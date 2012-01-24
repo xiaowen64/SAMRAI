@@ -46,7 +46,7 @@ void
 breakUpBoxes(
    hier::BoxLevel& mapped_box_level,
    const hier::BoxLevel& domain_mapped_box_level,
-   const tbox::Pointer<tbox::Database>& database);
+   const boost::shared_ptr<tbox::Database>& database);
 
 void
 alterAndGenerateMapping(
@@ -54,7 +54,7 @@ alterAndGenerateMapping(
    hier::Connector& b_to_c,
    hier::Connector& c_to_b,
    const hier::BoxLevel& mapped_box_level_b,
-   const tbox::Pointer<tbox::Database>& database);
+   const boost::shared_ptr<tbox::Database>& database);
 
 /*
  ************************************************************************
@@ -118,7 +118,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<InputDatabase> input_db(new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -128,7 +128,7 @@ int main(
        * all name strings in this program.
        */
 
-      Pointer<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -154,13 +154,13 @@ int main(
       /*
        * Generate the GridGeometry.
        */
-      tbox::Pointer<const hier::GridGeometry> grid_geometry;
+      boost::shared_ptr<const hier::GridGeometry> grid_geometry;
       if (main_db->keyExists("GridGeometry")) {
-         grid_geometry = new hier::GridGeometry(
+         grid_geometry.reset(new hier::GridGeometry(
                dim,
                "GridGeometry",
-               tbox::Pointer<hier::TransferOperatorRegistry>(),
-               main_db->getDatabase("GridGeometry"));
+               boost::shared_ptr<hier::TransferOperatorRegistry>(),
+               main_db->getDatabase("GridGeometry")));
       } else {
          TBOX_ERROR("Multiblock tree search test: could not find entry GridGeometry"
             << "\nin input.");
@@ -190,7 +190,7 @@ int main(
        * using input database BoxLevelA.
        */
       hier::BoxLevel mapped_box_level_a(domain_mapped_box_level);
-      Pointer<Database> a_db = main_db->getDatabase("BoxLevelA");
+      boost::shared_ptr<Database> a_db = main_db->getDatabase("BoxLevelA");
       breakUpBoxes(mapped_box_level_a, domain_mapped_box_level, a_db);
       mapped_box_level_a.cacheGlobalReducedData();
       // tbox::pout << "mapped box level a:\n" << mapped_box_level_a.format("A: ",2) << std::endl;
@@ -200,7 +200,7 @@ int main(
        * using input database BoxLevelB.
        */
       hier::BoxLevel mapped_box_level_b(domain_mapped_box_level);
-      Pointer<Database> b_db = main_db->getDatabase("BoxLevelB");
+      boost::shared_ptr<Database> b_db = main_db->getDatabase("BoxLevelB");
       breakUpBoxes(mapped_box_level_b, domain_mapped_box_level, b_db);
       mapped_box_level_b.cacheGlobalReducedData();
       // tbox::pout << "mapped box level b:\n" << mapped_box_level_b.format("B: ",2) << std::endl;
@@ -248,7 +248,8 @@ int main(
 
       hier::BoxLevel mapped_box_level_c(dim);
       hier::Connector b_to_c, c_to_b;
-      Pointer<Database> alteration_db = main_db->getDatabase("Alteration");
+      boost::shared_ptr<Database> alteration_db =
+         main_db->getDatabase("Alteration");
 
       alterAndGenerateMapping(
          mapped_box_level_c,
@@ -322,7 +323,7 @@ int main(
    } else {
       tbox::pout << "Process " << std::setw(5) << rank << " aborting."
                  << std::endl;
-      SAMRAI::tbox::Utilities::abort("Aborting due to nonzero fail count",
+      tbox::Utilities::abort("Aborting due to nonzero fail count",
          __FILE__, __LINE__);
    }
 
@@ -341,7 +342,7 @@ int main(
 void breakUpBoxes(
    hier::BoxLevel& mapped_box_level,
    const hier::BoxLevel& domain_mapped_box_level,
-   const tbox::Pointer<tbox::Database>& database) {
+   const boost::shared_ptr<tbox::Database>& database) {
 
    const tbox::Dimension& dim(mapped_box_level.getDim());
 
@@ -369,7 +370,7 @@ void breakUpBoxes(
 
    mesh::TreeLoadBalancer load_balancer(mapped_box_level.getDim());
 
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy;
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy;
    const int level_number(0);
 
    hier::Connector dummy_connector;
@@ -381,7 +382,7 @@ void breakUpBoxes(
       mapped_box_level,
       dummy_connector,
       dummy_connector,
-      tbox::Pointer<hier::PatchHierarchy>(),
+      boost::shared_ptr<hier::PatchHierarchy>(),
       level_number,
       dummy_connector,
       dummy_connector,
@@ -401,7 +402,7 @@ void alterAndGenerateMapping(
    hier::Connector& b_to_c,
    hier::Connector& c_to_b,
    const hier::BoxLevel& mapped_box_level_b,
-   const tbox::Pointer<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    const tbox::Dimension dim(mapped_box_level_b.getDim());
 

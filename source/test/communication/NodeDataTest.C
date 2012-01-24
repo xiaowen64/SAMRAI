@@ -30,7 +30,7 @@ using namespace std;
 NodeDataTest::NodeDataTest(
    const string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> main_input_db,
+   boost::shared_ptr<tbox::Database> main_input_db,
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
@@ -62,10 +62,11 @@ NodeDataTest::NodeDataTest(
       getDatabase("PatchHierarchy")->
       getInteger("max_levels") - 1;
 
-   d_cart_grid_geometry = new geom::CartesianGridGeometry(
+   d_cart_grid_geometry.reset(
+      new geom::CartesianGridGeometry(
          dim,
          "CartesianGridGeometry",
-         main_input_db->getDatabase("CartesianGridGeometry"));
+         main_input_db->getDatabase("CartesianGridGeometry")));
 
    setGridGeometry(d_cart_grid_geometry);
 
@@ -78,7 +79,7 @@ NodeDataTest::~NodeDataTest()
 }
 
 void NodeDataTest::readTestInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -132,9 +133,10 @@ void NodeDataTest::registerVariables(
    d_variables.resizeArray(nvars);
 
    for (int i = 0; i < nvars; i++) {
-      d_variables[i] = new pdat::NodeVariable<double>(d_dim,
-                                                      d_variable_src_name[i],
-                                                      d_variable_depth[i]);
+      d_variables[i].reset(
+         new pdat::NodeVariable<double>(d_dim,
+                                        d_variable_src_name[i],
+                                        d_variable_depth[i]));
 
       if (d_do_refine) {
          commtest->registerVariable(d_variables[i],
@@ -157,7 +159,7 @@ void NodeDataTest::registerVariables(
 }
 
 void NodeDataTest::setLinearData(
-   tbox::Pointer<pdat::NodeData<double> > data,
+   boost::shared_ptr<pdat::NodeData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -165,9 +167,9 @@ void NodeDataTest::setLinearData(
    TBOX_ASSERT(data);
 #endif
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const pdat::NodeIndex loweri(
       patch.getBox().lower(), (pdat::NodeIndex::Corner)0);
    const double* dx = pgeom->getDx();
@@ -203,7 +205,7 @@ void NodeDataTest::setLinearData(
 }
 
 void NodeDataTest::setPeriodicData(
-   tbox::Pointer<pdat::NodeData<double> > data,
+   boost::shared_ptr<pdat::NodeData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -219,9 +221,9 @@ void NodeDataTest::setPeriodicData(
       domain_len[d] = xup[d] - xlo[d];
    }
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
 
    const int depth = data->getDepth();
@@ -247,7 +249,7 @@ void NodeDataTest::setPeriodicData(
 
 void NodeDataTest::initializeDataOnPatch(
    const hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    char src_or_dst)
 {
@@ -263,9 +265,9 @@ void NodeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::NodeData<double> > node_data(
+         boost::shared_ptr<pdat::NodeData<double> > node_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          hier::Box dbox = node_data->getBox();
 
@@ -281,9 +283,9 @@ void NodeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::NodeData<double> > node_data(
+         boost::shared_ptr<pdat::NodeData<double> > node_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          hier::Box dbox = node_data->getGhostBox();
 
@@ -300,7 +302,7 @@ void NodeDataTest::initializeDataOnPatch(
 }
 
 void NodeDataTest::checkPatchInteriorData(
-   const tbox::Pointer<pdat::NodeData<double> >& data,
+   const boost::shared_ptr<pdat::NodeData<double> >& data,
    const hier::Box& interior,
    const hier::Patch& patch) const
 {
@@ -314,7 +316,7 @@ void NodeDataTest::checkPatchInteriorData(
 
    const int depth = data->getDepth();
 
-   tbox::Pointer<pdat::NodeData<double> > correct_data(
+   boost::shared_ptr<pdat::NodeData<double> > correct_data(
       new pdat::NodeData<double>(data->getBox(),
                                  depth,
                                  data->getGhostCellWidth()));
@@ -347,9 +349,9 @@ void NodeDataTest::setPhysicalBoundaryConditions(
       d_cart_grid_geometry->getPeriodicShift(hier::IntVector(d_dim, 1));
    bool is_periodic = periodic_shift.max() > 0;
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    const tbox::Array<hier::BoundaryBox> node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -369,9 +371,9 @@ void NodeDataTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
-      tbox::Pointer<pdat::NodeData<double> > node_data(
+      boost::shared_ptr<pdat::NodeData<double> > node_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       hier::Box patch_interior = node_data->getBox();
       checkPatchInteriorData(node_data, patch_interior, patch);
@@ -442,7 +444,7 @@ void NodeDataTest::setPhysicalBoundaryConditions(
  */
 bool NodeDataTest::verifyResults(
    const hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
    NULL_USE(hierarchy);
@@ -466,7 +468,7 @@ bool NodeDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      tbox::Pointer<pdat::NodeData<double> > solution(
+      boost::shared_ptr<pdat::NodeData<double> > solution(
          new pdat::NodeData<double>(pbox, 1, tgcw));
 
       hier::Box gbox(pbox);
@@ -488,9 +490,9 @@ bool NodeDataTest::verifyResults(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::NodeData<double> > node_data(
+         boost::shared_ptr<pdat::NodeData<double> > node_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          int depth = node_data->getDepth();
          hier::Box dbox = node_data->getGhostBox();
 

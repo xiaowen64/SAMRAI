@@ -84,9 +84,9 @@ public:
     * This routine is called by the refine schedule during construction of the
     * schedule.
     *
-    * @param dst_level      tbox::Pointer to destination patch level.
-    * @param src_level      tbox::Pointer to source patch level.
-    * @param overlap        tbox::Pointer to overlap region between patches.
+    * @param dst_level      boost::shared_ptr to destination patch level.
+    * @param src_level      boost::shared_ptr to source patch level.
+    * @param overlap        boost::shared_ptr to overlap region between patches.
     * @param dst_patch_id   Integer index of destination patch in destination
     *                       patch level.
     * @param src_patch_id   Integer index of source patch in source patch level.
@@ -98,22 +98,22 @@ public:
     *                       refine transaction involves time interpolation.
     *                       Default is false.
     */
-   virtual tbox::Pointer<tbox::Transaction>
+   virtual boost::shared_ptr<tbox::Transaction>
    allocate(
-      tbox::Pointer<hier::PatchLevel> dst_level,
-      tbox::Pointer<hier::PatchLevel> src_level,
-      tbox::Pointer<hier::BoxOverlap> overlap,
+      boost::shared_ptr<hier::PatchLevel> dst_level,
+      boost::shared_ptr<hier::PatchLevel> src_level,
+      boost::shared_ptr<hier::BoxOverlap> overlap,
       const hier::Box& dst_mapped_box,
       const hier::Box& src_mapped_box,
       int ritem_id,
       const hier::Box& box,
       bool use_time_interpolation = false) const = 0;
 
-   tbox::Pointer<tbox::Transaction>
+   boost::shared_ptr<tbox::Transaction>
    allocate(
-      tbox::Pointer<hier::PatchLevel> dst_level,
-      tbox::Pointer<hier::PatchLevel> src_level,
-      tbox::Pointer<hier::BoxOverlap> overlap,
+      boost::shared_ptr<hier::PatchLevel> dst_level,
+      boost::shared_ptr<hier::PatchLevel> src_level,
+      boost::shared_ptr<hier::BoxOverlap> overlap,
       const hier::Box& dst_mapped_box,
       const hier::Box& src_mapped_box,
       int ritem_id) const;
@@ -135,7 +135,7 @@ public:
     * optional for the concrete transaction factory object.
     * The default implementation is a no-op.
     *
-    * @param level        tbox::Pointer to patch level holding scratch data.
+    * @param level        boost::shared_ptr to patch level holding scratch data.
     * @param fill_time    Double value of simulation time corresponding to
     *                     RefineSchedule operations.
     * @param preprocess_vector Const reference to ComponentSelector that indicates
@@ -144,7 +144,7 @@ public:
     */
    virtual void
    preprocessScratchSpace(
-      tbox::Pointer<hier::PatchLevel> level,
+      boost::shared_ptr<hier::PatchLevel> level,
       double fill_time,
       const hier::ComponentSelector& preprocess_vector) const;
 

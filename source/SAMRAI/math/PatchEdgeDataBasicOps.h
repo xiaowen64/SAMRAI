@@ -17,7 +17,8 @@
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/math/ArrayDataBasicOps.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace math {
@@ -61,9 +62,9 @@ public:
     */
    void
    scale(
-      tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
+      boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
       const TYPE& alpha,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
       const hier::Box& box) const;
 
    /**
@@ -71,8 +72,8 @@ public:
     */
    void
    addScalar(
-      tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src,
+      boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
       const TYPE& alpha,
       const hier::Box& box) const;
 
@@ -81,9 +82,9 @@ public:
     */
    void
    add(
-      tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src1,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src2,
+      boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src1,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src2,
       const hier::Box& box) const;
 
    /**
@@ -91,9 +92,9 @@ public:
     */
    void
    subtract(
-      tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src1,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src2,
+      boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src1,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src2,
       const hier::Box& box) const;
 
    /**
@@ -101,9 +102,9 @@ public:
     */
    void
    multiply(
-      tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src1,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src2,
+      boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src1,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src2,
       const hier::Box& box) const;
 
    /**
@@ -111,9 +112,9 @@ public:
     */
    void
    divide(
-      tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src1,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src2,
+      boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src1,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src2,
       const hier::Box& box) const;
 
    /**
@@ -121,8 +122,8 @@ public:
     */
    void
    reciprocal(
-      tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src,
+      boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
       const hier::Box& box) const;
 
    /**
@@ -130,11 +131,11 @@ public:
     */
    void
    linearSum(
-      tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
+      boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
       const TYPE& alpha,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src1,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src1,
       const TYPE& beta,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src2,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src2,
       const hier::Box& box) const;
 
    /**
@@ -142,10 +143,10 @@ public:
     */
    void
    axpy(
-      tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
+      boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
       const TYPE& alpha,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src1,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src2,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src1,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src2,
       const hier::Box& box) const;
 
    /**
@@ -153,10 +154,10 @@ public:
     */
    void
    axmy(
-      tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
+      boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
       const TYPE& alpha,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src1,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src2,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src1,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src2,
       const hier::Box& box) const;
 
    /**
@@ -165,7 +166,7 @@ public:
     */
    TYPE
    min(
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
       const hier::Box& box) const;
 
    /**
@@ -174,7 +175,7 @@ public:
     */
    TYPE
    max(
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
       const hier::Box& box) const;
 
    /**
@@ -184,7 +185,7 @@ public:
     */
    void
    setRandomValues(
-      tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
+      boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
       const TYPE& width,
       const TYPE& low,
       const hier::Box& box) const;

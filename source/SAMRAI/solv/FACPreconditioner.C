@@ -40,7 +40,7 @@ namespace solv {
 FACPreconditioner::FACPreconditioner(
    const std::string& name,
    FACOperatorStrategy& user_ops,
-   tbox::Pointer<tbox::Database> database):
+   boost::shared_ptr<tbox::Database> database):
    d_object_name(name),
    d_fac_operator(user_ops),
    d_coarsest_ln(0),
@@ -94,7 +94,7 @@ FACPreconditioner::~FACPreconditioner()
  */
 
 void FACPreconditioner::getFromInput(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
    if (database) {
       if (database->isBool("enable_logging")) {
@@ -201,7 +201,7 @@ void FACPreconditioner::initializeSolverState(
    int num_components = solution.getNumberOfComponents();
    d_controlled_level_ops.resizeArray(num_components);
    for (int i = 0; i < num_components; ++i) {
-      tbox::Pointer<hier::Variable> variable = solution.getComponentVariable(i);
+      boost::shared_ptr<hier::Variable> variable = solution.getComponentVariable(i);
       d_controlled_level_ops[i] =
          ops_manager->getOperationsDouble(variable,
             d_patch_hierarchy,

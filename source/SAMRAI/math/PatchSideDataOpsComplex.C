@@ -37,18 +37,18 @@ PatchSideDataOpsComplex::~PatchSideDataOpsComplex()
  */
 
 void PatchSideDataOpsComplex::swapData(
-   tbox::Pointer<hier::Patch> patch,
+   boost::shared_ptr<hier::Patch> patch,
    const int data1_id,
    const int data2_id) const
 {
    TBOX_ASSERT(patch);
 
-   tbox::Pointer<pdat::SideData<dcomplex> > d1(
+   boost::shared_ptr<pdat::SideData<dcomplex> > d1(
       patch->getPatchData(data1_id),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::SideData<dcomplex> > d2(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::SideData<dcomplex> > d2(
       patch->getPatchData(data2_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
@@ -61,7 +61,7 @@ void PatchSideDataOpsComplex::swapData(
 }
 
 void PatchSideDataOpsComplex::printData(
-   const tbox::Pointer<pdat::SideData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
@@ -74,8 +74,8 @@ void PatchSideDataOpsComplex::printData(
 }
 
 void PatchSideDataOpsComplex::copyData(
-   tbox::Pointer<pdat::SideData<dcomplex> >& dst,
-   const tbox::Pointer<pdat::SideData<dcomplex> >& src,
+   boost::shared_ptr<pdat::SideData<dcomplex> >& dst,
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -94,7 +94,7 @@ void PatchSideDataOpsComplex::copyData(
 }
 
 void PatchSideDataOpsComplex::setToScalar(
-   tbox::Pointer<pdat::SideData<dcomplex> >& dst,
+   boost::shared_ptr<pdat::SideData<dcomplex> >& dst,
    const dcomplex& alpha,
    const hier::Box& box) const
 {

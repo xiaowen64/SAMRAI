@@ -90,8 +90,8 @@ using namespace std;
 ConvDiff::ConvDiff(
    const string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> input_db,
-   tbox::Pointer<geom::CartesianGridGeometry> grid_geom):
+   boost::shared_ptr<tbox::Database> input_db,
+   boost::shared_ptr<geom::CartesianGridGeometry> grid_geom):
    algs::MethodOfLinesPatchStrategy::MethodOfLinesPatchStrategy(dim),
    d_dim(dim),
    d_nghosts(d_dim, 1),
@@ -120,8 +120,10 @@ ConvDiff::ConvDiff(
     *     mu    = diffusion coefficient
     *     gamma = source coefficient
     */
-   d_primitive_vars = new pdat::CellVariable<double>(dim, "primitive_vars", 1);
-   d_function_eval = new pdat::CellVariable<double>(dim, "function_eval", 1);
+   d_primitive_vars.reset(
+      new pdat::CellVariable<double>(dim, "primitive_vars", 1));
+   d_function_eval.reset(
+      new pdat::CellVariable<double>(dim, "function_eval", 1));
    d_diffusion_coeff = 1.;
    for (k = 0; k < d_dim.getValue(); k++) d_convection_coeff[k] = 0.;
    d_source_coeff = 0.;
@@ -390,17 +392,17 @@ void ConvDiff::initializeDataOnPatch(
 
    if (initial_time) {
 
-      const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+      const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          patch.getPatchGeometry(),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       const double* dx = patch_geom->getDx();
       const double* xlo = patch_geom->getXLower();
       const double* xhi = patch_geom->getXUpper();
 
-      tbox::Pointer<pdat::CellData<double> > primitive_vars(
+      boost::shared_ptr<pdat::CellData<double> > primitive_vars(
          patch.getPatchData(d_primitive_vars, getInteriorContext()),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(primitive_vars);
@@ -408,8 +410,8 @@ void ConvDiff::initializeDataOnPatch(
       hier::IntVector ghost_cells = primitive_vars->getGhostCellWidth();
 
       hier::Box pbox = patch.getBox();
-      tbox::Pointer<pdat::CellData<double> > temp_var;
-      temp_var = new pdat::CellData<double>(pbox, 1, ghost_cells);
+      boost::shared_ptr<pdat::CellData<double> > temp_var(
+         new pdat::CellData<double>(pbox, 1, ghost_cells));
 
       const hier::Index ifirst = patch.getBox().lower();
       const hier::Index ilast = patch.getBox().upper();
@@ -457,17 +459,17 @@ double ConvDiff::computeStableDtOnPatch(
 {
    (void)time;
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > primitive_vas(
+   boost::shared_ptr<pdat::CellData<double> > primitive_vas(
       patch.getPatchData(d_primitive_vars, getInteriorContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    double stabdt = 0.0;
 
@@ -515,24 +517,24 @@ void ConvDiff::singleStep(
    const double beta) const
 {
 
-   tbox::Pointer<pdat::CellData<double> > prim_var_updated(
+   boost::shared_ptr<pdat::CellData<double> > prim_var_updated(
       patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<pdat::CellData<double> > prim_var_fixed(
+   boost::shared_ptr<pdat::CellData<double> > prim_var_fixed(
       patch.getPatchData(d_primitive_vars, getInteriorContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<pdat::CellData<double> > function_eval(
+   boost::shared_ptr<pdat::CellData<double> > function_eval(
       patch.getPatchData(d_function_eval, getInteriorContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
 
 //      tbox::plog << "----primitive_var_current" << endl;
@@ -624,12 +626,12 @@ void ConvDiff::tagGradientDetectorCells(
    (void)initial_error;
    (void)uses_richardson_extrapolation_too;
 
-   tbox::Pointer<pdat::CellData<int> > tags(
+   boost::shared_ptr<pdat::CellData<int> > tags(
       patch.getPatchData(tag_index),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::CellData<double> > primitive_vars(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > primitive_vars(
       patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
@@ -675,9 +677,9 @@ void ConvDiff::setPhysicalBoundaryConditions(
 {
    (void)fill_time;
 
-   tbox::Pointer<pdat::CellData<double> > primitive_vars(
+   boost::shared_ptr<pdat::CellData<double> > primitive_vars(
       patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext()),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(primitive_vars);
@@ -793,7 +795,7 @@ void ConvDiff::setPhysicalBoundaryConditions(
 
 #ifdef HAVE_HDF5
 void ConvDiff::registerVisItDataWriter(
-   tbox::Pointer<appu::VisItDataWriter> viz_writer)
+   boost::shared_ptr<appu::VisItDataWriter> viz_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(viz_writer);
@@ -896,7 +898,7 @@ void ConvDiff::printClassData(
  *************************************************************************
  */
 void ConvDiff::getFromInput(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -947,7 +949,7 @@ void ConvDiff::getFromInput(
                           << endl);
       }
 
-      tbox::Pointer<tbox::Database> init_data_db;
+      boost::shared_ptr<tbox::Database> init_data_db;
       if (db->keyExists("Initial_data")) {
          init_data_db = db->getDatabase("Initial_data");
       } else {
@@ -1008,7 +1010,7 @@ void ConvDiff::getFromInput(
       }
 
       if (db->keyExists("Boundary_data")) {
-         tbox::Pointer<tbox::Database> boundary_db = db->getDatabase(
+         boost::shared_ptr<tbox::Database> boundary_db = db->getDatabase(
                "Boundary_data");
 
          if (d_dim == tbox::Dimension(2)) {
@@ -1045,7 +1047,7 @@ void ConvDiff::getFromInput(
  */
 
 void ConvDiff::putToDatabase(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -1089,10 +1091,10 @@ void ConvDiff::putToDatabase(
 void ConvDiff::getFromRestart()
 {
 
-   tbox::Pointer<tbox::Database> root_db =
+   boost::shared_ptr<tbox::Database> root_db =
       tbox::RestartManager::getManager()->getRootDatabase();
 
-   tbox::Pointer<tbox::Database> db;
+   boost::shared_ptr<tbox::Database> db;
    if (root_db->isDatabase(d_object_name)) {
       db = root_db->getDatabase(d_object_name);
    } else {
@@ -1144,7 +1146,7 @@ void ConvDiff::getFromRestart()
  */
 
 void ConvDiff::readDirichletBoundaryDataEntry(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    string& db_name,
    int bdry_location_index)
 {
@@ -1167,7 +1169,7 @@ void ConvDiff::readDirichletBoundaryDataEntry(
 }
 
 void ConvDiff::readNeumannBoundaryDataEntry(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    string& db_name,
    int bdry_location_index)
 {
@@ -1190,7 +1192,7 @@ void ConvDiff::readNeumannBoundaryDataEntry(
 }
 
 void ConvDiff::readStateDataEntry(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    const string& db_name,
    int array_indx,
    tbox::Array<double>& val)
@@ -1238,9 +1240,9 @@ void ConvDiff::checkBoundaryData(
    }
 #endif
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const tbox::Array<hier::BoundaryBox> bdry_boxes =
       pgeom->getCodimensionBoundaries(btype);
 

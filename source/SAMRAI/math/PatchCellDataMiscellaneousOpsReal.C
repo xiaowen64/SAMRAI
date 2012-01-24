@@ -61,10 +61,10 @@ void PatchCellDataMiscellaneousOpsReal<TYPE>::operator = (
 
 template<class TYPE>
 int PatchCellDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data1,
-   const tbox::Pointer<pdat::CellData<TYPE> >& data2,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data1,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data2,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> > cvol) const
 {
    TBOX_ASSERT(data1 && data2);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data1, *data2, box);
@@ -88,11 +88,11 @@ int PatchCellDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 
 template<class TYPE>
 void PatchCellDataMiscellaneousOpsReal<TYPE>::compareToScalar(
-   tbox::Pointer<pdat::CellData<TYPE> >& dst,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src,
+   boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> > cvol) const
 {
    TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
@@ -114,10 +114,10 @@ void PatchCellDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 
 template<class TYPE>
 int PatchCellDataMiscellaneousOpsReal<TYPE>::testReciprocal(
-   tbox::Pointer<pdat::CellData<TYPE> >& dst,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src,
+   boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> > cvol) const
 {
    TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
@@ -141,8 +141,8 @@ int PatchCellDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 
 template<class TYPE>
 TYPE PatchCellDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
-   const tbox::Pointer<pdat::CellData<TYPE> >& numer,
-   const tbox::Pointer<pdat::CellData<TYPE> >& denom,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& numer,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& denom,
    const hier::Box& box) const
 {
    TBOX_ASSERT(numer && denom);
@@ -157,8 +157,8 @@ TYPE PatchCellDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
 
 template<class TYPE>
 TYPE PatchCellDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
-   const tbox::Pointer<pdat::CellData<TYPE> >& numer,
-   const tbox::Pointer<pdat::CellData<TYPE> >& denom,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& numer,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& denom,
    const hier::Box& box) const
 {
 

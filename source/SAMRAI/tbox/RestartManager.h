@@ -15,10 +15,10 @@
 
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/DatabaseFactory.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -118,9 +118,9 @@ public:
    closeRestartFile();
 
    /**
-    * Returns a Pointer to the root of the database.
+    * Returns a boost::shared_ptr to the root of the database.
     */
-   virtual Pointer<Database>
+   virtual boost::shared_ptr<Database>
    getRootDatabase();
 
    /**
@@ -129,7 +129,7 @@ public:
     */
    virtual void
    setRootDatabase(
-      Pointer<Database> database);
+      boost::shared_ptr<Database> database);
 
    /**
     * Sets the database for restore or dumps.
@@ -137,7 +137,7 @@ public:
     */
    virtual void
    setDatabaseFactory(
-      Pointer<DatabaseFactory> database_factory);
+      boost::shared_ptr<DatabaseFactory> database_factory);
 
    /**
     * Registers an object for restart with the given name.
@@ -231,7 +231,7 @@ private:
     */
    virtual void
    writeRestartFile(
-      Pointer<Database> database);
+      boost::shared_ptr<Database> database);
 
    /*
     * Create the directory structure for the data files.
@@ -271,13 +271,13 @@ private:
    List<RestartManager::RestartItem> d_restart_items_list;
 #endif
 
-   Pointer<Database> d_database_root;
+   boost::shared_ptr<Database> d_database_root;
 
    /*
     * Database factory use to create new databases.
     * Defaults so HDFDatabaseFactory.
     */
-   Pointer<DatabaseFactory> d_database_factory;
+   boost::shared_ptr<DatabaseFactory> d_database_factory;
 
    bool d_is_from_restart;
 

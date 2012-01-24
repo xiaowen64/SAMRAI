@@ -15,8 +15,8 @@
 #include "SAMRAI/tbox/Clock.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 #include <vector>
 
@@ -195,7 +195,7 @@ public:
     */
    virtual void
    putToDatabase(
-      Pointer<Database> db);
+      boost::shared_ptr<Database> db);
 
    /**
     * Read restarted times from restart database.  When assertion checking
@@ -203,7 +203,7 @@ public:
     */
    virtual void
    getFromRestart(
-      Pointer<Database> db);
+      boost::shared_ptr<Database> db);
 
 protected:
    /**

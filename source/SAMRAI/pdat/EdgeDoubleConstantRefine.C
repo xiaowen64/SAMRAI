@@ -104,14 +104,14 @@ EdgeDoubleConstantRefine::~EdgeDoubleConstantRefine()
 }
 
 bool EdgeDoubleConstantRefine::findRefineOperator(
-   const tbox::Pointer<hier::Variable>& var,
+   const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
-   const tbox::Pointer<EdgeVariable<double> > cast_var(
+   const boost::shared_ptr<EdgeVariable<double> > cast_var(
       var,
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    if (cast_var && (op_name == getOperatorName())) {
       return true;
    } else {
@@ -139,15 +139,15 @@ void EdgeDoubleConstantRefine::refine(
 {
    const tbox::Dimension& dim(getDim());
 
-   tbox::Pointer<EdgeData<double> > cdata(
+   boost::shared_ptr<EdgeData<double> > cdata(
       coarse.getPatchData(src_component),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<EdgeData<double> > fdata(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<EdgeData<double> > fdata(
       fine.getPatchData(dst_component),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
-   const pdat::EdgeOverlap* t_overlap =
-      dynamic_cast<const pdat::EdgeOverlap *>(&fine_overlap);
+   const EdgeOverlap* t_overlap =
+      dynamic_cast<const EdgeOverlap *>(&fine_overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 

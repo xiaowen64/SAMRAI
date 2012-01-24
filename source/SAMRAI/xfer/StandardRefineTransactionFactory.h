@@ -16,10 +16,11 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Transaction.h"
 #include "SAMRAI/xfer/RefineClasses.h"
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace xfer {
@@ -74,9 +75,9 @@ public:
     * object will be created.  Otherwise, a RefineCopyTransaction aill be
     * created.
     *
-    * @param dst_level      tbox::Pointer to destination patch level.
-    * @param src_level      tbox::Pointer to source patch level.
-    * @param overlap        tbox::Pointer to overlap region between patches.
+    * @param dst_level      boost::shared_ptr to destination patch level.
+    * @param src_level      boost::shared_ptr to source patch level.
+    * @param overlap        boost::shared_ptr to overlap region between patches.
     * @param dst_patch_id   Integer index of destination patch in destination
     *                       patch level.
     * @param src_patch_id   Integer index of source patch in source patch level.
@@ -88,11 +89,11 @@ public:
     *                       refine transaction involves time interpolation.
     *                       Default is false.
     */
-   tbox::Pointer<tbox::Transaction>
+   boost::shared_ptr<tbox::Transaction>
    allocate(
-      tbox::Pointer<hier::PatchLevel> dst_level,
-      tbox::Pointer<hier::PatchLevel> src_level,
-      tbox::Pointer<hier::BoxOverlap> overlap,
+      boost::shared_ptr<hier::PatchLevel> dst_level,
+      boost::shared_ptr<hier::PatchLevel> src_level,
+      boost::shared_ptr<hier::BoxOverlap> overlap,
       const hier::Box& dst_mapped_box,
       const hier::Box& src_mapped_box,
       int ritem_id,

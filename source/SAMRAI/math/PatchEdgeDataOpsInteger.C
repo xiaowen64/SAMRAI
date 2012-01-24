@@ -37,7 +37,7 @@ PatchEdgeDataOpsInteger::~PatchEdgeDataOpsInteger()
  */
 
 int PatchEdgeDataOpsInteger::numberOfEntries(
-   const tbox::Pointer<pdat::EdgeData<int> >& data,
+   const boost::shared_ptr<pdat::EdgeData<int> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -63,18 +63,18 @@ int PatchEdgeDataOpsInteger::numberOfEntries(
  */
 
 void PatchEdgeDataOpsInteger::swapData(
-   tbox::Pointer<hier::Patch> patch,
+   boost::shared_ptr<hier::Patch> patch,
    const int data1_id,
    const int data2_id) const
 {
    TBOX_ASSERT(patch);
 
-   tbox::Pointer<pdat::EdgeData<int> > d1(
+   boost::shared_ptr<pdat::EdgeData<int> > d1(
       patch->getPatchData(data1_id),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::EdgeData<int> > d2(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::EdgeData<int> > d2(
       patch->getPatchData(data2_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
@@ -86,7 +86,7 @@ void PatchEdgeDataOpsInteger::swapData(
 }
 
 void PatchEdgeDataOpsInteger::printData(
-   const tbox::Pointer<pdat::EdgeData<int> >& data,
+   const boost::shared_ptr<pdat::EdgeData<int> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
@@ -99,8 +99,8 @@ void PatchEdgeDataOpsInteger::printData(
 }
 
 void PatchEdgeDataOpsInteger::copyData(
-   tbox::Pointer<pdat::EdgeData<int> >& dst,
-   const tbox::Pointer<pdat::EdgeData<int> >& src,
+   boost::shared_ptr<pdat::EdgeData<int> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<int> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -115,7 +115,7 @@ void PatchEdgeDataOpsInteger::copyData(
 }
 
 void PatchEdgeDataOpsInteger::setToScalar(
-   tbox::Pointer<pdat::EdgeData<int> >& dst,
+   boost::shared_ptr<pdat::EdgeData<int> >& dst,
    const int& alpha,
    const hier::Box& box) const
 {
@@ -126,8 +126,8 @@ void PatchEdgeDataOpsInteger::setToScalar(
 }
 
 void PatchEdgeDataOpsInteger::abs(
-   tbox::Pointer<pdat::EdgeData<int> >& dst,
-   const tbox::Pointer<pdat::EdgeData<int> >& src,
+   boost::shared_ptr<pdat::EdgeData<int> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<int> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);

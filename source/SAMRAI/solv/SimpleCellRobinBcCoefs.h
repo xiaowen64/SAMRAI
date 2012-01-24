@@ -17,8 +17,8 @@
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <map>
 
 namespace SAMRAI {
@@ -92,10 +92,10 @@ public:
     */
    void
    setBcCoefs(
-      tbox::Pointer<pdat::ArrayData<double> >& acoef_data,
-      tbox::Pointer<pdat::ArrayData<double> >& bcoef_data,
-      tbox::Pointer<pdat::ArrayData<double> >& gcoef_data,
-      const tbox::Pointer<hier::Variable>& variable,
+      boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+      boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+      boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+      const boost::shared_ptr<hier::Variable>& variable,
       const hier::Patch& patch,
       const hier::BoundaryBox& bdry_box,
       double fill_time = 0.0) const;
@@ -117,7 +117,7 @@ public:
     */
    void
    setHierarchy(
-      tbox::Pointer<hier::PatchHierarchy>,
+      boost::shared_ptr<hier::PatchHierarchy>,
       const int ln_min = -1,
       const int ln_max = -1);
 
@@ -278,7 +278,7 @@ private:
     */
    std::string d_object_name;
 
-   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    int d_ln_min;
    int d_ln_max;
@@ -314,7 +314,7 @@ private:
     * array.  For the position of a particular box, see
     * d_dirichlet_data_position.
     */
-   tbox::Array<tbox::Pointer<pdat::ArrayData<double> > > d_dirichlet_data;
+   tbox::Array<boost::shared_ptr<pdat::ArrayData<double> > > d_dirichlet_data;
    /*!
     * @brief Position of cached boundary boxes of ghost cell data.
     *
@@ -326,7 +326,7 @@ private:
    /*!
     * @brief Timers for performance measurement.
     */
-   tbox::Pointer<tbox::Timer> t_set_bc_coefs;
+   boost::shared_ptr<tbox::Timer> t_set_bc_coefs;
 
 };
 

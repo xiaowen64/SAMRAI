@@ -16,10 +16,13 @@
 #include "SAMRAI/solv/solv_NVector.h"
 #include "SAMRAI/solv/SundialsAbstractVector.h"
 
+using namespace SAMRAI;
+using namespace solv;
+
 #define SABSVEC_CAST(v) \
-   (static_cast<SAMRAI::solv::SundialsAbstractVector *>(v \
-                                                        -> \
-                                                        content))
+   (static_cast<SundialsAbstractVector *>(v \
+                                          -> \
+                                          content))
 
 extern "C" {
 

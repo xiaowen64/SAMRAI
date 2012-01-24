@@ -36,8 +36,6 @@ namespace tbox {
  * many other reference counting pointer implementations.  With
  * hindsight a different approach would have been used, likely more
  * consistent with the Boost reference counting pointers.
- *
- * @see tbox::Pointer
  */
 class DescribedClass
 {

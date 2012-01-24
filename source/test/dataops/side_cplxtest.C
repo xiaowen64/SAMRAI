@@ -20,7 +20,6 @@ using namespace std;
 #include "SAMRAI/tbox/PIO.h"
 
 #include "SAMRAI/tbox/SAMRAIManager.h"
-#include "SAMRAI/tbox/Pointer.h"
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
@@ -47,6 +46,8 @@ using namespace std;
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/hier/VariableContext.h"
 
+#include <boost/shared_ptr.hpp>
+
 using namespace SAMRAI;
 
 /* Helper function declarations */
@@ -54,12 +55,12 @@ static bool
 complexDataSameAsValue(
    int desc_id,
    dcomplex value,
-   tbox::Pointer<hier::PatchHierarchy> hierarchy);
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy);
 static bool
 doubleDataSameAsValue(
    int desc_id,
    double value,
-   tbox::Pointer<hier::PatchHierarchy> hierarchy);
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy);
 
 #define NVARS 4
 
@@ -116,13 +117,13 @@ int main(
       fine_boxes.appendItem(fine0);
       fine_boxes.appendItem(fine1);
 
-      tbox::Pointer<geom::CartesianGridGeometry> geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry> geometry(
          new geom::CartesianGridGeometry("CartesianGeometry",
             lo,
             hi,
             coarse_domain));
 
-      tbox::Pointer<hier::PatchHierarchy> hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", geometry));
 
       // Note: For these simple tests we allow at most 2 processors.
@@ -165,28 +166,28 @@ int main(
 
       // Create instance of hier::Variable database
       hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-      tbox::Pointer<hier::VariableContext> dummy = variable_db->getContext(
-            "dummy");
+      boost::shared_ptr<hier::VariableContext> dummy =
+         variable_db->getContext("dummy");
       const hier::IntVector no_ghosts(dim2d, 0);
 
       // Make some dummy variables and data on the hierarchy
-      tbox::Pointer<pdat::SideVariable<dcomplex> > fvar[NVARS];
+      boost::shared_ptr<pdat::SideVariable<dcomplex> > fvar[NVARS];
       int svindx[NVARS];
-      fvar[0] = new pdat::SideVariable<dcomplex>(dim, "fvar0", 1);
+      fvar[0].reset(new pdat::SideVariable<dcomplex>(dim, "fvar0", 1));
       svindx[0] = variable_db->registerVariableAndContext(
             fvar[0], dummy, no_ghosts);
-      fvar[1] = new pdat::SideVariable<dcomplex>(dim, "fvar1", 1);
+      fvar[1].reset(new pdat::SideVariable<dcomplex>(dim, "fvar1", 1));
       svindx[1] = variable_db->registerVariableAndContext(
             fvar[1], dummy, no_ghosts);
-      fvar[2] = new pdat::SideVariable<dcomplex>(dim, "fvar2", 1);
+      fvar[2].reset(new pdat::SideVariable<dcomplex>(dim, "fvar2", 1));
       svindx[2] = variable_db->registerVariableAndContext(
             fvar[2], dummy, no_ghosts);
-      fvar[3] = new pdat::SideVariable<dcomplex>(dim, "fvar3", 1);
+      fvar[3].reset(new pdat::SideVariable<dcomplex>(dim, "fvar3", 1));
       svindx[3] = variable_db->registerVariableAndContext(
             fvar[3], dummy, no_ghosts);
 
-      tbox::Pointer<pdat::SideVariable<double> >
-      swgt(new pdat::SideVariable<double>(dim, "swgt", 1));
+      boost::shared_ptr<pdat::SideVariable<double> > swgt(
+         new pdat::SideVariable<double>(dim, "swgt", 1));
       int swgt_id = variable_db->registerVariableAndContext(
             swgt, dummy, no_ghosts);
 
@@ -198,23 +199,24 @@ int main(
          }
       }
 
-      tbox::Pointer<math::HierarchyDataOpsComplex> side_ops(
+      boost::shared_ptr<math::HierarchyDataOpsComplex> side_ops(
          new math::HierarchySideDataOpsComplex(hierarchy, 0, 1));
       TBOX_ASSERT(side_ops);
 
-      tbox::Pointer<math::HierarchyDataOpsReal<double> > swgt_ops(
+      boost::shared_ptr<math::HierarchyDataOpsReal<double> > swgt_ops(
          new math::HierarchySideDataOpsReal<double>(hierarchy, 0, 1));
 
-      tbox::Pointer<hier::Patch> patch;
-      tbox::Pointer<geom::CartesianPatchGeometry> pgeom;
+      boost::shared_ptr<hier::Patch> patch;
+      boost::shared_ptr<geom::CartesianPatchGeometry> pgeom;
 
       // Initialize control volume data for side-centered components
       hier::Box coarse_fine = fine0 + fine1;
       coarse_fine.coarsen(ratio);
       for (ln = 0; ln < 2; ln++) {
-         tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level =
+            hierarchy->getPatchLevel(ln);
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-            tbox::Pointer<pdat::SideData<double> > data;
+            boost::shared_ptr<pdat::SideData<double> > data;
             patch = level->getPatch(ip());
             pgeom = patch->getPatchGeometry();
             const double* dx = pgeom->getDx();
@@ -317,7 +319,7 @@ int main(
  *   for (ln = 0; ln < 2; ln++) {
  *   for (hier::PatchLevel::Iterator ip(hierarchy->getPatchLevel(ln)); ip; ip++) {
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
- *   tbox::Pointer< pdat::CellData<double> > svdata = patch->getPatchData(cwgt_id);
+ *   boost::shared_ptr< pdat::CellData<double> > svdata = patch->getPatchData(cwgt_id);
  *
  *   for (pdat::CellIterator c(svdata->getBox());c && vol_test_passed;c++) {
  *   pdat::CellIndex cell_index = c();
@@ -543,10 +545,10 @@ int main(
       }
 
       // Test #13:  Place some bogus values on coarse level
-      tbox::Pointer<pdat::SideData<dcomplex> > sdata;
+      boost::shared_ptr<pdat::SideData<dcomplex> > sdata;
 
       // set values
-      tbox::Pointer<hier::PatchLevel> level_zero =
+      boost::shared_ptr<hier::PatchLevel> level_zero =
          hierarchy->getPatchLevel(0);
       for (hier::PatchLevel::Iterator ip(level_zero); ip; ip++) {
          patch = level_zero->getPatch(ip());
@@ -788,18 +790,18 @@ static bool
 complexDataSameAsValue(
    int desc_id,
    dcomplex value,
-   tbox::Pointer<hier::PatchHierarchy> hierarchy)
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy)
 {
    bool test_passed = true;
 
    int ln;
-   tbox::Pointer<hier::Patch> patch;
+   boost::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          patch = level->getPatch(ip());
-         tbox::Pointer<pdat::SideData<dcomplex> > svdata = patch->getPatchData(
-               desc_id);
+         boost::shared_ptr<pdat::SideData<dcomplex> > svdata =
+            patch->getPatchData(desc_id);
 
          for (pdat::SideIterator c(svdata->getBox(), 1); c && test_passed;
               c++) {
@@ -823,18 +825,18 @@ static bool
 doubleDataSameAsValue(
    int desc_id,
    double value,
-   tbox::Pointer<hier::PatchHierarchy> hierarchy)
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy)
 {
    bool test_passed = true;
 
    int ln;
-   tbox::Pointer<hier::Patch> patch;
+   boost::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          patch = level->getPatch(ip());
-         tbox::Pointer<pdat::SideData<double> > svdata = patch->getPatchData(
-               desc_id);
+         boost::shared_ptr<pdat::SideData<double> > svdata =
+            patch->getPatchData(desc_id);
 
          for (pdat::SideIterator c(svdata->getBox(), 1); c && test_passed;
               c++) {

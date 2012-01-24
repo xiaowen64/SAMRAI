@@ -8,12 +8,8 @@
  *
  ************************************************************************/
 
-#include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/Pointer.C"
 #include "HierarchyTester.h"
 
-namespace SAMRAI {
+#include <boost/shared_ptr.hpp>
 
-template class tbox::Pointer<HierarchyTester>;
-
-}
+template class boost::shared_ptr<HierarchyTester>;

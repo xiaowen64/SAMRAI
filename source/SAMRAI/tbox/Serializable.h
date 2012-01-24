@@ -14,7 +14,8 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace tbox {
@@ -24,7 +25,7 @@ namespace tbox {
  * database serialization for objects.
  *
  * Objects needing to serialize their data to a database implement the
- * function putToDatabase(tbox::Pointer<tbox::Database>) specifying
+ * function putToDatabase(boost::shared_ptr<tbox::Database>) specifying
  * how to put its data members into the database instance.
  *
  * @note The interface asymmetric in that is no corresponding
@@ -65,7 +66,7 @@ public:
     */
    virtual void
    putToDatabase(
-      Pointer<Database> database) = 0;
+      boost::shared_ptr<Database> database) = 0;
 
 };
 

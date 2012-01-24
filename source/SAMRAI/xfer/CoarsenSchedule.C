@@ -44,11 +44,11 @@ namespace xfer {
 std::string
 CoarsenSchedule::s_schedule_generation_method = "DLBG";
 
-tbox::Pointer<tbox::Timer> CoarsenSchedule::t_coarsen_data;
-tbox::Pointer<tbox::Timer> CoarsenSchedule::t_gen_sched_n_squared;
-tbox::Pointer<tbox::Timer> CoarsenSchedule::t_gen_sched_dlbg;
-tbox::Pointer<tbox::Timer> CoarsenSchedule::t_invert_edges;
-tbox::Pointer<tbox::Timer> CoarsenSchedule::t_coarse_data_fill;
+boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarsen_data;
+boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_gen_sched_n_squared;
+boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_gen_sched_dlbg;
+boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_invert_edges;
+boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarse_data_fill;
 
 tbox::StartupShutdownManager::Handler
 CoarsenSchedule::s_initialize_finalize_handler(
@@ -94,11 +94,11 @@ void CoarsenSchedule::setScheduleGenerationMethod(
  */
 
 CoarsenSchedule::CoarsenSchedule(
-   tbox::Pointer<hier::PatchLevel> crse_level,
-   tbox::Pointer<hier::PatchLevel> fine_level,
-   const tbox::Pointer<xfer::CoarsenClasses> coarsen_classes,
-   tbox::Pointer<xfer::CoarsenTransactionFactory> transaction_factory,
-   xfer::CoarsenPatchStrategy* patch_strategy,
+   boost::shared_ptr<hier::PatchLevel> crse_level,
+   boost::shared_ptr<hier::PatchLevel> fine_level,
+   const boost::shared_ptr<CoarsenClasses> coarsen_classes,
+   boost::shared_ptr<CoarsenTransactionFactory> transaction_factory,
+   CoarsenPatchStrategy* patch_strategy,
    bool fill_coarse_data):
    d_ratio_between_levels(crse_level->getDim())
 {
@@ -127,7 +127,7 @@ CoarsenSchedule::CoarsenSchedule(
    d_precoarsen_refine_schedule.reset();
 
    d_number_coarsen_items = 0;
-   d_coarsen_items = (const xfer::CoarsenClasses::Data **)NULL;
+   d_coarsen_items = (const CoarsenClasses::Data **)NULL;
 
    /*
     * Compute ratio between fine and coarse levels and then check for
@@ -208,7 +208,7 @@ CoarsenSchedule::~CoarsenSchedule()
  */
 
 void CoarsenSchedule::reset(
-   const tbox::Pointer<xfer::CoarsenClasses> coarsen_classes)
+   const boost::shared_ptr<CoarsenClasses> coarsen_classes)
 {
    TBOX_ASSERT(coarsen_classes);
 
@@ -233,7 +233,7 @@ void CoarsenSchedule::reset(
  * ************************************************************************
  */
 
-const tbox::Pointer<xfer::CoarsenClasses>&
+const boost::shared_ptr<CoarsenClasses>&
 CoarsenSchedule::getEquivalenceClasses() const
 {
    return d_coarsen_classes;
@@ -342,7 +342,7 @@ void CoarsenSchedule::generateTemporaryLevel()
          *d_crse_level->getBoxLevel(),
          min_gcw);
 
-   d_temp_crse_level = new hier::PatchLevel(dim);
+   d_temp_crse_level.reset(new hier::PatchLevel(dim));
    d_temp_crse_level->setCoarsenedPatchLevel(d_fine_level,
       d_ratio_between_levels);
    d_temp_crse_level->setLevelNumber(d_crse_level->getLevelNumber());
@@ -402,14 +402,14 @@ void CoarsenSchedule::setupRefineAlgorithm()
       t_coarse_data_fill->barrierAndStart();
 
       d_precoarsen_refine_algorithm.reset();
-      d_precoarsen_refine_algorithm = new RefineAlgorithm(dim);
+      d_precoarsen_refine_algorithm.reset(new RefineAlgorithm(dim));
 
       for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
          const int src_id = d_coarsen_items[ici]->d_src;
          d_precoarsen_refine_algorithm->registerRefine(src_id,
             src_id,
             src_id,
-            tbox::Pointer<hier::RefineOperator>(NULL));
+            boost::shared_ptr<hier::RefineOperator>((hier::RefineOperator*)NULL));
       }
 
       t_coarse_data_fill->stop();
@@ -448,7 +448,7 @@ void CoarsenSchedule::generateSchedule()
       t_coarse_data_fill->stop();
    }
 
-   d_schedule = new tbox::Schedule();
+   d_schedule.reset(new tbox::Schedule());
    d_schedule->setTimerPrefix("xfer::CoarsenSchedule");
 
    if (s_schedule_generation_method == "ORIG_NSQUARED") {
@@ -721,9 +721,9 @@ hier::IntVector CoarsenSchedule::getMaxGhostsToGrow() const
  */
 
 void CoarsenSchedule::constructScheduleTransactions(
-   tbox::Pointer<hier::PatchLevel> dst_level,
+   boost::shared_ptr<hier::PatchLevel> dst_level,
    const hier::Box& dst_mapped_box,
-   tbox::Pointer<hier::PatchLevel> src_level,
+   boost::shared_ptr<hier::PatchLevel> src_level,
    const hier::Box& src_mapped_box)
 {
    TBOX_ASSERT(dst_level);
@@ -740,9 +740,9 @@ void CoarsenSchedule::constructScheduleTransactions(
    const hier::IntVector& constant_zero_intvector(hier::IntVector::getZero(dim));
    const hier::IntVector& constant_one_intvector(hier::IntVector::getOne(dim));
 
-   tbox::Pointer<hier::PatchDescriptor> dst_patch_descriptor =
+   boost::shared_ptr<hier::PatchDescriptor> dst_patch_descriptor =
       dst_level->getPatchDescriptor();
-   tbox::Pointer<hier::PatchDescriptor> src_patch_descriptor =
+   boost::shared_ptr<hier::PatchDescriptor> src_patch_descriptor =
       src_level->getPatchDescriptor();
 
    const hier::Box& dst_box = dst_mapped_box;
@@ -801,7 +801,7 @@ void CoarsenSchedule::constructScheduleTransactions(
       const hier::BlockId& dst_block_id = dst_mapped_box.getBlockId();
       const hier::BlockId& src_block_id = src_mapped_box.getBlockId();
 
-      tbox::Pointer<hier::GridGeometry> grid_geometry(
+      boost::shared_ptr<hier::GridGeometry> grid_geometry(
          d_crse_level->getGridGeometry());
 
       hier::Transformation::RotationIdentifier rotation =
@@ -819,7 +819,7 @@ void CoarsenSchedule::constructScheduleTransactions(
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (grid_geometry->areSingularityNeighbors(dst_block_id, src_block_id)) {
          for (int nc = 0; nc < num_equiv_classes; nc++) {
-            const xfer::CoarsenClasses::Data& rep_item =
+            const CoarsenClasses::Data& rep_item =
                d_coarsen_classes->getClassRepresentative(nc);
 
             TBOX_ASSERT(rep_item.d_var_fill_pattern->getStencilWidth() ==
@@ -831,20 +831,20 @@ void CoarsenSchedule::constructScheduleTransactions(
    }
 
    const int num_coarsen_items = d_coarsen_classes->getNumberOfCoarsenItems();
-   tbox::Array<tbox::Pointer<tbox::Transaction> >
+   tbox::Array<boost::shared_ptr<tbox::Transaction> >
    transactions(num_coarsen_items);
 
    for (int nc = 0; nc < num_equiv_classes; nc++) {
 
-      const xfer::CoarsenClasses::Data& rep_item =
+      const CoarsenClasses::Data& rep_item =
          d_coarsen_classes->getClassRepresentative(nc);
 
       const int rep_item_dst_id = rep_item.d_dst;
       const int rep_item_src_id = rep_item.d_src;
 
-      tbox::Pointer<hier::PatchDataFactory> src_pdf =
+      boost::shared_ptr<hier::PatchDataFactory> src_pdf =
          src_patch_descriptor->getPatchDataFactory(rep_item_src_id);
-      tbox::Pointer<hier::PatchDataFactory> dst_pdf =
+      boost::shared_ptr<hier::PatchDataFactory> dst_pdf =
          dst_patch_descriptor->getPatchDataFactory(rep_item_dst_id);
 
       const hier::IntVector& dst_gcw(dst_pdf->getGhostCellWidth());
@@ -871,7 +871,7 @@ void CoarsenSchedule::constructScheduleTransactions(
 
       src_mask += test_mask;
 
-      tbox::Pointer<hier::BoxOverlap> overlap(
+      boost::shared_ptr<hier::BoxOverlap> overlap(
          rep_item.d_var_fill_pattern->calculateOverlap(
             *dst_pdf->getBoxGeometry(unshifted_dst_box),
             *src_pdf->getBoxGeometry(unshifted_src_box),
@@ -925,15 +925,15 @@ void CoarsenSchedule::constructScheduleTransactions(
  */
 
 void CoarsenSchedule::coarsenSourceData(
-   xfer::CoarsenPatchStrategy* patch_strategy) const
+   CoarsenPatchStrategy* patch_strategy) const
 {
    /*
     * Loop over all local patches (fine and temp have the same mapping)
     */
 
    for (hier::PatchLevel::Iterator p(d_fine_level); p; p++) {
-      tbox::Pointer<hier::Patch> fine_patch = *p;
-      tbox::Pointer<hier::Patch> temp_patch =
+      boost::shared_ptr<hier::Patch> fine_patch = *p;
+      boost::shared_ptr<hier::Patch> temp_patch =
          d_temp_crse_level->getPatch(fine_patch->getGlobalId());
 
       const hier::Box& box = temp_patch->getBox();
@@ -948,7 +948,7 @@ void CoarsenSchedule::coarsenSourceData(
       }
 
       for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
-         const xfer::CoarsenClasses::Data * const crs_item =
+         const CoarsenClasses::Data * const crs_item =
             d_coarsen_items[ici];
          if (crs_item->d_opcoarsen) {
             const int source_id = crs_item->d_src;
@@ -976,7 +976,7 @@ void CoarsenSchedule::coarsenSourceData(
  */
 
 void CoarsenSchedule::setCoarsenItems(
-   const tbox::Pointer<xfer::CoarsenClasses> coarsen_classes)
+   const boost::shared_ptr<CoarsenClasses> coarsen_classes)
 {
 
    clearCoarsenItems();
@@ -1001,7 +1001,7 @@ void CoarsenSchedule::setCoarsenItems(
     */
 
    d_coarsen_items =
-      new const xfer::CoarsenClasses::Data *[d_number_coarsen_items];
+      new const CoarsenClasses::Data *[d_number_coarsen_items];
 
    int ircount = 0;
    for (unsigned int nc = 0; nc < d_number_coarsen_items; nc++) {
@@ -1033,7 +1033,8 @@ void CoarsenSchedule::initialCheckCoarsenClassItems() const
 {
    const tbox::Dimension& dim(d_crse_level->getDim());
 
-   tbox::Pointer<hier::PatchDescriptor> pd = d_crse_level->getPatchDescriptor();
+   boost::shared_ptr<hier::PatchDescriptor> pd =
+      d_crse_level->getPatchDescriptor();
 
    hier::IntVector user_gcw(dim, 0);
    if (d_coarsen_patch_strategy) {
@@ -1042,7 +1043,7 @@ void CoarsenSchedule::initialCheckCoarsenClassItems() const
 
    for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
 
-      const xfer::CoarsenClasses::Data * const crs_item = d_coarsen_items[ici];
+      const CoarsenClasses::Data * const crs_item = d_coarsen_items[ici];
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (d_coarsen_classes->itemIsValid(*crs_item, pd)) {
@@ -1051,9 +1052,9 @@ void CoarsenSchedule::initialCheckCoarsenClassItems() const
       const int dst_id = crs_item->d_dst;
       const int src_id = crs_item->d_src;
 
-      tbox::Pointer<hier::PatchDataFactory> dfact =
+      boost::shared_ptr<hier::PatchDataFactory> dfact =
          pd->getPatchDataFactory(dst_id);
-      tbox::Pointer<hier::PatchDataFactory> sfact =
+      boost::shared_ptr<hier::PatchDataFactory> sfact =
          pd->getPatchDataFactory(src_id);
 
       const hier::IntVector& dst_gcw(dfact->getGhostCellWidth());
@@ -1113,10 +1114,10 @@ void CoarsenSchedule::clearCoarsenItems()
 {
    if (d_coarsen_items) {
       for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
-         d_coarsen_items[ici] = (xfer::CoarsenClasses::Data *)NULL;
+         d_coarsen_items[ici] = (CoarsenClasses::Data *)NULL;
       }
       delete[] d_coarsen_items;
-      d_coarsen_items = (const xfer::CoarsenClasses::Data **)NULL;
+      d_coarsen_items = (const CoarsenClasses::Data **)NULL;
       d_number_coarsen_items = 0;
    }
 }

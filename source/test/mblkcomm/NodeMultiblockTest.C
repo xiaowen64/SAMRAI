@@ -22,7 +22,7 @@ using namespace SAMRAI;
 NodeMultiblockTest::NodeMultiblockTest(
    const string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> main_input_db,
+   boost::shared_ptr<tbox::Database> main_input_db,
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
@@ -50,12 +50,13 @@ NodeMultiblockTest::NodeMultiblockTest(
    sprintf(geom_name, "BlockGridGeometry");
 
    if (main_input_db->keyExists(geom_name)) {
-      getGridGeometry() = new hier::GridGeometry(
+      getGridGeometry().reset(
+         new hier::GridGeometry(
             dim,
             geom_name,
-            tbox::Pointer<hier::TransferOperatorRegistry>(
+            boost::shared_ptr<hier::TransferOperatorRegistry>(
                new geom::SAMRAITransferOperatorRegistry(dim)),
-            main_input_db->getDatabase(geom_name));
+            main_input_db->getDatabase(geom_name)));
 
    } else {
       TBOX_ERROR("NodeMultiblockTest: could not find entry `"
@@ -70,7 +71,7 @@ NodeMultiblockTest::~NodeMultiblockTest()
 }
 
 void NodeMultiblockTest::readTestInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -94,10 +95,10 @@ void NodeMultiblockTest::registerVariables(
    d_variables.resizeArray(nvars);
 
    for (int i = 0; i < nvars; i++) {
-      d_variables[i] =
+      d_variables[i].reset(
          new pdat::NodeVariable<double>(d_dim,
                                         d_variable_src_name[i],
-                                        d_variable_depth[i]);
+                                        d_variable_depth[i]));
 
       commtest->registerVariable(d_variables[i],
          d_variables[i],
@@ -112,7 +113,7 @@ void NodeMultiblockTest::registerVariables(
 
 void NodeMultiblockTest::initializeDataOnPatch(
    hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    const hier::BlockId& block_id,
    char src_or_dst)
@@ -126,9 +127,9 @@ void NodeMultiblockTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::NodeData<double> > node_data(
+         boost::shared_ptr<pdat::NodeData<double> > node_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          hier::Box dbox = node_data->getGhostBox();
 
@@ -140,7 +141,7 @@ void NodeMultiblockTest::initializeDataOnPatch(
 
 void NodeMultiblockTest::tagCellsToRefine(
    hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    int tag_index)
 {
@@ -160,7 +161,7 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
 {
    (void)time;
 
-   tbox::Pointer<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
+   boost::shared_ptr<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
 
    const tbox::Array<hier::BoundaryBox> node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -182,9 +183,9 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
-      tbox::Pointer<pdat::NodeData<double> > node_data(
+      boost::shared_ptr<pdat::NodeData<double> > node_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       /*
        * Set node boundary data.
@@ -301,7 +302,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
    const hier::Connector& dst_to_encon,
    const hier::Box& fill_box,
    const hier::BoundaryBox& bbox,
-   const tbox::Pointer<hier::GridGeometry>& grid_geometry)
+   const boost::shared_ptr<hier::GridGeometry>& grid_geometry)
 {
    const tbox::Dimension& dim = fill_box.getDim();
 
@@ -313,9 +314,9 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
-      tbox::Pointer<pdat::NodeData<double> > node_data(
+      boost::shared_ptr<pdat::NodeData<double> > node_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       hier::Box sing_fill_box(node_data->getGhostBox() * fill_box);
 
@@ -356,7 +357,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                  ei != dst_to_encon.end(ni); ++ei) {
 
                const hier::BlockId& encon_blk_id = ei->getBlockId();
-               tbox::Pointer<hier::Patch> encon_patch(
+               boost::shared_ptr<hier::Patch> encon_patch(
                   encon_level.getPatch(ei->getId()));
 
                hier::Transformation::RotationIdentifier rotation =
@@ -397,9 +398,9 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                                                   patch_blk_id,
                                                   encon_blk_id);
 
-                  tbox::Pointer<pdat::NodeData<double> > sing_data(
+                  boost::shared_ptr<pdat::NodeData<double> > sing_data(
                      encon_patch->getPatchData(d_variables[i], getDataContext()),
-                     tbox::__dynamic_cast_tag());
+                     boost::detail::dynamic_cast_tag());
 
                   for (pdat::NodeIterator ci(sing_fill_box); ci; ci++) {
                      bool use_index = true;
@@ -481,7 +482,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
  */
 bool NodeMultiblockTest::verifyResults(
    const hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int level_number,
    const hier::BlockId& block_id)
 {
@@ -497,7 +498,7 @@ bool NodeMultiblockTest::verifyResults(
    }
    hier::Box pbox = patch.getBox();
 
-   tbox::Pointer<pdat::NodeData<double> > solution(
+   boost::shared_ptr<pdat::NodeData<double> > solution(
       new pdat::NodeData<double>(pbox, 1, tgcw));
 
    hier::Box tbox(pbox);
@@ -519,9 +520,9 @@ bool NodeMultiblockTest::verifyResults(
 
       double correct = (double)block_id.getBlockValue();
 
-      tbox::Pointer<pdat::NodeData<double> > node_data(
+      boost::shared_ptr<pdat::NodeData<double> > node_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       int depth = node_data->getDepth();
 
       hier::Box interior_box(pbox);
@@ -543,7 +544,7 @@ bool NodeMultiblockTest::verifyResults(
          }
       }
 
-      tbox::Pointer<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
+      boost::shared_ptr<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
 
       hier::Box gbox = node_data->getGhostBox();
 

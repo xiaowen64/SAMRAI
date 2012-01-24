@@ -70,9 +70,9 @@ void OuteredgeSumTransaction::unsetRefineItems()
  */
 
 OuteredgeSumTransaction::OuteredgeSumTransaction(
-   tbox::Pointer<hier::PatchLevel> dst_level,
-   tbox::Pointer<hier::PatchLevel> src_level,
-   tbox::Pointer<hier::BoxOverlap> overlap,
+   boost::shared_ptr<hier::PatchLevel> dst_level,
+   boost::shared_ptr<hier::PatchLevel> src_level,
+   boost::shared_ptr<hier::BoxOverlap> overlap,
    const hier::Box& dst_node,
    const hier::Box& src_node,
    int refine_item_id):
@@ -176,10 +176,10 @@ void
 OuteredgeSumTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
-   tbox::Pointer<pdat::OuteredgeData<double> > oedge_dst_data(
+   boost::shared_ptr<pdat::OuteredgeData<double> > oedge_dst_data(
       d_dst_level->getPatch(d_dst_node.getGlobalId())->
       getPatchData(s_refine_items[d_refine_item_id]->d_scratch),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    TBOX_ASSERT(oedge_dst_data);
 
    oedge_dst_data->unpackStreamAndSum(stream, *d_overlap);
@@ -188,16 +188,16 @@ OuteredgeSumTransaction::unpackStream(
 void
 OuteredgeSumTransaction::copyLocalData()
 {
-   tbox::Pointer<pdat::OuteredgeData<double> > oedge_dst_data(
+   boost::shared_ptr<pdat::OuteredgeData<double> > oedge_dst_data(
       d_dst_level->getPatch(d_dst_node.getGlobalId())->
       getPatchData(s_refine_items[d_refine_item_id]->d_scratch),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    TBOX_ASSERT(oedge_dst_data);
 
-   tbox::Pointer<pdat::OuteredgeData<double> > oedge_src_data(
+   boost::shared_ptr<pdat::OuteredgeData<double> > oedge_src_data(
       d_src_level->getPatch(d_src_node.getGlobalId())->
       getPatchData(s_refine_items[d_refine_item_id]->d_src),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    TBOX_ASSERT(oedge_src_data);
 
    oedge_dst_data->sum(*oedge_src_data, *d_overlap);

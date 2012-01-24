@@ -11,16 +11,16 @@
 #ifndef included_math_PatchEdgeDataOpsReal
 #define included_math_PatchEdgeDataOpsReal
 
+#include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/pdat/EdgeData.h"
 #include "SAMRAI/math/PatchEdgeDataBasicOps.h"
 #include "SAMRAI/math/PatchEdgeDataMiscellaneousOpsReal.h"
 #include "SAMRAI/math/PatchEdgeDataNormOpsReal.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/Patch.h"
-
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -69,8 +69,8 @@ public:
     */
    void
    copyData(
-      tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src,
+      boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
       const hier::Box& box) const;
 
    /**
@@ -79,7 +79,7 @@ public:
     */
    void
    swapData(
-      tbox::Pointer<hier::Patch> patch,
+      boost::shared_ptr<hier::Patch> patch,
       const int data1_id,
       const int data2_id) const;
 
@@ -88,7 +88,7 @@ public:
     */
    void
    printData(
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
       const hier::Box& box,
       std::ostream& s = tbox::plog) const;
 
@@ -97,7 +97,7 @@ public:
     */
    void
    setToScalar(
-      tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
+      boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
       const TYPE& alpha,
       const hier::Box& box) const;
 

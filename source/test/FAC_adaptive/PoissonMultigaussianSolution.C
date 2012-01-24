@@ -153,17 +153,12 @@ double PoissonMultigaussianSolution::sourceFcn(
 
 void PoissonMultigaussianSolution::setGridData(
    hier::Patch& patch,
-   pdat::SideData<double>& diffcoef_data,
-   pdat::CellData<double>& ccoef_data,
    pdat::CellData<double>& exact_data,
    pdat::CellData<double>& source_data)
 {
-   (void)diffcoef_data;
-   (void)ccoef_data;
-
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    const double* h = patch_geom->getDx();
    const double* xl = patch_geom->getXLower();
@@ -212,10 +207,10 @@ std::ostream& operator << (
 }
 
 void PoissonMultigaussianSolution::setBcCoefs(
-   tbox::Pointer<pdat::ArrayData<double> >& acoef_data,
-   tbox::Pointer<pdat::ArrayData<double> >& bcoef_data,
-   tbox::Pointer<pdat::ArrayData<double> >& gcoef_data,
-   const tbox::Pointer<hier::Variable>& variable,
+   boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+   boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+   boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+   const boost::shared_ptr<hier::Variable>& variable,
    const hier::Patch& patch,
    const hier::BoundaryBox& bdry_box,
    const double fill_time) const
@@ -227,9 +222,9 @@ void PoissonMultigaussianSolution::setBcCoefs(
       return;
    }
 
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    /*
     * Set to an inhomogeneous Dirichlet boundary condition.
     */

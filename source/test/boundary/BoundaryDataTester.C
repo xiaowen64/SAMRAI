@@ -43,8 +43,8 @@
 BoundaryDataTester::BoundaryDataTester(
    const string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> input_db,
-   tbox::Pointer<geom::CartesianGridGeometry> grid_geom):
+   boost::shared_ptr<tbox::Database> input_db,
+   boost::shared_ptr<geom::CartesianGridGeometry> grid_geom):
    xfer::RefinePatchStrategy(dim),
    d_dim(dim)
 {
@@ -93,9 +93,9 @@ void BoundaryDataTester::setPhysicalBoundaryConditions(
 
    for (int iv = 0; iv < d_variables.getSize(); iv++) {
 
-      tbox::Pointer<pdat::CellData<double> > cvdata(
+      boost::shared_ptr<pdat::CellData<double> > cvdata(
          patch.getPatchData(d_variables[iv], d_variable_context),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(cvdata);
 #endif
@@ -177,13 +177,13 @@ void BoundaryDataTester::setPhysicalBoundaryConditions(
  */
 
 void BoundaryDataTester::initializeDataOnPatchInteriors(
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number == 0);
 
-   tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(
+   boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
          level_number);
    TBOX_ASSERT(level);
 
@@ -193,12 +193,12 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
     * Undefine the data so it is initialized to some value.
     */
    for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-      tbox::Pointer<hier::Patch> patch = *ip;
+      boost::shared_ptr<hier::Patch> patch = *ip;
 
       for (int iv = 0; iv < d_variables.getSize(); iv++) {
-         tbox::Pointer<pdat::CellData<double> > cvdata(
+         boost::shared_ptr<pdat::CellData<double> > cvdata(
             patch->getPatchData(d_variables[iv], d_variable_context),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          TBOX_ASSERT(cvdata);
          cvdata->getArrayData().undefineData();
@@ -207,12 +207,12 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
    }
 
    for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-      tbox::Pointer<hier::Patch> patch = *ip;
+      boost::shared_ptr<hier::Patch> patch = *ip;
 
       for (int iv = 0; iv < d_variables.getSize(); iv++) {
-         tbox::Pointer<pdat::CellData<double> > cvdata(
+         boost::shared_ptr<pdat::CellData<double> > cvdata(
             patch->getPatchData(d_variables[iv], d_variable_context),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          TBOX_ASSERT(cvdata);
          for (int id = 0; id < cvdata->getDepth(); id++) {
@@ -242,7 +242,7 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
  */
 
 int BoundaryDataTester::runBoundaryTest(
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -262,10 +262,10 @@ int BoundaryDataTester::runBoundaryTest(
             d_variable_context);
 
       boundary_fill.registerRefine(datid, datid, datid,
-         tbox::Pointer<SAMRAI::hier::RefineOperator>(NULL));
+         boost::shared_ptr<hier::RefineOperator>());
    }
 
-   tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(
+   boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
          level_number);
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level);
@@ -286,7 +286,7 @@ int BoundaryDataTester::runBoundaryTest(
  */
 
 void BoundaryDataTester::readVariableInputAndMakeVariables(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
    TBOX_ASSERT(db);
 
@@ -295,7 +295,7 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
 
    int var_cnt = 0;
    for (int i = 0; i < nkeys; i++) {
-      tbox::Pointer<tbox::Database> var_db = db->getDatabase(var_keys[i]);
+      boost::shared_ptr<tbox::Database> var_db = db->getDatabase(var_keys[i]);
       if (var_db->keyExists("name")) {
          var_cnt++;
       }
@@ -308,7 +308,7 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
 
    for (int i = 0; i < nkeys; i++) {
 
-      tbox::Pointer<tbox::Database> var_db = db->getDatabase(var_keys[i]);
+      boost::shared_ptr<tbox::Database> var_db = db->getDatabase(var_keys[i]);
 
       if (var_keys[i] != "Boundary_data" && var_db->keyExists("name")) {
 
@@ -352,9 +352,9 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
    d_variables.resizeArray(d_variable_name.getSize());
 
    for (int iv = 0; iv < d_variable_name.getSize(); iv++) {
-      d_variables[iv] =
+      d_variables[iv].reset(
          new pdat::CellVariable<double>(d_dim, d_variable_name[iv],
-                                        d_variable_depth[iv]);
+                                        d_variable_depth[iv]));
 
       int datid =
          variable_db->registerVariableAndContext(d_variables[iv],
@@ -463,7 +463,7 @@ void BoundaryDataTester::setBoundaryDataDefaults()
  */
 
 void BoundaryDataTester::readDirichletBoundaryDataEntry(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    string& db_name,
    int bdry_location_index)
 {
@@ -471,7 +471,7 @@ void BoundaryDataTester::readDirichletBoundaryDataEntry(
 }
 
 void BoundaryDataTester::readNeumannBoundaryDataEntry(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    string& db_name,
    int bdry_location_index)
 {
@@ -479,7 +479,7 @@ void BoundaryDataTester::readNeumannBoundaryDataEntry(
 }
 
 void BoundaryDataTester::readBoundaryDataStateEntry(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    string& db_name,
    int bdry_location_index)
 {
@@ -528,7 +528,7 @@ void BoundaryDataTester::readBoundaryDataStateEntry(
 }
 
 void BoundaryDataTester::readBoundaryDataInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -546,7 +546,7 @@ void BoundaryDataTester::readBoundaryDataInput(
 
       if (db->keyExists("Boundary_data")) {
 
-         tbox::Pointer<tbox::Database> bdry_db = db->getDatabase(
+         boost::shared_ptr<tbox::Database> bdry_db = db->getDatabase(
                "Boundary_data");
 
          if (d_dim == tbox::Dimension(2)) {
@@ -699,9 +699,9 @@ void BoundaryDataTester::checkBoundaryData(
    }
 #endif
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const tbox::Array<hier::BoundaryBox> bdry_boxes =
       pgeom->getCodimensionBoundaries(btype);
 
@@ -713,9 +713,9 @@ void BoundaryDataTester::checkBoundaryData(
       int bloc = bbox.getLocationIndex();
 
       for (int iv = 0; iv < d_variables.getSize(); iv++) {
-         tbox::Pointer<pdat::CellData<double> > cvdata(
+         boost::shared_ptr<pdat::CellData<double> > cvdata(
             patch.getPatchData(d_variables[iv], d_variable_context),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(cvdata);
 #endif

@@ -27,7 +27,7 @@ namespace math {
 
 template<class TYPE>
 HierarchyCellDataOpsReal<TYPE>::HierarchyCellDataOpsReal(
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int coarsest_level,
    const int finest_level):
    HierarchyDataOpsReal<TYPE>()
@@ -63,7 +63,7 @@ HierarchyCellDataOpsReal<TYPE>::~HierarchyCellDataOpsReal()
 
 template<class TYPE>
 void HierarchyCellDataOpsReal<TYPE>::setPatchHierarchy(
-   tbox::Pointer<hier::PatchHierarchy> hierarchy)
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy)
 {
    TBOX_ASSERT(hierarchy);
 
@@ -87,7 +87,7 @@ void HierarchyCellDataOpsReal<TYPE>::resetLevels(
 }
 
 template<class TYPE>
-const tbox::Pointer<hier::PatchHierarchy>
+const boost::shared_ptr<hier::PatchHierarchy>
 HierarchyCellDataOpsReal<TYPE>::getPatchHierarchy() const
 {
    return d_hierarchy;
@@ -140,16 +140,17 @@ void HierarchyCellDataOpsReal<TYPE>::copyData(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst(
+         boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -166,13 +167,13 @@ void HierarchyCellDataOpsReal<TYPE>::swapData(
    const int data2_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   tbox::Pointer<pdat::CellDataFactory<TYPE> > d1fact(
+   boost::shared_ptr<pdat::CellDataFactory<TYPE> > d1fact(
       d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    TBOX_ASSERT(d1fact);
-   tbox::Pointer<pdat::CellDataFactory<TYPE> > d2fact(
+   boost::shared_ptr<pdat::CellDataFactory<TYPE> > d2fact(
       d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
    TBOX_ASSERT(d1fact->getGhostCellWidth() == d2fact->getGhostCellWidth());
@@ -185,9 +186,10 @@ void HierarchyCellDataOpsReal<TYPE>::swapData(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
          d_patch_ops.swapData(p, data1_id, data2_id);
       }
@@ -214,13 +216,14 @@ void HierarchyCellDataOpsReal<TYPE>::printData(
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       s << "Level number = " << ln << std::endl;
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > d(
+         boost::shared_ptr<pdat::CellData<TYPE> > d(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -245,13 +248,14 @@ void HierarchyCellDataOpsReal<TYPE>::setToScalar(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > d(
+         boost::shared_ptr<pdat::CellData<TYPE> > d(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -285,16 +289,17 @@ void HierarchyCellDataOpsReal<TYPE>::scale(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst(
+         boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -320,16 +325,17 @@ void HierarchyCellDataOpsReal<TYPE>::addScalar(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst(
+         boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -355,19 +361,20 @@ void HierarchyCellDataOpsReal<TYPE>::add(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst(
+         boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -393,19 +400,20 @@ void HierarchyCellDataOpsReal<TYPE>::subtract(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst(
+         boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -431,19 +439,20 @@ void HierarchyCellDataOpsReal<TYPE>::multiply(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst(
+         boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -469,19 +478,20 @@ void HierarchyCellDataOpsReal<TYPE>::divide(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst(
+         boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -506,16 +516,17 @@ void HierarchyCellDataOpsReal<TYPE>::reciprocal(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst(
+         boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -543,19 +554,20 @@ void HierarchyCellDataOpsReal<TYPE>::linearSum(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst(
+         boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -582,19 +594,20 @@ void HierarchyCellDataOpsReal<TYPE>::axpy(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst(
+         boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -621,19 +634,20 @@ void HierarchyCellDataOpsReal<TYPE>::axmy(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst(
+         boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -658,16 +672,17 @@ void HierarchyCellDataOpsReal<TYPE>::abs(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst(
+         boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -693,13 +708,14 @@ void HierarchyCellDataOpsReal<TYPE>::setRandomValues(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > data(
+         boost::shared_ptr<pdat::CellData<TYPE> > data(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(data);
 #endif
@@ -734,13 +750,14 @@ int HierarchyCellDataOpsReal<TYPE>::numberOfEntries(
    int entries = 0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > d(
+         boost::shared_ptr<pdat::CellData<TYPE> > d(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -776,16 +793,17 @@ double HierarchyCellDataOpsReal<TYPE>::sumControlVolumes(
    double sum = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > data(
+         boost::shared_ptr<pdat::CellData<TYPE> > data(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<double> > cv(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<double> > cv(
             p->getPatchData(vol_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(cv);
 #endif
@@ -819,14 +837,15 @@ double HierarchyCellDataOpsReal<TYPE>::L1Norm(
    double norm = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > data(
+         boost::shared_ptr<pdat::CellData<TYPE> > data(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<hier::PatchData> pd;
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
@@ -837,9 +856,9 @@ double HierarchyCellDataOpsReal<TYPE>::L1Norm(
             pd = p->getPatchData(vol_id);
          }
 
-         tbox::Pointer<pdat::CellData<double> > cv(
+         boost::shared_ptr<pdat::CellData<double> > cv(
             pd,
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          norm += d_patch_ops.L1Norm(data, box, cv);
       }
    }
@@ -885,17 +904,18 @@ double HierarchyCellDataOpsReal<TYPE>::weightedL2Norm(
    double norm_squared = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > data(
+         boost::shared_ptr<pdat::CellData<TYPE> > data(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > weight(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > weight(
             p->getPatchData(wgt_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<hier::PatchData> pd;
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
@@ -906,9 +926,9 @@ double HierarchyCellDataOpsReal<TYPE>::weightedL2Norm(
             pd = p->getPatchData(vol_id);
          }
 
-         tbox::Pointer<pdat::CellData<double> > cv(
+         boost::shared_ptr<pdat::CellData<double> > cv(
             pd,
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          double pnorm = d_patch_ops.weightedL2Norm(data, weight, box, cv);
 
          norm_squared += pnorm * pnorm;
@@ -969,15 +989,15 @@ double HierarchyCellDataOpsReal<TYPE>::maxNorm(
    double norm = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level =
+      boost::shared_ptr<hier::PatchLevel> level =
          d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > data(
+         boost::shared_ptr<pdat::CellData<TYPE> > data(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<hier::PatchData> pd;
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
@@ -988,9 +1008,9 @@ double HierarchyCellDataOpsReal<TYPE>::maxNorm(
             pd = p->getPatchData(vol_id);
          }
 
-         tbox::Pointer<pdat::CellData<double> > cv(
+         boost::shared_ptr<pdat::CellData<double> > cv(
             pd,
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          norm = tbox::MathUtilities<double>::Max(norm,
                d_patch_ops.maxNorm(data, box, cv));
       }
@@ -1024,17 +1044,18 @@ TYPE HierarchyCellDataOpsReal<TYPE>::dot(
    TYPE dprod = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > data1(
+         boost::shared_ptr<pdat::CellData<TYPE> > data1(
             p->getPatchData(data1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > data2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > data2(
             p->getPatchData(data2_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<hier::PatchData> pd;
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
@@ -1045,9 +1066,9 @@ TYPE HierarchyCellDataOpsReal<TYPE>::dot(
             pd = p->getPatchData(vol_id);
          }
 
-         tbox::Pointer<pdat::CellData<double> > cv(
+         boost::shared_ptr<pdat::CellData<double> > cv(
             pd,
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          dprod += d_patch_ops.dot(data1, data2, box, cv);
       }
    }
@@ -1076,16 +1097,17 @@ TYPE HierarchyCellDataOpsReal<TYPE>::integral(
    TYPE local_integral = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > data(
+         boost::shared_ptr<pdat::CellData<TYPE> > data(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<double> > vol(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<double> > vol(
             p->getPatchData(vol_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(data);
@@ -1130,18 +1152,18 @@ int HierarchyCellDataOpsReal<TYPE>::computeConstrProdPos(
    int test = 1;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level =
+      boost::shared_ptr<hier::PatchLevel> level =
          d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > data1(
+         boost::shared_ptr<pdat::CellData<TYPE> > data1(
             p->getPatchData(data1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > data2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > data2(
             p->getPatchData(data2_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<hier::PatchData> pd;
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
@@ -1152,9 +1174,9 @@ int HierarchyCellDataOpsReal<TYPE>::computeConstrProdPos(
             pd = p->getPatchData(vol_id);
          }
 
-         tbox::Pointer<pdat::CellData<double> > cv(
+         boost::shared_ptr<pdat::CellData<double> > cv(
             pd,
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          test = tbox::MathUtilities<int>::Min(
                test,
                d_patch_ops.computeConstrProdPos(data1, data2, box, cv));
@@ -1183,17 +1205,18 @@ void HierarchyCellDataOpsReal<TYPE>::compareToScalar(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst(
+         boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<hier::PatchData> pd;
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
@@ -1204,9 +1227,9 @@ void HierarchyCellDataOpsReal<TYPE>::compareToScalar(
             pd = p->getPatchData(vol_id);
          }
 
-         tbox::Pointer<pdat::CellData<double> > cv(
+         boost::shared_ptr<pdat::CellData<double> > cv(
             pd,
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          d_patch_ops.compareToScalar(dst, src, alpha, box, cv);
       }
    }
@@ -1229,17 +1252,18 @@ int HierarchyCellDataOpsReal<TYPE>::testReciprocal(
    int test = 1;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > dst(
+         boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<hier::PatchData> pd;
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
@@ -1250,9 +1274,9 @@ int HierarchyCellDataOpsReal<TYPE>::testReciprocal(
             pd = p->getPatchData(vol_id);
          }
 
-         tbox::Pointer<pdat::CellData<double> > cv(
+         boost::shared_ptr<pdat::CellData<double> > cv(
             pd,
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          test = tbox::MathUtilities<int>::Min(
                test,
                d_patch_ops.testReciprocal(dst, src, box, cv));
@@ -1283,16 +1307,17 @@ TYPE HierarchyCellDataOpsReal<TYPE>::maxPointwiseDivide(
    TYPE max = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > numer(
+         boost::shared_ptr<pdat::CellData<TYPE> > numer(
             p->getPatchData(numer_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > denom(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > denom(
             p->getPatchData(denom_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          hier::Box box = p->getBox();
 
@@ -1326,16 +1351,17 @@ TYPE HierarchyCellDataOpsReal<TYPE>::minPointwiseDivide(
    TYPE min = tbox::MathUtilities<TYPE>::getMax();
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > numer(
+         boost::shared_ptr<pdat::CellData<TYPE> > numer(
             p->getPatchData(numer_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<TYPE> > denom(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<TYPE> > denom(
             p->getPatchData(denom_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          hier::Box box = p->getBox();
 
@@ -1368,13 +1394,14 @@ TYPE HierarchyCellDataOpsReal<TYPE>::min(
    TYPE minval = tbox::MathUtilities<TYPE>::getMax();
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > d(
+         boost::shared_ptr<pdat::CellData<TYPE> > d(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -1407,13 +1434,14 @@ TYPE HierarchyCellDataOpsReal<TYPE>::max(
    TYPE maxval = -tbox::MathUtilities<TYPE>::getMax();
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::CellData<TYPE> > d(
+         boost::shared_ptr<pdat::CellData<TYPE> > d(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif

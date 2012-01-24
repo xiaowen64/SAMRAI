@@ -15,10 +15,10 @@
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/CoarsenOperator.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -76,7 +76,7 @@ public:
       /*!
        * @brief Coarsening operator.
        */
-      tbox::Pointer<hier::CoarsenOperator> d_opcoarsen;
+      boost::shared_ptr<hier::CoarsenOperator> d_opcoarsen;
 
       /*!
        * @brief Index of equivalence class where this item belongs.  All
@@ -94,7 +94,7 @@ public:
        * @brief VariableFillPattern that can restrict the stencil of the data
        * coarsened by the CoarsenSchedule.
        */
-      tbox::Pointer<VariableFillPattern> d_var_fill_pattern;
+      boost::shared_ptr<VariableFillPattern> d_var_fill_pattern;
 
       /*!
        * @brief Constructor.
@@ -212,8 +212,8 @@ private:
    void
    insertEquivalenceClassItem(
       CoarsenClasses::Data& data,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL));
+      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL));
 
    /*!
     * @brief Check coarsen data item for validity.
@@ -237,8 +237,8 @@ private:
    bool
    itemIsValid(
       const CoarsenClasses::Data& data_item,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
+      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL)) const;
 
    /*!
     * @brief Compare CoarsenClasses object with another CoarsenClasses object;
@@ -263,9 +263,9 @@ private:
     */
    bool
    classesMatch(
-      tbox::Pointer<CoarsenClasses> test_classes,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
+      boost::shared_ptr<CoarsenClasses> test_classes,
+      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL)) const;
 
    /*!
     * @brief Compare CoarsenClasses::Data objects for equivalence;
@@ -299,8 +299,8 @@ private:
    itemsAreEquivalent(
       const CoarsenClasses::Data& data1,
       const CoarsenClasses::Data& data2,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
+      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL)) const;
 
    /*!
     * @brief Get the size that has been allocated for the array storing coarsen
@@ -373,7 +373,7 @@ private:
    patchDataMatch(
       int item_id1,
       int item_id2,
-      tbox::Pointer<hier::PatchDescriptor> pd) const;
+      boost::shared_ptr<hier::PatchDescriptor> pd) const;
 
    /*!
     * @brief Determine the equivalence class index of given
@@ -392,8 +392,8 @@ private:
    int
    getEquivalenceClassIndex(
       const CoarsenClasses::Data& data,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
+      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL)) const;
 
    /*!
     * The default length of the coarsen item array.

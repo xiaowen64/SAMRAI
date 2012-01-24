@@ -152,7 +152,7 @@ public:
     * exists in the database, then the old key record is deleted and the new
     * one is silently created in its place.
     */
-   virtual Pointer<Database>
+   virtual boost::shared_ptr<Database>
    putDatabase(
       const std::string& key);
 
@@ -161,7 +161,7 @@ public:
     * key does not exist in the database or it is not a database, then
     * an error message is printed and the program exits.
     */
-   virtual Pointer<Database>
+   virtual boost::shared_ptr<Database>
    getDatabase(
       const std::string& key);
 
@@ -912,7 +912,7 @@ private:
       int d_array_size;                                 // size of array data
       bool d_accessed;                                  // whether accessed
       bool d_from_default;                              // from default key
-      Pointer<Database> d_database;             // sub-database
+      boost::shared_ptr<Database> d_database;           // sub-database
       Array<bool> d_boolean;                    // boolean array value
       Array<DatabaseBox> d_box;                 // box array value
       Array<char> d_char;                       // char array value

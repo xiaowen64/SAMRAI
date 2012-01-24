@@ -72,7 +72,7 @@ MblkPatchBoundaryNodeSum::s_onode_dst_id_array =
 
 MblkPatchBoundaryNodeSum::MblkPatchBoundaryNodeSum(
    const std::string& object_name,
-   tbox::Pointer<hier::PatchHierarchy> hierarchy)
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy)
 {
    TBOX_ASSERT(!object_name.empty());
 
@@ -89,7 +89,7 @@ MblkPatchBoundaryNodeSum::MblkPatchBoundaryNodeSum(
    d_level_setup_called = false;
    d_hierarchy_setup_called = false;
 
-   d_sum_transaction_factory = new algs::OuternodeSumTransactionFactory();
+   d_sum_transaction_factory = new OuternodeSumTransactionFactory();
 
    s_instance_counter++;
 }
@@ -170,7 +170,7 @@ void MblkPatchBoundaryNodeSum::registerSum(
 
    hier::VariableDatabase* var_db = hier::VariableDatabase::getDatabase();
 
-   tbox::Pointer<pdat::NodeDataFactory<double> > node_factory =
+   boost::shared_ptr<pdat::NodeDataFactory<double> > node_factory =
       var_db->getPatchDescriptor()->getPatchDataFactory(node_data_id);
 
    if (!node_factory) {
@@ -297,7 +297,7 @@ void MblkPatchBoundaryNodeSum::registerSum(
  */
 
 void MblkPatchBoundaryNodeSum::setupSum(
-   tbox::Pointer<hier::PatchLevel> level)
+   boost::shared_ptr<hier::PatchLevel> level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level);
@@ -319,7 +319,7 @@ void MblkPatchBoundaryNodeSum::setupSum(
       d_single_level_sum_schedule.resizeArray(1);
 
       // Communication algorithm for summing outernode values on a level
-      tbox::Pointer<xfer::RefineAlgorithm> single_level_sum_algorithm =
+      boost::shared_ptr<xfer::RefineAlgorithm> single_level_sum_algorithm =
          new xfer::RefineAlgorithm();
 
       for (int i = 0; i < d_num_reg_sum; i++) {
@@ -404,7 +404,7 @@ void MblkPatchBoundaryNodeSum::computeSum(
  */
 
 void MblkPatchBoundaryNodeSum::doLevelSum(
-   tbox::Pointer<hier::PatchLevel> level) const
+   boost::shared_ptr<hier::PatchLevel> level) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level);
@@ -436,7 +436,7 @@ void MblkPatchBoundaryNodeSum::doLevelSum(
  */
 
 void MblkPatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
-   tbox::Pointer<hier::PatchLevel> level,
+   boost::shared_ptr<hier::PatchLevel> level,
    const tbox::Array<int>& node_data_id,
    const tbox::Array<int>& onode_data_id) const
 {
@@ -444,20 +444,20 @@ void MblkPatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
    TBOX_ASSERT(node_data_id.size() == onode_data_id.size());
 
    for (int bn = 0; bn < level->getNumberOfBlocks(); bn++) {
-      tbox::Pointer<hier::PatchLevel> patch_level =
+      boost::shared_ptr<hier::PatchLevel> patch_level =
          level->getPatchLevelForBlock(bn);
 
       if (patch_level) {
 
          for (hier::PatchLevel::Iterator ip(patch_level);
               ip; ip++) {
-            tbox::Pointer<hier::Patch> patch =
+            boost::shared_ptr<hier::Patch> patch =
                patch_level->getPatch(ip());
 
             for (int i = 0; i < node_data_id.size(); i++) {
-               tbox::Pointer<pdat::NodeData<double> > node_data =
+               boost::shared_ptr<pdat::NodeData<double> > node_data =
                   patch->getPatchData(node_data_id[i]);
-               tbox::Pointer<pdat::OuternodeData<double> > onode_data =
+               boost::shared_ptr<pdat::OuternodeData<double> > onode_data =
                   patch->getPatchData(onode_data_id[i]);
 
                onode_data->copy(*node_data);
@@ -468,7 +468,7 @@ void MblkPatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
 }
 
 void MblkPatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
-   tbox::Pointer<hier::PatchLevel> level,
+   boost::shared_ptr<hier::PatchLevel> level,
    const tbox::Array<int>& onode_data_id,
    const tbox::Array<int>& node_data_id) const
 {
@@ -478,20 +478,20 @@ void MblkPatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
 #endif
 
    for (int bn = 0; bn < level->getNumberOfBlocks(); bn++) {
-      tbox::Pointer<hier::PatchLevel> patch_level =
+      boost::shared_ptr<hier::PatchLevel> patch_level =
          level->getPatchLevelForBlock(bn);
 
       if (patch_level) {
 
          for (hier::PatchLevel::Iterator ip(patch_level);
               ip; ip++) {
-            tbox::Pointer<hier::Patch> patch =
+            boost::shared_ptr<hier::Patch> patch =
                patch_level->getPatch(ip());
 
             for (int i = 0; i < node_data_id.size(); i++) {
-               tbox::Pointer<pdat::OuternodeData<double> > onode_data =
+               boost::shared_ptr<pdat::OuternodeData<double> > onode_data =
                   patch->getPatchData(onode_data_id[i]);
-               tbox::Pointer<pdat::NodeData<double> > node_data =
+               boost::shared_ptr<pdat::NodeData<double> > node_data =
                   patch->getPatchData(node_data_id[i]);
 
                onode_data->copy2(*node_data);

@@ -63,10 +63,10 @@ void PatchEdgeDataMiscellaneousOpsReal<TYPE>::operator = (
 
 template<class TYPE>
 int PatchEdgeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data1,
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data2,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data1,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data2,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
@@ -101,11 +101,11 @@ int PatchEdgeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 
 template<class TYPE>
 void PatchEdgeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
-   tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& src,
+   boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);
@@ -134,10 +134,10 @@ void PatchEdgeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 
 template<class TYPE>
 int PatchEdgeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
-   tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& src,
+   boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);
@@ -172,8 +172,8 @@ int PatchEdgeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 
 template<class TYPE>
 TYPE PatchEdgeDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& numer,
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& denom,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& numer,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& denom,
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -194,8 +194,8 @@ TYPE PatchEdgeDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
 
 template<class TYPE>
 TYPE PatchEdgeDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& numer,
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& denom,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& numer,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& denom,
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS

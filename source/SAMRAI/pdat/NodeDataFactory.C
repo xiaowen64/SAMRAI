@@ -64,16 +64,16 @@ NodeDataFactory<TYPE>::~NodeDataFactory()
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchDataFactory>
+boost::shared_ptr<hier::PatchDataFactory>
 NodeDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return tbox::Pointer<hier::PatchDataFactory>(new NodeDataFactory<TYPE>(
-                                                   d_depth,
-                                                   ghosts,
-                                                   d_fine_boundary_represents_var));
+   return boost::shared_ptr<hier::PatchDataFactory>(
+      new NodeDataFactory<TYPE>(d_depth,
+                                ghosts,
+                                d_fine_boundary_represents_var));
 }
 
 /*
@@ -85,7 +85,7 @@ NodeDataFactory<TYPE>::cloneFactory(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchData>
+boost::shared_ptr<hier::PatchData>
 NodeDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
@@ -93,7 +93,7 @@ NodeDataFactory<TYPE>::allocate(
 
    hier::PatchData* patchdata =
       new NodeData<TYPE>(patch.getBox(), d_depth, this->d_ghosts);
-   return tbox::Pointer<hier::PatchData>(patchdata);
+   return boost::shared_ptr<hier::PatchData>(patchdata);
 }
 
 /*
@@ -105,14 +105,14 @@ NodeDataFactory<TYPE>::allocate(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::BoxGeometry>
+boost::shared_ptr<hier::BoxGeometry>
 NodeDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
    hier::BoxGeometry* boxgeometry = new NodeGeometry(box, this->d_ghosts);
-   return tbox::Pointer<hier::BoxGeometry>(boxgeometry);
+   return boost::shared_ptr<hier::BoxGeometry>(boxgeometry);
 }
 
 /*
@@ -147,7 +147,7 @@ size_t NodeDataFactory<TYPE>::getSizeOfMemory(
 
 template<class TYPE>
 bool NodeDataFactory<TYPE>::validCopyTo(
-   const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const
+   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
 
@@ -157,18 +157,18 @@ bool NodeDataFactory<TYPE>::validCopyTo(
     * Valid options are NodeData and OuternodeData.
     */
    if (!valid_copy) {
-      tbox::Pointer<NodeDataFactory<TYPE> > ndf(
+      boost::shared_ptr<NodeDataFactory<TYPE> > ndf(
          dst_pdf,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (ndf) {
          valid_copy = true;
       }
    }
 
    if (!valid_copy) {
-      tbox::Pointer<OuternodeDataFactory<TYPE> > ondf(
+      boost::shared_ptr<OuternodeDataFactory<TYPE> > ondf(
          dst_pdf,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (ondf) {
          valid_copy = true;
       }

@@ -91,7 +91,7 @@ public:
    SkeletonGridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      tbox::Pointer<tbox::Database> input_db,
+      boost::shared_ptr<tbox::Database> input_db,
       bool register_for_restart = true);
 
    /**
@@ -120,7 +120,7 @@ public:
     * Create and return a pointer to a refined version of this Cartesian grid
     * geometry object. This function is pure virtual in the hier_GridGeometry base class.
     */
-   tbox::Pointer<hier::GridGeometry>
+   boost::shared_ptr<hier::GridGeometry>
    makeRefinedGridGeometry(
       const std::string& fine_geom_name,
       const hier::IntVector& refine_ratio,
@@ -130,7 +130,7 @@ public:
     * Create and return a pointer to a coarsened version of this Cartesian grid
     * geometry object. This function is pure virtual in the hier_GridGeometry base class.
     */
-   tbox::Pointer<hier::GridGeometry>
+   boost::shared_ptr<hier::GridGeometry>
    makeCoarsenedGridGeometry(
       const std::string& coarse_geom_name,
       const hier::IntVector& coarsen_ratio,
@@ -162,7 +162,7 @@ public:
     */
    virtual void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
 private:
    /*
@@ -180,7 +180,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       bool is_from_restart);
 
    /*

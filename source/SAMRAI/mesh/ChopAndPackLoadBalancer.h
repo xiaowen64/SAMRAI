@@ -14,8 +14,9 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Timer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace mesh {
@@ -168,8 +169,8 @@ public:
    ChopAndPackLoadBalancer(
       const tbox::Dimension& dim,
       const std::string& name,
-      tbox::Pointer<tbox::Database> input_db =
-         tbox::Pointer<tbox::Database>(NULL));
+      boost::shared_ptr<tbox::Database> input_db =
+         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
 
    /*!
     * Construct load balancer object, including setting default object state
@@ -184,8 +185,8 @@ public:
     */
    explicit ChopAndPackLoadBalancer(
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database> input_db =
-         tbox::Pointer<tbox::Database>(NULL));
+      boost::shared_ptr<tbox::Database> input_db =
+         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
 
    /*!
     * The virtual destructor releases all internal storage.
@@ -356,7 +357,7 @@ public:
       hier::BoxLevel& balance_mapped_box_level,
       hier::Connector& balance_to_anchor,
       hier::Connector& anchor_to_balance,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const hier::Connector& unbalanced_to_attractor,
       const hier::Connector& attractor_to_unbalanced,
@@ -396,7 +397,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /*!
     * Given a list of boxes, representing the domain of a level in the AMR
@@ -448,7 +449,7 @@ private:
       hier::BoxContainer& out_boxes,
       hier::ProcessorMapping& mapping,
       const hier::BoxContainer& in_boxes,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number,
       const hier::BoxContainer& physical_domain,
       const hier::IntVector& ratio_to_hierarchy_level_zero,
@@ -480,7 +481,7 @@ private:
       hier::BoxContainer& out_boxes,
       tbox::Array<double>& out_workloads,
       const hier::BoxContainer& in_boxes,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
@@ -497,7 +498,7 @@ private:
       hier::BoxContainer& out_boxes,
       tbox::Array<double>& out_workloads,
       const hier::BoxContainer& in_boxes,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number,
       const hier::IntVector& ratio_to_coarsest_hierarchy_level,
       int wrk_indx,
@@ -613,12 +614,12 @@ private:
    /*
     * Performance timers.
     */
-   static tbox::Pointer<tbox::Timer> t_load_balance_boxes;
-   static tbox::Pointer<tbox::Timer> t_load_balance_boxes_remove_intersection;
-   static tbox::Pointer<tbox::Timer> t_bin_pack_boxes;
-   static tbox::Pointer<tbox::Timer> t_bin_pack_boxes_sort;
-   static tbox::Pointer<tbox::Timer> t_bin_pack_boxes_pack;
-   static tbox::Pointer<tbox::Timer> t_chop_boxes;
+   static boost::shared_ptr<tbox::Timer> t_load_balance_boxes;
+   static boost::shared_ptr<tbox::Timer> t_load_balance_boxes_remove_intersection;
+   static boost::shared_ptr<tbox::Timer> t_bin_pack_boxes;
+   static boost::shared_ptr<tbox::Timer> t_bin_pack_boxes_sort;
+   static boost::shared_ptr<tbox::Timer> t_bin_pack_boxes_pack;
+   static boost::shared_ptr<tbox::Timer> t_chop_boxes;
 
    /*
     * Static initialization and cleanup handler.

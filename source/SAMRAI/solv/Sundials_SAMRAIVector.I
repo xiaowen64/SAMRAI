@@ -14,7 +14,7 @@ namespace SAMRAI {
 namespace solv {
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<SAMRAIVectorReal<double> >
+boost::shared_ptr<SAMRAIVectorReal<double> >
 Sundials_SAMRAIVector::getSAMRAIVector()
 {
    return d_samrai_vector;

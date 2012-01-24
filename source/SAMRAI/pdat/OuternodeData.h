@@ -20,8 +20,8 @@
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -548,7 +548,7 @@ public:
     */
    virtual void
    getSpecializedFromDatabase(
-      tbox::Pointer<tbox::Database> database);
+      boost::shared_ptr<tbox::Database> database);
 
    /*!
     * @brief Write out the class version number and other data members to
@@ -558,7 +558,7 @@ public:
     */
    virtual void
    putSpecializedToDatabase(
-      tbox::Pointer<tbox::Database> database);
+      boost::shared_ptr<tbox::Database> database);
 
 private:
    /*

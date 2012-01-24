@@ -84,9 +84,9 @@ public:
     * the source old and new times using the time interpolation operator found in
     * the refine class item.
     *
-    * @param dst_level      tbox::Pointer to destination patch level.
-    * @param src_level      tbox::Pointer to source patch level.
-    * @param overlap        tbox::Pointer to overlap region between patches.
+    * @param dst_level      boost::shared_ptr to destination patch level.
+    * @param src_level      boost::shared_ptr to source patch level.
+    * @param overlap        boost::shared_ptr to overlap region between patches.
     * @param dst_patch      Integer index of destination patch in destination
     *                       patch level.
     * @param src_patch      Integer index of source patch in source patch level.
@@ -97,9 +97,9 @@ public:
     * arguments is null, or if any of the integer arguments are invalid (i.e., < 0);
     */
    RefineTimeTransaction(
-      tbox::Pointer<hier::PatchLevel>& dst_level,
-      tbox::Pointer<hier::PatchLevel>& src_level,
-      tbox::Pointer<hier::BoxOverlap> overlap,
+      boost::shared_ptr<hier::PatchLevel>& dst_level,
+      boost::shared_ptr<hier::PatchLevel>& src_level,
+      boost::shared_ptr<hier::BoxOverlap> overlap,
       const hier::Box& dst_mapped_box,
       const hier::Box& src_mapped_box,
       const hier::Box& box,
@@ -190,15 +190,15 @@ private:
 
    void
    timeInterpolate(
-      const tbox::Pointer<hier::PatchData>& pd_dst,
-      const tbox::Pointer<hier::PatchData>& pd_old,
-      const tbox::Pointer<hier::PatchData>& pd_new);
+      const boost::shared_ptr<hier::PatchData>& pd_dst,
+      const boost::shared_ptr<hier::PatchData>& pd_old,
+      const boost::shared_ptr<hier::PatchData>& pd_new);
 
-   tbox::Pointer<hier::Patch> d_dst_patch;
+   boost::shared_ptr<hier::Patch> d_dst_patch;
    int d_dst_patch_rank;
-   tbox::Pointer<hier::Patch> d_src_patch;
+   boost::shared_ptr<hier::Patch> d_src_patch;
    int d_src_patch_rank;
-   tbox::Pointer<hier::BoxOverlap> d_overlap;
+   boost::shared_ptr<hier::BoxOverlap> d_overlap;
    hier::Box d_box;
    int d_refine_item_id;
    int d_incoming_bytes;

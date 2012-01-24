@@ -33,7 +33,7 @@ CellVariable<TYPE>::CellVariable(
    const std::string& name,
    int depth):
    hier::Variable(name,
-                  SAMRAI::tbox::Pointer<SAMRAI::hier::PatchDataFactory>(
+                  boost::shared_ptr<hier::PatchDataFactory>(
                      new CellDataFactory<TYPE>(depth,
                                                hier::IntVector::getZero(dim)))) // default zero ghost cells
 {
@@ -47,7 +47,7 @@ CellVariable<TYPE>::~CellVariable()
 template<class TYPE>
 int CellVariable<TYPE>::getDepth() const
 {
-   tbox::Pointer<CellDataFactory<TYPE> > cell_factory =
+   boost::shared_ptr<CellDataFactory<TYPE> > cell_factory =
       this->getPatchDataFactory();
    TBOX_ASSERT(cell_factory);
    return cell_factory->getDepth();
@@ -66,7 +66,8 @@ int CellVariable<TYPE>::getDepth() const
 template<class TYPE>
 CellVariable<TYPE>::CellVariable(
    const CellVariable<TYPE>& foo):
-   hier::Variable(NULL, tbox::Pointer<SAMRAI::hier::PatchDataFactory>(NULL))
+   hier::Variable(NULL,
+                  boost::shared_ptr<hier::PatchDataFactory>(NULL))
 {
    NULL_USE(foo);
 }

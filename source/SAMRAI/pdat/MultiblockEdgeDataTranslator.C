@@ -58,12 +58,12 @@ void MultiblockEdgeDataTranslator<TYPE>::translateAndCopyData(
 
    const tbox::Dimension& dim(dst_patch.getDim());
 
-   tbox::Pointer<EdgeData<TYPE> > dst(
+   boost::shared_ptr<EdgeData<TYPE> > dst(
       dst_patch.getPatchData(dst_id),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<EdgeData<TYPE> > src(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<EdgeData<TYPE> > src(
       src_patch.getPatchData(src_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    TBOX_ASSERT(dst);
    TBOX_ASSERT(src);
@@ -77,9 +77,9 @@ void MultiblockEdgeDataTranslator<TYPE>::translateAndCopyData(
       }
    } else if (dim == tbox::Dimension(2)) {
       for (int axis = 0; axis < dim.getValue(); axis++) {
-         for (pdat::EdgeIterator fi(dst->getBox(), axis); fi; fi++) {
+         for (EdgeIterator fi(dst->getBox(), axis); fi; fi++) {
 
-            pdat::EdgeIndex dst_index(fi());
+            EdgeIndex dst_index(fi());
             hier::Index dst_xyz_index(dst_index);
 
             hier::Index src_xyz_index(dst_xyz_index);
@@ -107,7 +107,7 @@ void MultiblockEdgeDataTranslator<TYPE>::translateAndCopyData(
                src_xyz_index(i) -= copy_shift(i);
             }
 
-            pdat::EdgeIndex src_index(dim);
+            EdgeIndex src_index(dim);
             if (src_axis == 0) {
                src_index(0) = src_xyz_index(0);
                src_index(1) = src_xyz_index(1);
@@ -232,8 +232,8 @@ void MultiblockEdgeDataTranslator<TYPE>::translateAndCopyData(
          }
 
          const hier::BlockId& block_id = dst->getBox().getBlockId();
-         for (pdat::EdgeIterator fi(dst->getBox(), axis); fi; fi++) {
-            pdat::EdgeIndex dst_index(fi());
+         for (EdgeIterator fi(dst->getBox(), axis); fi; fi++) {
+            EdgeIndex dst_index(fi());
 
             hier::Transformation::RotationIdentifier back_rotate =
                hier::Transformation::
@@ -249,7 +249,7 @@ void MultiblockEdgeDataTranslator<TYPE>::translateAndCopyData(
 
             src_box.shift(back_shift);
 
-            pdat::EdgeIndex src_index(dim);
+            EdgeIndex src_index(dim);
             for (int i = 0; i < dim.getValue(); i++) {
                src_index(i) = src_box.lower() (i);
             }
@@ -461,8 +461,8 @@ void MultiblockEdgeDataTranslator<TYPE>::translateAndCopyData(
 
 template<class TYPE>
 void MultiblockEdgeDataTranslator<TYPE>::translateAndCopyArrayData(
-   pdat::ArrayData<TYPE>& dst,
-   const pdat::ArrayData<TYPE>& src,
+   ArrayData<TYPE>& dst,
+   const ArrayData<TYPE>& src,
    const hier::IntVector& shift,
    const hier::Transformation::RotationIdentifier rotate)
 {

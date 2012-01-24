@@ -18,7 +18,8 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -60,7 +61,7 @@ public:
     * @param ghosts default ghost cell width for concrete classes created from
     * the factory.
     */
-   virtual tbox::Pointer<hier::PatchDataFactory>
+   virtual boost::shared_ptr<hier::PatchDataFactory>
    cloneFactory(
       const hier::IntVector& ghosts);
 
@@ -69,7 +70,7 @@ public:
     * The default information about the object (e.g., ghost cell width) is
     * taken from the factory.
     */
-   virtual tbox::Pointer<hier::PatchData>
+   virtual boost::shared_ptr<hier::PatchData>
    allocate(
       const hier::Patch& patch) const;
 
@@ -78,7 +79,7 @@ public:
     * This information will be used in the computation of intersections
     * and data dependencies between objects.
     */
-   virtual tbox::Pointer<hier::BoxGeometry>
+   virtual boost::shared_ptr<hier::BoxGeometry>
    getBoxGeometry(
       const hier::Box& box) const;
 
@@ -118,7 +119,7 @@ public:
     */
    bool
    validCopyTo(
-      const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const;
+      const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const;
 
 private:
    IndexDataFactory(

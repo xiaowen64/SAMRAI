@@ -19,8 +19,8 @@
 #include "SAMRAI/pdat/SideIterator.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -475,7 +475,7 @@ public:
     */
    virtual void
    getSpecializedFromDatabase(
-      tbox::Pointer<tbox::Database> database);
+      boost::shared_ptr<tbox::Database> database);
 
    /*!
     * Write out the class version number and other data members to
@@ -485,7 +485,7 @@ public:
     */
    virtual void
    putSpecializedToDatabase(
-      tbox::Pointer<tbox::Database> database);
+      boost::shared_ptr<tbox::Database> database);
 
    /*!
     * The side iterator iterates over the elements on one axis of a side

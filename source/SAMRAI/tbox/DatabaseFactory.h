@@ -31,7 +31,7 @@ public:
    /*
     * Build a new Database instance.
     */
-   virtual Pointer<Database>
+   virtual boost::shared_ptr<Database>
    allocate(
       const std::string& name) = 0;
 };

@@ -18,7 +18,8 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace math {
@@ -95,12 +96,12 @@ public:
     * \brief Return pointer to operation object for a double variable
     * on the given hierarchy.
     */
-   virtual tbox::Pointer<HierarchyDataOpsReal<double> >
+   virtual boost::shared_ptr<HierarchyDataOpsReal<double> >
    getOperationsDouble(
       /*! operation should correspond to this variable */
-      const tbox::Pointer<hier::Variable>& variable
+      const boost::shared_ptr<hier::Variable>& variable
       , /*! operation should correspond to this hierarchy */
-      tbox::Pointer<hier::PatchHierarchy>& hierarchy
+      boost::shared_ptr<hier::PatchHierarchy>& hierarchy
       , /*! Whether a unique operator is requested */
       bool get_unique = false);
 
@@ -108,12 +109,12 @@ public:
     * \brief Return pointer to operation object for a float variable
     * on the given hierarchy.
     */
-   virtual tbox::Pointer<HierarchyDataOpsReal<float> >
+   virtual boost::shared_ptr<HierarchyDataOpsReal<float> >
    getOperationsFloat(
       /*! operation should correspond to this variable */
-      const tbox::Pointer<hier::Variable>& variable
+      const boost::shared_ptr<hier::Variable>& variable
       , /*! operation should correspond to this hierarchy */
-      tbox::Pointer<hier::PatchHierarchy>& hierarchy
+      boost::shared_ptr<hier::PatchHierarchy>& hierarchy
       , /*! Whether a unique operator is requested */
       bool get_unique = false);
 
@@ -121,12 +122,12 @@ public:
     * \brief Return pointer to operation object for a complex variable
     * on the given hierarchy.
     */
-   virtual tbox::Pointer<HierarchyDataOpsComplex>
+   virtual boost::shared_ptr<HierarchyDataOpsComplex>
    getOperationsComplex(
       /*! operation should correspond to this variable */
-      const tbox::Pointer<hier::Variable>& variable
+      const boost::shared_ptr<hier::Variable>& variable
       , /*! operation should correspond to this hierarchy */
-      tbox::Pointer<hier::PatchHierarchy>& hierarchy
+      boost::shared_ptr<hier::PatchHierarchy>& hierarchy
       , /*! Whether a unique operator is requested */
       bool get_unique = false);
 
@@ -134,12 +135,12 @@ public:
     * \brief Return pointer to operation object for a integer variable
     * on the given hierarchy.
     */
-   virtual tbox::Pointer<HierarchyDataOpsInteger>
+   virtual boost::shared_ptr<HierarchyDataOpsInteger>
    getOperationsInteger(
       /*! operation should correspond to this variable */
-      const tbox::Pointer<hier::Variable>& variable
+      const boost::shared_ptr<hier::Variable>& variable
       , /*! operation should correspond to this hierarchy */
-      tbox::Pointer<hier::PatchHierarchy>& hierarchy
+      boost::shared_ptr<hier::PatchHierarchy>& hierarchy
       , /*! Whether a unique operator is requested */
       bool get_unique = false);
    //@}
@@ -179,48 +180,48 @@ private:
    static HierarchyDataOpsManager* s_pdat_op_manager_instance;
 
    //@{ \name Operations for data of various types.
-   tbox::Array<tbox::Pointer<HierarchyDataOpsReal<double> > >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsReal<double> > >
    d_cell_ops_double;
-   tbox::Array<tbox::Pointer<HierarchyDataOpsReal<double> > >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsReal<double> > >
    d_face_ops_double;
-   tbox::Array<tbox::Pointer<HierarchyDataOpsReal<double> > >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsReal<double> > >
    d_node_ops_double;
-   tbox::Array<tbox::Pointer<HierarchyDataOpsReal<double> > >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsReal<double> > >
    d_side_ops_double;
-   tbox::Array<tbox::Pointer<HierarchyDataOpsReal<double> > >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsReal<double> > >
    d_edge_ops_double;
 
-   tbox::Array<tbox::Pointer<HierarchyDataOpsReal<float> > >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsReal<float> > >
    d_cell_ops_float;
-   tbox::Array<tbox::Pointer<HierarchyDataOpsReal<float> > >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsReal<float> > >
    d_face_ops_float;
-   tbox::Array<tbox::Pointer<HierarchyDataOpsReal<float> > >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsReal<float> > >
    d_side_ops_float;
-   tbox::Array<tbox::Pointer<HierarchyDataOpsReal<float> > >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsReal<float> > >
    d_node_ops_float;
-   tbox::Array<tbox::Pointer<HierarchyDataOpsReal<float> > >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsReal<float> > >
    d_edge_ops_float;
 
-   tbox::Array<tbox::Pointer<HierarchyDataOpsComplex> >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsComplex> >
    d_cell_ops_complex;
-   tbox::Array<tbox::Pointer<HierarchyDataOpsComplex> >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsComplex> >
    d_face_ops_complex;
-   tbox::Array<tbox::Pointer<HierarchyDataOpsComplex> >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsComplex> >
    d_side_ops_complex;
-   tbox::Array<tbox::Pointer<HierarchyDataOpsComplex> >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsComplex> >
    d_node_ops_complex;
-   tbox::Array<tbox::Pointer<HierarchyDataOpsComplex> >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsComplex> >
    d_edge_ops_complex;
 
-   tbox::Array<tbox::Pointer<HierarchyDataOpsInteger> >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsInteger> >
    d_cell_ops_int;
-   tbox::Array<tbox::Pointer<HierarchyDataOpsInteger> >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsInteger> >
    d_face_ops_int;
-   tbox::Array<tbox::Pointer<HierarchyDataOpsInteger> >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsInteger> >
    d_side_ops_int;
-   tbox::Array<tbox::Pointer<HierarchyDataOpsInteger> >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsInteger> >
    d_node_ops_int;
-   tbox::Array<tbox::Pointer<HierarchyDataOpsInteger> >
+   tbox::Array<boost::shared_ptr<HierarchyDataOpsInteger> >
    d_edge_ops_int;
    //@}
 

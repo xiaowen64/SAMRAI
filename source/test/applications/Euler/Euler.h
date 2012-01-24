@@ -28,12 +28,13 @@
 #include "SAMRAI/algs/HyperbolicPatchStrategy.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Array.h"
 
+
+#include <boost/shared_ptr.hpp>
 #include <string>
 using namespace std;
 
@@ -76,8 +77,8 @@ public:
    Euler(
       const string& object_name,
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database> input_db,
-      tbox::Pointer<geom::CartesianGridGeometry> grid_geom);
+      boost::shared_ptr<tbox::Database> input_db,
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geom);
 
    /**
     * The destructor for Euler does nothing.
@@ -193,8 +194,8 @@ public:
    tagRichardsonExtrapolationCells(
       hier::Patch& patch,
       const int error_level_number,
-      const tbox::Pointer<hier::VariableContext> coarsened_fine,
-      const tbox::Pointer<hier::VariableContext> advanced_coarse,
+      const boost::shared_ptr<hier::VariableContext> coarsened_fine,
+      const boost::shared_ptr<hier::VariableContext> advanced_coarse,
       const double regrid_time,
       const double deltat,
       const int error_coarsen_ratio,
@@ -277,7 +278,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /**
     * This routine is a concrete implementation of the virtual function
@@ -289,7 +290,7 @@ public:
     */
    void
    readDirichletBoundaryDataEntry(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       string& db_name,
       int bdry_location_index);
 
@@ -301,7 +302,7 @@ public:
 #ifdef HAVE_HDF5
    void
    registerVisItDataWriter(
-      tbox::Pointer<appu::VisItDataWriter> viz_writer);
+      boost::shared_ptr<appu::VisItDataWriter> viz_writer);
 #endif
 
    /**
@@ -359,7 +360,7 @@ public:
     */
    void
    writeData1dPencil(
-      const tbox::Pointer<hier::Patch> patch,
+      const boost::shared_ptr<hier::Patch> patch,
       const hier::Box& pencil_box,
       const int idir,
       ostream& file);
@@ -376,14 +377,14 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       bool is_from_restart);
    void
    getFromRestart();
 
    void
    readStateDataEntry(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       const string& db_name,
       int array_indx,
       tbox::Array<double>& density,
@@ -427,12 +428,12 @@ private:
     * and register plot variables.  We also cache a pointer to the
     * plot context passed to the variable registration routine.
     */
-   tbox::Pointer<geom::CartesianGridGeometry> d_grid_geometry;
+   boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
 
 #ifdef HAVE_HDF5
-   tbox::Pointer<appu::VisItDataWriter> d_visit_writer;
+   boost::shared_ptr<appu::VisItDataWriter> d_visit_writer;
 #endif
-   tbox::Pointer<hier::VariableContext> d_plot_context;
+   boost::shared_ptr<hier::VariableContext> d_plot_context;
 
    /*
     * Problem dimension.
@@ -442,7 +443,7 @@ private:
    /*
     * Data items used for nonuniform load balance, if used.
     */
-   tbox::Pointer<pdat::CellVariable<double> > d_workload_variable;
+   boost::shared_ptr<pdat::CellVariable<double> > d_workload_variable;
    int d_workload_data_id;
    bool d_use_nonuniform_workload;
 
@@ -450,14 +451,14 @@ private:
     * Euler solution state is represented by "primitive" variables,
     * density, velocity, and pressure.
     */
-   tbox::Pointer<pdat::CellVariable<double> > d_density;
-   tbox::Pointer<pdat::CellVariable<double> > d_velocity;
-   tbox::Pointer<pdat::CellVariable<double> > d_pressure;
+   boost::shared_ptr<pdat::CellVariable<double> > d_density;
+   boost::shared_ptr<pdat::CellVariable<double> > d_velocity;
+   boost::shared_ptr<pdat::CellVariable<double> > d_pressure;
 
    /*
-    * tbox::Pointer to flux variable vector  - [frho, fu, fp]
+    * boost::shared_ptr to flux variable vector  - [frho, fu, fp]
     */
-   tbox::Pointer<pdat::FaceVariable<double> > d_flux;
+   boost::shared_ptr<pdat::FaceVariable<double> > d_flux;
 
    /*
     * Ratio of specific heats for ideal gas.
@@ -590,12 +591,12 @@ private:
    /*
     * Timers.
     */
-   static tbox::Pointer<tbox::Timer> t_init;
-   static tbox::Pointer<tbox::Timer> t_compute_dt;
-   static tbox::Pointer<tbox::Timer> t_compute_fluxes;
-   static tbox::Pointer<tbox::Timer> t_conservdiff;
-   static tbox::Pointer<tbox::Timer> t_setphysbcs;
-   static tbox::Pointer<tbox::Timer> t_taggradient;
+   static boost::shared_ptr<tbox::Timer> t_init;
+   static boost::shared_ptr<tbox::Timer> t_compute_dt;
+   static boost::shared_ptr<tbox::Timer> t_compute_fluxes;
+   static boost::shared_ptr<tbox::Timer> t_conservdiff;
+   static boost::shared_ptr<tbox::Timer> t_setphysbcs;
+   static boost::shared_ptr<tbox::Timer> t_taggradient;
 
 };
 

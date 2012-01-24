@@ -17,7 +17,6 @@
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
@@ -32,6 +31,8 @@
 #include "FaceMultiblockTest.h"
 #include "NodeMultiblockTest.h"
 #include "SideMultiblockTest.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
@@ -198,9 +199,9 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      tbox::Pointer<tbox::InputDatabase> input_db(
+      boost::shared_ptr<tbox::InputDatabase> input_db(
          new tbox::InputDatabase("input_db"));
-      tbox::Pointer<tbox::Database> base_db = input_db;
+      boost::shared_ptr<tbox::Database> base_db = input_db;
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -209,7 +210,8 @@ int main(
        * analysis), and read in test information.
        */
 
-      tbox::Pointer<tbox::Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db =
+         input_db->getDatabase("Main");
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -255,14 +257,14 @@ int main(
           * For some reason, static members of GriddingAlgorithm* classes
           * don't get created without this no-op block.  BTNG.
           */
-         tbox::Pointer<mesh::GriddingAlgorithm> ga(
+         boost::shared_ptr<mesh::GriddingAlgorithm> ga(
             new mesh::GriddingAlgorithm(
-               tbox::Pointer<hier::PatchHierarchy>(),
+               boost::shared_ptr<hier::PatchHierarchy>(),
                std::string(),
-               tbox::Pointer<tbox::Database>(),
-               tbox::Pointer<mesh::TagAndInitializeStrategy>(),
-               tbox::Pointer<mesh::BoxGeneratorStrategy>(),
-               tbox::Pointer<mesh::LoadBalanceStrategy>()));
+               boost::shared_ptr<tbox::Database>(),
+               boost::shared_ptr<mesh::TagAndInitializeStrategy>(),
+               boost::shared_ptr<mesh::BoxGeneratorStrategy>(),
+               boost::shared_ptr<mesh::LoadBalanceStrategy>()));
       }
 #endif
       /*
@@ -314,27 +316,28 @@ int main(
             << test_to_run << endl);
       }
 
-      tbox::Pointer<tbox::Database> hier_db(
+      boost::shared_ptr<tbox::Database> hier_db(
          input_db->getDatabase("PatchHierarchy"));
 
-      tbox::Pointer<hier::PatchHierarchy> hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy(
             "PatchHierarchy",
             patch_data_test->getGridGeometry(),
             hier_db,
             true));
 
-      tbox::Pointer<MultiblockTester> comm_tester(new MultiblockTester(
-                                                     "MultiblockTester",
-                                                     dim,
-                                                     base_db,
-                                                     hierarchy,
-                                                     patch_data_test,
-                                                     do_refine,
-                                                     do_coarsen,
-                                                     refine_option));
+      boost::shared_ptr<MultiblockTester> comm_tester(
+         new MultiblockTester(
+            "MultiblockTester",
+            dim,
+            base_db,
+            hierarchy,
+            patch_data_test,
+            do_refine,
+            do_coarsen,
+            refine_option));
 
-      tbox::Pointer<mesh::StandardTagAndInitialize> cell_tagger(
+      boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger(
          new mesh::StandardTagAndInitialize(
             dim,
             "StandardTagggingAndInitializer",
@@ -359,14 +362,14 @@ int main(
 
       tbox::TimerManager* time_man = tbox::TimerManager::getManager();
 
-      tbox::Pointer<tbox::Timer> refine_create_time =
+      boost::shared_ptr<tbox::Timer> refine_create_time =
          time_man->getTimer("test::main::createRefineSchedule");
-      tbox::Pointer<tbox::Timer> refine_comm_time =
+      boost::shared_ptr<tbox::Timer> refine_comm_time =
          time_man->getTimer("test::main::performRefineOperations");
 
-      tbox::Pointer<tbox::Timer> coarsen_create_time =
+      boost::shared_ptr<tbox::Timer> coarsen_create_time =
          time_man->getTimer("test::main::createCoarsenSchedule");
-      tbox::Pointer<tbox::Timer> coarsen_comm_time =
+      boost::shared_ptr<tbox::Timer> coarsen_comm_time =
          time_man->getTimer("test::main::performCoarsenOperations");
 
       tbox::TimerManager::getManager()->resetAllTimers();
@@ -375,7 +378,7 @@ int main(
        * Create communication schedules and perform communication operations.
        */
 
-      tbox::Pointer<hier::PatchHierarchy> patch_hierarchy =
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy =
          comm_tester->getPatchHierarchy();
 
       int nlevels = patch_hierarchy->getNumberOfLevels();

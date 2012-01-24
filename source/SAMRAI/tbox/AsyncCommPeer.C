@@ -44,11 +44,11 @@ namespace tbox {
 // #define AsyncCommPeer_DEBUG_OUTPUT
 
 template<class TYPE>
-Pointer<Timer> AsyncCommPeer<TYPE>::t_send_timer;
+boost::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_send_timer;
 template<class TYPE>
-Pointer<Timer> AsyncCommPeer<TYPE>::t_recv_timer;
+boost::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_recv_timer;
 template<class TYPE>
-Pointer<Timer> AsyncCommPeer<TYPE>::t_waitall_timer;
+boost::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_waitall_timer;
 
 template<class TYPE>
 bool AsyncCommPeer<TYPE>::s_initialized = false;

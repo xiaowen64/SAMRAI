@@ -20,10 +20,11 @@
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace algs {
@@ -267,7 +268,7 @@ public:
     *
     * Return pointer to data context with ghost cells.
     */
-   tbox::Pointer<hier::VariableContext> getInteriorWithGhostsContext() const
+   boost::shared_ptr<hier::VariableContext> getInteriorWithGhostsContext() const
    {
       return d_interior_with_ghosts;
    }
@@ -275,7 +276,7 @@ public:
    /*!
     * Return pointer to data context with NO ghosts.
     */
-   tbox::Pointer<hier::VariableContext> getInteriorContext() const
+   boost::shared_ptr<hier::VariableContext> getInteriorContext() const
    {
       return d_interior;
    }
@@ -284,7 +285,7 @@ public:
     * Set pointer to data context with ghosts.
     */
    void setInteriorWithGhostsContext(
-      tbox::Pointer<hier::VariableContext> context)
+      boost::shared_ptr<hier::VariableContext> context)
    {
       d_interior_with_ghosts = context;
    }
@@ -293,7 +294,7 @@ public:
     * Set pointer to data context with NO ghosts.
     */
    void setInteriorContext(
-      tbox::Pointer<hier::VariableContext> context)
+      boost::shared_ptr<hier::VariableContext> context)
    {
       d_interior = context;
    }
@@ -305,8 +306,8 @@ public:
 private:
    const tbox::Dimension d_dim;
 
-   tbox::Pointer<hier::VariableContext> d_interior_with_ghosts;
-   tbox::Pointer<hier::VariableContext> d_interior;
+   boost::shared_ptr<hier::VariableContext> d_interior_with_ghosts;
+   boost::shared_ptr<hier::VariableContext> d_interior;
 };
 
 }

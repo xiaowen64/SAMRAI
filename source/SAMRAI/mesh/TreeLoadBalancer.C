@@ -75,7 +75,7 @@ const int TreeLoadBalancer::d_default_data_id = -1;
 TreeLoadBalancer::TreeLoadBalancer(
    const tbox::Dimension& dim,
    const std::string& name,
-   tbox::Pointer<tbox::Database> input_db):
+   boost::shared_ptr<tbox::Database> input_db):
    d_dim(dim),
    d_object_name(name),
    d_mpi(tbox::SAMRAI_MPI::commNull),
@@ -83,6 +83,7 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_n_root_cycles(-1),
    d_degree(2),
    d_master_workload_data_id(d_default_data_id),
+   d_min_load_fraction_per_box(0.03),
    d_balance_penalty_wt(1.0),
    d_surface_penalty_wt(1.0),
    d_slender_penalty_wt(1.0),
@@ -147,10 +148,10 @@ void TreeLoadBalancer::setWorkloadPatchDataIndex(
    int data_id,
    int level_number)
 {
-   tbox::Pointer<pdat::CellDataFactory<double> > datafact(
+   boost::shared_ptr<pdat::CellDataFactory<double> > datafact(
       hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
       getPatchDataFactory(data_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    if (!datafact) {
       TBOX_ERROR(
          d_object_name << " error: "
@@ -211,7 +212,7 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
    hier::BoxLevel& balance_box_level,
    hier::Connector& balance_to_anchor,
    hier::Connector& anchor_to_balance,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int level_number,
    const hier::Connector& balance_to_attractor,
    const hier::Connector& attractor_to_balance,
@@ -428,6 +429,26 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
 
 
    /*
+    * Add additional minimum box size restriction based on
+    * d_min_load_fraction_per_box: Should be no smaller than a cubic
+    * box that satisfies this work load.
+    */
+   if ( d_min_load_fraction_per_box > 0.0 ) {
+      const hier::IntVector tmp_vec(d_min_size);
+
+      int box_size_for_min_load_restriction =
+         static_cast<int>(pow(d_global_avg_load*d_min_load_fraction_per_box,
+                              1.0/d_dim.getValue())+ 0.5);
+      d_min_size.max( hier::IntVector( d_dim, box_size_for_min_load_restriction ) );
+
+      if (d_print_steps) {
+         tbox::plog << "min_load_fraction_per_box changed min_size from " << tmp_vec;
+         tbox::plog << " to " << d_min_size << '\n';
+      }
+   }
+
+
+   /*
     * User can set the number of cycles to use (see n_root_cycles
     * input parameter), or leave it negative to let this class set it
     * automatically using the following heuristic algorithm:
@@ -563,6 +584,14 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
       }
 
    }
+
+
+   /*
+    * Undo effects of min_load_fraction_per_box on d_min_size.  We do
+    * not want that constraint during the remaining load balance
+    * steps.
+    */
+   d_min_size = min_size;
 
 
    /*
@@ -2318,7 +2347,9 @@ int TreeLoadBalancer::shiftLoadsByBreaking(
             trial_dst.insert(give_box_in_transit);
             trial_actual_transfer += give_box_in_transit.d_load;
             if (d_print_steps) {
-               tbox::plog << "    Breakoff box " << *bi << " -> " << give_box_in_transit
+               tbox::plog << "    Breakoff box " << *bi << bi->numberCells()
+                          << '|' << bi->size()
+                          << " -> " << give_box_in_transit
                           << std::endl;
             }
          }
@@ -3522,7 +3553,7 @@ void TreeLoadBalancer::printClassData(
  */
 
 void TreeLoadBalancer::getFromInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 
    if (db) {
@@ -3555,6 +3586,14 @@ void TreeLoadBalancer::getFromInput(
 
       d_n_root_cycles = db->getIntegerWithDefault("n_root_cycles",
             d_n_root_cycles);
+
+      d_min_load_fraction_per_box = db->getDoubleWithDefault("min_load_fraction_per_box",
+            d_min_load_fraction_per_box);
+      if ( d_min_load_fraction_per_box >= 1.0 ) {
+         TBOX_ERROR("TreeLoadBalancer::getFromInput: min_load_fraction_per_box value of "
+                    << d_min_load_fraction_per_box
+                    << " is excessive.  It should be on the order of 0.01.");
+      }
 
       d_balance_penalty_wt = db->getDoubleWithDefault("balance_penalty_wt",
             d_balance_penalty_wt);
@@ -4538,8 +4577,9 @@ void TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::compute_tree_load");
 
       const int max_cycles_to_time = 4;
-      t_compute_tree_load_for_cycle.resize( max_cycles_to_time,
-                                            tbox::Pointer<tbox::Timer>(NULL) );
+      t_compute_tree_load_for_cycle.resize(
+         max_cycles_to_time,
+         boost::shared_ptr<tbox::Timer>((tbox::Timer*)NULL) );
       for ( int i=0; i<max_cycles_to_time; ++i ) {
          t_compute_tree_load_for_cycle[i] = tbox::TimerManager::getManager()->
             getTimer(d_object_name + "::compute_tree_load_for_cycle["

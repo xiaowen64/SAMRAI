@@ -18,7 +18,7 @@ Parser *Parser::getParser()
 }
 
 SAMRAI_INLINE_KEYWORD
-Pointer<Database>& Parser::getScope()
+boost::shared_ptr<Database>& Parser::getScope()
 {
    return d_scope_stack.getFirstItem();
 }

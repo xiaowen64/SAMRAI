@@ -474,7 +474,7 @@ void NodeData<TYPE>::print(
 
 template<class TYPE>
 void NodeData<TYPE>::getSpecializedFromDatabase(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
    TBOX_ASSERT(database);
 
@@ -486,7 +486,7 @@ void NodeData<TYPE>::getSpecializedFromDatabase(
 
    d_depth = database->getInteger("d_depth");
 
-   tbox::Pointer<tbox::Database> array_database;
+   boost::shared_ptr<tbox::Database> array_database;
    array_database = database->getDatabase("d_data");
    (d_data).getFromDatabase(array_database);
 }
@@ -502,7 +502,7 @@ void NodeData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void NodeData<TYPE>::putSpecializedToDatabase(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
 
    TBOX_ASSERT(database);
@@ -511,7 +511,7 @@ void NodeData<TYPE>::putSpecializedToDatabase(
 
    database->putInteger("d_depth", d_depth);
 
-   tbox::Pointer<tbox::Database> array_database;
+   boost::shared_ptr<tbox::Database> array_database;
    array_database = database->putDatabase("d_data");
    (d_data).putToDatabase(array_database);
 }

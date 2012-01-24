@@ -201,7 +201,7 @@ bool MemoryDatabase::isDatabase(
    return keydata ? keydata->d_type == Database::SAMRAI_DATABASE : false;
 }
 
-Pointer<Database> MemoryDatabase::putDatabase(
+boost::shared_ptr<Database> MemoryDatabase::putDatabase(
    const std::string& key)
 {
    deleteKeyIfFound(key);
@@ -211,12 +211,12 @@ Pointer<Database> MemoryDatabase::putDatabase(
    keydata.d_array_size = 1;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
-   keydata.d_database = new MemoryDatabase(key);
+   keydata.d_database.reset(new MemoryDatabase(key));
    d_keyvalues.appendItem(keydata);
    return keydata.d_database;
 }
 
-Pointer<Database> MemoryDatabase::getDatabase(
+boost::shared_ptr<Database> MemoryDatabase::getDatabase(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -1534,7 +1534,9 @@ void MemoryDatabase::printDatabase(
 
    for (List<KeyData>::Iterator j(d_keyvalues); j; j++) {
       if (j().d_type == Database::SAMRAI_DATABASE) {
-         Pointer<MemoryDatabase> db(j().d_database, __dynamic_cast_tag());
+         boost::shared_ptr<MemoryDatabase> db(
+            j().d_database,
+            boost::detail::dynamic_cast_tag());
          db->printDatabase(os, indent + 3, toprint);
       }
    }

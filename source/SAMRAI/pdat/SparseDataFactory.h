@@ -25,7 +25,8 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -68,7 +69,7 @@ public:
     * then be changed without modifying the original.
     * @param [in] ghosts
     */
-   tbox::Pointer<hier::PatchDataFactory>
+   boost::shared_ptr<hier::PatchDataFactory>
    cloneFactory(
       const hier::IntVector& ghosts);
 
@@ -80,7 +81,7 @@ public:
     *
     * @param [in] patch
     */
-   tbox::Pointer<hier::PatchData>
+   boost::shared_ptr<hier::PatchData>
    allocate(
       const hier::Patch& patch) const;
 
@@ -92,7 +93,7 @@ public:
     *
     * @param [in] box
     */
-   tbox::Pointer<hier::BoxGeometry>
+   boost::shared_ptr<hier::BoxGeometry>
    getBoxGeometry(
       const hier::Box& box) const;
 
@@ -139,7 +140,7 @@ public:
     */
    bool
    validCopyTo(
-      const tbox::Pointer<PatchDataFactory>& dst_pdf) const;
+      const boost::shared_ptr<PatchDataFactory>& dst_pdf) const;
 
 private:
    /*

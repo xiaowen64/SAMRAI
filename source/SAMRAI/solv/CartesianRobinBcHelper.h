@@ -20,7 +20,8 @@
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace solv {
@@ -112,7 +113,7 @@ public:
       const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const tbox::Pointer<hier::GridGeometry>& grid_geometry);
+      const boost::shared_ptr<hier::GridGeometry>& grid_geometry);
 
    //@}
 
@@ -299,7 +300,7 @@ public:
     * Provide the implementation that can be used to set the
     * Robin bc coefficients.
     *
-    * @param coef_strategy tbox::Pointer to a concrete inmplementation of
+    * @param coef_strategy Pointer to a concrete inmplementation of
     *        the coefficient strategy.
     */
    void
@@ -431,8 +432,8 @@ private:
    /*!
     * @brief Timers for performance measurement.
     */
-   tbox::Pointer<tbox::Timer> t_set_boundary_values_in_cells;
-   tbox::Pointer<tbox::Timer> t_use_set_bc_coefs;
+   boost::shared_ptr<tbox::Timer> t_set_boundary_values_in_cells;
+   boost::shared_ptr<tbox::Timer> t_use_set_bc_coefs;
 };
 
 }

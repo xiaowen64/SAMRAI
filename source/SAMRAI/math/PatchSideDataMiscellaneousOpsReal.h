@@ -16,7 +16,8 @@
 #include "SAMRAI/pdat/SideData.h"
 #include "SAMRAI/math/ArrayDataMiscellaneousOpsReal.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace math {
@@ -71,11 +72,12 @@ public:
     */
    int
    computeConstrProdPos(
-      const tbox::Pointer<pdat::SideData<TYPE> >& data1,
-      const tbox::Pointer<pdat::SideData<TYPE> >& data2,
+      const boost::shared_ptr<pdat::SideData<TYPE> >& data1,
+      const boost::shared_ptr<pdat::SideData<TYPE> >& data2,
       const hier::Box& box,
-      const tbox::Pointer<pdat::SideData<double> > cvol =
-         tbox::Pointer<pdat::SideData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::SideData<double> > cvol =
+         boost::shared_ptr<pdat::SideData<double> >(
+            (pdat::SideData<double>*)NULL)) const;
 
    /**
     * Wherever \f$cvol_i > 0\f$ in the index region, set \f$dst_i = 1\f$
@@ -84,12 +86,13 @@ public:
     */
    void
    compareToScalar(
-      tbox::Pointer<pdat::SideData<TYPE> >& dst,
-      const tbox::Pointer<pdat::SideData<TYPE> >& src,
+      boost::shared_ptr<pdat::SideData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::SideData<TYPE> >& src,
       const TYPE& alpha,
       const hier::Box& box,
-      const tbox::Pointer<pdat::SideData<double> > cvol =
-         tbox::Pointer<pdat::SideData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::SideData<double> > cvol =
+         boost::shared_ptr<pdat::SideData<double> >(
+            (pdat::SideData<double>*)NULL)) const;
 
    /**
     * Wherever \f$cvol_i > 0\f$ in the index region, set \f$dst_i = 1/src_i\f$ if
@@ -99,11 +102,12 @@ public:
     */
    int
    testReciprocal(
-      tbox::Pointer<pdat::SideData<TYPE> >& dst,
-      const tbox::Pointer<pdat::SideData<TYPE> >& src,
+      boost::shared_ptr<pdat::SideData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::SideData<TYPE> >& src,
       const hier::Box& box,
-      const tbox::Pointer<pdat::SideData<double> > cvol =
-         tbox::Pointer<pdat::SideData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::SideData<double> > cvol =
+         boost::shared_ptr<pdat::SideData<double> >(
+            (pdat::SideData<double>*)NULL)) const;
 
    /*!
     * @brief Compute max of "conditional" quotients of two arrays.
@@ -120,8 +124,8 @@ public:
     */
    TYPE
    maxPointwiseDivide(
-      const tbox::Pointer<pdat::SideData<TYPE> >& numer,
-      const tbox::Pointer<pdat::SideData<TYPE> >& denom,
+      const boost::shared_ptr<pdat::SideData<TYPE> >& numer,
+      const boost::shared_ptr<pdat::SideData<TYPE> >& denom,
       const hier::Box& box) const;
 
    /*!
@@ -140,8 +144,8 @@ public:
     */
    TYPE
    minPointwiseDivide(
-      const tbox::Pointer<pdat::SideData<TYPE> >& numer,
-      const tbox::Pointer<pdat::SideData<TYPE> >& denom,
+      const boost::shared_ptr<pdat::SideData<TYPE> >& numer,
+      const boost::shared_ptr<pdat::SideData<TYPE> >& denom,
       const hier::Box& box) const;
 
 private:

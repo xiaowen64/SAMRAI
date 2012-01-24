@@ -27,7 +27,7 @@ class HDFDatabaseFactory:public DatabaseFactory
    /**
     * Build a new Database object.
     */
-   virtual Pointer<Database>
+   virtual boost::shared_ptr<Database>
    allocate(
       const std::string& name);
 };

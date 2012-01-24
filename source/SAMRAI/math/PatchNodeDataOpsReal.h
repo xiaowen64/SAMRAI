@@ -20,8 +20,8 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -70,8 +70,8 @@ public:
     */
    void
    copyData(
-      tbox::Pointer<pdat::NodeData<TYPE> >& dst,
-      const tbox::Pointer<pdat::NodeData<TYPE> >& src,
+      boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
       const hier::Box& box) const;
 
    /**
@@ -80,7 +80,7 @@ public:
     */
    void
    swapData(
-      tbox::Pointer<hier::Patch> patch,
+      boost::shared_ptr<hier::Patch> patch,
       const int data1_id,
       const int data2_id) const;
 
@@ -89,7 +89,7 @@ public:
     */
    void
    printData(
-      const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const hier::Box& box,
       std::ostream& s = tbox::plog) const;
 
@@ -98,7 +98,7 @@ public:
     */
    void
    setToScalar(
-      tbox::Pointer<pdat::NodeData<TYPE> >& dst,
+      boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
       const TYPE& alpha,
       const hier::Box& box) const;
 

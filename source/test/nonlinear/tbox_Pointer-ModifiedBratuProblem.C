@@ -8,9 +8,9 @@
  *
  ************************************************************************/
 
-#include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/Pointer.C"
 #include "ModifiedBratuProblem.h"
+
+#include <boost/shared_ptr.hpp>
 
 #if !defined(HAVE_PETSC) || !defined(HAVE_SUNDIALS) || !defined(HAVE_HYPRE)
 
@@ -27,6 +27,6 @@
 
 #else
 
-template class SAMRAI::tbox::Pointer<ModifiedBratuProblem>;
+template class boost::shared_ptr<ModifiedBratuProblem>;
 
 #endif

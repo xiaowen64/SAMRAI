@@ -17,9 +17,9 @@ namespace tbox {
 /**
  * Build a new MemoryDatabase object.
  */
-Pointer<Database> MemoryDatabaseFactory::allocate(
+boost::shared_ptr<Database> MemoryDatabaseFactory::allocate(
    const std::string& name) {
-   Pointer<MemoryDatabase> database(new MemoryDatabase(name));
+   boost::shared_ptr<MemoryDatabase> database(new MemoryDatabase(name));
    return database;
 }
 

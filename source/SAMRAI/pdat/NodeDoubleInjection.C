@@ -73,14 +73,14 @@ NodeDoubleInjection::~NodeDoubleInjection()
 }
 
 bool NodeDoubleInjection::findCoarsenOperator(
-   const tbox::Pointer<hier::Variable>& var,
+   const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
-   const tbox::Pointer<NodeVariable<double> > cast_var(
+   const boost::shared_ptr<NodeVariable<double> > cast_var(
       var,
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    if (cast_var && (op_name == getOperatorName())) {
       return true;
    } else {
@@ -106,12 +106,12 @@ void NodeDoubleInjection::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   tbox::Pointer<NodeData<double> > fdata(
+   boost::shared_ptr<NodeData<double> > fdata(
       fine.getPatchData(src_component),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<NodeData<double> > cdata(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<NodeData<double> > cdata(
       coarse.getPatchData(dst_component),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);

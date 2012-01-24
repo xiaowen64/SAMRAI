@@ -20,7 +20,6 @@ using namespace std;
 #include "SAMRAI/tbox/PIO.h"
 
 #include "SAMRAI/tbox/SAMRAIManager.h"
-#include "SAMRAI/tbox/Pointer.h"
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainerIterator.h"
@@ -48,6 +47,8 @@ using namespace std;
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/hier/VariableContext.h"
 
+#include <boost/shared_ptr.hpp>
+
 using namespace SAMRAI;
 
 /* Helper function declarations */
@@ -55,7 +56,7 @@ static bool
 doubleDataSameAsValue(
    int desc_id,
    double value,
-   tbox::Pointer<hier::PatchHierarchy> hierarchy);
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy);
 
 #define NVARS 4
 
@@ -136,13 +137,13 @@ int main(
       fine_boxes.pushBack(fine0);
       fine_boxes.pushBack(fine1);
 
-      tbox::Pointer<geom::CartesianGridGeometry> geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry> geometry(
          new geom::CartesianGridGeometry("CartesianGeometry",
             lo,
             hi,
             coarse_domain));
 
-      tbox::Pointer<hier::PatchHierarchy> hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", geometry));
 
       hierarchy->setMaxNumberOfLevels(2);
@@ -187,64 +188,66 @@ int main(
 
       // Create instance of hier::Variable database
       hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-      tbox::Pointer<hier::VariableContext> dummy = variable_db->getContext(
+      boost::shared_ptr<hier::VariableContext> dummy = variable_db->getContext(
             "dummy");
       const hier::IntVector no_ghosts(dim2d, 0);
 
       // Make some dummy variables and data on the hierarchy
-      tbox::Pointer<pdat::NodeVariable<double> > nvar[NVARS];
+      boost::shared_ptr<pdat::NodeVariable<double> > nvar[NVARS];
       int nvindx[NVARS];
-      nvar[0] = new pdat::NodeVariable<double>(dim2d, "nvar0", 1);
+      nvar[0].reset(new pdat::NodeVariable<double>(dim2d, "nvar0", 1));
       nvindx[0] = variable_db->registerVariableAndContext(
             nvar[0], dummy, no_ghosts);
-      nvar[1] = new pdat::NodeVariable<double>(dim2d, "nvar1", 1);
+      nvar[1].reset(new pdat::NodeVariable<double>(dim2d, "nvar1", 1));
       nvindx[1] = variable_db->registerVariableAndContext(
             nvar[1], dummy, no_ghosts);
-      nvar[2] = new pdat::NodeVariable<double>(dim2d, "nvar2", 1);
+      nvar[2].reset(new pdat::NodeVariable<double>(dim2d, "nvar2", 1));
       nvindx[2] = variable_db->registerVariableAndContext(
             nvar[2], dummy, no_ghosts);
-      nvar[3] = new pdat::NodeVariable<double>(dim2d, "nvar3", 1);
+      nvar[3].reset(new pdat::NodeVariable<double>(dim2d, "nvar3", 1));
       nvindx[3] = variable_db->registerVariableAndContext(
             nvar[3], dummy, no_ghosts);
 
-      tbox::Pointer<pdat::NodeVariable<double> >
+      boost::shared_ptr<pdat::NodeVariable<double> >
       nwgt(new pdat::NodeVariable<double>(dim2d, "nwgt", 1));
       int nwgt_id = variable_db->registerVariableAndContext(
             nwgt, dummy, no_ghosts);
 
       // allocate data on hierarchy
       for (ln = 0; ln < 2; ln++) {
-         tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level =
+            hierarchy->getPatchLevel(ln);
          level->allocatePatchData(nwgt_id);
          for (iv = 0; iv < NVARS; iv++) {
             level->allocatePatchData(nvindx[iv]);
          }
       }
 
-      tbox::Pointer<math::HierarchyDataOpsReal<double> > node_ops(
+      boost::shared_ptr<math::HierarchyDataOpsReal<double> > node_ops(
          new math::HierarchyNodeDataOpsReal<double>(hierarchy, 0, 1));
       TBOX_ASSERT(node_ops);
 
-      tbox::Pointer<math::HierarchyDataOpsReal<double> > nwgt_ops(
+      boost::shared_ptr<math::HierarchyDataOpsReal<double> > nwgt_ops(
          new math::HierarchyNodeDataOpsReal<double>(hierarchy, 0, 1));
 
-      tbox::Pointer<hier::Patch> patch;
+      boost::shared_ptr<hier::Patch> patch;
 
       // Initialize control volume data for node-centered components
       hier::Box coarse_fine = fine0 + fine1;
       coarse_fine.coarsen(ratio);
       for (ln = 0; ln < 2; ln++) {
-         tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level =
+            hierarchy->getPatchLevel(ln);
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
             patch = *ip;
-	    tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+	    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
                patch->getPatchGeometry(),
-               tbox::__dynamic_cast_tag());
+               boost::detail::dynamic_cast_tag());
             const double* dx = pgeom->getDx();
             const double node_vol = dx[0] * dx[1];
-	    tbox::Pointer<pdat::NodeData<double> > data(
+	    boost::shared_ptr<pdat::NodeData<double> > data(
                patch->getPatchData(nwgt_id),
-               tbox::__dynamic_cast_tag());
+               boost::detail::dynamic_cast_tag());
             data->fillAll(node_vol);
             pdat::NodeIndex ni(dim);
             int plo0 = patch->getBox().lower(0);
@@ -369,7 +372,7 @@ int main(
  *   for (ln = 0; ln < 2; ln++) {
  *   for (hier::PatchLevel::Iterator ip(hierarchy->getPatchLevel(ln)); ip; ip++) {
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
- *   tbox::Pointer< pdat::NodeData<double> > cvdata = patch->getPatchData(cwgt_id);
+ *   boost::shared_ptr< pdat::NodeData<double> > cvdata = patch->getPatchData(cwgt_id);
  *
  *   for (pdat::NodeIterator c(cvdata->getBox());c && vol_test_passed;c++) {
  *   pdat::NodeIndex node_index = c();
@@ -608,15 +611,15 @@ int main(
       }
 
       // Test #14: Place some bogus values on coarse level
-      tbox::Pointer<pdat::NodeData<double> > ndata;
+      boost::shared_ptr<pdat::NodeData<double> > ndata;
 
       // set values
-      tbox::Pointer<hier::PatchLevel> level_zero =
+      boost::shared_ptr<hier::PatchLevel> level_zero =
          hierarchy->getPatchLevel(0);
       for (hier::PatchLevel::Iterator ip(level_zero); ip; ip++) {
          patch = *ip;
-         ndata = tbox::dynamic_pointer_cast<pdat::NodeData<double>,
-                                            hier::PatchData>(patch->getPatchData(nvindx[2]));
+         ndata = boost::dynamic_pointer_cast<pdat::NodeData<double>,
+                                             hier::PatchData>(patch->getPatchData(nvindx[2]));
          hier::Index index0(2, 2);
          hier::Index index1(5, 3);
          if (patch->getBox().contains(index0)) {
@@ -633,8 +636,8 @@ int main(
       bool bogus_value_test_passed = true;
       for (hier::PatchLevel::Iterator ipp(level_zero); ipp; ipp++) {
          patch = *ipp;
-         ndata = tbox::dynamic_pointer_cast<pdat::NodeData<double>,
-                                            hier::PatchData>(patch->getPatchData(nvindx[2]));
+         ndata = boost::dynamic_pointer_cast<pdat::NodeData<double>,
+                                             hier::PatchData>(patch->getPatchData(nvindx[2]));
          pdat::NodeIndex index0(hier::Index(2, 2), pdat::NodeIndex::LowerLeft);
          pdat::NodeIndex index1(hier::Index(5, 3), pdat::NodeIndex::UpperRight);
 
@@ -817,19 +820,19 @@ static bool
 doubleDataSameAsValue(
    int desc_id,
    double value,
-   tbox::Pointer<hier::PatchHierarchy> hierarchy)
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy)
 {
    bool test_passed = true;
 
    int ln;
-   tbox::Pointer<hier::Patch> patch;
+   boost::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          patch = *ip;
-         tbox::Pointer<pdat::NodeData<double> > nvdata(
+         boost::shared_ptr<pdat::NodeData<double> > nvdata(
                patch->getPatchData(desc_id),
-               tbox::__dynamic_cast_tag());
+               boost::detail::dynamic_cast_tag());
 
          for (pdat::NodeIterator c(nvdata->getBox()); c && test_passed; c++) {
             pdat::NodeIndex node_index = c();

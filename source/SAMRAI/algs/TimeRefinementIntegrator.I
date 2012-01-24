@@ -114,21 +114,21 @@ int TimeRefinementIntegrator::getLevelMaxSteps(
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Pointer<hier::PatchHierarchy>
+const boost::shared_ptr<hier::PatchHierarchy>
 TimeRefinementIntegrator::getPatchHierarchy() const
 {
    return d_patch_hierarchy;
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<TimeRefinementLevelStrategy>
+boost::shared_ptr<TimeRefinementLevelStrategy>
 TimeRefinementIntegrator::getLevelIntegrator() const
 {
    return d_refine_level_integrator;
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<mesh::GriddingAlgorithmStrategy>
+boost::shared_ptr<mesh::GriddingAlgorithmStrategy>
 TimeRefinementIntegrator::getGriddingAlgorithm() const
 {
    return d_gridding_algorithm;

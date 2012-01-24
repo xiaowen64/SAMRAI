@@ -32,10 +32,8 @@ OuterfaceVariable<TYPE>::OuterfaceVariable(
    const std::string& name,
    int depth):
    hier::Variable(name,
-                  tbox::Pointer<hier::PatchDataFactory>(new
-                                                        OuterfaceDataFactory<
-                                                           TYPE>(dim,
-                                                                 depth)))
+                  boost::shared_ptr<hier::PatchDataFactory>(
+                     new OuterfaceDataFactory<TYPE>(dim, depth)))
 {
 }
 
@@ -47,7 +45,7 @@ OuterfaceVariable<TYPE>::~OuterfaceVariable()
 template<class TYPE>
 int OuterfaceVariable<TYPE>::getDepth() const
 {
-   tbox::Pointer<OuterfaceDataFactory<TYPE> > factory =
+   boost::shared_ptr<OuterfaceDataFactory<TYPE> > factory =
       this->getPatchDataFactory();
    TBOX_ASSERT(factory);
    return factory->getDepth();
@@ -66,7 +64,8 @@ int OuterfaceVariable<TYPE>::getDepth() const
 template<class TYPE>
 OuterfaceVariable<TYPE>::OuterfaceVariable(
    const OuterfaceVariable<TYPE>& foo):
-   hier::Variable(NULL, tbox::Pointer<SAMRAI::hier::PatchDataFactory>(NULL))
+   hier::Variable(NULL,
+                  boost::shared_ptr<hier::PatchDataFactory>(NULL))
 {
    NULL_USE(foo);
 }

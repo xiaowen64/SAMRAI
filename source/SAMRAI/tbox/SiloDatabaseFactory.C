@@ -18,10 +18,10 @@ namespace tbox {
 /**
  * Build a new SiloDatabase object.
  */
-Pointer<Database> SiloDatabaseFactory::allocate(
+boost::shared_ptr<Database> SiloDatabaseFactory::allocate(
    const std::string& name) {
 #ifdef HAVE_SILO
-   Pointer<SiloDatabase> database(new SiloDatabase(name));
+   boost::shared_ptr<SiloDatabase> database(new SiloDatabase(name));
    return database;
 
 #else

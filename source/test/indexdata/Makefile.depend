@@ -119,9 +119,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.I				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Pointer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\

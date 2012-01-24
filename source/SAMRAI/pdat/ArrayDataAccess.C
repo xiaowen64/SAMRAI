@@ -12,7 +12,7 @@
 
 template<int DIM>
 MDA_Access<double, DIM, MDA_OrderColMajor<DIM> > access(
-   SAMRAI::pdat::ArrayData<double>& array_data,
+   ArrayData<double>& array_data,
    int depth)
 {
    MDA_Access<double, DIM, MDA_OrderColMajor<DIM> >
@@ -24,7 +24,7 @@ MDA_Access<double, DIM, MDA_OrderColMajor<DIM> > access(
 
 template<int DIM>
 const MDA_AccessConst<double, DIM, MDA_OrderColMajor<DIM> > access(
-   const SAMRAI::pdat::ArrayData<double>& array_data,
+   const ArrayData<double>& array_data,
    int depth)
 {
    MDA_AccessConst<double, DIM, MDA_OrderColMajor<DIM> >

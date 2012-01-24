@@ -14,7 +14,8 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace algs {
@@ -55,7 +56,7 @@ public:
     */
    virtual void
    setupSolutionVector(
-      tbox::Pointer<solv::SAMRAIVectorReal<double> > solution) = 0;
+      boost::shared_ptr<solv::SAMRAIVectorReal<double> > solution) = 0;
 
    /**
     * Return time increment for advancing the solution at the first timestep.

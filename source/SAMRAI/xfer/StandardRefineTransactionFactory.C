@@ -48,26 +48,24 @@ void StandardRefineTransactionFactory::setRefineItems(
    const RefineClasses::Data** refine_items,
    int num_refine_items)
 {
-   xfer::RefineCopyTransaction::setRefineItems(refine_items,
-      num_refine_items);
-   xfer::RefineTimeTransaction::setRefineItems(refine_items,
-      num_refine_items);
+   RefineCopyTransaction::setRefineItems(refine_items, num_refine_items);
+   RefineTimeTransaction::setRefineItems(refine_items, num_refine_items);
    d_refine_items = refine_items;
    d_num_refine_items = num_refine_items;
 }
 
 void StandardRefineTransactionFactory::unsetRefineItems()
 {
-   xfer::RefineCopyTransaction::unsetRefineItems();
-   xfer::RefineTimeTransaction::unsetRefineItems();
-   d_refine_items = (const xfer::RefineClasses::Data **)NULL;
+   RefineCopyTransaction::unsetRefineItems();
+   RefineTimeTransaction::unsetRefineItems();
+   d_refine_items = (const RefineClasses::Data **)NULL;
    d_num_refine_items = 0;
 }
 
 void StandardRefineTransactionFactory::setTransactionTime(
    double fill_time)
 {
-   xfer::RefineTimeTransaction::setTransactionTime(fill_time);
+   RefineTimeTransaction::setTransactionTime(fill_time);
 }
 
 /*
@@ -78,11 +76,11 @@ void StandardRefineTransactionFactory::setTransactionTime(
  *************************************************************************
  */
 
-tbox::Pointer<tbox::Transaction>
+boost::shared_ptr<tbox::Transaction>
 StandardRefineTransactionFactory::allocate(
-   tbox::Pointer<hier::PatchLevel> dst_level,
-   tbox::Pointer<hier::PatchLevel> src_level,
-   tbox::Pointer<hier::BoxOverlap> overlap,
+   boost::shared_ptr<hier::PatchLevel> dst_level,
+   boost::shared_ptr<hier::PatchLevel> src_level,
+   boost::shared_ptr<hier::BoxOverlap> overlap,
    const hier::Box& dst_mapped_box,
    const hier::Box& src_mapped_box,
    int ritem_id,
@@ -104,7 +102,7 @@ StandardRefineTransactionFactory::allocate(
             src_mapped_box,
             box,
             ritem_id);
-      return tbox::Pointer<tbox::Transaction>(transaction);
+      return boost::shared_ptr<tbox::Transaction>(transaction);
 
    } else {
 
@@ -114,7 +112,7 @@ StandardRefineTransactionFactory::allocate(
             dst_mapped_box,
             src_mapped_box,
             ritem_id);
-      return tbox::Pointer<tbox::Transaction>(transaction);
+      return boost::shared_ptr<tbox::Transaction>(transaction);
 
    }
 }

@@ -941,7 +941,7 @@ void OuternodeData<TYPE>::printAxisSide(
 
 template<class TYPE>
 void OuternodeData<TYPE>::getSpecializedFromDatabase(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
    TBOX_ASSERT(database);
 
@@ -953,7 +953,7 @@ void OuternodeData<TYPE>::getSpecializedFromDatabase(
 
    d_depth = database->getInteger("d_depth");
 
-   tbox::Pointer<tbox::Database> array_database;
+   boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
       std::string array_name = "d_data" + tbox::Utilities::intToString(i)
          + "_1";
@@ -981,7 +981,7 @@ void OuternodeData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void OuternodeData<TYPE>::putSpecializedToDatabase(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
    TBOX_ASSERT(database);
 
@@ -991,7 +991,7 @@ void OuternodeData<TYPE>::putSpecializedToDatabase(
    database->putInteger("d_depth", d_depth);
 
    std::string array_name;
-   tbox::Pointer<tbox::Database> array_database;
+   boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
       if (d_data[i][0].isInitialized()) {
          array_name = "d_data" + tbox::Utilities::intToString(i) + "_1";

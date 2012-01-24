@@ -26,12 +26,12 @@
 namespace SAMRAI {
 namespace mesh {
 
-tbox::Pointer<tbox::Timer> BergerRigoutsos::t_barrier_before;
-tbox::Pointer<tbox::Timer> BergerRigoutsos::t_barrier_after;
-tbox::Pointer<tbox::Timer> BergerRigoutsos::t_find_boxes_with_tags;
-tbox::Pointer<tbox::Timer> BergerRigoutsos::t_run_abr;
-tbox::Pointer<tbox::Timer> BergerRigoutsos::t_global_reductions;
-tbox::Pointer<tbox::Timer> BergerRigoutsos::t_sort_output_nodes;
+boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_barrier_before;
+boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_barrier_after;
+boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_find_boxes_with_tags;
+boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_run_abr;
+boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_global_reductions;
+boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_sort_output_nodes;
 
 tbox::StartupShutdownManager::Handler
 BergerRigoutsos::s_initialize_finalize_handler(
@@ -49,7 +49,7 @@ BergerRigoutsos::s_initialize_finalize_handler(
  */
 BergerRigoutsos::BergerRigoutsos(
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> database):
+   boost::shared_ptr<tbox::Database> database):
    d_dim(dim),
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_max_box_size(hier::IntVector(d_dim, tbox::MathUtilities<int>::getMax())),
@@ -166,7 +166,7 @@ void BergerRigoutsos::findBoxesContainingTags(
    hier::BoxLevel& new_mapped_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
-   const tbox::Pointer<hier::PatchLevel> tag_level,
+   const boost::shared_ptr<hier::PatchLevel> tag_level,
    const int tag_data_index,
    const int tag_val,
    const hier::Box& bound_box,

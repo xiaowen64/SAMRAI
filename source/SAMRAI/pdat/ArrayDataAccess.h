@@ -10,8 +10,8 @@
 #ifndef included_ArrayDataAccess_h
 #define included_ArrayDataAccess_h
 
+#include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/pdat/ArrayData.h"
-
 #include "SAMRAI/pdat/MDA_Access.h"
 
 namespace SAMRAI {

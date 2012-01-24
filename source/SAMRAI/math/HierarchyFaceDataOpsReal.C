@@ -28,7 +28,7 @@ namespace math {
 
 template<class TYPE>
 HierarchyFaceDataOpsReal<TYPE>::HierarchyFaceDataOpsReal(
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int coarsest_level,
    const int finest_level):
    HierarchyDataOpsReal<TYPE>()
@@ -64,7 +64,7 @@ HierarchyFaceDataOpsReal<TYPE>::~HierarchyFaceDataOpsReal()
 
 template<class TYPE>
 void HierarchyFaceDataOpsReal<TYPE>::setPatchHierarchy(
-   tbox::Pointer<hier::PatchHierarchy> hierarchy)
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy)
 {
    TBOX_ASSERT(hierarchy);
 
@@ -93,7 +93,8 @@ void HierarchyFaceDataOpsReal<TYPE>::resetLevels(
    }
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       hier::BoxContainer face_boxes;
 
       for (int nd = 0; nd < dim.getValue(); nd++) {
@@ -109,7 +110,7 @@ void HierarchyFaceDataOpsReal<TYPE>::resetLevels(
 }
 
 template<class TYPE>
-const tbox::Pointer<hier::PatchHierarchy>
+const boost::shared_ptr<hier::PatchHierarchy>
 HierarchyFaceDataOpsReal<TYPE>::getPatchHierarchy() const
 {
    return d_hierarchy;
@@ -162,16 +163,17 @@ void HierarchyFaceDataOpsReal<TYPE>::copyData(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > dst(
+         boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -188,13 +190,13 @@ void HierarchyFaceDataOpsReal<TYPE>::swapData(
    const int data2_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   tbox::Pointer<pdat::FaceDataFactory<TYPE> > d1fact(
+   boost::shared_ptr<pdat::FaceDataFactory<TYPE> > d1fact(
       d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    TBOX_ASSERT(d1fact);
-   tbox::Pointer<pdat::FaceDataFactory<TYPE> > d2fact(
+   boost::shared_ptr<pdat::FaceDataFactory<TYPE> > d2fact(
       d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
    TBOX_ASSERT(d1fact->getGhostCellWidth() == d2fact->getGhostCellWidth());
@@ -207,9 +209,10 @@ void HierarchyFaceDataOpsReal<TYPE>::swapData(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
          d_patch_ops.swapData(p, data1_id, data2_id);
       }
@@ -236,13 +239,14 @@ void HierarchyFaceDataOpsReal<TYPE>::printData(
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       s << "Level number = " << ln << std::endl;
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > d(
+         boost::shared_ptr<pdat::FaceData<TYPE> > d(
          p->getPatchData(data_id),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -267,13 +271,14 @@ void HierarchyFaceDataOpsReal<TYPE>::setToScalar(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > d(
+         boost::shared_ptr<pdat::FaceData<TYPE> > d(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -307,16 +312,17 @@ void HierarchyFaceDataOpsReal<TYPE>::scale(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > dst(
+         boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -342,16 +348,17 @@ void HierarchyFaceDataOpsReal<TYPE>::addScalar(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > dst(
+         boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -377,19 +384,20 @@ void HierarchyFaceDataOpsReal<TYPE>::add(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > dst(
+         boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -415,19 +423,20 @@ void HierarchyFaceDataOpsReal<TYPE>::subtract(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > dst(
+         boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -453,19 +462,20 @@ void HierarchyFaceDataOpsReal<TYPE>::multiply(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > dst(
+         boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -491,19 +501,20 @@ void HierarchyFaceDataOpsReal<TYPE>::divide(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > dst(
+         boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -528,16 +539,17 @@ void HierarchyFaceDataOpsReal<TYPE>::reciprocal(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > dst(
+         boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -565,19 +577,20 @@ void HierarchyFaceDataOpsReal<TYPE>::linearSum(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > dst(
+         boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -604,19 +617,20 @@ void HierarchyFaceDataOpsReal<TYPE>::axpy(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > dst(
+         boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -643,19 +657,20 @@ void HierarchyFaceDataOpsReal<TYPE>::axmy(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > dst(
+         boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -680,16 +695,17 @@ void HierarchyFaceDataOpsReal<TYPE>::abs(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > dst(
+         boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -715,13 +731,14 @@ void HierarchyFaceDataOpsReal<TYPE>::setRandomValues(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > data(
+         boost::shared_ptr<pdat::FaceData<TYPE> > data(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(data);
 #endif
@@ -759,15 +776,16 @@ int HierarchyFaceDataOpsReal<TYPE>::numberOfEntries(
 
    if (interior_only) {
 
-      tbox::Pointer<pdat::FaceDataFactory<TYPE> > dfact(
+      boost::shared_ptr<pdat::FaceDataFactory<TYPE> > dfact(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(dfact);
 #endif
 
       for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-         tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level =
+            d_hierarchy->getPatchLevel(ln);
          const int npatches = level->getNumberOfPatches();
 #ifdef DEBUG_CHECK_ASSERTIONS
          for (int nd = 0; nd < dim.getValue(); nd++) {
@@ -791,11 +809,12 @@ int HierarchyFaceDataOpsReal<TYPE>::numberOfEntries(
    } else {
 
       for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-         tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level =
+            d_hierarchy->getPatchLevel(ln);
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-            tbox::Pointer<pdat::FaceData<TYPE> > d(
+            boost::shared_ptr<pdat::FaceData<TYPE> > d(
                (*ip)->getPatchData(data_id),
-               tbox::__dynamic_cast_tag());
+               boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(d);
 #endif
@@ -831,16 +850,17 @@ double HierarchyFaceDataOpsReal<TYPE>::sumControlVolumes(
    double sum = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > data(
+         boost::shared_ptr<pdat::FaceData<TYPE> > data(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<double> > cv(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<double> > cv(
             p->getPatchData(vol_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(cv);
 #endif
@@ -874,14 +894,15 @@ double HierarchyFaceDataOpsReal<TYPE>::L1Norm(
    double norm = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > data(
+         boost::shared_ptr<pdat::FaceData<TYPE> > data(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<hier::PatchData> pd;
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
@@ -892,9 +913,9 @@ double HierarchyFaceDataOpsReal<TYPE>::L1Norm(
             pd = p->getPatchData(vol_id);
          }
 
-         tbox::Pointer<pdat::FaceData<double> > cv(
+         boost::shared_ptr<pdat::FaceData<double> > cv(
             pd,
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          norm += d_patch_ops.L1Norm(data, box, cv);
       }
    }
@@ -940,17 +961,18 @@ double HierarchyFaceDataOpsReal<TYPE>::weightedL2Norm(
    double norm_squared = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > data(
+         boost::shared_ptr<pdat::FaceData<TYPE> > data(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > weight(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > weight(
             p->getPatchData(wgt_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<hier::PatchData> pd;
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
@@ -961,9 +983,9 @@ double HierarchyFaceDataOpsReal<TYPE>::weightedL2Norm(
             pd = p->getPatchData(vol_id);
          }
 
-         tbox::Pointer<pdat::FaceData<double> > cv(
+         boost::shared_ptr<pdat::FaceData<double> > cv(
             pd,
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          double pnorm = d_patch_ops.weightedL2Norm(data, weight, box, cv);
 
          norm_squared += pnorm * pnorm;
@@ -1024,14 +1046,15 @@ double HierarchyFaceDataOpsReal<TYPE>::maxNorm(
    double norm = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > data(
+         boost::shared_ptr<pdat::FaceData<TYPE> > data(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<hier::PatchData> pd;
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
@@ -1042,9 +1065,9 @@ double HierarchyFaceDataOpsReal<TYPE>::maxNorm(
             pd = p->getPatchData(vol_id);
          }
 
-         tbox::Pointer<pdat::FaceData<double> > cv(
+         boost::shared_ptr<pdat::FaceData<double> > cv(
             pd,
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          norm = tbox::MathUtilities<double>::Max(norm,
                d_patch_ops.maxNorm(data, box, cv));
       }
@@ -1078,17 +1101,18 @@ TYPE HierarchyFaceDataOpsReal<TYPE>::dot(
    TYPE dprod = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > data1(
+         boost::shared_ptr<pdat::FaceData<TYPE> > data1(
             p->getPatchData(data1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > data2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > data2(
             p->getPatchData(data2_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<hier::PatchData> pd;
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
@@ -1099,9 +1123,9 @@ TYPE HierarchyFaceDataOpsReal<TYPE>::dot(
             pd = p->getPatchData(vol_id);
          }
 
-         tbox::Pointer<pdat::FaceData<double> > cv(
+         boost::shared_ptr<pdat::FaceData<double> > cv(
             pd,
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          dprod += d_patch_ops.dot(data1, data2, box, cv);
       }
    }
@@ -1130,16 +1154,17 @@ TYPE HierarchyFaceDataOpsReal<TYPE>::integral(
    TYPE local_integral = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > data(
+         boost::shared_ptr<pdat::FaceData<TYPE> > data(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<double> > vol(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<double> > vol(
             p->getPatchData(vol_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(data);
@@ -1184,17 +1209,18 @@ int HierarchyFaceDataOpsReal<TYPE>::computeConstrProdPos(
    int test = 1;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > data1(
+         boost::shared_ptr<pdat::FaceData<TYPE> > data1(
             p->getPatchData(data1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > data2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > data2(
             p->getPatchData(data2_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<hier::PatchData> pd;
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
@@ -1205,9 +1231,9 @@ int HierarchyFaceDataOpsReal<TYPE>::computeConstrProdPos(
             pd = p->getPatchData(vol_id);
          }
 
-         tbox::Pointer<pdat::FaceData<double> > cv(
+         boost::shared_ptr<pdat::FaceData<double> > cv(
             pd,
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          test = tbox::MathUtilities<int>::Min(test,
                d_patch_ops.computeConstrProdPos(data1, data2, box, cv));
       }
@@ -1235,17 +1261,18 @@ void HierarchyFaceDataOpsReal<TYPE>::compareToScalar(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > dst(
+         boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<hier::PatchData> pd;
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
@@ -1256,9 +1283,9 @@ void HierarchyFaceDataOpsReal<TYPE>::compareToScalar(
             pd = p->getPatchData(vol_id);
          }
 
-         tbox::Pointer<pdat::FaceData<double> > cv(
+         boost::shared_ptr<pdat::FaceData<double> > cv(
             pd,
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          d_patch_ops.compareToScalar(dst, src, alpha, box, cv);
       }
    }
@@ -1281,17 +1308,18 @@ int HierarchyFaceDataOpsReal<TYPE>::testReciprocal(
    int test = 1;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > dst(
+         boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<hier::PatchData> pd;
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
@@ -1302,9 +1330,9 @@ int HierarchyFaceDataOpsReal<TYPE>::testReciprocal(
             pd = p->getPatchData(vol_id);
          }
 
-         tbox::Pointer<pdat::FaceData<double> > cv(
+         boost::shared_ptr<pdat::FaceData<double> > cv(
             pd,
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          test = tbox::MathUtilities<int>::Min(test,
                d_patch_ops.testReciprocal(dst, src, box, cv));
       }
@@ -1334,16 +1362,17 @@ TYPE HierarchyFaceDataOpsReal<TYPE>::maxPointwiseDivide(
    TYPE max = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > numer(
+         boost::shared_ptr<pdat::FaceData<TYPE> > numer(
             p->getPatchData(numer_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > denom(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > denom(
             p->getPatchData(denom_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          hier::Box box = p->getBox();
 
@@ -1377,16 +1406,17 @@ TYPE HierarchyFaceDataOpsReal<TYPE>::minPointwiseDivide(
    TYPE min = tbox::MathUtilities<TYPE>::getMax();
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > numer(
+         boost::shared_ptr<pdat::FaceData<TYPE> > numer(
             p->getPatchData(numer_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::FaceData<TYPE> > denom(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::FaceData<TYPE> > denom(
             p->getPatchData(denom_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          hier::Box box = p->getBox();
 
@@ -1419,13 +1449,14 @@ TYPE HierarchyFaceDataOpsReal<TYPE>::min(
    TYPE minval = tbox::MathUtilities<TYPE>::getMax();
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > d(
+         boost::shared_ptr<pdat::FaceData<TYPE> > d(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -1458,13 +1489,14 @@ TYPE HierarchyFaceDataOpsReal<TYPE>::max(
    TYPE maxval = -tbox::MathUtilities<TYPE>::getMax();
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::FaceData<TYPE> > d(
+         boost::shared_ptr<pdat::FaceData<TYPE> > d(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif

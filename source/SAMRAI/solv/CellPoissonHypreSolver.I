@@ -60,7 +60,7 @@ void CellPoissonHypreSolver::setBoundaries(
 SAMRAI_INLINE_KEYWORD
 void CellPoissonHypreSolver::setPhysicalBcCoefObject(
    const RobinBcCoefStrategy* physical_bc_coef_strategy,
-   const tbox::Pointer<hier::Variable> variable)
+   const boost::shared_ptr<hier::Variable> variable)
 {
    d_physical_bc_coef_strategy = physical_bc_coef_strategy;
    d_physical_bc_variable = variable;

@@ -8,12 +8,12 @@
  *
  ************************************************************************/
 
-#include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/Pointer.C"
 #include "SkeletonCellDoubleConservativeLinearRefine.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
 #ifndef LACKS_EXPLICIT_TEMPLATE_INSTANTIATION
-template class tbox::Pointer<SkeletonCellDoubleConservativeLinearRefine>;
+template class boost::shared_ptr<SkeletonCellDoubleConservativeLinearRefine>;
 #endif

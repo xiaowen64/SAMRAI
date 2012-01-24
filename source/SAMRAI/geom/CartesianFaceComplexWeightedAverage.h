@@ -58,7 +58,7 @@ public:
     */
    bool
    findCoarsenOperator(
-      const tbox::Pointer<hier::Variable>& var,
+      const boost::shared_ptr<hier::Variable>& var,
       const std::string& op_name) const;
 
    /**

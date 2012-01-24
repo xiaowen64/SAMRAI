@@ -59,7 +59,7 @@ OuterfaceGeometry::~OuterfaceGeometry()
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::calculateOverlap(
+boost::shared_ptr<hier::BoxOverlap> OuterfaceGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -76,7 +76,7 @@ tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::calculateOverlap(
    const OuterfaceGeometry* t_src =
       dynamic_cast<const OuterfaceGeometry *>(&src_geometry);
 
-   tbox::Pointer<hier::BoxOverlap> over(NULL);
+   boost::shared_ptr<hier::BoxOverlap> over;
    if ((t_src != NULL) && (t_dst != NULL)) {
       over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
             transformation, dst_restrict_boxes);
@@ -99,7 +99,7 @@ tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::calculateOverlap(
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::doOverlap(
+boost::shared_ptr<hier::BoxOverlap> OuterfaceGeometry::doOverlap(
    const FaceGeometry& dst_geometry,
    const OuterfaceGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -191,7 +191,7 @@ tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::doOverlap(
    // Create the face overlap data object using the boxes and source shift
 
    hier::BoxOverlap* overlap = new FaceOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::shared_ptr<hier::BoxOverlap>(overlap);
 }
 
 /*
@@ -201,7 +201,7 @@ tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::doOverlap(
  *
  *************************************************************************
  */
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 OuterfaceGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
@@ -218,7 +218,7 @@ OuterfaceGeometry::setUpOverlap(
 
    // Create the face overlap data object using the boxes and source shift
    hier::BoxOverlap* overlap = new FaceOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::shared_ptr<hier::BoxOverlap>(overlap);
 
 }
 

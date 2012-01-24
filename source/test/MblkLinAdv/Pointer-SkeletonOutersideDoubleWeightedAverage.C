@@ -8,12 +8,12 @@
  *
  ************************************************************************/
 
-#include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/Pointer.C"
 #include "SkeletonOutersideDoubleWeightedAverage.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
 #ifndef LACKS_EXPLICIT_TEMPLATE_INSTANTIATION
-template class tbox::Pointer<SkeletonOutersideDoubleWeightedAverage>;
+template class boost::shared_ptr<SkeletonOutersideDoubleWeightedAverage>;
 #endif

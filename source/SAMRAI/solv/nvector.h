@@ -11,6 +11,7 @@
 extern "C" {
 #endif
 
+#include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/solv/solv_NVector.h"
 
 #ifdef  __cplusplus

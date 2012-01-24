@@ -16,10 +16,11 @@
 #include "SAMRAI/pdat/FaceVariable.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/Index.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/Complex.h"
+
+#include <boost/shared_ptr.hpp>
 
 /*
  *************************************************************************
@@ -120,12 +121,12 @@ FaceComplexLinearTimeInterpolateOp::~FaceComplexLinearTimeInterpolateOp()
 }
 
 bool FaceComplexLinearTimeInterpolateOp::findTimeInterpolateOperator(
-   const tbox::Pointer<hier::Variable>& var,
+   const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
-   const tbox::Pointer<FaceVariable<dcomplex> > cast_var(
+   const boost::shared_ptr<FaceVariable<dcomplex> > cast_var(
       var,
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    if (cast_var && (op_name == "STD_LINEAR_TIME_INTERPOLATE")) {
       return true;
    } else {

@@ -35,8 +35,8 @@ using namespace SAMRAI;
 MultiblockTester::MultiblockTester(
    const string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database>& main_input_db,
-   tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+   boost::shared_ptr<tbox::Database>& main_input_db,
+   boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    PatchMultiblockTestStrategy* data_test,
    bool do_refine,
    bool do_coarsen,
@@ -109,11 +109,11 @@ MultiblockTester::~MultiblockTester()
  */
 
 void MultiblockTester::registerVariable(
-   const tbox::Pointer<hier::Variable> src_variable,
-   const tbox::Pointer<hier::Variable> dst_variable,
+   const boost::shared_ptr<hier::Variable> src_variable,
+   const boost::shared_ptr<hier::Variable> dst_variable,
    const hier::IntVector& src_ghosts,
    const hier::IntVector& dst_ghosts,
-   const tbox::Pointer<hier::GridGeometry> xfer_geom,
+   const boost::shared_ptr<hier::GridGeometry> xfer_geom,
    const string& operator_name)
 {
    TBOX_ASSERT(src_variable);
@@ -138,15 +138,14 @@ void MultiblockTester::registerVariable(
    d_patch_data_components.setFlag(src_id);
    d_patch_data_components.setFlag(dst_id);
 
-   tbox::Pointer<hier::RefineOperator> refine_operator(NULL);
-   tbox::Pointer<hier::CoarsenOperator> coarsen_operator(NULL);
+   boost::shared_ptr<hier::RefineOperator> refine_operator;
+   boost::shared_ptr<hier::CoarsenOperator> coarsen_operator;
 
    if (d_do_refine) {
       refine_operator = xfer_geom->lookupRefineOperator(src_variable,
             operator_name);
 
-      d_mblk_refine_alg =
-         new xfer::RefineAlgorithm(d_dim);
+      d_mblk_refine_alg.reset(new xfer::RefineAlgorithm(d_dim));
 
       hier::IntVector scratch_ghosts =
          hier::IntVector::max(src_ghosts, dst_ghosts);
@@ -183,11 +182,11 @@ void MultiblockTester::registerVariable(
 }
 
 void MultiblockTester::registerVariableForReset(
-   const tbox::Pointer<hier::Variable> src_variable,
-   const tbox::Pointer<hier::Variable> dst_variable,
+   const boost::shared_ptr<hier::Variable> src_variable,
+   const boost::shared_ptr<hier::Variable> dst_variable,
    const hier::IntVector& src_ghosts,
    const hier::IntVector& dst_ghosts,
-   const tbox::Pointer<hier::GridGeometry> xfer_geom,
+   const boost::shared_ptr<hier::GridGeometry> xfer_geom,
    const string& operator_name)
 {
    TBOX_ASSERT(src_variable);
@@ -209,8 +208,8 @@ void MultiblockTester::registerVariableForReset(
    d_patch_data_components.setFlag(src_id);
    d_patch_data_components.setFlag(dst_id);
 
-   tbox::Pointer<hier::RefineOperator> refine_operator(NULL);
-   tbox::Pointer<hier::CoarsenOperator> coarsen_operator(NULL);
+   boost::shared_ptr<hier::RefineOperator> refine_operator;
+   boost::shared_ptr<hier::CoarsenOperator> coarsen_operator;
 
    if (d_do_refine) {
       refine_operator = xfer_geom->lookupRefineOperator(src_variable,
@@ -261,7 +260,7 @@ void MultiblockTester::createRefineSchedule(
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
 #endif
 
-   tbox::Pointer<hier::PatchLevel> level =
+   boost::shared_ptr<hier::PatchLevel> level =
       d_patch_hierarchy->getPatchLevel(level_number);
 
    if (d_do_refine) {
@@ -283,7 +282,7 @@ void MultiblockTester::createRefineSchedule(
       } else if (d_refine_option == "INTERIOR_FROM_COARSER_LEVEL") {
          d_refine_schedule[level_number] =
             d_mblk_refine_alg->createSchedule(level,
-               tbox::Pointer<SAMRAI::hier::PatchLevel>(NULL),
+               boost::shared_ptr<hier::PatchLevel>(),
                level_number - 1,
                d_patch_hierarchy,
                this);
@@ -323,13 +322,13 @@ void MultiblockTester::createCoarsenSchedule(
  *
  *
  *
- *    tbox::Pointer<hier::PatchLevel > level =
+ *    boost::shared_ptr<hier::PatchLevel > level =
  *       d_patch_hierarchy->getPatchLevel(level_number);
- *    tbox::Pointer<hier::PatchLevel > coarser_level =
+ *    boost::shared_ptr<hier::PatchLevel > coarser_level =
  *       d_patch_hierarchy->getPatchLevel(level_number-1);
  *
- *    tbox::Array< tbox::Pointer< hier::Connector > > fine_to_coarse;
- *    tbox::Array< tbox::Pointer< hier::Connector > > coarse_to_fine;
+ *    tbox::Array< boost::shared_ptr< hier::Connector > > fine_to_coarse;
+ *    tbox::Array< boost::shared_ptr< hier::Connector > > coarse_to_fine;
  *
  *    const hier::Connector *fine_to_coarse =
  *       &lh.getConnector(level_number, level_number-1);
@@ -432,7 +431,7 @@ bool MultiblockTester::verifyCommunicationResults() const
    }
    for (int ln = 0;
         ln <= d_patch_hierarchy->getFinestLevelNumber(); ln++) {
-      tbox::Pointer<hier::PatchLevel> level =
+      boost::shared_ptr<hier::PatchLevel> level =
          d_patch_hierarchy->getPatchLevel(ln);
 
       for (hier::PatchLevel::Iterator mi(level); mi; mi++) {
@@ -458,12 +457,12 @@ bool MultiblockTester::verifyCommunicationResults() const
  *************************************************************************
  */
 void MultiblockTester::initializeLevelData(
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int level_number,
    const double time,
    const bool can_be_refined,
    const bool initial_time,
-   const tbox::Pointer<hier::PatchLevel> old_level,
+   const boost::shared_ptr<hier::PatchLevel> old_level,
    const bool allocate_data)
 {
    (void)can_be_refined;
@@ -476,16 +475,16 @@ void MultiblockTester::initializeLevelData(
    TBOX_ASSERT(level_number >= 0);
 #endif
 
-   tbox::Pointer<hier::PatchHierarchy> mblk_hierarchy =
+   boost::shared_ptr<hier::PatchHierarchy> mblk_hierarchy =
       hierarchy;
 
-   tbox::Pointer<hier::PatchLevel> level =
+   boost::shared_ptr<hier::PatchLevel> level =
       hierarchy->getPatchLevel(level_number);
 
    level->allocatePatchData(d_patch_data_components, time);
 
    for (hier::PatchLevel::Iterator p(level); p; p++) {
-      tbox::Pointer<hier::Patch> patch = *p;
+      boost::shared_ptr<hier::Patch> patch = *p;
       const hier::BlockId& block_id = patch->getBox().getBlockId();
 
       int level_num = level->getLevelNumber();
@@ -526,7 +525,7 @@ void MultiblockTester::initializeLevelData(
 }
 
 void MultiblockTester::resetHierarchyConfiguration(
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int coarsest_level,
    const int finest_level)
 {
@@ -536,7 +535,7 @@ void MultiblockTester::resetHierarchyConfiguration(
 }
 
 void MultiblockTester::applyGradientDetector(
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int level_number,
    const double dt_time,
    const int tag_index,
@@ -551,13 +550,13 @@ void MultiblockTester::applyGradientDetector(
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
 #endif
 
-   tbox::Pointer<hier::PatchLevel> level =
+   boost::shared_ptr<hier::PatchLevel> level =
       hierarchy->getPatchLevel(level_number);
 
    d_data_test_strategy->setDataContext(d_source);
 
    for (hier::PatchLevel::Iterator p(level); p; p++) {
-      tbox::Pointer<hier::Patch> patch = *p;
+      boost::shared_ptr<hier::Patch> patch = *p;
 
       d_data_test_strategy->tagCellsToRefine(*patch,
          hierarchy,
@@ -585,7 +584,7 @@ void MultiblockTester::setPhysicalBoundaryConditions(
    const hier::IntVector& gcw)
 {
    (void)time;
-   tbox::Pointer<hier::VariableContext> save_context =
+   boost::shared_ptr<hier::VariableContext> save_context =
       d_data_test_strategy->getDataContext();
 
    d_data_test_strategy->setDataContext(d_refine_scratch);
@@ -605,11 +604,11 @@ void MultiblockTester::fillSingularityBoundaryConditions(
    const double time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
-   const tbox::Pointer<hier::GridGeometry>& grid_geometry)
+   const boost::shared_ptr<hier::GridGeometry>& grid_geometry)
 {
    NULL_USE(grid_geometry);
    (void)time;
-   tbox::Pointer<hier::VariableContext> save_context =
+   boost::shared_ptr<hier::VariableContext> save_context =
       d_data_test_strategy->getDataContext();
 
 //   if (d_filling_coarse_scratch) {
@@ -666,7 +665,7 @@ void MultiblockTester::preprocessCoarsen(
    const hier::IntVector& ratio)
 {
    d_data_test_strategy->preprocessCoarsen(coarse, fine,
-      tbox::Pointer<SAMRAI::hier::VariableContext>(NULL),
+      boost::shared_ptr<hier::VariableContext>(),
       coarse_box, ratio);
 }
 
@@ -677,7 +676,7 @@ void MultiblockTester::postprocessCoarsen(
    const hier::IntVector& ratio)
 {
    d_data_test_strategy->postprocessCoarsen(coarse, fine,
-      tbox::Pointer<SAMRAI::hier::VariableContext>(NULL),
+      boost::shared_ptr<hier::VariableContext>(),
       coarse_box, ratio);
 }
 
@@ -692,23 +691,23 @@ void MultiblockTester::postprocessCoarsen(
  */
 
 void MultiblockTester::setupHierarchy(
-   tbox::Pointer<tbox::Database> main_input_db,
-   tbox::Pointer<mesh::StandardTagAndInitialize> cell_tagger)
+   boost::shared_ptr<tbox::Database> main_input_db,
+   boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(main_input_db);
 #endif
 
-   tbox::Pointer<mesh::BergerRigoutsos> box_generator(
+   boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
       new mesh::BergerRigoutsos(d_dim));
 
-   tbox::Pointer<mesh::TreeLoadBalancer> load_balancer(
+   boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
       new mesh::TreeLoadBalancer(d_dim,
          "TreeLoadBalancer",
          main_input_db->getDatabase("TreeLoadBalancer")));
    load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-   tbox::Pointer<mesh::GriddingAlgorithm> gridding_alg(
+   boost::shared_ptr<mesh::GriddingAlgorithm> gridding_alg(
       new mesh::GriddingAlgorithm(
          d_patch_hierarchy,
          "GriddingAlgorithm",

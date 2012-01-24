@@ -17,10 +17,10 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Timer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -37,7 +37,7 @@ namespace tbox {
  * output generation.  Within the source code, timer objects are retrieved
  * as follows:
  *
- *    Pointer<Timer> name_timer =
+ *    boost::shared_ptr<Timer> name_timer =
  *        TimerManager::getManager->getTimer("name");
  *
  * Here `name' is the name string identifier for the timer.
@@ -160,7 +160,7 @@ public:
     */
    static void
    createManager(
-      Pointer<Database> input_db);
+      boost::shared_ptr<Database> input_db);
 
    /*!
     * Return a pointer to the singleton instance of the timer manager.
@@ -187,7 +187,7 @@ public:
     * When assertion checking is active, an assertion will result if the
     * string is empty.
     */
-   virtual Pointer<Timer>
+   virtual boost::shared_ptr<Timer>
    getTimer(
       const std::string& name,
       bool ignore_timer_input = false);
@@ -201,7 +201,7 @@ public:
     */
    virtual bool
    checkTimerExists(
-      Pointer<Timer>& timer,
+      boost::shared_ptr<Timer>& timer,
       const std::string& name) const;
 
    /*!
@@ -233,7 +233,7 @@ protected:
     * can have access to the constructor for the class.
     */
    explicit TimerManager(
-      Pointer<Database> input_db);
+      boost::shared_ptr<Database> input_db);
 
    /*!
     * TimerManager is a Singleton class; its destructor is protected.
@@ -296,9 +296,9 @@ private:
     */
    bool
    checkTimerExistsInArray(
-      Pointer<Timer>& timer,
+      boost::shared_ptr<Timer>& timer,
       const std::string& name,
-      const std::vector<Pointer<Timer> >&
+      const std::vector<boost::shared_ptr<Timer> >&
       timer_array) const;
 
    /*
@@ -384,7 +384,7 @@ private:
     */
    void
    getFromInput(
-      Pointer<Database> input_db);
+      boost::shared_ptr<Database> input_db);
 
    /*
     * Private member used by the above routine (processInputStringData)
@@ -464,19 +464,19 @@ private:
     * Main timer used to time overall run time (time between
     * creation and print, or deletion, of TimerManager.
     */
-   Pointer<Timer> d_main_timer;
+   boost::shared_ptr<Timer> d_main_timer;
 
    /*
     * Count of timers registered with the timer manager and an
     * array of pointers to those timers.
     */
-   std::vector<Pointer<Timer> > d_timers;
+   std::vector<boost::shared_ptr<Timer> > d_timers;
 
    /*
     * An array of dummy inactive timers is used to record
     * number of accesses to non-active timers.
     */
-   std::vector<Pointer<Timer> > d_inactive_timers;
+   std::vector<boost::shared_ptr<Timer> > d_inactive_timers;
 
    /*
     * Timer which measures overall run time.  All other timers are

@@ -61,7 +61,7 @@ PatchDataTestStrategy::~PatchDataTestStrategy()
  */
 
 void PatchDataTestStrategy::readVariableInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -80,7 +80,7 @@ void PatchDataTestStrategy::readVariableInput(
 
    for (int i = 0; i < nkeys; i++) {
 
-      tbox::Pointer<tbox::Database> var_db = db->getDatabase(var_keys[i]);
+      boost::shared_ptr<tbox::Database> var_db = db->getDatabase(var_keys[i]);
 
       if (var_db->keyExists("src_name")) {
          d_variable_src_name[i] = var_db->getString("src_name");
@@ -129,7 +129,7 @@ void PatchDataTestStrategy::readVariableInput(
 }
 
 void PatchDataTestStrategy::readRefinementInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);

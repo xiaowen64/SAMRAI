@@ -452,9 +452,9 @@ private:
    // Make some temporary variable statuses to avoid repetitious allocations.
    int d_mpi_err;
 
-   static Pointer<Timer> t_waitall_timer;
-   static Pointer<Timer> t_send_timer;
-   static Pointer<Timer> t_recv_timer;
+   static boost::shared_ptr<Timer> t_waitall_timer;
+   static boost::shared_ptr<Timer> t_send_timer;
+   static boost::shared_ptr<Timer> t_recv_timer;
 
    /**
     * \brief Has shutdown handler been initialized.

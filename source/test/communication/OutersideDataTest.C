@@ -34,7 +34,7 @@ using namespace std;
 OutersideDataTest::OutersideDataTest(
    const string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> main_input_db,
+   boost::shared_ptr<tbox::Database> main_input_db,
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
@@ -76,10 +76,11 @@ OutersideDataTest::OutersideDataTest(
       getDatabase("PatchHierarchy")->
       getInteger("max_levels") - 1;
 
-   d_cart_grid_geometry = new geom::CartesianGridGeometry(
+   d_cart_grid_geometry.reset(
+      new geom::CartesianGridGeometry(
          dim,
          "CartesianGridGeometry",
-         main_input_db->getDatabase("CartesianGridGeometry"));
+         main_input_db->getDatabase("CartesianGridGeometry")));
 
    setGridGeometry(d_cart_grid_geometry);
    readTestInput(main_input_db->getDatabase("OutersidePatchDataTest"));
@@ -91,7 +92,7 @@ OutersideDataTest::~OutersideDataTest()
 }
 
 void OutersideDataTest::readTestInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -104,14 +105,14 @@ void OutersideDataTest::readTestInput(
    readVariableInput(db->getDatabase("VariableData"));
    readRefinementInput(db->getDatabase("RefinementData"));
 
-   tbox::Pointer<tbox::Database> var_data = db->getDatabase("VariableData");
+   boost::shared_ptr<tbox::Database> var_data = db->getDatabase("VariableData");
    tbox::Array<string> var_keys = var_data->getAllKeys();
    int nkeys = var_keys.getSize();
 
    d_use_fine_value_at_interface.resizeArray(nkeys);
 
    for (int i = 0; i < nkeys; i++) {
-      tbox::Pointer<tbox::Database> var_db = var_data->getDatabase(var_keys[i]);
+      boost::shared_ptr<tbox::Database> var_db = var_data->getDatabase(var_keys[i]);
 
       if (var_db->keyExists("use_fine_value_at_interface")) {
          d_use_fine_value_at_interface[i] =
@@ -160,17 +161,17 @@ void OutersideDataTest::registerVariables(
    d_variables_dst.resizeArray(nvars);
 
    for (int i = 0; i < nvars; i++) {
-      d_variables_src[i] =
+      d_variables_src[i].reset(
          new pdat::OutersideVariable<double>(
             d_dim,
             d_variable_src_name[i],
-            d_variable_depth[i]);
-      d_variables_dst[i] =
+            d_variable_depth[i]));
+      d_variables_dst[i].reset(
          new pdat::SideVariable<double>(
             d_dim,
             d_variable_dst_name[i],
             d_variable_depth[i],
-            d_use_fine_value_at_interface[i]);
+            d_use_fine_value_at_interface[i]));
 
       if (d_do_refine) {
          commtest->registerVariable(d_variables_src[i],
@@ -194,7 +195,7 @@ void OutersideDataTest::registerVariables(
 
 void OutersideDataTest::initializeDataOnPatch(
    const hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    char src_or_dst)
 {
@@ -203,24 +204,24 @@ void OutersideDataTest::initializeDataOnPatch(
    hier::VariableDatabase* variable_db =
       hier::VariableDatabase::getDatabase();
    variable_db->printClassData();
-   tbox::Array<tbox::Pointer<hier::Variable> >& variables =
+   tbox::Array<boost::shared_ptr<hier::Variable> >& variables =
       src_or_dst == 's' ? d_variables_src : d_variables_dst;
 
    if (d_do_refine) {
 
       for (int i = 0; i < variables.getSize(); i++) {
 
-         tbox::Pointer<hier::PatchData> data =
+         boost::shared_ptr<hier::PatchData> data =
             patch.getPatchData(variables[i], getDataContext());
 
          TBOX_ASSERT(data);
 
-         tbox::Pointer<pdat::OutersideData<double> > oside_data(
+         boost::shared_ptr<pdat::OutersideData<double> > oside_data(
             data,
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::SideData<double> > side_data(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<double> > side_data(
             data,
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          hier::Box dbox = data->getBox();
 
@@ -237,17 +238,17 @@ void OutersideDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < variables.getSize(); i++) {
 
-         tbox::Pointer<hier::PatchData> data =
+         boost::shared_ptr<hier::PatchData> data =
             patch.getPatchData(variables[i], getDataContext());
 
          TBOX_ASSERT(data);
 
-         tbox::Pointer<pdat::OutersideData<double> > oside_data(
+         boost::shared_ptr<pdat::OutersideData<double> > oside_data(
             data,
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::SideData<double> > side_data(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<double> > side_data(
             data,
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          hier::Box dbox = data->getGhostBox();
 
@@ -264,9 +265,9 @@ void OutersideDataTest::initializeDataOnPatch(
 }
 
 void OutersideDataTest::checkPatchInteriorData(
-   const tbox::Pointer<pdat::OutersideData<double> >& data,
+   const boost::shared_ptr<pdat::OutersideData<double> >& data,
    const hier::Box& interior,
-   const tbox::Pointer<geom::CartesianPatchGeometry>& pgeom) const
+   const boost::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
@@ -335,7 +336,7 @@ void OutersideDataTest::setPhysicalBoundaryConditions(
 }
 
 void OutersideDataTest::setLinearData(
-   tbox::Pointer<pdat::SideData<double> > data,
+   boost::shared_ptr<pdat::SideData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -343,9 +344,9 @@ void OutersideDataTest::setLinearData(
    TBOX_ASSERT(data);
 #endif
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
    double x, y, z;
@@ -398,7 +399,7 @@ void OutersideDataTest::setLinearData(
 }
 
 void OutersideDataTest::setLinearData(
-   tbox::Pointer<pdat::OutersideData<double> > data,
+   boost::shared_ptr<pdat::OutersideData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -408,9 +409,9 @@ void OutersideDataTest::setLinearData(
    TBOX_ASSERT(data);
 #endif
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
    double x = 0., y = 0., z = 0.;
@@ -471,7 +472,7 @@ void OutersideDataTest::setLinearData(
 
 bool OutersideDataTest::verifyResults(
    const hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
    (void)hierarchy;
@@ -489,7 +490,7 @@ bool OutersideDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      tbox::Pointer<pdat::SideData<double> > solution(
+      boost::shared_ptr<pdat::SideData<double> > solution(
          new pdat::SideData<double>(pbox, 1, tgcw));
 
       hier::Box tbox(pbox);
@@ -503,9 +504,9 @@ bool OutersideDataTest::verifyResults(
 
       for (int i = 0; i < d_variables_dst.getSize(); i++) {
 
-         tbox::Pointer<pdat::SideData<double> > side_data(
+         boost::shared_ptr<pdat::SideData<double> > side_data(
             patch.getPatchData(d_variables_dst[i], getDataContext()),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          int depth = side_data->getDepth();
          hier::Box dbox = side_data->getGhostBox();
 

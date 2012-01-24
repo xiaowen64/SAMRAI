@@ -240,7 +240,7 @@ void TagAndInitializeStrategy::resetRefineBoxes(
  */
 
 void TagAndInitializeStrategy::getFromInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -256,7 +256,7 @@ void TagAndInitializeStrategy::getFromInput(
          << "for TagAndInitializeStrategy class for \n"
          << "discussion of the entry format." << std::endl);
    }
-   tbox::Pointer<tbox::Database> refine_box_db =
+   boost::shared_ptr<tbox::Database> refine_box_db =
       db->getDatabase("RefineBoxes");
    tbox::Array<std::string> box_keys = refine_box_db->getAllKeys();
    int nkeys = box_keys.getSize();
@@ -319,7 +319,7 @@ void TagAndInitializeStrategy::getFromInput(
                              << "of the expected input format."
                              << std::endl);
          }
-         tbox::Pointer<tbox::Database> level_refine_box_db =
+         boost::shared_ptr<tbox::Database> level_refine_box_db =
             refine_box_db->getDatabase(level_boxes_name);
 
          /*

@@ -17,8 +17,9 @@
 #include "SAMRAI/tbox/SiloDatabase.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/RestartManager.h"
+
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 using namespace std;
@@ -39,17 +40,17 @@ public:
    }
 
    void putToDatabase(
-      tbox::Pointer<tbox::Database> db)
+      boost::shared_ptr<tbox::Database> db)
    {
       writeTestData(db);
    }
 
    void getFromDatabase()
    {
-      tbox::Pointer<tbox::Database> root_db =
+      boost::shared_ptr<tbox::Database> root_db =
          tbox::RestartManager::getManager()->getRootDatabase();
 
-      tbox::Pointer<tbox::Database> db;
+      boost::shared_ptr<tbox::Database> db;
       if (root_db->isDatabase("RestartTester")) {
          db = root_db->getDatabase("RestartTester");
       }
@@ -88,7 +89,7 @@ int main(
 
       setupTestData();
 
-      tbox::Pointer<tbox::SiloDatabase> database(new tbox::SiloDatabase(
+      boost::shared_ptr<tbox::SiloDatabase> database(new tbox::SiloDatabase(
                                                     "SAMRAI Restart"));
       std::string name = "./restart." + tbox::Utilities::processorToString(
             mpi.getRank()) + ".silo";
@@ -101,8 +102,8 @@ int main(
       restart_manager->writeRestartToDatabase();
 
       database->close();
-      restart_manager->setRootDatabase(tbox::Pointer<SAMRAI::tbox::Database>(
-            NULL));
+      restart_manager->setRootDatabase(
+         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
 
       DBClose(silo_file);
 
@@ -110,7 +111,7 @@ int main(
 
       tbox::plog << "\n--- Silo read database tests BEGIN ---" << endl;
 
-      database = new tbox::SiloDatabase("SAMRAI Restart");
+      database.reset(new tbox::SiloDatabase("SAMRAI Restart"));
       silo_file = DBOpen(name.c_str(), DB_UNKNOWN, DB_READ);
       database->attachToFile(silo_file, "/");
 
@@ -119,8 +120,8 @@ int main(
       silo_tester.getFromDatabase();
 
       database->close();
-      restart_manager->setRootDatabase(tbox::Pointer<SAMRAI::tbox::Database>(
-            NULL));
+      restart_manager->setRootDatabase(
+         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
 
       DBClose(silo_file);
 

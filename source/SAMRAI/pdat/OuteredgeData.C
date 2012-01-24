@@ -1257,7 +1257,7 @@ void OuteredgeData<TYPE>::printAxisSide(
 
 template<class TYPE>
 void OuteredgeData<TYPE>::getSpecializedFromDatabase(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
    TBOX_ASSERT(database);
 
@@ -1270,7 +1270,7 @@ void OuteredgeData<TYPE>::getSpecializedFromDatabase(
 
    d_depth = database->getInteger("d_depth");
 
-   tbox::Pointer<tbox::Database> array_database;
+   boost::shared_ptr<tbox::Database> array_database;
 
    for (int axis = 0; axis < getDim().getValue(); ++axis) {
 
@@ -1307,7 +1307,7 @@ void OuteredgeData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void OuteredgeData<TYPE>::putSpecializedToDatabase(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
    TBOX_ASSERT(database);
 
@@ -1316,7 +1316,7 @@ void OuteredgeData<TYPE>::putSpecializedToDatabase(
 
    database->putInteger("d_depth", d_depth);
 
-   tbox::Pointer<tbox::Database> array_database;
+   boost::shared_ptr<tbox::Database> array_database;
 
    for (int axis = 0; axis < getDim().getValue(); ++axis) {
 

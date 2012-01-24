@@ -17,7 +17,8 @@
 #include "SAMRAI/math/ArrayDataNormOpsComplex.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/Complex.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace math {
@@ -66,7 +67,7 @@ public:
     */
    int
    numberOfEntries(
-      const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const hier::Box& box) const;
 
    /**
@@ -74,8 +75,8 @@ public:
     */
    double
    sumControlVolumes(
-      const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
-      const tbox::Pointer<pdat::FaceData<double> >& cvol,
+      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::FaceData<double> >& cvol,
       const hier::Box& box) const;
 
    /**
@@ -85,8 +86,8 @@ public:
     */
    void
    abs(
-      tbox::Pointer<pdat::FaceData<double> >& dst,
-      const tbox::Pointer<pdat::FaceData<dcomplex> >& src,
+      boost::shared_ptr<pdat::FaceData<double> >& dst,
+      const boost::shared_ptr<pdat::FaceData<dcomplex> >& src,
       const hier::Box& box) const;
 
    /**
@@ -98,10 +99,11 @@ public:
     */
    double
    L1Norm(
-      const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::FaceData<double> > cvol =
-         tbox::Pointer<pdat::FaceData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::FaceData<double> > cvol =
+         boost::shared_ptr<pdat::FaceData<double> >(
+            (pdat::FaceData<double>*)NULL)) const;
 
    /**
     * Return discrete \f$L_2\f$-norm of the data using the control volume to
@@ -113,10 +115,11 @@ public:
     */
    double
    L2Norm(
-      const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::FaceData<double> > cvol =
-         tbox::Pointer<pdat::FaceData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::FaceData<double> > cvol =
+         boost::shared_ptr<pdat::FaceData<double> >(
+            (pdat::FaceData<double>*)NULL)) const;
 
    /**
     * Return discrete weighted \f$L_2\f$-norm of the data using the control
@@ -128,11 +131,12 @@ public:
     */
    double
    weightedL2Norm(
-      const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
-      const tbox::Pointer<pdat::FaceData<dcomplex> >& weight,
+      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::FaceData<dcomplex> >& weight,
       const hier::Box& box,
-      const tbox::Pointer<pdat::FaceData<double> > cvol =
-         tbox::Pointer<pdat::FaceData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::FaceData<double> > cvol =
+         boost::shared_ptr<pdat::FaceData<double> >(
+            (pdat::FaceData<double>*)NULL)) const;
 
    /**
     * Return discrete root mean squared norm of the data.  If the control
@@ -143,10 +147,11 @@ public:
     */
    double
    RMSNorm(
-      const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::FaceData<double> > cvol =
-         tbox::Pointer<pdat::FaceData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::FaceData<double> > cvol =
+         boost::shared_ptr<pdat::FaceData<double> >(
+            (pdat::FaceData<double>*)NULL)) const;
 
    /**
     * Return discrete weighted root mean squared norm of the data.  If the
@@ -157,11 +162,12 @@ public:
     */
    double
    weightedRMSNorm(
-      const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
-      const tbox::Pointer<pdat::FaceData<dcomplex> >& weight,
+      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::FaceData<dcomplex> >& weight,
       const hier::Box& box,
-      const tbox::Pointer<pdat::FaceData<double> > cvol =
-         tbox::Pointer<pdat::FaceData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::FaceData<double> > cvol =
+         boost::shared_ptr<pdat::FaceData<double> >(
+            (pdat::FaceData<double>*)NULL)) const;
 
    /**
     * Return the \f$\max\f$-norm of the data using the control volume to weight
@@ -172,10 +178,11 @@ public:
     */
    double
    maxNorm(
-      const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::FaceData<double> > cvol =
-         tbox::Pointer<pdat::FaceData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::FaceData<double> > cvol =
+         boost::shared_ptr<pdat::FaceData<double> >(
+            (pdat::FaceData<double>*)NULL)) const;
 
    /**
     * Return the dot product of the two data arrays using the control volume
@@ -185,11 +192,12 @@ public:
     */
    dcomplex
    dot(
-      const tbox::Pointer<pdat::FaceData<dcomplex> >& data1,
-      const tbox::Pointer<pdat::FaceData<dcomplex> >& data2,
+      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data1,
+      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data2,
       const hier::Box& box,
-      const tbox::Pointer<pdat::FaceData<double> > cvol =
-         tbox::Pointer<pdat::FaceData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::FaceData<double> > cvol =
+         boost::shared_ptr<pdat::FaceData<double> >(
+            (pdat::FaceData<double>*)NULL)) const;
 
    /**
     * Return the integral of the function represented by the data array.
@@ -197,9 +205,9 @@ public:
     */
    dcomplex
    integral(
-      const tbox::Pointer<pdat::FaceData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::FaceData<double> > vol) const;
+      const boost::shared_ptr<pdat::FaceData<double> > vol) const;
 
 private:
    // The following are not implemented:

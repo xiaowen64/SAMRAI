@@ -21,11 +21,11 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/Variable.h"
 
 #include "PatchDataTestStrategy.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 using namespace std;
@@ -69,7 +69,7 @@ public:
    CellDataTest(
       const std::string& object_name,
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database> main_input_db,
+      boost::shared_ptr<tbox::Database> main_input_db,
       bool do_refine,
       bool do_coarsen,
       const std::string& refine_option);
@@ -109,7 +109,7 @@ public:
    virtual void
    initializeDataOnPatch(
       const hier::Patch& patch,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number,
       char src_or_dst);
 
@@ -119,7 +119,7 @@ public:
    bool
    verifyResults(
       const hier::Patch& patch,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number);
 
 private:
@@ -128,14 +128,14 @@ private:
     */
    void
    readTestInput(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /**
     * Set linear function data for testing interpolation
     */
    void
    setLinearData(
-      tbox::Pointer<pdat::CellData<double> > data,
+      boost::shared_ptr<pdat::CellData<double> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
@@ -144,10 +144,10 @@ private:
     */
    void
    setConservativeData(
-      tbox::Pointer<pdat::CellData<double> > data,
+      boost::shared_ptr<pdat::CellData<double> > data,
       const hier::Box& box,
       const hier::Patch& patch,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number) const;
 
    /**
@@ -156,13 +156,13 @@ private:
     */
    void
    setPeriodicData(
-      tbox::Pointer<pdat::CellData<double> > data,
+      boost::shared_ptr<pdat::CellData<double> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
    void
    checkPatchInteriorData(
-      const tbox::Pointer<pdat::CellData<double> >& data,
+      const boost::shared_ptr<pdat::CellData<double> >& data,
       const hier::Box& interior,
       const hier::Patch& patch) const;
 
@@ -176,7 +176,7 @@ private:
    /*
     * Data members specific to this cell data test.
     */
-   tbox::Pointer<geom::CartesianGridGeometry> d_cart_grid_geometry;
+   boost::shared_ptr<geom::CartesianGridGeometry> d_cart_grid_geometry;
 
    /*
     * Data members specific to this cell data test.
@@ -191,7 +191,7 @@ private:
    std::string d_refine_option;
    int d_finest_level_number;
 
-   tbox::Array<tbox::Pointer<hier::Variable> > d_variables;
+   tbox::Array<boost::shared_ptr<hier::Variable> > d_variables;
 
 };
 

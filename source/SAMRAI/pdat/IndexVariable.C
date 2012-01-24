@@ -34,7 +34,7 @@ IndexVariable<TYPE, BOX_GEOMETRY>::IndexVariable(
    // default zero ghost cells
    hier::Variable(
       name,
-      tbox::Pointer<SAMRAI::hier::PatchDataFactory>(
+      boost::shared_ptr<hier::PatchDataFactory>(
          new IndexDataFactory<TYPE, BOX_GEOMETRY>(hier::IntVector::getZero(dim))))
 {
 }
@@ -57,7 +57,8 @@ IndexVariable<TYPE, BOX_GEOMETRY>::~IndexVariable()
 template<class TYPE, class BOX_GEOMETRY>
 IndexVariable<TYPE, BOX_GEOMETRY>::IndexVariable(
    const IndexVariable<TYPE, BOX_GEOMETRY>& foo):
-   hier::Variable(NULL, tbox::Pointer<SAMRAI::hier::PatchDataFactory>(NULL))
+   hier::Variable(NULL,
+                  boost::shared_ptr<hier::PatchDataFactory>((hier::PatchDataFactory*)NULL))
 {
    // not implemented
    NULL_USE(foo);

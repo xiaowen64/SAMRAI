@@ -46,8 +46,8 @@ public:
    MblkEuler(
       const string& object_name,
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database> input_db,
-      tbox::Pointer<hier::GridGeometry>& grid_geom);
+      boost::shared_ptr<tbox::Database> input_db,
+      boost::shared_ptr<hier::GridGeometry>& grid_geom);
 
    ~MblkEuler();
 
@@ -188,7 +188,7 @@ public:
       const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const tbox::Pointer<hier::GridGeometry>& grid_geometry);
+      const boost::shared_ptr<hier::GridGeometry>& grid_geometry);
 
    /**
     * Build mapped grid on patch
@@ -212,7 +212,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    hier::IntVector
    getMultiblockRefineOpStencilWidth() const;
@@ -227,7 +227,7 @@ public:
     */
    void
    registerVisItDataWriter(
-      tbox::Pointer<appu::VisItDataWriter> viz_writer);
+      boost::shared_ptr<appu::VisItDataWriter> viz_writer);
 #endif
 
    /**
@@ -249,7 +249,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       bool is_from_restart);
 
    void
@@ -278,15 +278,15 @@ private:
     * object to set up initial data, set physical boundary conditions,
     * and register plot variables.
     */
-   tbox::Pointer<hier::GridGeometry> d_grid_geometry;
+   boost::shared_ptr<hier::GridGeometry> d_grid_geometry;
 #ifdef HAVE_HDF5
-   tbox::Pointer<appu::VisItDataWriter> d_visit_writer;
+   boost::shared_ptr<appu::VisItDataWriter> d_visit_writer;
 #endif
 
    //
    // Data items used for nonuniform load balance, if used.
    //
-   tbox::Pointer<pdat::CellVariable<double> > d_workload_variable;
+   boost::shared_ptr<pdat::CellVariable<double> > d_workload_variable;
    int d_workload_data_id;
    bool d_use_nonuniform_workload;
 
@@ -295,25 +295,25 @@ private:
    //
 
    //
-   // tbox::Pointer to state variable vector - [state]
+   // boost::shared_ptr to state variable vector - [state]
    //
    int d_nState;  // depth of the state vector
-   tbox::Pointer<pdat::CellVariable<double> > d_state;
+   boost::shared_ptr<pdat::CellVariable<double> > d_state;
 
    //
-   // tbox::Pointer to cell volume - [v]
+   // boost::shared_ptr to cell volume - [v]
    //
-   tbox::Pointer<pdat::CellVariable<double> > d_vol;
+   boost::shared_ptr<pdat::CellVariable<double> > d_vol;
 
    //
-   // tbox::Pointer to flux variable vector  - [F]
+   // boost::shared_ptr to flux variable vector  - [F]
    //
-   tbox::Pointer<pdat::SideVariable<double> > d_flux;
+   boost::shared_ptr<pdat::SideVariable<double> > d_flux;
 
    //
-   // tbox::Pointer to grid - [xyz]
+   // boost::shared_ptr to grid - [xyz]
    //
-   tbox::Pointer<pdat::NodeVariable<double> > d_xyz;
+   boost::shared_ptr<pdat::NodeVariable<double> > d_xyz;
    int d_xyz_id;
 
    //
@@ -411,7 +411,7 @@ private:
    //
    // Operators to be used with BlockGridGeometry
    //
-   tbox::Pointer<hier::TimeInterpolateOperator> d_cell_time_interp_op;
+   boost::shared_ptr<hier::TimeInterpolateOperator> d_cell_time_interp_op;
 };
 
 #endif

@@ -25,8 +25,8 @@
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 using namespace std;
@@ -43,8 +43,8 @@ public:
    BoundaryDataTester(
       const string& object_name,
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database> input_db,
-      tbox::Pointer<geom::CartesianGridGeometry> grid_geom);
+      boost::shared_ptr<tbox::Database> input_db,
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geom);
 
    /**
     * Virtual destructor for BoundaryDataTester.
@@ -105,7 +105,7 @@ public:
     */
    void
    readDirichletBoundaryDataEntry(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       string& db_name,
       int bdry_location_index);
 
@@ -118,7 +118,7 @@ public:
     */
    void
    readNeumannBoundaryDataEntry(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       string& db_name,
       int bdry_location_index);
 
@@ -127,7 +127,7 @@ public:
     */
    void
    initializeDataOnPatchInteriors(
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number);
 
    /**
@@ -136,7 +136,7 @@ public:
     */
    int
    runBoundaryTest(
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number);
 
    /**
@@ -154,7 +154,7 @@ private:
 
    const tbox::Dimension d_dim;
 
-   tbox::Pointer<geom::CartesianGridGeometry> d_grid_geometry;
+   boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
 
    /*
     * Arrays of information read from input file describing test variables
@@ -167,8 +167,8 @@ private:
    /*
     * Items used to manage variables and data in test program.
     */
-   tbox::Array<tbox::Pointer<hier::Variable> > d_variables;
-   tbox::Pointer<hier::VariableContext> d_variable_context;
+   tbox::Array<boost::shared_ptr<hier::Variable> > d_variables;
+   boost::shared_ptr<hier::VariableContext> d_variable_context;
    hier::ComponentSelector d_patch_data_components;
 
    /*
@@ -199,13 +199,13 @@ private:
     */
    void
    readVariableInputAndMakeVariables(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
    void
    readBoundaryDataInput(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
    void
    readBoundaryDataStateEntry(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       string& db_name,
       int bdry_location_index);
    void

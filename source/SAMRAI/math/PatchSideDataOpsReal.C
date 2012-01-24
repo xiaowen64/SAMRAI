@@ -68,18 +68,18 @@ void PatchSideDataOpsReal<TYPE>::operator = (
 
 template<class TYPE>
 void PatchSideDataOpsReal<TYPE>::swapData(
-   tbox::Pointer<hier::Patch> patch,
+   boost::shared_ptr<hier::Patch> patch,
    const int data1_id,
    const int data2_id) const
 {
    TBOX_ASSERT(patch);
 
-   tbox::Pointer<pdat::SideData<TYPE> > d1(
+   boost::shared_ptr<pdat::SideData<TYPE> > d1(
       patch->getPatchData(data1_id),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::SideData<TYPE> > d2(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::SideData<TYPE> > d2(
       patch->getPatchData(data2_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
@@ -93,7 +93,7 @@ void PatchSideDataOpsReal<TYPE>::swapData(
 
 template<class TYPE>
 void PatchSideDataOpsReal<TYPE>::printData(
-   const tbox::Pointer<pdat::SideData<TYPE> >& data,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
@@ -107,8 +107,8 @@ void PatchSideDataOpsReal<TYPE>::printData(
 
 template<class TYPE>
 void PatchSideDataOpsReal<TYPE>::copyData(
-   tbox::Pointer<pdat::SideData<TYPE> >& dst,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src,
+   boost::shared_ptr<pdat::SideData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -128,7 +128,7 @@ void PatchSideDataOpsReal<TYPE>::copyData(
 
 template<class TYPE>
 void PatchSideDataOpsReal<TYPE>::setToScalar(
-   tbox::Pointer<pdat::SideData<TYPE> >& dst,
+   boost::shared_ptr<pdat::SideData<TYPE> >& dst,
    const TYPE& alpha,
    const hier::Box& box) const
 {

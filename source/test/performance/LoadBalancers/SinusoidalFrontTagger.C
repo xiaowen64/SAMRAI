@@ -100,13 +100,13 @@ SinusoidalFrontTagger::SinusoidalFrontTagger(
    const std::string context_name = d_name + std::string(":context");
    d_context = variable_db->getContext(context_name);
 
-   tbox::Pointer<hier::Variable> dist_var(
+   boost::shared_ptr<hier::Variable> dist_var(
       new pdat::NodeVariable<double>(dim, d_name + ":dist"));
    d_dist_id = variable_db->registerVariableAndContext(dist_var,
          d_context,
          d_ghost_cell_width);
 
-   tbox::Pointer<hier::Variable> tag_var(
+   boost::shared_ptr<hier::Variable> tag_var(
       new pdat::CellVariable<int>(dim, d_name + ":tag"));
    d_tag_id = variable_db->registerVariableAndContext(tag_var,
          d_context,
@@ -134,7 +134,7 @@ SinusoidalFrontTagger::~SinusoidalFrontTagger()
 
 void SinusoidalFrontTagger::initializeLevelData(
    /*! Hierarchy to initialize */
-   const tbox::Pointer<hier::PatchHierarchy> base_hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> base_hierarchy,
    /*! Level to initialize */
    const int ln,
    const double init_data_time,
@@ -142,13 +142,13 @@ void SinusoidalFrontTagger::initializeLevelData(
    /*! Whether level is being introduced for the first time */
    const bool initial_time,
    /*! Level to copy data from */
-   const tbox::Pointer<hier::PatchLevel> old_base_level,
+   const boost::shared_ptr<hier::PatchLevel> old_base_level,
    const bool allocate_data)
 {
    NULL_USE(can_be_refined);
 
-   tbox::Pointer<hier::PatchHierarchy> hierarchy = base_hierarchy;
-   tbox::Pointer<hier::PatchLevel> old_level = old_base_level;
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy = base_hierarchy;
+   boost::shared_ptr<hier::PatchLevel> old_level = old_base_level;
    if (old_base_level) {
       TBOX_ASSERT(old_level);
    }
@@ -157,7 +157,7 @@ void SinusoidalFrontTagger::initializeLevelData(
    /*
     * Reference the level object with the given index from the hierarchy.
     */
-   tbox::Pointer<hier::PatchLevel> level =
+   boost::shared_ptr<hier::PatchLevel> level =
       hierarchy->getPatchLevel(ln);
 
    for (hier::PatchLevel::Iterator pi(level); pi; pi++) {
@@ -208,12 +208,12 @@ void SinusoidalFrontTagger::initializePatchData(
          if (!patch.checkAllocated(d_tag_id)) {
             patch.allocatePatchData(d_tag_id);
          }
-         tbox::Pointer<pdat::NodeData<double> > dist_data(
+         boost::shared_ptr<pdat::NodeData<double> > dist_data(
             patch.getPatchData(d_dist_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<int> > tag_data(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<int> > tag_data(
             patch.getPatchData(d_tag_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          TBOX_ASSERT(dist_data);
          TBOX_ASSERT(tag_data);
          computePatchData(patch, init_data_time,
@@ -225,7 +225,7 @@ void SinusoidalFrontTagger::initializePatchData(
 
 
 void SinusoidalFrontTagger::resetHierarchyConfiguration(
-   /*! New hierarchy */ tbox::Pointer<hier::PatchHierarchy> new_hierarchy,
+   /*! New hierarchy */ boost::shared_ptr<hier::PatchHierarchy> new_hierarchy,
    /*! Coarsest level */ int coarsest_level,
    /*! Finest level */ int finest_level)
 {
@@ -238,7 +238,7 @@ void SinusoidalFrontTagger::resetHierarchyConfiguration(
 
 
 void SinusoidalFrontTagger::applyGradientDetector(
-   const tbox::Pointer<hier::PatchHierarchy> base_hierarchy_,
+   const boost::shared_ptr<hier::PatchHierarchy> base_hierarchy_,
    const int ln,
    const double error_data_time,
    const int tag_index,
@@ -247,9 +247,9 @@ void SinusoidalFrontTagger::applyGradientDetector(
 {
    NULL_USE(initial_time);
    NULL_USE(uses_richardson_extrapolation);
-   tbox::Pointer<hier::PatchHierarchy> hierarchy_ = base_hierarchy_;
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy_ = base_hierarchy_;
    TBOX_ASSERT(hierarchy_);
-   tbox::Pointer<hier::PatchLevel> level_ = hierarchy_->getPatchLevel(ln);
+   boost::shared_ptr<hier::PatchLevel> level_ = hierarchy_->getPatchLevel(ln);
    TBOX_ASSERT(level_);
 
    hier::PatchLevel& level = *level_;
@@ -257,16 +257,16 @@ void SinusoidalFrontTagger::applyGradientDetector(
    for (hier::PatchLevel::Iterator pi(level); pi; pi++) {
       hier::Patch& patch = **pi;
 
-      tbox::Pointer<hier::PatchData> tag_data(
+      boost::shared_ptr<hier::PatchData> tag_data(
          patch.getPatchData(tag_index),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (!tag_data) {
          TBOX_ERROR("Data index " << tag_index
                                   << " does not exist for patch.\n");
       }
-      tbox::Pointer<pdat::CellData<int> > tag_cell_data_(
+      boost::shared_ptr<pdat::CellData<int> > tag_cell_data_(
          tag_data,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (!tag_cell_data_) {
          TBOX_ERROR("Data index " << tag_index
                                   << " is not cell int data.\n");
@@ -274,9 +274,9 @@ void SinusoidalFrontTagger::applyGradientDetector(
 
       if (d_allocate_data) {
          // Use internally stored data.
-         tbox::Pointer<hier::PatchData> saved_tag_data(
+         boost::shared_ptr<hier::PatchData> saved_tag_data(
             patch.getPatchData(d_tag_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          tag_cell_data_->copy(*saved_tag_data);
       } else {
          // Compute tag data for patch.
@@ -300,7 +300,7 @@ void SinusoidalFrontTagger::deallocatePatchData(
 {
    int ln;
    for (ln = 0; ln < hierarchy.getNumberOfLevels(); ++ln) {
-      tbox::Pointer<hier::PatchLevel> level = hierarchy.getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level = hierarchy.getPatchLevel(ln);
       deallocatePatchData(*level);
    }
 }
@@ -349,11 +349,11 @@ void SinusoidalFrontTagger::computeLevelData(
    const double time,
    const int dist_id,
    const int tag_id,
-   const tbox::Pointer<hier::PatchLevel>& old_level) const
+   const boost::shared_ptr<hier::PatchLevel>& old_level) const
 {
    NULL_USE(old_level);
 
-   const tbox::Pointer<hier::PatchLevel> level =
+   const boost::shared_ptr<hier::PatchLevel> level =
       hierarchy.getPatchLevel(ln);
 
    /*
@@ -361,15 +361,15 @@ void SinusoidalFrontTagger::computeLevelData(
     */
    for (hier::PatchLevel::Iterator pi(level); pi; pi++) {
       hier::Patch& patch = **pi;
-      tbox::Pointer<pdat::NodeData<double> > dist_data;
+      boost::shared_ptr<pdat::NodeData<double> > dist_data;
       if (dist_id >= 0) {
-         dist_data = tbox::dynamic_pointer_cast<pdat::NodeData<double>,
-                                                hier::PatchData>(patch.getPatchData(dist_id));
+         dist_data = boost::dynamic_pointer_cast<pdat::NodeData<double>,
+                                                 hier::PatchData>(patch.getPatchData(dist_id));
       }
-      tbox::Pointer<pdat::CellData<int> > tag_data;
+      boost::shared_ptr<pdat::CellData<int> > tag_data;
       if (tag_id >= 0) {
-         tag_data = tbox::dynamic_pointer_cast<pdat::CellData<int>,
-                                               hier::PatchData>(patch.getPatchData(tag_id));
+         tag_data = boost::dynamic_pointer_cast<pdat::CellData<int>,
+                                                hier::PatchData>(patch.getPatchData(tag_id));
       }
       computePatchData(patch, time,
          dist_data.get(),
@@ -396,13 +396,13 @@ void SinusoidalFrontTagger::computePatchData(
    TBOX_ASSERT(patch.inHierarchy());
 
    const int ln = patch.getPatchLevelNumber();
-   const tbox::Pointer<hier::PatchLevel> level =
+   const boost::shared_ptr<hier::PatchLevel> level =
       d_hierarchy->getPatchLevel(ln);
    const hier::IntVector& ratio(level->getRatioToLevelZero());
 
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    const double* xlo = patch_geom->getXLower();
 

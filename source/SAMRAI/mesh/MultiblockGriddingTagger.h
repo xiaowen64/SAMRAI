@@ -104,7 +104,7 @@ public:
       const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const tbox::Pointer<hier::GridGeometry>& grid_geometry);
+      const boost::shared_ptr<hier::GridGeometry>& grid_geometry);
 
    /*!
     * @brief Return maximum stencil width needed for user-defined

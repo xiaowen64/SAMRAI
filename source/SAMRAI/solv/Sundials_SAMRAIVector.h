@@ -23,7 +23,8 @@
 
 #include "SAMRAI/solv/SundialsAbstractVector.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace solv {
@@ -69,7 +70,7 @@ public:
     */
    static SundialsAbstractVector *
    createSundialsVector(
-      tbox::Pointer<SAMRAIVectorReal<double> > samrai_vec);
+      boost::shared_ptr<SAMRAIVectorReal<double> > samrai_vec);
 
    /**
     * Destroy a given Sundials vector object. It is important to note that
@@ -84,7 +85,7 @@ public:
     * Return pointer to the SAMRAI vector object associated with the
     * given Sundials wrapper vector.
     */
-   static tbox::Pointer<SAMRAIVectorReal<double> >
+   static boost::shared_ptr<SAMRAIVectorReal<double> >
    getSAMRAIVector(
       SundialsAbstractVector* sundials_vec);
 
@@ -92,7 +93,7 @@ public:
     * Return pointer to the SAMRAI vector object associated with the
     * given Sundials vector.
     */
-   static tbox::Pointer<SAMRAIVectorReal<double> >
+   static boost::shared_ptr<SAMRAIVectorReal<double> >
    getSAMRAIVector(
       N_Vector sundials_vec);
 
@@ -107,7 +108,7 @@ protected:
     * Constructor for Sundials_SAMRAIVector.
     */
    explicit Sundials_SAMRAIVector(
-      tbox::Pointer<SAMRAIVectorReal<double> > samrai_vector);
+      boost::shared_ptr<SAMRAIVectorReal<double> > samrai_vector);
 
    /*
     * Virtual destructor for Sundials_SAMRAIVector.
@@ -118,7 +119,7 @@ private:
    /*
     * Return SAMRAI vector owned by this Sundials_SAMRAIVector object.
     */
-   tbox::Pointer<SAMRAIVectorReal<double> >
+   boost::shared_ptr<SAMRAIVectorReal<double> >
    getSAMRAIVector();
 
    /*
@@ -293,7 +294,7 @@ private:
    /*
     * Vector data is maintained in SAMRAI vector structure.
     */
-   tbox::Pointer<SAMRAIVectorReal<double> > d_samrai_vector;
+   boost::shared_ptr<SAMRAIVectorReal<double> > d_samrai_vector;
 
 };
 

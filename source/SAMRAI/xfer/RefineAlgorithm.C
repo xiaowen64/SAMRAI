@@ -36,7 +36,7 @@ namespace xfer {
 RefineAlgorithm::RefineAlgorithm(
    const tbox::Dimension& dim):
    d_dim(dim),
-   d_refine_classes(new xfer::RefineClasses()),
+   d_refine_classes(new RefineClasses()),
    d_schedule_created(false)
 {
 }
@@ -66,8 +66,8 @@ void RefineAlgorithm::registerRefine(
    const int dst,
    const int src,
    const int scratch,
-   tbox::Pointer<hier::RefineOperator> oprefine,
-   tbox::Pointer<VariableFillPattern> var_fill_pattern)
+   boost::shared_ptr<hier::RefineOperator> oprefine,
+   boost::shared_ptr<VariableFillPattern> var_fill_pattern)
 {
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    if (oprefine) {
@@ -82,7 +82,7 @@ void RefineAlgorithm::registerRefine(
          << std::endl);
    }
 
-   xfer::RefineClasses::Data data;
+   RefineClasses::Data data;
 
    data.d_dst = dst;
    data.d_src = src;
@@ -94,12 +94,12 @@ void RefineAlgorithm::registerRefine(
       fineBoundaryRepresentsVariable();
    data.d_time_interpolate = false;
    data.d_oprefine = oprefine;
-   data.d_optime = NULL;
+   data.d_optime.reset();
    data.d_tag = -1;
    if (var_fill_pattern) {
       data.d_var_fill_pattern = var_fill_pattern;
    } else {
-      data.d_var_fill_pattern = new BoxGeometryVariableFillPattern();
+      data.d_var_fill_pattern.reset(new BoxGeometryVariableFillPattern());
    }
 
    d_refine_classes->insertEquivalenceClassItem(data);
@@ -119,9 +119,9 @@ void RefineAlgorithm::registerRefine(
    const int src_told,
    const int src_tnew,
    const int scratch,
-   tbox::Pointer<hier::RefineOperator> oprefine,
-   tbox::Pointer<hier::TimeInterpolateOperator> optime,
-   tbox::Pointer<VariableFillPattern> var_fill_pattern)
+   boost::shared_ptr<hier::RefineOperator> oprefine,
+   boost::shared_ptr<hier::TimeInterpolateOperator> optime,
+   boost::shared_ptr<VariableFillPattern> var_fill_pattern)
 {
    TBOX_ASSERT(optime);
 
@@ -132,7 +132,7 @@ void RefineAlgorithm::registerRefine(
          << std::endl);
    }
 
-   xfer::RefineClasses::Data data;
+   RefineClasses::Data data;
 
    data.d_dst = dst;
    data.d_src = src;
@@ -149,7 +149,7 @@ void RefineAlgorithm::registerRefine(
    if (var_fill_pattern) {
       data.d_var_fill_pattern = var_fill_pattern;
    } else {
-      data.d_var_fill_pattern = new BoxGeometryVariableFillPattern();
+      data.d_var_fill_pattern.reset(new BoxGeometryVariableFillPattern());
    }
 
    d_refine_classes->insertEquivalenceClassItem(data);
@@ -165,11 +165,11 @@ void RefineAlgorithm::registerRefine(
  *************************************************************************
  */
 
-tbox::Pointer<xfer::RefineSchedule>
+boost::shared_ptr<RefineSchedule>
 RefineAlgorithm::createSchedule(
-   tbox::Pointer<hier::PatchLevel> level,
-   xfer::RefinePatchStrategy* patch_strategy,
-   tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
+   boost::shared_ptr<hier::PatchLevel> level,
+   RefinePatchStrategy* patch_strategy,
+   boost::shared_ptr<RefineTransactionFactory> transaction_factory)
 {
    TBOX_ASSERT(level);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
@@ -181,23 +181,23 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   tbox::Pointer<xfer::RefineTransactionFactory> trans_factory(
+   boost::shared_ptr<RefineTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {
-      trans_factory = new xfer::StandardRefineTransactionFactory;
+      trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   tbox::Pointer<PatchLevelFullFillPattern> fill_pattern(
+   boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
       new PatchLevelFullFillPattern());
 
-   return tbox::Pointer<xfer::RefineSchedule>(new xfer::RefineSchedule(
-                                                 fill_pattern,
-                                                 level,
-                                                 level,
-                                                 d_refine_classes,
-                                                 trans_factory,
-                                                 patch_strategy));
+   return boost::shared_ptr<RefineSchedule>(
+      new RefineSchedule(fill_pattern,
+                         level,
+                         level,
+                         d_refine_classes,
+                         trans_factory,
+                         patch_strategy));
 }
 
 /*
@@ -210,12 +210,12 @@ RefineAlgorithm::createSchedule(
  *************************************************************************
  */
 
-tbox::Pointer<xfer::RefineSchedule>
+boost::shared_ptr<RefineSchedule>
 RefineAlgorithm::createSchedule(
-   tbox::Pointer<PatchLevelFillPattern> fill_pattern,
-   tbox::Pointer<hier::PatchLevel> level,
-   xfer::RefinePatchStrategy* patch_strategy,
-   tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
+   boost::shared_ptr<PatchLevelFillPattern> fill_pattern,
+   boost::shared_ptr<hier::PatchLevel> level,
+   RefinePatchStrategy* patch_strategy,
+   boost::shared_ptr<RefineTransactionFactory> transaction_factory)
 {
    TBOX_ASSERT(level);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
@@ -227,20 +227,20 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   tbox::Pointer<xfer::RefineTransactionFactory> trans_factory =
+   boost::shared_ptr<RefineTransactionFactory> trans_factory =
       transaction_factory;
 
    if (!trans_factory) {
-      trans_factory = new xfer::StandardRefineTransactionFactory;
+      trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   return tbox::Pointer<xfer::RefineSchedule>(new xfer::RefineSchedule(
-                                                 fill_pattern,
-                                                 level,
-                                                 level,
-                                                 d_refine_classes,
-                                                 trans_factory,
-                                                 patch_strategy));
+   return boost::shared_ptr<RefineSchedule>(
+      new RefineSchedule(fill_pattern,
+                         level,
+                         level,
+                         d_refine_classes,
+                         trans_factory,
+                         patch_strategy));
 }
 
 /*
@@ -253,13 +253,13 @@ RefineAlgorithm::createSchedule(
  *************************************************************************
  */
 
-tbox::Pointer<xfer::RefineSchedule>
+boost::shared_ptr<RefineSchedule>
 RefineAlgorithm::createSchedule(
-   tbox::Pointer<hier::PatchLevel> dst_level,
-   tbox::Pointer<hier::PatchLevel> src_level,
-   xfer::RefinePatchStrategy* patch_strategy,
+   boost::shared_ptr<hier::PatchLevel> dst_level,
+   boost::shared_ptr<hier::PatchLevel> src_level,
+   RefinePatchStrategy* patch_strategy,
    bool use_time_refinement,
-   tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
+   boost::shared_ptr<RefineTransactionFactory> transaction_factory)
 {
    // TBOX_ERROR("Untried method!  I think this method should work, but it's never been excercised.  When code crashes here, remove this line and rerun.  If problem continues, it could well be due to excercising this code.  --BTNG");
 
@@ -277,24 +277,24 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   tbox::Pointer<xfer::RefineTransactionFactory> trans_factory =
+   boost::shared_ptr<RefineTransactionFactory> trans_factory =
       transaction_factory;
 
    if (!trans_factory) {
-      trans_factory = new xfer::StandardRefineTransactionFactory;
+      trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   tbox::Pointer<PatchLevelFullFillPattern> fill_pattern(
+   boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
       new PatchLevelFullFillPattern());
 
-   return tbox::Pointer<xfer::RefineSchedule>(new xfer::RefineSchedule(
-                                                 fill_pattern,
-                                                 dst_level,
-                                                 src_level,
-                                                 d_refine_classes,
-                                                 trans_factory,
-                                                 patch_strategy,
-                                                 use_time_refinement));
+   return boost::shared_ptr<RefineSchedule>(
+      new RefineSchedule(fill_pattern,
+                         dst_level,
+                         src_level,
+                         d_refine_classes,
+                         trans_factory,
+                         patch_strategy,
+                         use_time_refinement));
 }
 
 /*
@@ -307,14 +307,14 @@ RefineAlgorithm::createSchedule(
  *************************************************************************
  */
 
-tbox::Pointer<xfer::RefineSchedule>
+boost::shared_ptr<RefineSchedule>
 RefineAlgorithm::createSchedule(
-   tbox::Pointer<PatchLevelFillPattern> fill_pattern,
-   tbox::Pointer<hier::PatchLevel> dst_level,
-   tbox::Pointer<hier::PatchLevel> src_level,
-   xfer::RefinePatchStrategy* patch_strategy,
+   boost::shared_ptr<PatchLevelFillPattern> fill_pattern,
+   boost::shared_ptr<hier::PatchLevel> dst_level,
+   boost::shared_ptr<hier::PatchLevel> src_level,
+   RefinePatchStrategy* patch_strategy,
    bool use_time_refinement,
-   tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
+   boost::shared_ptr<RefineTransactionFactory> transaction_factory)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst_level);
@@ -329,21 +329,21 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   tbox::Pointer<xfer::RefineTransactionFactory> trans_factory =
+   boost::shared_ptr<RefineTransactionFactory> trans_factory =
       transaction_factory;
 
    if (!trans_factory) {
-      trans_factory = new xfer::StandardRefineTransactionFactory;
+      trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   return tbox::Pointer<xfer::RefineSchedule>(new xfer::RefineSchedule(
-                                                 fill_pattern,
-                                                 dst_level,
-                                                 src_level,
-                                                 d_refine_classes,
-                                                 trans_factory,
-                                                 patch_strategy,
-                                                 use_time_refinement));
+   return boost::shared_ptr<RefineSchedule>(
+      new RefineSchedule(fill_pattern,
+                         dst_level,
+                         src_level,
+                         d_refine_classes,
+                         trans_factory,
+                         patch_strategy,
+                         use_time_refinement));
 }
 
 /*
@@ -356,14 +356,14 @@ RefineAlgorithm::createSchedule(
  *************************************************************************
  */
 
-tbox::Pointer<xfer::RefineSchedule>
+boost::shared_ptr<RefineSchedule>
 RefineAlgorithm::createSchedule(
-   tbox::Pointer<hier::PatchLevel> level,
+   boost::shared_ptr<hier::PatchLevel> level,
    const int next_coarser_level,
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
-   xfer::RefinePatchStrategy* patch_strategy,
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   RefinePatchStrategy* patch_strategy,
    bool use_time_refinement,
-   tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
+   boost::shared_ptr<RefineTransactionFactory> transaction_factory)
 {
 
    // Do we all agree on the destination mapped_box_level?
@@ -381,26 +381,26 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   tbox::Pointer<xfer::RefineTransactionFactory> trans_factory =
+   boost::shared_ptr<RefineTransactionFactory> trans_factory =
       transaction_factory;
 
    if (!trans_factory) {
-      trans_factory = new xfer::StandardRefineTransactionFactory;
+      trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   tbox::Pointer<PatchLevelFullFillPattern> fill_pattern(
+   boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
       new PatchLevelFullFillPattern());
 
-   return tbox::Pointer<xfer::RefineSchedule>(new xfer::RefineSchedule(
-                                                 fill_pattern,
-                                                 level,
-                                                 level,
-                                                 next_coarser_level,
-                                                 hierarchy,
-                                                 d_refine_classes,
-                                                 trans_factory,
-                                                 patch_strategy,
-                                                 use_time_refinement));
+   return boost::shared_ptr<RefineSchedule>(
+      new RefineSchedule(fill_pattern,
+                         level,
+                         level,
+                         next_coarser_level,
+                         hierarchy,
+                         d_refine_classes,
+                         trans_factory,
+                         patch_strategy,
+                         use_time_refinement));
 }
 
 /*
@@ -413,15 +413,15 @@ RefineAlgorithm::createSchedule(
  *************************************************************************
  */
 
-tbox::Pointer<xfer::RefineSchedule>
+boost::shared_ptr<RefineSchedule>
 RefineAlgorithm::createSchedule(
-   tbox::Pointer<PatchLevelFillPattern> fill_pattern,
-   tbox::Pointer<hier::PatchLevel> level,
+   boost::shared_ptr<PatchLevelFillPattern> fill_pattern,
+   boost::shared_ptr<hier::PatchLevel> level,
    const int next_coarser_level,
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
-   xfer::RefinePatchStrategy* patch_strategy,
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   RefinePatchStrategy* patch_strategy,
    bool use_time_refinement,
-   tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
+   boost::shared_ptr<RefineTransactionFactory> transaction_factory)
 {
 
    // Do we all agree on the destination mapped_box_level?
@@ -439,23 +439,23 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   tbox::Pointer<xfer::RefineTransactionFactory> trans_factory =
+   boost::shared_ptr<RefineTransactionFactory> trans_factory =
       transaction_factory;
 
    if (!trans_factory) {
-      trans_factory = new xfer::StandardRefineTransactionFactory;
+      trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   return tbox::Pointer<xfer::RefineSchedule>(new xfer::RefineSchedule(
-                                                 fill_pattern,
-                                                 level,
-                                                 level,
-                                                 next_coarser_level,
-                                                 hierarchy,
-                                                 d_refine_classes,
-                                                 trans_factory,
-                                                 patch_strategy,
-                                                 use_time_refinement));
+   return boost::shared_ptr<RefineSchedule>(
+      new RefineSchedule(fill_pattern,
+                         level,
+                         level,
+                         next_coarser_level,
+                         hierarchy,
+                         d_refine_classes,
+                         trans_factory,
+                         patch_strategy,
+                         use_time_refinement));
 }
 
 /*
@@ -468,15 +468,15 @@ RefineAlgorithm::createSchedule(
  *************************************************************************
  */
 
-tbox::Pointer<xfer::RefineSchedule>
+boost::shared_ptr<RefineSchedule>
 RefineAlgorithm::createSchedule(
-   tbox::Pointer<hier::PatchLevel> dst_level,
-   tbox::Pointer<hier::PatchLevel> src_level,
+   boost::shared_ptr<hier::PatchLevel> dst_level,
+   boost::shared_ptr<hier::PatchLevel> src_level,
    const int next_coarser_level,
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
-   xfer::RefinePatchStrategy* patch_strategy,
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   RefinePatchStrategy* patch_strategy,
    bool use_time_refinement,
-   tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
+   boost::shared_ptr<RefineTransactionFactory> transaction_factory)
 {
    (void)use_time_refinement;
    TBOX_ASSERT(dst_level);
@@ -502,26 +502,26 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   tbox::Pointer<xfer::RefineTransactionFactory> trans_factory =
+   boost::shared_ptr<RefineTransactionFactory> trans_factory =
       transaction_factory;
 
    if (!trans_factory) {
-      trans_factory = new xfer::StandardRefineTransactionFactory;
+      trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   tbox::Pointer<PatchLevelFullFillPattern> fill_pattern(
+   boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
       new PatchLevelFullFillPattern());
 
-   return tbox::Pointer<xfer::RefineSchedule>(new xfer::RefineSchedule(
-                                                 fill_pattern,
-                                                 dst_level,
-                                                 src_level,
-                                                 next_coarser_level,
-                                                 hierarchy,
-                                                 d_refine_classes,
-                                                 trans_factory,
-                                                 patch_strategy,
-                                                 false));
+   return boost::shared_ptr<RefineSchedule>(
+      new RefineSchedule(fill_pattern,
+                         dst_level,
+                         src_level,
+                         next_coarser_level,
+                         hierarchy,
+                         d_refine_classes,
+                         trans_factory,
+                         patch_strategy,
+                         false));
 }
 
 /*
@@ -534,16 +534,16 @@ RefineAlgorithm::createSchedule(
  *************************************************************************
  */
 
-tbox::Pointer<xfer::RefineSchedule>
+boost::shared_ptr<RefineSchedule>
 RefineAlgorithm::createSchedule(
-   tbox::Pointer<PatchLevelFillPattern> fill_pattern,
-   tbox::Pointer<hier::PatchLevel> dst_level,
-   tbox::Pointer<hier::PatchLevel> src_level,
+   boost::shared_ptr<PatchLevelFillPattern> fill_pattern,
+   boost::shared_ptr<hier::PatchLevel> dst_level,
+   boost::shared_ptr<hier::PatchLevel> src_level,
    const int next_coarser_level,
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
-   xfer::RefinePatchStrategy* patch_strategy,
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   RefinePatchStrategy* patch_strategy,
    bool use_time_refinement,
-   tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory)
+   boost::shared_ptr<RefineTransactionFactory> transaction_factory)
 {
    (void)use_time_refinement;
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -571,23 +571,23 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   tbox::Pointer<xfer::RefineTransactionFactory> trans_factory =
+   boost::shared_ptr<RefineTransactionFactory> trans_factory =
       transaction_factory;
 
    if (!trans_factory) {
-      trans_factory = new xfer::StandardRefineTransactionFactory;
+      trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   return tbox::Pointer<xfer::RefineSchedule>(new xfer::RefineSchedule(
-                                                 fill_pattern,
-                                                 dst_level,
-                                                 src_level,
-                                                 next_coarser_level,
-                                                 hierarchy,
-                                                 d_refine_classes,
-                                                 trans_factory,
-                                                 patch_strategy,
-                                                 false));
+   return boost::shared_ptr<RefineSchedule>(
+      new RefineSchedule(fill_pattern,
+                         dst_level,
+                         src_level,
+                         next_coarser_level,
+                         hierarchy,
+                         d_refine_classes,
+                         trans_factory,
+                         patch_strategy,
+                         false));
 }
 
 /*
@@ -599,7 +599,7 @@ RefineAlgorithm::createSchedule(
  */
 
 bool RefineAlgorithm::checkConsistency(
-   tbox::Pointer<xfer::RefineSchedule> schedule) const
+   boost::shared_ptr<RefineSchedule> schedule) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(schedule);
@@ -608,7 +608,7 @@ bool RefineAlgorithm::checkConsistency(
 }
 
 void RefineAlgorithm::resetSchedule(
-   tbox::Pointer<xfer::RefineSchedule> schedule) const
+   boost::shared_ptr<RefineSchedule> schedule) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(schedule);
@@ -623,14 +623,14 @@ void RefineAlgorithm::resetSchedule(
    }
 }
 
-const tbox::Pointer<xfer::RefineClasses>&
+const boost::shared_ptr<RefineClasses>&
 RefineAlgorithm::getEquivalenceClasses() const
 {
    return d_refine_classes;
 }
 
 void RefineAlgorithm::setEquivalenceClasses(
-   const tbox::Pointer<xfer::RefineClasses> refine_classes)
+   const boost::shared_ptr<RefineClasses> refine_classes)
 {
    d_refine_classes.reset();
    d_refine_classes = refine_classes;

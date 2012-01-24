@@ -13,9 +13,9 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/InputDatabase.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -87,10 +87,10 @@ public:
     * SAMRAI class:
     *
     *       // get root database
-    *       Pointer<Database> root_db =
+    *       boost::shared_ptr<Database> root_db =
     *          InputManager::getManager()->getInputDatabase();
     *       // get class's sub-database
-    *       Pointer<Database> class_db = root_db->getDatabase("MyClass");
+    *       boost::shared_ptr<Database> class_db = root_db->getDatabase("MyClass");
     *       // get parameter(s) from sub-database
     *       int dummy = class_db->getInteger("dummy");
     *
@@ -104,13 +104,13 @@ public:
     * This function is intended for SAMRAI classes in which there is no
     * easy or efficient way to supply input parameters.
     */
-   static Pointer<Database>
+   static boost::shared_ptr<Database>
    getInputDatabase();
 
    /**
     * Create a new database named "main" from the specified input file.
     */
-   virtual Pointer<InputDatabase>
+   virtual boost::shared_ptr<InputDatabase>
    parseInputFile(
       const std::string& filename);
 
@@ -120,7 +120,7 @@ public:
    virtual void
    parseInputFile(
       const std::string& filename,
-      Pointer<InputDatabase> input_db);
+      boost::shared_ptr<InputDatabase> input_db);
 
 protected:
    /**
@@ -155,7 +155,7 @@ private:
 
    static StartupShutdownManager::Handler s_finalize_handler;
 
-   static Pointer<Database> s_input_db;
+   static boost::shared_ptr<Database> s_input_db;
 };
 
 }

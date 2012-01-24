@@ -88,9 +88,9 @@ void RestartManager::registerSingletonSubclassInstance(
 
 RestartManager::RestartManager()
 {
-   d_database_root = new NullDatabase();
+   d_database_root.reset(new NullDatabase());
 #ifdef HAVE_HDF5
-   d_database_factory = new HDFDatabaseFactory();
+   d_database_factory.reset(new HDFDatabaseFactory());
 #else
    d_database_factory = NULL;
 #endif
@@ -133,7 +133,7 @@ bool RestartManager::openRestartFile(
 
    if (d_database_factory) {
 
-      Pointer<Database> database = d_database_factory->allocate(
+      boost::shared_ptr<Database> database = d_database_factory->allocate(
             restart_filename);
 
       if (!database->open(restart_filename)) {
@@ -177,7 +177,7 @@ void RestartManager::closeRestartFile()
       d_database_root.reset();
    }
 
-   d_database_root = new NullDatabase();
+   d_database_root.reset(new NullDatabase());
 }
 
 /*
@@ -290,7 +290,7 @@ void RestartManager::writeRestartFile(
 
    if (d_database_factory) {
 
-      Pointer<Database> new_restartDB = d_database_factory->allocate(
+      boost::shared_ptr<Database> new_restartDB = d_database_factory->allocate(
             restart_filename);
 
       new_restartDB->create(restart_filename);
@@ -315,13 +315,13 @@ void RestartManager::writeRestartFile(
  *************************************************************************
  */
 void RestartManager::writeRestartFile(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
    TBOX_ASSERT(database);
 
    List<RestartManager::RestartItem>::Iterator i(d_restart_items_list);
    for ( ; i; i++) {
-      Pointer<Database> obj_db =
+      boost::shared_ptr<Database> obj_db =
          database->putDatabase(i().name);
       (i().obj)->putToDatabase(obj_db);
    }

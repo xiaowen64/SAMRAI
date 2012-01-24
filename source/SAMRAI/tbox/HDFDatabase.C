@@ -602,7 +602,7 @@ bool HDFDatabase::isDatabase(
  *************************************************************************
  */
 
-Pointer<Database>
+boost::shared_ptr<Database>
 HDFDatabase::putDatabase(
    const std::string& key)
 {
@@ -617,7 +617,7 @@ HDFDatabase::putDatabase(
 
    TBOX_ASSERT(this_group >= 0);
 
-   Pointer<Database> new_database(new HDFDatabase(key, this_group));
+   boost::shared_ptr<Database> new_database(new HDFDatabase(key, this_group));
 
    return new_database;
 }
@@ -630,7 +630,7 @@ HDFDatabase::putDatabase(
  ************************************************************************
  */
 
-Pointer<Database>
+boost::shared_ptr<Database>
 HDFDatabase::getDatabase(
    const std::string& key)
 {
@@ -649,7 +649,7 @@ HDFDatabase::getDatabase(
 #endif
    TBOX_ASSERT(this_group >= 0);
 
-   Pointer<Database> database(new HDFDatabase(key, this_group));
+   boost::shared_ptr<Database> database(new HDFDatabase(key, this_group));
 
    return database;
 }

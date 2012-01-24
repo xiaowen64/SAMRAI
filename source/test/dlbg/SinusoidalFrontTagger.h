@@ -11,7 +11,8 @@
 #define included_SinusoidalFrontTagger
 
 #include <string>
-#include "SAMRAI/tbox/Pointer.h"
+#include <boost/shared_ptr.hpp>
+
 #include "SAMRAI/tbox/Database.h"
 
 /*
@@ -47,7 +48,7 @@ public:
       const std::string& object_name,
       const tbox::Dimension& dim,
       /*! Input database */
-      SAMRAI::tbox::Database* database = NULL);
+      tbox::Database* database = NULL);
 
    ~SinusoidalFrontTagger();
 
@@ -68,7 +69,7 @@ public:
    virtual void
    initializeLevelData(
       /*! Hierarchy to initialize */
-      const tbox::Pointer<SAMRAI::hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       /*! Level to initialize */
       const int level_number,
       const double init_data_time,
@@ -76,21 +77,21 @@ public:
       /*! Whether level is being introduced for the first time */
       const bool initial_time,
       /*! Level to copy data from */
-      const tbox::Pointer<SAMRAI::hier::PatchLevel> old_level =
-         tbox::Pointer<SAMRAI::hier::PatchLevel>((0)),
+      const boost::shared_ptr<hier::PatchLevel> old_level =
+         boost::shared_ptr<hier::PatchLevel>(),
       /*! Whether data on new patch needs to be allocated */
       const bool allocate_data = true);
 
    virtual void
    resetHierarchyConfiguration(
       /*! New hierarchy */
-      tbox::Pointer<SAMRAI::hier::PatchHierarchy> new_hierarchy,
+      boost::shared_ptr<hier::PatchHierarchy> new_hierarchy,
       /*! Coarsest level */ int coarsest_level,
       /*! Finest level */ int finest_level);
 
    virtual void
    applyGradientDetector(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const double error_data_time,
       const int tag_index,
@@ -160,8 +161,8 @@ public:
       const double time,
       const int dist_id,
       const int tag_id,
-      const tbox::Pointer<hier::PatchLevel>& old_level =
-         tbox::Pointer<hier::PatchLevel>()) const;
+      const boost::shared_ptr<hier::PatchLevel>& old_level =
+         boost::shared_ptr<hier::PatchLevel>()) const;
 
    /*!
     * @brief Compute distance and tag data for a patch.
@@ -178,7 +179,7 @@ private:
 
    const tbox::Dimension d_dim;
 
-   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    /*!
     * @brief Period of sinusoid.
@@ -214,7 +215,7 @@ private:
 
    tbox::Array<double> d_buffer_space;
 
-   tbox::Pointer<hier::VariableContext> d_context;
+   boost::shared_ptr<hier::VariableContext> d_context;
 
    /*!
     * @brief Distance from the front in the x direction.
@@ -235,11 +236,11 @@ private:
     */
    double d_time;
 
-   tbox::Pointer<tbox::Timer> t_setup;
-   tbox::Pointer<tbox::Timer> t_node_pos;
-   tbox::Pointer<tbox::Timer> t_distance;
-   tbox::Pointer<tbox::Timer> t_tag_cells;
-   tbox::Pointer<tbox::Timer> t_copy;
+   boost::shared_ptr<tbox::Timer> t_setup;
+   boost::shared_ptr<tbox::Timer> t_node_pos;
+   boost::shared_ptr<tbox::Timer> t_distance;
+   boost::shared_ptr<tbox::Timer> t_tag_cells;
+   boost::shared_ptr<tbox::Timer> t_copy;
 
 };
 

@@ -15,10 +15,11 @@
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
+#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <vector>
 #include <string>
 #include <iostream>
@@ -216,7 +217,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual Pointer<Database>
+   virtual boost::shared_ptr<Database>
    putDatabase(
       const std::string& key) = 0;
 
@@ -227,7 +228,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual Pointer<Database>
+   virtual boost::shared_ptr<Database>
    getDatabase(
       const std::string& key) = 0;
 
@@ -240,10 +241,10 @@ public:
     * @param key          Key name in database.
     * @param defaultvalue Default value to return if not found.
     */
-   virtual Pointer<Database>
+   virtual boost::shared_ptr<Database>
    getDatabaseWithDefault(
       const std::string& key,
-      const Pointer<Database>& defaultvalue);
+      const boost::shared_ptr<Database>& defaultvalue);
 
    /**
     * Return whether the specified key represents a boolean entry.  If

@@ -32,11 +32,8 @@ OuternodeVariable<TYPE>::OuternodeVariable(
    const std::string& name,
    int depth):
    hier::Variable(name,
-                  tbox::Pointer<SAMRAI::hier::PatchDataFactory>(new
-                                                                OuternodeDataFactory
-                                                                <
-                                                                   TYPE>(dim,
-                                                                         depth)))
+                  boost::shared_ptr<hier::PatchDataFactory>(
+                    new OuternodeDataFactory<TYPE>(dim, depth)))
 {
 }
 
@@ -48,7 +45,7 @@ OuternodeVariable<TYPE>::~OuternodeVariable()
 template<class TYPE>
 int OuternodeVariable<TYPE>::getDepth() const
 {
-   tbox::Pointer<OuternodeDataFactory<TYPE> > factory =
+   boost::shared_ptr<OuternodeDataFactory<TYPE> > factory =
       this->getPatchDataFactory();
    TBOX_ASSERT(factory);
    return factory->getDepth();
@@ -67,7 +64,8 @@ int OuternodeVariable<TYPE>::getDepth() const
 template<class TYPE>
 OuternodeVariable<TYPE>::OuternodeVariable(
    const OuternodeVariable<TYPE>& foo):
-   hier::Variable(NULL, tbox::Pointer<SAMRAI::hier::PatchDataFactory>(NULL))
+   hier::Variable(NULL,
+                  boost::shared_ptr<hier::PatchDataFactory>(NULL))
 {
    NULL_USE(foo);
 }

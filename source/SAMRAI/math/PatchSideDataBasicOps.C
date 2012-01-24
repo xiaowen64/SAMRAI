@@ -63,9 +63,9 @@ void PatchSideDataBasicOps<TYPE>::operator = (
 
 template<class TYPE>
 void PatchSideDataBasicOps<TYPE>::scale(
-   tbox::Pointer<pdat::SideData<TYPE> >& dst,
+   boost::shared_ptr<pdat::SideData<TYPE> >& dst,
    const TYPE& alpha,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -87,8 +87,8 @@ void PatchSideDataBasicOps<TYPE>::scale(
 
 template<class TYPE>
 void PatchSideDataBasicOps<TYPE>::addScalar(
-   tbox::Pointer<pdat::SideData<TYPE> >& dst,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src,
+   boost::shared_ptr<pdat::SideData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box) const
 {
@@ -111,9 +111,9 @@ void PatchSideDataBasicOps<TYPE>::addScalar(
 
 template<class TYPE>
 void PatchSideDataBasicOps<TYPE>::add(
-   tbox::Pointer<pdat::SideData<TYPE> >& dst,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src1,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src2,
+   boost::shared_ptr<pdat::SideData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -136,9 +136,9 @@ void PatchSideDataBasicOps<TYPE>::add(
 
 template<class TYPE>
 void PatchSideDataBasicOps<TYPE>::subtract(
-   tbox::Pointer<pdat::SideData<TYPE> >& dst,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src1,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src2,
+   boost::shared_ptr<pdat::SideData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -161,9 +161,9 @@ void PatchSideDataBasicOps<TYPE>::subtract(
 
 template<class TYPE>
 void PatchSideDataBasicOps<TYPE>::multiply(
-   tbox::Pointer<pdat::SideData<TYPE> >& dst,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src1,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src2,
+   boost::shared_ptr<pdat::SideData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -186,9 +186,9 @@ void PatchSideDataBasicOps<TYPE>::multiply(
 
 template<class TYPE>
 void PatchSideDataBasicOps<TYPE>::divide(
-   tbox::Pointer<pdat::SideData<TYPE> >& dst,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src1,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src2,
+   boost::shared_ptr<pdat::SideData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -211,8 +211,8 @@ void PatchSideDataBasicOps<TYPE>::divide(
 
 template<class TYPE>
 void PatchSideDataBasicOps<TYPE>::reciprocal(
-   tbox::Pointer<pdat::SideData<TYPE> >& dst,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src,
+   boost::shared_ptr<pdat::SideData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -234,11 +234,11 @@ void PatchSideDataBasicOps<TYPE>::reciprocal(
 
 template<class TYPE>
 void PatchSideDataBasicOps<TYPE>::linearSum(
-   tbox::Pointer<pdat::SideData<TYPE> >& dst,
+   boost::shared_ptr<pdat::SideData<TYPE> >& dst,
    const TYPE& alpha,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src1,
    const TYPE& beta,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src2,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -262,10 +262,10 @@ void PatchSideDataBasicOps<TYPE>::linearSum(
 
 template<class TYPE>
 void PatchSideDataBasicOps<TYPE>::axpy(
-   tbox::Pointer<pdat::SideData<TYPE> >& dst,
+   boost::shared_ptr<pdat::SideData<TYPE> >& dst,
    const TYPE& alpha,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src1,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src2,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -289,10 +289,10 @@ void PatchSideDataBasicOps<TYPE>::axpy(
 
 template<class TYPE>
 void PatchSideDataBasicOps<TYPE>::axmy(
-   tbox::Pointer<pdat::SideData<TYPE> >& dst,
+   boost::shared_ptr<pdat::SideData<TYPE> >& dst,
    const TYPE& alpha,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src1,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src2,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -316,7 +316,7 @@ void PatchSideDataBasicOps<TYPE>::axmy(
 
 template<class TYPE>
 void PatchSideDataBasicOps<TYPE>::setRandomValues(
-   tbox::Pointer<pdat::SideData<TYPE> >& dst,
+   boost::shared_ptr<pdat::SideData<TYPE> >& dst,
    const TYPE& width,
    const TYPE& low,
    const hier::Box& box) const
@@ -338,7 +338,7 @@ void PatchSideDataBasicOps<TYPE>::setRandomValues(
 
 template<class TYPE>
 TYPE PatchSideDataBasicOps<TYPE>::min(
-   const tbox::Pointer<pdat::SideData<TYPE> >& data,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -360,7 +360,7 @@ TYPE PatchSideDataBasicOps<TYPE>::min(
 
 template<class TYPE>
 TYPE PatchSideDataBasicOps<TYPE>::max(
-   const tbox::Pointer<pdat::SideData<TYPE> >& data,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);

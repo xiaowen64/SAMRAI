@@ -37,7 +37,7 @@ PatchNodeDataOpsInteger::~PatchNodeDataOpsInteger()
  */
 
 int PatchNodeDataOpsInteger::numberOfEntries(
-   const tbox::Pointer<pdat::NodeData<int> >& data,
+   const boost::shared_ptr<pdat::NodeData<int> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -58,18 +58,18 @@ int PatchNodeDataOpsInteger::numberOfEntries(
  */
 
 void PatchNodeDataOpsInteger::swapData(
-   tbox::Pointer<hier::Patch> patch,
+   boost::shared_ptr<hier::Patch> patch,
    const int data1_id,
    const int data2_id) const
 {
    TBOX_ASSERT(patch);
 
-   tbox::Pointer<pdat::NodeData<int> > d1(
+   boost::shared_ptr<pdat::NodeData<int> > d1(
       patch->getPatchData(data1_id),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::NodeData<int> > d2(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::NodeData<int> > d2(
       patch->getPatchData(data2_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
@@ -81,7 +81,7 @@ void PatchNodeDataOpsInteger::swapData(
 }
 
 void PatchNodeDataOpsInteger::printData(
-   const tbox::Pointer<pdat::NodeData<int> >& data,
+   const boost::shared_ptr<pdat::NodeData<int> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
@@ -94,8 +94,8 @@ void PatchNodeDataOpsInteger::printData(
 }
 
 void PatchNodeDataOpsInteger::copyData(
-   tbox::Pointer<pdat::NodeData<int> >& dst,
-   const tbox::Pointer<pdat::NodeData<int> >& src,
+   boost::shared_ptr<pdat::NodeData<int> >& dst,
+   const boost::shared_ptr<pdat::NodeData<int> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -106,7 +106,7 @@ void PatchNodeDataOpsInteger::copyData(
 }
 
 void PatchNodeDataOpsInteger::setToScalar(
-   tbox::Pointer<pdat::NodeData<int> >& dst,
+   boost::shared_ptr<pdat::NodeData<int> >& dst,
    const int& alpha,
    const hier::Box& box) const
 {
@@ -117,8 +117,8 @@ void PatchNodeDataOpsInteger::setToScalar(
 }
 
 void PatchNodeDataOpsInteger::abs(
-   tbox::Pointer<pdat::NodeData<int> >& dst,
-   const tbox::Pointer<pdat::NodeData<int> >& src,
+   boost::shared_ptr<pdat::NodeData<int> >& dst,
+   const boost::shared_ptr<pdat::NodeData<int> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);

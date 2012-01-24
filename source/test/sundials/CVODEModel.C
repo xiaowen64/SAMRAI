@@ -105,8 +105,8 @@ void F77_FUNC(setneufluxvalues3d, SETNEUFLUXVALUES3D) (
 CVODEModel::CVODEModel(
    const string& object_name,
    const tbox::Dimension& dim,
-   Pointer<Database> input_db,
-   Pointer<CartesianGridGeometry> grid_geom):
+   boost::shared_ptr<Database> input_db,
+   boost::shared_ptr<CartesianGridGeometry> grid_geom):
    RefinePatchStrategy(dim),
    CoarsenPatchStrategy(dim),
    d_dim(dim),
@@ -122,7 +122,7 @@ CVODEModel::CVODEModel(
     */
    VariableDatabase* variable_db = VariableDatabase::getDatabase();
 
-   d_soln_var = new CellVariable<double>(d_dim, "soln", 1);
+   d_soln_var.reset(new CellVariable<double>(d_dim, "soln", 1));
 
    d_cur_cxt = variable_db->getContext("CURRENT");
    d_scr_cxt = variable_db->getContext("SCRATCH");
@@ -134,7 +134,7 @@ CVODEModel::CVODEModel(
          d_scr_cxt,
          IntVector(d_dim, 1));
 #ifdef USE_FAC_PRECONDITIONER
-   d_diff_var = new SideVariable<double>(d_dim, "diffusion", 1);
+   d_diff_var.reset(new SideVariable<double>(d_dim, "diffusion", 1));
 
    d_diff_id = variable_db->registerVariableAndContext(d_diff_var,
          d_cur_cxt,
@@ -224,11 +224,11 @@ CVODEModel::CVODEModel(
     * Construct outerface variable to hold boundary flags and Neumann fluxes.
     */
    if (d_use_neumann_bcs) {
-      d_flag_var = new OuterfaceVariable<int>(d_dim, "bdryflag", 1);
+      d_flag_var.reset(new OuterfaceVariable<int>(d_dim, "bdryflag", 1));
       d_flag_id = variable_db->registerVariableAndContext(d_flag_var,
             d_cur_cxt,
             IntVector(d_dim, 0));
-      d_neuf_var = new OuterfaceVariable<double>(d_dim, "neuflux", 1);
+      d_neuf_var.reset(new OuterfaceVariable<double>(d_dim, "neuflux", 1));
       d_neuf_id = variable_db->registerVariableAndContext(d_neuf_var,
             d_cur_cxt,
             IntVector(d_dim, 0));
@@ -333,7 +333,7 @@ CVODEModel::CVODEModel(
 
 CVODEModel::~CVODEModel()
 {
-   Pointer<SAMRAIVectorReal<double> > soln_samvect =
+   boost::shared_ptr<SAMRAIVectorReal<double> > soln_samvect =
       Sundials_SAMRAIVector::getSAMRAIVector(d_solution_vector);
    Sundials_SAMRAIVector::destroySundialsVector(d_solution_vector);
 
@@ -355,12 +355,12 @@ CVODEModel::~CVODEModel()
 
 void
 CVODEModel::initializeLevelData(
-   const Pointer<PatchHierarchy> hierarchy,
+   const boost::shared_ptr<PatchHierarchy> hierarchy,
    const int level_number,
    const double time,
    const bool can_be_refined,
    const bool initial_time,
-   const Pointer<PatchLevel> old_level,
+   const boost::shared_ptr<PatchLevel> old_level,
    const bool allocate_data)
 {
    (void)hierarchy;
@@ -381,7 +381,7 @@ CVODEModel::initializeLevelData(
 
 void
 CVODEModel::resetHierarchyConfiguration(
-   const Pointer<PatchHierarchy> hierarchy,
+   const boost::shared_ptr<PatchHierarchy> hierarchy,
    const int coarsest_level,
    const int finest_level)
 {
@@ -406,7 +406,7 @@ CVODEModel::resetHierarchyConfiguration(
 
 void
 CVODEModel::applyGradientDetector(
-   const Pointer<PatchHierarchy> hierarchy,
+   const boost::shared_ptr<PatchHierarchy> hierarchy,
    const int level_number,
    const double time,
    const int tag_index,
@@ -417,15 +417,16 @@ CVODEModel::applyGradientDetector(
    (void)initial_time;
    (void)uses_richardson_extrapolation_too;
 
-   Pointer<PatchHierarchy> thierarchy = hierarchy;
-   Pointer<PatchLevel> level = thierarchy->getPatchLevel(level_number);
+   boost::shared_ptr<PatchHierarchy> thierarchy = hierarchy;
+   boost::shared_ptr<PatchLevel> level =
+      thierarchy->getPatchLevel(level_number);
 
    for (PatchLevel::Iterator p(level); p; p++) {
-      Pointer<Patch> patch = *p;
+      boost::shared_ptr<Patch> patch = *p;
 
-      Pointer<CellData<int> > tag_data(
+      boost::shared_ptr<CellData<int> > tag_data(
          patch->getPatchData(tag_index),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       // dumb implementation that tags all cells.
       tag_data->fillAll(TRUE);
@@ -449,9 +450,9 @@ CVODEModel::setPhysicalBoundaryConditions(
 
    (void)time;
 
-   Pointer<CellData<double> > soln_data(
+   boost::shared_ptr<CellData<double> > soln_data(
       patch.getPatchData(d_soln_scr_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(soln_data);
@@ -595,17 +596,18 @@ CVODEModel::evaluateRHSFunction(
    /*
     * Convert Sundials vectors to SAMRAI vectors
     */
-   Pointer<SAMRAIVectorReal<double> > y_samvect =
+   boost::shared_ptr<SAMRAIVectorReal<double> > y_samvect =
       Sundials_SAMRAIVector::getSAMRAIVector(y);
-   Pointer<SAMRAIVectorReal<double> > y_dot_samvect =
+   boost::shared_ptr<SAMRAIVectorReal<double> > y_dot_samvect =
       Sundials_SAMRAIVector::getSAMRAIVector(y_dot);
 
-   Pointer<PatchHierarchy> hierarchy = y_samvect->getPatchHierarchy();
+   boost::shared_ptr<PatchHierarchy> hierarchy =
+      y_samvect->getPatchHierarchy();
 
    /*
     * Compute max norm of solution vector.
     */
-   Pointer<HierarchyDataOpsReal<double> > hierops(
+   boost::shared_ptr<HierarchyDataOpsReal<double> > hierops(
       new HierarchyCellDataOpsReal<double>(hierarchy));
    //double max_norm = hierops->maxNorm(y_samvect->
    //                                   getComponentDescriptorIndex(0));
@@ -625,8 +627,9 @@ CVODEModel::evaluateRHSFunction(
     * 3) Use the refine algorithm to construct a refine schedule
     * 4) Use the refine schedule to fill data on fine level.
     */
-   Pointer<RefineAlgorithm> bdry_fill_alg(new RefineAlgorithm(d_dim));
-   Pointer<RefineOperator> refine_op = d_grid_geometry->
+   boost::shared_ptr<RefineAlgorithm> bdry_fill_alg(
+      new RefineAlgorithm(d_dim));
+   boost::shared_ptr<RefineOperator> refine_op = d_grid_geometry->
       lookupRefineOperator(d_soln_var, "CONSERVATIVE_LINEAR_REFINE");
    bdry_fill_alg->registerRefine(d_soln_scr_id,  // dest
       y_samvect->
@@ -635,14 +638,14 @@ CVODEModel::evaluateRHSFunction(
       refine_op);
 
    for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
-      Pointer<PatchLevel> level = hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<PatchLevel> level = hierarchy->getPatchLevel(ln);
       if (!level->checkAllocated(d_soln_scr_id)) {
          level->allocatePatchData(d_soln_scr_id);
       }
 
       // Note:  a pointer to "this" tells the refine schedule to invoke
       // the setPhysicalBCs defined in this class.
-      Pointer<RefineSchedule> bdry_fill_alg_schedule =
+      boost::shared_ptr<RefineSchedule> bdry_fill_alg_schedule =
          bdry_fill_alg->createSchedule(level,
             ln - 1,
             hierarchy,
@@ -655,30 +658,30 @@ CVODEModel::evaluateRHSFunction(
     * Step through the levels and compute rhs
     */
    for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
-      Pointer<PatchLevel> level = hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<PatchLevel> level = hierarchy->getPatchLevel(ln);
 
       for (PatchLevel::Iterator ip(level); ip; ip++) {
-         Pointer<Patch> patch = *ip;
-         Pointer<CartesianPatchGeometry> p_geom(
+         boost::shared_ptr<Patch> patch = *ip;
+         boost::shared_ptr<CartesianPatchGeometry> p_geom(
             patch->getPatchGeometry(),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
-         Pointer<CellData<double> > y(
+         boost::shared_ptr<CellData<double> > y(
             patch->getPatchData(d_soln_scr_id),
-            tbox::__dynamic_cast_tag());
-         Pointer<SideData<double> > diff(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<SideData<double> > diff(
             patch->getPatchData(d_diff_id),
-            tbox::__dynamic_cast_tag());
-         Pointer<CellData<double> > rhs(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<CellData<double> > rhs(
             patch->getPatchData(y_dot_samvect->getComponentDescriptorIndex(0)),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          const Index ifirst(patch->getBox().lower());
          const Index ilast(patch->getBox().upper());
 
-         const Pointer<CartesianPatchGeometry> patch_geom(
+         const boost::shared_ptr<CartesianPatchGeometry> patch_geom(
             patch->getPatchGeometry(),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          const double* dx = patch_geom->getDx();
 
          IntVector ghost_cells(y->getGhostCellWidth());
@@ -718,7 +721,7 @@ CVODEModel::evaluateRHSFunction(
     * Deallocate scratch space.
     */
    for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
-      Pointer<PatchLevel> level = hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<PatchLevel> level = hierarchy->getPatchLevel(ln);
       level->deallocatePatchData(d_soln_scr_id);
    }
 
@@ -765,12 +768,13 @@ int CVODEModel::CVSpgmrPrecondSet(
    /*
     * Convert passed-in CVODE vectors into SAMRAI vectors
     */
-   Pointer<SAMRAIVectorReal<double> > y_samvect =
+   boost::shared_ptr<SAMRAIVectorReal<double> > y_samvect =
       Sundials_SAMRAIVector::getSAMRAIVector(y);
-   Pointer<SAMRAIVectorReal<double> > fy_samvect =
+   boost::shared_ptr<SAMRAIVectorReal<double> > fy_samvect =
       Sundials_SAMRAIVector::getSAMRAIVector(fy);
 
-   Pointer<PatchHierarchy> hierarchy = y_samvect->getPatchHierarchy();
+   boost::shared_ptr<PatchHierarchy> hierarchy =
+      y_samvect->getPatchHierarchy();
 
    int y_indx = y_samvect->getComponentDescriptorIndex(0);
 
@@ -778,7 +782,7 @@ int CVODEModel::CVSpgmrPrecondSet(
     * Construct refine algorithm to fill boundaries of solution vector
     */
    RefineAlgorithm fill_soln_vector_bounds(d_dim);
-   Pointer<RefineOperator> refine_op = d_grid_geometry->
+   boost::shared_ptr<RefineOperator> refine_op = d_grid_geometry->
       lookupRefineOperator(d_soln_var, "CONSERVATIVE_LINEAR_REFINE");
    fill_soln_vector_bounds.registerRefine(d_soln_scr_id,
       y_samvect->getComponentDescriptorIndex(0),
@@ -790,7 +794,7 @@ int CVODEModel::CVSpgmrPrecondSet(
     * with solution on finer level.
     */
    CoarsenAlgorithm fill_soln_interior_on_coarser(d_dim);
-   Pointer<CoarsenOperator> coarsen_op = d_grid_geometry->
+   boost::shared_ptr<CoarsenOperator> coarsen_op = d_grid_geometry->
       lookupCoarsenOperator(d_soln_var, "CONSERVATIVE_COARSEN");
 
    fill_soln_interior_on_coarser.registerCoarsen(y_indx,
@@ -803,9 +807,10 @@ int CVODEModel::CVSpgmrPrecondSet(
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
         amr_level--) {
-      Pointer<PatchLevel> level = hierarchy->getPatchLevel(amr_level);
+      boost::shared_ptr<PatchLevel> level =
+         hierarchy->getPatchLevel(amr_level);
 
-      Pointer<RefineSchedule> fill_soln_vector_bounds_sched =
+      boost::shared_ptr<RefineSchedule> fill_soln_vector_bounds_sched =
          fill_soln_vector_bounds.createSchedule(level,
             amr_level - 1,
             hierarchy,
@@ -822,10 +827,10 @@ int CVODEModel::CVSpgmrPrecondSet(
        * data.
        */
       if (amr_level > 0) {
-         Pointer<PatchLevel> coarser_level =
+         boost::shared_ptr<PatchLevel> coarser_level =
             hierarchy->getPatchLevel(amr_level - 1);
 
-         Pointer<CoarsenSchedule> fill_soln_interior_on_coarser_sched =
+         boost::shared_ptr<CoarsenSchedule> fill_soln_interior_on_coarser_sched =
             fill_soln_interior_on_coarser.createSchedule(coarser_level,
                level);
 
@@ -833,21 +838,21 @@ int CVODEModel::CVSpgmrPrecondSet(
       }
 
       for (PatchLevel::Iterator p(level); p; p++) {
-         Pointer<Patch> patch = *p;
+         boost::shared_ptr<Patch> patch = *p;
 
-         const Pointer<CartesianPatchGeometry> patch_geom(
+         const boost::shared_ptr<CartesianPatchGeometry> patch_geom(
             patch->getPatchGeometry(),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          const Index ifirst(patch->getBox().lower());
          const Index ilast(patch->getBox().upper());
 
-         Pointer<CellData<double> > u(
+         boost::shared_ptr<CellData<double> > u(
             patch->getPatchData(y_indx),
-            tbox::__dynamic_cast_tag());
-         Pointer<SideData<double> > diffusion(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<SideData<double> > diffusion(
             patch->getPatchData(d_diff_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          diffusion->fillAll(1.0);
 
@@ -861,12 +866,12 @@ int CVODEModel::CVSpgmrPrecondSet(
           */
          if (d_use_neumann_bcs) {
 
-            Pointer<OuterfaceData<int> > flag_data(
+            boost::shared_ptr<OuterfaceData<int> > flag_data(
                patch->getPatchData(d_flag_id),
-               tbox::__dynamic_cast_tag());
-            Pointer<OuterfaceData<double> > neuf_data(
+               boost::detail::dynamic_cast_tag());
+            boost::shared_ptr<OuterfaceData<double> > neuf_data(
                patch->getPatchData(d_neuf_id),
-               tbox::__dynamic_cast_tag());
+               boost::detail::dynamic_cast_tag());
 
             /*
              * Outerface data access:
@@ -992,14 +997,15 @@ int CVODEModel::CVSpgmrPrecondSolve(
    /*
     * Convert passed-in CVODE vectors into SAMRAI vectors
     */
-   Pointer<SAMRAIVectorReal<double> > r_samvect =
+   boost::shared_ptr<SAMRAIVectorReal<double> > r_samvect =
       Sundials_SAMRAIVector::getSAMRAIVector(r);
-   Pointer<SAMRAIVectorReal<double> > z_samvect =
+   boost::shared_ptr<SAMRAIVectorReal<double> > z_samvect =
       Sundials_SAMRAIVector::getSAMRAIVector(z);
 
    int ret_val = 0;
 
-   Pointer<PatchHierarchy> hierarchy = r_samvect->getPatchHierarchy();
+   boost::shared_ptr<PatchHierarchy> hierarchy =
+      r_samvect->getPatchHierarchy();
 
    int r_indx = r_samvect->getComponentDescriptorIndex(0);
    int z_indx = z_samvect->getComponentDescriptorIndex(0);
@@ -1017,7 +1023,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
     * soln_scratch with z vector data (z -> soln_scratch).
     */
    RefineAlgorithm fill_z_vector_bounds(d_dim);
-   Pointer<RefineOperator> refine_op = d_grid_geometry->
+   boost::shared_ptr<RefineOperator> refine_op = d_grid_geometry->
       lookupRefineOperator(d_soln_var, "CONSERVATIVE_LINEAR_REFINE");
    fill_z_vector_bounds.registerRefine(d_soln_scr_id,
       z_indx,
@@ -1030,7 +1036,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
     */
    int ln;
    for (ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
-      Pointer<PatchLevel> level = hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<PatchLevel> level = hierarchy->getPatchLevel(ln);
 
       if (!level->checkAllocated(d_soln_scr_id)) {
          level->allocatePatchData(d_soln_scr_id);
@@ -1038,15 +1044,15 @@ int CVODEModel::CVSpgmrPrecondSolve(
 
       for (PatchLevel::Iterator p(level); p; p++) {
 
-         Pointer<Patch> patch = *p;
+         boost::shared_ptr<Patch> patch = *p;
 
-         const Pointer<CartesianPatchGeometry> patch_geom(
+         const boost::shared_ptr<CartesianPatchGeometry> patch_geom(
             patch->getPatchGeometry(),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
-         Pointer<CellData<double> > z_data(
+         boost::shared_ptr<CellData<double> > z_data(
             patch->getPatchData(z_indx),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          /*
           * Set initial guess for z here.
@@ -1057,17 +1063,17 @@ int CVODEModel::CVSpgmrPrecondSolve(
           * Scale RHS by 1/gamma
           */
          PatchCellDataOpsReal<double> math_ops;
-         Pointer<CellData<double> > r_data(
+         boost::shared_ptr<CellData<double> > r_data(
             patch->getPatchData(r_indx),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          math_ops.scale(r_data, 1.0 / gamma, r_data, r_data->getBox());
 
          /*
           * Copy interior data from z vector to soln_scratch
           */
-         Pointer<CellData<double> > z_scr_data(
+         boost::shared_ptr<CellData<double> > z_scr_data(
             patch->getPatchData(d_soln_scr_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          z_scr_data->copy(*z_data);
       }
 
@@ -1077,7 +1083,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
        * constructed above.
        */
 
-      Pointer<RefineSchedule> fill_z_vector_bounds_sched =
+      boost::shared_ptr<RefineSchedule> fill_z_vector_bounds_sched =
          fill_z_vector_bounds.createSchedule(level,
             ln - 1,
             hierarchy,
@@ -1144,17 +1150,17 @@ int CVODEModel::CVSpgmrPrecondSolve(
    *
    ******************************************************************/
    for (ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
-      Pointer<PatchLevel> level = hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<PatchLevel> level = hierarchy->getPatchLevel(ln);
 
       for (PatchLevel::Iterator p(level); p; p++) {
-         Pointer<Patch> patch = *p;
+         boost::shared_ptr<Patch> patch = *p;
 
-         Pointer<CellData<double> > soln_scratch(
+         boost::shared_ptr<CellData<double> > soln_scratch(
             patch->getPatchData(d_soln_scr_id),
-            tbox::__dynamic_cast_tag());
-         Pointer<CellData<double> > z(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<CellData<double> > z(
             patch->getPatchData(z_indx),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          z->copy(*soln_scratch);
       }
@@ -1199,10 +1205,10 @@ int CVODEModel::CVSpgmrPrecondSolve(
 
 void
 CVODEModel::setupSolutionVector(
-   Pointer<PatchHierarchy> hierarchy)
+   boost::shared_ptr<PatchHierarchy> hierarchy)
 {
    /* create SAMRAIVector */
-   Pointer<SAMRAIVectorReal<double> > soln_samvect(
+   boost::shared_ptr<SAMRAIVectorReal<double> > soln_samvect(
       new SAMRAIVectorReal<double>("solution", hierarchy,
                                    0, hierarchy->getFinestLevelNumber()));
    soln_samvect->addComponent(d_soln_var, d_soln_cur_id);
@@ -1222,7 +1228,7 @@ CVODEModel::setupSolutionVector(
    const int nlevels = hierarchy->getNumberOfLevels();
 
    for (int ln = 0; ln < nlevels; ln++) {
-      Pointer<PatchLevel> level = hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<PatchLevel> level = hierarchy->getPatchLevel(ln);
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(level);
 #endif
@@ -1255,27 +1261,28 @@ void
 CVODEModel::setInitialConditions(
    SundialsAbstractVector* soln_init)
 {
-   Pointer<SAMRAIVectorReal<double> > soln_init_samvect =
+   boost::shared_ptr<SAMRAIVectorReal<double> > soln_init_samvect =
       Sundials_SAMRAIVector::getSAMRAIVector(soln_init);
 
-   Pointer<PatchHierarchy> hierarchy = soln_init_samvect->getPatchHierarchy();
+   boost::shared_ptr<PatchHierarchy> hierarchy =
+      soln_init_samvect->getPatchHierarchy();
 
    for (int ln = 0; ln < hierarchy->getNumberOfLevels(); ln++) {
-      Pointer<PatchLevel> level = hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<PatchLevel> level = hierarchy->getPatchLevel(ln);
 
       for (int cn = 0; cn < soln_init_samvect->getNumberOfComponents(); cn++) {
          for (PatchLevel::Iterator p(level); p; p++) {
-            Pointer<Patch> patch = *p;
-            Pointer<CartesianPatchGeometry> p_geom(
+            boost::shared_ptr<Patch> patch = *p;
+            boost::shared_ptr<CartesianPatchGeometry> p_geom(
                patch->getPatchGeometry(),
-               tbox::__dynamic_cast_tag());
+               boost::detail::dynamic_cast_tag());
 
             /*
              * Set initial conditions for y
              */
-            Pointer<CellData<double> > y_init(
+            boost::shared_ptr<CellData<double> > y_init(
                soln_init_samvect->getComponentPatchData(cn, *patch),
-               tbox::__dynamic_cast_tag());
+               boost::detail::dynamic_cast_tag());
             y_init->fillAll(d_initial_value);
 
             /*
@@ -1284,9 +1291,9 @@ CVODEModel::setInitialConditions(
              * some function of y.  Here, we just do a simple minded
              * approach and set it to 1.
              */
-            Pointer<SideData<double> > diffusion(
+            boost::shared_ptr<SideData<double> > diffusion(
                patch->getPatchData(d_diff_id),
-               tbox::__dynamic_cast_tag());
+               boost::detail::dynamic_cast_tag());
 
             diffusion->fillAll(1.0);
          }
@@ -1325,7 +1332,7 @@ CVODEModel::getCounters(
  */
 void
 CVODEModel::getFromInput(
-   Pointer<Database> input_db,
+   boost::shared_ptr<Database> input_db,
    bool is_from_restart)
 {
    (void)is_from_restart;
@@ -1340,7 +1347,8 @@ CVODEModel::getFromInput(
    }
 
    if (input_db->keyExists("Boundary_data")) {
-      Pointer<Database> boundary_db = input_db->getDatabase("Boundary_data");
+      boost::shared_ptr<Database> boundary_db =
+         input_db->getDatabase("Boundary_data");
 
       if (d_dim == tbox::Dimension(2)) {
          CartesianBoundaryUtilities2::readBoundaryInput(this,
@@ -1389,7 +1397,7 @@ CVODEModel::getFromInput(
  *************************************************************************
  */
 void CVODEModel::putToDatabase(
-   Pointer<Database> db)
+   boost::shared_ptr<Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -1422,10 +1430,10 @@ void CVODEModel::putToDatabase(
 void CVODEModel::getFromRestart()
 {
 
-   Pointer<Database> root_db =
+   boost::shared_ptr<Database> root_db =
       RestartManager::getManager()->getRootDatabase();
 
-   Pointer<Database> db;
+   boost::shared_ptr<Database> db;
    if (root_db->isDatabase(d_object_name)) {
       db = root_db->getDatabase(d_object_name);
    } else {
@@ -1465,7 +1473,7 @@ void CVODEModel::getFromRestart()
  */
 
 void CVODEModel::readDirichletBoundaryDataEntry(
-   Pointer<Database> db,
+   boost::shared_ptr<Database> db,
    string& db_name,
    int bdry_location_index)
 {
@@ -1488,7 +1496,7 @@ void CVODEModel::readDirichletBoundaryDataEntry(
 }
 
 void CVODEModel::readNeumannBoundaryDataEntry(
-   Pointer<Database> db,
+   boost::shared_ptr<Database> db,
    string& db_name,
    int bdry_location_index)
 {
@@ -1511,7 +1519,7 @@ void CVODEModel::readNeumannBoundaryDataEntry(
 }
 
 void CVODEModel::readStateDataEntry(
-   Pointer<Database> db,
+   boost::shared_ptr<Database> db,
    const string& db_name,
    int array_indx,
    Array<double>& val)

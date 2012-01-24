@@ -51,7 +51,7 @@ void
 generateBoxesUniform(
    const tbox::Dimension& dim,
    std::vector<hier::Box>& output,
-   const Pointer<Database>& db);
+   const boost::shared_ptr<Database>& db);
 
 int main(
    int argc,
@@ -91,7 +91,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<InputDatabase> input_db(new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -108,7 +108,7 @@ int main(
        * all name strings in this program.
        */
 
-      Pointer<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -136,11 +136,11 @@ int main(
 
       tbox::TimerManager * tm(tbox::TimerManager::getManager());
       const std::string dim_str(tbox::Utilities::intToString(dim.getValue()));
-      tbox::Pointer<tbox::Timer> t_build_tree =
+      boost::shared_ptr<tbox::Timer> t_build_tree =
          tm->getTimer("apps::main::build_tree[" + dim_str + "]");
-      tbox::Pointer<tbox::Timer> t_search_tree_for_set =
+      boost::shared_ptr<tbox::Timer> t_search_tree_for_set =
          tm->getTimer("apps::main::search_tree_for_set[" + dim_str + "]");
-      tbox::Pointer<tbox::Timer> t_search_tree_for_vec =
+      boost::shared_ptr<tbox::Timer> t_search_tree_for_vec =
          tm->getTimer("apps::main::search_tree_for_vec[" + dim_str + "]");
 
       /*
@@ -335,7 +335,7 @@ int main(
    } else {
       tbox::pout << "Process " << std::setw(5) << rank << " aborting."
                  << std::endl;
-      SAMRAI::tbox::Utilities::abort("Aborting due to nonzero fail count",
+      tbox::Utilities::abort("Aborting due to nonzero fail count",
          __FILE__, __LINE__);
    }
 
@@ -349,7 +349,7 @@ int main(
 void generateBoxesUniform(
    const tbox::Dimension& dim,
    std::vector<hier::Box>& output,
-   const Pointer<Database>& db)
+   const boost::shared_ptr<Database>& db)
 {
    output.clear();
 

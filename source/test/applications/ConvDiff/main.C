@@ -35,7 +35,6 @@ using namespace std;
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -56,6 +55,8 @@ using namespace std;
 #if (TESTING == 1)
 #include "AutoTester.h"
 #endif
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 using namespace algs;
@@ -187,7 +188,8 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
+      boost::shared_ptr<tbox::InputDatabase> input_db(
+         new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -196,7 +198,7 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         tbox::Pointer<tbox::Database> global_db =
+         boost::shared_ptr<tbox::Database> global_db =
             input_db->getDatabase("GlobalInputs");
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
@@ -212,7 +214,8 @@ int main(
        * interval is non-zero, create a restart database.
        */
 
-      tbox::Pointer<tbox::Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db =
+         input_db->getDatabase("Main");
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -302,12 +305,12 @@ int main(
        * for this application, see comments at top of file.
        */
 
-      tbox::Pointer<geom::CartesianGridGeometry> grid_geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(dim,
             "CartesianGeometry",
             input_db->getDatabase("CartesianGeometry")));
 
-      tbox::Pointer<hier::PatchHierarchy> patch_hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
@@ -316,32 +319,32 @@ int main(
             input_db->getDatabase("ConvDiff"),
             grid_geometry);
 
-      tbox::Pointer<algs::MethodOfLinesIntegrator> mol_integrator(
+      boost::shared_ptr<algs::MethodOfLinesIntegrator> mol_integrator(
          new algs::MethodOfLinesIntegrator(
             "MethodOfLinesIntegrator",
             input_db->getDatabase("MethodOfLinesIntegrator"),
             convdiff_model));
 
-      tbox::Pointer<mesh::StandardTagAndInitialize> error_detector(
+      boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
          new mesh::StandardTagAndInitialize(
             dim,
             "StandardTagAndInitialize",
             mol_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
-      tbox::Pointer<mesh::BergerRigoutsos> box_generator(
+      boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
          new mesh::BergerRigoutsos(
             dim,
             input_db->getDatabaseWithDefault(
                "BergerRigoutsos",
-               SAMRAI::tbox::Pointer<SAMRAI::tbox::Database>(NULL))));
+               boost::shared_ptr<tbox::Database>())));
 
-      tbox::Pointer<mesh::TreeLoadBalancer> load_balancer(
+      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(dim,
             "LoadBalancer", input_db->getDatabase("LoadBalancer")));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      tbox::Pointer<mesh::GriddingAlgorithm> gridding_algorithm(
+      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
             patch_hierarchy,
             "GriddingAlgorithm",
@@ -354,7 +357,7 @@ int main(
        * Set up Visualization plot file writer(s).
        */
 #ifdef HAVE_HDF5
-      tbox::Pointer<appu::VisItDataWriter> visit_data_writer(
+      boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
          new appu::VisItDataWriter(dim,
             "ConvDiff VisIt Writer",
             visit_dump_dirname,

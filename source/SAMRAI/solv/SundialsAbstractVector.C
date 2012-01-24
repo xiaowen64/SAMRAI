@@ -19,9 +19,9 @@ namespace SAMRAI {
 namespace solv {
 
 #define SABSVEC_CAST(v) \
-   (static_cast<SAMRAI::solv::SundialsAbstractVector *>(v \
-                                                        -> \
-                                                        content))
+   (static_cast<SundialsAbstractVector *>(v \
+                                          -> \
+                                          content))
 
 SundialsAbstractVector::SundialsAbstractVector()
 {
@@ -95,8 +95,7 @@ N_Vector SundialsAbstractVector::N_VClone_SAMRAI(
    N_Vector w)
 {
    /* Create content, which in this case is the SAMRAI wrapper vector object */
-   SAMRAI::solv::SundialsAbstractVector* v =
-      SABSVEC_CAST(w)->makeNewVector();
+   SundialsAbstractVector* v = SABSVEC_CAST(w)->makeNewVector();
 
    return v->getNVector();
 }

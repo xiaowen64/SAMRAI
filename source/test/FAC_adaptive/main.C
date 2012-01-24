@@ -25,7 +25,6 @@
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -43,6 +42,8 @@
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/solv/FACPreconditioner.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
@@ -88,7 +89,8 @@ int main(
        * Create input database and parse all data in input file into it.
        */
 
-      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
+      boost::shared_ptr<tbox::InputDatabase> input_db(
+         new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       if (input_db->isDatabase("TimerManager")) {
@@ -100,7 +102,8 @@ int main(
        * This database contains information relevant to main.
        */
 
-      tbox::Pointer<tbox::Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db =
+         input_db->getDatabase("Main");
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -141,21 +144,21 @@ int main(
        * Create a patch hierarchy for use later.
        * This object is a required input for these objects: adaptive_poisson.
        */
-      tbox::Pointer<hier::PatchHierarchy> patch_hierarchy;
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy;
       {
          /*
           * Create a grid geometry required for the patchHierarchy object.
           */
-         tbox::Pointer<geom::CartesianGridGeometry> grid_geometry(
+         boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
             new geom::CartesianGridGeometry(
                dim,
                "CartesianGridGeometry",
                input_db->getDatabase("CartesianGridGeometry")));
          tbox::plog << "Grid Geometry:" << endl;
          grid_geometry->printClassData(tbox::plog);
-         patch_hierarchy =
+         patch_hierarchy.reset(
             new hier::PatchHierarchy("Patch Hierarchy", grid_geometry,
-               input_db->getDatabase("PatchHierarchy"));
+               input_db->getDatabase("PatchHierarchy")));
       }
 
       /*
@@ -169,28 +172,25 @@ int main(
                        &tbox::pout,
                        &tbox::plog);
 
-      tbox::Pointer<mesh::GriddingAlgorithm> gridding_algorithm;
+      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm;
       {
          /*
           * Create the tag-and-initializer, box-generator and load-balancer
           * object references required by the gridding_algorithm object.
           */
-         tbox::Pointer<mesh::StandardTagAndInitialize> tag_and_initializer(
+         boost::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
             new mesh::StandardTagAndInitialize(
                dim,
                "CellTaggingMethod",
-               tbox::Pointer<mesh::StandardTagAndInitStrategy>(
-                  &adaptive_poisson,
-                  false).get(),
-               input_db->getDatabase("StandardTagAndInitialize")
-               ));
-         tbox::Pointer<mesh::BergerRigoutsos> box_generator(
+               &adaptive_poisson,
+               input_db->getDatabase("StandardTagAndInitialize")));
+         boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
             new mesh::BergerRigoutsos(
                dim,
                (input_db->isDatabase("BergerRigoutsos") ?
                 input_db->getDatabase("BergerRigoutsos") :
-                tbox::Pointer<tbox::Database>(NULL))));
-         tbox::Pointer<mesh::TreeLoadBalancer> load_balancer(
+                boost::shared_ptr<tbox::Database>())));
+         boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
             new mesh::TreeLoadBalancer(dim,
                "load balancer",
                input_db->getDatabase("TreeLoadBalancer")));
@@ -200,13 +200,13 @@ int main(
           * Create the gridding algorithm used to generate the SAMR grid
           * and create the grid.
           */
-         gridding_algorithm = new mesh::GriddingAlgorithm(
+         gridding_algorithm.reset(new mesh::GriddingAlgorithm(
                patch_hierarchy,
                " Gridding Algorithm",
                input_db->getDatabase("GriddingAlgorithm"),
                tag_and_initializer,
                box_generator,
-               load_balancer);
+               load_balancer));
          tbox::plog << "Gridding algorithm:" << std::endl;
          gridding_algorithm->printClassData(tbox::plog);
          /*
@@ -292,7 +292,7 @@ int main(
 
          /* Write the plot file. */
          if (do_plot) {
-            tbox::Pointer<appu::VisItDataWriter> visit_writer(
+            boost::shared_ptr<appu::VisItDataWriter> visit_writer(
                new appu::VisItDataWriter(dim,
                   "VisIt Writer",
                   vis_filename + ".visit"));
@@ -328,7 +328,7 @@ int main(
             patch_hierarchy->recursivePrint(tbox::plog, "    ", 1);
             if (0) {
                /* Write post-adapt viz file for debugging */
-               tbox::Pointer<appu::VisItDataWriter> visit_writer(
+               boost::shared_ptr<appu::VisItDataWriter> visit_writer(
                   new appu::VisItDataWriter(dim,
                      "VisIt Writer",
                      "postadapt.visit"));

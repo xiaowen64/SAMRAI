@@ -16,8 +16,9 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -70,9 +71,9 @@ public:
     * @param[in] transformation  the transformation from source to
     *                            destination index space.
     *
-    * @return                Pointer to the calculated overlap object
+    * @return                boost::shared_ptr to the calculated overlap object
     */
-   tbox::Pointer<hier::BoxOverlap>
+   boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
       const hier::BoxGeometry& dst_geometry,
       const hier::BoxGeometry& src_geometry,
@@ -102,7 +103,7 @@ public:
     * @param[in] pdf         patch data factory for the data that is to be
     *                        filled
     */
-   tbox::Pointer<hier::BoxOverlap>
+   boost::shared_ptr<hier::BoxOverlap>
    computeFillBoxesOverlap(
       const hier::BoxContainer& fill_boxes,
       const hier::Box& patch_box,

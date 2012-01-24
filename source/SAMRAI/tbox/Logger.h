@@ -11,8 +11,10 @@
 #ifndef included_tbox_Logger
 #define included_tbox_Logger
 
-#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/SAMRAI_config.h"
+#include "SAMRAI/tbox/StartupShutdownManager.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -66,7 +68,7 @@ namespace tbox {
  *
  *
  * This Appender could be use to log warning message using:
- * tbox::Pointer<tbox::Logger::Appender> appender = new ConsoleAppender()
+ * boost::shared_ptr<tbox::Logger::Appender> appender = new ConsoleAppender()
  * tbox::Logger.getInstance() -> setWarningAppender(appender);
  *
  * Normally this would be done at the start of an application.
@@ -139,7 +141,7 @@ public:
     */
    void
    setAbortAppender(
-      tbox::Pointer<Appender> appender);
+      boost::shared_ptr<Appender> appender);
 
    /*!
     * Set the Appender for logging warning messages to an
@@ -149,7 +151,7 @@ public:
     */
    void
    setWarningAppender(
-      tbox::Pointer<Appender> appender);
+      boost::shared_ptr<Appender> appender);
 
    /*!
     * Set the Appender for logging debug messages to an
@@ -159,7 +161,7 @@ public:
     */
    void
    setDebugAppender(
-      tbox::Pointer<Appender> appender);
+      boost::shared_ptr<Appender> appender);
 
    /*!
     * Turn logging of warning messages on or off.
@@ -208,9 +210,9 @@ private:
    /*
     * Appenders for each type of logging.
     */
-   tbox::Pointer<Appender> d_abort_appender;
-   tbox::Pointer<Appender> d_warning_appender;
-   tbox::Pointer<Appender> d_debug_appender;
+   boost::shared_ptr<Appender> d_abort_appender;
+   boost::shared_ptr<Appender> d_warning_appender;
+   boost::shared_ptr<Appender> d_debug_appender;
 
    /*
     * Logging state (on or off)

@@ -23,7 +23,7 @@ HyperbolicPatchStrategy::HyperbolicPatchStrategy(
    xfer::RefinePatchStrategy(dim),
    xfer::CoarsenPatchStrategy(dim),
    d_dim(dim),
-   d_data_context(0)
+   d_data_context()
 {
 }
 
@@ -60,8 +60,8 @@ void HyperbolicPatchStrategy::tagGradientDetectorCells(
 void HyperbolicPatchStrategy::tagRichardsonExtrapolationCells(
    hier::Patch& patch,
    const int error_level_number,
-   const tbox::Pointer<hier::VariableContext> coarsened_fine,
-   const tbox::Pointer<hier::VariableContext> advanced_coarse,
+   const boost::shared_ptr<hier::VariableContext> coarsened_fine,
+   const boost::shared_ptr<hier::VariableContext> advanced_coarse,
    const double regrid_time,
    const double deltat,
    const int error_coarsen_ratio,
@@ -94,7 +94,7 @@ void HyperbolicPatchStrategy::setupLoadBalancer(
 }
 
 void HyperbolicPatchStrategy::preprocessAdvanceLevelState(
-   const tbox::Pointer<hier::PatchLevel>& level,
+   const boost::shared_ptr<hier::PatchLevel>& level,
    double current_time,
    double dt,
    bool first_step,
@@ -110,7 +110,7 @@ void HyperbolicPatchStrategy::preprocessAdvanceLevelState(
 }
 
 void HyperbolicPatchStrategy::postprocessAdvanceLevelState(
-   const tbox::Pointer<hier::PatchLevel>& level,
+   const boost::shared_ptr<hier::PatchLevel>& level,
    double current_time,
    double dt,
    bool first_step,
@@ -183,14 +183,14 @@ void HyperbolicPatchStrategy::postprocessCoarsen(
    NULL_USE(ratio);
 }
 
-tbox::Pointer<hier::VariableContext> HyperbolicPatchStrategy::getDataContext()
+boost::shared_ptr<hier::VariableContext> HyperbolicPatchStrategy::getDataContext()
 const
 {
    return d_data_context;
 }
 
 void HyperbolicPatchStrategy::setDataContext(
-   tbox::Pointer<hier::VariableContext> context)
+   boost::shared_ptr<hier::VariableContext> context)
 {
    d_data_context = context;
 }

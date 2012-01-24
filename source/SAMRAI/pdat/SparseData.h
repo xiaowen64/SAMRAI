@@ -307,7 +307,7 @@ public:
     */
    void
    getSpecializedFromDatabase(
-      tbox::Pointer<tbox::Database> database);
+      boost::shared_ptr<tbox::Database> database);
 
    /*!
     * @brief Write out the specialized data to the Database.
@@ -320,7 +320,7 @@ public:
     */
    void
    putSpecializedToDatabase(
-      tbox::Pointer<tbox::Database> database);
+      boost::shared_ptr<tbox::Database> database);
 
    /*!
     * @brief Returns the attribute ID associated with the named

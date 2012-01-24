@@ -772,7 +772,7 @@ void BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
 void BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
    hier::BoxContainer& out_boxes,
    tbox::List<double>& out_workloads,
-   const tbox::Pointer<hier::Patch>& patch,
+   const boost::shared_ptr<hier::Patch>& patch,
    const hier::Box& in_box,
    double in_box_workload,
    int work_data_index,
@@ -915,16 +915,16 @@ void BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
  */
 
 double BalanceUtilities::computeNonUniformWorkload(
-   tbox::Pointer<hier::Patch> patch,
+   boost::shared_ptr<hier::Patch> patch,
    int wrk_indx,
    const hier::Box& box)
 {
    TBOX_ASSERT(patch);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*patch, box);
 
-   const tbox::Pointer<pdat::CellData<double> > work_data(
+   const boost::shared_ptr<pdat::CellData<double> > work_data(
       patch->getPatchData(wrk_indx),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    double workload = s_norm_ops.L1Norm(work_data, box);
 
@@ -1287,7 +1287,7 @@ void BalanceUtilities::recursiveBisectionUniform(
 void BalanceUtilities::recursiveBisectionNonuniform(
    hier::BoxContainer& out_boxes,
    tbox::List<double>& out_workloads,
-   const tbox::Pointer<hier::PatchLevel>& in_level,
+   const boost::shared_ptr<hier::PatchLevel>& in_level,
    int work_id,
    double ideal_workload,
    const double workload_tolerance,
@@ -1314,7 +1314,7 @@ void BalanceUtilities::recursiveBisectionNonuniform(
       privateBadCutPointsExist(physical_domain);
 
    for (hier::PatchLevel::Iterator ip(in_level); ip; ip++) {
-      tbox::Pointer<hier::Patch> patch = *ip;
+      boost::shared_ptr<hier::Patch> patch = *ip;
 
       hier::Box box2chop = patch->getBox();
 
@@ -1658,7 +1658,7 @@ void BalanceUtilities::sortDescendingBoxWorkloads(
  */
 
 double BalanceUtilities::computeLoadBalanceEfficiency(
-   const tbox::Pointer<hier::PatchLevel>& level,
+   const boost::shared_ptr<hier::PatchLevel>& level,
    std::ostream& os,
    int workload_data_id)
 {
@@ -1690,10 +1690,10 @@ double BalanceUtilities::computeLoadBalanceEfficiency(
    } else {
 
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> patch = *ip;
-         tbox::Pointer<pdat::CellData<double> > weight(
+         boost::shared_ptr<hier::Patch> patch = *ip;
+         boost::shared_ptr<pdat::CellData<double> > weight(
             patch->getPatchData(workload_data_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          work[mapping.getProcessorAssignment(ip->getLocalId().getValue())] +=
             s_norm_ops.L1Norm(weight, patch->getBox());

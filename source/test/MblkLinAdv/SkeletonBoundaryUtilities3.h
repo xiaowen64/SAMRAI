@@ -20,8 +20,8 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 using namespace std;
@@ -158,7 +158,7 @@ public:
    static void
    readBoundaryInput(
       appu::BoundaryUtilityStrategy* bdry_strategy,
-      tbox::Pointer<tbox::Database> bdry_db,
+      boost::shared_ptr<tbox::Database> bdry_db,
       tbox::Array<int>& face_conds,
       tbox::Array<int>& edge_conds,
       tbox::Array<int>& node_conds,
@@ -181,7 +181,7 @@ public:
    static void
    fillFaceBoundaryData(
       const string& varname,
-      tbox::Pointer<pdat::CellData<double> >& vardata,
+      boost::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
       const tbox::Array<int>& bdry_face_conds,
@@ -204,7 +204,7 @@ public:
    static void
    fillEdgeBoundaryData(
       const string& varname,
-      tbox::Pointer<pdat::CellData<double> >& vardata,
+      boost::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
       const tbox::Array<int>& bdry_edge_conds,
@@ -227,7 +227,7 @@ public:
    static void
    fillNodeBoundaryData(
       const string& varname,
-      tbox::Pointer<pdat::CellData<double> >& vardata,
+      boost::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
       const tbox::Array<int>& bdry_node_conds,
@@ -308,20 +308,20 @@ private:
    static void
    read3dBdryFaces(
       appu::BoundaryUtilityStrategy* bdry_strategy,
-      tbox::Pointer<tbox::Database> bdry_db,
+      boost::shared_ptr<tbox::Database> bdry_db,
       tbox::Array<int>& face_conds,
       const hier::IntVector& periodic);
 
    static void
    read3dBdryEdges(
-      tbox::Pointer<tbox::Database> bdry_db,
+      boost::shared_ptr<tbox::Database> bdry_db,
       const tbox::Array<int>& face_conds,
       tbox::Array<int>& edge_conds,
       const hier::IntVector& periodic);
 
    static void
    read3dBdryNodes(
-      tbox::Pointer<tbox::Database> bdry_db,
+      boost::shared_ptr<tbox::Database> bdry_db,
       const tbox::Array<int>& face_conds,
       tbox::Array<int>& node_conds,
       const hier::IntVector& periodic);

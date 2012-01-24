@@ -28,7 +28,7 @@ namespace SAMRAI {
 namespace math {
 
 HierarchyEdgeDataOpsInteger::HierarchyEdgeDataOpsInteger(
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int coarsest_level,
    const int finest_level):
    HierarchyDataOpsInteger()
@@ -62,7 +62,7 @@ HierarchyEdgeDataOpsInteger::~HierarchyEdgeDataOpsInteger()
  */
 
 void HierarchyEdgeDataOpsInteger::setPatchHierarchy(
-   tbox::Pointer<hier::PatchHierarchy> hierarchy)
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy)
 {
    TBOX_ASSERT(hierarchy);
 
@@ -90,7 +90,8 @@ void HierarchyEdgeDataOpsInteger::resetLevels(
    }
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       hier::BoxContainer edge_boxes;
 
       for (int nd = 0; nd < dim.getValue(); nd++) {
@@ -105,7 +106,7 @@ void HierarchyEdgeDataOpsInteger::resetLevels(
    }
 }
 
-const tbox::Pointer<hier::PatchHierarchy>
+const boost::shared_ptr<hier::PatchHierarchy>
 HierarchyEdgeDataOpsInteger::getPatchHierarchy() const
 {
    return d_hierarchy;
@@ -136,15 +137,16 @@ int HierarchyEdgeDataOpsInteger::numberOfEntries(
 
    if (interior_only) {
 
-      tbox::Pointer<pdat::EdgeDataFactory<int> > dfact(
+      boost::shared_ptr<pdat::EdgeDataFactory<int> > dfact(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(dfact);
 #endif
 
       for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-         tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level =
+            d_hierarchy->getPatchLevel(ln);
          const int npatches = level->getNumberOfPatches();
 #ifdef DEBUG_CHECK_ASSERTIONS
          for (int nd = 0; nd < dim.getValue(); nd++) {
@@ -169,11 +171,12 @@ int HierarchyEdgeDataOpsInteger::numberOfEntries(
    } else {
 
       for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-         tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level =
+            d_hierarchy->getPatchLevel(ln);
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-            tbox::Pointer<pdat::EdgeData<int> > d(
+            boost::shared_ptr<pdat::EdgeData<int> > d(
                (*ip)->getPatchData(data_id),
-               tbox::__dynamic_cast_tag());
+               boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(d);
 #endif
@@ -205,16 +208,17 @@ void HierarchyEdgeDataOpsInteger::copyData(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::EdgeData<int> > d(
+         boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > s(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > s(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -230,13 +234,13 @@ void HierarchyEdgeDataOpsInteger::swapData(
    const int data2_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   tbox::Pointer<pdat::EdgeDataFactory<int> > d1fact(
+   boost::shared_ptr<pdat::EdgeDataFactory<int> > d1fact(
       d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    TBOX_ASSERT(d1fact);
-   tbox::Pointer<pdat::EdgeDataFactory<int> > d2fact(
+   boost::shared_ptr<pdat::EdgeDataFactory<int> > d2fact(
       d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
    TBOX_ASSERT(d1fact->getGhostCellWidth() == d2fact->getGhostCellWidth());
@@ -249,9 +253,10 @@ void HierarchyEdgeDataOpsInteger::swapData(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
          d_patch_ops.swapData(p, data1_id, data2_id);
       }
@@ -277,13 +282,14 @@ void HierarchyEdgeDataOpsInteger::printData(
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       s << "Level number = " << ln << std::endl;
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::EdgeData<int> > d(
+         boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -307,13 +313,14 @@ void HierarchyEdgeDataOpsInteger::setToScalar(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::EdgeData<int> > d(
+         boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -346,16 +353,17 @@ void HierarchyEdgeDataOpsInteger::scale(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::EdgeData<int> > dst(
+         boost::shared_ptr<pdat::EdgeData<int> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -380,16 +388,17 @@ void HierarchyEdgeDataOpsInteger::addScalar(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::EdgeData<int> > dst(
+         boost::shared_ptr<pdat::EdgeData<int> > dst(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(dst);
 #endif
@@ -414,19 +423,20 @@ void HierarchyEdgeDataOpsInteger::add(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::EdgeData<int> > d(
+         boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > s1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > s1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > s2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > s2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -451,19 +461,20 @@ void HierarchyEdgeDataOpsInteger::subtract(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::EdgeData<int> > d(
+         boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > s1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > s1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > s2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > s2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -488,19 +499,20 @@ void HierarchyEdgeDataOpsInteger::multiply(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::EdgeData<int> > d(
+         boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > s1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > s1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > s2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > s2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -525,19 +537,20 @@ void HierarchyEdgeDataOpsInteger::divide(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::EdgeData<int> > d(
+         boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > s1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > s1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > s2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > s2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -561,16 +574,17 @@ void HierarchyEdgeDataOpsInteger::reciprocal(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::EdgeData<int> > d(
+         boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -597,19 +611,20 @@ void HierarchyEdgeDataOpsInteger::linearSum(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::EdgeData<int> > d(
+         boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > s1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > s1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > s2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > s2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -635,19 +650,20 @@ void HierarchyEdgeDataOpsInteger::axpy(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::EdgeData<int> > d(
+         boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > s1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > s1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > s2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > s2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -673,19 +689,20 @@ void HierarchyEdgeDataOpsInteger::axmy(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::EdgeData<int> > d(
+         boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > s1(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > s1(
             p->getPatchData(src1_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > s2(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > s2(
             p->getPatchData(src2_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -709,16 +726,17 @@ void HierarchyEdgeDataOpsInteger::abs(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::EdgeData<int> > d(
+         boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::EdgeData<int> > src(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::EdgeData<int> > src(
             p->getPatchData(src_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -744,13 +762,14 @@ int HierarchyEdgeDataOpsInteger::min(
    int minval = tbox::MathUtilities<int>::getMax();
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::EdgeData<int> > d(
+         boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -783,13 +802,14 @@ int HierarchyEdgeDataOpsInteger::max(
    int maxval = -(tbox::MathUtilities<int>::getMax());
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::EdgeData<int> > d(
+         boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif
@@ -821,13 +841,14 @@ void HierarchyEdgeDataOpsInteger::setRandomValues(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level =
+         d_hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+         boost::shared_ptr<hier::Patch> p = *ip;
 
-         tbox::Pointer<pdat::EdgeData<int> > d(
+         boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(data_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d);
 #endif

@@ -18,7 +18,8 @@
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace solv {
@@ -68,8 +69,8 @@ public:
    FACPreconditioner(
       const std::string& name,
       FACOperatorStrategy& user_ops,
-      tbox::Pointer<tbox::Database> database =
-         tbox::Pointer<tbox::Database>(NULL));
+      boost::shared_ptr<tbox::Database> database =
+         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
 
    /*!
     * Virtual destructor.
@@ -411,7 +412,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> database);
+      boost::shared_ptr<tbox::Database> database);
 
    /*!
     * @brief Compute composite residual on all levels and
@@ -535,7 +536,7 @@ private:
    /*!
     * @brief Object providing problem-specific routines.
     *
-    * tbox::Pointer is initialized by constructor @em never changes.
+    * Reference is initialized by constructor @em never changes.
     */
    FACOperatorStrategy& d_fac_operator;
 
@@ -548,29 +549,29 @@ private:
     * and used only during the solve process.
     */
 
-   tbox::Pointer<hier::PatchHierarchy> d_patch_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_patch_hierarchy;
    int d_coarsest_ln;
    int d_finest_ln;
 
    /*!
     * @brief Clone of solution vector to store residual.
     */
-   tbox::Pointer<SAMRAIVectorReal<double> > d_residual_vector;
+   boost::shared_ptr<SAMRAIVectorReal<double> > d_residual_vector;
 
    /*!
     * @brief Clone of solution vector to store temporary residual.
     */
-   tbox::Pointer<SAMRAIVectorReal<double> > d_tmp_residual;
+   boost::shared_ptr<SAMRAIVectorReal<double> > d_tmp_residual;
 
    /*!
     * @brief Error vector.
     */
-   tbox::Pointer<SAMRAIVectorReal<double> > d_error_vector;
+   boost::shared_ptr<SAMRAIVectorReal<double> > d_error_vector;
 
    /*!
     * @brief Error vector for homogeneous boundary condition problem..
     */
-   tbox::Pointer<SAMRAIVectorReal<double> > d_tmp_error;
+   boost::shared_ptr<SAMRAIVectorReal<double> > d_tmp_error;
 
    //@}
 
@@ -625,13 +626,13 @@ private:
     * @brief Objects facilitating operations over a specific range
     * of levels.
     */
-   tbox::Array<tbox::Pointer<math::HierarchyDataOpsReal<double> > >
+   tbox::Array<boost::shared_ptr<math::HierarchyDataOpsReal<double> > >
    d_controlled_level_ops;
 
    /*!
     * Timers for performance measurement.
     */
-   tbox::Pointer<tbox::Timer> t_solve_system;
+   boost::shared_ptr<tbox::Timer> t_solve_system;
 };
 
 }

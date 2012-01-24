@@ -8,12 +8,11 @@
  *
  ************************************************************************/
 
-#include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/Pointer.C"
 #include "SAMRAI/solv/CellPoissonFACSolver.h"
 
-namespace SAMRAI {
+#include <boost/shared_ptr.hpp>
 
-template class tbox::Pointer<solv::CellPoissonFACSolver>;
+using namespace SAMRAI;
+using namespace solv;
 
-}
+template class boost::shared_ptr<CellPoissonFACSolver>;

@@ -14,8 +14,9 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/mesh/TagAndInitializeStrategy.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Serializable.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace mesh {
@@ -144,7 +145,7 @@ public:
     * @brief Return pointer to level gridding strategy data member.
     */
    virtual
-   tbox::Pointer<TagAndInitializeStrategy>
+   boost::shared_ptr<TagAndInitializeStrategy>
    getTagAndInitializeStrategy() const = 0;
 
 };

@@ -37,7 +37,7 @@ PatchNodeDataNormOpsComplex::~PatchNodeDataNormOpsComplex()
  */
 
 int PatchNodeDataNormOpsComplex::numberOfEntries(
-   const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -58,8 +58,8 @@ int PatchNodeDataNormOpsComplex::numberOfEntries(
  */
 
 double PatchNodeDataNormOpsComplex::sumControlVolumes(
-   const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
-   const tbox::Pointer<pdat::NodeData<double> >& cvol,
+   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::NodeData<double> >& cvol,
    const hier::Box& box) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -72,8 +72,8 @@ double PatchNodeDataNormOpsComplex::sumControlVolumes(
 }
 
 void PatchNodeDataNormOpsComplex::abs(
-   tbox::Pointer<pdat::NodeData<double> >& dst,
-   const tbox::Pointer<pdat::NodeData<dcomplex> >& src,
+   boost::shared_ptr<pdat::NodeData<double> >& dst,
+   const boost::shared_ptr<pdat::NodeData<dcomplex> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -86,9 +86,9 @@ void PatchNodeDataNormOpsComplex::abs(
 }
 
 double PatchNodeDataNormOpsComplex::L1Norm(
-   const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+   const boost::shared_ptr<pdat::NodeData<double> > cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
@@ -108,9 +108,9 @@ double PatchNodeDataNormOpsComplex::L1Norm(
 }
 
 double PatchNodeDataNormOpsComplex::L2Norm(
-   const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+   const boost::shared_ptr<pdat::NodeData<double> > cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
@@ -130,10 +130,10 @@ double PatchNodeDataNormOpsComplex::L2Norm(
 }
 
 double PatchNodeDataNormOpsComplex::weightedL2Norm(
-   const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
-   const tbox::Pointer<pdat::NodeData<dcomplex> >& weight,
+   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::NodeData<dcomplex> >& weight,
    const hier::Box& box,
-   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+   const boost::shared_ptr<pdat::NodeData<double> > cvol) const
 {
    TBOX_ASSERT(data && weight);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
@@ -157,9 +157,9 @@ double PatchNodeDataNormOpsComplex::weightedL2Norm(
 }
 
 double PatchNodeDataNormOpsComplex::RMSNorm(
-   const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+   const boost::shared_ptr<pdat::NodeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
@@ -174,10 +174,10 @@ double PatchNodeDataNormOpsComplex::RMSNorm(
 }
 
 double PatchNodeDataNormOpsComplex::weightedRMSNorm(
-   const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
-   const tbox::Pointer<pdat::NodeData<dcomplex> >& weight,
+   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::NodeData<dcomplex> >& weight,
    const hier::Box& box,
-   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+   const boost::shared_ptr<pdat::NodeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data && weight);
@@ -192,9 +192,9 @@ double PatchNodeDataNormOpsComplex::weightedRMSNorm(
 }
 
 double PatchNodeDataNormOpsComplex::maxNorm(
-   const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+   const boost::shared_ptr<pdat::NodeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
@@ -212,10 +212,10 @@ double PatchNodeDataNormOpsComplex::maxNorm(
 }
 
 dcomplex PatchNodeDataNormOpsComplex::dot(
-   const tbox::Pointer<pdat::NodeData<dcomplex> >& data1,
-   const tbox::Pointer<pdat::NodeData<dcomplex> >& data2,
+   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data1,
+   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data2,
    const hier::Box& box,
-   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+   const boost::shared_ptr<pdat::NodeData<double> > cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
@@ -237,9 +237,9 @@ dcomplex PatchNodeDataNormOpsComplex::dot(
 }
 
 dcomplex PatchNodeDataNormOpsComplex::integral(
-   const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
+   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::NodeData<double> > vol) const
+   const boost::shared_ptr<pdat::NodeData<double> > vol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);

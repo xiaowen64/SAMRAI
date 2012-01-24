@@ -50,13 +50,13 @@
 namespace SAMRAI {
 namespace solv {
 
-tbox::Pointer<pdat::CellVariable<double> >
+boost::shared_ptr<pdat::CellVariable<double> >
 CellPoissonFACOps::s_cell_scratch_var[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
 
-tbox::Pointer<pdat::SideVariable<double> >
+boost::shared_ptr<pdat::SideVariable<double> >
 CellPoissonFACOps::s_flux_scratch_var[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
 
-tbox::Pointer<pdat::OutersideVariable<double> >
+boost::shared_ptr<pdat::OutersideVariable<double> >
 CellPoissonFACOps::s_oflux_scratch_var[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
 
 tbox::StartupShutdownManager::Handler
@@ -558,7 +558,7 @@ void F77_FUNC(ewingfixfluxcondc3d, EWINGFIXFLUXCONDC3D) (
 CellPoissonFACOps::CellPoissonFACOps(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   tbox::Pointer<tbox::Database> database):
+   boost::shared_ptr<tbox::Database> database):
    d_dim(dim),
    d_object_name(object_name),
    d_hierarchy(),
@@ -586,7 +586,7 @@ CellPoissonFACOps::CellPoissonFACOps(
                   object_name + "::hypre_solver",
                   database && database->isDatabase("hypre_solver") ?
                   database->getDatabase("hypre_solver") :
-                  tbox::Pointer<tbox::Database>(NULL)),
+                  boost::shared_ptr<tbox::Database>((tbox::Database*)NULL)),
 #endif
    d_physical_bc_coef(NULL),
    d_context(hier::VariableDatabase::getDatabase()
@@ -645,16 +645,16 @@ CellPoissonFACOps::CellPoissonFACOps(
 
       std::ostringstream ss;
       ss << "CellPoissonFACOps::private_cell_scratch" << dim.getValue();
-      s_cell_scratch_var[dim.getValue() - 1] = new pdat::CellVariable<double>
-            (dim, ss.str());
+      s_cell_scratch_var[dim.getValue() - 1].reset(
+         new pdat::CellVariable<double>(dim, ss.str()));
       ss.str("");
       ss << "CellPoissonFACOps::private_flux_scratch" << dim.getValue();
-      s_flux_scratch_var[dim.getValue() - 1] = new pdat::SideVariable<double>
-            (dim, ss.str());
+      s_flux_scratch_var[dim.getValue() - 1].reset(
+         new pdat::SideVariable<double>(dim, ss.str()));
       ss.str("");
       ss << "CellPoissonFACOps::private_oflux_scratch" << dim.getValue();
-      s_oflux_scratch_var[dim.getValue() - 1] = new pdat::OutersideVariable<double>
-            (dim, ss.str());
+      s_oflux_scratch_var[dim.getValue() - 1].reset(
+         new pdat::OutersideVariable<double>(dim, ss.str()));
    }
 
    hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
@@ -735,12 +735,12 @@ void CellPoissonFACOps::initializeOperatorState(
    d_hierarchy = solution.getPatchHierarchy();
    d_ln_min = solution.getCoarsestLevelNumber();
    d_ln_max = solution.getFinestLevelNumber();
-   d_hopscell = new math::HierarchyCellDataOpsReal<double>(d_hierarchy,
-                                                           d_ln_min,
-                                                           d_ln_max);
-   d_hopsside = new math::HierarchySideDataOpsReal<double>(d_hierarchy,
-                                                           d_ln_min,
-                                                           d_ln_max);
+   d_hopscell.reset(new math::HierarchyCellDataOpsReal<double>(d_hierarchy,
+                                                               d_ln_min,
+                                                               d_ln_max));
+   d_hopsside.reset(new math::HierarchySideDataOpsReal<double>(d_hierarchy,
+                                                               d_ln_min,
+                                                               d_ln_max));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
 
@@ -775,7 +775,7 @@ void CellPoissonFACOps::initializeOperatorState(
     *   are allocated
     *   has sufficient ghost width
     */
-   tbox::Pointer<hier::Variable> var;
+   boost::shared_ptr<hier::Variable> var;
    {
       vdb->mapIndexToVariable(rhs.getComponentDescriptorIndex(0),
          var);
@@ -783,9 +783,9 @@ void CellPoissonFACOps::initializeOperatorState(
          TBOX_ERROR(d_object_name << ": RHS component does not\n"
                                   << "correspond to a variable.\n");
       }
-      tbox::Pointer<pdat::CellVariable<double> > cell_var(
+      boost::shared_ptr<pdat::CellVariable<double> > cell_var(
          var,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (!cell_var) {
          TBOX_ERROR(d_object_name
             << ": RHS variable is not cell-centered double\n");
@@ -798,29 +798,29 @@ void CellPoissonFACOps::initializeOperatorState(
          TBOX_ERROR(d_object_name << ": Solution component does not\n"
                                   << "correspond to a variable.\n");
       }
-      tbox::Pointer<pdat::CellVariable<double> > cell_var(
+      boost::shared_ptr<pdat::CellVariable<double> > cell_var(
          var,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (!cell_var) {
          TBOX_ERROR(d_object_name
             << ": Solution variable is not cell-centered double\n");
       }
    }
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
-      tbox::Pointer<hier::PatchLevel> level_ptr =
+      boost::shared_ptr<hier::PatchLevel> level_ptr =
          d_hierarchy->getPatchLevel(ln);
       hier::PatchLevel& level = *level_ptr;
       for (hier::PatchLevel::Iterator pi(level); pi; pi++) {
          hier::Patch& patch = **pi;
-         tbox::Pointer<hier::PatchData> fd =
+         boost::shared_ptr<hier::PatchData> fd =
             patch.getPatchData(rhs.getComponentDescriptorIndex(0));
          if (fd) {
             /*
              * Some data checks can only be done if the data already exists.
              */
-            tbox::Pointer<pdat::CellData<double> > cd(
+            boost::shared_ptr<pdat::CellData<double> > cd(
                fd,
-               tbox::__dynamic_cast_tag());
+               boost::detail::dynamic_cast_tag());
             if (!cd) {
                TBOX_ERROR(d_object_name
                   << ": RHS data is not cell-centered double\n");
@@ -831,16 +831,16 @@ void CellPoissonFACOps::initializeOperatorState(
                   << "Solver is for depth 0 only.\n");
             }
          }
-         tbox::Pointer<hier::PatchData> ud(
+         boost::shared_ptr<hier::PatchData> ud(
             patch.getPatchData(solution.getComponentDescriptorIndex(0)),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          if (ud) {
             /*
              * Some data checks can only be done if the data already exists.
              */
-            tbox::Pointer<pdat::CellData<double> > cd(
+            boost::shared_ptr<pdat::CellData<double> > cd(
                ud,
-               tbox::__dynamic_cast_tag());
+               boost::detail::dynamic_cast_tag());
             if (!cd) {
                TBOX_ERROR(d_object_name
                   << ": Solution data is not cell-centered double\n");
@@ -878,9 +878,10 @@ void CellPoissonFACOps::initializeOperatorState(
 
    hier::IntVector max_gcw(d_dim, 1);
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
-      d_cf_boundary[ln] = new hier::CoarseFineBoundary(*d_hierarchy,
+      d_cf_boundary[ln].reset(
+         new hier::CoarseFineBoundary(*d_hierarchy,
             ln,
-            max_gcw);
+            max_gcw));
    }
 #ifdef HAVE_HYPRE
    if (d_coarse_solver_choice == "hypre") {
@@ -905,10 +906,10 @@ void CellPoissonFACOps::initializeOperatorState(
     *   which should be set to either "Ewing" or one of the
     *   acceptable strings for looking up the refine operator.
     */
-   tbox::Pointer<geom::CartesianGridGeometry> geometry(
+   boost::shared_ptr<geom::CartesianGridGeometry> geometry(
       d_hierarchy->getGridGeometry(),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<hier::Variable> variable;
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<hier::Variable> variable;
 
    vdb->mapIndexToVariable(d_cell_scratch_id, variable);
    d_prolongation_refine_operator =
@@ -981,12 +982,18 @@ void CellPoissonFACOps::initializeOperatorState(
    d_rrestriction_coarsen_schedules.resizeArray(d_ln_max + 1);
    d_flux_coarsen_schedules.resizeArray(d_ln_max + 1);
 
-   d_prolongation_refine_algorithm = new xfer::RefineAlgorithm(d_dim);
-   d_urestriction_coarsen_algorithm = new xfer::CoarsenAlgorithm(d_dim);
-   d_rrestriction_coarsen_algorithm = new xfer::CoarsenAlgorithm(d_dim);
-   d_flux_coarsen_algorithm = new xfer::CoarsenAlgorithm(d_dim);
-   d_ghostfill_refine_algorithm = new xfer::RefineAlgorithm(d_dim);
-   d_ghostfill_nocoarse_refine_algorithm = new xfer::RefineAlgorithm(d_dim);
+   d_prolongation_refine_algorithm.reset(
+      new xfer::RefineAlgorithm(d_dim));
+   d_urestriction_coarsen_algorithm.reset(
+      new xfer::CoarsenAlgorithm(d_dim));
+   d_rrestriction_coarsen_algorithm.reset(
+      new xfer::CoarsenAlgorithm(d_dim));
+   d_flux_coarsen_algorithm.reset(
+      new xfer::CoarsenAlgorithm(d_dim));
+   d_ghostfill_refine_algorithm.reset(
+      new xfer::RefineAlgorithm(d_dim));
+   d_ghostfill_nocoarse_refine_algorithm.reset(
+      new xfer::RefineAlgorithm(d_dim));
 
    d_prolongation_refine_algorithm->
    registerRefine(d_cell_scratch_id,
@@ -1018,13 +1025,13 @@ void CellPoissonFACOps::initializeOperatorState(
 
    for (int dest_ln = d_ln_min + 1; dest_ln <= d_ln_max; ++dest_ln) {
 
-      tbox::Pointer<xfer::PatchLevelFullFillPattern> fill_pattern(
+      boost::shared_ptr<xfer::PatchLevelFullFillPattern> fill_pattern(
          new xfer::PatchLevelFullFillPattern());
       d_prolongation_refine_schedules[dest_ln] =
          d_prolongation_refine_algorithm->
          createSchedule(fill_pattern,
             d_hierarchy->getPatchLevel(dest_ln),
-            tbox::Pointer<hier::PatchLevel>(),
+            boost::shared_ptr<hier::PatchLevel>(),
             dest_ln - 1,
             d_hierarchy,
             &d_bc_helper);
@@ -1244,9 +1251,9 @@ void CellPoissonFACOps::prolongErrorAndCorrect(
    }
 #endif
 
-   tbox::Pointer<hier::PatchLevel> coarse_level =
+   boost::shared_ptr<hier::PatchLevel> coarse_level =
       d_hierarchy->getPatchLevel(dest_ln - 1);
-   tbox::Pointer<hier::PatchLevel> fine_level =
+   boost::shared_ptr<hier::PatchLevel> fine_level =
       d_hierarchy->getPatchLevel(dest_ln);
 
    /*
@@ -1337,7 +1344,7 @@ void CellPoissonFACOps::smoothErrorByRedBlack(
          "internal hierarchy.");
    }
 #endif
-   tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+   boost::shared_ptr<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
 
    const int data_id = data.getComponentDescriptorIndex(0);
 
@@ -1376,7 +1383,7 @@ void CellPoissonFACOps::smoothErrorByRedBlack(
       // Red sweep.
       xeqScheduleGhostFillNoCoarse(data_id, ln);
       for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
-         tbox::Pointer<hier::Patch> patch = *pi;
+         boost::shared_ptr<hier::Patch> patch = *pi;
 
          bool deallocate_flux_data_when_done = false;
          if (flux_id == d_flux_scratch_id) {
@@ -1392,24 +1399,24 @@ void CellPoissonFACOps::smoothErrorByRedBlack(
             }
          }
 
-         tbox::Pointer<pdat::CellData<double> > scalar_field_data;
+         boost::shared_ptr<pdat::CellData<double> > scalar_field_data;
          if (d_poisson_spec.cIsVariable()) {
             scalar_field_data =
-               tbox::dynamic_pointer_cast<pdat::CellData<double>,
-                                          hier::PatchData>(patch->getPatchData(d_poisson_spec.getCPatchDataId()));
+               boost::dynamic_pointer_cast<pdat::CellData<double>,
+                  hier::PatchData>(patch->getPatchData(d_poisson_spec.getCPatchDataId()));
          }
          else {
-            scalar_field_data = NULL;
+            scalar_field_data.reset();
          }
-         tbox::Pointer<pdat::CellData<double> > err_data(
+         boost::shared_ptr<pdat::CellData<double> > err_data(
             data.getComponentPatchData(0, *patch),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<double> > residual_data(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<double> > residual_data(
             residual.getComponentPatchData(0, *patch),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::SideData<double> > flux_data(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<double> > flux_data(
             patch->getPatchData(flux_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          computeFluxOnPatch(
             *patch,
@@ -1432,7 +1439,7 @@ void CellPoissonFACOps::smoothErrorByRedBlack(
 
       // Black sweep.
       for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
-         tbox::Pointer<hier::Patch> patch = *pi;
+         boost::shared_ptr<hier::Patch> patch = *pi;
 
          bool deallocate_flux_data_when_done = false;
          if (flux_id == d_flux_scratch_id) {
@@ -1448,24 +1455,24 @@ void CellPoissonFACOps::smoothErrorByRedBlack(
             }
          }
 
-         tbox::Pointer<pdat::CellData<double> > scalar_field_data;
+         boost::shared_ptr<pdat::CellData<double> > scalar_field_data;
          if (d_poisson_spec.cIsVariable()) {
             scalar_field_data =
-               tbox::dynamic_pointer_cast<pdat::CellData<double>,
-                                          hier::PatchData>(patch->getPatchData(d_poisson_spec.getCPatchDataId()));
+               boost::dynamic_pointer_cast<pdat::CellData<double>,
+                  hier::PatchData>(patch->getPatchData(d_poisson_spec.getCPatchDataId()));
          }
          else {
-            scalar_field_data = NULL;
+            scalar_field_data.reset();
          }
-         tbox::Pointer<pdat::CellData<double> > err_data(
+         boost::shared_ptr<pdat::CellData<double> > err_data(
             data.getComponentPatchData(0, *patch),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::CellData<double> > residual_data(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::CellData<double> > residual_data(
             residual.getComponentPatchData(0, *patch),
-            tbox::__dynamic_cast_tag());
-         tbox::Pointer<pdat::SideData<double> > flux_data(
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<double> > flux_data(
             patch->getPatchData(flux_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          computeFluxOnPatch(
             *patch,
@@ -1523,9 +1530,9 @@ void CellPoissonFACOps::ewingFixFlux(
 
    const int patch_ln = patch.getPatchLevelNumber();
    const hier::GlobalId id = patch.getGlobalId();
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
    const hier::Box& patch_box(patch.getBox());
    const hier::Index& plower = patch_box.lower();
@@ -1537,9 +1544,9 @@ void CellPoissonFACOps::ewingFixFlux(
 
    if (d_poisson_spec.dIsVariable()) {
 
-      tbox::Pointer<pdat::SideData<double> > diffcoef_data(
+      boost::shared_ptr<pdat::SideData<double> > diffcoef_data(
          patch.getPatchData(d_poisson_spec.getDPatchDataId()),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       for (bn = 0; bn < nboxes; ++bn) {
          const hier::BoundaryBox& boundary_box = bboxes[bn];
@@ -1780,7 +1787,7 @@ void CellPoissonFACOps::computeCompositeResidualOnLevel(
          "internal hierarchy.");
    }
 #endif
-   tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+   boost::shared_ptr<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
 
    /*
     * Set up the bc helper so that when we use a refine schedule
@@ -1815,7 +1822,7 @@ void CellPoissonFACOps::computeCompositeResidualOnLevel(
 
    /* S1. Fill solution ghost data. */
    {
-      tbox::Pointer<xfer::RefineSchedule> ln_refine_schedule;
+      boost::shared_ptr<xfer::RefineSchedule> ln_refine_schedule;
       if (ln > d_ln_min) {
          /* Fill from current, next coarser level and physical boundary */
          xeqScheduleGhostFill(soln_id, ln);
@@ -1845,20 +1852,20 @@ void CellPoissonFACOps::computeCompositeResidualOnLevel(
     * S2. Compute flux on patches in level.
     */
    for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
-      tbox::Pointer<hier::Patch> patch = *pi;
+      boost::shared_ptr<hier::Patch> patch = *pi;
 
-      tbox::Pointer<pdat::CellData<double> > soln_data(
+      boost::shared_ptr<pdat::CellData<double> > soln_data(
          solution.getComponentPatchData(0, *patch),
-         tbox::__dynamic_cast_tag());
-      tbox::Pointer<pdat::CellData<double> > rhs_data(
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::CellData<double> > rhs_data(
          rhs.getComponentPatchData(0, *patch),
-         tbox::__dynamic_cast_tag());
-      tbox::Pointer<pdat::CellData<double> > residual_data(
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::CellData<double> > residual_data(
          residual.getComponentPatchData(0, *patch),
-         tbox::__dynamic_cast_tag());
-      tbox::Pointer<pdat::SideData<double> > flux_data(
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::SideData<double> > flux_data(
          patch->getPatchData(flux_id),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       computeFluxOnPatch(
          *patch,
          level->getRatioToCoarserLevel(),
@@ -1879,19 +1886,19 @@ void CellPoissonFACOps::computeCompositeResidualOnLevel(
     * S4. Compute residual on patches in level.
     */
    for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
-      tbox::Pointer<hier::Patch> patch = *pi;
-      tbox::Pointer<pdat::CellData<double> > soln_data(
+      boost::shared_ptr<hier::Patch> patch = *pi;
+      boost::shared_ptr<pdat::CellData<double> > soln_data(
          solution.getComponentPatchData(0, *patch),
-         tbox::__dynamic_cast_tag());
-      tbox::Pointer<pdat::CellData<double> > rhs_data(
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::CellData<double> > rhs_data(
          rhs.getComponentPatchData(0, *patch),
-         tbox::__dynamic_cast_tag());
-      tbox::Pointer<pdat::CellData<double> > residual_data(
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::CellData<double> > residual_data(
          residual.getComponentPatchData(0, *patch),
-         tbox::__dynamic_cast_tag());
-      tbox::Pointer<pdat::SideData<double> > flux_data(
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::SideData<double> > flux_data(
          patch->getPatchData(flux_id),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       computeResidualOnPatch(*patch,
          *flux_data,
          *soln_data,
@@ -1906,9 +1913,9 @@ void CellPoissonFACOps::computeCompositeResidualOnLevel(
           *  loop through the patches, but we put it here to
           *  avoid writing another loop for it.
           */
-         tbox::Pointer<pdat::OutersideData<double> > oflux_data(
+         boost::shared_ptr<pdat::OutersideData<double> > oflux_data(
             patch->getPatchData(d_oflux_scratch_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          TBOX_ASSERT(oflux_data);
 
@@ -1969,7 +1976,7 @@ double CellPoissonFACOps::computeResidualNorm(
  */
 
 void CellPoissonFACOps::computeVectorWeights(
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int weight_id,
    int coarsest_ln,
    int finest_ln) const
@@ -1991,13 +1998,13 @@ void CellPoissonFACOps::computeVectorWeights(
        * On every level, first assign cell volume to vector weight.
        */
 
-      tbox::Pointer<hier::PatchLevel> level =
+      boost::shared_ptr<hier::PatchLevel> level =
          hierarchy->getPatchLevel(ln);
       for (hier::PatchLevel::Iterator p(level); p; p++) {
-         tbox::Pointer<hier::Patch> patch = *p;
-         tbox::Pointer<geom::CartesianPatchGeometry> patch_geometry(
+         boost::shared_ptr<hier::Patch> patch = *p;
+         boost::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
             patch->getPatchGeometry(),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          const double* dx = patch_geometry->getDx();
          double cell_vol = dx[0];
          if (d_dim > tbox::Dimension(1)) {
@@ -2008,9 +2015,9 @@ void CellPoissonFACOps::computeVectorWeights(
             cell_vol *= dx[2];
          }
 
-         tbox::Pointer<pdat::CellData<double> > w(
+         boost::shared_ptr<pdat::CellData<double> > w(
             patch->getPatchData(weight_id),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          if (!w) {
             TBOX_ERROR(d_object_name
                << ": weight id must refer to a pdat::CellVariable");
@@ -2031,7 +2038,7 @@ void CellPoissonFACOps::computeVectorWeights(
           * at this level.
           */
 
-         tbox::Pointer<hier::PatchLevel> next_finer_level =
+         boost::shared_ptr<hier::PatchLevel> next_finer_level =
             hierarchy->getPatchLevel(ln + 1);
          hier::BoxContainer coarsened_boxes = next_finer_level->getBoxes();
          hier::IntVector coarsen_ratio(next_finer_level->getRatioToLevelZero());
@@ -2046,15 +2053,15 @@ void CellPoissonFACOps::computeVectorWeights(
 
          for (hier::PatchLevel::Iterator p(level); p; p++) {
 
-            tbox::Pointer<hier::Patch> patch = *p;
+            boost::shared_ptr<hier::Patch> patch = *p;
             for (hier::BoxContainer::Iterator i(coarsened_boxes);
                  i != coarsened_boxes.end(); ++i) {
 
                hier::Box intersection = *i * (patch->getBox());
                if (!intersection.empty()) {
-                  tbox::Pointer<pdat::CellData<double> > w(
+                  boost::shared_ptr<pdat::CellData<double> > w(
                      patch->getPatchData(weight_id),
-                     tbox::__dynamic_cast_tag());
+                     boost::detail::dynamic_cast_tag());
                   w->fillAll(0.0, intersection);
 
                }  // assignment only in non-empty intersection
@@ -2078,11 +2085,11 @@ void CellPoissonFACOps::checkInputPatchDataIndices() const {
 
    if (!d_poisson_spec.dIsConstant()
        && d_poisson_spec.getDPatchDataId() != -1) {
-      tbox::Pointer<hier::Variable> var;
+      boost::shared_ptr<hier::Variable> var;
       vdb.mapIndexToVariable(d_poisson_spec.getDPatchDataId(), var);
-      tbox::Pointer<pdat::SideVariable<double> > diffcoef_var(
+      boost::shared_ptr<pdat::SideVariable<double> > diffcoef_var(
          var,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (!diffcoef_var) {
          TBOX_ERROR(d_object_name
             << ": Bad diffusion coefficient patch data index.");
@@ -2090,22 +2097,22 @@ void CellPoissonFACOps::checkInputPatchDataIndices() const {
    }
 
    if (!d_poisson_spec.cIsConstant() && !d_poisson_spec.cIsZero()) {
-      tbox::Pointer<hier::Variable> var;
+      boost::shared_ptr<hier::Variable> var;
       vdb.mapIndexToVariable(d_poisson_spec.getCPatchDataId(), var);
-      tbox::Pointer<pdat::CellVariable<double> > scalar_field_var(
+      boost::shared_ptr<pdat::CellVariable<double> > scalar_field_var(
          var,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       if (!scalar_field_var) {
          TBOX_ERROR(d_object_name << ": Bad linear term patch data index.");
       }
    }
 
    if (d_flux_id != -1) {
-      tbox::Pointer<hier::Variable> var;
+      boost::shared_ptr<hier::Variable> var;
       vdb.mapIndexToVariable(d_flux_id, var);
-      tbox::Pointer<pdat::SideVariable<double> > flux_var(
+      boost::shared_ptr<pdat::SideVariable<double> > flux_var(
          var,
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       TBOX_ASSERT(flux_var);
    }
@@ -2132,21 +2139,21 @@ void CellPoissonFACOps::computeFluxOnPatch(
    TBOX_ASSERT(w_data.getGhostCellWidth() >=
       hier::IntVector::getOne(ratio_to_coarser_level.getDim()));
 
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const hier::Box& box = patch.getBox();
    const int* lower = &box.lower()[0];
    const int* upper = &box.upper()[0];
    const double* dx = patch_geom->getDx();
 
    double D_value;
-   tbox::Pointer<pdat::SideData<double> > D_data;
+   boost::shared_ptr<pdat::SideData<double> > D_data;
    if (d_poisson_spec.dIsConstant()) {
       D_value = d_poisson_spec.getDConstant();
    } else {
-      D_data = tbox::dynamic_pointer_cast<pdat::SideData<double>,
-                                          hier::PatchData>(patch.getPatchData(d_poisson_spec.getDPatchDataId()));
+      D_data = boost::dynamic_pointer_cast<pdat::SideData<double>,
+                                           hier::PatchData>(patch.getPatchData(d_poisson_spec.getDPatchDataId()));
    }
 
    if (d_poisson_spec.dIsConstant()) {
@@ -2245,20 +2252,20 @@ void CellPoissonFACOps::computeResidualOnPatch(
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS5(d_dim, patch, flux_data, soln_data, rhs_data,
       residual_data);
 
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const hier::Box& box = patch.getBox();
    const int* lower = &box.lower()[0];
    const int* upper = &box.upper()[0];
    const double* dx = patch_geom->getDx();
 
-   tbox::Pointer<pdat::CellData<double> > scalar_field_data;
+   boost::shared_ptr<pdat::CellData<double> > scalar_field_data;
    double scalar_field_constant;
    if (d_poisson_spec.cIsVariable()) {
       scalar_field_data =
-         tbox::dynamic_pointer_cast<pdat::CellData<double>,
-                                    hier::PatchData>(patch.getPatchData(d_poisson_spec.getCPatchDataId()));
+         boost::dynamic_pointer_cast<pdat::CellData<double>,
+                                     hier::PatchData>(patch.getPatchData(d_poisson_spec.getCPatchDataId()));
       if (d_dim == tbox::Dimension(2)) {
          F77_FUNC(compresvarsca2d, COMPRESVARSCA2D) (
             flux_data.getPointer(0),
@@ -2409,31 +2416,31 @@ void CellPoissonFACOps::redOrBlackSmoothingOnPatch(
    TBOX_ASSERT(red_or_black == 'r' || red_or_black == 'b');
 
    const int offset = red_or_black == 'r' ? 0 : 1;
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const hier::Box& box = patch.getBox();
    const int* lower = &box.lower()[0];
    const int* upper = &box.upper()[0];
    const double* dx = patch_geom->getDx();
 
-   tbox::Pointer<pdat::CellData<double> > scalar_field_data;
+   boost::shared_ptr<pdat::CellData<double> > scalar_field_data;
    double scalar_field_constant;
-   tbox::Pointer<pdat::SideData<double> > diffcoef_data;
+   boost::shared_ptr<pdat::SideData<double> > diffcoef_data;
    double diffcoef_constant;
 
    if (d_poisson_spec.cIsVariable()) {
       scalar_field_data =
-         tbox::dynamic_pointer_cast<pdat::CellData<double>,
-                                    hier::PatchData>(patch.getPatchData(d_poisson_spec.getCPatchDataId()));
+         boost::dynamic_pointer_cast<pdat::CellData<double>,
+                                     hier::PatchData>(patch.getPatchData(d_poisson_spec.getCPatchDataId()));
    } else if (d_poisson_spec.cIsConstant()) {
       scalar_field_constant = d_poisson_spec.getCConstant();
    } else {
       scalar_field_constant = 0.0;
    }
    if (d_poisson_spec.dIsVariable()) {
-      diffcoef_data = tbox::dynamic_pointer_cast<pdat::SideData<double>,
-                                                 hier::PatchData>(patch.getPatchData(d_poisson_spec.getDPatchDataId()));
+      diffcoef_data = boost::dynamic_pointer_cast<pdat::SideData<double>,
+                                                  hier::PatchData>(patch.getPatchData(d_poisson_spec.getDPatchDataId()));
    } else {
       diffcoef_constant = d_poisson_spec.getDConstant();
    }

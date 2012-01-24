@@ -84,20 +84,20 @@ public:
     * This routine is called by the coarsen schedule during construction of the
     * schedule.
     *
-    * @param dst_level      tbox::Pointer to destination patch level.
-    * @param src_level      tbox::Pointer to source patch level.
-    * @param overlap        tbox::Pointer to overlap region between patches.
+    * @param dst_level      boost::shared_ptr to destination patch level.
+    * @param src_level      boost::shared_ptr to source patch level.
+    * @param overlap        boost::shared_ptr to overlap region between patches.
     * @param dst_patch_id   Integer index of destination patch in destination
     *                       patch level.
     * @param src_patch_id   Integer index of source patch in source patch level.
     * @param citem_id       Integer index of CoarsenClass::Data item associated
     *                       with transaction.
     */
-   virtual tbox::Pointer<tbox::Transaction>
+   virtual boost::shared_ptr<tbox::Transaction>
    allocate(
-      tbox::Pointer<hier::PatchLevel> dst_level,
-      tbox::Pointer<hier::PatchLevel> src_level,
-      tbox::Pointer<hier::BoxOverlap> overlap,
+      boost::shared_ptr<hier::PatchLevel> dst_level,
+      boost::shared_ptr<hier::PatchLevel> src_level,
+      boost::shared_ptr<hier::BoxOverlap> overlap,
       const hier::Box& dst_mapped_box,
       const hier::Box& src_mapped_box,
       int citem_id) const = 0;

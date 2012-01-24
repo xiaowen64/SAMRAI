@@ -72,9 +72,9 @@ public:
     * message stream with source patch data, or (3) unpacking and summing
     * destination patch data from a message stream.
     *
-    * @param dst_level        tbox::Pointer to destination patch level.
-    * @param src_level        tbox::Pointer to source patch level.
-    * @param overlap          tbox::Pointer to overlap region between patches.
+    * @param dst_level        boost::shared_ptr to destination patch level.
+    * @param src_level        boost::shared_ptr to source patch level.
+    * @param overlap          boost::shared_ptr to overlap region between patches.
     * @param dst_patch        Integer index of destination patch in
     *                         destination
     *                         patch level.
@@ -87,9 +87,9 @@ public:
     * arguments is null, or if any of the integer arguments is invalid (i.e., < 0).
     */
    OuteredgeSumTransaction(
-      tbox::Pointer<hier::PatchLevel> dst_level,
-      tbox::Pointer<hier::PatchLevel> src_level,
-      tbox::Pointer<hier::BoxOverlap> overlap,
+      boost::shared_ptr<hier::PatchLevel> dst_level,
+      boost::shared_ptr<hier::PatchLevel> src_level,
+      boost::shared_ptr<hier::BoxOverlap> overlap,
       const hier::Box& dst_node,
       const hier::Box& src_node,
       int refine_item_id);
@@ -172,9 +172,9 @@ private:
    static const xfer::RefineClasses::Data** s_refine_items;
    static int s_num_refine_items;
 
-   tbox::Pointer<hier::PatchLevel> d_dst_level;
-   tbox::Pointer<hier::PatchLevel> d_src_level;
-   tbox::Pointer<hier::BoxOverlap> d_overlap;
+   boost::shared_ptr<hier::PatchLevel> d_dst_level;
+   boost::shared_ptr<hier::PatchLevel> d_src_level;
+   boost::shared_ptr<hier::BoxOverlap> d_overlap;
    hier::Box d_dst_node;
    hier::Box d_src_node;
    int d_refine_item_id;

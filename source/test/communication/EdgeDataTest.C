@@ -40,7 +40,7 @@ static double GETVALUE(
 EdgeDataTest::EdgeDataTest(
    const string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> main_input_db,
+   boost::shared_ptr<tbox::Database> main_input_db,
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
@@ -74,10 +74,11 @@ EdgeDataTest::EdgeDataTest(
       getDatabase("PatchHierarchy")->
       getInteger("max_levels") - 1;
 
-   d_cart_grid_geometry = new geom::CartesianGridGeometry(
+   d_cart_grid_geometry.reset(
+      new geom::CartesianGridGeometry(
          dim,
          "CartesianGridGeometry",
-         main_input_db->getDatabase("CartesianGridGeometry"));
+         main_input_db->getDatabase("CartesianGridGeometry")));
 
    setGridGeometry(d_cart_grid_geometry);
 
@@ -90,7 +91,7 @@ EdgeDataTest::~EdgeDataTest()
 }
 
 void EdgeDataTest::readTestInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -131,14 +132,16 @@ void EdgeDataTest::readTestInput(
    readVariableInput(db->getDatabase("VariableData"));
    readRefinementInput(db->getDatabase("RefinementData"));
 
-   tbox::Pointer<tbox::Database> var_data = db->getDatabase("VariableData");
+   boost::shared_ptr<tbox::Database> var_data =
+      db->getDatabase("VariableData");
    tbox::Array<string> var_keys = var_data->getAllKeys();
    int nkeys = var_keys.getSize();
 
    d_use_fine_value_at_interface.resizeArray(nkeys);
 
    for (int i = 0; i < nkeys; i++) {
-      tbox::Pointer<tbox::Database> var_db = var_data->getDatabase(var_keys[i]);
+      boost::shared_ptr<tbox::Database> var_db =
+         var_data->getDatabase(var_keys[i]);
 
       if (var_db->keyExists("use_fine_value_at_interface")) {
          d_use_fine_value_at_interface[i] =
@@ -161,10 +164,10 @@ void EdgeDataTest::registerVariables(
    d_variables.resizeArray(nvars);
 
    for (int i = 0; i < nvars; i++) {
-      d_variables[i] =
+      d_variables[i].reset(
          new pdat::EdgeVariable<double>(d_dim, d_variable_src_name[i],
                                         d_variable_depth[i],
-                                        d_use_fine_value_at_interface[i]);
+                                        d_use_fine_value_at_interface[i]));
 
       if (d_do_refine) {
          commtest->registerVariable(d_variables[i],
@@ -187,7 +190,7 @@ void EdgeDataTest::registerVariables(
 }
 
 void EdgeDataTest::setConstantData(
-   tbox::Pointer<pdat::EdgeData<double> > data,
+   boost::shared_ptr<pdat::EdgeData<double> > data,
    const hier::Box& box,
    double ndimfact,
    double axfact) const
@@ -212,10 +215,10 @@ void EdgeDataTest::setConstantData(
 }
 
 void EdgeDataTest::setConservativeData(
-   tbox::Pointer<pdat::EdgeData<double> > data,
+   boost::shared_ptr<pdat::EdgeData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -226,7 +229,7 @@ void EdgeDataTest::setConservativeData(
 #endif
 
    int i, j;
-   tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(
+   boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
          level_number);
 
    const hier::BoxContainer& domain =
@@ -303,9 +306,9 @@ void EdgeDataTest::setConservativeData(
       hier::IntVector ratio(level->getRatioToLevelZero());
       const int max_ratio = ratio.max();
 
-      tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+      boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
          patch.getPatchGeometry(),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
       const double* dx = pgeom->getDx();
 
       int coarse_ncells = ncells;
@@ -379,7 +382,7 @@ void EdgeDataTest::setConservativeData(
 
 void EdgeDataTest::initializeDataOnPatch(
    const hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    char src_or_dst)
 {
@@ -391,9 +394,9 @@ void EdgeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::EdgeData<double> > edge_data(
+         boost::shared_ptr<pdat::EdgeData<double> > edge_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          hier::Box dbox = edge_data->getBox();
 
@@ -405,9 +408,9 @@ void EdgeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::EdgeData<double> > edge_data(
+         boost::shared_ptr<pdat::EdgeData<double> > edge_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
 
          hier::Box dbox = edge_data->getGhostBox();
 
@@ -421,7 +424,7 @@ void EdgeDataTest::initializeDataOnPatch(
 }
 
 void EdgeDataTest::setConstantBoundaryData(
-   tbox::Pointer<pdat::EdgeData<double> > data,
+   boost::shared_ptr<pdat::EdgeData<double> > data,
    const hier::BoundaryBox& bbox,
    double ndimfact,
    double axfact) const
@@ -559,7 +562,7 @@ void EdgeDataTest::setConstantBoundaryData(
 
 bool EdgeDataTest::verifyResults(
    const hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
    (void)hierarchy;
@@ -580,7 +583,7 @@ bool EdgeDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      tbox::Pointer<pdat::EdgeData<double> > solution(
+      boost::shared_ptr<pdat::EdgeData<double> > solution(
          new pdat::EdgeData<double>(pbox, 1, tgcw));
 
       hier::Box tbox(pbox);
@@ -593,9 +596,9 @@ bool EdgeDataTest::verifyResults(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::EdgeData<double> > edge_data(
+         boost::shared_ptr<pdat::EdgeData<double> > edge_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            tbox::__dynamic_cast_tag());
+            boost::detail::dynamic_cast_tag());
          int depth = edge_data->getDepth();
          hier::Box dbox = edge_data->getGhostBox();
 
@@ -638,7 +641,7 @@ bool EdgeDataTest::verifyResults(
 }
 
 void EdgeDataTest::setLinearData(
-   tbox::Pointer<pdat::EdgeData<double> > data,
+   boost::shared_ptr<pdat::EdgeData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -646,9 +649,9 @@ void EdgeDataTest::setLinearData(
    TBOX_ASSERT(data);
 #endif
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
    double x, y, z;
@@ -698,9 +701,9 @@ void EdgeDataTest::setLinearData(
 }
 
 void EdgeDataTest::checkPatchInteriorData(
-   const tbox::Pointer<pdat::EdgeData<double> >& data,
+   const boost::shared_ptr<pdat::EdgeData<double> >& data,
    const hier::Box& interior,
-   const tbox::Pointer<geom::CartesianPatchGeometry>& pgeom) const
+   const boost::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
@@ -764,9 +767,9 @@ void EdgeDataTest::setPhysicalBoundaryConditions(
 {
    (void)time;
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    const tbox::Array<hier::BoundaryBox> node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -786,9 +789,9 @@ void EdgeDataTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
-      tbox::Pointer<pdat::EdgeData<double> > edge_data(
+      boost::shared_ptr<pdat::EdgeData<double> > edge_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         tbox::__dynamic_cast_tag());
+         boost::detail::dynamic_cast_tag());
 
       hier::Box patch_interior = edge_data->getBox();
       checkPatchInteriorData(edge_data, patch_interior, pgeom);

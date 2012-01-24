@@ -16,8 +16,9 @@
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/RestartManager.h"
+
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 using namespace std;
@@ -38,19 +39,19 @@ setupTestData(
  */
 void
 writeTestData(
-   tbox::Pointer<tbox::Database> db);
+   boost::shared_ptr<tbox::Database> db);
 
 /**
  * Read database and test contents.
  */
 void
 readTestData(
-   tbox::Pointer<tbox::Database> db);
+   boost::shared_ptr<tbox::Database> db);
 
 /**
  * Test contents of database.
  */
 void
 testDatabaseContents(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    const string& tag);

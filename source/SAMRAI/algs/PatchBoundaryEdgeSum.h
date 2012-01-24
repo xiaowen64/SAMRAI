@@ -16,10 +16,10 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/pdat/EdgeVariable.h"
 #include "SAMRAI/pdat/OuteredgeVariable.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -133,7 +133,7 @@ public:
     */
    void
    setupSum(
-      tbox::Pointer<hier::PatchLevel> level);
+      boost::shared_ptr<hier::PatchLevel> level);
 
    /*!
     *  @brief Compute sum of edge values at each shared edge and replace
@@ -160,7 +160,7 @@ private:
     */
    void
    doLevelSum(
-      tbox::Pointer<hier::PatchLevel> level) const;
+      boost::shared_ptr<hier::PatchLevel> level) const;
 
    /*
     * Static members for managing shared temporary data among multiple
@@ -189,8 +189,8 @@ private:
     * Edge-centered variables and patch data indices used as internal work quantities.
     */
    // These arrays are indexed [variable registration sequence number]
-   tbox::Array<tbox::Pointer<hier::Variable> > d_tmp_oedge_src_variable;
-   tbox::Array<tbox::Pointer<hier::Variable> > d_tmp_oedge_dst_variable;
+   tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_oedge_src_variable;
+   tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_oedge_dst_variable;
 
    // These arrays are indexed [variable registration sequence number]
    tbox::Array<int> d_oedge_src_id;
@@ -202,11 +202,11 @@ private:
    hier::ComponentSelector d_oedge_src_data_set;
    hier::ComponentSelector d_oedge_dst_data_set;
 
-   tbox::Pointer<hier::PatchLevel> d_level;
+   boost::shared_ptr<hier::PatchLevel> d_level;
 
-   tbox::Pointer<xfer::RefineTransactionFactory> d_sum_transaction_factory;
+   boost::shared_ptr<xfer::RefineTransactionFactory> d_sum_transaction_factory;
 
-   tbox::Pointer<xfer::RefineSchedule> d_single_level_sum_schedule;
+   boost::shared_ptr<xfer::RefineSchedule> d_single_level_sum_schedule;
 
 };
 

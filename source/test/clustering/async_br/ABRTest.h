@@ -13,7 +13,7 @@
 #include <string>
 using namespace std;
 
-#include "SAMRAI/tbox/Pointer.h"
+#include <boost/shared_ptr.hpp>
 #include "SAMRAI/tbox/Database.h"
 
 /*
@@ -44,8 +44,8 @@ public:
    ABRTest(
       const std::string& object_name,
       const tbox::Dimension& dim,
-      tbox::Pointer<hier::PatchHierarchy> patch_hierarchy,
-      SAMRAI::tbox::Pointer<SAMRAI::tbox::Database> database);
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy,
+      boost::shared_ptr<tbox::Database> database);
 
    ~ABRTest();
 
@@ -93,7 +93,7 @@ public:
     */
    int
    registerVariablesWithPlotter(
-      tbox::Pointer<appu::VisItDataWriter> writer);
+      boost::shared_ptr<appu::VisItDataWriter> writer);
 #endif
 
 private:
@@ -101,7 +101,7 @@ private:
 
    const tbox::Dimension d_dim;
 
-   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    SinusoidalFrontTagger d_tagger;
 

@@ -37,7 +37,7 @@ PatchSideDataOpsInteger::~PatchSideDataOpsInteger()
  */
 
 int PatchSideDataOpsInteger::numberOfEntries(
-   const tbox::Pointer<pdat::SideData<int> >& data,
+   const boost::shared_ptr<pdat::SideData<int> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -66,18 +66,18 @@ int PatchSideDataOpsInteger::numberOfEntries(
  */
 
 void PatchSideDataOpsInteger::swapData(
-   tbox::Pointer<hier::Patch> patch,
+   boost::shared_ptr<hier::Patch> patch,
    const int data1_id,
    const int data2_id) const
 {
    TBOX_ASSERT(patch);
 
-   tbox::Pointer<pdat::SideData<int> > d1(
+   boost::shared_ptr<pdat::SideData<int> > d1(
       patch->getPatchData(data1_id),
-      tbox::__dynamic_cast_tag());
-   tbox::Pointer<pdat::SideData<int> > d2(
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::SideData<int> > d2(
       patch->getPatchData(data2_id),
-      tbox::__dynamic_cast_tag());
+      boost::detail::dynamic_cast_tag());
 
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
@@ -90,7 +90,7 @@ void PatchSideDataOpsInteger::swapData(
 }
 
 void PatchSideDataOpsInteger::printData(
-   const tbox::Pointer<pdat::SideData<int> >& data,
+   const boost::shared_ptr<pdat::SideData<int> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
@@ -103,8 +103,8 @@ void PatchSideDataOpsInteger::printData(
 }
 
 void PatchSideDataOpsInteger::copyData(
-   tbox::Pointer<pdat::SideData<int> >& dst,
-   const tbox::Pointer<pdat::SideData<int> >& src,
+   boost::shared_ptr<pdat::SideData<int> >& dst,
+   const boost::shared_ptr<pdat::SideData<int> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -123,7 +123,7 @@ void PatchSideDataOpsInteger::copyData(
 }
 
 void PatchSideDataOpsInteger::setToScalar(
-   tbox::Pointer<pdat::SideData<int> >& dst,
+   boost::shared_ptr<pdat::SideData<int> >& dst,
    const int& alpha,
    const hier::Box& box) const
 {
@@ -134,8 +134,8 @@ void PatchSideDataOpsInteger::setToScalar(
 }
 
 void PatchSideDataOpsInteger::abs(
-   tbox::Pointer<pdat::SideData<int> >& dst,
-   const tbox::Pointer<pdat::SideData<int> >& src,
+   boost::shared_ptr<pdat::SideData<int> >& dst,
+   const boost::shared_ptr<pdat::SideData<int> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);

@@ -17,9 +17,6 @@
 namespace SAMRAI {
 namespace tbox {
 
-template<class TYPE>
-class Pointer;
-
 /*!
  * Drop-in replacement for std::vector, with some SAMRAI enhancements.
  *

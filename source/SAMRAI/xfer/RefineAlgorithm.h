@@ -25,7 +25,8 @@
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace xfer {
@@ -152,10 +153,10 @@ public:
     *                      functions.  See the comments for
     *                      RefinePatchStrategy::preprocessRefine() and
     *                      RefinePatchStrategy::postprocessRefine().
-    * @param[in] var_fill_pattern  Pointer to the variable fill pattern, which
-    *                              can be used to restrict the filling of data
-    *                              to a specific stencil.  If the NULL default
-    *                              is used, then class
+    * @param[in] var_fill_pattern  boost::shared_ptr to the variable fill
+    *                              pattern, which can be used to restrict the
+    *                              filling of data to a specific stencil.  If
+    *                              the NULL default is used, then class
     *                              BoxGeometryVariableFillPattern will be used
     *                              internally.
     */
@@ -164,9 +165,9 @@ public:
       const int dst,
       const int src,
       const int scratch,
-      tbox::Pointer<hier::RefineOperator> oprefine,
-      tbox::Pointer<VariableFillPattern> var_fill_pattern =
-         (tbox::Pointer<VariableFillPattern>) NULL);
+      boost::shared_ptr<hier::RefineOperator> oprefine,
+      boost::shared_ptr<VariableFillPattern> var_fill_pattern =
+         boost::shared_ptr<VariableFillPattern>((VariableFillPattern*)NULL));
 
    /*!
     * @brief Register a refine operation with the refine algorithm object.
@@ -196,10 +197,10 @@ public:
     *                      RefinePatchStrategy::postprocessRefine().
     * @param[in] optime    Time interpolation operator.  This pointer may
     *                      not be null.
-    * @param[in] var_fill_pattern  Pointer to the variable fill pattern, which
-    *                              can be used to restrict the filling of data
-    *                              to a specific stencil.  If the NULL default
-    *                              is used, then class
+    * @param[in] var_fill_pattern  boost::shared_ptr to the variable fill
+    *                              pattern, which can be used to restrict the
+    *                              filling of data to a specific stencil.  If
+    *                              the NULL default is used, then class
     *                              BoxGeometryVariableFillPattern will be used
     *                              internally.
     */
@@ -210,10 +211,10 @@ public:
       const int src_told,
       const int src_tnew,
       const int scratch,
-      tbox::Pointer<hier::RefineOperator> oprefine,
-      tbox::Pointer<hier::TimeInterpolateOperator> optime,
-      tbox::Pointer<VariableFillPattern> var_fill_pattern =
-         (tbox::Pointer<VariableFillPattern>) NULL);
+      boost::shared_ptr<hier::RefineOperator> oprefine,
+      boost::shared_ptr<hier::TimeInterpolateOperator> optime,
+      boost::shared_ptr<VariableFillPattern> var_fill_pattern =
+         boost::shared_ptr<VariableFillPattern>((VariableFillPattern*)NULL));
 
    /*!
     * @brief Create a communication schedule for communicating data within a
@@ -229,7 +230,8 @@ public:
     * change; thus, it can be used for multiple data communication cycles
     * cycles.
     *
-    * @return Pointer to refine schedule that performs the data transfers.
+    * @return boost::shared_ptr to refine schedule that performs the data
+    *         transfers.
     *
     * @param[in] level           Level on which communication occurs.  This
     *                            pointer cannot be null.
@@ -241,20 +243,20 @@ public:
     * @param[in] block_id       Identifies the block that this schedule will
     *                           operate on.  Defaults to zero for single-block
     *                           problems.
-    * @param[in] transaction_factory Optional Pointer to a refine transaction
-    *                                factory that creates data transactions for
-    *                                the schedule.  If this pointer is null
-    *                                (default state), then a
+    * @param[in] transaction_factory Optional boost::shared_ptr to a refine
+    *                                transaction factory that creates data
+    *                                transactions for the schedule.  If this
+    *                                pointer is null (default state), then a
     *                                StandardRefineTransactionFactory object
     *                                will be used.
     */
-   tbox::Pointer<xfer::RefineSchedule>
+   boost::shared_ptr<RefineSchedule>
    createSchedule(
-      tbox::Pointer<hier::PatchLevel> level,
+      boost::shared_ptr<hier::PatchLevel> level,
       RefinePatchStrategy * patch_strategy =
          ((RefinePatchStrategy *)NULL),
-      tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
-         tbox::Pointer<xfer::RefineTransactionFactory>(NULL));
+      boost::shared_ptr<RefineTransactionFactory> transaction_factory =
+         boost::shared_ptr<RefineTransactionFactory>((RefineTransactionFactory*)NULL));
 
    /*
     * @brief Same as the above, except with fill_pattern specified.
@@ -263,14 +265,14 @@ public:
     *                          to fill.  See RefineSchedule for available
     *                          patterns.
     */
-   tbox::Pointer<xfer::RefineSchedule>
+   boost::shared_ptr<RefineSchedule>
    createSchedule(
-      tbox::Pointer<PatchLevelFillPattern> fill_pattern,
-      tbox::Pointer<hier::PatchLevel> level,
+      boost::shared_ptr<PatchLevelFillPattern> fill_pattern,
+      boost::shared_ptr<hier::PatchLevel> level,
       RefinePatchStrategy * patch_strategy =
          ((RefinePatchStrategy *)NULL),
-      tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
-         tbox::Pointer<xfer::RefineTransactionFactory>(NULL));
+      boost::shared_ptr<RefineTransactionFactory> transaction_factory =
+         boost::shared_ptr<RefineTransactionFactory>((RefineTransactionFactory*)NULL));
 
    /*!
     * @brief Create a communication schedule that communicates data between
@@ -291,34 +293,37 @@ public:
     * Note that the schedule remains valid as long as the levels do not
     * change; thus, it can be used for multiple data communication cycles.
     *
-    * @return Pointer to refine schedule that performs the data transfers.
+    * @return boost::shared_ptr to refine schedule that performs the data
+    *         transfers.
     *
-    * @param[in] dst_level       Pointer to destination level; cannot be null.
-    * @param[in] src_level       Pointer to source level; cannot be null.
-    * @param[in] patch_strategy  Pointer to a refine patch strategy that
-    *                            provides user-defined physical boundary
+    * @param[in] dst_level       boost::shared_ptr to destination level; cannot
+    *                            be null.
+    * @param[in] src_level       boost::shared_ptr to source level; cannot be
+    *                            null.
+    * @param[in] patch_strategy  boost::shared_ptr to a refine patch strategy
+    *                            that provides user-defined physical boundary
     *                            filling operations.  If this patch strategy is
     *                            null (default state), then no physical
     *                            boundary filling is performed.
     * @param[in]  use_time_interpolation  Flag to create the schedule with
     *                                     the ability to perform time
     *                                     interpolation.
-    * @param[in] transaction_factory  Pointer to a refine transaction factory
-    *                                 that creates data transactions for the
-    *                                 schedule.  If this pointer is null
-    *                                 (default state), then a
+    * @param[in] transaction_factory  boost::shared_ptr to a refine transaction
+    *                                 factory that creates data transactions
+    *                                 for the schedule.  If this pointer is
+    *                                 null (default state), then a
     *                                 StandardRefineTransactionFactory object
     *                                 will be used.
     */
-   tbox::Pointer<xfer::RefineSchedule>
+   boost::shared_ptr<RefineSchedule>
    createSchedule(
-      tbox::Pointer<hier::PatchLevel> dst_level,
-      tbox::Pointer<hier::PatchLevel> src_level,
-      xfer::RefinePatchStrategy * patch_strategy =
-         ((xfer::RefinePatchStrategy *)NULL),
+      boost::shared_ptr<hier::PatchLevel> dst_level,
+      boost::shared_ptr<hier::PatchLevel> src_level,
+      RefinePatchStrategy * patch_strategy =
+         ((RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
-      tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
-         tbox::Pointer<xfer::RefineTransactionFactory>(NULL));
+      boost::shared_ptr<RefineTransactionFactory> transaction_factory =
+         boost::shared_ptr<RefineTransactionFactory>((RefineTransactionFactory*)NULL));
 
    /*!
     * @brief Same as the above, except with fill_pattern specified.
@@ -327,16 +332,16 @@ public:
     *                          to fill.  See RefineSchedule for available
     *                          patterns.
     */
-   tbox::Pointer<xfer::RefineSchedule>
+   boost::shared_ptr<RefineSchedule>
    createSchedule(
-      tbox::Pointer<PatchLevelFillPattern> fill_pattern,
-      tbox::Pointer<hier::PatchLevel> dst_level,
-      tbox::Pointer<hier::PatchLevel> src_level,
-      xfer::RefinePatchStrategy * patch_strategy =
-         ((xfer::RefinePatchStrategy *)NULL),
+      boost::shared_ptr<PatchLevelFillPattern> fill_pattern,
+      boost::shared_ptr<hier::PatchLevel> dst_level,
+      boost::shared_ptr<hier::PatchLevel> src_level,
+      RefinePatchStrategy * patch_strategy =
+         ((RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
-      tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
-         tbox::Pointer<xfer::RefineTransactionFactory>(NULL));
+      boost::shared_ptr<RefineTransactionFactory> transaction_factory =
+         boost::shared_ptr<RefineTransactionFactory>((RefineTransactionFactory*)NULL));
 
    /*!
     * @brief Create a communication schedule that communicates data within a
@@ -367,20 +372,23 @@ public:
     * in its creation do not change; thus, it can be used for multiple
     * data communication cycles.
     *
-    * @return Pointer to refine schedule that performs the data transfers.
+    * @return boost::shared_ptr to refine schedule that performs the data
+    *         transfers.
     *
-    * @param[in] level         Pointer to destination level; cannot be null.
+    * @param[in] level         boost::shared_ptr to destination level; cannot
+    *                          be null.
     * @param[in] next_coarser_level  Level number of next coarser patch level
     *                                in the patch hierarchy relative to the
     *                                destination level.  Note that when the
     *                                destination level has number zero (i.e.,
     *                                the coarsest level), this value should
     *                                value should be < 0.
-    * @param[in] hierarchy     Pointer to patch hierarchy from which data to
-    *                          fill level should come.  This pointer may be
-    *                          null only when the next_coarser_level is < 0.
-    * @param[in] patch_strategy  Pointer to a refine patch strategy that
-    *                            provides user-defined physical boundary
+    * @param[in] hierarchy     boost::shared_ptr to patch hierarchy from which
+    *                          data to fill level should come.  This pointer
+    *                          may be null only when the next_coarser_level is
+    *                          < 0.
+    * @param[in] patch_strategy  boost::shared_ptr to a refine patch strategy
+    *                            that provides user-defined physical boundary
     *                            filling operations and user-defined spatial
     *                            interpolation operations.  If this patch
     *                            strategy is null (default state), then no
@@ -397,23 +405,23 @@ public:
     *                                    interpolation on the destination
     *                                    level.  Default is no time
     *                                    interpolation (false).
-    * @param[in] transaction_factory  Pointer to a refine transaction
+    * @param[in] transaction_factory  boost::shared_ptr to a refine transaction
     *                                 factory that creates data transactions
     *                                 for the schedule.  If this pointer is
     *                                 null (default state), then a
     *                                 StandardRefineTransactionFactory object
     *                                 will be used.
     */
-   tbox::Pointer<xfer::RefineSchedule>
+   boost::shared_ptr<RefineSchedule>
    createSchedule(
-      tbox::Pointer<hier::PatchLevel> level,
+      boost::shared_ptr<hier::PatchLevel> level,
       const int next_coarser_level,
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
-      xfer::RefinePatchStrategy * patch_strategy =
-         ((xfer::RefinePatchStrategy *)NULL),
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      RefinePatchStrategy * patch_strategy =
+         ((RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
-      tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
-         tbox::Pointer<xfer::RefineTransactionFactory>(NULL));
+      boost::shared_ptr<RefineTransactionFactory> transaction_factory =
+         boost::shared_ptr<RefineTransactionFactory>((RefineTransactionFactory*)NULL));
 
    /*!
     * @brief Same as the above, except with fill_pattern specified.
@@ -422,17 +430,17 @@ public:
     *                          to fill.  See RefineSchedule for available
     *                          patterns.
     */
-   tbox::Pointer<xfer::RefineSchedule>
+   boost::shared_ptr<RefineSchedule>
    createSchedule(
-      tbox::Pointer<PatchLevelFillPattern> fill_pattern,
-      tbox::Pointer<hier::PatchLevel> level,
+      boost::shared_ptr<PatchLevelFillPattern> fill_pattern,
+      boost::shared_ptr<hier::PatchLevel> level,
       const int next_coarser_level,
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
-      xfer::RefinePatchStrategy * patch_strategy =
-         ((xfer::RefinePatchStrategy *)NULL),
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      RefinePatchStrategy * patch_strategy =
+         ((RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
-      tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
-         tbox::Pointer<xfer::RefineTransactionFactory>(NULL));
+      boost::shared_ptr<RefineTransactionFactory> transaction_factory =
+         boost::shared_ptr<RefineTransactionFactory>((RefineTransactionFactory*)NULL));
 
    /*!
     * @brief Create a communication schedule that communicates data from a
@@ -473,27 +481,29 @@ public:
     * in its creation do not change; thus, it can be used for multiple
     * data communication cycles.
     *
-    * @return Pointer to refine schedule that performs the data transfers.
+    * @return boost::shared_ptr to refine schedule that performs the data
+    *         transfers.
     *
-    * @param[in] dst_level      Pointer to destination level; cannot be null.
-    * @param[in] src_level      Pointer to source level. This pointer may
-    *                           be null.  In this case, data on the destination
-    *                           level will be filled only using interpolated
-    *                           data from coarser hierarchy levels.  When this
-    *                           pointer is not null, the source level must live
-    *                           in the same AMR hierarchy index space as the
-    *                           destination level.
+    * @param[in] dst_level      boost::shared_ptr to destination level; cannot
+    *                           be null.
+    * @param[in] src_level      boost::shared_ptr to source level. This pointer
+    *                           may be null.  In this case, data on the
+    *                           destination level will be filled only using
+    *                           interpolated data from coarser hierarchy
+    *                           levels.  When this pointer is not null, the
+    *                           source level must live in the same AMR
+    *                           hierarchy index space as the destination level.
     * @param[in] next_coarser_level  Level number of next coarser patch level
     *                                in the patch hierarchy relative to the
     *                                destination level.  Note that when the
     *                                destination level has number zero (i.e.,
     *                                the coarsest level), this value should
     *                                value should be < 0.
-    * @param[in] hierarchy    Pointer to patch hierarchy from which data to
-    *                         fill level should come.  This pointer may be null
-    *                         only when the next_coarser_level is < 0.
-    * @param[in] patch_strategy  Pointer to a refine patch strategy that
-    *                            provides user-defined physical boundary
+    * @param[in] hierarchy    boost::shared_ptr to patch hierarchy from which
+    *                         data to fill level should come.  This pointer may
+    *                         be null only when the next_coarser_level is < 0.
+    * @param[in] patch_strategy  boost::shared_ptr to a refine patch strategy
+    *                            that provides user-defined physical boundary
     *                            filling operations and user-defined spatial
     *                            interpolation operations.  If this patch
     *                            strategy is null (default state), then no
@@ -510,24 +520,24 @@ public:
     *                                    interpolation on the destination
     *                                    level.  Default is no time
     *                                    interpolation (false).
-    * @param[in] transaction_factory  Pointer to a refine transaction
+    * @param[in] transaction_factory  boost::shared_ptr to a refine transaction
     *                                 factory that creates data transactions
     *                                 for the schedule.  If this pointer is
     *                                 null (default state), then a
     *                                 StandardRefineTransactionFactory object
     *                                 will be used.
     */
-   tbox::Pointer<xfer::RefineSchedule>
+   boost::shared_ptr<RefineSchedule>
    createSchedule(
-      tbox::Pointer<hier::PatchLevel> dst_level,
-      tbox::Pointer<hier::PatchLevel> src_level,
+      boost::shared_ptr<hier::PatchLevel> dst_level,
+      boost::shared_ptr<hier::PatchLevel> src_level,
       const int next_coarser_level,
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
-      xfer::RefinePatchStrategy * patch_strategy =
-         ((xfer::RefinePatchStrategy *)NULL),
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      RefinePatchStrategy * patch_strategy =
+         ((RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
-      tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
-         tbox::Pointer<xfer::RefineTransactionFactory>(NULL));
+      boost::shared_ptr<RefineTransactionFactory> transaction_factory =
+         boost::shared_ptr<RefineTransactionFactory>((RefineTransactionFactory*)NULL));
 
    /*!
     * @brief Same as the above, except with fill_pattern specified.
@@ -536,18 +546,18 @@ public:
     *                          to fill.  See RefineSchedule for available
     *                          patterns.
     */
-   tbox::Pointer<xfer::RefineSchedule>
+   boost::shared_ptr<RefineSchedule>
    createSchedule(
-      tbox::Pointer<PatchLevelFillPattern> fill_pattern,
-      tbox::Pointer<hier::PatchLevel> dst_level,
-      tbox::Pointer<hier::PatchLevel> src_level,
+      boost::shared_ptr<PatchLevelFillPattern> fill_pattern,
+      boost::shared_ptr<hier::PatchLevel> dst_level,
+      boost::shared_ptr<hier::PatchLevel> src_level,
       const int next_coarser_level,
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
-      xfer::RefinePatchStrategy * patch_strategy =
-         ((xfer::RefinePatchStrategy *)NULL),
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      RefinePatchStrategy * patch_strategy =
+         ((RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
-      tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory =
-         tbox::Pointer<xfer::RefineTransactionFactory>(NULL));
+      boost::shared_ptr<RefineTransactionFactory> transaction_factory =
+         boost::shared_ptr<RefineTransactionFactory>((RefineTransactionFactory*)NULL));
 
    /*!
     * @brief Given a previously-generated refine schedule, check for
@@ -564,11 +574,12 @@ public:
     *
     * @return true if schedule reset is valid; false otherwise.
     *
-    * @param[in] schedule  Pointer to refine schedule, which cannot be null.
+    * @param[in] schedule  boost::shared_ptr to refine schedule, which cannot
+    *                      be null.
     */
    bool
    checkConsistency(
-      tbox::Pointer<xfer::RefineSchedule> schedule) const;
+      boost::shared_ptr<RefineSchedule> schedule) const;
 
    /*!
     * @brief Given a previously-generated refine schedule, reconfigure it to
@@ -584,17 +595,17 @@ public:
     * consistent with this RefineAlgorithm object according to the criteria
     * in checkConsistency().
     *
-    * @param[in,out] schedule  Pointer to refine schedule, which cannot be
-    *                          null.
+    * @param[in,out] schedule  boost::shared_ptr to refine schedule, which
+    *                          cannot be null.
     */
    void
    resetSchedule(
-      tbox::Pointer<xfer::RefineSchedule> schedule) const;
+      boost::shared_ptr<RefineSchedule> schedule) const;
 
    /*!
     * @brief Return the refine equivalence classes used in the algorithm.
     */
-   const tbox::Pointer<RefineClasses>&
+   const boost::shared_ptr<RefineClasses>&
    getEquivalenceClasses() const;
 
    /*!
@@ -605,7 +616,7 @@ public:
     */
    void
    setEquivalenceClasses(
-      const tbox::Pointer<RefineClasses> refine_classes);
+      const boost::shared_ptr<RefineClasses> refine_classes);
 
    /*!
     * @brief Return the dimension of this object.
@@ -642,7 +653,7 @@ private:
    /*!
     * RefineClasses object holds all of the registered refine items
     */
-   tbox::Pointer<RefineClasses> d_refine_classes;
+   boost::shared_ptr<RefineClasses> d_refine_classes;
 
    /*!
     * Tells if any schedule has yet been created using this object.

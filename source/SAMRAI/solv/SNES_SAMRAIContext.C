@@ -122,7 +122,7 @@ int SNES_SAMRAIContext::SNESapplyPreconditioner(
  */
 SNES_SAMRAIContext::SNES_SAMRAIContext(
    const std::string& object_name,
-   tbox::Pointer<tbox::Database> input_db,
+   boost::shared_ptr<tbox::Database> input_db,
    SNESAbstractFunctions* my_functions)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -544,7 +544,7 @@ void SNES_SAMRAIContext::setFunctionEvaluationError(
  *************************************************************************
  */
 void SNES_SAMRAIContext::initialize(
-   tbox::Pointer<SAMRAIVectorReal<double> > solution)
+   boost::shared_ptr<SAMRAIVectorReal<double> > solution)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(solution);
@@ -557,7 +557,7 @@ void SNES_SAMRAIContext::initialize(
    d_solution_vector =
       PETSc_SAMRAIVectorReal<double>::createPETScVector(solution);
 
-   tbox::Pointer<SAMRAIVectorReal<double> > residual =
+   boost::shared_ptr<SAMRAIVectorReal<double> > residual =
       solution->cloneVector("residual");
    residual->allocateVectorData();
    d_residual_vector =
@@ -578,14 +578,14 @@ void SNES_SAMRAIContext::resetSolver(
    const int coarsest_level,
    const int finest_level)
 {
-   tbox::Pointer<SAMRAIVectorReal<double> > solution_vector =
+   boost::shared_ptr<SAMRAIVectorReal<double> > solution_vector =
       PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(
          d_solution_vector);
    solution_vector->deallocateVectorData();
    solution_vector->resetLevels(coarsest_level, finest_level);
    solution_vector->allocateVectorData();
 
-   tbox::Pointer<SAMRAIVectorReal<double> > residual_vector =
+   boost::shared_ptr<SAMRAIVectorReal<double> > residual_vector =
       PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(
          d_residual_vector);
    residual_vector->deallocateVectorData();
@@ -973,7 +973,7 @@ void SNES_SAMRAIContext::destroyPetscObjects()
  */
 
 void SNES_SAMRAIContext::getFromInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
    if (db) {
       if (db->keyExists("maximum_nonlinear_iterations")) {
@@ -1086,10 +1086,10 @@ void SNES_SAMRAIContext::getFromInput(
 void SNES_SAMRAIContext::getFromRestart()
 {
 
-   tbox::Pointer<tbox::Database> root_db =
+   boost::shared_ptr<tbox::Database> root_db =
       tbox::RestartManager::getManager()->getRootDatabase();
 
-   tbox::Pointer<tbox::Database> db;
+   boost::shared_ptr<tbox::Database> db;
    if (root_db->isDatabase(d_object_name)) {
       db = root_db->getDatabase(d_object_name);
    } else {
@@ -1147,7 +1147,7 @@ void SNES_SAMRAIContext::getFromRestart()
 }
 
 void SNES_SAMRAIContext::putToDatabase(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);

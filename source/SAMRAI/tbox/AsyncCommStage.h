@@ -396,7 +396,7 @@ private:
     */
    void
    setCommunicationWaitTimer(
-      Pointer<Timer> communication_timer);
+      boost::shared_ptr<Timer> communication_timer);
 
    /*!
     * @brief Get the number of Members on this stage.
@@ -558,7 +558,7 @@ private:
     * @brief Timer for communicaiton wait, set by
     * setCommunicationWaitTimer().
     */
-   Pointer<Timer> d_communication_timer;
+   boost::shared_ptr<Timer> d_communication_timer;
 
 };
 
