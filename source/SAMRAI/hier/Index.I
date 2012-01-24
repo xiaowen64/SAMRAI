@@ -48,10 +48,10 @@ Index::Index(
    IntVector(tbox::Dimension(2))
 {
    TBOX_DIM_ASSERT(
-      SAMRAI::tbox::Dimension::getMaxDimension() >= tbox::Dimension(2));
+      tbox::Dimension::getMaxDimension() >= tbox::Dimension(2));
 
    (*this)[0] = i;
-   if (SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE > 1) {
+   if (tbox::Dimension::MAXIMUM_DIMENSION_VALUE > 1) {
       (*this)[1] = j;
    }
 }
@@ -63,15 +63,14 @@ Index::Index(
    const int k):
    IntVector(tbox::Dimension(3))
 {
-   TBOX_DIM_ASSERT(
-      SAMRAI::tbox::Dimension::getMaxDimension() >= tbox::Dimension(3));
+   TBOX_DIM_ASSERT(tbox::Dimension::getMaxDimension() >= tbox::Dimension(3));
 
    (*this)[0] = i;
-   if (SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE > 1) {
+   if (tbox::Dimension::MAXIMUM_DIMENSION_VALUE > 1) {
       (*this)[1] = j;
    }
 
-   if (SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE > 2) {
+   if (tbox::Dimension::MAXIMUM_DIMENSION_VALUE > 2) {
       (*this)[2] = k;
    }
 

@@ -80,7 +80,7 @@ PatchDescriptor::~PatchDescriptor()
 
 int PatchDescriptor::definePatchDataComponent(
    const std::string& name,
-   tbox::Pointer<PatchDataFactory> factory)
+   boost::shared_ptr<PatchDataFactory> factory)
 {
    TBOX_ASSERT(!name.empty());
    TBOX_ASSERT(factory);
@@ -138,11 +138,11 @@ PatchDescriptor::removePatchDataComponent(
  *************************************************************************
  */
 
-tbox::Pointer<PatchDataFactory>
+boost::shared_ptr<PatchDataFactory>
 PatchDescriptor::getPatchDataFactory(
    const std::string& name) const
 {
-   tbox::Pointer<PatchDataFactory> factory(NULL);
+   boost::shared_ptr<PatchDataFactory> factory((PatchDataFactory*)NULL);
    const int id = mapNameToIndex(name);
    if (id >= 0) {
       factory = d_factories[id];
@@ -237,7 +237,7 @@ PatchDescriptor::getMaxGhostWidth(
 
 void
 PatchDescriptor::setMinGhostWidth(
-   const hier::IntVector& min_value)
+   const IntVector& min_value)
 {
    d_min_gcw[min_value.getDim().getValue() - 1] = min_value;
 }

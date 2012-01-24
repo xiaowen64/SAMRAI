@@ -191,127 +191,17 @@ class BoxNeighborhoodCollection
        */
 
       /*!
-       * @brief An iterator over the base Boxes of the neighborhoods in a
-       * BoxNeighborhoodCollection.  The interface does not allow modification
-       * of the base Boxes.
-       */
-      class Iterator
-      {
-         friend class BoxNeighborhoodCollection;
-         friend class Connector;
-
-         public:
-            // Constructors.
-
-            /*!
-             * @brief Constructs an iterator over the base Boxes in the
-             * supplied collection.
-             *
-             * @param nbrhds
-             */
-            explicit Iterator(
-               BoxNeighborhoodCollection& nbrhds,
-               bool from_start = true);
-
-            /*!
-             * @brief Copy constructor.
-             *
-             * @param other
-             */
-            Iterator(
-               const Iterator& other);
-
-            /*!
-             * @brief Assignment operator.
-             *
-             * @param rhs
-             */
-            Iterator&
-            operator = (
-               const Iterator& rhs);
-
-
-            // Destructor
-
-            /*!
-             * @brief Performs necessary deletion.
-             */
-            ~Iterator();
-
-
-            // Operators
-
-            /*!
-             * @brief Extracts the BoxId of the base Box of the current
-             * neighborhood in the iteration.
-             */
-            const BoxId&
-            operator * () const;
-
-            /*!
-             * @brief Extracts a pointer to the BoxId of the base Box of the
-             * current neighborhood in the iteration.
-             */
-            const BoxId*
-            operator -> () const;
-
-            /*!
-             * @brief Pre-increment iterator to point to BoxId of the base Box
-             * of next neighborhood in the collection.
-             */
-            Iterator&
-            operator ++ ();
-
-            /*!
-             * @brief Determine if two iterators are equivalent.
-             *
-             * @param rhs
-             */
-            bool
-            operator == (
-               const Iterator& rhs) const;
-
-            /*!
-             * @brief Determine if two iterators are not equivalent.
-             *
-             * @param rhs
-             */
-            bool
-            operator != (
-               const Iterator& rhs) const;
-
-         private:
-            // Default constructor does not exist.
-            Iterator();
-
-            /*!
-             * @brief Constructs an iterator pointing to a specific base Box in
-             * nbrhds.  Should only be called by BoxNeighborhoodCollection.
-             *
-             * @param nbrhds
-             *
-             * @param itr
-             */
-            Iterator(
-               BoxNeighborhoodCollection& nbrhds,
-               AdjListItr itr);
-
-            const BoxNeighborhoodCollection* d_collection;
-
-            AdjListItr d_itr;
-
-            BaseBoxPoolItr d_base_boxes_itr;
-      };
-
-      /*!
        * @brief An iterator over the base Boxes of the neighborhoods in a const
        * BoxNeighborhoodCollection.  The interface does not allow modification
        * of the base Boxes.
        */
+      class Iterator;
+      class ConstNeighborIterator;
       class ConstIterator
       {
          friend class BoxNeighborhoodCollection;
          friend class Connector;
+         friend class ConstNeighborIterator;
 
          public:
             // Constructors.
@@ -322,7 +212,7 @@ class BoxNeighborhoodCollection
              *
              * @param nbrhds
              */
-            explicit ConstIterator(
+            ConstIterator(
                const BoxNeighborhoodCollection& nbrhds,
                bool from_start = true);
 
@@ -434,29 +324,29 @@ class BoxNeighborhoodCollection
       };
 
       /*!
-       * @brief An iterator over the neighbors in the neighborhood of a base
-       * Box in a BoxNeighborhoodCollection.  The interface does not allow
-       * modification of the neighbors.
+       * @brief An iterator over the base Boxes of the neighborhoods in a
+       * BoxNeighborhoodCollection.  The interface does not allow modification
+       * of the base Boxes.
        */
-      class NeighborIterator
+      class NeighborIterator;
+      class Iterator
       {
          friend class BoxNeighborhoodCollection;
+         friend class Connector;
+         friend class ConstIterator;
+         friend class NeighborIterator;
 
          public:
-            // Constructors
+            // Constructors.
 
             /*!
-             * @brief Constructs an iterator over the neighbors of the base Box
-             * pointed to by the supplied Iterator in the supplied collection
-             * of neighborhoods.
+             * @brief Constructs an iterator over the base Boxes in the
+             * supplied collection.
              *
-             * @param base_box_itr
-             * @param from_start If true constructs an iterator pointing to the
-             * first neighbor.  Otherwise constructs an iterator pointing one
-             * past the last neighbor.
+             * @param nbrhds
              */
-            NeighborIterator(
-               Iterator& base_box_itr,
+            Iterator(
+               BoxNeighborhoodCollection& nbrhds,
                bool from_start = true);
 
             /*!
@@ -464,17 +354,17 @@ class BoxNeighborhoodCollection
              *
              * @param other
              */
-            NeighborIterator(
-               const NeighborIterator& other);
+            Iterator(
+               const Iterator& other);
 
             /*!
              * @brief Assignment operator.
              *
              * @param rhs
              */
-            NeighborIterator&
+            Iterator&
             operator = (
-               const NeighborIterator& rhs);
+               const Iterator& rhs);
 
 
             // Destructor
@@ -482,30 +372,30 @@ class BoxNeighborhoodCollection
             /*!
              * @brief Performs necessary deletion.
              */
-            ~NeighborIterator();
+            ~Iterator();
 
 
             // Operators
 
             /*!
-             * @brief Extract the Box which is the current neighbor in the
-             * iteration of the neighborhood of the base Box.
+             * @brief Extracts the BoxId of the base Box of the current
+             * neighborhood in the iteration.
              */
-            const Box&
+            const BoxId&
             operator * () const;
 
             /*!
-             * @brief Extracts a pointer to the Box which is current neighbor
-             * in the iteration of the neighborhood of the base Box.
+             * @brief Extracts a pointer to the BoxId of the base Box of the
+             * current neighborhood in the iteration.
              */
-            const Box*
+            const BoxId*
             operator -> () const;
 
             /*!
-             * @brief Pre-increment iterator to point to the Box which is the
-             * next neighbor of the base Box.
+             * @brief Pre-increment iterator to point to BoxId of the base Box
+             * of next neighborhood in the collection.
              */
-            NeighborIterator&
+            Iterator&
             operator ++ ();
 
             /*!
@@ -515,7 +405,7 @@ class BoxNeighborhoodCollection
              */
             bool
             operator == (
-               const NeighborIterator& rhs) const;
+               const Iterator& rhs) const;
 
             /*!
              * @brief Determine if two iterators are not equivalent.
@@ -524,17 +414,29 @@ class BoxNeighborhoodCollection
              */
             bool
             operator != (
-               const NeighborIterator& rhs) const;
+               const Iterator& rhs) const;
 
          private:
             // Default constructor does not exist.
-            NeighborIterator();
+            Iterator();
+
+            /*!
+             * @brief Constructs an iterator pointing to a specific base Box in
+             * nbrhds.  Should only be called by BoxNeighborhoodCollection.
+             *
+             * @param nbrhds
+             *
+             * @param itr
+             */
+            Iterator(
+               BoxNeighborhoodCollection& nbrhds,
+               AdjListItr itr);
 
             const BoxNeighborhoodCollection* d_collection;
 
-            const BoxId* d_base_box;
+            AdjListItr d_itr;
 
-            NeighborhoodItr d_itr;
+            BaseBoxPoolItr d_base_boxes_itr;
       };
 
       /*!
@@ -656,6 +558,111 @@ class BoxNeighborhoodCollection
             const BoxId* d_base_box;
 
             NeighborhoodConstItr d_itr;
+      };
+
+      /*!
+       * @brief An iterator over the neighbors in the neighborhood of a base
+       * Box in a BoxNeighborhoodCollection.  The interface does not allow
+       * modification of the neighbors.
+       */
+      class NeighborIterator
+      {
+         friend class BoxNeighborhoodCollection;
+         friend class ConstNeighborIterator;
+
+         public:
+            // Constructors
+
+            /*!
+             * @brief Constructs an iterator over the neighbors of the base Box
+             * pointed to by the supplied Iterator in the supplied collection
+             * of neighborhoods.
+             *
+             * @param base_box_itr
+             * @param from_start If true constructs an iterator pointing to the
+             * first neighbor.  Otherwise constructs an iterator pointing one
+             * past the last neighbor.
+             */
+            NeighborIterator(
+               Iterator& base_box_itr,
+               bool from_start = true);
+
+            /*!
+             * @brief Copy constructor.
+             *
+             * @param other
+             */
+            NeighborIterator(
+               const NeighborIterator& other);
+
+            /*!
+             * @brief Assignment operator.
+             *
+             * @param rhs
+             */
+            NeighborIterator&
+            operator = (
+               const NeighborIterator& rhs);
+
+
+            // Destructor
+
+            /*!
+             * @brief Performs necessary deletion.
+             */
+            ~NeighborIterator();
+
+
+            // Operators
+
+            /*!
+             * @brief Extract the Box which is the current neighbor in the
+             * iteration of the neighborhood of the base Box.
+             */
+            const Box&
+            operator * () const;
+
+            /*!
+             * @brief Extracts a pointer to the Box which is current neighbor
+             * in the iteration of the neighborhood of the base Box.
+             */
+            const Box*
+            operator -> () const;
+
+            /*!
+             * @brief Pre-increment iterator to point to the Box which is the
+             * next neighbor of the base Box.
+             */
+            NeighborIterator&
+            operator ++ ();
+
+            /*!
+             * @brief Determine if two iterators are equivalent.
+             *
+             * @param rhs
+             */
+            bool
+            operator == (
+               const NeighborIterator& rhs) const;
+
+            /*!
+             * @brief Determine if two iterators are not equivalent.
+             *
+             * @param rhs
+             */
+            bool
+            operator != (
+               const NeighborIterator& rhs) const;
+
+         private:
+            // Default constructor does not exist.
+            NeighborIterator();
+
+            const BoxNeighborhoodCollection* d_collection;
+
+            const BoxId* d_base_box;
+
+            NeighborhoodItr d_itr;
       };
 
       /*!

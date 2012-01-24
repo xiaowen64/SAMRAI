@@ -59,13 +59,13 @@ bool Patch::inHierarchy() const
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<PatchDescriptor> Patch::getPatchDescriptor() const
+boost::shared_ptr<PatchDescriptor> Patch::getPatchDescriptor() const
 {
    return d_descriptor;
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<PatchData> Patch::getPatchData(
+boost::shared_ptr<PatchData> Patch::getPatchData(
    const int id) const
 {
    TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
@@ -74,9 +74,9 @@ tbox::Pointer<PatchData> Patch::getPatchData(
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<PatchData> Patch::getPatchData(
-   const tbox::Pointer<Variable> variable,
-   const tbox::Pointer<VariableContext> context) const
+boost::shared_ptr<PatchData> Patch::getPatchData(
+   const boost::shared_ptr<Variable> variable,
+   const boost::shared_ptr<VariableContext> context) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *variable);
 
@@ -91,7 +91,7 @@ tbox::Pointer<PatchData> Patch::getPatchData(
 SAMRAI_INLINE_KEYWORD
 void Patch::setPatchData(
    const int id,
-   tbox::Pointer<PatchData> data)
+   boost::shared_ptr<PatchData> data)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *data);
    TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
@@ -108,13 +108,13 @@ bool Patch::checkAllocated(
 
 SAMRAI_INLINE_KEYWORD
 void Patch::setPatchGeometry(
-   tbox::Pointer<PatchGeometry> geometry)
+   boost::shared_ptr<PatchGeometry> geometry)
 {
    d_patch_geometry = geometry;
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<PatchGeometry> Patch::getPatchGeometry() const
+boost::shared_ptr<PatchGeometry> Patch::getPatchGeometry() const
 {
    return d_patch_geometry;
 }

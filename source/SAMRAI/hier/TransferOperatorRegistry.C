@@ -47,7 +47,7 @@ TransferOperatorRegistry::~TransferOperatorRegistry()
  */
 
 void TransferOperatorRegistry::addCoarsenOperator(
-   tbox::Pointer<CoarsenOperator> coarsen_op)
+   boost::shared_ptr<CoarsenOperator> coarsen_op)
 {
    if (d_max_op_stencil_width_req &&
        (coarsen_op->getStencilWidth() > getMaxTransferOpStencilWidth())) {
@@ -60,7 +60,7 @@ void TransferOperatorRegistry::addCoarsenOperator(
 }
 
 void TransferOperatorRegistry::addRefineOperator(
-   tbox::Pointer<RefineOperator> refine_op)
+   boost::shared_ptr<RefineOperator> refine_op)
 {
    if (d_max_op_stencil_width_req &&
        (refine_op->getStencilWidth() > getMaxTransferOpStencilWidth())) {
@@ -73,7 +73,7 @@ void TransferOperatorRegistry::addRefineOperator(
 }
 
 void TransferOperatorRegistry::addTimeInterpolateOperator(
-   tbox::Pointer<TimeInterpolateOperator> time_op)
+   boost::shared_ptr<TimeInterpolateOperator> time_op)
 {
    d_time_operators.addItem(time_op);
 }
@@ -86,15 +86,15 @@ void TransferOperatorRegistry::addTimeInterpolateOperator(
  *************************************************************************
  */
 
-tbox::Pointer<CoarsenOperator>
+boost::shared_ptr<CoarsenOperator>
 TransferOperatorRegistry::lookupCoarsenOperator(
-   const tbox::Pointer<Variable>& var,
+   const boost::shared_ptr<Variable>& var,
    const std::string& op_name)
 {
    TBOX_ASSERT(var);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
-   tbox::Pointer<CoarsenOperator> coarsen_op(NULL);
+   boost::shared_ptr<CoarsenOperator> coarsen_op((CoarsenOperator*)NULL);
    bool found_op = false;
 
    if ((op_name == "NO_COARSEN") ||
@@ -103,7 +103,7 @@ TransferOperatorRegistry::lookupCoarsenOperator(
       found_op = true;
    } else {
 
-      tbox::List<tbox::Pointer<CoarsenOperator> >::Iterator
+      tbox::List<boost::shared_ptr<CoarsenOperator> >::Iterator
          lop = d_coarsen_operators.listStart();
 
       while (!coarsen_op && lop) {
@@ -122,15 +122,15 @@ TransferOperatorRegistry::lookupCoarsenOperator(
    return coarsen_op;
 }
 
-tbox::Pointer<RefineOperator>
+boost::shared_ptr<RefineOperator>
 TransferOperatorRegistry::lookupRefineOperator(
-   const tbox::Pointer<Variable>& var,
+   const boost::shared_ptr<Variable>& var,
    const std::string& op_name)
 {
    TBOX_ASSERT(var);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
-   tbox::Pointer<RefineOperator> refine_op(NULL);
+   boost::shared_ptr<RefineOperator> refine_op((RefineOperator*)NULL);
    bool found_op = false;
 
    if ((op_name == "NO_REFINE") ||
@@ -139,7 +139,7 @@ TransferOperatorRegistry::lookupRefineOperator(
       found_op = true;
    } else {
 
-      tbox::List<tbox::Pointer<RefineOperator> >::Iterator
+      tbox::List<boost::shared_ptr<RefineOperator> >::Iterator
          lop = d_refine_operators.listStart();
 
       while (!refine_op && lop) {
@@ -158,15 +158,16 @@ TransferOperatorRegistry::lookupRefineOperator(
    return refine_op;
 }
 
-tbox::Pointer<TimeInterpolateOperator>
+boost::shared_ptr<TimeInterpolateOperator>
 TransferOperatorRegistry::lookupTimeInterpolateOperator(
-   const tbox::Pointer<Variable>& var,
+   const boost::shared_ptr<Variable>& var,
    const std::string& op_name)
 {
    TBOX_ASSERT(var);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
-   tbox::Pointer<TimeInterpolateOperator> time_op(NULL);
+   boost::shared_ptr<TimeInterpolateOperator> time_op(
+      (TimeInterpolateOperator*)NULL);
    bool found_op = false;
 
    if ((op_name == "NO_TIME_INTERPOLATE") ||
@@ -174,7 +175,7 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
       found_op = true;
    } else {
 
-      tbox::List<tbox::Pointer<TimeInterpolateOperator> >::Iterator
+      tbox::List<boost::shared_ptr<TimeInterpolateOperator> >::Iterator
          lop = d_time_operators.listStart();
 
       while (!time_op && lop) {
@@ -226,7 +227,7 @@ TransferOperatorRegistry::setMinTransferOpStencilWidth(
 
 /*
  *************************************************************************
- * Get the dimension of the hier::GridGeometry object holding this singleton.
+ * Get the dimension of the GridGeometry object holding this singleton.
  *************************************************************************
  */
 const tbox::Dimension&
@@ -252,7 +253,7 @@ TransferOperatorRegistry::printClassData(
       << (TransferOperatorRegistry *)this << std::endl;
 
    os << "Coarsen operator list: " << std::endl;
-   tbox::List<tbox::Pointer<CoarsenOperator> >::Iterator
+   tbox::List<boost::shared_ptr<CoarsenOperator> >::Iterator
       cop = d_coarsen_operators.listStart();
    while (cop) {
       os << cop().get() << std::endl;
@@ -260,7 +261,7 @@ TransferOperatorRegistry::printClassData(
    }
 
    os << "Refine operator list: " << std::endl;
-   tbox::List<tbox::Pointer<RefineOperator> >::Iterator
+   tbox::List<boost::shared_ptr<RefineOperator> >::Iterator
       rop = d_refine_operators.listStart();
    while (rop) {
       os << rop().get() << std::endl;
@@ -268,7 +269,7 @@ TransferOperatorRegistry::printClassData(
    }
 
    os << "Time interpolate operator list: " << std::endl;
-   tbox::List<tbox::Pointer<TimeInterpolateOperator> >::Iterator
+   tbox::List<boost::shared_ptr<TimeInterpolateOperator> >::Iterator
       top = d_time_operators.listStart();
    while (top) {
       os << top().get() << std::endl;

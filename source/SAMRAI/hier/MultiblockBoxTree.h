@@ -14,9 +14,9 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BoxTree.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/DescribedClass.h"
 
+#include <boost/shared_ptr.hpp>
 #include <vector>
 #include <map>
 
@@ -218,30 +218,7 @@ public:
    hasOverlap(
       const Box& box,
       bool include_singularity_block_neighbors = false) const;
-
-   /*!
-    * @brief Find all boxes that overlap the given Box and insert as neighbors
-    * of that box in overlap_connector.
-    *
-    * @param[out] overlap_connector Overlap connector with box in its base
-    * BoxLevel.
-    *
-    * @param[in] box
-    *
-    * @param[in] refinement_ratio Refinement ratio of box's index
-    * space.
-    *
-    * @param[in] include_singularity_block_neighbors Whether to include
-    * intersections with boxes in blocks that are neighbors of box's
-    * block across a multiblock singularity.
-    */
-   void
-   findOverlapBoxes(
-      Connector& overlap_connector,
-      const Box& box,
-      const IntVector& refinement_ratio,
-      bool include_singularity_block_neighbors = false) const;
-
+#if 0
    /*!
     * @brief Find all boxes that overlap the given Box.
     *
@@ -268,7 +245,7 @@ public:
       const Box& box,
       const IntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
-
+#endif
    /*!
     * @brief Find all boxes that overlap the given Box.
     *
@@ -292,6 +269,7 @@ public:
     * intersections with boxes in blocks that are neighbors of box's
     * block across a multiblock singularity.
     */
+
    void
    findOverlapBoxes(
       std::vector<const Box *>& overlap_boxes,
@@ -345,7 +323,7 @@ public:
     * manually get the boxes, coarsen them and use them to build a new
     * tree.
     */
-   tbox::Pointer<MultiblockBoxTree>
+   boost::shared_ptr<MultiblockBoxTree>
    createRefinedTree(
       const IntVector& ratio) const;
 

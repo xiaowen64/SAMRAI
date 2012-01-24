@@ -22,11 +22,11 @@ const tbox::Dimension& IntVector::getDim() const
 
 SAMRAI_INLINE_KEYWORD
 IntVector::IntVector():
-   d_dim(SAMRAI::tbox::Dimension::getInvalidDimension())
+   d_dim(tbox::Dimension::getInvalidDimension())
 {
 #ifdef DEBUG_INITIALIZE_UNDEFINED
-   for (int i = 0; i < SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
-      d_vector[i] = SAMRAI::tbox::MathUtilities<int>::getMin();
+   for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
+      d_vector[i] = tbox::MathUtilities<int>::getMin();
    }
 #endif
 }
@@ -38,11 +38,11 @@ IntVector::IntVector(
 {
    // an explicit setting Invalid is allowed.
    TBOX_DIM_ASSERT((!d_dim.isValid()) ||
-      (d_dim >= SAMRAI::tbox::Dimension(1) && d_dim <= SAMRAI::tbox::Dimension::getMaxDimension()));
+      (d_dim >= tbox::Dimension(1) && d_dim <= tbox::Dimension::getMaxDimension()));
 
 #ifdef DEBUG_INITIALIZE_UNDEFINED
-   for (int i = 0; i < SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
-      d_vector[i] = SAMRAI::tbox::MathUtilities<int>::getMin();
+   for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
+      d_vector[i] = tbox::MathUtilities<int>::getMin();
    }
 #endif
 
@@ -56,21 +56,21 @@ IntVector::IntVector(
 {
    // an explicit setting Invalid is allowed.
    TBOX_DIM_ASSERT((!d_dim.isValid()) ||
-      (d_dim >= SAMRAI::tbox::Dimension(1) && d_dim <= SAMRAI::tbox::Dimension::getMaxDimension()));
+      (d_dim >= tbox::Dimension(1) && d_dim <= tbox::Dimension::getMaxDimension()));
 
    if (d_dim.isValid()) {
       for (int i = 0; i < d_dim.getValue(); i++)
          d_vector[i] = value;
 
 #ifdef DEBUG_INITIALIZE_UNDEFINED
-      for (int i = d_dim.getValue(); i < SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE;
+      for (int i = d_dim.getValue(); i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE;
            i++) {
-         d_vector[i] = SAMRAI::tbox::MathUtilities<int>::getMin();
+         d_vector[i] = tbox::MathUtilities<int>::getMin();
       }
 #endif
    } else {
-      for (int i = 0; i < SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
-         d_vector[i] = SAMRAI::tbox::MathUtilities<int>::getMin();
+      for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
+         d_vector[i] = tbox::MathUtilities<int>::getMin();
       }
    }
 }
@@ -81,14 +81,14 @@ IntVector::IntVector(
    d_dim(static_cast<unsigned short>(a.getSize()))
 {
    TBOX_DIM_ASSERT(a.getSize() > 1 &&
-      a.getSize() <= SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE);
+      a.getSize() <= tbox::Dimension::MAXIMUM_DIMENSION_VALUE);
 
    for (int i = 0; i < d_dim.getValue(); i++)
       d_vector[i] = a[i];
 
 #ifdef DEBUG_INITIALIZE_UNDEFINED
-   for (int i = d_dim.getValue(); i < SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
-      d_vector[i] = SAMRAI::tbox::MathUtilities<int>::getMin();
+   for (int i = d_dim.getValue(); i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
+      d_vector[i] = tbox::MathUtilities<int>::getMin();
    }
 #endif
 }
@@ -140,8 +140,8 @@ IntVector& IntVector::operator = (
       d_vector[i] = rhs.d_vector[i];
 
 #ifdef DEBUG_INITIALIZE_UNDEFINED
-   for (int i = d_dim.getValue(); i < SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
-      d_vector[i] = SAMRAI::tbox::MathUtilities<int>::getMin();
+   for (int i = d_dim.getValue(); i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
+      d_vector[i] = tbox::MathUtilities<int>::getMin();
    }
 #endif
 
@@ -650,9 +650,9 @@ const IntVector& IntVector::getOne(
  */
 SAMRAI_INLINE_KEYWORD
 void IntVector::sortIntVector(
-   const hier::IntVector& values)
+   const IntVector& values)
 {
-   const hier::IntVector num_cells = values;
+   const IntVector num_cells = values;
 
    for (int d = 0; d < d_dim.getValue(); d++) {
       d_vector[d] = d;

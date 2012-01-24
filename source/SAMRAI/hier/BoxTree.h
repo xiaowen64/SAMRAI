@@ -16,9 +16,9 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Timer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <vector>
 #include <map>
 
@@ -275,7 +275,7 @@ public:
     * manually get the boxes, coarsen them and use them to build a new
     * tree.
     */
-   tbox::Pointer<BoxTree>
+   boost::shared_ptr<BoxTree>
    createRefinedTree(
       const IntVector& ratio) const;
 
@@ -392,16 +392,16 @@ private:
    BlockId d_block_id;
 
    /*!
-    * Pointers to familial mapped_boxes.
+    * boost::shared_ptrs to familial mapped_boxes.
     */
-   tbox::Pointer<BoxTree> d_left_child;
-   tbox::Pointer<BoxTree> d_right_child;
+   boost::shared_ptr<BoxTree> d_left_child;
+   boost::shared_ptr<BoxTree> d_right_child;
 
    /*!
     * @brief A tree for Boxes that are not given to the left or
     * right children.
     */
-   tbox::Pointer<BoxTree> d_center_child;
+   boost::shared_ptr<BoxTree> d_center_child;
 
    /*!
     * @brief Boxes that are contained within the physical domain
@@ -419,10 +419,10 @@ private:
    /*
     * Timers are static to keep the objects light-weight.
     */
-   static tbox::Pointer<tbox::Timer> t_build_tree[tbox::Dimension::
+   static boost::shared_ptr<tbox::Timer> t_build_tree[tbox::Dimension::
+                                                      MAXIMUM_DIMENSION_VALUE];
+   static boost::shared_ptr<tbox::Timer> t_search[tbox::Dimension::
                                                   MAXIMUM_DIMENSION_VALUE];
-   static tbox::Pointer<tbox::Timer> t_search[tbox::Dimension::
-                                              MAXIMUM_DIMENSION_VALUE];
 
    static unsigned int s_num_build[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
    static unsigned int s_num_generate[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];

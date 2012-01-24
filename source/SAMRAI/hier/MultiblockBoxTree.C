@@ -75,24 +75,6 @@ MultiblockBoxTree::MultiblockBoxTree(
 
       blocki->second.makeTree();
    }
-#if 0
-      blocki->second.makeTree(); 
-
-      /*
-       * The following lines do this:
-       * d_single_block_trees[blocki->first].generateTree(blocki->second, min_number);
-       *
-       * We cannot do it the concise way because it
-       * requires the default constructor for BoxTree.
-       */
-      const std::pair<std::map<BlockId, BoxContainer>::iterator, bool> insert_return_value(
-         d_single_block_trees.insert(
-            std::pair<BlockId, BoxContainer>(
-               blocki->first,
-               blocki->second)));
-      TBOX_ASSERT(insert_return_value.second);
-   }
-#endif
 }
 
 /*
@@ -163,22 +145,6 @@ void MultiblockBoxTree::generateTree(
 
       blocki->second.makeTree();
    }
-#if 0
-      /*
-       * The following lines do this:
-       * d_single_block_trees[blocki->first].generateTree(blocki->second, min_number);
-       *
-       * We cannot do it the concise way because it requires the
-       * default constructor for BoxTree.
-       */
-      const std::pair<std::map<BlockId, BoxContainer>::iterator, bool> insert_return_value(
-         d_single_block_trees.insert(
-            std::pair<BlockId, BoxContainer>(
-               blocki->first,
-               blocki->second)));
-      TBOX_ASSERT(insert_return_value.second);
-   }
-#endif
 }
 
 /*
@@ -204,23 +170,6 @@ void MultiblockBoxTree::generateTree(
 
       blocki->second.makeTree();
    }
-#if 0
-
-      /*
-       * The following lines do this:
-       * d_single_block_trees[blocki->first].generateTree(blocki->second, min_number);
-       *
-       * We cannot do it the concise way because it requires the
-       * default constructor for BoxTree.
-       */
-      const std::pair<std::map<BlockId, BoxContainer>::iterator, bool> insert_return_value(
-         d_single_block_trees.insert(
-            std::pair<BlockId, BoxContainer>(
-               blocki->first,
-               blocki->second)));
-      TBOX_ASSERT(insert_return_value.second);
-   }
-#endif
 }
 
 /*
@@ -260,22 +209,6 @@ void MultiblockBoxTree::generateNonPeriodicTree(
 
       blocki->second.makeTree();
    }
-#if 0
-      /*
-       * The following lines do this:
-       * d_single_block_trees[blocki->first].generateTree(blocki->second, min_number);
-       *
-       * We cannot do it the concise way because it requires the
-       * default constructor for BoxTree.
-       */
-      const std::pair<std::map<BlockId, BoxContainer>::iterator, bool> insert_return_value(
-         d_single_block_trees.insert(
-            std::pair<BlockId, BoxContainer>(
-               blocki->first,
-               blocki->second)));
-      TBOX_ASSERT(insert_return_value.second);
-   }
-#endif
 }
 
 /*
@@ -348,71 +281,7 @@ const BoxContainer& MultiblockBoxTree::getSingleBlockBoxTree(
  *************************************************************************
  *************************************************************************
  */
-void MultiblockBoxTree::findOverlapBoxes(
-   Connector& overlap_connector,
-   const Box& box,
-   const IntVector& refinement_ratio,
-   bool include_singularity_block_neighbors) const
-{
-   const BlockId& block_id = box.getBlockId();
-
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*d_grid_geometry, box, refinement_ratio);
-
-   TBOX_ASSERT(block_id.getBlockValue() >= 0 &&
-               block_id.getBlockValue() < d_grid_geometry->getNumberBlocks());
-
-   /*
-    * Search in the index space of block_id for overlaps.
-    */
-
-   std::map<BlockId, BoxContainer>::const_iterator
-   blocki(d_single_block_trees.find(block_id));
-
-   if (blocki != d_single_block_trees.end()) {
-      blocki->second.findOverlapBoxes(overlap_connector, box);
-   }
-
-   /*
-    * Search in the index spaces neighboring block_id for overlaps.
-    */
-
-   const tbox::List<GridGeometry::Neighbor>& block_neighbors(
-      d_grid_geometry->getNeighbors(block_id));
-
-   for (tbox::ListIterator<GridGeometry::Neighbor> ni(block_neighbors); ni; ni++) {
-
-      const GridGeometry::Neighbor& neighbor(*ni);
-
-      if (!include_singularity_block_neighbors && neighbor.isSingularity()) {
-         continue;
-      }
-
-      const BlockId neighbor_block_id(neighbor.getBlockId());
-
-      blocki = d_single_block_trees.find(neighbor_block_id);
-
-      if (blocki == d_single_block_trees.end()) {
-         continue;
-      }
-
-      Box transformed_box(box);
-
-      d_grid_geometry->transformBox(transformed_box,
-         refinement_ratio,
-         neighbor_block_id,
-         block_id);
-
-      blocki->second.findOverlapBoxes(overlap_connector, transformed_box);
-
-   }
-   return;
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-
+#if 0
 void MultiblockBoxTree::findOverlapBoxes(
    std::vector<Box>& overlap_boxes,
    const Box& box,
@@ -469,12 +338,11 @@ void MultiblockBoxTree::findOverlapBoxes(
 
    }
 }
-
+#endif
 /*
  *************************************************************************
  *************************************************************************
  */
-
 void MultiblockBoxTree::findOverlapBoxes(
    std::vector<const Box *>& overlap_boxes,
    const Box& box,
@@ -598,7 +466,7 @@ void MultiblockBoxTree::findOverlapBoxes(
  *************************************************************************
  *************************************************************************
  */
-tbox::Pointer<MultiblockBoxTree> MultiblockBoxTree::createRefinedTree(
+boost::shared_ptr<MultiblockBoxTree> MultiblockBoxTree::createRefinedTree(
    const IntVector& ratio) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*d_grid_geometry, ratio);
@@ -634,7 +502,7 @@ tbox::Pointer<MultiblockBoxTree> MultiblockBoxTree::createRefinedTree(
 */
    }
 
-   return tbox::Pointer<MultiblockBoxTree>(rval);
+   return boost::shared_ptr<MultiblockBoxTree>(rval);
 }
 
 /*

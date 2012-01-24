@@ -134,7 +134,7 @@ void CoarseFineBoundary::computeFromLevel(
    const BoxLevel& mapped_box_level = *level.getBoxLevel();
    const IntVector& ratio = level.getRatioToLevelZero();
 
-   tbox::Pointer<GridGeometry> grid_geometry = level.getGridGeometry();
+   boost::shared_ptr<GridGeometry> grid_geometry = level.getGridGeometry();
 
    /*
     * Get the domain's periodic shift.
@@ -257,7 +257,7 @@ void CoarseFineBoundary::computeFromLevel(
    /*
     * Get the dimension and number of blocks from the GridGeometry.
     */
-   tbox::Pointer<GridGeometry> grid_geometry = level.getGridGeometry();
+   boost::shared_ptr<GridGeometry> grid_geometry = level.getGridGeometry();
    int nblocks = grid_geometry->getNumberBlocks();
 
    tbox::Array<BoxContainer> adjusted_level_domain(nblocks);

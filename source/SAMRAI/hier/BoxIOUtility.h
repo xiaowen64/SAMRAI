@@ -16,8 +16,8 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <string>
 

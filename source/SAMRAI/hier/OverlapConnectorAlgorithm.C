@@ -34,19 +34,19 @@
 namespace SAMRAI {
 namespace hier {
 
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_find_overlaps_rbbt;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_setup_comm;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_remove_and_cache;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_discover;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_find_overlaps_rbbt;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_setup_comm;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_remove_and_cache;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_discover;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::
 t_bridge_discover_get_neighbors;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_discover_form_rbbt;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_discover_form_rbbt;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::
 t_bridge_discover_find_overlaps;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_share;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_receive_and_unpack;
-tbox::Pointer<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_MPI_wait;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_share;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_receive_and_unpack;
+boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_MPI_wait;
 
 int OverlapConnectorAlgorithm::s_operation_mpi_tag = 0;
 /*
@@ -164,7 +164,7 @@ void OverlapConnectorAlgorithm::extractNeighbors(
     */
    TBOX_ASSERT(mapped_box_id.getOwnerRank() == connector.getMPI().getRank());
 
-   const tbox::Pointer<const GridGeometry>& grid_geom(
+   const boost::shared_ptr<const GridGeometry>& grid_geom(
       connector.getBase().getGridGeometry());
 
    const Box& mapped_box(*connector.getBase().getBox(Box(dim, mapped_box_id)));
@@ -257,7 +257,7 @@ void OverlapConnectorAlgorithm::extractNeighbors(
        */
       TBOX_ASSERT(mapped_box_id.getOwnerRank() == connector.getMPI().getRank());
 
-      const tbox::Pointer<const GridGeometry>& grid_geom = 
+      const boost::shared_ptr<const GridGeometry>& grid_geom = 
          connector.getBase().getGridGeometry();
 
       const Box& mapped_box =
@@ -425,6 +425,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
          head.getRefinementRatio(),
          true);
       if (discard_self_overlap) {
+         nabrs_for_box.order();
          nabrs_for_box.erase(base_mapped_box);
       }
       if (!nabrs_for_box.isEmpty()) {
@@ -1334,7 +1335,7 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
          (east_to_west != NULL && east_to_west != &west_to_east);
 
       const BoxLevel& east(west_to_east.getBase());
-      const tbox::Pointer<const GridGeometry> &grid_geometry(
+      const boost::shared_ptr<const GridGeometry> &grid_geometry(
          east.getGridGeometry());
 
       const tbox::Dimension& dim(east.getDim());
@@ -1644,7 +1645,8 @@ void OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
    }
 #endif
 
-   std::vector<Box> found_nabrs, scratch_found_nabrs; // Should be made a member to avoid repetitive alloc/dealloc.  Reserve in privateBridge and used here.
+   //std::vector<Box> found_nabrs, scratch_found_nabrs; // Should be made a member to avoid repetitive alloc/dealloc.  Reserve in privateBridge and used here.
+   BoxContainer found_nabrs, scratch_found_nabrs; // Should be made a member to avoid repetitive alloc/dealloc.  Reserve in privateBridge and used here.
 
    while (base_ni != visible_base_nabrs.end() &&
           base_ni->getOwnerRank() == owner_rank) {
@@ -1667,10 +1669,11 @@ void OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
                                  true /* include singularity block neighbors */ );
       if (s_print_steps == 'y') {
          tbox::plog << "Found " << found_nabrs.size() << " neighbors:";
-         BoxContainerUtils::recursivePrintBoxVector(found_nabrs, tbox::plog, "\n ");
+         found_nabrs.print(tbox::plog);
+         //BoxContainerUtils::recursivePrintBoxVector(found_nabrs, tbox::plog, "\n ");
          tbox::plog << std::endl;
       }
-      if (!found_nabrs.empty()) {
+      if (!found_nabrs.isEmpty()) {
          if (base_mapped_box.isPeriodicImage()) {
             privateBridge_unshiftOverlappingNeighbors(
                base_mapped_box,
@@ -1688,7 +1691,7 @@ void OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
             *(submesg++) = base_mapped_box.getLocalId().getValue();
             *(submesg++) = base_mapped_box.getBlockId().getBlockValue();
             *(submesg++) = static_cast<int>(found_nabrs.size());
-            for (std::vector<Box>::const_iterator na = found_nabrs.begin();
+            for (BoxContainer::ConstIterator na = found_nabrs.begin();
                  na != found_nabrs.end(); ++na) {
                const Box& head_nabr = *na;
                referenced_head_nabrs.insert(head_nabr);
@@ -1709,11 +1712,11 @@ void OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
                   PeriodicId::zero());
             }
             // Add found neighbors for base_mapped_box.
-            if (!found_nabrs.empty()) {
+            if (!found_nabrs.isEmpty()) {
                Connector::NeighborhoodIterator base_box_itr =
                   bridging_connector.makeEmptyLocalNeighborhood(
                      unshifted_base_mapped_box_id);
-               for (std::vector<Box>::const_iterator na = found_nabrs.begin();
+               for (BoxContainer::ConstIterator na = found_nabrs.begin();
                     na != found_nabrs.end(); ++na) {
                   bridging_connector.insertLocalNeighbor(*na, base_box_itr);
                }
@@ -1746,8 +1749,8 @@ void OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
 
 void OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
    const Box& mapped_box,
-   std::vector<Box>& neighbors,
-   std::vector<Box>& scratch_space,
+   BoxContainer& neighbors,
+   BoxContainer& scratch_space,
    const IntVector& neighbor_refinement_ratio) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(mapped_box, neighbor_refinement_ratio);
@@ -1756,8 +1759,8 @@ void OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
       PeriodicShiftCatalog::getCatalog(mapped_box.getDim());
 
    scratch_space.clear();
-   scratch_space.reserve(neighbors.size());
-   for (std::vector<Box>::iterator na = neighbors.begin();
+//   scratch_space.reserve(neighbors.size());
+   for (BoxContainer::Iterator na = neighbors.begin();
         na != neighbors.end(); ++na) {
       Box& nabr = *na;
       IntVector sum_shift =
@@ -1766,7 +1769,7 @@ void OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
       const PeriodicId new_shift_number = shift_catalog->shiftDistanceToShiftNumber(sum_shift);
       if (new_shift_number.getPeriodicValue() != shift_catalog->getInvalidShiftNumber()) {
          nabr.initialize(nabr, new_shift_number, neighbor_refinement_ratio);
-         scratch_space.push_back(nabr);
+         scratch_space.pushBack(nabr);
       }
    }
    if (scratch_space.size() != neighbors.size()) {
@@ -2197,10 +2200,10 @@ void OverlapConnectorAlgorithm::initializeCallback()
    if (s_print_steps == '\0') {
       if (tbox::InputManager::inputDatabaseExists()) {
          s_print_steps = 'n';
-         tbox::Pointer<tbox::Database> idb =
+         boost::shared_ptr<tbox::Database> idb =
             tbox::InputManager::getInputDatabase();
          if (idb->isDatabase("OverlapConnectorAlgorithm")) {
-            tbox::Pointer<tbox::Database> ocu_db =
+            boost::shared_ptr<tbox::Database> ocu_db =
                idb->getDatabase("OverlapConnectorAlgorithm");
             s_print_steps = ocu_db->getCharWithDefault("print_bridge_steps",
                   s_print_steps);

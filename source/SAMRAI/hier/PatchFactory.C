@@ -23,12 +23,12 @@ PatchFactory::~PatchFactory()
 {
 }
 
-tbox::Pointer<Patch> PatchFactory::allocate(
+boost::shared_ptr<Patch> PatchFactory::allocate(
    const Box& mapped_box_level_mapped_box,
-   tbox::Pointer<PatchDescriptor> descriptor) const
+   boost::shared_ptr<PatchDescriptor> descriptor) const
 {
-   return tbox::Pointer<Patch>(new Patch(mapped_box_level_mapped_box,
-                                  descriptor));
+   return boost::shared_ptr<Patch>(new Patch(mapped_box_level_mapped_box,
+                                             descriptor));
 }
 
 }

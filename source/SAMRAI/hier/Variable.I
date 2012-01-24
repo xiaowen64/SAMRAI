@@ -33,14 +33,14 @@ const std::string& Variable::getName() const
 
 SAMRAI_INLINE_KEYWORD
 void Variable::setPatchDataFactory(
-   tbox::Pointer<PatchDataFactory> factory)
+   boost::shared_ptr<PatchDataFactory> factory)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *factory);
    d_factory = factory;
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Pointer<PatchDataFactory>
+boost::shared_ptr<PatchDataFactory>
 Variable::getPatchDataFactory() const
 {
    return d_factory;

@@ -176,7 +176,7 @@ public:
     */
    const tbox::Array<BoundaryBox>&
    getEdgeBoundaries(
-      const hier::GlobalId& global_id,
+      const GlobalId& global_id,
       const BlockId& block_id = BlockId::zero()) const;
 
    /*!
@@ -193,7 +193,7 @@ public:
     */
    const tbox::Array<BoundaryBox>&
    getFaceBoundaries(
-      const hier::GlobalId& global_id,
+      const GlobalId& global_id,
       const BlockId& block_id = BlockId::zero()) const;
 
    //@}

@@ -128,7 +128,7 @@ void ConnectorStatistics::computeLocalConnectorStatistics(
    sq.d_values[NUMBER_OF_REMOTE_NEIGHBORS] = 0.;
    sq.d_values[NUMBER_OF_REMOTE_NEIGHBOR_OWNERS] = 0.;
 
-   hier::BoxContainer visible_neighbors; // All neighbors of local base boxes.
+   BoxContainer visible_neighbors; // All neighbors of local base boxes.
 
    for ( Connector::ConstNeighborhoodIterator nbi=d_connector.begin();
          nbi!=d_connector.end(); ++nbi ) {
@@ -179,7 +179,7 @@ void ConnectorStatistics::computeLocalConnectorStatistics(
       static_cast<double>(visible_neighbors.size());
 
    std::set<int> remote_neighbor_owners;
-   for ( hier::BoxContainer::ConstIterator bi=visible_neighbors.begin();
+   for ( BoxContainer::ConstIterator bi=visible_neighbors.begin();
          bi!=visible_neighbors.end(); ++bi ) {
       const Box &neighbor = *bi;
 

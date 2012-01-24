@@ -31,11 +31,11 @@
 namespace SAMRAI {
 namespace hier {
 
-tbox::Pointer<tbox::Timer> BoxLevelConnectorUtils::t_make_sorting_map;
-tbox::Pointer<tbox::Timer> BoxLevelConnectorUtils::t_compute_external_parts;
-tbox::Pointer<tbox::Timer> BoxLevelConnectorUtils::t_compute_external_parts_intersection;
-tbox::Pointer<tbox::Timer> BoxLevelConnectorUtils::t_compute_internal_parts;
-tbox::Pointer<tbox::Timer> BoxLevelConnectorUtils::t_compute_internal_parts_intersection;
+boost::shared_ptr<tbox::Timer> BoxLevelConnectorUtils::t_make_sorting_map;
+boost::shared_ptr<tbox::Timer> BoxLevelConnectorUtils::t_compute_external_parts;
+boost::shared_ptr<tbox::Timer> BoxLevelConnectorUtils::t_compute_external_parts_intersection;
+boost::shared_ptr<tbox::Timer> BoxLevelConnectorUtils::t_compute_internal_parts;
+boost::shared_ptr<tbox::Timer> BoxLevelConnectorUtils::t_compute_internal_parts_intersection;
 
 tbox::StartupShutdownManager::Handler
 BoxLevelConnectorUtils::s_initialize_finalize_handler(
@@ -196,7 +196,7 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
 
    const BoxLevel& base = connector.getBase();
    const BoxLevel& head = connector.getHead();
-   const tbox::Pointer<const GridGeometry>& grid_geom = base.getGridGeometry();
+   const boost::shared_ptr<const GridGeometry>& grid_geom = base.getGridGeometry();
 
    /*
     * We swell the base then check for the parts outside the head if
@@ -632,7 +632,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
 {
    const BoxLevel& input = input_to_reference.getBase();
 
-   const tbox::Pointer<const GridGeometry>& grid_geometry(
+   const boost::shared_ptr<const GridGeometry>& grid_geometry(
       input.getGridGeometry());
 
    const tbox::Dimension& dim(input.getDim());
@@ -740,7 +740,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
          if (input.getRefinementRatio() == one_vec) {
             reference_box_list.intersectBoxes(input.getRefinementRatio(), domain);
          } else {
-            tbox::Pointer<MultiblockBoxTree> refined_domain =
+            boost::shared_ptr<MultiblockBoxTree> refined_domain =
                domain.createRefinedTree(input.getRefinementRatio());
             reference_box_list.intersectBoxes(input.getRefinementRatio(), *refined_domain);
          }
@@ -927,7 +927,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
 void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
    BoxContainer& boundary,
    const IntVector& refinement_ratio,
-   const tbox::Pointer<const GridGeometry>& grid_geometry,
+   const boost::shared_ptr<const GridGeometry>& grid_geometry,
    const bool simplify_boundary_boxes) const
 {
 
@@ -1251,7 +1251,7 @@ void BoxLevelConnectorUtils::addPeriodicImages(
       return; // No-op.
    }
 
-   tbox::Pointer<BoxContainer> domain_tree_for_mapped_box_level(
+   boost::shared_ptr<BoxContainer> domain_tree_for_mapped_box_level(
       new BoxContainer(domain_search_tree));
    domain_tree_for_mapped_box_level->refine(mapped_box_level.getRefinementRatio());
    domain_tree_for_mapped_box_level->makeTree();

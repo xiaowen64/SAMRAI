@@ -160,7 +160,7 @@ PatchGeometry::setCodimensionBoundaries(
 #endif
 
    d_patch_boundaries[codim - 1].resizeArray(bdry_boxes.size(),
-      hier::BoundaryBox(d_dim));
+      BoundaryBox(d_dim));
 
    for (int b = 0; b < bdry_boxes.size(); b++) {
       d_patch_boundaries[codim - 1][b] = bdry_boxes[b];

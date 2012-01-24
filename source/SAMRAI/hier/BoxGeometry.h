@@ -16,8 +16,9 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/DescribedClass.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace hier {
@@ -103,7 +104,7 @@ public:
     * is an empty BoxContainer, then it will have no effect on the overlap
     * calculation.
     */
-   tbox::Pointer<BoxOverlap>
+   boost::shared_ptr<BoxOverlap>
    calculateOverlap(
       const BoxGeometry& src_geometry,
       const Box& src_mask,
@@ -128,7 +129,7 @@ public:
     * is an empty BoxContainer, then it will have no effect on the overlap
     * calculation.
     */
-   virtual tbox::Pointer<BoxOverlap>
+   virtual boost::shared_ptr<BoxOverlap>
    calculateOverlap(
       const BoxGeometry& dst_geometry,
       const BoxGeometry& src_geometry,
@@ -143,10 +144,10 @@ public:
     * Set up a BoxOverlap object that consists simply of the given boxes
     * and the transformation.
     */
-   virtual tbox::Pointer<BoxOverlap>
+   virtual boost::shared_ptr<BoxOverlap>
    setUpOverlap(
-      const hier::BoxContainer& boxes,
-      const hier::Transformation& offset) const = 0;
+      const BoxContainer& boxes,
+      const Transformation& offset) const = 0;
 
 private:
    BoxGeometry(

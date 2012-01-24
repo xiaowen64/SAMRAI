@@ -38,7 +38,7 @@ const int Patch::HIER_PATCH_VERSION = 2;
 
 Patch::Patch(
    const Box& mapped_box,
-   tbox::Pointer<PatchDescriptor> descriptor):
+   boost::shared_ptr<PatchDescriptor> descriptor):
    d_mapped_box(mapped_box),
    d_descriptor(descriptor),
    d_patch_data(d_descriptor->getMaxNumberRegisteredComponents()),
@@ -212,7 +212,7 @@ void Patch::setTime(
  */
 
 void Patch::getFromDatabase(
-   tbox::Pointer<tbox::Database> database,
+   boost::shared_ptr<tbox::Database> database,
    const ComponentSelector& component_selector)
 {
    TBOX_ASSERT(database);
@@ -248,8 +248,8 @@ void Patch::getFromDatabase(
    for (int i = 0; i < patch_data_namelist.getSize(); i++) {
       std::string patch_data_name;
       int patch_data_index;
-      tbox::Pointer<tbox::Database> patch_data_database;
-      tbox::Pointer<PatchDataFactory> patch_data_factory;
+      boost::shared_ptr<tbox::Database> patch_data_database;
+      boost::shared_ptr<PatchDataFactory> patch_data_factory;
 
       patch_data_name = patch_data_namelist[i];
 
@@ -304,7 +304,7 @@ void Patch::getFromDatabase(
  *************************************************************************
  */
 void Patch::putToDatabase(
-   tbox::Pointer<tbox::Database> database,
+   boost::shared_ptr<tbox::Database> database,
    const ComponentSelector& patchdata_write_table)
 {
    TBOX_ASSERT(database);
@@ -330,7 +330,7 @@ void Patch::putToDatabase(
    }
 
    std::string patch_data_name;
-   tbox::Pointer<tbox::Database> patch_data_database;
+   boost::shared_ptr<tbox::Database> patch_data_database;
    tbox::Array<std::string> patch_data_namelist(namelist_count);
    namelist_count = 0;
    for (i = 0; i < d_patch_data.getSize(); i++) {

@@ -126,13 +126,13 @@ void BoundaryBoxUtils::computeOutwardShift()
 
 void BoundaryBoxUtils::stretchBoxToGhostWidth(
    Box& box,
-   const hier::IntVector& ghost_cell_width) const
+   const IntVector& ghost_cell_width) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(d_bbox, box);
 
    const tbox::Dimension& dim(d_bbox.getDim());
 
-   TBOX_ASSERT(ghost_cell_width >= hier::IntVector::getZero(dim));
+   TBOX_ASSERT(ghost_cell_width >= IntVector::getZero(dim));
 
    box = d_bbox.getBox();
    for (int d = 0; d < dim.getValue(); ++d) {
@@ -153,7 +153,7 @@ void BoundaryBoxUtils::stretchBoxToGhostWidth(
 
 void BoundaryBoxUtils::extendBoxOutward(
    Box& box,
-   const hier::IntVector& extension) const
+   const IntVector& extension) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(d_bbox, box);
 
@@ -177,13 +177,13 @@ int BoundaryBoxUtils::normalDir() const
  ************************************************************************
  */
 
-hier::Box BoundaryBoxUtils::getSurfaceBoxFromBoundaryBox() const
+Box BoundaryBoxUtils::getSurfaceBoxFromBoundaryBox() const
 {
    if (d_bbox.getBoundaryType() != 1) {
       TBOX_ERROR("BoundaryBoxUtils::getSurfaceBoxFromBoundaryBox\n"
          << "called with improper boundary box\n");
    }
-   hier::Box side_index_box = d_bbox.getBox();
+   Box side_index_box = d_bbox.getBox();
    int location_index = d_bbox.getLocationIndex();
    if (location_index % 2 == 0) {
       /*
@@ -203,8 +203,8 @@ hier::Box BoundaryBoxUtils::getSurfaceBoxFromBoundaryBox() const
  ************************************************************************
  */
 
-hier::BoundaryBox BoundaryBoxUtils::trimBoundaryBox(
-   const hier::Box& limit_box) const
+BoundaryBox BoundaryBoxUtils::trimBoundaryBox(
+   const Box& limit_box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(d_bbox, limit_box);
 
@@ -212,12 +212,12 @@ hier::BoundaryBox BoundaryBoxUtils::trimBoundaryBox(
 
    TBOX_ASSERT(d_bbox.getBoundaryType() < dim.getValue());
 
-   const hier::Box& bbox = d_bbox.getBox();
-   const hier::Index& plo = limit_box.lower();
-   const hier::Index& pup = limit_box.upper();
-   const hier::Index& blo = bbox.lower();
-   const hier::Index& bup = bbox.upper();
-   hier::Index newlo(dim), newup(dim);
+   const Box& bbox = d_bbox.getBox();
+   const Index& plo = limit_box.lower();
+   const Index& pup = limit_box.upper();
+   const Index& blo = bbox.lower();
+   const Index& bup = bbox.upper();
+   Index newlo(dim), newup(dim);
 
    if (d_bbox.getBoundaryType() == 1) {
       /*
@@ -259,10 +259,10 @@ hier::BoundaryBox BoundaryBoxUtils::trimBoundaryBox(
       }
    }
 
-   const hier::Box newbox(newlo, newup, d_bbox.getBox().getBlockId());
-   const hier::BoundaryBox newbbox(newbox,
-                                   d_bbox.getBoundaryType(),
-                                   d_bbox.getLocationIndex());
+   const Box newbox(newlo, newup, d_bbox.getBox().getBlockId());
+   const BoundaryBox newbbox(newbox,
+                             d_bbox.getBoundaryType(),
+                             d_bbox.getLocationIndex());
 
    return newbbox;
 }

@@ -10,6 +10,7 @@
 #ifndef included_hier_MappingConnectorAlgorithm
 #define included_hier_MappingConnectorAlgorithm
 
+#include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/BaseConnectorAlgorithm.h"
 
 #include <map>
@@ -475,13 +476,13 @@ private:
     */
    static int s_operation_mpi_tag;
 
-   static tbox::Pointer<tbox::Timer> t_modify;
-   static tbox::Pointer<tbox::Timer> t_modify_setup_comm;
-   static tbox::Pointer<tbox::Timer> t_modify_remove_and_cache;
-   static tbox::Pointer<tbox::Timer> t_modify_discover_and_send;
-   static tbox::Pointer<tbox::Timer> t_modify_receive_and_unpack;
-   static tbox::Pointer<tbox::Timer> t_modify_MPI_wait;
-   static tbox::Pointer<tbox::Timer> t_modify_misc;
+   static boost::shared_ptr<tbox::Timer> t_modify;
+   static boost::shared_ptr<tbox::Timer> t_modify_setup_comm;
+   static boost::shared_ptr<tbox::Timer> t_modify_remove_and_cache;
+   static boost::shared_ptr<tbox::Timer> t_modify_discover_and_send;
+   static boost::shared_ptr<tbox::Timer> t_modify_receive_and_unpack;
+   static boost::shared_ptr<tbox::Timer> t_modify_MPI_wait;
+   static boost::shared_ptr<tbox::Timer> t_modify_misc;
 
    bool d_sanity_check_inputs;
    bool d_sanity_check_outputs;

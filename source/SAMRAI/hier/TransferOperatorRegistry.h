@@ -20,8 +20,8 @@
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -87,7 +87,7 @@ public:
     */
    void
    addCoarsenOperator(
-      tbox::Pointer<CoarsenOperator> coarsen_op);
+      boost::shared_ptr<CoarsenOperator> coarsen_op);
 
    /*!
     * @brief Add a concrete spatial refinement operator.
@@ -97,7 +97,7 @@ public:
     */
    void
    addRefineOperator(
-      tbox::Pointer<RefineOperator> refine_op);
+      boost::shared_ptr<RefineOperator> refine_op);
 
    /*!
     * @brief Add a concrete time interpolation operator.
@@ -107,7 +107,7 @@ public:
     */
    void
    addTimeInterpolateOperator(
-      tbox::Pointer<TimeInterpolateOperator> time_op);
+      boost::shared_ptr<TimeInterpolateOperator> time_op);
 
    /*!
     * @brief Lookup function for coarsening operator.
@@ -121,9 +121,9 @@ public:
     *                operator should match.
     * @param[in]     op_name The string identifier of the coarsening operator.
     */
-   tbox::Pointer<CoarsenOperator>
+   boost::shared_ptr<CoarsenOperator>
    lookupCoarsenOperator(
-      const tbox::Pointer<Variable>& var,
+      const boost::shared_ptr<Variable>& var,
       const std::string& op_name);
 
    /*!
@@ -138,9 +138,9 @@ public:
     *                operator should match.
     * @param[in]     op_name The string identifier of the refinement operator.
     */
-   tbox::Pointer<RefineOperator>
+   boost::shared_ptr<RefineOperator>
    lookupRefineOperator(
-      const tbox::Pointer<Variable>& var,
+      const boost::shared_ptr<Variable>& var,
       const std::string& op_name);
 
    /*!
@@ -156,9 +156,9 @@ public:
     * @param[in]     op_name The string identifier of the time interpolation
     *                operator.  \b Default: STD_LINEAR_TIME_INTERPOLATE
     */
-   tbox::Pointer<TimeInterpolateOperator>
+   boost::shared_ptr<TimeInterpolateOperator>
    lookupTimeInterpolateOperator(
-      const tbox::Pointer<Variable>& var,
+      const boost::shared_ptr<Variable>& var,
       const std::string& op_name =
          "STD_LINEAR_TIME_INTERPOLATE");
 
@@ -221,9 +221,9 @@ protected:
     * SAMRAITransferOperatorRegistry::buildCoarsenOperator to build a SAMRAI
     * libaray CoarsenOperator.
     */
-   virtual tbox::Pointer<CoarsenOperator>
+   virtual boost::shared_ptr<CoarsenOperator>
    buildCoarsenOperator(
-      const tbox::Pointer<Variable>& var,
+      const boost::shared_ptr<Variable>& var,
       const std::string& op_name) = 0;
 
    /*!
@@ -234,9 +234,9 @@ protected:
     * SAMRAITransferOperatorRegistry::buildRefineOperator to build a SAMRAI
     * libaray RefineOperator.
     */
-   virtual tbox::Pointer<RefineOperator>
+   virtual boost::shared_ptr<RefineOperator>
    buildRefineOperator(
-      const tbox::Pointer<Variable>& var,
+      const boost::shared_ptr<Variable>& var,
       const std::string& op_name) = 0;
 
    /*!
@@ -248,9 +248,9 @@ protected:
     * SAMRAITransferOperatorRegistry::buildTimeInterpolateOperator to build a
     * SAMRAI libaray TimeInterpolateOperator.
     */
-   virtual tbox::Pointer<TimeInterpolateOperator>
+   virtual boost::shared_ptr<TimeInterpolateOperator>
    buildTimeInterpolateOperator(
-      const tbox::Pointer<Variable>& var,
+      const boost::shared_ptr<Variable>& var,
       const std::string& op_name) = 0;
 
 private:
@@ -262,7 +262,7 @@ private:
     * package.  Additional operators may be added to this list at any time
     * (see addCoarsenOperator() function).
     */
-   tbox::List<tbox::Pointer<CoarsenOperator> > d_coarsen_operators;
+   tbox::List<boost::shared_ptr<CoarsenOperator> > d_coarsen_operators;
 
    /*
     * The list of spatial refinement operators is maintained to lookup
@@ -272,7 +272,7 @@ private:
     * package.  Additional operators may be added to this list at any time
     * (see addRefineOperator() function).
     */
-   tbox::List<tbox::Pointer<RefineOperator> > d_refine_operators;
+   tbox::List<boost::shared_ptr<RefineOperator> > d_refine_operators;
 
    /*
     * The list of time interpolation operators is maintained to lookup
@@ -282,7 +282,7 @@ private:
     * patchdata package.  Additional operators may be added to this list at
     * any time (see addTimeInterpolateOperator() function).
     */
-   tbox::List<tbox::Pointer<TimeInterpolateOperator> > d_time_operators;
+   tbox::List<boost::shared_ptr<TimeInterpolateOperator> > d_time_operators;
 
    /*!
     * @brief Value set by setMinTransferOpStencilWidth().

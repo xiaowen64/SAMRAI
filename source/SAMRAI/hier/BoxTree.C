@@ -33,10 +33,10 @@
 namespace SAMRAI {
 namespace hier {
 
-tbox::Pointer<tbox::Timer> BoxTree::t_build_tree[tbox::Dimension::
+boost::shared_ptr<tbox::Timer> BoxTree::t_build_tree[tbox::Dimension::
+                                                     MAXIMUM_DIMENSION_VALUE];
+boost::shared_ptr<tbox::Timer> BoxTree::t_search[tbox::Dimension::
                                                  MAXIMUM_DIMENSION_VALUE];
-tbox::Pointer<tbox::Timer> BoxTree::t_search[tbox::Dimension::
-                                             MAXIMUM_DIMENSION_VALUE];
 unsigned int BoxTree::s_num_build[tbox::Dimension::MAXIMUM_DIMENSION_VALUE] =
 { 0 };
 unsigned int BoxTree::s_num_generate[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
@@ -210,7 +210,7 @@ BoxTree::BoxTree(
 
 BoxTree::BoxTree(
    const tbox::Dimension& dim,
-   const hier::BoxContainer& boxes,
+   const BoxContainer& boxes,
    const BlockId& block_id,
    int min_number):
    d_dim(dim),
@@ -544,7 +544,7 @@ void BoxTree::setupChildren(
     */
    if (d_mapped_boxes.size() > min_number /* recursion criterion */ &&
        d_mapped_boxes.size() < total_size /* avoid infinite recursion */) {
-      d_center_child = new BoxTree(d_dim);
+      d_center_child.reset(new BoxTree(d_dim));
       d_mapped_boxes.swap(d_center_child->d_mapped_boxes);
       d_center_child->privateGenerateTree(min_number);
       d_mapped_boxes.clear();   // No longer needed for tree construction or search.
@@ -554,12 +554,12 @@ void BoxTree::setupChildren(
     * Recurse to build this node's left and right children.
     */
    if (!left_mapped_boxes.empty()) {
-      d_left_child = new BoxTree(d_dim);
+      d_left_child.reset(new BoxTree(d_dim));
       left_mapped_boxes.swap(d_left_child->d_mapped_boxes);
       d_left_child->privateGenerateTree(min_number);
    }
    if (!right_mapped_boxes.empty()) {
-      d_right_child = new BoxTree(d_dim);
+      d_right_child.reset(new BoxTree(d_dim));
       right_mapped_boxes.swap(d_right_child->d_mapped_boxes);
       d_right_child->privateGenerateTree(min_number);
    }
@@ -711,11 +711,21 @@ void BoxTree::findOverlapBoxes(
       if (d_center_child) {
          d_center_child->findOverlapBoxes(overlap_boxes, box, true);
       } else {
-         for (std::list<const Box*>::const_iterator ni = d_mapped_boxes.begin();
-              ni != d_mapped_boxes.end(); ++ni) {
-            const Box* this_box = *ni;
-            if (box.intersects(*this_box)) {
-               overlap_boxes.insert(*this_box);
+         if (overlap_boxes.isOrdered()) {
+            for (std::list<const Box*>::const_iterator ni = d_mapped_boxes.begin();
+                 ni != d_mapped_boxes.end(); ++ni) {
+               const Box* this_box = *ni;
+               if (box.intersects(*this_box)) {
+                  overlap_boxes.insert(*this_box);
+               }
+            }
+         } else {
+            for (std::list<const Box*>::const_iterator ni = d_mapped_boxes.begin();
+                 ni != d_mapped_boxes.end(); ++ni) {
+               const Box* this_box = *ni;
+               if (box.intersects(*this_box)) {
+                  overlap_boxes.pushBack(*this_box);
+               }
             }
          }
       }
@@ -846,7 +856,7 @@ void BoxTree::getBoxes(
    }
 }
 
-tbox::Pointer<BoxTree> BoxTree::createRefinedTree(
+boost::shared_ptr<BoxTree> BoxTree::createRefinedTree(
    const IntVector& ratio) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio);
@@ -876,7 +886,7 @@ tbox::Pointer<BoxTree> BoxTree::createRefinedTree(
       rval->d_right_child = d_right_child->createRefinedTree(ratio);
    }
 
-   return tbox::Pointer<BoxTree>(rval);
+   return boost::shared_ptr<BoxTree>(rval);
 }
 
 /*
@@ -946,23 +956,23 @@ void BoxTree::printStatistics(
               << std::endl;
 
    tbox::Statistician* st = tbox::Statistician::getStatistician();
-   tbox::Pointer<tbox::Statistic> bdstat = st->getStatistic("num_build",
+   boost::shared_ptr<tbox::Statistic> bdstat = st->getStatistic("num_build",
          "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> gnstat = st->getStatistic("num_generate",
+   boost::shared_ptr<tbox::Statistic> gnstat = st->getStatistic("num_generate",
          "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> dpstat = st->getStatistic("num_duplicate",
+   boost::shared_ptr<tbox::Statistic> dpstat = st->getStatistic("num_duplicate",
          "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> srstat = st->getStatistic("num_search",
+   boost::shared_ptr<tbox::Statistic> srstat = st->getStatistic("num_search",
          "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> sbstat = st->getStatistic("num_sorted_box",
+   boost::shared_ptr<tbox::Statistic> sbstat = st->getStatistic("num_sorted_box",
          "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> fbstat = st->getStatistic("num_found_box",
+   boost::shared_ptr<tbox::Statistic> fbstat = st->getStatistic("num_found_box",
          "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> msbstat = st->getStatistic("max_sorted_box",
+   boost::shared_ptr<tbox::Statistic> msbstat = st->getStatistic("max_sorted_box",
          "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> mfbstat = st->getStatistic("max_found_box",
+   boost::shared_ptr<tbox::Statistic> mfbstat = st->getStatistic("max_found_box",
          "PROC_STAT");
-   tbox::Pointer<tbox::Statistic> lsstat = st->getStatistic("max_lin_search",
+   boost::shared_ptr<tbox::Statistic> lsstat = st->getStatistic("max_lin_search",
          "PROC_STAT");
 
    static int seq_num = 0;

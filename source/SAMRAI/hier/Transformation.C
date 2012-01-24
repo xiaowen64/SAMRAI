@@ -109,7 +109,7 @@ Transformation::inverseTransform(Box& box) const
 {
    TBOX_ASSERT(box.getBlockId() == d_end_block ||
                d_end_block == BlockId::invalidId());
-   hier::IntVector reverse_offset(d_offset.getDim());
+   IntVector reverse_offset(d_offset.getDim());
    calculateReverseShift(reverse_offset, d_offset, d_rotation);
 
    box.rotate(getReverseRotationIdentifier(d_rotation, d_offset.getDim()));
@@ -644,7 +644,7 @@ void Transformation::translateAndCopyData(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(dst_patch, src_patch, shift);
 
-   tbox::Pointer<PatchDataFactory> dst_pdf =
+   boost::shared_ptr<PatchDataFactory> dst_pdf =
       VariableDatabase::getDatabase()->getPatchDescriptor()->
       getPatchDataFactory(dst_id);
 
@@ -669,7 +669,7 @@ void Transformation::translateAndFillData(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(dst_patch, src_patch, shift);
 
-   tbox::Pointer<PatchDataFactory> dst_pdf =
+   boost::shared_ptr<PatchDataFactory> dst_pdf =
       VariableDatabase::getDatabase()->getPatchDescriptor()->
       getPatchDataFactory(dst_id);
 

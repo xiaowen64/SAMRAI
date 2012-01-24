@@ -53,7 +53,7 @@ PatchData::~PatchData()
  */
 
 void PatchData::getFromDatabase(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
    TBOX_ASSERT(database);
 
@@ -82,7 +82,7 @@ void PatchData::getFromDatabase(
  */
 
 void PatchData::putToDatabase(
-   tbox::Pointer<tbox::Database> database)
+   boost::shared_ptr<tbox::Database> database)
 {
    TBOX_ASSERT(database);
 

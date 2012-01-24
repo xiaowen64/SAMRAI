@@ -10,6 +10,7 @@
 #ifndef included_hier_OverlapConnectorAlgorithm
 #define included_hier_OverlapConnectorAlgorithm
 
+#include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/BaseConnectorAlgorithm.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 
@@ -615,8 +616,10 @@ private:
    void
    privateBridge_unshiftOverlappingNeighbors(
       const Box& mapped_box,
-      std::vector<Box>& neighbors,
-      std::vector<Box>& scratch_space,
+      BoxContainer& neighbors,
+      BoxContainer& scratch_space,
+      //std::vector<Box>& neighbors,
+      //std::vector<Box>& scratch_space,
       const IntVector& neighbor_refinement_ratio) const;
 
    /*!
@@ -684,18 +687,18 @@ private:
     */
    static int s_operation_mpi_tag;
 
-   static tbox::Pointer<tbox::Timer> t_find_overlaps_rbbt;
+   static boost::shared_ptr<tbox::Timer> t_find_overlaps_rbbt;
 
-   static tbox::Pointer<tbox::Timer> t_bridge;
-   static tbox::Pointer<tbox::Timer> t_bridge_setup_comm;
-   static tbox::Pointer<tbox::Timer> t_bridge_remove_and_cache;
-   static tbox::Pointer<tbox::Timer> t_bridge_discover;
-   static tbox::Pointer<tbox::Timer> t_bridge_discover_get_neighbors;
-   static tbox::Pointer<tbox::Timer> t_bridge_discover_form_rbbt;
-   static tbox::Pointer<tbox::Timer> t_bridge_discover_find_overlaps;
-   static tbox::Pointer<tbox::Timer> t_bridge_share;
-   static tbox::Pointer<tbox::Timer> t_bridge_receive_and_unpack;
-   static tbox::Pointer<tbox::Timer> t_bridge_MPI_wait;
+   static boost::shared_ptr<tbox::Timer> t_bridge;
+   static boost::shared_ptr<tbox::Timer> t_bridge_setup_comm;
+   static boost::shared_ptr<tbox::Timer> t_bridge_remove_and_cache;
+   static boost::shared_ptr<tbox::Timer> t_bridge_discover;
+   static boost::shared_ptr<tbox::Timer> t_bridge_discover_get_neighbors;
+   static boost::shared_ptr<tbox::Timer> t_bridge_discover_form_rbbt;
+   static boost::shared_ptr<tbox::Timer> t_bridge_discover_find_overlaps;
+   static boost::shared_ptr<tbox::Timer> t_bridge_share;
+   static boost::shared_ptr<tbox::Timer> t_bridge_receive_and_unpack;
+   static boost::shared_ptr<tbox::Timer> t_bridge_MPI_wait;
 
    bool d_sanity_check_method_preconditions;
    bool d_sanity_check_method_postconditions;

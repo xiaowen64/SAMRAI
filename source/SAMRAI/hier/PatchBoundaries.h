@@ -70,7 +70,7 @@ public:
     *
     * @param[in] i  Array index.
     */
-   tbox::Array<hier::BoundaryBox>&
+   tbox::Array<BoundaryBox>&
    operator [] (
       unsigned int i);
 
@@ -79,7 +79,7 @@ public:
     *
     * @param[in] i  Array index.
     */
-   const tbox::Array<hier::BoundaryBox>&
+   const tbox::Array<BoundaryBox>&
    operator [] (
       unsigned int i) const;
 
@@ -88,7 +88,7 @@ public:
     *
     * @return  Copy of the internal arrays.
     */
-   tbox::Array<tbox::Array<hier::BoundaryBox> >
+   tbox::Array<tbox::Array<BoundaryBox> >
    getArrays();
 
    /*!
@@ -96,13 +96,13 @@ public:
     *
     * @return  Const copy of the internal arrays.
     */
-   const tbox::Array<tbox::Array<hier::BoundaryBox> >
+   const tbox::Array<tbox::Array<BoundaryBox> >
    getArrays() const;
 
    /*!
     * @brief friend declaration
     */
-   friend class::std::map<int, SAMRAI::hier::PatchBoundaries>;
+   friend class::std::map<int, PatchBoundaries>;
 
 private:
    /*!
@@ -121,7 +121,7 @@ private:
    /*
     * @brief Internal arrays of BoundaryBox
     */
-   tbox::Array<tbox::Array<hier::BoundaryBox> > d_array_of_bboxes;
+   tbox::Array<tbox::Array<BoundaryBox> > d_array_of_bboxes;
 };
 
 } // SAMRAI namespace

@@ -28,13 +28,13 @@
 namespace SAMRAI {
 namespace hier {
 
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify;
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_setup_comm;
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_remove_and_cache;
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_discover_and_send;
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_receive_and_unpack;
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_MPI_wait;
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_misc;
+boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify;
+boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_setup_comm;
+boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_remove_and_cache;
+boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_discover_and_send;
+boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_receive_and_unpack;
+boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_MPI_wait;
+boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_misc;
 
 const std::string MappingConnectorAlgorithm::s_dbgbord;
 
@@ -64,20 +64,6 @@ MappingConnectorAlgorithm::MappingConnectorAlgorithm():
    d_sanity_check_inputs(false),
    d_sanity_check_outputs(false)
 {
-   /*
-    * While we figure out how to use multiple communicators in SAMRAI,
-    * we are still assuming that all communications use congruent
-    * communicators.  This class just makes a duplicate communicator
-    * to protect itself from unrelated communications in shared
-    * communicators.
-    */
-   if (s_class_mpi.getCommunicator() == tbox::SAMRAI_MPI::commNull) {
-      if (tbox::SAMRAI_MPI::usingMPI()) {
-         const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-         s_class_mpi.dupCommunicator(mpi);
-      }
-   }
-
 }
 
 /*
@@ -262,7 +248,7 @@ void MappingConnectorAlgorithm::modify(
       for (Connector::ConstNeighborIterator na = old_to_new.begin(ci);
            na != old_to_new.end(ci); ++na) {
          if (na->getOwnerRank() != old_to_new.getMPI().getRank()) {
-            const hier::Box find_box(na->getDim(), *ci);
+            const Box find_box(na->getDim(), *ci);
             const Box& mapped_box(
                *old_to_new.getBase().getBoxes().find(find_box));
             TBOX_ERROR("MappingConnectorAlgorithm::modify: this version of modify\n"
@@ -1359,7 +1345,7 @@ void MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const IntVector& refinement_ratio) const
 {
    const BoxLevel& old = mapping_connector.getBase();
-   const tbox::Pointer<const GridGeometry>& grid_geometry(old.getGridGeometry());
+   const boost::shared_ptr<const GridGeometry>& grid_geometry(old.getGridGeometry());
    const int rank = old.getMPI().getRank();
 
    while (base_ni != visible_base_nabrs.end() &&
@@ -1653,7 +1639,18 @@ size_t MappingConnectorAlgorithm::findMappingErrors(
 void MappingConnectorAlgorithm::initializeCallback()
 {
    /*
-    * The first constructor:
+    * While we figure out how to use multiple communicators in SAMRAI,
+    * we are still assuming that all communications use congruent
+    * communicators.  This class just makes a duplicate communicator
+    * to protect itself from unrelated communications in shared
+    * communicators.
+    */
+   if (tbox::SAMRAI_MPI::usingMPI()) {
+      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      s_class_mpi.dupCommunicator(mpi);
+   }
+
+   /*
     * - gets timers from the TimerManager.
     * - sets up their deallocation.
     * - sets up debugging flags.
@@ -1662,10 +1659,10 @@ void MappingConnectorAlgorithm::initializeCallback()
    if (s_print_steps == '\0') {
       if (tbox::InputManager::inputDatabaseExists()) {
          s_print_steps = 'n';
-         tbox::Pointer<tbox::Database> idb =
+         boost::shared_ptr<tbox::Database> idb =
             tbox::InputManager::getInputDatabase();
          if (idb->isDatabase("MappingConnectorAlgorithm")) {
-            tbox::Pointer<tbox::Database> ocu_db =
+            boost::shared_ptr<tbox::Database> ocu_db =
                idb->getDatabase("MappingConnectorAlgorithm");
             s_print_steps = ocu_db->getCharWithDefault("print_modify_steps",
                   s_print_steps);

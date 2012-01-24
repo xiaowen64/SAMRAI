@@ -984,24 +984,18 @@ private:
 
    void
    findOverlapBoxes(
-      BoxContainer& overlap_connector,
+      BoxContainer& overlap_boxes,
       const Box& box) const;
 
    void
    findOverlapBoxes(
-      Connector& overlap_connector,
+      std::vector<Box>& overlap_boxes,
       const Box& box) const;
 
    void
    findOverlapBoxes(
-      std::vector<Box>& overlap_connector,
+      std::vector<const Box*>& overlap_boxes,
       const Box& box) const;
-
-   void
-   findOverlapBoxes(
-      std::vector<const Box*>& overlap_connector,
-      const Box& box) const;
-//      bool recursive_call = false) const;
 
    bool
    hasOverlap(
@@ -1081,7 +1075,7 @@ private:
 
    bool d_ordered;
 
-   mutable tbox::Pointer<BoxTree> d_tree;
+   mutable boost::shared_ptr<BoxTree> d_tree;
 };
 
 }

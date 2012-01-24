@@ -13,12 +13,12 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchFactory.h"
 #include "SAMRAI/hier/ProcessorMapping.h"
 
+#include <boost/shared_ptr.hpp>
 #include <map>
 
 namespace SAMRAI {
@@ -85,9 +85,10 @@ public:
     */
    PatchLevel(
       const BoxLevel& mapped_box_level,
-      const tbox::Pointer<GridGeometry> grid_geometry,
-      const tbox::Pointer<PatchDescriptor> descriptor,
-      tbox::Pointer<PatchFactory> factory = tbox::Pointer<PatchFactory>(NULL),
+      const boost::shared_ptr<GridGeometry> grid_geometry,
+      const boost::shared_ptr<PatchDescriptor> descriptor,
+      boost::shared_ptr<PatchFactory> factory =
+         boost::shared_ptr<PatchFactory>((PatchFactory*)NULL),
       bool defer_boundary_box_creation = false);
 
    /*!
@@ -117,10 +118,10 @@ public:
     *             construction of the boundary boxes.  @b Default: false
     */
    PatchLevel(
-      tbox::Pointer<tbox::Database> level_database,
-      tbox::Pointer<GridGeometry> grid_geometry,
-      tbox::Pointer<PatchDescriptor> descriptor,
-      tbox::Pointer<PatchFactory> factory,
+      boost::shared_ptr<tbox::Database> level_database,
+      boost::shared_ptr<GridGeometry> grid_geometry,
+      boost::shared_ptr<PatchDescriptor> descriptor,
+      boost::shared_ptr<PatchFactory> factory,
       const ComponentSelector& component_selector =
          *(new ComponentSelector(false)),
       bool defer_boundary_box_creation = false);
@@ -242,9 +243,9 @@ public:
     * @param[in]  gid
     * @param[in]  bid
     *
-    * @return A Pointer to the Patch indicated by the GlobalId.
+    * @return A boost::shared_ptr to the Patch indicated by the GlobalId.
     */
-   const tbox::Pointer<Patch>&
+   const boost::shared_ptr<Patch>&
    getPatch(
       const GlobalId& gid) const;
 
@@ -253,9 +254,9 @@ public:
     *
     * @param[in]  mbid
     *
-    * @return A Pointer to the Patch indicated by the BoxId.
+    * @return A boost::shared_ptr to the Patch indicated by the BoxId.
     */
-   tbox::Pointer<Patch>
+   boost::shared_ptr<Patch>
    getPatch(
       const BoxId& mbid) const;
 
@@ -264,7 +265,7 @@ public:
     *
     * @return pointer to the patch descriptor for the hierarchy.
     */
-   tbox::Pointer<PatchDescriptor>
+   boost::shared_ptr<PatchDescriptor>
    getPatchDescriptor() const;
 
    /*!
@@ -272,15 +273,15 @@ public:
     *
     * @return the factory object used to created patches in the level.
     */
-   tbox::Pointer<PatchFactory>
+   boost::shared_ptr<PatchFactory>
    getPatchFactory() const;
 
    /*!
     * @brief Get the GridGeometry
     *
-    * @return A Pointer to the grid geometry description.
+    * @return A boost::shared_ptr to the grid geometry description.
     */
-   tbox::Pointer<GridGeometry>
+   boost::shared_ptr<GridGeometry>
    getGridGeometry() const;
 
    /*!
@@ -320,16 +321,16 @@ public:
     *
     * @param[in]  coarse_level
     * @param[in]  refine_ratio
-    * @param[in]  fine_grid_geometry @b Default: Pointer to a null grid
-    *             geometry
+    * @param[in]  fine_grid_geometry @b Default: boost::shared_ptr to a null
+    *             grid geometry
     * @param[in]  defer_boundary_box_creation @b Default: false
     */
    void
    setRefinedPatchLevel(
-      const tbox::Pointer<hier::PatchLevel> coarse_level,
-      const hier::IntVector& refine_ratio,
-      const tbox::Pointer<hier::GridGeometry> fine_grid_geometry =
-         tbox::Pointer<hier::GridGeometry>(NULL),
+      const boost::shared_ptr<PatchLevel> coarse_level,
+      const IntVector& refine_ratio,
+      const boost::shared_ptr<GridGeometry> fine_grid_geometry =
+      boost::shared_ptr<GridGeometry>((GridGeometry*)NULL),
       bool defer_boundary_box_creation = false);
 
    /*!
@@ -368,16 +369,16 @@ public:
     *
     * @param[in]  fine_level
     * @param[in]  coarsen_ratio
-    * @param[in]  coarse_grid_geometry @b Default: Pointer to a null grid
-    *             geometry
+    * @param[in]  coarse_grid_geometry @b Default: boost::shared_ptr to a null
+    *             grid geometry
     * @param[in]  defer_boundary_box_creation @b Default: false
     */
    void
    setCoarsenedPatchLevel(
-      const tbox::Pointer<hier::PatchLevel> fine_level,
-      const hier::IntVector& coarsen_ratio,
-      const tbox::Pointer<hier::GridGeometry> coarse_grid_geom =
-         tbox::Pointer<hier::GridGeometry>(NULL),
+      const boost::shared_ptr<PatchLevel> fine_level,
+      const IntVector& coarsen_ratio,
+      const boost::shared_ptr<GridGeometry> coarse_grid_geom =
+         boost::shared_ptr<GridGeometry>((GridGeometry*)NULL),
       bool defer_boundary_box_creation = false);
 
    /*!
@@ -405,7 +406,7 @@ public:
 
    const BoxContainer&
    getPhysicalDomain(
-      const hier::BlockId& block_id) const;
+      const BlockId& block_id) const;
 
    /*!
     * @brief Get the box defining the patches on the level.
@@ -438,10 +439,10 @@ public:
    /*!
     * @brief Get the BoxLevel associated with the PatchLevel.
     *
-    * @return a reference to a Pointer to the BoxLevel
+    * @return a reference to a boost::shared_ptr to the BoxLevel
     * associated with the PatchLevel.
     */
-   const tbox::Pointer<BoxLevel>&
+   const boost::shared_ptr<BoxLevel>&
    getBoxLevel() const;
 
    /*!
@@ -642,7 +643,7 @@ public:
     * and to create all patches on the local processor.
     *
     * @par Assertions
-    * Assertions will check that database is a non-null Pointer,
+    * Assertions will check that database is a non-null boost::shared_ptr,
     * that the data being retrieved from the database are of
     * the type expected.  Also checked is the number of patches is positive,
     * and the number of patches and size of processor mapping array are the
@@ -654,7 +655,7 @@ public:
     */
    void
    getFromDatabase(
-      tbox::Pointer<tbox::Database> database,
+      boost::shared_ptr<tbox::Database> database,
       const ComponentSelector& component_selector);
 
    /*!
@@ -665,7 +666,7 @@ public:
     * the database.
     *
     * @par Assertions
-    * Check that database is a non-null Pointer.
+    * Check that database is a non-null boost::shared_ptr.
     *
     * @param[in,out]  database
     * @param[in]      patchdata_write_table The ComponentSelector specifying
@@ -673,7 +674,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> database,
+      boost::shared_ptr<tbox::Database> database,
       const ComponentSelector& patchdata_write_table);
 
    /*!
@@ -703,7 +704,7 @@ private:
     * @brief Container of distributed patches on level.
     *
     */
-   typedef std::map<BoxId, tbox::Pointer<Patch> >
+   typedef std::map<BoxId, boost::shared_ptr<Patch> >
    PatchContainer;
 
 public:
@@ -756,16 +757,16 @@ public:
        * @param[in]  patch_level
        */
       explicit Iterator(
-         const tbox::Pointer<PatchLevel>& patch_level);
+         const boost::shared_ptr<PatchLevel>& patch_level);
 
       /*!
-       * @brief Initialize from a PatchLevel Pointer.
+       * @brief Initialize from a PatchLevel boost::shared_ptr.
        *
        * @param[in]  patch_level
        */
       void
       initialize(
-         const tbox::Pointer<PatchLevel>& patch_level);
+         const boost::shared_ptr<PatchLevel>& patch_level);
 
       /*!
        * @brief Initialize from a PatchLevel reference.
@@ -795,19 +796,19 @@ public:
       /*!
        * @brief Dereference operator.
        */
-      const tbox::Pointer<Patch>&
+      const boost::shared_ptr<Patch>&
       operator * () const;
 
       /*!
        * @brief Alternative dereference operator.
        */
-      const tbox::Pointer<Patch>&
+      const boost::shared_ptr<Patch>&
       operator () () const;
 
       /*!
        * @brief Delegation operations to the Patch pointer.
        */
-      const tbox::Pointer<Patch>&
+      const boost::shared_ptr<Patch>&
       operator -> () const;
 
       /*!
@@ -888,7 +889,7 @@ private:
    /*!
     * Primary metadata describing the PatchLevel.
     */
-   tbox::Pointer<BoxLevel> d_mapped_box_level;
+   boost::shared_ptr<BoxLevel> d_mapped_box_level;
 
    /*
     * Whether we have a globalized version of d_mapped_box_level.
@@ -916,15 +917,15 @@ private:
    /*
     * Grid geometry description.
     */
-   tbox::Pointer<GridGeometry> d_geometry;
+   boost::shared_ptr<GridGeometry> d_geometry;
    /*
     * PatchDescriptor - patch data info shared by all patches in the hierarchy
     */
-   tbox::Pointer<PatchDescriptor> d_descriptor;
+   boost::shared_ptr<PatchDescriptor> d_descriptor;
    /*
     * Factory for creating patches.
     */
-   tbox::Pointer<PatchFactory> d_factory;
+   boost::shared_ptr<PatchFactory> d_factory;
 
    /*
     * Local number of patches on the level.

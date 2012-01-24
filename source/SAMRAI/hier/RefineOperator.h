@@ -91,7 +91,7 @@ public:
     */
    virtual bool
    findRefineOperator(
-      const tbox::Pointer<Variable>& var,
+      const boost::shared_ptr<Variable>& var,
       const std::string& op_name) const = 0;
 
    /**

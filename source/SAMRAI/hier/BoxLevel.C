@@ -40,9 +40,9 @@ namespace hier {
 const int BoxLevel::HIER_MAPPED_BOX_LEVEL_VERSION = 0;
 const int BoxLevel::MAPPED_BOX_LEVEL_NUMBER_OF_STATS = 20;
 
-tbox::Pointer<tbox::Timer> BoxLevel::t_initialize_private;
-tbox::Pointer<tbox::Timer> BoxLevel::t_acquire_remote_boxes;
-tbox::Pointer<tbox::Timer> BoxLevel::t_cache_global_reduced_data;
+boost::shared_ptr<tbox::Timer> BoxLevel::t_initialize_private;
+boost::shared_ptr<tbox::Timer> BoxLevel::t_acquire_remote_boxes;
+boost::shared_ptr<tbox::Timer> BoxLevel::t_cache_global_reduced_data;
 
 const LocalId BoxLevel::s_negative_one_local_id(-1);
 
@@ -81,8 +81,8 @@ BoxLevel::BoxLevel():
    d_parallel_state(DISTRIBUTED),
    d_globalized_version(NULL),
    d_persistent_overlap_connectors(NULL),
-   d_handle(NULL),
-   d_grid_geometry(tbox::Pointer<const GridGeometry>(NULL))
+   d_handle((BoxLevelHandle*)NULL),
+   d_grid_geometry((const GridGeometry*)NULL)
 {
    // This ctor should never be invoked.
    TBOX_ERROR("Somehow, we entered code that was never meant to be used.");
@@ -117,8 +117,8 @@ BoxLevel::BoxLevel(
    d_parallel_state(DISTRIBUTED),
    d_globalized_version(NULL),
    d_persistent_overlap_connectors(NULL),
-   d_handle(NULL),
-   d_grid_geometry(tbox::Pointer<const GridGeometry>(NULL))
+   d_handle((BoxLevelHandle*)NULL),
+   d_grid_geometry((const GridGeometry*)NULL)
 {
 }
 
@@ -153,7 +153,7 @@ BoxLevel::BoxLevel(
    d_parallel_state(rhs.d_parallel_state),
    d_globalized_version(NULL),
    d_persistent_overlap_connectors(NULL),
-   d_handle(NULL),
+   d_handle((BoxLevelHandle*)NULL),
    d_grid_geometry(rhs.d_grid_geometry)
 {
    // This cannot be the first constructor call, so no need to set timers.
@@ -161,7 +161,7 @@ BoxLevel::BoxLevel(
 
 BoxLevel::BoxLevel(
    const IntVector& ratio,
-   const tbox::Pointer<const GridGeometry>& grid_geom,
+   const boost::shared_ptr<const GridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state):
    d_mpi(tbox::SAMRAI_MPI::commNull),
@@ -190,8 +190,8 @@ BoxLevel::BoxLevel(
    d_parallel_state(DISTRIBUTED),
    d_globalized_version(NULL),
    d_persistent_overlap_connectors(NULL),
-   d_handle(NULL),
-   d_grid_geometry(tbox::Pointer<const GridGeometry>(NULL))
+   d_handle((BoxLevelHandle*)NULL),
+   d_grid_geometry((const GridGeometry*)NULL)
 {
    initialize(ratio, grid_geom, mpi, parallel_state);
 }
@@ -207,7 +207,7 @@ BoxLevel::~BoxLevel()
 
 void BoxLevel::initialize(
    const IntVector& ratio,
-   const tbox::Pointer<const GridGeometry>& grid_geom,
+   const boost::shared_ptr<const GridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
@@ -223,7 +223,7 @@ void BoxLevel::initialize(
 void BoxLevel::swapInitialize(
    BoxContainer& boxes,
    const IntVector& ratio,
-   const tbox::Pointer<const GridGeometry>& grid_geom,
+   const boost::shared_ptr<const GridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
@@ -254,7 +254,7 @@ void BoxLevel::finalize()
 
 void BoxLevel::initializePrivate(
    const IntVector& ratio,
-   const tbox::Pointer<const GridGeometry>& grid_geom,
+   const boost::shared_ptr<const GridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
@@ -341,7 +341,7 @@ void BoxLevel::clear()
       d_global_max_box_size.clear();
       d_global_min_box_size.clear();
       d_parallel_state = DISTRIBUTED;
-      d_grid_geometry = tbox::Pointer<const GridGeometry>(NULL);
+      d_grid_geometry.reset();
    }
 }
 
@@ -378,7 +378,7 @@ void BoxLevel::swap(
       ParallelState tmpstate;
       const BoxLevel* tmpmbl;
       tbox::SAMRAI_MPI tmpmpi(tbox::SAMRAI_MPI::commNull);
-      tbox::Pointer<const GridGeometry> tmpgridgeom(level_a.getGridGeometry());
+      boost::shared_ptr<const GridGeometry> tmpgridgeom(level_a.getGridGeometry());
 
       tmpstate = level_a.d_parallel_state;
       level_a.d_parallel_state = level_b.d_parallel_state;
@@ -436,7 +436,7 @@ void BoxLevel::computeLocalRedundantData()
    d_local_number_of_cells = 0;
 
    if (int(d_local_bounding_box.size()) != nblocks) {
-      d_local_bounding_box.resize(nblocks, hier::Box(d_grid_geometry->getDim()));
+      d_local_bounding_box.resize(nblocks, Box(d_grid_geometry->getDim()));
       d_local_min_box_size.resize(nblocks, max_vec);
       d_local_max_box_size.resize(nblocks, zero_vec);
    }
@@ -517,9 +517,9 @@ void BoxLevel::cacheGlobalReducedData() const
    }
 
    if (int(d_global_bounding_box.size()) != nblocks) {
-      d_global_bounding_box.resize(nblocks, hier::Box(getDim()));
-      d_global_min_box_size.resize(nblocks, hier::IntVector(getDim()));
-      d_global_max_box_size.resize(nblocks, hier::IntVector(getDim()));
+      d_global_bounding_box.resize(nblocks, Box(getDim()));
+      d_global_min_box_size.resize(nblocks, IntVector(getDim()));
+      d_global_max_box_size.resize(nblocks, IntVector(getDim()));
    }
 
    /*
@@ -1356,7 +1356,7 @@ void BoxLevel::putToDatabase(
 
 void BoxLevel::getFromDatabase(
    tbox::Database& database,
-   const tbox::Pointer<const GridGeometry>& grid_geom)
+   const boost::shared_ptr<const GridGeometry>& grid_geom)
 {
    TBOX_ASSERT(database.isInteger("dim"));
    const tbox::Dimension dim(static_cast<unsigned short>(database.getInteger("dim")));

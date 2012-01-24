@@ -22,8 +22,9 @@
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Database.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace hier {
@@ -68,7 +69,7 @@ public:
     */
    Patch(
       const Box& mapped_box,
-      tbox::Pointer<PatchDescriptor> descriptor);
+      boost::shared_ptr<PatchDescriptor> descriptor);
 
    /*!
     * @brief Virtual destructor for patch objects.
@@ -118,7 +119,7 @@ public:
     *
     * @return the patch descriptor for this patch.
     */
-   tbox::Pointer<PatchDescriptor>
+   boost::shared_ptr<PatchDescriptor>
    getPatchDescriptor() const;
 
    /*!
@@ -134,7 +135,7 @@ public:
     *
     * @param[in]  id
     */
-   tbox::Pointer<PatchData>
+   boost::shared_ptr<PatchData>
    getPatchData(
       const int id) const;
 
@@ -153,10 +154,10 @@ public:
     * @param[in]  variable
     * @param[in]  context
     */
-   tbox::Pointer<PatchData>
+   boost::shared_ptr<PatchData>
    getPatchData(
-      const tbox::Pointer<Variable> variable,
-      const tbox::Pointer<VariableContext> context) const;
+      const boost::shared_ptr<Variable> variable,
+      const boost::shared_ptr<VariableContext> context) const;
 
    /*!
     * @brief Set the patch data Pointer associated with the specified
@@ -177,7 +178,7 @@ public:
    void
    setPatchData(
       const int id,
-      tbox::Pointer<PatchData> data);
+      boost::shared_ptr<PatchData> data);
 
    /*!
     * @brief Check whether the specified component has been allocated.
@@ -273,14 +274,14 @@ public:
     */
    void
    setPatchGeometry(
-      tbox::Pointer<PatchGeometry> geometry);
+      boost::shared_ptr<PatchGeometry> geometry);
 
    /*!
     * @brief Get the patch geometry
     *
     * @return pointer to patch geometry object.
     */
-   tbox::Pointer<PatchGeometry>
+   boost::shared_ptr<PatchGeometry>
    getPatchGeometry() const;
 
    /*!
@@ -378,7 +379,7 @@ public:
     * The class version and restart file version must be equal.
     *
     * @par Assertions
-    * Checks that the database is a non-null Pointer,
+    * Checks that the database is a non-null boost::shared_ptr,
     * that data retrieved from the database are of the type
     * expected, and that the patch_number read in from the database
     * matches the patch number assigned to this Patch.
@@ -392,7 +393,7 @@ public:
     */
    void
    getFromDatabase(
-      tbox::Pointer<tbox::Database> database,
+      boost::shared_ptr<tbox::Database> database,
       const ComponentSelector& component_selector);
 
    /*!
@@ -401,7 +402,7 @@ public:
     * Class version number and the state of the patch object are written.
     * Patch data objects specified in the component selector are also written.
     * @par Assertions
-    * Check that database is a non-null Pointer.
+    * Check that database is a non-null boost::shared_ptr.
     *
     * @param[in]  database
     * @param[in]  patchdata_write_table The ComponentSelector specifying the
@@ -409,7 +410,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> database,
+      boost::shared_ptr<tbox::Database> database,
       const ComponentSelector& patchdata_write_table);
 
    /*!
@@ -468,11 +469,11 @@ private:
     */
    Box d_mapped_box;
 
-   tbox::Pointer<PatchDescriptor> d_descriptor;
+   boost::shared_ptr<PatchDescriptor> d_descriptor;
 
-   tbox::Pointer<PatchGeometry> d_patch_geometry;
+   boost::shared_ptr<PatchGeometry> d_patch_geometry;
 
-   tbox::Array<tbox::Pointer<PatchData> > d_patch_data;
+   tbox::Array<boost::shared_ptr<PatchData> > d_patch_data;
 
    int d_patch_level_number;
 

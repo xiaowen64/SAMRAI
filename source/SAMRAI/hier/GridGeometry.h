@@ -110,7 +110,7 @@ class BoxTree;
  * reason for this is to avoid dynamic casting problems for smart pointers.
  * Typically, SAMRAI geometry objects inherit from tbox::Serializable
  * as well as this base geometry class.  Thus, there is usually more than
- * one class hierarchy for geometry objects.  Pointers to base objects
+ * one class hierarchy for geometry objects.  boost::shared_ptr to base objects
  * may need to be dynamically cast to derived objects in either hierarchy.
  *
  * @see hier::BoundaryBox
@@ -151,8 +151,8 @@ public:
    GridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      tbox::Pointer<TransferOperatorRegistry> op_reg,
-      tbox::Pointer<tbox::Database> input_db,
+      boost::shared_ptr<TransferOperatorRegistry> op_reg,
+      boost::shared_ptr<tbox::Database> input_db,
       bool register_for_restart = true);
 
    /*!
@@ -174,7 +174,7 @@ public:
    GridGeometry(
       const std::string& object_name,
       const BoxContainer& domain,
-      tbox::Pointer<TransferOperatorRegistry> op_reg,
+      boost::shared_ptr<TransferOperatorRegistry> op_reg,
       bool register_for_restart = true);
 
    /*!
@@ -223,7 +223,7 @@ public:
       TwoDimBool& touches_regular_bdry,
       TwoDimBool& touches_periodic_bdry,
       const Box& box,
-      const hier::IntVector &refinement_ratio,
+      const IntVector &refinement_ratio,
       const MultiblockBoxTree& refined_periodic_domain_tree) const;
 
    /*!
@@ -400,7 +400,7 @@ public:
     *
     * @return The multiblock domain description as a search tree.
     */
-   const hier::MultiblockBoxTree&
+   const MultiblockBoxTree&
    getDomainSearchTree() const;
 
    /*!
@@ -410,7 +410,7 @@ public:
     * @return The domain description as a search tree with periodic
     * images (if any).
     */
-   const hier::MultiblockBoxTree&
+   const MultiblockBoxTree&
    getPeriodicDomainSearchTree() const;
 
    /*!
@@ -424,7 +424,7 @@ public:
     */
    bool
    getDomainIsSingleBox(
-      const hier::BlockId& block_id) const;
+      const BlockId& block_id) const;
 
    /*!
     * @brief Initialize the periodic shift on the coarsest level.
@@ -493,7 +493,7 @@ public:
     *
     * @return The pointer to the grid geometry object.
     */
-   virtual tbox::Pointer<GridGeometry>
+   virtual boost::shared_ptr<GridGeometry>
    makeRefinedGridGeometry(
       const std::string& fine_geom_name,
       const IntVector& refine_ratio,
@@ -512,7 +512,7 @@ public:
     *
     * @return The pointer to a coarsened version of this grid geometry object.
     */
-   virtual tbox::Pointer<GridGeometry>
+   virtual boost::shared_ptr<GridGeometry>
    makeCoarsenedGridGeometry(
       const std::string& coarse_geom_name,
       const IntVector& coarsen_ratio,
@@ -642,7 +642,7 @@ public:
     */
    void
    addCoarsenOperator(
-      tbox::Pointer<CoarsenOperator> coarsen_op);
+      boost::shared_ptr<CoarsenOperator> coarsen_op);
 
    /*!
     * @brief Add a concrete spatial refinement operator.
@@ -652,7 +652,7 @@ public:
     */
    void
    addRefineOperator(
-      tbox::Pointer<RefineOperator> refine_op);
+      boost::shared_ptr<RefineOperator> refine_op);
 
    /*!
     * @brief Add a concrete time interpolation operator.
@@ -662,7 +662,7 @@ public:
     */
    void
    addTimeInterpolateOperator(
-      tbox::Pointer<TimeInterpolateOperator> time_op);
+      boost::shared_ptr<TimeInterpolateOperator> time_op);
 
    /*!
     * @brief Lookup function for coarsening operator.
@@ -676,9 +676,9 @@ public:
     *                operator should match.
     * @param[in]     op_name The string identifier of the coarsening operator.
     */
-   tbox::Pointer<CoarsenOperator>
+   boost::shared_ptr<CoarsenOperator>
    lookupCoarsenOperator(
-      const tbox::Pointer<Variable>& var,
+      const boost::shared_ptr<Variable>& var,
       const std::string& op_name);
 
    /*!
@@ -693,9 +693,9 @@ public:
     *                operator should match.
     * @param[in]     op_name The string identifier of the refinement operator.
     */
-   tbox::Pointer<RefineOperator>
+   boost::shared_ptr<RefineOperator>
    lookupRefineOperator(
-      const tbox::Pointer<Variable>& var,
+      const boost::shared_ptr<Variable>& var,
       const std::string& op_name);
 
    /*!
@@ -711,9 +711,9 @@ public:
     * @param[in]     op_name The string identifier of the time interpolation
     *                operator.  \b Default: STD_LINEAR_TIME_INTERPOLATE
     */
-   tbox::Pointer<TimeInterpolateOperator>
+   boost::shared_ptr<TimeInterpolateOperator>
    lookupTimeInterpolateOperator(
-      const tbox::Pointer<Variable>& var,
+      const boost::shared_ptr<Variable>& var,
       const std::string& op_name =
          "STD_LINEAR_TIME_INTERPOLATE");
 
@@ -824,7 +824,7 @@ private:
       /*!
        * @brief The block number of the neighboring block
        */
-      hier::BlockId d_block_id;
+      BlockId d_block_id;
 
       /*!
        * @brief The neighboring block's domain in the current block's
@@ -1089,7 +1089,7 @@ private:
     */
    virtual void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
 protected:
    /*!
@@ -1106,7 +1106,7 @@ protected:
    GridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      tbox::Pointer<TransferOperatorRegistry> op_reg);
+      boost::shared_ptr<TransferOperatorRegistry> op_reg);
 
    /*!
     * @brief Read multiblock metadata input from the input database
@@ -1115,7 +1115,7 @@ protected:
     */
    void
    readBlockDataFromInput(
-      const tbox::Pointer<tbox::Database>& input_db);
+      const boost::shared_ptr<tbox::Database>& input_db);
 
 private:
    /*!
@@ -1196,7 +1196,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       bool is_from_restart);
 
    /*!
@@ -1341,16 +1341,16 @@ private:
    /*!
     * The holder of all the transfer operators.
     */
-   tbox::Pointer<TransferOperatorRegistry> d_transfer_operator_registry;
+   boost::shared_ptr<TransferOperatorRegistry> d_transfer_operator_registry;
 
-   static tbox::Pointer<tbox::Timer> t_find_patches_touching_boundaries;
-   static tbox::Pointer<tbox::Timer> t_touching_boundaries_init;
-   static tbox::Pointer<tbox::Timer> t_touching_boundaries_loop;
-   static tbox::Pointer<tbox::Timer> t_set_geometry_on_patches;
-   static tbox::Pointer<tbox::Timer> t_set_boundary_boxes;
-   static tbox::Pointer<tbox::Timer> t_set_geometry_data_on_patches;
-   static tbox::Pointer<tbox::Timer> t_compute_boundary_boxes_on_level;
-   static tbox::Pointer<tbox::Timer> t_get_boundary_boxes;
+   static boost::shared_ptr<tbox::Timer> t_find_patches_touching_boundaries;
+   static boost::shared_ptr<tbox::Timer> t_touching_boundaries_init;
+   static boost::shared_ptr<tbox::Timer> t_touching_boundaries_loop;
+   static boost::shared_ptr<tbox::Timer> t_set_geometry_on_patches;
+   static boost::shared_ptr<tbox::Timer> t_set_boundary_boxes;
+   static boost::shared_ptr<tbox::Timer> t_set_geometry_data_on_patches;
+   static boost::shared_ptr<tbox::Timer> t_compute_boundary_boxes_on_level;
+   static boost::shared_ptr<tbox::Timer> t_get_boundary_boxes;
 
    /*
     * Static initialization and cleanup handler.

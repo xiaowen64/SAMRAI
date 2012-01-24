@@ -262,7 +262,7 @@ void BoxContainer::simplify()
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (size() > 0) {
-      const hier::BlockId& front_block_id = front().getBlockId();
+      const BlockId& front_block_id = front().getBlockId();
       for (ConstIterator itr = begin(); itr != end(); ++itr) {
          TBOX_ASSERT(itr->getBlockId() == front_block_id);
       }
@@ -380,7 +380,7 @@ void BoxContainer::coalesce()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (size() > 0) {
-      const hier::BlockId& front_block_id = front().getBlockId();
+      const BlockId& front_block_id = front().getBlockId();
       for (ConstIterator itr = begin(); itr != end(); ++itr) {
          TBOX_ASSERT(itr->getBlockId() == front_block_id);
       }
@@ -484,7 +484,7 @@ void BoxContainer::rotate(
 {
    if (!isEmpty()) {
       const tbox::Dimension& dim = d_list.front().getDim();
-      const hier::BlockId& block_id = d_list.front().getBlockId();
+      const BlockId& block_id = d_list.front().getBlockId();
       if (dim.getValue() == 2 || dim.getValue() == 3) {
          for (Iterator i(*this); i != end(); ++i) {
             if (i->getBlockId() != block_id) {
@@ -1314,7 +1314,7 @@ void BoxContainer::makeTree() const
    if (size() > 10 && !d_tree) {
       const tbox::Dimension& dim = front().getDim();
 
-      d_tree = new BoxTree(dim, *this); 
+      d_tree.reset(new BoxTree(dim, *this));
    }
 }
 
@@ -1470,35 +1470,25 @@ BoxContainer::Outputter BoxContainer::format(
 }
 
 void BoxContainer::findOverlapBoxes(
-   Connector& overlap_connector,
-   const Box& box) const
-{
-   if (d_tree) {
-      d_tree->findOverlapBoxes(overlap_connector, box);
-   } else {
-      const BoxId& box_id = box.getId();
-
-      for (ConstIterator ni = begin(); ni != end(); ++ni) {
-         const Box& my_box = *ni;
-         if (box.intersects(my_box)) {
-            overlap_connector.insertLocalNeighbor(my_box, box_id);
-         }
-      }
-   }
-}
-
-void BoxContainer::findOverlapBoxes(
    BoxContainer& container,
    const Box& box) const
 {
    if (d_tree) {
       d_tree->findOverlapBoxes(container, box);
    } else {
-
-      for (ConstIterator ni = begin(); ni != end(); ++ni) {
-         const Box& my_box = *ni;
-         if (box.intersects(my_box)) {
-            container.insert(container.end(), my_box);
+      if (container.isOrdered()) {
+         for (ConstIterator ni = begin(); ni != end(); ++ni) {
+            const Box& my_box = *ni;
+            if (box.intersects(my_box)) {
+               container.insert(container.end(), my_box);
+            }
+         }
+      } else {
+         for (ConstIterator ni = begin(); ni != end(); ++ni) {
+            const Box& my_box = *ni;
+            if (box.intersects(my_box)) {
+               container.pushBack(my_box);
+            }
          }
       }
    }
