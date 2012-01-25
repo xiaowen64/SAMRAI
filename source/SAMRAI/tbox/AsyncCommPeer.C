@@ -272,22 +272,19 @@ void AsyncCommPeer<TYPE>::resizeBuffer(
    size_t size)
 {
    if (d_internal_buf_size < size) {
-#ifdef DEBUG_INITIALIZE_UNDEFINED
-      const size_t orig_size = d_internal_buf_size;
-#endif
-      d_internal_buf_size = size;
       if (d_internal_buf) {
-         d_internal_buf = (FlexData *)realloc(d_internal_buf, d_internal_buf_size * sizeof(FlexData));
+         d_internal_buf = (FlexData *)realloc(d_internal_buf, size * sizeof(FlexData));
 #ifdef DEBUG_INITIALIZE_UNDEFINED
-         memset(d_internal_buf + orig_size, 0, (size - orig_size) * sizeof(FlexData));
+         memset(d_internal_buf + d_internal_buf_size, 0, (size - d_internal_buf_size) * sizeof(FlexData));
 #endif
       } else {
 #ifdef DEBUG_INITIALIZE_UNDEFINED
-         d_internal_buf = (FlexData *)calloc(d_internal_buf_size, sizeof(FlexData));
+         d_internal_buf = (FlexData *)calloc(size, sizeof(FlexData));
 #else
-         d_internal_buf = (FlexData *)malloc(d_internal_buf_size * sizeof(FlexData));
+         d_internal_buf = (FlexData *)malloc(size * sizeof(FlexData));
 #endif
       }
+      d_internal_buf_size = size;
    }
 }
 
@@ -341,13 +338,6 @@ bool AsyncCommPeer<TYPE>::checkSend()
             req[0] = MPI_REQUEST_NULL;
             t_send_timer->start();
 
-            // SGS
-//          FlexData *sgs_temp = new FlexData[first_chunk_count + 3];
-//          memcpy(sgs_temp, d_internal_buf, (first_chunk_count + 3) * sizeof(FlexData));
-//          delete [] sgs_temp;
-
-//          free(d_internal_buf);
-
             d_mpi_err = d_mpi.Isend(d_internal_buf,
                   static_cast<int>(sizeof(FlexData) * (first_chunk_count + 2)),
                   MPI_BYTE,
@@ -364,7 +354,7 @@ bool AsyncCommPeer<TYPE>::checkSend()
             d_report_send_completion[0] = true;
             tbox::plog << "tag0-" << d_tag0
                        << " sending " << d_full_count << " TYPEs + 2 int as "
-                       << sizeof(FlexData) * (d_full_count + 2)x
+                       << sizeof(FlexData) * (d_full_count + 2)
                        << " bytes to " << d_peer_rank << " in checkSend"
                        << std::endl;
 #endif
