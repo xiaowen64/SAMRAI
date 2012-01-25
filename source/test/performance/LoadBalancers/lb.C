@@ -448,7 +448,7 @@ int main(
       /*
        * Step 1: Build L0.
        */
-      tbox::pout << "\n\n\nGenerating L0" << std::endl;
+      tbox::pout << "\nGenerating L0" << std::endl;
 
       hier::BoxLevel L0(hier::IntVector(dim, 1), grid_geometry);
 
@@ -555,7 +555,7 @@ int main(
          /*
           * Step 2: Build L1.
           */
-         tbox::pout << "\n\n\nGenerating L1" << std::endl;
+         tbox::pout << "\nGenerating L1" << std::endl;
 
 
          const int coarser_ln = 0;
@@ -645,8 +645,6 @@ int main(
             (double)L1.getLocalNumberOfCells(),
             L1.getMPI());
 
-         tbox::plog << "\n\n\nLevel 0:\n"
-                    << L0.format("L0-> ", 2);
       }
 
 
@@ -655,7 +653,7 @@ int main(
          /*
           * Step 3: Build L2.
           */
-         tbox::pout << "\n\n\nGenerating L2" << std::endl;
+         tbox::pout << "\nGenerating L2" << std::endl;
 
          const int coarser_ln = 1;
          const int finer_ln = coarser_ln + 1;
