@@ -13,6 +13,7 @@
 #include "SAMRAI/hier/Connector.h"
 
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/ConnectorStatistics.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -1078,10 +1079,12 @@ void Connector::recursivePrint(
 Connector::Outputter::Outputter(
    const Connector& connector,
    const std::string& border,
-   int detail_depth):
+   int detail_depth,
+   bool output_statistics):
    d_conn(connector),
    d_border(border),
-   d_detail_depth(detail_depth)
+   d_detail_depth(detail_depth),
+   d_output_statistics(output_statistics)
 {
 }
 
@@ -1095,7 +1098,13 @@ std::ostream& operator << (
    std::ostream& os,
    const Connector::Outputter& format)
 {
-   format.d_conn.recursivePrint(os, format.d_border, format.d_detail_depth);
+   if ( format.d_output_statistics ) {
+      ConnectorStatistics cs(format.d_conn);
+      cs.printNeighborStats(os, format.d_border);
+   }
+   else {
+      format.d_conn.recursivePrint(os, format.d_border, format.d_detail_depth);
+   }
    return os;
 }
 
@@ -1110,6 +1119,18 @@ Connector::Outputter Connector::format(
    int detail_depth) const
 {
    return Outputter(*this, border, detail_depth);
+}
+
+/*
+ ***********************************************************************
+ * Return a Outputter that can dump the Connector to a stream.
+ ***********************************************************************
+ */
+
+Connector::Outputter Connector::formatStatistics(
+   const std::string& border) const
+{
+   return Outputter(*this, border, 0, true);
 }
 
 /*
@@ -1249,7 +1270,7 @@ size_t Connector::checkTransposeCorrectness(
             tbox::perr << "Neighbors of " << nabr << " are:\n";
             for (ConstNeighborIterator nj = tran_relationships.begin(cn);
                  nj != tran_relationships.end(cn); ++nj) {
-               tbox::perr << *nj << std::endl;
+               tbox::perr << "   " << *nj << std::endl;
             }
             ++err_count_for_current_index;
             continue;
@@ -1262,7 +1283,7 @@ size_t Connector::checkTransposeCorrectness(
          << err_count_for_current_index
          << " errors.  Neighbors are:\n";
          for (ConstNeighborIterator nj = begin(ci); nj != end(ci); ++nj) {
-            tbox::perr << *nj << std::endl;
+            tbox::perr << "  " << *nj << std::endl;
          }
          err_count += err_count_for_current_index;
       }
@@ -1308,7 +1329,7 @@ size_t Connector::checkTransposeCorrectness(
                << mapped_box_id << " are:\n";
                for (ConstNeighborIterator nj = tran_relationships.begin(ci);
                     nj != tran_relationships.end(ci); ++nj) {
-                  tbox::perr << *nj << std::endl;
+                  tbox::perr << "   " << *nj << std::endl;
                }
                ++err_count_for_current_index;
                continue;
@@ -1334,7 +1355,7 @@ size_t Connector::checkTransposeCorrectness(
                << ":" << std::endl;
                for (ConstNeighborIterator nj = tran_relationships.begin(ci);
                     nj != tran_relationships.end(ci); ++nj) {
-                  tbox::perr << *nj << std::endl;
+                  tbox::perr << "   " << *nj << std::endl;
                }
                ++err_count_for_current_index;
                continue;
@@ -1357,7 +1378,7 @@ size_t Connector::checkTransposeCorrectness(
                << ":" << std::endl;
                for (ConstNeighborIterator nj = tran_relationships.begin(ci);
                     nj != tran_relationships.end(ci); ++nj) {
-                  tbox::perr << *nj << std::endl;
+                  tbox::perr << "   " << *nj << std::endl;
                }
                tbox::perr << "Neighbors of base mapped_box ";
                if (nabr.isPeriodicImage()) {
@@ -1372,7 +1393,7 @@ size_t Connector::checkTransposeCorrectness(
                   d_relationships.find(base_non_per_id);
                for (ConstNeighborIterator nj = begin(nabr_nabrs_);
                     nj != end(nabr_nabrs_); ++nj) {
-                  tbox::perr << *nj << std::endl;
+                  tbox::perr << "   " << *nj << std::endl;
                }
                ++err_count_for_current_index;
                continue;
@@ -1392,7 +1413,10 @@ size_t Connector::checkTransposeCorrectness(
       delete transpose;
    }
 
-   return err_count;
+   int global_err_count = static_cast<int>(err_count);
+   getBase().getMPI().AllReduce( &global_err_count, 1, MPI_SUM );
+
+   return static_cast<size_t>(global_err_count);
 }
 
 /*
@@ -1550,7 +1574,7 @@ size_t Connector::checkConsistencyWithHead() const
             << nabr << "\n";
             tbox::perr << "Neighbors of mapped_box " << mapped_box_id << ":\n";
             for (ConstNeighborIterator nb = begin(ei); nb != end(ei); ++nb) {
-               tbox::perr << "    " << *nb << '\n';
+               tbox::perr << "   " << *nb << '\n';
             }
             ++number_of_inconsistencies;
             continue;

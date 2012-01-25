@@ -137,7 +137,6 @@ const Connector& PersistentOverlapConnectors::createConnector(
    new_connector->setHead(head);
    new_connector->setWidth(connector_width, true);
    if (s_check_created_connectors == 'y') {
-      // Check correctness.
       OverlapConnectorAlgorithm oca;
       TBOX_ASSERT(oca.checkOverlapCorrectness(*new_connector) == 0);
    }
@@ -183,11 +182,13 @@ void PersistentOverlapConnectors::cacheConnector(
 
    connector->setBase(d_my_mapped_box_level);
    connector->setHead(head, true);
-      
+
    if (s_check_created_connectors == 'y') {
-      // Check correctness.
       OverlapConnectorAlgorithm oca;
-      TBOX_ASSERT(oca.checkOverlapCorrectness(*connector) == 0);
+      if (oca.checkOverlapCorrectness(*connector) != 0) {
+         TBOX_ERROR("PersistentOverlapConnectors::cacheConnector errror:\n"
+                    <<"Bad overlap Connector found.");
+      }
    }
 
    d_cons_from_me.push_back(connector);
@@ -296,8 +297,10 @@ const Connector& PersistentOverlapConnectors::findConnector(
    }
 
    if (s_check_accessed_connectors == 'y') {
-      // Check correctness.
-      TBOX_ASSERT(oca.checkOverlapCorrectness(*found) == 0);
+      if (oca.checkOverlapCorrectness(*found) != 0) {
+         TBOX_ERROR("PersistentOverlapConnectors::findConnector errror:\n"
+                    <<"Bad overlap Connector found.");
+      }
    }
 
    return *found;
@@ -401,8 +404,10 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
    }
 
    if (s_check_accessed_connectors == 'y') {
-      // Check correctness.
-      TBOX_ASSERT(oca.checkOverlapCorrectness(*found) == 0);
+      if (oca.checkOverlapCorrectness(*found) != 0) {
+         TBOX_ERROR("PersistentOverlapConnectors::findOrCreateConnector errror:\n"
+                    <<"Bad overlap Connector found.");
+      }
    }
 
    return *found;
