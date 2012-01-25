@@ -111,6 +111,7 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_check_nonnesting_user_boxes('e'),
    d_check_boundary_proximity_violation('e'),
    d_sequentialize_patch_indices(true),
+   d_log_metadata_statistics(false),
    d_enforce_proper_nesting(true),
    d_extend_to_domain_boundary(true),
    d_load_balance(true),
@@ -118,7 +119,6 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_check_overflow_nesting(false),
    d_check_proper_nesting(false),
    d_check_connectors(false),
-   d_print_hierarchy(false),
    d_print_steps(false)
 {
    TBOX_ASSERT(hierarchy);
@@ -529,11 +529,6 @@ void GriddingAlgorithm::makeCoarsestLevel(
          *new_level->getBoxLevel(),
          new_to_new);
 
-      if (d_print_hierarchy) {
-         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel produced:\n";
-         d_hierarchy->recursivePrint(tbox::plog, "", 4);
-      }
-
       d_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(
          *d_hierarchy->getPatchLevel(0));
 
@@ -558,11 +553,6 @@ void GriddingAlgorithm::makeCoarsestLevel(
 
       d_hierarchy->makeNewPatchLevel(ln,
          new_mapped_box_level);
-
-      if (d_print_hierarchy) {
-         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel produced:\n";
-         d_hierarchy->recursivePrint(tbox::plog, "", 4);
-      }
 
       /*
        * Compute old<==>new.  Doing it this way is not scalable, but
@@ -600,6 +590,10 @@ void GriddingAlgorithm::makeCoarsestLevel(
    d_tag_init_strategy->resetHierarchyConfiguration(d_hierarchy, ln, ln);
    if (d_barrier_and_time) {
       t_reset_hier->stop();
+   }
+
+   if (d_log_metadata_statistics) {
+      logMetadataStatistics("makeCoarsestLevel", 0, false, false);
    }
 
 #ifdef GA_RECORD_STATS
@@ -935,11 +929,6 @@ void GriddingAlgorithm::makeFinerLevel(
             *new_level->getBoxLevel(),
             tag_to_new);
 
-         if (d_print_hierarchy) {
-            tbox::plog << "GriddingAlgorithm::makeFinerLevel produced:\n";
-            d_hierarchy->recursivePrint(tbox::plog, "", 4);
-         }
-
          d_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(
             *d_hierarchy->getPatchLevel(new_ln));
 
@@ -955,6 +944,10 @@ void GriddingAlgorithm::makeFinerLevel(
             new_ln);
          t_reset_hier->stop();
          t_make_finer_create->stop();
+
+         if (d_log_metadata_statistics) {
+            logMetadataStatistics("makeFinerLevel", d_hierarchy->getFinestLevelNumber(), false, true);
+         }
       }
       else {
          delete tag_to_new;
@@ -1014,7 +1007,7 @@ void GriddingAlgorithm::regridAllFinerLevels(
       if (d_print_steps) {
          tbox::plog
          << "GriddingAlgorithm::regridAllFinerLevels: regridding finer than "
-         << level_number << "\n";
+         << level_number << std::endl;
       }
 
       /*
@@ -1091,10 +1084,18 @@ void GriddingAlgorithm::regridAllFinerLevels(
       if (d_print_steps) {
          tbox::plog
          << "GriddingAlgorithm::regridAllFinerLevels: regridded finer than "
-         << level_number << "\n";
+         << level_number << std::endl;
       }
 
    } //  if level cannot be refined, the routine drops through...
+
+   else {
+      if (d_print_steps) {
+         tbox::plog
+         << "GriddingAlgorithm::regridAllFinerLevels: level "
+         << level_number << " cannot be refined." << std::endl;
+      }
+   }
 
 #ifdef GA_RECORD_STATS
    // Verified that this does not use much time.
@@ -1107,10 +1108,6 @@ void GriddingAlgorithm::regridAllFinerLevels(
       t_regrid_all_finer->stop();
    }
 
-   if (d_print_hierarchy) {
-      tbox::plog << "GriddingAlgorithm::regridAllFinerLevels produced:\n";
-      d_hierarchy->recursivePrint(tbox::plog, "", 4);
-   }
 }
 
 /*
@@ -1366,6 +1363,12 @@ void GriddingAlgorithm::regridFinerLevel(
             tag_to_finer,
             finer_to_tag);
 
+         if (d_log_metadata_statistics) {
+            // Don't log the coarse Connector, if the coarse level will be updated.
+            logMetadataStatistics("regridFinerLevel", new_ln, new_ln<d_hierarchy->getFinestLevelNumber(), tag_ln==d_base_ln);
+            tbox::plog << "GriddingAlgorithm::regridFinerLevel finished logging level stats." << std::endl;
+         }
+
       } else {
 
          /*
@@ -1398,6 +1401,12 @@ void GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
    const tbox::Array<double>& regrid_start_time,
    const double regrid_time)
 {
+   if (d_print_steps) {
+      tbox::plog
+      << "GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid: entered with tag_ln = "
+      << tag_ln << "\n";
+   }
+
    const hier::IntVector& zero_vec(hier::IntVector::getZero(d_dim));
    const boost::shared_ptr<hier::PatchLevel>& tag_level(d_hierarchy->getPatchLevel(tag_ln));
 
@@ -1506,6 +1515,12 @@ void GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
    const int tag_ln,
    const tbox::Array<int>& tag_buffer)
 {
+   if (d_print_steps) {
+      tbox::plog
+      << "GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid: entered with tag_ln = "
+      << tag_ln << "\n";
+   }
+
    const int new_ln = tag_ln + 1;
    const boost::shared_ptr<hier::PatchLevel>& tag_level(d_hierarchy->getPatchLevel(tag_ln));
    const hier::OverlapConnectorAlgorithm oca;
@@ -2664,6 +2679,12 @@ void GriddingAlgorithm::bufferTagsOnLevel(
    const boost::shared_ptr<hier::PatchLevel> level,
    const int buffer_size) const
 {
+   if (d_print_steps) {
+      tbox::plog
+      << "GriddingAlgorithm::bufferTagsOnLevel: entered with tag_ln = "
+      << level->getLevelNumber() << "\n";
+   }
+
    TBOX_ASSERT((tag_value == d_true_tag) || (tag_value == d_false_tag));
    TBOX_ASSERT(level);
    TBOX_ASSERT(buffer_size >= 0);
@@ -4298,10 +4319,10 @@ void GriddingAlgorithm::getFromInput(
       db->getBoolWithDefault("check_proper_nesting", d_check_proper_nesting);
    d_check_connectors =
       db->getBoolWithDefault("check_connectors", d_check_connectors);
-   d_print_hierarchy =
-      db->getBoolWithDefault("print_hierarchy", d_print_hierarchy);
    d_print_steps =
       db->getBoolWithDefault("print_steps", d_print_steps);
+   d_log_metadata_statistics =
+      db->getBoolWithDefault("log_metadata_statistics", d_log_metadata_statistics);
 
    /*
     * Read input for efficiency tolerance.
@@ -4458,6 +4479,50 @@ void GriddingAlgorithm::getFromRestart()
 
    d_sequentialize_patch_indices = db->getBool("d_sequentialize_patch_indices");
 
+}
+
+/*
+ *************************************************************************
+ * Log metadata statistics after generating a new level.
+ *
+ * Log the given level, its peer connector and if requested, the
+ * connectors to the next finer and next coarser levels.  Connectors
+ * logged will have unit width.
+ *************************************************************************
+ */
+void GriddingAlgorithm::logMetadataStatistics(
+   const char *caller_name,
+   int ln,
+   bool log_fine_connector,
+   bool log_coarse_connector) const
+{
+   const std::string name("L" + tbox::Utilities::levelToString(ln));
+   const hier::BoxLevel &level = *d_hierarchy->getPatchLevel(ln)->getBoxLevel();
+   hier::PersistentOverlapConnectors &poc = level.getPersistentOverlapConnectors();
+   const hier::IntVector &one_vector = hier::IntVector::getOne(d_dim);
+
+   tbox::plog << "GriddingAlgorithm::" << caller_name << " added " << name << ":\n"
+              << level.format("\t",0)
+              << name << " statistics:\n"
+              << level.formatStatistics("\t");
+
+   const hier::Connector &peer_conn = poc.findOrCreateConnector(level, one_vector, true);
+   tbox::plog << "Peer connector:\n" << peer_conn.format("\t",0)
+              << "Peer connector statistics:\n" << peer_conn.formatStatistics("\t");
+
+   if ( log_fine_connector ) {
+      const hier::BoxLevel &fine_level = *d_hierarchy->getPatchLevel(ln+1)->getBoxLevel();
+      const hier::Connector &fine_conn = poc.findOrCreateConnector(fine_level, one_vector, true);
+      tbox::plog << "Fine connector:\n" << fine_conn.format("\t",0)
+                 << "Fine connector statistics:\n" << fine_conn.formatStatistics("\t");
+   }
+
+   if ( log_coarse_connector ) {
+      const hier::BoxLevel &crse_level = *d_hierarchy->getPatchLevel(ln-1)->getBoxLevel();
+      const hier::Connector &crse_conn = poc.findOrCreateConnector(crse_level, one_vector, true);
+      tbox::plog << "Coarse connector:\n" << crse_conn.format("\t",0)
+                 << "Coarse connector statistics:\n" << crse_conn.formatStatistics("\t");
+   }
 }
 
 /*
