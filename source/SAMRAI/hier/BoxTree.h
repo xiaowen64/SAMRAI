@@ -50,7 +50,29 @@ class Connector;
 
 class BoxTree:public tbox::DescribedClass
 {
+friend class BoxContainer;
+
 public:
+
+   /*!
+    * @brief Print statistics on number of constructor calls, tree
+    * builds, tree searches, etc.
+    *
+    * This method is for developers to analyze performance.
+    */
+   static void
+   printStatistics(
+      const tbox::Dimension& dim);
+
+   /*!
+    * @brief Reset statistics on number of constructor calls, tree
+    * builds, tree searches, etc.
+    *
+    * This method is for developers to analyze performance.
+    */
+   static void
+   resetStatistics(
+      const tbox::Dimension& dim);
 
    /*!
     * @brief Constructs a BoxTree from set of Boxes.
@@ -75,6 +97,25 @@ public:
     * @brief Destructor.
     */
    ~BoxTree();
+
+private:
+
+   /*!
+    * @brief Default constructor is private to disallow user access.
+    * Objects are normally constructed with at least a dimension.
+    */
+   BoxTree();
+
+   /*!
+    * @brief Constructor building an uninitialized object.
+    *
+    * Private as it is used only internally to create child trees.
+    * The object can be initialized using generateTree().
+    *
+    * @param[in] dim
+    */
+   explicit BoxTree(
+      const tbox::Dimension& dim);
 
    /*!
     * @brief Reset to uninitialized state.
@@ -192,43 +233,6 @@ public:
    operator = (
       const BoxTree& r);
 
-   /*!
-    * @brief Print statistics on number of constructor calls, tree
-    * builds, tree searches, etc.
-    *
-    * This method is for developers to analyze performance.
-    */
-   static void
-   printStatistics(
-      const tbox::Dimension& dim);
-
-   /*!
-    * @brief Reset statistics on number of constructor calls, tree
-    * builds, tree searches, etc.
-    *
-    * This method is for developers to analyze performance.
-    */
-   static void
-   resetStatistics(
-      const tbox::Dimension& dim);
-
-private:
-   /*!
-    * @brief Default constructor is private to disallow user access.
-    * Objects are normally constructed with at least a dimension.
-    */
-   BoxTree();
-
-   /*!
-    * @brief Constructor building an uninitialized object.
-    *
-    * Private as it is used only internally to create child trees.
-    * The object can be initialized using generateTree().
-    *
-    * @param[in] dim
-    */
-   explicit BoxTree(
-      const tbox::Dimension& dim);
 
    /*!
     * @brief Private recursive function for generating the search tree.

@@ -247,7 +247,7 @@ int main(
           * Build search tree.
           */
          t_build_tree->start();
-         hier::BoxTree search_tree(dim, nodes);
+         nodes.makeTree();
          t_build_tree->stop();
 
          /*
@@ -263,7 +263,7 @@ int main(
               bi != grown_boxes.end();
               ++bi) {
             unordered_overlap.clear();
-            search_tree.findOverlapBoxes(unordered_overlap, *bi);
+            nodes.findOverlapBoxes(unordered_overlap, *bi);
          }
          t_search_tree_for_set->stop();
 
@@ -274,7 +274,7 @@ int main(
               bi != grown_boxes.end();
               ++bi) {
             ordered_overlap.clear();
-            search_tree.findOverlapBoxes(ordered_overlap, *bi);
+            nodes.findOverlapBoxes(ordered_overlap, *bi);
          }
          t_search_tree_for_vec->stop();
 

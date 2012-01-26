@@ -584,21 +584,6 @@ public:
    /*!
     * @brief Remove from each box portions intersecting boxes in takeaway.
     *
-    * BoxTree has an efficient overlap search method so this
-    * version of removeIntersection is relatively fast.
-    * For each box, b, in this container and for each box, t, in takeaway
-    * this operation computes b-(b^t) where '^' indicates intersection.
-    *
-    * @param[in] takeaway What to exclude from each box in the container.
-    */
-   void
-   removeIntersections(
-      const BoxTree& takeaway);
-
-
-   /*!
-    * @brief Remove from each box portions intersecting boxes in takeaway.
-    *
     * Use extra data to provide needed information in a multiblock setting.
     * MultiblockBoxTree has an efficient overlap search method so this
     * version of removeIntersection is relatively fast.
@@ -660,19 +645,6 @@ public:
    void
    intersectBoxes(
       const BoxContainer& keep);
-
-   /*!
-    * @brief Keep the intersection of the container's boxes and keep's boxes
-    *
-    * BoxTree has an efficient overlap search method so this
-    * version of intersectBoxes is relatively fast.  The complement of
-    * removeIntersections.
-    *
-    * @param[in] keep
-    */
-   void
-   intersectBoxes(
-      const BoxTree& keep);
 
    /*!
     * @brief Keep the intersection of the container's boxes and keep's boxes
@@ -1070,6 +1042,33 @@ private:
     * Static integer constant describing class's version number.
     */
    static const int HIER_BOX_CONTAINER_VERSION;
+
+   /*!
+    * @brief Remove from each box portions intersecting boxes in takeaway.
+    *
+    * BoxTree has an efficient overlap search method so this
+    * version of removeIntersection is relatively fast.
+    * For each box, b, in this container and for each box, t, in takeaway
+    * this operation computes b-(b^t) where '^' indicates intersection.
+    *
+    * @param[in] takeaway What to exclude from each box in the container.
+    */
+   void
+   removeIntersections(
+      const BoxTree& takeaway);
+
+   /*!
+    * @brief Keep the intersection of the container's boxes and keep's boxes
+    *
+    * BoxTree has an efficient overlap search method so this
+    * version of intersectBoxes is relatively fast.  The complement of
+    * removeIntersections.
+    *
+    * @param[in] keep
+    */
+   void
+   intersectBoxes(
+      const BoxTree& keep);
 
    /*!
     * @brief Break up bursty against solid and adds the pieces to container.
