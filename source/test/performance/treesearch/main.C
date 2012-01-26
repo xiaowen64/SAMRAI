@@ -247,34 +247,34 @@ int main(
           * Build search tree.
           */
          t_build_tree->start();
-         hier::BoxTree search_tree(dim);
-         search_tree.generateTree(nodes);
+         hier::BoxTree search_tree(dim, nodes);
          t_build_tree->stop();
 
          /*
           * Search the tree.
           *
-          * We test outputing in a set and a vector.  Results show that outputing
-          * in a vector is almost twice as fast, probably due to the set having to
-          * sort the output.
+          * We test outputing in an unordered and ordered container.  The
+          * can indicate the difference in performance due to sorting the
+          * output for an ordered container.
           */
-         hier::BoxContainer overlap_set;
+         hier::BoxContainer unordered_overlap;
          t_search_tree_for_set->start();
          for (BoxVec::iterator bi = grown_boxes.begin();
               bi != grown_boxes.end();
               ++bi) {
-            overlap_set.clear();
-            search_tree.findOverlapBoxes(overlap_set, *bi);
+            unordered_overlap.clear();
+            search_tree.findOverlapBoxes(unordered_overlap, *bi);
          }
          t_search_tree_for_set->stop();
 
-         NodeVec overlap_vec;
+         hier::BoxContainer ordered_overlap;
+         ordered_overlap.order(); 
          t_search_tree_for_vec->start();
          for (BoxVec::iterator bi = grown_boxes.begin();
               bi != grown_boxes.end();
               ++bi) {
-            overlap_vec.clear();
-            search_tree.findOverlapBoxes(overlap_vec, *bi);
+            ordered_overlap.clear();
+            search_tree.findOverlapBoxes(ordered_overlap, *bi);
          }
          t_search_tree_for_vec->stop();
 

@@ -51,15 +51,6 @@ class Connector;
 class BoxTree:public tbox::DescribedClass
 {
 public:
-   /*!
-    * @brief Constructor building an uninitialized object.
-    *
-    * The object can be initialized using generateTree().
-    *
-    * @param[in] dim
-    */
-   explicit BoxTree(
-      const tbox::Dimension& dim);
 
    /*!
     * @brief Constructs a BoxTree from set of Boxes.
@@ -81,46 +72,9 @@ public:
       int min_number = 10);
 
    /*!
-    * @brief Constructs a BoxTree from a list of Boxes.
-    *
-    * See BoxTree( const tbox::Dimension& , const BoxContainer& , int min_number );
-    *
-    * @param[in] dim
-    *
-    * @param[in] boxes  No empty boxes are allowed.
-    *
-    * @param[in] block_id The BlockId that will be assigned to every
-    *                     Box in the tree.
-    *
-    * @param[in] min_number  @b Default: 10
-    */
-   BoxTree(
-      const tbox::Dimension& dim,
-      const BoxContainer& boxes,
-      const BlockId& block_id,
-      int min_number = 10);
-
-   /*!
     * @brief Destructor.
     */
    ~BoxTree();
-
-   /*!
-    * @brief Generates the tree from a MUTABLE set of Boxes.
-    *
-    * For efficiency reasons, mapped_boxes is changed in the process.
-    * Its output state is undefined.  However, you can change
-    * mapped_boxes after tree generation without invalidating the
-    * tree.
-    *
-    * @param[in] mapped_boxes.  No empty boxes are allowed.
-    *
-    * @param[in] min_number
-    */
-   void
-   generateTree(
-      BoxContainer& mapped_boxes,
-      int min_number = 10);
 
    /*!
     * @brief Reset to uninitialized state.
@@ -142,29 +96,15 @@ public:
 
    //@{
 
-   //! @name Access to box data
-
-   /*!
-    * @brief Get the Boxes in the tree.
-    *
-    * @param[out] mapped_boxes
-    */
-   void
-   getBoxes(
-      std::vector<Box>& mapped_boxes) const;
-
-   /*!
-    * @brief Return the bounding box of all the Boxes in the
-    * tree.
-    */
-   const Box&
-   getBoundingBox() const;
+   //! @name Access to state data
 
    /*!
     * @brief Return the dimension of the boxes in the tree.
     */
-   const tbox::Dimension&
-   getDim() const;
+   const tbox::Dimension& getDim() const
+   {
+      return d_dim;
+   }
 
    //@}
 
@@ -186,44 +126,8 @@ public:
    /*!
     * @brief Find all boxes that overlap the given \b box.
     *
-    * @param[out] overlap_connector Overlap Connector with box in its base
-    * BoxLevel.
-    *
-    * @param[in] box the specified box whose overlaps are requested.
-    * The box is assumed to be in same index space as those in the
-    * tree.
-    */
-   void
-   findOverlapBoxes(
-      Connector& overlap_connector,
-      const Box& box,
-      bool recursive_call = false) const;
-
-   /*!
-    * @brief Find all boxes that overlap the given \b box.
-    *
-    * To avoid unneeded work, the output @b overlap_mapped_boxes container
-    * is not emptied.  Overlapping Boxes are simply added.
-    *
-    * Output is unsorted.
-    *
-    * @param[out] overlap_mapped_boxes Boxes that overlap with box.
-    *
-    * @param[in] box the specified box whose overlaps are requested.
-    * The box is assumed to be in same index space as those in the
-    * tree.
-    */
-   void
-   findOverlapBoxes(
-      std::vector<Box>& overlap_mapped_boxes,
-      const Box& box,
-      bool recursive_call = false) const;
-
-   /*!
-    * @brief Find all boxes that overlap the given \b box.
-    *
-    * Analogous to findOverlapBoxes returning a vector of Boxes
-    * but avoids the copies.  If the returned overlapped mapped boxes are used
+    * Analogous to findOverlapBoxes returning a BoxContainer 
+    * but avoids the copies.  If the returned overlap_mapped_boxes are used
     * in a context in which the BoxTree is constant there is no point
     * in incurring the cost of copying the tree's Boxes.  Just return
     * a vector of their addresses.
@@ -232,8 +136,8 @@ public:
     * with box.
     *
     * @param[in] box the specified box whose overlaps are requested.
-    * The box is assumed to be in same index space as those in the
-    * tree.
+    * An assertion failure will occur if the box does not have the same
+    * BlockId as the tree.
     */
    void
    findOverlapBoxes(
@@ -247,13 +151,13 @@ public:
     * To avoid unneeded work, the output @b overlap_boxes container
     * is not emptied.  Overlapping Boxes are simply added.
     *
-    * Output is unsorted.
-    *
-    * @param[out] overlap_boxes Boxes that overlap with box.
+    * @param[out] overlap_boxes Boxes that overlap with box.  The ordered/
+    * unordered state of this container is not changed from its state at
+    * entry of this method
     *
     * @param[in] box the specified box whose overlaps are requested.
-    * The box is assumed to be in same index space as those in the
-    * tree.
+    * An assertion failure will occur if the box does not have the same
+    * BlockId as the tree.
     */
    void
    findOverlapBoxes(
@@ -278,14 +182,6 @@ public:
    boost::shared_ptr<BoxTree>
    createRefinedTree(
       const IntVector& ratio) const;
-
-   /*!
-    * @brief Get the BlockId.
-    */
-   const BlockId& getBlockId() const
-   {
-      return d_block_id;
-   }
 
    /*!
     * @brief Assignment operator.
@@ -324,10 +220,22 @@ private:
    BoxTree();
 
    /*!
+    * @brief Constructor building an uninitialized object.
+    *
+    * Private as it is used only internally to create child trees.
+    * The object can be initialized using generateTree().
+    *
+    * @param[in] dim
+    */
+   explicit BoxTree(
+      const tbox::Dimension& dim);
+
+   /*!
     * @brief Private recursive function for generating the search tree.
     *
-    * mapped_boxes is changed in the process (for efficiency reasons).
-    * Its output state is undefined.
+    * d_mapped_boxes is changed in the process (for efficiency reasons).
+    * On output it will contain any boxes that are not assigned to a child
+    * tree.
     *
     * The object is not cleared in this method.  If the object has
     * been initialized, it should be cleared before calling this

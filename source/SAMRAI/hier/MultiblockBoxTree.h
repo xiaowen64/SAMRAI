@@ -218,38 +218,11 @@ public:
    hasOverlap(
       const Box& box,
       bool include_singularity_block_neighbors = false) const;
-#if 0
+
    /*!
     * @brief Find all boxes that overlap the given Box.
     *
-    * To avoid unneeded work, the output @b overlap_boxes
-    * container is not emptied.  Overlapping Boxes are simply
-    * added.
-    *
-    * Output is unsorted.
-    *
-    * @param[out] overlap_boxes
-    *
-    * @param[in] box
-    *
-    * @param[in] refinement_ratio Refinement ratio of box's index
-    * space.
-    *
-    * @param[in] include_singularity_block_neighbors Whether to include
-    * intersections with boxes in blocks that are neighbors of box's
-    * block across a multiblock singularity.
-    */
-   void
-   findOverlapBoxes(
-      std::vector<Box>& overlap_boxes,
-      const Box& box,
-      const IntVector& refinement_ratio,
-      bool include_singularity_block_neighbors = false) const;
-#endif
-   /*!
-    * @brief Find all boxes that overlap the given Box.
-    *
-    * Analogous to findOverlapBoxes returning a vector of Boxes
+    * Analogous to findOverlapBoxes returning a BoxContainer
     * but avoids the copies.  If the returned overlapped boxes are used
     * in a context in which the MultiblockBoxTree is constant there is
     * no point in incurring the cost of copying the tree's Boxes.  Just
@@ -269,7 +242,6 @@ public:
     * intersections with boxes in blocks that are neighbors of box's
     * block across a multiblock singularity.
     */
-
    void
    findOverlapBoxes(
       std::vector<const Box *>& overlap_boxes,
@@ -284,7 +256,8 @@ public:
     * container is not emptied.  Overlapping Boxes are simply
     * added.
     *
-    * Output is unsorted.
+    * @param[out] overlap_boxes  All boxes in this tree that overlap the
+    * the input box are added to this container.
     *
     * @param[in] box
     *

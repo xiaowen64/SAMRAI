@@ -169,6 +169,10 @@ BoxContainer::insert(
       TBOX_ERROR("insert attempted on unordered container.");
    }
 
+   if (d_tree) {
+      d_tree.reset();
+   }
+
    const std::list<Box>::iterator& list_iter =
       d_list.insert(d_list.end(), box);
 
@@ -203,6 +207,10 @@ void BoxContainer::insert ( ConstIterator first,
 
    if (!d_ordered) {
       TBOX_ERROR("insert attempted on unordered container.");
+   }
+
+   if (d_tree) {
+      d_tree.reset();
    }
 
    for (std::set<Box*>::const_iterator set_iter = first.d_set_iter;
@@ -268,6 +276,10 @@ void BoxContainer::simplify()
       }
    }
 #endif
+
+   if (d_tree) {
+      d_tree.reset();
+   }
 
    // Start coalescing on the highest dimension of the containers and work down
    // While there are non-canonical boxes, pick somebody out of the container.
@@ -391,6 +403,10 @@ void BoxContainer::coalesce()
       TBOX_ERROR("coalesce called on ordered BoxContainer.");
    }
 
+   if (d_tree) {
+      d_tree.reset();
+   }
+
    Iterator tb(*this);
    while (tb != end()) {
 
@@ -428,6 +444,10 @@ BoxContainer::removePeriodicImageBoxes()
 {
    if (!d_ordered && size() > 0) {
       TBOX_ERROR("removePeriodicImages attempted on unordered container.");
+   }
+
+   if (d_tree) {
+      d_tree.reset();
    }
 
    for (Iterator na = begin(); na != end(); ) {
@@ -483,6 +503,11 @@ void BoxContainer::rotate(
    const Transformation::RotationIdentifier rotation_ident)
 {
    if (!isEmpty()) {
+
+      if (d_tree) {
+         d_tree.reset();
+      }
+
       const tbox::Dimension& dim = d_list.front().getDim();
       const BlockId& block_id = d_list.front().getBlockId();
       if (dim.getValue() == 2 || dim.getValue() == 3) {
@@ -628,6 +653,10 @@ void BoxContainer::removeIntersections(
       TBOX_ERROR("removeIntersections attempted on ordered container.");
    }
 
+   if (d_tree) {
+      d_tree.reset();
+   }
+
    const unsigned short dim = takeaway.getDim().getValue();
    Iterator insertion_pt(*this);
    while (insertion_pt != end()) {
@@ -654,6 +683,10 @@ void BoxContainer::removeIntersections(
       TBOX_ERROR("removeIntersections attempted on ordered container.");
    }
 
+   if (d_tree) {
+      d_tree.reset();
+   }
+
    if (takeaway.d_tree) {
       removeIntersections(*(takeaway.d_tree));
    } else {
@@ -673,6 +706,10 @@ void BoxContainer::removeIntersections(
 
    if (d_ordered) {
       TBOX_ERROR("removeIntersections attempted on ordered container.");
+   }
+
+   if (d_tree) {
+      d_tree.reset();
    }
 
    std::vector<const Box *> overlap_mapped_boxes;
@@ -713,6 +750,10 @@ void BoxContainer::removeIntersections(
 
    if (d_ordered) {
       TBOX_ERROR("removeIntersections attempted on ordered container.");
+   }
+
+   if (d_tree) {
+      d_tree.reset();
    }
 
    const GridGeometry & grid_geometry(takeaway.getGridGeometry());
@@ -779,6 +820,10 @@ void BoxContainer::removeIntersections(
     */
    TBOX_ASSERT(isEmpty());
 
+   if (d_tree) {
+      d_tree.reset();
+   }
+
    if (box.intersects(takeaway)) {
       burstBoxes(box, takeaway, box.getDim().getValue());
    } else {
@@ -795,6 +840,10 @@ void BoxContainer::removeIntersectionsFromSublist(
 {
    if (d_ordered) {
       TBOX_ERROR("removeIntersections attempted on ordered container.");
+   }
+
+   if (d_tree) {
+      d_tree.reset();
    }
 
    const unsigned short dim = takeaway.getDim().getValue();
@@ -835,6 +884,10 @@ void BoxContainer::intersectBoxes(
       TBOX_ERROR("intersectBoxes attempted on ordered container.");
    }
 
+   if (d_tree) {
+      d_tree.reset();
+   }
+
    Iterator i(*this);
    Box overlap(i().getDim());
    while (i != end()) {
@@ -860,6 +913,10 @@ void BoxContainer::intersectBoxes(
 
    if (d_ordered) {
       TBOX_ERROR("intersectBoxes attempted on ordered container.");
+   }
+
+   if (d_tree) {
+      d_tree.reset();
    }
 
    if (keep.d_tree) {
@@ -892,6 +949,10 @@ void BoxContainer::intersectBoxes(
 
    if (d_ordered) {
       TBOX_ERROR("intersectBoxes attempted on ordered container.");
+   }
+
+   if (d_tree) {
+      d_tree.reset();
    }
 
    std::vector<const Box *> overlap_mapped_boxes;
@@ -927,6 +988,10 @@ void BoxContainer::intersectBoxes(
 
    if (d_ordered) {
       TBOX_ERROR("intersectBoxes attempted on ordered container.");
+   }
+
+   if (d_tree) {
+      d_tree.reset();
    }
 
    const GridGeometry & grid_geometry(keep.getGridGeometry());
@@ -1201,6 +1266,9 @@ void BoxContainer::erase(Iterator iter)
          }
       }
    }
+   if (d_tree) {
+      d_tree.reset();
+   }
 }
 
 void BoxContainer::erase(Iterator first, Iterator last)
@@ -1211,6 +1279,9 @@ void BoxContainer::erase(Iterator first, Iterator last)
       for (Iterator iter = first; iter != last; ++iter) {
          erase(iter);
       }
+   }
+   if (d_tree) {
+      d_tree.reset();
    }
 }
 
@@ -1228,6 +1299,10 @@ int BoxContainer::erase(const Box& box)
          d_list.erase(bi++);
          break;
       }
+   }
+
+   if (d_tree) {
+      d_tree.reset();
    }
 
    return ret;
@@ -1282,6 +1357,10 @@ void BoxContainer::grow(
    for (Iterator i(*this); i != end(); ++i) {
       i().grow(ghosts);
    }
+
+   if (d_tree) {
+      d_tree.reset();
+   }
 }
 
 
@@ -1291,6 +1370,9 @@ void BoxContainer::shift(
    for (Iterator i(*this); i != end(); ++i) {
       i().shift(offset);
    }
+   if (d_tree) {
+      d_tree.reset();
+   }
 }
 
 void BoxContainer::refine(
@@ -1298,6 +1380,9 @@ void BoxContainer::refine(
 {
    for (Iterator i(*this); i != end(); ++i) {
       i().refine(ratio);
+   }
+   if (d_tree) {
+      d_tree.reset();
    }
 }
 
@@ -1307,14 +1392,17 @@ void BoxContainer::coarsen(
    for (Iterator i(*this); i != end(); ++i) {
       i().coarsen(ratio);
    }
+   if (d_tree) {
+      d_tree.reset();
+   }
 }
 
-void BoxContainer::makeTree() const
+void BoxContainer::makeTree(int min_number)
 {
-   if (size() > 10 && !d_tree) {
+   if (size() > min_number && !d_tree) {
       const tbox::Dimension& dim = front().getDim();
 
-      d_tree.reset(new BoxTree(dim, *this));
+      d_tree.reset(new BoxTree(dim, *this, min_number));
    }
 }
 
@@ -1493,24 +1581,6 @@ void BoxContainer::findOverlapBoxes(
       }
    }
 }
-
-void BoxContainer::findOverlapBoxes(
-   std::vector<Box>& box_vector,
-   const Box& box) const
-{
-   if (d_tree) {
-      d_tree->findOverlapBoxes(box_vector, box);
-   } else {
-
-      for (ConstIterator ni = begin(); ni != end(); ++ni) {
-         const Box& my_box = *ni;
-         if (box.intersects(my_box)) {
-            box_vector.push_back(my_box);
-         }
-      }
-   }
-}
-
 
 void BoxContainer::findOverlapBoxes(
    std::vector<const Box*>& box_vector,

@@ -44,8 +44,6 @@ MultiblockBoxTree::MultiblockBoxTree(
    size_t min_number):
    d_grid_geometry(&grid_geometry)
 {
-   NULL_USE(min_number);
-
    const tbox::Dimension& dim(d_grid_geometry->getDim());
 
    /*
@@ -73,7 +71,7 @@ MultiblockBoxTree::MultiblockBoxTree(
       TBOX_ASSERT(blocki->first.getBlockValue() >= 0 &&
          blocki->first.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
-      blocki->second.makeTree();
+      blocki->second.makeTree(min_number);
    }
 }
 
@@ -120,8 +118,6 @@ void MultiblockBoxTree::generateTree(
    const BoxContainer& boxes,
    size_t min_number)
 {
-   NULL_USE(min_number);
-
    clear();
 
    d_grid_geometry = &grid_geometry;
@@ -143,7 +139,7 @@ void MultiblockBoxTree::generateTree(
       TBOX_ASSERT(blocki->first.getBlockValue() >= 0 &&
          blocki->first.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
-      blocki->second.makeTree();
+      blocki->second.makeTree(min_number);
    }
 }
 
@@ -168,7 +164,7 @@ void MultiblockBoxTree::generateTree(
       TBOX_ASSERT(blocki->first.getBlockValue() >= 0 &&
          blocki->first.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
-      blocki->second.makeTree();
+      blocki->second.makeTree(min_number);
    }
 }
 
@@ -207,7 +203,7 @@ void MultiblockBoxTree::generateNonPeriodicTree(
       TBOX_ASSERT(blocki->first.getBlockValue() >= 0 &&
          blocki->first.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
-      blocki->second.makeTree();
+      blocki->second.makeTree(min_number);
    }
 }
 
@@ -277,68 +273,6 @@ const BoxContainer& MultiblockBoxTree::getSingleBlockBoxTree(
    return mi->second;
 }
 
-/*
- *************************************************************************
- *************************************************************************
- */
-#if 0
-void MultiblockBoxTree::findOverlapBoxes(
-   std::vector<Box>& overlap_boxes,
-   const Box& box,
-   const IntVector& refinement_ratio,
-   bool include_singularity_block_neighbors) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*d_grid_geometry, box, refinement_ratio);
-
-   const BlockId &block_id = box.getBlockId();
-   TBOX_ASSERT(block_id.getBlockValue() >= 0 &&
-      block_id.getBlockValue() < d_grid_geometry->getNumberBlocks());
-
-   /*
-    * Search in the index space of block_id for overlaps.
-    */
-
-   std::map<BlockId, BoxContainer>::const_iterator blocki(d_single_block_trees.find(block_id));
-
-   if (blocki != d_single_block_trees.end()) {
-      blocki->second.findOverlapBoxes(overlap_boxes, box);
-   }
-
-   /*
-    * Search in the index spaces neighboring block_id for overlaps.
-    */
-
-   const tbox::List<GridGeometry::Neighbor>& block_neighbors(
-      d_grid_geometry->getNeighbors(block_id));
-
-   for (tbox::ListIterator<GridGeometry::Neighbor> ni(block_neighbors); ni; ni++) {
-
-      const GridGeometry::Neighbor& neighbor(*ni);
-
-      if (!include_singularity_block_neighbors && neighbor.isSingularity()) {
-         continue;
-      }
-
-      const BlockId neighbor_block_id(neighbor.getBlockId());
-
-      blocki = d_single_block_trees.find(neighbor_block_id);
-
-      if (blocki == d_single_block_trees.end()) {
-         continue;
-      }
-
-      Box transformed_box(box);
-
-      d_grid_geometry->transformBox(transformed_box,
-         refinement_ratio,
-         neighbor_block_id,
-         block_id);
-
-      blocki->second.findOverlapBoxes(overlap_boxes, transformed_box);
-
-   }
-}
-#endif
 /*
  *************************************************************************
  *************************************************************************
@@ -480,7 +414,6 @@ boost::shared_ptr<MultiblockBoxTree> MultiblockBoxTree::createRefinedTree(
         mi != d_single_block_trees.end(); ++mi) {
 
       const BlockId& block_id(mi->first);
-//      const BoxContainer box_tree(mi->second);
 
       /*
        * The next lines really just do this:
@@ -492,14 +425,6 @@ boost::shared_ptr<MultiblockBoxTree> MultiblockBoxTree::createRefinedTree(
       rval->d_single_block_trees[block_id] = mi->second;
       rval->d_single_block_trees[block_id].refine(ratio);
       rval->d_single_block_trees[block_id].makeTree();
-/*
-      const std::pair<std::map<BlockId, BoxTree>::iterator, bool> insert_return_value =
-         rval->d_single_block_trees.insert(
-            std::pair<BlockId, BoxTree>(
-               block_id,
-               BoxTree(*box_tree.createRefinedTree(ratio))));
-      TBOX_ASSERT(insert_return_value.second);
-*/
    }
 
    return boost::shared_ptr<MultiblockBoxTree>(rval);

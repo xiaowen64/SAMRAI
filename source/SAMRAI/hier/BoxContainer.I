@@ -148,6 +148,9 @@ void BoxContainer::pushFront(const Box& item)
    } else {
       TBOX_ERROR("Attempted pushFront on an ordered BoxContainer");
    }
+   if (d_tree) {
+      d_tree.reset();
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -163,6 +166,9 @@ void BoxContainer::pushBack(const Box& item)
    } else {
       TBOX_ERROR("Attempted pushBack on an ordered BoxContainer");
    }
+   if (d_tree) {
+      d_tree.reset();
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -177,6 +183,9 @@ void BoxContainer::insertBefore(Iterator iter, const Box& item)
       d_list.insert(iter.d_list_iter, item);
    } else {
       TBOX_ERROR("Attempted insertBefore on an ordered BoxContainer");
+   }
+   if (d_tree) {
+      d_tree.reset();
    }
 }
 
@@ -194,6 +203,9 @@ void BoxContainer::insertAfter(Iterator iter, const Box& item)
    } else {
       TBOX_ERROR("Attempted insertAfter called on ordered BoxContainer.");
    }
+   if (d_tree) {
+      d_tree.reset();
+   }
 }
 
 
@@ -209,6 +221,9 @@ void BoxContainer::spliceFront(BoxContainer& boxes)
       d_list.splice(begin().d_list_iter, boxes.d_list);
    } else {
       TBOX_ERROR("Attempted spliceFront on an ordered BoxContainer");
+   }
+   if (d_tree) {
+      d_tree.reset();
    }
 }
 
@@ -226,6 +241,9 @@ void BoxContainer::spliceBack(BoxContainer& boxes)
    } else {
       TBOX_ERROR("Attempted spliceBack on an ordered BoxContainer");
    }
+   if (d_tree) {
+      d_tree.reset();
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -236,6 +254,9 @@ void BoxContainer::popFront()
    } else {
       TBOX_ERROR("Attempted popFront on an ordered BoxContainer");
    }
+   if (d_tree) {
+      d_tree.reset();
+   }
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -245,6 +266,9 @@ void BoxContainer::popBack()
       d_list.pop_back();
    } else {
       TBOX_ERROR("Attempted popBack on an ordered BoxContainer");
+   }
+   if (d_tree) {
+      d_tree.reset();
    }
 }
 
@@ -291,6 +315,7 @@ void BoxContainer::swap(BoxContainer& other)
    bool other_set_created = other.d_ordered;
    other.d_ordered = d_ordered;
    d_ordered = other_set_created;
+   d_tree = other.d_tree;
 }
 
 
@@ -358,6 +383,10 @@ bool BoxContainer::insert(const Box& box)
 
    if (!d_ordered) {
       TBOX_ERROR("BoxContainer::insert called on unordered BoxContainer.");
+   }
+
+   if (d_tree) {
+      d_tree.reset();
    }
 
    const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), box);
