@@ -43,6 +43,7 @@ namespace xfer {
 
 std::string
 CoarsenSchedule::s_schedule_generation_method = "DLBG";
+bool CoarsenSchedule::s_extra_debug = false;
 
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarsen_data;
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_gen_sched_n_squared;
@@ -106,6 +107,10 @@ CoarsenSchedule::CoarsenSchedule(
    TBOX_ASSERT(fine_level);
    TBOX_ASSERT(coarsen_classes);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*crse_level, *fine_level);
+
+   if ( s_extra_debug ) {
+      tbox::plog << "CoarsenSchedule::CoarsenSchedule " << this << " entered" << std::endl;
+   }
 
    const tbox::Dimension& dim(crse_level->getDim());
 
@@ -173,6 +178,9 @@ CoarsenSchedule::CoarsenSchedule(
 
    generateSchedule();
 
+   if ( s_extra_debug ) {
+      tbox::plog << "CoarsenSchedule::CoarsenSchedule " << this << " returning" << std::endl;
+   }
 }
 
 /*
@@ -260,6 +268,9 @@ CoarsenSchedule::getEquivalenceClasses() const
 
 void CoarsenSchedule::coarsenData() const
 {
+   if ( s_extra_debug ) {
+      tbox::plog << "CoarsenSchedule::coarsenData " << this << " entered" << std::endl;
+   }
    t_coarsen_data->barrierAndStart();
 
    /*
@@ -312,6 +323,10 @@ void CoarsenSchedule::coarsenData() const
    d_transaction_factory->unsetCoarsenItems();
 
    t_coarsen_data->stop();
+
+   if ( s_extra_debug ) {
+      tbox::plog << "CoarsenSchedule::coarsenData " << this << " returning" << std::endl;
+   }
 }
 
 /*
@@ -328,26 +343,27 @@ void CoarsenSchedule::generateTemporaryLevel()
 {
    const tbox::Dimension& dim(d_crse_level->getDim());
 
-   hier::IntVector min_gcw = getMaxGhostsToGrow();
-
-   const hier::Connector& coarse_to_fine =
-      d_crse_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
-         *d_fine_level->getBoxLevel(),
-         Connector::convertHeadWidthToBase(d_crse_level->getBoxLevel()->
-            getRefinementRatio(),
-            d_fine_level->getBoxLevel()->getRefinementRatio(),
-            min_gcw));
-   const hier::Connector& fine_to_coarse =
-      d_fine_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
-         *d_crse_level->getBoxLevel(),
-         min_gcw);
-
    d_temp_crse_level.reset(new hier::PatchLevel(dim));
    d_temp_crse_level->setCoarsenedPatchLevel(d_fine_level,
       d_ratio_between_levels);
    d_temp_crse_level->setLevelNumber(d_crse_level->getLevelNumber());
    d_temp_crse_level->setNextCoarserHierarchyLevelNumber(
       d_crse_level->getLevelNumber());
+
+   const hier::IntVector min_gcw = getMaxGhostsToGrow();
+   const hier::IntVector transpose_width =
+      Connector::convertHeadWidthToBase(d_crse_level->getBoxLevel()->getRefinementRatio(),
+                                        d_fine_level->getBoxLevel()->getRefinementRatio(),
+                                        min_gcw);
+
+   const hier::Connector& coarse_to_fine =
+      d_crse_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
+         *d_fine_level->getBoxLevel(),
+         transpose_width);
+   const hier::Connector& fine_to_coarse =
+      d_fine_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
+         *d_crse_level->getBoxLevel(),
+         min_gcw);
 
    /*
     * Generate temporary BoxLevel and Connectors.
@@ -681,6 +697,8 @@ void CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
 hier::IntVector CoarsenSchedule::getMaxGhostsToGrow() const
 {
    const tbox::Dimension& dim(d_crse_level->getDim());
+   boost::shared_ptr<hier::PatchDescriptor> pd =
+      d_temp_crse_level->getPatchDescriptor();
 
    /*
     * Box, face and side elements of adjacent cells overlap even though
@@ -691,14 +709,8 @@ hier::IntVector CoarsenSchedule::getMaxGhostsToGrow() const
 
    for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
 
-      /*
-       * I don't know why we need to grow by ghost width of src_id.
-       * Rich seems to recall needing this but can't remember the
-       * reason.  I am disabling it, but may have to re-enable it
-       * if it causes problems.
-       */
-      // const int src_id = d_coarsen_items[ici]->d_src;
-      // gcw.max(pd->getPatchDataFactory(src_id)->getDefaultGhostCellWidth());
+      const int src_id = d_coarsen_items[ici]->d_src;
+      gcw.max(pd->getPatchDataFactory(src_id)->getGhostCellWidth());
 
       hier::IntVector gcw1 = d_coarsen_items[ici]->d_gcw_to_coarsen;
       if (d_coarsen_items[ici]->d_opcoarsen) {
@@ -739,6 +751,17 @@ void CoarsenSchedule::constructScheduleTransactions(
 
    const hier::IntVector& constant_zero_intvector(hier::IntVector::getZero(dim));
    const hier::IntVector& constant_one_intvector(hier::IntVector::getOne(dim));
+
+   if (s_extra_debug) {
+      tbox::plog << "CoarsenSchedule::constructScheduleTransactions:"
+                 << "\n  src: L" << src_level->getLevelNumber()
+                 << "R" << src_level->getRatioToLevelZero()
+                 << " / " << src_mapped_box << ""
+                 << "\n  dst: L" << dst_level->getLevelNumber()
+                 << "R" << dst_level->getRatioToLevelZero()
+                 << " / " << dst_mapped_box
+                 << std::endl;
+   }
 
    boost::shared_ptr<hier::PatchDescriptor> dst_patch_descriptor =
       dst_level->getPatchDescriptor();
@@ -836,6 +859,9 @@ void CoarsenSchedule::constructScheduleTransactions(
 
    for (int nc = 0; nc < num_equiv_classes; nc++) {
 
+      if ( s_extra_debug ) {
+         tbox::plog << " equivalent class " << nc << "/" << num_equiv_classes << std::endl;
+      }
       const CoarsenClasses::Data& rep_item =
          d_coarsen_classes->getClassRepresentative(nc);
 
@@ -863,13 +889,28 @@ void CoarsenSchedule::constructScheduleTransactions(
       hier::Box src_mask(test_mask);
       transformation.inverseTransform(src_mask);
 
-      test_mask = unshifted_src_box;
-      test_mask.grow(
-         hier::IntVector::min(
-            rep_item.d_gcw_to_coarsen,
-            src_pdf->getGhostCellWidth()));
+      if ( s_extra_debug ) {
+         tbox::plog << " dst_gcw = " << dst_gcw
+                    << "\n dst_fill_box = " << dst_fill_box
+                    << "\n test_mask = " << test_mask
+                    << "\n src_mask (before += test_mask) = " << src_mask
+                    << std::endl;
+      }
 
-      src_mask += test_mask;
+      if ( ! src_mask.empty() ) {
+         // What does this block do?  Need comments!
+         test_mask = unshifted_src_box;
+         test_mask.grow(
+            hier::IntVector::min(
+               rep_item.d_gcw_to_coarsen,
+               src_pdf->getGhostCellWidth()));
+         src_mask += test_mask;
+      }
+
+      if ( s_extra_debug ) {
+         tbox::plog << "\n src_mask (after += test_mask) = " << src_mask
+                    << std::endl;
+      }
 
       boost::shared_ptr<hier::BoxOverlap> overlap(
          rep_item.d_var_fill_pattern->calculateOverlap(
@@ -887,8 +928,15 @@ void CoarsenSchedule::constructScheduleTransactions(
             << "\n dst box = " << dst_box
             << "\n src mask = " << src_mask << std::endl);
       }
+      if ( s_extra_debug ) {
+         tbox::plog << " Overlap:\n" << std::endl;
+         overlap->print(tbox::plog);
+      }
 
       if (!overlap->isOverlapEmpty()) {
+         if ( s_extra_debug ) {
+            tbox::plog << " Overlap FINITE." << std::endl;
+         }
          for (tbox::List<int>::Iterator l(d_coarsen_classes->getIterator(nc));
               l; l++) {
             const CoarsenClasses::Data& item =
@@ -903,6 +951,11 @@ void CoarsenSchedule::constructScheduleTransactions(
                   dst_mapped_box,
                   src_mapped_box,
                   citem_count);
+         }
+      }
+      else {
+         if ( s_extra_debug ) {
+            tbox::plog << " Overlap empty." << std::endl;
          }
       }
 
@@ -1122,25 +1175,6 @@ void CoarsenSchedule::clearCoarsenItems()
    }
 }
 
-/*
- **************************************************************************
- * Private utility function to access overlap connectors between two
- * BoxLevels.  The Connector must be appropriately registered and
- * be unique.
- **************************************************************************
- */
-
-const hier::Connector *CoarsenSchedule::getOverlapConnector_strict(
-   const hier::BoxLevel& base,
-   const hier::BoxLevel& head,
-   const hier::IntVector& min_gcw) const
-{
-   const Connector* found =
-      &base.getPersistentOverlapConnectors().findConnector(head, min_gcw);
-   TBOX_ASSERT(found != NULL);
-   TBOX_ASSERT(found->getConnectorWidth() >= min_gcw);
-   return found;
-}
 
 /*
  * ************************************************************************
@@ -1180,6 +1214,13 @@ void CoarsenSchedule::printClassData(
 
 void CoarsenSchedule::initializeCallback()
 {
+   boost::shared_ptr<tbox::Database> idb(tbox::InputManager::getInputDatabase());
+   if (idb && idb->isDatabase("CoarsenSchedule")) {
+      boost::shared_ptr<tbox::Database> rsdb(idb->getDatabase(
+                                            "CoarsenSchedule"));
+      s_extra_debug =
+         rsdb->getBoolWithDefault("extra_debug", s_extra_debug);
+   }
    t_coarsen_data = tbox::TimerManager::getManager()->
       getTimer("xfer::CoarsenSchedule::coarsenData()");
    t_gen_sched_n_squared = tbox::TimerManager::getManager()->

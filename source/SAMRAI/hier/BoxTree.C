@@ -70,6 +70,7 @@ BoxTree::s_initialize_finalize_handler(
 
 /*
  *************************************************************************
+ * Constructor for an empty BoxTree
  *************************************************************************
  */
 
@@ -82,6 +83,11 @@ BoxTree::BoxTree(
 {
 }
 
+/*
+ *************************************************************************
+ * Constructor taking a BoxContainer
+ *************************************************************************
+ */
 BoxTree::BoxTree(
    const tbox::Dimension& dim,
    const BoxContainer& mapped_boxes,
@@ -202,39 +208,12 @@ BoxTree::BoxTree(
 
 /*
  *************************************************************************
- * dtor
+ * Destructor
  *************************************************************************
  */
 
 BoxTree::~BoxTree()
 {
-}
-
-/*
- *************************************************************************
- * Assignment operator.
- *
- * We share the children with the reference BoxTree.  This is
- * safe because the trees are never changed once they are set up.  If
- * one BoxTree changes, it simply sets its children pointers to
- * NULL instead of trying to change the children.  Other
- * BoxTrees sharing the children do not see any changes to the
- * children.
- *************************************************************************
- */
-
-BoxTree& BoxTree::operator = (
-   const BoxTree& r)
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, r);
-
-   d_bounding_box = r.d_bounding_box;
-   d_left_child = r.d_left_child;
-   d_right_child = r.d_right_child;
-   d_mapped_boxes = r.d_mapped_boxes;
-   d_partition_dim = r.d_partition_dim;
-   d_center_child = r.d_center_child;
-   return *this;
 }
 
 /*
@@ -337,12 +316,11 @@ void BoxTree::privateGenerateTree(
 
 /*
  **************************************************************************
- * This method finishes the tree generation by setting up the children
- * branches.  It expects the Boxes be have been split into
+ * This method finishes the tree generation by setting up the child
+ * branches.  It expects the Boxes to have been split into
  * left_mapped_boxes, right_mapped_boxes, and d_mapped_boxes.  It will
  * generate the d_left_child and d_right_child.  If d_mapped_boxes is
  * big enough, it will generate d_center_child.
- *
  **************************************************************************
  */
 void BoxTree::setupChildren(
@@ -401,6 +379,12 @@ void BoxTree::setupChildren(
    }
 }
 
+/*
+ **************************************************************************
+ * Returns true if any Box in the tree intersects the argument.
+ **************************************************************************
+ */
+
 bool BoxTree::hasOverlap(
    const Box& box) const
 {
@@ -432,6 +416,11 @@ bool BoxTree::hasOverlap(
    return has_overlap;
 }
 
+/*
+ **************************************************************************
+ * Fills the vector with pointers to Boxes that intersect the arguement
+ **************************************************************************
+ */
 void BoxTree::findOverlapBoxes(
    std::vector<const Box *>& overlap_mapped_boxes,
    const Box& box,
@@ -480,6 +469,11 @@ void BoxTree::findOverlapBoxes(
    }
 }
 
+/*
+ **************************************************************************
+ * Fills the vector with Boxes that intersect the arguement
+ **************************************************************************
+ */
 void BoxTree::findOverlapBoxes(
    BoxContainer& overlap_boxes,
    const Box& box,

@@ -230,6 +230,7 @@ GriddingAlgorithm {
    // regrid_boxes_filename = "grid"
    sequentialize_patch_indices = FALSE
    barrier_and_time = TRUE
+   log_metadata_statistics = TRUE
 }
 
 V2GriddingAlgorithm {

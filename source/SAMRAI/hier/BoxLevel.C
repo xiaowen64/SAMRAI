@@ -14,6 +14,7 @@
 
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxLevelStatistics.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -1415,10 +1416,12 @@ void BoxLevel::getFromDatabase(
 BoxLevel::Outputter::Outputter(
    const BoxLevel& box_level,
    const std::string& border,
-   int detail_depth):
+   int detail_depth,
+   bool output_statistics):
    d_level(box_level),
    d_border(border),
-   d_detail_depth(detail_depth)
+   d_detail_depth(detail_depth),
+   d_output_statistics(output_statistics)
 {
 }
 
@@ -1432,7 +1435,13 @@ std::ostream& operator << (
    std::ostream& s,
    const BoxLevel::Outputter& format)
 {
-   format.d_level.recursivePrint(s, format.d_border, format.d_detail_depth);
+   if ( format.d_output_statistics ) {
+      BoxLevelStatistics bls(format.d_level);
+      bls.printBoxStats(s, format.d_border);
+   }
+   else {
+      format.d_level.recursivePrint(s, format.d_border, format.d_detail_depth);
+   }
    return s;
 }
 
@@ -1447,6 +1456,18 @@ BoxLevel::Outputter BoxLevel::format(
    int detail_depth) const
 {
    return Outputter(*this, border, detail_depth);
+}
+
+/*
+ ***********************************************************************
+ * Return a Outputter that can dump the BoxLevel statistics to a stream.
+ ***********************************************************************
+ */
+
+BoxLevel::Outputter BoxLevel::formatStatistics(
+   const std::string& border) const
+{
+   return Outputter(*this, border, 0, true);
 }
 
 /*

@@ -190,6 +190,11 @@ namespace mesh {
  *      It will evetually be set back to false after we remove the VisIt
  *      requirement.
  *
+ *   - @b log_metadata_statistics = FALSE
+ *      Whether to log metadata statistics after generating a new level.
+ *      This flag writes out data that would be of interest to analyzing
+ *      how metadata statistics affects performance.
+ *
  *
  * Note that when continuing from restart, the input values in the
  * input file override all values read in from the restart database.
@@ -959,6 +964,15 @@ private:
    allocateTimers();
 
    /*!
+    * @brief Log metadata statistics after generating a new level.
+    */
+   void logMetadataStatistics(
+      const char *caller_name,
+      int ln,
+      bool log_fine_connector,
+      bool log_coarse_connector) const;
+
+   /*!
     * @brief Initialize static objects and register shutdown routine.
     *
     * Only called by StartupShutdownManager.
@@ -1153,6 +1167,14 @@ private:
     */
    bool d_sequentialize_patch_indices;
 
+   /*!
+    * @brief Whether to log metadata statistics after generating a new
+    * level.
+    *
+    * See input parameter description.
+    */
+   bool d_log_metadata_statistics;
+
    /*
     * Switches for massaging boxes after clustering.  Should be on for
     * most AMR applications.  Turning off is mainly for debugging
@@ -1245,7 +1267,6 @@ private:
    bool d_check_overflow_nesting;
    bool d_check_proper_nesting;
    bool d_check_connectors;
-   bool d_print_hierarchy;
    bool d_print_steps;
 
    /*

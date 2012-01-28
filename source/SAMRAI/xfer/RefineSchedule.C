@@ -3601,7 +3601,7 @@ void RefineSchedule::constructScheduleTransactions(
    const hier::IntVector& constant_one_intvector(hier::IntVector::getOne(dim));
 
    if (s_extra_debug) {
-      tbox::plog << "constructScheduleTransactions: " << use_time_interpolation
+      tbox::plog << "RefineSchedule::constructScheduleTransactions: " << use_time_interpolation
                  << std::endl;
       tbox::plog << "  src: L" << d_src_level->getLevelNumber()
                  << "R" << d_src_level->getRatioToLevelZero()
@@ -4104,7 +4104,7 @@ void RefineSchedule::constructScheduleTransactions(
    const hier::IntVector& constant_one_intvector(hier::IntVector::getOne(dim));
 
    if (s_extra_debug) {
-      tbox::plog << "constructScheduleTransactions: " << use_time_interpolation
+      tbox::plog << "RefineSchedule::constructScheduleTransactions: " << use_time_interpolation
                  << std::endl;
       tbox::plog << "  src: L" << d_src_level->getLevelNumber()
                  << "R" << d_src_level->getRatioToLevelZero()
@@ -4747,6 +4747,8 @@ void RefineSchedule::printClassData(
       d_coarse_interp_schedule->printClassData(stream);
    }
 }
+
+
 /*
  **************************************************************************
  **************************************************************************

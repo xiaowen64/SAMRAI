@@ -1162,7 +1162,8 @@ if test "${boost_PREFIX+set}" = set; then
    INC_PATH="$boost_INCLUDES $INC_PATH"
    AC_DEFINE([HAVE_BOOST_HEADERS],[1],[BOOST headers are available to use])
 else
-   AC_MSG_WARN([SparseData class is not supported without BOOST])
+   AC_MSG_ERROR(
+     [Path to BOOST installation must be specified with --with-boost])
 fi
 CASC_AC_LOG_VAR(
 [boost_INCLUDES INC_PATH boost_LIBS LIB_PATH LIB_NAME])dnl
@@ -1492,19 +1493,14 @@ AC_CONFIG_FILES( config/serpa-run, chmod +x config/serpa-run )
 dnl
 dnl Specify how many processors to use in testing.
 dnl
-AC_ARG_ENABLE([test-nprocs],
-[AS_HELP_STRING([--enable-test-nprocs=LIST],[Specify number of processors to use
-when running tests.  LIST is a comma delimited list of integers, with 0 meaning
-serial run.  Default LIST is '0,2'.])],
-[
-case "$enable_test_nprocs" in
-  yes|no)
-    AC_MSG_ERROR(You must specify a list of processors for testing.)
+case $CONFIGURED_WITH_MPI in
+  with_mpi)
+    TEST_NPROCS='1,2'
   ;;
-  *) TEST_NPROCS=$enable_test_nprocs
+  *)
+    TEST_NPROCS='0'
+  ;;
 esac
-],[TEST_NPROCS='0,2']
-)
 AC_SUBST(TEST_NPROCS)
 
 

@@ -1128,7 +1128,7 @@ public:
    /*!
     * @brief A class for outputting BoxLevel.
     *
-    * To use, see BoxLevel::format().
+    * To use, see BoxLevel::format() and BoxLevel::formatStatistics().
     *
     * This class simplifies the insertion of a BoxLevel into a
     * stream while letting the user control how the BoxLevel is
@@ -1154,17 +1154,20 @@ private:
        * @param[in] box_level
        * @param[in] border
        * @param[in] detail_depth
+       * @param[in] output_statistics
        */
       Outputter(
          const BoxLevel& box_level,
          const std::string& border,
-         int detail_depth = 0);
+         int detail_depth = 0,
+         bool output_statistics = false);
       void
       operator = (
          const Outputter& r);               // Unimplemented private.
       const BoxLevel& d_level;
       const std::string d_border;
       const int d_detail_depth;
+      const bool d_output_statistics;
    };
 
    /*!
@@ -1174,7 +1177,7 @@ private:
     * Usage example:
     * @code
     *    std::cout << "my box_level:\n"
-    *         << box_level.format("  ", 2) << std::endl;
+    *              << box_level.format("  ", 2) << std::endl;
     * @endcode
     *
     * @param[in] border
@@ -1184,6 +1187,22 @@ private:
    format(
       const std::string& border = std::string(),
       int detail_depth = 0) const;
+
+   /*!
+    * @brief Return a object that can format the BoxLevel for
+    * inserting its global statistics into output streams.
+    *
+    * Usage example:
+    * @code
+    *    std::cout << "my box_level statistics:\n"
+    *              << box_level.formatStatistics("  ") << std::endl;
+    * @endcode
+    *
+    * @param[in] border
+    */
+   Outputter
+   formatStatistics(
+      const std::string& border = std::string()) const;
 
    //@}
 

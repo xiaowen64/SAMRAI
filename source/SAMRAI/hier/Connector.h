@@ -868,7 +868,7 @@ public:
     * @param[in] transpose
     * @param[in] ignore_periodic_relationships
     *
-    * @return Number of errors in assuming that @c transpose is a
+    * @return Global number of errors in assuming that @c transpose is a
     * transpose of @c *this.
     */
    size_t
@@ -1020,7 +1020,7 @@ public:
     * Connector and output parameters.  The Outputter is capable of
     * outputting its Connector, formatted according to the parameters.
     *
-    * To use, @see Connector::format().
+    * To use, @see Connector::format(), Connector::formatStatistics().
     */
    class Outputter
    {
@@ -1037,17 +1037,19 @@ private:
       Outputter(
          const Connector& connector,
          const std::string& border,
-         int detail_depth = 0);
+         int detail_depth = 0,
+         bool output_statistics = false);
       void
       operator = (
          const Outputter& r);               // Unimplemented private.
       const Connector& d_conn;
       const std::string d_border;
       const int d_detail_depth;
+      const bool d_output_statistics;
    };
 
    /*!
-    * @brief Return an Outputter object that is formatted
+    * @brief Return an object that can format the Connector for
     * insertion into output streams.
     *
     * Usage example:
@@ -1063,6 +1065,22 @@ private:
    format(
       const std::string& border = std::string(),
       int detail_depth = 0) const;
+
+   /*!
+    * @brief Return an object that can format the Connector for
+    * inserting its global statistics into output streams.
+    *
+    * Usage example:
+    * @code
+    *    cout << "my connector statistics:\n"
+    *         << connector.formatStatistics("  ") << endl;
+    * @endcode
+    *
+    * @param[in] border
+    */
+   Outputter
+   formatStatistics(
+      const std::string& border = std::string()) const;
 
 private:
    /*

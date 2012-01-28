@@ -1399,7 +1399,9 @@ void BoxContainer::coarsen(
 
 void BoxContainer::makeTree(int min_number)
 {
-   if (size() > min_number && !d_tree) {
+   TBOX_ASSERT(min_number > 0);
+
+   if (!d_tree && size() > min_number) {
       const tbox::Dimension& dim = front().getDim();
 
       d_tree.reset(new BoxTree(dim, *this, min_number));

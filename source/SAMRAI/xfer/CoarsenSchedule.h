@@ -376,22 +376,15 @@ private:
    void
    initialCheckCoarsenClassItems() const;
 
-   /*
-    * @brief Similar to getOverlapConnector() but requires that the
-    * Connector is found.
-    *
-    * @deprecated  Private method doesn't appear to be used.
-    */
-   const hier::Connector *
-   getOverlapConnector_strict(
-      const hier::BoxLevel& base,
-      const hier::BoxLevel& head,
-      const hier::IntVector& min_gcw) const;
-
    /*!
     * @brief Selects algorithm used to generate communication schedule.
     */
    static std::string s_schedule_generation_method;
+
+   /*!
+    * @brief Shared debug checking flag.
+    */
+   static bool s_extra_debug;
 
    /*!
     * @brief Structures that store coarsen data items.

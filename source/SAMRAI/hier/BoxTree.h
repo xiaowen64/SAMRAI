@@ -37,15 +37,15 @@ class Connector;
  * is less than a minimum number specified in the constructor.
  *
  * All mapped boxes in a BoxTree must exist in the same index space.
- * This means that the must all have the same BlockId value.
+ * This means that they must all have the same BlockId value.
  *
  * Overlap searches are done by
  * - hasOverlap()
  * - findOverlapBoxes()
  *
- * Information about the boxes in the tree are given by
- * - getBoundingBox()
- * - getBoxes()
+ * Except for two static methods and a destructor needed by boost shared_ptr,
+ * the entire interface is private, as a precursor to becoming a private
+ * subclass of BoxContainer.
  */
 
 class BoxTree:public tbox::DescribedClass
@@ -75,6 +75,12 @@ public:
       const tbox::Dimension& dim);
 
    /*!
+    * @brief Destructor.
+    */
+   ~BoxTree();
+
+private:
+   /*!
     * @brief Constructs a BoxTree from set of Boxes.
     *
     * @param[in] dim
@@ -92,19 +98,6 @@ public:
       const tbox::Dimension& dim,
       const BoxContainer& mapped_boxes,
       int min_number = 10);
-
-   /*!
-    * @brief Destructor.
-    */
-   ~BoxTree();
-
-private:
-
-   /*!
-    * @brief Default constructor is private to disallow user access.
-    * Objects are normally constructed with at least a dimension.
-    */
-   BoxTree();
 
    /*!
     * @brief Constructor building an uninitialized object.
@@ -223,16 +216,6 @@ private:
    boost::shared_ptr<BoxTree>
    createRefinedTree(
       const IntVector& ratio) const;
-
-   /*!
-    * @brief Assignment operator.
-    *
-    * @param[in] r
-    */
-   BoxTree&
-   operator = (
-      const BoxTree& r);
-
 
    /*!
     * @brief Private recursive function for generating the search tree.

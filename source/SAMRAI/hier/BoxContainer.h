@@ -959,10 +959,14 @@ private:
     * argument, then an internal BoxTree representation of the boxes will
     * be created and held by the container.
     *
+    * This method may only be used if all members of this container have the
+    * same BlockId.  An assertion failure will occur if this condition is not
+    * met.
+    *
     * The building of the tree is an O(N log(N)) operation, but it reduces
     * the cost of the search methods findOverlapBoxes() and hasOverlap() to
     * O(log(N)), rather than O(N).  The tree representation is intended for
-    * when these search methods are multiple times called on the same
+    * when these search methods are called multiple times on the same
     * BoxContainer which is not changing, so that the benefit of more
     * efficient search should outweigh the cost of building the tree.
     *
@@ -975,7 +979,7 @@ private:
     * by adding or removing boxes, or by changing the spatial coordinates of
     * the boxes, the tree representation is destroyed.
     * 
-    * @param[in]  min_number
+    * @param[in]  min_number  An assertion failure will occur if not positive
     */
    void makeTree(int min_number = 10);
 
