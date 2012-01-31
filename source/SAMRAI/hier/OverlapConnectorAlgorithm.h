@@ -616,8 +616,10 @@ private:
    void
    privateBridge_unshiftOverlappingNeighbors(
       const Box& mapped_box,
-      std::vector<Box>& neighbors,
-      std::vector<Box>& scratch_space,
+      BoxContainer& neighbors,
+      BoxContainer& scratch_space,
+      //std::vector<Box>& neighbors,
+      //std::vector<Box>& scratch_space,
       const IntVector& neighbor_refinement_ratio) const;
 
    /*!

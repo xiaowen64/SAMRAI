@@ -1241,7 +1241,7 @@ void BoxLevelConnectorUtils::makeRemainderMap(
 
 void BoxLevelConnectorUtils::addPeriodicImages(
    BoxLevel& mapped_box_level,
-   const BoxTree& domain_search_tree,
+   const BoxContainer& domain_search_tree,
    const IntVector& threshold_distance) const
 {
    const PeriodicShiftCatalog* shift_catalog =
@@ -1251,11 +1251,12 @@ void BoxLevelConnectorUtils::addPeriodicImages(
       return; // No-op.
    }
 
-   boost::shared_ptr<BoxTree> domain_tree_for_mapped_box_level =
-      domain_search_tree.createRefinedTree(
-         mapped_box_level.getRefinementRatio());
+   boost::shared_ptr<BoxContainer> domain_tree_for_mapped_box_level(
+      new BoxContainer(domain_search_tree));
+   domain_tree_for_mapped_box_level->refine(mapped_box_level.getRefinementRatio());
+   domain_tree_for_mapped_box_level->makeTree();
 
-   const BoxTree& domain_tree =
+   const BoxContainer& domain_tree =
       *domain_tree_for_mapped_box_level;
 
    const IntVector& mapped_box_level_growth = threshold_distance;
@@ -1300,7 +1301,7 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
    BoxLevel& mapped_box_level,
    Connector& mapped_box_level_to_anchor,
    Connector& anchor_to_mapped_box_level,
-   const BoxTree& domain_search_tree,
+   const BoxContainer& domain_search_tree,
    const Connector& anchor_to_anchor) const
 {
    OverlapConnectorAlgorithm oca;
@@ -1350,9 +1351,9 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
 
    const BoxLevel& anchor = anchor_to_mapped_box_level.getBase();
 
-   boost::shared_ptr<BoxTree> domain_tree_for_mapped_box_level =
-      domain_search_tree.createRefinedTree(
-         mapped_box_level.getRefinementRatio());
+   BoxContainer domain_tree_for_mapped_box_level(domain_search_tree);
+   domain_tree_for_mapped_box_level.refine(mapped_box_level.getRefinementRatio());
+   domain_tree_for_mapped_box_level.makeTree();
 
    {
       /*
@@ -1367,8 +1368,8 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
          tbox::perr << "mapped_box_level:\n"
                     << mapped_box_level.format("BEFORE-> ", 3);
       }
-      const BoxTree& domain_tree =
-         *domain_tree_for_mapped_box_level;
+      const BoxContainer& domain_tree =
+         domain_tree_for_mapped_box_level;
 
       const IntVector& mapped_box_level_growth =
          mapped_box_level_to_anchor.getConnectorWidth();

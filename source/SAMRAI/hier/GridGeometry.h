@@ -1163,7 +1163,7 @@ private:
    computeShiftsForBox(
       std::vector<IntVector>& shifts,
       const Box& box,
-      const BoxTree& domain_search_tree,
+      const BoxContainer& domain_search_tree,
       const IntVector& periodic_shift) const;
 
    /*!

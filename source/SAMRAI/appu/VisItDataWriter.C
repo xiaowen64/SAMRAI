@@ -3745,12 +3745,11 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
             hier::Box compare_box(*bi);
             compare_box.refine(ratio);
 
-            std::vector<hier::Box> overlap_mapped_boxes;
+            hier::BoxContainer overlap_mapped_boxes;
 
             child_box_tree->findOverlapBoxes(
                overlap_mapped_boxes,
                compare_box,
-               // block_id,
                ratio);
 
             int num_kids = static_cast<int>(overlap_mapped_boxes.size());
@@ -3774,10 +3773,12 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
                   delete[] temp;
                }
 
-               for (int idx = 0; idx < num_kids; idx++) {
+               for (hier::BoxContainer::Iterator
+                    ob_itr = overlap_mapped_boxes.begin();
+                    ob_itr != overlap_mapped_boxes.end(); ++ob_itr) { 
                   child_parent[child_parent_idx].child =
                      getGlobalPatchNumber(hierarchy, ln + 1,
-                        overlap_mapped_boxes[idx].getLocalId().getValue());
+                        ob_itr->getLocalId().getValue());
                   child_parent[child_parent_idx++].parent =
                      getGlobalPatchNumber(hierarchy, ln,
                         bi->getLocalId().getValue());

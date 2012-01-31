@@ -583,21 +583,6 @@ public:
    /*!
     * @brief Remove from each box portions intersecting boxes in takeaway.
     *
-    * BoxTree has an efficient overlap search method so this
-    * version of removeIntersection is relatively fast.
-    * For each box, b, in this container and for each box, t, in takeaway
-    * this operation computes b-(b^t) where '^' indicates intersection.
-    *
-    * @param[in] takeaway What to exclude from each box in the container.
-    */
-   void
-   removeIntersections(
-      const BoxTree& takeaway);
-
-
-   /*!
-    * @brief Remove from each box portions intersecting boxes in takeaway.
-    *
     * Use extra data to provide needed information in a multiblock setting.
     * MultiblockBoxTree has an efficient overlap search method so this
     * version of removeIntersection is relatively fast.
@@ -659,19 +644,6 @@ public:
    void
    intersectBoxes(
       const BoxContainer& keep);
-
-   /*!
-    * @brief Keep the intersection of the container's boxes and keep's boxes
-    *
-    * BoxTree has an efficient overlap search method so this
-    * version of intersectBoxes is relatively fast.  The complement of
-    * removeIntersections.
-    *
-    * @param[in] keep
-    */
-   void
-   intersectBoxes(
-      const BoxTree& keep);
 
    /*!
     * @brief Keep the intersection of the container's boxes and keep's boxes
@@ -979,12 +951,127 @@ private:
 
    //@}
 
+   /*!
+    * @brief Create a search tree representation of the boxes in this container.
+    *
+    * If the size of this container is greater than the min_number
+    * argument, then an internal BoxTree representation of the boxes will
+    * be created and held by the container.
+    *
+    * This method may only be used if all members of this container have the
+    * same BlockId.  An assertion failure will occur if this condition is not
+    * met.
+    *
+    * The building of the tree is an O(N log(N)) operation, but it reduces
+    * the cost of the search methods findOverlapBoxes() and hasOverlap() to
+    * O(log(N)), rather than O(N).  The tree representation is intended for
+    * when these search methods are called multiple times on the same
+    * BoxContainer which is not changing, so that the benefit of more
+    * efficient search should outweigh the cost of building the tree.
+    *
+    * The min_number argument is used to indicate a container size below
+    * which there is no benefit from building the tree, so no tree is created
+    * when the size is less than or equal to this value.
+    *
+    * If a tree representation has been created via this method, and then
+    * any other BoxContainer method is called that changes the container
+    * by adding or removing boxes, or by changing the spatial coordinates of
+    * the boxes, the tree representation is destroyed.
+    * 
+    * @param[in]  min_number  An assertion failure will occur if not positive
+    */
+   void makeTree(int min_number = 10);
+
+   /*!
+    * @brief Find all boxes that intersect with a given box.
+    *
+    * Every Box in this BoxContainer that intersects with the box argument
+    * will be added to the overlap_boxes output container.  The output
+    * container will retain the same ordered/unordered state that it had
+    * prior to being passed into this method.
+    *
+    * If this method is used multiple times on the same BoxContainer, it
+    * is recommended for efficiency's sake to call makeTree() on this
+    * BoxContainer before calling this method.
+    *
+    * @param[out] overlap_boxes
+    *
+    * @param[in] box
+    */
+   void
+   findOverlapBoxes(
+      BoxContainer& overlap_boxes,
+      const Box& box) const;
+
+   /*!
+    * @brief Find all boxes that intersect with a given box.
+    *
+    * A pointer to every Box in this BoxContainer that intersects with the
+    * box argument will be added to the overlap_boxes output vector.  The
+    * vector is not sorted in any way.
+    *
+    * If this method is used multiple times on the same BoxContainer, it
+    * is recommended for efficiency's sake to call makeTree() on this
+    * BoxContainer before calling this method.
+    *
+    * @param[out] overlap_boxes
+    *
+    * @param[in] box
+    */
+   void
+   findOverlapBoxes(
+      std::vector<const Box*>& overlap_boxes,
+      const Box& box) const;
+
+   /*!
+    * @brief Determine if a given box intersects with the BoxContainer.
+    *
+    * If this method is used multiple times on the same BoxContainer, it
+    * is recommended for efficiency's sake to call makeTree() on this
+    * BoxContainer before calling this method.
+    *
+    * @return  True if box intersects with any member of the BoxContainer,
+    *          false otherwise.
+    *
+    * @param[in] box
+    */
+   bool
+   hasOverlap(
+      const Box& box) const;
+
 private:
 
    /*
     * Static integer constant describing class's version number.
     */
    static const int HIER_BOX_CONTAINER_VERSION;
+
+   /*!
+    * @brief Remove from each box portions intersecting boxes in takeaway.
+    *
+    * BoxTree has an efficient overlap search method so this
+    * version of removeIntersection is relatively fast.
+    * For each box, b, in this container and for each box, t, in takeaway
+    * this operation computes b-(b^t) where '^' indicates intersection.
+    *
+    * @param[in] takeaway What to exclude from each box in the container.
+    */
+   void
+   removeIntersections(
+      const BoxTree& takeaway);
+
+   /*!
+    * @brief Keep the intersection of the container's boxes and keep's boxes
+    *
+    * BoxTree has an efficient overlap search method so this
+    * version of intersectBoxes is relatively fast.  The complement of
+    * removeIntersections.
+    *
+    * @param[in] keep
+    */
+   void
+   intersectBoxes(
+      const BoxTree& keep);
 
    /*!
     * @brief Break up bursty against solid and adds the pieces to container.
@@ -1052,6 +1139,8 @@ private:
    std::set<Box*, Box::id_less> d_set;
 
    bool d_ordered;
+
+   boost::shared_ptr<BoxTree> d_tree;
 };
 
 }

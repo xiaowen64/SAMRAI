@@ -869,7 +869,7 @@ void GridGeometry::putToDatabase(
 void GridGeometry::computeShiftsForBox(
    std::vector<IntVector>& shifts,
    const Box& box,
-   const BoxTree& domain_search_tree,
+   const BoxContainer& domain_search_tree,
    const IntVector& periodic_shift) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, box, periodic_shift);

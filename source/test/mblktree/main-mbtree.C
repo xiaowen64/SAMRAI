@@ -280,12 +280,14 @@ int main(
          hier::Box grown_box(mapped_box);
          grown_box.grow(connector_width);
 
+         hier::BoxContainer overlap_boxes;
          multiblock_mapped_box_tree.findOverlapBoxes(
-            connector,
+            overlap_boxes,
             grown_box,
             refinement_ratio,
             true);
 
+         connector.insertNeighbors(overlap_boxes, mapped_box.getId());
       }
 
       /*
