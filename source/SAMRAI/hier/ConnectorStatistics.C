@@ -288,22 +288,21 @@ void ConnectorStatistics::printNeighborStats(
 void ConnectorStatistics::initializeCallback()
 {
 
-   s_quantity_names[NUMBER_OF_BASE_BOXES] = "num base boxes";
-   s_quantity_names[NUMBER_OF_BASE_CELLS] = "num base cells";
+   s_quantity_names[NUMBER_OF_BASE_BOXES]             = "num base boxes";
+   s_quantity_names[NUMBER_OF_BASE_CELLS]             = "num base cells";
 
-   s_quantity_names[HAS_ANY_NEIGHBOR_SETS] = "has any neighbor sets";
-   s_quantity_names[NUMBER_OF_NEIGHBOR_SETS] = "num neighbor sets";
+   s_quantity_names[HAS_ANY_NEIGHBOR_SETS]            = "has any neighbor sets";
+   s_quantity_names[NUMBER_OF_NEIGHBOR_SETS]          = "num neighbor sets";
 
-   s_quantity_names[HAS_ANY_RELATIONSHIPS] = "has any relationships";
-   s_quantity_names[NUMBER_OF_RELATIONSHIPS] = "num relationships";
-   s_quantity_names[MIN_NUMBER_OF_RELATIONSHIPS] = "min num relationships";
-   s_quantity_names[MAX_NUMBER_OF_RELATIONSHIPS] = "max num relationships";
+   s_quantity_names[HAS_ANY_RELATIONSHIPS]            = "has any relationships";
+   s_quantity_names[NUMBER_OF_RELATIONSHIPS]          = "num relationships";
+   s_quantity_names[MIN_NUMBER_OF_RELATIONSHIPS]      = "min num relationships";
+   s_quantity_names[MAX_NUMBER_OF_RELATIONSHIPS]      = "max num relationships";
 
-   s_quantity_names[NUMBER_OF_NEIGHBORS] = "num neighbors";
-   s_quantity_names[NUMBER_OF_LOCAL_NEIGHBORS] = "num local neighbors";
-   s_quantity_names[NUMBER_OF_REMOTE_NEIGHBORS] = "num remote neighbors";
-   s_quantity_names[NUMBER_OF_REMOTE_NEIGHBOR_OWNERS] =
-      "num remote neighbor owners";
+   s_quantity_names[NUMBER_OF_NEIGHBORS]              = "num neighbors";
+   s_quantity_names[NUMBER_OF_LOCAL_NEIGHBORS]        = "num local neighbors";
+   s_quantity_names[NUMBER_OF_REMOTE_NEIGHBORS]       = "num remote neighbors";
+   s_quantity_names[NUMBER_OF_REMOTE_NEIGHBOR_OWNERS] = "num remote neighbor owners";
 
    s_quantity_names[OVERLAP_SIZE] = "overlap size";
    s_quantity_names[LOCAL_OVERLAP_SIZE] = "local overlap size";
