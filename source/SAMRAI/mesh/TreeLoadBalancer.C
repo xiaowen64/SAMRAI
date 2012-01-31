@@ -983,7 +983,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
       rank_group,
       bdfs );
    child_recv_stage.setCommunicationWaitTimer(t_child_recv_wait);
-   parent_recv_stage.setCommunicationWaitTimer(t_parent_send_wait);
+   parent_recv_stage.setCommunicationWaitTimer(t_parent_recv_wait);
 
 
 
