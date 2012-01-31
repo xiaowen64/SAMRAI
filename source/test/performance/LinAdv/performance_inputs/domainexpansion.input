@@ -281,7 +281,7 @@ TimeRefinementIntegrator {
    end_time              = 2.0      // final simulation time
    grow_dt               = 1.0e0    // growth factor for timesteps
    // max_integrator_steps  = 1     // max number of simulation timesteps
-   max_integrator_steps  = 25     // max number of simulation timesteps
+   max_integrator_steps  = 30     // max number of simulation timesteps
    // tag_buffer            = 3, 3, 3, 3, 3, 3
    barrier_and_time        = TRUE
 }
@@ -308,8 +308,8 @@ TreeLoadBalancer {
 }
 
 HyperbolicLevelIntegrator {
-   cfl                      = 0.5
-   cfl_init                 = 0.5
+   cfl                      = 0.43
+   cfl_init                 = 0.43
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
    distinguish_mpi_reduction_costs = TRUE
