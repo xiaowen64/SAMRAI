@@ -128,7 +128,7 @@ void ConnectorStatistics::computeLocalConnectorStatistics(
    sq.d_values[NUMBER_OF_REMOTE_NEIGHBORS] = 0.;
    sq.d_values[NUMBER_OF_REMOTE_NEIGHBOR_OWNERS] = 0.;
 
-   BoxContainer visible_neighbors; // All neighbors of local base boxes.
+   BoxContainer visible_neighbors(true); // All neighbors of local base boxes.
 
    for ( Connector::ConstNeighborhoodIterator nbi=d_connector.begin();
          nbi!=d_connector.end(); ++nbi ) {
