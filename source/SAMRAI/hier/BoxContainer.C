@@ -14,6 +14,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
+#include "SAMRAI/hier/BoxTree.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
@@ -1396,7 +1397,7 @@ void BoxContainer::coarsen(
    }
 }
 
-void BoxContainer::makeTree(int min_number)
+void BoxContainer::makeTree(int min_number) const
 {
    TBOX_ASSERT(min_number > 0);
 

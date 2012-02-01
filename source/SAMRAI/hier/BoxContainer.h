@@ -28,6 +28,7 @@ namespace hier {
 class BoxContainerIterator;
 class BoxContainerConstIterator;
 class BoxTree;
+class Connector;
 class MultiblockBoxTree;
 
 /*!
@@ -58,7 +59,23 @@ class MultiblockBoxTree;
  * a different Dimension than the Boxes already in the container, an assertion
  * failure will occur.
  *
- * @see Box
+ * An option exists to create an internal search tree representation based on
+ * the spatial coordinates of the Boxes in the container.  This option can be
+ * used to reduce the cost of searching operations in the methods
+ * removeIntersections(), intersectBoxes(), findOverlapBoxes() and
+ * hasOverlap().  This option is invoked by calling the method makeTree().
+ * This option should only be used in cases where the listed search methods
+ * will be called multiple times on the same unchanging BoxContainer.  The
+ * cost of building the tree representaion is O(N(log(N)), while the tree
+ * reduces the cost of the search operations to O(log(N)) rather than O(N),
+ * thus it is adviseable to only use the tree representation when the
+ * reduction in search cost is expected to outweigh the increased cost of
+ * building the tree.
+ *
+ * Constructing the tree represenation via makeTree() will change nothing
+ * about the Boxes stored in the container, nor will it change the
+ * ordered/unordered state of the container.
+ *
  * @see BoxId
  */
 class BoxContainer
@@ -980,7 +997,15 @@ private:
     * 
     * @param[in]  min_number  An assertion failure will occur if not positive
     */
-   void makeTree(int min_number = 10);
+   void makeTree(int min_number = 10) const;
+
+   /*!
+    * @brief Query if the search tree representation exists.
+    */
+   bool hasTree() const
+   {
+      return (d_tree.get() != 0);
+   }
 
    /*!
     * @brief Find all boxes that intersect with a given box.
@@ -1018,6 +1043,7 @@ private:
     *
     * @param[in] box
     */
+
    void
    findOverlapBoxes(
       std::vector<const Box*>& overlap_boxes,
@@ -1140,7 +1166,7 @@ private:
 
    bool d_ordered;
 
-   boost::shared_ptr<BoxTree> d_tree;
+   mutable boost::shared_ptr<BoxTree> d_tree;
 };
 
 }
