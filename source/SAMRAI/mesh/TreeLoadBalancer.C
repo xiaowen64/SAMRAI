@@ -96,6 +96,7 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_cut_factor(d_dim),
    // Output control.
    d_report_load_balance(false),
+   d_summarize_map(false),
    // Performance evaluation.
    d_barrier_before(false),
    d_barrier_after(false),
@@ -1428,9 +1429,12 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
    }
 
    if (d_print_steps) {
-      tbox::plog << "  After parent/children, my total work is "
+      tbox::plog << "  After parent, my total work is "
                  << my_load_data.d_total_work << " / "
-                 << my_load_data.d_ideal_work << std::endl;
+                 << my_load_data.d_ideal_work
+                 << ", unassigned ammount is "
+                 << sumWorkInBoxes(unassigned.begin(),unassigned.end())
+                 << std::endl;
    }
 
 
@@ -1488,6 +1492,14 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
          std::vector<int> msg;
          packSubtreeLoadData(msg, recip_data);
          child_sends[ichild].beginSend(&msg[0], static_cast<int>(msg.size()));
+
+         if (d_print_steps) {
+            tbox::plog << "  After child " << ichild
+                       << " rank=" << child_sends[ichild].getPeerRank()
+                       << ", unassigned ammount is "
+                       << sumWorkInBoxes(unassigned.begin(),unassigned.end())
+                       << std::endl;
+         }
 
       }
 
@@ -1573,6 +1585,16 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
    constructSemilocalUnbalancedToBalanced(
       unbalanced_to_balanced,
       unassigned );
+
+   if ( d_summarize_map ) {
+      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup unbalanced--->balanced map:\n"
+                 << unbalanced_to_balanced.format("\t",0)
+                 << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
+                 << "TreeLoadBalancer::loadBalanceWithinRankGroup balanced--->unbalanced map:\n"
+                 << balanced_to_unbalanced.format("\t",0)
+                 << "Map statistics:\n" << balanced_to_unbalanced.formatStatistics("\t")
+                 << '\n';
+   }
 
 
    if (d_check_connectivity) {
@@ -2254,11 +2276,30 @@ int TreeLoadBalancer::shiftLoadsByBreaking(
    TransitSet best_dst = dst;
    int best_actual_transfer = 0;
 
+   double best_balance_penalty = computeBalancePenalty(best_src,
+                                                       best_dst,
+                                                       static_cast<int>(ideal_transfer) - best_actual_transfer);
+   double best_surface_penalty = computeSurfacePenalty(best_src,
+                                                       best_dst);
+   double best_slender_penalty = computeSlenderPenalty(best_src,
+                                                       best_dst);
    double best_combined_penalty = combinedBreakingPenalty(
-      computeBalancePenalty(best_src, best_dst, static_cast<double>(ideal_transfer)
-                            - best_actual_transfer),
-      computeSurfacePenalty(best_src, best_dst),
-      computeSlenderPenalty(best_src, best_dst));
+      best_balance_penalty,
+      best_surface_penalty,
+      best_slender_penalty);
+
+   if (d_print_steps) {
+      tbox::plog.unsetf(std::ios::fixed | std::ios::scientific);
+      tbox::plog.precision(6);
+      tbox::plog << "    Uncut's imbalance: "
+                 << (ideal_transfer - best_actual_transfer)
+                 << " balance,surface,slender,combined penalty: "
+                 << best_balance_penalty << ' '
+                 << best_surface_penalty << ' '
+                 << best_slender_penalty << ' '
+                 << best_combined_penalty
+                 << std::endl;
+   }
 
    /*
     * Scale the pre-cut penalty.  Scaling makes this method more
@@ -2416,12 +2457,16 @@ int TreeLoadBalancer::shiftLoadsByBreaking(
             best_actual_transfer = static_cast<int>(breakoff_amt);
             best_src = trial_src;
             best_dst = trial_dst;
+            best_balance_penalty = trial_balance_penalty;
+            best_surface_penalty = trial_surface_penalty;
+            best_slender_penalty = trial_slender_penalty;
             best_combined_penalty = trial_combined_penalty;
          }
 
       } else {
          if (d_print_steps) {
             tbox::plog << "    Break step could not break " << ideal_transfer
+                       << " from src box " << candidate
                        << std::endl;
          }
       }
@@ -3577,6 +3622,8 @@ void TreeLoadBalancer::getFromInput(
          db->getBoolWithDefault("check_map",
             d_check_map);
 
+      d_summarize_map = db->getBoolWithDefault("summarize_map", d_summarize_map);
+
       d_report_load_balance = db->getBoolWithDefault("report_load_balance",
             d_report_load_balance);
       d_barrier_before = db->getBoolWithDefault("barrier_before",
@@ -4522,6 +4569,24 @@ void TreeLoadBalancer::prebalanceBoxLevel(
       delete[] box_recv;
       delete[] id_send;
    }
+}
+
+
+
+/*
+**************************************************************************
+**************************************************************************
+*/
+
+int TreeLoadBalancer::sumWorkInBoxes(
+   const TransitSet::const_iterator &first,
+   const TransitSet::const_iterator &last ) const
+{
+   int sum = 0;
+   for ( TransitSet::const_iterator itr=first; itr!=last; ++itr ) {
+      sum += itr->d_load;
+   }
+   return sum;
 }
 
 

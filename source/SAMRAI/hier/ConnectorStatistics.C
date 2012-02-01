@@ -256,7 +256,7 @@ void ConnectorStatistics::printNeighborStats(
    co.precision(3);
 
    co << border << "N = " << base.getGlobalNumberOfBoxes()
-      << " (global number of boxes)\n"
+      << " (global number of boxes),  "
       << border << "P = " << mpi.getSize() << " (number of processes)\n"
       << border << std::setw(s_longest_length) << std::string()
       << "    local        min               max             sum    sum/N    sum/P\n";

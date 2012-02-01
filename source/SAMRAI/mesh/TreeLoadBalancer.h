@@ -801,6 +801,15 @@ private:
       tbox::AsyncCommPeer<int> *& parent_comm) const;
 
    /*!
+    * @brief Sum up the work in a sequence of boxes.
+    *
+    * @return Sum of work in [first,last)
+    */
+   int sumWorkInBoxes(
+      const TransitSet::const_iterator &first,
+      const TransitSet::const_iterator &last ) const;
+
+   /*!
     * @brief Set up timers for the object.
     */
    void
@@ -894,6 +903,11 @@ private:
     * in the log files.
     */
    bool d_report_load_balance;
+
+   /*!
+    * @brief See "summarize_map" input parameter.
+    */
+   char d_summarize_map;
 
    //@{
    //! @name Used for evaluating peformance.
