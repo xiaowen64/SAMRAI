@@ -88,7 +88,7 @@ public:
       const boost::shared_ptr<GridGeometry> grid_geometry,
       const boost::shared_ptr<PatchDescriptor> descriptor,
       boost::shared_ptr<PatchFactory> factory =
-         boost::shared_ptr<PatchFactory>((PatchFactory*)NULL),
+         boost::shared_ptr<PatchFactory>(),
       bool defer_boundary_box_creation = false);
 
    /*!
@@ -330,7 +330,7 @@ public:
       const boost::shared_ptr<PatchLevel> coarse_level,
       const IntVector& refine_ratio,
       const boost::shared_ptr<GridGeometry> fine_grid_geometry =
-      boost::shared_ptr<GridGeometry>((GridGeometry*)NULL),
+         boost::shared_ptr<GridGeometry>(),
       bool defer_boundary_box_creation = false);
 
    /*!
@@ -378,7 +378,7 @@ public:
       const boost::shared_ptr<PatchLevel> fine_level,
       const IntVector& coarsen_ratio,
       const boost::shared_ptr<GridGeometry> coarse_grid_geom =
-         boost::shared_ptr<GridGeometry>((GridGeometry*)NULL),
+         boost::shared_ptr<GridGeometry>(),
       bool defer_boundary_box_creation = false);
 
    /*!

@@ -29,12 +29,12 @@ HierarchyCellDataOpsInteger::HierarchyCellDataOpsInteger(
    boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int coarsest_level,
    const int finest_level):
-   HierarchyDataOpsInteger()
+   HierarchyDataOpsInteger(),
+   d_hierarchy(hierarchy)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(hierarchy);
 #endif
-   d_hierarchy = hierarchy;
    if ((coarsest_level < 0) || (finest_level < 0)) {
       if (d_hierarchy->getNumberOfLevels() == 0) {
          d_coarsest_level = coarsest_level;
@@ -111,10 +111,10 @@ int HierarchyCellDataOpsInteger::numberOfEntries(
    int entries = 0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > d(
             p->getPatchData(data_id),
@@ -148,10 +148,10 @@ void HierarchyCellDataOpsInteger::copyData(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > d(
             p->getPatchData(dst_id),
@@ -193,10 +193,10 @@ void HierarchyCellDataOpsInteger::swapData(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          d_patch_ops.swapData(p, data1_id, data2_id);
       }
@@ -222,10 +222,10 @@ void HierarchyCellDataOpsInteger::printData(
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       s << "Level number = " << ln << std::endl;
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > d(
             p->getPatchData(data_id),
@@ -253,10 +253,10 @@ void HierarchyCellDataOpsInteger::setToScalar(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > d(
             p->getPatchData(data_id),
@@ -293,10 +293,10 @@ void HierarchyCellDataOpsInteger::scale(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > dst(
             p->getPatchData(dst_id),
@@ -328,10 +328,10 @@ void HierarchyCellDataOpsInteger::addScalar(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > dst(
             p->getPatchData(dst_id),
@@ -363,10 +363,10 @@ void HierarchyCellDataOpsInteger::add(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > d(
             p->getPatchData(dst_id),
@@ -401,10 +401,10 @@ void HierarchyCellDataOpsInteger::subtract(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > d(
             p->getPatchData(dst_id),
@@ -439,10 +439,10 @@ void HierarchyCellDataOpsInteger::multiply(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > d(
             p->getPatchData(dst_id),
@@ -477,10 +477,10 @@ void HierarchyCellDataOpsInteger::divide(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > d(
             p->getPatchData(dst_id),
@@ -514,10 +514,10 @@ void HierarchyCellDataOpsInteger::reciprocal(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > d(
             p->getPatchData(dst_id),
@@ -551,10 +551,10 @@ void HierarchyCellDataOpsInteger::linearSum(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > d(
             p->getPatchData(dst_id),
@@ -590,10 +590,10 @@ void HierarchyCellDataOpsInteger::axpy(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > d(
             p->getPatchData(dst_id),
@@ -629,10 +629,10 @@ void HierarchyCellDataOpsInteger::axmy(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > d(
             p->getPatchData(dst_id),
@@ -666,10 +666,10 @@ void HierarchyCellDataOpsInteger::abs(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > d(
             p->getPatchData(dst_id),
@@ -702,10 +702,10 @@ int HierarchyCellDataOpsInteger::min(
    int minval = tbox::MathUtilities<int>::getMax();
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > d(
             p->getPatchData(data_id),
@@ -742,10 +742,10 @@ int HierarchyCellDataOpsInteger::max(
    int maxval = -(tbox::MathUtilities<int>::getMax());
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > d(
             p->getPatchData(data_id),
@@ -781,10 +781,10 @@ void HierarchyCellDataOpsInteger::setRandomValues(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > d(
             p->getPatchData(data_id),

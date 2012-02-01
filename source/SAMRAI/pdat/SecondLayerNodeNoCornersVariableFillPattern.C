@@ -17,6 +17,8 @@
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -98,9 +100,7 @@ SecondLayerNodeNoCornersVariableFillPattern::calculateOverlap(
       dst_boxes.intersectBoxes(stencil_boxes);
    }
 
-   hier::BoxOverlap* overlap = new NodeOverlap(dst_boxes, transformation);
-
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
+   return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
 
 }
 
@@ -201,11 +201,9 @@ SecondLayerNodeNoCornersVariableFillPattern::computeFillBoxesOverlap(
 
    overlap_boxes.coalesce();
 
-   hier::BoxOverlap* overlap =
-      new NodeOverlap(
-         overlap_boxes,
-         hier::Transformation(hier::IntVector::getZero(dim)));
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
+   return boost::make_shared<NodeOverlap>(
+      overlap_boxes,
+      hier::Transformation(hier::IntVector::getZero(dim)));
 }
 
 }

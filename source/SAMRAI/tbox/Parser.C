@@ -247,7 +247,7 @@ boost::shared_ptr<Database> Parser::getDatabaseWithKey(
    for ( ; i; i++) {
       if (i()->keyExists(key)) return i();
    }
-   return boost::shared_ptr<Database>((Database*)NULL);
+   return boost::shared_ptr<Database>();
 }
 
 /*

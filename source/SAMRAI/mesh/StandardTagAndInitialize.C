@@ -29,6 +29,7 @@
 #endif
 
 #include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include <stdio.h>
 
 /*
@@ -303,11 +304,11 @@ void StandardTagAndInitialize::tagCellsForRefinement(
       hier::BoxContainer refine_boxes;
       getUserSuppliedRefineBoxes(refine_boxes, level_number, regrid_time);
 
-      boost::shared_ptr<hier::PatchLevel> level =
-         hierarchy->getPatchLevel(level_number);
+      boost::shared_ptr<hier::PatchLevel> level(
+         hierarchy->getPatchLevel(level_number));
 
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> patch = *ip;
+         const boost::shared_ptr<hier::Patch>& patch = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > tag_data(
             patch->getPatchData(tag_index),
@@ -405,8 +406,8 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
 
    const tbox::Dimension& dim(getDim());
 
-   boost::shared_ptr<hier::PatchLevel> patch_level =
-      hierarchy->getPatchLevel(level_number);
+   boost::shared_ptr<hier::PatchLevel> patch_level(
+      hierarchy->getPatchLevel(level_number));
 
    /*
     * Determine the level timestep.  If the error coarsen ratio is 2
@@ -484,8 +485,8 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
       start_time = end_time;
    }
 
-   boost::shared_ptr<hier::PatchLevel> coarser_level =
-      d_rich_extrap_coarsened_levels[level_number];
+   boost::shared_ptr<hier::PatchLevel> coarser_level(
+      d_rich_extrap_coarsened_levels[level_number]);
 
    /*
     * Coarsen data from hierarchy level to coarser level.
@@ -504,9 +505,9 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
     */
    hier::IntVector coarsen_ratio(dim, d_error_coarsen_ratio);
    for (hier::PatchLevel::Iterator ip(coarser_level); ip; ip++) {
-      boost::shared_ptr<hier::Patch> coarse_patch = *ip;
-      boost::shared_ptr<hier::Patch> fine_patch =
-         patch_level->getPatch(coarse_patch->getGlobalId());
+      const boost::shared_ptr<hier::Patch>& coarse_patch = *ip;
+      boost::shared_ptr<hier::Patch> fine_patch(
+         patch_level->getPatch(coarse_patch->getGlobalId()));
       boost::shared_ptr<pdat::CellData<int> > ftags(
          fine_patch->getPatchData(tag_index),
          boost::detail::dynamic_cast_tag());
@@ -580,7 +581,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
    pdat::CellIntegerConstantRefine copytags(dim);
    for (hier::PatchLevel::Iterator ip(coarser_level); ip; ip++) {
 
-      boost::shared_ptr<hier::Patch> coarse_patch = *ip;
+      const boost::shared_ptr<hier::Patch>& coarse_patch = *ip;
       boost::shared_ptr<hier::Patch> fine_patch =
          patch_level->getPatch(coarse_patch->getGlobalId());
       copytags.refine(*fine_patch, *coarse_patch,
@@ -597,7 +598,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
       bool allocate_data = false;
       initializeLevelData(hierarchy, level_number, regrid_time,
          can_be_refined, initial_time,
-         boost::shared_ptr<hier::PatchLevel>((hier::PatchLevel*)NULL),
+         boost::shared_ptr<hier::PatchLevel>(),
          allocate_data);
    }
 
@@ -686,8 +687,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
 
    const tbox::Dimension& dim(getDim());
 
-   boost::shared_ptr<hier::PatchLevel> patch_level =
-      hierarchy->getPatchLevel(level_number);
+   boost::shared_ptr<hier::PatchLevel> patch_level(
+      hierarchy->getPatchLevel(level_number));
 
    /*
     * Determine the level timestep.  If the error coarsen ratio is 2
@@ -740,7 +741,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
     * so user routines can use this information.
     */
 
-   boost::shared_ptr<hier::PatchLevel> coarsened_level(new hier::PatchLevel(dim));
+   boost::shared_ptr<hier::PatchLevel> coarsened_level =
+      boost::make_shared<hier::PatchLevel>(dim);
    hier::IntVector coarsen_ratio(dim, d_error_coarsen_ratio);
    coarsened_level->setCoarsenedPatchLevel(patch_level, coarsen_ratio);
 
@@ -800,8 +802,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
        */
       hier::Connector* coarsened_to_coarser = new hier::Connector;
       hier::Connector* coarser_to_coarsened = new hier::Connector;
-      boost::shared_ptr<hier::PatchLevel> coarser_level = hierarchy->getPatchLevel(
-            level_number - 1);
+      boost::shared_ptr<hier::PatchLevel> coarser_level(
+         hierarchy->getPatchLevel(level_number - 1));
       const hier::Connector& level_to_coarser =
          patch_level->getBoxLevel()->getPersistentOverlapConnectors().
          findConnector(

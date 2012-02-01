@@ -34,9 +34,11 @@ PersistentOverlapConnectors::PersistentOverlapConnectors(
    d_my_mapped_box_level(my_mapped_box_level)
 {
    if (s_check_created_connectors == '\0') {
-      boost::shared_ptr<tbox::Database> idb(tbox::InputManager::getInputDatabase());
+      boost::shared_ptr<tbox::Database> idb(
+         tbox::InputManager::getInputDatabase());
       if (idb && idb->isDatabase("PersistentOverlapConnectors")) {
-         boost::shared_ptr<tbox::Database> rsdb(idb->getDatabase("PersistentOverlapConnectors"));
+         boost::shared_ptr<tbox::Database> rsdb(
+            idb->getDatabase("PersistentOverlapConnectors"));
 
          const bool check_created_connectors(
             rsdb->getBoolWithDefault("check_created_connectors", false));

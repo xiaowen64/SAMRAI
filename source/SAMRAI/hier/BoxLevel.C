@@ -82,8 +82,8 @@ BoxLevel::BoxLevel():
    d_parallel_state(DISTRIBUTED),
    d_globalized_version(NULL),
    d_persistent_overlap_connectors(NULL),
-   d_handle((BoxLevelHandle*)NULL),
-   d_grid_geometry((const GridGeometry*)NULL)
+   d_handle(),
+   d_grid_geometry()
 {
    // This ctor should never be invoked.
    TBOX_ERROR("Somehow, we entered code that was never meant to be used.");
@@ -118,14 +118,13 @@ BoxLevel::BoxLevel(
    d_parallel_state(DISTRIBUTED),
    d_globalized_version(NULL),
    d_persistent_overlap_connectors(NULL),
-   d_handle((BoxLevelHandle*)NULL),
-   d_grid_geometry((const GridGeometry*)NULL)
+   d_handle(),
+   d_grid_geometry()
 {
 }
 
 BoxLevel::BoxLevel(
    const BoxLevel& rhs):
-   tbox::DescribedClass(),
    d_mpi(rhs.d_mpi),
    d_boxes(rhs.d_boxes),
    d_global_boxes(rhs.d_global_boxes),
@@ -154,7 +153,7 @@ BoxLevel::BoxLevel(
    d_parallel_state(rhs.d_parallel_state),
    d_globalized_version(NULL),
    d_persistent_overlap_connectors(NULL),
-   d_handle((BoxLevelHandle*)NULL),
+   d_handle(),
    d_grid_geometry(rhs.d_grid_geometry)
 {
    // This cannot be the first constructor call, so no need to set timers.
@@ -191,8 +190,8 @@ BoxLevel::BoxLevel(
    d_parallel_state(DISTRIBUTED),
    d_globalized_version(NULL),
    d_persistent_overlap_connectors(NULL),
-   d_handle((BoxLevelHandle*)NULL),
-   d_grid_geometry((const GridGeometry*)NULL)
+   d_handle(),
+   d_grid_geometry()
 {
    initialize(ratio, grid_geom, mpi, parallel_state);
 }
@@ -379,7 +378,8 @@ void BoxLevel::swap(
       ParallelState tmpstate;
       const BoxLevel* tmpmbl;
       tbox::SAMRAI_MPI tmpmpi(tbox::SAMRAI_MPI::commNull);
-      boost::shared_ptr<const GridGeometry> tmpgridgeom(level_a.getGridGeometry());
+      boost::shared_ptr<const GridGeometry> tmpgridgeom(
+         level_a.getGridGeometry());
 
       tmpstate = level_a.d_parallel_state;
       level_a.d_parallel_state = level_b.d_parallel_state;
@@ -421,7 +421,6 @@ void BoxLevel::swap(
       level_a.d_globalized_version = level_b.d_globalized_version;
       level_b.d_globalized_version = tmpmbl;
 
-      tmpgridgeom = level_b.d_grid_geometry;
       level_a.d_grid_geometry = level_b.d_grid_geometry;
       level_b.d_grid_geometry = tmpgridgeom;
    }

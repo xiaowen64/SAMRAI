@@ -367,8 +367,8 @@ TimeRefinementIntegrator::initializeRefinedTimesteppingLevelData(
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
 #endif
 
-   const boost::shared_ptr<hier::PatchLevel>
-   patch_level = d_patch_hierarchy->getPatchLevel(level_number);
+   const boost::shared_ptr<hier::PatchLevel> patch_level(
+      d_patch_hierarchy->getPatchLevel(level_number));
 
    /*
     * Initialize step count and start time for current level.
@@ -500,8 +500,8 @@ TimeRefinementIntegrator::initializeSynchronizedTimesteppingLevelData(
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
 #endif
 
-   const boost::shared_ptr<hier::PatchLevel>
-   patch_level = d_patch_hierarchy->getPatchLevel(level_number);
+   const boost::shared_ptr<hier::PatchLevel> patch_level(
+      d_patch_hierarchy->getPatchLevel(level_number));
 
    /*
     * Initialize step count and start time for current level.
@@ -671,8 +671,8 @@ void TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
    TBOX_ASSERT(end_time >= d_integrator_time);
 #endif
 
-   const boost::shared_ptr<hier::PatchLevel>
-   patch_level = d_patch_hierarchy->getPatchLevel(level_number);
+   const boost::shared_ptr<hier::PatchLevel> patch_level(
+      d_patch_hierarchy->getPatchLevel(level_number));
 
    /*
     * Initialize step count, start time for current level.
@@ -1048,8 +1048,8 @@ double TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
    int level_num;
    for (level_num = 0; level_num <= finest_level_number; level_num++) {
 
-      boost::shared_ptr<hier::PatchLevel> patch_level =
-         d_patch_hierarchy->getPatchLevel(level_num);
+      boost::shared_ptr<hier::PatchLevel> patch_level(
+         d_patch_hierarchy->getPatchLevel(level_num));
 
       d_step_level[level_num] = 1;
       d_max_steps_level[level_num] = 1;
@@ -1668,8 +1668,8 @@ void TimeRefinementIntegrator::getFromInput(
 void TimeRefinementIntegrator::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database> restart_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> restart_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
    boost::shared_ptr<tbox::Database> db;
    if (restart_db->isDatabase(d_object_name)) {

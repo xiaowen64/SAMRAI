@@ -65,7 +65,7 @@ namespace xfer {
  * @see xfer::CoarsenClasses
  */
 
-class CoarsenSchedule:public tbox::DescribedClass
+class CoarsenSchedule
 {
 public:
    /*!

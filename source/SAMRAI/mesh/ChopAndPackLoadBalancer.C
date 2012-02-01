@@ -36,6 +36,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
+#include <boost/make_shared.hpp>
 #include <cstdlib>
 #include <fstream>
 
@@ -620,7 +621,7 @@ void ChopAndPackLoadBalancer::loadBalanceBoxes(
          ++local_indices_idx;
       }
    }
-   this->markLoadForPostprocessing(mpi.getSize(),
+   markLoadForPostprocessing(mpi.getSize(),
       local_load,
       local_indices.size());
 #endif
@@ -876,11 +877,12 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
       tmp_level_workloads,
       "GREEDY");
 
-   boost::shared_ptr<hier::BoxLevel> tmp_mapped_box_level(
-      new hier::BoxLevel(ratio_to_hierarchy_level_zero,
+   boost::shared_ptr<hier::BoxLevel> tmp_mapped_box_level =
+      boost::make_shared<hier::BoxLevel>(
+         ratio_to_hierarchy_level_zero,
          hierarchy->getGridGeometry(),
          mpi,
-         hier::BoxLevel::GLOBALIZED));
+         hier::BoxLevel::GLOBALIZED);
    idx = 0;
    for (hier::BoxContainer::Iterator i(tmp_level_boxes); i != tmp_level_boxes.end();
         ++i, ++idx) {
@@ -889,24 +891,24 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
       tmp_mapped_box_level->addBox(node);
    }
 
-   boost::shared_ptr<hier::PatchLevel> tmp_level(
-      new hier::PatchLevel(*tmp_mapped_box_level,
+   boost::shared_ptr<hier::PatchLevel> tmp_level =
+      boost::make_shared<hier::PatchLevel>(*tmp_mapped_box_level,
          hierarchy->getGridGeometry(),
-         hierarchy->getPatchDescriptor()));
+         hierarchy->getPatchDescriptor());
 
    tmp_level->allocatePatchData(wrk_indx);
 
    xfer::RefineAlgorithm fill_work_algorithm(d_dim);
 
-   boost::shared_ptr<hier::RefineOperator> work_refine_op(
-      new pdat::CellDoubleConstantRefine(d_dim));
+   boost::shared_ptr<hier::RefineOperator> work_refine_op =
+      boost::make_shared<pdat::CellDoubleConstantRefine>(d_dim);
 
    fill_work_algorithm.registerRefine(wrk_indx,
       wrk_indx,
       wrk_indx,
       work_refine_op);
 
-   boost::shared_ptr<hier::PatchLevel> current_level((hier::PatchLevel*)NULL);
+   boost::shared_ptr<hier::PatchLevel> current_level;
    if (level_number <= hierarchy->getFinestLevelNumber()) {
       current_level = hierarchy->getPatchLevel(level_number);
    }
@@ -918,7 +920,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
 
    double local_work = 0;
    for (hier::PatchLevel::Iterator ip(tmp_level); ip; ip++) {
-      boost::shared_ptr<hier::Patch> patch = *ip;
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       double patch_work =
          BalanceUtilities::computeNonUniformWorkload(patch,

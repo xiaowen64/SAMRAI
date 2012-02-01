@@ -25,8 +25,9 @@ namespace SAMRAI {
 namespace algs {
 
 /*!
- * @brief Concrete subclass of the xfer::RefineTransactionFactory base class that
- * allocates transaction outernode sum objects for a xfer::RefineSchedule object.
+ * @brief Concrete subclass of the xfer::RefineTransactionFactory base class
+ * that allocates transaction outernode sum objects for a xfer::RefineSchedule
+ * object.
  *
  * @see xfer::RefineTransactionFactory
  * @see xfer::OuternodeSumTransaction
@@ -46,7 +47,8 @@ public:
    virtual ~OuternodeSumTransactionFactory();
 
    /*!
-    * @brief Set the array of xfer::RefineClass<DIM>::Data items used by the transactions.
+    * @brief Set the array of xfer::RefineClass<DIM>::Data items used by the
+    * transactions.
     */
    void
    setRefineItems(
@@ -54,7 +56,8 @@ public:
       int num_refine_items);
 
    /*!
-    * @brief Clear the array of xfer::RefineClass<DIM>::Data items used by the transactions.
+    * @brief Clear the array of xfer::RefineClass<DIM>::Data items used by the
+    * transactions.
     */
    void
    unsetRefineItems();
@@ -64,17 +67,19 @@ public:
     *
     * @param dst_level      boost::shared_ptr to destination patch level.
     * @param src_level      boost::shared_ptr to source patch level.
-    * @param overlap        boost::shared_ptr to overlap region between patches.
+    * @param overlap        boost::shared_ptr to overlap region between
+    *                       patches.
     * @param dst_patch_id   Integer index of destination patch in destination
     *                       patch level.
-    * @param src_patch_id   Integer index of source patch in source patch level.
+    * @param src_patch_id   Integer index of source patch in source patch
+    *                       level.
     * @param ritem_id       Integer index of xfer::RefineClass<DIM>::Data item
     *                       associated with transaction.
     * @param box            Const reference to box defining region of
     *                       refine transaction.  Use following allocate method
     *                       if not needed.
-    * @param use_time_interpolation  Optional boolean flag indicating whether the
-    *                       refine transaction involves time interpolation.
+    * @param use_time_interpolation  Optional boolean flag indicating whether
+    *                       the refine transaction involves time interpolation.
     *                       Default is false.
     */
    boost::shared_ptr<tbox::Transaction>
@@ -107,12 +112,13 @@ public:
     * @brief Function to initialize scratch space data for the sum transactions
     * (patch data components indicated by the component selector) to zero.
     *
-    * @param level        boost::shared_ptr to patch level holding scratch data.
+    * @param level        boost::shared_ptr to patch level holding scratch
+    *                     data.
     * @param fill_time    Double value of simulation time at which preprocess
     *                     operation is called.
-    * @param preprocess_vector Const reference to hier::ComponentSelector indicating
-    *                     patch data array indices of scratch patch data objects
-    *                     to preprocess.
+    * @param preprocess_vector Const reference to hier::ComponentSelector
+    *                     indicating patch data array indices of scratch patch
+    *                     data objects to preprocess.
     */
    void
    preprocessScratchSpace(

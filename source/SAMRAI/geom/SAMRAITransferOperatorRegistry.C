@@ -102,6 +102,8 @@
 #include "SAMRAI/geom/CartesianNodeFloatLinearRefine.h"
 #include "SAMRAI/geom/SkeletonRefine.h"
 
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace geom {
 
@@ -131,75 +133,74 @@ SAMRAITransferOperatorRegistry::buildCoarsenOperator(
    boost::shared_ptr<hier::CoarsenOperator> coarsen_op;
    if (op_name == "CONSERVATIVE_COARSEN") {
       if (boost::shared_ptr<pdat::CellVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new CartesianCellComplexWeightedAverage(getDim()));
+         coarsen_op =
+            boost::make_shared<CartesianCellComplexWeightedAverage>(getDim());
       } else if (boost::shared_ptr<pdat::CellVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new CartesianCellDoubleWeightedAverage(getDim()));
+         coarsen_op =
+            boost::make_shared<CartesianCellDoubleWeightedAverage>(getDim());
       } else if (boost::shared_ptr<pdat::CellVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new CartesianCellFloatWeightedAverage(getDim()));
+         coarsen_op =
+            boost::make_shared<CartesianCellFloatWeightedAverage>(getDim());
       } else if (boost::shared_ptr<pdat::EdgeVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new CartesianEdgeComplexWeightedAverage(getDim()));
+         coarsen_op =
+            boost::make_shared<CartesianEdgeComplexWeightedAverage>(getDim());
       } else if (boost::shared_ptr<pdat::EdgeVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new CartesianEdgeDoubleWeightedAverage(getDim()));
+         coarsen_op =
+            boost::make_shared<CartesianEdgeDoubleWeightedAverage>(getDim());
       } else if (boost::shared_ptr<pdat::EdgeVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new CartesianEdgeFloatWeightedAverage(getDim()));
+         coarsen_op =
+            boost::make_shared<CartesianEdgeFloatWeightedAverage>(getDim());
       } else if (boost::shared_ptr<pdat::FaceVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new CartesianFaceComplexWeightedAverage(getDim()));
+         coarsen_op =
+            boost::make_shared<CartesianFaceComplexWeightedAverage>(getDim());
       } else if (boost::shared_ptr<pdat::FaceVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new CartesianFaceDoubleWeightedAverage(getDim()));
+         coarsen_op =
+            boost::make_shared<CartesianFaceDoubleWeightedAverage>(getDim());
       } else if (boost::shared_ptr<pdat::FaceVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new CartesianFaceFloatWeightedAverage(getDim()));
+         coarsen_op =
+            boost::make_shared<CartesianFaceFloatWeightedAverage>(getDim());
       } else if (boost::shared_ptr<pdat::OuterfaceVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new CartesianOuterfaceComplexWeightedAverage(getDim()));
+         coarsen_op =
+            boost::make_shared<CartesianOuterfaceComplexWeightedAverage>(
+               getDim());
       } else if (boost::shared_ptr<pdat::OuterfaceVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new CartesianOuterfaceDoubleWeightedAverage(getDim()));
+         coarsen_op =
+            boost::make_shared<CartesianOuterfaceDoubleWeightedAverage>(
+               getDim());
       } else if (boost::shared_ptr<pdat::OuterfaceVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new CartesianOuterfaceFloatWeightedAverage(getDim()));
+         coarsen_op =
+            boost::make_shared<CartesianOuterfaceFloatWeightedAverage>(
+               getDim());
       } else if (boost::shared_ptr<pdat::OutersideVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new CartesianOutersideDoubleWeightedAverage(getDim()));
+         coarsen_op =
+            boost::make_shared<CartesianOutersideDoubleWeightedAverage>(
+               getDim());
       } else if (boost::shared_ptr<pdat::SideVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new CartesianSideComplexWeightedAverage(getDim()));
+         coarsen_op =
+            boost::make_shared<CartesianSideComplexWeightedAverage>(getDim());
       } else if (boost::shared_ptr<pdat::SideVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new CartesianSideDoubleWeightedAverage(getDim()));
+         coarsen_op =
+            boost::make_shared<CartesianSideDoubleWeightedAverage>(getDim());
       } else if (boost::shared_ptr<pdat::SideVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new CartesianSideFloatWeightedAverage(getDim()));
+         coarsen_op =
+            boost::make_shared<CartesianSideFloatWeightedAverage>(getDim());
       } else {
          TBOX_ERROR("Unsupported variable centering for coarsen operator");
       }
    } else if (op_name == "SKELETON_COARSEN") {
-      coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-            new SkeletonCoarsen(getDim()));
+      coarsen_op = boost::make_shared<SkeletonCoarsen>(getDim());
    } else if (op_name == "CONSTANT_COARSEN") {
       if (boost::shared_ptr<pdat::NodeVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new pdat::NodeComplexInjection(getDim()));
+         coarsen_op = boost::make_shared<pdat::NodeComplexInjection>(getDim());
       } else if (boost::shared_ptr<pdat::NodeVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new pdat::NodeDoubleInjection(getDim()));
+         coarsen_op = boost::make_shared<pdat::NodeDoubleInjection>(getDim());
       } else if (boost::shared_ptr<pdat::NodeVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new pdat::NodeFloatInjection(getDim()));
+         coarsen_op = boost::make_shared<pdat::NodeFloatInjection>(getDim());
       } else if (boost::shared_ptr<pdat::NodeVariable<int> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new pdat::NodeIntegerInjection(getDim()));
+         coarsen_op = boost::make_shared<pdat::NodeIntegerInjection>(getDim());
       } else if (boost::shared_ptr<pdat::OuternodeVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         coarsen_op = boost::shared_ptr<hier::CoarsenOperator>(
-               new pdat::OuternodeDoubleConstantCoarsen(getDim()));
+         coarsen_op =
+            boost::make_shared<pdat::OuternodeDoubleConstantCoarsen>(getDim());
       } else {
          TBOX_ERROR("Unsupported variable centering for coarsen operator");
       }
@@ -218,121 +219,129 @@ SAMRAITransferOperatorRegistry::buildRefineOperator(
    boost::shared_ptr<hier::RefineOperator> refine_op;
    if (op_name == "CONSERVATIVE_LINEAR_REFINE") {
       if (boost::shared_ptr<pdat::CellVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new CartesianCellComplexConservativeLinearRefine(getDim()));
+         refine_op =
+            boost::make_shared<CartesianCellComplexConservativeLinearRefine>(
+               getDim());
       } else if (boost::shared_ptr<pdat::CellVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new CartesianCellDoubleConservativeLinearRefine(getDim()));
+         refine_op =
+            boost::make_shared<CartesianCellDoubleConservativeLinearRefine>(
+               getDim());
       } else if (boost::shared_ptr<pdat::CellVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new CartesianCellFloatConservativeLinearRefine(getDim()));
+         refine_op =
+            boost::make_shared<CartesianCellFloatConservativeLinearRefine>(
+               getDim());
       } else if (boost::shared_ptr<pdat::EdgeVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new CartesianEdgeDoubleConservativeLinearRefine(getDim()));
+         refine_op =
+            boost::make_shared<CartesianEdgeDoubleConservativeLinearRefine>(
+               getDim());
       } else if (boost::shared_ptr<pdat::EdgeVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new CartesianEdgeFloatConservativeLinearRefine(getDim()));
+         refine_op =
+            boost::make_shared<CartesianEdgeFloatConservativeLinearRefine>(
+               getDim());
       } else if (boost::shared_ptr<pdat::FaceVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new CartesianFaceDoubleConservativeLinearRefine(getDim()));
+         refine_op =
+            boost::make_shared<CartesianFaceDoubleConservativeLinearRefine>(
+               getDim());
       } else if (boost::shared_ptr<pdat::FaceVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new CartesianFaceFloatConservativeLinearRefine(getDim()));
+         refine_op =
+            boost::make_shared<CartesianFaceFloatConservativeLinearRefine>(
+               getDim());
       } else if (boost::shared_ptr<pdat::SideVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new CartesianSideDoubleConservativeLinearRefine(getDim()));
+         refine_op =
+            boost::make_shared<CartesianSideDoubleConservativeLinearRefine>(
+               getDim());
       } else if (boost::shared_ptr<pdat::SideVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new CartesianSideFloatConservativeLinearRefine(getDim()));
+         refine_op =
+            boost::make_shared<CartesianSideFloatConservativeLinearRefine>(
+               getDim());
       } else {
          TBOX_ERROR("Unsupported variable centering for refine operator");
       }
    } else if (op_name == "LINEAR_REFINE") {
       if (boost::shared_ptr<pdat::CellVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new CartesianCellComplexLinearRefine(getDim()));
+         refine_op =
+            boost::make_shared<CartesianCellComplexLinearRefine>(getDim());
       } else if (boost::shared_ptr<pdat::CellVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new CartesianCellDoubleLinearRefine(getDim()));
+         refine_op =
+            boost::make_shared<CartesianCellDoubleLinearRefine>(getDim());
       } else if (boost::shared_ptr<pdat::CellVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new CartesianCellFloatLinearRefine(getDim()));
+         refine_op =
+            boost::make_shared<CartesianCellFloatLinearRefine>(getDim());
       } else if (boost::shared_ptr<pdat::NodeVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new CartesianNodeComplexLinearRefine(getDim()));
+         refine_op =
+            boost::make_shared<CartesianNodeComplexLinearRefine>(getDim());
       } else if (boost::shared_ptr<pdat::NodeVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new CartesianNodeDoubleLinearRefine(getDim()));
+         refine_op =
+            boost::make_shared<CartesianNodeDoubleLinearRefine>(getDim());
       } else if (boost::shared_ptr<pdat::NodeVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new CartesianNodeFloatLinearRefine(getDim()));
+         refine_op =
+            boost::make_shared<CartesianNodeFloatLinearRefine>(getDim());
       } else {
          TBOX_ERROR("Unsupported variable centering for refine operator");
       }
    } else if (op_name == "SKELETON_REFINE") {
-      refine_op = boost::shared_ptr<hier::RefineOperator>(
-            new SkeletonRefine(getDim()));
+      refine_op = boost::make_shared<SkeletonRefine>(getDim());
    } else if (op_name == "CONSTANT_REFINE") {
       if (boost::shared_ptr<pdat::CellVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::CellComplexConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::CellComplexConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::CellVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::CellDoubleConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::CellDoubleConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::CellVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::CellFloatConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::CellFloatConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::CellVariable<int> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::CellIntegerConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::CellIntegerConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::EdgeVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::EdgeComplexConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::EdgeComplexConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::EdgeVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::EdgeDoubleConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::EdgeDoubleConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::EdgeVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::EdgeFloatConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::EdgeFloatConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::EdgeVariable<int> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::EdgeIntegerConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::EdgeIntegerConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::FaceVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::FaceComplexConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::FaceComplexConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::FaceVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::FaceDoubleConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::FaceDoubleConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::FaceVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::FaceFloatConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::FaceFloatConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::FaceVariable<int> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::FaceIntegerConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::FaceIntegerConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::OuterfaceVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::OuterfaceComplexConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::OuterfaceComplexConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::OuterfaceVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::OuterfaceDoubleConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::OuterfaceDoubleConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::OuterfaceVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::OuterfaceFloatConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::OuterfaceFloatConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::OuterfaceVariable<int> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::OuterfaceIntegerConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::OuterfaceIntegerConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::SideVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::SideComplexConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::SideComplexConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::SideVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::SideDoubleConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::SideDoubleConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::SideVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::SideFloatConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::SideFloatConstantRefine>(getDim());
       } else if (boost::shared_ptr<pdat::SideVariable<int> >(var, boost::detail::dynamic_cast_tag())) {
-         refine_op = boost::shared_ptr<hier::RefineOperator>(
-               new pdat::SideIntegerConstantRefine(getDim()));
+         refine_op =
+            boost::make_shared<pdat::SideIntegerConstantRefine>(getDim());
       } else {
          TBOX_ERROR("Unsupported variable centering for refine operator");
       }
@@ -351,68 +360,68 @@ SAMRAITransferOperatorRegistry::buildTimeInterpolateOperator(
    boost::shared_ptr<hier::TimeInterpolateOperator> time_op;
    if (op_name == "STD_LINEAR_TIME_INTERPOLATE") {
       if (boost::shared_ptr<pdat::CellVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::CellComplexLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::CellComplexLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::CellVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::CellDoubleLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::CellDoubleLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::CellVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::CellFloatLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::CellFloatLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::EdgeVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::EdgeComplexLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::EdgeComplexLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::EdgeVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::EdgeDoubleLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::EdgeDoubleLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::EdgeVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::EdgeFloatLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::EdgeFloatLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::FaceVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::FaceComplexLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::FaceComplexLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::FaceVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::FaceDoubleLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::FaceDoubleLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::FaceVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::FaceFloatLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::FaceFloatLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::NodeVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::NodeComplexLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::NodeComplexLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::NodeVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::NodeDoubleLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::NodeDoubleLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::NodeVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::NodeFloatLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::NodeFloatLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::OuterfaceVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::OuterfaceComplexLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::OuterfaceComplexLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::OuterfaceVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::OuterfaceDoubleLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::OuterfaceDoubleLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::OuterfaceVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::OuterfaceFloatLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::OuterfaceFloatLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::OutersideVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::OutersideComplexLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::OutersideComplexLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::OutersideVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::OutersideDoubleLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::OutersideDoubleLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::OutersideVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::OutersideFloatLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::OutersideFloatLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::SideVariable<dcomplex> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::SideComplexLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::SideComplexLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::SideVariable<double> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::SideDoubleLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::SideDoubleLinearTimeInterpolateOp>();
       } else if (boost::shared_ptr<pdat::SideVariable<float> >(var, boost::detail::dynamic_cast_tag())) {
-         time_op = boost::shared_ptr<hier::TimeInterpolateOperator>(
-               new pdat::SideFloatLinearTimeInterpolateOp());
+         time_op =
+            boost::make_shared<pdat::SideFloatLinearTimeInterpolateOp>();
       } else {
          TBOX_ERROR("Unsupported variable centering for time interpolate operator");
       }

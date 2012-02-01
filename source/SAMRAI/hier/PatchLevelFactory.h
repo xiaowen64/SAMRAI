@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/PatchFactory.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -33,7 +32,7 @@ namespace hier {
  *
  * @see hier::PatchLevel
  */
-class PatchLevelFactory:public tbox::DescribedClass
+class PatchLevelFactory
 {
 public:
    /*!
@@ -65,7 +64,7 @@ public:
       const boost::shared_ptr<GridGeometry> grid_geometry,
       const boost::shared_ptr<PatchDescriptor> descriptor,
       boost::shared_ptr<PatchFactory> factory =
-         boost::shared_ptr<PatchFactory>((PatchFactory*)NULL)) const;
+         boost::shared_ptr<PatchFactory>()) const;
 
    /*!
     * @brief Allocate a patch level using the data from the database to
@@ -97,7 +96,7 @@ public:
       const boost::shared_ptr<PatchDescriptor> descriptor,
       const ComponentSelector& component_selector,
       boost::shared_ptr<PatchFactory> factory =
-         boost::shared_ptr<PatchFactory>((PatchFactory*)NULL),
+         boost::shared_ptr<PatchFactory>(),
       const bool defer_boundary_box_creation = false) const;
 
 private:

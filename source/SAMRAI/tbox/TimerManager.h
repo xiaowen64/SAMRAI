@@ -298,8 +298,7 @@ private:
    checkTimerExistsInArray(
       boost::shared_ptr<Timer>& timer,
       const std::string& name,
-      const std::vector<boost::shared_ptr<Timer> >&
-      timer_array) const;
+      const std::vector<boost::shared_ptr<Timer> >& timer_array) const;
 
    /*
     * Print a table of values, using values specified in the timer_values

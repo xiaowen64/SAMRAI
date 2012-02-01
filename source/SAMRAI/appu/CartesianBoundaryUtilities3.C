@@ -861,8 +861,8 @@ void CartesianBoundaryUtilities3::read3dBdryFaces(
 
          if (need_data_read) {
             if (bdry_db->keyExists(bdry_loc_str)) {
-               boost::shared_ptr<tbox::Database> bdry_loc_db =
-                  bdry_db->getDatabase(bdry_loc_str);
+               boost::shared_ptr<tbox::Database> bdry_loc_db(
+                  bdry_db->getDatabase(bdry_loc_str));
                if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
                      std::string bdry_cond_str =
@@ -1007,8 +1007,8 @@ void CartesianBoundaryUtilities3::read3dBdryEdges(
 
          if (need_data_read) {
             if (bdry_db->keyExists(bdry_loc_str)) {
-               boost::shared_ptr<tbox::Database> bdry_loc_db =
-                  bdry_db->getDatabase(bdry_loc_str);
+               boost::shared_ptr<tbox::Database> bdry_loc_db(
+                  bdry_db->getDatabase(bdry_loc_str));
                if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
                      std::string bdry_cond_str =
@@ -1331,8 +1331,8 @@ void CartesianBoundaryUtilities3::read3dBdryNodes(
          }
 
          if (bdry_db->keyExists(bdry_loc_str)) {
-            boost::shared_ptr<tbox::Database> bdry_loc_db =
-               bdry_db->getDatabase(bdry_loc_str);
+            boost::shared_ptr<tbox::Database> bdry_loc_db(
+               bdry_db->getDatabase(bdry_loc_str));
             if (bdry_loc_db) {
                if (bdry_loc_db->keyExists("boundary_condition")) {
                   std::string bdry_cond_str =

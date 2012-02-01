@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Serializable.h"
 #ifndef included_String
 #include <string>

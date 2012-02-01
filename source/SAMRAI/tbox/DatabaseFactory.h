@@ -25,7 +25,7 @@ namespace tbox {
  * may use a DatabaseFactory to build databases when creating
  * a restart file.
  */
-class DatabaseFactory:public DescribedClass
+class DatabaseFactory
 {
 public:
    /*

@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Timer.h"
 
@@ -141,8 +140,7 @@ namespace algs {
  * @see mesh::GriddingAlgorithmStrategy
  */
 
-class TimeRefinementIntegrator:
-   public virtual tbox::DescribedClass,
+class TimeRefinementIntegrator :
    public tbox::Serializable
 {
 public:
@@ -154,8 +152,8 @@ public:
     * corresponding to the specified object_name.  Consult top of
     * this header file for further details.  The constructor also
     * registers this object for restart using the specified object name
-    * when the boolean argument is true.  Whether object will write its state to
-    * restart files during program execution is determined by this argument.
+    * when the boolean argument is true.  Whether object will write its state
+    * to restart files during program execution is determined by this argument.
     * Note that it has a default state of true.
     *
     * Note that this object also invokes the variable creation and

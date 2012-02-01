@@ -16,6 +16,8 @@
 
 #include "SAMRAI/xfer/CoarsenCopyTransaction.h"
 
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace xfer {
 
@@ -82,13 +84,13 @@ StandardCoarsenTransactionFactory::allocate(
       dst_mapped_box,
       src_mapped_box);
 
-   CoarsenCopyTransaction* transaction =
-      new CoarsenCopyTransaction(dst_level, src_level,
-         overlap,
-         dst_mapped_box,
-         src_mapped_box,
-         citem_id);
-   return boost::shared_ptr<tbox::Transaction>(transaction);
+   return boost::make_shared<CoarsenCopyTransaction>(
+      dst_level,
+      src_level,
+      overlap,
+      dst_mapped_box,
+      src_mapped_box,
+      citem_id);
 }
 
 }

@@ -37,7 +37,7 @@ namespace xfer {
  * of equivalence.
  */
 
-class CoarsenClasses:public tbox::DescribedClass
+class CoarsenClasses
 {
 public:
    /*!
@@ -213,7 +213,7 @@ private:
    insertEquivalenceClassItem(
       CoarsenClasses::Data& data,
       boost::shared_ptr<hier::PatchDescriptor> descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL));
+         boost::shared_ptr<hier::PatchDescriptor>());
 
    /*!
     * @brief Check coarsen data item for validity.
@@ -238,7 +238,7 @@ private:
    itemIsValid(
       const CoarsenClasses::Data& data_item,
       boost::shared_ptr<hier::PatchDescriptor> descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL)) const;
+         boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Compare CoarsenClasses object with another CoarsenClasses object;
@@ -265,7 +265,7 @@ private:
    classesMatch(
       boost::shared_ptr<CoarsenClasses> test_classes,
       boost::shared_ptr<hier::PatchDescriptor> descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL)) const;
+         boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Compare CoarsenClasses::Data objects for equivalence;
@@ -300,7 +300,7 @@ private:
       const CoarsenClasses::Data& data1,
       const CoarsenClasses::Data& data2,
       boost::shared_ptr<hier::PatchDescriptor> descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL)) const;
+         boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Get the size that has been allocated for the array storing coarsen
@@ -393,7 +393,7 @@ private:
    getEquivalenceClassIndex(
       const CoarsenClasses::Data& data,
       boost::shared_ptr<hier::PatchDescriptor> descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL)) const;
+         boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * The default length of the coarsen item array.

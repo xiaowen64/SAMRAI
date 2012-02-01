@@ -341,7 +341,7 @@ void ArrayData<TYPE>::copy(
    const hier::IntVector& src_shift)
 {
    for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
-      this->copy(src, b(), src_shift);
+      copy(src, b(), src_shift);
    }
 }
 
@@ -352,7 +352,7 @@ void ArrayData<TYPE>::copy(
    const hier::Transformation& transformation)
 {
    for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
-      this->copy(src, b(), transformation);
+      copy(src, b(), transformation);
    }
 }
 
@@ -550,7 +550,7 @@ void ArrayData<TYPE>::sum(
    const hier::IntVector& src_shift)
 {
    for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
-      this->sum(src, b(), src_shift);
+      sum(src, b(), src_shift);
    }
 }
 

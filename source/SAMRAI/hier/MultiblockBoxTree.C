@@ -22,6 +22,8 @@
 #include "SAMRAI/tbox/Statistician.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
+#include <boost/make_shared.hpp>
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -44,8 +46,6 @@ MultiblockBoxTree::MultiblockBoxTree(
    size_t min_number):
    d_grid_geometry(&grid_geometry)
 {
-   const tbox::Dimension& dim(d_grid_geometry->getDim());
-
    /*
     * Group Boxes by their BlockId and
     * create a tree for each BlockId.
@@ -71,7 +71,7 @@ MultiblockBoxTree::MultiblockBoxTree(
       TBOX_ASSERT(blocki->first.getBlockValue() >= 0 &&
          blocki->first.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
-      blocki->second.makeTree(min_number);
+      blocki->second.makeTree(static_cast<int>(min_number));
    }
 }
 
@@ -139,7 +139,7 @@ void MultiblockBoxTree::generateTree(
       TBOX_ASSERT(blocki->first.getBlockValue() >= 0 &&
          blocki->first.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
-      blocki->second.makeTree(min_number);
+      blocki->second.makeTree(static_cast<int>(min_number));
    }
 }
 
@@ -164,7 +164,7 @@ void MultiblockBoxTree::generateTree(
       TBOX_ASSERT(blocki->first.getBlockValue() >= 0 &&
          blocki->first.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
-      blocki->second.makeTree(min_number);
+      blocki->second.makeTree(static_cast<int>(min_number));
    }
 }
 
@@ -203,7 +203,7 @@ void MultiblockBoxTree::generateNonPeriodicTree(
       TBOX_ASSERT(blocki->first.getBlockValue() >= 0 &&
          blocki->first.getBlockValue() < d_grid_geometry->getNumberBlocks());
 
-      blocki->second.makeTree(min_number);
+      blocki->second.makeTree(static_cast<int>(min_number));
    }
 }
 
@@ -404,10 +404,13 @@ boost::shared_ptr<MultiblockBoxTree> MultiblockBoxTree::createRefinedTree(
    const IntVector& ratio) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*d_grid_geometry, ratio);
+#ifdef DEBUG_CHECK_ASSERTIONS
    const tbox::Dimension& dim(d_grid_geometry->getDim());
+#endif
    TBOX_ASSERT(ratio >= IntVector::getOne(dim));
 
-   MultiblockBoxTree* rval = new MultiblockBoxTree();
+   boost::shared_ptr<MultiblockBoxTree> rval =
+      boost::make_shared<MultiblockBoxTree>();
    rval->d_grid_geometry = d_grid_geometry;
 
    for (std::map<BlockId, BoxContainer>::const_iterator mi = d_single_block_trees.begin();
@@ -420,7 +423,7 @@ boost::shared_ptr<MultiblockBoxTree> MultiblockBoxTree::createRefinedTree(
       rval->d_single_block_trees[block_id].makeTree();
    }
 
-   return boost::shared_ptr<MultiblockBoxTree>(rval);
+   return rval;
 }
 
 /*

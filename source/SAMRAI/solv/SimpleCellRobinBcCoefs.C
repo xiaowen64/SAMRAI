@@ -47,7 +47,6 @@ SimpleCellRobinBcCoefs::SimpleCellRobinBcCoefs(
    const std::string& object_name):
    d_dim(dim),
    d_object_name(object_name),
-   d_hierarchy(),
    d_ln_min(-1),
    d_ln_max(-1),
    d_flux_id(-1),
@@ -224,7 +223,8 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
                              << "the same hierarchy as cached\n"
                              << "Dirichlet coefficients.");
          }
-         boost::shared_ptr<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level(
+            d_hierarchy->getPatchLevel(ln));
          if (!level->getPatch(global_id)->getBox().isSpatiallyEqual(patch.getBox())) {
             TBOX_ERROR(
                d_object_name << ": patch is not in the hierarchy\n"
@@ -371,8 +371,8 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
             }
          } else {
             diffcoef_data_ptr =
-	      boost::dynamic_pointer_cast<pdat::SideData<double>,
-                                          hier::PatchData>(patch.getPatchData(d_diffusion_coef_id));
+               boost::dynamic_pointer_cast<pdat::SideData<double>,
+                                           hier::PatchData>(patch.getPatchData(d_diffusion_coef_id));
             const pdat::ArrayData<double>& diffcoef_array_data =
                diffcoef_data_ptr->getArrayData(axis);
             for ( ; ai; ai++) {

@@ -16,6 +16,8 @@
 #include "SAMRAI/pdat/OuteredgeData.h"
 #include "SAMRAI/algs/OuteredgeSumTransaction.h"
 
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace algs {
 
@@ -84,14 +86,12 @@ OuteredgeSumTransactionFactory::allocate(
 
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst_level, *src_level, dst_node, src_node);
 
-   OuteredgeSumTransaction* transaction =
-      new OuteredgeSumTransaction(dst_level,
-         src_level,
-         overlap,
-         dst_node,
-         src_node,
-         ritem_id);
-   return boost::shared_ptr<tbox::Transaction>(transaction);
+   return boost::make_shared<OuteredgeSumTransaction>(dst_level,
+      src_level,
+      overlap,
+      dst_node,
+      src_node,
+      ritem_id);
 }
 
 boost::shared_ptr<tbox::Transaction>
@@ -132,7 +132,7 @@ void OuteredgeSumTransactionFactory::preprocessScratchSpace(
    TBOX_ASSERT(level);
 
    for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-      boost::shared_ptr<hier::Patch> patch = *ip;
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       const int ncomponents = preprocess_vector.getSize();
       for (int n = 0; n < ncomponents; ++n) {

@@ -91,7 +91,7 @@ public:
    explicit BergerRigoutsos(
       const tbox::Dimension& dim,
       boost::shared_ptr<tbox::Database> database =
-         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * @brief Destructor.

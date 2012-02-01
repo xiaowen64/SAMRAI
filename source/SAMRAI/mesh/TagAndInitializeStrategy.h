@@ -124,8 +124,7 @@ namespace mesh {
  * @see mesh::GriddingAlgorithm
  */
 
-class TagAndInitializeStrategy:
-   public virtual tbox::DescribedClass
+class TagAndInitializeStrategy
 {
 public:
    /*!
@@ -201,7 +200,7 @@ public:
       const bool can_be_refined,
       const bool initial_time,
       const boost::shared_ptr<hier::PatchLevel> old_level =
-         boost::shared_ptr<hier::PatchLevel>((hier::PatchLevel*)NULL),
+         boost::shared_ptr<hier::PatchLevel>(),
       const bool allocate_data = true) = 0;
 
    /*!

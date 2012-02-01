@@ -17,6 +17,8 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/hier/VariableDatabase.I"
 #endif
@@ -72,10 +74,9 @@ void VariableDatabase::shutdownCallback()
  *************************************************************************
  */
 
-VariableDatabase::VariableDatabase()
+VariableDatabase::VariableDatabase() :
+   d_patch_descriptor(boost::make_shared<PatchDescriptor>())
 {
-   d_patch_descriptor.reset(new PatchDescriptor());
-
    d_max_variable_id = idUndefined();
    d_max_context_id = idUndefined();
    d_max_descriptor_id = idUndefined();
@@ -114,7 +115,7 @@ boost::shared_ptr<VariableContext>
 VariableDatabase::getContext(
    const std::string& name)
 {
-   boost::shared_ptr<VariableContext> context((VariableContext*)NULL);
+   boost::shared_ptr<VariableContext> context;
 
    if (!name.empty()) {
 
@@ -189,7 +190,7 @@ boost::shared_ptr<Variable>
 VariableDatabase::getVariable(
    const std::string& name) const
 {
-   boost::shared_ptr<Variable> variable((Variable*)NULL);
+   boost::shared_ptr<Variable> variable;
 
    int var_id = getVariableId(name);
 
@@ -304,8 +305,8 @@ int VariableDatabase::registerPatchDataIndex(
 
       new_id = d_patch_descriptor->definePatchDataComponent(
             variable->getName(),
-            variable->getPatchDataFactory()->cloneFactory(variable->
-               getPatchDataFactory()->getGhostCellWidth()));
+            variable->getPatchDataFactory()->cloneFactory(
+               variable->getPatchDataFactory()->getGhostCellWidth()));
 
       const bool user_variable = true;
       addVariablePatchDataIndexPairToDatabase_Private(variable,
@@ -353,8 +354,7 @@ void VariableDatabase::removePatchDataIndex(
 
    if ((data_id >= 0) && (data_id <= d_max_descriptor_id)) {
 
-      boost::shared_ptr<Variable> variable =
-         d_index2variable_map[data_id];
+      boost::shared_ptr<Variable> variable = d_index2variable_map[data_id];
 
       if (variable) {
 
@@ -446,8 +446,8 @@ bool VariableDatabase::checkVariablePatchDataIndexType(
 
    if (d_patch_descriptor->getPatchDataFactory(data_id)) {
 
-      boost::shared_ptr<PatchDataFactory> dfact =
-         d_patch_descriptor->getPatchDataFactory(data_id);
+      boost::shared_ptr<PatchDataFactory> dfact(
+         d_patch_descriptor->getPatchDataFactory(data_id));
 
       if (dfact &&
           (typeid(*(variable->getPatchDataFactory())) == typeid(*dfact))) {
@@ -757,8 +757,7 @@ void VariableDatabase::removeInternalSAMRAIVariablePatchDataIndex(
 {
    if ((data_id >= 0) && (data_id <= d_max_descriptor_id)) {
 
-      boost::shared_ptr<Variable> variable =
-         d_index2variable_map[data_id];
+      boost::shared_ptr<Variable> variable = d_index2variable_map[data_id];
 
       if (variable &&
           !d_is_user_variable[variable->getInstanceIdentifier()]) {
@@ -1047,8 +1046,8 @@ int VariableDatabase::registerVariableAndContext_Private(
          // Check the descriptor id. If valid, get the associated
          // PatchDataFactory instance.
          if (desc_id != idUndefined()) {
-            boost::shared_ptr<PatchDataFactory> factory =
-               d_patch_descriptor->getPatchDataFactory(desc_id);
+            boost::shared_ptr<PatchDataFactory> factory(
+               d_patch_descriptor->getPatchDataFactory(desc_id));
 
             // Ensure the factory is not null and that the ghost
             // cells are the same as what we passed in.  If the ghost
@@ -1075,8 +1074,8 @@ int VariableDatabase::registerVariableAndContext_Private(
    // Create the new factory if necessary
    if (make_new_factory) {
 
-      boost::shared_ptr<PatchDataFactory> new_factory =
-         variable->getPatchDataFactory()->cloneFactory(ghosts);
+      boost::shared_ptr<PatchDataFactory> new_factory(
+         variable->getPatchDataFactory()->cloneFactory(ghosts));
 
       std::string tmp(variable->getName());
       tmp += separator;

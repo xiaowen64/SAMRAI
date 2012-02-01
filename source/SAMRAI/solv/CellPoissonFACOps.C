@@ -43,6 +43,8 @@
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/PatchLevelFullFillPattern.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/solv/CellPoissonFACOps.I"
 #endif
@@ -561,10 +563,8 @@ CellPoissonFACOps::CellPoissonFACOps(
    boost::shared_ptr<tbox::Database> database):
    d_dim(dim),
    d_object_name(object_name),
-   d_hierarchy(),
    d_ln_min(-1),
    d_ln_max(-1),
-   d_cf_boundary(),
    d_poisson_spec(object_name + "::Poisson specs"),
    d_smoothing_choice("redblack"),
    d_coarse_solver_choice(
@@ -586,38 +586,18 @@ CellPoissonFACOps::CellPoissonFACOps(
                   object_name + "::hypre_solver",
                   database && database->isDatabase("hypre_solver") ?
                   database->getDatabase("hypre_solver") :
-                  boost::shared_ptr<tbox::Database>((tbox::Database*)NULL)),
+                  boost::shared_ptr<tbox::Database>()),
 #endif
    d_physical_bc_coef(NULL),
-   d_context(hier::VariableDatabase::getDatabase()
-             ->getContext(object_name + "::PRIVATE_CONTEXT")),
+   d_context(hier::VariableDatabase::getDatabase()->getContext(
+             object_name + "::PRIVATE_CONTEXT")),
    d_cell_scratch_id(-1),
    d_flux_scratch_id(-1),
    d_oflux_scratch_id(-1),
-   d_prolongation_refine_operator(),
-   d_prolongation_refine_algorithm(),
-   d_prolongation_refine_schedules(),
-   d_urestriction_coarsen_operator(),
-   d_urestriction_coarsen_algorithm(),
-   d_urestriction_coarsen_schedules(),
-   d_rrestriction_coarsen_operator(),
-   d_rrestriction_coarsen_algorithm(),
-   d_rrestriction_coarsen_schedules(),
-   d_flux_coarsen_operator(),
-   d_flux_coarsen_algorithm(),
-   d_flux_coarsen_schedules(),
-   d_ghostfill_refine_operator(),
-   d_ghostfill_refine_algorithm(),
-   d_ghostfill_refine_schedules(),
-   d_ghostfill_nocoarse_refine_operator(),
-   d_ghostfill_nocoarse_refine_algorithm(),
-   d_ghostfill_nocoarse_refine_schedules(),
    d_bc_helper(dim,
                d_object_name + "::bc helper"),
    d_enable_logging(false),
-   d_preconditioner(NULL),
-   d_hopscell(),
-   d_hopsside()
+   d_preconditioner(NULL)
 {
 
    t_restrict_solution = tbox::TimerManager::getManager()->
@@ -807,13 +787,13 @@ void CellPoissonFACOps::initializeOperatorState(
       }
    }
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level_ptr =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level_ptr(
+         d_hierarchy->getPatchLevel(ln));
       hier::PatchLevel& level = *level_ptr;
       for (hier::PatchLevel::Iterator pi(level); pi; pi++) {
          hier::Patch& patch = **pi;
-         boost::shared_ptr<hier::PatchData> fd =
-            patch.getPatchData(rhs.getComponentDescriptorIndex(0));
+         boost::shared_ptr<hier::PatchData> fd(
+            patch.getPatchData(rhs.getComponentDescriptorIndex(0)));
          if (fd) {
             /*
              * Some data checks can only be done if the data already exists.
@@ -995,30 +975,30 @@ void CellPoissonFACOps::initializeOperatorState(
    d_ghostfill_nocoarse_refine_algorithm.reset(
       new xfer::RefineAlgorithm(d_dim));
 
-   d_prolongation_refine_algorithm->
-   registerRefine(d_cell_scratch_id,
+   d_prolongation_refine_algorithm->registerRefine(
+      d_cell_scratch_id,
       solution.getComponentDescriptorIndex(0),
       d_cell_scratch_id,
       d_prolongation_refine_operator);
-   d_urestriction_coarsen_algorithm->
-   registerCoarsen(solution.getComponentDescriptorIndex(0),
+   d_urestriction_coarsen_algorithm->registerCoarsen(
+      solution.getComponentDescriptorIndex(0),
       solution.getComponentDescriptorIndex(0),
       d_urestriction_coarsen_operator);
-   d_rrestriction_coarsen_algorithm->
-   registerCoarsen(rhs.getComponentDescriptorIndex(0),
+   d_rrestriction_coarsen_algorithm->registerCoarsen(
+      rhs.getComponentDescriptorIndex(0),
       rhs.getComponentDescriptorIndex(0),
       d_rrestriction_coarsen_operator);
-   d_ghostfill_refine_algorithm->
-   registerRefine(solution.getComponentDescriptorIndex(0),
+   d_ghostfill_refine_algorithm->registerRefine(
+      solution.getComponentDescriptorIndex(0),
       solution.getComponentDescriptorIndex(0),
       solution.getComponentDescriptorIndex(0),
       d_ghostfill_refine_operator);
-   d_flux_coarsen_algorithm->
-   registerCoarsen(((d_flux_id != -1) ? d_flux_id : d_flux_scratch_id),
+   d_flux_coarsen_algorithm->registerCoarsen(
+      ((d_flux_id != -1) ? d_flux_id : d_flux_scratch_id),
       d_oflux_scratch_id,
       d_flux_coarsen_operator);
-   d_ghostfill_nocoarse_refine_algorithm->
-   registerRefine(solution.getComponentDescriptorIndex(0),
+   d_ghostfill_nocoarse_refine_algorithm->registerRefine(
+      solution.getComponentDescriptorIndex(0),
       solution.getComponentDescriptorIndex(0),
       solution.getComponentDescriptorIndex(0),
       d_ghostfill_nocoarse_refine_operator);
@@ -1026,7 +1006,7 @@ void CellPoissonFACOps::initializeOperatorState(
    for (int dest_ln = d_ln_min + 1; dest_ln <= d_ln_max; ++dest_ln) {
 
       boost::shared_ptr<xfer::PatchLevelFullFillPattern> fill_pattern(
-         new xfer::PatchLevelFullFillPattern());
+         boost::make_shared<xfer::PatchLevelFullFillPattern>());
       d_prolongation_refine_schedules[dest_ln] =
          d_prolongation_refine_algorithm->
          createSchedule(fill_pattern,
@@ -1040,8 +1020,8 @@ void CellPoissonFACOps::initializeOperatorState(
             << ": Cannot create a refine schedule for prolongation!\n");
       }
       d_ghostfill_refine_schedules[dest_ln] =
-         d_ghostfill_refine_algorithm->
-         createSchedule(d_hierarchy->getPatchLevel(dest_ln),
+         d_ghostfill_refine_algorithm->createSchedule(
+            d_hierarchy->getPatchLevel(dest_ln),
             dest_ln - 1,
             d_hierarchy,
             &d_bc_helper);
@@ -1050,8 +1030,8 @@ void CellPoissonFACOps::initializeOperatorState(
             << ": Cannot create a refine schedule for ghost filling!\n");
       }
       d_ghostfill_nocoarse_refine_schedules[dest_ln] =
-         d_ghostfill_nocoarse_refine_algorithm->
-         createSchedule(d_hierarchy->getPatchLevel(dest_ln),
+         d_ghostfill_nocoarse_refine_algorithm->createSchedule(
+            d_hierarchy->getPatchLevel(dest_ln),
             &d_bc_helper);
       if (!d_ghostfill_nocoarse_refine_schedules[dest_ln]) {
          TBOX_ERROR(
@@ -1061,24 +1041,24 @@ void CellPoissonFACOps::initializeOperatorState(
    }
    for (int dest_ln = d_ln_min; dest_ln < d_ln_max; ++dest_ln) {
       d_urestriction_coarsen_schedules[dest_ln] =
-         d_urestriction_coarsen_algorithm->
-         createSchedule(d_hierarchy->getPatchLevel(dest_ln),
+         d_urestriction_coarsen_algorithm->createSchedule(
+            d_hierarchy->getPatchLevel(dest_ln),
             d_hierarchy->getPatchLevel(dest_ln + 1));
       if (!d_urestriction_coarsen_schedules[dest_ln]) {
          TBOX_ERROR(d_object_name
             << ": Cannot create a coarsen schedule for U restriction!\n");
       }
       d_rrestriction_coarsen_schedules[dest_ln] =
-         d_rrestriction_coarsen_algorithm->
-         createSchedule(d_hierarchy->getPatchLevel(dest_ln),
+         d_rrestriction_coarsen_algorithm->createSchedule(
+            d_hierarchy->getPatchLevel(dest_ln),
             d_hierarchy->getPatchLevel(dest_ln + 1));
       if (!d_rrestriction_coarsen_schedules[dest_ln]) {
          TBOX_ERROR(d_object_name
             << ": Cannot create a coarsen schedule for R restriction!\n");
       }
       d_flux_coarsen_schedules[dest_ln] =
-         d_flux_coarsen_algorithm->
-         createSchedule(d_hierarchy->getPatchLevel(dest_ln),
+         d_flux_coarsen_algorithm->createSchedule(
+            d_hierarchy->getPatchLevel(dest_ln),
             d_hierarchy->getPatchLevel(dest_ln + 1));
       if (!d_flux_coarsen_schedules[dest_ln]) {
          TBOX_ERROR(d_object_name
@@ -1086,8 +1066,8 @@ void CellPoissonFACOps::initializeOperatorState(
       }
    }
    d_ghostfill_nocoarse_refine_schedules[d_ln_min] =
-      d_ghostfill_nocoarse_refine_algorithm->
-      createSchedule(d_hierarchy->getPatchLevel(d_ln_min),
+      d_ghostfill_nocoarse_refine_algorithm->createSchedule(
+         d_hierarchy->getPatchLevel(d_ln_min),
          &d_bc_helper);
    if (!d_ghostfill_nocoarse_refine_schedules[d_ln_min]) {
       TBOX_ERROR(
@@ -1251,10 +1231,8 @@ void CellPoissonFACOps::prolongErrorAndCorrect(
    }
 #endif
 
-   boost::shared_ptr<hier::PatchLevel> coarse_level =
-      d_hierarchy->getPatchLevel(dest_ln - 1);
-   boost::shared_ptr<hier::PatchLevel> fine_level =
-      d_hierarchy->getPatchLevel(dest_ln);
+   boost::shared_ptr<hier::PatchLevel> fine_level(
+      d_hierarchy->getPatchLevel(dest_ln));
 
    /*
     * Data is prolonged into the scratch space corresponding
@@ -1344,7 +1322,7 @@ void CellPoissonFACOps::smoothErrorByRedBlack(
          "internal hierarchy.");
    }
 #endif
-   boost::shared_ptr<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+   boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(ln));
 
    const int data_id = data.getComponentDescriptorIndex(0);
 
@@ -1383,7 +1361,7 @@ void CellPoissonFACOps::smoothErrorByRedBlack(
       // Red sweep.
       xeqScheduleGhostFillNoCoarse(data_id, ln);
       for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
-         boost::shared_ptr<hier::Patch> patch = *pi;
+         const boost::shared_ptr<hier::Patch>& patch = *pi;
 
          bool deallocate_flux_data_when_done = false;
          if (flux_id == d_flux_scratch_id) {
@@ -1399,15 +1377,6 @@ void CellPoissonFACOps::smoothErrorByRedBlack(
             }
          }
 
-         boost::shared_ptr<pdat::CellData<double> > scalar_field_data;
-         if (d_poisson_spec.cIsVariable()) {
-            scalar_field_data =
-               boost::dynamic_pointer_cast<pdat::CellData<double>,
-                  hier::PatchData>(patch->getPatchData(d_poisson_spec.getCPatchDataId()));
-         }
-         else {
-            scalar_field_data.reset();
-         }
          boost::shared_ptr<pdat::CellData<double> > err_data(
             data.getComponentPatchData(0, *patch),
             boost::detail::dynamic_cast_tag());
@@ -1439,7 +1408,7 @@ void CellPoissonFACOps::smoothErrorByRedBlack(
 
       // Black sweep.
       for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
-         boost::shared_ptr<hier::Patch> patch = *pi;
+         const boost::shared_ptr<hier::Patch>& patch = *pi;
 
          bool deallocate_flux_data_when_done = false;
          if (flux_id == d_flux_scratch_id) {
@@ -1455,15 +1424,6 @@ void CellPoissonFACOps::smoothErrorByRedBlack(
             }
          }
 
-         boost::shared_ptr<pdat::CellData<double> > scalar_field_data;
-         if (d_poisson_spec.cIsVariable()) {
-            scalar_field_data =
-               boost::dynamic_pointer_cast<pdat::CellData<double>,
-                  hier::PatchData>(patch->getPatchData(d_poisson_spec.getCPatchDataId()));
-         }
-         else {
-            scalar_field_data.reset();
-         }
          boost::shared_ptr<pdat::CellData<double> > err_data(
             data.getComponentPatchData(0, *patch),
             boost::detail::dynamic_cast_tag());
@@ -1787,7 +1747,7 @@ void CellPoissonFACOps::computeCompositeResidualOnLevel(
          "internal hierarchy.");
    }
 #endif
-   boost::shared_ptr<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+   boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(ln));
 
    /*
     * Set up the bc helper so that when we use a refine schedule
@@ -1822,7 +1782,6 @@ void CellPoissonFACOps::computeCompositeResidualOnLevel(
 
    /* S1. Fill solution ghost data. */
    {
-      boost::shared_ptr<xfer::RefineSchedule> ln_refine_schedule;
       if (ln > d_ln_min) {
          /* Fill from current, next coarser level and physical boundary */
          xeqScheduleGhostFill(soln_id, ln);
@@ -1852,16 +1811,10 @@ void CellPoissonFACOps::computeCompositeResidualOnLevel(
     * S2. Compute flux on patches in level.
     */
    for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
-      boost::shared_ptr<hier::Patch> patch = *pi;
+      const boost::shared_ptr<hier::Patch>& patch = *pi;
 
       boost::shared_ptr<pdat::CellData<double> > soln_data(
          solution.getComponentPatchData(0, *patch),
-         boost::detail::dynamic_cast_tag());
-      boost::shared_ptr<pdat::CellData<double> > rhs_data(
-         rhs.getComponentPatchData(0, *patch),
-         boost::detail::dynamic_cast_tag());
-      boost::shared_ptr<pdat::CellData<double> > residual_data(
-         residual.getComponentPatchData(0, *patch),
          boost::detail::dynamic_cast_tag());
       boost::shared_ptr<pdat::SideData<double> > flux_data(
          patch->getPatchData(flux_id),
@@ -1886,7 +1839,7 @@ void CellPoissonFACOps::computeCompositeResidualOnLevel(
     * S4. Compute residual on patches in level.
     */
    for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
-      boost::shared_ptr<hier::Patch> patch = *pi;
+      const boost::shared_ptr<hier::Patch>& patch = *pi;
       boost::shared_ptr<pdat::CellData<double> > soln_data(
          solution.getComponentPatchData(0, *patch),
          boost::detail::dynamic_cast_tag());
@@ -1998,10 +1951,9 @@ void CellPoissonFACOps::computeVectorWeights(
        * On every level, first assign cell volume to vector weight.
        */
 
-      boost::shared_ptr<hier::PatchLevel> level =
-         hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator p(level); p; p++) {
-         boost::shared_ptr<hier::Patch> patch = *p;
+         const boost::shared_ptr<hier::Patch>& patch = *p;
          boost::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
             patch->getPatchGeometry(),
             boost::detail::dynamic_cast_tag());
@@ -2038,8 +1990,8 @@ void CellPoissonFACOps::computeVectorWeights(
           * at this level.
           */
 
-         boost::shared_ptr<hier::PatchLevel> next_finer_level =
-            hierarchy->getPatchLevel(ln + 1);
+         boost::shared_ptr<hier::PatchLevel> next_finer_level(
+            hierarchy->getPatchLevel(ln + 1));
          hier::BoxContainer coarsened_boxes = next_finer_level->getBoxes();
          hier::IntVector coarsen_ratio(next_finer_level->getRatioToLevelZero());
          coarsen_ratio /= level->getRatioToLevelZero();
@@ -2053,7 +2005,7 @@ void CellPoissonFACOps::computeVectorWeights(
 
          for (hier::PatchLevel::Iterator p(level); p; p++) {
 
-            boost::shared_ptr<hier::Patch> patch = *p;
+            const boost::shared_ptr<hier::Patch>& patch = *p;
             for (hier::BoxContainer::Iterator i(coarsened_boxes);
                  i != coarsened_boxes.end(); ++i) {
 
@@ -2147,16 +2099,8 @@ void CellPoissonFACOps::computeFluxOnPatch(
    const int* upper = &box.upper()[0];
    const double* dx = patch_geom->getDx();
 
-   double D_value;
-   boost::shared_ptr<pdat::SideData<double> > D_data;
    if (d_poisson_spec.dIsConstant()) {
-      D_value = d_poisson_spec.getDConstant();
-   } else {
-      D_data = boost::dynamic_pointer_cast<pdat::SideData<double>,
-                                           hier::PatchData>(patch.getPatchData(d_poisson_spec.getDPatchDataId()));
-   }
-
-   if (d_poisson_spec.dIsConstant()) {
+      double D_value = d_poisson_spec.getDConstant();
       if (d_dim == tbox::Dimension(2)) {
          F77_FUNC(compfluxcondc2d, COMPFLUXCONDC2D) (
             Dgradw_data.getPointer(0),
@@ -2189,6 +2133,9 @@ void CellPoissonFACOps::computeFluxOnPatch(
             dx);
       }
    } else {
+      boost::shared_ptr<pdat::SideData<double> > D_data(
+         boost::dynamic_pointer_cast<pdat::SideData<double>, hier::PatchData>(
+            patch.getPatchData(d_poisson_spec.getDPatchDataId())));
       if (d_dim == tbox::Dimension(2)) {
          F77_FUNC(compfluxvardc2d, COMPFLUXVARDC2D) (
             Dgradw_data.getPointer(0),
@@ -2260,12 +2207,11 @@ void CellPoissonFACOps::computeResidualOnPatch(
    const int* upper = &box.upper()[0];
    const double* dx = patch_geom->getDx();
 
-   boost::shared_ptr<pdat::CellData<double> > scalar_field_data;
    double scalar_field_constant;
    if (d_poisson_spec.cIsVariable()) {
-      scalar_field_data =
-         boost::dynamic_pointer_cast<pdat::CellData<double>,
-                                     hier::PatchData>(patch.getPatchData(d_poisson_spec.getCPatchDataId()));
+      boost::shared_ptr<pdat::CellData<double> > scalar_field_data(
+         boost::dynamic_pointer_cast<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_poisson_spec.getCPatchDataId())));
       if (d_dim == tbox::Dimension(2)) {
          F77_FUNC(compresvarsca2d, COMPRESVARSCA2D) (
             flux_data.getPointer(0),
@@ -2754,16 +2700,14 @@ CellPoissonFACOps::xeqScheduleProlongation(
       TBOX_ERROR("Expected schedule not found.");
    }
    xfer::RefineAlgorithm refiner(d_dim);
-   refiner.
-   registerRefine(dst_id,
+   refiner.registerRefine(dst_id,
       src_id,
       scr_id,
       d_prolongation_refine_operator);
-   refiner.
-   resetSchedule(d_prolongation_refine_schedules[dest_ln]);
+   refiner.resetSchedule(d_prolongation_refine_schedules[dest_ln]);
    d_prolongation_refine_schedules[dest_ln]->fillData(0.0);
-   d_prolongation_refine_algorithm->
-   resetSchedule(d_prolongation_refine_schedules[dest_ln]);
+   d_prolongation_refine_algorithm->resetSchedule(
+      d_prolongation_refine_schedules[dest_ln]);
 }
 
 void
@@ -2782,8 +2726,8 @@ CellPoissonFACOps::xeqScheduleURestriction(
       d_urestriction_coarsen_operator);
    coarsener.resetSchedule(d_urestriction_coarsen_schedules[dest_ln]);
    d_urestriction_coarsen_schedules[dest_ln]->coarsenData();
-   d_urestriction_coarsen_algorithm->
-   resetSchedule(d_urestriction_coarsen_schedules[dest_ln]);
+   d_urestriction_coarsen_algorithm->resetSchedule(
+      d_urestriction_coarsen_schedules[dest_ln]);
 }
 
 void
@@ -2802,8 +2746,8 @@ CellPoissonFACOps::xeqScheduleRRestriction(
       d_rrestriction_coarsen_operator);
    coarsener.resetSchedule(d_rrestriction_coarsen_schedules[dest_ln]);
    d_rrestriction_coarsen_schedules[dest_ln]->coarsenData();
-   d_rrestriction_coarsen_algorithm->
-   resetSchedule(d_rrestriction_coarsen_schedules[dest_ln]);
+   d_rrestriction_coarsen_algorithm->resetSchedule(
+      d_rrestriction_coarsen_schedules[dest_ln]);
 }
 
 void
@@ -2823,8 +2767,7 @@ CellPoissonFACOps::xeqScheduleFluxCoarsen(
 
    coarsener.resetSchedule(d_flux_coarsen_schedules[dest_ln]);
    d_flux_coarsen_schedules[dest_ln]->coarsenData();
-   d_flux_coarsen_algorithm->
-   resetSchedule(d_flux_coarsen_schedules[dest_ln]);
+   d_flux_coarsen_algorithm->resetSchedule(d_flux_coarsen_schedules[dest_ln]);
 }
 
 void
@@ -2844,8 +2787,8 @@ CellPoissonFACOps::xeqScheduleGhostFill(
    refiner.
    resetSchedule(d_ghostfill_refine_schedules[dest_ln]);
    d_ghostfill_refine_schedules[dest_ln]->fillData(0.0);
-   d_ghostfill_refine_algorithm->
-   resetSchedule(d_ghostfill_refine_schedules[dest_ln]);
+   d_ghostfill_refine_algorithm->resetSchedule(
+      d_ghostfill_refine_schedules[dest_ln]);
 }
 
 void
@@ -2865,8 +2808,8 @@ CellPoissonFACOps::xeqScheduleGhostFillNoCoarse(
    refiner.
    resetSchedule(d_ghostfill_nocoarse_refine_schedules[dest_ln]);
    d_ghostfill_nocoarse_refine_schedules[dest_ln]->fillData(0.0);
-   d_ghostfill_nocoarse_refine_algorithm->
-   resetSchedule(d_ghostfill_nocoarse_refine_schedules[dest_ln]);
+   d_ghostfill_nocoarse_refine_algorithm->resetSchedule(
+      d_ghostfill_nocoarse_refine_schedules[dest_ln]);
 }
 
 void

@@ -17,7 +17,6 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -54,7 +53,7 @@ namespace hier {
  * @see hier::PatchDescriptor
  */
 
-class PatchData:public tbox::DescribedClass
+class PatchData
 {
 public:
    /**

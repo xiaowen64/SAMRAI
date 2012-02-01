@@ -18,6 +18,7 @@
 #include "SAMRAI/tbox/IOStream.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
 #include <string>
 
 #ifndef ENABLE_SAMRAI_TIMERS
@@ -122,45 +123,40 @@ void TimerManager::registerSingletonSubclassInstance(
  */
 
 TimerManager::TimerManager(
-   boost::shared_ptr<Database> input_db)
-{
+   boost::shared_ptr<Database> input_db) :
 #ifdef ENABLE_SAMRAI_TIMERS
+   d_timer_active_access_time(-9999.0),
+   d_timer_inactive_access_time(-9999.0),
+#ifdef HAVE_TAU
+   d_main_timer(new Timer("UNINSTRUMENTED PARTS")),
+#else
+   d_main_timer(new Timer("TOTAL RUN TIME")),
+#endif
+   d_length_package_names(0),
+   d_length_class_names(0),
+   d_length_class_method_names(0),
+   d_print_threshold(0.25),
+   d_print_exclusive(false),
+   d_print_total(true),
+   d_print_processor(true),
+   d_print_max(false),
+   d_print_summed(false),
+   d_print_user(false),
+   d_print_sys(false),
+   d_print_wall(true),
+   d_print_percentage(true),
+   d_print_concurrent(false),
+   d_print_timer_overhead(false)
+#endif
+{
    /*
     * Create a timer that measures overall solution time.  If the
     * application uses Tau, this timer will effectively measure
     * uninstrumented parts of the library.  Hence, use a different name
     * for the different cases to avoid confusion in the Tau analysis tool.
     */
-#ifdef HAVE_TAU
-   d_main_timer.reset(new Timer("UNINSTRUMENTED PARTS"));
-#else
-   d_main_timer.reset(new Timer("TOTAL RUN TIME"));
-#endif
-
-   d_exclusive_timer_stack.clearItems();
-
-   d_length_package_names = 0;
-   d_length_class_names = 0;
-   d_length_class_method_names = 0;
-
-   d_print_exclusive = false;
-   d_print_total = true;
-   d_print_processor = true;
-   d_print_max = false;
-   d_print_summed = false;
-   d_print_user = false;
-   d_print_sys = false;
-   d_print_wall = true;
-   d_print_percentage = true;
-   d_print_concurrent = false;
-   d_print_timer_overhead = false;
-
-   d_print_threshold = 0.25;
-
+#ifdef ENABLE_SAMRAI_TIMERS
    getFromInput(input_db);
-
-   d_timer_active_access_time = -9999.0;
-   d_timer_inactive_access_time = -9999.0;
 #endif
 }
 
@@ -228,7 +224,8 @@ bool TimerManager::checkTimerExistsInArray(
 
 void TimerManager::activateExistingTimers() {
 #ifdef ENABLE_SAMRAI_TIMERS
-   std::vector<boost::shared_ptr<Timer> >::iterator it = d_inactive_timers.begin();
+   std::vector<boost::shared_ptr<Timer> >::iterator it =
+      d_inactive_timers.begin();
    while (it != d_inactive_timers.end()) {
       bool timer_active = checkTimerInNameLists((*it)->getName());
       if (timer_active) {
@@ -246,9 +243,8 @@ boost::shared_ptr<Timer> TimerManager::getTimer(
    const std::string& name,
    bool ignore_timer_input)
 {
-   boost::shared_ptr<Timer> timer;
-
 #ifdef ENABLE_SAMRAI_TIMERS
+   boost::shared_ptr<Timer> timer;
 
    TBOX_ASSERT(!name.empty());
    bool timer_active = true;
@@ -293,7 +289,7 @@ boost::shared_ptr<Timer> TimerManager::getTimer(
    // since timers aren't active - and we need to still provide
    // pseudo-timer functionality (i.e., a valid timer), we'll
    // create one on the fly, but not track it.
-   timer = new Timer(name);
+   boost::shared_ptr<Timer> timer = boost::make_shared<Timer>(name);
    timer->setActive(false);
    return timer;
 
@@ -2396,14 +2392,13 @@ double TimerManager::computeOverheadConstantActiveOrInactive(
    bool active)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   boost::shared_ptr<tbox::Timer> outer_timer;
-   boost::shared_ptr<tbox::Timer> inner_timer;
-
    std::string outer_name("TimerManger::Outer");
-   outer_timer = tbox::TimerManager::getManager()->getTimer(outer_name, true);
+   boost::shared_ptr<tbox::Timer> outer_timer(
+      tbox::TimerManager::getManager()->getTimer(outer_name, true));
 
    std::string inner_name("TimerMangerInner");
-   inner_timer = tbox::TimerManager::getManager()->getTimer(inner_name, active);
+   boost::shared_ptr<tbox::Timer> inner_timer(
+      tbox::TimerManager::getManager()->getTimer(inner_name, active));
 
    const int ntest = 1000;
    for (int i = 0; i < ntest; i++) {

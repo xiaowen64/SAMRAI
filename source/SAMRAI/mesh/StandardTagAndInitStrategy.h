@@ -49,8 +49,7 @@ namespace mesh {
  * @see mesh::StandardTagAndInitialize.
  */
 
-class StandardTagAndInitStrategy:
-   public virtual tbox::DescribedClass
+class StandardTagAndInitStrategy
 {
 public:
    /**
@@ -207,7 +206,7 @@ public:
       const bool can_be_refined,
       const bool initial_time,
       const boost::shared_ptr<hier::PatchLevel> old_level =
-         boost::shared_ptr<hier::PatchLevel>((hier::PatchLevel*)NULL),
+         boost::shared_ptr<hier::PatchLevel>(),
       const bool allocate_data = true) = 0;
 
    /**

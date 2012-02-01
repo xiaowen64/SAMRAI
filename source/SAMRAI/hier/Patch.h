@@ -21,7 +21,6 @@
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Database.h"
 
 #include <boost/shared_ptr.hpp>
@@ -55,7 +54,7 @@ namespace hier {
  * @see hier::PatchDataFactory
  * @see hier::PatchGeometry
  */
-class Patch:public tbox::DescribedClass
+class Patch
 {
 public:
    /*!

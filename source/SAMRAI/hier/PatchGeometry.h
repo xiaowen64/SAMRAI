@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/LocalId.h"
 #include "SAMRAI/hier/PatchBoundaries.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/List.h"
 
 #include <iostream>
@@ -39,7 +38,7 @@ namespace hier {
  * @see hier::GridGeometry
  */
 
-class PatchGeometry:public tbox::DescribedClass
+class PatchGeometry
 {
 public:
    /*!

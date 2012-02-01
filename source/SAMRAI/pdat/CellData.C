@@ -81,7 +81,7 @@ CellData<TYPE>::CellData(
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 
-   d_data.initializeArray(this->getGhostBox(), depth);
+   d_data.initializeArray(getGhostBox(), depth);
 }
 
 template<class TYPE>
@@ -484,9 +484,7 @@ void CellData<TYPE>::getSpecializedFromDatabase(
 
    d_depth = database->getInteger("d_depth");
 
-   boost::shared_ptr<tbox::Database> array_database;
-   array_database = database->getDatabase("d_data");
-   d_data.getFromDatabase(array_database);
+   d_data.getFromDatabase(database->getDatabase("d_data"));
 }
 
 /*
@@ -508,9 +506,7 @@ void CellData<TYPE>::putSpecializedToDatabase(
 
    database->putInteger("d_depth", d_depth);
 
-   boost::shared_ptr<tbox::Database> array_database;
-   array_database = database->putDatabase("d_data");
-   d_data.putToDatabase(array_database);
+   d_data.putToDatabase(database->putDatabase("d_data"));
 }
 
 }

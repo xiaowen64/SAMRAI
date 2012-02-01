@@ -16,6 +16,8 @@
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/NodeGeometry.I"
 #endif
@@ -121,8 +123,7 @@ boost::shared_ptr<hier::BoxOverlap> NodeGeometry::doOverlap(
 
    // Create the node overlap data object using the boxes and source shift
 
-   hier::BoxOverlap* overlap = new NodeOverlap(dst_boxes, transformation);
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
+   return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
 }
 
 /*
@@ -142,7 +143,9 @@ void NodeGeometry::computeDestinationBoxes(
    const hier::Transformation& transformation,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
+#ifdef DEBUG_CHECK_ASSERTIONS
    const hier::IntVector& src_offset(transformation.getOffset());
+#endif
    TBOX_DIM_ASSERT_CHECK_ARGS2(src_mask, src_offset);
 
    // Translate the source box and grow the destination box by the ghost cells
@@ -200,8 +203,7 @@ NodeGeometry::setUpOverlap(
    }
 
    // Create the node overlap data object using the boxes and source shift
-   hier::BoxOverlap* overlap = new NodeOverlap(dst_boxes, transformation);
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
+   return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
 
 }
 

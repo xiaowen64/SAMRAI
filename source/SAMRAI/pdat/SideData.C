@@ -57,7 +57,7 @@ SideData<TYPE>::SideData(
    for (int d = 0; d < getDim().getValue(); d++) {
       if (d_directions(d)) {
          const hier::Box side =
-            SideGeometry::toSideBox(this->getGhostBox(), d);
+            SideGeometry::toSideBox(getGhostBox(), d);
          d_data[d].initializeArray(side, depth);
       } else {
          d_data[d].invalidateArray(dim);
@@ -85,7 +85,7 @@ SideData<TYPE>::SideData(
    for (int d = 0; d < getDim().getValue(); d++) {
       if (d_directions(d)) {
          const hier::Box side =
-            SideGeometry::toSideBox(this->getGhostBox(), d);
+            SideGeometry::toSideBox(getGhostBox(), d);
          d_data[d].initializeArray(side, depth);
       } else {
          d_data[d].invalidateArray(dim);

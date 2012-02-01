@@ -31,12 +31,12 @@ HierarchyEdgeDataOpsInteger::HierarchyEdgeDataOpsInteger(
    boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int coarsest_level,
    const int finest_level):
-   HierarchyDataOpsInteger()
+   HierarchyDataOpsInteger(),
+   d_hierarchy(hierarchy)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(hierarchy);
 #endif
-   d_hierarchy = hierarchy;
    if ((coarsest_level < 0) || (finest_level < 0)) {
       if (d_hierarchy->getNumberOfLevels() == 0) {
          d_coarsest_level = coarsest_level;
@@ -90,8 +90,8 @@ void HierarchyEdgeDataOpsInteger::resetLevels(
    }
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       hier::BoxContainer edge_boxes;
 
       for (int nd = 0; nd < dim.getValue(); nd++) {
@@ -145,8 +145,8 @@ int HierarchyEdgeDataOpsInteger::numberOfEntries(
 #endif
 
       for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-         boost::shared_ptr<hier::PatchLevel> level =
-            d_hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level(
+            d_hierarchy->getPatchLevel(ln));
          const int npatches = level->getNumberOfPatches();
 #ifdef DEBUG_CHECK_ASSERTIONS
          for (int nd = 0; nd < dim.getValue(); nd++) {
@@ -171,8 +171,8 @@ int HierarchyEdgeDataOpsInteger::numberOfEntries(
    } else {
 
       for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-         boost::shared_ptr<hier::PatchLevel> level =
-            d_hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level(
+            d_hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
             boost::shared_ptr<pdat::EdgeData<int> > d(
                (*ip)->getPatchData(data_id),
@@ -208,10 +208,10 @@ void HierarchyEdgeDataOpsInteger::copyData(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
@@ -253,10 +253,10 @@ void HierarchyEdgeDataOpsInteger::swapData(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          d_patch_ops.swapData(p, data1_id, data2_id);
       }
@@ -282,10 +282,10 @@ void HierarchyEdgeDataOpsInteger::printData(
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       s << "Level number = " << ln << std::endl;
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(data_id),
@@ -313,10 +313,10 @@ void HierarchyEdgeDataOpsInteger::setToScalar(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(data_id),
@@ -353,10 +353,10 @@ void HierarchyEdgeDataOpsInteger::scale(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<int> > dst(
             p->getPatchData(dst_id),
@@ -388,10 +388,10 @@ void HierarchyEdgeDataOpsInteger::addScalar(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<int> > dst(
             p->getPatchData(dst_id),
@@ -423,10 +423,10 @@ void HierarchyEdgeDataOpsInteger::add(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
@@ -461,10 +461,10 @@ void HierarchyEdgeDataOpsInteger::subtract(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
@@ -499,10 +499,10 @@ void HierarchyEdgeDataOpsInteger::multiply(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
@@ -537,10 +537,10 @@ void HierarchyEdgeDataOpsInteger::divide(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
@@ -574,10 +574,10 @@ void HierarchyEdgeDataOpsInteger::reciprocal(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
@@ -611,10 +611,10 @@ void HierarchyEdgeDataOpsInteger::linearSum(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
@@ -650,10 +650,10 @@ void HierarchyEdgeDataOpsInteger::axpy(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
@@ -689,10 +689,10 @@ void HierarchyEdgeDataOpsInteger::axmy(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
@@ -726,10 +726,10 @@ void HierarchyEdgeDataOpsInteger::abs(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(dst_id),
@@ -762,10 +762,10 @@ int HierarchyEdgeDataOpsInteger::min(
    int minval = tbox::MathUtilities<int>::getMax();
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(data_id),
@@ -802,10 +802,10 @@ int HierarchyEdgeDataOpsInteger::max(
    int maxval = -(tbox::MathUtilities<int>::getMax());
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(data_id),
@@ -841,10 +841,10 @@ void HierarchyEdgeDataOpsInteger::setRandomValues(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> p = *ip;
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::EdgeData<int> > d(
             p->getPatchData(data_id),

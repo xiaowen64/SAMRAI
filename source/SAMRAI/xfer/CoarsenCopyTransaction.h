@@ -84,12 +84,12 @@ public:
     * arguments is null, or if any of the integer arguments are invalid (i.e., < 0);
     */
    CoarsenCopyTransaction(
-      boost::shared_ptr<hier::PatchLevel>& dst_level,
-      boost::shared_ptr<hier::PatchLevel>& src_level,
-      boost::shared_ptr<hier::BoxOverlap> overlap,
+      const boost::shared_ptr<hier::PatchLevel>& dst_level,
+      const boost::shared_ptr<hier::PatchLevel>& src_level,
+      const boost::shared_ptr<hier::BoxOverlap> overlap,
       const hier::Box& dst_mapped_box,
       const hier::Box& src_mapped_box,
-      int coarsen_item_id);
+      const int coarsen_item_id);
 
    /*!
     * The virtual destructor for the copy transaction releases all

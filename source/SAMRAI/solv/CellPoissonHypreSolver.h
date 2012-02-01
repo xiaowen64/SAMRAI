@@ -107,7 +107,7 @@ public:
       const tbox::Dimension& dim,
       const std::string& object_name,
       boost::shared_ptr<tbox::Database> database =
-         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * The Poisson destructor releases all internally managed data.
@@ -318,7 +318,7 @@ public:
    setPhysicalBcCoefObject(
       const RobinBcCoefStrategy* physical_bc_coef_strategy,
       const boost::shared_ptr<hier::Variable> variable =
-         boost::shared_ptr<hier::Variable>((hier::Variable*)NULL));
+         boost::shared_ptr<hier::Variable>());
 
    /*!
     * @brief Set the flag for printing solver information.

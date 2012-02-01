@@ -101,7 +101,14 @@ CoarsenSchedule::CoarsenSchedule(
    boost::shared_ptr<CoarsenTransactionFactory> transaction_factory,
    CoarsenPatchStrategy* patch_strategy,
    bool fill_coarse_data):
-   d_ratio_between_levels(crse_level->getDim())
+   d_number_coarsen_items(0),
+   d_coarsen_items((const CoarsenClasses::Data **)NULL),
+   d_crse_level(crse_level),
+   d_fine_level(fine_level),
+   d_coarsen_patch_strategy(patch_strategy),
+   d_transaction_factory(transaction_factory),
+   d_ratio_between_levels(crse_level->getDim()),
+   d_fill_coarse_data(fill_coarse_data)
 {
    TBOX_ASSERT(crse_level);
    TBOX_ASSERT(fine_level);
@@ -113,26 +120,6 @@ CoarsenSchedule::CoarsenSchedule(
    }
 
    const tbox::Dimension& dim(crse_level->getDim());
-
-   /*
-    * Initial values; some may change in setup operations.
-    */
-   d_crse_level = crse_level;
-   d_fine_level = fine_level;
-   d_transaction_factory = transaction_factory;
-   d_temp_crse_level.reset();
-
-   d_coarsen_patch_strategy = patch_strategy;
-
-   d_fill_coarse_data = fill_coarse_data;
-
-   d_schedule.reset();
-
-   d_precoarsen_refine_algorithm.reset();
-   d_precoarsen_refine_schedule.reset();
-
-   d_number_coarsen_items = 0;
-   d_coarsen_items = (const CoarsenClasses::Data **)NULL;
 
    /*
     * Compute ratio between fine and coarse levels and then check for
@@ -195,16 +182,6 @@ CoarsenSchedule::CoarsenSchedule(
 CoarsenSchedule::~CoarsenSchedule()
 {
    clearCoarsenItems();
-
-   d_transaction_factory.reset();
-   d_crse_level.reset();
-   d_fine_level.reset();
-   d_temp_crse_level.reset();
-
-   d_schedule.reset();
-
-   d_precoarsen_refine_algorithm.reset();
-   d_precoarsen_refine_schedule.reset();
 }
 
 /*
@@ -226,8 +203,8 @@ void CoarsenSchedule::reset(
 
    if (d_fill_coarse_data) {
       t_coarse_data_fill->start();
-      d_precoarsen_refine_algorithm->
-      resetSchedule(d_precoarsen_refine_schedule);
+      d_precoarsen_refine_algorithm->resetSchedule(
+         d_precoarsen_refine_schedule);
       t_coarse_data_fill->stop();
    }
 
@@ -417,7 +394,6 @@ void CoarsenSchedule::setupRefineAlgorithm()
    if (d_fill_coarse_data) {
       t_coarse_data_fill->barrierAndStart();
 
-      d_precoarsen_refine_algorithm.reset();
       d_precoarsen_refine_algorithm.reset(new RefineAlgorithm(dim));
 
       for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
@@ -425,7 +401,7 @@ void CoarsenSchedule::setupRefineAlgorithm()
          d_precoarsen_refine_algorithm->registerRefine(src_id,
             src_id,
             src_id,
-            boost::shared_ptr<hier::RefineOperator>((hier::RefineOperator*)NULL));
+            boost::shared_ptr<hier::RefineOperator>());
       }
 
       t_coarse_data_fill->stop();
@@ -518,13 +494,14 @@ void CoarsenSchedule::generateScheduleNSquared()
                                      d_crse_level->getProcessorMapping().
                                      getProcessorAssignment(dp));
 
-      hier::BoxContainer::ConstIterator crse_itr_sp(d_temp_crse_level->getBoxes());
+      hier::BoxContainer::ConstIterator crse_itr_sp(
+         d_temp_crse_level->getBoxes());
       for (int sp = 0; sp < src_npatches; sp++, crse_itr_sp++) {
 
-         const hier::Box src_mapped_box(*crse_itr_sp,
-                                        hier::LocalId(sp),
-                                        d_temp_crse_level->getProcessorMapping()
-                                        .getProcessorAssignment(sp));
+         const hier::Box src_mapped_box(
+            *crse_itr_sp,
+            hier::LocalId(sp),
+            d_temp_crse_level->getProcessorMapping().getProcessorAssignment(sp));
 
          if (dst_mapping.isMappingLocal(dp)
              || src_mapping.isMappingLocal(sp)) {
@@ -697,8 +674,8 @@ void CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
 hier::IntVector CoarsenSchedule::getMaxGhostsToGrow() const
 {
    const tbox::Dimension& dim(d_crse_level->getDim());
-   boost::shared_ptr<hier::PatchDescriptor> pd =
-      d_temp_crse_level->getPatchDescriptor();
+   boost::shared_ptr<hier::PatchDescriptor> pd(
+      d_temp_crse_level->getPatchDescriptor());
 
    /*
     * Box, face and side elements of adjacent cells overlap even though
@@ -763,10 +740,10 @@ void CoarsenSchedule::constructScheduleTransactions(
                  << std::endl;
    }
 
-   boost::shared_ptr<hier::PatchDescriptor> dst_patch_descriptor =
-      dst_level->getPatchDescriptor();
-   boost::shared_ptr<hier::PatchDescriptor> src_patch_descriptor =
-      src_level->getPatchDescriptor();
+   boost::shared_ptr<hier::PatchDescriptor> dst_patch_descriptor(
+      dst_level->getPatchDescriptor());
+   boost::shared_ptr<hier::PatchDescriptor> src_patch_descriptor(
+      src_level->getPatchDescriptor());
 
    const hier::Box& dst_box = dst_mapped_box;
    const hier::Box& src_box = src_mapped_box;
@@ -854,8 +831,8 @@ void CoarsenSchedule::constructScheduleTransactions(
    }
 
    const int num_coarsen_items = d_coarsen_classes->getNumberOfCoarsenItems();
-   tbox::Array<boost::shared_ptr<tbox::Transaction> >
-   transactions(num_coarsen_items);
+   tbox::Array<boost::shared_ptr<tbox::Transaction> > transactions(
+      num_coarsen_items);
 
    for (int nc = 0; nc < num_equiv_classes; nc++) {
 
@@ -868,10 +845,10 @@ void CoarsenSchedule::constructScheduleTransactions(
       const int rep_item_dst_id = rep_item.d_dst;
       const int rep_item_src_id = rep_item.d_src;
 
-      boost::shared_ptr<hier::PatchDataFactory> src_pdf =
-         src_patch_descriptor->getPatchDataFactory(rep_item_src_id);
-      boost::shared_ptr<hier::PatchDataFactory> dst_pdf =
-         dst_patch_descriptor->getPatchDataFactory(rep_item_dst_id);
+      boost::shared_ptr<hier::PatchDataFactory> src_pdf(
+         src_patch_descriptor->getPatchDataFactory(rep_item_src_id));
+      boost::shared_ptr<hier::PatchDataFactory> dst_pdf(
+         dst_patch_descriptor->getPatchDataFactory(rep_item_dst_id));
 
       const hier::IntVector& dst_gcw(dst_pdf->getGhostCellWidth());
 
@@ -985,9 +962,9 @@ void CoarsenSchedule::coarsenSourceData(
     */
 
    for (hier::PatchLevel::Iterator p(d_fine_level); p; p++) {
-      boost::shared_ptr<hier::Patch> fine_patch = *p;
-      boost::shared_ptr<hier::Patch> temp_patch =
-         d_temp_crse_level->getPatch(fine_patch->getGlobalId());
+      const boost::shared_ptr<hier::Patch>& fine_patch = *p;
+      boost::shared_ptr<hier::Patch> temp_patch(
+         d_temp_crse_level->getPatch(fine_patch->getGlobalId()));
 
       const hier::Box& box = temp_patch->getBox();
 
@@ -1086,8 +1063,8 @@ void CoarsenSchedule::initialCheckCoarsenClassItems() const
 {
    const tbox::Dimension& dim(d_crse_level->getDim());
 
-   boost::shared_ptr<hier::PatchDescriptor> pd =
-      d_crse_level->getPatchDescriptor();
+   boost::shared_ptr<hier::PatchDescriptor> pd(
+      d_crse_level->getPatchDescriptor());
 
    hier::IntVector user_gcw(dim, 0);
    if (d_coarsen_patch_strategy) {
@@ -1105,13 +1082,10 @@ void CoarsenSchedule::initialCheckCoarsenClassItems() const
       const int dst_id = crs_item->d_dst;
       const int src_id = crs_item->d_src;
 
-      boost::shared_ptr<hier::PatchDataFactory> dfact =
-         pd->getPatchDataFactory(dst_id);
-      boost::shared_ptr<hier::PatchDataFactory> sfact =
-         pd->getPatchDataFactory(src_id);
-
-      const hier::IntVector& dst_gcw(dfact->getGhostCellWidth());
-      const hier::IntVector& src_gcw(sfact->getGhostCellWidth());
+      const hier::IntVector& dst_gcw(
+         pd->getPatchDataFactory(dst_id)->getGhostCellWidth());
+      const hier::IntVector& src_gcw(
+         pd->getPatchDataFactory(src_id)->getGhostCellWidth());
 
       if (crs_item->d_gcw_to_coarsen > dst_gcw) {
          TBOX_ERROR("Bad data given to CoarsenSchedule...\n"
@@ -1214,7 +1188,8 @@ void CoarsenSchedule::printClassData(
 
 void CoarsenSchedule::initializeCallback()
 {
-   boost::shared_ptr<tbox::Database> idb(tbox::InputManager::getInputDatabase());
+   boost::shared_ptr<tbox::Database> idb(
+      tbox::InputManager::getInputDatabase());
    if (idb && idb->isDatabase("CoarsenSchedule")) {
       boost::shared_ptr<tbox::Database> rsdb(idb->getDatabase(
                                             "CoarsenSchedule"));

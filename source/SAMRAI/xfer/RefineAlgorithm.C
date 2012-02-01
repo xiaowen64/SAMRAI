@@ -22,6 +22,8 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace xfer {
 
@@ -36,7 +38,7 @@ namespace xfer {
 RefineAlgorithm::RefineAlgorithm(
    const tbox::Dimension& dim):
    d_dim(dim),
-   d_refine_classes(new RefineClasses()),
+   d_refine_classes(boost::make_shared<RefineClasses>()),
    d_schedule_created(false)
 {
 }
@@ -191,13 +193,13 @@ RefineAlgorithm::createSchedule(
    boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
       new PatchLevelFullFillPattern());
 
-   return boost::shared_ptr<RefineSchedule>(
-      new RefineSchedule(fill_pattern,
-                         level,
-                         level,
-                         d_refine_classes,
-                         trans_factory,
-                         patch_strategy));
+   return boost::make_shared<RefineSchedule>(
+      fill_pattern,
+      level,
+      level,
+      d_refine_classes,
+      trans_factory,
+      patch_strategy);
 }
 
 /*
@@ -227,20 +229,20 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory> trans_factory =
-      transaction_factory;
+   boost::shared_ptr<RefineTransactionFactory> trans_factory(
+      transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   return boost::shared_ptr<RefineSchedule>(
-      new RefineSchedule(fill_pattern,
-                         level,
-                         level,
-                         d_refine_classes,
-                         trans_factory,
-                         patch_strategy));
+   return boost::make_shared<RefineSchedule>(
+      fill_pattern,
+      level,
+      level,
+      d_refine_classes,
+      trans_factory,
+      patch_strategy);
 }
 
 /*
@@ -277,8 +279,8 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory> trans_factory =
-      transaction_factory;
+   boost::shared_ptr<RefineTransactionFactory> trans_factory(
+      transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
@@ -287,14 +289,14 @@ RefineAlgorithm::createSchedule(
    boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
       new PatchLevelFullFillPattern());
 
-   return boost::shared_ptr<RefineSchedule>(
-      new RefineSchedule(fill_pattern,
-                         dst_level,
-                         src_level,
-                         d_refine_classes,
-                         trans_factory,
-                         patch_strategy,
-                         use_time_refinement));
+   return boost::make_shared<RefineSchedule>(
+      fill_pattern,
+      dst_level,
+      src_level,
+      d_refine_classes,
+      trans_factory,
+      patch_strategy,
+      use_time_refinement);
 }
 
 /*
@@ -329,21 +331,21 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory> trans_factory =
-      transaction_factory;
+   boost::shared_ptr<RefineTransactionFactory> trans_factory(
+      transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   return boost::shared_ptr<RefineSchedule>(
-      new RefineSchedule(fill_pattern,
-                         dst_level,
-                         src_level,
-                         d_refine_classes,
-                         trans_factory,
-                         patch_strategy,
-                         use_time_refinement));
+   return boost::make_shared<RefineSchedule>(
+      fill_pattern,
+      dst_level,
+      src_level,
+      d_refine_classes,
+      trans_factory,
+      patch_strategy,
+      use_time_refinement);
 }
 
 /*
@@ -381,8 +383,8 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory> trans_factory =
-      transaction_factory;
+   boost::shared_ptr<RefineTransactionFactory> trans_factory(
+      transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
@@ -391,16 +393,16 @@ RefineAlgorithm::createSchedule(
    boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
       new PatchLevelFullFillPattern());
 
-   return boost::shared_ptr<RefineSchedule>(
-      new RefineSchedule(fill_pattern,
-                         level,
-                         level,
-                         next_coarser_level,
-                         hierarchy,
-                         d_refine_classes,
-                         trans_factory,
-                         patch_strategy,
-                         use_time_refinement));
+   return boost::make_shared<RefineSchedule>(
+      fill_pattern,
+      level,
+      level,
+      next_coarser_level,
+      hierarchy,
+      d_refine_classes,
+      trans_factory,
+      patch_strategy,
+      use_time_refinement);
 }
 
 /*
@@ -439,23 +441,23 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory> trans_factory =
-      transaction_factory;
+   boost::shared_ptr<RefineTransactionFactory> trans_factory(
+      transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   return boost::shared_ptr<RefineSchedule>(
-      new RefineSchedule(fill_pattern,
-                         level,
-                         level,
-                         next_coarser_level,
-                         hierarchy,
-                         d_refine_classes,
-                         trans_factory,
-                         patch_strategy,
-                         use_time_refinement));
+   return boost::make_shared<RefineSchedule>(
+      fill_pattern,
+      level,
+      level,
+      next_coarser_level,
+      hierarchy,
+      d_refine_classes,
+      trans_factory,
+      patch_strategy,
+      use_time_refinement);
 }
 
 /*
@@ -502,8 +504,8 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory> trans_factory =
-      transaction_factory;
+   boost::shared_ptr<RefineTransactionFactory> trans_factory(
+      transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
@@ -512,16 +514,16 @@ RefineAlgorithm::createSchedule(
    boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
       new PatchLevelFullFillPattern());
 
-   return boost::shared_ptr<RefineSchedule>(
-      new RefineSchedule(fill_pattern,
-                         dst_level,
-                         src_level,
-                         next_coarser_level,
-                         hierarchy,
-                         d_refine_classes,
-                         trans_factory,
-                         patch_strategy,
-                         false));
+   return boost::make_shared<RefineSchedule>(
+      fill_pattern,
+      dst_level,
+      src_level,
+      next_coarser_level,
+      hierarchy,
+      d_refine_classes,
+      trans_factory,
+      patch_strategy,
+      false);
 }
 
 /*
@@ -571,23 +573,23 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory> trans_factory =
-      transaction_factory;
+   boost::shared_ptr<RefineTransactionFactory> trans_factory(
+      transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   return boost::shared_ptr<RefineSchedule>(
-      new RefineSchedule(fill_pattern,
-                         dst_level,
-                         src_level,
-                         next_coarser_level,
-                         hierarchy,
-                         d_refine_classes,
-                         trans_factory,
-                         patch_strategy,
-                         false));
+   return boost::make_shared<RefineSchedule>(
+      fill_pattern,
+      dst_level,
+      src_level,
+      next_coarser_level,
+      hierarchy,
+      d_refine_classes,
+      trans_factory,
+      patch_strategy,
+      false);
 }
 
 /*
@@ -632,7 +634,6 @@ RefineAlgorithm::getEquivalenceClasses() const
 void RefineAlgorithm::setEquivalenceClasses(
    const boost::shared_ptr<RefineClasses> refine_classes)
 {
-   d_refine_classes.reset();
    d_refine_classes = refine_classes;
 }
 

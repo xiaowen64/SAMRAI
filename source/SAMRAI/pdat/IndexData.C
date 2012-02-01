@@ -118,7 +118,7 @@ void IndexData<TYPE, BOX_GEOMETRY>::copy(
         s(*t_src);
         s;
         s++) {
-      if (this->getGhostBox().contains(s.getNode().d_index)) {
+      if (getGhostBox().contains(s.getNode().d_index)) {
          appendItem(s.getNode().d_index, *s.getNode().d_item);
       }
    }
@@ -728,10 +728,11 @@ void IndexData<TYPE, BOX_GEOMETRY>::getSpecializedFromDatabase(
 
       if (database->isDatabase(index_keyword)) {
 
-         boost::shared_ptr<tbox::Database> item_db =
-            database->getDatabase(index_keyword);
+         boost::shared_ptr<tbox::Database> item_db(
+            database->getDatabase(index_keyword));
 
-         tbox::Array<int> index_array = item_db->getIntegerArray(index_keyword);
+         tbox::Array<int> index_array =
+            item_db->getIntegerArray(index_keyword);
          hier::Index index(d_dim);
          for (int j = 0; j < d_dim.getValue(); j++) {
             index(j) = index_array[j];
@@ -780,8 +781,8 @@ void IndexData<TYPE, BOX_GEOMETRY>::putSpecializedToDatabase(
          index_array[i] = index(i);
       }
 
-      boost::shared_ptr<tbox::Database> item_db =
-         database->putDatabase(index_keyword);
+      boost::shared_ptr<tbox::Database> item_db(
+         database->putDatabase(index_keyword));
 
       item_db->putIntegerArray(index_keyword, index_array);
 

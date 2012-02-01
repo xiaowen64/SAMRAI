@@ -15,6 +15,8 @@
 #include "SAMRAI/pdat/NodeDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -33,11 +35,11 @@ NodeVariable<TYPE>::NodeVariable(
    int depth,
    bool fine_boundary_represents_var):
    hier::Variable(name,
-                  boost::shared_ptr<hier::PatchDataFactory>(
-                     new NodeDataFactory<TYPE>(depth,
-                                               // default zero ghost cells
-                                               hier::IntVector::getZero(dim),
-                                               fine_boundary_represents_var))),
+                  boost::make_shared<NodeDataFactory<TYPE> >(
+                     depth,
+                     // default zero ghost cells
+                     hier::IntVector::getZero(dim),
+                     fine_boundary_represents_var)),
 
    d_fine_boundary_represents_var(fine_boundary_represents_var)
 {
@@ -51,8 +53,7 @@ NodeVariable<TYPE>::~NodeVariable()
 template<class TYPE>
 int NodeVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<NodeDataFactory<TYPE> > factory =
-      this->getPatchDataFactory();
+   boost::shared_ptr<NodeDataFactory<TYPE> > factory(getPatchDataFactory());
    TBOX_ASSERT(factory);
    return factory->getDepth();
 }
@@ -71,7 +72,7 @@ template<class TYPE>
 NodeVariable<TYPE>::NodeVariable(
    const NodeVariable<TYPE>& foo):
    hier::Variable(NULL,
-                  boost::shared_ptr<hier::PatchDataFactory>(NULL))
+                  boost::shared_ptr<hier::PatchDataFactory>())
 {
    NULL_USE(foo);
 }

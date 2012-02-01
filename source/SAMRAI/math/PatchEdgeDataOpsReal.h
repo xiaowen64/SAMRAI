@@ -50,7 +50,6 @@ namespace math {
 
 template<class TYPE>
 class PatchEdgeDataOpsReal:
-   public tbox::DescribedClass,
    public PatchEdgeDataBasicOps<TYPE>,
    public PatchEdgeDataMiscellaneousOpsReal<TYPE>,
    public PatchEdgeDataNormOpsReal<TYPE>

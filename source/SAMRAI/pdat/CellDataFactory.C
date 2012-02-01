@@ -17,6 +17,8 @@
 #include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/hier/Patch.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/CellDataFactory.I"
 #endif
@@ -77,8 +79,7 @@ CellDataFactory<TYPE>::cloneFactory(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return boost::shared_ptr<hier::PatchDataFactory>(
-      new CellDataFactory<TYPE>(d_depth, ghosts));
+   return boost::make_shared<CellDataFactory<TYPE> >(d_depth, ghosts);
 }
 
 /*
@@ -96,9 +97,10 @@ CellDataFactory<TYPE>::allocate(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
 
-   hier::PatchData* patchdata =
-      new CellData<TYPE>(patch.getBox(), this->d_depth, this->d_ghosts);
-   return boost::shared_ptr<hier::PatchData>(patchdata);
+   return boost::make_shared<CellData<TYPE> >(
+      patch.getBox(),
+      d_depth,
+      d_ghosts);
 }
 
 /*
@@ -116,8 +118,7 @@ CellDataFactory<TYPE>::getBoxGeometry(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
-   hier::BoxGeometry* boxgeometry = new CellGeometry(box, this->d_ghosts);
-   return boost::shared_ptr<hier::BoxGeometry>(boxgeometry);
+   return boost::make_shared<CellGeometry>(box, d_ghosts);
 }
 
 /*
@@ -137,7 +138,7 @@ size_t CellDataFactory<TYPE>::getSizeOfMemory(
    const size_t obj =
       tbox::MemoryUtilities::align(sizeof(CellData<TYPE>));
    const size_t data =
-      CellData<TYPE>::getSizeOfData(box, d_depth, this->d_ghosts);
+      CellData<TYPE>::getSizeOfData(box, d_depth, d_ghosts);
    return obj + data;
 }
 

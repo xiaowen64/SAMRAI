@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -54,8 +53,7 @@ namespace algs {
  * @see algs::TimeRefinementIntegrator
  */
 
-class TimeRefinementLevelStrategy:
-   public virtual tbox::DescribedClass
+class TimeRefinementLevelStrategy
 {
 public:
    /**

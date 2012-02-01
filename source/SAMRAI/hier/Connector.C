@@ -85,7 +85,6 @@ Connector::Connector():
 
 Connector::Connector(
    const Connector& other):
-   tbox::DescribedClass(),
    d_base_handle(other.d_base_handle),
    d_head_handle(other.d_head_handle),
    d_base_width(other.d_base_width),
@@ -250,7 +249,8 @@ void Connector::shrinkWidth(const IntVector& new_width)
    const bool base_coarser = !getHeadCoarserFlag() &&
       getBase().getRefinementRatio() != getHead().getRefinementRatio();
 
-   const boost::shared_ptr<const GridGeometry>& grid_geom(getBase().getGridGeometry());
+   const boost::shared_ptr<const GridGeometry>& grid_geom(
+      getBase().getGridGeometry());
 
    for (NeighborhoodIterator ei = begin(); ei != end(); ++ei) {
       const BoxId& mapped_box_id = *ei;

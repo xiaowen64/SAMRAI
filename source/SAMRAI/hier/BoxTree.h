@@ -15,7 +15,6 @@
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Timer.h"
 
 #include <boost/shared_ptr.hpp>
@@ -46,7 +45,7 @@ namespace hier {
  * subclass of BoxContainer.
  */
 
-class BoxTree:public tbox::DescribedClass
+class BoxTree
 {
 friend class BoxContainer;
 

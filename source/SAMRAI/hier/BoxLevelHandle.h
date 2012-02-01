@@ -12,6 +12,8 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace hier {
 
@@ -112,7 +114,7 @@ private:
    //@{
    /*!
     * @brief Allows BoxLevel to allocate BoxLevelHandles
-    * and call detachMyBoxLevel().
+    * and to call detachMyBoxLevel().
     */
    friend class BoxLevel;
    //@}

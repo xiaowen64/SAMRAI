@@ -105,8 +105,7 @@ public:
       const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const hier::Box& box,
       const boost::shared_ptr<pdat::NodeData<double> > cvol =
-         boost::shared_ptr<pdat::NodeData<double> >(
-            (pdat::NodeData<double>*)NULL)) const;
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return discrete \f$L_2\f$-norm of the data using the control volume to
@@ -120,8 +119,7 @@ public:
       const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const hier::Box& box,
       const boost::shared_ptr<pdat::NodeData<double> > cvol =
-         boost::shared_ptr<pdat::NodeData<double> >(
-            (pdat::NodeData<double>*)NULL)) const;
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return discrete weighted \f$L_2\f$-norm of the data using the control
@@ -136,8 +134,7 @@ public:
       const boost::shared_ptr<pdat::NodeData<TYPE> >& weight,
       const hier::Box& box,
       const boost::shared_ptr<pdat::NodeData<double> > cvol =
-         boost::shared_ptr<pdat::NodeData<double> >(
-            (pdat::NodeData<double>*)NULL)) const;
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return discrete root mean squared norm of the data.  If the control
@@ -151,8 +148,7 @@ public:
       const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const hier::Box& box,
       const boost::shared_ptr<pdat::NodeData<double> > cvol =
-         boost::shared_ptr<pdat::NodeData<double> >(
-            (pdat::NodeData<double>*)NULL)) const;
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return discrete weighted root mean squared norm of the data.  If the
@@ -167,8 +163,7 @@ public:
       const boost::shared_ptr<pdat::NodeData<TYPE> >& weight,
       const hier::Box& box,
       const boost::shared_ptr<pdat::NodeData<double> > cvol =
-         boost::shared_ptr<pdat::NodeData<double> >(
-            (pdat::NodeData<double>*)NULL)) const;
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return the \f$\max\f$-norm of the data using the control volume to weight
@@ -182,8 +177,7 @@ public:
       const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const hier::Box& box,
       const boost::shared_ptr<pdat::NodeData<double> > cvol =
-         boost::shared_ptr<pdat::NodeData<double> >(
-            (pdat::NodeData<double>*)NULL)) const;
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return the dot product of the two data arrays using the control volume
@@ -197,8 +191,7 @@ public:
       const boost::shared_ptr<pdat::NodeData<TYPE> >& data2,
       const hier::Box& box,
       const boost::shared_ptr<pdat::NodeData<double> > cvol =
-         boost::shared_ptr<pdat::NodeData<double> >(
-            (pdat::NodeData<double>*)NULL)) const;
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return the integral of the function represented by the data array.

@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchLevel.h"
@@ -29,7 +28,7 @@ namespace mesh {
  * @see hier::PatchLevel
  */
 
-class BoxGeneratorStrategy:public tbox::DescribedClass
+class BoxGeneratorStrategy
 {
 public:
    /**

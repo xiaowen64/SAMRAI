@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BoxTree.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 #include <boost/shared_ptr.hpp>
 #include <vector>
@@ -38,7 +37,7 @@ class GridGeometry;
  * - findOverlapBoxes requires refinement_ratio.
  */
 
-class MultiblockBoxTree:public tbox::DescribedClass
+class MultiblockBoxTree
 {
 
 public:

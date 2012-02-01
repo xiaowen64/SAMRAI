@@ -185,7 +185,7 @@ SparseData<BOX_GEOMETRY>::copy(
    for ( ; src_index_map_iterator != tmp_src->d_index_to_attribute_map.end();
          ++src_index_map_iterator) {
 
-      if (this->getGhostBox().contains(src_index_map_iterator->first)) {
+      if (getGhostBox().contains(src_index_map_iterator->first)) {
          _add(src_index_map_iterator);
       }
 
@@ -685,8 +685,8 @@ SparseData<BOX_GEOMETRY>::getSpecializedFromDatabase(
 
       // get the next item
       if (db->isDatabase(index_keyword)) {
-         boost::shared_ptr<tbox::Database> item_db =
-            db->getDatabase(index_keyword);
+         boost::shared_ptr<tbox::Database> item_db(
+            db->getDatabase(index_keyword));
 
          // unpack the index
          tbox::Array<int> index_array =
@@ -821,8 +821,8 @@ SparseData<BOX_GEOMETRY>::putSpecializedToDatabase(
          index_array[i] = index(i);
       }
 
-      boost::shared_ptr<tbox::Database> item_db =
-         db->putDatabase(index_keyword);
+      boost::shared_ptr<tbox::Database> item_db(
+         db->putDatabase(index_keyword));
 
       item_db->putIntegerArray(index_keyword, index_array);
 

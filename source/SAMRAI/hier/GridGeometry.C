@@ -36,6 +36,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include <map>
 #include <stdlib.h>
 
@@ -236,7 +237,7 @@ void GridGeometry::computeBoundaryBoxesOnLevel(
 #endif
 
    for (PatchLevel::Iterator ip(&level); ip; ip++) {
-      boost::shared_ptr<Patch> patch = *ip;
+      const boost::shared_ptr<Patch>& patch = *ip;
       const BoxId& patch_id = patch->getBox().getId();
       const int block_num = patch->getBox().getBlockId().getBlockValue();
 
@@ -309,13 +310,14 @@ void GridGeometry::findPatchesTouchingBoundaries(
 
    boost::shared_ptr<MultiblockBoxTree> tmp_refined_periodic_domain_tree;
    if ( level.getRatioToLevelZero() != IntVector::getZero(level.getDim()) ) {
-      tmp_refined_periodic_domain_tree = d_domain_search_tree_periodic.createRefinedTree(
-         level.getRatioToLevelZero());
+      tmp_refined_periodic_domain_tree =
+          d_domain_search_tree_periodic.createRefinedTree(
+            level.getRatioToLevelZero());
    }
 
    t_touching_boundaries_loop->start();
    for (PatchLevel::Iterator ip(&level); ip; ip++) {
-      boost::shared_ptr<Patch> patch = *ip;
+      const boost::shared_ptr<Patch>& patch = *ip;
       const Box& box(patch->getBox());
 
       std::map<BoxId, TwoDimBool>::iterator iter_touches_regular_bdry(
@@ -467,7 +469,7 @@ void GridGeometry::setGeometryOnPatches(
 
    t_set_geometry_data_on_patches->start();
    for (PatchLevel::Iterator ip(&level); ip; ip++) {
-      boost::shared_ptr<Patch> patch = *ip;
+      const boost::shared_ptr<Patch>& patch = *ip;
       setGeometryDataOnPatch(*patch, ratio_to_level_zero,
          (*touches_regular_bdry.find(ip->getBox().getId())).second,
          (*touches_periodic_bdry.find(ip->getBox().getId())).second);
@@ -568,10 +570,11 @@ const
    }
 #endif
 
-   boost::shared_ptr<PatchGeometry>
-   geometry(new PatchGeometry(ratio_to_level_zero,
-               touches_regular_bdry,
-               touches_periodic_bdry));
+   boost::shared_ptr<PatchGeometry> geometry =
+      boost::make_shared<PatchGeometry>(
+         ratio_to_level_zero,
+         touches_regular_bdry,
+         touches_periodic_bdry);
 
    patch.setPatchGeometry(geometry);
 
@@ -630,8 +633,9 @@ GridGeometry::makeCoarsenedGridGeometry(
       }
    }
 
-   GridGeometry* coarse_geometry =
-      new GridGeometry(coarse_geom_name,
+   boost::shared_ptr<GridGeometry> coarse_geometry =
+      boost::make_shared<GridGeometry>(
+         coarse_geom_name,
          coarse_domain,
          d_transfer_operator_registry,
          register_for_restart);
@@ -639,7 +643,7 @@ GridGeometry::makeCoarsenedGridGeometry(
    coarse_geometry->initializePeriodicShift(getPeriodicShift(
          IntVector::getOne(dim)));
 
-   return boost::shared_ptr<GridGeometry>(coarse_geometry);
+   return coarse_geometry;
 }
 
 /*
@@ -667,8 +671,9 @@ GridGeometry::makeRefinedGridGeometry(
    BoxContainer fine_domain(getPhysicalDomain());
    fine_domain.refine(refine_ratio);
 
-   GridGeometry* fine_geometry =
-      new GridGeometry(fine_geom_name,
+   boost::shared_ptr<GridGeometry> fine_geometry =
+      boost::make_shared<GridGeometry>(
+         fine_geom_name,
          fine_domain,
          d_transfer_operator_registry,
          register_for_restart);
@@ -676,7 +681,7 @@ GridGeometry::makeRefinedGridGeometry(
    fine_geometry->initializePeriodicShift(getPeriodicShift(
          IntVector::getOne(dim)));
 
-   return boost::shared_ptr<GridGeometry>(fine_geometry);
+   return fine_geometry;
 }
 
 /*
@@ -692,17 +697,15 @@ void GridGeometry::getFromRestart()
 {
    const tbox::Dimension dim(getDim());
 
-   boost::shared_ptr<tbox::Database> restart_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> restart_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   boost::shared_ptr<tbox::Database> db;
-
-   if (restart_db->isDatabase(getObjectName())) {
-      db = restart_db->getDatabase(getObjectName());
-   } else {
+   if (!restart_db->isDatabase(getObjectName())) {
       TBOX_ERROR("Restart database corresponding to "
          << getObjectName() << " not found in the restart file.");
    }
+   boost::shared_ptr<tbox::Database> db(
+      restart_db->getDatabase(getObjectName()));
 
    int ver = db->getInteger("HIER_GRID_GEOMETRY_VERSION");
    if (ver != HIER_GRID_GEOMETRY_VERSION) {
@@ -1792,8 +1795,8 @@ void GridGeometry::readBlockDataFromInput(
          break;
       }
 
-      boost::shared_ptr<tbox::Database> sing_db =
-         input_db->getDatabase(sing_name);
+      boost::shared_ptr<tbox::Database> sing_db(
+         input_db->getDatabase(sing_name));
 
       tbox::Array<int> blocks = sing_db->getIntegerArray("blocks");
 
@@ -1819,8 +1822,8 @@ void GridGeometry::readBlockDataFromInput(
       if (!input_db->keyExists(neighbor_name)) {
          break;
       }
-      boost::shared_ptr<tbox::Database> pair_db =
-         input_db->getDatabase(neighbor_name);
+      boost::shared_ptr<tbox::Database> pair_db(
+         input_db->getDatabase(neighbor_name));
 
       BlockId block_a(pair_db->getInteger("block_a"));
       BlockId block_b(pair_db->getInteger("block_b"));
@@ -2122,9 +2125,8 @@ void GridGeometry::adjustMultiblockPatchLevelBoundaries(
 
          for ( ; mbi.isValid(); mbi++) {
             const BoxId& mapped_box_id = (*mbi).getId();
-            boost::shared_ptr<Patch> patch(patch_level.getPatch(mapped_box_id));
-
-            adjustBoundaryBoxesOnPatch(*patch,
+            adjustBoundaryBoxesOnPatch(
+               *patch_level.getPatch(mapped_box_id),
                pseudo_domain,
                gcw,
                singularity);

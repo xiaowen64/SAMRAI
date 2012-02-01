@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -68,7 +67,7 @@ namespace hier {
  * @see hier::PatchData
  */
 
-class BoxGeometry:public tbox::DescribedClass
+class BoxGeometry
 {
 public:
    /**

@@ -87,7 +87,7 @@ void LoadBalanceStrategy::gatherAndReportLoadBalance(
    } else {
       workloads[0] = local_load;
    }
-   this->reportLoadBalance(workloads, os);
+   reportLoadBalance(workloads, os);
 }
 
 /*
@@ -116,12 +116,12 @@ void LoadBalanceStrategy::gatherAndReportLoadBalance(
             workloads_at_seq_i[n] = global_workloads[i + n * local_loads.size()];
          }
          os << "================ Sequence " << i << " ===============\n";
-         this->reportLoadBalance(workloads_at_seq_i, os);
+         reportLoadBalance(workloads_at_seq_i, os);
       }
    } else {
       std::vector<double> workloads(1);
       workloads[0] = local_loads[0];
-      this->reportLoadBalance(workloads, os);
+      reportLoadBalance(workloads, os);
    }
 }
 

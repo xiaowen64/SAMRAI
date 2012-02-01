@@ -50,7 +50,7 @@ class BoxLevelHandle;
  *   to which the Box in the base is related.
  */
 
-class Connector:public tbox::DescribedClass
+class Connector
 {
 public:
    /*!

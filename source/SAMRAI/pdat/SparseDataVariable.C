@@ -13,6 +13,8 @@
 
 #include "SAMRAI/pdat/SparseDataVariable.h"
 
+#include <boost/make_shared.hpp>
+
 #ifdef HAVE_BOOST_HEADERS
 
 #include "SAMRAI/pdat/SparseDataFactory.h"
@@ -27,10 +29,9 @@ SparseDataVariable<BOX_GEOMETRY>::SparseDataVariable(
    const std::vector<std::string>& dbl_attributes,
    const std::vector<std::string>& int_attributes):
    hier::Variable(name,
-                  boost::shared_ptr<hier::PatchDataFactory>(
-                     new SparseDataFactory<BOX_GEOMETRY>(
-                        hier::IntVector::getZero(dim),
-                        dbl_attributes, int_attributes)))
+                  boost::make_shared<SparseDataFactory<BOX_GEOMETRY> >(
+                     hier::IntVector::getZero(dim),
+                     dbl_attributes, int_attributes))
 {
 }
 

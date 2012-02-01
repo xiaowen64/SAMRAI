@@ -89,7 +89,7 @@ public:
       const tbox::Dimension& dim,
       const std::string& name = std::string("TreeLoadBalancerOld"),
       boost::shared_ptr<tbox::Database> input_db =
-         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * @brief Virtual destructor releases all internal storage.

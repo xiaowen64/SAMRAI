@@ -288,16 +288,14 @@ void KINSOL_SAMRAIContext::getFromInput(
 void KINSOL_SAMRAIContext::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database> root_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> root_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   boost::shared_ptr<tbox::Database> db;
-   if (root_db->isDatabase(d_object_name)) {
-      db = root_db->getDatabase(d_object_name);
-   } else {
+   if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file");
    }
+   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("SOLV_KINSOL_SAMRAI_CONTEXT_VERSION");
    if (ver != SOLV_KINSOL_SAMRAI_CONTEXT_VERSION) {

@@ -45,7 +45,7 @@ namespace math {
  */
 
 template<class TYPE>
-class HierarchyDataOpsReal:public tbox::DescribedClass
+class HierarchyDataOpsReal
 {
 public:
    /**

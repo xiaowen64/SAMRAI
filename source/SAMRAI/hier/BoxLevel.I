@@ -12,6 +12,8 @@
 #include "SAMRAI/hier/BoxContainerIterator.h"
 #include "SAMRAI/hier/BoxContainerSingleOwnerIterator.h"
 
+#include <boost/make_shared.hpp>
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -165,8 +167,6 @@ BoxLevel& BoxLevel::operator = (
       deallocateGlobalizedVersion();
       clearPersistentOverlapConnectors();
       detachMyHandle();
-
-      d_grid_geometry = rhs.d_grid_geometry;
 
       d_parallel_state = rhs.d_parallel_state;
       d_mpi = rhs.d_mpi;
@@ -520,8 +520,7 @@ getBoxLevelHandle() const
       /*
        * No handle yet.  Generate one attached to this object.
        */
-      boost::shared_ptr<BoxLevelHandle> ptr(new BoxLevelHandle(this));
-      d_handle = ptr;
+      d_handle.reset(new BoxLevelHandle(this));
    }
    if (d_handle->d_box_level != this) {
       /*

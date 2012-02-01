@@ -46,7 +46,6 @@ namespace math {
  */
 
 class PatchEdgeDataOpsComplex:
-   public tbox::DescribedClass,
    public PatchEdgeDataBasicOps<dcomplex>,
    public PatchEdgeDataNormOpsComplex
 {

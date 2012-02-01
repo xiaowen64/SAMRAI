@@ -19,6 +19,8 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/pdat/FaceDataFactory.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/OuterfaceDataFactory.I"
 #endif
@@ -64,8 +66,9 @@ OuterfaceDataFactory<TYPE>::cloneFactory(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return boost::shared_ptr<hier::PatchDataFactory>(
-      new OuterfaceDataFactory<TYPE>(ghosts.getDim(), d_depth));
+   return boost::make_shared<OuterfaceDataFactory<TYPE> >(
+      ghosts.getDim(),
+      d_depth);
 }
 
 /*
@@ -83,9 +86,7 @@ OuterfaceDataFactory<TYPE>::allocate(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
 
-   hier::PatchData* patchdata =
-      new OuterfaceData<TYPE>(patch.getBox(), d_depth);
-   return boost::shared_ptr<hier::PatchData>(patchdata);
+   return boost::make_shared<OuterfaceData<TYPE> >(patch.getBox(), d_depth);
 }
 
 /*
@@ -105,8 +106,7 @@ OuterfaceDataFactory<TYPE>::getBoxGeometry(
 
    const hier::IntVector zero_vector(hier::IntVector::getZero(getDim()));
 
-   hier::BoxGeometry* boxgeometry = new OuterfaceGeometry(box, zero_vector);
-   return boost::shared_ptr<hier::BoxGeometry>(boxgeometry);
+   return boost::make_shared<OuterfaceGeometry>(box, zero_vector);
 }
 
 /*

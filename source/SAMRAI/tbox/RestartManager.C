@@ -8,6 +8,7 @@
  *
  ************************************************************************/
 
+#include <boost/make_shared.hpp>
 #include <string>
 
 #include "SAMRAI/tbox/RestartManager.h"
@@ -18,7 +19,6 @@
 #include "SAMRAI/tbox/Parser.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-
 #include "SAMRAI/tbox/Utilities.h"
 
 #ifndef SAMRAI_INLINE
@@ -86,15 +86,13 @@ void RestartManager::registerSingletonSubclassInstance(
  *************************************************************************
  */
 
-RestartManager::RestartManager()
-{
-   d_database_root.reset(new NullDatabase());
+RestartManager::RestartManager() :
+   d_database_root(boost::make_shared<NullDatabase>()),
 #ifdef HAVE_HDF5
-   d_database_factory.reset(new HDFDatabaseFactory());
-#else
-   d_database_factory = NULL;
+   d_database_factory(boost::make_shared<HDFDatabaseFactory>()),
 #endif
-   d_is_from_restart = false;
+   d_is_from_restart(false)
+{
    clearRestartItems();
 }
 
@@ -133,8 +131,8 @@ bool RestartManager::openRestartFile(
 
    if (d_database_factory) {
 
-      boost::shared_ptr<Database> database = d_database_factory->allocate(
-            restart_filename);
+      boost::shared_ptr<Database> database(d_database_factory->allocate(
+         restart_filename));
 
       if (!database->open(restart_filename)) {
          TBOX_ERROR(
@@ -290,8 +288,8 @@ void RestartManager::writeRestartFile(
 
    if (d_database_factory) {
 
-      boost::shared_ptr<Database> new_restartDB = d_database_factory->allocate(
-            restart_filename);
+      boost::shared_ptr<Database> new_restartDB(d_database_factory->allocate(
+         restart_filename));
 
       new_restartDB->create(restart_filename);
 
@@ -321,8 +319,8 @@ void RestartManager::writeRestartFile(
 
    List<RestartManager::RestartItem>::Iterator i(d_restart_items_list);
    for ( ; i; i++) {
-      boost::shared_ptr<Database> obj_db =
-         database->putDatabase(i().name);
+      boost::shared_ptr<Database> obj_db(
+         database->putDatabase(i().name));
       (i().obj)->putToDatabase(obj_db);
    }
 }

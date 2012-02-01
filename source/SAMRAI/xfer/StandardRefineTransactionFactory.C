@@ -17,6 +17,8 @@
 #include "SAMRAI/xfer/RefineCopyTransaction.h"
 #include "SAMRAI/xfer/RefineTimeTransaction.h"
 
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace xfer {
 
@@ -95,24 +97,24 @@ StandardRefineTransactionFactory::allocate(
 
    if (use_time_interpolation) {
 
-      RefineTimeTransaction* transaction =
-         new RefineTimeTransaction(dst_level, src_level,
-            overlap,
-            dst_mapped_box,
-            src_mapped_box,
-            box,
-            ritem_id);
-      return boost::shared_ptr<tbox::Transaction>(transaction);
+      return boost::make_shared<RefineTimeTransaction>(
+         dst_level,
+         src_level,
+         overlap,
+         dst_mapped_box,
+         src_mapped_box,
+         box,
+         ritem_id);
 
    } else {
 
-      RefineCopyTransaction* transaction =
-         new RefineCopyTransaction(dst_level, src_level,
-            overlap,
-            dst_mapped_box,
-            src_mapped_box,
-            ritem_id);
-      return boost::shared_ptr<tbox::Transaction>(transaction);
+      return boost::make_shared<RefineCopyTransaction>(
+         dst_level,
+         src_level,
+         overlap,
+         dst_mapped_box,
+         src_mapped_box,
+         ritem_id);
 
    }
 }

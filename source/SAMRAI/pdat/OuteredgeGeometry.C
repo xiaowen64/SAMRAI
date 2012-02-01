@@ -18,6 +18,8 @@
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/OuteredgeGeometry.I"
 #endif
@@ -201,9 +203,7 @@ OuteredgeGeometry::doOverlap(
    }  // if quick check passes
 
    // Create the edge overlap data object using the boxes and source shift
-   hier::BoxOverlap* overlap =
-      new EdgeOverlap(dst_boxes, transformation);
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
+   return boost::make_shared<EdgeOverlap>(dst_boxes, transformation);
 }
 
 /*
@@ -355,9 +355,7 @@ OuteredgeGeometry::doOverlap(
    }  // if quick check passes
 
    // Create the edge overlap data object using the boxes and source shift
-   hier::BoxOverlap* overlap =
-      new EdgeOverlap(dst_boxes, transformation);
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
+   return boost::make_shared<EdgeOverlap>(dst_boxes, transformation);
 }
 
 /*
@@ -451,8 +449,7 @@ OuteredgeGeometry::setUpOverlap(
    }
 
    // Create the edge overlap data object using the boxes and transformation
-   hier::BoxOverlap* overlap = new EdgeOverlap(dst_boxes, transformation);
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
+   return boost::make_shared<EdgeOverlap>(dst_boxes, transformation);
 
 }
 

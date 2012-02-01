@@ -19,6 +19,8 @@
 #include "SAMRAI/pdat/OuternodeDataFactory.h"
 #include "SAMRAI/hier/Patch.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/NodeDataFactory.I"
 #endif
@@ -70,10 +72,10 @@ NodeDataFactory<TYPE>::cloneFactory(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return boost::shared_ptr<hier::PatchDataFactory>(
-      new NodeDataFactory<TYPE>(d_depth,
-                                ghosts,
-                                d_fine_boundary_represents_var));
+   return boost::make_shared<NodeDataFactory<TYPE> >(
+      d_depth,
+      ghosts,
+      d_fine_boundary_represents_var);
 }
 
 /*
@@ -91,9 +93,10 @@ NodeDataFactory<TYPE>::allocate(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
 
-   hier::PatchData* patchdata =
-      new NodeData<TYPE>(patch.getBox(), d_depth, this->d_ghosts);
-   return boost::shared_ptr<hier::PatchData>(patchdata);
+   return boost::make_shared<NodeData<TYPE> >(
+      patch.getBox(),
+      d_depth,
+      d_ghosts);
 }
 
 /*
@@ -111,8 +114,7 @@ NodeDataFactory<TYPE>::getBoxGeometry(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
-   hier::BoxGeometry* boxgeometry = new NodeGeometry(box, this->d_ghosts);
-   return boost::shared_ptr<hier::BoxGeometry>(boxgeometry);
+   return boost::make_shared<NodeGeometry>(box, d_ghosts);
 }
 
 /*
@@ -132,7 +134,7 @@ size_t NodeDataFactory<TYPE>::getSizeOfMemory(
    const size_t obj =
       tbox::MemoryUtilities::align(sizeof(NodeData<TYPE>));
    const size_t data =
-      NodeData<TYPE>::getSizeOfData(box, d_depth, this->d_ghosts);
+      NodeData<TYPE>::getSizeOfData(box, d_depth, d_ghosts);
    return obj + data;
 }
 

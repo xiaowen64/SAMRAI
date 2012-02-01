@@ -15,6 +15,8 @@
 #include "SAMRAI/pdat/OuterfaceDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -32,8 +34,7 @@ OuterfaceVariable<TYPE>::OuterfaceVariable(
    const std::string& name,
    int depth):
    hier::Variable(name,
-                  boost::shared_ptr<hier::PatchDataFactory>(
-                     new OuterfaceDataFactory<TYPE>(dim, depth)))
+                  boost::make_shared<OuterfaceDataFactory<TYPE> >(dim, depth))
 {
 }
 
@@ -45,8 +46,8 @@ OuterfaceVariable<TYPE>::~OuterfaceVariable()
 template<class TYPE>
 int OuterfaceVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<OuterfaceDataFactory<TYPE> > factory =
-      this->getPatchDataFactory();
+   boost::shared_ptr<OuterfaceDataFactory<TYPE> > factory(
+      getPatchDataFactory());
    TBOX_ASSERT(factory);
    return factory->getDepth();
 }
@@ -65,7 +66,7 @@ template<class TYPE>
 OuterfaceVariable<TYPE>::OuterfaceVariable(
    const OuterfaceVariable<TYPE>& foo):
    hier::Variable(NULL,
-                  boost::shared_ptr<hier::PatchDataFactory>(NULL))
+                  boost::shared_ptr<hier::PatchDataFactory>())
 {
    NULL_USE(foo);
 }

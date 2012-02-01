@@ -248,28 +248,24 @@ void Patch::getFromDatabase(
    for (int i = 0; i < patch_data_namelist.getSize(); i++) {
       std::string patch_data_name;
       int patch_data_index;
-      boost::shared_ptr<tbox::Database> patch_data_database;
-      boost::shared_ptr<PatchDataFactory> patch_data_factory;
 
       patch_data_name = patch_data_namelist[i];
 
-      if (database->isDatabase(patch_data_name)) {
-         patch_data_database = database->getDatabase(patch_data_name);
-      } else {
+      if (!database->isDatabase(patch_data_name)) {
          TBOX_ERROR("Patch::getFromDatabase() error...\n"
             << "   patch data" << patch_data_name
             << " not found in database" << std::endl);
       }
+      boost::shared_ptr<tbox::Database> patch_data_database(
+         database->getDatabase(patch_data_name));
 
-      patch_data_index = d_descriptor->
-         mapNameToIndex(patch_data_name);
+      patch_data_index = d_descriptor->mapNameToIndex(patch_data_name);
 
       if ((patch_data_index >= 0) &&
           (local_selector.isSet(patch_data_index))) {
-         patch_data_factory = d_descriptor->
-            getPatchDataFactory(patch_data_index);
-         d_patch_data[patch_data_index] =
-            patch_data_factory->allocate(*this);
+         boost::shared_ptr<PatchDataFactory> patch_data_factory(
+            d_descriptor->getPatchDataFactory(patch_data_index));
+         d_patch_data[patch_data_index] = patch_data_factory->allocate(*this);
          d_patch_data[patch_data_index]->getFromDatabase(patch_data_database);
 
          local_selector.clrFlag(patch_data_index);
@@ -330,14 +326,14 @@ void Patch::putToDatabase(
    }
 
    std::string patch_data_name;
-   boost::shared_ptr<tbox::Database> patch_data_database;
    tbox::Array<std::string> patch_data_namelist(namelist_count);
    namelist_count = 0;
    for (i = 0; i < d_patch_data.getSize(); i++) {
       if (patchdata_write_table.isSet(i) && checkAllocated(i)) {
          patch_data_namelist[namelist_count++] =
             patch_data_name = d_descriptor->mapIndexToName(i);
-         patch_data_database = database->putDatabase(patch_data_name);
+         boost::shared_ptr<tbox::Database> patch_data_database(
+            database->putDatabase(patch_data_name));
          (d_patch_data[i])->putToDatabase(patch_data_database);
       }
    }

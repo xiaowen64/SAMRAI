@@ -53,8 +53,7 @@ ComponentSelector::ComponentSelector(
 
 SAMRAI_INLINE_KEYWORD
 ComponentSelector::ComponentSelector(
-   const ComponentSelector& flags):
-   tbox::DescribedClass()
+   const ComponentSelector& flags)
 {
    d_bit_vector = flags.d_bit_vector;
    d_max_bit_index = flags.d_max_bit_index;

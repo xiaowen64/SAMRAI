@@ -29,6 +29,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
+#include <boost/make_shared.hpp>
 #include <typeinfo>
 #include <cfloat>
 #include <cmath>
@@ -223,11 +224,12 @@ SAMRAIVectorReal<TYPE>::cloneVector(
 {
 
    std::string new_name = (name.empty() ? d_vector_name : name);
-   boost::shared_ptr<SAMRAIVectorReal<TYPE> > new_vec(
-      new SAMRAIVectorReal<TYPE>(new_name,
-                                 d_hierarchy,
-                                 d_coarsest_level,
-                                 d_finest_level));
+   boost::shared_ptr<SAMRAIVectorReal<TYPE> > new_vec =
+      boost::make_shared<SAMRAIVectorReal<TYPE> >(
+         new_name,
+         d_hierarchy,
+         d_coarsest_level,
+         d_finest_level);
 
    new_vec->setNumberOfComponents(d_number_components);
 
@@ -302,8 +304,8 @@ void SAMRAIVectorReal<TYPE>::addComponent(
 #ifdef DEBUG_CHECK_ASSERTIONS
    hier::VariableDatabase* var_db =
       hier::VariableDatabase::getDatabase();
-   boost::shared_ptr<hier::PatchDescriptor> patch_descriptor =
-      var_db->getPatchDescriptor();
+   boost::shared_ptr<hier::PatchDescriptor> patch_descriptor(
+      var_db->getPatchDescriptor());
    if (!var_db->checkVariablePatchDataIndexType(var, comp_data_id)) {
       TBOX_ERROR("Error in SAMRAIVectorReal::addComponent : "
          << "Vector name = " << d_vector_name
@@ -368,8 +370,8 @@ void SAMRAIVectorReal<TYPE>::allocateVectorData(
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level = d_hierarchy->
-         getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (int i = 0; i < d_number_components; i++) {
          level->allocatePatchData(d_component_data_id[i], timestamp);
       }
@@ -387,8 +389,8 @@ void SAMRAIVectorReal<TYPE>::deallocateVectorData()
 #endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level = d_hierarchy->
-         getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       for (int i = 0; i < d_number_components; i++) {
          level->deallocatePatchData(d_component_data_id[i]);
       }
@@ -570,8 +572,7 @@ void SAMRAIVectorReal<TYPE>::copyVector(
 {
    for (int i = 0; i < d_number_components; i++) {
       d_component_operations[i]->resetLevels(d_coarsest_level, d_finest_level);
-      d_component_operations[i]->
-      copyData(d_component_data_id[i],
+      d_component_operations[i]->copyData(d_component_data_id[i],
          src_vec->getComponentDescriptorIndex(i),
          interior_only);
    }
@@ -583,8 +584,7 @@ void SAMRAIVectorReal<TYPE>::swapVectors(
 {
    for (int i = 0; i < d_number_components; i++) {
       d_component_operations[i]->resetLevels(d_coarsest_level, d_finest_level);
-      d_component_operations[i]->
-      swapData(d_component_data_id[i],
+      d_component_operations[i]->swapData(d_component_data_id[i],
          other->getComponentDescriptorIndex(i));
    }
 }

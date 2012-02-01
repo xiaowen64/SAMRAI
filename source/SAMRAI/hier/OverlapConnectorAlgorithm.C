@@ -2200,11 +2200,11 @@ void OverlapConnectorAlgorithm::initializeCallback()
    if (s_print_steps == '\0') {
       if (tbox::InputManager::inputDatabaseExists()) {
          s_print_steps = 'n';
-         boost::shared_ptr<tbox::Database> idb =
-            tbox::InputManager::getInputDatabase();
+         boost::shared_ptr<tbox::Database> idb(
+            tbox::InputManager::getInputDatabase());
          if (idb->isDatabase("OverlapConnectorAlgorithm")) {
-            boost::shared_ptr<tbox::Database> ocu_db =
-               idb->getDatabase("OverlapConnectorAlgorithm");
+            boost::shared_ptr<tbox::Database> ocu_db(
+               idb->getDatabase("OverlapConnectorAlgorithm"));
             s_print_steps = ocu_db->getCharWithDefault("print_bridge_steps",
                   s_print_steps);
          }

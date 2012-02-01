@@ -1342,7 +1342,8 @@ void MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const IntVector& refinement_ratio) const
 {
    const BoxLevel& old = mapping_connector.getBase();
-   const boost::shared_ptr<const GridGeometry>& grid_geometry(old.getGridGeometry());
+   const boost::shared_ptr<const GridGeometry>& grid_geometry(
+      old.getGridGeometry());
    const int rank = old.getMPI().getRank();
 
    while (base_ni != visible_base_nabrs.end() &&
@@ -1656,11 +1657,11 @@ void MappingConnectorAlgorithm::initializeCallback()
    if (s_print_steps == '\0') {
       if (tbox::InputManager::inputDatabaseExists()) {
          s_print_steps = 'n';
-         boost::shared_ptr<tbox::Database> idb =
-            tbox::InputManager::getInputDatabase();
+         boost::shared_ptr<tbox::Database> idb(
+            tbox::InputManager::getInputDatabase());
          if (idb->isDatabase("MappingConnectorAlgorithm")) {
-            boost::shared_ptr<tbox::Database> ocu_db =
-               idb->getDatabase("MappingConnectorAlgorithm");
+            boost::shared_ptr<tbox::Database> ocu_db(
+               idb->getDatabase("MappingConnectorAlgorithm"));
             s_print_steps = ocu_db->getCharWithDefault("print_modify_steps",
                   s_print_steps);
          }

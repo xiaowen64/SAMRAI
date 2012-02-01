@@ -19,6 +19,8 @@
 #include "SAMRAI/pdat/OutersideDataFactory.h"
 #include "SAMRAI/hier/Patch.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/SideDataFactory.I"
 #endif
@@ -95,11 +97,11 @@ SideDataFactory<TYPE>::cloneFactory(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return boost::shared_ptr<hier::PatchDataFactory>(new SideDataFactory<TYPE>(
-                                                   d_depth,
-                                                   ghosts,
-                                                   d_fine_boundary_represents_var,
-                                                   d_directions));
+   return boost::make_shared<SideDataFactory<TYPE> >(
+      d_depth,
+      ghosts,
+      d_fine_boundary_represents_var,
+      d_directions);
 }
 
 /*
@@ -117,12 +119,11 @@ SideDataFactory<TYPE>::allocate(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
 
-   hier::PatchData* patchdata =
-      new SideData<TYPE>(patch.getBox(),
-                         d_depth,
-                         this->d_ghosts,
-                         d_directions);
-   return boost::shared_ptr<hier::PatchData>(patchdata);
+   return boost::make_shared<SideData<TYPE> >(
+      patch.getBox(),
+      d_depth,
+      d_ghosts,
+      d_directions);
 }
 
 /*
@@ -140,10 +141,10 @@ SideDataFactory<TYPE>::getBoxGeometry(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
-   hier::BoxGeometry* boxgeometry = new SideGeometry(box,
-         this->d_ghosts,
-         d_directions);
-   return boost::shared_ptr<hier::BoxGeometry>(boxgeometry);
+   return boost::make_shared<SideGeometry>(
+      box,
+      d_ghosts,
+      d_directions);
 }
 
 /*
@@ -163,7 +164,7 @@ size_t SideDataFactory<TYPE>::getSizeOfMemory(
    const size_t obj =
       tbox::MemoryUtilities::align(sizeof(SideData<TYPE>));
    const size_t data =
-      SideData<TYPE>::getSizeOfData(box, d_depth, this->d_ghosts, d_directions);
+      SideData<TYPE>::getSizeOfData(box, d_depth, d_ghosts, d_directions);
    return obj + data;
 }
 

@@ -23,7 +23,12 @@ include $(OBJECT)/config/Makefile.config
 
 NUM_TESTS = 6
 
-TEST_NPROCS = 0 # @TEST_NPROCS@
+TEST_NPROCS = @TEST_NPROCS@
+ifeq (${TEST_NPROCS},0)
+TEST_NPROCS = 0
+else
+TEST_NPROCS = 1
+endif
 
 main:	main-mbtree.o $(LIBSAMRAIDEPEND)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) main-mbtree.o $(LIBSAMRAI) $(LDLIBS) -o $@

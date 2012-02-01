@@ -17,7 +17,6 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchData.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -69,7 +68,7 @@ namespace hier {
 class Patch;
 class MultiblockDataTranslator;
 
-class PatchDataFactory:public tbox::DescribedClass
+class PatchDataFactory
 {
 public:
    /**

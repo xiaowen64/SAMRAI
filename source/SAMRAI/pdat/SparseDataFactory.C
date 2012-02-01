@@ -19,6 +19,7 @@
 #include "SAMRAI/tbox/MemoryUtilities.h"
 
 #include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -51,9 +52,10 @@ SparseDataFactory<BOX_GEOMETRY>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
-   return boost::shared_ptr<hier::PatchDataFactory>(
-             new SparseDataFactory<BOX_GEOMETRY>(ghosts, d_dbl_attributes,
-                d_int_attributes));
+   return boost::make_shared<SparseDataFactory<BOX_GEOMETRY> >(
+      ghosts,
+      d_dbl_attributes,
+      d_int_attributes);
 }
 
 template<typename BOX_GEOMETRY>
@@ -62,10 +64,11 @@ SparseDataFactory<BOX_GEOMETRY>::allocate(
    const hier::Patch& patch) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
-   hier::PatchData* pd = new SparseData<BOX_GEOMETRY>(
-         patch.getBox(), this->d_ghosts, this->d_dbl_attributes,
-         this->d_int_attributes);
-   return boost::shared_ptr<hier::PatchData>(pd);
+   return boost::make_shared<SparseData<BOX_GEOMETRY> >(
+         patch.getBox(),
+         d_ghosts,
+         d_dbl_attributes,
+         d_int_attributes);
 }
 
 template<typename BOX_GEOMETRY>
@@ -74,9 +77,7 @@ SparseDataFactory<BOX_GEOMETRY>::getBoxGeometry(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
-   hier::BoxGeometry* boxGeometry =
-      new BOX_GEOMETRY(box, this->d_ghosts);
-   return boost::shared_ptr<hier::BoxGeometry>(boxGeometry);
+   return boost::make_shared<BOX_GEOMETRY>(box, d_ghosts);
 }
 
 template<typename BOX_GEOMETRY>

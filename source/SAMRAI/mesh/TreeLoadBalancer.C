@@ -4644,7 +4644,7 @@ void TreeLoadBalancer::setTimers()
       const int max_cycles_to_time = 4;
       t_compute_tree_load_for_cycle.resize(
          max_cycles_to_time,
-         boost::shared_ptr<tbox::Timer>((tbox::Timer*)NULL) );
+         boost::shared_ptr<tbox::Timer>() );
       for ( int i=0; i<max_cycles_to_time; ++i ) {
          t_compute_tree_load_for_cycle[i] = tbox::TimerManager::getManager()->
             getTimer(d_object_name + "::compute_tree_load_for_cycle["

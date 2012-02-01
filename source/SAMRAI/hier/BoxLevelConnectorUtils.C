@@ -20,6 +20,7 @@
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
+#include <boost/make_shared.hpp>
 #include <limits>
 #include <cstdlib>
 #include <list>
@@ -196,7 +197,8 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
 
    const BoxLevel& base = connector.getBase();
    const BoxLevel& head = connector.getHead();
-   const boost::shared_ptr<const GridGeometry>& grid_geom = base.getGridGeometry();
+   const boost::shared_ptr<const GridGeometry>& grid_geom(
+      base.getGridGeometry());
 
    /*
     * We swell the base then check for the parts outside the head if
@@ -738,11 +740,13 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
       if (domain.isInitialized()) {
 
          if (input.getRefinementRatio() == one_vec) {
-            reference_box_list.intersectBoxes(input.getRefinementRatio(), domain);
+            reference_box_list.intersectBoxes(
+               input.getRefinementRatio(),
+               domain);
          } else {
-            boost::shared_ptr<MultiblockBoxTree> refined_domain =
-               domain.createRefinedTree(input.getRefinementRatio());
-            reference_box_list.intersectBoxes(input.getRefinementRatio(), *refined_domain);
+            reference_box_list.intersectBoxes(
+               input.getRefinementRatio(),
+               *domain.createRefinedTree(input.getRefinementRatio()));
          }
 
       }
@@ -1251,9 +1255,10 @@ void BoxLevelConnectorUtils::addPeriodicImages(
       return; // No-op.
    }
 
-   boost::shared_ptr<BoxContainer> domain_tree_for_mapped_box_level(
-      new BoxContainer(domain_search_tree));
-   domain_tree_for_mapped_box_level->refine(mapped_box_level.getRefinementRatio());
+   boost::shared_ptr<BoxContainer> domain_tree_for_mapped_box_level =
+      boost::make_shared<BoxContainer>(domain_search_tree);
+   domain_tree_for_mapped_box_level->refine(
+      mapped_box_level.getRefinementRatio());
    domain_tree_for_mapped_box_level->makeTree();
 
    const BoxContainer& domain_tree =
@@ -1352,7 +1357,8 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
    const BoxLevel& anchor = anchor_to_mapped_box_level.getBase();
 
    BoxContainer domain_tree_for_mapped_box_level(domain_search_tree);
-   domain_tree_for_mapped_box_level.refine(mapped_box_level.getRefinementRatio());
+   domain_tree_for_mapped_box_level.refine(
+      mapped_box_level.getRefinementRatio());
    domain_tree_for_mapped_box_level.makeTree();
 
    {

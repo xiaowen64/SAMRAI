@@ -105,6 +105,9 @@ SAMRAI_INLINE_KEYWORD
 const BoxNeighborhoodCollection& Connector::getRelations(
    const BoxId& mapped_box_id) const
 {
+#ifndef DEBUG_CHECK_ASSERTIONS
+   NULL_USE(mapped_box_id);
+#endif
    if (d_parallel_state == BoxLevel::DISTRIBUTED) {
       TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mpi.getRank());
    }

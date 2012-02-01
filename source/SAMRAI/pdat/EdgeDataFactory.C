@@ -20,6 +20,8 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/MemoryUtilities.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/EdgeDataFactory.I"
 #endif
@@ -72,10 +74,10 @@ EdgeDataFactory<TYPE>::cloneFactory(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return boost::shared_ptr<hier::PatchDataFactory>(
-      new EdgeDataFactory<TYPE>(d_depth,
-                                ghosts,
-                                d_fine_boundary_represents_var));
+   return boost::make_shared<EdgeDataFactory<TYPE> >(
+      d_depth,
+      ghosts,
+      d_fine_boundary_represents_var);
 }
 
 /*
@@ -93,9 +95,10 @@ EdgeDataFactory<TYPE>::allocate(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
 
-   hier::PatchData* patchdata =
-      new EdgeData<TYPE>(patch.getBox(), d_depth, this->d_ghosts);
-   return boost::shared_ptr<hier::PatchData>(patchdata);
+   return boost::make_shared<EdgeData<TYPE> >(
+      patch.getBox(),
+      d_depth,
+      d_ghosts);
 }
 
 /*
@@ -113,8 +116,7 @@ EdgeDataFactory<TYPE>::getBoxGeometry(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
-   hier::BoxGeometry* boxgeometry = new EdgeGeometry(box, this->d_ghosts);
-   return boost::shared_ptr<hier::BoxGeometry>(boxgeometry);
+   return boost::make_shared<EdgeGeometry>(box, d_ghosts);
 }
 
 /*
@@ -134,7 +136,7 @@ size_t EdgeDataFactory<TYPE>::getSizeOfMemory(
    const size_t obj =
       tbox::MemoryUtilities::align(sizeof(EdgeData<TYPE>));
    const size_t data =
-      EdgeData<TYPE>::getSizeOfData(box, d_depth, this->d_ghosts);
+      EdgeData<TYPE>::getSizeOfData(box, d_depth, d_ghosts);
    return obj + data;
 }
 

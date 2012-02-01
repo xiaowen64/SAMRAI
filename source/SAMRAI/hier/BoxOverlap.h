@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Transformation.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -42,7 +41,7 @@ namespace hier {
  * @see hier::BoxGeometry
  */
 
-class BoxOverlap:public tbox::DescribedClass
+class BoxOverlap
 {
 public:
    /*!

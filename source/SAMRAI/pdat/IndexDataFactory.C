@@ -18,6 +18,8 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MemoryUtilities.h"
 
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -56,8 +58,7 @@ IndexDataFactory<TYPE, BOX_GEOMETRY>::cloneFactory(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return boost::shared_ptr<hier::PatchDataFactory>(
-      new IndexDataFactory<TYPE, BOX_GEOMETRY>(ghosts));
+   return boost::make_shared<IndexDataFactory<TYPE, BOX_GEOMETRY> >(ghosts);
 }
 
 /*
@@ -75,8 +76,9 @@ IndexDataFactory<TYPE, BOX_GEOMETRY>::allocate(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
 
-   hier::PatchData* pd = new IndexData<TYPE, BOX_GEOMETRY>(patch.getBox(), this->d_ghosts);
-   return boost::shared_ptr<hier::PatchData>(pd);
+   return boost::make_shared<IndexData<TYPE, BOX_GEOMETRY> >(
+      patch.getBox(),
+      d_ghosts);
 }
 
 /*
@@ -94,8 +96,7 @@ IndexDataFactory<TYPE, BOX_GEOMETRY>::getBoxGeometry(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
-   hier::BoxGeometry* boxgeometry = new BOX_GEOMETRY(box, this->d_ghosts);
-   return boost::shared_ptr<hier::BoxGeometry>(boxgeometry);
+   return boost::make_shared<BOX_GEOMETRY>(box, d_ghosts);
 }
 
 /*

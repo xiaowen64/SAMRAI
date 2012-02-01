@@ -15,7 +15,6 @@
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
 
@@ -51,7 +50,7 @@ namespace tbox {
  * version of getTYPE() works in a similar fashion.
  */
 
-class Database:public DescribedClass
+class Database
 {
 public:
    /**

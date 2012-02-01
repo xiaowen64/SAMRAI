@@ -12,7 +12,6 @@
 #define included_hier_ComponentSelector
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/PIO.h"
 
 #include <vector>
@@ -35,7 +34,7 @@ namespace hier {
  *
  * @see tbox::SAMRAIManager
  */
-class ComponentSelector:public tbox::DescribedClass
+class ComponentSelector
 {
 public:
    /*!

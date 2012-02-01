@@ -17,6 +17,8 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/SideGeometry.I"
 #endif
@@ -145,7 +147,9 @@ boost::shared_ptr<hier::BoxOverlap> SideGeometry::doOverlap(
    const hier::Transformation& transformation,
    const hier::BoxContainer& dst_restrict_boxes)
 {
+#ifdef DEBUG_CHECK_ASSERTIONS 
    const hier::IntVector& src_offset = transformation.getOffset();
+#endif
    TBOX_DIM_ASSERT_CHECK_ARGS2(src_mask, src_offset);
    TBOX_ASSERT(
       dst_geometry.getDirectionVector() == src_geometry.getDirectionVector());
@@ -205,8 +209,7 @@ boost::shared_ptr<hier::BoxOverlap> SideGeometry::doOverlap(
 
    // Create the side overlap data object using the boxes and source shift
 
-   hier::BoxOverlap* overlap = new SideOverlap(dst_boxes, transformation);
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
+   return boost::make_shared<SideOverlap>(dst_boxes, transformation);
 }
 
 /*
@@ -232,8 +235,7 @@ SideGeometry::setUpOverlap(
    }
 
    // Create the side overlap data object using the boxes and source shift
-   hier::BoxOverlap* overlap = new SideOverlap(dst_boxes, transformation);
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
+   return boost::make_shared<SideOverlap>(dst_boxes, transformation);
 
 }
 

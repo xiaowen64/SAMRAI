@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/Variable.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
@@ -56,7 +55,7 @@ namespace hier {
  * @see hier::TransferOperatorRegistry
  */
 
-class TimeInterpolateOperator:public tbox::DescribedClass
+class TimeInterpolateOperator
 {
 public:
    /**

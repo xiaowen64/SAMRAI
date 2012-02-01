@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/MessageStream.h"
 
 #include <iostream>
@@ -27,7 +26,7 @@ namespace tbox {
  * data transaction in a communication schedule.
  */
 
-class Transaction:public DescribedClass
+class Transaction
 {
 public:
    /**

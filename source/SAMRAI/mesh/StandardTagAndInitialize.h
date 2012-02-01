@@ -97,7 +97,7 @@ public:
       const std::string& object_name,
       StandardTagAndInitStrategy* tag_strategy,
       boost::shared_ptr<tbox::Database> input_db =
-         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * Virtual destructor for StandardTagAndInitialize.
@@ -147,7 +147,7 @@ public:
       const bool can_be_refined,
       const bool initial_time,
       const boost::shared_ptr<hier::PatchLevel> old_level =
-         boost::shared_ptr<hier::PatchLevel>((hier::PatchLevel*)NULL),
+         boost::shared_ptr<hier::PatchLevel>(),
       const bool allocate_data = true);
 
    /*!

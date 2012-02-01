@@ -11,6 +11,8 @@
 #include "SAMRAI/tbox/HDFDatabaseFactory.h"
 #include "SAMRAI/tbox/HDFDatabase.h"
 
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace tbox {
 
@@ -20,14 +22,15 @@ namespace tbox {
 boost::shared_ptr<Database> HDFDatabaseFactory::allocate(
    const std::string& name) {
 #ifdef HAVE_HDF5
-   boost::shared_ptr<HDFDatabase> database(new HDFDatabase(name));
+   boost::shared_ptr<HDFDatabase> database =
+      boost::make_shared<HDFDatabase>(name);
    return database;
 
 #else
    (void)name;
    TBOX_WARNING("HDF5DatabaseFactory: Cannot allocate an HDFDatabase.\n"
       << "SAMRAI was not configured with HDF.");
-   return boost::shared_ptr<Database>(NULL);
+   return boost::shared_ptr<Database>();
 
 #endif
 }

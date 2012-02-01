@@ -1314,7 +1314,7 @@ void BalanceUtilities::recursiveBisectionNonuniform(
       privateBadCutPointsExist(physical_domain);
 
    for (hier::PatchLevel::Iterator ip(in_level); ip; ip++) {
-      boost::shared_ptr<hier::Patch> patch = *ip;
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       hier::Box box2chop = patch->getBox();
 
@@ -1690,7 +1690,7 @@ double BalanceUtilities::computeLoadBalanceEfficiency(
    } else {
 
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> patch = *ip;
+         const boost::shared_ptr<hier::Patch>& patch = *ip;
          boost::shared_ptr<pdat::CellData<double> > weight(
             patch->getPatchData(workload_data_id),
             boost::detail::dynamic_cast_tag());

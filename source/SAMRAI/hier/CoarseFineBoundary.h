@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
@@ -45,7 +44,7 @@ namespace hier {
  * such objects.
  */
 
-class CoarseFineBoundary:public tbox::DescribedClass
+class CoarseFineBoundary
 {
 public:
    /*!

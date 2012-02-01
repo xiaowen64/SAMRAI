@@ -15,7 +15,6 @@
 
 #include "SAMRAI/xfer/PatchLevelFillPattern.h"
 #include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 namespace SAMRAI {
 namespace xfer {

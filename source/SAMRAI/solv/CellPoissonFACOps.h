@@ -130,7 +130,7 @@ public:
       const tbox::Dimension& dim,
       const std::string& object_name = std::string(),
       boost::shared_ptr<tbox::Database> database =
-         boost::shared_ptr<tbox::Database>(((tbox::Database*)NULL)));
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * @brief Destructor.

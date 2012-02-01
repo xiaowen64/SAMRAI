@@ -14,7 +14,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Transaction.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/PatchLevel.h"
@@ -45,7 +44,7 @@ namespace xfer {
  * @see tbox::Transaction
  */
 
-class RefineTransactionFactory:public tbox::DescribedClass
+class RefineTransactionFactory
 {
 public:
    /*!

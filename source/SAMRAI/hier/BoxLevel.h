@@ -76,7 +76,7 @@ namespace hier {
  * a valid BoxLevel does not contain two Boxes with the same
  * owner and index.
  */
-class BoxLevel:public tbox::DescribedClass
+class BoxLevel
 {
 
 public:

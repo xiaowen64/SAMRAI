@@ -15,6 +15,8 @@
 #include "SAMRAI/pdat/OuteredgeDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -32,8 +34,7 @@ OuteredgeVariable<TYPE>::OuteredgeVariable(
    const std::string& name,
    int depth):
    hier::Variable(name,
-                  boost::shared_ptr<hier::PatchDataFactory>(
-                     new OuteredgeDataFactory<TYPE>(dim, depth)))
+                  boost::make_shared<OuteredgeDataFactory<TYPE> >(dim, depth))
 {
 }
 
@@ -45,8 +46,8 @@ OuteredgeVariable<TYPE>::~OuteredgeVariable()
 template<class TYPE>
 int OuteredgeVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<OuteredgeDataFactory<TYPE> > factory =
-      this->getPatchDataFactory();
+   boost::shared_ptr<OuteredgeDataFactory<TYPE> > factory(
+      getPatchDataFactory());
    TBOX_ASSERT(factory);
    return factory->getDepth();
 }
@@ -65,7 +66,7 @@ template<class TYPE>
 OuteredgeVariable<TYPE>::OuteredgeVariable(
    const OuteredgeVariable<TYPE>& foo):
    hier::Variable(NULL,
-                  boost::shared_ptr<hier::PatchDataFactory>(NULL))
+                  boost::shared_ptr<hier::PatchDataFactory>())
 {
    NULL_USE(foo);
 }

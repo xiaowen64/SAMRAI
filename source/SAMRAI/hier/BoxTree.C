@@ -22,6 +22,8 @@
 #include "SAMRAI/tbox/Statistician.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
+#include <boost/make_shared.hpp>
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -258,7 +260,7 @@ void BoxTree::privateGenerateTree(
     * live here.  In this case, there is no left child,
     * no right child, and no recursive d_center_child.
     */
-   if (d_boxes.size() > min_number) {
+   if (d_boxes.size() > static_cast<std::list<const Box*>::size_type>(min_number)) {
       /*
        * Partition the boxes into three sets, using the midpoint of
        * the longest dimension of the bounding box:
@@ -339,9 +341,9 @@ void BoxTree::setupChildren(
     * everything into d_boxes so the check below will prevent
     * recursion.
     */
-   if (left_boxes.size() == total_size) {
+   if (left_boxes.size() == static_cast<std::list<const Box*>::size_type>(total_size)) {
       left_boxes.swap(d_boxes);
-   } else if (right_boxes.size() == total_size) {
+   } else if (right_boxes.size() == static_cast<std::list<const Box*>::size_type>(total_size)) {
       right_boxes.swap(d_boxes);
    }
 
@@ -356,8 +358,8 @@ void BoxTree::setupChildren(
    /*
     * If d_boxes is big enough, generate a center child for it.
     */
-   if (d_boxes.size() > min_number /* recursion criterion */ &&
-       d_boxes.size() < total_size /* avoid infinite recursion */) {
+   if (d_boxes.size() > static_cast<std::list<const Box*>::size_type>(min_number) /* recursion criterion */ &&
+       d_boxes.size() < static_cast<std::list<const Box*>::size_type>(total_size) /* avoid infinite recursion */) {
       d_center_child.reset(new BoxTree(d_dim));
       d_boxes.swap(d_center_child->d_boxes);
       d_center_child->privateGenerateTree(min_number);

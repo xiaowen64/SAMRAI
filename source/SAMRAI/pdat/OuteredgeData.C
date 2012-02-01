@@ -60,7 +60,7 @@ OuteredgeData<TYPE>::OuteredgeData(
             for (int side = 0; side < 2; ++side) {
 
                hier::Box oedge_data_box =
-                  OuteredgeGeometry::toOuteredgeBox(this->getGhostBox(),
+                  OuteredgeGeometry::toOuteredgeBox(getGhostBox(),
                      axis,
                      face_normal,
                      side);
@@ -717,7 +717,7 @@ OuteredgeData<TYPE>::getDataBox(
    int face_normal,
    int side)
 {
-   return OuteredgeGeometry::toOuteredgeBox(this->getGhostBox(),
+   return OuteredgeGeometry::toOuteredgeBox(getGhostBox(),
       axis,
       face_normal,
       side)

@@ -19,6 +19,8 @@
 #include "SAMRAI/pdat/OuterfaceDataFactory.h"
 #include "SAMRAI/hier/Patch.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/FaceDataFactory.I"
 #endif
@@ -71,10 +73,10 @@ FaceDataFactory<TYPE>::cloneFactory(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return boost::shared_ptr<hier::PatchDataFactory>(
-      new FaceDataFactory<TYPE>(d_depth,
-                                ghosts,
-                                d_fine_boundary_represents_var));
+   return boost::make_shared<FaceDataFactory>(
+      d_depth,
+      ghosts,
+      d_fine_boundary_represents_var);
 }
 
 /*
@@ -92,9 +94,10 @@ FaceDataFactory<TYPE>::allocate(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
 
-   hier::PatchData* patchdata =
-      new FaceData<TYPE>(patch.getBox(), d_depth, this->d_ghosts);
-   return boost::shared_ptr<hier::PatchData>(patchdata);
+   return boost::make_shared<FaceData<TYPE> >(
+      patch.getBox(),
+      d_depth,
+      d_ghosts);
 }
 
 /*
@@ -112,8 +115,7 @@ FaceDataFactory<TYPE>::getBoxGeometry(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
-   hier::BoxGeometry* boxgeometry = new FaceGeometry(box, this->d_ghosts);
-   return boost::shared_ptr<hier::BoxGeometry>(boxgeometry);
+   return boost::make_shared<FaceGeometry>(box, d_ghosts);
 }
 
 /*
@@ -133,7 +135,7 @@ size_t FaceDataFactory<TYPE>::getSizeOfMemory(
    const size_t obj =
       tbox::MemoryUtilities::align(sizeof(FaceData<TYPE>));
    const size_t data =
-      FaceData<TYPE>::getSizeOfData(box, d_depth, this->d_ghosts);
+      FaceData<TYPE>::getSizeOfData(box, d_depth, d_ghosts);
    return obj + data;
 }
 

@@ -28,10 +28,10 @@ namespace algs {
 /*!
  *  @brief Class PatchBoundaryEdgeSum provides operations summing edge data
  *  values at edges that are shared by multiple patches on a single level.
- *  Note that this utility only works on a SINGLE patch level, not on a multiple
- *  levels in an AMR patch hierarchy like the PatchBoundaryNodeSum class.   Unlike
- *  node data, edge data at coarse-fine boundaries are not co-located, so the sum
- *  operation is not clearly defined.
+ *  Note that this utility only works on a SINGLE patch level, not on a
+ *  multiple levels in an AMR patch hierarchy like the PatchBoundaryNodeSum
+ *  class.   Unlike node data, edge data at coarse-fine boundaries are not
+ *  co-located, so the sum operation is not clearly defined.
  *
  *  Usage of a patch boundry edge sum involves the following sequence of steps:
  *
@@ -54,9 +54,9 @@ namespace algs {
  *         my_edge_sum.computeSum()
  *     \endverbatim
  *
- *  The result of these operations is that each edge patch data value associated
- *  with the registered ids at patch boundaries on the level is replaced by the
- *  sum of all data values at the edge.
+ *  The result of these operations is that each edge patch data value
+ *  associated with the registered ids at patch boundaries on the level is
+ *  replaced by the sum of all data values at the edge.
  */
 
 class PatchBoundaryEdgeSum
@@ -186,7 +186,8 @@ private:
    tbox::Array<int> d_num_registered_data_by_depth;
 
    /*
-    * Edge-centered variables and patch data indices used as internal work quantities.
+    * Edge-centered variables and patch data indices used as internal work
+    * quantities.
     */
    // These arrays are indexed [variable registration sequence number]
    tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_oedge_src_variable;
@@ -197,7 +198,8 @@ private:
    tbox::Array<int> d_oedge_dst_id;
 
    /*
-    * Sets of indices for temporary variables to expedite allocation/deallocation.
+    * Sets of indices for temporary variables to expedite allocation and
+    * deallocation.
     */
    hier::ComponentSelector d_oedge_src_data_set;
    hier::ComponentSelector d_oedge_dst_data_set;

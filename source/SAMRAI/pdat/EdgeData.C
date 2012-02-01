@@ -52,7 +52,7 @@ EdgeData<TYPE>::EdgeData(
 
    for (int d = 0; d < getDim().getValue(); d++) {
       const hier::Box edge_box =
-         EdgeGeometry::toEdgeBox(this->getGhostBox(), d);
+         EdgeGeometry::toEdgeBox(getGhostBox(), d);
       d_data[d].initializeArray(edge_box, depth);
    }
 }

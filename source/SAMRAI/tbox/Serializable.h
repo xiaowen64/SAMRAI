@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -35,16 +34,9 @@ namespace tbox {
  * implementing Serializable not by an additional method.  The
  * database used to restore state from is obtained via a
  * getRootDatabase() call to the RestartManager.
- *
- * @note The derivation from DescribedClass is virtual.  The reason
- * for this is to avoid dynamic casting problems for smart pointers.
- * For some objects in SAMRAI, inheritance from Serializable
- * introduces a class hierarchy that is distinct from the class
- * hierarchy used to implement the class.  Pointers to base objects
- * need to be dynamically cast to derived objects in either hierarchy.
  */
 
-class Serializable:public virtual DescribedClass
+class Serializable
 {
 public:
    /*!

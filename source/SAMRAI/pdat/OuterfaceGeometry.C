@@ -17,6 +17,8 @@
 #include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/OuterfaceGeometry.I"
 #endif
@@ -190,8 +192,7 @@ boost::shared_ptr<hier::BoxOverlap> OuterfaceGeometry::doOverlap(
 
    // Create the face overlap data object using the boxes and source shift
 
-   hier::BoxOverlap* overlap = new FaceOverlap(dst_boxes, transformation);
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
+   return boost::make_shared<FaceOverlap>(dst_boxes, transformation);
 }
 
 /*
@@ -217,8 +218,7 @@ OuterfaceGeometry::setUpOverlap(
    }
 
    // Create the face overlap data object using the boxes and source shift
-   hier::BoxOverlap* overlap = new FaceOverlap(dst_boxes, transformation);
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
+   return boost::make_shared<FaceOverlap>(dst_boxes, transformation);
 
 }
 

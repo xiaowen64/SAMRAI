@@ -25,12 +25,13 @@ namespace algs {
 
 /*!
  * @brief Class OuteredgeSumTransaction represents a single outeredge data sum
- * communication transaction between two processors or a local data sum for refine schedules.
- * Note that to there is an implicit hand-shaking between objects of this class and
- * the xfer::RefineSchedule object that constructs them.  Following the refine
- * schedule implementation, the source patch data index for a transaction always refers
- * to the source data and the destination patch data index for a transaction is always
- * the scratch data, all as defined in the xfer::RefineClasses class.
+ * communication transaction between two processors or a local data sum for
+ * refine schedules.  Note that to there is an implicit hand-shaking between
+ * objects of this class and the xfer::RefineSchedule object that constructs
+ * them.  Following the refine schedule implementation, the source patch data
+ * index for a transaction always refers to the source data and the destination
+ * patch data index for a transaction is always the scratch data, all as
+ * defined in the xfer::RefineClasses class.
  *
  * @see xfer::RefineSchedule
  * @see xfer::RefineClasses
@@ -44,8 +45,8 @@ public:
    /*!
     * Static member function to set the array of refine class data items that
     * is shared by all object instances of this sum transaction class during
-    * data transfers.  The array must be set before any transactions are executed.
-    * The array is set in the RefineSchedule class.
+    * data transfers.  The array must be set before any transactions are
+    * executed.  The array is set in the RefineSchedule class.
     */
    static void
    setRefineItems(
@@ -55,8 +56,9 @@ public:
    /*!
     * Static member function to unset the array of refine class data items that
     * is shared by all object instances of this sum transaction class during
-    * data transfers.  The unset function is used to prevent erroneous execution
-    * of different schedules.  The array is unset in the RefineSchedule class.
+    * data transfers.  The unset function is used to prevent erroneous
+    * execution of different schedules.  The array is unset in the
+    * RefineSchedule class.
     */
    static void
    unsetRefineItems();
@@ -74,7 +76,8 @@ public:
     *
     * @param dst_level        boost::shared_ptr to destination patch level.
     * @param src_level        boost::shared_ptr to source patch level.
-    * @param overlap          boost::shared_ptr to overlap region between patches.
+    * @param overlap          boost::shared_ptr to overlap region between
+    *                         patches.
     * @param dst_patch        Integer index of destination patch in
     *                         destination
     *                         patch level.
@@ -83,8 +86,9 @@ public:
     * @param refine_item_id   Integer id of refine data item owned by refine
     *                         schedule.
     *
-    * When assertion checking is active, an assertion will result if any of the pointer
-    * arguments is null, or if any of the integer arguments is invalid (i.e., < 0).
+    * When assertion checking is active, an assertion will result if any of the
+    * pointer arguments is null, or if any of the integer arguments is invalid
+    * (i.e., < 0).
     */
    OuteredgeSumTransaction(
       boost::shared_ptr<hier::PatchLevel> dst_level,
@@ -118,7 +122,8 @@ public:
    computeIncomingMessageSize();
 
    /*!
-    * Return the integer buffer space (in bytes) needed for the outgoing message.
+    * Return the integer buffer space (in bytes) needed for the outgoing
+    * message.
     */
    virtual size_t
    computeOutgoingMessageSize();

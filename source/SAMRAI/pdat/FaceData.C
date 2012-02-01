@@ -53,7 +53,7 @@ FaceData<TYPE>::FaceData(
    TBOX_ASSERT(ghosts.min() >= 0);
 
    for (int d = 0; d < getDim().getValue(); d++) {
-      const hier::Box face = FaceGeometry::toFaceBox(this->getGhostBox(), d);
+      const hier::Box face = FaceGeometry::toFaceBox(getGhostBox(), d);
       d_data[d].initializeArray(face, depth);
    }
 }

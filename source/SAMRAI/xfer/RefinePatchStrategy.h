@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 #include <set>
 
@@ -54,8 +53,7 @@ namespace xfer {
  * @see xfer::RefineSchedule
  */
 
-class RefinePatchStrategy:
-   public virtual tbox::DescribedClass
+class RefinePatchStrategy
 {
 public:
    /*!

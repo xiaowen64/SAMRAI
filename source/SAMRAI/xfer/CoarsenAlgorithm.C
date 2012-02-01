@@ -19,6 +19,8 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace xfer {
 
@@ -36,7 +38,7 @@ CoarsenAlgorithm::CoarsenAlgorithm(
    const tbox::Dimension& dim,
    bool fill_coarse_data):
    d_dim(dim),
-   d_coarsen_classes(new CoarsenClasses(d_fill_coarse_data)),
+   d_coarsen_classes(boost::make_shared<CoarsenClasses>(d_fill_coarse_data)),
    d_fill_coarse_data(fill_coarse_data),
    d_schedule_created(false)
 {
@@ -132,20 +134,20 @@ CoarsenAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<CoarsenTransactionFactory> trans_factory =
-      transaction_factory;
+   boost::shared_ptr<CoarsenTransactionFactory> trans_factory(
+      transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardCoarsenTransactionFactory());
    }
 
-   return boost::shared_ptr<CoarsenSchedule>(
-      new CoarsenSchedule(crse_level,
-                          fine_level,
-                          d_coarsen_classes,
-                          trans_factory,
-                          patch_strategy,
-                          d_fill_coarse_data));
+   return boost::make_shared<CoarsenSchedule>(
+      crse_level,
+      fine_level,
+      d_coarsen_classes,
+      trans_factory,
+      patch_strategy,
+      d_fill_coarse_data);
 }
 
 /*
@@ -161,8 +163,7 @@ bool CoarsenAlgorithm::checkConsistency(
 {
    TBOX_ASSERT(schedule);
 
-   return d_coarsen_classes->
-          classesMatch(schedule->getEquivalenceClasses());
+   return d_coarsen_classes->classesMatch(schedule->getEquivalenceClasses());
 }
 
 void CoarsenAlgorithm::resetSchedule(

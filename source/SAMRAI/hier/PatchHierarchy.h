@@ -25,7 +25,6 @@
 #include "SAMRAI/hier/PatchLevelFactory.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Serializable.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
@@ -270,7 +269,7 @@ public:
       const std::string& object_name,
       boost::shared_ptr<GridGeometry> geometry,
       const boost::shared_ptr<tbox::Database>& database =
-         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL),
+         boost::shared_ptr<tbox::Database>(),
       bool register_for_restart = true);
 
    /*!

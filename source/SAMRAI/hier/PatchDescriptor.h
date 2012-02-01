@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/List.h"
 
@@ -56,7 +55,7 @@ namespace hier {
  * @see hier::Patch
  */
 
-class PatchDescriptor:public tbox::DescribedClass
+class PatchDescriptor
 {
 public:
    /*!

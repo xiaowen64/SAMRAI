@@ -169,8 +169,7 @@ boost::shared_ptr<Database> NullDatabase::getDatabase(
    const std::string& key)
 {
    NULL_USE(key);
-   boost::shared_ptr<Database> new_NullDatabase(new NullDatabase());
-   return new_NullDatabase;
+   return boost::make_shared<NullDatabase>();
 }
 
 /*

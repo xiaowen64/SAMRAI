@@ -15,6 +15,8 @@
 #include "SAMRAI/pdat/OutersideDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -32,8 +34,7 @@ OutersideVariable<TYPE>::OutersideVariable(
    const std::string& name,
    int depth):
    hier::Variable(name,
-                  boost::shared_ptr<hier::PatchDataFactory>(
-                     new OutersideDataFactory<TYPE>(dim, depth)))
+                  boost::make_shared<OutersideDataFactory<TYPE> >(dim, depth))
 {
 }
 
@@ -45,8 +46,8 @@ OutersideVariable<TYPE>::~OutersideVariable()
 template<class TYPE>
 int OutersideVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<OutersideDataFactory<TYPE> > factory =
-      this->getPatchDataFactory();
+   boost::shared_ptr<OutersideDataFactory<TYPE> > factory(
+      getPatchDataFactory());
    TBOX_ASSERT(factory);
    return factory->getDepth();
 }
@@ -65,7 +66,7 @@ template<class TYPE>
 OutersideVariable<TYPE>::OutersideVariable(
    const OutersideVariable<TYPE>& foo):
    hier::Variable(NULL,
-                  boost::shared_ptr<hier::PatchDataFactory>(NULL))
+                  boost::shared_ptr<hier::PatchDataFactory>())
 {
    NULL_USE(foo);
 }

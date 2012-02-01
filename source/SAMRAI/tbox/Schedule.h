@@ -52,7 +52,7 @@ namespace tbox {
  * @see tbox::List
  */
 
-class Schedule:public DescribedClass
+class Schedule
 {
 public:
    /*!

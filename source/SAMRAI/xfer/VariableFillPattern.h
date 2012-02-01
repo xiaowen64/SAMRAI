@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
@@ -44,7 +43,7 @@ namespace xfer {
  * @see xfer::RefineSchedule
  */
 
-class VariableFillPattern:public tbox::DescribedClass
+class VariableFillPattern
 {
 public:
    /*!

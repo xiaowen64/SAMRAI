@@ -45,10 +45,6 @@ FACPreconditioner::FACPreconditioner(
    d_fac_operator(user_ops),
    d_coarsest_ln(0),
    d_finest_ln(0),
-   d_residual_vector(),
-   d_tmp_residual(),
-   d_error_vector(),
-   d_tmp_error(),
    d_max_iterations(0),
    d_residual_tolerance(tbox::MathUtilities<double>::getSignalingNaN()),
    d_relative_residual_tolerance(tbox::MathUtilities<double>::getSignalingNaN()),
@@ -201,9 +197,9 @@ void FACPreconditioner::initializeSolverState(
    int num_components = solution.getNumberOfComponents();
    d_controlled_level_ops.resizeArray(num_components);
    for (int i = 0; i < num_components; ++i) {
-      boost::shared_ptr<hier::Variable> variable = solution.getComponentVariable(i);
       d_controlled_level_ops[i] =
-         ops_manager->getOperationsDouble(variable,
+         ops_manager->getOperationsDouble(
+            solution.getComponentVariable(i),
             d_patch_hierarchy,
             true);
       /*

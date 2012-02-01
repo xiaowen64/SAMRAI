@@ -15,7 +15,6 @@
 
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/NeighborhoodSet.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 namespace SAMRAI {
 namespace xfer {
@@ -36,7 +35,7 @@ namespace xfer {
  * @see hier::NeighborhoodSet
  */
 
-class PatchLevelFillPattern:public tbox::DescribedClass
+class PatchLevelFillPattern
 {
 public:
    typedef std::vector<hier::Box> BoxVector;

@@ -13,6 +13,8 @@
 
 #include "SAMRAI/hier/PatchLevelFactory.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/hier/PatchLevelFactory.I"
 #endif
@@ -31,12 +33,13 @@ boost::shared_ptr<PatchLevel> PatchLevelFactory::allocate(
    boost::shared_ptr<PatchFactory> factory) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(mapped_box_level, *grid_geometry);
-   PatchLevel* pl =
-      new PatchLevel(mapped_box_level,
+   boost::shared_ptr<PatchLevel> pl =
+      boost::make_shared<PatchLevel>(
+         mapped_box_level,
          grid_geometry,
          descriptor,
          factory);
-   return boost::shared_ptr<PatchLevel>(pl);
+   return pl;
 }
 
 boost::shared_ptr<PatchLevel> PatchLevelFactory::allocate(
@@ -47,14 +50,15 @@ boost::shared_ptr<PatchLevel> PatchLevelFactory::allocate(
    boost::shared_ptr<PatchFactory> factory,
    const bool defer_boundary_box_creation) const
 {
-   PatchLevel* pl =
-      new PatchLevel(database,
+   boost::shared_ptr<PatchLevel> pl =
+      boost::make_shared<PatchLevel>(
+         database,
          grid_geometry,
          descriptor,
          factory,
          component_selector,
          defer_boundary_box_creation);
-   return boost::shared_ptr<PatchLevel>(pl);
+   return pl;
 }
 
 }

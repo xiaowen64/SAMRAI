@@ -21,7 +21,6 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Schedule.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Array.h"
@@ -68,7 +67,7 @@ namespace xfer {
  * @see xfer::RefineClasses
  */
 
-class RefineSchedule:public tbox::DescribedClass
+class RefineSchedule
 {
 public:
    /*!

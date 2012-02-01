@@ -92,7 +92,7 @@ namespace xfer {
  * @see xfer::CoarsenClasses
  */
 
-class CoarsenAlgorithm:public tbox::DescribedClass
+class CoarsenAlgorithm
 {
 public:
    /*!
@@ -187,7 +187,7 @@ public:
       const boost::shared_ptr<hier::CoarsenOperator> opcoarsen,
       const hier::IntVector& gcw_to_coarsen,
       boost::shared_ptr<VariableFillPattern> var_fill_pattern =
-         boost::shared_ptr<VariableFillPattern>((VariableFillPattern*)NULL));
+         boost::shared_ptr<VariableFillPattern>());
 
    /*!
     * @brief Register a coarsening operation with the coarsening algorithm.
@@ -201,7 +201,7 @@ public:
       const int src,
       const boost::shared_ptr<hier::CoarsenOperator> opcoarsen,
       boost::shared_ptr<VariableFillPattern> var_fill_pattern =
-         boost::shared_ptr<VariableFillPattern>((VariableFillPattern*)NULL));
+         boost::shared_ptr<VariableFillPattern>());
 
    /*!
     * @brief Create a communication schedule to coarsen data from the given
@@ -242,7 +242,7 @@ public:
       boost::shared_ptr<hier::PatchLevel> fine_level,
       CoarsenPatchStrategy * coarsen_strategy = ((CoarsenPatchStrategy *)NULL),
       boost::shared_ptr<CoarsenTransactionFactory> transaction_factory =
-         boost::shared_ptr<CoarsenTransactionFactory>((CoarsenTransactionFactory*)NULL));
+         boost::shared_ptr<CoarsenTransactionFactory>());
 
    /*!
     * @brief Given a previously-generated coarsen schedule, check for

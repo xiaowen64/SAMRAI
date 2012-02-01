@@ -38,7 +38,7 @@ namespace xfer {
  * of equivalence.
  */
 
-class RefineClasses:public tbox::DescribedClass
+class RefineClasses
 {
 public:
    /*!
@@ -215,7 +215,7 @@ public:
    insertEquivalenceClassItem(
       RefineClasses::Data& data_item,
       boost::shared_ptr<hier::PatchDescriptor> descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL));
+         boost::shared_ptr<hier::PatchDescriptor>());
 
    /*!
     * @brief Check refine data item for validity.
@@ -243,7 +243,7 @@ public:
    itemIsValid(
       const RefineClasses::Data& data_item,
       boost::shared_ptr<hier::PatchDescriptor> descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL)) const;
+         boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Compare RefineClasses object with another RefineClasses object;
@@ -270,7 +270,7 @@ public:
    classesMatch(
       boost::shared_ptr<RefineClasses> test_classes,
       boost::shared_ptr<hier::PatchDescriptor> descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL)) const;
+         boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Compare RefineClasses::Data objects for equivalence;
@@ -311,7 +311,7 @@ public:
       const RefineClasses::Data& data1,
       const RefineClasses::Data& data2,
       boost::shared_ptr<hier::PatchDescriptor> descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>((hier::PatchDescriptor*)NULL)) const;
+         boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Get the size that has been allocated for the array storing refine

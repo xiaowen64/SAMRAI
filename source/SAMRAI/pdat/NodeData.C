@@ -48,7 +48,7 @@ NodeData<TYPE>::NodeData(
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 
-   const hier::Box node = NodeGeometry::toNodeBox(this->getGhostBox());
+   const hier::Box node = NodeGeometry::toNodeBox(getGhostBox());
    d_data.initializeArray(node, depth);
 
 }
@@ -486,9 +486,7 @@ void NodeData<TYPE>::getSpecializedFromDatabase(
 
    d_depth = database->getInteger("d_depth");
 
-   boost::shared_ptr<tbox::Database> array_database;
-   array_database = database->getDatabase("d_data");
-   (d_data).getFromDatabase(array_database);
+   d_data.getFromDatabase(database->getDatabase("d_data"));
 }
 
 /*
@@ -511,9 +509,7 @@ void NodeData<TYPE>::putSpecializedToDatabase(
 
    database->putInteger("d_depth", d_depth);
 
-   boost::shared_ptr<tbox::Database> array_database;
-   array_database = database->putDatabase("d_data");
-   (d_data).putToDatabase(array_database);
+   d_data.putToDatabase(database->putDatabase("d_data"));
 }
 
 }

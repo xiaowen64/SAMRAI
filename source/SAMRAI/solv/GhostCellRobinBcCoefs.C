@@ -161,8 +161,8 @@ void GhostCellRobinBcCoefs::setBcCoefs(
        * and a pdat::CellData<DIM> object in that order.  Data from the
        * first place with allocated storage is used.
        */
-      boost::shared_ptr<hier::PatchData> patch_data =
-         patch.getPatchData(d_ghost_data_id);
+      boost::shared_ptr<hier::PatchData> patch_data(
+         patch.getPatchData(d_ghost_data_id));
       if (!patch_data) {
          TBOX_ERROR(d_object_name << ": hier::Patch data for index "
                                   << d_ghost_data_id << " does not exist.");

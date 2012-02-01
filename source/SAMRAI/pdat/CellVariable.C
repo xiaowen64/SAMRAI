@@ -16,6 +16,8 @@
 #include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -33,9 +35,8 @@ CellVariable<TYPE>::CellVariable(
    const std::string& name,
    int depth):
    hier::Variable(name,
-                  boost::shared_ptr<hier::PatchDataFactory>(
-                     new CellDataFactory<TYPE>(depth,
-                                               hier::IntVector::getZero(dim)))) // default zero ghost cells
+                  boost::make_shared<CellDataFactory<TYPE> >(depth,
+                     hier::IntVector::getZero(dim))) // default zero ghost cells
 {
 }
 
@@ -47,8 +48,8 @@ CellVariable<TYPE>::~CellVariable()
 template<class TYPE>
 int CellVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<CellDataFactory<TYPE> > cell_factory =
-      this->getPatchDataFactory();
+   boost::shared_ptr<CellDataFactory<TYPE> > cell_factory(
+      getPatchDataFactory());
    TBOX_ASSERT(cell_factory);
    return cell_factory->getDepth();
 }
@@ -67,7 +68,7 @@ template<class TYPE>
 CellVariable<TYPE>::CellVariable(
    const CellVariable<TYPE>& foo):
    hier::Variable(NULL,
-                  boost::shared_ptr<hier::PatchDataFactory>(NULL))
+                  boost::shared_ptr<hier::PatchDataFactory>())
 {
    NULL_USE(foo);
 }

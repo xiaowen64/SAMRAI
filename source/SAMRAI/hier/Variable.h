@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
@@ -65,7 +64,7 @@ namespace hier {
  * @see hier::PatchDataFactory
  */
 
-class Variable:public tbox::DescribedClass
+class Variable
 {
 public:
    /**

@@ -105,20 +105,11 @@ class BoxTree;
  * for patches which describe how the patch touches the domain boundary
  * (useful for filling ghost cell data for physical boundary conditions).
  *
- * @note
- * The derivation from tbox::DescribedClass is virtual.  The
- * reason for this is to avoid dynamic casting problems for smart pointers.
- * Typically, SAMRAI geometry objects inherit from tbox::Serializable
- * as well as this base geometry class.  Thus, there is usually more than
- * one class hierarchy for geometry objects.  boost::shared_ptr to base objects
- * may need to be dynamically cast to derived objects in either hierarchy.
- *
  * @see hier::BoundaryBox
  */
 
 class GridGeometry:
-   public virtual tbox::DescribedClass,
-   public virtual tbox::Serializable
+   public tbox::Serializable
 {
 public:
    typedef  PatchGeometry::TwoDimBool TwoDimBool;

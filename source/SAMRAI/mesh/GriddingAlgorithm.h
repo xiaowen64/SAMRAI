@@ -265,7 +265,7 @@ public:
       boost::shared_ptr<BoxGeneratorStrategy> generator,
       boost::shared_ptr<LoadBalanceStrategy> balancer,
       boost::shared_ptr<LoadBalanceStrategy> balancer_zero =
-         boost::shared_ptr<LoadBalanceStrategy>((LoadBalanceStrategy*)NULL),
+         boost::shared_ptr<LoadBalanceStrategy>(),
       bool register_for_restart = true);
 
    /*!

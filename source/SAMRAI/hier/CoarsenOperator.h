@@ -62,7 +62,7 @@ namespace hier {
  * @see hier::TransferOperatorRegistry
  */
 
-class CoarsenOperator:public tbox::DescribedClass
+class CoarsenOperator
 {
 public:
    /*!

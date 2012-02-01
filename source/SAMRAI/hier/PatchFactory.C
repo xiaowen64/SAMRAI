@@ -13,6 +13,8 @@
 
 #include "SAMRAI/hier/PatchFactory.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/hier/PatchFactory.I"
 #endif
@@ -27,8 +29,7 @@ boost::shared_ptr<Patch> PatchFactory::allocate(
    const Box& mapped_box_level_mapped_box,
    boost::shared_ptr<PatchDescriptor> descriptor) const
 {
-   return boost::shared_ptr<Patch>(new Patch(mapped_box_level_mapped_box,
-                                             descriptor));
+   return boost::make_shared<Patch>(mapped_box_level_mapped_box, descriptor);
 }
 
 }

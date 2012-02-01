@@ -43,7 +43,7 @@ namespace math {
  * respectively.
  */
 
-class HierarchyDataOpsComplex:public tbox::DescribedClass
+class HierarchyDataOpsComplex
 {
 public:
    /**

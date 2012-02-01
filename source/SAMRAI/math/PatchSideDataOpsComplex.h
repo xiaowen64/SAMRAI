@@ -46,7 +46,6 @@ namespace math {
  */
 
 class PatchSideDataOpsComplex:
-   public tbox::DescribedClass,
    public PatchSideDataBasicOps<dcomplex>,
    public PatchSideDataNormOpsComplex
 {

@@ -17,7 +17,6 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/Variable.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 #include <string>
 #include <map>
@@ -63,7 +62,7 @@ namespace hier {
  * @see hier::TransferOperatorRegistry
  */
 
-class RefineOperator:public tbox::DescribedClass
+class RefineOperator
 {
 public:
    /*!

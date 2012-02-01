@@ -39,6 +39,10 @@ PatchGeometry::PatchGeometry(
    d_touches_regular_bdry(ratio_to_level_zero.getDim())
 
 {
+#ifndef DEBUG_CHECK_ASSERTIONS
+   NULL_USE(touches_periodic_bdry);
+#endif
+
    TBOX_DIM_ASSERT_CHECK_ARGS3(ratio_to_level_zero,
       touches_regular_bdry,
       touches_periodic_bdry);

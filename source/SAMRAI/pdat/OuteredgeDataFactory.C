@@ -19,6 +19,8 @@
 #include "SAMRAI/pdat/OuteredgeGeometry.h"
 #include "SAMRAI/hier/Patch.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/OuteredgeDataFactory.I"
 #endif
@@ -65,8 +67,9 @@ OuteredgeDataFactory<TYPE>::cloneFactory(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return boost::shared_ptr<hier::PatchDataFactory>(
-      new OuteredgeDataFactory<TYPE>(ghosts.getDim(), d_depth));
+   return boost::make_shared<OuteredgeDataFactory<TYPE> >(
+      ghosts.getDim(),
+      d_depth);
 }
 
 /*
@@ -84,9 +87,7 @@ OuteredgeDataFactory<TYPE>::allocate(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
 
-   hier::PatchData* patchdata =
-      new OuteredgeData<TYPE>(patch.getBox(), d_depth);
-   return boost::shared_ptr<hier::PatchData>(patchdata);
+   return boost::make_shared<OuteredgeData<TYPE> >(patch.getBox(), d_depth);
 }
 
 /*
@@ -106,8 +107,7 @@ OuteredgeDataFactory<TYPE>::getBoxGeometry(
 
    const hier::IntVector& zero_vector(hier::IntVector::getZero(getDim()));
 
-   hier::BoxGeometry* boxgeometry = new OuteredgeGeometry(box, zero_vector);
-   return boost::shared_ptr<hier::BoxGeometry>(boxgeometry);
+   return boost::make_shared<OuteredgeGeometry>(box, zero_vector);
 }
 
 /*

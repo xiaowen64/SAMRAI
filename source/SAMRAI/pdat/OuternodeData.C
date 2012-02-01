@@ -563,8 +563,8 @@ OuternodeData<TYPE>::getDataBox(
     * We start with the full box and chop it down to the databox
     * corresponding to the given face_normal and side.
     */
-   hier::Box databox = NodeGeometry::toNodeBox(this->getBox());
-   const hier::IntVector& ghosts = this->getGhostCellWidth();
+   hier::Box databox = NodeGeometry::toNodeBox(getBox());
+   const hier::IntVector& ghosts = getGhostCellWidth();
 
    for (int dh = face_normal + 1; dh < getDim().getValue(); dh++) {
 

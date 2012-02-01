@@ -94,7 +94,7 @@ TransferOperatorRegistry::lookupCoarsenOperator(
    TBOX_ASSERT(var);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
-   boost::shared_ptr<CoarsenOperator> coarsen_op((CoarsenOperator*)NULL);
+   boost::shared_ptr<CoarsenOperator> coarsen_op;
    bool found_op = false;
 
    if ((op_name == "NO_COARSEN") ||
@@ -103,8 +103,8 @@ TransferOperatorRegistry::lookupCoarsenOperator(
       found_op = true;
    } else {
 
-      tbox::List<boost::shared_ptr<CoarsenOperator> >::Iterator
-         lop = d_coarsen_operators.listStart();
+      tbox::List<boost::shared_ptr<CoarsenOperator> >::Iterator lop =
+         d_coarsen_operators.listStart();
 
       while (!coarsen_op && lop) {
          if (lop()->findCoarsenOperator(var, op_name)) {
@@ -130,7 +130,7 @@ TransferOperatorRegistry::lookupRefineOperator(
    TBOX_ASSERT(var);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
-   boost::shared_ptr<RefineOperator> refine_op((RefineOperator*)NULL);
+   boost::shared_ptr<RefineOperator> refine_op;
    bool found_op = false;
 
    if ((op_name == "NO_REFINE") ||
@@ -139,8 +139,8 @@ TransferOperatorRegistry::lookupRefineOperator(
       found_op = true;
    } else {
 
-      tbox::List<boost::shared_ptr<RefineOperator> >::Iterator
-         lop = d_refine_operators.listStart();
+      tbox::List<boost::shared_ptr<RefineOperator> >::Iterator lop =
+         d_refine_operators.listStart();
 
       while (!refine_op && lop) {
          if (lop()->findRefineOperator(var, op_name)) {
@@ -166,8 +166,7 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
    TBOX_ASSERT(var);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
 
-   boost::shared_ptr<TimeInterpolateOperator> time_op(
-      (TimeInterpolateOperator*)NULL);
+   boost::shared_ptr<TimeInterpolateOperator> time_op;
    bool found_op = false;
 
    if ((op_name == "NO_TIME_INTERPOLATE") ||
@@ -175,8 +174,8 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
       found_op = true;
    } else {
 
-      tbox::List<boost::shared_ptr<TimeInterpolateOperator> >::Iterator
-         lop = d_time_operators.listStart();
+      tbox::List<boost::shared_ptr<TimeInterpolateOperator> >::Iterator lop =
+         d_time_operators.listStart();
 
       while (!time_op && lop) {
          if (lop()->findTimeInterpolateOperator(var, op_name)) {
@@ -253,24 +252,24 @@ TransferOperatorRegistry::printClassData(
       << (TransferOperatorRegistry *)this << std::endl;
 
    os << "Coarsen operator list: " << std::endl;
-   tbox::List<boost::shared_ptr<CoarsenOperator> >::Iterator
-      cop = d_coarsen_operators.listStart();
+   tbox::List<boost::shared_ptr<CoarsenOperator> >::Iterator cop =
+      d_coarsen_operators.listStart();
    while (cop) {
       os << cop().get() << std::endl;
       cop++;
    }
 
    os << "Refine operator list: " << std::endl;
-   tbox::List<boost::shared_ptr<RefineOperator> >::Iterator
-      rop = d_refine_operators.listStart();
+   tbox::List<boost::shared_ptr<RefineOperator> >::Iterator rop =
+      d_refine_operators.listStart();
    while (rop) {
       os << rop().get() << std::endl;
       rop++;
    }
 
    os << "Time interpolate operator list: " << std::endl;
-   tbox::List<boost::shared_ptr<TimeInterpolateOperator> >::Iterator
-      top = d_time_operators.listStart();
+   tbox::List<boost::shared_ptr<TimeInterpolateOperator> >::Iterator top =
+      d_time_operators.listStart();
    while (top) {
       os << top().get() << std::endl;
       top++;

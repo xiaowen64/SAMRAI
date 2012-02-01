@@ -17,7 +17,6 @@
 #include "SAMRAI/solv/FACOperatorStrategy.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -56,7 +55,7 @@ namespace solv {
  *    if desired.
  */
 
-class FACPreconditioner:public tbox::DescribedClass
+class FACPreconditioner
 {
 public:
    /*!
@@ -70,7 +69,7 @@ public:
       const std::string& name,
       FACOperatorStrategy& user_ops,
       boost::shared_ptr<tbox::Database> database =
-         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * Virtual destructor.

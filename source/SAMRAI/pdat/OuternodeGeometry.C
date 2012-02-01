@@ -17,6 +17,8 @@
 #include "SAMRAI/pdat/NodeOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/OuternodeGeometry.I"
 #endif
@@ -207,8 +209,7 @@ OuternodeGeometry::doOverlap(
 
    // Create the outernode overlap data object using the boxes and source shift
 
-   hier::BoxOverlap* overlap = new NodeOverlap(dst_boxes, transformation);
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
+   return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
 }
 
 /*
@@ -313,8 +314,7 @@ OuternodeGeometry::doOverlap(
 
    // Create the side overlap data object using the boxes and source shift
 
-   hier::BoxOverlap* overlap = new NodeOverlap(src_boxes, transformation);
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
+   return boost::make_shared<NodeOverlap>(src_boxes, transformation);
 }
 
 /*
@@ -444,8 +444,7 @@ OuternodeGeometry::doOverlap(
 
    // Create the side overlap data object using the boxes and source shift
 
-   hier::BoxOverlap* overlap = new NodeOverlap(dst_boxes, transformation);
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
+   return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
 
 }
 
@@ -469,8 +468,7 @@ OuternodeGeometry::setUpOverlap(
    }
 
    // Create the node overlap data object using the boxes and source shift
-   hier::BoxOverlap* overlap = new NodeOverlap(dst_boxes, transformation);
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
+   return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
 
 }
 

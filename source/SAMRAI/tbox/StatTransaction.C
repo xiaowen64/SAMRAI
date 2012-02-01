@@ -24,11 +24,11 @@ namespace tbox {
 StatTransaction::StatTransaction(
    boost::shared_ptr<Statistic> stat,
    int src_proc_id,
-   int dst_proc_id)
+   int dst_proc_id) :
+   d_stat(stat),
+   d_src_id(src_proc_id),
+   d_dst_id(dst_proc_id)
 {
-   d_stat = stat;
-   d_src_id = src_proc_id;
-   d_dst_id = dst_proc_id;
 }
 
 StatTransaction::~StatTransaction()

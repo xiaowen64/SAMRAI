@@ -117,7 +117,7 @@ namespace xfer {
  * @see xfer::RefineClasses
  */
 
-class RefineAlgorithm:public tbox::DescribedClass
+class RefineAlgorithm
 {
 public:
    /*!
@@ -167,7 +167,7 @@ public:
       const int scratch,
       boost::shared_ptr<hier::RefineOperator> oprefine,
       boost::shared_ptr<VariableFillPattern> var_fill_pattern =
-         boost::shared_ptr<VariableFillPattern>((VariableFillPattern*)NULL));
+         boost::shared_ptr<VariableFillPattern>());
 
    /*!
     * @brief Register a refine operation with the refine algorithm object.
@@ -214,7 +214,7 @@ public:
       boost::shared_ptr<hier::RefineOperator> oprefine,
       boost::shared_ptr<hier::TimeInterpolateOperator> optime,
       boost::shared_ptr<VariableFillPattern> var_fill_pattern =
-         boost::shared_ptr<VariableFillPattern>((VariableFillPattern*)NULL));
+         boost::shared_ptr<VariableFillPattern>());
 
    /*!
     * @brief Create a communication schedule for communicating data within a
@@ -253,10 +253,9 @@ public:
    boost::shared_ptr<RefineSchedule>
    createSchedule(
       boost::shared_ptr<hier::PatchLevel> level,
-      RefinePatchStrategy * patch_strategy =
-         ((RefinePatchStrategy *)NULL),
+      RefinePatchStrategy * patch_strategy = ((RefinePatchStrategy *)NULL),
       boost::shared_ptr<RefineTransactionFactory> transaction_factory =
-         boost::shared_ptr<RefineTransactionFactory>((RefineTransactionFactory*)NULL));
+         boost::shared_ptr<RefineTransactionFactory>());
 
    /*
     * @brief Same as the above, except with fill_pattern specified.
@@ -269,10 +268,9 @@ public:
    createSchedule(
       boost::shared_ptr<PatchLevelFillPattern> fill_pattern,
       boost::shared_ptr<hier::PatchLevel> level,
-      RefinePatchStrategy * patch_strategy =
-         ((RefinePatchStrategy *)NULL),
+      RefinePatchStrategy * patch_strategy = ((RefinePatchStrategy *)NULL),
       boost::shared_ptr<RefineTransactionFactory> transaction_factory =
-         boost::shared_ptr<RefineTransactionFactory>((RefineTransactionFactory*)NULL));
+         boost::shared_ptr<RefineTransactionFactory>());
 
    /*!
     * @brief Create a communication schedule that communicates data between
@@ -319,11 +317,10 @@ public:
    createSchedule(
       boost::shared_ptr<hier::PatchLevel> dst_level,
       boost::shared_ptr<hier::PatchLevel> src_level,
-      RefinePatchStrategy * patch_strategy =
-         ((RefinePatchStrategy *)NULL),
+      RefinePatchStrategy * patch_strategy = ((RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
       boost::shared_ptr<RefineTransactionFactory> transaction_factory =
-         boost::shared_ptr<RefineTransactionFactory>((RefineTransactionFactory*)NULL));
+         boost::shared_ptr<RefineTransactionFactory>());
 
    /*!
     * @brief Same as the above, except with fill_pattern specified.
@@ -337,11 +334,10 @@ public:
       boost::shared_ptr<PatchLevelFillPattern> fill_pattern,
       boost::shared_ptr<hier::PatchLevel> dst_level,
       boost::shared_ptr<hier::PatchLevel> src_level,
-      RefinePatchStrategy * patch_strategy =
-         ((RefinePatchStrategy *)NULL),
+      RefinePatchStrategy * patch_strategy = ((RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
       boost::shared_ptr<RefineTransactionFactory> transaction_factory =
-         boost::shared_ptr<RefineTransactionFactory>((RefineTransactionFactory*)NULL));
+         boost::shared_ptr<RefineTransactionFactory>());
 
    /*!
     * @brief Create a communication schedule that communicates data within a
@@ -417,11 +413,10 @@ public:
       boost::shared_ptr<hier::PatchLevel> level,
       const int next_coarser_level,
       boost::shared_ptr<hier::PatchHierarchy> hierarchy,
-      RefinePatchStrategy * patch_strategy =
-         ((RefinePatchStrategy *)NULL),
+      RefinePatchStrategy * patch_strategy = ((RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
       boost::shared_ptr<RefineTransactionFactory> transaction_factory =
-         boost::shared_ptr<RefineTransactionFactory>((RefineTransactionFactory*)NULL));
+         boost::shared_ptr<RefineTransactionFactory>());
 
    /*!
     * @brief Same as the above, except with fill_pattern specified.
@@ -436,11 +431,10 @@ public:
       boost::shared_ptr<hier::PatchLevel> level,
       const int next_coarser_level,
       boost::shared_ptr<hier::PatchHierarchy> hierarchy,
-      RefinePatchStrategy * patch_strategy =
-         ((RefinePatchStrategy *)NULL),
+      RefinePatchStrategy * patch_strategy = ((RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
       boost::shared_ptr<RefineTransactionFactory> transaction_factory =
-         boost::shared_ptr<RefineTransactionFactory>((RefineTransactionFactory*)NULL));
+         boost::shared_ptr<RefineTransactionFactory>());
 
    /*!
     * @brief Create a communication schedule that communicates data from a
@@ -533,11 +527,10 @@ public:
       boost::shared_ptr<hier::PatchLevel> src_level,
       const int next_coarser_level,
       boost::shared_ptr<hier::PatchHierarchy> hierarchy,
-      RefinePatchStrategy * patch_strategy =
-         ((RefinePatchStrategy *)NULL),
+      RefinePatchStrategy * patch_strategy = ((RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
       boost::shared_ptr<RefineTransactionFactory> transaction_factory =
-         boost::shared_ptr<RefineTransactionFactory>((RefineTransactionFactory*)NULL));
+         boost::shared_ptr<RefineTransactionFactory>());
 
    /*!
     * @brief Same as the above, except with fill_pattern specified.
@@ -553,11 +546,10 @@ public:
       boost::shared_ptr<hier::PatchLevel> src_level,
       const int next_coarser_level,
       boost::shared_ptr<hier::PatchHierarchy> hierarchy,
-      RefinePatchStrategy * patch_strategy =
-         ((RefinePatchStrategy *)NULL),
+      RefinePatchStrategy * patch_strategy = ((RefinePatchStrategy *)NULL),
       bool use_time_interpolation = false,
       boost::shared_ptr<RefineTransactionFactory> transaction_factory =
-         boost::shared_ptr<RefineTransactionFactory>((RefineTransactionFactory*)NULL));
+         boost::shared_ptr<RefineTransactionFactory>());
 
    /*!
     * @brief Given a previously-generated refine schedule, check for

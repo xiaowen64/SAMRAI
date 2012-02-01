@@ -19,6 +19,9 @@
 #include "SAMRAI/tbox/StatTransaction.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/tbox/Statistician.I"
 #endif
@@ -1822,9 +1825,8 @@ void Statistician::finalize(
                      global_proc_stats[is][ip].reset(
                         new Statistic(sname, stype, is));
                      stat_schedule.addTransaction(
-                        boost::shared_ptr<tbox::Transaction>(new
-                           StatTransaction(global_proc_stats[is][ip],
-                              ip, 0)));
+                        boost::make_shared<StatTransaction>(
+                           global_proc_stats[is][ip], ip, 0));
                   }
                }
 
@@ -1837,9 +1839,8 @@ void Statistician::finalize(
 
                for (is = 0; is < d_num_proc_stats; is++) {
                   stat_schedule.addTransaction(
-                     boost::shared_ptr<tbox::Transaction>(
-                        new StatTransaction(d_proc_statistics[is],
-                           my_rank, 0)));
+                     boost::make_shared<StatTransaction>(
+                        d_proc_statistics[is], my_rank, 0));
                }
 
             }
@@ -1863,9 +1864,8 @@ void Statistician::finalize(
                      global_patch_stats[is][ip].reset(
                         new Statistic(sname, stype, is));
                      stat_schedule.addTransaction(
-                        boost::shared_ptr<tbox::Transaction>(
-                           new StatTransaction(global_patch_stats[is][ip],
-                              ip, 0)));
+                        boost::make_shared<StatTransaction>(
+                           global_patch_stats[is][ip], ip, 0));
                   }
                }
 
@@ -1878,9 +1878,8 @@ void Statistician::finalize(
 
                for (is = 0; is < d_num_patch_stats; is++) {
                   stat_schedule.addTransaction(
-                     boost::shared_ptr<tbox::Transaction>(
-                        new StatTransaction(d_patch_statistics[is],
-                           my_rank, 0)));
+                     boost::make_shared<StatTransaction>(
+                        d_patch_statistics[is], my_rank, 0));
                }
 
             }
@@ -2627,16 +2626,14 @@ void StatisticRestartDatabase::putToDatabase(
 
 void StatisticRestartDatabase::getFromRestart()
 {
-   boost::shared_ptr<Database> root_db =
-      RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<Database> root_db(
+      RestartManager::getManager()->getRootDatabase());
 
-   boost::shared_ptr<Database> db;
-   if (root_db->isDatabase(d_object_name)) {
-      db = root_db->getDatabase(d_object_name);
-   } else {
+   if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file" << std::endl);
    }
+   boost::shared_ptr<Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("TBOX_STATISTICRESTARTDATABASE_VERSION");
    if (ver != TBOX_STATISTICRESTARTDATABASE_VERSION) {

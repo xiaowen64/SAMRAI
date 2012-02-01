@@ -89,7 +89,7 @@ namespace solv {
  */
 
 template<class TYPE>
-class SAMRAIVectorReal:public tbox::DescribedClass
+class SAMRAIVectorReal
 {
 public:
    /**
@@ -303,8 +303,7 @@ public:
       const int comp_data_id,
       const int control_vol_id = -1,
       const boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> > vop =
-         boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >(
-            (math::HierarchyDataOpsReal<TYPE>*)NULL));
+         boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >());
 
    /**
     * Allocate data storage for all components of this vector object.

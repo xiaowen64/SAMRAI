@@ -38,7 +38,7 @@ namespace mesh {
  * @see hier::ProcessorMapping
  */
 
-class LoadBalanceStrategy:public tbox::DescribedClass
+class LoadBalanceStrategy
 {
 public:
    /*!

@@ -27,7 +27,7 @@ OBJS = 	\
 	MemoryDatabaseFactory.o  \
 	MessageStream.o SAMRAI_MPI.o Schedule.o \
 	Transaction.o AsyncCommGroup.o AsyncCommStage.o \
-	BalancedDepthFirstTree.o DescribedClass.o \
+	BalancedDepthFirstTree.o \
 	MemoryUtilities.o ReferenceCounter.o \
 	ArraySpecial.o HDFDatabase.o HDFDatabaseFactory.o \
 	SiloDatabase.o SiloDatabaseFactory.o RestartManager.o \

@@ -12,7 +12,6 @@
 #define included_hier_VariableContext
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 #include <string>
 
@@ -50,7 +49,7 @@ namespace hier {
  * @see hier::VariableDatabase
  */
 
-class VariableContext:public tbox::DescribedClass
+class VariableContext
 {
 public:
    /**

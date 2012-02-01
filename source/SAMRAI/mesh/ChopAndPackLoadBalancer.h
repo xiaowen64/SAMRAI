@@ -170,7 +170,7 @@ public:
       const tbox::Dimension& dim,
       const std::string& name,
       boost::shared_ptr<tbox::Database> input_db =
-         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * Construct load balancer object, including setting default object state
@@ -186,7 +186,7 @@ public:
    explicit ChopAndPackLoadBalancer(
       const tbox::Dimension& dim,
       boost::shared_ptr<tbox::Database> input_db =
-         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * The virtual destructor releases all internal storage.

@@ -15,6 +15,8 @@
 #include "SAMRAI/pdat/OuternodeDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -32,8 +34,7 @@ OuternodeVariable<TYPE>::OuternodeVariable(
    const std::string& name,
    int depth):
    hier::Variable(name,
-                  boost::shared_ptr<hier::PatchDataFactory>(
-                    new OuternodeDataFactory<TYPE>(dim, depth)))
+                  boost::make_shared<OuternodeDataFactory<TYPE> >(dim, depth))
 {
 }
 
@@ -45,8 +46,8 @@ OuternodeVariable<TYPE>::~OuternodeVariable()
 template<class TYPE>
 int OuternodeVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<OuternodeDataFactory<TYPE> > factory =
-      this->getPatchDataFactory();
+   boost::shared_ptr<OuternodeDataFactory<TYPE> > factory(
+      getPatchDataFactory());
    TBOX_ASSERT(factory);
    return factory->getDepth();
 }
@@ -65,7 +66,7 @@ template<class TYPE>
 OuternodeVariable<TYPE>::OuternodeVariable(
    const OuternodeVariable<TYPE>& foo):
    hier::Variable(NULL,
-                  boost::shared_ptr<hier::PatchDataFactory>(NULL))
+                  boost::shared_ptr<hier::PatchDataFactory>())
 {
    NULL_USE(foo);
 }

@@ -23,12 +23,7 @@ include $(OBJECT)/config/Makefile.config
 
 NUM_TESTS = 3
 
-#TEST_NPROCS = @TEST_NPROCS@
-ifeq (${CONFIGURED_WITH_MPI},yes)
-TEST_NPROCS = 0,1
-else
-TEST_NPROCS = 0
-endif
+TEST_NPROCS = @TEST_NPROCS@
 
 CXX_OBJS = mpi-interface-tests.o
 

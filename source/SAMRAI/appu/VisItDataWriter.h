@@ -155,7 +155,7 @@ namespace appu {
  *
  */
 
-class VisItDataWriter:public virtual tbox::DescribedClass
+class VisItDataWriter
 {
 public:
    /*!

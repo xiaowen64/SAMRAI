@@ -26,6 +26,8 @@
 
 #include "SAMRAI/solv/CartesianRobinBcHelper.h"
 
+#include <boost/make_shared.hpp>
+
 extern "C" {
 
 #ifdef __INTEL_COMPILER
@@ -176,8 +178,8 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
    /*
     * Get the data.
     */
-   boost::shared_ptr<hier::PatchData>
-   data_ptr = patch.getPatchData(target_data_id);
+   boost::shared_ptr<hier::PatchData> data_ptr(
+      patch.getPatchData(target_data_id));
    boost::shared_ptr<pdat::CellData<double> > cell_data_ptr(
       data_ptr,
       boost::detail::dynamic_cast_tag());
@@ -244,10 +246,12 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
          const hier::Index& lower = boundary_box.getBox().lower();
          const hier::Index& upper = boundary_box.getBox().upper();
          const hier::Box coefbox = makeFaceBoundaryBox(boundary_box);
-         boost::shared_ptr<pdat::ArrayData<double> >
-         acoef_data(new pdat::ArrayData<double>(coefbox, 1)),
-         bcoef_data(new pdat::ArrayData<double>(coefbox, 1)),
-         gcoef_data(homogeneous_bc ? NULL :
+         boost::shared_ptr<pdat::ArrayData<double> > acoef_data =
+            boost::make_shared<pdat::ArrayData<double> >(coefbox, 1);
+         boost::shared_ptr<pdat::ArrayData<double> > bcoef_data =
+            boost::make_shared<pdat::ArrayData<double> >(coefbox, 1);
+         boost::shared_ptr<pdat::ArrayData<double> >gcoef_data(
+            homogeneous_bc ? NULL :
             new pdat::ArrayData<double>(coefbox, 1));
          t_use_set_bc_coefs->start();
          d_coef_strategy->setBcCoefs(acoef_data,
@@ -619,7 +623,7 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, level, ghost_width_to_fill);
 
    for (hier::PatchLevel::Iterator p(level); p; p++) {
-      boost::shared_ptr<hier::Patch> patch = *p;
+      const boost::shared_ptr<hier::Patch>& patch = *p;
       setBoundaryValuesInCells(*patch,
          fill_time,
          ghost_width_to_fill,

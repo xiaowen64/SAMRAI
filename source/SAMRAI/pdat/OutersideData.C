@@ -50,7 +50,7 @@ OutersideData<TYPE>::OutersideData(
    TBOX_ASSERT(depth > 0);
 
    for (int d = 0; d < getDim().getValue(); d++) {
-      const hier::Box& ghosts = this->getGhostBox();
+      const hier::Box& ghosts = getGhostBox();
       const hier::Box sidebox = SideGeometry::toSideBox(ghosts, d);
       hier::Box outersidebox = sidebox;
       outersidebox.upper(d) = sidebox.lower(d);

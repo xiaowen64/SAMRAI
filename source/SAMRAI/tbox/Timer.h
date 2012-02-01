@@ -59,7 +59,7 @@ namespace tbox {
 
 class TimerManager;
 
-class Timer:public DescribedClass
+class Timer
 {
    friend class TimerManager;
 public:

@@ -53,6 +53,7 @@
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
 #include <cstdlib>
 #include <fstream>
 
@@ -76,8 +77,7 @@ SkeletonGridGeometry::SkeletonGridGeometry(
    boost::shared_ptr<tbox::Database> input_db,
    bool register_for_restart):
    hier::GridGeometry(dim, object_name,
-                      boost::shared_ptr<hier::TransferOperatorRegistry>(
-                         new SAMRAITransferOperatorRegistry(dim)))
+                      boost::make_shared<SAMRAITransferOperatorRegistry>(dim))
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
@@ -103,8 +103,7 @@ SkeletonGridGeometry::SkeletonGridGeometry(
    const hier::BoxContainer& domain,
    bool register_for_restart):
    hier::GridGeometry(domain.front().getDim(), object_name,
-                      boost::shared_ptr<hier::TransferOperatorRegistry>(
-                         new SAMRAITransferOperatorRegistry(domain.front().getDim())))
+                      boost::make_shared<SAMRAITransferOperatorRegistry>(domain.front().getDim()))
 {
    TBOX_ASSERT(domain.size() > 0);
    TBOX_ASSERT(!object_name.empty());
@@ -116,7 +115,7 @@ SkeletonGridGeometry::SkeletonGridGeometry(
       registerRestartItem(getObjectName(), this);
    }
 
-   this->setPhysicalDomain(domain, 1);
+   setPhysicalDomain(domain, 1);
 
 }
 
@@ -157,18 +156,18 @@ SkeletonGridGeometry::makeRefinedGridGeometry(
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, refine_ratio);
    TBOX_ASSERT(refine_ratio > hier::IntVector::getZero(dim));
 
-   hier::BoxContainer fine_domain(this->getPhysicalDomain());
+   hier::BoxContainer fine_domain(getPhysicalDomain());
    fine_domain.refine(refine_ratio);
 
-   SkeletonGridGeometry* fine_geometry =
-      new SkeletonGridGeometry(fine_geom_name,
+   boost::shared_ptr<hier::GridGeometry> fine_geometry =
+       boost::make_shared<SkeletonGridGeometry>(fine_geom_name,
          fine_domain,
          register_for_restart);
 
-   fine_geometry->initializePeriodicShift(this->getPeriodicShift(hier::
-         IntVector::getOne(dim)));
+   fine_geometry->initializePeriodicShift(
+      getPeriodicShift(hier::IntVector::getOne(dim)));
 
-   return boost::shared_ptr<hier::GridGeometry>(fine_geometry);
+   return fine_geometry;
 }
 
 /*
@@ -193,13 +192,13 @@ SkeletonGridGeometry::makeCoarsenedGridGeometry(
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, coarsen_ratio);
    TBOX_ASSERT(coarsen_ratio > hier::IntVector::getZero(dim));
 
-   hier::BoxContainer coarse_domain(this->getPhysicalDomain());
+   hier::BoxContainer coarse_domain(getPhysicalDomain());
    coarse_domain.coarsen(coarsen_ratio);
 
    /*
     * Need to check that domain can be coarsened by given ratio.
     */
-   const hier::BoxContainer& fine_domain = this->getPhysicalDomain();
+   const hier::BoxContainer& fine_domain = getPhysicalDomain();
    const int nboxes = fine_domain.size();
    hier::BoxContainer::ConstIterator fine_domain_itr(fine_domain);
    hier::BoxContainer::Iterator coarse_domain_itr(coarse_domain);
@@ -221,15 +220,15 @@ SkeletonGridGeometry::makeCoarsenedGridGeometry(
       }
    }
 
-   SkeletonGridGeometry* coarse_geometry =
-      new SkeletonGridGeometry(coarse_geom_name,
+   boost::shared_ptr<hier::GridGeometry> coarse_geometry =
+      boost::make_shared<SkeletonGridGeometry>(coarse_geom_name,
          coarse_domain,
          register_for_restart);
 
-   coarse_geometry->initializePeriodicShift(this->getPeriodicShift(hier::
-         IntVector::getOne(dim)));
+   coarse_geometry->initializePeriodicShift(
+      getPeriodicShift(hier::IntVector::getOne(dim)));
 
-   return boost::shared_ptr<hier::GridGeometry>(coarse_geometry);
+   return coarse_geometry;
 }
 
 /*
@@ -271,10 +270,11 @@ void SkeletonGridGeometry::setGeometryDataOnPatch(
    }
 #endif
 
-   boost::shared_ptr<SkeletonPatchGeometry>
-   geometry(new SkeletonPatchGeometry(ratio_to_level_zero,
-               touches_regular_bdry,
-               touches_periodic_bdry));
+   boost::shared_ptr<SkeletonPatchGeometry> geometry =
+      boost::make_shared<SkeletonPatchGeometry>(
+         ratio_to_level_zero,
+         touches_regular_bdry,
+         touches_periodic_bdry);
 
    patch.setPatchGeometry(geometry);
 }
@@ -298,10 +298,10 @@ void SkeletonGridGeometry::putToDatabase(
 
    db->putInteger("GEOM_SKELETON_GRID_GEOMETRY_VERSION",
       GEOM_SKELETON_GRID_GEOMETRY_VERSION);
-   tbox::Array<tbox::DatabaseBox> temp_box_array = this->getPhysicalDomain();
+   tbox::Array<tbox::DatabaseBox> temp_box_array = getPhysicalDomain();
    db->putDatabaseBoxArray("d_physical_domain", temp_box_array);
 
-   hier::IntVector level0_shift = this->getPeriodicShift(
+   hier::IntVector level0_shift = getPeriodicShift(
          hier::IntVector::getOne(dim));
    int* temp_shift = &level0_shift[0];
    db->putIntegerArray("d_periodic_shift", temp_shift, dim.getValue());
@@ -361,9 +361,9 @@ void SkeletonGridGeometry::getFromInput(
          }
       }
 
-      this->setPhysicalDomain(domain, 1);
+      setPhysicalDomain(domain, 1);
 
-      this->initializePeriodicShift(per_bc);
+      initializePeriodicShift(per_bc);
    }
 }
 
@@ -381,17 +381,15 @@ void SkeletonGridGeometry::getFromRestart()
 {
    const tbox::Dimension dim(getDim());
 
-   boost::shared_ptr<tbox::Database> restart_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> restart_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   boost::shared_ptr<tbox::Database> db;
-
-   if (restart_db->isDatabase(getObjectName())) {
-      db = restart_db->getDatabase(getObjectName());
-   } else {
+   if (!restart_db->isDatabase(getObjectName())) {
       TBOX_ERROR("Restart database corresponding to "
          << getObjectName() << " not found in the restart file.");
    }
+   boost::shared_ptr<tbox::Database> db(
+      restart_db->getDatabase(getObjectName()));
 
    int ver = db->getInteger("GEOM_SKELETON_GRID_GEOMETRY_VERSION");
    if (ver != GEOM_SKELETON_GRID_GEOMETRY_VERSION) {
@@ -410,12 +408,12 @@ void SkeletonGridGeometry::getFromRestart()
       domain.pushBack(hier::Box(*itr, local_id++, 0));
    }
 
-   this->setPhysicalDomain(domain, 1);
+   setPhysicalDomain(domain, 1);
 
    hier::IntVector periodic_shift(dim);
    int* temp_shift = &periodic_shift[0];
    db->getIntegerArray("d_periodic_shift", temp_shift, dim.getValue());
-   this->initializePeriodicShift(periodic_shift);
+   initializePeriodicShift(periodic_shift);
 
 }
 

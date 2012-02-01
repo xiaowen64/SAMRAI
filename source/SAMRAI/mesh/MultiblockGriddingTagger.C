@@ -97,7 +97,7 @@ void MultiblockGriddingTagger::setPhysicalBoundaryConditions(
       hier::IntVector::min(ghost_width_to_fill,
          tag_data->getGhostCellWidth());
 
-   boost::shared_ptr<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
+   boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
    for (int d = 0; d < d_dim.getValue(); d++) {
 

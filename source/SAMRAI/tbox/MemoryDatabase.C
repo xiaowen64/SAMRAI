@@ -253,7 +253,7 @@ void MemoryDatabase::putBoolArray(
    const std::string& key,
    const Array<bool>& data)
 {
-   this->putBoolArray(key, data.getPointer(), data.getSize());
+   putBoolArray(key, data.getPointer(), data.getSize());
 }
 
 void MemoryDatabase::putBoolArray(
@@ -294,7 +294,7 @@ bool MemoryDatabase::getBoolWithDefault(
    const bool& defaultvalue)
 {
    KeyData* keydata = findKeyData(key);
-   if (keydata) return this->getBool(key);
+   if (keydata) return getBool(key);
 
    putBool(key, defaultvalue);
    d_keyvalues.getLastItem().d_from_default = true;
@@ -317,7 +317,7 @@ void MemoryDatabase::getBoolArray(
    bool* data,
    const int nelements)
 {
-   Array<bool> tmp = this->getBoolArray(key);
+   Array<bool> tmp = getBoolArray(key);
    const int tsize = tmp.getSize();
 
    if (nelements != tmp.getSize()) {
@@ -358,7 +358,7 @@ void MemoryDatabase::putDatabaseBoxArray(
    const std::string& key,
    const Array<DatabaseBox>& data)
 {
-   this->putDatabaseBoxArray(key, data.getPointer(), data.getSize());
+   putDatabaseBoxArray(key, data.getPointer(), data.getSize());
 }
 
 void MemoryDatabase::putDatabaseBoxArray(
@@ -399,7 +399,7 @@ DatabaseBox MemoryDatabase::getDatabaseBoxWithDefault(
    const DatabaseBox& defaultvalue)
 {
    KeyData* keydata = findKeyData(key);
-   if (keydata) return this->getDatabaseBox(key);
+   if (keydata) return getDatabaseBox(key);
 
    putDatabaseBox(key, defaultvalue);
    d_keyvalues.getLastItem().d_from_default = true;
@@ -422,7 +422,7 @@ void MemoryDatabase::getDatabaseBoxArray(
    DatabaseBox* data,
    const int nelements)
 {
-   Array<DatabaseBox> tmp = this->getDatabaseBoxArray(key);
+   Array<DatabaseBox> tmp = getDatabaseBoxArray(key);
    const int tsize = tmp.getSize();
 
    if (nelements != tmp.getSize()) {
@@ -463,7 +463,7 @@ void MemoryDatabase::putCharArray(
    const std::string& key,
    const Array<char>& data)
 {
-   this->putCharArray(key, data.getPointer(), data.getSize());
+   putCharArray(key, data.getPointer(), data.getSize());
 }
 
 void MemoryDatabase::putCharArray(
@@ -504,7 +504,7 @@ char MemoryDatabase::getCharWithDefault(
    const char& defaultvalue)
 {
    KeyData* keydata = findKeyData(key);
-   if (keydata) return this->getChar(key);
+   if (keydata) return getChar(key);
 
    putChar(key, defaultvalue);
    d_keyvalues.getLastItem().d_from_default = true;
@@ -527,7 +527,7 @@ void MemoryDatabase::getCharArray(
    char* data,
    const int nelements)
 {
-   Array<char> tmp = this->getCharArray(key);
+   Array<char> tmp = getCharArray(key);
    const int tsize = tmp.getSize();
 
    if (nelements != tmp.getSize()) {
@@ -573,7 +573,7 @@ void MemoryDatabase::putComplexArray(
    const std::string& key,
    const Array<dcomplex>& data)
 {
-   this->putComplexArray(key, data.getPointer(), data.getSize());
+   putComplexArray(key, data.getPointer(), data.getSize());
 }
 
 void MemoryDatabase::putComplexArray(
@@ -633,7 +633,7 @@ dcomplex MemoryDatabase::getComplexWithDefault(
    const dcomplex& defaultvalue)
 {
    KeyData* keydata = findKeyData(key);
-   if (keydata) return this->getComplex(key);
+   if (keydata) return getComplex(key);
 
    putComplex(key, defaultvalue);
    d_keyvalues.getLastItem().d_from_default = true;
@@ -682,7 +682,7 @@ void MemoryDatabase::getComplexArray(
    dcomplex* data,
    const int nelements)
 {
-   Array<dcomplex> tmp = this->getComplexArray(key);
+   Array<dcomplex> tmp = getComplexArray(key);
    const int tsize = tmp.getSize();
 
    if (nelements != tmp.getSize()) {
@@ -726,7 +726,7 @@ void MemoryDatabase::putDoubleArray(
    const std::string& key,
    const Array<double>& data)
 {
-   this->putDoubleArray(key, data.getPointer(), data.getSize());
+   putDoubleArray(key, data.getPointer(), data.getSize());
 }
 
 void MemoryDatabase::putDoubleArray(
@@ -783,7 +783,7 @@ double MemoryDatabase::getDoubleWithDefault(
    const double& defaultvalue)
 {
    KeyData* keydata = findKeyData(key);
-   if (keydata) return this->getDouble(key);
+   if (keydata) return getDouble(key);
 
    putDouble(key, defaultvalue);
    d_keyvalues.getLastItem().d_from_default = true;
@@ -826,7 +826,7 @@ void MemoryDatabase::getDoubleArray(
    double* data,
    const int nelements)
 {
-   Array<double> tmp = this->getDoubleArray(key);
+   Array<double> tmp = getDoubleArray(key);
    const int tsize = tmp.getSize();
 
    if (nelements != tmp.getSize()) {
@@ -871,7 +871,7 @@ void MemoryDatabase::putFloatArray(
    const std::string& key,
    const Array<float>& data)
 {
-   this->putFloatArray(key, data.getPointer(), data.getSize());
+   putFloatArray(key, data.getPointer(), data.getSize());
 }
 
 void MemoryDatabase::putFloatArray(
@@ -934,7 +934,7 @@ float MemoryDatabase::getFloatWithDefault(
    const float& defaultvalue)
 {
    KeyData* keydata = findKeyData(key);
-   if (keydata) return this->getFloat(key);
+   if (keydata) return getFloat(key);
 
    putFloat(key, defaultvalue);
    d_keyvalues.getLastItem().d_from_default = true;
@@ -976,7 +976,7 @@ void MemoryDatabase::getFloatArray(
    float* data,
    const int nelements)
 {
-   Array<float> tmp = this->getFloatArray(key);
+   Array<float> tmp = getFloatArray(key);
    const int tsize = tmp.getSize();
 
    if (nelements != tmp.getSize()) {
@@ -1017,7 +1017,7 @@ void MemoryDatabase::putIntegerArray(
    const std::string& key,
    const Array<int>& data)
 {
-   this->putIntegerArray(key, data.getPointer(), data.getSize());
+   putIntegerArray(key, data.getPointer(), data.getSize());
 }
 
 void MemoryDatabase::putIntegerArray(
@@ -1058,7 +1058,7 @@ int MemoryDatabase::getIntegerWithDefault(
    const int& defaultvalue)
 {
    KeyData* keydata = findKeyData(key);
-   if (keydata) return this->getInteger(key);
+   if (keydata) return getInteger(key);
 
    putInteger(key, defaultvalue);
    d_keyvalues.getLastItem().d_from_default = true;
@@ -1081,7 +1081,7 @@ void MemoryDatabase::getIntegerArray(
    int* data,
    const int nelements)
 {
-   Array<int> tmp = this->getIntegerArray(key);
+   Array<int> tmp = getIntegerArray(key);
    const int tsize = tmp.getSize();
 
    if (nelements != tmp.getSize()) {
@@ -1122,7 +1122,7 @@ void MemoryDatabase::putStringArray(
    const std::string& key,
    const Array<std::string>& data)
 {
-   this->putStringArray(key, data.getPointer(), data.getSize());
+   putStringArray(key, data.getPointer(), data.getSize());
 }
 
 void MemoryDatabase::putStringArray(
@@ -1163,7 +1163,7 @@ std::string MemoryDatabase::getStringWithDefault(
    const std::string& defaultvalue)
 {
    KeyData* keydata = findKeyData(key);
-   if (keydata) return this->getString(key);
+   if (keydata) return getString(key);
 
    putString(key, defaultvalue);
    d_keyvalues.getLastItem().d_from_default = true;
@@ -1186,7 +1186,7 @@ void MemoryDatabase::getStringArray(
    std::string* data,
    const int nelements)
 {
-   Array<std::string> tmp = this->getStringArray(key);
+   Array<std::string> tmp = getStringArray(key);
    const int tsize = tmp.getSize();
 
    if (nelements != tmp.getSize()) {

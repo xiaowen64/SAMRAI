@@ -15,6 +15,8 @@
 #include "SAMRAI/pdat/CellOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/CellGeometry.I"
 #endif
@@ -118,8 +120,7 @@ boost::shared_ptr<hier::BoxOverlap> CellGeometry::doOverlap(
 
    // Create the cell overlap data object using the boxes and source shift
 
-   hier::BoxOverlap* overlap = new CellOverlap(dst_boxes, transformation);
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
+   return boost::make_shared<CellOverlap>(dst_boxes, transformation);
 }
 
 /*
@@ -185,8 +186,7 @@ CellGeometry::setUpOverlap(
    const hier::Transformation& transformation) const
 {
    // Create the cell overlap data object using the boxes and source shift
-   hier::BoxOverlap* overlap = new CellOverlap(boxes, transformation);
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
+   return boost::make_shared<CellOverlap>(boxes, transformation);
 
 }
 

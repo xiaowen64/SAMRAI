@@ -15,7 +15,6 @@
 
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/BoxOverlap.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
 
 #include <boost/shared_ptr.hpp>

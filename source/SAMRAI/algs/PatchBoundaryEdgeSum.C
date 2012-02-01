@@ -23,6 +23,8 @@
 #include "SAMRAI/hier/RefineOperator.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/algs/PatchBoundaryEdgeSum.I"
 #endif
@@ -87,18 +89,14 @@ PatchBoundaryEdgeSum::getNumUniquePatchDataSlots(
  */
 
 PatchBoundaryEdgeSum::PatchBoundaryEdgeSum(
-   const std::string& object_name)
+   const std::string& object_name) :
+   d_setup_called(false),
+   d_num_reg_sum(0),
+   d_sum_transaction_factory(boost::make_shared<OuteredgeSumTransactionFactory>())
 {
    TBOX_ASSERT(!object_name.empty());
 
    d_object_name = object_name;
-   d_setup_called = false;
-
-   d_num_reg_sum = 0;
-
-   d_level.reset();
-
-   d_sum_transaction_factory.reset(new OuteredgeSumTransactionFactory());
 
    s_instance_counter++;
 }
@@ -325,7 +323,7 @@ void PatchBoundaryEdgeSum::setupSum(
       single_level_sum_algorithm.registerRefine(d_oedge_dst_id[i],  // dst data
          d_oedge_src_id[i],                                         // src data
          d_oedge_dst_id[i],                                         // scratch data
-         boost::shared_ptr<hier::RefineOperator>((hier::RefineOperator*)NULL));
+         boost::shared_ptr<hier::RefineOperator>());
    }
 
    d_single_level_sum_schedule =
@@ -375,7 +373,7 @@ void PatchBoundaryEdgeSum::doLevelSum(
    TBOX_ASSERT(level);
 
    for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-      boost::shared_ptr<hier::Patch> patch = *ip;
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       for (int i = 0; i < d_user_edge_data_id.size(); i++) {
          boost::shared_ptr<pdat::EdgeData<double> > edge_data(
@@ -393,7 +391,7 @@ void PatchBoundaryEdgeSum::doLevelSum(
    d_single_level_sum_schedule->fillData(0.0, false);
 
    for (hier::PatchLevel::Iterator ip2(level); ip2; ip2++) {
-      boost::shared_ptr<hier::Patch> patch = *ip2;
+      const boost::shared_ptr<hier::Patch>& patch = *ip2;
 
       for (int i = 0; i < d_user_edge_data_id.size(); i++) {
          boost::shared_ptr<pdat::EdgeData<double> > edge_data(

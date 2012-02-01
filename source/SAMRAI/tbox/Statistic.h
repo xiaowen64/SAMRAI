@@ -16,7 +16,6 @@
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/List.h"
 
 #include <string>
@@ -75,7 +74,7 @@ class Statistician;
  * @see tbox::Statistician
  */
 
-class Statistic:public DescribedClass
+class Statistic
 {
    friend class Statistician;
 public:

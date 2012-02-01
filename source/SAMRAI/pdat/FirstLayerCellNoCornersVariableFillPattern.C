@@ -16,6 +16,8 @@
 #include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -161,11 +163,9 @@ FirstLayerCellNoCornersVariableFillPattern::computeFillBoxesOverlap(
    overlap_boxes.intersectBoxes(data_box);
    overlap_boxes.intersectBoxes(stencil_boxes);
 
-   hier::BoxOverlap* overlap =
-      new CellOverlap(
+   return boost::make_shared<CellOverlap>(
          overlap_boxes,
          hier::Transformation(hier::IntVector::getZero(patch_box.getDim())));
-   return boost::shared_ptr<hier::BoxOverlap>(overlap);
 }
 
 }

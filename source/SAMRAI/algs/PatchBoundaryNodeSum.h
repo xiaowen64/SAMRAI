@@ -31,8 +31,8 @@ namespace algs {
 
 /*!
  *  @brief Class PatchBoundaryNodeSum provides operations for summing node data
- *  values at nodes that are shared by multiple patches on a single level or across
- *  multiple hierarchy levels.
+ *  values at nodes that are shared by multiple patches on a single level or
+ *  across multiple hierarchy levels.
  *
  *  Usage of a patch boundry node sum involves the following sequence of steps:
  *
@@ -58,9 +58,10 @@ namespace algs {
  *         my_node_sum.computeSum()
  *     \endverbatim
  *
- *  The result of these operations is that each node patch data value associated
- *  with the registered ids at patch boundaries, on either the single level or
- *  range of hierarchy levels, is replaced by the sum of all data values at the node.
+ *  The result of these operations is that each node patch data value
+ *  associated with the registered ids at patch boundaries, on either the
+ *  single level or range of hierarchy levels, is replaced by the sum of all
+ *  data values at the node.
  *
  *  Note that only one of the setupSum() functions may be called once a
  *  PatchBoundaryNodeSum object is created.
@@ -187,14 +188,15 @@ public:
     *  a coarse level). The correct steps required to deal with hanging
     *  nodes is algorithm dependent so, if left unspecified, values at the
     *  hanging nodes will not be adjusted.  However, because many algorithms
-    *  average hanging nodes we provide the capability to do it here.  Note that
-    *  the hanging node interpolation provided does not take into consideration
-    *  the spatial location of the nodes.  So the interpolation may not be
-    *  correct for coordinate systems other than standard Cartesian grid geometry.
+    *  average hanging nodes we provide the capability to do it here.  Note
+    *  that the hanging node interpolation provided does not take into
+    *  consideration the spatial location of the nodes.  So the interpolation
+    *  may not be correct for coordinate systems other than standard Cartesian
+    *  grid geometry.
     *
-    *  @param fill_hanging_nodes Optional boolean value specifying whether hanging
-    *         node values should be set to values interpolated from neighboring
-    *         non-hanging node values.  The default is false.
+    *  @param fill_hanging_nodes Optional boolean value specifying whether
+    *         hanging node values should be set to values interpolated from
+    *         neighboring non-hanging node values.  The default is false.
     */
    void
    computeSum(
@@ -274,7 +276,8 @@ private:
    tbox::Array<int> d_num_registered_data_by_depth;
 
    /*
-    * Node-centered variables and patch data indices used as internal work quantities.
+    * Node-centered variables and patch data indices used as internal work
+    * quantities.
     */
    // These arrays are indexed [variable registration sequence number]
    tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_onode_src_variable;
@@ -285,7 +288,8 @@ private:
    tbox::Array<int> d_onode_dst_id;
 
    /*
-    * Sets of indices for temporary variables to expedite allocation/deallocation.
+    * Sets of indices for temporary variables to expedite allocation and
+    * deallocation.
     */
    hier::ComponentSelector d_onode_src_data_set;
    hier::ComponentSelector d_onode_dst_data_set;

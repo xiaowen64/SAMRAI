@@ -65,13 +65,10 @@ CellPoissonFACSolver::CellPoissonFACSolver(
    d_fac_precond(object_name + "::fac_precond", d_fac_ops),
    d_bc_object(NULL),
    d_simple_bc(d_dim, object_name + "::bc"),
-   d_hierarchy(),
    d_ln_min(-1),
    d_ln_max(-1),
-   d_context(hier::VariableDatabase::getDatabase()
-             ->getContext(object_name + "::CONTEXT")),
-   d_uv(),
-   d_fv(),
+   d_context(hier::VariableDatabase::getDatabase()->getContext(
+                object_name + "::CONTEXT")),
    d_solver_is_initialized(false),
    d_enable_logging(false)
 {
@@ -292,7 +289,8 @@ void CellPoissonFACSolver::initializeSolverState(
 
    int ln;
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
-      d_hierarchy->getPatchLevel(ln)->allocatePatchData(s_weight_id[d_dim.getValue() - 1]);
+      d_hierarchy->getPatchLevel(ln)->allocatePatchData(
+         s_weight_id[d_dim.getValue() - 1]);
    }
 
    d_fac_ops.computeVectorWeights(d_hierarchy,
@@ -331,8 +329,8 @@ void CellPoissonFACSolver::deallocateSolverState()
        */
       int ln;
       for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
-         d_hierarchy->getPatchLevel(ln)->deallocatePatchData(s_weight_id[d_dim.getValue()
-                                                                         - 1]);
+         d_hierarchy->getPatchLevel(ln)->deallocatePatchData(
+            s_weight_id[d_dim.getValue() - 1]);
       }
 
       d_hierarchy.reset();

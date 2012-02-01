@@ -51,7 +51,6 @@ namespace math {
 
 template<class TYPE>
 class PatchSideDataOpsReal:
-   public tbox::DescribedClass,
    public PatchSideDataBasicOps<TYPE>,
    public PatchSideDataMiscellaneousOpsReal<TYPE>,
    public PatchSideDataNormOpsReal<TYPE>

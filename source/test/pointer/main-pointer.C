@@ -19,7 +19,7 @@
 using namespace std;
 using namespace SAMRAI;
 
-class A:public virtual tbox::DescribedClass
+class A
 {
 public:
    A() {
@@ -34,7 +34,7 @@ public:
       std::string& trace) = 0;
 };
 
-class B:public virtual tbox::DescribedClass
+class B
 {
 public:
    B() {
@@ -200,7 +200,7 @@ private:
    boost::shared_ptr<B> d_b_smartptr;
 };
 
-class Derived:public tbox::DescribedClass
+class Derived
 {
 public:
    Derived() {

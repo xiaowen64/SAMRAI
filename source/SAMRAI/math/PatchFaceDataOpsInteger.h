@@ -42,7 +42,6 @@ namespace math {
  */
 
 class PatchFaceDataOpsInteger:
-   public tbox::DescribedClass,
    public PatchFaceDataBasicOps<int>
 {
 public:

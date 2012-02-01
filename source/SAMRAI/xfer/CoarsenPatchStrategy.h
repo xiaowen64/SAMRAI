@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 #include <set>
 
@@ -45,8 +44,7 @@ namespace xfer {
  * @see xfer::CoarsenSchedule
  */
 
-class CoarsenPatchStrategy:
-   public virtual tbox::DescribedClass
+class CoarsenPatchStrategy
 {
 public:
    /*!

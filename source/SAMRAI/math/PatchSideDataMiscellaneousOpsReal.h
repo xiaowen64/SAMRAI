@@ -76,8 +76,7 @@ public:
       const boost::shared_ptr<pdat::SideData<TYPE> >& data2,
       const hier::Box& box,
       const boost::shared_ptr<pdat::SideData<double> > cvol =
-         boost::shared_ptr<pdat::SideData<double> >(
-            (pdat::SideData<double>*)NULL)) const;
+         boost::shared_ptr<pdat::SideData<double> >()) const;
 
    /**
     * Wherever \f$cvol_i > 0\f$ in the index region, set \f$dst_i = 1\f$
@@ -91,8 +90,7 @@ public:
       const TYPE& alpha,
       const hier::Box& box,
       const boost::shared_ptr<pdat::SideData<double> > cvol =
-         boost::shared_ptr<pdat::SideData<double> >(
-            (pdat::SideData<double>*)NULL)) const;
+         boost::shared_ptr<pdat::SideData<double> >()) const;
 
    /**
     * Wherever \f$cvol_i > 0\f$ in the index region, set \f$dst_i = 1/src_i\f$ if
@@ -106,8 +104,7 @@ public:
       const boost::shared_ptr<pdat::SideData<TYPE> >& src,
       const hier::Box& box,
       const boost::shared_ptr<pdat::SideData<double> > cvol =
-         boost::shared_ptr<pdat::SideData<double> >(
-            (pdat::SideData<double>*)NULL)) const;
+         boost::shared_ptr<pdat::SideData<double> >()) const;
 
    /*!
     * @brief Compute max of "conditional" quotients of two arrays.
