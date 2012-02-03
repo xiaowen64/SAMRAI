@@ -24,6 +24,9 @@ include $(OBJECT)/config/Makefile.config
 NUM_TESTS = 3
 
 TEST_NPROCS = @TEST_NPROCS@
+ifeq ($(findstring 2, ${TEST_NPROCS}),2)
+TEST_NPROCS = 1
+endif
 
 CXX_OBJS = mpi-interface-tests.o
 
