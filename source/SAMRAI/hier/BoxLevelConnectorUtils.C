@@ -375,35 +375,18 @@ void BoxLevelConnectorUtils::makeSortingMap(
 
    const BoxContainer& cur_mapped_boxes =
       unsorted_mapped_box_level.getBoxes();
-   int n_mapped_boxes =
-      static_cast<int>(unsorted_mapped_box_level.getLocalNumberOfBoxes());
 
    LocalId last_index = initial_sequential_index - 1;
 
    if (sequentialize_global_indices) {
+      // Increase last_index by the box count of all lower MPI ranks.
 
-      const int nproc = unsorted_mapped_box_level.getMPI().getSize();
-      const int rank = unsorted_mapped_box_level.getMPI().getRank();
+      int box_count =
+         static_cast<int>(unsorted_mapped_box_level.getLocalNumberOfBoxes());
+      unsorted_mapped_box_level.getMPI().parallelPrefixSum(&box_count, 1, 0);
+      box_count -= static_cast<int>(unsorted_mapped_box_level.getLocalNumberOfBoxes());
 
-      std::vector<int> all_n_mapped_boxes(nproc);
-      tbox::SAMRAI_MPI mpi(unsorted_mapped_box_level.getMPI());
-      if (mpi.getSize() > 1) {
-         mpi.Allgather(&n_mapped_boxes,
-            1,
-            MPI_INT,
-            &all_n_mapped_boxes[0],
-            1,
-            MPI_INT);
-      } else {
-         all_n_mapped_boxes[0] = n_mapped_boxes;
-      }
-
-      LocalId new_start_index = initial_sequential_index;
-      for (int i = 0; i < rank; ++i) {
-         new_start_index += all_n_mapped_boxes[i];
-      }
-      last_index = new_start_index - 1;
-
+      last_index += box_count;
    }
 
    std::vector<Box> real_mapped_box_vector;
