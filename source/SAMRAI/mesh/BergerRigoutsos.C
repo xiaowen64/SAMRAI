@@ -329,7 +329,14 @@ void BergerRigoutsos::findBoxesContainingTags(
                  << "-" << new_mapped_box_level.getMaxNumberOfBoxes() << "]\n"
                  << "Number of continuations: avg = "
                  << root_node.getAvgNumberOfCont()
-                 << "   max = " << root_node.getMaxNumberOfCont() << "\n";
+                 << "   max = " << root_node.getMaxNumberOfCont() << '\n'
+                 << "BergerRigoutsos new_level:\n" << new_mapped_box_level.format("\t",0)
+                 << "new_level statistics:\n" << new_mapped_box_level.formatStatistics("\t")
+                 << "BergerRigoutsos new_to_tag:\n" << new_to_tag.format("\t",0)
+                 << "new_to_tag statistics:\n" << new_to_tag.formatStatistics("\t")
+                 << "BergerRigoutsos tag_to_new:\n" << tag_to_new.format("\t",0)
+                 << "tag_to_new statistics:\n" << tag_to_new.formatStatistics("\t")
+                 << "\n";
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
