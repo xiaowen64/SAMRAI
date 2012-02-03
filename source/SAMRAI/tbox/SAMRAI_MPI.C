@@ -1289,6 +1289,79 @@ int SAMRAI_MPI::AllReduce(
    return rval;
 }
 
+/*
+ **************************************************************************
+ * Parallel prefix sum for ints.
+ *
+ * This method implements the parallel prefix sum algorithm.
+ * The distance loop is expected to execute (ln d_size) times,
+ * doing up to 1 send and 1 receive each time.
+ *
+ * Note: I'm not sure we have to use all non-blocking calls to get
+ * good performance, but it probably can't hurt.  --BTNG
+ **************************************************************************
+ */
+int SAMRAI_MPI::parallelPrefixSum(
+   int* x,
+   int count,
+   int tag) const
+{
+#ifndef HAVE_MPI
+   NULL_USE(x);
+   NULL_USE(count);
+   NULL_USE(tag);
+#endif
+
+   // Scratch data.
+   std::vector<int> send_scr(count), recv_scr(count);
+
+   Request send_req, recv_req;
+   Status send_stat, recv_stat;
+   int mpi_err = MPI_SUCCESS;
+
+   for ( int distance=1; distance < d_size; distance *= 2 ) {
+
+      const int recv_from = d_rank - distance;
+      const int send_to = d_rank + distance;
+
+      if ( recv_from >= 0 ) {
+         mpi_err = Irecv( &recv_scr[0], count, MPI_INT, recv_from, tag, &recv_req );
+         if ( mpi_err != MPI_SUCCESS ) {
+            return mpi_err;
+         }
+      }
+
+      if (send_to < d_size ) {
+         send_scr.clear();
+         send_scr.insert( send_scr.end(), x, x+count );
+         mpi_err = Isend( &send_scr[0], count, MPI_INT, send_to, tag, &send_req );
+         if ( mpi_err != MPI_SUCCESS ) {
+            return mpi_err;
+         }
+      }
+
+      if ( recv_from >= 0 ) {
+         mpi_err = Wait( &recv_req, &recv_stat );
+         if ( mpi_err != MPI_SUCCESS ) {
+            return mpi_err;
+         }
+         for ( int i=0; i<count; ++i ) {
+            x[i] += recv_scr[i];
+         }
+      }
+
+      if ( send_to < d_size ) {
+         mpi_err = Wait( &send_req, &send_stat );
+         if ( mpi_err != MPI_SUCCESS ) {
+            return mpi_err;
+         }
+      }
+
+   }
+
+   return MPI_SUCCESS;
+}
+
 }
 }
 

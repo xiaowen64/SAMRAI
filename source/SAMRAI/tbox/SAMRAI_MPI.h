@@ -584,6 +584,35 @@ public:
 
    //@}
 
+   //@{
+
+   //! @name Generic high-level operations not in MPI interfaces.
+
+   /*!
+    * @brief Parallel prefix sum for integers.
+    *
+    * Given an input x, the output is the sum of x from process 0 up
+    * to and including the local process's x.  This implementation
+    * allows an array of x, each of which is summed independently of
+    * the other.
+    *
+    * @param[in,out] x   Array of integers to sum.
+    *
+    * @param[in] count Number of items in x.  Must be the same on all
+    * processes.
+    *
+    * @param[in] tag MPI tag for communication.
+    *
+    * @return MPI_SUCCESS or an MPI error code.
+    */
+   int
+   parallelPrefixSum(
+      int* x,
+      int count,
+      int tag) const;
+
+   // @}
+
    /*!
     * @brief Set flag indicating whether exit or MPI_Abort is called
     * when running with one processor.

@@ -46,6 +46,8 @@ void mpiInterfaceTests(
 
    mpiInterfaceTestAllreduce(fail_count);
 
+   mpiInterfaceTestParallelPrefixSum(fail_count);
+
    SAMRAIManager::shutdown();
    SAMRAIManager::finalize();
    SAMRAI_MPI::finalize();
@@ -94,4 +96,42 @@ int mpiInterfaceTestAllreduce(
       }
    }
    return 0;
+}
+
+/*
+ * Prefix sum test: sum numbers from all lower ranks.
+ */
+int mpiInterfaceTestParallelPrefixSum(
+   int& fail_count)
+{
+   SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   int nproc = mpi.getSize();
+
+   int rval = 0;
+
+   if (nproc != 1) {
+      int data[3];
+      data[0] = 1; // Prefix sum should yield rank+1
+      data[1] = 10; // Prefix sum should yield 10*(rank+1)
+      data[2] = mpi.getRank(); // Prefix sum should yield triangular numbers.
+      mpi.parallelPrefixSum(data, 3, 0);
+      if (data[0] != mpi.getRank()+1) {
+         perr << "parallelPrefixSum test failed." << std::endl;
+         rval += 1;
+      }
+      if (data[1] != 10*(mpi.getRank()+1)) {
+         perr << "parallelPrefixSum test failed." << std::endl;
+         rval += 1;
+      }
+      if (data[2] != mpi.getRank()*(mpi.getRank()+1)/2) {
+         perr << "parallelPrefixSum test failed." << std::endl;
+         rval += 1;
+      }
+      for ( int i=0; i<3; ++i ) {
+         std::cout << mpi.getRank() << ": ParallelPrefixSum[" << i << "] = " << data[i] << std::endl;
+      }
+
+      fail_count += rval;
+   }
+   return rval;
 }

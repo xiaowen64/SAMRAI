@@ -43,3 +43,14 @@ mpiInterfaceTestBcast(
 int
 mpiInterfaceTestAllreduce(
    int& fail_count);
+
+/*!
+ * @brief Test SAMRAI_MPI::parallelPrefixSum.
+ *
+ * @param fail_count Increment this count by number of failures.
+ *
+ * @return number of failures found.
+ */
+int
+mpiInterfaceTestParallelPrefixSum(
+   int& fail_count);
