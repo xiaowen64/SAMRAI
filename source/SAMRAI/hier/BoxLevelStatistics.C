@@ -90,6 +90,11 @@ void BoxLevelStatistics::computeLocalBoxLevelStatistics(
    /*
     * Compute per-processor statistics.  Some quantities are readily
     * available while others are computed in the loop following.
+    *
+    * Aspect ratio uses a generalized formula that goes to 1 when box
+    * has same length on all sides (regardless of dimension),
+    * degenerates to the rectangular aspect ratio in 2D, and grows
+    * appropriately for dimensions higher than 2.
     */
 
    sq.d_values[HAS_ANY_BOX] = (d_box_level.getLocalNumberOfBoxes() > 0);
@@ -117,11 +122,14 @@ void BoxLevelStatistics::computeLocalBoxLevelStatistics(
       const int boxvol = boxdims.getProduct();
       const int longdim = boxdims.max();
       const int shortdim = boxdims.min();
-      const double aspect_ratio = double(longdim) / shortdim;
+      double aspect_ratio = 0.0;
       double surfarea = 0.;
       for (int d = 0; d < dim.getValue(); ++d) {
          surfarea += 2 * double(boxvol) / boxdims(d);
+         double tmp = static_cast<double>(boxdims(d))/shortdim - 1.0;
+         aspect_ratio += tmp*tmp;
       }
+      aspect_ratio = 1.0 + sqrt(aspect_ratio);
 
       sq.d_values[LARGEST_BOX_SIZE] =
          tbox::MathUtilities<double>::Max(sq.d_values[LARGEST_BOX_SIZE],
