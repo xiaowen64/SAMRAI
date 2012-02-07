@@ -235,8 +235,8 @@ int main(
          tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
       }
 
-      boost::shared_ptr<tbox::Timer> t_vis_writing =
-         tbox::TimerManager::getManager()->getTimer("apps::Main::vis_writing");
+      boost::shared_ptr<tbox::Timer> t_vis_writing(
+         tbox::TimerManager::getManager()->getTimer("apps::Main::vis_writing"));
 
       /*
        * Retrieve "Main" section of the input database.  First, read
@@ -246,7 +246,7 @@ int main(
        * database.
        */
 
-      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -257,8 +257,8 @@ int main(
          string("ScaledInput")
          + (use_scaled_input ? tbox::Utilities::intToString(mpi.getSize())
             : string());
-      boost::shared_ptr<Database> scaled_input_db = input_db->getDatabase(
-            scaled_input_str);
+      boost::shared_ptr<Database> scaled_input_db(
+         input_db->getDatabase(scaled_input_str));
 
       string base_name = main_db->getStringWithDefault("base_name", "unnamed");
 
@@ -365,14 +365,15 @@ int main(
             scaled_input_db->getDatabase("CartesianGeometry")));
 
       boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
-         new hier::PatchHierarchy("PatchHierarchy", grid_geometry,
+         new hier::PatchHierarchy(
+            "PatchHierarchy",
+            grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
       const bool use_analytical_tagger =
          input_db->isDatabase("SinusoidalFrontTagger");
 
-      SinusoidalFrontTagger
-      analytical_tagger(
+      SinusoidalFrontTagger analytical_tagger(
          "SinusoidalFrontTagger",
          dim,
          input_db->getDatabaseWithDefault("SinusoidalFrontTagger",
@@ -384,13 +385,12 @@ int main(
             dim,
             input_db->getDatabase("LinAdv"),
             grid_geometry,
-            use_analytical_tagger ? &analytical_tagger : NULL
-            );
+            use_analytical_tagger ? &analytical_tagger : NULL);
 
-      boost::shared_ptr<tbox::Database> hli_db =
+      boost::shared_ptr<tbox::Database> hli_db(
          scaled_input_db->isDatabase("HyperbolicLevelIntegrator") ?
          scaled_input_db->getDatabase("HyperbolicLevelIntegrator") :
-         input_db->getDatabase("HyperbolicLevelIntegrator");
+         input_db->getDatabase("HyperbolicLevelIntegrator"));
       boost::shared_ptr<algs::HyperbolicLevelIntegrator> hyp_level_integrator(
          new algs::HyperbolicLevelIntegrator(
             "HyperbolicLevelIntegrator",
@@ -398,17 +398,16 @@ int main(
             linear_advection_model, true, use_refined_timestepping));
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
-         new mesh::StandardTagAndInitialize(dim,
+         new mesh::StandardTagAndInitialize(
+            dim,
             "StandardTagAndInitialize",
              hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
-      boost::shared_ptr<Database> abr_db =
-         input_db->getDatabase("BergerRigoutsos");
-      boost::shared_ptr<mesh::BergerRigoutsos> new_box_generator(
+      boost::shared_ptr<Database> abr_db(
+         input_db->getDatabase("BergerRigoutsos"));
+      boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator(
          new mesh::BergerRigoutsos(dim, abr_db));
-      boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator =
-         boost::shared_ptr<mesh::BoxGeneratorStrategy>(new_box_generator);
 
 
       // Set up the load balancer.
@@ -422,15 +421,17 @@ int main(
       if ( load_balancer_type == "TreeLoadBalancer" ) {
 
          boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer(
-            new mesh::TreeLoadBalancer(dim,
-                                       "mesh::TreeLoadBalancer",
-                                       input_db->getDatabase("TreeLoadBalancer")));
+            new mesh::TreeLoadBalancer(
+               dim,
+               "mesh::TreeLoadBalancer",
+               input_db->getDatabase("TreeLoadBalancer")));
          tree_load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
          boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer0(
-            new mesh::TreeLoadBalancer(dim,
-                                       "mesh::TreeLoadBalancer0",
-                                       input_db->getDatabase("TreeLoadBalancer")));
+            new mesh::TreeLoadBalancer(
+               dim,
+               "mesh::TreeLoadBalancer0",
+               input_db->getDatabase("TreeLoadBalancer")));
          tree_load_balancer0->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
          load_balancer = tree_load_balancer;
@@ -439,9 +440,10 @@ int main(
       else if ( load_balancer_type == "ChopAndPackLoadBalancer" ) {
 
          boost::shared_ptr<mesh::ChopAndPackLoadBalancer> cap_load_balancer(
-            new mesh::ChopAndPackLoadBalancer(dim,
-                                       "mesh::ChopAndPackLoadBalancer",
-                                       input_db->getDatabase("ChopAndPackLoadBalancer")));
+            new mesh::ChopAndPackLoadBalancer(
+               dim,
+               "mesh::ChopAndPackLoadBalancer",
+               input_db->getDatabase("ChopAndPackLoadBalancer")));
 
          load_balancer = cap_load_balancer;
          load_balancer0 = cap_load_balancer;
@@ -459,9 +461,9 @@ int main(
             load_balancer0));
 
       boost::shared_ptr<algs::TimeRefinementIntegrator> time_integrator(
-         new algs::TimeRefinementIntegrator("TimeRefinementIntegrator",
-            input_db->getDatabase(
-               "TimeRefinementIntegrator"),
+         new algs::TimeRefinementIntegrator(
+            "TimeRefinementIntegrator",
+            input_db->getDatabase("TimeRefinementIntegrator"),
             patch_hierarchy,
             hyp_level_integrator,
             gridding_algorithm));
@@ -469,7 +471,8 @@ int main(
       // VisitDataWriter is only present if HDF is available
 #ifdef HAVE_HDF5
       boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
-         new appu::VisItDataWriter(dim,
+         new appu::VisItDataWriter(
+            dim,
             "LinAdv VisIt Writer",
             viz_dump_dirname,
             visit_number_procs_per_file));
@@ -634,9 +637,9 @@ int main(
          /*
           * Output load balancing results for TreeLoadBalancer.
           */
-         boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer =
+         boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer(
             boost::dynamic_pointer_cast<mesh::TreeLoadBalancer,
-                                        mesh::LoadBalanceStrategy>(load_balancer);
+                                        mesh::LoadBalanceStrategy>(load_balancer));
          tbox::plog << "\n\nLoad balancing results:\n";
          tree_load_balancer->printStatistics(tbox::plog);
       }
@@ -657,7 +660,7 @@ int main(
 
       gridding_algorithm.reset();
       load_balancer.reset();
-      new_box_generator.reset();
+      box_generator.reset();
       error_detector.reset();
       hyp_level_integrator.reset();
 

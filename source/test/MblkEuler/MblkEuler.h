@@ -286,7 +286,6 @@ private:
    //
    // Data items used for nonuniform load balance, if used.
    //
-   boost::shared_ptr<pdat::CellVariable<double> > d_workload_variable;
    int d_workload_data_id;
    bool d_use_nonuniform_workload;
 

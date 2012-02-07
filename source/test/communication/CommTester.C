@@ -59,7 +59,6 @@ CommTester::CommTester(
 
    d_object_name = object_name;
    d_data_test_strategy = data_test;
-   d_patch_hierarchy.reset();
 
    d_fake_time = 0.0;
 
@@ -147,12 +146,9 @@ void CommTester::registerVariable(
    d_patch_data_components.setFlag(src_id);
    d_patch_data_components.setFlag(dst_id);
 
-   boost::shared_ptr<hier::RefineOperator> refine_operator;
-   boost::shared_ptr<hier::CoarsenOperator> coarsen_operator;
-
    if (d_do_refine) {
-      refine_operator = xfer_geom->lookupRefineOperator(src_variable,
-            operator_name);
+      boost::shared_ptr<hier::RefineOperator> refine_operator(
+         xfer_geom->lookupRefineOperator(src_variable, operator_name));
 
       hier::IntVector scratch_ghosts(hier::IntVector::max(src_ghosts,
                                         dst_ghosts));
@@ -180,8 +176,8 @@ void CommTester::registerVariable(
             refine_operator);
       }
    } else if (d_do_coarsen) {
-      coarsen_operator = xfer_geom->lookupCoarsenOperator(src_variable,
-            operator_name);
+      boost::shared_ptr<hier::CoarsenOperator> coarsen_operator(
+         xfer_geom->lookupCoarsenOperator(src_variable, operator_name));
       d_coarsen_algorithm.registerCoarsen(dst_id,
          src_id,
          coarsen_operator);
@@ -220,12 +216,9 @@ void CommTester::registerVariableForReset(
    d_patch_data_components.setFlag(src_id);
    d_patch_data_components.setFlag(dst_id);
 
-   boost::shared_ptr<hier::RefineOperator> refine_operator;
-   boost::shared_ptr<hier::CoarsenOperator> coarsen_operator;
-
    if (d_do_refine) {
-      refine_operator = xfer_geom->lookupRefineOperator(src_variable,
-            operator_name);
+      boost::shared_ptr<hier::RefineOperator> refine_operator(
+         xfer_geom->lookupRefineOperator(src_variable, operator_name));
 
       hier::IntVector scratch_ghosts(hier::IntVector::max(src_ghosts,
                                         dst_ghosts));
@@ -246,8 +239,8 @@ void CommTester::registerVariableForReset(
          refine_operator);
 
    } else if (d_do_coarsen) {
-      coarsen_operator = xfer_geom->lookupCoarsenOperator(src_variable,
-            operator_name);
+      boost::shared_ptr<hier::CoarsenOperator> coarsen_operator(
+         xfer_geom->lookupCoarsenOperator(src_variable, operator_name));
       d_reset_coarsen_algorithm.registerCoarsen(dst_id,
          src_id,
          coarsen_operator);
@@ -271,9 +264,8 @@ void CommTester::createRefineSchedule(
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
 #endif
 
-   boost::shared_ptr<hier::PatchLevel> level =
-      d_patch_hierarchy->getPatchLevel(
-         level_number);
+   boost::shared_ptr<hier::PatchLevel> level(
+      d_patch_hierarchy->getPatchLevel(level_number));
 
    if (d_do_refine) {
 
@@ -353,10 +345,10 @@ void CommTester::createCoarsenSchedule(
       d_coarsen_schedule.resizeArray(d_patch_hierarchy->getNumberOfLevels());
       d_coarsen_schedule[level_number].reset();
 
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_patch_hierarchy->getPatchLevel(level_number);
-      boost::shared_ptr<hier::PatchLevel> coarser_level =
-         d_patch_hierarchy->getPatchLevel(level_number - 1);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_patch_hierarchy->getPatchLevel(level_number));
+      boost::shared_ptr<hier::PatchLevel> coarser_level(
+         d_patch_hierarchy->getPatchLevel(level_number - 1));
 
       d_coarsen_schedule[level_number] =
          d_coarsen_algorithm.createSchedule(coarser_level,
@@ -447,11 +439,11 @@ bool CommTester::verifyCommunicationResults() const
    }
    for (int ln = 0;
         ln <= d_patch_hierarchy->getFinestLevelNumber(); ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_patch_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_patch_hierarchy->getPatchLevel(ln));
 
       for (hier::PatchLevel::Iterator p(level); p; p++) {
-         boost::shared_ptr<hier::Patch> patch = *p;
+         const boost::shared_ptr<hier::Patch>& patch = *p;
 
          tests_pass &=
             d_data_test_strategy->verifyResults(*patch, d_patch_hierarchy, ln);
@@ -481,10 +473,10 @@ void CommTester::initializeLevelData(
    const boost::shared_ptr<hier::PatchLevel> old_level,
    const bool allocate_data)
 {
-   (void)can_be_refined;
-   (void)initial_time;
-   (void)old_level;
-   (void)allocate_data;
+   NULL_USE(can_be_refined);
+   NULL_USE(initial_time);
+   NULL_USE(old_level);
+   NULL_USE(allocate_data);
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
@@ -551,9 +543,9 @@ void CommTester::resetHierarchyConfiguration(
    const int coarsest_level,
    const int finest_level)
 {
-   (void)hierarchy;
-   (void)coarsest_level;
-   (void)finest_level;
+   NULL_USE(hierarchy);
+   NULL_USE(coarsest_level);
+   NULL_USE(finest_level);
 }
 
 /*
@@ -571,7 +563,7 @@ void CommTester::setPhysicalBoundaryConditions(
    const double time,
    const hier::IntVector& gcw)
 {
-   (void)time;
+   NULL_USE(time);
    d_data_test_strategy->setPhysicalBoundaryConditions(patch,
       d_fake_time,
       gcw);
@@ -650,13 +642,15 @@ void CommTester::setupHierarchy(
       new mesh::BergerRigoutsos(d_dim));
 
    boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
-      new mesh::TreeLoadBalancer(d_dim,
+      new mesh::TreeLoadBalancer(
+         d_dim,
          "TreeLoadBalancer",
          main_input_db->getDatabase("TreeLoadBalancer")));
    load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
-      new mesh::GriddingAlgorithm(d_patch_hierarchy,
+      new mesh::GriddingAlgorithm(
+         d_patch_hierarchy,
          "GriddingAlgorithm",
          main_input_db->getDatabase("GriddingAlgorithm"),
          cell_tagger,

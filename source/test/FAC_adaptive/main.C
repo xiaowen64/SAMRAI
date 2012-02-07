@@ -102,8 +102,7 @@ int main(
        * This database contains information relevant to main.
        */
 
-      boost::shared_ptr<tbox::Database> main_db =
-         input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -144,22 +143,21 @@ int main(
        * Create a patch hierarchy for use later.
        * This object is a required input for these objects: adaptive_poisson.
        */
-      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy;
-      {
-         /*
-          * Create a grid geometry required for the patchHierarchy object.
+      /*
+       * Create a grid geometry required for the patchHierarchy object.
           */
-         boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
-            new geom::CartesianGridGeometry(
-               dim,
-               "CartesianGridGeometry",
-               input_db->getDatabase("CartesianGridGeometry")));
-         tbox::plog << "Grid Geometry:" << endl;
-         grid_geometry->printClassData(tbox::plog);
-         patch_hierarchy.reset(
-            new hier::PatchHierarchy("Patch Hierarchy", grid_geometry,
-               input_db->getDatabase("PatchHierarchy")));
-      }
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+         new geom::CartesianGridGeometry(
+            dim,
+            "CartesianGridGeometry",
+            input_db->getDatabase("CartesianGridGeometry")));
+      tbox::plog << "Grid Geometry:" << endl;
+      grid_geometry->printClassData(tbox::plog);
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+         new hier::PatchHierarchy(
+            "Patch Hierarchy",
+            grid_geometry,
+            input_db->getDatabase("PatchHierarchy")));
 
       /*
        * Create the problem-specific object implementing the required
@@ -172,48 +170,47 @@ int main(
                        &tbox::pout,
                        &tbox::plog);
 
-      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm;
-      {
-         /*
-          * Create the tag-and-initializer, box-generator and load-balancer
-          * object references required by the gridding_algorithm object.
-          */
-         boost::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
-            new mesh::StandardTagAndInitialize(
-               dim,
-               "CellTaggingMethod",
-               &adaptive_poisson,
-               input_db->getDatabase("StandardTagAndInitialize")));
-         boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
-            new mesh::BergerRigoutsos(
-               dim,
-               (input_db->isDatabase("BergerRigoutsos") ?
-                input_db->getDatabase("BergerRigoutsos") :
-                boost::shared_ptr<tbox::Database>())));
-         boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
-            new mesh::TreeLoadBalancer(dim,
-               "load balancer",
-               input_db->getDatabase("TreeLoadBalancer")));
-         load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      /*
+       * Create the tag-and-initializer, box-generator and load-balancer
+       * object references required by the gridding_algorithm object.
+       */
+      boost::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
+         new mesh::StandardTagAndInitialize(
+            dim,
+            "CellTaggingMethod",
+            &adaptive_poisson,
+            input_db->getDatabase("StandardTagAndInitialize")));
+      boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
+         new mesh::BergerRigoutsos(
+            dim,
+            (input_db->isDatabase("BergerRigoutsos") ?
+             input_db->getDatabase("BergerRigoutsos") :
+             boost::shared_ptr<tbox::Database>())));
+      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
+         new mesh::TreeLoadBalancer(
+            dim,
+            "load balancer",
+            input_db->getDatabase("TreeLoadBalancer")));
+      load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-         /*
-          * Create the gridding algorithm used to generate the SAMR grid
-          * and create the grid.
-          */
-         gridding_algorithm.reset(new mesh::GriddingAlgorithm(
-               patch_hierarchy,
-               " Gridding Algorithm",
-               input_db->getDatabase("GriddingAlgorithm"),
-               tag_and_initializer,
-               box_generator,
-               load_balancer));
-         tbox::plog << "Gridding algorithm:" << std::endl;
-         gridding_algorithm->printClassData(tbox::plog);
-         /*
-          * Make the coarse patch level.
-          */
-         gridding_algorithm->makeCoarsestLevel(0.0);
-      }
+      /*
+       * Create the gridding algorithm used to generate the SAMR grid
+       * and create the grid.
+       */
+      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
+         new mesh::GriddingAlgorithm(
+            patch_hierarchy,
+            " Gridding Algorithm",
+            input_db->getDatabase("GriddingAlgorithm"),
+            tag_and_initializer,
+            box_generator,
+            load_balancer));
+      tbox::plog << "Gridding algorithm:" << std::endl;
+      gridding_algorithm->printClassData(tbox::plog);
+      /*
+       * Make the coarse patch level.
+       */
+      gridding_algorithm->makeCoarsestLevel(0.0);
 
       int ln;
 
@@ -293,7 +290,8 @@ int main(
          /* Write the plot file. */
          if (do_plot) {
             boost::shared_ptr<appu::VisItDataWriter> visit_writer(
-               new appu::VisItDataWriter(dim,
+               new appu::VisItDataWriter(
+                  dim,
                   "VisIt Writer",
                   vis_filename + ".visit"));
             adaptive_poisson.registerVariablesWithPlotter(*visit_writer);
@@ -329,7 +327,8 @@ int main(
             if (0) {
                /* Write post-adapt viz file for debugging */
                boost::shared_ptr<appu::VisItDataWriter> visit_writer(
-                  new appu::VisItDataWriter(dim,
+                  new appu::VisItDataWriter(
+                     dim,
                      "VisIt Writer",
                      "postadapt.visit"));
                adaptive_poisson.registerVariablesWithPlotter(*visit_writer);

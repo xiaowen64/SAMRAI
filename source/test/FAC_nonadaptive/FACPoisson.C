@@ -57,7 +57,6 @@ FACPoisson::FACPoisson(
    boost::shared_ptr<tbox::Database> database):
    d_object_name(object_name),
    d_dim(dim),
-   d_hierarchy(),
    d_poisson_fac_solver((d_dim),
                         object_name + "::poisson_hypre",
                         (database &&
@@ -69,8 +68,7 @@ FACPoisson::FACPoisson(
               (database &&
                database->isDatabase("bc_coefs")) ?
               database->getDatabase("bc_coefs") :
-              boost::shared_ptr<tbox::Database>()),
-   d_context()
+              boost::shared_ptr<tbox::Database>())
 {
 
    hier::VariableDatabase* vdb =
@@ -87,7 +85,10 @@ FACPoisson::FACPoisson(
     */
 
    boost::shared_ptr<pdat::CellVariable<double> > comp_soln(
-      new pdat::CellVariable<double>(dim, object_name + ":computed solution", 1));
+      new pdat::CellVariable<double>(
+         dim,
+         object_name + ":computed solution",
+         1));
    d_comp_soln_id =
       vdb->registerVariableAndContext(
          comp_soln,
@@ -95,7 +96,9 @@ FACPoisson::FACPoisson(
          hier::IntVector(dim, 1) /* ghost cell width is 1 for stencil widths */);
 
    boost::shared_ptr<pdat::CellVariable<double> > exact_solution(
-      new pdat::CellVariable<double>(dim, object_name + ":exact solution"));
+      new pdat::CellVariable<double>(
+         dim,
+         object_name + ":exact solution"));
    d_exact_id =
       vdb->registerVariableAndContext(
          exact_solution,
@@ -147,19 +150,15 @@ void FACPoisson::initializeLevelData(
    const boost::shared_ptr<hier::PatchLevel> old_level,
    const bool allocate_data)
 {
-
-   (void)init_data_time;
-   (void)can_be_refined;
-   (void)initial_time;
-   (void)old_level;
+   NULL_USE(init_data_time);
+   NULL_USE(can_be_refined);
+   NULL_USE(initial_time);
+   NULL_USE(old_level);
 
    boost::shared_ptr<hier::PatchHierarchy> hierarchy = patch_hierarchy;
-   boost::shared_ptr<geom::CartesianGridGeometry> grid_geom(
-      hierarchy->getGridGeometry(),
-      boost::detail::dynamic_cast_tag());
 
-   boost::shared_ptr<hier::PatchLevel> level =
-      hierarchy->getPatchLevel(level_number);
+   boost::shared_ptr<hier::PatchLevel> level(
+      hierarchy->getPatchLevel(level_number));
 
    if (allocate_data) {
       level->allocatePatchData(d_comp_soln_id);
@@ -173,7 +172,7 @@ void FACPoisson::initializeLevelData(
    hier::PatchLevel::Iterator pi(*level);
    for (pi.initialize(*level); pi; pi++) {
 
-      boost::shared_ptr<hier::Patch> patch = *pi;
+      const boost::shared_ptr<hier::Patch>& patch = *pi;
       if (!patch) {
          TBOX_ERROR(d_object_name
             << ": Cannot find patch.  Null patch pointer.");
@@ -230,8 +229,8 @@ void FACPoisson::resetHierarchyConfiguration(
    int coarsest_level,
    int finest_level)
 {
-   (void)coarsest_level;
-   (void)finest_level;
+   NULL_USE(coarsest_level);
+   NULL_USE(finest_level);
 
    d_hierarchy = new_hierarchy;
 }
@@ -256,11 +255,11 @@ int FACPoisson::solvePoisson()
     * Fill in the initial guess.
     */
    for (ln = 0; ln <= d_hierarchy->getFinestLevelNumber(); ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       hier::PatchLevel::Iterator ip(*level);
       for ( ; ip; ip++) {
-         boost::shared_ptr<hier::Patch> patch = *ip;
+         const boost::shared_ptr<hier::Patch>& patch = *ip;
          boost::shared_ptr<pdat::CellData<double> > data(
             patch->getPatchData(d_comp_soln_id),
             boost::detail::dynamic_cast_tag());
@@ -352,7 +351,7 @@ bool FACPoisson::packDerivedDataIntoDoubleBuffer(
    const std::string& variable_name,
    int depth_id) const
 {
-   (void)depth_id;
+   NULL_USE(depth_id);
 
    pdat::CellData<double>::Iterator icell(region);
 

@@ -128,7 +128,7 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -154,17 +154,16 @@ int main(
       /*
        * Generate the GridGeometry.
        */
-      boost::shared_ptr<const hier::GridGeometry> grid_geometry;
-      if (main_db->keyExists("GridGeometry")) {
-         grid_geometry.reset(new hier::GridGeometry(
-               dim,
-               "GridGeometry",
-               boost::shared_ptr<hier::TransferOperatorRegistry>(),
-               main_db->getDatabase("GridGeometry")));
-      } else {
+      if (!main_db->keyExists("GridGeometry")) {
          TBOX_ERROR("Multiblock tree search test: could not find entry GridGeometry"
             << "\nin input.");
       }
+      boost::shared_ptr<const hier::GridGeometry> grid_geometry(
+         new hier::GridGeometry(
+            dim,
+            "GridGeometry",
+            boost::shared_ptr<hier::TransferOperatorRegistry>(),
+            main_db->getDatabase("GridGeometry")));
 
       /*
        * Print input database again to fully show usage.
@@ -190,7 +189,7 @@ int main(
        * using input database BoxLevelA.
        */
       hier::BoxLevel mapped_box_level_a(domain_mapped_box_level);
-      boost::shared_ptr<Database> a_db = main_db->getDatabase("BoxLevelA");
+      boost::shared_ptr<Database> a_db(main_db->getDatabase("BoxLevelA"));
       breakUpBoxes(mapped_box_level_a, domain_mapped_box_level, a_db);
       mapped_box_level_a.cacheGlobalReducedData();
       // tbox::pout << "mapped box level a:\n" << mapped_box_level_a.format("A: ",2) << std::endl;
@@ -200,7 +199,7 @@ int main(
        * using input database BoxLevelB.
        */
       hier::BoxLevel mapped_box_level_b(domain_mapped_box_level);
-      boost::shared_ptr<Database> b_db = main_db->getDatabase("BoxLevelB");
+      boost::shared_ptr<Database> b_db(main_db->getDatabase("BoxLevelB"));
       breakUpBoxes(mapped_box_level_b, domain_mapped_box_level, b_db);
       mapped_box_level_b.cacheGlobalReducedData();
       // tbox::pout << "mapped box level b:\n" << mapped_box_level_b.format("B: ",2) << std::endl;
@@ -248,8 +247,8 @@ int main(
 
       hier::BoxLevel mapped_box_level_c(dim);
       hier::Connector b_to_c, c_to_b;
-      boost::shared_ptr<Database> alteration_db =
-         main_db->getDatabase("Alteration");
+      boost::shared_ptr<Database> alteration_db(
+         main_db->getDatabase("Alteration"));
 
       alterAndGenerateMapping(
          mapped_box_level_c,
@@ -370,7 +369,6 @@ void breakUpBoxes(
 
    mesh::TreeLoadBalancer load_balancer(mapped_box_level.getDim());
 
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy;
    const int level_number(0);
 
    hier::Connector dummy_connector;

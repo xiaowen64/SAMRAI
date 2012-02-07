@@ -51,9 +51,6 @@ HierarchyTester::HierarchyTester(
    d_do_refine_test = false;
    d_do_coarsen_test = false;
 
-   d_initial_patch_hierarchy.reset();
-   d_test_patch_hierarchy.reset();
-
    if (hier_test_db->keyExists("do_refine_test")) {
       d_do_refine_test = hier_test_db->getBool("do_refine_test");
       if (d_do_refine_test) {
@@ -97,8 +94,6 @@ HierarchyTester::HierarchyTester(
 
 HierarchyTester::~HierarchyTester()
 {
-   d_initial_patch_hierarchy.reset();
-   d_test_patch_hierarchy.reset();
 }
 
 /*
@@ -127,16 +122,19 @@ void HierarchyTester::setupInitialHierarchy(
          grid_geometry,
          main_input_db->getDatabase("PatchHierarchy")));
 
-   boost::shared_ptr<BergerRigoutsos> box_generator(new BergerRigoutsos(d_dim));
+   boost::shared_ptr<BergerRigoutsos> box_generator(
+      new BergerRigoutsos(d_dim));
 
    boost::shared_ptr<TreeLoadBalancer> load_balancer(
-      new TreeLoadBalancer(d_dim,
+      new TreeLoadBalancer(
+         d_dim,
          "TreeLoadBalancer",
          main_input_db->getDatabase("TreeLoadBalancer")));
    load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    boost::shared_ptr<StandardTagAndInitialize> dummy_error_detector(
-      new StandardTagAndInitialize(d_dim,
+      new StandardTagAndInitialize(
+         d_dim,
          "StandardTagAndInitialize",
          this,
          main_input_db->getDatabase("StandardTagAndInitialize")));
@@ -192,10 +190,10 @@ int HierarchyTester::runHierarchyTestAndVerify()
     **************************************************************
     */
 
-   boost::shared_ptr<GridGeometry> init_geometry =
-      d_initial_patch_hierarchy->getGridGeometry();
-   boost::shared_ptr<GridGeometry> test_geometry =
-      d_test_patch_hierarchy->getGridGeometry();
+   boost::shared_ptr<GridGeometry> init_geometry(
+      d_initial_patch_hierarchy->getGridGeometry());
+   boost::shared_ptr<GridGeometry> test_geometry(
+      d_test_patch_hierarchy->getGridGeometry());
 
    hier::IntVector one_vector(d_dim, 1);
 
@@ -268,10 +266,10 @@ int HierarchyTester::runHierarchyTestAndVerify()
    }
 
    for (int ln = 0; ln < nlevels; ln++) {
-      boost::shared_ptr<PatchLevel> init_level =
-         d_initial_patch_hierarchy->getPatchLevel(ln);
-      boost::shared_ptr<PatchLevel> test_level =
-         d_test_patch_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<PatchLevel> init_level(
+         d_initial_patch_hierarchy->getPatchLevel(ln));
+      boost::shared_ptr<PatchLevel> test_level(
+         d_test_patch_hierarchy->getPatchLevel(ln));
 
       // Test #2:
       if (init_level->getLevelNumber() !=
@@ -457,10 +455,10 @@ int HierarchyTester::runHierarchyTestAndVerify()
        */
       for (PatchLevel::Iterator tip(test_level); tip; tip++) {
          const BoxId& mapped_box_id = tip->getBox().getId();
-         boost::shared_ptr<Patch> test_patch =
-            test_level->getPatch(mapped_box_id);
-         boost::shared_ptr<Patch> init_patch =
-            init_level->getPatch(mapped_box_id);
+         boost::shared_ptr<Patch> test_patch(
+            test_level->getPatch(mapped_box_id));
+         boost::shared_ptr<Patch> init_patch(
+            init_level->getPatch(mapped_box_id));
 
          // Test #13:
          if (d_do_refine_test) {
@@ -531,10 +529,10 @@ int HierarchyTester::runHierarchyTestAndVerify()
           **************************************************************
           */
 
-         boost::shared_ptr<PatchGeometry> init_patch_geom =
-            init_patch->getPatchGeometry();
-         boost::shared_ptr<PatchGeometry> test_patch_geom =
-            test_patch->getPatchGeometry();
+         boost::shared_ptr<PatchGeometry> init_patch_geom(
+            init_patch->getPatchGeometry());
+         boost::shared_ptr<PatchGeometry> test_patch_geom(
+            test_patch->getPatchGeometry());
 
          // Test #18a:
          if (init_patch_geom->getRatio() !=

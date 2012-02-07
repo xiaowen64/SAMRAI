@@ -577,10 +577,9 @@ int main(
 
       int size = 100;
       {
-         boost::shared_ptr<tbox::Timer> timer;
-
-         timer = tbox::TimerManager::getManager()->
-            getTimer("IndexDataAppendItemSequential", true);
+         boost::shared_ptr<tbox::Timer> timer(
+            tbox::TimerManager::getManager()->
+            getTimer("IndexDataAppendItemSequential", true));
 
          tbox::plog << "Begin Timing" << endl;
 
@@ -617,10 +616,9 @@ int main(
       }
 
       {
-         boost::shared_ptr<tbox::Timer> timer;
-
-         timer = tbox::TimerManager::getManager()->
-            getTimer("IndexDataAppendItemPointerSequential", true);
+         boost::shared_ptr<tbox::Timer> timer(
+            tbox::TimerManager::getManager()->
+            getTimer("IndexDataAppendItemPointerSequential", true));
 
          tbox::plog << "Begin Timing" << endl;
 
@@ -657,10 +655,9 @@ int main(
       int num_inserts = 100000;
 
       {
-         boost::shared_ptr<tbox::Timer> timer;
-
-         timer = tbox::TimerManager::getManager()->
-            getTimer("IndexDataAppendItemRandom", true);
+         boost::shared_ptr<tbox::Timer> timer(
+            tbox::TimerManager::getManager()->
+            getTimer("IndexDataAppendItemRandom", true));
 
          tbox::plog << "Begin Timing" << endl;
 
@@ -698,10 +695,9 @@ int main(
       }
 
       {
-         boost::shared_ptr<tbox::Timer> timer;
-
-         timer = tbox::TimerManager::getManager()->
-            getTimer("IndexDataAppendItemPointerRandom", true);
+         boost::shared_ptr<tbox::Timer> timer(
+            tbox::TimerManager::getManager()->
+            getTimer("IndexDataAppendItemPointerRandom", true));
 
          tbox::plog << "Begin Timing" << endl;
 
@@ -738,10 +734,9 @@ int main(
       size = 100;
 
       {
-         boost::shared_ptr<tbox::Timer> timer;
-
-         timer = tbox::TimerManager::getManager()->
-            getTimer("IndexDataReplace", true);
+         boost::shared_ptr<tbox::Timer> timer(
+            tbox::TimerManager::getManager()->
+            getTimer("IndexDataReplace", true));
 
          tbox::plog << "Begin Timing" << endl;
 

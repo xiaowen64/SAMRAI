@@ -47,8 +47,8 @@ public:
 
    void getFromDatabase()
    {
-      boost::shared_ptr<tbox::Database> root_db =
-         tbox::RestartManager::getManager()->getRootDatabase();
+      boost::shared_ptr<tbox::Database> root_db(
+         tbox::RestartManager::getManager()->getRootDatabase());
 
       boost::shared_ptr<tbox::Database> db;
       if (root_db->isDatabase("RestartTester")) {
@@ -89,8 +89,8 @@ int main(
 
       setupTestData();
 
-      boost::shared_ptr<tbox::SiloDatabase> database(new tbox::SiloDatabase(
-                                                    "SAMRAI Restart"));
+      boost::shared_ptr<tbox::SiloDatabase> database(
+         new tbox::SiloDatabase("SAMRAI Restart"));
       std::string name = "./restart." + tbox::Utilities::processorToString(
             mpi.getRank()) + ".silo";
       DBfile* silo_file = DBCreate(
@@ -102,8 +102,7 @@ int main(
       restart_manager->writeRestartToDatabase();
 
       database->close();
-      restart_manager->setRootDatabase(
-         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
+      restart_manager->setRootDatabase(boost::shared_ptr<tbox::Database>());
 
       DBClose(silo_file);
 
@@ -120,8 +119,7 @@ int main(
       silo_tester.getFromDatabase();
 
       database->close();
-      restart_manager->setRootDatabase(
-         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
+      restart_manager->setRootDatabase(boost::shared_ptr<tbox::Database>());
 
       DBClose(silo_file);
 

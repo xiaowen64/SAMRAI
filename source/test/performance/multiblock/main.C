@@ -214,8 +214,8 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         boost::shared_ptr<tbox::Database> global_db =
-            input_db->getDatabase("GlobalInputs");
+         boost::shared_ptr<tbox::Database> global_db(
+            input_db->getDatabase("GlobalInputs"));
 //         if (global_db->keyExists("tag_clustering_method")) {
 //            string tag_clustering_method =
 //               global_db->getString("tag_clustering_method");
@@ -235,8 +235,8 @@ int main(
        * interval is non-zero, create a restart database.
        */
 
-      boost::shared_ptr<tbox::Database> main_db =
-         input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db(
+         input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -385,7 +385,8 @@ int main(
          new mesh::BergerRigoutsos(dim));
 
       boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
-         new mesh::TreeLoadBalancer(dim,
+         new mesh::TreeLoadBalancer(
+            dim,
             "TreeLoadBalancer",
             input_db->getDatabase("TreeLoadBalancer")));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
@@ -401,9 +402,9 @@ int main(
             load_balancer));
 
       boost::shared_ptr<algs::TimeRefinementIntegrator> time_integrator(
-         new algs::TimeRefinementIntegrator("TimeRefinementIntegrator",
-            input_db->getDatabase(
-               "TimeRefinementIntegrator"),
+         new algs::TimeRefinementIntegrator(
+            "TimeRefinementIntegrator",
+            input_db->getDatabase("TimeRefinementIntegrator"),
             mblk_patch_hierarchy,
             mblk_hyp_level_integrator,
             mblk_gridding_algorithm));
@@ -415,7 +416,8 @@ int main(
 #ifdef HAVE_HDF5
       bool is_multiblock = true;
       boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
-         new appu::VisItDataWriter(dim,
+         new appu::VisItDataWriter(
+            dim,
             "MblkLinAdv VisIt Writer",
             visit_dump_dirname,
             visit_number_procs_per_file,
@@ -603,27 +605,27 @@ void setupHierarchy(
    TBOX_ASSERT(main_input_db);
 #endif
 
-   boost::shared_ptr<tbox::Database> mult_db =
-      main_input_db->getDatabase("PatchHierarchy");
+   boost::shared_ptr<tbox::Database> mult_db(
+      main_input_db->getDatabase("PatchHierarchy"));
 
    char geom_name[32];
 
    sprintf(geom_name, "BlockGeometry");
    if (main_input_db->keyExists(geom_name)) {
-      geometry =
+      geometry.reset(
          new hier::GridGeometry(
             dim,
             geom_name,
             boost::shared_ptr<hier::TransferOperatorRegistry>(
                new geom::SAMRAITransferOperatorRegistry(dim)),
-            main_input_db->getDatabase(geom_name));
+            main_input_db->getDatabase(geom_name)));
    } else {
       TBOX_ERROR("main::setupHierarchy(): could not find entry `"
          << geom_name << "' in input.");
    }
 
-   mblk_hierarchy =
+   mblk_hierarchy.reset(
       new hier::PatchHierarchy("PatchHierarchy",
-         geometry, mult_db, true);
+         geometry, mult_db, true));
 
 }

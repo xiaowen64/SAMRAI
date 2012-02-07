@@ -225,8 +225,8 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         boost::shared_ptr<tbox::Database> global_db =
-            input_db->getDatabase("GlobalInputs");
+         boost::shared_ptr<tbox::Database> global_db(
+            input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
                getBool("call_abort_in_serial_instead_of_exit");
@@ -240,8 +240,7 @@ int main(
        * analysis), and read in test information.
        */
 
-      boost::shared_ptr<tbox::Database> main_db =
-         input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -366,13 +365,14 @@ int main(
       }
 
       boost::shared_ptr<CommTester> comm_tester(
-         new CommTester("CommTester",
-                        dim,
-                        input_db,
-                        patch_data_test,
-                        do_refine,
-                        do_coarsen,
-                        refine_option));
+         new CommTester(
+            "CommTester",
+            dim,
+            input_db,
+            patch_data_test,
+            do_refine,
+            do_coarsen,
+            refine_option));
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger(
          new mesh::StandardTagAndInitialize(
@@ -393,15 +393,15 @@ int main(
 
       tbox::TimerManager* time_man = tbox::TimerManager::getManager();
 
-      boost::shared_ptr<tbox::Timer> refine_create_time =
-         time_man->getTimer("test::main::createRefineSchedule");
-      boost::shared_ptr<tbox::Timer> refine_comm_time =
-         time_man->getTimer("test::main::performRefineOperations");
+      boost::shared_ptr<tbox::Timer> refine_create_time(
+         time_man->getTimer("test::main::createRefineSchedule"));
+      boost::shared_ptr<tbox::Timer> refine_comm_time(
+         time_man->getTimer("test::main::performRefineOperations"));
 
-      boost::shared_ptr<tbox::Timer> coarsen_create_time =
-         time_man->getTimer("test::main::createCoarsenSchedule");
-      boost::shared_ptr<tbox::Timer> coarsen_comm_time =
-         time_man->getTimer("test::main::performCoarsenOperations");
+      boost::shared_ptr<tbox::Timer> coarsen_create_time(
+         time_man->getTimer("test::main::createCoarsenSchedule"));
+      boost::shared_ptr<tbox::Timer> coarsen_comm_time(
+         time_man->getTimer("test::main::performCoarsenOperations"));
 
       const bool plot = main_db->getBoolWithDefault("plot", false);
       VisItDerivedData vdd;
@@ -410,7 +410,10 @@ int main(
          const std::string visit_filename = base_name + ".visit";
          /* Create the VisIt data writer. */
          boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
-            new appu::VisItDataWriter(dim, "VisIt Writer", visit_filename));
+            new appu::VisItDataWriter(
+               dim,
+               "VisIt Writer",
+               visit_filename));
          /*
           * The VisItDataWriter requires some value to be plotted.
           * We are registering the owner value just so we can plot.
@@ -430,8 +433,8 @@ int main(
        * Create communication schedules and perform communication operations.
        */
 
-      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy =
-         comm_tester->getPatchHierarchy();
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+         comm_tester->getPatchHierarchy());
       patch_hierarchy->recursivePrint(tbox::plog,
          "H-> ",
          3);

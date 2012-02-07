@@ -47,8 +47,8 @@ public:
 
    void getFromDatabase()
    {
-      boost::shared_ptr<tbox::Database> root_db =
-         tbox::RestartManager::getManager()->getRootDatabase();
+      boost::shared_ptr<tbox::Database> root_db(
+         tbox::RestartManager::getManager()->getRootDatabase());
 
       boost::shared_ptr<tbox::Database> db;
       if (root_db->isDatabase("RestartTester")) {

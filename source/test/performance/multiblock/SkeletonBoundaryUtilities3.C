@@ -199,8 +199,8 @@ void SkeletonBoundaryUtilities3::fillFaceBoundaryData(
       stuff3dBdryFortConst();
    }
 
-   const boost::shared_ptr<hier::PatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> pgeom(
+      patch.getPatchGeometry());
    //const double* dx = pgeom->getDx();
    const double dx[3] = { 0., 0., 0. };
 
@@ -279,8 +279,8 @@ void SkeletonBoundaryUtilities3::fillEdgeBoundaryData(
       stuff3dBdryFortConst();
    }
 
-   const boost::shared_ptr<hier::PatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> pgeom(
+      patch.getPatchGeometry());
    //const double* dx = pgeom->getDx();
    const double dx[3] = { 0., 0., 0. };
 
@@ -360,8 +360,8 @@ void SkeletonBoundaryUtilities3::fillNodeBoundaryData(
       stuff3dBdryFortConst();
    }
 
-   const boost::shared_ptr<hier::PatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> pgeom(
+      patch.getPatchGeometry());
    //const double* dx = pgeom->getDx();
    const double dx[3] = { 0., 0., 0. };
 
@@ -600,11 +600,10 @@ int SkeletonBoundaryUtilities3::checkBdryData(
    int btype = bbox.getBoundaryType();
    int bloc = bbox.getLocationIndex();
 
-   boost::shared_ptr<hier::PatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
-   boost::shared_ptr<pdat::CellData<double> > vardata =
-      patch.getPatchData(data_id);
+   boost::shared_ptr<pdat::CellData<double> > vardata(
+      patch.getPatchData(data_id));
 
    string bdry_type_str;
    if (btype == Bdry::FACE3D) {
@@ -811,8 +810,8 @@ void SkeletonBoundaryUtilities3::read3dBdryFaces(
 
          if (need_data_read) {
             if (bdry_db->keyExists(bdry_loc_str)) {
-               boost::shared_ptr<tbox::Database> bdry_loc_db =
-                  bdry_db->getDatabase(bdry_loc_str);
+               boost::shared_ptr<tbox::Database> bdry_loc_db(
+                  bdry_db->getDatabase(bdry_loc_str));
                if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
                      string bdry_cond_str =
@@ -939,8 +938,8 @@ void SkeletonBoundaryUtilities3::read3dBdryEdges(
 
          if (need_data_read) {
             if (bdry_db->keyExists(bdry_loc_str)) {
-               boost::shared_ptr<tbox::Database> bdry_loc_db =
-                  bdry_db->getDatabase(bdry_loc_str);
+               boost::shared_ptr<tbox::Database> bdry_loc_db(
+                  bdry_db->getDatabase(bdry_loc_str));
                if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
                      string bdry_cond_str =
@@ -1243,8 +1242,8 @@ void SkeletonBoundaryUtilities3::read3dBdryNodes(
          }
 
          if (bdry_db->keyExists(bdry_loc_str)) {
-            boost::shared_ptr<tbox::Database> bdry_loc_db =
-               bdry_db->getDatabase(bdry_loc_str);
+            boost::shared_ptr<tbox::Database> bdry_loc_db(
+               bdry_db->getDatabase(bdry_loc_str));
             if (bdry_loc_db) {
                if (bdry_loc_db->keyExists("boundary_condition")) {
                   string bdry_cond_str =

@@ -112,7 +112,7 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
       std::string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
 

@@ -315,8 +315,8 @@ bool MathUtilities<bool>::Rand(
    const bool& low,
    const bool& width)
 {
-   (void)low;
-   (void)width;
+   NULL_USE(low);
+   NULL_USE(width);
    return mrand48() > 0 ? true : false;
 }
 

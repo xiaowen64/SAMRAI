@@ -28,10 +28,8 @@ bool DerivedVisOwnerData::packDerivedDataIntoDoubleBuffer(
    const std::string& variable_name,
    int depth_id) const
 {
-   (void)patch;
-   (void)region;
-   (void)variable_name;
-   (void)depth_id;
+   NULL_USE(patch);
+   NULL_USE(depth_id);
    if (variable_name == "Owner") {
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
       double owner = mpi.getRank();

@@ -96,14 +96,15 @@ int main(
       fine_domain[0] = fine0;
       fine_domain[1] = fine1;
 
-      boost::shared_ptr<geom::CartesianGridGeometry> geometry =
-         new geom::CartesianGridGeometry("CartesianGeometry",
+      boost::shared_ptr<geom::CartesianGridGeometry> geometry(
+         new geom::CartesianGridGeometry(
+            "CartesianGeometry",
             lo,
             hi,
-            coarse_domain);
+            coarse_domain));
 
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy =
-         new hier::PatchHierarchy("PatchHierarchy", geometry);
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+         new hier::PatchHierarchy("PatchHierarchy", geometry));
 
       // Note: For these simple tests we allow at most 2 processors.
       tbox::SAMRAI_MPI mpi(SAMRAIManager::getSAMRAICommWorld());
@@ -141,8 +142,8 @@ int main(
        * the variable database.
        */
       hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-      boost::shared_ptr<hier::VariableContext> dummy = variable_db->getContext(
-            "dummy");
+      boost::shared_ptr<hier::VariableContext> dummy(
+         variable_db->getContext("dummy"));
       const hier::IntVector<2> no_ghosts(0);
 
       boost::shared_ptr<pdat::CellVariable<double> > cvar[NVARS];
@@ -179,12 +180,18 @@ int main(
        */
       int coarsest = 0;
       int finest = 1;
-      boost::shared_ptr<math::HierarchyDataOpsReal<double> > cell_ops =
-         new math::HierarchyCellDataOpsReal<double>(hierarchy, coarsest, finest);
+      boost::shared_ptr<math::HierarchyDataOpsReal<double> > cell_ops(
+         new math::HierarchyCellDataOpsReal<double>(
+            hierarchy,
+            coarsest,
+            finest));
       TBOX_ASSERT(cell_ops);
 
-      boost::shared_ptr<math::HierarchyDataOpsReal<double> > cwgt_ops =
-         new math::HierarchyCellDataOpsReal<double>(hierarchy, coarsest, finest);
+      boost::shared_ptr<math::HierarchyDataOpsReal<double> > cwgt_ops(
+         new math::HierarchyCellDataOpsReal<double>(
+            hierarchy,
+            coarsest,
+            finest));
 
       boost::shared_ptr<hier::Patch> patch;
       boost::shared_ptr<geom::CartesianPatchGeometry> pgeom;
@@ -193,15 +200,15 @@ int main(
       hier::Box<2> coarse_fine = fine0 + fine1;
       coarse_fine.coarsen(ratio);
       for (ln = 0; ln < 2; ln++) {
-         boost::shared_ptr<hier::PatchLevel> level =
-            hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level(
+            hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
             patch = level->getPatch(ip());
             pgeom = patch->getPatchGeometry();
             const double* dx = pgeom->getDx();
             const double cell_vol = dx[0] * dx[1];
-            boost::shared_ptr<pdat::CellData<double> > cvdata =
-               patch->getPatchData(cwgt_id);
+            boost::shared_ptr<pdat::CellData<double> > cvdata(
+               patch->getPatchData(cwgt_id));
             cvdata->fillAll(cell_vol);
             if (ln == 0) cvdata->fillAll(0.0, (coarse_fine * patch->getBox()));
          }
@@ -217,13 +224,13 @@ int main(
       bool vol_test_passed = true;
       for (ln = 0; ln < 2; ln++) {
 
-         boost::shared_ptr<hier::PatchLevel> level =
-            hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level(
+            hierarchy->getPatchLevel(ln));
 
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
             patch = level->getPatch(ip());
-            boost::shared_ptr<pdat::CellData<double> > cvdata =
-               patch->getPatchData(cwgt_id);
+            boost::shared_ptr<pdat::CellData<double> > cvdata(
+               patch->getPatchData(cwgt_id));
 
             for (pdat::CellIterator c(cvdata->getBox());
                  c && vol_test_passed;
@@ -446,7 +453,7 @@ int main(
       boost::shared_ptr<pdat::CellData<double> > cdata;
 
       // set values
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(0);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(0));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          patch = level->getPatch(ip());
          cdata = patch->getPatchData(cvindx[2]);
@@ -643,11 +650,11 @@ doubleDataSameAsValue(
    int ln;
    boost::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          patch = level->getPatch(ip());
-         boost::shared_ptr<pdat::CellData<double> > cvdata =
-            patch->getPatchData(desc_id);
+         boost::shared_ptr<pdat::CellData<double> > cvdata(
+            patch->getPatchData(desc_id));
 
          for (pdat::CellIterator c(cvdata->getBox()); c && test_passed; c++) {
             pdat::CellIndex cell_index = c();

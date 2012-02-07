@@ -126,7 +126,8 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase> input_db(
+         new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -143,7 +144,7 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
       const int dimval = dim.getValue();
@@ -666,15 +667,16 @@ void generatePrebalanceByUserShells(
       boost::detail::dynamic_cast_tag());
 
    boost::shared_ptr<hier::PatchLevel> tag_level(
-      new hier::PatchLevel(anchor_mapped_box_level,
+      new hier::PatchLevel(
+         anchor_mapped_box_level,
          grid_geometry,
          vdb->getPatchDescriptor()));
 
    boost::shared_ptr<pdat::CellVariable<int> > tag_variable(
       new pdat::CellVariable<int>(dim, "TagVariable"));
 
-   boost::shared_ptr<hier::VariableContext> default_context =
-      vdb->getContext("TagVariable");
+   boost::shared_ptr<hier::VariableContext> default_context(
+      vdb->getContext("TagVariable"));
 
    const int tag_id = vdb->registerVariableAndContext(
          tag_variable,
@@ -686,7 +688,7 @@ void generatePrebalanceByUserShells(
    const double* xlo = grid_geometry->getXLower();
    const double* h = grid_geometry->getDx();
    for (hier::PatchLevel::Iterator pi(tag_level); pi; pi++) {
-      boost::shared_ptr<hier::Patch> patch = *pi;
+      const boost::shared_ptr<hier::Patch>& patch = *pi;
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(tag_id),
          boost::detail::dynamic_cast_tag());

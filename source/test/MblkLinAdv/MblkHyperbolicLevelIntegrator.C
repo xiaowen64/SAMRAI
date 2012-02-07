@@ -135,12 +135,81 @@ using namespace algs;
 MblkHyperbolicLevelIntegrator::MblkHyperbolicLevelIntegrator(
    const string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> input_db,
+   const boost::shared_ptr<tbox::Database> input_db,
    MblkHyperbolicPatchStrategy* patch_strategy,
-   boost::shared_ptr<hier::PatchHierarchy>& mblk_hierarchy,
-   bool register_for_restart,
-   bool use_time_refinement):
-   d_dim(dim)
+   const boost::shared_ptr<hier::PatchHierarchy>& mblk_hierarchy,
+   const bool register_for_restart,
+   const bool use_time_refinement):
+   d_patch_strategy(patch_strategy),
+   d_object_name(object_name),
+   d_dim(dim),
+   d_use_time_refinement(use_time_refinement),
+   d_registered_for_restart(register_for_restart),
+   d_cfl(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_cfl_init(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_lag_dt_computation(true),
+   d_use_ghosts_for_dt(false),
+   d_flux_is_face(true),
+   d_flux_face_registered(false),
+   d_flux_side_registered(false),
+   d_mblk_bdry_fill_advance(new xfer::RefineAlgorithm(dim)),
+   d_mblk_bdry_fill_advance_new(new xfer::RefineAlgorithm(dim)),
+   d_mblk_bdry_fill_advance_old(new xfer::RefineAlgorithm(dim)),
+   d_mblk_coarsen_fluxsum(new xfer::CoarsenAlgorithm(dim)),
+   d_mblk_coarsen_sync_data(new xfer::CoarsenAlgorithm(dim)),
+   d_mblk_sync_initial_data(new xfer::CoarsenAlgorithm(dim)),
+   d_coarsen_rich_extrap_init(new xfer::CoarsenAlgorithm(dim)),
+   d_coarsen_rich_extrap_final(new xfer::CoarsenAlgorithm(dim)),
+   d_mblk_fill_new_level(new xfer::RefineAlgorithm(dim)),
+   d_number_time_data_levels(2),
+   d_scratch(hier::VariableDatabase::getDatabase()->getContext("SCRATCH")),
+   d_current(hier::VariableDatabase::getDatabase()->getContext("CURRENT")),
+   d_new(hier::VariableDatabase::getDatabase()->getContext("NEW")),
+   d_plot_context(
+      hier::VariableDatabase::getDatabase()->getContext("CURRENT")),
+   d_have_flux_on_level_zero(false),
+   d_distinguish_mpi_reduction_costs(false),
+   t_advance_bdry_fill_comm(tbox::TimerManager::getManager()->
+      getTimer("algs::MblkHyperbolicLevelIntegrator::advance_bdry_fill_comm")),
+   t_error_bdry_fill_create(tbox::TimerManager::getManager()->
+      getTimer("algs::MblkHyperbolicLevelIntegrator::error_bdry_fill_create")),
+   t_error_bdry_fill_comm(tbox::TimerManager::getManager()->
+      getTimer("algs::MblkHyperbolicLevelIntegrator::error_bdry_fill_comm")),
+   t_mpi_reductions(tbox::TimerManager::getManager()->
+      getTimer("algs::MblkHyperbolicLevelIntegrator::mpi_reductions")),
+   t_initialize_level_data(tbox::TimerManager::getManager()->
+      getTimer("algs::MblkHyperbolicLevelIntegrator::initializeLevelData()")),
+   t_fill_new_level_create(tbox::TimerManager::getManager()->
+      getTimer("algs::MblkHyperbolicLevelIntegrator::fill_new_level_create")),
+   t_fill_new_level_comm(tbox::TimerManager::getManager()->
+      getTimer("algs::MblkHyperbolicLevelIntegrator::fill_new_level_comm")),
+   t_advance_bdry_fill_create(tbox::TimerManager::getManager()->
+      getTimer("algs::MblkHyperbolicLevelIntegrator::advance_bdry_fill_create")),
+   t_new_advance_bdry_fill_create(tbox::TimerManager::getManager()->
+      getTimer(
+         "algs::MblkHyperbolicLevelIntegrator::new_advance_bdry_fill_create")),
+   t_apply_gradient_detector(tbox::TimerManager::getManager()->
+      getTimer("algs::MblkHyperbolicLevelIntegrator::applyGradientDetector()")),
+   t_coarsen_rich_extrap(tbox::TimerManager::getManager()->
+      getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_rich_extrap")),
+   t_get_level_dt(tbox::TimerManager::getManager()->
+      getTimer("algs::MblkHyperbolicLevelIntegrator::getLevelDt()")),
+   t_get_level_dt_sync(tbox::TimerManager::getManager()->
+      getTimer("algs::MblkHyperbolicLevelIntegrator::getLevelDt()_sync")),
+   t_advance_level(tbox::TimerManager::getManager()->
+      getTimer("algs::MblkHyperbolicLevelIntegrator::advanceLevel()")),
+   t_new_advance_bdry_fill_comm(tbox::TimerManager::getManager()->
+      getTimer(
+         "algs::MblkHyperbolicLevelIntegrator::new_advance_bdry_fill_comm")),
+   t_patch_num_kernel(tbox::TimerManager::getManager()->
+      getTimer("algs::MblkHyperbolicLevelIntegrator::patch_numerical_kernels")),
+   t_advance_level_sync(tbox::TimerManager::getManager()->
+      getTimer("algs::MblkHyperbolicLevelIntegrator::advanceLevel()_sync")),
+   t_std_level_sync(tbox::TimerManager::getManager()->
+      getTimer(
+         "algs::MblkHyperbolicLevelIntegrator::standardLevelSynchronization()")),
+   t_sync_new_levels(tbox::TimerManager::getManager()->
+      getTimer("algs::MblkHyperbolicLevelIntegrator::synchronizeNewLevels()"))
 {
    NULL_USE(mblk_hierarchy);
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -149,114 +218,10 @@ MblkHyperbolicLevelIntegrator::MblkHyperbolicLevelIntegrator(
    TBOX_ASSERT(patch_strategy != ((MblkHyperbolicPatchStrategy *)NULL));
 #endif
 
-   d_object_name = object_name;
-   d_use_time_refinement = use_time_refinement;
-   d_registered_for_restart = register_for_restart;
-
    if (d_registered_for_restart) {
       tbox::RestartManager::getManager()->
       registerRestartItem(d_object_name, this);
    }
-
-   d_patch_strategy = patch_strategy;
-
-   /*
-    * Default parameter values.
-    */
-   d_number_time_data_levels = 2;
-
-   d_flux_is_face = true;
-   d_flux_face_registered = false;
-   d_flux_side_registered = false;
-
-   d_have_flux_on_level_zero = false;
-
-   d_lag_dt_computation = true;
-   d_use_ghosts_for_dt = false;
-   d_distinguish_mpi_reduction_costs = false;
-
-   d_cfl = tbox::MathUtilities<double>::getSignalingNaN();
-   d_cfl_init = tbox::MathUtilities<double>::getSignalingNaN();
-
-   /*
-    * Communication algorithms.
-    */
-   // "regular" single hierarchy Coarsen/Refine algs
-   d_coarsen_rich_extrap_init.reset(new xfer::CoarsenAlgorithm(dim));
-   d_coarsen_rich_extrap_final.reset(new xfer::CoarsenAlgorithm(dim));
-
-   // multi-block versions of Coarsen/Refine algs
-   d_mblk_bdry_fill_advance.reset(
-      new xfer::RefineAlgorithm(d_dim));
-   d_mblk_bdry_fill_advance_new.reset(
-      new xfer::RefineAlgorithm(d_dim));
-   d_mblk_bdry_fill_advance_old.reset(
-      new xfer::RefineAlgorithm(d_dim));
-   d_mblk_fill_new_level.reset(
-      new xfer::RefineAlgorithm(d_dim));
-   d_mblk_coarsen_fluxsum.reset(
-      new xfer::CoarsenAlgorithm(d_dim));
-   d_mblk_coarsen_sync_data.reset(
-      new xfer::CoarsenAlgorithm(d_dim));
-   d_mblk_sync_initial_data.reset(
-      new xfer::CoarsenAlgorithm(d_dim));
-
-   /*
-    * hier::Variable contexts used in algorithm.  Note that "OLD" context
-    * is only created and used in the case of Richardson extrapolation
-    * and a refinement ratio of 3 (see registerModelVariables()).
-    */
-   d_scratch = hier::VariableDatabase::getDatabase()->getContext("SCRATCH");
-   d_current = hier::VariableDatabase::getDatabase()->getContext("CURRENT");
-   d_new = hier::VariableDatabase::getDatabase()->getContext("NEW");
-
-   d_plot_context = d_current;
-
-   /*
-    * Timers:  one for each of the communication algorithms ("create"
-    * indicates schedule creation, "comm" indicates communication)
-    */
-   t_advance_bdry_fill_comm = tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::advance_bdry_fill_comm");
-   t_error_bdry_fill_create = tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::error_bdry_fill_create");
-   t_error_bdry_fill_comm = tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::error_bdry_fill_comm");
-   t_mpi_reductions = tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::mpi_reductions");
-   t_initialize_level_data = tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::initializeLevelData()");
-   t_fill_new_level_create = tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::fill_new_level_create");
-   t_fill_new_level_comm = tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::fill_new_level_comm");
-   t_advance_bdry_fill_create = tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::advance_bdry_fill_create");
-   t_new_advance_bdry_fill_create = tbox::TimerManager::getManager()->
-      getTimer(
-         "algs::MblkHyperbolicLevelIntegrator::new_advance_bdry_fill_create");
-   t_apply_gradient_detector = tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::applyGradientDetector()");
-   t_coarsen_rich_extrap = tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_rich_extrap");
-   t_get_level_dt = tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::getLevelDt()");
-   t_get_level_dt_sync = tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::getLevelDt()_sync");
-   t_advance_level = tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::advanceLevel()");
-   t_new_advance_bdry_fill_comm = tbox::TimerManager::getManager()->
-      getTimer(
-         "algs::MblkHyperbolicLevelIntegrator::new_advance_bdry_fill_comm");
-   t_patch_num_kernel = tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::patch_numerical_kernels");
-   t_advance_level_sync = tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::advanceLevel()_sync");
-   t_std_level_sync = tbox::TimerManager::getManager()->
-      getTimer(
-         "algs::MblkHyperbolicLevelIntegrator::standardLevelSynchronization()");
-   t_sync_new_levels = tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::synchronizeNewLevels()");
 
    /*
     * Initialize object with data read from the input and restart databases.
@@ -324,12 +289,8 @@ void MblkHyperbolicLevelIntegrator::initializeLevelData(
 
    t_initialize_level_data->start();
 
-   boost::shared_ptr<hier::PatchHierarchy> mblk_hierarchy = hierarchy;
-
-   boost::shared_ptr<hier::PatchLevel> mblk_level =
-      mblk_hierarchy->getPatchLevel(level_number);
-
-   boost::shared_ptr<hier::PatchLevel> mblk_old_level = old_level;
+   boost::shared_ptr<hier::PatchLevel> mblk_level(
+      hierarchy->getPatchLevel(level_number));
 
    /*
     * Allocate storage needed to initialize level and fill data
@@ -351,12 +312,12 @@ void MblkHyperbolicLevelIntegrator::initializeLevelData(
    if ((level_number > 0) || old_level) {
       t_fill_new_level_create->start();
 
-      boost::shared_ptr<xfer::RefineSchedule> sched =
+      boost::shared_ptr<xfer::RefineSchedule> sched(
          d_mblk_fill_new_level->createSchedule(mblk_level,
-            mblk_old_level,
+            old_level,
             level_number - 1,
-            mblk_hierarchy,
-            d_patch_strategy);
+            hierarchy,
+            d_patch_strategy));
       t_fill_new_level_create->stop();
 
       d_patch_strategy->setDataContext(d_scratch);
@@ -445,22 +406,20 @@ MblkHyperbolicLevelIntegrator::resetHierarchyConfiguration(
    NULL_USE(finest_level);
 #endif
 
-   boost::shared_ptr<hier::PatchHierarchy> mblk_hierarchy = hierarchy;
-
    int finest_hiera_level = hierarchy->getFinestLevelNumber();
 
    d_mblk_bdry_sched_advance.resizeArray(finest_hiera_level + 1);
    d_mblk_bdry_sched_advance_new.resizeArray(finest_hiera_level + 1);
 
    for (int ln = coarsest_level; ln <= finest_hiera_level; ln++) {
-      boost::shared_ptr<hier::PatchLevel> mblk_level =
-         mblk_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> mblk_level(
+         hierarchy->getPatchLevel(ln));
 
       t_advance_bdry_fill_create->start();
       d_mblk_bdry_sched_advance[ln] =
          d_mblk_bdry_fill_advance->createSchedule(mblk_level,
             ln - 1,
-            mblk_hierarchy,
+            hierarchy,
             d_patch_strategy);
       t_advance_bdry_fill_create->stop();
 
@@ -469,7 +428,7 @@ MblkHyperbolicLevelIntegrator::resetHierarchyConfiguration(
          d_mblk_bdry_sched_advance_new[ln] =
             d_mblk_bdry_fill_advance_new->createSchedule(mblk_level,
                ln - 1,
-               mblk_hierarchy,
+               hierarchy,
                d_patch_strategy);
          t_new_advance_bdry_fill_create->stop();
       }
@@ -504,10 +463,8 @@ void MblkHyperbolicLevelIntegrator::applyGradientDetector(
 
    t_apply_gradient_detector->start();
 
-   boost::shared_ptr<hier::PatchHierarchy> mblk_hierarchy = hierarchy;
-
-   boost::shared_ptr<hier::PatchLevel> mblk_level =
-      mblk_hierarchy->getPatchLevel(level_number);
+   boost::shared_ptr<hier::PatchLevel> mblk_level(
+      hierarchy->getPatchLevel(level_number));
 
    mblk_level->allocatePatchData(d_saved_var_scratch_data, error_data_time);
 
@@ -573,6 +530,10 @@ MblkHyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
    const double coarsen_data_time,
    const bool before_advance)
 {
+#ifndef DEBUG_CHECK_ASSERTIONS
+   NULL_USE(hierarchy);
+   NULL_USE(level_number);
+#endif
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((level_number >= 0)
@@ -582,8 +543,8 @@ MblkHyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
 #endif
    t_coarsen_rich_extrap->start();
 
-   boost::shared_ptr<hier::PatchLevel> level =
-      hierarchy->getPatchLevel(level_number);
+//   boost::shared_ptr<hier::PatchLevel> level(
+//      hierarchy->getPatchLevel(level_number));
 
    if (before_advance) {
 
@@ -660,7 +621,7 @@ MblkHyperbolicLevelIntegrator::applyRichardsonExtrapolation(
       level->getNextCoarserHierarchyLevelNumber() + 1;
 
    for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-      boost::shared_ptr<hier::Patch> patch = *ip;
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       d_patch_strategy->
       tagRichardsonExtrapolationCells(*patch,
@@ -737,9 +698,8 @@ MblkHyperbolicLevelIntegrator::getLevelDt(
    const double dt_time,
    const bool initial_time)
 {
-   boost::shared_ptr<hier::PatchLevel> mblk_patch_level = level;
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(mblk_patch_level);
+   TBOX_ASSERT(level);
 #endif
    t_get_level_dt->start();
 
@@ -749,7 +709,7 @@ MblkHyperbolicLevelIntegrator::getLevelDt(
 
       d_patch_strategy->setDataContext(d_current);
 
-      for (hier::PatchLevel::Iterator mi(mblk_patch_level); mi; mi++) {
+      for (hier::PatchLevel::Iterator mi(level); mi; mi++) {
 
          (*mi)->allocatePatchData(d_temp_var_scratch_data, dt_time);
 
@@ -769,17 +729,15 @@ MblkHyperbolicLevelIntegrator::getLevelDt(
 
    } else {
 
-      mblk_patch_level->allocatePatchData(d_saved_var_scratch_data,
-         dt_time);
+      level->allocatePatchData(d_saved_var_scratch_data, dt_time);
 
       d_patch_strategy->setDataContext(d_scratch);
 
       t_advance_bdry_fill_comm->start();
-      d_mblk_bdry_sched_advance[mblk_patch_level->getLevelNumber()]->
-      fillData(dt_time);
+      d_mblk_bdry_sched_advance[level->getLevelNumber()]->fillData(dt_time);
       t_advance_bdry_fill_comm->stop();
 
-      for (hier::PatchLevel::Iterator mi(mblk_patch_level); mi; mi++) {
+      for (hier::PatchLevel::Iterator mi(level); mi; mi++) {
 
          (*mi)->allocatePatchData(d_temp_var_scratch_data, dt_time);
 
@@ -805,9 +763,9 @@ MblkHyperbolicLevelIntegrator::getLevelDt(
        * in most cases.
        */
 
-      copyTimeDependentData(mblk_patch_level, d_scratch, d_current);
+      copyTimeDependentData(level, d_scratch, d_current);
 
-      mblk_patch_level->deallocatePatchData(d_saved_var_scratch_data);
+      level->deallocatePatchData(d_saved_var_scratch_data);
 
    }
 
@@ -953,56 +911,51 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
    const bool last_step,
    const bool regrid_advance)
 {
-
-   boost::shared_ptr<hier::PatchHierarchy> mblk_hierarchy = hierarchy;
-
-   boost::shared_ptr<hier::PatchLevel> mblk_level = level;
-
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(mblk_level);
-   TBOX_ASSERT(mblk_hierarchy);
+   TBOX_ASSERT(level);
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(current_time <= new_time);
 #endif
 
 #ifdef RECORD_STATS
-   boost::shared_ptr<tbox::Statistic> num_boxes_l0 =
+   boost::shared_ptr<tbox::Statistic> num_boxes_l0(
       tbox::Statistician::getStatistician()->
-      getStatistic("NumberBoxesL0", "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> num_boxes_l1 =
+      getStatistic("NumberBoxesL0", "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> num_boxes_l1(
       tbox::Statistician::getStatistician()->
-      getStatistic("NumberBoxesL1", "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> num_boxes_l2 =
+      getStatistic("NumberBoxesL1", "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> num_boxes_l2(
       tbox::Statistician::getStatistician()->
-      getStatistic("NumberBoxesL2", "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> num_boxes_l3 =
+      getStatistic("NumberBoxesL2", "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> num_boxes_l3(
       tbox::Statistician::getStatistician()->
-      getStatistic("NumberBoxesL3", "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> num_gridcells_l0 =
+      getStatistic("NumberBoxesL3", "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> num_gridcells_l0(
       tbox::Statistician::getStatistician()->
-      getStatistic("NumberGridcellsL0", "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> num_gridcells_l1 =
+      getStatistic("NumberGridcellsL0", "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> num_gridcells_l1(
       tbox::Statistician::getStatistician()->
-      getStatistic("NumberGridcellsL1", "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> num_gridcells_l2 =
+      getStatistic("NumberGridcellsL1", "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> num_gridcells_l2(
       tbox::Statistician::getStatistician()->
-      getStatistic("NumberGridcellsL2", "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> num_gridcells_l3 =
+      getStatistic("NumberGridcellsL2", "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> num_gridcells_l3(
       tbox::Statistician::getStatistician()->
-      getStatistic("NumberGridcellsL3", "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> timestamp_l0 =
+      getStatistic("NumberGridcellsL3", "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> timestamp_l0(
       tbox::Statistician::getStatistician()->
-      getStatistic("TimeStampL0", "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> timestamp_l1 =
+      getStatistic("TimeStampL0", "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> timestamp_l1(
       tbox::Statistician::getStatistician()->
-      getStatistic("TimeStampL1", "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> timestamp_l2 =
+      getStatistic("TimeStampL1", "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> timestamp_l2(
       tbox::Statistician::getStatistician()->
-      getStatistic("TimeStampL2", "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> timestamp_l3 =
+      getStatistic("TimeStampL2", "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> timestamp_l3(
       tbox::Statistician::getStatistician()->
-      getStatistic("TimeStampL3", "PROC_STAT");
+      getStatistic("TimeStampL3", "PROC_STAT"));
 
-   int level_num = mblk_level->getLevelNumber();
+   int level_num = level->getLevelNumber();
 
    /*
     * Record number of gridcells on each patch.  Note that patch
@@ -1010,14 +963,14 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
     */
    double level_gridcells = 0.;
    double level_local_patches = 0.;
-   // to count total gridcells on mblk_level
-   //hier::BoxList boxes = mblk_level->getBoxes();
+   // to count total gridcells on level
+   //hier::BoxList boxes = level->getBoxes();
    //for (hier::BoxList::Iterator i(boxes); i; i++) {
    //   level_gridcells += itr().size();
    //}
    // to count gridcells on this processor
 
-   for (hier::PatchLevel::Iterator mi(mblk_level); mi; mi++) {
+   for (hier::PatchLevel::Iterator mi(level); mi; mi++) {
       level_gridcells += (*mi)->getBox().size();
       level_local_patches += 1.0;
    } // loop over patches
@@ -1046,7 +999,7 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
 
    t_advance_level->start();
 
-   const int level_number = mblk_level->getLevelNumber();
+   const int level_number = level->getLevelNumber();
    const double dt = new_time - current_time;
 
    /*
@@ -1057,26 +1010,26 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
     * (4) Process flux storage before the advance.
     */
 
-   mblk_level->allocatePatchData(d_new_time_dep_data, new_time);
-   mblk_level->allocatePatchData(d_saved_var_scratch_data, current_time);
+   level->allocatePatchData(d_new_time_dep_data, new_time);
+   level->allocatePatchData(d_saved_var_scratch_data, current_time);
 
    boost::shared_ptr<xfer::RefineSchedule> mblk_fill_schedule;
 
-   const bool in_hierarchy = mblk_level->inHierarchy();
+   const bool in_hierarchy = level->inHierarchy();
 
    if (!in_hierarchy) {
       t_error_bdry_fill_create->start();
       if (d_number_time_data_levels == 3) {
          mblk_fill_schedule = d_mblk_bdry_fill_advance_old->
-            createSchedule(mblk_level,
-               mblk_level->getLevelNumber() - 1,
-               mblk_hierarchy,
+            createSchedule(level,
+               level->getLevelNumber() - 1,
+               hierarchy,
                d_patch_strategy);
       } else {
          mblk_fill_schedule = d_mblk_bdry_fill_advance->
-            createSchedule(mblk_level,
-               mblk_level->getLevelNumber() - 1,
-               mblk_hierarchy,
+            createSchedule(level,
+               level->getLevelNumber() - 1,
+               hierarchy,
                d_patch_strategy);
       }
       t_error_bdry_fill_create->stop();
@@ -1100,7 +1053,7 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
    d_patch_strategy->clearDataContext();
    mblk_fill_schedule.reset();
 
-   preprocessFluxData(mblk_level,
+   preprocessFluxData(level,
       current_time,
       new_time,
       regrid_advance,
@@ -1114,7 +1067,7 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
     * (8) Call user-routine to post-process state data, if needed.
     */
    t_patch_num_kernel->start();
-   d_patch_strategy->preprocessAdvanceLevelState(mblk_level,
+   d_patch_strategy->preprocessAdvanceLevelState(level,
       current_time,
       dt,
       first_step,
@@ -1123,8 +1076,8 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
    t_patch_num_kernel->stop();
 
    d_patch_strategy->setDataContext(d_scratch);
-   for (hier::PatchLevel::Iterator ip(mblk_level); ip; ip++) {
-      boost::shared_ptr<hier::Patch> patch = *ip;
+   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       patch->allocatePatchData(d_temp_var_scratch_data, current_time);
 
@@ -1147,13 +1100,13 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
    }
    d_patch_strategy->clearDataContext();
 
-   mblk_level->setTime(new_time, d_saved_var_scratch_data);
-   mblk_level->setTime(new_time, d_flux_var_data);
+   level->setTime(new_time, d_saved_var_scratch_data);
+   level->setTime(new_time, d_flux_var_data);
 
-   copyTimeDependentData(mblk_level, d_scratch, d_new);
+   copyTimeDependentData(level, d_scratch, d_new);
 
    t_patch_num_kernel->start();
-   d_patch_strategy->postprocessAdvanceLevelState(mblk_level,
+   d_patch_strategy->postprocessAdvanceLevelState(level,
       current_time,
       dt,
       first_step,
@@ -1184,7 +1137,7 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
 
          if (d_use_ghosts_for_dt) {
             d_patch_strategy->setDataContext(d_scratch);
-            copyTimeDependentData(mblk_level, d_current, d_scratch);
+            copyTimeDependentData(level, d_current, d_scratch);
          } else {
             d_patch_strategy->setDataContext(d_current);
          }
@@ -1211,7 +1164,7 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
 
       }
 
-      for (hier::PatchLevel::Iterator mi(mblk_level); mi; mi++) {
+      for (hier::PatchLevel::Iterator mi(level); mi; mi++) {
 
          (*mi)->allocatePatchData(d_temp_var_scratch_data, new_time);
          // "false" argument indicates "initial_time" is false.
@@ -1232,9 +1185,9 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
 
    } // !regrid_advance
 
-   mblk_level->deallocatePatchData(d_saved_var_scratch_data);
+   level->deallocatePatchData(d_saved_var_scratch_data);
 
-   postprocessFluxData(mblk_level,
+   postprocessFluxData(level,
       regrid_advance,
       first_step,
       last_step);
@@ -1312,8 +1265,6 @@ MblkHyperbolicLevelIntegrator::standardLevelSynchronization(
 #endif
    t_std_level_sync->start();
 
-   boost::shared_ptr<hier::PatchHierarchy> mblk_hierarchy = hierarchy;
-
    for (int fine_ln = finest_level; fine_ln > coarsest_level; fine_ln--) {
       const int coarse_ln = fine_ln - 1;
 
@@ -1321,10 +1272,10 @@ MblkHyperbolicLevelIntegrator::standardLevelSynchronization(
       TBOX_ASSERT(sync_time >= old_times[coarse_ln]);
 #endif
 
-      boost::shared_ptr<hier::PatchLevel> mblk_fine_level =
-         mblk_hierarchy->getPatchLevel(fine_ln);
-      boost::shared_ptr<hier::PatchLevel> mblk_coarse_level =
-         mblk_hierarchy->getPatchLevel(coarse_ln);
+      boost::shared_ptr<hier::PatchLevel> mblk_fine_level(
+         hierarchy->getPatchLevel(fine_ln));
+      boost::shared_ptr<hier::PatchLevel> mblk_coarse_level(
+         hierarchy->getPatchLevel(coarse_ln));
 
       synchronizeLevelWithCoarser(mblk_fine_level,
          mblk_coarse_level,
@@ -1386,16 +1337,14 @@ void MblkHyperbolicLevelIntegrator::synchronizeNewLevels(
    }
 #endif
 
-   boost::shared_ptr<tbox::Timer> t_sync_initial_create =
+   boost::shared_ptr<tbox::Timer> t_sync_initial_create(
       tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::sync_initial_create");
-   boost::shared_ptr<tbox::Timer> t_sync_initial_comm =
+      getTimer("algs::MblkHyperbolicLevelIntegrator::sync_initial_create"));
+   boost::shared_ptr<tbox::Timer> t_sync_initial_comm(
       tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::sync_initial_comm");
+      getTimer("algs::MblkHyperbolicLevelIntegrator::sync_initial_comm"));
 
    t_sync_new_levels->start();
-
-   boost::shared_ptr<hier::PatchHierarchy> mblk_hierarchy = hierarchy;
 
    if (initial_time) {
 
@@ -1404,17 +1353,17 @@ void MblkHyperbolicLevelIntegrator::synchronizeNewLevels(
       for (int fine_ln = finest_level; fine_ln > coarsest_level; fine_ln--) {
          const int coarse_ln = fine_ln - 1;
 
-         boost::shared_ptr<hier::PatchLevel> fine_level =
-            mblk_hierarchy->getPatchLevel(fine_ln);
+         boost::shared_ptr<hier::PatchLevel> fine_level(
+            hierarchy->getPatchLevel(fine_ln));
 
-         boost::shared_ptr<hier::PatchLevel> coarse_level =
-            mblk_hierarchy->getPatchLevel(coarse_ln);
+         boost::shared_ptr<hier::PatchLevel> coarse_level(
+            hierarchy->getPatchLevel(coarse_ln));
 
          t_sync_initial_create->start();
-         boost::shared_ptr<xfer::CoarsenSchedule> sched =
+         boost::shared_ptr<xfer::CoarsenSchedule> sched(
             d_mblk_sync_initial_data->createSchedule(coarse_level,
                fine_level,
-               d_patch_strategy);
+               d_patch_strategy));
          t_sync_initial_create->stop();
 
          t_sync_initial_comm->start();
@@ -1473,18 +1422,18 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
       (mblk_fine_level->getLevelNumber() - 1));
 #endif
 
-   boost::shared_ptr<tbox::Timer> t_coarsen_fluxsum_create =
+   boost::shared_ptr<tbox::Timer> t_coarsen_fluxsum_create(
       tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_fluxsum_create");
-   boost::shared_ptr<tbox::Timer> t_coarsen_fluxsum_comm =
+      getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_fluxsum_create"));
+   boost::shared_ptr<tbox::Timer> t_coarsen_fluxsum_comm(
       tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_fluxsum_comm");
-   boost::shared_ptr<tbox::Timer> t_coarsen_sync_create =
+      getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_fluxsum_comm"));
+   boost::shared_ptr<tbox::Timer> t_coarsen_sync_create(
       tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_sync_create");
-   boost::shared_ptr<tbox::Timer> t_coarsen_sync_comm =
+      getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_sync_create"));
+   boost::shared_ptr<tbox::Timer> t_coarsen_sync_comm(
       tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_sync_comm");
+      getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_sync_comm"));
 
    /*
     * Coarsen flux integrals around fine patch boundaries to coarser level
@@ -1494,10 +1443,10 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
     */
 
    t_coarsen_fluxsum_create->start();
-   boost::shared_ptr<xfer::CoarsenSchedule> sched =
+   boost::shared_ptr<xfer::CoarsenSchedule> sched(
       d_mblk_coarsen_fluxsum->createSchedule(mblk_coarse_level,
          mblk_fine_level,
-         NULL);
+         NULL));
    t_coarsen_fluxsum_create->stop();
 
    d_patch_strategy->setDataContext(d_current);
@@ -1575,17 +1524,15 @@ void MblkHyperbolicLevelIntegrator::resetTimeDependentData(
    const double new_time,
    const bool can_be_refined)
 {
-   boost::shared_ptr<hier::PatchLevel> mblk_level = level;
-
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(mblk_level);
+   TBOX_ASSERT(level);
 #endif
 
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 
    double cur_time = 0.;
 
-   for (hier::PatchLevel::Iterator mi(mblk_level); mi; mi++) {
+   for (hier::PatchLevel::Iterator mi(level); mi; mi++) {
 
       tbox::List<boost::shared_ptr<hier::Variable> >::Iterator time_dep_var =
          d_time_dep_variables.listStart();
@@ -1634,10 +1581,10 @@ void MblkHyperbolicLevelIntegrator::resetTimeDependentData(
 
    } // loop over patches
 
-   mblk_level->setTime(new_time, d_new_patch_init_data);
+   level->setTime(new_time, d_new_patch_init_data);
 
    if (d_number_time_data_levels == 3) {
-      mblk_level->setTime(cur_time, d_old_time_dep_data);
+      level->setTime(cur_time, d_old_time_dep_data);
    }
 
 }
@@ -2534,16 +2481,14 @@ void MblkHyperbolicLevelIntegrator::getFromInput(
 void MblkHyperbolicLevelIntegrator::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database> root_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> root_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   boost::shared_ptr<tbox::Database> db;
-   if (root_db->isDatabase(d_object_name)) {
-      db = root_db->getDatabase(d_object_name);
-   } else {
+   if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file" << endl);
    }
+   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION");
    if (ver != ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION) {

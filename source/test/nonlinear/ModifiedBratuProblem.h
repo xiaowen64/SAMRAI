@@ -322,10 +322,10 @@ public:
       const hier::Box& fine_box,
       const hier::IntVector& ratio)
    {
-      (void)fine;
-      (void)coarse;
-      (void)fine_box;
-      (void)ratio;
+      NULL_USE(fine);
+      NULL_USE(coarse);
+      NULL_USE(fine_box);
+      NULL_USE(ratio);
    }
 
    void postprocessRefine(
@@ -334,10 +334,10 @@ public:
       const hier::Box& fine_box,
       const hier::IntVector& ratio)
    {
-      (void)fine;
-      (void)coarse;
-      (void)fine_box;
-      (void)ratio;
+      NULL_USE(fine);
+      NULL_USE(coarse);
+      NULL_USE(fine_box);
+      NULL_USE(ratio);
    }
 
    hier::IntVector getRefineOpStencilWidth() const
@@ -362,10 +362,10 @@ public:
       const hier::Box& coarse_box,
       const hier::IntVector& ratio)
    {
-      (void)coarse;
-      (void)fine;
-      (void)coarse_box;
-      (void)ratio;
+      NULL_USE(coarse);
+      NULL_USE(fine);
+      NULL_USE(coarse_box);
+      NULL_USE(ratio);
    }
 
    void postprocessCoarsen(
@@ -374,10 +374,10 @@ public:
       const hier::Box& coarse_box,
       const hier::IntVector& ratio)
    {
-      (void)coarse;
-      (void)fine;
-      (void)coarse_box;
-      (void)ratio;
+      NULL_USE(coarse);
+      NULL_USE(fine);
+      NULL_USE(coarse_box);
+      NULL_USE(ratio);
    }
 
    hier::IntVector getCoarsenOpStencilWidth() const
@@ -568,7 +568,6 @@ private:
     * solution vector entries on a composite grid.
     */
    boost::shared_ptr<solv::SAMRAIVectorReal<double> > d_solution_vector;
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > d_current_soln_vector;
 
    boost::shared_ptr<pdat::CellVariable<double> > d_weight;
 

@@ -317,9 +317,10 @@ void NodeDataTest::checkPatchInteriorData(
    const int depth = data->getDepth();
 
    boost::shared_ptr<pdat::NodeData<double> > correct_data(
-      new pdat::NodeData<double>(data->getBox(),
-                                 depth,
-                                 data->getGhostCellWidth()));
+      new pdat::NodeData<double>(
+         data->getBox(),
+         depth,
+         data->getGhostCellWidth()));
    if (is_periodic) {
       setPeriodicData(correct_data, correct_data->getGhostBox(), patch);
    } else {

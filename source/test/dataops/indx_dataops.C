@@ -77,14 +77,15 @@ int main(
       fine_domain.appendItem(fine0);
       fine_domain.appendItem(fine1);
 
-      boost::shared_ptr<geom::CartesianGridGeometry> geometry =
-         new geom::CartesianGridGeometry("CartesianGeometry",
+      boost::shared_ptr<geom::CartesianGridGeometry> geometry(
+         new geom::CartesianGridGeometry(
+            "CartesianGeometry",
             lo,
             hi,
-            coarse_domain);
+            coarse_domain));
 
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy =
-         new hier::PatchHierarchy("PatchHierarchy", geometry);
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+         new hier::PatchHierarchy("PatchHierarchy", geometry));
 
       // Note: For these simple tests we allow at most 2 processors.
       tbox::SAMRAI_MPI mpi(SAMRAIManager::getSAMRAICommWorld());
@@ -122,14 +123,14 @@ int main(
        * the variable database.
        */
       hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-      boost::shared_ptr<hier::VariableContext> cxt = variable_db->getContext(
-            "dummy");
+      boost::shared_ptr<hier::VariableContext> cxt(
+         variable_db->getContext("dummy"));
       const hier::IntVector<NDIM> no_ghosts(0);
 
       boost::shared_ptr<pdat::IndexVariable<NDIM, SampleIndexData,
-                                            pdat::CellGeometry> > data =
+                                            pdat::CellGeometry> > data(
          new pdat::IndexVariable<NDIM, SampleIndexData, pdat::CellGeometry>(
-            "sample");
+            "sample"));
       int data_id = variable_db->registerVariableAndContext(
             data, cxt, no_ghosts);
 
@@ -147,8 +148,8 @@ int main(
       int counter = 0;
       std::ostream& os = tbox::plog;
       for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
-         boost::shared_ptr<hier::PatchLevel> level =
-            hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level(
+            hierarchy->getPatchLevel(ln));
 
          // allocate "sample" data
          level->allocatePatchData(data_id);
@@ -156,13 +157,13 @@ int main(
 
          // loop over patches on level
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-            boost::shared_ptr<hier::Patch> patch = level->getPatch(ip());
+            boost::shared_ptr<hier::Patch> patch(level->getPatch(ip()));
             os << "Patch: " << patch->getLocalId() << std::endl;
 
             // access sample data from patch
             boost::shared_ptr<pdat::IndexData<NDIM, SampleIndexData,
-                                              pdat::CellGeometry> > sample =
-               patch->getPatchData(data_id);
+                              pdat::CellGeometry> > sample(
+               patch->getPatchData(data_id));
 
             // iterate over cells of patch and invoke one "SampleIndexData"
             // instance on each cell (its possible to do more).

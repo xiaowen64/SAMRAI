@@ -137,7 +137,7 @@ AsyncCommGroup::AsyncCommGroup(
    d_nchild(0),
    d_mpi(tbox::SAMRAI_MPI::getSAMRAIWorld())
 {
-   (void)r;
+   NULL_USE(r);
    TBOX_ERROR(
       "Copy constructor disallowed due to primitive internal memory management.");
 }
@@ -148,7 +148,7 @@ AsyncCommGroup::AsyncCommGroup(
  */
 AsyncCommGroup& AsyncCommGroup::operator = (
    const AsyncCommGroup& r) {
-   (void)r;
+   NULL_USE(r);
    TBOX_ERROR(
       "Assignment operator disallowed due to primitive internal memory management.");
    return *this;
@@ -1234,7 +1234,7 @@ void AsyncCommGroup::computeDependentData(
    const int* group_ranks,
    const int group_size)
 {
-   (void)group_size;
+   NULL_USE(group_size);
    /*
     * Compute number of descendants in each child branch and in all branches.
     * To find the number of descendants in each branch find the oldest

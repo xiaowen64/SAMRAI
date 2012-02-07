@@ -293,6 +293,11 @@ private:
    const tbox::Dimension d_dim;
 
    /*
+    * Node, edge, and cell variable depths - all are equal.
+    */
+   int d_depth;
+
+   /*
     * Variable - u
     */
    boost::shared_ptr<CellVariable<double> > d_ucell_var;
@@ -312,11 +317,6 @@ private:
    int d_ucell_edge_id;
    int d_unode_id;
    int d_uedge_id;
-
-   /*
-    * Node, edge, and cell variable depths - all are equal.
-    */
-   int d_depth;
 
    /*
     * Node and edge sum utilities.

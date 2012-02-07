@@ -224,8 +224,8 @@ int main(
           */
 
          if (input_db->keyExists("GlobalInputs")) {
-            boost::shared_ptr<tbox::Database> global_db =
-               input_db->getDatabase("GlobalInputs");
+            boost::shared_ptr<tbox::Database> global_db(
+               input_db->getDatabase("GlobalInputs"));
 #ifdef SGS
             if (global_db->keyExists("tag_clustering_method")) {
                string tag_clustering_method =
@@ -248,8 +248,8 @@ int main(
           * database.
           */
 
-         boost::shared_ptr<tbox::Database> main_db =
-            input_db->getDatabase("Main");
+         boost::shared_ptr<tbox::Database> main_db(
+            input_db->getDatabase("Main"));
 
          const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -339,7 +339,9 @@ int main(
                input_db->getDatabase("CartesianGeometry")));
 
          boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
-            new hier::PatchHierarchy("PatchHierarchy", grid_geometry,
+            new hier::PatchHierarchy(
+               "PatchHierarchy",
+               grid_geometry,
                input_db->getDatabase("PatchHierarchy")));
 
          LinAdv* linear_advection_model = new LinAdv(
@@ -369,14 +371,16 @@ int main(
                   boost::shared_ptr<tbox::Database>())));
 
          boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
-            new mesh::TreeLoadBalancer(dim,
+            new mesh::TreeLoadBalancer(
+               dim,
                "LoadBalancer",
                input_db->getDatabase("LoadBalancer")));
          load_balancer->setSAMRAI_MPI(
             tbox::SAMRAI_MPI::getSAMRAIWorld());
 
          boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
-            new mesh::GriddingAlgorithm(patch_hierarchy,
+            new mesh::GriddingAlgorithm(
+               patch_hierarchy,
                "GriddingAlgorithm",
                input_db->getDatabase("GriddingAlgorithm"),
                error_detector,
@@ -384,9 +388,9 @@ int main(
                load_balancer));
 
          boost::shared_ptr<algs::TimeRefinementIntegrator> time_integrator(
-            new algs::TimeRefinementIntegrator("TimeRefinementIntegrator",
-               input_db->getDatabase(
-                  "TimeRefinementIntegrator"),
+            new algs::TimeRefinementIntegrator(
+               "TimeRefinementIntegrator",
+               input_db->getDatabase("TimeRefinementIntegrator"),
                patch_hierarchy,
                hyp_level_integrator,
                gridding_algorithm));
@@ -394,7 +398,8 @@ int main(
          // VisitDataWriter is only present if HDF is available
 #ifdef HAVE_HDF5
          boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
-            new appu::VisItDataWriter(dim,
+            new appu::VisItDataWriter(
+               dim,
                "LinAdv VisIt Writer",
                viz_dump_dirname,
                visit_number_procs_per_file));

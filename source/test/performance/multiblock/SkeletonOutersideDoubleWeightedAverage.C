@@ -126,10 +126,10 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   boost::shared_ptr<pdat::OuterfaceData<double> > fdata =
-      fine.getPatchData(src_component);
-   boost::shared_ptr<pdat::OuterfaceData<double> > cdata =
-      coarse.getPatchData(dst_component);
+   boost::shared_ptr<pdat::OuterfaceData<double> > fdata(
+      fine.getPatchData(src_component));
+   boost::shared_ptr<pdat::OuterfaceData<double> > cdata(
+      coarse.getPatchData(dst_component));
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
@@ -141,10 +141,10 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
    const hier::Index cilo = cdata->getGhostBox().lower();
    const hier::Index cihi = cdata->getGhostBox().upper();
 
-   const boost::shared_ptr<hier::PatchGeometry> fgeom =
-      fine.getPatchGeometry();
-   const boost::shared_ptr<hier::PatchGeometry> cgeom =
-      coarse.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> fgeom(
+      fine.getPatchGeometry());
+   const boost::shared_ptr<hier::PatchGeometry> cgeom(
+      coarse.getPatchGeometry());
 
    const hier::Index ifirstc = coarse_box.lower();
    const hier::Index ilastc = coarse_box.upper();

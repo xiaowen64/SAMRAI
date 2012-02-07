@@ -78,7 +78,7 @@ void PatchMultiblockTestStrategy::readVariableInput(
 
    for (int i = 0; i < nkeys; i++) {
 
-      boost::shared_ptr<tbox::Database> var_db = db->getDatabase(var_keys[i]);
+      boost::shared_ptr<tbox::Database> var_db(db->getDatabase(var_keys[i]));
 
       if (var_db->keyExists("src_name")) {
          d_variable_src_name[i] = var_db->getString("src_name");
@@ -192,9 +192,9 @@ void PatchMultiblockTestStrategy::setPhysicalBoundaryConditions(
    const double time,
    const hier::IntVector& gcw) const
 {
-   (void)patch;
-   (void)time;
-   (void)gcw;
+   NULL_USE(patch);
+   NULL_USE(time);
+   NULL_USE(gcw);
 }
 
 void PatchMultiblockTestStrategy::preprocessRefine(
@@ -204,11 +204,11 @@ void PatchMultiblockTestStrategy::preprocessRefine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   (void)fine;
-   (void)coarse;
-   (void)context;
-   (void)fine_box;
-   (void)ratio;
+   NULL_USE(fine);
+   NULL_USE(coarse);
+   NULL_USE(context);
+   NULL_USE(fine_box);
+   NULL_USE(ratio);
 }
 
 void PatchMultiblockTestStrategy::postprocessRefine(
@@ -218,11 +218,11 @@ void PatchMultiblockTestStrategy::postprocessRefine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   (void)fine;
-   (void)coarse;
-   (void)context;
-   (void)fine_box;
-   (void)ratio;
+   NULL_USE(fine);
+   NULL_USE(coarse);
+   NULL_USE(context);
+   NULL_USE(fine_box);
+   NULL_USE(ratio);
 }
 
 void PatchMultiblockTestStrategy::preprocessCoarsen(
@@ -232,11 +232,11 @@ void PatchMultiblockTestStrategy::preprocessCoarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   (void)coarse;
-   (void)fine;
-   (void)context;
-   (void)coarse_box;
-   (void)ratio;
+   NULL_USE(coarse);
+   NULL_USE(fine);
+   NULL_USE(context);
+   NULL_USE(coarse_box);
+   NULL_USE(ratio);
 }
 
 void PatchMultiblockTestStrategy::postprocessCoarsen(
@@ -246,9 +246,9 @@ void PatchMultiblockTestStrategy::postprocessCoarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   (void)coarse;
-   (void)fine;
-   (void)context;
-   (void)coarse_box;
-   (void)ratio;
+   NULL_USE(coarse);
+   NULL_USE(fine);
+   NULL_USE(context);
+   NULL_USE(coarse_box);
+   NULL_USE(ratio);
 }

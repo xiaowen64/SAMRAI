@@ -67,7 +67,7 @@ Array<TYPE>::Array(
    const int n,
    const typename Array::DoNotInitialize& do_not_initialize_flag)
 {
-   (void)do_not_initialize_flag;
+   NULL_USE(do_not_initialize_flag);
 
    if (n > 0) {
       d_objects = reinterpret_cast<TYPE *>(malloc(sizeof(TYPE) * n));

@@ -78,10 +78,10 @@ public:
       const hier::Box& fine_box,
       const hier::IntVector& ratio)
    {
-      (void)fine;
-      (void)coarse;
-      (void)fine_box;
-      (void)ratio;
+      NULL_USE(fine);
+      NULL_USE(coarse);
+      NULL_USE(fine_box);
+      NULL_USE(ratio);
    }
 
    void postprocessRefine(
@@ -90,10 +90,10 @@ public:
       const hier::Box& fine_box,
       const hier::IntVector& ratio)
    {
-      (void)fine;
-      (void)coarse;
-      (void)fine_box;
-      (void)ratio;
+      NULL_USE(fine);
+      NULL_USE(coarse);
+      NULL_USE(fine_box);
+      NULL_USE(ratio);
    }
 
    /**

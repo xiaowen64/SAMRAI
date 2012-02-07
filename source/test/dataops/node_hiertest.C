@@ -138,7 +138,8 @@ int main(
       fine_boxes.pushBack(fine1);
 
       boost::shared_ptr<geom::CartesianGridGeometry> geometry(
-         new geom::CartesianGridGeometry("CartesianGeometry",
+         new geom::CartesianGridGeometry(
+            "CartesianGeometry",
             lo,
             hi,
             coarse_domain));
@@ -188,8 +189,8 @@ int main(
 
       // Create instance of hier::Variable database
       hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-      boost::shared_ptr<hier::VariableContext> dummy = variable_db->getContext(
-            "dummy");
+      boost::shared_ptr<hier::VariableContext> dummy(
+         variable_db->getContext("dummy"));
       const hier::IntVector no_ghosts(dim2d, 0);
 
       // Make some dummy variables and data on the hierarchy
@@ -208,15 +209,15 @@ int main(
       nvindx[3] = variable_db->registerVariableAndContext(
             nvar[3], dummy, no_ghosts);
 
-      boost::shared_ptr<pdat::NodeVariable<double> >
-      nwgt(new pdat::NodeVariable<double>(dim2d, "nwgt", 1));
+      boost::shared_ptr<pdat::NodeVariable<double> > nwgt(
+         new pdat::NodeVariable<double>(dim2d, "nwgt", 1));
       int nwgt_id = variable_db->registerVariableAndContext(
             nwgt, dummy, no_ghosts);
 
       // allocate data on hierarchy
       for (ln = 0; ln < 2; ln++) {
-         boost::shared_ptr<hier::PatchLevel> level =
-            hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level(
+            hierarchy->getPatchLevel(ln));
          level->allocatePatchData(nwgt_id);
          for (iv = 0; iv < NVARS; iv++) {
             level->allocatePatchData(nvindx[iv]);
@@ -224,11 +225,17 @@ int main(
       }
 
       boost::shared_ptr<math::HierarchyDataOpsReal<double> > node_ops(
-         new math::HierarchyNodeDataOpsReal<double>(hierarchy, 0, 1));
+         new math::HierarchyNodeDataOpsReal<double>(
+            hierarchy,
+            0,
+            1));
       TBOX_ASSERT(node_ops);
 
       boost::shared_ptr<math::HierarchyDataOpsReal<double> > nwgt_ops(
-         new math::HierarchyNodeDataOpsReal<double>(hierarchy, 0, 1));
+         new math::HierarchyNodeDataOpsReal<double>(
+            hierarchy,
+            0,
+            1));
 
       boost::shared_ptr<hier::Patch> patch;
 
@@ -236,16 +243,16 @@ int main(
       hier::Box coarse_fine = fine0 + fine1;
       coarse_fine.coarsen(ratio);
       for (ln = 0; ln < 2; ln++) {
-         boost::shared_ptr<hier::PatchLevel> level =
-            hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level(
+            hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
             patch = *ip;
-	    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+            boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
                patch->getPatchGeometry(),
                boost::detail::dynamic_cast_tag());
             const double* dx = pgeom->getDx();
             const double node_vol = dx[0] * dx[1];
-	    boost::shared_ptr<pdat::NodeData<double> > data(
+            boost::shared_ptr<pdat::NodeData<double> > data(
                patch->getPatchData(nwgt_id),
                boost::detail::dynamic_cast_tag());
             data->fillAll(node_vol);
@@ -614,8 +621,8 @@ int main(
       boost::shared_ptr<pdat::NodeData<double> > ndata;
 
       // set values
-      boost::shared_ptr<hier::PatchLevel> level_zero =
-         hierarchy->getPatchLevel(0);
+      boost::shared_ptr<hier::PatchLevel> level_zero(
+         hierarchy->getPatchLevel(0));
       for (hier::PatchLevel::Iterator ip(level_zero); ip; ip++) {
          patch = *ip;
          ndata = boost::dynamic_pointer_cast<pdat::NodeData<double>,
@@ -827,7 +834,7 @@ doubleDataSameAsValue(
    int ln;
    boost::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ln++) {
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          patch = *ip;
          boost::shared_ptr<pdat::NodeData<double> > nvdata(

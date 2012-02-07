@@ -105,8 +105,8 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         boost::shared_ptr<tbox::Database> global_db =
-            input_db->getDatabase("GlobalInputs");
+         boost::shared_ptr<tbox::Database> global_db(
+            input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
                getBool("call_abort_in_serial_instead_of_exit");
@@ -119,8 +119,8 @@ int main(
        * This database contains information relevant to main.
        */
 
-      boost::shared_ptr<tbox::Database> main_db =
-         input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db(
+         input_db->getDatabase("Main"));
       tbox::plog << "Main database:" << endl;
       main_db->printClassData(tbox::plog);
 
@@ -192,21 +192,22 @@ int main(
        * Create a patch hierarchy for use later.
        * This object is a required input for these objects: abrtest.
        */
-      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy;
-      {
-         /*
-          * Create a grid geometry required for the
-          * hier::PatchHierarchy object.
-          */
-         boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
-            new geom::CartesianGridGeometry(dim, "CartesianGridGeometry",
-               input_db->getDatabase("CartesianGridGeometry")));
-         tbox::plog << "Grid Geometry:" << endl;
-         grid_geometry->printClassData(tbox::plog);
-         patch_hierarchy.reset(
-            new hier::PatchHierarchy("Patch Hierarchy", grid_geometry,
-               input_db->getDatabase("PatchHierarchy")));
-      }
+      /*
+       * Create a grid geometry required for the
+       * hier::PatchHierarchy object.
+       */
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+         new geom::CartesianGridGeometry(
+            dim,
+            "CartesianGridGeometry",
+            input_db->getDatabase("CartesianGridGeometry")));
+      tbox::plog << "Grid Geometry:" << endl;
+      grid_geometry->printClassData(tbox::plog);
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+         new hier::PatchHierarchy(
+            "Patch Hierarchy",
+            grid_geometry,
+            input_db->getDatabase("PatchHierarchy")));
 
       /*
        * Create the problem-specific object implementing the required
@@ -220,51 +221,45 @@ int main(
 
       tbox::plog << "Creating box generator.\n";
       boost::shared_ptr<mesh::BergerRigoutsos> new_br(
-         new mesh::BergerRigoutsos(dim,
+         new mesh::BergerRigoutsos(
+            dim,
             input_db->isDatabase("BergerRigoutsos") ?
             input_db->getDatabase("BergerRigoutsos") :
             boost::shared_ptr<tbox::Database>()));
       new_br->setMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator =
-         boost::shared_ptr<mesh::BoxGeneratorStrategy>(new_br);
-      TBOX_ASSERT(box_generator);
-
       tbox::plog << "Creating grid algorithm.\n";
-      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm;
-      {
-         /*
-          * Create the tag-and-initializer, box-generator and load-balancer
-          * object references required by the gridding_algorithm object.
-          */
-         boost::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
-            new mesh::StandardTagAndInitialize(
-               dim,
-               "CellTaggingMethod",
-               abrtest.getStandardTagAndInitObject(),
-               input_db->getDatabase("StandardTagAndInitialize")));
-         boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
-            new mesh::TreeLoadBalancer(dim,
-               "tree load balancer",
-               input_db->getDatabase("TreeLoadBalancer")));
-         load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      /*
+       * Create the tag-and-initializer, box-generator and load-balancer
+       * object references required by the gridding_algorithm object.
+       */
+      boost::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
+         new mesh::StandardTagAndInitialize(
+            dim,
+            "CellTaggingMethod",
+            abrtest.getStandardTagAndInitObject(),
+            input_db->getDatabase("StandardTagAndInitialize")));
+      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
+         new mesh::TreeLoadBalancer(
+            dim,
+            "tree load balancer",
+            input_db->getDatabase("TreeLoadBalancer")));
+      load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-         /*
-          * Create the gridding algorithm used to generate the SAMR grid
-          * and create the grid.
-          */
-         gridding_algorithm.reset(
-            new mesh::GriddingAlgorithm(
-               patch_hierarchy,
-               "Distributed Gridding Algorithm",
-               input_db->getDatabase("GriddingAlgorithm"),
-               tag_and_initializer,
-               box_generator,
-               load_balancer));
-         tbox::plog << "Sistributed gridding algorithm:" << std::endl;
-         gridding_algorithm->printClassData(tbox::plog);
-
-      }
+      /*
+       * Create the gridding algorithm used to generate the SAMR grid
+       * and create the grid.
+       */
+      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
+         new mesh::GriddingAlgorithm(
+            patch_hierarchy,
+            "Distributed Gridding Algorithm",
+            input_db->getDatabase("GriddingAlgorithm"),
+            tag_and_initializer,
+            new_br,
+            load_balancer));
+      tbox::plog << "Sistributed gridding algorithm:" << std::endl;
+      gridding_algorithm->printClassData(tbox::plog);
 
       bool log_hierarchy = false;
       log_hierarchy = main_db->getBoolWithDefault("log_hierarchy",
@@ -293,9 +288,9 @@ int main(
        * Make the patch levels.
        */
 
-      boost::shared_ptr<tbox::Timer> t_generate_mesh =
+      boost::shared_ptr<tbox::Timer> t_generate_mesh(
          tbox::TimerManager::getManager()->
-         getTimer("apps::main::generate_mesh");
+         getTimer("apps::main::generate_mesh"));
       t_generate_mesh->start();
       gridding_algorithm->makeCoarsestLevel(0.0);
       tbox::plog << "Memory used after creating level 0:" << endl;
@@ -304,8 +299,8 @@ int main(
       for (int ln = 0; patch_hierarchy->levelCanBeRefined(ln) && !done;
            ln++) {
          tbox::plog << "Adding finer levels with ln = " << ln << endl;
-         boost::shared_ptr<hier::PatchLevel> level_ =
-            patch_hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level_(
+            patch_hierarchy->getPatchLevel(ln));
          gridding_algorithm->makeFinerLevel(
             /* simulation time */ 0.0,
             /* whether initial time */ true,
@@ -314,8 +309,8 @@ int main(
          if (patch_hierarchy->getNumberOfLevels() < ln + 2) {
             tbox::plog << " (no new level!)" << endl;
          } else {
-            boost::shared_ptr<hier::PatchLevel> finer_level_ =
-               patch_hierarchy->getPatchLevel(ln + 1);
+            boost::shared_ptr<hier::PatchLevel> finer_level_(
+               patch_hierarchy->getPatchLevel(ln + 1));
             tbox::plog
             << " (" << level_->getNumberOfPatches()
             << " -> " << finer_level_->getNumberOfPatches()
@@ -349,7 +344,10 @@ int main(
          const string visit_filename = vis_filename + ".visit";
          /* Create the VisIt data writer. */
          boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
-            new appu::VisItDataWriter(dim, "VisIt Writer", visit_filename));
+            new appu::VisItDataWriter(
+               dim,
+               "VisIt Writer",
+               visit_filename));
          /* Register variables with plotter. */
          abrtest.registerVariablesWithPlotter(visit_data_writer);
          /* Write the plot file. */
@@ -397,7 +395,8 @@ int main(
             const string visit_filename = vis_filename + ".visit";
             /* Create the VisIt data writer. */
             boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
-               new appu::VisItDataWriter(dim,
+               new appu::VisItDataWriter(
+                  dim,
                   "VisIt Writer",
                   visit_filename));
             /* Register variables with plotter. */

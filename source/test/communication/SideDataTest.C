@@ -97,8 +97,8 @@ void SideDataTest::readTestInput(
    readVariableInput(db->getDatabase("VariableData"));
    readRefinementInput(db->getDatabase("RefinementData"));
 
-   boost::shared_ptr<tbox::Database> var_data =
-      db->getDatabase("VariableData");
+   boost::shared_ptr<tbox::Database> var_data(
+      db->getDatabase("VariableData"));
    tbox::Array<string> var_keys = var_data->getAllKeys();
    int nkeys = var_keys.getSize();
 
@@ -106,8 +106,8 @@ void SideDataTest::readTestInput(
    d_use_fine_value_at_interface.resizeArray(nkeys);
 
    for (int i = 0; i < nkeys; i++) {
-      boost::shared_ptr<tbox::Database> var_db =
-         var_data->getDatabase(var_keys[i]);
+      boost::shared_ptr<tbox::Database> var_db(
+         var_data->getDatabase(var_keys[i]));
 
       if (var_db->keyExists("test_direction")) {
          d_test_direction[i] = var_db->getInteger("test_direction");
@@ -204,8 +204,8 @@ void SideDataTest::setConservativeData(
 #endif
 
    int i, j;
-   boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-         level_number);
+   boost::shared_ptr<hier::PatchLevel> level(
+      hierarchy->getPatchLevel(level_number));
 
    const hier::BoxContainer& domain =
       level->getPhysicalDomain(hier::BlockId::zero());

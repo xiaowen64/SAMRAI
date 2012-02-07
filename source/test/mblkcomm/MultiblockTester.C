@@ -43,9 +43,29 @@ MultiblockTester::MultiblockTester(
    const string& refine_option):
    xfer::CoarsenPatchStrategy(dim),
    xfer::RefinePatchStrategy(dim),
+   d_object_name(object_name),
    d_dim(dim),
+   d_data_test_strategy(data_test),
+   d_do_refine(do_refine),
+   d_do_coarsen(false),
+   d_refine_option(refine_option),
+   d_patch_hierarchy(hierarchy),
+   d_fake_time(0.0),
+   d_source(
+     hier::VariableDatabase::getDatabase()->getContext("SOURCE")),
+   d_destination(
+      hier::VariableDatabase::getDatabase()->getContext("DESTINATION")),
+   d_refine_scratch(
+      hier::VariableDatabase::getDatabase()->getContext("REFINE_SCRATCH")),
+   d_reset_source(
+      hier::VariableDatabase::getDatabase()->getContext("SOURCE")),
+   d_reset_destination(
+      hier::VariableDatabase::getDatabase()->getContext("DESTINATION")),
+   d_reset_refine_scratch(
+      hier::VariableDatabase::getDatabase()->getContext("REFINE_SCRATCH")),
    d_reset_refine_algorithm(dim),
-   d_reset_coarsen_algorithm(dim)
+   d_reset_coarsen_algorithm(dim),
+   d_is_reset(false)
 {
    NULL_USE(main_input_db);
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -53,21 +73,10 @@ MultiblockTester::MultiblockTester(
    TBOX_ASSERT(data_test != (PatchMultiblockTestStrategy *)NULL);
 #endif
 
-   d_object_name = object_name;
-   d_data_test_strategy = data_test;
-   d_patch_hierarchy = hierarchy;
-
-   d_fake_time = 0.0;
-
-   d_is_reset = false;
-
-   d_do_refine = do_refine;
-   d_do_coarsen = false;
    if (!do_refine) {
       d_do_coarsen = do_coarsen;
    }
 
-   d_refine_option = refine_option;
    if (!((d_refine_option == "INTERIOR_FROM_SAME_LEVEL")
          || (d_refine_option == "INTERIOR_FROM_COARSER_LEVEL"))) {
       TBOX_ERROR(object_name << " input error: illegal refine_option = "
@@ -75,22 +84,6 @@ MultiblockTester::MultiblockTester(
    }
 
    d_patch_data_components.clrAllFlags();
-   d_refine_schedule.resizeArray(0);
-   d_coarsen_schedule.resizeArray(0);
-
-   d_source =
-      hier::VariableDatabase::getDatabase()->getContext("SOURCE");
-   d_destination =
-      hier::VariableDatabase::getDatabase()->getContext("DESTINATION");
-   d_refine_scratch =
-      hier::VariableDatabase::getDatabase()->getContext("REFINE_SCRATCH");
-
-   d_reset_source =
-      hier::VariableDatabase::getDatabase()->getContext("SOURCE");
-   d_reset_destination =
-      hier::VariableDatabase::getDatabase()->getContext("DESTINATION");
-   d_reset_refine_scratch =
-      hier::VariableDatabase::getDatabase()->getContext("REFINE_SCRATCH");
 
    d_data_test_strategy->registerVariables(this);
 }
@@ -260,8 +253,8 @@ void MultiblockTester::createRefineSchedule(
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
 #endif
 
-   boost::shared_ptr<hier::PatchLevel> level =
-      d_patch_hierarchy->getPatchLevel(level_number);
+   boost::shared_ptr<hier::PatchLevel> level(
+      d_patch_hierarchy->getPatchLevel(level_number));
 
    if (d_do_refine) {
 
@@ -431,8 +424,8 @@ bool MultiblockTester::verifyCommunicationResults() const
    }
    for (int ln = 0;
         ln <= d_patch_hierarchy->getFinestLevelNumber(); ln++) {
-      boost::shared_ptr<hier::PatchLevel> level =
-         d_patch_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_patch_hierarchy->getPatchLevel(ln));
 
       for (hier::PatchLevel::Iterator mi(level); mi; mi++) {
 
@@ -465,26 +458,25 @@ void MultiblockTester::initializeLevelData(
    const boost::shared_ptr<hier::PatchLevel> old_level,
    const bool allocate_data)
 {
-   (void)can_be_refined;
-   (void)initial_time;
-   (void)old_level;
-   (void)allocate_data;
+   NULL_USE(can_be_refined);
+   NULL_USE(initial_time);
+   NULL_USE(old_level);
+   NULL_USE(allocate_data);
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(level_number >= 0);
 #endif
 
-   boost::shared_ptr<hier::PatchHierarchy> mblk_hierarchy =
-      hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> mblk_hierarchy(hierarchy);
 
-   boost::shared_ptr<hier::PatchLevel> level =
-      hierarchy->getPatchLevel(level_number);
+   boost::shared_ptr<hier::PatchLevel> level(
+      hierarchy->getPatchLevel(level_number));
 
    level->allocatePatchData(d_patch_data_components, time);
 
    for (hier::PatchLevel::Iterator p(level); p; p++) {
-      boost::shared_ptr<hier::Patch> patch = *p;
+      const boost::shared_ptr<hier::Patch>& patch = *p;
       const hier::BlockId& block_id = patch->getBox().getBlockId();
 
       int level_num = level->getLevelNumber();
@@ -529,9 +521,9 @@ void MultiblockTester::resetHierarchyConfiguration(
    const int coarsest_level,
    const int finest_level)
 {
-   (void)hierarchy;
-   (void)coarsest_level;
-   (void)finest_level;
+   NULL_USE(hierarchy);
+   NULL_USE(coarsest_level);
+   NULL_USE(finest_level);
 }
 
 void MultiblockTester::applyGradientDetector(
@@ -542,21 +534,21 @@ void MultiblockTester::applyGradientDetector(
    const bool initial_time,
    const bool uses_richardson_extrapolation_too)
 {
-   (void)dt_time;
-   (void)initial_time;
-   (void)uses_richardson_extrapolation_too;
+   NULL_USE(dt_time);
+   NULL_USE(initial_time);
+   NULL_USE(uses_richardson_extrapolation_too);
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
 #endif
 
-   boost::shared_ptr<hier::PatchLevel> level =
-      hierarchy->getPatchLevel(level_number);
+   boost::shared_ptr<hier::PatchLevel> level(
+      hierarchy->getPatchLevel(level_number));
 
    d_data_test_strategy->setDataContext(d_source);
 
    for (hier::PatchLevel::Iterator p(level); p; p++) {
-      boost::shared_ptr<hier::Patch> patch = *p;
+      const boost::shared_ptr<hier::Patch>& patch = *p;
 
       d_data_test_strategy->tagCellsToRefine(*patch,
          hierarchy,
@@ -583,9 +575,9 @@ void MultiblockTester::setPhysicalBoundaryConditions(
    const double time,
    const hier::IntVector& gcw)
 {
-   (void)time;
-   boost::shared_ptr<hier::VariableContext> save_context =
-      d_data_test_strategy->getDataContext();
+   NULL_USE(time);
+   boost::shared_ptr<hier::VariableContext> save_context(
+      d_data_test_strategy->getDataContext());
 
    d_data_test_strategy->setDataContext(d_refine_scratch);
 
@@ -607,9 +599,10 @@ void MultiblockTester::fillSingularityBoundaryConditions(
    const boost::shared_ptr<hier::GridGeometry>& grid_geometry)
 {
    NULL_USE(grid_geometry);
-   (void)time;
-   boost::shared_ptr<hier::VariableContext> save_context =
-      d_data_test_strategy->getDataContext();
+   NULL_USE(time);
+
+   boost::shared_ptr<hier::VariableContext> save_context(
+      d_data_test_strategy->getDataContext());
 
 //   if (d_filling_coarse_scratch) {
    d_data_test_strategy->setDataContext(d_refine_scratch);

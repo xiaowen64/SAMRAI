@@ -47,8 +47,8 @@ public:
 
    void getFromDatabase()
    {
-      boost::shared_ptr<tbox::Database> root_db =
-         tbox::RestartManager::getManager()->getRootDatabase();
+      boost::shared_ptr<tbox::Database> root_db(
+         tbox::RestartManager::getManager()->getRootDatabase());
 
       boost::shared_ptr<tbox::Database> db;
       if (root_db->isDatabase("RestartTester")) {
@@ -89,8 +89,8 @@ int main(
 
       setupTestData();
 
-      boost::shared_ptr<tbox::HDFDatabase> database(new tbox::HDFDatabase(
-                                                   "SAMRAI Restart"));
+      boost::shared_ptr<tbox::HDFDatabase> database(
+         new tbox::HDFDatabase("SAMRAI Restart"));
       std::string name = "./restart." + tbox::Utilities::processorToString(
             mpi.getRank()) + ".hdf5";
       hid_t file_id = H5Fcreate(name.c_str(), H5F_ACC_TRUNC,
@@ -116,8 +116,7 @@ int main(
 
       database->close();
 
-      restart_manager->setRootDatabase(
-         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
+      restart_manager->setRootDatabase(boost::shared_ptr<tbox::Database>());
 
       H5Fclose(file_id);
 
@@ -136,8 +135,7 @@ int main(
 
       database->close();
 
-      restart_manager->setRootDatabase(
-         boost::shared_ptr<tbox::Database>((tbox::Database*)NULL));
+      restart_manager->setRootDatabase(boost::shared_ptr<tbox::Database>());
 
       H5Fclose(file_id);
 

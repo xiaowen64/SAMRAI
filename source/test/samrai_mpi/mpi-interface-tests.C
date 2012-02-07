@@ -26,7 +26,9 @@ void mpiInterfaceTests(
    bool runtime_mpi,
    bool mpi_disabled)
 {
-   (void)runtime_mpi;
+#ifdef HAVE_MPI
+   NULL_USE(runtime_mpi);
+#endif
 
 #ifndef HAVE_MPI
    if (runtime_mpi) {

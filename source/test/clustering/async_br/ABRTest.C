@@ -94,7 +94,7 @@ bool ABRTest::packDerivedDataIntoDoubleBuffer(
    const std::string& variable_name,
    int depth_id) const
 {
-   (void)depth_id;
+   NULL_USE(depth_id);
 
    if (variable_name == "Patch level number") {
       double pln = patch.getPatchLevelNumber();

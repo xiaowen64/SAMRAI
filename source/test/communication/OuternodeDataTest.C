@@ -288,15 +288,15 @@ void OuternodeDataTest::initializeDataOnPatch(
    NULL_USE(level_number);
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
    variable_db->printClassData();
-   tbox::Array<boost::shared_ptr<hier::Variable> >& variables =
-      src_or_dst == 's' ? d_variables_src : d_variables_dst;
+   tbox::Array<boost::shared_ptr<hier::Variable> >& variables(
+      src_or_dst == 's' ? d_variables_src : d_variables_dst);
 
    if (d_do_refine) {
 
       for (int i = 0; i < variables.getSize(); i++) {
 
-         boost::shared_ptr<hier::PatchData> data =
-            patch.getPatchData(variables[i], getDataContext());
+         boost::shared_ptr<hier::PatchData> data(
+            patch.getPatchData(variables[i], getDataContext()));
          TBOX_ASSERT(data);
 
          boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
@@ -321,8 +321,8 @@ void OuternodeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < variables.getSize(); i++) {
 
-         boost::shared_ptr<hier::PatchData> data =
-            patch.getPatchData(variables[i], getDataContext());
+         boost::shared_ptr<hier::PatchData> data(
+            patch.getPatchData(variables[i], getDataContext()));
          TBOX_ASSERT(data);
          boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
             data,
@@ -397,9 +397,9 @@ void OuternodeDataTest::setPhysicalBoundaryConditions(
    const double time,
    const hier::IntVector& gcw) const
 {
-   (void)patch;
-   (void)gcw;
-   (void)time;
+   NULL_USE(patch);
+   NULL_USE(gcw);
+   NULL_USE(time);
 
    TBOX_ERROR("Only coarsen operations can be done with this test.\n"
       << "Coarsen operations should not need physical bc.\n");
@@ -418,7 +418,7 @@ bool OuternodeDataTest::verifyResults(
    const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
-   (void)hierarchy;
+   NULL_USE(hierarchy);
    bool test_failed = false;
    if (d_do_refine || d_do_coarsen) {
 

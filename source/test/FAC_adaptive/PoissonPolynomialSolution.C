@@ -41,9 +41,9 @@ PoissonPolynomialSolution::PoissonPolynomialSolution(
    d_exact(dim),
    d_source(dim)
 {
-   (void)object_name;
-   (void)out_stream;
-   (void)log_stream;
+   NULL_USE(object_name);
+   NULL_USE(out_stream);
+   NULL_USE(log_stream);
 
    setFromDatabase(database);
 }
@@ -78,8 +78,8 @@ void PoissonPolynomialSolution::setPoissonSpecifications(
    int C_patch_data_id,
    int D_patch_data_id) const
 {
-   (void)C_patch_data_id;
-   (void)D_patch_data_id;
+   NULL_USE(C_patch_data_id);
+   NULL_USE(D_patch_data_id);
 
    sps.setDConstant(1.0);
    sps.setCZero();
@@ -90,11 +90,6 @@ void PoissonPolynomialSolution::setGridData(
    pdat::CellData<double>& exact_data,
    pdat::CellData<double>& source_data)
 {
-   hier::Box pbox = patch.getBox();
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
-
    /* Set source function and exact solution. */
    setCellDataToQuartic(exact_data,
       patch,
@@ -121,8 +116,8 @@ void PoissonPolynomialSolution::setBcCoefs(
    const hier::BoundaryBox& bdry_box,
    const double fill_time) const
 {
-   (void)variable;
-   (void)fill_time;
+   NULL_USE(variable);
+   NULL_USE(fill_time);
 
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),

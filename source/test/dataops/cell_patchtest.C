@@ -123,12 +123,12 @@ int main(
       /* Make a variety of data on the patch. */
 
       /* Make three contexts for patch */
-      boost::shared_ptr<hier::VariableContext> ghost_width_1_context =
-         hier::VariableDatabase::getDatabase()->getContext("ghost_width_1");
-      boost::shared_ptr<hier::VariableContext> ghost_width_2_context =
-         hier::VariableDatabase::getDatabase()->getContext("ghost_width_2");
-      boost::shared_ptr<hier::VariableContext> ghost_width_3_context =
-         hier::VariableDatabase::getDatabase()->getContext("ghost_width_3");
+      boost::shared_ptr<hier::VariableContext> ghost_width_1_context(
+         hier::VariableDatabase::getDatabase()->getContext("ghost_width_1"));
+      boost::shared_ptr<hier::VariableContext> ghost_width_2_context(
+         hier::VariableDatabase::getDatabase()->getContext("ghost_width_2"));
+      boost::shared_ptr<hier::VariableContext> ghost_width_3_context(
+         hier::VariableDatabase::getDatabase()->getContext("ghost_width_3"));
 
       /* Make ghost cell IntVectors which are used when variables
        * and contexts are registered
@@ -139,7 +139,10 @@ int main(
 
       /* Make cell-centered double variable for patch */
       boost::shared_ptr<pdat::CellVariable<double> > cell_double_variable(
-         new pdat::CellVariable<double>(dim, "cell_double_variable", 1));
+         new pdat::CellVariable<double>(
+            dim,
+            "cell_double_variable",
+            1));
 
       int cdvindx[3];
 
@@ -163,8 +166,8 @@ int main(
       patch_components.setFlag(cdvindx[2]);
 
       /* Make control volume for cell-centered patch variables */
-      boost::shared_ptr<hier::VariableContext> ghost_width_0_context =
-         hier::VariableDatabase::getDatabase()->getContext("ghost_width_0");
+      boost::shared_ptr<hier::VariableContext> ghost_width_0_context(
+         hier::VariableDatabase::getDatabase()->getContext("ghost_width_0"));
       hier::IntVector nghosts_0(dim, 0);
       boost::shared_ptr<pdat::CellVariable<double> > cwgt(
          new pdat::CellVariable<double>(dim, "cwgt", 1));
@@ -187,7 +190,10 @@ int main(
 
       // Make two cell-centered int variables for the patch
       boost::shared_ptr<pdat::CellVariable<int> > cell_int_variable(
-         new pdat::CellVariable<int>(dim, "cell_int_variable", 1));
+         new pdat::CellVariable<int>(
+            dim,
+            "cell_int_variable",
+            1));
 
       int civindx[3];
 

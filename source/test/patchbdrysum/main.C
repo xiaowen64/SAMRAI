@@ -108,7 +108,7 @@ int main(
        * Retrieve "Main" section of the input database.
        */
 
-      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -175,7 +175,9 @@ int main(
        * The patch hierarchy defines the adaptive grid system.
        */
       boost::shared_ptr<PatchHierarchy> patch_hierarchy(
-         new PatchHierarchy("PatchHierarchy", grid_geometry,
+         new PatchHierarchy(
+            "PatchHierarchy",
+            grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
 #ifdef HAVE_HDF5
@@ -310,8 +312,8 @@ int main(
 
       for (int pln = 0; pln <= patch_hierarchy->getFinestLevelNumber();
            pln++) {
-         boost::shared_ptr<PatchLevel> level =
-            patch_hierarchy->getPatchLevel(pln);
+         boost::shared_ptr<PatchLevel> level(
+            patch_hierarchy->getPatchLevel(pln));
 
          tbox::plog << "\n PRINTING PATCHES ON LEVEL " << pln << endl;
 
@@ -359,8 +361,8 @@ int main(
          }
          if (do_edge_sum) {
             for (int ln = 0; ln < nlevels; ln++) {
-               boost::shared_ptr<PatchLevel> level =
-                  patch_hierarchy->getPatchLevel(ln);
+               boost::shared_ptr<PatchLevel> level(
+                  patch_hierarchy->getPatchLevel(ln));
                fail_count += hier_sum_test->setInitialEdgeValues(level);
             }
          }
@@ -399,8 +401,8 @@ int main(
 
       if (do_edge_sum) {
          for (int ln = 0; ln < nlevels; ln++) {
-            boost::shared_ptr<PatchLevel> level =
-               patch_hierarchy->getPatchLevel(ln);
+            boost::shared_ptr<PatchLevel> level(
+               patch_hierarchy->getPatchLevel(ln));
             fail_count += hier_sum_test->checkEdgeResult(level);
          }
       }

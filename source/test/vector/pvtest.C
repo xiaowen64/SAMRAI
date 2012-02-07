@@ -153,14 +153,16 @@ int main(
       hier::Box fine_level_box(fine_level_list.front());
 
       boost::shared_ptr<geom::CartesianGridGeometry> geometry(
-         new geom::CartesianGridGeometry("CartesianGeometry",
+         new geom::CartesianGridGeometry(
+            "CartesianGeometry",
             lo,
             hi,
             coarse_domain));
 
       boost::shared_ptr<hier::PatchHierarchy> hierarchy(
-         new hier::PatchHierarchy("PatchHierarchy",
-                                  geometry));
+         new hier::PatchHierarchy(
+            "PatchHierarchy",
+            geometry));
 
       hierarchy->setMaxNumberOfLevels(2);
       hierarchy->setRatioToCoarserLevel(ratio, 1);
@@ -276,8 +278,8 @@ int main(
 
       // Create instance of hier::Variable database
       hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-      boost::shared_ptr<hier::VariableContext> dummy = variable_db->getContext(
-            "dummy");
+      boost::shared_ptr<hier::VariableContext> dummy(
+         variable_db->getContext("dummy"));
       const hier::IntVector no_ghosts(dim3d, 0);
 
       // Make some dummy variables and data on the hierarchy
@@ -366,8 +368,8 @@ int main(
 
       for (ln = 0; ln < 2; ln++) {
 
-         boost::shared_ptr<hier::PatchLevel> level =
-            hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level(
+            hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
             patch = *ip;
             pgeom = boost::dynamic_pointer_cast<geom::CartesianPatchGeometry,
@@ -385,8 +387,8 @@ int main(
       // Initialize control volume data for face-centered components
       for (ln = 0; ln < 2; ln++) {
 
-         boost::shared_ptr<hier::PatchLevel> level =
-            hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level(
+            hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
             patch = *ip;
             pgeom = boost::dynamic_pointer_cast<geom::CartesianPatchGeometry,
@@ -512,8 +514,8 @@ int main(
       }
 
       for (ln = 0; ln < 2; ln++) {
-         boost::shared_ptr<hier::PatchLevel> level =
-            hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level(
+            hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
             patch = *ip;
             pgeom = boost::dynamic_pointer_cast<geom::CartesianPatchGeometry,
@@ -979,14 +981,22 @@ int main(
       // Each vector has four components (1 cell component with depth = 2,
       // 1 face component with depth = 1, and 2 node components with depth = 1).
       boost::shared_ptr<solv::SAMRAIVectorReal<double> > my_vec0(
-         new solv::SAMRAIVectorReal<double>("my_vec0", hierarchy, 0, 1));
+         new solv::SAMRAIVectorReal<double>(
+            "my_vec0",
+            hierarchy,
+            0,
+            1));
       my_vec0->addComponent(cvar[0], cvindx[0], cwgt_id);
       my_vec0->addComponent(fvar[0], fvindx[0], fwgt_id);
       my_vec0->addComponent(nvar[0], nvindx[0], nwgt_id);
       my_vec0->addComponent(nvar[1], nvindx[1], nwgt_id);
 
       boost::shared_ptr<solv::SAMRAIVectorReal<double> > my_vec1(
-         new solv::SAMRAIVectorReal<double>("my_vec1", hierarchy, 0, 1));
+         new solv::SAMRAIVectorReal<double>(
+            "my_vec1",
+            hierarchy,
+            0,
+            1));
       my_vec1->addComponent(cvar[1], cvindx[1], cwgt_id);
       my_vec1->addComponent(fvar[1], fvindx[1], fwgt_id);
       my_vec1->addComponent(nvar[2], nvindx[2], nwgt_id);
@@ -1132,8 +1142,8 @@ int main(
       // Set some bogus values on Level in my_vec1 that should be masked out
       // in ensuing vector norm calculations
 
-      boost::shared_ptr<hier::PatchLevel> level_zero =
-         hierarchy->getPatchLevel(0);
+      boost::shared_ptr<hier::PatchLevel> level_zero(
+         hierarchy->getPatchLevel(0));
       for (hier::PatchLevel::Iterator ip(level_zero); ip; ip++) {
          patch = *ip;
 
@@ -1289,8 +1299,8 @@ int main(
 
       VecCopy(pvec2, pvec3);
 
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > sam_vec3 =
-         solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(pvec3);
+      boost::shared_ptr<solv::SAMRAIVectorReal<double> > sam_vec3(
+         solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(pvec3));
 
       tbox::plog << "\nVariables and data components in new vector...";
       int ncomp = sam_vec3->getNumberOfComponents();

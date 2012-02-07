@@ -145,7 +145,7 @@ void NodeMultiblockTest::tagCellsToRefine(
    int level_number,
    int tag_index)
 {
-   (void)hierarchy;
+   NULL_USE(hierarchy);
 
    /*
     * Base class sets tags in box array for each level.
@@ -159,9 +159,9 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
    const double time,
    const hier::IntVector& gcw_to_fill) const
 {
-   (void)time;
+   NULL_USE(time);
 
-   boost::shared_ptr<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
+   boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
    const tbox::Array<hier::BoundaryBox> node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -544,7 +544,7 @@ bool NodeMultiblockTest::verifyResults(
          }
       }
 
-      boost::shared_ptr<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
+      boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
       hier::Box gbox = node_data->getGhostBox();
 

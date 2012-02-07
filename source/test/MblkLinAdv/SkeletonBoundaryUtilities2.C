@@ -160,8 +160,8 @@ void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
       stuff2dBdryFortConst();
    }
 
-   const boost::shared_ptr<hier::PatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> pgeom(
+      patch.getPatchGeometry());
 
    const hier::Box& interior = patch.getBox();
    const hier::Index& ifirst(interior.lower());
@@ -239,8 +239,8 @@ void SkeletonBoundaryUtilities2::fillNodeBoundaryData(
       stuff2dBdryFortConst();
    }
 
-   const boost::shared_ptr<hier::PatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> pgeom(
+      patch.getPatchGeometry());
 
    const hier::Box& interior(patch.getBox());
    const hier::Index& ifirst(interior.lower());
@@ -383,8 +383,7 @@ int SkeletonBoundaryUtilities2::checkBdryData(
    int btype = bbox.getBoundaryType();
    int bloc = bbox.getLocationIndex();
 
-   boost::shared_ptr<hier::PatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
    boost::shared_ptr<pdat::CellData<double> > vardata(
       patch.getPatchData(data_id),
@@ -565,8 +564,8 @@ void SkeletonBoundaryUtilities2::read2dBdryEdges(
 
          if (need_data_read) {
             if (bdry_db->keyExists(bdry_loc_str)) {
-               boost::shared_ptr<tbox::Database> bdry_loc_db =
-                  bdry_db->getDatabase(bdry_loc_str);
+               boost::shared_ptr<tbox::Database> bdry_loc_db(
+                  bdry_db->getDatabase(bdry_loc_str));
                if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
                      string bdry_cond_str =
@@ -649,8 +648,8 @@ void SkeletonBoundaryUtilities2::read2dBdryNodes(
          }
 
          if (bdry_db->keyExists(bdry_loc_str)) {
-            boost::shared_ptr<tbox::Database> bdry_loc_db =
-               bdry_db->getDatabase(bdry_loc_str);
+            boost::shared_ptr<tbox::Database> bdry_loc_db(
+               bdry_db->getDatabase(bdry_loc_str));
             if (bdry_loc_db) {
                if (bdry_loc_db->keyExists("boundary_condition")) {
                   string bdry_cond_str =

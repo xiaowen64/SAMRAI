@@ -198,11 +198,11 @@ public:
    MblkHyperbolicLevelIntegrator(
       const string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database> input_db,
+      const boost::shared_ptr<tbox::Database> input_db,
       MblkHyperbolicPatchStrategy* patch_strategy,
-      boost::shared_ptr<hier::PatchHierarchy>& mblk_hierarchy,
-      bool register_for_restart = true,
-      bool use_time_refinement = true);
+      const boost::shared_ptr<hier::PatchHierarchy>& mblk_hierarchy,
+      const bool register_for_restart = true,
+      const bool use_time_refinement = true);
 
    /**
     * The destructor for MblkHyperbolicLevelIntegrator unregisters

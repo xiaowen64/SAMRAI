@@ -122,16 +122,23 @@ LinAdv::LinAdv(
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geom,
    SinusoidalFrontTagger* analytical_tagger):
    algs::HyperbolicPatchStrategy(dim),
+   d_object_name(object_name),
    d_dim(dim),
    d_analytical_tagger(analytical_tagger),
+   d_grid_geometry(grid_geom),
+   d_use_nonuniform_workload(false),
+   d_uval(new pdat::CellVariable<double>(dim, "uval", 1)),
+   d_flux(new pdat::FaceVariable<double>(dim, "flux", 1)),
+   d_godunov_order (1),
+   d_corner_transport("CORNER_TRANSPORT_1"),
    d_nghosts(hier::IntVector(dim, CELLG)),
-   d_fluxghosts(hier::IntVector(dim, FLUXG))
+   d_fluxghosts(hier::IntVector(dim, FLUXG)),
+   d_data_problem_int(tbox::MathUtilities<int>::getMax())
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
    TBOX_ASSERT(grid_geom);
 
-   d_object_name = object_name;
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 
    if (!t_init) {
@@ -143,21 +150,6 @@ LinAdv::LinAdv(
          getTimer("apps::LinAdv::analytical_tag");
    }
 
-   d_grid_geometry = grid_geom;
-
-   d_use_nonuniform_workload = false;
-
-   /*
-    * hier::Variable quantities that define state of linear advection problem.
-    */
-   d_uval.reset(new pdat::CellVariable<double>(dim, "uval", 1));
-   d_flux.reset(new pdat::FaceVariable<double>(dim, "flux", 1));
-
-   /*
-    * Default parameters for the numerical method.
-    */
-   d_godunov_order = 1;
-   d_corner_transport = "CORNER_TRANSPORT_1";
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(CELLG == FACEG);
 #endif
@@ -165,7 +157,6 @@ LinAdv::LinAdv(
    /*
     * Defaults for problem type and initial data.
     */
-   d_data_problem_int = tbox::MathUtilities<int>::getMax();
 
    int k;
 
@@ -431,7 +422,7 @@ void LinAdv::setupLoadBalancer(
    algs::HyperbolicLevelIntegrator* integrator,
    mesh::GriddingAlgorithm* gridding_algorithm)
 {
-   (void)integrator;
+   NULL_USE(integrator);
 
    hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
 
@@ -482,8 +473,6 @@ void LinAdv::initializeDataOnPatch(
    const bool initial_time)
 {
    t_init->start();
-
-   (void)data_time;
 
    if (initial_time) {
 
@@ -640,8 +629,8 @@ double LinAdv::computeStableDtOnPatch(
    const bool initial_time,
    const double dt_time)
 {
-   (void)initial_time;
-   (void)dt_time;
+   NULL_USE(initial_time);
+   NULL_USE(dt_time);
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
@@ -701,7 +690,7 @@ void LinAdv::computeFluxesOnPatch(
    const double time,
    const double dt)
 {
-   (void)time;
+   NULL_USE(time);
 
    if (d_dim == tbox::Dimension(3)) {
 
@@ -1428,9 +1417,9 @@ void LinAdv::conservativeDifferenceOnPatch(
    const double dt,
    bool at_syncronization)
 {
-   (void)time;
-   (void)dt;
-   (void)at_syncronization;
+   NULL_USE(time);
+   NULL_USE(dt);
+   NULL_USE(at_syncronization);
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
@@ -1609,8 +1598,7 @@ void LinAdv::setPhysicalBoundaryConditions(
    const double fill_time,
    const hier::IntVector& ghost_width_to_fill)
 {
-   (void)fill_time;
-   (void)ghost_width_to_fill;
+   NULL_USE(fill_time);
 
    boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
@@ -1740,11 +1728,8 @@ void LinAdv::tagRichardsonExtrapolationCells(
    const int tag_index,
    const bool uses_gradient_detector_too)
 {
-   (void)initial_error;
+   NULL_USE(initial_error);
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
    hier::Box pbox = patch.getBox();
 
    boost::shared_ptr<pdat::CellData<int> > tags(
@@ -1913,7 +1898,7 @@ void LinAdv::tagGradientDetectorCells(
    const int tag_indx,
    const bool uses_richardson_extrapolation_too)
 {
-   (void)initial_error;
+   NULL_USE(initial_error);
 
    const int error_level_number = patch.getPatchLevelNumber();
 
@@ -2430,8 +2415,8 @@ void LinAdv::getFromInput(
    }
 
    if (db->keyExists("Refinement_data")) {
-      boost::shared_ptr<tbox::Database> refine_db = db->getDatabase(
-            "Refinement_data");
+      boost::shared_ptr<tbox::Database> refine_db(
+         db->getDatabase("Refinement_data"));
       tbox::Array<string> refinement_keys = refine_db->getAllKeys();
       int num_keys = refinement_keys.getSize();
 
@@ -2645,14 +2630,13 @@ void LinAdv::getFromInput(
                           << endl);
       }
 
-      boost::shared_ptr<tbox::Database> init_data_db;
-      if (db->keyExists("Initial_data")) {
-         init_data_db = db->getDatabase("Initial_data");
-      } else {
+      if (!db->keyExists("Initial_data")) {
          TBOX_ERROR(
             d_object_name << ": "
                           << "No `Initial_data' database found in input." << endl);
       }
+      boost::shared_ptr<tbox::Database> init_data_db(
+         db->getDatabase("Initial_data"));
 
       bool found_problem_data = false;
 
@@ -2749,8 +2733,8 @@ void LinAdv::getFromInput(
 
             if (!(init_data_keys[nkey] == "front_position")) {
 
-               boost::shared_ptr<tbox::Database> interval_db =
-                  init_data_db->getDatabase(init_data_keys[nkey]);
+               boost::shared_ptr<tbox::Database> interval_db(
+                  init_data_db->getDatabase(init_data_keys[nkey]));
 
                if (interval_db->keyExists("uval")) {
                   d_interval_uval[i] = interval_db->getDouble("uval");
@@ -2803,9 +2787,8 @@ void LinAdv::getFromInput(
 
    } // if !is_from_restart read in problem data
 
-   hier::IntVector periodic(d_grid_geometry->getPeriodicShift(hier::IntVector(
-                                  d_dim,
-                                  1)));
+   hier::IntVector periodic(
+      d_grid_geometry->getPeriodicShift(hier::IntVector(d_dim, 1)));
    int num_per_dirs = 0;
    for (int id = 0; id < d_dim.getValue(); id++) {
       if (periodic(id)) num_per_dirs++;
@@ -2813,8 +2796,8 @@ void LinAdv::getFromInput(
 
    if (db->keyExists("Boundary_data")) {
 
-      boost::shared_ptr<tbox::Database> bdry_db =
-         db->getDatabase("Boundary_data");
+      boost::shared_ptr<tbox::Database> bdry_db(
+         db->getDatabase("Boundary_data"));
 
       if (d_dim == tbox::Dimension(2)) {
          appu::CartesianBoundaryUtilities2::readBoundaryInput(this,
@@ -2935,16 +2918,14 @@ void LinAdv::putToDatabase(
  */
 void LinAdv::getFromRestart()
 {
-   boost::shared_ptr<tbox::Database> root_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> root_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   boost::shared_ptr<tbox::Database> db;
-   if (root_db->isDatabase(d_object_name)) {
-      db = root_db->getDatabase(d_object_name);
-   } else {
+   if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file.");
    }
+   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("LINADV_VERSION");
    if (ver != LINADV_VERSION) {

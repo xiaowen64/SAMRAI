@@ -213,8 +213,8 @@ void CellDataTest::setConservativeData(
       && (level_number <= hierarchy->getFinestLevelNumber()));
 #endif
 
-   boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-         level_number);
+   boost::shared_ptr<hier::PatchLevel> level(
+      hierarchy->getPatchLevel(level_number));
 
    const hier::BoxContainer& domain =
       level->getPhysicalDomain(hier::BlockId::zero());
@@ -411,9 +411,10 @@ void CellDataTest::checkPatchInteriorData(
    const int depth = data->getDepth();
 
    boost::shared_ptr<pdat::CellData<double> > correct_data(
-      new pdat::CellData<double>(data->getBox(),
-                                 depth,
-                                 data->getGhostCellWidth()));
+      new pdat::CellData<double>(
+         data->getBox(),
+         depth,
+         data->getGhostCellWidth()));
    if (is_periodic) {
       setPeriodicData(correct_data, correct_data->getGhostBox(), patch);
    } else {

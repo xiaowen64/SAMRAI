@@ -122,9 +122,11 @@ int ArrayData<TYPE>::getDataStreamSize(
    const hier::BoxContainer& boxes,
    const hier::IntVector& source_shift) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, source_shift);
+#ifndef DEBUG_CHECK_ASSERTIONS
+   NULL_USE(source_shift);
+#endif
 
-   (void)source_shift;
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, source_shift);
 
    const int nelements = boxes.getTotalSizeOfBoxes();
 

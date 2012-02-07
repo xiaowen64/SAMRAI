@@ -480,7 +480,8 @@ RefineAlgorithm::createSchedule(
    bool use_time_refinement,
    boost::shared_ptr<RefineTransactionFactory> transaction_factory)
 {
-   (void)use_time_refinement;
+   NULL_USE(use_time_refinement);
+
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
@@ -547,7 +548,8 @@ RefineAlgorithm::createSchedule(
    bool use_time_refinement,
    boost::shared_ptr<RefineTransactionFactory> transaction_factory)
 {
-   (void)use_time_refinement;
+   NULL_USE(use_time_refinement);
+
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT((next_coarser_level == -1) || hierarchy);

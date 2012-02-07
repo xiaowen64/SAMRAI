@@ -91,7 +91,8 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase> input_db(
+         new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -108,7 +109,7 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -136,12 +137,12 @@ int main(
 
       tbox::TimerManager * tm(tbox::TimerManager::getManager());
       const std::string dim_str(tbox::Utilities::intToString(dim.getValue()));
-      boost::shared_ptr<tbox::Timer> t_build_tree =
-         tm->getTimer("apps::main::build_tree[" + dim_str + "]");
-      boost::shared_ptr<tbox::Timer> t_search_tree_for_set =
-         tm->getTimer("apps::main::search_tree_for_set[" + dim_str + "]");
-      boost::shared_ptr<tbox::Timer> t_search_tree_for_vec =
-         tm->getTimer("apps::main::search_tree_for_vec[" + dim_str + "]");
+      boost::shared_ptr<tbox::Timer> t_build_tree(
+         tm->getTimer("apps::main::build_tree[" + dim_str + "]"));
+      boost::shared_ptr<tbox::Timer> t_search_tree_for_set(
+         tm->getTimer("apps::main::search_tree_for_set[" + dim_str + "]"));
+      boost::shared_ptr<tbox::Timer> t_search_tree_for_vec(
+         tm->getTimer("apps::main::search_tree_for_vec[" + dim_str + "]"));
 
       /*
        * Generate the boxes.

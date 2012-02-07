@@ -93,18 +93,23 @@ ConvDiff::ConvDiff(
    boost::shared_ptr<tbox::Database> input_db,
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geom):
    algs::MethodOfLinesPatchStrategy::MethodOfLinesPatchStrategy(dim),
+   d_object_name(object_name),
    d_dim(dim),
-   d_nghosts(d_dim, 1),
-   d_zero_ghosts(d_dim, 0)
+   d_grid_geometry(grid_geom),
+   d_primitive_vars(new pdat::CellVariable<double>(dim, "primitive_vars", 1)),
+   d_function_eval(new pdat::CellVariable<double>(dim, "function_eval", 1)),
+   d_diffusion_coeff(1.),
+   d_source_coeff(0.),
+   d_cfl(0.9),
+   d_nghosts(dim, 1),
+   d_zero_ghosts(dim, 0),
+   d_radius(tbox::MathUtilities<double>::getSignalingNaN())
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
    TBOX_ASSERT(grid_geom);
 
-   d_object_name = object_name;
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
-
-   d_grid_geometry = grid_geom;
 
    int k;
 
@@ -120,16 +125,9 @@ ConvDiff::ConvDiff(
     *     mu    = diffusion coefficient
     *     gamma = source coefficient
     */
-   d_primitive_vars.reset(
-      new pdat::CellVariable<double>(dim, "primitive_vars", 1));
-   d_function_eval.reset(
-      new pdat::CellVariable<double>(dim, "function_eval", 1));
-   d_diffusion_coeff = 1.;
    for (k = 0; k < d_dim.getValue(); k++) d_convection_coeff[k] = 0.;
-   d_source_coeff = 0.;
 
    // Physics parameters
-   d_cfl = 0.9;
    for (k = 0; k < NEQU; k++) d_tolerance[k] = 0.;
 
    /*
@@ -137,10 +135,9 @@ ConvDiff::ConvDiff(
     * data to NaNs so we make sure input has set it to appropriate
     * problem.
     */
-   d_data_problem = tbox::MathUtilities<char>::getMax();
+   d_data_problem = tbox::MathUtilities<char>::getMax(),
 
    // SPHERE problem...
-   d_radius = tbox::MathUtilities<double>::getSignalingNaN();
    tbox::MathUtilities<double>::setArrayToSignalingNaN(d_center, d_dim.getValue());
    tbox::MathUtilities<double>::setArrayToSignalingNaN(d_val_inside, NEQU);
    tbox::MathUtilities<double>::setArrayToSignalingNaN(d_val_inside, NEQU);
@@ -388,7 +385,7 @@ void ConvDiff::initializeDataOnPatch(
    const double time,
    const bool initial_time) const
 {
-   (void)time;
+   NULL_USE(time);
 
    if (initial_time) {
 
@@ -457,7 +454,7 @@ double ConvDiff::computeStableDtOnPatch(
    hier::Patch& patch,
    const double time) const
 {
-   (void)time;
+   NULL_USE(time);
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
@@ -622,9 +619,9 @@ void ConvDiff::tagGradientDetectorCells(
    const int tag_index,
    const bool uses_richardson_extrapolation_too)
 {
-   (void)regrid_time;
-   (void)initial_error;
-   (void)uses_richardson_extrapolation_too;
+   NULL_USE(regrid_time);
+   NULL_USE(initial_error);
+   NULL_USE(uses_richardson_extrapolation_too);
 
    boost::shared_ptr<pdat::CellData<int> > tags(
       patch.getPatchData(tag_index),
@@ -675,7 +672,7 @@ void ConvDiff::setPhysicalBoundaryConditions(
    const double fill_time,
    const hier::IntVector& ghost_width_to_fill)
 {
-   (void)fill_time;
+   NULL_USE(fill_time);
 
    boost::shared_ptr<pdat::CellData<double> > primitive_vars(
       patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext()),
@@ -949,14 +946,13 @@ void ConvDiff::getFromInput(
                           << endl);
       }
 
-      boost::shared_ptr<tbox::Database> init_data_db;
-      if (db->keyExists("Initial_data")) {
-         init_data_db = db->getDatabase("Initial_data");
-      } else {
+      if (!db->keyExists("Initial_data")) {
          TBOX_ERROR(
             d_object_name << ": "
                           << "No `Initial_data' database found in input." << endl);
       }
+      boost::shared_ptr<tbox::Database> init_data_db(
+         db->getDatabase("Initial_data"));
 
       bool found_problem_data = false;
 
@@ -1010,8 +1006,8 @@ void ConvDiff::getFromInput(
       }
 
       if (db->keyExists("Boundary_data")) {
-         boost::shared_ptr<tbox::Database> boundary_db = db->getDatabase(
-               "Boundary_data");
+         boost::shared_ptr<tbox::Database> boundary_db(
+            db->getDatabase("Boundary_data"));
 
          if (d_dim == tbox::Dimension(2)) {
             appu::CartesianBoundaryUtilities2::readBoundaryInput(this,
@@ -1091,16 +1087,14 @@ void ConvDiff::putToDatabase(
 void ConvDiff::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database> root_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> root_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   boost::shared_ptr<tbox::Database> db;
-   if (root_db->isDatabase(d_object_name)) {
-      db = root_db->getDatabase(d_object_name);
-   } else {
+   if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in the restart file.");
    }
+   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("CONV_DIFF_VERSION");
    if (ver != CONV_DIFF_VERSION) {

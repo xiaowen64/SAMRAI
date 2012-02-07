@@ -96,14 +96,15 @@ void FaceDataTest::readTestInput(
    readVariableInput(db->getDatabase("VariableData"));
    readRefinementInput(db->getDatabase("RefinementData"));
 
-   boost::shared_ptr<tbox::Database> var_data = db->getDatabase("VariableData");
+   boost::shared_ptr<tbox::Database> var_data(db->getDatabase("VariableData"));
    tbox::Array<string> var_keys = var_data->getAllKeys();
    int nkeys = var_keys.getSize();
 
    d_use_fine_value_at_interface.resizeArray(nkeys);
 
    for (int i = 0; i < nkeys; i++) {
-      boost::shared_ptr<tbox::Database> var_db = var_data->getDatabase(var_keys[i]);
+      boost::shared_ptr<tbox::Database> var_db(
+         var_data->getDatabase(var_keys[i]));
 
       if (var_db->keyExists("use_fine_value_at_interface")) {
          d_use_fine_value_at_interface[i] =
@@ -192,8 +193,8 @@ void FaceDataTest::setConservativeData(
 #endif
 
    int i, j;
-   boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-         level_number);
+   boost::shared_ptr<hier::PatchLevel> level(
+      hierarchy->getPatchLevel(level_number));
 
    const hier::BoxContainer& domain =
       level->getPhysicalDomain(hier::BlockId::zero());
@@ -306,8 +307,7 @@ void FaceDataTest::initializeDataOnPatch(
    int level_number,
    char src_or_dst)
 {
-   (void)hierarchy;
-   (void)src_or_dst;
+   NULL_USE(src_or_dst);
 
    if (d_do_refine) {
 
@@ -410,7 +410,7 @@ void FaceDataTest::setPhysicalBoundaryConditions(
    const double time,
    const hier::IntVector& gcw) const
 {
-   (void)time;
+   NULL_USE(time);
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
@@ -565,7 +565,6 @@ bool FaceDataTest::verifyResults(
    const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
-   (void)hierarchy;
    bool test_failed = false;
    if (d_do_refine || d_do_coarsen) {
 

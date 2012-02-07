@@ -127,7 +127,7 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -153,17 +153,16 @@ int main(
       /*
        * Generate the GridGeometry.
        */
-      boost::shared_ptr<const hier::GridGeometry> grid_geometry;
-      if (main_db->keyExists("GridGeometry")) {
-         grid_geometry.reset(new hier::GridGeometry(
+      if (!main_db->keyExists("GridGeometry")) {
+         TBOX_ERROR("Multiblock tree search test: could not find entry GridGeometry"
+            << "\nin input.");
+      }
+      boost::shared_ptr<const hier::GridGeometry> grid_geometry(
+         new hier::GridGeometry(
             dim,
             "GridGeometry",
             boost::shared_ptr<hier::TransferOperatorRegistry>(),
             main_db->getDatabase("GridGeometry")));
-      } else {
-         TBOX_ERROR("Multiblock tree search test: could not find entry GridGeometry"
-            << "\nin input.");
-      }
 
       /*
        * Baseline stuff:
@@ -443,8 +442,6 @@ void breakUpBoxes(
    domain_mapped_box_level.setParallelState(hier::BoxLevel::GLOBALIZED);
 
    mesh::TreeLoadBalancer load_balancer(mapped_box_level.getDim());
-
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy;
 
    hier::Connector dummy_connector;
 

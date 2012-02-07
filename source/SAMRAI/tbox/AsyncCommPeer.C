@@ -140,7 +140,7 @@ AsyncCommPeer<TYPE>::AsyncCommPeer(
    const AsyncCommPeer& r):
    AsyncCommStage::Member(0, NULL, NULL)
 {
-   (void)r;
+   NULL_USE(r);
    TBOX_ERROR(
       "Copy constructor disallowed due to primitive internal memory management.");
 }
@@ -152,7 +152,7 @@ AsyncCommPeer<TYPE>::AsyncCommPeer(
 template<class TYPE>
 AsyncCommPeer<TYPE>& AsyncCommPeer<TYPE>::operator = (
    const AsyncCommPeer& r) {
-   (void)r;
+   NULL_USE(r);
    TBOX_ERROR(
       "Assignment operator disallowed due to primitive internal memory management.");
    return *this;

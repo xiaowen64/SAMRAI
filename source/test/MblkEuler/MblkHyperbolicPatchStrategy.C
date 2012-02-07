@@ -20,7 +20,6 @@ MblkHyperbolicPatchStrategy::MblkHyperbolicPatchStrategy(
    xfer::CoarsenPatchStrategy(dim),
    d_dim(dim)
 {
-   d_data_context.reset();
 }
 
 MblkHyperbolicPatchStrategy::~MblkHyperbolicPatchStrategy()

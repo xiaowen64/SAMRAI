@@ -261,9 +261,9 @@ public:
       const double dt_time,
       const bool initial_time)
    {
-      (void)level;
-      (void)dt_time;
-      (void)initial_time;
+      NULL_USE(level);
+      NULL_USE(dt_time);
+      NULL_USE(initial_time);
       return 0.0;
    }
 
@@ -333,11 +333,10 @@ private:
    hier::ComponentSelector d_patch_data_components;
 
    /*
-    * Refine/Coarsen algorithm and schedules for testing communication
+    * Coarsen algorithm and schedules for testing communication
     * among levels in the patch hierarchy.
     */
 
-   boost::shared_ptr<xfer::RefineAlgorithm> d_refine_algorithm;
    boost::shared_ptr<xfer::CoarsenAlgorithm> d_coarsen_algorithm;
 
    xfer::RefineAlgorithm d_reset_refine_algorithm;

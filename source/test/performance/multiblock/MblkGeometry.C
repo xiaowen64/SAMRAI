@@ -129,8 +129,7 @@ void MblkGeometry::tagOctantCells(
    TBOX_ASSERT(temp_tags);
 #endif
 
-   boost::shared_ptr<pdat::NodeData<double> > xyz =
-      patch.getPatchData(xyz_id);
+   boost::shared_ptr<pdat::NodeData<double> > xyz(patch.getPatchData(xyz_id));
 
    if (d_dim == tbox::Dimension(3)) {
       /*
@@ -175,14 +174,13 @@ void MblkGeometry::getFromInput(
    boost::shared_ptr<tbox::Database> input_db,
    bool is_from_restart)
 {
+   NULL_USE(is_from_restart);
+
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(input_db);
 #endif
 
-   (void)is_from_restart;
-
-   boost::shared_ptr<tbox::Database> db =
-      input_db->getDatabase("MblkGeometry");
+   boost::shared_ptr<tbox::Database> db(input_db->getDatabase("MblkGeometry"));
 
    d_geom_problem = db->getString("problem_type");
 
@@ -196,8 +194,8 @@ void MblkGeometry::getFromInput(
     */
    if (d_geom_problem == "CARTESIAN") {
 
-      boost::shared_ptr<tbox::Database> cart_db =
-         db->getDatabase("CartesianGeometry");
+      boost::shared_ptr<tbox::Database> cart_db(
+         db->getDatabase("CartesianGeometry"));
 
       d_cart_xlo.resizeArray(d_nblocks);
       d_cart_xhi.resizeArray(d_nblocks);
@@ -241,8 +239,8 @@ void MblkGeometry::getFromInput(
     */
    if (d_geom_problem == "WEDGE") {
 
-      boost::shared_ptr<tbox::Database> wedge_db =
-         db->getDatabase("WedgeGeometry");
+      boost::shared_ptr<tbox::Database> wedge_db(
+         db->getDatabase("WedgeGeometry"));
 
       d_wedge_rmin.resizeArray(d_nblocks);
       d_wedge_rmax.resizeArray(d_nblocks);
@@ -298,8 +296,8 @@ void MblkGeometry::getFromInput(
                                   << "only works in 3D." << std::endl);
       }
 
-      boost::shared_ptr<tbox::Database> sshell_db =
-         db->getDatabase("ShellGeometry");
+      boost::shared_ptr<tbox::Database> sshell_db(
+         db->getDatabase("ShellGeometry"));
 
       d_sshell_rmin = sshell_db->getDouble("rmin");
       d_sshell_rmax = sshell_db->getDouble("rmax");
@@ -564,8 +562,8 @@ void MblkGeometry::buildCartesianGridOnPatch(
    const int block_number)
 {
 
-   boost::shared_ptr<pdat::NodeData<double> > xyz =
-      patch.getPatchData(xyz_id);
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
+      patch.getPatchData(xyz_id));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(xyz);
@@ -647,8 +645,8 @@ void MblkGeometry::buildWedgeGridOnPatch(
    const int block_number)
 {
 
-   boost::shared_ptr<pdat::NodeData<double> > xyz =
-      patch.getPatchData(xyz_id);
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
+      patch.getPatchData(xyz_id));
 
    TBOX_ASSERT(xyz);
 
@@ -791,8 +789,8 @@ void MblkGeometry::buildSShellGridOnPatch(
       //patch.allocatePatchData(xyz_id);
    }
 
-   boost::shared_ptr<pdat::NodeData<double> > xyz =
-      patch.getPatchData(xyz_id);
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
+      patch.getPatchData(xyz_id));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(xyz);

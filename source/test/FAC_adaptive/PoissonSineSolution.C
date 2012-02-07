@@ -42,9 +42,9 @@ PoissonSineSolution::PoissonSineSolution(
    d_linear_coef(0.0),
    d_exact(dim)
 {
-   (void)object_name;
-   (void)out_stream;
-   (void)log_stream;
+   NULL_USE(object_name);
+   NULL_USE(out_stream);
+   NULL_USE(log_stream);
 
    int i;
    for (i = 0; i < 2 * d_dim.getValue(); ++i) {
@@ -93,8 +93,8 @@ void PoissonSineSolution::setPoissonSpecifications(
    int C_patch_data_id,
    int D_patch_data_id) const
 {
-   (void)C_patch_data_id;
-   (void)D_patch_data_id;
+   NULL_USE(C_patch_data_id);
+   NULL_USE(D_patch_data_id);
 
    sps.setDConstant(1.0);
    sps.setCConstant(d_linear_coef);
@@ -105,11 +105,6 @@ void PoissonSineSolution::setGridData(
    pdat::CellData<double>& exact_data,
    pdat::CellData<double>& source_data)
 {
-   hier::Box pbox = patch.getBox();
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
-
    /* Set source function and exact solution. */
    /*
     * For the forcing function
@@ -154,8 +149,8 @@ void PoissonSineSolution::setBcCoefs(
    const hier::BoundaryBox& bdry_box,
    const double fill_time) const
 {
-   (void)variable;
-   (void)fill_time;
+   NULL_USE(variable);
+   NULL_USE(fill_time);
 
    if (bdry_box.getBoundaryType() != 1) {
       // Must be a face boundary.

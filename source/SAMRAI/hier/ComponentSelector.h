@@ -56,7 +56,7 @@ public:
    /*!
     * @brief The destructor for a component selector does nothing interesting.
     */
-   ~ComponentSelector();
+   virtual ~ComponentSelector();
 
    /*!
     * @brief Get the size of the ComponentSelector.

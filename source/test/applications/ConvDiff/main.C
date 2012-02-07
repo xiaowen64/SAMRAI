@@ -198,8 +198,8 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         boost::shared_ptr<tbox::Database> global_db =
-            input_db->getDatabase("GlobalInputs");
+         boost::shared_ptr<tbox::Database> global_db(
+            input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
                getBool("call_abort_in_serial_instead_of_exit");
@@ -214,8 +214,8 @@ int main(
        * interval is non-zero, create a restart database.
        */
 
-      boost::shared_ptr<tbox::Database> main_db =
-         input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db(
+         input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -306,12 +306,15 @@ int main(
        */
 
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
-         new geom::CartesianGridGeometry(dim,
+         new geom::CartesianGridGeometry(
+            dim,
             "CartesianGeometry",
             input_db->getDatabase("CartesianGeometry")));
 
       boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
-         new hier::PatchHierarchy("PatchHierarchy", grid_geometry,
+         new hier::PatchHierarchy(
+            "PatchHierarchy",
+            grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
       ConvDiff* convdiff_model = new ConvDiff("ConvDiff",
@@ -340,8 +343,10 @@ int main(
                boost::shared_ptr<tbox::Database>())));
 
       boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
-         new mesh::TreeLoadBalancer(dim,
-            "LoadBalancer", input_db->getDatabase("LoadBalancer")));
+         new mesh::TreeLoadBalancer(
+            dim,
+            "LoadBalancer",
+            input_db->getDatabase("LoadBalancer")));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
@@ -358,7 +363,8 @@ int main(
        */
 #ifdef HAVE_HDF5
       boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
-         new appu::VisItDataWriter(dim,
+         new appu::VisItDataWriter(
+            dim,
             "ConvDiff VisIt Writer",
             visit_dump_dirname,
             visit_number_procs_per_file));

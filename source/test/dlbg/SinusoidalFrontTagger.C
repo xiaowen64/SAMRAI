@@ -31,7 +31,6 @@ SinusoidalFrontTagger::SinusoidalFrontTagger(
    tbox::Database* database):
    d_name(object_name),
    d_dim(dim),
-   d_hierarchy(),
    d_period(1.0),
    d_amplitude(0.2),
    d_ghost_cell_width(dim, 0),
@@ -140,8 +139,8 @@ void SinusoidalFrontTagger::initializeLevelData(
 {
    NULL_USE(can_be_refined);
 
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy = base_hierarchy;
-   boost::shared_ptr<hier::PatchLevel> old_level = old_base_level;
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy(base_hierarchy);
+   boost::shared_ptr<hier::PatchLevel> old_level(old_base_level);
    if (old_base_level) {
       TBOX_ASSERT(old_level);
    }
@@ -150,8 +149,7 @@ void SinusoidalFrontTagger::initializeLevelData(
    /*
     * Reference the level object with the given index from the hierarchy.
     */
-   boost::shared_ptr<hier::PatchLevel> level =
-      hierarchy->getPatchLevel(ln);
+   boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
 
    for (hier::PatchLevel::Iterator pi(level); pi; pi++) {
       hier::Patch& patch = **pi;
@@ -234,9 +232,9 @@ void SinusoidalFrontTagger::applyGradientDetector(
 {
    NULL_USE(initial_time);
    NULL_USE(uses_richardson_extrapolation);
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy_ = base_hierarchy_;
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy_(base_hierarchy_);
    TBOX_ASSERT(hierarchy_);
-   boost::shared_ptr<hier::PatchLevel> level_ = hierarchy_->getPatchLevel(ln);
+   boost::shared_ptr<hier::PatchLevel> level_(hierarchy_->getPatchLevel(ln));
    TBOX_ASSERT(level_);
 
    hier::PatchLevel& level = *level_;
@@ -244,8 +242,8 @@ void SinusoidalFrontTagger::applyGradientDetector(
    for (hier::PatchLevel::Iterator pi(level); pi; pi++) {
       hier::Patch& patch = **pi;
 
-      boost::shared_ptr<hier::PatchData>
-      tag_data = patch.getPatchData(tag_index);
+      boost::shared_ptr<hier::PatchData> tag_data(
+         patch.getPatchData(tag_index));
       if (!tag_data) {
          TBOX_ERROR("Data index " << tag_index
                                   << " does not exist for patch.\n");
@@ -260,8 +258,8 @@ void SinusoidalFrontTagger::applyGradientDetector(
 
       if (d_allocate_data) {
          // Use internally stored data.
-         boost::shared_ptr<hier::PatchData>
-         saved_tag_data = patch.getPatchData(d_tag_id);
+         boost::shared_ptr<hier::PatchData> saved_tag_data(
+           patch.getPatchData(d_tag_id));
          tag_cell_data_->copy(*saved_tag_data);
       } else {
          // Compute tag data for patch.
@@ -283,7 +281,7 @@ void SinusoidalFrontTagger::deallocatePatchData(
 {
    int ln;
    for (ln = 0; ln < hierarchy.getNumberOfLevels(); ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy.getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy.getPatchLevel(ln));
       deallocatePatchData(*level);
    }
 }
@@ -330,8 +328,8 @@ void SinusoidalFrontTagger::computeLevelData(
 {
    NULL_USE(old_level);
 
-   const boost::shared_ptr<hier::PatchLevel> level =
-      hierarchy.getPatchLevel(ln);
+   const boost::shared_ptr<hier::PatchLevel> level(
+      hierarchy.getPatchLevel(ln));
 
    /*
     * Initialize data in all patches in the level.
@@ -373,8 +371,8 @@ void SinusoidalFrontTagger::computePatchData(
    TBOX_ASSERT(patch.inHierarchy());
 
    const int ln = patch.getPatchLevelNumber();
-   const boost::shared_ptr<hier::PatchLevel> level =
-      d_hierarchy->getPatchLevel(ln);
+   const boost::shared_ptr<hier::PatchLevel> level(
+      d_hierarchy->getPatchLevel(ln));
    const hier::IntVector& ratio(level->getRatioToLevelZero());
 
    const hier::Box& pbox = patch.getBox();
@@ -571,8 +569,8 @@ bool SinusoidalFrontTagger::packDerivedDataIntoDoubleBuffer(
    const std::string& variable_name,
    int depth_index) const
 {
-   (void)region;
-   (void)depth_index;
+   NULL_USE(region);
+   NULL_USE(depth_index);
 
    TBOX_ASSERT(d_allocate_data == false);
    if (variable_name == "Distance to front") {

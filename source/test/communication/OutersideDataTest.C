@@ -105,14 +105,15 @@ void OutersideDataTest::readTestInput(
    readVariableInput(db->getDatabase("VariableData"));
    readRefinementInput(db->getDatabase("RefinementData"));
 
-   boost::shared_ptr<tbox::Database> var_data = db->getDatabase("VariableData");
+   boost::shared_ptr<tbox::Database> var_data(db->getDatabase("VariableData"));
    tbox::Array<string> var_keys = var_data->getAllKeys();
    int nkeys = var_keys.getSize();
 
    d_use_fine_value_at_interface.resizeArray(nkeys);
 
    for (int i = 0; i < nkeys; i++) {
-      boost::shared_ptr<tbox::Database> var_db = var_data->getDatabase(var_keys[i]);
+      boost::shared_ptr<tbox::Database> var_db(
+         var_data->getDatabase(var_keys[i]));
 
       if (var_db->keyExists("use_fine_value_at_interface")) {
          d_use_fine_value_at_interface[i] =
@@ -204,15 +205,15 @@ void OutersideDataTest::initializeDataOnPatch(
    hier::VariableDatabase* variable_db =
       hier::VariableDatabase::getDatabase();
    variable_db->printClassData();
-   tbox::Array<boost::shared_ptr<hier::Variable> >& variables =
-      src_or_dst == 's' ? d_variables_src : d_variables_dst;
+   tbox::Array<boost::shared_ptr<hier::Variable> >& variables(
+      src_or_dst == 's' ? d_variables_src : d_variables_dst);
 
    if (d_do_refine) {
 
       for (int i = 0; i < variables.getSize(); i++) {
 
-         boost::shared_ptr<hier::PatchData> data =
-            patch.getPatchData(variables[i], getDataContext());
+         boost::shared_ptr<hier::PatchData> data(
+            patch.getPatchData(variables[i], getDataContext()));
 
          TBOX_ASSERT(data);
 
@@ -238,8 +239,8 @@ void OutersideDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < variables.getSize(); i++) {
 
-         boost::shared_ptr<hier::PatchData> data =
-            patch.getPatchData(variables[i], getDataContext());
+         boost::shared_ptr<hier::PatchData> data(
+            patch.getPatchData(variables[i], getDataContext()));
 
          TBOX_ASSERT(data);
 
@@ -328,9 +329,9 @@ void OutersideDataTest::setPhysicalBoundaryConditions(
    const double time,
    const hier::IntVector& gcw) const
 {
-   (void)patch;
-   (void)gcw;
-   (void)time;
+   NULL_USE(patch);
+   NULL_USE(gcw);
+   NULL_USE(time);
    TBOX_ERROR("Only coarsen operations can be done with this test.\n"
       << "Coarsen operations should not need physical bc.\n");
 }
@@ -475,7 +476,7 @@ bool OutersideDataTest::verifyResults(
    const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
-   (void)hierarchy;
+   NULL_USE(hierarchy);
    bool test_failed = false;
    if (d_do_refine || d_do_coarsen) {
 

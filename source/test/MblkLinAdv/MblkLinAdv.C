@@ -569,18 +569,31 @@ MblkLinAdv::MblkLinAdv(
    boost::shared_ptr<tbox::Database> input_db,
    boost::shared_ptr<hier::GridGeometry>& grid_geom):
    MblkHyperbolicPatchStrategy(dim),
+   d_object_name(object_name),
    d_dim(dim),
+   d_grid_geometry(grid_geom),
+   d_use_nonuniform_workload(false),
+   d_uval(new pdat::CellVariable<double>(dim, "uval", DEPTH)),
+   d_vol(new pdat::CellVariable<double>(dim, "vol", 1)),
+   d_flux(new pdat::SideVariable<double>(dim, "flux", 1)),
+   d_xyz(new pdat::NodeVariable<double>(dim, "xyz", dim.getValue())),
+   d_dx_set(false),
+   d_godunov_order(1),
+   d_corner_transport("CORNER_TRANSPORT_1"),
    d_nghosts(hier::IntVector(dim, CELLG)),
    d_fluxghosts(hier::IntVector(dim, FLUXG)),
-   d_nodeghosts(hier::IntVector(dim, NODEG))
+   d_nodeghosts(hier::IntVector(dim, NODEG)),
+   d_data_problem_int(tbox::MathUtilities<int>::getMax()),
+   d_radius(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_uval_inside(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_uval_outside(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_number_of_intervals(0),
+   d_amplitude(0.)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
 
-   d_object_name = object_name;
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
-
-   d_grid_geometry = grid_geom;
 
    /*
     * Setup MblkGeometry object to manage construction of mapped grids
@@ -590,47 +603,15 @@ MblkLinAdv::MblkLinAdv(
          input_db,
          grid_geom->getNumberBlocks());
 
-   d_use_nonuniform_workload = false;
-
-   /*
-    * hier::Variable quantities that define state of linear advection problem.
-    */
-   d_uval.reset(new pdat::CellVariable<double>(dim, "uval", DEPTH));
-   d_vol.reset(new pdat::CellVariable<double>(dim, "vol", 1));
-   d_flux.reset(new pdat::SideVariable<double>(dim, "flux", 1));
-   d_xyz.reset(new pdat::NodeVariable<double>(dim, "xyz", d_dim.getValue()));
-
-   d_dx_set = false;
-
-   /*
-    * Default parameters for the numerical method.
-    */
-   d_godunov_order = 1;
-   d_corner_transport = "CORNER_TRANSPORT_1";
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(CELLG == FACEG);
 #endif
 
-   /*
-    * Defaults for problem type and initial data.
-    */
-   d_data_problem_int = tbox::MathUtilities<int>::getMax();
-
-   int k;
-
    // SPHERE problem...
-   d_radius = tbox::MathUtilities<double>::getSignalingNaN();
    tbox::MathUtilities<double>::setArrayToSignalingNaN(d_center, d_dim.getValue());
-   d_uval_inside = tbox::MathUtilities<double>::getSignalingNaN();
-   d_uval_outside = tbox::MathUtilities<double>::getSignalingNaN();
-
-   d_number_of_intervals = 0;
-   d_front_position.resizeArray(0);
-   d_interval_uval.resizeArray(0);
 
    // SINE problem
-   d_amplitude = 0.;
-   for (k = 0; k < d_dim.getValue(); k++) d_frequency[k] = 0.;
+   for (int k = 0; k < d_dim.getValue(); k++) d_frequency[k] = 0.;
 
    /*
     * Defaults for boundary conditions. Set to bogus values
@@ -904,7 +885,7 @@ void MblkLinAdv::initializeDataOnPatch(
    const double data_time,
    const bool initial_time)
 {
-   (void)data_time;
+   NULL_USE(data_time);
    /*
     * Build the mapped grid on the patch.
     */
@@ -1077,8 +1058,8 @@ double MblkLinAdv::computeStableDtOnPatch(
    const bool initial_time,
    const double dt_time)
 {
-   (void)initial_time;
-   (void)dt_time;
+   NULL_USE(initial_time);
+   NULL_USE(dt_time);
 
    /*
     * Build the mapped grid on the patch.
@@ -1247,7 +1228,7 @@ void MblkLinAdv::computeFluxesOnPatch(
    const double time,
    const double dt)
 {
-   (void)time;
+   NULL_USE(time);
 
    //return;
 
@@ -1522,10 +1503,10 @@ void MblkLinAdv::conservativeDifferenceOnPatch(
    const double dt,
    bool at_syncronization)
 {
-   (void)patch;
-   (void)time;
-   (void)dt;
-   (void)at_syncronization;
+   NULL_USE(patch);
+   NULL_USE(time);
+   NULL_USE(dt);
+   NULL_USE(at_syncronization);
 }
 
 /*
@@ -1544,7 +1525,7 @@ void MblkLinAdv::setPhysicalBoundaryConditions(
    const double fill_time,
    const hier::IntVector& ghost_width_to_fill)
 {
-   (void)fill_time;
+   NULL_USE(fill_time);
 
    boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
@@ -1635,8 +1616,8 @@ void MblkLinAdv::preprocessRefine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio)
 {
-   (void)fine_box;
-   (void)ratio;
+   NULL_USE(fine_box);
+   NULL_USE(ratio);
 
    int xyz_id = hier::VariableDatabase::getDatabase()->
       mapVariableAndContextToIndex(d_xyz, getDataContext());
@@ -1901,8 +1882,8 @@ void MblkLinAdv::preprocessCoarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio)
 {
-   (void)coarse_box;
-   (void)ratio;
+   NULL_USE(coarse_box);
+   NULL_USE(ratio);
 
    int xyz_id = hier::VariableDatabase::getDatabase()->
       mapVariableAndContextToIndex(d_xyz, getDataContext());
@@ -2124,8 +2105,8 @@ void MblkLinAdv::tagGradientDetectorCells(
    const int tag_indx,
    const bool uses_richardson_extrapolation_too)
 {
-   (void)regrid_time;
-   (void)uses_richardson_extrapolation_too;
+   NULL_USE(regrid_time);
+   NULL_USE(uses_richardson_extrapolation_too);
 
    NULL_USE(initial_error);
 
@@ -2471,8 +2452,8 @@ void MblkLinAdv::setMappedGridOnPatch(
 #endif
 
    // compute level domain
-   const boost::shared_ptr<hier::PatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> patch_geom(
+      patch.getPatchGeometry());
    hier::IntVector ratio = patch_geom->getRatio();
    hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
@@ -2703,7 +2684,7 @@ void MblkLinAdv::getFromInput(
    TBOX_ASSERT(input_db);
 #endif
 
-   boost::shared_ptr<tbox::Database> db = input_db->getDatabase("MblkLinAdv");
+   boost::shared_ptr<tbox::Database> db(input_db->getDatabase("MblkLinAdv"));
 
    /*
     * Note: if we are restarting, then we only allow nonuniform
@@ -2758,8 +2739,8 @@ void MblkLinAdv::getFromInput(
    }
 
    if (db->keyExists("Refinement_data")) {
-      boost::shared_ptr<tbox::Database> refine_db = db->getDatabase(
-            "Refinement_data");
+      boost::shared_ptr<tbox::Database> refine_db(
+         db->getDatabase("Refinement_data"));
       tbox::Array<string> refinement_keys = refine_db->getAllKeys();
       int num_keys = refinement_keys.getSize();
 
@@ -2955,14 +2936,13 @@ void MblkLinAdv::getFromInput(
                           << endl);
       }
 
-      boost::shared_ptr<tbox::Database> init_data_db;
-      if (db->keyExists("Initial_data")) {
-         init_data_db = db->getDatabase("Initial_data");
-      } else {
+      if (!db->keyExists("Initial_data")) {
          TBOX_ERROR(
             d_object_name << ": "
                           << "No `Initial_data' database found in input." << endl);
       }
+      boost::shared_ptr<tbox::Database> init_data_db(
+         db->getDatabase("Initial_data"));
 
       bool found_problem_data = false;
 
@@ -3055,8 +3035,8 @@ void MblkLinAdv::getFromInput(
 
             if (!(init_data_keys[nkey] == "front_position")) {
 
-               boost::shared_ptr<tbox::Database> interval_db =
-                  init_data_db->getDatabase(init_data_keys[nkey]);
+               boost::shared_ptr<tbox::Database> interval_db(
+                  init_data_db->getDatabase(init_data_keys[nkey]));
 
                if (interval_db->keyExists("uval")) {
                   d_interval_uval[i] = interval_db->getDouble("uval");
@@ -3126,8 +3106,8 @@ void MblkLinAdv::getFromInput(
 
    if (db->keyExists("Boundary_data")) {
 
-      boost::shared_ptr<tbox::Database> bdry_db =
-         db->getDatabase("Boundary_data");
+      boost::shared_ptr<tbox::Database> bdry_db(
+         db->getDatabase("Boundary_data"));
 
       if (d_dim == tbox::Dimension(2)) {
          SkeletonBoundaryUtilities2::readBoundaryInput(this,
@@ -3244,16 +3224,14 @@ void MblkLinAdv::putToDatabase(
  */
 void MblkLinAdv::getFromRestart()
 {
-   boost::shared_ptr<tbox::Database> root_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> root_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   boost::shared_ptr<tbox::Database> db;
-   if (root_db->isDatabase(d_object_name)) {
-      db = root_db->getDatabase(d_object_name);
-   } else {
+   if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file.");
    }
+   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("MBLKLINADV_VERSION");
    if (ver != MBLKLINADV_VERSION) {
@@ -3427,8 +3405,8 @@ void MblkLinAdv::checkBoundaryData(
    }
 #endif
 
-   const boost::shared_ptr<hier::PatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> pgeom(
+      patch.getPatchGeometry());
    const tbox::Array<hier::BoundaryBox> bdry_boxes =
       pgeom->getCodimensionBoundaries(btype);
 

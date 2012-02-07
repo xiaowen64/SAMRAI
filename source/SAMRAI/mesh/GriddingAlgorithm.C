@@ -3533,11 +3533,13 @@ void GriddingAlgorithm::makeOverflowNestingMap(
    const hier::BoxLevel& unnested_mapped_box_level,
    const hier::Connector& unnested_to_reference) const
 {
+#ifndef DEBUG_CHECK_ASSERTIONS
+   NULL_USE(unnested_mapped_box_level);
+#endif
+
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim,
       unnested_mapped_box_level,
       nested_mapped_box_level);
-
-   (void)unnested_mapped_box_level;
 
    t_make_overflow_map->start();
 

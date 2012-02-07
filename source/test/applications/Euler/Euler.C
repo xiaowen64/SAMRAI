@@ -126,15 +126,32 @@ Euler::Euler(
    boost::shared_ptr<tbox::Database> input_db,
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geom):
    algs::HyperbolicPatchStrategy(dim),
+   d_object_name(object_name),
+   d_grid_geometry(grid_geom),
    d_dim(dim),
-   d_nghosts(d_dim),
-   d_fluxghosts(d_dim)
+   d_use_nonuniform_workload(false),
+   d_density(new pdat::CellVariable<double>(dim, "density", 1)),
+   d_velocity(new pdat::CellVariable<double>(
+      dim, "velocity", d_dim.getValue())),
+   d_pressure(new pdat::CellVariable<double>(dim, "pressure", 1)),
+   d_flux(new pdat::FaceVariable<double>(dim, "flux", NEQU)),
+   d_gamma(1.4),  // specific heat ratio for ideal diatomic gas (e.g., air)
+   d_riemann_solve("APPROX_RIEM_SOLVE"),
+   d_godunov_order(1),
+   d_corner_transport("CORNER_TRANSPORT_1"),
+   d_nghosts(hier::IntVector(dim, CELLG)),
+   d_fluxghosts(hier::IntVector(dim, FLUXG)),
+   d_radius(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_density_inside(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_pressure_inside(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_density_outside(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_pressure_outside(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_number_of_intervals(0)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
    TBOX_ASSERT(grid_geom);
 
-   d_object_name = object_name;
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 
    if (!t_init) {
@@ -152,57 +169,18 @@ Euler::Euler(
          getTimer("apps::Euler::tagGradientDetectorCells()");
    }
 
-   d_grid_geometry = grid_geom;
-
-   d_use_nonuniform_workload = false;
-
-   /*
-    * *hier::Variable quantities that define state of Euler problem.
-    */
-   d_density.reset(new pdat::CellVariable<double>(d_dim, "density", 1));
-   d_velocity.reset(
-      new pdat::CellVariable<double>(d_dim, "velocity", d_dim.getValue()));
-   d_pressure.reset(new pdat::CellVariable<double>(d_dim, "pressure", 1));
-   d_flux.reset(new pdat::FaceVariable<double>(d_dim, "flux", NEQU));
-
-   /*
-    * Default parameters for physical constants
-    */
-
-   d_gamma = 1.4;  // specific heat ratio for ideal diatomic gas (e.g., air)
-
-   /*
-    * Default parameters for numerical methods
-    */
-
-   d_riemann_solve = "APPROX_RIEM_SOLVE";
-   d_godunov_order = 1;
-   d_corner_transport = "CORNER_TRANSPORT_1";
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(CELLG == FACEG);
 #endif
-   d_nghosts = hier::IntVector(d_dim, CELLG);
-   d_fluxghosts = hier::IntVector(d_dim, FLUXG);
 
    /*
     * Defaults for problem type and initial data
     */
 
-   d_radius = tbox::MathUtilities<double>::getSignalingNaN();
    tbox::MathUtilities<double>::setArrayToSignalingNaN(d_center, d_dim.getValue());
-   d_density_inside = tbox::MathUtilities<double>::getSignalingNaN();
    tbox::MathUtilities<double>::setArrayToSignalingNaN(d_velocity_inside, d_dim.getValue());
-   d_pressure_inside = tbox::MathUtilities<double>::getSignalingNaN();
-   d_density_outside = tbox::MathUtilities<double>::getSignalingNaN();
    tbox::MathUtilities<double>::setArrayToSignalingNaN(d_velocity_outside,
       d_dim.getValue());
-   d_pressure_outside = tbox::MathUtilities<double>::getSignalingNaN();
-
-   d_number_of_intervals = 0;
-   d_front_position.resizeArray(0);
-   d_interval_density.resizeArray(0);
-   d_interval_velocity.resizeArray(0);
-   d_interval_pressure.resizeArray(0);
 
    /*
     * Defaults for boundary conditions. Set to bogus values
@@ -533,7 +511,7 @@ void Euler::setupLoadBalancer(
    algs::HyperbolicLevelIntegrator* integrator,
    mesh::GriddingAlgorithm* gridding_algorithm)
 {
-   (void)integrator;
+   NULL_USE(integrator);
 
    const hier::IntVector& zero_vec = hier::IntVector::getZero(d_dim);
 
@@ -587,7 +565,7 @@ void Euler::initializeDataOnPatch(
    const double data_time,
    const bool initial_time)
 {
-   (void)data_time;
+   NULL_USE(data_time);
 
    t_init->start();
 
@@ -735,8 +713,8 @@ double Euler::computeStableDtOnPatch(
    const bool initial_time,
    const double dt_time)
 {
-   (void)initial_time;
-   (void)dt_time;
+   NULL_USE(initial_time);
+   NULL_USE(dt_time);
 
    t_compute_dt->start();
 
@@ -815,7 +793,7 @@ void Euler::computeFluxesOnPatch(
    const double time,
    const double dt)
 {
-   (void)time;
+   NULL_USE(time);
 
    t_compute_fluxes->start();
 
@@ -1665,9 +1643,9 @@ void Euler::conservativeDifferenceOnPatch(
    const double dt,
    bool at_syncronization)
 {
-   (void)time;
-   (void)dt;
-   (void)at_syncronization;
+   NULL_USE(time);
+   NULL_USE(dt);
+   NULL_USE(at_syncronization);
 
    t_conservdiff->start();
 
@@ -2152,7 +2130,7 @@ void Euler::setPhysicalBoundaryConditions(
    const double fill_time,
    const hier::IntVector& ghost_width_to_fill)
 {
-   (void)fill_time;
+   NULL_USE(fill_time);
    t_setphysbcs->start();
 
    boost::shared_ptr<pdat::CellData<double> > density(
@@ -2380,8 +2358,6 @@ void Euler::tagGradientDetectorCells(
    const int tag_indx,
    const bool uses_richardson_extrapolation_too)
 {
-   (void)initial_error;
-
    t_taggradient->start();
 
    const int error_level_number = patch.getPatchLevelNumber();
@@ -2718,7 +2694,7 @@ void Euler::tagRichardsonExtrapolationCells(
    const int tag_index,
    const bool uses_gradient_detector_too)
 {
-   (void)initial_error;
+   NULL_USE(initial_error);
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
@@ -3548,8 +3524,8 @@ void Euler::getFromInput(
    }
 
    if (db->keyExists("Refinement_data")) {
-      boost::shared_ptr<tbox::Database> refine_db = db->getDatabase(
-            "Refinement_data");
+      boost::shared_ptr<tbox::Database> refine_db(
+         db->getDatabase("Refinement_data"));
       tbox::Array<string> refinement_keys = refine_db->getAllKeys();
       int num_keys = refinement_keys.getSize();
 
@@ -3915,14 +3891,13 @@ void Euler::getFromInput(
                           << endl);
       }
 
-      boost::shared_ptr<tbox::Database> init_data_db;
-      if (db->keyExists("Initial_data")) {
-         init_data_db = db->getDatabase("Initial_data");
-      } else {
+      if (!db->keyExists("Initial_data")) {
          TBOX_ERROR(
             d_object_name << ": "
                           << "No `Initial_data' database found in input." << endl);
       }
+      boost::shared_ptr<tbox::Database> init_data_db(
+         db->getDatabase("Initial_data"));
 
       bool found_problem_data = false;
 
@@ -4046,8 +4021,8 @@ void Euler::getFromInput(
 
             if (!(init_data_keys[nkey] == "front_position")) {
 
-               boost::shared_ptr<tbox::Database> interval_db =
-                  init_data_db->getDatabase(init_data_keys[nkey]);
+               boost::shared_ptr<tbox::Database> interval_db(
+                  init_data_db->getDatabase(init_data_keys[nkey]));
 
                readStateDataEntry(interval_db,
                   init_data_keys[nkey],
@@ -4285,16 +4260,14 @@ void Euler::putToDatabase(
 void Euler::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database> root_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> root_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   boost::shared_ptr<tbox::Database> db;
-   if (root_db->isDatabase(d_object_name)) {
-      db = root_db->getDatabase(d_object_name);
-   } else {
+   if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file." << endl);
    }
+   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("EULER_VERSION");
    if (ver != EULER_VERSION) {

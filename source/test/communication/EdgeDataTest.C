@@ -132,16 +132,16 @@ void EdgeDataTest::readTestInput(
    readVariableInput(db->getDatabase("VariableData"));
    readRefinementInput(db->getDatabase("RefinementData"));
 
-   boost::shared_ptr<tbox::Database> var_data =
-      db->getDatabase("VariableData");
+   boost::shared_ptr<tbox::Database> var_data(
+      db->getDatabase("VariableData"));
    tbox::Array<string> var_keys = var_data->getAllKeys();
    int nkeys = var_keys.getSize();
 
    d_use_fine_value_at_interface.resizeArray(nkeys);
 
    for (int i = 0; i < nkeys; i++) {
-      boost::shared_ptr<tbox::Database> var_db =
-         var_data->getDatabase(var_keys[i]);
+      boost::shared_ptr<tbox::Database> var_db(
+         var_data->getDatabase(var_keys[i]));
 
       if (var_db->keyExists("use_fine_value_at_interface")) {
          d_use_fine_value_at_interface[i] =
@@ -195,7 +195,7 @@ void EdgeDataTest::setConstantData(
    double ndimfact,
    double axfact) const
 {
-   (void)axfact;
+   NULL_USE(axfact);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
@@ -229,8 +229,8 @@ void EdgeDataTest::setConservativeData(
 #endif
 
    int i, j;
-   boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-         level_number);
+   boost::shared_ptr<hier::PatchLevel> level(
+      hierarchy->getPatchLevel(level_number));
 
    const hier::BoxContainer& domain =
       level->getPhysicalDomain(hier::BlockId::zero());
@@ -386,7 +386,7 @@ void EdgeDataTest::initializeDataOnPatch(
    int level_number,
    char src_or_dst)
 {
-   (void)src_or_dst;
+   NULL_USE(src_or_dst);
 
    d_hierarchy = hierarchy;
 
@@ -565,7 +565,6 @@ bool EdgeDataTest::verifyResults(
    const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
-   (void)hierarchy;
    bool test_failed = false;
    if (d_dim <= tbox::Dimension(1)) {
       return !test_failed;
@@ -765,7 +764,7 @@ void EdgeDataTest::setPhysicalBoundaryConditions(
    const double time,
    const hier::IntVector& gcw) const
 {
-   (void)time;
+   NULL_USE(time);
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),

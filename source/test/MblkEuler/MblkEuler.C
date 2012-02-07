@@ -98,7 +98,10 @@ MblkEuler::MblkEuler(
    boost::shared_ptr<tbox::Database> input_db,
    boost::shared_ptr<hier::GridGeometry>& grid_geom):
    MblkHyperbolicPatchStrategy(dim),
+   d_object_name(object_name),
    d_dim(dim),
+   d_grid_geometry(grid_geom),
+   d_use_nonuniform_workload(false),
    d_nghosts(hier::IntVector(d_dim, CELLG)),
    d_fluxghosts(hier::IntVector(d_dim, FLUXG)),
    d_nodeghosts(hier::IntVector(d_dim, NODEG))
@@ -106,10 +109,7 @@ MblkEuler::MblkEuler(
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
 
-   d_object_name = object_name;
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
-
-   d_grid_geometry = grid_geom;
 
    //
    // Setup MblkGeometry object to manage construction of mapped grids
@@ -119,31 +119,14 @@ MblkEuler::MblkEuler(
          input_db,
          grid_geom->getNumberBlocks());
 
-   d_use_nonuniform_workload = false;
-
-   boost::shared_ptr<tbox::Database> mbe_db =
-      input_db->getDatabase("MblkEuler");
-
-   //
-   // Default parameters for the numerical method.
-   //
+   boost::shared_ptr<tbox::Database> mbe_db(
+      input_db->getDatabase("MblkEuler"));
 
    //
    // zero out initial condition variables
    //
    tbox::MathUtilities<double>::setArrayToSignalingNaN(d_center, d_dim.getValue());
    tbox::MathUtilities<double>::setArrayToSignalingNaN(d_axis, d_dim.getValue());
-
-   d_front_position.resizeArray(0);
-
-   d_rev_rad.resizeArray(0);
-   d_rev_axis.resizeArray(0);
-
-   d_amn.resizeArray(0);
-   d_m_mode.resizeArray(0);
-   d_n_mode.resizeArray(0);
-   d_phiy.resizeArray(0);
-   d_phiz.resizeArray(0);
 
    //
    // Initialize object with data read from given input/restart databases.
@@ -669,8 +652,8 @@ double MblkEuler::computeStableDtOnPatch(
    const bool initial_time,
    const double dt_time)
 {
-   (void)initial_time;
-   (void)dt_time;
+   NULL_USE(initial_time);
+   NULL_USE(dt_time);
 
    //
    // Build the mapped grid on the patch.
@@ -991,8 +974,6 @@ void MblkEuler::computeFluxesOnPatch(
    const double time,
    const double dt)
 {
-   (void)time;
-
    //
    // process the SAMRAI data
    //
@@ -1533,8 +1514,8 @@ void MblkEuler::markPhysicalBoundaryConditions(
    int ny = jmax - jmin + 1;
    int nxny = nx * ny;
 
-   const boost::shared_ptr<hier::PatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> pgeom(
+      patch.getPatchGeometry());
 
    for (int ii = 0; ii < 3; ii++) {
 
@@ -1609,12 +1590,11 @@ void MblkEuler::setPhysicalBoundaryConditions(
    const double fill_time,
    const hier::IntVector& ghost_width_to_fill)
 {
+   NULL_USE(fill_time);
 
    const int block_number = patch.getBox().getBlockId().getBlockValue();
 
    markPhysicalBoundaryConditions(patch, ghost_width_to_fill);
-
-   (void)fill_time;
 
    boost::shared_ptr<pdat::NodeData<double> > position(
       patch.getPatchData(d_xyz, getDataContext()),
@@ -1637,8 +1617,8 @@ void MblkEuler::setPhysicalBoundaryConditions(
    //
    // the index space of this block and its neighbors
    //
-   const boost::shared_ptr<hier::PatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> patch_geom(
+      patch.getPatchGeometry());
    const hier::IntVector ratio = patch_geom->getRatio();
    hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
@@ -2565,8 +2545,8 @@ void MblkEuler::setMappedGridOnPatch(
    //
    // compute level domain
    //
-   const boost::shared_ptr<hier::PatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> patch_geom(
+      patch.getPatchGeometry());
    hier::IntVector ratio = patch_geom->getRatio();
    hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
@@ -2761,7 +2741,7 @@ void MblkEuler::getFromInput(
    TBOX_ASSERT(input_db);
 #endif
 
-   boost::shared_ptr<tbox::Database> db = input_db->getDatabase("MblkEuler");
+   boost::shared_ptr<tbox::Database> db(input_db->getDatabase("MblkEuler"));
 
    //
    // --------------- load balancing inputs
@@ -2874,8 +2854,8 @@ void MblkEuler::getFromInput(
             char tmp[20];
             sprintf(tmp, "region_%d", i + 1);  //
             string lkey = tmp;
-            boost::shared_ptr<tbox::Database> region_db =
-               db->getDatabase(lkey);
+            boost::shared_ptr<tbox::Database> region_db(
+               db->getDatabase(lkey));
 
             d_rev_rad[i] = region_db->getDoubleArray("radius");
             d_rev_axis[i] = region_db->getDoubleArray("axis");
@@ -2949,8 +2929,8 @@ void MblkEuler::getFromInput(
       //
       if (d_advection_test) {
          if (db->keyExists("state_data")) {
-            boost::shared_ptr<tbox::Database> state_db = db->getDatabase(
-                  "state_data");
+            boost::shared_ptr<tbox::Database> state_db(
+               db->getDatabase("state_data"));
             tbox::Array<double> lpsi;
             for (int iState = 0; iState < d_nState; iState++) {
                lpsi = state_db->getDoubleArray(d_state_names[iState]);
@@ -3108,16 +3088,14 @@ void MblkEuler::putToDatabase(
  */
 void MblkEuler::getFromRestart()
 {
-   boost::shared_ptr<tbox::Database> root_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> root_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   boost::shared_ptr<tbox::Database> db;
-   if (root_db->isDatabase(d_object_name)) {
-      db = root_db->getDatabase(d_object_name);
-   } else {
+   if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file.");
    }
+   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("MBLKEULER_VERSION");
    if (ver != MBLKEULER_VERSION) {

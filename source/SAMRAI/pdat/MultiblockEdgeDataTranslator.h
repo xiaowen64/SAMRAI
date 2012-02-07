@@ -55,12 +55,12 @@ public:
       const hier::IntVector& shift,
       const hier::Transformation::RotationIdentifier rotate)
    {
-      (void)dst_patch;
-      (void)dst_id;
-      (void)src_patch;
-      (void)src_id;
-      (void)shift;
-      (void)rotate;
+      NULL_USE(dst_patch);
+      NULL_USE(dst_id);
+      NULL_USE(src_patch);
+      NULL_USE(src_id);
+      NULL_USE(shift);
+      NULL_USE(rotate);
    }
 
 private:

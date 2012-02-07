@@ -189,8 +189,7 @@ int main(
        * dump information, which is used for writing plot files.
        */
 
-      boost::shared_ptr<tbox::Database> main_db =
-         input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -278,12 +277,15 @@ int main(
       }
 
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
-         new geom::CartesianGridGeometry(dim,
+         new geom::CartesianGridGeometry(
+            dim,
             "CartesianGeometry",
             input_db->getDatabase("CartesianGeometry")));
 
       boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
-         new hier::PatchHierarchy("PatchHierarchy", grid_geometry,
+         new hier::PatchHierarchy(
+            "PatchHierarchy",
+            grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
       ModifiedBratuProblem* bratu_model = new ModifiedBratuProblem(
@@ -333,7 +335,8 @@ int main(
             patch_hierarchy);
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
-         new mesh::StandardTagAndInitialize(dim,
+         new mesh::StandardTagAndInitialize(
+            dim,
             "CellTaggingMethod",
             bratu_model,
             input_db->
@@ -343,7 +346,9 @@ int main(
          new mesh::BergerRigoutsos(dim));
 
       boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
-         new mesh::TreeLoadBalancer(dim, "LoadBalancer",
+         new mesh::TreeLoadBalancer(
+            dim,
+            "LoadBalancer",
             input_db->getDatabase("LoadBalancer")));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
@@ -401,10 +406,10 @@ int main(
        * simulation part of the main program.
        */
 
-      boost::shared_ptr<tbox::Timer> main_timer =
-         tbox::TimerManager::getManager()->getTimer("apps::main::main");
-      boost::shared_ptr<tbox::Timer> solve_timer =
-         tbox::TimerManager::getManager()->getTimer("apps::main::solve");
+      boost::shared_ptr<tbox::Timer> main_timer(
+         tbox::TimerManager::getManager()->getTimer("apps::main::main"));
+      boost::shared_ptr<tbox::Timer> solve_timer(
+         tbox::TimerManager::getManager()->getTimer("apps::main::solve"));
 
       main_timer->start();
 

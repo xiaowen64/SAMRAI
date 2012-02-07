@@ -294,25 +294,25 @@ int main(
        * Regular pointer tests.
        */
 
-      boost::shared_ptr<Derived> derived(new Derived);
-      boost::shared_ptr<ReallyDerived> really_derived(new ReallyDerived);
+      boost::shared_ptr<Derived> derived(new Derived());
+      boost::shared_ptr<ReallyDerived> really_derived(new ReallyDerived());
       boost::shared_ptr<ReallyReallyDerived> really_really_derived(
-         new ReallyReallyDerived);
+         new ReallyReallyDerived());
 
       /*
        * Test casting to base class Derived.
        */
-      boost::shared_ptr<Derived> a = derived;
+      boost::shared_ptr<Derived> a(derived);
       if (!a) {
          fail_count++;
          tbox::perr << "FAILED: - Test #1a: a is null" << endl;
       }
-      boost::shared_ptr<Derived> b = really_derived;
+      boost::shared_ptr<Derived> b(really_derived);
       if (!b) {
          fail_count++;
          tbox::perr << "FAILED: - Test #1b: b is null" << endl;
       }
-      boost::shared_ptr<Derived> c = really_really_derived;
+      boost::shared_ptr<Derived> c(really_really_derived);
       if (!c) {
          fail_count++;
          tbox::perr << "FAILED: - Test #1c: c is null" << endl;
@@ -328,12 +328,12 @@ int main(
          fail_count++;
          tbox::perr << "FAILED: - Test #1d: d is non-null" << endl;
       }
-      boost::shared_ptr<ReallyDerived> e = really_derived;
+      boost::shared_ptr<ReallyDerived> e(really_derived);
       if (!e) {
          fail_count++;
          tbox::perr << "FAILED: - Test #1e: e is null" << endl;
       }
-      boost::shared_ptr<ReallyDerived> f = really_really_derived;
+      boost::shared_ptr<ReallyDerived> f(really_really_derived);
       if (!f) {
          fail_count++;
          tbox::perr << "FAILED: - Test #1f: f is null" << endl;
@@ -356,7 +356,7 @@ int main(
          fail_count++;
          tbox::perr << "FAILED: - Test #1h: h is non-null" << endl;
       }
-      boost::shared_ptr<ReallyReallyDerived> i = really_really_derived;
+      boost::shared_ptr<ReallyReallyDerived> i(really_really_derived);
       if (!i) {
          fail_count++;
          tbox::perr << "FAILED: - Test #1i: i is null" << endl;
@@ -377,17 +377,17 @@ int main(
       /*
        * Test casting to base class Derived.
        */
-      const boost::shared_ptr<Derived> j = derived;
+      const boost::shared_ptr<Derived> j(derived);
       if (!j) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3j: j is null" << endl;
       }
-      const boost::shared_ptr<Derived> k = really_derived;
+      const boost::shared_ptr<Derived> k(really_derived);
       if (!k) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3k: k is null" << endl;
       }
-      const boost::shared_ptr<Derived> l = really_really_derived;
+      const boost::shared_ptr<Derived> l(really_really_derived);
       if (!l) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3l: l is null" << endl;
@@ -403,12 +403,12 @@ int main(
          fail_count++;
          tbox::perr << "FAILED: - Test #3m: m is non-null" << endl;
       }
-      const boost::shared_ptr<ReallyDerived> n = really_derived;
+      const boost::shared_ptr<ReallyDerived> n(really_derived);
       if (!n) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3n: n is null" << endl;
       }
-      const boost::shared_ptr<ReallyDerived> o = really_really_derived;
+      const boost::shared_ptr<ReallyDerived> o(really_really_derived);
       if (!o) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3o: o is null" << endl;
@@ -431,7 +431,7 @@ int main(
          fail_count++;
          tbox::perr << "FAILED: - Test #3q: q is non-null" << endl;
       }
-      const boost::shared_ptr<ReallyReallyDerived> r = really_really_derived;
+      const boost::shared_ptr<ReallyReallyDerived> r(really_really_derived);
       if (!r) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3r: r is null" << endl;
@@ -441,17 +441,17 @@ int main(
        * Test casting const pointer to regular pointers.
        */
 #if 0
-      const boost::shared_ptr<ReallyReallyDerived> s = derived;
+      const boost::shared_ptr<ReallyReallyDerived> s(derived);
       if (s) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3s: s is non-null" << endl;
       }
-      const boost::shared_ptr<ReallyReallyDerived> t = really_derived;
+      const boost::shared_ptr<ReallyReallyDerived> t(really_derived);
       if (t) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3t: t is non-null" << endl;
       }
-      const boost::shared_ptr<ReallyReallyDerived> u = really_really_derived;
+      const boost::shared_ptr<ReallyReallyDerived> u(really_really_derived);
       if (u) {
          fail_count++;
          tbox::perr << "FAILED: - Test #3u: u is non-null" << endl;

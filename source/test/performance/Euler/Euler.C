@@ -128,7 +128,14 @@ boost::shared_ptr<tbox::Timer> Euler::t_taggradient;
 Euler::Euler(
    const string& object_name,
    boost::shared_ptr<tbox::Database> input_db,
-   boost::shared_ptr<geom::CartesianGridGeometry> grid_geom)
+   boost::shared_ptr<geom::CartesianGridGeometry> grid_geom) :
+   d_object_name(object_name),
+   d_grid_geometry(grid_geom),
+   d_density(new pdat::CellVariable<double>("density", 1)),
+   d_velocity(new pdat::CellVariable<double>("velocity", NDIM)),
+   d_pressure(new pdat::CellVariable<double>("pressure", 1)),
+   d_flux(new pdat::FaceVariable<double>("flux", NEQU)),
+   d_gamma(1.4)  // specific heat ratio for ideal diatomic gas (e.g., air)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
@@ -136,7 +143,6 @@ Euler::Euler(
    TBOX_ASSERT(grid_geom);
 #endif
 
-   d_object_name = object_name;
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 
    if (!t_init) {
@@ -154,23 +160,7 @@ Euler::Euler(
          getTimer("apps::Euler::tagGradientDetectorCells()");
    }
 
-   d_grid_geometry = grid_geom;
-
    d_use_nonuniform_workload = false;
-
-   /*
-    * *hier::Variable quantities that define state of Euler problem.
-    */
-   d_density = new pdat::CellVariable<double>("density", 1);
-   d_velocity = new pdat::CellVariable<double>("velocity", NDIM);
-   d_pressure = new pdat::CellVariable<double>("pressure", 1);
-   d_flux = new pdat::FaceVariable<double>("flux", NEQU);
-
-   /*
-    * Default parameters for physical constants
-    */
-
-   d_gamma = 1.4;  // specific heat ratio for ideal diatomic gas (e.g., air)
 
    /*
     * Default parameters for numerical methods
@@ -533,18 +523,19 @@ void Euler::setupLoadBalancer(
    algs::HyperbolicLevelIntegrator* integrator,
    mesh::GriddingAlgorithm* gridding_algorithm)
 {
-   (void)integrator;
+   NULL_USE(integrator);
 
    hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
 
    if (d_use_nonuniform_workload && gridding_algorithm) {
-      boost::shared_ptr<mesh::DistributedLoadBalancer> load_balancer =
-         gridding_algorithm->getLoadBalanceStrategy();
+      boost::shared_ptr<mesh::DistributedLoadBalancer> load_balancer(
+         gridding_algorithm->getLoadBalanceStrategy());
 
       if (load_balancer) {
-         d_workload_variable = new pdat::CellVariable<double>(
+         d_workload_variable.reset(
+            new pdat::CellVariable<double>(
                "workload_variable",
-               1);
+               1));
          d_workload_data_id =
             vardb->registerVariableAndContext(d_workload_variable,
                vardb->getContext("WORKLOAD"));
@@ -581,24 +572,24 @@ void Euler::initializeDataOnPatch(
    const double data_time,
    const bool initial_time)
 {
-   (void)data_time;
+   NULL_USE(data_time);
 
    t_init->start();
 
    if (initial_time) {
 
-      const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom =
-         patch.getPatchGeometry();
+      const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+         patch.getPatchGeometry());
       const double* dx = pgeom->getDx();
       const double* xlo = pgeom->getXLower();
       const double* xhi = pgeom->getXUpper();
 
-      boost::shared_ptr<pdat::CellData<double> > density =
-         patch.getPatchData(d_density, getDataContext());
-      boost::shared_ptr<pdat::CellData<double> > velocity =
-         patch.getPatchData(d_velocity, getDataContext());
-      boost::shared_ptr<pdat::CellData<double> > pressure =
-         patch.getPatchData(d_pressure, getDataContext());
+      boost::shared_ptr<pdat::CellData<double> > density(
+         patch.getPatchData(d_density, getDataContext()));
+      boost::shared_ptr<pdat::CellData<double> > velocity(
+         patch.getPatchData(d_velocity, getDataContext()));
+      boost::shared_ptr<pdat::CellData<double> > pressure(
+         patch.getPatchData(d_pressure, getDataContext()));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(density);
@@ -672,8 +663,8 @@ void Euler::initializeDataOnPatch(
       if (!patch.checkAllocated(d_workload_data_id)) {
          patch.allocatePatchData(d_workload_data_id);
       }
-      boost::shared_ptr<pdat::CellData<double> > workload_data =
-         patch.getPatchData(d_workload_data_id);
+      boost::shared_ptr<pdat::CellData<double> > workload_data(
+         patch.getPatchData(d_workload_data_id));
       workload_data->fillAll(1.0);
    }
 
@@ -694,24 +685,24 @@ double Euler::computeStableDtOnPatch(
    const bool initial_time,
    const double dt_time)
 {
-   (void)initial_time;
-   (void)dt_time;
+   NULL_USE(initial_time);
+   NULL_USE(dt_time);
 
    t_compute_dt->start();
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry());
    const double* dx = patch_geom->getDx();
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   const boost::shared_ptr<pdat::CellData<double> > density =
-      patch.getPatchData(d_density, getDataContext());
-   const boost::shared_ptr<pdat::CellData<double> > velocity =
-      patch.getPatchData(d_velocity, getDataContext());
-   const boost::shared_ptr<pdat::CellData<double> > pressure =
-      patch.getPatchData(d_pressure, getDataContext());
+   const boost::shared_ptr<pdat::CellData<double> > density(
+      patch.getPatchData(d_density, getDataContext()));
+   const boost::shared_ptr<pdat::CellData<double> > velocity(
+      patch.getPatchData(d_velocity, getDataContext()));
+   const boost::shared_ptr<pdat::CellData<double> > pressure(
+      patch.getPatchData(d_pressure, getDataContext()));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(density);
@@ -761,7 +752,7 @@ void Euler::computeFluxesOnPatch(
    const double time,
    const double dt)
 {
-   (void)time;
+   NULL_USE(time);
 
    t_compute_fluxes->start();
 
@@ -779,22 +770,22 @@ void Euler::computeFluxesOnPatch(
    TBOX_ASSERT(CELLG == FACEG);
 #endif
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry());
    const double* dx = patch_geom->getDx();
 
    hier::Box pbox = patch.getBox();
    const hier::Index ifirst = pbox.lower();
    const hier::Index ilast = pbox.upper();
 
-   boost::shared_ptr<pdat::CellData<double> > density =
-      patch.getPatchData(d_density, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > velocity =
-      patch.getPatchData(d_velocity, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > pressure =
-      patch.getPatchData(d_pressure, getDataContext());
-   boost::shared_ptr<pdat::FaceData<double> > flux =
-      patch.getPatchData(d_flux, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > density(
+      patch.getPatchData(d_density, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > velocity(
+      patch.getPatchData(d_velocity, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > pressure(
+      patch.getPatchData(d_pressure, getDataContext()));
+   boost::shared_ptr<pdat::FaceData<double> > flux(
+      patch.getPatchData(d_flux, getDataContext()));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(density);
@@ -983,22 +974,22 @@ void Euler::compute3DFluxesWithCornerTransport1(
    TBOX_ASSERT(CELLG == FACEG);
 #endif
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry());
    const double* dx = patch_geom->getDx();
 
    hier::Box pbox = patch.getBox();
    const hier::Index ifirst = pbox.lower();
    const hier::Index ilast = pbox.upper();
 
-   boost::shared_ptr<pdat::CellData<double> > density =
-      patch.getPatchData(d_density, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > velocity =
-      patch.getPatchData(d_velocity, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > pressure =
-      patch.getPatchData(d_pressure, getDataContext());
-   boost::shared_ptr<pdat::FaceData<double> > flux =
-      patch.getPatchData(d_flux, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > density(
+      patch.getPatchData(d_density, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > velocity(
+      patch.getPatchData(d_velocity, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > pressure(
+      patch.getPatchData(d_pressure, getDataContext()));
+   boost::shared_ptr<pdat::FaceData<double> > flux(
+      patch.getPatchData(d_flux, getDataContext()));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(density);
@@ -1329,22 +1320,22 @@ void Euler::compute3DFluxesWithCornerTransport2(
    TBOX_ASSERT(CELLG == FACEG);
 #endif
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry());
    const double* dx = patch_geom->getDx();
 
    hier::Box pbox = patch.getBox();
    const hier::Index ifirst = pbox.lower();
    const hier::Index ilast = pbox.upper();
 
-   boost::shared_ptr<pdat::CellData<double> > density =
-      patch.getPatchData(d_density, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > velocity =
-      patch.getPatchData(d_velocity, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > pressure =
-      patch.getPatchData(d_pressure, getDataContext());
-   boost::shared_ptr<pdat::FaceData<double> > flux =
-      patch.getPatchData(d_flux, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > density(
+      patch.getPatchData(d_density, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > velocity(
+      patch.getPatchData(d_velocity, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > pressure(
+      patch.getPatchData(d_pressure, getDataContext()));
+   boost::shared_ptr<pdat::FaceData<double> > flux(
+      patch.getPatchData(d_flux, getDataContext()));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(density);
@@ -1600,28 +1591,28 @@ void Euler::conservativeDifferenceOnPatch(
    const double dt,
    bool at_syncronization)
 {
-   (void)time;
-   (void)dt;
-   (void)at_syncronization;
+   NULL_USE(time);
+   NULL_USE(dt);
+   NULL_USE(at_syncronization);
 
    t_conservdiff->start();
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry());
    const double* dx = patch_geom->getDx();
 
    hier::Box pbox = patch.getBox();
    const hier::Index ifirst = pbox.lower();
    const hier::Index ilast = pbox.upper();
 
-   boost::shared_ptr<pdat::FaceData<double> > flux =
-      patch.getPatchData(d_flux, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > density =
-      patch.getPatchData(d_density, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > velocity =
-      patch.getPatchData(d_velocity, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > pressure =
-      patch.getPatchData(d_pressure, getDataContext());
+   boost::shared_ptr<pdat::FaceData<double> > flux(
+      patch.getPatchData(d_flux, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > density(
+      patch.getPatchData(d_density, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > velocity(
+      patch.getPatchData(d_velocity, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > pressure(
+      patch.getPatchData(d_pressure, getDataContext()));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(density);
@@ -1679,8 +1670,8 @@ void Euler::boundaryReset(
    int i, idir;
    bool bdry_cell = true;
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry());
    hier::BoxList domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, patch_geom->getRatio());
    const double* dx = patch_geom->getDx();
@@ -1780,19 +1771,19 @@ void Euler::postprocessRefine(
    const hier::IntVector<NDIM>& ratio)
 {
 
-   boost::shared_ptr<pdat::CellData<double> > cdensity =
-      coarse.getPatchData(d_density, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > cvelocity =
-      coarse.getPatchData(d_velocity, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > cpressure =
-      coarse.getPatchData(d_pressure, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > cdensity(
+      coarse.getPatchData(d_density, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > cvelocity(
+      coarse.getPatchData(d_velocity, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > cpressure(
+      coarse.getPatchData(d_pressure, getDataContext()));
 
-   boost::shared_ptr<pdat::CellData<double> > fdensity =
-      fine.getPatchData(d_density, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > fvelocity =
-      fine.getPatchData(d_velocity, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > fpressure =
-      fine.getPatchData(d_pressure, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > fdensity(
+      fine.getPatchData(d_density, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > fvelocity(
+      fine.getPatchData(d_velocity, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > fpressure(
+      fine.getPatchData(d_pressure, getDataContext()));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(cdensity);
@@ -1818,10 +1809,10 @@ void Euler::postprocessRefine(
    const hier::Index filo = fdensity->getGhostBox().lower();
    const hier::Index fihi = fdensity->getGhostBox().upper();
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> cgeom =
-      coarse.getPatchGeometry();
-   const boost::shared_ptr<geom::CartesianPatchGeometry> fgeom =
-      fine.getPatchGeometry();
+   const boost::shared_ptr<geom::CartesianPatchGeometry> cgeom(
+      coarse.getPatchGeometry());
+   const boost::shared_ptr<geom::CartesianPatchGeometry> fgeom(
+      fine.getPatchGeometry());
 
    const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
    const hier::Index ifirstc = coarse_box.lower();
@@ -1955,18 +1946,18 @@ void Euler::postprocessCoarsen(
    const hier::IntVector<NDIM>& ratio)
 {
 
-   boost::shared_ptr<pdat::CellData<double> > fdensity = fine.getPatchData(
-         d_density, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > fvelocity = fine.getPatchData(
-         d_velocity, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > fpressure = fine.getPatchData(
-         d_pressure, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > cdensity = coarse.getPatchData(
-         d_density, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > cvelocity = coarse.getPatchData(
-         d_velocity, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > cpressure = coarse.getPatchData(
-         d_pressure, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > fdensity(
+      fine.getPatchData(d_density, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > fvelocity(
+      fine.getPatchData(d_velocity, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > fpressure(
+      fine.getPatchData(d_pressure, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > cdensity(
+      coarse.getPatchData(d_density, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > cvelocity(
+      coarse.getPatchData(d_velocity, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > cpressure(
+      coarse.getPatchData(d_pressure, getDataContext()));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(cdensity);
@@ -1990,10 +1981,10 @@ void Euler::postprocessCoarsen(
    const hier::Index cilo = cdensity->getGhostBox().lower();
    const hier::Index cihi = cdensity->getGhostBox().upper();
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> fgeom =
-      fine.getPatchGeometry();
-   const boost::shared_ptr<geom::CartesianPatchGeometry> cgeom =
-      coarse.getPatchGeometry();
+   const boost::shared_ptr<geom::CartesianPatchGeometry> fgeom(
+      fine.getPatchGeometry());
+   const boost::shared_ptr<geom::CartesianPatchGeometry> cgeom(
+      coarse.getPatchGeometry());
 
    const hier::Box fine_box = hier::Box::refine(coarse_box, ratio);
    const hier::Index ifirstc = coarse_box.lower();
@@ -2060,15 +2051,16 @@ void Euler::setPhysicalBoundaryConditions(
    const double fill_time,
    const hier::IntVector<NDIM>& ghost_width_to_fill)
 {
-   (void)fill_time;
+   NULL_USE(fill_time);
+
    t_setphysbcs->start();
 
-   boost::shared_ptr<pdat::CellData<double> > density =
-      patch.getPatchData(d_density, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > velocity =
-      patch.getPatchData(d_velocity, getDataContext());
-   boost::shared_ptr<pdat::CellData<double> > pressure =
-      patch.getPatchData(d_pressure, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > density(
+      patch.getPatchData(d_density, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > velocity(
+      patch.getPatchData(d_velocity, getDataContext()));
+   boost::shared_ptr<pdat::CellData<double> > pressure(
+      patch.getPatchData(d_pressure, getDataContext()));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(density);
@@ -2099,8 +2091,8 @@ void Euler::setPhysicalBoundaryConditions(
 
    if (d_data_problem == "STEP") {
 
-      const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom =
-         patch.getPatchGeometry();
+      const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+         patch.getPatchGeometry());
       const double* dx = patch_geom->getDx();
       const double* xpatchhi = patch_geom->getXUpper();
       const double* xdomainhi = d_grid_geometry->getXUpper();
@@ -2284,17 +2276,17 @@ void Euler::tagGradientDetectorCells(
    const int tag_indx,
    const bool uses_richardson_extrapolation_too)
 {
-   (void)initial_error;
+   NULL_USE(initial_error);
 
    t_taggradient->start();
 
    const int error_level_number = patch.getPatchLevelNumber();
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry());
    const double* dx = patch_geom->getDx();
 
-   boost::shared_ptr<pdat::CellData<int> > tags = patch.getPatchData(tag_indx);
+   boost::shared_ptr<pdat::CellData<int> > tags(patch.getPatchData(tag_indx));
 
    hier::Box pbox = patch.getBox();
    hier::Box pboxm1 = pbox.grow(pbox, -1);
@@ -2317,10 +2309,11 @@ void Euler::tagGradientDetectorCells(
     * Create a set of temporary tags and set to untagged value.
     */
 
-   boost::shared_ptr<pdat::CellData<int> > temp_tags = new pdat::CellData<int>(
+   boost::shared_ptr<pdat::CellData<int> > temp_tags(
+      new pdat::CellData<int>(
          pbox,
          1,
-         d_nghosts);
+         d_nghosts));
    temp_tags->fillAll(FALSE);
 
 #if (NDIM == 2)
@@ -2596,16 +2589,16 @@ void Euler::tagRichardsonExtrapolationCells(
    const int tag_index,
    const bool uses_gradient_detector_too)
 {
-   (void)initial_error;
+   NULL_USE(initial_error);
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry());
    const double* xdomainlo = d_grid_geometry->getXLower();
    const double* xdomainhi = d_grid_geometry->getXUpper();
 
    hier::Box pbox = patch.getBox();
 
-   boost::shared_ptr<pdat::CellData<int> > tags = patch.getPatchData(tag_index);
+   boost::shared_ptr<pdat::CellData<int> > tags(patch.getPatchData(tag_index));
 
    /*
     * Possible tagging criteria includes
@@ -2813,12 +2806,12 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
 
    bool data_on_patch = FALSE;
 
-   boost::shared_ptr<pdat::CellData<double> > density =
-      patch.getPatchData(d_density, d_plot_context);
-   boost::shared_ptr<pdat::CellData<double> > velocity =
-      patch.getPatchData(d_velocity, d_plot_context);
-   boost::shared_ptr<pdat::CellData<double> > pressure =
-      patch.getPatchData(d_pressure, d_plot_context);
+   boost::shared_ptr<pdat::CellData<double> > density(
+      patch.getPatchData(d_density, d_plot_context));
+   boost::shared_ptr<pdat::CellData<double> > velocity(
+      patch.getPatchData(d_velocity, d_plot_context));
+   boost::shared_ptr<pdat::CellData<double> > pressure(
+      patch.getPatchData(d_pressure, d_plot_context));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(density);
@@ -2941,12 +2934,12 @@ void Euler::writeData1dPencil(
 
    if (!box.empty()) {
 
-      boost::shared_ptr<pdat::CellData<double> > density =
-         patch->getPatchData(d_density, getDataContext());
-      boost::shared_ptr<pdat::CellData<double> > velocity =
-         patch->getPatchData(d_velocity, getDataContext());
-      boost::shared_ptr<pdat::CellData<double> > pressure =
-         patch->getPatchData(d_pressure, getDataContext());
+      boost::shared_ptr<pdat::CellData<double> > density(
+         patch->getPatchData(d_density, getDataContext()));
+      boost::shared_ptr<pdat::CellData<double> > velocity(
+         patch->getPatchData(d_velocity, getDataContext()));
+      boost::shared_ptr<pdat::CellData<double> > pressure(
+         patch->getPatchData(d_pressure, getDataContext()));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(density);
@@ -2954,8 +2947,8 @@ void Euler::writeData1dPencil(
       TBOX_ASSERT(pressure);
 #endif
 
-      const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom =
-         patch->getPatchGeometry();
+      const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+         patch->getPatchGeometry());
       const double* dx = pgeom->getDx();
       const double* xlo = pgeom->getXLower();
 
@@ -3384,8 +3377,8 @@ void Euler::getFromInput(
    }
 
    if (db->keyExists("Refinement_data")) {
-      boost::shared_ptr<tbox::Database> refine_db = db->getDatabase(
-            "Refinement_data");
+      boost::shared_ptr<tbox::Database> refine_db(
+         db->getDatabase("Refinement_data"));
       tbox::Array<string> refinement_keys = refine_db->getAllKeys();
       int num_keys = refinement_keys.getSize();
 
@@ -3751,14 +3744,13 @@ void Euler::getFromInput(
                           << endl);
       }
 
-      boost::shared_ptr<tbox::Database> init_data_db;
-      if (db->keyExists("Initial_data")) {
-         init_data_db = db->getDatabase("Initial_data");
-      } else {
+      if (!db->keyExists("Initial_data")) {
          TBOX_ERROR(
             d_object_name << ": "
                           << "No `Initial_data' database found in input." << endl);
       }
+      boost::shared_ptr<tbox::Database> init_data_db(
+         db->getDatabase("Initial_data"));
 
       bool found_problem_data = false;
 
@@ -3882,8 +3874,8 @@ void Euler::getFromInput(
 
             if (!(init_data_keys[nkey] == "front_position")) {
 
-               boost::shared_ptr<tbox::Database> interval_db =
-                  init_data_db->getDatabase(init_data_keys[nkey]);
+               boost::shared_ptr<tbox::Database> interval_db(
+                  init_data_db->getDatabase(init_data_keys[nkey]));
 
                readStateDataEntry(interval_db,
                   init_data_keys[nkey],
@@ -3931,8 +3923,8 @@ void Euler::getFromInput(
 
       if (db->keyExists("Boundary_data")) {
 
-         boost::shared_ptr<tbox::Database> bdry_db = db->getDatabase(
-               "Boundary_data");
+         boost::shared_ptr<tbox::Database> bdry_db(
+            db->getDatabase("Boundary_data"));
 
 #if (NDIM == 2)
          appu::CartesianBoundaryUtilities2::readBoundaryInput(this,
@@ -4120,16 +4112,14 @@ void Euler::putToDatabase(
 void Euler::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database> root_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> root_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   boost::shared_ptr<tbox::Database> db;
-   if (root_db->isDatabase(d_object_name)) {
-      db = root_db->getDatabase(d_object_name);
-   } else {
+   if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file." << endl);
    }
+   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("EULER_VERSION");
    if (ver != EULER_VERSION) {
@@ -4410,8 +4400,8 @@ void Euler::checkBoundaryData(
 #endif
 #endif
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry());
    const tbox::Array<hier::BoundaryBox> bdry_boxes =
       pgeom->getCodimensionBoundaries(btype);
 

@@ -58,7 +58,7 @@ SAMRAI_INLINE_KEYWORD
 bool MathUtilities<TYPE>::isNaN(
    const TYPE& value)
 {
-   (void)value;
+   NULL_USE(value);
    return false;
 }
 

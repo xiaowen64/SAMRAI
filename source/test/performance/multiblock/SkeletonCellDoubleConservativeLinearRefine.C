@@ -141,10 +141,10 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   boost::shared_ptr<pdat::CellData<double> > cdata =
-      coarse.getPatchData(src_component);
-   boost::shared_ptr<pdat::CellData<double> > fdata =
-      fine.getPatchData(dst_component);
+   boost::shared_ptr<pdat::CellData<double> > cdata(
+      coarse.getPatchData(src_component));
+   boost::shared_ptr<pdat::CellData<double> > fdata(
+      fine.getPatchData(dst_component));
 
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
@@ -157,10 +157,10 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   const boost::shared_ptr<hier::PatchGeometry> cgeom =
-      coarse.getPatchGeometry();
-   const boost::shared_ptr<hier::PatchGeometry> fgeom =
-      fine.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> cgeom(
+      coarse.getPatchGeometry());
+   const boost::shared_ptr<hier::PatchGeometry> fgeom(
+      fine.getPatchGeometry());
 
    const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
    const hier::Index ifirstc = coarse_box.lower();

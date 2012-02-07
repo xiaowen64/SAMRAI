@@ -28,7 +28,12 @@ namespace tbox {
 class DatabaseFactory
 {
 public:
-   /*
+  /**
+    * Destructor
+    */
+  virtual ~DatabaseFactory() {};
+
+  /**
     * Build a new Database instance.
     */
    virtual boost::shared_ptr<Database>

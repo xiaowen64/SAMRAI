@@ -101,8 +101,8 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         boost::shared_ptr<tbox::Database> global_db =
-            input_db->getDatabase("GlobalInputs");
+         boost::shared_ptr<tbox::Database> global_db(
+            input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
                getBool("call_abort_in_serial_instead_of_exit");
@@ -114,8 +114,7 @@ int main(
        * Read "Main" input data.
        */
 
-      boost::shared_ptr<tbox::Database> main_db =
-         input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -143,7 +142,9 @@ int main(
             input_db->getDatabase("CartesianGridGeometry")));
 
       boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
-         new hier::PatchHierarchy("PatchHierarchy", grid_geometry));
+         new hier::PatchHierarchy(
+            "PatchHierarchy",
+            grid_geometry));
 
       BoundaryDataTester* btester =
          new BoundaryDataTester(
@@ -211,8 +212,8 @@ int main(
       patch_hierarchy->makeNewPatchLevel(0, layer0);
 
       // Add Connector required for schedule construction.
-      boost::shared_ptr<hier::PatchLevel> level0 =
-         patch_hierarchy->getPatchLevel(0);
+      boost::shared_ptr<hier::PatchLevel> level0(
+         patch_hierarchy->getPatchLevel(0));
       level0->getBoxLevel()->getPersistentOverlapConnectors().
       createConnector(
          *level0->getBoxLevel(),

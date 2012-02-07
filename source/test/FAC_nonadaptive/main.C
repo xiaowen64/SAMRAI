@@ -113,8 +113,7 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<tbox::Database> main_db =
-         input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -143,14 +142,16 @@ int main(
        */
 
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
-         new geom::CartesianGridGeometry(dim,
+         new geom::CartesianGridGeometry(
+            dim,
             base_name + "CartesianGridGeometry",
             input_db->getDatabase("CartesianGridGeometry")));
       tbox::plog << "Cartesian Geometry:" << endl;
       grid_geometry->printClassData(tbox::plog);
 
       boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
-         new hier::PatchHierarchy(base_name + "::PatchHierarchy",
+         new hier::PatchHierarchy(
+            base_name + "::PatchHierarchy",
             grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
@@ -180,7 +181,8 @@ int main(
       boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
          new mesh::BergerRigoutsos(dim));
       boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
-         new mesh::TreeLoadBalancer(dim,
+         new mesh::TreeLoadBalancer(
+            dim,
             "load balancer",
             boost::shared_ptr<tbox::Database>()));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());

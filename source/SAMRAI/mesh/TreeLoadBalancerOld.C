@@ -1790,7 +1790,10 @@ void TreeLoadBalancerOld::unpackSubtreeLoadData(
    const int* received_data,
    int received_data_length ) const
 {
-   (void)received_data_length;
+#ifndef DEBUG_CHECK_ASSERTIONS
+   NULL_USE(received_data_length);
+#endif
+
    t_unpack_load->start();
    const int *buffer = received_data;
    load_data.d_num_procs = *(buffer++);

@@ -53,7 +53,9 @@ SideDataFactory<TYPE>::SideDataFactory(
    d_directions(hier::IntVector::getOne(ghosts.getDim())),
    d_mb_trans(NULL)
 {
-   (void)directions;
+#ifndef DEBUG_CHECK_ASSERTIONS
+   NULL_USE(directions);
+#endif
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
    TBOX_ASSERT(directions.min() >= 0);

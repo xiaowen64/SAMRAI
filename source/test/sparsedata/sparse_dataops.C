@@ -118,8 +118,8 @@ int main(
       hier::BoxContainer fine_domain;
       hier::IntVector ratio(dim, 2);
 
-      boost::shared_ptr<geom::CartesianGridGeometry> geometry =
-         getGeometry(coarse_domain, fine_domain, dim);
+      boost::shared_ptr<geom::CartesianGridGeometry> geometry(
+         getGeometry(coarse_domain, fine_domain, dim));
 
       boost::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", geometry));
@@ -168,8 +168,8 @@ int main(
        */
       hier::VariableDatabase* variable_db =
          hier::VariableDatabase::getDatabase();
-      boost::shared_ptr<hier::VariableContext> cxt = variable_db->getContext(
-            "dummy");
+      boost::shared_ptr<hier::VariableContext> cxt(
+            variable_db->getContext("dummy"));
       const hier::IntVector no_ghosts(dim, 0);
 
       typedef pdat::SparseData<pdat::CellGeometry> LSparseData;
@@ -204,12 +204,12 @@ int main(
        * Loop over hierarchy levels and populate data.
        */
       for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
-         boost::shared_ptr<hier::PatchLevel> level =
-            hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level(
+            hierarchy->getPatchLevel(ln));
 
          // loop over patches on level
          for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-            boost::shared_ptr<hier::Patch> patch = ip();
+            const boost::shared_ptr<hier::Patch>& patch = ip();
 
             // access sample data from patch
             boost::shared_ptr<LSparseData> sample1(
@@ -339,10 +339,10 @@ checkIterators(
 #ifdef HAVE_BOOST_HEADERS
    typedef pdat::SparseData<pdat::CellGeometry> LSparseData;
    for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> patch = ip();
+         const boost::shared_ptr<hier::Patch>& patch = ip();
 
          boost::shared_ptr<LSparseData> sample(
             patch->getPatchData(data_id1),
@@ -401,9 +401,9 @@ bool checkCopyOps(
 #ifdef HAVE_BOOST_HEADERS
    typedef pdat::SparseData<pdat::CellGeometry> LSparseData;
    for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> patch = ip();
+         const boost::shared_ptr<hier::Patch>& patch = ip();
          boost::shared_ptr<LSparseData> control(
             patch->getPatchData(data_id1),
             boost::detail::dynamic_cast_tag());
@@ -474,10 +474,10 @@ bool checkRemoveOps(
    typedef pdat::SparseData<pdat::CellGeometry> LSparseData;
    int num_failures(0);
    for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         boost::shared_ptr<hier::Patch> patch = ip();
+         const boost::shared_ptr<hier::Patch>& patch = ip();
 
          boost::shared_ptr<LSparseData> sample(
             patch->getPatchData(data_id1),
@@ -553,10 +553,10 @@ getGeometry(
    fine_domain.pushBack(fine1);
 
    boost::shared_ptr<geom::CartesianGridGeometry> geometry(
-      new geom::CartesianGridGeometry("CartesianGeometry",
+      new geom::CartesianGridGeometry(
+         "CartesianGeometry",
          lo,
          hi,
          coarse_domain));
-
    return geometry;
 }

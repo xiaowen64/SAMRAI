@@ -122,8 +122,8 @@ int main(
    // values accordingly.
    //
    if (input_db->keyExists("GlobalInputs")) {
-      boost::shared_ptr<tbox::Database> global_db =
-         input_db->getDatabase("GlobalInputs");
+      boost::shared_ptr<tbox::Database> global_db(
+         input_db->getDatabase("GlobalInputs"));
 //      if (global_db->keyExists("tag_clustering_method")) {
 //       string tag_clustering_method =
 //          global_db->getString("tag_clustering_method");
@@ -142,7 +142,7 @@ int main(
    // proper restart information was given on command line, and the
    // restart interval is non-zero, create a restart database.
    //
-   boost::shared_ptr<tbox::Database> main_db = input_db->getDatabase("Main");
+   boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
    const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -262,7 +262,8 @@ int main(
    // -------------------- the mesh refinement operations --------------
    //
    boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
-      new mesh::StandardTagAndInitialize(dim,
+      new mesh::StandardTagAndInitialize(
+         dim,
          "StandardTagAndInitialize",
          mblk_hyp_level_integrator.get(),
          input_db->getDatabase("StandardTagAndInitialize")));
@@ -278,7 +279,8 @@ int main(
    load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    boost::shared_ptr<mesh::GriddingAlgorithm> mblk_gridding_algorithm(
-      new mesh::GriddingAlgorithm(mblk_patch_hierarchy,
+      new mesh::GriddingAlgorithm(
+         mblk_patch_hierarchy,
          "GriddingAlgorithm",
          input_db->getDatabase("GriddingAlgorithm"),
          error_detector,
@@ -287,7 +289,8 @@ int main(
          load_balancer));
 
    boost::shared_ptr<algs::TimeRefinementIntegrator> time_integrator(
-      new algs::TimeRefinementIntegrator("TimeRefinementIntegrator",
+      new algs::TimeRefinementIntegrator(
+         "TimeRefinementIntegrator",
          input_db->getDatabase("TimeRefinementIntegrator"),
          mblk_patch_hierarchy,
          mblk_hyp_level_integrator,
@@ -299,7 +302,8 @@ int main(
    //
    bool is_multiblock = true;
    boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
-      new appu::VisItDataWriter(dim,
+      new appu::VisItDataWriter(
+         dim,
          "MblkEuler VisIt Writer",
          visit_dump_dirname,
          visit_number_procs_per_file,
@@ -468,8 +472,8 @@ void setupHierarchy(
    TBOX_ASSERT(main_input_db);
 #endif
 
-   boost::shared_ptr<tbox::Database> mult_db =
-      main_input_db->getDatabase("PatchHierarchy");
+   boost::shared_ptr<tbox::Database> mult_db(
+      main_input_db->getDatabase("PatchHierarchy"));
 
    /*
     * Read the geometry information and build array of geometries
@@ -492,7 +496,10 @@ void setupHierarchy(
    }
 
    mblk_hierarchy.reset(
-      new hier::PatchHierarchy("PatchHierarchy",
-         geometry, mult_db, true));
+      new hier::PatchHierarchy(
+         "PatchHierarchy",
+         geometry,
+         mult_db,
+         true));
 
 }

@@ -26,12 +26,9 @@ using namespace SAMRAI;
 // using namespace std;
 
 DLBGTest::DLBGTest(
-   const std::string& object_name
-   ,
-   const tbox::Dimension& dim
-   ,
-   boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy
-   ,
+   const std::string& object_name,
+   const tbox::Dimension& dim,
+   boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy,
    boost::shared_ptr<tbox::Database> database):
    d_name(object_name),
    d_dim(dim),
@@ -103,10 +100,8 @@ bool DLBGTest::packDerivedDataIntoDoubleBuffer(
    const std::string& variable_name,
    int depth_id) const
 {
-   (void)patch;
-   (void)region;
-   (void)variable_name;
-   (void)depth_id;
+   NULL_USE(patch);
+   NULL_USE(depth_id);
    if (variable_name == "Owner") {
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
       double owner = mpi.getRank();

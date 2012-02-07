@@ -146,7 +146,7 @@ void FaceMultiblockTest::tagCellsToRefine(
    const int level_number,
    int tag_index)
 {
-   (void)hierarchy;
+   NULL_USE(hierarchy);
 
    /*
     * Base class sets tags in box array for each level.
@@ -160,9 +160,9 @@ void FaceMultiblockTest::setPhysicalBoundaryConditions(
    const double time,
    const hier::IntVector& gcw_to_fill) const
 {
-   (void)time;
+   NULL_USE(time);
 
-   boost::shared_ptr<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
+   boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
    const tbox::Array<hier::BoundaryBox> node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -652,7 +652,7 @@ bool FaceMultiblockTest::verifyResults(
          }
       }
 
-      boost::shared_ptr<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
+      boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
       for (int b = 0; b < d_dim.getValue(); b++) {
          tbox::Array<hier::BoundaryBox> bdry =
@@ -776,15 +776,15 @@ void FaceMultiblockTest::postprocessRefine(
       int id = hier::VariableDatabase::getDatabase()->
          mapVariableAndContextToIndex(d_variables[i], context);
 
-      boost::shared_ptr<hier::PatchDataFactory> fine_pdf =
-         fine.getPatchDescriptor()->getPatchDataFactory(id);
+      boost::shared_ptr<hier::PatchDataFactory> fine_pdf(
+         fine.getPatchDescriptor()->getPatchDataFactory(id));
 
-      boost::shared_ptr<hier::BoxOverlap> fine_overlap =
+      boost::shared_ptr<hier::BoxOverlap> fine_overlap(
          fill_pattern.computeFillBoxesOverlap(
             fine_box_list,
             fine.getBox(),
             fine.getPatchData(id)->getGhostBox(),
-            *fine_pdf);
+            *fine_pdf));
 
       ref_op.refine(fine, coarse, id, id, *fine_overlap, ratio);
    }

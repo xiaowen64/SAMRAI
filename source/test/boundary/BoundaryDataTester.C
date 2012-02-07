@@ -46,18 +46,16 @@ BoundaryDataTester::BoundaryDataTester(
    boost::shared_ptr<tbox::Database> input_db,
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geom):
    xfer::RefinePatchStrategy(dim),
-   d_dim(dim)
+   d_object_name(object_name),
+   d_dim(dim),
+   d_grid_geometry(grid_geom),
+   d_variable_context(
+      hier::VariableDatabase::getDatabase()->getContext("BOUNDARY_TEST"))
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
 #endif
-
-   d_object_name = object_name;
-   d_grid_geometry = grid_geom;
-
-   d_variable_context =
-      hier::VariableDatabase::getDatabase()->getContext("BOUNDARY_TEST");
 
    readVariableInputAndMakeVariables(input_db);
 
@@ -86,7 +84,7 @@ void BoundaryDataTester::setPhysicalBoundaryConditions(
    const double fill_time,
    const hier::IntVector& ghost_width_to_fill)
 {
-   (void)fill_time;
+   NULL_USE(fill_time);
    tbox::plog << "\n\nFilling boundary data on patch = " << patch.getBox()
               << endl;
    tbox::plog << "ghost_width_to_fill = " << ghost_width_to_fill << endl;
@@ -183,8 +181,8 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number == 0);
 
-   boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-         level_number);
+   boost::shared_ptr<hier::PatchLevel> level(
+      hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(level);
 
    level->allocatePatchData(d_patch_data_components);
@@ -193,7 +191,7 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
     * Undefine the data so it is initialized to some value.
     */
    for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-      boost::shared_ptr<hier::Patch> patch = *ip;
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       for (int iv = 0; iv < d_variables.getSize(); iv++) {
          boost::shared_ptr<pdat::CellData<double> > cvdata(
@@ -207,7 +205,7 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
    }
 
    for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-      boost::shared_ptr<hier::Patch> patch = *ip;
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       for (int iv = 0; iv < d_variables.getSize(); iv++) {
          boost::shared_ptr<pdat::CellData<double> > cvdata(
@@ -265,8 +263,8 @@ int BoundaryDataTester::runBoundaryTest(
          boost::shared_ptr<hier::RefineOperator>());
    }
 
-   boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-         level_number);
+   boost::shared_ptr<hier::PatchLevel> level(
+      hierarchy->getPatchLevel(level_number));
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level);
 #endif
@@ -295,8 +293,7 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
 
    int var_cnt = 0;
    for (int i = 0; i < nkeys; i++) {
-      boost::shared_ptr<tbox::Database> var_db = db->getDatabase(var_keys[i]);
-      if (var_db->keyExists("name")) {
+      if (db->getDatabase(var_keys[i])->keyExists("name")) {
          var_cnt++;
       }
    }
@@ -308,7 +305,7 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
 
    for (int i = 0; i < nkeys; i++) {
 
-      boost::shared_ptr<tbox::Database> var_db = db->getDatabase(var_keys[i]);
+      boost::shared_ptr<tbox::Database> var_db(db->getDatabase(var_keys[i]));
 
       if (var_keys[i] != "Boundary_data" && var_db->keyExists("name")) {
 
@@ -546,8 +543,8 @@ void BoundaryDataTester::readBoundaryDataInput(
 
       if (db->keyExists("Boundary_data")) {
 
-         boost::shared_ptr<tbox::Database> bdry_db = db->getDatabase(
-               "Boundary_data");
+         boost::shared_ptr<tbox::Database> bdry_db(
+            db->getDatabase("Boundary_data"));
 
          if (d_dim == tbox::Dimension(2)) {
             appu::CartesianBoundaryUtilities2::
@@ -683,10 +680,6 @@ void BoundaryDataTester::checkBoundaryData(
    const hier::Patch& patch,
    const hier::IntVector& ghost_width_to_check)
 {
-   (void)btype;
-   (void)patch;
-   (void)ghost_width_to_check;
-
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim == tbox::Dimension(2)) {
       TBOX_ASSERT(btype == Bdry::EDGE2D ||

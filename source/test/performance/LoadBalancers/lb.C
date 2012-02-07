@@ -247,7 +247,7 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension
          dim(static_cast<unsigned short>(main_db->getInteger("dim")));
@@ -389,8 +389,8 @@ int main(
       boost::shared_ptr<pdat::CellVariable<int> > dummy_variable(
          new pdat::CellVariable<int>(dim, "DummyVariable"));
 
-      boost::shared_ptr<hier::VariableContext> dummy_context =
-         vdb->getContext("DUMMY");
+      boost::shared_ptr<hier::VariableContext> dummy_context(
+         vdb->getContext("DUMMY"));
 
       vdb->registerVariableAndContext(
          dummy_variable,
@@ -492,8 +492,8 @@ int main(
          oca.findOverlaps(L0_to_domain);
          oca.findOverlaps(domain_to_L0);
 
-         boost::shared_ptr<mesh::LoadBalanceStrategy> lb0 =
-            createLoadBalancer( base_db, load_balancer_type, 0, dim );
+         boost::shared_ptr<mesh::LoadBalanceStrategy> lb0(
+            createLoadBalancer( base_db, load_balancer_type, 0, dim ));
 
          tbox::plog << "\n\n\ninitial L0 loads:\n";
          lb0->gatherAndReportLoadBalance(
@@ -589,8 +589,8 @@ int main(
             TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
          }
 
-         boost::shared_ptr<mesh::LoadBalanceStrategy> lb1
-            = createLoadBalancer( base_db, load_balancer_type, 1 , dim);
+         boost::shared_ptr<mesh::LoadBalanceStrategy> lb1(
+            createLoadBalancer( base_db, load_balancer_type, 1 , dim));
 
          lb1->gatherAndReportLoadBalance(
             (double)L1.getLocalNumberOfCells(),
@@ -686,8 +686,8 @@ int main(
             TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
          }
 
-         boost::shared_ptr<mesh::LoadBalanceStrategy> lb2
-            = createLoadBalancer( base_db, load_balancer_type, 2 , dim);
+         boost::shared_ptr<mesh::LoadBalanceStrategy> lb2(
+            createLoadBalancer( base_db, load_balancer_type, 2 , dim));
 
          lb2->gatherAndReportLoadBalance(
             (double)L2.getLocalNumberOfCells(),
@@ -1013,10 +1013,12 @@ void generatePrebalanceByUserShells(
          vdb->getPatchDescriptor()));
 
    boost::shared_ptr<pdat::CellVariable<int> > tag_variable(
-      new pdat::CellVariable<int>(dim, "UserShellsTagVariable"));
+      new pdat::CellVariable<int>(
+         dim,
+         "UserShellsTagVariable"));
 
-   boost::shared_ptr<hier::VariableContext> default_context =
-      vdb->getContext("TagVariable");
+   boost::shared_ptr<hier::VariableContext> default_context(
+      vdb->getContext("TagVariable"));
 
    const int tag_id = vdb->registerVariableAndContext(
          tag_variable,
@@ -1029,7 +1031,7 @@ void generatePrebalanceByUserShells(
    const double* h = grid_geometry->getDx();
    std::vector<double> r(dim.getValue());
    for (hier::PatchLevel::Iterator pi(tag_level); pi; pi++) {
-      boost::shared_ptr<hier::Patch> patch = *pi;
+      const boost::shared_ptr<hier::Patch>& patch = *pi;
 
       pdat::NodeData<double> node_tag_data(patch->getBox(), 1, zero_vec);
       for (pdat::NodeData<int>::Iterator ni(node_tag_data.getGhostBox());
@@ -1186,15 +1188,18 @@ void generatePrebalanceByShrinkingLevel(
       hier::VariableDatabase::getDatabase();
 
    boost::shared_ptr<hier::PatchLevel> tag_level(
-      new hier::PatchLevel(L1,
+      new hier::PatchLevel(
+         L1,
          grid_geometry,
          vdb->getPatchDescriptor()));
 
    boost::shared_ptr<pdat::CellVariable<int> > tag_variable(
-      new pdat::CellVariable<int>(dim, "ShrinkingLevelTagVariable"));
+      new pdat::CellVariable<int>(
+         dim,
+         "ShrinkingLevelTagVariable"));
 
-   boost::shared_ptr<hier::VariableContext> default_context =
-      vdb->getContext("TagVariable");
+   boost::shared_ptr<hier::VariableContext> default_context(
+      vdb->getContext("TagVariable"));
 
    const int tag_id = vdb->registerVariableAndContext(
          tag_variable,
@@ -1205,7 +1210,7 @@ void generatePrebalanceByShrinkingLevel(
 
    for (hier::PatchLevel::Iterator pi(tag_level); pi; pi++) {
 
-      boost::shared_ptr<hier::Patch> patch = *pi;
+      const boost::shared_ptr<hier::Patch>& patch = *pi;
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(tag_id),
          boost::detail::dynamic_cast_tag());
@@ -1335,15 +1340,18 @@ void generatePrebalanceBySinusoidalFront(
       hier::VariableDatabase::getDatabase();
 
    boost::shared_ptr<hier::PatchLevel> tag_level(
-      new hier::PatchLevel(L1,
+      new hier::PatchLevel(
+         L1,
          grid_geometry,
          vdb->getPatchDescriptor()));
 
    boost::shared_ptr<pdat::CellVariable<int> > tag_variable(
-      new pdat::CellVariable<int>(dim, "SinusoidalFrontTagVariable"));
+      new pdat::CellVariable<int>(
+         dim,
+         "SinusoidalFrontTagVariable"));
 
-   boost::shared_ptr<hier::VariableContext> default_context =
-      vdb->getContext("TagVariable");
+   boost::shared_ptr<hier::VariableContext> default_context(
+      vdb->getContext("TagVariable"));
 
    const int tag_id = vdb->registerVariableAndContext(
          tag_variable,
@@ -1360,7 +1368,7 @@ void generatePrebalanceBySinusoidalFront(
 
    for (hier::PatchLevel::Iterator pi(tag_level); pi; pi++) {
 
-      boost::shared_ptr<hier::Patch> patch = *pi;
+      const boost::shared_ptr<hier::Patch>& patch = *pi;
 
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          patch->getPatchGeometry(),
@@ -1449,7 +1457,6 @@ void generatePrebalanceByUserBoxes(
    const hier::IntVector& min_size,
    const hier::IntVector& connector_width )
 {
-   NULL_USE(hierarchy);
    NULL_USE(min_size);
 
    const tbox::Dimension& dim(hierarchy->getDim());
@@ -1566,8 +1573,9 @@ void generatePrebalance(
    const hier::IntVector &min_size,
    const hier::IntVector &required_connector_width )
 {
-   boost::shared_ptr<tbox::Database> box_gen_db =
-      main_db.getDatabaseWithDefault(box_gen_method, boost::shared_ptr<Database>());
+   boost::shared_ptr<tbox::Database> box_gen_db(
+      main_db.getDatabaseWithDefault(
+         box_gen_method, boost::shared_ptr<Database>()));
 
    if (box_gen_method == "PrebalanceByUserBoxes") {
       generatePrebalanceByUserBoxes(
@@ -1628,8 +1636,8 @@ createLoadBalancer(
 
    if (lb_type == "TreeLoadBalancer") {
 
-      boost::shared_ptr<mesh::TreeLoadBalancer>
-         tree_lb(new mesh::TreeLoadBalancer(
+      boost::shared_ptr<mesh::TreeLoadBalancer> tree_lb(
+         new mesh::TreeLoadBalancer(
             dim,
             std::string("mesh::TreeLoadBalancer") + tbox::Utilities::intToString(ln),
             input_db->getDatabaseWithDefault("TreeLoadBalancer",
@@ -1639,8 +1647,8 @@ createLoadBalancer(
 
    }else if (lb_type == "TreeLoadBalancerOld") {
 
-      boost::shared_ptr<mesh::TreeLoadBalancerOld>
-         tree_lb(new mesh::TreeLoadBalancerOld(
+      boost::shared_ptr<mesh::TreeLoadBalancerOld> tree_lb(
+         new mesh::TreeLoadBalancerOld(
             dim,
             std::string("mesh::TreeLoadBalancerOld") + tbox::Utilities::intToString(ln),
             input_db->getDatabaseWithDefault("TreeLoadBalancerOld",
@@ -1650,8 +1658,8 @@ createLoadBalancer(
 
    } else if (lb_type == "ChopAndPackLoadBalancer") {
 
-      boost::shared_ptr<mesh::ChopAndPackLoadBalancer>
-         cap_lb(new mesh::ChopAndPackLoadBalancer(
+      boost::shared_ptr<mesh::ChopAndPackLoadBalancer> cap_lb(
+         new mesh::ChopAndPackLoadBalancer(
             dim,
             std::string("mesh::ChopAndPackLoadBalancer") + tbox::Utilities::intToString(ln),
             input_db->getDatabaseWithDefault("ChopAndPackLoadBalancer",

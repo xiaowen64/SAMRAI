@@ -117,43 +117,56 @@ ModifiedBratuProblem::ModifiedBratuProblem(
    boost::shared_ptr<appu::VisItDataWriter> visit_writer):
    RefinePatchStrategy(dim),
    CoarsenPatchStrategy(dim),
+   d_object_name(object_name),
    d_dim(dim),
+   d_grid_geometry(grid_geometry),
+   d_lambda(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_input_dt(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_solution(new pdat::CellVariable<double>(
+      dim, object_name + "solution", 1)),
+   d_source_term(new pdat::CellVariable<double>(
+      dim, object_name + "source_term", 1)),
+   d_exponential_term(new pdat::CellVariable<double>(
+      dim, object_name + "exponential_term", 1)),
+   d_diffusion_coef(new pdat::SideVariable<double>(
+      dim, object_name + "diffusion_coef", 1)),
+   d_flux(new pdat::SideVariable<double>(
+      dim, object_name + "flux", 1)),
+   d_coarse_fine_flux(new pdat::OutersideVariable<double>(
+      dim, object_name + "coarse_fine_flux", 1)),
+   d_jacobian_a(new pdat::CellVariable<double>(
+      dim, object_name + ":jacobian_a", 1)),
+   d_jacobian_b(new pdat::FaceVariable<double>(
+      dim, object_name + ":jacobian_b", 1)),
    d_jacobian_a_id(-1),
    d_jacobian_b_id(-1),
+   d_precond_a(new pdat::CellVariable<double>(
+      dim, object_name + "precond_a", 1)),
+   d_precond_b(new pdat::FaceVariable<double>(
+      dim, object_name + "precond_b", 1)),
    d_precond_a_id(-1),
    d_precond_b_id(-1),
-   d_nghosts(d_dim),
-   d_fill_new_level(d_dim),
-   d_soln_fill(d_dim),
-   d_flux_coarsen(d_dim),
-   d_soln_coarsen(d_dim),
-   d_scratch_soln_coarsen(d_dim)
+   d_nghosts(hier::IntVector(dim, NUM_GHOSTS_U)),
+   d_weight(new pdat::CellVariable<double>(
+      dim, object_name + "weight", 1)),
+   d_fill_new_level(dim),
+   d_soln_fill(dim),
+   d_flux_coarsen(dim),
+   d_soln_coarsen(dim),
+   d_scratch_soln_coarsen(dim),
+   d_current_time(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_new_time(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_current_dt(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_max_precond_its(tbox::MathUtilities<int>::getMax()),
+   d_precond_tol(tbox::MathUtilities<double>::getSignalingNaN())
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
    TBOX_ASSERT(grid_geometry);
 
-   d_object_name = object_name;
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 
-   d_grid_geometry = grid_geometry;
-
-   /*
-    * Set default values for data members.
-    */
-   d_current_time =
-      d_current_dt =
-         d_new_time =
-            d_lambda =
-               d_input_dt = tbox::MathUtilities<double>::getSignalingNaN();
-
-   d_max_precond_its = tbox::MathUtilities<int>::getMax();
-   d_precond_tol = tbox::MathUtilities<double>::getSignalingNaN();
-
-   getFromInput(input_db,
-      false);
-
-   d_FAC_solver.reset();
+   getFromInput(input_db, false);
 
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 
@@ -166,13 +179,6 @@ ModifiedBratuProblem::ModifiedBratuProblem(
     * and contexts with variable database to retrieve their descriptor
     * indices for data management.
     */
-
-   d_nghosts = hier::IntVector(d_dim, NUM_GHOSTS_U);
-
-   d_solution.reset(
-      new pdat::CellVariable<double>(d_dim,
-         d_object_name + "solution",
-         1));
 
    int soln_id = variable_db->registerVariableAndContext(d_solution,
          d_current,
@@ -191,9 +197,6 @@ ModifiedBratuProblem::ModifiedBratuProblem(
     * *hier::Variable to weight solution vector entries on a composite grid.
     */
 
-   d_weight.reset(
-      new pdat::CellVariable<double>(d_dim, d_object_name + "weight", 1));
-
    d_weight_id = variable_db->registerVariableAndContext(d_weight,
          d_scratch,
          hier::IntVector(d_dim, 0));
@@ -202,44 +205,23 @@ ModifiedBratuProblem::ModifiedBratuProblem(
     * Other variables used in discrete problem.
     */
 
-   d_source_term.reset(
-      new pdat::CellVariable<double>(d_dim,
-         d_object_name + "source_term",
-         1));
-
    int source_id = variable_db->registerVariableAndContext(d_source_term,
          d_scratch,
          hier::IntVector(d_dim, 0));
 
-   d_exponential_term.reset(
-      new pdat::CellVariable<double>(d_dim,
-                                     d_object_name + "exponential_term",
-                                     1));
 
    int exp_id = variable_db->registerVariableAndContext(d_exponential_term,
          d_scratch,
          hier::IntVector(d_dim, 0));
 
-   d_diffusion_coef.reset(
-      new pdat::SideVariable<double>(d_dim,
-         d_object_name + "diffusion_coef",
-         1));
 
    int diffcoef_id = variable_db->registerVariableAndContext(d_diffusion_coef,
          d_scratch,
          hier::IntVector(d_dim, 0));
 
-   d_flux.reset(
-      new pdat::SideVariable<double>(d_dim, d_object_name + "flux", 1));
-
    d_flux_id = variable_db->registerVariableAndContext(d_flux,
          d_scratch,
          hier::IntVector(d_dim, 0));
-
-   d_coarse_fine_flux.reset(
-      new pdat::OutersideVariable<double>(d_dim,
-                                          d_object_name + "coarse_fine_flux",
-                                          1));
 
    d_coarse_fine_flux_id =
       variable_db->registerVariableAndContext(d_coarse_fine_flux,
@@ -249,17 +231,9 @@ ModifiedBratuProblem::ModifiedBratuProblem(
    /*
     * Variables for A(x)z=r preconditioning.
     */
-   d_precond_a.reset(
-      new pdat::CellVariable<double>(d_dim,
-         d_object_name + "precond_a",
-         1));
    d_precond_a_id = variable_db->registerVariableAndContext(d_precond_a,
          d_scratch,
          hier::IntVector(d_dim, 0));
-   d_precond_b.reset(
-      new pdat::FaceVariable<double>(d_dim,
-         d_object_name + "precond_b",
-         1));
    d_precond_b_id = variable_db->registerVariableAndContext(d_precond_b,
          d_scratch,
          hier::IntVector(d_dim, 0));
@@ -267,13 +241,9 @@ ModifiedBratuProblem::ModifiedBratuProblem(
    /*
     * Variables for A(x)*v operations.
     */
-   d_jacobian_a.reset(
-      new pdat::CellVariable<double>(d_dim, d_object_name + ":jacobian_a", 1));
    d_jacobian_a_id = variable_db->registerVariableAndContext(d_jacobian_a,
          d_scratch,
          hier::IntVector(d_dim, 0));
-   d_jacobian_b.reset(
-      new pdat::FaceVariable<double>(d_dim, d_object_name + ":jacobian_b", 1));
    d_jacobian_b_id = variable_db->registerVariableAndContext(d_jacobian_b,
          d_scratch,
          hier::IntVector(d_dim, 0));
@@ -338,9 +308,9 @@ ModifiedBratuProblem::ModifiedBratuProblem(
       grid_geometry->lookupCoarsenOperator(d_solution,
          "CONSERVATIVE_COARSEN");
 
-   boost::shared_ptr<CoarsenOperator> flux_coarsen_op =
+   boost::shared_ptr<CoarsenOperator> flux_coarsen_op(
       grid_geometry->lookupCoarsenOperator(d_coarse_fine_flux,
-         "CONSERVATIVE_COARSEN");
+         "CONSERVATIVE_COARSEN"));
 
    /*
     * Register the transfer algorithms so we can create
@@ -382,7 +352,6 @@ ModifiedBratuProblem::ModifiedBratuProblem(
 
 ModifiedBratuProblem::~ModifiedBratuProblem()
 {
-   d_FAC_solver.reset();
    s_copy_timer.reset();
    s_pc_timer.reset();
 }
@@ -431,10 +400,10 @@ void ModifiedBratuProblem::setVectorWeights(
        * On every level, first assign cell volume to vector weight.
        */
 
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-            amr_level);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+            amr_level));
       for (hier::PatchLevel::Iterator p(level); p; p++) {
-         boost::shared_ptr<hier::Patch> patch = *p;
+         const boost::shared_ptr<hier::Patch>& patch = *p;
          boost::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
             patch->getPatchGeometry(),
             boost::detail::dynamic_cast_tag());
@@ -465,8 +434,8 @@ void ModifiedBratuProblem::setVectorWeights(
           * at this level.
           */
 
-         boost::shared_ptr<hier::PatchLevel> next_finer_level =
-            hierarchy->getPatchLevel(amr_level + 1);
+         boost::shared_ptr<hier::PatchLevel> next_finer_level(
+            hierarchy->getPatchLevel(amr_level + 1));
          hier::BoxContainer coarsened_boxes = next_finer_level->getBoxes();
          hier::IntVector coarsen_ratio = next_finer_level->getRatioToLevelZero();
          coarsen_ratio /= level->getRatioToLevelZero();
@@ -480,7 +449,7 @@ void ModifiedBratuProblem::setVectorWeights(
 
          for (hier::PatchLevel::Iterator p(level); p; p++) {
 
-            boost::shared_ptr<hier::Patch> patch = *p;
+            const boost::shared_ptr<hier::Patch>& patch = *p;
             for (hier::BoxContainer::ConstIterator i(coarsened_boxes);
                  i != coarsened_boxes.end(); ++i) {
 
@@ -524,8 +493,8 @@ void ModifiedBratuProblem::setInitialGuess(
    d_current_dt = current_dt;
    d_new_time = d_current_time + d_current_dt;
 
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy =
-      d_solution_vector->getPatchHierarchy();
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+      d_solution_vector->getPatchHierarchy());
 
    if (first_step) {
 
@@ -551,10 +520,10 @@ void ModifiedBratuProblem::setInitialGuess(
            amr_level < hierarchy->getNumberOfLevels();
            amr_level++) {
 
-         boost::shared_ptr<hier::PatchLevel> patch_level =
-            hierarchy->getPatchLevel(amr_level);
+         boost::shared_ptr<hier::PatchLevel> patch_level(
+            hierarchy->getPatchLevel(amr_level));
          for (hier::PatchLevel::Iterator p(patch_level); p; p++) {
-            boost::shared_ptr<hier::Patch> patch = *p;
+            const boost::shared_ptr<hier::Patch>& patch = *p;
 
             boost::shared_ptr<pdat::CellData<double> > y_cur(
                patch->getPatchData(d_solution, d_current),
@@ -610,10 +579,10 @@ void ModifiedBratuProblem::setInitialGuess(
            amr_level < hierarchy->getNumberOfLevels();
            amr_level++) {
 
-         boost::shared_ptr<hier::PatchLevel> patch_level =
-            hierarchy->getPatchLevel(amr_level);
+         boost::shared_ptr<hier::PatchLevel> patch_level(
+            hierarchy->getPatchLevel(amr_level));
          for (hier::PatchLevel::Iterator p(patch_level); p; p++) {
-            boost::shared_ptr<hier::Patch> patch = *p;
+            const boost::shared_ptr<hier::Patch>& patch = *p;
 
             boost::shared_ptr<pdat::CellData<double> > y_cur(
                patch->getPatchData(d_solution, d_current),
@@ -707,8 +676,8 @@ double ModifiedBratuProblem::getNextDt(
    const bool good_solution,
    const int solver_retcode)
 {
-   (void)good_solution;
-   (void)solver_retcode;
+   NULL_USE(good_solution);
+   NULL_USE(solver_retcode);
 
    return d_input_dt;
 }
@@ -741,17 +710,17 @@ bool ModifiedBratuProblem::checkNewSolution(
 
    double new_time = d_current_time + d_current_dt;
    double maxerror = 0.0;
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy =
-      d_solution_vector->getPatchHierarchy();
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+      d_solution_vector->getPatchHierarchy());
    for (int amr_level = 0;
         amr_level < hierarchy->getNumberOfLevels();
         amr_level++) {
-      boost::shared_ptr<hier::PatchLevel> patch_level =
-         hierarchy->getPatchLevel(amr_level);
+      boost::shared_ptr<hier::PatchLevel> patch_level(
+         hierarchy->getPatchLevel(amr_level));
       double levelerror = 0.0;
       double levell2error = 0.0;
       for (hier::PatchLevel::Iterator p(patch_level); p; p++) {
-         boost::shared_ptr<hier::Patch> patch = *p;
+         const boost::shared_ptr<hier::Patch>& patch = *p;
          const hier::Index ifirst = patch->getBox().lower();
          const hier::Index ilast = patch->getBox().upper();
          boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
@@ -824,8 +793,8 @@ bool ModifiedBratuProblem::checkNewSolution(
 void ModifiedBratuProblem::updateSolution(
    const double new_time)
 {
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy =
-      d_solution_vector->getPatchHierarchy();
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+      d_solution_vector->getPatchHierarchy());
 
    d_new_time = d_current_time = new_time;
 
@@ -833,10 +802,10 @@ void ModifiedBratuProblem::updateSolution(
         amr_level < hierarchy->getNumberOfLevels();
         amr_level++) {
 
-      boost::shared_ptr<hier::PatchLevel> patch_level =
-         hierarchy->getPatchLevel(amr_level);
+      boost::shared_ptr<hier::PatchLevel> patch_level(
+         hierarchy->getPatchLevel(amr_level));
       for (hier::PatchLevel::Iterator p(patch_level); p; p++) {
-         boost::shared_ptr<hier::Patch> patch = *p;
+         const boost::shared_ptr<hier::Patch>& patch = *p;
 
          boost::shared_ptr<pdat::CellData<double> > y_cur(
             patch->getPatchData(d_solution, d_current),
@@ -896,22 +865,20 @@ void ModifiedBratuProblem::initializeLevelData(
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
 #endif
 
-   boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy = hierarchy;
-
-   boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-         level_number);
+   boost::shared_ptr<hier::PatchLevel> level(
+      hierarchy->getPatchLevel(level_number));
 
    level->allocatePatchData(d_new_patch_problem_data, time);
 
    if ((level_number > 0) || old_level) {
 
-      boost::shared_ptr<RefineSchedule> sched =
+      boost::shared_ptr<RefineSchedule> sched(
          d_fill_new_level.createSchedule(
             level,
             old_level,
             level_number - 1,
             hierarchy,
-            NULL);
+            NULL));
       sched->fillData(time);
 
       if (old_level) {
@@ -930,11 +897,11 @@ void ModifiedBratuProblem::initializeLevelData(
     */
 
    for (hier::PatchLevel::Iterator p(level); p; p++) {
-      boost::shared_ptr<hier::Patch> patch = *p;
+      const boost::shared_ptr<hier::Patch>& patch = *p;
 
       if (initial_time) {
 
-	boost::shared_ptr<pdat::CellData<double> > u(
+         boost::shared_ptr<pdat::CellData<double> > u(
             patch->getPatchData(d_solution, d_current),
             boost::detail::dynamic_cast_tag());
          u->fillAll(0.0);
@@ -1005,15 +972,12 @@ void ModifiedBratuProblem::resetHierarchyConfiguration(
       TBOX_ASSERT(hierarchy->getPatchLevel(ln0));
    }
 #endif
-   boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy = hierarchy;
-   (void)coarsest_level;
-   (void)finest_level;
 
-   d_flux_coarsen_schedule.resizeArray(patch_hierarchy->getNumberOfLevels());
-   d_soln_fill_schedule.resizeArray(patch_hierarchy->getNumberOfLevels());
-   d_soln_coarsen_schedule.resizeArray(patch_hierarchy->getNumberOfLevels());
+   d_flux_coarsen_schedule.resizeArray(hierarchy->getNumberOfLevels());
+   d_soln_fill_schedule.resizeArray(hierarchy->getNumberOfLevels());
+   d_soln_coarsen_schedule.resizeArray(hierarchy->getNumberOfLevels());
    d_scratch_soln_coarsen_schedule.resizeArray(
-      patch_hierarchy->getNumberOfLevels());
+      hierarchy->getNumberOfLevels());
 
    int ln;
    /*
@@ -1025,10 +989,10 @@ void ModifiedBratuProblem::resetHierarchyConfiguration(
       const int ln_beg = coarsest_level - (coarsest_level > 0);
       const int ln_end = finest_level;
       for (ln = ln_beg; ln < ln_end; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level =
-            patch_hierarchy->getPatchLevel(ln);
-         boost::shared_ptr<hier::PatchLevel> finer_level =
-            patch_hierarchy->getPatchLevel(ln + 1);
+         boost::shared_ptr<hier::PatchLevel> level(
+            hierarchy->getPatchLevel(ln));
+         boost::shared_ptr<hier::PatchLevel> finer_level(
+            hierarchy->getPatchLevel(ln + 1));
 
          d_flux_coarsen_schedule[ln] =
             d_flux_coarsen.createSchedule(level,
@@ -1039,11 +1003,11 @@ void ModifiedBratuProblem::resetHierarchyConfiguration(
       const int ln_beg = coarsest_level;
       const int ln_end = finest_level;
       for (ln = ln_beg; ln <= ln_end; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level =
-            patch_hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level(
+            hierarchy->getPatchLevel(ln));
          d_soln_fill_schedule[ln] = d_soln_fill.createSchedule(level,
                ln - 1,
-               patch_hierarchy,
+               hierarchy,
                this);
       }
    }
@@ -1051,10 +1015,10 @@ void ModifiedBratuProblem::resetHierarchyConfiguration(
       const int ln_beg = coarsest_level - (coarsest_level > 0);
       const int ln_end = finest_level;
       for (ln = ln_beg; ln < ln_end; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level =
-            patch_hierarchy->getPatchLevel(ln);
-         boost::shared_ptr<hier::PatchLevel> finer_level =
-            patch_hierarchy->getPatchLevel(ln + 1);
+         boost::shared_ptr<hier::PatchLevel> level(
+            hierarchy->getPatchLevel(ln));
+         boost::shared_ptr<hier::PatchLevel> finer_level(
+            hierarchy->getPatchLevel(ln + 1));
 
          d_soln_coarsen_schedule[ln] =
             d_soln_coarsen.createSchedule(level,
@@ -1083,10 +1047,10 @@ void ModifiedBratuProblem::evaluateNonlinearFunction(
    TBOX_ASSERT(!(fval == (solv::SundialsAbstractVector *)NULL));
 #endif
 
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > x =
-      solv::Sundials_SAMRAIVector::getSAMRAIVector(soln);
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > f =
-      solv::Sundials_SAMRAIVector::getSAMRAIVector(fval);
+   boost::shared_ptr<solv::SAMRAIVectorReal<double> > x(
+      solv::Sundials_SAMRAIVector::getSAMRAIVector(soln));
+   boost::shared_ptr<solv::SAMRAIVectorReal<double> > f(
+      solv::Sundials_SAMRAIVector::getSAMRAIVector(fval));
 
    evaluateBratuFunction(x, f);
 }
@@ -1100,19 +1064,19 @@ int ModifiedBratuProblem::precondSetup(
    solv::SundialsAbstractVector* vtemp2,
    int& num_feval)
 {
-   (void)soln_scale;
-   (void)fval;
-   (void)fval_scale;
-   (void)vtemp1;
-   (void)vtemp2;
+   NULL_USE(soln_scale);
+   NULL_USE(fval);
+   NULL_USE(fval_scale);
+   NULL_USE(vtemp1);
+   NULL_USE(vtemp2);
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(soln == (solv::SundialsAbstractVector *)NULL));
 #endif
 
    num_feval += 0;
 
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > x =
-      solv::Sundials_SAMRAIVector::getSAMRAIVector(soln);
+   boost::shared_ptr<solv::SAMRAIVectorReal<double> > x(
+      solv::Sundials_SAMRAIVector::getSAMRAIVector(soln));
 
    setupBratuPreconditioner(x);
 
@@ -1128,19 +1092,19 @@ int ModifiedBratuProblem::precondSolve(
    solv::SundialsAbstractVector* vtemp,
    int& num_feval)
 {
-   (void)soln;
-   (void)soln_scale;
-   (void)fval;
-   (void)fval_scale;
-   (void)vtemp;
+   NULL_USE(soln);
+   NULL_USE(soln_scale);
+   NULL_USE(fval);
+   NULL_USE(fval_scale);
+   NULL_USE(vtemp);
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(rhs == (solv::SundialsAbstractVector *)NULL));
 #endif
 
    num_feval += 0;
 
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > r =
-      solv::Sundials_SAMRAIVector::getSAMRAIVector(rhs);
+   boost::shared_ptr<solv::SAMRAIVectorReal<double> > r(
+      solv::Sundials_SAMRAIVector::getSAMRAIVector(rhs));
 
    return applyBratuPreconditioner(r, r);
 }
@@ -1158,14 +1122,14 @@ ModifiedBratuProblem::jacobianTimesVector(
    TBOX_ASSERT(!(soln == (solv::SundialsAbstractVector *)NULL));
 #endif
 
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > v =
-      solv::Sundials_SAMRAIVector::getSAMRAIVector(vector);
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > Jv =
-      solv::Sundials_SAMRAIVector::getSAMRAIVector(product);
+   boost::shared_ptr<solv::SAMRAIVectorReal<double> > v(
+      solv::Sundials_SAMRAIVector::getSAMRAIVector(vector));
+   boost::shared_ptr<solv::SAMRAIVectorReal<double> > Jv(
+      solv::Sundials_SAMRAIVector::getSAMRAIVector(product));
 
    if (soln_changed) {
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > ucur =
-         solv::Sundials_SAMRAIVector::getSAMRAIVector(soln);
+      boost::shared_ptr<solv::SAMRAIVectorReal<double> > ucur(
+         solv::Sundials_SAMRAIVector::getSAMRAIVector(soln));
       evaluateBratuJacobian(ucur);
    }
    return jacobianTimesVector(v, Jv);
@@ -1188,10 +1152,10 @@ int ModifiedBratuProblem::evaluateNonlinearFunction(
    TBOX_ASSERT(!(fcur == NULL));
 #endif
 
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > x =
-      solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(xcur);
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > f =
-      solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(fcur);
+   boost::shared_ptr<solv::SAMRAIVectorReal<double> > x(
+      solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(xcur));
+   boost::shared_ptr<solv::SAMRAIVectorReal<double> > f(
+      solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(fcur));
 
    evaluateBratuFunction(x, f);
 
@@ -1205,8 +1169,8 @@ int ModifiedBratuProblem::evaluateJacobian(
    TBOX_ASSERT(!(x == NULL));
 #endif
 
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > xvec =
-      solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(x);
+   boost::shared_ptr<solv::SAMRAIVectorReal<double> > xvec(
+      solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(x));
 
    evaluateBratuJacobian(xvec);
 
@@ -1222,10 +1186,10 @@ int ModifiedBratuProblem::jacobianTimesVector(
    TBOX_ASSERT(xout != NULL);
 #endif
 
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > xinvec =
-      solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(xin);
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > xoutvec =
-      solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(xout);
+   boost::shared_ptr<solv::SAMRAIVectorReal<double> > xinvec(
+      solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(xin));
+   boost::shared_ptr<solv::SAMRAIVectorReal<double> > xoutvec(
+      solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(xout));
 
    jacobianTimesVector(xinvec, xoutvec);
 
@@ -1235,8 +1199,8 @@ int ModifiedBratuProblem::jacobianTimesVector(
 int ModifiedBratuProblem::setupPreconditioner(
    Vec x)
 {
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > uvec =
-      solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(x);
+   boost::shared_ptr<solv::SAMRAIVectorReal<double> > uvec(
+      solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(x));
    setupBratuPreconditioner(uvec);
 
    return 0;
@@ -1251,10 +1215,10 @@ int ModifiedBratuProblem::applyPreconditioner(
    TBOX_ASSERT(z != NULL);
 #endif
 
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > rhs =
-      solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(r);
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > soln =
-      solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(z);
+   boost::shared_ptr<solv::SAMRAIVectorReal<double> > rhs(
+      solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(r));
+   boost::shared_ptr<solv::SAMRAIVectorReal<double> > soln(
+      solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(z));
 
    return applyBratuPreconditioner(rhs, soln);
 }
@@ -1291,8 +1255,8 @@ void ModifiedBratuProblem::evaluateBratuFunction(
    TBOX_ASSERT(f);
 #endif
 
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy =
-      d_solution_vector->getPatchHierarchy();
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+      d_solution_vector->getPatchHierarchy());
 
    /*
     * Create a coarsen algorithm to coarsen data on fine patch interiors.
@@ -1306,10 +1270,10 @@ void ModifiedBratuProblem::evaluateBratuFunction(
    for (amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
         amr_level--) {
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-            amr_level);
-      boost::shared_ptr<hier::PatchLevel> finer_level =
-         hierarchy->getPatchLevel(amr_level + 1);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+            amr_level));
+      boost::shared_ptr<hier::PatchLevel> finer_level(
+         hierarchy->getPatchLevel(amr_level + 1));
       eval_average.resetSchedule(d_soln_coarsen_schedule[amr_level]);
       d_soln_coarsen_schedule[amr_level]->coarsenData();
       d_soln_coarsen.resetSchedule(d_soln_coarsen_schedule[amr_level]);
@@ -1330,8 +1294,8 @@ void ModifiedBratuProblem::evaluateBratuFunction(
    for (amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
         amr_level--) {
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-            amr_level);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+            amr_level));
 
       s_copy_timer->start();
       eval_fill.resetSchedule(d_soln_fill_schedule[amr_level]);
@@ -1345,7 +1309,7 @@ void ModifiedBratuProblem::evaluateBratuFunction(
       }
 
       for (hier::PatchLevel::Iterator p(level); p; p++) {
-         boost::shared_ptr<hier::Patch> patch = *p;
+         const boost::shared_ptr<hier::Patch>& patch = *p;
 
          const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
             patch->getPatchGeometry(),
@@ -1537,8 +1501,8 @@ void ModifiedBratuProblem::evaluateBratuFunction(
 
       if (amr_level < hierarchy->getFinestLevelNumber()) {
 
-         boost::shared_ptr<hier::PatchLevel> finer_level =
-            hierarchy->getPatchLevel(amr_level + 1);
+         boost::shared_ptr<hier::PatchLevel> finer_level(
+            hierarchy->getPatchLevel(amr_level + 1));
 
          d_flux_coarsen_schedule[amr_level]->coarsenData();
 
@@ -1552,7 +1516,7 @@ void ModifiedBratuProblem::evaluateBratuFunction(
        */
 
       for (hier::PatchLevel::Iterator p(level); p; p++) {
-         boost::shared_ptr<hier::Patch> patch = *p;
+         const boost::shared_ptr<hier::Patch>& patch = *p;
 
          const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
             patch->getPatchGeometry(),
@@ -1684,10 +1648,10 @@ void ModifiedBratuProblem::evaluateBratuFunction(
    for (amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
         amr_level--) {
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-            amr_level);
-      boost::shared_ptr<hier::PatchLevel> finer_level =
-         hierarchy->getPatchLevel(amr_level + 1);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+            amr_level));
+      boost::shared_ptr<hier::PatchLevel> finer_level(
+         hierarchy->getPatchLevel(amr_level + 1));
       /*
        * We take advantage of the knowlege that f has the same
        * structure as the solution and reset the solution coarsening
@@ -1732,16 +1696,16 @@ ModifiedBratuProblem::jacobianTimesVector(
     * down the data.
     */
 
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy = Jv->getPatchHierarchy();
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy(Jv->getPatchHierarchy());
 
    for (int amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
         amr_level--) {
 
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-            amr_level);
-      boost::shared_ptr<hier::PatchLevel> finer_level =
-         hierarchy->getPatchLevel(amr_level + 1);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+            amr_level));
+      boost::shared_ptr<hier::PatchLevel> finer_level(
+         hierarchy->getPatchLevel(amr_level + 1));
       jacv_average.resetSchedule(d_soln_coarsen_schedule[amr_level]);
       d_soln_coarsen_schedule[amr_level]->coarsenData();
       d_soln_coarsen.resetSchedule(d_soln_coarsen_schedule[amr_level]);
@@ -1783,8 +1747,8 @@ ModifiedBratuProblem::jacobianTimesVector(
         amr_level >= 0;
         amr_level--) {
 
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-            amr_level);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+            amr_level));
 
       /*
        * Allocate scratch space on this level used to store the fluxes.  Also,
@@ -1814,7 +1778,7 @@ ModifiedBratuProblem::jacobianTimesVector(
        */
 
       for (hier::PatchLevel::Iterator p(level); p; p++) {
-         boost::shared_ptr<hier::Patch> patch = *p;
+         const boost::shared_ptr<hier::Patch>& patch = *p;
 
          const hier::Index ifirst = patch->getBox().lower();
          const hier::Index ilast = patch->getBox().upper();
@@ -2019,8 +1983,8 @@ ModifiedBratuProblem::jacobianTimesVector(
 
       if (amr_level < hierarchy->getFinestLevelNumber()) {
 
-         boost::shared_ptr<hier::PatchLevel> finer_level =
-            hierarchy->getPatchLevel(amr_level + 1);
+         boost::shared_ptr<hier::PatchLevel> finer_level(
+            hierarchy->getPatchLevel(amr_level + 1));
 
          d_flux_coarsen_schedule[amr_level]->coarsenData();
 
@@ -2034,7 +1998,7 @@ ModifiedBratuProblem::jacobianTimesVector(
        */
 
       for (hier::PatchLevel::Iterator p(level); p; p++) {
-         boost::shared_ptr<hier::Patch> patch = *p;
+         const boost::shared_ptr<hier::Patch>& patch = *p;
 
          const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
             patch->getPatchGeometry(),
@@ -2147,8 +2111,8 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
    TBOX_ASSERT(x);
 #endif
 
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy =
-      d_solution_vector->getPatchHierarchy();
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+      d_solution_vector->getPatchHierarchy());
 
    RefineAlgorithm eval_fill(d_dim);
    eval_fill.registerRefine(d_soln_scratch_id,
@@ -2159,15 +2123,15 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
         amr_level--) {
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-            amr_level);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+            amr_level));
 
       eval_fill.resetSchedule(d_soln_fill_schedule[amr_level]);
       d_soln_fill_schedule[amr_level]->fillData(d_new_time);
       d_soln_fill.resetSchedule(d_soln_fill_schedule[amr_level]);
 
       for (hier::PatchLevel::Iterator p(level); p; p++) {
-         boost::shared_ptr<hier::Patch> patch = *p;
+         const boost::shared_ptr<hier::Patch>& patch = *p;
 
          const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
             patch->getPatchGeometry(),
@@ -2387,8 +2351,8 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
 
    int ret_val = 0;
 
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy =
-      d_solution_vector->getPatchHierarchy();
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+      d_solution_vector->getPatchHierarchy());
 
    int r_indx = r->getComponentDescriptorIndex(0);
    int z_indx = z->getComponentDescriptorIndex(0);
@@ -2403,10 +2367,10 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
    for (int amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
         amr_level--) {
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-            amr_level);
-      boost::shared_ptr<hier::PatchLevel> finer_level =
-         hierarchy->getPatchLevel(amr_level + 1);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+            amr_level));
+      boost::shared_ptr<hier::PatchLevel> finer_level(
+         hierarchy->getPatchLevel(amr_level + 1));
       pc_rhs_average.resetSchedule(d_soln_coarsen_schedule[amr_level]);
       d_soln_coarsen_schedule[amr_level]->coarsenData();
       d_soln_coarsen.resetSchedule(d_soln_coarsen_schedule[amr_level]);
@@ -2441,10 +2405,10 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
    for (int amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
         amr_level--) {
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-            amr_level);
-      boost::shared_ptr<hier::PatchLevel> finer_level =
-         hierarchy->getPatchLevel(amr_level + 1);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+            amr_level));
+      boost::shared_ptr<hier::PatchLevel> finer_level(
+         hierarchy->getPatchLevel(amr_level + 1));
       pc_sol_average.resetSchedule(d_scratch_soln_coarsen_schedule[amr_level]);
       d_scratch_soln_coarsen_schedule[amr_level]->coarsenData();
       d_scratch_soln_coarsen.resetSchedule(d_scratch_soln_coarsen_schedule[
@@ -2454,11 +2418,11 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
         amr_level--) {
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-            amr_level);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+            amr_level));
 
       for (hier::PatchLevel::Iterator p(level); p; p++) {
-         boost::shared_ptr<hier::Patch> patch = *p;
+         const boost::shared_ptr<hier::Patch>& patch = *p;
 
          boost::shared_ptr<pdat::CellData<double> > src_data(
             patch->getPatchData(d_soln_scratch_id),
@@ -2485,8 +2449,8 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
 void ModifiedBratuProblem::evaluateBratuJacobian(
    boost::shared_ptr<solv::SAMRAIVectorReal<double> > x)
 {
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy =
-      d_solution_vector->getPatchHierarchy();
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+      d_solution_vector->getPatchHierarchy());
 
    RefineAlgorithm eval_fill(d_dim);
    eval_fill.registerRefine(d_soln_scratch_id,
@@ -2497,15 +2461,15 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
         amr_level--) {
-      boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(
-            amr_level);
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+            amr_level));
 
       eval_fill.resetSchedule(d_soln_fill_schedule[amr_level]);
       d_soln_fill_schedule[amr_level]->fillData(d_new_time);
       d_soln_fill.resetSchedule(d_soln_fill_schedule[amr_level]);
 
       for (hier::PatchLevel::Iterator p(level); p; p++) {
-         boost::shared_ptr<hier::Patch> patch = *p;
+         const boost::shared_ptr<hier::Patch>& patch = *p;
 
          const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
             patch->getPatchGeometry(),
@@ -2895,7 +2859,7 @@ void ModifiedBratuProblem::correctLevelFlux(
    boost::shared_ptr<hier::PatchLevel> level)
 {
    for (hier::PatchLevel::Iterator p(level); p; p++) {
-      boost::shared_ptr<hier::Patch> patch = *p;
+      const boost::shared_ptr<hier::Patch>& patch = *p;
       const hier::Box box = patch->getBox();
       boost::shared_ptr<pdat::SideData<double> > flux_data(
          patch->getPatchData(d_flux_id),

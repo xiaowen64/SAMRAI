@@ -146,8 +146,8 @@ void SAMRAI_MPI::init(
    MPI_Comm_size(s_samrai_world.d_comm, &s_samrai_world.d_size);
 
 #else
-   (void)argc;
-   (void)argv;
+   NULL_USE(argc);
+   NULL_USE(argv);
 #endif
 
    commWorld = MPI_COMM_WORLD;

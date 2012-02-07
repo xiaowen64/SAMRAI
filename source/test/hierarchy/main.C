@@ -72,8 +72,8 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         boost::shared_ptr<tbox::Database> global_db =
-            input_db->getDatabase("GlobalInputs");
+         boost::shared_ptr<tbox::Database> global_db(
+            input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
                getBool("call_abort_in_serial_instead_of_exit");
@@ -81,7 +81,7 @@ int main(
          }
       }
 
-      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -100,7 +100,8 @@ int main(
       }
 
       boost::shared_ptr<HierarchyTester> hierarchy_tester(
-         new HierarchyTester("HierarchyTester",
+         new HierarchyTester(
+            "HierarchyTester",
             dim,
             input_db->getDatabase("HierarchyTest")));
 

@@ -70,8 +70,8 @@ int main(
        * looked up the first time).
        */
       string name = "main::test";
-      boost::shared_ptr<tbox::Timer> timer =
-         tbox::TimerManager::getManager()->getTimer(name);
+      boost::shared_ptr<tbox::Timer> timer(
+         tbox::TimerManager::getManager()->getTimer(name));
 
       /*
        * Start timer.  If the timer name was not specified in the input

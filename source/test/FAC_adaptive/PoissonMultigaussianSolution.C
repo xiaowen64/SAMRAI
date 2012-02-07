@@ -42,9 +42,9 @@ PoissonMultigaussianSolution::PoissonMultigaussianSolution(
    :d_dim(dim)
 #endif
 {
-   (void)object_name;
-   (void)out_stream;
-   (void)log_stream;
+   NULL_USE(object_name);
+   NULL_USE(out_stream);
+   NULL_USE(log_stream);
 
    setFromDatabase(database);
 }
@@ -79,8 +79,8 @@ void PoissonMultigaussianSolution::setPoissonSpecifications(
    int C_patch_data_id,
    int D_patch_data_id) const
 {
-   (void)C_patch_data_id;
-   (void)D_patch_data_id;
+   NULL_USE(C_patch_data_id);
+   NULL_USE(D_patch_data_id);
 
    sps.setDConstant(1.0);
    sps.setCZero();
@@ -215,8 +215,8 @@ void PoissonMultigaussianSolution::setBcCoefs(
    const hier::BoundaryBox& bdry_box,
    const double fill_time) const
 {
-   (void)variable;
-   (void)fill_time;
+   NULL_USE(variable);
+   NULL_USE(fill_time);
 
    if (!acoef_data && !gcoef_data) {
       return;

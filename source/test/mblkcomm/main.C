@@ -201,7 +201,7 @@ int main(
 
       boost::shared_ptr<tbox::InputDatabase> input_db(
          new tbox::InputDatabase("input_db"));
-      boost::shared_ptr<tbox::Database> base_db = input_db;
+      boost::shared_ptr<tbox::Database> base_db(input_db);
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -210,8 +210,7 @@ int main(
        * analysis), and read in test information.
        */
 
-      boost::shared_ptr<tbox::Database> main_db =
-         input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -362,15 +361,15 @@ int main(
 
       tbox::TimerManager* time_man = tbox::TimerManager::getManager();
 
-      boost::shared_ptr<tbox::Timer> refine_create_time =
-         time_man->getTimer("test::main::createRefineSchedule");
-      boost::shared_ptr<tbox::Timer> refine_comm_time =
-         time_man->getTimer("test::main::performRefineOperations");
+      boost::shared_ptr<tbox::Timer> refine_create_time(
+         time_man->getTimer("test::main::createRefineSchedule"));
+      boost::shared_ptr<tbox::Timer> refine_comm_time(
+         time_man->getTimer("test::main::performRefineOperations"));
 
-      boost::shared_ptr<tbox::Timer> coarsen_create_time =
-         time_man->getTimer("test::main::createCoarsenSchedule");
-      boost::shared_ptr<tbox::Timer> coarsen_comm_time =
-         time_man->getTimer("test::main::performCoarsenOperations");
+      boost::shared_ptr<tbox::Timer> coarsen_create_time(
+         time_man->getTimer("test::main::createCoarsenSchedule"));
+      boost::shared_ptr<tbox::Timer> coarsen_comm_time(
+         time_man->getTimer("test::main::performCoarsenOperations"));
 
       tbox::TimerManager::getManager()->resetAllTimers();
 
@@ -378,8 +377,8 @@ int main(
        * Create communication schedules and perform communication operations.
        */
 
-      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy =
-         comm_tester->getPatchHierarchy();
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+         comm_tester->getPatchHierarchy());
 
       int nlevels = patch_hierarchy->getNumberOfLevels();
 

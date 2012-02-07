@@ -47,7 +47,7 @@ public:
       int to,
       int count,
       std::vector<TYPE>& send_data) {
-      (void)to;
+      NULL_USE(to);
       send_data.resize(count);
       for (int i = 0; i < count; ++i) send_data[i] = (TYPE)(fr + count + i);
    }
@@ -59,7 +59,7 @@ public:
       const TYPE* recv_data,
       std::string& size_correct,
       std::string& data_correct) {
-      (void)to;
+      NULL_USE(to);
 
       bool rval = false;
       if (recv_size == count) size_correct = "SIZE OK";

@@ -340,7 +340,9 @@ bool SingleLevelTestCase(
    }
 
    boost::shared_ptr<geom::SkeletonGridGeometry> geom(
-      new geom::SkeletonGridGeometry("GridGeometry", domain_boxes));
+      new geom::SkeletonGridGeometry(
+         "GridGeometry",
+         domain_boxes));
 
    boost::shared_ptr<hier::PatchHierarchy> hierarchy(
       new hier::PatchHierarchy("hier", geom));
@@ -371,14 +373,14 @@ bool SingleLevelTestCase(
    int level_no = 0;
    hierarchy->makeNewPatchLevel(level_no, mblevel);
 
-   boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(0);
+   boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(0));
 
    // There is one variable-context pair with a gcw of 2
 
    xfer::RefineAlgorithm refine_alg(dim);
 
-   boost::shared_ptr<hier::VariableContext> context =
-      hier::VariableDatabase::getDatabase()->getContext("CONTEXT");
+   boost::shared_ptr<hier::VariableContext> context(
+      hier::VariableDatabase::getDatabase()->getContext("CONTEXT"));
 
    hier::IntVector ghost_cell_width(dim, 2);
 
@@ -398,7 +400,7 @@ bool SingleLevelTestCase(
        pattern_name == "FIRST_LAYER_CELL_FILL_PATTERN") {
       // Loop over each patch and initialize data
       for (hier::PatchLevel::Iterator p(level); p; p++) {
-         boost::shared_ptr<hier::Patch> patch(*p);
+         const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::CellData<int> > cdata(
             patch->getPatchData(data_id),
             boost::detail::dynamic_cast_tag());
@@ -415,7 +417,7 @@ bool SingleLevelTestCase(
               pattern_name == "SECOND_LAYER_NODE_FILL_PATTERN") {
       // Loop over each patch and initialize data
       for (hier::PatchLevel::Iterator p(level); p; p++) {
-         boost::shared_ptr<hier::Patch> patch(*p);
+         const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::NodeData<int> > ndata(
             patch->getPatchData(data_id),
             boost::detail::dynamic_cast_tag());
@@ -445,7 +447,7 @@ bool SingleLevelTestCase(
    if (pattern_name == "FIRST_LAYER_CELL_NO_CORNERS_FILL_PATTERN" ||
        pattern_name == "FIRST_LAYER_CELL_FILL_PATTERN") {
       for (hier::PatchLevel::Iterator p(level); p; p++) {
-         boost::shared_ptr<hier::Patch> patch(*p);
+         const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::CellData<int> > cdata(
             patch->getPatchData(data_id),
             boost::detail::dynamic_cast_tag());
@@ -473,7 +475,7 @@ bool SingleLevelTestCase(
    } else if (pattern_name == "SECOND_LAYER_NODE_NO_CORNERS_FILL_PATTERN" ||
               pattern_name == "SECOND_LAYER_NODE_FILL_PATTERN") {
       for (hier::PatchLevel::Iterator p(level); p; p++) {
-         boost::shared_ptr<hier::Patch> patch(*p);
+         const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::NodeData<int> > ndata(
             patch->getPatchData(data_id),
             boost::detail::dynamic_cast_tag());
@@ -1244,7 +1246,9 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
    tbox::Dimension dim(2);
 
    boost::shared_ptr<pdat::NodeVariable<int> > var(
-      new pdat::NodeVariable<int>(dim, "secondnodenocorners"));
+      new pdat::NodeVariable<int>(
+         dim,
+         "secondnodenocorners"));
 
    boost::shared_ptr<pdat::SecondLayerNodeNoCornersVariableFillPattern>
    fill_pattern(
@@ -1518,8 +1522,7 @@ bool Test_SecondLayerNodeVariableFillPattern()
    boost::shared_ptr<pdat::NodeVariable<int> > var(
       new pdat::NodeVariable<int>(dim, "secondnode"));
 
-   boost::shared_ptr<pdat::SecondLayerNodeVariableFillPattern>
-   fill_pattern(
+   boost::shared_ptr<pdat::SecondLayerNodeVariableFillPattern> fill_pattern(
       new pdat::SecondLayerNodeVariableFillPattern(dim));
 
    return SingleLevelTestCase(levelboxes_txt,

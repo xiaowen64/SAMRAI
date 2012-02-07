@@ -57,7 +57,8 @@ int main(
       /*
        * Create input database and parse all data in input file.
        */
-      boost::shared_ptr<tbox::InputDatabase> input_db(new tbox::InputDatabase("input_db"));
+      boost::shared_ptr<tbox::InputDatabase> input_db(
+         new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /**************************************************************************
@@ -67,7 +68,7 @@ int main(
       /*
        * Retreive "Main" section of input db.
        */
-      boost::shared_ptr<tbox::Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim((unsigned short)main_db->getInteger("dim"));
 

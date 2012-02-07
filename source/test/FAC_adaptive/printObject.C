@@ -33,7 +33,7 @@ int printObject(
    const std::string& border,
    unsigned short depth)
 {
-   (void)depth;
+   NULL_USE(depth);
    const tbox::Dimension& dim = box.getDim();
    if ((dim == tbox::Dimension(1))) {
       os << border << "( " << box.lower(0)
@@ -66,7 +66,7 @@ int printObject(
    const std::string& border,
    unsigned short depth)
 {
-   (void)depth;
+   NULL_USE(depth);
    const hier::Box& rbox = pdat.getBox();
    const hier::Box& gbox = pdat.getBox();
    os << border

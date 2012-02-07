@@ -138,8 +138,7 @@ int main(
       /*
        * Retreive "Main" section of input db.
        */
-      boost::shared_ptr<tbox::Database> main_db =
-         input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -181,16 +180,18 @@ int main(
             input_db->getDatabase("Geometry")));
 
       boost::shared_ptr<hier::PatchHierarchy> hierarchy(
-         new hier::PatchHierarchy("Hierarchy",
-                                  geometry,
-                                  input_db->getDatabase("PatchHierarchy")));
+         new hier::PatchHierarchy(
+            "Hierarchy",
+            geometry,
+            input_db->getDatabase("PatchHierarchy")));
 
       /*
        * Create gridding algorithm objects that will handle construction of
        * of the patch levels in the hierarchy.
        */
       boost::shared_ptr<CVODEModel> cvode_model(
-         new CVODEModel("CVODEModel",
+         new CVODEModel(
+            "CVODEModel",
             dim,
             input_db->getDatabase("CVODEModel"),
             geometry));
@@ -246,12 +247,12 @@ int main(
        * Setup timer manager for profiling code.
        */
       tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
-      boost::shared_ptr<tbox::Timer> t_cvode_solve =
+      boost::shared_ptr<tbox::Timer> t_cvode_solve(
          tbox::TimerManager::getManager()->
-         getTimer("apps::main::cvode_solver");
-      boost::shared_ptr<tbox::Timer> t_log_dump =
+         getTimer("apps::main::cvode_solver"));
+      boost::shared_ptr<tbox::Timer> t_log_dump(
          tbox::TimerManager::getManager()->
-         getTimer("apps::main::Solution log dump");
+         getTimer("apps::main::Solution log dump"));
       /*
        * Setup solution vector.
        */
@@ -273,8 +274,8 @@ int main(
             uses_preconditioning);
 
       int neq = 0;
-      boost::shared_ptr<hier::PatchLevel> level_zero =
-         hierarchy->getPatchLevel(0);
+      boost::shared_ptr<hier::PatchLevel> level_zero(
+         hierarchy->getPatchLevel(0));
       const hier::BoxContainer& level_0_boxes = level_zero->getBoxes();
       for (hier::BoxContainer::ConstIterator i(level_0_boxes); i != level_0_boxes.end(); ++i) {
          neq += i().size();
@@ -298,13 +299,13 @@ int main(
       /*
        * Print initial vector (if solution logging is enabled)
        */
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > y_init =
-         solv::Sundials_SAMRAIVector::getSAMRAIVector(solution_vector);
+      boost::shared_ptr<solv::SAMRAIVectorReal<double> > y_init(
+         solv::Sundials_SAMRAIVector::getSAMRAIVector(solution_vector));
 
       if (solution_logging) {
 
-         boost::shared_ptr<hier::PatchHierarchy> init_hierarchy =
-            y_init->getPatchHierarchy();
+         boost::shared_ptr<hier::PatchHierarchy> init_hierarchy(
+            y_init->getPatchHierarchy());
 
          tbox::pout << "Initial solution vector y() at initial time: " << endl;
          int ln;
@@ -315,7 +316,7 @@ int main(
             tbox::plog << "level = " << ln << endl;
 
             for (hier::PatchLevel::Iterator p(level); p; p++) {
-               boost::shared_ptr<hier::Patch> patch = *p;
+               const boost::shared_ptr<hier::Patch>& patch = *p;
 
                boost::shared_ptr<CellData<double> > y_data(
                   y_init->getComponentPatchData(0, *patch),
@@ -366,10 +367,10 @@ int main(
           * Print statistics
           * Format:  time  max norm   l1 norm   l2 norm
           */
-         boost::shared_ptr<solv::SAMRAIVectorReal<double> > y_result =
-            solv::Sundials_SAMRAIVector::getSAMRAIVector(solution_vector);
-         boost::shared_ptr<hier::PatchHierarchy> result_hierarchy =
-            y_result->getPatchHierarchy();
+         boost::shared_ptr<solv::SAMRAIVectorReal<double> > y_result(
+            solv::Sundials_SAMRAIVector::getSAMRAIVector(solution_vector));
+         boost::shared_ptr<hier::PatchHierarchy> result_hierarchy(
+            y_result->getPatchHierarchy());
 
          time[interval - 1] = actual_time;
          maxnorm[interval - 1] = y_result->maxNorm();
@@ -388,12 +389,12 @@ int main(
             t_log_dump->start();
             for (int ln = 0; ln < result_hierarchy->getNumberOfLevels();
                  ln++) {
-	      boost::shared_ptr<hier::PatchLevel> level(
+               boost::shared_ptr<hier::PatchLevel> level(
                   result_hierarchy->getPatchLevel(ln));
                tbox::plog << "level = " << ln << endl;
 
                for (hier::PatchLevel::Iterator p(level); p; p++) {
-                  boost::shared_ptr<hier::Patch> patch = *p;
+                  const boost::shared_ptr<hier::Patch>& patch = *p;
 
                   boost::shared_ptr<CellData<double> > y_data(
                      y_result->getComponentPatchData(0, *patch),

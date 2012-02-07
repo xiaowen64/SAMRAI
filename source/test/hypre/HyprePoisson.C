@@ -57,7 +57,6 @@ HyprePoisson::HyprePoisson(
    boost::shared_ptr<tbox::Database> database):
    d_object_name(object_name),
    d_dim(dim),
-   d_hierarchy(),
    d_poisson_hypre(dim,
                    object_name + "::poisson_hypre",
                    (database &&
@@ -69,8 +68,7 @@ HyprePoisson::HyprePoisson(
               (database &&
                database->isDatabase("bc_coefs")) ?
               database->getDatabase("bc_coefs") :
-              boost::shared_ptr<tbox::Database>()),
-   d_context()
+              boost::shared_ptr<tbox::Database>())
 {
 
    hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
@@ -85,16 +83,19 @@ HyprePoisson::HyprePoisson(
     * and get the descriptor indices for those variables.
     */
    boost::shared_ptr<pdat::CellVariable<double> > comp_soln(
-      new pdat::CellVariable<double>(d_dim,
-                                     object_name + ":computed solution",
-                                     1));
+      new pdat::CellVariable<double>(
+         d_dim,
+         object_name + ":computed solution",
+         1));
    d_comp_soln_id =
       vdb->registerVariableAndContext(
          comp_soln,
          d_context,
          hier::IntVector(d_dim, 1) /* ghost cell width is 1 for stencil widths */);
    boost::shared_ptr<pdat::CellVariable<double> > exact_solution(
-      new pdat::CellVariable<double>(d_dim, object_name + ":exact solution"));
+      new pdat::CellVariable<double>(
+         d_dim,
+         object_name + ":exact solution"));
    d_exact_id =
       vdb->registerVariableAndContext(
          exact_solution,
@@ -138,18 +139,18 @@ void HyprePoisson::initializeLevelData(
    const boost::shared_ptr<hier::PatchLevel> old_level,
    const bool allocate_data)
 {
-   (void)init_data_time;
-   (void)can_be_refined;
-   (void)initial_time;
-   (void)old_level;
+   NULL_USE(init_data_time);
+   NULL_USE(can_be_refined);
+   NULL_USE(initial_time);
+   NULL_USE(old_level);
 
    boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy = hierarchy;
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geom(
       patch_hierarchy->getGridGeometry(),
       boost::detail::dynamic_cast_tag());
 
-   boost::shared_ptr<hier::PatchLevel> level =
-      hierarchy->getPatchLevel(level_number);
+   boost::shared_ptr<hier::PatchLevel> level(
+      hierarchy->getPatchLevel(level_number));
 
    /*
     * If required, allocate all patch data on the level.
@@ -166,7 +167,7 @@ void HyprePoisson::initializeLevelData(
    hier::PatchLevel::Iterator pi(*level);
    for (pi.initialize(*level); pi; pi++) {
 
-      boost::shared_ptr<hier::Patch> patch = *pi;
+      const boost::shared_ptr<hier::Patch>& patch = *pi;
       if (!patch) {
          TBOX_ERROR(d_object_name
             << ": Cannot find patch.  Null patch pointer.");
@@ -224,8 +225,8 @@ void HyprePoisson::resetHierarchyConfiguration(
    int coarsest_level,
    int finest_level)
 {
-   (void)coarsest_level;
-   (void)finest_level;
+   NULL_USE(coarsest_level);
+   NULL_USE(finest_level);
 
    d_hierarchy = new_hierarchy;
 }
@@ -250,11 +251,11 @@ bool HyprePoisson::solvePoisson()
     * The easiest way to do this is to just write 0 everywhere,
     * simultaneous setting the boundary values and initial guess.
     */
-   boost::shared_ptr<hier::PatchLevel> level = d_hierarchy->getPatchLevel(
-         level_number);
+   boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(
+         level_number));
    hier::PatchLevel::Iterator ip(level);
    for ( ; ip; ip++) {
-      boost::shared_ptr<hier::Patch> patch = *ip;
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
       boost::shared_ptr<pdat::CellData<double> > data(
          patch->getPatchData(d_comp_soln_id),
          boost::detail::dynamic_cast_tag());
@@ -360,8 +361,8 @@ bool HyprePoisson::packDerivedDataIntoDoubleBuffer(
    const std::string& variable_name,
    int depth_id) const
 {
-   (void)region;
-   (void)depth_id;
+   NULL_USE(region);
+   NULL_USE(depth_id);
 
    pdat::CellData<double>::Iterator icell(patch.getBox());
 
