@@ -16,7 +16,7 @@ using namespace std;
 // Headers for basic SAMRAI objects used in this code.
 #include "SAMRAI/tbox/SAMRAIManager.h"
 
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/tbox/Database.h"

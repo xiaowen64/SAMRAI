@@ -13,7 +13,7 @@
 
 #include "SAMRAI/pdat/CellOverlap.h"
 
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/CellOverlap.I"

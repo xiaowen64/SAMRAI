@@ -9,7 +9,7 @@
  ************************************************************************/
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/BoxLevelHandle.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxContainerSingleOwnerIterator.h"
 
 #include <boost/make_shared.hpp>

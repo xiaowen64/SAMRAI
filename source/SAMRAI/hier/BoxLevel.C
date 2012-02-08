@@ -12,7 +12,7 @@
 
 #include "SAMRAI/hier/BoxLevel.h"
 
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/BoxLevelStatistics.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"

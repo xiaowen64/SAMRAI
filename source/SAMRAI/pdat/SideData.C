@@ -14,7 +14,7 @@
 #include "SAMRAI/pdat/SideData.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/pdat/SideGeometry.h"
 #include "SAMRAI/pdat/SideOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"

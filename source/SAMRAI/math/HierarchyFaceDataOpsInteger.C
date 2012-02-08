@@ -13,7 +13,7 @@
 
 #include "SAMRAI/math/HierarchyFaceDataOpsInteger.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/pdat/FaceDataFactory.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"

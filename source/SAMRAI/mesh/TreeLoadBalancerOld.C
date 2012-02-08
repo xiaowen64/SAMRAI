@@ -12,7 +12,7 @@
 #define included_mesh_TreeLoadBalancerOld_C
 
 #include "SAMRAI/mesh/TreeLoadBalancerOld.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 

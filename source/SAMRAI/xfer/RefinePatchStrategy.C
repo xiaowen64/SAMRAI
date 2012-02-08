@@ -13,7 +13,7 @@
 
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 
 namespace SAMRAI {
 namespace xfer {

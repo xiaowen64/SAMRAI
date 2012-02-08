@@ -14,7 +14,7 @@
 #include "SAMRAI/pdat/IndexData.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/IOStream.h"

@@ -11,7 +11,7 @@
 #define included_hier_BaseConnectorAlgorithm_C
 
 #include "SAMRAI/hier/BaseConnectorAlgorithm.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 
 namespace SAMRAI {
 namespace hier {

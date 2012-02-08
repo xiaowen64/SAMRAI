@@ -14,7 +14,7 @@
 #include "SAMRAI/pdat/EdgeData.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/pdat/EdgeGeometry.h"
 #include "SAMRAI/pdat/EdgeOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"

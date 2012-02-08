@@ -15,7 +15,7 @@
 
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/PatchDescriptor.h"

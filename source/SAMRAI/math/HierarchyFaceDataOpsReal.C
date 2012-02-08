@@ -12,7 +12,7 @@
 #define included_math_HierarchyFaceDataOpsReal_C
 
 #include "SAMRAI/math/HierarchyFaceDataOpsReal.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/pdat/FaceDataFactory.h"

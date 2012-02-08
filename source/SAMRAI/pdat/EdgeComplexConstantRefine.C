@@ -15,7 +15,7 @@
 #include "SAMRAI/pdat/EdgeComplexConstantRefine.h"
 
 #include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/pdat/EdgeData.h"
 #include "SAMRAI/pdat/EdgeVariable.h"

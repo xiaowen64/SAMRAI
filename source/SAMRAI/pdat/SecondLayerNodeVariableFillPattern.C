@@ -13,7 +13,7 @@
 
 #include "SAMRAI/pdat/SecondLayerNodeVariableFillPattern.h"
 
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/tbox/Utilities.h"
 

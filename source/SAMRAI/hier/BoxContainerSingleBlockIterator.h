@@ -14,7 +14,6 @@
 
 #include "SAMRAI/hier/BlockId.h"
 #include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
 
 namespace SAMRAI {
 namespace hier {

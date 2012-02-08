@@ -12,7 +12,7 @@
 #define included_math_HierarchyEdgeDataOpsReal_C
 
 #include "SAMRAI/math/HierarchyEdgeDataOpsReal.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/pdat/EdgeDataFactory.h"

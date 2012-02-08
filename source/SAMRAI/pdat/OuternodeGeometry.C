@@ -12,7 +12,7 @@
 #define included_pdat_OuternodeGeometry_C
 
 #include "SAMRAI/pdat/OuternodeGeometry.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/pdat/NodeOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"

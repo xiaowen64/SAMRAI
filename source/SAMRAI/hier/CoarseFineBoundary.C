@@ -13,7 +13,7 @@
 
 #include "SAMRAI/hier/CoarseFineBoundary.h"
 
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/PatchLevel.h"

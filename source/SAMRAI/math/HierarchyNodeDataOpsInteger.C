@@ -12,7 +12,7 @@
 #define included_math_HierarchyNodeDataOpsInteger_C
 
 #include "SAMRAI/math/HierarchyNodeDataOpsInteger.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/pdat/NodeDataFactory.h"

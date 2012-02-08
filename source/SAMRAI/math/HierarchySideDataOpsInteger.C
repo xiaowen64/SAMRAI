@@ -13,7 +13,7 @@
 
 #include "SAMRAI/math/HierarchySideDataOpsInteger.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/pdat/SideDataFactory.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"

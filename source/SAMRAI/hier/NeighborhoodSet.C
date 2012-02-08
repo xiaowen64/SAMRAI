@@ -11,7 +11,7 @@
 #define included_hier_NeighborhoodSet_C
 
 #include "SAMRAI/hier/NeighborhoodSet.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/Connector.h"
 
