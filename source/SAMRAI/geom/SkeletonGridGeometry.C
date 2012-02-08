@@ -159,10 +159,10 @@ SkeletonGridGeometry::makeRefinedGridGeometry(
    hier::BoxContainer fine_domain(getPhysicalDomain());
    fine_domain.refine(refine_ratio);
 
-   boost::shared_ptr<hier::GridGeometry> fine_geometry =
+   boost::shared_ptr<hier::GridGeometry> fine_geometry(
        boost::make_shared<SkeletonGridGeometry>(fine_geom_name,
          fine_domain,
-         register_for_restart);
+         register_for_restart));
 
    fine_geometry->initializePeriodicShift(
       getPeriodicShift(hier::IntVector::getOne(dim)));
@@ -220,10 +220,10 @@ SkeletonGridGeometry::makeCoarsenedGridGeometry(
       }
    }
 
-   boost::shared_ptr<hier::GridGeometry> coarse_geometry =
+   boost::shared_ptr<hier::GridGeometry> coarse_geometry(
       boost::make_shared<SkeletonGridGeometry>(coarse_geom_name,
          coarse_domain,
-         register_for_restart);
+         register_for_restart));
 
    coarse_geometry->initializePeriodicShift(
       getPeriodicShift(hier::IntVector::getOne(dim)));
@@ -270,11 +270,11 @@ void SkeletonGridGeometry::setGeometryDataOnPatch(
    }
 #endif
 
-   boost::shared_ptr<SkeletonPatchGeometry> geometry =
+   boost::shared_ptr<SkeletonPatchGeometry> geometry(
       boost::make_shared<SkeletonPatchGeometry>(
          ratio_to_level_zero,
          touches_regular_bdry,
-         touches_periodic_bdry);
+         touches_periodic_bdry));
 
    patch.setPatchGeometry(geometry);
 }

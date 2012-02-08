@@ -246,10 +246,10 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
          const hier::Index& lower = boundary_box.getBox().lower();
          const hier::Index& upper = boundary_box.getBox().upper();
          const hier::Box coefbox = makeFaceBoundaryBox(boundary_box);
-         boost::shared_ptr<pdat::ArrayData<double> > acoef_data =
-            boost::make_shared<pdat::ArrayData<double> >(coefbox, 1);
-         boost::shared_ptr<pdat::ArrayData<double> > bcoef_data =
-            boost::make_shared<pdat::ArrayData<double> >(coefbox, 1);
+         boost::shared_ptr<pdat::ArrayData<double> > acoef_data(
+            boost::make_shared<pdat::ArrayData<double> >(coefbox, 1));
+         boost::shared_ptr<pdat::ArrayData<double> > bcoef_data(
+            boost::make_shared<pdat::ArrayData<double> >(coefbox, 1));
          boost::shared_ptr<pdat::ArrayData<double> >gcoef_data(
             homogeneous_bc ? NULL :
             new pdat::ArrayData<double>(coefbox, 1));

@@ -16,6 +16,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
+#include <boost/make_shared.hpp>
 #include <cassert>
 #include <cstring>
 
@@ -617,7 +618,8 @@ HDFDatabase::putDatabase(
 
    TBOX_ASSERT(this_group >= 0);
 
-   boost::shared_ptr<Database> new_database(new HDFDatabase(key, this_group));
+   boost::shared_ptr<Database> new_database(
+      boost::make_shared<HDFDatabase>(key, this_group));
 
    return new_database;
 }
@@ -649,7 +651,8 @@ HDFDatabase::getDatabase(
 #endif
    TBOX_ASSERT(this_group >= 0);
 
-   boost::shared_ptr<Database> database(new HDFDatabase(key, this_group));
+   boost::shared_ptr<Database> database(
+      boost::make_shared<HDFDatabase>(key, this_group));
 
    return database;
 }

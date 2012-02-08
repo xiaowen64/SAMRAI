@@ -224,12 +224,12 @@ SAMRAIVectorReal<TYPE>::cloneVector(
 {
 
    std::string new_name = (name.empty() ? d_vector_name : name);
-   boost::shared_ptr<SAMRAIVectorReal<TYPE> > new_vec =
+   boost::shared_ptr<SAMRAIVectorReal<TYPE> > new_vec(
       boost::make_shared<SAMRAIVectorReal<TYPE> >(
          new_name,
          d_hierarchy,
          d_coarsest_level,
-         d_finest_level);
+         d_finest_level));
 
    new_vec->setNumberOfComponents(d_number_components);
 

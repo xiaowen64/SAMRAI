@@ -877,12 +877,12 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
       tmp_level_workloads,
       "GREEDY");
 
-   boost::shared_ptr<hier::BoxLevel> tmp_mapped_box_level =
+   boost::shared_ptr<hier::BoxLevel> tmp_mapped_box_level(
       boost::make_shared<hier::BoxLevel>(
          ratio_to_hierarchy_level_zero,
          hierarchy->getGridGeometry(),
          mpi,
-         hier::BoxLevel::GLOBALIZED);
+         hier::BoxLevel::GLOBALIZED));
    idx = 0;
    for (hier::BoxContainer::Iterator i(tmp_level_boxes); i != tmp_level_boxes.end();
         ++i, ++idx) {
@@ -891,17 +891,17 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
       tmp_mapped_box_level->addBox(node);
    }
 
-   boost::shared_ptr<hier::PatchLevel> tmp_level =
+   boost::shared_ptr<hier::PatchLevel> tmp_level(
       boost::make_shared<hier::PatchLevel>(*tmp_mapped_box_level,
          hierarchy->getGridGeometry(),
-         hierarchy->getPatchDescriptor());
+         hierarchy->getPatchDescriptor()));
 
    tmp_level->allocatePatchData(wrk_indx);
 
    xfer::RefineAlgorithm fill_work_algorithm(d_dim);
 
-   boost::shared_ptr<hier::RefineOperator> work_refine_op =
-      boost::make_shared<pdat::CellDoubleConstantRefine>(d_dim);
+   boost::shared_ptr<hier::RefineOperator> work_refine_op(
+      boost::make_shared<pdat::CellDoubleConstantRefine>(d_dim));
 
    fill_work_algorithm.registerRefine(wrk_indx,
       wrk_indx,

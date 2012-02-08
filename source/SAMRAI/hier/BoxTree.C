@@ -614,24 +614,24 @@ void BoxTree::printStatistics(
               << std::endl;
 
    tbox::Statistician* st = tbox::Statistician::getStatistician();
-   boost::shared_ptr<tbox::Statistic> bdstat = st->getStatistic("num_build",
-         "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> gnstat = st->getStatistic("num_generate",
-         "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> dpstat = st->getStatistic("num_duplicate",
-         "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> srstat = st->getStatistic("num_search",
-         "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> sbstat = st->getStatistic("num_sorted_box",
-         "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> fbstat = st->getStatistic("num_found_box",
-         "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> msbstat = st->getStatistic("max_sorted_box",
-         "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> mfbstat = st->getStatistic("max_found_box",
-         "PROC_STAT");
-   boost::shared_ptr<tbox::Statistic> lsstat = st->getStatistic("max_lin_search",
-         "PROC_STAT");
+   boost::shared_ptr<tbox::Statistic> bdstat(st->getStatistic("num_build",
+         "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> gnstat(st->getStatistic("num_generate",
+         "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> dpstat(st->getStatistic("num_duplicate",
+         "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> srstat(st->getStatistic("num_search",
+         "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> sbstat(st->getStatistic("num_sorted_box",
+         "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> fbstat(st->getStatistic("num_found_box",
+         "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> msbstat(st->getStatistic("max_sorted_box",
+         "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> mfbstat(st->getStatistic("max_found_box",
+         "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic> lsstat(st->getStatistic("max_lin_search",
+         "PROC_STAT"));
 
    static int seq_num = 0;
    bdstat->recordProcStat(s_num_build[dim.getValue() - 1], seq_num);

@@ -316,8 +316,8 @@ void MblkPatchBoundaryNodeSum::setupSum(
       d_single_level_sum_schedule.resizeArray(1);
 
       // Communication algorithm for summing outernode values on a level
-      boost::shared_ptr<xfer::RefineAlgorithm> single_level_sum_algorithm =
-         boost::make_shared<xfer::RefineAlgorithm>();
+      boost::shared_ptr<xfer::RefineAlgorithm> single_level_sum_algorithm(
+         boost::make_shared<xfer::RefineAlgorithm>());
 
       for (int i = 0; i < d_num_reg_sum; i++) {
          single_level_sum_algorithm->registerRefine(

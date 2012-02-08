@@ -2822,8 +2822,8 @@ void VisItDataWriter::writeSummaryToHDFFile(
       //sprintf(temp_buf, "/summary.samrai");
       //string summary_HDFFilename = dump_dirname + temp_buf;
       std::string summary_HDFFilename = dump_dirname + "/" + d_summary_filename;
-      boost::shared_ptr<tbox::Database> summary_HDFFilePointer =
-         boost::make_shared<tbox::HDFDatabase>("root");
+      boost::shared_ptr<tbox::Database> summary_HDFFilePointer(
+         boost::make_shared<tbox::HDFDatabase>("root"));
       summary_HDFFilePointer->create(summary_HDFFilename);
 
       /*

@@ -890,10 +890,10 @@ void CellPoissonHypreSolver::setMatrixCoefficients(
                bbu.trimBoundaryBox(patch.getBox());
             const hier::Box bccoef_box =
                bbu.getSurfaceBoxFromBoundaryBox();
-            boost::shared_ptr<pdat::ArrayData<double> > acoef_data =
-               boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1);
-            boost::shared_ptr<pdat::ArrayData<double> > bcoef_data =
-               boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1);
+            boost::shared_ptr<pdat::ArrayData<double> > acoef_data(
+               boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
+            boost::shared_ptr<pdat::ArrayData<double> > bcoef_data(
+               boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
             boost::shared_ptr<pdat::ArrayData<double> > gcoef_data;
             static const double fill_time = 0.0;
             d_physical_bc_coef_strategy->setBcCoefs(acoef_data,
@@ -952,10 +952,10 @@ void CellPoissonHypreSolver::setMatrixCoefficients(
                bbu.trimBoundaryBox(patch.getBox());
             const hier::Box bccoef_box =
                bbu.getSurfaceBoxFromBoundaryBox();
-            boost::shared_ptr<pdat::ArrayData<double> > acoef_data =
-               boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1);
-            boost::shared_ptr<pdat::ArrayData<double> > bcoef_data =
-               boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1);
+            boost::shared_ptr<pdat::ArrayData<double> > acoef_data(
+               boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
+            boost::shared_ptr<pdat::ArrayData<double> > bcoef_data(
+               boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
             boost::shared_ptr<pdat::ArrayData<double> > gcoef_data;
             static const double fill_time = 0.0;
             /*
@@ -1099,8 +1099,8 @@ void CellPoissonHypreSolver::add_gAk0_toRhs(
       const hier::Box bccoef_box = bbu.getSurfaceBoxFromBoundaryBox();
       boost::shared_ptr<pdat::ArrayData<double> > acoef_data;
       boost::shared_ptr<pdat::ArrayData<double> > bcoef_data;
-      boost::shared_ptr<pdat::ArrayData<double> > gcoef_data =
-         boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1);
+      boost::shared_ptr<pdat::ArrayData<double> > gcoef_data(
+         boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
       static const double fill_time = 0.0;
       robin_bc_coef->setBcCoefs(acoef_data,
          bcoef_data,

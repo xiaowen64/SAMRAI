@@ -354,7 +354,7 @@ void VariableDatabase::removePatchDataIndex(
 
    if ((data_id >= 0) && (data_id <= d_max_descriptor_id)) {
 
-      boost::shared_ptr<Variable> variable = d_index2variable_map[data_id];
+      boost::shared_ptr<Variable> variable(d_index2variable_map[data_id]);
 
       if (variable) {
 
@@ -757,7 +757,7 @@ void VariableDatabase::removeInternalSAMRAIVariablePatchDataIndex(
 {
    if ((data_id >= 0) && (data_id <= d_max_descriptor_id)) {
 
-      boost::shared_ptr<Variable> variable = d_index2variable_map[data_id];
+      boost::shared_ptr<Variable> variable(d_index2variable_map[data_id]);
 
       if (variable &&
           !d_is_user_variable[variable->getInstanceIdentifier()]) {

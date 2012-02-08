@@ -644,9 +644,9 @@ void Transformation::translateAndCopyData(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(dst_patch, src_patch, shift);
 
-   boost::shared_ptr<PatchDataFactory> dst_pdf =
+   boost::shared_ptr<PatchDataFactory> dst_pdf(
       VariableDatabase::getDatabase()->getPatchDescriptor()->
-      getPatchDataFactory(dst_id);
+      getPatchDataFactory(dst_id));
 
    MultiblockDataTranslator* mb_trans =
       dst_pdf->getMultiblockDataTranslator();
@@ -669,9 +669,9 @@ void Transformation::translateAndFillData(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(dst_patch, src_patch, shift);
 
-   boost::shared_ptr<PatchDataFactory> dst_pdf =
+   boost::shared_ptr<PatchDataFactory> dst_pdf(
       VariableDatabase::getDatabase()->getPatchDescriptor()->
-      getPatchDataFactory(dst_id);
+      getPatchDataFactory(dst_id));
 
    MultiblockDataTranslator* mb_trans =
       dst_pdf->getMultiblockDataTranslator();

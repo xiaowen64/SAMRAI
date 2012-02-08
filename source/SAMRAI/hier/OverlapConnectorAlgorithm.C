@@ -257,8 +257,8 @@ void OverlapConnectorAlgorithm::extractNeighbors(
        */
       TBOX_ASSERT(mapped_box_id.getOwnerRank() == connector.getMPI().getRank());
 
-      const boost::shared_ptr<const GridGeometry>& grid_geom = 
-         connector.getBase().getGridGeometry();
+      const boost::shared_ptr<const GridGeometry>& grid_geom (
+         connector.getBase().getGridGeometry());
 
       const Box& mapped_box =
          *connector.getBase().getBox(Box(dim, mapped_box_id));

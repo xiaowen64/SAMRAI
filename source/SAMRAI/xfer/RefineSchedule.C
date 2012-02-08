@@ -895,11 +895,11 @@ void RefineSchedule::finishScheduleConstruction(
        * BoxGeometryVariableFillPattern, so that it fills all needed
        * parts of d_coarse_interp_level
        */
-      boost::shared_ptr<BoxGeometryVariableFillPattern> bg_fill_pattern =
-         boost::make_shared<BoxGeometryVariableFillPattern>();
+      boost::shared_ptr<BoxGeometryVariableFillPattern> bg_fill_pattern(
+         boost::make_shared<BoxGeometryVariableFillPattern>());
 
-      boost::shared_ptr<RefineClasses> coarse_schedule_refine_classes =
-         boost::make_shared<RefineClasses>();
+      boost::shared_ptr<RefineClasses> coarse_schedule_refine_classes(
+         boost::make_shared<RefineClasses>());
 
       const int num_refine_items =
          d_refine_classes->getNumberOfRefineItems();
@@ -1025,11 +1025,11 @@ RefineSchedule::createEnconFillSchedule(
     * BoxGeometryVariableFillPattern, so that it fills all needed parts of
     * d_coarse_interp_encon_level
     */
-   boost::shared_ptr<BoxGeometryVariableFillPattern> bg_fill_pattern =
-      boost::make_shared<BoxGeometryVariableFillPattern>();
+   boost::shared_ptr<BoxGeometryVariableFillPattern> bg_fill_pattern(
+      boost::make_shared<BoxGeometryVariableFillPattern>());
 
-   boost::shared_ptr<RefineClasses> coarse_schedule_refine_classes =
-      boost::make_shared<RefineClasses>();
+   boost::shared_ptr<RefineClasses> coarse_schedule_refine_classes(
+      boost::make_shared<RefineClasses>());
 
    const int num_refine_items =
       d_refine_classes->getNumberOfRefineItems();

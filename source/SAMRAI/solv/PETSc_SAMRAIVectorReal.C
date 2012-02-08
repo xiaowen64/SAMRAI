@@ -135,8 +135,8 @@ PETSc_SAMRAIVectorReal<TYPE>::makeNewVector()
          &comm);
    PETSC_SAMRAI_ERROR(ierr);
 
-   boost::shared_ptr<SAMRAIVectorReal<TYPE> > sam_vec =
-      d_samrai_vector->cloneVector(d_samrai_vector->getName());
+   boost::shared_ptr<SAMRAIVectorReal<TYPE> > sam_vec(
+      d_samrai_vector->cloneVector(d_samrai_vector->getName()));
    sam_vec->allocateVectorData();
    const bool vector_created_via_duplicate = true;
    PETSc_SAMRAIVectorReal<TYPE>* out_vec =

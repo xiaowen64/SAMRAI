@@ -1907,9 +1907,9 @@ void Statistician::finalize(
 
             for (ip = 0; ip < nnodes; ip++) {
 
-               boost::shared_ptr<Statistic> stat = ((ip == 0) ?
+               boost::shared_ptr<Statistic> stat(((ip == 0) ?
                                           d_proc_statistics[is] :
-                                          global_proc_stats[is][ip]);
+                                          global_proc_stats[is][ip]));
 
                for (ipsl = 0; ipsl < stat->getStatSequenceLength(); ipsl++) {
                   sdata[ipsl][ip] = stat->getProcStatSeqArray()[ipsl].value;
@@ -1928,9 +1928,9 @@ void Statistician::finalize(
 
             for (ip = 0; ip < nnodes; ip++) {
 
-               boost::shared_ptr<Statistic> stat = ((ip == 0) ?
+               boost::shared_ptr<Statistic> stat(((ip == 0) ?
                                           d_patch_statistics[is] :
-                                          global_patch_stats[is][ip]);
+                                          global_patch_stats[is][ip]));
 
                for (ipsl = 0; ipsl < stat->getStatSequenceLength(); ipsl++) {
                   List<Statistic::PatchStatRecord>::Iterator ilr(

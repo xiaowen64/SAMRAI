@@ -111,8 +111,8 @@ boost::shared_ptr<InputDatabase>
 InputManager::parseInputFile(
    const std::string& filename)
 {
-   boost::shared_ptr<InputDatabase> db =
-      boost::make_shared<InputDatabase>("main");
+   boost::shared_ptr<InputDatabase> db(
+      boost::make_shared<InputDatabase>("main"));
    parseInputFile(filename, db);
    return db;
 }

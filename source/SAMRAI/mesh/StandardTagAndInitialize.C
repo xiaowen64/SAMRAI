@@ -582,8 +582,8 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
    for (hier::PatchLevel::Iterator ip(coarser_level); ip; ip++) {
 
       const boost::shared_ptr<hier::Patch>& coarse_patch = *ip;
-      boost::shared_ptr<hier::Patch> fine_patch =
-         patch_level->getPatch(coarse_patch->getGlobalId());
+      boost::shared_ptr<hier::Patch> fine_patch(
+         patch_level->getPatch(coarse_patch->getGlobalId()));
       copytags.refine(*fine_patch, *coarse_patch,
          tag_index, tag_index,
          fine_patch->getBox(), coarsen_ratio);
@@ -741,8 +741,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
     * so user routines can use this information.
     */
 
-   boost::shared_ptr<hier::PatchLevel> coarsened_level =
-      boost::make_shared<hier::PatchLevel>(dim);
+   boost::shared_ptr<hier::PatchLevel> coarsened_level(
+      boost::make_shared<hier::PatchLevel>(dim));
    hier::IntVector coarsen_ratio(dim, d_error_coarsen_ratio);
    coarsened_level->setCoarsenedPatchLevel(patch_level, coarsen_ratio);
 

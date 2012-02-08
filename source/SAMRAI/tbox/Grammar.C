@@ -2876,7 +2876,7 @@ static KeyData* lookup_variable(
    result->d_integer    = 0;
 
    Parser *parser = Parser::getParser();
-   boost::shared_ptr<Database> db = parser->getDatabaseWithKey(key);
+   boost::shared_ptr<Database> db(parser->getDatabaseWithKey(key));
 
    if (!db) {
       string tmp("Variable ``");

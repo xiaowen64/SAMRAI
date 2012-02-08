@@ -409,8 +409,8 @@ boost::shared_ptr<MultiblockBoxTree> MultiblockBoxTree::createRefinedTree(
 #endif
    TBOX_ASSERT(ratio >= IntVector::getOne(dim));
 
-   boost::shared_ptr<MultiblockBoxTree> rval =
-      boost::make_shared<MultiblockBoxTree>();
+   boost::shared_ptr<MultiblockBoxTree> rval(
+      boost::make_shared<MultiblockBoxTree>());
    rval->d_grid_geometry = d_grid_geometry;
 
    for (std::map<BlockId, BoxContainer>::const_iterator mi = d_single_block_trees.begin();

@@ -33,12 +33,12 @@ boost::shared_ptr<PatchLevel> PatchLevelFactory::allocate(
    boost::shared_ptr<PatchFactory> factory) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(mapped_box_level, *grid_geometry);
-   boost::shared_ptr<PatchLevel> pl =
+   boost::shared_ptr<PatchLevel> pl(
       boost::make_shared<PatchLevel>(
          mapped_box_level,
          grid_geometry,
          descriptor,
-         factory);
+         factory));
    return pl;
 }
 
@@ -50,14 +50,14 @@ boost::shared_ptr<PatchLevel> PatchLevelFactory::allocate(
    boost::shared_ptr<PatchFactory> factory,
    const bool defer_boundary_box_creation) const
 {
-   boost::shared_ptr<PatchLevel> pl =
+   boost::shared_ptr<PatchLevel> pl(
       boost::make_shared<PatchLevel>(
          database,
          grid_geometry,
          descriptor,
          factory,
          component_selector,
-         defer_boundary_box_creation);
+         defer_boundary_box_creation));
    return pl;
 }
 

@@ -63,6 +63,13 @@ public:
       const std::string& name);
 
    /**
+    * Constructor used to create sub-databases.
+    */
+   HDFDatabase(
+      const std::string& name,
+      hid_t group_ID);
+
+   /**
     * The database destructor closes the HDF5 group or data file.
     */
    virtual ~HDFDatabase();
@@ -523,13 +530,6 @@ private:
       const char* name,
       int type,
       void* database);
-
-   /*
-    * Private constructor used internally to create sub-databases.
-    */
-   HDFDatabase(
-      const std::string& name,
-      hid_t group_ID);
 
    /*
     * Private utility routine for inserting array data in the database

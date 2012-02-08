@@ -1582,8 +1582,8 @@ void HyperbolicLevelIntegrator::resetTimeDependentData(
    for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
-      tbox::List<boost::shared_ptr<hier::Variable> >::Iterator
-         time_dep_var = d_time_dep_variables.listStart();
+      tbox::List<boost::shared_ptr<hier::Variable> >::Iterator time_dep_var =
+          d_time_dep_variables.listStart();
       while (time_dep_var) {
 
          int cur_indx =
@@ -2118,8 +2118,8 @@ void HyperbolicLevelIntegrator::preprocessFluxData(
          for (hier::PatchLevel::Iterator p(level); p; p++) {
             const boost::shared_ptr<hier::Patch>& patch = *p;
 
-            tbox::List<boost::shared_ptr<hier::Variable> >::Iterator
-               fs_var = d_fluxsum_variables.listStart();
+            tbox::List<boost::shared_ptr<hier::Variable> >::Iterator fs_var =
+               d_fluxsum_variables.listStart();
 
             while (fs_var) {
                int fsum_id =
@@ -2400,8 +2400,8 @@ void HyperbolicLevelIntegrator::copyTimeDependentData(
    for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
-      tbox::List<boost::shared_ptr<hier::Variable> >::Iterator
-         time_dep_var = d_time_dep_variables.listStart();
+      tbox::List<boost::shared_ptr<hier::Variable> >::Iterator time_dep_var =
+         d_time_dep_variables.listStart();
       while (time_dep_var) {
          boost::shared_ptr<hier::PatchData> src_data(
             patch->getPatchData(time_dep_var(), src_context));
@@ -2701,13 +2701,11 @@ void HyperbolicLevelIntegrator::getFromRestart()
    boost::shared_ptr<tbox::Database> root_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
-   boost::shared_ptr<tbox::Database> db;
-   if (root_db->isDatabase(d_object_name)) {
-      db = root_db->getDatabase(d_object_name);
-   } else {
+   if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file" << std::endl);
    }
+   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION");
    if (ver != ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION) {

@@ -1238,8 +1238,8 @@ void BoxLevelConnectorUtils::addPeriodicImages(
       return; // No-op.
    }
 
-   boost::shared_ptr<BoxContainer> domain_tree_for_mapped_box_level =
-      boost::make_shared<BoxContainer>(domain_search_tree);
+   boost::shared_ptr<BoxContainer> domain_tree_for_mapped_box_level(
+      boost::make_shared<BoxContainer>(domain_search_tree));
    domain_tree_for_mapped_box_level->refine(
       mapped_box_level.getRefinementRatio());
    domain_tree_for_mapped_box_level->makeTree();

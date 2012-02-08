@@ -240,12 +240,12 @@ CartesianGridGeometry::makeRefinedGridGeometry(
    hier::BoxContainer fine_domain(getPhysicalDomain());
    fine_domain.refine(refine_ratio);
 
-   boost::shared_ptr<hier::GridGeometry> fine_geometry =
+   boost::shared_ptr<hier::GridGeometry> fine_geometry(
       boost::make_shared<CartesianGridGeometry>(fine_geom_name,
          d_x_lo,
          d_x_up,
          fine_domain,
-         register_for_restart);
+         register_for_restart));
 
    fine_geometry->initializePeriodicShift(getPeriodicShift(hier::
          IntVector::getOne(dim)));
@@ -303,12 +303,12 @@ makeCoarsenedGridGeometry(
       }
    }
 
-   boost::shared_ptr<hier::GridGeometry> coarse_geometry =
+   boost::shared_ptr<hier::GridGeometry> coarse_geometry(
       boost::make_shared<CartesianGridGeometry>(coarse_geom_name,
          d_x_lo,
          d_x_up,
          coarse_domain,
-         register_for_restart);
+         register_for_restart));
 
    coarse_geometry->initializePeriodicShift(getPeriodicShift(hier::
          IntVector::getOne(dim)));
@@ -440,11 +440,11 @@ void CartesianGridGeometry::setGeometryDataOnPatch(
       x_up[id5] = x_lo[id5] + ((double)box.numberCells(id5)) * dx[id5];
    }
 
-   boost::shared_ptr<CartesianPatchGeometry> geom =
+   boost::shared_ptr<CartesianPatchGeometry> geom(
       boost::make_shared<CartesianPatchGeometry>(ratio_to_level_zero,
          touches_regular_bdry,
          touches_periodic_bdry,
-         dx, x_lo, x_up);
+         dx, x_lo, x_up));
 
    patch.setPatchGeometry(geom);
 

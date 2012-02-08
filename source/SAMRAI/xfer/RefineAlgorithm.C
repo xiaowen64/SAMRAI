@@ -191,7 +191,7 @@ RefineAlgorithm::createSchedule(
    }
 
    boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
-      new PatchLevelFullFillPattern());
+      boost::make_shared<PatchLevelFullFillPattern>());
 
    return boost::make_shared<RefineSchedule>(
       fill_pattern,
@@ -287,7 +287,7 @@ RefineAlgorithm::createSchedule(
    }
 
    boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
-      new PatchLevelFullFillPattern());
+      boost::make_shared<PatchLevelFullFillPattern>());
 
    return boost::make_shared<RefineSchedule>(
       fill_pattern,
@@ -391,7 +391,7 @@ RefineAlgorithm::createSchedule(
    }
 
    boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
-      new PatchLevelFullFillPattern());
+      boost::make_shared<PatchLevelFullFillPattern>());
 
    return boost::make_shared<RefineSchedule>(
       fill_pattern,
@@ -513,7 +513,7 @@ RefineAlgorithm::createSchedule(
    }
 
    boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
-      new PatchLevelFullFillPattern());
+      boost::make_shared<PatchLevelFullFillPattern>());
 
    return boost::make_shared<RefineSchedule>(
       fill_pattern,

@@ -820,8 +820,8 @@ void PatchLevel::getFromDatabase(
     * Put local patches in database.
     */
 
-   boost::shared_ptr<tbox::Database> mbl_database =
-      database->getDatabase("mapped_box_level");
+   boost::shared_ptr<tbox::Database> mbl_database(
+      database->getDatabase("mapped_box_level"));
    boost::shared_ptr<BoxLevel> mapped_box_level(
       boost::make_shared<BoxLevel>(getDim()));
    boost::shared_ptr<const GridGeometry> grid_geometry(getGridGeometry());
@@ -848,7 +848,7 @@ void PatchLevel::getFromDatabase(
             << " not found in database" << std::endl);
       }
 
-      boost::shared_ptr<Patch>& patch = d_patches[mapped_box_id];
+      boost::shared_ptr<Patch>& patch(d_patches[mapped_box_id]);
       patch = d_factory->allocate(mapped_box, d_descriptor);
       patch->setPatchLevelNumber(d_level_number);
       patch->setPatchInHierarchy(d_in_hierarchy);
@@ -960,7 +960,7 @@ int PatchLevel::recursivePrint(
 
    if (depth > 0) {
       for (Iterator pi(this); pi; pi++) {
-         const boost::shared_ptr<Patch> patch = *pi;
+         const boost::shared_ptr<Patch>& patch = *pi;
          os << border << "Patch " << patch->getLocalId() << '/' << npatch << "\n";
          patch->recursivePrint(os, border + "\t", depth - 1);
 

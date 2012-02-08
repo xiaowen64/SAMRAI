@@ -59,6 +59,15 @@ public:
       const std::string& name);
 
    /**
+    * Constructor used to create sub-databases.
+    */
+   SiloDatabase(
+      const std::string& name,
+      DBfile* file,
+      const std::string& directory,
+      const bool create_in_file);
+
+   /**
     * The database destructor closes the Silo group or data file.
     */
    virtual ~SiloDatabase();
@@ -543,15 +552,6 @@ private:
    bool
    IsValid(
       int i);
-
-   /*
-    * Private constructor used internally to create sub-databases.
-    */
-   SiloDatabase(
-      const std::string& name,
-      DBfile* file,
-      const std::string& directory,
-      const bool create_in_file);
 
    /*
     * Silo file and group id, boolean flag indicating whether database

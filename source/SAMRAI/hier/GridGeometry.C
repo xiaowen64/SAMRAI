@@ -523,7 +523,7 @@ void GridGeometry::setBoundaryBoxes(
 
    for (std::map<BoxId, PatchBoundaries>::const_iterator mi = boundaries.begin();
         mi != boundaries.end(); ++mi) {
-      boost::shared_ptr<Patch> patch = level.getPatch((*mi).first);
+      boost::shared_ptr<Patch> patch(level.getPatch((*mi).first));
       patch->getPatchGeometry()->setBoundaryBoxesOnPatch((*mi).second.getArrays());
    }
 
@@ -570,11 +570,11 @@ const
    }
 #endif
 
-   boost::shared_ptr<PatchGeometry> geometry =
+   boost::shared_ptr<PatchGeometry> geometry(
       boost::make_shared<PatchGeometry>(
          ratio_to_level_zero,
          touches_regular_bdry,
-         touches_periodic_bdry);
+         touches_periodic_bdry));
 
    patch.setPatchGeometry(geometry);
 
@@ -633,12 +633,12 @@ GridGeometry::makeCoarsenedGridGeometry(
       }
    }
 
-   boost::shared_ptr<GridGeometry> coarse_geometry =
+   boost::shared_ptr<GridGeometry> coarse_geometry(
       boost::make_shared<GridGeometry>(
          coarse_geom_name,
          coarse_domain,
          d_transfer_operator_registry,
-         register_for_restart);
+         register_for_restart));
 
    coarse_geometry->initializePeriodicShift(getPeriodicShift(
          IntVector::getOne(dim)));
@@ -671,12 +671,12 @@ GridGeometry::makeRefinedGridGeometry(
    BoxContainer fine_domain(getPhysicalDomain());
    fine_domain.refine(refine_ratio);
 
-   boost::shared_ptr<GridGeometry> fine_geometry =
+   boost::shared_ptr<GridGeometry> fine_geometry(
       boost::make_shared<GridGeometry>(
          fine_geom_name,
          fine_domain,
          d_transfer_operator_registry,
-         register_for_restart);
+         register_for_restart));
 
    fine_geometry->initializePeriodicShift(getPeriodicShift(
          IntVector::getOne(dim)));
