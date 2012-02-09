@@ -364,6 +364,12 @@ public:
     * Each entry in the array of box arrays represents the physical domain
     * for a single block
     *
+    * The extents of the input domain boxes are used, but their
+    * LocalId's are disregarded.  GridGeometry will assign new and
+    * unique LocalId's to the domain box description.  Subsequent
+    * calls to getPhysicalDomain() will return boxes with the new
+    * LocalId's.
+    *
     * @param[in]     domain The input array of BoxContainer
     */
    void

@@ -1436,7 +1436,8 @@ void GridGeometry::setPhysicalDomain(
        d_periodic_shift != IntVector::getZero(d_dim) ) {
 
       /*
-       * Check incoming array and reset values if necessary.
+       * If necessary, reset periodic shift amounts using the new
+       * bounding box.
        */
       for (int id = 0; id < d_dim.getValue(); id++) {
          d_periodic_shift(id) = ((d_periodic_shift(id) == 0) ? 0 : 1);
