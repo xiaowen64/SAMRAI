@@ -161,6 +161,7 @@ void BoxLevelStatistics::computeLocalBoxLevelStatistics(
     * distributed in mpi.
     */
    double ideal_surfarea =
+      2*dim.getValue() *
       pow(double(d_box_level.getGlobalNumberOfCells()) / mpi.getSize(),
           double(dim.getValue() - 1) / dim.getValue());
 
@@ -227,6 +228,7 @@ void BoxLevelStatistics::printBoxStats(
     * distributed in mpi.
     */
    double ideal_surfarea =
+      2*dim.getValue() *
       pow(double(d_box_level.getGlobalNumberOfCells()) / mpi.getSize(),
           double(dim.getValue() - 1) / dim.getValue());
 
