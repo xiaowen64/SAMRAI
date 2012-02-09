@@ -1456,6 +1456,17 @@ bool BergerRigoutsosNode::broadcastAcceptability_check()
          }
 
       }
+      else {
+         if (d_common->log_node_history) {
+            tbox::plog << d_common->num_nodes_allocated << "-allocated  "
+                       << d_common->num_nodes_active << "-active  "
+                       << d_common->num_nodes_owned << "-owned  "
+                       << d_common->num_nodes_completed << "-completed  "
+                       << "Rm Accepted " << d_generation << ':' << d_pos
+                       << "  " << d_box
+                       << "  accept=" << d_box_acceptance << ".\n";
+         }
+      }
    }
    return d_comm_group->isDone();
 }
@@ -1862,6 +1873,15 @@ void BergerRigoutsosNode::acceptOrSplitBox()
 
          if (efficiency >= d_common->efficiency_tol) {
             d_box_acceptance = accepted_by_calculation;
+            if (d_common->log_node_history) {
+               tbox::plog << d_common->num_nodes_allocated << "-allocated  "
+                          << d_common->num_nodes_active << "-active  "
+                          << d_common->num_nodes_owned << "-owned  "
+                          << d_common->num_nodes_completed << "-completed  "
+                          << "Accepted " << d_generation << ':' << d_pos
+                          << "  " << d_box << " by sufficient efficiency of " << efficiency
+                          << "  accept=" << d_box_acceptance << ".\n";
+            }
          } else if (num_tagged == 0) {
             // No tags!  This should be caught at the dendogram root.
             TBOX_ASSERT(d_parent == NULL);
