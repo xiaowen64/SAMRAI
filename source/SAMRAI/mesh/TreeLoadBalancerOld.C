@@ -476,7 +476,7 @@ void TreeLoadBalancerOld::loadBalanceBoxLevel(
          tbox::plog
          << "TreeLoadBalancerOld::loadBalanceBoxLevel results before cycle "
          << icycle << ":" << std::endl;
-         TreeLoadBalancerOld::gatherAndReportLoadBalance(
+         BalanceUtilities::gatherAndReportLoadBalance(
             local_load,
             balance_box_level.getMPI());
       }
@@ -610,7 +610,7 @@ void TreeLoadBalancerOld::loadBalanceBoxLevel(
       tbox::plog
       << "TreeLoadBalancerOld::loadBalanceBoxLevel results after "
       << number_of_cycles << " cycles:" << std::endl;
-      TreeLoadBalancerOld::gatherAndReportLoadBalance(local_load,
+      BalanceUtilities::gatherAndReportLoadBalance(local_load,
          balance_box_level.getMPI());
       t_report_loads->stop();
    }
@@ -4694,7 +4694,7 @@ void TreeLoadBalancerOld::setTimers()
 void TreeLoadBalancerOld::printStatistics(
    std::ostream& s) const
 {
-   gatherAndReportLoadBalance(d_load_stat,
+   BalanceUtilities::gatherAndReportLoadBalance(d_load_stat,
       tbox::SAMRAI_MPI::getSAMRAIWorld(),
       s);
 }

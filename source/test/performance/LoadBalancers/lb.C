@@ -26,6 +26,7 @@
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
+#include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/mesh/TreeLoadBalancerOld.h"
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
@@ -496,7 +497,7 @@ int main(
             createLoadBalancer( base_db, load_balancer_type, 0, dim ));
 
          tbox::plog << "\n\n\ninitial L0 loads:\n";
-         lb0->gatherAndReportLoadBalance(
+         mesh::BalanceUtilities::gatherAndReportLoadBalance(
             (double)L0.getLocalNumberOfCells(),
             L0.getMPI());
 
@@ -527,7 +528,7 @@ int main(
          L0.cacheGlobalReducedData();
 
          tbox::plog << "\n\n\nfinal L0 loads:\n";
-         lb->gatherAndReportLoadBalance(
+         mesh::BalanceUtilities::gatherAndReportLoadBalance(
             (double)L0.getLocalNumberOfCells(),
             L0.getMPI());
 
@@ -592,7 +593,7 @@ int main(
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb1(
             createLoadBalancer( base_db, load_balancer_type, 1 , dim));
 
-         lb1->gatherAndReportLoadBalance(
+         mesh::BalanceUtilities::gatherAndReportLoadBalance(
             (double)L1.getLocalNumberOfCells(),
             L1.getMPI());
 
@@ -641,7 +642,7 @@ int main(
          // Output metadata after balancing L1.
          outputMetadataAfter( L0_to_L1, L1_to_L0, L1_to_L1, "L0", "L1post" );
 
-         lb->gatherAndReportLoadBalance(
+         mesh::BalanceUtilities::gatherAndReportLoadBalance(
             (double)L1.getLocalNumberOfCells(),
             L1.getMPI());
 
@@ -689,7 +690,7 @@ int main(
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb2(
             createLoadBalancer( base_db, load_balancer_type, 2 , dim));
 
-         lb2->gatherAndReportLoadBalance(
+         mesh::BalanceUtilities::gatherAndReportLoadBalance(
             (double)L2.getLocalNumberOfCells(),
             L2.getMPI());
 
@@ -738,7 +739,7 @@ int main(
          // Output metadata after balancing L2.
          outputMetadataAfter( L1_to_L2, L2_to_L1, L2_to_L2, "L1", "L2post" );
 
-         lb->gatherAndReportLoadBalance(
+         mesh::BalanceUtilities::gatherAndReportLoadBalance(
             (double)L2.getLocalNumberOfCells(),
             L2.getMPI());
 

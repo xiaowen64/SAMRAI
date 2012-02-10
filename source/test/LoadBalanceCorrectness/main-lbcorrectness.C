@@ -22,6 +22,7 @@
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
+#include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -360,7 +361,7 @@ int main(
          oca.findOverlaps(domain_to_anchor);
 
          tbox::plog << "\n\n\ninitial anchor loads:\n";
-         lb->gatherAndReportLoadBalance(
+         mesh::BalanceUtilities::gatherAndReportLoadBalance(
             (double)anchor_mapped_box_level.getLocalNumberOfCells(),
             anchor_mapped_box_level.getMPI());
 
@@ -390,7 +391,7 @@ int main(
          anchor_mapped_box_level.cacheGlobalReducedData();
 
          tbox::plog << "\n\n\nfinal anchor loads:\n";
-         lb->gatherAndReportLoadBalance(
+         mesh::BalanceUtilities::gatherAndReportLoadBalance(
             (double)anchor_mapped_box_level.getLocalNumberOfCells(),
             anchor_mapped_box_level.getMPI());
       }
@@ -435,7 +436,7 @@ int main(
           */
          balance_mapped_box_level.cacheGlobalReducedData();
          tbox::plog << "\n\n\nBefore:\n";
-         lb->gatherAndReportLoadBalance(
+         mesh::BalanceUtilities::gatherAndReportLoadBalance(
             (double)balance_mapped_box_level.getLocalNumberOfCells(),
             balance_mapped_box_level.getMPI());
 
@@ -490,7 +491,7 @@ int main(
           */
          balance_mapped_box_level.cacheGlobalReducedData();
          tbox::plog << "\n\n\nAfter:\n";
-         lb->gatherAndReportLoadBalance(
+         mesh::BalanceUtilities::gatherAndReportLoadBalance(
             (double)balance_mapped_box_level.getLocalNumberOfCells(),
             balance_mapped_box_level.getMPI());
 

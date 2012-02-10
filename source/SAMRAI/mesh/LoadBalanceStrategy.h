@@ -143,54 +143,6 @@ public:
       const hier::IntVector& cut_factor, // Default v 2.x.x = hier::IntVector::getOne(tbox::Dimension(DIM))
       const tbox::RankGroup& rank_group = tbox::RankGroup()) const = 0;
 
-   /*!
-    * @brief Gather workloads in an MPI group and write out a summary
-    * of load balance efficiency.
-    *
-    * To be used for performance evaluation.  Not recommended for general use.
-    *
-    * @param[in] local_workload Workload of the local process
-    *
-    * @param[in] mpi Represents all processes involved in the load balancing.
-    *
-    * @param[in] output_stream
-    *
-    * TODO: This method is a utility that doesn't strictly belong in a
-    * strategy design pattern.  It should be moved elsewhere.
-    */
-   void
-   gatherAndReportLoadBalance(
-      double local_workload,
-      const tbox::SAMRAI_MPI& mpi,
-      std::ostream& output_stream = tbox::plog) const;
-
-   /*!
-    * @brief Gather a sequence of workloads in an MPI group and write
-    * out a summary of load balance efficiency.
-    *
-    * Each value in the sequence of workloads represent a certain load
-    * the local process had over a sequence of load balancings.
-    *
-    * To be used for performance evaluation.  Not recommended for general use.
-    *
-    * @param[in] local_workloads Sequence of workloads of the local
-    * process.  The size of @c local_loads is the number times load
-    * balancing has been used.  It must be the same across all
-    * processors in @c mpi.
-    *
-    * @param[in] mpi Represents all processes involved in the load balancing.
-    *
-    * @param[in] output_stream
-    *
-    * TODO: This method is a utility that doesn't strictly belong in a
-    * strategy design pattern.  It should be moved elsewhere.
-    */
-   void
-   gatherAndReportLoadBalance(
-      const std::vector<double>& local_loads,
-      const tbox::SAMRAI_MPI& mpi,
-      std::ostream& output_stream = tbox::plog) const;
-
 protected:
    /*!
     * Construct load balance strategy object.
@@ -217,26 +169,6 @@ protected:
       double load,
       int nbox);
 
-   /*!
-    * @brief Write out a short report of how well load is balanced.
-    *
-    * Given the workloads of a number of processes, format and write
-    * out a brief report for assessing how well balanced the workloads
-    * are.
-    *
-    * @param[in] workloads One value for each process.  The number of
-    * processes is taken to be the size of this container.
-    *
-    * @param[in] output_stream
-    *
-    * TODO: This method does not belong in a strategy base class and
-    * should be moved elsewhere.
-    */
-   static void
-   reportLoadBalance(
-      const std::vector<double>& workloads,
-      std::ostream& output_stream);
-
 private:
    // The following are not implemented:
    LoadBalanceStrategy(
@@ -246,22 +178,7 @@ private:
    operator = (
       const LoadBalanceStrategy&);
 
-   struct RankAndLoad {
-      int rank;
-      double load;
-   };
-
    static int s_sequence_number;
-
-   static int
-   qsortRankAndLoadCompareAscending(
-      const void* v,
-      const void* w);
-
-   static int
-   qsortRankAndLoadCompareDescending(
-      const void* v,
-      const void* w);
 
 };
 
