@@ -293,32 +293,33 @@ void BergerRigoutsos::findBoxesContainingTags(
    t_global_reductions->stop();
 
    if (d_log_cluster) {
-      tbox::plog
-      << "New mapped_box_level clustered by BergerRigoutsos:\n" << new_mapped_box_level.format("",
+      tbox::plog << "BergerRigoutsos cluster log:\n"
+      << "\tNew mapped_box_level clustered by BergerRigoutsos:\n" << new_mapped_box_level.format("",
          2)
-      << "BergerRigoutsos tag_to_new:\n" << tag_to_new.format("", 2)
-      << "BergerRigoutsos new_to_tag:\n" << new_to_tag.format("", 2);
+      << "\tBergerRigoutsos tag_to_new:\n" << tag_to_new.format("", 2)
+      << "\tBergerRigoutsos new_to_tag:\n" << new_to_tag.format("", 2);
    }
    if (d_log_cluster_summary) {
       /*
        * Log summary of clustering and dendogram.
        */
-      tbox::plog << "Async BR on proc " << mpi.getRank()
+      tbox::plog << "BergerRigoutsos summary:\n"
+                 << "\tAsync BR on proc " << mpi.getRank()
                  << " owned "
                  << root_node.getMaxOwnership() << " participating in "
                  << root_node.getMaxNodes() << " nodes ("
                  << (double)root_node.getMaxOwnership() / root_node.getMaxNodes()
                  << ") in " << root_node.getMaxGeneration() << " generations,"
                  << "   " << root_node.getNumBoxesGenerated()
-                 << " boxes generated.\n"
-                 << root_node.getMaxTagsOwned() << " locally owned tags on new BoxLevel.\n"
+                 << " boxes generated.\n\t"
+                 << root_node.getMaxTagsOwned() << " locally owned tags on new BoxLevel.\n\t"
                  << "Initial bounding box = " << bound_box << ", "
                  << bound_box.size() << " cells, "
                  << "final global bounding box = "
                  << new_mapped_box_level.getGlobalBoundingBox(block_id.getBlockValue())
                  << ", "
                  << new_mapped_box_level.getGlobalBoundingBox(block_id.getBlockValue()).size()
-                 << " cells\n"
+                 << " cells\n\t"
                  << "Final output has " << root_node.getNumTags()
                  << " tags in "
                  << new_mapped_box_level.getGlobalNumberOfCells()
@@ -326,16 +327,16 @@ void BergerRigoutsos::findBoxesContainingTags(
                  << "-" << new_mapped_box_level.getMaxNumberOfCells() << "], "
                  << new_mapped_box_level.getGlobalNumberOfBoxes()
                  << " global mapped boxes [" << new_mapped_box_level.getMinNumberOfBoxes()
-                 << "-" << new_mapped_box_level.getMaxNumberOfBoxes() << "]\n"
+                 << "-" << new_mapped_box_level.getMaxNumberOfBoxes() << "]\n\t"
                  << "Number of continuations: avg = "
                  << root_node.getAvgNumberOfCont()
                  << "   max = " << root_node.getMaxNumberOfCont() << '\n'
-                 << "BergerRigoutsos new_level:\n" << new_mapped_box_level.format("\t",0)
-                 << "new_level statistics:\n" << new_mapped_box_level.formatStatistics("\t")
-                 << "BergerRigoutsos new_to_tag:\n" << new_to_tag.format("\t",0)
-                 << "new_to_tag statistics:\n" << new_to_tag.formatStatistics("\t")
-                 << "BergerRigoutsos tag_to_new:\n" << tag_to_new.format("\t",0)
-                 << "tag_to_new statistics:\n" << tag_to_new.formatStatistics("\t")
+                 << "\tBergerRigoutsos new_level summary:\n" << new_mapped_box_level.format("\t\t",0)
+                 << "\tBergerRigoutsos new_level statistics:\n" << new_mapped_box_level.formatStatistics("\t\t")
+                 << "\tBergerRigoutsos new_to_tag summary:\n" << new_to_tag.format("\t\t",0)
+                 << "\tBergerRigoutsos new_to_tag statistics:\n" << new_to_tag.formatStatistics("\t\t")
+                 << "\tBergerRigoutsos tag_to_new summary:\n" << tag_to_new.format("\t\t",0)
+                 << "\tBergerRigoutsos tag_to_new statistics:\n" << tag_to_new.formatStatistics("\t\t")
                  << "\n";
    }
 
