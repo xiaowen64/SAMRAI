@@ -86,11 +86,11 @@ GriddingAlgorithm::s_initialize_handler(
 GriddingAlgorithm::GriddingAlgorithm(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const std::string& object_name,
-   boost::shared_ptr<tbox::Database> input_db,
-   boost::shared_ptr<TagAndInitializeStrategy> tag_init_strategy,
-   boost::shared_ptr<BoxGeneratorStrategy> generator,
-   boost::shared_ptr<LoadBalanceStrategy> balancer,
-   boost::shared_ptr<LoadBalanceStrategy> balancer0,
+   const boost::shared_ptr<tbox::Database>& input_db,
+   const boost::shared_ptr<TagAndInitializeStrategy>& tag_init_strategy,
+   const boost::shared_ptr<BoxGeneratorStrategy>& generator,
+   const boost::shared_ptr<LoadBalanceStrategy>& balancer,
+   const boost::shared_ptr<LoadBalanceStrategy>& balancer0,
    bool register_for_restart):
    GriddingAlgorithmStrategy(),
    d_hierarchy(hierarchy),
@@ -2551,7 +2551,7 @@ void GriddingAlgorithm::readLevelBoxes(
 
 void GriddingAlgorithm::fillTags(
    const int tag_value,
-   const boost::shared_ptr<hier::PatchLevel> tag_level,
+   const boost::shared_ptr<hier::PatchLevel>& tag_level,
    const int tag_index) const
 {
    TBOX_ASSERT((tag_value == d_true_tag) || (tag_value == d_false_tag));
@@ -2586,7 +2586,7 @@ void GriddingAlgorithm::fillTags(
 
 void GriddingAlgorithm::fillTagsFromBoxLevel(
    const int tag_value,
-   const boost::shared_ptr<hier::PatchLevel> tag_level,
+   const boost::shared_ptr<hier::PatchLevel>& tag_level,
    const int tag_index,
    const hier::Connector& tag_level_to_fill_mapped_box_level,
    const bool interior_only,
@@ -2672,7 +2672,7 @@ void GriddingAlgorithm::fillTagsFromBoxLevel(
 
 void GriddingAlgorithm::bufferTagsOnLevel(
    const int tag_value,
-   const boost::shared_ptr<hier::PatchLevel> level,
+   const boost::shared_ptr<hier::PatchLevel>& level,
    const int buffer_size) const
 {
    if (d_print_steps) {
@@ -4277,7 +4277,7 @@ void GriddingAlgorithm::printClassData(
  */
 
 void GriddingAlgorithm::putToDatabase(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
    TBOX_ASSERT(db);
 
@@ -4304,7 +4304,7 @@ void GriddingAlgorithm::putToDatabase(
  */
 
 void GriddingAlgorithm::getFromInput(
-   boost::shared_ptr<tbox::Database> db,
+   const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
    NULL_USE(is_from_restart);

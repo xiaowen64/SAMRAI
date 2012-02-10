@@ -167,10 +167,10 @@ public:
     */
    TimeRefinementIntegrator(
       const std::string& object_name,
-      boost::shared_ptr<tbox::Database> input_db,
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
-      boost::shared_ptr<TimeRefinementLevelStrategy> level_integrator,
-      boost::shared_ptr<mesh::GriddingAlgorithmStrategy> gridding_algorithm,
+      const boost::shared_ptr<tbox::Database>& input_db,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const boost::shared_ptr<TimeRefinementLevelStrategy>& level_integrator,
+      const boost::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_algorithm,
       bool register_for_restart = true);
 
    /**
@@ -397,7 +397,7 @@ public:
     */
    void
    putToDatabase(
-      boost::shared_ptr<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
    /**
     * Returns the object name.
@@ -484,7 +484,7 @@ private:
     */
    virtual void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       bool is_from_restart);
 
    /*

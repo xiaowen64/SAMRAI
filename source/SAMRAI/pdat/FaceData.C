@@ -646,7 +646,7 @@ void FaceData<TYPE>::printAxis(
 
 template<class TYPE>
 void FaceData<TYPE>::getSpecializedFromDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
 
@@ -677,7 +677,7 @@ void FaceData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void FaceData<TYPE>::putSpecializedToDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
 

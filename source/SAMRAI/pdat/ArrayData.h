@@ -560,7 +560,7 @@ public:
     */
    void
    getFromDatabase(
-      boost::shared_ptr<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /*!
     * Write out array data object data to database.  This
@@ -573,7 +573,7 @@ public:
     */
    void
    putToDatabase(
-      boost::shared_ptr<tbox::Database> database,
+      const boost::shared_ptr<tbox::Database>& database,
       bool data_only = false);
 
    /*!
@@ -582,7 +582,7 @@ public:
     */
    void
    getSpecializedFromDatabase(
-      boost::shared_ptr<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /*!
     * Use specialized template method to get the correct behavior
@@ -590,7 +590,7 @@ public:
     */
    void
    putSpecializedToDatabase(
-      boost::shared_ptr<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /**
     * Return the dimension of this object.

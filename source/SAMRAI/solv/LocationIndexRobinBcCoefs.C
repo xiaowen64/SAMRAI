@@ -36,7 +36,7 @@ namespace solv {
 LocationIndexRobinBcCoefs::LocationIndexRobinBcCoefs(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   boost::shared_ptr<tbox::Database> database):
+   const boost::shared_ptr<tbox::Database>& database):
    d_dim(dim),
    d_object_name(object_name)
 {
@@ -66,7 +66,7 @@ LocationIndexRobinBcCoefs::~LocationIndexRobinBcCoefs(
  */
 
 void LocationIndexRobinBcCoefs::getFromInput(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    if (database) {
       int i;
@@ -164,9 +164,9 @@ void LocationIndexRobinBcCoefs::setRawCoefficients(
  */
 
 void LocationIndexRobinBcCoefs::setBcCoefs(
-   boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
-   boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
-   boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+   const boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+   const boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+   const boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
    const boost::shared_ptr<hier::Variable>& variable,
    const hier::Patch& patch,
    const hier::BoundaryBox& bdry_box,

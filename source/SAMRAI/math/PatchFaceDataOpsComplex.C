@@ -37,7 +37,7 @@ PatchFaceDataOpsComplex::~PatchFaceDataOpsComplex()
  */
 
 void PatchFaceDataOpsComplex::swapData(
-   boost::shared_ptr<hier::Patch> patch,
+   const boost::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
@@ -73,7 +73,7 @@ void PatchFaceDataOpsComplex::printData(
 }
 
 void PatchFaceDataOpsComplex::copyData(
-   boost::shared_ptr<pdat::FaceData<dcomplex> >& dst,
+   const boost::shared_ptr<pdat::FaceData<dcomplex> >& dst,
    const boost::shared_ptr<pdat::FaceData<dcomplex> >& src,
    const hier::Box& box) const
 {
@@ -89,7 +89,7 @@ void PatchFaceDataOpsComplex::copyData(
 }
 
 void PatchFaceDataOpsComplex::setToScalar(
-   boost::shared_ptr<pdat::FaceData<dcomplex> >& dst,
+   const boost::shared_ptr<pdat::FaceData<dcomplex> >& dst,
    const dcomplex& alpha,
    const hier::Box& box) const
 {

@@ -60,8 +60,8 @@ void HyperbolicPatchStrategy::tagGradientDetectorCells(
 void HyperbolicPatchStrategy::tagRichardsonExtrapolationCells(
    hier::Patch& patch,
    const int error_level_number,
-   const boost::shared_ptr<hier::VariableContext> coarsened_fine,
-   const boost::shared_ptr<hier::VariableContext> advanced_coarse,
+   const boost::shared_ptr<hier::VariableContext>& coarsened_fine,
+   const boost::shared_ptr<hier::VariableContext>& advanced_coarse,
    const double regrid_time,
    const double deltat,
    const int error_coarsen_ratio,
@@ -190,7 +190,7 @@ const
 }
 
 void HyperbolicPatchStrategy::setDataContext(
-   boost::shared_ptr<hier::VariableContext> context)
+   const boost::shared_ptr<hier::VariableContext>& context)
 {
    d_data_context = context;
 }

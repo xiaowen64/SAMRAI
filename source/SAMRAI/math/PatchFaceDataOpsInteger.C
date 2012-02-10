@@ -63,7 +63,7 @@ int PatchFaceDataOpsInteger::numberOfEntries(
  */
 
 void PatchFaceDataOpsInteger::swapData(
-   boost::shared_ptr<hier::Patch> patch,
+   const boost::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
@@ -99,7 +99,7 @@ void PatchFaceDataOpsInteger::printData(
 }
 
 void PatchFaceDataOpsInteger::copyData(
-   boost::shared_ptr<pdat::FaceData<int> >& dst,
+   const boost::shared_ptr<pdat::FaceData<int> >& dst,
    const boost::shared_ptr<pdat::FaceData<int> >& src,
    const hier::Box& box) const
 {
@@ -115,7 +115,7 @@ void PatchFaceDataOpsInteger::copyData(
 }
 
 void PatchFaceDataOpsInteger::setToScalar(
-   boost::shared_ptr<pdat::FaceData<int> >& dst,
+   const boost::shared_ptr<pdat::FaceData<int> >& dst,
    const int& alpha,
    const hier::Box& box) const
 {
@@ -126,7 +126,7 @@ void PatchFaceDataOpsInteger::setToScalar(
 }
 
 void PatchFaceDataOpsInteger::abs(
-   boost::shared_ptr<pdat::FaceData<int> >& dst,
+   const boost::shared_ptr<pdat::FaceData<int> >& dst,
    const boost::shared_ptr<pdat::FaceData<int> >& src,
    const hier::Box& box) const
 {

@@ -58,7 +58,7 @@ public:
     */
    virtual void
    putToDatabase(
-      boost::shared_ptr<Database> database) = 0;
+      const boost::shared_ptr<Database>& database) = 0;
 
 };
 

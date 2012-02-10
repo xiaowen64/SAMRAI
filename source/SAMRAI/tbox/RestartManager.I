@@ -60,7 +60,7 @@ boost::shared_ptr<Database> RestartManager::getRootDatabase()
  */
 SAMRAI_INLINE_KEYWORD
 void RestartManager::setRootDatabase(
-   boost::shared_ptr<Database> database)
+   const boost::shared_ptr<Database>& database)
 {
    if (!database) {
       d_database_root.reset();
@@ -80,7 +80,7 @@ void RestartManager::setRootDatabase(
  */
 SAMRAI_INLINE_KEYWORD
 void RestartManager::setDatabaseFactory(
-   boost::shared_ptr<DatabaseFactory> database_factory)
+   const boost::shared_ptr<DatabaseFactory>& database_factory)
 {
    d_database_factory = database_factory;
 }

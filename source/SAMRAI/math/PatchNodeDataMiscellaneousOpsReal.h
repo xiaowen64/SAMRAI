@@ -75,7 +75,7 @@ public:
       const boost::shared_ptr<pdat::NodeData<TYPE> >& data1,
       const boost::shared_ptr<pdat::NodeData<TYPE> >& data2,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::NodeData<double> > cvol =
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
          boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
@@ -85,11 +85,11 @@ public:
     */
    void
    compareToScalar(
-      boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
       const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
       const TYPE& alpha,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::NodeData<double> > cvol =
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
          boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
@@ -100,10 +100,10 @@ public:
     */
    int
    testReciprocal(
-      boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
       const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::NodeData<double> > cvol =
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
          boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /*!

@@ -269,12 +269,12 @@ MblkHyperbolicLevelIntegrator::~MblkHyperbolicLevelIntegrator()
  *************************************************************************
  */
 void MblkHyperbolicLevelIntegrator::initializeLevelData(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double init_data_time,
    const bool can_be_refined,
    const bool initial_time,
-   const boost::shared_ptr<hier::PatchLevel> old_level,
+   const boost::shared_ptr<hier::PatchLevel>& old_level,
    const bool allocate_data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -390,7 +390,7 @@ void MblkHyperbolicLevelIntegrator::initializeLevelData(
 
 void
 MblkHyperbolicLevelIntegrator::resetHierarchyConfiguration(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level)
 {
@@ -447,7 +447,7 @@ MblkHyperbolicLevelIntegrator::resetHierarchyConfiguration(
  */
 
 void MblkHyperbolicLevelIntegrator::applyGradientDetector(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double error_data_time,
    const int tag_index,
@@ -524,9 +524,9 @@ void MblkHyperbolicLevelIntegrator::applyGradientDetector(
 
 void
 MblkHyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
-   const boost::shared_ptr<hier::PatchLevel> coarse_level,
+   const boost::shared_ptr<hier::PatchLevel>& coarse_level,
    const double coarsen_data_time,
    const bool before_advance)
 {
@@ -599,7 +599,7 @@ MblkHyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
 
 void
 MblkHyperbolicLevelIntegrator::applyRichardsonExtrapolation(
-   const boost::shared_ptr<hier::PatchLevel> level,
+   const boost::shared_ptr<hier::PatchLevel>& level,
    const double error_data_time,
    const int tag_index,
    const double deltat,
@@ -652,7 +652,7 @@ MblkHyperbolicLevelIntegrator::applyRichardsonExtrapolation(
 
 void
 MblkHyperbolicLevelIntegrator::initializeLevelIntegrator(
-   boost::shared_ptr<mesh::GriddingAlgorithmStrategy> gridding_alg)
+   const boost::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_alg)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(gridding_alg);
@@ -694,7 +694,7 @@ MblkHyperbolicLevelIntegrator::initializeLevelIntegrator(
 
 double
 MblkHyperbolicLevelIntegrator::getLevelDt(
-   const boost::shared_ptr<hier::PatchLevel> level,
+   const boost::shared_ptr<hier::PatchLevel>& level,
    const double dt_time,
    const bool initial_time)
 {
@@ -903,8 +903,8 @@ MblkHyperbolicLevelIntegrator::getMaxFinerLevelDt(
 
 double
 MblkHyperbolicLevelIntegrator::advanceLevel(
-   const boost::shared_ptr<hier::PatchLevel> level,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchLevel>& level,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const double current_time,
    const double new_time,
    const bool first_step,
@@ -1229,7 +1229,7 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
 
 void
 MblkHyperbolicLevelIntegrator::standardLevelSynchronization(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level,
    const double sync_time,
@@ -1245,7 +1245,7 @@ MblkHyperbolicLevelIntegrator::standardLevelSynchronization(
 
 void
 MblkHyperbolicLevelIntegrator::standardLevelSynchronization(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level,
    const double sync_time,
@@ -1321,7 +1321,7 @@ MblkHyperbolicLevelIntegrator::standardLevelSynchronization(
  */
 
 void MblkHyperbolicLevelIntegrator::synchronizeNewLevels(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level,
    const double sync_time,
@@ -1520,7 +1520,7 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
  */
 
 void MblkHyperbolicLevelIntegrator::resetTimeDependentData(
-   const boost::shared_ptr<hier::PatchLevel> level,
+   const boost::shared_ptr<hier::PatchLevel>& level,
    const double new_time,
    const bool can_be_refined)
 {
@@ -1600,7 +1600,7 @@ void MblkHyperbolicLevelIntegrator::resetTimeDependentData(
 
 void
 MblkHyperbolicLevelIntegrator::resetDataToPreadvanceState(
-   const boost::shared_ptr<hier::PatchLevel> level)
+   const boost::shared_ptr<hier::PatchLevel>& level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level);
@@ -2383,7 +2383,7 @@ void MblkHyperbolicLevelIntegrator::printClassData(
  */
 
 void MblkHyperbolicLevelIntegrator::putToDatabase(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);

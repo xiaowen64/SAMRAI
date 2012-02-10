@@ -61,7 +61,7 @@ TimerManager::s_finalize_handler(
  */
 
 void TimerManager::createManager(
-   boost::shared_ptr<Database> input_db)
+   const boost::shared_ptr<Database>& input_db)
 {
    if (!s_timer_manager_instance) {
       s_timer_manager_instance = new TimerManager(input_db);
@@ -123,7 +123,7 @@ void TimerManager::registerSingletonSubclassInstance(
  */
 
 TimerManager::TimerManager(
-   boost::shared_ptr<Database> input_db) :
+   const boost::shared_ptr<Database>& input_db) :
 #ifdef ENABLE_SAMRAI_TIMERS
    d_timer_active_access_time(-9999.0),
    d_timer_inactive_access_time(-9999.0),
@@ -2135,7 +2135,7 @@ double TimerManager::computePercentageDouble(
  */
 
 void TimerManager::getFromInput(
-   boost::shared_ptr<Database> input_db)
+   const boost::shared_ptr<Database>& input_db)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    if (input_db) {

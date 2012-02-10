@@ -288,7 +288,7 @@ AdaptivePoisson::AdaptivePoisson(
 
 void AdaptivePoisson::initializeLevelData(
    /*! Hierarchy to initialize */
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    /*! Level to initialize */
    const int ln,
    const double init_data_time,
@@ -296,7 +296,7 @@ void AdaptivePoisson::initializeLevelData(
    /*! Whether level is being introduced for the first time */
    const bool initial_time,
    /*! Level to copy data from */
-   const boost::shared_ptr<hier::PatchLevel> old_level,
+   const boost::shared_ptr<hier::PatchLevel>& old_level,
    const bool allocate_data)
 {
    NULL_USE(init_data_time);
@@ -437,7 +437,7 @@ void AdaptivePoisson::initializeLevelData(
 }
 
 void AdaptivePoisson::resetHierarchyConfiguration(
-   /*! New hierarchy */ boost::shared_ptr<hier::PatchHierarchy> new_hierarchy,
+   /*! New hierarchy */ const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
    /*! Coarsest level */ int coarsest_level,
    /*! Finest level */ int finest_level)
 {
@@ -460,7 +460,7 @@ void AdaptivePoisson::resetHierarchyConfiguration(
 }
 
 void AdaptivePoisson::applyGradientDetector(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy_,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy_,
    const int ln,
    const double error_data_time,
    const int tag_index,

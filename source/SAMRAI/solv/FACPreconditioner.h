@@ -68,7 +68,7 @@ public:
    FACPreconditioner(
       const std::string& name,
       FACOperatorStrategy& user_ops,
-      boost::shared_ptr<tbox::Database> database =
+      const boost::shared_ptr<tbox::Database>& database =
          boost::shared_ptr<tbox::Database>());
 
    /*!
@@ -411,7 +411,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /*!
     * @brief Compute composite residual on all levels and

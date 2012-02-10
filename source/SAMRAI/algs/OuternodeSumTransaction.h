@@ -90,9 +90,9 @@ public:
     * (i.e., < 0).
     */
    OuternodeSumTransaction(
-      boost::shared_ptr<hier::PatchLevel> dst_level,
-      boost::shared_ptr<hier::PatchLevel> src_level,
-      boost::shared_ptr<hier::BoxOverlap> overlap,
+      const boost::shared_ptr<hier::PatchLevel>& dst_level,
+      const boost::shared_ptr<hier::PatchLevel>& src_level,
+      const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_node,
       const hier::Box& src_node,
       int refine_item_id);

@@ -164,7 +164,7 @@ const int CartesianGridGeometry::GEOM_CARTESIAN_GRID_GEOMETRY_VERSION = 2;
 CartesianGridGeometry::CartesianGridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   boost::shared_ptr<tbox::Database> input_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    bool register_for_restart):
    hier::GridGeometry(dim, object_name,
                       boost::make_shared<SAMRAITransferOperatorRegistry>(dim)),
@@ -497,7 +497,7 @@ void CartesianGridGeometry::printClassData(
  */
 
 void CartesianGridGeometry::putToDatabase(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
    TBOX_ASSERT(db);
 
@@ -532,7 +532,7 @@ void CartesianGridGeometry::putToDatabase(
  */
 
 void CartesianGridGeometry::getFromInput(
-   boost::shared_ptr<tbox::Database> db,
+   const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
    TBOX_ASSERT(db);

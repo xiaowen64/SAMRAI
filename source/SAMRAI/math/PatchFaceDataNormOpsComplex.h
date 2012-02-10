@@ -86,7 +86,7 @@ public:
     */
    void
    abs(
-      boost::shared_ptr<pdat::FaceData<double> >& dst,
+      const boost::shared_ptr<pdat::FaceData<double> >& dst,
       const boost::shared_ptr<pdat::FaceData<dcomplex> >& src,
       const hier::Box& box) const;
 
@@ -101,7 +101,7 @@ public:
    L1Norm(
       const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::FaceData<double> > cvol =
+      const boost::shared_ptr<pdat::FaceData<double> >& cvol =
          boost::shared_ptr<pdat::FaceData<double> >()) const;
 
    /**
@@ -116,7 +116,7 @@ public:
    L2Norm(
       const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::FaceData<double> > cvol =
+      const boost::shared_ptr<pdat::FaceData<double> >& cvol =
          boost::shared_ptr<pdat::FaceData<double> >()) const;
 
    /**
@@ -132,7 +132,7 @@ public:
       const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const boost::shared_ptr<pdat::FaceData<dcomplex> >& weight,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::FaceData<double> > cvol =
+      const boost::shared_ptr<pdat::FaceData<double> >& cvol =
          boost::shared_ptr<pdat::FaceData<double> >()) const;
 
    /**
@@ -146,7 +146,7 @@ public:
    RMSNorm(
       const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::FaceData<double> > cvol =
+      const boost::shared_ptr<pdat::FaceData<double> >& cvol =
          boost::shared_ptr<pdat::FaceData<double> >()) const;
 
    /**
@@ -161,7 +161,7 @@ public:
       const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const boost::shared_ptr<pdat::FaceData<dcomplex> >& weight,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::FaceData<double> > cvol =
+      const boost::shared_ptr<pdat::FaceData<double> >& cvol =
          boost::shared_ptr<pdat::FaceData<double> >()) const;
 
    /**
@@ -175,7 +175,7 @@ public:
    maxNorm(
       const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::FaceData<double> > cvol =
+      const boost::shared_ptr<pdat::FaceData<double> >& cvol =
          boost::shared_ptr<pdat::FaceData<double> >()) const;
 
    /**
@@ -189,7 +189,7 @@ public:
       const boost::shared_ptr<pdat::FaceData<dcomplex> >& data1,
       const boost::shared_ptr<pdat::FaceData<dcomplex> >& data2,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::FaceData<double> > cvol =
+      const boost::shared_ptr<pdat::FaceData<double> >& cvol =
          boost::shared_ptr<pdat::FaceData<double> >()) const;
 
    /**
@@ -200,7 +200,7 @@ public:
    integral(
       const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::FaceData<double> > vol) const;
+      const boost::shared_ptr<pdat::FaceData<double> >& vol) const;
 
 private:
    // The following are not implemented:

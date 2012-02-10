@@ -42,7 +42,7 @@ const int KINSOL_SAMRAIContext::SOLV_KINSOL_SAMRAI_CONTEXT_VERSION = 1;
 
 KINSOL_SAMRAIContext::KINSOL_SAMRAIContext(
    const std::string& object_name,
-   boost::shared_ptr<tbox::Database> input_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    KINSOLAbstractFunctions* my_functions)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -118,7 +118,7 @@ KINSOL_SAMRAIContext::~KINSOL_SAMRAIContext()
  */
 
 void KINSOL_SAMRAIContext::initialize(
-   boost::shared_ptr<SAMRAIVectorReal<double> > solution)
+   const boost::shared_ptr<SAMRAIVectorReal<double> >& solution)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(solution);
@@ -149,7 +149,7 @@ KINSOLSolver *KINSOL_SAMRAIContext::getKINSOLSolver()
  */
 
 void KINSOL_SAMRAIContext::getFromInput(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
    if (db) {
       if (db->keyExists("residual_stop_tolerance")) {
@@ -335,7 +335,7 @@ void KINSOL_SAMRAIContext::getFromRestart()
  */
 
 void KINSOL_SAMRAIContext::putToDatabase(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);

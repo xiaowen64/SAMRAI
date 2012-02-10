@@ -142,8 +142,8 @@ public:
    GridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      boost::shared_ptr<TransferOperatorRegistry> op_reg,
-      boost::shared_ptr<tbox::Database> input_db,
+      const boost::shared_ptr<TransferOperatorRegistry>& op_reg,
+      const boost::shared_ptr<tbox::Database>& input_db,
       bool register_for_restart = true);
 
    /*!
@@ -165,7 +165,7 @@ public:
    GridGeometry(
       const std::string& object_name,
       const BoxContainer& domain,
-      boost::shared_ptr<TransferOperatorRegistry> op_reg,
+      const boost::shared_ptr<TransferOperatorRegistry>& op_reg,
       bool register_for_restart = true);
 
    /*!
@@ -639,7 +639,7 @@ public:
     */
    void
    addCoarsenOperator(
-      boost::shared_ptr<CoarsenOperator> coarsen_op);
+      const boost::shared_ptr<CoarsenOperator>& coarsen_op);
 
    /*!
     * @brief Add a concrete spatial refinement operator.
@@ -649,7 +649,7 @@ public:
     */
    void
    addRefineOperator(
-      boost::shared_ptr<RefineOperator> refine_op);
+      const boost::shared_ptr<RefineOperator>& refine_op);
 
    /*!
     * @brief Add a concrete time interpolation operator.
@@ -659,7 +659,7 @@ public:
     */
    void
    addTimeInterpolateOperator(
-      boost::shared_ptr<TimeInterpolateOperator> time_op);
+      const boost::shared_ptr<TimeInterpolateOperator>& time_op);
 
    /*!
     * @brief Lookup function for coarsening operator.
@@ -1086,7 +1086,7 @@ private:
     */
    virtual void
    putToDatabase(
-      boost::shared_ptr<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
 protected:
    /*!
@@ -1103,7 +1103,7 @@ protected:
    GridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      boost::shared_ptr<TransferOperatorRegistry> op_reg);
+      const boost::shared_ptr<TransferOperatorRegistry>& op_reg);
 
    /*!
     * @brief Read multiblock metadata input from the input database
@@ -1193,7 +1193,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       bool is_from_restart);
 
    /*!

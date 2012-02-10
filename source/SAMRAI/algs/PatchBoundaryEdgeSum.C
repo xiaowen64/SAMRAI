@@ -306,7 +306,7 @@ void PatchBoundaryEdgeSum::registerSum(
  */
 
 void PatchBoundaryEdgeSum::setupSum(
-   boost::shared_ptr<hier::PatchLevel> level)
+   const boost::shared_ptr<hier::PatchLevel>& level)
 {
    TBOX_ASSERT(level);
 
@@ -368,7 +368,7 @@ void PatchBoundaryEdgeSum::computeSum() const
  */
 
 void PatchBoundaryEdgeSum::doLevelSum(
-   boost::shared_ptr<hier::PatchLevel> level) const
+   const boost::shared_ptr<hier::PatchLevel>& level) const
 {
    TBOX_ASSERT(level);
 

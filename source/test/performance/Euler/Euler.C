@@ -3961,7 +3961,7 @@ void Euler::getFromInput(
  */
 
 void Euler::putToDatabase(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -4296,7 +4296,7 @@ void Euler::getFromRestart()
  */
 
 void Euler::readDirichletBoundaryDataEntry(
-   boost::shared_ptr<tbox::Database> db,
+   const boost::shared_ptr<tbox::Database>& db,
    string& db_name,
    int bdry_location_index)
 {

@@ -28,7 +28,7 @@ namespace SAMRAI {
 namespace math {
 
 HierarchyFaceDataOpsInteger::HierarchyFaceDataOpsInteger(
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level):
    HierarchyDataOpsInteger(),
@@ -62,7 +62,7 @@ HierarchyFaceDataOpsInteger::~HierarchyFaceDataOpsInteger()
  */
 
 void HierarchyFaceDataOpsInteger::setPatchHierarchy(
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy)
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    TBOX_ASSERT(hierarchy);
 

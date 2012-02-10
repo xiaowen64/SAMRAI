@@ -313,7 +313,7 @@ void RestartManager::writeRestartFile(
  *************************************************************************
  */
 void RestartManager::writeRestartFile(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
 

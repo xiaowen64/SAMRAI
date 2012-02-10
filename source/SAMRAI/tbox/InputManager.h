@@ -120,7 +120,7 @@ public:
    virtual void
    parseInputFile(
       const std::string& filename,
-      boost::shared_ptr<InputDatabase> input_db);
+      const boost::shared_ptr<InputDatabase>& input_db);
 
 protected:
    /**

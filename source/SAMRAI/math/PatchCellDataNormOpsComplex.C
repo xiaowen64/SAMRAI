@@ -69,7 +69,7 @@ double PatchCellDataNormOpsComplex::sumControlVolumes(
 }
 
 void PatchCellDataNormOpsComplex::abs(
-   boost::shared_ptr<pdat::CellData<double> >& dst,
+   const boost::shared_ptr<pdat::CellData<double> >& dst,
    const boost::shared_ptr<pdat::CellData<dcomplex> >& src,
    const hier::Box& box) const
 {
@@ -84,7 +84,7 @@ void PatchCellDataNormOpsComplex::abs(
 double PatchCellDataNormOpsComplex::L1Norm(
    const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
@@ -105,7 +105,7 @@ double PatchCellDataNormOpsComplex::L1Norm(
 double PatchCellDataNormOpsComplex::L2Norm(
    const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
@@ -127,7 +127,7 @@ double PatchCellDataNormOpsComplex::weightedL2Norm(
    const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
    const boost::shared_ptr<pdat::CellData<dcomplex> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
@@ -152,7 +152,7 @@ double PatchCellDataNormOpsComplex::weightedL2Norm(
 double PatchCellDataNormOpsComplex::RMSNorm(
    const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
@@ -172,7 +172,7 @@ double PatchCellDataNormOpsComplex::weightedRMSNorm(
    const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
    const boost::shared_ptr<pdat::CellData<dcomplex> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
@@ -191,7 +191,7 @@ double PatchCellDataNormOpsComplex::weightedRMSNorm(
 double PatchCellDataNormOpsComplex::maxNorm(
    const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
@@ -213,7 +213,7 @@ dcomplex PatchCellDataNormOpsComplex::dot(
    const boost::shared_ptr<pdat::CellData<dcomplex> >& data1,
    const boost::shared_ptr<pdat::CellData<dcomplex> >& data2,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data1 && data2);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data1, *data2, box);
@@ -238,7 +238,7 @@ dcomplex PatchCellDataNormOpsComplex::dot(
 dcomplex PatchCellDataNormOpsComplex::integral(
    const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> > vol) const
+   const boost::shared_ptr<pdat::CellData<double> >& vol) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT(vol);

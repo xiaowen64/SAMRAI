@@ -771,12 +771,12 @@ int HierSumTest::checkEdgeResult(
  */
 
 void HierSumTest::initializeLevelData(
-   const boost::shared_ptr<PatchHierarchy> hierarchy,
+   const boost::shared_ptr<PatchHierarchy>& hierarchy,
    const int level_number,
    const double time,
    const bool can_be_refined,
    const bool initial_time,
-   const boost::shared_ptr<PatchLevel> old_level,
+   const boost::shared_ptr<PatchLevel>& old_level,
    const bool allocate_data)
 {
    NULL_USE(can_be_refined);
@@ -948,7 +948,7 @@ void HierSumTest::initializeLevelData(
  */
 void
 HierSumTest::resetHierarchyConfiguration(
-   const boost::shared_ptr<PatchHierarchy> hierarchy,
+   const boost::shared_ptr<PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level)
 {
@@ -962,7 +962,7 @@ HierSumTest::resetHierarchyConfiguration(
  */
 void
 HierSumTest::applyGradientDetector(
-   const boost::shared_ptr<PatchHierarchy> hierarchy,
+   const boost::shared_ptr<PatchHierarchy>& hierarchy,
    const int level_number,
    const double time,
    const int tag_index,

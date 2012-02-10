@@ -172,12 +172,12 @@ public:
     */
    virtual void
    initializeLevelData(
-      const boost::shared_ptr<PatchHierarchy> hierarchy,
+      const boost::shared_ptr<PatchHierarchy>& hierarchy,
       const int level_number,
       const double time,
       const bool can_be_refined,
       const bool initial_time,
-      const boost::shared_ptr<PatchLevel> old_level =
+      const boost::shared_ptr<PatchLevel>& old_level =
          boost::shared_ptr<PatchLevel>(),
       const bool allocate_data = true);
 
@@ -201,7 +201,7 @@ public:
     */
    virtual void
    resetHierarchyConfiguration(
-      const boost::shared_ptr<PatchHierarchy> hierarchy,
+      const boost::shared_ptr<PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -219,7 +219,7 @@ public:
     */
    virtual void
    applyGradientDetector(
-      const boost::shared_ptr<PatchHierarchy> hierarchy,
+      const boost::shared_ptr<PatchHierarchy>& hierarchy,
       const int level_number,
       const double time,
       const int tag_index,
@@ -442,13 +442,13 @@ public:
     */
    void
    readDirichletBoundaryDataEntry(
-      boost::shared_ptr<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       string& db_name,
       int bdry_location_index);
 
    void
    readNeumannBoundaryDataEntry(
-      boost::shared_ptr<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       string& db_name,
       int bdry_location_index);
 

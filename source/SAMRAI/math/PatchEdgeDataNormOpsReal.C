@@ -112,7 +112,7 @@ double PatchEdgeDataNormOpsReal<TYPE>::sumControlVolumes(
 
 template<class TYPE>
 void PatchEdgeDataNormOpsReal<TYPE>::abs(
-   boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
    const hier::Box& box) const
 {
@@ -133,7 +133,7 @@ template<class TYPE>
 double PatchEdgeDataNormOpsReal<TYPE>::L1Norm(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
@@ -163,7 +163,7 @@ template<class TYPE>
 double PatchEdgeDataNormOpsReal<TYPE>::L2Norm(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
@@ -197,7 +197,7 @@ double PatchEdgeDataNormOpsReal<TYPE>::weightedL2Norm(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
@@ -233,7 +233,7 @@ template<class TYPE>
 double PatchEdgeDataNormOpsReal<TYPE>::RMSNorm(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
@@ -252,7 +252,7 @@ double PatchEdgeDataNormOpsReal<TYPE>::weightedRMSNorm(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data && weight);
@@ -270,7 +270,7 @@ template<class TYPE>
 double PatchEdgeDataNormOpsReal<TYPE>::maxNorm(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
@@ -304,7 +304,7 @@ TYPE PatchEdgeDataNormOpsReal<TYPE>::dot(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data1,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data2,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
@@ -336,7 +336,7 @@ template<class TYPE>
 TYPE PatchEdgeDataNormOpsReal<TYPE>::integral(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> > vol) const
+   const boost::shared_ptr<pdat::EdgeData<double> >& vol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);

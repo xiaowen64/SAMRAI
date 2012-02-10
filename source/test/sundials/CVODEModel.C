@@ -351,12 +351,12 @@ CVODEModel::~CVODEModel()
 
 void
 CVODEModel::initializeLevelData(
-   const boost::shared_ptr<PatchHierarchy> hierarchy,
+   const boost::shared_ptr<PatchHierarchy>& hierarchy,
    const int level_number,
    const double time,
    const bool can_be_refined,
    const bool initial_time,
-   const boost::shared_ptr<PatchLevel> old_level,
+   const boost::shared_ptr<PatchLevel>& old_level,
    const bool allocate_data)
 {
    NULL_USE(hierarchy);
@@ -377,7 +377,7 @@ CVODEModel::initializeLevelData(
 
 void
 CVODEModel::resetHierarchyConfiguration(
-   const boost::shared_ptr<PatchHierarchy> hierarchy,
+   const boost::shared_ptr<PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level)
 {
@@ -402,7 +402,7 @@ CVODEModel::resetHierarchyConfiguration(
 
 void
 CVODEModel::applyGradientDetector(
-   const boost::shared_ptr<PatchHierarchy> hierarchy,
+   const boost::shared_ptr<PatchHierarchy>& hierarchy,
    const int level_number,
    const double time,
    const int tag_index,
@@ -1455,7 +1455,7 @@ void CVODEModel::getFromRestart()
  */
 
 void CVODEModel::readDirichletBoundaryDataEntry(
-   boost::shared_ptr<Database> db,
+   const boost::shared_ptr<Database>& db,
    string& db_name,
    int bdry_location_index)
 {
@@ -1478,7 +1478,7 @@ void CVODEModel::readDirichletBoundaryDataEntry(
 }
 
 void CVODEModel::readNeumannBoundaryDataEntry(
-   boost::shared_ptr<Database> db,
+   const boost::shared_ptr<Database>& db,
    string& db_name,
    int bdry_location_index)
 {

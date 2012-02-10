@@ -28,7 +28,7 @@ namespace math {
 
 template<class TYPE>
 HierarchyEdgeDataOpsReal<TYPE>::HierarchyEdgeDataOpsReal(
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level):
    HierarchyDataOpsReal<TYPE>(),
@@ -64,7 +64,7 @@ HierarchyEdgeDataOpsReal<TYPE>::~HierarchyEdgeDataOpsReal()
 
 template<class TYPE>
 void HierarchyEdgeDataOpsReal<TYPE>::setPatchHierarchy(
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy)
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    TBOX_ASSERT(hierarchy);
 

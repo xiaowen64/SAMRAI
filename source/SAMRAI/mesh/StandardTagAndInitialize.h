@@ -96,7 +96,7 @@ public:
       const tbox::Dimension& dim,
       const std::string& object_name,
       StandardTagAndInitStrategy* tag_strategy,
-      boost::shared_ptr<tbox::Database> input_db =
+      const boost::shared_ptr<tbox::Database>& input_db =
          boost::shared_ptr<tbox::Database>());
 
    /*!
@@ -141,12 +141,12 @@ public:
     */
    void
    initializeLevelData(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double init_data_time,
       const bool can_be_refined,
       const bool initial_time,
-      const boost::shared_ptr<hier::PatchLevel> old_level =
+      const boost::shared_ptr<hier::PatchLevel>& old_level =
          boost::shared_ptr<hier::PatchLevel>(),
       const bool allocate_data = true);
 
@@ -159,7 +159,7 @@ public:
     */
    void
    resetHierarchyConfiguration(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -172,7 +172,7 @@ public:
     */
    void
    preprocessErrorEstimation(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double regrid_time,
       const double regrid_start_time,
@@ -188,7 +188,7 @@ public:
     */
    void
    tagCellsForRefinement(
-      const boost::shared_ptr<hier::PatchHierarchy> level,
+      const boost::shared_ptr<hier::PatchHierarchy>& level,
       const int level_number,
       const double regrid_time,
       const int tag_index,
@@ -258,7 +258,7 @@ public:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
    const StandardTagAndInitializeConnectorWidthRequestor
    &
@@ -270,7 +270,7 @@ private:
     */
    void
    preprocessRichardsonExtrapolation(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double regrid_time,
       const double regrid_start_time,
@@ -281,7 +281,7 @@ private:
     */
    void
    tagCellsUsingRichardsonExtrapolation(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double regrid_time,
       const double regrid_start_time,

@@ -86,10 +86,10 @@ public:
     */
    ImplicitIntegrator(
       const std::string& object_name,
-      boost::shared_ptr<tbox::Database> input_db,
+      const boost::shared_ptr<tbox::Database>& input_db,
       ImplicitEquationStrategy * implicit_equations,
       solv::NonlinearSolverStrategy * nonlinear_solver,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy);
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
    /**
     * Empty destructor for ImplicitIntegrator
@@ -227,7 +227,7 @@ public:
     */
    void
    putToDatabase(
-      boost::shared_ptr<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
    /**
     * Returns the object name.
@@ -250,7 +250,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       bool is_from_restart);
 
    /*

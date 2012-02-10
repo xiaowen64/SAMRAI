@@ -162,17 +162,17 @@ void Logger::logDebug(
  * Set appenders.
  */
 void Logger::setAbortAppender(
-   boost::shared_ptr<Appender> appender) {
+   const boost::shared_ptr<Appender>& appender) {
    d_abort_appender = appender;
 }
 
 void Logger::setWarningAppender(
-   boost::shared_ptr<Appender> appender) {
+   const boost::shared_ptr<Appender>& appender) {
    d_warning_appender = appender;
 }
 
 void Logger::setDebugAppender(
-   boost::shared_ptr<Appender> appender) {
+   const boost::shared_ptr<Appender>& appender) {
    d_debug_appender = appender;
 }
 

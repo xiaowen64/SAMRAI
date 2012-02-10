@@ -133,7 +133,7 @@ public:
     */
    void
    setupSum(
-      boost::shared_ptr<hier::PatchLevel> level);
+      const boost::shared_ptr<hier::PatchLevel>& level);
 
    /*!
     *  @brief Compute sum of edge values at each shared edge and replace
@@ -160,7 +160,7 @@ private:
     */
    void
    doLevelSum(
-      boost::shared_ptr<hier::PatchLevel> level) const;
+      const boost::shared_ptr<hier::PatchLevel>& level) const;
 
    /*
     * Static members for managing shared temporary data among multiple

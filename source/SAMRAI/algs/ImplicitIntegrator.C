@@ -45,10 +45,10 @@ const int ImplicitIntegrator::ALGS_IMPLICIT_INTEGRATOR_VERSION = 1;
 
 ImplicitIntegrator::ImplicitIntegrator(
    const std::string& object_name,
-   boost::shared_ptr<tbox::Database> input_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    ImplicitEquationStrategy* implicit_equations,
    solv::NonlinearSolverStrategy* nonlinear_solver,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy)
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(implicit_equations != ((ImplicitEquationStrategy *)NULL));
@@ -272,7 +272,7 @@ double ImplicitIntegrator::updateSolution()
  */
 
 void ImplicitIntegrator::getFromInput(
-   boost::shared_ptr<tbox::Database> db,
+   const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -350,7 +350,7 @@ void ImplicitIntegrator::getFromInput(
  */
 
 void ImplicitIntegrator::putToDatabase(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);

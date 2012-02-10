@@ -86,7 +86,7 @@ Parser::~Parser()
 int Parser::parse(
    const std::string& filename,
    FILE* fstream,
-   boost::shared_ptr<Database> database)
+   const boost::shared_ptr<Database>& database)
 {
    d_errors = 0;
    d_warnings = 0;

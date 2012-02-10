@@ -216,7 +216,7 @@ public:
     */
    SNES_SAMRAIContext(
       const std::string& object_name,
-      boost::shared_ptr<tbox::Database> input_db,
+      const boost::shared_ptr<tbox::Database>& input_db,
       SNESAbstractFunctions* my_functions);
 
    /*!
@@ -564,7 +564,7 @@ public:
     */
    void
    initialize(
-      boost::shared_ptr<SAMRAIVectorReal<double> > solution);
+      const boost::shared_ptr<SAMRAIVectorReal<double> >& solution);
 
    /*!
     *  Reset the state of the nonlinear solver after regridding.
@@ -610,7 +610,7 @@ public:
     */
    void
    putToDatabase(
-      boost::shared_ptr<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
    /*!
     * Print out all members of integrator instance to given output stream.
@@ -690,7 +690,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
    /*!
     * Read solver parameters from restart database matching object name.

@@ -90,7 +90,7 @@ public:
     */
    void
    abs(
-      boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
       const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
       const hier::Box& box) const;
 
@@ -104,7 +104,7 @@ public:
    L1Norm(
       const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::NodeData<double> > cvol =
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
          boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
@@ -118,7 +118,7 @@ public:
    L2Norm(
       const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::NodeData<double> > cvol =
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
          boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
@@ -133,7 +133,7 @@ public:
       const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const boost::shared_ptr<pdat::NodeData<TYPE> >& weight,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::NodeData<double> > cvol =
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
          boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
@@ -147,7 +147,7 @@ public:
    RMSNorm(
       const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::NodeData<double> > cvol =
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
          boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
@@ -162,7 +162,7 @@ public:
       const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const boost::shared_ptr<pdat::NodeData<TYPE> >& weight,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::NodeData<double> > cvol =
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
          boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
@@ -176,7 +176,7 @@ public:
    maxNorm(
       const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::NodeData<double> > cvol =
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
          boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
@@ -190,7 +190,7 @@ public:
       const boost::shared_ptr<pdat::NodeData<TYPE> >& data1,
       const boost::shared_ptr<pdat::NodeData<TYPE> >& data2,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::NodeData<double> > cvol =
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
          boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
@@ -201,7 +201,7 @@ public:
    integral(
       const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::NodeData<double> > vol) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& vol) const;
 
 private:
    // The following are not implemented:

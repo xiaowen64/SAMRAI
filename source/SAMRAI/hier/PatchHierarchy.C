@@ -54,7 +54,7 @@ PatchHierarchy::s_initialize_finalize_handler(
 
 PatchHierarchy::PatchHierarchy(
    const std::string& object_name,
-   boost::shared_ptr<GridGeometry> geometry,
+   const boost::shared_ptr<GridGeometry>& geometry,
    const boost::shared_ptr<tbox::Database>& database,
    bool register_for_restart):
 
@@ -673,7 +673,7 @@ void PatchHierarchy::removePatchLevel(
  */
 
 void PatchHierarchy::putToDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    putToDatabase(database,
       VariableDatabase::getDatabase()->getPatchDataRestartTable());
@@ -696,7 +696,7 @@ void PatchHierarchy::putToDatabase(
  */
 
 void PatchHierarchy::putToDatabase(
-   boost::shared_ptr<tbox::Database> database,
+   const boost::shared_ptr<tbox::Database>& database,
    const ComponentSelector& patchdata_write_table)
 {
    TBOX_ASSERT(database);
@@ -813,7 +813,7 @@ void PatchHierarchy::getFromRestart()
 }
 
 void PatchHierarchy::getFromDatabase(
-   boost::shared_ptr<tbox::Database> database,
+   const boost::shared_ptr<tbox::Database>& database,
    const ComponentSelector& component_selector)
 {
    TBOX_ASSERT(database);

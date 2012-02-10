@@ -68,7 +68,7 @@ public:
     *                            or face (in 3d) boundary.
     */
    virtual void readDirichletBoundaryDataEntry(
-      boost::shared_ptr<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       std::string& db_name,
       int bdry_location_index)
    {
@@ -89,7 +89,7 @@ public:
     *                            or face (in 3d) boundary.
     */
    virtual void readNeumannBoundaryDataEntry(
-      boost::shared_ptr<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       std::string& db_name,
       int bdry_location_index)
    {

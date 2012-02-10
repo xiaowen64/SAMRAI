@@ -212,7 +212,7 @@ private:
    void
    insertEquivalenceClassItem(
       CoarsenClasses::Data& data,
-      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
          boost::shared_ptr<hier::PatchDescriptor>());
 
    /*!
@@ -237,7 +237,7 @@ private:
    bool
    itemIsValid(
       const CoarsenClasses::Data& data_item,
-      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
          boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
@@ -263,8 +263,8 @@ private:
     */
    bool
    classesMatch(
-      boost::shared_ptr<CoarsenClasses> test_classes,
-      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+      const boost::shared_ptr<CoarsenClasses>& test_classes,
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
          boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
@@ -299,7 +299,7 @@ private:
    itemsAreEquivalent(
       const CoarsenClasses::Data& data1,
       const CoarsenClasses::Data& data2,
-      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
          boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
@@ -373,7 +373,7 @@ private:
    patchDataMatch(
       int item_id1,
       int item_id2,
-      boost::shared_ptr<hier::PatchDescriptor> pd) const;
+      const boost::shared_ptr<hier::PatchDescriptor>& pd) const;
 
    /*!
     * @brief Determine the equivalence class index of given
@@ -392,7 +392,7 @@ private:
    int
    getEquivalenceClassIndex(
       const CoarsenClasses::Data& data,
-      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
          boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!

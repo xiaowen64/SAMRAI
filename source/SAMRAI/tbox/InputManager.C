@@ -139,7 +139,7 @@ boost::shared_ptr<Database> InputManager::getInputDatabase()
 
 void InputManager::parseInputFile(
    const std::string& filename,
-   boost::shared_ptr<InputDatabase> db)
+   const boost::shared_ptr<InputDatabase>& db)
 {
    FILE* fstream = NULL;
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());

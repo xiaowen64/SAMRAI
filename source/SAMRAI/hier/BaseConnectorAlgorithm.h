@@ -44,7 +44,7 @@ protected:
       const tbox::SAMRAI_MPI& mpi,
       const std::set<int>& incoming_ranks,
       const std::set<int>& outgoing_ranks,
-      boost::shared_ptr<tbox::Timer>& mpi_wait_timer,
+      const boost::shared_ptr<tbox::Timer>& mpi_wait_timer,
       int& operation_mpi_tag) const;
 
    //! @brief Send discovery to one processor during privateBridge/Modify.
@@ -68,7 +68,7 @@ protected:
       tbox::AsyncCommPeer<int> all_comms[],
       tbox::AsyncCommStage& comm_stage,
       tbox::AsyncCommStage::MemberVec& completed,
-      boost::shared_ptr<tbox::Timer>& receive_and_unpack_timer) const;
+      const boost::shared_ptr<tbox::Timer>& receive_and_unpack_timer) const;
 
    //! @brief Unpack message sent by sendDiscoverytoOneProcess().
    void

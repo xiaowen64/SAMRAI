@@ -460,7 +460,7 @@ void BoundaryDataTester::setBoundaryDataDefaults()
  */
 
 void BoundaryDataTester::readDirichletBoundaryDataEntry(
-   boost::shared_ptr<tbox::Database> db,
+   const boost::shared_ptr<tbox::Database>& db,
    string& db_name,
    int bdry_location_index)
 {
@@ -468,7 +468,7 @@ void BoundaryDataTester::readDirichletBoundaryDataEntry(
 }
 
 void BoundaryDataTester::readNeumannBoundaryDataEntry(
-   boost::shared_ptr<tbox::Database> db,
+   const boost::shared_ptr<tbox::Database>& db,
    string& db_name,
    int bdry_location_index)
 {

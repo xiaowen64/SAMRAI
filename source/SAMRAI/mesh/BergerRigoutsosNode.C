@@ -269,7 +269,7 @@ void BergerRigoutsosNode::clusterAndComputeRelationships(
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
    const hier::Box& bound_box,
-   const boost::shared_ptr<hier::PatchLevel> tag_level,
+   const boost::shared_ptr<hier::PatchLevel>& tag_level,
    const tbox::SAMRAI_MPI& mpi_object)
 {
    TBOX_ASSERT(d_parent == NULL);

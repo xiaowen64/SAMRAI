@@ -144,7 +144,7 @@ public:
     */
    void
    setupSum(
-      boost::shared_ptr<hier::PatchLevel> level);
+      const boost::shared_ptr<hier::PatchLevel>& level);
 
    /*!
     *  @brief Set up for summation operations for node data at shared nodes
@@ -162,7 +162,7 @@ public:
     */
    void
    setupSum(
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -217,7 +217,7 @@ private:
     */
    void
    doLevelSum(
-      boost::shared_ptr<hier::PatchLevel> level) const;
+      const boost::shared_ptr<hier::PatchLevel>& level) const;
 
    /*
     * Private member function to set node node data on a fine level at a
@@ -226,8 +226,8 @@ private:
     */
    void
    doLocalCoarseFineBoundarySum(
-      boost::shared_ptr<hier::PatchLevel> fine_level,
-      boost::shared_ptr<hier::PatchLevel> coarsened_fine_level,
+      const boost::shared_ptr<hier::PatchLevel>& fine_level,
+      const boost::shared_ptr<hier::PatchLevel>& coarsened_fine_level,
       const tbox::Array<int>& node_data_id,
       const tbox::Array<int>& onode_data_id,
       bool fill_hanging_nodes) const;
@@ -238,7 +238,7 @@ private:
     */
    void
    copyNodeToOuternodeOnLevel(
-      boost::shared_ptr<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       const tbox::Array<int>& node_data_id,
       const tbox::Array<int>& onode_data_id) const;
 
@@ -248,7 +248,7 @@ private:
     */
    void
    copyOuternodeToNodeOnLevel(
-      boost::shared_ptr<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       const tbox::Array<int>& onode_data_id,
       const tbox::Array<int>& node_data_id) const;
 

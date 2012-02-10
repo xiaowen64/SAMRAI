@@ -85,8 +85,8 @@ boost::shared_ptr<tbox::Timer> GridGeometry::t_get_boundary_boxes;
 GridGeometry::GridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   boost::shared_ptr<TransferOperatorRegistry> op_reg,
-   boost::shared_ptr<tbox::Database> input_db,
+   const boost::shared_ptr<TransferOperatorRegistry>& op_reg,
+   const boost::shared_ptr<tbox::Database>& input_db,
    bool register_for_restart):
    d_dim(dim),
    d_object_name(object_name),
@@ -125,7 +125,7 @@ GridGeometry::GridGeometry(
 GridGeometry::GridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   boost::shared_ptr<TransferOperatorRegistry> op_reg):
+   const boost::shared_ptr<TransferOperatorRegistry>& op_reg):
    d_dim(dim),
    d_object_name(object_name),
    d_periodic_shift(IntVector::getZero(d_dim)),
@@ -148,7 +148,7 @@ GridGeometry::GridGeometry(
 GridGeometry::GridGeometry(
    const std::string& object_name,
    const BoxContainer& domain,
-   boost::shared_ptr<TransferOperatorRegistry> op_reg,
+   const boost::shared_ptr<TransferOperatorRegistry>& op_reg,
    bool register_for_restart):
    d_dim((*(domain.begin())).getDim()),
    d_object_name(object_name),
@@ -760,7 +760,7 @@ void GridGeometry::getFromRestart()
  */
 
 void GridGeometry::getFromInput(
-   boost::shared_ptr<tbox::Database> db,
+   const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
 
@@ -830,7 +830,7 @@ void GridGeometry::getFromInput(
  */
 
 void GridGeometry::putToDatabase(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
    TBOX_ASSERT(db);
 
@@ -2304,19 +2304,19 @@ bool GridGeometry::areSingularityNeighbors(const BlockId& block_a,
  */
 
 void GridGeometry::addCoarsenOperator(
-   boost::shared_ptr<CoarsenOperator> coarsen_op)
+   const boost::shared_ptr<CoarsenOperator>& coarsen_op)
 {
    d_transfer_operator_registry->addCoarsenOperator(coarsen_op);
 }
 
 void GridGeometry::addRefineOperator(
-   boost::shared_ptr<RefineOperator> refine_op)
+   const boost::shared_ptr<RefineOperator>& refine_op)
 {
    d_transfer_operator_registry->addRefineOperator(refine_op);
 }
 
 void GridGeometry::addTimeInterpolateOperator(
-   boost::shared_ptr<TimeInterpolateOperator> time_op)
+   const boost::shared_ptr<TimeInterpolateOperator>& time_op)
 {
    d_transfer_operator_registry->addTimeInterpolateOperator(time_op);
 }

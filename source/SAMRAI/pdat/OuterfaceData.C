@@ -562,7 +562,7 @@ void OuterfaceData<TYPE>::printAxisFace(
 
 template<class TYPE>
 void OuterfaceData<TYPE>::getSpecializedFromDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
 
@@ -599,7 +599,7 @@ void OuterfaceData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void OuterfaceData<TYPE>::putSpecializedToDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
 
    TBOX_ASSERT(database);

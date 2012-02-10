@@ -83,7 +83,7 @@ public:
     */
    MblkPatchBoundaryNodeSum(
       const std::string& object_name,
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy);
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
    /*!
     *  @brief Destructor for the schedule releases all internal storage.
@@ -115,7 +115,7 @@ public:
     */
    void
    setupSum(
-      boost::shared_ptr<hier::PatchLevel> level);
+      const boost::shared_ptr<hier::PatchLevel>& level);
 
    /*!
     *  @brief Compute sum of node values at each shared node and replace
@@ -167,7 +167,7 @@ private:
     */
    void
    doLevelSum(
-      boost::shared_ptr<hier::PatchLevel> level) const;
+      const boost::shared_ptr<hier::PatchLevel>& level) const;
 
    /*
     * Private member function to copy node data to outernode data
@@ -175,7 +175,7 @@ private:
     */
    void
    copyNodeToOuternodeOnLevel(
-      boost::shared_ptr<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       const tbox::Array<int>& node_data_id,
       const tbox::Array<int>& onode_data_id) const;
 
@@ -185,7 +185,7 @@ private:
     */
    void
    copyOuternodeToNodeOnLevel(
-      boost::shared_ptr<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       const tbox::Array<int>& onode_data_id,
       const tbox::Array<int>& node_data_id) const;
 

@@ -64,7 +64,7 @@ public:
    virtual
    void
    setPatchHierarchy(
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy) = 0;
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy) = 0;
 
    /**
     * Reset range of patch levels over which operations occur.

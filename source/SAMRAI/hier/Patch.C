@@ -38,7 +38,7 @@ const int Patch::HIER_PATCH_VERSION = 2;
 
 Patch::Patch(
    const Box& mapped_box,
-   boost::shared_ptr<PatchDescriptor> descriptor):
+   const boost::shared_ptr<PatchDescriptor>& descriptor):
    d_mapped_box(mapped_box),
    d_descriptor(descriptor),
    d_patch_data(d_descriptor->getMaxNumberRegisteredComponents()),
@@ -212,7 +212,7 @@ void Patch::setTime(
  */
 
 void Patch::getFromDatabase(
-   boost::shared_ptr<tbox::Database> database,
+   const boost::shared_ptr<tbox::Database>& database,
    const ComponentSelector& component_selector)
 {
    TBOX_ASSERT(database);
@@ -300,7 +300,7 @@ void Patch::getFromDatabase(
  *************************************************************************
  */
 void Patch::putToDatabase(
-   boost::shared_ptr<tbox::Database> database,
+   const boost::shared_ptr<tbox::Database>& database,
    const ComponentSelector& patchdata_write_table)
 {
    TBOX_ASSERT(database);

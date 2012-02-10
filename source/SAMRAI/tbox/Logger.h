@@ -141,7 +141,7 @@ public:
     */
    void
    setAbortAppender(
-      boost::shared_ptr<Appender> appender);
+      const boost::shared_ptr<Appender>& appender);
 
    /*!
     * Set the Appender for logging warning messages to an
@@ -151,7 +151,7 @@ public:
     */
    void
    setWarningAppender(
-      boost::shared_ptr<Appender> appender);
+      const boost::shared_ptr<Appender>& appender);
 
    /*!
     * Set the Appender for logging debug messages to an
@@ -161,7 +161,7 @@ public:
     */
    void
    setDebugAppender(
-      boost::shared_ptr<Appender> appender);
+      const boost::shared_ptr<Appender>& appender);
 
    /*!
     * Turn logging of warning messages on or off.

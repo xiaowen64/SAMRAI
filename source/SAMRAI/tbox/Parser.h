@@ -77,7 +77,7 @@ public:
    parse(
       const std::string& filename,
       FILE * fstream,
-      boost::shared_ptr<Database> database);
+      const boost::shared_ptr<Database>& database);
 
    /**
     * Return the total number of errors resulting from the parse.

@@ -126,7 +126,7 @@ public:
     */
    SAMRAIVectorReal(
       const std::string& name,
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -302,7 +302,7 @@ public:
       const boost::shared_ptr<hier::Variable>& var,
       const int comp_data_id,
       const int control_vol_id = -1,
-      const boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> > vop =
+      const boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >& vop =
          boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >());
 
    /**
@@ -333,7 +333,7 @@ public:
     */
    void
    copyVector(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > src_vec,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& src_vec,
       const bool interior_only = true);
 
    /**
@@ -342,7 +342,7 @@ public:
     */
    void
    swapVectors(
-      boost::shared_ptr<SAMRAIVectorReal<TYPE> > other);
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& other);
 
    //@{
    /*!
@@ -363,7 +363,7 @@ public:
    void
    scale(
       const TYPE& alpha,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
       const bool interior_only = true);
 
    /**
@@ -371,7 +371,7 @@ public:
     */
    void
    addScalar(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
       const TYPE& alpha,
       const bool interior_only = true);
 
@@ -380,8 +380,8 @@ public:
     */
    void
    add(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > y,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
       const bool interior_only = true);
 
    /**
@@ -389,8 +389,8 @@ public:
     */
    void
    subtract(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > y,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
       const bool interior_only = true);
 
    /**
@@ -399,8 +399,8 @@ public:
     */
    void
    multiply(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > y,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
       const bool interior_only = true);
 
    /**
@@ -409,8 +409,8 @@ public:
     */
    void
    divide(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > y,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
       const bool interior_only = true);
 
    /**
@@ -419,7 +419,7 @@ public:
     */
    void
    reciprocal(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
       const bool interior_only = true);
 
    /**
@@ -429,9 +429,9 @@ public:
    void
    linearSum(
       const TYPE& alpha,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
       const TYPE& beta,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > y,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
       const bool interior_only = true);
 
    /**
@@ -441,8 +441,8 @@ public:
    void
    axpy(
       const TYPE& alpha,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > y,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
       const bool interior_only = true);
 
    /**
@@ -451,7 +451,7 @@ public:
     */
    void
    abs(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
       const bool interior_only = true);
 
    /**
@@ -523,7 +523,7 @@ public:
     */
    double
    weightedL2Norm(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > wgt) const;
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& wgt) const;
 
    /**
     * Return discrete root mean squared norm of this vector.  If control
@@ -550,7 +550,7 @@ public:
     */
    double
    weightedRMSNorm(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > wgt) const;
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& wgt) const;
 
    /**
     * Return the @f$ \max @f$ -norm of this vector.  If control volumes are defined
@@ -576,7 +576,7 @@ public:
     */
    TYPE
    dot(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
       bool local_only = false) const;
 
    /**
@@ -590,7 +590,7 @@ public:
     */
    int
    computeConstrProdPos(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x) const;
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x) const;
 
    /**
     * Wherever @f$ cvol_i > 0 @f$  in the set of vector data indices, set @f$ w_i = 1 @f$
@@ -602,7 +602,7 @@ public:
     */
    void
    compareToScalar(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
       const TYPE& alpha);
 
    /**
@@ -615,7 +615,7 @@ public:
     */
    int
    testReciprocal(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > x);
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x);
 
    /*!
     * @brief Compute max of "conditional" quotients of two arrays.
@@ -632,7 +632,7 @@ public:
     */
    TYPE
    maxPointwiseDivide(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> > denom)
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& denom)
    const;
 
    //@}
@@ -677,9 +677,8 @@ private:
       const boost::shared_ptr<hier::Variable>& var,
       const int data_id,
       const int control_vol_id = -1,
-      const boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> > vop =
-         boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >(
-            (math::HierarchyDataOpsReal<TYPE>*)NULL));
+      const boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >& vop =
+         boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >());
 
    static int s_instance_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
 

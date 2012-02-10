@@ -51,7 +51,7 @@ public:
     * that the copyLocalData() routine has an empty implementation.
     */
    StatTransaction(
-      boost::shared_ptr<Statistic> stat,
+      const boost::shared_ptr<Statistic>& stat,
       int src_proc_id,
       int dst_proc_id);
 

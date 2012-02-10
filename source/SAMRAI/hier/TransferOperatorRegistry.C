@@ -47,7 +47,7 @@ TransferOperatorRegistry::~TransferOperatorRegistry()
  */
 
 void TransferOperatorRegistry::addCoarsenOperator(
-   boost::shared_ptr<CoarsenOperator> coarsen_op)
+   const boost::shared_ptr<CoarsenOperator>& coarsen_op)
 {
    if (d_max_op_stencil_width_req &&
        (coarsen_op->getStencilWidth() > getMaxTransferOpStencilWidth())) {
@@ -60,7 +60,7 @@ void TransferOperatorRegistry::addCoarsenOperator(
 }
 
 void TransferOperatorRegistry::addRefineOperator(
-   boost::shared_ptr<RefineOperator> refine_op)
+   const boost::shared_ptr<RefineOperator>& refine_op)
 {
    if (d_max_op_stencil_width_req &&
        (refine_op->getStencilWidth() > getMaxTransferOpStencilWidth())) {
@@ -73,7 +73,7 @@ void TransferOperatorRegistry::addRefineOperator(
 }
 
 void TransferOperatorRegistry::addTimeInterpolateOperator(
-   boost::shared_ptr<TimeInterpolateOperator> time_op)
+   const boost::shared_ptr<TimeInterpolateOperator>& time_op)
 {
    d_time_operators.addItem(time_op);
 }

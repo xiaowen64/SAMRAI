@@ -277,7 +277,7 @@ public:
     */
    void
    putToDatabase(
-      boost::shared_ptr<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
    /**
     * This routine is a concrete implementation of the virtual function
@@ -289,7 +289,7 @@ public:
     */
    void
    readDirichletBoundaryDataEntry(
-      boost::shared_ptr<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       string& db_name,
       int bdry_location_index);
 

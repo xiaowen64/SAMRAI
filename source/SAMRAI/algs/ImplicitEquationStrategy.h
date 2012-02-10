@@ -56,7 +56,7 @@ public:
     */
    virtual void
    setupSolutionVector(
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > solution) = 0;
+      const boost::shared_ptr<solv::SAMRAIVectorReal<double> >& solution) = 0;
 
    /**
     * Return time increment for advancing the solution at the first timestep.

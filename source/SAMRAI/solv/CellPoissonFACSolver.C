@@ -57,7 +57,7 @@ int CellPoissonFACSolver::s_instance_counter[tbox::Dimension::
 CellPoissonFACSolver::CellPoissonFACSolver(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   boost::shared_ptr<tbox::Database> database):
+   const boost::shared_ptr<tbox::Database>& database):
    d_dim(dim),
    d_object_name(object_name),
    d_poisson_spec(object_name + "::poisson_spec"),
@@ -175,7 +175,7 @@ CellPoissonFACSolver::~CellPoissonFACSolver()
  */
 
 void CellPoissonFACSolver::getFromInput(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    if (database) {
       if (database->isBool("enable_logging")) {
@@ -243,7 +243,7 @@ void CellPoissonFACSolver::getFromInput(
 void CellPoissonFACSolver::initializeSolverState(
    const int solution,
    const int rhs,
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarse_level,
    const int fine_level)
 {
@@ -464,7 +464,7 @@ bool CellPoissonFACSolver::solveSystem(
 bool CellPoissonFACSolver::solveSystem(
    const int u,
    const int f,
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarse_ln,
    int fine_ln)
 {

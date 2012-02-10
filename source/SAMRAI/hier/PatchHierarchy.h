@@ -267,7 +267,7 @@ public:
  */
    PatchHierarchy(
       const std::string& object_name,
-      boost::shared_ptr<GridGeometry> geometry,
+      const boost::shared_ptr<GridGeometry>& geometry,
       const boost::shared_ptr<tbox::Database>& database =
          boost::shared_ptr<tbox::Database>(),
       bool register_for_restart = true);
@@ -688,7 +688,7 @@ public:
     */
    void
    setPatchFactory(
-      boost::shared_ptr<PatchFactory> factory);
+      const boost::shared_ptr<PatchFactory>& factory);
 
    /*!
     * @brief Set the factory used to create patch level objects.
@@ -700,7 +700,7 @@ public:
     */
    void
    setPatchLevelFactory(
-      boost::shared_ptr<PatchLevelFactory> factory);
+      const boost::shared_ptr<PatchLevelFactory>& factory);
 
    /*!
     * @brief Get the grid geometry.
@@ -727,7 +727,7 @@ public:
     */
    void
    putToDatabase(
-      boost::shared_ptr<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /*!
     * @brief Writes the state of the PatchHierarchy object and the PatchLevels
@@ -744,7 +744,7 @@ public:
     */
    void
    putToDatabase(
-      boost::shared_ptr<tbox::Database> database,
+      const boost::shared_ptr<tbox::Database>& database,
       const ComponentSelector& patchdata_write_table);
 
    /*!
@@ -791,7 +791,7 @@ public:
     */
    void
    getFromDatabase(
-      boost::shared_ptr<tbox::Database> database,
+      const boost::shared_ptr<tbox::Database>& database,
       const ComponentSelector& component_selector);
 
    /*!

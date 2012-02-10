@@ -2560,7 +2560,7 @@ StatisticRestartDatabase::~StatisticRestartDatabase()
 }
 
 void StatisticRestartDatabase::putToDatabase(
-   boost::shared_ptr<Database> db)
+   const boost::shared_ptr<Database>& db)
 {
    TBOX_ASSERT(db);
 

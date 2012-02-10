@@ -471,7 +471,7 @@ void CellData<TYPE>::print(
 
 template<class TYPE>
 void CellData<TYPE>::getSpecializedFromDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
 
    TBOX_ASSERT(database);
@@ -498,7 +498,7 @@ void CellData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void CellData<TYPE>::putSpecializedToDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
 

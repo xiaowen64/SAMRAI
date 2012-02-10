@@ -68,7 +68,7 @@ public:
     */
    void
    copyData(
-      boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
       const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
       const hier::Box& box) const;
 
@@ -78,7 +78,7 @@ public:
     */
    void
    swapData(
-      boost::shared_ptr<hier::Patch> patch,
+      const boost::shared_ptr<hier::Patch>& patch,
       const int data1_id,
       const int data2_id) const;
 
@@ -96,7 +96,7 @@ public:
     */
    void
    setToScalar(
-      boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
       const TYPE& alpha,
       const hier::Box& box) const;
 

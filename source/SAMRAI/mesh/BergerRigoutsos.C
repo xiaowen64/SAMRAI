@@ -49,7 +49,7 @@ BergerRigoutsos::s_initialize_finalize_handler(
  */
 BergerRigoutsos::BergerRigoutsos(
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> database):
+   const boost::shared_ptr<tbox::Database>& database):
    d_dim(dim),
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_max_box_size(hier::IntVector(d_dim, tbox::MathUtilities<int>::getMax())),
@@ -166,7 +166,7 @@ void BergerRigoutsos::findBoxesContainingTags(
    hier::BoxLevel& new_mapped_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
-   const boost::shared_ptr<hier::PatchLevel> tag_level,
+   const boost::shared_ptr<hier::PatchLevel>& tag_level,
    const int tag_data_index,
    const int tag_val,
    const hier::Box& bound_box,

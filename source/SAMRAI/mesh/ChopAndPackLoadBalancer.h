@@ -169,7 +169,7 @@ public:
    ChopAndPackLoadBalancer(
       const tbox::Dimension& dim,
       const std::string& name,
-      boost::shared_ptr<tbox::Database> input_db =
+      const boost::shared_ptr<tbox::Database>& input_db =
          boost::shared_ptr<tbox::Database>());
 
    /*!
@@ -185,7 +185,7 @@ public:
     */
    explicit ChopAndPackLoadBalancer(
       const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database> input_db =
+      const boost::shared_ptr<tbox::Database>& input_db =
          boost::shared_ptr<tbox::Database>());
 
    /*!
@@ -357,7 +357,7 @@ public:
       hier::BoxLevel& balance_mapped_box_level,
       hier::Connector& balance_to_anchor,
       hier::Connector& anchor_to_balance,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::Connector& unbalanced_to_attractor,
       const hier::Connector& attractor_to_unbalanced,
@@ -397,7 +397,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
    /*!
     * Given a list of boxes, representing the domain of a level in the AMR
@@ -449,7 +449,7 @@ private:
       hier::BoxContainer& out_boxes,
       hier::ProcessorMapping& mapping,
       const hier::BoxContainer& in_boxes,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int level_number,
       const hier::BoxContainer& physical_domain,
       const hier::IntVector& ratio_to_hierarchy_level_zero,
@@ -481,7 +481,7 @@ private:
       hier::BoxContainer& out_boxes,
       tbox::Array<double>& out_workloads,
       const hier::BoxContainer& in_boxes,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int level_number,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
@@ -498,7 +498,7 @@ private:
       hier::BoxContainer& out_boxes,
       tbox::Array<double>& out_workloads,
       const hier::BoxContainer& in_boxes,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int level_number,
       const hier::IntVector& ratio_to_coarsest_hierarchy_level,
       int wrk_indx,

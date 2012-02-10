@@ -83,7 +83,7 @@ public:
     */
    Variable(
       const std::string& name,
-      const boost::shared_ptr<PatchDataFactory> factory);
+      const boost::shared_ptr<PatchDataFactory>& factory);
 
    /**
     * Virtual destructor for variable objects.
@@ -126,7 +126,7 @@ public:
     */
    void
    setPatchDataFactory(
-      boost::shared_ptr<PatchDataFactory> factory);
+      const boost::shared_ptr<PatchDataFactory>& factory);
 
    /**
     * Return a non-const pointer to a patch data factory that will be used

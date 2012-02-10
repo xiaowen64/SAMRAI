@@ -474,7 +474,7 @@ void NodeData<TYPE>::print(
 
 template<class TYPE>
 void NodeData<TYPE>::getSpecializedFromDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
 
@@ -500,7 +500,7 @@ void NodeData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void NodeData<TYPE>::putSpecializedToDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
 
    TBOX_ASSERT(database);

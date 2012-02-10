@@ -390,7 +390,7 @@ void PatchBoundaryNodeSum::registerSum(
  */
 
 void PatchBoundaryNodeSum::setupSum(
-   boost::shared_ptr<hier::PatchLevel> level)
+   const boost::shared_ptr<hier::PatchLevel>& level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level);
@@ -443,7 +443,7 @@ void PatchBoundaryNodeSum::setupSum(
  */
 
 void PatchBoundaryNodeSum::setupSum(
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level)
 {
@@ -702,7 +702,7 @@ void PatchBoundaryNodeSum::computeSum(
  */
 
 void PatchBoundaryNodeSum::doLevelSum(
-   boost::shared_ptr<hier::PatchLevel> level) const
+   const boost::shared_ptr<hier::PatchLevel>& level) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level);
@@ -737,8 +737,8 @@ void PatchBoundaryNodeSum::doLevelSum(
  */
 
 void PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
-   boost::shared_ptr<hier::PatchLevel> fine_level,
-   boost::shared_ptr<hier::PatchLevel> coarsened_fine_level,
+   const boost::shared_ptr<hier::PatchLevel>& fine_level,
+   const boost::shared_ptr<hier::PatchLevel>& coarsened_fine_level,
    const tbox::Array<int>& node_data_id,
    const tbox::Array<int>& onode_data_id,
    bool fill_hanging_nodes) const
@@ -1082,7 +1082,7 @@ void PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
  */
 
 void PatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
-   boost::shared_ptr<hier::PatchLevel> level,
+   const boost::shared_ptr<hier::PatchLevel>& level,
    const tbox::Array<int>& node_data_id,
    const tbox::Array<int>& onode_data_id) const
 {
@@ -1107,7 +1107,7 @@ void PatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
 }
 
 void PatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
-   boost::shared_ptr<hier::PatchLevel> level,
+   const boost::shared_ptr<hier::PatchLevel>& level,
    const tbox::Array<int>& onode_data_id,
    const tbox::Array<int>& node_data_id) const
 {

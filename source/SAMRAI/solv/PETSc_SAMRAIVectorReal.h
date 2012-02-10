@@ -82,7 +82,7 @@ public:
     */
    static Vec
    createPETScVector(
-      boost::shared_ptr<SAMRAIVectorReal<TYPE> > samrai_vec,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& samrai_vec,
       MPI_Comm comm = PETSC_COMM_SELF);
 
    /**
@@ -116,7 +116,7 @@ protected:
     * (i.e., clone) operation, but not otherwise.
     */
    PETSc_SAMRAIVectorReal(
-      boost::shared_ptr<SAMRAIVectorReal<TYPE> > samrai_vector,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& samrai_vector,
       bool vector_created_via_duplicate,
       MPI_Comm comm);
 

@@ -104,7 +104,7 @@ RefineClasses::getIterator(
 
 void RefineClasses::insertEquivalenceClassItem(
    RefineClasses::Data& data,
-   boost::shared_ptr<hier::PatchDescriptor> descriptor)
+   const boost::shared_ptr<hier::PatchDescriptor>& descriptor)
 {
 
    if (!itemIsValid(data, descriptor)) {
@@ -154,7 +154,7 @@ void RefineClasses::insertEquivalenceClassItem(
 
 bool RefineClasses::itemIsValid(
    const RefineClasses::Data& data_item,
-   boost::shared_ptr<hier::PatchDescriptor> descriptor) const
+   const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
 
    bool item_good = true;
@@ -320,8 +320,8 @@ bool RefineClasses::itemIsValid(
  */
 
 bool RefineClasses::classesMatch(
-   boost::shared_ptr<RefineClasses> test_classes,
-   boost::shared_ptr<hier::PatchDescriptor> descriptor) const
+   const boost::shared_ptr<RefineClasses>& test_classes,
+   const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
    NULL_USE(descriptor);
 
@@ -376,7 +376,7 @@ bool RefineClasses::classesMatch(
 bool RefineClasses::itemsAreEquivalent(
    const RefineClasses::Data& data1,
    const RefineClasses::Data& data2,
-   boost::shared_ptr<hier::PatchDescriptor> descriptor) const
+   const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
    bool equivalent = true;
 
@@ -524,7 +524,7 @@ void RefineClasses::printRefineItem(
 bool RefineClasses::patchDataMatch(
    int item_id1,
    int item_id2,
-   boost::shared_ptr<hier::PatchDescriptor> pd) const
+   const boost::shared_ptr<hier::PatchDescriptor>& pd) const
 {
 
    bool items_match = ((item_id1 >= 0) && (item_id2 >= 0));
@@ -561,7 +561,7 @@ bool RefineClasses::patchDataMatch(
 
 int RefineClasses::getEquivalenceClassIndex(
    const RefineClasses::Data& data,
-   boost::shared_ptr<hier::PatchDescriptor> descriptor) const
+   const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
   NULL_USE(descriptor);
 

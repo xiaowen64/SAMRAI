@@ -214,7 +214,7 @@ public:
    void
    insertEquivalenceClassItem(
       RefineClasses::Data& data_item,
-      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
          boost::shared_ptr<hier::PatchDescriptor>());
 
    /*!
@@ -242,7 +242,7 @@ public:
    bool
    itemIsValid(
       const RefineClasses::Data& data_item,
-      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
          boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
@@ -268,8 +268,8 @@ public:
     */
    bool
    classesMatch(
-      boost::shared_ptr<RefineClasses> test_classes,
-      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+      const boost::shared_ptr<RefineClasses>& test_classes,
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
          boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
@@ -310,7 +310,7 @@ public:
    itemsAreEquivalent(
       const RefineClasses::Data& data1,
       const RefineClasses::Data& data2,
-      boost::shared_ptr<hier::PatchDescriptor> descriptor =
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
          boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
@@ -383,7 +383,7 @@ private:
    patchDataMatch(
       int item_id1,
       int item_id2,
-      boost::shared_ptr<hier::PatchDescriptor> pd) const;
+      const boost::shared_ptr<hier::PatchDescriptor>& pd) const;
 
    /*!
     * @brief Determine the equivalence class index of given RefineClasses::Data
@@ -402,7 +402,7 @@ private:
    int
    getEquivalenceClassIndex(
       const RefineClasses::Data& data,
-      boost::shared_ptr<hier::PatchDescriptor> descriptor) const;
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const;
 
    /*!
     * The default length of the refine item array.

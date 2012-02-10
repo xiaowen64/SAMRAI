@@ -136,7 +136,7 @@ public:
     */
    void
    setupSolutionVector(
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > solution);
+      const boost::shared_ptr<solv::SAMRAIVectorReal<double> >& solution);
 
    /**
     * Return time increment for advancing the solution at the first timestep.
@@ -210,18 +210,18 @@ public:
 
    virtual void
    initializeLevelData(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double init_data_time,
       const bool can_be_refined,
       const bool initial_time,
-      const boost::shared_ptr<hier::PatchLevel> old_level =
+      const boost::shared_ptr<hier::PatchLevel>& old_level =
          boost::shared_ptr<hier::PatchLevel>(),
       const bool allocate_data = true);
 
    void
    resetHierarchyConfiguration(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level);
    //@}
@@ -394,7 +394,7 @@ public:
     */
    void
    putToDatabase(
-      boost::shared_ptr<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
    /**
     * Write class data to given output stream.

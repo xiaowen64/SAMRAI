@@ -86,7 +86,7 @@ public:
    int
    definePatchDataComponent(
       const std::string& name,
-      boost::shared_ptr<PatchDataFactory> factory);
+      const boost::shared_ptr<PatchDataFactory>& factory);
 
    /*!
     * Deallocate the patch data factory in the patch descriptor identified by the

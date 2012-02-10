@@ -135,7 +135,7 @@ bool CartesianBoundaryUtilities3::s_fortran_constants_stuffed = false;
 
 void CartesianBoundaryUtilities3::readBoundaryInput(
    BoundaryUtilityStrategy* bdry_strategy,
-   boost::shared_ptr<tbox::Database> bdry_db,
+   const boost::shared_ptr<tbox::Database>& bdry_db,
    tbox::Array<int>& face_conds,
    tbox::Array<int>& edge_conds,
    tbox::Array<int>& node_conds,
@@ -186,7 +186,7 @@ void CartesianBoundaryUtilities3::readBoundaryInput(
 
 void CartesianBoundaryUtilities3::fillFaceBoundaryData(
    const std::string& varname,
-   boost::shared_ptr<pdat::CellData<double> >& vardata,
+   const boost::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
    const tbox::Array<int>& bdry_face_conds,
@@ -268,7 +268,7 @@ void CartesianBoundaryUtilities3::fillFaceBoundaryData(
 
 void CartesianBoundaryUtilities3::fillEdgeBoundaryData(
    const std::string& varname,
-   boost::shared_ptr<pdat::CellData<double> >& vardata,
+   const boost::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
    const tbox::Array<int>& bdry_edge_conds,
@@ -350,7 +350,7 @@ void CartesianBoundaryUtilities3::fillEdgeBoundaryData(
 
 void CartesianBoundaryUtilities3::fillNodeBoundaryData(
    const std::string& varname,
-   boost::shared_ptr<pdat::CellData<double> >& vardata,
+   const boost::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
    const tbox::Array<int>& bdry_node_conds,
@@ -806,7 +806,7 @@ int CartesianBoundaryUtilities3::checkBdryData(
 
 void CartesianBoundaryUtilities3::read3dBdryFaces(
    BoundaryUtilityStrategy* bdry_strategy,
-   boost::shared_ptr<tbox::Database> bdry_db,
+   const boost::shared_ptr<tbox::Database>& bdry_db,
    tbox::Array<int>& face_conds,
    const hier::IntVector& periodic)
 {
@@ -909,7 +909,7 @@ void CartesianBoundaryUtilities3::read3dBdryFaces(
  */
 
 void CartesianBoundaryUtilities3::read3dBdryEdges(
-   boost::shared_ptr<tbox::Database> bdry_db,
+   const boost::shared_ptr<tbox::Database>& bdry_db,
    const tbox::Array<int>& face_conds,
    tbox::Array<int>& edge_conds,
    const hier::IntVector& periodic)
@@ -1273,7 +1273,7 @@ void CartesianBoundaryUtilities3::read3dBdryEdges(
  */
 
 void CartesianBoundaryUtilities3::read3dBdryNodes(
-   boost::shared_ptr<tbox::Database> bdry_db,
+   const boost::shared_ptr<tbox::Database>& bdry_db,
    const tbox::Array<int>& face_conds,
    tbox::Array<int>& node_conds,
    const hier::IntVector& periodic)

@@ -68,7 +68,7 @@ void PatchEdgeDataOpsReal<TYPE>::operator = (
 
 template<class TYPE>
 void PatchEdgeDataOpsReal<TYPE>::swapData(
-   boost::shared_ptr<hier::Patch> patch,
+   const boost::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
@@ -106,7 +106,7 @@ void PatchEdgeDataOpsReal<TYPE>::printData(
 
 template<class TYPE>
 void PatchEdgeDataOpsReal<TYPE>::copyData(
-   boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
    const hier::Box& box) const
 {
@@ -123,7 +123,7 @@ void PatchEdgeDataOpsReal<TYPE>::copyData(
 
 template<class TYPE>
 void PatchEdgeDataOpsReal<TYPE>::setToScalar(
-   boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
    const TYPE& alpha,
    const hier::Box& box) const
 {

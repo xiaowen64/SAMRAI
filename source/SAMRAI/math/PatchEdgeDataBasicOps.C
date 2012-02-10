@@ -63,7 +63,7 @@ void PatchEdgeDataBasicOps<TYPE>::operator = (
 
 template<class TYPE>
 void PatchEdgeDataBasicOps<TYPE>::scale(
-   boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
    const TYPE& alpha,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
    const hier::Box& box) const
@@ -83,7 +83,7 @@ void PatchEdgeDataBasicOps<TYPE>::scale(
 
 template<class TYPE>
 void PatchEdgeDataBasicOps<TYPE>::addScalar(
-   boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box) const
@@ -103,7 +103,7 @@ void PatchEdgeDataBasicOps<TYPE>::addScalar(
 
 template<class TYPE>
 void PatchEdgeDataBasicOps<TYPE>::add(
-   boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src1,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src2,
    const hier::Box& box) const
@@ -123,7 +123,7 @@ void PatchEdgeDataBasicOps<TYPE>::add(
 
 template<class TYPE>
 void PatchEdgeDataBasicOps<TYPE>::subtract(
-   boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src1,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src2,
    const hier::Box& box) const
@@ -143,7 +143,7 @@ void PatchEdgeDataBasicOps<TYPE>::subtract(
 
 template<class TYPE>
 void PatchEdgeDataBasicOps<TYPE>::multiply(
-   boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src1,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src2,
    const hier::Box& box) const
@@ -163,7 +163,7 @@ void PatchEdgeDataBasicOps<TYPE>::multiply(
 
 template<class TYPE>
 void PatchEdgeDataBasicOps<TYPE>::divide(
-   boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src1,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src2,
    const hier::Box& box) const
@@ -183,7 +183,7 @@ void PatchEdgeDataBasicOps<TYPE>::divide(
 
 template<class TYPE>
 void PatchEdgeDataBasicOps<TYPE>::reciprocal(
-   boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
    const hier::Box& box) const
 {
@@ -202,7 +202,7 @@ void PatchEdgeDataBasicOps<TYPE>::reciprocal(
 
 template<class TYPE>
 void PatchEdgeDataBasicOps<TYPE>::linearSum(
-   boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
    const TYPE& alpha,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src1,
    const TYPE& beta,
@@ -225,7 +225,7 @@ void PatchEdgeDataBasicOps<TYPE>::linearSum(
 
 template<class TYPE>
 void PatchEdgeDataBasicOps<TYPE>::axpy(
-   boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
    const TYPE& alpha,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src1,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src2,
@@ -247,7 +247,7 @@ void PatchEdgeDataBasicOps<TYPE>::axpy(
 
 template<class TYPE>
 void PatchEdgeDataBasicOps<TYPE>::axmy(
-   boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
    const TYPE& alpha,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src1,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src2,
@@ -269,7 +269,7 @@ void PatchEdgeDataBasicOps<TYPE>::axmy(
 
 template<class TYPE>
 void PatchEdgeDataBasicOps<TYPE>::setRandomValues(
-   boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
    const TYPE& width,
    const TYPE& low,
    const hier::Box& box) const

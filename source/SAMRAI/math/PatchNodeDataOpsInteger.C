@@ -58,7 +58,7 @@ int PatchNodeDataOpsInteger::numberOfEntries(
  */
 
 void PatchNodeDataOpsInteger::swapData(
-   boost::shared_ptr<hier::Patch> patch,
+   const boost::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
@@ -94,7 +94,7 @@ void PatchNodeDataOpsInteger::printData(
 }
 
 void PatchNodeDataOpsInteger::copyData(
-   boost::shared_ptr<pdat::NodeData<int> >& dst,
+   const boost::shared_ptr<pdat::NodeData<int> >& dst,
    const boost::shared_ptr<pdat::NodeData<int> >& src,
    const hier::Box& box) const
 {
@@ -106,7 +106,7 @@ void PatchNodeDataOpsInteger::copyData(
 }
 
 void PatchNodeDataOpsInteger::setToScalar(
-   boost::shared_ptr<pdat::NodeData<int> >& dst,
+   const boost::shared_ptr<pdat::NodeData<int> >& dst,
    const int& alpha,
    const hier::Box& box) const
 {
@@ -117,7 +117,7 @@ void PatchNodeDataOpsInteger::setToScalar(
 }
 
 void PatchNodeDataOpsInteger::abs(
-   boost::shared_ptr<pdat::NodeData<int> >& dst,
+   const boost::shared_ptr<pdat::NodeData<int> >& dst,
    const boost::shared_ptr<pdat::NodeData<int> >& src,
    const hier::Box& box) const
 {

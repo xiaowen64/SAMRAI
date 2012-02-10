@@ -91,7 +91,7 @@ public:
    SkeletonGridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      boost::shared_ptr<tbox::Database> input_db,
+      const boost::shared_ptr<tbox::Database>& input_db,
       bool register_for_restart = true);
 
    /**
@@ -162,7 +162,7 @@ public:
     */
    virtual void
    putToDatabase(
-      boost::shared_ptr<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
 private:
    /*
@@ -180,7 +180,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       bool is_from_restart);
 
    /*

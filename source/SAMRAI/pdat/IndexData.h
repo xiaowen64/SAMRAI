@@ -361,7 +361,7 @@ public:
     */
    virtual void
    getSpecializedFromDatabase(
-      boost::shared_ptr<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /**
     * Write out the class version number to the database.
@@ -370,7 +370,7 @@ public:
     */
    virtual void
    putSpecializedToDatabase(
-      boost::shared_ptr<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
 private:
    friend class IndexIterator<TYPE, BOX_GEOMETRY>;

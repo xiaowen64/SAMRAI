@@ -80,7 +80,7 @@ PatchDescriptor::~PatchDescriptor()
 
 int PatchDescriptor::definePatchDataComponent(
    const std::string& name,
-   boost::shared_ptr<PatchDataFactory> factory)
+   const boost::shared_ptr<PatchDataFactory>& factory)
 {
    TBOX_ASSERT(!name.empty());
    TBOX_ASSERT(factory);

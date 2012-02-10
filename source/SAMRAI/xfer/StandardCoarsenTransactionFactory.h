@@ -73,9 +73,9 @@ public:
     */
    boost::shared_ptr<tbox::Transaction>
    allocate(
-      boost::shared_ptr<hier::PatchLevel> dst_level,
-      boost::shared_ptr<hier::PatchLevel> src_level,
-      boost::shared_ptr<hier::BoxOverlap> overlap,
+      const boost::shared_ptr<hier::PatchLevel>& dst_level,
+      const boost::shared_ptr<hier::PatchLevel>& src_level,
+      const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_mapped_box,
       const hier::Box& src_mapped_box,
       int citem_id) const;

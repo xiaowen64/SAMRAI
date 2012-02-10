@@ -85,9 +85,9 @@ public:
     */
    PatchLevel(
       const BoxLevel& mapped_box_level,
-      const boost::shared_ptr<GridGeometry> grid_geometry,
-      const boost::shared_ptr<PatchDescriptor> descriptor,
-      boost::shared_ptr<PatchFactory> factory =
+      const boost::shared_ptr<GridGeometry>& grid_geometry,
+      const boost::shared_ptr<PatchDescriptor>& descriptor,
+      const boost::shared_ptr<PatchFactory>& factory =
          boost::shared_ptr<PatchFactory>(),
       bool defer_boundary_box_creation = false);
 
@@ -118,10 +118,10 @@ public:
     *             construction of the boundary boxes.  @b Default: false
     */
    PatchLevel(
-      boost::shared_ptr<tbox::Database> level_database,
-      boost::shared_ptr<GridGeometry> grid_geometry,
-      boost::shared_ptr<PatchDescriptor> descriptor,
-      boost::shared_ptr<PatchFactory> factory,
+      const boost::shared_ptr<tbox::Database>& level_database,
+      const boost::shared_ptr<GridGeometry>& grid_geometry,
+      const boost::shared_ptr<PatchDescriptor>& descriptor,
+      const boost::shared_ptr<PatchFactory>& factory,
       const ComponentSelector& component_selector =
          *(new ComponentSelector(false)),
       bool defer_boundary_box_creation = false);
@@ -327,9 +327,9 @@ public:
     */
    void
    setRefinedPatchLevel(
-      const boost::shared_ptr<PatchLevel> coarse_level,
+      const boost::shared_ptr<PatchLevel>& coarse_level,
       const IntVector& refine_ratio,
-      const boost::shared_ptr<GridGeometry> fine_grid_geometry =
+      const boost::shared_ptr<GridGeometry>& fine_grid_geometry =
          boost::shared_ptr<GridGeometry>(),
       bool defer_boundary_box_creation = false);
 
@@ -375,9 +375,9 @@ public:
     */
    void
    setCoarsenedPatchLevel(
-      const boost::shared_ptr<PatchLevel> fine_level,
+      const boost::shared_ptr<PatchLevel>& fine_level,
       const IntVector& coarsen_ratio,
-      const boost::shared_ptr<GridGeometry> coarse_grid_geom =
+      const boost::shared_ptr<GridGeometry>& coarse_grid_geom =
          boost::shared_ptr<GridGeometry>(),
       bool defer_boundary_box_creation = false);
 
@@ -655,7 +655,7 @@ public:
     */
    void
    getFromDatabase(
-      boost::shared_ptr<tbox::Database> database,
+      const boost::shared_ptr<tbox::Database>& database,
       const ComponentSelector& component_selector);
 
    /*!
@@ -674,7 +674,7 @@ public:
     */
    void
    putToDatabase(
-      boost::shared_ptr<tbox::Database> database,
+      const boost::shared_ptr<tbox::Database>& database,
       const ComponentSelector& patchdata_write_table);
 
    /*!

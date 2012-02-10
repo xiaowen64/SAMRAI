@@ -75,7 +75,7 @@ const int TreeLoadBalancerOld::d_default_data_id = -1;
 TreeLoadBalancerOld::TreeLoadBalancerOld(
    const tbox::Dimension& dim,
    const std::string& name,
-   boost::shared_ptr<tbox::Database> input_db):
+   const boost::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_object_name(name),
    d_mpi(tbox::SAMRAI_MPI::commNull),
@@ -211,7 +211,7 @@ void TreeLoadBalancerOld::loadBalanceBoxLevel(
    hier::BoxLevel& balance_box_level,
    hier::Connector& balance_to_anchor,
    hier::Connector& anchor_to_balance,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const hier::Connector& balance_to_attractor,
    const hier::Connector& attractor_to_balance,
@@ -3592,7 +3592,7 @@ void TreeLoadBalancerOld::printClassData(
  */
 
 void TreeLoadBalancerOld::getFromInput(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
 
    if (db) {

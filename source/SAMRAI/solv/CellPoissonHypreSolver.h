@@ -106,7 +106,7 @@ public:
    CellPoissonHypreSolver(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      boost::shared_ptr<tbox::Database> database =
+      const boost::shared_ptr<tbox::Database>& database =
          boost::shared_ptr<tbox::Database>());
 
    /*!
@@ -124,7 +124,7 @@ public:
     */
    void
    initializeSolverState(
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int ln = 0);
 
    /*!
@@ -317,7 +317,7 @@ public:
    void
    setPhysicalBcCoefObject(
       const RobinBcCoefStrategy* physical_bc_coef_strategy,
-      const boost::shared_ptr<hier::Variable> variable =
+      const boost::shared_ptr<hier::Variable>& variable =
          boost::shared_ptr<hier::Variable>());
 
    /*!
@@ -363,7 +363,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    void
    setupHypreSolver();

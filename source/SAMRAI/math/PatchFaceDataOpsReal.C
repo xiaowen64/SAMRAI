@@ -68,7 +68,7 @@ void PatchFaceDataOpsReal<TYPE>::operator = (
 
 template<class TYPE>
 void PatchFaceDataOpsReal<TYPE>::swapData(
-   boost::shared_ptr<hier::Patch> patch,
+   const boost::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
@@ -106,7 +106,7 @@ void PatchFaceDataOpsReal<TYPE>::printData(
 
 template<class TYPE>
 void PatchFaceDataOpsReal<TYPE>::copyData(
-   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
    const hier::Box& box) const
 {
@@ -123,7 +123,7 @@ void PatchFaceDataOpsReal<TYPE>::copyData(
 
 template<class TYPE>
 void PatchFaceDataOpsReal<TYPE>::setToScalar(
-   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const TYPE& alpha,
    const hier::Box& box) const
 {

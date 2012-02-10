@@ -259,7 +259,7 @@ public:
    virtual
    void
    addVariable(
-      const boost::shared_ptr<Variable> variable);
+      const boost::shared_ptr<Variable>& variable);
 
    /*!
     * @brief Remove the Variable from the database identified by @c name.
@@ -327,7 +327,7 @@ public:
    virtual
    int
    registerClonedPatchDataIndex(
-      const boost::shared_ptr<Variable> variable,
+      const boost::shared_ptr<Variable>& variable,
       int old_id);
 
    /*!
@@ -373,7 +373,7 @@ public:
    virtual
    int
    registerPatchDataIndex(
-      const boost::shared_ptr<Variable> variable,
+      const boost::shared_ptr<Variable>& variable,
       int data_id = idUndefined());
 
    /*!
@@ -416,7 +416,7 @@ public:
    virtual
    bool
    checkVariablePatchDataIndex(
-      const boost::shared_ptr<Variable> variable,
+      const boost::shared_ptr<Variable>& variable,
       int data_id) const;
 
    /*!
@@ -437,7 +437,7 @@ public:
    virtual
    bool
    checkVariablePatchDataIndexType(
-      const boost::shared_ptr<Variable> variable,
+      const boost::shared_ptr<Variable>& variable,
       int data_id) const;
 
    /*!
@@ -487,8 +487,8 @@ public:
    virtual
    int
    registerVariableAndContext(
-      const boost::shared_ptr<Variable> variable,
-      const boost::shared_ptr<VariableContext> context,
+      const boost::shared_ptr<Variable>& variable,
+      const boost::shared_ptr<VariableContext>& context,
       const IntVector& ghosts // NOTE: old default (zero ghost width)
                               // does not work since dimension of
                               // variable and IntVector must match.
@@ -524,8 +524,8 @@ public:
    virtual
    int
    mapVariableAndContextToIndex(
-      const boost::shared_ptr<Variable> variable,
-      const boost::shared_ptr<VariableContext> context) const;
+      const boost::shared_ptr<Variable>& variable,
+      const boost::shared_ptr<VariableContext>& context) const;
 
    /*!
     * @brief Map patch data index to variable associated with the data, if
@@ -682,7 +682,7 @@ public:
    virtual
    int
    registerInternalSAMRAIVariable(
-      const boost::shared_ptr<Variable> variable,
+      const boost::shared_ptr<Variable>& variable,
       const IntVector& ghosts);
 
    /*!
@@ -785,7 +785,7 @@ private:
 
    void
    addContext_Private(
-      const boost::shared_ptr<VariableContext> context);
+      const boost::shared_ptr<VariableContext>& context);
 
    /*
     * Private member function to add variable to database (either
@@ -798,7 +798,7 @@ private:
     */
    bool
    addVariable_Private(
-      const boost::shared_ptr<Variable> variable,
+      const boost::shared_ptr<Variable>& variable,
       bool user_variable);
 
    /*
@@ -808,7 +808,7 @@ private:
     */
    void
    addVariablePatchDataIndexPairToDatabase_Private(
-      const boost::shared_ptr<Variable> variable,
+      const boost::shared_ptr<Variable>& variable,
       int data_id,
       bool user_variable);
 
@@ -819,8 +819,8 @@ private:
     */
    int
    registerVariableAndContext_Private(
-      const boost::shared_ptr<Variable> variable,
-      const boost::shared_ptr<VariableContext> context,
+      const boost::shared_ptr<Variable>& variable,
+      const boost::shared_ptr<VariableContext>& context,
       const IntVector& ghosts,
       bool user_variable);
 

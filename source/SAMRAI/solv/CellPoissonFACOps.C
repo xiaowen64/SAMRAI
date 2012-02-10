@@ -560,7 +560,7 @@ void F77_FUNC(ewingfixfluxcondc3d, EWINGFIXFLUXCONDC3D) (
 CellPoissonFACOps::CellPoissonFACOps(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   boost::shared_ptr<tbox::Database> database):
+   const boost::shared_ptr<tbox::Database>& database):
    d_dim(dim),
    d_object_name(object_name),
    d_ln_min(-1),
@@ -1929,7 +1929,7 @@ double CellPoissonFACOps::computeResidualNorm(
  */
 
 void CellPoissonFACOps::computeVectorWeights(
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int weight_id,
    int coarsest_ln,
    int finest_ln) const

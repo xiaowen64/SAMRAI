@@ -66,7 +66,7 @@ int PatchFaceDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& data1,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& data2,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::FaceData<double> > cvol) const
+   const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
@@ -101,11 +101,11 @@ int PatchFaceDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 
 template<class TYPE>
 void PatchFaceDataMiscellaneousOpsReal<TYPE>::compareToScalar(
-   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::FaceData<double> > cvol) const
+   const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);
@@ -134,10 +134,10 @@ void PatchFaceDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 
 template<class TYPE>
 int PatchFaceDataMiscellaneousOpsReal<TYPE>::testReciprocal(
-   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::FaceData<double> > cvol) const
+   const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);

@@ -194,8 +194,8 @@ public:
    tagRichardsonExtrapolationCells(
       hier::Patch& patch,
       const int error_level_number,
-      const boost::shared_ptr<hier::VariableContext> coarsened_fine,
-      const boost::shared_ptr<hier::VariableContext> advanced_coarse,
+      const boost::shared_ptr<hier::VariableContext>& coarsened_fine,
+      const boost::shared_ptr<hier::VariableContext>& advanced_coarse,
       const double regrid_time,
       const double deltat,
       const int error_coarsen_ratio,
@@ -278,7 +278,7 @@ public:
     */
    void
    putToDatabase(
-      boost::shared_ptr<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
    /**
     * This routine is a concrete implementation of the virtual function
@@ -290,7 +290,7 @@ public:
     */
    void
    readDirichletBoundaryDataEntry(
-      boost::shared_ptr<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       string& db_name,
       int bdry_location_index);
 

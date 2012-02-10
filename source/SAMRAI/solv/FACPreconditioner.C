@@ -40,7 +40,7 @@ namespace solv {
 FACPreconditioner::FACPreconditioner(
    const std::string& name,
    FACOperatorStrategy& user_ops,
-   boost::shared_ptr<tbox::Database> database):
+   const boost::shared_ptr<tbox::Database>& database):
    d_object_name(name),
    d_fac_operator(user_ops),
    d_coarsest_ln(0),
@@ -90,7 +90,7 @@ FACPreconditioner::~FACPreconditioner()
  */
 
 void FACPreconditioner::getFromInput(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    if (database) {
       if (database->isBool("enable_logging")) {

@@ -189,7 +189,7 @@ public:
     */
    virtual void
    putToDatabase(
-      boost::shared_ptr<Database> db);
+      const boost::shared_ptr<Database>& db);
 
    /**
     * Read restarted times from restart database.  When assertion checking
@@ -197,7 +197,7 @@ public:
     */
    virtual void
    getFromRestart(
-      boost::shared_ptr<Database> db);
+      const boost::shared_ptr<Database>& db);
 
    /*
     * These structures are used to store statistic data entries.

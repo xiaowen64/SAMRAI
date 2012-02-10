@@ -708,7 +708,7 @@ bool IndexData<TYPE, BOX_GEOMETRY>::isElement(
 
 template<class TYPE, class BOX_GEOMETRY>
 void IndexData<TYPE, BOX_GEOMETRY>::getSpecializedFromDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
 
@@ -763,7 +763,7 @@ void IndexData<TYPE, BOX_GEOMETRY>::getSpecializedFromDatabase(
 
 template<class TYPE, class BOX_GEOMETRY>
 void IndexData<TYPE, BOX_GEOMETRY>::putSpecializedToDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
 

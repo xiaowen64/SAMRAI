@@ -941,7 +941,7 @@ void OuternodeData<TYPE>::printAxisSide(
 
 template<class TYPE>
 void OuternodeData<TYPE>::getSpecializedFromDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
 
@@ -981,7 +981,7 @@ void OuternodeData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void OuternodeData<TYPE>::putSpecializedToDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
 

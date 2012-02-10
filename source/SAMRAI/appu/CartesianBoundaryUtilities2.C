@@ -104,7 +104,7 @@ bool CartesianBoundaryUtilities2::s_fortran_constants_stuffed = false;
 
 void CartesianBoundaryUtilities2::readBoundaryInput(
    BoundaryUtilityStrategy* bdry_strategy,
-   boost::shared_ptr<tbox::Database> bdry_db,
+   const boost::shared_ptr<tbox::Database>& bdry_db,
    tbox::Array<int>& edge_conds,
    tbox::Array<int>& node_conds,
    const hier::IntVector& periodic)
@@ -148,7 +148,7 @@ void CartesianBoundaryUtilities2::readBoundaryInput(
 
 void CartesianBoundaryUtilities2::fillEdgeBoundaryData(
    const std::string& varname,
-   boost::shared_ptr<pdat::CellData<double> >& vardata,
+   const boost::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
    const tbox::Array<int>& bdry_edge_conds,
@@ -228,7 +228,7 @@ void CartesianBoundaryUtilities2::fillEdgeBoundaryData(
 
 void CartesianBoundaryUtilities2::fillNodeBoundaryData(
    const std::string& varname,
-   boost::shared_ptr<pdat::CellData<double> >& vardata,
+   const boost::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
    const tbox::Array<int>& bdry_node_conds,
@@ -536,7 +536,7 @@ int CartesianBoundaryUtilities2::checkBdryData(
 
 void CartesianBoundaryUtilities2::read2dBdryEdges(
    BoundaryUtilityStrategy* bdry_strategy,
-   boost::shared_ptr<tbox::Database> bdry_db,
+   const boost::shared_ptr<tbox::Database>& bdry_db,
    tbox::Array<int>& edge_conds,
    const hier::IntVector& periodic)
 {
@@ -631,7 +631,7 @@ void CartesianBoundaryUtilities2::read2dBdryEdges(
  */
 
 void CartesianBoundaryUtilities2::read2dBdryNodes(
-   boost::shared_ptr<tbox::Database> bdry_db,
+   const boost::shared_ptr<tbox::Database>& bdry_db,
    const tbox::Array<int>& edge_conds,
    tbox::Array<int>& node_conds,
    const hier::IntVector& periodic)

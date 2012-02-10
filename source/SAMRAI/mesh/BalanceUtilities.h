@@ -257,7 +257,7 @@ struct BalanceUtilities {
     */
    static double
    computeNonUniformWorkload(
-      boost::shared_ptr<hier::Patch> patch,
+      const boost::shared_ptr<hier::Patch>& patch,
       int wrk_indx,
       const hier::Box& box);
 

@@ -52,7 +52,7 @@ public:
     */
    virtual void
    initialize(
-      const boost::shared_ptr<SAMRAIVectorReal<double> > solution) = 0;
+      const boost::shared_ptr<SAMRAIVectorReal<double> >& solution) = 0;
 
    /**
     * Solve the nonlinear problem and return the integer code defined by the

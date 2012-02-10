@@ -109,12 +109,12 @@ public:
     */
    virtual void
    initializeLevelData(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double init_data_time,
       const bool can_be_refined,
       const bool initial_time,
-      const boost::shared_ptr<hier::PatchLevel> old_level =
+      const boost::shared_ptr<hier::PatchLevel>& old_level =
          boost::shared_ptr<hier::PatchLevel>(),
       const bool allocate_data = true);
 
@@ -123,7 +123,7 @@ public:
     */
    virtual void
    resetHierarchyConfiguration(
-      boost::shared_ptr<hier::PatchHierarchy> new_hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
       int coarsest_level,
       int finest_level);
 

@@ -134,7 +134,7 @@ public:
     */
    MethodOfLinesIntegrator(
       const std::string& object_name,
-      boost::shared_ptr<tbox::Database> input_db,
+      const boost::shared_ptr<tbox::Database>& input_db,
       MethodOfLinesPatchStrategy* patch_strategy,
       bool register_for_restart = true);
 
@@ -152,7 +152,7 @@ public:
     */
    void
    initializeIntegrator(
-      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_alg);
+      const boost::shared_ptr<mesh::GriddingAlgorithm>& gridding_alg);
 
    /*!
     * Return a suitable time increment over which to integrate the ODE
@@ -161,7 +161,7 @@ public:
     */
    double
    getTimestep(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const double time) const;
 
    /*!
@@ -171,7 +171,7 @@ public:
     */
    void
    advanceHierarchy(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const double time,
       const double dt);
 
@@ -181,7 +181,7 @@ public:
     */
    void
    registerVariable(
-      const boost::shared_ptr<hier::Variable> variable,
+      const boost::shared_ptr<hier::Variable>& variable,
       const hier::IntVector& ghosts,
       const MOL_VAR_TYPE m_v_type,
       const boost::shared_ptr<hier::GridGeometry>& transfer_geom,
@@ -229,12 +229,12 @@ public:
     */
    void
    initializeLevelData(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double init_time,
       const bool can_be_refined,
       const bool initial_time,
-      const boost::shared_ptr<hier::PatchLevel> old_level =
+      const boost::shared_ptr<hier::PatchLevel>& old_level =
          boost::shared_ptr<hier::PatchLevel>(),
       const bool allocate_data = true);
 
@@ -256,7 +256,7 @@ public:
     */
    void
    resetHierarchyConfiguration(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -280,7 +280,7 @@ public:
     */
    virtual void
    applyGradientDetector(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double time,
       const int tag_index,
@@ -294,7 +294,7 @@ public:
     */
    void
    putToDatabase(
-      boost::shared_ptr<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
    /*!
     * Returns the object name.
@@ -313,14 +313,14 @@ private:
     */
    void
    copyCurrentToScratch(
-      const boost::shared_ptr<hier::PatchLevel> level) const;
+      const boost::shared_ptr<hier::PatchLevel>& level) const;
 
    /*
     * Copy all solution data from scratch context to current context.
     */
    void
    copyScratchToCurrent(
-      const boost::shared_ptr<hier::PatchLevel> level) const;
+      const boost::shared_ptr<hier::PatchLevel>& level) const;
 
    /*
     * Reads in parameters from the input database.  All
@@ -331,7 +331,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       bool is_from_restart);
 
    /*

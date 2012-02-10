@@ -72,7 +72,7 @@ public:
     * reset by calling the resetLevels() function.
     */
    explicit HierarchySideDataOpsReal(
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level = -1,
       const int finest_level = -1);
 
@@ -86,7 +86,7 @@ public:
     */
    void
    setPatchHierarchy(
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy);
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
    /**
     * Reset range of patch levels over which operations occur.

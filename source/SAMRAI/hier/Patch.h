@@ -68,7 +68,7 @@ public:
     */
    Patch(
       const Box& mapped_box,
-      boost::shared_ptr<PatchDescriptor> descriptor);
+      const boost::shared_ptr<PatchDescriptor>& descriptor);
 
    /*!
     * @brief Virtual destructor for patch objects.
@@ -155,8 +155,8 @@ public:
     */
    boost::shared_ptr<PatchData>
    getPatchData(
-      const boost::shared_ptr<Variable> variable,
-      const boost::shared_ptr<VariableContext> context) const;
+      const boost::shared_ptr<Variable>& variable,
+      const boost::shared_ptr<VariableContext>& context) const;
 
    /*!
     * @brief Set the patch data Pointer associated with the specified
@@ -177,7 +177,7 @@ public:
    void
    setPatchData(
       const int id,
-      boost::shared_ptr<PatchData> data);
+      const boost::shared_ptr<PatchData>& data);
 
    /*!
     * @brief Check whether the specified component has been allocated.
@@ -273,7 +273,7 @@ public:
     */
    void
    setPatchGeometry(
-      boost::shared_ptr<PatchGeometry> geometry);
+      const boost::shared_ptr<PatchGeometry>& geometry);
 
    /*!
     * @brief Get the patch geometry
@@ -392,7 +392,7 @@ public:
     */
    void
    getFromDatabase(
-      boost::shared_ptr<tbox::Database> database,
+      const boost::shared_ptr<tbox::Database>& database,
       const ComponentSelector& component_selector);
 
    /*!
@@ -409,7 +409,7 @@ public:
     */
    void
    putToDatabase(
-      boost::shared_ptr<tbox::Database> database,
+      const boost::shared_ptr<tbox::Database>& database,
       const ComponentSelector& patchdata_write_table);
 
    /*!

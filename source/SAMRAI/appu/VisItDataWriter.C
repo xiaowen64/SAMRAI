@@ -1365,7 +1365,7 @@ void VisItDataWriter::dumpWriteBarrierEnd()
  */
 
 void VisItDataWriter::writePlotData(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int time_step_number,
    double simulation_time)
 {
@@ -1487,7 +1487,7 @@ void VisItDataWriter::setSummaryFilename(
  */
 
 void VisItDataWriter::initializePlotVariableMinMaxInfo(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy)
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    TBOX_ASSERT(hierarchy);
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
@@ -1604,7 +1604,7 @@ void VisItDataWriter::initializePlotVariableMinMaxInfo(
  */
 
 void VisItDataWriter::writeHDFFiles(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    double simulation_time)
 {
 
@@ -1745,7 +1745,7 @@ void VisItDataWriter::writeHDFFiles(
  */
 
 int VisItDataWriter::getGlobalPatchNumber(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const int patch_number)
 {
@@ -1773,8 +1773,8 @@ int VisItDataWriter::getGlobalPatchNumber(
  */
 
 void VisItDataWriter::writeVisItVariablesToHDFFile(
-   boost::shared_ptr<tbox::Database> processor_HDFGroup,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<tbox::Database>& processor_HDFGroup,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarsest_level,
    int finest_level)
 {
@@ -1858,8 +1858,8 @@ void VisItDataWriter::writeVisItVariablesToHDFFile(
  */
 
 void VisItDataWriter::packRegularAndDerivedData(
-   boost::shared_ptr<tbox::Database> patch_HDFGroup,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<tbox::Database>& patch_HDFGroup,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    hier::Patch& patch)
 {
@@ -2216,8 +2216,8 @@ void VisItDataWriter::packRegularAndDerivedData(
  */
 
 void VisItDataWriter::packMaterialsData(
-   boost::shared_ptr<tbox::Database> patch_HDFGroup,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<tbox::Database>& patch_HDFGroup,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    hier::Patch& patch)
 {
@@ -2560,7 +2560,7 @@ void VisItDataWriter::packMaterialsData(
  */
 
 void VisItDataWriter::packSpeciesData(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    hier::Patch& patch)
 {
@@ -2785,7 +2785,7 @@ void VisItDataWriter::checkFloatMinMax(
 
 void VisItDataWriter::writeSummaryToHDFFile(
    std::string dump_dirname,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarsest_plot_level,
    int finest_plot_level,
    double simulation_time)
@@ -3489,7 +3489,7 @@ void VisItDataWriter::writeSummaryToHDFFile(
  *************************************************************************
  */
 void VisItDataWriter::exchangeMinMaxPatchInformation(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_plot_level,
    const int finest_plot_level)
 {
@@ -3635,8 +3635,8 @@ void VisItDataWriter::exchangeMinMaxPatchInformation(
  *************************************************************************
  */
 void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
-   boost::shared_ptr<tbox::Database> basic_HDFGroup)
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const boost::shared_ptr<tbox::Database>& basic_HDFGroup)
 {
    TBOX_ASSERT(hierarchy);
 
@@ -3915,7 +3915,7 @@ int VisItDataWriter::childParentCompareFunc(
  */
 
 void VisItDataWriter::packPatchDataIntoDoubleBuffer(
-   const boost::shared_ptr<hier::PatchData> pdata,
+   const boost::shared_ptr<hier::PatchData>& pdata,
    const int depth_index,
    const variable_data_type data_type,
    const hier::Box patch_box,

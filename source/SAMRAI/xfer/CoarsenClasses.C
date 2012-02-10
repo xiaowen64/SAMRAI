@@ -108,7 +108,7 @@ CoarsenClasses::getIterator(
 
 void CoarsenClasses::insertEquivalenceClassItem(
    CoarsenClasses::Data& data,
-   boost::shared_ptr<hier::PatchDescriptor> descriptor)
+   const boost::shared_ptr<hier::PatchDescriptor>& descriptor)
 {
 
    if (!itemIsValid(data, descriptor)) {
@@ -158,7 +158,7 @@ void CoarsenClasses::insertEquivalenceClassItem(
 
 bool CoarsenClasses::itemIsValid(
    const CoarsenClasses::Data& data_item,
-   boost::shared_ptr<hier::PatchDescriptor> descriptor) const
+   const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
 
    bool item_good = true;
@@ -232,8 +232,8 @@ bool CoarsenClasses::itemIsValid(
  */
 
 bool CoarsenClasses::classesMatch(
-   boost::shared_ptr<CoarsenClasses> test_classes,
-   boost::shared_ptr<hier::PatchDescriptor> descriptor) const
+   const boost::shared_ptr<CoarsenClasses>& test_classes,
+   const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
    NULL_USE(descriptor);
 
@@ -287,7 +287,7 @@ bool CoarsenClasses::classesMatch(
 bool CoarsenClasses::itemsAreEquivalent(
    const CoarsenClasses::Data& data1,
    const CoarsenClasses::Data& data2,
-   boost::shared_ptr<hier::PatchDescriptor> descriptor) const
+   const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
    bool equivalent = true;
 
@@ -412,7 +412,7 @@ void CoarsenClasses::printCoarsenItem(
 bool CoarsenClasses::patchDataMatch(
    int item_id1,
    int item_id2,
-   boost::shared_ptr<hier::PatchDescriptor> pd) const
+   const boost::shared_ptr<hier::PatchDescriptor>& pd) const
 {
 
    bool items_match = ((item_id1 >= 0) && (item_id2 >= 0));
@@ -449,7 +449,7 @@ bool CoarsenClasses::patchDataMatch(
 
 int CoarsenClasses::getEquivalenceClassIndex(
    const CoarsenClasses::Data& data,
-   boost::shared_ptr<hier::PatchDescriptor> descriptor) const
+   const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
    NULL_USE(descriptor);
 

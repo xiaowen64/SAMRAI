@@ -56,7 +56,7 @@ int PatchCellDataOpsInteger::numberOfEntries(
  */
 
 void PatchCellDataOpsInteger::swapData(
-   boost::shared_ptr<hier::Patch> patch,
+   const boost::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
@@ -92,7 +92,7 @@ void PatchCellDataOpsInteger::printData(
 }
 
 void PatchCellDataOpsInteger::copyData(
-   boost::shared_ptr<pdat::CellData<int> >& dst,
+   const boost::shared_ptr<pdat::CellData<int> >& dst,
    const boost::shared_ptr<pdat::CellData<int> >& src,
    const hier::Box& box) const
 {
@@ -103,7 +103,7 @@ void PatchCellDataOpsInteger::copyData(
 }
 
 void PatchCellDataOpsInteger::setToScalar(
-   boost::shared_ptr<pdat::CellData<int> >& dst,
+   const boost::shared_ptr<pdat::CellData<int> >& dst,
    const int& alpha,
    const hier::Box& box) const
 {
@@ -114,7 +114,7 @@ void PatchCellDataOpsInteger::setToScalar(
 }
 
 void PatchCellDataOpsInteger::abs(
-   boost::shared_ptr<pdat::CellData<int> >& dst,
+   const boost::shared_ptr<pdat::CellData<int> >& dst,
    const boost::shared_ptr<pdat::CellData<int> >& src,
    const hier::Box& box) const
 {

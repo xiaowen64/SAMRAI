@@ -881,7 +881,7 @@ void ArrayData<TYPE>::fill(
 
 template<class TYPE>
 void ArrayData<TYPE>::getFromDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
 
@@ -910,7 +910,7 @@ void ArrayData<TYPE>::getFromDatabase(
 
 template<class TYPE>
 void ArrayData<TYPE>::putToDatabase(
-   boost::shared_ptr<tbox::Database> database,
+   const boost::shared_ptr<tbox::Database>& database,
    bool data_only)
 {
    TBOX_ASSERT(database);
@@ -928,14 +928,14 @@ void ArrayData<TYPE>::putToDatabase(
 
 template<class TYPE>
 void ArrayData<TYPE>::putSpecializedToDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    database->putArray("d_array", d_array);
 }
 
 template<class TYPE>
 void ArrayData<TYPE>::getSpecializedFromDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    database->getArray("d_array", d_array);
 }

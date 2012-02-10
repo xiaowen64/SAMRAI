@@ -63,7 +63,7 @@ SimpleCellRobinBcCoefs::~SimpleCellRobinBcCoefs()
 }
 
 void SimpleCellRobinBcCoefs::setHierarchy(
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int ln_min,
    const int ln_max)
 {
@@ -178,9 +178,9 @@ void SimpleCellRobinBcCoefs::setBoundaries(
  */
 
 void SimpleCellRobinBcCoefs::setBcCoefs(
-   boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
-   boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
-   boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+   const boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+   const boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+   const boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
    const boost::shared_ptr<hier::Variable>& variable,
    const hier::Patch& patch,
    const hier::BoundaryBox& bdry_box,

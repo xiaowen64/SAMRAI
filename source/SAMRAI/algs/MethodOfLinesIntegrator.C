@@ -43,7 +43,7 @@ const int MethodOfLinesIntegrator::ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION = 2;
 
 MethodOfLinesIntegrator::MethodOfLinesIntegrator(
    const std::string& object_name,
-   boost::shared_ptr<tbox::Database> input_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    MethodOfLinesPatchStrategy* patch_strategy,
    bool register_for_restart)
 {
@@ -143,7 +143,7 @@ MethodOfLinesIntegrator::~MethodOfLinesIntegrator()
  */
 
 void MethodOfLinesIntegrator::initializeIntegrator(
-   boost::shared_ptr<mesh::GriddingAlgorithm> gridding_alg)
+   const boost::shared_ptr<mesh::GriddingAlgorithm>& gridding_alg)
 {
    NULL_USE(gridding_alg);
    TBOX_ASSERT(gridding_alg);
@@ -170,7 +170,7 @@ void MethodOfLinesIntegrator::initializeIntegrator(
  */
 
 double MethodOfLinesIntegrator::getTimestep(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const double time) const
 {
    TBOX_ASSERT(hierarchy);
@@ -227,7 +227,7 @@ double MethodOfLinesIntegrator::getTimestep(
  */
 
 void MethodOfLinesIntegrator::advanceHierarchy(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const double time,
    const double dt)
 {
@@ -359,7 +359,7 @@ void MethodOfLinesIntegrator::advanceHierarchy(
  */
 
 void MethodOfLinesIntegrator::registerVariable(
-   const boost::shared_ptr<hier::Variable> variable,
+   const boost::shared_ptr<hier::Variable>& variable,
    const hier::IntVector& ghosts,
    const MOL_VAR_TYPE m_v_type,
    const boost::shared_ptr<hier::GridGeometry>& transfer_geom,
@@ -499,12 +499,12 @@ void MethodOfLinesIntegrator::registerVariable(
  */
 
 void MethodOfLinesIntegrator::initializeLevelData(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double time,
    const bool can_be_refined,
    const bool initial_time,
-   const boost::shared_ptr<hier::PatchLevel> old_level,
+   const boost::shared_ptr<hier::PatchLevel>& old_level,
    const bool allocate_data)
 {
    NULL_USE(can_be_refined);
@@ -562,7 +562,7 @@ void MethodOfLinesIntegrator::initializeLevelData(
  *************************************************************************
  */
 void MethodOfLinesIntegrator::resetHierarchyConfiguration(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level)
 {
@@ -616,7 +616,7 @@ void MethodOfLinesIntegrator::resetHierarchyConfiguration(
  */
 
 void MethodOfLinesIntegrator::applyGradientDetector(
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int ln,
    const double time,
    const int tag_index,
@@ -669,7 +669,7 @@ void MethodOfLinesIntegrator::applyGradientDetector(
  */
 
 void MethodOfLinesIntegrator::putToDatabase(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
    TBOX_ASSERT(db);
 
@@ -693,7 +693,7 @@ void MethodOfLinesIntegrator::putToDatabase(
  */
 
 void MethodOfLinesIntegrator::getFromInput(
-   boost::shared_ptr<tbox::Database> input_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart)
 {
    TBOX_ASSERT(is_from_restart || input_db);
@@ -818,7 +818,7 @@ void MethodOfLinesIntegrator::getFromRestart()
  */
 
 void MethodOfLinesIntegrator::copyCurrentToScratch(
-   const boost::shared_ptr<hier::PatchLevel> level) const
+   const boost::shared_ptr<hier::PatchLevel>& level) const
 {
    TBOX_ASSERT(level);
 
@@ -853,7 +853,7 @@ void MethodOfLinesIntegrator::copyCurrentToScratch(
  */
 
 void MethodOfLinesIntegrator::copyScratchToCurrent(
-   const boost::shared_ptr<hier::PatchLevel> level) const
+   const boost::shared_ptr<hier::PatchLevel>& level) const
 {
    TBOX_ASSERT(level);
 

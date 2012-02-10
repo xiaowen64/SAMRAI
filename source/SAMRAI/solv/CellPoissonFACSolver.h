@@ -129,7 +129,7 @@ public:
    CellPoissonFACSolver(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      boost::shared_ptr<tbox::Database> database =
+      const boost::shared_ptr<tbox::Database>& database =
          boost::shared_ptr<tbox::Database>());
 
    /*!
@@ -182,7 +182,7 @@ public:
    solveSystem(
       const int solution,
       const int rhs,
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int coarse_ln = -1,
       int fine_ln = -1);
 
@@ -504,7 +504,7 @@ public:
    initializeSolverState(
       const int solution,
       const int rhs,
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarse_level = -1,
       const int fine_level = -1);
 
@@ -576,7 +576,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /*
     * @brief Set @c d_uv and @c d_fv to vectors wrapping the data

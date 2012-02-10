@@ -95,10 +95,10 @@ void CoarsenSchedule::setScheduleGenerationMethod(
  */
 
 CoarsenSchedule::CoarsenSchedule(
-   boost::shared_ptr<hier::PatchLevel> crse_level,
-   boost::shared_ptr<hier::PatchLevel> fine_level,
-   const boost::shared_ptr<CoarsenClasses> coarsen_classes,
-   boost::shared_ptr<CoarsenTransactionFactory> transaction_factory,
+   const boost::shared_ptr<hier::PatchLevel>& crse_level,
+   const boost::shared_ptr<hier::PatchLevel>& fine_level,
+   const boost::shared_ptr<CoarsenClasses>& coarsen_classes,
+   const boost::shared_ptr<CoarsenTransactionFactory>& transaction_factory,
    CoarsenPatchStrategy* patch_strategy,
    bool fill_coarse_data):
    d_number_coarsen_items(0),
@@ -193,7 +193,7 @@ CoarsenSchedule::~CoarsenSchedule()
  */
 
 void CoarsenSchedule::reset(
-   const boost::shared_ptr<CoarsenClasses> coarsen_classes)
+   const boost::shared_ptr<CoarsenClasses>& coarsen_classes)
 {
    TBOX_ASSERT(coarsen_classes);
 
@@ -710,9 +710,9 @@ hier::IntVector CoarsenSchedule::getMaxGhostsToGrow() const
  */
 
 void CoarsenSchedule::constructScheduleTransactions(
-   boost::shared_ptr<hier::PatchLevel> dst_level,
+   const boost::shared_ptr<hier::PatchLevel>& dst_level,
    const hier::Box& dst_mapped_box,
-   boost::shared_ptr<hier::PatchLevel> src_level,
+   const boost::shared_ptr<hier::PatchLevel>& src_level,
    const hier::Box& src_mapped_box)
 {
    TBOX_ASSERT(dst_level);
@@ -1006,7 +1006,7 @@ void CoarsenSchedule::coarsenSourceData(
  */
 
 void CoarsenSchedule::setCoarsenItems(
-   const boost::shared_ptr<CoarsenClasses> coarsen_classes)
+   const boost::shared_ptr<CoarsenClasses>& coarsen_classes)
 {
 
    clearCoarsenItems();

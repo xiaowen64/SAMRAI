@@ -87,7 +87,7 @@ public:
     */
    void
    addCoarsenOperator(
-      boost::shared_ptr<CoarsenOperator> coarsen_op);
+      const boost::shared_ptr<CoarsenOperator>& coarsen_op);
 
    /*!
     * @brief Add a concrete spatial refinement operator.
@@ -97,7 +97,7 @@ public:
     */
    void
    addRefineOperator(
-      boost::shared_ptr<RefineOperator> refine_op);
+      const boost::shared_ptr<RefineOperator>& refine_op);
 
    /*!
     * @brief Add a concrete time interpolation operator.
@@ -107,7 +107,7 @@ public:
     */
    void
    addTimeInterpolateOperator(
-      boost::shared_ptr<TimeInterpolateOperator> time_op);
+      const boost::shared_ptr<TimeInterpolateOperator>& time_op);
 
    /*!
     * @brief Lookup function for coarsening operator.

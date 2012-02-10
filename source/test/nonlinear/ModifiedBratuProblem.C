@@ -367,7 +367,7 @@ ModifiedBratuProblem::~ModifiedBratuProblem()
  */
 
 void ModifiedBratuProblem::setupSolutionVector(
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > solution)
+   const boost::shared_ptr<solv::SAMRAIVectorReal<double> >& solution)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(solution);
@@ -844,12 +844,12 @@ void ModifiedBratuProblem::updateSolution(
  *************************************************************************
  */
 void ModifiedBratuProblem::initializeLevelData(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double time,
    const bool can_be_refined,
    const bool initial_time,
-   const boost::shared_ptr<hier::PatchLevel> old_level,
+   const boost::shared_ptr<hier::PatchLevel>& old_level,
    const bool allocate_data)
 {
    NULL_USE(can_be_refined);
@@ -959,7 +959,7 @@ void ModifiedBratuProblem::initializeLevelData(
  */
 
 void ModifiedBratuProblem::resetHierarchyConfiguration(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level)
 {
@@ -2748,7 +2748,7 @@ void ModifiedBratuProblem::getFromInput(
  */
 
 void ModifiedBratuProblem::putToDatabase(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);

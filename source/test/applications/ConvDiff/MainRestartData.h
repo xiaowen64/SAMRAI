@@ -134,7 +134,7 @@ public:
     */
    virtual void
    putToDatabase(
-      boost::shared_ptr<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
 private:
    /**

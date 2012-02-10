@@ -169,14 +169,14 @@ int PatchHierarchy::getFinestLevelNumber() const
 
 SAMRAI_INLINE_KEYWORD
 void PatchHierarchy::setPatchFactory(
-   boost::shared_ptr<PatchFactory> factory)
+   const boost::shared_ptr<PatchFactory>& factory)
 {
    d_patch_factory = factory;
 }
 
 SAMRAI_INLINE_KEYWORD
 void PatchHierarchy::setPatchLevelFactory(
-   boost::shared_ptr<PatchLevelFactory> factory)
+   const boost::shared_ptr<PatchLevelFactory>& factory)
 {
    d_patch_level_factory = factory;
 }

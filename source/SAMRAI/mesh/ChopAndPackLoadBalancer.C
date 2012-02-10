@@ -73,7 +73,7 @@ boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_chop_boxes;
 ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    const tbox::Dimension& dim,
    const std::string& name,
-   boost::shared_ptr<tbox::Database> input_db):
+   const boost::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_object_name(name),
    d_processor_layout_specified(false),
@@ -96,7 +96,7 @@ ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
 
 ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> input_db):
+   const boost::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_object_name("ChopAndPackLoadBalancer"),
    d_processor_layout_specified(false),
@@ -289,7 +289,7 @@ void ChopAndPackLoadBalancer::loadBalanceBoxLevel(
    hier::BoxLevel& balance_mapped_box_level,
    hier::Connector& balance_to_anchor,
    hier::Connector& anchor_to_balance,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const hier::Connector& balance_to_attractor,
    const hier::Connector& attractor_to_balance,
@@ -430,7 +430,7 @@ void ChopAndPackLoadBalancer::loadBalanceBoxes(
    hier::BoxContainer& out_boxes,
    hier::ProcessorMapping& mapping,
    const hier::BoxContainer& in_boxes,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int level_number,
    const hier::BoxContainer& physical_domain,
    const hier::IntVector& ratio_to_hierarchy_level_zero,
@@ -729,7 +729,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
    hier::BoxContainer& out_boxes,
    tbox::Array<double>& out_workloads,
    const hier::BoxContainer& in_boxes,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int level_number,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
@@ -822,7 +822,7 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    hier::BoxContainer& out_boxes,
    tbox::Array<double>& out_workloads,
    const hier::BoxContainer& in_boxes,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int level_number,
    const hier::IntVector& ratio_to_hierarchy_level_zero,
    int wrk_indx,
@@ -1169,7 +1169,7 @@ void ChopAndPackLoadBalancer::printClassData(
  */
 
 void ChopAndPackLoadBalancer::getFromInput(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
 
    if (db) {

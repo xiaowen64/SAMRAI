@@ -107,10 +107,10 @@ public:
     *                              operations are done.
     */
    CoarsenSchedule(
-      boost::shared_ptr<hier::PatchLevel> crse_level,
-      boost::shared_ptr<hier::PatchLevel> fine_level,
-      const boost::shared_ptr<CoarsenClasses> coarsen_classes,
-      boost::shared_ptr<CoarsenTransactionFactory> transaction_factory,
+      const boost::shared_ptr<hier::PatchLevel>& crse_level,
+      const boost::shared_ptr<hier::PatchLevel>& fine_level,
+      const boost::shared_ptr<CoarsenClasses>& coarsen_classes,
+      const boost::shared_ptr<CoarsenTransactionFactory>& transaction_factory,
       CoarsenPatchStrategy * patch_strategy,
       bool fill_coarse_data);
 
@@ -136,7 +136,7 @@ public:
     */
    void
    reset(
-      const boost::shared_ptr<CoarsenClasses> coarsen_classes);
+      const boost::shared_ptr<CoarsenClasses>& coarsen_classes);
 
    /*!
     * @brief Execute the stored communication schedule and perform the data
@@ -311,9 +311,9 @@ private:
     */
    void
    constructScheduleTransactions(
-      boost::shared_ptr<hier::PatchLevel> dst_level,
+      const boost::shared_ptr<hier::PatchLevel>& dst_level,
       const hier::Box& dst_mapped_box,
-      boost::shared_ptr<hier::PatchLevel> src_level,
+      const boost::shared_ptr<hier::PatchLevel>& src_level,
       const hier::Box& src_mapped_box);
 
    /*!
@@ -350,7 +350,7 @@ private:
     */
    void
    setCoarsenItems(
-      const boost::shared_ptr<CoarsenClasses> coarsen_classes);
+      const boost::shared_ptr<CoarsenClasses>& coarsen_classes);
 
    /*!
     * @brief Utility function to clear local copies of coarsen items.

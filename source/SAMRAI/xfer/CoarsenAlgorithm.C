@@ -67,9 +67,9 @@ CoarsenAlgorithm::~CoarsenAlgorithm()
 void CoarsenAlgorithm::registerCoarsen(
    const int dst,
    const int src,
-   const boost::shared_ptr<hier::CoarsenOperator> opcoarsen,
+   const boost::shared_ptr<hier::CoarsenOperator>& opcoarsen,
    const hier::IntVector& gcw_to_coarsen,
-   boost::shared_ptr<VariableFillPattern> var_fill_pattern)
+   const boost::shared_ptr<VariableFillPattern>& var_fill_pattern)
 {
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    if (opcoarsen) {
@@ -107,8 +107,8 @@ void CoarsenAlgorithm::registerCoarsen(
 void CoarsenAlgorithm::registerCoarsen(
    const int dst,
    const int src,
-   const boost::shared_ptr<hier::CoarsenOperator> opcoarsen,
-   boost::shared_ptr<VariableFillPattern> var_fill_pattern)
+   const boost::shared_ptr<hier::CoarsenOperator>& opcoarsen,
+   const boost::shared_ptr<VariableFillPattern>& var_fill_pattern)
 {
    registerCoarsen(dst, src, opcoarsen,
       hier::IntVector::getZero(d_dim), var_fill_pattern);
@@ -125,10 +125,10 @@ void CoarsenAlgorithm::registerCoarsen(
 
 boost::shared_ptr<CoarsenSchedule>
 CoarsenAlgorithm::createSchedule(
-   boost::shared_ptr<hier::PatchLevel> crse_level,
-   boost::shared_ptr<hier::PatchLevel> fine_level,
+   const boost::shared_ptr<hier::PatchLevel>& crse_level,
+   const boost::shared_ptr<hier::PatchLevel>& fine_level,
    CoarsenPatchStrategy* patch_strategy,
-   boost::shared_ptr<CoarsenTransactionFactory> transaction_factory)
+   const boost::shared_ptr<CoarsenTransactionFactory>& transaction_factory)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, *crse_level, *fine_level);
 
@@ -159,7 +159,7 @@ CoarsenAlgorithm::createSchedule(
  */
 
 bool CoarsenAlgorithm::checkConsistency(
-   boost::shared_ptr<CoarsenSchedule> schedule) const
+   const boost::shared_ptr<CoarsenSchedule>& schedule) const
 {
    TBOX_ASSERT(schedule);
 
@@ -167,7 +167,7 @@ bool CoarsenAlgorithm::checkConsistency(
 }
 
 void CoarsenAlgorithm::resetSchedule(
-   boost::shared_ptr<CoarsenSchedule> schedule) const
+   const boost::shared_ptr<CoarsenSchedule>& schedule) const
 {
 
    TBOX_ASSERT(schedule);

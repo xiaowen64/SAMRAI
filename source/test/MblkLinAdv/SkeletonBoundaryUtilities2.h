@@ -131,7 +131,7 @@ public:
    static void
    readBoundaryInput(
       BoundaryUtilityStrategy* bdry_strategy,
-      boost::shared_ptr<tbox::Database> bdry_db,
+      const boost::shared_ptr<tbox::Database>& bdry_db,
       tbox::Array<int>& edge_conds,
       tbox::Array<int>& node_conds,
       const hier::IntVector& periodic);

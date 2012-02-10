@@ -108,9 +108,9 @@ std::ostream& operator << (
 }
 
 void PoissonPolynomialSolution::setBcCoefs(
-   boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
-   boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
-   boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+   const boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+   const boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+   const boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
    const boost::shared_ptr<hier::Variable>& variable,
    const hier::Patch& patch,
    const hier::BoundaryBox& bdry_box,

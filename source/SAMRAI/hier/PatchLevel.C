@@ -94,9 +94,9 @@ PatchLevel::PatchLevel(
 
 PatchLevel::PatchLevel(
    const BoxLevel& mapped_box_level,
-   const boost::shared_ptr<GridGeometry> grid_geometry,
-   const boost::shared_ptr<PatchDescriptor> descriptor,
-   boost::shared_ptr<PatchFactory> factory,
+   const boost::shared_ptr<GridGeometry>& grid_geometry,
+   const boost::shared_ptr<PatchDescriptor>& descriptor,
+   const boost::shared_ptr<PatchFactory>& factory,
    bool defer_boundary_box_creation):
    d_dim(grid_geometry->getDim()),
    d_mapped_box_level(boost::make_shared<BoxLevel>(mapped_box_level)),
@@ -202,10 +202,10 @@ PatchLevel::PatchLevel(
  */
 
 PatchLevel::PatchLevel(
-   boost::shared_ptr<tbox::Database> level_database,
-   boost::shared_ptr<GridGeometry> grid_geometry,
-   boost::shared_ptr<PatchDescriptor> descriptor,
-   boost::shared_ptr<PatchFactory> factory,
+   const boost::shared_ptr<tbox::Database>& level_database,
+   const boost::shared_ptr<GridGeometry>& grid_geometry,
+   const boost::shared_ptr<PatchDescriptor>& descriptor,
+   const boost::shared_ptr<PatchFactory>& factory,
    const ComponentSelector& component_selector,
    bool defer_boundary_box_creation):
    d_dim(grid_geometry->getDim()),
@@ -407,9 +407,9 @@ void PatchLevel::setLevelInHierarchy(
  */
 
 void PatchLevel::setRefinedPatchLevel(
-   const boost::shared_ptr<PatchLevel> coarse_level,
+   const boost::shared_ptr<PatchLevel>& coarse_level,
    const IntVector& refine_ratio,
-   const boost::shared_ptr<GridGeometry> fine_grid_geometry,
+   const boost::shared_ptr<GridGeometry>& fine_grid_geometry,
    bool defer_boundary_box_creation)
 {
    TBOX_ASSERT(coarse_level);
@@ -575,9 +575,9 @@ void PatchLevel::setRefinedPatchLevel(
  */
 
 void PatchLevel::setCoarsenedPatchLevel(
-   const boost::shared_ptr<PatchLevel> fine_level,
+   const boost::shared_ptr<PatchLevel>& fine_level,
    const IntVector& coarsen_ratio,
-   const boost::shared_ptr<GridGeometry> coarse_grid_geom,
+   const boost::shared_ptr<GridGeometry>& coarse_grid_geom,
    bool defer_boundary_box_creation)
 {
    TBOX_ASSERT(fine_level);
@@ -771,7 +771,7 @@ void PatchLevel::setBoundaryBoxes()
  */
 
 void PatchLevel::getFromDatabase(
-   boost::shared_ptr<tbox::Database> database,
+   const boost::shared_ptr<tbox::Database>& database,
    const ComponentSelector& component_selector)
 {
    TBOX_ASSERT(database);
@@ -876,7 +876,7 @@ void PatchLevel::getFromDatabase(
  * ************************************************************************
  */
 void PatchLevel::putToDatabase(
-   boost::shared_ptr<tbox::Database> database,
+   const boost::shared_ptr<tbox::Database>& database,
    const ComponentSelector& patchdata_write_table)
 {
    TBOX_ASSERT(database);

@@ -129,7 +129,7 @@ public:
     */
    virtual void
    setRootDatabase(
-      boost::shared_ptr<Database> database);
+      const boost::shared_ptr<Database>& database);
 
    /**
     * Sets the database for restore or dumps.
@@ -137,7 +137,7 @@ public:
     */
    virtual void
    setDatabaseFactory(
-      boost::shared_ptr<DatabaseFactory> database_factory);
+      const boost::shared_ptr<DatabaseFactory>& database_factory);
 
    /**
     * Registers an object for restart with the given name.
@@ -231,7 +231,7 @@ private:
     */
    virtual void
    writeRestartFile(
-      boost::shared_ptr<Database> database);
+      const boost::shared_ptr<Database>& database);
 
    /*
     * Create the directory structure for the data files.

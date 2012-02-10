@@ -69,7 +69,7 @@ void PatchNodeDataOpsReal<TYPE>::operator = (
 
 template<class TYPE>
 void PatchNodeDataOpsReal<TYPE>::swapData(
-   boost::shared_ptr<hier::Patch> patch,
+   const boost::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
@@ -107,7 +107,7 @@ void PatchNodeDataOpsReal<TYPE>::printData(
 
 template<class TYPE>
 void PatchNodeDataOpsReal<TYPE>::copyData(
-   boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
    const hier::Box& box) const
 {
@@ -120,7 +120,7 @@ void PatchNodeDataOpsReal<TYPE>::copyData(
 
 template<class TYPE>
 void PatchNodeDataOpsReal<TYPE>::setToScalar(
-   boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const TYPE& alpha,
    const hier::Box& box) const
 {

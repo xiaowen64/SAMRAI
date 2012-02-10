@@ -184,9 +184,9 @@ public:
    registerCoarsen(
       const int dst,
       const int src,
-      const boost::shared_ptr<hier::CoarsenOperator> opcoarsen,
+      const boost::shared_ptr<hier::CoarsenOperator>& opcoarsen,
       const hier::IntVector& gcw_to_coarsen,
-      boost::shared_ptr<VariableFillPattern> var_fill_pattern =
+      const boost::shared_ptr<VariableFillPattern>& var_fill_pattern =
          boost::shared_ptr<VariableFillPattern>());
 
    /*!
@@ -199,8 +199,8 @@ public:
    registerCoarsen(
       const int dst,
       const int src,
-      const boost::shared_ptr<hier::CoarsenOperator> opcoarsen,
-      boost::shared_ptr<VariableFillPattern> var_fill_pattern =
+      const boost::shared_ptr<hier::CoarsenOperator>& opcoarsen,
+      const boost::shared_ptr<VariableFillPattern>& var_fill_pattern =
          boost::shared_ptr<VariableFillPattern>());
 
    /*!
@@ -238,10 +238,10 @@ public:
     */
    boost::shared_ptr<CoarsenSchedule>
    createSchedule(
-      boost::shared_ptr<hier::PatchLevel> crse_level,
-      boost::shared_ptr<hier::PatchLevel> fine_level,
+      const boost::shared_ptr<hier::PatchLevel>& crse_level,
+      const boost::shared_ptr<hier::PatchLevel>& fine_level,
       CoarsenPatchStrategy * coarsen_strategy = ((CoarsenPatchStrategy *)NULL),
-      boost::shared_ptr<CoarsenTransactionFactory> transaction_factory =
+      const boost::shared_ptr<CoarsenTransactionFactory>& transaction_factory =
          boost::shared_ptr<CoarsenTransactionFactory>());
 
    /*!
@@ -262,7 +262,7 @@ public:
     */
    bool
    checkConsistency(
-      boost::shared_ptr<CoarsenSchedule> schedule) const;
+      const boost::shared_ptr<CoarsenSchedule>& schedule) const;
 
    /*!
     * @brief Given a previously-generated coarsen schedule, reconfigure it to
@@ -281,7 +281,7 @@ public:
     */
    void
    resetSchedule(
-      boost::shared_ptr<CoarsenSchedule> schedule) const;
+      const boost::shared_ptr<CoarsenSchedule>& schedule) const;
 
    /*!
     * @brief Print the coarsen algorithm state to the specified data stream.

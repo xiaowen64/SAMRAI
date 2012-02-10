@@ -260,11 +260,11 @@ public:
    GriddingAlgorithm(
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const std::string& object_name,
-      boost::shared_ptr<tbox::Database> input_db,
-      boost::shared_ptr<TagAndInitializeStrategy> level_strategy,
-      boost::shared_ptr<BoxGeneratorStrategy> generator,
-      boost::shared_ptr<LoadBalanceStrategy> balancer,
-      boost::shared_ptr<LoadBalanceStrategy> balancer_zero =
+      const boost::shared_ptr<tbox::Database>& input_db,
+      const boost::shared_ptr<TagAndInitializeStrategy>& level_strategy,
+      const boost::shared_ptr<BoxGeneratorStrategy>& generator,
+      const boost::shared_ptr<LoadBalanceStrategy>& balancer,
+      const boost::shared_ptr<LoadBalanceStrategy>& balancer_zero =
          boost::shared_ptr<LoadBalanceStrategy>(),
       bool register_for_restart = true);
 
@@ -465,7 +465,7 @@ public:
     */
    void
    putToDatabase(
-      boost::shared_ptr<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
    /*
     * @brief Write out statistics recorded on numbers of cells and patches generated.
@@ -496,7 +496,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       bool is_from_restart);
 
    /*
@@ -583,7 +583,7 @@ private:
    void
    fillTags(
       const int tag_value,
-      const boost::shared_ptr<hier::PatchLevel> tag_level,
+      const boost::shared_ptr<hier::PatchLevel>& tag_level,
       const int tag_index) const;
 
    /*
@@ -613,7 +613,7 @@ private:
    void
    fillTagsFromBoxLevel(
       const int tag_value,
-      const boost::shared_ptr<hier::PatchLevel> tag_level,
+      const boost::shared_ptr<hier::PatchLevel>& tag_level,
       const int index,
       const hier::Connector& tag_level_to_fill_mapped_box_level,
       const bool interior_only,
@@ -809,7 +809,7 @@ private:
    void
    bufferTagsOnLevel(
       const int tag_value,
-      const boost::shared_ptr<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       const int buffer_size) const;
 
    /*

@@ -66,7 +66,7 @@ int PatchSideDataOpsInteger::numberOfEntries(
  */
 
 void PatchSideDataOpsInteger::swapData(
-   boost::shared_ptr<hier::Patch> patch,
+   const boost::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
@@ -103,7 +103,7 @@ void PatchSideDataOpsInteger::printData(
 }
 
 void PatchSideDataOpsInteger::copyData(
-   boost::shared_ptr<pdat::SideData<int> >& dst,
+   const boost::shared_ptr<pdat::SideData<int> >& dst,
    const boost::shared_ptr<pdat::SideData<int> >& src,
    const hier::Box& box) const
 {
@@ -123,7 +123,7 @@ void PatchSideDataOpsInteger::copyData(
 }
 
 void PatchSideDataOpsInteger::setToScalar(
-   boost::shared_ptr<pdat::SideData<int> >& dst,
+   const boost::shared_ptr<pdat::SideData<int> >& dst,
    const int& alpha,
    const hier::Box& box) const
 {
@@ -134,7 +134,7 @@ void PatchSideDataOpsInteger::setToScalar(
 }
 
 void PatchSideDataOpsInteger::abs(
-   boost::shared_ptr<pdat::SideData<int> >& dst,
+   const boost::shared_ptr<pdat::SideData<int> >& dst,
    const boost::shared_ptr<pdat::SideData<int> >& src,
    const hier::Box& box) const
 {

@@ -1257,7 +1257,7 @@ void OuteredgeData<TYPE>::printAxisSide(
 
 template<class TYPE>
 void OuteredgeData<TYPE>::getSpecializedFromDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
 
@@ -1307,7 +1307,7 @@ void OuteredgeData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void OuteredgeData<TYPE>::putSpecializedToDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
 

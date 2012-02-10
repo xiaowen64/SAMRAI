@@ -72,9 +72,9 @@ void OuteredgeSumTransactionFactory::unsetRefineItems()
 
 boost::shared_ptr<tbox::Transaction>
 OuteredgeSumTransactionFactory::allocate(
-   boost::shared_ptr<hier::PatchLevel> dst_level,
-   boost::shared_ptr<hier::PatchLevel> src_level,
-   boost::shared_ptr<hier::BoxOverlap> overlap,
+   const boost::shared_ptr<hier::PatchLevel>& dst_level,
+   const boost::shared_ptr<hier::PatchLevel>& src_level,
+   const boost::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_node,
    const hier::Box& src_node,
    int ritem_id,
@@ -96,9 +96,9 @@ OuteredgeSumTransactionFactory::allocate(
 
 boost::shared_ptr<tbox::Transaction>
 OuteredgeSumTransactionFactory::allocate(
-   boost::shared_ptr<hier::PatchLevel> dst_level,
-   boost::shared_ptr<hier::PatchLevel> src_level,
-   boost::shared_ptr<hier::BoxOverlap> overlap,
+   const boost::shared_ptr<hier::PatchLevel>& dst_level,
+   const boost::shared_ptr<hier::PatchLevel>& src_level,
+   const boost::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_node,
    const hier::Box& src_node,
    int ritem_id) const
@@ -124,7 +124,7 @@ OuteredgeSumTransactionFactory::allocate(
  */
 
 void OuteredgeSumTransactionFactory::preprocessScratchSpace(
-   boost::shared_ptr<hier::PatchLevel> level,
+   const boost::shared_ptr<hier::PatchLevel>& level,
    double fill_time,
    const hier::ComponentSelector& preprocess_vector) const
 {

@@ -65,7 +65,7 @@ int PatchNodeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& data1,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& data2,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> > cvol) const
+   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
@@ -88,11 +88,11 @@ int PatchNodeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 
 template<class TYPE>
 void PatchNodeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
-   boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> > cvol) const
+   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);
@@ -114,10 +114,10 @@ void PatchNodeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 
 template<class TYPE>
 int PatchNodeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
-   boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> > cvol) const
+   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);

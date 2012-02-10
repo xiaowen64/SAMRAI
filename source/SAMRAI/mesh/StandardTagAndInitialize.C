@@ -104,7 +104,7 @@ StandardTagAndInitialize::StandardTagAndInitialize(
    const tbox::Dimension& dim,
    const std::string& object_name,
    StandardTagAndInitStrategy* tag_strategy,
-   boost::shared_ptr<tbox::Database> input_db):
+   const boost::shared_ptr<tbox::Database>& input_db):
    TagAndInitializeStrategy(dim, object_name)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -164,12 +164,12 @@ StandardTagAndInitialize::~StandardTagAndInitialize()
  */
 
 void StandardTagAndInitialize::initializeLevelData(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double init_data_time,
    const bool can_be_refined,
    const bool initial_time,
-   const boost::shared_ptr<hier::PatchLevel> old_level,
+   const boost::shared_ptr<hier::PatchLevel>& old_level,
    const bool allocate_data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -205,7 +205,7 @@ void StandardTagAndInitialize::initializeLevelData(
  */
 
 void StandardTagAndInitialize::resetHierarchyConfiguration(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level)
 {
@@ -250,7 +250,7 @@ void StandardTagAndInitialize::resetHierarchyConfiguration(
  */
 
 void StandardTagAndInitialize::tagCellsForRefinement(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double regrid_time,
    const int tag_index,
@@ -391,7 +391,7 @@ void StandardTagAndInitialize::tagCellsForRefinement(
 
 void
 StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double regrid_time,
    const double regrid_start_time,
@@ -616,7 +616,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
 
 void
 StandardTagAndInitialize::preprocessErrorEstimation(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double regrid_time,
    const double regrid_start_time,
@@ -674,7 +674,7 @@ StandardTagAndInitialize::preprocessErrorEstimation(
 
 void
 StandardTagAndInitialize::preprocessRichardsonExtrapolation(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double regrid_time,
    const double regrid_start_time,
@@ -1011,7 +1011,7 @@ void StandardTagAndInitialize::checkCoarsenRatios(
  */
 
 void StandardTagAndInitialize::getFromInput(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);

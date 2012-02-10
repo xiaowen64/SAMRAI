@@ -122,7 +122,7 @@ int SNES_SAMRAIContext::SNESapplyPreconditioner(
  */
 SNES_SAMRAIContext::SNES_SAMRAIContext(
    const std::string& object_name,
-   boost::shared_ptr<tbox::Database> input_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    SNESAbstractFunctions* my_functions)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -544,7 +544,7 @@ void SNES_SAMRAIContext::setFunctionEvaluationError(
  *************************************************************************
  */
 void SNES_SAMRAIContext::initialize(
-   boost::shared_ptr<SAMRAIVectorReal<double> > solution)
+   const boost::shared_ptr<SAMRAIVectorReal<double> >& solution)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(solution);
@@ -971,7 +971,7 @@ void SNES_SAMRAIContext::destroyPetscObjects()
  */
 
 void SNES_SAMRAIContext::getFromInput(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
    if (db) {
       if (db->keyExists("maximum_nonlinear_iterations")) {
@@ -1143,7 +1143,7 @@ void SNES_SAMRAIContext::getFromRestart()
 }
 
 void SNES_SAMRAIContext::putToDatabase(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);

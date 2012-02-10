@@ -131,7 +131,7 @@ public:
    static void
    readBoundaryInput(
       BoundaryUtilityStrategy* bdry_strategy,
-      boost::shared_ptr<tbox::Database> bdry_db,
+      const boost::shared_ptr<tbox::Database>& bdry_db,
       tbox::Array<int>& edge_conds,
       tbox::Array<int>& node_conds,
       const hier::IntVector& periodic);
@@ -153,7 +153,7 @@ public:
    static void
    fillEdgeBoundaryData(
       const std::string& varname,
-      boost::shared_ptr<pdat::CellData<double> >& vardata,
+      const boost::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
       const tbox::Array<int>& bdry_edge_conds,
@@ -176,7 +176,7 @@ public:
    static void
    fillNodeBoundaryData(
       const std::string& varname,
-      boost::shared_ptr<pdat::CellData<double> >& vardata,
+      const boost::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
       const tbox::Array<int>& bdry_node_conds,
@@ -238,13 +238,13 @@ private:
    static void
    read2dBdryEdges(
       BoundaryUtilityStrategy* bdry_strategy,
-      boost::shared_ptr<tbox::Database> bdry_db,
+      const boost::shared_ptr<tbox::Database>& bdry_db,
       tbox::Array<int>& edge_conds,
       const hier::IntVector& periodic);
 
    static void
    read2dBdryNodes(
-      boost::shared_ptr<tbox::Database> bdry_db,
+      const boost::shared_ptr<tbox::Database>& bdry_db,
       const tbox::Array<int>& edge_conds,
       tbox::Array<int>& node_conds,
       const hier::IntVector& periodic);

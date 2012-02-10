@@ -959,7 +959,7 @@ public:
     */
    void
    putToDatabase(
-      boost::shared_ptr<Database> db);
+      const boost::shared_ptr<Database>& db);
 
    /*
     * Construct those statistics saved in the restart database.

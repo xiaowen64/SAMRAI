@@ -285,7 +285,7 @@ public:
     * Set pointer to data context with ghosts.
     */
    void setInteriorWithGhostsContext(
-      boost::shared_ptr<hier::VariableContext> context)
+      const boost::shared_ptr<hier::VariableContext>& context)
    {
       d_interior_with_ghosts = context;
    }
@@ -294,7 +294,7 @@ public:
     * Set pointer to data context with NO ghosts.
     */
    void setInteriorContext(
-      boost::shared_ptr<hier::VariableContext> context)
+      const boost::shared_ptr<hier::VariableContext>& context)
    {
       d_interior = context;
    }

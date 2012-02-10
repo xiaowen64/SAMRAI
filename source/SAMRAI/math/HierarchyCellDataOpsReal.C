@@ -27,7 +27,7 @@ namespace math {
 
 template<class TYPE>
 HierarchyCellDataOpsReal<TYPE>::HierarchyCellDataOpsReal(
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level):
    HierarchyDataOpsReal<TYPE>(),
@@ -63,7 +63,7 @@ HierarchyCellDataOpsReal<TYPE>::~HierarchyCellDataOpsReal()
 
 template<class TYPE>
 void HierarchyCellDataOpsReal<TYPE>::setPatchHierarchy(
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy)
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    TBOX_ASSERT(hierarchy);
 

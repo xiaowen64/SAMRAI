@@ -63,7 +63,7 @@ void PatchFaceDataBasicOps<TYPE>::operator = (
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::scale(
-   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const TYPE& alpha,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
    const hier::Box& box) const
@@ -83,7 +83,7 @@ void PatchFaceDataBasicOps<TYPE>::scale(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::addScalar(
-   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box) const
@@ -103,7 +103,7 @@ void PatchFaceDataBasicOps<TYPE>::addScalar(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::add(
-   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
@@ -123,7 +123,7 @@ void PatchFaceDataBasicOps<TYPE>::add(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::subtract(
-   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
@@ -143,7 +143,7 @@ void PatchFaceDataBasicOps<TYPE>::subtract(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::multiply(
-   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
@@ -163,7 +163,7 @@ void PatchFaceDataBasicOps<TYPE>::multiply(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::divide(
-   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
    const hier::Box& box) const
@@ -183,7 +183,7 @@ void PatchFaceDataBasicOps<TYPE>::divide(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::reciprocal(
-   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
    const hier::Box& box) const
 {
@@ -202,7 +202,7 @@ void PatchFaceDataBasicOps<TYPE>::reciprocal(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::linearSum(
-   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const TYPE& alpha,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
    const TYPE& beta,
@@ -225,7 +225,7 @@ void PatchFaceDataBasicOps<TYPE>::linearSum(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::axpy(
-   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const TYPE& alpha,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
@@ -247,7 +247,7 @@ void PatchFaceDataBasicOps<TYPE>::axpy(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::axmy(
-   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const TYPE& alpha,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
@@ -269,7 +269,7 @@ void PatchFaceDataBasicOps<TYPE>::axmy(
 
 template<class TYPE>
 void PatchFaceDataBasicOps<TYPE>::setRandomValues(
-   boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const TYPE& width,
    const TYPE& low,
    const hier::Box& box) const

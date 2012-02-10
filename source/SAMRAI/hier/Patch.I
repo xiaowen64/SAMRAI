@@ -75,8 +75,8 @@ boost::shared_ptr<PatchData> Patch::getPatchData(
 
 SAMRAI_INLINE_KEYWORD
 boost::shared_ptr<PatchData> Patch::getPatchData(
-   const boost::shared_ptr<Variable> variable,
-   const boost::shared_ptr<VariableContext> context) const
+   const boost::shared_ptr<Variable>& variable,
+   const boost::shared_ptr<VariableContext>& context) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *variable);
 
@@ -91,7 +91,7 @@ boost::shared_ptr<PatchData> Patch::getPatchData(
 SAMRAI_INLINE_KEYWORD
 void Patch::setPatchData(
    const int id,
-   boost::shared_ptr<PatchData> data)
+   const boost::shared_ptr<PatchData>& data)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *data);
    TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
@@ -108,7 +108,7 @@ bool Patch::checkAllocated(
 
 SAMRAI_INLINE_KEYWORD
 void Patch::setPatchGeometry(
-   boost::shared_ptr<PatchGeometry> geometry)
+   const boost::shared_ptr<PatchGeometry>& geometry)
 {
    d_patch_geometry = geometry;
 }

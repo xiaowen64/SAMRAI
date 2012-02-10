@@ -61,9 +61,9 @@ public:
    virtual boost::shared_ptr<PatchLevel>
    allocate(
       const BoxLevel& mapped_box_level,
-      const boost::shared_ptr<GridGeometry> grid_geometry,
-      const boost::shared_ptr<PatchDescriptor> descriptor,
-      boost::shared_ptr<PatchFactory> factory =
+      const boost::shared_ptr<GridGeometry>& grid_geometry,
+      const boost::shared_ptr<PatchDescriptor>& descriptor,
+      const boost::shared_ptr<PatchFactory>& factory =
          boost::shared_ptr<PatchFactory>()) const;
 
    /*!
@@ -91,11 +91,11 @@ public:
     */
    virtual boost::shared_ptr<PatchLevel>
    allocate(
-      boost::shared_ptr<tbox::Database> database,
-      const boost::shared_ptr<GridGeometry> grid_geometry,
-      const boost::shared_ptr<PatchDescriptor> descriptor,
+      const boost::shared_ptr<tbox::Database>& database,
+      const boost::shared_ptr<GridGeometry>& grid_geometry,
+      const boost::shared_ptr<PatchDescriptor>& descriptor,
       const ComponentSelector& component_selector,
-      boost::shared_ptr<PatchFactory> factory =
+      const boost::shared_ptr<PatchFactory>& factory =
          boost::shared_ptr<PatchFactory>(),
       const bool defer_boundary_box_creation = false) const;
 

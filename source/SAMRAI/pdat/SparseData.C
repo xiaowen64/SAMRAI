@@ -621,7 +621,7 @@ SparseData<BOX_GEOMETRY>::unpackStream(
 template<typename BOX_GEOMETRY>
 void
 SparseData<BOX_GEOMETRY>::getSpecializedFromDatabase(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
    TBOX_ASSERT(db);
 
@@ -752,7 +752,7 @@ SparseData<BOX_GEOMETRY>::getSpecializedFromDatabase(
 template<typename BOX_GEOMETRY>
 void
 SparseData<BOX_GEOMETRY>::putSpecializedToDatabase(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
    TBOX_ASSERT(db);
 

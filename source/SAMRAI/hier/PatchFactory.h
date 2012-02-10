@@ -52,7 +52,7 @@ public:
    virtual boost::shared_ptr<Patch>
    allocate(
       const Box& mapped_box_level_mapped_box,
-      boost::shared_ptr<PatchDescriptor> descriptor) const;
+      const boost::shared_ptr<PatchDescriptor>& descriptor) const;
 
 private:
    PatchFactory(

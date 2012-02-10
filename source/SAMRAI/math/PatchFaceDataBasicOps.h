@@ -62,7 +62,7 @@ public:
     */
    void
    scale(
-      boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
       const TYPE& alpha,
       const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
       const hier::Box& box) const;
@@ -72,7 +72,7 @@ public:
     */
    void
    addScalar(
-      boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
       const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
       const TYPE& alpha,
       const hier::Box& box) const;
@@ -82,7 +82,7 @@ public:
     */
    void
    add(
-      boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
       const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
       const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
       const hier::Box& box) const;
@@ -92,7 +92,7 @@ public:
     */
    void
    subtract(
-      boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
       const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
       const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
       const hier::Box& box) const;
@@ -102,7 +102,7 @@ public:
     */
    void
    multiply(
-      boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
       const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
       const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
       const hier::Box& box) const;
@@ -112,7 +112,7 @@ public:
     */
    void
    divide(
-      boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
       const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
       const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
       const hier::Box& box) const;
@@ -122,7 +122,7 @@ public:
     */
    void
    reciprocal(
-      boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
       const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
       const hier::Box& box) const;
 
@@ -131,7 +131,7 @@ public:
     */
    void
    linearSum(
-      boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
       const TYPE& alpha,
       const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
       const TYPE& beta,
@@ -143,7 +143,7 @@ public:
     */
    void
    axpy(
-      boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
       const TYPE& alpha,
       const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
       const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
@@ -154,7 +154,7 @@ public:
     */
    void
    axmy(
-      boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
       const TYPE& alpha,
       const boost::shared_ptr<pdat::FaceData<TYPE> >& src1,
       const boost::shared_ptr<pdat::FaceData<TYPE> >& src2,
@@ -185,7 +185,7 @@ public:
     */
    void
    setRandomValues(
-      boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
       const TYPE& width,
       const TYPE& low,
       const hier::Box& box) const;

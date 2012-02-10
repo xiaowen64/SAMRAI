@@ -281,7 +281,7 @@ tbox::StartupShutdownManager::Handler CellPoissonHypreSolver::s_finalize_handler
 CellPoissonHypreSolver::CellPoissonHypreSolver(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   boost::shared_ptr<tbox::Database> database):
+   const boost::shared_ptr<tbox::Database>& database):
    d_dim(dim),
    d_object_name(object_name),
    d_ln(-1),
@@ -337,7 +337,7 @@ CellPoissonHypreSolver::CellPoissonHypreSolver(
  */
 
 void CellPoissonHypreSolver::getFromInput(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    if (database) {
       d_print_solver_info = database->getBoolWithDefault("print_solver_info",
@@ -387,7 +387,7 @@ void CellPoissonHypreSolver::getFromInput(
  */
 
 void CellPoissonHypreSolver::initializeSolverState(
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int ln)
 {
    TBOX_ASSERT(hierarchy);

@@ -160,7 +160,7 @@ bool VariableDatabase::checkContextExists(
  */
 
 void VariableDatabase::addVariable(
-   const boost::shared_ptr<Variable> variable)
+   const boost::shared_ptr<Variable>& variable)
 {
    TBOX_ASSERT(variable);
 
@@ -233,7 +233,7 @@ bool VariableDatabase::checkVariableExists(
  */
 
 int VariableDatabase::registerClonedPatchDataIndex(
-   const boost::shared_ptr<Variable> variable,
+   const boost::shared_ptr<Variable>& variable,
    int old_id)
 {
    TBOX_ASSERT(variable);
@@ -294,7 +294,7 @@ int VariableDatabase::registerClonedPatchDataIndex(
  */
 
 int VariableDatabase::registerPatchDataIndex(
-   const boost::shared_ptr<Variable> variable,
+   const boost::shared_ptr<Variable>& variable,
    int data_id)
 {
    TBOX_ASSERT(variable);
@@ -401,7 +401,7 @@ void VariableDatabase::removePatchDataIndex(
  */
 
 bool VariableDatabase::checkVariablePatchDataIndex(
-   const boost::shared_ptr<Variable> variable,
+   const boost::shared_ptr<Variable>& variable,
    int data_id) const
 {
    TBOX_ASSERT(variable);
@@ -435,7 +435,7 @@ bool VariableDatabase::checkVariablePatchDataIndex(
  */
 
 bool VariableDatabase::checkVariablePatchDataIndexType(
-   const boost::shared_ptr<Variable> variable,
+   const boost::shared_ptr<Variable>& variable,
    int data_id) const
 {
    TBOX_ASSERT(variable);
@@ -469,8 +469,8 @@ bool VariableDatabase::checkVariablePatchDataIndexType(
  */
 
 int VariableDatabase::registerVariableAndContext(
-   const boost::shared_ptr<Variable> variable,
-   const boost::shared_ptr<VariableContext> context,
+   const boost::shared_ptr<Variable>& variable,
+   const boost::shared_ptr<VariableContext>& context,
    const IntVector& ghosts)
 {
    TBOX_ASSERT(variable);
@@ -496,8 +496,8 @@ int VariableDatabase::registerVariableAndContext(
  */
 
 int VariableDatabase::mapVariableAndContextToIndex(
-   const boost::shared_ptr<Variable> variable,
-   const boost::shared_ptr<VariableContext> context) const
+   const boost::shared_ptr<Variable>& variable,
+   const boost::shared_ptr<VariableContext>& context) const
 {
    TBOX_ASSERT(variable);
    TBOX_ASSERT(context);
@@ -708,7 +708,7 @@ void VariableDatabase::printClassData(
  */
 
 int VariableDatabase::registerInternalSAMRAIVariable(
-   const boost::shared_ptr<Variable> variable,
+   const boost::shared_ptr<Variable>& variable,
    const IntVector& ghosts)
 {
    TBOX_ASSERT(variable);
@@ -821,7 +821,7 @@ int VariableDatabase::getContextId_Private(
 }
 
 void VariableDatabase::addContext_Private(
-   const boost::shared_ptr<VariableContext> context)
+   const boost::shared_ptr<VariableContext>& context)
 {
    int new_id = context->getIndex();
    int oldsize = d_contexts.getSize();
@@ -846,7 +846,7 @@ void VariableDatabase::addContext_Private(
  */
 
 void VariableDatabase::addVariablePatchDataIndexPairToDatabase_Private(
-   const boost::shared_ptr<Variable> variable,
+   const boost::shared_ptr<Variable>& variable,
    int data_id,
    bool user_variable)
 {
@@ -930,7 +930,7 @@ VariableDatabase::removeVariable(
  */
 
 bool VariableDatabase::addVariable_Private(
-   const boost::shared_ptr<Variable> variable,
+   const boost::shared_ptr<Variable>& variable,
    bool user_variable)
 {
    bool ret_value = true;
@@ -1018,8 +1018,8 @@ bool VariableDatabase::addVariable_Private(
  */
 
 int VariableDatabase::registerVariableAndContext_Private(
-   const boost::shared_ptr<Variable> variable,
-   const boost::shared_ptr<VariableContext> context,
+   const boost::shared_ptr<Variable>& variable,
+   const boost::shared_ptr<VariableContext>& context,
    const IntVector& ghosts,
    bool user_variable)
 {

@@ -3142,7 +3142,7 @@ void MblkLinAdv::getFromInput(
  */
 
 void MblkLinAdv::putToDatabase(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -3334,7 +3334,7 @@ void MblkLinAdv::getFromRestart()
  */
 
 void MblkLinAdv::readDirichletBoundaryDataEntry(
-   boost::shared_ptr<tbox::Database> db,
+   const boost::shared_ptr<tbox::Database>& db,
    string& db_name,
    int bdry_location_index)
 {

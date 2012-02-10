@@ -129,7 +129,7 @@ public:
    explicit CellPoissonFACOps(
       const tbox::Dimension& dim,
       const std::string& object_name = std::string(),
-      boost::shared_ptr<tbox::Database> database =
+      const boost::shared_ptr<tbox::Database>& database =
          boost::shared_ptr<tbox::Database>());
 
    /*!
@@ -368,7 +368,7 @@ public:
     */
    void
    computeVectorWeights(
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int weight_id,
       int coarsest_ln = -1,
       int finest_ln = -1) const;

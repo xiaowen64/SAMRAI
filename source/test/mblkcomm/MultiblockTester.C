@@ -450,12 +450,12 @@ bool MultiblockTester::verifyCommunicationResults() const
  *************************************************************************
  */
 void MultiblockTester::initializeLevelData(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double time,
    const bool can_be_refined,
    const bool initial_time,
-   const boost::shared_ptr<hier::PatchLevel> old_level,
+   const boost::shared_ptr<hier::PatchLevel>& old_level,
    const bool allocate_data)
 {
    NULL_USE(can_be_refined);
@@ -517,7 +517,7 @@ void MultiblockTester::initializeLevelData(
 }
 
 void MultiblockTester::resetHierarchyConfiguration(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level)
 {
@@ -527,7 +527,7 @@ void MultiblockTester::resetHierarchyConfiguration(
 }
 
 void MultiblockTester::applyGradientDetector(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double dt_time,
    const int tag_index,

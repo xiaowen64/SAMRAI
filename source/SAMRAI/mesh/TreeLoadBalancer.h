@@ -94,7 +94,7 @@ public:
    TreeLoadBalancer(
       const tbox::Dimension& dim,
       const std::string& name = std::string("TreeLoadBalancer"),
-      boost::shared_ptr<tbox::Database> input_db =
+      const boost::shared_ptr<tbox::Database>& input_db =
          boost::shared_ptr<tbox::Database>());
 
    /*!
@@ -196,7 +196,7 @@ public:
       hier::BoxLevel& balance_box_level,
       hier::Connector& balance_to_anchor,
       hier::Connector& anchor_to_balance,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::Connector& unbalanced_to_attractor,
       const hier::Connector& attractor_to_unbalanced,
@@ -465,7 +465,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
    /*!
     * Move Boxes in balance_box_level from ranks outside of

@@ -600,7 +600,7 @@ public:
     */
    virtual void
    getSpecializedFromDatabase(
-      boost::shared_ptr<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /*!
     * @brief Write out the class version number and other data members to
@@ -610,7 +610,7 @@ public:
     */
    virtual void
    putSpecializedToDatabase(
-      boost::shared_ptr<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
 private:
    /*

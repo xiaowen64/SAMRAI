@@ -73,7 +73,7 @@ const int SkeletonGridGeometry::GEOM_SKELETON_GRID_GEOMETRY_VERSION = 2;
 SkeletonGridGeometry::SkeletonGridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   boost::shared_ptr<tbox::Database> input_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    bool register_for_restart):
    hier::GridGeometry(dim, object_name,
                       boost::make_shared<SAMRAITransferOperatorRegistry>(dim))
@@ -287,7 +287,7 @@ void SkeletonGridGeometry::setGeometryDataOnPatch(
  */
 
 void SkeletonGridGeometry::putToDatabase(
-   boost::shared_ptr<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
@@ -319,7 +319,7 @@ void SkeletonGridGeometry::putToDatabase(
  */
 
 void SkeletonGridGeometry::getFromInput(
-   boost::shared_ptr<tbox::Database> db,
+   const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
    TBOX_ASSERT(db);

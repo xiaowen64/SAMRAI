@@ -74,7 +74,7 @@ MblkPatchBoundaryNodeSum::s_onode_dst_id_array =
 
 MblkPatchBoundaryNodeSum::MblkPatchBoundaryNodeSum(
    const std::string& object_name,
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy) :
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy) :
    d_setup_called(false),
    d_num_reg_sum(0),
    d_hierarchy(hierarchy),
@@ -294,7 +294,7 @@ void MblkPatchBoundaryNodeSum::registerSum(
  */
 
 void MblkPatchBoundaryNodeSum::setupSum(
-   boost::shared_ptr<hier::PatchLevel> level)
+   const boost::shared_ptr<hier::PatchLevel>& level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level);
@@ -401,7 +401,7 @@ void MblkPatchBoundaryNodeSum::computeSum(
  */
 
 void MblkPatchBoundaryNodeSum::doLevelSum(
-   boost::shared_ptr<hier::PatchLevel> level) const
+   const boost::shared_ptr<hier::PatchLevel>& level) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level);
@@ -433,7 +433,7 @@ void MblkPatchBoundaryNodeSum::doLevelSum(
  */
 
 void MblkPatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
-   boost::shared_ptr<hier::PatchLevel> level,
+   const boost::shared_ptr<hier::PatchLevel>& level,
    const tbox::Array<int>& node_data_id,
    const tbox::Array<int>& onode_data_id) const
 {
@@ -464,7 +464,7 @@ void MblkPatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
 }
 
 void MblkPatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
-   boost::shared_ptr<hier::PatchLevel> level,
+   const boost::shared_ptr<hier::PatchLevel>& level,
    const tbox::Array<int>& onode_data_id,
    const tbox::Array<int>& node_data_id) const
 {

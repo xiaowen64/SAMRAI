@@ -70,7 +70,7 @@ public:
     */
    static SundialsAbstractVector *
    createSundialsVector(
-      boost::shared_ptr<SAMRAIVectorReal<double> > samrai_vec);
+      const boost::shared_ptr<SAMRAIVectorReal<double> >& samrai_vec);
 
    /**
     * Destroy a given Sundials vector object. It is important to note that
@@ -108,7 +108,7 @@ protected:
     * Constructor for Sundials_SAMRAIVector.
     */
    explicit Sundials_SAMRAIVector(
-      boost::shared_ptr<SAMRAIVectorReal<double> > samrai_vector);
+      const boost::shared_ptr<SAMRAIVectorReal<double> >& samrai_vector);
 
    /*
     * Virtual destructor for Sundials_SAMRAIVector.

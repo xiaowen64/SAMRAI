@@ -695,7 +695,7 @@ void SideData<TYPE>::printAxis(
 
 template<class TYPE>
 void SideData<TYPE>::getSpecializedFromDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
 
@@ -728,7 +728,7 @@ void SideData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void SideData<TYPE>::putSpecializedToDatabase(
-   boost::shared_ptr<tbox::Database> database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
 

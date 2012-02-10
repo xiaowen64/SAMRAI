@@ -111,11 +111,11 @@ public:
     *                                    Default is no time interpolation.
     */
    RefineSchedule(
-      boost::shared_ptr<PatchLevelFillPattern> dst_level_fill_pattern,
-      boost::shared_ptr<hier::PatchLevel> dst_level,
-      boost::shared_ptr<hier::PatchLevel> src_level,
-      const boost::shared_ptr<RefineClasses> refine_classes,
-      boost::shared_ptr<RefineTransactionFactory> transaction_factory,
+      const boost::shared_ptr<PatchLevelFillPattern>& dst_level_fill_pattern,
+      const boost::shared_ptr<hier::PatchLevel>& dst_level,
+      const boost::shared_ptr<hier::PatchLevel>& src_level,
+      const boost::shared_ptr<RefineClasses>& refine_classes,
+      const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
       RefinePatchStrategy * patch_strategy,
       bool use_time_interpolation = false);
 
@@ -177,13 +177,13 @@ public:
     *                                    is no time interpolation.
     */
    RefineSchedule(
-      boost::shared_ptr<PatchLevelFillPattern> dst_level_fill_pattern,
-      boost::shared_ptr<hier::PatchLevel> dst_level,
-      boost::shared_ptr<hier::PatchLevel> src_level,
+      const boost::shared_ptr<PatchLevelFillPattern>& dst_level_fill_pattern,
+      const boost::shared_ptr<hier::PatchLevel>& dst_level,
+      const boost::shared_ptr<hier::PatchLevel>& src_level,
       int next_coarser_level,
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
-      const boost::shared_ptr<RefineClasses> refine_classes,
-      boost::shared_ptr<RefineTransactionFactory> transaction_factory,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const boost::shared_ptr<RefineClasses>& refine_classes,
+      const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
       RefinePatchStrategy * patch_strategy,
       bool use_time_refinement = false);
 
@@ -208,7 +208,7 @@ public:
     */
    void
    reset(
-      const boost::shared_ptr<RefineClasses> refine_classes);
+      const boost::shared_ptr<RefineClasses>& refine_classes);
 
    /*!
     * @brief Execute the stored communication schedule and perform
@@ -274,7 +274,7 @@ public:
    void
    allocateScratchSpace(
       hier::ComponentSelector& allocate_vector,
-      boost::shared_ptr<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       double fill_time) const;
 
    /*!
@@ -384,15 +384,15 @@ private:
     *                            or user-defined refine operations will occur.
     */
    RefineSchedule(
-      boost::shared_ptr<hier::PatchLevel> dst_level,
-      boost::shared_ptr<hier::PatchLevel> src_level,
+      const boost::shared_ptr<hier::PatchLevel>& dst_level,
+      const boost::shared_ptr<hier::PatchLevel>& src_level,
       int next_coarser_level,
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const hier::Connector& dst_to_src,
       const hier::Connector& src_to_dst,
       const hier::IntVector& src_growth_to_nest_dst,
-      const boost::shared_ptr<RefineClasses> refine_classes,
-      boost::shared_ptr<RefineTransactionFactory> transaction_factory,
+      const boost::shared_ptr<RefineClasses>& refine_classes,
+      const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
       RefinePatchStrategy* patch_strategy);
 
    /*!
@@ -434,7 +434,7 @@ private:
    void
    finishScheduleConstruction(
       int next_coarser_ln,
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const Connector& dst_to_src,
       const Connector& src_to_dst,
       const bool dst_is_coarse_interp_level,
@@ -651,8 +651,8 @@ private:
     */
    void
    findEnconUnfilledBoxes(
-      boost::shared_ptr<hier::BoxLevel>& unfilled_encon_box_level,
-      boost::shared_ptr<hier::Connector>& encon_to_unfilled_encon,
+      const boost::shared_ptr<hier::BoxLevel>& unfilled_encon_box_level,
+      const boost::shared_ptr<hier::Connector>& encon_to_unfilled_encon,
       hier::LocalId& last_unfilled_local_id,
       const hier::Box& dst_mapped_box,
       const Connector& dst_to_src,
@@ -909,7 +909,7 @@ private:
     */
    void
    setRefineItems(
-      const boost::shared_ptr<RefineClasses> refine_classes);
+      const boost::shared_ptr<RefineClasses>& refine_classes);
 
    /*
     * @brief Utility function to clear local copies of refine items.
