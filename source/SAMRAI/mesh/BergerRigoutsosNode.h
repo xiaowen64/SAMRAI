@@ -125,6 +125,8 @@ public:
     *   fraction of the distance from the center plane to the end.
     *   Zero means cut only at the center plane.  One means unlimited.
     *   Under most situations, one is fine.
+    *
+    * @param [i] laplace_cut_long_dir_only
     */
    void
    setClusteringParameters(
@@ -134,7 +136,8 @@ public:
       const double efficiency_tol,
       const double combine_tol,
       const hier::IntVector& max_box_size,
-      const double max_lap_cut_from_center);
+      const double max_lap_cut_from_center,
+      const bool laplace_cut_long_dir_only);
 
    //@{
    //! @name Algorithm mode settings
@@ -414,6 +417,16 @@ public:
       hier::Connector* new_to_tag;
 
       /*!
+       * @brief
+       */
+      double max_lap_cut_from_center;
+
+      /*!
+       * @brief  Whether to try Laplace cut only along the longest direction.
+       */
+      double laplace_cut_long_dir_only;
+
+      /*!
        * @brief List of processes that will send neighbor data
        * for locally owned boxes after the BR algorithm completes.
        */
@@ -444,7 +457,6 @@ public:
       hier::IntVector min_box;
       double efficiency_tol;
       double combine_tol;
-      double max_lap_cut_from_center;
       //@}
 
       /*!
@@ -757,6 +769,7 @@ public:
    void
    cutAtLaplacian(
       int& cut_pt,
+      int& diff_laplace,
       const int dim);
 
    int

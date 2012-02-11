@@ -247,7 +247,8 @@ void BergerRigoutsosNode::setClusteringParameters(
    const double efficiency_tol,
    const double combine_tol,
    const hier::IntVector& max_box_size,
-   const double max_lap_cut_from_center)
+   const double max_lap_cut_from_center,
+   const bool laplace_cut_long_dir_only)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, min_box, max_box_size);
 
@@ -258,6 +259,7 @@ void BergerRigoutsosNode::setClusteringParameters(
    d_common->combine_tol = combine_tol;
    d_common->max_box_size = max_box_size;
    d_common->max_lap_cut_from_center = max_lap_cut_from_center;
+   d_common->laplace_cut_long_dir_only = laplace_cut_long_dir_only;
 }
 
 /*
@@ -2003,19 +2005,34 @@ void BergerRigoutsosNode::acceptOrSplitBox()
       }
 
       /*
-       * If no zero point found, try Laplacian cut on side with the
-       * widest cut_margin.
+       * If no zero point found, try Laplacian cut.
        */
 
       if (dir == d_dim.getValue()) {
          const hier::IntVector margins = boxdims - (d_common->min_box) * 2;
-         cut_dir = 0;
-         for (int d = 1; d < d_dim.getValue(); ++d) {
-            if (margins(cut_dir) < margins(d)) {
-               cut_dir = d;
+         int diff_laplace = -1;
+         if ( d_common->laplace_cut_long_dir_only ) {
+            cut_dir = 0;
+            for (int d = 1; d < d_dim.getValue(); ++d) {
+               if (margins(cut_dir) < margins(d)) {
+                  cut_dir = d;
+               }
             }
+            cutAtLaplacian(cut_pt, diff_laplace, cut_dir);
          }
-         cutAtLaplacian(cut_pt, cut_dir);
+         else {
+            for ( int d=0; d<d_dim.getValue(); ++d ) {
+               int try_cut_pt, try_diff_laplace;
+               cutAtLaplacian(try_cut_pt, try_diff_laplace, d);
+               if ( diff_laplace < try_diff_laplace ||
+                    ( diff_laplace == try_diff_laplace && margins(d) > margins(cut_dir) ) ) {
+                  cut_dir = d;
+                  cut_pt = try_cut_pt;
+                  diff_laplace = try_diff_laplace;
+               }
+            }
+            TBOX_ASSERT( cut_dir >= 0 && cut_dir < d_dim.getValue() );
+         }
          // Split bound box at cut_pt; cut_dir is splitting dimension.
          lft_hi(cut_dir) = cut_pt - 1;
          rht_lo(cut_dir) = cut_pt;
@@ -2168,6 +2185,7 @@ bool BergerRigoutsosNode::findZeroCutSwath(
 
 void BergerRigoutsosNode::cutAtLaplacian(
    int& cut_pt,
+   int& diff_laplace,
    const int dim)
 {
    /*
@@ -2199,6 +2217,7 @@ void BergerRigoutsosNode::cutAtLaplacian(
          }
       }
       cut_pt += d_box.lower() (dim);
+      diff_laplace = 0;  // Did not use any Laplace values.
       return;
    }
 
@@ -2221,7 +2240,7 @@ void BergerRigoutsosNode::cutAtLaplacian(
     * side of it.  We want to cut where this difference is biggest.
     */
    cut_pt = box_mid;
-   int diff_laplace =
+   diff_laplace =
       (hist[cut_pt - 1] - 2 * hist[cut_pt] + hist[cut_pt + 1])
       - (hist[cut_pt - 2] - 2 * hist[cut_pt - 1] + hist[cut_pt]);
    diff_laplace = tbox::MathUtilities<int>::Abs(diff_laplace);

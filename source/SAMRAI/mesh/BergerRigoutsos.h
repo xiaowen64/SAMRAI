@@ -196,6 +196,9 @@ private:
    //! @brief Max distance from center for Laplace cut.
    double d_max_lap_cut_from_center;
 
+   //! @brief Whether to do Laplace cut only along the longest direction.
+   bool d_laplace_cut_long_dir_only;
+
    //! @brief Whether to log execution node allocation and deallocation.
    bool d_log_node_history;
 
