@@ -47,7 +47,7 @@ PatchLevelFillPattern::~PatchLevelFillPattern()
  * needsToCommunicateDestinationFillBoxes() returns false.
  *************************************************************************
  */
-
+#if 0
 void PatchLevelFillPattern::computeDestinationFillBoxesOnSourceProc(
    FillSet& dst_fill_boxes_on_src_proc,
    const hier::BoxLevel& dst_mapped_box_level,
@@ -65,7 +65,7 @@ void PatchLevelFillPattern::computeDestinationFillBoxesOnSourceProc(
          << "method needsToCommunicateDestinationFillBoxes() returns false.");
    }
 }
-
+#endif
 }
 }
 #endif

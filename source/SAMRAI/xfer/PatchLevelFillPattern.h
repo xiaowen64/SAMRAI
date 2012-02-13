@@ -130,7 +130,7 @@ public:
       FillSet& dst_fill_boxes_on_src_proc,
       const hier::BoxLevel& dst_mapped_box_level,
       const hier::Connector& src_to_dst,
-      const hier::IntVector& fill_ghost_width);
+      const hier::IntVector& fill_ghost_width) = 0;
 
    /*!
     * @brief Tell RefineSchedule whether it needs to communicate data
