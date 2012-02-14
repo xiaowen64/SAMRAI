@@ -1102,13 +1102,15 @@ double TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
       tbox::plog << "\nSynchronizing levels " << coarse_level_number
                  << " to " << finest_level_number << std::endl;
 #endif
+      tbox::Array<double> old_times(finest_level_number+1,
+                                    d_integrator_time-dt);
 
       d_refine_level_integrator->standardLevelSynchronization(
          d_patch_hierarchy,
          0,
          finest_level_number,
          d_integrator_time,
-         d_integrator_time - dt);
+         old_times);
    }
 
    /*
