@@ -145,7 +145,7 @@ public:
    preprocessScratchSpace(
       const boost::shared_ptr<hier::PatchLevel>& level,
       double fill_time,
-      const hier::ComponentSelector& preprocess_vector) const;
+      const hier::ComponentSelector& preprocess_vector) const = 0;
 
 private:
    // The following two functions are not implemented

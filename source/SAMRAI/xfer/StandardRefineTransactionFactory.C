@@ -119,6 +119,17 @@ StandardRefineTransactionFactory::allocate(
    }
 }
 
+void
+StandardRefineTransactionFactory::preprocessScratchSpace(
+   const boost::shared_ptr<hier::PatchLevel>& level,
+   double fill_time,
+   const hier::ComponentSelector& preprocess_vector) const
+{
+   NULL_USE(level);
+   NULL_USE(fill_time);
+   NULL_USE(preprocess_vector);
+}
+
 }
 }
 #endif

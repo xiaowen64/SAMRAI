@@ -4470,6 +4470,16 @@ void Euler::readDirichletBoundaryDataEntry(
    }
 }
 
+void Euler::readNeumannBoundaryDataEntry(
+   const boost::shared_ptr<tbox::Database>& db,
+   string& db_name,
+   int bdry_location_index)
+{
+   NULL_USE(db);
+   NULL_USE(db_name);
+   NULL_USE(bdry_location_index);
+}
+
 void Euler::readStateDataEntry(
    boost::shared_ptr<tbox::Database> db,
    const string& db_name,

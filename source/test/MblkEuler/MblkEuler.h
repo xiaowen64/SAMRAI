@@ -19,7 +19,6 @@
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/pdat/NodeVariable.h"
 #include "SAMRAI/pdat/SideVariable.h"
-#include "SAMRAI/appu/BoundaryUtilityStrategy.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
 
 #include <string>
@@ -36,8 +35,7 @@ using namespace SAMRAI;
 
 class MblkEuler:
    public tbox::Serializable,
-   public MblkHyperbolicPatchStrategy,
-   public appu::BoundaryUtilityStrategy
+   public MblkHyperbolicPatchStrategy
 {
 public:
    //

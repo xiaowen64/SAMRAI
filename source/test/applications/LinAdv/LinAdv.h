@@ -247,6 +247,17 @@ public:
       string& db_name,
       int bdry_location_index);
 
+   /**
+    * This routine is a concrete implementation of the virtual function
+    * in the base class BoundaryUtilityStrategy.  It is a blank implementation
+    * for the purposes of this class.
+    */
+   void
+   readNeumannBoundaryDataEntry(
+      const boost::shared_ptr<tbox::Database>& db,
+      string& db_name,
+      int bdry_location_index);
+
 #ifdef HAVE_HDF5
    /**
     * Register a VisIt data writer so this class will write

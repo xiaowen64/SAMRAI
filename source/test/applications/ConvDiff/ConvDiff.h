@@ -92,8 +92,12 @@ public:
    ///      registerModelVariables(),
    ///      initializeDataOnPatch(),
    ///      computeStableDtOnPatch(),
-   ///      singleStep,
+   ///      singleStep(),
    ///      tagGradientDetectorCells(),
+   ///      preprocessRefine(),
+   ///      postprocessRefine(),
+   ///      preprocessCoarsen(),
+   ///      postprocessCoarsen()
    ///
    ///  are concrete implementations of functions declared in the
    ///  algs::MethodOfLinesPatchStrategy abstract base class.
@@ -157,6 +161,38 @@ public:
       const bool initial_error,
       const int tag_index,
       const bool uses_richardson_extrapolation_too);
+
+   /*
+    * Pre- and post-processing routines for implementing user-defined
+    * spatial interpolation routines applied to variables.
+    */
+   virtual void preprocessRefine(
+      hier::Patch& fine,
+      const hier::Patch& coarse,
+      const hier::Box& fine_box,
+      const hier::IntVector& ratio);
+
+   virtual void postprocessRefine(
+      hier::Patch& fine,
+      const hier::Patch& coarse,
+      const hier::Box& fine_box,
+      const hier::IntVector& ratio);
+
+   /*
+    * Pre- and post-processing routines for implementing user-defined
+    * spatial coarsening routines applied to variables.
+    */
+   virtual void preprocessCoarsen(
+      hier::Patch& coarse,
+      const hier::Patch& fine,
+      const hier::Box& coarse_box,
+      const hier::IntVector& ratio);
+
+   virtual void postprocessCoarsen(
+      hier::Patch& coarse,
+      const hier::Patch& fine,
+      const hier::Box& coarse_box,
+      const hier::IntVector& ratio);
 
    ///
    ///  The following routines:

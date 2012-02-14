@@ -51,10 +51,9 @@ void HyperbolicPatchStrategy::tagGradientDetectorCells(
    NULL_USE(initial_error);
    NULL_USE(tag_index);
    NULL_USE(uses_richardson_extrapolation_too);
-   TBOX_WARNING("HyperbolicPatchStrategy::tagGradientDetectorCells()"
-      << "\nNo class supplies a concrete implementation for "
-      << "\nthis method.  The default abstract method (which "
-      << "\ndoes no cell tagging) is executed" << std::endl);
+   TBOX_ERROR("HyperbolicPatchStrategy::tagGradientDetectorCells()"
+      << "\nNo derived class supplies a concrete implementation for "
+      << "\nthis method." << std::endl);
 }
 
 void HyperbolicPatchStrategy::tagRichardsonExtrapolationCells(
@@ -79,10 +78,9 @@ void HyperbolicPatchStrategy::tagRichardsonExtrapolationCells(
    NULL_USE(initial_error);
    NULL_USE(tag_index);
    NULL_USE(uses_gradient_detector_too);
-   TBOX_WARNING("HyperbolicPatchStrategy::tagRichardsonExtrapolationCells()"
-      << "\nNo class supplies a concrete implementation for "
-      << "\nthis method.  The default abstract method (which "
-      << "\ndoes no cell tagging) is executed" << std::endl);
+   TBOX_ERROR("HyperbolicPatchStrategy::tagRichardsonExtrapolationCells()"
+      << "\nNo derived class supplies a concrete implementation for "
+      << "\nthis method." << std::endl);
 }
 
 void HyperbolicPatchStrategy::setupLoadBalancer(

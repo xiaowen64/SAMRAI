@@ -58,9 +58,7 @@ public:
 
    /*!
     * Read DIRICHLET boundary state values for an edge (in 2d) or a face
-    * (in 3d) from a given database.  This virtual function is given a
-    * blank implementation here to avoid the need for users to do the same
-    * if they do not need this functionality.
+    * (in 3d) from a given database.
     *
     * @param db      Input database from which to read boundary values.
     * @param db_name Name of input database (e.g., for error reporting).
@@ -70,18 +68,11 @@ public:
    virtual void readDirichletBoundaryDataEntry(
       const boost::shared_ptr<tbox::Database>& db,
       std::string& db_name,
-      int bdry_location_index)
-   {
-      NULL_USE(db);
-      NULL_USE(db_name);
-      NULL_USE(bdry_location_index);
-   }
+      int bdry_location_index) = 0;
 
    /*!
     * Read NEUMANN boundary state values for an edge (in 2d) or a face
-    * (in 3d) from a given database.  This virtual function is given a
-    * blank implementation here to avoid the need for users to do the same
-    * if they do not need this functionality.
+    * (in 3d) from a given database.
     *
     * @param db      Input database from which to read boundary values.
     * @param db_name Name of input database (e.g., for error reporting).
@@ -91,12 +82,7 @@ public:
    virtual void readNeumannBoundaryDataEntry(
       const boost::shared_ptr<tbox::Database>& db,
       std::string& db_name,
-      int bdry_location_index)
-   {
-      NULL_USE(db);
-      NULL_USE(db_name);
-      NULL_USE(bdry_location_index);
-   }
+      int bdry_location_index) = 0;
 
 };
 

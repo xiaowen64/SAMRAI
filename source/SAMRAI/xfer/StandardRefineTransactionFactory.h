@@ -100,6 +100,25 @@ public:
       const hier::Box& box,       // Default in v 2.x  = hier::Box()
       bool use_time_interpolation = false) const;
 
+   /*!
+    * @brief Virtual function allowing transaction factory to preprocess scratch
+    * space data before transactactions use it if they need to.  This function is
+    * optional for the concrete transaction factory object.
+    * The default implementation is a no-op.
+    *
+    * @param level        boost::shared_ptr to patch level holding scratch data.
+    * @param fill_time    Double value of simulation time corresponding to
+    *                     RefineSchedule operations.
+    * @param preprocess_vector Const reference to ComponentSelector that indicates
+    *                     patch data array indices of scratch patch data objects
+    *                     to preprocess.
+    */
+   virtual void
+   preprocessScratchSpace(
+      const boost::shared_ptr<hier::PatchLevel>& level,
+      double fill_time,
+      const hier::ComponentSelector& preprocess_vector) const;
+
 private:
    // The following two functions are not implemented
    StandardRefineTransactionFactory(

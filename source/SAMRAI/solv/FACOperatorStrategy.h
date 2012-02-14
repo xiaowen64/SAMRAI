@@ -324,7 +324,7 @@ public:
    postprocessOneCycle(
       int fac_cycle_num,
       const SAMRAIVectorReal<double>& current_soln,
-      const SAMRAIVectorReal<double>& residual);
+      const SAMRAIVectorReal<double>& residual) = 0;
 
    /*!
     * @brief Compute hierarchy-dependent data if any is required
@@ -353,7 +353,7 @@ public:
    virtual void
    initializeOperatorState(
       const SAMRAIVectorReal<double>& solution,
-      const SAMRAIVectorReal<double>& rhs);
+      const SAMRAIVectorReal<double>& rhs) = 0;
 
    /*!
     * @brief Remove all hierarchy-dependent data.

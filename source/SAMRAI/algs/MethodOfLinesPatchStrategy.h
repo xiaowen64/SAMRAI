@@ -117,14 +117,7 @@ public:
       const double regrid_time,
       const bool initial_error,
       const int tag_index,
-      const bool uses_richardson_extrapolation_too)
-   {
-      NULL_USE(patch);
-      NULL_USE(regrid_time);
-      NULL_USE(initial_error);
-      NULL_USE(tag_index);
-      NULL_USE(uses_richardson_extrapolation_too);
-   }
+      const bool uses_richardson_extrapolation_too) = 0;
 
    /*!
     * Set user-defined boundary conditions at the physical domain boundary.
@@ -177,26 +170,14 @@ public:
       hier::Patch& fine,
       const hier::Patch& coarse,
       const hier::Box& fine_box,
-      const hier::IntVector& ratio)
-   {
-      NULL_USE(fine);
-      NULL_USE(coarse);
-      NULL_USE(fine_box);
-      NULL_USE(ratio);
-   }
+      const hier::IntVector& ratio) = 0;
 
    ///
    virtual void postprocessRefine(
       hier::Patch& fine,
       const hier::Patch& coarse,
       const hier::Box& fine_box,
-      const hier::IntVector& ratio)
-   {
-      NULL_USE(fine);
-      NULL_USE(coarse);
-      NULL_USE(fine_box);
-      NULL_USE(ratio);
-   }
+      const hier::IntVector& ratio) = 0;
 
    /*!
     * Return maximum stencil width needed for user-defined
@@ -239,26 +220,14 @@ public:
       hier::Patch& coarse,
       const hier::Patch& fine,
       const hier::Box& coarse_box,
-      const hier::IntVector& ratio)
-   {
-      NULL_USE(fine);
-      NULL_USE(coarse);
-      NULL_USE(coarse_box);
-      NULL_USE(ratio);
-   }
+      const hier::IntVector& ratio) = 0;
 
    ///
    virtual void postprocessCoarsen(
       hier::Patch& coarse,
       const hier::Patch& fine,
       const hier::Box& coarse_box,
-      const hier::IntVector& ratio)
-   {
-      NULL_USE(fine);
-      NULL_USE(coarse);
-      NULL_USE(coarse_box);
-      NULL_USE(ratio);
-   }
+      const hier::IntVector& ratio) = 0;
 
    /*!
     * The method of lines integrator controls the context for the data to

@@ -149,6 +149,10 @@ public:
       NULL_USE(fill_box);
       NULL_USE(boundary_box);
       NULL_USE(grid_geometry);
+      TBOX_ERROR(
+         "The abstract RefinePatchLevelStragey::fillSingularityBoudaryConditions:\n"
+         << "must be implemented whenever the concrete derived\n"
+         << "class supports multiblock and singularities.");
    }
 
    /*!

@@ -146,6 +146,24 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
    fill_mapped_boxes.finalize();
 }
 
+void
+PatchLevelBorderAndInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
+   FillSet& dst_fill_boxes_on_src_proc,
+   const hier::BoxLevel& dst_mapped_box_level,
+   const hier::Connector& src_to_dst,
+   const hier::IntVector& fill_ghost_width)
+{
+   NULL_USE(dst_fill_boxes_on_src_proc);
+   NULL_USE(dst_mapped_box_level);
+   NULL_USE(src_to_dst);
+   NULL_USE(fill_ghost_width);
+   if (!needsToCommunicateDestinationFillBoxes()) {
+      TBOX_ERROR(
+         "PatchLevelBorderAndInteriorFillPattern cannot compute destination:\n"
+         << "fill boxes on the source processor.\n");
+   }
+}
+
 }
 }
 #endif

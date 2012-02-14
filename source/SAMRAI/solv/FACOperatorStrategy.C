@@ -22,24 +22,6 @@ FACOperatorStrategy::FACOperatorStrategy() {
 FACOperatorStrategy::~FACOperatorStrategy() {
 }
 
-void FACOperatorStrategy::postprocessOneCycle(
-   int fac_cycle_num,
-   const SAMRAIVectorReal<double>& current_soln,
-   const SAMRAIVectorReal<double>& residual)
-{
-   NULL_USE(fac_cycle_num);
-   NULL_USE(current_soln);
-   NULL_USE(residual);
-}
-
-void FACOperatorStrategy::initializeOperatorState(
-   const SAMRAIVectorReal<double>& solution,
-   const SAMRAIVectorReal<double>& rhs)
-{
-   NULL_USE(solution);
-   NULL_USE(rhs);
-}
-
 void FACOperatorStrategy::deallocateOperatorState()
 {
 }

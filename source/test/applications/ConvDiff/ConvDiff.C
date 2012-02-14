@@ -657,6 +657,54 @@ void ConvDiff::tagGradientDetectorCells(
    }
 }
 
+void ConvDiff::preprocessRefine(
+      hier::Patch& fine,
+      const hier::Patch& coarse,
+      const hier::Box& fine_box,
+      const hier::IntVector& ratio)
+{
+   NULL_USE(fine);
+   NULL_USE(coarse);
+   NULL_USE(fine_box);
+   NULL_USE(ratio);
+}
+
+void ConvDiff::postprocessRefine(
+   hier::Patch& fine,
+   const hier::Patch& coarse,
+   const hier::Box& fine_box,
+   const hier::IntVector& ratio)
+{
+   NULL_USE(fine);
+   NULL_USE(coarse);
+   NULL_USE(fine_box);
+   NULL_USE(ratio);
+}
+
+void ConvDiff::preprocessCoarsen(
+      hier::Patch& coarse,
+      const hier::Patch& fine,
+      const hier::Box& coarse_box,
+      const hier::IntVector& ratio)
+{
+   NULL_USE(coarse);
+   NULL_USE(fine);
+   NULL_USE(coarse_box);
+   NULL_USE(ratio);
+}
+
+void ConvDiff::postprocessCoarsen(
+      hier::Patch& coarse,
+      const hier::Patch& fine,
+      const hier::Box& coarse_box,
+      const hier::IntVector& ratio)
+{
+   NULL_USE(coarse);
+   NULL_USE(fine);
+   NULL_USE(coarse_box);
+   NULL_USE(ratio);
+}
+
 /*
  *************************************************************************
  *
