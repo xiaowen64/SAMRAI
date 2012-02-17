@@ -51,9 +51,9 @@ public:
       const StreamMode mode);
 
    /*!
-    * Virtual destructor for a message stream.
+    * Destructor for a message stream.
     */
-   virtual ~MessageStream();
+   ~MessageStream();
 
    /*!
     * @brief Static method to get amount of message stream space needed to
@@ -164,7 +164,7 @@ public:
     *
     * @param[out] os  Output stream.
     */
-   virtual void
+   void
    printClassData(
       std::ostream& os) const;
 

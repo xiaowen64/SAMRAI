@@ -66,7 +66,7 @@ std::ostream& operator << (
    return s;
 }
 
-void IntVector::putToDatabase(
+void IntVector::putUnregisteredToDatabase(
    tbox::Database& database,
    const std::string& name) const
 {

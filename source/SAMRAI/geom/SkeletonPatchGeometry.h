@@ -53,7 +53,7 @@ public:
    /**
     * Destructor for SkeletonPatchGeometry.
     */
-   ~SkeletonPatchGeometry();
+   virtual ~SkeletonPatchGeometry();
 
    /**
     * Print SkeletonPatchGeometry class data.

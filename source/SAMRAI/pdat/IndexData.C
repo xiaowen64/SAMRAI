@@ -763,7 +763,7 @@ void IndexData<TYPE, BOX_GEOMETRY>::getSpecializedFromDatabase(
 
 template<class TYPE, class BOX_GEOMETRY>
 void IndexData<TYPE, BOX_GEOMETRY>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& database) const
 {
    TBOX_ASSERT(database);
 
@@ -788,7 +788,7 @@ void IndexData<TYPE, BOX_GEOMETRY>::putSpecializedToDatabase(
 
       TYPE* item = getItem(index);
 
-      item->putToDatabase(item_db);
+      item->putUnregisteredToDatabase(item_db);
 
       item_count++;
    }

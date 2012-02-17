@@ -448,7 +448,7 @@ public:
     */
    virtual void
    putSpecializedToDatabase(
-      const boost::shared_ptr<tbox::Database>& database);
+      const boost::shared_ptr<tbox::Database>& database) const;
 
    /*!
     * The edge iterator iterates over the elements on one axis of an edge

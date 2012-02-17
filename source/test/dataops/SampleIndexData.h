@@ -126,10 +126,10 @@ public:
     */
    void
    getFromDatabase(
-      boost::shared_ptr<tbox::Database>& database);
+      const boost::shared_ptr<tbox::Database>& database);
    void
-   putToDatabase(
-      boost::shared_ptr<tbox::Database>& database);
+   putUnregisteredToDatabase(
+      const boost::shared_ptr<tbox::Database>& database) const;
 
 private:
    /*

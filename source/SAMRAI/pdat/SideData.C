@@ -728,7 +728,7 @@ void SideData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void SideData<TYPE>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& database) const
 {
    TBOX_ASSERT(database);
 
@@ -741,7 +741,7 @@ void SideData<TYPE>::putSpecializedToDatabase(
       if (d_directions(i)) {
          std::string array_name = "d_data" + tbox::Utilities::intToString(i);
          array_database = database->putDatabase(array_name);
-         (d_data[i]).putToDatabase(array_database);
+         (d_data[i]).putUnregisteredToDatabase(array_database);
       }
    }
 }

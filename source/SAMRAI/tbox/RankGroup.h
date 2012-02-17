@@ -83,9 +83,9 @@ public:
          SAMRAI_MPI(SAMRAI_MPI::getSAMRAIWorld()));
 
    /*!
-    * Virtual destructor
+    * Destructor
     */
-   virtual ~RankGroup();
+   ~RankGroup();
 
    /*!
     * Returns true if the RankGroup contains ranks for all available

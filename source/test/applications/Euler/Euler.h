@@ -278,7 +278,7 @@ public:
     */
    void
    putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db);
+      const boost::shared_ptr<tbox::Database>& db) const;
 
    /**
     * This routine is a concrete implementation of the virtual function

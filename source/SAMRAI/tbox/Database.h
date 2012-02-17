@@ -72,47 +72,6 @@ public:
                    SAMRAI_BOX };
 
    /**
-    * Database::Serializable is an abstract base class for those
-    * objects that can serialize/unserialize their data to/from a
-    * database.
-    *
-    * Some methods in Database require objects to implement this
-    * interface.  For example, putVector and getVector require
-    * that the objects in the vector being serialized implement
-    * Database::Serializable.
-    */
-   class Serializable
-   {
-public:
-      /**
-       * Store the object state to the specified database
-       * with the provided name.
-       *
-       * @param datbase
-       * @param name     Base name to use for keys to store the vector.
-       */
-      virtual void
-      putToDatabase(
-         Database& database,
-         const std::string& name) const = 0;
-
-      /**
-       * Restores the object state from the specified database
-       * with the provided name.
-       *
-       * @param datbase
-       * @param name     Base name to used for keys to retrieve the vector.
-       */
-      virtual void
-      getFromDatabase(
-         Database& database,
-         const std::string& name) = 0;
-
-      virtual ~Serializable();
-
-   };
-
-   /**
     * The constructor for the database base class does nothing interesting.
     */
    Database();

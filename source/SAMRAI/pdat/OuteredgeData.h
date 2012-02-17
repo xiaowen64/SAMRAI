@@ -610,7 +610,7 @@ public:
     */
    virtual void
    putSpecializedToDatabase(
-      const boost::shared_ptr<tbox::Database>& database);
+      const boost::shared_ptr<tbox::Database>& database) const;
 
 private:
    /*

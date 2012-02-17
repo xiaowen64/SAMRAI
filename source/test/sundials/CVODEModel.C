@@ -1380,8 +1380,8 @@ CVODEModel::getFromInput(
  *
  *************************************************************************
  */
-void CVODEModel::putToDatabase(
-   boost::shared_ptr<Database> db)
+void CVODEModel::putUnregisteredToDatabase(
+   const boost::shared_ptr<Database>& db) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);

@@ -188,9 +188,9 @@ public:
       bool use_time_refinement = false);
 
    /*!
-    * Virtual destructor for the schedule releases all internal storage.
+    * Destructor for the schedule releases all internal storage.
     */
-   virtual ~RefineSchedule();
+   ~RefineSchedule();
 
    /*!
     * @brief Reset this refine schedule to perform data transfers
@@ -309,7 +309,7 @@ public:
     *
     * @param[out] stream Output data stream.
     */
-   virtual void
+   void
    printClassData(
       std::ostream& stream) const;
 

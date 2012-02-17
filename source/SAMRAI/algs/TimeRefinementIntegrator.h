@@ -177,7 +177,7 @@ public:
     * The destructor for TimeRefinementIntegrator unregisters
     * the integrator object with the restart manager when so registered.
     */
-   ~TimeRefinementIntegrator();
+   virtual ~TimeRefinementIntegrator();
 
    /*!
     * Set AMR patch hierarchy configuration and data at start of simulation.
@@ -397,7 +397,7 @@ public:
     */
    void
    putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db);
+      const boost::shared_ptr<tbox::Database>& db) const;
 
    /**
     * Returns the object name.

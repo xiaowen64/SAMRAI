@@ -1307,7 +1307,7 @@ void OuteredgeData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void OuteredgeData<TYPE>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& database) const
 {
    TBOX_ASSERT(database);
 
@@ -1331,7 +1331,8 @@ void OuteredgeData<TYPE>::putSpecializedToDatabase(
                   + "_" + tbox::Utilities::intToString(face_normal) + "_"
                   + tbox::Utilities::intToString(side);
                array_database = database->putDatabase(array_name);
-               (d_data[axis][face_normal][side]).putToDatabase(array_database);
+               (d_data[axis][face_normal][side]).putUnregisteredToDatabase(
+                  array_database);
 
             }  // iterate over lower/upper sides
 

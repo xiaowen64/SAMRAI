@@ -553,7 +553,7 @@ void OutersideData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void OutersideData<TYPE>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& database) const
 {
    TBOX_ASSERT(database);
 
@@ -567,11 +567,11 @@ void OutersideData<TYPE>::putSpecializedToDatabase(
       std::string array_name = "d_data%d_" + tbox::Utilities::intToString(i)
          + "_1";
       array_database = database->putDatabase(array_name);
-      (d_data[i][0]).putToDatabase(array_database);
+      (d_data[i][0]).putUnregisteredToDatabase(array_database);
 
       array_name = "d_data%d_" + tbox::Utilities::intToString(i) + "_2";
       array_database = database->putDatabase(array_name);
-      (d_data[i][1]).putToDatabase(array_database);
+      (d_data[i][1]).putUnregisteredToDatabase(array_database);
    }
 }
 

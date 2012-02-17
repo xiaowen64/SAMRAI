@@ -96,7 +96,7 @@ public:
     * Returns true if the run is from a restart file (i.e. a restart file
     * has been opened from main()).  Returns false otherwise.
     */
-   virtual bool
+   bool
    isFromRestart();
 
    /**
@@ -105,7 +105,7 @@ public:
     * mounts the restart file.
     * Returns true if open is successful; false otherwise.
     */
-   virtual bool
+   bool
    openRestartFile(
       const std::string& root_dirname,
       const int restore_num,
@@ -114,20 +114,20 @@ public:
    /**
     * Closes the restart file.
     */
-   virtual void
+   void
    closeRestartFile();
 
    /**
     * Returns a boost::shared_ptr to the root of the database.
     */
-   virtual boost::shared_ptr<Database>
+   boost::shared_ptr<Database>
    getRootDatabase();
 
    /**
     * Sets the database for restore or dumps.
     *
     */
-   virtual void
+   void
    setRootDatabase(
       const boost::shared_ptr<Database>& database);
 
@@ -135,7 +135,7 @@ public:
     * Sets the database for restore or dumps.
     *
     */
-   virtual void
+   void
    setDatabaseFactory(
       const boost::shared_ptr<DatabaseFactory>& database_factory);
 
@@ -146,7 +146,7 @@ public:
     * will result if either the string is empty or the serializable
     * object pointer is null.
     */
-   virtual void
+   void
    registerRestartItem(
       const std::string& name,
       Serializable* obj);
@@ -158,14 +158,14 @@ public:
     * When assertion checking is active, an unrecoverable assertion
     * will result if the string is empty.
     */
-   virtual void
+   void
    unregisterRestartItem(
       const std::string& name);
 
    /**
     * Clear all restart items managed by the restart manager.
     */
-   virtual void
+   void
    clearRestartItems();
 
    /**
@@ -176,7 +176,7 @@ public:
     * Note:  This method creates/uses a restart directory structure
     *    with 00000 as the restore number.
     */
-   virtual void
+   void
    writeRestartFile(
       const std::string& root_dirname);
 
@@ -186,7 +186,7 @@ public:
     * root of restart directory.  The integer argument is the
     * identification number associated with the restart files generated.
     */
-   virtual void
+   void
    writeRestartFile(
       const std::string& root_dirname,
       const int restore_num);
@@ -195,7 +195,7 @@ public:
     * Write all objects registered to as restart objects to the
     * restart database.
     */
-   virtual void
+   void
    writeRestartToDatabase();
 
 protected:
@@ -213,7 +213,7 @@ protected:
     * The destructor for the restart manager is protected, since only the
     * singleton class and subclasses may destroy the manager objects.
     */
-   virtual ~RestartManager();
+   ~RestartManager();
 
    /**
     * Initialize Singleton instance with instance of subclass.  This function
@@ -229,7 +229,7 @@ private:
     * Write all objects registered to as restart objects to the
     * restart database.
     */
-   virtual void
+   void
    writeRestartFile(
       const boost::shared_ptr<Database>& database);
 

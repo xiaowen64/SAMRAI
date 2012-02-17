@@ -79,7 +79,7 @@ public:
    /**
     * Deallocate a list.  If items remain in the list, they are deallocated.
     */
-   virtual ~List();
+   ~List();
 
    /**
     * Check whether a list is empty (has no elements).

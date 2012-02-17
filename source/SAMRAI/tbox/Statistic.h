@@ -81,7 +81,7 @@ public:
    /**
     * Virtual destructor destroys recorded object data.
     */
-   virtual ~Statistic();
+   ~Statistic();
 
    /**
     * Return string name identifier for statistic object.
@@ -178,7 +178,7 @@ public:
     * Print statistic data to given output stream.  Floating point precision
     * can be specified (default is 12).
     */
-   virtual void
+   void
    printClassData(
       std::ostream& stream,
       int precision = 12) const;
@@ -187,15 +187,15 @@ public:
     * Write statistic data members to database. When assertion checking
     * is on, the database pointer must be non-null.
     */
-   virtual void
-   putToDatabase(
-      const boost::shared_ptr<Database>& db);
+   void
+   putUnregisteredToDatabase(
+      const boost::shared_ptr<Database>& db) const;
 
    /**
     * Read restarted times from restart database.  When assertion checking
     * is on, the database pointer must be non-null.
     */
-   virtual void
+   void
    getFromRestart(
       const boost::shared_ptr<Database>& db);
 

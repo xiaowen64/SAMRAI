@@ -20,6 +20,7 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Dimension.h"
 
+#include <boost/shared_ptr.hpp>
 #include <map>
 #include <set>
 #include <vector>
@@ -1327,8 +1328,8 @@ class BoxNeighborhoodCollection
        * @param database
        */
       void
-      putToDatabase(
-         tbox::Database& database) const;
+      putUnregisteredToDatabase(
+         const boost::shared_ptr<tbox::Database>& database) const;
 
       /*!
        * @brief Constructs the neighborhoods from the supplied database.

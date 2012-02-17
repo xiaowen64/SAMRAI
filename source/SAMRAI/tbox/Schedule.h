@@ -66,7 +66,7 @@ public:
     * Note that the schedule can not be deleted during a communication
     * phase; this will result in an assertion being thrown.
     */
-   virtual ~Schedule();
+   ~Schedule();
 
    /*!
     * @beief Add a data transaction to the head of the list of transactions

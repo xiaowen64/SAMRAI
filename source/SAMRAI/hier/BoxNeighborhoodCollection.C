@@ -657,17 +657,17 @@ void BoxNeighborhoodCollection::getFromIntBuffer(
 
 // These are defined in NeighborhoodSet but it's not clear that they
 // are ever called or even needed.
-void BoxNeighborhoodCollection::putToDatabase(
-   tbox::Database& database) const
+void BoxNeighborhoodCollection::putUnregisteredToDatabase(
+   const boost::shared_ptr<tbox::Database>& database) const
 {
    // This appears to be used in the RedistributedRestartUtility.
-   database.putBool("d_is_edge_set", true);
+   database->putBool("d_is_edge_set", true);
 
-   database.putInteger(
+   database->putInteger(
       "HIER_BOX_NBRHD_COLLECTION_VERSION",
       HIER_BOX_NBRHD_COLLECTION_VERSION);
    const int num_neighborhoods = numBoxNeighborhoods();
-   database.putInteger("number_of_sets", num_neighborhoods);
+   database->putInteger("number_of_sets", num_neighborhoods);
 
    if (num_neighborhoods > 0) {
 
@@ -681,15 +681,15 @@ void BoxNeighborhoodCollection::putToDatabase(
          periodic_ids.push_back(base_box_id.getPeriodicId().getPeriodicValue());
       }
 
-      database.putIntegerArray(
+      database->putIntegerArray(
          "owners",
          &owners[0],
          num_neighborhoods);
-      database.putIntegerArray(
+      database->putIntegerArray(
          "local_indices",
          &local_indices[0],
          num_neighborhoods);
-      database.putIntegerArray(
+      database->putIntegerArray(
          "periodic_ids",
          &periodic_ids[0],
          num_neighborhoods);
@@ -702,7 +702,7 @@ void BoxNeighborhoodCollection::putToDatabase(
             + tbox::Utilities::processorToString(mbid.getOwnerRank())
             + tbox::Utilities::patchToString(mbid.getLocalId().getValue())
             + tbox::Utilities::intToString(mbid.getPeriodicId().getPeriodicValue());
-         tbox::Database& nbr_db = *database.putDatabase(set_name);
+         tbox::Database& nbr_db = *database->putDatabase(set_name);
 
          const int mbs_size = numNeighbors(ei);
          nbr_db.putInteger("mapped_box_set_size", mbs_size);

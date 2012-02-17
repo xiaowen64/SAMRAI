@@ -35,7 +35,7 @@ void Database::putVector(
    putInteger(key + "_size", size);
    for (unsigned int i = 0; i < size; ++i) {
       const std::string index_str = tbox::Utilities::intToString(i);
-      vector[i].putToDatabase(*this, key + "_" + index_str);
+      vector[i].putUnregisteredToDatabase(*this, key + "_" + index_str);
    }
 }
 

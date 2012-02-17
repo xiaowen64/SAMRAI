@@ -1501,7 +1501,7 @@ void TimeRefinementIntegrator::printDataForLevel(
  */
 
 void TimeRefinementIntegrator::putToDatabase(
-   const boost::shared_ptr<tbox::Database>& db)
+   const boost::shared_ptr<tbox::Database>& db) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);

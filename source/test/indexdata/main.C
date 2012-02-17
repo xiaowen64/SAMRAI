@@ -82,7 +82,7 @@ public:
       NULL_USE(offset);
    }
 
-   void putToDatabase(
+   void putUnregisteredToDatabase(
       boost::shared_ptr<tbox::Database> dbase)
    {
       NULL_USE(dbase);

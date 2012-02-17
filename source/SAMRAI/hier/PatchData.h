@@ -215,8 +215,8 @@ public:
     * putSpecializedToDatabase() method is invoked.
     */
    virtual void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& database);
+   putUnregisteredToDatabase(
+      const boost::shared_ptr<tbox::Database>& database) const;
 
    /**
     * This pure abstract method is used by concrete patch data subclasses
@@ -232,7 +232,7 @@ public:
     */
    virtual void
    putSpecializedToDatabase(
-      const boost::shared_ptr<tbox::Database>& database) = 0;
+      const boost::shared_ptr<tbox::Database>& database) const = 0;
 
    /**
     * Return the dimension of this object.

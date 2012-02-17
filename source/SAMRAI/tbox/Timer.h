@@ -64,9 +64,9 @@ class Timer
    friend class TimerManager;
 public:
    /**
-    * Empty virtual destructor for Timer class.
+    * Empty destructor for Timer class.
     */
-   virtual ~Timer();
+   ~Timer();
 
    /**
     * Return string name for timer.
@@ -193,15 +193,15 @@ public:
    /**
     * Write timer data members to database.
     */
-   virtual void
-   putToDatabase(
-      const boost::shared_ptr<Database>& db);
+   void
+   putUnregisteredToDatabase(
+      const boost::shared_ptr<Database>& db) const;
 
    /**
     * Read restarted times from restart database.  When assertion checking
     * is on, the database pointer must be non-null.
     */
-   virtual void
+   void
    getFromRestart(
       const boost::shared_ptr<Database>& db);
 

@@ -72,9 +72,9 @@ public:
       const std::string& name);
 
    /**
-    * The virtual destructor does nothing interesting.
+    * The destructor does nothing interesting.
     */
-   virtual ~VariableContext();
+   ~VariableContext();
 
    /**
     * Return integer index for VariableContext object.

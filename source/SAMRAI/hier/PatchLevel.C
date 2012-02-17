@@ -875,9 +875,9 @@ void PatchLevel::getFromDatabase(
  *
  * ************************************************************************
  */
-void PatchLevel::putToDatabase(
+void PatchLevel::putUnregisteredToDatabase(
    const boost::shared_ptr<tbox::Database>& database,
-   const ComponentSelector& patchdata_write_table)
+   const ComponentSelector& patchdata_write_table) const
 {
    TBOX_ASSERT(database);
 
@@ -894,7 +894,7 @@ void PatchLevel::putToDatabase(
 
    // database->putIntegerArray("d_mapping", d_mapping.getProcessorMapping());
 
-   int* temp_ratio_to_level_zero = &d_ratio_to_level_zero[0];
+   const int* temp_ratio_to_level_zero = &d_ratio_to_level_zero[0];
    database->putIntegerArray("d_ratio_to_level_zero",
       temp_ratio_to_level_zero, getDim().getValue());
 
@@ -911,7 +911,7 @@ void PatchLevel::putToDatabase(
       d_next_coarser_level_number);
    database->putBool("d_in_hierarchy", d_in_hierarchy);
 
-   int* temp_ratio_to_coarser_level = &d_ratio_to_coarser_level[0];
+   const int* temp_ratio_to_coarser_level = &d_ratio_to_coarser_level[0];
    database->putIntegerArray("d_ratio_to_coarser_level",
       temp_ratio_to_coarser_level, getDim().getValue());
 
@@ -921,7 +921,7 @@ void PatchLevel::putToDatabase(
 
    boost::shared_ptr<tbox::Database> mbl_database(
       database->putDatabase("mapped_box_level"));
-   d_mapped_box_level->putToDatabase(*mbl_database);
+   d_mapped_box_level->putUnregisteredToDatabase(mbl_database);
 
    for (PatchLevel::Iterator ip(this); ip; ip++) {
 
@@ -933,7 +933,7 @@ void PatchLevel::putToDatabase(
          + tbox::Utilities::blockToString(
             ip->getBox().getBlockId().getBlockValue());
 
-      ip->putToDatabase(
+      ip->putUnregisteredToDatabase(
          database->putDatabase(patch_name),
          patchdata_write_table);
    }

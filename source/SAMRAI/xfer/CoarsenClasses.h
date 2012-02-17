@@ -119,10 +119,10 @@ private:
       bool fill_coarse_data);
 
    /*!
-    * @brief The virtual destructor destroys the coarsen data items owned
+    * @brief The destructor destroys the coarsen data items owned
     * by this object.
     */
-   virtual ~CoarsenClasses();
+   ~CoarsenClasses();
 
    /*!
     * Return number of equivalence classes maintained by this object.
@@ -334,7 +334,7 @@ private:
     *
     * @param[out] stream
     */
-   virtual void
+   void
    printClassData(
       std::ostream& stream) const;
 

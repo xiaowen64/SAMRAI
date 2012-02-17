@@ -290,8 +290,8 @@ void Timer::computeMaxWallclock()
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void Timer::putToDatabase(
-   const boost::shared_ptr<Database>& db)
+void Timer::putUnregisteredToDatabase(
+   const boost::shared_ptr<Database>& db) const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    TBOX_ASSERT(db);

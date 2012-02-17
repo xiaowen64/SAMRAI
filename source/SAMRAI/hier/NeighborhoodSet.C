@@ -242,15 +242,15 @@ NeighborhoodSet::getOwners(
  ***********************************************************************
  */
 
-void NeighborhoodSet::putToDatabase(
-   tbox::Database& database) const
+void NeighborhoodSet::putUnregisteredToDatabase(
+   const boost::shared_ptr<tbox::Database>& database) const
 {
    // This appears to be used in the RedistributedRestartUtility.
-   database.putBool("d_is_edge_set", true);
+   database->putBool("d_is_edge_set", true);
 
-   database.putInteger(
+   database->putInteger(
       "HIER_EDGE_SET_VERSION", HIER_EDGE_SET_VERSION);
-   database.putInteger("number_of_sets", size());
+   database->putInteger("number_of_sets", size());
 
    if (!empty()) {
 
@@ -269,10 +269,10 @@ void NeighborhoodSet::putToDatabase(
          periodic_ids.push_back(ei->first.getPeriodicId().getPeriodicValue());
       }
 
-      database.putIntegerArray("block_ids", &block_ids[0], size());
-      database.putIntegerArray("owners", &owners[0], size());
-      database.putIntegerArray("local_indices", &local_indices[0], size());
-      database.putIntegerArray("periodic_ids", &periodic_ids[0], size());
+      database->putIntegerArray("block_ids", &block_ids[0], size());
+      database->putIntegerArray("owners", &owners[0], size());
+      database->putIntegerArray("local_indices", &local_indices[0], size());
+      database->putIntegerArray("periodic_ids", &periodic_ids[0], size());
 
       const std::string set_db_string("set_for_local_id_");
 
@@ -284,7 +284,8 @@ void NeighborhoodSet::putToDatabase(
             + tbox::Utilities::processorToString(mbid.getOwnerRank())
             + tbox::Utilities::patchToString(mbid.getLocalId().getValue())
             + tbox::Utilities::intToString(mbid.getPeriodicId().getPeriodicValue());
-         mapped_boxes.putToDatabase(*database.putDatabase(set_name));
+         mapped_boxes.putUnregisteredToDatabase(
+            database->putDatabase(set_name));
       }
 
    }

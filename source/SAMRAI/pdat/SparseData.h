@@ -320,7 +320,7 @@ public:
     */
    void
    putSpecializedToDatabase(
-      const boost::shared_ptr<tbox::Database>& database);
+      const boost::shared_ptr<tbox::Database>& database) const;
 
    /*!
     * @brief Returns the attribute ID associated with the named

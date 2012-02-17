@@ -244,7 +244,7 @@ SparseDataTester::testDatabaseInterface()
    _fillObject(sample);
    boost::shared_ptr<tbox::Database> input_db(
       new tbox::InputDatabase("input_db"));
-   sample->putToDatabase(input_db);
+   sample->putUnregisteredToDatabase(input_db);
 
    boost::shared_ptr<SparseDataType> sample2(_createEmptySparseData());
    sample2->getFromDatabase(input_db);

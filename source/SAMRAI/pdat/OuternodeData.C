@@ -981,7 +981,7 @@ void OuternodeData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void OuternodeData<TYPE>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& database) const
 {
    TBOX_ASSERT(database);
 
@@ -996,12 +996,12 @@ void OuternodeData<TYPE>::putSpecializedToDatabase(
       if (d_data[i][0].isInitialized()) {
          array_name = "d_data" + tbox::Utilities::intToString(i) + "_1";
          array_database = database->putDatabase(array_name);
-         (d_data[i][0]).putToDatabase(array_database);
+         (d_data[i][0]).putUnregisteredToDatabase(array_database);
       }
       if (d_data[i][1].isInitialized()) {
          array_name = "d_data" + tbox::Utilities::intToString(i) + "_2";
          array_database = database->putDatabase(array_name);
-         (d_data[i][1]).putToDatabase(array_database);
+         (d_data[i][1]).putUnregisteredToDatabase(array_database);
       }
    }
 }

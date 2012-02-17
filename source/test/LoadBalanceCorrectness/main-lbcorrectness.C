@@ -454,7 +454,8 @@ int main(
       }
 
       if (generate_baseline) {
-         balance_mapped_box_level.putToDatabase(*prebalance_mapped_box_level_db);
+         balance_mapped_box_level.putUnregisteredToDatabase(
+            prebalance_mapped_box_level_db);
       }
 
       {
@@ -506,7 +507,8 @@ int main(
       }
 
       if (generate_baseline) {
-         balance_mapped_box_level.putToDatabase(*postbalance_mapped_box_level_db);
+         balance_mapped_box_level.putUnregisteredToDatabase(
+            postbalance_mapped_box_level_db);
       }
 
 #ifdef HAVE_HDF5

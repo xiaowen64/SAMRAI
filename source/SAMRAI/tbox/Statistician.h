@@ -114,7 +114,7 @@ public:
     * When assertion checking is active, an assertion will result if wither
     * string is empty.
     */
-   virtual boost::shared_ptr<Statistic>
+   boost::shared_ptr<Statistic>
    getStatistic(
       const std::string& name,
       const std::string& stat_type);
@@ -126,7 +126,7 @@ public:
     * to that statistic.  Otherwise, return false and return a null pointer.
     * If the name string is empty, a null pointer is returned.
     */
-   virtual bool
+   bool
    checkStatisticExists(
       boost::shared_ptr<Statistic>& stat,
       const std::string& name) const;
@@ -135,14 +135,14 @@ public:
     * Return integer number of local processor statistics maintained
     * by statistician.
     */
-   virtual int
+   int
    getNumberProcessorStats() const;
 
    /**
     * Return integer number of local patch statistics maintained
     * by statistician.
     */
-   virtual int
+   int
    getNumberPatchStats() const;
 
    /**
@@ -150,7 +150,7 @@ public:
     * intent of this function is to avoid using restarted statistic values
     * when performing a restarted run.  However, it can be called anytime.
     */
-   virtual void
+   void
    resetProcessorStatistics();
 
    /**
@@ -158,13 +158,13 @@ public:
     * intent of this function is to avoid using restarted statistic values
     * when performing a restarted run.  However, it can be called anytime.
     */
-   virtual void
+   void
    resetPatchStatistics();
 
    /**
     * Reset all patch and processor statistics to contain no information.
     */
-   virtual void
+   void
    resetStatistics();
 
    /**
@@ -173,7 +173,7 @@ public:
     * with that name, then a warning message results and the return value
     * will be the invalid instance identifier "-1".
     */
-   virtual int
+   int
    getProcStatId(
       const std::string& name) const;
 
@@ -186,7 +186,7 @@ public:
     * When assertion checking is active, the identifier must be valid or
     * an assertion will result.
     */
-   virtual int
+   int
    getGlobalProcStatSequenceLength(
       int proc_stat_id);
 
@@ -201,7 +201,7 @@ public:
     * When assertion checking is active, the identifier, sequence number,
     * and processor number must be valid or an assertion will result.
     */
-   virtual double
+   double
    getGlobalProcStatValue(
       int proc_stat_id,
       int seq_num,
@@ -218,7 +218,7 @@ public:
     * When assertion checking is active, the identifier and sequence number
     * must be valid or an assertion will result.
     */
-   virtual double
+   double
    getGlobalProcStatSum(
       int proc_stat_id,
       int seq_num);
@@ -234,7 +234,7 @@ public:
     * When assertion checking is active, the identifier and sequence number
     * must be valid or an assertion will result.
     */
-   virtual double
+   double
    getGlobalProcStatMax(
       int proc_stat_id,
       int seq_num);
@@ -247,7 +247,7 @@ public:
     * When assertion checking is active, the identifier and sequence number
     * must be valid or an assertion will result.
     */
-   virtual int
+   int
    getGlobalProcStatMaxProcessorId(
       int proc_stat_id,
       int seq_num);
@@ -263,7 +263,7 @@ public:
     * When assertion checking is active, the identifier and sequence number
     * must be valid or an assertion will result.
     */
-   virtual double
+   double
    getGlobalProcStatMin(
       int proc_stat_id,
       int seq_num);
@@ -276,7 +276,7 @@ public:
     * When assertion checking is active, the identifier and sequence number
     * must be valid or an assertion will result.
     */
-   virtual int
+   int
    getGlobalProcStatMinProcessorId(
       int proc_stat_id,
       int seq_num);
@@ -288,7 +288,7 @@ public:
     * the data but does NOT generate it in tabulated form.  To generate
     * tabulated data, see the printGlobalProcStatDataFormatted() method.
     */
-   virtual void
+   void
    printGlobalProcStatData(
       int proc_stat_id,
       std::ostream& os,
@@ -298,7 +298,7 @@ public:
     * Print processor stat data in formatted output to given output
     * stream.  Floating point precision may be specified (default is 12).
     */
-   virtual void
+   void
    printGlobalProcStatDataFormatted(
       int proc_stat_id,
       std::ostream& os,
@@ -309,7 +309,7 @@ public:
     * given output stream.  Floating point precision may be specified
     * (default is 12).
     */
-   virtual void
+   void
    printGlobalProcStatDataFormatted(
       int proc_stat_id,
       int proc_id,
@@ -322,7 +322,7 @@ public:
     * with that name, then a warning message results and the return value
     * will be the invalid instance identifier "-1".
     */
-   virtual int
+   int
    getPatchStatId(
       const std::string& name) const;
 
@@ -335,7 +335,7 @@ public:
     * When assertion checking is active, the identifier must be valid or
     * an assertion will result.
     */
-   virtual int
+   int
    getGlobalPatchStatSequenceLength(
       int patch_stat_id);
 
@@ -350,7 +350,7 @@ public:
     * When assertion checking is active, the identifier and sequence number
     * must be valid or an assertion will result.
     */
-   virtual int
+   int
    getGlobalPatchStatNumberPatches(
       int patch_stat_id,
       int seq_num);
@@ -368,7 +368,7 @@ public:
     * When assertion checking is active, the identifier, sequence number,
     * and patch number must be valid or an assertion will result.
     */
-   virtual int
+   int
    getGlobalPatchStatPatchMapping(
       int patch_stat_id,
       int seq_num,
@@ -387,7 +387,7 @@ public:
     * When assertion checking is active, the identifier, sequence number,
     * and patch number must be valid or an assertion will result.
     */
-   virtual double
+   double
    getGlobalPatchStatValue(
       int patch_stat_id,
       int seq_num,
@@ -404,7 +404,7 @@ public:
     * When assertion checking is active, the identifier and sequence number
     * must be valid or an assertion will result.
     */
-   virtual double
+   double
    getGlobalPatchStatSum(
       int patch_stat_id,
       int seq_num);
@@ -420,7 +420,7 @@ public:
     * When assertion checking is active, the identifier and sequence number
     * must be valid or an assertion will result.
     */
-   virtual double
+   double
    getGlobalPatchStatMax(
       int patch_stat_id,
       int seq_num);
@@ -433,7 +433,7 @@ public:
     * When assertion checking is active, the identifier and sequence number
     * must be valid or an assertion will result.
     */
-   virtual int
+   int
    getGlobalPatchStatMaxPatchId(
       int patch_stat_id,
       int seq_num);
@@ -449,7 +449,7 @@ public:
     * When assertion checking is active, the identifier and sequence number
     * must be valid or an assertion will result.
     */
-   virtual double
+   double
    getGlobalPatchStatMin(
       int patch_stat_id,
       int seq_num);
@@ -462,7 +462,7 @@ public:
     * When assertion checking is active, the identifier and sequence number
     * must be valid or an assertion will result.
     */
-   virtual int
+   int
    getGlobalPatchStatMinPatchId(
       int patch_stat_id,
       int seq_num);
@@ -475,7 +475,7 @@ public:
     * When assertion checking is active, the identifier, processor id,
     * and sequence number must be valid or an assertion will result.
     */
-   virtual double
+   double
    getGlobalPatchStatProcessorSum(
       int patch_stat_id,
       int processor_id,
@@ -492,7 +492,7 @@ public:
     * When assertion checking is active, the identifier and sequence
     * number must be valid or an assertion will result.
     */
-   virtual double
+   double
    getGlobalPatchStatProcessorSumMax(
       int patch_stat_id,
       int seq_num);
@@ -507,7 +507,7 @@ public:
     * When assertion checking is active, the identifier and sequence
     * number must be valid or an assertion will result.
     */
-   virtual int
+   int
    getGlobalPatchStatProcessorSumMaxId(
       int patch_stat_id,
       int seq_num);
@@ -522,7 +522,7 @@ public:
     * When assertion checking is active, the identifier and sequence
     * number must be valid or an assertion will result.
     */
-   virtual double
+   double
    getGlobalPatchStatProcessorSumMin(
       int patch_stat_id,
       int seq_num);
@@ -537,7 +537,7 @@ public:
     * When assertion checking is active, the identifier and sequence
     * number must be valid or an assertion will result.
     */
-   virtual int
+   int
    getGlobalPatchStatProcessorSumMinId(
       int patch_stat_id,
       int seq_num);
@@ -549,7 +549,7 @@ public:
     * When assertion checking is active, the identifier and sequence number
     * must be valid or an assertion will result.
     */
-   virtual int
+   int
    getGlobalPatchStatNumberPatchesOnProc(
       int patch_stat_id,
       int seq_num,
@@ -562,7 +562,7 @@ public:
     * When assertion checking is active, the identifier and sequence
     * number must be valid or an assertion will result.
     */
-   virtual int
+   int
    getGlobalPatchStatMaxPatchesPerProc(
       int patch_stat_id,
       int seq_num);
@@ -574,7 +574,7 @@ public:
     * When assertion checking is active, the identifier and sequence
     * number must be valid or an assertion will result.
     */
-   virtual int
+   int
    getGlobalPatchStatMaxPatchesPerProcId(
       int patch_stat_id,
       int seq_num);
@@ -586,7 +586,7 @@ public:
     * When assertion checking is active, the identifier and sequence
     * number must be valid or an assertion will result.
     */
-   virtual int
+   int
    getGlobalPatchStatMinPatchesPerProc(
       int patch_stat_id,
       int seq_num);
@@ -598,7 +598,7 @@ public:
     * When assertion checking is active, the identifier and sequence
     * number must be valid or an assertion will result.
     */
-   virtual int
+   int
    getGlobalPatchStatMinPatchesPerProcId(
       int patch_stat_id,
       int seq_num);
@@ -609,7 +609,7 @@ public:
     * the data but does NOT generate it in tabulated form.  To generate
     * tabulated data, see the printGlobalPatchStatDataFormatted() method.
     */
-   virtual void
+   void
    printGlobalPatchStatData(
       int patch_stat_id,
       std::ostream& os,
@@ -619,7 +619,7 @@ public:
     * Print patch stat data in formatted output to given output
     * stream.  Floating point precision may be specified (default is 12).
     */
-   virtual void
+   void
    printGlobalPatchStatDataFormatted(
       int patch_stat_id,
       std::ostream& os,
@@ -639,7 +639,7 @@ public:
     * available (on all processes).  Non-local "PATCH_STATS" are only available
     * if gather_individual_stats_on_proc_0 == true.
     */
-   virtual void
+   void
    finalize(
       bool gather_individual_stats_on_proc_0 = true);
 
@@ -648,7 +648,7 @@ public:
     * by this statistician object.  Note that no fancy formatting is done.
     * Floating point precision can be specified (default is 12).
     */
-   virtual void
+   void
    printLocalStatData(
       std::ostream& os,
       int precision = 12) const;
@@ -658,7 +658,7 @@ public:
     * The data will NOT be in tabulated form.  Floating point precision
     * can be specified (default is 12).
     */
-   virtual void
+   void
    printAllGlobalStatData(
       std::ostream& os,
       int precision = 12);
@@ -667,7 +667,7 @@ public:
     * Print sums of all global statistic data information to given
     * output stream. Floating point precision can be specified (default is 12).
     */
-   virtual void
+   void
    printAllSummedGlobalStatData(
       std::ostream& os,
       int precision = 12);
@@ -676,7 +676,7 @@ public:
     * Print sums of all global statistic data information to specified
     * filename. Floating point precision can be specified (default is 12).
     */
-   virtual void
+   void
    printAllSummedGlobalStatData(
       const std::string& filename,
       int precision = 12);
@@ -690,7 +690,7 @@ public:
     * no directory name is supplied, the files will be written to the directory
     * where the application is run.
     */
-   virtual void
+   void
    printSpreadSheetOutput(
       const std::string& dirname = std::string(),
       int precision = 12);
@@ -702,7 +702,7 @@ public:
     * that is the same across all processors.  This method will only print
     * processor stats. Any patch stats will be ignored.
     */
-   virtual void
+   void
    printSpreadSheetOutputForProcessor(
       const int proc_id,
       const std::string& dirname = std::string(),
@@ -719,7 +719,7 @@ protected:
    /**
     * Statistician is a Singleton class; its destructor is protected.
     */
-   virtual ~Statistician();
+   ~Statistician();
 
    /**
     * Initialize Singleton instance with instance of subclass.  This function
@@ -734,7 +734,7 @@ protected:
     * During finalize() check statistic information on all processors
     * for consistency before generating arrays of data.
     */
-   virtual void
+   void
    checkStatsForConsistency(
       Array<int>& total_patches);
 
@@ -745,7 +745,7 @@ protected:
     * in the argument list is set to that statistic.  Otherwise, return
     * false and return a null pointer.
     */
-   virtual bool
+   bool
    checkProcStatExists(
       boost::shared_ptr<Statistic>& stat,
       const std::string& name) const;
@@ -757,7 +757,7 @@ protected:
     * in the argument list is set to that statistic.  Otherwise, return
     * false and return a null pointer.
     */
-   virtual bool
+   bool
    checkPatchStatExists(
       boost::shared_ptr<Statistic>& stat,
       const std::string& name) const;
@@ -959,7 +959,7 @@ public:
     */
    void
    putToDatabase(
-      const boost::shared_ptr<Database>& db);
+      const boost::shared_ptr<Database>& db) const;
 
    /*
     * Construct those statistics saved in the restart database.

@@ -93,8 +93,7 @@ public:
    /*!
     * @brief Destructor.
     */
-   virtual ~AsyncCommGroup(
-      void);
+   virtual ~AsyncCommGroup();
 
    /*!
     * @brief Initialize the object.

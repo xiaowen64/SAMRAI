@@ -299,9 +299,9 @@ void Patch::getFromDatabase(
  *
  *************************************************************************
  */
-void Patch::putToDatabase(
+void Patch::putUnregisteredToDatabase(
    const boost::shared_ptr<tbox::Database>& database,
-   const ComponentSelector& patchdata_write_table)
+   const ComponentSelector& patchdata_write_table) const
 {
    TBOX_ASSERT(database);
 
@@ -334,7 +334,7 @@ void Patch::putToDatabase(
             patch_data_name = d_descriptor->mapIndexToName(i);
          boost::shared_ptr<tbox::Database> patch_data_database(
             database->putDatabase(patch_data_name));
-         (d_patch_data[i])->putToDatabase(patch_data_database);
+         (d_patch_data[i])->putUnregisteredToDatabase(patch_data_database);
       }
    }
 

@@ -41,7 +41,7 @@ public:
    /*!
     * @brief Destructor.
     */
-   virtual ~BoundaryBoxUtils();
+   ~BoundaryBoxUtils();
 
    /*!
     * @brief Reset boundary box.

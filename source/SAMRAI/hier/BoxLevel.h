@@ -141,8 +141,7 @@ public:
     *
     * Deallocate internal data.
     */
-   ~BoxLevel(
-      void);
+   ~BoxLevel();
 
    //@{
    //! @name Initialization and clearing methods
@@ -1013,8 +1012,8 @@ public:
     * @param[in,out] database
     */
    void
-   putToDatabase(
-      tbox::Database& database) const;
+   putUnregisteredToDatabase(
+      const boost::shared_ptr<tbox::Database>& database) const;
 
    /*!
     * @brief Read the BoxLevel from a database.

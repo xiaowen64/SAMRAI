@@ -438,8 +438,6 @@ int main(
 
 
 
-      mesh::LoadBalanceStrategy* lb = NULL;
-
       std::string load_balancer_type =
          main_db->getStringWithDefault("load_balancer_type", "TreeLoadBalancer");
 

@@ -131,9 +131,9 @@ public:
       const tbox::Dimension& dim);
 
    /*!
-    * @brief The virtual destructor releases all internal storage.
+    * @brief The destructor releases all internal storage.
     */
-   virtual ~RefineAlgorithm();
+   ~RefineAlgorithm();
 
    /*!
     * @brief Register a refine operation with the refine algorithm object.

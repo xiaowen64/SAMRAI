@@ -430,8 +430,8 @@ void Statistic::checkArraySizes(
 
 }
 
-void Statistic::putToDatabase(
-   const boost::shared_ptr<Database>& db)
+void Statistic::putUnregisteredToDatabase(
+   const boost::shared_ptr<Database>& db) const
 {
    TBOX_ASSERT(db);
 
@@ -468,7 +468,7 @@ void Statistic::putToDatabase(
       int mark = d_seq_counter;
 
       for (i = 0; i < d_seq_counter; i++) {
-         List<Statistic::PatchStatRecord>& records =
+         const List<Statistic::PatchStatRecord>& records =
             d_patch_array[i].patch_records;
          idata[i] = records.getNumberOfItems();  // # patches at seq num
          List<Statistic::PatchStatRecord>::Iterator ir(records);

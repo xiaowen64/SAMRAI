@@ -54,9 +54,9 @@ public:
       const IOTYPE iotype);
 
    /**
-    * Virtual destructor.
+    * Destructor.
     */
-   virtual ~BoxIOUtility();
+   ~BoxIOUtility();
 
    /**
     * Pulls refinement boxes corresponding to the provided level and

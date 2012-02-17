@@ -1413,14 +1413,14 @@ void BoxContainer::makeTree(int min_number) const
  * Write the BoxContainer to a database.
  ***********************************************************************
  */
-void BoxContainer::putToDatabase(
-   tbox::Database& database) const
+void BoxContainer::putUnregisteredToDatabase(
+   const boost::shared_ptr<tbox::Database>& database) const
 {
-   database.putInteger(
+   database->putInteger(
       "HIER_BOX_CONTAINER_VERSION", HIER_BOX_CONTAINER_VERSION);
 
    const int mbs_size = size();
-   database.putInteger("mapped_box_set_size", mbs_size);
+   database->putInteger("mapped_box_set_size", mbs_size);
    if (mbs_size > 0) {
 
       std::vector<int> local_ids;
@@ -1444,16 +1444,11 @@ void BoxContainer::putToDatabase(
          db_box_array[++counter] = *ni;
       }
 
-      database.putIntegerArray(
-         "local_indices", &local_ids[0], mbs_size);
-      database.putIntegerArray(
-         "ranks", &ranks[0], mbs_size);
-      database.putIntegerArray(
-         "block_ids", &block_ids[0], mbs_size);
-      database.putIntegerArray(
-         "periodic_ids", &periodic_ids[0], mbs_size);
-      database.putDatabaseBoxArray(
-         "boxes", &db_box_array[0], mbs_size);
+      database->putIntegerArray("local_indices", &local_ids[0], mbs_size);
+      database->putIntegerArray("ranks", &ranks[0], mbs_size);
+      database->putIntegerArray("block_ids", &block_ids[0], mbs_size);
+      database->putIntegerArray("periodic_ids", &periodic_ids[0], mbs_size);
+      database->putDatabaseBoxArray("boxes", &db_box_array[0], mbs_size);
    }
 }
 

@@ -377,7 +377,7 @@ public:
     */
    virtual void
    putSpecializedToDatabase(
-      const boost::shared_ptr<tbox::Database>& database);
+      const boost::shared_ptr<tbox::Database>& database) const;
 
    /*!
     * The node iterator iterates over the elements of a node

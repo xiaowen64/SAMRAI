@@ -1220,8 +1220,8 @@ public:
     * @brief Write the BoxContainer to a database.
     */
    void
-   putToDatabase(
-      tbox::Database& database) const;
+   putUnregisteredToDatabase(
+      const boost::shared_ptr<tbox::Database>& database) const;
 
    /*!
     * @brief Read the BoxContainer from a database.

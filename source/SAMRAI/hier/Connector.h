@@ -159,7 +159,7 @@ public:
    /*!
     * @brief Destructor.
     */
-   virtual ~Connector();
+   ~Connector();
 
    /*!
     * @brief Clear the Connector, putting it into an uninitialized state.
@@ -961,7 +961,7 @@ public:
     */
    void
    putNeighborhoodsToDatabase(
-      tbox::Database& database) const;
+      const boost::shared_ptr<tbox::Database>& database);
 
    /*!
     * @brief Read the neighborhoods from a database.

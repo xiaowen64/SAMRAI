@@ -579,9 +579,9 @@ bool Connector::neighborhoodEqual(
  */
 SAMRAI_INLINE_KEYWORD
 void Connector::putNeighborhoodsToDatabase(
-   tbox::Database& database) const
+   const boost::shared_ptr<tbox::Database>& database)
 {
-   d_relationships.putToDatabase(database);
+   d_relationships.putUnregisteredToDatabase(database);
    return;
 }
 

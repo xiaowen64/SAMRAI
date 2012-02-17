@@ -830,7 +830,7 @@ void GridGeometry::getFromInput(
  */
 
 void GridGeometry::putToDatabase(
-   const boost::shared_ptr<tbox::Database>& db)
+   const boost::shared_ptr<tbox::Database>& db) const
 {
    TBOX_ASSERT(db);
 

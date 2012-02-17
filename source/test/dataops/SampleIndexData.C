@@ -229,8 +229,8 @@ void SampleIndexData::unpackStream(
  *************************************************************************
  */
 
-void SampleIndexData::putToDatabase(
-   boost::shared_ptr<tbox::Database>& database)
+void SampleIndexData::putUnregisteredToDatabase(
+   const boost::shared_ptr<tbox::Database>& database) const
 {
 
    int counter = 0;
@@ -247,7 +247,7 @@ void SampleIndexData::putToDatabase(
 }
 
 void SampleIndexData::getFromDatabase(
-   boost::shared_ptr<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    int dim = d_index.getDim().getValue();
    int ibuffer[dim + 1];

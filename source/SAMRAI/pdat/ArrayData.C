@@ -909,9 +909,9 @@ void ArrayData<TYPE>::getFromDatabase(
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::putToDatabase(
+void ArrayData<TYPE>::putUnregisteredToDatabase(
    const boost::shared_ptr<tbox::Database>& database,
-   bool data_only)
+   bool data_only) const
 {
    TBOX_ASSERT(database);
 
@@ -928,7 +928,7 @@ void ArrayData<TYPE>::putToDatabase(
 
 template<class TYPE>
 void ArrayData<TYPE>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& database) const
 {
    database->putArray("d_array", d_array);
 }

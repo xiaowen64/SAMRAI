@@ -23,10 +23,6 @@ Database::~Database()
 {
 }
 
-Database::Serializable::~Serializable()
-{
-}
-
 /*
  ************************************************************************
  *

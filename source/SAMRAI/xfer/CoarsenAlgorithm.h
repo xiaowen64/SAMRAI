@@ -123,9 +123,9 @@ public:
       bool fill_coarse_data = false);
 
    /*!
-    * @brief The virtual destructor releases all internal storage.
+    * @brief The destructor releases all internal storage.
     */
-   virtual ~CoarsenAlgorithm();
+   ~CoarsenAlgorithm();
 
    /*!
     * @brief Register a coarsening operation with the coarsening algorithm.
@@ -288,7 +288,7 @@ public:
     *
     * @param[out] stream Output data stream.
     */
-   virtual void
+   void
    printClassData(
       std::ostream& stream) const;
 

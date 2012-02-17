@@ -1086,7 +1086,7 @@ private:
     */
    virtual void
    putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db);
+      const boost::shared_ptr<tbox::Database>& db) const;
 
 protected:
    /*!

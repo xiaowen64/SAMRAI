@@ -72,7 +72,7 @@ public:
     *
     * Deallocate internal data.
     */
-   virtual ~BalancedDepthFirstTree();
+   ~BalancedDepthFirstTree();
 
    /*!
     * @brief Construct the tree.

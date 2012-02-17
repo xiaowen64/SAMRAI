@@ -408,9 +408,9 @@ public:
     *             patch data components to write.
     */
    void
-   putToDatabase(
+   putUnregisteredToDatabase(
       const boost::shared_ptr<tbox::Database>& database,
-      const ComponentSelector& patchdata_write_table);
+      const ComponentSelector& patchdata_write_table) const;
 
    /*!
     * @brief Print a patch (for debugging).

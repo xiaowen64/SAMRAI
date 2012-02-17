@@ -227,7 +227,7 @@ int main(
          tbox::pout << "\nBoxLevel for review:\n"
                     << mapped_box_level.format("REVIEW: ", 2)
                     << std::endl;
-         mapped_box_level.putToDatabase(*mapped_box_level_db);
+         mapped_box_level.putUnregisteredToDatabase(mapped_box_level_db);
       } else {
          /*
           * Get the baselined BoxLevel and compare.
@@ -354,7 +354,7 @@ int main(
             ++fail_count;
          } else {
 
-            connector.putNeighborhoodsToDatabase(*connector_db);
+            connector.putNeighborhoodsToDatabase(connector_db);
             tbox::pout << "Connector for review:\n"
                        << connector.format("REVIEW: ", 2)
                        << "This data has been verified by comparing against the results\n"

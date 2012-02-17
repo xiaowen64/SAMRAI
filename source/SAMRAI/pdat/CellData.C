@@ -498,7 +498,7 @@ void CellData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void CellData<TYPE>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& database) const
 {
    TBOX_ASSERT(database);
 
@@ -506,7 +506,7 @@ void CellData<TYPE>::putSpecializedToDatabase(
 
    database->putInteger("d_depth", d_depth);
 
-   d_data.putToDatabase(database->putDatabase("d_data"));
+   d_data.putUnregisteredToDatabase(database->putDatabase("d_data"));
 }
 
 }

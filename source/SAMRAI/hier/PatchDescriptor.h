@@ -65,10 +65,10 @@ public:
    PatchDescriptor();
 
    /*!
-    * The virtual destructor for a patch descriptor deallocates the
+    * The destructor for a patch descriptor deallocates the
     * internal data structures.
     */
-   virtual ~PatchDescriptor();
+   ~PatchDescriptor();
 
    /*!
     * Add a new patch data factory and name std::string identifier to the patch
@@ -195,7 +195,7 @@ public:
    /*!
     * Print patch descriptor data to given output stream (plog by default).
     */
-   virtual void
+   void
    printClassData(
       std::ostream& stream = tbox::plog) const;
 

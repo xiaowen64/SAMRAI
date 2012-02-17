@@ -59,8 +59,7 @@ public:
    /*!
     * @brief Destructor.
     */
-   virtual ~RealBoxConstIterator(
-      void);
+   ~RealBoxConstIterator();
 
    /*!
     * @brief Assignment operator.

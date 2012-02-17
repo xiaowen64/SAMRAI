@@ -72,8 +72,7 @@ public:
    /*!
     * @brief Destructor.
     */
-   virtual ~GlobalId(
-      void);
+   ~GlobalId();
 
    /*!
     * @brief Access the owner rank.

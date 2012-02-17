@@ -572,9 +572,9 @@ public:
     * Assertions:  database must be a non-null pointer.
     */
    void
-   putToDatabase(
+   putUnregisteredToDatabase(
       const boost::shared_ptr<tbox::Database>& database,
-      bool data_only = false);
+      bool data_only = false) const;
 
    /*!
     * Use specialized template method to get the correct behavior
@@ -590,7 +590,7 @@ public:
     */
    void
    putSpecializedToDatabase(
-      const boost::shared_ptr<tbox::Database>& database);
+      const boost::shared_ptr<tbox::Database>& database) const;
 
    /**
     * Return the dimension of this object.

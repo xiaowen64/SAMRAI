@@ -112,7 +112,7 @@ public:
    /*!
     * @brief Destructor.
     */
-   virtual ~CoarseFineBoundary();
+   ~CoarseFineBoundary();
 
    /*!
     * @brief Clear all boundary data or clear boundary data for a given block
@@ -202,7 +202,7 @@ public:
     *
     * @param[in] os Output stream
     */
-   virtual void
+   void
    printClassData(
       std::ostream& os) const;
 

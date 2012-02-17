@@ -56,7 +56,7 @@ public:
    explicit vector(
       size_type n):d_vec(n) {
    }
-   virtual ~vector() {
+   ~vector() {
    }
 
    //@{ @name Replication of std::vector methods.

@@ -120,7 +120,7 @@ void MainRestartData::setIterationNumber(
  *************************************************************************
  */
 void MainRestartData::putToDatabase(
-   const boost::shared_ptr<tbox::Database>& db)
+   const boost::shared_ptr<tbox::Database>& db) const
 {
    TBOX_ASSERT(db);
 

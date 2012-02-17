@@ -429,8 +429,8 @@ public:
     * declared in the tbox::Serializable abstract base class.
     */
    void
-   putToDatabase(
-      boost::shared_ptr<tbox::Database> db);
+   putUnregisteredToDatabase(
+      const boost::shared_ptr<tbox::Database>& db) const;
 
    /**
     * This routine is a concrete implementation of the virtual function

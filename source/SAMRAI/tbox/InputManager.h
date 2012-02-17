@@ -110,14 +110,14 @@ public:
    /**
     * Create a new database named "main" from the specified input file.
     */
-   virtual boost::shared_ptr<InputDatabase>
+   boost::shared_ptr<InputDatabase>
    parseInputFile(
       const std::string& filename);
 
    /**
     * Parse data from the specified file into the existing database.
     */
-   virtual void
+   void
    parseInputFile(
       const std::string& filename,
       const boost::shared_ptr<InputDatabase>& input_db);
@@ -134,7 +134,7 @@ protected:
     * The destructor for the input manager is protected, since only the
     * singleton class and subclasses may destroy the manager objects.
     */
-   virtual ~InputManager();
+   ~InputManager();
 
 private:
    InputManager(

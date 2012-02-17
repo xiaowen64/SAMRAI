@@ -39,7 +39,7 @@ public:
     * The destructor simply deallocates any internal data
     * buffers.  It does not modify the output streams.
     */
-   virtual ~ParallelBuffer();
+   ~ParallelBuffer();
 
    /**
     * Set whether the output stream will be active.  If the parallel buffer
@@ -98,7 +98,7 @@ public:
    /**
     * Synchronize the parallel buffer (called from streambuf).
     */
-   virtual int
+   int
    sync();
 
 #if !defined(__INTEL_COMPILER) && (defined(__GNUG__))
@@ -106,7 +106,7 @@ public:
     * Write the specified number of characters into the output stream (called
     * from streambuf).
     */
-   virtual std::streamsize
+   std::streamsize
    xsputn(
       const std::string& text,
       std::streamsize n);
@@ -116,7 +116,7 @@ public:
     * Write an overflow character into the parallel buffer (called from
     * streambuf).
     */
-   virtual int
+   int
    overflow(
       int ch);
 
@@ -127,7 +127,7 @@ public:
     * streambuf).  This is not implemented.  It is needed by the
     * MSVC++ stream implementation.
     */
-   virtual int
+   int
    underflow();
 #endif
 

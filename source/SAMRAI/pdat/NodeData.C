@@ -500,7 +500,7 @@ void NodeData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void NodeData<TYPE>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& database) const
 {
 
    TBOX_ASSERT(database);
@@ -509,7 +509,7 @@ void NodeData<TYPE>::putSpecializedToDatabase(
 
    database->putInteger("d_depth", d_depth);
 
-   d_data.putToDatabase(database->putDatabase("d_data"));
+   d_data.putUnregisteredToDatabase(database->putDatabase("d_data"));
 }
 
 }

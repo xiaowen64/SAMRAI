@@ -752,7 +752,7 @@ SparseData<BOX_GEOMETRY>::getSpecializedFromDatabase(
 template<typename BOX_GEOMETRY>
 void
 SparseData<BOX_GEOMETRY>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& db)
+   const boost::shared_ptr<tbox::Database>& db) const
 {
    TBOX_ASSERT(db);
 
@@ -804,9 +804,9 @@ SparseData<BOX_GEOMETRY>::putSpecializedToDatabase(
    // record the actual data for each element
    int curr_item(0);
    typename IndexMap::iterator index_iter =
-      d_index_to_attribute_map.begin();
+      const_cast<IndexMap&>(d_index_to_attribute_map).begin();
    typename IndexMap::iterator index_iter_end =
-      d_index_to_attribute_map.end();
+      const_cast<IndexMap&>(d_index_to_attribute_map).end();
 
    for ( ; index_iter != index_iter_end; ++index_iter) {
 

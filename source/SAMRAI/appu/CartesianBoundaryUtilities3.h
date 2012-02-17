@@ -29,7 +29,7 @@ namespace SAMRAI {
 namespace appu {
 
 /*!
- * @brief Class CartesianBoundaryUtilities2 is a utility class that
+ * @brief Class CartesianBoundaryUtilities3 is a utility class that
  * simplifies the implementation of simple physical boundary data in
  * 3 spatial dimensions.  It contains routines for reading boundary data
  * information from input files, applying those boundary conditions,

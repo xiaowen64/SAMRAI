@@ -677,7 +677,7 @@ void FaceData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void FaceData<TYPE>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& database) const
 {
    TBOX_ASSERT(database);
 
@@ -689,7 +689,7 @@ void FaceData<TYPE>::putSpecializedToDatabase(
    for (int i = 0; i < getDim().getValue(); i++) {
       std::string array_name = "d_data" + tbox::Utilities::intToString(i);
       array_database = database->putDatabase(array_name);
-      (d_data[i]).putToDatabase(array_database);
+      (d_data[i]).putUnregisteredToDatabase(array_database);
    }
 }
 

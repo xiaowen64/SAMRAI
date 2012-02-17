@@ -259,7 +259,7 @@ int AutoTester::evalTestData(
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
             boost::shared_ptr<tbox::Database> level_db(
                step_db->putDatabase(level_name));
-            level->getBoxLevel()->putToDatabase(*level_db);
+            level->getBoxLevel()->putUnregisteredToDatabase(level_db);
          }
 
          if (d_output_correct) {
@@ -433,7 +433,7 @@ int AutoTester::evalTestData(
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
             boost::shared_ptr<tbox::Database> level_db(
                step_db->putDatabase(level_name));
-            level->getBoxLevel()->putToDatabase(*level_db);
+            level->getBoxLevel()->putUnregisteredToDatabase(level_db);
          }
 
       }

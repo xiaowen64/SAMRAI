@@ -115,10 +115,10 @@ public:
       bool fill_coarse_data);
 
    /*!
-    * @brief The virtual destructor for the schedule releases all internal
+    * @brief The destructor for the schedule releases all internal
     * storage.
     */
-   virtual ~CoarsenSchedule();
+   ~CoarsenSchedule();
 
    /*!
     * @brief Reset this coarsen schedule to perform data transfers asssociated
@@ -172,7 +172,7 @@ public:
     *
     * @param[out] stream Output data stream.
     */
-   virtual void
+   void
    printClassData(
       std::ostream& stream) const;
 

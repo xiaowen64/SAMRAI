@@ -81,7 +81,7 @@ public:
    /*!
     * @brief Destructor.
     */
-   virtual ~BoxId();
+   ~BoxId();
 
    /*!
     * @brief Set all the attributes to given values.

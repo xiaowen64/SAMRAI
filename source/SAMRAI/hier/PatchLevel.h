@@ -673,9 +673,9 @@ public:
     *                 which patch data to write to the database
     */
    void
-   putToDatabase(
+   putUnregisteredToDatabase(
       const boost::shared_ptr<tbox::Database>& database,
-      const ComponentSelector& patchdata_write_table);
+      const ComponentSelector& patchdata_write_table) const;
 
    /*!
     * @brief Print a patch level to varying details.

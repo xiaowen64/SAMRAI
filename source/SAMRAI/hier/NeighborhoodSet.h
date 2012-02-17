@@ -16,6 +16,7 @@
 #include "SAMRAI/hier/BoxId.h"
 #include "SAMRAI/tbox/Database.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <map>
 #include <string>
@@ -60,8 +61,7 @@ public:
       const NeighborhoodSet& other);
 
    //! @brief Destructor.
-   virtual ~NeighborhoodSet(
-      void);
+   ~NeighborhoodSet();
 
    //@{
 
@@ -341,8 +341,8 @@ public:
     * @brief Write the NeighborhoodSet to a database.
     */
    void
-   putToDatabase(
-      tbox::Database& database) const;
+   putUnregisteredToDatabase(
+      const boost::shared_ptr<tbox::Database>& database) const;
 
    /*!
     * @brief Read the NeighborhoodSet from a database.

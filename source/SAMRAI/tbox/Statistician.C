@@ -2560,7 +2560,7 @@ StatisticRestartDatabase::~StatisticRestartDatabase()
 }
 
 void StatisticRestartDatabase::putToDatabase(
-   const boost::shared_ptr<Database>& db)
+   const boost::shared_ptr<Database>& db) const
 {
    TBOX_ASSERT(db);
 
@@ -2600,14 +2600,14 @@ void StatisticRestartDatabase::putToDatabase(
       stat = statistician->d_proc_statistics[n];
       proc_stat_names[n] = stat->getName();
       stat_database = db->putDatabase(proc_stat_names[n]);
-      stat->putToDatabase(stat_database);
+      stat->putUnregisteredToDatabase(stat_database);
    }
 
    for (n = 0; n < number_of_patchstats; n++) {
       stat = statistician->d_patch_statistics[n];
       patch_stat_names[n] = stat->getName();
       stat_database = db->putDatabase(patch_stat_names[n]);
-      stat->putToDatabase(stat_database);
+      stat->putUnregisteredToDatabase(stat_database);
    }
 
    /*

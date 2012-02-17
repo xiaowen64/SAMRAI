@@ -41,7 +41,7 @@ public:
    /*!
     * @brief Destructor
     */
-   ~SAMRAITransferOperatorRegistry();
+   virtual ~SAMRAITransferOperatorRegistry();
 
 protected:
    boost::shared_ptr<hier::CoarsenOperator>

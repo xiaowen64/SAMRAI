@@ -452,7 +452,7 @@ public:
     */
    virtual void
    putSpecializedToDatabase(
-      const boost::shared_ptr<tbox::Database>& database);
+      const boost::shared_ptr<tbox::Database>& database) const;
 
    /*!
     * The face iterator iterates over the elements on one face normal of a face

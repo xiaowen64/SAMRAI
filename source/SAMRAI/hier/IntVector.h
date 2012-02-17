@@ -365,7 +365,7 @@ public:
     *
     */
    virtual void
-   putToDatabase(
+   putUnregisteredToDatabase(
       tbox::Database& database,
       const std::string& name) const;
 

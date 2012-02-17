@@ -321,8 +321,7 @@ private:
     * @brief Deallocate Members remaining in the stage and all
     * internal data used to manage Members.
     */
-   virtual ~AsyncCommStage(
-      void);
+   ~AsyncCommStage();
 
    /*!
     * @brief Advance to completion one Member (any Member) that is

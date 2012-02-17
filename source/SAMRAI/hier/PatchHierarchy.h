@@ -727,25 +727,7 @@ public:
     */
    void
    putToDatabase(
-      const boost::shared_ptr<tbox::Database>& database);
-
-   /*!
-    * @brief Writes the state of the PatchHierarchy object and the PatchLevels
-    * it contains to the database.
-    *
-    * Only those patch data indicated in the ComponentSelector are written to
-    * the specified database.
-    *
-    * @par Assertions
-    * When assertion checking is active, the database pointer must be non-null.
-    *
-    * @param[out]  database
-    * @param[in]  patchdata_write_table
-    */
-   void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& database,
-      const ComponentSelector& patchdata_write_table);
+      const boost::shared_ptr<tbox::Database>& database) const;
 
    /*!
     * @brief Read in the entire hierarchy from the restart file.
@@ -841,6 +823,24 @@ private:
     * Static integer constant describing class's version number.
     */
    static const int HIER_PATCH_HIERARCHY_VERSION;
+
+   /*!
+    * @brief Writes the state of the PatchHierarchy object and the PatchLevels
+    * it contains to the database.
+    *
+    * Only those patch data indicated in the ComponentSelector are written to
+    * the specified database.
+    *
+    * @par Assertions
+    * When assertion checking is active, the database pointer must be non-null.
+    *
+    * @param[out]  database
+    * @param[in]  patchdata_write_table
+    */
+   void
+   putToDatabase(
+      const boost::shared_ptr<tbox::Database>& database,
+      const ComponentSelector& patchdata_write_table) const;
 
    /*!
     * @brief Read input data from specified database and initialize

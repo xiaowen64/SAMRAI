@@ -56,7 +56,7 @@ public:
    /*!
     * @brief The destructor for a component selector does nothing interesting.
     */
-   virtual ~ComponentSelector();
+   ~ComponentSelector();
 
    /*!
     * @brief Get the size of the ComponentSelector.
@@ -229,7 +229,7 @@ public:
    /*!
     * @brief Print the bit vector data to the specified output stream.
     */
-   virtual void
+   void
    printClassData(
       std::ostream& os = tbox::plog) const;
 

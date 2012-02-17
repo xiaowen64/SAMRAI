@@ -673,7 +673,7 @@ void PatchHierarchy::removePatchLevel(
  */
 
 void PatchHierarchy::putToDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& database) const
 {
    putToDatabase(database,
       VariableDatabase::getDatabase()->getPatchDataRestartTable());
@@ -697,7 +697,7 @@ void PatchHierarchy::putToDatabase(
 
 void PatchHierarchy::putToDatabase(
    const boost::shared_ptr<tbox::Database>& database,
-   const ComponentSelector& patchdata_write_table)
+   const ComponentSelector& patchdata_write_table) const
 {
    TBOX_ASSERT(database);
 
@@ -728,7 +728,7 @@ void PatchHierarchy::putToDatabase(
    boost::shared_ptr<tbox::Database> ratio_to_coarser_db(
       database->putDatabase("d_ratio_to_coarser"));
    for (unsigned int ln = 0; ln < d_ratio_to_coarser.size(); ln++) {
-      int* tmp_array = &d_ratio_to_coarser[ln][0];
+      const int* tmp_array = &d_ratio_to_coarser[ln][0];
       ratio_to_coarser_db->putIntegerArray(level_names[ln], tmp_array,
          d_dim.getValue());
    }
@@ -736,7 +736,7 @@ void PatchHierarchy::putToDatabase(
    boost::shared_ptr<tbox::Database> largest_patch_db(
       database->putDatabase("d_largest_patch_size"));
    for (unsigned int ln = 0; ln < d_largest_patch_size.size(); ln++) {
-      int* tmp_array = &d_largest_patch_size[ln][0];
+      const int* tmp_array = &d_largest_patch_size[ln][0];
       largest_patch_db->putIntegerArray(level_names[ln], tmp_array,
          d_dim.getValue());
    }
@@ -744,7 +744,7 @@ void PatchHierarchy::putToDatabase(
    boost::shared_ptr<tbox::Database> smallest_patch_db(
       database->putDatabase("d_smallest_patch_size"));
    for (unsigned int ln = 0; ln < d_smallest_patch_size.size(); ln++) {
-      int* tmp_array = &d_smallest_patch_size[ln][0];
+      const int* tmp_array = &d_smallest_patch_size[ln][0];
       smallest_patch_db->putIntegerArray(level_names[ln], tmp_array,
          d_dim.getValue());
    }
@@ -770,7 +770,9 @@ void PatchHierarchy::putToDatabase(
      boost::shared_ptr<tbox::Database> level_database(
          database->putDatabase(level_names[i]));
 
-      d_patch_levels[i]->putToDatabase(level_database, patchdata_write_table);
+      d_patch_levels[i]->putUnregisteredToDatabase(
+         level_database,
+         patchdata_write_table);
    }
 }
 

@@ -138,7 +138,7 @@ public:
    /*!
     * @brief Destructor
     */
-   virtual ~Transformation();
+   ~Transformation();
 
    /*!
     * @brief Get the rotation
@@ -269,9 +269,6 @@ public:
    /*!
     * @brief Fill patch data from src to dst using the shift and rotate
     * arguments.
-    *
-    * This is an empty virtual function that allows for a user-defined
-    * implementation of the filling of destination patch data.
     *
     * @param dst_patch   destination data
     * @param dst_id      destination id

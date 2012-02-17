@@ -121,10 +121,10 @@ public:
    RefineClasses();
 
    /*!
-    * @brief The virtual destructor destroys the refinement data items owned
+    * @brief The destructor destroys the refinement data items owned
     * by this object.
     */
-   virtual ~RefineClasses();
+   ~RefineClasses();
 
    /*!
     * @brief Return number of equivalence classes maintained by this object.
@@ -344,7 +344,7 @@ public:
     *
     * @param[out] stream
     */
-   virtual void
+   void
    printClassData(
       std::ostream& stream) const;
 

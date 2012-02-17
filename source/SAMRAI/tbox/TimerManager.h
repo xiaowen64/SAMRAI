@@ -187,7 +187,7 @@ public:
     * When assertion checking is active, an assertion will result if the
     * string is empty.
     */
-   virtual boost::shared_ptr<Timer>
+   boost::shared_ptr<Timer>
    getTimer(
       const std::string& name,
       bool ignore_timer_input = false);
@@ -199,7 +199,7 @@ public:
     * to that timer.  Otherwise, return false and return a null pointer.
     * If the name string is empty, a null pointer is returned.
     */
-   virtual bool
+   bool
    checkTimerExists(
       boost::shared_ptr<Timer>& timer,
       const std::string& name) const;
@@ -209,20 +209,20 @@ public:
     * exists in the database of timers and is currently running.
     * Otherwise, return false.
     */
-   virtual bool
+   bool
    checkTimerRunning(
       const std::string& name) const;
 
    /*!
     * Reset the times in all timers to zero.
     */
-   virtual void
+   void
    resetAllTimers();
 
    /*!
     * Print the timing statistics to the specified output stream.
     */
-   virtual void
+   void
    print(
       std::ostream& os = plog);
 
@@ -238,7 +238,7 @@ protected:
    /*!
     * TimerManager is a Singleton class; its destructor is protected.
     */
-   virtual ~TimerManager();
+   ~TimerManager();
 
    /*!
     * Initialize Singleton instance with instance of subclass.  This function
@@ -257,7 +257,7 @@ protected:
     *
     * When assertion checking is active, the timer pointer must be non-null.
     */
-   virtual void
+   void
    startTime(
       Timer* timer);
 
@@ -269,7 +269,7 @@ protected:
     *
     * When assertion checking is active, the timer pointer must be non-null.
     */
-   virtual void
+   void
    stopTime(
       Timer* timer);
 
