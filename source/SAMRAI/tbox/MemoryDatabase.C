@@ -45,6 +45,12 @@ const int MemoryDatabase::PRINT_INPUT = 2;
 const int MemoryDatabase::PRINT_UNUSED = 4;
 const int MemoryDatabase::SSTREAM_BUFFER = 4096;
 
+MemoryDatabase::MemoryDatabase(
+   const std::string& name) :
+   d_database_name(name)
+{
+}
+
 /*
  *************************************************************************
  *
@@ -1201,51 +1207,14 @@ void MemoryDatabase::getStringArray(
    }
 }
 
-std::string MemoryDatabase::getName(
-   void)
+std::string MemoryDatabase::getName()
 {
    return d_database_name;
 }
 
-/*
- *************************************************************************
- *
- * Search the current database for a matching key.  If found, delete
- * that key and return true.  If the key does not exist, then return
- * false.
- *
- *************************************************************************
- */
-
-bool MemoryDatabase::deleteKeyIfFound(
-   const std::string& key)
+std::string MemoryDatabase::getName() const
 {
-   for (List<KeyData>::Iterator i(d_keyvalues); i; i++) {
-      if (i().d_key == key) {
-         d_keyvalues.removeItem(i);
-         return true;
-      }
-   }
-   return false;
-}
-
-/*
- *************************************************************************
- *
- * Find the key data associated with the specified key and return a
- * pointer to the record.  If no such key data exists, then return NULL.
- *
- *************************************************************************
- */
-
-MemoryDatabase::KeyData *
-MemoryDatabase::findKeyData(
-   const std::string& key)
-{
-   for (List<KeyData>::Iterator i(d_keyvalues); i; i++) {
-      if (key == i().d_key) return &i();
-   }
-   return NULL;
+   return d_database_name;
 }
 
 /*
@@ -1281,51 +1250,6 @@ void MemoryDatabase::printClassData(
    std::ostream& os)
 {
    printDatabase(os, 0, PRINT_DEFAULT | PRINT_INPUT | PRINT_UNUSED);
-}
-
-/*
- *************************************************************************
- *
- * Print unused database keys to the specified output stream.
- *
- *************************************************************************
- */
-
-void MemoryDatabase::printUnusedKeys(
-   std::ostream& os) const
-{
-   printDatabase(os, 0, PRINT_UNUSED);
-}
-
-/*
- *************************************************************************
- *
- * Print default database keys to the specified output stream.
- *
- *************************************************************************
- */
-
-void MemoryDatabase::printDefaultKeys(
-   std::ostream& os) const
-{
-   printDatabase(os, 0, PRINT_DEFAULT);
-}
-
-/*
- *************************************************************************
- *
- * Indent the output stream by the specified indentation factor.
- *
- *************************************************************************
- */
-
-void MemoryDatabase::indentStream(
-   std::ostream& os,
-   const long indent)
-{
-   for (int i = 0; i < indent; i++) {
-      os << " ";
-   }
 }
 
 /*

@@ -15,6 +15,10 @@
 
 #include <cstring>
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/tbox/Schedule.I"
+#endif
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -157,16 +161,6 @@ int Schedule::getNumRecvTransactions(
       size = mi->second.size();
    }
    return size;
-}
-
-/*
- *************************************************************************
- * Access number of send transactions.
- *************************************************************************
- */
-int Schedule::getNumLocalTransactions() const
-{
-   return d_local_set.size();
 }
 
 /*
@@ -439,30 +433,6 @@ void Schedule::processCompletedCommunications()
 
 /*
  *************************************************************************
- *************************************************************************
- */
-void Schedule::setMPITag(
-   const int tag0,
-   const int tag1)
-{
-   TBOX_ASSERT(tag0 >= 0);
-   TBOX_ASSERT(tag1 >= 0);
-   d_first_tag = tag0;
-   d_second_tag = tag1;
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void Schedule::setMPI(
-   const SAMRAI_MPI& mpi)
-{
-   d_mpi = mpi;
-}
-
-/*
- *************************************************************************
  * Allocate communication objects, set them up on the stage and get
  * them ready to send/receive.
  *************************************************************************
@@ -494,16 +464,6 @@ void Schedule::allocateCommunicationObjects()
       d_coms[counter].limitFirstDataLength(d_first_message_length);
       ++counter;
    }
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void Schedule::deallocateCommunicationObjects()
-{
-   delete[] d_coms;
-   d_coms = NULL;
 }
 
 /*
@@ -542,17 +502,6 @@ void Schedule::printClassData(
    for (Iterator local(d_local_set); local; local++) {
       local()->printClassData(stream);
    }
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void Schedule::setFirstMessageLength(
-   int first_message_length)
-{
-   TBOX_ASSERT(first_message_length > 0);
-   d_first_message_length = first_message_length;
 }
 
 /*
@@ -601,29 +550,6 @@ void Schedule::getAllTimers(
       getTimer(timer_prefix + "::unpack_stream");
    timers.t_local_copies = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::performLocalCopies()");
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-
-void Schedule::initializeCallback()
-{
-   TimerStruct& timers(s_static_timers[s_default_timer_prefix]);
-   getAllTimers(s_default_timer_prefix, timers);
-}
-
-/*
- ***************************************************************************
- * Release static timers.  To be called by shutdown registry to make sure
- * memory for timers does not leak.
- ***************************************************************************
- */
-
-void Schedule::finalizeCallback()
-{
-   s_static_timers.clear();
 }
 
 }

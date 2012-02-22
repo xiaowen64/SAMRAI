@@ -457,4 +457,7 @@ private:
 }
 }
 
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/tbox/Utilities.I"
+#endif
 #endif

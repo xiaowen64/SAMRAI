@@ -65,18 +65,6 @@ void RestartManager::shutdownCallback()
    }
 }
 
-void RestartManager::registerSingletonSubclassInstance(
-   RestartManager* subclass_instance)
-{
-   if (!s_manager_instance) {
-      s_manager_instance = subclass_instance;
-   } else {
-      TBOX_ERROR("RestartManager internal error...\n"
-         << "Attemptng to set Singleton instance to subclass instance,"
-         << "\n but Singleton instance already set." << std::endl);
-   }
-}
-
 /*
  *************************************************************************
  *
@@ -99,6 +87,17 @@ RestartManager::RestartManager() :
 /*
  *************************************************************************
  *
+ * Destructor
+ *
+ *************************************************************************
+ */
+RestartManager::~RestartManager()
+{
+}
+
+/*
+ *************************************************************************
+ *
  * Mount restart_file to the empty database created in the
  * constructor and sets d_is_from_restart to true.
  * Return d_database_root.
@@ -111,15 +110,15 @@ bool RestartManager::openRestartFile(
    const int restore_num,
    const int num_nodes)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    int proc_num = mpi.getRank();
 
    /* create the intermediate parts of the full path name of restart file */
-   std::string restore_buf = "/restore." + tbox::Utilities::intToString(
+   std::string restore_buf = "/restore." + Utilities::intToString(
          restore_num,
          6);
-   std::string nodes_buf = "/nodes." + tbox::Utilities::nodeToString(num_nodes);
-   std::string proc_buf = "/proc." + tbox::Utilities::processorToString(
+   std::string nodes_buf = "/nodes." + Utilities::nodeToString(num_nodes);
+   std::string proc_buf = "/proc." + Utilities::processorToString(
          proc_num);
 
    /* create full path name of restart file */
@@ -251,18 +250,6 @@ void RestartManager::unregisterRestartItem(
 /*
  *************************************************************************
  *
- * Remove all items from the restart item list.
- *
- *************************************************************************
- */
-void RestartManager::clearRestartItems()
-{
-   d_restart_items_list.clearItems();
-}
-
-/*
- *************************************************************************
- *
  * Creates a new file with the given name and writes out the current
  * simulation state to the file by invoking the writeRestartFile()
  * method for all objects contained in d_restart_objects_list.
@@ -273,7 +260,7 @@ void RestartManager::writeRestartFile(
    const std::string& root_dirname,
    int restore_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    /* Create necessary directories and cd proper directory for writing */
    std::string restart_dirname = createDirs(root_dirname, restore_num);
 
@@ -282,7 +269,7 @@ void RestartManager::writeRestartFile(
    int proc_rank = mpi.getRank();
 
    std::string restart_filename_buf =
-      "/proc." + tbox::Utilities::processorToString(proc_rank);
+      "/proc." + Utilities::processorToString(proc_rank);
 
    std::string restart_filename = restart_dirname + restart_filename_buf;
 
@@ -313,7 +300,7 @@ void RestartManager::writeRestartFile(
  *************************************************************************
  */
 void RestartManager::writeRestartFile(
-   const boost::shared_ptr<tbox::Database>& database)
+   const boost::shared_ptr<Database>& database)
 {
    TBOX_ASSERT(database);
 
@@ -322,23 +309,6 @@ void RestartManager::writeRestartFile(
       boost::shared_ptr<Database> obj_db(
          database->putDatabase(i().name));
       (i().obj)->putToDatabase(obj_db);
-   }
-}
-
-/*
- *************************************************************************
- *
- * Write simulation state to root database
- *
- *************************************************************************
- */
-void RestartManager::writeRestartToDatabase()
-{
-   if (d_database_root) {
-      writeRestartFile(d_database_root);
-   } else {
-      TBOX_ERROR("writeRestartToDatabase has no database to write to"
-         << std::endl);
    }
 }
 
@@ -355,18 +325,18 @@ std::string RestartManager::createDirs(
    const std::string& root_dirname,
    int restore_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    int num_procs = mpi.getSize();
 
-   std::string restore_buf = "/restore." + tbox::Utilities::intToString(
+   std::string restore_buf = "/restore." + Utilities::intToString(
          restore_num,
          6);
-   std::string nodes_buf = "/nodes." + tbox::Utilities::processorToString(
+   std::string nodes_buf = "/nodes." + Utilities::processorToString(
          num_procs);
 
    std::string full_dirname = root_dirname + restore_buf + nodes_buf;
 
-   tbox::Utilities::recursiveMkdir(full_dirname);
+   Utilities::recursiveMkdir(full_dirname);
 
    return full_dirname;
 }

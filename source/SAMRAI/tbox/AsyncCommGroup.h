@@ -388,9 +388,7 @@ private:
       int rank;
       //! @brief Number of descendants on each child branch.
       int size;
-      ChildData():rank(-1),
-         size(-1) {
-      }
+      ChildData();
    };
 
    /*!
@@ -639,8 +637,7 @@ private:
    static boost::shared_ptr<Timer> t_reduce_data;
    static boost::shared_ptr<Timer> t_wait_all;
 
-   static tbox::StartupShutdownManager::Handler
-      s_initialize_finalize_handler;
+   static StartupShutdownManager::Handler s_initialize_finalize_handler;
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    /*!

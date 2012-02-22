@@ -396,4 +396,7 @@ private:
 }
 }
 
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/tbox/Schedule.I"
+#endif
 #endif

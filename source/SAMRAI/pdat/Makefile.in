@@ -21,7 +21,7 @@ include $(OBJECT)/config/Makefile.config
 
 SUBDIRS = fortran
 
-OBJS = 		\
+OBJS = 	\
 	CellComplexLinearTimeInterpolateOp.o \
 	CellDoubleLinearTimeInterpolateOp.o \
 	CellFloatLinearTimeInterpolateOp.o \
@@ -98,16 +98,16 @@ OBJS = 		\
 	NodeOverlap.o \
 	SideOverlap.o \
 	ArrayDataIterator.o \
-        FirstLayerCellVariableFillPattern.o \
-        FirstLayerCellNoCornersVariableFillPattern.o \
-        FirstLayerNodeVariableFillPattern.o \
-        SecondLayerNodeVariableFillPattern.o \
-        SecondLayerNodeNoCornersVariableFillPattern.o \
-        SparseData.o \
-        SparseDataFactory.o \
-        SparseDataVariable.o \
-		  IntegerAttributeId.o \
-		  DoubleAttributeId.o
+	FirstLayerCellVariableFillPattern.o \
+	FirstLayerCellNoCornersVariableFillPattern.o \
+	FirstLayerNodeVariableFillPattern.o \
+	SecondLayerNodeVariableFillPattern.o \
+	SecondLayerNodeNoCornersVariableFillPattern.o \
+	SparseData.o \
+	SparseDataFactory.o \
+	SparseDataVariable.o \
+	IntegerAttributeId.o \
+	DoubleAttributeId.o
 
         
 

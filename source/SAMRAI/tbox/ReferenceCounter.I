@@ -12,21 +12,6 @@ namespace SAMRAI {
 namespace tbox {
 
 SAMRAI_INLINE_KEYWORD
-ReferenceCounter::ReferenceCounter()
-{
-   d_references = 1;
-   d_next = (ReferenceCounter *)NULL;
-}
-
-SAMRAI_INLINE_KEYWORD
-ReferenceCounter::~ReferenceCounter()
-{
-   if ((d_next) && (--d_next->d_references == 0)) {
-      delete d_next;
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
 bool ReferenceCounter::deleteReference()
 {
    return --d_references == 0;
@@ -36,6 +21,11 @@ SAMRAI_INLINE_KEYWORD
 void ReferenceCounter::addReference()
 {
    d_references++;
+}
+
+SAMRAI_INLINE_KEYWORD
+bool ReferenceCounter::isFinalized() {
+   return s_is_finalized;
 }
 
 }

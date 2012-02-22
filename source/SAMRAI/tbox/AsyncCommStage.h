@@ -84,8 +84,7 @@ public:
     * @see Member::setHandler().
     */
    struct Handler {
-      virtual ~Handler() {
-      }
+      virtual ~Handler();
    };
 
    /*!
@@ -564,4 +563,7 @@ private:
 }
 }
 
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/tbox/AsyncCommStage.I"
+#endif
 #endif  // included_tbox_AsyncCommStage

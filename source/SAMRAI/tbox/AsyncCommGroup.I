@@ -26,48 +26,6 @@ namespace tbox {
  ****************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool AsyncCommGroup::isDone() const
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_next_task_op == none) {
-      TBOX_ASSERT(!hasPendingRequests());    // Verify sane state.
-   }
-#endif
-   return d_next_task_op == none;
-}
-
-SAMRAI_INLINE_KEYWORD
-void AsyncCommGroup::reduceData(
-   int* output,
-   const int* data) const
-{
-   int i;
-   switch (d_base_op) {
-      case max_reduce:
-         for (i = 0; i < d_external_size; ++i) {
-            if (output[i] < data[i]) output[i] = data[i];
-         }
-         break;
-      case min_reduce:
-         for (i = 0; i < d_external_size; ++i) {
-            if (output[i] > data[i]) output[i] = data[i];
-         }
-         break;
-      case sum_reduce:
-         for (i = 0; i < d_external_size; ++i) {
-            output[i] = output[i] + data[i];
-         }
-         break;
-      default:
-         TBOX_ERROR("Library error: d_base_op is somehow corrupted. ");
-   }
-}
-
-/*
- ****************************************************************
- ****************************************************************
- */
-SAMRAI_INLINE_KEYWORD
 void AsyncCommGroup::setMPITag(
    const int mpi_tag)
 {
@@ -241,6 +199,74 @@ void AsyncCommGroup::resetStatus()
    d_mpi_status.MPI_TAG =
       d_mpi_status.MPI_SOURCE =
          d_mpi_status.MPI_ERROR = -1;
+}
+
+/*
+ ************************************************************************
+ ************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+bool AsyncCommGroup::bcastByMpiCollective()
+{
+   d_mpi.Bcast(d_external_buf,
+      d_external_size,
+      MPI_INT,
+      d_root_rank);
+   d_next_task_op = none;
+   return true;
+}
+
+/*
+ **********************************************************************
+ * The fact that the current reduction is a sum reduction is recorded
+ * in the d_base_op parameter.  We simply use the generic method for
+ * checking reduction.
+ **********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+bool AsyncCommGroup::checkSumReduce()
+{
+   return checkReduce();
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void AsyncCommGroup::checkMPIParams()
+{
+   if (d_mpi_tag < 0) {
+      TBOX_ERROR("AsyncCommGroup: Invalid MPI tag value "
+         << d_mpi_tag << "\nUse setMPITag() to set it.");
+   }
+}
+
+/*
+ ***************************************************************************
+ * Allocate static timers.
+ ***************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void AsyncCommGroup::initializeCallback()
+{
+   t_reduce_data = TimerManager::getManager()->
+      getTimer("tbox::AsyncCommGroup::reduceData()");
+   t_wait_all = TimerManager::getManager()->
+      getTimer("tbox::AsyncCommGroup::mpi_wait_all");
+}
+
+/*
+ ***************************************************************************
+ * Release static timers.  To be called by shutdown registry to make sure
+ * memory for timers does not leak.
+ ***************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void AsyncCommGroup::finalizeCallback()
+{
+   t_reduce_data.reset();
+   t_wait_all.reset();
 }
 
 }

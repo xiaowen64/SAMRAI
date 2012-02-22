@@ -221,5 +221,91 @@ void StartupShutdownManager::finalize()
    s_initialized = false;
 }
 
+StartupShutdownManager::AbstractHandler::~AbstractHandler()
+{
+}
+
+StartupShutdownManager::Handler::Handler()
+{
+}
+
+StartupShutdownManager::Handler::Handler(
+   void(*initialize)(),
+   void(*startup)(),
+   void(*shutdown)(),
+   void(*finalize)(),
+   unsigned char priority):
+   d_initialize(initialize),
+   d_startup(startup),
+   d_shutdown(shutdown),
+   d_finalize(finalize),
+   d_priority(priority)
+{
+   StartupShutdownManager::registerHandler(this);
+}
+
+StartupShutdownManager::Handler::~Handler()
+{
+}
+
+void StartupShutdownManager::Handler::initialize()
+{
+   if (d_initialize) {
+      (*d_initialize)();
+   }
+}
+
+void StartupShutdownManager::Handler::startup()
+{
+   if (d_startup) {
+      (*d_startup)();
+   }
+}
+
+void StartupShutdownManager::Handler::shutdown()
+{
+   if (d_shutdown) {
+      (*d_shutdown)();
+   }
+}
+
+void StartupShutdownManager::Handler::finalize()
+{
+   if (d_finalize) {
+      (*d_finalize)();
+   }
+}
+
+unsigned char StartupShutdownManager::Handler::getPriority()
+{
+   return d_priority;
+}
+
+bool StartupShutdownManager::Handler::hasInitialize()
+{
+   return d_initialize != 0;
+}
+
+bool StartupShutdownManager::Handler::hasStartup()
+{
+   return d_startup != 0;
+}
+
+bool StartupShutdownManager::Handler::hasShutdown()
+{
+   return d_shutdown != 0;
+}
+
+bool StartupShutdownManager::Handler::hasFinalize()
+{
+   return d_finalize != 0;
+}
+
+StartupShutdownManager::ListElement::ListElement():
+   handler(0),
+   next(0)
+{
+}
+
 }
 }

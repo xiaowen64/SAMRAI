@@ -13,24 +13,6 @@
 namespace SAMRAI {
 namespace tbox {
 
-SAMRAI_INLINE_KEYWORD
-Dimension::Dimension():
-   d_dim(Dimension::getInvalidDimValue())
-{
-}
-
-SAMRAI_INLINE_KEYWORD Dimension::Dimension(
-   const unsigned short& dim):d_dim(dim) {
-   TBOX_DIM_ASSERT((!isValid()) ||
-      (d_dim > 0 && d_dim <= Dimension::getMaxDimValue()));
-}
-
-SAMRAI_INLINE_KEYWORD Dimension::Dimension(
-   const Dimension& dimension):d_dim(dimension.d_dim) {
-   TBOX_DIM_ASSERT((!isValid()) ||
-      (d_dim > 0 && d_dim <= Dimension::getMaxDimValue()));
-}
-
 SAMRAI_INLINE_KEYWORD Dimension& Dimension::operator = (
    const Dimension& rhs) {
    d_dim = rhs.d_dim;
@@ -134,6 +116,12 @@ Dimension::getInvalidDimension()
 {
    static Dimension invalidDim(Dimension::getInvalidDimValue());
    return invalidDim;
+}
+
+SAMRAI_INLINE_KEYWORD
+unsigned short
+Dimension::getValue() const {
+   return d_dim;
 }
 
 }

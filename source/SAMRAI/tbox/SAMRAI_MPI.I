@@ -11,6 +11,20 @@
 namespace SAMRAI {
 namespace tbox {
 
+SAMRAI_INLINE_KEYWORD
+void SAMRAI_MPI::setCallAbortInSerialInsteadOfExit(
+   bool flag)
+{
+   s_call_abort_in_serial_instead_of_exit = flag;
+}
+
+SAMRAI_INLINE_KEYWORD
+void SAMRAI_MPI::setCallAbortInParallelInsteadOfMPIAbort(
+   bool flag)
+{
+   s_call_abort_in_parallel_instead_of_mpiabort = flag;
+}
+
 /*
  **************************************************************************
  **************************************************************************
@@ -22,26 +36,14 @@ const SAMRAI_MPI& SAMRAI_MPI::getSAMRAIWorld() {
 
 /*
  **************************************************************************
+ * Whether SAMRAI is using MPI.
  **************************************************************************
  */
+
 SAMRAI_INLINE_KEYWORD
-SAMRAI_MPI::SAMRAI_MPI(
-   const Comm& comm):
-   d_comm(comm),
-   d_rank(-1),
-   d_size(-1)
+bool SAMRAI_MPI::usingMPI()
 {
-   if (comm != MPI_COMM_NULL) {
-#ifdef HAVE_MPI
-      if (s_mpi_is_initialized) {
-         MPI_Comm_rank(d_comm, &d_rank);
-         MPI_Comm_size(d_comm, &d_size);
-      }
-#else
-      d_rank = 0;
-      d_size = 1;
-#endif
-   }
+   return s_mpi_is_initialized == true;
 }
 
 /*
@@ -76,7 +78,7 @@ void SAMRAI_MPI::freeCommunicator()
 {
 #ifdef HAVE_MPI
    if (d_comm != MPI_COMM_NULL) {
-      TBOX_ASSERT(tbox::SAMRAI_MPI::usingMPI());
+      TBOX_ASSERT(SAMRAI_MPI::usingMPI());
       Comm_free(&d_comm);
       // d_comm is now set to MPI_COMM_NULL;
    }

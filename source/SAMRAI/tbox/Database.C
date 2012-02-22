@@ -19,6 +19,10 @@
 namespace SAMRAI {
 namespace tbox {
 
+Database::Database()
+{
+}
+
 Database::~Database()
 {
 }
@@ -150,34 +154,6 @@ void Database::getBoolArray(
       data[i] = tmp[i];
    }
 
-}
-
-void Database::getScalar(
-   const std::string& key,
-   bool& scalar)
-{
-   scalar = getBool(key);
-}
-
-void Database::putScalar(
-   const std::string& key,
-   const bool scalar)
-{
-   putBool(key, scalar);
-}
-
-void Database::getArray(
-   const std::string& key,
-   Array<bool>& array)
-{
-   array = getBoolArray(key);
-}
-
-void Database::putArray(
-   const std::string& key,
-   const Array<bool> array)
-{
-   putBoolArray(key, array);
 }
 
 /*
@@ -414,34 +390,6 @@ void Database::getCharArray(
    }
 }
 
-void Database::getScalar(
-   const std::string& key,
-   char& scalar)
-{
-   scalar = getChar(key);
-}
-
-void Database::putScalar(
-   const std::string& key,
-   const char scalar)
-{
-   putChar(key, scalar);
-}
-
-void Database::getArray(
-   const std::string& key,
-   Array<char>& array)
-{
-   array = getCharArray(key);
-}
-
-void Database::putArray(
-   const std::string& key,
-   const Array<char> array)
-{
-   putCharArray(key, array);
-}
-
 /*
  * Complex
  */
@@ -561,34 +509,6 @@ void Database::getComplexArray(
    for (int i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
-}
-
-void Database::getScalar(
-   const std::string& key,
-   dcomplex& scalar)
-{
-   scalar = getComplex(key);
-}
-
-void Database::putScalar(
-   const std::string& key,
-   const dcomplex scalar)
-{
-   putComplex(key, scalar);
-}
-
-void Database::getArray(
-   const std::string& key,
-   Array<dcomplex>& array)
-{
-   array = getComplexArray(key);
-}
-
-void Database::putArray(
-   const std::string& key,
-   const Array<dcomplex> array)
-{
-   putComplexArray(key, array);
 }
 
 /*
@@ -711,34 +631,6 @@ void Database::getFloatArray(
    }
 }
 
-void Database::getScalar(
-   const std::string& key,
-   float& scalar)
-{
-   scalar = getFloat(key);
-}
-
-void Database::putScalar(
-   const std::string& key,
-   const float scalar)
-{
-   putFloat(key, scalar);
-}
-
-void Database::getArray(
-   const std::string& key,
-   Array<float>& array)
-{
-   array = getFloatArray(key);
-}
-
-void Database::putArray(
-   const std::string& key,
-   const Array<float> array)
-{
-   putFloatArray(key, array);
-}
-
 /*
  * Double
  */
@@ -855,34 +747,6 @@ void Database::getDoubleArray(
    for (int i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
-}
-
-void Database::getScalar(
-   const std::string& key,
-   double& scalar)
-{
-   scalar = getDouble(key);
-}
-
-void Database::putScalar(
-   const std::string& key,
-   const double scalar)
-{
-   putDouble(key, scalar);
-}
-
-void Database::getArray(
-   const std::string& key,
-   Array<double>& array)
-{
-   array = getDoubleArray(key);
-}
-
-void Database::putArray(
-   const std::string& key,
-   const Array<double> array)
-{
-   putDoubleArray(key, array);
 }
 
 /*
@@ -1002,34 +866,6 @@ void Database::getIntegerArray(
    for (int i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
-}
-
-void Database::getScalar(
-   const std::string& key,
-   int& scalar)
-{
-   scalar = getInteger(key);
-}
-
-void Database::putScalar(
-   const std::string& key,
-   const int scalar)
-{
-   putInteger(key, scalar);
-}
-
-void Database::getArray(
-   const std::string& key,
-   Array<int>& array)
-{
-   array = getIntegerArray(key);
-}
-
-void Database::putArray(
-   const std::string& key,
-   const Array<int> array)
-{
-   putIntegerArray(key, array);
 }
 
 /*

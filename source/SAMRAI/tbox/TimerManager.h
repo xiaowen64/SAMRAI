@@ -283,8 +283,7 @@ private:
     * life cycle management.
     */
    void
-   activateExistingTimers(
-      void);
+   activateExistingTimers();
 
    /*
     * Static data members to manage the singleton timer manager instance.
@@ -350,7 +349,8 @@ private:
    /*
     * Build the timer_names, timer_values, and max_processor_id arrays.
     */
-   void buildTimerArrays(
+   void
+   buildTimerArrays(
       double timer_values[][18],
       int max_processor_id[][2],
       Array<std::string> timer_names);
@@ -358,10 +358,11 @@ private:
    /*
     * Build an ordered list array, organizing timers largest to smallest.
     */
-   void buildOrderedList(const double timer_values[][18],
-                         const int column,
-                         int index[],
-                         const int array_size);
+   void
+   buildOrderedList(const double timer_values[][18],
+      const int column,
+      int index[],
+      const int array_size);
 
    /*
     * Checks timer name to determine if it is specified to be turned
@@ -399,9 +400,10 @@ private:
     * implementation is based off of that provided in "Algorithms in
     * C++", 3rd Edition, Sedgewick.
     */
-   static void quicksort(const Array<double>&a,
-                         int index[],
-                         int lo, int hi);
+   static void
+   quicksort(const Array<double>&a,
+      int index[],
+      int lo, int hi);
 
    /*
     * Simple methods to compute percentages, given two doubles.
@@ -426,8 +428,7 @@ private:
     * be called in the constructor.
     */
    void
-   computeOverheadConstants(
-      void);
+   computeOverheadConstants();
    double
    computeOverheadConstantActiveOrInactive(
       bool active);
@@ -436,8 +437,7 @@ private:
     * Clear the registered timers.
     */
    void
-   clearArrays(
-      void);
+   clearArrays();
 
    /*!
     * Deallocate the TimerManager instance. Note that it is not

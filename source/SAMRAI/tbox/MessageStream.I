@@ -4,7 +4,8 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Fixed-size message buffer used in interprocessor communication
+ * Description:   Fixed-size message buffer used in interprocessor
+ *                communication
  *
  ************************************************************************/
 
@@ -45,8 +46,8 @@ void MessageStream::resetIndex()
 }
 
 SAMRAI_INLINE_KEYWORD
-void *
-MessageStream::getPointerAndAdvanceCursor(const size_t nbytes)
+void* MessageStream::getPointerAndAdvanceCursor(
+   const size_t nbytes)
 {
    void* ptr = &d_buffer[d_buffer_index];
    d_buffer_index += nbytes;

@@ -12,24 +12,6 @@ namespace SAMRAI {
 namespace tbox {
 
 SAMRAI_INLINE_KEYWORD
-Tracer::Tracer(
-   const std::string& message)
-{
-   d_message = message;
-   if (s_stream) {
-      (*s_stream) << "Entering " << d_message << std::endl << std::flush;
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
-Tracer::~Tracer()
-{
-   if (s_stream) {
-      (*s_stream) << "Exiting " << d_message << std::endl << std::flush;
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
 void Tracer::setTraceStream(
    std::ostream* stream)
 {

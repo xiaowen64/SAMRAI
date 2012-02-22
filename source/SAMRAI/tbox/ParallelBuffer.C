@@ -16,6 +16,10 @@
 #include <string>
 #include <cstring>
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/tbox/ParallelBuffer.I"
+#endif
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -82,63 +86,6 @@ void ParallelBuffer::setActive(
       d_buffer_ptr = 0;
    }
    d_active = active;
-}
-
-/*
- *************************************************************************
- *
- * Set the prefix that begins every new output line.
- *
- *************************************************************************
- */
-
-void ParallelBuffer::setPrefixString(
-   const std::string& text)
-{
-   d_prefix = text;
-}
-
-/*
- *************************************************************************
- *
- * Set the primary output stream.
- *
- *************************************************************************
- */
-
-void ParallelBuffer::setOutputStream1(
-   std::ostream* stream)
-{
-   d_ostream1 = stream;
-}
-
-/*
- *************************************************************************
- *
- * Set the secondary output stream.
- *
- *************************************************************************
- */
-
-void ParallelBuffer::setOutputStream2(
-   std::ostream* stream)
-{
-   d_ostream2 = stream;
-}
-
-/*
- *************************************************************************
- *
- * Output a string to the output stream by invoking the
- * outputString(string,length) method.
- *
- *************************************************************************
- */
-
-void ParallelBuffer::outputString(
-   const std::string& text)
-{
-   outputString(text, static_cast<int>(text.length()));
 }
 
 /*

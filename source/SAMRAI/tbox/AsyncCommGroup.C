@@ -51,13 +51,13 @@ namespace tbox {
 boost::shared_ptr<Timer> AsyncCommGroup::t_reduce_data;
 boost::shared_ptr<Timer> AsyncCommGroup::t_wait_all;
 
-tbox::StartupShutdownManager::Handler
+StartupShutdownManager::Handler
 AsyncCommGroup::s_initialize_finalize_handler(
    AsyncCommGroup::initializeCallback,
    0,
    0,
    AsyncCommGroup::finalizeCallback,
-   tbox::StartupShutdownManager::priorityTimers);
+   StartupShutdownManager::priorityTimers);
 
 /*
  ***********************************************************************
@@ -68,7 +68,7 @@ AsyncCommGroup::s_initialize_finalize_handler(
  */
 AsyncCommGroup::AsyncCommGroup():
    AsyncCommStage::Member(),
-   d_nchild(tbox::MathUtilities<int>::getMax()),
+   d_nchild(MathUtilities<int>::getMax()),
    d_idx(-1),
    d_root_idx(-1),
    d_parent_rank(-1),
@@ -80,7 +80,7 @@ AsyncCommGroup::AsyncCommGroup():
    d_external_size(0),
    d_internal_buf(),
    d_mpi_tag(-1),
-   d_mpi(tbox::SAMRAI_MPI::getSAMRAIWorld()),
+   d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
    d_use_mpi_collective_for_full_groups(false),
    d_use_blocking_send_to_children(false),
    d_use_blocking_send_to_parent(true)
@@ -115,7 +115,7 @@ AsyncCommGroup::AsyncCommGroup(
    d_external_size(0),
    d_internal_buf(),
    d_mpi_tag(-1),
-   d_mpi(tbox::SAMRAI_MPI::getSAMRAIWorld()),
+   d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
    d_use_mpi_collective_for_full_groups(false),
    d_use_blocking_send_to_children(false),
    d_use_blocking_send_to_parent(true)
@@ -135,7 +135,7 @@ AsyncCommGroup::AsyncCommGroup(
    const AsyncCommGroup& r):
    AsyncCommStage::Member(0, NULL, NULL),
    d_nchild(0),
-   d_mpi(tbox::SAMRAI_MPI::getSAMRAIWorld())
+   d_mpi(SAMRAI_MPI::getSAMRAIWorld())
 {
    NULL_USE(r);
    TBOX_ERROR(
@@ -230,6 +230,21 @@ bool AsyncCommGroup::proceedToNextWait()
 }
 
 /*
+ ****************************************************************
+ * Whether the last communicatoin operation has finished.
+ ****************************************************************
+ */
+bool AsyncCommGroup::isDone() const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (d_next_task_op == none) {
+      TBOX_ASSERT(!hasPendingRequests());    // Verify sane state.
+   }
+#endif
+   return d_next_task_op == none;
+}
+
+/*
  *********************************************************************
  * Wait for current communication operation to complete.
  *
@@ -264,20 +279,6 @@ void AsyncCommGroup::completeCurrentOperation()
    if (mpi_stat != NULL) {
       delete[] mpi_stat;
    }
-}
-
-/*
- ************************************************************************
- ************************************************************************
- */
-bool AsyncCommGroup::bcastByMpiCollective()
-{
-   d_mpi.Bcast(d_external_buf,
-      d_external_size,
-      MPI_INT,
-      d_root_rank);
-   d_next_task_op = none;
-   return true;
 }
 
 /*
@@ -346,11 +347,11 @@ bool AsyncCommGroup::checkBcast()
                   << "mpi_tag = " << d_mpi_tag);
             }
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
-            tbox::plog << "tag-" << d_mpi_tag
-                       << " expecting " << d_external_size
-                       << " from " << d_parent_rank
-                       << " in checkBcast"
-                       << std::endl;
+            plog << "tag-" << d_mpi_tag
+                 << " expecting " << d_external_size
+                 << " from " << d_parent_rank
+                 << " in checkBcast"
+                 << std::endl;
 #endif
          }
 
@@ -381,11 +382,11 @@ bool AsyncCommGroup::checkBcast()
                      << "mpi_tag = " << d_mpi_tag);
                }
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
-               tbox::plog << "tag-" << d_mpi_tag
-                          << " received " << count
-                          << " from " << d_mpi_status.MPI_SOURCE
-                          << " in checkBcast"
-                          << std::endl;
+               plog << "tag-" << d_mpi_tag
+                    << " received " << count
+                    << " from " << d_mpi_status.MPI_SOURCE
+                    << " in checkBcast"
+                    << std::endl;
 #endif
                TBOX_ASSERT(count <= d_external_size);
                TBOX_ASSERT(d_mpi_status.MPI_TAG == d_mpi_tag);
@@ -421,11 +422,11 @@ bool AsyncCommGroup::checkBcast()
                      << "mpi_tag = " << d_mpi_tag);
                }
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
-               tbox::plog << "tag-" << d_mpi_tag
-                          << " sending " << d_external_size
-                          << " to " << d_child_data[ic].rank
-                          << " in checkBcast"
-                          << std::endl;
+               plog << "tag-" << d_mpi_tag
+                    << " sending " << d_external_size
+                    << " to " << d_child_data[ic].rank
+                    << " in checkBcast"
+                    << std::endl;
 #endif
             }
          }
@@ -449,11 +450,11 @@ bool AsyncCommGroup::checkBcast()
                   int count = -1;
                   d_mpi.Get_count(&d_mpi_status, MPI_INT, &count);
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
-                  tbox::plog << "tag-" << d_mpi_tag
-                             << " sent unknown size (MPI convention)"
-                             << " to " << d_child_data[ic].rank
-                             << " in checkBcast"
-                             << std::endl;
+                  plog << "tag-" << d_mpi_tag
+                       << " sent unknown size (MPI convention)"
+                       << " to " << d_child_data[ic].rank
+                       << " in checkBcast"
+                       << std::endl;
 #endif
                }
 #endif
@@ -660,11 +661,11 @@ bool AsyncCommGroup::checkGather()
                   int count = -1;
                   d_mpi.Get_count(&d_mpi_status, MPI_INT, &count);
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
-                  tbox::plog << "tag-" << d_mpi_tag
-                             << " received " << count
-                             << " from " << d_mpi_status.MPI_SOURCE
-                             << " in checkGather"
-                             << std::endl;
+                  plog << "tag-" << d_mpi_tag
+                       << " received " << count
+                       << " from " << d_mpi_status.MPI_SOURCE
+                       << " in checkGather"
+                       << std::endl;
 #endif
                   if (count > d_child_data[ic].size * per_proc_msg_size) {
                      TBOX_ERROR("Message size bigger than expected from proc "
@@ -765,11 +766,11 @@ bool AsyncCommGroup::checkGather()
          } else {
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
             if (d_parent_rank > -1) {
-               tbox::plog << "tag-" << d_mpi_tag
-                          << " sent " << d_internal_buf.size()
-                          << " to " << d_parent_rank
-                          << " in checkGather"
-                          << std::endl;
+               plog << "tag-" << d_mpi_tag
+                    << " sent " << d_internal_buf.size()
+                    << " to " << d_parent_rank
+                    << " in checkGather"
+                    << std::endl;
             }
 #endif
             d_next_task_op = none;
@@ -810,24 +811,12 @@ bool AsyncCommGroup::beginSumReduce(
 }
 
 /*
- **********************************************************************
- * The fact that the current reduction is a sum reduction is recorded
- * in the d_base_op parameter.  We simply use the generic method for
- * checking reduction.
- **********************************************************************
- */
-bool AsyncCommGroup::checkSumReduce()
-{
-   return checkReduce();
-}
-
-/*
  ************************************************************************
  ************************************************************************
  */
 bool AsyncCommGroup::reduceByMpiCollective()
 {
-   tbox::SAMRAI_MPI::Op mpi_op =
+   SAMRAI_MPI::Op mpi_op =
       d_base_op == max_reduce ? MPI_MAX :
       d_base_op == min_reduce ? MPI_MIN :
       MPI_SUM;
@@ -891,7 +880,7 @@ bool AsyncCommGroup::beginReduce()
     */
    const int oldest_pos = toOldest(toPosition(d_idx));
    int limit_pos = toYoungest(toPosition(d_idx)) + 1;
-   limit_pos = tbox::MathUtilities<int>::Min(limit_pos, d_group_size);
+   limit_pos = MathUtilities<int>::Min(limit_pos, d_group_size);
    const int n_children = limit_pos > oldest_pos ? limit_pos - oldest_pos : 0;
 
    d_internal_buf.clear();
@@ -956,11 +945,11 @@ bool AsyncCommGroup::checkReduce()
                      << "mpi_tag = " << d_mpi_tag << '\n');
                }
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
-               tbox::plog << "tag-" << d_mpi_tag
-                          << " expecting " << msg_size
-                          << " from " << d_child_data[ic].rank
-                          << " in checkReduce"
-                          << std::endl;
+               plog << "tag-" << d_mpi_tag
+                    << " expecting " << msg_size
+                    << " from " << d_child_data[ic].rank
+                    << " in checkReduce"
+                    << std::endl;
 #endif
             }
          }
@@ -988,11 +977,11 @@ bool AsyncCommGroup::checkReduce()
                   int count = -1;
                   d_mpi.Get_count(&d_mpi_status, MPI_INT, &count);
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
-                  tbox::plog << " child-" << ic << " tag-" << d_mpi_tag
-                             << " received " << count
-                             << " from " << d_mpi_status.MPI_SOURCE
-                             << " in checkReduce"
-                             << std::endl;
+                  plog << " child-" << ic << " tag-" << d_mpi_tag
+                       << " received " << count
+                       << " from " << d_mpi_status.MPI_SOURCE
+                       << " in checkReduce"
+                       << std::endl;
 #endif
                   if (count != msg_size) {
                      TBOX_ERROR(
@@ -1009,10 +998,10 @@ bool AsyncCommGroup::checkReduce()
 #endif
                } else {
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
-                  tbox::plog << " child-" << ic << " tag-" << d_mpi_tag
-                             << " still waiting for proc " << d_child_data[ic].rank
-                             << " in checkReduce"
-                             << std::endl;
+                  plog << " child-" << ic << " tag-" << d_mpi_tag
+                       << " still waiting for proc " << d_child_data[ic].rank
+                       << " in checkReduce"
+                       << std::endl;
                   TBOX_ASSERT(req[ic] != MPI_REQUEST_NULL);
                   TBOX_ASSERT(numberOfPendingRequests() > 0);
 #endif
@@ -1066,11 +1055,11 @@ bool AsyncCommGroup::checkReduce()
                   << "mpi_tag = " << d_mpi_tag << '\n');
             }
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
-            tbox::plog << "tag-" << d_mpi_tag
-                       << " sending " << msg_size
-                       << " to " << d_parent_rank
-                       << " in checkReduce"
-                       << std::endl;
+            plog << "tag-" << d_mpi_tag
+                 << " sending " << msg_size
+                 << " to " << d_parent_rank
+                 << " in checkReduce"
+                 << std::endl;
 #endif
          }
 
@@ -1093,11 +1082,11 @@ bool AsyncCommGroup::checkReduce()
             int count = -1;
             d_mpi.Get_count(&d_mpi_status, MPI_INT, &count);
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
-            tbox::plog << "tag-" << d_mpi_tag
-                       << " sent " << count
-                       << " to " << d_parent_rank
-                       << " in checkReduce"
-                       << std::endl;
+            plog << "tag-" << d_mpi_tag
+                 << " sent " << count
+                 << " to " << d_parent_rank
+                 << " in checkReduce"
+                 << std::endl;
 #endif
 #endif
             d_next_task_op = send_check;
@@ -1227,6 +1216,38 @@ void AsyncCommGroup::setGroupAndRootIndex(
 
 /*
  ***************************************************************************
+ * Perform reduction on data that after it has been brought to the local
+ * process.
+ ***************************************************************************
+ */
+void AsyncCommGroup::reduceData(
+   int* output,
+   const int* data) const
+{
+   int i;
+   switch (d_base_op) {
+      case max_reduce:
+         for (i = 0; i < d_external_size; ++i) {
+            if (output[i] < data[i]) output[i] = data[i];
+         }
+         break;
+      case min_reduce:
+         for (i = 0; i < d_external_size; ++i) {
+            if (output[i] > data[i]) output[i] = data[i];
+         }
+         break;
+      case sum_reduce:
+         for (i = 0; i < d_external_size; ++i) {
+            output[i] = output[i] + data[i];
+         }
+         break;
+      default:
+         TBOX_ERROR("Library error: d_base_op is somehow corrupted. ");
+   }
+}
+
+/*
+ ***************************************************************************
  * Compute data that is dependent on the group, root and local processes.
  ***************************************************************************
  */
@@ -1278,18 +1299,6 @@ void AsyncCommGroup::computeDependentData(
  ***********************************************************************
  ***********************************************************************
  */
-void AsyncCommGroup::checkMPIParams()
-{
-   if (d_mpi_tag < 0) {
-      TBOX_ERROR("AsyncCommGroup: Invalid MPI tag value "
-         << d_mpi_tag << "\nUse setMPITag() to set it.");
-   }
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
 void AsyncCommGroup::logCurrentState(
    std::ostream& co) const
 {
@@ -1311,31 +1320,10 @@ void AsyncCommGroup::logCurrentState(
    co << '\n';
 }
 
-/*
- ***************************************************************************
- * Allocate static timers.
- ***************************************************************************
- */
-
-void AsyncCommGroup::initializeCallback(
-   void)
+AsyncCommGroup::ChildData::ChildData():
+   rank(-1),
+   size(-1)
 {
-   t_reduce_data = TimerManager::getManager()->
-      getTimer("tbox::AsyncCommGroup::reduceData()");
-   t_wait_all = TimerManager::getManager()->
-      getTimer("tbox::AsyncCommGroup::mpi_wait_all");
-}
-
-/*
- ***************************************************************************
- * Release static timers.  To be called by shutdown registry to make sure
- * memory for timers does not leak.
- ***************************************************************************
- */
-void AsyncCommGroup::finalizeCallback()
-{
-   t_reduce_data.reset();
-   t_wait_all.reset();
 }
 
 }

@@ -161,4 +161,7 @@ private:
 }
 }
 
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/tbox/InputManager.I"
+#endif
 #endif

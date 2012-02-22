@@ -32,6 +32,19 @@ ReferenceCounter::s_handler(
    ReferenceCounter::finalizeCallback,
    StartupShutdownManager::priorityReferenceCounter);
 
+ReferenceCounter::ReferenceCounter()
+{
+   d_references = 1;
+   d_next = (ReferenceCounter *)NULL;
+}
+
+ReferenceCounter::~ReferenceCounter()
+{
+   if ((d_next) && (--d_next->d_references == 0)) {
+      delete d_next;
+   }
+}
+
 void *ReferenceCounter::operator new (
    size_t bytes)
 {
@@ -45,8 +58,7 @@ void *ReferenceCounter::operator new (
       s_free_list = s_free_list->d_next;
       return node;
    } else {
-      return ::operator new (
-                bytes);
+      return ::operator new (bytes);
    }
 }
 
@@ -67,10 +79,8 @@ void ReferenceCounter::finalizeCallback()
 {
    while (s_free_list) {
       void * byebye = s_free_list;
-      s_free_list = s_free_list->d_next
-      ;
-      ::operator delete (
-         byebye);
+      s_free_list = s_free_list->d_next;
+      ::operator delete (byebye);
    }
 
    s_is_finalized = true;

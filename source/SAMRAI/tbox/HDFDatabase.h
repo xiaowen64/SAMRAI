@@ -698,6 +698,9 @@ private:
 }
 }
 
-#endif
 
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/tbox/HDFDatabase.I"
+#endif
+#endif
 #endif

@@ -38,8 +38,7 @@
 namespace SAMRAI {
 namespace tbox {
 
-TimerManager * TimerManager::s_timer_manager_instance =
-   (TimerManager *)NULL;
+TimerManager * TimerManager::s_timer_manager_instance = (TimerManager *)NULL;
 
 int TimerManager::s_main_timer_identifier = -1;
 int TimerManager::s_inactive_timer_identifier = -9999;
@@ -2417,8 +2416,7 @@ double TimerManager::computeOverheadConstantActiveOrInactive(
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void TimerManager::computeOverheadConstants(
-   void)
+void TimerManager::computeOverheadConstants()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
 
@@ -2437,8 +2435,7 @@ void TimerManager::computeOverheadConstants(
 #endif  // ENABLE_SAMRAI_TIMERS
 }
 
-void TimerManager::clearArrays(
-   void)
+void TimerManager::clearArrays()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    /*

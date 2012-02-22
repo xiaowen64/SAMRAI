@@ -29,9 +29,14 @@ class DatabaseFactory
 {
 public:
   /**
+   * Default constructor
+   */
+  DatabaseFactory();
+
+  /**
     * Destructor
     */
-  virtual ~DatabaseFactory() {};
+  virtual ~DatabaseFactory();
 
   /**
     * Build a new Database instance.

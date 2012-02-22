@@ -154,9 +154,8 @@ public:
     * used for comparisons, the Dimension comparison operations are
     * better suited for that purpose.
     */
-   unsigned short getValue() const {
-      return d_dim;
-   }
+   unsigned short
+   getValue() const;
 
    /**
     * Returns the maximum dimension for the currently compiled library
@@ -215,7 +214,7 @@ public:
    template<class>
    friend class pdat::ArrayData;
    friend class hier::IntVector;
-   friend class tbox::DatabaseBox;
+   friend class DatabaseBox;
 
    /**
     * Output operator for debugging and error messages.

@@ -55,7 +55,7 @@ public:
    /*
     * The flag value for use in the Array uninitialized constructor.
     */
-   static const typename tbox::Array<TYPE>::DoNotInitialize UNINITIALIZED;
+   static const typename Array<TYPE>::DoNotInitialize UNINITIALIZED;
 
    /**
     * Create an array of zero elements.

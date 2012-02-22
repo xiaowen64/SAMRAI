@@ -21,15 +21,16 @@ include $(OBJECT)/config/Makefile.config
 
 SUBDIRS = fortran
 
-OBJS =  BoxGeometryVariableFillPattern.o \
-        PatchInteriorVariableFillPattern.o		\
-        PatchLevelFullFillPattern.o		\
-        PatchLevelBorderFillPattern.o		\
-        PatchLevelBorderAndInteriorFillPattern.o		\
-        PatchLevelEnhancedFillPattern.o		\
-        PatchLevelInteriorFillPattern.o		\
-        PatchLevelFillPattern.o		\
-        VariableFillPattern.o		\
+OBJS = 	\
+	BoxGeometryVariableFillPattern.o \
+	PatchInteriorVariableFillPattern.o \
+	PatchLevelFullFillPattern.o \
+	PatchLevelBorderFillPattern.o \
+	PatchLevelBorderAndInteriorFillPattern.o \
+	PatchLevelEnhancedFillPattern.o \
+	PatchLevelInteriorFillPattern.o \
+	PatchLevelFillPattern.o \
+	VariableFillPattern.o \
 	RefineAlgorithm.o \
 	CoarsenAlgorithm.o \
 	RefineSchedule.o \

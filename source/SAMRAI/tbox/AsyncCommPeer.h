@@ -77,8 +77,7 @@ public:
    /*!
     * @brief Destructor.
     */
-   virtual ~AsyncCommPeer(
-      void);
+   virtual ~AsyncCommPeer();
 
    /*!
     * @brief Initialize the object.
@@ -301,12 +300,7 @@ private:
    union FlexData {
       int i;
       TYPE t;
-      FlexData()
-      {
-#ifdef DEBUG_INITIALIZE_UNDEFINED
-         memset(&i, 0, std::max(sizeof(int), sizeof(TYPE)));
-#endif
-      }
+      FlexData();
    };
 
    /*
@@ -467,8 +461,7 @@ private:
     * \brief Initialize static state
     */
    static bool
-   initialize(
-      void);
+   initialize();
 
 };
 

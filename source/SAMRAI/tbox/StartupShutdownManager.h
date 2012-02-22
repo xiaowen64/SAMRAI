@@ -68,8 +68,7 @@ public:
       /*!
        * @brief Virtual destructor since class has virtual methods.
        */
-      virtual ~AbstractHandler() {
-      }
+      virtual ~AbstractHandler();
 
       /*!
        * @brief Method that is invoked on initialize.
@@ -79,8 +78,7 @@ public:
        * Only called by StartupShutdownManager.
        */
       virtual void
-      initialize(
-         void) = 0;
+      initialize() = 0;
 
       /*!
        * @brief Method that is invoked on startup.
@@ -90,8 +88,7 @@ public:
        * Only called by StartupShutdownManager.
        */
       virtual void
-      startup(
-         void) = 0;
+      startup() = 0;
 
       /*!
        * @brief Method that is invoked on shutdown.
@@ -101,8 +98,7 @@ public:
        * Only called by StartupShutdownManager.
        */
       virtual void
-      shutdown(
-         void) = 0;
+      shutdown() = 0;
 
       /*!
        * @brief Method that is invoked on finalize.
@@ -112,15 +108,13 @@ public:
        * Only called by StartupShutdownManager.
        */
       virtual void
-      finalize(
-         void) = 0;
+      finalize() = 0;
 
       /*!
        * @brief Get the Priority of this handler.
        */
       virtual unsigned char
-      getPriority(
-         void) = 0;
+      getPriority() = 0;
 
       /*!
        * @brief Query if handler has initialize callback function.
@@ -166,11 +160,11 @@ public:
     * \code
     * classs StartupShutdownExample {
     * public:
-    *    static void startupCallback(void) {
+    *    static void startupCallback() {
     *       // stuff to do for class initialization.
     *    }
     *
-    *    static void shutdownCallback(void) {
+    *    static void shutdownCallback() {
     *       // stuff to do for class destruction.
     *    }
     * private:
@@ -220,101 +214,61 @@ public:
        *
        */
       Handler(
-         void(*initialize)(void),
-         void(*startup)(void),
-         void(*shutdown)(void),
-         void(*finalize)(void),
-         unsigned char priority):
-         d_initialize(initialize),
-         d_startup(startup),
-         d_shutdown(shutdown),
-         d_finalize(finalize),
-         d_priority(priority)
-      {
-         StartupShutdownManager::registerHandler(this);
-      }
+         void(*initialize)(),
+         void(*startup)(),
+         void(*shutdown)(),
+         void(*finalize)(),
+         unsigned char priority);
 
       /*!
        * @brief Destructor.
        */
-      ~Handler() {
-      }
+      ~Handler();
 
       /*!
        * @brief Call initialize callback function.
        */
-      void initialize(
-         void) {
-         if (d_initialize) {
-            (*d_initialize)();
-         }
-      }
+      void initialize();
 
       /*!
        * @brief Call startup callback function.
        */
-      void startup(
-         void) {
-         if (d_startup) {
-            (*d_startup)();
-         }
-      }
+      void startup();
 
       /*!
        * @brief Call shutdown callback function.
        */
-      void shutdown(
-         void) {
-         if (d_shutdown) {
-            (*d_shutdown)();
-         }
-      }
+      void shutdown();
 
       /*!
        * @brief Call finalize callback function.
        */
-      void finalize(
-         void) {
-         if (d_finalize) {
-            (*d_finalize)();
-         }
-      }
+      void finalize();
 
       /*!
        * @brief Get the priority.
        */
-      unsigned char getPriority(
-         void) {
-         return d_priority;
-      }
+      unsigned char getPriority();
 
       /*!
        * @brief Query if initialize function has been provided.
        */
-      bool hasInitialize() {
-         return d_initialize != 0;
-      }
+      bool hasInitialize();
 
       /*!
        * @brief Query if startup function has been provided.
        */
-      bool hasStartup() {
-         return d_startup != 0;
-      }
+      bool hasStartup();
 
       /*!
        * @brief Query if shutdown function has been provided.
        */
-      bool hasShutdown() {
-         return d_shutdown != 0;
-      }
+      bool hasShutdown();
 
       /*!
        * @brief Query if finalize function has been provided.
        */
-      bool hasFinalize() {
-         return d_finalize != 0;
-      }
+      bool hasFinalize();
 
 private:
       /*!
@@ -322,32 +276,27 @@ private:
        *
        * TODO:  Should this be unimplemented?
        */
-      Handler() {
-      }
+      Handler();
 
       /*!
        * @brief Initialize function.
        */
-      void (* d_initialize)(
-         void);
+      void (* d_initialize)();
 
       /*!
        * @brief Startup function.
        */
-      void (* d_startup)(
-         void);
+      void (* d_startup)();
 
       /*!
        * @brief Shutdown function.
        */
-      void (* d_shutdown)(
-         void);
+      void (* d_shutdown)();
 
       /*!
        * @brief Finalize function.
        */
-      void (* d_finalize)(
-         void);
+      void (* d_finalize)();
 
       /*!
        * @brief Priority of the handler.
@@ -449,8 +398,7 @@ private:
     * @brief Sets up the StartupShutdownManager singleton.
     */
    static void
-   setupSingleton(
-      void);
+   setupSingleton();
 
    /*!
     * @brief Used to maintain a list of registered handlers.
@@ -464,11 +412,7 @@ public:
       /*!
        * @brief Constructor.
        */
-      ListElement():
-         handler(0),
-         next(0)
-      {
-      }
+      ListElement();
 
       /*!
        * @brief A registered handler being stored in a list.

@@ -78,7 +78,7 @@ public:
     * An assertion failure will result if the array is empty.
     */
    explicit RankGroup(
-      const tbox::Array<int>& rank_group,
+      const Array<int>& rank_group,
       const SAMRAI_MPI& samrai_mpi =
          SAMRAI_MPI(SAMRAI_MPI::getSAMRAIWorld()));
 
@@ -146,7 +146,7 @@ private:
    int d_min;
    int d_max;
 
-   tbox::Array<int> d_ranks;
+   Array<int> d_ranks;
 
    StorageType d_storage;
 

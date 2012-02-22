@@ -82,9 +82,7 @@ public:
     * This method is used only for a debugging check assert in
     * the pointer class and should not normally be used.
     */
-   static bool isFinalized() {
-      return s_is_finalized;
-   }
+   static bool isFinalized();
 
 private:
    ReferenceCounter(

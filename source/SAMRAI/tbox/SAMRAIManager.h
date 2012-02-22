@@ -177,4 +177,7 @@ private:
 }
 }
 
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/tbox/SAMRAIManager.I"
+#endif
 #endif

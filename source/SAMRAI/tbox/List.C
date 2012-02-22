@@ -35,6 +35,22 @@ template<class TYPE>
 bool List<TYPE>::s_initialized = false;
 
 template<class TYPE>
+ListNode<TYPE>::ListNode(
+   const TYPE& t,
+   ListNode<TYPE>* n,
+   ListNode<TYPE>* p):
+   d_item(t),
+   d_next(n),
+   d_prev(p)
+{
+}
+
+template<class TYPE>
+ListNode<TYPE>::~ListNode()
+{
+}
+
+template<class TYPE>
 void * ListNode<TYPE>::operator new (
    size_t bytes)
 {
@@ -81,6 +97,43 @@ void ListNode<TYPE>::freeCachedListItems()
    }
    s_free_list = NULL;
    s_num_free = 0;
+}
+
+template<class TYPE>
+ListIterator<TYPE>::ListIterator()
+{
+   d_list = ((List<TYPE> *)NULL);
+   d_node = ((ListNode<TYPE> *)NULL);
+}
+
+template<class TYPE>
+ListIterator<TYPE>::ListIterator(
+   const List<TYPE>& list)
+{
+   d_list = (List<TYPE> *) & list;
+   d_node = list.d_list_head;
+}
+
+template<class TYPE>
+ListIterator<TYPE>::ListIterator(
+   List<TYPE>* list,
+   ListNode<TYPE>* node)
+{
+   d_list = list;
+   d_node = node;
+}
+
+template<class TYPE>
+ListIterator<TYPE>::ListIterator(
+   const ListIterator<TYPE>& iter)
+{
+   d_list = iter.d_list;
+   d_node = iter.d_node;
+}
+
+template<class TYPE>
+ListIterator<TYPE>::~ListIterator()
+{
 }
 
 template<class TYPE>
@@ -319,12 +372,6 @@ void List<TYPE>::swap(
    ListNode<TYPE>* tmpt = d_list_tail;
    d_list_tail = r.d_list_tail;
    r.d_list_tail = tmpt;
-}
-
-template<class TYPE>
-void List<TYPE>::finalizeCallback()
-{
-   ListNode<TYPE>::freeCachedListItems();
 }
 
 }

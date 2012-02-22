@@ -15,6 +15,10 @@
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/tbox/BalancedDepthFirstTree.I"
+#endif
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -205,11 +209,6 @@ void BalancedDepthFirstTree::initialize(
    tbox::plog << "  /  \\ " << std::endl;
    tbox::plog << d_children[0] << "   " << d_children[1] << std::endl;
 #endif
-}
-
-unsigned int BalancedDepthFirstTree::getInvalidRank() const
-{
-   return 1 << (8 * sizeof(unsigned int) - 2);
 }
 
 }

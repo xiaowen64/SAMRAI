@@ -353,7 +353,7 @@ int Statistician::getProcStatId(
 int Statistician::getGlobalProcStatSequenceLength(
    int proc_stat_id)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    int seq_len = -1;
 
    if (mpi.getRank() == 0) {
@@ -386,7 +386,7 @@ double Statistician::getGlobalProcStatValue(
    int seq_num,
    int proc_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    double val = 0.;
 
    if (mpi.getRank() == 0) {
@@ -420,7 +420,7 @@ double Statistician::getGlobalProcStatSum(
    int proc_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    double sum = 0.;
 
    if (mpi.getRank() == 0) {
@@ -447,8 +447,8 @@ double Statistician::getGlobalProcStatMax(
    int proc_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-   double pmax = -(tbox::MathUtilities<double>::getMax());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   double pmax = -(MathUtilities<double>::getMax());
 
    if (mpi.getRank() == 0) {
 
@@ -474,7 +474,7 @@ int Statistician::getGlobalProcStatMaxProcessorId(
    int proc_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    int id = -1;
 
    if (mpi.getRank() == 0) {
@@ -502,8 +502,8 @@ double Statistician::getGlobalProcStatMin(
    int proc_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-   double pmin = tbox::MathUtilities<double>::getMax();
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   double pmin = MathUtilities<double>::getMax();
 
    if (mpi.getRank() == 0) {
 
@@ -529,7 +529,7 @@ int Statistician::getGlobalProcStatMinProcessorId(
    int proc_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    int id = -1;
 
    if (mpi.getRank() == 0) {
@@ -557,7 +557,7 @@ void Statistician::printGlobalProcStatData(
    std::ostream& os,
    int precision)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
    if (mpi.getRank() == 0) {
 
@@ -611,7 +611,7 @@ void Statistician::printGlobalProcStatDataFormatted(
    std::ostream& os,
    int precision)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
    if (mpi.getRank() == 0) {
 
@@ -691,7 +691,7 @@ void Statistician::printGlobalProcStatDataFormatted(
    std::ostream& os,
    int precision)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
    if (mpi.getRank() == 0) {
 
@@ -773,7 +773,7 @@ int Statistician::getPatchStatId(
 int Statistician::getGlobalPatchStatSequenceLength(
    int patch_stat_id)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    int seq_len = -1;
 
    if (mpi.getRank() == 0) {
@@ -805,7 +805,7 @@ int Statistician::getGlobalPatchStatNumberPatches(
    int patch_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
    int num_patches = -1;
 
@@ -842,7 +842,7 @@ int Statistician::getGlobalPatchStatPatchMapping(
    int seq_num,
    int patch_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    int mapping = -1;
 
    if (mpi.getRank() == 0) {
@@ -880,7 +880,7 @@ double Statistician::getGlobalPatchStatValue(
    int seq_num,
    int patch_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    double val = 0.;
 
    if (mpi.getRank() == 0) {
@@ -915,7 +915,7 @@ double Statistician::getGlobalPatchStatSum(
    int patch_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
    double sum = 0.;
 
@@ -954,8 +954,8 @@ double Statistician::getGlobalPatchStatMax(
    int patch_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-   double pmax = -(tbox::MathUtilities<double>::getMax());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   double pmax = -(MathUtilities<double>::getMax());
 
    if (mpi.getRank() == 0) {
 
@@ -993,8 +993,8 @@ int Statistician::getGlobalPatchStatMaxPatchId(
    int patch_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-   double pmax = -(tbox::MathUtilities<double>::getMax());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   double pmax = -(MathUtilities<double>::getMax());
    int id = -1;
 
    if (mpi.getRank() == 0) {
@@ -1036,8 +1036,8 @@ double Statistician::getGlobalPatchStatMin(
    int patch_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-   double pmin = tbox::MathUtilities<double>::getMax();
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   double pmin = MathUtilities<double>::getMax();
 
    if (mpi.getRank() == 0) {
 
@@ -1075,8 +1075,8 @@ int Statistician::getGlobalPatchStatMinPatchId(
    int patch_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-   double pmin = tbox::MathUtilities<double>::getMax();
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   double pmin = MathUtilities<double>::getMax();
    int id = -1;
 
    if (mpi.getRank() == 0) {
@@ -1120,7 +1120,7 @@ double Statistician::getGlobalPatchStatProcessorSum(
    int processor_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    double sum = -1.;
 
    if (mpi.getRank() == 0) {
@@ -1155,8 +1155,8 @@ double Statistician::getGlobalPatchStatProcessorSumMax(
    int patch_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-   double pmax = -(tbox::MathUtilities<double>::getMax());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   double pmax = -(MathUtilities<double>::getMax());
 
    if (mpi.getRank() == 0) {
 
@@ -1192,8 +1192,8 @@ int Statistician::getGlobalPatchStatProcessorSumMaxId(
    int patch_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-   double pmax = -(tbox::MathUtilities<double>::getMax());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   double pmax = -(MathUtilities<double>::getMax());
    int id = -1;
 
    if (mpi.getRank() == 0) {
@@ -1232,8 +1232,8 @@ double Statistician::getGlobalPatchStatProcessorSumMin(
    int patch_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-   double pmin = tbox::MathUtilities<double>::getMax();
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   double pmin = MathUtilities<double>::getMax();
 
    if (mpi.getRank() == 0) {
 
@@ -1270,8 +1270,8 @@ int Statistician::getGlobalPatchStatProcessorSumMinId(
    int patch_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-   double pmin = tbox::MathUtilities<double>::getMax();
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   double pmin = MathUtilities<double>::getMax();
    int id = -1;
 
    if (mpi.getRank() == 0) {
@@ -1311,7 +1311,7 @@ int Statistician::getGlobalPatchStatNumberPatchesOnProc(
    int seq_num,
    int proc_id)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    TBOX_ASSERT(patch_stat_id >= 0 &&
       patch_stat_id < d_global_patch_stat_data.getSize());
    TBOX_ASSERT(seq_num >= 0 &&
@@ -1346,7 +1346,7 @@ int Statistician::getGlobalPatchStatMaxPatchesPerProc(
    int patch_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    TBOX_ASSERT(patch_stat_id >= 0 &&
       patch_stat_id < d_global_patch_stat_proc_data.getSize());
    TBOX_ASSERT(seq_num >= 0 &&
@@ -1399,7 +1399,7 @@ int Statistician::getGlobalPatchStatMaxPatchesPerProcId(
    int patch_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    TBOX_ASSERT(patch_stat_id >= 0 &&
       patch_stat_id < d_global_patch_stat_proc_data.getSize());
    TBOX_ASSERT(seq_num >= 0 &&
@@ -1457,7 +1457,7 @@ int Statistician::getGlobalPatchStatMinPatchesPerProc(
    int patch_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    TBOX_ASSERT(patch_stat_id >= 0 &&
       patch_stat_id < d_global_patch_stat_proc_data.getSize());
    TBOX_ASSERT(seq_num >= 0 &&
@@ -1516,7 +1516,7 @@ int Statistician::getGlobalPatchStatMinPatchesPerProcId(
    int patch_stat_id,
    int seq_num)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    TBOX_ASSERT(patch_stat_id >= 0 &&
       patch_stat_id < d_global_patch_stat_proc_data.getSize());
    TBOX_ASSERT(seq_num >= 0 &&
@@ -1575,7 +1575,7 @@ void Statistician::printGlobalPatchStatData(
    std::ostream& os,
    int precision)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
    if (mpi.getRank() == 0) {
 
@@ -1627,7 +1627,7 @@ void Statistician::printGlobalPatchStatDataFormatted(
    std::ostream& os,
    int precision)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getRank() == 0) {
 
       if (d_must_call_finalize) {
@@ -1717,7 +1717,7 @@ void Statistician::printGlobalPatchStatDataFormatted(
 void Statistician::finalize(
    bool gather_individual_stats_on_proc_0)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    int nnodes = mpi.getSize();
    int my_rank = mpi.getRank();
 
@@ -2230,24 +2230,6 @@ void Statistician::checkStatsForConsistency(
 /*
  *************************************************************************
  *
- * Utility functions for retrieving statistic data from statistician.
- *
- *************************************************************************
- */
-
-int Statistician::getNumberProcessorStats() const
-{
-   return d_num_proc_stats;
-}
-
-int Statistician::getNumberPatchStats() const
-{
-   return d_num_patch_stats;
-}
-
-/*
- *************************************************************************
- *
  * Utility functions to print local statistic information and global
  * statistic information (after calling finalize()).
  *
@@ -2281,7 +2263,7 @@ void Statistician::printAllGlobalStatData(
    std::ostream& os,
    int precision)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
    if (mpi.getRank() == 0) {
 
@@ -2334,7 +2316,7 @@ void Statistician::printAllSummedGlobalStatData(
    const std::string& filename,
    int precision)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getRank() == 0) {
       std::ofstream file(filename.c_str());
       printAllSummedGlobalStatData(file, precision);
@@ -2347,7 +2329,7 @@ void Statistician::printAllSummedGlobalStatData(
    std::ostream& os,
    int precision)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
    if (mpi.getRank() == 0) {
       os.precision(precision);
@@ -2400,7 +2382,7 @@ void Statistician::printSpreadSheetOutput(
    const std::string& dirname,
    int precision)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
    /*
     * Generate directory to write output
@@ -2472,7 +2454,7 @@ void Statistician::printSpreadSheetOutputForProcessor(
    const std::string& dirname,
    int precision)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
    /*
     * Generate directory to write output
@@ -2679,18 +2661,6 @@ void StatisticRestartDatabase::getFromRestart()
       stat->getFromRestart(sub_database);
    }
 
-}
-
-int Statistician::getMaximumNumberOfStatistics() {
-   return d_proc_statistics.getSize();
-}
-
-void Statistician::setMaximumNumberOfStatistics(
-   const int size) {
-   if (size > d_proc_statistics.getSize()) {
-      d_proc_statistics.resizeArray(size);
-      d_patch_statistics.resizeArray(size);
-   }
 }
 
 }

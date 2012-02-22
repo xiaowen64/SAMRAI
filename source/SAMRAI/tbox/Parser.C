@@ -219,21 +219,6 @@ void Parser::warning(
 /*
  *************************************************************************
  *
- * Set the input line which is currently being parsed.
- *
- *************************************************************************
- */
-
-void Parser::setLine(
-   const std::string& line)
-{
-   Parser::ParseData& pd = d_parse_stack.getFirstItem();
-   pd.d_linebuffer = line;
-}
-
-/*
- *************************************************************************
- *
  * Iterate through the database scopes, looking for the first match on
  * the key value.
  *
@@ -263,7 +248,7 @@ bool Parser::pushIncludeFile(
    const std::string& filename)
 {
    FILE* fstream = NULL;
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
    std::string filename_with_path;
 
@@ -330,7 +315,7 @@ int Parser::yyinput(
    char* buffer,
    const int max_size)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    int byte = 0;
    if (mpi.getRank() == 0) {
       byte = static_cast<int>(fread(buffer,

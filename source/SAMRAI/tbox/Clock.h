@@ -110,4 +110,7 @@ private:
 }
 }
 
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/tbox/Clock.I"
+#endif
 #endif

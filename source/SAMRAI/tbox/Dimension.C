@@ -20,6 +20,23 @@
 namespace SAMRAI {
 namespace tbox {
 
+Dimension::Dimension():
+   d_dim(Dimension::getInvalidDimValue())
+{
+}
+
+Dimension::Dimension(
+   const unsigned short& dim):d_dim(dim) {
+   TBOX_DIM_ASSERT((!isValid()) ||
+      (d_dim > 0 && d_dim <= Dimension::getMaxDimValue()));
+}
+
+Dimension::Dimension(
+   const Dimension& dimension):d_dim(dimension.d_dim) {
+   TBOX_DIM_ASSERT((!isValid()) ||
+      (d_dim > 0 && d_dim <= Dimension::getMaxDimValue()));
+}
+
 std::ostream& operator << (
    std::ostream& s,
    const Dimension& dim)

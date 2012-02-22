@@ -57,13 +57,37 @@ namespace tbox {
 SAMRAI_MPI::Comm SAMRAI_MPI::commWorld = MPI_COMM_NULL;
 SAMRAI_MPI::Comm SAMRAI_MPI::commNull = MPI_COMM_NULL;
 
-bool tbox::SAMRAI_MPI::s_mpi_is_initialized = false;
-bool tbox::SAMRAI_MPI::s_we_started_mpi(false);
-tbox::SAMRAI_MPI tbox::SAMRAI_MPI::s_samrai_world(tbox::SAMRAI_MPI::commNull);
+bool SAMRAI_MPI::s_mpi_is_initialized = false;
+bool SAMRAI_MPI::s_we_started_mpi(false);
+SAMRAI_MPI SAMRAI_MPI::s_samrai_world(SAMRAI_MPI::commNull);
 
 bool SAMRAI_MPI::s_call_abort_in_serial_instead_of_exit = false;
 bool SAMRAI_MPI::s_call_abort_in_parallel_instead_of_mpiabort = false;
 int SAMRAI_MPI::s_invalid_rank = -1;
+
+/*
+ **************************************************************************
+ * Constructor.
+ **************************************************************************
+ */
+SAMRAI_MPI::SAMRAI_MPI(
+   const Comm& comm):
+   d_comm(comm),
+   d_rank(-1),
+   d_size(-1)
+{
+   if (comm != MPI_COMM_NULL) {
+#ifdef HAVE_MPI
+      if (s_mpi_is_initialized) {
+         MPI_Comm_rank(d_comm, &d_rank);
+         MPI_Comm_size(d_comm, &d_size);
+      }
+#else
+      d_rank = 0;
+      d_size = 1;
+#endif
+   }
+}
 
 /*
  **************************************************************************
@@ -73,23 +97,11 @@ int SAMRAI_MPI::s_invalid_rank = -1;
  **************************************************************************
  */
 
-void SAMRAI_MPI::setCallAbortInSerialInsteadOfExit(
-   bool flag)
-{
-   s_call_abort_in_serial_instead_of_exit = flag;
-}
-
-void SAMRAI_MPI::setCallAbortInParallelInsteadOfMPIAbort(
-   bool flag)
-{
-   s_call_abort_in_parallel_instead_of_mpiabort = flag;
-}
-
 void SAMRAI_MPI::abort()
 {
 
 #ifdef HAVE_MPI
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getSize() > 1) {
       if (s_call_abort_in_parallel_instead_of_mpiabort) {
          ::abort();
@@ -111,17 +123,6 @@ void SAMRAI_MPI::abort()
    }
 #endif
 
-}
-
-/*
- **************************************************************************
- * Whether SAMRAI is using MPI.
- **************************************************************************
- */
-
-bool SAMRAI_MPI::usingMPI()
-{
-   return s_mpi_is_initialized == true;
 }
 
 /*

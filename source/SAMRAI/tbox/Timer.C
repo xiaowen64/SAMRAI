@@ -236,6 +236,22 @@ void Timer::reset()
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
+bool Timer::isConcurrentTimer(
+   const Timer& timer) const
+{
+#ifdef ENABLE_SAMRAI_TIMERS
+   for (std::vector<const Timer *>::const_iterator i = d_concurrent_timers.begin();
+        i != d_concurrent_timers.end();
+        ++i) {
+      if (*i == &timer) {
+         return true;
+      }
+   }
+
+#endif // ENABLE_SAMRAI_TIMERS
+   return false;
+}
+
 /*
  ***************************************************************************
  *
@@ -254,7 +270,7 @@ void Timer::reset()
 double Timer::computeLoadBalanceEfficiency()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    double wall_time = d_wallclock_total;
    double sum = wall_time;
    if (mpi.getSize() > 1) {
@@ -277,7 +293,7 @@ double Timer::computeLoadBalanceEfficiency()
 void Timer::computeMaxWallclock()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    double wall_time = d_wallclock_total;
    if (mpi.getSize() > 1) {
       mpi.Allreduce(

@@ -234,7 +234,7 @@ int Statistic::getDataStreamSize()
 void Statistic::packStream(
    MessageStream& stream)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getRank() == 0) {
       TBOX_ERROR("Statistic::packStream error...\n"
          << "    Processor zero should not pack stat data" << std::endl);
@@ -295,7 +295,7 @@ void Statistic::packStream(
 void Statistic::unpackStream(
    MessageStream& stream)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getRank() != 0) {
       TBOX_ERROR("Statistic::unpackStream error...\n"
          << "    Only processor zero should unpack stat data" << std::endl);
@@ -366,7 +366,7 @@ void Statistic::printClassData(
    std::ostream& stream,
    int precision) const
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    TBOX_ASSERT(precision > 0);
 
    stream.precision(precision);
@@ -405,7 +405,7 @@ void Statistic::checkArraySizes(
     * Verify that seq_num is less than array size.  If so, drop through.
     * If not, resize and initialize the array.
     */
-   int high_mark = tbox::MathUtilities<int>::Max(seq_num, d_seq_counter);
+   int high_mark = MathUtilities<int>::Max(seq_num, d_seq_counter);
 
    if (d_stat_type == PROC_STAT) {
 

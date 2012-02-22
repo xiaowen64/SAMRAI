@@ -194,22 +194,6 @@ SAMRAI_INLINE_KEYWORD void Timer::addConcurrentTimer(
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-SAMRAI_INLINE_KEYWORD bool Timer::isConcurrentTimer(
-   const Timer& timer) const
-{
-#ifdef ENABLE_SAMRAI_TIMERS
-   for (std::vector<const Timer *>::const_iterator i = d_concurrent_timers.begin();
-        i != d_concurrent_timers.end();
-        ++i) {
-      if (*i == &timer) {
-         return true;
-      }
-   }
-
-#endif // ENABLE_SAMRAI_TIMERS
-   return false;
-}
-
 SAMRAI_INLINE_KEYWORD int Timer::getNumberAccesses() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS

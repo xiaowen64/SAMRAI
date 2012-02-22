@@ -19,6 +19,10 @@
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/tbox/InputManager.I"
+#endif
+
 namespace SAMRAI {
 namespace tbox {
 
@@ -89,19 +93,6 @@ InputManager::~InputManager()
 /*
  *************************************************************************
  *
- * Return whether or not the manager contains an valid input database.
- *
- *************************************************************************
- */
-
-bool InputManager::inputDatabaseExists()
-{
-   return s_input_db;
-}
-
-/*
- *************************************************************************
- *
  * Parse the specified input file and return the new database.
  *
  *************************************************************************
@@ -115,18 +106,6 @@ InputManager::parseInputFile(
       boost::make_shared<InputDatabase>("main"));
    parseInputFile(filename, db);
    return db;
-}
-
-/*
- *************************************************************************
- *
- * Accessor method for InputManger's root input database.
- *
- *************************************************************************
- */
-boost::shared_ptr<Database> InputManager::getInputDatabase()
-{
-   return s_input_db;
 }
 
 /*

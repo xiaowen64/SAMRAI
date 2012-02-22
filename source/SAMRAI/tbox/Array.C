@@ -32,14 +32,34 @@ namespace SAMRAI {
 namespace tbox {
 
 template<class TYPE>
-const typename tbox::Array<TYPE>::DoNotInitialize tbox::Array<
-   TYPE>::UNINITIALIZED;
+const typename Array<TYPE>::DoNotInitialize Array<TYPE>::UNINITIALIZED;
 
 /*
  * Note that this class is specialized for the built-in types to avoid
  * invoking the default ctor for TYPE.   A simple assignment is
  * used for the built-in types.
  */
+
+template<class TYPE>
+Array<TYPE>::Array() :
+   d_objects(0),
+   d_counter(0),
+   d_elements(0)
+{
+}
+
+template<class TYPE>
+Array<TYPE>::Array(
+   const Array<TYPE>& rhs) :
+   d_objects(rhs.d_objects),
+   d_counter(rhs.d_counter),
+   d_elements(rhs.d_elements)
+{
+   if (d_counter) {
+      d_counter->addReference();
+   }
+}
+
 template<class TYPE>
 Array<TYPE>::Array(
    const int n,
@@ -81,15 +101,27 @@ Array<TYPE>::Array(
 }
 
 template<class TYPE>
+Array<TYPE>::~Array()
+{
+   if (d_counter && d_counter->deleteReference()) {
+      deleteObjects();
+   }
+}
+
+template<class TYPE>
 Array<TYPE>& Array<TYPE>::operator = (
    const Array<TYPE>& rhs)
 {
    if (this != &rhs) {
-      if (d_counter && d_counter->deleteReference()) deleteObjects();
+      if (d_counter && d_counter->deleteReference()) {
+         deleteObjects();
+      }
       d_objects = rhs.d_objects;
       d_counter = rhs.d_counter;
       d_elements = rhs.d_elements;
-      if (d_counter) d_counter->addReference();
+      if (d_counter) {
+         d_counter->addReference();
+      }
    }
    return *this;
 }
@@ -106,27 +138,8 @@ void Array<TYPE>::resizeArray(
          array.d_objects[i] = d_objects[i];
       }
 
-      this->
-      operator = (
-         array);
+      this->operator = (array);
    }
-}
-
-template<class TYPE>
-void Array<TYPE>::push_back(
-   const TYPE& value)
-{
-   int i = d_elements;
-   resizeArray(i + 1);
-   d_objects[i] = value;
-}
-
-template<class TYPE>
-const TYPE& Array<TYPE>::back()
-{
-   TBOX_ASSERT(d_elements > 0);
-
-   return d_objects[d_elements - 1];
 }
 
 template<class TYPE>

@@ -48,5 +48,13 @@ int Parser::getNumberWarnings() const
    return d_warnings;
 }
 
+SAMRAI_INLINE_KEYWORD
+void Parser::setLine(
+   const std::string& line)
+{
+   Parser::ParseData& pd = d_parse_stack.getFirstItem();
+   pd.d_linebuffer = line;
+}
+
 }
 }

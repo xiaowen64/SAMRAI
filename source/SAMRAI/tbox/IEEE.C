@@ -58,7 +58,7 @@ static void error_action(
 {
    Utilities::abort(
       "Floating point exception -- program abort! "
-      + tbox::Utilities::intToString(error),
+      + Utilities::intToString(error),
       __FILE__,
       __LINE__);
 }
@@ -74,53 +74,6 @@ void IEEE::setupFloatingPointExceptionHandlers()
    _FPU_SETCW(fpu_flags);
    signal(SIGFPE, error_action);
 #endif
-}
-
-/*
- *************************************************************************
- *
- * Routines to initialize arrays to signaling NaNs.
- *
- *************************************************************************
- */
-
-void IEEE::initializeArrayToSignalingNaN(
-   Array<float>& array)
-{
-   MathUtilities<float>::setArrayToSignalingNaN(array);
-}
-
-void IEEE::initializeArrayToSignalingNaN(
-   Array<double>& array)
-{
-   MathUtilities<double>::setArrayToSignalingNaN(array);
-}
-
-void IEEE::initializeArrayToSignalingNaN(
-   Array<dcomplex>& array)
-{
-   MathUtilities<dcomplex>::setArrayToSignalingNaN(array);
-}
-
-void IEEE::initializeArrayToSignalingNaN(
-   float* array,
-   int n)
-{
-   MathUtilities<float>::setArrayToSignalingNaN(array, n);
-}
-
-void IEEE::initializeArrayToSignalingNaN(
-   double* array,
-   int n)
-{
-   MathUtilities<double>::setArrayToSignalingNaN(array, n);
-}
-
-void IEEE::initializeArrayToSignalingNaN(
-   dcomplex* array,
-   int n)
-{
-   MathUtilities<dcomplex>::setArrayToSignalingNaN(array, n);
 }
 
 }

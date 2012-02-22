@@ -66,7 +66,7 @@ public:
     * two, or three.
     */
    DatabaseBox(
-      const tbox::Dimension& dim,
+      const Dimension& dim,
       const int * lower,
       const int * upper);
 
@@ -99,12 +99,12 @@ public:
    /**
     * Return the dimension of this object.
     */
-   const tbox::Dimension&
+   const Dimension&
    getDim() const;
 
    void
    setDim(
-      const tbox::Dimension& dim);
+      const Dimension& dim);
 
    /**
     * Return the specified component (non-const) of the lower index of the box.
@@ -154,7 +154,7 @@ public:
     */
    DatabaseBox_POD d_data;
 
-   tbox::Dimension d_dim;
+   Dimension d_dim;
 };
 
 }

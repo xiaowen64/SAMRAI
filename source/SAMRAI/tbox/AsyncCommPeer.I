@@ -140,15 +140,14 @@ size_t AsyncCommPeer<TYPE>::getNumberOfFlexData(
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-bool AsyncCommPeer<TYPE>::initialize(
-   void)
+bool AsyncCommPeer<TYPE>::initialize()
 {
    static StartupShutdownManager::Handler handler(
       0,
       0,
       0,
       AsyncCommPeer::finalizeCallback,
-      tbox::StartupShutdownManager::priorityTimers);
+      StartupShutdownManager::priorityTimers);
 
    t_waitall_timer = TimerManager::getManager()->
       getTimer("tbox::AsyncCommPeer::wait_all()");
@@ -158,6 +157,67 @@ bool AsyncCommPeer<TYPE>::initialize(
       getTimer("tbox::AsyncCommPeer::MPI_Irecv");
 
    return true;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+template<class TYPE>
+SAMRAI_INLINE_KEYWORD
+int AsyncCommPeer<TYPE>::getRecvSize() const
+{
+   if (d_base_op != recv) {
+      TBOX_ERROR("AsyncCommPeer::getRecvSize() called without a\n"
+         << "corresponding receive.");
+   }
+   return static_cast<int>(d_full_count);
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+template<class TYPE>
+SAMRAI_INLINE_KEYWORD
+const TYPE * AsyncCommPeer<TYPE>::getRecvData() const
+{
+   if (d_base_op != recv) {
+      TBOX_ERROR("AsyncCommPeer::getRecvData() called without a\n"
+         << "corresponding receive.");
+   }
+   return &d_internal_buf[0].t;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+template<class TYPE>
+SAMRAI_INLINE_KEYWORD
+void AsyncCommPeer<TYPE>::clearRecvData()
+{
+   if (d_next_task_op != none) {
+      TBOX_ERROR("AsyncCommPeer::clearRecvData() called during an\n"
+         << "operation.");
+   }
+   // d_internal_buf.clear();
+}
+
+/*
+ ***************************************************************************
+ * Release static timers.  To be called by shutdown registry to make sure
+ * memory for timers does not leak.
+ ***************************************************************************
+ */
+template<class TYPE>
+SAMRAI_INLINE_KEYWORD
+void AsyncCommPeer<TYPE>::finalizeCallback()
+{
+   t_send_timer.reset();
+   t_recv_timer.reset();
+   t_waitall_timer.reset();
+   s_initialized = false;
 }
 
 }

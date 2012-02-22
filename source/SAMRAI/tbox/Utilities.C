@@ -19,6 +19,10 @@
 #include <sys/stat.h>
 #include <time.h>
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/tbox/Utilities.I"
+#endif
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -29,19 +33,6 @@
 
 namespace SAMRAI {
 namespace tbox {
-
-/*
- * Routine to rename a file.
- */
-void Utilities::renameFile(
-   const std::string& old_filename,
-   const std::string& new_filename)
-{
-   TBOX_ASSERT(!old_filename.empty());
-   TBOX_ASSERT(!new_filename.empty());
-
-   rename(old_filename.c_str(), new_filename.c_str());
-}
 
 /*
  * Routine to recursively construct directories based on a relative path name.
@@ -161,33 +152,6 @@ std::string Utilities::intToString(
    os << std::flush;
 
    return os.str();  //returns the string form of the stringstream object
-}
-
-std::string Utilities::nodeToString(
-   int num)
-{
-   return intToString(num, s_node_width);
-}
-
-std::string Utilities::processorToString(
-   int num)
-{
-   return intToString(num, s_processor_width);
-}
-
-std::string Utilities::patchToString(
-   int num) {
-   return intToString(num, s_patch_width);
-}
-
-std::string Utilities::levelToString(
-   int num) {
-   return intToString(num, s_level_width);
-}
-
-std::string Utilities::blockToString(
-   int num) {
-   return intToString(num, s_block_width);
 }
 
 /*

@@ -20,5 +20,21 @@ namespace tbox {
 
 std::ostream * Tracer::s_stream = &plog;
 
+Tracer::Tracer(
+   const std::string& message)
+{
+   d_message = message;
+   if (s_stream) {
+      (*s_stream) << "Entering " << d_message << std::endl << std::flush;
+   }
+}
+
+Tracer::~Tracer()
+{
+   if (s_stream) {
+      (*s_stream) << "Exiting " << d_message << std::endl << std::flush;
+   }
+}
+
 }
 }

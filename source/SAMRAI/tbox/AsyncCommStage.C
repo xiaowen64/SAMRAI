@@ -17,6 +17,10 @@
 #include "SAMRAI/tbox/TimerManager.h"
 #include STL_SSTREAM_HEADER_FILE
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/tbox/AsyncCommStage.I"
+#endif
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -330,34 +334,6 @@ void AsyncCommStage::Member::detachStage()
  ***********************************************************************
  ***********************************************************************
  */
-void AsyncCommStage::Member::setHandler(
-   Handler* handler)
-{
-   d_handler = handler;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-AsyncCommStage::Handler *AsyncCommStage::Member::getHandler() const
-{
-   return d_handler;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-size_t AsyncCommStage::Member::numberOfRequests() const
-{
-   return d_nreq;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
 bool AsyncCommStage::Member::hasPendingRequests() const
 {
    if (d_stage == NULL) {
@@ -385,44 +361,6 @@ size_t AsyncCommStage::Member::numberOfPendingRequests() const
       }
    }
    return npending;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-SAMRAI_MPI::Request *AsyncCommStage::Member::getRequestPointer() const
-{
-   if (d_stage == NULL) {
-      TBOX_ERROR("AssyncCommStage::Member::getRequestPointer():\n"
-         << "Empty stage encountered!\n"
-         << "This probably means that the stage that allocated\n"
-         << "your AsyncCommGroup has been deallocated.\n"
-         << "(and your AssyncCommGroup deallocated too!).\n"
-         << "It is an error to deallocate a stage and still\n"
-         << "use the Member it allocated.\n");
-
-   }
-   return d_stage->lookupRequestPointer(d_index_on_stage);
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-SAMRAI_MPI::Status *AsyncCommStage::Member::getStatusPointer() const
-{
-   if (d_stage == NULL) {
-      TBOX_ERROR("AssyncCommStage::Member::getStatusPointer():\n"
-         << "Empty stage encountered!\n"
-         << "This probably means that the stage that allocated\n"
-         << "your AsyncCommGroup has been deallocated.\n"
-         << "(and your AssyncCommGroup deallocated too!).\n"
-         << "It is an error to deallocate a stage and still\n"
-         << "use the Member it allocated.\n");
-
-   }
-   return d_stage->lookupStatusPointer(d_index_on_stage);
 }
 
 /*
@@ -726,114 +664,8 @@ AsyncCommStage::Member *AsyncCommStage::advanceAny()
    return member_index_on_stage < 0 ? NULL : d_members[member_index_on_stage];
 }
 
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void AsyncCommStage::setCommunicationWaitTimer(
-   const boost::shared_ptr<Timer>& communication_timer)
+AsyncCommStage::Handler::~Handler()
 {
-   d_communication_timer = communication_timer;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-size_t AsyncCommStage::numberOfMembers() const
-{
-   return d_member_count;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-size_t AsyncCommStage::numberOfRequests(
-   size_t index_on_stage) const
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(index_on_stage < d_members.size());
-   TBOX_ASSERT(d_members[index_on_stage] != NULL);
-#endif
-
-   const int init_req = static_cast<int>(d_member_to_req[index_on_stage]);
-   const int term_req = static_cast<int>(d_member_to_req[index_on_stage + 1]);
-   return term_req - init_req;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-bool AsyncCommStage::hasPendingRequests() const
-{
-   size_t ireq;
-   for (ireq = 0; ireq < d_member_to_req[d_members.size()]; ++ireq) {
-      if (d_req[ireq] != MPI_REQUEST_NULL) break;
-   }
-   return ireq != d_member_to_req[d_members.size()];
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-size_t AsyncCommStage::numberOfPendingRequests() const
-{
-   size_t npending = 0;
-   size_t ireq;
-   for (ireq = 0; ireq < d_member_to_req[d_members.size()]; ++ireq) {
-      if (d_req[ireq] != MPI_REQUEST_NULL) ++npending;
-   }
-   return npending;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-size_t AsyncCommStage::numberOfPendingMembers() const
-{
-   size_t nmember = 0;
-   for (size_t imember = 0; imember < d_members.size(); ++imember) {
-      if (d_members[imember] != NULL &&
-          d_members[imember]->hasPendingRequests())
-         ++nmember;
-   }
-   return nmember;
-}
-
-/*
- ****************************************************************
- * Return the request pointer for a communication Member
- * allocated by this object.
- ****************************************************************
- */
-SAMRAI_MPI::Request *AsyncCommStage::lookupRequestPointer(
-   const size_t imember) const
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(imember < d_members.size());
-   TBOX_ASSERT(d_members[imember] != NULL);
-#endif
-   return &d_req[d_member_to_req[imember]];
-}
-
-/*
- ****************************************************************
- * Return the status pointer for a communication Member
- * allocated by this object.
- ****************************************************************
- */
-SAMRAI_MPI::Status *AsyncCommStage::lookupStatusPointer(
-   const size_t imember) const
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(imember < d_members.size());
-   TBOX_ASSERT(d_members[imember] != NULL);
-#endif
-   return &d_stat[d_member_to_req[imember]];
 }
 
 }

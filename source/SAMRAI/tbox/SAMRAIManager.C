@@ -18,6 +18,10 @@
 
 #include <new>
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/tbox/SAMRAIManager.I"
+#endif
+
 namespace SAMRAI {
 namespace tbox {
 
@@ -84,72 +88,6 @@ void SAMRAIManager::initialize(
    StartupShutdownManager::initialize();
 
    s_initialized = true;
-}
-
-void SAMRAIManager::startup(
-   )
-{
-   TBOX_ASSERT(s_initialized);
-   TBOX_ASSERT(!s_started);
-
-   StartupShutdownManager::startup();
-
-   s_started = true;
-}
-
-/*
- *************************************************************************
- *
- * Shutdown the SAMRAI package.  This routine currently only deallocates
- * statically allocated memory and finalizes the output streams.
- *
- *************************************************************************
- */
-
-void SAMRAIManager::shutdown()
-{
-   TBOX_ASSERT(s_initialized);
-   TBOX_ASSERT(s_started);
-
-   StartupShutdownManager::shutdown();
-
-   s_started = false;
-
-}
-
-void SAMRAIManager::finalize()
-{
-   TBOX_ASSERT(s_initialized);
-
-   StartupShutdownManager::finalize();
-
-   PIO::finalize();
-
-   s_initialized = false;
-}
-
-bool SAMRAIManager::isInitialized() {
-   return s_initialized;
-}
-
-bool SAMRAIManager::isStarted() {
-   return s_started;
-}
-
-/*
- *************************************************************************
- *
- * Functions to get and set the maximum number of patch data entries
- * that will be supported.  Note that the set routine cannot be called
- * after the max number has been accessed.
- *
- *************************************************************************
- */
-
-int SAMRAIManager::getMaxNumberPatchDataEntries()
-{
-   s_max_patch_data_entries_accessed = true;
-   return s_max_patch_data_entries;
 }
 
 void SAMRAIManager::setMaxNumberPatchDataEntries(

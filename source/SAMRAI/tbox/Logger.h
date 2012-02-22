@@ -96,8 +96,7 @@ public:
          const std::string& filename,
          const int line) = 0;
 
-      virtual ~Appender() {
-      }
+      virtual ~Appender();
    };
 
    /*!
@@ -227,5 +226,7 @@ private:
 
 }
 }
-
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/tbox/Logger.I"
+#endif
 #endif

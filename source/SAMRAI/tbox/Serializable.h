@@ -42,14 +42,12 @@ public:
    /*!
     * Default constructor.
     */
-   SAMRAI_INLINE_KEYWORD Serializable() {
-   }
+   Serializable();
 
    /*!
     * Virtual destructor
     */
-   virtual ~Serializable() {
-   }
+   virtual ~Serializable();
 
    /*!
     * @brief Serializes the object by writing necessary state to the

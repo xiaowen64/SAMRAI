@@ -13,60 +13,6 @@ namespace tbox {
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-ListNode<TYPE>::ListNode(
-   const TYPE& t,
-   ListNode<TYPE>* n,
-   ListNode<TYPE>* p):
-   d_item(t),
-   d_next(n),
-   d_prev(p)
-{
-}
-
-template<class TYPE>
-SAMRAI_INLINE_KEYWORD
-ListNode<TYPE>::~ListNode()
-{
-}
-
-template<class TYPE>
-SAMRAI_INLINE_KEYWORD
-ListIterator<TYPE>::ListIterator()
-{
-   d_list = ((List<TYPE> *)NULL);
-   d_node = ((ListNode<TYPE> *)NULL);
-}
-
-template<class TYPE>
-SAMRAI_INLINE_KEYWORD
-ListIterator<TYPE>::ListIterator(
-   const List<TYPE>& list)
-{
-   d_list = (List<TYPE> *) & list;
-   d_node = list.d_list_head;
-}
-
-template<class TYPE>
-SAMRAI_INLINE_KEYWORD
-ListIterator<TYPE>::ListIterator(
-   List<TYPE>* list,
-   ListNode<TYPE>* node)
-{
-   d_list = list;
-   d_node = node;
-}
-
-template<class TYPE>
-SAMRAI_INLINE_KEYWORD
-ListIterator<TYPE>::ListIterator(
-   const ListIterator<TYPE>& iter)
-{
-   d_list = iter.d_list;
-   d_node = iter.d_node;
-}
-
-template<class TYPE>
-SAMRAI_INLINE_KEYWORD
 ListIterator<TYPE>&
 ListIterator<TYPE>::operator = (
    const ListIterator<TYPE>& iter)
@@ -74,12 +20,6 @@ ListIterator<TYPE>::operator = (
    d_list = iter.d_list;
    d_node = iter.d_node;
    return *this;
-}
-
-template<class TYPE>
-SAMRAI_INLINE_KEYWORD
-ListIterator<TYPE>::~ListIterator()
-{
 }
 
 template<class TYPE>
@@ -248,6 +188,13 @@ SAMRAI_INLINE_KEYWORD
 TYPE& List<TYPE>::getLastItem() const
 {
    return d_list_tail->d_item;
+}
+
+template<class TYPE>
+SAMRAI_INLINE_KEYWORD
+void List<TYPE>::finalizeCallback()
+{
+   ListNode<TYPE>::freeCachedListItems();
 }
 
 template<class TYPE>

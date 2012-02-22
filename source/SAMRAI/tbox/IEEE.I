@@ -85,5 +85,58 @@ bool IEEE::isNaN(
    return MathUtilities<dcomplex>::isNaN(dc);
 }
 
+/*
+ *************************************************************************
+ *
+ * Routines to initialize arrays to signaling NaNs.
+ *
+ *************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+void IEEE::initializeArrayToSignalingNaN(
+   Array<float>& array)
+{
+   MathUtilities<float>::setArrayToSignalingNaN(array);
+}
+
+SAMRAI_INLINE_KEYWORD
+void IEEE::initializeArrayToSignalingNaN(
+   Array<double>& array)
+{
+   MathUtilities<double>::setArrayToSignalingNaN(array);
+}
+
+SAMRAI_INLINE_KEYWORD
+void IEEE::initializeArrayToSignalingNaN(
+   Array<dcomplex>& array)
+{
+   MathUtilities<dcomplex>::setArrayToSignalingNaN(array);
+}
+
+SAMRAI_INLINE_KEYWORD
+void IEEE::initializeArrayToSignalingNaN(
+   float* array,
+   int n)
+{
+   MathUtilities<float>::setArrayToSignalingNaN(array, n);
+}
+
+SAMRAI_INLINE_KEYWORD
+void IEEE::initializeArrayToSignalingNaN(
+   double* array,
+   int n)
+{
+   MathUtilities<double>::setArrayToSignalingNaN(array, n);
+}
+
+SAMRAI_INLINE_KEYWORD
+void IEEE::initializeArrayToSignalingNaN(
+   dcomplex* array,
+   int n)
+{
+   MathUtilities<dcomplex>::setArrayToSignalingNaN(array, n);
+}
+
 }
 }

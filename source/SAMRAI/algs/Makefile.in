@@ -21,7 +21,7 @@ include $(OBJECT)/config/Makefile.config
 
 SUBDIRS = fortran
 
-OBJS = 		\
+OBJS = 	\
 	TimeRefinementIntegrator.o \
 	TimeRefinementLevelStrategy.o \
 	HyperbolicPatchStrategy.o \

@@ -15,6 +15,10 @@
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/ParallelBuffer.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/tbox/PIO.I"
+#endif
+
 namespace SAMRAI {
 namespace tbox {
 
@@ -81,22 +85,6 @@ void PIO::initialize()
    plog_buffer.setPrefixString(std::string());
    plog_buffer.setOutputStream1(NULL);
    plog_buffer.setOutputStream2(NULL);
-}
-
-/*
- *************************************************************************
- *
- * Close the output streams.  Flush both cout and cerr.  If logging,
- * then flush and close the log stream.
- *
- *************************************************************************
- */
-
-void PIO::finalize()
-{
-   std::cout.flush();
-   std::cerr.flush();
-   shutdownFilestream();
 }
 
 /*
@@ -210,7 +198,6 @@ void PIO::logAllNodes(
  *
  *************************************************************************
  */
-
 void PIO::suspendLogging()
 {
    pout_buffer.setOutputStream2(NULL);
@@ -227,7 +214,6 @@ void PIO::suspendLogging()
  *
  *************************************************************************
  */
-
 void PIO::resumeLogging()
 {
    if (s_filestream) {

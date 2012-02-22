@@ -153,4 +153,7 @@ private:
 }
 }
 
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/tbox/ParallelBuffer.I"
+#endif
 #endif

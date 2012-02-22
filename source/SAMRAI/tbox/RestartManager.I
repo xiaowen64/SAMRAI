@@ -14,18 +14,6 @@ namespace tbox {
 /*
  *************************************************************************
  *
- * Destructor
- *
- *************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-RestartManager::~RestartManager()
-{
-}
-
-/*
- *************************************************************************
- *
  * Returns d_is_from_restart.
  *
  *************************************************************************
@@ -97,6 +85,50 @@ void RestartManager::writeRestartFile(
    const std::string& root_dir_name)
 {
    writeRestartFile(root_dir_name, 0);
+}
+
+SAMRAI_INLINE_KEYWORD
+void RestartManager::registerSingletonSubclassInstance(
+   RestartManager* subclass_instance)
+{
+   if (!s_manager_instance) {
+      s_manager_instance = subclass_instance;
+   } else {
+      TBOX_ERROR("RestartManager internal error...\n"
+         << "Attemptng to set Singleton instance to subclass instance,"
+         << "\n but Singleton instance already set." << std::endl);
+   }
+}
+
+/*
+ *************************************************************************
+ *
+ * Remove all items from the restart item list.
+ *
+ *************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void RestartManager::clearRestartItems()
+{
+   d_restart_items_list.clearItems();
+}
+
+/*
+ *************************************************************************
+ *
+ * Write simulation state to root database
+ *
+ *************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void RestartManager::writeRestartToDatabase()
+{
+   if (d_database_root) {
+      writeRestartFile(d_database_root);
+   } else {
+      TBOX_ERROR("writeRestartToDatabase has no database to write to"
+         << std::endl);
+   }
 }
 
 }

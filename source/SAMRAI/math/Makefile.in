@@ -21,7 +21,7 @@ include $(OBJECT)/config/Makefile.config
 
 SUBDIRS = fortran
 
-OBJS = 		\
+OBJS = 	\
 	PatchSideDataOpsInteger.o \
 	PatchFaceDataOpsInteger.o \
 	PatchEdgeDataOpsInteger.o \

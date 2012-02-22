@@ -11,6 +11,10 @@
 #include "SAMRAI/tbox/Logger.h"
 #include "SAMRAI/tbox/PIO.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/tbox/Logger.I"
+#endif
+
 namespace SAMRAI {
 namespace tbox {
 
@@ -121,73 +125,8 @@ Logger *Logger::getInstance()
    return s_instance;
 }
 
-/*
- * Log an abort message.
- */
-void Logger::logAbort(
-   const std::string& message,
-   const std::string& filename,
-   const int line)
+Logger::Appender::~Appender()
 {
-   d_abort_appender->logMessage(message, filename, line);
-}
-
-/*
- * Log a warning message.
- */
-void Logger::logWarning(
-   const std::string& message,
-   const std::string& filename,
-   const int line)
-{
-   if (d_log_warning) {
-      d_warning_appender->logMessage(message, filename, line);
-   }
-}
-
-/*
- * Log a debug message.
- */
-void Logger::logDebug(
-   const std::string& message,
-   const std::string& filename,
-   const int line)
-{
-   if (d_log_debug) {
-      d_debug_appender->logMessage(message, filename, line);
-   }
-}
-
-/*
- * Set appenders.
- */
-void Logger::setAbortAppender(
-   const boost::shared_ptr<Appender>& appender) {
-   d_abort_appender = appender;
-}
-
-void Logger::setWarningAppender(
-   const boost::shared_ptr<Appender>& appender) {
-   d_warning_appender = appender;
-}
-
-void Logger::setDebugAppender(
-   const boost::shared_ptr<Appender>& appender) {
-   d_debug_appender = appender;
-}
-
-/*
- * Set logging state.
- */
-
-void Logger::setWarning(
-   bool onoff) {
-   d_log_warning = onoff;
-}
-
-void Logger::setDebug(
-   bool onoff) {
-   d_log_debug = onoff;
 }
 
 }

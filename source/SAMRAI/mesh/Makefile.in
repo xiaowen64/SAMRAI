@@ -27,8 +27,8 @@ OBJS = 	\
 	GriddingAlgorithm.o \
 	GriddingAlgorithmConnectorWidthRequestor.o \
 	StandardTagAndInitStrategy.o \
-        StandardTagAndInitialize.o \
-        StandardTagAndInitializeConnectorWidthRequestor.o \
+	StandardTagAndInitialize.o \
+	StandardTagAndInitializeConnectorWidthRequestor.o \
 	TagAndInitializeStrategy.o \
 	BalanceUtilities.o \
 	TreeLoadBalancer.o \

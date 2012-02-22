@@ -16,6 +16,10 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/tbox/HDFDatabase.I"
+#endif
+
 #include <boost/make_shared.hpp>
 #include <cassert>
 #include <cstring>
@@ -2444,21 +2448,7 @@ bool HDFDatabase::attachToFile(
    return status;
 }
 
-/*
- *************************************************************************
- *
- * Public method to return the group_id so VisIt can access an
- * object's HDF database.
- *
- *************************************************************************
- */
-hid_t HDFDatabase::getGroupId()
-{
-   return d_group_id;
-}
-
-std::string HDFDatabase::getName(
-   void)
+std::string HDFDatabase::getName()
 {
    return d_database_name;
 }
