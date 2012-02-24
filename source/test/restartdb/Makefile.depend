@@ -29,19 +29,23 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RestartManager.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RestartManager.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h database_tests.C		\
 	database_tests.h database_values.h
 
@@ -68,21 +72,26 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/HDFDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/HDFDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RestartManager.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RestartManager.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h database_tests.h		\
 	mainHDF5.C
 
@@ -108,21 +117,26 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/HDFDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/HDFDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RestartManager.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RestartManager.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h database_tests.h		\
 	mainHDF5AppFileOpen.C
 
@@ -151,19 +165,23 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryDatabase.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RestartManager.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RestartManager.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h database_tests.h		\
 	mainMemory.C
 
@@ -192,18 +210,22 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RestartManager.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RestartManager.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SiloDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h database_tests.h		\
 	mainSilo.C
 
@@ -232,18 +254,22 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RestartManager.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RestartManager.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SiloDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h database_tests.h		\
 	mainSiloAppFileOpen.C
 

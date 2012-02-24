@@ -14,11 +14,7 @@
 #include "SAMRAI/hier/BoxTree.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/tbox/MathUtilities.h"
-#include "SAMRAI/tbox/SAMRAI_MPI.h"
-#include "SAMRAI/tbox/SAMRAIManager.h"
-#include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/Statistician.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
@@ -207,6 +203,28 @@ BoxTree::BoxTree(
 
    t_build_tree[d_dim.getValue() - 1]->stop();
 }
+
+BoxTree::BoxTree(
+   const std::list<const Box*> boxes,
+   int min_number)
+: d_dim((*(boxes.begin()))->getDim()),
+  d_bounding_box(d_dim),
+  d_boxes(boxes)
+{
+   ++s_num_build[d_dim.getValue() - 1];
+   s_num_sorted_box[d_dim.getValue() - 1] +=
+      static_cast<int>(boxes.size());
+   s_max_sorted_box[d_dim.getValue() - 1] = tbox::MathUtilities<int>::Max(
+         s_max_sorted_box[d_dim.getValue() - 1],
+         static_cast<int>(boxes.size()));
+   t_build_tree[d_dim.getValue() - 1]->start();
+   min_number = (min_number < 1) ? 1 : min_number;
+
+   privateGenerateTree(min_number);
+
+   t_build_tree[d_dim.getValue() - 1]->stop();
+}
+
 
 /*
  *************************************************************************
@@ -435,6 +453,7 @@ void BoxTree::findOverlapBoxes(
    }
 
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT(box.getBlockId() == d_block_id);
 
    if (box.intersects(d_bounding_box)) {
 
@@ -488,6 +507,7 @@ void BoxTree::findOverlapBoxes(
    }
 
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT(box.getBlockId() == d_block_id);
 
    if (box.intersects(d_bounding_box)) {
 

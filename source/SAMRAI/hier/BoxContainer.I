@@ -53,9 +53,6 @@ BoxContainer::BoxContainer(
    if (other.d_ordered) {
       order();
    }
-   if (other.d_tree) {
-      makeTree();
-   }
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -82,7 +79,7 @@ int BoxContainer::size() const
 SAMRAI_INLINE_KEYWORD
 bool BoxContainer::isEmpty() const
 {
-   return size() == 0;
+   return d_list.empty();
 }
 
 /*

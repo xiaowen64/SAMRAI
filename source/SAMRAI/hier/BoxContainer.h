@@ -15,6 +15,7 @@
 #include "SAMRAI/hier/BlockId.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
+#include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/tbox/Array.h"
 
 #include <iostream>
@@ -24,10 +25,6 @@
 
 namespace SAMRAI {
 namespace hier {
-
-class BoxTree;
-class Connector;
-class MultiblockBoxTree;
 
 /*!
  * @brief A container for Boxes.
@@ -923,6 +920,9 @@ public:
     * For each box, b, in this container and for each box, t, in takeaway
     * this operation computes b-(b^t) where '^' indicates intersection.
     *
+    * This only works if all boxes in this BoxContainer and the takeaway
+    * BoxContainer have the same BlockId.  An error will occur otherwise.
+    *
     * @param[in] takeaway What to exclude from each box in the container.
     */
    void
@@ -932,21 +932,25 @@ public:
    /*!
     * @brief Remove from each box portions intersecting boxes in takeaway.
     *
-    * Use extra data to provide needed information in a multiblock setting.
-    * MultiblockBoxTree has an efficient overlap search method so this
-    * version of removeIntersection is relatively fast.
+    * Uses refinement ratio and grid geometry to handle intersections
+    * across block boundaries if needed.
     *
-    * @param[in] refinement_ratio  Assume all boxes in this BoxContainer
-    * belong in this refinement ratio.
+    * @param[in] refinement_ratio  All boxes in this BoxContainer
+    * are assumed to exist in index space that has this refinement ratio 
+    * relative to the coarse-level domain.
     *
-    * @param[in] takeaway  The boxes to take away from this BoxContainer.
+    * @param[in] takeaway  The boxes to take away from this BoxContainer.  An
+    * error will occur if makeTree with a non-null GridGeometry argument
+    * has not been previously called on this container.
     *
-    * @param[in] include_singularity_block_neighbors  
+    * @param[in] include_singularity_block_neighbors  If true, intersections
+    * with neighboring blocks that touch only across an enhanced connectivity
+    * singularity will be removed.  If false, those intersections are ignored.
     */
    void
    removeIntersections(
       const IntVector& refinement_ratio,
-      const MultiblockBoxTree& takeaway,
+      const BoxContainer& takeaway,
       const bool include_singularity_block_neighbors = false);
 
    /*!
@@ -961,7 +965,7 @@ public:
     * box-(box^takeaway) where '^' indicates intersection.
     *
     * @param[in] box
-    * @param[in] takaway
+    * @param[in] takeaway
     */
    void
    removeIntersections(
@@ -988,6 +992,9 @@ public:
     * \f$O(N^2)\f$ time for containers with \f$N\f$ boxes.  The complement
     * of removeIntersections.
     *
+    * This only works if all boxes in this BoxContainer and the keep 
+    * BoxContainer have the same BlockId.  An error will occur otherwise.
+    *
     * @param[in] keep
     */
    void
@@ -997,22 +1004,25 @@ public:
    /*!
     * @brief Keep the intersection of the container's boxes and keep's boxes
     *
-    * Use extra data to provide needed information in a multiblock setting.
-    * MultiblockBoxTree has an efficient overlap search method so this
-    * version of intersectBoxes is relatively fast.  The complement of
-    * removeIntersection.
+    * Uses refinement ratio and grid geometry to handle intersections
+    * across block boundaries if needed.
     *
-    * @param[in]  refinement_ratio  Assume all boxes in this BoxContainer
-    * belong in this refefinement ratio.
+    * @param[in]  refinement_ratio  All boxes in this BoxContainer
+    * are assumed to exist in index space that has this refinement ratio 
+    * relative to the coarse-level domain.
     *
-    * @param[in] keep  The boxes to intersect with this BoxContainer.
+    * @param[in] keep  The boxes to intersect with this BoxContainer.  An
+    * error will occur if makeTree with a non-null GridGeometry argument
+    * has not been previously called on this container.
     *
-    * @param[in] include_singularity_block_neighbors
+    * @param[in] include_singularity_block_neighbors  If true, intersections
+    * with neighboring blocks that touch only across an enhanced connectivity
+    * singularity will be kept.  If false, those intersections are ignored.
     */
    void
    intersectBoxes(
       const IntVector& refinement_ratio,
-      const MultiblockBoxTree& keep,
+      const BoxContainer& keep,
       bool include_singularity_block_neighbors = false);
 
    //@}
@@ -1326,10 +1336,18 @@ private:
     * any other BoxContainer method is called that changes the container
     * by adding or removing boxes, or by changing the spatial coordinates of
     * the boxes, the tree representation is destroyed.
+    *
+    * A non-null pointer to a GridGeometry must be provided if this container
+    * is going to be used in any of the methods that handle multiblock
+    * transformations.  If this container is used only in a single-block
+    * context, no GridGeometry argument is necessary.
     * 
+    * @param[in]  grid_geometry  To handle multiblock transformations if
+    *                            needed.  
     * @param[in]  min_number  An assertion failure will occur if not positive
     */
-   void makeTree(int min_number = 10) const;
+   void makeTree(const GridGeometry* grid_geometry = NULL,
+                 const int min_number = 10) const;
 
    /*!
     * @brief Query if the search tree representation exists.
@@ -1338,6 +1356,16 @@ private:
    {
       return (d_tree.get() != 0);
    }
+
+   /*!
+    * @brief Query if this BoxContainer contains any Box with the given
+    * BlockId.
+    *
+    * This is an efficient query if the the tree representation of this
+    * container has been constructed.  If not, it requires a linear search
+    * over the entire container and may not be efficient.
+    */
+   bool hasBoxInBlock(const BlockId& block_id) const;
 
    /*!
     * @brief Find all boxes that intersect with a given box.
@@ -1364,7 +1392,7 @@ private:
     * @brief Find all boxes that intersect with a given box.
     *
     * A pointer to every Box in this BoxContainer that intersects with the
-    * box argument will be added to the overlap_boxes output vector.  The
+    * box argument will be copied to the overlap_boxes output vector.  The
     * vector is not sorted in any way.
     *
     * If this method is used multiple times on the same BoxContainer, it
@@ -1375,11 +1403,43 @@ private:
     *
     * @param[in] box
     */
-
    void
    findOverlapBoxes(
       std::vector<const Box*>& overlap_boxes,
       const Box& box) const;
+
+   /*!
+    * @brief Find all boxes that intersect with a given box.
+    *
+    * Uses refinement ratio and grid geometry to handle intersections
+    * across block boundaries if needed.  The makeTree method with a non-null
+    * GridGeometry pointer must be called on this container before calling
+    * this version of findOverlapBoxes.
+    *
+    * Every Box in this BoxContainer that intersects with the box argument
+    * will be copied to the overlap_boxes output container.  The output
+    * container will retain the same ordered/unordered state that it had
+    * prior to being passed into this method.
+    *
+    * @param[out]  overlap_boxes
+    *
+    * @param[in]  box
+    *
+    * @param[in]  refinement_ratio  All boxes in this BoxContainer
+    * are assumed to exist in index space that has this refinement ratio 
+    * relative to the coarse-level domain.
+    *
+    * @param[in]  include_singularity_block_neighbors  If true, intersections
+    * with neighboring blocks that touch only across an enhanced connectivity
+    * singularity will be added to output.  If false, those intersections are
+    * ignored.
+    */
+   void
+   findOverlapBoxes(
+      BoxContainer& overlap_boxes,
+      const Box& box,
+      const IntVector& refinement_ratio,
+      bool include_singularity_block_neighbors = false) const;
 
    /*!
     * @brief Determine if a given box intersects with the BoxContainer.
@@ -1387,6 +1447,10 @@ private:
     * If this method is used multiple times on the same BoxContainer, it
     * is recommended for efficiency's sake to call makeTree() on this
     * BoxContainer before calling this method.
+    *
+    * This only works if all boxes in this BoxContainer have the same BlockId,
+    * and the argument box also has that same BlockId.  An error will occur if
+    * these conditions are not met. 
     *
     * @return  True if box intersects with any member of the BoxContainer,
     *          false otherwise.
@@ -1407,7 +1471,7 @@ private:
    /*!
     * @brief Remove from each box portions intersecting boxes in takeaway.
     *
-    * BoxTree has an efficient overlap search method so this
+    * MultiblockBoxTree has an efficient overlap search method so this
     * version of removeIntersection is relatively fast.
     * For each box, b, in this container and for each box, t, in takeaway
     * this operation computes b-(b^t) where '^' indicates intersection.
@@ -1416,12 +1480,12 @@ private:
     */
    void
    removeIntersections(
-      const BoxTree& takeaway);
+      const MultiblockBoxTree& takeaway);
 
    /*!
     * @brief Keep the intersection of the container's boxes and keep's boxes
     *
-    * BoxTree has an efficient overlap search method so this
+    * MultiblockBoxTree has an efficient overlap search method so this
     * version of intersectBoxes is relatively fast.  The complement of
     * removeIntersections.
     *
@@ -1429,7 +1493,7 @@ private:
     */
    void
    intersectBoxes(
-      const BoxTree& keep);
+      const MultiblockBoxTree& keep);
 
    /*!
     * @brief Break up bursty against solid and adds the pieces to container.
@@ -1498,7 +1562,7 @@ private:
 
    bool d_ordered;
 
-   mutable boost::shared_ptr<BoxTree> d_tree;
+   mutable boost::shared_ptr<MultiblockBoxTree> d_tree;
 };
 
 }

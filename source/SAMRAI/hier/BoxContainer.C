@@ -14,10 +14,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
-#include "SAMRAI/hier/BoxTree.h"
-#include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/GridGeometry.h"
-#include "SAMRAI/hier/MultiblockBoxTree.h"
 
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/hier/BoxContainer.I"
@@ -118,9 +115,6 @@ BoxContainer& BoxContainer::operator = (
          order();
       } else {
          d_ordered = false;
-      }
-      if (rhs.d_tree) {
-         makeTree();
       }
    }
    return *this;
@@ -504,9 +498,9 @@ void BoxContainer::rotate(
 {
    if (!isEmpty()) {
 
-      if (d_tree) {
-         d_tree.reset();
-      }
+   if (d_tree) {
+      d_tree.reset();
+   }
 
       const tbox::Dimension& dim = d_list.front().getDim();
       const BlockId& block_id = d_list.front().getBlockId();
@@ -637,8 +631,7 @@ bool BoxContainer::boxesIntersect() const
 /*
  *************************************************************************
  *
- * Return the current container without the portions that intersect
- * takeaway.
+ * Remove intersections with a single box
  *
  *************************************************************************
  */
@@ -672,6 +665,13 @@ void BoxContainer::removeIntersections(
    }
 }
 
+/*
+ *************************************************************************
+ *
+ * Remove intersections with another BoxContainer
+ *
+ *************************************************************************
+ */
 void BoxContainer::removeIntersections(
    const BoxContainer& takeaway)
 {
@@ -697,51 +697,17 @@ void BoxContainer::removeIntersections(
    }
 }
 
-void BoxContainer::removeIntersections(
-   const BoxTree& takeaway)
-{
-   if (isEmpty()) {
-      return;
-   }
-
-   if (d_ordered) {
-      TBOX_ERROR("removeIntersections attempted on ordered container.");
-   }
-
-   if (d_tree) {
-      d_tree.reset();
-   }
-
-   std::vector<const Box *> overlap_mapped_boxes;
-   Iterator itr(*this);
-   while (itr != end()) {
-      const Box& tryme = *itr;
-      takeaway.findOverlapBoxes(overlap_mapped_boxes, tryme);
-      if (overlap_mapped_boxes.empty()) {
-         ++itr;
-      } else {
-         Iterator sublist_start = itr;
-         Iterator sublist_end = sublist_start;
-         ++sublist_end;
-         for (size_t i = 0;
-              i < overlap_mapped_boxes.size() && sublist_start != sublist_end;
-              ++i) {
-            Iterator insertion_pt = sublist_start;
-            removeIntersectionsFromSublist(
-               *overlap_mapped_boxes[i],
-               sublist_start,
-               sublist_end,
-               insertion_pt);
-         }
-         overlap_mapped_boxes.clear();
-         itr = sublist_end;
-      }
-   }
-}
-
+/*
+ *************************************************************************
+ *
+ * Remove intersections with another BoxContainer using multiblock tree
+ * representation.
+ *
+ *************************************************************************
+ */
 void BoxContainer::removeIntersections(
    const IntVector& refinement_ratio,
-   const MultiblockBoxTree& takeaway,
+   const BoxContainer& takeaway,
    const bool include_singularity_block_neighbors)
 {
    if (isEmpty()) {
@@ -756,13 +722,21 @@ void BoxContainer::removeIntersections(
       d_tree.reset();
    }
 
-   const GridGeometry & grid_geometry(takeaway.getGridGeometry());
+   if (takeaway.size() == 0) {
+      return;
+   }
+
+   if (!takeaway.d_tree) {
+      TBOX_ERROR("Multiblock removeIntersections called without makeTree.");
+   }
+
+   const GridGeometry& grid_geometry(*takeaway.d_tree->getGridGeometry());
 
    std::vector<const Box *> overlap_mapped_boxes;
    Iterator itr(*this);
    while (itr != end()) {
       const Box& tryme = *itr;
-      takeaway.findOverlapBoxes(overlap_mapped_boxes,
+      takeaway.d_tree->findOverlapBoxes(overlap_mapped_boxes,
          tryme,
          refinement_ratio,
          include_singularity_block_neighbors);
@@ -819,6 +793,7 @@ void BoxContainer::removeIntersections(
     * intersect, simply add box to the box container (no intersection removed).
     */
    TBOX_ASSERT(isEmpty());
+   TBOX_ASSERT(box.getBlockId() == takeaway.getBlockId());
 
    if (d_tree) {
       d_tree.reset();
@@ -831,6 +806,49 @@ void BoxContainer::removeIntersections(
    }
 
 }
+
+void BoxContainer::removeIntersections(
+   const MultiblockBoxTree& takeaway)
+{
+   if (isEmpty()) {
+      return;
+   }
+
+   if (d_ordered) {
+      TBOX_ERROR("removeIntersections attempted on ordered container.");
+   }
+
+   if (d_tree) {
+      d_tree.reset();
+   }
+
+   std::vector<const Box *> overlap_mapped_boxes;
+   Iterator itr(*this);
+   while (itr != end()) {
+      const Box& tryme = *itr;
+      takeaway.findOverlapBoxes(overlap_mapped_boxes, tryme);
+      if (overlap_mapped_boxes.empty()) {
+         ++itr;
+      } else {
+         Iterator sublist_start = itr;
+         Iterator sublist_end = sublist_start;
+         ++sublist_end;
+         for (size_t i = 0;
+              i < overlap_mapped_boxes.size() && sublist_start != sublist_end;
+              ++i) {
+            Iterator insertion_pt = sublist_start;
+            removeIntersectionsFromSublist(
+               *overlap_mapped_boxes[i],
+               sublist_start,
+               sublist_end,
+               insertion_pt);
+         }
+         overlap_mapped_boxes.clear();
+         itr = sublist_end;
+      }
+   }
+}
+
 
 void BoxContainer::removeIntersectionsFromSublist(
    const Box& takeaway,
@@ -941,7 +959,7 @@ void BoxContainer::intersectBoxes(
 }
 
 void BoxContainer::intersectBoxes(
-   const BoxTree& keep)
+   const MultiblockBoxTree& keep)
 {
    if (isEmpty()) {
       return;
@@ -979,7 +997,7 @@ void BoxContainer::intersectBoxes(
 
 void BoxContainer::intersectBoxes(
    const IntVector& refinement_ratio,
-   const MultiblockBoxTree& keep,
+   const BoxContainer& keep,
    const bool include_singularity_block_neighbors)
 {
    if (isEmpty()) {
@@ -994,7 +1012,16 @@ void BoxContainer::intersectBoxes(
       d_tree.reset();
    }
 
-   const GridGeometry & grid_geometry(keep.getGridGeometry());
+   if (keep.size() == 0) {
+      clear();
+      return; 
+   }
+
+   if (!keep.d_tree) {
+      TBOX_ERROR("Multiblock intersectBoxes called without makeTree.");
+   }
+
+   const GridGeometry& grid_geometry(*keep.d_tree->getGridGeometry());
 
    std::vector<const Box *> overlap_mapped_boxes;
    Box overlap(front().getDim());
@@ -1002,7 +1029,7 @@ void BoxContainer::intersectBoxes(
    Iterator insertion_pt = itr;
    while (itr != end()) {
       const Box& tryme = *itr;
-      keep.findOverlapBoxes(overlap_mapped_boxes,
+      keep.d_tree->findOverlapBoxes(overlap_mapped_boxes,
          tryme,
          refinement_ratio,
          include_singularity_block_neighbors);
@@ -1397,16 +1424,33 @@ void BoxContainer::coarsen(
    }
 }
 
-void BoxContainer::makeTree(int min_number) const
+void BoxContainer::makeTree(
+   const GridGeometry* grid_geometry,
+   const int min_number) const
 {
    TBOX_ASSERT(min_number > 0);
 
-   if (!d_tree && size() > min_number) {
+   if (!d_tree && size() > 0) {
       const tbox::Dimension& dim = front().getDim();
 
-      d_tree.reset(new BoxTree(dim, *this, min_number));
+      d_tree.reset(new MultiblockBoxTree(*this, grid_geometry, min_number));
    }
 }
+
+bool BoxContainer::hasBoxInBlock(const BlockId& block_id) const
+{
+   if (d_tree) {
+      return d_tree->hasBoxInBlock(block_id);
+   } else {
+      for (ConstIterator bi = begin(); bi != end(); ++bi) {
+         if (bi->getBlockId() == block_id) {
+            return true;
+         }
+      }
+      return false;
+   }
+}
+
 
 /*
  ***********************************************************************
@@ -1584,9 +1628,9 @@ void BoxContainer::findOverlapBoxes(
    const Box& box) const
 {
    if (d_tree) {
+      TBOX_ASSERT(d_tree->getNumberBlocksInTree() == 1);
       d_tree->findOverlapBoxes(box_vector, box);
    } else {
-
       for (ConstIterator ni = begin(); ni != end(); ++ni) {
          const Box& my_box = *ni;
          if (box.intersects(my_box)) {
@@ -1595,6 +1639,27 @@ void BoxContainer::findOverlapBoxes(
       }
    }
 }
+
+void BoxContainer::findOverlapBoxes(
+   BoxContainer& overlap_boxes,
+   const Box& box,
+   const IntVector& refinement_ratio,
+   bool include_singularity_block_neighbors) const
+{
+   if (isEmpty()) {
+      return;
+   }
+
+   if (!d_tree) {
+      TBOX_ERROR("Must call makeTree before calling findOverlapBoxes with refinement ratio argument.");
+   }
+
+   d_tree->findOverlapBoxes(overlap_boxes,
+                            box,
+                            refinement_ratio,
+                            include_singularity_block_neighbors); 
+}
+
 
 bool BoxContainer::hasOverlap(
    const Box& box) const

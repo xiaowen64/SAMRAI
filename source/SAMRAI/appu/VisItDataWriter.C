@@ -17,7 +17,6 @@
 
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
-#include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -3671,7 +3670,7 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
       const hier::BoxContainer& coarser_mapped_boxes =
          hierarchy->getPatchLevel(ln)->getBoxLevel()->getGlobalizedVersion().getGlobalBoxes();
 
-      boost::shared_ptr<hier::MultiblockBoxTree> child_box_tree;
+      boost::shared_ptr<hier::BoxContainer> child_box_tree;
       hier::IntVector ratio(d_dim);
 
       if (ln != finest_level) {
@@ -3697,16 +3696,16 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
             }
 
             child_box_tree.reset(
-               new hier::MultiblockBoxTree(
-                  *hierarchy->getGridGeometry(),
+               new hier::BoxContainer(
                   non_per_child_boxes));
+            child_box_tree->makeTree(hierarchy->getGridGeometry().get());
 
          } else {
 
             child_box_tree.reset(
-               new hier::MultiblockBoxTree(
-                  *hierarchy->getGridGeometry(),
+               new hier::BoxContainer(
                   global_child_boxes));
+            child_box_tree->makeTree(hierarchy->getGridGeometry().get());
 
          }
       }

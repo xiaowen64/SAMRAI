@@ -89,7 +89,7 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
    const IntVector& base_swell,
    const IntVector& head_swell,
    const IntVector& head_nesting_margin,
-   const MultiblockBoxTree* domain) const
+   const BoxContainer* domain) const
 {
 
    tbox::Dimension dim(head.getDim());
@@ -164,7 +164,7 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
    const IntVector& base_swell,
    const IntVector& head_swell,
    const IntVector& head_nesting_margin,
-   const MultiblockBoxTree* domain) const
+   const BoxContainer* domain) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(
       connector.getBase(), base_swell, head_nesting_margin);
@@ -285,7 +285,7 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
          swelledbase_to_external,
          swelledbase_to_swelledhead,
          -head_nesting_margin,
-         MultiblockBoxTree());
+         BoxContainer());
    }
    if (domain) {
       /*
@@ -294,15 +294,14 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
        * the domain and we want to ignore those parts.
        */
       MappingConnectorAlgorithm mca;
-      std::vector<Box> domain_mapped_boxes;
-      domain->getBoxes(domain_mapped_boxes);
       BoxLevel domain_mapped_box_level(
          IntVector::getOne(dim),
          grid_geom,
          connector.getMPI(),
          BoxLevel::GLOBALIZED);
-      for (size_t i = 0; i < domain_mapped_boxes.size(); ++i) {
-         domain_mapped_box_level.addBox(domain_mapped_boxes[i]);
+      for (BoxContainer::ConstIterator bi = domain->begin();
+           bi != domain->end(); ++bi) {
+         domain_mapped_box_level.addBox(*bi);
       }
       Connector external_to_domain(
          external,
@@ -512,7 +511,7 @@ void BoxLevelConnectorUtils::computeExternalParts(
    Connector& input_to_external,
    const Connector& input_to_reference,
    const IntVector& nesting_width,
-   const MultiblockBoxTree& domain) const
+   const BoxContainer& domain) const
 {
    t_compute_external_parts->start();
 
@@ -536,7 +535,7 @@ void BoxLevelConnectorUtils::computeInternalParts(
    Connector& input_to_internal,
    const Connector& input_to_reference,
    const IntVector& nesting_width,
-   const MultiblockBoxTree& domain) const
+   const BoxContainer& domain) const
 {
    t_compute_internal_parts->start();
 
@@ -613,7 +612,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
    char internal_or_external,
    const Connector& input_to_reference,
    const IntVector& nesting_width,
-   const MultiblockBoxTree& domain) const
+   const BoxContainer& domain) const
 {
    const BoxLevel& input = input_to_reference.getBase();
 
@@ -720,16 +719,18 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
          grid_geometry);
       // ... reference_boundary is now ( (R^1) \ R )
 
-      if (domain.isInitialized()) {
+      if (domain.size() > 0) {
 
          if (input.getRefinementRatio() == one_vec) {
             reference_box_list.intersectBoxes(
                input.getRefinementRatio(),
                domain);
          } else {
-            reference_box_list.intersectBoxes(
-               input.getRefinementRatio(),
-               *domain.createRefinedTree(input.getRefinementRatio()));
+            BoxContainer refined_domain(domain);
+            refined_domain.refine(input.getRefinementRatio());
+            refined_domain.makeTree(grid_geometry.get());
+            reference_box_list.intersectBoxes(input.getRefinementRatio(),
+                                              refined_domain);
          }
 
       }
@@ -739,9 +740,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
       // ... reference_boundary is now ( ( (R^1) \ R ) <intersection> O )^(-g)
    } // search_tree_represents_internal == false
 
-   MultiblockBoxTree search_tree(*grid_geometry, reference_box_list);
-
-   reference_box_list.clear();
+   reference_box_list.makeTree(grid_geometry.get());
 
    /*
     * Keep track of last index so we don't give parts an index
@@ -804,7 +803,7 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
          BoxContainer parts_list(input_mapped_box);
          /*
           * Compute parts of input_mapped_box either overlapping
-          * or nor overlapping the search_tree.
+          * or nor overlapping the reference_box_list.
           *
           * Note about intersections in singularity neighbor blocks:
           * Cells from multiple singularity neighbor blocks can
@@ -823,12 +822,12 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
          if (compute_overlaps) {
             parts_list.intersectBoxes(
                input.getRefinementRatio(),
-               search_tree,
+               reference_box_list,
                true /* Count singularity neighbors */);
          } else {
             parts_list.removeIntersections(
                input.getRefinementRatio(),
-               search_tree,
+               reference_box_list,
                true /* Count singularity neighbors */);
          }
          t_compute_internal_parts_intersection->stop();
@@ -921,9 +920,16 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
    const tbox::Dimension& dim(grid_geometry->getDim());
    const IntVector& one_vec(IntVector::getOne(dim));
 
-   MultiblockBoxTree reference_mapped_boxes_tree(
-      *grid_geometry,
-      boundary);
+   BoxContainer reference_mapped_boxes_tree(boundary);
+   reference_mapped_boxes_tree.makeTree(grid_geometry.get());
+
+   std::map<BlockId, BoxContainer> single_block_reference;
+   if (grid_geometry->getNumberOfBlockSingularities() > 0) {
+      for (BoxContainer::ConstIterator bi = boundary.begin();
+           bi != boundary.end(); ++bi) {
+         single_block_reference[bi->getBlockId()].pushBack(*bi); 
+      }
+   }
 
    // Boundary starts as R
 
@@ -1050,9 +1056,12 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
                   neighbor_block_id,
                   block_id);
 
+               if (!single_block_reference[neighbor_block_id].hasTree()) {
+                  single_block_reference[neighbor_block_id].makeTree(
+                     grid_geometry.get());
+               }
                singularity_boxes.intersectBoxes(
-                  reference_mapped_boxes_tree.getSingleBlockBoxTree(
-                     neighbor_block_id));
+                  single_block_reference[neighbor_block_id]);
 
                grid_geometry->transformBoxContainer(singularity_boxes,
                   refinement_ratio,
@@ -1242,7 +1251,7 @@ void BoxLevelConnectorUtils::addPeriodicImages(
       boost::make_shared<BoxContainer>(domain_search_tree));
    domain_tree_for_mapped_box_level->refine(
       mapped_box_level.getRefinementRatio());
-   domain_tree_for_mapped_box_level->makeTree();
+   domain_tree_for_mapped_box_level->makeTree(NULL);
 
    const BoxContainer& domain_tree =
       *domain_tree_for_mapped_box_level;
@@ -1342,7 +1351,7 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
    BoxContainer domain_tree_for_mapped_box_level(domain_search_tree);
    domain_tree_for_mapped_box_level.refine(
       mapped_box_level.getRefinementRatio());
-   domain_tree_for_mapped_box_level.makeTree();
+   domain_tree_for_mapped_box_level.makeTree(NULL);
 
    {
       /*

@@ -16,7 +16,6 @@
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/hier/CoarsenOperator.h"
-#include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/hier/RefineOperator.h"
@@ -215,7 +214,7 @@ public:
       TwoDimBool& touches_periodic_bdry,
       const Box& box,
       const IntVector &refinement_ratio,
-      const MultiblockBoxTree& refined_periodic_domain_tree) const;
+      const BoxContainer& refined_periodic_domain_tree) const;
 
    /*!
     * @brief Sets geometry data for patches on a level.
@@ -397,7 +396,7 @@ public:
     *
     * @return The multiblock domain description as a search tree.
     */
-   const MultiblockBoxTree&
+   const BoxContainer&
    getDomainSearchTree() const;
 
    /*!
@@ -407,7 +406,7 @@ public:
     * @return The domain description as a search tree with periodic
     * images (if any).
     */
-   const MultiblockBoxTree&
+   const BoxContainer& 
    getPeriodicDomainSearchTree() const;
 
    /*!
@@ -1241,27 +1240,6 @@ private:
     * BoxContainer defining computational domain on coarsest level.
     */
    BoxContainer d_physical_domain;
-
-   /*!
-    * @brief The domain, excluding periodic images, in
-    * MultiblockBoxTree form, used for overlap searches.
-    */
-   MultiblockBoxTree d_domain_search_tree;
-
-   /*!
-    * @brief The same as d_domain_search_tree, but with periodic
-    * Boxes.
-    *
-    * For non-periodic domains, this tree is identical to
-    * d_domain_search_tree.
-    */
-   MultiblockBoxTree d_domain_search_tree_periodic;
-
-   /*!
-    * @brief The multiblock domain complement description stored in a
-    * search tree.
-    */
-   MultiblockBoxTree d_complement_searchtree;
 
    /*!
     * Boolean array telling for each block whether the domain of that block

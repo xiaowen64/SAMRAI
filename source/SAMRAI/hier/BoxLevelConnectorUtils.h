@@ -14,7 +14,6 @@
 
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/BoxLevel.h"
-#include "SAMRAI/hier/MultiblockBoxTree.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -111,7 +110,7 @@ public:
       const IntVector& base_swell,
       const IntVector& head_swell,
       const IntVector& head_nesting_margin,
-      const MultiblockBoxTree* domain = NULL) const;
+      const BoxContainer* domain = NULL) const;
 
    /*!
     * @brief Given base and head BoxLevels, determine the extent
@@ -158,7 +157,7 @@ public:
       const IntVector& base_swell,
       const IntVector& head_swell,
       const IntVector& head_margin,
-      const MultiblockBoxTree* domain = NULL) const;
+      const BoxContainer* domain = NULL) const;
 
    /*!
     * @brief Compute the parts of one BoxLevel that are external
@@ -208,7 +207,7 @@ public:
       Connector& input_to_external,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
-      const MultiblockBoxTree& domain = MultiblockBoxTree()) const;
+      const BoxContainer& domain = BoxContainer()) const;
 
    /*!
     * @brief Compute the parts of one BoxLevel that are internal
@@ -258,7 +257,7 @@ public:
       Connector& input_to_internal,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
-      const MultiblockBoxTree& domain = MultiblockBoxTree()) const;
+      const BoxContainer& domain = BoxContainer()) const;
 
    //@}
 
@@ -454,7 +453,7 @@ private:
       char internal_or_external,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
-      const MultiblockBoxTree& domain) const;
+      const BoxContainer& domain) const;
 
    /*!
     * @brief Call-back function to sort boxes.

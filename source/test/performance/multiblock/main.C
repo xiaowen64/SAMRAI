@@ -204,7 +204,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<tbox::Database> input_db(
+      boost::shared_ptr<tbox::InputDatabase> input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 

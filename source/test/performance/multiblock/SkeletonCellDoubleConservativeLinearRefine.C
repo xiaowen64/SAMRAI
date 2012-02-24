@@ -90,7 +90,8 @@ bool SkeletonCellDoubleConservativeLinearRefine::findRefineOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const string& op_name) const
 {
-   const boost::shared_ptr<pdat::CellVariable<double> > cast_var(var);
+   const boost::shared_ptr<pdat::CellVariable<double> > cast_var(
+      var, boost::detail::dynamic_cast_tag());
    if (cast_var && (op_name == getOperatorName())) {
       return true;
    } else {
@@ -142,9 +143,11 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
    const hier::IntVector& ratio) const
 {
    boost::shared_ptr<pdat::CellData<double> > cdata(
-      coarse.getPatchData(src_component));
+      coarse.getPatchData(src_component),
+      boost::detail::dynamic_cast_tag());
    boost::shared_ptr<pdat::CellData<double> > fdata(
-      fine.getPatchData(dst_component));
+      fine.getPatchData(dst_component),
+      boost::detail::dynamic_cast_tag());
 
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);

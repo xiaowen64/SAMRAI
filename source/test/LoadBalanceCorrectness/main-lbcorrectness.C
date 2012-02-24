@@ -849,12 +849,14 @@ int checkBalanceCorrectness(
    const hier::BoxLevel& globalized_prebalance =
       prebalance.getGlobalizedVersion();
 
+   const hier::GridGeometry& grid_geometry(*postbalance.getGridGeometry());
+
    const hier::BoxContainer& globalized_prebalance_mapped_box_set =
       globalized_prebalance.getGlobalBoxes();
 
-   const hier::MultiblockBoxTree globalized_prebalance_mapped_box_tree(
-      *prebalance.getGridGeometry(),
+   const hier::BoxContainer globalized_prebalance_mapped_box_tree(
       globalized_prebalance_mapped_box_set);
+   globalized_prebalance_mapped_box_tree.makeTree(&grid_geometry); 
 
    const hier::BoxLevel& globalized_postbalance =
       postbalance.getGlobalizedVersion();
@@ -862,9 +864,10 @@ int checkBalanceCorrectness(
    const hier::BoxContainer& globalized_postbalance_mapped_box_set =
       globalized_postbalance.getGlobalBoxes();
 
-   const hier::MultiblockBoxTree globalized_postbalance_mapped_box_tree(
-      *postbalance.getGridGeometry(),
+   const hier::BoxContainer globalized_postbalance_mapped_box_tree(
       globalized_postbalance_mapped_box_set);
+   globalized_postbalance_mapped_box_tree.makeTree(&grid_geometry);
+
 
    // Check for prebalance indices absent in postbalance.
    for (hier::BoxContainer::ConstIterator bi = globalized_prebalance_mapped_box_set.begin();

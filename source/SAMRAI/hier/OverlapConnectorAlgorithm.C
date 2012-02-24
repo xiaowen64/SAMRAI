@@ -13,7 +13,6 @@
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxContainerUtils.h"
-#include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
@@ -352,7 +351,7 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
     * in which case we want to avoid the expense
     * of creating a temporary GLOBALIZED version.
     *
-    * Global mapped_boxes provided by head are sorted in a MultiblockBoxTree
+    * Global mapped_boxes provided by head are sorted in a BoxContainer
     * so they can be quickly searched to see which intersects the
     * boxes in this object.
     */
@@ -381,7 +380,8 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
     * Create single container of visible head mapped_boxes
     * to generate the search tree.
     */
-   MultiblockBoxTree rbbt(*head.getGridGeometry(), head.getGlobalBoxes());
+   const BoxContainer& rbbt = head.getGlobalBoxes();
+   rbbt.makeTree(head.getGridGeometry().get());
 
    /*
     * A neighbor of a Box would be discarded if
@@ -1343,12 +1343,12 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
       const int nproc = east.getMPI().getSize();
 
       t_bridge_discover_form_rbbt->start();
-      const MultiblockBoxTree east_rbbt(*grid_geometry,
-                                        visible_east_nabrs);
+      const BoxContainer east_rbbt(visible_east_nabrs);
+      east_rbbt.makeTree(grid_geometry.get());
       // Note: west_rbbt only needed when compute_reverse is true.
       BoxContainer empty_nabrs(true);
-      const MultiblockBoxTree west_rbbt(*grid_geometry,
-                                        compute_reverse ? visible_west_nabrs : empty_nabrs );
+      const BoxContainer west_rbbt(compute_reverse ? visible_west_nabrs : empty_nabrs);
+      west_rbbt.makeTree(grid_geometry.get());
       t_bridge_discover_form_rbbt->stop();
 
       /*
@@ -1620,7 +1620,7 @@ void OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
    const int remote_mapped_box_counter_index,
    Connector& bridging_connector,
    NeighborSet& referenced_head_nabrs,
-   const MultiblockBoxTree& head_rbbt) const
+   const BoxContainer& head_rbbt) const
 {
    const IntVector &head_refinement_ratio(bridging_connector.getHead().getRefinementRatio());
 
@@ -1644,6 +1644,8 @@ void OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
       TBOX_ERROR("Can't coarsen in one dimension and refine in another");
    }
 #endif
+
+   const GridGeometry& grid_geometry(*bridging_connector.getHead().getGridGeometry());
 
    //std::vector<Box> found_nabrs, scratch_found_nabrs; // Should be made a member to avoid repetitive alloc/dealloc.  Reserve in privateBridge and used here.
    BoxContainer found_nabrs, scratch_found_nabrs; // Should be made a member to avoid repetitive alloc/dealloc.  Reserve in privateBridge and used here.

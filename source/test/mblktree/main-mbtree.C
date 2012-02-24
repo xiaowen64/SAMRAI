@@ -13,7 +13,6 @@
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxLevel.h"
-#include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/TransferOperatorRegistry.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/tbox/InputDatabase.h"
@@ -58,11 +57,11 @@ exhaustiveFindOverlapBoxes(
  ************************************************************************
  *
  * This is accuracy test for the multiblock tree search algorithm
- * in MultiblockBoxTree:
+ * in BoxContainer:
  *
  * 1. Generate a set of Boxes.
  *
- * 2. Sort the Boxes into trees using MultiblockBoxTree.
+ * 2. Sort the Boxes into trees using makeTree.
  *
  * 3. Search for overlaps.
  *
@@ -237,7 +236,7 @@ int main(
             *mapped_box_level_db,
             grid_geometry);
          if (mapped_box_level != baseline_mapped_box_level) {
-            tbox::perr << "MultiblockBoxTree test problem:\n"
+            tbox::perr << "Multiblock Tree test problem:\n"
                        << "the BoxLevel generated is different\n"
                        << "from the one in the database.  Thus the check\n"
                        << "cannot be done.\n";
@@ -252,9 +251,8 @@ int main(
        * Generate boxes from the multiblock domain description.
        */
 
-      hier::MultiblockBoxTree multiblock_mapped_box_tree(
-         *grid_geometry,
-         mapped_box_level.getBoxes());
+      const hier::BoxContainer& level_boxes = mapped_box_level.getBoxes();
+      level_boxes.makeTree(grid_geometry.get());
 
       /*
        * Find overlaps.
@@ -280,7 +278,7 @@ int main(
          grown_box.grow(connector_width);
 
          hier::BoxContainer overlap_boxes;
-         multiblock_mapped_box_tree.findOverlapBoxes(
+         level_boxes.findOverlapBoxes(
             overlap_boxes,
             grown_box,
             refinement_ratio,
@@ -371,7 +369,7 @@ int main(
          hier::Connector baseline_connector;
          baseline_connector.getNeighborhoodsFromDatabase(*connector_db);
          if (!baseline_connector.localNeighborhoodsEqual(connector)) {
-            tbox::perr << "MultiblockBoxTree test problem:\n"
+            tbox::perr << "Multiblock Tree test problem:\n"
                        << "the NeighborhoodSets generated is different\n"
                        << "from the one in the database.\n"
                        << "computed neighborhood set:\n";

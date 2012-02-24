@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/BoxLevel.h"
-#include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/PatchFactory.h"
 #include "SAMRAI/hier/PatchLevel.h"

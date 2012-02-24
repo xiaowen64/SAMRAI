@@ -603,7 +603,8 @@ int SkeletonBoundaryUtilities3::checkBdryData(
    boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
    boost::shared_ptr<pdat::CellData<double> > vardata(
-      patch.getPatchData(data_id));
+      patch.getPatchData(data_id),
+      boost::detail::dynamic_cast_tag());
 
    string bdry_type_str;
    if (btype == Bdry::FACE3D) {

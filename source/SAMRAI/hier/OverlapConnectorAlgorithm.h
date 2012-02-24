@@ -12,7 +12,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/BaseConnectorAlgorithm.h"
-#include "SAMRAI/hier/MultiblockBoxTree.h"
 
 #include <map>
 
@@ -610,7 +609,7 @@ private:
       const int remote_mapped_box_counter_index,
       Connector& bridging_connector,
       NeighborSet& referenced_head_nabrs,
-      const MultiblockBoxTree& head_rbbt) const;
+      const BoxContainer& head_rbbt) const;
 
    //! @brief Utility used in privateBridge()
    void

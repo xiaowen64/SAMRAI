@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
-#include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/TransferOperatorRegistry.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/tbox/InputDatabase.h"
@@ -239,8 +238,7 @@ int main(
                  << domain_mapped_boxes.format()
                  << std::endl;
 
-      const hier::MultiblockBoxTree domain_mapped_box_tree(
-         *grid_geometry, domain_mapped_boxes);
+      domain_mapped_boxes.makeTree(grid_geometry.get());
 
       /*
        * Construct the big_mapped_box_level.  It is a refinement of
@@ -371,9 +369,9 @@ int main(
 
       const hier::BoxContainer& small_mapped_box_set(small_mapped_box_level.getBoxes());
 
-      const hier::MultiblockBoxTree small_box_tree(*grid_geometry,
-                                                   small_mapped_box_level.getGlobalizedVersion().
-                                                   getGlobalBoxes());
+      const hier::BoxContainer small_box_tree(
+         small_mapped_box_level.getGlobalizedVersion().getGlobalBoxes());
+      small_box_tree.makeTree(grid_geometry.get());
 
       /*
        * Connectors between big and small BoxLevels.
@@ -429,13 +427,13 @@ int main(
             small_to_nothing,
             small_to_big,
             -shrinkage,
-            domain_mapped_box_tree);
+            domain_mapped_boxes);
          mblcu.computeInternalParts(
             everything,
             small_to_everything,
             small_to_big,
             -shrinkage,
-            domain_mapped_box_tree);
+            domain_mapped_boxes);
          tbox::plog << "\nsmall_to_nothing:\n"
                     << small_to_nothing.format("", 2) << '\n'
                     << "\nnothing:\n"
@@ -525,9 +523,9 @@ int main(
                     << "big_to_internal:\n"
                     << big_to_internal.format("", 2);
 
-         hier::MultiblockBoxTree internal_box_tree(
-            *grid_geometry,
+         hier::BoxContainer internal_box_tree(
             internal_mapped_box_level.getGlobalizedVersion().getGlobalBoxes());
+         internal_box_tree.makeTree(grid_geometry.get());
 
          for (hier::BoxContainer::ConstIterator ni = small_mapped_box_set.begin();
               ni != small_mapped_box_set.end(); ++ni) {
@@ -585,7 +583,7 @@ int main(
             big_to_external,
             big_to_small,
             zero_vector,
-            hier::MultiblockBoxTree());
+            hier::BoxContainer());
          const hier::BoxContainer& external_mapped_box_set(external_mapped_box_level.getBoxes());
          tbox::plog << "\nexternal_mapped_box_level:\n"
                     << external_mapped_box_level.format("", 2)
@@ -593,9 +591,9 @@ int main(
                     << "big_to_external:\n"
                     << big_to_external.format("", 2);
 
-         hier::MultiblockBoxTree external_box_tree(
-            *grid_geometry,
+         hier::BoxContainer external_box_tree(
             external_mapped_box_level.getGlobalizedVersion().getGlobalBoxes());
+         external_box_tree.makeTree(grid_geometry.get());
 
          for (hier::BoxContainer::ConstIterator ni = external_mapped_box_set.begin();
               ni != external_mapped_box_set.end(); ++ni) {
@@ -782,10 +780,6 @@ void shrinkBoxLevel(
    }
 #endif
 
-   hier::MultiblockBoxTree visible_box_tree(
-      *grid_geometry,
-      visible_mapped_boxes);
-
    hier::BoxLevelConnectorUtils mblcu;
 
    mblcu.computeBoxesAroundBoundary(
@@ -845,9 +839,7 @@ void shrinkBoxLevel(
    }
 #endif
 
-   const hier::MultiblockBoxTree complement_mapped_box_tree(
-      *grid_geometry,
-      complement_mapped_boxes);
+   complement_mapped_boxes.makeTree(grid_geometry.get());
 
    /*
     * Construct the small_mapped_box_level.
@@ -881,7 +873,7 @@ void shrinkBoxLevel(
 
          shrunken_boxes.removeIntersections(
             big_mapped_box_level.getRefinementRatio(),
-            complement_mapped_box_tree);
+            complement_mapped_boxes);
          shrunken_boxes.simplify();
 
          for (hier::BoxContainer::Iterator li(shrunken_boxes);

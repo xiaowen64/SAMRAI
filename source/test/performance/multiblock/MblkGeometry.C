@@ -129,7 +129,9 @@ void MblkGeometry::tagOctantCells(
    TBOX_ASSERT(temp_tags);
 #endif
 
-   boost::shared_ptr<pdat::NodeData<double> > xyz(patch.getPatchData(xyz_id));
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
+      patch.getPatchData(xyz_id),
+      boost::detail::dynamic_cast_tag());
 
    if (d_dim == tbox::Dimension(3)) {
       /*
@@ -563,7 +565,8 @@ void MblkGeometry::buildCartesianGridOnPatch(
 {
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
-      patch.getPatchData(xyz_id));
+      patch.getPatchData(xyz_id),
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(xyz);
@@ -646,7 +649,8 @@ void MblkGeometry::buildWedgeGridOnPatch(
 {
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
-      patch.getPatchData(xyz_id));
+      patch.getPatchData(xyz_id),
+      boost::detail::dynamic_cast_tag());
 
    TBOX_ASSERT(xyz);
 
@@ -790,7 +794,8 @@ void MblkGeometry::buildSShellGridOnPatch(
    }
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
-      patch.getPatchData(xyz_id));
+      patch.getPatchData(xyz_id),
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(xyz);

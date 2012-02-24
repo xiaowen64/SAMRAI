@@ -307,11 +307,11 @@ void GridGeometry::findPatchesTouchingBoundaries(
    touches_periodic_bdry.clear();
    t_touching_boundaries_init->stop();
 
-   boost::shared_ptr<MultiblockBoxTree> tmp_refined_periodic_domain_tree;
-   if ( level.getRatioToLevelZero() != IntVector::getZero(level.getDim()) ) {
-      tmp_refined_periodic_domain_tree =
-          d_domain_search_tree_periodic.createRefinedTree(
-            level.getRatioToLevelZero());
+   hier::BoxContainer tmp_refined_periodic_domain_tree;
+   if ( level.getRatioToLevelZero() != IntVector::getOne(level.getDim()) ) {
+      tmp_refined_periodic_domain_tree = d_domain_with_images;
+      tmp_refined_periodic_domain_tree.refine(level.getRatioToLevelZero());
+      tmp_refined_periodic_domain_tree.makeTree(this);
    }
 
    t_touching_boundaries_loop->start();
@@ -340,9 +340,10 @@ void GridGeometry::findPatchesTouchingBoundaries(
          (*iter_touches_periodic_bdry).second,
          box,
          level.getRatioToLevelZero(),
-         !tmp_refined_periodic_domain_tree ?
-         d_domain_search_tree :
-         *tmp_refined_periodic_domain_tree );
+         tmp_refined_periodic_domain_tree.isEmpty() ?
+         d_physical_domain :
+         //d_domain_search_tree :
+         tmp_refined_periodic_domain_tree );
    }
    t_touching_boundaries_loop->stop();
    t_find_patches_touching_boundaries->stop();
@@ -353,7 +354,7 @@ void GridGeometry::computeBoxTouchingBoundaries(
    TwoDimBool& touches_periodic_bdry,
    const Box& box,
    const IntVector &refinement_ratio,
-   const MultiblockBoxTree& refined_periodic_domain_tree) const
+   const BoxContainer& refined_periodic_domain_tree) const
 {
 
    /*
@@ -363,7 +364,8 @@ void GridGeometry::computeBoxTouchingBoundaries(
     */
    BoxContainer bdry_list(box);
    bdry_list.grow(IntVector::getOne(d_dim));
-   bdry_list.removeIntersections(refinement_ratio, refined_periodic_domain_tree);
+   bdry_list.removeIntersections(refinement_ratio,
+                                 refined_periodic_domain_tree);
    const bool touches_any_boundary = (bdry_list.size() > 0);
 
    if (!touches_any_boundary) {
@@ -1034,6 +1036,19 @@ void GridGeometry::getBoundaryBoxes(
       }
 
    } else {
+      if (!domain_boxes.hasTree() && domain_boxes.size() > 10) {
+         domain_boxes.makeTree(NULL);
+      }
+
+      BoxContainer per_domain_boxes;
+      if (num_per_dirs != 0) {
+         per_domain_boxes = domain_boxes;
+         per_domain_boxes.grow(periodic_shift);
+         if (per_domain_boxes.size() > 10) { 
+            per_domain_boxes.makeTree(NULL);
+         }
+      }
+
       BoundaryLookupTable* blut =
          BoundaryLookupTable::getLookupTable(d_dim);
 
@@ -1095,12 +1110,6 @@ void GridGeometry::getBoundaryBoxes(
                   }
                }
 
-               BoxContainer per_domain_boxes;
-               if (num_per_dirs != 0) {
-                  per_domain_boxes = domain_boxes;
-                  per_domain_boxes.grow(periodic_shift);
-               }
- 
                /*
                 * Intersect border_list with domain, then shift so that
                 * true boundary boxes are outside domain.  Then remove
@@ -1109,7 +1118,7 @@ void GridGeometry::getBoundaryBoxes(
 
                BoxContainer border_list(border);
                if (num_per_dirs != 0) {
-                  border_list.intersectBoxes(per_domain_boxes); // Should use BoxTree here if possible.
+                  border_list.intersectBoxes(per_domain_boxes);
                } else {
                   border_list.intersectBoxes(domain_boxes);
                }
@@ -1481,8 +1490,7 @@ void GridGeometry::setPhysicalDomain(
 
 void GridGeometry::resetDomainBoxContainer()
 {
-
-   d_domain_search_tree.generateTree(*this, d_physical_domain);
+   d_physical_domain.makeTree(this);
 
    const bool is_periodic =
       d_periodic_shift != IntVector::getZero(d_periodic_shift.getDim());
@@ -1510,13 +1518,9 @@ void GridGeometry::resetDomainBoxContainer()
          }
 
       }
-
-      d_domain_search_tree_periodic.generateTree(*this, d_domain_with_images);
-
    }
-   else {
-      d_domain_search_tree_periodic = d_domain_search_tree;
-   }
+   d_domain_with_images.makeTree(this);
+  
 }
 
 

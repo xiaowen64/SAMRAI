@@ -1513,7 +1513,7 @@ void RefineSchedule::createCoarseInterpPatchLevel(
          coarse_interp_mapped_box_level,
          coarse_interp_to_hiercoarse,
          hiercoarse_to_coarse_interp,
-         hierarchy->getGridGeometry()->getDomainSearchTree().getSingleBlockBoxTree(hier::BlockId(0)),
+         hierarchy->getGridGeometry()->getDomainSearchTree(),
          hiercoarse_to_hiercoarse);
 
    }

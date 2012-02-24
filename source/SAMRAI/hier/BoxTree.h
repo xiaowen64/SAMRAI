@@ -14,15 +14,16 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Timer.h"
 
 #include <boost/shared_ptr.hpp>
 #include <vector>
-#include <map>
+#include <list>
 
 namespace SAMRAI {
 namespace hier {
+
+class BoxContainer;
 
 /*!
  * @brief Utility sorting Boxes into tree-like form for finding
@@ -41,13 +42,12 @@ namespace hier {
  * - findOverlapBoxes()
  *
  * Except for two static methods and a destructor needed by boost shared_ptr,
- * the entire interface is private, as a precursor to becoming a private
- * subclass of BoxContainer.
+ * the entire interface is private.
  */
 
 class BoxTree
 {
-friend class BoxContainer;
+friend class MultiblockBoxTree;
 
 public:
 
@@ -76,7 +76,11 @@ public:
     */
    ~BoxTree();
 
-private:
+public:
+
+   BoxTree(const std::list<const Box*> boxes,
+           int min_number = 10);
+
    /*!
     * @brief Constructs a BoxTree from set of Boxes.
     *
@@ -106,6 +110,11 @@ private:
     */
    explicit BoxTree(
       const tbox::Dimension& dim);
+
+   /*!
+    * Default constructor is unimplemented and should not be used.
+    */
+   BoxTree();
 
    /*!
     * @brief Reset to uninitialized state.

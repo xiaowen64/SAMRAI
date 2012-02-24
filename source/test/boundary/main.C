@@ -206,7 +206,7 @@ int main(
       }
       edge_utils.addPeriodicImages(
          layer0,
-         patch_hierarchy->getGridGeometry()->getDomainSearchTree().getSingleBlockBoxTree(hier::BlockId::zero()),
+         patch_hierarchy->getGridGeometry()->getDomainSearchTree(),
          hier::IntVector(dim, 2));
 
       patch_hierarchy->makeNewPatchLevel(0, layer0);
