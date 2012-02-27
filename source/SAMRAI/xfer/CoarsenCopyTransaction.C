@@ -18,6 +18,10 @@
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/xfer/CoarsenClasses.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/xfer/CoarsenCopyTransaction.I"
+#endif
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -29,35 +33,9 @@
 namespace SAMRAI {
 namespace xfer {
 
-/*
- *************************************************************************
- *
- * Initialization, set/unset functions for static array of coarsen items.
- *
- *************************************************************************
- */
-
-const CoarsenClasses::Data **
-CoarsenCopyTransaction::s_coarsen_items =
+const CoarsenClasses::Data ** CoarsenCopyTransaction::s_coarsen_items =
    (const CoarsenClasses::Data **)NULL;
 int CoarsenCopyTransaction::s_num_coarsen_items = 0;
-
-void CoarsenCopyTransaction::setCoarsenItems(
-   const CoarsenClasses::Data** coarsen_items,
-   int num_coarsen_items)
-{
-   TBOX_ASSERT(coarsen_items != (const CoarsenClasses::Data **)NULL);
-   TBOX_ASSERT(num_coarsen_items >= 0);
-
-   s_coarsen_items = coarsen_items;
-   s_num_coarsen_items = num_coarsen_items;
-}
-
-void CoarsenCopyTransaction::unsetCoarsenItems()
-{
-   s_coarsen_items = (const CoarsenClasses::Data **)NULL;
-   s_num_coarsen_items = 0;
-}
 
 /*
  *************************************************************************
@@ -114,7 +92,8 @@ CoarsenCopyTransaction::~CoarsenCopyTransaction()
  *************************************************************************
  */
 
-bool CoarsenCopyTransaction::canEstimateIncomingMessageSize()
+bool
+CoarsenCopyTransaction::canEstimateIncomingMessageSize()
 {
    bool can_estimate = false;
    if (d_src_patch) {
@@ -129,7 +108,8 @@ bool CoarsenCopyTransaction::canEstimateIncomingMessageSize()
    return can_estimate;
 }
 
-size_t CoarsenCopyTransaction::computeIncomingMessageSize()
+size_t
+CoarsenCopyTransaction::computeIncomingMessageSize()
 {
    d_incoming_bytes =
       d_dst_patch->getPatchData(s_coarsen_items[d_coarsen_item_id]->d_dst)
@@ -137,7 +117,8 @@ size_t CoarsenCopyTransaction::computeIncomingMessageSize()
    return d_incoming_bytes;
 }
 
-size_t CoarsenCopyTransaction::computeOutgoingMessageSize()
+size_t
+CoarsenCopyTransaction::computeOutgoingMessageSize()
 {
    d_outgoing_bytes =
       d_src_patch->getPatchData(s_coarsen_items[d_coarsen_item_id]->d_src)
@@ -145,21 +126,36 @@ size_t CoarsenCopyTransaction::computeOutgoingMessageSize()
    return d_outgoing_bytes;
 }
 
-void CoarsenCopyTransaction::packStream(
+int
+CoarsenCopyTransaction::getSourceProcessor()
+{
+   return d_src_patch_rank;
+}
+
+int
+CoarsenCopyTransaction::getDestinationProcessor()
+{
+   return d_dst_patch_rank;
+}
+
+void
+CoarsenCopyTransaction::packStream(
    tbox::MessageStream& stream)
 {
    d_src_patch->getPatchData(s_coarsen_items[d_coarsen_item_id]->d_src)
    ->packStream(stream, *d_overlap);
 }
 
-void CoarsenCopyTransaction::unpackStream(
+void
+CoarsenCopyTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
    d_dst_patch->getPatchData(s_coarsen_items[d_coarsen_item_id]->d_dst)
    ->unpackStream(stream, *d_overlap);
 }
 
-void CoarsenCopyTransaction::copyLocalData()
+void
+CoarsenCopyTransaction::copyLocalData()
 {
    hier::PatchData& dst_data =
       *d_dst_patch->getPatchData(s_coarsen_items[d_coarsen_item_id]->d_dst);
@@ -178,7 +174,8 @@ void CoarsenCopyTransaction::copyLocalData()
  *************************************************************************
  */
 
-void CoarsenCopyTransaction::printClassData(
+void
+CoarsenCopyTransaction::printClassData(
    std::ostream& stream) const
 {
    stream << "Coarsen Copy Transaction" << std::endl;

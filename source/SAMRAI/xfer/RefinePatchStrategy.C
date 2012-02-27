@@ -15,6 +15,10 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/BoxContainer.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/xfer/RefinePatchStrategy.I"
+#endif
+
 namespace SAMRAI {
 namespace xfer {
 
@@ -39,92 +43,27 @@ RefinePatchStrategy::~RefinePatchStrategy()
    unregisterObject();
 }
 
-/*
- *************************************************************************
- *
- * Loop over all fill boxes and call the user-defined preprocesses.
- *
- *************************************************************************
- */
-
-void RefinePatchStrategy::preprocessRefineBoxes(
-   hier::Patch& fine,
-   const hier::Patch& coarse,
-   const hier::BoxContainer& fine_boxes,
-   const hier::IntVector& ratio)
+void
+RefinePatchStrategy::fillSingularityBoundaryConditions(
+   hier::Patch& patch,
+   const hier::PatchLevel& encon_level,
+   const hier::Connector& dst_to_encon,
+   const double fill_time,
+   const hier::Box& fill_box,
+   const hier::BoundaryBox& boundary_box,
+   const boost::shared_ptr<hier::GridGeometry>& grid_geometry)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(fine, coarse, ratio);
-
-   for (hier::BoxContainer::ConstIterator b(fine_boxes); b != fine_boxes.end(); ++b) {
-      preprocessRefine(fine, coarse, b(), ratio);
-   }
-}
-
-/*
- *************************************************************************
- *
- * Loop over all fill boxes and call the user-defined postprocesses.
- *
- *************************************************************************
- */
-
-void RefinePatchStrategy::postprocessRefineBoxes(
-   hier::Patch& fine,
-   const hier::Patch& coarse,
-   const hier::BoxContainer& fine_boxes,
-   const hier::IntVector& ratio)
-{
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim, fine, coarse, ratio);
-
-   for (hier::BoxContainer::ConstIterator b(fine_boxes); b != fine_boxes.end(); ++b) {
-      postprocessRefine(fine, coarse, b(), ratio);
-   }
-}
-
-/*
- *************************************************************************
- * Register this in the static registry.
- *************************************************************************
- */
-void RefinePatchStrategy::registerObject()
-{
-   std::set<RefinePatchStrategy *>& current_objects =
-      RefinePatchStrategy::getCurrentObjects();
-   TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
-   current_objects.insert(this);
-}
-
-/*
- *************************************************************************
- * Unregister this from the static registry.
- *************************************************************************
- */
-void RefinePatchStrategy::unregisterObject()
-{
-   std::set<RefinePatchStrategy *>& current_objects =
-      RefinePatchStrategy::getCurrentObjects();
-   TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
-   current_objects.erase(this);
-}
-
-/*
- *************************************************************************
- * Return the static registry.
- *************************************************************************
- */
-std::set<RefinePatchStrategy *>& RefinePatchStrategy::getCurrentObjects()
-{
-   static std::set<RefinePatchStrategy *> current_objects;
-   return current_objects;
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-const tbox::Dimension& RefinePatchStrategy::getDim() const
-{
-   return d_dim;
+   NULL_USE(patch);
+   NULL_USE(encon_level);
+   NULL_USE(dst_to_encon);
+   NULL_USE(fill_time);
+   NULL_USE(fill_box);
+   NULL_USE(boundary_box);
+   NULL_USE(grid_geometry);
+   TBOX_ERROR(
+      "The abstract RefinePatchLevelStragey::fillSingularityBoudaryConditions:\n"
+      << "must be implemented whenever the concrete derived\n"
+      << "class supports multiblock and singularities.");
 }
 
 /*

@@ -16,6 +16,10 @@
 
 #include "SAMRAI/tbox/Utilities.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.I"
+#endif
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -64,7 +68,8 @@ void RefineScheduleConnectorWidthRequestor::setGhostCellWidthFactor(
  * properly on a given hierarchy.
  **************************************************************************
  */
-void RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
+void
+RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
    std::vector<hier::IntVector>& self_connector_widths,
    std::vector<hier::IntVector>& fine_connector_widths,
    const hier::PatchHierarchy& patch_hierarchy) const
@@ -138,26 +143,6 @@ void RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
       }
    }
 
-}
-
-/*
- ***********************************************************************
- * Register the static ConnectorWidthRequestor to be
- * automatically used by PatchHierarchy objects.
- ***********************************************************************
- */
-void RefineScheduleConnectorWidthRequestor::initializeCallback()
-{
-   hier::PatchHierarchy::registerAutoConnectorWidthRequestorStrategy(
-      s_auto_registered_connector_width_requestor);
-}
-
-/*
- ***************************************************************************
- ***************************************************************************
- */
-void RefineScheduleConnectorWidthRequestor::finalizeCallback()
-{
 }
 
 }

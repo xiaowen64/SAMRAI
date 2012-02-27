@@ -198,13 +198,18 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	HierarchyTester.C HierarchyTester.h
@@ -409,13 +414,18 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	HierarchyTester.h main.C
@@ -615,13 +625,18 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	HierarchyTester.h tbox_Pointer-HierarchyTester.C

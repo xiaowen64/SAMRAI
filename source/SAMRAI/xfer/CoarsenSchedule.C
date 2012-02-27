@@ -30,6 +30,10 @@
 #include "SAMRAI/xfer/CoarsenCopyTransaction.h"
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/xfer/CoarsenSchedule.I"
+#endif
+
 namespace SAMRAI {
 namespace xfer {
 
@@ -67,7 +71,8 @@ CoarsenSchedule::s_initialize_finalize_handler(
  * ************************************************************************
  */
 
-void CoarsenSchedule::setScheduleGenerationMethod(
+void
+CoarsenSchedule::setScheduleGenerationMethod(
    const std::string& method)
 {
    if (!((method == "ORIG_NSQUARED") ||
@@ -192,7 +197,8 @@ CoarsenSchedule::~CoarsenSchedule()
  * ***********************************************************************
  */
 
-void CoarsenSchedule::reset(
+void
+CoarsenSchedule::reset(
    const boost::shared_ptr<CoarsenClasses>& coarsen_classes)
 {
    TBOX_ASSERT(coarsen_classes);
@@ -208,20 +214,6 @@ void CoarsenSchedule::reset(
       t_coarse_data_fill->stop();
    }
 
-}
-
-/*
- * ************************************************************************
- *
- * Return const pointer to equivalence classes used in schedule.
- *
- * ************************************************************************
- */
-
-const boost::shared_ptr<CoarsenClasses>&
-CoarsenSchedule::getEquivalenceClasses() const
-{
-   return d_coarsen_classes;
 }
 
 /*
@@ -243,7 +235,8 @@ CoarsenSchedule::getEquivalenceClasses() const
  * ************************************************************************
  */
 
-void CoarsenSchedule::coarsenData() const
+void
+CoarsenSchedule::coarsenData() const
 {
    if ( s_extra_debug ) {
       tbox::plog << "CoarsenSchedule::coarsenData " << this << " entered" << std::endl;
@@ -316,7 +309,8 @@ void CoarsenSchedule::coarsenData() const
  * ************************************************************************
  */
 
-void CoarsenSchedule::generateTemporaryLevel()
+void
+CoarsenSchedule::generateTemporaryLevel()
 {
    const tbox::Dimension& dim(d_crse_level->getDim());
 
@@ -387,7 +381,8 @@ void CoarsenSchedule::generateTemporaryLevel()
  * ************************************************************************
  */
 
-void CoarsenSchedule::setupRefineAlgorithm()
+void
+CoarsenSchedule::setupRefineAlgorithm()
 {
    const tbox::Dimension& dim(d_crse_level->getDim());
 
@@ -420,7 +415,8 @@ void CoarsenSchedule::setupRefineAlgorithm()
  * ************************************************************************
  */
 
-void CoarsenSchedule::generateSchedule()
+void
+CoarsenSchedule::generateSchedule()
 {
 
    /*
@@ -473,7 +469,8 @@ void CoarsenSchedule::generateSchedule()
  *************************************************************************
  */
 
-void CoarsenSchedule::generateScheduleNSquared()
+void
+CoarsenSchedule::generateScheduleNSquared()
 {
 
    t_gen_sched_n_squared->start();
@@ -523,7 +520,8 @@ void CoarsenSchedule::generateScheduleNSquared()
  *************************************************************************
  *************************************************************************
  */
-void CoarsenSchedule::generateScheduleDLBG()
+void
+CoarsenSchedule::generateScheduleDLBG()
 {
    t_gen_sched_dlbg->start();
 
@@ -620,7 +618,8 @@ void CoarsenSchedule::generateScheduleDLBG()
  * shifts to be absorbed in the src mapped_box.
  ***********************************************************************
  */
-void CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
+void
+CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
    FullNeighborhoodSet& full_inverted_edges,
    const Connector& src_to_dst) const
 {
@@ -671,7 +670,8 @@ void CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
  **************************************************************************
  */
 
-hier::IntVector CoarsenSchedule::getMaxGhostsToGrow() const
+hier::IntVector
+CoarsenSchedule::getMaxGhostsToGrow() const
 {
    const tbox::Dimension& dim(d_crse_level->getDim());
    boost::shared_ptr<hier::PatchDescriptor> pd(
@@ -709,7 +709,8 @@ hier::IntVector CoarsenSchedule::getMaxGhostsToGrow() const
  *************************************************************************
  */
 
-void CoarsenSchedule::constructScheduleTransactions(
+void
+CoarsenSchedule::constructScheduleTransactions(
    const boost::shared_ptr<hier::PatchLevel>& dst_level,
    const hier::Box& dst_mapped_box,
    const boost::shared_ptr<hier::PatchLevel>& src_level,
@@ -954,7 +955,8 @@ void CoarsenSchedule::constructScheduleTransactions(
  * ************************************************************************
  */
 
-void CoarsenSchedule::coarsenSourceData(
+void
+CoarsenSchedule::coarsenSourceData(
    CoarsenPatchStrategy* patch_strategy) const
 {
    /*
@@ -1005,7 +1007,8 @@ void CoarsenSchedule::coarsenSourceData(
  * ***********************************************************************
  */
 
-void CoarsenSchedule::setCoarsenItems(
+void
+CoarsenSchedule::setCoarsenItems(
    const boost::shared_ptr<CoarsenClasses>& coarsen_classes)
 {
 
@@ -1059,7 +1062,8 @@ void CoarsenSchedule::setCoarsenItems(
  * ***********************************************************************
  */
 
-void CoarsenSchedule::initialCheckCoarsenClassItems() const
+void
+CoarsenSchedule::initialCheckCoarsenClassItems() const
 {
    const tbox::Dimension& dim(d_crse_level->getDim());
 
@@ -1137,7 +1141,8 @@ void CoarsenSchedule::initialCheckCoarsenClassItems() const
  * ************************************************************************
  */
 
-void CoarsenSchedule::clearCoarsenItems()
+void
+CoarsenSchedule::clearCoarsenItems()
 {
    if (d_coarsen_items) {
       for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
@@ -1158,7 +1163,8 @@ void CoarsenSchedule::clearCoarsenItems()
  * ************************************************************************
  */
 
-void CoarsenSchedule::printClassData(
+void
+CoarsenSchedule::printClassData(
    std::ostream& stream) const
 {
    stream << "CoarsenSchedule::printClassData()" << std::endl;
@@ -1186,7 +1192,8 @@ void CoarsenSchedule::printClassData(
  ***********************************************************************
  */
 
-void CoarsenSchedule::initializeCallback()
+void
+CoarsenSchedule::initializeCallback()
 {
    boost::shared_ptr<tbox::Database> idb(
       tbox::InputManager::getInputDatabase());
@@ -1217,7 +1224,8 @@ void CoarsenSchedule::initializeCallback()
  ***************************************************************************
  */
 
-void CoarsenSchedule::finalizeCallback()
+void
+CoarsenSchedule::finalizeCallback()
 {
    t_coarsen_data.reset();
    t_gen_sched_n_squared.reset();

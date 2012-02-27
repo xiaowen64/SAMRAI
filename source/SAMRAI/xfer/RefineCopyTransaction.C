@@ -17,6 +17,10 @@
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/xfer/RefineCopyTransaction.I"
+#endif
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -28,36 +32,9 @@
 namespace SAMRAI {
 namespace xfer {
 
-/*
- *************************************************************************
- *
- * Initialization, set/unset functions for static array of refine items.
- *
- *************************************************************************
- */
-
-const RefineClasses::Data **
-RefineCopyTransaction::s_refine_items =
+const RefineClasses::Data ** RefineCopyTransaction::s_refine_items =
    (const RefineClasses::Data **)NULL;
 int RefineCopyTransaction::s_num_refine_items = 0;
-
-void RefineCopyTransaction::setRefineItems(
-   const RefineClasses::Data** refine_items,
-   int num_refine_items)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(refine_items != (const RefineClasses::Data **)NULL);
-   TBOX_ASSERT(num_refine_items >= 0);
-#endif
-   s_refine_items = refine_items;
-   s_num_refine_items = num_refine_items;
-}
-
-void RefineCopyTransaction::unsetRefineItems()
-{
-   s_refine_items = (const RefineClasses::Data **)NULL;
-   s_num_refine_items = 0;
-}
 
 /*
  *************************************************************************
@@ -114,7 +91,8 @@ RefineCopyTransaction::~RefineCopyTransaction()
  *************************************************************************
  */
 
-bool RefineCopyTransaction::canEstimateIncomingMessageSize()
+bool
+RefineCopyTransaction::canEstimateIncomingMessageSize()
 {
    bool can_estimate = false;
    if (d_src_patch) {
@@ -129,7 +107,8 @@ bool RefineCopyTransaction::canEstimateIncomingMessageSize()
    return can_estimate;
 }
 
-size_t RefineCopyTransaction::computeIncomingMessageSize()
+size_t
+RefineCopyTransaction::computeIncomingMessageSize()
 {
    d_incoming_bytes =
       d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->d_scratch)
@@ -137,7 +116,8 @@ size_t RefineCopyTransaction::computeIncomingMessageSize()
    return d_incoming_bytes;
 }
 
-size_t RefineCopyTransaction::computeOutgoingMessageSize()
+size_t
+RefineCopyTransaction::computeOutgoingMessageSize()
 {
    d_outgoing_bytes =
       d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->d_src)
@@ -145,21 +125,34 @@ size_t RefineCopyTransaction::computeOutgoingMessageSize()
    return d_outgoing_bytes;
 }
 
-void RefineCopyTransaction::packStream(
+int
+RefineCopyTransaction::getSourceProcessor() {
+   return d_src_patch_rank;
+}
+
+int
+RefineCopyTransaction::getDestinationProcessor() {
+   return d_dst_patch_rank;
+}
+
+void
+RefineCopyTransaction::packStream(
    tbox::MessageStream& stream)
 {
    d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->d_src)
    ->packStream(stream, *d_overlap);
 }
 
-void RefineCopyTransaction::unpackStream(
+void
+RefineCopyTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
    d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->d_scratch)
    ->unpackStream(stream, *d_overlap);
 }
 
-void RefineCopyTransaction::copyLocalData()
+void
+RefineCopyTransaction::copyLocalData()
 {
    hier::PatchData& dst_data =
       *d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->d_scratch);
@@ -178,7 +171,8 @@ void RefineCopyTransaction::copyLocalData()
  *************************************************************************
  */
 
-void RefineCopyTransaction::printClassData(
+void
+RefineCopyTransaction::printClassData(
    std::ostream& stream) const
 {
    stream << "Refine Copy Transaction" << std::endl;

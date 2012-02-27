@@ -169,4 +169,7 @@ private:
 
 }
 }
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/xfer/CoarsenPatchStrategy.I"
+#endif
 #endif

@@ -24,6 +24,10 @@
 
 #include <boost/make_shared.hpp>
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/xfer/RefineAlgorithm.I"
+#endif
+
 namespace SAMRAI {
 namespace xfer {
 
@@ -64,7 +68,8 @@ RefineAlgorithm::~RefineAlgorithm()
  *************************************************************************
  */
 
-void RefineAlgorithm::registerRefine(
+void
+RefineAlgorithm::registerRefine(
    const int dst,
    const int src,
    const int scratch,
@@ -115,7 +120,8 @@ void RefineAlgorithm::registerRefine(
  *************************************************************************
  */
 
-void RefineAlgorithm::registerRefine(
+void
+RefineAlgorithm::registerRefine(
    const int dst,
    const int src,
    const int src_told,
@@ -627,18 +633,6 @@ void RefineAlgorithm::resetSchedule(
    }
 }
 
-const boost::shared_ptr<RefineClasses>&
-RefineAlgorithm::getEquivalenceClasses() const
-{
-   return d_refine_classes;
-}
-
-void RefineAlgorithm::setEquivalenceClasses(
-   const boost::shared_ptr<RefineClasses>& refine_classes)
-{
-   d_refine_classes = refine_classes;
-}
-
 /*
  *************************************************************************
  *
@@ -647,25 +641,13 @@ void RefineAlgorithm::setEquivalenceClasses(
  *************************************************************************
  */
 
-void RefineAlgorithm::printClassData(
+void
+RefineAlgorithm::printClassData(
    std::ostream& stream) const
 {
    stream << "RefineAlgorithm::printClassData()" << std::endl;
    stream << "----------------------------------------" << std::endl;
    d_refine_classes->printClassData(stream);
-}
-
-/*
- *************************************************************************
- *
- * Return the dimension
- *
- *************************************************************************
- */
-
-const tbox::Dimension& RefineAlgorithm::getDim() const
-{
-   return d_dim;
 }
 
 }

@@ -60,49 +60,13 @@ RefineClasses::~RefineClasses()
 /*
  *************************************************************************
  *
- * Return representative item for given equivalence class (first in list)
- *
- *************************************************************************
- */
-
-const RefineClasses::Data&
-RefineClasses::getClassRepresentative(
-   int equiv_class_index) const
-{
-   TBOX_ASSERT((equiv_class_index >= 0) &&
-      (equiv_class_index < getNumberOfEquivalenceClasses()));
-   return d_refine_classes_data_items[
-             d_equivalence_class_indices[equiv_class_index].getFirstItem()];
-}
-
-/*
- *************************************************************************
- *
- * Return iterator for list of refine items for given equivalence class
- *
- *************************************************************************
- */
-
-tbox::List<int>::Iterator
-RefineClasses::getIterator(
-   int equiv_class_index)
-{
-   TBOX_ASSERT((equiv_class_index >= 0) &&
-      (equiv_class_index < getNumberOfEquivalenceClasses()));
-   return tbox::List<int>::
-          Iterator(d_equivalence_class_indices[equiv_class_index]);
-
-}
-
-/*
- *************************************************************************
- *
  * Insert a data item into the proper equivalence class.
  *
  *************************************************************************
  */
 
-void RefineClasses::insertEquivalenceClassItem(
+void
+RefineClasses::insertEquivalenceClassItem(
    RefineClasses::Data& data,
    const boost::shared_ptr<hier::PatchDescriptor>& descriptor)
 {
@@ -152,7 +116,8 @@ void RefineClasses::insertEquivalenceClassItem(
  *************************************************************************
  */
 
-bool RefineClasses::itemIsValid(
+bool
+RefineClasses::itemIsValid(
    const RefineClasses::Data& data_item,
    const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
@@ -319,7 +284,8 @@ bool RefineClasses::itemIsValid(
  *************************************************************************
  */
 
-bool RefineClasses::classesMatch(
+bool
+RefineClasses::classesMatch(
    const boost::shared_ptr<RefineClasses>& test_classes,
    const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
@@ -373,7 +339,8 @@ bool RefineClasses::classesMatch(
  *************************************************************************
  */
 
-bool RefineClasses::itemsAreEquivalent(
+bool
+RefineClasses::itemsAreEquivalent(
    const RefineClasses::Data& data1,
    const RefineClasses::Data& data2,
    const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
@@ -418,28 +385,13 @@ bool RefineClasses::itemsAreEquivalent(
 /*
  *************************************************************************
  *
- * Increase the data items array to the specified size.
- *
- *************************************************************************
- */
-
-void RefineClasses::increaseRefineItemArraySize(
-   const int size)
-{
-   if (size > d_refine_classes_data_items.size()) {
-      d_refine_classes_data_items.resizeArray(size);
-   }
-}
-
-/*
- *************************************************************************
- *
  * Print the data in the refine item lists to the specified stream.
  *
  *************************************************************************
  */
 
-void RefineClasses::printClassData(
+void
+RefineClasses::printClassData(
    std::ostream& stream) const
 {
    stream << "RefineClasses::printClassData()\n";
@@ -462,7 +414,8 @@ void RefineClasses::printClassData(
 
 }
 
-void RefineClasses::printRefineItem(
+void
+RefineClasses::printRefineItem(
    std::ostream& stream,
    const RefineClasses::Data& data) const
 {
@@ -521,7 +474,8 @@ void RefineClasses::printRefineItem(
  *************************************************************************
  */
 
-bool RefineClasses::patchDataMatch(
+bool
+RefineClasses::patchDataMatch(
    int item_id1,
    int item_id2,
    const boost::shared_ptr<hier::PatchDescriptor>& pd) const
@@ -559,7 +513,8 @@ bool RefineClasses::patchDataMatch(
  *************************************************************************
  */
 
-int RefineClasses::getEquivalenceClassIndex(
+int
+RefineClasses::getEquivalenceClassIndex(
    const RefineClasses::Data& data,
    const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {

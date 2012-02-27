@@ -12,33 +12,36 @@ namespace SAMRAI {
 namespace xfer {
 
 SAMRAI_INLINE_KEYWORD
-bool PatchLevelBorderFillPattern::needsToCommunicateDestinationFillBoxes()
-const
+bool
+PatchLevelBorderFillPattern::needsToCommunicateDestinationFillBoxes() const
 {
    return true;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool PatchLevelBorderFillPattern::doesSourceLevelCommunicateToDestination()
-const
+bool
+PatchLevelBorderFillPattern::doesSourceLevelCommunicateToDestination() const
 {
    return false;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool PatchLevelBorderFillPattern::fillingCoarseFineGhosts() const
+bool
+PatchLevelBorderFillPattern::fillingCoarseFineGhosts() const
 {
    return true;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool PatchLevelBorderFillPattern::fillingEnhancedConnectivityOnly() const
+bool
+PatchLevelBorderFillPattern::fillingEnhancedConnectivityOnly() const
 {
    return false;
 }
 
 SAMRAI_INLINE_KEYWORD
-int PatchLevelBorderFillPattern::getMaxFillBoxes() const
+int
+PatchLevelBorderFillPattern::getMaxFillBoxes() const
 {
    return d_max_fill_boxes;
 }

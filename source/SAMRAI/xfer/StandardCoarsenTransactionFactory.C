@@ -45,7 +45,8 @@ StandardCoarsenTransactionFactory::~StandardCoarsenTransactionFactory()
  *************************************************************************
  */
 
-void StandardCoarsenTransactionFactory::setCoarsenItems(
+void
+StandardCoarsenTransactionFactory::setCoarsenItems(
    const CoarsenClasses::Data** coarsen_items,
    int num_coarsen_items)
 {
@@ -55,7 +56,8 @@ void StandardCoarsenTransactionFactory::setCoarsenItems(
    d_num_coarsen_items = num_coarsen_items;
 }
 
-void StandardCoarsenTransactionFactory::unsetCoarsenItems()
+void
+StandardCoarsenTransactionFactory::unsetCoarsenItems()
 {
    CoarsenCopyTransaction::unsetCoarsenItems();
    d_coarsen_items = (const CoarsenClasses::Data **)NULL;

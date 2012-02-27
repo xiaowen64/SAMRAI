@@ -77,6 +77,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	BoxGeometryVariableFillPattern.C
@@ -224,19 +225,27 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/StandardCoarsenTransactionFactory.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
@@ -479,6 +488,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenCopyTransaction.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenCopyTransaction.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	CoarsenCopyTransaction.C
@@ -582,6 +592,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
 	CoarsenPatchStrategy.C
 
@@ -736,21 +747,29 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenCopyTransaction.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenCopyTransaction.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelInteriorFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelInteriorFillPattern.h	\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	CoarsenSchedule.C
@@ -965,6 +984,7 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/PatchInteriorVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchInteriorVariableFillPattern.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	PatchInteriorVariableFillPattern.C
@@ -1892,15 +1912,20 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFullFillPattern.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFullFillPattern.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/StandardRefineTransactionFactory.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
@@ -2143,6 +2168,7 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineCopyTransaction.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineCopyTransaction.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	RefineCopyTransaction.C
@@ -2274,6 +2300,7 @@ DEPENDS_17:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	RefinePatchStrategy.C
 
@@ -2432,17 +2459,24 @@ DEPENDS_18:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFullFillPattern.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFullFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineCopyTransaction.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineCopyTransaction.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.I\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.h\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTimeTransaction.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTimeTransaction.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	RefineSchedule.C
@@ -2579,7 +2613,9 @@ DEPENDS_19:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.I\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.h\
 	RefineScheduleConnectorWidthRequestor.C
 
@@ -2713,6 +2749,7 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTimeTransaction.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTimeTransaction.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	RefineTimeTransaction.C
@@ -2847,6 +2884,7 @@ DEPENDS_21:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	RefineTransactionFactory.C
@@ -2981,6 +3019,7 @@ DEPENDS_22:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenCopyTransaction.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenCopyTransaction.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/StandardCoarsenTransactionFactory.h	\
@@ -3117,8 +3156,11 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineCopyTransaction.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineCopyTransaction.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTimeTransaction.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTimeTransaction.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/StandardRefineTransactionFactory.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\

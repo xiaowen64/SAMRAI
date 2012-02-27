@@ -117,4 +117,7 @@ private:
 }
 }
 
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.I"
+#endif
 #endif

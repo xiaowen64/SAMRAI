@@ -13,6 +13,10 @@
 
 #include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/xfer/CoarsenPatchStrategy.I"
+#endif
+
 namespace SAMRAI {
 namespace xfer {
 
@@ -25,36 +29,6 @@ CoarsenPatchStrategy::CoarsenPatchStrategy(
 
 CoarsenPatchStrategy::~CoarsenPatchStrategy()
 {
-}
-
-/*
- *************************************************************************
- * Register this in the static registry.
- *************************************************************************
- */
-
-void CoarsenPatchStrategy::registerObject()
-{
-   std::set<CoarsenPatchStrategy *>& current_objects =
-      CoarsenPatchStrategy::getCurrentObjects();
-   current_objects.insert(this);
-}
-
-/*
- *************************************************************************
- * Return the static registry.
- *************************************************************************
- */
-
-std::set<CoarsenPatchStrategy *>& CoarsenPatchStrategy::getCurrentObjects()
-{
-   static std::set<CoarsenPatchStrategy *> current_objects;
-   return current_objects;
-}
-
-const tbox::Dimension& CoarsenPatchStrategy::getDim() const
-{
-   return d_dim;
 }
 
 /*

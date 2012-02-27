@@ -40,6 +40,10 @@
 #include <boost/make_shared.hpp>
 #include <cassert>
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/xfer/RefineSchedule.I"
+#endif
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -612,26 +616,6 @@ void RefineSchedule::reset(
 }
 
 /*
- **************************************************************************
- *
- * Return const pointer to equivalence classes used in schedule.
- *
- **************************************************************************
- */
-
-const boost::shared_ptr<RefineClasses>&
-RefineSchedule::getEquivalenceClasses() const
-{
-   return d_refine_classes;
-}
-
-const hier::IntVector&
-RefineSchedule::getBoundaryFillGhostWidth() const
-{
-   return d_boundary_fill_ghost_width;
-}
-
-/*
  ************************************************************************
  * Construct transactions for schedule and set up recursive schedules if
  * needed.
@@ -649,7 +633,8 @@ RefineSchedule::getBoundaryFillGhostWidth() const
  ************************************************************************
  */
 
-void RefineSchedule::finishScheduleConstruction(
+void
+RefineSchedule::finishScheduleConstruction(
    int next_coarser_ln,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const Connector& dst_to_src,
@@ -1069,7 +1054,8 @@ RefineSchedule::createEnconFillSchedule(
  **************************************************************************
  */
 
-void RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
+void
+RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
    hier::BoxLevel& unfilled,
    hier::Connector& dst_to_unfilled,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
@@ -1137,7 +1123,8 @@ void RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
  * coarse interpolation Boxes it generated.
  **************************************************************************
  */
-void RefineSchedule::setupCoarseInterpBoxLevel(
+void
+RefineSchedule::setupCoarseInterpBoxLevel(
    hier::BoxLevel &coarse_interp_mapped_box_level,
    hier::Connector &dst_to_coarse_interp,
    hier::Connector &coarse_interp_to_dst,
@@ -1316,7 +1303,8 @@ void RefineSchedule::setupCoarseInterpBoxLevel(
  * filling the coarse interpolation level.
  **************************************************************************
  */
-void RefineSchedule::createCoarseInterpPatchLevel(
+void
+RefineSchedule::createCoarseInterpPatchLevel(
    boost::shared_ptr<hier::PatchLevel>& coarse_interp_level,
    hier::BoxLevel& coarse_interp_mapped_box_level,
    hier::Connector &coarse_interp_to_hiercoarse,
@@ -1555,7 +1543,8 @@ void RefineSchedule::createCoarseInterpPatchLevel(
  * BoxLevel sufficiently nests inside the hiercoarse.
  **************************************************************************
  */
-void RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
+void
+RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
    const hier::Connector& coarse_interp_to_hiercoarse,
    const hier::Connector& hiercoarse_to_coarse_interp,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -1663,7 +1652,8 @@ void RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
  **************************************************************************
  */
 
-void RefineSchedule::fillData(
+void
+RefineSchedule::fillData(
    double fill_time,
    bool do_physical_boundary_fill) const
 {
@@ -1745,7 +1735,8 @@ void RefineSchedule::fillData(
  **************************************************************************
  */
 
-void RefineSchedule::recursiveFill(
+void
+RefineSchedule::recursiveFill(
    double fill_time,
    bool do_physical_boundary_fill) const
 {
@@ -1884,7 +1875,8 @@ void RefineSchedule::recursiveFill(
  **************************************************************************
  */
 
-void RefineSchedule::fillPhysicalBoundaries(
+void
+RefineSchedule::fillPhysicalBoundaries(
    double fill_time) const
 {
    TBOX_ASSERT(d_dst_level);
@@ -1912,7 +1904,8 @@ void RefineSchedule::fillPhysicalBoundaries(
  *
  ********************************************************************
  */
-void RefineSchedule::fillSingularityBoundaries(
+void
+RefineSchedule::fillSingularityBoundaries(
    double fill_time) const
 {
    TBOX_ASSERT(d_dst_level);
@@ -2026,7 +2019,8 @@ void RefineSchedule::fillSingularityBoundaries(
  **************************************************************************
  */
 
-void RefineSchedule::allocateScratchSpace(
+void
+RefineSchedule::allocateScratchSpace(
    hier::ComponentSelector& allocate_vector,
    const boost::shared_ptr<hier::PatchLevel>& level,
    double fill_time) const
@@ -2057,51 +2051,14 @@ void RefineSchedule::allocateScratchSpace(
 /*
  **************************************************************************
  *
- * Fill the component selector argument with the components needed to
- * allocate source data.
- *
- **************************************************************************
- */
-
-void RefineSchedule::initializeSourceVector(
-   hier::ComponentSelector& allocate_vector) const
-{
-   allocate_vector.clrAllFlags();
-
-   for (int iri = 0; iri < d_number_refine_items; iri++) {
-      allocate_vector.setFlag(d_refine_items[iri]->d_src);
-   }
-}
-
-/*
- * ************************************************************************
- *
- * Fill the component selector argument with the components needed to
- * allocate destination data.
- *
- * ************************************************************************
- */
-
-void RefineSchedule::initializeDestinationVector(
-   hier::ComponentSelector& allocate_vector) const
-{
-   allocate_vector.clrAllFlags();
-
-   for (int iri = 0; iri < d_number_refine_items; iri++) {
-      allocate_vector.setFlag(d_refine_items[iri]->d_dst);
-   }
-}
-
-/*
- **************************************************************************
- *
  * Allocate all destination data and store the destination components
  * in a component selector.
  *
  **************************************************************************
  */
 
-void RefineSchedule::allocateDestinationSpace(
+void
+RefineSchedule::allocateDestinationSpace(
    hier::ComponentSelector& allocate_vector,
    double fill_time) const
 {
@@ -2129,7 +2086,8 @@ void RefineSchedule::allocateDestinationSpace(
  **************************************************************************
  */
 
-void RefineSchedule::copyScratchToDestination() const
+void
+RefineSchedule::copyScratchToDestination() const
 {
    TBOX_ASSERT(d_dst_level);
 
@@ -2160,7 +2118,8 @@ void RefineSchedule::copyScratchToDestination() const
  **************************************************************************
  */
 
-void RefineSchedule::refineScratchData(
+void
+RefineSchedule::refineScratchData(
    const boost::shared_ptr<hier::PatchLevel>& fine_level,
    const boost::shared_ptr<hier::PatchLevel>& coarse_level,
    const Connector& coarse_to_fine,
@@ -2258,7 +2217,8 @@ void RefineSchedule::refineScratchData(
  *
  **************************************************************************
  */
-void RefineSchedule::computeRefineOverlaps(
+void
+RefineSchedule::computeRefineOverlaps(
    tbox::List<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
    const boost::shared_ptr<hier::PatchLevel>& fine_level,
    const boost::shared_ptr<hier::PatchLevel>& coarse_level,
@@ -2363,7 +2323,8 @@ void RefineSchedule::computeRefineOverlaps(
  *********************************************************************
  */
 
-void RefineSchedule::generateCommunicationSchedule(
+void
+RefineSchedule::generateCommunicationSchedule(
    boost::shared_ptr<BoxLevel>& unfilled_mapped_box_level,
    boost::shared_ptr<Connector>& dst_to_unfilled,
    boost::shared_ptr<BoxLevel>& unfilled_encon_box_level,
@@ -2634,7 +2595,8 @@ void RefineSchedule::generateCommunicationSchedule(
  * connectivity boundary from the destination block.
  ***********************************************************************
  */
-void RefineSchedule::findEnconFillBoxes(
+void
+RefineSchedule::findEnconFillBoxes(
    hier::BoxContainer& encon_fill_boxes,
    const hier::BoxContainer& fill_boxes_list,
    const hier::BlockId& dst_block_id)
@@ -2672,7 +2634,8 @@ void RefineSchedule::findEnconFillBoxes(
  * source level and add those unfilled boxes to the appropriate containers.
  ***********************************************************************
  */
-void RefineSchedule::findEnconUnfilledBoxes(
+void
+RefineSchedule::findEnconUnfilledBoxes(
    const boost::shared_ptr<hier::BoxLevel>& unfilled_encon_box_level,
    const boost::shared_ptr<hier::Connector>& encon_to_unfilled_encon,
    hier::LocalId& last_unfilled_local_id,
@@ -2827,7 +2790,8 @@ void RefineSchedule::findEnconUnfilledBoxes(
  * shifts to be absorbed in the src Box.
  ***********************************************************************
  */
-void RefineSchedule::reorderNeighborhoodSetsByDstNodes(
+void
+RefineSchedule::reorderNeighborhoodSetsByDstNodes(
    FullNeighborhoodSet& full_inverted_edges,
    const Connector& src_to_dst) const
 {
@@ -2895,7 +2859,8 @@ void RefineSchedule::reorderNeighborhoodSetsByDstNodes(
  ****************************************************************
  */
 
-void RefineSchedule::setDefaultFillBoxLevel(
+void
+RefineSchedule::setDefaultFillBoxLevel(
    BoxLevel& fill_mapped_box_level,
    Connector& dst_to_fill,
    NeighborhoodSet& dst_to_fill_on_src_proc,
@@ -3037,7 +3002,8 @@ void RefineSchedule::setDefaultFillBoxLevel(
  * that touch enhanced connectivity.
  *****************************************************************
  */
-void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
+void
+RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
 {
    const tbox::Dimension& dim = fill_gcw.getDim();
 
@@ -3283,7 +3249,8 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
  * if the dst mapped_box has no fill boxes.
  **************************************************************************
  */
-void RefineSchedule::communicateFillBoxes(
+void
+RefineSchedule::communicateFillBoxes(
    NeighborhoodSet& dst_to_fill_on_src_proc,
    const Connector& dst_to_fill,
    const Connector& dst_to_src,
@@ -3440,7 +3407,8 @@ void RefineSchedule::communicateFillBoxes(
  **************************************************************************
  */
 
-hier::IntVector RefineSchedule::getMaxDestinationGhosts() const
+hier::IntVector
+RefineSchedule::getMaxDestinationGhosts() const
 {
    const tbox::Dimension& dim(d_dst_level->getDim());
 
@@ -3465,7 +3433,8 @@ hier::IntVector RefineSchedule::getMaxDestinationGhosts() const
  **************************************************************************
  */
 
-hier::IntVector RefineSchedule::getMaxScratchGhosts() const
+hier::IntVector
+RefineSchedule::getMaxScratchGhosts() const
 {
    const tbox::Dimension& dim(d_dst_level->getDim());
 
@@ -3489,7 +3458,8 @@ hier::IntVector RefineSchedule::getMaxScratchGhosts() const
  **************************************************************************
  */
 
-hier::IntVector RefineSchedule::getMaxStencilGhosts() const
+hier::IntVector
+RefineSchedule::getMaxStencilGhosts() const
 {
    const tbox::Dimension& dim(d_dst_level->getDim());
 
@@ -3517,7 +3487,8 @@ hier::IntVector RefineSchedule::getMaxStencilGhosts() const
  *************************************************************************
  */
 
-void RefineSchedule::constructScheduleTransactions(
+void
+RefineSchedule::constructScheduleTransactions(
    const hier::BoxContainer& fill_boxes,
    const hier::Box& dst_mapped_box,
    const hier::Box& src_mapped_box,
@@ -4006,7 +3977,8 @@ void RefineSchedule::constructScheduleTransactions(
  *************************************************************************
  */
 
-void RefineSchedule::constructScheduleTransactions(
+void
+RefineSchedule::constructScheduleTransactions(
    const hier::Connector& dst_to_fill,
    hier::Connector::ConstNeighborhoodIterator& dst_itr,
    const hier::Box& dst_mapped_box,
@@ -4540,7 +4512,8 @@ RefineSchedule::initializeDomainAndGhostInformation(
  *************************************************************************
  */
 
-void RefineSchedule::setRefineItems(
+void
+RefineSchedule::setRefineItems(
    const boost::shared_ptr<RefineClasses>& refine_classes)
 {
 
@@ -4574,7 +4547,8 @@ void RefineSchedule::setRefineItems(
  *************************************************************************
  */
 
-void RefineSchedule::initialCheckRefineClassItems() const
+void
+RefineSchedule::initialCheckRefineClassItems() const
 {
    const tbox::Dimension& dim(d_dst_level->getDim());
 
@@ -4630,7 +4604,8 @@ void RefineSchedule::initialCheckRefineClassItems() const
  **************************************************************************
  */
 
-void RefineSchedule::clearRefineItems()
+void
+RefineSchedule::clearRefineItems()
 {
    if (d_refine_items) {
       for (int iri = 0; iri < d_number_refine_items; iri++) {
@@ -4650,7 +4625,8 @@ void RefineSchedule::clearRefineItems()
  **************************************************************************
  */
 
-void RefineSchedule::printClassData(
+void
+RefineSchedule::printClassData(
    std::ostream& stream) const
 {
    stream << "RefineSchedule::printClassData()\n";
@@ -4676,7 +4652,8 @@ void RefineSchedule::printClassData(
  **************************************************************************
  */
 
-void RefineSchedule::initializeCallback()
+void
+RefineSchedule::initializeCallback()
 {
    boost::shared_ptr<tbox::Database> idb(
       tbox::InputManager::getInputDatabase());
@@ -4745,7 +4722,8 @@ void RefineSchedule::initializeCallback()
  * memory for timers does not leak.
  ***************************************************************************
  */
-void RefineSchedule::finalizeCallback()
+void
+RefineSchedule::finalizeCallback()
 {
    t_fill_data.reset();
    t_recursive_fill.reset();

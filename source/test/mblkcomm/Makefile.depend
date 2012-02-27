@@ -180,19 +180,27 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	CellMultiblockTest.C CellMultiblockTest.h MultiblockTester.h	\
@@ -391,19 +399,27 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	EdgeMultiblockTest.C EdgeMultiblockTest.h MultiblockTester.h	\
@@ -604,19 +620,27 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	FaceMultiblockTest.C FaceMultiblockTest.h MultiblockTester.h	\
@@ -829,19 +853,27 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	MultiblockTester.C MultiblockTester.h				\
@@ -1039,19 +1071,27 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	MultiblockTester.h NodeMultiblockTest.C NodeMultiblockTest.h	\
@@ -1239,19 +1279,27 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	MultiblockTester.h PatchMultiblockTestStrategy.C		\
@@ -1413,19 +1461,27 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	MultiblockTester.h Pointer-MultiblockTester.C
@@ -1615,19 +1671,27 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	MultiblockTester.h PatchMultiblockTestStrategy.h		\
@@ -1869,19 +1933,27 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.I	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.I			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	CellMultiblockTest.h EdgeMultiblockTest.h FaceMultiblockTest.h	\

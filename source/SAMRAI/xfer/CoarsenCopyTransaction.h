@@ -4,7 +4,8 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Communication transaction for data copies during data coarsening
+ * Description:   Communication transaction for data copies during data
+ *                coarsening
  *
  ************************************************************************/
 
@@ -124,17 +125,13 @@ public:
     * Return the sending processor number for the communications transaction.
     */
    virtual int
-   getSourceProcessor() {
-      return d_src_patch_rank;
-   }
+   getSourceProcessor();
 
    /*!
     * Return the receiving processor number for the communications transaction.
     */
    virtual int
-   getDestinationProcessor() {
-      return d_dst_patch_rank;
-   }
+   getDestinationProcessor();
 
    /*!
     * Pack the transaction data into the message stream.
@@ -186,4 +183,8 @@ private:
 
 }
 }
+
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/xfer/CoarsenCopyTransaction.I"
+#endif
 #endif

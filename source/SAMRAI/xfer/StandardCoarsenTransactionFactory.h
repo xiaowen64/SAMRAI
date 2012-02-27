@@ -48,7 +48,7 @@ public:
    /*!
     * @brief Set the array of CoarsenClass::Data items used by the transactions.
     */
-   void
+   virtual void
    setCoarsenItems(
       const CoarsenClasses::Data ** coarsen_items,
       int num_coarsen_items);
@@ -56,7 +56,7 @@ public:
    /*!
     * @brief Clear the array of CoarsenClass::Data items used by the transactions.
     */
-   void
+   virtual void
    unsetCoarsenItems();
 
    /*!
@@ -71,7 +71,7 @@ public:
     * @param citem_id       Integer index of CoarsenClass::Data item associated
     *                       with transaction.
     */
-   boost::shared_ptr<tbox::Transaction>
+   virtual boost::shared_ptr<tbox::Transaction>
    allocate(
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
       const boost::shared_ptr<hier::PatchLevel>& src_level,

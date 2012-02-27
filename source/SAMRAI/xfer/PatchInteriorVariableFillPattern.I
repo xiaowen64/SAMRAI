@@ -4,19 +4,9 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Interface for factory objects that create transactions for
- *                refine schedules.
+ * Description:   Fill pattern class that fills PatchInteriors only
  *
  ************************************************************************/
-
-#ifndef included_xfer_RefineTransactionFactory_C
-#define included_xfer_RefineTransactionFactory_C
-
-#include "SAMRAI/xfer/RefineTransactionFactory.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/RefineTransactionFactory.I"
-#endif
 
 namespace SAMRAI {
 namespace xfer {
@@ -24,34 +14,31 @@ namespace xfer {
 /*
  *************************************************************************
  *
- * Default constructor and destructor.
+ * Return the string name identifier.
  *
  *************************************************************************
  */
-
-RefineTransactionFactory::RefineTransactionFactory()
+SAMRAI_INLINE_KEYWORD
+const std::string&
+PatchInteriorVariableFillPattern::getPatternName() const
 {
-}
-
-RefineTransactionFactory::~RefineTransactionFactory()
-{
+   return s_name_id;
 }
 
 /*
  *************************************************************************
  *
- * Default no-op implementations of optional virtual functions.
+ * getStencilWidth() throws an error if called.  Only overridding
+ * versions of this method in concrete subclasses should be called.
  *
  *************************************************************************
  */
-
-void
-RefineTransactionFactory::setTransactionTime(
-   double fill_time)
+SAMRAI_INLINE_KEYWORD
+const hier::IntVector&
+PatchInteriorVariableFillPattern::getStencilWidth()
 {
-   NULL_USE(fill_time);
+   return hier::IntVector::getZero(d_dim);
 }
 
 }
 }
-#endif

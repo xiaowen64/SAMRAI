@@ -334,4 +334,8 @@ private:
 
 }
 }
+
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/xfer/CoarsenAlgorithm.I"
+#endif
 #endif

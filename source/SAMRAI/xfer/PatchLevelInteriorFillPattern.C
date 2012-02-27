@@ -64,7 +64,8 @@ PatchLevelInteriorFillPattern::~PatchLevelInteriorFillPattern()
  *************************************************************************
  */
 
-void PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
+void
+PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
    hier::BoxLevel& fill_mapped_boxes,
    hier::Connector& dst_to_fill,
    const hier::BoxLevel& dst_mapped_box_level,
@@ -104,7 +105,8 @@ void PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
  *************************************************************************
  */
 
-void PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
+void
+PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
    FillSet& dst_fill_boxes_on_src_proc,
    const hier::BoxLevel& dst_mapped_box_level,
    const hier::Connector& src_to_dst,

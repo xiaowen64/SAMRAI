@@ -114,7 +114,8 @@ ArrayData<TYPE>::ArrayData(
 }
 
 template<class TYPE>
-void ArrayData<TYPE>::operator = (
+void
+ArrayData<TYPE>::operator = (
    const ArrayData<TYPE>& foo)
 {
    /*
@@ -133,7 +134,8 @@ void ArrayData<TYPE>::operator = (
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::initializeArray(
+void
+ArrayData<TYPE>::initializeArray(
    const hier::Box& box,
    int depth)
 {
@@ -182,7 +184,8 @@ void ArrayData<TYPE>::initializeArray(
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::copy(
+void
+ArrayData<TYPE>::copy(
    const ArrayData<TYPE>& src,
    const hier::Box& box)
 {
@@ -242,7 +245,8 @@ void ArrayData<TYPE>::copy(
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::copy(
+void
+ArrayData<TYPE>::copy(
    const ArrayData<TYPE>& src,
    const hier::Box& box,
    const hier::IntVector& src_shift)
@@ -282,7 +286,8 @@ void ArrayData<TYPE>::copy(
 }
 
 template<class TYPE>
-void ArrayData<TYPE>::copy(
+void
+ArrayData<TYPE>::copy(
    const ArrayData<TYPE>& src,
    const hier::Box& box,
    const hier::Transformation& transformation)
@@ -335,7 +340,8 @@ void ArrayData<TYPE>::copy(
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::copy(
+void
+ArrayData<TYPE>::copy(
    const ArrayData<TYPE>& src,
    const hier::BoxContainer& boxes,
    const hier::IntVector& src_shift)
@@ -346,7 +352,8 @@ void ArrayData<TYPE>::copy(
 }
 
 template<class TYPE>
-void ArrayData<TYPE>::copy(
+void
+ArrayData<TYPE>::copy(
    const ArrayData<TYPE>& src,
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation)
@@ -369,7 +376,8 @@ void ArrayData<TYPE>::copy(
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::copyDepth(
+void
+ArrayData<TYPE>::copyDepth(
    int dst_depth,
    const ArrayData<TYPE>& src,
    int src_depth,
@@ -436,7 +444,8 @@ void ArrayData<TYPE>::copyDepth(
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::sum(
+void
+ArrayData<TYPE>::sum(
    const ArrayData<TYPE>& src,
    const hier::Box& box)
 {
@@ -495,7 +504,8 @@ void ArrayData<TYPE>::sum(
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::sum(
+void
+ArrayData<TYPE>::sum(
    const ArrayData<TYPE>& src,
    const hier::Box& box,
    const hier::IntVector& src_shift)
@@ -544,7 +554,8 @@ void ArrayData<TYPE>::sum(
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::sum(
+void
+ArrayData<TYPE>::sum(
    const ArrayData<TYPE>& src,
    const hier::BoxContainer& boxes,
    const hier::IntVector& src_shift)
@@ -567,7 +578,8 @@ void ArrayData<TYPE>::sum(
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::packStream(
+void
+ArrayData<TYPE>::packStream(
    tbox::MessageStream& stream,
    const hier::Box& dest_box,
    const hier::IntVector& src_shift) const
@@ -584,7 +596,8 @@ void ArrayData<TYPE>::packStream(
 }
 
 template<class TYPE>
-void ArrayData<TYPE>::packStream(
+void
+ArrayData<TYPE>::packStream(
    tbox::MessageStream& stream,
    const hier::BoxContainer& dest_boxes,
    const hier::IntVector& src_shift) const
@@ -607,7 +620,8 @@ void ArrayData<TYPE>::packStream(
 }
 
 template<class TYPE>
-void ArrayData<TYPE>::packStream(
+void
+ArrayData<TYPE>::packStream(
    tbox::MessageStream& stream,
    const hier::Box& dest_box,
    const hier::Transformation& transformation) const
@@ -627,7 +641,8 @@ void ArrayData<TYPE>::packStream(
 
 
 template<class TYPE>
-void ArrayData<TYPE>::packStream(
+void
+ArrayData<TYPE>::packStream(
    tbox::MessageStream& stream,
    const hier::BoxContainer& dest_boxes,
    const hier::Transformation& transformation) const
@@ -665,7 +680,8 @@ void ArrayData<TYPE>::packStream(
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::unpackStream(
+void
+ArrayData<TYPE>::unpackStream(
    tbox::MessageStream& stream,
    const hier::Box& dest_box,
    const hier::IntVector& src_shift)
@@ -682,7 +698,8 @@ void ArrayData<TYPE>::unpackStream(
 }
 
 template<class TYPE>
-void ArrayData<TYPE>::unpackStream(
+void
+ArrayData<TYPE>::unpackStream(
    tbox::MessageStream& stream,
    const hier::BoxContainer& dest_boxes,
    const hier::IntVector& src_shift)
@@ -717,7 +734,8 @@ void ArrayData<TYPE>::unpackStream(
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::unpackStreamAndSum(
+void
+ArrayData<TYPE>::unpackStreamAndSum(
    tbox::MessageStream& stream,
    const hier::Box& dest_box,
    const hier::IntVector& src_shift)
@@ -734,7 +752,8 @@ void ArrayData<TYPE>::unpackStreamAndSum(
 }
 
 template<class TYPE>
-void ArrayData<TYPE>::unpackStreamAndSum(
+void
+ArrayData<TYPE>::unpackStreamAndSum(
    tbox::MessageStream& stream,
    const hier::BoxContainer& dest_boxes,
    const hier::IntVector& src_shift)
@@ -766,7 +785,8 @@ void ArrayData<TYPE>::unpackStreamAndSum(
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::fillAll(
+void
+ArrayData<TYPE>::fillAll(
    const TYPE& t)
 {
    if (!d_box.empty()) {
@@ -779,7 +799,8 @@ void ArrayData<TYPE>::fillAll(
 }
 
 template<class TYPE>
-void ArrayData<TYPE>::fillAll(
+void
+ArrayData<TYPE>::fillAll(
    const TYPE& t,
    const hier::Box& box)
 {
@@ -789,7 +810,8 @@ void ArrayData<TYPE>::fillAll(
 }
 
 template<class TYPE>
-void ArrayData<TYPE>::fill(
+void
+ArrayData<TYPE>::fill(
    const TYPE& t,
    const int d)
 {
@@ -805,7 +827,8 @@ void ArrayData<TYPE>::fill(
 }
 
 template<class TYPE>
-void ArrayData<TYPE>::fill(
+void
+ArrayData<TYPE>::fill(
    const TYPE& t,
    const hier::Box& box,
    const int d)
@@ -880,7 +903,8 @@ void ArrayData<TYPE>::fill(
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::getFromDatabase(
+void
+ArrayData<TYPE>::getFromDatabase(
    const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
@@ -909,7 +933,8 @@ void ArrayData<TYPE>::getFromDatabase(
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::putUnregisteredToDatabase(
+void
+ArrayData<TYPE>::putUnregisteredToDatabase(
    const boost::shared_ptr<tbox::Database>& database,
    bool data_only) const
 {
@@ -927,14 +952,16 @@ void ArrayData<TYPE>::putUnregisteredToDatabase(
 }
 
 template<class TYPE>
-void ArrayData<TYPE>::putSpecializedToDatabase(
+void
+ArrayData<TYPE>::putSpecializedToDatabase(
    const boost::shared_ptr<tbox::Database>& database) const
 {
    database->putArray("d_array", d_array);
 }
 
 template<class TYPE>
-void ArrayData<TYPE>::getSpecializedFromDatabase(
+void
+ArrayData<TYPE>::getSpecializedFromDatabase(
    const boost::shared_ptr<tbox::Database>& database)
 {
    database->getArray("d_array", d_array);
@@ -949,7 +976,8 @@ void ArrayData<TYPE>::getSpecializedFromDatabase(
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::undefineData()
+void
+ArrayData<TYPE>::undefineData()
 {
    fillAll(tbox::MathUtilities<TYPE>::getSignalingNaN());
 }
@@ -964,7 +992,8 @@ void ArrayData<TYPE>::undefineData()
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::packBuffer(
+void
+ArrayData<TYPE>::packBuffer(
    TYPE* buffer,
    const hier::Box& box) const
 {
@@ -984,7 +1013,8 @@ void ArrayData<TYPE>::packBuffer(
 }
 
 template<class TYPE>
-void ArrayData<TYPE>::unpackBuffer(
+void
+ArrayData<TYPE>::unpackBuffer(
    const TYPE* buffer,
    const hier::Box& box)
 {
@@ -1012,7 +1042,8 @@ void ArrayData<TYPE>::unpackBuffer(
  */
 
 template<class TYPE>
-void ArrayData<TYPE>::unpackBufferAndSum(
+void
+ArrayData<TYPE>::unpackBufferAndSum(
    const TYPE* buffer,
    const hier::Box& box)
 {
@@ -1031,7 +1062,8 @@ void ArrayData<TYPE>::unpackBufferAndSum(
 }
 
 template<class TYPE>
-void ArrayData<TYPE>::invalidateArray(
+void
+ArrayData<TYPE>::invalidateArray(
    const tbox::Dimension& dim) {
    d_dim = dim;
    d_depth = 0;

@@ -732,7 +732,8 @@ private:
     *
     * @param[in] dst_to_unfilled
     */
-   void setupCoarseInterpBoxLevel(
+   void
+   setupCoarseInterpBoxLevel(
       hier::BoxLevel &coarse_interp_mapped_box_level,
       hier::Connector &dst_to_coarse_interp,
       hier::Connector &coarse_interp_to_dst,
@@ -1240,4 +1241,7 @@ private:
 }
 }
 
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/xfer/RefineSchedule.I"
+#endif
 #endif

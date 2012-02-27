@@ -4,54 +4,46 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Interface for factory objects that create transactions for
- *                refine schedules.
+ * Description:   Strategy interface to user routines for coarsening AMR data.
  *
  ************************************************************************/
-
-#ifndef included_xfer_RefineTransactionFactory_C
-#define included_xfer_RefineTransactionFactory_C
-
-#include "SAMRAI/xfer/RefineTransactionFactory.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/RefineTransactionFactory.I"
-#endif
 
 namespace SAMRAI {
 namespace xfer {
 
 /*
  *************************************************************************
- *
- * Default constructor and destructor.
- *
+ * Register this in the static registry.
  *************************************************************************
  */
-
-RefineTransactionFactory::RefineTransactionFactory()
+SAMRAI_INLINE_KEYWORD
+void
+CoarsenPatchStrategy::registerObject()
 {
-}
-
-RefineTransactionFactory::~RefineTransactionFactory()
-{
+   std::set<CoarsenPatchStrategy *>& current_objects =
+      CoarsenPatchStrategy::getCurrentObjects();
+   current_objects.insert(this);
 }
 
 /*
  *************************************************************************
- *
- * Default no-op implementations of optional virtual functions.
- *
+ * Return the static registry.
  *************************************************************************
  */
-
-void
-RefineTransactionFactory::setTransactionTime(
-   double fill_time)
+SAMRAI_INLINE_KEYWORD
+std::set<CoarsenPatchStrategy *>&
+CoarsenPatchStrategy::getCurrentObjects()
 {
-   NULL_USE(fill_time);
+   static std::set<CoarsenPatchStrategy *> current_objects;
+   return current_objects;
+}
+
+SAMRAI_INLINE_KEYWORD
+const tbox::Dimension&
+CoarsenPatchStrategy::getDim() const
+{
+   return d_dim;
 }
 
 }
 }
-#endif

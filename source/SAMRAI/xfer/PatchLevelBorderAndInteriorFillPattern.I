@@ -13,35 +13,34 @@ namespace xfer {
 
 SAMRAI_INLINE_KEYWORD
 bool
-PatchLevelBorderAndInteriorFillPattern::needsToCommunicateDestinationFillBoxes()
-const
+PatchLevelBorderAndInteriorFillPattern::needsToCommunicateDestinationFillBoxes() const
 {
    return true;
 }
 
 SAMRAI_INLINE_KEYWORD
 bool
-PatchLevelBorderAndInteriorFillPattern::doesSourceLevelCommunicateToDestination()
-const
+PatchLevelBorderAndInteriorFillPattern::doesSourceLevelCommunicateToDestination() const
 {
    return true;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool PatchLevelBorderAndInteriorFillPattern::fillingCoarseFineGhosts() const
+bool
+PatchLevelBorderAndInteriorFillPattern::fillingCoarseFineGhosts() const
 {
    return true;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool PatchLevelBorderAndInteriorFillPattern::fillingEnhancedConnectivityOnly()
-const
+bool PatchLevelBorderAndInteriorFillPattern::fillingEnhancedConnectivityOnly() const
 {
    return false;
 }
 
 SAMRAI_INLINE_KEYWORD
-int PatchLevelBorderAndInteriorFillPattern::getMaxFillBoxes() const
+int
+PatchLevelBorderAndInteriorFillPattern::getMaxFillBoxes() const
 {
    return d_max_fill_boxes;
 }

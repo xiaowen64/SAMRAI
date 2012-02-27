@@ -134,4 +134,8 @@ private:
 
 }
 }
+
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/xfer/BoxGeometryVariableFillPattern.I"
+#endif
 #endif

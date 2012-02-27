@@ -65,48 +65,13 @@ CoarsenClasses::~CoarsenClasses()
 /*
  *************************************************************************
  *
- * Return representative item for given equivalence class (first in list)
- *
- *************************************************************************
- */
-
-const CoarsenClasses::Data&
-CoarsenClasses::getClassRepresentative(
-   int equiv_class_index) const
-{
-   TBOX_ASSERT((equiv_class_index >= 0) &&
-      (equiv_class_index < getNumberOfEquivalenceClasses()));
-   return d_coarsen_classes_data_items[
-             d_equivalence_class_indices[equiv_class_index].getFirstItem()];
-}
-
-/*
- *************************************************************************
- *
- * Return iterator for list of coarsen items for given equivalence class
- *
- *************************************************************************
- */
-
-tbox::List<int>::Iterator
-CoarsenClasses::getIterator(
-   int equiv_class_index)
-{
-   TBOX_ASSERT((equiv_class_index >= 0) &&
-      (equiv_class_index < getNumberOfEquivalenceClasses()));
-   return tbox::List<int>::
-          Iterator(d_equivalence_class_indices[equiv_class_index]);
-}
-
-/*
- *************************************************************************
- *
  * Insert a data item into the proper equivalence class.
  *
  *************************************************************************
  */
 
-void CoarsenClasses::insertEquivalenceClassItem(
+void
+CoarsenClasses::insertEquivalenceClassItem(
    CoarsenClasses::Data& data,
    const boost::shared_ptr<hier::PatchDescriptor>& descriptor)
 {
@@ -156,7 +121,8 @@ void CoarsenClasses::insertEquivalenceClassItem(
  *************************************************************************
  */
 
-bool CoarsenClasses::itemIsValid(
+bool
+CoarsenClasses::itemIsValid(
    const CoarsenClasses::Data& data_item,
    const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
@@ -231,7 +197,8 @@ bool CoarsenClasses::itemIsValid(
  *************************************************************************
  */
 
-bool CoarsenClasses::classesMatch(
+bool
+CoarsenClasses::classesMatch(
    const boost::shared_ptr<CoarsenClasses>& test_classes,
    const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
@@ -284,7 +251,8 @@ bool CoarsenClasses::classesMatch(
  *************************************************************************
  */
 
-bool CoarsenClasses::itemsAreEquivalent(
+bool
+CoarsenClasses::itemsAreEquivalent(
    const CoarsenClasses::Data& data1,
    const CoarsenClasses::Data& data2,
    const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
@@ -323,29 +291,13 @@ bool CoarsenClasses::itemsAreEquivalent(
 /*
  *************************************************************************
  *
- * Increase the data items array to the specified size.
- *
- *************************************************************************
- */
-
-void CoarsenClasses::increaseCoarsenItemArraySize(
-   const int size,
-   const tbox::Dimension& dim)
-{
-   if (size > d_coarsen_classes_data_items.size()) {
-      d_coarsen_classes_data_items.resizeArray(size, Data(dim));
-   }
-}
-
-/*
- *************************************************************************
- *
  * Print the data in the coarsen item lists to the specified stream.
  *
  *************************************************************************
  */
 
-void CoarsenClasses::printClassData(
+void
+CoarsenClasses::printClassData(
    std::ostream& stream) const
 {
    stream << "CoarsenClasses::printClassData()\n";
@@ -368,7 +320,8 @@ void CoarsenClasses::printClassData(
 
 }
 
-void CoarsenClasses::printCoarsenItem(
+void
+CoarsenClasses::printCoarsenItem(
    std::ostream& stream,
    const CoarsenClasses::Data& data) const
 {
@@ -409,7 +362,8 @@ void CoarsenClasses::printCoarsenItem(
  *************************************************************************
  */
 
-bool CoarsenClasses::patchDataMatch(
+bool
+CoarsenClasses::patchDataMatch(
    int item_id1,
    int item_id2,
    const boost::shared_ptr<hier::PatchDescriptor>& pd) const
@@ -447,7 +401,8 @@ bool CoarsenClasses::patchDataMatch(
  *************************************************************************
  */
 
-int CoarsenClasses::getEquivalenceClassIndex(
+int
+CoarsenClasses::getEquivalenceClassIndex(
    const CoarsenClasses::Data& data,
    const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
@@ -473,6 +428,17 @@ int CoarsenClasses::getEquivalenceClassIndex(
 
    return eq_index;
 
+}
+
+/*
+ *************************************************************************
+ * Constructor
+ *************************************************************************
+ */
+CoarsenClasses::Data::Data(
+   tbox::Dimension dim):
+   d_gcw_to_coarsen(dim)
+{
 }
 
 }

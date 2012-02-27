@@ -21,6 +21,10 @@
 
 #include <boost/make_shared.hpp>
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/xfer/CoarsenAlgorithm.I"
+#endif
+
 namespace SAMRAI {
 namespace xfer {
 
@@ -64,7 +68,8 @@ CoarsenAlgorithm::~CoarsenAlgorithm()
  *************************************************************************
  */
 
-void CoarsenAlgorithm::registerCoarsen(
+void
+CoarsenAlgorithm::registerCoarsen(
    const int dst,
    const int src,
    const boost::shared_ptr<hier::CoarsenOperator>& opcoarsen,
@@ -104,16 +109,6 @@ void CoarsenAlgorithm::registerCoarsen(
    d_coarsen_classes->insertEquivalenceClassItem(data);
 }
 
-void CoarsenAlgorithm::registerCoarsen(
-   const int dst,
-   const int src,
-   const boost::shared_ptr<hier::CoarsenOperator>& opcoarsen,
-   const boost::shared_ptr<VariableFillPattern>& var_fill_pattern)
-{
-   registerCoarsen(dst, src, opcoarsen,
-      hier::IntVector::getZero(d_dim), var_fill_pattern);
-}
-
 /*
  *************************************************************************
  *
@@ -150,23 +145,8 @@ CoarsenAlgorithm::createSchedule(
       d_fill_coarse_data);
 }
 
-/*
- **************************************************************************
- *
- * Reconfigure coarsen schedule to perform operations in this algorithm.
- *
- **************************************************************************
- */
-
-bool CoarsenAlgorithm::checkConsistency(
-   const boost::shared_ptr<CoarsenSchedule>& schedule) const
-{
-   TBOX_ASSERT(schedule);
-
-   return d_coarsen_classes->classesMatch(schedule->getEquivalenceClasses());
-}
-
-void CoarsenAlgorithm::resetSchedule(
+void
+CoarsenAlgorithm::resetSchedule(
    const boost::shared_ptr<CoarsenSchedule>& schedule) const
 {
 
@@ -190,7 +170,8 @@ void CoarsenAlgorithm::resetSchedule(
  *************************************************************************
  */
 
-void CoarsenAlgorithm::printClassData(
+void
+CoarsenAlgorithm::printClassData(
    std::ostream& stream) const
 {
    stream << "CoarsenAlgorithm::printClassData()" << std::endl;
@@ -198,19 +179,6 @@ void CoarsenAlgorithm::printClassData(
    stream << "d_fill_coarse_data = " << d_fill_coarse_data << std::endl;
 
    d_coarsen_classes->printClassData(stream);
-}
-
-/*
- *************************************************************************
- *
- * Return the dimension
- *
- *************************************************************************
- */
-
-const tbox::Dimension& CoarsenAlgorithm::getDim() const
-{
-   return d_dim;
 }
 
 }

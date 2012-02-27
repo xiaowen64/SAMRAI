@@ -140,20 +140,7 @@ public:
       const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const boost::shared_ptr<hier::GridGeometry>& grid_geometry)
-   {
-      NULL_USE(patch);
-      NULL_USE(encon_level);
-      NULL_USE(dst_to_encon);
-      NULL_USE(fill_time);
-      NULL_USE(fill_box);
-      NULL_USE(boundary_box);
-      NULL_USE(grid_geometry);
-      TBOX_ERROR(
-         "The abstract RefinePatchLevelStragey::fillSingularityBoudaryConditions:\n"
-         << "must be implemented whenever the concrete derived\n"
-         << "class supports multiblock and singularities.");
-   }
+      const boost::shared_ptr<hier::GridGeometry>& grid_geometry);
 
    /*!
     * @brief Return maximum stencil width needed for user-defined
@@ -294,4 +281,8 @@ private:
 
 }
 }
+
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/xfer/RefinePatchStrategy.I"
+#endif
 #endif

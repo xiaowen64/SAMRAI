@@ -21,42 +21,48 @@ namespace pdat {
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-const tbox::Dimension& ArrayData<TYPE>::getDim() const
+const tbox::Dimension&
+ArrayData<TYPE>::getDim() const
 {
    return d_dim;
 }
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-const hier::Box& ArrayData<TYPE>::getBox() const
+const hier::Box&
+ArrayData<TYPE>::getBox() const
 {
    return d_box;
 }
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-bool ArrayData<TYPE>::isInitialized() const
+bool
+ArrayData<TYPE>::isInitialized() const
 {
    return d_depth > 0;
 }
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-int ArrayData<TYPE>::getDepth() const
+int
+ArrayData<TYPE>::getDepth() const
 {
    return d_depth;
 }
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-int ArrayData<TYPE>::getOffset() const
+int
+ArrayData<TYPE>::getOffset() const
 {
    return d_offset;
 }
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-TYPE * ArrayData<TYPE>::getPointer(
+TYPE*
+ArrayData<TYPE>::getPointer(
    int d)
 {
    TBOX_ASSERT((d >= 0) && (d < d_depth));
@@ -66,7 +72,8 @@ TYPE * ArrayData<TYPE>::getPointer(
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-const TYPE * ArrayData<TYPE>::getPointer(
+const TYPE*
+ArrayData<TYPE>::getPointer(
    int d) const
 {
    TBOX_ASSERT((d >= 0) && (d < d_depth));
@@ -76,7 +83,8 @@ const TYPE * ArrayData<TYPE>::getPointer(
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-TYPE& ArrayData<TYPE>::operator () (
+TYPE&
+ArrayData<TYPE>::operator () (
    const hier::Index& i,
    int d)
 {
@@ -109,7 +117,8 @@ ArrayData<TYPE>::operator () (
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-size_t ArrayData<TYPE>::getSizeOfData(
+size_t
+ArrayData<TYPE>::getSizeOfData(
    const hier::Box& box,
    int depth)
 {
@@ -118,7 +127,8 @@ size_t ArrayData<TYPE>::getSizeOfData(
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-int ArrayData<TYPE>::getDataStreamSize(
+int
+ArrayData<TYPE>::getDataStreamSize(
    const hier::BoxContainer& boxes,
    const hier::IntVector& source_shift) const
 {
@@ -150,7 +160,8 @@ int ArrayData<TYPE>::getDataStreamSize(
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-bool ArrayData<TYPE>::canEstimateStreamSizeFromBox()
+bool
+ArrayData<TYPE>::canEstimateStreamSizeFromBox()
 {
    if ((typeid(TYPE) == typeid(bool))
        | (typeid(TYPE) == typeid(char))
@@ -166,7 +177,8 @@ bool ArrayData<TYPE>::canEstimateStreamSizeFromBox()
 
 template<class TYPE>
 SAMRAI_INLINE_KEYWORD
-bool ArrayData<TYPE>::isValid()
+bool
+ArrayData<TYPE>::isValid()
 {
    return !d_box.isEmpty();
 }

@@ -64,7 +64,8 @@ PatchLevelFullFillPattern::~PatchLevelFullFillPattern()
  *************************************************************************
  */
 
-void PatchLevelFullFillPattern::computeFillBoxesAndNeighborhoodSets(
+void
+PatchLevelFullFillPattern::computeFillBoxesAndNeighborhoodSets(
    hier::BoxLevel& fill_mapped_boxes,
    hier::Connector& dst_to_fill,
    const hier::BoxLevel& dst_mapped_box_level,
@@ -101,7 +102,8 @@ void PatchLevelFullFillPattern::computeFillBoxesAndNeighborhoodSets(
  *************************************************************************
  */
 
-void PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
+void
+PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
    FillSet& dst_fill_boxes_on_src_proc,
    const hier::BoxLevel& dst_mapped_box_level,
    const hier::Connector& src_to_dst,

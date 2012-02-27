@@ -102,9 +102,7 @@ public:
        * @param[in] dim Dimension.
        */
       explicit Data(
-         tbox::Dimension dim):
-         d_gcw_to_coarsen(dim) {
-      }
+         tbox::Dimension dim);
 
 private:
       Data();  //not implemented

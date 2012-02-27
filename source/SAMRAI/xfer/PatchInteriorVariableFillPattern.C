@@ -15,6 +15,10 @@
 
 #include "SAMRAI/tbox/Utilities.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/xfer/PatchInteriorVariableFillPattern.I"
+#endif
+
 namespace SAMRAI {
 namespace xfer {
 
@@ -73,31 +77,6 @@ PatchInteriorVariableFillPattern::calculateOverlap(
    return dst_geometry.calculateOverlap(src_geometry, src_mask, fill_box,
       true, transformation,
       dst_restrict_boxes);
-}
-
-/*
- *************************************************************************
- *
- * Return the string name identifier.
- *
- *************************************************************************
- */
-const std::string& PatchInteriorVariableFillPattern::getPatternName() const
-{
-   return s_name_id;
-}
-
-/*
- *************************************************************************
- *
- * getStencilWidth() throws an error if called.  Only overridding
- * versions of this method in concrete subclasses should be called.
- *
- *************************************************************************
- */
-const hier::IntVector& PatchInteriorVariableFillPattern::getStencilWidth()
-{
-   return hier::IntVector::getZero(d_dim);
 }
 
 /*

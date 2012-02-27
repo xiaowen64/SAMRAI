@@ -656,4 +656,8 @@ private:
 
 }
 }
+
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/xfer/RefineAlgorithm.I"
+#endif
 #endif

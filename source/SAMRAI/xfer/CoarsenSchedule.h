@@ -490,4 +490,7 @@ private:
 }
 }
 
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/xfer/CoarsenSchedule.I"
+#endif
 #endif

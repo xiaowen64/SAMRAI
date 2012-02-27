@@ -22,6 +22,10 @@
 
 #include <typeinfo>
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/xfer/RefineTimeTransaction.I"
+#endif
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -45,33 +49,8 @@ namespace xfer {
 double RefineTimeTransaction::s_time = 0.0;
 
 const RefineClasses::Data **
-RefineTimeTransaction::s_refine_items =
-   (const RefineClasses::Data **)NULL;
+RefineTimeTransaction::s_refine_items = (const RefineClasses::Data **)NULL;
 int RefineTimeTransaction::s_num_refine_items = 0;
-
-void RefineTimeTransaction::setTransactionTime(
-   const double time)
-{
-   s_time = time;
-}
-
-void RefineTimeTransaction::setRefineItems(
-   const RefineClasses::Data** refine_items,
-   int num_refine_items)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(refine_items != (const RefineClasses::Data **)NULL);
-   TBOX_ASSERT(num_refine_items >= 0);
-#endif
-   s_refine_items = refine_items;
-   s_num_refine_items = num_refine_items;
-}
-
-void RefineTimeTransaction::unsetRefineItems()
-{
-   s_refine_items = (const RefineClasses::Data **)NULL;
-   s_num_refine_items = 0;
-}
 
 /*
  *************************************************************************
@@ -131,7 +110,8 @@ RefineTimeTransaction::~RefineTimeTransaction()
  *************************************************************************
  */
 
-bool RefineTimeTransaction::canEstimateIncomingMessageSize()
+bool
+RefineTimeTransaction::canEstimateIncomingMessageSize()
 {
    bool can_estimate = false;
    if (d_src_patch) {
@@ -148,7 +128,8 @@ bool RefineTimeTransaction::canEstimateIncomingMessageSize()
    return can_estimate;
 }
 
-size_t RefineTimeTransaction::computeIncomingMessageSize()
+size_t
+RefineTimeTransaction::computeIncomingMessageSize()
 {
    d_incoming_bytes =
       d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->
@@ -157,7 +138,8 @@ size_t RefineTimeTransaction::computeIncomingMessageSize()
    return d_incoming_bytes;
 }
 
-size_t RefineTimeTransaction::computeOutgoingMessageSize()
+size_t
+RefineTimeTransaction::computeOutgoingMessageSize()
 {
    d_outgoing_bytes =
       d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->
@@ -166,7 +148,18 @@ size_t RefineTimeTransaction::computeOutgoingMessageSize()
    return d_outgoing_bytes;
 }
 
-void RefineTimeTransaction::packStream(
+int
+RefineTimeTransaction::getSourceProcessor() {
+   return d_src_patch_rank;
+}
+
+int
+RefineTimeTransaction::getDestinationProcessor() {
+   return d_dst_patch_rank;
+}
+
+void
+RefineTimeTransaction::packStream(
    tbox::MessageStream& stream)
 {
    hier::Box temporary_mapped_box(d_box.getDim());
@@ -191,14 +184,16 @@ void RefineTimeTransaction::packStream(
    temporary_patch_data->packStream(stream, *d_overlap);
 }
 
-void RefineTimeTransaction::unpackStream(
+void
+RefineTimeTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
    d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->d_scratch)
    ->unpackStream(stream, *d_overlap);
 }
 
-void RefineTimeTransaction::copyLocalData()
+void
+RefineTimeTransaction::copyLocalData()
 {
    /*
     * If there is no offset between the source and destination, then
@@ -248,7 +243,8 @@ void RefineTimeTransaction::copyLocalData()
 
 }
 
-void RefineTimeTransaction::timeInterpolate(
+void
+RefineTimeTransaction::timeInterpolate(
    const boost::shared_ptr<hier::PatchData>& pd_dst,
    const boost::shared_ptr<hier::PatchData>& pd_old,
    const boost::shared_ptr<hier::PatchData>& pd_new)
@@ -281,7 +277,8 @@ void RefineTimeTransaction::timeInterpolate(
  *************************************************************************
  */
 
-void RefineTimeTransaction::printClassData(
+void
+RefineTimeTransaction::printClassData(
    std::ostream& stream) const
 {
    stream << "Refine Time Transaction" << std::endl;

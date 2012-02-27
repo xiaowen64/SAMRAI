@@ -51,7 +51,7 @@ public:
    /*!
     * @brief Set the array of RefineClass::Data items used by the transactions.
     */
-   void
+   virtual void
    setRefineItems(
       const RefineClasses::Data ** refine_items,
       int num_refine_items);
@@ -59,13 +59,13 @@ public:
    /*!
     * @brief Clear the array of RefineClass::Data items used by the transactions.
     */
-   void
+   virtual void
    unsetRefineItems();
 
    /*!
     * @brief Set simulation time used by the refine time transaction objects.
     */
-   void
+   virtual void
    setTransactionTime(
       double fill_time);
 
@@ -89,7 +89,7 @@ public:
     *                       refine transaction involves time interpolation.
     *                       Default is false.
     */
-   boost::shared_ptr<tbox::Transaction>
+   virtual boost::shared_ptr<tbox::Transaction>
    allocate(
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
       const boost::shared_ptr<hier::PatchLevel>& src_level,
