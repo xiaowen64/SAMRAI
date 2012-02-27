@@ -11,9 +11,41 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-const std::string& RefineOperator::getOperatorName() const
+const std::string&
+RefineOperator::getOperatorName() const
 {
    return d_name;
+}
+
+/*
+ *************************************************************************
+ * Register this in the static look-up table.
+ *************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+RefineOperator::registerInLookupTable(
+   const std::string& name)
+{
+   s_lookup_table.insert(std::pair<std::string, RefineOperator *>(name, this));
+}
+
+SAMRAI_INLINE_KEYWORD
+const tbox::Dimension&
+RefineOperator::getDim() const
+{
+   return d_dim;
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+RefineOperator::finalizeCallback()
+{
+   s_lookup_table.clear();
 }
 
 }

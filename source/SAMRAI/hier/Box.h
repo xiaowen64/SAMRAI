@@ -170,6 +170,11 @@ public:
       const IntVector& refinement_ratio);
 
    /*!
+    * @brief The destructor for Box.
+    */
+   ~Box();
+
+   /*!
     * @brief Set all the attributes of the Box.
     *
     * @param[in] box
@@ -210,20 +215,19 @@ public:
       const PeriodicId& periodic_id,
       const IntVector& refinement_ratio);
 
-   /*!
-    * @brief The destructor for Box.
-    */
-   ~Box();
-
    //! @brief Set the BoxId.
-   void setId(const BoxId& box_id);
+   void
+   setId(
+      const BoxId& box_id);
 
    //! @brief Get the BoxId.
    const BoxId&
    getId() const;
 
    //! @brief Set the BlockId.
-   void setBlockId(const BlockId& block_id);
+   void
+   setBlockId(
+      const BlockId& block_id);
 
    //! @brief Get the BlockId.
    const BlockId&
@@ -258,24 +262,28 @@ public:
       const Box& other) const;
 
    struct id_equal {
-      bool operator () (const Box& b1, const Box& b2) const
+      bool
+      operator () (const Box& b1, const Box& b2) const
       {
          return b1.isIdEqual(b2);
       }
 
-      bool operator () (const Box* b1, const Box* b2) const
+      bool
+      operator () (const Box* b1, const Box* b2) const
       {
          return b1->isIdEqual(*b2);
       }
    };
 
    struct id_less {
-      bool operator () (const Box& b1, const Box& b2) const
+      bool
+      operator () (const Box& b1, const Box& b2) const
       {
          return b1.getId() < b2.getId();
       }
 
-      bool operator () (const Box* b1, const Box* b2) const
+      bool
+      operator () (const Box* b1, const Box* b2) const
       {
          return b1->getId() < b2->getId();
       }
@@ -478,7 +486,8 @@ public:
    isSpatiallyEqual(
       const Box& box) const;
    struct box_equality {
-      bool operator () (const Box& b1, const Box& b2) const
+      bool
+      operator () (const Box& b1, const Box& b2) const
       {
          return b1.isSpatiallyEqual(b2);
       }
@@ -790,7 +799,8 @@ public:
     * @brief Lock the BoxId of this Box so that it may not be changed in any
     * way.
     */
-   void lockId();
+   void
+   lockId();
 
    /*!
     * @brief Read the box description in the form [L,U], where L and U are the
@@ -877,12 +887,6 @@ private:
       const int axis,
       const int num_rotations);
 
-   Index d_lo;
-   Index d_hi;
-   BlockId d_block_id;
-   BoxId d_id;
-   bool d_id_locked;
-
 
    /*!
     * @brief Initialize static objects and register shutdown routine.
@@ -899,6 +903,12 @@ private:
     */
    static void
    finalizeCallback();
+
+   Index d_lo;
+   Index d_hi;
+   BlockId d_block_id;
+   BoxId d_id;
+   bool d_id_locked;
 
    /*
     * Array of empty boxes for each dimension.  Preallocated

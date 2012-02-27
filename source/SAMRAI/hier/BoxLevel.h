@@ -19,6 +19,7 @@
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/Timer.h"
+#include "SAMRAI/tbox/TimerManager.h"
 
 #include <boost/shared_ptr.hpp>
 #include <vector>

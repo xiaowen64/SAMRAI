@@ -71,13 +71,6 @@ Patch::~Patch()
  *************************************************************************
  */
 
-size_t Patch::getSizeOfPatchData(
-   const int id) const
-{
-   return d_descriptor->getPatchDataFactory(id)->getSizeOfMemory(
-      d_mapped_box);
-}
-
 size_t
 Patch::getSizeOfPatchData(
    const ComponentSelector& components) const
@@ -101,7 +94,8 @@ Patch::getSizeOfPatchData(
  *************************************************************************
  */
 
-void Patch::allocatePatchData(
+void
+Patch::allocatePatchData(
    const int id,
    const double time)
 {
@@ -120,7 +114,8 @@ void Patch::allocatePatchData(
    d_patch_data[id]->setTime(time);
 }
 
-void Patch::allocatePatchData(
+void
+Patch::allocatePatchData(
    const ComponentSelector& components,
    const double time)
 {
@@ -148,18 +143,8 @@ void Patch::allocatePatchData(
  *************************************************************************
  */
 
-void Patch::deallocatePatchData(
-   const int id)
-{
-   TBOX_ASSERT((id >= 0) &&
-      (id < d_descriptor->getMaxNumberRegisteredComponents()));
-
-   if (id < d_patch_data.getSize()) {
-      d_patch_data[id].reset();
-   }
-}
-
-void Patch::deallocatePatchData(
+void
+Patch::deallocatePatchData(
    const ComponentSelector& components)
 {
    const int ncomponents = d_patch_data.getSize();
@@ -178,7 +163,8 @@ void Patch::deallocatePatchData(
  *************************************************************************
  */
 
-void Patch::setTime(
+void
+Patch::setTime(
    const double timestamp,
    const ComponentSelector& components)
 {
@@ -190,7 +176,8 @@ void Patch::setTime(
    }
 }
 
-void Patch::setTime(
+void
+Patch::setTime(
    const double timestamp)
 {
    const int ncomponents = d_patch_data.getSize();
@@ -211,7 +198,8 @@ void Patch::setTime(
  *************************************************************************
  */
 
-void Patch::getFromDatabase(
+void
+Patch::getFromDatabase(
    const boost::shared_ptr<tbox::Database>& database,
    const ComponentSelector& component_selector)
 {
@@ -299,7 +287,8 @@ void Patch::getFromDatabase(
  *
  *************************************************************************
  */
-void Patch::putUnregisteredToDatabase(
+void
+Patch::putUnregisteredToDatabase(
    const boost::shared_ptr<tbox::Database>& database,
    const ComponentSelector& patchdata_write_table) const
 {
@@ -352,7 +341,8 @@ void Patch::putUnregisteredToDatabase(
  *************************************************************************
  */
 
-int Patch::recursivePrint(
+int
+Patch::recursivePrint(
    std::ostream& os,
    const std::string& border,
    int depth) const
@@ -373,7 +363,8 @@ int Patch::recursivePrint(
    return 0;
 }
 
-std::ostream& operator << (
+std::ostream&
+operator << (
    std::ostream& s,
    const Patch& patch)
 {

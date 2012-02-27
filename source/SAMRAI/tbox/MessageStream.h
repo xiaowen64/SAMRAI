@@ -16,6 +16,7 @@
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <cstring>
 #include <iostream>
 
 namespace SAMRAI {
@@ -119,7 +120,17 @@ public:
    template<typename DATA_TYPE>
    MessageStream&
    operator << (
-      const DATA_TYPE& data);
+      const DATA_TYPE& data)
+   {
+      TBOX_ASSERT(d_mode == MessageStream::Write);
+
+      static const unsigned int nbytes = MessageStream::getSizeof<DATA_TYPE>(1);
+
+      void* ptr = getPointerAndAdvanceCursor(nbytes);
+      memcpy(ptr, static_cast<const void *>(&data), nbytes);
+
+      return *this;
+   }
 
    /*!
     * @brief Pack an array of data items into message stream.
@@ -132,7 +143,16 @@ public:
    void
    pack(
       const DATA_TYPE* data,
-      unsigned int size = 1);
+      unsigned int size = 1)
+   {
+      TBOX_ASSERT(d_mode == MessageStream::Write);
+
+      if (data && (size > 0)) {
+         const unsigned int nbytes = MessageStream::getSizeof<DATA_TYPE>(size);
+         void* ptr = getPointerAndAdvanceCursor(nbytes);
+         memcpy(ptr, static_cast<const void *>(data), nbytes);
+      }
+   }
 
    /*!
     * @brief Unpack a single data item from message stream.
@@ -143,7 +163,17 @@ public:
    template<typename DATA_TYPE>
    MessageStream&
    operator >> (
-      DATA_TYPE& data);
+      DATA_TYPE& data)
+   {
+      TBOX_ASSERT(d_mode == MessageStream::Read);
+
+      static const unsigned int nbytes = MessageStream::getSizeof<DATA_TYPE>(1);
+
+      void* ptr = getPointerAndAdvanceCursor(nbytes);
+      memcpy(static_cast<void *>(&data), ptr, nbytes);
+
+      return *this;
+   }
 
    /*!
     * @brief Unpack an array of data items from message stream.
@@ -157,7 +187,16 @@ public:
    void
    unpack(
       DATA_TYPE * data,
-      unsigned int size = 1);
+      unsigned int size = 1)
+   {
+      TBOX_ASSERT(d_mode == MessageStream::Read);
+
+      if (data && (size > 0)) {
+         const unsigned int nbytes = MessageStream::getSizeof<DATA_TYPE>(size);
+         void* ptr = getPointerAndAdvanceCursor(nbytes);
+         memcpy(static_cast<void *>(data), ptr, nbytes);
+      }
+   }
 
    /*!
     * @brief Print out internal object data.
@@ -217,10 +256,6 @@ private:
 
 #ifdef SAMRAI_INLINE
 #include "SAMRAI/tbox/MessageStream.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
-#include "SAMRAI/tbox/MessageStream_template_methods.C"
 #endif
 
 #endif

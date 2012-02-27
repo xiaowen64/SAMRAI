@@ -16,191 +16,15 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Dimension& Box::getDim() const
+const tbox::Dimension&
+Box::getDim() const
 {
    return d_lo.getDim();
 }
 
 SAMRAI_INLINE_KEYWORD
-Box::Box():
-   d_lo(tbox::Dimension::getInvalidDimension(), tbox::MathUtilities<int>::getMax()),
-   d_hi(tbox::Dimension::getInvalidDimension(), tbox::MathUtilities<int>::getMin()),
-   d_block_id(BlockId::invalidId()),
-   d_id_locked(false)
-{
-#ifdef BOX_TELEMETRY
-   // Increment the cumulative constructed count, active box count and reset
-   // the high water mark of active boxes if necessary.
-   ++s_cumulative_constructed_ct;
-   ++s_active_ct;
-   if (s_active_ct > s_high_water) {
-      s_high_water = s_active_ct;
-   }
-#endif
-}
-
-SAMRAI_INLINE_KEYWORD
-Box::Box(
-   const tbox::Dimension& dim):
-   d_lo(dim, tbox::MathUtilities<int>::getMax()),
-   d_hi(dim, tbox::MathUtilities<int>::getMin()),
-   d_block_id(BlockId::invalidId()),
-   d_id(GlobalId(), PeriodicId::zero()),
-   d_id_locked(false)
-{
-   TBOX_DIM_ASSERT_CHECK_DIM(dim);
-#ifdef BOX_TELEMETRY
-   // Increment the cumulative constructed count, active box count and reset
-   // the high water mark of active boxes if necessary.
-   ++s_cumulative_constructed_ct;
-   ++s_active_ct;
-   if (s_active_ct > s_high_water) {
-      s_high_water = s_active_ct;
-   }
-#endif
-}
-
-SAMRAI_INLINE_KEYWORD
-Box::Box(
-   const Index& lower,
-   const Index& upper,
-   const BlockId& block_id):
-   d_lo(lower),
-   d_hi(upper),
-   d_block_id(block_id),
-   d_id(GlobalId(), PeriodicId::zero()),
-   d_id_locked(false)
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(lower, upper);
-   TBOX_ASSERT(block_id != BlockId::invalidId());
-#ifdef BOX_TELEMETRY
-   // Increment the cumulative constructed count, active box count and reset
-   // the high water mark of active boxes if necessary.
-   ++s_cumulative_constructed_ct;
-   ++s_active_ct;
-   if (s_active_ct > s_high_water) {
-      s_high_water = s_active_ct;
-   }
-#endif
-}
-
-SAMRAI_INLINE_KEYWORD
-Box::Box(
-   const Box& box):
-   d_lo(box.d_lo),
-   d_hi(box.d_hi),
-   d_block_id(box.d_block_id),
-   d_id(box.d_id),
-   d_id_locked(false)
-{
-#ifdef BOX_TELEMETRY
-   // Increment the cumulative constructed count, active box count and reset
-   // the high water mark of active boxes if necessary.
-   ++s_cumulative_constructed_ct;
-   ++s_active_ct;
-   if (s_active_ct > s_high_water) {
-      s_high_water = s_active_ct;
-   }
-#endif
-}
-
-SAMRAI_INLINE_KEYWORD
-Box::Box(
-   const tbox::DatabaseBox& box):
-   d_lo(box.getDim(), tbox::MathUtilities<int>::getMax()),
-   d_hi(box.getDim(), tbox::MathUtilities<int>::getMin()),
-   d_id(GlobalId(), PeriodicId::zero()),
-   d_id_locked(false)
-{
-   set_Box_from_DatabaseBox(box);
-#ifdef BOX_TELEMETRY
-   // Increment the cumulative constructed count, active box count and reset
-   // the high water mark of active boxes if necessary.
-   ++s_cumulative_constructed_ct;
-   ++s_active_ct;
-   if (s_active_ct > s_high_water) {
-      s_high_water = s_active_ct;
-   }
-#endif
-}
-
-SAMRAI_INLINE_KEYWORD
-Box::Box(
-   const Box& box,
-   const LocalId& local_id,
-   const int owner,
-   const PeriodicId& periodic_id):
-   d_lo(box.d_lo),
-   d_hi(box.d_hi),
-   d_block_id(box.d_block_id),
-   d_id(local_id, owner, periodic_id),
-   d_id_locked(false)
-{
-   TBOX_ASSERT(periodic_id.isValid());
-   TBOX_ASSERT(periodic_id.getPeriodicValue() <
-      PeriodicShiftCatalog::getCatalog(box.getDim())->getNumberOfShifts());
-#ifdef BOX_TELEMETRY
-   // Increment the cumulative constructed count, active mapped box count and
-   // reset the high water mark of active mapped boxes if necessary.
-   ++s_cumulative_constructed_ct;
-   ++s_active_ct;
-   if (s_active_ct > s_high_water) {
-      s_high_water = s_active_ct;
-   }
-#endif
-}
-
-SAMRAI_INLINE_KEYWORD
-Box::Box(
-   const tbox::Dimension& dim,
-   const GlobalId& global_id,
-   const PeriodicId& periodic_id):
-   d_lo(dim),
-   d_hi(dim),
-   d_block_id(BlockId::invalidId()),
-   d_id(global_id, periodic_id),
-   d_id_locked(false)
-{
-   TBOX_ASSERT(periodic_id.isValid());
-   TBOX_ASSERT(periodic_id.getPeriodicValue() < PeriodicShiftCatalog::getCatalog(
-         dim)->getNumberOfShifts());
-#ifdef BOX_TELEMETRY
-   // Increment the cumulative constructed count, active mapped box count and
-   // reset the high water mark of active mapped boxes if necessary.
-   ++s_cumulative_constructed_ct;
-   ++s_active_ct;
-   if (s_active_ct > s_high_water) {
-      s_high_water = s_active_ct;
-   }
-#endif
-}
-
-SAMRAI_INLINE_KEYWORD
-Box::Box(
-   const tbox::Dimension& dim,
-   const BoxId& mapped_box_id):
-   d_lo(dim),
-   d_hi(dim),
-   d_id(mapped_box_id),
-   d_id_locked(false)
-{
-   TBOX_ASSERT(mapped_box_id.getPeriodicId().isValid());
-   TBOX_ASSERT(
-      mapped_box_id.getPeriodicId().getPeriodicValue() <
-      PeriodicShiftCatalog::getCatalog(dim)->getNumberOfShifts());
-#ifdef BOX_TELEMETRY
-   // Increment the cumulative constructed count, active mapped box count and
-   // reset the high water mark of active mapped boxes if necessary.
-   ++s_cumulative_constructed_ct;
-   ++s_active_ct;
-   if (s_active_ct > s_high_water) {
-      s_high_water = s_active_ct;
-   }
-#endif
-}
-
-SAMRAI_INLINE_KEYWORD
-void Box::initialize(
+void
+Box::initialize(
    const Box& box,
    const LocalId& local_id,
    const int owner,
@@ -217,116 +41,83 @@ void Box::initialize(
 }
 
 SAMRAI_INLINE_KEYWORD
-Box::~Box()
-{
-#ifdef BOX_TELEMETRY
-   // There is one fewer box so decrement the active count.
-   --s_active_ct;
-#endif
-}
-
-SAMRAI_INLINE_KEYWORD
-void Box::setId(const BoxId& box_id) {
+void
+Box::setId(const BoxId& box_id) {
    d_id = box_id;
 }
 
 SAMRAI_INLINE_KEYWORD
-const BoxId& Box::getId() const {
+const BoxId&
+Box::getId() const {
    return d_id;
 }
 
 SAMRAI_INLINE_KEYWORD
-int Box::getOwnerRank() const
+int
+Box::getOwnerRank() const
 {
    return d_id.getOwnerRank();
 }
 
 SAMRAI_INLINE_KEYWORD
-const LocalId& Box::getLocalId() const
+const LocalId&
+Box::getLocalId() const
 {
    return d_id.getLocalId();
 }
 SAMRAI_INLINE_KEYWORD
-const GlobalId& Box::getGlobalId() const
+const GlobalId&
+Box::getGlobalId() const
 {
    return d_id.getGlobalId();
 }
 
 SAMRAI_INLINE_KEYWORD
-void Box::setBlockId(const BlockId& block_id)
+void
+Box::setBlockId(const BlockId& block_id)
 {
    d_block_id = block_id;
 }
 
 SAMRAI_INLINE_KEYWORD
-const BlockId& Box::getBlockId() const
+const BlockId&
+Box::getBlockId() const
 {
    return d_block_id;
 }
 
 SAMRAI_INLINE_KEYWORD
-const PeriodicId& Box::getPeriodicId() const
+const PeriodicId&
+Box::getPeriodicId() const
 {
    return d_id.getPeriodicId();
 }
 
 SAMRAI_INLINE_KEYWORD
-bool Box::isPeriodicImage() const
+bool
+Box::isPeriodicImage() const
 {
    return d_id.isPeriodicImage();
 }
 
 SAMRAI_INLINE_KEYWORD
-bool Box::isIdEqual(const Box& other) const
+bool
+Box::isIdEqual(const Box& other) const
 {
    return d_id == other.d_id;
 }
 
 SAMRAI_INLINE_KEYWORD
-int Box::commBufferSize(
+int
+Box::commBufferSize(
    const tbox::Dimension& dim)
 {
    return BoxId::commBufferSize() + (2 * dim.getValue()) + 1;
 }
 
 SAMRAI_INLINE_KEYWORD
-void Box::putToIntBuffer(
-   int* buffer) const
-{
-   buffer[0] = d_block_id.getBlockValue();
-   buffer++;
-
-   d_id.putToIntBuffer(buffer);
-   buffer += BoxId::commBufferSize();
-
-   const tbox::Dimension& dim(d_lo.getDim());
-   for (int d = 0; d < dim.getValue(); ++d) {
-      buffer[d * 2] = d_lo(d);
-      buffer[d * 2 + 1] = d_hi(d);
-   }
-
-}
-
-SAMRAI_INLINE_KEYWORD
-void Box::getFromIntBuffer(
-   const int* buffer)
-{
-   d_block_id = BlockId(buffer[0]);
-   buffer++; 
-
-   d_id.getFromIntBuffer(buffer);
-   buffer += BoxId::commBufferSize();
-
-   const tbox::Dimension& dim(d_lo.getDim());
-   for (int d = 0; d < dim.getValue(); ++d) {
-      d_lo(d) = buffer[d * 2];
-      d_hi(d) = buffer[d * 2 + 1];
-   }
-
-}
-
-SAMRAI_INLINE_KEYWORD
-Box& Box::Box_from_DatabaseBox(
+Box&
+Box::Box_from_DatabaseBox(
    const tbox::DatabaseBox& box)
 {
    set_Box_from_DatabaseBox(box);
@@ -334,40 +125,8 @@ Box& Box::Box_from_DatabaseBox(
 }
 
 SAMRAI_INLINE_KEYWORD
-Box& Box::operator = (
-   const Box& rhs)
-{
-
-   if (this != &rhs) {
-      /*
-       * Allow assignment of to an uninitialized box but
-       * not from an uninitialized box.
-       * This is needed for tbox::Array and vector.
-       */
-      if (getDim().isValid()) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
-      } else {
-         TBOX_DIM_ASSERT_CHECK_DIM(rhs.getDim());
-      }
-
-      d_lo = rhs.d_lo;
-      d_hi = rhs.d_hi;
-      if (!d_id_locked) {
-         d_block_id = rhs.d_block_id;
-         d_id = rhs.d_id;
-      } else {
-         TBOX_ERROR("Attempted to change BoxId that is locked in an ordered BoxContainer.");
-      }
-#ifdef BOX_TELEMETRY
-      // Increment the cumulative assigned count only.
-      ++s_cumulative_assigned_ct;
-#endif
-   }
-   return *this;
-}
-
-SAMRAI_INLINE_KEYWORD
-Box& Box::operator = (
+Box&
+Box::operator = (
    const tbox::DatabaseBox& box)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -380,79 +139,94 @@ Box& Box::operator = (
 }
 
 SAMRAI_INLINE_KEYWORD
-Index& Box::lower()
+Index&
+Box::lower()
 {
    return d_lo;
 }
 
 SAMRAI_INLINE_KEYWORD
-Index& Box::upper()
+Index&
+Box::upper()
 {
    return d_hi;
 }
 
 SAMRAI_INLINE_KEYWORD
-const Index& Box::lower() const
+const Index&
+Box::lower() const
 {
    return d_lo;
 }
 
 SAMRAI_INLINE_KEYWORD
-const Index& Box::upper() const
+const Index&
+Box::upper() const
 {
    return d_hi;
 }
 
 SAMRAI_INLINE_KEYWORD
-int& Box::lower(
+int&
+Box::lower(
    const int i)
 {
    return d_lo(i);
 }
 
 SAMRAI_INLINE_KEYWORD
-int& Box::upper(
+int&
+Box::upper(
    const int i)
 {
    return d_hi(i);
 }
 
 SAMRAI_INLINE_KEYWORD
-const int& Box::lower(
+const int&
+Box::lower(
    const int i) const
 {
    return d_lo(i);
 }
 
 SAMRAI_INLINE_KEYWORD
-const int& Box::upper(
+const int&
+Box::upper(
    const int i) const
 {
    return d_hi(i);
 }
 
 SAMRAI_INLINE_KEYWORD
-bool Box::empty() const
+bool
+Box::empty() const
 {
    for (int i = 0; i < getDim().getValue(); i++) {
-      if (d_hi(i) < d_lo(i)) return true;
+      if (d_hi(i) < d_lo(i)) {
+         return true;
+      }
    }
 
    return false;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool Box::isEmpty() const
+bool
+Box::isEmpty() const
 {
    for (int i = 0; i < getDim().getValue(); i++) {
-      if (d_hi(i) < d_lo(i)) return true;
+      if (d_hi(i) < d_lo(i)) {
+         return true;
+      }
    }
 
    return false;
 }
 
 SAMRAI_INLINE_KEYWORD
-void Box::setEmpty()
+void
+Box::setEmpty()
 {
    const tbox::Dimension& dim(getDim());
 
@@ -461,7 +235,8 @@ void Box::setEmpty()
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector Box::numberCells() const
+IntVector
+Box::numberCells() const
 {
    if (empty()) {
       return IntVector::getZero(getDim());
@@ -471,7 +246,8 @@ IntVector Box::numberCells() const
 }
 
 SAMRAI_INLINE_KEYWORD
-int Box::numberCells(
+int
+Box::numberCells(
    const int i) const
 {
    if (empty()) {
@@ -482,20 +258,23 @@ int Box::numberCells(
 }
 
 SAMRAI_INLINE_KEYWORD
-int Box::size() const
+int
+Box::size() const
 {
    int mysize = 0;
    if (!empty()) {
       mysize = 1;
-      for (int i = 0; i < getDim().getValue(); i++)
+      for (int i = 0; i < getDim().getValue(); i++) {
          mysize *= (d_hi(i) - d_lo(i) + 1);
+      }
    }
 
    return mysize;
 }
 
 SAMRAI_INLINE_KEYWORD
-int Box::offset(
+int
+Box::offset(
    const Index& p) const
 {
    int myoffset = 0;
@@ -509,63 +288,15 @@ int Box::offset(
 }
 
 SAMRAI_INLINE_KEYWORD
-Index Box::index(
-   const int offset) const
-{
-   TBOX_ASSERT(offset >= 0);
-   TBOX_ASSERT(offset <= size());
-
-   IntVector n(getDim());
-   IntVector index(getDim());
-
-   n = numberCells();
-
-   int remainder = offset;
-
-   for (int d = getDim().getValue() - 1; d > -1; d--) {
-      /* Compute the stride for indexing */
-      int stride = 1;
-      for (int stride_dim = 0; stride_dim < d; stride_dim++) {
-         stride *= n[stride_dim];
-      }
-
-      /* Compute the local index */
-      index[d] = remainder / stride;
-      remainder -= index[d] * stride;
-
-      /* Compute the global index */
-      index[getDim().getValue()] += lower(d);
-   }
-
-   Index idx(index);
-
-   return idx;
-}
-
-SAMRAI_INLINE_KEYWORD
-bool Box::contains(
+bool
+Box::contains(
    const Index& p) const
 {
    for (int i = 0; i < getDim().getValue(); i++) {
-      if ((p(i) < d_lo(i)) || (p(i) > d_hi(i))) return false;
+      if ((p(i) < d_lo(i)) || (p(i) > d_hi(i))) {
+         return false;
+      }
    }
-   return true;
-}
-
-SAMRAI_INLINE_KEYWORD
-bool Box::contains(
-   const Box& box) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
-
-   if (box.empty()) return true;
-
-   if (box.getBlockId() != d_block_id) return false;
-
-   if (!contains(box.lower())) return false;
-
-   if (!contains(box.upper())) return false;
-
    return true;
 }
 
@@ -582,118 +313,16 @@ Box::operator tbox::DatabaseBox() const
 }
 
 SAMRAI_INLINE_KEYWORD
-bool Box::isSpatiallyEqual(
+bool
+Box::isSpatiallyEqual(
    const Box& box) const
 {
    return ((d_lo == box.d_lo) && (d_hi == box.d_hi) && (d_block_id == box.d_block_id)) || (empty() && box.empty());
 }
 
 SAMRAI_INLINE_KEYWORD
-Box Box::operator * (
-   const Box& box) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
-
-   Box both(*this);
-
-   if (d_block_id != box.d_block_id) {
-      if (empty() || box.empty()) {
-         both.setEmpty();
-      } else {
-         TBOX_ERROR("Attempted intersection of Boxes from different blocks.");
-      } 
-   } else {
-      both.d_lo.max(box.d_lo);
-      both.d_hi.min(box.d_hi);
-   }
-
-   return both;
-}
-
-SAMRAI_INLINE_KEYWORD
-Box &Box::operator *= (
-   const Box& box)
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
-
-   if (d_block_id != box.d_block_id) {
-      if (empty() || box.empty()) {
-         setEmpty();
-      } else {
-         TBOX_ERROR("Attempted intersection of Boxes from different blocks.");
-      }
-   } else {
-      d_lo.max(box.d_lo);
-      d_hi.min(box.d_hi);
-   }
- 
-   return *this;
-}
-
-SAMRAI_INLINE_KEYWORD
-void Box::intersect(
-   const Box& other,
-   Box& result) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, other);
-
-   result = *this;
-   if (result.d_block_id != other.d_block_id) {
-      if (result.empty() || other.empty()) {
-         result.setEmpty();
-      } else {
-         TBOX_ERROR("Attempted intersection of Boxes from different blocks.");
-      }
-   } else {
-      result.d_lo.max(other.d_lo);
-      result.d_hi.min(other.d_hi);
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
-bool Box::intersects(
-   const Box& box) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
-
-   if (d_block_id != box.d_block_id) {
-      if (empty() || box.empty()) {
-         return false;
-      } else {
-         TBOX_ERROR("Attempted intersection of Boxes from different blocks."); 
-      }
-   }
-
-   for (int i = 0; i < getDim().getValue(); i++) {
-      if (tbox::MathUtilities<int>::Max(d_lo(i), box.d_lo(i)) >
-          tbox::MathUtilities<int>::Min(d_hi(i), box.d_hi(i))) {
-         return false;
-      }
-   }
-
-   return true;
-}
-
-SAMRAI_INLINE_KEYWORD
-Box Box::operator + (
-   const Box& box) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
-
-   Box bbox(*this);
-
-   if (d_block_id != box.d_block_id) {
-      if (!(empty()) || !(box.empty())) {
-         TBOX_ERROR("Attempted bounding box of Boxes from different blocks.");
-      }
-   }
-
-   bbox += box;
-   return bbox;
-}
-
-SAMRAI_INLINE_KEYWORD
-void Box::grow(
+void
+Box::grow(
    const IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
@@ -705,7 +334,8 @@ void Box::grow(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Box::grow(
+void
+Box::grow(
    const int direction,
    const int ghosts)
 {
@@ -718,7 +348,8 @@ void Box::grow(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Box::growLower(
+void
+Box::growLower(
    const IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
@@ -729,7 +360,8 @@ void Box::growLower(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Box::growLower(
+void
+Box::growLower(
    const int direction,
    const int ghosts)
 {
@@ -741,7 +373,8 @@ void Box::growLower(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Box::growUpper(
+void
+Box::growUpper(
    const IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
@@ -752,7 +385,8 @@ void Box::growUpper(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Box::growUpper(
+void
+Box::growUpper(
    const int direction,
    const int ghosts)
 {
@@ -764,39 +398,8 @@ void Box::growUpper(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Box::lengthen(
-   const int direction,
-   const int ghosts)
-{
-   TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
-
-   if (!empty()) {
-      if (ghosts > 0) {
-         d_hi(direction) += ghosts;
-      } else {
-         d_lo(direction) += ghosts;
-      }
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
-void Box::shorten(
-   const int direction,
-   const int ghosts)
-{
-   TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
-
-   if (!empty()) {
-      if (ghosts > 0) {
-         d_hi(direction) -= ghosts;
-      } else {
-         d_lo(direction) -= ghosts;
-      }
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
-void Box::shift(
+void
+Box::shift(
    const IntVector& offset)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, offset);
@@ -806,7 +409,8 @@ void Box::shift(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Box::shift(
+void
+Box::shift(
    const int direction,
    const int offset)
 {
@@ -817,7 +421,8 @@ void Box::shift(
 }
 
 SAMRAI_INLINE_KEYWORD
-int Box::coarsen(
+int
+Box::coarsen(
    const int index,
    const int ratio)
 {
@@ -825,7 +430,8 @@ int Box::coarsen(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Box::coarsen(
+void
+Box::coarsen(
    const IntVector& ratio)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio);
@@ -837,37 +443,8 @@ void Box::coarsen(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Box::refine(
-   const IntVector& ratio)
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio);
-
-   bool negative_ratio = false;
-   for (int d = 0; d < getDim().getValue(); d++) {
-      if (ratio(d) < 0) {
-         negative_ratio = true;
-         break;
-      }
-   }
-
-   if (!negative_ratio) {
-      d_lo *= ratio;
-      d_hi = d_hi * ratio + (ratio - 1);
-   } else {
-      for (int i = 0; i < getDim().getValue(); i++) {
-         if (ratio(i) > 0) {
-            d_lo(i) *= ratio(i);
-            d_hi(i) = d_hi(i) * ratio(i) + (ratio(i) - 1);
-         } else {
-            d_lo(i) = coarsen(d_lo(i), -ratio(i));
-            d_hi(i) = coarsen(d_hi(i), -ratio(i));
-         }
-      }
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
-Box Box::grow(
+Box
+Box::grow(
    const Box& box,
    const IntVector& ghosts)
 {
@@ -879,7 +456,8 @@ Box Box::grow(
 }
 
 SAMRAI_INLINE_KEYWORD
-Box Box::shift(
+Box
+Box::shift(
    const Box& box,
    const IntVector& ghosts)
 {
@@ -889,7 +467,8 @@ Box Box::shift(
 }
 
 SAMRAI_INLINE_KEYWORD
-Box Box::refine(
+Box
+Box::refine(
    const Box& box,
    const IntVector& ratio)
 {
@@ -901,7 +480,8 @@ Box Box::refine(
 }
 
 SAMRAI_INLINE_KEYWORD
-Box Box::coarsen(
+Box
+Box::coarsen(
    const Box& box,
    const IntVector& ratio)
 {
@@ -913,30 +493,8 @@ Box Box::coarsen(
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxIterator::BoxIterator():
-   d_index(tbox::Dimension::getInvalidDimension())
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-BoxIterator::BoxIterator(
-   const Box& box):
-   d_index(box.lower()),
-   d_box(box)
-{
-   TBOX_DIM_ASSERT_CHECK_DIM(box.getDim());
-}
-
-SAMRAI_INLINE_KEYWORD
-BoxIterator::BoxIterator(
-   const BoxIterator& iter):
-   d_index(iter.d_index),
-   d_box(iter.d_box)
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-void BoxIterator::initialize(
+void
+BoxIterator::initialize(
    const Box& box)
 {
    TBOX_DIM_ASSERT_CHECK_DIM(box.getDim());
@@ -956,18 +514,15 @@ BoxIterator::operator = (
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxIterator::~BoxIterator()
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-const Index& BoxIterator::operator * () const
+const Index&
+BoxIterator::operator * () const
 {
    return d_index;
 }
 
 SAMRAI_INLINE_KEYWORD
-const Index& BoxIterator::operator () () const
+const Index&
+BoxIterator::operator () () const
 {
    return d_index;
 }
@@ -976,7 +531,9 @@ SAMRAI_INLINE_KEYWORD
 BoxIterator::operator bool () const
 {
    for (int i = 0; i < d_index.getDim().getValue(); i++) {
-      if (d_index(i) > d_box.upper(i)) return false;
+      if (d_index(i) > d_box.upper(i)) {
+         return false;
+      }
    }
    return true;
 }
@@ -990,13 +547,15 @@ BoxIterator::operator const void * () const
 #endif
 
 SAMRAI_INLINE_KEYWORD
-bool BoxIterator::operator ! () const
+bool
+BoxIterator::operator ! () const
 {
    return !BoxIterator::operator bool ();
 }
 
 SAMRAI_INLINE_KEYWORD
-void BoxIterator::operator ++ (
+void
+BoxIterator::operator ++ (
    int)
 {
    d_index(0)++;
@@ -1010,39 +569,42 @@ void BoxIterator::operator ++ (
 }
 
 SAMRAI_INLINE_KEYWORD
-bool BoxIterator::operator == (
+bool
+BoxIterator::operator == (
    const BoxIterator& iter) const
 {
    return d_index == iter.d_index;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool BoxIterator::operator != (
+bool
+BoxIterator::operator != (
    const BoxIterator& iter) const
 {
    return d_index != iter.d_index;
 }
 
 SAMRAI_INLINE_KEYWORD
-const Box& Box::getEmptyBox(
+const Box&
+Box::getEmptyBox(
    const tbox::Dimension& dim) {
    TBOX_DIM_ASSERT_CHECK_DIM(dim);
    return *(s_emptys[dim.getValue() - 1]);
 }
 
 SAMRAI_INLINE_KEYWORD
-const Box& Box::getUniverse(
+const Box&
+Box::getUniverse(
    const tbox::Dimension& dim) {
    TBOX_DIM_ASSERT_CHECK_DIM(dim);
    return *(s_universes[dim.getValue() - 1]);
 }
 
 SAMRAI_INLINE_KEYWORD
-void Box::lockId() {
+void
+Box::lockId() {
    d_id_locked = true;
 }
-
-
 
 }
 }

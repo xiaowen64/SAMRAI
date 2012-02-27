@@ -20,6 +20,10 @@
 namespace SAMRAI {
 namespace hier {
 
+BoxGeometry::BoxGeometry()
+{
+}
+
 BoxGeometry::~BoxGeometry()
 {
 }

@@ -101,7 +101,8 @@ BoundaryLookupTable::~BoundaryLookupTable()
  *************************************************************************
  */
 
-void BoundaryLookupTable::buildTable(
+void
+BoundaryLookupTable::buildTable(
    int* table,
    int codim,
    int ibeg,
@@ -135,7 +136,8 @@ void BoundaryLookupTable::buildTable(
  *************************************************************************
  */
 
-void BoundaryLookupTable::buildBoundaryDirectionVectors()
+void
+BoundaryLookupTable::buildBoundaryDirectionVectors()
 {
 
    d_bdry_dirs.resizeArray(d_dim.getValue());
@@ -170,7 +172,8 @@ void BoundaryLookupTable::buildBoundaryDirectionVectors()
  *
  *************************************************************************
  */
-void BoundaryLookupTable::finalizeCallback()
+void
+BoundaryLookupTable::finalizeCallback()
 {
    for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
       if (s_lookup_table_instance[i]) {

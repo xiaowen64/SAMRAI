@@ -48,7 +48,8 @@ PeriodicShiftCatalog::s_finalize_handler(
  ***********************************************************************
  */
 
-const PeriodicShiftCatalog *PeriodicShiftCatalog::getCatalog(
+const PeriodicShiftCatalog*
+PeriodicShiftCatalog::getCatalog(
    const tbox::Dimension& dim)
 {
    if (s_periodic_shift_catalog_instance[dim.getValue() - 1] == NULL) {
@@ -62,7 +63,8 @@ const PeriodicShiftCatalog *PeriodicShiftCatalog::getCatalog(
  ***********************************************************************
  */
 
-void PeriodicShiftCatalog::finalizeCallback()
+void
+PeriodicShiftCatalog::finalizeCallback()
 {
    for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
       if (s_periodic_shift_catalog_instance[i] != NULL) {
@@ -101,7 +103,8 @@ PeriodicShiftCatalog::~PeriodicShiftCatalog()
  ***********************************************************************
  */
 
-void PeriodicShiftCatalog::setShifts(
+void
+PeriodicShiftCatalog::setShifts(
    const tbox::Dimension& dim,
    const std::vector<IntVector>& shifts)
 {
@@ -178,7 +181,8 @@ void PeriodicShiftCatalog::setShifts(
  ***********************************************************************
  */
 
-void PeriodicShiftCatalog::initializeShiftsByIndexDirections(
+void
+PeriodicShiftCatalog::initializeShiftsByIndexDirections(
    const IntVector& shift_distance_along_index_directions)
 {
 

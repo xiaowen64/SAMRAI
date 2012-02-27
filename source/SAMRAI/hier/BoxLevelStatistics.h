@@ -111,8 +111,7 @@ private:
     */
    static int s_longest_length;
 
-   static tbox::StartupShutdownManager::Handler
-      s_initialize_finalize_handler;
+   static tbox::StartupShutdownManager::Handler s_initialize_finalize_handler;
 
 
 };

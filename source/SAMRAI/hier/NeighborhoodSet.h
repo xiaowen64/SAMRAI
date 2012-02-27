@@ -85,82 +85,62 @@ public:
     * These methods just pass the call off to d_map.
     */
 
-   iterator begin() {
-      return d_map.begin();
-   }
+   iterator
+   begin();
 
-   iterator end() {
-      return d_map.end();
-   }
+   iterator
+   end();
 
-   const_iterator begin() const {
-      return d_map.begin();
-   }
+   const_iterator
+   begin() const;
 
-   const_iterator end() const {
-      return d_map.end();
-   }
+   const_iterator
+   end() const;
 
-   reverse_iterator rbegin() {
-      return d_map.rbegin();
-   }
+   reverse_iterator
+   rbegin();
 
-   reverse_iterator rend() {
-      return d_map.rend();
-   }
+   reverse_iterator
+   rend();
 
-   iterator insert(
+   iterator
+   insert(
       iterator i,
-      const value_type& v) {
-      return d_map.insert(i, v);
-   }
+      const value_type& v);
 
-   void erase(
-      iterator i) {
-      d_map.erase(i);
-   }
+   void
+   erase(
+      iterator i);
 
-   size_type erase(
-      const key_type& k) {
-      TBOX_ASSERT(k.getPeriodicId().getPeriodicValue() == 0);
-      return d_map.erase(k);
-   }
+   size_type
+   erase(
+      const key_type& k);
 
-   void erase(
+   void
+   erase(
       iterator first,
-      iterator last) {
-      d_map.erase(first, last);
-   }
+      iterator last);
 
-   size_t size() const {
-      return d_map.size();
-   }
+   size_t
+   size() const;
 
-   bool empty() const {
-      return d_map.empty();
-   }
+   bool
+   empty() const;
 
-   void clear() {
-      d_map.clear();
-   }
+   void
+   clear();
 
-   NeighborSet& operator [] (
-      const key_type& k) {
-      TBOX_ASSERT(k.getPeriodicId().getPeriodicValue() == 0);
-      return d_map[k];
-   }
+   NeighborSet&
+   operator [] (
+      const key_type& k);
 
-   iterator find(
-      const key_type& k) {
-      TBOX_ASSERT(k.getPeriodicId().getPeriodicValue() == 0);
-      return d_map.find(k);
-   }
+   iterator
+   find(
+      const key_type& k);
 
-   const_iterator find(
-      const key_type& k) const {
-      TBOX_ASSERT(k.getPeriodicId().getPeriodicValue() == 0);
-      return d_map.find(k);
-   }
+   const_iterator
+   find(
+      const key_type& k) const;
 
    NeighborhoodSet&
    operator = (

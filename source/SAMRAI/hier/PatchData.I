@@ -12,25 +12,29 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Dimension& PatchData::getDim() const
+const tbox::Dimension&
+PatchData::getDim() const
 {
    return d_box.getDim();
 }
 
 SAMRAI_INLINE_KEYWORD
-const Box& PatchData::getBox() const
+const Box&
+PatchData::getBox() const
 {
    return d_box;
 }
 
 SAMRAI_INLINE_KEYWORD
-const Box& PatchData::getGhostBox() const
+const Box&
+PatchData::getGhostBox() const
 {
    return d_ghost_box;
 }
 
 SAMRAI_INLINE_KEYWORD
-void PatchData::setGhostBox(
+void
+PatchData::setGhostBox(
    const Box& ghost_box)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, ghost_box);
@@ -40,20 +44,23 @@ void PatchData::setGhostBox(
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& PatchData::getGhostCellWidth() const
+const IntVector&
+PatchData::getGhostCellWidth() const
 {
    return d_ghosts;
 }
 
 SAMRAI_INLINE_KEYWORD
-void PatchData::setTime(
+void
+PatchData::setTime(
    const double timestamp)
 {
    d_timestamp = timestamp;
 }
 
 SAMRAI_INLINE_KEYWORD
-double PatchData::getTime() const
+double
+PatchData::getTime() const
 {
    return d_timestamp;
 }

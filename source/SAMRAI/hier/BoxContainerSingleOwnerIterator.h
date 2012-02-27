@@ -124,7 +124,7 @@ private:
 }
 
 #ifdef SAMRAI_INLINE
-// #include "SAMRAI/hier/BoxContainerSingleOwnerIterator.I"
+#include "SAMRAI/hier/BoxContainerSingleOwnerIterator.I"
 #endif
 
 #endif  // included_hier_BoxContainerSingleOwnerIterator

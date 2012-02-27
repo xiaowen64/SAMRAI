@@ -171,16 +171,16 @@ void AsyncCommStage::privateDestageMember(
    if (min_required_len != d_members.size()) {
       d_members.resize(min_required_len, NULL);
       d_member_to_req.resize(d_members.size() + 1,
-         size_t(tbox::MathUtilities<int>::getMax()));
+         size_t(MathUtilities<int>::getMax()));
 
       const size_t new_num_req = d_member_to_req[d_member_to_req.size() - 1];
       d_req_to_member.resize(new_num_req,
-         size_t(tbox::MathUtilities<int>::getMax()));
+         size_t(MathUtilities<int>::getMax()));
       d_req.resize(new_num_req, MPI_REQUEST_NULL);
    }
 
    member->d_nreq = member->d_index_on_stage = size_t(
-            tbox::MathUtilities<int>::getMax());
+            MathUtilities<int>::getMax());
    member->d_stage = NULL;
    member->d_handler = NULL;
 
@@ -263,8 +263,8 @@ AsyncCommStage::Member::Member(
    AsyncCommStage* stage,
    AsyncCommStage::Handler* handler):
    d_stage(NULL),
-   d_nreq(size_t(tbox::MathUtilities<int>::getMax())),
-   d_index_on_stage(size_t(tbox::MathUtilities<int>::getMax())),
+   d_nreq(size_t(MathUtilities<int>::getMax())),
+   d_index_on_stage(size_t(MathUtilities<int>::getMax())),
    d_handler(handler)
 {
    stage->privateStageMember(this, nreq);
@@ -276,8 +276,8 @@ AsyncCommStage::Member::Member(
  */
 AsyncCommStage::Member::Member():
    d_stage(NULL),
-   d_nreq(size_t(tbox::MathUtilities<int>::getMax())),
-   d_index_on_stage(size_t(tbox::MathUtilities<int>::getMax())),
+   d_nreq(size_t(MathUtilities<int>::getMax())),
+   d_index_on_stage(size_t(MathUtilities<int>::getMax())),
    d_handler(NULL)
 {
 }
@@ -497,11 +497,11 @@ size_t AsyncCommStage::advanceSome(
           */
          index[iout] = static_cast<int>(d_req_to_member[index[iout]]);
 #ifdef AsyncCommStage_ExtraDebug
-         tbox::plog << "AsyncCommStage::advanceSome completed:"
-                    << " tag-" << stat[iout].MPI_TAG
-                    << " source-" << stat[iout].MPI_SOURCE
-                    << " for member index " << index[iout]
-                    << std::endl;
+         plog << "AsyncCommStage::advanceSome completed:"
+              << " tag-" << stat[iout].MPI_TAG
+              << " source-" << stat[iout].MPI_SOURCE
+              << " for member index " << index[iout]
+              << std::endl;
 #endif
          unsigned int i;
          for (i = 0; i < n_check_member; ++i) {
@@ -521,7 +521,7 @@ size_t AsyncCommStage::advanceSome(
          TBOX_ASSERT(!memberi.isDone());
          bool memberi_done = memberi.proceedToNextWait();
 #ifdef AsyncCommStage_ExtraDebug
-         tbox::plog
+         plog
          << "AsyncCommStage::advanceSome proceedToNextWait for member:"
          << memberi.d_index_on_stage
          << " completion=" << memberi_done

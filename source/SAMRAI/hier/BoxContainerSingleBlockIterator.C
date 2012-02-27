@@ -12,6 +12,10 @@
 
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/hier/BoxContainerSingleBlockIterator.I"
+#endif
+
 namespace SAMRAI {
 namespace hier {
 
@@ -32,55 +36,14 @@ BoxContainerSingleBlockIterator::~BoxContainerSingleBlockIterator()
    d_mapped_boxes = NULL;
 }
 
-bool BoxContainerSingleBlockIterator::isValid() const
-{
-   return d_mapped_boxes != NULL &&
-          d_iter != d_mapped_boxes->end() &&
-          d_iter->getBlockId() == d_block_id;
-}
-
-BoxContainerSingleBlockIterator& BoxContainerSingleBlockIterator::operator = (
-   const BoxContainerSingleBlockIterator& r)
-{
-   d_mapped_boxes = r.d_mapped_boxes;
-   d_iter = r.d_iter;
-   d_block_id = r.d_block_id;
-   return *this;
-}
-
-const Box& BoxContainerSingleBlockIterator::operator * () const
-{
-   return *d_iter;
-}
-
-const Box *BoxContainerSingleBlockIterator::operator -> () const
-{
-   return &(*d_iter);
-}
-
-bool BoxContainerSingleBlockIterator::operator == (
-   const BoxContainerSingleBlockIterator& r) const
-{
-   return d_mapped_boxes == r.d_mapped_boxes &&
-          d_block_id == r.d_block_id &&
-          d_iter == r.d_iter;
-}
-
-bool BoxContainerSingleBlockIterator::operator != (
-   const BoxContainerSingleBlockIterator& r) const
-{
-   return d_mapped_boxes != r.d_mapped_boxes ||
-          d_block_id != r.d_block_id ||
-          d_iter != r.d_iter;
-}
-
 /*
  ****************************************************************************
  * Pre-increment operator.
  ****************************************************************************
  */
 
-BoxContainerSingleBlockIterator& BoxContainerSingleBlockIterator::operator ++ ()
+BoxContainerSingleBlockIterator&
+BoxContainerSingleBlockIterator::operator ++ ()
 {
    do {
       ++d_iter;
@@ -95,7 +58,8 @@ BoxContainerSingleBlockIterator& BoxContainerSingleBlockIterator::operator ++ ()
  ****************************************************************************
  */
 
-BoxContainerSingleBlockIterator BoxContainerSingleBlockIterator::operator ++ (
+BoxContainerSingleBlockIterator
+BoxContainerSingleBlockIterator::operator ++ (
    int)
 {
    BoxContainerSingleBlockIterator saved = *this;
@@ -106,7 +70,8 @@ BoxContainerSingleBlockIterator BoxContainerSingleBlockIterator::operator ++ (
    return saved;
 }
 
-int BoxContainerSingleBlockIterator::count() const
+int
+BoxContainerSingleBlockIterator::count() const
 {
    int ct = 0;
    BoxContainerSingleBlockIterator iter(*d_mapped_boxes, d_block_id);

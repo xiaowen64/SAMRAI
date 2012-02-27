@@ -207,8 +207,7 @@ public:
       /*!
        * @brief Destructor
        */
-      virtual ~ConnectorWidthRequestorStrategy() {
-      }
+      virtual ~ConnectorWidthRequestorStrategy();
 
       /*
        * TODO: How is a developer supposed to know what IntVector values

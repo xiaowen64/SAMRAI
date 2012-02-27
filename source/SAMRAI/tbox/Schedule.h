@@ -351,16 +351,16 @@ private:
     * corresponding to a prefix.
     */
    struct TimerStruct {
-      boost::shared_ptr<tbox::Timer> t_communicate;
-      boost::shared_ptr<tbox::Timer> t_begin_communication;
-      boost::shared_ptr<tbox::Timer> t_finalize_communication;
-      boost::shared_ptr<tbox::Timer> t_post_receives;
-      boost::shared_ptr<tbox::Timer> t_post_sends;
-      boost::shared_ptr<tbox::Timer> t_process_incoming_messages;
-      boost::shared_ptr<tbox::Timer> t_MPI_wait;
-      boost::shared_ptr<tbox::Timer> t_pack_stream;
-      boost::shared_ptr<tbox::Timer> t_unpack_stream;
-      boost::shared_ptr<tbox::Timer> t_local_copies;
+      boost::shared_ptr<Timer> t_communicate;
+      boost::shared_ptr<Timer> t_begin_communication;
+      boost::shared_ptr<Timer> t_finalize_communication;
+      boost::shared_ptr<Timer> t_post_receives;
+      boost::shared_ptr<Timer> t_post_sends;
+      boost::shared_ptr<Timer> t_process_incoming_messages;
+      boost::shared_ptr<Timer> t_MPI_wait;
+      boost::shared_ptr<Timer> t_pack_stream;
+      boost::shared_ptr<Timer> t_unpack_stream;
+      boost::shared_ptr<Timer> t_local_copies;
    };
 
    //! @brief Default prefix for Timers.
@@ -388,7 +388,7 @@ private:
 
    //@}
 
-   static tbox::StartupShutdownManager::Handler
+   static StartupShutdownManager::Handler
       s_initialize_finalize_handler;
 
 };

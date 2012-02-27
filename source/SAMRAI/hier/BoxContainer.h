@@ -436,7 +436,8 @@ public:
     *
     * @param[in] ordered  Container will be ordered if true, unordered if false.
     */
-   explicit BoxContainer(const bool ordered);
+   explicit BoxContainer(
+      const bool ordered);
 
    /*!
     * @brief Create container containing members from another container.
@@ -637,7 +638,8 @@ public:
     * @param[in,out] other  Other container for swap.
     */
    void
-   swap(BoxContainer& other);
+   swap(
+      BoxContainer& other);
 
    /*!
     * @brief  Get all of the ranks that own Boxes in this container
@@ -723,7 +725,8 @@ public:
     *         having the given BlockId.
     */
    Box
-   getBoundingBox(const BlockId& block_id) const;
+   getBoundingBox(
+      const BlockId& block_id) const;
 
    /*!
     * @brief Check for non-empty intersection among boxes in container.
@@ -747,21 +750,24 @@ public:
     *
     * If called on a container that is already ordered, nothing changes.
     */
-   void order();
+   void
+   order();
 
    /*!
     * @brief Changes state of this container to unordered.
     *
     * This method can be called on any container.
     */
-   void unorder();
+   void
+   unorder();
 
    /*!
     * @brief Return whether this container is ordered.
     *
     * @return  True if ordered, false if unordered.
     */
-   bool isOrdered() const;
+   bool
+   isOrdered() const;
 
    //@}
 
@@ -1049,7 +1055,9 @@ public:
     *
     * @param[in]  Box to attempt to insert into the container.
     */ 
-   bool insert(const Box& box);
+   bool
+   insert(
+      const Box& box);
 
    /*!
     * @brief  Insert a single Box.
@@ -1076,8 +1084,10 @@ public:
     * @param[in] position  Location to begin searching for place to insert Box
     * @param[in] box       Box to attempt to insert into the container
     */
-   Iterator insert ( Iterator position,
-                     const Box& box );
+   Iterator
+   insert(
+      Iterator position,
+      const Box& box );
 
    /*!
     * @brief  Insert all Boxes within a range.
@@ -1089,8 +1099,10 @@ public:
     * @param[in] first
     * @param[in] last
     */
-   void insert ( ConstIterator first,
-                 ConstIterator last );
+   void
+   insert(
+      ConstIterator first,
+      ConstIterator last );
 
    //@} 
 
@@ -1109,7 +1121,9 @@ public:
     * @param[in]  box  Box serving as key for the find operation.  Only
     *                  its BoxId is compared to members of this container. 
     */  
-   Iterator find(const Box& box) const;
+   Iterator
+   find(
+      const Box& box) const;
 
    /*!
     * @brief  Get lower bound Iterator for a given Box.
@@ -1122,7 +1136,9 @@ public:
     *
     * @param[in]  box  Box serving as key for the lower bound search.
     */
-   Iterator lowerBound(const Box& box) const;
+   Iterator
+   lowerBound(
+      const Box& box) const;
 
    /*!
     * @brief  Get upper bound Iterator for a given Box.
@@ -1136,7 +1152,9 @@ public:
     *
     * @param[in]  box  Box serving as key for the upper bound search.
     */
-   Iterator upperBound(const Box& box) const;
+   Iterator
+   upperBound(
+      const Box& box) const;
 
    /*!
     * @brief  Erase a Box from the container.
@@ -1150,7 +1168,9 @@ public:
     *
     * @param[in]  box  Box serving as key to find a Box to be erased.
     */
-   int erase(const Box& box);
+   int
+   erase(
+      const Box& box);
 
    // The following may only be called on ordered containers.
 
@@ -1346,16 +1366,16 @@ private:
     *                            needed.  
     * @param[in]  min_number  An assertion failure will occur if not positive
     */
-   void makeTree(const GridGeometry* grid_geometry = NULL,
-                 const int min_number = 10) const;
+   void
+   makeTree(
+      const GridGeometry* grid_geometry = NULL,
+      const int min_number = 10) const;
 
    /*!
     * @brief Query if the search tree representation exists.
     */
-   bool hasTree() const
-   {
-      return (d_tree.get() != 0);
-   }
+   bool
+   hasTree() const;
 
    /*!
     * @brief Query if this BoxContainer contains any Box with the given

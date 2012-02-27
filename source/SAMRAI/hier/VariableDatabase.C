@@ -49,7 +49,8 @@ VariableDatabase::s_shutdown_handler(
  *************************************************************************
  */
 
-VariableDatabase *VariableDatabase::getDatabase()
+VariableDatabase*
+VariableDatabase::getDatabase()
 {
    if (!s_variable_database_instance) {
       s_variable_database_instance = new VariableDatabase();
@@ -57,7 +58,8 @@ VariableDatabase *VariableDatabase::getDatabase()
    return s_variable_database_instance;
 }
 
-void VariableDatabase::shutdownCallback()
+void
+VariableDatabase::shutdownCallback()
 {
    if (s_variable_database_instance) {
       delete s_variable_database_instance;
@@ -90,7 +92,8 @@ VariableDatabase::~VariableDatabase()
 {
 }
 
-void VariableDatabase::registerSingletonSubclassInstance(
+void
+VariableDatabase::registerSingletonSubclassInstance(
    VariableDatabase* subclass_instance)
 {
    if (!s_variable_database_instance) {
@@ -100,6 +103,69 @@ void VariableDatabase::registerSingletonSubclassInstance(
          << "Attemptng to set Singleton instance to subclass instance,"
          << "\n but Singleton instance already set." << std::endl);
    }
+}
+
+/*
+ *************************************************************************
+ *
+ * Accessory functions to retrieve data members.
+ *
+ *************************************************************************
+ */
+
+boost::shared_ptr<PatchDescriptor>
+VariableDatabase::getPatchDescriptor() const
+{
+   return d_patch_descriptor;
+}
+
+int
+VariableDatabase::getNumberOfRegisteredPatchDataIndices() const
+{
+   return d_num_registered_patch_data_ids;
+}
+
+int
+VariableDatabase::getNumberOfRegisteredVariableContexts() const
+{
+   // currently, we do not allow removal of variable contexts
+   // so this suffices
+   return d_max_context_id + 1;
+}
+
+/*
+ *************************************************************************
+ *
+ * Accessory functions to manage patch data ids for restart.
+ *
+ *************************************************************************
+ */
+
+ComponentSelector
+VariableDatabase::getPatchDataRestartTable() const
+{
+   return d_patchdata_restart_table;
+}
+
+bool
+VariableDatabase::isPatchDataRegisteredForRestart(
+   int index) const
+{
+   return d_patchdata_restart_table.isSet(index);
+}
+
+void
+VariableDatabase::registerPatchDataForRestart(
+   int index)
+{
+   d_patchdata_restart_table.setFlag(index);
+}
+
+void
+VariableDatabase::unregisterPatchDataForRestart(
+   int index)
+{
+   d_patchdata_restart_table.clrFlag(index);
 }
 
 /*
@@ -142,7 +208,8 @@ VariableDatabase::getContext(
  *************************************************************************
  */
 
-bool VariableDatabase::checkContextExists(
+bool
+VariableDatabase::checkContextExists(
    const std::string& name) const
 {
    int ctxt_id = getContextId_Private(name);
@@ -159,7 +226,8 @@ bool VariableDatabase::checkContextExists(
  *************************************************************************
  */
 
-void VariableDatabase::addVariable(
+void
+VariableDatabase::addVariable(
    const boost::shared_ptr<Variable>& variable)
 {
    TBOX_ASSERT(variable);
@@ -210,7 +278,8 @@ VariableDatabase::getVariable(
  *************************************************************************
  */
 
-bool VariableDatabase::checkVariableExists(
+bool
+VariableDatabase::checkVariableExists(
    const std::string& name) const
 {
    int var_id = getVariableId(name);
@@ -232,7 +301,8 @@ bool VariableDatabase::checkVariableExists(
  *************************************************************************
  */
 
-int VariableDatabase::registerClonedPatchDataIndex(
+int
+VariableDatabase::registerClonedPatchDataIndex(
    const boost::shared_ptr<Variable>& variable,
    int old_id)
 {
@@ -293,7 +363,8 @@ int VariableDatabase::registerClonedPatchDataIndex(
  *************************************************************************
  */
 
-int VariableDatabase::registerPatchDataIndex(
+int
+VariableDatabase::registerPatchDataIndex(
    const boost::shared_ptr<Variable>& variable,
    int data_id)
 {
@@ -348,7 +419,8 @@ int VariableDatabase::registerPatchDataIndex(
  *************************************************************************
  */
 
-void VariableDatabase::removePatchDataIndex(
+void
+VariableDatabase::removePatchDataIndex(
    int data_id)
 {
 
@@ -400,7 +472,8 @@ void VariableDatabase::removePatchDataIndex(
  *************************************************************************
  */
 
-bool VariableDatabase::checkVariablePatchDataIndex(
+bool
+VariableDatabase::checkVariablePatchDataIndex(
    const boost::shared_ptr<Variable>& variable,
    int data_id) const
 {
@@ -434,7 +507,8 @@ bool VariableDatabase::checkVariablePatchDataIndex(
  *************************************************************************
  */
 
-bool VariableDatabase::checkVariablePatchDataIndexType(
+bool
+VariableDatabase::checkVariablePatchDataIndexType(
    const boost::shared_ptr<Variable>& variable,
    int data_id) const
 {
@@ -468,7 +542,8 @@ bool VariableDatabase::checkVariablePatchDataIndexType(
  *************************************************************************
  */
 
-int VariableDatabase::registerVariableAndContext(
+int
+VariableDatabase::registerVariableAndContext(
    const boost::shared_ptr<Variable>& variable,
    const boost::shared_ptr<VariableContext>& context,
    const IntVector& ghosts)
@@ -495,7 +570,8 @@ int VariableDatabase::registerVariableAndContext(
  *************************************************************************
  */
 
-int VariableDatabase::mapVariableAndContextToIndex(
+int
+VariableDatabase::mapVariableAndContextToIndex(
    const boost::shared_ptr<Variable>& variable,
    const boost::shared_ptr<VariableContext>& context) const
 {
@@ -528,7 +604,8 @@ int VariableDatabase::mapVariableAndContextToIndex(
  *************************************************************************
  */
 
-bool VariableDatabase::mapIndexToVariable(
+bool
+VariableDatabase::mapIndexToVariable(
    const int index,
    boost::shared_ptr<Variable>& variable) const
 {
@@ -551,7 +628,8 @@ bool VariableDatabase::mapIndexToVariable(
  *************************************************************************
  */
 
-bool VariableDatabase::mapIndexToVariableAndContext(
+bool
+VariableDatabase::mapIndexToVariableAndContext(
    const int index,
    boost::shared_ptr<Variable>& variable,
    boost::shared_ptr<VariableContext>& context) const
@@ -595,7 +673,8 @@ bool VariableDatabase::mapIndexToVariableAndContext(
  *************************************************************************
  */
 
-void VariableDatabase::printClassData(
+void
+VariableDatabase::printClassData(
    std::ostream& os,
    bool print_only_user_defined_variables) const
 {
@@ -707,7 +786,8 @@ void VariableDatabase::printClassData(
  *************************************************************************
  */
 
-int VariableDatabase::registerInternalSAMRAIVariable(
+int
+VariableDatabase::registerInternalSAMRAIVariable(
    const boost::shared_ptr<Variable>& variable,
    const IntVector& ghosts)
 {
@@ -752,7 +832,8 @@ int VariableDatabase::registerInternalSAMRAIVariable(
  *************************************************************************
  */
 
-void VariableDatabase::removeInternalSAMRAIVariablePatchDataIndex(
+void
+VariableDatabase::removeInternalSAMRAIVariablePatchDataIndex(
    int data_id)
 {
    if ((data_id >= 0) && (data_id <= d_max_descriptor_id)) {
@@ -775,7 +856,8 @@ void VariableDatabase::removeInternalSAMRAIVariablePatchDataIndex(
  *************************************************************************
  */
 
-int VariableDatabase::getVariableId(
+int
+VariableDatabase::getVariableId(
    const std::string& name) const
 {
    int ret_id = idUndefined();
@@ -802,7 +884,8 @@ int VariableDatabase::getVariableId(
  *************************************************************************
  */
 
-int VariableDatabase::getContextId_Private(
+int
+VariableDatabase::getContextId_Private(
    const std::string& name) const
 {
    int ret_id = idUndefined();
@@ -820,7 +903,8 @@ int VariableDatabase::getContextId_Private(
    return ret_id;
 }
 
-void VariableDatabase::addContext_Private(
+void
+VariableDatabase::addContext_Private(
    const boost::shared_ptr<VariableContext>& context)
 {
    int new_id = context->getIndex();
@@ -845,7 +929,8 @@ void VariableDatabase::addContext_Private(
  *************************************************************************
  */
 
-void VariableDatabase::addVariablePatchDataIndexPairToDatabase_Private(
+void
+VariableDatabase::addVariablePatchDataIndexPairToDatabase_Private(
    const boost::shared_ptr<Variable>& variable,
    int data_id,
    bool user_variable)
@@ -929,7 +1014,8 @@ VariableDatabase::removeVariable(
  *************************************************************************
  */
 
-bool VariableDatabase::addVariable_Private(
+bool
+VariableDatabase::addVariable_Private(
    const boost::shared_ptr<Variable>& variable,
    bool user_variable)
 {
@@ -1017,7 +1103,8 @@ bool VariableDatabase::addVariable_Private(
  *************************************************************************
  */
 
-int VariableDatabase::registerVariableAndContext_Private(
+int
+VariableDatabase::registerVariableAndContext_Private(
    const boost::shared_ptr<Variable>& variable,
    const boost::shared_ptr<VariableContext>& context,
    const IntVector& ghosts,

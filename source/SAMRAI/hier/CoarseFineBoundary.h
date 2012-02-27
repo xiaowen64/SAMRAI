@@ -14,6 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Dimension.h"
+#include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 
@@ -293,4 +294,7 @@ private:
 }
 }
 
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/hier/CoarseFineBoundary.I"
+#endif
 #endif

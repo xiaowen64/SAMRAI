@@ -741,9 +741,7 @@ protected:
     * context identifier.  This routine is protected to allow subclasses
     * to be consistent with this database class.
     */
-   static int idUndefined() {
-      return -1;
-   }
+   static int idUndefined();
 
    /**
     * @brief Return integer identifier for first variable found matching given

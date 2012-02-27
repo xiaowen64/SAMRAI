@@ -43,7 +43,8 @@ int MappingConnectorAlgorithm::s_operation_mpi_tag = 0;
  * with reused tags anyway.
  */
 
-tbox::SAMRAI_MPI MappingConnectorAlgorithm::s_class_mpi(tbox::SAMRAI_MPI::commNull);
+tbox::SAMRAI_MPI MappingConnectorAlgorithm::s_class_mpi(
+   tbox::SAMRAI_MPI::commNull);
 
 tbox::StartupShutdownManager::Handler
 MappingConnectorAlgorithm::s_initialize_finalize_handler(
@@ -77,7 +78,8 @@ MappingConnectorAlgorithm::~MappingConnectorAlgorithm()
  ***********************************************************************
  ***********************************************************************
  */
-void MappingConnectorAlgorithm::setSanityCheckMethodPreconditions(
+void
+MappingConnectorAlgorithm::setSanityCheckMethodPreconditions(
    bool do_check)
 {
    d_sanity_check_inputs = do_check;
@@ -87,7 +89,8 @@ void MappingConnectorAlgorithm::setSanityCheckMethodPreconditions(
  ***********************************************************************
  ***********************************************************************
  */
-void MappingConnectorAlgorithm::setSanityCheckMethodPostconditions(
+void
+MappingConnectorAlgorithm::setSanityCheckMethodPostconditions(
    bool do_check)
 {
    d_sanity_check_outputs = do_check;
@@ -98,7 +101,8 @@ void MappingConnectorAlgorithm::setSanityCheckMethodPostconditions(
  ***********************************************************************
  */
 
-void MappingConnectorAlgorithm::modify(
+void
+MappingConnectorAlgorithm::modify(
    Connector& anchor_to_mapped,
    Connector& mapped_to_anchor,
    const Connector& old_to_new,
@@ -229,7 +233,8 @@ void MappingConnectorAlgorithm::modify(
  *****************************************************************************
  */
 
-void MappingConnectorAlgorithm::modify(
+void
+MappingConnectorAlgorithm::modify(
    Connector& anchor_to_mapped,
    Connector& mapped_to_anchor,
    const Connector& old_to_new,
@@ -342,7 +347,8 @@ void MappingConnectorAlgorithm::modify(
  *****************************************************************************
  */
 
-void MappingConnectorAlgorithm::modify(
+void
+MappingConnectorAlgorithm::modify(
    Connector& anchor_to_mapped,
    const Connector& old_to_new,
    BoxLevel* mutable_new,
@@ -470,7 +476,8 @@ void MappingConnectorAlgorithm::modify(
  ***********************************************************************
  */
 
-void MappingConnectorAlgorithm::privateModify(
+void
+MappingConnectorAlgorithm::privateModify(
    Connector& anchor_to_mapped,
    Connector& mapped_to_anchor,
    const Connector& old_to_new,
@@ -800,7 +807,8 @@ void MappingConnectorAlgorithm::privateModify(
  ***********************************************************************
  */
 
-void MappingConnectorAlgorithm::privateModify_checkParameters(
+void
+MappingConnectorAlgorithm::privateModify_checkParameters(
    const Connector& anchor_to_mapped,
    const Connector& mapped_to_anchor,
    const Connector& old_to_new,
@@ -904,7 +912,8 @@ void MappingConnectorAlgorithm::privateModify_checkParameters(
  * information in message buffers.
  ***********************************************************************
  */
-void MappingConnectorAlgorithm::privateModify_removeAndCache(
+void
+MappingConnectorAlgorithm::privateModify_removeAndCache(
    std::map<int, std::vector<int> >& neighbor_removal_mesg,
    Connector& anchor_to_new,
    Connector* new_to_anchor,
@@ -1040,7 +1049,8 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
  * started asap to maximize communication and computation.
  ***********************************************************************
  */
-void MappingConnectorAlgorithm::privateModify_discoverAndSend(
+void
+MappingConnectorAlgorithm::privateModify_discoverAndSend(
    std::map<int, std::vector<int> >& neighbor_removal_mesg,
    Connector& anchor_to_new,
    Connector* new_to_anchor,
@@ -1327,7 +1337,8 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
  *
  ***********************************************************************
  */
-void MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
+void
+MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const int owner_rank,
    BoxContainer& visible_base_nabrs,
    BoxContainer::Iterator& base_ni,
@@ -1464,7 +1475,8 @@ void MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
  ***********************************************************************
  */
 
-void MappingConnectorAlgorithm::assertMappingValidity(
+void
+MappingConnectorAlgorithm::assertMappingValidity(
    const Connector& connector,
    char is_local_map) const
 {
@@ -1486,7 +1498,8 @@ void MappingConnectorAlgorithm::assertMappingValidity(
  ***********************************************************************
  */
 
-size_t MappingConnectorAlgorithm::findMappingErrors(
+size_t
+MappingConnectorAlgorithm::findMappingErrors(
    const Connector& connector,
    char is_local_map) const
 {
@@ -1634,7 +1647,8 @@ size_t MappingConnectorAlgorithm::findMappingErrors(
  ***********************************************************************
  */
 
-void MappingConnectorAlgorithm::initializeCallback()
+void
+MappingConnectorAlgorithm::initializeCallback()
 {
    /*
     * While we figure out how to use multiple communicators in SAMRAI,
@@ -1691,7 +1705,8 @@ void MappingConnectorAlgorithm::initializeCallback()
  ***************************************************************************
  */
 
-void MappingConnectorAlgorithm::finalizeCallback()
+void
+MappingConnectorAlgorithm::finalizeCallback()
 {
    t_modify.reset();
    t_modify_setup_comm.reset();

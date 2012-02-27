@@ -12,6 +12,10 @@
 
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/hier/RealBoxConstIterator.I"
+#endif
+
 namespace SAMRAI {
 namespace hier {
 
@@ -30,50 +34,14 @@ RealBoxConstIterator::~RealBoxConstIterator()
    d_mapped_boxes = NULL;
 }
 
-bool RealBoxConstIterator::isValid() const
-{
-   return d_mapped_boxes != NULL &&
-          d_ni != d_mapped_boxes->end() &&
-          !d_ni->isPeriodicImage();
-}
-
-RealBoxConstIterator& RealBoxConstIterator::operator = (
-   const RealBoxConstIterator& r)
-{
-   d_mapped_boxes = r.d_mapped_boxes;
-   d_ni = r.d_ni;
-   return *this;
-}
-
-const Box& RealBoxConstIterator::operator * () const
-{
-   return *d_ni;
-}
-
-const Box *RealBoxConstIterator::operator -> () const
-{
-   return &(*d_ni);
-}
-
-bool RealBoxConstIterator::operator == (
-   const RealBoxConstIterator& r) const
-{
-   return d_mapped_boxes == r.d_mapped_boxes && d_ni == r.d_ni;
-}
-
-bool RealBoxConstIterator::operator != (
-   const RealBoxConstIterator& r) const
-{
-   return d_mapped_boxes != r.d_mapped_boxes || d_ni != r.d_ni;
-}
-
 /*
  ****************************************************************************
  * Pre-increment operator.
  ****************************************************************************
  */
 
-RealBoxConstIterator& RealBoxConstIterator::operator ++ ()
+RealBoxConstIterator&
+RealBoxConstIterator::operator ++ ()
 {
    do {
       ++d_ni;
@@ -87,7 +55,8 @@ RealBoxConstIterator& RealBoxConstIterator::operator ++ ()
  ****************************************************************************
  */
 
-RealBoxConstIterator RealBoxConstIterator::operator ++ (
+RealBoxConstIterator
+RealBoxConstIterator::operator ++ (
    int)
 {
    RealBoxConstIterator saved = *this;

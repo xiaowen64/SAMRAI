@@ -16,6 +16,10 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/hier/BoundaryBoxUtils.I"
+#endif
+
 namespace SAMRAI {
 namespace hier {
 
@@ -37,24 +41,8 @@ BoundaryBoxUtils::~BoundaryBoxUtils()
 {
 }
 
-void BoundaryBoxUtils::setBoundaryBox(
-   const BoundaryBox& bbox)
-{
-   d_bbox = bbox;
-   computeOutwardShift();
-}
-
-const BoundaryBox& BoundaryBoxUtils::getBoundaryBox() const
-{
-   return d_bbox;
-}
-
-const IntVector& BoundaryBoxUtils::getOutwardShift() const
-{
-   return d_outward;
-}
-
-void BoundaryBoxUtils::computeOutwardShift()
+void
+BoundaryBoxUtils::computeOutwardShift()
 {
 
    const tbox::Dimension& dim(d_bbox.getDim());
@@ -124,7 +112,8 @@ void BoundaryBoxUtils::computeOutwardShift()
    }
 }
 
-void BoundaryBoxUtils::stretchBoxToGhostWidth(
+void
+BoundaryBoxUtils::stretchBoxToGhostWidth(
    Box& box,
    const IntVector& ghost_cell_width) const
 {
@@ -151,7 +140,8 @@ void BoundaryBoxUtils::stretchBoxToGhostWidth(
    }
 }
 
-void BoundaryBoxUtils::extendBoxOutward(
+void
+BoundaryBoxUtils::extendBoxOutward(
    Box& box,
    const IntVector& extension) const
 {
@@ -166,18 +156,14 @@ void BoundaryBoxUtils::extendBoxOutward(
    }
 }
 
-int BoundaryBoxUtils::normalDir() const
-{
-   return d_bbox.getLocationIndex() / 2;
-}
-
 /*
  ************************************************************************
  * Make surface box on boundary using standard boundary box
  ************************************************************************
  */
 
-Box BoundaryBoxUtils::getSurfaceBoxFromBoundaryBox() const
+Box
+BoundaryBoxUtils::getSurfaceBoxFromBoundaryBox() const
 {
    if (d_bbox.getBoundaryType() != 1) {
       TBOX_ERROR("BoundaryBoxUtils::getSurfaceBoxFromBoundaryBox\n"
@@ -203,7 +189,8 @@ Box BoundaryBoxUtils::getSurfaceBoxFromBoundaryBox() const
  ************************************************************************
  */
 
-BoundaryBox BoundaryBoxUtils::trimBoundaryBox(
+BoundaryBox
+BoundaryBoxUtils::trimBoundaryBox(
    const Box& limit_box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(d_bbox, limit_box);

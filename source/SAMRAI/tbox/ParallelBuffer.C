@@ -172,7 +172,7 @@ void ParallelBuffer::copyToBuffer(
 
    if (d_buffer_ptr + length > d_buffer_size) {
       const int new_size =
-         tbox::MathUtilities<int>::Max(d_buffer_ptr + length, 2 * d_buffer_size);
+         MathUtilities<int>::Max(d_buffer_ptr + length, 2 * d_buffer_size);
       char* new_buffer = new char[new_size];
 
       if (d_buffer_ptr > 0) {

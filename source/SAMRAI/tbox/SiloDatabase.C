@@ -781,7 +781,7 @@ Array<DatabaseBox> SiloDatabase::getDatabaseBoxArray(
        * This preserves old behavior where boxes can be different dims but is
        * likely not supported anywhere else in the library.
        */
-      boxArray[i].setDim(tbox::Dimension((unsigned short)values[i]));
+      boxArray[i].setDim(Dimension((unsigned short)values[i]));
       for (int d = 0; d < boxArray[i].d_data.d_dimension; d++) {
          boxArray[i].d_data.d_lo[d] = values[offset];
          boxArray[i].d_data.d_hi[d] = values[offset + ca->elemlengths[1]];

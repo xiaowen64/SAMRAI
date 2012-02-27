@@ -14,7 +14,7 @@ namespace SAMRAI {
 namespace tbox {
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Dimension& DatabaseBox::getDim() const
+const Dimension& DatabaseBox::getDim() const
 {
    return d_dim;
 }
@@ -36,11 +36,11 @@ DatabaseBox& DatabaseBox::operator = (
 
 SAMRAI_INLINE_KEYWORD
 void DatabaseBox::setDim(
-   const tbox::Dimension& dim)
+   const Dimension& dim)
 {
    TBOX_DIM_ASSERT_CHECK_DIM(dim);
    TBOX_ASSERT(dim.getValue() <= DatabaseBox_MAX_DIM);
-   d_dim = tbox::Dimension(dim);
+   d_dim = Dimension(dim);
    d_data.d_dimension = d_dim.getValue();
 }
 

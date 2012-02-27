@@ -14,17 +14,17 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-PatchDataFactory::PatchDataFactory(
-   const IntVector& ghosts):
-   d_ghosts(ghosts)
+const tbox::Dimension&
+PatchDataFactory::getDim() const
 {
-   TBOX_ASSERT(ghosts.min() >= 0);
+   return d_ghosts.getDim();
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Dimension& PatchDataFactory::getDim() const
+const IntVector&
+PatchDataFactory::getGhostCellWidth() const
 {
-   return d_ghosts.getDim();
+   return d_ghosts;
 }
 
 }

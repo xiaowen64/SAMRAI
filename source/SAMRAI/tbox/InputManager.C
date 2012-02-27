@@ -121,7 +121,7 @@ void InputManager::parseInputFile(
    const boost::shared_ptr<InputDatabase>& db)
 {
    FILE* fstream = NULL;
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getRank() == 0) {
       fstream = fopen(filename.c_str(), "r");
    }

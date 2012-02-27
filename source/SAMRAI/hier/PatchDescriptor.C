@@ -78,7 +78,8 @@ PatchDescriptor::~PatchDescriptor()
  *************************************************************************
  */
 
-int PatchDescriptor::definePatchDataComponent(
+int
+PatchDescriptor::definePatchDataComponent(
    const std::string& name,
    const boost::shared_ptr<PatchDataFactory>& factory)
 {
@@ -183,7 +184,8 @@ PatchDescriptor::mapNameToIndex(
  *************************************************************************
  */
 
-void PatchDescriptor::printClassData(
+void
+PatchDescriptor::printClassData(
    std::ostream& stream) const
 {
    stream << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
@@ -227,19 +229,6 @@ PatchDescriptor::getMaxGhostWidth(
       }
    }
    return max_gcw;
-}
-
-/*
- *************************************************************************
- * Set the mininum value to be returned by getMaxGhostWidth().
- *************************************************************************
- */
-
-void
-PatchDescriptor::setMinGhostWidth(
-   const IntVector& min_value)
-{
-   d_min_gcw[min_value.getDim().getValue() - 1] = min_value;
 }
 
 }

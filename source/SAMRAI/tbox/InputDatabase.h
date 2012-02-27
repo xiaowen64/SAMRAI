@@ -29,7 +29,7 @@ namespace tbox {
  * to constructors for problem setup.
  *
  */
-typedef tbox::MemoryDatabase InputDatabase;
+typedef MemoryDatabase InputDatabase;
 
 }
 }

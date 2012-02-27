@@ -58,31 +58,12 @@ BoxLevelConnectorUtils::BoxLevelConnectorUtils():
 
 /*
  ***********************************************************************
- ***********************************************************************
- */
-void BoxLevelConnectorUtils::setSanityCheckMethodPreconditions(
-   bool do_check)
-{
-   d_sanity_check_precond = do_check;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void BoxLevelConnectorUtils::setSanityCheckMethodPostconditions(
-   bool do_check)
-{
-   d_sanity_check_postcond = do_check;
-}
-
-/*
- ***********************************************************************
  * Given the base and head levels, determine whether the base nests
  * nests in the head.
  ***********************************************************************
  */
-bool BoxLevelConnectorUtils::baseNestsInHead(
+bool
+BoxLevelConnectorUtils::baseNestsInHead(
    bool* locally_nests,
    const BoxLevel& base,
    const BoxLevel& head,
@@ -158,7 +139,8 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
  * the domain.
  ***********************************************************************
  */
-bool BoxLevelConnectorUtils::baseNestsInHead(
+bool
+BoxLevelConnectorUtils::baseNestsInHead(
    bool* locally_nests,
    const Connector& connector,
    const IntVector& base_swell,
@@ -349,7 +331,8 @@ bool BoxLevelConnectorUtils::baseNestsInHead(
  * algorithms.
  ***********************************************************************
  */
-void BoxLevelConnectorUtils::makeSortingMap(
+void
+BoxLevelConnectorUtils::makeSortingMap(
    BoxLevel& sorted_mapped_box_level,
    Connector& output_map,
    const BoxLevel& unsorted_mapped_box_level,
@@ -470,7 +453,8 @@ void BoxLevelConnectorUtils::makeSortingMap(
  * for use when sorting integers using the C-library qsort
  *************************************************************************
  */
-int BoxLevelConnectorUtils::qsortBoxCompare(
+int
+BoxLevelConnectorUtils::qsortBoxCompare(
    const void* v,
    const void* w)
 {
@@ -500,54 +484,6 @@ int BoxLevelConnectorUtils::qsortBoxCompare(
    }
 
    return 0;
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void BoxLevelConnectorUtils::computeExternalParts(
-   BoxLevel& external,
-   Connector& input_to_external,
-   const Connector& input_to_reference,
-   const IntVector& nesting_width,
-   const BoxContainer& domain) const
-{
-   t_compute_external_parts->start();
-
-   computeInternalOrExternalParts(
-      external,
-      input_to_external,
-      'e',
-      input_to_reference,
-      nesting_width,
-      domain);
-
-   t_compute_external_parts->stop();
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void BoxLevelConnectorUtils::computeInternalParts(
-   BoxLevel& internal,
-   Connector& input_to_internal,
-   const Connector& input_to_reference,
-   const IntVector& nesting_width,
-   const BoxContainer& domain) const
-{
-   t_compute_internal_parts->start();
-
-   computeInternalOrExternalParts(
-      internal,
-      input_to_internal,
-      'i',
-      input_to_reference,
-      nesting_width,
-      domain);
-
-   t_compute_internal_parts->stop();
 }
 
 /*
@@ -606,7 +542,8 @@ void BoxLevelConnectorUtils::computeInternalParts(
  *
  *************************************************************************
  */
-void BoxLevelConnectorUtils::computeInternalOrExternalParts(
+void
+BoxLevelConnectorUtils::computeInternalOrExternalParts(
    BoxLevel& parts,
    Connector& input_to_parts,
    char internal_or_external,
@@ -910,7 +847,8 @@ void BoxLevelConnectorUtils::computeInternalOrExternalParts(
  * R^1 means grown boxes in R by a width of one.
  *************************************************************************
  */
-void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
+void
+BoxLevelConnectorUtils::computeBoxesAroundBoundary(
    BoxContainer& boundary,
    const IntVector& refinement_ratio,
    const boost::shared_ptr<const GridGeometry>& grid_geometry,
@@ -1108,7 +1046,8 @@ void BoxLevelConnectorUtils::computeBoxesAroundBoundary(
  *************************************************************************
  */
 
-void BoxLevelConnectorUtils::makeRemainderMap(
+void
+BoxLevelConnectorUtils::makeRemainderMap(
    BoxLevel& remainder,
    Connector& orig_to_remainder,
    const Connector& orig_to_rejection) const
@@ -1235,7 +1174,8 @@ void BoxLevelConnectorUtils::makeRemainderMap(
  *************************************************************************
  */
 
-void BoxLevelConnectorUtils::addPeriodicImages(
+void
+BoxLevelConnectorUtils::addPeriodicImages(
    BoxLevel& mapped_box_level,
    const BoxContainer& domain_search_tree,
    const IntVector& threshold_distance) const
@@ -1294,7 +1234,8 @@ void BoxLevelConnectorUtils::addPeriodicImages(
  *************************************************************************
  */
 
-void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
+void
+BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
    BoxLevel& mapped_box_level,
    Connector& mapped_box_level_to_anchor,
    Connector& anchor_to_mapped_box_level,
@@ -1513,42 +1454,6 @@ void BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
             << mapped_box_level_to_anchor.format("ERR-> ", 3));
       }
    }
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void BoxLevelConnectorUtils::initializeCallback()
-{
-   t_make_sorting_map = tbox::TimerManager::getManager()->
-      getTimer("BoxLevelConnectorUtils::makeSortingMap()");
-   t_compute_external_parts = tbox::TimerManager::getManager()->
-      getTimer("BoxLevelConnectorUtils::computeExternalParts()");
-   t_compute_external_parts_intersection =
-      tbox::TimerManager::getManager()->
-      getTimer("BoxLevelConnectorUtils::computeExternalParts()_intersection");
-   t_compute_internal_parts = tbox::TimerManager::getManager()->
-      getTimer("BoxLevelConnectorUtils::computeInternalParts()");
-   t_compute_internal_parts_intersection =
-      tbox::TimerManager::getManager()->
-      getTimer("BoxLevelConnectorUtils::computeInternalParts()_intersection");
-}
-
-/*
- ***************************************************************************
- * * Release static timers.  To be called by shutdown registry to make sure
- * * memory for timers does not leak.
- ***************************************************************************
- */
-
-void BoxLevelConnectorUtils::finalizeCallback()
-{
-   t_make_sorting_map.reset();
-   t_compute_external_parts.reset();
-   t_compute_external_parts_intersection.reset();
-   t_compute_internal_parts.reset();
-   t_compute_internal_parts_intersection.reset();
 }
 
 }

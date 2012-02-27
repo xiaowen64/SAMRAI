@@ -53,7 +53,7 @@ std::ostream plog(&plog_buffer);
 
 void PIO::initialize()
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    mpi.Comm_rank(&s_rank);
    s_filestream = NULL;
 
@@ -70,7 +70,7 @@ void PIO::initialize()
     * Initialize the error parallel output stream
     */
 
-   std::string buffer = "P=" + tbox::Utilities::processorToString(s_rank) + ":";
+   std::string buffer = "P=" + Utilities::processorToString(s_rank) + ":";
 
    perr_buffer.setActive(true);
    perr_buffer.setPrefixString(buffer);
@@ -175,7 +175,7 @@ void PIO::logAllNodes(
     */
 
    std::string full_filename = filename + "."
-      + tbox::Utilities::processorToString(s_rank);
+      + Utilities::processorToString(s_rank);
    s_filestream = new std::ofstream(full_filename.c_str());
 
    if (!(*s_filestream)) {

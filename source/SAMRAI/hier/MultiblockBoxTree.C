@@ -18,6 +18,10 @@
 
 #include <boost/make_shared.hpp>
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/hier/MultiblockBoxTree.I"
+#endif
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -72,32 +76,11 @@ MultiblockBoxTree::~MultiblockBoxTree()
 
 /*
  *************************************************************************
- * Clear all data
- *************************************************************************
- */
-void MultiblockBoxTree::clear()
-{
-   d_single_block_trees.clear();
-}
-
-/*
- *************************************************************************
- * Tell whether any Box has the given BlockId
- *************************************************************************
- */
-bool MultiblockBoxTree::hasBoxInBlock(
-   const BlockId& block_id) const
-{
-   return d_single_block_trees.find(block_id) !=
-          d_single_block_trees.end();
-}
-
-/*
- *************************************************************************
  * Tell if any Box in the tree intersects the given Box
  *************************************************************************
  */
-bool MultiblockBoxTree::hasOverlap(
+bool
+MultiblockBoxTree::hasOverlap(
    const Box& box) const
 {
    if (getNumberBlocksInTree() != 1) {
@@ -117,7 +100,8 @@ bool MultiblockBoxTree::hasOverlap(
  * Fills the vector with pointers to Boxes that intersect the arguement
  **************************************************************************
  */
-void MultiblockBoxTree::findOverlapBoxes(
+void
+MultiblockBoxTree::findOverlapBoxes(
    std::vector<const Box *>& overlap_boxes,
    const Box& box,
    const IntVector& refinement_ratio,
@@ -179,7 +163,8 @@ void MultiblockBoxTree::findOverlapBoxes(
  * Fills the container with pointers to Boxes that intersect the arguement
  **************************************************************************
  */
-void MultiblockBoxTree::findOverlapBoxes(
+void
+MultiblockBoxTree::findOverlapBoxes(
    BoxContainer& overlap_boxes,
    const Box& box,
    const IntVector& refinement_ratio,
@@ -241,7 +226,8 @@ void MultiblockBoxTree::findOverlapBoxes(
  * Fills the container with pointers to Boxes that intersect the arguement
  **************************************************************************
  */
-void MultiblockBoxTree::findOverlapBoxes(
+void
+MultiblockBoxTree::findOverlapBoxes(
    BoxContainer& overlap_boxes,
    const Box& box) const
 {
@@ -261,7 +247,8 @@ void MultiblockBoxTree::findOverlapBoxes(
  * Fills the vector with pointers to Boxes that intersect the arguement
  **************************************************************************
  */
-void MultiblockBoxTree::findOverlapBoxes(
+void
+MultiblockBoxTree::findOverlapBoxes(
    std::vector<const Box *>& overlap_boxes,
    const Box& box) const
 {

@@ -71,7 +71,8 @@ PersistentOverlapConnectors::~PersistentOverlapConnectors()
  * Create Connector using global search for edges.
  ************************************************************************
  */
-const Connector& PersistentOverlapConnectors::createConnector(
+const Connector&
+PersistentOverlapConnectors::createConnector(
    const BoxLevel& head,
    const IntVector& connector_width)
 {
@@ -106,7 +107,8 @@ const Connector& PersistentOverlapConnectors::createConnector(
  * Create Connector with user-provided for edges.
  ************************************************************************
  */
-const Connector& PersistentOverlapConnectors::createConnector(
+const Connector&
+PersistentOverlapConnectors::createConnector(
    const BoxLevel& head,
    const IntVector& connector_width,
    const Connector& relationships)
@@ -156,7 +158,8 @@ const Connector& PersistentOverlapConnectors::createConnector(
  * Cache the user-provided Connector.
  ************************************************************************
  */
-void PersistentOverlapConnectors::cacheConnector(
+void
+PersistentOverlapConnectors::cacheConnector(
    const BoxLevel& head,
    Connector* connector)
 {
@@ -204,7 +207,8 @@ void PersistentOverlapConnectors::cacheConnector(
  *
  ************************************************************************
  */
-const Connector& PersistentOverlapConnectors::findConnector(
+const Connector&
+PersistentOverlapConnectors::findConnector(
    const BoxLevel& head,
    const IntVector& min_connector_width,
    bool exact_width_only)
@@ -313,7 +317,8 @@ const Connector& PersistentOverlapConnectors::findConnector(
  *
  ************************************************************************
  */
-const Connector& PersistentOverlapConnectors::findOrCreateConnector(
+const Connector&
+PersistentOverlapConnectors::findOrCreateConnector(
    const BoxLevel& head,
    const IntVector& min_connector_width,
    bool exact_width_only)
@@ -420,7 +425,8 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
  *
  ************************************************************************
  */
-bool PersistentOverlapConnectors::hasConnector(
+bool
+PersistentOverlapConnectors::hasConnector(
    const BoxLevel& head,
    const IntVector& min_connector_width,
    bool exact_width_only) const
@@ -448,7 +454,8 @@ bool PersistentOverlapConnectors::hasConnector(
  *
  ************************************************************************
  */
-void PersistentOverlapConnectors::clear()
+void
+PersistentOverlapConnectors::clear()
 {
    if (d_cons_from_me.empty() && d_cons_to_me.empty()) {
       return;

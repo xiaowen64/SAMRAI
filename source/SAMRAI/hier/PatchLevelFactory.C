@@ -22,11 +22,16 @@
 namespace SAMRAI {
 namespace hier {
 
+PatchLevelFactory::PatchLevelFactory()
+{
+}
+
 PatchLevelFactory::~PatchLevelFactory()
 {
 }
 
-boost::shared_ptr<PatchLevel> PatchLevelFactory::allocate(
+boost::shared_ptr<PatchLevel>
+PatchLevelFactory::allocate(
    const BoxLevel& mapped_box_level,
    const boost::shared_ptr<GridGeometry>& grid_geometry,
    const boost::shared_ptr<PatchDescriptor>& descriptor,
@@ -42,7 +47,8 @@ boost::shared_ptr<PatchLevel> PatchLevelFactory::allocate(
    return pl;
 }
 
-boost::shared_ptr<PatchLevel> PatchLevelFactory::allocate(
+boost::shared_ptr<PatchLevel>
+PatchLevelFactory::allocate(
    const boost::shared_ptr<tbox::Database>& database,
    const boost::shared_ptr<GridGeometry>& grid_geometry,
    const boost::shared_ptr<PatchDescriptor>& descriptor,

@@ -23,6 +23,26 @@ namespace SAMRAI {
 namespace hier {
 
 BoundaryBox::BoundaryBox(
+   const tbox::Dimension& dim):
+   d_dim(dim),
+   d_box(dim),
+   d_bdry_type(-1),
+   d_location_index(-1)
+{
+   TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
+}
+
+BoundaryBox::BoundaryBox(
+   const BoundaryBox& boundary_box):
+   d_dim(boundary_box.getDim()),
+   d_box(boundary_box.d_box),
+   d_bdry_type(boundary_box.d_bdry_type),
+   d_location_index(boundary_box.d_location_index),
+   d_is_mblk_singularity(boundary_box.d_is_mblk_singularity)
+{
+}
+
+BoundaryBox::BoundaryBox(
    const Box& box,
    const int bdry_type,
    const int location_index):
@@ -48,6 +68,33 @@ BoundaryBox::BoundaryBox(
 
 BoundaryBox::~BoundaryBox()
 {
+}
+
+BoundaryBox::BoundaryOrientation
+BoundaryBox::getBoundaryOrientation(
+   const int dir) const
+{
+   TBOX_ASSERT(dir < d_dim.getValue());
+
+   BoundaryLookupTable* blut =
+      BoundaryLookupTable::getLookupTable(d_dim);
+
+   int bdry_dir =
+      blut->getBoundaryDirections(d_bdry_type)[d_location_index](dir);
+
+   TBOX_ASSERT(bdry_dir == -1 || bdry_dir == 0 || bdry_dir == 1);
+
+   BoundaryOrientation retval;
+
+   if (bdry_dir == -1) {
+      retval = LOWER;
+   } else if (bdry_dir == 0) {
+      retval = MIDDLE;
+   } else {
+      retval = UPPER;
+   }
+
+   return retval;
 }
 
 }

@@ -27,7 +27,8 @@ Transformation::getOffset() const
 
 SAMRAI_INLINE_KEYWORD
 Transformation&
-Transformation::operator = (const Transformation& rhs)
+Transformation::operator = (
+   const Transformation& rhs)
 {
    d_rotation = rhs.d_rotation;
    d_offset = rhs.d_offset;
@@ -35,6 +36,23 @@ Transformation::operator = (const Transformation& rhs)
    d_end_block = rhs.d_end_block;
 
    return *this;
+}
+
+/*
+ *************************************************************************
+ *
+ * Rotate an index around the origin.
+ *
+ *************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+void
+Transformation::rotateIndex(
+   Index& index,
+   const RotationIdentifier rotation)
+{
+   rotateIndex(&index[0], index.getDim(), rotation);
 }
 
 }

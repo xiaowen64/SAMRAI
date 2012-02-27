@@ -147,6 +147,8 @@ private:
    explicit PeriodicShiftCatalog(
       const tbox::Dimension& dim);
 
+   ~PeriodicShiftCatalog();
+
    /*!
     * @brief Set the shifts.
     *
@@ -164,8 +166,6 @@ private:
    setShifts(
       const tbox::Dimension& dim,
       const std::vector<IntVector>& shifts);
-
-   ~PeriodicShiftCatalog();
 
    /*!
     * @brief Free the singleton object.

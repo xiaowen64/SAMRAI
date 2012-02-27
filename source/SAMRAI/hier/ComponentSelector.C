@@ -20,8 +20,43 @@
 namespace SAMRAI {
 namespace hier {
 
-bool
-ComponentSelector::any() const {
+ComponentSelector::ComponentSelector(
+   const bool flag):d_max_bit_index(-1)
+{
+   int pd_entries = tbox::SAMRAIManager::getMaxNumberPatchDataEntries();
+   int num_bitset_elements = pd_entries / C_BITSET_SIZE;
+   int num_mod = pd_entries % C_BITSET_SIZE;
+
+   if (num_mod != 0) {
+      num_bitset_elements++;
+   }
+
+   std::bitset<C_BITSET_SIZE> l_bits;
+   d_bit_vector.resize(num_bitset_elements, l_bits);
+
+   if (flag) {
+      // use the bitset "set" operation to set each vector element's
+      // bitset values to "true".
+      for (size_t vi = 0; vi < d_bit_vector.size(); ++vi) {
+         d_bit_vector[vi].set();
+      }
+      d_max_bit_index =
+         (static_cast<int>(d_bit_vector.size()) * C_BITSET_SIZE) - 1;
+   }
+}
+
+ComponentSelector::ComponentSelector(
+   const ComponentSelector& flags)
+{
+   d_bit_vector = flags.d_bit_vector;
+   d_max_bit_index = flags.d_max_bit_index;
+}
+
+ComponentSelector::~ComponentSelector()
+{
+}
+
+bool ComponentSelector::any() const {
    std::vector<std::bitset<C_BITSET_SIZE> >::const_iterator iter;
    bool set = false;
    for (iter = d_bit_vector.begin(); iter != d_bit_vector.end() && !set;
@@ -31,12 +66,8 @@ ComponentSelector::any() const {
    return set;
 }
 
-bool
-ComponentSelector::none() const {
-   return !any();
-}
-
-int ComponentSelector::_findMaxIndex(
+int
+ComponentSelector::_findMaxIndex(
    const std::vector<std::bitset<C_BITSET_SIZE> >& bits) const
 {
    bool bits_set = false;
@@ -55,7 +86,69 @@ int ComponentSelector::_findMaxIndex(
    return max_index;
 }
 
-void ComponentSelector::printClassData(
+ComponentSelector
+ComponentSelector::operator | (
+   const ComponentSelector& flags) const
+{
+   ComponentSelector tmp;
+   for (size_t vi = 0; vi < d_bit_vector.size(); ++vi) {
+      tmp.d_bit_vector[vi] = d_bit_vector[vi] | flags.d_bit_vector[vi];
+   }
+   tmp.d_max_bit_index =
+      tbox::MathUtilities<int>::Max(
+         d_max_bit_index, flags.d_max_bit_index);
+   return tmp;
+}
+
+ComponentSelector
+ComponentSelector::operator & (
+   const ComponentSelector& flags) const
+{
+   ComponentSelector tmp;
+   for (size_t vi = 0; vi < d_bit_vector.size(); ++vi) {
+      tmp.d_bit_vector[vi] = d_bit_vector[vi] & flags.d_bit_vector[vi];
+   }
+   tmp.d_max_bit_index = _findMaxIndex(tmp.d_bit_vector);
+   return tmp;
+}
+
+ComponentSelector
+ComponentSelector::operator ! () const
+{
+   ComponentSelector tmp;
+   for (size_t vi = 0; vi < d_bit_vector.size(); ++vi) {
+      tmp.d_bit_vector[vi] = ~(d_bit_vector[vi]);
+   }
+   tmp.d_max_bit_index = _findMaxIndex(tmp.d_bit_vector);
+   return tmp;
+}
+
+ComponentSelector&
+ComponentSelector::operator |= (
+   const ComponentSelector& flags)
+{
+   for (size_t vi = 0; vi < d_bit_vector.size(); ++vi) {
+      d_bit_vector[vi] |= flags.d_bit_vector[vi];
+   }
+   d_max_bit_index =
+      tbox::MathUtilities<int>::Max(
+         d_max_bit_index, flags.d_max_bit_index);
+   return *this;
+}
+
+ComponentSelector&
+ComponentSelector::operator &= (
+   const ComponentSelector& flags)
+{
+   for (size_t vi = 0; vi < d_bit_vector.size(); ++vi) {
+      d_bit_vector[vi] &= flags.d_bit_vector[vi];
+   }
+   d_max_bit_index = _findMaxIndex(d_bit_vector);
+   return *this;
+}
+
+void
+ComponentSelector::printClassData(
    std::ostream& os) const
 {
    int i;

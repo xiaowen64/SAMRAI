@@ -43,7 +43,8 @@ class BoxNeighborhoodCollection
    private:
       // Strict weak ordering for pointers to Boxes.
       struct box_ptr_less {
-         bool operator () (const Box* box0, const Box* box1) const
+         bool
+         operator () (const Box* box0, const Box* box1) const
          {
             return box0->getId() < box1->getId();
          }
@@ -51,7 +52,8 @@ class BoxNeighborhoodCollection
 
       // Strict weak ordering for Boxes.
       struct box_less {
-         bool operator () (const Box& box0, const Box& box1) const
+         bool
+         operator () (const Box& box0, const Box& box1) const
          {
             return box0.getId() < box1.getId();
          }
@@ -59,7 +61,8 @@ class BoxNeighborhoodCollection
 
       // Strict weak ordering for pointers to BoxIds.
       struct box_id_ptr_less {
-         bool operator () (const BoxId* id0, const BoxId* id1) const
+         bool
+         operator () (const BoxId* id0, const BoxId* id1) const
          {
             return *id0 < *id1;
          }
@@ -67,7 +70,8 @@ class BoxNeighborhoodCollection
 
       // Strict weak ordering for BoxIds.
       struct box_id_less {
-         bool operator () (const BoxId& id0, const BoxId& id1) const
+         bool
+         operator () (const BoxId& id0, const BoxId& id1) const
          {
             return id0 < id1;
          }
@@ -175,7 +179,8 @@ class BoxNeighborhoodCollection
        *
        * @param rhs
        */
-      bool operator == (
+      bool
+      operator == (
          const BoxNeighborhoodCollection& rhs) const;
 
       /*!
@@ -183,7 +188,8 @@ class BoxNeighborhoodCollection
        *
        * @param rhs
        */
-      bool operator != (
+      bool
+      operator != (
          const BoxNeighborhoodCollection& rhs) const;
 
       //@{

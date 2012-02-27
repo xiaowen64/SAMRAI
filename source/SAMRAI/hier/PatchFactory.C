@@ -21,11 +21,16 @@
 namespace SAMRAI {
 namespace hier {
 
+PatchFactory::PatchFactory()
+{
+}
+
 PatchFactory::~PatchFactory()
 {
 }
 
-boost::shared_ptr<Patch> PatchFactory::allocate(
+boost::shared_ptr<Patch>
+PatchFactory::allocate(
    const Box& mapped_box_level_mapped_box,
    const boost::shared_ptr<PatchDescriptor>& descriptor) const
 {

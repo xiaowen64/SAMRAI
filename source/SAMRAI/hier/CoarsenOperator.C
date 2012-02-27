@@ -45,18 +45,8 @@ CoarsenOperator::~CoarsenOperator()
    removeFromLookupTable(d_name);
 }
 
-/*
- *************************************************************************
- * Register this in the static look-up table.
- *************************************************************************
- */
-void CoarsenOperator::registerInLookupTable(
-   const std::string& name)
-{
-   s_lookup_table.insert(std::pair<std::string, CoarsenOperator *>(name, this));
-}
-
-void CoarsenOperator::removeFromLookupTable(
+void
+CoarsenOperator::removeFromLookupTable(
    const std::string& name)
 {
    /*
@@ -84,12 +74,6 @@ void CoarsenOperator::removeFromLookupTable(
  * coarsen operators.
  *************************************************************************
  */
-/*
- *************************************************************************
- * Compute the max refine stencil width from all constructed
- * refine operators.
- *************************************************************************
- */
 IntVector
 CoarsenOperator::getMaxCoarsenOpStencilWidth(
    const tbox::Dimension& dim)
@@ -105,20 +89,6 @@ CoarsenOperator::getMaxCoarsenOpStencilWidth(
    }
 
    return max_width;
-}
-
-const tbox::Dimension& CoarsenOperator::getDim() const
-{
-   return d_dim;
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void CoarsenOperator::finalizeCallback()
-{
-   s_lookup_table.clear();
 }
 
 }

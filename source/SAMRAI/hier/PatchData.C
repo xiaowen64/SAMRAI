@@ -52,7 +52,8 @@ PatchData::~PatchData()
  *************************************************************************
  */
 
-void PatchData::getFromDatabase(
+void
+PatchData::getFromDatabase(
    const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
@@ -81,7 +82,8 @@ void PatchData::getFromDatabase(
  *************************************************************************
  */
 
-void PatchData::putUnregisteredToDatabase(
+void
+PatchData::putUnregisteredToDatabase(
    const boost::shared_ptr<tbox::Database>& database) const
 {
    TBOX_ASSERT(database);

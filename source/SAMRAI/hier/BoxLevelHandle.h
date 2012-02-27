@@ -129,8 +129,8 @@ private:
 }
 }
 
-#ifndef DEBUG_NO_INLINE
-// #include "SAMRAI/hier/BoxLevelHandle.I"
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/hier/BoxLevelHandle.I"
 #endif
 
 #endif // included_hier_BoxLevelHandle

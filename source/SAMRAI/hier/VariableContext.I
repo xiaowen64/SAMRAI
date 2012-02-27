@@ -12,25 +12,29 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-int VariableContext::getCurrentMaximumInstanceNumber()
+int
+VariableContext::getCurrentMaximumInstanceNumber()
 {
    return s_instance_counter;
 }
 
 SAMRAI_INLINE_KEYWORD
-int VariableContext::getIndex() const
+int
+VariableContext::getIndex() const
 {
    return d_index;
 }
 
 SAMRAI_INLINE_KEYWORD
-const std::string& VariableContext::getName() const
+const std::string&
+VariableContext::getName() const
 {
    return d_name;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool VariableContext::operator == (
+bool
+VariableContext::operator == (
    const VariableContext& other) const
 {
    return d_index == other.d_index;

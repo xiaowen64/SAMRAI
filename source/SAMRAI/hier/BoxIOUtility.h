@@ -135,4 +135,7 @@ private:
 }
 }
 
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/hier/BoxIOUtility.I"
+#endif
 #endif

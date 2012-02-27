@@ -18,6 +18,10 @@
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/PatchLevel.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/hier/CoarseFineBoundary.I"
+#endif
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -119,7 +123,8 @@ CoarseFineBoundary::~CoarseFineBoundary()
  * the coarse-fine boundary (instead of the domain boundary).
  ************************************************************************
  */
-void CoarseFineBoundary::computeFromLevel(
+void
+CoarseFineBoundary::computeFromLevel(
    const PatchLevel& level,
    const Connector& mapped_box_level_to_domain,
    const Connector& mapped_box_level_to_self,
@@ -238,7 +243,8 @@ void CoarseFineBoundary::computeFromLevel(
    d_initialized[0] = true;
 }
 
-void CoarseFineBoundary::computeFromLevel(
+void
+CoarseFineBoundary::computeFromLevel(
    const PatchLevel& level,
    const PatchLevel& level0,
    const IntVector& max_ghost_width)
@@ -405,47 +411,6 @@ void CoarseFineBoundary::computeFromLevel(
 
 }
 
-void CoarseFineBoundary::clear()
-{
-   d_boundary_boxes.clear();
-}
-
-const tbox::Array<BoundaryBox>&
-CoarseFineBoundary::getNodeBoundaries(
-   const GlobalId& global_id,
-   const BlockId& block_id) const
-{
-   return getBoundaries(global_id, d_dim.getValue(), block_id);
-}
-
-const tbox::Array<BoundaryBox>&
-CoarseFineBoundary::getEdgeBoundaries(
-   const GlobalId& global_id,
-   const BlockId& block_id) const
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_dim.getValue() < 2) {
-      TBOX_ERROR("CoarseFineBoundary::getEdgeBoundaries():  There are\n"
-         << "no edge boundaries in " << d_dim << "d.\n");
-   }
-#endif
-   return getBoundaries(global_id, d_dim.getValue() - 1, block_id);
-}
-
-const tbox::Array<BoundaryBox>&
-CoarseFineBoundary::getFaceBoundaries(
-   const GlobalId& global_id,
-   const BlockId& block_id) const
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_dim.getValue() < 3) {
-      TBOX_ERROR("CoarseFineBoundary::getFaceBoundaries():  There are\n"
-         << "no face boundaries in " << d_dim << "d.\n");
-   }
-#endif
-   return getBoundaries(global_id, d_dim.getValue() - 2, block_id);
-}
-
 const tbox::Array<BoundaryBox>&
 CoarseFineBoundary::getBoundaries(
    const GlobalId& global_id,
@@ -464,7 +429,8 @@ CoarseFineBoundary::getBoundaries(
    return (*mi).second[boundary_type - 1];
 }
 
-void CoarseFineBoundary::printClassData(
+void
+CoarseFineBoundary::printClassData(
    std::ostream& os) const {
    os << "\nCoarseFineBoundary::printClassData...";
    for (std::map<BoxId, PatchBoundaries>::const_iterator
@@ -484,14 +450,6 @@ void CoarseFineBoundary::printClassData(
       }
    }
    os << "\n";
-}
-
-CoarseFineBoundary& CoarseFineBoundary::operator = (
-   const CoarseFineBoundary& rhs)
-{
-   d_initialized = rhs.d_initialized;
-   d_boundary_boxes = rhs.d_boundary_boxes;
-   return *this;
 }
 
 }

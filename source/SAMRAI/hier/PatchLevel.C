@@ -264,149 +264,14 @@ PatchLevel::~PatchLevel()
 /*
  * ************************************************************************
  *
- * Allocate or deallocate data for single components or collections of
- * component on all patches on a patch level.
- *
- * ************************************************************************
- */
-
-void PatchLevel::allocatePatchData(
-   const int id,
-   const double timestamp)
-{
-   for (PatchLevel::Iterator ip(this); ip; ip++) {
-      ip->allocatePatchData(id, timestamp);
-   }
-}
-
-void PatchLevel::allocatePatchData(
-   const ComponentSelector& components,
-   const double timestamp)
-{
-   for (PatchLevel::Iterator ip(this); ip; ip++) {
-      ip->allocatePatchData(components, timestamp);
-   }
-}
-
-bool PatchLevel::checkAllocated(
-   const int id) const
-{
-   bool allocated = true;
-   for (PatchContainer::const_iterator
-        mi = d_patches.begin(); mi != d_patches.end(); ++mi) {
-      allocated &= (*mi).second->checkAllocated(id);
-   }
-   return allocated;
-}
-
-void PatchLevel::deallocatePatchData(
-   const int id)
-{
-   for (PatchLevel::Iterator ip(this); ip; ip++) {
-      ip->deallocatePatchData(id);
-   }
-}
-
-void PatchLevel::deallocatePatchData(
-   const ComponentSelector& components)
-{
-   for (PatchLevel::Iterator ip(this); ip; ip++) {
-      ip->deallocatePatchData(components);
-   }
-}
-
-/*
- * ************************************************************************
- *
- * Set the simulation time for all patches in the patch level.
- *
- * ************************************************************************
- */
-
-void PatchLevel::setTime(
-   const double timestamp,
-   const int id)
-{
-   for (PatchLevel::Iterator ip(this); ip; ip++) {
-      ip->setTime(timestamp, id);
-   }
-}
-
-void PatchLevel::setTime(
-   const double timestamp,
-   const ComponentSelector& components)
-{
-   for (PatchLevel::Iterator ip(this); ip; ip++) {
-      ip->setTime(timestamp, components);
-   }
-}
-
-void PatchLevel::setTime(
-   const double timestamp)
-{
-   for (PatchLevel::Iterator ip(this); ip; ip++) {
-      ip->setTime(timestamp);
-   }
-}
-
-/*
- * ************************************************************************
- *
- * Set level numbers relating this level to "level", a level in
- * a hierarchy
- *
- * ************************************************************************
- */
-
-void PatchLevel::setLevelNumber(
-   const int level)
-{
-   d_level_number = level;
-
-   for (PatchLevel::Iterator p(this); p; p++) {
-      p->setPatchLevelNumber(d_level_number);
-   }
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-
-void PatchLevel::setNextCoarserHierarchyLevelNumber(
-   const int level)
-{
-   d_next_coarser_level_number = level;
-}
-
-/*
- * ************************************************************************
- *
- * Set whether this level resides in a hierarchy.
- *
- * ************************************************************************
- */
-
-void PatchLevel::setLevelInHierarchy(
-   bool in_hierarchy)
-{
-   d_in_hierarchy = in_hierarchy;
-
-   for (PatchLevel::Iterator p(this); p; p++) {
-      p->setPatchInHierarchy(d_in_hierarchy);
-   }
-}
-
-/*
- * ************************************************************************
- *
  * Set data members of this patch level by refining information on
  * the argument level by the given ratio.
  *
  * ************************************************************************
  */
 
-void PatchLevel::setRefinedPatchLevel(
+void
+PatchLevel::setRefinedPatchLevel(
    const boost::shared_ptr<PatchLevel>& coarse_level,
    const IntVector& refine_ratio,
    const boost::shared_ptr<GridGeometry>& fine_grid_geometry,
@@ -574,7 +439,8 @@ void PatchLevel::setRefinedPatchLevel(
  * ************************************************************************
  */
 
-void PatchLevel::setCoarsenedPatchLevel(
+void
+PatchLevel::setCoarsenedPatchLevel(
    const boost::shared_ptr<PatchLevel>& fine_level,
    const IntVector& coarsen_ratio,
    const boost::shared_ptr<GridGeometry>& coarse_grid_geom,
@@ -747,30 +613,14 @@ void PatchLevel::setCoarsenedPatchLevel(
 /*
  * ************************************************************************
  *
- * Call the geometry routine to create and set boundary boxes, if they
- * have not already been created.
- *
- * ************************************************************************
- */
-
-void PatchLevel::setBoundaryBoxes()
-{
-   if (!d_boundary_boxes_created) {
-      d_geometry->setBoundaryBoxes(*this);
-      d_boundary_boxes_created = true;
-   }
-}
-
-/*
- * ************************************************************************
- *
  *  Check that class version and restart file number are the same.  If
  *  so, read in data from database and build patch level from data.
  *
  * ************************************************************************
  */
 
-void PatchLevel::getFromDatabase(
+void
+PatchLevel::getFromDatabase(
    const boost::shared_ptr<tbox::Database>& database,
    const ComponentSelector& component_selector)
 {
@@ -875,7 +725,8 @@ void PatchLevel::getFromDatabase(
  *
  * ************************************************************************
  */
-void PatchLevel::putUnregisteredToDatabase(
+void
+PatchLevel::putUnregisteredToDatabase(
    const boost::shared_ptr<tbox::Database>& database,
    const ComponentSelector& patchdata_write_table) const
 {
@@ -940,7 +791,8 @@ void PatchLevel::putUnregisteredToDatabase(
 
 }
 
-int PatchLevel::recursivePrint(
+int
+PatchLevel::recursivePrint(
    std::ostream& os,
    const std::string& border,
    int depth)
@@ -974,7 +826,8 @@ int PatchLevel::recursivePrint(
  * Private utility function to gather and store globalized data, if needed.
  *************************************************************************
  */
-void PatchLevel::initializeGlobalizedBoxLevel() const
+void
+PatchLevel::initializeGlobalizedBoxLevel() const
 {
    if (!d_has_globalized_data) {
 
@@ -1014,7 +867,8 @@ void PatchLevel::initializeGlobalizedBoxLevel() const
  * ************************************************************************
  */
 
-void PatchLevel::initializeCallback()
+void
+PatchLevel::initializeCallback()
 {
    t_level_constructor = tbox::TimerManager::getManager()->
       getTimer("hier::PatchLevel::level_constructor");
@@ -1039,7 +893,8 @@ void PatchLevel::initializeCallback()
  ***************************************************************************
  */
 
-void PatchLevel::finalizeCallback()
+void
+PatchLevel::finalizeCallback()
 {
    t_level_constructor.reset();
    t_constructor_setup.reset();
@@ -1048,6 +903,65 @@ void PatchLevel::finalizeCallback()
    t_constructor_set_geometry.reset();
    t_set_patch_touches.reset();
    t_constructor_compute_shifts.reset();
+}
+
+/*
+ *************************************************************************
+ * Default constructor.
+ *************************************************************************
+ */
+PatchLevel::Iterator::Iterator():
+   d_iterator(),
+   d_patches(NULL /* Unused since not backward compatibility not needed */)
+{
+}
+
+/*
+ *************************************************************************
+ * Copy constructor.
+ *************************************************************************
+ */
+PatchLevel::Iterator::Iterator(
+   const PatchLevel::Iterator& r):
+   d_iterator(r.d_iterator),
+   d_patches(NULL /* Unused since not backward compatibility not needed */)
+{
+}
+
+/*
+ *************************************************************************
+ * Construct from raw iterator.
+ *************************************************************************
+ */
+PatchLevel::Iterator::Iterator(
+   const PatchLevel::PatchContainer::const_iterator& r):
+   d_iterator(r),
+   d_patches(NULL /* Unused since not backward compatibility not needed */)
+{
+}
+
+// Support for backward compatible interface by new PatchLevel::Iterator.
+PatchLevel::Iterator::Iterator(
+   const PatchLevel& patch_level):
+   d_iterator(patch_level.d_patches.begin()),
+   d_patches(&patch_level.d_patches)
+{
+}
+
+// Support for backward compatible interface by new PatchLevel::Iterator.
+PatchLevel::Iterator::Iterator(
+   const boost::shared_ptr<PatchLevel>& patch_level):
+   d_iterator(patch_level->d_patches.begin()),
+   d_patches(&patch_level->d_patches)
+{
+}
+
+// Support for backward compatible interface by new PatchLevel::Iterator.
+PatchLevel::Iterator::Iterator(
+   const PatchLevel* patch_level):
+   d_iterator(patch_level->d_patches.begin()),
+   d_patches(&patch_level->d_patches)
+{
 }
 
 }

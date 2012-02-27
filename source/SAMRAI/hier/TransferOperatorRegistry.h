@@ -303,4 +303,8 @@ private:
 
 }
 }
+
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/hier/TransferOperatorRegistry.I"
+#endif
 #endif

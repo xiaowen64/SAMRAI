@@ -13,6 +13,10 @@
 #include "SAMRAI/hier/BoxLevelHandle.h"
 #include "SAMRAI/hier/BoxLevel.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/hier/BoxLevelHandle.I"
+#endif
+
 namespace SAMRAI {
 namespace hier {
 
@@ -39,16 +43,8 @@ BoxLevelHandle::~BoxLevelHandle()
  ************************************************************************
  ************************************************************************
  */
-bool BoxLevelHandle::isAttached() const
-{
-   return d_box_level != NULL;
-}
-
-/*
- ************************************************************************
- ************************************************************************
- */
-const BoxLevel& BoxLevelHandle::getBoxLevel() const
+const BoxLevel&
+BoxLevelHandle::getBoxLevel() const
 {
    if (d_box_level == NULL) {
       TBOX_ERROR(
@@ -65,18 +61,6 @@ const BoxLevel& BoxLevelHandle::getBoxLevel() const
    }
 #endif
    return *d_box_level;
-}
-
-/*
- ************************************************************************
- * To be called by the object's BoxLevel when the
- * BoxLevel changes in a way that can invalidate the
- * Connector data.
- ************************************************************************
- */
-void BoxLevelHandle::detachMyBoxLevel()
-{
-   d_box_level = NULL;
 }
 
 }

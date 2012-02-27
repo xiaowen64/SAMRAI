@@ -15,98 +15,8 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-Index::Index():
-   IntVector()
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-Index::Index(
-   const tbox::Dimension& dim):
-   IntVector(dim)
-{
-   // an explicit setting Invalid is allowed.
-   TBOX_DIM_ASSERT((!dim.isValid()) || (
-         dim.getValue() > 0 && dim <= tbox::Dimension::getMaxDimension()));
-}
-
-SAMRAI_INLINE_KEYWORD
-Index::Index(
-   const tbox::Dimension& dim,
-   const int i):
-   IntVector(dim, i)
-{
-   // an explicit setting Invalid is allowed.
-   TBOX_DIM_ASSERT((!dim.isValid()) || (
-         dim >= tbox::Dimension(1) && dim <= tbox::Dimension::getMaxDimension()));
-}
-
-SAMRAI_INLINE_KEYWORD
-Index::Index(
-   const int i,
-   const int j):
-   IntVector(tbox::Dimension(2))
-{
-   TBOX_DIM_ASSERT(
-      tbox::Dimension::getMaxDimension() >= tbox::Dimension(2));
-
-   (*this)[0] = i;
-   if (tbox::Dimension::MAXIMUM_DIMENSION_VALUE > 1) {
-      (*this)[1] = j;
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
-Index::Index(
-   const int i,
-   const int j,
-   const int k):
-   IntVector(tbox::Dimension(3))
-{
-   TBOX_DIM_ASSERT(tbox::Dimension::getMaxDimension() >= tbox::Dimension(3));
-
-   (*this)[0] = i;
-   if (tbox::Dimension::MAXIMUM_DIMENSION_VALUE > 1) {
-      (*this)[1] = j;
-   }
-
-   if (tbox::Dimension::MAXIMUM_DIMENSION_VALUE > 2) {
-      (*this)[2] = k;
-   }
-
-}
-
-SAMRAI_INLINE_KEYWORD
-Index::Index(
-   const tbox::Array<int>& a):
-   IntVector(a)
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-Index::Index(
-   const tbox::Dimension& dim,
-   const int array[]):
-   IntVector(dim, array)
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-Index::Index(
-   const Index& rhs):
-   IntVector(rhs)
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-Index::Index(
-   const IntVector& rhs):
-   IntVector(rhs)
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-Index& Index::operator = (
+Index&
+Index::operator = (
    const Index& rhs)
 {
    /*
@@ -120,13 +30,13 @@ Index& Index::operator = (
       TBOX_DIM_ASSERT_CHECK_DIM(rhs.getDim());
    }
 
-   IntVector::operator = (
-      rhs);
+   IntVector::operator = (rhs);
    return *this;
 }
 
 SAMRAI_INLINE_KEYWORD
-Index& Index::operator = (
+Index&
+Index::operator = (
    const IntVector& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -136,12 +46,8 @@ Index& Index::operator = (
 }
 
 SAMRAI_INLINE_KEYWORD
-Index::~Index()
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-Index& Index::operator += (
+Index&
+Index::operator += (
    const IntVector& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -151,7 +57,8 @@ Index& Index::operator += (
 }
 
 SAMRAI_INLINE_KEYWORD
-Index Index::operator + (
+Index
+Index::operator + (
    const IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -162,7 +69,8 @@ Index Index::operator + (
 }
 
 SAMRAI_INLINE_KEYWORD
-Index& Index::operator += (
+Index&
+Index::operator += (
    const int rhs)
 {
    TBOX_DIM_ASSERT_CHECK_DIM(getDim());
@@ -172,7 +80,8 @@ Index& Index::operator += (
 }
 
 SAMRAI_INLINE_KEYWORD
-Index Index::operator + (
+Index
+Index::operator + (
    const int rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM(getDim());
@@ -183,7 +92,8 @@ Index Index::operator + (
 }
 
 SAMRAI_INLINE_KEYWORD
-Index& Index::operator -= (
+Index&
+Index::operator -= (
    const IntVector& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -193,7 +103,8 @@ Index& Index::operator -= (
 }
 
 SAMRAI_INLINE_KEYWORD
-Index Index::operator - (
+Index
+Index::operator - (
    const IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -204,7 +115,8 @@ Index Index::operator - (
 }
 
 SAMRAI_INLINE_KEYWORD
-Index& Index::operator -= (
+Index&
+Index::operator -= (
    const int rhs)
 {
    TBOX_DIM_ASSERT_CHECK_DIM(getDim());
@@ -214,7 +126,8 @@ Index& Index::operator -= (
 }
 
 SAMRAI_INLINE_KEYWORD
-Index Index::operator - (
+Index
+Index::operator - (
    const int rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM(getDim());
@@ -225,7 +138,8 @@ Index Index::operator - (
 }
 
 SAMRAI_INLINE_KEYWORD
-Index& Index::operator *= (
+Index&
+Index::operator *= (
    const IntVector& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -235,7 +149,8 @@ Index& Index::operator *= (
 }
 
 SAMRAI_INLINE_KEYWORD
-Index Index::operator * (
+Index
+Index::operator * (
    const IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -246,7 +161,8 @@ Index Index::operator * (
 }
 
 SAMRAI_INLINE_KEYWORD
-Index& Index::operator *= (
+Index&
+Index::operator *= (
    const int rhs)
 {
    TBOX_DIM_ASSERT_CHECK_DIM(getDim());
@@ -256,7 +172,8 @@ Index& Index::operator *= (
 }
 
 SAMRAI_INLINE_KEYWORD
-Index Index::operator * (
+Index
+Index::operator * (
    const int rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM(getDim());
@@ -267,7 +184,8 @@ Index Index::operator * (
 }
 
 SAMRAI_INLINE_KEYWORD
-Index& Index::operator /= (
+Index&
+Index::operator /= (
    const IntVector& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -277,7 +195,8 @@ Index& Index::operator /= (
 }
 
 SAMRAI_INLINE_KEYWORD
-Index Index::operator / (
+Index
+Index::operator / (
    const IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -288,7 +207,8 @@ Index Index::operator / (
 }
 
 SAMRAI_INLINE_KEYWORD
-Index& Index::operator /= (
+Index&
+Index::operator /= (
    const int rhs)
 {
    TBOX_DIM_ASSERT_CHECK_DIM(getDim());
@@ -298,7 +218,8 @@ Index& Index::operator /= (
 }
 
 SAMRAI_INLINE_KEYWORD
-Index Index::operator / (
+Index
+Index::operator / (
    const int rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM(getDim());
@@ -309,7 +230,8 @@ Index Index::operator / (
 }
 
 SAMRAI_INLINE_KEYWORD
-int Index::coarsen(
+int
+Index::coarsen(
    const int index,
    const int ratio)
 {
@@ -317,7 +239,8 @@ int Index::coarsen(
 }
 
 SAMRAI_INLINE_KEYWORD
-Index& Index::coarsen(
+Index&
+Index::coarsen(
    const IntVector& ratio)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio);
@@ -329,31 +252,36 @@ Index& Index::coarsen(
 }
 
 SAMRAI_INLINE_KEYWORD
-const Index& Index::getZeroIndex(
+const Index&
+Index::getZeroIndex(
    const tbox::Dimension& dim) {
    return *(s_zeros[dim.getValue() - 1]);
 }
 
 SAMRAI_INLINE_KEYWORD
-const Index& Index::getOneIndex(
+const Index&
+Index::getOneIndex(
    const tbox::Dimension& dim) {
    return *(s_ones[dim.getValue() - 1]);
 }
 
 SAMRAI_INLINE_KEYWORD
-const Index& Index::getMinIndex(
+const Index&
+Index::getMinIndex(
    const tbox::Dimension& dim) {
    return *(s_mins[dim.getValue() - 1]);
 }
 
 SAMRAI_INLINE_KEYWORD
-const Index& Index::getMaxIndex(
+const Index&
+Index::getMaxIndex(
    const tbox::Dimension& dim) {
    return *(s_maxs[dim.getValue() - 1]);
 }
 
 SAMRAI_INLINE_KEYWORD
-Index Index::coarsen(
+Index
+Index::coarsen(
    const Index& index,
    const IntVector& ratio)
 {

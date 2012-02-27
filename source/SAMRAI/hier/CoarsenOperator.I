@@ -11,9 +11,41 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-const std::string& CoarsenOperator::getOperatorName() const
+const std::string&
+CoarsenOperator::getOperatorName() const
 {
    return d_name;
+}
+
+SAMRAI_INLINE_KEYWORD
+const tbox::Dimension&
+CoarsenOperator::getDim() const
+{
+   return d_dim;
+}
+
+/*
+ *************************************************************************
+ * Register this in the static look-up table.
+ *************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+CoarsenOperator::registerInLookupTable(
+   const std::string& name)
+{
+   s_lookup_table.insert(std::pair<std::string, CoarsenOperator *>(name, this));
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+CoarsenOperator::finalizeCallback()
+{
+   s_lookup_table.clear();
 }
 
 }

@@ -34,6 +34,21 @@ const int NeighborhoodSet::HIER_EDGE_SET_VERSION = 0;
 #pragma report(disable, CPPC5328)
 #endif
 
+NeighborhoodSet::NeighborhoodSet() :
+   d_map()
+{
+}
+
+NeighborhoodSet::NeighborhoodSet(
+   const NeighborhoodSet& r):
+   d_map(r.d_map)
+{
+}
+
+NeighborhoodSet::~NeighborhoodSet()
+{
+}
+
 /*
  ***********************************************************************
  * Find all the Boxes corresponding to a given rank as a range in
@@ -135,19 +150,6 @@ NeighborhoodSet::growNeighbors(
    }
 }
 
-/*
- ***********************************************************************
- * Removes periodic neighbors in a NeighborhoodSet.
- ***********************************************************************
- */
-void
-NeighborhoodSet::removePeriodicNeighbors()
-{
-   for (iterator ei = begin(); ei != end(); ++ei) {
-      ei->second.removePeriodicImageBoxes();
-   }
-}
-
 /*!
  ***********************************************************************
  * Insert all neighbors from a NeighborhoodSet into a single NeighborSet.
@@ -242,7 +244,8 @@ NeighborhoodSet::getOwners(
  ***********************************************************************
  */
 
-void NeighborhoodSet::putUnregisteredToDatabase(
+void
+NeighborhoodSet::putUnregisteredToDatabase(
    const boost::shared_ptr<tbox::Database>& database) const
 {
    // This appears to be used in the RedistributedRestartUtility.
@@ -297,7 +300,8 @@ void NeighborhoodSet::putUnregisteredToDatabase(
  ***********************************************************************
  */
 
-void NeighborhoodSet::getFromDatabase(
+void
+NeighborhoodSet::getFromDatabase(
    tbox::Database& database)
 {
    const unsigned int number_of_sets = database.getInteger("number_of_sets");
@@ -339,7 +343,8 @@ void NeighborhoodSet::getFromDatabase(
  ***********************************************************************
  */
 
-void NeighborhoodSet::recursivePrint(
+void
+NeighborhoodSet::recursivePrint(
    std::ostream& co,
    const std::string& border,
    int detail_depth) const
@@ -371,33 +376,6 @@ NeighborhoodSet::Outputter::Outputter(
    d_border(border),
    d_detail_depth(detail_depth)
 {
-}
-
-/*
- ***********************************************************************
- * Print out a NeighborhoodSet according to settings in the Outputter.
- ***********************************************************************
- */
-
-std::ostream& operator << (
-   std::ostream& s,
-   const NeighborhoodSet::Outputter& format)
-{
-   format.d_set.recursivePrint(s, format.d_border, format.d_detail_depth);
-   return s;
-}
-
-/*
- ***********************************************************************
- * Return a Outputter that can dump the NeighborhoodSet to a stream.
- ***********************************************************************
- */
-
-NeighborhoodSet::Outputter NeighborhoodSet::format(
-   const std::string& border,
-   int detail_depth) const
-{
-   return Outputter(*this, border, detail_depth);
 }
 
 }

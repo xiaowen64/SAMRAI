@@ -80,15 +80,10 @@ private:
    /*!
     * @brief Return the number of blocks represented in this tree.
     */
-   int getNumberBlocksInTree() const
-   {
-      return d_single_block_trees.size(); 
-   }
+   int getNumberBlocksInTree() const;
 
-   const GridGeometry* getGridGeometry() const
-   {
-      return d_grid_geometry;
-   } 
+   const GridGeometry*
+   getGridGeometry() const;
 
    /*!
     * @brief Reset to uninitialized state.
@@ -110,7 +105,8 @@ private:
     * @param[in] box The box must have the same BlockId as all Boxes in the
     * tree. 
     */
-   bool hasOverlap(const Box& box) const; 
+   bool
+   hasOverlap(const Box& box) const; 
 
    /*!
     * @brief Find all boxes that intersect with a given box.
@@ -229,4 +225,7 @@ private:
 }
 }
 
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/hier/MultiblockBoxTree.I"
+#endif
 #endif

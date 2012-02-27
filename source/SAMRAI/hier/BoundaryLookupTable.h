@@ -193,12 +193,13 @@ private:
     *
     * TODO:  Document the parameters.
     */
-   void buildTable(int* table,
-                   int codim,
-                   int ibeg,
-                   int(&work)[tbox::Dimension::MAXIMUM_DIMENSION_VALUE],
-                   int& lvl,
-                   int * & ptr);
+   void
+   buildTable(int* table,
+              int codim,
+              int ibeg,
+              int(&work)[tbox::Dimension::MAXIMUM_DIMENSION_VALUE],
+              int& lvl,
+              int * & ptr);
 
    /*!
     * @brief Build table of direction IntVectors

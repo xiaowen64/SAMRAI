@@ -26,7 +26,7 @@ Logger::s_finalize_handler(
    0,
    0,
    Logger::finalizeCallback,
-   tbox::StartupShutdownManager::priorityLogger);
+   StartupShutdownManager::priorityLogger);
 
 /*
  * Default Appender to print abort message and calling location to perr stream.

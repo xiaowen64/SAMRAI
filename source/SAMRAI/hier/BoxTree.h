@@ -78,8 +78,9 @@ public:
 
 public:
 
-   BoxTree(const std::list<const Box*> boxes,
-           int min_number = 10);
+   BoxTree(
+      const std::list<const Box*> boxes,
+      int min_number = 10);
 
    /*!
     * @brief Constructs a BoxTree from set of Boxes.
@@ -141,10 +142,8 @@ public:
    /*!
     * @brief Return the dimension of the boxes in the tree.
     */
-   const tbox::Dimension& getDim() const
-   {
-      return d_dim;
-   }
+   const tbox::Dimension&
+   getDim() const;
 
    //@}
 
@@ -327,4 +326,7 @@ public:
 }
 }
 
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/hier/BoxTree.I"
+#endif
 #endif

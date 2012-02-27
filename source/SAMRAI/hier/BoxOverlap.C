@@ -20,11 +20,16 @@
 namespace SAMRAI {
 namespace hier {
 
+BoxOverlap::BoxOverlap()
+{
+}
+
 BoxOverlap::~BoxOverlap()
 {
 }
 
-void BoxOverlap::print(
+void
+BoxOverlap::print(
    std::ostream& os) const
 {
    os << "print() method not implemented for this overlap type" << std::endl;

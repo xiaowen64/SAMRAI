@@ -35,7 +35,8 @@ namespace hier {
  *************************************************************************
  */
 
-void BoxUtilities::findBadCutPointsForBorderAndDirection(
+void
+BoxUtilities::findBadCutPointsForBorderAndDirection(
    const int id,
    tbox::Array<bool>& bad_cuts,
    const Box& box,
@@ -113,7 +114,8 @@ void BoxUtilities::findBadCutPointsForBorderAndDirection(
  *************************************************************************
  */
 
-void BoxUtilities::checkBoxConstraints(
+void
+BoxUtilities::checkBoxConstraints(
    const Box& box,
    const IntVector& min_size,
    const IntVector& cut_factor,
@@ -320,7 +322,8 @@ void BoxUtilities::checkBoxConstraints(
  *************************************************************************
  */
 
-void BoxUtilities::chopBoxes(
+void
+BoxUtilities::chopBoxes(
    BoxContainer& boxes,
    const IntVector& max_size,
    const IntVector& min_size,
@@ -408,7 +411,8 @@ void BoxUtilities::chopBoxes(
  *************************************************************************
  */
 
-void BoxUtilities::chopBox(
+void
+BoxUtilities::chopBox(
    BoxContainer& boxes,
    const Box& box,
    const tbox::Array<tbox::List<int> > cut_points)
@@ -495,7 +499,8 @@ void BoxUtilities::chopBox(
  *************************************************************************
  */
 
-bool BoxUtilities::extendBoxesToDomainBoundary(
+bool
+BoxUtilities::extendBoxesToDomainBoundary(
    BoxContainer& boxes,
    const BoxContainer& domain,
    const IntVector& ext_ghosts)
@@ -524,7 +529,8 @@ bool BoxUtilities::extendBoxesToDomainBoundary(
    return out_val;
 }
 
-bool BoxUtilities::extendBoxToDomainBoundary(
+bool
+BoxUtilities::extendBoxToDomainBoundary(
    Box& box,
    const BoxContainer& domain,
    const IntVector& ext_ghosts)
@@ -609,7 +615,8 @@ bool BoxUtilities::extendBoxToDomainBoundary(
  *************************************************************************
  */
 
-void BoxUtilities::growBoxesWithinDomain(
+void
+BoxUtilities::growBoxesWithinDomain(
    BoxContainer& boxes,
    const BoxContainer& domain,
    const IntVector& min_size)
@@ -725,7 +732,8 @@ void BoxUtilities::growBoxesWithinDomain(
  *************************************************************************
  */
 
-void BoxUtilities::growBoxWithinDomain(
+void
+BoxUtilities::growBoxWithinDomain(
    Box& box,
    const BoxContainer& local_domain_complement,
    const IntVector& min_size)
@@ -822,7 +830,8 @@ void BoxUtilities::growBoxWithinDomain(
  *************************************************************************
  */
 
-bool BoxUtilities::findBestCutPointsGivenMax(
+bool
+BoxUtilities::findBestCutPointsGivenMax(
    tbox::Array<tbox::List<int> >& cut_points,
    const Box& box,
    const IntVector& max_size,
@@ -876,7 +885,8 @@ bool BoxUtilities::findBestCutPointsGivenMax(
  *************************************************************************
  */
 
-bool BoxUtilities::findBestCutPointsForDirectionGivenMax(
+bool
+BoxUtilities::findBestCutPointsForDirectionGivenMax(
    const int idir,
    tbox::List<int>& cut_points,
    const Box& box,
@@ -977,7 +987,8 @@ bool BoxUtilities::findBestCutPointsForDirectionGivenMax(
  *************************************************************************
  */
 
-bool BoxUtilities::findBestCutPointsGivenNumber(
+bool
+BoxUtilities::findBestCutPointsGivenNumber(
    tbox::Array<tbox::List<int> >& cut_points,
    const Box& box,
    const IntVector& number_boxes,
@@ -1050,7 +1061,8 @@ bool BoxUtilities::findBestCutPointsGivenNumber(
  *************************************************************************
  */
 
-bool BoxUtilities::findBestCutPointsForDirectionGivenNumber(
+bool
+BoxUtilities::findBestCutPointsForDirectionGivenNumber(
    const int idir,
    tbox::List<int>& cut_points,
    const Box& box,
@@ -1131,7 +1143,8 @@ bool BoxUtilities::findBestCutPointsForDirectionGivenNumber(
  *************************************************************************
  */
 
-bool BoxUtilities::checkBoxForBadCutPoints(
+bool
+BoxUtilities::checkBoxForBadCutPoints(
    IntVector& bad_cut_information,
    const Box& box,
    const BoxContainer& physical_boxes,
@@ -1169,7 +1182,8 @@ bool BoxUtilities::checkBoxForBadCutPoints(
  *************************************************************************
  */
 
-bool BoxUtilities::checkBoxForBadCutPointsInDirection(
+bool
+BoxUtilities::checkBoxForBadCutPointsInDirection(
    const int id,
    const Box& box,
    const BoxContainer& physical_boxes,
@@ -1261,7 +1275,8 @@ bool BoxUtilities::checkBoxForBadCutPointsInDirection(
  *************************************************************************
  */
 
-void BoxUtilities::findBadCutPoints(
+void
+BoxUtilities::findBadCutPoints(
    tbox::Array<tbox::Array<bool> >& bad_cuts,
    const Box& box,
    const BoxContainer& physical_boxes,
@@ -1300,7 +1315,8 @@ void BoxUtilities::findBadCutPoints(
  *************************************************************************
  */
 
-void BoxUtilities::findBadCutPointsForDirection(
+void
+BoxUtilities::findBadCutPointsForDirection(
    const int id,
    tbox::Array<bool>& bad_cuts,
    const Box& box,
@@ -1435,7 +1451,8 @@ void BoxUtilities::findBadCutPointsForDirection(
  *************************************************************************
  */
 
-void BoxUtilities::fixBadCutPoints(
+void
+BoxUtilities::fixBadCutPoints(
    tbox::Array<tbox::List<int> >& cuts,
    const tbox::Array<tbox::Array<bool> >& bad_cuts,
    const Box& box,
@@ -1486,7 +1503,8 @@ void BoxUtilities::fixBadCutPoints(
  *************************************************************************
  */
 
-void BoxUtilities::fixBadCutPointsForDirection(
+void
+BoxUtilities::fixBadCutPointsForDirection(
    const int id,
    tbox::List<int>& cuts,
    const tbox::Array<bool>& bad_cuts,
@@ -1714,7 +1732,8 @@ void BoxUtilities::fixBadCutPointsForDirection(
  *************************************************************************
  */
 
-void BoxUtilities::makeNonOverlappingBoxContainers(
+void
+BoxUtilities::makeNonOverlappingBoxContainers(
    tbox::Array<BoxContainer>& box_list_array,
    const BoxContainer& boxes)
 {

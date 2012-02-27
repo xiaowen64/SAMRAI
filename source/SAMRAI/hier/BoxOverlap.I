@@ -11,10 +11,5 @@
 namespace SAMRAI {
 namespace hier {
 
-SAMRAI_INLINE_KEYWORD
-BoxOverlap::BoxOverlap()
-{
-}
-
 }
 }

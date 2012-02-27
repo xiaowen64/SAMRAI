@@ -42,7 +42,8 @@ BaseConnectorAlgorithm::~BaseConnectorAlgorithm()
  * Receive messages and unpack info sent from other processes.
  ***********************************************************************
  */
-void BaseConnectorAlgorithm::setupCommunication(
+void
+BaseConnectorAlgorithm::setupCommunication(
    tbox::AsyncCommPeer<int> *& all_comms,
    tbox::AsyncCommStage& comm_stage,
    tbox::AsyncCommStage::MemberVec& completed,
@@ -120,7 +121,8 @@ void BaseConnectorAlgorithm::setupCommunication(
  * and send them.
  ***********************************************************************
  */
-void BaseConnectorAlgorithm::sendDiscoveryToOneProcess(
+void
+BaseConnectorAlgorithm::sendDiscoveryToOneProcess(
    std::vector<int>& send_mesg,
    const int idx_offset_to_ref,
    BoxContainer& referenced_new_head_nabrs,
@@ -182,7 +184,8 @@ void BaseConnectorAlgorithm::sendDiscoveryToOneProcess(
  * Receive messages and unpack info sent from other processes.
  ***********************************************************************
  */
-void BaseConnectorAlgorithm::receiveAndUnpack(
+void
+BaseConnectorAlgorithm::receiveAndUnpack(
    Connector& new_base_to_new_head,
    Connector* new_head_to_new_base,
    std::set<int>& incoming_ranks,
@@ -233,7 +236,8 @@ void BaseConnectorAlgorithm::receiveAndUnpack(
  ***********************************************************************
  ***********************************************************************
  */
-void BaseConnectorAlgorithm::unpackDiscoveryMessage(
+void
+BaseConnectorAlgorithm::unpackDiscoveryMessage(
    const tbox::AsyncCommPeer<int>* incoming_comm,
    Connector& new_base_to_new_head,
    Connector* new_head_to_new_base) const

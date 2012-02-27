@@ -20,6 +20,10 @@
 
 #include <boost/make_shared.hpp>
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/hier/BoxTree.I"
+#endif
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -254,7 +258,8 @@ BoxTree::~BoxTree()
  * starts/stops can be removed from the recursive codes.
  *************************************************************************
  */
-void BoxTree::privateGenerateTree(
+void
+BoxTree::privateGenerateTree(
    int min_number)
 {
    ++s_num_generate[d_dim.getValue() - 1];
@@ -343,7 +348,8 @@ void BoxTree::privateGenerateTree(
  * big enough, it will generate d_center_child.
  **************************************************************************
  */
-void BoxTree::setupChildren(
+void
+BoxTree::setupChildren(
    const int min_number,
    std::list<const Box*>& left_boxes,
    std::list<const Box*>& right_boxes)
@@ -405,7 +411,8 @@ void BoxTree::setupChildren(
  **************************************************************************
  */
 
-bool BoxTree::hasOverlap(
+bool
+BoxTree::hasOverlap(
    const Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -440,7 +447,8 @@ bool BoxTree::hasOverlap(
  * Fills the vector with pointers to Boxes that intersect the arguement
  **************************************************************************
  */
-void BoxTree::findOverlapBoxes(
+void
+BoxTree::findOverlapBoxes(
    std::vector<const Box *>& overlap_boxes,
    const Box& box,
    bool recursive_call) const
@@ -494,7 +502,8 @@ void BoxTree::findOverlapBoxes(
  * Fills the vector with Boxes that intersect the arguement
  **************************************************************************
  */
-void BoxTree::findOverlapBoxes(
+void
+BoxTree::findOverlapBoxes(
    BoxContainer& overlap_boxes,
    const Box& box,
    bool recursive_call) const
@@ -553,25 +562,12 @@ void BoxTree::findOverlapBoxes(
    }
 }
 
-void BoxTree::clear()
-{
-   d_bounding_box.setEmpty();
-   d_left_child.reset();
-   d_right_child.reset();
-   d_boxes.clear();
-   d_center_child.reset();
-}
-
-bool BoxTree::isInitialized() const
-{
-   return !d_bounding_box.empty();
-}
-
 /*
  ***********************************************************************
  ***********************************************************************
  */
-void BoxTree::initializeCallback()
+void
+BoxTree::initializeCallback()
 {
    for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
       const std::string dim_str(tbox::Utilities::intToString(i + 1));
@@ -588,7 +584,8 @@ void BoxTree::initializeCallback()
  * memory for timers does not leak.
  ***************************************************************************
  */
-void BoxTree::finalizeCallback()
+void
+BoxTree::finalizeCallback()
 {
    for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
       t_build_tree[i].reset();
@@ -600,7 +597,8 @@ void BoxTree::finalizeCallback()
  ***************************************************************************
  ***************************************************************************
  */
-void BoxTree::resetStatistics(
+void
+BoxTree::resetStatistics(
    const tbox::Dimension& dim)
 {
    s_num_build[dim.getValue() - 1] = 0;
@@ -618,7 +616,8 @@ void BoxTree::resetStatistics(
  ***************************************************************************
  ***************************************************************************
  */
-void BoxTree::printStatistics(
+void
+BoxTree::printStatistics(
    const tbox::Dimension& dim)
 {
    tbox::plog << "BoxTree local stats:"

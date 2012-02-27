@@ -12,6 +12,10 @@
 
 #include "SAMRAI/hier/BoxContainerSingleOwnerIterator.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/hier/BoxContainerSingleOwnerIterator.I"
+#endif
+
 namespace SAMRAI {
 namespace hier {
 
@@ -32,55 +36,14 @@ BoxContainerSingleOwnerIterator::~BoxContainerSingleOwnerIterator()
    d_mapped_boxes = NULL;
 }
 
-bool BoxContainerSingleOwnerIterator::isValid() const
-{
-   return d_mapped_boxes != NULL &&
-          d_iter != d_mapped_boxes->end() &&
-          d_iter->getOwnerRank() == d_owner_rank;
-}
-
-BoxContainerSingleOwnerIterator& BoxContainerSingleOwnerIterator::operator = (
-   const BoxContainerSingleOwnerIterator& r)
-{
-   d_mapped_boxes = r.d_mapped_boxes;
-   d_iter = r.d_iter;
-   d_owner_rank = r.d_owner_rank;
-   return *this;
-}
-
-const Box& BoxContainerSingleOwnerIterator::operator * () const
-{
-   return *d_iter;
-}
-
-const Box *BoxContainerSingleOwnerIterator::operator -> () const
-{
-   return &(*d_iter);
-}
-
-bool BoxContainerSingleOwnerIterator::operator == (
-   const BoxContainerSingleOwnerIterator& r) const
-{
-   return d_mapped_boxes == r.d_mapped_boxes &&
-          d_owner_rank == r.d_owner_rank &&
-          d_iter == r.d_iter;
-}
-
-bool BoxContainerSingleOwnerIterator::operator != (
-   const BoxContainerSingleOwnerIterator& r) const
-{
-   return d_mapped_boxes != r.d_mapped_boxes ||
-          d_owner_rank != r.d_owner_rank ||
-          d_iter != r.d_iter;
-}
-
 /*
  ****************************************************************************
  * Pre-increment operator.
  ****************************************************************************
  */
 
-BoxContainerSingleOwnerIterator& BoxContainerSingleOwnerIterator::operator ++ ()
+BoxContainerSingleOwnerIterator&
+BoxContainerSingleOwnerIterator::operator ++ ()
 {
    do {
       ++d_iter;
@@ -95,7 +58,8 @@ BoxContainerSingleOwnerIterator& BoxContainerSingleOwnerIterator::operator ++ ()
  ****************************************************************************
  */
 
-BoxContainerSingleOwnerIterator BoxContainerSingleOwnerIterator::operator ++ (
+BoxContainerSingleOwnerIterator
+BoxContainerSingleOwnerIterator::operator ++ (
    int)
 {
    BoxContainerSingleOwnerIterator saved = *this;

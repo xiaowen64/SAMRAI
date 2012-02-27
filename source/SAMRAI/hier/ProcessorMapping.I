@@ -14,19 +14,16 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-ProcessorMapping::~ProcessorMapping()
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-void ProcessorMapping::setNumberNodes(
+void
+ProcessorMapping::setNumberNodes(
    const int n)
 {
    d_nodes = n;
 }
 
 SAMRAI_INLINE_KEYWORD
-int ProcessorMapping::getProcessorAssignment(
+int
+ProcessorMapping::getProcessorAssignment(
    const int i) const
 {
    TBOX_ASSERT((i >= 0) && (i < d_mapping.getSize()));
@@ -35,7 +32,8 @@ int ProcessorMapping::getProcessorAssignment(
 }
 
 SAMRAI_INLINE_KEYWORD
-void ProcessorMapping::setProcessorAssignment(
+void
+ProcessorMapping::setProcessorAssignment(
    const int i,
    const int p)
 {
@@ -46,25 +44,44 @@ void ProcessorMapping::setProcessorAssignment(
 }
 
 SAMRAI_INLINE_KEYWORD
-tbox::Array<int> ProcessorMapping::getProcessorMapping() const
+tbox::Array<int>
+ProcessorMapping::getProcessorMapping() const
 {
    return d_mapping;
 }
 
 SAMRAI_INLINE_KEYWORD
-int ProcessorMapping::getSizeOfMappingArray() const
+int
+ProcessorMapping::getSizeOfMappingArray() const
 {
    return d_mapping.getSize();
 }
 
 SAMRAI_INLINE_KEYWORD
-bool ProcessorMapping::isMappingLocal(
+bool
+ProcessorMapping::isMappingLocal(
    const int i) const
 {
 
    TBOX_ASSERT((i >= 0) && (i < d_mapping.getSize()));
 
    return d_mapping[i] == d_my_rank;
+}
+
+SAMRAI_INLINE_KEYWORD
+int
+ProcessorMapping::getNumberOfLocalIndices() const
+{
+   computeLocalIndices();
+   return d_local_id_count;
+}
+
+SAMRAI_INLINE_KEYWORD
+const tbox::Array<int>&
+ProcessorMapping::getLocalIndices() const
+{
+   computeLocalIndices();
+   return d_local_indices;
 }
 
 }

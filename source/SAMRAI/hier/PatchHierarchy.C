@@ -141,7 +141,8 @@ PatchHierarchy::~PatchHierarchy()
  *************************************************************************
  */
 
-void PatchHierarchy::getFromInput(
+void
+PatchHierarchy::getFromInput(
    const boost::shared_ptr<tbox::Database>& db)
 {
    TBOX_ASSERT(db);
@@ -258,7 +259,8 @@ void PatchHierarchy::getFromInput(
  * PatchHierarchy computes its required Connector width.
  *************************************************************************
  */
-void PatchHierarchy::registerConnectorWidthRequestor(
+void
+PatchHierarchy::registerConnectorWidthRequestor(
    const ConnectorWidthRequestorStrategy& cwrs)
 {
    if (d_connector_widths_are_computed) {
@@ -288,7 +290,8 @@ void PatchHierarchy::registerConnectorWidthRequestor(
  * the auto-registration mechanism).
  *************************************************************************
  */
-void PatchHierarchy::registerAutoConnectorWidthRequestorStrategy(
+void
+PatchHierarchy::registerAutoConnectorWidthRequestorStrategy(
    const ConnectorWidthRequestorStrategy& cwrs)
 {
    size_t i;
@@ -303,24 +306,13 @@ void PatchHierarchy::registerAutoConnectorWidthRequestorStrategy(
 }
 
 /*
- ***********************************************************************
- ***********************************************************************
- */
-
-void PatchHierarchy::initializeCallback()
-{
-   /*
-    * No-op.  This class doesn't
-    */
-}
-
-/*
  ***************************************************************************
  * Clear out static registry.
  ***************************************************************************
  */
 
-void PatchHierarchy::finalizeCallback()
+void
+PatchHierarchy::finalizeCallback()
 {
    for (int i = 0; i < int(s_class_cwrs.size()); ++i) {
       s_class_cwrs[i] = NULL;
@@ -337,7 +329,8 @@ void PatchHierarchy::finalizeCallback()
  *************************************************************************
  *************************************************************************
  */
-IntVector PatchHierarchy::getRequiredConnectorWidth(
+IntVector
+PatchHierarchy::getRequiredConnectorWidth(
    int base_ln,
    int head_ln) const
 {
@@ -423,7 +416,8 @@ IntVector PatchHierarchy::getRequiredConnectorWidth(
  * with that width from the PatchLevels' BoxLevels.
  *************************************************************************
  */
-const Connector& PatchHierarchy::getConnector(
+const Connector&
+PatchHierarchy::getConnector(
    const int base_ln,
    const int head_ln) const
 {
@@ -580,7 +574,8 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
  *************************************************************************
  */
 
-void PatchHierarchy::makeNewPatchLevel(
+void
+PatchHierarchy::makeNewPatchLevel(
    const int ln,
    const BoxLevel& new_mapped_box_level)
 {
@@ -646,7 +641,8 @@ void PatchHierarchy::makeNewPatchLevel(
  *************************************************************************
  */
 
-void PatchHierarchy::removePatchLevel(
+void
+PatchHierarchy::removePatchLevel(
    const int l)
 {
    TBOX_ASSERT((l >= 0) && (l < d_number_levels));
@@ -672,7 +668,8 @@ void PatchHierarchy::removePatchLevel(
  *************************************************************************
  */
 
-void PatchHierarchy::putToDatabase(
+void
+PatchHierarchy::putToDatabase(
    const boost::shared_ptr<tbox::Database>& database) const
 {
    putToDatabase(database,
@@ -695,7 +692,8 @@ void PatchHierarchy::putToDatabase(
  *************************************************************************
  */
 
-void PatchHierarchy::putToDatabase(
+void
+PatchHierarchy::putToDatabase(
    const boost::shared_ptr<tbox::Database>& database,
    const ComponentSelector& patchdata_write_table) const
 {
@@ -788,7 +786,8 @@ void PatchHierarchy::putToDatabase(
  *
  *************************************************************************
  */
-void PatchHierarchy::getFromRestart()
+void
+PatchHierarchy::getFromRestart()
 {
 
   boost::shared_ptr<tbox::Database> restart_db(
@@ -814,7 +813,8 @@ void PatchHierarchy::getFromRestart()
       VariableDatabase::getDatabase()->getPatchDataRestartTable());
 }
 
-void PatchHierarchy::getFromDatabase(
+void
+PatchHierarchy::getFromDatabase(
    const boost::shared_ptr<tbox::Database>& database,
    const ComponentSelector& component_selector)
 {
@@ -931,7 +931,8 @@ void PatchHierarchy::getFromDatabase(
 
 }
 
-int PatchHierarchy::recursivePrint(
+int
+PatchHierarchy::recursivePrint(
    std::ostream& os,
    const std::string& border,
    int depth)
@@ -954,6 +955,10 @@ int PatchHierarchy::recursivePrint(
       os << border << "Total number of cells = " << totl_ncells << "\n";
    }
    return 0;
+}
+
+PatchHierarchy::ConnectorWidthRequestorStrategy::~ConnectorWidthRequestorStrategy()
+{
 }
 
 }

@@ -73,7 +73,8 @@ ConnectorStatistics::StatisticalQuantities::StatisticalQuantities()
  ***********************************************************************
  */
 
-void ConnectorStatistics::computeLocalConnectorStatistics(
+void
+ConnectorStatistics::computeLocalConnectorStatistics(
    StatisticalQuantities &sq) const
 {
    if (!d_connector.isFinalized()) {
@@ -206,7 +207,8 @@ void ConnectorStatistics::computeLocalConnectorStatistics(
  ***********************************************************************
  */
 
-void ConnectorStatistics::printNeighborStats(
+void
+ConnectorStatistics::printNeighborStats(
    std::ostream& co,
    const std::string& border) const
 {
@@ -285,7 +287,8 @@ void ConnectorStatistics::printNeighborStats(
  ***********************************************************************
  */
 
-void ConnectorStatistics::initializeCallback()
+void
+ConnectorStatistics::initializeCallback()
 {
 
    s_quantity_names[NUMBER_OF_BASE_BOXES]             = "num base boxes";
@@ -320,7 +323,8 @@ void ConnectorStatistics::initializeCallback()
  ***************************************************************************
  */
 
-void ConnectorStatistics::finalizeCallback()
+void
+ConnectorStatistics::finalizeCallback()
 {
    for ( int i=0; i<NUMBER_OF_QUANTITIES; ++i ) {
       s_quantity_names[i].clear();

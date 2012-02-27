@@ -15,110 +15,10 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Dimension& IntVector::getDim() const
+const tbox::Dimension&
+IntVector::getDim() const
 {
    return d_dim;
-}
-
-SAMRAI_INLINE_KEYWORD
-IntVector::IntVector():
-   d_dim(tbox::Dimension::getInvalidDimension())
-{
-#ifdef DEBUG_INITIALIZE_UNDEFINED
-   for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
-      d_vector[i] = tbox::MathUtilities<int>::getMin();
-   }
-#endif
-}
-
-SAMRAI_INLINE_KEYWORD
-IntVector::IntVector(
-   const tbox::Dimension& dim):
-   d_dim(dim)
-{
-   // an explicit setting Invalid is allowed.
-   TBOX_DIM_ASSERT((!d_dim.isValid()) ||
-      (d_dim >= tbox::Dimension(1) && d_dim <= tbox::Dimension::getMaxDimension()));
-
-#ifdef DEBUG_INITIALIZE_UNDEFINED
-   for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
-      d_vector[i] = tbox::MathUtilities<int>::getMin();
-   }
-#endif
-
-}
-
-SAMRAI_INLINE_KEYWORD
-IntVector::IntVector(
-   const tbox::Dimension& dim,
-   const int value):
-   d_dim(dim)
-{
-   // an explicit setting Invalid is allowed.
-   TBOX_DIM_ASSERT((!d_dim.isValid()) ||
-      (d_dim >= tbox::Dimension(1) && d_dim <= tbox::Dimension::getMaxDimension()));
-
-   if (d_dim.isValid()) {
-      for (int i = 0; i < d_dim.getValue(); i++)
-         d_vector[i] = value;
-
-#ifdef DEBUG_INITIALIZE_UNDEFINED
-      for (int i = d_dim.getValue(); i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE;
-           i++) {
-         d_vector[i] = tbox::MathUtilities<int>::getMin();
-      }
-#endif
-   } else {
-      for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
-         d_vector[i] = tbox::MathUtilities<int>::getMin();
-      }
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
-IntVector::IntVector(
-   const tbox::Array<int>& a):
-   d_dim(static_cast<unsigned short>(a.getSize()))
-{
-   TBOX_DIM_ASSERT(a.getSize() > 1 &&
-      a.getSize() <= tbox::Dimension::MAXIMUM_DIMENSION_VALUE);
-
-   for (int i = 0; i < d_dim.getValue(); i++)
-      d_vector[i] = a[i];
-
-#ifdef DEBUG_INITIALIZE_UNDEFINED
-   for (int i = d_dim.getValue(); i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
-      d_vector[i] = tbox::MathUtilities<int>::getMin();
-   }
-#endif
-}
-
-SAMRAI_INLINE_KEYWORD
-IntVector::IntVector(
-   const IntVector& rhs):
-   d_dim(rhs.getDim())
-{
-   /*
-    * STL needs to be able to copy invalid values.
-    */
-   if (rhs.getDim().isValid()) {
-      TBOX_DIM_ASSERT_CHECK_DIM(rhs.getDim());
-
-      for (int i = 0; i < d_dim.getValue(); i++)
-         d_vector[i] = rhs.d_vector[i];
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
-IntVector::IntVector(
-   const tbox::Dimension& dim,
-   const int array[]):
-   d_dim(dim)
-{
-   TBOX_DIM_ASSERT_CHECK_DIM(dim);
-
-   for (int i = 0; i < d_dim.getValue(); i++)
-      d_vector[i] = array[i];
 }
 
 SAMRAI_INLINE_KEYWORD
@@ -149,12 +49,8 @@ IntVector& IntVector::operator = (
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector::~IntVector()
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-int& IntVector::operator [] (
+int&
+IntVector::operator [] (
    const int i)
 {
    TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
@@ -163,7 +59,8 @@ int& IntVector::operator [] (
 }
 
 SAMRAI_INLINE_KEYWORD
-const int& IntVector::operator [] (
+const int&
+IntVector::operator [] (
    const int i) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
@@ -172,7 +69,8 @@ const int& IntVector::operator [] (
 }
 
 SAMRAI_INLINE_KEYWORD
-int& IntVector::operator () (
+int&
+IntVector::operator () (
    const int i)
 {
    TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
@@ -181,7 +79,8 @@ int& IntVector::operator () (
 }
 
 SAMRAI_INLINE_KEYWORD
-const int& IntVector::operator () (
+const int&
+IntVector::operator () (
    const int i) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
@@ -190,7 +89,8 @@ const int& IntVector::operator () (
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector& IntVector::operator += (
+IntVector&
+IntVector::operator += (
    const IntVector& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -202,7 +102,8 @@ IntVector& IntVector::operator += (
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector IntVector::operator + (
+IntVector
+IntVector::operator + (
    const IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -213,7 +114,8 @@ IntVector IntVector::operator + (
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector& IntVector::operator += (
+IntVector&
+IntVector::operator += (
    const int rhs)
 {
    TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
@@ -225,7 +127,8 @@ IntVector& IntVector::operator += (
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector IntVector::operator + (
+IntVector
+IntVector::operator + (
    const int rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
@@ -236,7 +139,8 @@ IntVector IntVector::operator + (
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector& IntVector::operator -= (
+IntVector&
+IntVector::operator -= (
    const IntVector& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -248,7 +152,8 @@ IntVector& IntVector::operator -= (
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector IntVector::operator - (
+IntVector
+IntVector::operator - (
    const IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -259,7 +164,8 @@ IntVector IntVector::operator - (
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector& IntVector::operator -= (
+IntVector&
+IntVector::operator -= (
    const int rhs)
 {
    TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
@@ -271,7 +177,8 @@ IntVector& IntVector::operator -= (
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector IntVector::operator - (
+IntVector
+IntVector::operator - (
    const int rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
@@ -282,7 +189,8 @@ IntVector IntVector::operator - (
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector& IntVector::operator *= (
+IntVector&
+IntVector::operator *= (
    const IntVector& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -294,7 +202,8 @@ IntVector& IntVector::operator *= (
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector IntVector::operator * (
+IntVector
+IntVector::operator * (
    const IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -305,7 +214,8 @@ IntVector IntVector::operator * (
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector& IntVector::operator *= (
+IntVector&
+IntVector::operator *= (
    const int rhs)
 {
    TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
@@ -317,7 +227,8 @@ IntVector& IntVector::operator *= (
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector IntVector::operator * (
+IntVector
+IntVector::operator * (
    const int rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
@@ -328,7 +239,8 @@ IntVector IntVector::operator * (
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector& IntVector::operator /= (
+IntVector&
+IntVector::operator /= (
    const IntVector& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -340,7 +252,8 @@ IntVector& IntVector::operator /= (
 }
 
 SAMRAI_INLINE_KEYWORD
-void IntVector::ceilingDivide(
+void
+IntVector::ceilingDivide(
    const IntVector& denominator)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, denominator);
@@ -364,7 +277,8 @@ void IntVector::ceilingDivide(
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector IntVector::ceilingDivide(
+IntVector
+IntVector::ceilingDivide(
    const IntVector& numerator,
    const IntVector& denominator)
 {
@@ -391,7 +305,8 @@ IntVector IntVector::ceilingDivide(
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector IntVector::operator / (
+IntVector
+IntVector::operator / (
    const IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -402,7 +317,8 @@ IntVector IntVector::operator / (
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector& IntVector::operator /= (
+IntVector&
+IntVector::operator /= (
    const int rhs)
 {
    TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
@@ -414,7 +330,8 @@ IntVector& IntVector::operator /= (
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector IntVector::operator / (
+IntVector
+IntVector::operator / (
    const int rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
@@ -425,7 +342,8 @@ IntVector IntVector::operator / (
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector IntVector::operator - () const
+IntVector
+IntVector::operator - () const
 {
    TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
 
@@ -437,7 +355,8 @@ IntVector IntVector::operator - () const
 }
 
 SAMRAI_INLINE_KEYWORD
-bool IntVector::operator == (
+bool
+IntVector::operator == (
    int rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
@@ -451,7 +370,8 @@ bool IntVector::operator == (
 }
 
 SAMRAI_INLINE_KEYWORD
-bool IntVector::operator != (
+bool
+IntVector::operator != (
    int rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
@@ -465,7 +385,8 @@ bool IntVector::operator != (
 }
 
 SAMRAI_INLINE_KEYWORD
-bool IntVector::operator == (
+bool
+IntVector::operator == (
    const IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -479,7 +400,8 @@ bool IntVector::operator == (
 }
 
 SAMRAI_INLINE_KEYWORD
-bool IntVector::operator != (
+bool
+IntVector::operator != (
    const IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -488,7 +410,8 @@ bool IntVector::operator != (
 }
 
 SAMRAI_INLINE_KEYWORD
-void IntVector::min(
+void
+IntVector::min(
    IntVector const& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -500,7 +423,8 @@ void IntVector::min(
 }
 
 SAMRAI_INLINE_KEYWORD
-bool IntVector::operator < (
+bool
+IntVector::operator < (
    const IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -514,7 +438,8 @@ bool IntVector::operator < (
 }
 
 SAMRAI_INLINE_KEYWORD
-bool IntVector::operator <= (
+bool
+IntVector::operator <= (
    const IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -529,7 +454,8 @@ bool IntVector::operator <= (
 }
 
 SAMRAI_INLINE_KEYWORD
-bool IntVector::operator > (
+bool
+IntVector::operator > (
    const IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -543,7 +469,8 @@ bool IntVector::operator > (
 }
 
 SAMRAI_INLINE_KEYWORD
-bool IntVector::operator >= (
+bool
+IntVector::operator >= (
    const IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -557,7 +484,8 @@ bool IntVector::operator >= (
 }
 
 SAMRAI_INLINE_KEYWORD
-int IntVector::min() const
+int
+IntVector::min() const
 {
    TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
 
@@ -571,7 +499,8 @@ int IntVector::min() const
 }
 
 SAMRAI_INLINE_KEYWORD
-void IntVector::max(
+void
+IntVector::max(
    const IntVector& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -582,7 +511,8 @@ void IntVector::max(
 }
 
 SAMRAI_INLINE_KEYWORD
-int IntVector::max() const
+int
+IntVector::max() const
 {
    TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
 
@@ -596,7 +526,8 @@ int IntVector::max() const
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector IntVector::min(
+IntVector
+IntVector::min(
    const IntVector& a,
    const IntVector& b)
 {
@@ -608,7 +539,8 @@ IntVector IntVector::min(
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector IntVector::max(
+IntVector
+IntVector::max(
    const IntVector& a,
    const IntVector& b)
 {
@@ -620,7 +552,8 @@ IntVector IntVector::max(
 }
 
 SAMRAI_INLINE_KEYWORD
-int IntVector::getProduct() const
+int
+IntVector::getProduct() const
 {
    int prod = 1;
    for (int i = 0; i < d_dim.getValue(); i++) {
@@ -630,47 +563,17 @@ int IntVector::getProduct() const
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& IntVector::getZero(
+const IntVector&
+IntVector::getZero(
    const tbox::Dimension& dim) {
    return *(s_zeros[dim.getValue() - 1]);
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& IntVector::getOne(
+const IntVector&
+IntVector::getOne(
    const tbox::Dimension& dim) {
    return *(s_ones[dim.getValue() - 1]);
-}
-
-
-
-/*
- *************************************************************************
- * Sort the sizes of the given IntVector from smallest to largest value.
- *************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-void IntVector::sortIntVector(
-   const IntVector& values)
-{
-   const IntVector num_cells = values;
-
-   for (int d = 0; d < d_dim.getValue(); d++) {
-      d_vector[d] = d;
-   }
-   for (int d0 = 0; d0 < d_dim.getValue() - 1; d0++) {
-      for (int d1 = d0 + 1; d1 < d_dim.getValue(); d1++) {
-         if (values(d_vector[d0]) > values(d_vector[d1])) {
-            int tmp_d = d_vector[d0];
-            d_vector[d0] = d_vector[d1];
-            d_vector[d1] = tmp_d;
-         }
-      }
-   }
-#ifdef DEBUG_CHECK_ASSERTIONS
-   for (int d = 0; d < d_dim.getValue() - 1; d++) {
-      TBOX_ASSERT(values(d_vector[d]) <= values(d_vector[d + 1]));
-   }
-#endif
 }
 
 }

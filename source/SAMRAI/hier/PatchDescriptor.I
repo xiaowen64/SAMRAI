@@ -22,18 +22,33 @@ PatchDescriptor::getPatchDataFactory(
 }
 
 SAMRAI_INLINE_KEYWORD
-int PatchDescriptor::getMaxNumberRegisteredComponents() const
+int
+PatchDescriptor::getMaxNumberRegisteredComponents() const
 {
    return d_max_number_registered_components;
 }
 
 SAMRAI_INLINE_KEYWORD
-const std::string& PatchDescriptor::mapIndexToName(
+const std::string&
+PatchDescriptor::mapIndexToName(
    const int id) const
 {
    TBOX_ASSERT((id >= 0) && (id < d_max_number_registered_components));
 
    return d_names[id];
+}
+
+/*
+ *************************************************************************
+ * Set the mininum value to be returned by getMaxGhostWidth().
+ *************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+PatchDescriptor::setMinGhostWidth(
+   const IntVector& min_value)
+{
+   d_min_gcw[min_value.getDim().getValue() - 1] = min_value;
 }
 
 }

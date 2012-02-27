@@ -20,25 +20,29 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-int PatchLevel::getLevelNumber() const
+int
+PatchLevel::getLevelNumber() const
 {
    return d_level_number;
 }
 
 SAMRAI_INLINE_KEYWORD
-int PatchLevel::getNextCoarserHierarchyLevelNumber() const
+int
+PatchLevel::getNextCoarserHierarchyLevelNumber() const
 {
    return d_next_coarser_level_number;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool PatchLevel::inHierarchy() const
+bool
+PatchLevel::inHierarchy() const
 {
    return d_in_hierarchy;
 }
 
 SAMRAI_INLINE_KEYWORD
-const boost::shared_ptr<Patch>& PatchLevel::getPatch(
+const boost::shared_ptr<Patch>&
+PatchLevel::getPatch(
    const GlobalId& gid) const
 //   const BlockId& bid) const
 {
@@ -49,7 +53,8 @@ const boost::shared_ptr<Patch>& PatchLevel::getPatch(
 }
 
 SAMRAI_INLINE_KEYWORD
-boost::shared_ptr<Patch> PatchLevel::getPatch(
+boost::shared_ptr<Patch>
+PatchLevel::getPatch(
    const BoxId& mapped_box_id) const
 {
    const PatchContainer::const_iterator mi = d_patches.find(mapped_box_id);
@@ -63,85 +68,100 @@ boost::shared_ptr<Patch> PatchLevel::getPatch(
 }
 
 SAMRAI_INLINE_KEYWORD
-int PatchLevel::getLocalNumberOfPatches() const
+int
+PatchLevel::getLocalNumberOfPatches() const
 {
    return static_cast<int>(d_mapped_box_level->getLocalNumberOfBoxes());
 }
 
 SAMRAI_INLINE_KEYWORD
-int PatchLevel::getGlobalNumberOfPatches() const
+int
+PatchLevel::getGlobalNumberOfPatches() const
 {
    return d_mapped_box_level->getGlobalNumberOfBoxes();
 }
 
 SAMRAI_INLINE_KEYWORD
-int PatchLevel::getNumberOfPatches() const {
+int
+PatchLevel::getNumberOfPatches() const {
    return getGlobalNumberOfPatches();
 }
 
 SAMRAI_INLINE_KEYWORD
-int PatchLevel::getLocalNumberOfCells() const
+int
+PatchLevel::getLocalNumberOfCells() const
 {
    return static_cast<int>(d_mapped_box_level->getLocalNumberOfCells());
 }
 
 SAMRAI_INLINE_KEYWORD
-int PatchLevel::getGlobalNumberOfCells() const
+int
+PatchLevel::getGlobalNumberOfCells() const
 {
    return d_mapped_box_level->getGlobalNumberOfCells();
 }
 
 SAMRAI_INLINE_KEYWORD
-boost::shared_ptr<PatchDescriptor> PatchLevel::getPatchDescriptor() const
+boost::shared_ptr<PatchDescriptor>
+PatchLevel::getPatchDescriptor() const
 {
    return d_descriptor;
 }
 
 SAMRAI_INLINE_KEYWORD
-boost::shared_ptr<PatchFactory> PatchLevel::getPatchFactory() const
+boost::shared_ptr<PatchFactory>
+PatchLevel::getPatchFactory() const
 {
    return d_factory;
 }
 
 SAMRAI_INLINE_KEYWORD
-boost::shared_ptr<GridGeometry> PatchLevel::getGridGeometry() const
+boost::shared_ptr<GridGeometry>
+PatchLevel::getGridGeometry() const
 {
    return d_geometry;
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Array<BoxContainer>& PatchLevel::getPhysicalDomainArray() const
+const tbox::Array<BoxContainer>&
+PatchLevel::getPhysicalDomainArray() const
 {
    return d_physical_domain;
 }
 
 SAMRAI_INLINE_KEYWORD
-const BoxContainer& PatchLevel::getPhysicalDomain(const BlockId& block_id) const
+const BoxContainer&
+PatchLevel::getPhysicalDomain(
+   const BlockId& block_id) const
 {
    return d_physical_domain[block_id.getBlockValue()];
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& PatchLevel::getRatioToLevelZero() const
+const IntVector&
+PatchLevel::getRatioToLevelZero() const
 {
    return d_ratio_to_level_zero;
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& PatchLevel::getRatioToCoarserLevel() const
+const IntVector&
+PatchLevel::getRatioToCoarserLevel() const
 {
    return d_ratio_to_coarser_level;
 }
 
 SAMRAI_INLINE_KEYWORD
-void PatchLevel::setRatioToCoarserLevel(
+void
+PatchLevel::setRatioToCoarserLevel(
    const IntVector& ratio)
 {
    d_ratio_to_coarser_level = ratio;
 }
 
 SAMRAI_INLINE_KEYWORD
-const BoxContainer& PatchLevel::getBoxes() const
+const BoxContainer&
+PatchLevel::getBoxes() const
 {
    if (!d_has_globalized_data) {
       initializeGlobalizedBoxLevel();
@@ -150,7 +170,10 @@ const BoxContainer& PatchLevel::getBoxes() const
 }
 
 SAMRAI_INLINE_KEYWORD
-void PatchLevel::getBoxes(BoxContainer& boxes, const BlockId& block_id) const
+void
+PatchLevel::getBoxes(
+   BoxContainer& boxes,
+   const BlockId& block_id) const
 {
    if (!d_has_globalized_data) {
       initializeGlobalizedBoxLevel();
@@ -167,7 +190,8 @@ void PatchLevel::getBoxes(BoxContainer& boxes, const BlockId& block_id) const
 }
 
 SAMRAI_INLINE_KEYWORD
-const boost::shared_ptr<BoxLevel>& PatchLevel::getBoxLevel() const
+const boost::shared_ptr<BoxLevel>&
+PatchLevel::getBoxLevel() const
 {
    return d_mapped_box_level;
 }
@@ -183,7 +207,8 @@ PatchLevel::getGlobalizedBoxLevel() const
 }
 
 SAMRAI_INLINE_KEYWORD
-const ProcessorMapping& PatchLevel::getProcessorMapping() const
+const ProcessorMapping&
+PatchLevel::getProcessorMapping() const
 {
    if (!d_has_globalized_data) {
       initializeGlobalizedBoxLevel();
@@ -192,13 +217,15 @@ const ProcessorMapping& PatchLevel::getProcessorMapping() const
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Dimension& PatchLevel::getDim() const
+const tbox::Dimension&
+PatchLevel::getDim() const
 {
    return d_dim;
 }
 
 SAMRAI_INLINE_KEYWORD
-int PatchLevel::getMappingForPatch(
+int
+PatchLevel::getMappingForPatch(
    const BoxId& mapped_box_id) const
 {
    // Note: p is required to be a local index.
@@ -214,7 +241,8 @@ int PatchLevel::getMappingForPatch(
 }
 
 SAMRAI_INLINE_KEYWORD
-const Box& PatchLevel::getBoxForPatch(
+const Box&
+PatchLevel::getBoxForPatch(
    const BoxId& mapped_box_id) const
 {
    TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mapped_box_level->getMPI().getRank());
@@ -222,7 +250,8 @@ const Box& PatchLevel::getBoxForPatch(
 }
 
 SAMRAI_INLINE_KEYWORD
-bool PatchLevel::patchTouchesRegularBoundary(
+bool
+PatchLevel::patchTouchesRegularBoundary(
    const BoxId& mapped_box_id) const
 {
    TBOX_ASSERT(mapped_box_id.getOwnerRank() == d_mapped_box_level->getMPI().getRank());
@@ -230,45 +259,184 @@ bool PatchLevel::patchTouchesRegularBoundary(
    return rval;
 }
 
+/*
+ * ************************************************************************
+ *
+ * Allocate or deallocate data for single components or collections of
+ * component on all patches on a patch level.
+ *
+ * ************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+void
+PatchLevel::allocatePatchData(
+   const int id,
+   const double timestamp)
+{
+   for (PatchLevel::Iterator ip(this); ip; ip++) {
+      ip->allocatePatchData(id, timestamp);
+   }
+}
+
+SAMRAI_INLINE_KEYWORD
+void
+PatchLevel::allocatePatchData(
+   const ComponentSelector& components,
+   const double timestamp)
+{
+   for (PatchLevel::Iterator ip(this); ip; ip++) {
+      ip->allocatePatchData(components, timestamp);
+   }
+}
+
+SAMRAI_INLINE_KEYWORD
+bool
+PatchLevel::checkAllocated(
+   const int id) const
+{
+   bool allocated = true;
+   for (PatchContainer::const_iterator
+        mi = d_patches.begin(); mi != d_patches.end(); ++mi) {
+      allocated &= (*mi).second->checkAllocated(id);
+   }
+   return allocated;
+}
+
+SAMRAI_INLINE_KEYWORD
+void
+PatchLevel::deallocatePatchData(
+   const int id)
+{
+   for (PatchLevel::Iterator ip(this); ip; ip++) {
+      ip->deallocatePatchData(id);
+   }
+}
+
+SAMRAI_INLINE_KEYWORD
+void
+PatchLevel::deallocatePatchData(
+   const ComponentSelector& components)
+{
+   for (PatchLevel::Iterator ip(this); ip; ip++) {
+      ip->deallocatePatchData(components);
+   }
+}
+
+/*
+ * ************************************************************************
+ *
+ * Set the simulation time for all patches in the patch level.
+ *
+ * ************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+void
+PatchLevel::setTime(
+   const double timestamp,
+   const int id)
+{
+   for (PatchLevel::Iterator ip(this); ip; ip++) {
+      ip->setTime(timestamp, id);
+   }
+}
+
+SAMRAI_INLINE_KEYWORD
+void
+PatchLevel::setTime(
+   const double timestamp,
+   const ComponentSelector& components)
+{
+   for (PatchLevel::Iterator ip(this); ip; ip++) {
+      ip->setTime(timestamp, components);
+   }
+}
+
+SAMRAI_INLINE_KEYWORD
+void
+PatchLevel::setTime(
+   const double timestamp)
+{
+   for (PatchLevel::Iterator ip(this); ip; ip++) {
+      ip->setTime(timestamp);
+   }
+}
+
+/*
+ * ************************************************************************
+ *
+ * Set level numbers relating this level to "level", a level in
+ * a hierarchy
+ *
+ * ************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+void
+PatchLevel::setLevelNumber(
+   const int level)
+{
+   d_level_number = level;
+
+   for (PatchLevel::Iterator p(this); p; p++) {
+      p->setPatchLevelNumber(d_level_number);
+   }
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+void
+PatchLevel::setNextCoarserHierarchyLevelNumber(
+   const int level)
+{
+   d_next_coarser_level_number = level;
+}
+
+/*
+ * ************************************************************************
+ *
+ * Set whether this level resides in a hierarchy.
+ *
+ * ************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+void
+PatchLevel::setLevelInHierarchy(
+   bool in_hierarchy)
+{
+   d_in_hierarchy = in_hierarchy;
+
+   for (PatchLevel::Iterator p(this); p; p++) {
+      p->setPatchInHierarchy(d_in_hierarchy);
+   }
+}
+
+/*
+ * ************************************************************************
+ *
+ * Call the geometry routine to create and set boundary boxes, if they
+ * have not already been created.
+ *
+ * ************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+void
+PatchLevel::setBoundaryBoxes()
+{
+   if (!d_boundary_boxes_created) {
+      d_geometry->setBoundaryBoxes(*this);
+      d_boundary_boxes_created = true;
+   }
+}
+
 // Iterator implementation
-
-/*
- *************************************************************************
- * Default constructor.
- *************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-PatchLevel::Iterator::Iterator():
-   d_iterator(),
-   d_patches(NULL /* Unused since not backward compatibility not needed */)
-{
-}
-
-/*
- *************************************************************************
- * Copy constructor.
- *************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-PatchLevel::Iterator::Iterator(
-   const PatchLevel::Iterator& r):
-   d_iterator(r.d_iterator),
-   d_patches(NULL /* Unused since not backward compatibility not needed */)
-{
-}
-
-/*
- *************************************************************************
- * Construct from raw iterator.
- *************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-PatchLevel::Iterator::Iterator(
-   const PatchLevel::PatchContainer::const_iterator& r):
-   d_iterator(r),
-   d_patches(NULL /* Unused since not backward compatibility not needed */)
-{
-}
 
 /*
  *************************************************************************
@@ -276,7 +444,8 @@ PatchLevel::Iterator::Iterator(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-PatchLevel::Iterator& PatchLevel::Iterator::operator = (
+PatchLevel::Iterator&
+PatchLevel::Iterator::operator = (
    const PatchLevel::Iterator& rhs)
 {
    d_iterator = rhs.d_iterator;
@@ -290,7 +459,8 @@ PatchLevel::Iterator& PatchLevel::Iterator::operator = (
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const boost::shared_ptr<Patch>& PatchLevel::Iterator::operator * () const
+const boost::shared_ptr<Patch>&
+PatchLevel::Iterator::operator * () const
 {
    return d_iterator->second;
 }
@@ -301,7 +471,8 @@ const boost::shared_ptr<Patch>& PatchLevel::Iterator::operator * () const
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const boost::shared_ptr<Patch>& PatchLevel::Iterator::operator () () const
+const boost::shared_ptr<Patch>&
+PatchLevel::Iterator::operator () () const
 {
    return d_iterator->second;
 }
@@ -312,7 +483,8 @@ const boost::shared_ptr<Patch>& PatchLevel::Iterator::operator () () const
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const boost::shared_ptr<Patch>& PatchLevel::Iterator::operator -> () const
+const boost::shared_ptr<Patch>&
+PatchLevel::Iterator::operator -> () const
 {
    return d_iterator->second;
 }
@@ -323,7 +495,8 @@ const boost::shared_ptr<Patch>& PatchLevel::Iterator::operator -> () const
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool PatchLevel::Iterator::operator == (
+bool
+PatchLevel::Iterator::operator == (
    const Iterator& rhs) const
 {
    return d_iterator == rhs.d_iterator;
@@ -335,7 +508,8 @@ bool PatchLevel::Iterator::operator == (
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool PatchLevel::Iterator::operator != (
+bool
+PatchLevel::Iterator::operator != (
    const Iterator& rhs) const
 {
    return d_iterator != rhs.d_iterator;
@@ -347,7 +521,8 @@ bool PatchLevel::Iterator::operator != (
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const PatchLevel::Iterator& PatchLevel::Iterator::operator ++ ()
+const PatchLevel::Iterator&
+PatchLevel::Iterator::operator ++ ()
 {
    ++d_iterator;
    return *this;
@@ -359,7 +534,8 @@ const PatchLevel::Iterator& PatchLevel::Iterator::operator ++ ()
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-PatchLevel::Iterator PatchLevel::Iterator::operator ++ (
+PatchLevel::Iterator
+PatchLevel::Iterator::operator ++ (
    int)
 {
    Iterator tmp_iterator = *this;
@@ -369,34 +545,8 @@ PatchLevel::Iterator PatchLevel::Iterator::operator ++ (
 
 // Support for backward compatible interface by new PatchLevel::Iterator.
 SAMRAI_INLINE_KEYWORD
-PatchLevel::Iterator::Iterator(
-   const PatchLevel& patch_level):
-   d_iterator(patch_level.d_patches.begin()),
-   d_patches(&patch_level.d_patches)
-{
-}
-
-// Support for backward compatible interface by new PatchLevel::Iterator.
-SAMRAI_INLINE_KEYWORD
-PatchLevel::Iterator::Iterator(
-   const boost::shared_ptr<PatchLevel>& patch_level):
-   d_iterator(patch_level->d_patches.begin()),
-   d_patches(&patch_level->d_patches)
-{
-}
-
-// Support for backward compatible interface by new PatchLevel::Iterator.
-SAMRAI_INLINE_KEYWORD
-PatchLevel::Iterator::Iterator(
-   const PatchLevel* patch_level):
-   d_iterator(patch_level->d_patches.begin()),
-   d_patches(&patch_level->d_patches)
-{
-}
-
-// Support for backward compatible interface by new PatchLevel::Iterator.
-SAMRAI_INLINE_KEYWORD
-void PatchLevel::Iterator::initialize(
+void
+PatchLevel::Iterator::initialize(
    const boost::shared_ptr<PatchLevel>& patch_level)
 {
    d_iterator = patch_level->d_patches.begin();
@@ -405,7 +555,8 @@ void PatchLevel::Iterator::initialize(
 
 // Support for backward compatible interface by new PatchLevel::Iterator.
 SAMRAI_INLINE_KEYWORD
-void PatchLevel::Iterator::initialize(
+void
+PatchLevel::Iterator::initialize(
    const PatchLevel& patch_level)
 {
    d_iterator = patch_level.d_patches.begin();
@@ -414,7 +565,8 @@ void PatchLevel::Iterator::initialize(
 
 // Support for backward compatible interface by new PatchLevel::Iterator.
 SAMRAI_INLINE_KEYWORD
-void PatchLevel::Iterator::initialize(
+void
+PatchLevel::Iterator::initialize(
    const PatchLevel* patch_level)
 {
    d_iterator = patch_level->d_patches.begin();

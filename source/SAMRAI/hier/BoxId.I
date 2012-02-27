@@ -19,68 +19,6 @@ namespace hier {
  ************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-BoxId::BoxId():
-   d_global_id(),
-   d_periodic_id()
-{
-}
-
-/*
- ************************************************************************
- ************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-BoxId::BoxId(
-   const GlobalId& id,
-   const PeriodicId& periodic_id):
-   d_global_id(id),
-   d_periodic_id(periodic_id)
-{
-   TBOX_ASSERT(periodic_id.isValid());
-}
-
-/*
- ************************************************************************
- ************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-BoxId::BoxId(
-   const LocalId& local_id,
-   const int owner,
-   const PeriodicId& periodic_id):
-   d_global_id(local_id, owner),
-   d_periodic_id(periodic_id)
-{
-   TBOX_ASSERT(periodic_id.isValid());
-}
-
-/*
- ************************************************************************
- ************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-BoxId::BoxId(
-   const BoxId& r):
-   d_global_id(r.d_global_id),
-   d_periodic_id(r.d_periodic_id)
-{
-   TBOX_ASSERT(r.d_periodic_id.isValid());
-}
-
-/*
- ************************************************************************
- ************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-BoxId::~BoxId()
-{
-}
-
-/*
- ************************************************************************
- ************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
 void BoxId::initialize(
    const LocalId& local_id,
    const int owner,

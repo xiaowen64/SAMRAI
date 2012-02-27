@@ -90,7 +90,7 @@ RankGroup::RankGroup(
  */
 
 RankGroup::RankGroup(
-   const tbox::Array<int>& rank_group,
+   const Array<int>& rank_group,
    const SAMRAI_MPI& samrai_mpi):
    d_min(-1),
    d_max(-1),

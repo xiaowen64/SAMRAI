@@ -110,8 +110,7 @@ DEPENDS_3:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_3 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database_template_methods.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
 endif
 
 ${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}

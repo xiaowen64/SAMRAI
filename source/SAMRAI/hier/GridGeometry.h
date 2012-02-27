@@ -771,12 +771,7 @@ public:
          const BlockId& block_id,
          const BoxContainer& domain,
          const Transformation& transformation,
-         const bool is_singularity):
-         d_block_id(block_id),
-         d_transformed_domain(domain),
-         d_transformation(transformation),
-         d_is_singularity(is_singularity) {
-      }
+         const bool is_singularity);
 
       /*!
        * @brief Get the block number of the neighboring block.

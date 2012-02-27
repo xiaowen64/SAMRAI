@@ -22,7 +22,9 @@ PatchHierarchy::getPatchLevel(
 }
 
 SAMRAI_INLINE_KEYWORD
-const boost::shared_ptr<BoxLevel>& PatchHierarchy::getBoxLevel(int level) const
+const boost::shared_ptr<BoxLevel>&
+PatchHierarchy::getBoxLevel(
+   int level) const
 {
    return d_patch_levels[level]->getBoxLevel();
 }
@@ -34,27 +36,31 @@ PatchHierarchy::getPatchDescriptor() const
    return d_patch_descriptor;
 }
 
-SAMRAI_INLINE_KEYWORD const BoxLevel&
+SAMRAI_INLINE_KEYWORD
+const BoxLevel&
 PatchHierarchy::getDomainBoxLevel() const
 {
    return d_domain_mapped_box_level;
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::SAMRAI_MPI& PatchHierarchy::getMPI() const
+const tbox::SAMRAI_MPI&
+PatchHierarchy::getMPI() const
 {
    return d_domain_mapped_box_level.getMPI();
 }
 
 SAMRAI_INLINE_KEYWORD
-bool PatchHierarchy::levelExists(
+bool
+PatchHierarchy::levelExists(
    const int l) const
 {
    return (l < d_number_levels) && d_patch_levels[l];
 }
 
 SAMRAI_INLINE_KEYWORD
-bool PatchHierarchy::finerLevelExists(
+bool
+PatchHierarchy::finerLevelExists(
    const int l) const
 {
    return (l + 1 < d_number_levels) && d_patch_levels[l + 1];
@@ -72,19 +78,23 @@ PatchHierarchy::levelCanBeRefined(
 }
 
 SAMRAI_INLINE_KEYWORD
-int PatchHierarchy::getNumberOfLevels() const
+int
+PatchHierarchy::getNumberOfLevels() const
 {
    return d_number_levels;
 }
 
 SAMRAI_INLINE_KEYWORD
-int PatchHierarchy::getMaxNumberOfLevels() const
+int
+PatchHierarchy::getMaxNumberOfLevels() const
 {
    return d_max_levels;
 }
 
 SAMRAI_INLINE_KEYWORD
-void PatchHierarchy::setMaxNumberOfLevels(int max_levels)
+void
+PatchHierarchy::setMaxNumberOfLevels(
+   int max_levels)
 {
    d_max_levels = max_levels;
 
@@ -98,84 +108,103 @@ void PatchHierarchy::setMaxNumberOfLevels(int max_levels)
 }
 
 SAMRAI_INLINE_KEYWORD
-void PatchHierarchy::setRatioToCoarserLevel(const IntVector& ratio,
-                                            int level)
+void
+PatchHierarchy::setRatioToCoarserLevel(
+   const IntVector& ratio,
+   int level)
 {
    TBOX_ASSERT(level > 0 && level < d_max_levels);
    d_ratio_to_coarser[level] = ratio;
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& PatchHierarchy::getRatioToCoarserLevel(int level) const
+const IntVector&
+PatchHierarchy::getRatioToCoarserLevel(
+   int level) const
 {
    TBOX_ASSERT(level < d_max_levels);
    return d_ratio_to_coarser[level];
 }
 
 SAMRAI_INLINE_KEYWORD
-void PatchHierarchy::setSmallestPatchSize(const IntVector& size,
-                                          int level)
+void
+PatchHierarchy::setSmallestPatchSize(
+   const IntVector& size,
+   int level)
 {
    TBOX_ASSERT(level >= 0 && level < d_max_levels);
    d_smallest_patch_size[level] = size;
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& PatchHierarchy::getSmallestPatchSize(int level) const
+const IntVector&
+PatchHierarchy::getSmallestPatchSize(
+   int level) const
 {
    TBOX_ASSERT(level >= 0 && level < d_max_levels);
    return d_smallest_patch_size[level];
 }
 
 SAMRAI_INLINE_KEYWORD
-void PatchHierarchy::setLargestPatchSize(const IntVector& size,
-                                         int level)
+void
+PatchHierarchy::setLargestPatchSize(
+   const IntVector& size,
+   int level)
 {
    TBOX_ASSERT(level >= 0 && level < d_max_levels);
    d_largest_patch_size[level] = size;
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& PatchHierarchy::getLargestPatchSize(int level) const
+const IntVector&
+PatchHierarchy::getLargestPatchSize(
+   int level) const
 {
    TBOX_ASSERT(level >= 0 && level < d_max_levels);
    return d_largest_patch_size[level];
 }
 
 SAMRAI_INLINE_KEYWORD
-int PatchHierarchy::getProperNestingBuffer(int ln) const
+int
+PatchHierarchy::getProperNestingBuffer(
+   int ln) const
 {
    TBOX_ASSERT(ln >= 0 && ln < d_max_levels);
    return (ln < d_max_levels - 1) ? d_proper_nesting_buffer[ln] : -1;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool PatchHierarchy::allowPatchesSmallerThanGhostWidth() const
+bool
+PatchHierarchy::allowPatchesSmallerThanGhostWidth() const
 {
    return d_allow_patches_smaller_than_ghostwidth;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool PatchHierarchy::allowPatchesSmallerThanMinimumSize() const
+bool
+PatchHierarchy::allowPatchesSmallerThanMinimumSize() const
 {
    return d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps;
 }
 
 SAMRAI_INLINE_KEYWORD
-int PatchHierarchy::getFinestLevelNumber() const
+int
+PatchHierarchy::getFinestLevelNumber() const
 {
    return d_number_levels - 1;
 }
 
 SAMRAI_INLINE_KEYWORD
-void PatchHierarchy::setPatchFactory(
+void
+PatchHierarchy::setPatchFactory(
    const boost::shared_ptr<PatchFactory>& factory)
 {
    d_patch_factory = factory;
 }
 
 SAMRAI_INLINE_KEYWORD
-void PatchHierarchy::setPatchLevelFactory(
+void
+PatchHierarchy::setPatchLevelFactory(
    const boost::shared_ptr<PatchLevelFactory>& factory)
 {
    d_patch_level_factory = factory;
@@ -189,15 +218,27 @@ PatchHierarchy::getGridGeometry() const
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Dimension& PatchHierarchy::getDim() const
+const tbox::Dimension&
+PatchHierarchy::getDim() const
 {
    return d_dim;
 }
 
 SAMRAI_INLINE_KEYWORD
-const std::string& PatchHierarchy::getObjectName() const
+const std::string&
+PatchHierarchy::getObjectName() const
 {
    return d_object_name;
+}
+
+
+SAMRAI_INLINE_KEYWORD
+void
+PatchHierarchy::initializeCallback()
+{
+   /*
+    * No-op.  This class doesn't
+    */
 }
 
 }

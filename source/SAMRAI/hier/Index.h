@@ -108,7 +108,7 @@ public:
    /**
     * The index destructor does nothing interesting.
     */
-   ~Index();
+   virtual ~Index();
 
    /**
     * Plus-equals operator for an index and an integer vector.

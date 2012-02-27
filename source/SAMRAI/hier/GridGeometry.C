@@ -207,7 +207,8 @@ GridGeometry::~GridGeometry()
  *************************************************************************
  */
 
-void GridGeometry::computeBoundaryBoxesOnLevel(
+void
+GridGeometry::computeBoundaryBoxesOnLevel(
    std::map<BoxId, PatchBoundaries>& boundaries,
    const PatchLevel& level,
    const IntVector& periodic_shift,
@@ -295,7 +296,8 @@ void GridGeometry::computeBoundaryBoxesOnLevel(
  *************************************************************************
  */
 
-void GridGeometry::findPatchesTouchingBoundaries(
+void
+GridGeometry::findPatchesTouchingBoundaries(
    std::map<BoxId, TwoDimBool>& touches_regular_bdry,
    std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
    const PatchLevel& level) const
@@ -307,7 +309,7 @@ void GridGeometry::findPatchesTouchingBoundaries(
    touches_periodic_bdry.clear();
    t_touching_boundaries_init->stop();
 
-   hier::BoxContainer tmp_refined_periodic_domain_tree;
+   BoxContainer tmp_refined_periodic_domain_tree;
    if ( level.getRatioToLevelZero() != IntVector::getOne(level.getDim()) ) {
       tmp_refined_periodic_domain_tree = d_domain_with_images;
       tmp_refined_periodic_domain_tree.refine(level.getRatioToLevelZero());
@@ -349,7 +351,8 @@ void GridGeometry::findPatchesTouchingBoundaries(
    t_find_patches_touching_boundaries->stop();
 }
 
-void GridGeometry::computeBoxTouchingBoundaries(
+void
+GridGeometry::computeBoxTouchingBoundaries(
    TwoDimBool& touches_regular_bdry,
    TwoDimBool& touches_periodic_bdry,
    const Box& box,
@@ -442,7 +445,8 @@ void GridGeometry::computeBoxTouchingBoundaries(
  *************************************************************************
  */
 
-void GridGeometry::setGeometryOnPatches(
+void
+GridGeometry::setGeometryOnPatches(
    PatchLevel& level,
    const IntVector& ratio_to_level_zero,
    std::map<BoxId, TwoDimBool>& touches_regular_bdry,
@@ -491,7 +495,8 @@ void GridGeometry::setGeometryOnPatches(
  *************************************************************************
  */
 
-void GridGeometry::setBoundaryBoxes(
+void
+GridGeometry::setBoundaryBoxes(
    PatchLevel& level)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, level);
@@ -540,7 +545,8 @@ void GridGeometry::setBoundaryBoxes(
  *************************************************************************
  */
 
-void GridGeometry::setGeometryDataOnPatch(
+void
+GridGeometry::setGeometryDataOnPatch(
    Patch& patch,
    const IntVector& ratio_to_level_zero,
    const PatchGeometry::TwoDimBool& touches_regular_bdry,
@@ -694,7 +700,8 @@ GridGeometry::makeRefinedGridGeometry(
  *
  *************************************************************************
  */
-void GridGeometry::getFromRestart()
+void
+GridGeometry::getFromRestart()
 {
    const tbox::Dimension dim(getDim());
 
@@ -761,7 +768,8 @@ void GridGeometry::getFromRestart()
  *************************************************************************
  */
 
-void GridGeometry::getFromInput(
+void
+GridGeometry::getFromInput(
    const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
@@ -831,7 +839,8 @@ void GridGeometry::getFromInput(
  *************************************************************************
  */
 
-void GridGeometry::putToDatabase(
+void
+GridGeometry::putToDatabase(
    const boost::shared_ptr<tbox::Database>& db) const
 {
    TBOX_ASSERT(db);
@@ -870,7 +879,8 @@ void GridGeometry::putToDatabase(
  * ************************************************************************
  */
 
-void GridGeometry::computeShiftsForBox(
+void
+GridGeometry::computeShiftsForBox(
    std::vector<IntVector>& shifts,
    const Box& box,
    const BoxContainer& domain_search_tree,
@@ -1011,7 +1021,8 @@ void GridGeometry::computeShiftsForBox(
  *************************************************************************
  */
 
-void GridGeometry::getBoundaryBoxes(
+void
+GridGeometry::getBoundaryBoxes(
    PatchBoundaries& patch_boundaries,
    const Box& box,
    const BoxContainer& domain_boxes,
@@ -1182,7 +1193,8 @@ void GridGeometry::getBoundaryBoxes(
  *************************************************************************
  */
 
-void GridGeometry::computePhysicalDomain(
+void
+GridGeometry::computePhysicalDomain(
    BoxContainer& domain_mapped_boxes,
    const IntVector& ratio_to_level_zero,
    const BlockId& block_id) const
@@ -1241,7 +1253,8 @@ void GridGeometry::computePhysicalDomain(
  *************************************************************************
  */
 
-void GridGeometry::computePhysicalDomain(
+void
+GridGeometry::computePhysicalDomain(
    BoxLevel& box_level,
    const IntVector& ratio_to_level_zero,
    const BlockId& block_id) const
@@ -1302,7 +1315,8 @@ void GridGeometry::computePhysicalDomain(
  *************************************************************************
  */
 
-void GridGeometry::computePhysicalDomain(
+void
+GridGeometry::computePhysicalDomain(
    BoxContainer& domain_mapped_boxes,
    const IntVector& ratio_to_level_zero) const
 {
@@ -1345,7 +1359,8 @@ void GridGeometry::computePhysicalDomain(
 
 }
 
-void GridGeometry::computePhysicalDomain(
+void
+GridGeometry::computePhysicalDomain(
    BoxLevel& box_level,
    const IntVector& ratio_to_level_zero) const
 {
@@ -1403,7 +1418,8 @@ void GridGeometry::computePhysicalDomain(
  *************************************************************************
  */
 
-void GridGeometry::setPhysicalDomain(
+void
+GridGeometry::setPhysicalDomain(
    const BoxContainer& domain,
    const int number_blocks)
 {
@@ -1488,7 +1504,8 @@ void GridGeometry::setPhysicalDomain(
  *************************************************************************
  */
 
-void GridGeometry::resetDomainBoxContainer()
+void
+GridGeometry::resetDomainBoxContainer()
 {
    d_physical_domain.makeTree(this);
 
@@ -1537,7 +1554,8 @@ void GridGeometry::resetDomainBoxContainer()
  *************************************************************************
  */
 
-void GridGeometry::initializePeriodicShift(
+void
+GridGeometry::initializePeriodicShift(
    const IntVector& directions)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, directions);
@@ -1561,7 +1579,8 @@ void GridGeometry::initializePeriodicShift(
  *************************************************************************
  */
 
-IntVector GridGeometry::getPeriodicShift(
+IntVector
+GridGeometry::getPeriodicShift(
    const IntVector& ratio_to_level_zero) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio_to_level_zero);
@@ -1607,7 +1626,8 @@ IntVector GridGeometry::getPeriodicShift(
  *************************************************************************
  */
 
-bool GridGeometry::checkPeriodicValidity(
+bool
+GridGeometry::checkPeriodicValidity(
    const BoxContainer& domain)
 {
    bool is_valid = true;
@@ -1681,7 +1701,8 @@ bool GridGeometry::checkPeriodicValidity(
  *************************************************************************
  */
 
-bool GridGeometry::checkBoundaryBox(
+bool
+GridGeometry::checkBoundaryBox(
    const BoundaryBox& boundary_box,
    const Patch& patch,
    const BoxContainer& domain,
@@ -1772,7 +1793,8 @@ bool GridGeometry::checkBoundaryBox(
  * Read multiblock metadata from input database
  ***************************************************************************
  */
-void GridGeometry::readBlockDataFromInput(
+void
+GridGeometry::readBlockDataFromInput(
    const boost::shared_ptr<tbox::Database>& input_db)
 {
    TBOX_ASSERT(input_db);
@@ -1922,7 +1944,8 @@ GridGeometry::getDomainOutsideBlock(
  * ************************************************************************
  */
 
-void GridGeometry::registerNeighbors(
+void
+GridGeometry::registerNeighbors(
    const BlockId& block_a,
    const BlockId& block_b,
    const Transformation::RotationIdentifier rotation,
@@ -2089,7 +2112,8 @@ GridGeometry::getTransformedBlock(
  * ************************************************************************
  */
 
-void GridGeometry::adjustMultiblockPatchLevelBoundaries(
+void
+GridGeometry::adjustMultiblockPatchLevelBoundaries(
    PatchLevel& patch_level)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch_level);
@@ -2148,7 +2172,8 @@ void GridGeometry::adjustMultiblockPatchLevelBoundaries(
  * ************************************************************************
  */
 
-void GridGeometry::adjustBoundaryBoxesOnPatch(
+void
+GridGeometry::adjustBoundaryBoxesOnPatch(
    const Patch& patch,
    const BoxContainer& pseudo_domain,
    const IntVector& gcw,
@@ -2217,8 +2242,9 @@ void GridGeometry::adjustBoundaryBoxesOnPatch(
  *************************************************************************
  */
 Transformation::RotationIdentifier
-GridGeometry::getRotationIdentifier(const BlockId& dst,
-                                    const BlockId& src) const
+GridGeometry::getRotationIdentifier(
+   const BlockId& dst,
+   const BlockId& src) const
 {
    TBOX_ASSERT(areNeighbors(dst, src));
 
@@ -2240,8 +2266,9 @@ GridGeometry::getRotationIdentifier(const BlockId& dst,
  *************************************************************************
  */
 const IntVector&
-GridGeometry::getOffset(const BlockId& dst,
-                        const BlockId& src) const
+GridGeometry::getOffset(
+   const BlockId& dst,
+   const BlockId& src) const
 {
    TBOX_ASSERT(areNeighbors(dst, src));
 
@@ -2260,8 +2287,10 @@ GridGeometry::getOffset(const BlockId& dst,
  *
  *************************************************************************
  */
-bool GridGeometry::areNeighbors(const BlockId& block_a,
-                                const BlockId& block_b) const
+bool
+GridGeometry::areNeighbors(
+   const BlockId& block_a,
+   const BlockId& block_b) const
 {
    bool are_neighbors = false;
 
@@ -2281,8 +2310,10 @@ bool GridGeometry::areNeighbors(const BlockId& block_a,
  *
  *************************************************************************
  */
-bool GridGeometry::areSingularityNeighbors(const BlockId& block_a,
-                                           const BlockId& block_b) const
+bool
+GridGeometry::areSingularityNeighbors(
+   const BlockId& block_a,
+   const BlockId& block_b) const
 {
    bool are_sing_neighbors = false;
 
@@ -2302,99 +2333,13 @@ bool GridGeometry::areSingularityNeighbors(const BlockId& block_a,
 /*
  *************************************************************************
  *
- * Add operator to appropriate lookup list.
- *
- *************************************************************************
- */
-
-void GridGeometry::addCoarsenOperator(
-   const boost::shared_ptr<CoarsenOperator>& coarsen_op)
-{
-   d_transfer_operator_registry->addCoarsenOperator(coarsen_op);
-}
-
-void GridGeometry::addRefineOperator(
-   const boost::shared_ptr<RefineOperator>& refine_op)
-{
-   d_transfer_operator_registry->addRefineOperator(refine_op);
-}
-
-void GridGeometry::addTimeInterpolateOperator(
-   const boost::shared_ptr<TimeInterpolateOperator>& time_op)
-{
-   d_transfer_operator_registry->addTimeInterpolateOperator(time_op);
-}
-
-/*
- *************************************************************************
- *
- * Search operator lists for operator matching request.
- *
- *************************************************************************
- */
-
-boost::shared_ptr<CoarsenOperator>
-GridGeometry::lookupCoarsenOperator(
-   const boost::shared_ptr<Variable>& var,
-   const std::string& op_name)
-{
-   return d_transfer_operator_registry->lookupCoarsenOperator(
-      var, op_name);
-}
-
-boost::shared_ptr<RefineOperator>
-GridGeometry::lookupRefineOperator(
-   const boost::shared_ptr<Variable>& var,
-   const std::string& op_name)
-{
-   return d_transfer_operator_registry->lookupRefineOperator(
-      var, op_name);
-}
-
-boost::shared_ptr<TimeInterpolateOperator>
-GridGeometry::lookupTimeInterpolateOperator(
-   const boost::shared_ptr<Variable>& var,
-   const std::string& op_name)
-{
-   return d_transfer_operator_registry->lookupTimeInterpolateOperator(
-      var, op_name);
-}
-
-/*
- *************************************************************************
- * Compute the max operator stencil width from all constructed
- * refine and coarsen operators and the user-specified minimum value.
- *************************************************************************
- */
-IntVector
-GridGeometry::getMaxTransferOpStencilWidth()
-{
-   return d_transfer_operator_registry->getMaxTransferOpStencilWidth();
-}
-
-/*
- *************************************************************************
- * Set the mininum value to be returned by
- * getMaxTransferOpStencilWidth().
- *************************************************************************
- */
-
-void
-GridGeometry::setMinTransferOpStencilWidth(
-   const IntVector& min_width)
-{
-   d_transfer_operator_registry->setMinTransferOpStencilWidth(min_width);
-}
-
-/*
- *************************************************************************
- *
  * Print object data to the specified output stream.
  *
  *************************************************************************
  */
 
-void GridGeometry::printClassData(
+void
+GridGeometry::printClassData(
    std::ostream& stream) const
 {
 
@@ -2444,7 +2389,8 @@ void GridGeometry::printClassData(
  * ************************************************************************
  */
 
-void GridGeometry::initializeCallback()
+void
+GridGeometry::initializeCallback()
 {
    t_find_patches_touching_boundaries = tbox::TimerManager::getManager()->
       getTimer("hier::GridGeometry::findPatchesTouchingBoundaries()");
@@ -2477,7 +2423,8 @@ void GridGeometry::initializeCallback()
  *************************************************************************
  */
 
-void GridGeometry::finalizeCallback()
+void
+GridGeometry::finalizeCallback()
 {
    t_find_patches_touching_boundaries.reset();
    t_touching_boundaries_init.reset();
@@ -2487,6 +2434,23 @@ void GridGeometry::finalizeCallback()
    t_set_geometry_data_on_patches.reset();
    t_compute_boundary_boxes_on_level.reset();
    t_get_boundary_boxes.reset();
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+
+GridGeometry::Neighbor::Neighbor(
+   const BlockId& block_id,
+   const BoxContainer& domain,
+   const Transformation& transformation,
+   const bool is_singularity):
+   d_block_id(block_id),
+   d_transformed_domain(domain),
+   d_transformation(transformation),
+   d_is_singularity(is_singularity)
+{
 }
 
 }

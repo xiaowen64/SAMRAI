@@ -45,13 +45,13 @@ const size_t Schedule::s_default_first_message_length = 1000;
 const std::string Schedule::s_default_timer_prefix("tbox::Schedule");
 std::map<std::string, Schedule::TimerStruct> Schedule::s_static_timers;
 
-tbox::StartupShutdownManager::Handler
+StartupShutdownManager::Handler
 Schedule::s_initialize_finalize_handler(
    Schedule::initializeCallback,
    0,
    0,
    Schedule::finalizeCallback,
-   tbox::StartupShutdownManager::priorityTimers);
+   StartupShutdownManager::priorityTimers);
 
 /*
  *************************************************************************
@@ -61,7 +61,7 @@ Schedule::s_initialize_finalize_handler(
 Schedule::Schedule():
    d_coms(NULL),
    d_com_stage(),
-   d_mpi(tbox::SAMRAI_MPI::getSAMRAIWorld()),
+   d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
    d_first_tag(s_default_first_tag),
    d_second_tag(s_default_second_tag),
    d_first_message_length(s_default_first_message_length)
@@ -236,7 +236,7 @@ void Schedule::postReceives()
     * send posted earlier is paired with a receive that is also posted
     * earlier.
     */
-   tbox::AsyncCommPeer<char>* recv_coms = d_coms;
+   AsyncCommPeer<char>* recv_coms = d_coms;
 
    // Initialize iterators to where we want to start looping.
    size_t icom = 0; // Index into recv_coms.
@@ -309,7 +309,7 @@ void Schedule::postSends()
 
    int rank = d_mpi.getRank();
 
-   tbox::AsyncCommPeer<char>* send_coms = d_coms + d_recv_sets.size();
+   AsyncCommPeer<char>* send_coms = d_coms + d_recv_sets.size();
 
    // Initialize iterators to where we want to start looping.
    TransactionSets::const_iterator mi = d_send_sets.upper_bound(rank);
@@ -530,25 +530,25 @@ void Schedule::getAllTimers(
    const std::string& timer_prefix,
    TimerStruct& timers)
 {
-   timers.t_communicate = tbox::TimerManager::getManager()->
+   timers.t_communicate = TimerManager::getManager()->
       getTimer(timer_prefix + "::communicate()");
-   timers.t_begin_communication = tbox::TimerManager::getManager()->
+   timers.t_begin_communication = TimerManager::getManager()->
       getTimer(timer_prefix + "::beginCommunication()");
-   timers.t_finalize_communication = tbox::TimerManager::getManager()->
+   timers.t_finalize_communication = TimerManager::getManager()->
       getTimer(timer_prefix + "::finalizeCommunication()");
-   timers.t_post_receives = tbox::TimerManager::getManager()->
+   timers.t_post_receives = TimerManager::getManager()->
       getTimer(timer_prefix + "::postReceives()");
-   timers.t_post_sends = tbox::TimerManager::getManager()->
+   timers.t_post_sends = TimerManager::getManager()->
       getTimer(timer_prefix + "::postSends()");
-   timers.t_process_incoming_messages = tbox::TimerManager::getManager()->
+   timers.t_process_incoming_messages = TimerManager::getManager()->
       getTimer(timer_prefix + "::processIncomingMessages()");
-   timers.t_MPI_wait = tbox::TimerManager::getManager()->
+   timers.t_MPI_wait = TimerManager::getManager()->
       getTimer(timer_prefix + "::MPI_wait");
-   timers.t_pack_stream = tbox::TimerManager::getManager()->
+   timers.t_pack_stream = TimerManager::getManager()->
       getTimer(timer_prefix + "::pack_stream");
-   timers.t_unpack_stream = tbox::TimerManager::getManager()->
+   timers.t_unpack_stream = TimerManager::getManager()->
       getTimer(timer_prefix + "::unpack_stream");
-   timers.t_local_copies = tbox::TimerManager::getManager()->
+   timers.t_local_copies = TimerManager::getManager()->
       getTimer(timer_prefix + "::performLocalCopies()");
 }
 

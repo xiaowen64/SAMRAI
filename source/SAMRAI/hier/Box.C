@@ -47,15 +47,182 @@ int Box::s_active_ct = 0;
 
 int Box::s_high_water = 0;
 #endif
+
+Box::Box():
+   d_lo(tbox::Dimension::getInvalidDimension(), tbox::MathUtilities<int>::getMax()),
+   d_hi(tbox::Dimension::getInvalidDimension(), tbox::MathUtilities<int>::getMin()),
+   d_block_id(BlockId::invalidId()),
+   d_id_locked(false)
+{
+#ifdef BOX_TELEMETRY
+   // Increment the cumulative constructed count, active box count and reset
+   // the high water mark of active boxes if necessary.
+   ++s_cumulative_constructed_ct;
+   ++s_active_ct;
+   if (s_active_ct > s_high_water) {
+      s_high_water = s_active_ct;
+   }
+#endif
+}
+
+Box::Box(
+   const tbox::Dimension& dim):
+   d_lo(dim, tbox::MathUtilities<int>::getMax()),
+   d_hi(dim, tbox::MathUtilities<int>::getMin()),
+   d_block_id(BlockId::invalidId()),
+   d_id(GlobalId(), PeriodicId::zero()),
+   d_id_locked(false)
+{
+   TBOX_DIM_ASSERT_CHECK_DIM(dim);
+#ifdef BOX_TELEMETRY
+   // Increment the cumulative constructed count, active box count and reset
+   // the high water mark of active boxes if necessary.
+   ++s_cumulative_constructed_ct;
+   ++s_active_ct;
+   if (s_active_ct > s_high_water) {
+      s_high_water = s_active_ct;
+   }
+#endif
+}
+
+Box::Box(
+   const Index& lower,
+   const Index& upper,
+   const BlockId& block_id):
+   d_lo(lower),
+   d_hi(upper),
+   d_block_id(block_id),
+   d_id(GlobalId(), PeriodicId::zero()),
+   d_id_locked(false)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(lower, upper);
+   TBOX_ASSERT(block_id != BlockId::invalidId());
+#ifdef BOX_TELEMETRY
+   // Increment the cumulative constructed count, active box count and reset
+   // the high water mark of active boxes if necessary.
+   ++s_cumulative_constructed_ct;
+   ++s_active_ct;
+   if (s_active_ct > s_high_water) {
+      s_high_water = s_active_ct;
+   }
+#endif
+}
+
+Box::Box(
+   const Box& box):
+   d_lo(box.d_lo),
+   d_hi(box.d_hi),
+   d_block_id(box.d_block_id),
+   d_id(box.d_id),
+   d_id_locked(false)
+{
+#ifdef BOX_TELEMETRY
+   // Increment the cumulative constructed count, active box count and reset
+   // the high water mark of active boxes if necessary.
+   ++s_cumulative_constructed_ct;
+   ++s_active_ct;
+   if (s_active_ct > s_high_water) {
+      s_high_water = s_active_ct;
+   }
+#endif
+}
+
+Box::Box(
+   const tbox::DatabaseBox& box):
+   d_lo(box.getDim(), tbox::MathUtilities<int>::getMax()),
+   d_hi(box.getDim(), tbox::MathUtilities<int>::getMin()),
+   d_id(GlobalId(), PeriodicId::zero()),
+   d_id_locked(false)
+{
+   set_Box_from_DatabaseBox(box);
+#ifdef BOX_TELEMETRY
+   // Increment the cumulative constructed count, active box count and reset
+   // the high water mark of active boxes if necessary.
+   ++s_cumulative_constructed_ct;
+   ++s_active_ct;
+   if (s_active_ct > s_high_water) {
+      s_high_water = s_active_ct;
+   }
+#endif
+}
+
+Box::Box(
+   const Box& box,
+   const LocalId& local_id,
+   const int owner,
+   const PeriodicId& periodic_id):
+   d_lo(box.d_lo),
+   d_hi(box.d_hi),
+   d_block_id(box.d_block_id),
+   d_id(local_id, owner, periodic_id),
+   d_id_locked(false)
+{
+   TBOX_ASSERT(periodic_id.isValid());
+   TBOX_ASSERT(periodic_id.getPeriodicValue() <
+      PeriodicShiftCatalog::getCatalog(box.getDim())->getNumberOfShifts());
+#ifdef BOX_TELEMETRY
+   // Increment the cumulative constructed count, active mapped box count and
+   // reset the high water mark of active mapped boxes if necessary.
+   ++s_cumulative_constructed_ct;
+   ++s_active_ct;
+   if (s_active_ct > s_high_water) {
+      s_high_water = s_active_ct;
+   }
+#endif
+}
+
+Box::Box(
+   const tbox::Dimension& dim,
+   const GlobalId& global_id,
+   const PeriodicId& periodic_id):
+   d_lo(dim),
+   d_hi(dim),
+   d_block_id(BlockId::invalidId()),
+   d_id(global_id, periodic_id),
+   d_id_locked(false)
+{
+   TBOX_ASSERT(periodic_id.isValid());
+   TBOX_ASSERT(periodic_id.getPeriodicValue() < PeriodicShiftCatalog::getCatalog(
+         dim)->getNumberOfShifts());
+#ifdef BOX_TELEMETRY
+   // Increment the cumulative constructed count, active mapped box count and
+   // reset the high water mark of active mapped boxes if necessary.
+   ++s_cumulative_constructed_ct;
+   ++s_active_ct;
+   if (s_active_ct > s_high_water) {
+      s_high_water = s_active_ct;
+   }
+#endif
+}
+
+Box::Box(
+   const tbox::Dimension& dim,
+   const BoxId& mapped_box_id):
+   d_lo(dim),
+   d_hi(dim),
+   d_id(mapped_box_id),
+   d_id_locked(false)
+{
+   TBOX_ASSERT(mapped_box_id.getPeriodicId().isValid());
+   TBOX_ASSERT(
+      mapped_box_id.getPeriodicId().getPeriodicValue() <
+      PeriodicShiftCatalog::getCatalog(dim)->getNumberOfShifts());
+#ifdef BOX_TELEMETRY
+   // Increment the cumulative constructed count, active mapped box count and
+   // reset the high water mark of active mapped boxes if necessary.
+   ++s_cumulative_constructed_ct;
+   ++s_active_ct;
+   if (s_active_ct > s_high_water) {
+      s_high_water = s_active_ct;
+   }
+#endif
+}
+
 /*
- *********************************************************************************
+ *******************************************************************************
  * Construct Box from the components of a reference Box
  * and possibly changing the periodic shift.
- *
- * This method is not inlined because constructing a periodic-shifted
- * Box from another (possibly shifted) Box is more involved
- * and less frequently used.
- *********************************************************************************
+ *******************************************************************************
  */
 Box::Box(
    const Box& other,
@@ -126,8 +293,49 @@ Box::Box(
    }
 }
 
+Box::~Box()
+{
+#ifdef BOX_TELEMETRY
+   // There is one fewer box so decrement the active count.
+   --s_active_ct;
+#endif
+}
+
+Box&
+Box::operator = (
+   const Box& rhs)
+{
+
+   if (this != &rhs) {
+      /*
+       * Allow assignment of to an uninitialized box but
+       * not from an uninitialized box.
+       * This is needed for tbox::Array and vector.
+       */
+      if (getDim().isValid()) {
+         TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      } else {
+         TBOX_DIM_ASSERT_CHECK_DIM(rhs.getDim());
+      }
+
+      d_lo = rhs.d_lo;
+      d_hi = rhs.d_hi;
+      if (!d_id_locked) {
+         d_block_id = rhs.d_block_id;
+         d_id = rhs.d_id;
+      } else {
+         TBOX_ERROR("Attempted to change BoxId that is locked in an ordered BoxContainer.");
+      }
+#ifdef BOX_TELEMETRY
+      // Increment the cumulative assigned count only.
+      ++s_cumulative_assigned_ct;
+#endif
+   }
+   return *this;
+}
+
 /*
- *********************************************************************************
+ *******************************************************************************
  * Construct Box from a reference Box and possibly
  * changing the periodic shift.
  *
@@ -137,9 +345,10 @@ Box::Box(
  *
  * We inititalize d_id last so that we can support inititalizing an
  * object from a reference to itself.
- *********************************************************************************
+ *******************************************************************************
  */
-void Box::initialize(
+void
+Box::initialize(
    const Box& other,
    const PeriodicId& periodic_id,
    const IntVector& refinement_ratio)
@@ -206,6 +415,231 @@ void Box::initialize(
    }
 }
 
+Index
+Box::index(
+   const int offset) const
+{
+   TBOX_ASSERT(offset >= 0);
+   TBOX_ASSERT(offset <= size());
+
+   IntVector n(getDim());
+   IntVector index(getDim());
+
+   n = numberCells();
+
+   int remainder = offset;
+
+   for (int d = getDim().getValue() - 1; d > -1; d--) {
+      /* Compute the stride for indexing */
+      int stride = 1;
+      for (int stride_dim = 0; stride_dim < d; stride_dim++) {
+         stride *= n[stride_dim];
+      }
+
+      /* Compute the local index */
+      index[d] = remainder / stride;
+      remainder -= index[d] * stride;
+
+      /* Compute the global index */
+      index[getDim().getValue()] += lower(d);
+   }
+
+   Index idx(index);
+
+   return idx;
+}
+
+bool
+Box::contains(
+   const Box& box) const
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+
+   if (box.empty()) {
+      return true;
+   }
+
+   if (box.getBlockId() != d_block_id) {
+      return false;
+   }
+
+   if (!contains(box.lower())) {
+      return false;
+   }
+
+   if (!contains(box.upper())) {
+      return false;
+   }
+
+   return true;
+}
+
+Box
+Box::operator * (
+   const Box& box) const
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+
+   Box both(*this);
+
+   if (d_block_id != box.d_block_id) {
+      if (empty() || box.empty()) {
+         both.setEmpty();
+      } else {
+         TBOX_ERROR("Attempted intersection of Boxes from different blocks.");
+      } 
+   } else {
+      both.d_lo.max(box.d_lo);
+      both.d_hi.min(box.d_hi);
+   }
+
+   return both;
+}
+
+Box&
+Box::operator *= (
+   const Box& box)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+
+   if (d_block_id != box.d_block_id) {
+      if (empty() || box.empty()) {
+         setEmpty();
+      } else {
+         TBOX_ERROR("Attempted intersection of Boxes from different blocks.");
+      }
+   } else {
+      d_lo.max(box.d_lo);
+      d_hi.min(box.d_hi);
+   }
+ 
+   return *this;
+}
+
+void
+Box::intersect(
+   const Box& other,
+   Box& result) const
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, other);
+
+   result = *this;
+   if (result.d_block_id != other.d_block_id) {
+      if (result.empty() || other.empty()) {
+         result.setEmpty();
+      } else {
+         TBOX_ERROR("Attempted intersection of Boxes from different blocks.");
+      }
+   } else {
+      result.d_lo.max(other.d_lo);
+      result.d_hi.min(other.d_hi);
+   }
+}
+
+bool
+Box::intersects(
+   const Box& box) const
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+
+   if (d_block_id != box.d_block_id) {
+      if (empty() || box.empty()) {
+         return false;
+      } else {
+         TBOX_ERROR("Attempted intersection of Boxes from different blocks."); 
+      }
+   }
+
+   for (int i = 0; i < getDim().getValue(); i++) {
+      if (tbox::MathUtilities<int>::Max(d_lo(i), box.d_lo(i)) >
+          tbox::MathUtilities<int>::Min(d_hi(i), box.d_hi(i))) {
+         return false;
+      }
+   }
+
+   return true;
+}
+
+Box
+Box::operator + (
+   const Box& box) const
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+
+   Box bbox(*this);
+
+   if (d_block_id != box.d_block_id) {
+      if (!(empty()) || !(box.empty())) {
+         TBOX_ERROR("Attempted bounding box of Boxes from different blocks.");
+      }
+   }
+
+   bbox += box;
+   return bbox;
+}
+
+void
+Box::lengthen(
+   const int direction,
+   const int ghosts)
+{
+   TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+
+   if (!empty()) {
+      if (ghosts > 0) {
+         d_hi(direction) += ghosts;
+      } else {
+         d_lo(direction) += ghosts;
+      }
+   }
+}
+
+void
+Box::shorten(
+   const int direction,
+   const int ghosts)
+{
+   TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+
+   if (!empty()) {
+      if (ghosts > 0) {
+         d_hi(direction) -= ghosts;
+      } else {
+         d_lo(direction) -= ghosts;
+      }
+   }
+}
+
+void
+Box::refine(
+   const IntVector& ratio)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio);
+
+   bool negative_ratio = false;
+   for (int d = 0; d < getDim().getValue(); d++) {
+      if (ratio(d) < 0) {
+         negative_ratio = true;
+         break;
+      }
+   }
+
+   if (!negative_ratio) {
+      d_lo *= ratio;
+      d_hi = d_hi * ratio + (ratio - 1);
+   } else {
+      for (int i = 0; i < getDim().getValue(); i++) {
+         if (ratio(i) > 0) {
+            d_lo(i) *= ratio(i);
+            d_hi(i) = d_hi(i) * ratio(i) + (ratio(i) - 1);
+         } else {
+            d_lo(i) = coarsen(d_lo(i), -ratio(i));
+            d_hi(i) = coarsen(d_hi(i), -ratio(i));
+         }
+      }
+   }
+}
+
 /*
  *************************************************************************
  *
@@ -214,7 +648,8 @@ void Box::initialize(
  *************************************************************************
  */
 
-int Box::longestDimension() const
+int
+Box::longestDimension() const
 {
    int max = upper(0) - lower(0);
    int dim = 0;
@@ -235,7 +670,8 @@ int Box::longestDimension() const
  *************************************************************************
  */
 
-tbox::DatabaseBox Box::DatabaseBox_from_Box() const
+tbox::DatabaseBox
+Box::DatabaseBox_from_Box() const
 {
    TBOX_DIM_ASSERT_CHECK_DIM(getDim());
 
@@ -251,7 +687,8 @@ tbox::DatabaseBox Box::DatabaseBox_from_Box() const
    return new_Box;
 }
 
-void Box::set_Box_from_DatabaseBox(
+void
+Box::set_Box_from_DatabaseBox(
    const tbox::DatabaseBox& box)
 {
    TBOX_DIM_ASSERT_CHECK_DIM(getDim());
@@ -262,6 +699,42 @@ void Box::set_Box_from_DatabaseBox(
    }
 }
 
+void
+Box::putToIntBuffer(
+   int* buffer) const
+{
+   buffer[0] = d_block_id.getBlockValue();
+   buffer++;
+
+   d_id.putToIntBuffer(buffer);
+   buffer += BoxId::commBufferSize();
+
+   const tbox::Dimension& dim(d_lo.getDim());
+   for (int d = 0; d < dim.getValue(); ++d) {
+      buffer[d * 2] = d_lo(d);
+      buffer[d * 2 + 1] = d_hi(d);
+   }
+
+}
+
+void
+Box::getFromIntBuffer(
+   const int* buffer)
+{
+   d_block_id = BlockId(buffer[0]);
+   buffer++; 
+
+   d_id.getFromIntBuffer(buffer);
+   buffer += BoxId::commBufferSize();
+
+   const tbox::Dimension& dim(d_lo.getDim());
+   for (int d = 0; d < dim.getValue(); ++d) {
+      d_lo(d) = buffer[d * 2];
+      d_hi(d) = buffer[d * 2 + 1];
+   }
+
+}
+
 /*
  *************************************************************************
  *
@@ -270,7 +743,8 @@ void Box::set_Box_from_DatabaseBox(
  *************************************************************************
  */
 
-std::istream& operator >> (
+std::istream&
+operator >> (
    std::istream& s,
    Box& box)
 {
@@ -284,7 +758,8 @@ std::istream& operator >> (
    return s;
 }
 
-std::ostream& operator << (
+std::ostream&
+operator << (
    std::ostream& s,
    const Box& box)
 {
@@ -298,7 +773,8 @@ std::ostream& operator << (
    return s;
 }
 
-Box& Box::operator += (
+Box&
+Box::operator += (
    const Box& box)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -328,7 +804,8 @@ Box& Box::operator += (
  *************************************************************************
  */
 
-bool Box::coalesceIntervals(
+bool
+Box::coalesceIntervals(
    const int* lo1,
    const int* hi1,
    const int* lo2,
@@ -391,7 +868,8 @@ bool Box::coalesceIntervals(
  *************************************************************************
  */
 
-bool Box::coalesceWith(
+bool
+Box::coalesceWith(
    const Box& box)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -449,7 +927,8 @@ bool Box::coalesceWith(
  *************************************************************************
  */
 
-void Box::rotateAboutAxis(
+void
+Box::rotateAboutAxis(
    const int axis,
    const int num_rotations)
 {
@@ -483,7 +962,8 @@ void Box::rotateAboutAxis(
  *************************************************************************
  */
 
-void Box::rotate(
+void
+Box::rotate(
    const Transformation::RotationIdentifier rotation_ident)
 {
    if (rotation_ident == Transformation::NO_ROTATE)
@@ -583,7 +1063,8 @@ void Box::rotate(
  *************************************************************************
  *************************************************************************
  */
-void Box::initializeCallback()
+void
+Box::initializeCallback()
 {
    for (unsigned short d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
       tbox::Dimension dim(static_cast<unsigned short>(d + 1));
@@ -604,12 +1085,37 @@ void Box::initializeCallback()
  *************************************************************************
  *************************************************************************
  */
-void Box::finalizeCallback()
+void
+Box::finalizeCallback()
 {
    for (int d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
       delete s_emptys[d];
       delete s_universes[d];
    }
+}
+
+BoxIterator::BoxIterator():
+   d_index(tbox::Dimension::getInvalidDimension())
+{
+}
+
+BoxIterator::BoxIterator(
+   const Box& box):
+   d_index(box.lower()),
+   d_box(box)
+{
+   TBOX_DIM_ASSERT_CHECK_DIM(box.getDim());
+}
+
+BoxIterator::BoxIterator(
+   const BoxIterator& iter):
+   d_index(iter.d_index),
+   d_box(iter.d_box)
+{
+}
+
+BoxIterator::~BoxIterator()
+{
 }
 
 }

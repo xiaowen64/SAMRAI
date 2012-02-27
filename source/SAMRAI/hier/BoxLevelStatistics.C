@@ -73,7 +73,8 @@ BoxLevelStatistics::StatisticalQuantities::StatisticalQuantities()
  ***********************************************************************
  */
 
-void BoxLevelStatistics::computeLocalBoxLevelStatistics(
+void
+BoxLevelStatistics::computeLocalBoxLevelStatistics(
    StatisticalQuantities &sq) const
 {
    if (!d_box_level.isInitialized()) {
@@ -177,7 +178,8 @@ void BoxLevelStatistics::computeLocalBoxLevelStatistics(
  ***********************************************************************
  */
 
-void BoxLevelStatistics::printBoxStats(
+void
+BoxLevelStatistics::printBoxStats(
    std::ostream& co,
    const std::string& border) const
 {
@@ -264,7 +266,8 @@ void BoxLevelStatistics::printBoxStats(
  ***********************************************************************
  */
 
-void BoxLevelStatistics::initializeCallback()
+void
+BoxLevelStatistics::initializeCallback()
 {
    s_quantity_names[HAS_ANY_BOX]                 = "has any box";
    s_quantity_names[NUMBER_OF_CELLS]             = "num cells";
@@ -289,7 +292,8 @@ void BoxLevelStatistics::initializeCallback()
  ***************************************************************************
  */
 
-void BoxLevelStatistics::finalizeCallback()
+void
+BoxLevelStatistics::finalizeCallback()
 {
    for ( int i=0; i<NUMBER_OF_QUANTITIES; ++i ) {
       s_quantity_names[i].clear();

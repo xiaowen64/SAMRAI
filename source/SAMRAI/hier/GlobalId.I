@@ -21,52 +21,8 @@ namespace hier {
  ************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-GlobalId::GlobalId():
-   d_owner_rank(tbox::SAMRAI_MPI::getInvalidRank()),
-   d_local_id(LocalId::getInvalidId())
-{
-}
-
-/*
- ************************************************************************
- ************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-GlobalId::GlobalId(
-   const LocalId& local_id,
-   const int owner):
-   d_owner_rank(owner),
-   d_local_id(local_id)
-{
-}
-
-/*
- ************************************************************************
- ************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-GlobalId::GlobalId(
-   const GlobalId& other):
-   d_owner_rank(other.d_owner_rank),
-   d_local_id(other.d_local_id)
-{
-}
-
-/*
- ************************************************************************
- ************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-GlobalId::~GlobalId()
-{
-}
-
-/*
- ************************************************************************
- ************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-int& GlobalId::getOwnerRank() {
+int&
+GlobalId::getOwnerRank() {
    return d_owner_rank;
 }
 
@@ -75,7 +31,8 @@ int& GlobalId::getOwnerRank() {
  ************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const int& GlobalId::getOwnerRank() const {
+const int&
+GlobalId::getOwnerRank() const {
    return d_owner_rank;
 }
 
@@ -84,7 +41,8 @@ const int& GlobalId::getOwnerRank() const {
  ************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-LocalId& GlobalId::getLocalId() {
+LocalId&
+GlobalId::getLocalId() {
    return d_local_id;
 }
 
@@ -93,7 +51,8 @@ LocalId& GlobalId::getLocalId() {
  ************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const LocalId& GlobalId::getLocalId() const {
+const LocalId&
+GlobalId::getLocalId() const {
    return d_local_id;
 }
 
@@ -102,7 +61,8 @@ const LocalId& GlobalId::getLocalId() const {
  ************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool GlobalId::operator == (
+bool
+GlobalId::operator == (
    const GlobalId& r) const {
    bool rval = (d_owner_rank == r.d_owner_rank) &&
       (d_local_id == r.d_local_id);
@@ -114,7 +74,8 @@ bool GlobalId::operator == (
  ************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool GlobalId::operator != (
+bool
+GlobalId::operator != (
    const GlobalId& r) const {
    bool rval = (d_owner_rank != r.d_owner_rank) ||
       (d_local_id != r.d_local_id);
@@ -126,7 +87,8 @@ bool GlobalId::operator != (
  ************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool GlobalId::operator < (
+bool
+GlobalId::operator < (
    const GlobalId& r) const {
    return (d_owner_rank < r.d_owner_rank) ||
           ((d_owner_rank == r.d_owner_rank) && (d_local_id < r.d_local_id));
@@ -137,7 +99,8 @@ bool GlobalId::operator < (
  ************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool GlobalId::operator > (
+bool
+GlobalId::operator > (
    const GlobalId& r) const {
    return (d_owner_rank > r.d_owner_rank) ||
           ((d_owner_rank == r.d_owner_rank) && (d_local_id > r.d_local_id));
@@ -148,7 +111,8 @@ bool GlobalId::operator > (
  ************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool GlobalId::operator <= (
+bool
+GlobalId::operator <= (
    const GlobalId& r) const {
    return (d_owner_rank < r.d_owner_rank) ||
           ((d_owner_rank == r.d_owner_rank) &&
@@ -160,7 +124,8 @@ bool GlobalId::operator <= (
  ************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool GlobalId::operator >= (
+bool
+GlobalId::operator >= (
    const GlobalId& r) const {
    return (d_owner_rank > r.d_owner_rank) ||
           ((d_owner_rank == r.d_owner_rank) &&

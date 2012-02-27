@@ -24,7 +24,8 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-bool& PatchGeometry::TwoDimBool::operator () (
+bool&
+PatchGeometry::TwoDimBool::operator () (
    int dim,
    int side)
 {
@@ -35,7 +36,8 @@ bool& PatchGeometry::TwoDimBool::operator () (
 }
 
 SAMRAI_INLINE_KEYWORD
-const bool& PatchGeometry::TwoDimBool::operator () (
+const bool&
+PatchGeometry::TwoDimBool::operator () (
    int dim,
    int side) const
 {
@@ -46,32 +48,37 @@ const bool& PatchGeometry::TwoDimBool::operator () (
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Array<tbox::Array<BoundaryBox> > PatchGeometry::getPatchBoundaries()
+const tbox::Array<tbox::Array<BoundaryBox> >
+PatchGeometry::getPatchBoundaries()
 const
 {
    return d_patch_boundaries.getArrays();
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& PatchGeometry::getRatio() const
+const IntVector&
+PatchGeometry::getRatio() const
 {
    return d_ratio_to_level_zero;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool PatchGeometry::intersectsPhysicalBoundary() const
+bool
+PatchGeometry::intersectsPhysicalBoundary() const
 {
    return d_has_regular_boundary;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool PatchGeometry::getTouchesRegularBoundary() const
+bool
+PatchGeometry::getTouchesRegularBoundary() const
 {
    return d_has_regular_boundary;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool PatchGeometry::getTouchesPeriodicBoundary() const
+bool
+PatchGeometry::getTouchesPeriodicBoundary() const
 {
    return d_has_periodic_boundary;
 }
@@ -136,7 +143,8 @@ PatchGeometry::getCodimensionBoundaries(
 }
 
 SAMRAI_INLINE_KEYWORD
-void PatchGeometry::TwoDimBool::setAll(
+void
+PatchGeometry::TwoDimBool::setAll(
    bool v)
 {
    for (int i = 0; i < 2 * d_dim.getValue(); ++i) {
@@ -145,33 +153,8 @@ void PatchGeometry::TwoDimBool::setAll(
 }
 
 SAMRAI_INLINE_KEYWORD
-PatchGeometry::TwoDimBool::TwoDimBool():
-   d_dim(tbox::Dimension::getInvalidDimension())
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-PatchGeometry::TwoDimBool::TwoDimBool(
-   const tbox::Dimension& dim):
-   d_dim(dim)
-{
-   TBOX_DIM_ASSERT_CHECK_DIM(dim);
-   setAll(false);
-}
-
-SAMRAI_INLINE_KEYWORD
-PatchGeometry::TwoDimBool::TwoDimBool(
-   const tbox::Dimension& dim,
-   bool v):
-   d_dim(dim)
-{
-   for (int i = 0; i < 2 * d_dim.getValue(); ++i) {
-      d_data[i] = v;
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
-const tbox::Dimension& PatchGeometry::TwoDimBool::getDim() const {
+const tbox::Dimension&
+PatchGeometry::TwoDimBool::getDim() const {
    return d_dim;
 }
 

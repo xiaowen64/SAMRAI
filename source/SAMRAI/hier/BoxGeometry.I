@@ -14,11 +14,6 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-BoxGeometry::BoxGeometry()
-{
-}
-
-SAMRAI_INLINE_KEYWORD
 boost::shared_ptr<BoxOverlap>
 BoxGeometry::calculateOverlap(
    const BoxGeometry& src_geometry,

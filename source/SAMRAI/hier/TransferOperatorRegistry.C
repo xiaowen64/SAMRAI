@@ -15,6 +15,10 @@
 
 #include "SAMRAI/tbox/Utilities.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/hier/TransferOperatorRegistry.I"
+#endif
+
 namespace SAMRAI {
 namespace hier {
 
@@ -46,7 +50,8 @@ TransferOperatorRegistry::~TransferOperatorRegistry()
  *************************************************************************
  */
 
-void TransferOperatorRegistry::addCoarsenOperator(
+void
+TransferOperatorRegistry::addCoarsenOperator(
    const boost::shared_ptr<CoarsenOperator>& coarsen_op)
 {
    if (d_max_op_stencil_width_req &&
@@ -59,7 +64,8 @@ void TransferOperatorRegistry::addCoarsenOperator(
    d_coarsen_operators.addItem(coarsen_op);
 }
 
-void TransferOperatorRegistry::addRefineOperator(
+void
+TransferOperatorRegistry::addRefineOperator(
    const boost::shared_ptr<RefineOperator>& refine_op)
 {
    if (d_max_op_stencil_width_req &&
@@ -70,12 +76,6 @@ void TransferOperatorRegistry::addRefineOperator(
                                    << "after call to getMaxTransferOpStencilWidth.\n");
    }
    d_refine_operators.addItem(refine_op);
-}
-
-void TransferOperatorRegistry::addTimeInterpolateOperator(
-   const boost::shared_ptr<TimeInterpolateOperator>& time_op)
-{
-   d_time_operators.addItem(time_op);
 }
 
 /*
@@ -207,32 +207,6 @@ TransferOperatorRegistry::getMaxTransferOpStencilWidth()
    max_width.max(CoarsenOperator::getMaxCoarsenOpStencilWidth(getDim()));
    d_max_op_stencil_width_req = true;
    return max_width;
-}
-
-/*
- *************************************************************************
- * Set the mininum value to be returned by
- * getMaxTransferOpStencilWidth().
- *************************************************************************
- */
-
-void
-TransferOperatorRegistry::setMinTransferOpStencilWidth(
-   const IntVector& min_width)
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_min_stencil_width, min_width);
-   d_min_stencil_width = min_width;
-}
-
-/*
- *************************************************************************
- * Get the dimension of the GridGeometry object holding this singleton.
- *************************************************************************
- */
-const tbox::Dimension&
-TransferOperatorRegistry::getDim() const
-{
-   return d_dim;
 }
 
 /*

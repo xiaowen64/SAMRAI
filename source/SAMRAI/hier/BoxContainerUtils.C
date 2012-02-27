@@ -33,7 +33,8 @@ BoxContainerUtils::BoxContainerUtils() {
  ***************************************************************************
  */
 
-void BoxContainerUtils::recursivePrintBoxVector(
+void
+BoxContainerUtils::recursivePrintBoxVector(
    const std::vector<Box>& mapped_boxes,
    std::ostream& os,
    const std::string& border,

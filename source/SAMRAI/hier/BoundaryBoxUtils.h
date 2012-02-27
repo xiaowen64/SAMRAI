@@ -204,4 +204,7 @@ private:
 }
 }
 
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/hier/BoundaryBoxUtils.I"
+#endif
 #endif

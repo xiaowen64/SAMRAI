@@ -2494,7 +2494,7 @@ void Statistician::printSpreadSheetOutputForProcessor(
       for (is = 0; is < d_num_proc_stats; is++) {
          std::string name = d_proc_statistics[is]->getName();
          name = name + "-proc-";
-         std::string filename = name + tbox::Utilities::processorToString(
+         std::string filename = name + Utilities::processorToString(
                proc_id) + ".txt";
          if (write_to_dir) filename = dirname + "/" + filename;
          std::ofstream file(filename.c_str());

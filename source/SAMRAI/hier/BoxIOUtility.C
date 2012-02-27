@@ -24,6 +24,10 @@
 #include <boost/make_shared.hpp>
 #include <fstream>
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/hier/BoxIOUtility.I"
+#endif
+
 namespace SAMRAI {
 namespace hier {
 
@@ -72,7 +76,8 @@ BoxIOUtility::~BoxIOUtility()
  *
  *************************************************************************
  */
-void BoxIOUtility::getLevelBoxes(
+void
+BoxIOUtility::getLevelBoxes(
    BoxContainer& level_boxes,
    const int level_number,
    const int entry_number)
@@ -116,7 +121,8 @@ void BoxIOUtility::getLevelBoxes(
  *
  *************************************************************************
  */
-void BoxIOUtility::putLevelBoxes(
+void
+BoxIOUtility::putLevelBoxes(
    const BoxContainer& level_boxes,
    const int level_number,
    const int entry_number)
@@ -145,45 +151,12 @@ void BoxIOUtility::putLevelBoxes(
 /*
  *************************************************************************
  *
- * Return number of levels in the Database.
- *
- *************************************************************************
- */
-int BoxIOUtility::getNumberOfLevels()
-{
-   return d_level_boxes.getSize();
-}
-
-/*
- *************************************************************************
- *
- * Return number of entries for a particular level.
- *
- *************************************************************************
- */
-int BoxIOUtility::getNumberOfEntries(
-   const int level_number)
-{
-   if (level_number + 1 > d_level_boxes.getSize()) {
-      TBOX_ERROR("BoxIOUtility::getNumberOfEntries() error: "
-         << "invalid level number. "
-         << "\n The level boxes database holds data only up "
-         << "\n to level " << d_level_boxes.getSize() - 1
-         << "\n You requested data from level " << level_number
-         << std::endl);
-   }
-
-   return d_level_boxes[level_number].getSize();
-}
-
-/*
- *************************************************************************
- *
  * Opens an HDF5 database which we will either write to or read from.
  *
  *************************************************************************
  */
-void BoxIOUtility::readLevelBoxesDatabase()
+void
+BoxIOUtility::readLevelBoxesDatabase()
 {
 
 #ifdef HAVE_HDF5
@@ -258,7 +231,8 @@ void BoxIOUtility::readLevelBoxesDatabase()
  *
  *************************************************************************
  */
-void BoxIOUtility::writeLevelBoxesDatabase()
+void
+BoxIOUtility::writeLevelBoxesDatabase()
 {
 #ifdef HAVE_HDF5
    /*
@@ -326,7 +300,8 @@ void BoxIOUtility::writeLevelBoxesDatabase()
  *
  *************************************************************************
  */
-void BoxIOUtility::printBoxes(
+void
+BoxIOUtility::printBoxes(
    std::ostream& os)
 {
    os << "\n\n---------------------------------------------" << std::endl;

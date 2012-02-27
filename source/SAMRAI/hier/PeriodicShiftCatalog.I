@@ -25,7 +25,8 @@ namespace hier {
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const PeriodicId& PeriodicShiftCatalog::getZeroShiftNumber() const
+const PeriodicId&
+PeriodicShiftCatalog::getZeroShiftNumber() const
 {
    return PeriodicId::zero();
 }
@@ -35,7 +36,8 @@ const PeriodicId& PeriodicShiftCatalog::getZeroShiftNumber() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool PeriodicShiftCatalog::isPeriodic() const
+bool
+PeriodicShiftCatalog::isPeriodic() const
 {
    return d_shifts.size() > 1;
 }
@@ -45,13 +47,15 @@ bool PeriodicShiftCatalog::isPeriodic() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int PeriodicShiftCatalog::getNumberOfShifts() const
+int
+PeriodicShiftCatalog::getNumberOfShifts() const
 {
    return (int)d_shifts.size();
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& PeriodicShiftCatalog::shiftNumberToShiftDistance(
+const IntVector&
+PeriodicShiftCatalog::shiftNumberToShiftDistance(
    const PeriodicId& shift_number) const
 {
    TBOX_ASSERT(shift_number.isValid());
@@ -61,7 +65,8 @@ const IntVector& PeriodicShiftCatalog::shiftNumberToShiftDistance(
 }
 
 SAMRAI_INLINE_KEYWORD
-const PeriodicId& PeriodicShiftCatalog::getOppositeShiftNumber(
+const PeriodicId&
+PeriodicShiftCatalog::getOppositeShiftNumber(
    const PeriodicId& shift_number) const
 {
    TBOX_ASSERT(shift_number.isValid());
@@ -71,7 +76,8 @@ const PeriodicId& PeriodicShiftCatalog::getOppositeShiftNumber(
 }
 
 SAMRAI_INLINE_KEYWORD
-PeriodicId PeriodicShiftCatalog::shiftDistanceToShiftNumber(
+PeriodicId
+PeriodicShiftCatalog::shiftDistanceToShiftNumber(
    const IntVector& shift_distance) const
 {
    unsigned int s;
@@ -85,7 +91,8 @@ PeriodicId PeriodicShiftCatalog::shiftDistanceToShiftNumber(
 }
 
 SAMRAI_INLINE_KEYWORD
-int PeriodicShiftCatalog::getInvalidShiftNumber() const
+int
+PeriodicShiftCatalog::getInvalidShiftNumber() const
 {
    return tbox::MathUtilities<int>::getMax();
 }

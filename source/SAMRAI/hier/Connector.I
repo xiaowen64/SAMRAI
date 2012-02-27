@@ -15,19 +15,22 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-bool Connector::isFinalized() const
+bool
+Connector::isFinalized() const
 {
    return d_finalized;
 }
 
 SAMRAI_INLINE_KEYWORD
-BoxLevel::ParallelState Connector::getParallelState() const
+BoxLevel::ParallelState
+Connector::getParallelState() const
 {
    return d_parallel_state;
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::SAMRAI_MPI& Connector::getMPI() const
+const tbox::SAMRAI_MPI&
+Connector::getMPI() const
 {
    TBOX_ASSERT(isFinalized());
    return d_base_handle->getBoxLevel().getMPI();
@@ -41,42 +44,48 @@ const IntVector& Connector::getConnectorWidth() const
 }
 
 SAMRAI_INLINE_KEYWORD
-const BoxLevel& Connector::getBase() const
+const BoxLevel&
+Connector::getBase() const
 {
    TBOX_ASSERT(isFinalized());
    return d_base_handle->getBoxLevel();
 }
 
 SAMRAI_INLINE_KEYWORD
-const BoxLevel& Connector::getHead() const
+const BoxLevel&
+Connector::getHead() const
 {
    TBOX_ASSERT(isFinalized());
    return d_head_handle->getBoxLevel();
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& Connector::getRatio() const
+const IntVector&
+Connector::getRatio() const
 {
    TBOX_ASSERT(isFinalized());
    return d_ratio;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool Connector::ratioIsExact() const
+bool
+Connector::ratioIsExact() const
 {
    TBOX_ASSERT(isFinalized());
    return d_ratio_is_exact;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool Connector::getHeadCoarserFlag() const
+bool
+Connector::getHeadCoarserFlag() const
 {
    TBOX_ASSERT(isFinalized());
    return d_head_coarser;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool Connector::isLocal() const
+bool
+Connector::isLocal() const
 {
    return d_relationships.isLocal(getMPI().getRank());
 }
@@ -86,7 +95,8 @@ bool Connector::isLocal() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool Connector::hasNeighborSet(
+bool
+Connector::hasNeighborSet(
    const BoxId& mapped_box_id) const
 {
    const BoxNeighborhoodCollection& relationships =
@@ -102,7 +112,8 @@ bool Connector::hasNeighborSet(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const BoxNeighborhoodCollection& Connector::getRelations(
+const BoxNeighborhoodCollection&
+Connector::getRelations(
    const BoxId& mapped_box_id) const
 {
 #ifndef DEBUG_CHECK_ASSERTIONS
@@ -122,116 +133,8 @@ const BoxNeighborhoodCollection& Connector::getRelations(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const Connector& Connector::operator = (
-   const Connector& rhs)
-{
-   if (this != &rhs) {
-      d_base_handle = rhs.d_base_handle;
-      d_global_data_up_to_date = rhs.d_global_data_up_to_date;
-      d_global_number_of_neighbor_sets = rhs.d_global_number_of_neighbor_sets;
-      d_head_handle = rhs.d_head_handle;
-      d_global_number_of_relationships = rhs.d_global_number_of_relationships;
-      d_relationships = rhs.d_relationships;
-      d_global_relationships = rhs.d_global_relationships;
-      d_mpi = rhs.d_mpi;
-      d_base_width = rhs.d_base_width;
-      d_ratio = rhs.d_ratio;
-      d_head_coarser = rhs.d_head_coarser;
-      d_parallel_state = rhs.d_parallel_state;
-      d_finalized = rhs.d_finalized;
-      d_connector_type = rhs.d_connector_type;
-   }
-   return *this;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-bool Connector::operator == (
-   const Connector& rhs) const
-{
-   if (this == &rhs) {
-      return true;
-   }
-   // Note: two unfinalized Connectors always compare equal.
-   if (!isFinalized() && !rhs.isFinalized()) {
-      return true;
-   }
-   if (!isFinalized() && rhs.isFinalized()) {
-      return false;
-   }
-   if (isFinalized() && !rhs.isFinalized()) {
-      return false;
-   }
-
-   // Compare only independent attributes.
-   if (d_base_width != rhs.d_base_width) {
-      return false;
-   }
-   if (d_base_handle->getBoxLevel() !=
-       rhs.d_base_handle->getBoxLevel()) {
-      return false;
-   }
-   if (d_head_handle->getBoxLevel() !=
-       rhs.d_head_handle->getBoxLevel()) {
-      return false;
-   }
-   if (d_relationships != rhs.d_relationships) {
-      return false;
-   }
-
-   return true;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-bool Connector::operator != (
-   const Connector& rhs) const
-{
-   if (this == &rhs) {
-      return false;
-   }
-   // Note: two unfinalized Connectors always compare equal.
-   if (!isFinalized() && !rhs.isFinalized()) {
-      return false;
-   }
-   if (!isFinalized() && rhs.isFinalized()) {
-      return true;
-   }
-   if (isFinalized() && !rhs.isFinalized()) {
-      return true;
-   }
-
-   // Compare only independent attributes.
-   if (d_base_width != rhs.d_base_width) {
-      return true;
-   }
-   if (d_base_handle->getBoxLevel() !=
-       rhs.d_base_handle->getBoxLevel()) {
-      return true;
-   }
-   if (d_head_handle->getBoxLevel() !=
-       rhs.d_head_handle->getBoxLevel()) {
-      return true;
-   }
-   if (d_relationships != rhs.d_relationships) {
-      return true;
-   }
-
-   return false;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-void Connector::coarsenLocalNeighbors(
+void
+Connector::coarsenLocalNeighbors(
    const IntVector& ratio)
 {
    d_relationships.coarsenNeighbors(ratio);
@@ -243,7 +146,8 @@ void Connector::coarsenLocalNeighbors(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Connector::refineLocalNeighbors(
+void
+Connector::refineLocalNeighbors(
    const IntVector& ratio)
 {
    d_relationships.refineNeighbors(ratio);
@@ -255,7 +159,8 @@ void Connector::refineLocalNeighbors(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Connector::growLocalNeighbors(
+void
+Connector::growLocalNeighbors(
    const IntVector& growth)
 {
    d_relationships.growNeighbors(growth);
@@ -267,7 +172,8 @@ void Connector::growLocalNeighbors(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Connector::insertLocalNeighbor(
+void
+Connector::insertLocalNeighbor(
    const Box& neighbor,
    const BoxId& box_id)
 {
@@ -280,7 +186,8 @@ void Connector::insertLocalNeighbor(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Connector::insertLocalNeighbor(
+void
+Connector::insertLocalNeighbor(
    const Box& neighbor,
    NeighborhoodIterator& base_box_itr)
 {
@@ -293,7 +200,8 @@ void Connector::insertLocalNeighbor(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-Connector::NeighborhoodIterator Connector::makeEmptyLocalNeighborhood(
+Connector::NeighborhoodIterator
+Connector::makeEmptyLocalNeighborhood(
    const BoxId& box_id)
 {
    TBOX_ASSERT( box_id.getOwnerRank() == d_mpi.getRank() );
@@ -305,7 +213,8 @@ Connector::NeighborhoodIterator Connector::makeEmptyLocalNeighborhood(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Connector::eraseLocalNeighborhood(
+void
+Connector::eraseLocalNeighborhood(
    const BoxId& box_id)
 {
    TBOX_ASSERT( box_id.getOwnerRank() == d_mpi.getRank() );
@@ -317,7 +226,8 @@ void Connector::eraseLocalNeighborhood(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool Connector::hasLocalNeighbor(
+bool
+Connector::hasLocalNeighbor(
    const BoxId& box_id,
    const Box& neighbor) const
 {
@@ -330,7 +240,8 @@ bool Connector::hasLocalNeighbor(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool Connector::isEmptyNeighborhood(
+bool
+Connector::isEmptyNeighborhood(
    const BoxId& box_id) const
 {
    return getRelations(box_id).emptyBoxNeighborhood(box_id);
@@ -341,7 +252,8 @@ bool Connector::isEmptyNeighborhood(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int Connector::numLocalNeighbors(
+int
+Connector::numLocalNeighbors(
    const BoxId& box_id) const
 {
    TBOX_ASSERT(hasNeighborSet(box_id));
@@ -356,7 +268,8 @@ int Connector::numLocalNeighbors(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Connector::getLocalNeighbors(
+void
+Connector::getLocalNeighbors(
    BoxContainer& neighbors) const
 {
    d_relationships.getNeighbors(neighbors);
@@ -368,7 +281,8 @@ void Connector::getLocalNeighbors(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Connector::getLocalNeighbors(
+void
+Connector::getLocalNeighbors(
    std::map<BlockId, BoxContainer>& neighbors) const
 {
    d_relationships.getNeighbors(neighbors);
@@ -380,7 +294,8 @@ void Connector::getLocalNeighbors(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Connector::getLocalOwners(
+void
+Connector::getLocalOwners(
    std::set<int>& owners) const
 {
    d_relationships.getOwners(owners);
@@ -392,7 +307,8 @@ void Connector::getLocalOwners(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Connector::getLocalOwners(
+void
+Connector::getLocalOwners(
    ConstNeighborhoodIterator& base_boxes_itr,
    std::set<int>& owners) const
 {
@@ -405,7 +321,8 @@ void Connector::getLocalOwners(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Connector::clearNeighborhoods()
+void
+Connector::clearNeighborhoods()
 {
    d_relationships.clear();
    d_global_relationships.clear();
@@ -417,7 +334,8 @@ void Connector::clearNeighborhoods()
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-Connector::ConstNeighborhoodIterator Connector::begin() const
+Connector::ConstNeighborhoodIterator
+Connector::begin() const
 {
    return d_relationships.begin();
 }
@@ -427,7 +345,8 @@ Connector::ConstNeighborhoodIterator Connector::begin() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-Connector::NeighborhoodIterator Connector::begin()
+Connector::NeighborhoodIterator
+Connector::begin()
 {
    return d_relationships.begin();
 }
@@ -437,7 +356,8 @@ Connector::NeighborhoodIterator Connector::begin()
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-Connector::ConstNeighborhoodIterator Connector::end() const
+Connector::ConstNeighborhoodIterator
+Connector::end() const
 {
    return d_relationships.end();
 }
@@ -447,7 +367,8 @@ Connector::ConstNeighborhoodIterator Connector::end() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-Connector::NeighborhoodIterator Connector::end()
+Connector::NeighborhoodIterator
+Connector::end()
 {
    return d_relationships.end();
 }
@@ -457,7 +378,8 @@ Connector::NeighborhoodIterator Connector::end()
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-Connector::ConstNeighborIterator Connector::begin(
+Connector::ConstNeighborIterator
+Connector::begin(
    ConstNeighborhoodIterator& nbrhd) const
 {
    return nbrhd.d_collection->begin(nbrhd);
@@ -468,7 +390,8 @@ Connector::ConstNeighborIterator Connector::begin(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-Connector::NeighborIterator Connector::begin(
+Connector::NeighborIterator
+Connector::begin(
    NeighborhoodIterator& nbrhd)
 {
    BoxNeighborhoodCollection* tmp =
@@ -481,7 +404,8 @@ Connector::NeighborIterator Connector::begin(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-Connector::ConstNeighborIterator Connector::end(
+Connector::ConstNeighborIterator
+Connector::end(
    ConstNeighborhoodIterator& nbrhd) const
 {
    return nbrhd.d_collection->end(nbrhd);
@@ -492,7 +416,8 @@ Connector::ConstNeighborIterator Connector::end(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-Connector::NeighborIterator Connector::end(
+Connector::NeighborIterator
+Connector::end(
    NeighborhoodIterator& nbrhd)
 {
    BoxNeighborhoodCollection* tmp =
@@ -505,7 +430,8 @@ Connector::NeighborIterator Connector::end(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-Connector::ConstNeighborhoodIterator Connector::findLocal(
+Connector::ConstNeighborhoodIterator
+Connector::findLocal(
    const BoxId& box_id) const
 {
    BoxId non_per_id(box_id.getGlobalId(),
@@ -518,7 +444,8 @@ Connector::ConstNeighborhoodIterator Connector::findLocal(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-Connector::NeighborhoodIterator Connector::findLocal(
+Connector::NeighborhoodIterator
+Connector::findLocal(
    const BoxId& box_id)
 {
    BoxId non_per_id(box_id.getGlobalId(),
@@ -531,7 +458,8 @@ Connector::NeighborhoodIterator Connector::findLocal(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-Connector::ConstNeighborhoodIterator Connector::find(
+Connector::ConstNeighborhoodIterator
+Connector::find(
    const BoxId& box_id) const
 {
    const BoxNeighborhoodCollection& relationships = getRelations(box_id);
@@ -550,7 +478,8 @@ Connector::ConstNeighborhoodIterator Connector::find(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool Connector::localNeighborhoodsEqual(
+bool
+Connector::localNeighborhoodsEqual(
    const Connector& other) const
 {
    return d_relationships == other.d_relationships;
@@ -561,7 +490,8 @@ bool Connector::localNeighborhoodsEqual(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool Connector::neighborhoodEqual(
+bool
+Connector::neighborhoodEqual(
    const BoxId& box_id,
    const Connector& other) const
 {
@@ -578,7 +508,8 @@ bool Connector::neighborhoodEqual(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Connector::putNeighborhoodsToDatabase(
+void
+Connector::putNeighborhoodsToDatabase(
    const boost::shared_ptr<tbox::Database>& database)
 {
    d_relationships.putUnregisteredToDatabase(database);
@@ -590,11 +521,266 @@ void Connector::putNeighborhoodsToDatabase(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Connector::getNeighborhoodsFromDatabase(
+void
+Connector::getNeighborhoodsFromDatabase(
    tbox::Database& database)
 {
    d_relationships.getFromDatabase(database);
    return;
+}
+
+/*
+ ***************************************************************************
+ ***************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+Connector::getNeighborBoxes(
+   const BoxId& box_id,
+   BoxContainer& nbr_boxes) const
+{
+   const BoxNeighborhoodCollection& relationships = getRelations(box_id);
+   BoxId non_per_id(box_id.getGlobalId(),
+                    PeriodicId::zero());
+   relationships.getNeighbors(non_per_id, nbr_boxes);
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+const BoxNeighborhoodCollection&
+Connector::getGlobalNeighborhoodSets() const
+{
+   if (d_parallel_state == BoxLevel::DISTRIBUTED) {
+      TBOX_ERROR("Global connectivity unavailable in DISTRIBUTED state.");
+   }
+   return d_global_relationships;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+Connector::removePeriodicRelationships()
+{
+   d_relationships.erasePeriodicNeighbors();
+   if (d_parallel_state == BoxLevel::GLOBALIZED) {
+      d_global_relationships.erasePeriodicNeighbors();
+   }
+   return;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+Connector::removePeriodicLocalNeighbors()
+{
+   d_relationships.erasePeriodicNeighbors();
+   return;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+bool
+Connector::hasPeriodicLocalNeighborhoodBaseBoxes() const
+{
+   bool result = false;
+   for (ConstNeighborhoodIterator ei = begin(); ei != end(); ++ei) {
+      if (ei->getPeriodicId().getPeriodicValue() != 0) {
+         result = true;
+         break;
+      }
+   }
+   return result;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+Connector::clear()
+{
+   if ( d_base_handle ) {
+      d_relationships.clear();
+      d_global_relationships.clear();
+      d_mpi.setCommunicator(tbox::SAMRAI_MPI::commNull);
+      d_base_handle.reset();
+      d_head_handle.reset();
+      d_base_width(0) = d_ratio(0) = 0;
+      d_parallel_state = BoxLevel::DISTRIBUTED;
+   }
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+Connector::eraseEmptyNeighborSets()
+{
+   d_relationships.eraseEmptyNeighborhoods();
+   d_global_data_up_to_date = false;
+   return;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+int
+Connector::numLocalEmptyNeighborhoods() const
+{
+   int ct = 0;
+   for (ConstNeighborhoodIterator itr = begin(); itr != end(); ++itr) {
+      if (d_relationships.emptyBoxNeighborhood(itr)) {
+         ++ct;
+      }
+   }
+   return ct;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+int
+Connector::getLocalNumberOfNeighborSets() const
+{
+   return d_relationships.numBoxNeighborhoods();
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+int
+Connector::getLocalNumberOfRelationships() const
+{
+  return d_relationships.sumNumNeighbors();
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+int
+Connector::getGlobalNumberOfNeighborSets() const
+{
+   TBOX_ASSERT(isFinalized());
+
+   cacheGlobalReducedData();
+   return d_global_number_of_neighbor_sets;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+int
+Connector::getGlobalNumberOfRelationships() const
+{
+   TBOX_ASSERT(isFinalized());
+
+   cacheGlobalReducedData();
+   return d_global_number_of_relationships;
+}
+
+/*
+ ***********************************************************************
+ * Return a Outputter that can dump the Connector to a stream.
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+Connector::Outputter
+Connector::format(
+   const std::string& border,
+   int detail_depth) const
+{
+   return Outputter(*this, border, detail_depth);
+}
+
+/*
+ ***********************************************************************
+ * Return a Outputter that can dump the Connector to a stream.
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+Connector::Outputter
+Connector::formatStatistics(
+   const std::string& border) const
+{
+   return Outputter(*this, border, 0, true);
+}
+
+/*
+ ***************************************************************************
+ ***************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+Connector::setConnectorType(
+   ConnectorType connector_type)
+{
+   d_connector_type = connector_type;
+}
+
+/*
+ ***************************************************************************
+ ***************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+Connector::ConnectorType
+Connector::getConnectorType() const
+{
+   return d_connector_type;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+Connector::initializeCallback()
+{
+   t_acquire_remote_relationships = tbox::TimerManager::getManager()->
+      getTimer("hier::Connector::acquireRemoteNeighborhoods()");
+   t_cache_global_reduced_data = tbox::TimerManager::getManager()->
+      getTimer("hier::Connector::cacheGlobalReducedData()");
+}
+
+/*
+ ***************************************************************************
+ *
+ * Release static timers.  To be called by shutdown registry to make sure
+ * memory for timers does not leak.
+ *
+ ***************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+Connector::finalizeCallback()
+{
+   t_acquire_remote_relationships.reset();
+   t_cache_global_reduced_data.reset();
 }
 
 }

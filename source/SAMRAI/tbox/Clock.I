@@ -51,7 +51,7 @@ void Clock::timestamp(
 {
 #ifdef HAVE_SYS_TIMES_H
    s_null_clock_t = times(&s_tms_buffer);
-   wall = tbox::SAMRAI_MPI::Wtime();
+   wall = SAMRAI_MPI::Wtime();
    sys = s_tms_buffer.tms_stime;
    user = s_tms_buffer.tms_utime;
 #endif

@@ -704,8 +704,7 @@ private:
     * @brief Container of distributed patches on level.
     *
     */
-   typedef std::map<BoxId, boost::shared_ptr<Patch> >
-   PatchContainer;
+   typedef std::map<BoxId, boost::shared_ptr<Patch> > PatchContainer;
 
 public:
    /*!
@@ -985,8 +984,7 @@ private:
     * @brief Initialize static state
     */
    static bool
-   initialize(
-      void);
+   initialize();
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

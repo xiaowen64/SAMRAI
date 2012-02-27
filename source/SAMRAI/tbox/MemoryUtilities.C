@@ -164,7 +164,7 @@ void MemoryUtilities::recordMemoryInfo(
 void MemoryUtilities::printMaxMemory(
    std::ostream& os)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    /*
     * Step through all nodes (>0) and send max memory to processor 0,
     * which subsequently writes it out.

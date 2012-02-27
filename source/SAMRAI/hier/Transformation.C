@@ -105,7 +105,8 @@ Transformation::transform(Box& box) const
  * ************************************************************************
  */
 void
-Transformation::inverseTransform(Box& box) const
+Transformation::inverseTransform(
+   Box& box) const
 {
    TBOX_ASSERT(box.getBlockId() == d_end_block ||
                d_end_block == BlockId::invalidId());
@@ -634,7 +635,8 @@ Transformation::calculateReverseShift(
  *************************************************************************
  */
 
-void Transformation::translateAndCopyData(
+void
+Transformation::translateAndCopyData(
    Patch& dst_patch,
    const int dst_id,
    const Patch& src_patch,
@@ -659,7 +661,8 @@ void Transformation::translateAndCopyData(
       rotate);
 }
 
-void Transformation::translateAndFillData(
+void
+Transformation::translateAndFillData(
    Patch& dst_patch,
    const int dst_id,
    const Patch& src_patch,
@@ -692,7 +695,8 @@ void Transformation::translateAndFillData(
  *************************************************************************
  */
 
-void Transformation::rotateIndex(
+void
+Transformation::rotateIndex(
    int* index,
    const tbox::Dimension& dim,
    const RotationIdentifier rotation)
@@ -782,27 +786,13 @@ void Transformation::rotateIndex(
 /*
  *************************************************************************
  *
- * Rotate an index around the origin.
- *
- *************************************************************************
- */
-
-void Transformation::rotateIndex(
-   Index& index,
-   const RotationIdentifier rotation)
-{
-   rotateIndex(&index[0], index.getDim(), rotation);
-}
-
-/*
- *************************************************************************
- *
  * Private routine to rotate an index about an axis.
  *
  *************************************************************************
  */
 
-void Transformation::rotateAboutAxis(
+void
+Transformation::rotateAboutAxis(
    const tbox::Dimension& dim,
    int* index,
    const int axis,

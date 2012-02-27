@@ -999,7 +999,7 @@ Array<DatabaseBox> HDFDatabase::getDatabaseBoxArray(
        * This seems a little hacky but HDF and POD stuff is making this ugly.
        */
       for (size_t i = 0; i < static_cast<size_t>(nsel); ++i) {
-         locPtr[i].setDim(tbox::Dimension(static_cast<unsigned short>(locPtr[i].d_data.d_dimension)));
+         locPtr[i].setDim(Dimension(static_cast<unsigned short>(locPtr[i].d_data.d_dimension)));
       }
    }
 
@@ -2171,7 +2171,7 @@ void HDFDatabase::printClassData(
 
    for (List<KeyData>::Iterator i(d_keydata); i; i++) {
       int t = i().d_type;
-      switch (tbox::MathUtilities<int>::Abs(t)) {
+      switch (MathUtilities<int>::Abs(t)) {
          case KEY_DATABASE: {
             os << "   Data entry `" << i().d_key << "' is"
                << " a database" << std::endl;

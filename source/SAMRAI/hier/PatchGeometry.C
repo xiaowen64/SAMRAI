@@ -180,7 +180,8 @@ PatchGeometry::setBoundaryBoxesOnPatch(
    }
 }
 
-void PatchGeometry::printClassData(
+void
+PatchGeometry::printClassData(
    std::ostream& stream) const
 {
    stream << "\nPatchGeometry::printClassData..." << std::endl;
@@ -196,6 +197,29 @@ void PatchGeometry::printClassData(
          stream << "box " << i << " = "
                 << d_patch_boundaries[d][i].getBox() << std::endl;
       }
+   }
+}
+
+PatchGeometry::TwoDimBool::TwoDimBool():
+   d_dim(tbox::Dimension::getInvalidDimension())
+{
+}
+
+PatchGeometry::TwoDimBool::TwoDimBool(
+   const tbox::Dimension& dim):
+   d_dim(dim)
+{
+   TBOX_DIM_ASSERT_CHECK_DIM(dim);
+   setAll(false);
+}
+
+PatchGeometry::TwoDimBool::TwoDimBool(
+   const tbox::Dimension& dim,
+   bool v):
+   d_dim(dim)
+{
+   for (int i = 0; i < 2 * d_dim.getValue(); ++i) {
+      d_data[i] = v;
    }
 }
 

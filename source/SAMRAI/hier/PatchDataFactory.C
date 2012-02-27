@@ -19,14 +19,15 @@
 namespace SAMRAI {
 namespace hier {
 
-PatchDataFactory::~PatchDataFactory()
+PatchDataFactory::PatchDataFactory(
+   const IntVector& ghosts):
+   d_ghosts(ghosts)
 {
+   TBOX_ASSERT(ghosts.min() >= 0);
 }
 
-const IntVector&
-PatchDataFactory::getGhostCellWidth() const
+PatchDataFactory::~PatchDataFactory()
 {
-   return d_ghosts;
 }
 
 /**********************************************************************

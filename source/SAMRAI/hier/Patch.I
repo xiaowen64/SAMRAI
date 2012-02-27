@@ -15,57 +15,66 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-const Box& Patch::getBox() const
+const Box&
+Patch::getBox() const
 {
    return d_mapped_box;
 }
 
 SAMRAI_INLINE_KEYWORD
-const GlobalId& Patch::getGlobalId() const
+const GlobalId&
+Patch::getGlobalId() const
 {
    return d_mapped_box.getGlobalId();
 }
 
 SAMRAI_INLINE_KEYWORD
-const LocalId& Patch::getLocalId() const
+const LocalId&
+Patch::getLocalId() const
 {
    return d_mapped_box.getLocalId();
 }
 
 SAMRAI_INLINE_KEYWORD
-void Patch::setPatchLevelNumber(
+void
+Patch::setPatchLevelNumber(
    const int level_number)
 {
    d_patch_level_number = level_number;
 }
 
 SAMRAI_INLINE_KEYWORD
-int Patch::getPatchLevelNumber() const
+int
+Patch::getPatchLevelNumber() const
 {
    return d_patch_level_number;
 }
 
 SAMRAI_INLINE_KEYWORD
-void Patch::setPatchInHierarchy(
+void
+Patch::setPatchInHierarchy(
    bool in_hierarchy)
 {
    d_patch_in_hierarchy = in_hierarchy;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool Patch::inHierarchy() const
+bool
+Patch::inHierarchy() const
 {
    return d_patch_in_hierarchy;
 }
 
 SAMRAI_INLINE_KEYWORD
-boost::shared_ptr<PatchDescriptor> Patch::getPatchDescriptor() const
+boost::shared_ptr<PatchDescriptor>
+Patch::getPatchDescriptor() const
 {
    return d_descriptor;
 }
 
 SAMRAI_INLINE_KEYWORD
-boost::shared_ptr<PatchData> Patch::getPatchData(
+boost::shared_ptr<PatchData>
+Patch::getPatchData(
    const int id) const
 {
    TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
@@ -74,7 +83,8 @@ boost::shared_ptr<PatchData> Patch::getPatchData(
 }
 
 SAMRAI_INLINE_KEYWORD
-boost::shared_ptr<PatchData> Patch::getPatchData(
+boost::shared_ptr<PatchData>
+Patch::getPatchData(
    const boost::shared_ptr<Variable>& variable,
    const boost::shared_ptr<VariableContext>& context) const
 {
@@ -89,7 +99,8 @@ boost::shared_ptr<PatchData> Patch::getPatchData(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Patch::setPatchData(
+void
+Patch::setPatchData(
    const int id,
    const boost::shared_ptr<PatchData>& data)
 {
@@ -100,27 +111,31 @@ void Patch::setPatchData(
 }
 
 SAMRAI_INLINE_KEYWORD
-bool Patch::checkAllocated(
+bool
+Patch::checkAllocated(
    const int id) const
 {
    return (id < d_patch_data.getSize()) && d_patch_data[id];
 }
 
 SAMRAI_INLINE_KEYWORD
-void Patch::setPatchGeometry(
+void
+Patch::setPatchGeometry(
    const boost::shared_ptr<PatchGeometry>& geometry)
 {
    d_patch_geometry = geometry;
 }
 
 SAMRAI_INLINE_KEYWORD
-boost::shared_ptr<PatchGeometry> Patch::getPatchGeometry() const
+boost::shared_ptr<PatchGeometry>
+Patch::getPatchGeometry() const
 {
    return d_patch_geometry;
 }
 
 SAMRAI_INLINE_KEYWORD
-void Patch::setTime(
+void
+Patch::setTime(
    const double timestamp,
    const int id)
 {
@@ -131,9 +146,33 @@ void Patch::setTime(
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Dimension& Patch::getDim() const
+const tbox::Dimension&
+Patch::getDim() const
 {
    return d_mapped_box.getDim();
+}
+
+SAMRAI_INLINE_KEYWORD
+size_t
+Patch::getSizeOfPatchData(
+   const int id) const
+{
+   return d_descriptor->getPatchDataFactory(id)->getSizeOfMemory(
+      d_mapped_box);
+}
+
+SAMRAI_INLINE_KEYWORD
+void
+Patch::deallocatePatchData(
+   const int id)
+{
+   TBOX_ASSERT((id >= 0) &&
+      (id < d_descriptor->getMaxNumberRegisteredComponents()));
+
+   if (id < d_patch_data.getSize()) {
+      d_patch_data[id].reset();
+   }
+
 }
 
 }

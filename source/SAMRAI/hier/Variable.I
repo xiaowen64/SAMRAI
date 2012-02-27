@@ -14,25 +14,29 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-int Variable::getCurrentMaximumInstanceNumber()
+int
+Variable::getCurrentMaximumInstanceNumber()
 {
    return s_instance_counter;
 }
 
 SAMRAI_INLINE_KEYWORD
-int Variable::getInstanceIdentifier() const
+int
+Variable::getInstanceIdentifier() const
 {
    return d_instance;
 }
 
 SAMRAI_INLINE_KEYWORD
-const std::string& Variable::getName() const
+const std::string&
+Variable::getName() const
 {
    return d_name;
 }
 
 SAMRAI_INLINE_KEYWORD
-void Variable::setPatchDataFactory(
+void
+Variable::setPatchDataFactory(
    const boost::shared_ptr<PatchDataFactory>& factory)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *factory);
@@ -47,10 +51,12 @@ Variable::getPatchDataFactory() const
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Dimension& Variable::getDim() const
+const tbox::Dimension&
+Variable::getDim() const
 {
    return d_dim;
 }
+
 
 }
 }

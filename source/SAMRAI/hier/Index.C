@@ -35,7 +35,94 @@ Index::s_initialize_finalize_handler(
    Index::finalizeCallback,
    tbox::StartupShutdownManager::priorityTimers);
 
-void Index::initializeCallback()
+Index::Index():
+   IntVector()
+{
+}
+
+Index::Index(
+   const tbox::Dimension& dim):
+   IntVector(dim)
+{
+   // an explicit setting Invalid is allowed.
+   TBOX_DIM_ASSERT((!dim.isValid()) || (
+         dim.getValue() > 0 && dim <= tbox::Dimension::getMaxDimension()));
+}
+
+Index::Index(
+   const tbox::Dimension& dim,
+   const int i):
+   IntVector(dim, i)
+{
+   // an explicit setting Invalid is allowed.
+   TBOX_DIM_ASSERT((!dim.isValid()) || (
+         dim >= tbox::Dimension(1) && dim <= tbox::Dimension::getMaxDimension()));
+}
+
+Index::Index(
+   const int i,
+   const int j):
+   IntVector(tbox::Dimension(2))
+{
+   TBOX_DIM_ASSERT(
+      tbox::Dimension::getMaxDimension() >= tbox::Dimension(2));
+
+   (*this)[0] = i;
+   if (tbox::Dimension::MAXIMUM_DIMENSION_VALUE > 1) {
+      (*this)[1] = j;
+   }
+}
+
+Index::Index(
+   const int i,
+   const int j,
+   const int k):
+   IntVector(tbox::Dimension(3))
+{
+   TBOX_DIM_ASSERT(tbox::Dimension::getMaxDimension() >= tbox::Dimension(3));
+
+   (*this)[0] = i;
+   if (tbox::Dimension::MAXIMUM_DIMENSION_VALUE > 1) {
+      (*this)[1] = j;
+   }
+
+   if (tbox::Dimension::MAXIMUM_DIMENSION_VALUE > 2) {
+      (*this)[2] = k;
+   }
+
+}
+
+Index::Index(
+   const tbox::Array<int>& a):
+   IntVector(a)
+{
+}
+
+Index::Index(
+   const tbox::Dimension& dim,
+   const int array[]):
+   IntVector(dim, array)
+{
+}
+
+Index::Index(
+   const Index& rhs):
+   IntVector(rhs)
+{
+}
+
+Index::Index(
+   const IntVector& rhs):
+   IntVector(rhs)
+{
+}
+
+Index::~Index()
+{
+}
+
+void
+Index::initializeCallback()
 {
    for (unsigned short d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
       s_zeros[d] = new Index(tbox::Dimension(static_cast<unsigned short>(d + 1)), 0);
@@ -48,7 +135,8 @@ void Index::initializeCallback()
    }
 }
 
-void Index::finalizeCallback()
+void
+Index::finalizeCallback()
 {
    for (int d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
       delete s_zeros[d];

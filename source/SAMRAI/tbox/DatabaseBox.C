@@ -18,7 +18,7 @@ namespace SAMRAI {
 namespace tbox {
 
 DatabaseBox::DatabaseBox():
-   d_dim(tbox::Dimension::getInvalidDimension())
+   d_dim(Dimension::getInvalidDimension())
 {
    d_data.d_dimension = 0;
    d_data.d_lo[0] = d_data.d_hi[0] = 0;
@@ -40,7 +40,7 @@ DatabaseBox::DatabaseBox(
 }
 
 DatabaseBox::DatabaseBox(
-   const tbox::Dimension& dim,
+   const Dimension& dim,
    const int* lower,
    const int* upper):
    d_dim(dim)

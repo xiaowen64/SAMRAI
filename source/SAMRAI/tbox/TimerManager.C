@@ -87,7 +87,7 @@ TimerManager *TimerManager::getManager()
       TBOX_WARNING("TimerManager::getManager() is called before\n"
          << "createManager().  Creating the timer manager\n"
          << "(without using input database.)\n");
-      createManager(boost::shared_ptr<tbox::Database>());
+      createManager(boost::shared_ptr<Database>());
    }
 
    return s_timer_manager_instance;
@@ -683,7 +683,7 @@ void TimerManager::print(
    std::ostream& os)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    /*
     * There are 18 possible timer values that users may wish to look at.
     * (i.e. User/sys/wallclock time, Total or Exclusive, for individual
@@ -2392,12 +2392,12 @@ double TimerManager::computeOverheadConstantActiveOrInactive(
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    std::string outer_name("TimerManger::Outer");
-   boost::shared_ptr<tbox::Timer> outer_timer(
-      tbox::TimerManager::getManager()->getTimer(outer_name, true));
+   boost::shared_ptr<Timer> outer_timer(
+      TimerManager::getManager()->getTimer(outer_name, true));
 
    std::string inner_name("TimerMangerInner");
-   boost::shared_ptr<tbox::Timer> inner_timer(
-      tbox::TimerManager::getManager()->getTimer(inner_name, active));
+   boost::shared_ptr<Timer> inner_timer(
+      TimerManager::getManager()->getTimer(inner_name, active));
 
    const int ntest = 1000;
    for (int i = 0; i < ntest; i++) {

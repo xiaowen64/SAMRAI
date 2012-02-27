@@ -54,7 +54,8 @@ int OverlapConnectorAlgorithm::s_operation_mpi_tag = 0;
  * with reused tags anyway.
  */
 
-tbox::SAMRAI_MPI OverlapConnectorAlgorithm::s_class_mpi(tbox::SAMRAI_MPI::commNull);
+tbox::SAMRAI_MPI OverlapConnectorAlgorithm::s_class_mpi(
+   tbox::SAMRAI_MPI::commNull);
 
 tbox::StartupShutdownManager::Handler
 OverlapConnectorAlgorithm::s_initialize_finalize_handler(
@@ -102,7 +103,8 @@ OverlapConnectorAlgorithm::~OverlapConnectorAlgorithm()
  ***********************************************************************
  ***********************************************************************
  */
-void OverlapConnectorAlgorithm::setSanityCheckMethodPreconditions(
+void
+OverlapConnectorAlgorithm::setSanityCheckMethodPreconditions(
    bool do_check)
 {
    d_sanity_check_method_preconditions = do_check;
@@ -112,7 +114,8 @@ void OverlapConnectorAlgorithm::setSanityCheckMethodPreconditions(
  ***********************************************************************
  ***********************************************************************
  */
-void OverlapConnectorAlgorithm::setSanityCheckMethodPostconditions(
+void
+OverlapConnectorAlgorithm::setSanityCheckMethodPostconditions(
    bool do_check)
 {
    d_sanity_check_method_postconditions = do_check;
@@ -123,7 +126,8 @@ void OverlapConnectorAlgorithm::setSanityCheckMethodPostconditions(
  ***********************************************************************
  */
 
-void OverlapConnectorAlgorithm::extractNeighbors(
+void
+OverlapConnectorAlgorithm::extractNeighbors(
    NeighborSet& neighbors,
    const Connector& connector,
    const BoxId& mapped_box_id,
@@ -209,7 +213,8 @@ void OverlapConnectorAlgorithm::extractNeighbors(
  ***********************************************************************
  */
 
-void OverlapConnectorAlgorithm::extractNeighbors(
+void
+OverlapConnectorAlgorithm::extractNeighbors(
    Connector& other,
    const Connector& connector,
    const IntVector& gcw) const
@@ -300,7 +305,8 @@ void OverlapConnectorAlgorithm::extractNeighbors(
  ***********************************************************************
  */
 
-void OverlapConnectorAlgorithm::findOverlaps(
+void
+OverlapConnectorAlgorithm::findOverlaps(
    Connector& connector,
    const bool ignore_self_overlap) const
 {
@@ -314,7 +320,8 @@ void OverlapConnectorAlgorithm::findOverlaps(
  ***********************************************************************
  */
 
-void OverlapConnectorAlgorithm::findOverlaps(
+void
+OverlapConnectorAlgorithm::findOverlaps(
    Connector& connector,
    const BoxLevel& globalized_head,
    const bool ignore_self_overlap) const
@@ -332,7 +339,8 @@ void OverlapConnectorAlgorithm::findOverlaps(
  ***********************************************************************
  */
 
-void OverlapConnectorAlgorithm::findOverlaps_rbbt(
+void
+OverlapConnectorAlgorithm::findOverlaps_rbbt(
    Connector& connector,
    const BoxLevel& head,
    const bool ignore_self_overlap) const
@@ -448,7 +456,8 @@ void OverlapConnectorAlgorithm::findOverlaps_rbbt(
  ***********************************************************************
  ***********************************************************************
  */
-void OverlapConnectorAlgorithm::bridge(
+void
+OverlapConnectorAlgorithm::bridge(
    Connector& west_to_east,
    Connector& east_to_west,
    const Connector& west_to_cent,
@@ -478,7 +487,8 @@ void OverlapConnectorAlgorithm::bridge(
  ***********************************************************************
  ***********************************************************************
  */
-void OverlapConnectorAlgorithm::bridgeWithNesting(
+void
+OverlapConnectorAlgorithm::bridgeWithNesting(
    Connector& west_to_east,
    Connector& east_to_west,
    const Connector& west_to_cent,
@@ -507,7 +517,8 @@ void OverlapConnectorAlgorithm::bridgeWithNesting(
  ***********************************************************************
  ***********************************************************************
  */
-void OverlapConnectorAlgorithm::bridge(
+void
+OverlapConnectorAlgorithm::bridge(
    Connector& west_to_east,
    Connector& east_to_west,
    const Connector& west_to_cent,
@@ -536,7 +547,8 @@ void OverlapConnectorAlgorithm::bridge(
  ***********************************************************************
  ***********************************************************************
  */
-void OverlapConnectorAlgorithm::bridge(
+void
+OverlapConnectorAlgorithm::bridge(
    Connector& west_to_cent,
    const Connector& cent_to_east,
    const Connector& east_to_cent,
@@ -561,7 +573,8 @@ void OverlapConnectorAlgorithm::bridge(
  ***********************************************************************
  ***********************************************************************
  */
-void OverlapConnectorAlgorithm::bridge(
+void
+OverlapConnectorAlgorithm::bridge(
    Connector& west_to_east,
    const Connector& west_to_cent,
    const Connector& cent_to_east,
@@ -589,7 +602,8 @@ void OverlapConnectorAlgorithm::bridge(
  ***********************************************************************
  ***********************************************************************
  */
-void OverlapConnectorAlgorithm::bridge(
+void
+OverlapConnectorAlgorithm::bridge(
    Connector& west_to_east,
    const Connector& west_to_cent,
    const Connector& cent_to_east,
@@ -636,7 +650,8 @@ void OverlapConnectorAlgorithm::bridge(
  ***********************************************************************
  */
 
-void OverlapConnectorAlgorithm::privateBridge(
+void
+OverlapConnectorAlgorithm::privateBridge(
    Connector& west_to_east,
    Connector* east_to_west,
    const Connector& west_to_cent,
@@ -930,7 +945,8 @@ void OverlapConnectorAlgorithm::privateBridge(
  ***********************************************************************
  */
 
-void OverlapConnectorAlgorithm::privateBridge(
+void
+OverlapConnectorAlgorithm::privateBridge(
    Connector& west_to_cent,
    const Connector& cent_to_east,
    const Connector& east_to_cent,
@@ -1204,7 +1220,8 @@ void OverlapConnectorAlgorithm::privateBridge(
  ***********************************************************************
  ***********************************************************************
  */
-void OverlapConnectorAlgorithm::privateBridge_checkParameters(
+void
+OverlapConnectorAlgorithm::privateBridge_checkParameters(
    const Connector& west_to_cent,
    const Connector& cent_to_east,
    const Connector& east_to_cent,
@@ -1280,7 +1297,8 @@ void OverlapConnectorAlgorithm::privateBridge_checkParameters(
  * information in message buffers.
  ***********************************************************************
  */
-void OverlapConnectorAlgorithm::privateModify_removeAndCache(
+void
+OverlapConnectorAlgorithm::privateModify_removeAndCache(
    std::map<int, std::vector<int> >& neighbor_removal_mesg,
    Connector& overlap_connector,
    Connector* overlap_connector_transpose,
@@ -1304,7 +1322,8 @@ void OverlapConnectorAlgorithm::privateModify_removeAndCache(
  ***********************************************************************
  ***********************************************************************
  */
-void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
+void
+OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
    std::map<int, std::vector<int> > neighbor_removal_mesg,
    Connector& west_to_east,
    Connector* east_to_west,
@@ -1612,7 +1631,8 @@ void OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
  ***********************************************************************
  */
 
-void OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
+void
+OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
    const int owner_rank,
    NeighborSet& visible_base_nabrs,
    NeighborSet::Iterator& base_ni,
@@ -1644,8 +1664,6 @@ void OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
       TBOX_ERROR("Can't coarsen in one dimension and refine in another");
    }
 #endif
-
-   const GridGeometry& grid_geometry(*bridging_connector.getHead().getGridGeometry());
 
    //std::vector<Box> found_nabrs, scratch_found_nabrs; // Should be made a member to avoid repetitive alloc/dealloc.  Reserve in privateBridge and used here.
    BoxContainer found_nabrs, scratch_found_nabrs; // Should be made a member to avoid repetitive alloc/dealloc.  Reserve in privateBridge and used here.
@@ -1749,7 +1767,8 @@ void OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
  ***********************************************************************
  */
 
-void OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
+void
+OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
    const Box& mapped_box,
    BoxContainer& neighbors,
    BoxContainer& scratch_space,
@@ -1794,7 +1813,8 @@ void OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
  ***********************************************************************
  */
 
-void OverlapConnectorAlgorithm::findOverlapErrors(
+void
+OverlapConnectorAlgorithm::findOverlapErrors(
    const Connector& connector,
    Connector& missing,
    Connector& extra,
@@ -1880,7 +1900,8 @@ void OverlapConnectorAlgorithm::findOverlapErrors(
  ***********************************************************************
  */
 
-void OverlapConnectorAlgorithm::assertOverlapCorrectness(
+void
+OverlapConnectorAlgorithm::assertOverlapCorrectness(
    const Connector& connector,
    bool ignore_self_overlap,
    bool assert_completeness,
@@ -1933,7 +1954,8 @@ void OverlapConnectorAlgorithm::assertOverlapCorrectness(
  ***********************************************************************
  */
 
-int OverlapConnectorAlgorithm::checkOverlapCorrectness(
+int
+OverlapConnectorAlgorithm::checkOverlapCorrectness(
    const Connector& connector,
    bool ignore_self_overlap,
    bool assert_completeness,
@@ -2196,7 +2218,8 @@ int OverlapConnectorAlgorithm::checkOverlapCorrectness(
  ***********************************************************************
  ***********************************************************************
  */
-void OverlapConnectorAlgorithm::initializeCallback()
+void
+OverlapConnectorAlgorithm::initializeCallback()
 {
 
    if (s_print_steps == '\0') {
@@ -2247,7 +2270,8 @@ void OverlapConnectorAlgorithm::initializeCallback()
  ***************************************************************************
  */
 
-void OverlapConnectorAlgorithm::finalizeCallback()
+void
+OverlapConnectorAlgorithm::finalizeCallback()
 {
    t_find_overlaps_rbbt.reset();
    t_bridge.reset();

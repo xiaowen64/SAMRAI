@@ -17,6 +17,7 @@
 #include "SAMRAI/tbox/DatabaseBox.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <vector>
@@ -1406,7 +1407,14 @@ public:
    void
    getVector(
       const std::string& key,
-      std::vector<TYPE>& vector);
+      std::vector<TYPE>& vector)
+   {
+      size_t size = getInteger(key + "_size");
+      for (unsigned int i = 0; i < size; ++i) {
+         const std::string index_str = Utilities::intToString(i);
+         vector[i].getFromDatabase(*this, key + "_" + index_str);
+      }
+   }
 
    /**
     * Create an vector entry in the database with the specified
@@ -1422,7 +1430,15 @@ public:
    void
    putVector(
       const std::string& key,
-      const std::vector<TYPE>& vector);
+      const std::vector<TYPE>& vector)
+   {
+      unsigned int size = static_cast<int>(vector.size());
+      putInteger(key + "_size", size);
+      for (unsigned int i = 0; i < size; ++i) {
+         const std::string index_str = Utilities::intToString(i);
+         vector[i].putUnregisteredToDatabase(*this, key + "_" + index_str);
+      }
+   }
 
    /**
     * @brief Returns the name of this database.
@@ -1451,10 +1467,6 @@ public:
 
 #ifdef SAMRAI_INLINE
 #include "SAMRAI/tbox/Database.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
-#include "SAMRAI/tbox/Database_template_methods.C"
 #endif
 
 #endif

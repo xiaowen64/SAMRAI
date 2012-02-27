@@ -132,7 +132,7 @@ private:
 }
 
 #ifdef SAMRAI_INLINE
-// #include "SAMRAI/hier/BoxContainerSingleBlockIterator.I"
+#include "SAMRAI/hier/BoxContainerSingleBlockIterator.I"
 #endif
 
 #endif  // included_hier_BoxContainerSingleBlockIterator

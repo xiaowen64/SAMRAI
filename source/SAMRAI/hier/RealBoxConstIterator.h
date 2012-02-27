@@ -100,8 +100,7 @@ public:
     * Pre-increment increment the iterator and returns the incremented
     * state.
     */
-   RealBoxConstIterator
-   &
+   RealBoxConstIterator&
    operator ++ ();
 
    /*!
@@ -137,4 +136,7 @@ private:
 }
 }
 
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/hier/RealBoxConstIterator.I"
+#endif
 #endif  // included_hier_RealBoxConstIterator

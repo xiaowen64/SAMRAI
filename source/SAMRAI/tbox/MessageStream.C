@@ -18,8 +18,6 @@
 #include "SAMRAI/tbox/MessageStream.I"
 #endif
 
-#include <cstring>
-
 namespace SAMRAI {
 namespace tbox {
 

@@ -45,18 +45,8 @@ RefineOperator::~RefineOperator()
    removeFromLookupTable(d_name);
 }
 
-/*
- *************************************************************************
- * Register this in the static look-up table.
- *************************************************************************
- */
-void RefineOperator::registerInLookupTable(
-   const std::string& name)
-{
-   s_lookup_table.insert(std::pair<std::string, RefineOperator *>(name, this));
-}
-
-void RefineOperator::removeFromLookupTable(
+void
+RefineOperator::removeFromLookupTable(
    const std::string& name)
 {
    /*
@@ -100,20 +90,6 @@ RefineOperator::getMaxRefineOpStencilWidth(
    }
 
    return max_width;
-}
-
-const tbox::Dimension& RefineOperator::getDim() const
-{
-   return d_dim;
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void RefineOperator::finalizeCallback()
-{
-   s_lookup_table.clear();
 }
 
 }

@@ -44,8 +44,7 @@ public:
       const Patch& src_patch,
       const int src_id,
       const IntVector& shift,
-      const Transformation::RotationIdentifier rotate) =
-      0;
+      const Transformation::RotationIdentifier rotate) = 0;
 
    virtual void
    translateAndFillData(
@@ -54,8 +53,7 @@ public:
       const Patch& src_patch,
       const int src_id,
       const IntVector& shift,
-      const Transformation::RotationIdentifier rotate) =
-      0;
+      const Transformation::RotationIdentifier rotate) = 0;
 
 private:
 };

@@ -58,7 +58,7 @@ void BalancedDepthFirstTree::initialize(
    TBOX_ASSERT(rank <= last_rank);
 #endif
 #if defined(BalancedDepthFirstTree_ExtraDebug)
-   tbox::plog
+   plog
    << "BalancedDepthFirstTree::initialize with first_rank,last_rank,x="
    << first_rank << " " << last_rank << " " << rank << std::endl;
 #endif
@@ -100,11 +100,11 @@ void BalancedDepthFirstTree::initialize(
       if (nr > 0) cr = cl + static_cast<int>(nl);         // right child
 
 #if defined(BalancedDepthFirstTree_ExtraDebug)
-      tbox::plog << "There are" << " " << nrem << " "
-                 << "remaining nodes.  nl,nr=" << " " << nl << " " << nr
-                 << std::endl;
-      tbox::plog << "cl=" << " " << cl << " " << "cr=" << " " << cr
-                 << std::endl;
+      plog << "There are" << " " << nrem << " "
+           << "remaining nodes.  nl,nr=" << " " << nl << " " << nr
+           << std::endl;
+      plog << "cl=" << " " << cl << " " << "cr=" << " " << cr
+           << std::endl;
 #endif
 
       if (node == rank) break;
@@ -117,7 +117,7 @@ void BalancedDepthFirstTree::initialize(
          up = node;
          if (nr < 1 || rank < cr) {
 #if defined(BalancedDepthFirstTree_ExtraDebug)
-            tbox::plog << "Going left to" << " " << cl << std::endl;
+            plog << "Going left to" << " " << cl << std::endl;
 #endif
             rbeg = cl;
             rend = cl + static_cast<int>(nl) - 1;
@@ -127,7 +127,7 @@ void BalancedDepthFirstTree::initialize(
             TBOX_ASSERT(cr != getInvalidRank());
 #endif
 #if defined(BalancedDepthFirstTree_ExtraDebug)
-            tbox::plog << "Going right to" << " " << cr << std::endl;
+            plog << "Going right to" << " " << cr << std::endl;
 #endif
             rbeg = cr;
             rend = cr + static_cast<int>(nr) - 1;
@@ -142,11 +142,11 @@ void BalancedDepthFirstTree::initialize(
    d_children[1] = cr;
    d_num_children = 0;
 #if defined(BalancedDepthFirstTree_ExtraDebug)
-   tbox::plog << "  " << d_parent << std::endl;
-   tbox::plog << "   |" << std::endl;
-   tbox::plog << "  " << d_rank << std::endl;
-   tbox::plog << "  /  \\ " << std::endl;
-   tbox::plog << d_children[0] << "   " << d_children[1] << std::endl;
+   plog << "  " << d_parent << std::endl;
+   plog << "   |" << std::endl;
+   plog << "  " << d_rank << std::endl;
+   plog << "  /  \\ " << std::endl;
+   plog << d_children[0] << "   " << d_children[1] << std::endl;
 #endif
 
    if (do_left_leaf_switch) {
@@ -203,11 +203,11 @@ void BalancedDepthFirstTree::initialize(
    }
 
 #if defined(BalancedDepthFirstTree_ExtraDebug)
-   tbox::plog << "  " << d_parent << std::endl;
-   tbox::plog << "   |" << std::endl;
-   tbox::plog << "  " << d_rank << std::endl;
-   tbox::plog << "  /  \\ " << std::endl;
-   tbox::plog << d_children[0] << "   " << d_children[1] << std::endl;
+   plog << "  " << d_parent << std::endl;
+   plog << "   |" << std::endl;
+   plog << "  " << d_rank << std::endl;
+   plog << "  /  \\ " << std::endl;
+   plog << d_children[0] << "   " << d_children[1] << std::endl;
 #endif
 }
 

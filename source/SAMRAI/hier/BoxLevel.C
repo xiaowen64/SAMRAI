@@ -205,6 +205,50 @@ BoxLevel::~BoxLevel()
    }
 }
 
+/*
+ ***********************************************************************
+ * Assignment operator.
+ ***********************************************************************
+ */
+BoxLevel& BoxLevel::operator = (
+   const BoxLevel& rhs)
+{
+   if (&rhs != this) {
+      /*
+       * Protect this block from assignment to self because it is
+       * inefficient and it removes d_boxes data before resetting it.
+       */
+
+      deallocateGlobalizedVersion();
+      clearPersistentOverlapConnectors();
+      detachMyHandle();
+
+      d_parallel_state = rhs.d_parallel_state;
+      d_mpi = rhs.d_mpi;
+      d_ratio = rhs.d_ratio;
+
+      d_local_number_of_cells = rhs.d_local_number_of_cells;
+      d_local_number_of_boxes = rhs.d_local_number_of_boxes;
+      d_global_number_of_cells = rhs.d_global_number_of_cells;
+      d_global_number_of_boxes = rhs.d_global_number_of_boxes;
+
+      d_local_max_box_size = rhs.d_local_max_box_size;
+      d_global_max_box_size = rhs.d_global_max_box_size;
+      d_local_min_box_size = rhs.d_local_min_box_size;
+      d_global_min_box_size = rhs.d_global_min_box_size;
+
+      d_local_bounding_box = rhs.d_local_bounding_box;
+      d_local_bounding_box_up_to_date = rhs.d_local_bounding_box_up_to_date;
+      d_global_bounding_box = rhs.d_global_bounding_box;
+      d_global_data_up_to_date = rhs.d_global_data_up_to_date;
+
+      d_boxes = rhs.d_boxes;
+      d_global_boxes = rhs.d_global_boxes;
+      d_grid_geometry = rhs.d_grid_geometry;
+   }
+   return *this;
+}
+
 void BoxLevel::initialize(
    const IntVector& ratio,
    const boost::shared_ptr<const GridGeometry>& grid_geom,
@@ -291,6 +335,50 @@ void BoxLevel::initializePrivate(
    computeLocalRedundantData();
 
    t_initialize_private->stop();
+}
+
+bool BoxLevel::operator == (
+   const BoxLevel& r) const
+{
+   if (this == &r) {
+      return true;
+   }
+
+   if (d_ratio != r.d_ratio) {
+      return false;
+   }
+
+   if (d_mpi != r.d_mpi) {
+      return false;
+   }
+
+   if (getBoxes() != r.getBoxes()) {
+      return false;
+   }
+
+   return true;
+}
+
+bool BoxLevel::operator != (
+   const BoxLevel& r) const
+{
+   if (this == &r) {
+      return false;
+   }
+
+   if (d_ratio != r.d_ratio) {
+      return true;
+   }
+
+   if (d_mpi != r.d_mpi) {
+      return true;
+   }
+
+   if (getBoxes() != r.getBoxes()) {
+      return true;
+   }
+
+   return false;
 }
 
 /*
@@ -590,85 +678,58 @@ void BoxLevel::cacheGlobalReducedData() const
    t_cache_global_reduced_data->stop();
 }
 
-int BoxLevel::getGlobalNumberOfBoxes() const
+size_t BoxLevel::getLocalNumberOfBoxes(
+   int rank) const
 {
    TBOX_ASSERT(isInitialized());
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (d_parallel_state == DISTRIBUTED && rank != d_mpi.getRank()) {
+      TBOX_ERROR(
+         "Non-local boxes are not available in DISTRIBUTED mode.");
+   }
+   TBOX_ASSERT(rank >= 0 && rank < d_mpi.getSize());
+#endif
 
-   cacheGlobalReducedData();
-   return d_global_number_of_boxes;
+   if (rank == d_mpi.getRank()) {
+      return d_local_number_of_boxes;
+   } else {
+      size_t count = 0;
+      BoxContainerSingleOwnerIterator mbi(d_global_boxes, rank);
+      for ( ; mbi.isValid(); mbi++) {
+         if (!(*mbi).isPeriodicImage()) {
+            ++count;
+         }
+      }
+
+      return count;
+   }
 }
 
-int BoxLevel::getMaxNumberOfBoxes() const
+size_t BoxLevel::getLocalNumberOfCells(
+   int rank) const
 {
    TBOX_ASSERT(isInitialized());
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (d_parallel_state == DISTRIBUTED && rank != d_mpi.getRank()) {
+      TBOX_ERROR(
+         "Non-local boxes are not available in DISTRIBUTED mode.");
+   }
+   TBOX_ASSERT(rank >= 0 && rank < d_mpi.getSize());
+#endif
 
-   cacheGlobalReducedData();
-   return d_max_number_of_boxes;
-}
+   if (rank == d_mpi.getRank()) {
+      return d_local_number_of_cells;
+   } else {
+      size_t count = 0;
+      BoxContainerSingleOwnerIterator mbi(d_global_boxes, rank);
+      for ( ; mbi.isValid(); mbi++) {
+         if (!(*mbi).isPeriodicImage()) {
+            count += (*mbi).size();
+         }
+      }
 
-int BoxLevel::getMinNumberOfBoxes() const
-{
-   TBOX_ASSERT(isInitialized());
-
-   cacheGlobalReducedData();
-   return d_min_number_of_boxes;
-}
-
-int BoxLevel::getGlobalNumberOfCells() const
-{
-   TBOX_ASSERT(isInitialized());
-
-   cacheGlobalReducedData();
-   return d_global_number_of_cells;
-}
-
-int BoxLevel::getMaxNumberOfCells() const
-{
-   TBOX_ASSERT(isInitialized());
-
-   cacheGlobalReducedData();
-   return d_max_number_of_cells;
-}
-
-int BoxLevel::getMinNumberOfCells() const
-{
-   TBOX_ASSERT(isInitialized());
-
-   cacheGlobalReducedData();
-   return d_min_number_of_cells;
-}
-
-const Box& BoxLevel::getGlobalBoundingBox(int block_num) const
-{
-   cacheGlobalReducedData();
-   return d_global_bounding_box[block_num];
-}
-
-const Box& BoxLevel::getLocalBoundingBox(int block_num) const
-{
-   return d_local_bounding_box[block_num];
-}
-
-const IntVector& BoxLevel::getLocalMaxBoxSize(int block_num) const
-{
-   return d_local_max_box_size[block_num];
-}
-
-const IntVector& BoxLevel::getGlobalMaxBoxSize(int block_num) const
-{
-   cacheGlobalReducedData();
-   return d_global_max_box_size[block_num];
-}
-
-const IntVector& BoxLevel::getLocalMinBoxSize(int block_num) const
-{
-   return d_local_min_box_size[block_num];
-}
-
-const IntVector& BoxLevel::getGlobalMinBoxSize(int block_num) const
-{
-   cacheGlobalReducedData();
-   return d_global_min_box_size[block_num];
+      return count;
+   }
 }
 
 bool BoxLevel::getSpatiallyEqualBox(
@@ -1134,21 +1195,6 @@ BoxLevel::addBox(
  ***********************************************************************
  ***********************************************************************
  */
-void
-BoxLevel::addBoxWithoutUpdate(
-   const Box& box)
-{
-   if (d_parallel_state == GLOBALIZED) {
-      d_global_boxes.insert(box);
-   }
-   d_boxes.insert(box);
-   return;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
 
 void
 BoxLevel::eraseBox(
@@ -1237,51 +1283,6 @@ BoxLevel::eraseBox(
  ****************************************************************************
  ****************************************************************************
  */
-void BoxLevel::eraseBoxWithoutUpdate(
-   const Box& box)
-{
-   d_boxes.erase(box);
-   return;
-}
-
-/*
- ****************************************************************************
- * TODO: This method puts finer in an inconsistent state by not
- * updating the attributes depenent on what has been changed.  This
- * method seems to be an initializer, but it is not clear from the
- * name or documentation if that is so.  The same goes for coarsenBoxes.
- ****************************************************************************
- */
-void BoxLevel::refineBoxes(
-   BoxLevel& finer,
-   const IntVector& ratio,
-   const IntVector& final_ratio) const
-{
-   finer.d_boxes = d_boxes;
-   finer.d_boxes.refine(ratio);
-   finer.d_ratio = final_ratio;
-   return;
-}
-
-/*
- ****************************************************************************
- ****************************************************************************
- */
-void BoxLevel::coarsenBoxes(
-   BoxLevel& coarser,
-   const IntVector& ratio,
-   const IntVector& final_ratio) const
-{
-   coarser.d_boxes = d_boxes;
-   coarser.d_boxes.coarsen(ratio);
-   coarser.d_ratio = final_ratio;
-   return;
-}
-
-/*
- ****************************************************************************
- ****************************************************************************
- */
 const BoxLevel& BoxLevel::getGlobalizedVersion() const
 {
    TBOX_ASSERT(isInitialized());
@@ -1313,6 +1314,141 @@ const
       d_persistent_overlap_connectors = new PersistentOverlapConnectors(*this);
    }
    return *d_persistent_overlap_connectors;
+}
+
+LocalId BoxLevel::getFirstLocalId() const
+{
+   TBOX_ASSERT(isInitialized());
+
+   const BoxContainer& boxes = getBoxes();
+   if (boxes.isEmpty()) {
+      return s_negative_one_local_id;
+   }
+   BoxContainer::ConstIterator ni = boxes.begin();
+   while (ni->isPeriodicImage()) {
+      TBOX_ASSERT(ni != boxes.end());   // There should be a real box!
+      ++ni;
+   }
+   return ni->getLocalId();
+}
+
+LocalId BoxLevel::getLastLocalId() const
+{
+   TBOX_ASSERT(isInitialized());
+
+   const BoxContainer& boxes = getBoxes();
+   if (boxes.isEmpty()) {
+      return s_negative_one_local_id;
+   }
+   LocalId last_local_id(0);
+   for (BoxContainer::ConstIterator ni = boxes.begin();
+        ni != boxes.end(); ++ni) {
+      if (last_local_id < ni->getLocalId()) {
+         last_local_id = ni->getLocalId();
+      }
+   }
+   return last_local_id;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+bool BoxLevel::hasBox(
+   const Box& box) const
+{
+   if (box.getOwnerRank() == d_mpi.getRank()) {
+
+      BoxContainer::ConstIterator ni = d_boxes.find(box);
+      return ni != d_boxes.end();
+
+   } else {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_parallel_state == DISTRIBUTED) {
+         TBOX_ERROR("BoxLevel: Cannot check on remote Box "
+            << box << " while in DISTRIBUTED mode.\n"
+            << "See BoxLevel::setParallelState().");
+      }
+#endif
+      BoxContainer::ConstIterator ni = d_global_boxes.find(box);
+      return ni != d_global_boxes.end();
+   }
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+BoxContainer::ConstIterator BoxLevel::getBoxStrict(
+   const Box& box) const
+{
+   if (box.getOwnerRank() == d_mpi.getRank()) {
+      BoxContainer::ConstIterator ni = d_boxes.find(box);
+      if (ni == d_boxes.end()) {
+         TBOX_ERROR(
+            "BoxContainer::getBoxStrict: requested box "
+            << box
+            << " does not exist in the box_level.");
+      }
+
+      return ni;
+   } else {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_parallel_state != GLOBALIZED) {
+         TBOX_ERROR(
+            "BoxLevel::getBox: cannot get remote box "
+            << box << " without being in globalized state.");
+      }
+#endif
+      BoxContainer::ConstIterator ni = d_global_boxes.find(box);
+      if (ni == d_global_boxes.end()) {
+         TBOX_ERROR(
+            "BoxContainer::getBoxStrict: requested box "
+            << box
+            << " does not exist in the box_level.");
+      }
+
+      return ni;
+   }
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+BoxContainer::ConstIterator BoxLevel::getBoxStrict(
+   const BoxId& box_id) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (box_id.getOwnerRank() != d_mpi.getRank() && d_parallel_state != GLOBALIZED) {
+      TBOX_ERROR(
+         "BoxLevel::getBoxStrict: cannot get remote box " << box_id
+                                                                 <<
+         " without being in globalized state.");
+   }
+#endif
+
+   Box box(getDim(),
+                  box_id);
+   if (box.getOwnerRank() == d_mpi.getRank()) {
+      BoxContainer::ConstIterator ni = d_boxes.find(box);
+      if (ni == d_boxes.end()) {
+         TBOX_ERROR(
+            "BoxContainer::getBoxStrict: requested box "
+            << box
+            << " does not exist in the box_level.");
+      }
+      return ni;
+   } else {
+      BoxContainer::ConstIterator ni = d_global_boxes.find(box);
+      if (ni == d_global_boxes.end()) {
+         TBOX_ERROR(
+            "BoxContainer::getBoxStrict: requested box "
+            << box
+            << " does not exist in the box_level.");
+      }
+      return ni;
+   }
 }
 
 /*
@@ -1530,38 +1666,6 @@ void BoxLevel::recursivePrint(
          }
       }
    }
-}
-
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-
-void BoxLevel::initializeCallback()
-{
-   t_initialize_private = tbox::TimerManager::getManager()->
-      getTimer("hier::BoxLevel::initializePrivate()");
-   t_acquire_remote_boxes = tbox::TimerManager::getManager()->
-      getTimer("hier::BoxLevel::acquireRemoteBoxes()");
-   t_cache_global_reduced_data = tbox::TimerManager::getManager()->
-      getTimer("hier::BoxLevel::cacheGlobalReducedData()");
-}
-
-/*
- ***************************************************************************
- *
- * Release static timers.  To be called by shutdown registry to make sure
- * memory for timers does not leak.
- *
- ***************************************************************************
- */
-
-void BoxLevel::finalizeCallback()
-{
-   t_initialize_private.reset();
-   t_acquire_remote_boxes.reset();
-   t_cache_global_reduced_data.reset();
 }
 
 }
