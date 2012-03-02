@@ -35,7 +35,8 @@ StartupShutdownManager::ListElement *
 StartupShutdownManager::s_manager_list_last[s_number_of_priorities];
 int StartupShutdownManager::s_num_manager_items[s_number_of_priorities];
 
-void StartupShutdownManager::registerHandler(
+void
+StartupShutdownManager::registerHandler(
    AbstractHandler* handler)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -73,7 +74,8 @@ void StartupShutdownManager::registerHandler(
    s_num_manager_items[priority]++;
 }
 
-void StartupShutdownManager::initialize()
+void
+StartupShutdownManager::initialize()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    assert(!s_initialized);
@@ -101,7 +103,8 @@ void StartupShutdownManager::initialize()
    }
 }
 
-void StartupShutdownManager::startup()
+void
+StartupShutdownManager::startup()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    // If this is thrown you need to make sure SAMRAIManger::initialize
@@ -134,7 +137,8 @@ void StartupShutdownManager::startup()
    s_shutdowned = false;
 }
 
-void StartupShutdownManager::shutdown()
+void
+StartupShutdownManager::shutdown()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    assert(s_initialized);
@@ -166,7 +170,8 @@ void StartupShutdownManager::shutdown()
 
 }
 
-void StartupShutdownManager::setupSingleton()
+void
+StartupShutdownManager::setupSingleton()
 {
    for (int priority = s_number_of_priorities - 1; priority > -1; priority--) {
       s_manager_list[priority] = (ListElement *)NULL;
@@ -177,7 +182,8 @@ void StartupShutdownManager::setupSingleton()
    s_singleton_initialized = true;
 }
 
-void StartupShutdownManager::finalize()
+void
+StartupShutdownManager::finalize()
 {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -248,55 +254,64 @@ StartupShutdownManager::Handler::~Handler()
 {
 }
 
-void StartupShutdownManager::Handler::initialize()
+void
+StartupShutdownManager::Handler::initialize()
 {
    if (d_initialize) {
       (*d_initialize)();
    }
 }
 
-void StartupShutdownManager::Handler::startup()
+void
+StartupShutdownManager::Handler::startup()
 {
    if (d_startup) {
       (*d_startup)();
    }
 }
 
-void StartupShutdownManager::Handler::shutdown()
+void
+StartupShutdownManager::Handler::shutdown()
 {
    if (d_shutdown) {
       (*d_shutdown)();
    }
 }
 
-void StartupShutdownManager::Handler::finalize()
+void
+StartupShutdownManager::Handler::finalize()
 {
    if (d_finalize) {
       (*d_finalize)();
    }
 }
 
-unsigned char StartupShutdownManager::Handler::getPriority()
+unsigned char
+StartupShutdownManager::Handler::getPriority()
 {
    return d_priority;
 }
 
-bool StartupShutdownManager::Handler::hasInitialize()
+bool
+StartupShutdownManager::Handler::hasInitialize()
 {
    return d_initialize != 0;
 }
 
-bool StartupShutdownManager::Handler::hasStartup()
+bool
+StartupShutdownManager::Handler::hasStartup()
 {
    return d_startup != 0;
 }
 
-bool StartupShutdownManager::Handler::hasShutdown()
+bool
+StartupShutdownManager::Handler::hasShutdown()
 {
    return d_shutdown != 0;
 }
 
-bool StartupShutdownManager::Handler::hasFinalize()
+bool
+StartupShutdownManager::Handler::hasFinalize()
 {
    return d_finalize != 0;
 }

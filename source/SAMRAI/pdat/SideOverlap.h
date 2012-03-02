@@ -92,7 +92,4 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/SideOverlap.I"
-#endif
 #endif

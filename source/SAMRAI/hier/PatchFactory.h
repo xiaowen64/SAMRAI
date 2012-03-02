@@ -65,7 +65,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchFactory.I"
-#endif
+
 #endif

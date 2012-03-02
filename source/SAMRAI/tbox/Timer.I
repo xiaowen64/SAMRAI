@@ -41,7 +41,9 @@ namespace tbox {
 #endif // __INTEL_COMPILER
 #endif // ENABLE_SAMRAI_TIMERS
 
-SAMRAI_INLINE_KEYWORD void Timer::startExclusive()
+SAMRAI_INLINE_KEYWORD
+void
+Timer::startExclusive()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    if (d_is_active) {
@@ -54,7 +56,9 @@ SAMRAI_INLINE_KEYWORD void Timer::startExclusive()
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-SAMRAI_INLINE_KEYWORD void Timer::stopExclusive()
+SAMRAI_INLINE_KEYWORD
+void
+Timer::stopExclusive()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    if (d_is_active) {
@@ -80,12 +84,16 @@ SAMRAI_INLINE_KEYWORD void Timer::stopExclusive()
  ***************************************************************************
  */
 
-SAMRAI_INLINE_KEYWORD const std::string& Timer::getName() const
+SAMRAI_INLINE_KEYWORD
+const std::string&
+Timer::getName() const
 {
    return d_name;
 }
 
-SAMRAI_INLINE_KEYWORD bool Timer::isActive() const
+SAMRAI_INLINE_KEYWORD
+bool
+Timer::isActive() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_is_active;
@@ -96,7 +104,9 @@ SAMRAI_INLINE_KEYWORD bool Timer::isActive() const
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-SAMRAI_INLINE_KEYWORD bool Timer::isRunning() const
+SAMRAI_INLINE_KEYWORD
+bool
+Timer::isRunning() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_is_running;
@@ -107,7 +117,9 @@ SAMRAI_INLINE_KEYWORD bool Timer::isRunning() const
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-SAMRAI_INLINE_KEYWORD double Timer::getTotalUserTime() const
+SAMRAI_INLINE_KEYWORD
+double
+Timer::getTotalUserTime() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_user_total / Clock::getClockCycle();
@@ -118,7 +130,9 @@ SAMRAI_INLINE_KEYWORD double Timer::getTotalUserTime() const
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-SAMRAI_INLINE_KEYWORD double Timer::getTotalSystemTime() const
+SAMRAI_INLINE_KEYWORD
+double
+Timer::getTotalSystemTime() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_system_total / Clock::getClockCycle();
@@ -129,7 +143,9 @@ SAMRAI_INLINE_KEYWORD double Timer::getTotalSystemTime() const
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-SAMRAI_INLINE_KEYWORD double Timer::getTotalWallclockTime() const
+SAMRAI_INLINE_KEYWORD
+double
+Timer::getTotalWallclockTime() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_wallclock_total;
@@ -140,7 +156,9 @@ SAMRAI_INLINE_KEYWORD double Timer::getTotalWallclockTime() const
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-SAMRAI_INLINE_KEYWORD double Timer::getMaxWallclockTime() const
+SAMRAI_INLINE_KEYWORD
+double
+Timer::getMaxWallclockTime() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_max_wallclock;
@@ -151,7 +169,9 @@ SAMRAI_INLINE_KEYWORD double Timer::getMaxWallclockTime() const
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-SAMRAI_INLINE_KEYWORD double Timer::getExclusiveUserTime() const
+SAMRAI_INLINE_KEYWORD
+double
+Timer::getExclusiveUserTime() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_user_exclusive / Clock::getClockCycle();
@@ -162,7 +182,9 @@ SAMRAI_INLINE_KEYWORD double Timer::getExclusiveUserTime() const
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-SAMRAI_INLINE_KEYWORD double Timer::getExclusiveSystemTime() const
+SAMRAI_INLINE_KEYWORD
+double
+Timer::getExclusiveSystemTime() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_system_exclusive / Clock::getClockCycle();
@@ -173,7 +195,9 @@ SAMRAI_INLINE_KEYWORD double Timer::getExclusiveSystemTime() const
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-SAMRAI_INLINE_KEYWORD double Timer::getExclusiveWallclockTime() const
+SAMRAI_INLINE_KEYWORD
+double
+Timer::getExclusiveWallclockTime() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_wallclock_exclusive;
@@ -184,7 +208,9 @@ SAMRAI_INLINE_KEYWORD double Timer::getExclusiveWallclockTime() const
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-SAMRAI_INLINE_KEYWORD void Timer::addConcurrentTimer(
+SAMRAI_INLINE_KEYWORD
+void
+Timer::addConcurrentTimer(
    const Timer& timer)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -194,7 +220,9 @@ SAMRAI_INLINE_KEYWORD void Timer::addConcurrentTimer(
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-SAMRAI_INLINE_KEYWORD int Timer::getNumberAccesses() const
+SAMRAI_INLINE_KEYWORD
+int
+Timer::getNumberAccesses() const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    return d_accesses;
@@ -213,7 +241,9 @@ SAMRAI_INLINE_KEYWORD int Timer::getNumberAccesses() const
  ***************************************************************************
  */
 
-SAMRAI_INLINE_KEYWORD void Timer::setActive(
+SAMRAI_INLINE_KEYWORD
+void
+Timer::setActive(
    bool is_active)
 {
 #ifdef ENABLE_SAMRAI_TIMERS

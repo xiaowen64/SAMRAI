@@ -122,7 +122,8 @@ SecondLayerNodeVariableFillPattern::calculateOverlap(
  *************************************************************************
  */
 
-const hier::IntVector& SecondLayerNodeVariableFillPattern::getStencilWidth()
+const hier::IntVector&
+SecondLayerNodeVariableFillPattern::getStencilWidth()
 {
    return hier::IntVector::getOne(d_dim);
 }
@@ -135,7 +136,8 @@ const hier::IntVector& SecondLayerNodeVariableFillPattern::getStencilWidth()
  *************************************************************************
  */
 
-const std::string& SecondLayerNodeVariableFillPattern::getPatternName() const
+const std::string&
+SecondLayerNodeVariableFillPattern::getPatternName() const
 {
    return s_name_id;
 }
@@ -148,7 +150,8 @@ const std::string& SecondLayerNodeVariableFillPattern::getPatternName() const
  *************************************************************************
  */
 
-void SecondLayerNodeVariableFillPattern::computeStencilBoxes(
+void
+SecondLayerNodeVariableFillPattern::computeStencilBoxes(
    hier::BoxContainer& stencil_boxes,
    const hier::Box& dst_box) const
 {

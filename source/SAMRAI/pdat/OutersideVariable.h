@@ -99,8 +99,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/OutersideVariable.C"
-#endif
 
 #endif

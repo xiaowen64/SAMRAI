@@ -73,7 +73,8 @@ NodeFloatInjection::~NodeFloatInjection()
 {
 }
 
-bool NodeFloatInjection::findCoarsenOperator(
+bool
+NodeFloatInjection::findCoarsenOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -89,17 +90,20 @@ bool NodeFloatInjection::findCoarsenOperator(
    }
 }
 
-int NodeFloatInjection::getOperatorPriority() const
+int
+NodeFloatInjection::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-NodeFloatInjection::getStencilWidth() const {
+NodeFloatInjection::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void NodeFloatInjection::coarsen(
+void
+NodeFloatInjection::coarsen(
    hier::Patch& coarse,
    const hier::Patch& fine,
    const int dst_component,

@@ -21,10 +21,6 @@
 
 #include <boost/make_shared.hpp>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/OuteredgeDataFactory.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 
@@ -110,6 +106,13 @@ OuteredgeDataFactory<TYPE>::getBoxGeometry(
    return boost::make_shared<OuteredgeGeometry>(box, zero_vector);
 }
 
+template<class TYPE>
+int
+OuteredgeDataFactory<TYPE>::getDepth() const
+{
+   return d_depth;
+}
+
 /*
  *************************************************************************
  *
@@ -119,7 +122,8 @@ OuteredgeDataFactory<TYPE>::getBoxGeometry(
  */
 
 template<class TYPE>
-size_t OuteredgeDataFactory<TYPE>::getSizeOfMemory(
+size_t
+OuteredgeDataFactory<TYPE>::getSizeOfMemory(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -133,6 +137,36 @@ size_t OuteredgeDataFactory<TYPE>::getSizeOfMemory(
 /*
  *************************************************************************
  *
+ * Return a boolean true value indicating that fine data for the outeredge
+ * quantity will take precedence on coarse-fine interfaces.  See the
+ * OuteredgeVariable<DIM> class header file for more information.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+OuteredgeDataFactory<TYPE>::fineBoundaryRepresentsVariable() const {
+   return true;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return true since the outeredge data index space extends beyond the
+ * interior of patches.  That is, outeredge data lives on patch borders.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+OuteredgeDataFactory<TYPE>::dataLivesOnPatchBorder() const
+{
+   return true;
+}
+
+/*
+ *************************************************************************
+ *
  * Determine whether this is a valid copy operation to/from EdgeData
  * between the supplied datatype.
  *
@@ -140,7 +174,8 @@ size_t OuteredgeDataFactory<TYPE>::getSizeOfMemory(
  */
 
 template<class TYPE>
-bool OuteredgeDataFactory<TYPE>::validCopyTo(
+bool
+OuteredgeDataFactory<TYPE>::validCopyTo(
    const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);

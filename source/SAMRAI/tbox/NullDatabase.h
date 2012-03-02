@@ -358,7 +358,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/NullDatabase.I"
-#endif
 #endif

@@ -21,7 +21,8 @@ namespace tbox {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Clock::initialize(
+void
+Clock::initialize(
    clock_t& clock)
 {
 #ifdef HAVE_SYS_TIMES_H
@@ -30,7 +31,8 @@ void Clock::initialize(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Clock::initialize(
+void
+Clock::initialize(
    double& clock)
 {
    clock = 0.0;
@@ -44,7 +46,8 @@ void Clock::initialize(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Clock::timestamp(
+void
+Clock::timestamp(
    clock_t& user,
    clock_t& sys,
    double& wall)
@@ -66,7 +69,8 @@ void Clock::timestamp(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-double Clock::getClockCycle()
+double
+Clock::getClockCycle()
 {
 #ifdef _POSIX_VERSION
    double clock_cycle = double(sysconf(_SC_CLK_TCK));

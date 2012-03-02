@@ -65,7 +65,8 @@ OutersideGeometry::~OutersideGeometry()
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap> OutersideGeometry::calculateOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+OutersideGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -105,7 +106,8 @@ boost::shared_ptr<hier::BoxOverlap> OutersideGeometry::calculateOverlap(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap> OutersideGeometry::doOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+OutersideGeometry::doOverlap(
    const SideGeometry& dst_geometry,
    const OutersideGeometry& src_geometry,
    const hier::Box& src_mask,

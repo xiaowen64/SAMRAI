@@ -49,8 +49,7 @@ PatchGeometry::TwoDimBool::operator () (
 
 SAMRAI_INLINE_KEYWORD
 const tbox::Array<tbox::Array<BoundaryBox> >
-PatchGeometry::getPatchBoundaries()
-const
+PatchGeometry::getPatchBoundaries() const
 {
    return d_patch_boundaries.getArrays();
 }

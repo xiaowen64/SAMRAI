@@ -14,38 +14,8 @@ namespace SAMRAI {
 namespace pdat {
 
 SAMRAI_INLINE_KEYWORD
-EdgeIndex::EdgeIndex(
-   const tbox::Dimension& dim):
-   hier::Index(dim)
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-EdgeIndex::EdgeIndex(
-   const hier::Index& rhs,
-   const int axis,
-   const int edge):
-   hier::Index(rhs),
-   d_axis(axis)
-{
-   if (getDim() > tbox::Dimension(1)) {
-      (*this)((d_axis + 1) % getDim().getValue()) += edge % 2;
-   }
-   for (int j = 2; j < getDim().getValue(); j++) {
-      (*this)((d_axis + j) % getDim().getValue()) += (edge / (1 << (j - 1))) % 2;
-   }
-}
-
-SAMRAI_INLINE_KEYWORD
-EdgeIndex::EdgeIndex(
-   const EdgeIndex& rhs):
-   hier::Index(rhs),
-   d_axis(rhs.d_axis)
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-EdgeIndex& EdgeIndex::operator = (
+EdgeIndex&
+EdgeIndex::operator = (
    const EdgeIndex& rhs)
 {
    hier::Index::operator = (rhs);
@@ -54,45 +24,23 @@ EdgeIndex& EdgeIndex::operator = (
 }
 
 SAMRAI_INLINE_KEYWORD
-EdgeIndex::~EdgeIndex()
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-int EdgeIndex::getAxis() const
+int
+EdgeIndex::getAxis() const
 {
    return d_axis;
 }
 
 SAMRAI_INLINE_KEYWORD
-void EdgeIndex::setAxis(
+void
+EdgeIndex::setAxis(
    const int axis)
 {
    d_axis = axis;
 }
 
 SAMRAI_INLINE_KEYWORD
-hier::Index EdgeIndex::toCell(
-   const int edge) const
-{
-   const tbox::Dimension& dim(getDim());
-   hier::Index index(dim);
-
-   for (int i = 0; i < dim.getValue(); i++) {
-      index(i) = (*this)(i);
-   }
-
-   if (dim > tbox::Dimension(1)) {
-      index((d_axis + 1) % dim.getValue()) += ((edge % 2) - 1);
-   }
-   for (int j = 2; j < dim.getValue(); j++) {
-      index((d_axis + j) % dim.getValue()) += (((edge / (2 << (j - 1))) % 2) - 1);
-   }
-   return index;
-}
-
-SAMRAI_INLINE_KEYWORD
-EdgeIndex& EdgeIndex::operator += (
+EdgeIndex&
+EdgeIndex::operator += (
    const hier::IntVector& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -102,7 +50,8 @@ EdgeIndex& EdgeIndex::operator += (
 }
 
 SAMRAI_INLINE_KEYWORD
-EdgeIndex EdgeIndex::operator + (
+EdgeIndex
+EdgeIndex::operator + (
    const hier::IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -113,7 +62,8 @@ EdgeIndex EdgeIndex::operator + (
 }
 
 SAMRAI_INLINE_KEYWORD
-EdgeIndex& EdgeIndex::operator += (
+EdgeIndex&
+EdgeIndex::operator += (
    const int rhs)
 {
    hier::Index::operator += (rhs);
@@ -121,7 +71,8 @@ EdgeIndex& EdgeIndex::operator += (
 }
 
 SAMRAI_INLINE_KEYWORD
-EdgeIndex EdgeIndex::operator + (
+EdgeIndex
+EdgeIndex::operator + (
    const int rhs) const
 {
    EdgeIndex tmp = *this;
@@ -130,7 +81,8 @@ EdgeIndex EdgeIndex::operator + (
 }
 
 SAMRAI_INLINE_KEYWORD
-EdgeIndex& EdgeIndex::operator -= (
+EdgeIndex&
+EdgeIndex::operator -= (
    const hier::IntVector& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -140,7 +92,8 @@ EdgeIndex& EdgeIndex::operator -= (
 }
 
 SAMRAI_INLINE_KEYWORD
-EdgeIndex EdgeIndex::operator - (
+EdgeIndex
+EdgeIndex::operator - (
    const hier::IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -151,7 +104,8 @@ EdgeIndex EdgeIndex::operator - (
 }
 
 SAMRAI_INLINE_KEYWORD
-EdgeIndex& EdgeIndex::operator -= (
+EdgeIndex&
+EdgeIndex::operator -= (
    const int rhs)
 {
    hier::Index::operator -= (rhs);
@@ -159,7 +113,8 @@ EdgeIndex& EdgeIndex::operator -= (
 }
 
 SAMRAI_INLINE_KEYWORD
-EdgeIndex EdgeIndex::operator - (
+EdgeIndex
+EdgeIndex::operator - (
    const int rhs) const
 {
    EdgeIndex tmp = *this;
@@ -168,7 +123,8 @@ EdgeIndex EdgeIndex::operator - (
 }
 
 SAMRAI_INLINE_KEYWORD
-EdgeIndex& EdgeIndex::operator *= (
+EdgeIndex&
+EdgeIndex::operator *= (
    const hier::IntVector& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -178,7 +134,8 @@ EdgeIndex& EdgeIndex::operator *= (
 }
 
 SAMRAI_INLINE_KEYWORD
-EdgeIndex EdgeIndex::operator * (
+EdgeIndex
+EdgeIndex::operator * (
    const hier::IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -189,7 +146,8 @@ EdgeIndex EdgeIndex::operator * (
 }
 
 SAMRAI_INLINE_KEYWORD
-EdgeIndex& EdgeIndex::operator *= (
+EdgeIndex&
+EdgeIndex::operator *= (
    const int rhs)
 {
    hier::Index::operator *= (rhs);
@@ -197,7 +155,8 @@ EdgeIndex& EdgeIndex::operator *= (
 }
 
 SAMRAI_INLINE_KEYWORD
-EdgeIndex EdgeIndex::operator * (
+EdgeIndex
+EdgeIndex::operator * (
    const int rhs) const
 {
    EdgeIndex tmp = *this;
@@ -206,7 +165,8 @@ EdgeIndex EdgeIndex::operator * (
 }
 
 SAMRAI_INLINE_KEYWORD
-bool EdgeIndex::operator == (
+bool
+EdgeIndex::operator == (
    const EdgeIndex& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -215,7 +175,8 @@ bool EdgeIndex::operator == (
 }
 
 SAMRAI_INLINE_KEYWORD
-bool EdgeIndex::operator != (
+bool
+EdgeIndex::operator != (
    const EdgeIndex& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);

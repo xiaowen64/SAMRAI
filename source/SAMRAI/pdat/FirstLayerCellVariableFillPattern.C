@@ -88,7 +88,8 @@ FirstLayerCellVariableFillPattern::calculateOverlap(
  *
  *************************************************************************
  */
-const hier::IntVector& FirstLayerCellVariableFillPattern::getStencilWidth()
+const hier::IntVector&
+FirstLayerCellVariableFillPattern::getStencilWidth()
 {
    return hier::IntVector::getOne(d_dim);
 }
@@ -100,7 +101,8 @@ const hier::IntVector& FirstLayerCellVariableFillPattern::getStencilWidth()
  *
  *************************************************************************
  */
-const std::string& FirstLayerCellVariableFillPattern::getPatternName() const
+const std::string&
+FirstLayerCellVariableFillPattern::getPatternName() const
 {
    return s_name_id;
 }
@@ -112,7 +114,8 @@ const std::string& FirstLayerCellVariableFillPattern::getPatternName() const
  *
  *************************************************************************
  */
-void FirstLayerCellVariableFillPattern::computeStencilBoxes(
+void
+FirstLayerCellVariableFillPattern::computeStencilBoxes(
    hier::BoxContainer& stencil_boxes,
    const hier::Box& dst_box) const
 {

@@ -21,9 +21,6 @@
 
 #include <boost/make_shared.hpp>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/OuterfaceDataFactory.I"
-#endif
 namespace SAMRAI {
 namespace pdat {
 
@@ -109,6 +106,13 @@ OuterfaceDataFactory<TYPE>::getBoxGeometry(
    return boost::make_shared<OuterfaceGeometry>(box, zero_vector);
 }
 
+template<class TYPE>
+int
+OuterfaceDataFactory<TYPE>::getDepth() const
+{
+   return d_depth;
+}
+
 /*
  *************************************************************************
  *
@@ -118,7 +122,8 @@ OuterfaceDataFactory<TYPE>::getBoxGeometry(
  */
 
 template<class TYPE>
-size_t OuterfaceDataFactory<TYPE>::getSizeOfMemory(
+size_t
+OuterfaceDataFactory<TYPE>::getSizeOfMemory(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -131,6 +136,37 @@ size_t OuterfaceDataFactory<TYPE>::getSizeOfMemory(
 /*
  *************************************************************************
  *
+ * Return a boolean true value indicating that fine data for the outerface
+ * quantity will take precedence on coarse-fine interfaces.  See the
+ * OuterfaceVariable<DIM> class header file for more information.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+OuterfaceDataFactory<TYPE>::fineBoundaryRepresentsVariable() const
+{
+   return true;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return true since the outerface data index space extends beyond the
+ * interior of patches.  That is, outerface data lives on patch borders.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+OuterfaceDataFactory<TYPE>::dataLivesOnPatchBorder() const
+{
+   return true;
+}
+
+/*
+ *************************************************************************
+ *
  * Determine whether this is a valid copy operation to/from OuterfaceData
  * between the supplied datatype.
  *
@@ -138,7 +174,8 @@ size_t OuterfaceDataFactory<TYPE>::getSizeOfMemory(
  */
 
 template<class TYPE>
-bool OuterfaceDataFactory<TYPE>::validCopyTo(
+bool
+OuterfaceDataFactory<TYPE>::validCopyTo(
    const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);

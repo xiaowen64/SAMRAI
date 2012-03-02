@@ -101,21 +101,19 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Return a boolean true value indicating that fine data for the outerside quantity will
-    * take precedence on coarse-fine interfaces.  See the OutersideVariable<DIM> class
-    * header file for more information.
+    * Return a boolean true value indicating that fine data for the outerside
+    * quantity will take precedence on coarse-fine interfaces.  See the
+    * OutersideVariable<DIM> class header file for more information.
     */
-   bool fineBoundaryRepresentsVariable() const {
-      return true;
-   }
+   bool
+   fineBoundaryRepresentsVariable() const;
 
    /**
-    * Return true since the outerside data index space extends beyond the interior of
-    * patches.  That is, outerside data lives on patch borders.
+    * Return true since the outerside data index space extends beyond the
+    * interior of patches.  That is, outerside data lives on patch borders.
     */
-   bool dataLivesOnPatchBorder() const {
-      return true;
-   }
+   bool
+   dataLivesOnPatchBorder() const;
 
    /**
     * Return whether it is valid to copy this OutersideDataFactory to the
@@ -134,12 +132,7 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/OutersideDataFactory.I"
-#endif
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/OutersideDataFactory.C"
-#endif
 
 #endif

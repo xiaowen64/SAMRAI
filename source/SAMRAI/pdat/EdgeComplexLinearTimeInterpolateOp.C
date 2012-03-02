@@ -121,7 +121,8 @@ EdgeComplexLinearTimeInterpolateOp::~EdgeComplexLinearTimeInterpolateOp()
 {
 }
 
-bool EdgeComplexLinearTimeInterpolateOp::findTimeInterpolateOperator(
+bool
+EdgeComplexLinearTimeInterpolateOp::findTimeInterpolateOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -135,7 +136,8 @@ bool EdgeComplexLinearTimeInterpolateOp::findTimeInterpolateOperator(
    }
 }
 
-void EdgeComplexLinearTimeInterpolateOp::timeInterpolate(
+void
+EdgeComplexLinearTimeInterpolateOp::timeInterpolate(
    hier::PatchData& dst_data,
    const hier::Box& where,
    const hier::PatchData& src_data_old,

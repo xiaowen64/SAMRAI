@@ -17,4 +17,29 @@
 #include "SAMRAI/pdat/CellIndex.I"
 #endif
 
+namespace SAMRAI {
+namespace pdat {
+
+CellIndex::CellIndex(
+   const tbox::Dimension& dim):
+   hier::Index(dim)
+{
+}
+
+CellIndex::CellIndex(
+   const hier::Index& rhs):hier::Index(rhs)
+{
+}
+
+CellIndex::CellIndex(
+   const CellIndex& rhs):hier::Index(rhs)
+{
+}
+
+CellIndex::~CellIndex()
+{
+}
+
+}
+}
 #endif

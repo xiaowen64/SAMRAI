@@ -367,7 +367,8 @@ OuteredgeGeometry::doOverlap(
  *************************************************************************
  */
 
-hier::Box OuteredgeGeometry::toOuteredgeBox(
+hier::Box
+OuteredgeGeometry::toOuteredgeBox(
    const hier::Box& box,
    int axis,
    int face_normal,

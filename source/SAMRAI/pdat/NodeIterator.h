@@ -90,8 +90,7 @@ public:
    /**
     * Return a non-NULL if the iterator points to a valid index within the box.
     */
-   operator const void
-   * () const;
+   operator const void * () const;
 #endif
 
    /**

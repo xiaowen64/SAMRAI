@@ -21,10 +21,6 @@
 
 #include <stdio.h>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/FaceData.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 
@@ -82,10 +78,96 @@ FaceData<TYPE>::FaceData(
 }
 
 template<class TYPE>
-void FaceData<TYPE>::operator = (
+void
+FaceData<TYPE>::operator = (
    const FaceData<TYPE>& foo)
 {
    NULL_USE(foo);
+}
+
+template<class TYPE>
+int
+FaceData<TYPE>::getDepth() const
+{
+   return d_depth;
+}
+
+template<class TYPE>
+TYPE*
+FaceData<TYPE>::getPointer(
+   int face_normal,
+   int depth)
+{
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data[face_normal].getPointer(depth);
+}
+
+template<class TYPE>
+const TYPE*
+FaceData<TYPE>::getPointer(
+   int face_normal,
+   int depth) const
+{
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data[face_normal].getPointer(depth);
+}
+
+template<class TYPE>
+TYPE&
+FaceData<TYPE>::operator () (
+   const FaceIndex& i,
+   int depth)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+
+   const int axis = i.getAxis();
+
+   TBOX_ASSERT((axis >= 0) && (axis < getDim().getValue()));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data[axis](i, depth);
+}
+
+template<class TYPE>
+const TYPE&
+FaceData<TYPE>::operator () (
+   const FaceIndex& i,
+   int depth) const
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+
+   const int axis = i.getAxis();
+
+   TBOX_ASSERT((axis >= 0) && (axis < getDim().getValue()));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data[axis](i, depth);
+}
+
+template<class TYPE>
+ArrayData<TYPE>&
+FaceData<TYPE>::getArrayData(
+   int face_normal)
+{
+
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
+
+   return d_data[face_normal];
+}
+
+template<class TYPE>
+const ArrayData<TYPE>&
+FaceData<TYPE>::getArrayData(
+   int face_normal) const
+{
+
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
+
+   return d_data[face_normal];
 }
 
 /*
@@ -98,7 +180,8 @@ void FaceData<TYPE>::operator = (
  */
 
 template<class TYPE>
-void FaceData<TYPE>::copy(
+void
+FaceData<TYPE>::copy(
    const hier::PatchData& src)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
@@ -119,7 +202,8 @@ void FaceData<TYPE>::copy(
 }
 
 template<class TYPE>
-void FaceData<TYPE>::copy2(
+void
+FaceData<TYPE>::copy2(
    hier::PatchData& dst) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
@@ -147,7 +231,8 @@ void FaceData<TYPE>::copy2(
  */
 
 template<class TYPE>
-void FaceData<TYPE>::copy(
+void
+FaceData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
@@ -186,7 +271,8 @@ void FaceData<TYPE>::copy(
 }
 
 template<class TYPE>
-void FaceData<TYPE>::copy2(
+void
+FaceData<TYPE>::copy2(
    hier::PatchData& dst,
    const hier::BoxOverlap& overlap) const
 {
@@ -221,7 +307,23 @@ void FaceData<TYPE>::copy2(
 }
 
 template<class TYPE>
-void FaceData<TYPE>::copyWithRotation(
+void
+FaceData<TYPE>::copyOnBox(
+   const FaceData<TYPE>& src,
+   const hier::Box& box)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, src, box);
+
+   for (int axis = 0; axis < getDim().getValue(); axis++) {
+      const hier::Box face_box = FaceGeometry::toFaceBox(box, axis);
+      d_data[axis].copy(src.getArrayData(axis), face_box);
+   }
+
+}
+
+template<class TYPE>
+void
+FaceData<TYPE>::copyWithRotation(
    const FaceData<TYPE>& src,
    const FaceOverlap& overlap)
 {
@@ -290,7 +392,8 @@ void FaceData<TYPE>::copyWithRotation(
  */
 
 template<class TYPE>
-void FaceData<TYPE>::copyDepth(
+void
+FaceData<TYPE>::copyDepth(
    int dst_depth,
    const FaceData<TYPE>& src,
    int src_depth)
@@ -315,13 +418,15 @@ void FaceData<TYPE>::copyDepth(
  */
 
 template<class TYPE>
-bool FaceData<TYPE>::canEstimateStreamSizeFromBox() const
+bool
+FaceData<TYPE>::canEstimateStreamSizeFromBox() const
 {
    return ArrayData<TYPE>::canEstimateStreamSizeFromBox();
 }
 
 template<class TYPE>
-int FaceData<TYPE>::getDataStreamSize(
+int
+FaceData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
    const FaceOverlap* t_overlap =
@@ -355,7 +460,8 @@ int FaceData<TYPE>::getDataStreamSize(
  */
 
 template<class TYPE>
-void FaceData<TYPE>::packStream(
+void
+FaceData<TYPE>::packStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap) const
 {
@@ -385,7 +491,8 @@ void FaceData<TYPE>::packStream(
 }
 
 template<class TYPE>
-void FaceData<TYPE>::packWithRotation(
+void
+FaceData<TYPE>::packWithRotation(
    tbox::MessageStream& stream,
    const FaceOverlap& overlap) const
 {
@@ -452,7 +559,8 @@ void FaceData<TYPE>::packWithRotation(
 }
 
 template<class TYPE>
-void FaceData<TYPE>::unpackStream(
+void
+FaceData<TYPE>::unpackStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
@@ -486,7 +594,8 @@ void FaceData<TYPE>::unpackStream(
  */
 
 template<class TYPE>
-size_t FaceData<TYPE>::getSizeOfData(
+size_t
+FaceData<TYPE>::getSizeOfData(
    const hier::Box& box,
    int depth,
    const hier::IntVector& ghosts)
@@ -513,7 +622,8 @@ size_t FaceData<TYPE>::getSizeOfData(
  */
 
 template<class TYPE>
-void FaceData<TYPE>::fill(
+void
+FaceData<TYPE>::fill(
    const TYPE& t,
    int d)
 {
@@ -525,7 +635,8 @@ void FaceData<TYPE>::fill(
 }
 
 template<class TYPE>
-void FaceData<TYPE>::fill(
+void
+FaceData<TYPE>::fill(
    const TYPE& t,
    const hier::Box& box,
    int d)
@@ -540,7 +651,8 @@ void FaceData<TYPE>::fill(
 }
 
 template<class TYPE>
-void FaceData<TYPE>::fillAll(
+void
+FaceData<TYPE>::fillAll(
    const TYPE& t)
 {
    for (int i = 0; i < getDim().getValue(); i++) {
@@ -549,7 +661,8 @@ void FaceData<TYPE>::fillAll(
 }
 
 template<class TYPE>
-void FaceData<TYPE>::fillAll(
+void
+FaceData<TYPE>::fillAll(
    const TYPE& t,
    const hier::Box& box)
 {
@@ -570,7 +683,8 @@ void FaceData<TYPE>::fillAll(
  */
 
 template<class TYPE>
-void FaceData<TYPE>::print(
+void
+FaceData<TYPE>::print(
    const hier::Box& box,
    std::ostream& os,
    int prec) const
@@ -584,7 +698,8 @@ void FaceData<TYPE>::print(
 }
 
 template<class TYPE>
-void FaceData<TYPE>::print(
+void
+FaceData<TYPE>::print(
    const hier::Box& box,
    int d,
    std::ostream& os,
@@ -600,7 +715,8 @@ void FaceData<TYPE>::print(
 }
 
 template<class TYPE>
-void FaceData<TYPE>::printAxis(
+void
+FaceData<TYPE>::printAxis(
    int face_normal,
    const hier::Box& box,
    std::ostream& os,
@@ -616,7 +732,8 @@ void FaceData<TYPE>::printAxis(
 }
 
 template<class TYPE>
-void FaceData<TYPE>::printAxis(
+void
+FaceData<TYPE>::printAxis(
    int face_normal,
    const hier::Box& box,
    int depth,
@@ -645,7 +762,8 @@ void FaceData<TYPE>::printAxis(
  */
 
 template<class TYPE>
-void FaceData<TYPE>::getSpecializedFromDatabase(
+void
+FaceData<TYPE>::getSpecializedFromDatabase(
    const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
@@ -676,7 +794,8 @@ void FaceData<TYPE>::getSpecializedFromDatabase(
  */
 
 template<class TYPE>
-void FaceData<TYPE>::putSpecializedToDatabase(
+void
+FaceData<TYPE>::putSpecializedToDatabase(
    const boost::shared_ptr<tbox::Database>& database) const
 {
    TBOX_ASSERT(database);

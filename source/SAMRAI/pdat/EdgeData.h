@@ -487,12 +487,6 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/EdgeData.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/EdgeData.C"
-#endif
 
 #endif

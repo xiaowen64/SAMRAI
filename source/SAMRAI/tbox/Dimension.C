@@ -37,7 +37,8 @@ Dimension::Dimension(
       (d_dim > 0 && d_dim <= Dimension::getMaxDimValue()));
 }
 
-std::ostream& operator << (
+std::ostream&
+operator << (
    std::ostream& s,
    const Dimension& dim)
 {

@@ -13,7 +13,8 @@ namespace SAMRAI {
 namespace tbox {
 
 SAMRAI_INLINE_KEYWORD
-bool MemoryDatabase::keyAccessed(
+bool
+MemoryDatabase::keyAccessed(
    const std::string& key)
 {
    KeyData* keydata = findKeyData(key);
@@ -29,7 +30,8 @@ bool MemoryDatabase::keyAccessed(
  */
 
 SAMRAI_INLINE_KEYWORD
-void MemoryDatabase::printUnusedKeys(
+void
+MemoryDatabase::printUnusedKeys(
    std::ostream& os) const
 {
    printDatabase(os, 0, PRINT_UNUSED);
@@ -44,7 +46,8 @@ void MemoryDatabase::printUnusedKeys(
  */
 
 SAMRAI_INLINE_KEYWORD
-void MemoryDatabase::printDefaultKeys(
+void
+MemoryDatabase::printDefaultKeys(
    std::ostream& os) const
 {
    printDatabase(os, 0, PRINT_DEFAULT);
@@ -61,7 +64,8 @@ void MemoryDatabase::printDefaultKeys(
  */
 
 SAMRAI_INLINE_KEYWORD
-bool MemoryDatabase::deleteKeyIfFound(
+bool
+MemoryDatabase::deleteKeyIfFound(
    const std::string& key)
 {
    for (List<KeyData>::Iterator i(d_keyvalues); i; i++) {
@@ -102,7 +106,8 @@ MemoryDatabase::findKeyData(
  */
 
 SAMRAI_INLINE_KEYWORD
-void MemoryDatabase::indentStream(
+void
+MemoryDatabase::indentStream(
    std::ostream& os,
    const long indent)
 {

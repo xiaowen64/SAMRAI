@@ -22,6 +22,7 @@
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/OuterfaceGeometry.I"
 #endif
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -61,7 +62,8 @@ OuterfaceGeometry::~OuterfaceGeometry()
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap> OuterfaceGeometry::calculateOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+OuterfaceGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -101,7 +103,8 @@ boost::shared_ptr<hier::BoxOverlap> OuterfaceGeometry::calculateOverlap(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap> OuterfaceGeometry::doOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+OuterfaceGeometry::doOverlap(
    const FaceGeometry& dst_geometry,
    const OuterfaceGeometry& src_geometry,
    const hier::Box& src_mask,

@@ -20,7 +20,8 @@ namespace tbox {
 /**
  * Build a new SiloDatabase object.
  */
-boost::shared_ptr<Database> SiloDatabaseFactory::allocate(
+boost::shared_ptr<Database>
+SiloDatabaseFactory::allocate(
    const std::string& name) {
 #ifdef HAVE_SILO
    return boost::make_shared<SiloDatabase>(name);

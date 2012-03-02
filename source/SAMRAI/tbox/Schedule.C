@@ -90,7 +90,8 @@ Schedule::~Schedule()
  * on the source and destination processors of the transaction.
  *************************************************************************
  */
-void Schedule::addTransaction(
+void
+Schedule::addTransaction(
    const boost::shared_ptr<Transaction>& transaction)
 {
    const int src_id = transaction->getSourceProcessor();
@@ -114,7 +115,8 @@ void Schedule::addTransaction(
  * on the source and destination processors of the transaction.
  *************************************************************************
  */
-void Schedule::appendTransaction(
+void
+Schedule::appendTransaction(
    const boost::shared_ptr<Transaction>& transaction)
 {
    const int src_id = transaction->getSourceProcessor();
@@ -136,7 +138,8 @@ void Schedule::appendTransaction(
  * Access number of send transactions.
  *************************************************************************
  */
-int Schedule::getNumSendTransactions(
+int
+Schedule::getNumSendTransactions(
    const int rank) const
 {
    int size = 0;
@@ -152,7 +155,8 @@ int Schedule::getNumSendTransactions(
  * Access number of receive transactions.
  *************************************************************************
  */
-int Schedule::getNumRecvTransactions(
+int
+Schedule::getNumRecvTransactions(
    const int rank) const
 {
    int size = 0;
@@ -168,7 +172,8 @@ int Schedule::getNumRecvTransactions(
  * Perform the communication described by the schedule.
  *************************************************************************
  */
-void Schedule::communicate()
+void
+Schedule::communicate()
 {
    d_object_timers->t_communicate->start();
    beginCommunication();
@@ -184,7 +189,8 @@ void Schedule::communicate()
  * communication has finished.
  *************************************************************************
  */
-void Schedule::beginCommunication()
+void
+Schedule::beginCommunication()
 {
    d_object_timers->t_begin_communication->start();
    allocateCommunicationObjects();
@@ -199,7 +205,8 @@ void Schedule::beginCommunication()
  * unpack received data into their destinations.
  *************************************************************************
  */
-void Schedule::finalizeCommunication()
+void
+Schedule::finalizeCommunication()
 {
    d_object_timers->t_finalize_communication->start();
    performLocalCopies();
@@ -216,7 +223,8 @@ void Schedule::finalizeCommunication()
  * message lengths to avoid overheads due to unknown lengths.
  *************************************************************************
  */
-void Schedule::postReceives()
+void
+Schedule::postReceives()
 {
    if (d_recv_sets.empty()) {
       /*
@@ -296,7 +304,8 @@ void Schedule::postReceives()
  * sends.
  *************************************************************************
  */
-void Schedule::postSends()
+void
+Schedule::postSends()
 {
    d_object_timers->t_post_sends->start();
    /*
@@ -371,7 +380,8 @@ void Schedule::postSends()
  * Perform all of the local memory-to-memory copies for this processor.
  *************************************************************************
  */
-void Schedule::performLocalCopies()
+void
+Schedule::performLocalCopies()
 {
    d_object_timers->t_local_copies->start();
    for (Iterator local(d_local_set); local; local++) {
@@ -388,7 +398,8 @@ void Schedule::performLocalCopies()
  * operations are completed.
  *************************************************************************
  */
-void Schedule::processCompletedCommunications()
+void
+Schedule::processCompletedCommunications()
 {
    d_object_timers->t_process_incoming_messages->start();
    do {
@@ -437,7 +448,8 @@ void Schedule::processCompletedCommunications()
  * them ready to send/receive.
  *************************************************************************
  */
-void Schedule::allocateCommunicationObjects()
+void
+Schedule::allocateCommunicationObjects()
 {
    const size_t length = d_recv_sets.size() + d_send_sets.size();
    d_coms = new AsyncCommPeer<char>[length];
@@ -471,7 +483,8 @@ void Schedule::allocateCommunicationObjects()
  * Print class data to the specified output stream.
  *************************************************************************
  */
-void Schedule::printClassData(
+void
+Schedule::printClassData(
    std::ostream& stream) const
 {
    stream << "Schedule::printClassData()" << std::endl;
@@ -508,7 +521,8 @@ void Schedule::printClassData(
  ***********************************************************************
  ***********************************************************************
  */
-void Schedule::setTimerPrefix(
+void
+Schedule::setTimerPrefix(
    const std::string& timer_prefix)
 {
    std::map<std::string, TimerStruct>::iterator ti(
@@ -526,7 +540,8 @@ void Schedule::setTimerPrefix(
  ***********************************************************************
  ***********************************************************************
  */
-void Schedule::getAllTimers(
+void
+Schedule::getAllTimers(
    const std::string& timer_prefix,
    TimerStruct& timers)
 {

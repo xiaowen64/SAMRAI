@@ -608,7 +608,8 @@ RefineAlgorithm::createSchedule(
  **************************************************************************
  */
 
-bool RefineAlgorithm::checkConsistency(
+bool
+RefineAlgorithm::checkConsistency(
    const boost::shared_ptr<RefineSchedule>& schedule) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS

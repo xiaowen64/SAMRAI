@@ -55,7 +55,8 @@ MessageStream::~MessageStream()
  *************************************************************************
  */
 
-void MessageStream::printClassData(
+void
+MessageStream::printClassData(
    std::ostream& os) const
 {
    os << "Maximum buffer size = " << d_buffer_size << std::endl;

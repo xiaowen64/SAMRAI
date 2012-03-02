@@ -105,21 +105,20 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Return a boolean value indicating how data for the node quantity will be treated
-    * on coarse-fine interfaces.  This value is passed into the constructor.  See
-    * the NodeVariable<DIM> class header file for more information.
+    * Return a boolean value indicating how data for the node quantity will be
+    * treated on coarse-fine interfaces.  This value is passed into the
+    * constructor.  See the NodeVariable<DIM> class header file for more
+    * information.
     */
-   bool fineBoundaryRepresentsVariable() const {
-      return d_fine_boundary_represents_var;
-   }
+   bool
+   fineBoundaryRepresentsVariable() const;
 
    /**
-    * Return true since the node data index space extends beyond the interior of
-    * patches.  That is, node data lives on patch borders.
+    * Return true since the node data index space extends beyond the interior
+    * of patches.  That is, node data lives on patch borders.
     */
-   bool dataLivesOnPatchBorder() const {
-      return true;
-   }
+   bool
+   dataLivesOnPatchBorder() const;
 
    /**
     * Return whether it is valid to copy this NodeDataFactory to the
@@ -146,12 +145,7 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/NodeDataFactory.I"
-#endif
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/NodeDataFactory.C"
-#endif
 
 #endif

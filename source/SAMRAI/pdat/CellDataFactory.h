@@ -104,21 +104,21 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Return a boolean true value indicating that the cell data quantities will always
-    * be treated as though fine values represent them on coarse-fine interfaces.
+    * Return a boolean true value indicating that the cell data quantities will
+    * always be treated as though fine values represent them on coarse-fine
+    * interfaces.
     * See the CellVariable<DIM> class header file for more information.
     */
-   bool fineBoundaryRepresentsVariable() const {
-      return true;
-   }
+   bool
+   fineBoundaryRepresentsVariable() const;
 
    /**
     * Return false since the cell data index space matches the cell-centered
-    * index space for AMR patches.  Thus, cell data does not live on patch borders.
+    * index space for AMR patches.  Thus, cell data does not live on patch
+    * borders.
     */
-   bool dataLivesOnPatchBorder() const {
-      return false;
-   }
+   bool
+   dataLivesOnPatchBorder() const;
 
    /**
     * Return whether it is valid to copy this CellDataFactory to the
@@ -143,12 +143,7 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/CellDataFactory.I"
-#endif
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/CellDataFactory.C"
-#endif
 
 #endif

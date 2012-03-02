@@ -13,6 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/ReferenceCounter.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
 namespace tbox {
@@ -321,12 +322,6 @@ Array<double>::deleteObjects();
  * Default assume Array is not a standard type
  */
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/Array.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/tbox/Array.C"
-#endif
 
 #endif

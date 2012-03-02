@@ -27,7 +27,7 @@ class MemoryDatabaseFactory:public DatabaseFactory
    /**
     * Build a new Database object.
     */
-  virtual boost::shared_ptr<Database>
+   virtual boost::shared_ptr<Database>
    allocate(
       const std::string& name);
 };

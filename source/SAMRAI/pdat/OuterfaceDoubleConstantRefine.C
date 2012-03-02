@@ -113,7 +113,8 @@ OuterfaceDoubleConstantRefine::~OuterfaceDoubleConstantRefine()
 {
 }
 
-bool OuterfaceDoubleConstantRefine::findRefineOperator(
+bool
+OuterfaceDoubleConstantRefine::findRefineOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -129,17 +130,20 @@ bool OuterfaceDoubleConstantRefine::findRefineOperator(
    }
 }
 
-int OuterfaceDoubleConstantRefine::getOperatorPriority() const
+int
+OuterfaceDoubleConstantRefine::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-OuterfaceDoubleConstantRefine::getStencilWidth() const {
+OuterfaceDoubleConstantRefine::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void OuterfaceDoubleConstantRefine::refine(
+void
+OuterfaceDoubleConstantRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,

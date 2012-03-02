@@ -18,7 +18,8 @@ namespace tbox {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int Schedule::getNumLocalTransactions() const
+int
+Schedule::getNumLocalTransactions() const
 {
    return d_local_set.size();
 }
@@ -28,7 +29,8 @@ int Schedule::getNumLocalTransactions() const
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Schedule::setMPITag(
+void
+Schedule::setMPITag(
    const int tag0,
    const int tag1)
 {
@@ -43,7 +45,8 @@ void Schedule::setMPITag(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Schedule::setMPI(
+void
+Schedule::setMPI(
    const SAMRAI_MPI& mpi)
 {
    d_mpi = mpi;
@@ -54,7 +57,8 @@ void Schedule::setMPI(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Schedule::deallocateCommunicationObjects()
+void
+Schedule::deallocateCommunicationObjects()
 {
    delete[] d_coms;
    d_coms = NULL;
@@ -65,7 +69,8 @@ void Schedule::deallocateCommunicationObjects()
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Schedule::setFirstMessageLength(
+void
+Schedule::setFirstMessageLength(
    int first_message_length)
 {
    TBOX_ASSERT(first_message_length > 0);
@@ -77,7 +82,8 @@ void Schedule::setFirstMessageLength(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Schedule::initializeCallback()
+void
+Schedule::initializeCallback()
 {
    TimerStruct& timers(s_static_timers[s_default_timer_prefix]);
    getAllTimers(s_default_timer_prefix, timers);
@@ -90,7 +96,8 @@ void Schedule::initializeCallback()
  ***************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void Schedule::finalizeCallback()
+void
+Schedule::finalizeCallback()
 {
    s_static_timers.clear();
 }

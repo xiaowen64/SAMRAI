@@ -10,10 +10,6 @@
 
 #include "SAMRAI/tbox/NullDatabase.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/NullDatabase.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 
@@ -41,7 +37,8 @@ NullDatabase::~NullDatabase()
  *************************************************************************
  */
 
-bool NullDatabase::create(
+bool
+NullDatabase::create(
    const std::string& name)
 {
    NULL_USE(name);
@@ -56,7 +53,8 @@ bool NullDatabase::create(
  *************************************************************************
  */
 
-bool NullDatabase::open(
+bool
+NullDatabase::open(
    const std::string& name,
    const bool read_write_mode)
 {
@@ -73,7 +71,8 @@ bool NullDatabase::open(
  *************************************************************************
  */
 
-bool NullDatabase::close()
+bool
+NullDatabase::close()
 {
    return true;
 }
@@ -86,7 +85,8 @@ bool NullDatabase::close()
  *************************************************************************
  */
 
-bool NullDatabase::keyExists(
+bool
+NullDatabase::keyExists(
    const std::string& key)
 {
    NULL_USE(key);
@@ -101,7 +101,8 @@ bool NullDatabase::keyExists(
  *************************************************************************
  */
 
-Array<std::string> NullDatabase::getAllKeys()
+Array<std::string>
+NullDatabase::getAllKeys()
 {
    Array<std::string> keys(0);
    return keys;
@@ -115,7 +116,8 @@ Array<std::string> NullDatabase::getAllKeys()
  *************************************************************************
  */
 
-Database::DataType NullDatabase::getArrayType(
+Database::DataType
+NullDatabase::getArrayType(
    const std::string& key)
 {
    NULL_USE(key);
@@ -130,7 +132,8 @@ Database::DataType NullDatabase::getArrayType(
  *************************************************************************
  */
 
-int NullDatabase::getArraySize(
+int
+NullDatabase::getArraySize(
    const std::string& key)
 {
    NULL_USE(key);
@@ -145,21 +148,24 @@ int NullDatabase::getArraySize(
  *************************************************************************
  */
 
-bool NullDatabase::isDatabase(
+bool
+NullDatabase::isDatabase(
    const std::string& key)
 {
    NULL_USE(key);
    return true;
 }
 
-boost::shared_ptr<Database> NullDatabase::putDatabase(
+boost::shared_ptr<Database>
+NullDatabase::putDatabase(
    const std::string& key)
 {
    NULL_USE(key);
    return boost::shared_ptr<Database>(this);
 }
 
-boost::shared_ptr<Database> NullDatabase::getDatabase(
+boost::shared_ptr<Database>
+NullDatabase::getDatabase(
    const std::string& key)
 {
    NULL_USE(key);
@@ -174,14 +180,16 @@ boost::shared_ptr<Database> NullDatabase::getDatabase(
  *************************************************************************
  */
 
-bool NullDatabase::isBool(
+bool
+NullDatabase::isBool(
    const std::string& key)
 {
    NULL_USE(key);
    return true;
 }
 
-void NullDatabase::putBoolArray(
+void
+NullDatabase::putBoolArray(
    const std::string& key,
    const bool * const data,
    const int nelements)
@@ -191,7 +199,8 @@ void NullDatabase::putBoolArray(
    NULL_USE(nelements);
 }
 
-Array<bool> NullDatabase::getBoolArray(
+Array<bool>
+NullDatabase::getBoolArray(
    const std::string& key)
 {
    NULL_USE(key);
@@ -207,14 +216,16 @@ Array<bool> NullDatabase::getBoolArray(
  *************************************************************************
  */
 
-bool NullDatabase::isDatabaseBox(
+bool
+NullDatabase::isDatabaseBox(
    const std::string& key)
 {
    NULL_USE(key);
    return true;
 }
 
-void NullDatabase::putDatabaseBoxArray(
+void
+NullDatabase::putDatabaseBoxArray(
    const std::string& key,
    const DatabaseBox * const data,
    const int nelements)
@@ -224,7 +235,8 @@ void NullDatabase::putDatabaseBoxArray(
    NULL_USE(nelements);
 }
 
-Array<DatabaseBox> NullDatabase::getDatabaseBoxArray(
+Array<DatabaseBox>
+NullDatabase::getDatabaseBoxArray(
    const std::string& key)
 {
    NULL_USE(key);
@@ -241,14 +253,16 @@ Array<DatabaseBox> NullDatabase::getDatabaseBoxArray(
  *************************************************************************
  */
 
-bool NullDatabase::isChar(
+bool
+NullDatabase::isChar(
    const std::string& key)
 {
    NULL_USE(key);
    return true;
 }
 
-void NullDatabase::putCharArray(
+void
+NullDatabase::putCharArray(
    const std::string& key,
    const char * const data,
    const int nelements)
@@ -258,7 +272,8 @@ void NullDatabase::putCharArray(
    NULL_USE(nelements);
 }
 
-Array<char> NullDatabase::getCharArray(
+Array<char>
+NullDatabase::getCharArray(
    const std::string& key)
 {
    NULL_USE(key);
@@ -277,14 +292,16 @@ Array<char> NullDatabase::getCharArray(
  *************************************************************************
  */
 
-bool NullDatabase::isComplex(
+bool
+NullDatabase::isComplex(
    const std::string& key)
 {
    NULL_USE(key);
    return true;
 }
 
-void NullDatabase::putComplexArray(
+void
+NullDatabase::putComplexArray(
    const std::string& key,
    const dcomplex * const data,
    const int nelements)
@@ -294,7 +311,8 @@ void NullDatabase::putComplexArray(
    NULL_USE(nelements);
 }
 
-Array<dcomplex> NullDatabase::getComplexArray(
+Array<dcomplex>
+NullDatabase::getComplexArray(
    const std::string& key)
 {
    NULL_USE(key);
@@ -312,14 +330,16 @@ Array<dcomplex> NullDatabase::getComplexArray(
  *************************************************************************
  */
 
-bool NullDatabase::isDouble(
+bool
+NullDatabase::isDouble(
    const std::string& key)
 {
    NULL_USE(key);
    return true;
 }
 
-void NullDatabase::putDoubleArray(
+void
+NullDatabase::putDoubleArray(
    const std::string& key,
    const double * const data,
    const int nelements)
@@ -329,7 +349,8 @@ void NullDatabase::putDoubleArray(
    NULL_USE(nelements);
 }
 
-Array<double> NullDatabase::getDoubleArray(
+Array<double>
+NullDatabase::getDoubleArray(
    const std::string& key)
 {
    NULL_USE(key);
@@ -347,14 +368,16 @@ Array<double> NullDatabase::getDoubleArray(
  *************************************************************************
  */
 
-bool NullDatabase::isFloat(
+bool
+NullDatabase::isFloat(
    const std::string& key)
 {
    NULL_USE(key);
    return true;
 }
 
-void NullDatabase::putFloatArray(
+void
+NullDatabase::putFloatArray(
    const std::string& key,
    const float * const data,
    const int nelements)
@@ -364,7 +387,8 @@ void NullDatabase::putFloatArray(
    NULL_USE(nelements);
 }
 
-Array<float> NullDatabase::getFloatArray(
+Array<float>
+NullDatabase::getFloatArray(
    const std::string& key)
 {
    NULL_USE(key);
@@ -381,14 +405,16 @@ Array<float> NullDatabase::getFloatArray(
  *************************************************************************
  */
 
-bool NullDatabase::isInteger(
+bool
+NullDatabase::isInteger(
    const std::string& key)
 {
    NULL_USE(key);
    return true;
 }
 
-void NullDatabase::putIntegerArray(
+void
+NullDatabase::putIntegerArray(
    const std::string& key,
    const int * const data,
    const int nelements)
@@ -398,7 +424,8 @@ void NullDatabase::putIntegerArray(
    NULL_USE(nelements);
 }
 
-Array<int> NullDatabase::getIntegerArray(
+Array<int>
+NullDatabase::getIntegerArray(
    const std::string& key)
 {
    NULL_USE(key);
@@ -415,14 +442,16 @@ Array<int> NullDatabase::getIntegerArray(
  *************************************************************************
  */
 
-bool NullDatabase::isString(
+bool
+NullDatabase::isString(
    const std::string& key)
 {
    NULL_USE(key);
    return true;
 }
 
-void NullDatabase::putStringArray(
+void
+NullDatabase::putStringArray(
    const std::string& key,
    const std::string * const data,
    const int nelements)
@@ -432,7 +461,8 @@ void NullDatabase::putStringArray(
    NULL_USE(nelements);
 }
 
-Array<std::string> NullDatabase::getStringArray(
+Array<std::string>
+NullDatabase::getStringArray(
    const std::string& key)
 {
    NULL_USE(key);
@@ -440,7 +470,8 @@ Array<std::string> NullDatabase::getStringArray(
    return empty;
 }
 
-std::string NullDatabase::getName(
+std::string
+NullDatabase::getName(
    void)
 {
    return std::string();
@@ -454,7 +485,8 @@ std::string NullDatabase::getName(
  *************************************************************************
  */
 
-void NullDatabase::printClassData(
+void
+NullDatabase::printClassData(
    std::ostream& os)
 {
    NULL_USE(os);

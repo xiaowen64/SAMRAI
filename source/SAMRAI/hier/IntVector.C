@@ -132,7 +132,8 @@ IntVector::~IntVector()
 {
 }
 
-std::istream& operator >> (
+std::istream&
+operator >> (
    std::istream& s,
    IntVector& rhs)
 {
@@ -165,14 +166,16 @@ std::ostream& operator << (
    return s;
 }
 
-void IntVector::putUnregisteredToDatabase(
+void
+IntVector::putUnregisteredToDatabase(
    tbox::Database& database,
    const std::string& name) const
 {
    database.putIntegerArray(name, d_vector, d_dim.getValue());
 }
 
-void IntVector::getFromDatabase(
+void
+IntVector::getFromDatabase(
    tbox::Database& database,
    const std::string& name)
 {
@@ -211,7 +214,8 @@ IntVector::sortIntVector(
 #endif
 }
 
-void IntVector::initializeCallback()
+void
+IntVector::initializeCallback()
 {
    for (unsigned short d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
       s_zeros[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 0);
@@ -222,7 +226,8 @@ void IntVector::initializeCallback()
    }
 }
 
-void IntVector::finalizeCallback()
+void
+IntVector::finalizeCallback()
 {
    for (int d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
       delete s_zeros[d];

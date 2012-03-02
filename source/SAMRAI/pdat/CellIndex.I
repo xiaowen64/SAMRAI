@@ -8,32 +8,12 @@
  *
  ************************************************************************/
 
-#include "SAMRAI/tbox/Utilities.h"
-
 namespace SAMRAI {
 namespace pdat {
 
 SAMRAI_INLINE_KEYWORD
-CellIndex::CellIndex(
-   const tbox::Dimension& dim):
-   hier::Index(dim)
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-CellIndex::CellIndex(
-   const hier::Index& rhs):hier::Index(rhs)
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-CellIndex::CellIndex(
-   const CellIndex& rhs):hier::Index(rhs)
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-CellIndex& CellIndex::operator = (
+CellIndex&
+CellIndex::operator = (
    const CellIndex& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -42,12 +22,8 @@ CellIndex& CellIndex::operator = (
 }
 
 SAMRAI_INLINE_KEYWORD
-CellIndex::~CellIndex()
-{
-}
-
-SAMRAI_INLINE_KEYWORD
-CellIndex& CellIndex::operator += (
+CellIndex&
+CellIndex::operator += (
    const hier::IntVector& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -56,7 +32,8 @@ CellIndex& CellIndex::operator += (
 }
 
 SAMRAI_INLINE_KEYWORD
-CellIndex CellIndex::operator + (
+CellIndex
+CellIndex::operator + (
    const hier::IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -66,7 +43,8 @@ CellIndex CellIndex::operator + (
 }
 
 SAMRAI_INLINE_KEYWORD
-CellIndex& CellIndex::operator += (
+CellIndex&
+CellIndex::operator += (
    const int rhs)
 {
    hier::Index::operator += (rhs);
@@ -74,7 +52,8 @@ CellIndex& CellIndex::operator += (
 }
 
 SAMRAI_INLINE_KEYWORD
-CellIndex CellIndex::operator + (
+CellIndex
+CellIndex::operator + (
    const int rhs) const
 {
    CellIndex tmp = *this;
@@ -83,7 +62,8 @@ CellIndex CellIndex::operator + (
 }
 
 SAMRAI_INLINE_KEYWORD
-CellIndex& CellIndex::operator -= (
+CellIndex&
+CellIndex::operator -= (
    const hier::IntVector& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -92,7 +72,8 @@ CellIndex& CellIndex::operator -= (
 }
 
 SAMRAI_INLINE_KEYWORD
-CellIndex CellIndex::operator - (
+CellIndex
+CellIndex::operator - (
    const hier::IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -102,7 +83,8 @@ CellIndex CellIndex::operator - (
 }
 
 SAMRAI_INLINE_KEYWORD
-CellIndex& CellIndex::operator -= (
+CellIndex&
+CellIndex::operator -= (
    const int rhs)
 {
    hier::Index::operator -= (rhs);
@@ -110,7 +92,8 @@ CellIndex& CellIndex::operator -= (
 }
 
 SAMRAI_INLINE_KEYWORD
-CellIndex CellIndex::operator - (
+CellIndex
+CellIndex::operator - (
    const int rhs) const
 {
    CellIndex tmp = *this;
@@ -119,7 +102,8 @@ CellIndex CellIndex::operator - (
 }
 
 SAMRAI_INLINE_KEYWORD
-CellIndex& CellIndex::operator *= (
+CellIndex&
+CellIndex::operator *= (
    const hier::IntVector& rhs)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -128,7 +112,8 @@ CellIndex& CellIndex::operator *= (
 }
 
 SAMRAI_INLINE_KEYWORD
-CellIndex CellIndex::operator * (
+CellIndex
+CellIndex::operator * (
    const hier::IntVector& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -138,7 +123,8 @@ CellIndex CellIndex::operator * (
 }
 
 SAMRAI_INLINE_KEYWORD
-CellIndex& CellIndex::operator *= (
+CellIndex&
+CellIndex::operator *= (
    const int rhs)
 {
    hier::Index::operator *= (rhs);
@@ -146,7 +132,8 @@ CellIndex& CellIndex::operator *= (
 }
 
 SAMRAI_INLINE_KEYWORD
-CellIndex CellIndex::operator * (
+CellIndex
+CellIndex::operator * (
    const int rhs) const
 {
    CellIndex tmp = *this;
@@ -155,7 +142,8 @@ CellIndex CellIndex::operator * (
 }
 
 SAMRAI_INLINE_KEYWORD
-bool CellIndex::operator == (
+bool
+CellIndex::operator == (
    const CellIndex& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
@@ -163,7 +151,8 @@ bool CellIndex::operator == (
 }
 
 SAMRAI_INLINE_KEYWORD
-bool CellIndex::operator != (
+bool
+CellIndex::operator != (
    const CellIndex& rhs) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);

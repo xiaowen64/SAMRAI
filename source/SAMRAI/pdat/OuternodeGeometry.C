@@ -22,6 +22,7 @@
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/OuternodeGeometry.I"
 #endif
+
 namespace SAMRAI {
 namespace pdat {
 

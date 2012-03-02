@@ -19,7 +19,8 @@ namespace tbox {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool InputManager::inputDatabaseExists()
+bool
+InputManager::inputDatabaseExists()
 {
    return s_input_db;
 }
@@ -32,7 +33,8 @@ bool InputManager::inputDatabaseExists()
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-boost::shared_ptr<Database> InputManager::getInputDatabase()
+boost::shared_ptr<Database>
+InputManager::getInputDatabase()
 {
    return s_input_db;
 }

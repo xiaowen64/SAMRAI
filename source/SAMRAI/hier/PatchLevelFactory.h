@@ -113,7 +113,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchLevelFactory.I"
-#endif
+
 #endif

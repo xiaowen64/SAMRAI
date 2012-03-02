@@ -113,8 +113,7 @@ public:
    /*!
     * @brief Access the LocalId.
     */
-   const LocalId
-   &
+   const LocalId&
    getLocalId() const;
 
    /*!

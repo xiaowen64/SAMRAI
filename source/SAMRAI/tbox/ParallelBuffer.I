@@ -19,7 +19,8 @@ namespace tbox {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void ParallelBuffer::setPrefixString(
+void
+ParallelBuffer::setPrefixString(
    const std::string& text)
 {
    d_prefix = text;
@@ -33,7 +34,8 @@ void ParallelBuffer::setPrefixString(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void ParallelBuffer::setOutputStream1(
+void
+ParallelBuffer::setOutputStream1(
    std::ostream* stream)
 {
    d_ostream1 = stream;
@@ -47,7 +49,8 @@ void ParallelBuffer::setOutputStream1(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void ParallelBuffer::setOutputStream2(
+void
+ParallelBuffer::setOutputStream2(
    std::ostream* stream)
 {
    d_ostream2 = stream;
@@ -62,7 +65,8 @@ void ParallelBuffer::setOutputStream2(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void ParallelBuffer::outputString(
+void
+ParallelBuffer::outputString(
    const std::string& text)
 {
    outputString(text, static_cast<int>(text.length()));

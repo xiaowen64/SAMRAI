@@ -15,4 +15,42 @@
 #include "SAMRAI/pdat/IntegerAttributeId.I"
 #endif
 
+namespace SAMRAI {
+namespace pdat {
+
+/**********************************************************************
+ * IntegerAttributesId ctor
+ *********************************************************************/
+IntegerAttributeId::IntegerAttributeId(
+   int value):
+   d_val(value)
+{
+}
+
+/**********************************************************************
+ * IntegerAttributesId copy ctor
+ *********************************************************************/
+IntegerAttributeId::IntegerAttributeId(
+   const IntegerAttributeId& other):
+   d_val(other.d_val)
+{
+}
+
+/**********************************************************************
+ * IntegerAttributesId c'tor (private)
+ *********************************************************************/
+IntegerAttributeId::IntegerAttributeId():
+   d_val(-1)
+{
+}
+
+/**********************************************************************
+ * d'tor
+ *********************************************************************/
+IntegerAttributeId::~IntegerAttributeId()
+{
+}
+
+}
+}
 #endif

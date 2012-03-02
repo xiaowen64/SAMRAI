@@ -84,7 +84,8 @@ CellFloatLinearTimeInterpolateOp::~CellFloatLinearTimeInterpolateOp()
 {
 }
 
-bool CellFloatLinearTimeInterpolateOp::findTimeInterpolateOperator(
+bool
+CellFloatLinearTimeInterpolateOp::findTimeInterpolateOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -98,7 +99,8 @@ bool CellFloatLinearTimeInterpolateOp::findTimeInterpolateOperator(
    }
 }
 
-void CellFloatLinearTimeInterpolateOp::timeInterpolate(
+void
+CellFloatLinearTimeInterpolateOp::timeInterpolate(
    hier::PatchData& dst_data,
    const hier::Box& where,
    const hier::PatchData& src_data_old,

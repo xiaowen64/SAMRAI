@@ -601,7 +601,8 @@ RefineSchedule::~RefineSchedule()
  ************************************************************************
  */
 
-void RefineSchedule::reset(
+void
+RefineSchedule::reset(
    const boost::shared_ptr<RefineClasses>& refine_classes)
 {
    TBOX_ASSERT(refine_classes);

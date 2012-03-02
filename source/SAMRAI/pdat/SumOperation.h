@@ -54,12 +54,6 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/SumOperation.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/SumOperation.C"
-#endif
 
 #endif

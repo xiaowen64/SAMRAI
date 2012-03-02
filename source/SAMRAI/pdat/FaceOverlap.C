@@ -13,10 +13,6 @@
 
 #include "SAMRAI/pdat/FaceOverlap.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/FaceOverlap.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 
@@ -40,9 +36,31 @@ FaceOverlap::~FaceOverlap()
 {
 }
 
-bool FaceOverlap::isOverlapEmpty() const
+bool
+FaceOverlap::isOverlapEmpty() const
 {
    return d_is_overlap_empty;
+}
+
+const hier::BoxContainer&
+FaceOverlap::getDestinationBoxContainer(
+   const int axis) const
+{
+   TBOX_ASSERT((axis >= 0) && (axis < d_dst_boxes.getSize()));
+
+   return d_dst_boxes[axis];
+}
+
+const hier::IntVector&
+FaceOverlap::getSourceOffset() const
+{
+   return d_transformation.getOffset();
+}
+
+const hier::Transformation&
+FaceOverlap::getTransformation() const
+{
+   return d_transformation;
 }
 
 }

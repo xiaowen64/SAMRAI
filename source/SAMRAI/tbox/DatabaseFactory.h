@@ -41,9 +41,9 @@ public:
   /**
     * Build a new Database instance.
     */
-   virtual boost::shared_ptr<Database>
-   allocate(
-      const std::string& name) = 0;
+  virtual boost::shared_ptr<Database>
+  allocate(
+     const std::string& name) = 0;
 };
 
 }

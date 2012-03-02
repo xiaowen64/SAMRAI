@@ -18,8 +18,36 @@
 
 #include "SAMRAI/pdat/SumOperation.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/SumOperation.I"
-#endif
+namespace SAMRAI {
+namespace pdat {
 
+template<class TYPE>
+SumOperation<TYPE>::SumOperation()
+{
+}
+
+template<class TYPE>
+SumOperation<TYPE>::~SumOperation()
+{
+}
+
+/*
+ * Member functions for SumOperation
+ */
+
+template<class TYPE>
+void
+SumOperation<TYPE>::operator () (
+   TYPE& vdst,
+   const TYPE& vsrc) const
+{
+// Disable Intel warning about conversions
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:810)
+#endif
+   vdst += vsrc;
+}
+
+}
+}
 #endif

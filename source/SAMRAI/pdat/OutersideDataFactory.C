@@ -21,9 +21,6 @@
 
 #include <boost/make_shared.hpp>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/OutersideDataFactory.I"
-#endif
 namespace SAMRAI {
 namespace pdat {
 
@@ -109,6 +106,13 @@ OutersideDataFactory<TYPE>::getBoxGeometry(
    return boost::make_shared<OutersideGeometry>(box, zero_vector);
 }
 
+template<class TYPE>
+int
+OutersideDataFactory<TYPE>::getDepth() const
+{
+   return d_depth;
+}
+
 /*
  *************************************************************************
  *
@@ -118,7 +122,8 @@ OutersideDataFactory<TYPE>::getBoxGeometry(
  */
 
 template<class TYPE>
-size_t OutersideDataFactory<TYPE>::getSizeOfMemory(
+size_t
+OutersideDataFactory<TYPE>::getSizeOfMemory(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -138,7 +143,8 @@ size_t OutersideDataFactory<TYPE>::getSizeOfMemory(
  */
 
 template<class TYPE>
-bool OutersideDataFactory<TYPE>::validCopyTo(
+bool
+OutersideDataFactory<TYPE>::validCopyTo(
    const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
@@ -167,6 +173,37 @@ bool OutersideDataFactory<TYPE>::validCopyTo(
    }
 
    return valid_copy;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return a boolean true value indicating that fine data for the outerside
+ * quantity will take precedence on coarse-fine interfaces.  See the
+ * OutersideVariable<DIM> class header file for more information.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+OutersideDataFactory<TYPE>::fineBoundaryRepresentsVariable() const
+{
+   return true;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return true since the outerside data index space extends beyond the
+ * interior of patches.  That is, outerside data lives on patch borders.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+OutersideDataFactory<TYPE>::dataLivesOnPatchBorder() const
+{
+   return true;
 }
 
 }

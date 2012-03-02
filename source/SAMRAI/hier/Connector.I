@@ -37,7 +37,8 @@ Connector::getMPI() const
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& Connector::getConnectorWidth() const
+const IntVector&
+Connector::getConnectorWidth() const
 {
    TBOX_ASSERT(isFinalized());
    return d_base_width;

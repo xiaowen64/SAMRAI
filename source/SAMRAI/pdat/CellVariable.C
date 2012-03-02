@@ -46,12 +46,47 @@ CellVariable<TYPE>::~CellVariable()
 }
 
 template<class TYPE>
-int CellVariable<TYPE>::getDepth() const
+int
+CellVariable<TYPE>::getDepth() const
 {
    boost::shared_ptr<CellDataFactory<TYPE> > cell_factory(
       getPatchDataFactory());
    TBOX_ASSERT(cell_factory);
    return cell_factory->getDepth();
+}
+
+/*
+ *************************************************************************
+ *
+ * Return true indicating that cell data quantities will always
+ * be treated as though fine values take precedence on coarse-fine
+ * interfaces.  Note that this is really artificial since the cell
+ * data index space matches the cell-centered index space for AMR
+ * patches.  However, some value must be supplied for communication
+ * operations.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+CellVariable<TYPE>::fineBoundaryRepresentsVariable() const
+{
+   return true;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return false indicating that cell data on a patch interior
+ * does not exist on the patch boundary.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+CellVariable<TYPE>::dataLivesOnPatchBorder() const
+{
+   return false;
 }
 
 /*
@@ -74,7 +109,8 @@ CellVariable<TYPE>::CellVariable(
 }
 
 template<class TYPE>
-void CellVariable<TYPE>::operator = (
+void
+CellVariable<TYPE>::operator = (
    const CellVariable<TYPE>& foo)
 {
    NULL_USE(foo);

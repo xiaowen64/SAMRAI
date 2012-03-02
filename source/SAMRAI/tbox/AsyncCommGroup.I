@@ -26,7 +26,8 @@ namespace tbox {
  ****************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void AsyncCommGroup::setMPITag(
+void
+AsyncCommGroup::setMPITag(
    const int mpi_tag)
 {
    if (!isDone()) {
@@ -41,7 +42,8 @@ void AsyncCommGroup::setMPITag(
  ****************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void AsyncCommGroup::setUseMPICollectiveForFullGroups(
+void
+AsyncCommGroup::setUseMPICollectiveForFullGroups(
    bool use_mpi_collective)
 {
    if (!isDone()) {
@@ -56,7 +58,8 @@ void AsyncCommGroup::setUseMPICollectiveForFullGroups(
  ****************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void AsyncCommGroup::setUseBlockingSendToChildren(
+void
+AsyncCommGroup::setUseBlockingSendToChildren(
    const bool flag)
 {
    d_use_blocking_send_to_children = flag;
@@ -67,7 +70,8 @@ void AsyncCommGroup::setUseBlockingSendToChildren(
  ****************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void AsyncCommGroup::setUseBlockingSendToParent(
+void
+AsyncCommGroup::setUseBlockingSendToParent(
    const bool flag)
 {
    d_use_blocking_send_to_parent = flag;
@@ -78,7 +82,8 @@ void AsyncCommGroup::setUseBlockingSendToParent(
  ****************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int AsyncCommGroup::getNumberOfChildren() const
+int
+AsyncCommGroup::getNumberOfChildren() const
 {
    return static_cast<int>(d_nchild);
 }
@@ -88,7 +93,8 @@ int AsyncCommGroup::getNumberOfChildren() const
  ****************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int AsyncCommGroup::toPosition(
+int
+AsyncCommGroup::toPosition(
    int index) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -110,7 +116,8 @@ int AsyncCommGroup::toPosition(
  ****************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int AsyncCommGroup::toIndex(
+int
+AsyncCommGroup::toIndex(
    int position) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -132,7 +139,8 @@ int AsyncCommGroup::toIndex(
  ****************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int AsyncCommGroup::toChildPosition(
+int
+AsyncCommGroup::toChildPosition(
    int parent_pos,
    int child) const
 {
@@ -152,7 +160,8 @@ int AsyncCommGroup::toChildPosition(
  ****************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int AsyncCommGroup::toOldest(
+int
+AsyncCommGroup::toOldest(
    int parent_pos) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -171,7 +180,8 @@ int AsyncCommGroup::toOldest(
  ****************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int AsyncCommGroup::toYoungest(
+int
+AsyncCommGroup::toYoungest(
    int parent_pos) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -190,7 +200,8 @@ int AsyncCommGroup::toYoungest(
  ****************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void AsyncCommGroup::resetStatus()
+void
+AsyncCommGroup::resetStatus()
 {
    /*
     * Do not set d_mpi_status.count because it is not guaranteed
@@ -206,7 +217,8 @@ void AsyncCommGroup::resetStatus()
  ************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool AsyncCommGroup::bcastByMpiCollective()
+bool
+AsyncCommGroup::bcastByMpiCollective()
 {
    d_mpi.Bcast(d_external_buf,
       d_external_size,
@@ -224,7 +236,8 @@ bool AsyncCommGroup::bcastByMpiCollective()
  **********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool AsyncCommGroup::checkSumReduce()
+bool
+AsyncCommGroup::checkSumReduce()
 {
    return checkReduce();
 }
@@ -234,7 +247,8 @@ bool AsyncCommGroup::checkSumReduce()
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void AsyncCommGroup::checkMPIParams()
+void
+AsyncCommGroup::checkMPIParams()
 {
    if (d_mpi_tag < 0) {
       TBOX_ERROR("AsyncCommGroup: Invalid MPI tag value "
@@ -248,7 +262,8 @@ void AsyncCommGroup::checkMPIParams()
  ***************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void AsyncCommGroup::initializeCallback()
+void
+AsyncCommGroup::initializeCallback()
 {
    t_reduce_data = TimerManager::getManager()->
       getTimer("tbox::AsyncCommGroup::reduceData()");
@@ -263,7 +278,8 @@ void AsyncCommGroup::initializeCallback()
  ***************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void AsyncCommGroup::finalizeCallback()
+void
+AsyncCommGroup::finalizeCallback()
 {
    t_reduce_data.reset();
    t_wait_all.reset();

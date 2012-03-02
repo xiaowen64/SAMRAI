@@ -26,13 +26,15 @@ namespace SAMRAI {
 namespace hier {
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Dimension& BoxLevel::getDim() const
+const tbox::Dimension&
+BoxLevel::getDim() const
 {
    return d_ratio.getDim();
 }
 
 SAMRAI_INLINE_KEYWORD
-bool BoxLevel::isInitialized() const
+bool
+BoxLevel::isInitialized() const
 {
    return d_ratio(0) != 0;
 }
@@ -53,7 +55,8 @@ BoxLevel::getParallelState() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void BoxLevel::detachMyHandle() const
+void
+BoxLevel::detachMyHandle() const
 {
    if (d_handle) {
       d_handle->detachMyBoxLevel();
@@ -62,13 +65,15 @@ void BoxLevel::detachMyHandle() const
 }
 
 SAMRAI_INLINE_KEYWORD
-const BoxContainer& BoxLevel::getBoxes() const
+const BoxContainer&
+BoxLevel::getBoxes() const
 {
    return d_boxes;
 }
 
 SAMRAI_INLINE_KEYWORD
-const BoxContainer& BoxLevel::getGlobalBoxes() const
+const BoxContainer&
+BoxLevel::getGlobalBoxes() const
 {
    return d_global_boxes;
 }
@@ -78,7 +83,8 @@ const BoxContainer& BoxLevel::getGlobalBoxes() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void BoxLevel::clearPersistentOverlapConnectors()
+void
+BoxLevel::clearPersistentOverlapConnectors()
 {
    if (d_persistent_overlap_connectors != NULL) {
       d_persistent_overlap_connectors->clear();
@@ -90,7 +96,8 @@ void BoxLevel::clearPersistentOverlapConnectors()
  ****************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void BoxLevel::deallocateGlobalizedVersion() const
+void
+BoxLevel::deallocateGlobalizedVersion() const
 {
    if (d_globalized_version != NULL) {
       TBOX_ASSERT(d_globalized_version->getParallelState() == GLOBALIZED);
@@ -105,7 +112,8 @@ void BoxLevel::deallocateGlobalizedVersion() const
  ****************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void BoxLevel::clearForBoxChanges(bool isInvalid)
+void
+BoxLevel::clearForBoxChanges(bool isInvalid)
 {
    deallocateGlobalizedVersion();
    clearPersistentOverlapConnectors();
@@ -121,13 +129,15 @@ void BoxLevel::clearForBoxChanges(bool isInvalid)
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& BoxLevel::getRefinementRatio() const
+const IntVector&
+BoxLevel::getRefinementRatio() const
 {
    return d_ratio;
 }
 
 SAMRAI_INLINE_KEYWORD
-size_t BoxLevel::getLocalNumberOfBoxes() const
+size_t
+BoxLevel::getLocalNumberOfBoxes() const
 {
    TBOX_ASSERT(isInitialized());
 
@@ -135,7 +145,8 @@ size_t BoxLevel::getLocalNumberOfBoxes() const
 }
 
 SAMRAI_INLINE_KEYWORD
-size_t BoxLevel::getLocalNumberOfCells() const
+size_t
+BoxLevel::getLocalNumberOfCells() const
 {
    TBOX_ASSERT(isInitialized());
 
@@ -143,7 +154,8 @@ size_t BoxLevel::getLocalNumberOfCells() const
 }
 
 SAMRAI_INLINE_KEYWORD
-int BoxLevel::getGlobalNumberOfBoxes() const
+int
+BoxLevel::getGlobalNumberOfBoxes() const
 {
    TBOX_ASSERT(isInitialized());
 
@@ -152,7 +164,8 @@ int BoxLevel::getGlobalNumberOfBoxes() const
 }
 
 SAMRAI_INLINE_KEYWORD
-int BoxLevel::getMaxNumberOfBoxes() const
+int
+BoxLevel::getMaxNumberOfBoxes() const
 {
    TBOX_ASSERT(isInitialized());
 
@@ -161,7 +174,8 @@ int BoxLevel::getMaxNumberOfBoxes() const
 }
 
 SAMRAI_INLINE_KEYWORD
-int BoxLevel::getMinNumberOfBoxes() const
+int
+BoxLevel::getMinNumberOfBoxes() const
 {
    TBOX_ASSERT(isInitialized());
 
@@ -170,7 +184,8 @@ int BoxLevel::getMinNumberOfBoxes() const
 }
 
 SAMRAI_INLINE_KEYWORD
-int BoxLevel::getGlobalNumberOfCells() const
+int
+BoxLevel::getGlobalNumberOfCells() const
 {
    TBOX_ASSERT(isInitialized());
 
@@ -179,7 +194,8 @@ int BoxLevel::getGlobalNumberOfCells() const
 }
 
 SAMRAI_INLINE_KEYWORD
-int BoxLevel::getMaxNumberOfCells() const
+int
+BoxLevel::getMaxNumberOfCells() const
 {
    TBOX_ASSERT(isInitialized());
 
@@ -188,7 +204,8 @@ int BoxLevel::getMaxNumberOfCells() const
 }
 
 SAMRAI_INLINE_KEYWORD
-int BoxLevel::getMinNumberOfCells() const
+int
+BoxLevel::getMinNumberOfCells() const
 {
    TBOX_ASSERT(isInitialized());
 
@@ -197,39 +214,45 @@ int BoxLevel::getMinNumberOfCells() const
 }
 
 SAMRAI_INLINE_KEYWORD
-const Box& BoxLevel::getGlobalBoundingBox(int block_num) const
+const Box&
+BoxLevel::getGlobalBoundingBox(int block_num) const
 {
    cacheGlobalReducedData();
    return d_global_bounding_box[block_num];
 }
 
 SAMRAI_INLINE_KEYWORD
-const Box& BoxLevel::getLocalBoundingBox(int block_num) const
+const Box&
+BoxLevel::getLocalBoundingBox(int block_num) const
 {
    return d_local_bounding_box[block_num];
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& BoxLevel::getLocalMaxBoxSize(int block_num) const
+const IntVector&
+BoxLevel::getLocalMaxBoxSize(int block_num) const
 {
    return d_local_max_box_size[block_num];
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& BoxLevel::getGlobalMaxBoxSize(int block_num) const
+const IntVector&
+BoxLevel::getGlobalMaxBoxSize(int block_num) const
 {
    cacheGlobalReducedData();
    return d_global_max_box_size[block_num];
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& BoxLevel::getLocalMinBoxSize(int block_num) const
+const IntVector&
+BoxLevel::getLocalMinBoxSize(int block_num) const
 {
    return d_local_min_box_size[block_num];
 }
 
 SAMRAI_INLINE_KEYWORD
-const IntVector& BoxLevel::getGlobalMinBoxSize(int block_num) const
+const IntVector&
+BoxLevel::getGlobalMinBoxSize(int block_num) const
 {
    cacheGlobalReducedData();
    return d_global_min_box_size[block_num];
@@ -240,7 +263,8 @@ const IntVector& BoxLevel::getGlobalMinBoxSize(int block_num) const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool BoxLevel::hasBox(
+bool
+BoxLevel::hasBox(
    const GlobalId& global_id,
    const PeriodicId& periodic_id) const
 {
@@ -256,7 +280,8 @@ bool BoxLevel::hasBox(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool BoxLevel::hasBox(
+bool
+BoxLevel::hasBox(
    const BoxId& box_id) const
 {
    const Box box(getDim(), box_id);
@@ -264,7 +289,8 @@ bool BoxLevel::hasBox(
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::SAMRAI_MPI& BoxLevel::getMPI() const
+const tbox::SAMRAI_MPI&
+BoxLevel::getMPI() const
 {
    return d_mpi;
 }
@@ -274,7 +300,8 @@ const tbox::SAMRAI_MPI& BoxLevel::getMPI() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void BoxLevel::addBoxWithoutUpdate(
+void
+BoxLevel::addBoxWithoutUpdate(
    const Box& box)
 {
    if (d_parallel_state == GLOBALIZED) {
@@ -289,7 +316,8 @@ void BoxLevel::addBoxWithoutUpdate(
  ****************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void BoxLevel::eraseBoxWithoutUpdate(
+void
+BoxLevel::eraseBoxWithoutUpdate(
    const Box& box)
 {
    d_boxes.erase(box);
@@ -305,7 +333,8 @@ void BoxLevel::eraseBoxWithoutUpdate(
  ****************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void BoxLevel::refineBoxes(
+void
+BoxLevel::refineBoxes(
    BoxLevel& finer,
    const IntVector& ratio,
    const IntVector& final_ratio) const
@@ -321,7 +350,8 @@ void BoxLevel::refineBoxes(
  ****************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void BoxLevel::coarsenBoxes(
+void
+BoxLevel::coarsenBoxes(
    BoxLevel& coarser,
    const IntVector& ratio,
    const IntVector& final_ratio) const
@@ -337,7 +367,8 @@ void BoxLevel::coarsenBoxes(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-BoxContainer::ConstIterator BoxLevel::getBox(
+BoxContainer::ConstIterator
+BoxLevel::getBox(
    const Box& box) const
 {
    if (box.getOwnerRank() == d_mpi.getRank()) {
@@ -359,7 +390,8 @@ BoxContainer::ConstIterator BoxLevel::getBox(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-BoxContainer::ConstIterator BoxLevel::getBox(
+BoxContainer::ConstIterator
+BoxLevel::getBox(
    const BoxId& box_id) const
 {
 
@@ -383,7 +415,8 @@ BoxLevel::getGridGeometry() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const boost::shared_ptr<BoxLevelHandle>& BoxLevel::getBoxLevelHandle() const
+const boost::shared_ptr<BoxLevelHandle>&
+BoxLevel::getBoxLevelHandle() const
 {
    if (!d_handle) {
       /*
@@ -407,7 +440,8 @@ const boost::shared_ptr<BoxLevelHandle>& BoxLevel::getBoxLevelHandle() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void BoxLevel::initializeCallback()
+void
+BoxLevel::initializeCallback()
 {
    t_initialize_private = tbox::TimerManager::getManager()->
       getTimer("hier::BoxLevel::initializePrivate()");
@@ -426,7 +460,8 @@ void BoxLevel::initializeCallback()
  ***************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void BoxLevel::finalizeCallback()
+void
+BoxLevel::finalizeCallback()
 {
    t_initialize_private.reset();
    t_acquire_remote_boxes.reset();

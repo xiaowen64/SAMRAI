@@ -12,8 +12,60 @@
 #define included_pdat_SideIterator_C
 
 #include "SAMRAI/pdat/SideIterator.h"
+
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/SideIterator.I"
 #endif
 
+namespace SAMRAI {
+namespace pdat {
+
+SideIterator::SideIterator(
+   const hier::Box& box,
+   const int axis):
+   d_index(box.lower(), axis, SideIndex::Lower),
+   d_box(SideGeometry::toSideBox(box, axis))
+{
+}
+
+SideIterator::SideIterator(
+   const SideIterator& iter):
+   d_index(iter.d_index),
+   d_box(iter.d_box)
+{
+}
+
+SideIterator::~SideIterator()
+{
+}
+
+SideIterator::operator bool () const
+{
+   bool retval = true;
+   for (int i = 0; i < d_box.getDim().getValue(); i++) {
+      if (d_index(i) > d_box.upper(i)) {
+         retval = false;
+         break;
+      }
+   }
+   return retval;
+}
+
+void
+SideIterator::operator ++ (
+   int)
+{
+   d_index(0)++;
+   for (int i = 0; i < d_box.getDim().getValue() - 1; i++) {
+      if (d_index(i) > d_box.upper(i)) {
+         d_index(i) = d_box.lower(i);
+         d_index(i + 1)++;
+      } else {
+         break;
+      }
+   }
+}
+
+}
+}
 #endif

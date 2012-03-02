@@ -12,7 +12,8 @@ namespace SAMRAI {
 namespace tbox {
 
 SAMRAI_INLINE_KEYWORD
-void Tracer::setTraceStream(
+void
+Tracer::setTraceStream(
    std::ostream* stream)
 {
    s_stream = stream;

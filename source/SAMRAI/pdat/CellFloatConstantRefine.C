@@ -73,7 +73,8 @@ CellFloatConstantRefine::~CellFloatConstantRefine()
 {
 }
 
-bool CellFloatConstantRefine::findRefineOperator(
+bool
+CellFloatConstantRefine::findRefineOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -89,17 +90,20 @@ bool CellFloatConstantRefine::findRefineOperator(
    }
 }
 
-int CellFloatConstantRefine::getOperatorPriority() const
+int
+CellFloatConstantRefine::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-CellFloatConstantRefine::getStencilWidth() const {
+CellFloatConstantRefine::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void CellFloatConstantRefine::refine(
+void
+CellFloatConstantRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,
@@ -123,7 +127,8 @@ void CellFloatConstantRefine::refine(
    }
 }
 
-void CellFloatConstantRefine::refine(
+void
+CellFloatConstantRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,

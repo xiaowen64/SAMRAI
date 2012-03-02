@@ -20,7 +20,8 @@ namespace tbox {
  */
 
 SAMRAI_INLINE_KEYWORD
-bool RestartManager::isFromRestart()
+bool
+RestartManager::isFromRestart()
 {
    return d_is_from_restart;
 }
@@ -34,7 +35,8 @@ bool RestartManager::isFromRestart()
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-boost::shared_ptr<Database> RestartManager::getRootDatabase()
+boost::shared_ptr<Database>
+RestartManager::getRootDatabase()
 {
    return d_database_root;
 }
@@ -47,7 +49,8 @@ boost::shared_ptr<Database> RestartManager::getRootDatabase()
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void RestartManager::setRootDatabase(
+void
+RestartManager::setRootDatabase(
    const boost::shared_ptr<Database>& database)
 {
    if (!database) {
@@ -67,7 +70,8 @@ void RestartManager::setRootDatabase(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void RestartManager::setDatabaseFactory(
+void
+RestartManager::setDatabaseFactory(
    const boost::shared_ptr<DatabaseFactory>& database_factory)
 {
    d_database_factory = database_factory;
@@ -81,14 +85,16 @@ void RestartManager::setDatabaseFactory(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void RestartManager::writeRestartFile(
+void
+RestartManager::writeRestartFile(
    const std::string& root_dir_name)
 {
    writeRestartFile(root_dir_name, 0);
 }
 
 SAMRAI_INLINE_KEYWORD
-void RestartManager::registerSingletonSubclassInstance(
+void
+RestartManager::registerSingletonSubclassInstance(
    RestartManager* subclass_instance)
 {
    if (!s_manager_instance) {
@@ -108,7 +114,8 @@ void RestartManager::registerSingletonSubclassInstance(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void RestartManager::clearRestartItems()
+void
+RestartManager::clearRestartItems()
 {
    d_restart_items_list.clearItems();
 }
@@ -121,7 +128,8 @@ void RestartManager::clearRestartItems()
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void RestartManager::writeRestartToDatabase()
+void
+RestartManager::writeRestartToDatabase()
 {
    if (d_database_root) {
       writeRestartFile(d_database_root);

@@ -13,8 +13,32 @@
 
 #include "SAMRAI/pdat/CopyOperation.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/CopyOperation.I"
-#endif
+namespace SAMRAI {
+namespace pdat {
 
+template<class TYPE>
+CopyOperation<TYPE>::CopyOperation()
+{
+}
+
+template<class TYPE>
+CopyOperation<TYPE>::~CopyOperation()
+{
+}
+
+/*
+ * Member functions for CopyOperation
+ */
+
+template<class TYPE>
+void
+CopyOperation<TYPE>::operator () (
+   TYPE& vdst,
+   const TYPE& vsrc) const
+{
+   vdst = vsrc;
+}
+
+}
+}
 #endif

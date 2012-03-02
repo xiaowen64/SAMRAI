@@ -180,7 +180,8 @@ bool MathUtilities<float>::isNaN(
 }
 
 template<>
-bool MathUtilities<double>::isNaN(
+bool
+MathUtilities<double>::isNaN(
    const double& value)
 {
    int i;
@@ -201,7 +202,8 @@ bool MathUtilities<double>::isNaN(
 }
 
 template<>
-bool MathUtilities<dcomplex>::isNaN(
+bool
+MathUtilities<dcomplex>::isNaN(
    const dcomplex& value)
 {
 
@@ -228,7 +230,8 @@ bool MathUtilities<dcomplex>::isNaN(
 }
 
 template<>
-bool MathUtilities<float>::equalEps(
+bool
+MathUtilities<float>::equalEps(
    const float& a,
    const float& b)
 {
@@ -244,7 +247,8 @@ bool MathUtilities<float>::equalEps(
 }
 
 template<>
-bool MathUtilities<double>::equalEps(
+bool
+MathUtilities<double>::equalEps(
    const double& a,
    const double& b)
 {
@@ -260,7 +264,8 @@ bool MathUtilities<double>::equalEps(
 }
 
 template<>
-bool MathUtilities<dcomplex>::equalEps(
+bool
+MathUtilities<dcomplex>::equalEps(
    const dcomplex& a,
    const dcomplex& b)
 {
@@ -274,7 +279,8 @@ bool MathUtilities<dcomplex>::equalEps(
 }
 
 template<>
-dcomplex MathUtilities<dcomplex>::Min(
+dcomplex
+MathUtilities<dcomplex>::Min(
    dcomplex a,
    dcomplex b)
 {
@@ -282,7 +288,8 @@ dcomplex MathUtilities<dcomplex>::Min(
 }
 
 template<>
-dcomplex MathUtilities<dcomplex>::Max(
+dcomplex
+MathUtilities<dcomplex>::Max(
    dcomplex a,
    dcomplex b)
 {
@@ -290,28 +297,32 @@ dcomplex MathUtilities<dcomplex>::Max(
 }
 
 template<>
-int MathUtilities<int>::Abs(
+int
+MathUtilities<int>::Abs(
    int a)
 {
    return a > 0 ? a : -a;
 }
 
 template<>
-float MathUtilities<float>::Abs(
+float
+MathUtilities<float>::Abs(
    float a)
 {
    return a > 0.0 ? a : -a;
 }
 
 template<>
-double MathUtilities<double>::Abs(
+double
+MathUtilities<double>::Abs(
    double a)
 {
    return a > 0.0 ? a : -a;
 }
 
 template<>
-bool MathUtilities<bool>::Rand(
+bool
+MathUtilities<bool>::Rand(
    const bool& low,
    const bool& width)
 {
@@ -321,7 +332,8 @@ bool MathUtilities<bool>::Rand(
 }
 
 template<>
-char MathUtilities<char>::Rand(
+char
+MathUtilities<char>::Rand(
    const char& low,
    const char& width)
 {
@@ -335,7 +347,8 @@ char MathUtilities<char>::Rand(
 }
 
 template<>
-int MathUtilities<int>::Rand(
+int
+MathUtilities<int>::Rand(
    const int& low,
    const int& width)
 {
@@ -347,7 +360,8 @@ int MathUtilities<int>::Rand(
 }
 
 template<>
-float MathUtilities<float>::Rand(
+float
+MathUtilities<float>::Rand(
    const float& low,
    const float& width)
 {
@@ -359,7 +373,8 @@ float MathUtilities<float>::Rand(
 }
 
 template<>
-double MathUtilities<double>::Rand(
+double
+MathUtilities<double>::Rand(
    const double& low,
    const double& width)
 {
@@ -367,7 +382,8 @@ double MathUtilities<double>::Rand(
 }
 
 template<>
-dcomplex MathUtilities<dcomplex>::Rand(
+dcomplex
+MathUtilities<dcomplex>::Rand(
    const dcomplex& low,
    const dcomplex& width)
 {
@@ -377,7 +393,8 @@ dcomplex MathUtilities<dcomplex>::Rand(
 }
 
 template<class TYPE>
-TYPE round_internal(
+TYPE
+round_internal(
    TYPE x)
 {
    /* algorithm used from Steven G. Kargl */
@@ -395,21 +412,19 @@ TYPE round_internal(
    }
 }
 
-template float round_internal<float
-                              >(
-   float x);
-template double round_internal<double
-                               >(
-   double x);
+template float round_internal<float>(float x);
+template double round_internal<double>(double x);
 
 template<>
-float MathUtilities<float>::round(
+float
+MathUtilities<float>::round(
    float x) {
    return round_internal<float>(x);
 }
 
 template<>
-double MathUtilities<double>::round(
+double
+MathUtilities<double>::round(
    double x) {
    return round_internal<double>(x);
 }

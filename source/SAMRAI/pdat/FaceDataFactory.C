@@ -21,9 +21,6 @@
 
 #include <boost/make_shared.hpp>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/FaceDataFactory.I"
-#endif
 namespace SAMRAI {
 namespace pdat {
 
@@ -118,6 +115,13 @@ FaceDataFactory<TYPE>::getBoxGeometry(
    return boost::make_shared<FaceGeometry>(box, d_ghosts);
 }
 
+template<class TYPE>
+int
+FaceDataFactory<TYPE>::getDepth() const
+{
+   return d_depth;
+}
+
 /*
  *************************************************************************
  *
@@ -127,7 +131,8 @@ FaceDataFactory<TYPE>::getBoxGeometry(
  */
 
 template<class TYPE>
-size_t FaceDataFactory<TYPE>::getSizeOfMemory(
+size_t
+FaceDataFactory<TYPE>::getSizeOfMemory(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -149,7 +154,8 @@ size_t FaceDataFactory<TYPE>::getSizeOfMemory(
  */
 
 template<class TYPE>
-bool FaceDataFactory<TYPE>::validCopyTo(
+bool
+FaceDataFactory<TYPE>::validCopyTo(
    const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
@@ -178,6 +184,38 @@ bool FaceDataFactory<TYPE>::validCopyTo(
    }
 
    return valid_copy;
+}
+
+/*
+ * Return a boolean value indicating how data for the face quantity will be
+ * treated on coarse-fine interfaces.  This value is passed into the
+ * constructor.  See the FaceVariable<DIM> class header file for more
+ * information.
+ */
+template<class TYPE>
+bool
+FaceDataFactory<TYPE>::fineBoundaryRepresentsVariable() const {
+   return d_fine_boundary_represents_var;
+}
+
+/*
+ * Return true since the face data index space extends beyond the interior of
+ * patches.  That is, face data lives on patch borders.
+ */
+template<class TYPE>
+bool
+FaceDataFactory<TYPE>::dataLivesOnPatchBorder() const {
+   return true;
+}
+
+template<class TYPE>
+hier::MultiblockDataTranslator *
+FaceDataFactory<TYPE>::getMultiblockDataTranslator()
+{
+   if (d_mb_trans == NULL) {
+      d_mb_trans = new MultiblockFaceDataTranslator<TYPE>();
+   }
+   return d_mb_trans;
 }
 
 }

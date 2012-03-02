@@ -28,7 +28,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -68,12 +67,10 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.h			\
@@ -81,11 +78,8 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeGeometry.h			\
@@ -93,11 +87,8 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
@@ -110,11 +101,9 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -181,7 +170,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxNeighborhoodCollection.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxNeighborhoodCollection.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -216,7 +204,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
@@ -224,7 +211,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchHierarchy.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevelFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevelFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
@@ -252,16 +238,12 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/mesh/StandardTagAndInitStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TagAndInitializeStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TagAndInitializeStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/FaceData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/FaceDataFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceGeometry.h			\
@@ -269,28 +251,21 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/FaceOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceVariable.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockFaceDataTranslator.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockSideDataTranslator.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceData.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceData.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideData.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideData.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideDataFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideDataFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideDataFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideGeometry.h			\
@@ -298,14 +273,10 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
@@ -320,11 +291,9 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -435,7 +404,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxNeighborhoodCollection.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxNeighborhoodCollection.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -469,7 +437,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
@@ -477,7 +444,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchHierarchy.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevelFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevelFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
@@ -504,9 +470,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/mesh/GriddingAlgorithmStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TagAndInitializeStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TagAndInitializeStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
@@ -520,11 +484,9 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
@@ -604,7 +566,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxNeighborhoodCollection.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxNeighborhoodCollection.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -639,7 +600,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
@@ -647,7 +607,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchHierarchy.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevelFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevelFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
@@ -678,14 +637,11 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TagAndInitializeStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TreeLoadBalancer.I			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TreeLoadBalancer.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellDoubleLinearTimeInterpolateOp.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.I			\
@@ -694,17 +650,13 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockNodeDataTranslator.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockSideDataTranslator.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeDataFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeDoubleInjection.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeDoubleLinearTimeInterpolateOp.h	\
@@ -714,24 +666,17 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeData.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeData.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideData.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideData.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideDataFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideDataFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideDataFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideGeometry.h			\
@@ -739,14 +684,10 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
@@ -765,11 +706,9 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/HDFDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/HDFDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -889,7 +828,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxNeighborhoodCollection.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxNeighborhoodCollection.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -923,7 +861,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
@@ -931,7 +868,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchHierarchy.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevelFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevelFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
@@ -959,9 +895,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/mesh/StandardTagAndInitStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TagAndInitializeStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TagAndInitializeStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
@@ -975,11 +909,9 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
@@ -1054,7 +986,6 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1096,7 +1027,6 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
@@ -1108,11 +1038,9 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
@@ -1158,7 +1086,6 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1200,7 +1127,6 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
@@ -1212,11 +1138,9 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
@@ -1262,7 +1186,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1304,7 +1227,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
@@ -1316,11 +1238,9 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
@@ -1368,7 +1288,6 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1408,12 +1327,10 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.h			\
@@ -1421,13 +1338,9 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
@@ -1439,11 +1352,9 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -1497,7 +1408,6 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1537,12 +1447,10 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.h			\
@@ -1550,13 +1458,9 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
@@ -1568,11 +1472,9 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -1624,7 +1526,6 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1674,14 +1575,11 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.h			\
@@ -1689,15 +1587,11 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
@@ -1709,11 +1603,9 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -1770,7 +1662,6 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1820,14 +1711,11 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.h			\
@@ -1835,15 +1723,11 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
@@ -1855,11 +1739,9 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -1916,7 +1798,6 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -1966,24 +1847,18 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockSideDataTranslator.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideData.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideData.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideDataFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideDataFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideDataFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideGeometry.h			\
@@ -1991,11 +1866,8 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideOverlap.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
@@ -2007,11 +1879,9 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -2089,7 +1959,6 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxNeighborhoodCollection.I		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxNeighborhoodCollection.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -2124,7 +1993,6 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
@@ -2132,7 +2000,6 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchHierarchy.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevelFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevelFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
@@ -2172,14 +2039,11 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TagAndInitializeStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TreeLoadBalancer.I			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TreeLoadBalancer.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.h			\
@@ -2187,17 +2051,13 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockNodeDataTranslator.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockSideDataTranslator.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeDataFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeGeometry.h			\
@@ -2205,24 +2065,17 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeData.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeData.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideData.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideData.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideDataFactory.I		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideDataFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideDataFactory.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideGeometry.h			\
@@ -2230,14 +2083,10 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
@@ -2259,11 +2108,9 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/InputDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/InputManager.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/InputManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryDatabase.h			\

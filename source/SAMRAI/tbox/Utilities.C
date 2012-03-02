@@ -37,7 +37,8 @@ namespace tbox {
 /*
  * Routine to recursively construct directories based on a relative path name.
  */
-void Utilities::recursiveMkdir(
+void
+Utilities::recursiveMkdir(
    const std::string& path,
    mode_t mode,
    bool only_node_zero_creates)
@@ -138,7 +139,8 @@ void Utilities::recursiveMkdir(
 /*
  * Routine to convert an integer to a string.
  */
-std::string Utilities::intToString(
+std::string
+Utilities::intToString(
    int num,
    int min_width)
 {
@@ -157,7 +159,8 @@ std::string Utilities::intToString(
 /*
  * Routine that calls abort and prints calling location to error stream.
  */
-void Utilities::abort(
+void
+Utilities::abort(
    const std::string& message,
    const std::string& filename,
    const int line)

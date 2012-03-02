@@ -105,7 +105,8 @@ SideIntegerConstantRefine::~SideIntegerConstantRefine()
 {
 }
 
-bool SideIntegerConstantRefine::findRefineOperator(
+bool
+SideIntegerConstantRefine::findRefineOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -121,17 +122,20 @@ bool SideIntegerConstantRefine::findRefineOperator(
    }
 }
 
-int SideIntegerConstantRefine::getOperatorPriority() const
+int
+SideIntegerConstantRefine::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-SideIntegerConstantRefine::getStencilWidth() const {
+SideIntegerConstantRefine::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void SideIntegerConstantRefine::refine(
+void
+SideIntegerConstantRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,

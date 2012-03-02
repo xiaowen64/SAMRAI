@@ -63,7 +63,8 @@ double MemoryUtilities::s_max_memory = 0.;
  *
  *************************************************************************
  */
-void MemoryUtilities::printMemoryInfo(
+void
+MemoryUtilities::printMemoryInfo(
    std::ostream& os)
 {
    NULL_USE(os);
@@ -111,7 +112,8 @@ void MemoryUtilities::printMemoryInfo(
  *************************************************************************
  */
 
-void MemoryUtilities::recordMemoryInfo(
+void
+MemoryUtilities::recordMemoryInfo(
    double time)
 {
    NULL_USE(time);
@@ -161,7 +163,8 @@ void MemoryUtilities::recordMemoryInfo(
  *
  *************************************************************************
  */
-void MemoryUtilities::printMaxMemory(
+void
+MemoryUtilities::printMaxMemory(
    std::ostream& os)
 {
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());

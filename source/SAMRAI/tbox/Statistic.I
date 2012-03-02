@@ -21,27 +21,37 @@ namespace tbox {
  *************************************************************************
  */
 
-SAMRAI_INLINE_KEYWORD const std::string& Statistic::getName() const
+SAMRAI_INLINE_KEYWORD
+const std::string&
+Statistic::getName() const
 {
    return d_object_name;
 }
 
-SAMRAI_INLINE_KEYWORD std::string Statistic::getType() const
+SAMRAI_INLINE_KEYWORD
+std::string
+Statistic::getType() const
 {
    return (d_stat_type == PROC_STAT) ? "PROC_STAT" : "PATCH_STAT";
 }
 
-SAMRAI_INLINE_KEYWORD int Statistic::getInstanceId() const
+SAMRAI_INLINE_KEYWORD
+int
+Statistic::getInstanceId() const
 {
    return d_instance_id;
 }
 
-SAMRAI_INLINE_KEYWORD int Statistic::getStatSequenceLength() const
+SAMRAI_INLINE_KEYWORD
+int
+Statistic::getStatSequenceLength() const
 {
    return d_seq_counter;
 }
 
-SAMRAI_INLINE_KEYWORD void Statistic::reset() {
+SAMRAI_INLINE_KEYWORD
+void
+Statistic::reset() {
    d_proc_array.clear();
    d_patch_array.clear();
 }
@@ -54,13 +64,15 @@ SAMRAI_INLINE_KEYWORD void Statistic::reset() {
  *************************************************************************
  */
 
-SAMRAI_INLINE_KEYWORD const Array<Statistic::ProcStat>&
+SAMRAI_INLINE_KEYWORD
+const Array<Statistic::ProcStat>&
 Statistic::getProcStatSeqArray() const
 {
    return d_proc_array;
 }
 
-SAMRAI_INLINE_KEYWORD const Array<Statistic::PatchStat>&
+SAMRAI_INLINE_KEYWORD
+const Array<Statistic::PatchStat>&
 Statistic::getPatchStatSeqArray() const
 {
    return d_patch_array;
@@ -75,7 +87,9 @@ Statistic::getPatchStatSeqArray() const
  *************************************************************************
  */
 
-SAMRAI_INLINE_KEYWORD bool Statistic::canEstimateDataStreamSize()
+SAMRAI_INLINE_KEYWORD
+bool
+Statistic::canEstimateDataStreamSize()
 {
    return false;
 }

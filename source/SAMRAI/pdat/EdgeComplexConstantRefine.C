@@ -120,17 +120,20 @@ bool EdgeComplexConstantRefine::findRefineOperator(
    }
 }
 
-int EdgeComplexConstantRefine::getOperatorPriority() const
+int
+EdgeComplexConstantRefine::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-EdgeComplexConstantRefine::getStencilWidth() const {
+EdgeComplexConstantRefine::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void EdgeComplexConstantRefine::refine(
+void
+EdgeComplexConstantRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,

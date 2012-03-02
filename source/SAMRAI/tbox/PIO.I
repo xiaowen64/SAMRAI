@@ -20,7 +20,8 @@ namespace tbox {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void PIO::finalize()
+void
+PIO::finalize()
 {
    std::cout.flush();
    std::cerr.flush();

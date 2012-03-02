@@ -717,8 +717,7 @@ public:
     * Return a non-null if the iterator points to a valid item in the index
     * set.
     */
-   operator const void
-   * () const;
+   operator const void * () const;
 #endif
 
    /**
@@ -762,12 +761,6 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/IndexData.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/IndexData.C"
-#endif
 
 #endif

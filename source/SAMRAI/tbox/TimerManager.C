@@ -59,7 +59,8 @@ TimerManager::s_finalize_handler(
  *************************************************************************
  */
 
-void TimerManager::createManager(
+void
+TimerManager::createManager(
    const boost::shared_ptr<Database>& input_db)
 {
    if (!s_timer_manager_instance) {
@@ -81,7 +82,8 @@ void TimerManager::createManager(
    }
 }
 
-TimerManager *TimerManager::getManager()
+TimerManager*
+TimerManager::getManager()
 {
    if (!s_timer_manager_instance) {
       TBOX_WARNING("TimerManager::getManager() is called before\n"
@@ -93,7 +95,8 @@ TimerManager *TimerManager::getManager()
    return s_timer_manager_instance;
 }
 
-void TimerManager::finalizeCallback()
+void
+TimerManager::finalizeCallback()
 {
    if (s_timer_manager_instance) {
       delete s_timer_manager_instance;
@@ -101,7 +104,8 @@ void TimerManager::finalizeCallback()
    }
 }
 
-void TimerManager::registerSingletonSubclassInstance(
+void
+TimerManager::registerSingletonSubclassInstance(
    TimerManager* subclass_instance)
 {
    if (!s_timer_manager_instance) {
@@ -198,7 +202,8 @@ TimerManager::~TimerManager()
  *************************************************************************
  */
 
-bool TimerManager::checkTimerExistsInArray(
+bool
+TimerManager::checkTimerExistsInArray(
    boost::shared_ptr<Timer>& timer,
    const std::string& name,
    const std::vector<boost::shared_ptr<Timer> >& timer_array) const
@@ -221,7 +226,8 @@ bool TimerManager::checkTimerExistsInArray(
    return timer_found;
 }
 
-void TimerManager::activateExistingTimers() {
+void
+TimerManager::activateExistingTimers() {
 #ifdef ENABLE_SAMRAI_TIMERS
    std::vector<boost::shared_ptr<Timer> >::iterator it =
       d_inactive_timers.begin();
@@ -238,7 +244,8 @@ void TimerManager::activateExistingTimers() {
 #endif
 }
 
-boost::shared_ptr<Timer> TimerManager::getTimer(
+boost::shared_ptr<Timer>
+TimerManager::getTimer(
    const std::string& name,
    bool ignore_timer_input)
 {
@@ -295,7 +302,8 @@ boost::shared_ptr<Timer> TimerManager::getTimer(
 #endif
 }
 
-bool TimerManager::checkTimerExists(
+bool
+TimerManager::checkTimerExists(
    boost::shared_ptr<Timer>& timer,
    const std::string& name) const
 {
@@ -329,7 +337,8 @@ bool TimerManager::checkTimerExists(
  *************************************************************************
  */
 
-bool TimerManager::checkTimerRunning(
+bool
+TimerManager::checkTimerRunning(
    const std::string& name) const
 {
    bool is_running = false;
@@ -344,7 +353,8 @@ bool TimerManager::checkTimerRunning(
    return is_running;
 }
 
-void TimerManager::resetAllTimers()
+void
+TimerManager::resetAllTimers()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    d_main_timer->stop();
@@ -368,7 +378,8 @@ void TimerManager::resetAllTimers()
  *************************************************************************
  */
 
-void TimerManager::startTime(
+void
+TimerManager::startTime(
    Timer* timer)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -397,7 +408,8 @@ void TimerManager::startTime(
 #endif
 }
 
-void TimerManager::stopTime(
+void
+TimerManager::stopTime(
    Timer* timer)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -424,7 +436,8 @@ void TimerManager::stopTime(
  *************************************************************************
  */
 
-bool TimerManager::checkTimerInNameLists(
+bool
+TimerManager::checkTimerInNameLists(
    const std::string& copy)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -679,7 +692,8 @@ bool TimerManager::checkTimerInNameLists(
  *************************************************************************
  */
 
-void TimerManager::print(
+void
+TimerManager::print(
    std::ostream& os)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -1132,7 +1146,8 @@ void TimerManager::print(
 #endif
 }
 
-void TimerManager::printTable(
+void
+TimerManager::printTable(
    const std::string& table_title,
    const Array<std::string> column_titles,
    const Array<std::string> timer_names,
@@ -1281,7 +1296,8 @@ void TimerManager::printTable(
 #endif
 }
 
-void TimerManager::printTable(
+void
+TimerManager::printTable(
    const std::string& table_title,
    const Array<std::string> column_titles,
    const Array<std::string> timer_names,
@@ -1429,7 +1445,8 @@ void TimerManager::printTable(
 #endif
 }
 
-void TimerManager::printOverhead(
+void
+TimerManager::printOverhead(
    const Array<std::string> timer_names,
    const double timer_values[][18],
    std::ostream& os)
@@ -1570,7 +1587,8 @@ void TimerManager::printOverhead(
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void TimerManager::printConcurrent(
+void
+TimerManager::printConcurrent(
    std::ostream& os)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -1644,7 +1662,8 @@ void TimerManager::printConcurrent(
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void TimerManager::checkConsistencyAcrossProcessors()
+void
+TimerManager::checkConsistencyAcrossProcessors()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    /*
@@ -1756,7 +1775,8 @@ void TimerManager::checkConsistencyAcrossProcessors()
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void TimerManager::buildTimerArrays(
+void
+TimerManager::buildTimerArrays(
    double timer_values[][18],
    int max_processor_id[][2],
    Array<std::string> timer_names)
@@ -2007,7 +2027,8 @@ void TimerManager::buildTimerArrays(
  *
  *************************************************************************
  */
-void TimerManager::buildOrderedList(
+void
+TimerManager::buildOrderedList(
    const double timer_values[][18],
    const int column,
    int index[],
@@ -2039,7 +2060,8 @@ void TimerManager::buildOrderedList(
  *
  *************************************************************************
  */
-void TimerManager::quicksort(
+void
+TimerManager::quicksort(
    const Array<double>& a,
    int index[],
    int lo,
@@ -2087,7 +2109,8 @@ void TimerManager::quicksort(
  *
  *************************************************************************
  */
-int TimerManager::computePercentageInt(
+int
+TimerManager::computePercentageInt(
    const double frac,
    const double tot)
 {
@@ -2106,7 +2129,8 @@ int TimerManager::computePercentageInt(
    return perc;
 }
 
-double TimerManager::computePercentageDouble(
+double
+TimerManager::computePercentageDouble(
    const double frac,
    const double tot)
 {
@@ -2133,7 +2157,8 @@ double TimerManager::computePercentageDouble(
  *************************************************************************
  */
 
-void TimerManager::getFromInput(
+void
+TimerManager::getFromInput(
    const boost::shared_ptr<Database>& input_db)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -2193,7 +2218,8 @@ void TimerManager::getFromInput(
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void TimerManager::addTimerToNameLists(
+void
+TimerManager::addTimerToNameLists(
    const std::string& name)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -2387,7 +2413,8 @@ void TimerManager::addTimerToNameLists(
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-double TimerManager::computeOverheadConstantActiveOrInactive(
+double
+TimerManager::computeOverheadConstantActiveOrInactive(
    bool active)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -2416,7 +2443,8 @@ double TimerManager::computeOverheadConstantActiveOrInactive(
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void TimerManager::computeOverheadConstants()
+void
+TimerManager::computeOverheadConstants()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
 
@@ -2435,7 +2463,8 @@ void TimerManager::computeOverheadConstants()
 #endif  // ENABLE_SAMRAI_TIMERS
 }
 
-void TimerManager::clearArrays()
+void
+TimerManager::clearArrays()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    /*

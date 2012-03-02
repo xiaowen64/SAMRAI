@@ -46,7 +46,8 @@ MultiblockEdgeDataTranslator<TYPE>::~MultiblockEdgeDataTranslator()
  */
 
 template<class TYPE>
-void MultiblockEdgeDataTranslator<TYPE>::translateAndCopyData(
+void
+MultiblockEdgeDataTranslator<TYPE>::translateAndCopyData(
    hier::Patch& dst_patch,
    const int dst_id,
    const hier::Patch& src_patch,
@@ -460,7 +461,8 @@ void MultiblockEdgeDataTranslator<TYPE>::translateAndCopyData(
  */
 
 template<class TYPE>
-void MultiblockEdgeDataTranslator<TYPE>::translateAndCopyArrayData(
+void
+MultiblockEdgeDataTranslator<TYPE>::translateAndCopyArrayData(
    ArrayData<TYPE>& dst,
    const ArrayData<TYPE>& src,
    const hier::IntVector& shift,
@@ -557,6 +559,24 @@ void MultiblockEdgeDataTranslator<TYPE>::translateAndCopyArrayData(
          "MultiblockEdgeDataTranslator<TYPE>::translateAndCopyData : dim = 1 or > 3 not implemented");
    }
 
+}
+
+template<class TYPE>
+void
+MultiblockEdgeDataTranslator<TYPE>::translateAndFillData(
+   hier::Patch& dst_patch,
+   const int dst_id,
+   const hier::Patch& src_patch,
+   const int src_id,
+   const hier::IntVector& shift,
+   const hier::Transformation::RotationIdentifier rotate)
+{
+   NULL_USE(dst_patch);
+   NULL_USE(dst_id);
+   NULL_USE(src_patch);
+   NULL_USE(src_id);
+   NULL_USE(shift);
+   NULL_USE(rotate);
 }
 
 }

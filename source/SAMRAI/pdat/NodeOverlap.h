@@ -90,7 +90,4 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/NodeOverlap.I"
-#endif
 #endif

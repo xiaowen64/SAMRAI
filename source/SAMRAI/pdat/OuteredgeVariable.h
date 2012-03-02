@@ -92,8 +92,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/OuteredgeVariable.C"
-#endif
 
 #endif

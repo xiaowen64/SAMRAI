@@ -219,8 +219,7 @@ private:
    bool d_log_warning;
    bool d_log_debug;
 
-   static StartupShutdownManager::Handler
-      s_finalize_handler;
+   static StartupShutdownManager::Handler s_finalize_handler;
 
 };
 

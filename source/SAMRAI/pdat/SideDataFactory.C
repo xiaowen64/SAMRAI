@@ -21,9 +21,6 @@
 
 #include <boost/make_shared.hpp>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/SideDataFactory.I"
-#endif
 namespace SAMRAI {
 namespace pdat {
 
@@ -149,6 +146,20 @@ SideDataFactory<TYPE>::getBoxGeometry(
       d_directions);
 }
 
+template<class TYPE>
+int
+SideDataFactory<TYPE>::getDepth() const
+{
+   return d_depth;
+}
+
+template<class TYPE>
+const hier::IntVector&
+SideDataFactory<TYPE>::getDirectionVector() const
+{
+   return d_directions;
+}
+
 /*
  *************************************************************************
  *
@@ -158,7 +169,8 @@ SideDataFactory<TYPE>::getBoxGeometry(
  */
 
 template<class TYPE>
-size_t SideDataFactory<TYPE>::getSizeOfMemory(
+size_t
+SideDataFactory<TYPE>::getSizeOfMemory(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -180,7 +192,8 @@ size_t SideDataFactory<TYPE>::getSizeOfMemory(
  */
 
 template<class TYPE>
-bool SideDataFactory<TYPE>::validCopyTo(
+bool
+SideDataFactory<TYPE>::validCopyTo(
    const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
@@ -209,6 +222,48 @@ bool SideDataFactory<TYPE>::validCopyTo(
    }
 
    return valid_copy;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return a boolean value indicating how data for the side quantity will be
+ * treated on coarse-fine interfaces.  This value is passed into the
+ * constructor.  See the FaceVariable<DIM> class header file for more
+ * information.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+SideDataFactory<TYPE>::fineBoundaryRepresentsVariable() const
+{
+   return d_fine_boundary_represents_var;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return true since the side data index space extends beyond the interior
+ * of patches.  That is, side data lives on patch borders.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+SideDataFactory<TYPE>::dataLivesOnPatchBorder() const
+{
+   return true;
+}
+
+template<class TYPE>
+hier::MultiblockDataTranslator *
+SideDataFactory<TYPE>::getMultiblockDataTranslator()
+{
+   if (d_mb_trans == NULL) {
+      d_mb_trans = new MultiblockSideDataTranslator<TYPE>();
+   }
+   return d_mb_trans;
 }
 
 }

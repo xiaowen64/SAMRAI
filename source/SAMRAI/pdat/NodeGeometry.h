@@ -20,6 +20,7 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 
+#include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {

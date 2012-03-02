@@ -22,7 +22,8 @@ IntVector::getDim() const
 }
 
 SAMRAI_INLINE_KEYWORD
-IntVector& IntVector::operator = (
+IntVector&
+IntVector::operator = (
    const IntVector& rhs)
 {
    /*

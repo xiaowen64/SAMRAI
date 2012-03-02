@@ -61,7 +61,8 @@ EdgeGeometry::~EdgeGeometry()
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap> EdgeGeometry::calculateOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+EdgeGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -101,7 +102,8 @@ boost::shared_ptr<hier::BoxOverlap> EdgeGeometry::calculateOverlap(
  *************************************************************************
  */
 
-hier::Box EdgeGeometry::toEdgeBox(
+hier::Box
+EdgeGeometry::toEdgeBox(
    const hier::Box& box,
    int axis)
 {
@@ -137,7 +139,8 @@ hier::Box EdgeGeometry::toEdgeBox(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap> EdgeGeometry::doOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+EdgeGeometry::doOverlap(
    const EdgeGeometry& dst_geometry,
    const EdgeGeometry& src_geometry,
    const hier::Box& src_mask,

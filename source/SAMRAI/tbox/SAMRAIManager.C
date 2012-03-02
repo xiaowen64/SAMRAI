@@ -70,7 +70,8 @@ static void badnew()
    TBOX_ERROR("operator `new' failed -- program abort!" << std::endl);
 }
 
-void SAMRAIManager::initialize(
+void
+SAMRAIManager::initialize(
    bool initialize_IEEE_assertion_handlers)
 {
    TBOX_ASSERT(!s_initialized);
@@ -90,7 +91,8 @@ void SAMRAIManager::initialize(
    s_initialized = true;
 }
 
-void SAMRAIManager::setMaxNumberPatchDataEntries(
+void
+SAMRAIManager::setMaxNumberPatchDataEntries(
    int maxnum)
 {
    if (s_max_patch_data_entries_accessed) {

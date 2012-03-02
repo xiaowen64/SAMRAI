@@ -19,10 +19,6 @@
 
 #include <boost/make_shared.hpp>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/CellDataFactory.I"
-#endif
-
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -121,6 +117,13 @@ CellDataFactory<TYPE>::getBoxGeometry(
    return boost::make_shared<CellGeometry>(box, d_ghosts);
 }
 
+template<class TYPE>
+int
+CellDataFactory<TYPE>::getDepth() const
+{
+   return d_depth;
+}
+
 /*
  *************************************************************************
  *
@@ -130,7 +133,8 @@ CellDataFactory<TYPE>::getBoxGeometry(
  */
 
 template<class TYPE>
-size_t CellDataFactory<TYPE>::getSizeOfMemory(
+size_t
+CellDataFactory<TYPE>::getSizeOfMemory(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -152,7 +156,8 @@ size_t CellDataFactory<TYPE>::getSizeOfMemory(
  */
 
 template<class TYPE>
-bool CellDataFactory<TYPE>::validCopyTo(
+bool
+CellDataFactory<TYPE>::validCopyTo(
    const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
@@ -169,6 +174,48 @@ bool CellDataFactory<TYPE>::validCopyTo(
       valid_copy = true;
    }
    return valid_copy;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return a boolean true value indicating that the cell data quantities will
+ * always be treated as though fine values represent them on coarse-fine
+ * interfaces.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+CellDataFactory<TYPE>::fineBoundaryRepresentsVariable() const
+{
+   return true;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return false since the cell data index space matches the cell-centered
+ * index space for AMR patches.  Thus, cell data does not live on patch
+ * borders.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+CellDataFactory<TYPE>::dataLivesOnPatchBorder() const
+{
+   return false;
+}
+
+template<class TYPE>
+hier::MultiblockDataTranslator *
+CellDataFactory<TYPE>::getMultiblockDataTranslator()
+{
+   if (d_mb_trans == NULL) {
+      d_mb_trans = new MultiblockCellDataTranslator<TYPE>();
+   }
+   return d_mb_trans;
 }
 
 }

@@ -12,13 +12,15 @@ namespace SAMRAI {
 namespace pdat {
 
 SAMRAI_INLINE_KEYWORD
-const hier::Box& OuteredgeGeometry::getBox() const
+const hier::Box&
+OuteredgeGeometry::getBox() const
 {
    return d_box;
 }
 
 SAMRAI_INLINE_KEYWORD
-const hier::IntVector& OuteredgeGeometry::getGhosts() const
+const hier::IntVector&
+OuteredgeGeometry::getGhosts() const
 {
    return d_ghosts;
 }

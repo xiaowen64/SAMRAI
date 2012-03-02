@@ -47,21 +47,14 @@ public:
       const hier::IntVector& shift,
       const hier::Transformation::RotationIdentifier rotate);
 
-   virtual void translateAndFillData(
+   virtual void
+   translateAndFillData(
       hier::Patch& dst_patch,
       const int dst_id,
       const hier::Patch& src_patch,
       const int src_id,
       const hier::IntVector& shift,
-      const hier::Transformation::RotationIdentifier rotate)
-   {
-      NULL_USE(dst_patch);
-      NULL_USE(dst_id);
-      NULL_USE(src_patch);
-      NULL_USE(src_id);
-      NULL_USE(shift);
-      NULL_USE(rotate);
-   }
+      const hier::Transformation::RotationIdentifier rotate);
 
 private:
    void
@@ -76,8 +69,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/MultiblockEdgeDataTranslator.C"
-#endif
 
 #endif

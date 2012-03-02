@@ -11,33 +11,6 @@ namespace SAMRAI {
 namespace pdat {
 
 /**********************************************************************
- * c'tor
- *********************************************************************/
-SAMRAI_INLINE_KEYWORD
-DoubleAttributeId::DoubleAttributeId(
-   int value):
-   d_val(value)
-{
-}
-
-/**********************************************************************
- * copy c'tor
- *********************************************************************/
-SAMRAI_INLINE_KEYWORD
-DoubleAttributeId::DoubleAttributeId(
-   const DoubleAttributeId& other):
-   d_val(other.d_val)
-{
-}
-
-/**********************************************************************
- * d'tor
- *********************************************************************/
-SAMRAI_INLINE_KEYWORD
-DoubleAttributeId::~DoubleAttributeId()
-{
-}
-/**********************************************************************
  * DoubleAttributeId equality
  *********************************************************************/
 SAMRAI_INLINE_KEYWORD
@@ -57,15 +30,6 @@ DoubleAttributeId::operator != (
    const DoubleAttributeId& rhs) const
 {
    return !this->operator == (rhs);
-}
-
-/**********************************************************************
- * DoubleAttributeId c'tor (private)
- *********************************************************************/
-SAMRAI_INLINE_KEYWORD
-DoubleAttributeId::DoubleAttributeId():
-   d_val(-1)
-{
 }
 
 /**********************************************************************

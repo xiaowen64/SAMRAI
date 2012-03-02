@@ -16,10 +16,6 @@
 #include <new>
 #include <cstdlib>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/Array.I"
-#endif
-
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -109,7 +105,8 @@ Array<TYPE>::~Array()
 }
 
 template<class TYPE>
-Array<TYPE>& Array<TYPE>::operator = (
+Array<TYPE>&
+Array<TYPE>::operator = (
    const Array<TYPE>& rhs)
 {
    if (this != &rhs) {
@@ -127,7 +124,8 @@ Array<TYPE>& Array<TYPE>::operator = (
 }
 
 template<class TYPE>
-void Array<TYPE>::resizeArray(
+void
+Array<TYPE>::resizeArray(
    const int n,
    const TYPE& default_value)
 {
@@ -143,7 +141,8 @@ void Array<TYPE>::resizeArray(
 }
 
 template<class TYPE>
-void Array<TYPE>::erase(
+void
+Array<TYPE>::erase(
    const int position)
 {
    TBOX_ASSERT(position >= 0 && position < d_elements);
@@ -187,7 +186,8 @@ void Array<TYPE>::erase(
 }
 
 template<class TYPE>
-void Array<TYPE>::deleteObjects()
+void
+Array<TYPE>::deleteObjects()
 {
    if (d_objects) {
       for (int i = 0; i < d_elements; i++) {
@@ -200,6 +200,127 @@ void Array<TYPE>::deleteObjects()
    d_objects = (TYPE *)NULL;
    d_counter = (ReferenceCounter *)NULL;
    d_elements = 0;
+}
+
+template<class TYPE>
+TYPE&
+Array<TYPE>::operator [] (
+   const int i)
+{
+   TBOX_ASSERT((i >= 0) && (i < d_elements));
+
+   return d_objects[i];
+}
+
+template<class TYPE>
+const TYPE&
+Array<TYPE>::operator [] (
+   const int i) const
+{
+   TBOX_ASSERT((i >= 0) && (i < d_elements));
+
+   return d_objects[i];
+}
+
+template<class TYPE>
+void
+Array<TYPE>::setNull()
+{
+   if (d_counter && d_counter->deleteReference()) {
+      deleteObjects();
+   }
+   d_objects = (TYPE *)NULL;
+   d_counter = (ReferenceCounter *)NULL;
+   d_elements = 0;
+}
+
+template<class TYPE>
+void
+Array<TYPE>::clear()
+{
+   if (d_counter && d_counter->deleteReference()) {
+      deleteObjects();
+   }
+   d_objects = (TYPE *)NULL;
+   d_counter = (ReferenceCounter *)NULL;
+   d_elements = 0;
+}
+
+template<class TYPE>
+bool
+Array<TYPE>::isNull() const
+{
+   return !d_objects;
+}
+
+template<class TYPE>
+bool
+Array<TYPE>::empty() const
+{
+   return !d_objects;
+}
+
+template<class TYPE>
+TYPE*
+Array<TYPE>::getPointer(
+   const int i)
+{
+   TBOX_ASSERT((i >= 0) && (i < d_elements));
+
+   return &d_objects[i];
+}
+
+template<class TYPE>
+const TYPE*
+Array<TYPE>::getPointer(
+   const int i) const
+{
+   TBOX_ASSERT((i >= 0) && (i < d_elements));
+
+   return &d_objects[i];
+}
+
+template<class TYPE>
+int
+Array<TYPE>::getSize() const
+{
+   return d_elements;
+}
+
+template<class TYPE>
+int
+Array<TYPE>::size() const
+{
+   return d_elements;
+}
+
+template<class TYPE>
+size_t
+Array<TYPE>::align(
+   const size_t bytes)
+{
+   size_t aligned = bytes + ALLOCATION_ALIGNMENT - 1;
+   aligned -= aligned % ALLOCATION_ALIGNMENT;
+   return aligned;
+}
+
+template<class TYPE>
+void
+Array<TYPE>::push_back(
+   const TYPE& value)
+{
+   int i = d_elements;
+   resizeArray(i + 1);
+   d_objects[i] = value;
+}
+
+template<class TYPE>
+const TYPE&
+Array<TYPE>::back()
+{
+   TBOX_ASSERT(d_elements > 0);
+
+   return d_objects[d_elements - 1];
 }
 
 }

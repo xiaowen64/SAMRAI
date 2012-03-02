@@ -90,7 +90,8 @@ Statistic::~Statistic()
  *************************************************************************
  */
 
-void Statistic::recordProcStat(
+void
+Statistic::recordProcStat(
    double value,
    int seq_num)
 {
@@ -127,7 +128,8 @@ void Statistic::recordProcStat(
    d_seq_counter++;
 }
 
-void Statistic::recordPatchStat(
+void
+Statistic::recordPatchStat(
    int patch_num,
    double value,
    int seq_num)
@@ -218,7 +220,8 @@ void Statistic::recordPatchStat(
  *************************************************************************
  */
 
-int Statistic::getDataStreamSize()
+int
+Statistic::getDataStreamSize()
 {
    int byte_size = MessageStream::getSizeof<int>(4);
    if (d_stat_type == PROC_STAT) {
@@ -231,7 +234,8 @@ int Statistic::getDataStreamSize()
    return byte_size;
 }
 
-void Statistic::packStream(
+void
+Statistic::packStream(
    MessageStream& stream)
 {
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
@@ -292,7 +296,8 @@ void Statistic::packStream(
 
 }
 
-void Statistic::unpackStream(
+void
+Statistic::unpackStream(
    MessageStream& stream)
 {
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
@@ -362,7 +367,8 @@ void Statistic::unpackStream(
 
 }
 
-void Statistic::printClassData(
+void
+Statistic::printClassData(
    std::ostream& stream,
    int precision) const
 {
@@ -398,7 +404,8 @@ void Statistic::printClassData(
 
 }
 
-void Statistic::checkArraySizes(
+void
+Statistic::checkArraySizes(
    int seq_num)
 {
    /*
@@ -430,7 +437,8 @@ void Statistic::checkArraySizes(
 
 }
 
-void Statistic::putUnregisteredToDatabase(
+void
+Statistic::putUnregisteredToDatabase(
    const boost::shared_ptr<Database>& db) const
 {
    TBOX_ASSERT(db);
@@ -488,7 +496,8 @@ void Statistic::putUnregisteredToDatabase(
    }
 }
 
-void Statistic::getFromRestart(
+void
+Statistic::getFromRestart(
    const boost::shared_ptr<Database>& db)
 {
    TBOX_ASSERT(db);

@@ -15,10 +15,6 @@
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/List.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 
@@ -51,7 +47,8 @@ ListNode<TYPE>::~ListNode()
 }
 
 template<class TYPE>
-void * ListNode<TYPE>::operator new (
+void*
+ListNode<TYPE>::operator new (
    size_t bytes)
 {
    if (s_free_list) {
@@ -66,7 +63,8 @@ void * ListNode<TYPE>::operator new (
 }
 
 template<class TYPE>
-void ListNode<TYPE>::operator delete (
+void
+ListNode<TYPE>::operator delete (
    void* what)
 {
    ListNode<TYPE>* node = (ListNode<TYPE> *)what;
@@ -86,7 +84,8 @@ void ListNode<TYPE>::operator delete (
 }
 
 template<class TYPE>
-void ListNode<TYPE>::freeCachedListItems()
+void
+ListNode<TYPE>::freeCachedListItems()
 {
    while (s_free_list) {
       void * byebye = s_free_list;
@@ -137,6 +136,111 @@ ListIterator<TYPE>::~ListIterator()
 }
 
 template<class TYPE>
+ListIterator<TYPE>&
+ListIterator<TYPE>::operator = (
+   const ListIterator<TYPE>& iter)
+{
+   d_list = iter.d_list;
+   d_node = iter.d_node;
+   return *this;
+}
+
+template<class TYPE>
+TYPE&
+ListIterator<TYPE>::operator * ()
+{
+   return d_node->d_item;
+}
+
+template<class TYPE>
+const TYPE&
+ListIterator<TYPE>::operator * () const
+{
+   return d_node->d_item;
+}
+
+template<class TYPE>
+TYPE&
+ListIterator<TYPE>::operator () ()
+{
+   return d_node->d_item;
+}
+
+template<class TYPE>
+const TYPE&
+ListIterator<TYPE>::operator () () const
+{
+   return d_node->d_item;
+}
+
+template<class TYPE>
+ListIterator<TYPE>::operator bool () const
+{
+   return d_node ? true : false;
+}
+
+#ifndef LACKS_BOOL_VOID_RESOLUTION
+template<class TYPE>
+ListIterator<TYPE>::operator const void * () const
+{
+   return d_node ? this : NULL;
+}
+#endif
+
+template<class TYPE>
+bool
+ListIterator<TYPE>::operator ! () const
+{
+   return d_node ? false : true;
+}
+
+template<class TYPE>
+void
+ListIterator<TYPE>::operator ++ (
+   int)
+{
+   if (d_node) d_node = d_node->d_next;
+}
+
+template<class TYPE>
+void
+ListIterator<TYPE>::operator -- (
+   int)
+{
+   if (d_node) d_node = d_node->d_prev;
+}
+
+template<class TYPE>
+void
+ListIterator<TYPE>::rewindIterator()
+{
+   if (d_list) d_node = d_list->d_list_head;
+}
+
+template<class TYPE>
+void
+ListIterator<TYPE>::fastforwardIterator()
+{
+   if (d_list) d_node = d_list->d_list_tail;
+}
+
+template<class TYPE>
+bool
+ListIterator<TYPE>::operator == (
+   const ListIterator<TYPE>& i) const
+{
+   return d_node == i.d_node;
+}
+
+template<class TYPE>
+bool
+ListIterator<TYPE>::operator != (
+   const ListIterator<TYPE>& i) const
+{
+   return d_node != i.d_node;
+}
+
+template<class TYPE>
 List<TYPE>::List(
    const List<TYPE>& list):
    d_number_items(0),
@@ -151,7 +255,25 @@ List<TYPE>::List(
 }
 
 template<class TYPE>
-List<TYPE>& List<TYPE>::operator = (
+List<TYPE>::List():
+   d_number_items(0),
+   d_list_head((ListNode<TYPE> *)NULL),
+   d_list_tail((ListNode<TYPE> *)NULL)
+{
+   if (!s_initialized) {
+      s_initialized = List<TYPE>::initializeHandler();
+   }
+}
+
+template<class TYPE>
+List<TYPE>::~List()
+{
+   clearItems();
+}
+
+template<class TYPE>
+List<TYPE>&
+List<TYPE>::operator = (
    const List<TYPE>& list)
 {
    if (this != &list) {
@@ -162,7 +284,8 @@ List<TYPE>& List<TYPE>::operator = (
 }
 
 template<class TYPE>
-void List<TYPE>::addItem(
+void
+List<TYPE>::addItem(
    const TYPE& item)
 {
 
@@ -175,7 +298,8 @@ void List<TYPE>::addItem(
 }
 
 template<class TYPE>
-void List<TYPE>::addItemBefore(
+void
+List<TYPE>::addItemBefore(
    ListIterator<TYPE>& iter,
    const TYPE& item)
 {
@@ -195,7 +319,8 @@ void List<TYPE>::addItemBefore(
 }
 
 template<class TYPE>
-void List<TYPE>::addItemAfter(
+void
+List<TYPE>::addItemAfter(
    ListIterator<TYPE>& iter,
    const TYPE& item)
 {
@@ -215,7 +340,8 @@ void List<TYPE>::addItemAfter(
 }
 
 template<class TYPE>
-void List<TYPE>::appendItem(
+void
+List<TYPE>::appendItem(
    const TYPE& item)
 {
    ListNode<TYPE>* new_item =
@@ -227,7 +353,8 @@ void List<TYPE>::appendItem(
 }
 
 template<class TYPE>
-void List<TYPE>::copyItems(
+void
+List<TYPE>::copyItems(
    const List<TYPE>& list)
 {
    for (Iterator l(list); l; l++) {
@@ -236,7 +363,8 @@ void List<TYPE>::copyItems(
 }
 
 template<class TYPE>
-void List<TYPE>::catenateItems(
+void
+List<TYPE>::catenateItems(
    List<TYPE>& list)
 {
    if (!list.isEmpty()) {
@@ -253,8 +381,10 @@ void List<TYPE>::catenateItems(
       list.d_number_items = 0;
    }
 }
+
 template<class TYPE>
-void List<TYPE>::catenateItemsAtFront(
+void
+List<TYPE>::catenateItemsAtFront(
    List<TYPE>& list)
 {
    if (!list.isEmpty()) {
@@ -273,7 +403,8 @@ void List<TYPE>::catenateItemsAtFront(
 }
 
 template<class TYPE>
-void List<TYPE>::removeFirstItem()
+void
+List<TYPE>::removeFirstItem()
 {
    if (!isEmpty()) {
       ListNode<TYPE>* node = d_list_head;
@@ -288,7 +419,8 @@ void List<TYPE>::removeFirstItem()
 }
 
 template<class TYPE>
-void List<TYPE>::removeLastItem()
+void
+List<TYPE>::removeLastItem()
 {
    if (!isEmpty()) {
       ListNode<TYPE>* node = d_list_tail;
@@ -303,7 +435,8 @@ void List<TYPE>::removeLastItem()
 }
 
 template<class TYPE>
-void List<TYPE>::clearItems()
+void
+List<TYPE>::clearItems()
 {
    while (d_list_head) {
       ListNode<TYPE>* byebye = d_list_head;
@@ -315,7 +448,8 @@ void List<TYPE>::clearItems()
 }
 
 template<class TYPE>
-void List<TYPE>::removeItem(
+void
+List<TYPE>::removeItem(
    ListIterator<TYPE>& iter)
 {
    if ((iter.d_list == this) && iter.d_node) {
@@ -343,7 +477,8 @@ void List<TYPE>::removeItem(
 }
 
 template<class TYPE>
-void List<TYPE>::reverse()
+void
+List<TYPE>::reverse()
 {
    ListNode<TYPE>* ptr = d_list_head;
    while (ptr) {
@@ -358,7 +493,8 @@ void List<TYPE>::reverse()
 }
 
 template<class TYPE>
-void List<TYPE>::swap(
+void
+List<TYPE>::swap(
    List& r)
 {
    int tmpi = d_number_items;
@@ -372,6 +508,79 @@ void List<TYPE>::swap(
    ListNode<TYPE>* tmpt = d_list_tail;
    d_list_tail = r.d_list_tail;
    r.d_list_tail = tmpt;
+}
+
+/*
+ * Initialize shutdown handler.
+ */
+template<class TYPE>
+bool
+List<TYPE>::initializeHandler(
+   void) {
+   static StartupShutdownManager::Handler handler(
+      0,
+      0,
+      0,
+      List::finalizeCallback,
+      StartupShutdownManager::priorityList);
+
+   return true;
+}
+
+template<class TYPE>
+bool
+List<TYPE>::isEmpty() const
+{
+   return d_number_items == 0;
+}
+
+template<class TYPE>
+int
+List<TYPE>::getNumberOfItems() const
+{
+   return d_number_items;
+}
+
+template<class TYPE>
+int
+List<TYPE>::size() const
+{
+   return d_number_items;
+}
+
+template<class TYPE>
+TYPE&
+List<TYPE>::getFirstItem() const
+{
+   return d_list_head->d_item;
+}
+
+template<class TYPE>
+TYPE&
+List<TYPE>::getLastItem() const
+{
+   return d_list_tail->d_item;
+}
+
+template<class TYPE>
+void
+List<TYPE>::finalizeCallback()
+{
+   ListNode<TYPE>::freeCachedListItems();
+}
+
+template<class TYPE>
+ListIterator<TYPE>
+List<TYPE>::listStart() const
+{
+   return ListIterator<TYPE>((List<TYPE> *) this, d_list_head);
+}
+
+template<class TYPE>
+ListIterator<TYPE>
+List<TYPE>::listEnd() const
+{
+   return ListIterator<TYPE>((List<TYPE> *) this, d_list_tail);
 }
 
 }

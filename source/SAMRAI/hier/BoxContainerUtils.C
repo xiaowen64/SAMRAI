@@ -14,10 +14,6 @@
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxContainerUtils.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 
@@ -25,7 +21,8 @@ namespace hier {
  * Constructor does nothing because the objects are stateless.
  */
 
-BoxContainerUtils::BoxContainerUtils() {
+BoxContainerUtils::BoxContainerUtils()
+{
 }
 
 /*

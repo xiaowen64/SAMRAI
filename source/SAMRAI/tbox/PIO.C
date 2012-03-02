@@ -51,7 +51,8 @@ std::ostream plog(&plog_buffer);
  *************************************************************************
  */
 
-void PIO::initialize()
+void
+PIO::initialize()
 {
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    mpi.Comm_rank(&s_rank);
@@ -96,7 +97,8 @@ void PIO::initialize()
  *************************************************************************
  */
 
-void PIO::shutdownFilestream()
+void
+PIO::shutdownFilestream()
 {
    if (s_filestream) {
       s_filestream->flush();
@@ -122,7 +124,8 @@ void PIO::shutdownFilestream()
  *************************************************************************
  */
 
-void PIO::logOnlyNodeZero(
+void
+PIO::logOnlyNodeZero(
    const std::string& filename)
 {
    /*
@@ -161,7 +164,8 @@ void PIO::logOnlyNodeZero(
  *************************************************************************
  */
 
-void PIO::logAllNodes(
+void
+PIO::logAllNodes(
    const std::string& filename)
 {
    /*
@@ -198,7 +202,8 @@ void PIO::logAllNodes(
  *
  *************************************************************************
  */
-void PIO::suspendLogging()
+void
+PIO::suspendLogging()
 {
    pout_buffer.setOutputStream2(NULL);
    perr_buffer.setOutputStream2(NULL);
@@ -214,7 +219,8 @@ void PIO::suspendLogging()
  *
  *************************************************************************
  */
-void PIO::resumeLogging()
+void
+PIO::resumeLogging()
 {
    if (s_filestream) {
       pout_buffer.setOutputStream2(s_filestream);

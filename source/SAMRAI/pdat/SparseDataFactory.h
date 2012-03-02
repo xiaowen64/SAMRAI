@@ -161,9 +161,7 @@ private:
 } // end namespace pdat
 } // end namespace SAMRAI
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/SparseDataFactory.C"
-#endif
 
 #endif
 #endif

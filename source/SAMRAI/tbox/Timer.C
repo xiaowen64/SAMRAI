@@ -121,7 +121,8 @@ Timer::~Timer()
  ***************************************************************************
  */
 
-void Timer::start()
+void
+Timer::start()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    if (d_is_active) {
@@ -159,7 +160,8 @@ void Timer::start()
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void Timer::stop()
+void
+Timer::stop()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    if (d_is_active) {
@@ -197,7 +199,8 @@ void Timer::stop()
  ***************************************************************************
  */
 
-void Timer::barrierAndStart()
+void
+Timer::barrierAndStart()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    if (d_is_active) {
@@ -208,7 +211,8 @@ void Timer::barrierAndStart()
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void Timer::barrierAndStop()
+void
+Timer::barrierAndStop()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    if (d_is_active) {
@@ -219,7 +223,8 @@ void Timer::barrierAndStop()
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void Timer::reset()
+void
+Timer::reset()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    d_user_total = 0.0;
@@ -236,7 +241,8 @@ void Timer::reset()
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-bool Timer::isConcurrentTimer(
+bool
+Timer::isConcurrentTimer(
    const Timer& timer) const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -267,7 +273,8 @@ bool Timer::isConcurrentTimer(
  *
  ***************************************************************************
  */
-double Timer::computeLoadBalanceEfficiency()
+double
+Timer::computeLoadBalanceEfficiency()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
@@ -290,7 +297,8 @@ double Timer::computeLoadBalanceEfficiency()
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void Timer::computeMaxWallclock()
+void
+Timer::computeMaxWallclock()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
@@ -306,7 +314,8 @@ void Timer::computeMaxWallclock()
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void Timer::putUnregisteredToDatabase(
+void
+Timer::putUnregisteredToDatabase(
    const boost::shared_ptr<Database>& db) const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -327,7 +336,8 @@ void Timer::putUnregisteredToDatabase(
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void Timer::getFromRestart(
+void
+Timer::getFromRestart(
    const boost::shared_ptr<Database>& db)
 {
 #ifdef ENABLE_SAMRAI_TIMERS

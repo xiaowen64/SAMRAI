@@ -19,7 +19,8 @@ namespace tbox {
 /**
  * Build a new Database object.
  */
-boost::shared_ptr<Database> HDFDatabaseFactory::allocate(
+boost::shared_ptr<Database>
+HDFDatabaseFactory::allocate(
    const std::string& name) {
 #ifdef HAVE_HDF5
    boost::shared_ptr<HDFDatabase> database(

@@ -45,7 +45,8 @@ ReferenceCounter::~ReferenceCounter()
    }
 }
 
-void *ReferenceCounter::operator new (
+void*
+ReferenceCounter::operator new (
    size_t bytes)
 {
 #ifdef DEBUG_CHECK_DEV_ASSERTIONS
@@ -62,7 +63,8 @@ void *ReferenceCounter::operator new (
    }
 }
 
-void ReferenceCounter::operator delete (
+void
+ReferenceCounter::operator delete (
    void* what)
 {
 #ifdef DEBUG_CHECK_DEV_ASSERTIONS
@@ -75,7 +77,8 @@ void ReferenceCounter::operator delete (
    s_free_list = node;
 }
 
-void ReferenceCounter::finalizeCallback()
+void
+ReferenceCounter::finalizeCallback()
 {
    while (s_free_list) {
       void * byebye = s_free_list;

@@ -66,7 +66,8 @@ SideGeometry::~SideGeometry()
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap> SideGeometry::calculateOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+SideGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -105,7 +106,8 @@ boost::shared_ptr<hier::BoxOverlap> SideGeometry::calculateOverlap(
  *************************************************************************
  */
 
-hier::Box SideGeometry::toSideBox(
+hier::Box
+SideGeometry::toSideBox(
    const hier::Box& box,
    int side_normal)
 {
@@ -137,7 +139,8 @@ hier::Box SideGeometry::toSideBox(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap> SideGeometry::doOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+SideGeometry::doOverlap(
    const SideGeometry& dst_geometry,
    const SideGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -562,8 +565,8 @@ SideGeometry::transform(
 
 void
 SideGeometry::rotateAboutAxis(SideIndex& index,
-                              const int axis,
-                              const int num_rotations)
+   const int axis,
+   const int num_rotations)
 {
    const tbox::Dimension& dim = index.getDim();
    const int a = (axis + 1) % dim.getValue();

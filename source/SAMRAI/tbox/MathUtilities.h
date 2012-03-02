@@ -399,12 +399,6 @@ MathUtilities<double>::round(
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/MathUtilities.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/tbox/MathUtilities.C"
-#endif
 
 #endif

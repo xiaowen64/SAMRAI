@@ -15,9 +15,6 @@
 
 #include <boost/make_shared.hpp>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchFactory.I"
-#endif
 namespace SAMRAI {
 namespace hier {
 

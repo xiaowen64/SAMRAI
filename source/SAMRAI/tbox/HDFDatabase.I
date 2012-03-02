@@ -20,7 +20,8 @@ namespace tbox {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-hid_t HDFDatabase::getGroupId()
+hid_t
+HDFDatabase::getGroupId()
 {
    return d_group_id;
 }

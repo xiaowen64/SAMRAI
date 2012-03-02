@@ -61,102 +61,125 @@ public:
 
    //@{ @name Replication of std::vector methods.
 
-   iterator begin() {
+   iterator
+   begin() {
       return d_vec.begin();
    }
-   iterator end() {
+   iterator
+   end() {
       return d_vec.end();
    }
-   const_iterator begin() const {
+   const_iterator
+   begin() const {
       return d_vec.begin();
    }
-   const_iterator end() const {
+   const_iterator
+   end() const {
       return d_vec.end();
    }
-   reverse_iterator rbegin() {
+   reverse_iterator
+   rbegin() {
       return d_vec.rbegin();
    }
-   reverse_iterator rend() {
+   reverse_iterator
+   rend() {
       return d_vec.rend();
    }
-   const_reverse_iterator rbegin() const {
+   const_reverse_iterator
+   rbegin() const {
       return d_vec.rbegin();
    }
-   const_reverse_iterator rend() const {
+   const_reverse_iterator
+   rend() const {
       return d_vec.rend();
    }
 
-   iterator insert(
+   iterator
+   insert(
       iterator i,
       const value_type& v) {
       return d_vec.insert(i, v);
    }
-   void insert(
+   void
+   insert(
       iterator p,
       size_type n,
       const TYPE& x) {
       d_vec.insert(p, n, x);
    }
    template<class InputIterator>
-   void insert(
+   void
+   insert(
       InputIterator i,
       InputIterator j) {
       d_vec.insert(i, j);
    }
-   void erase(
+   void
+   erase(
       iterator i) {
       d_vec.erase(i);
    }
-   size_type erase(
+   size_type
+   erase(
       iterator& p) {
       return d_vec.erase(p);
    }
-   size_type erase(
+   size_type
+   erase(
       iterator& p,
       iterator& q) {
       return d_vec.erase(p, q);
    }
 
-   size_t size() const {
+   size_t
+   size() const {
       return d_vec.size();
    }
-   bool empty() const {
+   bool
+   empty() const {
       return d_vec.empty();
    }
-   void clear() {
+   void
+   clear() {
       d_vec.clear();
    }
-   void resize(
+   void
+   resize(
       size_type n,
       const TYPE& t) {
       d_vec.resize(n, t);
    }
-   void reserve(
+   void
+   reserve(
       size_type n) {
       d_vec.reserve(n);
    }
 
-   vector& operator = (
+   vector&
+   operator = (
       const SVec& r) {
       d_vec = r;
    }
-   bool operator == (
+   bool
+   operator == (
       const SVec& r) const {
       return d_vec == r;
    }
-   bool operator != (
+   bool
+   operator != (
       const SVec& r) const {
       return d_vec != r;
    }
-   void swap(
+   void
+   swap(
       SVec& r) {
       d_vec.swap(r.d_vec);
    }
 
-   operator const SVec& () const { return d_vec;
+   operator const SVec& () const {
+      return d_vec;
    }
-   operator SVec& ()
-   {
+   operator SVec& () {
       return d_vec;
    }
 
@@ -165,7 +188,8 @@ public:
    //@{ @name Enhancements of std::vector methods.
 
    //! @brief Vector element accessor with array bound checking.
-   TYPE& operator [] (
+   TYPE&
+   operator [] (
       size_type i) {
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(i <= d_vec.size() - 1);
@@ -173,7 +197,8 @@ public:
       return d_vec[i];
    }
    //! @brief Vector element accessor with array bound checking.
-   const TYPE& operator [] (
+   const TYPE&
+   operator [] (
       size_type i) const {
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(i <= d_vec.size() - 1);

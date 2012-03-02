@@ -90,7 +90,4 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/FaceOverlap.I"
-#endif
 #endif

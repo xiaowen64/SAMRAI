@@ -18,7 +18,8 @@ namespace tbox {
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void AsyncCommStage::Member::setHandler(
+void
+AsyncCommStage::Member::setHandler(
    Handler* handler)
 {
    d_handler = handler;
@@ -29,7 +30,8 @@ void AsyncCommStage::Member::setHandler(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-AsyncCommStage::Handler *AsyncCommStage::Member::getHandler() const
+AsyncCommStage::Handler*
+AsyncCommStage::Member::getHandler() const
 {
    return d_handler;
 }
@@ -39,7 +41,8 @@ AsyncCommStage::Handler *AsyncCommStage::Member::getHandler() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-size_t AsyncCommStage::Member::numberOfRequests() const
+size_t
+AsyncCommStage::Member::numberOfRequests() const
 {
    return d_nreq;
 }
@@ -49,7 +52,8 @@ size_t AsyncCommStage::Member::numberOfRequests() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-SAMRAI_MPI::Request *AsyncCommStage::Member::getRequestPointer() const
+SAMRAI_MPI::Request*
+AsyncCommStage::Member::getRequestPointer() const
 {
    if (d_stage == NULL) {
       TBOX_ERROR("AssyncCommStage::Member::getRequestPointer():\n"
@@ -69,7 +73,8 @@ SAMRAI_MPI::Request *AsyncCommStage::Member::getRequestPointer() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-SAMRAI_MPI::Status *AsyncCommStage::Member::getStatusPointer() const
+SAMRAI_MPI::Status*
+AsyncCommStage::Member::getStatusPointer() const
 {
    if (d_stage == NULL) {
       TBOX_ERROR("AssyncCommStage::Member::getStatusPointer():\n"
@@ -89,7 +94,8 @@ SAMRAI_MPI::Status *AsyncCommStage::Member::getStatusPointer() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void AsyncCommStage::setCommunicationWaitTimer(
+void
+AsyncCommStage::setCommunicationWaitTimer(
    const boost::shared_ptr<Timer>& communication_timer)
 {
    d_communication_timer = communication_timer;
@@ -100,7 +106,8 @@ void AsyncCommStage::setCommunicationWaitTimer(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-size_t AsyncCommStage::numberOfMembers() const
+size_t
+AsyncCommStage::numberOfMembers() const
 {
    return d_member_count;
 }
@@ -110,7 +117,8 @@ size_t AsyncCommStage::numberOfMembers() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-size_t AsyncCommStage::numberOfRequests(
+size_t
+AsyncCommStage::numberOfRequests(
    size_t index_on_stage) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -128,7 +136,8 @@ size_t AsyncCommStage::numberOfRequests(
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool AsyncCommStage::hasPendingRequests() const
+bool
+AsyncCommStage::hasPendingRequests() const
 {
    bool hasPending = false;
    for (size_t ireq = 0; ireq < d_member_to_req[d_members.size()]; ++ireq) {
@@ -145,7 +154,8 @@ bool AsyncCommStage::hasPendingRequests() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-size_t AsyncCommStage::numberOfPendingRequests() const
+size_t
+AsyncCommStage::numberOfPendingRequests() const
 {
    size_t npending = 0;
    for (size_t ireq = 0; ireq < d_member_to_req[d_members.size()]; ++ireq) {
@@ -161,7 +171,8 @@ size_t AsyncCommStage::numberOfPendingRequests() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-size_t AsyncCommStage::numberOfPendingMembers() const
+size_t
+AsyncCommStage::numberOfPendingMembers() const
 {
    size_t nmember = 0;
    for (size_t imember = 0; imember < d_members.size(); ++imember) {
@@ -180,7 +191,8 @@ size_t AsyncCommStage::numberOfPendingMembers() const
  ****************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-SAMRAI_MPI::Request *AsyncCommStage::lookupRequestPointer(
+SAMRAI_MPI::Request*
+AsyncCommStage::lookupRequestPointer(
    const size_t imember) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -197,7 +209,8 @@ SAMRAI_MPI::Request *AsyncCommStage::lookupRequestPointer(
  ****************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-SAMRAI_MPI::Status *AsyncCommStage::lookupStatusPointer(
+SAMRAI_MPI::Status*
+AsyncCommStage::lookupStatusPointer(
    const size_t imember) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS

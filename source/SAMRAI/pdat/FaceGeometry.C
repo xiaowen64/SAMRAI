@@ -60,7 +60,8 @@ FaceGeometry::~FaceGeometry()
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap> FaceGeometry::calculateOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+FaceGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -139,7 +140,8 @@ FaceGeometry::toFaceBox(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap> FaceGeometry::doOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+FaceGeometry::doOverlap(
    const FaceGeometry& dst_geometry,
    const FaceGeometry& src_geometry,
    const hier::Box& src_mask,

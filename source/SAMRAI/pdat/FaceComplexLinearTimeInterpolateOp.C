@@ -120,7 +120,8 @@ FaceComplexLinearTimeInterpolateOp::~FaceComplexLinearTimeInterpolateOp()
 {
 }
 
-bool FaceComplexLinearTimeInterpolateOp::findTimeInterpolateOperator(
+bool
+FaceComplexLinearTimeInterpolateOp::findTimeInterpolateOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -134,7 +135,8 @@ bool FaceComplexLinearTimeInterpolateOp::findTimeInterpolateOperator(
    }
 }
 
-void FaceComplexLinearTimeInterpolateOp::timeInterpolate(
+void
+FaceComplexLinearTimeInterpolateOp::timeInterpolate(
    hier::PatchData& dst_data,
    const hier::Box& where,
    const hier::PatchData& src_data_old,

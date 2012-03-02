@@ -359,7 +359,8 @@ private:
     * Build an ordered list array, organizing timers largest to smallest.
     */
    void
-   buildOrderedList(const double timer_values[][18],
+   buildOrderedList(
+      const double timer_values[][18],
       const int column,
       int index[],
       const int array_size);

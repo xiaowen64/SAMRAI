@@ -18,9 +18,6 @@
 #include "SAMRAI/pdat/NodeOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/NodeData.I"
-#endif
 namespace SAMRAI {
 namespace pdat {
 
@@ -77,10 +74,76 @@ NodeData<TYPE>::NodeData(
 }
 
 template<class TYPE>
-void NodeData<TYPE>::operator = (
+void
+NodeData<TYPE>::operator = (
    const NodeData<TYPE>& foo)
 {
    NULL_USE(foo);
+}
+
+template<class TYPE>
+int
+NodeData<TYPE>::getDepth() const
+{
+   return d_depth;
+}
+
+template<class TYPE>
+ArrayData<TYPE>&
+NodeData<TYPE>::getArrayData()
+{
+   return d_data;
+}
+
+template<class TYPE>
+const ArrayData<TYPE>&
+NodeData<TYPE>::getArrayData() const
+{
+   return d_data;
+}
+
+template<class TYPE>
+TYPE*
+NodeData<TYPE>::getPointer(
+   int depth)
+{
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data.getPointer(depth);
+}
+
+template<class TYPE>
+const TYPE*
+NodeData<TYPE>::getPointer(
+   int depth) const
+{
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data.getPointer(depth);
+}
+
+template<class TYPE>
+TYPE&
+NodeData<TYPE>::operator () (
+   const NodeIndex& i,
+   int depth)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data(i, depth);
+}
+
+template<class TYPE>
+const TYPE&
+NodeData<TYPE>::operator () (
+   const NodeIndex& i,
+   int depth) const
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data(i, depth);
 }
 
 /*
@@ -93,7 +156,8 @@ void NodeData<TYPE>::operator = (
  */
 
 template<class TYPE>
-void NodeData<TYPE>::copy(
+void
+NodeData<TYPE>::copy(
    const hier::PatchData& src)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
@@ -111,7 +175,8 @@ void NodeData<TYPE>::copy(
 }
 
 template<class TYPE>
-void NodeData<TYPE>::copy2(
+void
+NodeData<TYPE>::copy2(
    hier::PatchData& dst) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
@@ -137,7 +202,8 @@ void NodeData<TYPE>::copy2(
  */
 
 template<class TYPE>
-void NodeData<TYPE>::copy(
+void
+NodeData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
@@ -163,7 +229,8 @@ void NodeData<TYPE>::copy(
 }
 
 template<class TYPE>
-void NodeData<TYPE>::copy2(
+void
+NodeData<TYPE>::copy2(
    hier::PatchData& dst,
    const hier::BoxOverlap& overlap) const
 {
@@ -188,7 +255,19 @@ void NodeData<TYPE>::copy2(
 }
 
 template<class TYPE>
-void NodeData<TYPE>::copyWithRotation(
+void
+NodeData<TYPE>::copyOnBox(
+   const NodeData<TYPE>& src,
+   const hier::Box& box)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, src, box);
+   const hier::Box node_box = NodeGeometry::toNodeBox(box);
+   d_data.copy(src.getArrayData(), node_box);
+}
+
+template<class TYPE>
+void
+NodeData<TYPE>::copyWithRotation(
    const NodeData<TYPE>& src,
    const NodeOverlap& overlap)
 {
@@ -253,7 +332,8 @@ void NodeData<TYPE>::copyWithRotation(
  */
 
 template<class TYPE>
-void NodeData<TYPE>::copyDepth(
+void
+NodeData<TYPE>::copyDepth(
    int dst_depth,
    const NodeData<TYPE>& src,
    int src_depth)
@@ -276,13 +356,15 @@ void NodeData<TYPE>::copyDepth(
  */
 
 template<class TYPE>
-bool NodeData<TYPE>::canEstimateStreamSizeFromBox() const
+bool
+NodeData<TYPE>::canEstimateStreamSizeFromBox() const
 {
    return ArrayData<TYPE>::canEstimateStreamSizeFromBox();
 }
 
 template<class TYPE>
-int NodeData<TYPE>::getDataStreamSize(
+int
+NodeData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
    const NodeOverlap* t_overlap =
@@ -304,7 +386,8 @@ int NodeData<TYPE>::getDataStreamSize(
  */
 
 template<class TYPE>
-void NodeData<TYPE>::packStream(
+void
+NodeData<TYPE>::packStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap) const
 {
@@ -324,7 +407,8 @@ void NodeData<TYPE>::packStream(
 }
 
 template<class TYPE>
-void NodeData<TYPE>::packWithRotation(
+void
+NodeData<TYPE>::packWithRotation(
    tbox::MessageStream& stream,
    const NodeOverlap& overlap) const
 {
@@ -386,7 +470,8 @@ void NodeData<TYPE>::packWithRotation(
 }
 
 template<class TYPE>
-void NodeData<TYPE>::unpackStream(
+void
+NodeData<TYPE>::unpackStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
@@ -400,6 +485,48 @@ void NodeData<TYPE>::unpackStream(
       t_overlap->getSourceOffset());
 }
 
+template<class TYPE>
+void
+NodeData<TYPE>::fill(
+   const TYPE& t,
+   int d)
+{
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
+
+   d_data.fill(t, d);
+}
+
+template<class TYPE>
+void
+NodeData<TYPE>::fill(
+   const TYPE& t,
+   const hier::Box& box,
+   int d)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
+
+   d_data.fill(t, NodeGeometry::toNodeBox(box), d);
+}
+
+template<class TYPE>
+void
+NodeData<TYPE>::fillAll(
+   const TYPE& t)
+{
+   d_data.fillAll(t);
+}
+
+template<class TYPE>
+void
+NodeData<TYPE>::fillAll(
+   const TYPE& t,
+   const hier::Box& box)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   d_data.fillAll(t, NodeGeometry::toNodeBox(box));
+}
+
 /*
  *************************************************************************
  *
@@ -410,7 +537,8 @@ void NodeData<TYPE>::unpackStream(
  */
 
 template<class TYPE>
-size_t NodeData<TYPE>::getSizeOfData(
+size_t
+NodeData<TYPE>::getSizeOfData(
    const hier::Box& box,
    int depth,
    const hier::IntVector& ghosts)
@@ -432,7 +560,8 @@ size_t NodeData<TYPE>::getSizeOfData(
  */
 
 template<class TYPE>
-void NodeData<TYPE>::print(
+void
+NodeData<TYPE>::print(
    const hier::Box& box,
    std::ostream& os,
    int prec) const
@@ -446,7 +575,8 @@ void NodeData<TYPE>::print(
 }
 
 template<class TYPE>
-void NodeData<TYPE>::print(
+void
+NodeData<TYPE>::print(
    const hier::Box& box,
    int depth,
    std::ostream& os,
@@ -473,7 +603,8 @@ void NodeData<TYPE>::print(
  */
 
 template<class TYPE>
-void NodeData<TYPE>::getSpecializedFromDatabase(
+void
+NodeData<TYPE>::getSpecializedFromDatabase(
    const boost::shared_ptr<tbox::Database>& database)
 {
    TBOX_ASSERT(database);
@@ -499,7 +630,8 @@ void NodeData<TYPE>::getSpecializedFromDatabase(
  */
 
 template<class TYPE>
-void NodeData<TYPE>::putSpecializedToDatabase(
+void
+NodeData<TYPE>::putSpecializedToDatabase(
    const boost::shared_ptr<tbox::Database>& database) const
 {
 

@@ -66,8 +66,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxContainerUtils.I"
-#endif
-
 #endif  // included_hier_BoxContainerUtils

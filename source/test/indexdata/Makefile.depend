@@ -28,7 +28,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -68,13 +67,11 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.C				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.I			\
@@ -83,21 +80,16 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/IndexData.C				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/IndexData.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/IndexData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/IndexDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/IndexDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/IndexVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/IndexVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
@@ -110,11 +102,9 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\

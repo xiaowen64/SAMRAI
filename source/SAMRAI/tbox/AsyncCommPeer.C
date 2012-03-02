@@ -20,10 +20,6 @@
 
 #include <cstring>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/AsyncCommPeer.I"
-#endif
-
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -150,7 +146,8 @@ AsyncCommPeer<TYPE>::AsyncCommPeer(
  ***********************************************************************
  */
 template<class TYPE>
-AsyncCommPeer<TYPE>& AsyncCommPeer<TYPE>::operator = (
+AsyncCommPeer<TYPE>&
+AsyncCommPeer<TYPE>::operator = (
    const AsyncCommPeer& r) {
    NULL_USE(r);
    TBOX_ERROR(
@@ -164,7 +161,8 @@ AsyncCommPeer<TYPE>& AsyncCommPeer<TYPE>::operator = (
  ***********************************************************************
  */
 template<class TYPE>
-void AsyncCommPeer<TYPE>::initialize(
+void
+AsyncCommPeer<TYPE>::initialize(
    AsyncCommStage* stage,
    AsyncCommStage::Handler* handler)
 {
@@ -184,7 +182,8 @@ void AsyncCommPeer<TYPE>::initialize(
  *********************************************************************
  */
 template<class TYPE>
-bool AsyncCommPeer<TYPE>::proceedToNextWait()
+bool
+AsyncCommPeer<TYPE>::proceedToNextWait()
 {
    switch (d_base_op) {
       case send: return checkSend();
@@ -214,7 +213,8 @@ bool AsyncCommPeer<TYPE>::proceedToNextWait()
  *********************************************************************
  */
 template<class TYPE>
-void AsyncCommPeer<TYPE>::completeCurrentOperation()
+void
+AsyncCommPeer<TYPE>::completeCurrentOperation()
 {
    SAMRAI_MPI::Request * const req = getRequestPointer();
    SAMRAI_MPI::Status* mpi_status = getStatusPointer();
@@ -245,7 +245,8 @@ void AsyncCommPeer<TYPE>::completeCurrentOperation()
  ************************************************************************
  */
 template<class TYPE>
-bool AsyncCommPeer<TYPE>::beginSend(
+bool
+AsyncCommPeer<TYPE>::beginSend(
    const TYPE* buffer,
    int size)
 {
@@ -268,7 +269,8 @@ bool AsyncCommPeer<TYPE>::beginSend(
 
 // SGS should we initialize if DEBUG_INITIALIZE_UNDEFINED ?
 template<class TYPE>
-void AsyncCommPeer<TYPE>::resizeBuffer(
+void
+AsyncCommPeer<TYPE>::resizeBuffer(
    size_t size)
 {
    if (d_internal_buf_size < size) {
@@ -300,7 +302,8 @@ void AsyncCommPeer<TYPE>::resizeBuffer(
  ************************************************************************
  */
 template<class TYPE>
-bool AsyncCommPeer<TYPE>::checkSend()
+bool
+AsyncCommPeer<TYPE>::checkSend()
 {
    if (d_base_op != send) {
       TBOX_ERROR("Cannot check nonexistent send operation."
@@ -490,7 +493,8 @@ bool AsyncCommPeer<TYPE>::checkSend()
  ************************************************************************
  */
 template<class TYPE>
-bool AsyncCommPeer<TYPE>::beginRecv()
+bool
+AsyncCommPeer<TYPE>::beginRecv()
 {
    if (d_next_task_op != none) {
       TBOX_ERROR("Cannot begin communication while another is in progress."
@@ -518,7 +522,8 @@ bool AsyncCommPeer<TYPE>::beginRecv()
  ************************************************************************
  */
 template<class TYPE>
-bool AsyncCommPeer<TYPE>::checkRecv()
+bool
+AsyncCommPeer<TYPE>::checkRecv()
 {
    if (d_base_op != recv) {
       TBOX_ERROR("Cannot check nonexistent receive operation."
@@ -770,7 +775,8 @@ bool AsyncCommPeer<TYPE>::checkRecv()
  ***********************************************************************
  */
 template<class TYPE>
-void AsyncCommPeer<TYPE>::checkMPIParams()
+void
+AsyncCommPeer<TYPE>::checkMPIParams()
 {
    if (d_tag0 < 0 || d_tag1 < 0) {
       TBOX_ERROR("AsyncCommPeer: Invalid MPI tag values "
@@ -796,7 +802,8 @@ void AsyncCommPeer<TYPE>::checkMPIParams()
  ***********************************************************************
  */
 template<class TYPE>
-void AsyncCommPeer<TYPE>::logCurrentState(
+void
+AsyncCommPeer<TYPE>::logCurrentState(
    std::ostream& co) const
 {
    SAMRAI_MPI::Request * const req = getRequestPointer();
@@ -810,6 +817,205 @@ void AsyncCommPeer<TYPE>::logCurrentState(
       << "  request,status-1=" << (void *)req[1]
    ;
    co << '\n';
+}
+
+/*
+ ****************************************************************
+ ****************************************************************
+ */
+template<class TYPE>
+void
+AsyncCommPeer<TYPE>::setMPITag(
+   const int tag0,
+   const int tag1)
+{
+   if (!isDone()) {
+      TBOX_ERROR("Resetting the MPI tag is not allowed\n"
+         << "during pending communications");
+   }
+   d_tag0 = tag0;
+   d_tag1 = tag1;
+}
+
+/*
+ ****************************************************************
+ ****************************************************************
+ */
+template<class TYPE>
+void
+AsyncCommPeer<TYPE>::setMPI(
+   const SAMRAI_MPI& mpi)
+{
+   if (!isDone()) {
+      TBOX_ERROR("Resetting the MPI object is not allowed\n"
+         << "during pending communications");
+   }
+   d_mpi = mpi;
+}
+
+/*
+ ****************************************************************
+ ****************************************************************
+ */
+template<class TYPE>
+bool
+AsyncCommPeer<TYPE>::isDone() const
+{
+   return d_next_task_op == none;
+}
+
+/*
+ ****************************************************************
+ ****************************************************************
+ */
+template<class TYPE>
+void
+AsyncCommPeer<TYPE>::setPeerRank(
+   int peer_rank)
+{
+   if (!isDone()) {
+      TBOX_ERROR("Resetting the peer is not allowed\n"
+         << "during pending communications");
+   }
+   d_peer_rank = peer_rank;
+}
+
+/*
+ ****************************************************************
+ ****************************************************************
+ */
+template<class TYPE>
+int
+AsyncCommPeer<TYPE>::getPeerRank() const
+{
+   return d_peer_rank;
+}
+
+/*
+ ****************************************************************
+ ****************************************************************
+ */
+template<class TYPE>
+void
+AsyncCommPeer<TYPE>::limitFirstDataLength(
+   size_t limit)
+{
+   d_max_first_data_len = limit;
+}
+
+/*
+ ****************************************************************
+ ****************************************************************
+ */
+template<class TYPE>
+void
+AsyncCommPeer<TYPE>::resetStatus(
+   SAMRAI_MPI::Status& mpi_status)
+{
+   /*
+    * Do not set stat.count because it is not guaranteed
+    * to exist in every implemenation.
+    */
+   mpi_status.MPI_TAG =
+      mpi_status.MPI_SOURCE =
+         mpi_status.MPI_ERROR = -1;
+}
+
+/*
+ ****************************************************************
+ ****************************************************************
+ */
+template<class TYPE>
+size_t
+AsyncCommPeer<TYPE>::getNumberOfFlexData(
+   size_t number_of_type_data) const
+{
+   size_t number_of_flexdata = number_of_type_data * sizeof(TYPE);
+   number_of_flexdata = number_of_flexdata / sizeof(FlexData)
+      + (number_of_flexdata % sizeof(FlexData) > 0);
+   return number_of_flexdata;
+}
+
+template<class TYPE>
+bool
+AsyncCommPeer<TYPE>::initialize()
+{
+   static StartupShutdownManager::Handler handler(
+      0,
+      0,
+      0,
+      AsyncCommPeer::finalizeCallback,
+      StartupShutdownManager::priorityTimers);
+
+   t_waitall_timer = TimerManager::getManager()->
+      getTimer("tbox::AsyncCommPeer::wait_all()");
+   t_send_timer = TimerManager::getManager()->
+      getTimer("tbox::AsyncCommPeer::MPI_ISend");
+   t_recv_timer = TimerManager::getManager()->
+      getTimer("tbox::AsyncCommPeer::MPI_Irecv");
+
+   return true;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+template<class TYPE>
+int
+AsyncCommPeer<TYPE>::getRecvSize() const
+{
+   if (d_base_op != recv) {
+      TBOX_ERROR("AsyncCommPeer::getRecvSize() called without a\n"
+         << "corresponding receive.");
+   }
+   return static_cast<int>(d_full_count);
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+template<class TYPE>
+const TYPE*
+AsyncCommPeer<TYPE>::getRecvData() const
+{
+   if (d_base_op != recv) {
+      TBOX_ERROR("AsyncCommPeer::getRecvData() called without a\n"
+         << "corresponding receive.");
+   }
+   return &d_internal_buf[0].t;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+template<class TYPE>
+void
+AsyncCommPeer<TYPE>::clearRecvData()
+{
+   if (d_next_task_op != none) {
+      TBOX_ERROR("AsyncCommPeer::clearRecvData() called during an\n"
+         << "operation.");
+   }
+   // d_internal_buf.clear();
+}
+
+/*
+ ***************************************************************************
+ * Release static timers.  To be called by shutdown registry to make sure
+ * memory for timers does not leak.
+ ***************************************************************************
+ */
+template<class TYPE>
+void
+AsyncCommPeer<TYPE>::finalizeCallback()
+{
+   t_send_timer.reset();
+   t_recv_timer.reset();
+   t_waitall_timer.reset();
+   s_initialized = false;
 }
 
 template<class TYPE>

@@ -24,7 +24,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.I				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
@@ -48,33 +47,27 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeIndex.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeIndex.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceIndex.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceIndex.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/FaceOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIndex.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIndex.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideGeometry.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideIndex.I				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideIndex.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SideOverlap.I			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideOverlap.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
@@ -88,7 +81,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\

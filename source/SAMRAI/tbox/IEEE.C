@@ -64,7 +64,8 @@ static void error_action(
 }
 #endif
 
-void IEEE::setupFloatingPointExceptionHandlers()
+void
+IEEE::setupFloatingPointExceptionHandlers()
 {
 #if defined(HAVE_EXCEPTION_HANDLING)
    int fpu_flags = _FPU_DEFAULT;

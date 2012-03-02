@@ -120,7 +120,8 @@ SideFloatLinearTimeInterpolateOp::~SideFloatLinearTimeInterpolateOp()
 {
 }
 
-bool SideFloatLinearTimeInterpolateOp::findTimeInterpolateOperator(
+bool
+SideFloatLinearTimeInterpolateOp::findTimeInterpolateOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -134,7 +135,8 @@ bool SideFloatLinearTimeInterpolateOp::findTimeInterpolateOperator(
    }
 }
 
-void SideFloatLinearTimeInterpolateOp::timeInterpolate(
+void
+SideFloatLinearTimeInterpolateOp::timeInterpolate(
    hier::PatchData& dst_data,
    const hier::Box& where,
    const hier::PatchData& src_data_old,

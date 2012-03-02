@@ -71,7 +71,8 @@ MemoryDatabase::~MemoryDatabase()
  *************************************************************************
  */
 
-bool MemoryDatabase::create(
+bool
+MemoryDatabase::create(
    const std::string& name)
 {
    d_database_name = name;
@@ -88,7 +89,8 @@ bool MemoryDatabase::create(
  *************************************************************************
  */
 
-bool MemoryDatabase::open(
+bool
+MemoryDatabase::open(
    const std::string& name,
    const bool read_write_mode)
 {
@@ -111,7 +113,8 @@ bool MemoryDatabase::open(
  *************************************************************************
  */
 
-bool MemoryDatabase::close()
+bool
+MemoryDatabase::close()
 {
    d_database_name = "";
    d_keyvalues.clearItems();
@@ -127,7 +130,8 @@ bool MemoryDatabase::close()
  *************************************************************************
  */
 
-bool MemoryDatabase::keyExists(
+bool
+MemoryDatabase::keyExists(
    const std::string& key)
 {
    return findKeyData(key) ? true : false;
@@ -141,7 +145,8 @@ bool MemoryDatabase::keyExists(
  *************************************************************************
  */
 
-Array<std::string> MemoryDatabase::getAllKeys()
+Array<std::string>
+MemoryDatabase::getAllKeys()
 {
    const int n = d_keyvalues.getNumberOfItems();
    Array<std::string> keys(n);
@@ -161,7 +166,8 @@ Array<std::string> MemoryDatabase::getAllKeys()
  *
  *************************************************************************
  */
-enum Database::DataType MemoryDatabase::getArrayType(
+enum Database::DataType
+MemoryDatabase::getArrayType(
    const std::string& key) {
    KeyData* keydata = findKeyData(key);
 
@@ -181,7 +187,8 @@ enum Database::DataType MemoryDatabase::getArrayType(
  *************************************************************************
  */
 
-int MemoryDatabase::getArraySize(
+int
+MemoryDatabase::getArraySize(
    const std::string& key)
 {
    KeyData* keydata = findKeyData(key);
@@ -200,14 +207,16 @@ int MemoryDatabase::getArraySize(
  *************************************************************************
  */
 
-bool MemoryDatabase::isDatabase(
+bool
+MemoryDatabase::isDatabase(
    const std::string& key)
 {
    KeyData* keydata = findKeyData(key);
    return keydata ? keydata->d_type == Database::SAMRAI_DATABASE : false;
 }
 
-boost::shared_ptr<Database> MemoryDatabase::putDatabase(
+boost::shared_ptr<Database>
+MemoryDatabase::putDatabase(
    const std::string& key)
 {
    deleteKeyIfFound(key);
@@ -222,7 +231,8 @@ boost::shared_ptr<Database> MemoryDatabase::putDatabase(
    return keydata.d_database;
 }
 
-boost::shared_ptr<Database> MemoryDatabase::getDatabase(
+boost::shared_ptr<Database>
+MemoryDatabase::getDatabase(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -241,28 +251,32 @@ boost::shared_ptr<Database> MemoryDatabase::getDatabase(
  *************************************************************************
  */
 
-bool MemoryDatabase::isBool(
+bool
+MemoryDatabase::isBool(
    const std::string& key)
 {
    KeyData* keydata = findKeyData(key);
    return keydata ? keydata->d_type == Database::SAMRAI_BOOL : false;
 }
 
-void MemoryDatabase::putBool(
+void
+MemoryDatabase::putBool(
    const std::string& key,
    const bool& data)
 {
    putBoolArray(key, &data, 1);
 }
 
-void MemoryDatabase::putBoolArray(
+void
+MemoryDatabase::putBoolArray(
    const std::string& key,
    const Array<bool>& data)
 {
    putBoolArray(key, data.getPointer(), data.getSize());
 }
 
-void MemoryDatabase::putBoolArray(
+void
+MemoryDatabase::putBoolArray(
    const std::string& key,
    const bool * const data,
    const int nelements)
@@ -283,7 +297,8 @@ void MemoryDatabase::putBoolArray(
    d_keyvalues.appendItem(keydata);
 }
 
-bool MemoryDatabase::getBool(
+bool
+MemoryDatabase::getBool(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -295,7 +310,8 @@ bool MemoryDatabase::getBool(
    return keydata->d_boolean[0];
 }
 
-bool MemoryDatabase::getBoolWithDefault(
+bool
+MemoryDatabase::getBoolWithDefault(
    const std::string& key,
    const bool& defaultvalue)
 {
@@ -307,7 +323,8 @@ bool MemoryDatabase::getBoolWithDefault(
    return defaultvalue;
 }
 
-Array<bool> MemoryDatabase::getBoolArray(
+Array<bool>
+MemoryDatabase::getBoolArray(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -318,7 +335,8 @@ Array<bool> MemoryDatabase::getBoolArray(
    return keydata->d_boolean;
 }
 
-void MemoryDatabase::getBoolArray(
+void
+MemoryDatabase::getBoolArray(
    const std::string& key,
    bool* data,
    const int nelements)
@@ -346,28 +364,32 @@ void MemoryDatabase::getBoolArray(
  *************************************************************************
  */
 
-bool MemoryDatabase::isDatabaseBox(
+bool
+MemoryDatabase::isDatabaseBox(
    const std::string& key)
 {
    KeyData* keydata = findKeyData(key);
    return keydata ? keydata->d_type == Database::SAMRAI_BOX : false;
 }
 
-void MemoryDatabase::putDatabaseBox(
+void
+MemoryDatabase::putDatabaseBox(
    const std::string& key,
    const DatabaseBox& data)
 {
    putDatabaseBoxArray(key, &data, 1);
 }
 
-void MemoryDatabase::putDatabaseBoxArray(
+void
+MemoryDatabase::putDatabaseBoxArray(
    const std::string& key,
    const Array<DatabaseBox>& data)
 {
    putDatabaseBoxArray(key, data.getPointer(), data.getSize());
 }
 
-void MemoryDatabase::putDatabaseBoxArray(
+void
+MemoryDatabase::putDatabaseBoxArray(
    const std::string& key,
    const DatabaseBox * const data,
    const int nelements)
@@ -388,7 +410,8 @@ void MemoryDatabase::putDatabaseBoxArray(
    d_keyvalues.appendItem(keydata);
 }
 
-DatabaseBox MemoryDatabase::getDatabaseBox(
+DatabaseBox
+MemoryDatabase::getDatabaseBox(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -400,7 +423,8 @@ DatabaseBox MemoryDatabase::getDatabaseBox(
    return keydata->d_box[0];
 }
 
-DatabaseBox MemoryDatabase::getDatabaseBoxWithDefault(
+DatabaseBox
+MemoryDatabase::getDatabaseBoxWithDefault(
    const std::string& key,
    const DatabaseBox& defaultvalue)
 {
@@ -412,7 +436,8 @@ DatabaseBox MemoryDatabase::getDatabaseBoxWithDefault(
    return defaultvalue;
 }
 
-Array<DatabaseBox> MemoryDatabase::getDatabaseBoxArray(
+Array<DatabaseBox>
+MemoryDatabase::getDatabaseBoxArray(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -423,7 +448,8 @@ Array<DatabaseBox> MemoryDatabase::getDatabaseBoxArray(
    return keydata->d_box;
 }
 
-void MemoryDatabase::getDatabaseBoxArray(
+void
+MemoryDatabase::getDatabaseBoxArray(
    const std::string& key,
    DatabaseBox* data,
    const int nelements)
@@ -451,28 +477,32 @@ void MemoryDatabase::getDatabaseBoxArray(
  *************************************************************************
  */
 
-bool MemoryDatabase::isChar(
+bool
+MemoryDatabase::isChar(
    const std::string& key)
 {
    KeyData* keydata = findKeyData(key);
    return keydata ? keydata->d_type == Database::SAMRAI_CHAR : false;
 }
 
-void MemoryDatabase::putChar(
+void
+MemoryDatabase::putChar(
    const std::string& key,
    const char& data)
 {
    putCharArray(key, &data, 1);
 }
 
-void MemoryDatabase::putCharArray(
+void
+MemoryDatabase::putCharArray(
    const std::string& key,
    const Array<char>& data)
 {
    putCharArray(key, data.getPointer(), data.getSize());
 }
 
-void MemoryDatabase::putCharArray(
+void
+MemoryDatabase::putCharArray(
    const std::string& key,
    const char * const data,
    const int nelements)
@@ -493,7 +523,8 @@ void MemoryDatabase::putCharArray(
    d_keyvalues.appendItem(keydata);
 }
 
-char MemoryDatabase::getChar(
+char
+MemoryDatabase::getChar(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -505,7 +536,8 @@ char MemoryDatabase::getChar(
    return keydata->d_char[0];
 }
 
-char MemoryDatabase::getCharWithDefault(
+char
+MemoryDatabase::getCharWithDefault(
    const std::string& key,
    const char& defaultvalue)
 {
@@ -517,7 +549,8 @@ char MemoryDatabase::getCharWithDefault(
    return defaultvalue;
 }
 
-Array<char> MemoryDatabase::getCharArray(
+Array<char>
+MemoryDatabase::getCharArray(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -528,7 +561,8 @@ Array<char> MemoryDatabase::getCharArray(
    return keydata->d_char;
 }
 
-void MemoryDatabase::getCharArray(
+void
+MemoryDatabase::getCharArray(
    const std::string& key,
    char* data,
    const int nelements)
@@ -558,7 +592,8 @@ void MemoryDatabase::getCharArray(
  *************************************************************************
  */
 
-bool MemoryDatabase::isComplex(
+bool
+MemoryDatabase::isComplex(
    const std::string& key)
 {
    KeyData* keydata = findKeyData(key);
@@ -568,21 +603,24 @@ bool MemoryDatabase::isComplex(
                               || keydata->d_type == Database::SAMRAI_DOUBLE);
 }
 
-void MemoryDatabase::putComplex(
+void
+MemoryDatabase::putComplex(
    const std::string& key,
    const dcomplex& data)
 {
    putComplexArray(key, &data, 1);
 }
 
-void MemoryDatabase::putComplexArray(
+void
+MemoryDatabase::putComplexArray(
    const std::string& key,
    const Array<dcomplex>& data)
 {
    putComplexArray(key, data.getPointer(), data.getSize());
 }
 
-void MemoryDatabase::putComplexArray(
+void
+MemoryDatabase::putComplexArray(
    const std::string& key,
    const dcomplex * const data,
    const int nelements)
@@ -603,7 +641,8 @@ void MemoryDatabase::putComplexArray(
    d_keyvalues.appendItem(keydata);
 }
 
-dcomplex MemoryDatabase::getComplex(
+dcomplex
+MemoryDatabase::getComplex(
    const std::string& key)
 {
    dcomplex value(0.0, 0.0);
@@ -634,7 +673,8 @@ dcomplex MemoryDatabase::getComplex(
    return value;
 }
 
-dcomplex MemoryDatabase::getComplexWithDefault(
+dcomplex
+MemoryDatabase::getComplexWithDefault(
    const std::string& key,
    const dcomplex& defaultvalue)
 {
@@ -646,7 +686,8 @@ dcomplex MemoryDatabase::getComplexWithDefault(
    return defaultvalue;
 }
 
-Array<dcomplex> MemoryDatabase::getComplexArray(
+Array<dcomplex>
+MemoryDatabase::getComplexArray(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -683,7 +724,8 @@ Array<dcomplex> MemoryDatabase::getComplexArray(
    return array;
 }
 
-void MemoryDatabase::getComplexArray(
+void
+MemoryDatabase::getComplexArray(
    const std::string& key,
    dcomplex* data,
    const int nelements)
@@ -712,7 +754,8 @@ void MemoryDatabase::getComplexArray(
  *************************************************************************
  */
 
-bool MemoryDatabase::isDouble(
+bool
+MemoryDatabase::isDouble(
    const std::string& key)
 {
    KeyData* keydata = findKeyData(key);
@@ -721,21 +764,24 @@ bool MemoryDatabase::isDouble(
                               || keydata->d_type == Database::SAMRAI_FLOAT);
 }
 
-void MemoryDatabase::putDouble(
+void
+MemoryDatabase::putDouble(
    const std::string& key,
    const double& data)
 {
    putDoubleArray(key, &data, 1);
 }
 
-void MemoryDatabase::putDoubleArray(
+void
+MemoryDatabase::putDoubleArray(
    const std::string& key,
    const Array<double>& data)
 {
    putDoubleArray(key, data.getPointer(), data.getSize());
 }
 
-void MemoryDatabase::putDoubleArray(
+void
+MemoryDatabase::putDoubleArray(
    const std::string& key,
    const double * const data,
    const int nelements)
@@ -756,7 +802,8 @@ void MemoryDatabase::putDoubleArray(
    d_keyvalues.appendItem(keydata);
 }
 
-double MemoryDatabase::getDouble(
+double
+MemoryDatabase::getDouble(
    const std::string& key)
 {
    double value = 0.0;
@@ -784,7 +831,8 @@ double MemoryDatabase::getDouble(
    return value;
 }
 
-double MemoryDatabase::getDoubleWithDefault(
+double
+MemoryDatabase::getDoubleWithDefault(
    const std::string& key,
    const double& defaultvalue)
 {
@@ -796,7 +844,8 @@ double MemoryDatabase::getDoubleWithDefault(
    return defaultvalue;
 }
 
-Array<double> MemoryDatabase::getDoubleArray(
+Array<double>
+MemoryDatabase::getDoubleArray(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -827,7 +876,8 @@ Array<double> MemoryDatabase::getDoubleArray(
    return array;
 }
 
-void MemoryDatabase::getDoubleArray(
+void
+MemoryDatabase::getDoubleArray(
    const std::string& key,
    double* data,
    const int nelements)
@@ -857,7 +907,8 @@ void MemoryDatabase::getDoubleArray(
  *************************************************************************
  */
 
-bool MemoryDatabase::isFloat(
+bool
+MemoryDatabase::isFloat(
    const std::string& key)
 {
    KeyData* keydata = findKeyData(key);
@@ -866,21 +917,24 @@ bool MemoryDatabase::isFloat(
                               || keydata->d_type == Database::SAMRAI_FLOAT);
 }
 
-void MemoryDatabase::putFloat(
+void
+MemoryDatabase::putFloat(
    const std::string& key,
    const float& data)
 {
    putFloatArray(key, &data, 1);
 }
 
-void MemoryDatabase::putFloatArray(
+void
+MemoryDatabase::putFloatArray(
    const std::string& key,
    const Array<float>& data)
 {
    putFloatArray(key, data.getPointer(), data.getSize());
 }
 
-void MemoryDatabase::putFloatArray(
+void
+MemoryDatabase::putFloatArray(
    const std::string& key,
    const float * const data,
    const int nelements)
@@ -901,7 +955,8 @@ void MemoryDatabase::putFloatArray(
    d_keyvalues.appendItem(keydata);
 }
 
-float MemoryDatabase::getFloat(
+float
+MemoryDatabase::getFloat(
    const std::string& key)
 {
 
@@ -935,7 +990,8 @@ float MemoryDatabase::getFloat(
    return value;
 }
 
-float MemoryDatabase::getFloatWithDefault(
+float
+MemoryDatabase::getFloatWithDefault(
    const std::string& key,
    const float& defaultvalue)
 {
@@ -947,7 +1003,8 @@ float MemoryDatabase::getFloatWithDefault(
    return defaultvalue;
 }
 
-Array<float> MemoryDatabase::getFloatArray(
+Array<float>
+MemoryDatabase::getFloatArray(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -977,7 +1034,8 @@ Array<float> MemoryDatabase::getFloatArray(
    return array;
 }
 
-void MemoryDatabase::getFloatArray(
+void
+MemoryDatabase::getFloatArray(
    const std::string& key,
    float* data,
    const int nelements)
@@ -1005,28 +1063,32 @@ void MemoryDatabase::getFloatArray(
  *************************************************************************
  */
 
-bool MemoryDatabase::isInteger(
+bool
+MemoryDatabase::isInteger(
    const std::string& key)
 {
    KeyData* keydata = findKeyData(key);
    return !keydata ? false : keydata->d_type == Database::SAMRAI_INT;
 }
 
-void MemoryDatabase::putInteger(
+void
+MemoryDatabase::putInteger(
    const std::string& key,
    const int& data)
 {
    putIntegerArray(key, &data, 1);
 }
 
-void MemoryDatabase::putIntegerArray(
+void
+MemoryDatabase::putIntegerArray(
    const std::string& key,
    const Array<int>& data)
 {
    putIntegerArray(key, data.getPointer(), data.getSize());
 }
 
-void MemoryDatabase::putIntegerArray(
+void
+MemoryDatabase::putIntegerArray(
    const std::string& key,
    const int * const data,
    const int nelements)
@@ -1047,7 +1109,8 @@ void MemoryDatabase::putIntegerArray(
    d_keyvalues.appendItem(keydata);
 }
 
-int MemoryDatabase::getInteger(
+int
+MemoryDatabase::getInteger(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -1059,7 +1122,8 @@ int MemoryDatabase::getInteger(
    return keydata->d_integer[0];
 }
 
-int MemoryDatabase::getIntegerWithDefault(
+int
+MemoryDatabase::getIntegerWithDefault(
    const std::string& key,
    const int& defaultvalue)
 {
@@ -1071,7 +1135,8 @@ int MemoryDatabase::getIntegerWithDefault(
    return defaultvalue;
 }
 
-Array<int> MemoryDatabase::getIntegerArray(
+Array<int>
+MemoryDatabase::getIntegerArray(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -1082,7 +1147,8 @@ Array<int> MemoryDatabase::getIntegerArray(
    return keydata->d_integer;
 }
 
-void MemoryDatabase::getIntegerArray(
+void
+MemoryDatabase::getIntegerArray(
    const std::string& key,
    int* data,
    const int nelements)
@@ -1110,28 +1176,32 @@ void MemoryDatabase::getIntegerArray(
  *************************************************************************
  */
 
-bool MemoryDatabase::isString(
+bool
+MemoryDatabase::isString(
    const std::string& key)
 {
    KeyData* keydata = findKeyData(key);
    return !keydata ? false : keydata->d_type == Database::SAMRAI_STRING;
 }
 
-void MemoryDatabase::putString(
+void
+MemoryDatabase::putString(
    const std::string& key,
    const std::string& data)
 {
    putStringArray(key, &data, 1);
 }
 
-void MemoryDatabase::putStringArray(
+void
+MemoryDatabase::putStringArray(
    const std::string& key,
    const Array<std::string>& data)
 {
    putStringArray(key, data.getPointer(), data.getSize());
 }
 
-void MemoryDatabase::putStringArray(
+void
+MemoryDatabase::putStringArray(
    const std::string& key,
    const std::string * const data,
    const int nelements)
@@ -1152,7 +1222,8 @@ void MemoryDatabase::putStringArray(
    d_keyvalues.appendItem(keydata);
 }
 
-std::string MemoryDatabase::getString(
+std::string
+MemoryDatabase::getString(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -1164,7 +1235,8 @@ std::string MemoryDatabase::getString(
    return keydata->d_string[0];
 }
 
-std::string MemoryDatabase::getStringWithDefault(
+std::string
+MemoryDatabase::getStringWithDefault(
    const std::string& key,
    const std::string& defaultvalue)
 {
@@ -1176,7 +1248,8 @@ std::string MemoryDatabase::getStringWithDefault(
    return defaultvalue;
 }
 
-Array<std::string> MemoryDatabase::getStringArray(
+Array<std::string>
+MemoryDatabase::getStringArray(
    const std::string& key)
 {
    KeyData* keydata = findKeyDataOrExit(key);
@@ -1187,7 +1260,8 @@ Array<std::string> MemoryDatabase::getStringArray(
    return keydata->d_string;
 }
 
-void MemoryDatabase::getStringArray(
+void
+MemoryDatabase::getStringArray(
    const std::string& key,
    std::string* data,
    const int nelements)
@@ -1207,12 +1281,14 @@ void MemoryDatabase::getStringArray(
    }
 }
 
-std::string MemoryDatabase::getName()
+std::string
+MemoryDatabase::getName()
 {
    return d_database_name;
 }
 
-std::string MemoryDatabase::getName() const
+std::string
+MemoryDatabase::getName() const
 {
    return d_database_name;
 }
@@ -1246,7 +1322,8 @@ MemoryDatabase::findKeyDataOrExit(
  *************************************************************************
  */
 
-void MemoryDatabase::printClassData(
+void
+MemoryDatabase::printClassData(
    std::ostream& os)
 {
    printDatabase(os, 0, PRINT_DEFAULT | PRINT_INPUT | PRINT_UNUSED);
@@ -1260,7 +1337,8 @@ void MemoryDatabase::printClassData(
  *************************************************************************
  */
 
-void MemoryDatabase::printDatabase(
+void
+MemoryDatabase::printDatabase(
    std::ostream& os,
    const int indent,
    const int toprint) const

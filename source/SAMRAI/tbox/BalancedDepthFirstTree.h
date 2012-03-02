@@ -102,12 +102,14 @@ public:
    /*!
     * @brief Access the rank used to initialize.
     */
-   unsigned int getRank() const;
+   unsigned int
+   getRank() const;
 
    /*!
     * @brief Access the parent rank.
     */
-   unsigned int getParentRank() const;
+   unsigned int
+   getParentRank() const;
 
    /*!
     * @brief Access a child rank.
@@ -115,10 +117,12 @@ public:
     * Currently, child_number must be 0 or 1 because we only support
     * a binary tree.
     */
-   unsigned int getChildRank(
+   unsigned int
+   getChildRank(
       unsigned int child_number) const;
 
-   unsigned short int getNumberOfChildren() const;
+   unsigned short int
+   getNumberOfChildren() const;
 
    /*!
     * @brief What this class considers an invalid rank.

@@ -21,9 +21,6 @@
 
 #include <boost/make_shared.hpp>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/NodeDataFactory.I"
-#endif
 namespace SAMRAI {
 namespace pdat {
 
@@ -117,6 +114,13 @@ NodeDataFactory<TYPE>::getBoxGeometry(
    return boost::make_shared<NodeGeometry>(box, d_ghosts);
 }
 
+template<class TYPE>
+int
+NodeDataFactory<TYPE>::getDepth() const
+{
+   return d_depth;
+}
+
 /*
  *************************************************************************
  *
@@ -126,7 +130,8 @@ NodeDataFactory<TYPE>::getBoxGeometry(
  */
 
 template<class TYPE>
-size_t NodeDataFactory<TYPE>::getSizeOfMemory(
+size_t
+NodeDataFactory<TYPE>::getSizeOfMemory(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -148,7 +153,8 @@ size_t NodeDataFactory<TYPE>::getSizeOfMemory(
  */
 
 template<class TYPE>
-bool NodeDataFactory<TYPE>::validCopyTo(
+bool
+NodeDataFactory<TYPE>::validCopyTo(
    const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
@@ -177,6 +183,46 @@ bool NodeDataFactory<TYPE>::validCopyTo(
    }
 
    return valid_copy;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return a boolean value indicating how data for the node quantity will be
+ * treated on coarse-fine interfaces.  This value is passed into the
+ * constructor.  See the NodeVariable<DIM> class header file for more
+ * information.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+NodeDataFactory<TYPE>::fineBoundaryRepresentsVariable() const {
+   return d_fine_boundary_represents_var;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return true since the node data index space extends beyond the interior
+ * of patches.  That is, node data lives on patch borders.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+NodeDataFactory<TYPE>::dataLivesOnPatchBorder() const {
+   return true;
+}
+
+template<class TYPE>
+hier::MultiblockDataTranslator *
+NodeDataFactory<TYPE>::getMultiblockDataTranslator()
+{
+   if (d_mb_trans == NULL) {
+      d_mb_trans = new MultiblockNodeDataTranslator<TYPE>();
+   }
+   return d_mb_trans;
 }
 
 }

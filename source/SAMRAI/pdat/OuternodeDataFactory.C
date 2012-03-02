@@ -21,10 +21,6 @@
 
 #include <boost/make_shared.hpp>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/OuternodeDataFactory.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 
@@ -110,6 +106,13 @@ OuternodeDataFactory<TYPE>::getBoxGeometry(
    return boost::make_shared<OuternodeGeometry>(box, zero_vector);
 }
 
+template<class TYPE>
+int
+OuternodeDataFactory<TYPE>::getDepth() const
+{
+   return d_depth;
+}
+
 /*
  *************************************************************************
  *
@@ -119,7 +122,8 @@ OuternodeDataFactory<TYPE>::getBoxGeometry(
  */
 
 template<class TYPE>
-size_t OuternodeDataFactory<TYPE>::getSizeOfMemory(
+size_t
+OuternodeDataFactory<TYPE>::getSizeOfMemory(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -140,7 +144,8 @@ size_t OuternodeDataFactory<TYPE>::getSizeOfMemory(
  */
 
 template<class TYPE>
-bool OuternodeDataFactory<TYPE>::validCopyTo(
+bool
+OuternodeDataFactory<TYPE>::validCopyTo(
    const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
@@ -169,6 +174,37 @@ bool OuternodeDataFactory<TYPE>::validCopyTo(
    }
 
    return valid_copy;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return a boolean true value indicating that fine data for the outernode
+ * quantity will take precedence on coarse-fine interfaces.  See the
+ * OuternodeVariable class header file for more information.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+OuternodeDataFactory<TYPE>::fineBoundaryRepresentsVariable() const
+{
+   return true;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return true since the outernode data index space extends beyond the
+ * interior of patches.  That is, outernode data lives on patch borders.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+OuternodeDataFactory<TYPE>::dataLivesOnPatchBorder() const
+{
+   return true;
 }
 
 }

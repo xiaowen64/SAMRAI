@@ -35,7 +35,8 @@ Logger::s_finalize_handler(
 class AbortAppender:public Logger::Appender
 {
 
-   void logMessage(
+   void
+   logMessage(
       const std::string& message,
       const std::string& filename,
       const int line)
@@ -53,7 +54,8 @@ class AbortAppender:public Logger::Appender
 class WarningAppender:public Logger::Appender
 {
 
-   void logMessage(
+   void
+   logMessage(
       const std::string& message,
       const std::string& filename,
       const int line)
@@ -71,7 +73,8 @@ class WarningAppender:public Logger::Appender
 class DebugAppender:public Logger::Appender
 {
 
-   void logMessage(
+   void
+   logMessage(
       const std::string& message,
       const std::string& filename,
       const int line)
@@ -108,7 +111,8 @@ Logger::~Logger()
 {
 }
 
-void Logger::finalizeCallback()
+void
+Logger::finalizeCallback()
 {
    if (s_instance) {
       delete s_instance;
@@ -116,7 +120,8 @@ void Logger::finalizeCallback()
    }
 }
 
-Logger *Logger::getInstance()
+Logger*
+Logger::getInstance()
 {
    if (s_instance == static_cast<Logger *>(NULL)) {
       s_instance = new Logger();

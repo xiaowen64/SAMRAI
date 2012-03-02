@@ -91,7 +91,4 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/EdgeOverlap.I"
-#endif
 #endif

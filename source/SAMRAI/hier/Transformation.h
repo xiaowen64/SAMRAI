@@ -201,8 +201,7 @@ public:
     * @param[in] rotation_string
     * @param[in] dim
     */
-   static
-   RotationIdentifier
+   static RotationIdentifier
    getRotationIdentifier(
       const tbox::Array<std::string>& rotation_string,
       const tbox::Dimension& dim);
@@ -220,8 +219,7 @@ public:
     * @param[in] rotation Rotation for which the reverse rotation is sought
     * @param[in] dim      Dimension being used
     */
-   static
-   RotationIdentifier
+   static RotationIdentifier
    getReverseRotationIdentifier(
       const RotationIdentifier rotation,
       const tbox::Dimension& dim);
@@ -238,8 +236,7 @@ public:
     * @param[in] shift
     * @param[in] rotation
     */
-   static
-   void
+   static void
    calculateReverseShift(
       IntVector& back_shift,
       const IntVector& shift,
@@ -256,8 +253,7 @@ public:
     * @param shift       the shift needed after rotation
     * @param rotate      identifier of the rotation between index spaces
     */
-   static
-   void
+   static void
    translateAndCopyData(
       Patch& dst_patch,
       const int dst_id,
@@ -277,8 +273,7 @@ public:
     * @param shift       the shift needed after rotation
     * @param rotate      identifier of the rotation between index spaces
     */
-   static
-   void
+   static void
    translateAndFillData(
       Patch& dst_patch,
       const int dst_id,
@@ -301,8 +296,7 @@ public:
     * @param rotation    identifier of the rotation that will be applied
     *                        to index
     */
-   static
-   void
+   static void
    rotateIndex(
       int* index,
       const tbox::Dimension& dim,
@@ -320,8 +314,7 @@ public:
     * @param rotation    identifier of the rotation that will be applied
     *                        to index
     */
-   static
-   void
+   static void
    rotateIndex(
       Index& index,
       const RotationIdentifier rotation);
@@ -338,8 +331,7 @@ private:
     * @param axis axis around which index will be rotated
     * @param num_rotations number of 90-degree rotations around the axis
     */
-   static
-   void
+   static void
    rotateAboutAxis(
       const tbox::Dimension& dim,
       int* index,

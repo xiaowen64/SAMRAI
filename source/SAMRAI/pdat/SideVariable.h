@@ -132,8 +132,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/SideVariable.C"
-#endif
 
 #endif

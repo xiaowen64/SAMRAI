@@ -18,7 +18,8 @@ namespace tbox {
  */
 
 SAMRAI_INLINE_KEYWORD
-bool RankGroup::containsAllRanks() const
+bool
+RankGroup::containsAllRanks() const
 {
    return d_storage == USING_ALL;
 }
@@ -30,7 +31,8 @@ bool RankGroup::containsAllRanks() const
  */
 
 SAMRAI_INLINE_KEYWORD
-void RankGroup::setMinMax(
+void
+RankGroup::setMinMax(
    const int min,
    const int max)
 {

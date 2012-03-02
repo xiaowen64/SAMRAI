@@ -14,13 +14,15 @@ namespace SAMRAI {
 namespace tbox {
 
 SAMRAI_INLINE_KEYWORD
-const Dimension& DatabaseBox::getDim() const
+const Dimension&
+DatabaseBox::getDim() const
 {
    return d_dim;
 }
 
 SAMRAI_INLINE_KEYWORD
-DatabaseBox& DatabaseBox::operator = (
+DatabaseBox&
+DatabaseBox::operator = (
    const DatabaseBox& box)
 {
    d_dim = box.d_dim;
@@ -35,7 +37,8 @@ DatabaseBox& DatabaseBox::operator = (
 }
 
 SAMRAI_INLINE_KEYWORD
-void DatabaseBox::setDim(
+void
+DatabaseBox::setDim(
    const Dimension& dim)
 {
    TBOX_DIM_ASSERT_CHECK_DIM(dim);
@@ -45,7 +48,8 @@ void DatabaseBox::setDim(
 }
 
 SAMRAI_INLINE_KEYWORD
-int& DatabaseBox::lower(
+int&
+DatabaseBox::lower(
    const int i)
 {
    TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
@@ -53,7 +57,8 @@ int& DatabaseBox::lower(
 }
 
 SAMRAI_INLINE_KEYWORD
-int& DatabaseBox::upper(
+int&
+DatabaseBox::upper(
    const int i)
 {
    TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
@@ -62,7 +67,8 @@ int& DatabaseBox::upper(
 }
 
 SAMRAI_INLINE_KEYWORD
-int DatabaseBox::lower(
+int
+DatabaseBox::lower(
    const int i) const
 {
    TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
@@ -71,7 +77,8 @@ int DatabaseBox::lower(
 }
 
 SAMRAI_INLINE_KEYWORD
-int DatabaseBox::upper(
+int
+DatabaseBox::upper(
    const int i) const
 {
 

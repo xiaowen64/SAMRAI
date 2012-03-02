@@ -42,13 +42,15 @@ Box::initialize(
 
 SAMRAI_INLINE_KEYWORD
 void
-Box::setId(const BoxId& box_id) {
+Box::setId(const BoxId& box_id)
+{
    d_id = box_id;
 }
 
 SAMRAI_INLINE_KEYWORD
 const BoxId&
-Box::getId() const {
+Box::getId() const
+{
    return d_id;
 }
 
@@ -587,7 +589,8 @@ BoxIterator::operator != (
 SAMRAI_INLINE_KEYWORD
 const Box&
 Box::getEmptyBox(
-   const tbox::Dimension& dim) {
+   const tbox::Dimension& dim)
+{
    TBOX_DIM_ASSERT_CHECK_DIM(dim);
    return *(s_emptys[dim.getValue() - 1]);
 }
@@ -595,14 +598,16 @@ Box::getEmptyBox(
 SAMRAI_INLINE_KEYWORD
 const Box&
 Box::getUniverse(
-   const tbox::Dimension& dim) {
+   const tbox::Dimension& dim)
+{
    TBOX_DIM_ASSERT_CHECK_DIM(dim);
    return *(s_universes[dim.getValue() - 1]);
 }
 
 SAMRAI_INLINE_KEYWORD
 void
-Box::lockId() {
+Box::lockId()
+{
    d_id_locked = true;
 }
 

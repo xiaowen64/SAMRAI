@@ -13,13 +13,17 @@
 namespace SAMRAI {
 namespace tbox {
 
-SAMRAI_INLINE_KEYWORD Dimension& Dimension::operator = (
+SAMRAI_INLINE_KEYWORD
+Dimension&
+Dimension::operator = (
    const Dimension& rhs) {
    d_dim = rhs.d_dim;
    return *this;
 }
 
-SAMRAI_INLINE_KEYWORD bool Dimension::isValid() const {
+SAMRAI_INLINE_KEYWORD
+bool
+Dimension::isValid() const {
    /*
     * Note we don't check for != getInvalidDimension() because it is
     * maximum value for a unsigned short so this condition will
@@ -31,46 +35,60 @@ SAMRAI_INLINE_KEYWORD bool Dimension::isValid() const {
    return (d_dim != 0) && (d_dim <= Dimension::getMaxDimValue());
 }
 
-SAMRAI_INLINE_KEYWORD bool Dimension::isInitialized() const {
+SAMRAI_INLINE_KEYWORD
+bool
+Dimension::isInitialized() const {
    return d_dim != Dimension::getInvalidDimValue();
 }
 
-SAMRAI_INLINE_KEYWORD bool Dimension::operator == (
+SAMRAI_INLINE_KEYWORD
+bool
+Dimension::operator == (
    const Dimension& rhs) const {
    TBOX_DIM_ASSERT_CHECK_DIM(*this);
    TBOX_DIM_ASSERT_CHECK_DIM(rhs);
    return d_dim == rhs.d_dim;
 }
 
-SAMRAI_INLINE_KEYWORD bool Dimension::operator != (
+SAMRAI_INLINE_KEYWORD
+bool
+Dimension::operator != (
    const Dimension& rhs) const {
    TBOX_DIM_ASSERT_CHECK_DIM(*this);
    TBOX_DIM_ASSERT_CHECK_DIM(rhs);
    return d_dim != rhs.d_dim;
 }
 
-SAMRAI_INLINE_KEYWORD bool Dimension::operator > (
+SAMRAI_INLINE_KEYWORD
+bool
+Dimension::operator > (
    const Dimension& rhs) const {
    TBOX_DIM_ASSERT_CHECK_DIM(*this);
    TBOX_DIM_ASSERT_CHECK_DIM(rhs);
    return d_dim > rhs.d_dim;
 }
 
-SAMRAI_INLINE_KEYWORD bool Dimension::operator >= (
+SAMRAI_INLINE_KEYWORD
+bool
+Dimension::operator >= (
    const Dimension& rhs) const {
    TBOX_DIM_ASSERT_CHECK_DIM(*this);
    TBOX_DIM_ASSERT_CHECK_DIM(rhs);
    return d_dim >= rhs.d_dim;
 }
 
-SAMRAI_INLINE_KEYWORD bool Dimension::operator < (
+SAMRAI_INLINE_KEYWORD
+bool
+Dimension::operator < (
    const Dimension& rhs) const {
    TBOX_DIM_ASSERT_CHECK_DIM(*this);
    TBOX_DIM_ASSERT_CHECK_DIM(rhs);
    return d_dim < rhs.d_dim;
 }
 
-SAMRAI_INLINE_KEYWORD bool Dimension::operator <= (
+SAMRAI_INLINE_KEYWORD
+bool
+Dimension::operator <= (
    const Dimension& rhs) const {
    TBOX_DIM_ASSERT_CHECK_DIM(*this);
    TBOX_DIM_ASSERT_CHECK_DIM(rhs);
@@ -78,7 +96,8 @@ SAMRAI_INLINE_KEYWORD bool Dimension::operator <= (
 }
 
 #ifdef SGS
-SAMRAI_INLINE_KEYWORD Dimension::operator unsigned short () const {
+SAMRAI_INLINE_KEYWORD
+Dimension::operator unsigned short () const {
    TBOX_DIM_ASSERT_CHECK_DIM(*this);
    return d_dim;
 }

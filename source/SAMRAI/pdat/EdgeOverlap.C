@@ -13,10 +13,6 @@
 
 #include "SAMRAI/pdat/EdgeOverlap.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/EdgeOverlap.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 
@@ -39,9 +35,31 @@ EdgeOverlap::~EdgeOverlap()
 {
 }
 
-bool EdgeOverlap::isOverlapEmpty() const
+bool
+EdgeOverlap::isOverlapEmpty() const
 {
    return d_is_overlap_empty;
+}
+
+const hier::BoxContainer&
+EdgeOverlap::getDestinationBoxContainer(
+   const int axis) const
+{
+   TBOX_ASSERT((axis >= 0) && (axis < d_dst_boxes.getSize()));
+
+   return d_dst_boxes[axis];
+}
+
+const hier::IntVector&
+EdgeOverlap::getSourceOffset() const
+{
+   return d_transformation.getOffset();
+}
+
+const hier::Transformation&
+EdgeOverlap::getTransformation() const
+{
+   return d_transformation;
 }
 
 }

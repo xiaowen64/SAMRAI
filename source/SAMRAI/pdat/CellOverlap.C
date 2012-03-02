@@ -15,10 +15,6 @@
 
 #include "SAMRAI/hier/BoxContainer.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/CellOverlap.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 
@@ -35,12 +31,32 @@ CellOverlap::~CellOverlap()
 {
 }
 
-bool CellOverlap::isOverlapEmpty() const
+bool
+CellOverlap::isOverlapEmpty() const
 {
    return d_is_overlap_empty;
 }
 
-void CellOverlap::print(
+const hier::BoxContainer&
+CellOverlap::getDestinationBoxContainer() const
+{
+   return d_dst_boxes;
+}
+
+const hier::IntVector&
+CellOverlap::getSourceOffset() const
+{
+   return d_transformation.getOffset();
+}
+
+const hier::Transformation&
+CellOverlap::getTransformation() const
+{
+   return d_transformation;
+}
+
+void
+CellOverlap::print(
    std::ostream& os) const
 {
    os << "CellOverlap boxes:";

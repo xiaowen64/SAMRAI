@@ -12,7 +12,8 @@ namespace SAMRAI {
 namespace tbox {
 
 SAMRAI_INLINE_KEYWORD
-void SAMRAIManager::startup()
+void
+SAMRAIManager::startup()
 {
    TBOX_ASSERT(s_initialized);
    TBOX_ASSERT(!s_started);
@@ -31,7 +32,8 @@ void SAMRAIManager::startup()
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void SAMRAIManager::shutdown()
+void
+SAMRAIManager::shutdown()
 {
    TBOX_ASSERT(s_initialized);
    TBOX_ASSERT(s_started);
@@ -43,7 +45,8 @@ void SAMRAIManager::shutdown()
 }
 
 SAMRAI_INLINE_KEYWORD
-void SAMRAIManager::finalize()
+void
+SAMRAIManager::finalize()
 {
    TBOX_ASSERT(s_initialized);
 
@@ -55,12 +58,14 @@ void SAMRAIManager::finalize()
 }
 
 SAMRAI_INLINE_KEYWORD
-bool SAMRAIManager::isInitialized() {
+bool
+SAMRAIManager::isInitialized() {
    return s_initialized;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool SAMRAIManager::isStarted() {
+bool
+SAMRAIManager::isStarted() {
    return s_started;
 }
 
@@ -75,7 +80,8 @@ bool SAMRAIManager::isStarted() {
  */
 
 SAMRAI_INLINE_KEYWORD
-int SAMRAIManager::getMaxNumberPatchDataEntries()
+int
+SAMRAIManager::getMaxNumberPatchDataEntries()
 {
    s_max_patch_data_entries_accessed = true;
    return s_max_patch_data_entries;

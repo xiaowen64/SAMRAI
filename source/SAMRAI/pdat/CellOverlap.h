@@ -102,7 +102,4 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/CellOverlap.I"
-#endif
 #endif

@@ -105,7 +105,8 @@ SideComplexConstantRefine::~SideComplexConstantRefine()
 {
 }
 
-bool SideComplexConstantRefine::findRefineOperator(
+bool
+SideComplexConstantRefine::findRefineOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -121,13 +122,15 @@ bool SideComplexConstantRefine::findRefineOperator(
    }
 }
 
-int SideComplexConstantRefine::getOperatorPriority() const
+int
+SideComplexConstantRefine::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-SideComplexConstantRefine::getStencilWidth() const {
+SideComplexConstantRefine::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 

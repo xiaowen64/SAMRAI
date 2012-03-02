@@ -20,10 +20,6 @@
 #include "SAMRAI/pdat/CopyOperation.h"
 #include "SAMRAI/pdat/SumOperation.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/ArrayData.I"
-#endif
-
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -37,6 +33,31 @@ namespace pdat {
 
 template<class TYPE>
 const int ArrayData<TYPE>::PDAT_ARRAYDATA_VERSION = 1;
+
+template<class TYPE>
+bool
+ArrayData<TYPE>::canEstimateStreamSizeFromBox()
+{
+   if ((typeid(TYPE) == typeid(bool))
+       | (typeid(TYPE) == typeid(char))
+       | (typeid(TYPE) == typeid(double))
+       | (typeid(TYPE) == typeid(float))
+       | (typeid(TYPE) == typeid(int))
+       | (typeid(TYPE) == typeid(dcomplex))) {
+      return true;
+   } else {
+      return false;
+   }
+}
+
+template<class TYPE>
+size_t
+ArrayData<TYPE>::getSizeOfData(
+   const hier::Box& box,
+   int depth)
+{
+   return tbox::MemoryUtilities::align(box.size() * depth * sizeof(TYPE));
+}
 
 /*
  *************************************************************************
@@ -167,6 +188,86 @@ ArrayData<TYPE>::initializeArray(
 #ifdef DEBUG_INITIALIZE_UNDEFINED
    undefineData();
 #endif
+}
+
+template<class TYPE>
+bool
+ArrayData<TYPE>::isInitialized() const
+{
+   return d_depth > 0;
+}
+
+template<class TYPE>
+const hier::Box&
+ArrayData<TYPE>::getBox() const
+{
+   return d_box;
+}
+
+template<class TYPE>
+int
+ArrayData<TYPE>::getDepth() const
+{
+   return d_depth;
+}
+
+template<class TYPE>
+int
+ArrayData<TYPE>::getOffset() const
+{
+   return d_offset;
+}
+
+template<class TYPE>
+TYPE*
+ArrayData<TYPE>::getPointer(
+   int d)
+{
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
+
+   return d_array.getPointer(d * d_offset);
+}
+
+template<class TYPE>
+const TYPE*
+ArrayData<TYPE>::getPointer(
+   int d) const
+{
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
+
+   return d_array.getPointer(d * d_offset);
+}
+
+template<class TYPE>
+TYPE&
+ArrayData<TYPE>::operator () (
+   const hier::Index& i,
+   int d)
+{
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
+
+   const int index = d_box.offset(i) + d * d_offset;
+
+   TBOX_ASSERT((index >= 0) && (index < d_depth * d_offset));
+
+   return d_array[index];
+}
+
+template<class TYPE>
+const TYPE&
+ArrayData<TYPE>::operator () (
+   const hier::Index& i,
+   int d) const
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
+
+   const int index = d_box.offset(i) + d * d_offset;
+
+   TBOX_ASSERT((index >= 0) && (index < d_depth * d_offset));
+
+   return d_array[index];
 }
 
 /*
@@ -327,8 +428,6 @@ ArrayData<TYPE>::copy(
    }
 
 }
-
-
 
 /*
  *************************************************************************
@@ -563,6 +662,38 @@ ArrayData<TYPE>::sum(
    for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
       sum(src, b(), src_shift);
    }
+}
+
+template<class TYPE>
+int
+ArrayData<TYPE>::getDataStreamSize(
+   const hier::BoxContainer& boxes,
+   const hier::IntVector& source_shift) const
+{
+#ifndef DEBUG_CHECK_ASSERTIONS
+   NULL_USE(source_shift);
+#endif
+
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, source_shift);
+
+   const int nelements = boxes.getTotalSizeOfBoxes();
+
+   if (typeid(TYPE) == typeid(bool)) {
+      return tbox::MessageStream::getSizeof<bool>(d_depth * nelements);
+   } else if (typeid(TYPE) == typeid(char)) {
+      return tbox::MessageStream::getSizeof<char>(d_depth * nelements);
+   } else if (typeid(TYPE) == typeid(dcomplex)) {
+      return tbox::MessageStream::getSizeof<dcomplex>(d_depth * nelements);
+   } else if (typeid(TYPE) == typeid(double)) {
+      return tbox::MessageStream::getSizeof<double>(d_depth * nelements);
+   } else if (typeid(TYPE) == typeid(float)) {
+      return tbox::MessageStream::getSizeof<float>(d_depth * nelements);
+   } else if (typeid(TYPE) == typeid(int)) {
+      return tbox::MessageStream::getSizeof<int>(d_depth * nelements);
+   }
+
+   TBOX_ERROR("ArrayData::getDataStreamSize() -- Invalid type" << std::endl);
+   return 0;
 }
 
 /*
@@ -967,6 +1098,30 @@ ArrayData<TYPE>::getSpecializedFromDatabase(
    database->getArray("d_array", d_array);
 }
 
+template<class TYPE>
+const tbox::Dimension&
+ArrayData<TYPE>::getDim() const
+{
+   return d_dim;
+}
+
+template<class TYPE>
+void
+ArrayData<TYPE>::invalidateArray(
+   const tbox::Dimension& dim) {
+   d_dim = dim;
+   d_depth = 0;
+   d_offset = 0;
+   d_box = hier::Box::getEmptyBox(dim);
+}
+
+template<class TYPE>
+bool
+ArrayData<TYPE>::isValid()
+{
+   return !d_box.isEmpty();
+}
+ 
 /*
  *************************************************************************
  *
@@ -1059,16 +1214,6 @@ ArrayData<TYPE>::unpackBufferAndSum(
       box,
       src_is_buffer,
       sumop);
-}
-
-template<class TYPE>
-void
-ArrayData<TYPE>::invalidateArray(
-   const tbox::Dimension& dim) {
-   d_dim = dim;
-   d_depth = 0;
-   d_offset = 0;
-   d_box = hier::Box::getEmptyBox(dim);
 }
 
 }

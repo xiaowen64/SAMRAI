@@ -228,47 +228,56 @@ public:
       /*!
        * @brief Call initialize callback function.
        */
-      void initialize();
+      void
+      initialize();
 
       /*!
        * @brief Call startup callback function.
        */
-      void startup();
+      void
+      startup();
 
       /*!
        * @brief Call shutdown callback function.
        */
-      void shutdown();
+      void
+      shutdown();
 
       /*!
        * @brief Call finalize callback function.
        */
-      void finalize();
+      void
+      finalize();
 
       /*!
        * @brief Get the priority.
        */
-      unsigned char getPriority();
+      unsigned char
+      getPriority();
 
       /*!
        * @brief Query if initialize function has been provided.
        */
-      bool hasInitialize();
+      bool
+      hasInitialize();
 
       /*!
        * @brief Query if startup function has been provided.
        */
-      bool hasStartup();
+      bool
+      hasStartup();
 
       /*!
        * @brief Query if shutdown function has been provided.
        */
-      bool hasShutdown();
+      bool
+      hasShutdown();
 
       /*!
        * @brief Query if finalize function has been provided.
        */
-      bool hasFinalize();
+      bool
+      hasFinalize();
 
 private:
       /*!

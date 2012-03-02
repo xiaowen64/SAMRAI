@@ -18,19 +18,22 @@ namespace tbox {
  */
 
 SAMRAI_INLINE_KEYWORD
-float IEEE::getSignalingFloatNaN()
+float
+IEEE::getSignalingFloatNaN()
 {
    return MathUtilities<float>::getSignalingNaN();
 }
 
 SAMRAI_INLINE_KEYWORD
-double IEEE::getSignalingNaN()
+double
+IEEE::getSignalingNaN()
 {
    return MathUtilities<double>::getSignalingNaN();
 }
 
 SAMRAI_INLINE_KEYWORD
-dcomplex IEEE::getSignalingComplexNaN()
+dcomplex
+IEEE::getSignalingComplexNaN()
 {
    return MathUtilities<dcomplex>::getSignalingNaN();
 }
@@ -40,21 +43,24 @@ dcomplex IEEE::getSignalingComplexNaN()
  */
 
 SAMRAI_INLINE_KEYWORD
-void IEEE::setNaN(
+void
+IEEE::setNaN(
    float& f)
 {
    f = MathUtilities<float>::getSignalingNaN();
 }
 
 SAMRAI_INLINE_KEYWORD
-void IEEE::setNaN(
+void
+IEEE::setNaN(
    double& d)
 {
    d = MathUtilities<double>::getSignalingNaN();
 }
 
 SAMRAI_INLINE_KEYWORD
-void IEEE::setNaN(
+void
+IEEE::setNaN(
    dcomplex& dc)
 {
    dc = MathUtilities<dcomplex>::getSignalingNaN();
@@ -65,21 +71,24 @@ void IEEE::setNaN(
  */
 
 SAMRAI_INLINE_KEYWORD
-bool IEEE::isNaN(
+bool
+IEEE::isNaN(
    const float& f)
 {
    return MathUtilities<float>::isNaN(f);
 }
 
 SAMRAI_INLINE_KEYWORD
-bool IEEE::isNaN(
+bool
+IEEE::isNaN(
    const double& d)
 {
    return MathUtilities<double>::isNaN(d);
 }
 
 SAMRAI_INLINE_KEYWORD
-bool IEEE::isNaN(
+bool
+IEEE::isNaN(
    const dcomplex& dc)
 {
    return MathUtilities<dcomplex>::isNaN(dc);
@@ -94,28 +103,32 @@ bool IEEE::isNaN(
  */
 
 SAMRAI_INLINE_KEYWORD
-void IEEE::initializeArrayToSignalingNaN(
+void
+IEEE::initializeArrayToSignalingNaN(
    Array<float>& array)
 {
    MathUtilities<float>::setArrayToSignalingNaN(array);
 }
 
 SAMRAI_INLINE_KEYWORD
-void IEEE::initializeArrayToSignalingNaN(
+void
+IEEE::initializeArrayToSignalingNaN(
    Array<double>& array)
 {
    MathUtilities<double>::setArrayToSignalingNaN(array);
 }
 
 SAMRAI_INLINE_KEYWORD
-void IEEE::initializeArrayToSignalingNaN(
+void
+IEEE::initializeArrayToSignalingNaN(
    Array<dcomplex>& array)
 {
    MathUtilities<dcomplex>::setArrayToSignalingNaN(array);
 }
 
 SAMRAI_INLINE_KEYWORD
-void IEEE::initializeArrayToSignalingNaN(
+void
+IEEE::initializeArrayToSignalingNaN(
    float* array,
    int n)
 {
@@ -123,7 +136,8 @@ void IEEE::initializeArrayToSignalingNaN(
 }
 
 SAMRAI_INLINE_KEYWORD
-void IEEE::initializeArrayToSignalingNaN(
+void
+IEEE::initializeArrayToSignalingNaN(
    double* array,
    int n)
 {
@@ -131,7 +145,8 @@ void IEEE::initializeArrayToSignalingNaN(
 }
 
 SAMRAI_INLINE_KEYWORD
-void IEEE::initializeArrayToSignalingNaN(
+void
+IEEE::initializeArrayToSignalingNaN(
    dcomplex* array,
    int n)
 {

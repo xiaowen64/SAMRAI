@@ -13,10 +13,6 @@
 
 #include "SAMRAI/hier/BoxOverlap.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxOverlap.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 

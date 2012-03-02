@@ -76,7 +76,8 @@ ParallelBuffer::~ParallelBuffer()
  *************************************************************************
  */
 
-void ParallelBuffer::setActive(
+void
+ParallelBuffer::setActive(
    bool active)
 {
    if (!active && d_buffer) {
@@ -98,7 +99,8 @@ void ParallelBuffer::setActive(
  *************************************************************************
  */
 
-void ParallelBuffer::outputString(
+void
+ParallelBuffer::outputString(
    const std::string& text,
    const int length)
 {
@@ -162,7 +164,8 @@ void ParallelBuffer::outputString(
  *************************************************************************
  */
 
-void ParallelBuffer::copyToBuffer(
+void
+ParallelBuffer::copyToBuffer(
    const std::string& text,
    const int length)
 {
@@ -203,7 +206,8 @@ void ParallelBuffer::copyToBuffer(
  *************************************************************************
  */
 
-void ParallelBuffer::outputBuffer()
+void
+ParallelBuffer::outputBuffer()
 {
    if (d_buffer_ptr > 0) {
       if (d_ostream1) {
@@ -227,7 +231,8 @@ void ParallelBuffer::outputBuffer()
  *************************************************************************
  */
 
-int ParallelBuffer::sync()
+int
+ParallelBuffer::sync()
 {
    const int n = static_cast<int>(pptr() - pbase());
    if (n > 0) outputString(pbase(), n);
@@ -248,7 +253,8 @@ int ParallelBuffer::sync()
  */
 
 #if !defined(__INTEL_COMPILER) && (defined(__GNUG__))
-std::streamsize ParallelBuffer::xsputn(
+std::streamsize
+ParallelBuffer::xsputn(
    const std::string& text,
    std::streamsize n)
 {
@@ -267,7 +273,8 @@ std::streamsize ParallelBuffer::xsputn(
  *************************************************************************
  */
 
-int ParallelBuffer::overflow(
+int
+ParallelBuffer::overflow(
    int ch)
 {
    const int n = static_cast<int>(pptr() - pbase());
@@ -286,7 +293,8 @@ int ParallelBuffer::overflow(
 
 #ifdef _MSC_VER
 // Should never read from here
-int ParallelBuffer::underflow()
+int
+ParallelBuffer::underflow()
 {
    return EOF;
 }

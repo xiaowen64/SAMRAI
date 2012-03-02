@@ -62,17 +62,15 @@ public:
     * patches.  However, some value must be supplied for communication
     * operations.
     */
-   bool fineBoundaryRepresentsVariable() const {
-      return true;
-   }
+   bool
+   fineBoundaryRepresentsVariable() const;
 
    /*!
     * @brief Return false indicating that cell data on a patch interior
     * does not exist on the patch boundary.
     */
-   bool dataLivesOnPatchBorder() const {
-      return false;
-   }
+   bool
+   dataLivesOnPatchBorder() const;
 
    /*!
     * @brief Return the the depth (number of components).
@@ -91,8 +89,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/CellVariable.C"
-#endif
 
 #endif

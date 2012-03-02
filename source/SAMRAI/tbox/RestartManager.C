@@ -48,7 +48,8 @@ RestartManager::s_shutdown_handler(
  *************************************************************************
  */
 
-RestartManager *RestartManager::getManager()
+RestartManager*
+RestartManager::getManager()
 {
    if (!s_manager_instance) {
       s_manager_instance = new RestartManager;
@@ -56,7 +57,8 @@ RestartManager *RestartManager::getManager()
    return s_manager_instance;
 }
 
-void RestartManager::shutdownCallback()
+void
+RestartManager::shutdownCallback()
 {
    if (s_manager_instance) {
       s_manager_instance->clearRestartItems();
@@ -105,7 +107,8 @@ RestartManager::~RestartManager()
  *************************************************************************
  */
 
-bool RestartManager::openRestartFile(
+bool
+RestartManager::openRestartFile(
    const std::string& root_dirname,
    const int restore_num,
    const int num_nodes)
@@ -167,7 +170,8 @@ bool RestartManager::openRestartFile(
  *************************************************************************
  */
 
-void RestartManager::closeRestartFile()
+void
+RestartManager::closeRestartFile()
 {
    if (d_database_root) {
       d_database_root->close();
@@ -185,7 +189,8 @@ void RestartManager::closeRestartFile()
  *
  *************************************************************************
  */
-void RestartManager::registerRestartItem(
+void
+RestartManager::registerRestartItem(
    const std::string& name,
    Serializable* obj)
 {
@@ -230,7 +235,8 @@ void RestartManager::registerRestartItem(
  *
  *************************************************************************
  */
-void RestartManager::unregisterRestartItem(
+void
+RestartManager::unregisterRestartItem(
    const std::string& name)
 {
    TBOX_ASSERT(!name.empty());
@@ -256,7 +262,8 @@ void RestartManager::unregisterRestartItem(
  *
  *************************************************************************
  */
-void RestartManager::writeRestartFile(
+void
+RestartManager::writeRestartFile(
    const std::string& root_dirname,
    int restore_num)
 {
@@ -299,7 +306,8 @@ void RestartManager::writeRestartFile(
  *
  *************************************************************************
  */
-void RestartManager::writeRestartFile(
+void
+RestartManager::writeRestartFile(
    const boost::shared_ptr<Database>& database)
 {
    TBOX_ASSERT(database);
@@ -321,7 +329,8 @@ void RestartManager::writeRestartFile(
  *************************************************************************
  */
 
-std::string RestartManager::createDirs(
+std::string
+RestartManager::createDirs(
    const std::string& root_dirname,
    int restore_num)
 {

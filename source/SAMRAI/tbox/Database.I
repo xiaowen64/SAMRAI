@@ -14,7 +14,8 @@ namespace SAMRAI {
 namespace tbox {
 
 SAMRAI_INLINE_KEYWORD
-void Database::getScalar(
+void
+Database::getScalar(
    const std::string& key,
    bool& scalar)
 {
@@ -22,7 +23,8 @@ void Database::getScalar(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::putScalar(
+void
+Database::putScalar(
    const std::string& key,
    const bool scalar)
 {
@@ -30,7 +32,8 @@ void Database::putScalar(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::getArray(
+void
+Database::getArray(
    const std::string& key,
    Array<bool>& array)
 {
@@ -38,7 +41,8 @@ void Database::getArray(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::putArray(
+void
+Database::putArray(
    const std::string& key,
    const Array<bool> array)
 {
@@ -46,7 +50,8 @@ void Database::putArray(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::getScalar(
+void
+Database::getScalar(
    const std::string& key,
    char& scalar)
 {
@@ -54,7 +59,8 @@ void Database::getScalar(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::putScalar(
+void
+Database::putScalar(
    const std::string& key,
    const char scalar)
 {
@@ -62,7 +68,8 @@ void Database::putScalar(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::getArray(
+void
+Database::getArray(
    const std::string& key,
    Array<char>& array)
 {
@@ -70,7 +77,8 @@ void Database::getArray(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::putArray(
+void
+Database::putArray(
    const std::string& key,
    const Array<char> array)
 {
@@ -78,7 +86,8 @@ void Database::putArray(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::getScalar(
+void
+Database::getScalar(
    const std::string& key,
    dcomplex& scalar)
 {
@@ -86,7 +95,8 @@ void Database::getScalar(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::putScalar(
+void
+Database::putScalar(
    const std::string& key,
    const dcomplex scalar)
 {
@@ -94,7 +104,8 @@ void Database::putScalar(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::getArray(
+void
+Database::getArray(
    const std::string& key,
    Array<dcomplex>& array)
 {
@@ -102,7 +113,8 @@ void Database::getArray(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::putArray(
+void
+Database::putArray(
    const std::string& key,
    const Array<dcomplex> array)
 {
@@ -110,7 +122,8 @@ void Database::putArray(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::getScalar(
+void
+Database::getScalar(
    const std::string& key,
    float& scalar)
 {
@@ -118,7 +131,8 @@ void Database::getScalar(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::putScalar(
+void
+Database::putScalar(
    const std::string& key,
    const float scalar)
 {
@@ -126,7 +140,8 @@ void Database::putScalar(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::getArray(
+void
+Database::getArray(
    const std::string& key,
    Array<float>& array)
 {
@@ -134,7 +149,8 @@ void Database::getArray(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::putArray(
+void
+Database::putArray(
    const std::string& key,
    const Array<float> array)
 {
@@ -142,7 +158,8 @@ void Database::putArray(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::getScalar(
+void
+Database::getScalar(
    const std::string& key,
    double& scalar)
 {
@@ -150,7 +167,8 @@ void Database::getScalar(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::putScalar(
+void
+Database::putScalar(
    const std::string& key,
    const double scalar)
 {
@@ -158,7 +176,8 @@ void Database::putScalar(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::getArray(
+void
+Database::getArray(
    const std::string& key,
    Array<double>& array)
 {
@@ -166,7 +185,8 @@ void Database::getArray(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::putArray(
+void
+Database::putArray(
    const std::string& key,
    const Array<double> array)
 {
@@ -174,7 +194,8 @@ void Database::putArray(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::getScalar(
+void
+Database::getScalar(
    const std::string& key,
    int& scalar)
 {
@@ -182,7 +203,8 @@ void Database::getScalar(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::putScalar(
+void
+Database::putScalar(
    const std::string& key,
    const int scalar)
 {
@@ -190,7 +212,8 @@ void Database::putScalar(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::getArray(
+void
+Database::getArray(
    const std::string& key,
    Array<int>& array)
 {
@@ -198,7 +221,8 @@ void Database::getArray(
 }
 
 SAMRAI_INLINE_KEYWORD
-void Database::putArray(
+void
+Database::putArray(
    const std::string& key,
    const Array<int> array)
 {

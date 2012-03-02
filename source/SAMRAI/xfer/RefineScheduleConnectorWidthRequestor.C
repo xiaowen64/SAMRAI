@@ -55,7 +55,8 @@ RefineScheduleConnectorWidthRequestor::RefineScheduleConnectorWidthRequestor(
  **************************************************************************
  **************************************************************************
  */
-void RefineScheduleConnectorWidthRequestor::setGhostCellWidthFactor(
+void
+RefineScheduleConnectorWidthRequestor::setGhostCellWidthFactor(
    int gcw_factor)
 {
    TBOX_ASSERT(gcw_factor >= 0);

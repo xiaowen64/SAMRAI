@@ -14,6 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Index.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <vector>
 

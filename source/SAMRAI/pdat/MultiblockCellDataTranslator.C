@@ -46,7 +46,8 @@ MultiblockCellDataTranslator<TYPE>::~MultiblockCellDataTranslator()
  */
 
 template<class TYPE>
-void MultiblockCellDataTranslator<TYPE>::translateAndCopyData(
+void
+MultiblockCellDataTranslator<TYPE>::translateAndCopyData(
    hier::Patch& dst_patch,
    const int dst_id,
    const hier::Patch& src_patch,
@@ -193,7 +194,8 @@ void MultiblockCellDataTranslator<TYPE>::translateAndCopyData(
  */
 
 template<class TYPE>
-void MultiblockCellDataTranslator<TYPE>::translateAndCopyArrayData(
+void
+MultiblockCellDataTranslator<TYPE>::translateAndCopyArrayData(
    ArrayData<TYPE>& dst,
    const ArrayData<TYPE>& src,
    const hier::IntVector& shift,
@@ -286,6 +288,24 @@ void MultiblockCellDataTranslator<TYPE>::translateAndCopyArrayData(
          }
       }
    }
+}
+
+template<class TYPE>
+void
+MultiblockCellDataTranslator<TYPE>::translateAndFillData(
+   hier::Patch& dst_patch,
+   const int dst_id,
+   const hier::Patch& src_patch,
+   const int src_id,
+   const hier::IntVector& shift,
+   const hier::Transformation::RotationIdentifier rotate)
+{
+   NULL_USE(dst_patch);
+   NULL_USE(dst_id);
+   NULL_USE(src_patch);
+   NULL_USE(src_id);
+   NULL_USE(shift);
+   NULL_USE(rotate);
 }
 
 }

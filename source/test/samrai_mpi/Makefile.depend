@@ -83,7 +83,6 @@ ${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
 FILE_3=mpi-interface-tests.o
 DEPENDS_3:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\

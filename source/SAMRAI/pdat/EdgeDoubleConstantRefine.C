@@ -103,7 +103,8 @@ EdgeDoubleConstantRefine::~EdgeDoubleConstantRefine()
 {
 }
 
-bool EdgeDoubleConstantRefine::findRefineOperator(
+bool
+EdgeDoubleConstantRefine::findRefineOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -119,17 +120,20 @@ bool EdgeDoubleConstantRefine::findRefineOperator(
    }
 }
 
-int EdgeDoubleConstantRefine::getOperatorPriority() const
+int
+EdgeDoubleConstantRefine::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-EdgeDoubleConstantRefine::getStencilWidth() const {
+EdgeDoubleConstantRefine::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void EdgeDoubleConstantRefine::refine(
+void
+EdgeDoubleConstantRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,

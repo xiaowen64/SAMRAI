@@ -210,7 +210,8 @@ BoxLevel::~BoxLevel()
  * Assignment operator.
  ***********************************************************************
  */
-BoxLevel& BoxLevel::operator = (
+BoxLevel&
+BoxLevel::operator = (
    const BoxLevel& rhs)
 {
    if (&rhs != this) {
@@ -249,7 +250,8 @@ BoxLevel& BoxLevel::operator = (
    return *this;
 }
 
-void BoxLevel::initialize(
+void
+BoxLevel::initialize(
    const IntVector& ratio,
    const boost::shared_ptr<const GridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
@@ -264,7 +266,8 @@ void BoxLevel::initialize(
       parallel_state);
 }
 
-void BoxLevel::swapInitialize(
+void
+BoxLevel::swapInitialize(
    BoxContainer& boxes,
    const IntVector& ratio,
    const boost::shared_ptr<const GridGeometry>& grid_geom,
@@ -279,7 +282,8 @@ void BoxLevel::swapInitialize(
       parallel_state);
 }
 
-void BoxLevel::finalize()
+void
+BoxLevel::finalize()
 {
 
    // Erase non-local Boxes, if any, from d_boxes.
@@ -296,7 +300,8 @@ void BoxLevel::finalize()
    return;
 }
 
-void BoxLevel::initializePrivate(
+void
+BoxLevel::initializePrivate(
    const IntVector& ratio,
    const boost::shared_ptr<const GridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
@@ -337,7 +342,8 @@ void BoxLevel::initializePrivate(
    t_initialize_private->stop();
 }
 
-bool BoxLevel::operator == (
+bool
+BoxLevel::operator == (
    const BoxLevel& r) const
 {
    if (this == &r) {
@@ -359,7 +365,8 @@ bool BoxLevel::operator == (
    return true;
 }
 
-bool BoxLevel::operator != (
+bool
+BoxLevel::operator != (
    const BoxLevel& r) const
 {
    if (this == &r) {
@@ -389,7 +396,8 @@ bool BoxLevel::operator != (
  * already shut down.
  ***********************************************************************
  */
-void BoxLevel::removePeriodicImageBoxes()
+void
+BoxLevel::removePeriodicImageBoxes()
 {
    if (isInitialized()) {
       clearForBoxChanges();
@@ -408,7 +416,8 @@ void BoxLevel::removePeriodicImageBoxes()
  * already shut down.
  ***********************************************************************
  */
-void BoxLevel::clear()
+void
+BoxLevel::clear()
 {
    if (isInitialized()) {
       clearForBoxChanges();
@@ -433,7 +442,8 @@ void BoxLevel::clear()
    }
 }
 
-void BoxLevel::swap(
+void
+BoxLevel::swap(
    BoxLevel& level_a,
    BoxLevel& level_b)
 {
@@ -514,7 +524,8 @@ void BoxLevel::swap(
    }
 }
 
-void BoxLevel::computeLocalRedundantData()
+void
+BoxLevel::computeLocalRedundantData()
 {
    const IntVector max_vec(d_ratio.getDim(), tbox::MathUtilities<int>::getMax());
    const IntVector& zero_vec = IntVector::getZero(d_ratio.getDim());
@@ -554,7 +565,8 @@ void BoxLevel::computeLocalRedundantData()
  * do.
  ****************************************************************************
  */
-void BoxLevel::cacheGlobalReducedData() const
+void
+BoxLevel::cacheGlobalReducedData() const
 {
    TBOX_ASSERT(isInitialized());
 
@@ -678,7 +690,8 @@ void BoxLevel::cacheGlobalReducedData() const
    t_cache_global_reduced_data->stop();
 }
 
-size_t BoxLevel::getLocalNumberOfBoxes(
+size_t
+BoxLevel::getLocalNumberOfBoxes(
    int rank) const
 {
    TBOX_ASSERT(isInitialized());
@@ -705,7 +718,8 @@ size_t BoxLevel::getLocalNumberOfBoxes(
    }
 }
 
-size_t BoxLevel::getLocalNumberOfCells(
+size_t
+BoxLevel::getLocalNumberOfCells(
    int rank) const
 {
    TBOX_ASSERT(isInitialized());
@@ -732,7 +746,8 @@ size_t BoxLevel::getLocalNumberOfCells(
    }
 }
 
-bool BoxLevel::getSpatiallyEqualBox(
+bool
+BoxLevel::getSpatiallyEqualBox(
    const Box& box_to_match,
    const BlockId& block_id,
    Box& matching_box) const
@@ -754,7 +769,8 @@ bool BoxLevel::getSpatiallyEqualBox(
  ***********************************************************************
  */
 
-void BoxLevel::setParallelState(
+void
+BoxLevel::setParallelState(
    const ParallelState parallel_state)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -784,7 +800,8 @@ void BoxLevel::setParallelState(
  ***********************************************************************
  */
 
-void BoxLevel::acquireRemoteBoxes()
+void
+BoxLevel::acquireRemoteBoxes()
 {
    BoxLevel* object = this;
    acquireRemoteBoxes(1, &object);
@@ -800,7 +817,8 @@ void BoxLevel::acquireRemoteBoxes()
  ***********************************************************************
  */
 
-void BoxLevel::acquireRemoteBoxes(
+void
+BoxLevel::acquireRemoteBoxes(
    const int num_sets,
    BoxLevel* multiple_box_levels[])
 {
@@ -884,7 +902,8 @@ void BoxLevel::acquireRemoteBoxes(
  ***********************************************************************
  */
 
-void BoxLevel::acquireRemoteBoxes_pack(
+void
+BoxLevel::acquireRemoteBoxes_pack(
    std::vector<int>& send_mesg) const
 {
    const tbox::Dimension& dim(getDim());
@@ -925,7 +944,8 @@ void BoxLevel::acquireRemoteBoxes_pack(
  ***********************************************************************
  */
 
-void BoxLevel::acquireRemoteBoxes_unpack(
+void
+BoxLevel::acquireRemoteBoxes_unpack(
    const std::vector<int>& recv_mesg,
    std::vector<int>& proc_offset)
 {
@@ -968,7 +988,8 @@ void BoxLevel::acquireRemoteBoxes_unpack(
  ***********************************************************************
  */
 
-BoxContainer::ConstIterator BoxLevel::addBox(
+BoxContainer::ConstIterator
+BoxLevel::addBox(
    const Box& box,
    const BlockId& block_id,
    const bool use_vacant_index)
@@ -1283,7 +1304,8 @@ BoxLevel::eraseBox(
  ****************************************************************************
  ****************************************************************************
  */
-const BoxLevel& BoxLevel::getGlobalizedVersion() const
+const BoxLevel&
+BoxLevel::getGlobalizedVersion() const
 {
    TBOX_ASSERT(isInitialized());
 
@@ -1307,8 +1329,8 @@ const BoxLevel& BoxLevel::getGlobalizedVersion() const
  ***********************************************************************
  ***********************************************************************
  */
-PersistentOverlapConnectors& BoxLevel::getPersistentOverlapConnectors()
-const
+PersistentOverlapConnectors&
+BoxLevel::getPersistentOverlapConnectors() const
 {
    if (d_persistent_overlap_connectors == NULL) {
       d_persistent_overlap_connectors = new PersistentOverlapConnectors(*this);
@@ -1316,7 +1338,8 @@ const
    return *d_persistent_overlap_connectors;
 }
 
-LocalId BoxLevel::getFirstLocalId() const
+LocalId
+BoxLevel::getFirstLocalId() const
 {
    TBOX_ASSERT(isInitialized());
 
@@ -1332,7 +1355,8 @@ LocalId BoxLevel::getFirstLocalId() const
    return ni->getLocalId();
 }
 
-LocalId BoxLevel::getLastLocalId() const
+LocalId
+BoxLevel::getLastLocalId() const
 {
    TBOX_ASSERT(isInitialized());
 
@@ -1354,7 +1378,8 @@ LocalId BoxLevel::getLastLocalId() const
  ***********************************************************************
  ***********************************************************************
  */
-bool BoxLevel::hasBox(
+bool
+BoxLevel::hasBox(
    const Box& box) const
 {
    if (box.getOwnerRank() == d_mpi.getRank()) {
@@ -1379,7 +1404,8 @@ bool BoxLevel::hasBox(
  ***********************************************************************
  ***********************************************************************
  */
-BoxContainer::ConstIterator BoxLevel::getBoxStrict(
+BoxContainer::ConstIterator
+BoxLevel::getBoxStrict(
    const Box& box) const
 {
    if (box.getOwnerRank() == d_mpi.getRank()) {
@@ -1416,7 +1442,8 @@ BoxContainer::ConstIterator BoxLevel::getBoxStrict(
  ***********************************************************************
  ***********************************************************************
  */
-BoxContainer::ConstIterator BoxLevel::getBoxStrict(
+BoxContainer::ConstIterator
+BoxLevel::getBoxStrict(
    const BoxId& box_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1455,7 +1482,8 @@ BoxContainer::ConstIterator BoxLevel::getBoxStrict(
  ***********************************************************************
  ***********************************************************************
  */
-void BoxLevel::getGlobalBoxes(BoxContainer& global_boxes) const
+void
+BoxLevel::getGlobalBoxes(BoxContainer& global_boxes) const
 {
    for (BoxContainer::ConstIterator itr = d_global_boxes.begin();
         itr != d_global_boxes.end(); ++itr) {
@@ -1471,7 +1499,8 @@ void BoxLevel::getGlobalBoxes(BoxContainer& global_boxes) const
  ***********************************************************************
  */
 
-void BoxLevel::putUnregisteredToDatabase(
+void
+BoxLevel::putUnregisteredToDatabase(
    const boost::shared_ptr<tbox::Database>& database) const
 {
    database->putBool("d_is_mapped_box_level", true);
@@ -1491,7 +1520,8 @@ void BoxLevel::putUnregisteredToDatabase(
  ***********************************************************************
  */
 
-void BoxLevel::getFromDatabase(
+void
+BoxLevel::getFromDatabase(
    tbox::Database& database,
    const boost::shared_ptr<const GridGeometry>& grid_geom)
 {
@@ -1567,7 +1597,8 @@ BoxLevel::Outputter::Outputter(
  ***********************************************************************
  */
 
-std::ostream& operator << (
+std::ostream&
+operator << (
    std::ostream& s,
    const BoxLevel::Outputter& format)
 {
@@ -1587,7 +1618,8 @@ std::ostream& operator << (
  ***********************************************************************
  */
 
-BoxLevel::Outputter BoxLevel::format(
+BoxLevel::Outputter
+BoxLevel::format(
    const std::string& border,
    int detail_depth) const
 {
@@ -1600,7 +1632,8 @@ BoxLevel::Outputter BoxLevel::format(
  ***********************************************************************
  */
 
-BoxLevel::Outputter BoxLevel::formatStatistics(
+BoxLevel::Outputter
+BoxLevel::formatStatistics(
    const std::string& border) const
 {
    return Outputter(*this, border, 0, true);
@@ -1613,7 +1646,8 @@ BoxLevel::Outputter BoxLevel::formatStatistics(
  ***********************************************************************
  */
 
-void BoxLevel::recursivePrint(
+void
+BoxLevel::recursivePrint(
    std::ostream& co,
    const std::string& border,
    int detail_depth) const

@@ -117,17 +117,15 @@ public:
     * quantity will take precedence on coarse-fine interfaces.  See the
     * OuternodeVariable class header file for more information.
     */
-   bool fineBoundaryRepresentsVariable() const {
-      return true;
-   }
+   bool
+   fineBoundaryRepresentsVariable() const;
 
    /**
     * Return true since the outernode data index space extends beyond the
     * interior of patches.  That is, outernode data lives on patch borders.
     */
-   bool dataLivesOnPatchBorder() const {
-      return true;
-   }
+   bool
+   dataLivesOnPatchBorder() const;
 
    /**
     * Return whether it is valid to copy this OuternodeDataFactory to the
@@ -146,12 +144,7 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/OuternodeDataFactory.I"
-#endif
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/OuternodeDataFactory.C"
-#endif
 
 #endif

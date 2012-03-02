@@ -12,7 +12,8 @@ namespace SAMRAI {
 namespace tbox {
 
 SAMRAI_INLINE_KEYWORD
-size_t MemoryUtilities::align(
+size_t
+MemoryUtilities::align(
    const size_t bytes)
 {
    size_t aligned = bytes + ArenaAllocationAlignment - 1;

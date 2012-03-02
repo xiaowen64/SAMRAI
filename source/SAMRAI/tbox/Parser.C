@@ -83,7 +83,8 @@ Parser::~Parser()
  *************************************************************************
  */
 
-int Parser::parse(
+int
+Parser::parse(
    const std::string& filename,
    FILE* fstream,
    const boost::shared_ptr<Database>& database)
@@ -132,7 +133,8 @@ int Parser::parse(
  *************************************************************************
  */
 
-void Parser::advanceLine(
+void
+Parser::advanceLine(
    const int nline)
 {
    Parser::ParseData& pd = d_parse_stack.getFirstItem();
@@ -150,7 +152,8 @@ void Parser::advanceLine(
  *************************************************************************
  */
 
-void Parser::advanceCursor(
+void
+Parser::advanceCursor(
    const std::string& token)
 {
    Parser::ParseData& pd = d_parse_stack.getFirstItem();
@@ -172,7 +175,8 @@ void Parser::advanceCursor(
  *************************************************************************
  */
 
-void Parser::error(
+void
+Parser::error(
    const std::string& message)
 {
    Parser::ParseData& pd = d_parse_stack.getFirstItem();
@@ -198,7 +202,8 @@ void Parser::error(
  *************************************************************************
  */
 
-void Parser::warning(
+void
+Parser::warning(
    const std::string& message)
 {
    Parser::ParseData& pd = d_parse_stack.getFirstItem();
@@ -225,7 +230,8 @@ void Parser::warning(
  *************************************************************************
  */
 
-boost::shared_ptr<Database> Parser::getDatabaseWithKey(
+boost::shared_ptr<Database>
+Parser::getDatabaseWithKey(
    const std::string& key)
 {
    List<boost::shared_ptr<Database> >::Iterator i(d_scope_stack);
@@ -244,7 +250,8 @@ boost::shared_ptr<Database> Parser::getDatabaseWithKey(
  *************************************************************************
  */
 
-bool Parser::pushIncludeFile(
+bool
+Parser::pushIncludeFile(
    const std::string& filename)
 {
    FILE* fstream = NULL;
@@ -294,7 +301,8 @@ bool Parser::pushIncludeFile(
  *************************************************************************
  */
 
-void Parser::popIncludeFile()
+void
+Parser::popIncludeFile()
 {
    Parser::ParseData& pd = d_parse_stack.getFirstItem();
    if (pd.d_fstream) fclose(pd.d_fstream);
@@ -311,7 +319,8 @@ void Parser::popIncludeFile()
  *************************************************************************
  */
 
-int Parser::yyinput(
+int
+Parser::yyinput(
    char* buffer,
    const int max_size)
 {

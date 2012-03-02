@@ -130,7 +130,8 @@ Array<double>::Array(
 }
 
 template<>
-void Array<bool>::deleteObjects()
+void
+Array<bool>::deleteObjects()
 {
    if (d_objects) {
       free(reinterpret_cast<char *>(d_objects));
@@ -143,7 +144,8 @@ void Array<bool>::deleteObjects()
 }
 
 template<>
-void Array<char>::deleteObjects()
+void
+Array<char>::deleteObjects()
 {
    if (d_objects) {
       free(reinterpret_cast<char *>(d_objects));
@@ -156,7 +158,8 @@ void Array<char>::deleteObjects()
 }
 
 template<>
-void Array<int>::deleteObjects()
+void
+Array<int>::deleteObjects()
 {
    if (d_objects) {
       free(reinterpret_cast<char *>(d_objects));
@@ -169,7 +172,8 @@ void Array<int>::deleteObjects()
 }
 
 template<>
-void Array<float>::deleteObjects()
+void
+Array<float>::deleteObjects()
 {
    if (d_objects) {
       free(reinterpret_cast<char *>(d_objects));
@@ -182,7 +186,8 @@ void Array<float>::deleteObjects()
 }
 
 template<>
-void Array<double>::deleteObjects()
+void
+Array<double>::deleteObjects()
 {
    if (d_objects) {
       free(reinterpret_cast<char *>(d_objects));

@@ -192,15 +192,13 @@ public:
    /*!
     * @brief Get the number of patch data indices registered with the database.
     */
-   virtual
-   int
+   virtual int
    getNumberOfRegisteredPatchDataIndices() const;
 
    /*!
     * @brief Get number of variable contexts registered with the database.
     */
-   virtual
-   int
+   virtual int
    getNumberOfRegisteredVariableContexts() const;
 
    /*!
@@ -208,8 +206,7 @@ public:
     *
     * This descriptor is shared by all patches in the hierarchy.
     */
-   virtual
-   boost::shared_ptr<PatchDescriptor>
+   virtual boost::shared_ptr<PatchDescriptor>
    getPatchDescriptor() const;
 
    /*!
@@ -228,8 +225,7 @@ public:
     *
     * @return  Variable context.
     */
-   virtual
-   boost::shared_ptr<VariableContext>
+   virtual boost::shared_ptr<VariableContext>
    getContext(
       const std::string& context_name);
 
@@ -238,8 +234,7 @@ public:
     *
     * @param[in] context_name
     */
-   virtual
-   bool
+   virtual bool
    checkContextExists(
       const std::string& context_name) const;
 
@@ -256,8 +251,7 @@ public:
     *                 checking is active, an assertion will result if the
     *                 variable pointer is null.
     */
-   virtual
-   void
+   virtual void
    addVariable(
       const boost::shared_ptr<Variable>& variable);
 
@@ -266,8 +260,7 @@ public:
     *
     * @param[in] variable_name
     */
-   virtual
-   void
+   virtual void
    removeVariable(
       const std::string& variable_name);
 
@@ -279,8 +272,7 @@ public:
     * @return  Variable in the database with given name.
     *          If no such variable exists, a null pointer is returned.
     */
-   virtual
-   boost::shared_ptr<Variable>
+   virtual boost::shared_ptr<Variable>
    getVariable(
       const std::string& variable_name) const;
 
@@ -292,8 +284,7 @@ public:
     * @return  True if variable with name exists in database;
     *          otherwise, false.
     */
-   virtual
-   bool
+   virtual bool
    checkVariableExists(
       const std::string& variable_name) const;
 
@@ -324,8 +315,7 @@ public:
     * @return New integer patch data index. If new patch data not added,
     *         return value is an invalid (undefined) patch data index (< 0).
     */
-   virtual
-   int
+   virtual int
    registerClonedPatchDataIndex(
       const boost::shared_ptr<Variable>& variable,
       int old_id);
@@ -370,8 +360,7 @@ public:
     * @return New integer patch data index.  If new patch data index not
     *         added, return value is an invalid patch data index (< 0).
     */
-   virtual
-   int
+   virtual int
    registerPatchDataIndex(
       const boost::shared_ptr<Variable>& variable,
       int data_id = idUndefined());
@@ -393,8 +382,7 @@ public:
     *                  an assertion will result when the patch data index
     *                  is invalid (i.e., < 0).
     */
-   virtual
-   void
+   virtual void
    removePatchDataIndex(
       int data_id);
 
@@ -413,8 +401,7 @@ public:
     * @return  Boolean true if the variable is mapped the given patch
     * data index; false otherwise.
     */
-   virtual
-   bool
+   virtual bool
    checkVariablePatchDataIndex(
       const boost::shared_ptr<Variable>& variable,
       int data_id) const;
@@ -434,8 +421,7 @@ public:
     * @return  Boolean true if the type of the variable matches the type of
     *          the patch data at the given patch data index; false otherwise.
     */
-   virtual
-   bool
+   virtual bool
    checkVariablePatchDataIndexType(
       const boost::shared_ptr<Variable>& variable,
       int data_id) const;
@@ -484,8 +470,7 @@ public:
     *
     * @return Integer patch data index of variable-context pair in database.
     */
-   virtual
-   int
+   virtual int
    registerVariableAndContext(
       const boost::shared_ptr<Variable>& variable,
       const boost::shared_ptr<VariableContext>& context,
@@ -521,8 +506,7 @@ public:
     *         If the variable-context pair was not registered with the
     *         database, then an invalid data index (< 0) will be returned.
     */
-   virtual
-   int
+   virtual int
    mapVariableAndContextToIndex(
       const boost::shared_ptr<Variable>& variable,
       const boost::shared_ptr<VariableContext>& context) const;
@@ -542,8 +526,7 @@ public:
     * @return  Boolean true if patch data index maps to variable in the
     *          database; otherwise false.
     */
-   virtual
-   bool
+   virtual bool
    mapIndexToVariable(
       const int index,
       boost::shared_ptr<Variable>& variable) const;
@@ -572,8 +555,7 @@ public:
     * @return  Boolean true if patch data index maps to variable-context
     *          pair in the database; otherwise false.
     */
-   virtual
-   bool
+   virtual bool
    mapIndexToVariableAndContext(
       const int index,
       boost::shared_ptr<Variable>& variable,
@@ -588,8 +570,7 @@ public:
     *         selector will correspond to the patch data indices
     *         that have been registered for restart.
     */
-   virtual
-   ComponentSelector
+   virtual ComponentSelector
    getPatchDataRestartTable() const;
 
    /*!
@@ -602,8 +583,7 @@ public:
     *         is registered for restart; otherwise false.
     *
     */
-   virtual
-   bool
+   virtual bool
    isPatchDataRegisteredForRestart(
       int index) const;
 
@@ -612,8 +592,7 @@ public:
     *
     * @param[in]  index  Integer patch data index to set.
     */
-   virtual
-   void
+   virtual void
    registerPatchDataForRestart(
       int index);
 
@@ -622,8 +601,7 @@ public:
     *
     * @param[in]  index  Integer patch data index to unset.
     */
-   virtual
-   void
+   virtual void
    unregisterPatchDataForRestart(
       int index);
 
@@ -679,8 +657,7 @@ public:
     * @return Integer patch data index of variable-ghost width pair
     * in database.
     */
-   virtual
-   int
+   virtual int
    registerInternalSAMRAIVariable(
       const boost::shared_ptr<Variable>& variable,
       const IntVector& ghosts);
@@ -713,8 +690,7 @@ public:
     * @param[in]  data_id  Integer patch data identifier to be removed from
     *                  the database.
     */
-   virtual
-   void
+   virtual void
    removeInternalSAMRAIVariablePatchDataIndex(
       int data_id);
 
@@ -741,7 +717,8 @@ protected:
     * context identifier.  This routine is protected to allow subclasses
     * to be consistent with this database class.
     */
-   static int idUndefined();
+   static int
+   idUndefined();
 
    /**
     * @brief Return integer identifier for first variable found matching given

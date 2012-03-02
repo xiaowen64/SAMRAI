@@ -12,14 +12,16 @@ namespace SAMRAI {
 namespace tbox {
 
 SAMRAI_INLINE_KEYWORD
-void SAMRAI_MPI::setCallAbortInSerialInsteadOfExit(
+void
+SAMRAI_MPI::setCallAbortInSerialInsteadOfExit(
    bool flag)
 {
    s_call_abort_in_serial_instead_of_exit = flag;
 }
 
 SAMRAI_INLINE_KEYWORD
-void SAMRAI_MPI::setCallAbortInParallelInsteadOfMPIAbort(
+void
+SAMRAI_MPI::setCallAbortInParallelInsteadOfMPIAbort(
    bool flag)
 {
    s_call_abort_in_parallel_instead_of_mpiabort = flag;
@@ -30,7 +32,8 @@ void SAMRAI_MPI::setCallAbortInParallelInsteadOfMPIAbort(
  **************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const SAMRAI_MPI& SAMRAI_MPI::getSAMRAIWorld() {
+const SAMRAI_MPI&
+SAMRAI_MPI::getSAMRAIWorld() {
    return s_samrai_world;
 }
 
@@ -41,7 +44,8 @@ const SAMRAI_MPI& SAMRAI_MPI::getSAMRAIWorld() {
  */
 
 SAMRAI_INLINE_KEYWORD
-bool SAMRAI_MPI::usingMPI()
+bool
+SAMRAI_MPI::usingMPI()
 {
    return s_mpi_is_initialized == true;
 }
@@ -51,7 +55,8 @@ bool SAMRAI_MPI::usingMPI()
  **************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void SAMRAI_MPI::dupCommunicator(
+void
+SAMRAI_MPI::dupCommunicator(
    const SAMRAI_MPI& r)
 {
 #ifdef HAVE_MPI
@@ -74,7 +79,8 @@ void SAMRAI_MPI::dupCommunicator(
  **************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void SAMRAI_MPI::freeCommunicator()
+void
+SAMRAI_MPI::freeCommunicator()
 {
 #ifdef HAVE_MPI
    if (d_comm != MPI_COMM_NULL) {
@@ -94,7 +100,8 @@ void SAMRAI_MPI::freeCommunicator()
  **************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const SAMRAI_MPI& SAMRAI_MPI::operator = (
+const SAMRAI_MPI&
+SAMRAI_MPI::operator = (
    const SAMRAI_MPI& rhs)
 {
    d_comm = rhs.d_comm;
@@ -108,7 +115,8 @@ const SAMRAI_MPI& SAMRAI_MPI::operator = (
  **************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool SAMRAI_MPI::operator == (
+bool
+SAMRAI_MPI::operator == (
    const SAMRAI_MPI& rhs) const
 {
    return d_comm == rhs.d_comm;
@@ -119,7 +127,8 @@ bool SAMRAI_MPI::operator == (
  **************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool SAMRAI_MPI::operator != (
+bool
+SAMRAI_MPI::operator != (
    const SAMRAI_MPI& rhs) const
 {
    return d_comm != rhs.d_comm;
@@ -130,7 +139,8 @@ bool SAMRAI_MPI::operator != (
  **************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int SAMRAI_MPI::getRank() const
+int
+SAMRAI_MPI::getRank() const
 {
    return d_rank;
 }
@@ -140,7 +150,8 @@ int SAMRAI_MPI::getRank() const
  **************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int SAMRAI_MPI::getSize() const
+int
+SAMRAI_MPI::getSize() const
 {
    return d_size;
 }
@@ -150,7 +161,8 @@ int SAMRAI_MPI::getSize() const
  **************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int SAMRAI_MPI::getInvalidRank()
+int
+SAMRAI_MPI::getInvalidRank()
 {
    return s_invalid_rank;
 }
@@ -160,7 +172,8 @@ int SAMRAI_MPI::getInvalidRank()
  **************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const SAMRAI_MPI::Comm& SAMRAI_MPI::getCommunicator() const
+const SAMRAI_MPI::Comm&
+SAMRAI_MPI::getCommunicator() const
 {
    return d_comm;
 }
@@ -170,7 +183,8 @@ const SAMRAI_MPI::Comm& SAMRAI_MPI::getCommunicator() const
  **************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void SAMRAI_MPI::setCommunicator(
+void
+SAMRAI_MPI::setCommunicator(
    const Comm& comm)
 {
    d_comm = comm;

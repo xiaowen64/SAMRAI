@@ -15,38 +15,44 @@ namespace SAMRAI {
 namespace tbox {
 
 SAMRAI_INLINE_KEYWORD
-void *MessageStream::getBufferStart()
+void*
+MessageStream::getBufferStart()
 {
    return (void *)d_buffer;
 }
 
 SAMRAI_INLINE_KEYWORD
-size_t MessageStream::getCurrentSize() const
+size_t
+MessageStream::getCurrentSize() const
 {
    return d_current_size;
 }
 
 SAMRAI_INLINE_KEYWORD
-size_t MessageStream::getCurrentIndex() const
+size_t
+MessageStream::getCurrentIndex() const
 {
    return d_buffer_index;
 }
 
 SAMRAI_INLINE_KEYWORD
-void MessageStream::setCurrentIndex(
+void
+MessageStream::setCurrentIndex(
    const size_t index)
 {
    d_buffer_index = index;
 }
 
 SAMRAI_INLINE_KEYWORD
-void MessageStream::resetIndex()
+void
+MessageStream::resetIndex()
 {
    setCurrentIndex(0);
 }
 
 SAMRAI_INLINE_KEYWORD
-void* MessageStream::getPointerAndAdvanceCursor(
+void*
+MessageStream::getPointerAndAdvanceCursor(
    const size_t nbytes)
 {
    void* ptr = &d_buffer[d_buffer_index];

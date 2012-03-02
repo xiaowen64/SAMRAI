@@ -56,7 +56,8 @@ ComponentSelector::~ComponentSelector()
 {
 }
 
-bool ComponentSelector::any() const {
+bool
+ComponentSelector::any() const {
    std::vector<std::bitset<C_BITSET_SIZE> >::const_iterator iter;
    bool set = false;
    for (iter = d_bit_vector.begin(); iter != d_bit_vector.end() && !set;

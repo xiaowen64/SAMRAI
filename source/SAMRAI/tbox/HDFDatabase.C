@@ -125,7 +125,8 @@ const int HDFDatabase::KEY_STRING_SCALAR = -8;
  *************************************************************************
  */
 
-herr_t HDFDatabase::iterateKeys(
+herr_t
+HDFDatabase::iterateKeys(
    hid_t loc_id,
    const char* name,
    void* void_database)
@@ -247,7 +248,8 @@ herr_t HDFDatabase::iterateKeys(
  *************************************************************************
  */
 
-void HDFDatabase::addKeyToList(
+void
+HDFDatabase::addKeyToList(
    const char* name,
    int type,
    void* database)
@@ -343,7 +345,8 @@ HDFDatabase::~HDFDatabase()
  *************************************************************************
  */
 
-bool HDFDatabase::keyExists(
+bool
+HDFDatabase::keyExists(
    const std::string& key)
 {
 
@@ -396,7 +399,8 @@ bool HDFDatabase::keyExists(
  *************************************************************************
  */
 
-Array<std::string> HDFDatabase::getAllKeys()
+Array<std::string>
+HDFDatabase::getAllKeys()
 {
    performKeySearch();
 
@@ -420,7 +424,8 @@ Array<std::string> HDFDatabase::getAllKeys()
  *
  *************************************************************************
  */
-enum Database::DataType HDFDatabase::getArrayType(
+enum Database::DataType
+HDFDatabase::getArrayType(
    const std::string& key) {
 
    enum Database::DataType type = Database::SAMRAI_INVALID;
@@ -518,7 +523,8 @@ enum Database::DataType HDFDatabase::getArrayType(
  *************************************************************************
  */
 
-int HDFDatabase::getArraySize(
+int
+HDFDatabase::getArraySize(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -572,7 +578,8 @@ int HDFDatabase::getArraySize(
  *************************************************************************
  */
 
-bool HDFDatabase::isDatabase(
+bool
+HDFDatabase::isDatabase(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -671,7 +678,8 @@ HDFDatabase::getDatabase(
  *************************************************************************
  */
 
-bool HDFDatabase::isBool(
+bool
+HDFDatabase::isBool(
    const std::string& key)
 {
    bool is_boolean = false;
@@ -709,7 +717,8 @@ bool HDFDatabase::isBool(
  *************************************************************************
  */
 
-void HDFDatabase::putBoolArray(
+void
+HDFDatabase::putBoolArray(
    const std::string& key,
    const bool * const data,
    const int nelements)
@@ -780,7 +789,8 @@ void HDFDatabase::putBoolArray(
  ************************************************************************
  */
 
-Array<bool> HDFDatabase::getBoolArray(
+Array<bool>
+HDFDatabase::getBoolArray(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -851,7 +861,8 @@ Array<bool> HDFDatabase::getBoolArray(
  *************************************************************************
  */
 
-bool HDFDatabase::isDatabaseBox(
+bool
+HDFDatabase::isDatabaseBox(
    const std::string& key)
 {
    bool is_box = false;
@@ -888,7 +899,8 @@ bool HDFDatabase::isDatabaseBox(
  *************************************************************************
  */
 
-void HDFDatabase::putDatabaseBoxArray(
+void
+HDFDatabase::putDatabaseBoxArray(
    const std::string& key,
    const DatabaseBox * const data,
    const int nelements)
@@ -956,7 +968,8 @@ void HDFDatabase::putDatabaseBoxArray(
  ************************************************************************
  */
 
-Array<DatabaseBox> HDFDatabase::getDatabaseBoxArray(
+Array<DatabaseBox>
+HDFDatabase::getDatabaseBoxArray(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -1015,7 +1028,8 @@ Array<DatabaseBox> HDFDatabase::getDatabaseBoxArray(
    return boxArray;
 }
 
-hid_t HDFDatabase::createCompoundDatabaseBox(
+hid_t
+HDFDatabase::createCompoundDatabaseBox(
    char type_spec) const {
 
    herr_t errf;
@@ -1062,7 +1076,8 @@ hid_t HDFDatabase::createCompoundDatabaseBox(
  *************************************************************************
  */
 
-bool HDFDatabase::isChar(
+bool
+HDFDatabase::isChar(
    const std::string& key)
 {
    bool is_char = false;
@@ -1101,7 +1116,8 @@ bool HDFDatabase::isChar(
  *************************************************************************
  */
 
-void HDFDatabase::putCharArray(
+void
+HDFDatabase::putCharArray(
    const std::string& key,
    const char * const data,
    const int nelements)
@@ -1180,7 +1196,8 @@ void HDFDatabase::putCharArray(
  ************************************************************************
  */
 
-Array<char> HDFDatabase::getCharArray(
+Array<char>
+HDFDatabase::getCharArray(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -1241,7 +1258,8 @@ Array<char> HDFDatabase::getCharArray(
  *************************************************************************
  */
 
-bool HDFDatabase::isComplex(
+bool
+HDFDatabase::isComplex(
    const std::string& key)
 {
    bool is_complex = false;
@@ -1280,7 +1298,8 @@ bool HDFDatabase::isComplex(
  *************************************************************************
  */
 
-void HDFDatabase::putComplexArray(
+void
+HDFDatabase::putComplexArray(
    const std::string& key,
    const dcomplex * const data,
    const int nelements)
@@ -1350,7 +1369,8 @@ void HDFDatabase::putComplexArray(
  ************************************************************************
  */
 
-Array<dcomplex> HDFDatabase::getComplexArray(
+Array<dcomplex>
+HDFDatabase::getComplexArray(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -1402,7 +1422,8 @@ Array<dcomplex> HDFDatabase::getComplexArray(
    return complexArray;
 }
 
-hid_t HDFDatabase::createCompoundComplex(
+hid_t
+HDFDatabase::createCompoundComplex(
    char type_spec) const {
 
    herr_t errf;
@@ -1445,7 +1466,8 @@ hid_t HDFDatabase::createCompoundComplex(
  *************************************************************************
  */
 
-bool HDFDatabase::isDouble(
+bool
+HDFDatabase::isDouble(
    const std::string& key)
 {
    bool is_double = false;
@@ -1484,7 +1506,8 @@ bool HDFDatabase::isDouble(
  *************************************************************************
  */
 
-void HDFDatabase::putDoubleArray(
+void
+HDFDatabase::putDoubleArray(
    const std::string& key,
    const double * const data,
    const int nelements)
@@ -1542,7 +1565,8 @@ void HDFDatabase::putDoubleArray(
  ************************************************************************
  */
 
-Array<double> HDFDatabase::getDoubleArray(
+Array<double>
+HDFDatabase::getDoubleArray(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -1599,7 +1623,8 @@ Array<double> HDFDatabase::getDoubleArray(
  *************************************************************************
  */
 
-bool HDFDatabase::isFloat(
+bool
+HDFDatabase::isFloat(
    const std::string& key)
 {
    bool is_float = false;
@@ -1637,7 +1662,8 @@ bool HDFDatabase::isFloat(
  *************************************************************************
  */
 
-void HDFDatabase::putFloatArray(
+void
+HDFDatabase::putFloatArray(
    const std::string& key,
    const float * const data,
    const int nelements)
@@ -1696,7 +1722,8 @@ void HDFDatabase::putFloatArray(
  ************************************************************************
  */
 
-Array<float> HDFDatabase::getFloatArray(
+Array<float>
+HDFDatabase::getFloatArray(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -1754,7 +1781,8 @@ Array<float> HDFDatabase::getFloatArray(
  *************************************************************************
  */
 
-bool HDFDatabase::isInteger(
+bool
+HDFDatabase::isInteger(
    const std::string& key)
 {
    bool is_int = false;
@@ -1793,7 +1821,8 @@ bool HDFDatabase::isInteger(
  *************************************************************************
  */
 
-void HDFDatabase::putIntegerArray(
+void
+HDFDatabase::putIntegerArray(
    const std::string& key,
    const int * const data,
    const int nelements)
@@ -1851,7 +1880,8 @@ void HDFDatabase::putIntegerArray(
  ************************************************************************
  */
 
-Array<int> HDFDatabase::getIntegerArray(
+Array<int>
+HDFDatabase::getIntegerArray(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -1909,7 +1939,8 @@ Array<int> HDFDatabase::getIntegerArray(
  *************************************************************************
  */
 
-bool HDFDatabase::isString(
+bool
+HDFDatabase::isString(
    const std::string& key)
 {
    bool is_string = false;
@@ -1947,7 +1978,8 @@ bool HDFDatabase::isString(
  *************************************************************************
  */
 
-void HDFDatabase::putStringArray(
+void
+HDFDatabase::putStringArray(
    const std::string& key,
    const std::string * const data,
    const int nelements)
@@ -2037,7 +2069,8 @@ void HDFDatabase::putStringArray(
  ************************************************************************
  */
 
-Array<std::string> HDFDatabase::getStringArray(
+Array<std::string>
+HDFDatabase::getStringArray(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -2097,7 +2130,8 @@ Array<std::string> HDFDatabase::getStringArray(
    return stringArray;
 }
 
-void HDFDatabase::writeAttribute(
+void
+HDFDatabase::writeAttribute(
    int type_key,
    hid_t dataset_id)
 {
@@ -2126,7 +2160,8 @@ void HDFDatabase::writeAttribute(
    TBOX_ASSERT(errf >= 0);
 }
 
-int HDFDatabase::readAttribute(
+int
+HDFDatabase::readAttribute(
    hid_t dataset_id)
 {
    herr_t errf;
@@ -2155,7 +2190,8 @@ int HDFDatabase::readAttribute(
  *************************************************************************
  */
 
-void HDFDatabase::printClassData(
+void
+HDFDatabase::printClassData(
    std::ostream& os)
 {
 
@@ -2237,7 +2273,8 @@ void HDFDatabase::printClassData(
  *************************************************************************
  */
 
-bool HDFDatabase::create(
+bool
+HDFDatabase::create(
    const std::string& name)
 {
    TBOX_ASSERT(!name.empty());
@@ -2269,7 +2306,8 @@ bool HDFDatabase::create(
  *************************************************************************
  */
 
-bool HDFDatabase::open(
+bool
+HDFDatabase::open(
    const std::string& name,
    const bool read_write_mode) {
    TBOX_ASSERT(!name.empty());
@@ -2303,7 +2341,8 @@ bool HDFDatabase::open(
  *************************************************************************
  */
 
-bool HDFDatabase::close()
+bool
+HDFDatabase::close()
 {
    herr_t errf = 0;
    NULL_USE(errf);
@@ -2336,7 +2375,8 @@ bool HDFDatabase::close()
  *************************************************************************
  */
 
-void HDFDatabase::insertArray(
+void
+HDFDatabase::insertArray(
    hid_t parent_id,
    const char* name,
    size_t offset,
@@ -2392,7 +2432,8 @@ void HDFDatabase::insertArray(
  *************************************************************************
  */
 
-void HDFDatabase::performKeySearch()
+void
+HDFDatabase::performKeySearch()
 {
    herr_t errf;
    NULL_USE(errf);
@@ -2414,7 +2455,8 @@ void HDFDatabase::performKeySearch()
    TBOX_ASSERT(errf >= 0);
 }
 
-void HDFDatabase::cleanupKeySearch()
+void
+HDFDatabase::cleanupKeySearch()
 {
    d_top_level_search_group = std::string();
    d_group_to_search = std::string();
@@ -2429,7 +2471,8 @@ void HDFDatabase::cleanupKeySearch()
  * Attach to an already created HDF file.
  *************************************************************************
  */
-bool HDFDatabase::attachToFile(
+bool
+HDFDatabase::attachToFile(
    hid_t group_id)
 {
    bool status = false;
@@ -2448,7 +2491,8 @@ bool HDFDatabase::attachToFile(
    return status;
 }
 
-std::string HDFDatabase::getName()
+std::string
+HDFDatabase::getName()
 {
    return d_database_name;
 }

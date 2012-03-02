@@ -21,34 +21,6 @@ IntegerAttributeId::operator () () const
 }
 
 /**********************************************************************
- * IntegerAttributesId ctor
- *********************************************************************/
-SAMRAI_INLINE_KEYWORD
-IntegerAttributeId::IntegerAttributeId(
-   int value):
-   d_val(value)
-{
-}
-
-/**********************************************************************
- * IntegerAttributesId copy ctor
- *********************************************************************/
-SAMRAI_INLINE_KEYWORD
-IntegerAttributeId::IntegerAttributeId(
-   const IntegerAttributeId& other):
-   d_val(other.d_val)
-{
-}
-
-/**********************************************************************
- * d'tor
- *********************************************************************/
-SAMRAI_INLINE_KEYWORD
-IntegerAttributeId::~IntegerAttributeId()
-{
-}
-
-/**********************************************************************
  * IntegerAttributesId equality
  *********************************************************************/
 SAMRAI_INLINE_KEYWORD
@@ -68,15 +40,6 @@ IntegerAttributeId::operator != (
    const IntegerAttributeId& rhs) const
 {
    return !this->operator == (rhs);
-}
-
-/**********************************************************************
- * IntegerAttributesId c'tor (private)
- *********************************************************************/
-SAMRAI_INLINE_KEYWORD
-IntegerAttributeId::IntegerAttributeId():
-   d_val(-1)
-{
 }
 
 /**********************************************************************

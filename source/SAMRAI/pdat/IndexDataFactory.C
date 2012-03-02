@@ -108,7 +108,8 @@ IndexDataFactory<TYPE, BOX_GEOMETRY>::getBoxGeometry(
  */
 
 template<class TYPE, class BOX_GEOMETRY>
-size_t IndexDataFactory<TYPE, BOX_GEOMETRY>::getSizeOfMemory(
+size_t
+IndexDataFactory<TYPE, BOX_GEOMETRY>::getSizeOfMemory(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -127,7 +128,8 @@ size_t IndexDataFactory<TYPE, BOX_GEOMETRY>::getSizeOfMemory(
  */
 
 template<class TYPE, class BOX_GEOMETRY>
-bool IndexDataFactory<TYPE, BOX_GEOMETRY>::validCopyTo(
+bool
+IndexDataFactory<TYPE, BOX_GEOMETRY>::validCopyTo(
    const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
@@ -147,6 +149,39 @@ bool IndexDataFactory<TYPE, BOX_GEOMETRY>::validCopyTo(
    }
 
    return valid_copy;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return a boolean true value indicating that the index data quantities
+ * will always be treated as though fine values represent them on
+ * coarse-fine interfaces. See the IndexVariable<DIM> class header file for
+ * more information.
+ *
+ *************************************************************************
+ */
+template<class TYPE, class BOX_GEOMETRY>
+bool
+IndexDataFactory<TYPE, BOX_GEOMETRY>::fineBoundaryRepresentsVariable() const
+{
+   return true;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return false since the index data index space matches the cell-centered
+ * index space for AMR patches.  Thus, index data does not live on patch
+ * borders.
+ *
+ *************************************************************************
+ */
+template<class TYPE, class BOX_GEOMETRY>
+bool
+IndexDataFactory<TYPE, BOX_GEOMETRY>::dataLivesOnPatchBorder() const
+{
+   return false;
 }
 
 }

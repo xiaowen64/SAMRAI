@@ -18,6 +18,7 @@
 #include "SAMRAI/pdat/EdgeData.h"
 #include "SAMRAI/pdat/EdgeIndex.h"
 #include "SAMRAI/pdat/EdgeOverlap.h"
+#include "SAMRAI/pdat/OuteredgeGeometry.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
 
@@ -664,12 +665,6 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/OuteredgeData.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/OuteredgeData.C"
-#endif
 
 #endif

@@ -96,8 +96,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/NodeVariable.C"
-#endif
 
 #endif

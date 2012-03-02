@@ -47,7 +47,8 @@ BalancedDepthFirstTree::~BalancedDepthFirstTree()
 {
 }
 
-void BalancedDepthFirstTree::initialize(
+void
+BalancedDepthFirstTree::initialize(
    unsigned int first_rank,
    unsigned int last_rank,
    unsigned int rank,

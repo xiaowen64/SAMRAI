@@ -15,7 +15,8 @@ namespace tbox {
  * Routine to rename a file.
  */
 SAMRAI_INLINE_KEYWORD
-void Utilities::renameFile(
+void
+Utilities::renameFile(
    const std::string& old_filename,
    const std::string& new_filename)
 {
@@ -26,33 +27,38 @@ void Utilities::renameFile(
 }
 
 SAMRAI_INLINE_KEYWORD
-std::string Utilities::nodeToString(
+std::string
+Utilities::nodeToString(
    int num)
 {
    return intToString(num, s_node_width);
 }
 
 SAMRAI_INLINE_KEYWORD
-std::string Utilities::processorToString(
+std::string
+Utilities::processorToString(
    int num)
 {
    return intToString(num, s_processor_width);
 }
 
 SAMRAI_INLINE_KEYWORD
-std::string Utilities::patchToString(
+std::string
+Utilities::patchToString(
    int num) {
    return intToString(num, s_patch_width);
 }
 
 SAMRAI_INLINE_KEYWORD
-std::string Utilities::levelToString(
+std::string
+Utilities::levelToString(
    int num) {
    return intToString(num, s_level_width);
 }
 
 SAMRAI_INLINE_KEYWORD
-std::string Utilities::blockToString(
+std::string
+Utilities::blockToString(
    int num) {
    return intToString(num, s_block_width);
 }

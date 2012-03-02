@@ -15,7 +15,8 @@ namespace tbox {
  * Log an abort message.
  */
 SAMRAI_INLINE_KEYWORD
-void Logger::logAbort(
+void
+Logger::logAbort(
    const std::string& message,
    const std::string& filename,
    const int line)
@@ -27,7 +28,8 @@ void Logger::logAbort(
  * Log a warning message.
  */
 SAMRAI_INLINE_KEYWORD
-void Logger::logWarning(
+void
+Logger::logWarning(
    const std::string& message,
    const std::string& filename,
    const int line)
@@ -41,7 +43,8 @@ void Logger::logWarning(
  * Log a debug message.
  */
 SAMRAI_INLINE_KEYWORD
-void Logger::logDebug(
+void
+Logger::logDebug(
    const std::string& message,
    const std::string& filename,
    const int line)
@@ -55,19 +58,22 @@ void Logger::logDebug(
  * Set appenders.
  */
 SAMRAI_INLINE_KEYWORD
-void Logger::setAbortAppender(
+void
+Logger::setAbortAppender(
    const boost::shared_ptr<Appender>& appender) {
    d_abort_appender = appender;
 }
 
 SAMRAI_INLINE_KEYWORD
-void Logger::setWarningAppender(
+void
+Logger::setWarningAppender(
    const boost::shared_ptr<Appender>& appender) {
    d_warning_appender = appender;
 }
 
 SAMRAI_INLINE_KEYWORD
-void Logger::setDebugAppender(
+void
+Logger::setDebugAppender(
    const boost::shared_ptr<Appender>& appender) {
    d_debug_appender = appender;
 }
@@ -77,13 +83,15 @@ void Logger::setDebugAppender(
  */
 
 SAMRAI_INLINE_KEYWORD
-void Logger::setWarning(
+void
+Logger::setWarning(
    bool onoff) {
    d_log_warning = onoff;
 }
 
 SAMRAI_INLINE_KEYWORD
-void Logger::setDebug(
+void
+Logger::setDebug(
    bool onoff) {
    d_log_debug = onoff;
 }

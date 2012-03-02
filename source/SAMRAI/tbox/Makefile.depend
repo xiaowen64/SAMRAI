@@ -15,7 +15,6 @@ FILE_0=Array.o
 DEPENDS_0:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
@@ -36,7 +35,6 @@ ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
 FILE_1=ArraySpecial.o
 DEPENDS_1:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
@@ -57,7 +55,6 @@ ${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
 FILE_2=AsyncCommGroup.o
 DEPENDS_2:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommGroup.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommGroup.h			\
@@ -73,11 +70,9 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
@@ -107,10 +102,8 @@ ${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
 FILE_3=AsyncCommPeer.o
 DEPENDS_3:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
@@ -124,7 +117,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
@@ -155,7 +147,6 @@ ${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
 FILE_4=AsyncCommStage.o
 DEPENDS_4:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
@@ -169,11 +160,9 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
@@ -246,7 +235,6 @@ ${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
 FILE_7=Database.o
 DEPENDS_7:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -297,7 +285,6 @@ ${FILE_8:X.o=${NDIM}.o}: ${DEPENDS_8}
 FILE_9=DatabaseFactory.o
 DEPENDS_9:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -347,7 +334,6 @@ ${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}
 FILE_11=Grammar.o
 DEPENDS_11:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -357,7 +343,6 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
@@ -382,7 +367,6 @@ ${FILE_11:X.o=${NDIM}.o}: ${DEPENDS_11}
 FILE_12=HDFDatabase.o
 DEPENDS_12:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -394,11 +378,9 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/HDFDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/HDFDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
@@ -420,7 +402,6 @@ ${FILE_12:X.o=${NDIM}.o}: ${DEPENDS_12}
 FILE_13=HDFDatabaseFactory.o
 DEPENDS_13:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -434,7 +415,6 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/HDFDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/HDFDatabaseFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
@@ -457,7 +437,6 @@ ${FILE_13:X.o=${NDIM}.o}: ${DEPENDS_13}
 FILE_14=IEEE.o
 DEPENDS_14:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IEEE.I				\
@@ -465,7 +444,6 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
@@ -486,7 +464,6 @@ ${FILE_14:X.o=${NDIM}.o}: ${DEPENDS_14}
 FILE_15=InputManager.o
 DEPENDS_15:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -499,7 +476,6 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/InputDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/InputManager.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/InputManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
@@ -532,7 +508,6 @@ DEPENDS_16:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
@@ -566,14 +541,12 @@ ${FILE_17:X.o=${NDIM}.o}: ${DEPENDS_17}
 FILE_18=MathUtilities.o
 DEPENDS_18:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
@@ -591,13 +564,11 @@ ${FILE_18:X.o=${NDIM}.o}: ${DEPENDS_18}
 FILE_19=MathUtilitiesSpecial.o
 DEPENDS_19:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
@@ -616,7 +587,6 @@ ${FILE_19:X.o=${NDIM}.o}: ${DEPENDS_19}
 FILE_20=MemoryDatabase.o
 DEPENDS_20:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -626,7 +596,6 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
@@ -653,7 +622,6 @@ ${FILE_20:X.o=${NDIM}.o}: ${DEPENDS_20}
 FILE_21=MemoryDatabaseFactory.o
 DEPENDS_21:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -664,7 +632,6 @@ DEPENDS_21:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
@@ -690,7 +657,6 @@ ${FILE_21:X.o=${NDIM}.o}: ${DEPENDS_21}
 FILE_22=MemoryUtilities.o
 DEPENDS_22:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -702,7 +668,6 @@ DEPENDS_22:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -749,7 +714,6 @@ ${FILE_23:X.o=${NDIM}.o}: ${DEPENDS_23}
 FILE_24=NullDatabase.o
 DEPENDS_24:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -759,11 +723,9 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/NullDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/NullDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
@@ -784,7 +746,6 @@ ${FILE_24:X.o=${NDIM}.o}: ${DEPENDS_24}
 FILE_25=PIO.o
 DEPENDS_25:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -820,13 +781,11 @@ ${FILE_25:X.o=${NDIM}.o}: ${DEPENDS_25}
 FILE_26=ParallelBuffer.o
 DEPENDS_26:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ParallelBuffer.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ParallelBuffer.h			\
@@ -847,7 +806,6 @@ ${FILE_26:X.o=${NDIM}.o}: ${DEPENDS_26}
 FILE_27=Parser.o
 DEPENDS_27:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -857,7 +815,6 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
@@ -886,7 +843,6 @@ ${FILE_27:X.o=${NDIM}.o}: ${DEPENDS_27}
 FILE_28=RankGroup.o
 DEPENDS_28:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -896,11 +852,9 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
@@ -943,7 +897,6 @@ ${FILE_29:X.o=${NDIM}.o}: ${DEPENDS_29}
 FILE_30=RestartManager.o
 DEPENDS_30:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -955,11 +908,9 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/HDFDatabaseFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/NullDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/NullDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
@@ -989,7 +940,6 @@ ${FILE_30:X.o=${NDIM}.o}: ${DEPENDS_30}
 FILE_31=SAMRAIManager.o
 DEPENDS_31:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -1003,7 +953,6 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
@@ -1028,7 +977,6 @@ ${FILE_31:X.o=${NDIM}.o}: ${DEPENDS_31}
 FILE_32=SAMRAI_MPI.o
 DEPENDS_32:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -1062,7 +1010,6 @@ ${FILE_32:X.o=${NDIM}.o}: ${DEPENDS_32}
 FILE_33=Scanner.o
 DEPENDS_33:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -1072,7 +1019,6 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
@@ -1097,9 +1043,7 @@ ${FILE_33:X.o=${NDIM}.o}: ${DEPENDS_33}
 FILE_34=Schedule.o
 DEPENDS_34:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
@@ -1113,7 +1057,6 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
@@ -1150,7 +1093,6 @@ ${FILE_34:X.o=${NDIM}.o}: ${DEPENDS_34}
 FILE_35=Serializable.o
 DEPENDS_35:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -1181,7 +1123,6 @@ ${FILE_35:X.o=${NDIM}.o}: ${DEPENDS_35}
 FILE_36=SiloDatabase.o
 DEPENDS_36:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -1191,11 +1132,9 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
@@ -1218,7 +1157,6 @@ ${FILE_36:X.o=${NDIM}.o}: ${DEPENDS_36}
 FILE_37=SiloDatabaseFactory.o
 DEPENDS_37:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -1229,7 +1167,6 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
@@ -1271,7 +1208,6 @@ ${FILE_38:X.o=${NDIM}.o}: ${DEPENDS_38}
 FILE_39=StatTransaction.o
 DEPENDS_39:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -1281,7 +1217,6 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
@@ -1310,7 +1245,6 @@ ${FILE_39:X.o=${NDIM}.o}: ${DEPENDS_39}
 FILE_40=Statistic.o
 DEPENDS_40:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\
@@ -1320,11 +1254,9 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
@@ -1354,9 +1286,7 @@ ${FILE_40:X.o=${NDIM}.o}: ${DEPENDS_40}
 FILE_41=Statistician.o
 DEPENDS_41:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
@@ -1371,11 +1301,9 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
@@ -1418,7 +1346,6 @@ ${FILE_41:X.o=${NDIM}.o}: ${DEPENDS_41}
 FILE_42=Timer.o
 DEPENDS_42:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
@@ -1430,7 +1357,6 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
@@ -1461,7 +1387,6 @@ ${FILE_42:X.o=${NDIM}.o}: ${DEPENDS_42}
 FILE_43=TimerManager.o
 DEPENDS_43:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
@@ -1475,7 +1400,6 @@ DEPENDS_43:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/InputDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
@@ -1546,7 +1470,6 @@ ${FILE_45:X.o=${NDIM}.o}: ${DEPENDS_45}
 FILE_46=Utilities.o
 DEPENDS_46:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.I				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.I				\

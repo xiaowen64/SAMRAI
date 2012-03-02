@@ -623,12 +623,10 @@ public:
       /**********************************************************************
       * non-modifying operations
       **********************************************************************/
-      const double *getDoubleAttributes() const {
-         return &d_dbl_attrs[0];
-      }
-      const int *getIntAttributes() const {
-         return &d_int_attrs[0];
-      }
+      const double*
+      getDoubleAttributes() const;
+      const int*
+      getIntAttributes() const;
 
       /**********************************************************************
       * operators (modifying and non-modifying
@@ -977,13 +975,7 @@ private:
 } // namespace pdat
 } // namespace SAMRAI
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/SparseData.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/SparseData.C"
-#endif
 
 #endif
 #endif // included_pdat_SparseData

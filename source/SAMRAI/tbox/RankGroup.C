@@ -144,7 +144,8 @@ RankGroup::~RankGroup()
  ***********************************************************************
  */
 
-bool RankGroup::isMember(
+bool
+RankGroup::isMember(
    const int rank) const
 {
    bool is_member = false;
@@ -191,7 +192,8 @@ bool RankGroup::isMember(
  ***********************************************************************
  */
 
-int RankGroup::size() const
+int
+RankGroup::size() const
 {
    int size = -MathUtilities<int>::getMax();
 
@@ -222,7 +224,8 @@ int RankGroup::size() const
  ***********************************************************************
  */
 
-int RankGroup::getMappedRank(
+int
+RankGroup::getMappedRank(
    const int index) const
 {
    TBOX_ASSERT(index >= 0 && index < size());
@@ -256,7 +259,8 @@ int RankGroup::getMappedRank(
  ***********************************************************************
  */
 
-int RankGroup::getMapIndex(
+int
+RankGroup::getMapIndex(
    const int rank) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS

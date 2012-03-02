@@ -103,7 +103,8 @@ FaceComplexConstantRefine::~FaceComplexConstantRefine()
 {
 }
 
-bool FaceComplexConstantRefine::findRefineOperator(
+bool
+FaceComplexConstantRefine::findRefineOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -119,17 +120,20 @@ bool FaceComplexConstantRefine::findRefineOperator(
    }
 }
 
-int FaceComplexConstantRefine::getOperatorPriority() const
+int
+FaceComplexConstantRefine::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-FaceComplexConstantRefine::getStencilWidth() const {
+FaceComplexConstantRefine::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void FaceComplexConstantRefine::refine(
+void
+FaceComplexConstantRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,

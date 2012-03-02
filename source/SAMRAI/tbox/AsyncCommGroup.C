@@ -146,7 +146,8 @@ AsyncCommGroup::AsyncCommGroup(
  ***********************************************************************
  ***********************************************************************
  */
-AsyncCommGroup& AsyncCommGroup::operator = (
+AsyncCommGroup&
+AsyncCommGroup::operator = (
    const AsyncCommGroup& r) {
    NULL_USE(r);
    TBOX_ERROR(
@@ -175,7 +176,8 @@ AsyncCommGroup::~AsyncCommGroup()
  * Initialize data as if constructed with the given arguments.
  ***********************************************************************
  */
-void AsyncCommGroup::initialize(
+void
+AsyncCommGroup::initialize(
    const int nchild,
    AsyncCommStage* stage,
    AsyncCommStage::Handler* handler)
@@ -205,7 +207,8 @@ void AsyncCommGroup::initialize(
  * Check whether the current (or last) operation has completed.
  *********************************************************************
  */
-bool AsyncCommGroup::proceedToNextWait()
+bool
+AsyncCommGroup::proceedToNextWait()
 {
    switch (d_base_op) {
       case gather: return checkGather();
@@ -234,7 +237,8 @@ bool AsyncCommGroup::proceedToNextWait()
  * Whether the last communicatoin operation has finished.
  ****************************************************************
  */
-bool AsyncCommGroup::isDone() const
+bool
+AsyncCommGroup::isDone() const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_next_task_op == none) {
@@ -252,7 +256,8 @@ bool AsyncCommGroup::isDone() const
  * until all tasks of the communication operation is complete.
  *********************************************************************
  */
-void AsyncCommGroup::completeCurrentOperation()
+void
+AsyncCommGroup::completeCurrentOperation()
 {
    SAMRAI_MPI::Request * const req = getRequestPointer();
    SAMRAI_MPI::Status* mpi_stat = d_next_task_op == none ?
@@ -287,7 +292,8 @@ void AsyncCommGroup::completeCurrentOperation()
  * and call checkBcast to perform the communication.
  ************************************************************************
  */
-bool AsyncCommGroup::beginBcast(
+bool
+AsyncCommGroup::beginBcast(
    int* buffer,
    int size)
 {
@@ -317,7 +323,8 @@ bool AsyncCommGroup::beginBcast(
  * parent process and send to the children processes.
  ************************************************************************
  */
-bool AsyncCommGroup::checkBcast()
+bool
+AsyncCommGroup::checkBcast()
 {
    if (d_base_op != bcast) {
       TBOX_ERROR("Cannot check nonexistent broadcast operation."
@@ -489,7 +496,8 @@ bool AsyncCommGroup::checkBcast()
  ************************************************************************
  ************************************************************************
  */
-bool AsyncCommGroup::gatherByMpiCollective()
+bool
+AsyncCommGroup::gatherByMpiCollective()
 {
    if (d_mpi.getSize() > 1) {
       d_internal_buf.clear();
@@ -517,7 +525,8 @@ bool AsyncCommGroup::gatherByMpiCollective()
  * to parent.
  ************************************************************************
  */
-bool AsyncCommGroup::beginGather(
+bool
+AsyncCommGroup::beginGather(
    int* buffer,
    int size)
 {
@@ -590,7 +599,8 @@ bool AsyncCommGroup::beginGather(
  * children processes and send to the parent process.
  ************************************************************************
  */
-bool AsyncCommGroup::checkGather()
+bool
+AsyncCommGroup::checkGather()
 {
    if (d_base_op != gather) {
       TBOX_ERROR("Cannot check nonexistent gather operation\n"
@@ -792,7 +802,8 @@ bool AsyncCommGroup::checkGather()
  * to do the actual work.
  **********************************************************************
  */
-bool AsyncCommGroup::beginSumReduce(
+bool
+AsyncCommGroup::beginSumReduce(
    int* buffer,
    int size)
 {
@@ -814,7 +825,8 @@ bool AsyncCommGroup::beginSumReduce(
  ************************************************************************
  ************************************************************************
  */
-bool AsyncCommGroup::reduceByMpiCollective()
+bool
+AsyncCommGroup::reduceByMpiCollective()
 {
    SAMRAI_MPI::Op mpi_op =
       d_base_op == max_reduce ? MPI_MAX :
@@ -845,7 +857,8 @@ bool AsyncCommGroup::reduceByMpiCollective()
  * data and send result to parent..
  ************************************************************************
  */
-bool AsyncCommGroup::beginReduce()
+bool
+AsyncCommGroup::beginReduce()
 {
    if (d_use_mpi_collective_for_full_groups && d_group_size == d_mpi.getSize()) {
       return reduceByMpiCollective();
@@ -910,7 +923,8 @@ bool AsyncCommGroup::beginReduce()
  * The result of the local reduction is sent to the parent.
  ************************************************************************
  */
-bool AsyncCommGroup::checkReduce()
+bool
+AsyncCommGroup::checkReduce()
 {
    if (!(d_base_op == max_reduce ||
          d_base_op == min_reduce ||
@@ -1116,7 +1130,8 @@ bool AsyncCommGroup::checkReduce()
  ***********************************************************************
  ***********************************************************************
  */
-void AsyncCommGroup::setGroupAndRootRank(
+void
+AsyncCommGroup::setGroupAndRootRank(
    const SAMRAI_MPI& mpi,
    const int* group_ranks,
    const int group_size,
@@ -1142,7 +1157,8 @@ void AsyncCommGroup::setGroupAndRootRank(
  ***********************************************************************
  ***********************************************************************
  */
-void AsyncCommGroup::setGroupAndRootIndex(
+void
+AsyncCommGroup::setGroupAndRootIndex(
    const SAMRAI_MPI& mpi,
    const int* group_ranks,
    const int group_size,
@@ -1220,7 +1236,8 @@ void AsyncCommGroup::setGroupAndRootIndex(
  * process.
  ***************************************************************************
  */
-void AsyncCommGroup::reduceData(
+void
+AsyncCommGroup::reduceData(
    int* output,
    const int* data) const
 {
@@ -1251,7 +1268,8 @@ void AsyncCommGroup::reduceData(
  * Compute data that is dependent on the group, root and local processes.
  ***************************************************************************
  */
-void AsyncCommGroup::computeDependentData(
+void
+AsyncCommGroup::computeDependentData(
    const int* group_ranks,
    const int group_size)
 {
@@ -1299,7 +1317,8 @@ void AsyncCommGroup::computeDependentData(
  ***********************************************************************
  ***********************************************************************
  */
-void AsyncCommGroup::logCurrentState(
+void
+AsyncCommGroup::logCurrentState(
    std::ostream& co) const
 {
    SAMRAI_MPI::Request * const req = getRequestPointer();

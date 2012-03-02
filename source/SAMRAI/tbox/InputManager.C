@@ -46,7 +46,8 @@ StartupShutdownManager::Handler InputManager::s_finalize_handler(
  *************************************************************************
  */
 
-InputManager *InputManager::getManager()
+InputManager*
+InputManager::getManager()
 {
    if (!s_manager_instance) {
       s_manager_instance = new InputManager;
@@ -54,7 +55,8 @@ InputManager *InputManager::getManager()
    return s_manager_instance;
 }
 
-void InputManager::setManager(
+void
+InputManager::setManager(
    InputManager* manager)
 {
    if (s_manager_instance) {
@@ -63,7 +65,8 @@ void InputManager::setManager(
    s_manager_instance = manager;
 }
 
-void InputManager::finalizeCallback()
+void
+InputManager::finalizeCallback()
 {
    if (s_manager_instance) {
       delete s_manager_instance;
@@ -116,7 +119,8 @@ InputManager::parseInputFile(
  *************************************************************************
  */
 
-void InputManager::parseInputFile(
+void
+InputManager::parseInputFile(
    const std::string& filename,
    const boost::shared_ptr<InputDatabase>& db)
 {

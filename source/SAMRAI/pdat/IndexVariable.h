@@ -88,8 +88,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/IndexVariable.C"
-#endif
 
 #endif

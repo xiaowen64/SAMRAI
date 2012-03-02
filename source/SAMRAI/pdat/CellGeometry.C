@@ -15,8 +15,6 @@
 #include "SAMRAI/pdat/CellOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/make_shared.hpp>
-
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/CellGeometry.I"
 #endif
@@ -60,7 +58,8 @@ CellGeometry::~CellGeometry()
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap> CellGeometry::calculateOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+CellGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -93,45 +92,13 @@ boost::shared_ptr<hier::BoxOverlap> CellGeometry::calculateOverlap(
 /*
  *************************************************************************
  *
- * Compute the overlap between two cell centered boxes.  The two boxes
- * are intersected and, if necessary, the interior section is removed
- * from the destination box.
- *
- *************************************************************************
- */
-
-boost::shared_ptr<hier::BoxOverlap> CellGeometry::doOverlap(
-   const CellGeometry& dst_geometry,
-   const CellGeometry& src_geometry,
-   const hier::Box& src_mask,
-   const hier::Box& fill_box,
-   const bool overwrite_interior,
-   const hier::Transformation& transformation,
-   const hier::BoxContainer& dst_restrict_boxes)
-{
-   hier::BoxContainer dst_boxes;
-   dst_geometry.computeDestinationBoxes(dst_boxes,
-      src_geometry,
-      src_mask,
-      fill_box,
-      overwrite_interior,
-      transformation,
-      dst_restrict_boxes);
-
-   // Create the cell overlap data object using the boxes and source shift
-
-   return boost::make_shared<CellOverlap>(dst_boxes, transformation);
-}
-
-/*
- *************************************************************************
- *
  * Compute the boxes that will be used to contstruct an overlap object
  *
  *************************************************************************
  */
 
-void CellGeometry::computeDestinationBoxes(
+void
+CellGeometry::computeDestinationBoxes(
    hier::BoxContainer& dst_boxes,
    const CellGeometry& src_geometry,
    const hier::Box& src_mask,

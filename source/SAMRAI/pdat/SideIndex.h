@@ -15,6 +15,7 @@
 
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Index.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
 namespace pdat {

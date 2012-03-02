@@ -120,7 +120,8 @@ OutersideDoubleLinearTimeInterpolateOp::~OutersideDoubleLinearTimeInterpolateOp(
 {
 }
 
-bool OutersideDoubleLinearTimeInterpolateOp::findTimeInterpolateOperator(
+bool
+OutersideDoubleLinearTimeInterpolateOp::findTimeInterpolateOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -134,7 +135,8 @@ bool OutersideDoubleLinearTimeInterpolateOp::findTimeInterpolateOperator(
    }
 }
 
-void OutersideDoubleLinearTimeInterpolateOp::timeInterpolate(
+void
+OutersideDoubleLinearTimeInterpolateOp::timeInterpolate(
    hier::PatchData& dst_data,
    const hier::Box& where,
    const hier::PatchData& src_data_old,

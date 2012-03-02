@@ -402,8 +402,7 @@ public:
    /**
     * Return a non-NULL value if the iterator points to a valid list item.
     */
-   operator const void
-   * () const;
+   operator const void * () const;
 #endif
 
    /**
@@ -473,12 +472,6 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/List.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/tbox/List.C"
-#endif
 
 #endif

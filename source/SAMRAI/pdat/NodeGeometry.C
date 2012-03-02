@@ -16,8 +16,6 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/make_shared.hpp>
-
 #ifndef SAMRAI_INLINE
 #include "SAMRAI/pdat/NodeGeometry.I"
 #endif
@@ -62,7 +60,8 @@ NodeGeometry::~NodeGeometry()
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap> NodeGeometry::calculateOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+NodeGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -95,46 +94,13 @@ boost::shared_ptr<hier::BoxOverlap> NodeGeometry::calculateOverlap(
 /*
  *************************************************************************
  *
- * Compute the overlap between two node centered boxes.  The algorithm
- * is fairly straight-forward.  First, the two boxes are converted into
- * node coordinates.  Then, the boxes are intersected and, if necessary,
- * the interior section is removed from the destination box.
- *
- *************************************************************************
- */
-
-boost::shared_ptr<hier::BoxOverlap> NodeGeometry::doOverlap(
-   const NodeGeometry& dst_geometry,
-   const NodeGeometry& src_geometry,
-   const hier::Box& src_mask,
-   const hier::Box& fill_box,
-   const bool overwrite_interior,
-   const hier::Transformation& transformation,
-   const hier::BoxContainer& dst_restrict_boxes)
-{
-   hier::BoxContainer dst_boxes;
-   dst_geometry.computeDestinationBoxes(dst_boxes,
-      src_geometry,
-      src_mask,
-      fill_box,
-      overwrite_interior,
-      transformation,
-      dst_restrict_boxes);
-
-   // Create the node overlap data object using the boxes and source shift
-
-   return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
-}
-
-/*
- *************************************************************************
- *
  * Compute the boxes that will be used to contstruct an overlap object
  *
  *************************************************************************
  */
 
-void NodeGeometry::computeDestinationBoxes(
+void
+NodeGeometry::computeDestinationBoxes(
    hier::BoxContainer& dst_boxes,
    const NodeGeometry& src_geometry,
    const hier::Box& src_mask,

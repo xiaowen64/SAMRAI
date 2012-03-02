@@ -80,7 +80,8 @@ private:
    /*!
     * @brief Return the number of blocks represented in this tree.
     */
-   int getNumberBlocksInTree() const;
+   int
+   getNumberBlocksInTree() const;
 
    const GridGeometry*
    getGridGeometry() const;

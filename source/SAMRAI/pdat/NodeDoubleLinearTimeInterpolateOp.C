@@ -84,7 +84,8 @@ NodeDoubleLinearTimeInterpolateOp::~NodeDoubleLinearTimeInterpolateOp()
 {
 }
 
-bool NodeDoubleLinearTimeInterpolateOp::findTimeInterpolateOperator(
+bool
+NodeDoubleLinearTimeInterpolateOp::findTimeInterpolateOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -98,7 +99,8 @@ bool NodeDoubleLinearTimeInterpolateOp::findTimeInterpolateOperator(
    }
 }
 
-void NodeDoubleLinearTimeInterpolateOp::timeInterpolate(
+void
+NodeDoubleLinearTimeInterpolateOp::timeInterpolate(
    hier::PatchData& dst_data,
    const hier::Box& where,
    const hier::PatchData& src_data_old,

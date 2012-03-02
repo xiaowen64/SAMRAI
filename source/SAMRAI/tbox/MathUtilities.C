@@ -13,10 +13,6 @@
 
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/MathUtilities.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 
@@ -29,7 +25,8 @@ namespace tbox {
  */
 
 template<class TYPE>
-void MathUtilities<TYPE>::setArrayToSignalingNaN(
+void
+MathUtilities<TYPE>::setArrayToSignalingNaN(
    Array<TYPE>& array)
 {
    for (int i = 0; i < array.getSize(); i++) {
@@ -38,7 +35,8 @@ void MathUtilities<TYPE>::setArrayToSignalingNaN(
 }
 
 template<class TYPE>
-void MathUtilities<TYPE>::setArrayToSignalingNaN(
+void
+MathUtilities<TYPE>::setArrayToSignalingNaN(
    TYPE* array,
    int n)
 {
@@ -56,7 +54,8 @@ void MathUtilities<TYPE>::setArrayToSignalingNaN(
  */
 
 template<class TYPE>
-void MathUtilities<TYPE>::setArrayToMax(
+void
+MathUtilities<TYPE>::setArrayToMax(
    Array<TYPE>& array)
 {
    for (int i = 0; i < array.getSize(); i++) {
@@ -65,7 +64,8 @@ void MathUtilities<TYPE>::setArrayToMax(
 }
 
 template<class TYPE>
-void MathUtilities<TYPE>::setArrayToMax(
+void
+MathUtilities<TYPE>::setArrayToMax(
    TYPE* array,
    int n)
 {
@@ -83,7 +83,8 @@ void MathUtilities<TYPE>::setArrayToMax(
  */
 
 template<class TYPE>
-void MathUtilities<TYPE>::setArrayToMin(
+void
+MathUtilities<TYPE>::setArrayToMin(
    Array<TYPE>& array)
 {
    for (int i = 0; i < array.getSize(); i++) {
@@ -92,7 +93,8 @@ void MathUtilities<TYPE>::setArrayToMin(
 }
 
 template<class TYPE>
-void MathUtilities<TYPE>::setArrayToMin(
+void
+MathUtilities<TYPE>::setArrayToMin(
    TYPE* array,
    int n)
 {
@@ -110,7 +112,8 @@ void MathUtilities<TYPE>::setArrayToMin(
  */
 
 template<class TYPE>
-void MathUtilities<TYPE>::setArrayToEpsilon(
+void
+MathUtilities<TYPE>::setArrayToEpsilon(
    Array<TYPE>& array)
 {
    for (int i = 0; i < array.getSize(); i++) {
@@ -119,13 +122,108 @@ void MathUtilities<TYPE>::setArrayToEpsilon(
 }
 
 template<class TYPE>
-void MathUtilities<TYPE>::setArrayToEpsilon(
+void
+MathUtilities<TYPE>::setArrayToEpsilon(
    TYPE* array,
    int n)
 {
    for (int i = 0; i < n; i++) {
       array[i] = getEpsilon();
    }
+}
+
+template<class TYPE>
+TYPE
+MathUtilities<TYPE>::getZero()
+{
+   return s_zero;
+}
+
+template<class TYPE>
+TYPE
+MathUtilities<TYPE>::getOne()
+{
+   return s_one;
+}
+
+template<class TYPE>
+TYPE
+MathUtilities<TYPE>::getSignalingNaN()
+{
+   return s_signaling_nan;
+}
+
+template<class TYPE>
+TYPE
+MathUtilities<TYPE>::getMax()
+{
+   return s_max;
+}
+
+template<class TYPE>
+TYPE
+MathUtilities<TYPE>::getMin()
+{
+   return s_min;
+}
+
+template<class TYPE>
+TYPE
+MathUtilities<TYPE>::getEpsilon()
+{
+   return s_epsilon;
+}
+
+template<class TYPE>
+bool
+MathUtilities<TYPE>::isNaN(
+   const TYPE& value)
+{
+   NULL_USE(value);
+   return false;
+}
+
+template<class TYPE>
+bool
+MathUtilities<TYPE>::equalEps(
+   const TYPE& a,
+   const TYPE& b)
+{
+   return a == b;
+}
+
+template<class TYPE>
+TYPE
+MathUtilities<TYPE>::Min(
+   TYPE a,
+   TYPE b)
+{
+   return a < b ? a : b;
+}
+
+template<class TYPE>
+TYPE
+MathUtilities<TYPE>::Max(
+   TYPE a,
+   TYPE b)
+{
+   return a > b ? a : b;
+}
+
+template<class TYPE>
+TYPE
+MathUtilities<TYPE>::Abs(
+   TYPE value)
+{
+   return value;
+}
+
+template<class TYPE>
+TYPE
+MathUtilities<TYPE>::round(
+   TYPE x)
+{
+   return x;
 }
 
 }

@@ -123,7 +123,8 @@ OuterfaceComplexLinearTimeInterpolateOp()
 {
 }
 
-bool OuterfaceComplexLinearTimeInterpolateOp::findTimeInterpolateOperator(
+bool
+OuterfaceComplexLinearTimeInterpolateOp::findTimeInterpolateOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -137,7 +138,8 @@ bool OuterfaceComplexLinearTimeInterpolateOp::findTimeInterpolateOperator(
    }
 }
 
-void OuterfaceComplexLinearTimeInterpolateOp::timeInterpolate(
+void
+OuterfaceComplexLinearTimeInterpolateOp::timeInterpolate(
    hier::PatchData& dst_data,
    const hier::Box& where,
    const hier::PatchData& src_data_old,

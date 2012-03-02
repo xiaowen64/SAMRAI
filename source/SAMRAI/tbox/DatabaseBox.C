@@ -62,7 +62,8 @@ DatabaseBox::~DatabaseBox()
 {
 }
 
-bool DatabaseBox::empty() const
+bool
+DatabaseBox::empty() const
 {
    bool is_empty = (d_data.d_dimension == 0 ? true : false);
    for (int i = 0; i < d_data.d_dimension; i++) {
@@ -71,7 +72,8 @@ bool DatabaseBox::empty() const
    return is_empty;
 }
 
-int DatabaseBox::operator == (
+int
+DatabaseBox::operator == (
    const DatabaseBox& box) const
 {
    bool equals = (d_data.d_dimension == box.d_data.d_dimension);

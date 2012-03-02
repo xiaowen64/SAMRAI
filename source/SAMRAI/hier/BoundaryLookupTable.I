@@ -23,7 +23,8 @@ namespace hier {
  */
 
 SAMRAI_INLINE_KEYWORD
-BoundaryLookupTable *BoundaryLookupTable::getLookupTable(
+BoundaryLookupTable*
+BoundaryLookupTable::getLookupTable(
    const tbox::Dimension& dim)
 {
    if (!s_lookup_table_instance[dim.getValue() - 1]) {
@@ -41,13 +42,15 @@ BoundaryLookupTable *BoundaryLookupTable::getLookupTable(
  */
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Array<int>& BoundaryLookupTable::getMaxLocationIndices() const
+const tbox::Array<int>&
+BoundaryLookupTable::getMaxLocationIndices() const
 {
    return d_max_li;
 }
 
 SAMRAI_INLINE_KEYWORD
-const tbox::Array<int>& BoundaryLookupTable::getDirections(
+const tbox::Array<int>&
+BoundaryLookupTable::getDirections(
    const int loc,
    const int codim) const
 {
@@ -59,7 +62,8 @@ const tbox::Array<int>& BoundaryLookupTable::getDirections(
 }
 
 SAMRAI_INLINE_KEYWORD
-bool BoundaryLookupTable::isUpper(
+bool
+BoundaryLookupTable::isUpper(
    const int loc,
    const int codim,
    const int index) const
@@ -72,7 +76,8 @@ bool BoundaryLookupTable::isUpper(
 }
 
 SAMRAI_INLINE_KEYWORD
-bool BoundaryLookupTable::isLower(
+bool
+BoundaryLookupTable::isLower(
    const int loc,
    const int codim,
    const int index) const

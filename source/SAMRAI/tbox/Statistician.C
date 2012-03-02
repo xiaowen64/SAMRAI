@@ -50,7 +50,8 @@ Statistician::s_finalize_handler(
  *************************************************************************
  */
 
-Statistician *Statistician::createStatistician(
+Statistician*
+Statistician::createStatistician(
    bool register_for_restart,
    bool read_from_restart)
 {
@@ -58,7 +59,8 @@ Statistician *Statistician::createStatistician(
    return s_statistician_instance;
 }
 
-Statistician *Statistician::getStatistician()
+Statistician*
+Statistician::getStatistician()
 {
    /* Should have instance constructed in initializeCallback */
    TBOX_ASSERT(s_statistician_instance);
@@ -66,14 +68,16 @@ Statistician *Statistician::getStatistician()
    return s_statistician_instance;
 }
 
-void Statistician::initializeCallback()
+void
+Statistician::initializeCallback()
 {
    if (!s_statistician_instance) {
       makeStatisticianInstance();
    }
 }
 
-void Statistician::shutdownCallback()
+void
+Statistician::shutdownCallback()
 {
    if (s_statistician_instance) {
       if (s_statistician_instance->d_restart_database_instance) {
@@ -83,7 +87,8 @@ void Statistician::shutdownCallback()
    }
 }
 
-void Statistician::finalizeCallback()
+void
+Statistician::finalizeCallback()
 {
    if (s_statistician_instance) {
       delete s_statistician_instance;
@@ -91,7 +96,8 @@ void Statistician::finalizeCallback()
    }
 }
 
-void Statistician::registerSingletonSubclassInstance(
+void
+Statistician::registerSingletonSubclassInstance(
    Statistician* subclass_instance)
 {
    if (!s_statistician_instance) {
@@ -144,7 +150,8 @@ Statistician::~Statistician()
  *************************************************************************
  */
 
-void Statistician::makeStatisticianInstance(
+void
+Statistician::makeStatisticianInstance(
    bool register_for_restart,
    bool read_from_restart)
 {
@@ -163,7 +170,8 @@ void Statistician::makeStatisticianInstance(
    }
 }
 
-void Statistician::initRestartDatabase(
+void
+Statistician::initRestartDatabase(
    bool register_for_restart,
    bool read_from_restart)
 {
@@ -182,7 +190,8 @@ void Statistician::initRestartDatabase(
  *************************************************************************
  */
 
-boost::shared_ptr<Statistic> Statistician::getStatistic(
+boost::shared_ptr<Statistic>
+Statistician::getStatistic(
    const std::string& name,
    const std::string& stat_type)
 {
@@ -249,7 +258,8 @@ boost::shared_ptr<Statistic> Statistician::getStatistic(
 
 }
 
-bool Statistician::checkStatisticExists(
+bool
+Statistician::checkStatisticExists(
    boost::shared_ptr<Statistic>& stat,
    const std::string& name) const
 {
@@ -267,7 +277,8 @@ bool Statistician::checkStatisticExists(
 
 }
 
-bool Statistician::checkProcStatExists(
+bool
+Statistician::checkProcStatExists(
    boost::shared_ptr<Statistic>& stat,
    const std::string& name) const
 {
@@ -285,7 +296,8 @@ bool Statistician::checkProcStatExists(
    return stat_found;
 }
 
-bool Statistician::checkPatchStatExists(
+bool
+Statistician::checkPatchStatExists(
    boost::shared_ptr<Statistic>& stat,
    const std::string& name) const
 {
@@ -303,7 +315,8 @@ bool Statistician::checkPatchStatExists(
    return stat_found;
 }
 
-void Statistician::resetProcessorStatistics()
+void
+Statistician::resetProcessorStatistics()
 {
    for (int i = 0; i < d_num_proc_stats; i++) {
       d_proc_statistics[i]->reset();
@@ -311,7 +324,8 @@ void Statistician::resetProcessorStatistics()
    d_must_call_finalize = true;
 }
 
-void Statistician::resetPatchStatistics()
+void
+Statistician::resetPatchStatistics()
 {
    for (int i = 0; i < d_num_patch_stats; i++) {
       d_patch_statistics[i]->reset();
@@ -319,7 +333,8 @@ void Statistician::resetPatchStatistics()
    d_must_call_finalize = true;
 }
 
-void Statistician::resetStatistics()
+void
+Statistician::resetStatistics()
 {
    resetProcessorStatistics();
    resetPatchStatistics();
@@ -334,7 +349,8 @@ void Statistician::resetStatistics()
  *************************************************************************
  */
 
-int Statistician::getProcStatId(
+int
+Statistician::getProcStatId(
    const std::string& name) const
 {
    int ret_val = -1;
@@ -350,7 +366,8 @@ int Statistician::getProcStatId(
 
 }
 
-int Statistician::getGlobalProcStatSequenceLength(
+int
+Statistician::getGlobalProcStatSequenceLength(
    int proc_stat_id)
 {
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
@@ -381,7 +398,8 @@ int Statistician::getGlobalProcStatSequenceLength(
 
 }
 
-double Statistician::getGlobalProcStatValue(
+double
+Statistician::getGlobalProcStatValue(
    int proc_stat_id,
    int seq_num,
    int proc_num)
@@ -416,7 +434,8 @@ double Statistician::getGlobalProcStatValue(
    return val;
 }
 
-double Statistician::getGlobalProcStatSum(
+double
+Statistician::getGlobalProcStatSum(
    int proc_stat_id,
    int seq_num)
 {
@@ -443,7 +462,8 @@ double Statistician::getGlobalProcStatSum(
    return sum;
 }
 
-double Statistician::getGlobalProcStatMax(
+double
+Statistician::getGlobalProcStatMax(
    int proc_stat_id,
    int seq_num)
 {
@@ -470,7 +490,8 @@ double Statistician::getGlobalProcStatMax(
    return pmax;
 }
 
-int Statistician::getGlobalProcStatMaxProcessorId(
+int
+Statistician::getGlobalProcStatMaxProcessorId(
    int proc_stat_id,
    int seq_num)
 {
@@ -498,7 +519,8 @@ int Statistician::getGlobalProcStatMaxProcessorId(
    return id;
 }
 
-double Statistician::getGlobalProcStatMin(
+double
+Statistician::getGlobalProcStatMin(
    int proc_stat_id,
    int seq_num)
 {
@@ -525,7 +547,8 @@ double Statistician::getGlobalProcStatMin(
    return pmin;
 }
 
-int Statistician::getGlobalProcStatMinProcessorId(
+int
+Statistician::getGlobalProcStatMinProcessorId(
    int proc_stat_id,
    int seq_num)
 {
@@ -552,7 +575,8 @@ int Statistician::getGlobalProcStatMinProcessorId(
    return id;
 }
 
-void Statistician::printGlobalProcStatData(
+void
+Statistician::printGlobalProcStatData(
    int proc_stat_id,
    std::ostream& os,
    int precision)
@@ -606,7 +630,8 @@ void Statistician::printGlobalProcStatData(
 
 }
 
-void Statistician::printGlobalProcStatDataFormatted(
+void
+Statistician::printGlobalProcStatDataFormatted(
    int proc_stat_id,
    std::ostream& os,
    int precision)
@@ -685,7 +710,8 @@ void Statistician::printGlobalProcStatDataFormatted(
 
 }
 
-void Statistician::printGlobalProcStatDataFormatted(
+void
+Statistician::printGlobalProcStatDataFormatted(
    int proc_stat_id,
    int proc_id,
    std::ostream& os,
@@ -754,7 +780,8 @@ void Statistician::printGlobalProcStatDataFormatted(
 
 }
 
-int Statistician::getPatchStatId(
+int
+Statistician::getPatchStatId(
    const std::string& name) const
 {
    int ret_val = -1;
@@ -770,7 +797,8 @@ int Statistician::getPatchStatId(
 
 }
 
-int Statistician::getGlobalPatchStatSequenceLength(
+int
+Statistician::getGlobalPatchStatSequenceLength(
    int patch_stat_id)
 {
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
@@ -801,7 +829,8 @@ int Statistician::getGlobalPatchStatSequenceLength(
 
 }
 
-int Statistician::getGlobalPatchStatNumberPatches(
+int
+Statistician::getGlobalPatchStatNumberPatches(
    int patch_stat_id,
    int seq_num)
 {
@@ -837,7 +866,8 @@ int Statistician::getGlobalPatchStatNumberPatches(
 
 }
 
-int Statistician::getGlobalPatchStatPatchMapping(
+int
+Statistician::getGlobalPatchStatPatchMapping(
    int patch_stat_id,
    int seq_num,
    int patch_num)
@@ -875,7 +905,8 @@ int Statistician::getGlobalPatchStatPatchMapping(
    return mapping;
 }
 
-double Statistician::getGlobalPatchStatValue(
+double
+Statistician::getGlobalPatchStatValue(
    int patch_stat_id,
    int seq_num,
    int patch_num)
@@ -911,7 +942,8 @@ double Statistician::getGlobalPatchStatValue(
    return val;
 }
 
-double Statistician::getGlobalPatchStatSum(
+double
+Statistician::getGlobalPatchStatSum(
    int patch_stat_id,
    int seq_num)
 {
@@ -950,7 +982,8 @@ double Statistician::getGlobalPatchStatSum(
    return sum;
 }
 
-double Statistician::getGlobalPatchStatMax(
+double
+Statistician::getGlobalPatchStatMax(
    int patch_stat_id,
    int seq_num)
 {
@@ -989,7 +1022,8 @@ double Statistician::getGlobalPatchStatMax(
    return pmax;
 }
 
-int Statistician::getGlobalPatchStatMaxPatchId(
+int
+Statistician::getGlobalPatchStatMaxPatchId(
    int patch_stat_id,
    int seq_num)
 {
@@ -1032,7 +1066,8 @@ int Statistician::getGlobalPatchStatMaxPatchId(
    return id;
 }
 
-double Statistician::getGlobalPatchStatMin(
+double
+Statistician::getGlobalPatchStatMin(
    int patch_stat_id,
    int seq_num)
 {
@@ -1071,7 +1106,8 @@ double Statistician::getGlobalPatchStatMin(
    return pmin;
 }
 
-int Statistician::getGlobalPatchStatMinPatchId(
+int
+Statistician::getGlobalPatchStatMinPatchId(
    int patch_stat_id,
    int seq_num)
 {
@@ -1115,7 +1151,8 @@ int Statistician::getGlobalPatchStatMinPatchId(
 
 }
 
-double Statistician::getGlobalPatchStatProcessorSum(
+double
+Statistician::getGlobalPatchStatProcessorSum(
    int patch_stat_id,
    int processor_id,
    int seq_num)
@@ -1151,7 +1188,8 @@ double Statistician::getGlobalPatchStatProcessorSum(
    return sum;
 }
 
-double Statistician::getGlobalPatchStatProcessorSumMax(
+double
+Statistician::getGlobalPatchStatProcessorSumMax(
    int patch_stat_id,
    int seq_num)
 {
@@ -1188,7 +1226,8 @@ double Statistician::getGlobalPatchStatProcessorSumMax(
    return pmax;
 }
 
-int Statistician::getGlobalPatchStatProcessorSumMaxId(
+int
+Statistician::getGlobalPatchStatProcessorSumMaxId(
    int patch_stat_id,
    int seq_num)
 {
@@ -1228,7 +1267,8 @@ int Statistician::getGlobalPatchStatProcessorSumMaxId(
    return id;
 }
 
-double Statistician::getGlobalPatchStatProcessorSumMin(
+double
+Statistician::getGlobalPatchStatProcessorSumMin(
    int patch_stat_id,
    int seq_num)
 {
@@ -1266,7 +1306,8 @@ double Statistician::getGlobalPatchStatProcessorSumMin(
    return pmin;
 }
 
-int Statistician::getGlobalPatchStatProcessorSumMinId(
+int
+Statistician::getGlobalPatchStatProcessorSumMinId(
    int patch_stat_id,
    int seq_num)
 {
@@ -1306,7 +1347,8 @@ int Statistician::getGlobalPatchStatProcessorSumMinId(
    return id;
 }
 
-int Statistician::getGlobalPatchStatNumberPatchesOnProc(
+int
+Statistician::getGlobalPatchStatNumberPatchesOnProc(
    int patch_stat_id,
    int seq_num,
    int proc_id)
@@ -1342,7 +1384,8 @@ int Statistician::getGlobalPatchStatNumberPatchesOnProc(
 
 }
 
-int Statistician::getGlobalPatchStatMaxPatchesPerProc(
+int
+Statistician::getGlobalPatchStatMaxPatchesPerProc(
    int patch_stat_id,
    int seq_num)
 {
@@ -1395,7 +1438,8 @@ int Statistician::getGlobalPatchStatMaxPatchesPerProc(
    return pmax;
 }
 
-int Statistician::getGlobalPatchStatMaxPatchesPerProcId(
+int
+Statistician::getGlobalPatchStatMaxPatchesPerProcId(
    int patch_stat_id,
    int seq_num)
 {
@@ -1453,7 +1497,8 @@ int Statistician::getGlobalPatchStatMaxPatchesPerProcId(
    return id;
 }
 
-int Statistician::getGlobalPatchStatMinPatchesPerProc(
+int
+Statistician::getGlobalPatchStatMinPatchesPerProc(
    int patch_stat_id,
    int seq_num)
 {
@@ -1512,7 +1557,8 @@ int Statistician::getGlobalPatchStatMinPatchesPerProc(
    return pmin;
 }
 
-int Statistician::getGlobalPatchStatMinPatchesPerProcId(
+int
+Statistician::getGlobalPatchStatMinPatchesPerProcId(
    int patch_stat_id,
    int seq_num)
 {
@@ -1570,7 +1616,8 @@ int Statistician::getGlobalPatchStatMinPatchesPerProcId(
    return id;
 }
 
-void Statistician::printGlobalPatchStatData(
+void
+Statistician::printGlobalPatchStatData(
    int patch_stat_id,
    std::ostream& os,
    int precision)
@@ -1622,7 +1669,8 @@ void Statistician::printGlobalPatchStatData(
    }
 }
 
-void Statistician::printGlobalPatchStatDataFormatted(
+void
+Statistician::printGlobalPatchStatDataFormatted(
    int patch_stat_id,
    std::ostream& os,
    int precision)
@@ -1714,7 +1762,8 @@ void Statistician::printGlobalPatchStatDataFormatted(
  *************************************************************************
  */
 
-void Statistician::finalize(
+void
+Statistician::finalize(
    bool gather_individual_stats_on_proc_0)
 {
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
@@ -1994,7 +2043,8 @@ void Statistician::finalize(
  *************************************************************************
  */
 
-void Statistician::reduceGlobalStatistics()
+void
+Statistician::reduceGlobalStatistics()
 {
    std::vector<double> proc_stat_values;
    for (int istat = 0; istat < d_num_proc_stats; istat++) {
@@ -2097,7 +2147,8 @@ void Statistician::reduceGlobalStatistics()
  *************************************************************************
  */
 
-void Statistician::checkStatsForConsistency(
+void
+Statistician::checkStatsForConsistency(
    Array<int>& total_patches)
 {
    TBOX_ASSERT(total_patches.getSize() == 0);
@@ -2236,7 +2287,8 @@ void Statistician::checkStatsForConsistency(
  *************************************************************************
  */
 
-void Statistician::printLocalStatData(
+void
+Statistician::printLocalStatData(
    std::ostream& os,
    int precision) const
 {
@@ -2259,7 +2311,8 @@ void Statistician::printLocalStatData(
    }
 }
 
-void Statistician::printAllGlobalStatData(
+void
+Statistician::printAllGlobalStatData(
    std::ostream& os,
    int precision)
 {
@@ -2312,7 +2365,8 @@ void Statistician::printAllGlobalStatData(
  *
  *************************************************************************
  */
-void Statistician::printAllSummedGlobalStatData(
+void
+Statistician::printAllSummedGlobalStatData(
    const std::string& filename,
    int precision)
 {
@@ -2325,7 +2379,8 @@ void Statistician::printAllSummedGlobalStatData(
    }
 }
 
-void Statistician::printAllSummedGlobalStatData(
+void
+Statistician::printAllSummedGlobalStatData(
    std::ostream& os,
    int precision)
 {
@@ -2378,7 +2433,8 @@ void Statistician::printAllSummedGlobalStatData(
  *************************************************************************
  */
 
-void Statistician::printSpreadSheetOutput(
+void
+Statistician::printSpreadSheetOutput(
    const std::string& dirname,
    int precision)
 {
@@ -2449,7 +2505,8 @@ void Statistician::printSpreadSheetOutput(
  *************************************************************************
  */
 
-void Statistician::printSpreadSheetOutputForProcessor(
+void
+Statistician::printSpreadSheetOutputForProcessor(
    const int proc_id,
    const std::string& dirname,
    int precision)

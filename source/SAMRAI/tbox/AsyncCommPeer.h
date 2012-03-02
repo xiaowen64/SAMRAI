@@ -16,6 +16,7 @@
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/TimerManager.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <algorithm>
 #include <cstring>
@@ -468,12 +469,6 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/AsyncCommPeer.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/tbox/AsyncCommPeer.C"
-#endif
 
 #endif  // included_tbox_AsyncCommPeer

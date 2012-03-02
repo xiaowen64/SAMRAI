@@ -1385,7 +1385,9 @@ private:
     * container has been constructed.  If not, it requires a linear search
     * over the entire container and may not be efficient.
     */
-   bool hasBoxInBlock(const BlockId& block_id) const;
+   bool
+   hasBoxInBlock(
+      const BlockId& block_id) const;
 
    /*!
     * @brief Find all boxes that intersect with a given box.

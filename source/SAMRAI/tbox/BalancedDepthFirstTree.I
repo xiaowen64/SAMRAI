@@ -12,19 +12,22 @@ namespace SAMRAI {
 namespace tbox {
 
 SAMRAI_INLINE_KEYWORD
-unsigned int BalancedDepthFirstTree::getRank() const
+unsigned int
+BalancedDepthFirstTree::getRank() const
 {
    return d_rank;
 }
 
 SAMRAI_INLINE_KEYWORD
-unsigned int BalancedDepthFirstTree::getParentRank() const
+unsigned int
+BalancedDepthFirstTree::getParentRank() const
 {
    return d_parent;
 }
 
 SAMRAI_INLINE_KEYWORD
-unsigned int BalancedDepthFirstTree::getChildRank(
+unsigned int
+BalancedDepthFirstTree::getChildRank(
    unsigned int child_number) const
 {
    return d_children[child_number];
@@ -32,13 +35,15 @@ unsigned int BalancedDepthFirstTree::getChildRank(
 
 
 SAMRAI_INLINE_KEYWORD
-unsigned short int BalancedDepthFirstTree::getNumberOfChildren() const
+unsigned short int
+BalancedDepthFirstTree::getNumberOfChildren() const
 {
    return d_num_children;
 }
 
 SAMRAI_INLINE_KEYWORD
-unsigned int BalancedDepthFirstTree::getInvalidRank() const
+unsigned int
+BalancedDepthFirstTree::getInvalidRank() const
 {
    return 1 << (8 * sizeof(unsigned int) - 2);
 }

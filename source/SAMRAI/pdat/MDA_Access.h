@@ -7,8 +7,8 @@
  * Description:   Light-weight array class
  *
  ************************************************************************/
-#ifndef include_MDA_Access_h
-#define include_MDA_Access_h
+#ifndef included_MDA_Access_h
+#define included_MDA_Access_h
 
 #include "SAMRAI/SAMRAI_config.h"
 
@@ -1410,4 +1410,4 @@ public:
    }
 };
 
-#endif  // include_MDA_Access_h
+#endif  // included_MDA_Access_h

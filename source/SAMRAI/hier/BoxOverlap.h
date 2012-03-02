@@ -111,8 +111,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxOverlap.I"
-#endif
-
 #endif
