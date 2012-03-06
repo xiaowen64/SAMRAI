@@ -122,4 +122,8 @@ private:
 
 }
 }
+
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/math/PatchCellDataOpsInteger.I"
+#endif
 #endif

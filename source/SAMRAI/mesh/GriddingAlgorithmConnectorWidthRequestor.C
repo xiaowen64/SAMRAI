@@ -40,7 +40,8 @@ GriddingAlgorithmConnectorWidthRequestor::GriddingAlgorithmConnectorWidthRequest
  * properly on a given hierarchy.
  **************************************************************************
  */
-void GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
+void
+GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
    std::vector<hier::IntVector>& self_connector_widths,
    std::vector<hier::IntVector>& fine_connector_widths,
    const hier::PatchHierarchy& patch_hierarchy) const
@@ -84,7 +85,8 @@ void GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
       /*
        * Must be big enough for GriddingAlgorithm::computeProperNestingData().
        */
-      self_connector_widths[ln].max(hier::IntVector(dim,patch_hierarchy.getProperNestingBuffer(ln)));
+      self_connector_widths[ln].max(
+         hier::IntVector(dim,patch_hierarchy.getProperNestingBuffer(ln)));
    }
 }
 
@@ -110,7 +112,8 @@ void GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
  *************************************************************************
  */
 
-void GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFromFines(
+void
+GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFromFines(
    hier::IntVector& coarse_to_fine_width,
    hier::IntVector& coarse_to_coarse_width,
    const hier::IntVector& fine_to_fine_width,

@@ -21,15 +21,147 @@ namespace mesh {
 
 
 /*
+**************************************************************************
+**************************************************************************
+*/
+SAMRAI_INLINE_KEYWORD
+void
+TreeLoadBalancer::setUniformWorkload(
+   int level_number)
+{
+   d_workload_data_id[level_number] = -1;
+}
+
+
+
+/*
  *************************************************************************
+ * Compute the total combined penalty associated with box cutting.
+ * Any kind of binary function can be used.  I am just experimenting
+ * with various types and weights.
+ *
+ * All input penalties should all be non-dimensional.
  *************************************************************************
  */
+
 SAMRAI_INLINE_KEYWORD
-TreeLoadBalancer::BoxInTransit::BoxInTransit(
-   const tbox::Dimension &dim) :
-   d_box(dim),
-   d_orig_box(dim)
+double
+TreeLoadBalancer::combinedBreakingPenalty(
+   double balance_penalty,
+   double surface_penalty,
+   double slender_penalty) const
 {
+   double combined_penalty =
+      d_balance_penalty_wt * balance_penalty * balance_penalty
+      + d_surface_penalty_wt * surface_penalty * surface_penalty
+      + d_slender_penalty_wt * slender_penalty * slender_penalty;
+   return combined_penalty;
+}
+
+
+
+/*
+ *************************************************************************
+ * Return non-dimensional volume-weighted balance penalty for
+ * two containers of boxes and how imbalanced they are.
+ *************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+double
+TreeLoadBalancer::computeBalancePenalty(
+   const std::vector<hier::Box>& a,
+   const std::vector<hier::Box>& b,
+   double imbalance) const
+{
+   NULL_USE(a);
+   NULL_USE(b);
+   return tbox::MathUtilities<double>::Abs(imbalance);
+}
+
+
+
+/*
+ *************************************************************************
+ * Return non-dimensional volume-weighted balance penalty for
+ * two containers of boxes and how imbalanced they are.
+ *************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+double
+TreeLoadBalancer::computeBalancePenalty(
+   const TransitSet& a,
+   const TransitSet& b,
+   double imbalance) const
+{
+   NULL_USE(a);
+   NULL_USE(b);
+   return tbox::MathUtilities<double>::Abs(imbalance);
+}
+
+
+
+/*
+ *************************************************************************
+ * Return non-dimensional volume-weighted balance penalty for
+ * a box and how imbalanced it is.
+ *************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+double
+TreeLoadBalancer::computeBalancePenalty(
+   const hier::Box& a,
+   double imbalance) const
+{
+   NULL_USE(a);
+   return tbox::MathUtilities<double>::Abs(imbalance);
+}
+
+
+
+/*
+ *************************************************************************
+ *
+ * Private utility functions to determine parameter values for level.
+ *
+ *************************************************************************
+ */
+
+SAMRAI_INLINE_KEYWORD
+int
+TreeLoadBalancer::getWorkloadDataId(
+   int level_number) const
+{
+
+   TBOX_ASSERT(level_number >= 0);
+
+   int wrk_id = (level_number < d_workload_data_id.getSize() ?
+                 d_workload_data_id[level_number] :
+                 d_master_workload_data_id);
+
+   return wrk_id;
+}
+
+
+
+/*
+**************************************************************************
+**************************************************************************
+*/
+
+SAMRAI_INLINE_KEYWORD
+int
+TreeLoadBalancer::sumWorkInBoxes(
+   const TransitSet::const_iterator &first,
+   const TransitSet::const_iterator &last ) const
+{
+   int sum = 0;
+   for ( TransitSet::const_iterator itr=first; itr!=last; ++itr ) {
+      sum += itr->d_load;
+   }
+   return sum;
 }
 
 
@@ -39,12 +171,13 @@ TreeLoadBalancer::BoxInTransit::BoxInTransit(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-TreeLoadBalancer::BoxInTransit::BoxInTransit(
-   const hier::Box& origin):
-   d_box(origin),
-   d_orig_box(origin),
-   d_load(origin.size())
+void
+TreeLoadBalancer::printStatistics(
+   std::ostream& s) const
 {
+   BalanceUtilities::gatherAndReportLoadBalance(d_load_stat,
+      tbox::SAMRAI_MPI::getSAMRAIWorld(),
+      s);
 }
 
 
@@ -54,34 +187,18 @@ TreeLoadBalancer::BoxInTransit::BoxInTransit(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-TreeLoadBalancer::BoxInTransit::BoxInTransit(
-   const int *&ptr,
-   const tbox::Dimension &dim ):
-   d_box(dim),
-   d_orig_box(dim),
-   d_load(0)
-{
-   getFromIntBuffer(ptr);
-   ptr += commBufferSize();
-}
-
-
-
-/*
- *************************************************************************
- * Construct a new BoxInTransit with the history of an existing box.
- *************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-TreeLoadBalancer::BoxInTransit::BoxInTransit(
-   const BoxInTransit& other,
+double
+TreeLoadBalancer::computeLoad(
    const hier::Box& box,
-   int rank,
-   hier::LocalId local_id):
-   d_box(box, local_id, rank),
-   d_orig_box(other.d_orig_box),
-   d_load(d_box.size())
+   const hier::Box& restriction) const
 {
+   /*
+    * Currently only for uniform loads, where the load is equal
+    * to the number of cells.  For non-uniform loads, this method
+    * needs the patch data index for the load.  It would summ up
+    * the individual cell loads in the overlap region.
+    */
+   return double((box * restriction).size());
 }
 
 
@@ -91,7 +208,29 @@ TreeLoadBalancer::BoxInTransit::BoxInTransit(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int TreeLoadBalancer::BoxInTransit::getOwnerRank() const {
+double
+TreeLoadBalancer::computeLoad(
+   const hier::Box& mapped_box) const
+{
+   /*
+    * Currently only for uniform loads, where the load is equal
+    * to the number of cells.  For non-uniform loads, this method
+    * needs the patch data index for the load.  It would summ up
+    * the individual cell loads in the cell.
+    */
+   return double(mapped_box.size());
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+int
+TreeLoadBalancer::BoxInTransit::getOwnerRank() const
+{
    return d_box.getOwnerRank();
 }
 
@@ -102,7 +241,9 @@ int TreeLoadBalancer::BoxInTransit::getOwnerRank() const {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-hier::LocalId TreeLoadBalancer::BoxInTransit::getLocalId() const {
+hier::LocalId
+TreeLoadBalancer::BoxInTransit::getLocalId() const
+{
    return d_box.getLocalId();
 }
 
@@ -113,7 +254,9 @@ hier::LocalId TreeLoadBalancer::BoxInTransit::getLocalId() const {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-hier::Box& TreeLoadBalancer::BoxInTransit::getBox() {
+hier::Box&
+TreeLoadBalancer::BoxInTransit::getBox()
+{
    return d_box;
 }
 
@@ -124,7 +267,9 @@ hier::Box& TreeLoadBalancer::BoxInTransit::getBox() {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const hier::Box& TreeLoadBalancer::BoxInTransit::getBox() const {
+const hier::Box&
+TreeLoadBalancer::BoxInTransit::getBox() const
+{
    return d_box;
 }
 
@@ -135,7 +280,8 @@ const hier::Box& TreeLoadBalancer::BoxInTransit::getBox() const {
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int TreeLoadBalancer::BoxInTransit::commBufferSize() const
+int
+TreeLoadBalancer::BoxInTransit::commBufferSize() const
 {
    const tbox::Dimension& dim(d_box.getDim());
    return 2 * hier::Box::commBufferSize(dim) + 1;
@@ -148,7 +294,8 @@ int TreeLoadBalancer::BoxInTransit::commBufferSize() const
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const TreeLoadBalancer::BoxInTransit& TreeLoadBalancer::BoxInTransit::operator = (
+const TreeLoadBalancer::BoxInTransit&
+TreeLoadBalancer::BoxInTransit::operator = (
    const BoxInTransit& other)
 {
    d_box = other.d_box;
@@ -164,14 +311,15 @@ const TreeLoadBalancer::BoxInTransit& TreeLoadBalancer::BoxInTransit::operator =
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int * TreeLoadBalancer::BoxInTransit::putToIntBuffer(
+int*
+TreeLoadBalancer::BoxInTransit::putToIntBuffer(
    int* buffer) const
 {
-   const tbox::Dimension& dim(d_box.getDim());
+   const int box_comm_buf_size = hier::Box::commBufferSize(d_box.getDim());
    d_box.putToIntBuffer(buffer);
-   buffer += hier::Box::commBufferSize(dim);
+   buffer += box_comm_buf_size;
    d_orig_box.putToIntBuffer(buffer);
-   buffer += hier::Box::commBufferSize(dim);
+   buffer += box_comm_buf_size;
    *(buffer++) = d_load;
    return buffer;
 }
@@ -183,14 +331,15 @@ int * TreeLoadBalancer::BoxInTransit::putToIntBuffer(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const int * TreeLoadBalancer::BoxInTransit::getFromIntBuffer(
+const int*
+TreeLoadBalancer::BoxInTransit::getFromIntBuffer(
    const int* buffer)
 {
-   const tbox::Dimension& dim(d_box.getDim());
+   const int box_comm_buf_size = hier::Box::commBufferSize(d_box.getDim());
    d_box.getFromIntBuffer(buffer);
-   buffer += hier::Box::commBufferSize(dim);
+   buffer += box_comm_buf_size;
    d_orig_box.getFromIntBuffer(buffer);
-   buffer += hier::Box::commBufferSize(dim);
+   buffer += box_comm_buf_size;
    d_load = *(buffer++);
    return buffer;
 }
@@ -202,7 +351,8 @@ const int * TreeLoadBalancer::BoxInTransit::getFromIntBuffer(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool TreeLoadBalancer::BoxInTransitMoreLoad::operator () (
+bool
+TreeLoadBalancer::BoxInTransitMoreLoad::operator () (
    const TreeLoadBalancer::BoxInTransit& a,
    const TreeLoadBalancer::BoxInTransit& b) const
 {
@@ -210,46 +360,6 @@ bool TreeLoadBalancer::BoxInTransitMoreLoad::operator () (
       return a.d_load > b.d_load;
    }
    return a.d_box.getId() < b.d_box.getId();
-}
-
-
-
-/*
- *************************************************************************
- *************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-double TreeLoadBalancer::computeLoad(
-   const hier::Box& box,
-   const hier::Box& restriction) const
-{
-   /*
-    * Currently only for uniform loads, where the load is equal
-    * to the number of cells.  For non-uniform loads, this method
-    * needs the patch data index for the load.  It would summ up
-    * the individual cell loads in the overlap region.
-    */
-   hier::Box overlap = box * restriction;
-   return double(overlap.size());
-}
-
-
-
-/*
- *************************************************************************
- *************************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-double TreeLoadBalancer::computeLoad(
-   const hier::Box& mapped_box) const
-{
-   /*
-    * Currently only for uniform loads, where the load is equal
-    * to the number of cells.  For non-uniform loads, this method
-    * needs the patch data index for the load.  It would summ up
-    * the individual cell loads in the cell.
-    */
-   return double(mapped_box.size());
 }
 
 }

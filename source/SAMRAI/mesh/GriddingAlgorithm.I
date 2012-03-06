@@ -19,27 +19,6 @@ namespace SAMRAI {
 namespace mesh {
 
 SAMRAI_INLINE_KEYWORD
-boost::shared_ptr<TagAndInitializeStrategy>
-GriddingAlgorithm::getTagAndInitializeStrategy() const
-{
-   return d_tag_init_strategy;
-}
-
-SAMRAI_INLINE_KEYWORD
-boost::shared_ptr<LoadBalanceStrategy>
-GriddingAlgorithm::getLoadBalanceStrategy() const
-{
-   return d_load_balancer;
-}
-
-SAMRAI_INLINE_KEYWORD
-boost::shared_ptr<LoadBalanceStrategy>
-GriddingAlgorithm::getLoadBalanceStrategyZero() const
-{
-   return d_load_balancer0;
-}
-
-SAMRAI_INLINE_KEYWORD
 void
 GriddingAlgorithm::setEfficiencyTolerance(
    const double efficiency_tolerance,
@@ -87,6 +66,54 @@ GriddingAlgorithm::setCombineEfficiency(
    TBOX_ASSERT((level_number >= 0) && (level_number < d_hierarchy->getMaxNumberOfLevels()));
    TBOX_ASSERT((combine_efficiency >= 0) && (combine_efficiency <= 1.0));
    d_combine_efficiency[level_number] = combine_efficiency;
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+GriddingAlgorithm::startupCallback()
+{
+   s_tag_indx = new tbox::Array<int>(
+      tbox::Dimension::MAXIMUM_DIMENSION_VALUE,
+      -1);
+   s_buf_tag_indx = new tbox::Array<int>(
+      tbox::Dimension::MAXIMUM_DIMENSION_VALUE,
+      -1);
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+GriddingAlgorithm::shutdownCallback()
+{
+   delete s_tag_indx;
+   delete s_buf_tag_indx;
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+GriddingAlgorithm::initializeCallback()
+{
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+GriddingAlgorithm::finalizeCallback()
+{
 }
 
 }

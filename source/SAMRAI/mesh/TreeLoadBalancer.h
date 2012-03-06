@@ -12,6 +12,7 @@
 #define included_mesh_TreeLoadBalancer
 
 #include "SAMRAI/SAMRAI_config.h"
+#include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
@@ -292,25 +293,31 @@ private:
        *
        * @param[in] other
        */
-      const BoxInTransit& operator = (const BoxInTransit& other);
+      const BoxInTransit&
+      operator = (const BoxInTransit& other);
 
       //! @brief Return the owner rank.
-      int getOwnerRank() const;
+      int
+      getOwnerRank() const;
 
       //! @brief Return the LocalId.
-      hier::LocalId getLocalId() const;
+      hier::LocalId
+      getLocalId() const;
 
       //! @brief Return the Box.
-      hier::Box& getBox();
+      hier::Box&
+      getBox();
 
       //! @brief Return the Box.
-      const hier::Box& getBox() const;
+      const hier::Box&
+      getBox() const;
 
       /*!
        * @brief Return number of ints required for putting a putting the
        * object in message passing buffer.
        */
-      int commBufferSize() const;
+      int
+      commBufferSize() const;
 
       /*!
        * @brief Put self into a int buffer.
@@ -320,7 +327,8 @@ private:
        *
        * @return The next unwritten position in the buffer.
        */
-      int *putToIntBuffer(
+      int*
+      putToIntBuffer(
          int* buffer) const;
 
       /*!
@@ -331,7 +339,8 @@ private:
        *
        * @return The next unread position in the buffer.
        */
-      const int *getFromIntBuffer(
+      const int*
+      getFromIntBuffer(
          const int* buffer);
 
       //! @brief The Box.
@@ -363,7 +372,8 @@ private:
        * @brief Compares two BoxInTransit for sorting them from more load
        * to less load.
        */
-      bool operator () (
+      bool
+      operator () (
          const BoxInTransit& a,
          const BoxInTransit& b) const;
    };
@@ -406,12 +416,7 @@ private:
     */
    struct SubtreeLoadData {
       // @brief Constructor.
-      SubtreeLoadData():
-         d_num_procs(0),
-         d_total_work(0),
-         d_load_exported(0),
-         d_load_imported(0) {
-      }
+      SubtreeLoadData();
 
       /*!
        * @brief Number of processes in subtree
@@ -588,7 +593,8 @@ private:
     *
     * @param [i] kept_imports Work that was imported and locally kept.
     */
-   void constructSemilocalUnbalancedToBalanced(
+   void
+   constructSemilocalUnbalancedToBalanced(
       hier::Connector &unbalanced_to_balanced,
       const TreeLoadBalancer::TransitSet &kept_imports ) const;
 
@@ -743,7 +749,8 @@ private:
     * @brief Constrain maximum box sizes in the given BoxLevel and
     * update given Connectors to the changed BoxLevel.
     */
-   void constrainMaxBoxSizes(
+   void
+   constrainMaxBoxSizes(
       hier::BoxLevel& box_level,
       hier::Connector &anchor_to_level,
       hier::Connector &level_to_anchor ) const;
@@ -762,7 +769,8 @@ private:
     * @param [i] cycle_number
     * @param [i] number_of_cycles
     */
-   void createBalanceRankGroupBasedOnCycles(
+   void
+   createBalanceRankGroupBasedOnCycles(
       tbox::RankGroup &rank_group,
       int &num_groups,
       int &group_num,
@@ -784,7 +792,8 @@ private:
     * @param [i] rank_group
     * @param [i] bdfs
     */
-   void setupAsyncCommObjects(
+   void
+   setupAsyncCommObjects(
       tbox::AsyncCommStage& child_stage,
       tbox::AsyncCommPeer<int> *& child_comms,
       tbox::AsyncCommStage& parent_stage,
@@ -805,7 +814,8 @@ private:
     *
     * @return Sum of work in [first,last)
     */
-   int sumWorkInBoxes(
+   int
+   sumWorkInBoxes(
       const TransitSet::const_iterator &first,
       const TransitSet::const_iterator &last ) const;
 

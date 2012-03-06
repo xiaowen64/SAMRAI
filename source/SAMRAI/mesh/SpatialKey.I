@@ -19,7 +19,8 @@ namespace mesh {
  ****************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-SpatialKey& SpatialKey::operator = (
+SpatialKey&
+SpatialKey::operator = (
    const SpatialKey& spatial_key)
 {
    for (int i = 0; i < NUM_COORDS_MIXED_FOR_SPATIAL_KEY; i++) {
@@ -37,12 +38,16 @@ SpatialKey& SpatialKey::operator = (
  ****************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool SpatialKey::operator == (
+bool
+SpatialKey::operator == (
    const SpatialKey& spatial_key) const
 {
    bool are_equal = true;
    for (int i = 0; i < NUM_COORDS_MIXED_FOR_SPATIAL_KEY; i++) {
-      if (d_key[i] != spatial_key.d_key[i]) are_equal = false;
+      if (d_key[i] != spatial_key.d_key[i]) {
+         are_equal = false;
+         break;
+      }
    }
    return are_equal;
 }
@@ -56,7 +61,8 @@ bool SpatialKey::operator == (
  ****************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool SpatialKey::operator != (
+bool
+SpatialKey::operator != (
    const SpatialKey& spatial_key) const
 {
    return !((*this) == spatial_key);
@@ -70,11 +76,60 @@ bool SpatialKey::operator != (
  ****************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void SpatialKey::setToZero()
+void
+SpatialKey::setToZero()
 {
    for (int i = 0; i < NUM_COORDS_MIXED_FOR_SPATIAL_KEY; i++) {
       d_key[i] = 0;
    }
+}
+
+/*
+ ****************************************************************************
+ *
+ * Less than or equal operator for spatial keys.  Returns true if
+ * this key is less or equal to the argument key.
+ *
+ ****************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+bool
+SpatialKey::operator <= (
+   const SpatialKey& spatial_key) const
+{
+   return ((*this) < spatial_key) || ((*this) == spatial_key);
+}
+
+/*
+ ****************************************************************************
+ *
+ * Greater than operator for spatial keys. Returns true if this key is
+ * is greater than the argument key.
+ *
+ ****************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+bool
+SpatialKey::operator > (
+   const SpatialKey& spatial_key) const
+{
+   return !((*this) < spatial_key) && ((*this) != spatial_key);
+}
+
+/*
+ ****************************************************************************
+ *
+ * Greater than or equal operator for spatial keys.  Returns true if this
+ * key is greater than or equal to the argument key.
+ *
+ ****************************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+bool
+SpatialKey::operator >= (
+   const SpatialKey& spatial_key) const
+{
+   return ((*this) > spatial_key) || ((*this) == spatial_key);
 }
 
 }

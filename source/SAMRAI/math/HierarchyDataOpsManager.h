@@ -232,4 +232,9 @@ private:
 
 }
 }
+
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/math/HierarchyDataOpsManager.I"
+#endif
+
 #endif

@@ -16,6 +16,10 @@
 #include "SAMRAI/tbox/Utilities.h"
 #endif
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/math/PatchCellDataOpsComplex.I"
+#endif
+
 namespace SAMRAI {
 namespace math {
 
@@ -35,7 +39,8 @@ PatchCellDataOpsComplex::~PatchCellDataOpsComplex()
  *************************************************************************
  */
 
-void PatchCellDataOpsComplex::swapData(
+void
+PatchCellDataOpsComplex::swapData(
    const boost::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
@@ -56,41 +61,6 @@ void PatchCellDataOpsComplex::swapData(
 #endif
    patch->setPatchData(data1_id, d2);
    patch->setPatchData(data2_id, d1);
-}
-
-void PatchCellDataOpsComplex::printData(
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
-   const hier::Box& box,
-   std::ostream& s) const
-{
-   TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
-
-   s << "Data box = " << box << std::endl;
-   data->print(box, s);
-   s << "\n";
-}
-
-void PatchCellDataOpsComplex::copyData(
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& dst,
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& src,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
-
-   (dst->getArrayData()).copy(src->getArrayData(), box);
-}
-
-void PatchCellDataOpsComplex::setToScalar(
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& dst,
-   const dcomplex& alpha,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(dst);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
-
-   dst->fillAll(alpha, box);
 }
 
 }

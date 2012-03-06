@@ -16,6 +16,10 @@
 #include "SAMRAI/tbox/Utilities.h"
 #endif
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/math/PatchCellDataNormOpsComplex.I"
+#endif
+
 namespace SAMRAI {
 namespace math {
 
@@ -27,61 +31,8 @@ PatchCellDataNormOpsComplex::~PatchCellDataNormOpsComplex()
 {
 }
 
-/*
- *************************************************************************
- *
- * Compute the number of data entries on a patch in the given box.
- *
- *************************************************************************
- */
-
-int PatchCellDataNormOpsComplex::numberOfEntries(
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
-
-   const hier::Box ibox = box * data->getGhostBox();
-   int retval = ibox.size() * data->getDepth();
-   return retval;
-}
-
-/*
- *************************************************************************
- *
- * Norm operations for complex cell-centered data.
- *
- *************************************************************************
- */
-
-double PatchCellDataNormOpsComplex::sumControlVolumes(
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
-   const boost::shared_ptr<pdat::CellData<double> >& cvol,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(data && cvol);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *cvol, box);
-
-   return d_array_ops.sumControlVolumes(data->getArrayData(),
-      cvol->getArrayData(),
-      box);
-}
-
-void PatchCellDataNormOpsComplex::abs(
-   const boost::shared_ptr<pdat::CellData<double> >& dst,
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& src,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
-
-   d_array_ops.abs(dst->getArrayData(),
-      src->getArrayData(),
-      box);
-}
-
-double PatchCellDataNormOpsComplex::L1Norm(
+double
+PatchCellDataNormOpsComplex::L1Norm(
    const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::CellData<double> >& cvol) const
@@ -102,7 +53,8 @@ double PatchCellDataNormOpsComplex::L1Norm(
    return retval;
 }
 
-double PatchCellDataNormOpsComplex::L2Norm(
+double
+PatchCellDataNormOpsComplex::L2Norm(
    const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::CellData<double> >& cvol) const
@@ -123,7 +75,8 @@ double PatchCellDataNormOpsComplex::L2Norm(
    return retval;
 }
 
-double PatchCellDataNormOpsComplex::weightedL2Norm(
+double
+PatchCellDataNormOpsComplex::weightedL2Norm(
    const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
    const boost::shared_ptr<pdat::CellData<dcomplex> >& weight,
    const hier::Box& box,
@@ -149,7 +102,8 @@ double PatchCellDataNormOpsComplex::weightedL2Norm(
    return retval;
 }
 
-double PatchCellDataNormOpsComplex::RMSNorm(
+double
+PatchCellDataNormOpsComplex::RMSNorm(
    const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::CellData<double> >& cvol) const
@@ -168,7 +122,8 @@ double PatchCellDataNormOpsComplex::RMSNorm(
    return retval;
 }
 
-double PatchCellDataNormOpsComplex::weightedRMSNorm(
+double
+PatchCellDataNormOpsComplex::weightedRMSNorm(
    const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
    const boost::shared_ptr<pdat::CellData<dcomplex> >& weight,
    const hier::Box& box,
@@ -188,7 +143,8 @@ double PatchCellDataNormOpsComplex::weightedRMSNorm(
    return retval;
 }
 
-double PatchCellDataNormOpsComplex::maxNorm(
+double
+PatchCellDataNormOpsComplex::maxNorm(
    const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::CellData<double> >& cvol) const
@@ -209,7 +165,8 @@ double PatchCellDataNormOpsComplex::maxNorm(
    return retval;
 }
 
-dcomplex PatchCellDataNormOpsComplex::dot(
+dcomplex
+PatchCellDataNormOpsComplex::dot(
    const boost::shared_ptr<pdat::CellData<dcomplex> >& data1,
    const boost::shared_ptr<pdat::CellData<dcomplex> >& data2,
    const hier::Box& box,
@@ -232,24 +189,6 @@ dcomplex PatchCellDataNormOpsComplex::dot(
             cvol->getArrayData(),
             box);
    }
-   return retval;
-}
-
-dcomplex PatchCellDataNormOpsComplex::integral(
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
-   const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> >& vol) const
-{
-   TBOX_ASSERT(data);
-   TBOX_ASSERT(vol);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*data, box, *vol);
-
-   dcomplex retval = dcomplex(0.0, 0.0);
-
-   retval = d_array_ops.integral(data->getArrayData(),
-         vol->getArrayData(),
-         box);
-
    return retval;
 }
 

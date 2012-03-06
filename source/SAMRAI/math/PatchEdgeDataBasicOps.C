@@ -71,9 +71,9 @@ void PatchEdgeDataBasicOps<TYPE>::scale(
    TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
-   const tbox::Dimension& dim(box.getDim());
+   int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.scale(dst->getArrayData(d),
          alpha, src->getArrayData(d),
@@ -91,9 +91,9 @@ void PatchEdgeDataBasicOps<TYPE>::addScalar(
    TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
-   const tbox::Dimension& dim(box.getDim());
+   int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.addScalar(dst->getArrayData(d),
          src->getArrayData(d), alpha,
@@ -111,9 +111,9 @@ void PatchEdgeDataBasicOps<TYPE>::add(
    TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
-   const tbox::Dimension& dim(box.getDim());
+   int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.add(dst->getArrayData(d),
          src1->getArrayData(d), src2->getArrayData(d),
@@ -131,9 +131,9 @@ void PatchEdgeDataBasicOps<TYPE>::subtract(
    TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
-   const tbox::Dimension& dim(box.getDim());
+   int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.subtract(dst->getArrayData(d),
          src1->getArrayData(d), src2->getArrayData(d),
@@ -151,9 +151,9 @@ void PatchEdgeDataBasicOps<TYPE>::multiply(
    TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
-   const tbox::Dimension& dim(box.getDim());
+   int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.multiply(dst->getArrayData(d),
          src1->getArrayData(d), src2->getArrayData(d),
@@ -171,9 +171,9 @@ void PatchEdgeDataBasicOps<TYPE>::divide(
    TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
-   const tbox::Dimension& dim(box.getDim());
+   int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.divide(dst->getArrayData(d),
          src1->getArrayData(d), src2->getArrayData(d),
@@ -190,9 +190,9 @@ void PatchEdgeDataBasicOps<TYPE>::reciprocal(
    TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
-   const tbox::Dimension& dim(box.getDim());
+   int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.reciprocal(dst->getArrayData(d),
          src->getArrayData(d),
@@ -212,9 +212,9 @@ void PatchEdgeDataBasicOps<TYPE>::linearSum(
    TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
-   const tbox::Dimension& dim(box.getDim());
+   int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.linearSum(dst->getArrayData(d),
          alpha, src1->getArrayData(d),
@@ -234,9 +234,9 @@ void PatchEdgeDataBasicOps<TYPE>::axpy(
    TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
-   const tbox::Dimension& dim(box.getDim());
+   int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.axpy(dst->getArrayData(d),
          alpha, src1->getArrayData(d),
@@ -256,9 +256,9 @@ void PatchEdgeDataBasicOps<TYPE>::axmy(
    TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
-   const tbox::Dimension& dim(box.getDim());
+   int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.axmy(dst->getArrayData(d),
          alpha, src1->getArrayData(d),
@@ -277,9 +277,9 @@ void PatchEdgeDataBasicOps<TYPE>::setRandomValues(
    TBOX_ASSERT(dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
 
-   const tbox::Dimension& dim(box.getDim());
+   int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.setRandomValues(dst->getArrayData(d),
          width, low, edge_box);
@@ -294,10 +294,10 @@ TYPE PatchEdgeDataBasicOps<TYPE>::min(
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
-   const tbox::Dimension& dim(box.getDim());
+   int dimVal = box.getDim().getValue();
    TYPE minval = tbox::MathUtilities<TYPE>::getMax();
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       minval = tbox::MathUtilities<TYPE>::Min(
             minval, d_array_ops.min(data->getArrayData(d), edge_box));
@@ -313,10 +313,10 @@ TYPE PatchEdgeDataBasicOps<TYPE>::max(
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
-   const tbox::Dimension& dim(box.getDim());
+   int dimVal = box.getDim().getValue();
 
    TYPE maxval = -tbox::MathUtilities<TYPE>::getMax();
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       maxval = tbox::MathUtilities<TYPE>::Max(
             maxval, d_array_ops.max(data->getArrayData(d), edge_box));

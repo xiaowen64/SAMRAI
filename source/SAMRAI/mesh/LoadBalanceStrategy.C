@@ -53,7 +53,8 @@ LoadBalanceStrategy::~LoadBalanceStrategy()
  * for debugging and checking load balance quality.
  *************************************************************************
  */
-void LoadBalanceStrategy::markLoadForPostprocessing(
+void
+LoadBalanceStrategy::markLoadForPostprocessing(
    int rank,
    double load,
    int nbox)

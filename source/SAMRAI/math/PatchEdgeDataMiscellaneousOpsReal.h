@@ -159,8 +159,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/math/PatchEdgeDataMiscellaneousOpsReal.C"
-#endif
 
 #endif

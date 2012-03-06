@@ -201,4 +201,9 @@ private:
 
 }
 }
+
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/math/ArrayDataNormOpsComplex.I"
+#endif
+
 #endif

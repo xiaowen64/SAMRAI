@@ -17,6 +17,10 @@
 #include "SAMRAI/tbox/Utilities.h"
 #endif
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/math/PatchSideDataOpsInteger.I"
+#endif
+
 namespace SAMRAI {
 namespace math {
 
@@ -26,35 +30,6 @@ PatchSideDataOpsInteger::PatchSideDataOpsInteger()
 
 PatchSideDataOpsInteger::~PatchSideDataOpsInteger()
 {
-}
-
-/*
- *************************************************************************
- *
- * Compute the number of data entries on a patch in the given box.
- *
- *************************************************************************
- */
-
-int PatchSideDataOpsInteger::numberOfEntries(
-   const boost::shared_ptr<pdat::SideData<int> >& data,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
-
-   const tbox::Dimension& dim(box.getDim());
-
-   int retval = 0;
-   const hier::Box ibox = box * data->getGhostBox();
-   const hier::IntVector& directions = data->getDirectionVector();
-   for (int d = 0; d < dim.getValue(); d++) {
-      if (directions(d)) {
-         const hier::Box dbox = pdat::SideGeometry::toSideBox(ibox, d);
-         retval += (dbox.size() * data->getDepth());
-      }
-   }
-   return retval;
 }
 
 /*
@@ -87,72 +62,6 @@ void PatchSideDataOpsInteger::swapData(
 
    patch->setPatchData(data1_id, d2);
    patch->setPatchData(data2_id, d1);
-}
-
-void PatchSideDataOpsInteger::printData(
-   const boost::shared_ptr<pdat::SideData<int> >& data,
-   const hier::Box& box,
-   std::ostream& s) const
-{
-   TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
-
-   s << "Data box = " << box << std::endl;
-   data->print(box, s);
-   s << "\n";
-}
-
-void PatchSideDataOpsInteger::copyData(
-   const boost::shared_ptr<pdat::SideData<int> >& dst,
-   const boost::shared_ptr<pdat::SideData<int> >& src,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(dst && src);
-   TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
-
-   const tbox::Dimension& dim(box.getDim());
-
-   const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dim.getValue(); d++) {
-      if (directions(d)) {
-         const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
-         (dst->getArrayData(d)).copy(src->getArrayData(d), side_box);
-      }
-   }
-}
-
-void PatchSideDataOpsInteger::setToScalar(
-   const boost::shared_ptr<pdat::SideData<int> >& dst,
-   const int& alpha,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(dst);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
-
-   dst->fillAll(alpha, box);
-}
-
-void PatchSideDataOpsInteger::abs(
-   const boost::shared_ptr<pdat::SideData<int> >& dst,
-   const boost::shared_ptr<pdat::SideData<int> >& src,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(dst && src);
-   TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
-
-   const tbox::Dimension& dim(box.getDim());
-
-   const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dim.getValue(); d++) {
-      if (directions(d)) {
-         const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
-         d_array_ops.abs(dst->getArrayData(d),
-            src->getArrayData(d),
-            side_box);
-      }
-   }
 }
 
 }

@@ -105,7 +105,8 @@ SpatialKey::~SpatialKey()
  *
  ****************************************************************************
  */
-bool SpatialKey::operator < (
+bool
+SpatialKey::operator < (
    const SpatialKey& spatial_key) const
 {
    int i = NUM_COORDS_MIXED_FOR_SPATIAL_KEY - 1;
@@ -126,48 +127,6 @@ bool SpatialKey::operator < (
 /*
  ****************************************************************************
  *
- * Less than or equal operator for spatial keys.  Returns true if
- * this key is less or equal to the argument key.
- *
- ****************************************************************************
- */
-bool SpatialKey::operator <= (
-   const SpatialKey& spatial_key) const
-{
-   return ((*this) < spatial_key) || ((*this) == spatial_key);
-}
-
-/*
- ****************************************************************************
- *
- * Greater than operator for spatial keys. Returns true if this key is
- * is greater than the argument key.
- *
- ****************************************************************************
- */
-bool SpatialKey::operator > (
-   const SpatialKey& spatial_key) const
-{
-   return !((*this) < spatial_key) && ((*this) != spatial_key);
-}
-
-/*
- ****************************************************************************
- *
- * Greater than or equal operator for spatial keys.  Returns true if this
- * key is greater than or equal to the argument key.
- *
- ****************************************************************************
- */
-bool SpatialKey::operator >= (
-   const SpatialKey& spatial_key) const
-{
-   return ((*this) > spatial_key) || ((*this) == spatial_key);
-}
-
-/*
- ****************************************************************************
- *
  * Write a spatial key to an output stream.  The spatial key is
  * output in hex to avoid the binary to decimal conversion of the
  * extended integer key.
@@ -177,7 +136,8 @@ bool SpatialKey::operator >= (
  *
  ****************************************************************************
  */
-std::ostream& operator << (
+std::ostream&
+operator << (
    std::ostream& s,
    const SpatialKey& spatial_key)
 {
@@ -205,7 +165,8 @@ std::ostream& operator << (
  *
  ****************************************************************************
  */
-void SpatialKey::blendOneCoord(
+void
+SpatialKey::blendOneCoord(
    const unsigned int coord,
    const int coord_offset)
 {
@@ -242,7 +203,8 @@ void SpatialKey::blendOneCoord(
  *
  ****************************************************************************
  */
-void SpatialKey::setKey(
+void
+SpatialKey::setKey(
    const unsigned int i,
    const unsigned int j,
    const unsigned int k,

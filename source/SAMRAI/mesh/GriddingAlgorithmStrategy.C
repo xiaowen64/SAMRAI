@@ -16,6 +16,14 @@
 namespace SAMRAI {
 namespace mesh {
 
+GriddingAlgorithmStrategy::GriddingAlgorithmStrategy()
+{
+}
+
+GriddingAlgorithmStrategy::~GriddingAlgorithmStrategy()
+{
+}
+
 }
 }
 #endif

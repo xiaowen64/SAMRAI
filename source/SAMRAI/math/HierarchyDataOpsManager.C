@@ -40,6 +40,10 @@
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/math/HierarchyDataOpsManager.I"
+#endif
+
 namespace SAMRAI {
 namespace math {
 
@@ -62,32 +66,6 @@ HierarchyDataOpsManager::s_shutdown_handler(
    HierarchyDataOpsManager::shutdownCallback,
    0,
    tbox::StartupShutdownManager::priorityHierarchyDataOpsManager);
-
-HierarchyDataOpsManager *HierarchyDataOpsManager::getManager()
-{
-   if (!s_pdat_op_manager_instance) {
-      s_pdat_op_manager_instance = new HierarchyDataOpsManager();
-   }
-   return s_pdat_op_manager_instance;
-}
-
-void HierarchyDataOpsManager::shutdownCallback()
-{
-   if (s_pdat_op_manager_instance) delete s_pdat_op_manager_instance;
-   s_pdat_op_manager_instance = ((HierarchyDataOpsManager *)NULL);
-}
-
-void HierarchyDataOpsManager::registerSingletonSubclassInstance(
-   HierarchyDataOpsManager* subclass_instance)
-{
-   if (!s_pdat_op_manager_instance) {
-      s_pdat_op_manager_instance = subclass_instance;
-   } else {
-      TBOX_ERROR("HierarchyDataOpsManager internal error...\n"
-         << "Attempting to set Singleton instance to subclass instance,"
-         << "\n but Singleton instance already set." << std::endl);
-   }
-}
 
 /*
  *************************************************************************

@@ -83,12 +83,12 @@ void HierarchyEdgeDataOpsReal<TYPE>::resetLevels(
       && (finest_level <= d_hierarchy->getFinestLevelNumber()));
 #endif
 
-   const tbox::Dimension& dim(d_hierarchy->getDim());
+   int dimVal = d_hierarchy->getDim().getValue();
 
    d_coarsest_level = coarsest_level;
    d_finest_level = finest_level;
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       d_nonoverlapping_edge_boxes[d].resizeArray(d_finest_level + 1);
    }
 
@@ -97,7 +97,7 @@ void HierarchyEdgeDataOpsReal<TYPE>::resetLevels(
          d_hierarchy->getPatchLevel(ln));
       hier::BoxContainer edge_boxes;
 
-      for (int nd = 0; nd < dim.getValue(); nd++) {
+      for (int nd = 0; nd < dimVal; nd++) {
          edge_boxes = level->getBoxes();
          for (hier::BoxContainer::Iterator i = edge_boxes.begin();
               i != edge_boxes.end(); ++i) {
@@ -770,7 +770,7 @@ int HierarchyEdgeDataOpsReal<TYPE>::numberOfEntries(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 #endif
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
-   const tbox::Dimension& dim(d_hierarchy->getDim());
+   int dimVal = d_hierarchy->getDim().getValue();
 
    int entries = 0;
 
@@ -788,13 +788,13 @@ int HierarchyEdgeDataOpsReal<TYPE>::numberOfEntries(
             d_hierarchy->getPatchLevel(ln));
          const int npatches = level->getNumberOfPatches();
 #ifdef DEBUG_CHECK_ASSERTIONS
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             TBOX_ASSERT(npatches == d_nonoverlapping_edge_boxes[nd][ln].getSize());
          }
 #endif
          for (int il = 0; il < npatches; il++) {
 
-            for (int eb = 0; eb < dim.getValue(); eb++) {
+            for (int eb = 0; eb < dimVal; eb++) {
                hier::BoxContainer::ConstIterator lb = 
                   ((d_nonoverlapping_edge_boxes[eb][ln])[il]).begin();
                for ( ; lb != ((d_nonoverlapping_edge_boxes[eb][ln])[il]).end();

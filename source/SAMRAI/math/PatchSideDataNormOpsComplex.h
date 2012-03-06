@@ -215,4 +215,8 @@ private:
 
 }
 }
+
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/math/PatchSideDataNormOpsComplex.I"
+#endif
 #endif

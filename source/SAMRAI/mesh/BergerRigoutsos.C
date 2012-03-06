@@ -121,8 +121,7 @@ BergerRigoutsos::BergerRigoutsos(
 
 }
 
-BergerRigoutsos::~BergerRigoutsos(
-   void)
+BergerRigoutsos::~BergerRigoutsos()
 {
    if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
       // Free the private communicator (if SAMRAI_MPI has not been finalized).
@@ -139,7 +138,8 @@ BergerRigoutsos::~BergerRigoutsos(
  * Set the MPI communicator.
  *************************************************************************
  */
-void BergerRigoutsos::setMPI(
+void
+BergerRigoutsos::setMPI(
    const tbox::SAMRAI_MPI& mpi)
 {
    if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
@@ -166,7 +166,8 @@ void BergerRigoutsos::setMPI(
  *
  ************************************************************************
  */
-void BergerRigoutsos::findBoxesContainingTags(
+void
+BergerRigoutsos::findBoxesContainingTags(
    hier::BoxLevel& new_mapped_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
@@ -362,7 +363,8 @@ void BergerRigoutsos::findBoxesContainingTags(
  ***********************************************************************
  ***********************************************************************
  */
-void BergerRigoutsos::sortOutputBoxes(
+void
+BergerRigoutsos::sortOutputBoxes(
    hier::BoxLevel& new_mapped_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag) const
@@ -461,7 +463,8 @@ void BergerRigoutsos::sortOutputBoxes(
  *
  ***************************************************************************
  */
-void BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
+void
+BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
 {
    /*
     * If using a private communicator, double check to make sure
@@ -500,7 +503,8 @@ void BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
  ***********************************************************************
  ***********************************************************************
  */
-void BergerRigoutsos::initializeCallback()
+void
+BergerRigoutsos::initializeCallback()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!t_global_reductions);
@@ -527,7 +531,8 @@ void BergerRigoutsos::initializeCallback()
  *
  ***************************************************************************
  */
-void BergerRigoutsos::finalizeCallback()
+void
+BergerRigoutsos::finalizeCallback()
 {
    t_barrier_before.reset();
    t_barrier_after.reset();

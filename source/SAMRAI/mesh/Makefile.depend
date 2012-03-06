@@ -254,6 +254,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BergerRigoutsos.h			\
+	$(INCLUDE_SAM)/SAMRAI/mesh/BergerRigoutsosNode.I		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BergerRigoutsosNode.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BoxGeneratorStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
@@ -390,6 +391,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
+	$(INCLUDE_SAM)/SAMRAI/mesh/BergerRigoutsosNode.I		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BergerRigoutsosNode.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -879,6 +881,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsInteger.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BoxGeneratorStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/GriddingAlgorithm.I			\

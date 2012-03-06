@@ -199,6 +199,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -491,11 +492,14 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyCellDataOpsComplex.h	\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsComplex.h	\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -657,6 +661,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyCellDataOpsInteger.h	\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsInteger.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -1241,6 +1246,7 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.h	\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.h		\
@@ -1249,6 +1255,7 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyCellDataOpsReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsInteger.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsManager.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyEdgeDataOpsComplex.h	\
@@ -1265,37 +1272,52 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchySideDataOpsReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataBasicOps.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataMiscellaneousOpsReal.h	\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsComplex.h	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsComplex.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsInteger.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataBasicOps.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataMiscellaneousOpsReal.h	\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataNormOpsComplex.h	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataNormOpsReal.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataOpsComplex.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataOpsInteger.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataOpsReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataBasicOps.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataMiscellaneousOpsReal.h	\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataNormOpsComplex.h	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataNormOpsReal.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataOpsComplex.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataOpsInteger.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataOpsReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataBasicOps.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataMiscellaneousOpsReal.h	\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataNormOpsComplex.h	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataNormOpsReal.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataOpsComplex.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataOpsInteger.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataOpsReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataBasicOps.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataMiscellaneousOpsReal.h	\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataNormOpsComplex.h	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataNormOpsReal.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataOpsComplex.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataOpsInteger.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataOpsReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
@@ -1695,11 +1717,14 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyEdgeDataOpsComplex.h	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataNormOpsComplex.h	\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -1868,6 +1893,7 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyEdgeDataOpsInteger.h	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataOpsInteger.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -2210,11 +2236,14 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyFaceDataOpsComplex.h	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataNormOpsComplex.h	\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -2383,6 +2412,7 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyFaceDataOpsInteger.h	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataOpsInteger.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -2725,11 +2755,14 @@ DEPENDS_18:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyNodeDataOpsComplex.h	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataNormOpsComplex.h	\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -2898,6 +2931,7 @@ DEPENDS_19:=\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyNodeDataOpsInteger.h	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataOpsInteger.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -3240,11 +3274,14 @@ DEPENDS_21:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchySideDataOpsComplex.h	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataNormOpsComplex.h	\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -3413,6 +3450,7 @@ DEPENDS_22:=\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchySideDataOpsInteger.h	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataOpsInteger.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -3893,7 +3931,9 @@ DEPENDS_26:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsComplex.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -4106,9 +4146,12 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsComplex.h	\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -4232,6 +4275,7 @@ DEPENDS_29:=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsInteger.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -4652,7 +4696,9 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataNormOpsComplex.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -4865,9 +4911,12 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataNormOpsComplex.h	\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -4991,6 +5040,7 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataOpsInteger.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchEdgeDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -5411,7 +5461,9 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataNormOpsComplex.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -5624,9 +5676,12 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataNormOpsComplex.h	\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -5750,6 +5805,7 @@ DEPENDS_43:=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataOpsInteger.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchFaceDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -6170,7 +6226,9 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataNormOpsComplex.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -6383,9 +6441,12 @@ DEPENDS_49:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataNormOpsComplex.h	\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -6509,6 +6570,7 @@ DEPENDS_50:=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataOpsInteger.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -6929,7 +6991,9 @@ DEPENDS_54:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicShiftCatalog.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataNormOpsComplex.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -7142,9 +7206,12 @@ DEPENDS_56:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataNormOpsComplex.I	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataNormOpsComplex.h	\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataOpsComplex.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
@@ -7268,6 +7335,7 @@ DEPENDS_57:=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataBasicOps.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataOpsInteger.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataOpsInteger.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\

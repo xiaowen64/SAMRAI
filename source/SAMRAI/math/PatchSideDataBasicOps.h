@@ -204,8 +204,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/math/PatchSideDataBasicOps.C"
-#endif
 
 #endif

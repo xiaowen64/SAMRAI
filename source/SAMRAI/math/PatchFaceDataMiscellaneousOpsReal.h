@@ -159,8 +159,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/math/PatchFaceDataMiscellaneousOpsReal.C"
-#endif
 
 #endif

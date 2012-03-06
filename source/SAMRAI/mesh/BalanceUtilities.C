@@ -44,7 +44,8 @@ math::PatchCellDataNormOpsReal<double> BalanceUtilities::s_norm_ops;
  *************************************************************************
  */
 
-void BalanceUtilities::privateHeapify(
+void
+BalanceUtilities::privateHeapify(
    tbox::Array<int>& permutation,
    tbox::Array<double>& workload,
    const int index,
@@ -54,9 +55,13 @@ void BalanceUtilities::privateHeapify(
    const int r = l + 1;
    int s = index;
    if ((l < heap_size) &&
-       (workload[permutation[s]] > workload[permutation[l]])) s = l;
+       (workload[permutation[s]] > workload[permutation[l]])) {
+      s = l;
+   }
    if ((r < heap_size) &&
-       (workload[permutation[s]] > workload[permutation[r]])) s = r;
+       (workload[permutation[s]] > workload[permutation[r]])) {
+      s = r;
+   }
    if (s != index) {
       const int tmp = permutation[s];
       permutation[s] = permutation[index];
@@ -65,7 +70,8 @@ void BalanceUtilities::privateHeapify(
    }
 }
 
-void BalanceUtilities::privateHeapify(
+void
+BalanceUtilities::privateHeapify(
    tbox::Array<int>& permutation,
    tbox::Array<SpatialKey>& spatial_keys,
    const int index,
@@ -75,9 +81,13 @@ void BalanceUtilities::privateHeapify(
    const int r = l + 1;
    int s = index;
    if ((l < heap_size) &&
-       (spatial_keys[permutation[s]] < spatial_keys[permutation[l]])) s = l;
+       (spatial_keys[permutation[s]] < spatial_keys[permutation[l]])) {
+      s = l;
+   }
    if ((r < heap_size) &&
-       (spatial_keys[permutation[s]] < spatial_keys[permutation[r]])) s = r;
+       (spatial_keys[permutation[s]] < spatial_keys[permutation[r]])) {
+      s = r;
+   }
    if (s != index) {
       const int tmp = permutation[s];
       permutation[s] = permutation[index];
@@ -94,7 +104,8 @@ void BalanceUtilities::privateHeapify(
  *
  *************************************************************************
  */
-void BalanceUtilities::privateRecursiveProcAssign(
+void
+BalanceUtilities::privateRecursiveProcAssign(
    const int wt_index_lo,
    const int wt_index_hi,
    tbox::Array<double>& weights,
@@ -190,7 +201,8 @@ void BalanceUtilities::privateRecursiveProcAssign(
  *************************************************************************
  */
 
-void BalanceUtilities::privatePrimeFactorization(
+void
+BalanceUtilities::privatePrimeFactorization(
    const int N,
    tbox::Array<int>& p)
 {
@@ -262,7 +274,8 @@ void BalanceUtilities::privatePrimeFactorization(
 
 }
 
-void BalanceUtilities::privateResetPrimesArray(
+void
+BalanceUtilities::privateResetPrimesArray(
    tbox::Array<int>& p)
 {
    // keep a copy of the original p in array "temp"
@@ -298,7 +311,8 @@ void BalanceUtilities::privateResetPrimesArray(
  *************************************************************************
  */
 
-bool BalanceUtilities::privateBadCutPointsExist(
+bool
+BalanceUtilities::privateBadCutPointsExist(
    const hier::BoxContainer& physical_domain)
 {
    hier::BoxContainer bounding_box(physical_domain.getBoundingBox());
@@ -317,7 +331,8 @@ bool BalanceUtilities::privateBadCutPointsExist(
  *************************************************************************
  */
 
-void BalanceUtilities::privateInitializeBadCutPointsForBox(
+void
+BalanceUtilities::privateInitializeBadCutPointsForBox(
    tbox::Array<tbox::Array<bool> >& bad_cut_points,
    hier::Box& box,
    bool bad_domain_boundaries_exist,
@@ -387,7 +402,8 @@ void BalanceUtilities::privateInitializeBadCutPointsForBox(
  *************************************************************************
  */
 
-bool BalanceUtilities::privateFindBestCutDimension(
+bool
+BalanceUtilities::privateFindBestCutDimension(
    int& cut_dim_out,
    const hier::Box& in_box,
    const hier::IntVector& min_size,
@@ -482,7 +498,8 @@ bool BalanceUtilities::privateFindBestCutDimension(
  *************************************************************************
  */
 
-int BalanceUtilities::privateFindCutPoint(
+int
+BalanceUtilities::privateFindCutPoint(
    double total_work,
    double ideal_workload,
    int mincut,
@@ -569,7 +586,8 @@ int BalanceUtilities::privateFindCutPoint(
  *************************************************************************
  */
 
-void BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
+void
+BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
    hier::Box& box_lo,
    tbox::Array<tbox::Array<bool> >& bad_cut_points_for_boxlo,
    hier::Box& box_hi,
@@ -634,7 +652,8 @@ void BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
  *************************************************************************
  */
 
-void BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
+void
+BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
    hier::BoxContainer& out_boxes,
    tbox::List<double>& out_workloads,
    const hier::Box& in_box,
@@ -769,7 +788,8 @@ void BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
  *************************************************************************
  */
 
-void BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
+void
+BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
    hier::BoxContainer& out_boxes,
    tbox::List<double>& out_workloads,
    const boost::shared_ptr<hier::Patch>& patch,
@@ -914,7 +934,8 @@ void BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
  *************************************************************************
  */
 
-double BalanceUtilities::computeNonUniformWorkload(
+double
+BalanceUtilities::computeNonUniformWorkload(
    const boost::shared_ptr<hier::Patch>& patch,
    int wrk_indx,
    const hier::Box& box)
@@ -941,7 +962,8 @@ double BalanceUtilities::computeNonUniformWorkload(
  *************************************************************************
  */
 
-double BalanceUtilities::binPack(
+double
+BalanceUtilities::binPack(
    hier::ProcessorMapping& mapping,
    tbox::Array<double>& weights,
    const int nproc)
@@ -1024,7 +1046,8 @@ double BalanceUtilities::binPack(
  *************************************************************************
  */
 
-double BalanceUtilities::spatialBinPack(
+double
+BalanceUtilities::spatialBinPack(
    hier::ProcessorMapping& mapping,
    tbox::Array<double>& weights,
    hier::BoxContainer& boxes,
@@ -1200,7 +1223,8 @@ double BalanceUtilities::spatialBinPack(
  **************************************************************************
  */
 
-void BalanceUtilities::recursiveBisectionUniform(
+void
+BalanceUtilities::recursiveBisectionUniform(
    hier::BoxContainer& out_boxes,
    tbox::List<double>& out_workloads,
    const hier::BoxContainer& in_boxes,
@@ -1284,7 +1308,8 @@ void BalanceUtilities::recursiveBisectionUniform(
  **************************************************************************
  */
 
-void BalanceUtilities::recursiveBisectionNonuniform(
+void
+BalanceUtilities::recursiveBisectionNonuniform(
    hier::BoxContainer& out_boxes,
    tbox::List<double>& out_workloads,
    const boost::shared_ptr<hier::PatchLevel>& in_level,
@@ -1375,7 +1400,8 @@ void BalanceUtilities::recursiveBisectionNonuniform(
  *************************************************************************
  */
 
-void BalanceUtilities::computeDomainDependentProcessorLayout(
+void
+BalanceUtilities::computeDomainDependentProcessorLayout(
    hier::IntVector& proc_dist,
    int num_procs,
    const hier::Box& box)
@@ -1485,7 +1511,8 @@ void BalanceUtilities::computeDomainDependentProcessorLayout(
  *************************************************************************
  */
 
-void BalanceUtilities::computeDomainIndependentProcessorLayout(
+void
+BalanceUtilities::computeDomainIndependentProcessorLayout(
    hier::IntVector& proc_dist,
    int num_procs,
    const hier::Box& box)
@@ -1581,7 +1608,8 @@ void BalanceUtilities::computeDomainIndependentProcessorLayout(
  *************************************************************************
  */
 
-void BalanceUtilities::sortDescendingBoxWorkloads(
+void
+BalanceUtilities::sortDescendingBoxWorkloads(
    hier::BoxContainer& boxes,
    tbox::Array<double>& workload)
 {
@@ -1657,7 +1685,8 @@ void BalanceUtilities::sortDescendingBoxWorkloads(
  **************************************************************************
  */
 
-double BalanceUtilities::computeLoadBalanceEfficiency(
+double
+BalanceUtilities::computeLoadBalanceEfficiency(
    const boost::shared_ptr<hier::PatchLevel>& level,
    std::ostream& os,
    int workload_data_id)
@@ -1725,7 +1754,8 @@ double BalanceUtilities::computeLoadBalanceEfficiency(
  * Gather and report load balance for a single balancing.
  *************************************************************************
  */
-void BalanceUtilities::gatherAndReportLoadBalance(
+void
+BalanceUtilities::gatherAndReportLoadBalance(
    double local_load,
    const tbox::SAMRAI_MPI& mpi,
    std::ostream& os)
@@ -1752,7 +1782,8 @@ void BalanceUtilities::gatherAndReportLoadBalance(
  * Gather and report load balance for multiple balancings.
  *************************************************************************
  */
-void BalanceUtilities::gatherAndReportLoadBalance(
+void
+BalanceUtilities::gatherAndReportLoadBalance(
    const std::vector<double>& local_loads,
    const tbox::SAMRAI_MPI& mpi,
    std::ostream& os)
@@ -1788,7 +1819,8 @@ void BalanceUtilities::gatherAndReportLoadBalance(
  *************************************************************************
  *************************************************************************
  */
-void BalanceUtilities::reportLoadBalance(
+void
+BalanceUtilities::reportLoadBalance(
    const std::vector<double>& workloads,
    std::ostream& os)
 {
@@ -1886,7 +1918,8 @@ void BalanceUtilities::reportLoadBalance(
  * for use when sorting loads using the C-library qsort
  *************************************************************************
  */
-int BalanceUtilities::qsortRankAndLoadCompareDescending(
+int
+BalanceUtilities::qsortRankAndLoadCompareDescending(
    const void* v,
    const void* w)
 {
@@ -1910,7 +1943,8 @@ int BalanceUtilities::qsortRankAndLoadCompareDescending(
  * for use when sorting loads using the C-library qsort
  *************************************************************************
  */
-int BalanceUtilities::qsortRankAndLoadCompareAscending(
+int
+BalanceUtilities::qsortRankAndLoadCompareAscending(
    const void* v,
    const void* w)
 {

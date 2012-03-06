@@ -60,7 +60,8 @@ HierarchyEdgeDataOpsComplex::~HierarchyEdgeDataOpsComplex()
  *************************************************************************
  */
 
-void HierarchyEdgeDataOpsComplex::setPatchHierarchy(
+void
+HierarchyEdgeDataOpsComplex::setPatchHierarchy(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    TBOX_ASSERT(hierarchy);
@@ -68,7 +69,8 @@ void HierarchyEdgeDataOpsComplex::setPatchHierarchy(
    d_hierarchy = hierarchy;
 }
 
-void HierarchyEdgeDataOpsComplex::resetLevels(
+void
+HierarchyEdgeDataOpsComplex::resetLevels(
    const int coarsest_level,
    const int finest_level)
 {
@@ -79,12 +81,12 @@ void HierarchyEdgeDataOpsComplex::resetLevels(
       && (finest_level <= d_hierarchy->getFinestLevelNumber()));
 #endif
 
-   const tbox::Dimension& dim(d_hierarchy->getDim());
+   int dimVal = d_hierarchy->getDim().getValue();
 
    d_coarsest_level = coarsest_level;
    d_finest_level = finest_level;
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       d_nonoverlapping_edge_boxes[d].resizeArray(d_finest_level + 1);
    }
 
@@ -93,7 +95,7 @@ void HierarchyEdgeDataOpsComplex::resetLevels(
          d_hierarchy->getPatchLevel(ln));
       hier::BoxContainer edge_boxes;
 
-      for (int nd = 0; nd < dim.getValue(); nd++) {
+      for (int nd = 0; nd < dimVal; nd++) {
          edge_boxes = level->getBoxes();
          for (hier::BoxContainer::Iterator i(edge_boxes); i != edge_boxes.end(); ++i) {
             *i = pdat::EdgeGeometry::toEdgeBox(*i, nd);
@@ -119,7 +121,8 @@ HierarchyEdgeDataOpsComplex::getPatchHierarchy() const
  *************************************************************************
  */
 
-void HierarchyEdgeDataOpsComplex::copyData(
+void
+HierarchyEdgeDataOpsComplex::copyData(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
@@ -153,7 +156,8 @@ void HierarchyEdgeDataOpsComplex::copyData(
    }
 }
 
-void HierarchyEdgeDataOpsComplex::swapData(
+void
+HierarchyEdgeDataOpsComplex::swapData(
    const int data1_id,
    const int data2_id) const
 {
@@ -187,7 +191,8 @@ void HierarchyEdgeDataOpsComplex::swapData(
    }
 }
 
-void HierarchyEdgeDataOpsComplex::printData(
+void
+HierarchyEdgeDataOpsComplex::printData(
    const int data_id,
    std::ostream& s,
    const bool interior_only) const
@@ -224,7 +229,8 @@ void HierarchyEdgeDataOpsComplex::printData(
    }
 }
 
-void HierarchyEdgeDataOpsComplex::setToScalar(
+void
+HierarchyEdgeDataOpsComplex::setToScalar(
    const int data_id,
    const dcomplex& alpha,
    const bool interior_only) const
@@ -263,7 +269,8 @@ void HierarchyEdgeDataOpsComplex::setToScalar(
  *************************************************************************
  */
 
-void HierarchyEdgeDataOpsComplex::scale(
+void
+HierarchyEdgeDataOpsComplex::scale(
    const int dst_id,
    const dcomplex& alpha,
    const int src_id,
@@ -298,7 +305,8 @@ void HierarchyEdgeDataOpsComplex::scale(
    }
 }
 
-void HierarchyEdgeDataOpsComplex::addScalar(
+void
+HierarchyEdgeDataOpsComplex::addScalar(
    const int dst_id,
    const int src_id,
    const dcomplex& alpha,
@@ -333,7 +341,8 @@ void HierarchyEdgeDataOpsComplex::addScalar(
    }
 }
 
-void HierarchyEdgeDataOpsComplex::add(
+void
+HierarchyEdgeDataOpsComplex::add(
    const int dst_id,
    const int src1_id,
    const int src2_id,
@@ -371,7 +380,8 @@ void HierarchyEdgeDataOpsComplex::add(
    }
 }
 
-void HierarchyEdgeDataOpsComplex::subtract(
+void
+HierarchyEdgeDataOpsComplex::subtract(
    const int dst_id,
    const int src1_id,
    const int src2_id,
@@ -409,7 +419,8 @@ void HierarchyEdgeDataOpsComplex::subtract(
    }
 }
 
-void HierarchyEdgeDataOpsComplex::multiply(
+void
+HierarchyEdgeDataOpsComplex::multiply(
    const int dst_id,
    const int src1_id,
    const int src2_id,
@@ -447,7 +458,8 @@ void HierarchyEdgeDataOpsComplex::multiply(
    }
 }
 
-void HierarchyEdgeDataOpsComplex::divide(
+void
+HierarchyEdgeDataOpsComplex::divide(
    const int dst_id,
    const int src1_id,
    const int src2_id,
@@ -485,7 +497,8 @@ void HierarchyEdgeDataOpsComplex::divide(
    }
 }
 
-void HierarchyEdgeDataOpsComplex::reciprocal(
+void
+HierarchyEdgeDataOpsComplex::reciprocal(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
@@ -519,7 +532,8 @@ void HierarchyEdgeDataOpsComplex::reciprocal(
    }
 }
 
-void HierarchyEdgeDataOpsComplex::linearSum(
+void
+HierarchyEdgeDataOpsComplex::linearSum(
    const int dst_id,
    const dcomplex& alpha,
    const int src1_id,
@@ -559,7 +573,8 @@ void HierarchyEdgeDataOpsComplex::linearSum(
    }
 }
 
-void HierarchyEdgeDataOpsComplex::axpy(
+void
+HierarchyEdgeDataOpsComplex::axpy(
    const int dst_id,
    const dcomplex& alpha,
    const int src1_id,
@@ -598,7 +613,8 @@ void HierarchyEdgeDataOpsComplex::axpy(
    }
 }
 
-void HierarchyEdgeDataOpsComplex::axmy(
+void
+HierarchyEdgeDataOpsComplex::axmy(
    const int dst_id,
    const dcomplex& alpha,
    const int src1_id,
@@ -637,7 +653,8 @@ void HierarchyEdgeDataOpsComplex::axmy(
    }
 }
 
-void HierarchyEdgeDataOpsComplex::abs(
+void
+HierarchyEdgeDataOpsComplex::abs(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
@@ -671,7 +688,8 @@ void HierarchyEdgeDataOpsComplex::abs(
    }
 }
 
-void HierarchyEdgeDataOpsComplex::setRandomValues(
+void
+HierarchyEdgeDataOpsComplex::setRandomValues(
    const int data_id,
    const dcomplex& width,
    const dcomplex& low,
@@ -711,7 +729,8 @@ void HierarchyEdgeDataOpsComplex::setRandomValues(
  *************************************************************************
  */
 
-int HierarchyEdgeDataOpsComplex::numberOfEntries(
+int
+HierarchyEdgeDataOpsComplex::numberOfEntries(
    const int data_id,
    const bool interior_only) const
 {
@@ -721,7 +740,7 @@ int HierarchyEdgeDataOpsComplex::numberOfEntries(
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 #endif
-   const tbox::Dimension& dim(d_hierarchy->getDim());
+   int dimVal = d_hierarchy->getDim().getValue();
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    int entries = 0;
@@ -740,13 +759,13 @@ int HierarchyEdgeDataOpsComplex::numberOfEntries(
             d_hierarchy->getPatchLevel(ln));
          const int npatches = level->getNumberOfPatches();
 #ifdef DEBUG_CHECK_ASSERTIONS
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             TBOX_ASSERT(npatches == d_nonoverlapping_edge_boxes[nd][ln].getSize());
          }
 #endif
          for (int il = 0; il < npatches; il++) {
 
-            for (int eb = 0; eb < dim.getValue(); eb++) {
+            for (int eb = 0; eb < dimVal; eb++) {
                hier::BoxContainer::ConstIterator lb =
                   ((d_nonoverlapping_edge_boxes[eb][ln])[il]).begin();
                for ( ; lb != ((d_nonoverlapping_edge_boxes[eb][ln])[il]).end();
@@ -786,7 +805,8 @@ int HierarchyEdgeDataOpsComplex::numberOfEntries(
    return entries;
 }
 
-double HierarchyEdgeDataOpsComplex::sumControlVolumes(
+double
+HierarchyEdgeDataOpsComplex::sumControlVolumes(
    const int data_id,
    const int vol_id) const
 {
@@ -829,7 +849,8 @@ double HierarchyEdgeDataOpsComplex::sumControlVolumes(
    return global_sum;
 }
 
-double HierarchyEdgeDataOpsComplex::L1Norm(
+double
+HierarchyEdgeDataOpsComplex::L1Norm(
    const int data_id,
    const int vol_id) const
 {
@@ -877,7 +898,8 @@ double HierarchyEdgeDataOpsComplex::L1Norm(
    return global_norm;
 }
 
-double HierarchyEdgeDataOpsComplex::L2Norm(
+double
+HierarchyEdgeDataOpsComplex::L2Norm(
    const int data_id,
    const int vol_id) const
 {
@@ -888,7 +910,8 @@ double HierarchyEdgeDataOpsComplex::L2Norm(
    return sqrt(real(dotprod));
 }
 
-double HierarchyEdgeDataOpsComplex::weightedL2Norm(
+double
+HierarchyEdgeDataOpsComplex::weightedL2Norm(
    const int data_id,
    const int wgt_id,
    const int vol_id) const
@@ -942,7 +965,8 @@ double HierarchyEdgeDataOpsComplex::weightedL2Norm(
    return sqrt(global_norm_squared);
 }
 
-double HierarchyEdgeDataOpsComplex::RMSNorm(
+double
+HierarchyEdgeDataOpsComplex::RMSNorm(
    const int data_id,
    const int vol_id) const
 {
@@ -955,7 +979,8 @@ double HierarchyEdgeDataOpsComplex::RMSNorm(
    return rms_norm;
 }
 
-double HierarchyEdgeDataOpsComplex::weightedRMSNorm(
+double
+HierarchyEdgeDataOpsComplex::weightedRMSNorm(
    const int data_id,
    const int wgt_id,
    const int vol_id) const
@@ -970,7 +995,8 @@ double HierarchyEdgeDataOpsComplex::weightedRMSNorm(
    return rms_norm;
 }
 
-double HierarchyEdgeDataOpsComplex::maxNorm(
+double
+HierarchyEdgeDataOpsComplex::maxNorm(
    const int data_id,
    const int vol_id) const
 {
@@ -1019,7 +1045,8 @@ double HierarchyEdgeDataOpsComplex::maxNorm(
    return global_norm;
 }
 
-dcomplex HierarchyEdgeDataOpsComplex::dot(
+dcomplex
+HierarchyEdgeDataOpsComplex::dot(
    const int data1_id,
    const int data2_id,
    const int vol_id) const
@@ -1071,7 +1098,8 @@ dcomplex HierarchyEdgeDataOpsComplex::dot(
    return global_dot;
 }
 
-dcomplex HierarchyEdgeDataOpsComplex::integral(
+dcomplex
+HierarchyEdgeDataOpsComplex::integral(
    const int data_id,
    const int vol_id) const
 {

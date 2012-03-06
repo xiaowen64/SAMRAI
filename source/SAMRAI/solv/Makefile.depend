@@ -1556,6 +1556,7 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyCellDataOpsReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsComplex.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsInteger.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsManager.I		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/HierarchyEdgeDataOpsReal.h		\

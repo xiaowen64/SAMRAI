@@ -73,11 +73,11 @@ int PatchSideDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
    TBOX_ASSERT(data1->getDirectionVector() == data2->getDirectionVector());
 #endif
    int retval = 1;
-   const tbox::Dimension& dim(data1->getDim());
+   int dimVal = data1->getDim().getValue();
 
    const hier::IntVector& directions = data1->getDirectionVector();
    if (!cvol) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -93,7 +93,7 @@ int PatchSideDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 #endif
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -121,11 +121,11 @@ void PatchSideDataMiscellaneousOpsReal<TYPE>::compareToScalar(
    TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
 #endif
-   const tbox::Dimension& dim(dst->getDim());
+   int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
    if (!cvol) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             d_array_ops.compareToScalar(dst->getArrayData(d),
@@ -139,7 +139,7 @@ void PatchSideDataMiscellaneousOpsReal<TYPE>::compareToScalar(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 #endif
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             d_array_ops.compareToScalarWithControlVolume(dst->getArrayData(d),
@@ -163,12 +163,12 @@ int PatchSideDataMiscellaneousOpsReal<TYPE>::testReciprocal(
    TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
 #endif
-   const tbox::Dimension& dim(dst->getDim());
+   int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
    int retval = 1;
    if (!cvol) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -184,7 +184,7 @@ int PatchSideDataMiscellaneousOpsReal<TYPE>::testReciprocal(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 #endif
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -209,10 +209,10 @@ TYPE PatchSideDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(numer && denom);
 #endif
-   const tbox::Dimension& dim(numer->getDim());
+   int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box side_box =
          pdat::SideGeometry::toSideBox(box, d);
       TYPE dirval = d_array_ops.maxPointwiseDivide(numer->getArrayData(d),
@@ -232,10 +232,10 @@ TYPE PatchSideDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(numer && denom);
 #endif
-   const tbox::Dimension& dim(numer->getDim());
+   int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
       TYPE dirval = d_array_ops.minPointwiseDivide(numer->getArrayData(d),
             denom->getArrayData(d),

@@ -519,8 +519,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/math/HierarchySideDataOpsReal.C"
-#endif
 
 #endif

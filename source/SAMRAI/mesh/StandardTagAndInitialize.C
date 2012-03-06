@@ -163,7 +163,8 @@ StandardTagAndInitialize::~StandardTagAndInitialize()
  *************************************************************************
  */
 
-void StandardTagAndInitialize::initializeLevelData(
+void
+StandardTagAndInitialize::initializeLevelData(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double init_data_time,
@@ -204,7 +205,8 @@ void StandardTagAndInitialize::initializeLevelData(
  *************************************************************************
  */
 
-void StandardTagAndInitialize::resetHierarchyConfiguration(
+void
+StandardTagAndInitialize::resetHierarchyConfiguration(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level)
@@ -249,7 +251,8 @@ void StandardTagAndInitialize::resetHierarchyConfiguration(
  *************************************************************************
  */
 
-void StandardTagAndInitialize::tagCellsForRefinement(
+void
+StandardTagAndInitialize::tagCellsForRefinement(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double regrid_time,
@@ -908,7 +911,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
  *************************************************************************
  */
 
-bool StandardTagAndInitialize::coarsestLevelBoxesOK(
+bool
+StandardTagAndInitialize::coarsestLevelBoxesOK(
    const hier::BoxContainer& boxes) const
 {
    TBOX_ASSERT(boxes.size() > 0);
@@ -947,7 +951,8 @@ bool StandardTagAndInitialize::coarsestLevelBoxesOK(
  *************************************************************************
  */
 
-void StandardTagAndInitialize::checkCoarsenRatios(
+void
+StandardTagAndInitialize::checkCoarsenRatios(
    const tbox::Array<hier::IntVector>& ratio_to_coarser)
 {
    if (d_use_richardson_extrapolation) {
@@ -1002,6 +1007,31 @@ void StandardTagAndInitialize::checkCoarsenRatios(
 
 }
 
+bool
+StandardTagAndInitialize::usesTimeIntegration() const
+{
+   return d_use_richardson_extrapolation;
+}
+
+int
+StandardTagAndInitialize::getErrorCoarsenRatio() const
+{
+   return d_error_coarsen_ratio;
+}
+
+bool
+StandardTagAndInitialize::refineUserBoxInputOnly() const
+{
+   bool use_only_refine_boxes = false;
+   if (d_use_refine_boxes) {
+      use_only_refine_boxes = true;
+      if (d_use_gradient_detector || d_use_richardson_extrapolation) {
+         use_only_refine_boxes = false;
+      }
+   }
+   return use_only_refine_boxes;
+}
+
 /*
  *************************************************************************
  *
@@ -1010,7 +1040,8 @@ void StandardTagAndInitialize::checkCoarsenRatios(
  *************************************************************************
  */
 
-void StandardTagAndInitialize::getFromInput(
+void
+StandardTagAndInitialize::getFromInput(
    const boost::shared_ptr<tbox::Database>& db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS

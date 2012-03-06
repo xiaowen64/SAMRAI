@@ -98,8 +98,7 @@ public:
     *
     * Deallocate internal data.
     */
-   ~BergerRigoutsos(
-      void);
+   virtual ~BergerRigoutsos();
 
    /*!
     * @brief Set the MPI communication object.

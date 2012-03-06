@@ -50,7 +50,8 @@ TagAndInitializeStrategy::~TagAndInitializeStrategy()
  *
  *************************************************************************
  */
-bool TagAndInitializeStrategy::getUserSuppliedRefineBoxes(
+bool
+TagAndInitializeStrategy::getUserSuppliedRefineBoxes(
    hier::BoxContainer& refine_boxes,
    const int level_num,
    const double time)
@@ -209,7 +210,8 @@ bool TagAndInitializeStrategy::getUserSuppliedRefineBoxes(
  *************************************************************************
  */
 
-void TagAndInitializeStrategy::resetRefineBoxes(
+void
+TagAndInitializeStrategy::resetRefineBoxes(
    const hier::BoxContainer& refine_boxes,
    const int level_num)
 {
@@ -239,7 +241,8 @@ void TagAndInitializeStrategy::resetRefineBoxes(
  *************************************************************************
  */
 
-void TagAndInitializeStrategy::getFromInput(
+void
+TagAndInitializeStrategy::getFromInput(
    const boost::shared_ptr<tbox::Database>& db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -397,11 +400,6 @@ void TagAndInitializeStrategy::getFromInput(
          d_refine_boxes_use_times[ln] = false;
       }
    } // not using new input format
-}
-
-const tbox::Dimension& TagAndInitializeStrategy::getDim() const
-{
-   return d_dim;
 }
 
 }

@@ -515,8 +515,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/math/HierarchyNodeDataOpsReal.C"
-#endif
 
 #endif

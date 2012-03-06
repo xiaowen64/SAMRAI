@@ -260,8 +260,7 @@ public:
    getFromInput(
       const boost::shared_ptr<tbox::Database>& db);
 
-   const StandardTagAndInitializeConnectorWidthRequestor
-   &
+   const StandardTagAndInitializeConnectorWidthRequestor&
    getConnectorWidthRequestor() const;
 
 private:

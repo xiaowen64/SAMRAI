@@ -214,4 +214,9 @@ private:
 
 }
 }
+
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/math/PatchCellDataNormOpsComplex.I"
+#endif
+
 #endif

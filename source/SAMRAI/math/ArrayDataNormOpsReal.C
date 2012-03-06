@@ -69,7 +69,7 @@ void ArrayDataNormOpsReal<TYPE>::abs(
    TBOX_DIM_ASSERT_CHECK_ARGS3(dst, src, box);
    TBOX_ASSERT(dst.getDepth() == src.getDepth());
 
-   const tbox::Dimension& dim(dst.getDim());
+   int dimVal = dst.getDim().getValue();
 
    const hier::Box dst_box = dst.getBox();
    const hier::Box src_box = src.getBox();
@@ -81,7 +81,7 @@ void ArrayDataNormOpsReal<TYPE>::abs(
       int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int src_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src_w[i] = src_box.numberCells(i);
@@ -107,7 +107,7 @@ void ArrayDataNormOpsReal<TYPE>::abs(
 
          int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int src_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             dst_b[nd] = dst_counter;
             src_b[nd] = src_counter;
          }
@@ -121,7 +121,7 @@ void ArrayDataNormOpsReal<TYPE>::abs(
 
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -163,7 +163,7 @@ double ArrayDataNormOpsReal<TYPE>::sumControlVolumes(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(data, cvol, box);
 
-   const tbox::Dimension& dim(data.getDim());
+   int dimVal = data.getDim().getValue();
 
    double sum = 0.0;
 
@@ -176,7 +176,7 @@ double ArrayDataNormOpsReal<TYPE>::sumControlVolumes(
       int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int cv_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          cv_w[i] = cv_box.numberCells(i);
          dim_counter[i] = 0;
@@ -199,7 +199,7 @@ double ArrayDataNormOpsReal<TYPE>::sumControlVolumes(
          int cv_counter = cv_begin;
 
          int cv_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             cv_b[nd] = cv_counter;
          }
 
@@ -210,7 +210,7 @@ double ArrayDataNormOpsReal<TYPE>::sumControlVolumes(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -249,7 +249,7 @@ double ArrayDataNormOpsReal<TYPE>::L1NormWithControlVolume(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(data, cvol, box);
 
-   const tbox::Dimension& dim(data.getDim());
+   int dimVal = data.getDim().getValue();
 
    double l1norm = 0.0;
 
@@ -267,7 +267,7 @@ double ArrayDataNormOpsReal<TYPE>::L1NormWithControlVolume(
       int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int cv_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          cv_w[i] = cv_box.numberCells(i);
@@ -292,7 +292,7 @@ double ArrayDataNormOpsReal<TYPE>::L1NormWithControlVolume(
 
          int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int cv_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
             cv_b[nd] = cv_counter;
          }
@@ -305,7 +305,7 @@ double ArrayDataNormOpsReal<TYPE>::L1NormWithControlVolume(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -347,7 +347,7 @@ double ArrayDataNormOpsReal<TYPE>::L1Norm(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(data, box);
 
-   const tbox::Dimension& dim(data.getDim());
+   int dimVal = data.getDim().getValue();
 
    double l1norm = 0.0;
 
@@ -359,7 +359,7 @@ double ArrayDataNormOpsReal<TYPE>::L1Norm(
       int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
@@ -380,7 +380,7 @@ double ArrayDataNormOpsReal<TYPE>::L1Norm(
          int d_counter = d_begin;
 
          int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
          }
 
@@ -391,7 +391,7 @@ double ArrayDataNormOpsReal<TYPE>::L1Norm(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -453,7 +453,7 @@ double ArrayDataNormOpsReal<TYPE>::weightedL2NormWithControlVolume(
    TBOX_DIM_ASSERT_CHECK_ARGS4(data, weight, cvol, box);
    TBOX_ASSERT(data.getDepth() == weight.getDepth());
 
-   const tbox::Dimension& dim(data.getDim());
+   int dimVal = data.getDim().getValue();
 
    double wl2norm = 0.0;
 
@@ -473,7 +473,7 @@ double ArrayDataNormOpsReal<TYPE>::weightedL2NormWithControlVolume(
       int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int cv_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          w_w[i] = w_box.numberCells(i);
          d_w[i] = d_box.numberCells(i);
@@ -504,7 +504,7 @@ double ArrayDataNormOpsReal<TYPE>::weightedL2NormWithControlVolume(
          int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int w_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int cv_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
             w_b[nd] = w_counter;
             cv_b[nd] = cv_counter;
@@ -518,7 +518,7 @@ double ArrayDataNormOpsReal<TYPE>::weightedL2NormWithControlVolume(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -567,7 +567,7 @@ double ArrayDataNormOpsReal<TYPE>::weightedL2Norm(
    TBOX_DIM_ASSERT_CHECK_ARGS3(data, weight, box);
    TBOX_ASSERT(data.getDepth() == weight.getDepth());
 
-   const tbox::Dimension& dim(data.getDim());
+   int dimVal = data.getDim().getValue();
 
    double wl2norm = 0.0;
 
@@ -581,7 +581,7 @@ double ArrayDataNormOpsReal<TYPE>::weightedL2Norm(
       int w_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          w_w[i] = w_box.numberCells(i);
          d_w[i] = d_box.numberCells(i);
@@ -608,7 +608,7 @@ double ArrayDataNormOpsReal<TYPE>::weightedL2Norm(
 
          int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int w_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
             w_b[nd] = w_counter;
          }
@@ -620,7 +620,7 @@ double ArrayDataNormOpsReal<TYPE>::weightedL2Norm(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -663,7 +663,7 @@ double ArrayDataNormOpsReal<TYPE>::maxNormWithControlVolume(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(data, cvol, box);
 
-   const tbox::Dimension& dim(data.getDim());
+   int dimVal = data.getDim().getValue();
 
    double maxnorm = 0.0;
 
@@ -681,7 +681,7 @@ double ArrayDataNormOpsReal<TYPE>::maxNormWithControlVolume(
       int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int cv_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          cv_w[i] = cv_box.numberCells(i);
@@ -706,7 +706,7 @@ double ArrayDataNormOpsReal<TYPE>::maxNormWithControlVolume(
 
          int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int cv_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
             cv_b[nd] = cv_counter;
          }
@@ -723,7 +723,7 @@ double ArrayDataNormOpsReal<TYPE>::maxNormWithControlVolume(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -765,7 +765,7 @@ double ArrayDataNormOpsReal<TYPE>::maxNorm(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(data, box);
 
-   const tbox::Dimension& dim(data.getDim());
+   int dimVal = data.getDim().getValue();
 
    double maxnorm = 0.0;
 
@@ -777,7 +777,7 @@ double ArrayDataNormOpsReal<TYPE>::maxNorm(
       int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
@@ -797,7 +797,7 @@ double ArrayDataNormOpsReal<TYPE>::maxNorm(
          int d_counter = d_begin;
 
          int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
          }
 
@@ -810,7 +810,7 @@ double ArrayDataNormOpsReal<TYPE>::maxNorm(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -855,7 +855,7 @@ TYPE ArrayDataNormOpsReal<TYPE>::dotWithControlVolume(
 #pragma warning (disable:810)
 #endif
 
-   const tbox::Dimension& dim(data1.getDim());
+   int dimVal = data1.getDim().getValue();
 
    TYPE dprod = 0.0;
 
@@ -876,7 +876,7 @@ TYPE ArrayDataNormOpsReal<TYPE>::dotWithControlVolume(
       int d2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int cv_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d1_w[i] = d1_box.numberCells(i);
          d2_w[i] = d2_box.numberCells(i);
@@ -907,7 +907,7 @@ TYPE ArrayDataNormOpsReal<TYPE>::dotWithControlVolume(
          int d1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int d2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int cv_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             d1_b[nd] = d1_counter;
             d2_b[nd] = d2_counter;
             cv_b[nd] = cv_counter;
@@ -921,7 +921,7 @@ TYPE ArrayDataNormOpsReal<TYPE>::dotWithControlVolume(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -972,7 +972,7 @@ TYPE ArrayDataNormOpsReal<TYPE>::dot(
    TBOX_DIM_ASSERT_CHECK_ARGS3(data1, data2, box);
    TBOX_ASSERT(data1.getDepth() == data2.getDepth());
 
-   const tbox::Dimension& dim(data1.getDim());
+   int dimVal = data1.getDim().getValue();
 
    TYPE dprod = 0.0;
 
@@ -989,7 +989,7 @@ TYPE ArrayDataNormOpsReal<TYPE>::dot(
       int d1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int d2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d1_w[i] = d1_box.numberCells(i);
          d2_w[i] = d2_box.numberCells(i);
@@ -1014,7 +1014,7 @@ TYPE ArrayDataNormOpsReal<TYPE>::dot(
 
          int d1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int d2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             d1_b[nd] = d1_counter;
             d2_b[nd] = d2_counter;
          }
@@ -1026,7 +1026,7 @@ TYPE ArrayDataNormOpsReal<TYPE>::dot(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -1071,7 +1071,7 @@ TYPE ArrayDataNormOpsReal<TYPE>::integral(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(data, vol, box);
 
-   const tbox::Dimension& dim(data.getDim());
+   int dimVal = data.getDim().getValue();
 
    TYPE integral = 0.0;
 
@@ -1089,7 +1089,7 @@ TYPE ArrayDataNormOpsReal<TYPE>::integral(
       int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int v_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          v_w[i] = v_box.numberCells(i);
@@ -1114,7 +1114,7 @@ TYPE ArrayDataNormOpsReal<TYPE>::integral(
 
          int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int v_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
             v_b[nd] = v_counter;
          }
@@ -1126,7 +1126,7 @@ TYPE ArrayDataNormOpsReal<TYPE>::integral(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;

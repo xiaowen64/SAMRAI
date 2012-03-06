@@ -21,7 +21,6 @@
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/VariableDatabase.h"
-#include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellDataFactory.h"
 #include "SAMRAI/tbox/Array.h"
@@ -133,7 +132,8 @@ TreeLoadBalancer::~TreeLoadBalancer()
  *************************************************************************
  */
 
-bool TreeLoadBalancer::getLoadBalanceDependsOnPatchData(
+bool
+TreeLoadBalancer::getLoadBalanceDependsOnPatchData(
    int level_number) const
 {
    return getWorkloadDataId(level_number) < 0 ? false : true;
@@ -145,7 +145,8 @@ bool TreeLoadBalancer::getLoadBalanceDependsOnPatchData(
 **************************************************************************
 **************************************************************************
 */
-void TreeLoadBalancer::setWorkloadPatchDataIndex(
+void
+TreeLoadBalancer::setWorkloadPatchDataIndex(
    int data_id,
    int level_number)
 {
@@ -182,18 +183,6 @@ void TreeLoadBalancer::setWorkloadPatchDataIndex(
 
 
 /*
-**************************************************************************
-**************************************************************************
-*/
-void TreeLoadBalancer::setUniformWorkload(
-   int level_number)
-{
-   d_workload_data_id[level_number] = -1;
-}
-
-
-
-/*
  *************************************************************************
  * This method implements the abstract LoadBalanceStrategy interface,
  * but it is not where the tree load balancer algorithm is implemented.
@@ -209,7 +198,8 @@ void TreeLoadBalancer::setUniformWorkload(
  * by breaking up large boxes and update balance<==>anchor again.
  *************************************************************************
  */
-void TreeLoadBalancer::loadBalanceBoxLevel(
+void
+TreeLoadBalancer::loadBalanceBoxLevel(
    hier::BoxLevel& balance_box_level,
    hier::Connector& balance_to_anchor,
    hier::Connector& anchor_to_balance,
@@ -691,7 +681,8 @@ void TreeLoadBalancer::loadBalanceBoxLevel(
  * update given Connectors to the changed BoxLevel.
  *************************************************************************
  */
-void TreeLoadBalancer::constrainMaxBoxSizes(
+void
+TreeLoadBalancer::constrainMaxBoxSizes(
    hier::BoxLevel& box_level,
    hier::Connector &anchor_to_level,
    hier::Connector &level_to_anchor ) const
@@ -809,7 +800,7 @@ void TreeLoadBalancer::constrainMaxBoxSizes(
 
    if (d_print_steps) {
       tbox::plog
-      << " TreeLoadBalancer::mapOversizedBoxes completed building unconstrained_to_constrained"
+      << " TreeLoadBalancer::constrainMaxBoxSizes completed building unconstrained_to_constrained"
       << "\n";
    }
 
@@ -854,7 +845,8 @@ void TreeLoadBalancer::constrainMaxBoxSizes(
  * locally empty.
  *************************************************************************
  */
-void TreeLoadBalancer::loadBalanceWithinRankGroup(
+void
+TreeLoadBalancer::loadBalanceWithinRankGroup(
    hier::BoxLevel& balance_box_level,
    hier::Connector& balance_to_anchor,
    hier::Connector& anchor_to_balance,
@@ -1620,12 +1612,12 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
       const hier::MappingConnectorAlgorithm mca;
       if (mca.findMappingErrors(unbalanced_to_balanced) != 0) {
          TBOX_ERROR(
-            "TreeLoadBalancer::loadBalanceBoxLevel_rootCycle Mapping errors found in unbalanced_to_balanced!");
+            "TreeLoadBalancer::loadBalanceWithinRankGroup Mapping errors found in unbalanced_to_balanced!");
       }
       if (unbalanced_to_balanced.checkTransposeCorrectness(
              balanced_to_unbalanced)) {
          TBOX_ERROR(
-            "TreeLoadBalancer::loadBalanceBoxLevel_rootCycle Transpose errors found!");
+            "TreeLoadBalancer::loadBalanceWithinRankGroup Transpose errors found!");
       }
    }
 
@@ -1671,7 +1663,8 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
  *
  *************************************************************************
  */
-int TreeLoadBalancer::reassignLoads(
+int
+TreeLoadBalancer::reassignLoads(
    TransitSet& src,
    TransitSet& dst,
    hier::LocalId& next_available_index,
@@ -1784,7 +1777,8 @@ int TreeLoadBalancer::reassignLoads(
  *************************************************************************
  *************************************************************************
  */
-void TreeLoadBalancer::packSubtreeLoadData(
+void
+TreeLoadBalancer::packSubtreeLoadData(
    std::vector<int>& msg,
    const SubtreeLoadData& load_data) const
 {
@@ -1810,7 +1804,8 @@ void TreeLoadBalancer::packSubtreeLoadData(
  *************************************************************************
  *************************************************************************
  */
-void TreeLoadBalancer::unpackSubtreeLoadData(
+void
+TreeLoadBalancer::unpackSubtreeLoadData(
    SubtreeLoadData& load_data,
    TransitSet& receiving_bin,
    hier::LocalId& next_available_index,
@@ -1861,7 +1856,8 @@ void TreeLoadBalancer::unpackSubtreeLoadData(
  * we have accounted for all the cells in the unbalanced BoxLevel.
  *************************************************************************
  */
-void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
+void
+TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
    hier::Connector &unbalanced_to_balanced,
    const TreeLoadBalancer::TransitSet &kept_imports ) const
 {
@@ -2021,11 +2017,12 @@ void TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
  * other code have access to it.
  *************************************************************************
  */
-void TreeLoadBalancer::setSAMRAI_MPI(
+void
+TreeLoadBalancer::setSAMRAI_MPI(
    const tbox::SAMRAI_MPI& samrai_mpi)
 {
    if (samrai_mpi.getCommunicator() == tbox::SAMRAI_MPI::commNull) {
-      TBOX_ERROR("TreeLoadBalancer::setMPICommunicator error: Given\n"
+      TBOX_ERROR("TreeLoadBalancer::setSAMRAI_MPI error: Given\n"
          << "communicator is invalid.");
    }
 
@@ -2045,7 +2042,8 @@ void TreeLoadBalancer::setSAMRAI_MPI(
  * Set the MPI commuicator.
  *************************************************************************
  */
-void TreeLoadBalancer::freeMPICommunicator()
+void
+TreeLoadBalancer::freeMPICommunicator()
 {
    if ( d_mpi_is_dupe ) {
       // Free the private communicator (if MPI has not been finalized).
@@ -2083,7 +2081,8 @@ void TreeLoadBalancer::freeMPICommunicator()
  * The group size is p^((i+1)/m)
  *************************************************************************
  */
-void TreeLoadBalancer::createBalanceRankGroupBasedOnCycles(
+void
+TreeLoadBalancer::createBalanceRankGroupBasedOnCycles(
    tbox::RankGroup &rank_group,
    int &number_of_groups,
    int &group_num,
@@ -2142,7 +2141,8 @@ void TreeLoadBalancer::createBalanceRankGroupBasedOnCycles(
  * children and parent.
  *************************************************************************
  */
-void TreeLoadBalancer::setupAsyncCommObjects(
+void
+TreeLoadBalancer::setupAsyncCommObjects(
    tbox::AsyncCommStage& child_stage,
    tbox::AsyncCommPeer<int> *& child_comms,
    tbox::AsyncCommStage& parent_stage,
@@ -2197,7 +2197,8 @@ void TreeLoadBalancer::setupAsyncCommObjects(
  *************************************************************************
  *************************************************************************
  */
-void TreeLoadBalancer::destroyAsyncCommObjects(
+void
+TreeLoadBalancer::destroyAsyncCommObjects(
    tbox::AsyncCommPeer<int> *& child_comms,
    tbox::AsyncCommPeer<int> *& parent_comm) const
 {
@@ -2231,7 +2232,8 @@ void TreeLoadBalancer::destroyAsyncCommObjects(
  * Return whether any changes were made.
  *************************************************************************
  */
-int TreeLoadBalancer::shiftLoadsByBreaking(
+int
+TreeLoadBalancer::shiftLoadsByBreaking(
    TransitSet& src,
    TransitSet& dst,
    hier::LocalId& next_available_index,
@@ -2497,7 +2499,8 @@ int TreeLoadBalancer::shiftLoadsByBreaking(
  * Return whether any changes were made.
  *************************************************************************
  */
-int TreeLoadBalancer::shiftLoadsBySwapping(
+int
+TreeLoadBalancer::shiftLoadsBySwapping(
    TransitSet& src,
    TransitSet& dst,
    int ideal_transfer ) const
@@ -2565,7 +2568,8 @@ int TreeLoadBalancer::shiftLoadsBySwapping(
  * load.
  *************************************************************************
  */
-bool TreeLoadBalancer::swapLoadPair(
+bool
+TreeLoadBalancer::swapLoadPair(
    TransitSet& src,
    TransitSet& dst,
    int& actual_transfer,
@@ -2898,7 +2902,8 @@ bool TreeLoadBalancer::swapLoadPair(
  * Return whether a successful break was made.
  *************************************************************************
  */
-bool TreeLoadBalancer::breakOffLoad(
+bool
+TreeLoadBalancer::breakOffLoad(
    std::vector<hier::Box>& breakoff,
    std::vector<hier::Box>& leftover,
    double& brk_load,
@@ -3167,7 +3172,8 @@ bool TreeLoadBalancer::breakOffLoad(
  *************************************************************************
  */
 
-double TreeLoadBalancer::computeBoxSurfaceArea(
+double
+TreeLoadBalancer::computeBoxSurfaceArea(
    const std::vector<hier::Box>& boxes) const
 {
    int surface_area = 0;
@@ -3193,7 +3199,8 @@ double TreeLoadBalancer::computeBoxSurfaceArea(
  *************************************************************************
  */
 
-int TreeLoadBalancer::computeBoxSurfaceArea(
+int
+TreeLoadBalancer::computeBoxSurfaceArea(
    const hier::Box& box) const
 {
    int surface_area = 0;
@@ -3209,92 +3216,14 @@ int TreeLoadBalancer::computeBoxSurfaceArea(
 
 /*
  *************************************************************************
- * Compute the total combined penalty associated with box cutting.
- * Any kind of binary function can be used.  I am just experimenting
- * with various types and weights.
- *
- * All input penalties should all be non-dimensional.
- *************************************************************************
- */
-
-double TreeLoadBalancer::combinedBreakingPenalty(
-   double balance_penalty,
-   double surface_penalty,
-   double slender_penalty) const
-{
-   double combined_penalty =
-      d_balance_penalty_wt * balance_penalty * balance_penalty
-      + d_surface_penalty_wt * surface_penalty * surface_penalty
-      + d_slender_penalty_wt * slender_penalty * slender_penalty;
-   return combined_penalty;
-}
-
-
-
-/*
- *************************************************************************
- * Return non-dimensional volume-weighted balance penalty for
- * two containers of boxes and how imbalanced they are.
- *************************************************************************
- */
-
-double TreeLoadBalancer::computeBalancePenalty(
-   const std::vector<hier::Box>& a,
-   const std::vector<hier::Box>& b,
-   double imbalance) const
-{
-   NULL_USE(a);
-   NULL_USE(b);
-   return tbox::MathUtilities<double>::Abs(imbalance);
-}
-
-
-
-/*
- *************************************************************************
- * Return non-dimensional volume-weighted balance penalty for
- * two containers of boxes and how imbalanced they are.
- *************************************************************************
- */
-
-double TreeLoadBalancer::computeBalancePenalty(
-   const TransitSet& a,
-   const TransitSet& b,
-   double imbalance) const
-{
-   NULL_USE(a);
-   NULL_USE(b);
-   return tbox::MathUtilities<double>::Abs(imbalance);
-}
-
-
-
-/*
- *************************************************************************
- * Return non-dimensional volume-weighted balance penalty for
- * a box and how imbalanced it is.
- *************************************************************************
- */
-
-double TreeLoadBalancer::computeBalancePenalty(
-   const hier::Box& a,
-   double imbalance) const
-{
-   NULL_USE(a);
-   return tbox::MathUtilities<double>::Abs(imbalance);
-}
-
-
-
-/*
- *************************************************************************
  * Return non-dimensional volume-weighted surface penalty for a box.  The
  * reference zero penalty is for a box of equal sides having the same
  * volume.
  *************************************************************************
  */
 
-double TreeLoadBalancer::computeSurfacePenalty(
+double
+TreeLoadBalancer::computeSurfacePenalty(
    const std::vector<hier::Box>& a,
    const std::vector<hier::Box>& b) const
 {
@@ -3322,7 +3251,8 @@ double TreeLoadBalancer::computeSurfacePenalty(
  *************************************************************************
  */
 
-double TreeLoadBalancer::computeSurfacePenalty(
+double
+TreeLoadBalancer::computeSurfacePenalty(
    const TransitSet& a,
    const TransitSet& b) const
 {
@@ -3346,7 +3276,8 @@ double TreeLoadBalancer::computeSurfacePenalty(
  *************************************************************************
  */
 
-double TreeLoadBalancer::computeSurfacePenalty(
+double
+TreeLoadBalancer::computeSurfacePenalty(
    const hier::Box& a) const
 {
    int boxvol = a.size();
@@ -3368,7 +3299,8 @@ double TreeLoadBalancer::computeSurfacePenalty(
  *************************************************************************
  */
 
-double TreeLoadBalancer::computeSlenderPenalty(
+double
+TreeLoadBalancer::computeSlenderPenalty(
    const std::vector<hier::Box>& a,
    const std::vector<hier::Box>& b) const
 {
@@ -3396,7 +3328,8 @@ double TreeLoadBalancer::computeSlenderPenalty(
  *************************************************************************
  */
 
-double TreeLoadBalancer::computeSlenderPenalty(
+double
+TreeLoadBalancer::computeSlenderPenalty(
    const TransitSet& a,
    const TransitSet& b) const
 {
@@ -3420,7 +3353,8 @@ double TreeLoadBalancer::computeSlenderPenalty(
  *************************************************************************
  */
 
-double TreeLoadBalancer::computeSlenderPenalty(
+double
+TreeLoadBalancer::computeSlenderPenalty(
    const hier::Box& a) const
 {
    const hier::IntVector boxdim = a.numberCells();
@@ -3439,7 +3373,8 @@ double TreeLoadBalancer::computeSlenderPenalty(
  *************************************************************************
  */
 
-void TreeLoadBalancer::burstBox(
+void
+TreeLoadBalancer::burstBox(
    std::vector<hier::Box>& boxes,
    const hier::Box& bursty,
    const hier::Box& solid ) const
@@ -3538,7 +3473,8 @@ void TreeLoadBalancer::burstBox(
  *************************************************************************
  *************************************************************************
  */
-double TreeLoadBalancer::computeLocalLoads(
+double
+TreeLoadBalancer::computeLocalLoads(
    const hier::BoxLevel& box_level) const
 {
    // Count up workload.
@@ -3563,7 +3499,8 @@ double TreeLoadBalancer::computeLocalLoads(
  *************************************************************************
  */
 
-void TreeLoadBalancer::printClassData(
+void
+TreeLoadBalancer::printClassData(
    std::ostream& os) const
 {
    os << "\nTreeLoadBalancer::printClassData..." << std::endl;
@@ -3590,7 +3527,8 @@ void TreeLoadBalancer::printClassData(
  *************************************************************************
  */
 
-void TreeLoadBalancer::getFromInput(
+void
+TreeLoadBalancer::getFromInput(
    const boost::shared_ptr<tbox::Database>& db)
 {
 
@@ -3650,34 +3588,12 @@ void TreeLoadBalancer::getFromInput(
 
 
 /*
- *************************************************************************
- *
- * Private utility functions to determine parameter values for level.
- *
- *************************************************************************
- */
-
-int TreeLoadBalancer::getWorkloadDataId(
-   int level_number) const
-{
-
-   TBOX_ASSERT(level_number >= 0);
-
-   int wrk_id = (level_number < d_workload_data_id.getSize() ?
-                 d_workload_data_id[level_number] :
-                 d_master_workload_data_id);
-
-   return wrk_id;
-}
-
-
-
-/*
  ***************************************************************************
  *
  ***************************************************************************
  */
-void TreeLoadBalancer::assertNoMessageForPrivateCommunicator() const
+void
+TreeLoadBalancer::assertNoMessageForPrivateCommunicator() const
 {
    /*
     * If using a private communicator, double check to make sure
@@ -3729,7 +3645,8 @@ void TreeLoadBalancer::assertNoMessageForPrivateCommunicator() const
  * Return whether a successful break was made.
  *************************************************************************
  */
-bool TreeLoadBalancer::breakOffLoad_planar(
+bool
+TreeLoadBalancer::breakOffLoad_planar(
    std::vector<hier::Box>& breakoff,
    std::vector<hier::Box>& leftover,
    double& brk_load,
@@ -3942,7 +3859,8 @@ bool TreeLoadBalancer::breakOffLoad_planar(
  * account.
  *************************************************************************
  */
-bool TreeLoadBalancer::breakOffLoad_cubic(
+bool
+TreeLoadBalancer::breakOffLoad_cubic(
    std::vector<hier::Box>& breakoff,
    std::vector<hier::Box>& leftover,
    double& brk_load,
@@ -4280,7 +4198,8 @@ bool TreeLoadBalancer::breakOffLoad_cubic(
 **************************************************************************
 */
 
-void TreeLoadBalancer::prebalanceBoxLevel(
+void
+TreeLoadBalancer::prebalanceBoxLevel(
    hier::BoxLevel& balance_box_level,
    hier::Connector& balance_to_anchor,
    hier::Connector& anchor_to_balance,
@@ -4571,25 +4490,8 @@ void TreeLoadBalancer::prebalanceBoxLevel(
 **************************************************************************
 */
 
-int TreeLoadBalancer::sumWorkInBoxes(
-   const TransitSet::const_iterator &first,
-   const TransitSet::const_iterator &last ) const
-{
-   int sum = 0;
-   for ( TransitSet::const_iterator itr=first; itr!=last; ++itr ) {
-      sum += itr->d_load;
-   }
-   return sum;
-}
-
-
-
-/*
-**************************************************************************
-**************************************************************************
-*/
-
-std::ostream& operator << (
+std::ostream&
+operator << (
    std::ostream& co,
    const TreeLoadBalancer::BoxInTransit& r)
 {
@@ -4608,7 +4510,8 @@ std::ostream& operator << (
  ***********************************************************************
  ***********************************************************************
  */
-void TreeLoadBalancer::setTimers()
+void
+TreeLoadBalancer::setTimers()
 {
    /*
     * The first constructor gets timers from the TimerManager.
@@ -4713,18 +4616,72 @@ void TreeLoadBalancer::setTimers()
    }
 }
 
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+TreeLoadBalancer::BoxInTransit::BoxInTransit(
+   const tbox::Dimension &dim) :
+   d_box(dim),
+   d_orig_box(dim)
+{
+}
+
 
 
 /*
  *************************************************************************
  *************************************************************************
  */
-void TreeLoadBalancer::printStatistics(
-   std::ostream& s) const
+TreeLoadBalancer::BoxInTransit::BoxInTransit(
+   const hier::Box& origin):
+   d_box(origin),
+   d_orig_box(origin),
+   d_load(origin.size())
 {
-   BalanceUtilities::gatherAndReportLoadBalance(d_load_stat,
-      tbox::SAMRAI_MPI::getSAMRAIWorld(),
-      s);
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+TreeLoadBalancer::BoxInTransit::BoxInTransit(
+   const int *&ptr,
+   const tbox::Dimension &dim ):
+   d_box(dim),
+   d_orig_box(dim),
+   d_load(0)
+{
+   getFromIntBuffer(ptr);
+   ptr += commBufferSize();
+}
+
+
+
+/*
+ *************************************************************************
+ * Construct a new BoxInTransit with the history of an existing box.
+ *************************************************************************
+ */
+TreeLoadBalancer::BoxInTransit::BoxInTransit(
+   const BoxInTransit& other,
+   const hier::Box& box,
+   int rank,
+   hier::LocalId local_id):
+   d_box(box, local_id, rank),
+   d_orig_box(other.d_orig_box),
+   d_load(d_box.size())
+{
+}
+
+TreeLoadBalancer::SubtreeLoadData::SubtreeLoadData():
+   d_num_procs(0),
+   d_total_work(0),
+   d_load_exported(0),
+   d_load_imported(0)
+{
 }
 
 }

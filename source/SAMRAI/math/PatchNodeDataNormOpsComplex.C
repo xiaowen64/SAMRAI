@@ -17,6 +17,10 @@
 #include "SAMRAI/tbox/Utilities.h"
 #endif
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/math/PatchNodeDataNormOpsComplex.I"
+#endif
+
 namespace SAMRAI {
 namespace math {
 
@@ -28,64 +32,8 @@ PatchNodeDataNormOpsComplex::~PatchNodeDataNormOpsComplex()
 {
 }
 
-/*
- *************************************************************************
- *
- * Compute the number of data entries on a patch in the given box.
- *
- *************************************************************************
- */
-
-int PatchNodeDataNormOpsComplex::numberOfEntries(
-   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
-
-   const hier::Box ibox =
-      pdat::NodeGeometry::toNodeBox(box * data->getGhostBox());
-   int retval = ibox.size() * data->getDepth();
-   return retval;
-}
-
-/*
- *************************************************************************
- *
- * Norm operations for complex node-centered data.
- *
- *************************************************************************
- */
-
-double PatchNodeDataNormOpsComplex::sumControlVolumes(
-   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol,
-   const hier::Box& box) const
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(data && cvol);
-#endif
-   const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
-   return d_array_ops.sumControlVolumes(data->getArrayData(),
-      cvol->getArrayData(),
-      node_box);
-}
-
-void PatchNodeDataNormOpsComplex::abs(
-   const boost::shared_ptr<pdat::NodeData<double> >& dst,
-   const boost::shared_ptr<pdat::NodeData<dcomplex> >& src,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
-
-   const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
-   d_array_ops.abs(dst->getArrayData(),
-      src->getArrayData(),
-      node_box);
-}
-
-double PatchNodeDataNormOpsComplex::L1Norm(
+double
+PatchNodeDataNormOpsComplex::L1Norm(
    const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
@@ -107,7 +55,8 @@ double PatchNodeDataNormOpsComplex::L1Norm(
    return retval;
 }
 
-double PatchNodeDataNormOpsComplex::L2Norm(
+double
+PatchNodeDataNormOpsComplex::L2Norm(
    const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
@@ -129,7 +78,8 @@ double PatchNodeDataNormOpsComplex::L2Norm(
    return retval;
 }
 
-double PatchNodeDataNormOpsComplex::weightedL2Norm(
+double
+PatchNodeDataNormOpsComplex::weightedL2Norm(
    const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
    const boost::shared_ptr<pdat::NodeData<dcomplex> >& weight,
    const hier::Box& box,
@@ -156,7 +106,8 @@ double PatchNodeDataNormOpsComplex::weightedL2Norm(
    return retval;
 }
 
-double PatchNodeDataNormOpsComplex::RMSNorm(
+double
+PatchNodeDataNormOpsComplex::RMSNorm(
    const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
@@ -173,7 +124,8 @@ double PatchNodeDataNormOpsComplex::RMSNorm(
    return retval;
 }
 
-double PatchNodeDataNormOpsComplex::weightedRMSNorm(
+double
+PatchNodeDataNormOpsComplex::weightedRMSNorm(
    const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
    const boost::shared_ptr<pdat::NodeData<dcomplex> >& weight,
    const hier::Box& box,
@@ -191,7 +143,8 @@ double PatchNodeDataNormOpsComplex::weightedRMSNorm(
    return retval;
 }
 
-double PatchNodeDataNormOpsComplex::maxNorm(
+double
+PatchNodeDataNormOpsComplex::maxNorm(
    const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
@@ -211,7 +164,8 @@ double PatchNodeDataNormOpsComplex::maxNorm(
    return retval;
 }
 
-dcomplex PatchNodeDataNormOpsComplex::dot(
+dcomplex
+PatchNodeDataNormOpsComplex::dot(
    const boost::shared_ptr<pdat::NodeData<dcomplex> >& data1,
    const boost::shared_ptr<pdat::NodeData<dcomplex> >& data2,
    const hier::Box& box,
@@ -233,25 +187,6 @@ dcomplex PatchNodeDataNormOpsComplex::dot(
             cvol->getArrayData(),
             node_box);
    }
-   return retval;
-}
-
-dcomplex PatchNodeDataNormOpsComplex::integral(
-   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
-   const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& vol) const
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(data);
-#endif
-   dcomplex retval;
-   const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
-
-   retval = d_array_ops.integral(
-         data->getArrayData(),
-         vol->getArrayData(),
-         node_box);
-
    return retval;
 }
 

@@ -71,11 +71,11 @@ int PatchEdgeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
 #endif
-   const tbox::Dimension& dim(data1->getDim());
+   int dimVal = data1->getDim().getValue();
 
    int retval = 1;
    if (!cvol) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box =
             pdat::EdgeGeometry::toEdgeBox(box, d);
          retval = tbox::MathUtilities<int>::Min(retval,
@@ -85,7 +85,7 @@ int PatchEdgeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
                   edge_box));
       }
    } else {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box =
             pdat::EdgeGeometry::toEdgeBox(box, d);
          retval = tbox::MathUtilities<int>::Min(retval,
@@ -110,10 +110,10 @@ void PatchEdgeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);
 #endif
-   const tbox::Dimension& dim(dst->getDim());
+   int dimVal = dst->getDim().getValue();
 
    if (!cvol) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          d_array_ops.compareToScalar(dst->getArrayData(d),
             src->getArrayData(d),
@@ -121,7 +121,7 @@ void PatchEdgeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
             edge_box);
       }
    } else {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          d_array_ops.compareToScalarWithControlVolume(dst->getArrayData(d),
             src->getArrayData(d),
@@ -142,11 +142,11 @@ int PatchEdgeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);
 #endif
-   const tbox::Dimension& dim(dst->getDim());
+   int dimVal = dst->getDim().getValue();
 
    int retval = 1;
    if (!cvol) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box =
             pdat::EdgeGeometry::toEdgeBox(box, d);
          retval = tbox::MathUtilities<int>::Min(retval,
@@ -156,7 +156,7 @@ int PatchEdgeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
                   edge_box));
       }
    } else {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box =
             pdat::EdgeGeometry::toEdgeBox(box, d);
          retval = tbox::MathUtilities<int>::Min(retval,
@@ -179,10 +179,10 @@ TYPE PatchEdgeDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(numer && denom);
 #endif
-   const tbox::Dimension& dim(numer->getDim());
+   int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       TYPE dirval = d_array_ops.maxPointwiseDivide(numer->getArrayData(d),
             denom->getArrayData(d),
@@ -201,10 +201,10 @@ TYPE PatchEdgeDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(numer && denom);
 #endif
-   const tbox::Dimension& dim(numer->getDim());
+   int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       TYPE dirval = d_array_ops.minPointwiseDivide(numer->getArrayData(d),
             denom->getArrayData(d),

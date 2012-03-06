@@ -271,7 +271,7 @@ public:
    /*!
     * @brief Destructor
     */
-   ~GriddingAlgorithm();
+   virtual ~GriddingAlgorithm();
 
    /*!
     * @brief Create or rebalance the coarsest level.

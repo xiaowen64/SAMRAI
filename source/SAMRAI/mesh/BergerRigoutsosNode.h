@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Asynchronous Berger-Rigoutsos dendogram
+ * Description:   Node in asynchronous Berger-Rigoutsos dendogram
  *
  ************************************************************************/
 #ifndef included_mesh_BergerRigoutsosNode
@@ -111,8 +111,7 @@ public:
     *
     * Deallocate internal data.
     */
-   ~BergerRigoutsosNode(
-      void);
+   virtual ~BergerRigoutsosNode();
 
    /*!
     * @brief Set parameters for (our slight variation of) the
@@ -379,8 +378,8 @@ public:
       /*!
        * @brief BoxLevel associated with tag_level.
        *
-       * If relationships are computed (see setComputeRelationships()), the relationships
-       * go between the graph nodes on the tagged level and the
+       * If relationships are computed (see setComputeRelationships()), the
+       * relationships go between the graph nodes on the tagged level and the
        * generated graph nodes.
        */
       const hier::BoxLevel* tag_mapped_box_level;
@@ -799,17 +798,9 @@ public:
    BoxAcceptance
    intToBoxAcceptance(
       int i) const;
-   bool boxAccepted() const {
-      return bool(d_box_acceptance >= 0 &&
-                  d_box_acceptance % 2);
-   }
-   bool boxRejected() const {
-      return bool(d_box_acceptance >= 0 &&
-                  d_box_acceptance % 2 == 0);
-   }
-   bool boxHasNoTag() const {
-      return bool(d_box_acceptance == -1);
-   }
+   bool boxAccepted() const;
+   bool boxRejected() const;
+   bool boxHasNoTag() const;
    //@}
 
    //@{
@@ -1014,4 +1005,8 @@ public:
 }
 }
 
+
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/mesh/BergerRigoutsosNode.I"
+#endif
 #endif  // included_mesh_BergerRigoutsosNode

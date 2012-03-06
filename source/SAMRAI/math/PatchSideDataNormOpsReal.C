@@ -69,12 +69,12 @@ int PatchSideDataNormOpsReal<TYPE>::numberOfEntries(
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
-   const tbox::Dimension& dim(box.getDim());
+   int dimVal = box.getDim().getValue();
 
    int retval = 0;
    const hier::Box ibox = box * data->getGhostBox();
    const hier::IntVector& directions = data->getDirectionVector();
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       if (directions(d)) {
          const hier::Box dbox = pdat::SideGeometry::toSideBox(ibox, d);
          retval += (dbox.size() * data->getDepth());
@@ -106,9 +106,9 @@ double PatchSideDataNormOpsReal<TYPE>::sumControlVolumes(
    TBOX_ASSERT(directions ==
       hier::IntVector::min(directions, cvol->getDirectionVector()));
 #endif
-   const tbox::Dimension& dim(data->getDim());
+   int dimVal = data->getDim().getValue();
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          retval += d_array_ops.sumControlVolumes(data->getArrayData(d),
@@ -129,10 +129,10 @@ void PatchSideDataNormOpsReal<TYPE>::abs(
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
-   const tbox::Dimension& dim(dst->getDim());
+   int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          d_array_ops.abs(dst->getArrayData(d),
@@ -151,12 +151,12 @@ double PatchSideDataNormOpsReal<TYPE>::L1Norm(
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
-   const tbox::Dimension& dim(data->getDim());
+   int dimVal = data->getDim().getValue();
 
    double retval = 0.0;
    const hier::IntVector& directions = data->getDirectionVector();
    if (!cvol) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             retval += d_array_ops.L1Norm(data->getArrayData(d), side_box);
@@ -167,7 +167,7 @@ double PatchSideDataNormOpsReal<TYPE>::L1Norm(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             retval += d_array_ops.L1NormWithControlVolume(data->getArrayData(d),
@@ -188,12 +188,12 @@ double PatchSideDataNormOpsReal<TYPE>::L2Norm(
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
-   const tbox::Dimension& dim(data->getDim());
+   int dimVal = data->getDim().getValue();
 
    double retval = 0.0;
    const hier::IntVector& directions = data->getDirectionVector();
    if (!cvol) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             double aval = d_array_ops.L2Norm(data->getArrayData(d), side_box);
@@ -205,7 +205,7 @@ double PatchSideDataNormOpsReal<TYPE>::L2Norm(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             double aval = d_array_ops.L2NormWithControlVolume(
@@ -229,7 +229,7 @@ double PatchSideDataNormOpsReal<TYPE>::weightedL2Norm(
    TBOX_ASSERT(data && weight);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
 
-   const tbox::Dimension& dim(data->getDim());
+   int dimVal = data->getDim().getValue();
 
    double retval = 0.0;
    const hier::IntVector& directions = data->getDirectionVector();
@@ -238,7 +238,7 @@ double PatchSideDataNormOpsReal<TYPE>::weightedL2Norm(
       hier::IntVector::min(directions, weight->getDirectionVector()));
 
    if (!cvol) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             double aval = d_array_ops.weightedL2Norm(data->getArrayData(d),
@@ -252,7 +252,7 @@ double PatchSideDataNormOpsReal<TYPE>::weightedL2Norm(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             double aval = d_array_ops.weightedL2NormWithControlVolume(
@@ -317,12 +317,12 @@ double PatchSideDataNormOpsReal<TYPE>::maxNorm(
    TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
-   const tbox::Dimension& dim(data->getDim());
+   int dimVal = data->getDim().getValue();
 
    double retval = 0.0;
    const hier::IntVector& directions = data->getDirectionVector();
    if (!cvol) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -335,7 +335,7 @@ double PatchSideDataNormOpsReal<TYPE>::maxNorm(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -361,12 +361,12 @@ TYPE PatchSideDataNormOpsReal<TYPE>::dot(
    TBOX_ASSERT(data1 && data2);
    TBOX_ASSERT(data1->getDirectionVector() == data2->getDirectionVector());
 #endif
-   const tbox::Dimension& dim(data1->getDim());
+   int dimVal = data1->getDim().getValue();
 
    TYPE retval = 0.0;
    const hier::IntVector& directions = data1->getDirectionVector();
    if (!cvol) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             retval += d_array_ops.dot(data1->getArrayData(d),
@@ -379,7 +379,7 @@ TYPE PatchSideDataNormOpsReal<TYPE>::dot(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             retval += d_array_ops.dotWithControlVolume(
@@ -403,7 +403,7 @@ TYPE PatchSideDataNormOpsReal<TYPE>::integral(
    TBOX_ASSERT(vol);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data, box, *vol);
 
-   const tbox::Dimension& dim(data->getDim());
+   int dimVal = data->getDim().getValue();
 
    TYPE retval = 0.0;
    const hier::IntVector& directions = data->getDirectionVector();
@@ -411,7 +411,7 @@ TYPE PatchSideDataNormOpsReal<TYPE>::integral(
    TBOX_ASSERT(directions ==
       hier::IntVector::min(directions, vol->getDirectionVector()));
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          retval += d_array_ops.integral(

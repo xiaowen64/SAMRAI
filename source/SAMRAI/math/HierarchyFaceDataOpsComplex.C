@@ -60,7 +60,8 @@ HierarchyFaceDataOpsComplex::~HierarchyFaceDataOpsComplex()
  *************************************************************************
  */
 
-void HierarchyFaceDataOpsComplex::setPatchHierarchy(
+void
+HierarchyFaceDataOpsComplex::setPatchHierarchy(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    TBOX_ASSERT(hierarchy);
@@ -68,7 +69,8 @@ void HierarchyFaceDataOpsComplex::setPatchHierarchy(
    d_hierarchy = hierarchy;
 }
 
-void HierarchyFaceDataOpsComplex::resetLevels(
+void
+HierarchyFaceDataOpsComplex::resetLevels(
    const int coarsest_level,
    const int finest_level)
 {
@@ -79,12 +81,12 @@ void HierarchyFaceDataOpsComplex::resetLevels(
       && (finest_level <= d_hierarchy->getFinestLevelNumber()));
 #endif
 
-   const tbox::Dimension& dim(d_hierarchy->getDim());
+   int dimVal = d_hierarchy->getDim().getValue();
 
    d_coarsest_level = coarsest_level;
    d_finest_level = finest_level;
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       d_nonoverlapping_face_boxes[d].resizeArray(d_finest_level + 1);
    }
 
@@ -93,7 +95,7 @@ void HierarchyFaceDataOpsComplex::resetLevels(
          d_hierarchy->getPatchLevel(ln));
       hier::BoxContainer face_boxes;
 
-      for (int nd = 0; nd < dim.getValue(); nd++) {
+      for (int nd = 0; nd < dimVal; nd++) {
          face_boxes = level->getBoxes();
          for (hier::BoxContainer::Iterator i(face_boxes); i != face_boxes.end(); ++i) {
             *i = pdat::FaceGeometry::toFaceBox(*i, nd);
@@ -119,7 +121,8 @@ HierarchyFaceDataOpsComplex::getPatchHierarchy() const
  *************************************************************************
  */
 
-void HierarchyFaceDataOpsComplex::copyData(
+void
+HierarchyFaceDataOpsComplex::copyData(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
@@ -153,7 +156,8 @@ void HierarchyFaceDataOpsComplex::copyData(
    }
 }
 
-void HierarchyFaceDataOpsComplex::swapData(
+void
+HierarchyFaceDataOpsComplex::swapData(
    const int data1_id,
    const int data2_id) const
 {
@@ -187,7 +191,8 @@ void HierarchyFaceDataOpsComplex::swapData(
    }
 }
 
-void HierarchyFaceDataOpsComplex::printData(
+void
+HierarchyFaceDataOpsComplex::printData(
    const int data_id,
    std::ostream& s,
    const bool interior_only) const
@@ -224,7 +229,8 @@ void HierarchyFaceDataOpsComplex::printData(
    }
 }
 
-void HierarchyFaceDataOpsComplex::setToScalar(
+void
+HierarchyFaceDataOpsComplex::setToScalar(
    const int data_id,
    const dcomplex& alpha,
    const bool interior_only) const
@@ -263,7 +269,8 @@ void HierarchyFaceDataOpsComplex::setToScalar(
  *************************************************************************
  */
 
-void HierarchyFaceDataOpsComplex::scale(
+void
+HierarchyFaceDataOpsComplex::scale(
    const int dst_id,
    const dcomplex& alpha,
    const int src_id,
@@ -298,7 +305,8 @@ void HierarchyFaceDataOpsComplex::scale(
    }
 }
 
-void HierarchyFaceDataOpsComplex::addScalar(
+void
+HierarchyFaceDataOpsComplex::addScalar(
    const int dst_id,
    const int src_id,
    const dcomplex& alpha,
@@ -333,7 +341,8 @@ void HierarchyFaceDataOpsComplex::addScalar(
    }
 }
 
-void HierarchyFaceDataOpsComplex::add(
+void
+HierarchyFaceDataOpsComplex::add(
    const int dst_id,
    const int src1_id,
    const int src2_id,
@@ -371,7 +380,8 @@ void HierarchyFaceDataOpsComplex::add(
    }
 }
 
-void HierarchyFaceDataOpsComplex::subtract(
+void
+HierarchyFaceDataOpsComplex::subtract(
    const int dst_id,
    const int src1_id,
    const int src2_id,
@@ -409,7 +419,8 @@ void HierarchyFaceDataOpsComplex::subtract(
    }
 }
 
-void HierarchyFaceDataOpsComplex::multiply(
+void
+HierarchyFaceDataOpsComplex::multiply(
    const int dst_id,
    const int src1_id,
    const int src2_id,
@@ -447,7 +458,8 @@ void HierarchyFaceDataOpsComplex::multiply(
    }
 }
 
-void HierarchyFaceDataOpsComplex::divide(
+void
+HierarchyFaceDataOpsComplex::divide(
    const int dst_id,
    const int src1_id,
    const int src2_id,
@@ -485,7 +497,8 @@ void HierarchyFaceDataOpsComplex::divide(
    }
 }
 
-void HierarchyFaceDataOpsComplex::reciprocal(
+void
+HierarchyFaceDataOpsComplex::reciprocal(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
@@ -519,7 +532,8 @@ void HierarchyFaceDataOpsComplex::reciprocal(
    }
 }
 
-void HierarchyFaceDataOpsComplex::linearSum(
+void
+HierarchyFaceDataOpsComplex::linearSum(
    const int dst_id,
    const dcomplex& alpha,
    const int src1_id,
@@ -559,7 +573,8 @@ void HierarchyFaceDataOpsComplex::linearSum(
    }
 }
 
-void HierarchyFaceDataOpsComplex::axpy(
+void
+HierarchyFaceDataOpsComplex::axpy(
    const int dst_id,
    const dcomplex& alpha,
    const int src1_id,
@@ -598,7 +613,8 @@ void HierarchyFaceDataOpsComplex::axpy(
    }
 }
 
-void HierarchyFaceDataOpsComplex::axmy(
+void
+HierarchyFaceDataOpsComplex::axmy(
    const int dst_id,
    const dcomplex& alpha,
    const int src1_id,
@@ -637,7 +653,8 @@ void HierarchyFaceDataOpsComplex::axmy(
    }
 }
 
-void HierarchyFaceDataOpsComplex::abs(
+void
+HierarchyFaceDataOpsComplex::abs(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
@@ -671,7 +688,8 @@ void HierarchyFaceDataOpsComplex::abs(
    }
 }
 
-void HierarchyFaceDataOpsComplex::setRandomValues(
+void
+HierarchyFaceDataOpsComplex::setRandomValues(
    const int data_id,
    const dcomplex& width,
    const dcomplex& low,
@@ -711,7 +729,8 @@ void HierarchyFaceDataOpsComplex::setRandomValues(
  *************************************************************************
  */
 
-int HierarchyFaceDataOpsComplex::numberOfEntries(
+int
+HierarchyFaceDataOpsComplex::numberOfEntries(
    const int data_id,
    const bool interior_only) const
 {
@@ -722,7 +741,7 @@ int HierarchyFaceDataOpsComplex::numberOfEntries(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 #endif
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
-   const tbox::Dimension& dim(d_hierarchy->getDim());
+   int dimVal = d_hierarchy->getDim().getValue();
 
    int entries = 0;
 
@@ -740,12 +759,12 @@ int HierarchyFaceDataOpsComplex::numberOfEntries(
             d_hierarchy->getPatchLevel(ln));
          const int npatches = level->getNumberOfPatches();
 #ifdef DEBUG_CHECK_ASSERTIONS
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             TBOX_ASSERT(npatches == d_nonoverlapping_face_boxes[nd][ln].getSize());
          }
 #endif
          for (int il = 0; il < npatches; il++) {
-            for (int eb = 0; eb < dim.getValue(); eb++) {
+            for (int eb = 0; eb < dimVal; eb++) {
                hier::BoxContainer::ConstIterator lb =
                   ((d_nonoverlapping_face_boxes[eb][ln])[il]).begin();
                for ( ; lb != ((d_nonoverlapping_face_boxes[eb][ln])[il]).end();
@@ -785,7 +804,8 @@ int HierarchyFaceDataOpsComplex::numberOfEntries(
    return entries;
 }
 
-double HierarchyFaceDataOpsComplex::sumControlVolumes(
+double
+HierarchyFaceDataOpsComplex::sumControlVolumes(
    const int data_id,
    const int vol_id) const
 {
@@ -828,7 +848,8 @@ double HierarchyFaceDataOpsComplex::sumControlVolumes(
    return global_sum;
 }
 
-double HierarchyFaceDataOpsComplex::L1Norm(
+double
+HierarchyFaceDataOpsComplex::L1Norm(
    const int data_id,
    const int vol_id) const
 {
@@ -876,7 +897,8 @@ double HierarchyFaceDataOpsComplex::L1Norm(
    return global_norm;
 }
 
-double HierarchyFaceDataOpsComplex::L2Norm(
+double
+HierarchyFaceDataOpsComplex::L2Norm(
    const int data_id,
    const int vol_id) const
 {
@@ -887,7 +909,8 @@ double HierarchyFaceDataOpsComplex::L2Norm(
    return sqrt(real(dotprod));
 }
 
-double HierarchyFaceDataOpsComplex::weightedL2Norm(
+double
+HierarchyFaceDataOpsComplex::weightedL2Norm(
    const int data_id,
    const int wgt_id,
    const int vol_id) const
@@ -941,7 +964,8 @@ double HierarchyFaceDataOpsComplex::weightedL2Norm(
    return sqrt(global_norm_squared);
 }
 
-double HierarchyFaceDataOpsComplex::RMSNorm(
+double
+HierarchyFaceDataOpsComplex::RMSNorm(
    const int data_id,
    const int vol_id) const
 {
@@ -954,7 +978,8 @@ double HierarchyFaceDataOpsComplex::RMSNorm(
    return rms_norm;
 }
 
-double HierarchyFaceDataOpsComplex::weightedRMSNorm(
+double
+HierarchyFaceDataOpsComplex::weightedRMSNorm(
    const int data_id,
    const int wgt_id,
    const int vol_id) const
@@ -969,7 +994,8 @@ double HierarchyFaceDataOpsComplex::weightedRMSNorm(
    return rms_norm;
 }
 
-double HierarchyFaceDataOpsComplex::maxNorm(
+double
+HierarchyFaceDataOpsComplex::maxNorm(
    const int data_id,
    const int vol_id) const
 {
@@ -1018,7 +1044,8 @@ double HierarchyFaceDataOpsComplex::maxNorm(
    return global_norm;
 }
 
-dcomplex HierarchyFaceDataOpsComplex::dot(
+dcomplex
+HierarchyFaceDataOpsComplex::dot(
    const int data1_id,
    const int data2_id,
    const int vol_id) const
@@ -1070,7 +1097,8 @@ dcomplex HierarchyFaceDataOpsComplex::dot(
    return global_dot;
 }
 
-dcomplex HierarchyFaceDataOpsComplex::integral(
+dcomplex
+HierarchyFaceDataOpsComplex::integral(
    const int data_id,
    const int vol_id) const
 {

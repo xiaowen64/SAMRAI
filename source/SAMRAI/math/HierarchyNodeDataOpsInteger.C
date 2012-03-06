@@ -61,7 +61,8 @@ HierarchyNodeDataOpsInteger::~HierarchyNodeDataOpsInteger()
  *************************************************************************
  */
 
-void HierarchyNodeDataOpsInteger::setPatchHierarchy(
+void
+HierarchyNodeDataOpsInteger::setPatchHierarchy(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    TBOX_ASSERT(hierarchy);
@@ -69,7 +70,8 @@ void HierarchyNodeDataOpsInteger::setPatchHierarchy(
    d_hierarchy = hierarchy;
 }
 
-void HierarchyNodeDataOpsInteger::resetLevels(
+void
+HierarchyNodeDataOpsInteger::resetLevels(
    const int coarsest_level,
    const int finest_level)
 {
@@ -112,7 +114,8 @@ HierarchyNodeDataOpsInteger::getPatchHierarchy() const
  *************************************************************************
  */
 
-int HierarchyNodeDataOpsInteger::numberOfEntries(
+int
+HierarchyNodeDataOpsInteger::numberOfEntries(
    const int data_id,
    const bool interior_only) const
 {
@@ -180,7 +183,8 @@ int HierarchyNodeDataOpsInteger::numberOfEntries(
    return entries;
 }
 
-void HierarchyNodeDataOpsInteger::copyData(
+void
+HierarchyNodeDataOpsInteger::copyData(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
@@ -214,7 +218,8 @@ void HierarchyNodeDataOpsInteger::copyData(
    }
 }
 
-void HierarchyNodeDataOpsInteger::swapData(
+void
+HierarchyNodeDataOpsInteger::swapData(
    const int data1_id,
    const int data2_id) const
 {
@@ -248,7 +253,8 @@ void HierarchyNodeDataOpsInteger::swapData(
    }
 }
 
-void HierarchyNodeDataOpsInteger::printData(
+void
+HierarchyNodeDataOpsInteger::printData(
    const int data_id,
    std::ostream& s,
    const bool interior_only) const
@@ -285,7 +291,8 @@ void HierarchyNodeDataOpsInteger::printData(
    }
 }
 
-void HierarchyNodeDataOpsInteger::setToScalar(
+void
+HierarchyNodeDataOpsInteger::setToScalar(
    const int data_id,
    const int& alpha,
    const bool interior_only) const
@@ -324,7 +331,8 @@ void HierarchyNodeDataOpsInteger::setToScalar(
  *************************************************************************
  */
 
-void HierarchyNodeDataOpsInteger::scale(
+void
+HierarchyNodeDataOpsInteger::scale(
    const int dst_id,
    const int& alpha,
    const int src_id,
@@ -359,7 +367,8 @@ void HierarchyNodeDataOpsInteger::scale(
    }
 }
 
-void HierarchyNodeDataOpsInteger::addScalar(
+void
+HierarchyNodeDataOpsInteger::addScalar(
    const int dst_id,
    const int src_id,
    const int& alpha,
@@ -394,7 +403,8 @@ void HierarchyNodeDataOpsInteger::addScalar(
    }
 }
 
-void HierarchyNodeDataOpsInteger::add(
+void
+HierarchyNodeDataOpsInteger::add(
    const int dst_id,
    const int src1_id,
    const int src2_id,
@@ -432,7 +442,8 @@ void HierarchyNodeDataOpsInteger::add(
    }
 }
 
-void HierarchyNodeDataOpsInteger::subtract(
+void
+HierarchyNodeDataOpsInteger::subtract(
    const int dst_id,
    const int src1_id,
    const int src2_id,
@@ -470,7 +481,8 @@ void HierarchyNodeDataOpsInteger::subtract(
    }
 }
 
-void HierarchyNodeDataOpsInteger::multiply(
+void
+HierarchyNodeDataOpsInteger::multiply(
    const int dst_id,
    const int src1_id,
    const int src2_id,
@@ -508,7 +520,8 @@ void HierarchyNodeDataOpsInteger::multiply(
    }
 }
 
-void HierarchyNodeDataOpsInteger::divide(
+void
+HierarchyNodeDataOpsInteger::divide(
    const int dst_id,
    const int src1_id,
    const int src2_id,
@@ -546,7 +559,8 @@ void HierarchyNodeDataOpsInteger::divide(
    }
 }
 
-void HierarchyNodeDataOpsInteger::reciprocal(
+void
+HierarchyNodeDataOpsInteger::reciprocal(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
@@ -580,7 +594,8 @@ void HierarchyNodeDataOpsInteger::reciprocal(
    }
 }
 
-void HierarchyNodeDataOpsInteger::linearSum(
+void
+HierarchyNodeDataOpsInteger::linearSum(
    const int dst_id,
    const int& alpha,
    const int src1_id,
@@ -620,7 +635,8 @@ void HierarchyNodeDataOpsInteger::linearSum(
    }
 }
 
-void HierarchyNodeDataOpsInteger::axpy(
+void
+HierarchyNodeDataOpsInteger::axpy(
    const int dst_id,
    const int& alpha,
    const int src1_id,
@@ -659,7 +675,8 @@ void HierarchyNodeDataOpsInteger::axpy(
    }
 }
 
-void HierarchyNodeDataOpsInteger::axmy(
+void
+HierarchyNodeDataOpsInteger::axmy(
    const int dst_id,
    const int& alpha,
    const int src1_id,
@@ -698,7 +715,8 @@ void HierarchyNodeDataOpsInteger::axmy(
    }
 }
 
-void HierarchyNodeDataOpsInteger::abs(
+void
+HierarchyNodeDataOpsInteger::abs(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
@@ -732,7 +750,8 @@ void HierarchyNodeDataOpsInteger::abs(
    }
 }
 
-int HierarchyNodeDataOpsInteger::min(
+int
+HierarchyNodeDataOpsInteger::min(
    const int data_id,
    const bool interior_only) const
 {
@@ -772,7 +791,8 @@ int HierarchyNodeDataOpsInteger::min(
    return global_min;
 }
 
-int HierarchyNodeDataOpsInteger::max(
+int
+HierarchyNodeDataOpsInteger::max(
    const int data_id,
    const bool interior_only) const
 {
@@ -812,7 +832,8 @@ int HierarchyNodeDataOpsInteger::max(
    return global_max;
 }
 
-void HierarchyNodeDataOpsInteger::setRandomValues(
+void
+HierarchyNodeDataOpsInteger::setRandomValues(
    const int data_id,
    const int& width,
    const int& low,

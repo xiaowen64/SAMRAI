@@ -130,13 +130,15 @@ ChopAndPackLoadBalancer::~ChopAndPackLoadBalancer()
  *************************************************************************
  */
 
-bool ChopAndPackLoadBalancer::getLoadBalanceDependsOnPatchData(
+bool
+ChopAndPackLoadBalancer::getLoadBalanceDependsOnPatchData(
    int level_number) const
 {
    return getWorkloadDataId(level_number) < 0 ? false : true;
 }
 
-void ChopAndPackLoadBalancer::setMaxWorkloadFactor(
+void
+ChopAndPackLoadBalancer::setMaxWorkloadFactor(
    double factor,
    int level_number)
 {
@@ -161,7 +163,8 @@ void ChopAndPackLoadBalancer::setMaxWorkloadFactor(
    }
 }
 
-void ChopAndPackLoadBalancer::setWorkloadTolerance(
+void
+ChopAndPackLoadBalancer::setWorkloadTolerance(
    double tolerance,
    int level_number)
 {
@@ -186,7 +189,8 @@ void ChopAndPackLoadBalancer::setWorkloadTolerance(
    }
 }
 
-void ChopAndPackLoadBalancer::setWorkloadPatchDataIndex(
+void
+ChopAndPackLoadBalancer::setWorkloadPatchDataIndex(
    int data_id,
    int level_number)
 {
@@ -220,7 +224,8 @@ void ChopAndPackLoadBalancer::setWorkloadPatchDataIndex(
    }
 }
 
-void ChopAndPackLoadBalancer::setUniformWorkload(
+void
+ChopAndPackLoadBalancer::setUniformWorkload(
    int level_number)
 {
    if (level_number >= 0) {
@@ -241,7 +246,8 @@ void ChopAndPackLoadBalancer::setUniformWorkload(
    }
 }
 
-void ChopAndPackLoadBalancer::setBinPackMethod(
+void
+ChopAndPackLoadBalancer::setBinPackMethod(
    const std::string& method,
    int level_number)
 {
@@ -274,18 +280,12 @@ void ChopAndPackLoadBalancer::setBinPackMethod(
    }
 }
 
-void
-ChopAndPackLoadBalancer::setIgnoreLevelDomainIsSingleBox(
-   bool flag)
-{
-   d_ignore_level_box_union_is_single_box = flag;
-}
-
 /*
  *************************************************************************
  *************************************************************************
  */
-void ChopAndPackLoadBalancer::loadBalanceBoxLevel(
+void
+ChopAndPackLoadBalancer::loadBalanceBoxLevel(
    hier::BoxLevel& balance_mapped_box_level,
    hier::Connector& balance_to_anchor,
    hier::Connector& anchor_to_balance,
@@ -426,7 +426,8 @@ void ChopAndPackLoadBalancer::loadBalanceBoxLevel(
  *************************************************************************
  */
 
-void ChopAndPackLoadBalancer::loadBalanceBoxes(
+void
+ChopAndPackLoadBalancer::loadBalanceBoxes(
    hier::BoxContainer& out_boxes,
    hier::ProcessorMapping& mapping,
    const hier::BoxContainer& in_boxes,
@@ -638,7 +639,8 @@ void ChopAndPackLoadBalancer::loadBalanceBoxes(
  *************************************************************************
  */
 
-void ChopAndPackLoadBalancer::chopUniformSingleBox(
+void
+ChopAndPackLoadBalancer::chopUniformSingleBox(
    hier::BoxContainer& out_boxes,
    tbox::Array<double>& out_workloads,
    const hier::Box& in_box,
@@ -725,7 +727,8 @@ void ChopAndPackLoadBalancer::chopUniformSingleBox(
  *************************************************************************
  */
 
-void ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
+void
+ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
    hier::BoxContainer& out_boxes,
    tbox::Array<double>& out_workloads,
    const hier::BoxContainer& in_boxes,
@@ -818,7 +821,8 @@ void ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
  *************************************************************************
  */
 
-void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
+void
+ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    hier::BoxContainer& out_boxes,
    tbox::Array<double>& out_workloads,
    const hier::BoxContainer& in_boxes,
@@ -993,7 +997,8 @@ void ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
  *
  *************************************************************************
  */
-void ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
+void
+ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
    const hier::BoxContainer& box_list_in,
    const tbox::Array<double>& weights_in,
    hier::BoxContainer& box_list_out,
@@ -1113,7 +1118,8 @@ void ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
  *************************************************************************
  */
 
-void ChopAndPackLoadBalancer::printClassData(
+void
+ChopAndPackLoadBalancer::printClassData(
    std::ostream& os) const
 {
    os << "\nChopAndPackLoadBalancer::printClassData..." << std::endl;
@@ -1168,7 +1174,8 @@ void ChopAndPackLoadBalancer::printClassData(
  *************************************************************************
  */
 
-void ChopAndPackLoadBalancer::getFromInput(
+void
+ChopAndPackLoadBalancer::getFromInput(
    const boost::shared_ptr<tbox::Database>& db)
 {
 
@@ -1267,7 +1274,8 @@ void ChopAndPackLoadBalancer::getFromInput(
  *************************************************************************
  */
 
-void ChopAndPackLoadBalancer::binPackBoxes(
+void
+ChopAndPackLoadBalancer::binPackBoxes(
    hier::BoxContainer& boxes,
    hier::ProcessorMapping& mapping,
    tbox::Array<double>& workloads,
@@ -1319,69 +1327,10 @@ void ChopAndPackLoadBalancer::binPackBoxes(
 
 /*
  *************************************************************************
- *
- * Private utility functions to determine parameter values for level.
- *
  *************************************************************************
  */
-
-int ChopAndPackLoadBalancer::getWorkloadDataId(
-   int level_number) const
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(level_number >= 0);
-#endif
-   int wrk_id = (level_number < d_workload_data_id.getSize() ?
-                 d_workload_data_id[level_number] :
-                 d_master_workload_data_id);
-
-   return wrk_id;
-}
-
-double ChopAndPackLoadBalancer::getMaxWorkloadFactor(
-   int level_number) const
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(level_number >= 0);
-#endif
-   double factor = (level_number < d_max_workload_factor.getSize() ?
-                    d_max_workload_factor[level_number] :
-                    d_master_max_workload_factor);
-
-   return factor;
-}
-
-double ChopAndPackLoadBalancer::getWorkloadTolerance(
-   int level_number) const
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(level_number >= 0);
-#endif
-   double tolerance = (level_number < d_workload_tolerance.getSize() ?
-                       d_workload_tolerance[level_number] :
-                       d_master_workload_tolerance);
-
-   return tolerance;
-}
-
-std::string ChopAndPackLoadBalancer::getBinPackMethod(
-   int level_number) const
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(level_number >= 0);
-#endif
-   std::string factor = (level_number < d_bin_pack_method.getSize() ?
-                         d_bin_pack_method[level_number] :
-                         d_master_bin_pack_method);
-
-   return factor;
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void ChopAndPackLoadBalancer::initializeCallback()
+void
+ChopAndPackLoadBalancer::initializeCallback()
 {
    t_load_balance_boxes = tbox::TimerManager::getManager()->
       getTimer("mesh::ChopAndPackLoadBalancer::loadBalanceBoxes()");
@@ -1403,7 +1352,8 @@ void ChopAndPackLoadBalancer::initializeCallback()
  *************************************************************************
  *************************************************************************
  */
-void ChopAndPackLoadBalancer::finalizeCallback()
+void
+ChopAndPackLoadBalancer::finalizeCallback()
 {
    t_load_balance_boxes.reset();
    t_load_balance_boxes_remove_intersection.reset();

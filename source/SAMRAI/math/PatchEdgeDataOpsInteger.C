@@ -17,6 +17,10 @@
 #include "SAMRAI/tbox/Utilities.h"
 #endif
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/math/PatchEdgeDataOpsInteger.I"
+#endif
+
 namespace SAMRAI {
 namespace math {
 
@@ -31,38 +35,13 @@ PatchEdgeDataOpsInteger::~PatchEdgeDataOpsInteger()
 /*
  *************************************************************************
  *
- * Compute the number of data entries on a patch in the given box.
- *
- *************************************************************************
- */
-
-int PatchEdgeDataOpsInteger::numberOfEntries(
-   const boost::shared_ptr<pdat::EdgeData<int> >& data,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
-
-   const tbox::Dimension& dim(box.getDim());
-
-   int retval = 0;
-   const hier::Box ibox = box * data->getGhostBox();
-   for (int d = 0; d < dim.getValue(); d++) {
-      const hier::Box dbox = pdat::EdgeGeometry::toEdgeBox(ibox, d);
-      retval += (dbox.size() * data->getDepth());
-   }
-   return retval;
-}
-
-/*
- *************************************************************************
- *
  * General operations for integer edge-centered patch data.
  *
  *************************************************************************
  */
 
-void PatchEdgeDataOpsInteger::swapData(
+void
+PatchEdgeDataOpsInteger::swapData(
    const boost::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
@@ -83,64 +62,6 @@ void PatchEdgeDataOpsInteger::swapData(
 #endif
    patch->setPatchData(data1_id, d2);
    patch->setPatchData(data2_id, d1);
-}
-
-void PatchEdgeDataOpsInteger::printData(
-   const boost::shared_ptr<pdat::EdgeData<int> >& data,
-   const hier::Box& box,
-   std::ostream& s) const
-{
-   TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
-
-   s << "Data box = " << box << std::endl;
-   data->print(box, s);
-   s << "\n";
-}
-
-void PatchEdgeDataOpsInteger::copyData(
-   const boost::shared_ptr<pdat::EdgeData<int> >& dst,
-   const boost::shared_ptr<pdat::EdgeData<int> >& src,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
-
-   const tbox::Dimension& dim(box.getDim());
-
-   for (int d = 0; d < dim.getValue(); d++) {
-      const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
-      (dst->getArrayData(d)).copy(src->getArrayData(d), edge_box);
-   }
-}
-
-void PatchEdgeDataOpsInteger::setToScalar(
-   const boost::shared_ptr<pdat::EdgeData<int> >& dst,
-   const int& alpha,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(dst);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
-
-   dst->fillAll(alpha, box);
-}
-
-void PatchEdgeDataOpsInteger::abs(
-   const boost::shared_ptr<pdat::EdgeData<int> >& dst,
-   const boost::shared_ptr<pdat::EdgeData<int> >& src,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
-
-   const tbox::Dimension& dim(box.getDim());
-
-   for (int d = 0; d < dim.getValue(); d++) {
-      const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
-      d_array_ops.abs(dst->getArrayData(d),
-         src->getArrayData(d),
-         edge_box);
-   }
 }
 
 }

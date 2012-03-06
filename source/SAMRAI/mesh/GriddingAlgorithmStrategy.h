@@ -38,14 +38,12 @@ public:
    /*!
     * @brief Constructor
     */
-   GriddingAlgorithmStrategy() {
-   }
+   GriddingAlgorithmStrategy();
 
    /*!
     * @brief Virtual destructor for GriddingAlgorithmStrategy.
     */
-   virtual ~GriddingAlgorithmStrategy() {
-   }
+   virtual ~GriddingAlgorithmStrategy();
 
    /*!
     * @brief Construct the coarsest level in the hierarchy (i.e., level 0).

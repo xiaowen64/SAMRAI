@@ -63,7 +63,8 @@ void ArrayDataBasicOps<TYPE>::operator = (
  */
 
 template<class TYPE>
-void ArrayDataBasicOps<TYPE>::scale(
+void
+ArrayDataBasicOps<TYPE>::scale(
    pdat::ArrayData<TYPE>& dst,
    const TYPE& alpha,
    const pdat::ArrayData<TYPE>& src,
@@ -76,7 +77,7 @@ void ArrayDataBasicOps<TYPE>::scale(
 
    TBOX_DIM_ASSERT_CHECK_ARGS3(dst, src, box);
 
-   const tbox::Dimension& dim(dst.getDim());
+   int dimVal = dst.getDim().getValue();
 
    if (alpha == tbox::MathUtilities<TYPE>::getZero()) {
       dst.fillAll(alpha, box);
@@ -97,7 +98,7 @@ void ArrayDataBasicOps<TYPE>::scale(
          int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int src_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int i = 0; i < dim.getValue(); i++) {
+         for (int i = 0; i < dimVal; i++) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
             src_w[i] = src_box.numberCells(i);
@@ -122,7 +123,7 @@ void ArrayDataBasicOps<TYPE>::scale(
 
             int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
             int src_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-            for (int nd = 0; nd < dim.getValue(); nd++) {
+            for (int nd = 0; nd < dimVal; nd++) {
                dst_b[nd] = dst_counter;
                src_b[nd] = src_counter;
             }
@@ -137,7 +138,7 @@ void ArrayDataBasicOps<TYPE>::scale(
                }
                int dim_jump = 0;
 
-               for (int j = 1; j < dim.getValue(); j++) {
+               for (int j = 1; j < dimVal; j++) {
                   if (dim_counter[j] < box_w[j] - 1) {
                      ++dim_counter[j];
                      dim_jump = j;
@@ -174,7 +175,8 @@ void ArrayDataBasicOps<TYPE>::scale(
 }
 
 template<class TYPE>
-void ArrayDataBasicOps<TYPE>::addScalar(
+void
+ArrayDataBasicOps<TYPE>::addScalar(
    pdat::ArrayData<TYPE>& dst,
    const pdat::ArrayData<TYPE>& src,
    const TYPE& alpha,
@@ -187,7 +189,7 @@ void ArrayDataBasicOps<TYPE>::addScalar(
 
    TBOX_DIM_ASSERT_CHECK_ARGS3(dst, src, box);
 
-   const tbox::Dimension& dim(dst.getDim());
+   int dimVal = dst.getDim().getValue();
 
    if (alpha == tbox::MathUtilities<TYPE>::getZero()) {
       dst.copy(src, box);
@@ -206,7 +208,7 @@ void ArrayDataBasicOps<TYPE>::addScalar(
          int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int src_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int i = 0; i < dim.getValue(); i++) {
+         for (int i = 0; i < dimVal; i++) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
             src_w[i] = src_box.numberCells(i);
@@ -231,7 +233,7 @@ void ArrayDataBasicOps<TYPE>::addScalar(
 
             int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
             int src_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-            for (int nd = 0; nd < dim.getValue(); nd++) {
+            for (int nd = 0; nd < dimVal; nd++) {
                dst_b[nd] = dst_counter;
                src_b[nd] = src_counter;
             }
@@ -246,7 +248,7 @@ void ArrayDataBasicOps<TYPE>::addScalar(
                }
                int dim_jump = 0;
 
-               for (int j = 1; j < dim.getValue(); j++) {
+               for (int j = 1; j < dimVal; j++) {
                   if (dim_counter[j] < box_w[j] - 1) {
                      ++dim_counter[j];
                      dim_jump = j;
@@ -283,7 +285,8 @@ void ArrayDataBasicOps<TYPE>::addScalar(
 }
 
 template<class TYPE>
-void ArrayDataBasicOps<TYPE>::add(
+void
+ArrayDataBasicOps<TYPE>::add(
    pdat::ArrayData<TYPE>& dst,
    const pdat::ArrayData<TYPE>& src1,
    const pdat::ArrayData<TYPE>& src2,
@@ -291,7 +294,7 @@ void ArrayDataBasicOps<TYPE>::add(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
 
-   const tbox::Dimension& dim(dst.getDim());
+   int dimVal = dst.getDim().getValue();
 
    const int ddepth = dst.getDepth();
 
@@ -309,7 +312,7 @@ void ArrayDataBasicOps<TYPE>::add(
       int src1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int src2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src1_w[i] = src1_box.numberCells(i);
@@ -340,7 +343,7 @@ void ArrayDataBasicOps<TYPE>::add(
          int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int src1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int src2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             dst_b[nd] = dst_counter;
             src1_b[nd] = src1_counter;
             src2_b[nd] = src2_counter;
@@ -357,7 +360,7 @@ void ArrayDataBasicOps<TYPE>::add(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -398,7 +401,8 @@ void ArrayDataBasicOps<TYPE>::add(
 }
 
 template<class TYPE>
-void ArrayDataBasicOps<TYPE>::subtract(
+void
+ArrayDataBasicOps<TYPE>::subtract(
    pdat::ArrayData<TYPE>& dst,
    const pdat::ArrayData<TYPE>& src1,
    const pdat::ArrayData<TYPE>& src2,
@@ -406,7 +410,7 @@ void ArrayDataBasicOps<TYPE>::subtract(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
 
-   const tbox::Dimension& dim(dst.getDim());
+   int dimVal = dst.getDim().getValue();
 
    const int ddepth = dst.getDepth();
 
@@ -424,7 +428,7 @@ void ArrayDataBasicOps<TYPE>::subtract(
       int src1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int src2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src1_w[i] = src1_box.numberCells(i);
@@ -455,7 +459,7 @@ void ArrayDataBasicOps<TYPE>::subtract(
          int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int src1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int src2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             dst_b[nd] = dst_counter;
             src1_b[nd] = src1_counter;
             src2_b[nd] = src2_counter;
@@ -472,7 +476,7 @@ void ArrayDataBasicOps<TYPE>::subtract(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -513,7 +517,8 @@ void ArrayDataBasicOps<TYPE>::subtract(
 }
 
 template<class TYPE>
-void ArrayDataBasicOps<TYPE>::multiply(
+void
+ArrayDataBasicOps<TYPE>::multiply(
    pdat::ArrayData<TYPE>& dst,
    const pdat::ArrayData<TYPE>& src1,
    const pdat::ArrayData<TYPE>& src2,
@@ -521,7 +526,7 @@ void ArrayDataBasicOps<TYPE>::multiply(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
 
-   const tbox::Dimension& dim(dst.getDim());
+   int dimVal = dst.getDim().getValue();
    const int ddepth = dst.getDepth();
 
    TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
@@ -538,7 +543,7 @@ void ArrayDataBasicOps<TYPE>::multiply(
       int src1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int src2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src1_w[i] = src1_box.numberCells(i);
@@ -569,7 +574,7 @@ void ArrayDataBasicOps<TYPE>::multiply(
          int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int src1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int src2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             dst_b[nd] = dst_counter;
             src1_b[nd] = src1_counter;
             src2_b[nd] = src2_counter;
@@ -586,7 +591,7 @@ void ArrayDataBasicOps<TYPE>::multiply(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -627,7 +632,8 @@ void ArrayDataBasicOps<TYPE>::multiply(
 }
 
 template<class TYPE>
-void ArrayDataBasicOps<TYPE>::divide(
+void
+ArrayDataBasicOps<TYPE>::divide(
    pdat::ArrayData<TYPE>& dst,
    const pdat::ArrayData<TYPE>& src1,
    const pdat::ArrayData<TYPE>& src2,
@@ -635,7 +641,7 @@ void ArrayDataBasicOps<TYPE>::divide(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
 
-   const tbox::Dimension& dim(dst.getDim());
+   int dimVal = dst.getDim().getValue();
    const int ddepth = dst.getDepth();
 
    TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
@@ -652,7 +658,7 @@ void ArrayDataBasicOps<TYPE>::divide(
       int src1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int src2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src1_w[i] = src1_box.numberCells(i);
@@ -683,7 +689,7 @@ void ArrayDataBasicOps<TYPE>::divide(
          int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int src1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int src2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             dst_b[nd] = dst_counter;
             src1_b[nd] = src1_counter;
             src2_b[nd] = src2_counter;
@@ -697,7 +703,7 @@ void ArrayDataBasicOps<TYPE>::divide(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -738,14 +744,15 @@ void ArrayDataBasicOps<TYPE>::divide(
 }
 
 template<class TYPE>
-void ArrayDataBasicOps<TYPE>::reciprocal(
+void
+ArrayDataBasicOps<TYPE>::reciprocal(
    pdat::ArrayData<TYPE>& dst,
    const pdat::ArrayData<TYPE>& src,
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(dst, src, box);
 
-   const tbox::Dimension& dim(dst.getDim());
+   int dimVal = dst.getDim().getValue();
    const int ddepth = dst.getDepth();
 
    TBOX_ASSERT(ddepth == src.getDepth());
@@ -760,7 +767,7 @@ void ArrayDataBasicOps<TYPE>::reciprocal(
       int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int src_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src_w[i] = src_box.numberCells(i);
@@ -785,7 +792,7 @@ void ArrayDataBasicOps<TYPE>::reciprocal(
 
          int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int src_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             dst_b[nd] = dst_counter;
             src_b[nd] = src_counter;
          }
@@ -801,7 +808,7 @@ void ArrayDataBasicOps<TYPE>::reciprocal(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -837,7 +844,8 @@ void ArrayDataBasicOps<TYPE>::reciprocal(
 }
 
 template<class TYPE>
-void ArrayDataBasicOps<TYPE>::linearSum(
+void
+ArrayDataBasicOps<TYPE>::linearSum(
    pdat::ArrayData<TYPE>& dst,
    const TYPE& alpha,
    const pdat::ArrayData<TYPE>& src1,
@@ -852,7 +860,7 @@ void ArrayDataBasicOps<TYPE>::linearSum(
 
    TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
 
-   const tbox::Dimension& dim(dst.getDim());
+   int dimVal = dst.getDim().getValue();
    const int ddepth = dst.getDepth();
 
    TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
@@ -887,7 +895,7 @@ void ArrayDataBasicOps<TYPE>::linearSum(
          int src1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int src2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int i = 0; i < dim.getValue(); i++) {
+         for (int i = 0; i < dimVal; i++) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
             src1_w[i] = src1_box.numberCells(i);
@@ -918,7 +926,7 @@ void ArrayDataBasicOps<TYPE>::linearSum(
             int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
             int src1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
             int src2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-            for (int nd = 0; nd < dim.getValue(); nd++) {
+            for (int nd = 0; nd < dimVal; nd++) {
                dst_b[nd] = dst_counter;
                src1_b[nd] = src1_counter;
                src2_b[nd] = src2_counter;
@@ -935,7 +943,7 @@ void ArrayDataBasicOps<TYPE>::linearSum(
                }
                int dim_jump = 0;
 
-               for (int j = 1; j < dim.getValue(); j++) {
+               for (int j = 1; j < dimVal; j++) {
                   if (dim_counter[j] < box_w[j] - 1) {
                      ++dim_counter[j];
                      dim_jump = j;
@@ -977,7 +985,8 @@ void ArrayDataBasicOps<TYPE>::linearSum(
 }
 
 template<class TYPE>
-void ArrayDataBasicOps<TYPE>::axpy(
+void
+ArrayDataBasicOps<TYPE>::axpy(
    pdat::ArrayData<TYPE>& dst,
    const TYPE& alpha,
    const pdat::ArrayData<TYPE>& src1,
@@ -986,7 +995,7 @@ void ArrayDataBasicOps<TYPE>::axpy(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
 
-   const tbox::Dimension& dim(dst.getDim());
+   int dimVal = dst.getDim().getValue();
 
    if (alpha == tbox::MathUtilities<TYPE>::getZero()) {
       dst.copy(src2, box);
@@ -1011,7 +1020,7 @@ void ArrayDataBasicOps<TYPE>::axpy(
          int src1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int src2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int i = 0; i < dim.getValue(); i++) {
+         for (int i = 0; i < dimVal; i++) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
             src1_w[i] = src1_box.numberCells(i);
@@ -1042,7 +1051,7 @@ void ArrayDataBasicOps<TYPE>::axpy(
             int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
             int src1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
             int src2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-            for (int nd = 0; nd < dim.getValue(); nd++) {
+            for (int nd = 0; nd < dimVal; nd++) {
                dst_b[nd] = dst_counter;
                src1_b[nd] = src1_counter;
                src2_b[nd] = src2_counter;
@@ -1059,7 +1068,7 @@ void ArrayDataBasicOps<TYPE>::axpy(
                }
                int dim_jump = 0;
 
-               for (int j = 1; j < dim.getValue(); j++) {
+               for (int j = 1; j < dimVal; j++) {
                   if (dim_counter[j] < box_w[j] - 1) {
                      ++dim_counter[j];
                      dim_jump = j;
@@ -1101,7 +1110,8 @@ void ArrayDataBasicOps<TYPE>::axpy(
 }
 
 template<class TYPE>
-void ArrayDataBasicOps<TYPE>::axmy(
+void
+ArrayDataBasicOps<TYPE>::axmy(
    pdat::ArrayData<TYPE>& dst,
    const TYPE& alpha,
    const pdat::ArrayData<TYPE>& src1,
@@ -1110,7 +1120,7 @@ void ArrayDataBasicOps<TYPE>::axmy(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
 
-   const tbox::Dimension& dim(dst.getDim());
+   int dimVal = dst.getDim().getValue();
 
    if (alpha == tbox::MathUtilities<TYPE>::getZero()) {
       scale(dst, -tbox::MathUtilities<TYPE>::getOne(), src2, box);
@@ -1133,7 +1143,7 @@ void ArrayDataBasicOps<TYPE>::axmy(
          int src1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int src2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int i = 0; i < dim.getValue(); i++) {
+         for (int i = 0; i < dimVal; i++) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
             src1_w[i] = src1_box.numberCells(i);
@@ -1164,7 +1174,7 @@ void ArrayDataBasicOps<TYPE>::axmy(
             int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
             int src1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
             int src2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-            for (int nd = 0; nd < dim.getValue(); nd++) {
+            for (int nd = 0; nd < dimVal; nd++) {
                dst_b[nd] = dst_counter;
                src1_b[nd] = src1_counter;
                src2_b[nd] = src2_counter;
@@ -1181,7 +1191,7 @@ void ArrayDataBasicOps<TYPE>::axmy(
                }
                int dim_jump = 0;
 
-               for (int j = 1; j < dim.getValue(); j++) {
+               for (int j = 1; j < dimVal; j++) {
                   if (dim_counter[j] < box_w[j] - 1) {
                      ++dim_counter[j];
                      dim_jump = j;
@@ -1223,13 +1233,14 @@ void ArrayDataBasicOps<TYPE>::axmy(
 }
 
 template<class TYPE>
-TYPE ArrayDataBasicOps<TYPE>::min(
+TYPE
+ArrayDataBasicOps<TYPE>::min(
    const pdat::ArrayData<TYPE>& data,
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(data, box);
 
-   const tbox::Dimension& dim(data.getDim());
+   int dimVal = data.getDim().getValue();
    TYPE minval = tbox::MathUtilities<TYPE>::getMax();
 
    const hier::Box d_box = data.getBox();
@@ -1239,7 +1250,7 @@ TYPE ArrayDataBasicOps<TYPE>::min(
       int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
@@ -1260,7 +1271,7 @@ TYPE ArrayDataBasicOps<TYPE>::min(
          int d_counter = d_begin;
 
          int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
          }
 
@@ -1272,7 +1283,7 @@ TYPE ArrayDataBasicOps<TYPE>::min(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -1302,13 +1313,14 @@ TYPE ArrayDataBasicOps<TYPE>::min(
 }
 
 template<class TYPE>
-TYPE ArrayDataBasicOps<TYPE>::max(
+TYPE
+ArrayDataBasicOps<TYPE>::max(
    const pdat::ArrayData<TYPE>& data,
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(data, box);
 
-   const tbox::Dimension& dim(data.getDim());
+   int dimVal = data.getDim().getValue();
    TYPE maxval = -(tbox::MathUtilities<TYPE>::getMax());
 
    const hier::Box d_box = data.getBox();
@@ -1319,7 +1331,7 @@ TYPE ArrayDataBasicOps<TYPE>::max(
       int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
@@ -1340,7 +1352,7 @@ TYPE ArrayDataBasicOps<TYPE>::max(
          int d_counter = d_begin;
 
          int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
          }
 
@@ -1352,7 +1364,7 @@ TYPE ArrayDataBasicOps<TYPE>::max(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -1382,7 +1394,8 @@ TYPE ArrayDataBasicOps<TYPE>::max(
 }
 
 template<class TYPE>
-void ArrayDataBasicOps<TYPE>::setRandomValues(
+void
+ArrayDataBasicOps<TYPE>::setRandomValues(
    pdat::ArrayData<TYPE>& dst,
    const TYPE& width,
    const TYPE& low,
@@ -1390,7 +1403,7 @@ void ArrayDataBasicOps<TYPE>::setRandomValues(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst, box);
 
-   const tbox::Dimension& dim(dst.getDim());
+   int dimVal = dst.getDim().getValue();
    const hier::Box d_box = dst.getBox();
    const hier::Box ibox = box * d_box;
 
@@ -1399,7 +1412,7 @@ void ArrayDataBasicOps<TYPE>::setRandomValues(
       int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
@@ -1420,7 +1433,7 @@ void ArrayDataBasicOps<TYPE>::setRandomValues(
          int d_counter = d_begin;
 
          int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
          }
 
@@ -1431,7 +1444,7 @@ void ArrayDataBasicOps<TYPE>::setRandomValues(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;

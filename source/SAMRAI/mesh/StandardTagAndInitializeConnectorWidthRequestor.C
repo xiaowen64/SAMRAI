@@ -87,7 +87,8 @@ StandardTagAndInitializeConnectorWidthRequestor::StandardTagAndInitializeConnect
  *
  **************************************************************************
  */
-void StandardTagAndInitializeConnectorWidthRequestor::computeRequiredConnectorWidths(
+void
+StandardTagAndInitializeConnectorWidthRequestor::computeRequiredConnectorWidths(
    std::vector<hier::IntVector>& self_connector_widths,
    std::vector<hier::IntVector>& fine_connector_widths,
    const hier::PatchHierarchy& patch_hierarchy) const
@@ -133,7 +134,8 @@ void StandardTagAndInitializeConnectorWidthRequestor::computeRequiredConnectorWi
  *************************************************************************
  */
 
-int StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
+int
+StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
    const tbox::Array<hier::IntVector>& ratios_to_coarser) const
 {
    const tbox::Dimension& dim(ratios_to_coarser[0].getDim());
@@ -167,7 +169,7 @@ int StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
          if ((gcd % error_coarsen_ratio) != 0) {
             gcd = ratios_to_coarser[ln](d);
             TBOX_ERROR(
-               "StandardTagAndInitialize::ConnectorWidthRequestor::computeCoarsenRatio:\n"
+               "StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio:\n"
                << "Unable to perform Richardson extrapolation because\n"
                << "the error coarsen ratio computed from the\n"
                << "ratios_to_coarser entries is not constant across all\n"

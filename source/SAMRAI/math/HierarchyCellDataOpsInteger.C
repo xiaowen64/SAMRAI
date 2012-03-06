@@ -59,7 +59,8 @@ HierarchyCellDataOpsInteger::~HierarchyCellDataOpsInteger()
  *************************************************************************
  */
 
-void HierarchyCellDataOpsInteger::setPatchHierarchy(
+void
+HierarchyCellDataOpsInteger::setPatchHierarchy(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    TBOX_ASSERT(hierarchy);
@@ -67,7 +68,8 @@ void HierarchyCellDataOpsInteger::setPatchHierarchy(
    d_hierarchy = hierarchy;
 }
 
-void HierarchyCellDataOpsInteger::resetLevels(
+void
+HierarchyCellDataOpsInteger::resetLevels(
    const int coarsest_level,
    const int finest_level)
 {
@@ -96,7 +98,8 @@ HierarchyCellDataOpsInteger::getPatchHierarchy() const
  *************************************************************************
  */
 
-int HierarchyCellDataOpsInteger::numberOfEntries(
+int
+HierarchyCellDataOpsInteger::numberOfEntries(
    const int data_id,
    const bool interior_only) const
 {
@@ -137,7 +140,8 @@ int HierarchyCellDataOpsInteger::numberOfEntries(
    return global_entries;
 }
 
-void HierarchyCellDataOpsInteger::copyData(
+void
+HierarchyCellDataOpsInteger::copyData(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
@@ -169,7 +173,8 @@ void HierarchyCellDataOpsInteger::copyData(
    }
 }
 
-void HierarchyCellDataOpsInteger::swapData(
+void
+HierarchyCellDataOpsInteger::swapData(
    const int data1_id,
    const int data2_id) const
 {
@@ -203,7 +208,8 @@ void HierarchyCellDataOpsInteger::swapData(
    }
 }
 
-void HierarchyCellDataOpsInteger::printData(
+void
+HierarchyCellDataOpsInteger::printData(
    const int data_id,
    std::ostream& s,
    const bool interior_only) const
@@ -240,7 +246,8 @@ void HierarchyCellDataOpsInteger::printData(
    }
 }
 
-void HierarchyCellDataOpsInteger::setToScalar(
+void
+HierarchyCellDataOpsInteger::setToScalar(
    const int data_id,
    const int& alpha,
    const bool interior_only) const
@@ -279,7 +286,8 @@ void HierarchyCellDataOpsInteger::setToScalar(
  *************************************************************************
  */
 
-void HierarchyCellDataOpsInteger::scale(
+void
+HierarchyCellDataOpsInteger::scale(
    const int dst_id,
    const int& alpha,
    const int src_id,
@@ -314,7 +322,8 @@ void HierarchyCellDataOpsInteger::scale(
    }
 }
 
-void HierarchyCellDataOpsInteger::addScalar(
+void
+HierarchyCellDataOpsInteger::addScalar(
    const int dst_id,
    const int src_id,
    const int& alpha,
@@ -349,7 +358,8 @@ void HierarchyCellDataOpsInteger::addScalar(
    }
 }
 
-void HierarchyCellDataOpsInteger::add(
+void
+HierarchyCellDataOpsInteger::add(
    const int dst_id,
    const int src1_id,
    const int src2_id,
@@ -387,7 +397,8 @@ void HierarchyCellDataOpsInteger::add(
    }
 }
 
-void HierarchyCellDataOpsInteger::subtract(
+void
+HierarchyCellDataOpsInteger::subtract(
    const int dst_id,
    const int src1_id,
    const int src2_id,
@@ -425,7 +436,8 @@ void HierarchyCellDataOpsInteger::subtract(
    }
 }
 
-void HierarchyCellDataOpsInteger::multiply(
+void
+HierarchyCellDataOpsInteger::multiply(
    const int dst_id,
    const int src1_id,
    const int src2_id,
@@ -463,7 +475,8 @@ void HierarchyCellDataOpsInteger::multiply(
    }
 }
 
-void HierarchyCellDataOpsInteger::divide(
+void
+HierarchyCellDataOpsInteger::divide(
    const int dst_id,
    const int src1_id,
    const int src2_id,
@@ -501,7 +514,8 @@ void HierarchyCellDataOpsInteger::divide(
    }
 }
 
-void HierarchyCellDataOpsInteger::reciprocal(
+void
+HierarchyCellDataOpsInteger::reciprocal(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
@@ -535,7 +549,8 @@ void HierarchyCellDataOpsInteger::reciprocal(
    }
 }
 
-void HierarchyCellDataOpsInteger::linearSum(
+void
+HierarchyCellDataOpsInteger::linearSum(
    const int dst_id,
    const int& alpha,
    const int src1_id,
@@ -575,7 +590,8 @@ void HierarchyCellDataOpsInteger::linearSum(
    }
 }
 
-void HierarchyCellDataOpsInteger::axpy(
+void
+HierarchyCellDataOpsInteger::axpy(
    const int dst_id,
    const int& alpha,
    const int src1_id,
@@ -614,7 +630,8 @@ void HierarchyCellDataOpsInteger::axpy(
    }
 }
 
-void HierarchyCellDataOpsInteger::axmy(
+void
+HierarchyCellDataOpsInteger::axmy(
    const int dst_id,
    const int& alpha,
    const int src1_id,
@@ -653,7 +670,8 @@ void HierarchyCellDataOpsInteger::axmy(
    }
 }
 
-void HierarchyCellDataOpsInteger::abs(
+void
+HierarchyCellDataOpsInteger::abs(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
@@ -687,7 +705,8 @@ void HierarchyCellDataOpsInteger::abs(
    }
 }
 
-int HierarchyCellDataOpsInteger::min(
+int
+HierarchyCellDataOpsInteger::min(
    const int data_id,
    const bool interior_only) const
 {
@@ -727,7 +746,8 @@ int HierarchyCellDataOpsInteger::min(
    return global_min;
 }
 
-int HierarchyCellDataOpsInteger::max(
+int
+HierarchyCellDataOpsInteger::max(
    const int data_id,
    const bool interior_only) const
 {
@@ -767,7 +787,8 @@ int HierarchyCellDataOpsInteger::max(
    return global_max;
 }
 
-void HierarchyCellDataOpsInteger::setRandomValues(
+void
+HierarchyCellDataOpsInteger::setRandomValues(
    const int data_id,
    const int& width,
    const int& low,

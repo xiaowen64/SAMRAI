@@ -50,7 +50,14 @@ MultiblockGriddingTagger::~MultiblockGriddingTagger()
 {
 }
 
-void MultiblockGriddingTagger::setScratchTagPatchDataIndex(
+hier::IntVector
+MultiblockGriddingTagger::getRefineOpStencilWidth() const
+{
+   return hier::IntVector::getOne(d_dim);
+}
+
+void
+MultiblockGriddingTagger::setScratchTagPatchDataIndex(
    int buf_tag_indx)
 {
 
@@ -80,7 +87,8 @@ void MultiblockGriddingTagger::setScratchTagPatchDataIndex(
    d_buf_tag_indx = buf_tag_indx;
 }
 
-void MultiblockGriddingTagger::setPhysicalBoundaryConditions(
+void
+MultiblockGriddingTagger::setPhysicalBoundaryConditions(
    hier::Patch& patch,
    const double fill_time,
    const hier::IntVector& ghost_width_to_fill)
@@ -116,7 +124,8 @@ void MultiblockGriddingTagger::setPhysicalBoundaryConditions(
    }
 }
 
-void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
+void
+MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    hier::Patch& patch,
    const hier::PatchLevel& encon_level,
    const hier::Connector& dst_to_encon,
@@ -217,7 +226,21 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    }
 }
 
-void MultiblockGriddingTagger::postprocessRefine(
+void
+MultiblockGriddingTagger::preprocessRefine(
+   hier::Patch& fine,
+   const hier::Patch& coarse,
+   const hier::Box& fine_box,
+   const hier::IntVector& ratio)
+{
+   NULL_USE(fine);
+   NULL_USE(coarse);
+   NULL_USE(fine_box);
+   NULL_USE(ratio);
+}
+
+void
+MultiblockGriddingTagger::postprocessRefine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const hier::Box& fine_box,

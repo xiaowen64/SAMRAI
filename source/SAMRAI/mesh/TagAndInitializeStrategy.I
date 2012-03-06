@@ -18,7 +18,15 @@ namespace SAMRAI {
 namespace mesh {
 
 SAMRAI_INLINE_KEYWORD
-const std::string& TagAndInitializeStrategy::getObjectName() const
+const tbox::Dimension&
+TagAndInitializeStrategy::getDim() const
+{
+   return d_dim;
+}
+
+SAMRAI_INLINE_KEYWORD
+const std::string&
+TagAndInitializeStrategy::getObjectName() const
 {
    return d_object_name;
 }

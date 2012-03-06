@@ -17,6 +17,10 @@
 #include "SAMRAI/tbox/Utilities.h"
 #endif
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/math/PatchEdgeDataOpsComplex.I"
+#endif
+
 namespace SAMRAI {
 namespace math {
 
@@ -36,7 +40,8 @@ PatchEdgeDataOpsComplex::~PatchEdgeDataOpsComplex()
  *************************************************************************
  */
 
-void PatchEdgeDataOpsComplex::swapData(
+void
+PatchEdgeDataOpsComplex::swapData(
    const boost::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
@@ -57,46 +62,6 @@ void PatchEdgeDataOpsComplex::swapData(
 #endif
    patch->setPatchData(data1_id, d2);
    patch->setPatchData(data2_id, d1);
-}
-
-void PatchEdgeDataOpsComplex::printData(
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& data,
-   const hier::Box& box,
-   std::ostream& s) const
-{
-   TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
-
-   s << "Data box = " << box << std::endl;
-   data->print(box, s);
-   s << "\n";
-}
-
-void PatchEdgeDataOpsComplex::copyData(
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& dst,
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& src,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
-
-   const tbox::Dimension& dim(box.getDim());
-
-   for (int d = 0; d < dim.getValue(); d++) {
-      const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
-      (dst->getArrayData(d)).copy(src->getArrayData(d), edge_box);
-   }
-}
-
-void PatchEdgeDataOpsComplex::setToScalar(
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& dst,
-   const dcomplex& alpha,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(dst);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
-
-   dst->fillAll(alpha, box);
 }
 
 }

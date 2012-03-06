@@ -172,8 +172,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/math/ArrayDataMiscellaneousOpsReal.C"
-#endif
 
 #endif

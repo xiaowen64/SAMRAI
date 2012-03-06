@@ -114,10 +114,7 @@ public:
     * Always returns an IntVector of ones, because that is the maximum
     * stencil needed for the operations in GriddingAlgorithm
     */
-   virtual hier::IntVector getRefineOpStencilWidth() const
-   {
-      return hier::IntVector::getOne(d_dim);
-   }
+   virtual hier::IntVector getRefineOpStencilWidth() const;
 
    /*!
     * Perform user-defined refining operations.  This member function
@@ -139,13 +136,7 @@ public:
       hier::Patch& fine,
       const hier::Patch& coarse,
       const hier::Box& fine_box,
-      const hier::IntVector& ratio)
-   {
-      NULL_USE(fine);
-      NULL_USE(coarse);
-      NULL_USE(fine_box);
-      NULL_USE(ratio);
-   }
+      const hier::IntVector& ratio);
 
    /*!
     * Perform user-defined refining operations.  This member function

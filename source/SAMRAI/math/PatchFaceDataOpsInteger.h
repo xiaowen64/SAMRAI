@@ -123,4 +123,8 @@ private:
 
 }
 }
+
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/math/PatchFaceDataOpsInteger.I"
+#endif
 #endif
