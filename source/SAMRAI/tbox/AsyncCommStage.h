@@ -319,14 +319,6 @@ private:
    };
 
    /*!
-    * @brief Container of pointers to Members.
-    *
-    * This container is used in some interfaces
-    * and is instantiated in the SAMRAI library.
-    */
-   typedef std::vector<Member *> MemberVec;
-
-   /*!
     * @brief Construct a stage that may begin allocating and
     * managing Members.
     */
@@ -453,12 +445,8 @@ private:
     */
    friend class Member;
 
-   /*!
-    * @brief Trivial typedef used by SAMRAI template scripts to
-    * generate code to instantiate MemberVec (not
-    * used anywhere else).
-    */
-   typedef Member * MemberPtr;
+   //@{
+   //! @name Private methods to be called only by Members of the stage.
 
    /*!
     * @brief Set up a Member to work this stage, initializing mutual
@@ -535,6 +523,10 @@ private:
     */
    void privateYankFromCompletionQueue( Member &member );
 
+   //@}
+
+
+
    /*!
     * @brief Members managed on this stage.
     *
@@ -542,7 +534,7 @@ private:
     * stage because they are not at the end of the vector and cannot
     * be removed from the vector.
     */
-   MemberVec d_members;
+   std::vector<Member*> d_members;
 
    /*!
     * @brief Number of members.
