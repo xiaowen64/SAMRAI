@@ -40,14 +40,20 @@ namespace tbox {
 // #define AsyncCommPeer_DEBUG_OUTPUT
 
 template<class TYPE>
-boost::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_send_timer;
+boost::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_default_send_timer;
 template<class TYPE>
-boost::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_recv_timer;
+boost::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_default_recv_timer;
 template<class TYPE>
-boost::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_waitall_timer;
+boost::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_default_waitall_timer;
 
 template<class TYPE>
-bool AsyncCommPeer<TYPE>::s_initialized = false;
+tbox::StartupShutdownManager::Handler
+AsyncCommPeer<TYPE>::s_initialize_finalize_handler(
+   AsyncCommPeer<TYPE>::initializeCallback,
+   0,
+   0,
+   AsyncCommPeer<TYPE>::finalizeCallback,
+   tbox::StartupShutdownManager::priorityTimers);
 
 /*
  ***********************************************************************
@@ -67,13 +73,22 @@ AsyncCommPeer<TYPE>::AsyncCommPeer():
    d_internal_buf(),
    d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
    d_tag0(-1),
-   d_tag1(-1)
+   d_tag1(-1),
+   t_send_timer(t_default_send_timer),
+   t_recv_timer(t_default_recv_timer),
+   t_waitall_timer(t_default_waitall_timer)
 {
-
-   if (!s_initialized) {
-      s_initialized = AsyncCommPeer<TYPE>::initialize();
-   }
    d_report_send_completion[0] = d_report_send_completion[1] = false;
+   if ( ! t_default_waitall_timer ) {
+      /*
+       * This should not be needed, but somehow initializeCallback()
+       * may not have called yet.
+       */
+      initializeCallback();
+      t_send_timer = t_default_send_timer;
+      t_recv_timer = t_default_recv_timer;
+      t_waitall_timer = t_default_waitall_timer;
+   }
 }
 
 /*
@@ -99,12 +114,22 @@ AsyncCommPeer<TYPE>::AsyncCommPeer(
    d_internal_buf(),
    d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
    d_tag0(-1),
-   d_tag1(-1)
+   d_tag1(-1),
+   t_send_timer(t_default_send_timer),
+   t_recv_timer(t_default_recv_timer),
+   t_waitall_timer(t_default_waitall_timer)
 {
-   if (!s_initialized) {
-      s_initialized = AsyncCommPeer<TYPE>::initialize();
-   }
    d_report_send_completion[0] = d_report_send_completion[1] = false;
+   if ( ! t_default_waitall_timer ) {
+      /*
+       * This should not be needed, but somehow initializeCallback()
+       * may not have called yet.
+       */
+      initializeCallback();
+      t_send_timer = t_default_send_timer;
+      t_recv_timer = t_default_recv_timer;
+      t_waitall_timer = t_default_waitall_timer;
+   }
 }
 
 /*
@@ -947,13 +972,6 @@ AsyncCommPeer<TYPE>::initialize()
       AsyncCommPeer::finalizeCallback,
       StartupShutdownManager::priorityTimers);
 
-   t_waitall_timer = TimerManager::getManager()->
-      getTimer("tbox::AsyncCommPeer::wait_all()");
-   t_send_timer = TimerManager::getManager()->
-      getTimer("tbox::AsyncCommPeer::MPI_ISend");
-   t_recv_timer = TimerManager::getManager()->
-      getTimer("tbox::AsyncCommPeer::MPI_Irecv");
-
    return true;
 }
 
@@ -1004,6 +1022,23 @@ AsyncCommPeer<TYPE>::clearRecvData()
 
 /*
  ***************************************************************************
+ * Initialize static timers.
+ ***************************************************************************
+ */
+template<class TYPE>
+void
+AsyncCommPeer<TYPE>::initializeCallback()
+{
+   t_default_send_timer = TimerManager::getManager()->
+      getTimer("tbox::AsyncCommPeer::MPI_ISend");
+   t_default_recv_timer = TimerManager::getManager()->
+      getTimer("tbox::AsyncCommPeer::MPI_Irecv");
+   t_default_waitall_timer = TimerManager::getManager()->
+      getTimer("tbox::AsyncCommPeer::wait_all()");
+}
+
+/*
+ ***************************************************************************
  * Release static timers.  To be called by shutdown registry to make sure
  * memory for timers does not leak.
  ***************************************************************************
@@ -1012,10 +1047,9 @@ template<class TYPE>
 void
 AsyncCommPeer<TYPE>::finalizeCallback()
 {
-   t_send_timer.reset();
-   t_recv_timer.reset();
-   t_waitall_timer.reset();
-   s_initialized = false;
+   t_default_send_timer.reset();
+   t_default_recv_timer.reset();
+   t_default_waitall_timer.reset();
 }
 
 template<class TYPE>

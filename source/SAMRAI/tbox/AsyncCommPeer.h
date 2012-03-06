@@ -357,10 +357,17 @@ private:
       size_t size);
 
    /*!
+    * @brief Set up things for the entire class.
+    *
+    * Only called by StartupShutdownManager.
+    */
+   static void
+   initializeCallback();
+
+   /*!
     * Free static timers.
     *
-    * To be called by shutdown registry to make sure memory for timers
-    * does not leak.
+    * Only called by StartupShutdownManager.
     */
    static void
    finalizeCallback();
@@ -447,9 +454,16 @@ private:
    // Make some temporary variable statuses to avoid repetitious allocations.
    int d_mpi_err;
 
-   static boost::shared_ptr<Timer> t_waitall_timer;
-   static boost::shared_ptr<Timer> t_send_timer;
-   static boost::shared_ptr<Timer> t_recv_timer;
+   boost::shared_ptr<Timer> t_send_timer;
+   boost::shared_ptr<Timer> t_recv_timer;
+   boost::shared_ptr<Timer> t_waitall_timer;
+
+   static boost::shared_ptr<Timer> t_default_send_timer;
+   static boost::shared_ptr<Timer> t_default_recv_timer;
+   static boost::shared_ptr<Timer> t_default_waitall_timer;
+
+   static tbox::StartupShutdownManager::Handler
+      s_initialize_finalize_handler;
 
    /**
     * \brief Has shutdown handler been initialized.
