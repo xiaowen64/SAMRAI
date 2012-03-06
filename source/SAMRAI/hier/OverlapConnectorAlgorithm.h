@@ -592,7 +592,6 @@ private:
       std::set<int>& incoming_ranks,
       std::set<int>& outgoing_ranks,
       tbox::AsyncCommPeer<int> all_comms[],
-      tbox::AsyncCommStage::MemberVec& completed,
       NeighborSet& visible_west_nabrs,
       NeighborSet& visible_east_nabrs) const;
 

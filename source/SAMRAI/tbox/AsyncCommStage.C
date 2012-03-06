@@ -81,8 +81,7 @@ AsyncCommStage::~AsyncCommStage()
  * Allocate the new Member and set the internal arrays for it.
  ****************************************************************
  */
-void
-AsyncCommStage::privateStageMember(
+void AsyncCommStage::privateStageMember(
    Member* member,
    size_t nreq)
 {
@@ -105,6 +104,7 @@ AsyncCommStage::privateStageMember(
     */
    d_members.push_back(member);
    ++d_member_count;
+
 
    const size_t cur_total_request_count = d_member_to_req[d_members.size() - 1];
    const size_t new_total_request_count = cur_total_request_count + nreq;
@@ -136,8 +136,7 @@ AsyncCommStage::privateStageMember(
  *    off the ends of arrays, if possible.
  *******************************************************************
  */
-void
-AsyncCommStage::privateDestageMember(
+void AsyncCommStage::privateDestageMember(
    Member* member)
 {
    if (member->hasPendingRequests()) {
@@ -195,8 +194,7 @@ AsyncCommStage::privateDestageMember(
  ****************************************************************
  ****************************************************************
  */
-void
-AsyncCommStage::assertDataConsistency() const
+void AsyncCommStage::assertDataConsistency() const
 {
    if (d_members.size() + 1 != d_member_to_req.size()) {
       TBOX_ERROR("d_members.size()=" << d_members.size()
@@ -251,28 +249,100 @@ AsyncCommStage::assertDataConsistency() const
    }
 }
 
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
+void AsyncCommStage::privatePushToCompletionQueue( Member &member )
+{
+   TBOX_ASSERT( member.isDone() );
+   /*
+    * Push member onto d_completed_members, but be sure to avoid
+    * duplicating.
+    */
+   std::list<size_t>::iterator li;
+   for ( li=d_completed_members.begin();
+         li!=d_completed_members.end(); ++li ) {
+      if ( member.d_index_on_stage == *li ) break;
+   }
+   if ( li == d_completed_members.end() ) {
+      d_completed_members.push_back(member.d_index_on_stage);
+   }
+   return;
+}
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
+void AsyncCommStage::privateYankFromCompletionQueue( Member &member )
+{
+   /*
+    * Remove member from d_completed_members.
+    */
+   std::list<size_t>::iterator li;
+   for ( li=d_completed_members.begin();
+         li!=d_completed_members.end(); ++li ) {
+      if ( member.d_index_on_stage == *li ) {
+         d_completed_members.erase(li);
+         break;
+      }
+   }
+   return;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+size_t AsyncCommStage::numberOfCompletedMembers() const
+{
+   return d_completed_members.size();
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+AsyncCommStage::Member *AsyncCommStage::popCompletionQueue()
+{
+   if ( d_completed_members.empty() ) {
+      TBOX_ERROR("AsyncCommStage::popCompletionQueue(): There is no\n"
+                 << "completed member.  You cannot call this method\n"
+                 << "when numberOfCompletedMembers() > 0.");
+   }
+   Member *completed = d_members[d_completed_members.front()];
+   if ( ! completed->isDone() ) {
+      TBOX_ERROR("AsyncCommStage::popCompletionQueue error:\n"
+                 << "You asked for a completed AsyncCommStage Member\n"
+                 << "but its stage has changed to pending since the\n"
+                 << "stage last identified it as being completed.\n"
+                 << "This is likely caused by some code re-using the\n"
+                 << "Member for another operation before poping it\n"
+                 << "using this method.");
+   }
+   d_completed_members.pop_front();
+   return completed;
+}
+
 /*
  ******************************************************************
  * Advance all communication Members by calling advanceSome
  * repeatedly until all outstanding communications are complete.
  ******************************************************************
  */
-size_t
-AsyncCommStage::advanceAll(
-   MemberVec& completed)
+size_t AsyncCommStage::advanceAll()
 {
-   MemberVec completed_part;
-   while (advanceSome(completed_part)) {
-      size_t num_add = completed_part.size();
-      size_t i0 = completed.size();
-      completed.insert(completed.end(),
-         completed_part.begin(),
-         completed_part.end());
-      for (size_t i = 0; i < num_add; ++i) {
-         completed[i0 + i] = completed_part[i];
-      }
+   while (hasPendingRequests()) {
+      advanceSome();
    }
-   return completed.size();
+   return d_completed_members.size();
 }
 
 /*
@@ -286,12 +356,8 @@ AsyncCommStage::advanceAll(
  * finished.  If no Member has finished, repeat until at least one has.
  ******************************************************************
  */
-size_t
-AsyncCommStage::advanceSome(
-   MemberVec& completed)
+size_t AsyncCommStage::advanceSome()
 {
-   completed.clear();
-
    if (!SAMRAI_MPI::usingMPI()) {
       return 0;
    }
@@ -418,40 +484,15 @@ AsyncCommStage::advanceSome(
          << std::endl;
 #endif
          if (memberi_done) {
-            completed.push_back(&memberi);
             ++n_member_completed;
             TBOX_ASSERT(!memberi.hasPendingRequests());
+            privatePushToCompletionQueue(memberi);
          }
       }
 
    } while (n_req_completed > 0 && n_member_completed == 0);
 
-   return n_member_completed;
-}
-
-/*
- ****************************************************************
- * Advance one communication Members by using MPI_Waitsome
- * to complete one requests.
- *
- * This method is functionally the same as the advanceAny() taking no
- * arguments.  The overloaded version provides an interface similar to
- * that of advanceSome().
- ****************************************************************
- */
-size_t
-AsyncCommStage::advanceAny(
-   MemberVec& completed)
-{
-   completed.clear();
-   if (!SAMRAI_MPI::usingMPI()) {
-      return 0;
-   }
-   Member* completed_member = advanceAny();
-   if (completed_member != NULL) {
-      completed.push_back(completed_member);
-   }
-   return completed_member == 0 ? 0 : 1;
+   return d_completed_members.size();
 }
 
 /*
@@ -465,8 +506,7 @@ AsyncCommStage::advanceAny(
  * has completed its communication operation.
  ****************************************************************
  */
-AsyncCommStage::Member*
-AsyncCommStage::advanceAny()
+size_t AsyncCommStage::advanceAny()
 {
    if (!SAMRAI_MPI::usingMPI()) {
       return 0;
@@ -480,6 +520,7 @@ AsyncCommStage::advanceAny()
          TBOX_WARNING("non-null request above d_n_reg.");
    }
 #endif
+
    int ireq = MPI_UNDEFINED;
    int member_index_on_stage = -1;
    bool member_done;
@@ -553,7 +594,12 @@ AsyncCommStage::advanceAny()
 
    } while (member_done == false);
 
-   return member_index_on_stage < 0 ? NULL : d_members[member_index_on_stage];
+
+   if ( member_index_on_stage >= 0 ) {
+      privatePushToCompletionQueue(*d_members[member_index_on_stage]);
+   }
+
+   return d_completed_members.size();
 }
 
 /*
@@ -610,8 +656,7 @@ AsyncCommStage::Member::~Member()
  ***********************************************************************
  ***********************************************************************
  */
-void
-AsyncCommStage::Member::attachStage(
+void AsyncCommStage::Member::attachStage(
    const size_t nreq,
    AsyncCommStage* stage)
 {
@@ -629,8 +674,7 @@ AsyncCommStage::Member::attachStage(
  ***********************************************************************
  ***********************************************************************
  */
-void
-AsyncCommStage::Member::detachStage()
+void AsyncCommStage::Member::detachStage()
 {
    if (d_stage != NULL) {
       // Deregister from current stage.
@@ -644,8 +688,7 @@ AsyncCommStage::Member::detachStage()
  ***********************************************************************
  ***********************************************************************
  */
-bool
-AsyncCommStage::Member::hasPendingRequests() const
+bool AsyncCommStage::Member::hasPendingRequests() const
 {
    if (d_stage == NULL) {
       return false;
@@ -662,8 +705,7 @@ AsyncCommStage::Member::hasPendingRequests() const
  ***********************************************************************
  ***********************************************************************
  */
-size_t
-AsyncCommStage::Member::numberOfPendingRequests() const
+size_t AsyncCommStage::Member::numberOfPendingRequests() const
 {
    size_t npending = 0;
    if (d_stage != NULL) {
@@ -674,6 +716,37 @@ AsyncCommStage::Member::numberOfPendingRequests() const
    }
    return npending;
 }
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void AsyncCommStage::Member::pushToCompletionQueue()
+{
+   if ( ! isDone() ) {
+      TBOX_ERROR("AsyncCommStage::Member::pushToCompletionQueue error:\n"
+                 << "This method may not be called by Members that have not\n"
+                 << "completed their operation (and returns true from isDon().");
+   }
+   d_stage->privatePushToCompletionQueue(*this);
+   return;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void AsyncCommStage::Member::yankFromCompletionQueue()
+{
+   d_stage->privateYankFromCompletionQueue(*this);
+   return;
+}
+
+/*
+ ****************************************************************
+ * Implementations for AsyncCommStage::Member.
+ ****************************************************************
+ */
 
 AsyncCommStage::Handler::~Handler()
 {

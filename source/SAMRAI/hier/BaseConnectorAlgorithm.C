@@ -46,7 +46,6 @@ void
 BaseConnectorAlgorithm::setupCommunication(
    tbox::AsyncCommPeer<int> *& all_comms,
    tbox::AsyncCommStage& comm_stage,
-   tbox::AsyncCommStage::MemberVec& completed,
    const tbox::SAMRAI_MPI& mpi,
    const std::set<int>& incoming_ranks,
    const std::set<int>& outgoing_ranks,
@@ -62,8 +61,6 @@ BaseConnectorAlgorithm::setupCommunication(
    const int n_comm = static_cast<int>(
          incoming_ranks.size() + outgoing_ranks.size());
    all_comms = new tbox::AsyncCommPeer<int>[n_comm];
-
-   completed.reserve(incoming_ranks.size());
 
    const int tag0 = ++operation_mpi_tag;
    const int tag1 = ++operation_mpi_tag;
@@ -87,7 +84,7 @@ BaseConnectorAlgorithm::setupCommunication(
                     << std::endl;
       }
       if (incoming_comm.isDone()) {
-         completed.insert(completed.end(), &incoming_comm);
+         incoming_comm.pushToCompletionQueue();
       }
    }
 
@@ -191,44 +188,40 @@ BaseConnectorAlgorithm::receiveAndUnpack(
    std::set<int>& incoming_ranks,
    tbox::AsyncCommPeer<int> all_comms[],
    tbox::AsyncCommStage& comm_stage,
-   tbox::AsyncCommStage::MemberVec& completed,
    const boost::shared_ptr<tbox::Timer>& receive_and_unpack_timer) const
 {
    receive_and_unpack_timer->start();
    /*
     * Receive and unpack messages.
     */
-   do {
-      for (unsigned int i = 0; i < completed.size(); ++i) {
+   while ( comm_stage.numberOfCompletedMembers() > 0 ||
+           comm_stage.advanceSome() ) {
 
-         tbox::AsyncCommPeer<int>* peer =
-            dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
-         TBOX_ASSERT(completed[i] != NULL);
-         TBOX_ASSERT(peer != NULL);
+      tbox::AsyncCommPeer<int>* peer =
+         dynamic_cast<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
 
-         if ((size_t)(peer - all_comms) < incoming_ranks.size()) {
-            // Receive from this peer.
-            if (s_print_steps == 'y') {
-               tbox::plog << "Received from " << peer->getPeerRank()
-                          << std::endl;
-            }
-            unpackDiscoveryMessage(
-               peer,
-               new_base_to_new_head,
-               new_head_to_new_base);
+      TBOX_ASSERT(peer != NULL);
+
+      if ((size_t)(peer - all_comms) < incoming_ranks.size()) {
+         // Receive from this peer.
+         if (s_print_steps == 'y') {
+            tbox::plog << "Received from " << peer->getPeerRank()
+                       << std::endl;
          }
-         else {
-            // Sent to this peer.  No follow-up needed.
-            if (s_print_steps == 'y') {
-               tbox::plog << "Sent to " << peer->getPeerRank() << std::endl;
-            }
+         unpackDiscoveryMessage(
+            peer,
+            new_base_to_new_head,
+            new_head_to_new_base);
+      }
+      else {
+         // Sent to this peer.  No follow-up needed.
+         if (s_print_steps == 'y') {
+            tbox::plog << "Sent to " << peer->getPeerRank() << std::endl;
          }
       }
 
-      completed.clear();
-      comm_stage.advanceSome(completed);
+   }
 
-   } while (completed.size() > 0);
    receive_and_unpack_timer->stop();
 }
 

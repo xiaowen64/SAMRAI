@@ -182,11 +182,6 @@ int main(
       int gi; // Group index.
       int ai; // Active group index.
 
-      /*
-       * Output data for stage methods.
-       */
-      AsyncCommStage::MemberVec completed;
-      int num_complete = 0;
 
       int count = 0;
       while ((sync_bcast_count < sync_bcast_cycles) ||
@@ -319,6 +314,7 @@ int main(
              * For the synchronous (groupwise) broadcast test,
              * each group broadcasts the its group id.
              */
+            TBOX_ASSERT( comm_stage.numberOfCompletedMembers() == 0 );
             plog << "\n\n\n*********** Synchronous Broadcast "
                  << sync_bcast_count << " ************\n";
             for (ai = 0; ai < num_active_groups; ++ai)
@@ -328,7 +324,6 @@ int main(
                AsyncCommGroup& comm_group = comm_groups[ai];
                comm_group.beginBcast(&bcdata[ai], 1);
                comm_group.completeCurrentOperation();
-               TBOX_ASSERT(comm_group.isDone());
                gi = active_groups[ai];
                plog << std::setw(3) << ai
                     << std::setw(5) << gi
@@ -353,6 +348,7 @@ int main(
          }
 
          if (sync_sumreduce_count < sync_sumreduce_cycles) {
+            TBOX_ASSERT( comm_stage.numberOfCompletedMembers() == 0 );
             /*
              * For the sum advanceSome reduce test,
              * each group sums up the ranks of its members, plus 1.
@@ -394,6 +390,7 @@ int main(
          }
 
          if (asyncany_bcast_count < asyncany_bcast_cycles) {
+            TBOX_ASSERT( comm_stage.numberOfCompletedMembers() == 0 );
             /*
              * For the advanceSome broadcast test,
              * each group broadcasts the its group id.
@@ -407,21 +404,17 @@ int main(
             int counter = 0;
             while (counter < num_active_groups ||
                    comm_stage.hasPendingRequests()) {
-               AsyncCommGroup* completed_group = NULL;
                if (counter < num_active_groups) {
                   if (comm_groups[counter].beginBcast(&bcdata[counter], 1)) {
                      TBOX_ASSERT(comm_groups[counter].isDone());
-                     completed_group = &comm_groups[counter];
                   }
                   ++counter;
                } else {
-                  AsyncCommStage::Member* completed_member =
-                     comm_stage.advanceAny();
-                  completed_group =
-                     dynamic_cast<AsyncCommGroup *>(completed_member);
-                  TBOX_ASSERT(completed_group != NULL);
+                  comm_stage.advanceAny();
                }
-               if (completed_group != NULL) {
+               if ( comm_stage.numberOfCompletedMembers() > 0 ) {
+                  AsyncCommGroup *completed_group =
+                     dynamic_cast<AsyncCommGroup *>(comm_stage.popCompletionQueue());
                   ai = static_cast<int>(completed_group - comm_groups);
                   gi = active_groups[ai];
                   plog << std::setw(3) << ai
@@ -450,6 +443,7 @@ int main(
          }
 
          if (asyncany_sumreduce_count < asyncany_sumreduce_cycles) {
+            TBOX_ASSERT( comm_stage.numberOfCompletedMembers() == 0 );
             /*
              * For the advanceSome broadcast test,
              * each group broadcasts the its group id.
@@ -462,21 +456,21 @@ int main(
             int counter = 0;
             while (counter < num_active_groups ||
                    comm_stage.hasPendingRequests()) {
-               AsyncCommGroup* completed_group = NULL;
                if (counter < num_active_groups) {
                   if (comm_groups[counter].beginSumReduce(&sum[counter], 1)) {
                      TBOX_ASSERT(comm_groups[counter].isDone());
-                     completed_group = &comm_groups[counter];
+                     comm_groups[counter].pushToCompletionQueue();
                   }
                   ++counter;
-               } else {
-                  AsyncCommStage::Member* completed_member =
-                     comm_stage.advanceAny();
-                  completed_group =
-                     dynamic_cast<AsyncCommGroup *>(completed_member);
-                  TBOX_ASSERT(completed_group != NULL);
                }
-               if (completed_group != NULL) {
+               if ( comm_stage.numberOfCompletedMembers() == 0 ) {
+                  comm_stage.advanceAny();
+                  TBOX_ASSERT( comm_stage.numberOfCompletedMembers() < 2 );
+               }
+               TBOX_ASSERT( comm_stage.numberOfCompletedMembers() < 2 );
+               if ( comm_stage.numberOfCompletedMembers() > 0 ) {
+                  AsyncCommGroup *completed_group =
+                     dynamic_cast<AsyncCommGroup *>(comm_stage.popCompletionQueue());
                   ai = static_cast<int>(completed_group - comm_groups);
                   gi = active_groups[ai];
                   plog << std::setw(3) << ai
@@ -509,6 +503,7 @@ int main(
          }
 
          if (asyncsome_bcast_count < asyncsome_bcast_cycles) {
+            TBOX_ASSERT( comm_stage.numberOfCompletedMembers() == 0 );
             /*
              * For the advanceSome broadcast test,
              * each group broadcasts the its group id.
@@ -517,41 +512,37 @@ int main(
                  << asyncsome_bcast_count << " ************\n";
             for (ai = 0; ai < num_active_groups; ++ai)
                if (rank != owners[active_groups[ai]]) bcdata[ai] = -1;
-            completed.resize(num_active_groups);
-            num_complete = 0;
             for (ai = 0; ai < num_active_groups; ++ai) {
                AsyncCommGroup& comm_group = comm_groups[ai];
-               bool fin = comm_group.beginBcast(&bcdata[ai], 1);
-               if (fin) {
-                  completed[num_complete++] = &comm_groups[ai];
+               comm_group.beginBcast(&bcdata[ai], 1);
+               if ( comm_group.isDone() ) {
+                  comm_group.pushToCompletionQueue();
                }
             }
             plog << "Job Group Result Correct  Note\n";
-            do {
-               for (int n = 0; n < num_complete; ++n) {
-                  AsyncCommGroup* completed_group =
-                     dynamic_cast<AsyncCommGroup *>(completed[n]);
-                  TBOX_ASSERT(completed_group != NULL);
-                  ai = static_cast<int>(completed_group - comm_groups);
-                  gi = active_groups[ai];
-                  plog << std::setw(3) << ai
-                       << std::setw(5) << gi
-                       << std::setw(8) << bcdata[ai]
-                       << std::setw(8) << correct_bcdata[ai]
+            while ( comm_stage.numberOfCompletedMembers() > 0 ||
+                    comm_stage.advanceSome() ) {
+               AsyncCommGroup* completed_group =
+                  dynamic_cast<AsyncCommGroup *>(comm_stage.popCompletionQueue());
+               TBOX_ASSERT(completed_group != NULL);
+               ai = static_cast<int>(completed_group - comm_groups);
+               gi = active_groups[ai];
+               plog << std::setw(3) << ai
+                    << std::setw(5) << gi
+                    << std::setw(8) << bcdata[ai]
+                    << std::setw(8) << correct_bcdata[ai]
                   ;
-                  plog << "  Bcast difference = "
-                       << bcdata[ai] - correct_bcdata[ai];
-                  if (bcdata[ai] != correct_bcdata[ai]) {
-                     plog << "  Error!";
-                     tbox::pout << "Error in bcast result for group "
-                                << gi << std::endl;
-                     ++fail_count;
-                  } else ++pass_count;
-                  plog << std::endl;
-                  TBOX_ASSERT(comm_groups[ai].isDone());
-               }
-               num_complete = static_cast<int>(comm_stage.advanceSome(completed));
-            } while (num_complete != 0);
+               plog << "  Bcast difference = "
+                    << bcdata[ai] - correct_bcdata[ai];
+               if (bcdata[ai] != correct_bcdata[ai]) {
+                  plog << "  Error!";
+                  tbox::pout << "Error in bcast result for group "
+                             << gi << std::endl;
+                  ++fail_count;
+               } else ++pass_count;
+               plog << std::endl;
+               TBOX_ASSERT(comm_groups[ai].isDone());
+            }
             for (ai = 0; ai < num_active_groups; ++ai) {
                TBOX_ASSERT(comm_groups[ai].isDone());
             }
@@ -560,6 +551,7 @@ int main(
          }
 
          if (asyncsome_sumreduce_count < asyncsome_sumreduce_cycles) {
+            TBOX_ASSERT( comm_stage.numberOfCompletedMembers() == 0 );
             /*
              * For the sum advanceSome reduce test,
              * each group sums up the ranks of its members, plus 1.
@@ -567,46 +559,41 @@ int main(
             plog << "\n\n\n*********** advanceSome Sum Reduce "
                  << asyncsome_sumreduce_count << " ************\n";
             for (ai = 0; ai < num_active_groups; ++ai) sum[ai] = 1 + rank;
-            completed.resize(num_active_groups);
-            num_complete = 0;
             for (ai = 0; ai < num_active_groups; ++ai) {
                AsyncCommGroup& comm_group = comm_groups[ai];
-               bool fin = comm_group.beginSumReduce(&sum[ai], 1);
-               if (fin) {
-                  completed[num_complete++] = &comm_groups[ai];
+               comm_group.beginSumReduce(&sum[ai], 1);
+               if ( comm_group.isDone() ) {
+                  comm_group.pushToCompletionQueue();
                }
             }
             plog << "Job Group Result Correct  Note\n";
-            do {
-               for (int n = 0; n < num_complete; ++n) {
-                  AsyncCommGroup* completed_group =
-                     dynamic_cast<AsyncCommGroup *>(completed[n]);
-                  TBOX_ASSERT(completed_group != NULL);
-                  ai = static_cast<int>(completed_group - comm_groups);
-                  gi = active_groups[ai];
-                  plog << std::setw(3) << ai
-                       << std::setw(5) << gi
-                       << std::setw(8) << sum[ai]
-                       << std::setw(8) << correct_sum[ai]
+            while ( comm_stage.numberOfCompletedMembers() > 0 ||
+                    comm_stage.advanceSome() ) {
+               AsyncCommGroup* completed_group =
+                  dynamic_cast<AsyncCommGroup *>(comm_stage.popCompletionQueue());
+               TBOX_ASSERT(completed_group != NULL);
+               ai = static_cast<int>(completed_group - comm_groups);
+               gi = active_groups[ai];
+               plog << std::setw(3) << ai
+                    << std::setw(5) << gi
+                    << std::setw(8) << sum[ai]
+                    << std::setw(8) << correct_sum[ai]
                   ;
-                  if (rank == owners[gi]) {
-                     plog << "  Sum reduce difference = "
-                          << sum[ai] - correct_sum[ai];
-                     if (sum[ai] != correct_sum[ai]) {
-                        plog << "  Error!";
-                        tbox::pout << "Error in sum reduce result for group "
-                                   << gi << std::endl;
-                        ++fail_count;
-                     } else ++pass_count;
-                  } else {
-                     plog << "  Not owner (not checking)";
-                  }
-                  plog << std::endl;
-                  TBOX_ASSERT(comm_groups[ai].isDone());
+               if (rank == owners[gi]) {
+                  plog << "  Sum reduce difference = "
+                       << sum[ai] - correct_sum[ai];
+                  if (sum[ai] != correct_sum[ai]) {
+                     plog << "  Error!";
+                     tbox::pout << "Error in sum reduce result for group "
+                                << gi << std::endl;
+                     ++fail_count;
+                  } else ++pass_count;
+               } else {
+                  plog << "  Not owner (not checking)";
                }
-               num_complete = static_cast<int>(
-                     comm_stage.advanceSome(completed));
-            } while (num_complete != 0);
+               plog << std::endl;
+               TBOX_ASSERT(comm_groups[ai].isDone());
+            }
             for (ai = 0; ai < num_active_groups; ++ai) {
                TBOX_ASSERT(comm_groups[ai].isDone());
             }
@@ -637,7 +624,7 @@ int main(
    }
 
    if (fail_count == 0) {
-      tbox::pout << "\nPASSED:  peer_comm" << std::endl;
+      tbox::pout << "\nPASSED:  group_comm" << std::endl;
    }
 
    SAMRAIManager::shutdown();

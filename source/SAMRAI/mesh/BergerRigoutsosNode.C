@@ -390,7 +390,6 @@ void BergerRigoutsosNode::clusterAndComputeRelationships()
       // d_common->relaunch_queue.appendItem(this);
       d_common->relaunch_queue.push_back(this);
 
-      tbox::AsyncCommStage::MemberVec completed_comms;
 
       do {
 
@@ -414,13 +413,13 @@ void BergerRigoutsosNode::clusterAndComputeRelationships()
 
          d_common->t_comm_wait->start();
          n_comm_group_completed =
-            static_cast<int>(d_common->comm_stage.advanceSome(completed_comms));
+            static_cast<int>(d_common->comm_stage.advanceSome());
          d_common->t_comm_wait->stop();
 
          d_common->t_compute->start();
-         for (int n = 0; n < n_comm_group_completed; ++n) {
+         while ( d_common->comm_stage.numberOfCompletedMembers() > 0 ) {
             BergerRigoutsosNode* node_for_relaunch =
-               (BergerRigoutsosNode *)(completed_comms[n]->getHandler());
+               (BergerRigoutsosNode *)(d_common->comm_stage.popCompletionQueue()->getHandler());
             if (0) {
                tbox::plog << "Continuing from stage ";
                node_for_relaunch->printState(tbox::plog);
@@ -447,7 +446,7 @@ void BergerRigoutsosNode::clusterAndComputeRelationships()
                        << d_common->comm_stage.numberOfPendingRequests()
                        << " pending requests." << std::endl;
          }
-      } while (!d_common->relaunch_queue.empty() || n_comm_group_completed > 0);
+      } while ( !d_common->relaunch_queue.empty() || d_common->comm_stage.hasPendingRequests() );
 
    }
 
@@ -1306,7 +1305,8 @@ bool BergerRigoutsosNode::reduceHistogram_check()
    if (d_group.size() == 1) {
       return true;
    }
-   if (d_comm_group->proceedToNextWait() && d_common->rank == d_owner) {
+   d_comm_group->proceedToNextWait();
+   if (d_comm_group->isDone() && d_common->rank == d_owner) {
       getHistogramFromBuffer(&d_recv_msg[0]);
    }
    return d_comm_group->isDone();
@@ -1381,7 +1381,8 @@ bool BergerRigoutsosNode::broadcastAcceptability_check()
    if (d_group.size() == 1) {
       return true;
    }
-   if (d_comm_group->checkBcast() && d_common->rank != d_owner) {
+   d_comm_group->checkBcast();
+   if (d_comm_group->isDone() && d_common->rank != d_owner) {
 
       int* ptr = &d_recv_msg[0];
       d_num_tags = *(ptr++);
@@ -1574,7 +1575,8 @@ bool BergerRigoutsosNode::broadcastChildGroups_check()
    if (d_group.size() == 1) {
       return true;
    }
-   if (d_comm_group->checkBcast() && d_common->rank != d_owner) {
+   d_comm_group->checkBcast();
+   if (d_comm_group->isDone() && d_common->rank != d_owner) {
 
       int* ptr = &d_recv_msg[0];
 
@@ -1637,7 +1639,8 @@ bool BergerRigoutsosNode::broadcastToDropouts_check()
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_common->rank == d_owner || d_overlap == 0);
 #endif
-   if (d_comm_group->checkBcast()) {
+   d_comm_group->checkBcast();
+   if (d_comm_group->isDone()) {
       if (d_common->rank != d_owner) {
 #ifdef DEBUG_CHECK_ASSERTIONS
          /*

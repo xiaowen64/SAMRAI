@@ -653,7 +653,6 @@ MappingConnectorAlgorithm::privateModify(
     */
    tbox::AsyncCommStage comm_stage;
    tbox::AsyncCommPeer<int> * all_comms(NULL);
-   tbox::AsyncCommStage::MemberVec completed;
 
    t_modify_misc->stop();
 
@@ -665,7 +664,6 @@ MappingConnectorAlgorithm::privateModify(
    setupCommunication(
       all_comms,
       comm_stage,
-      completed,
       anchor.getMPI(),
       incoming_ranks,
       outgoing_ranks,
@@ -720,7 +718,6 @@ MappingConnectorAlgorithm::privateModify(
       incoming_ranks,
       outgoing_ranks,
       all_comms,
-      completed,
       visible_new_nabrs,
       visible_anchor_nabrs,
       anchor_eto_old,
@@ -740,7 +737,6 @@ MappingConnectorAlgorithm::privateModify(
       incoming_ranks,
       all_comms,
       comm_stage,
-      completed,
       t_modify_receive_and_unpack);
 
    t_modify_misc->start();
@@ -1057,7 +1053,6 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
    std::set<int>& incoming_ranks,
    std::set<int>& outgoing_ranks,
    tbox::AsyncCommPeer<int> all_comms[],
-   tbox::AsyncCommStage::MemberVec& completed,
    BoxContainer& visible_new_nabrs,
    BoxContainer& visible_anchor_nabrs,
    InvertedNeighborhoodSet& anchor_eto_old,
@@ -1287,9 +1282,6 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
                outgoing_comm,
                dim);
 
-            if (outgoing_comm.isDone()) {
-               completed.insert(completed.end(), &outgoing_comm);
-            }
             TBOX_ASSERT(owners_sent_to.find(curr_owner) == owners_sent_to.end());
 #ifdef DEBUG_CHECK_ASSERTIONS
             owners_sent_to.insert(curr_owner);

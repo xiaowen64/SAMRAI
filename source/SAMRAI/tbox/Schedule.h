@@ -302,10 +302,6 @@ private:
     * completion.
     */
    AsyncCommStage d_com_stage;
-   /*!
-    * @brief Container of completed communication operations.
-    */
-   AsyncCommStage::MemberVec d_completed_coms;
 
    //@}
 

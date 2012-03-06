@@ -40,7 +40,6 @@ protected:
    setupCommunication(
       tbox::AsyncCommPeer<int> *& all_comms,
       tbox::AsyncCommStage& comm_stage,
-      tbox::AsyncCommStage::MemberVec& completed,
       const tbox::SAMRAI_MPI& mpi,
       const std::set<int>& incoming_ranks,
       const std::set<int>& outgoing_ranks,
@@ -67,7 +66,6 @@ protected:
       std::set<int>& incoming_ranks,
       tbox::AsyncCommPeer<int> all_comms[],
       tbox::AsyncCommStage& comm_stage,
-      tbox::AsyncCommStage::MemberVec& completed,
       const boost::shared_ptr<tbox::Timer>& receive_and_unpack_timer) const;
 
    //! @brief Unpack message sent by sendDiscoverytoOneProcess().

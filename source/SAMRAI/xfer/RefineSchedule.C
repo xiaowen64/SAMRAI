@@ -3271,7 +3271,6 @@ RefineSchedule::communicateFillBoxes(
    std::map<int, std::vector<int> > recv_mesgs;
 
    tbox::AsyncCommStage comm_stage;
-   tbox::AsyncCommStage::MemberVec completed;
    tbox::AsyncCommPeer<int>* comms =
       new tbox::AsyncCommPeer<int>[src_owners.size() + dst_owners.size()];
 
@@ -3291,7 +3290,7 @@ RefineSchedule::communicateFillBoxes(
       comms[mesg_number].setMPITag(0, 1);
       comms[mesg_number].beginRecv();
       if (comms[mesg_number].isDone()) {
-         completed.insert(completed.end(), &comms[mesg_number]);
+         comms[mesg_number].pushToCompletionQueue();
       }
       ++mesg_number;
    }
@@ -3358,7 +3357,7 @@ RefineSchedule::communicateFillBoxes(
       comms[mesg_number].beginSend(&send_mesgs[*si][0],
          static_cast<int>(send_mesgs[*si].size()));
       if (comms[mesg_number].isDone()) {
-         completed.insert(completed.end(), &comms[mesg_number]);
+         comms[mesg_number].pushToCompletionQueue();
       }
       ++mesg_number;
    }
@@ -3366,37 +3365,33 @@ RefineSchedule::communicateFillBoxes(
    /*
     * Complete communication and unpack messages.
     */
-   do {
-      for (size_t i = 0; i < completed.size(); ++i) {
-         tbox::AsyncCommPeer<int>* peer =
-            dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
-         TBOX_ASSERT(completed[i] != NULL);
-         TBOX_ASSERT(peer != NULL);
-         if (peer < comms + src_owners.size()) {
-            // This is a receive.  Unpack it.  (Otherwise, ignore send completion.)
-            const int* ptr = peer->getRecvData();
-            while (ptr != peer->getRecvData() + peer->getRecvSize()) {
-               const hier::BoxId distributed_id(hier::LocalId(ptr[0]),
-                                                peer->getPeerRank());
-               const unsigned int num_fill_mapped_boxes = ptr[2];
-               ptr += 3;
-               d_max_fill_boxes = tbox::MathUtilities<int>::Max(
-                     d_max_fill_boxes,
-                     num_fill_mapped_boxes);
-               hier::BoxContainer& fill_boxes = dst_to_fill_on_src_proc[distributed_id];
-               for (size_t ii = 0; ii < num_fill_mapped_boxes; ++ii) {
-                  hier::Box tmp_dst_mapped_box(dim);
-                  tmp_dst_mapped_box.getFromIntBuffer(ptr);
-                  ptr += hier::Box::commBufferSize(dim);
-                  fill_boxes.insert(fill_boxes.end(), tmp_dst_mapped_box);
-               }
+   while ( comm_stage.numberOfCompletedMembers() > 0 ||
+           comm_stage.advanceSome() ) {
+      tbox::AsyncCommPeer<int>* peer =
+         dynamic_cast<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
+      TBOX_ASSERT(peer != NULL);
+      if (peer < comms + src_owners.size()) {
+         // This is a receive.  Unpack it.  (Otherwise, ignore send completion.)
+         const int* ptr = peer->getRecvData();
+         while (ptr != peer->getRecvData() + peer->getRecvSize()) {
+            const hier::BoxId distributed_id(hier::LocalId(ptr[0]),
+                                             peer->getPeerRank());
+            const unsigned int num_fill_mapped_boxes = ptr[2];
+            ptr += 3;
+            d_max_fill_boxes = tbox::MathUtilities<int>::Max(
+               d_max_fill_boxes,
+               num_fill_mapped_boxes);
+            hier::BoxContainer& fill_boxes = dst_to_fill_on_src_proc[distributed_id];
+            for (size_t ii = 0; ii < num_fill_mapped_boxes; ++ii) {
+               hier::Box tmp_dst_mapped_box(dim);
+               tmp_dst_mapped_box.getFromIntBuffer(ptr);
+               ptr += hier::Box::commBufferSize(dim);
+               fill_boxes.insert(fill_boxes.end(), tmp_dst_mapped_box);
             }
-            TBOX_ASSERT(ptr == peer->getRecvData() + peer->getRecvSize());
          }
+         TBOX_ASSERT(ptr == peer->getRecvData() + peer->getRecvSize());
       }
-      completed.clear();
-      comm_stage.advanceSome(completed);
-   } while (!completed.empty());
+   }
 
    delete[] comms;
 }

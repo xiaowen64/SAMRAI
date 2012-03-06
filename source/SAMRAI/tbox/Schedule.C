@@ -286,7 +286,7 @@ Schedule::postReceives()
       d_object_timers->t_post_receives->start();
       recv_coms[icom].beginRecv();
       if (recv_coms[icom].isDone()) {
-         d_completed_coms.push_back(&recv_coms[icom]);
+         recv_coms[icom].pushToCompletionQueue();
       }
       d_object_timers->t_post_receives->stop();
 
@@ -368,7 +368,7 @@ Schedule::postSends()
          (char *)outgoing_stream.getBufferStart(),
          static_cast<int>(outgoing_stream.getCurrentSize()));
       if (send_coms[icom].isDone()) {
-         d_completed_coms.push_back(&send_coms[icom]);
+         send_coms[icom].pushToCompletionQueue();
       }
    }
 
@@ -402,42 +402,37 @@ void
 Schedule::processCompletedCommunications()
 {
    d_object_timers->t_process_incoming_messages->start();
-   do {
 
-      // Process completed communications in d_completed_coms.
-      for (size_t i = 0; i < d_completed_coms.size(); ++i) {
-         AsyncCommPeer<char>* completed_comm =
-            dynamic_cast<AsyncCommPeer<char> *>(d_completed_coms[i]);
-         TBOX_ASSERT(completed_comm != NULL);
-         TBOX_ASSERT(completed_comm->isDone());
-         if (static_cast<size_t>(completed_comm - d_coms) < d_recv_sets.size()) {
+   while ( d_com_stage.numberOfCompletedMembers() > 0 ||
+           d_com_stage.advanceSome() ) {
 
-            const int sender = completed_comm->getPeerRank();
+      AsyncCommPeer<char>* completed_comm =
+         dynamic_cast<AsyncCommPeer<char> *>(d_com_stage.popCompletionQueue());
 
-            // Copy message into stream.
-            MessageStream incoming_stream(completed_comm->getRecvSize(),
-                                          MessageStream::Read);
-            memcpy(
-               incoming_stream.getBufferStart(),
-               completed_comm->getRecvData(),
-               completed_comm->getRecvSize() * sizeof(char));
-            completed_comm->clearRecvData();
+      TBOX_ASSERT(completed_comm != NULL);
+      TBOX_ASSERT(completed_comm->isDone());
+      if (static_cast<size_t>(completed_comm - d_coms) < d_recv_sets.size()) {
 
-            d_object_timers->t_unpack_stream->start();
-            for (Iterator recv(d_recv_sets[sender]); recv; recv++) {
-               recv()->unpackStream(incoming_stream);
-            }
-            d_object_timers->t_unpack_stream->stop();
-         } else {
-            // No further action required for completed send.
+         const int sender = completed_comm->getPeerRank();
+
+         // Copy message into stream.
+         MessageStream incoming_stream(completed_comm->getRecvSize(),
+                                       MessageStream::Read);
+         memcpy(
+            incoming_stream.getBufferStart(),
+            completed_comm->getRecvData(),
+            completed_comm->getRecvSize() * sizeof(char));
+         completed_comm->clearRecvData();
+
+         d_object_timers->t_unpack_stream->start();
+         for (Iterator recv(d_recv_sets[sender]); recv; recv++) {
+            recv()->unpackStream(incoming_stream);
          }
+         d_object_timers->t_unpack_stream->stop();
+      } else {
+         // No further action required for completed send.
       }
-
-      // Check for more completed communications.
-      d_completed_coms.clear();
-      d_com_stage.advanceSome(d_completed_coms);
-
-   } while (!d_completed_coms.empty());
+   }
 
    d_object_timers->t_process_incoming_messages->stop();
 }
@@ -453,7 +448,6 @@ Schedule::allocateCommunicationObjects()
 {
    const size_t length = d_recv_sets.size() + d_send_sets.size();
    d_coms = new AsyncCommPeer<char>[length];
-   d_completed_coms.reserve(length);
 
    size_t counter = 0;
    for (TransactionSets::iterator ti = d_recv_sets.begin();

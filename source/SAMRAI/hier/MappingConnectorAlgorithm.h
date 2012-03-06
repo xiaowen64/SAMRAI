@@ -405,7 +405,6 @@ private:
       std::set<int>& incoming_ranks,
       std::set<int>& outoing_ranks,
       tbox::AsyncCommPeer<int> all_comms[],
-      tbox::AsyncCommStage::MemberVec& completed,
       BoxContainer& visible_new_nabrs,
       BoxContainer& visible_anchor_nabrs,
       InvertedNeighborhoodSet& anchor_eto_old,

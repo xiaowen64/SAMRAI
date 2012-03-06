@@ -848,7 +848,6 @@ OverlapConnectorAlgorithm::privateBridge(
 
    tbox::AsyncCommStage comm_stage;
    tbox::AsyncCommPeer<int>* all_comms(NULL);
-   tbox::AsyncCommStage::MemberVec completed;
 
    t_bridge_share->start();
    t_bridge_setup_comm->start();
@@ -856,7 +855,6 @@ OverlapConnectorAlgorithm::privateBridge(
    setupCommunication(
       all_comms,
       comm_stage,
-      completed,
       mpi,
       incoming_ranks,
       outgoing_ranks,
@@ -891,7 +889,6 @@ OverlapConnectorAlgorithm::privateBridge(
       incoming_ranks,
       outgoing_ranks,
       all_comms,
-      completed,
       visible_west_nabrs,
       visible_east_nabrs);
 
@@ -903,7 +900,6 @@ OverlapConnectorAlgorithm::privateBridge(
       incoming_ranks,
       all_comms,
       comm_stage,
-      completed,
       t_bridge_receive_and_unpack);
 
    t_bridge_share->stop();
@@ -1141,7 +1137,6 @@ OverlapConnectorAlgorithm::privateBridge(
 
    tbox::AsyncCommStage comm_stage;
    tbox::AsyncCommPeer<int>* all_comms(NULL);
-   tbox::AsyncCommStage::MemberVec completed;
 
    t_bridge_share->start();
    t_bridge_setup_comm->start();
@@ -1149,7 +1144,6 @@ OverlapConnectorAlgorithm::privateBridge(
    setupCommunication(
       all_comms,
       comm_stage,
-      completed,
       mpi,
       incoming_ranks,
       outgoing_ranks,
@@ -1184,7 +1178,6 @@ OverlapConnectorAlgorithm::privateBridge(
       incoming_ranks,
       outgoing_ranks,
       all_comms,
-      completed,
       visible_west_nabrs,
       visible_east_nabrs);
 
@@ -1196,7 +1189,6 @@ OverlapConnectorAlgorithm::privateBridge(
       incoming_ranks,
       all_comms,
       comm_stage,
-      completed,
       t_bridge_receive_and_unpack);
 
    t_bridge_share->stop();
@@ -1330,7 +1322,6 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
    std::set<int>& incoming_ranks,
    std::set<int>& outgoing_ranks,
    tbox::AsyncCommPeer<int> all_comms[],
-   tbox::AsyncCommStage::MemberVec& completed,
    NeighborSet& visible_west_nabrs,
    NeighborSet& visible_east_nabrs) const
 {
@@ -1576,9 +1567,6 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
                outgoing_comm,
                dim);
 
-            if (outgoing_comm.isDone()) {
-               completed.push_back(&outgoing_comm);
-            }
             TBOX_ASSERT(owners_sent_to.find(curr_owner) == owners_sent_to.end());
 #ifdef DEBUG_CHECK_ASSERTIONS
             owners_sent_to.insert(curr_owner);

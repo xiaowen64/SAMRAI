@@ -94,8 +94,18 @@ AsyncCommStage::Member::getStatusPointer() const
  ***********************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void
-AsyncCommStage::setCommunicationWaitTimer(
+void AsyncCommStage::clearCompletionQueue()
+{
+   d_completed_members.clear();
+   return;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void AsyncCommStage::setCommunicationWaitTimer(
    const boost::shared_ptr<Timer>& communication_timer)
 {
    d_communication_timer = communication_timer;

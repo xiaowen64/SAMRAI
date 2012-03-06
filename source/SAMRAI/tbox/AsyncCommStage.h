@@ -18,6 +18,7 @@
 #include "SAMRAI/tbox/Timer.h"
 
 #include <vector>
+#include <list>
 
 namespace SAMRAI {
 namespace tbox {
@@ -168,10 +169,10 @@ public:
        * messages perform follow-up operations and waiting for
        * follow-ups to complete.
        *
-       * After this method, isDone() should return true.
+       * After this method completes, isDone() should return true.
        *
-       * This method should assume that all communications can finish.
-       * Otherwise communications may hang.
+       * This method should assume that all needed communications can
+       * finish within this method.  Otherwise the method may hang.
        */
       virtual void
       completeCurrentOperation() = 0;
@@ -197,11 +198,25 @@ public:
       setHandler(
          Handler* handler);
 
-      /*
+      /*!
        * @brief Regurgitate the handler from setHandler().
        */
       Handler *
       getHandler() const;
+
+      /*!
+       * @brief Push this onto the stage's list of completed Members.
+       *
+       * This causes the member to be returned by a call to
+       * AsyncCommStage::popCompletionQueue(), eventually.
+       */
+      void pushToCompletionQueue();
+
+      /*!
+       * @brief Yank this member from the stage's list of completed
+       * Members.
+       */
+      void yankFromCompletionQueue();
 
 protected:
       /*!
@@ -228,7 +243,8 @@ protected:
       detachStage();
 
       /*!
-       * Return the MPI requests provided by the stage for the Member.
+       * @brief Return the MPI requests provided by the stage for the
+       * Member.
        *
        * To work on the stage, you must use these requests in your
        * non-blocking MPI calls.  The requests are a part of an array
@@ -326,62 +342,67 @@ private:
     * @brief Advance to completion one Member (any Member) that is
     * currently waiting for communication to complete.
     *
+    * The completed Member is accessible through popCompletionQueue().
+    *
     * This method uses MPI_Waitany, which may be prone to starvation.
     * When a process is potentially receiving multiple messages from
     * another processor, it is better to use advanceSome(), which uses
     * MPI_Waitsome, which avoids starvation.
     *
-    * @return completed Member, or NULL if no Member in the stage had
-    * incomplete communication, or there are no Members on the stage.
-    */
-   Member *
-   advanceAny();
-
-   /*!
-    * @brief Alternate interface for advanceAny to appear similar to other
-    * advancing interfaces.
-    *
-    * @param completed Array space to put addresses of Member's
-    *                  associated with the completed communications.
-    *                  The array has length 0 or 1 on return.
-    *
-    * @return number of Members completed or 0 if none have pending
-    * communication.  The strategy pointers corresponding to the
-    * completed Members are set in the @c completed array.
+    * @return Number of completed Members in the completion queue.
     */
    size_t
-   advanceAny(
-      MemberVec& completed);
+   advanceAny();
 
    /*!
     * @brief Advance to completion one or more Members (any Members)
     * that are currently waiting for communication to complete.
     *
-    * @param completed Space to put addresses of Member's
-    *                  associated with the completed communications.
+    * The completed Members are accessible through popCompletionQueue().
     *
-    * @return number of Members completed or 0 if none have pending
-    * communication.
+    * @return Number of completed Members in the completion queue.
     */
    size_t
-   advanceSome(
-      MemberVec& completed);
+   advanceSome();
 
    /*!
     * @brief Advance all pending communications to operations
     *
-    * This method just calls advanceSome() repeatedly until all
-    * operations complete.
+    * The completed Members are accessible through popCompletionQueue().
     *
-    * @param completed Array space to put addresses of Member's
-    *                  associated with the completed communications.
-    *
-    * @return number of Members completed or 0 if none have pending
-    * communication.
+    * @return Number of completed Members in the completion queue.
     */
    size_t
-   advanceAll(
-      MemberVec& completed);
+   advanceAll();
+
+   /*
+    * @brief Number of completed stage Members in the completion
+    * queue.
+    *
+    * Members that completed their communication operation through
+    * advanceAny(), advanceSome() or advanceAll() can be accessed
+    * through popCompletionQueue().  This method gives the size of
+    * that queue.
+    */
+   size_t numberOfCompletedMembers() const;
+   /*
+    * @brief Return a Member that has fully completed its
+    * communication operation.
+    *
+    * This method provides the accessor for stage Members what have
+    * completed their communication operations.  The queue is
+    * populated by advanceAny(), advanceSome() and advanceAll().  You
+    * can also push Members onto the queue using the Member's
+    * pushToCompletionQueue().
+    */
+   Member *popCompletionQueue();
+
+   /*!
+    * @brief Clear the internal completion queue.
+    *
+    * @see popCompletionQueue(), Member::pushToCompletionQueue().
+    */
+   void clearCompletionQueue();
 
    /*!
     * @brief Set optional timer for timing communication wait.
@@ -503,6 +524,18 @@ private:
       const size_t index_on_stage) const;
 
    /*!
+    * @brief Push the given Member onto the stage's list of completed
+    * Members.
+    */
+   void privatePushToCompletionQueue( Member &member );
+
+   /*!
+    * @brief Yank the given Member from the stage's list of completed
+    * Members.
+    */
+   void privateYankFromCompletionQueue( Member &member );
+
+   /*!
     * @brief Members managed on this stage.
     *
     * Includes destaged Members that are still occupying space on the
@@ -551,6 +584,21 @@ private:
     * requests that the stage has allocated.
     */
    std::vector<size_t> d_member_to_req;
+
+   /*!
+    * @brief Members completed by by the stage.
+    *
+    * Member whose operations are completed through advanceAny(),
+    * advanceSome() or advanceAll() are tracked here for access
+    * through popCompletionQueue().  This list does NOT include
+    * Members completed on their own, because users are expected
+    * to track those by themselves.
+    */
+   std::list<size_t> d_completed_members;
+
+   /*!
+    * @brief Members who has completed their operations.
+    */
 
    /*!
     * @brief Timer for communicaiton wait, set by

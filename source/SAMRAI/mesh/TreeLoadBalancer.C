@@ -1011,9 +1011,6 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
     * Send additional work (if any).
     */
 
-   // For keeping track of completed communications.
-   tbox::AsyncCommStage::MemberVec completed;
-
    /*
     * Step 1:
     *
@@ -1025,7 +1022,7 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
    for (int c = 0; c < num_children; ++c) {
       child_recvs[c].beginRecv();
       if (child_recvs[c].isDone()) {
-         completed.insert(completed.end(), &child_recvs[c]);
+         child_recvs[c].pushToCompletionQueue();
       }
    }
    t_get_load_from_children->stop();
@@ -1202,68 +1199,60 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
     * Add imported BoxInTransit to unassigned bin.
     */
    t_get_load_from_children->start();
-   do {
+   while ( child_recv_stage.numberOfCompletedMembers() > 0 ||
+           child_recv_stage.advanceSome() ) {
 
-      for (unsigned int i = 0; i < completed.size(); ++i) {
+      tbox::AsyncCommPeer<int>* child_recv =
+         dynamic_cast<tbox::AsyncCommPeer<int> *>(child_recv_stage.popCompletionQueue());
 
-         tbox::AsyncCommPeer<int>* child_recv =
-            dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
+      TBOX_ASSERT(child_recv != NULL);
+      TBOX_ASSERT(child_recv >= child_recvs);
+      TBOX_ASSERT(child_recv < child_recvs + num_children);
 
-         TBOX_ASSERT(child_recv != NULL);
-         TBOX_ASSERT(child_recv >= child_recvs);
-         TBOX_ASSERT(child_recv < child_recvs + num_children);
+      const int cindex = static_cast<int>(child_recv - child_recvs);
 
-         const int cindex = static_cast<int>(child_recv - child_recvs);
+      TBOX_ASSERT(cindex >= 0 && cindex < num_children);
 
-         TBOX_ASSERT(cindex >= 0 && cindex < num_children);
+      /*
+       * Extract data from the child cindex, storing it in
+       * child_load_data[cindex].  If child sent up any excess Box,
+       * put them in unassigned.
+       */
+      int old_size = static_cast<int>(unassigned.size());
+      unpackSubtreeLoadData(
+         child_load_data[cindex],
+         unassigned,
+         next_available_index[cindex],
+         child_recv->getRecvData(),
+         child_recv->getRecvSize() );
 
-         /*
-          * Extract data from the child cindex, storing it in
-          * child_load_data[cindex].  If child sent up any excess Box,
-          * put them in unassigned.
-          */
-         int old_size = static_cast<int>(unassigned.size());
-         unpackSubtreeLoadData(
-            child_load_data[cindex],
-            unassigned,
-            next_available_index[cindex],
-            child_recv->getRecvData(),
-            child_recv->getRecvSize() );
+      child_load_data[cindex].d_ideal_work =
+         int(group_avg_load * child_load_data[cindex].d_num_procs + 0.5);
 
-         child_load_data[cindex].d_ideal_work =
-            int(group_avg_load * child_load_data[cindex].d_num_procs + 0.5);
-
+      if (d_print_steps) {
+         TransitSet::const_iterator
+            ni = unassigned.begin();
+         for (int ii = 0; ii < old_size; ++ii) { ++ni; }
          if (d_print_steps) {
-            TransitSet::const_iterator
-               ni = unassigned.begin();
-            for (int ii = 0; ii < old_size; ++ii) { ++ni; }
-            if (d_print_steps) {
-               tbox::plog << "    Got " << unassigned.size() - old_size
-                          << " boxes (" << child_load_data[cindex].d_load_imported
-                          << " units) from child "
-                          << child_recv->getPeerRank() << ":";
-               for ( ; ni != unassigned.end(); ++ni) {
-                  const BoxInTransit& box_in_transit = *ni;
-                  tbox::plog << "  " << box_in_transit;
-               }
-               tbox::plog << std::endl;
+            tbox::plog << "    Got " << unassigned.size() - old_size
+                       << " boxes (" << child_load_data[cindex].d_load_imported
+                       << " units) from child "
+                       << child_recv->getPeerRank() << ":";
+            for ( ; ni != unassigned.end(); ++ni) {
+               const BoxInTransit& box_in_transit = *ni;
+               tbox::plog << "  " << box_in_transit;
             }
+            tbox::plog << std::endl;
          }
-
-         // Sum children load into my_load_data.
-         my_load_data.d_num_procs += child_load_data[cindex].d_num_procs;
-         my_load_data.d_total_work +=
-            child_load_data[cindex].d_total_work
-            + child_load_data[cindex].d_load_imported;
-
       }
 
-      completed.clear();
-      t_children_load_comm->start();
-      child_recv_stage.advanceSome(completed);
-      t_children_load_comm->stop();
+      // Sum children load into my_load_data.
+      my_load_data.d_num_procs += child_load_data[cindex].d_num_procs;
+      my_load_data.d_total_work +=
+         child_load_data[cindex].d_total_work
+         + child_load_data[cindex].d_load_imported;
 
-   } while (!completed.empty());
+   }
 
 
 
@@ -1566,10 +1555,11 @@ void TreeLoadBalancer::loadBalanceWithinRankGroup(
     * long to advance them all to completion.
     */
    t_finish_sends->start();
-   child_send_stage.advanceAll(completed);
-   parent_send_stage.advanceAll(completed);
+   child_send_stage.advanceAll();
+   parent_send_stage.advanceAll();
    t_finish_sends->stop();
-   completed.clear();
+   child_send_stage.clearCompletionQueue();
+   parent_send_stage.clearCompletionQueue();
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int i = 0; i < num_children; ++i) {
       TBOX_ASSERT(child_sends[i].isDone());

@@ -162,7 +162,6 @@ void TypeIndependentTester<TYPE>::runTest(
            << "] recv fr " << std::setw(3) << peer_rank << std::endl;
    }
 
-   AsyncCommStage::MemberVec completed_members(1);
 
    /*
     * Test loop.  Each process will send and receive from every
@@ -179,19 +178,17 @@ void TypeIndependentTester<TYPE>::runTest(
        * or advanceAny, as controlled by input file.
        */
       if (use_advance_some) {
-         stage.advanceSome(completed_members);
+         stage.advanceSome();
       } else {
-         completed_members.resize(1);
-         completed_members[0] = stage.advanceAny();
-         if (completed_members[0] == NULL) completed_members.clear();
+         stage.advanceAny();
       }
 
       /*
        * Check completed members for correctness.
        */
-      for (size_t i = 0; i < completed_members.size(); ++i) {
+      while ( stage.numberOfCompletedMembers() > 0 ) {
 
-         AsyncCommStage::Member* completed_member = completed_members[i];
+         AsyncCommStage::Member* completed_member = stage.popCompletionQueue();
 
          /*
           * If there has been a completed prop, process it.

@@ -980,9 +980,6 @@ void TreeLoadBalancerOld::loadBalanceWithinRankGroup(
     * Send additional work (if any).
     */
 
-   // For keeping track of completed communications.
-   tbox::AsyncCommStage::MemberVec completed;
-
    /*
     * Step 1:
     *
@@ -994,7 +991,7 @@ void TreeLoadBalancerOld::loadBalanceWithinRankGroup(
    for (int c = 0; c < num_children; ++c) {
       child_recvs[c].beginRecv();
       if (child_recvs[c].isDone()) {
-         completed.insert(completed.end(), &child_recvs[c]);
+         child_recvs[c].pushToCompletionQueue();
       }
    }
    t_get_load_from_children->stop();
@@ -1162,68 +1159,60 @@ void TreeLoadBalancerOld::loadBalanceWithinRankGroup(
     * Add imported BoxInTransit to unassigned bin.
     */
    t_get_load_from_children->start();
-   do {
+   while ( child_recv_stage.numberOfCompletedMembers() > 0 ||
+           child_recv_stage.advanceSome() ) {
 
-      for (unsigned int i = 0; i < completed.size(); ++i) {
+      tbox::AsyncCommPeer<int>* child_recv =
+         dynamic_cast<tbox::AsyncCommPeer<int> *>(child_recv_stage.popCompletionQueue());
 
-         tbox::AsyncCommPeer<int>* child_recv =
-            dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
+      TBOX_ASSERT(child_recv != NULL);
+      TBOX_ASSERT(child_recv >= child_recvs);
+      TBOX_ASSERT(child_recv < child_recvs + num_children);
 
-         TBOX_ASSERT(child_recv != NULL);
-         TBOX_ASSERT(child_recv >= child_recvs);
-         TBOX_ASSERT(child_recv < child_recvs + num_children);
+      const int cindex = static_cast<int>(child_recv - child_recvs);
 
-         const int cindex = static_cast<int>(child_recv - child_recvs);
+      TBOX_ASSERT(cindex >= 0 && cindex < num_children);
 
-         TBOX_ASSERT(cindex >= 0 && cindex < num_children);
+      /*
+       * Extract data from the child cindex, storing it in
+       * child_load_data[cindex].  If child sent up any excess Box,
+       * put them in unassigned.
+       */
+      int old_size = static_cast<int>(unassigned.size());
+      unpackSubtreeLoadData(
+         child_load_data[cindex],
+         unassigned,
+         next_available_index[cindex],
+         child_recv->getRecvData(),
+         child_recv->getRecvSize() );
 
-         /*
-          * Extract data from the child cindex, storing it in
-          * child_load_data[cindex].  If child sent up any excess Box,
-          * put them in unassigned.
-          */
-         int old_size = static_cast<int>(unassigned.size());
-         unpackSubtreeLoadData(
-            child_load_data[cindex],
-            unassigned,
-            next_available_index[cindex],
-            child_recv->getRecvData(),
-            child_recv->getRecvSize() );
+      child_load_data[cindex].d_ideal_work =
+         int(group_avg_load * child_load_data[cindex].d_num_procs + 0.5);
 
-         child_load_data[cindex].d_ideal_work =
-            int(group_avg_load * child_load_data[cindex].d_num_procs + 0.5);
-
+      if (d_print_steps) {
+         TransitSet::const_iterator
+            ni = unassigned.begin();
+         for (int ii = 0; ii < old_size; ++ii) { ++ni; }
          if (d_print_steps) {
-            TransitSet::const_iterator
-               ni = unassigned.begin();
-            for (int ii = 0; ii < old_size; ++ii) { ++ni; }
-            if (d_print_steps) {
-               tbox::plog << "    Got " << unassigned.size() - old_size
-                          << " boxes (" << child_load_data[cindex].d_load_imported
-                          << " units) from child "
-                          << child_recv->getPeerRank() << ":";
-               for ( ; ni != unassigned.end(); ++ni) {
-                  const BoxInTransit& box_in_transit = *ni;
-                  tbox::plog << "  " << box_in_transit;
-               }
-               tbox::plog << std::endl;
+            tbox::plog << "    Got " << unassigned.size() - old_size
+                       << " boxes (" << child_load_data[cindex].d_load_imported
+                       << " units) from child "
+                       << child_recv->getPeerRank() << ":";
+            for ( ; ni != unassigned.end(); ++ni) {
+               const BoxInTransit& box_in_transit = *ni;
+               tbox::plog << "  " << box_in_transit;
             }
+            tbox::plog << std::endl;
          }
-
-         // Sum children load into my_load_data.
-         my_load_data.d_num_procs += child_load_data[cindex].d_num_procs;
-         my_load_data.d_total_work +=
-            child_load_data[cindex].d_total_work
-            + child_load_data[cindex].d_load_imported;
-
       }
 
-      completed.clear();
-      t_children_load_comm->start();
-      child_recv_stage.advanceSome(completed);
-      t_children_load_comm->stop();
+      // Sum children load into my_load_data.
+      my_load_data.d_num_procs += child_load_data[cindex].d_num_procs;
+      my_load_data.d_total_work +=
+         child_load_data[cindex].d_total_work
+         + child_load_data[cindex].d_load_imported;
 
-   } while (!completed.empty());
+   }
 
 
 
@@ -1513,10 +1502,9 @@ void TreeLoadBalancerOld::loadBalanceWithinRankGroup(
     * long to advance them all to completion.
     */
    t_finish_sends->start();
-   child_send_stage.advanceAll(completed);
-   parent_send_stage.advanceAll(completed);
+   child_send_stage.advanceAll();
+   parent_send_stage.advanceAll();
    t_finish_sends->stop();
-   completed.clear();
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int i = 0; i < num_children; ++i) {
       TBOX_ASSERT(child_sends[i].isDone());
@@ -1874,7 +1862,6 @@ void TreeLoadBalancerOld::constructSemilocalUnbalancedToBalanced(
    tbox::AsyncCommStage comm_stage;
    tbox::AsyncCommPeer<int> *importer_comms = import_srcs.empty() ? NULL : new tbox::AsyncCommPeer<int>[import_srcs.size()];
    tbox::AsyncCommPeer<int> *exporter_comms = export_dsts.empty() ? NULL : new tbox::AsyncCommPeer<int>[export_dsts.size()];
-   tbox::AsyncCommStage::MemberVec completed;
 
    for ( size_t i=0; i<export_dsts.size(); ++i ) {
       exporter_comms[i].initialize(&comm_stage);
@@ -1885,7 +1872,7 @@ void TreeLoadBalancerOld::constructSemilocalUnbalancedToBalanced(
       exporter_comms[i].limitFirstDataLength(TreeLoadBalancerOld_FIRSTDATALEN);
       exporter_comms[i].beginRecv();
       if ( exporter_comms[i].isDone() ) {
-         completed.push_back(&exporter_comms[i]);
+         exporter_comms[i].pushToCompletionQueue();
       }
    }
 
@@ -1918,38 +1905,30 @@ void TreeLoadBalancerOld::constructSemilocalUnbalancedToBalanced(
    /*
     * Receive and unpack incoming messages.
     */
-   do {
-      for (unsigned int i = 0; i < completed.size(); ++i) {
+   while ( comm_stage.numberOfCompletedMembers() > 0 ||
+           comm_stage.advanceSome() ) {
 
-         tbox::AsyncCommPeer<int>* peer_comm =
-            dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
-         TBOX_ASSERT(peer_comm != NULL);
+      tbox::AsyncCommPeer<int>* peer_comm =
+         dynamic_cast<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
+      TBOX_ASSERT(peer_comm != NULL);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         size_t j;
-         for ( j=0; j<export_dsts.size(); ++j ) {
-            if ( export_dsts[j] == peer_comm->getPeerRank() ) break;
-         }
-         TBOX_ASSERT( j < export_dsts.size() );
+      size_t j;
+      for ( j=0; j<export_dsts.size(); ++j ) {
+         if ( export_dsts[j] == peer_comm->getPeerRank() ) break;
+      }
+      TBOX_ASSERT( j < export_dsts.size() );
 #endif
 
-         const int* received_data = peer_comm->getRecvData();
-         int received_data_length = peer_comm->getRecvSize();
-         unpackAndRouteNeighborhoodSets(
-            outgoing_messages,
-            unbalanced_to_balanced,
-            received_data,
-            received_data_length );
-      }
+      const int* received_data = peer_comm->getRecvData();
+      int received_data_length = peer_comm->getRecvSize();
+      unpackAndRouteNeighborhoodSets(
+         outgoing_messages,
+         unbalanced_to_balanced,
+         received_data,
+         received_data_length );
+   }
 
-      completed.clear();
-      t_construct_semilocal_comm_wait->start();
-      t_children_edge_comm->start();
-      comm_stage.advanceSome(completed);
-      t_children_edge_comm->stop();
-      t_construct_semilocal_comm_wait->stop();
-
-   } while (!completed.empty());
 
 
    /*
@@ -1967,7 +1946,7 @@ void TreeLoadBalancerOld::constructSemilocalUnbalancedToBalanced(
 
    t_construct_semilocal_comm_wait->start();
    t_finish_sends->start();
-   comm_stage.advanceAll(completed);
+   comm_stage.advanceAll();
    t_finish_sends->stop();
    t_construct_semilocal_comm_wait->stop();
 
