@@ -284,6 +284,21 @@ public:
    void
    completeCurrentOperation();
 
+   /*!
+    * @brief Set timers.
+    *
+    * Use the given timers for certain operations.  If a given
+    * timer is null, do not change the coresponding current timer.
+    *
+    * These timers are used when in this class and are not the same
+    * as the timers given to AsyncCommStage (unless the user sets
+    * it up that way explicitly).
+    */
+   void setTimers(
+      const boost::shared_ptr<Timer> &send_timer,
+      const boost::shared_ptr<Timer> &recv_timer,
+      const boost::shared_ptr<Timer> &waitall_timer );
+
    //@}
 
    /*!

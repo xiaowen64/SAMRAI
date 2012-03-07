@@ -1020,6 +1020,25 @@ AsyncCommPeer<TYPE>::clearRecvData()
    // d_internal_buf.clear();
 }
 
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+template<class TYPE>
+void
+AsyncCommPeer<TYPE>::setTimers(
+   const boost::shared_ptr<Timer> &send_timer,
+   const boost::shared_ptr<Timer> &recv_timer,
+   const boost::shared_ptr<Timer> &waitall_timer )
+{
+   if ( send_timer ) t_send_timer = send_timer;
+   if ( recv_timer ) t_recv_timer = recv_timer;
+   if ( waitall_timer ) t_waitall_timer = waitall_timer;
+   return;
+}
+
 /*
  ***************************************************************************
  * Initialize static timers.
