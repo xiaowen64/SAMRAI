@@ -34,7 +34,8 @@ SkeletonCoarsen::~SkeletonCoarsen()
 {
 }
 
-bool SkeletonCoarsen::findCoarsenOperator(
+bool
+SkeletonCoarsen::findCoarsenOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -46,16 +47,20 @@ bool SkeletonCoarsen::findCoarsenOperator(
    }
 }
 
-int SkeletonCoarsen::getOperatorPriority() const
+int
+SkeletonCoarsen::getOperatorPriority() const
 {
    return 0;
 }
 
-hier::IntVector SkeletonCoarsen::getStencilWidth() const {
+hier::IntVector
+SkeletonCoarsen::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void SkeletonCoarsen::coarsen(
+void
+SkeletonCoarsen::coarsen(
    hier::Patch& coarse,
    const hier::Patch& fine,
    const int dst_component,

@@ -376,13 +376,8 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/PETSc_SAMRAIVectorReal.I"
-#endif
-#endif
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/solv/PETSc_SAMRAIVectorReal.C"
-#endif
 
+#endif
 #endif

@@ -135,8 +135,7 @@ public:
    /*!
     * @brief Destructor.
     */
-   ~CellPoissonFACSolver(
-      void);
+   ~CellPoissonFACSolver();
 
    /*!
     * @brief Enable logging.

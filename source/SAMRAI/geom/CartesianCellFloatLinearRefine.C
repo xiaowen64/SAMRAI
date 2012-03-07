@@ -80,7 +80,8 @@ CartesianCellFloatLinearRefine::~CartesianCellFloatLinearRefine()
 {
 }
 
-bool CartesianCellFloatLinearRefine::findRefineOperator(
+bool
+CartesianCellFloatLinearRefine::findRefineOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -96,17 +97,20 @@ bool CartesianCellFloatLinearRefine::findRefineOperator(
    }
 }
 
-int CartesianCellFloatLinearRefine::getOperatorPriority() const
+int
+CartesianCellFloatLinearRefine::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-CartesianCellFloatLinearRefine::getStencilWidth() const {
+CartesianCellFloatLinearRefine::getStencilWidth() const
+{
    return hier::IntVector::getOne(getDim());
 }
 
-void CartesianCellFloatLinearRefine::refine(
+void
+CartesianCellFloatLinearRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,
@@ -130,7 +134,8 @@ void CartesianCellFloatLinearRefine::refine(
    }
 }
 
-void CartesianCellFloatLinearRefine::refine(
+void
+CartesianCellFloatLinearRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,

@@ -23,19 +23,22 @@ namespace solv {
  */
 
 SAMRAI_INLINE_KEYWORD
-int FACPreconditioner::getNumberOfIterations() const
+int
+FACPreconditioner::getNumberOfIterations() const
 {
    return d_number_iterations;
 }
 
 SAMRAI_INLINE_KEYWORD
-double FACPreconditioner::getResidualNorm() const
+double
+FACPreconditioner::getResidualNorm() const
 {
    return d_residual_norm;
 }
 
 SAMRAI_INLINE_KEYWORD
-void FACPreconditioner::getConvergenceFactors(
+void
+FACPreconditioner::getConvergenceFactors(
    double& avg_factor,
    double& final_factor) const
 {
@@ -50,7 +53,8 @@ void FACPreconditioner::getConvergenceFactors(
 }
 
 SAMRAI_INLINE_KEYWORD
-double FACPreconditioner::getNetConvergenceFactor() const
+double
+FACPreconditioner::getNetConvergenceFactor() const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_number_iterations <= 0) {
@@ -62,7 +66,8 @@ double FACPreconditioner::getNetConvergenceFactor() const
 }
 
 SAMRAI_INLINE_KEYWORD
-double FACPreconditioner::getAvgConvergenceFactor() const
+double
+FACPreconditioner::getAvgConvergenceFactor() const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_number_iterations <= 0) {
@@ -74,7 +79,8 @@ double FACPreconditioner::getAvgConvergenceFactor() const
 }
 
 SAMRAI_INLINE_KEYWORD
-double FACPreconditioner::getFinalConvergenceFactor() const
+double
+FACPreconditioner::getFinalConvergenceFactor() const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_number_iterations <= 0) {
@@ -86,25 +92,29 @@ double FACPreconditioner::getFinalConvergenceFactor() const
 }
 
 SAMRAI_INLINE_KEYWORD
-void FACPreconditioner::setPresmoothingSweeps(
+void
+FACPreconditioner::setPresmoothingSweeps(
    int num_pre_sweeps) {
    d_presmoothing_sweeps = num_pre_sweeps;
 }
 
 SAMRAI_INLINE_KEYWORD
-void FACPreconditioner::setPostsmoothingSweeps(
+void
+FACPreconditioner::setPostsmoothingSweeps(
    int num_post_sweeps) {
    d_postsmoothing_sweeps = num_post_sweeps;
 }
 
 SAMRAI_INLINE_KEYWORD
-void FACPreconditioner::setMaxCycles(
+void
+FACPreconditioner::setMaxCycles(
    int max_cycles) {
    d_max_iterations = max_cycles;
 }
 
 SAMRAI_INLINE_KEYWORD
-void FACPreconditioner::setResidualTolerance(
+void
+FACPreconditioner::setResidualTolerance(
    double residual_tol,
    double relative_residual_tol) {
    d_residual_tolerance = residual_tol;
@@ -112,7 +122,8 @@ void FACPreconditioner::setResidualTolerance(
 }
 
 SAMRAI_INLINE_KEYWORD
-void FACPreconditioner::setAlgorithmChoice(
+void
+FACPreconditioner::setAlgorithmChoice(
    const std::string& choice)
 {
    /* This ptr_function helps resolve to the correct tolower method */
@@ -144,13 +155,17 @@ void FACPreconditioner::setAlgorithmChoice(
  *************************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void FACPreconditioner::enableLogging(
-   bool enabled) {
+void
+FACPreconditioner::enableLogging(
+   bool enabled)
+{
    d_do_log = enabled;
 }
 
 SAMRAI_INLINE_KEYWORD
-const std::string& FACPreconditioner::getObjectName() const {
+const std::string&
+FACPreconditioner::getObjectName() const
+{
    return d_object_name;
 }
 

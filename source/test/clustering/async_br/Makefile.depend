@@ -564,6 +564,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataMiscellaneousOpsReal.h	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataNormOpsReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataOpsReal.h		\
+	$(INCLUDE_SAM)/SAMRAI/mesh/BalanceUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BergerRigoutsos.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BoxGeneratorStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/GriddingAlgorithm.I			\
@@ -572,6 +573,8 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/mesh/GriddingAlgorithmStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/LoadBalanceStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/MultiblockGriddingTagger.h		\
+	$(INCLUDE_SAM)/SAMRAI/mesh/SpatialKey.I				\
+	$(INCLUDE_SAM)/SAMRAI/mesh/SpatialKey.h				\
 	$(INCLUDE_SAM)/SAMRAI/mesh/StandardTagAndInitStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/StandardTagAndInitialize.I		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/StandardTagAndInitialize.h		\
@@ -663,7 +666,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/solv/FACPreconditioner.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/FACPreconditioner.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/RobinBcCoefStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\

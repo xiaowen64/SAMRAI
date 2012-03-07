@@ -58,8 +58,7 @@ public:
    /*!
     * @brief Destructor.
     */
-   virtual ~SimpleCellRobinBcCoefs(
-      void);
+   virtual ~SimpleCellRobinBcCoefs();
 
    //@{ @name Inherited from RobinBcCoefStrategy
 

@@ -15,13 +15,12 @@
 
 #ifdef HAVE_SUNDIALS
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/solv/SundialsAbstractVector.I"
+#endif
+
 namespace SAMRAI {
 namespace solv {
-
-#define SABSVEC_CAST(v) \
-   (static_cast<SundialsAbstractVector *>(v \
-                                          -> \
-                                          content))
 
 SundialsAbstractVector::SundialsAbstractVector()
 {
@@ -46,11 +45,8 @@ SundialsAbstractVector::~SundialsAbstractVector()
    }
 }
 
-N_Vector SundialsAbstractVector::getNVector() {
-   return d_n_vector;
-}
-
-N_Vector_Ops SundialsAbstractVector::createVectorOps()
+N_Vector_Ops
+SundialsAbstractVector::createVectorOps()
 {
    /* Create vector operation structure */
 
@@ -86,167 +82,6 @@ N_Vector_Ops SundialsAbstractVector::createVectorOps()
 //   ops->nvminquotient     = N_VMinQuotient_SAMRAI;
 
    return ops;
-}
-
-/* Duplicate vector structure and allocate data storage for new vector.
- * Note: This function should only be invoked from within the Sundials
- * package for producing temporary vectors. */
-N_Vector SundialsAbstractVector::N_VClone_SAMRAI(
-   N_Vector w)
-{
-   /* Create content, which in this case is the SAMRAI wrapper vector object */
-   SundialsAbstractVector* v = SABSVEC_CAST(w)->makeNewVector();
-
-   return v->getNVector();
-}
-
-/* Free vector structure and associated data. */
-void SundialsAbstractVector::N_VDestroy_SAMRAI(
-   N_Vector v)
-{
-   if (v) {
-      SABSVEC_CAST(v)->freeVector();
-   }
-}
-
-/* Set z = a * x + b * y */
-void SundialsAbstractVector::N_VLinearSum_SAMRAI(
-   realtype a,
-   N_Vector x,
-   realtype b,
-   N_Vector y,
-   N_Vector z)
-{
-   SABSVEC_CAST(z)->setLinearSum(a, SABSVEC_CAST(x), b, SABSVEC_CAST(y));
-}
-
-/* Set vector entries to scalar: v = c  */
-void SundialsAbstractVector::N_VConst_SAMRAI(
-   realtype c,
-   N_Vector z)
-{
-   SABSVEC_CAST(z)->setToScalar(c);
-}
-
-/* Set z_i = x_i * y_i */
-void SundialsAbstractVector::N_VProd_SAMRAI(
-   N_Vector x,
-   N_Vector y,
-   N_Vector z)
-{
-   SABSVEC_CAST(z)->pointwiseMultiply(SABSVEC_CAST(x), SABSVEC_CAST(y));
-}
-
-/* Set z_i = x_i / y_i */
-void SundialsAbstractVector::N_VDiv_SAMRAI(
-   N_Vector x,
-   N_Vector y,
-   N_Vector z)
-{
-   SABSVEC_CAST(z)->pointwiseDivide(SABSVEC_CAST(x), SABSVEC_CAST(y));
-}
-
-/* Scale vector entries: z = c * x   */
-void SundialsAbstractVector::N_VScale_SAMRAI(
-   realtype c,
-   N_Vector x,
-   N_Vector z)
-{
-   SABSVEC_CAST(z)->scaleVector(SABSVEC_CAST(x), c);
-}
-
-/* Set z_i = | x_i | */
-void SundialsAbstractVector::N_VAbs_SAMRAI(
-   N_Vector x,
-   N_Vector z)
-{
-   SABSVEC_CAST(z)->setAbs(SABSVEC_CAST(x));
-}
-
-/* Set z_i = 1.0 / x_i */
-void SundialsAbstractVector::N_VInv_SAMRAI(
-   N_Vector x,
-   N_Vector z)
-{
-   SABSVEC_CAST(z)->pointwiseReciprocal(SABSVEC_CAST(x));
-}
-
-/* Set z_i = x_i + b */
-void SundialsAbstractVector::N_VAddConst_SAMRAI(
-   N_Vector x,
-   realtype b,
-   N_Vector z)
-{
-   SABSVEC_CAST(z)->addScalar(SABSVEC_CAST(x), b);
-}
-
-/* Return dot product: (x,y) = sum( x_i * y_i ) */
-realtype SundialsAbstractVector::N_VDotProd_SAMRAI(
-   N_Vector x,
-   N_Vector y)
-{
-   return SABSVEC_CAST(x)->dotWith(SABSVEC_CAST(y));
-}
-
-/* Return max-norm of vector x */
-realtype SundialsAbstractVector::N_VMaxNorm_SAMRAI(
-   N_Vector x)
-{
-   return SABSVEC_CAST(x)->maxNorm();
-}
-
-/* Return weighted RMS-norm of vector x; w is weighting vector. */
-realtype SundialsAbstractVector::N_VWrmsNorm_SAMRAI(
-   N_Vector x,
-   N_Vector w)
-{
-   return SABSVEC_CAST(x)->weightedRMSNorm(SABSVEC_CAST(w));
-}
-
-/* Return minimum entry in x. */
-realtype SundialsAbstractVector::N_VMin_SAMRAI(
-   N_Vector x)
-{
-   return SABSVEC_CAST(x)->vecMin();
-}
-
-/* Return weighted L2-norm of vector x */
-realtype SundialsAbstractVector::N_VWL2Norm_SAMRAI(
-   N_Vector x,
-   N_Vector w)
-{
-   return SABSVEC_CAST(x)->weightedL2Norm(SABSVEC_CAST(w));
-}
-
-/* Return L1-norm of vector x */
-realtype SundialsAbstractVector::N_VL1Norm_SAMRAI(
-   N_Vector x)
-{
-   return SABSVEC_CAST(x)->L1Norm();
-}
-
-/*
- * Set each entry in vector z based on the vector x as follows:
- * if | x_i | >= c, then z_i = 1.0, else z_i = 0.0.
- */
-void SundialsAbstractVector::N_VCompare_SAMRAI(
-   realtype c,
-   N_Vector x,
-   N_Vector z)
-{
-   SABSVEC_CAST(z)->compareToScalar(SABSVEC_CAST(x), c);
-}
-
-/*
- * Set each entry of vector z: v_i =  1.0 / x_i, where x_i is an
- * entry in the vector x, unless x_i = 0.0.  If x_i = 0.0, then
- * return 0.  Otherwise, 1 is returned.
- */
-booleantype SundialsAbstractVector::N_VInvTest_SAMRAI(
-   N_Vector x,
-   N_Vector z)
-{
-   return SABSVEC_CAST(z)->testReciprocal(SABSVEC_CAST(x));
 }
 
 }

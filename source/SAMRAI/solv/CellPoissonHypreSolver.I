@@ -12,20 +12,26 @@ namespace SAMRAI {
 namespace solv {
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonHypreSolver::setSolnIdDepth(
-   const int depth) {
+void
+CellPoissonHypreSolver::setSolnIdDepth(
+   const int depth)
+{
    d_soln_depth = depth;
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonHypreSolver::setRhsIdDepth(
-   const int depth) {
+void
+CellPoissonHypreSolver::setRhsIdDepth(
+   const int depth)
+{
    d_rhs_depth = depth;
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonHypreSolver::setUseSMG(
-   bool use_smg) {
+void
+CellPoissonHypreSolver::setUseSMG(
+   bool use_smg)
+{
    d_use_smg = use_smg;
 }
 
@@ -37,7 +43,8 @@ void CellPoissonHypreSolver::setUseSMG(
  */
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonHypreSolver::setBoundaries(
+void
+CellPoissonHypreSolver::setBoundaries(
    const std::string& boundary_type,
    const int fluxes,
    const int flags,
@@ -58,7 +65,8 @@ void CellPoissonHypreSolver::setBoundaries(
  */
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonHypreSolver::setPhysicalBcCoefObject(
+void
+CellPoissonHypreSolver::setPhysicalBcCoefObject(
    const RobinBcCoefStrategy* physical_bc_coef_strategy,
    const boost::shared_ptr<hier::Variable>& variable)
 {
@@ -67,19 +75,22 @@ void CellPoissonHypreSolver::setPhysicalBcCoefObject(
 }
 
 SAMRAI_INLINE_KEYWORD
-int CellPoissonHypreSolver::getNumberOfIterations() const
+int
+CellPoissonHypreSolver::getNumberOfIterations() const
 {
    return d_number_iterations;
 }
 
 SAMRAI_INLINE_KEYWORD
-double CellPoissonHypreSolver::getRelativeResidualNorm() const
+double
+CellPoissonHypreSolver::getRelativeResidualNorm() const
 {
    return d_relative_residual_norm;
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonHypreSolver::setNumPreRelaxSteps(
+void
+CellPoissonHypreSolver::setNumPreRelaxSteps(
    const int steps)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -89,7 +100,8 @@ void CellPoissonHypreSolver::setNumPreRelaxSteps(
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonHypreSolver::setNumPostRelaxSteps(
+void
+CellPoissonHypreSolver::setNumPostRelaxSteps(
    const int steps)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -99,14 +111,16 @@ void CellPoissonHypreSolver::setNumPostRelaxSteps(
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonHypreSolver::setPrintSolverInfo(
+void
+CellPoissonHypreSolver::setPrintSolverInfo(
    const bool print)
 {
    d_print_solver_info = print;
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonHypreSolver::setStoppingCriteria(
+void
+CellPoissonHypreSolver::setStoppingCriteria(
    const int max_iterations,
    const double residual_tol)
 {
@@ -119,7 +133,9 @@ void CellPoissonHypreSolver::setStoppingCriteria(
 }
 
 SAMRAI_INLINE_KEYWORD
-const std::string& CellPoissonHypreSolver::getObjectName() const {
+const std::string&
+CellPoissonHypreSolver::getObjectName() const
+{
    return d_object_name;
 }
 

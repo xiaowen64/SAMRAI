@@ -45,8 +45,7 @@ public:
    /*!
     * @brief Destructor.
     */
-   virtual ~RobinBcCoefStrategy(
-      void);
+   virtual ~RobinBcCoefStrategy();
 
    //@{
 

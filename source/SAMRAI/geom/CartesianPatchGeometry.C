@@ -75,7 +75,8 @@ CartesianPatchGeometry::~CartesianPatchGeometry()
  *
  *************************************************************************
  */
-void CartesianPatchGeometry::printClassData(
+void
+CartesianPatchGeometry::printClassData(
    std::ostream& os) const
 {
    const tbox::Dimension& dim(getRatio().getDim());

@@ -239,7 +239,8 @@ SkeletonGridGeometry::makeCoarsenedGridGeometry(
  *************************************************************************
  */
 
-void SkeletonGridGeometry::setGeometryDataOnPatch(
+void
+SkeletonGridGeometry::setGeometryDataOnPatch(
    hier::Patch& patch,
    const hier::IntVector& ratio_to_level_zero,
    const TwoDimBool& touches_regular_bdry,
@@ -286,7 +287,8 @@ void SkeletonGridGeometry::setGeometryDataOnPatch(
  *************************************************************************
  */
 
-void SkeletonGridGeometry::putToDatabase(
+void
+SkeletonGridGeometry::putToDatabase(
    const boost::shared_ptr<tbox::Database>& db) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -318,7 +320,8 @@ void SkeletonGridGeometry::putToDatabase(
  *************************************************************************
  */
 
-void SkeletonGridGeometry::getFromInput(
+void
+SkeletonGridGeometry::getFromInput(
    const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
@@ -376,7 +379,8 @@ void SkeletonGridGeometry::getFromInput(
  *
  *************************************************************************
  */
-void SkeletonGridGeometry::getFromRestart()
+void
+SkeletonGridGeometry::getFromRestart()
 {
    const tbox::Dimension dim(getDim());
 
@@ -424,7 +428,8 @@ void SkeletonGridGeometry::getFromRestart()
  *************************************************************************
  */
 
-void SkeletonGridGeometry::printClassData(
+void
+SkeletonGridGeometry::printClassData(
    std::ostream& os) const
 {
    os << "Printing SkeletonGridGeometry data: this = "

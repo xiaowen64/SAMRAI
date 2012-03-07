@@ -120,8 +120,7 @@ CartesianRobinBcHelper::CartesianRobinBcHelper(
  ************************************************************************
  */
 
-CartesianRobinBcHelper::~CartesianRobinBcHelper(
-   void) {
+CartesianRobinBcHelper::~CartesianRobinBcHelper() {
 }
 
 /*
@@ -130,7 +129,8 @@ CartesianRobinBcHelper::~CartesianRobinBcHelper(
  ************************************************************************
  */
 
-void CartesianRobinBcHelper::setBoundaryValuesInCells(
+void
+CartesianRobinBcHelper::setBoundaryValuesInCells(
    hier::Patch& patch,
    const double fill_time,
    const hier::IntVector& ghost_width_to_fill,
@@ -613,7 +613,8 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
  ************************************************************************
  */
 
-void CartesianRobinBcHelper::setBoundaryValuesInCells(
+void
+CartesianRobinBcHelper::setBoundaryValuesInCells(
    hier::PatchLevel& level,
    const double fill_time,
    const hier::IntVector& ghost_width_to_fill,
@@ -638,7 +639,8 @@ void CartesianRobinBcHelper::setBoundaryValuesInCells(
  ************************************************************************
  */
 
-void CartesianRobinBcHelper::setBoundaryValuesAtNodes(
+void
+CartesianRobinBcHelper::setBoundaryValuesAtNodes(
    hier::Patch& patch,
    const double fill_time,
    int target_data_id,
@@ -659,40 +661,6 @@ void CartesianRobinBcHelper::setBoundaryValuesAtNodes(
 }
 
 /*
- ************************************************************************
- * Set the coefficient strategy pointer that will be used to get
- * Robin bc coefficients.  It should be some external implementation.
- * This function implies that the simple mappings for
- * parallelpiped domains are not used and resets those arrays to null.
- * is a parallelpiped (not checked) and that the boundary condition
- * coefficients are functions only of the location index of the
- * boundary.
- ************************************************************************
- */
-
-void CartesianRobinBcHelper::setCoefImplementation(
-   const RobinBcCoefStrategy* coef_strategy)
-{
-   if (!coef_strategy) {
-      TBOX_ERROR(d_object_name << ": Invalid pointer value"
-                               << std::endl);
-   }
-   d_coef_strategy = coef_strategy;
-}
-
-void CartesianRobinBcHelper::setTargetDataId(
-   int target_data_id)
-{
-   d_target_data_id = target_data_id;
-}
-
-void CartesianRobinBcHelper::setHomogeneousBc(
-   bool is_homogeneous)
-{
-   d_homogeneous_bc = is_homogeneous;
-}
-
-/*
  ***********************************************************************
  *
  *  Virtual functions or xfer::RefinePatchStrategy.
@@ -700,7 +668,8 @@ void CartesianRobinBcHelper::setHomogeneousBc(
  ***********************************************************************
  */
 
-void CartesianRobinBcHelper::setPhysicalBoundaryConditions(
+void
+CartesianRobinBcHelper::setPhysicalBoundaryConditions(
    hier::Patch& patch,
    const double fill_time,
    const hier::IntVector& ghost_width_to_fill)
@@ -714,12 +683,14 @@ void CartesianRobinBcHelper::setPhysicalBoundaryConditions(
       d_homogeneous_bc);
 }
 
-hier::IntVector CartesianRobinBcHelper::getRefineOpStencilWidth() const
+hier::IntVector
+CartesianRobinBcHelper::getRefineOpStencilWidth() const
 {
    return hier::IntVector::getZero(d_dim);
 }
 
-void CartesianRobinBcHelper::preprocessRefineBoxes(
+void
+CartesianRobinBcHelper::preprocessRefineBoxes(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const hier::BoxContainer& fine_boxes,
@@ -730,7 +701,8 @@ void CartesianRobinBcHelper::preprocessRefineBoxes(
    NULL_USE(fine_boxes);
    NULL_USE(ratio);
 }
-void CartesianRobinBcHelper::preprocessRefine(
+void
+CartesianRobinBcHelper::preprocessRefine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const hier::Box& fine_box,
@@ -741,7 +713,8 @@ void CartesianRobinBcHelper::preprocessRefine(
    NULL_USE(fine_box);
    NULL_USE(ratio);
 }
-void CartesianRobinBcHelper::postprocessRefineBoxes(
+void
+CartesianRobinBcHelper::postprocessRefineBoxes(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const hier::BoxContainer& fine_box,
@@ -752,7 +725,8 @@ void CartesianRobinBcHelper::postprocessRefineBoxes(
    NULL_USE(fine_box);
    NULL_USE(ratio);
 }
-void CartesianRobinBcHelper::postprocessRefine(
+void
+CartesianRobinBcHelper::postprocessRefine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const hier::Box& fine_boxes,
@@ -763,7 +737,8 @@ void CartesianRobinBcHelper::postprocessRefine(
    NULL_USE(fine_boxes);
    NULL_USE(ratio);
 }
-void CartesianRobinBcHelper::fillSingularityBoundaryConditions(
+void
+CartesianRobinBcHelper::fillSingularityBoundaryConditions(
    hier::Patch& patch,
    const hier::PatchLevel& encon_level,
    const hier::Connector& dst_to_encon,
@@ -789,7 +764,8 @@ void CartesianRobinBcHelper::fillSingularityBoundaryConditions(
  ************************************************************************
  */
 
-hier::BoundaryBox CartesianRobinBcHelper::trimBoundaryBox(
+hier::BoundaryBox
+CartesianRobinBcHelper::trimBoundaryBox(
    const hier::BoundaryBox& boundary_box,
    const hier::Box& limit_box) const
 {
@@ -854,7 +830,8 @@ hier::BoundaryBox CartesianRobinBcHelper::trimBoundaryBox(
  ************************************************************************
  */
 
-hier::Box CartesianRobinBcHelper::makeFaceBoundaryBox(
+hier::Box
+CartesianRobinBcHelper::makeFaceBoundaryBox(
    const hier::BoundaryBox& boundary_box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, boundary_box);
@@ -883,7 +860,8 @@ hier::Box CartesianRobinBcHelper::makeFaceBoundaryBox(
  ************************************************************************
  */
 
-hier::Box CartesianRobinBcHelper::makeNodeBoundaryBox(
+hier::Box
+CartesianRobinBcHelper::makeNodeBoundaryBox(
    const hier::BoundaryBox& boundary_box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, boundary_box);

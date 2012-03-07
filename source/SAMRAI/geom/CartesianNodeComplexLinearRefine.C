@@ -81,7 +81,8 @@ CartesianNodeComplexLinearRefine::~CartesianNodeComplexLinearRefine()
 {
 }
 
-bool CartesianNodeComplexLinearRefine::findRefineOperator(
+bool
+CartesianNodeComplexLinearRefine::findRefineOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -97,17 +98,20 @@ bool CartesianNodeComplexLinearRefine::findRefineOperator(
    }
 }
 
-int CartesianNodeComplexLinearRefine::getOperatorPriority() const
+int
+CartesianNodeComplexLinearRefine::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-CartesianNodeComplexLinearRefine::getStencilWidth() const {
+CartesianNodeComplexLinearRefine::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void CartesianNodeComplexLinearRefine::refine(
+void
+CartesianNodeComplexLinearRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,
@@ -133,7 +137,8 @@ void CartesianNodeComplexLinearRefine::refine(
    }
 }
 
-void CartesianNodeComplexLinearRefine::refine(
+void
+CartesianNodeComplexLinearRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,

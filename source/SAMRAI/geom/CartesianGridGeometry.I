@@ -12,19 +12,22 @@ namespace SAMRAI {
 namespace geom {
 
 SAMRAI_INLINE_KEYWORD
-const double *CartesianGridGeometry::getDx() const
+const double*
+CartesianGridGeometry::getDx() const
 {
    return d_dx;
 }
 
 SAMRAI_INLINE_KEYWORD
-const double *CartesianGridGeometry::getXLower() const
+const double*
+CartesianGridGeometry::getXLower() const
 {
    return d_x_lo;
 }
 
 SAMRAI_INLINE_KEYWORD
-const double *CartesianGridGeometry::getXUpper() const
+const double*
+CartesianGridGeometry::getXUpper() const
 {
    return d_x_up;
 }

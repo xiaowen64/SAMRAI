@@ -211,8 +211,8 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.h			\
+	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/Sundials_SAMRAIVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/Sundials_SAMRAIVector.h		\
@@ -524,9 +524,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/PETScAbstractVectorReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/solv/PETSc_SAMRAIVectorReal.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/PETSc_SAMRAIVectorReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\

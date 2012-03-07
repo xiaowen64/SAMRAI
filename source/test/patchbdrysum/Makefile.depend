@@ -358,6 +358,9 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.h		\
+	$(INCLUDE_SAM)/SAMRAI/mesh/BalanceUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BergerRigoutsos.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BoxGeneratorStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/GriddingAlgorithm.I			\
@@ -366,6 +369,8 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/mesh/GriddingAlgorithmStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/LoadBalanceStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/MultiblockGriddingTagger.h		\
+	$(INCLUDE_SAM)/SAMRAI/mesh/SpatialKey.I				\
+	$(INCLUDE_SAM)/SAMRAI/mesh/SpatialKey.h				\
 	$(INCLUDE_SAM)/SAMRAI/mesh/StandardTagAndInitStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/StandardTagAndInitialize.I		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/StandardTagAndInitialize.h		\
@@ -503,6 +508,8 @@ DEPENDS_1:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.C				\

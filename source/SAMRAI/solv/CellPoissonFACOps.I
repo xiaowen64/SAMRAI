@@ -11,14 +11,17 @@ namespace SAMRAI {
 namespace solv {
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACOps::setPreconditioner(
-   const FACPreconditioner* preconditioner) {
+void
+CellPoissonFACOps::setPreconditioner(
+   const FACPreconditioner* preconditioner)
+{
    d_preconditioner = preconditioner;
 }
 
 #ifdef HAVE_HYPRE
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACOps::setUseSMG(
+void
+CellPoissonFACOps::setUseSMG(
    bool use_smg)
 {
    if (d_hierarchy) {
@@ -38,7 +41,8 @@ void CellPoissonFACOps::setUseSMG(
  */
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACOps::setPhysicalBcCoefObject(
+void
+CellPoissonFACOps::setPhysicalBcCoefObject(
    const RobinBcCoefStrategy* physical_bc_coef)
 {
    d_physical_bc_coef = physical_bc_coef;
@@ -55,7 +59,8 @@ void CellPoissonFACOps::setPhysicalBcCoefObject(
  */
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACOps::setPoissonSpecifications(
+void
+CellPoissonFACOps::setPoissonSpecifications(
    const PoissonSpecifications& spec)
 {
    d_poisson_spec = spec;
@@ -67,7 +72,8 @@ void CellPoissonFACOps::setPoissonSpecifications(
  */
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACOps::enableLogging(
+void
+CellPoissonFACOps::enableLogging(
    bool enable_logging)
 {
    d_enable_logging = enable_logging;
@@ -80,8 +86,10 @@ void CellPoissonFACOps::enableLogging(
  */
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACOps::setFluxId(
-   int flux_id) {
+void
+CellPoissonFACOps::setFluxId(
+   int flux_id)
+{
    d_flux_id = flux_id;
 #ifdef DEBUG_CHECK_ASSERTIONS
    checkInputPatchDataIndices();
@@ -95,7 +103,8 @@ void CellPoissonFACOps::setFluxId(
  */
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACOps::setSmoothingChoice(
+void
+CellPoissonFACOps::setSmoothingChoice(
    const std::string& smoothing_choice)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -115,8 +124,10 @@ void CellPoissonFACOps::setSmoothingChoice(
  */
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACOps::setCoarsestLevelSolverChoice(
-   const std::string& choice) {
+void
+CellPoissonFACOps::setCoarsestLevelSolverChoice(
+   const std::string& choice)
+{
 #ifdef DEBUG_CHECK_ASSERTIONS
 #ifndef HAVE_HYPRE
    if (choice == "hypre") {
@@ -142,8 +153,10 @@ void CellPoissonFACOps::setCoarsestLevelSolverChoice(
  */
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACOps::setCoarsestLevelSolverTolerance(
-   double tol) {
+void
+CellPoissonFACOps::setCoarsestLevelSolverTolerance(
+   double tol)
+{
    d_coarse_solver_tolerance = tol;
 }
 
@@ -154,8 +167,10 @@ void CellPoissonFACOps::setCoarsestLevelSolverTolerance(
  */
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACOps::setCoarsestLevelSolverMaxIterations(
-   int max_iterations) {
+void
+CellPoissonFACOps::setCoarsestLevelSolverMaxIterations(
+   int max_iterations)
+{
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (max_iterations < 0) {
       TBOX_ERROR(d_object_name << ": Invalid number of max iterations\n");
@@ -171,8 +186,10 @@ void CellPoissonFACOps::setCoarsestLevelSolverMaxIterations(
  */
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACOps::setCoarseFineDiscretization(
-   const std::string& coarsefine_method) {
+void
+CellPoissonFACOps::setCoarseFineDiscretization(
+   const std::string& coarsefine_method)
+{
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_hierarchy) {
       TBOX_ERROR(
@@ -192,8 +209,10 @@ void CellPoissonFACOps::setCoarseFineDiscretization(
  */
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACOps::setProlongationMethod(
-   const std::string& prolongation_method) {
+void
+CellPoissonFACOps::setProlongationMethod(
+   const std::string& prolongation_method)
+{
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_hierarchy) {
       TBOX_ERROR(
@@ -206,7 +225,9 @@ void CellPoissonFACOps::setProlongationMethod(
 }
 
 SAMRAI_INLINE_KEYWORD
-const std::string& CellPoissonFACOps::getObjectName() const {
+const std::string&
+CellPoissonFACOps::getObjectName() const
+{
    return d_object_name;
 }
 

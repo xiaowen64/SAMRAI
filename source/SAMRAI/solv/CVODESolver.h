@@ -18,9 +18,15 @@
 #include "SAMRAI/solv/CVODEAbstractFunctions.h"
 #include "SAMRAI/solv/SundialsAbstractVector.h"
 #include "SAMRAI/tbox/IOStream.h"
+#include "SAMRAI/tbox/Utilities.h"
 
+// CVODE includes
 extern "C" {
 #include "cvode/cvode.h"
+}
+
+extern "C" {
+#include "cvode/cvode_spgmr.h"
 }
 
 #include <string>
@@ -46,6 +52,11 @@ namespace solv {
       }                                                                         \
    } while (0)
 #endif
+
+#define SABSVEC_CAST(v) \
+   (static_cast<SundialsAbstractVector *>(v \
+                                          -> \
+                                          content))
 
 /*!
  * @brief Class CVODESolver serves as a C++ wrapper for the CVODE

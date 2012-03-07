@@ -15,6 +15,7 @@ FILE_0=CVODEAbstractFunctions.o
 DEPENDS_0:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/CVODEAbstractFunctions.h		\
+	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.h		\
 	CVODEAbstractFunctions.C
 
@@ -31,6 +32,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/solv/CVODEAbstractFunctions.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/CVODESolver.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/CVODESolver.h			\
+	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
@@ -456,7 +458,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/solv/PoissonSpecifications.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/PoissonSpecifications.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/RobinBcCoefStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SimpleCellRobinBcCoefs.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SimpleCellRobinBcCoefs.h		\
@@ -818,7 +819,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/solv/PoissonSpecifications.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/PoissonSpecifications.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/RobinBcCoefStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SimpleCellRobinBcCoefs.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SimpleCellRobinBcCoefs.h		\
@@ -1356,7 +1356,6 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/FACOperatorStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
@@ -1663,7 +1662,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/solv/FACOperatorStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/FACPreconditioner.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/FACPreconditioner.h			\
-	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
@@ -1917,6 +1915,7 @@ FILE_9=KINSOLAbstractFunctions.o
 DEPENDS_9:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/KINSOLAbstractFunctions.h		\
+	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.h		\
 	KINSOLAbstractFunctions.C
 
@@ -1933,6 +1932,7 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/solv/KINSOLAbstractFunctions.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/KINSOLSolver.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/KINSOLSolver.h			\
+	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
@@ -2146,8 +2146,8 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/solv/KINSOL_SAMRAIContext.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/KINSOL_SAMRAIContext.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/NonlinearSolverStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.h			\
+	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/Sundials_SAMRAIVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/Sundials_SAMRAIVector.h		\
@@ -2567,7 +2567,6 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/NonlinearSolverStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
@@ -2893,9 +2892,7 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/PETScAbstractVectorReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/PETSc_SAMRAIVectorReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/solv/PETSc_SAMRAIVectorReal.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/PETSc_SAMRAIVectorReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
@@ -3325,7 +3322,6 @@ DEPENDS_18:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.C			\
-	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.I				\
@@ -3639,9 +3635,7 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/NonlinearSolverStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/PETScAbstractVectorReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/solv/PETSc_SAMRAIVectorReal.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/PETSc_SAMRAIVectorReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SNESAbstractFunctions.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SNES_SAMRAIContext.I			\
@@ -3934,6 +3928,7 @@ ${FILE_21:X.o=${NDIM}.o}: ${DEPENDS_21}
 FILE_22=SundialsAbstractVector.o
 DEPENDS_22:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
+	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.I				\
@@ -4141,8 +4136,8 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.h			\
+	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/Sundials_SAMRAIVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/Sundials_SAMRAIVector.h		\
@@ -4255,6 +4250,7 @@ ${FILE_23:X.o=${NDIM}.o}: ${DEPENDS_23}
 FILE_24=solv_NVector.o
 DEPENDS_24:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
+	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/solv_NVector.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\

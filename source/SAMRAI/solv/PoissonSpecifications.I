@@ -16,56 +16,15 @@ namespace solv {
 
 /*
  *******************************************************************
- * Default constructor
- *******************************************************************
- */
-
-SAMRAI_INLINE_KEYWORD
-PoissonSpecifications::PoissonSpecifications(
-   const std::string& object_name):d_object_name(object_name),
-   d_D_id(-1),
-   d_D_constant(1.0),
-   d_C_zero(true),
-   d_C_id(-1),
-   d_C_constant(0.0) {
-}
-
-/*
- *******************************************************************
- * Copy constructor
- *******************************************************************
- */
-
-SAMRAI_INLINE_KEYWORD
-PoissonSpecifications::PoissonSpecifications(
-   const std::string& object_name,
-   const PoissonSpecifications& r):d_object_name(object_name),
-   d_D_id(r.d_D_id),
-   d_D_constant(r.d_D_constant),
-   d_C_zero(r.d_C_zero),
-   d_C_id(r.d_C_id),
-   d_C_constant(r.d_C_constant) {
-}
-
-/*
- *******************************************************************
- * Destructor (does nothing).
- *******************************************************************
- */
-SAMRAI_INLINE_KEYWORD
-PoissonSpecifications::~PoissonSpecifications() {
-}
-
-/*
- *******************************************************************
  * Assignment operator
  *******************************************************************
  */
 
 SAMRAI_INLINE_KEYWORD
-const PoissonSpecifications
-& PoissonSpecifications::operator = (
-   const PoissonSpecifications& r) {
+const PoissonSpecifications&
+PoissonSpecifications::operator = (
+   const PoissonSpecifications& r)
+{
    d_D_id = r.d_D_id;
    d_D_constant = r.d_D_constant;
    d_C_zero = r.d_C_zero;
@@ -80,8 +39,10 @@ const PoissonSpecifications
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void PoissonSpecifications::setDPatchDataId(
-   int id) {
+void
+PoissonSpecifications::setDPatchDataId(
+   int id)
+{
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (id < 0) {
       TBOX_ERROR(d_object_name << ": Invalid patch data id.\n");
@@ -97,8 +58,10 @@ void PoissonSpecifications::setDPatchDataId(
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void PoissonSpecifications::setDConstant(
-   double constant) {
+void
+PoissonSpecifications::setDConstant(
+   double constant)
+{
    d_D_id = -1;
    d_D_constant = constant;
 }
@@ -109,7 +72,9 @@ void PoissonSpecifications::setDConstant(
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool PoissonSpecifications::dIsVariable() const {
+bool
+PoissonSpecifications::dIsVariable() const
+{
    return d_D_id != -1;
 }
 
@@ -119,7 +84,9 @@ bool PoissonSpecifications::dIsVariable() const {
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool PoissonSpecifications::dIsConstant() const {
+bool
+PoissonSpecifications::dIsConstant() const
+{
    return d_D_id == -1;
 }
 
@@ -129,7 +96,9 @@ bool PoissonSpecifications::dIsConstant() const {
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int PoissonSpecifications::getDPatchDataId() const {
+int
+PoissonSpecifications::getDPatchDataId() const
+{
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_D_id == -1) {
       TBOX_ERROR(d_object_name << ": D not prepresented by a patch data.\n");
@@ -144,7 +113,9 @@ int PoissonSpecifications::getDPatchDataId() const {
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-double PoissonSpecifications::getDConstant() const {
+double
+PoissonSpecifications::getDConstant() const
+{
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_D_id != -1) {
       TBOX_ERROR(d_object_name << ": D not prepresented by a constant.\n");
@@ -159,8 +130,10 @@ double PoissonSpecifications::getDConstant() const {
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void PoissonSpecifications::setCPatchDataId(
-   int id) {
+void
+PoissonSpecifications::setCPatchDataId(
+   int id)
+{
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (id < 0) {
       TBOX_ERROR(d_object_name << ": Invalid patch data id.\n");
@@ -177,8 +150,10 @@ void PoissonSpecifications::setCPatchDataId(
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void PoissonSpecifications::setCConstant(
-   double constant) {
+void
+PoissonSpecifications::setCConstant(
+   double constant)
+{
    d_C_zero = false;
    d_C_id = -1;
    d_C_constant = constant;
@@ -190,7 +165,9 @@ void PoissonSpecifications::setCConstant(
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-void PoissonSpecifications::setCZero() {
+void
+PoissonSpecifications::setCZero()
+{
    d_C_zero = true;
    d_C_id = -1;
    d_C_constant = 0.0;
@@ -202,7 +179,9 @@ void PoissonSpecifications::setCZero() {
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool PoissonSpecifications::cIsVariable() const {
+bool
+PoissonSpecifications::cIsVariable() const
+{
    return d_C_id != -1;
 }
 
@@ -212,7 +191,9 @@ bool PoissonSpecifications::cIsVariable() const {
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool PoissonSpecifications::cIsZero() const {
+bool
+PoissonSpecifications::cIsZero() const
+{
    return d_C_zero;
 }
 
@@ -222,7 +203,9 @@ bool PoissonSpecifications::cIsZero() const {
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-bool PoissonSpecifications::cIsConstant() const {
+bool
+PoissonSpecifications::cIsConstant() const
+{
    return !d_C_zero && (d_C_id == -1);
 }
 
@@ -232,7 +215,9 @@ bool PoissonSpecifications::cIsConstant() const {
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-int PoissonSpecifications::getCPatchDataId() const {
+int
+PoissonSpecifications::getCPatchDataId() const
+{
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_C_id == -1) {
       TBOX_ERROR(d_object_name << ": C not prepresented by a an index.\n");
@@ -247,7 +232,9 @@ int PoissonSpecifications::getCPatchDataId() const {
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-double PoissonSpecifications::getCConstant() const {
+double
+PoissonSpecifications::getCConstant() const
+{
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_C_id != -1 || d_C_zero) {
       TBOX_ERROR(d_object_name << ": C is not prepresented by a constant.\n");
@@ -262,7 +249,9 @@ double PoissonSpecifications::getCConstant() const {
  *******************************************************************
  */
 SAMRAI_INLINE_KEYWORD
-const std::string& PoissonSpecifications::getObjectName() const {
+const std::string&
+PoissonSpecifications::getObjectName() const
+{
    return d_object_name;
 }
 

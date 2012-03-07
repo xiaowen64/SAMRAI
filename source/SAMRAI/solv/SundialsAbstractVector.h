@@ -354,6 +354,10 @@ private:
 
 }
 }
+
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/solv/SundialsAbstractVector.I"
+#endif
 #endif
 
 #endif

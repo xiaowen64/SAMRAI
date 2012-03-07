@@ -261,8 +261,8 @@ CartesianGridGeometry::makeRefinedGridGeometry(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::GridGeometry> CartesianGridGeometry::
-makeCoarsenedGridGeometry(
+boost::shared_ptr<hier::GridGeometry>
+CartesianGridGeometry::makeCoarsenedGridGeometry(
    const std::string& coarse_geom_name,
    const hier::IntVector& coarsen_ratio,
    bool register_for_restart) const
@@ -338,7 +338,8 @@ CartesianGridGeometry::~CartesianGridGeometry()
  *************************************************************************
  */
 
-void CartesianGridGeometry::setGeometryData(
+void
+CartesianGridGeometry::setGeometryData(
    const double* x_lo,
    const double* x_up,
    const hier::BoxContainer& domain)
@@ -380,7 +381,8 @@ void CartesianGridGeometry::setGeometryData(
  *************************************************************************
  */
 
-void CartesianGridGeometry::setGeometryDataOnPatch(
+void
+CartesianGridGeometry::setGeometryDataOnPatch(
    hier::Patch& patch,
    const hier::IntVector& ratio_to_level_zero,
    const TwoDimBool& touches_regular_bdry,
@@ -457,7 +459,8 @@ void CartesianGridGeometry::setGeometryDataOnPatch(
  *************************************************************************
  */
 
-void CartesianGridGeometry::printClassData(
+void
+CartesianGridGeometry::printClassData(
    std::ostream& os) const
 {
    const tbox::Dimension& dim(getDim());
@@ -496,7 +499,8 @@ void CartesianGridGeometry::printClassData(
  *************************************************************************
  */
 
-void CartesianGridGeometry::putToDatabase(
+void
+CartesianGridGeometry::putToDatabase(
    const boost::shared_ptr<tbox::Database>& db) const
 {
    TBOX_ASSERT(db);
@@ -531,7 +535,8 @@ void CartesianGridGeometry::putToDatabase(
  *************************************************************************
  */
 
-void CartesianGridGeometry::getFromInput(
+void
+CartesianGridGeometry::getFromInput(
    const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
@@ -610,7 +615,8 @@ void CartesianGridGeometry::getFromInput(
  *
  *************************************************************************
  */
-void CartesianGridGeometry::getFromRestart()
+void
+CartesianGridGeometry::getFromRestart()
 {
    const tbox::Dimension& dim(getDim());
 

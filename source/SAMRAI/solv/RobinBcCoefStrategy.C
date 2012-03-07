@@ -21,7 +21,8 @@ namespace solv {
  ********************************************************************
  */
 
-RobinBcCoefStrategy::RobinBcCoefStrategy() {
+RobinBcCoefStrategy::RobinBcCoefStrategy()
+{
 }
 
 /*
@@ -30,7 +31,8 @@ RobinBcCoefStrategy::RobinBcCoefStrategy() {
  ********************************************************************
  */
 
-RobinBcCoefStrategy::~RobinBcCoefStrategy() {
+RobinBcCoefStrategy::~RobinBcCoefStrategy()
+{
 }
 
 }

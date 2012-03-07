@@ -56,8 +56,8 @@ GhostCellRobinBcCoefs::GhostCellRobinBcCoefs(
  ************************************************************************
  */
 
-GhostCellRobinBcCoefs::~GhostCellRobinBcCoefs(
-   void) {
+GhostCellRobinBcCoefs::~GhostCellRobinBcCoefs()
+{
 }
 
 /*
@@ -66,7 +66,8 @@ GhostCellRobinBcCoefs::~GhostCellRobinBcCoefs(
  ************************************************************************
  */
 
-void GhostCellRobinBcCoefs::setGhostDataId(
+void
+GhostCellRobinBcCoefs::setGhostDataId(
    int ghost_data_id,
    hier::IntVector extensions_fillable)
 {
@@ -108,7 +109,8 @@ void GhostCellRobinBcCoefs::setGhostDataId(
  ************************************************************************
  */
 
-void GhostCellRobinBcCoefs::setBcCoefs(
+void
+GhostCellRobinBcCoefs::setBcCoefs(
    const boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
    const boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
    const boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
@@ -212,8 +214,8 @@ void GhostCellRobinBcCoefs::setBcCoefs(
  * no more than what the data it uses provides.
  ***********************************************************************
  */
-hier::IntVector GhostCellRobinBcCoefs::numberOfExtensionsFillable()
-const
+hier::IntVector
+GhostCellRobinBcCoefs::numberOfExtensionsFillable() const
 {
    return d_extensions_fillable;
 }
@@ -224,7 +226,8 @@ const
  ************************************************************************
  */
 
-hier::Box GhostCellRobinBcCoefs::makeSideBoundaryBox(
+hier::Box
+GhostCellRobinBcCoefs::makeSideBoundaryBox(
    const hier::BoundaryBox& boundary_box) const
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, boundary_box);

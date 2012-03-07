@@ -11,26 +11,33 @@ namespace SAMRAI {
 namespace solv {
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACSolver::setDPatchDataId(
-   int id) {
+void
+CellPoissonFACSolver::setDPatchDataId(
+   int id)
+{
    d_poisson_spec.setDPatchDataId(id);
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACSolver::setDConstant(
+void
+CellPoissonFACSolver::setDConstant(
    double scalar) {
    d_poisson_spec.setDConstant(scalar);
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACSolver::setCPatchDataId(
-   int id) {
+void
+CellPoissonFACSolver::setCPatchDataId(
+   int id)
+{
    d_poisson_spec.setCPatchDataId(id);
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACSolver::setCConstant(
-   double scalar) {
+void
+CellPoissonFACSolver::setCConstant(
+   double scalar)
+{
 // Disable Intel warning on real comparison
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:1572)
@@ -43,35 +50,65 @@ void CellPoissonFACSolver::setCConstant(
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACSolver::setProlongationMethod(
+void
+CellPoissonFACSolver::enableLogging(
+   bool logging)
+{
+   d_enable_logging = logging;
+   d_fac_precond.enableLogging(d_enable_logging);
+   d_fac_ops.enableLogging(d_enable_logging);
+}
+
+SAMRAI_INLINE_KEYWORD
+void
+CellPoissonFACSolver::setBcObject(
+   const RobinBcCoefStrategy* bc_object)
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (!bc_object) {
+      TBOX_ERROR(d_object_name << ": NULL pointer for boundary condition\n"
+                               << "object.\n");
+   }
+#endif
+   d_bc_object = bc_object;
+   d_fac_ops.setPhysicalBcCoefObject(d_bc_object);
+}
+
+SAMRAI_INLINE_KEYWORD
+void
+CellPoissonFACSolver::setProlongationMethod(
    const std::string& prolongation_method)
 {
    d_fac_ops.setProlongationMethod(prolongation_method);
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACSolver::setCoarsestLevelSolverChoice(
+void
+CellPoissonFACSolver::setCoarsestLevelSolverChoice(
    const std::string& choice)
 {
    d_fac_ops.setCoarsestLevelSolverChoice(choice);
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACSolver::setCoarsestLevelSolverTolerance(
+void
+CellPoissonFACSolver::setCoarsestLevelSolverTolerance(
    double tol)
 {
    d_fac_ops.setCoarsestLevelSolverTolerance(tol);
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACSolver::setCoarsestLevelSolverMaxIterations(
+void
+CellPoissonFACSolver::setCoarsestLevelSolverMaxIterations(
    int max_iterations)
 {
    d_fac_ops.setCoarsestLevelSolverMaxIterations(max_iterations);
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACSolver::setCoarseFineDiscretization(
+void
+CellPoissonFACSolver::setCoarseFineDiscretization(
    const std::string& coarsefine_method)
 {
    d_fac_ops.setCoarseFineDiscretization(coarsefine_method);
@@ -79,7 +116,8 @@ void CellPoissonFACSolver::setCoarseFineDiscretization(
 
 #ifdef HAVE_HYPRE
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACSolver::setUseSMG(
+void
+CellPoissonFACSolver::setUseSMG(
    bool use_smg)
 {
    if (d_solver_is_initialized) {
@@ -93,53 +131,79 @@ void CellPoissonFACSolver::setUseSMG(
 #endif
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACSolver::setPresmoothingSweeps(
-   int num_pre_sweeps) {
+void
+CellPoissonFACSolver::setPresmoothingSweeps(
+   int num_pre_sweeps)
+{
    d_fac_precond.setPresmoothingSweeps(num_pre_sweeps);
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACSolver::setPostsmoothingSweeps(
-   int num_post_sweeps) {
+void
+CellPoissonFACSolver::setPostsmoothingSweeps(
+   int num_post_sweeps)
+{
    d_fac_precond.setPostsmoothingSweeps(num_post_sweeps);
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACSolver::setMaxCycles(
-   int max_cycles) {
+void
+CellPoissonFACSolver::setMaxCycles(
+   int max_cycles)
+{
    d_fac_precond.setMaxCycles(max_cycles);
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACSolver::setResidualTolerance(
-   double residual_tol) {
+void
+CellPoissonFACSolver::setResidualTolerance(
+   double residual_tol)
+{
    d_fac_precond.setResidualTolerance(residual_tol);
 }
 
 SAMRAI_INLINE_KEYWORD
-int CellPoissonFACSolver::getNumberOfIterations() const
+int
+CellPoissonFACSolver::getNumberOfIterations() const
 {
    return d_fac_precond.getNumberOfIterations();
 }
 
 SAMRAI_INLINE_KEYWORD
-double CellPoissonFACSolver::getResidualNorm() const
+double
+CellPoissonFACSolver::getResidualNorm() const
 {
    return d_fac_precond.getResidualNorm();
 }
 
 SAMRAI_INLINE_KEYWORD
-void CellPoissonFACSolver::getConvergenceFactors(
+void
+CellPoissonFACSolver::getConvergenceFactors(
    double& avg_factor,
-   double& final_factor)
-const
+   double& final_factor) const
 {
    d_fac_precond.getConvergenceFactors(avg_factor, final_factor);
 }
 
 SAMRAI_INLINE_KEYWORD
-const std::string& CellPoissonFACSolver::getObjectName() const {
+const std::string&
+CellPoissonFACSolver::getObjectName() const
+{
    return d_object_name;
+}
+
+/*
+ ***********************************************************************
+ * Delete the vector wrappers.  Do not freeVectorComponents because
+ * we do not control their data allocation.  The user does that.
+ ***********************************************************************
+ */
+SAMRAI_INLINE_KEYWORD
+void
+CellPoissonFACSolver::destroyVectorWrappers()
+{
+   d_uv.reset();
+   d_fv.reset();
 }
 
 }

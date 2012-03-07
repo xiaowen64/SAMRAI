@@ -16,13 +16,16 @@
 namespace SAMRAI {
 namespace solv {
 
-FACOperatorStrategy::FACOperatorStrategy() {
+FACOperatorStrategy::FACOperatorStrategy()
+{
 }
 
-FACOperatorStrategy::~FACOperatorStrategy() {
+FACOperatorStrategy::~FACOperatorStrategy()
+{
 }
 
-void FACOperatorStrategy::deallocateOperatorState()
+void
+FACOperatorStrategy::deallocateOperatorState()
 {
 }
 

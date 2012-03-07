@@ -632,8 +632,7 @@ public:
     */
    TYPE
    maxPointwiseDivide(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& denom)
-   const;
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& denom) const;
 
    //@}
 
@@ -720,12 +719,7 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/SAMRAIVectorReal.I"
-#endif
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/solv/SAMRAIVectorReal.C"
-#endif
 
 #endif

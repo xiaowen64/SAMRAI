@@ -101,7 +101,8 @@ CartesianFaceFloatWeightedAverage::~CartesianFaceFloatWeightedAverage()
 {
 }
 
-bool CartesianFaceFloatWeightedAverage::findCoarsenOperator(
+bool
+CartesianFaceFloatWeightedAverage::findCoarsenOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -117,17 +118,20 @@ bool CartesianFaceFloatWeightedAverage::findCoarsenOperator(
    }
 }
 
-int CartesianFaceFloatWeightedAverage::getOperatorPriority() const
+int
+CartesianFaceFloatWeightedAverage::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-CartesianFaceFloatWeightedAverage::getStencilWidth() const {
+CartesianFaceFloatWeightedAverage::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void CartesianFaceFloatWeightedAverage::coarsen(
+void
+CartesianFaceFloatWeightedAverage::coarsen(
    hier::Patch& coarse,
    const hier::Patch& fine,
    const int dst_component,

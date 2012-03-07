@@ -62,7 +62,8 @@ SimpleCellRobinBcCoefs::~SimpleCellRobinBcCoefs()
 {
 }
 
-void SimpleCellRobinBcCoefs::setHierarchy(
+void
+SimpleCellRobinBcCoefs::setHierarchy(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int ln_min,
    const int ln_max)
@@ -90,7 +91,8 @@ void SimpleCellRobinBcCoefs::setHierarchy(
 #endif
 }
 
-void SimpleCellRobinBcCoefs::setBoundaries(
+void
+SimpleCellRobinBcCoefs::setBoundaries(
    const std::string& boundary_type,
    const int fluxes,
    const int flags,
@@ -177,7 +179,8 @@ void SimpleCellRobinBcCoefs::setBoundaries(
  ************************************************************************
  */
 
-void SimpleCellRobinBcCoefs::setBcCoefs(
+void
+SimpleCellRobinBcCoefs::setBcCoefs(
    const boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
    const boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
    const boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
@@ -487,7 +490,8 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
  * that does not extend.
  ***********************************************************************
  */
-hier::IntVector SimpleCellRobinBcCoefs::numberOfExtensionsFillable() const
+hier::IntVector
+SimpleCellRobinBcCoefs::numberOfExtensionsFillable() const
 {
    return hier::IntVector::getZero(d_dim);
 }
@@ -514,7 +518,8 @@ hier::IntVector SimpleCellRobinBcCoefs::numberOfExtensionsFillable() const
  *
  ************************************************************************
  */
-void SimpleCellRobinBcCoefs::cacheDirichletData(
+void
+SimpleCellRobinBcCoefs::cacheDirichletData(
    int dirichlet_data_id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -591,7 +596,8 @@ void SimpleCellRobinBcCoefs::cacheDirichletData(
  *
  ************************************************************************
  */
-void SimpleCellRobinBcCoefs::restoreDirichletData(
+void
+SimpleCellRobinBcCoefs::restoreDirichletData(
    int dirichlet_data_id)
 {
    if (d_dirichlet_data_pos.empty()) {
@@ -634,27 +640,14 @@ void SimpleCellRobinBcCoefs::restoreDirichletData(
    }
 }
 
-void SimpleCellRobinBcCoefs::setDiffusionCoefId(
-   int diffusion_coef_id)
-{
-   d_diffusion_coef_id = diffusion_coef_id;
-   d_diffusion_coef_constant = 0.0;
-}
-
-void SimpleCellRobinBcCoefs::setDiffusionCoefConstant(
-   double diffusion_coef_constant)
-{
-   d_diffusion_coef_constant = diffusion_coef_constant;
-   d_diffusion_coef_id = -1;
-}
-
 /*
  ************************************************************************
  * Make surface box on boundary using standard boundary box
  ************************************************************************
  */
 
-hier::Box SimpleCellRobinBcCoefs::makeSideBoundaryBox(
+hier::Box
+SimpleCellRobinBcCoefs::makeSideBoundaryBox(
    const hier::BoundaryBox& boundary_box) const
 {
    if (boundary_box.getBoundaryType() != 1) {

@@ -11,7 +11,9 @@ namespace SAMRAI {
 namespace solv {
 
 SAMRAI_INLINE_KEYWORD
-const std::string& GhostCellRobinBcCoefs::getObjectName() const {
+const std::string&
+GhostCellRobinBcCoefs::getObjectName() const
+{
    return d_object_name;
 }
 

@@ -11,7 +11,27 @@ namespace SAMRAI {
 namespace solv {
 
 SAMRAI_INLINE_KEYWORD
-const std::string& SimpleCellRobinBcCoefs::getObjectName() const {
+void
+SimpleCellRobinBcCoefs::setDiffusionCoefId(
+   int diffusion_coef_id)
+{
+   d_diffusion_coef_id = diffusion_coef_id;
+   d_diffusion_coef_constant = 0.0;
+}
+
+SAMRAI_INLINE_KEYWORD
+void
+SimpleCellRobinBcCoefs::setDiffusionCoefConstant(
+   double diffusion_coef_constant)
+{
+   d_diffusion_coef_constant = diffusion_coef_constant;
+   d_diffusion_coef_id = -1;
+}
+
+SAMRAI_INLINE_KEYWORD
+const std::string&
+SimpleCellRobinBcCoefs::getObjectName() const
+{
    return d_object_name;
 }
 

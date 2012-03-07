@@ -110,7 +110,8 @@ CartesianOuterfaceComplexWeightedAverage()
 {
 }
 
-bool CartesianOuterfaceComplexWeightedAverage::findCoarsenOperator(
+bool
+CartesianOuterfaceComplexWeightedAverage::findCoarsenOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -126,17 +127,20 @@ bool CartesianOuterfaceComplexWeightedAverage::findCoarsenOperator(
    }
 }
 
-int CartesianOuterfaceComplexWeightedAverage::getOperatorPriority() const
+int
+CartesianOuterfaceComplexWeightedAverage::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-CartesianOuterfaceComplexWeightedAverage::getStencilWidth() const {
+CartesianOuterfaceComplexWeightedAverage::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void CartesianOuterfaceComplexWeightedAverage::coarsen(
+void
+CartesianOuterfaceComplexWeightedAverage::coarsen(
    hier::Patch& coarse,
    const hier::Patch& fine,
    const int dst_component,

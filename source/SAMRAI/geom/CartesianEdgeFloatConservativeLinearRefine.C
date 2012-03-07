@@ -120,7 +120,8 @@ CartesianEdgeFloatConservativeLinearRefine()
 {
 }
 
-bool CartesianEdgeFloatConservativeLinearRefine::findRefineOperator(
+bool
+CartesianEdgeFloatConservativeLinearRefine::findRefineOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -143,11 +144,13 @@ CartesianEdgeFloatConservativeLinearRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianEdgeFloatConservativeLinearRefine::getStencilWidth() const {
+CartesianEdgeFloatConservativeLinearRefine::getStencilWidth() const
+{
    return hier::IntVector::getOne(getDim());
 }
 
-void CartesianEdgeFloatConservativeLinearRefine::refine(
+void
+CartesianEdgeFloatConservativeLinearRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,

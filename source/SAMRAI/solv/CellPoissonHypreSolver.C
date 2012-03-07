@@ -336,7 +336,8 @@ CellPoissonHypreSolver::CellPoissonHypreSolver(
  ********************************************************************
  */
 
-void CellPoissonHypreSolver::getFromInput(
+void
+CellPoissonHypreSolver::getFromInput(
    const boost::shared_ptr<tbox::Database>& database)
 {
    if (database) {
@@ -386,7 +387,8 @@ void CellPoissonHypreSolver::getFromInput(
  ********************************************************************
  */
 
-void CellPoissonHypreSolver::initializeSolverState(
+void
+CellPoissonHypreSolver::initializeSolverState(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int ln)
 {
@@ -418,9 +420,12 @@ void CellPoissonHypreSolver::initializeSolverState(
  ********************************************************************
  */
 
-void CellPoissonHypreSolver::deallocateSolverState()
+void
+CellPoissonHypreSolver::deallocateSolverState()
 {
-   if (!d_hierarchy) return;
+   if (!d_hierarchy) {
+      return;
+   }
 
    d_cf_boundary->clear();
    boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
@@ -438,7 +443,8 @@ void CellPoissonHypreSolver::deallocateSolverState()
  *
  *************************************************************************
  */
-void CellPoissonHypreSolver::allocateHypreData()
+void
+CellPoissonHypreSolver::allocateHypreData()
 {
    tbox::SAMRAI_MPI::Comm communicator =
       d_hierarchy->getMPI().getCommunicator();
@@ -635,7 +641,8 @@ CellPoissonHypreSolver::~CellPoissonHypreSolver()
  *************************************************************************
  */
 
-void CellPoissonHypreSolver::deallocateHypreData()
+void
+CellPoissonHypreSolver::deallocateHypreData()
 {
    if (d_stencil) {
       HYPRE_StructStencilDestroy(d_stencil);
@@ -668,7 +675,8 @@ void CellPoissonHypreSolver::deallocateHypreData()
  *************************************************************************
  */
 
-void CellPoissonHypreSolver::copyToHypre(
+void
+CellPoissonHypreSolver::copyToHypre(
    HYPRE_StructVector vector,
    pdat::CellData<double>& src,
    int depth,
@@ -690,7 +698,8 @@ void CellPoissonHypreSolver::copyToHypre(
  *************************************************************************
  */
 
-void CellPoissonHypreSolver::copyFromHypre(
+void
+CellPoissonHypreSolver::copyFromHypre(
    pdat::CellData<double>& dst,
    int depth,
    HYPRE_StructVector vector,
@@ -717,7 +726,8 @@ void CellPoissonHypreSolver::copyFromHypre(
  *************************************************************************
  */
 
-void CellPoissonHypreSolver::setMatrixCoefficients(
+void
+CellPoissonHypreSolver::setMatrixCoefficients(
    const PoissonSpecifications& spec)
 {
    if (d_physical_bc_coef_strategy == NULL) {
@@ -1058,7 +1068,8 @@ void CellPoissonHypreSolver::setMatrixCoefficients(
  **********************************************************************
  */
 
-void CellPoissonHypreSolver::add_gAk0_toRhs(
+void
+CellPoissonHypreSolver::add_gAk0_toRhs(
    const hier::Patch& patch,
    const tbox::Array<hier::BoundaryBox>& bdry_boxes,
    const RobinBcCoefStrategy* robin_bc_coef,
@@ -1164,7 +1175,8 @@ void CellPoissonHypreSolver::add_gAk0_toRhs(
  * Create the hypre solver and set it according to the current state.
  *************************************************************************
  */
-void CellPoissonHypreSolver::setupHypreSolver()
+void
+CellPoissonHypreSolver::setupHypreSolver()
 {
    TBOX_ASSERT(d_mg_data == NULL);
 
@@ -1201,7 +1213,8 @@ void CellPoissonHypreSolver::setupHypreSolver()
    }
 }
 
-void CellPoissonHypreSolver::destroyHypreSolver()
+void
+CellPoissonHypreSolver::destroyHypreSolver()
 {
    if (d_mg_data != NULL) {
       if (d_use_smg) {
@@ -1222,7 +1235,8 @@ void CellPoissonHypreSolver::destroyHypreSolver()
  *************************************************************************
  */
 
-int CellPoissonHypreSolver::solveSystem(
+int
+CellPoissonHypreSolver::solveSystem(
    const int u,
    const int f,
    bool homogeneous_bc)
@@ -1392,7 +1406,8 @@ int CellPoissonHypreSolver::solveSystem(
    return d_relative_residual_norm <= d_relative_residual_tol;
 }
 
-void CellPoissonHypreSolver::computeDiagonalEntries(
+void
+CellPoissonHypreSolver::computeDiagonalEntries(
    pdat::CellData<double>& diagonal,
    const pdat::CellData<double>& C_data,
    const pdat::SideData<double>& off_diagonal,
@@ -1428,7 +1443,8 @@ void CellPoissonHypreSolver::computeDiagonalEntries(
    }
 }
 
-void CellPoissonHypreSolver::computeDiagonalEntries(
+void
+CellPoissonHypreSolver::computeDiagonalEntries(
    pdat::CellData<double>& diagonal,
    const double C,
    const pdat::SideData<double>& off_diagonal,
@@ -1463,7 +1479,8 @@ void CellPoissonHypreSolver::computeDiagonalEntries(
    }
 }
 
-void CellPoissonHypreSolver::computeDiagonalEntries(
+void
+CellPoissonHypreSolver::computeDiagonalEntries(
    pdat::CellData<double>& diagonal,
    const pdat::SideData<double>& off_diagonal,
    const hier::Box& patch_box)
@@ -1495,7 +1512,8 @@ void CellPoissonHypreSolver::computeDiagonalEntries(
    }
 }
 
-void CellPoissonHypreSolver::adjustBoundaryEntries(
+void
+CellPoissonHypreSolver::adjustBoundaryEntries(
    pdat::CellData<double>& diagonal,
    const pdat::SideData<double>& off_diagonal,
    const hier::Box& patch_box,

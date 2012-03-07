@@ -12,19 +12,22 @@ namespace SAMRAI {
 namespace geom {
 
 SAMRAI_INLINE_KEYWORD
-const double *CartesianPatchGeometry::getDx() const
+const double*
+CartesianPatchGeometry::getDx() const
 {
    return d_dx;
 }
 
 SAMRAI_INLINE_KEYWORD
-const double *CartesianPatchGeometry::getXLower() const
+const double*
+CartesianPatchGeometry::getXLower() const
 {
    return d_x_lo;
 }
 
 SAMRAI_INLINE_KEYWORD
-const double *CartesianPatchGeometry::getXUpper() const
+const double*
+CartesianPatchGeometry::getXUpper() const
 {
    return d_x_up;
 }

@@ -117,7 +117,8 @@ KINSOL_SAMRAIContext::~KINSOL_SAMRAIContext()
  *************************************************************************
  */
 
-void KINSOL_SAMRAIContext::initialize(
+void
+KINSOL_SAMRAIContext::initialize(
    const boost::shared_ptr<SAMRAIVectorReal<double> >& solution)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -128,14 +129,10 @@ void KINSOL_SAMRAIContext::initialize(
    d_KINSOL_solver->initialize(d_solution_vector);
 }
 
-int KINSOL_SAMRAIContext::solve()
+int
+KINSOL_SAMRAIContext::solve()
 {
    return d_KINSOL_solver->solve();
-}
-
-KINSOLSolver *KINSOL_SAMRAIContext::getKINSOLSolver()
-{
-   return d_KINSOL_solver;
 }
 
 /*
@@ -148,7 +145,8 @@ KINSOLSolver *KINSOL_SAMRAIContext::getKINSOLSolver()
  *************************************************************************
  */
 
-void KINSOL_SAMRAIContext::getFromInput(
+void
+KINSOL_SAMRAIContext::getFromInput(
    const boost::shared_ptr<tbox::Database>& db)
 {
    if (db) {
@@ -285,7 +283,8 @@ void KINSOL_SAMRAIContext::getFromInput(
  *************************************************************************
  */
 
-void KINSOL_SAMRAIContext::getFromRestart()
+void
+KINSOL_SAMRAIContext::getFromRestart()
 {
 
    boost::shared_ptr<tbox::Database> root_db(
@@ -334,7 +333,8 @@ void KINSOL_SAMRAIContext::getFromRestart()
  *************************************************************************
  */
 
-void KINSOL_SAMRAIContext::putToDatabase(
+void
+KINSOL_SAMRAIContext::putToDatabase(
    const boost::shared_ptr<tbox::Database>& db) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -373,7 +373,8 @@ void KINSOL_SAMRAIContext::putToDatabase(
  *************************************************************************
  */
 
-void KINSOL_SAMRAIContext::printClassData(
+void
+KINSOL_SAMRAIContext::printClassData(
    std::ostream& os) const
 {
    os << "\nKINSOL_SAMRAIContext::printClassData..." << std::endl;

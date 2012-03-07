@@ -178,7 +178,8 @@ PETScAbstractVectorReal<TYPE>::~PETScAbstractVectorReal()
 }
 
 template<class TYPE>
-PetscErrorCode PETScAbstractVectorReal<TYPE>::vecDuplicateVecs(
+PetscErrorCode
+PETScAbstractVectorReal<TYPE>::vecDuplicateVecs(
    Vec v_in,
    int n,
    Vec** varr_new)
@@ -197,7 +198,8 @@ PetscErrorCode PETScAbstractVectorReal<TYPE>::vecDuplicateVecs(
 }
 
 template<class TYPE>
-PetscErrorCode PETScAbstractVectorReal<TYPE>::vecDestroyVecs(
+PetscErrorCode
+PETScAbstractVectorReal<TYPE>::vecDestroyVecs(
    Vec* v_arr,
    PetscInt n)
 {

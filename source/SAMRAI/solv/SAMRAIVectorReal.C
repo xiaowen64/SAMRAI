@@ -34,10 +34,6 @@
 #include <cfloat>
 #include <cmath>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/SAMRAIVectorReal.I"
-#endif
-
 namespace SAMRAI {
 namespace solv {
 
@@ -171,7 +167,8 @@ SAMRAIVectorReal<TYPE>::SAMRAIVectorReal(
 }
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::operator = (
+void
+SAMRAIVectorReal<TYPE>::operator = (
    const SAMRAIVectorReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -186,7 +183,8 @@ void SAMRAIVectorReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::setName(
+void
+SAMRAIVectorReal<TYPE>::setName(
    const std::string& name)
 {
    d_vector_name = name;
@@ -201,7 +199,8 @@ void SAMRAIVectorReal<TYPE>::setName(
  */
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::resetLevels(
+void
+SAMRAIVectorReal<TYPE>::resetLevels(
    const int coarsest_level,
    const int finest_level)
 {
@@ -260,7 +259,8 @@ SAMRAIVectorReal<TYPE>::cloneVector(
  */
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::freeVectorComponents()
+void
+SAMRAIVectorReal<TYPE>::freeVectorComponents()
 {
    // deallocate storage for vector components
    deallocateVectorData();
@@ -295,7 +295,8 @@ void SAMRAIVectorReal<TYPE>::freeVectorComponents()
  */
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::addComponent(
+void
+SAMRAIVectorReal<TYPE>::addComponent(
    const boost::shared_ptr<hier::Variable>& var,
    const int comp_data_id,
    const int comp_vol_id,
@@ -359,7 +360,8 @@ void SAMRAIVectorReal<TYPE>::addComponent(
  *************************************************************************
  */
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::allocateVectorData(
+void
+SAMRAIVectorReal<TYPE>::allocateVectorData(
    const double timestamp)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -379,7 +381,8 @@ void SAMRAIVectorReal<TYPE>::allocateVectorData(
 }
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::deallocateVectorData()
+void
+SAMRAIVectorReal<TYPE>::deallocateVectorData()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
@@ -406,7 +409,8 @@ void SAMRAIVectorReal<TYPE>::deallocateVectorData()
  */
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::print(
+void
+SAMRAIVectorReal<TYPE>::print(
    std::ostream& s,
    bool interior_only) const
 {
@@ -438,7 +442,8 @@ void SAMRAIVectorReal<TYPE>::print(
  */
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::setNumberOfComponents(
+void
+SAMRAIVectorReal<TYPE>::setNumberOfComponents(
    int num_comp)
 {
    d_number_components = num_comp;
@@ -450,7 +455,8 @@ void SAMRAIVectorReal<TYPE>::setNumberOfComponents(
 }
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::setComponent(
+void
+SAMRAIVectorReal<TYPE>::setComponent(
    const int comp_id,
    const boost::shared_ptr<hier::Variable>& var,
    const int data_id,
@@ -566,7 +572,8 @@ void SAMRAIVectorReal<TYPE>::setComponent(
  */
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::copyVector(
+void
+SAMRAIVectorReal<TYPE>::copyVector(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& src_vec,
    const bool interior_only)
 {
@@ -579,7 +586,8 @@ void SAMRAIVectorReal<TYPE>::copyVector(
 }
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::swapVectors(
+void
+SAMRAIVectorReal<TYPE>::swapVectors(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& other)
 {
    for (int i = 0; i < d_number_components; i++) {
@@ -590,7 +598,8 @@ void SAMRAIVectorReal<TYPE>::swapVectors(
 }
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::setToScalar(
+void
+SAMRAIVectorReal<TYPE>::setToScalar(
    const TYPE& alpha,
    const bool interior_only)
 {
@@ -603,7 +612,8 @@ void SAMRAIVectorReal<TYPE>::setToScalar(
 }
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::scale(
+void
+SAMRAIVectorReal<TYPE>::scale(
    const TYPE& alpha,
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
    const bool interior_only)
@@ -618,7 +628,8 @@ void SAMRAIVectorReal<TYPE>::scale(
 }
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::addScalar(
+void
+SAMRAIVectorReal<TYPE>::addScalar(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
    const TYPE& alpha,
    const bool interior_only)
@@ -633,7 +644,8 @@ void SAMRAIVectorReal<TYPE>::addScalar(
 }
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::add(
+void
+SAMRAIVectorReal<TYPE>::add(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
    const bool interior_only)
@@ -648,7 +660,8 @@ void SAMRAIVectorReal<TYPE>::add(
 }
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::subtract(
+void
+SAMRAIVectorReal<TYPE>::subtract(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
    const bool interior_only)
@@ -663,7 +676,8 @@ void SAMRAIVectorReal<TYPE>::subtract(
 }
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::multiply(
+void
+SAMRAIVectorReal<TYPE>::multiply(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
    const bool interior_only)
@@ -678,7 +692,8 @@ void SAMRAIVectorReal<TYPE>::multiply(
 }
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::divide(
+void
+SAMRAIVectorReal<TYPE>::divide(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
    const bool interior_only)
@@ -693,7 +708,8 @@ void SAMRAIVectorReal<TYPE>::divide(
 }
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::reciprocal(
+void
+SAMRAIVectorReal<TYPE>::reciprocal(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
    const bool interior_only)
 {
@@ -706,7 +722,8 @@ void SAMRAIVectorReal<TYPE>::reciprocal(
 }
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::linearSum(
+void
+SAMRAIVectorReal<TYPE>::linearSum(
    const TYPE& alpha,
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
    const TYPE& beta,
@@ -725,7 +742,8 @@ void SAMRAIVectorReal<TYPE>::linearSum(
 }
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::axpy(
+void
+SAMRAIVectorReal<TYPE>::axpy(
    const TYPE& alpha,
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
@@ -742,7 +760,8 @@ void SAMRAIVectorReal<TYPE>::axpy(
 }
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::abs(
+void
+SAMRAIVectorReal<TYPE>::abs(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
    const bool interior_only)
 {
@@ -755,7 +774,8 @@ void SAMRAIVectorReal<TYPE>::abs(
 }
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::setRandomValues(
+void
+SAMRAIVectorReal<TYPE>::setRandomValues(
    const TYPE& width,
    const TYPE& low,
    const bool interior_only)
@@ -770,7 +790,8 @@ void SAMRAIVectorReal<TYPE>::setRandomValues(
 }
 
 template<class TYPE>
-double SAMRAIVectorReal<TYPE>::L1Norm(
+double
+SAMRAIVectorReal<TYPE>::L1Norm(
    bool local_only) const
 {
    double norm = 0.0;
@@ -786,7 +807,8 @@ double SAMRAIVectorReal<TYPE>::L1Norm(
 }
 
 template<class TYPE>
-double SAMRAIVectorReal<TYPE>::L2Norm(
+double
+SAMRAIVectorReal<TYPE>::L2Norm(
    bool local_only) const
 {
    double norm_squared = 0.0;
@@ -804,7 +826,8 @@ double SAMRAIVectorReal<TYPE>::L2Norm(
 }
 
 template<class TYPE>
-double SAMRAIVectorReal<TYPE>::weightedL2Norm(
+double
+SAMRAIVectorReal<TYPE>::weightedL2Norm(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& wgt) const
 {
    double norm_squared = 0.0;
@@ -822,7 +845,8 @@ double SAMRAIVectorReal<TYPE>::weightedL2Norm(
 }
 
 template<class TYPE>
-double SAMRAIVectorReal<TYPE>::RMSNorm() const
+double
+SAMRAIVectorReal<TYPE>::RMSNorm() const
 {
    double num = L2Norm();
 
@@ -845,7 +869,8 @@ double SAMRAIVectorReal<TYPE>::RMSNorm() const
 }
 
 template<class TYPE>
-double SAMRAIVectorReal<TYPE>::weightedRMSNorm(
+double
+SAMRAIVectorReal<TYPE>::weightedRMSNorm(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& wgt) const
 {
    double num = weightedL2Norm(wgt);
@@ -869,7 +894,8 @@ double SAMRAIVectorReal<TYPE>::weightedRMSNorm(
 }
 
 template<class TYPE>
-double SAMRAIVectorReal<TYPE>::maxNorm(
+double
+SAMRAIVectorReal<TYPE>::maxNorm(
    bool local_only) const
 {
    double norm = 0.0;
@@ -887,7 +913,8 @@ double SAMRAIVectorReal<TYPE>::maxNorm(
 }
 
 template<class TYPE>
-TYPE SAMRAIVectorReal<TYPE>::dot(
+TYPE
+SAMRAIVectorReal<TYPE>::dot(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
    bool local_only) const
 {
@@ -905,7 +932,8 @@ TYPE SAMRAIVectorReal<TYPE>::dot(
 }
 
 template<class TYPE>
-int SAMRAIVectorReal<TYPE>::computeConstrProdPos(
+int
+SAMRAIVectorReal<TYPE>::computeConstrProdPos(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x) const
 {
    int test = 1;
@@ -925,7 +953,8 @@ int SAMRAIVectorReal<TYPE>::computeConstrProdPos(
 }
 
 template<class TYPE>
-void SAMRAIVectorReal<TYPE>::compareToScalar(
+void
+SAMRAIVectorReal<TYPE>::compareToScalar(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
    const TYPE& alpha)
 {
@@ -940,7 +969,8 @@ void SAMRAIVectorReal<TYPE>::compareToScalar(
 }
 
 template<class TYPE>
-int SAMRAIVectorReal<TYPE>::testReciprocal(
+int
+SAMRAIVectorReal<TYPE>::testReciprocal(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x)
 {
    int test = 1;
@@ -958,7 +988,8 @@ int SAMRAIVectorReal<TYPE>::testReciprocal(
 }
 
 template<class TYPE>
-TYPE SAMRAIVectorReal<TYPE>::maxPointwiseDivide(
+TYPE
+SAMRAIVectorReal<TYPE>::maxPointwiseDivide(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& denom) const
 {
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
@@ -980,7 +1011,8 @@ TYPE SAMRAIVectorReal<TYPE>::maxPointwiseDivide(
 }
 
 template<class TYPE>
-TYPE SAMRAIVectorReal<TYPE>::min(
+TYPE
+SAMRAIVectorReal<TYPE>::min(
    const bool interior_only) const
 {
    TYPE minval = tbox::MathUtilities<TYPE>::getMax();
@@ -997,7 +1029,8 @@ TYPE SAMRAIVectorReal<TYPE>::min(
 }
 
 template<class TYPE>
-TYPE SAMRAIVectorReal<TYPE>::max(
+TYPE
+SAMRAIVectorReal<TYPE>::max(
    const bool interior_only) const
 {
    TYPE maxval = -tbox::MathUtilities<TYPE>::getMax();
@@ -1011,6 +1044,119 @@ TYPE SAMRAIVectorReal<TYPE>::max(
    }
 
    return maxval;
+}
+
+template<class TYPE>
+void
+SAMRAIVectorReal<TYPE>::setOutputStream(
+   std::ostream& s)
+{
+   d_output_stream = &s;
+}
+
+template<class TYPE>
+std::ostream&
+SAMRAIVectorReal<TYPE>::getOutputStream()
+{
+   return *d_output_stream;
+}
+
+template<class TYPE>
+const std::string&
+SAMRAIVectorReal<TYPE>::getName() const
+{
+   return d_vector_name;
+}
+
+template<class TYPE>
+boost::shared_ptr<hier::PatchHierarchy>
+SAMRAIVectorReal<TYPE>::getPatchHierarchy() const
+{
+   return d_hierarchy;
+}
+
+template<class TYPE>
+int
+SAMRAIVectorReal<TYPE>::getCoarsestLevelNumber() const
+{
+   return d_coarsest_level;
+}
+
+template<class TYPE>
+int
+SAMRAIVectorReal<TYPE>::getFinestLevelNumber() const
+{
+   return d_finest_level;
+}
+
+template<class TYPE>
+int
+SAMRAIVectorReal<TYPE>::getNumberOfComponents() const
+{
+   return d_number_components;
+}
+
+template<class TYPE>
+boost::shared_ptr<hier::PatchData>
+SAMRAIVectorReal<TYPE>::getComponentPatchData(
+   const int comp_id,
+   const hier::Patch& patch) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(comp_id >= 0 && comp_id < d_number_components);
+#endif
+   return patch.getPatchData(d_component_data_id[comp_id]);
+}
+
+template<class TYPE>
+boost::shared_ptr<hier::PatchData>
+SAMRAIVectorReal<TYPE>::getComponentPatchData(
+   const boost::shared_ptr<hier::Variable>& var,
+   const hier::Patch& patch) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(var);
+   TBOX_ASSERT(d_variableid_2_vectorcomponent_map[
+         var->getInstanceIdentifier()] >= 0);
+#endif
+   return patch.getPatchData(
+      d_component_data_id[
+         d_variableid_2_vectorcomponent_map[
+            var->getInstanceIdentifier()]]);
+}
+
+template<class TYPE>
+boost::shared_ptr<hier::Variable>
+SAMRAIVectorReal<TYPE>::getComponentVariable(
+   const int comp_id) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(comp_id >= 0 && comp_id < d_number_components);
+#endif
+   return d_component_variable[comp_id];
+
+}
+
+template<class TYPE>
+int
+SAMRAIVectorReal<TYPE>::getComponentDescriptorIndex(
+   const int comp_id) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(comp_id >= 0 && comp_id < d_number_components);
+#endif
+   return d_component_data_id[comp_id];
+}
+
+template<class TYPE>
+int
+SAMRAIVectorReal<TYPE>::getControlVolumeIndex(
+   const int comp_id) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(comp_id >= 0 && comp_id < d_number_components);
+#endif
+   return d_control_volume_data_id[comp_id];
 }
 
 }

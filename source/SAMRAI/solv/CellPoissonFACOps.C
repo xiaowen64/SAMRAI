@@ -690,8 +690,7 @@ CellPoissonFACOps::CellPoissonFACOps(
 
 }
 
-CellPoissonFACOps::~CellPoissonFACOps(
-   void)
+CellPoissonFACOps::~CellPoissonFACOps()
 {
 }
 
@@ -704,7 +703,8 @@ CellPoissonFACOps::~CellPoissonFACOps(
  ************************************************************************
  */
 
-void CellPoissonFACOps::initializeOperatorState(
+void
+CellPoissonFACOps::initializeOperatorState(
    const SAMRAIVectorReal<double>& solution,
    const SAMRAIVectorReal<double>& rhs)
 {
@@ -1084,7 +1084,8 @@ void CellPoissonFACOps::initializeOperatorState(
  ********************************************************************
  */
 
-void CellPoissonFACOps::deallocateOperatorState()
+void
+CellPoissonFACOps::deallocateOperatorState()
 {
    if (d_hierarchy) {
       int ln;
@@ -1127,7 +1128,8 @@ void CellPoissonFACOps::deallocateOperatorState()
  ********************************************************************
  */
 
-void CellPoissonFACOps::postprocessOneCycle(
+void
+CellPoissonFACOps::postprocessOneCycle(
    int fac_cycle_num,
    const SAMRAIVectorReal<double>& current_soln,
    const SAMRAIVectorReal<double>& residual)
@@ -1162,11 +1164,12 @@ void CellPoissonFACOps::postprocessOneCycle(
  ********************************************************************
  */
 
-void CellPoissonFACOps::restrictSolution(
+void
+CellPoissonFACOps::restrictSolution(
    const SAMRAIVectorReal<double>& s,
    SAMRAIVectorReal<double>& d,
-   int dest_ln) {
-
+   int dest_ln)
+{
    t_restrict_solution->start();
 
    xeqScheduleURestriction(d.getComponentDescriptorIndex(0),
@@ -1193,10 +1196,12 @@ void CellPoissonFACOps::restrictSolution(
  ********************************************************************
  */
 
-void CellPoissonFACOps::restrictResidual(
+void
+CellPoissonFACOps::restrictResidual(
    const SAMRAIVectorReal<double>& s,
    SAMRAIVectorReal<double>& d,
-   int dest_ln) {
+   int dest_ln)
+{
 
    t_restrict_residual->start();
 
@@ -1216,11 +1221,12 @@ void CellPoissonFACOps::restrictResidual(
  ***********************************************************************
  */
 
-void CellPoissonFACOps::prolongErrorAndCorrect(
+void
+CellPoissonFACOps::prolongErrorAndCorrect(
    const SAMRAIVectorReal<double>& s,
    SAMRAIVectorReal<double>& d,
-   int dest_ln) {
-
+   int dest_ln)
+{
    t_prolong->start();
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1273,7 +1279,8 @@ void CellPoissonFACOps::prolongErrorAndCorrect(
  ********************************************************************
  */
 
-void CellPoissonFACOps::smoothError(
+void
+CellPoissonFACOps::smoothError(
    SAMRAIVectorReal<double>& data,
    const SAMRAIVectorReal<double>& residual,
    int ln,
@@ -1305,7 +1312,8 @@ void CellPoissonFACOps::smoothError(
  ********************************************************************
  */
 
-void CellPoissonFACOps::smoothErrorByRedBlack(
+void
+CellPoissonFACOps::smoothErrorByRedBlack(
    SAMRAIVectorReal<double>& data,
    const SAMRAIVectorReal<double>& residual,
    int ln,
@@ -1479,7 +1487,8 @@ void CellPoissonFACOps::smoothErrorByRedBlack(
  ********************************************************************
  */
 
-void CellPoissonFACOps::ewingFixFlux(
+void
+CellPoissonFACOps::ewingFixFlux(
    const hier::Patch& patch,
    const pdat::CellData<double>& soln_data,
    pdat::SideData<double>& flux_data,
@@ -1623,11 +1632,12 @@ void CellPoissonFACOps::ewingFixFlux(
  ********************************************************************
  */
 
-int CellPoissonFACOps::solveCoarsestLevel(
+int
+CellPoissonFACOps::solveCoarsestLevel(
    SAMRAIVectorReal<double>& data,
    const SAMRAIVectorReal<double>& residual,
-   int coarsest_ln) {
-
+   int coarsest_ln)
+{
    t_solve_coarsest->start();
 
    checkInputPatchDataIndices();
@@ -1680,18 +1690,19 @@ int CellPoissonFACOps::solveCoarsestLevel(
  ********************************************************************
  */
 
-int CellPoissonFACOps::solveCoarsestLevel_HYPRE(
+int
+CellPoissonFACOps::solveCoarsestLevel_HYPRE(
    SAMRAIVectorReal<double>& data,
    const SAMRAIVectorReal<double>& residual,
-   int coarsest_ln) {
-
+   int coarsest_ln)
+{
    NULL_USE(coarsest_ln);
 
 #ifndef HAVE_HYPRE
    TBOX_ERROR(d_object_name << ": Coarse level solver choice '"
                             << d_coarse_solver_choice
                             << "' unavailable in "
-                            << "CellPoissonFACOps::solveCoarsestLevel.");
+                            << "CellPoissonFACOps::solveCoarsestLevel_HYPRE.");
 
    return 0;
 
@@ -1729,13 +1740,14 @@ int CellPoissonFACOps::solveCoarsestLevel_HYPRE(
  ********************************************************************
  */
 
-void CellPoissonFACOps::computeCompositeResidualOnLevel(
+void
+CellPoissonFACOps::computeCompositeResidualOnLevel(
    SAMRAIVectorReal<double>& residual,
    const SAMRAIVectorReal<double>& solution,
    const SAMRAIVectorReal<double>& rhs,
    int ln,
-   bool error_equation_indicator) {
-
+   bool error_equation_indicator)
+{
    t_compute_composite_residual->start();
 
    checkInputPatchDataIndices();
@@ -1890,7 +1902,8 @@ void CellPoissonFACOps::computeCompositeResidualOnLevel(
  ********************************************************************
  */
 
-double CellPoissonFACOps::computeResidualNorm(
+double
+CellPoissonFACOps::computeResidualNorm(
    const SAMRAIVectorReal<double>& residual,
    int fine_ln,
    int coarse_ln)
@@ -1928,7 +1941,8 @@ double CellPoissonFACOps::computeResidualNorm(
  ********************************************************************
  */
 
-void CellPoissonFACOps::computeVectorWeights(
+void
+CellPoissonFACOps::computeVectorWeights(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int weight_id,
    int coarsest_ln,
@@ -2029,7 +2043,9 @@ void CellPoissonFACOps::computeVectorWeights(
  ********************************************************************
  */
 
-void CellPoissonFACOps::checkInputPatchDataIndices() const {
+void
+CellPoissonFACOps::checkInputPatchDataIndices() const
+{
    /*
     * Check input validity and correctness.
     */
@@ -2079,7 +2095,8 @@ void CellPoissonFACOps::checkInputPatchDataIndices() const {
  *******************************************************************
  */
 
-void CellPoissonFACOps::computeFluxOnPatch(
+void
+CellPoissonFACOps::computeFluxOnPatch(
    const hier::Patch& patch,
    const hier::IntVector& ratio_to_coarser_level,
    const pdat::CellData<double>& w_data,
@@ -2189,7 +2206,8 @@ void CellPoissonFACOps::computeFluxOnPatch(
 
 }
 
-void CellPoissonFACOps::computeResidualOnPatch(
+void
+CellPoissonFACOps::computeResidualOnPatch(
    const hier::Patch& patch,
    const pdat::SideData<double>& flux_data,
    const pdat::CellData<double>& soln_data,
@@ -2350,7 +2368,8 @@ void CellPoissonFACOps::computeResidualOnPatch(
    }
 }
 
-void CellPoissonFACOps::redOrBlackSmoothingOnPatch(
+void
+CellPoissonFACOps::redOrBlackSmoothingOnPatch(
    const hier::Patch& patch,
    const pdat::SideData<double>& flux_data,
    const pdat::CellData<double>& rhs_data,

@@ -54,7 +54,8 @@ SkeletonPatchGeometry::~SkeletonPatchGeometry()
  *
  *************************************************************************
  */
-void SkeletonPatchGeometry::printClassData(
+void
+SkeletonPatchGeometry::printClassData(
    std::ostream& os) const
 {
    os << "Printing SkeletonPatchGeometry data: this = "

@@ -121,7 +121,8 @@ CartesianFaceDoubleConservativeLinearRefine()
 {
 }
 
-bool CartesianFaceDoubleConservativeLinearRefine::findRefineOperator(
+bool
+CartesianFaceDoubleConservativeLinearRefine::findRefineOperator(
    const boost::shared_ptr<hier::Variable>& var,
    const std::string& op_name) const
 {
@@ -144,11 +145,13 @@ CartesianFaceDoubleConservativeLinearRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianFaceDoubleConservativeLinearRefine::getStencilWidth() const {
+CartesianFaceDoubleConservativeLinearRefine::getStencilWidth() const
+{
    return hier::IntVector::getOne(getDim());
 }
 
-void CartesianFaceDoubleConservativeLinearRefine::refine(
+void
+CartesianFaceDoubleConservativeLinearRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,

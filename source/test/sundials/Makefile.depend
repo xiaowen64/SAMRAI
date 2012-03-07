@@ -240,10 +240,10 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/solv/PoissonSpecifications.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/PoissonSpecifications.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/RobinBcCoefStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SimpleCellRobinBcCoefs.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SimpleCellRobinBcCoefs.h		\
+	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/Sundials_SAMRAIVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/Sundials_SAMRAIVector.h		\
@@ -515,6 +515,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataMiscellaneousOpsReal.h	\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataNormOpsReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchSideDataOpsReal.h		\
+	$(INCLUDE_SAM)/SAMRAI/mesh/BalanceUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BergerRigoutsos.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BoxGeneratorStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/GriddingAlgorithm.I			\
@@ -523,6 +524,8 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/mesh/GriddingAlgorithmStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/LoadBalanceStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/MultiblockGriddingTagger.h		\
+	$(INCLUDE_SAM)/SAMRAI/mesh/SpatialKey.I				\
+	$(INCLUDE_SAM)/SAMRAI/mesh/SpatialKey.h				\
 	$(INCLUDE_SAM)/SAMRAI/mesh/StandardTagAndInitStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/StandardTagAndInitialize.I		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/StandardTagAndInitialize.h		\
@@ -630,10 +633,10 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/solv/PoissonSpecifications.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/PoissonSpecifications.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/RobinBcCoefStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SimpleCellRobinBcCoefs.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SimpleCellRobinBcCoefs.h		\
+	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/Sundials_SAMRAIVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/Sundials_SAMRAIVector.h		\
@@ -1013,10 +1016,10 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/solv/PoissonSpecifications.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/PoissonSpecifications.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/RobinBcCoefStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.I			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.h			\
 	$(INCLUDE_SAM)/SAMRAI/solv/SimpleCellRobinBcCoefs.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SimpleCellRobinBcCoefs.h		\
+	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/SundialsAbstractVector.h		\
 	$(INCLUDE_SAM)/SAMRAI/solv/Sundials_SAMRAIVector.I		\
 	$(INCLUDE_SAM)/SAMRAI/solv/Sundials_SAMRAIVector.h		\

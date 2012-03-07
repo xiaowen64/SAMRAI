@@ -174,7 +174,8 @@ CellPoissonFACSolver::~CellPoissonFACSolver()
  ********************************************************************
  */
 
-void CellPoissonFACSolver::getFromInput(
+void
+CellPoissonFACSolver::getFromInput(
    const boost::shared_ptr<tbox::Database>& database)
 {
    if (database) {
@@ -240,7 +241,8 @@ void CellPoissonFACSolver::getFromInput(
  *************************************************************************
  */
 
-void CellPoissonFACSolver::initializeSolverState(
+void
+CellPoissonFACSolver::initializeSolverState(
    const int solution,
    const int rhs,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -318,7 +320,8 @@ void CellPoissonFACSolver::initializeSolverState(
    d_solver_is_initialized = true;
 }
 
-void CellPoissonFACSolver::deallocateSolverState()
+void
+CellPoissonFACSolver::deallocateSolverState()
 {
    if (d_hierarchy) {
 
@@ -343,21 +346,8 @@ void CellPoissonFACSolver::deallocateSolverState()
    }
 }
 
-/*
- *************************************************************************
- * Enable logging and propagate logging flag to major components.
- *************************************************************************
- */
-
-void CellPoissonFACSolver::enableLogging(
-   bool logging)
-{
-   d_enable_logging = logging;
-   d_fac_precond.enableLogging(d_enable_logging);
-   d_fac_ops.enableLogging(d_enable_logging);
-}
-
-void CellPoissonFACSolver::setBoundaries(
+void
+CellPoissonFACSolver::setBoundaries(
    const std::string& boundary_type,
    const int fluxes,
    const int flags,
@@ -378,19 +368,6 @@ void CellPoissonFACSolver::setBoundaries(
    d_fac_ops.setPhysicalBcCoefObject(d_bc_object);
 }
 
-void CellPoissonFACSolver::setBcObject(
-   const RobinBcCoefStrategy* bc_object)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (!bc_object) {
-      TBOX_ERROR(d_object_name << ": NULL pointer for boundary condition\n"
-                               << "object.\n");
-   }
-#endif
-   d_bc_object = bc_object;
-   d_fac_ops.setPhysicalBcCoefObject(d_bc_object);
-}
-
 /*
  *************************************************************************
  *
@@ -404,7 +381,8 @@ void CellPoissonFACSolver::setBcObject(
  *************************************************************************
  */
 
-bool CellPoissonFACSolver::solveSystem(
+bool
+CellPoissonFACSolver::solveSystem(
    const int u,
    const int f)
 {
@@ -461,7 +439,8 @@ bool CellPoissonFACSolver::solveSystem(
  *************************************************************************
  */
 
-bool CellPoissonFACSolver::solveSystem(
+bool
+CellPoissonFACSolver::solveSystem(
    const int u,
    const int f,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -499,10 +478,11 @@ bool CellPoissonFACSolver::solveSystem(
    return solver_rval;
 }
 
-void CellPoissonFACSolver::createVectorWrappers(
+void
+CellPoissonFACSolver::createVectorWrappers(
    int u,
-   int f) {
-
+   int f)
+{
    hier::VariableDatabase& vdb(*hier::VariableDatabase::getDatabase());
    boost::shared_ptr<hier::Variable> variable;
 
@@ -551,19 +531,9 @@ void CellPoissonFACSolver::createVectorWrappers(
    }
 }
 
-/*
- ***********************************************************************
- * Delete the vector wrappers.  Do not freeVectorComponents because
- * we do not control their data allocation.  The user does that.
- ***********************************************************************
- */
-void CellPoissonFACSolver::destroyVectorWrappers() {
-   d_uv.reset();
-   d_fv.reset();
-}
-
-void CellPoissonFACSolver::initializeStatics() {
-
+void
+CellPoissonFACSolver::initializeStatics()
+{
    for (int d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
       s_weight_id[d] = -1;
       s_instance_counter[d] = -1;

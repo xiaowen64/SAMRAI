@@ -102,9 +102,28 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.h		\
+	$(INCLUDE_SAM)/SAMRAI/mesh/BalanceUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/LoadBalanceStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/mesh/SpatialKey.I				\
+	$(INCLUDE_SAM)/SAMRAI/mesh/SpatialKey.h				\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TreeLoadBalancer.I			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TreeLoadBalancer.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.I			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.I			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.I				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.I			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.I			\
@@ -132,6 +151,8 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryDatabase.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryDatabase.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.I			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.I			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.I				\
@@ -158,6 +179,13 @@ DEPENDS_0:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.C		\
+	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.C				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\

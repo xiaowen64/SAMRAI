@@ -16,7 +16,50 @@
 namespace SAMRAI {
 namespace solv {
 
-void PoissonSpecifications::printClassData(
+/*
+ *******************************************************************
+ * Default constructor
+ *******************************************************************
+ */
+
+PoissonSpecifications::PoissonSpecifications(
+   const std::string& object_name):d_object_name(object_name),
+   d_D_id(-1),
+   d_D_constant(1.0),
+   d_C_zero(true),
+   d_C_id(-1),
+   d_C_constant(0.0)
+{
+}
+
+/*
+ *******************************************************************
+ * Copy constructor
+ *******************************************************************
+ */
+
+PoissonSpecifications::PoissonSpecifications(
+   const std::string& object_name,
+   const PoissonSpecifications& r):d_object_name(object_name),
+   d_D_id(r.d_D_id),
+   d_D_constant(r.d_D_constant),
+   d_C_zero(r.d_C_zero),
+   d_C_id(r.d_C_id),
+   d_C_constant(r.d_C_constant)
+{
+}
+
+/*
+ *******************************************************************
+ * Destructor (does nothing).
+ *******************************************************************
+ */
+PoissonSpecifications::~PoissonSpecifications()
+{
+}
+
+void
+PoissonSpecifications::printClassData(
    std::ostream& stream) const
 {
    stream << "PoissonSpecifications " << d_object_name << "\n"

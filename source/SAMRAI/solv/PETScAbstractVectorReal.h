@@ -779,9 +779,7 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/solv/PETScAbstractVectorReal.C"
-#endif
 
 #endif
 #endif

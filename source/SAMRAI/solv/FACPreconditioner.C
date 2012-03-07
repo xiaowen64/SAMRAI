@@ -89,7 +89,8 @@ FACPreconditioner::~FACPreconditioner()
  ********************************************************************
  */
 
-void FACPreconditioner::getFromInput(
+void
+FACPreconditioner::getFromInput(
    const boost::shared_ptr<tbox::Database>& database)
 {
    if (database) {
@@ -128,7 +129,8 @@ void FACPreconditioner::getFromInput(
  *
  *************************************************************************
  */
-void FACPreconditioner::deallocateSolverState()
+void
+FACPreconditioner::deallocateSolverState()
 {
    /*
     * Delete hierarchy-dependent state data.
@@ -161,7 +163,8 @@ void FACPreconditioner::deallocateSolverState()
    }
 }
 
-void FACPreconditioner::initializeSolverState(
+void
+FACPreconditioner::initializeSolverState(
    const SAMRAIVectorReal<double>& solution,
    const SAMRAIVectorReal<double>& rhs)
 {
@@ -234,7 +237,8 @@ void FACPreconditioner::initializeSolverState(
    d_fac_operator.initializeOperatorState(solution, rhs);
 }
 
-bool FACPreconditioner::checkVectorStateCompatibility(
+bool
+FACPreconditioner::checkVectorStateCompatibility(
    const SAMRAIVectorReal<double>& solution,
    const SAMRAIVectorReal<double>& rhs) const
 {
@@ -278,7 +282,8 @@ bool FACPreconditioner::checkVectorStateCompatibility(
  *************************************************************************
  */
 
-bool FACPreconditioner::solveSystem(
+bool
+FACPreconditioner::solveSystem(
    SAMRAIVectorReal<double>& u,
    SAMRAIVectorReal<double>& f)
 {
@@ -463,7 +468,8 @@ bool FACPreconditioner::solveSystem(
  *
  *************************************************************************
  */
-void FACPreconditioner::facCycle_Recursive(
+void
+FACPreconditioner::facCycle_Recursive(
    SAMRAIVectorReal<double>& e,
    SAMRAIVectorReal<double>& r,
    SAMRAIVectorReal<double>& u,
@@ -531,7 +537,8 @@ void FACPreconditioner::facCycle_Recursive(
  *************************************************************************
  */
 
-void FACPreconditioner::facCycle_McCormick(
+void
+FACPreconditioner::facCycle_McCormick(
    SAMRAIVectorReal<double>& e,
    SAMRAIVectorReal<double>& r,
    SAMRAIVectorReal<double>& u,
@@ -681,7 +688,8 @@ void FACPreconditioner::facCycle_McCormick(
  *
  *************************************************************************
  */
-void FACPreconditioner::facCycle(
+void
+FACPreconditioner::facCycle(
    SAMRAIVectorReal<double>& e,
    SAMRAIVectorReal<double>& r,
    SAMRAIVectorReal<double>& u,
@@ -773,7 +781,8 @@ void FACPreconditioner::facCycle(
  *************************************************************************
  */
 
-double FACPreconditioner::computeFullCompositeResidual(
+double
+FACPreconditioner::computeFullCompositeResidual(
    SAMRAIVectorReal<double>& r,
    SAMRAIVectorReal<double>& u,
    SAMRAIVectorReal<double>& f)
@@ -821,7 +830,8 @@ double FACPreconditioner::computeFullCompositeResidual(
  *
  *************************************************************************
  */
-void FACPreconditioner::printClassData(
+void
+FACPreconditioner::printClassData(
    std::ostream& os) const {
    os << "printing FACPreconditioner data...\n"
       << "FACPreconditioner: this = " << (FACPreconditioner *)this << "\n"

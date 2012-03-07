@@ -137,8 +137,7 @@ public:
     *
     * Deallocate internal data.
     */
-   ~CellPoissonFACOps(
-      void);
+   ~CellPoissonFACOps();
 
    /*!
     * @brief Set the scalar Poisson equation specifications.

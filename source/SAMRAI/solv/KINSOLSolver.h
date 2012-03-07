@@ -23,11 +23,15 @@
 #include "SAMRAI/solv/SundialsAbstractVector.h"
 #include "SAMRAI/solv/KINSOLAbstractFunctions.h"
 #include "SAMRAI/tbox/IOStream.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 extern "C" {
 #include "kinsol/kinsol.h"
 #include "kinsol/kinsol_spgmr.h"
 }
+
+#include <kinsol/kinsol_impl.h>
+#include <kinsol/kinsol_spils.h>
 
 #include <string>
 
@@ -49,6 +53,11 @@ extern "C" {
       }                                                                         \
    } while (0)
 #endif
+
+#define SABSVEC_CAST(v) \
+   (static_cast<SundialsAbstractVector *>(v \
+                                          -> \
+                                          content))
 
 namespace SAMRAI {
 namespace solv {
@@ -484,8 +493,7 @@ private:
     * Free internally allocated vectors.
     */
    void
-   freeInternalVectors(
-      void);
+   freeInternalVectors();
 
    /*
     * Static member functions for linkage with KINSOL routines.
