@@ -210,7 +210,7 @@ public:
     */
    ConstNeighborIterator
    begin(
-      ConstNeighborhoodIterator& nbrhd) const;
+      const ConstNeighborhoodIterator& nbrhd) const;
 
    /*!
     * @brief Iterator pointing to the first neighbor in nbrhd.
@@ -228,7 +228,7 @@ public:
     */
    ConstNeighborIterator
    end(
-      ConstNeighborhoodIterator& nbrhd) const;
+      const ConstNeighborhoodIterator& nbrhd) const;
 
    /*!
     * @brief Iterator pointing one past the last neighbor in nbrhd.

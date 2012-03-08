@@ -381,7 +381,7 @@ Connector::end()
 SAMRAI_INLINE_KEYWORD
 Connector::ConstNeighborIterator
 Connector::begin(
-   ConstNeighborhoodIterator& nbrhd) const
+   const ConstNeighborhoodIterator& nbrhd) const
 {
    return nbrhd.d_collection->begin(nbrhd);
 }
@@ -407,7 +407,7 @@ Connector::begin(
 SAMRAI_INLINE_KEYWORD
 Connector::ConstNeighborIterator
 Connector::end(
-   ConstNeighborhoodIterator& nbrhd) const
+   const ConstNeighborhoodIterator& nbrhd) const
 {
    return nbrhd.d_collection->end(nbrhd);
 }
