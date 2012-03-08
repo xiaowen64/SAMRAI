@@ -11,7 +11,8 @@ namespace SAMRAI {
 namespace algs {
 
 SAMRAI_INLINE_KEYWORD
-const std::string& MblkPatchBoundaryNodeSum::getObjectName() const
+const std::string&
+MblkPatchBoundaryNodeSum::getObjectName() const
 {
    return d_object_name;
 }

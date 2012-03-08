@@ -12,7 +12,8 @@ namespace SAMRAI {
 namespace algs {
 
 SAMRAI_INLINE_KEYWORD
-const std::string& HyperbolicLevelIntegrator::getObjectName() const
+const std::string&
+HyperbolicLevelIntegrator::getObjectName() const
 {
    return d_object_name;
 }
@@ -53,7 +54,8 @@ HyperbolicLevelIntegrator::getPlotContext() const
 }
 
 SAMRAI_INLINE_KEYWORD
-bool HyperbolicLevelIntegrator::usingRefinedTimestepping() const
+bool
+HyperbolicLevelIntegrator::usingRefinedTimestepping() const
 {
    return d_use_time_refinement;
 }

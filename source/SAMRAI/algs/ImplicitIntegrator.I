@@ -12,49 +12,57 @@ namespace SAMRAI {
 namespace algs {
 
 SAMRAI_INLINE_KEYWORD
-double ImplicitIntegrator::getCurrentDt() const
+double
+ImplicitIntegrator::getCurrentDt() const
 {
    return d_current_dt;
 }
 
 SAMRAI_INLINE_KEYWORD
-double ImplicitIntegrator::getInitialTime() const
+double
+ImplicitIntegrator::getInitialTime() const
 {
    return d_initial_time;
 }
 
 SAMRAI_INLINE_KEYWORD
-double ImplicitIntegrator::getFinalTime() const
+double
+ImplicitIntegrator::getFinalTime() const
 {
    return d_final_time;
 }
 
 SAMRAI_INLINE_KEYWORD
-double ImplicitIntegrator::getCurrentTime() const
+double
+ImplicitIntegrator::getCurrentTime() const
 {
    return d_current_time;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool ImplicitIntegrator::stepsRemaining() const
+bool
+ImplicitIntegrator::stepsRemaining() const
 {
    return d_integrator_step < d_max_integrator_steps;
 }
 
 SAMRAI_INLINE_KEYWORD
-int ImplicitIntegrator::getIntegratorStep() const
+int
+ImplicitIntegrator::getIntegratorStep() const
 {
    return d_integrator_step;
 }
 
 SAMRAI_INLINE_KEYWORD
-int ImplicitIntegrator::getMaxIntegratorSteps() const
+int
+ImplicitIntegrator::getMaxIntegratorSteps() const
 {
    return d_max_integrator_steps;
 }
 
 SAMRAI_INLINE_KEYWORD
-const std::string& ImplicitIntegrator::getObjectName() const
+const std::string&
+ImplicitIntegrator::getObjectName() const
 {
    return d_object_name;
 }

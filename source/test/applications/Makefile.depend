@@ -16,9 +16,11 @@ DEPENDS_0:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/algs/HyperbolicLevelIntegrator.I		\
 	$(INCLUDE_SAM)/SAMRAI/algs/HyperbolicLevelIntegrator.h		\
+	$(INCLUDE_SAM)/SAMRAI/algs/HyperbolicPatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/algs/HyperbolicPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/algs/MethodOfLinesIntegrator.I		\
 	$(INCLUDE_SAM)/SAMRAI/algs/MethodOfLinesIntegrator.h		\
+	$(INCLUDE_SAM)/SAMRAI/algs/MethodOfLinesPatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/algs/MethodOfLinesPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/algs/TimeRefinementIntegrator.I		\
 	$(INCLUDE_SAM)/SAMRAI/algs/TimeRefinementIntegrator.h		\

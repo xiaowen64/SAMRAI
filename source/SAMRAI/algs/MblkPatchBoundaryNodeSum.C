@@ -145,7 +145,8 @@ MblkPatchBoundaryNodeSum::~MblkPatchBoundaryNodeSum()
  *************************************************************************
  */
 
-void MblkPatchBoundaryNodeSum::registerSum(
+void
+MblkPatchBoundaryNodeSum::registerSum(
    int node_data_id)
 {
 
@@ -293,7 +294,8 @@ void MblkPatchBoundaryNodeSum::registerSum(
  *************************************************************************
  */
 
-void MblkPatchBoundaryNodeSum::setupSum(
+void
+MblkPatchBoundaryNodeSum::setupSum(
    const boost::shared_ptr<hier::PatchLevel>& level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -369,7 +371,8 @@ void MblkPatchBoundaryNodeSum::setupSum(
  *************************************************************************
  */
 
-void MblkPatchBoundaryNodeSum::computeSum(
+void
+MblkPatchBoundaryNodeSum::computeSum(
    const bool fill_hanging_nodes) const
 {
    NULL_USE(fill_hanging_nodes);
@@ -400,7 +403,8 @@ void MblkPatchBoundaryNodeSum::computeSum(
  *************************************************************************
  */
 
-void MblkPatchBoundaryNodeSum::doLevelSum(
+void
+MblkPatchBoundaryNodeSum::doLevelSum(
    const boost::shared_ptr<hier::PatchLevel>& level) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -432,7 +436,8 @@ void MblkPatchBoundaryNodeSum::doLevelSum(
  *************************************************************************
  */
 
-void MblkPatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
+void
+MblkPatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
    const boost::shared_ptr<hier::PatchLevel>& level,
    const tbox::Array<int>& node_data_id,
    const tbox::Array<int>& onode_data_id) const
@@ -463,7 +468,8 @@ void MblkPatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
    }
 }
 
-void MblkPatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
+void
+MblkPatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
    const boost::shared_ptr<hier::PatchLevel>& level,
    const tbox::Array<int>& onode_data_id,
    const tbox::Array<int>& node_data_id) const

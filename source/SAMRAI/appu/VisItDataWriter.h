@@ -724,9 +724,7 @@ private:
     * writing data from multiple tbox::MPI processes.
     */
    struct childParentStruct {
-      childParentStruct():child(-1),
-         parent(-1) {
-      }                                              // Kill warnings about uninit values.
+      childParentStruct();
       int child;
       int parent;
    };

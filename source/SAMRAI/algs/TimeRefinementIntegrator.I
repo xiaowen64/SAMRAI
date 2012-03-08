@@ -12,37 +12,43 @@ namespace SAMRAI {
 namespace algs {
 
 SAMRAI_INLINE_KEYWORD
-double TimeRefinementIntegrator::getIntegratorTime() const
+double
+TimeRefinementIntegrator::getIntegratorTime() const
 {
    return d_integrator_time;
 }
 
 SAMRAI_INLINE_KEYWORD
-double TimeRefinementIntegrator::getStartTime() const
+double
+TimeRefinementIntegrator::getStartTime() const
 {
    return d_start_time;
 }
 
 SAMRAI_INLINE_KEYWORD
-double TimeRefinementIntegrator::getEndTime() const
+double
+TimeRefinementIntegrator::getEndTime() const
 {
    return d_end_time;
 }
 
 SAMRAI_INLINE_KEYWORD
-int TimeRefinementIntegrator::getIntegratorStep() const
+int
+TimeRefinementIntegrator::getIntegratorStep() const
 {
    return d_integrator_step;
 }
 
 SAMRAI_INLINE_KEYWORD
-int TimeRefinementIntegrator::getMaxIntegratorSteps() const
+int
+TimeRefinementIntegrator::getMaxIntegratorSteps() const
 {
    return d_max_integrator_steps;
 }
 
 SAMRAI_INLINE_KEYWORD
-bool TimeRefinementIntegrator::stepsRemaining(
+bool
+TimeRefinementIntegrator::stepsRemaining(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -53,13 +59,15 @@ bool TimeRefinementIntegrator::stepsRemaining(
 }
 
 SAMRAI_INLINE_KEYWORD
-bool TimeRefinementIntegrator::stepsRemaining() const
+bool
+TimeRefinementIntegrator::stepsRemaining() const
 {
    return d_integrator_step < d_max_integrator_steps;
 }
 
 SAMRAI_INLINE_KEYWORD
-double TimeRefinementIntegrator::getLevelDtActual(
+double
+TimeRefinementIntegrator::getLevelDtActual(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -70,7 +78,8 @@ double TimeRefinementIntegrator::getLevelDtActual(
 }
 
 SAMRAI_INLINE_KEYWORD
-double TimeRefinementIntegrator::getLevelDtMax(
+double
+TimeRefinementIntegrator::getLevelDtMax(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -81,7 +90,8 @@ double TimeRefinementIntegrator::getLevelDtMax(
 }
 
 SAMRAI_INLINE_KEYWORD
-double TimeRefinementIntegrator::getLevelSimTime(
+double
+TimeRefinementIntegrator::getLevelSimTime(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -92,7 +102,8 @@ double TimeRefinementIntegrator::getLevelSimTime(
 }
 
 SAMRAI_INLINE_KEYWORD
-int TimeRefinementIntegrator::getLevelStep(
+int
+TimeRefinementIntegrator::getLevelStep(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -103,7 +114,8 @@ int TimeRefinementIntegrator::getLevelStep(
 }
 
 SAMRAI_INLINE_KEYWORD
-int TimeRefinementIntegrator::getLevelMaxSteps(
+int
+TimeRefinementIntegrator::getLevelMaxSteps(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -135,7 +147,8 @@ TimeRefinementIntegrator::getGriddingAlgorithm() const
 }
 
 SAMRAI_INLINE_KEYWORD
-bool TimeRefinementIntegrator::firstLevelStep(
+bool
+TimeRefinementIntegrator::firstLevelStep(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -146,7 +159,8 @@ bool TimeRefinementIntegrator::firstLevelStep(
 }
 
 SAMRAI_INLINE_KEYWORD
-bool TimeRefinementIntegrator::lastLevelStep(
+bool
+TimeRefinementIntegrator::lastLevelStep(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -157,7 +171,8 @@ bool TimeRefinementIntegrator::lastLevelStep(
 }
 
 SAMRAI_INLINE_KEYWORD
-void TimeRefinementIntegrator::setRegridInterval(
+void
+TimeRefinementIntegrator::setRegridInterval(
    const int regrid_interval)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -170,7 +185,8 @@ void TimeRefinementIntegrator::setRegridInterval(
 }
 
 SAMRAI_INLINE_KEYWORD
-const std::string& TimeRefinementIntegrator::getObjectName() const
+const std::string&
+TimeRefinementIntegrator::getObjectName() const
 {
    return d_object_name;
 }

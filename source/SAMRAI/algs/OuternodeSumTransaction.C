@@ -28,6 +28,10 @@
 #pragma report(disable, CPPC5328)
 #endif
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/algs/OuternodeSumTransaction.I"
+#endif
+
 namespace SAMRAI {
 namespace algs {
 
@@ -43,24 +47,6 @@ const xfer::RefineClasses::Data **
 OuternodeSumTransaction::s_refine_items =
    (const xfer::RefineClasses::Data **)NULL;
 int OuternodeSumTransaction::s_num_refine_items = 0;
-
-void OuternodeSumTransaction::setRefineItems(
-   const xfer::RefineClasses::Data** refine_items,
-   int num_refine_items)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(refine_items != (const xfer::RefineClasses::Data **)NULL);
-   TBOX_ASSERT(num_refine_items >= 0);
-#endif
-   s_refine_items = refine_items;
-   s_num_refine_items = num_refine_items;
-}
-
-void OuternodeSumTransaction::unsetRefineItems()
-{
-   s_refine_items = (const xfer::RefineClasses::Data **)NULL;
-   s_num_refine_items = 0;
-}
 
 /*
  *************************************************************************
@@ -212,7 +198,8 @@ OuternodeSumTransaction::copyLocalData()
  *************************************************************************
  */
 
-void OuternodeSumTransaction::printClassData(
+void
+OuternodeSumTransaction::printClassData(
    std::ostream& stream) const
 {
    stream << "Outernode Sum Transaction" << std::endl;

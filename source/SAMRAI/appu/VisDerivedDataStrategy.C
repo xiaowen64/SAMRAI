@@ -27,7 +27,8 @@ VisDerivedDataStrategy::~VisDerivedDataStrategy()
 {
 }
 
-bool VisDerivedDataStrategy::packMixedDerivedDataIntoDoubleBuffer(
+bool
+VisDerivedDataStrategy::packMixedDerivedDataIntoDoubleBuffer(
    double* buffer,
    std::vector<double>& mixbuffer,
    const hier::Patch& patch,

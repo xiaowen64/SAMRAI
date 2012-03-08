@@ -133,10 +133,8 @@ public:
     * data interpolation operations.  Default is to return
     * zero, assuming no user-defined operations provided.
     */
-   virtual hier::IntVector getRefineOpStencilWidth() const
-   {
-      return hier::IntVector::getZero(d_dim);
-   }
+   virtual hier::IntVector
+   getRefineOpStencilWidth() const;
 
    /*!
     * Pre- and post-processing routines for implementing user-defined
@@ -166,14 +164,16 @@ public:
     * data corresponding to the d_scratch context on both coarse and
     * fine patches.
     */
-   virtual void preprocessRefine(
+   virtual void
+   preprocessRefine(
       hier::Patch& fine,
       const hier::Patch& coarse,
       const hier::Box& fine_box,
       const hier::IntVector& ratio) = 0;
 
    ///
-   virtual void postprocessRefine(
+   virtual void
+   postprocessRefine(
       hier::Patch& fine,
       const hier::Patch& coarse,
       const hier::Box& fine_box,
@@ -184,10 +184,8 @@ public:
     * data coarsen operations.  Default is to return
     * zero, assuming no user-defined operations provided.
     */
-   virtual hier::IntVector getCoarsenOpStencilWidth() const
-   {
-      return hier::IntVector::getZero(d_dim);
-   }
+   virtual hier::IntVector
+   getCoarsenOpStencilWidth() const;
 
    /*!
     * Pre- and post-processing routines for implementing user-defined
@@ -216,14 +214,16 @@ public:
     * corresponding to the d_new context on both coarse and fine patches
     * for time-dependent quantities.
     */
-   virtual void preprocessCoarsen(
+   virtual void
+   preprocessCoarsen(
       hier::Patch& coarse,
       const hier::Patch& fine,
       const hier::Box& coarse_box,
       const hier::IntVector& ratio) = 0;
 
    ///
-   virtual void postprocessCoarsen(
+   virtual void
+   postprocessCoarsen(
       hier::Patch& coarse,
       const hier::Patch& fine,
       const hier::Box& coarse_box,
@@ -237,40 +237,31 @@ public:
     *
     * Return pointer to data context with ghost cells.
     */
-   boost::shared_ptr<hier::VariableContext> getInteriorWithGhostsContext() const
-   {
-      return d_interior_with_ghosts;
-   }
+   boost::shared_ptr<hier::VariableContext>
+   getInteriorWithGhostsContext() const;
 
    /*!
     * Return pointer to data context with NO ghosts.
     */
-   boost::shared_ptr<hier::VariableContext> getInteriorContext() const
-   {
-      return d_interior;
-   }
+   boost::shared_ptr<hier::VariableContext>
+   getInteriorContext() const;
 
    /*!
     * Set pointer to data context with ghosts.
     */
-   void setInteriorWithGhostsContext(
-      const boost::shared_ptr<hier::VariableContext>& context)
-   {
-      d_interior_with_ghosts = context;
-   }
+   void
+   setInteriorWithGhostsContext(
+      const boost::shared_ptr<hier::VariableContext>& context);
 
    /*!
     * Set pointer to data context with NO ghosts.
     */
-   void setInteriorContext(
-      const boost::shared_ptr<hier::VariableContext>& context)
-   {
-      d_interior = context;
-   }
+   void
+   setInteriorContext(
+      const boost::shared_ptr<hier::VariableContext>& context);
 
-   const tbox::Dimension& getDim() const {
-      return d_dim;
-   }
+   const tbox::Dimension&
+   getDim() const;
 
 private:
    const tbox::Dimension d_dim;
@@ -281,4 +272,8 @@ private:
 
 }
 }
+
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/algs/MethodOfLinesPatchStrategy.I"
+#endif
 #endif

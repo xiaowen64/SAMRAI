@@ -189,4 +189,8 @@ private:
 
 }
 }
+
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/algs/OuternodeSumTransaction.I"
+#endif
 #endif

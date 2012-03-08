@@ -108,7 +108,8 @@ ImplicitIntegrator::~ImplicitIntegrator()
  *************************************************************************
  */
 
-void ImplicitIntegrator::initialize()
+void
+ImplicitIntegrator::initialize()
 {
    d_finest_level = d_patch_hierarchy->getFinestLevelNumber();
 
@@ -145,7 +146,8 @@ void ImplicitIntegrator::initialize()
  *************************************************************************
  */
 
-int ImplicitIntegrator::advanceSolution(
+int
+ImplicitIntegrator::advanceSolution(
    const double dt,
    const bool first_step)
 {
@@ -194,7 +196,8 @@ int ImplicitIntegrator::advanceSolution(
  *************************************************************************
  */
 
-double ImplicitIntegrator::getNextDt(
+double
+ImplicitIntegrator::getNextDt(
    const bool good_solution,
    const int solver_retcode)
 {
@@ -224,7 +227,8 @@ double ImplicitIntegrator::getNextDt(
  *************************************************************************
  */
 
-bool ImplicitIntegrator::checkNewSolution(
+bool
+ImplicitIntegrator::checkNewSolution(
    const int solver_retcode) const
 {
    bool good_solution =
@@ -250,7 +254,8 @@ bool ImplicitIntegrator::checkNewSolution(
  *************************************************************************
  */
 
-double ImplicitIntegrator::updateSolution()
+double
+ImplicitIntegrator::updateSolution()
 {
    d_current_time += d_current_dt;
    d_old_dt = d_current_dt;
@@ -271,7 +276,8 @@ double ImplicitIntegrator::updateSolution()
  *************************************************************************
  */
 
-void ImplicitIntegrator::getFromInput(
+void
+ImplicitIntegrator::getFromInput(
    const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
@@ -349,7 +355,8 @@ void ImplicitIntegrator::getFromInput(
  *************************************************************************
  */
 
-void ImplicitIntegrator::putToDatabase(
+void
+ImplicitIntegrator::putToDatabase(
    const boost::shared_ptr<tbox::Database>& db) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -380,7 +387,8 @@ void ImplicitIntegrator::putToDatabase(
  *************************************************************************
  */
 
-void ImplicitIntegrator::getFromRestart()
+void
+ImplicitIntegrator::getFromRestart()
 {
 
    boost::shared_ptr<tbox::Database> root_db(
@@ -418,7 +426,8 @@ void ImplicitIntegrator::getFromRestart()
  *************************************************************************
  */
 
-void ImplicitIntegrator::printClassData(
+void
+ImplicitIntegrator::printClassData(
    std::ostream& os) const
 {
    os << "\nImplicitIntegrator::printClassData..." << std::endl;

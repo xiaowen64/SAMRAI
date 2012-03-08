@@ -52,36 +52,6 @@ PatchBoundaryEdgeSum::s_oedge_dst_id_array =
 /*
  *************************************************************************
  *
- * Static functions to determine number of patch data slots needed
- * for PatchBoundaryEdgeSum objects.
- *
- *************************************************************************
- */
-
-int
-PatchBoundaryEdgeSum::getNumSharedPatchDataSlots(
-   int max_variables_to_register)
-{
-   // edge boundary sum requires two internal outeredge variables
-   // (source and destination) for each registered variable.
-
-   return 2 * max_variables_to_register;
-}
-
-int
-PatchBoundaryEdgeSum::getNumUniquePatchDataSlots(
-   int max_variables_to_register)
-{
-   NULL_USE(max_variables_to_register);
-   // all patch data slots used by edge boundary sum are static
-   // and shared among all objects.
-
-   return 0;
-}
-
-/*
- *************************************************************************
- *
  * Constructor patch boundary edge sum objects initializes data members
  * to default (undefined) states.
  *
@@ -152,7 +122,8 @@ PatchBoundaryEdgeSum::~PatchBoundaryEdgeSum()
  *************************************************************************
  */
 
-void PatchBoundaryEdgeSum::registerSum(
+void
+PatchBoundaryEdgeSum::registerSum(
    int edge_data_id)
 {
    if (d_setup_called) {
@@ -305,7 +276,8 @@ void PatchBoundaryEdgeSum::registerSum(
  *************************************************************************
  */
 
-void PatchBoundaryEdgeSum::setupSum(
+void
+PatchBoundaryEdgeSum::setupSum(
    const boost::shared_ptr<hier::PatchLevel>& level)
 {
    TBOX_ASSERT(level);
@@ -343,7 +315,8 @@ void PatchBoundaryEdgeSum::setupSum(
  *************************************************************************
  */
 
-void PatchBoundaryEdgeSum::computeSum() const
+void
+PatchBoundaryEdgeSum::computeSum() const
 {
    d_level->allocatePatchData(d_oedge_src_data_set);
    d_level->allocatePatchData(d_oedge_dst_data_set);
@@ -367,7 +340,8 @@ void PatchBoundaryEdgeSum::computeSum() const
  *************************************************************************
  */
 
-void PatchBoundaryEdgeSum::doLevelSum(
+void
+PatchBoundaryEdgeSum::doLevelSum(
    const boost::shared_ptr<hier::PatchLevel>& level) const
 {
    TBOX_ASSERT(level);

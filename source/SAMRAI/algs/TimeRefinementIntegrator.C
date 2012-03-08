@@ -226,7 +226,8 @@ TimeRefinementIntegrator::~TimeRefinementIntegrator()
  *************************************************************************
  */
 
-double TimeRefinementIntegrator::initializeHierarchy()
+double
+TimeRefinementIntegrator::initializeHierarchy()
 {
 
    TBOX_DIM_ASSERT_CHECK_ARGS1(*d_patch_hierarchy);
@@ -297,7 +298,8 @@ double TimeRefinementIntegrator::initializeHierarchy()
  *************************************************************************
  */
 
-double TimeRefinementIntegrator::advanceHierarchy(
+double
+TimeRefinementIntegrator::advanceHierarchy(
    const double dt,
    const bool rebalance_coarsest)
 {
@@ -661,7 +663,8 @@ TimeRefinementIntegrator::initializeSynchronizedTimesteppingLevelData(
  *************************************************************************
  */
 
-void TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
+void
+TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
    const int level_number,
    const double end_time)
 {
@@ -1033,7 +1036,8 @@ void TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
  *************************************************************************
  */
 
-double TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
+double
+TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
    const double end_time)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1280,7 +1284,8 @@ double TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
  *************************************************************************
  */
 
-bool TimeRefinementIntegrator::findNextDtAndStepsRemaining(
+bool
+TimeRefinementIntegrator::findNextDtAndStepsRemaining(
    const int level_number,
    const double time_remaining,
    const double dt_bound)
@@ -1389,7 +1394,8 @@ bool TimeRefinementIntegrator::findNextDtAndStepsRemaining(
  *************************************************************************
  */
 
-bool TimeRefinementIntegrator::atRegridPoint(
+bool
+TimeRefinementIntegrator::atRegridPoint(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1414,7 +1420,8 @@ bool TimeRefinementIntegrator::atRegridPoint(
  *************************************************************************
  */
 
-bool TimeRefinementIntegrator::coarserLevelRegridsToo(
+bool
+TimeRefinementIntegrator::coarserLevelRegridsToo(
    const int level_number) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1432,7 +1439,8 @@ bool TimeRefinementIntegrator::coarserLevelRegridsToo(
  *************************************************************************
  */
 
-void TimeRefinementIntegrator::printClassData(
+void
+TimeRefinementIntegrator::printClassData(
    std::ostream& os) const
 {
    os << "\nTimeRefinementIntegrator::printClassData..." << std::endl;
@@ -1467,7 +1475,8 @@ void TimeRefinementIntegrator::printClassData(
  *************************************************************************
  */
 
-void TimeRefinementIntegrator::printDataForLevel(
+void
+TimeRefinementIntegrator::printDataForLevel(
    std::ostream& os,
    const int level_number) const
 {
@@ -1500,7 +1509,8 @@ void TimeRefinementIntegrator::printDataForLevel(
  *************************************************************************
  */
 
-void TimeRefinementIntegrator::putToDatabase(
+void
+TimeRefinementIntegrator::putToDatabase(
    const boost::shared_ptr<tbox::Database>& db) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1533,7 +1543,8 @@ void TimeRefinementIntegrator::putToDatabase(
  *************************************************************************
  */
 
-void TimeRefinementIntegrator::getFromInput(
+void
+TimeRefinementIntegrator::getFromInput(
    const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
@@ -1667,7 +1678,8 @@ void TimeRefinementIntegrator::getFromInput(
  *************************************************************************
  */
 
-void TimeRefinementIntegrator::getFromRestart()
+void
+TimeRefinementIntegrator::getFromRestart()
 {
 
    boost::shared_ptr<tbox::Database> restart_db(
@@ -1705,7 +1717,8 @@ void TimeRefinementIntegrator::getFromRestart()
  *************************************************************************
  *************************************************************************
  */
-void TimeRefinementIntegrator::initializeCallback()
+void
+TimeRefinementIntegrator::initializeCallback()
 {
    t_initialize_hier = tbox::TimerManager::getManager()->
       getTimer("algs::TimeRefinementIntegrator::initializeHierarchy()");
@@ -1719,7 +1732,8 @@ void TimeRefinementIntegrator::initializeCallback()
  *************************************************************************
  *************************************************************************
  */
-void TimeRefinementIntegrator::finalizeCallback()
+void
+TimeRefinementIntegrator::finalizeCallback()
 {
    t_initialize_hier.reset();
    t_advance_hier.reset();

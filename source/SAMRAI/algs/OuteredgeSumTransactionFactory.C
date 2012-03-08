@@ -45,7 +45,8 @@ OuteredgeSumTransactionFactory::~OuteredgeSumTransactionFactory()
  *************************************************************************
  */
 
-void OuteredgeSumTransactionFactory::setRefineItems(
+void
+OuteredgeSumTransactionFactory::setRefineItems(
    const xfer::RefineClasses::Data** refine_items,
    int num_refine_items)
 {
@@ -55,7 +56,8 @@ void OuteredgeSumTransactionFactory::setRefineItems(
    d_number_refine_items = num_refine_items;
 }
 
-void OuteredgeSumTransactionFactory::unsetRefineItems()
+void
+OuteredgeSumTransactionFactory::unsetRefineItems()
 {
    OuteredgeSumTransaction::unsetRefineItems();
    d_refine_items = (const xfer::RefineClasses::Data **)NULL;
@@ -123,7 +125,8 @@ OuteredgeSumTransactionFactory::allocate(
  *************************************************************************
  */
 
-void OuteredgeSumTransactionFactory::preprocessScratchSpace(
+void
+OuteredgeSumTransactionFactory::preprocessScratchSpace(
    const boost::shared_ptr<hier::PatchLevel>& level,
    double fill_time,
    const hier::ComponentSelector& preprocess_vector) const

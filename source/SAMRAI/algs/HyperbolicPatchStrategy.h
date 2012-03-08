@@ -465,4 +465,8 @@ private:
 
 }
 }
+
+#ifdef SAMRAI_INLINE
+#include "SAMRAI/algs/HyperbolicPatchStrategy.I"
+#endif
 #endif

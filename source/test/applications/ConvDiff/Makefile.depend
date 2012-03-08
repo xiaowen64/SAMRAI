@@ -16,6 +16,7 @@ DEPENDS_0:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/algs/MethodOfLinesIntegrator.I		\
 	$(INCLUDE_SAM)/SAMRAI/algs/MethodOfLinesIntegrator.h		\
+	$(INCLUDE_SAM)/SAMRAI/algs/MethodOfLinesPatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/algs/MethodOfLinesPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/appu/BoundaryUtilityStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/appu/CartesianBoundaryDefines.h		\
@@ -279,6 +280,7 @@ DEPENDS_2:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/algs/MethodOfLinesIntegrator.I		\
 	$(INCLUDE_SAM)/SAMRAI/algs/MethodOfLinesIntegrator.h		\
+	$(INCLUDE_SAM)/SAMRAI/algs/MethodOfLinesPatchStrategy.I		\
 	$(INCLUDE_SAM)/SAMRAI/algs/MethodOfLinesPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/appu/BoundaryUtilityStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisDerivedDataStrategy.h		\

@@ -102,7 +102,8 @@ bool CartesianBoundaryUtilities2::s_fortran_constants_stuffed = false;
  *                       GridGeometry2::getPeriodicShift())
  */
 
-void CartesianBoundaryUtilities2::readBoundaryInput(
+void
+CartesianBoundaryUtilities2::readBoundaryInput(
    BoundaryUtilityStrategy* bdry_strategy,
    const boost::shared_ptr<tbox::Database>& bdry_db,
    tbox::Array<int>& edge_conds,
@@ -146,7 +147,8 @@ void CartesianBoundaryUtilities2::readBoundaryInput(
  *                           condition types)
  */
 
-void CartesianBoundaryUtilities2::fillEdgeBoundaryData(
+void
+CartesianBoundaryUtilities2::fillEdgeBoundaryData(
    const std::string& varname,
    const boost::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
@@ -226,7 +228,8 @@ void CartesianBoundaryUtilities2::fillEdgeBoundaryData(
  *                           condition types)
  */
 
-void CartesianBoundaryUtilities2::fillNodeBoundaryData(
+void
+CartesianBoundaryUtilities2::fillNodeBoundaryData(
    const std::string& varname,
    const boost::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
@@ -302,7 +305,8 @@ void CartesianBoundaryUtilities2::fillNodeBoundaryData(
  * an error results.
  */
 
-int CartesianBoundaryUtilities2::getEdgeLocationForNodeBdry(
+int
+CartesianBoundaryUtilities2::getEdgeLocationForNodeBdry(
    int node_loc,
    int node_btype)
 {
@@ -370,7 +374,8 @@ int CartesianBoundaryUtilities2::getEdgeLocationForNodeBdry(
  *                  required, such as when using Dirichlet conditions
  */
 
-int CartesianBoundaryUtilities2::checkBdryData(
+int
+CartesianBoundaryUtilities2::checkBdryData(
    const std::string& varname,
    const hier::Patch& patch,
    int data_id,
@@ -534,7 +539,8 @@ int CartesianBoundaryUtilities2::checkBdryData(
  * Private function to read 2D edge boundary data from input database.
  */
 
-void CartesianBoundaryUtilities2::read2dBdryEdges(
+void
+CartesianBoundaryUtilities2::read2dBdryEdges(
    BoundaryUtilityStrategy* bdry_strategy,
    const boost::shared_ptr<tbox::Database>& bdry_db,
    tbox::Array<int>& edge_conds,
@@ -630,7 +636,8 @@ void CartesianBoundaryUtilities2::read2dBdryEdges(
  * Private function to read 2D node boundary data from input database.
  */
 
-void CartesianBoundaryUtilities2::read2dBdryNodes(
+void
+CartesianBoundaryUtilities2::read2dBdryNodes(
    const boost::shared_ptr<tbox::Database>& bdry_db,
    const tbox::Array<int>& edge_conds,
    tbox::Array<int>& node_conds,
@@ -836,7 +843,8 @@ void CartesianBoundaryUtilities2::read2dBdryNodes(
  * 2D boundary condition checking.  Called from checkBdryData().
  */
 
-void CartesianBoundaryUtilities2::get2dBdryDirectionCheckValues(
+void
+CartesianBoundaryUtilities2::get2dBdryDirectionCheckValues(
    int& idir,
    int& offsign,
    int btype,
@@ -911,7 +919,8 @@ void CartesianBoundaryUtilities2::get2dBdryDirectionCheckValues(
  * Private function to stuff 2D boundary contants into Fortran common blocks
  */
 
-void CartesianBoundaryUtilities2::stuff2dBdryFortConst()
+void
+CartesianBoundaryUtilities2::stuff2dBdryFortConst()
 {
    F77_FUNC(stufcartbdryloc2d, STUFCARTBDRYLOC2D) (BdryLoc::XLO, BdryLoc::XHI,
       BdryLoc::YLO, BdryLoc::YHI, NodeBdyLoc2D::XLO_YLO, NodeBdyLoc2D::XHI_YLO,

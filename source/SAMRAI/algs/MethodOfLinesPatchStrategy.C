@@ -15,6 +15,10 @@
 #include "SAMRAI/algs/MethodOfLinesPatchStrategy.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 
+#ifndef SAMRAI_INLINE
+#include "SAMRAI/algs/MethodOfLinesPatchStrategy.I"
+#endif
+
 namespace SAMRAI {
 namespace algs {
 
@@ -39,6 +43,18 @@ MethodOfLinesPatchStrategy::MethodOfLinesPatchStrategy(
 
 MethodOfLinesPatchStrategy::~MethodOfLinesPatchStrategy()
 {
+}
+
+hier::IntVector
+MethodOfLinesPatchStrategy::getRefineOpStencilWidth() const
+{
+   return hier::IntVector::getZero(d_dim);
+}
+
+hier::IntVector
+MethodOfLinesPatchStrategy::getCoarsenOpStencilWidth() const
+{
+   return hier::IntVector::getZero(d_dim);
 }
 
 }

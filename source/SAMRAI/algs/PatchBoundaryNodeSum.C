@@ -126,36 +126,6 @@ PatchBoundaryNodeSum::s_onode_dst_id_array =
 /*
  *************************************************************************
  *
- * Static functions to determine number of patch data slots needed
- * for PatchBoundaryNodeSum objects.
- *
- *************************************************************************
- */
-
-int
-PatchBoundaryNodeSum::getNumSharedPatchDataSlots(
-   int max_variables_to_register)
-{
-   // node boundary sum requires two internal outernode variables
-   // (source and destination) for each registered variable.
-
-   return 2 * max_variables_to_register;
-}
-
-int
-PatchBoundaryNodeSum::getNumUniquePatchDataSlots(
-   int max_variables_to_register)
-{
-   NULL_USE(max_variables_to_register);
-   // all patch data slots used by node boundary sum are static
-   // and shared among all objects.
-
-   return 0;
-}
-
-/*
- *************************************************************************
- *
  * Constructor patch boundary node sum objects initializes data members
  * to default (undefined) states.
  *
@@ -235,7 +205,8 @@ PatchBoundaryNodeSum::~PatchBoundaryNodeSum()
  *************************************************************************
  */
 
-void PatchBoundaryNodeSum::registerSum(
+void
+PatchBoundaryNodeSum::registerSum(
    int node_data_id)
 {
 
@@ -389,7 +360,8 @@ void PatchBoundaryNodeSum::registerSum(
  *************************************************************************
  */
 
-void PatchBoundaryNodeSum::setupSum(
+void
+PatchBoundaryNodeSum::setupSum(
    const boost::shared_ptr<hier::PatchLevel>& level)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -442,7 +414,8 @@ void PatchBoundaryNodeSum::setupSum(
  *************************************************************************
  */
 
-void PatchBoundaryNodeSum::setupSum(
+void
+PatchBoundaryNodeSum::setupSum(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level)
@@ -615,7 +588,8 @@ void PatchBoundaryNodeSum::setupSum(
  *************************************************************************
  */
 
-void PatchBoundaryNodeSum::computeSum(
+void
+PatchBoundaryNodeSum::computeSum(
    const bool fill_hanging_nodes) const
 {
 
@@ -701,7 +675,8 @@ void PatchBoundaryNodeSum::computeSum(
  *************************************************************************
  */
 
-void PatchBoundaryNodeSum::doLevelSum(
+void
+PatchBoundaryNodeSum::doLevelSum(
    const boost::shared_ptr<hier::PatchLevel>& level) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -736,7 +711,8 @@ void PatchBoundaryNodeSum::doLevelSum(
  *************************************************************************
  */
 
-void PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
+void
+PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
    const boost::shared_ptr<hier::PatchLevel>& fine_level,
    const boost::shared_ptr<hier::PatchLevel>& coarsened_fine_level,
    const tbox::Array<int>& node_data_id,
@@ -1081,7 +1057,8 @@ void PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
  *************************************************************************
  */
 
-void PatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
+void
+PatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
    const boost::shared_ptr<hier::PatchLevel>& level,
    const tbox::Array<int>& node_data_id,
    const tbox::Array<int>& onode_data_id) const
@@ -1106,7 +1083,8 @@ void PatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
 
 }
 
-void PatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
+void
+PatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
    const boost::shared_ptr<hier::PatchLevel>& level,
    const tbox::Array<int>& onode_data_id,
    const tbox::Array<int>& node_data_id) const

@@ -133,7 +133,8 @@ bool CartesianBoundaryUtilities3::s_fortran_constants_stuffed = false;
  *                       GridGeometry3::getPeriodicShift())
  */
 
-void CartesianBoundaryUtilities3::readBoundaryInput(
+void
+CartesianBoundaryUtilities3::readBoundaryInput(
    BoundaryUtilityStrategy* bdry_strategy,
    const boost::shared_ptr<tbox::Database>& bdry_db,
    tbox::Array<int>& face_conds,
@@ -184,7 +185,8 @@ void CartesianBoundaryUtilities3::readBoundaryInput(
  *                           condition types)
  */
 
-void CartesianBoundaryUtilities3::fillFaceBoundaryData(
+void
+CartesianBoundaryUtilities3::fillFaceBoundaryData(
    const std::string& varname,
    const boost::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
@@ -266,7 +268,8 @@ void CartesianBoundaryUtilities3::fillFaceBoundaryData(
  *                           condition types)
  */
 
-void CartesianBoundaryUtilities3::fillEdgeBoundaryData(
+void
+CartesianBoundaryUtilities3::fillEdgeBoundaryData(
    const std::string& varname,
    const boost::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
@@ -348,7 +351,8 @@ void CartesianBoundaryUtilities3::fillEdgeBoundaryData(
  *                           condition types)
  */
 
-void CartesianBoundaryUtilities3::fillNodeBoundaryData(
+void
+CartesianBoundaryUtilities3::fillNodeBoundaryData(
    const std::string& varname,
    const boost::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
@@ -426,7 +430,8 @@ void CartesianBoundaryUtilities3::fillNodeBoundaryData(
  * an error results.
  */
 
-int CartesianBoundaryUtilities3::getFaceLocationForEdgeBdry(
+int
+CartesianBoundaryUtilities3::getFaceLocationForEdgeBdry(
    int edge_loc,
    int edge_btype)
 {
@@ -518,7 +523,8 @@ int CartesianBoundaryUtilities3::getFaceLocationForEdgeBdry(
  * an error results.
  */
 
-int CartesianBoundaryUtilities3::getFaceLocationForNodeBdry(
+int
+CartesianBoundaryUtilities3::getFaceLocationForNodeBdry(
    int node_loc,
    int node_btype)
 {
@@ -605,7 +611,8 @@ int CartesianBoundaryUtilities3::getFaceLocationForNodeBdry(
  *                  required, such as when using Dirichlet conditions
  */
 
-int CartesianBoundaryUtilities3::checkBdryData(
+int
+CartesianBoundaryUtilities3::checkBdryData(
    const std::string& varname,
    const hier::Patch& patch,
    int data_id,
@@ -804,7 +811,8 @@ int CartesianBoundaryUtilities3::checkBdryData(
  * Private function to read 3D face boundary data from input database.
  */
 
-void CartesianBoundaryUtilities3::read3dBdryFaces(
+void
+CartesianBoundaryUtilities3::read3dBdryFaces(
    BoundaryUtilityStrategy* bdry_strategy,
    const boost::shared_ptr<tbox::Database>& bdry_db,
    tbox::Array<int>& face_conds,
@@ -908,7 +916,8 @@ void CartesianBoundaryUtilities3::read3dBdryFaces(
  * Private function to read 3D edge boundary data from input database.
  */
 
-void CartesianBoundaryUtilities3::read3dBdryEdges(
+void
+CartesianBoundaryUtilities3::read3dBdryEdges(
    const boost::shared_ptr<tbox::Database>& bdry_db,
    const tbox::Array<int>& face_conds,
    tbox::Array<int>& edge_conds,
@@ -1272,7 +1281,8 @@ void CartesianBoundaryUtilities3::read3dBdryEdges(
  * Private function to read 3D node boundary data from input database.
  */
 
-void CartesianBoundaryUtilities3::read3dBdryNodes(
+void
+CartesianBoundaryUtilities3::read3dBdryNodes(
    const boost::shared_ptr<tbox::Database>& bdry_db,
    const tbox::Array<int>& face_conds,
    tbox::Array<int>& node_conds,
@@ -1558,7 +1568,8 @@ void CartesianBoundaryUtilities3::read3dBdryNodes(
  * 3D boundary condition checking.  Called from checkBdryData().
  */
 
-void CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues(
+void
+CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues(
    int& idir,
    int& offsign,
    int btype,
@@ -1597,7 +1608,7 @@ void CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues(
          TBOX_ERROR(
             "Unknown boundary location " << bloc
                                          <<
-            " passed to CartesianBoundaryUtilities3::checkBdryData()"
+            " passed to CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues()"
                                          << "\n for "
                                          << bdry_type_str << " boundary " << std::endl);
       }
@@ -1656,7 +1667,7 @@ void CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues(
          TBOX_ERROR(
             "Unknown or ambigous bcase " << bcase
                                          <<
-            " passed to CartesianBoundaryUtilities3::checkBdryData()"
+            " passed to CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues()"
                                          << "\n for " << bdry_type_str
                                          << " at location " << bloc
                                          << std::endl);
@@ -1706,7 +1717,7 @@ void CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues(
    } else {
       TBOX_ERROR(
          "Unknown boundary type " << btype
-                                  << " passed to CartesianBoundaryUtilities3::checkBdryData()"
+                                  << " passed to CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues()"
                                   << "\n for " << bdry_type_str
                                   << " at location " << bloc
                                   << std::endl);
@@ -1718,7 +1729,8 @@ void CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues(
  * Private function to stuff 3D boundary contants into Fortran common blocks
  */
 
-void CartesianBoundaryUtilities3::stuff3dBdryFortConst()
+void
+CartesianBoundaryUtilities3::stuff3dBdryFortConst()
 {
    F77_FUNC(stufcartbdryloc3d, STUFCARTBDRYLOC3D) (BdryLoc::XLO, BdryLoc::XHI,
       BdryLoc::YLO, BdryLoc::YHI, BdryLoc::ZLO, BdryLoc::ZHI,

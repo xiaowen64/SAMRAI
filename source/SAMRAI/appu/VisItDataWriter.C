@@ -193,43 +193,12 @@ VisItDataWriter::~VisItDataWriter()
 /*
  *************************************************************************
  *
- * Set default derived data writer.
- *
- *************************************************************************
- */
-
-void VisItDataWriter::setDefaultDerivedDataWriter(
-   VisDerivedDataStrategy* derived_writer)
-{
-   TBOX_ASSERT(derived_writer != (VisDerivedDataStrategy *)NULL);
-
-   d_default_derived_writer = derived_writer;
-}
-
-/*
- *************************************************************************
- *
- * Set materials data writer object.
- *
- *************************************************************************
- */
-
-void VisItDataWriter::setMaterialsDataWriter(
-   VisMaterialsDataStrategy* materials_writer)
-{
-   TBOX_ASSERT(materials_writer != (VisMaterialsDataStrategy *)NULL);
-
-   d_materials_writer = materials_writer;
-}
-
-/*
- *************************************************************************
- *
  * Register (non-derived) plot quantities: scalar, vector or tensor.
  *
  *************************************************************************
  */
-void VisItDataWriter::registerPlotQuantity(
+void
+VisItDataWriter::registerPlotQuantity(
    const std::string& variable_name,
    const std::string& variable_type,
    const int patch_data_index,
@@ -283,7 +252,8 @@ void VisItDataWriter::registerPlotQuantity(
  *************************************************************************
  */
 
-void VisItDataWriter::registerDerivedPlotQuantity(
+void
+VisItDataWriter::registerDerivedPlotQuantity(
    const std::string& variable_name,
    const std::string& variable_type,
    VisDerivedDataStrategy* derived_writer,
@@ -392,7 +362,8 @@ void VisItDataWriter::registerDerivedPlotQuantity(
  *************************************************************************
  */
 
-void VisItDataWriter::resetLevelPlotQuantity(
+void
+VisItDataWriter::resetLevelPlotQuantity(
    const std::string& variable_name,
    const int level_number,
    const int patch_data_index,
@@ -533,7 +504,8 @@ void VisItDataWriter::resetLevelPlotQuantity(
  *************************************************************************
  */
 
-void VisItDataWriter::registerNodeCoordinates(
+void
+VisItDataWriter::registerNodeCoordinates(
    const int patch_data_index,
    const int start_depth_index)
 {
@@ -654,7 +626,8 @@ void VisItDataWriter::registerNodeCoordinates(
  *************************************************************************
  */
 
-void VisItDataWriter::registerSingleNodeCoordinate(
+void
+VisItDataWriter::registerSingleNodeCoordinate(
    const int coordinate_number,
    const int patch_data_index,
    const int depth_index,
@@ -788,7 +761,8 @@ void VisItDataWriter::registerSingleNodeCoordinate(
  *************************************************************************
  */
 
-void VisItDataWriter::registerMaterialNames(
+void
+VisItDataWriter::registerMaterialNames(
    const tbox::Array<std::string>& material_names)
 {
    TBOX_ASSERT(material_names.getSize() > 0);
@@ -857,7 +831,8 @@ void VisItDataWriter::registerMaterialNames(
  *************************************************************************
  */
 
-void VisItDataWriter::registerSparseMaterialNames(
+void
+VisItDataWriter::registerSparseMaterialNames(
    const tbox::Array<std::string>& material_names)
 {
    TBOX_ASSERT(material_names.getSize() > 0);
@@ -929,7 +904,8 @@ void VisItDataWriter::registerSparseMaterialNames(
  *************************************************************************
  */
 
-void VisItDataWriter::registerSpeciesNames(
+void
+VisItDataWriter::registerSpeciesNames(
    const std::string& material_name,
    const tbox::Array<std::string>& species_names)
 {
@@ -1036,7 +1012,8 @@ void VisItDataWriter::registerSpeciesNames(
  *
  *************************************************************************
  */
-void VisItDataWriter::registerVisItExpressions(
+void
+VisItDataWriter::registerVisItExpressions(
    const tbox::Array<std::string>& expression_keys,
    const tbox::Array<std::string>& expressions,
    const tbox::Array<std::string>& expression_types)
@@ -1064,7 +1041,8 @@ void VisItDataWriter::registerVisItExpressions(
  *
  *************************************************************************
  */
-void VisItDataWriter::initializePlotItem(
+void
+VisItDataWriter::initializePlotItem(
    VisItItem& plotitem,
    const std::string& variable_name,
    const std::string& variable_type,
@@ -1093,7 +1071,7 @@ void VisItDataWriter::initializePlotItem(
       plotitem.d_var_type = VISIT_TENSOR;
       plotitem.d_depth = d_dim.getValue() * d_dim.getValue();
    } else {
-      TBOX_ERROR("VisItDataWriter::registerPlotQuantity"
+      TBOX_ERROR("VisItDataWriter::registerPlotItem"
          << "\n    variable_type " << variable_type
          << "\n    is unsupported.  You must use SCALAR, VECTOR, or"
          << "\n    TENSOR.  Exiting***" << std::endl);
@@ -1108,7 +1086,7 @@ void VisItDataWriter::initializePlotItem(
 
    int new_num_components = num_old_components + plotitem.d_depth;
    if (new_num_components > VISIT_MAX_NUMBER_COMPONENTS) {
-      TBOX_ERROR("VisItDataWriter::registerPlotQuantity"
+      TBOX_ERROR("VisItDataWriter::registerPlotItem"
          << "\n     Unable to register this quantity because it"
          << "\n     the maximum number of variables allowed in"
          << "\n     the VisItWriter was reached:"
@@ -1139,7 +1117,7 @@ void VisItDataWriter::initializePlotItem(
          getPatchDescriptor()->
          getPatchDataFactory(patch_data_index));
       if (!factory) {
-         TBOX_ERROR("VisItDataWriter::registerPlotQuantity"
+         TBOX_ERROR("VisItDataWriter::registerPlotItem"
             << "\n    patch data array index = " << patch_data_index
             << "\n    for variable = " << variable_name
             << "\n    is invalid" << std::endl);
@@ -1218,7 +1196,7 @@ void VisItDataWriter::initializePlotItem(
           */
          int end_depth = start_depth_index + plotitem.d_depth;
          if (var_depth < end_depth) {
-            TBOX_ERROR("VisItDataWriter::registerPlotQuantity"
+            TBOX_ERROR("VisItDataWriter::registerPlotItem"
                << "\n    The variable: " << variable_name
                << "\n    has insufficient depth for the type"
                << "\n    and start depth index registered."
@@ -1238,7 +1216,7 @@ void VisItDataWriter::initializePlotItem(
       } else if (variable_centering == "NODE") {
          plotitem.d_var_centering = VISIT_UNKNOWN_NODE;
       } else {
-         TBOX_ERROR("VisItDataWriter::registerPlotQuantity"
+         TBOX_ERROR("VisItDataWriter::registerPlotItem"
             << "\n     Unable to determine the centering for"
             << "\n     this variable; it must be supplied."
             << "\n     The variable_centering argument is "
@@ -1313,7 +1291,8 @@ void VisItDataWriter::initializePlotItem(
  *************************************************************************
  */
 
-void VisItDataWriter::dumpWriteBarrierBegin()
+void
+VisItDataWriter::dumpWriteBarrierBegin()
 {
    int x[1], proc_before_me, len = 1;
 
@@ -1336,7 +1315,8 @@ void VisItDataWriter::dumpWriteBarrierBegin()
    }
 }
 
-void VisItDataWriter::dumpWriteBarrierEnd()
+void
+VisItDataWriter::dumpWriteBarrierEnd()
 {
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    int x[1], proc_after_me;
@@ -1363,7 +1343,8 @@ void VisItDataWriter::dumpWriteBarrierEnd()
  *************************************************************************
  */
 
-void VisItDataWriter::writePlotData(
+void
+VisItDataWriter::writePlotData(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int time_step_number,
    double simulation_time)
@@ -1458,22 +1439,6 @@ void VisItDataWriter::writePlotData(
 /*
  *************************************************************************
  *
- * Write plot data from given hierarchy to HDF file
- *
- *************************************************************************
- */
-
-void VisItDataWriter::setSummaryFilename(
-   std::string& filename)
-{
-   TBOX_ASSERT(!filename.empty());
-
-   d_summary_filename = filename + ".samrai";
-}
-
-/*
- *************************************************************************
- *
  * Private function to initialize min/max information for the plot
  * components.  This method will allocate space for the d_mm array on
  * the VISIT_MASTER processsor (which holds min/max info for all plot
@@ -1485,7 +1450,8 @@ void VisItDataWriter::setSummaryFilename(
  *************************************************************************
  */
 
-void VisItDataWriter::initializePlotVariableMinMaxInfo(
+void
+VisItDataWriter::initializePlotVariableMinMaxInfo(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    TBOX_ASSERT(hierarchy);
@@ -1602,7 +1568,8 @@ void VisItDataWriter::initializePlotVariableMinMaxInfo(
  *************************************************************************
  */
 
-void VisItDataWriter::writeHDFFiles(
+void
+VisItDataWriter::writeHDFFiles(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    double simulation_time)
 {
@@ -1743,7 +1710,8 @@ void VisItDataWriter::writeHDFFiles(
  *************************************************************************
  */
 
-int VisItDataWriter::getGlobalPatchNumber(
+int
+VisItDataWriter::getGlobalPatchNumber(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const int patch_number)
@@ -1771,7 +1739,8 @@ int VisItDataWriter::getGlobalPatchNumber(
  *************************************************************************
  */
 
-void VisItDataWriter::writeVisItVariablesToHDFFile(
+void
+VisItDataWriter::writeVisItVariablesToHDFFile(
    const boost::shared_ptr<tbox::Database>& processor_HDFGroup,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarsest_level,
@@ -1856,7 +1825,8 @@ void VisItDataWriter::writeVisItVariablesToHDFFile(
  *************************************************************************
  */
 
-void VisItDataWriter::packRegularAndDerivedData(
+void
+VisItDataWriter::packRegularAndDerivedData(
    const boost::shared_ptr<tbox::Database>& patch_HDFGroup,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
@@ -2214,7 +2184,8 @@ void VisItDataWriter::packRegularAndDerivedData(
  *************************************************************************
  */
 
-void VisItDataWriter::packMaterialsData(
+void
+VisItDataWriter::packMaterialsData(
    const boost::shared_ptr<tbox::Database>& patch_HDFGroup,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
@@ -2558,7 +2529,8 @@ void VisItDataWriter::packMaterialsData(
  *************************************************************************
  */
 
-void VisItDataWriter::packSpeciesData(
+void
+VisItDataWriter::packSpeciesData(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    hier::Patch& patch)
@@ -2730,7 +2702,8 @@ void VisItDataWriter::packSpeciesData(
  *************************************************************************
  */
 
-void VisItDataWriter::checkFloatMinMax(
+void
+VisItDataWriter::checkFloatMinMax(
    const std::string& var_name,
    const double dmin,
    const double dmax,
@@ -2782,7 +2755,8 @@ void VisItDataWriter::checkFloatMinMax(
  *************************************************************************
  */
 
-void VisItDataWriter::writeSummaryToHDFFile(
+void
+VisItDataWriter::writeSummaryToHDFFile(
    std::string dump_dirname,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarsest_plot_level,
@@ -3487,7 +3461,8 @@ void VisItDataWriter::writeSummaryToHDFFile(
  *
  *************************************************************************
  */
-void VisItDataWriter::exchangeMinMaxPatchInformation(
+void
+VisItDataWriter::exchangeMinMaxPatchInformation(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_plot_level,
    const int finest_plot_level)
@@ -3633,7 +3608,8 @@ void VisItDataWriter::exchangeMinMaxPatchInformation(
  *
  *************************************************************************
  */
-void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
+void
+VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const boost::shared_ptr<tbox::Database>& basic_HDFGroup)
 {
@@ -3872,8 +3848,12 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
          "number_parents");
    }
 
-   if (parent_array) delete[] parent_array;
-   if (parent_ptrs) delete[] parent_ptrs;
+   if (parent_array) {
+      delete[] parent_array;
+   }
+   if (parent_ptrs) {
+      delete[] parent_ptrs;
+   }
 
 }
 
@@ -3886,7 +3866,8 @@ void VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
  *************************************************************************
  */
 
-int VisItDataWriter::childParentCompareFunc(
+int
+VisItDataWriter::childParentCompareFunc(
    const void* s1,
    const void* s2)
 {
@@ -3913,7 +3894,8 @@ int VisItDataWriter::childParentCompareFunc(
  *************************************************************************
  */
 
-void VisItDataWriter::packPatchDataIntoDoubleBuffer(
+void
+VisItDataWriter::packPatchDataIntoDoubleBuffer(
    const boost::shared_ptr<hier::PatchData>& pdata,
    const int depth_index,
    const variable_data_type data_type,
@@ -3931,7 +3913,7 @@ void VisItDataWriter::packPatchDataIntoDoubleBuffer(
     */
    if (d_dim < tbox::Dimension(2) || d_dim > tbox::Dimension(3)) {
       TBOX_ERROR(
-         d_object_name << ":packPatchDataIntoDoubleBuffer()"
+         d_object_name << "VisItDataWriter::packPatchDataIntoDoubleBuffer()"
                        << "\n  This case has DIM = " << d_dim
                        << "\n  Dimensions < 2 or > 3 are not supported at"
                        << "\n  this time." << std::endl);
@@ -4119,7 +4101,8 @@ void VisItDataWriter::packPatchDataIntoDoubleBuffer(
  *************************************************************************
  */
 
-void VisItDataWriter::HDFputIntegerArray2D(
+void
+VisItDataWriter::HDFputIntegerArray2D(
    const std::string& key,
    const int* data,
    const int nelements0,
@@ -4188,7 +4171,8 @@ void VisItDataWriter::HDFputIntegerArray2D(
  *************************************************************************
  */
 
-void VisItDataWriter::HDFputDoubleArray2D(
+void
+VisItDataWriter::HDFputDoubleArray2D(
    const std::string& key,
    const double* data,
    const int nelements0,
@@ -4258,7 +4242,8 @@ void VisItDataWriter::HDFputDoubleArray2D(
  *************************************************************************
  */
 
-void VisItDataWriter::HDFputPatchExtentsStructArray(
+void
+VisItDataWriter::HDFputPatchExtentsStructArray(
    const std::string& key,
    const patchExtentsStruct* data,
    const int nelements,
@@ -4376,7 +4361,8 @@ void VisItDataWriter::HDFputPatchExtentsStructArray(
  *************************************************************************
  */
 
-void VisItDataWriter::HDFputPatchMapStructArray(
+void
+VisItDataWriter::HDFputPatchMapStructArray(
    const std::string& key,
    const patchMapStruct* data,
    const int nelements,
@@ -4471,7 +4457,8 @@ void VisItDataWriter::HDFputPatchMapStructArray(
  *
  *************************************************************************
  */
-void VisItDataWriter::HDFputPatchMinMaxStructArray(
+void
+VisItDataWriter::HDFputPatchMinMaxStructArray(
    const std::string& key,
    const patchMinMaxStruct* data,
    const int nelements,
@@ -4575,7 +4562,8 @@ void VisItDataWriter::HDFputPatchMinMaxStructArray(
  *************************************************************************
  */
 
-void VisItDataWriter::HDFputChildParentStructArray(
+void
+VisItDataWriter::HDFputChildParentStructArray(
    const std::string& key,
    const void* data,
    const int nelements,
@@ -4656,7 +4644,8 @@ void VisItDataWriter::HDFputChildParentStructArray(
  *************************************************************************
  */
 
-int VisItDataWriter::getBufferSize(
+int
+VisItDataWriter::getBufferSize(
    const hier::Box patch_box,
    const hier::IntVector& ghost_cell_width,
    const variable_centering centering)
@@ -4684,7 +4673,8 @@ int VisItDataWriter::getBufferSize(
  *
  *************************************************************************
  */
-void VisItDataWriter::dumpItem(
+void
+VisItDataWriter::dumpItem(
    VisItItem& plotitem,
    std::ostream& os) const
 {
@@ -4752,23 +4742,10 @@ void VisItDataWriter::dumpItem(
    }
 }
 
-/*
- *************************************************************************
- *************************************************************************
- */
-void VisItDataWriter::initializeCallback()
+VisItDataWriter::childParentStruct::childParentStruct():
+   child(-1),
+   parent(-1)
 {
-   t_write_plot_data =
-      tbox::TimerManager::getManager()->getTimer("appu:VisItDataWriter::writePlotData()");
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void VisItDataWriter::finalizeCallback()
-{
-   t_write_plot_data.reset();
 }
 
 }
