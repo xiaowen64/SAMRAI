@@ -416,7 +416,7 @@ basename=`echo $0 | sed 's!.*/!!'`
 
 cat <<-EOF
 
-	Usage: $basename <config name> ...
+	Usage: $basename <config name> [more switches]
 
 	This script suggests configure options for configuring SAMRAI
 	on platforms on which the SAMRAI team have some experience.
@@ -442,13 +442,15 @@ cat <<-EOF
 	Shortcut to avoid having to manually paste the output
 	when you want to use it without modification:
 
-	  $basename <config name> ... | xargs /path/to/SAMRAI/configure
+	  $basename <config name> --enable-opt | xargs /path/to/SAMRAI/configure
 	or
-	  eval /path/to/SAMRAI/configure \`$basename <config name> ... \`
+	  eval /path/to/SAMRAI/configure \`$basename <config name> --enable-opt\`
+
+	Note the added "--enable-opt" is included in the configuration switches.
 
 	To remove line-breaks for command line editing (less readable):
 
-	echo \`$basename <config name> ... \`
+	echo \`$basename <config name> --enable-opt\`
 
 	EOF
 test $# = 0 && exit	# Normal exit if no index was given.
