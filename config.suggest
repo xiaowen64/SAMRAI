@@ -163,26 +163,6 @@ EOF
 # Maintained by Brian Gunney and Susan Hazlett
 ;;
 
-
-yana_mpiicpc) # Yana, Intel MPI wrapper script
-cat <<-EOF
-	--with-CXX=/usr/local/bin/mpiicpc-12.0.191
-	--with-CC=/usr/local/bin/mpiicc-12.0.191
-	--with-F77=/usr/local/bin/mpiifort-12.0.191
-	--with-silo=/usr/gapps/silo/4.6.2/chaos_4_x86_64_ib
-	--with-hdf5=/usr/local/tools/hdf5-intel-parallel-1.8.1
-	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.45.0
-	--with-zlib
-	--with-parallel-run-bin=/usr/local/bin/mpirun
-	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
-	--without-sundials
-	--without-petsc
-	--without-x
-	--enable-rpath=-Wl,-R
-EOF
-# Maintained by Brian Gunney
-;;
-
 zeus_mpiicpc) # Zeus, Intel compilers with LLNL mpiicpc front ends
 cat <<-EOF
 	--with-CXX=/usr/local/bin/mpiicpc-12.0.191
