@@ -15,6 +15,11 @@
 
 #ifdef HAVE_SUNDIALS
 
+#define SABSVEC_CAST(v) \
+   (static_cast<SundialsAbstractVector *>(v \
+                                          -> \
+                                          content))
+
 #ifndef included_sundials_nvector
 #include "sundials/sundials_nvector.h"
 #define included_sundials_nvector
@@ -236,7 +241,10 @@ public:
     * Return the wrapped Sundials N_Vector.
     */
    N_Vector
-   getNVector();
+   getNVector()
+   {
+      return d_n_vector;
+   }
 
    /**
     * Print the vector data to the output stream used by the subclass
@@ -263,10 +271,23 @@ private:
 //   static N_Vector N_VCloneEmpty_SAMRAI(N_Vector w);
    static N_Vector
    N_VClone_SAMRAI(
-      N_Vector w);
+      N_Vector w)
+   {
+      /* Create content, which in this case is the SAMRAI
+       * wrapper vector object */
+      SundialsAbstractVector* v = SABSVEC_CAST(w)->makeNewVector();
+      return v->getNVector();
+   }
+
    static void
    N_VDestroy_SAMRAI(
-      N_Vector v);
+      N_Vector v)
+   {
+      if (v) {
+         SABSVEC_CAST(v)->freeVector();
+      }
+   }
+
 // static void N_VSpace_SAMRAI(N_Vector v, long int *lrw, long int *liw);
 // static realtype *N_VGetArrayPointer_SAMRAI(N_Vector v);
 // static void N_VSetArrayPointer_SAMRAI(realtype *v_data, N_Vector v);
@@ -276,88 +297,148 @@ private:
       N_Vector x,
       realtype b,
       N_Vector y,
-      N_Vector z);
+      N_Vector z)
+   {
+      SABSVEC_CAST(z)->setLinearSum(a, SABSVEC_CAST(x), b, SABSVEC_CAST(y));
+   }
+
    static void
    N_VConst_SAMRAI(
       realtype c,
-      N_Vector z);
+      N_Vector z)
+   {
+      SABSVEC_CAST(z)->setToScalar(c);
+   }
+
    static void
    N_VProd_SAMRAI(
       N_Vector x,
       N_Vector y,
-      N_Vector z);
+      N_Vector z)
+   {
+      SABSVEC_CAST(z)->pointwiseMultiply(SABSVEC_CAST(x), SABSVEC_CAST(y));
+   }
+
    static void
    N_VDiv_SAMRAI(
       N_Vector x,
       N_Vector y,
-      N_Vector z);
+      N_Vector z)
+   {
+      SABSVEC_CAST(z)->pointwiseDivide(SABSVEC_CAST(x), SABSVEC_CAST(y));
+   }
+
    static void
    N_VScale_SAMRAI(
       realtype c,
       N_Vector x,
-      N_Vector z);
+      N_Vector z)
+   {
+      SABSVEC_CAST(z)->scaleVector(SABSVEC_CAST(x), c);
+   }
+
    static void
    N_VAbs_SAMRAI(
       N_Vector x,
-      N_Vector z);
+      N_Vector z)
+   {
+      SABSVEC_CAST(z)->setAbs(SABSVEC_CAST(x));
+   }
+
    static void
    N_VInv_SAMRAI(
       N_Vector x,
-      N_Vector z);
+      N_Vector z)
+   {
+      SABSVEC_CAST(z)->pointwiseReciprocal(SABSVEC_CAST(x));
+   }
+
    static void
    N_VAddConst_SAMRAI(
       N_Vector x,
       realtype b,
-      N_Vector z);
+      N_Vector z)
+   {
+      SABSVEC_CAST(z)->addScalar(SABSVEC_CAST(x), b);
+   }
+
    static realtype
    N_VDotProd_SAMRAI(
       N_Vector x,
-      N_Vector y);
+      N_Vector y)
+   {
+      return SABSVEC_CAST(x)->dotWith(SABSVEC_CAST(y));
+   }
+
    static realtype
    N_VMaxNorm_SAMRAI(
-      N_Vector x);
+      N_Vector x)
+   {
+      return SABSVEC_CAST(x)->maxNorm();
+   }
+
    static realtype
    N_VWrmsNorm_SAMRAI(
       N_Vector x,
-      N_Vector w);
+      N_Vector w)
+   {
+      return SABSVEC_CAST(x)->weightedRMSNorm(SABSVEC_CAST(w));
+   }
+
 // static realtype N_VWrmsNormMask_SAMRAI(N_Vector x, N_Vector w, N_Vector id);
    static realtype
    N_VMin_SAMRAI(
-      N_Vector x);
+      N_Vector x)
+   {
+      return SABSVEC_CAST(x)->vecMin();
+   }
+
    static realtype
    N_VWL2Norm_SAMRAI(
       N_Vector x,
-      N_Vector w);
+      N_Vector w)
+   {
+      return SABSVEC_CAST(x)->weightedL2Norm(SABSVEC_CAST(w));
+   }
+
    static realtype
    N_VL1Norm_SAMRAI(
-      N_Vector x);
+      N_Vector x)
+   {
+      return SABSVEC_CAST(x)->L1Norm();
+   }
+
    static void
    N_VCompare_SAMRAI(
       realtype c,
       N_Vector x,
-      N_Vector z);
+      N_Vector z)
+   {
+      SABSVEC_CAST(z)->compareToScalar(SABSVEC_CAST(x), c);
+   }
+
    static booleantype
    N_VInvTest_SAMRAI(
       N_Vector x,
-      N_Vector z);
+      N_Vector z)
+   {
+      return SABSVEC_CAST(z)->testReciprocal(SABSVEC_CAST(x));
+   }
+
    static booleantype
    N_VConstrMask_SAMRAI(
       N_Vector c,
       N_Vector x,
       N_Vector m);
+
    static realtype
    N_VMinQuotient_SAMRAI(
       N_Vector num,
       N_Vector denom);
-
 };
 
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/SundialsAbstractVector.I"
 #endif
-#endif
-
 #endif

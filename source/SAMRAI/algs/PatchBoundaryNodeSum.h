@@ -22,6 +22,7 @@
 #include "SAMRAI/xfer/CoarsenSchedule.h"
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
@@ -84,7 +85,12 @@ public:
     */
    static int
    getNumSharedPatchDataSlots(
-      int max_variables_to_register);
+      int max_variables_to_register)
+   {
+      // node boundary sum requires two internal outernode variables
+      // (source and destination) for each registered variable.
+      return 2 * max_variables_to_register;
+   }
 
    /*!
     *  @brief Static function used to predetermine number of patch data
@@ -101,7 +107,13 @@ public:
     */
    static int
    getNumUniquePatchDataSlots(
-      int max_variables_to_register);
+      int max_variables_to_register)
+   {
+      NULL_USE(max_variables_to_register);
+      // all patch data slots used by node boundary sum are static
+      // and shared among all objects.
+      return 0;
+   }
 
    /*!
     *  @brief Constructor initializes object to default (mostly undefined)
@@ -208,7 +220,10 @@ public:
     * @return The object name.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*
@@ -322,7 +337,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/algs/PatchBoundaryNodeSum.I"
-#endif
 #endif

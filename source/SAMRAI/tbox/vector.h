@@ -191,18 +191,14 @@ public:
    TYPE&
    operator [] (
       size_type i) {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(i <= d_vec.size() - 1);
-#endif
       return d_vec[i];
    }
    //! @brief Vector element accessor with array bound checking.
    const TYPE&
    operator [] (
       size_type i) const {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(i <= d_vec.size() - 1);
-#endif
       return d_vec[i];
    }
 

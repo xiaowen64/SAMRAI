@@ -63,7 +63,12 @@ public:
     */
    FaceIterator&
    operator = (
-      const FaceIterator& iterator);
+      const FaceIterator& iterator)
+   {
+      d_index = iterator.d_index;
+      d_box = iterator.d_box;
+      return *this;
+   }
 
    /**
     * Destructor for the face iterator.
@@ -74,13 +79,19 @@ public:
     * Extract the face index corresponding to the iterator position in the box.
     */
    const FaceIndex&
-   operator * () const;
+   operator * () const
+   {
+      return d_index;
+   }
 
    /**
     * Extract the face index corresponding to the iterator position in the box.
     */
    const FaceIndex&
-   operator () () const;
+   operator () () const
+   {
+      return d_index;
+   }
 
    /**
     * Return true if the iterator points to a valid index within the box.
@@ -91,8 +102,10 @@ public:
    /**
     * Return a non-NULL if the iterator points to a valid index within the box.
     */
-   operator const void
-   * () const;
+   operator const void* () const
+   {
+      return FaceIterator::operator bool () ? this : NULL;
+   }
 #endif
 
    /**
@@ -100,7 +113,10 @@ public:
     * This operator mimics the !p operation applied to a pointer p.
     */
    bool
-   operator ! () const;
+   operator ! () const
+   {
+      return !FaceIterator::operator bool ();
+   }
 
    /**
     * Increment the iterator to point to the next index in the box.
@@ -114,14 +130,20 @@ public:
     */
    bool
    operator == (
-      const FaceIterator& iterator) const;
+      const FaceIterator& iterator) const
+   {
+      return d_index == iterator.d_index;
+   }
 
    /**
     * Test two iterators for inequality (different index values).
     */
    bool
    operator != (
-      const FaceIterator& iterator) const;
+      const FaceIterator& iterator) const
+   {
+      return d_index != iterator.d_index;
+   }
 
 private:
    FaceIndex d_index;
@@ -130,7 +152,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/FaceIterator.I"
-#endif
+
 #endif

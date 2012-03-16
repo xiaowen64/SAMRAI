@@ -46,7 +46,8 @@ ArrayDataNormOpsReal<TYPE>::ArrayDataNormOpsReal(
 }
 
 template<class TYPE>
-void ArrayDataNormOpsReal<TYPE>::operator = (
+void
+ArrayDataNormOpsReal<TYPE>::operator = (
    const ArrayDataNormOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);       // not implemented (but needed by some compilers)
@@ -61,7 +62,8 @@ void ArrayDataNormOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-void ArrayDataNormOpsReal<TYPE>::abs(
+void
+ArrayDataNormOpsReal<TYPE>::abs(
    pdat::ArrayData<TYPE>& dst,
    const pdat::ArrayData<TYPE>& src,
    const hier::Box& box) const
@@ -156,7 +158,8 @@ void ArrayDataNormOpsReal<TYPE>::abs(
 }
 
 template<class TYPE>
-double ArrayDataNormOpsReal<TYPE>::sumControlVolumes(
+double
+ArrayDataNormOpsReal<TYPE>::sumControlVolumes(
    const pdat::ArrayData<TYPE>& data,
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
@@ -242,7 +245,8 @@ double ArrayDataNormOpsReal<TYPE>::sumControlVolumes(
 }
 
 template<class TYPE>
-double ArrayDataNormOpsReal<TYPE>::L1NormWithControlVolume(
+double
+ArrayDataNormOpsReal<TYPE>::L1NormWithControlVolume(
    const pdat::ArrayData<TYPE>& data,
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
@@ -341,7 +345,8 @@ double ArrayDataNormOpsReal<TYPE>::L1NormWithControlVolume(
 }
 
 template<class TYPE>
-double ArrayDataNormOpsReal<TYPE>::L1Norm(
+double
+ArrayDataNormOpsReal<TYPE>::L1Norm(
    const pdat::ArrayData<TYPE>& data,
    const hier::Box& box) const
 {
@@ -422,7 +427,8 @@ double ArrayDataNormOpsReal<TYPE>::L1Norm(
 }
 
 template<class TYPE>
-double ArrayDataNormOpsReal<TYPE>::L2NormWithControlVolume(
+double
+ArrayDataNormOpsReal<TYPE>::L2NormWithControlVolume(
    const pdat::ArrayData<TYPE>& data,
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
@@ -434,7 +440,8 @@ double ArrayDataNormOpsReal<TYPE>::L2NormWithControlVolume(
 }
 
 template<class TYPE>
-double ArrayDataNormOpsReal<TYPE>::L2Norm(
+double
+ArrayDataNormOpsReal<TYPE>::L2Norm(
    const pdat::ArrayData<TYPE>& data,
    const hier::Box& box) const
 {
@@ -444,7 +451,8 @@ double ArrayDataNormOpsReal<TYPE>::L2Norm(
 }
 
 template<class TYPE>
-double ArrayDataNormOpsReal<TYPE>::weightedL2NormWithControlVolume(
+double
+ArrayDataNormOpsReal<TYPE>::weightedL2NormWithControlVolume(
    const pdat::ArrayData<TYPE>& data,
    const pdat::ArrayData<TYPE>& weight,
    const pdat::ArrayData<double>& cvol,
@@ -559,7 +567,8 @@ double ArrayDataNormOpsReal<TYPE>::weightedL2NormWithControlVolume(
 }
 
 template<class TYPE>
-double ArrayDataNormOpsReal<TYPE>::weightedL2Norm(
+double
+ArrayDataNormOpsReal<TYPE>::weightedL2Norm(
    const pdat::ArrayData<TYPE>& data,
    const pdat::ArrayData<TYPE>& weight,
    const hier::Box& box) const
@@ -656,7 +665,8 @@ double ArrayDataNormOpsReal<TYPE>::weightedL2Norm(
 }
 
 template<class TYPE>
-double ArrayDataNormOpsReal<TYPE>::maxNormWithControlVolume(
+double
+ArrayDataNormOpsReal<TYPE>::maxNormWithControlVolume(
    const pdat::ArrayData<TYPE>& data,
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
@@ -759,7 +769,8 @@ double ArrayDataNormOpsReal<TYPE>::maxNormWithControlVolume(
 }
 
 template<class TYPE>
-double ArrayDataNormOpsReal<TYPE>::maxNorm(
+double
+ArrayDataNormOpsReal<TYPE>::maxNorm(
    const pdat::ArrayData<TYPE>& data,
    const hier::Box& box) const
 {
@@ -841,7 +852,8 @@ double ArrayDataNormOpsReal<TYPE>::maxNorm(
 }
 
 template<class TYPE>
-TYPE ArrayDataNormOpsReal<TYPE>::dotWithControlVolume(
+TYPE
+ArrayDataNormOpsReal<TYPE>::dotWithControlVolume(
    const pdat::ArrayData<TYPE>& data1,
    const pdat::ArrayData<TYPE>& data2,
    const pdat::ArrayData<double>& cvol,
@@ -964,7 +976,8 @@ TYPE ArrayDataNormOpsReal<TYPE>::dotWithControlVolume(
 }
 
 template<class TYPE>
-TYPE ArrayDataNormOpsReal<TYPE>::dot(
+TYPE
+ArrayDataNormOpsReal<TYPE>::dot(
    const pdat::ArrayData<TYPE>& data1,
    const pdat::ArrayData<TYPE>& data2,
    const hier::Box& box) const
@@ -1064,7 +1077,8 @@ TYPE ArrayDataNormOpsReal<TYPE>::dot(
 }
 
 template<class TYPE>
-TYPE ArrayDataNormOpsReal<TYPE>::integral(
+TYPE
+ArrayDataNormOpsReal<TYPE>::integral(
    const pdat::ArrayData<TYPE>& data,
    const pdat::ArrayData<double>& vol,
    const hier::Box& box) const

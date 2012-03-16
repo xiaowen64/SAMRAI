@@ -87,19 +87,28 @@ public:
     * Return string name identifier for statistic object.
     */
    const std::string&
-   getName() const;
+   getName() const
+   {
+      return d_object_name;
+   }
 
    /**
     * Return string statistic type identifier for statistic object.
     */
    std::string
-   getType() const;
+   getType() const
+   {
+      return (d_stat_type == PROC_STAT) ? "PROC_STAT" : "PATCH_STAT";
+   }
 
    /**
     * Return integer instance identifier for statistic object.
     */
    int
-   getInstanceId() const;
+   getInstanceId() const
+   {
+      return d_instance_id;
+   }
 
    /**
     * Return integer length of list of statistic sequence records.
@@ -108,13 +117,20 @@ public:
     * type.
     */
    int
-   getStatSequenceLength() const;
+   getStatSequenceLength() const
+   {
+      return d_seq_counter;
+   }
 
    /**
     * Reset the state of the statistic information.
     */
    void
-   reset();
+   reset()
+   {
+      d_proc_array.clear();
+      d_patch_array.clear();
+   }
 
    /**
     * Record double processor statistic value. The optional sequence number
@@ -151,7 +167,10 @@ public:
     * any details of structure of statistic data.  Otherwise, return false.
     */
    bool
-   canEstimateDataStreamSize();
+   canEstimateDataStreamSize()
+   {
+      return false;
+   }
 
    /**
     * Return integer number of bytes needed to stream the statistic data.
@@ -213,11 +232,7 @@ public:
    };
 
    struct PatchStat {
-#ifdef LACKS_NAMESPACE_IN_DECLARE
-      List<PatchStatRecord> patch_records; // stat record
-#else
       List<Statistic::PatchStatRecord> patch_records; // stat record
-#endif
    };
 
 protected:
@@ -233,24 +248,20 @@ protected:
    /**
     * Return const reference to list of processor records.
     */
-#ifdef LACKS_NAMESPACE_IN_DECLARE
-   const Array<ProcStat>&
-   getProcStatSeqArray() const;
-#else
    const Array<Statistic::ProcStat>&
-   getProcStatSeqArray() const;
-#endif
+   getProcStatSeqArray() const
+   {
+      return d_proc_array;
+   }
 
    /**
     * Return const reference to list of patch records.
     */
-#ifdef LACKS_NAMESPACE_IN_DECLARE
-   const Array<PatchStat>&
-   getPatchStatSeqArray() const;
-#else
    const Array<Statistic::PatchStat>&
-   getPatchStatSeqArray() const;
-#endif
+   getPatchStatSeqArray() const
+   {
+      return d_patch_array;
+   }
 
 private:
    /*
@@ -297,13 +308,8 @@ private:
     * Integer sequence length refers to length of list corresponding
     * to stat type.
     */
-#ifdef LACKS_NAMESPACE_IN_DECLARE
-   Array<ProcStat> d_proc_array;
-   Array<PatchStat> d_patch_array;
-#else
    Array<Statistic::ProcStat> d_proc_array;
    Array<Statistic::PatchStat> d_patch_array;
-#endif
 
    /*
     * Sequence and patch counters (NOTE: patch counter use for patch stats
@@ -318,7 +324,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/Statistic.I"
-#endif
 #endif

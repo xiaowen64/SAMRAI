@@ -20,6 +20,7 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Complex.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <iostream>
@@ -64,7 +65,13 @@ public:
    copyData(
       const boost::shared_ptr<pdat::NodeData<dcomplex> >& dst,
       const boost::shared_ptr<pdat::NodeData<dcomplex> >& src,
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      TBOX_ASSERT(dst && src);
+      TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+      dst->getArrayData().copy(src->getArrayData(),
+         pdat::NodeGeometry::toNodeBox(box));
+   }
 
    /**
     * Swap pointers for patch data objects.  Objects are checked for
@@ -92,7 +99,12 @@ public:
    setToScalar(
       const boost::shared_ptr<pdat::NodeData<dcomplex> >& dst,
       const dcomplex& alpha,
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      TBOX_ASSERT(dst);
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
+      dst->fillAll(alpha, box);
+   }
 
 private:
    // The following are not implemented:
@@ -107,7 +119,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/math/PatchNodeDataOpsComplex.I"
-#endif
 #endif

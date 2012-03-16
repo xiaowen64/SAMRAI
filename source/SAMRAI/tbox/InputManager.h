@@ -76,7 +76,10 @@ public:
     * so, it returns true.  If not, false.
     */
    static bool
-   inputDatabaseExists();
+   inputDatabaseExists()
+   {
+      return s_input_db;
+   }
 
    /**
     * Accessor method for the root input database held by InputManager.
@@ -90,7 +93,8 @@ public:
     *       boost::shared_ptr<Database> root_db =
     *          InputManager::getManager()->getInputDatabase();
     *       // get class's sub-database
-    *       boost::shared_ptr<Database> class_db = root_db->getDatabase("MyClass");
+    *       boost::shared_ptr<Database> class_db =
+    *          root_db->getDatabase("MyClass");
     *       // get parameter(s) from sub-database
     *       int dummy = class_db->getInteger("dummy");
     *
@@ -105,7 +109,10 @@ public:
     * easy or efficient way to supply input parameters.
     */
    static boost::shared_ptr<Database>
-   getInputDatabase();
+   getInputDatabase()
+   {
+      return s_input_db;
+   }
 
    /**
     * Create a new database named "main" from the specified input file.
@@ -161,7 +168,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/InputManager.I"
-#endif
 #endif

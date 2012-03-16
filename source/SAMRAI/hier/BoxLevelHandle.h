@@ -12,6 +12,8 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/tbox/Utilities.h"
+
 #include <boost/make_shared.hpp>
 
 namespace SAMRAI {
@@ -65,7 +67,10 @@ public:
     * BoxLevel.
     */
    bool
-   isAttached() const;
+   isAttached() const
+   {
+      return d_box_level != NULL;
+   }
 
 private:
    /*!
@@ -109,7 +114,10 @@ private:
     * BoxLevelHandle should call this method.
     */
    void
-   detachMyBoxLevel();
+   detachMyBoxLevel()
+   {
+      d_box_level = NULL;
+   }
 
    //@{
    /*!
@@ -128,9 +136,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxLevelHandle.I"
-#endif
 
 #endif // included_hier_BoxLevelHandle

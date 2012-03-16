@@ -14,10 +14,6 @@
 
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/RefineTransactionFactory.I"
-#endif
-
 namespace SAMRAI {
 namespace xfer {
 

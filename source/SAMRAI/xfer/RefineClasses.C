@@ -21,10 +21,6 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/RefineClasses.I"
-#endif
-
 namespace SAMRAI {
 namespace xfer {
 

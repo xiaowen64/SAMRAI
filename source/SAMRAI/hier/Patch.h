@@ -16,12 +16,15 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/PatchData.h"
+#include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
+#include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -85,7 +88,10 @@ public:
     * @return The box over which this patch is defined.
     */
    const Box&
-   getBox() const;
+   getBox() const
+   {
+      return d_mapped_box;
+   }
 
    /*!
     * @brief Get the GlobalId for this patch.
@@ -97,7 +103,10 @@ public:
     * @return GlobalId for this patch.
     */
    const GlobalId&
-   getGlobalId() const;
+   getGlobalId() const
+   {
+      return d_mapped_box.getGlobalId();
+   }
 
    /*!
     * @brief Get the patch's LocalId.
@@ -108,7 +117,10 @@ public:
     * @return The LocalId of this patch.
     */
    const LocalId&
-   getLocalId() const;
+   getLocalId() const
+   {
+      return d_mapped_box.getLocalId();
+   }
 
    /*!
     * @brief Get the patch descriptor.
@@ -119,7 +131,10 @@ public:
     * @return the patch descriptor for this patch.
     */
    boost::shared_ptr<PatchDescriptor>
-   getPatchDescriptor() const;
+   getPatchDescriptor() const
+   {
+      return d_descriptor;
+   }
 
    /*!
     * @brief Get the patch data identified by the specified id.
@@ -136,7 +151,11 @@ public:
     */
    boost::shared_ptr<PatchData>
    getPatchData(
-      const int id) const;
+      const int id) const
+   {
+      TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
+      return d_patch_data[id];
+   }
 
    /*!
     * @brief Get the patch data associated with the specified variable and
@@ -156,7 +175,14 @@ public:
    boost::shared_ptr<PatchData>
    getPatchData(
       const boost::shared_ptr<Variable>& variable,
-      const boost::shared_ptr<VariableContext>& context) const;
+      const boost::shared_ptr<VariableContext>& context) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *variable);
+      int id = VariableDatabase::getDatabase()->
+         mapVariableAndContextToIndex(variable, context);
+      TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
+      return d_patch_data[id];
+   }
 
    /*!
     * @brief Set the patch data Pointer associated with the specified
@@ -177,7 +203,12 @@ public:
    void
    setPatchData(
       const int id,
-      const boost::shared_ptr<PatchData>& data);
+      const boost::shared_ptr<PatchData>& data)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *data);
+      TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
+      d_patch_data[id] = data;
+   }
 
    /*!
     * @brief Check whether the specified component has been allocated.
@@ -188,7 +219,10 @@ public:
     */
    bool
    checkAllocated(
-      const int id) const;
+      const int id) const
+   {
+      return (id < d_patch_data.getSize()) && d_patch_data[id];
+   }
 
    /*!
     * @brief Get the size of the patch data
@@ -199,7 +233,11 @@ public:
     */
    size_t
    getSizeOfPatchData(
-      const int id) const;
+      const int id) const
+   {
+      return d_descriptor->getPatchDataFactory(id)->getSizeOfMemory(
+         d_mapped_box);
+   }
 
    /*!
     * @brief Get the size of the patch data for all components specified
@@ -251,7 +289,14 @@ public:
     */
    void
    deallocatePatchData(
-      const int id);
+      const int id)
+   {
+      TBOX_ASSERT((id >= 0) &&
+         (id < d_descriptor->getMaxNumberRegisteredComponents()));
+      if (id < d_patch_data.getSize()) {
+         d_patch_data[id].reset();
+      }
+   }
 
    /*!
     * @brief Deallocate the specified components.
@@ -273,7 +318,10 @@ public:
     */
    void
    setPatchGeometry(
-      const boost::shared_ptr<PatchGeometry>& geometry);
+      const boost::shared_ptr<PatchGeometry>& geometry)
+   {
+      d_patch_geometry = geometry;
+   }
 
    /*!
     * @brief Get the patch geometry
@@ -281,7 +329,10 @@ public:
     * @return pointer to patch geometry object.
     */
    boost::shared_ptr<PatchGeometry>
-   getPatchGeometry() const;
+   getPatchGeometry() const
+   {
+      return d_patch_geometry;
+   }
 
    /*!
     * @brief Set the timestamp value for the specified patch component.
@@ -292,7 +343,12 @@ public:
    void
    setTime(
       const double timestamp,
-      const int id);
+      const int id)
+   {
+      TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
+      TBOX_ASSERT(d_patch_data[id]);
+      d_patch_data[id]->setTime(timestamp);
+   }
 
    /*!
     * @brief Set the timestamp value for the specified patch components.
@@ -332,7 +388,10 @@ public:
     * @see inHierarchy()
     */
    int
-   getPatchLevelNumber() const;
+   getPatchLevelNumber() const
+   {
+      return d_patch_level_number;
+   }
 
    /*!
     * @brief Set the patch level number for this patch.
@@ -345,8 +404,10 @@ public:
     */
    void
    setPatchLevelNumber(
-      const int level_number);
-
+      const int level_number)
+   {
+      d_patch_level_number = level_number;
+   }
    /*!
     * @brief Determine if the level holding this patch resides in a hierarchy.
     *
@@ -354,7 +415,10 @@ public:
     * otherwise false.
     */
    bool
-   inHierarchy() const;
+   inHierarchy() const
+   {
+      return d_patch_in_hierarchy;
+   }
 
    /*!
     * @brief Set a flag determining if the patch resides in a hierarchy.
@@ -367,7 +431,10 @@ public:
     */
    void
    setPatchInHierarchy(
-      bool in_hierarchy);
+      bool in_hierarchy)
+   {
+      d_patch_in_hierarchy = in_hierarchy;
+   }
 
    /*!
     * @brief Get the patch data items from the database.
@@ -435,7 +502,10 @@ public:
     * @return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_mapped_box.getDim();
+   }
 
    /*!
     * @brief Output patch information (box and number of components).
@@ -482,7 +552,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/Patch.I"
-#endif
+
 #endif

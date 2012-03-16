@@ -12,10 +12,6 @@
 
 #include <cstdlib>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/Clock.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 

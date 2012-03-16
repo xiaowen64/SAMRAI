@@ -8,7 +8,6 @@
  *
  ************************************************************************/
 
-#include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #ifdef HAVE_SUNDIALS

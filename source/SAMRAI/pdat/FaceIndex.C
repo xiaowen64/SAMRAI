@@ -13,10 +13,6 @@
 
 #include "SAMRAI/pdat/FaceIndex.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/FaceIndex.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 

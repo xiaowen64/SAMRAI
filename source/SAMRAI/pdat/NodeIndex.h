@@ -92,7 +92,12 @@ public:
     */
    NodeIndex&
    operator = (
-      const NodeIndex& rhs);
+      const NodeIndex& rhs)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      hier::Index::operator = (rhs);
+      return *this;
+   }
 
    /**
     * The node index destructor does nothing interesting.
@@ -104,84 +109,144 @@ public:
     */
    NodeIndex&
    operator += (
-      const hier::IntVector& rhs);
+      const hier::IntVector& rhs)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      hier::Index::operator += (rhs);
+      return *this;
+   }
 
    /**
     * Plus operator for a node index and an integer vector.
     */
    NodeIndex
    operator + (
-      const hier::IntVector& rhs) const;
+      const hier::IntVector& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      NodeIndex tmp = *this;
+      tmp += rhs;
+      return tmp;
+   }
 
    /**
     * Plus-equals operator for a node index and an integer.
     */
    NodeIndex&
    operator += (
-      const int rhs);
+      const int rhs)
+   {
+      hier::Index::operator += (rhs);
+      return *this;
+   }
 
    /**
     * Plus operator for a node index and an integer.
     */
    NodeIndex
    operator + (
-      const int rhs) const;
+      const int rhs) const
+   {
+      NodeIndex tmp = *this;
+      tmp += rhs;
+      return tmp;
+   }
 
    /**
     * Minus-equals operator for a node index and an integer vector.
     */
    NodeIndex&
    operator -= (
-      const hier::IntVector& rhs);
+      const hier::IntVector& rhs)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      hier::Index::operator -= (rhs);
+      return *this;
+   }
 
    /**
     * Minus operator for a node index and an integer vector.
     */
    NodeIndex
    operator - (
-      const hier::IntVector& rhs) const;
+      const hier::IntVector& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      NodeIndex tmp = *this;
+      tmp -= rhs;
+      return tmp;
+   }
 
    /**
     * Minus-equals operator for a node index and an integer.
     */
    NodeIndex&
    operator -= (
-      const int rhs);
+      const int rhs)
+   {
+      hier::Index::operator -= (rhs);
+      return *this;
+   }
 
    /**
     * Minus operator for a node index and an integer.
     */
    NodeIndex
    operator - (
-      const int rhs) const;
+      const int rhs) const
+   {
+      NodeIndex tmp = *this;
+      tmp -= rhs;
+      return tmp;
+   }
 
    /**
     * Times-equals operator for a node index and an integer vector.
     */
    NodeIndex&
    operator *= (
-      const hier::IntVector& rhs);
+      const hier::IntVector& rhs)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      hier::Index::operator *= (rhs);
+      return *this;
+   }
 
    /**
     * Times operator for a node index and an integer vector.
     */
    NodeIndex
    operator * (
-      const hier::IntVector& rhs) const;
+      const hier::IntVector& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      NodeIndex tmp = *this;
+      tmp *= rhs;
+      return tmp;
+   }
 
    /**
     * Times-equals operator for a node index and an integer.
     */
    NodeIndex&
    operator *= (
-      const int rhs);
+      const int rhs)
+   {
+      hier::Index::operator *= (rhs);
+      return *this;
+   }
 
    /**
     * Times operator for a node index and an integer.
     */
    NodeIndex
    operator * (
-      const int rhs) const;
+      const int rhs) const
+   {
+      NodeIndex tmp = *this;
+      tmp *= rhs;
+      return tmp;
+   }
 
    /**
     * Returns true if two node index objects are equal.
@@ -189,7 +254,11 @@ public:
     */
    bool
    operator == (
-      const NodeIndex& rhs) const;
+      const NodeIndex& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      return ((hier::Index *)this)->operator == (rhs);
+   }
 
    /**
     * Returns true if two node index objects are not equal.
@@ -197,7 +266,11 @@ public:
     */
    bool
    operator != (
-      const NodeIndex& rhs) const;
+      const NodeIndex& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      return ((hier::Index *)this)->operator != (rhs);
+   }
 
 private:
    /*
@@ -213,7 +286,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/NodeIndex.I"
-#endif
+
 #endif

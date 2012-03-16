@@ -17,10 +17,6 @@
 
 #include <stdio.h>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/mesh/TagAndInitializeStrategy.I"
-#endif
-
 namespace SAMRAI {
 namespace mesh {
 
@@ -56,10 +52,8 @@ TagAndInitializeStrategy::getUserSuppliedRefineBoxes(
    const int level_num,
    const double time)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level_num >= 0);
    TBOX_ASSERT(time >= 0.);
-#endif
 
    /*
     * The cycle counter and boolean array specifying whether times
@@ -215,9 +209,7 @@ TagAndInitializeStrategy::resetRefineBoxes(
    const hier::BoxContainer& refine_boxes,
    const int level_num)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level_num >= 0);
-#endif
 
    int i = d_reset_refine_boxes.getSize();
    if (i <= level_num) {
@@ -245,9 +237,7 @@ void
 TagAndInitializeStrategy::getFromInput(
    const boost::shared_ptr<tbox::Database>& db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    /*
     * Read refine boxes.

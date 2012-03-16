@@ -40,6 +40,7 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/tbox/Database.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
@@ -161,7 +162,10 @@ public:
     */
    void
    setSolnIdDepth(
-      const int depth);
+      const int depth)
+   {
+      d_soln_depth = depth;
+   }
 
    /*!
     * @brief Set default depth of the rhs data involved in the solve.
@@ -178,7 +182,10 @@ public:
     */
    void
    setRhsIdDepth(
-      const int depth);
+      const int depth)
+   {
+      d_rhs_depth = depth;
+   }
 
    /*!
     * @brief Set the stopping criteria (max iterations and residual
@@ -190,7 +197,13 @@ public:
    void
    setStoppingCriteria(
       const int max_iterations = 10,
-      const double relative_residual_tol = 1.0e-6);
+      const double relative_residual_tol = 1.0e-6)
+   {
+      TBOX_ASSERT(max_iterations >= 0);
+      TBOX_ASSERT(relative_residual_tol >= 0.0);
+      d_max_iterations = max_iterations;
+      d_relative_residual_tol = relative_residual_tol;
+   }
 
    /*!
     * @brief Solve the linear system Au=f.
@@ -237,28 +250,42 @@ public:
     * @return number of iterations taken by the solver to converge
     */
    int
-   getNumberOfIterations() const;
+   getNumberOfIterations() const
+   {
+      return d_number_iterations;
+   }
 
    /*!
     * @brief Set the number of pre-relax steps used by the Hypre solve.
     */
    void
    setNumPreRelaxSteps(
-      const int steps);
+      const int steps)
+   {
+      TBOX_ASSERT(d_hierarchy);
+      d_num_pre_relax_steps = steps;
+   }
 
    /*!
     * @brief Set the number of post-relax steps used by the Hypre solve.
     */
    void
    setNumPostRelaxSteps(
-      const int steps);
+      const int steps)
+   {
+      TBOX_ASSERT(d_hierarchy);
+      d_num_post_relax_steps = steps;
+   }
 
    /*!
     * @brief Return the final residual norm returned by the Hypre solve.
     * @return final residual norm returned by the Hypre solve.
     */
    double
-   getRelativeResidualNorm() const;
+   getRelativeResidualNorm() const
+   {
+      return d_relative_residual_norm;
+   }
 
    /*!
     * @brief Set whether to use Hypre's PFMG algorithm instead of the
@@ -274,7 +301,10 @@ public:
     */
    void
    setUseSMG(
-      bool use_smg);
+      bool use_smg)
+   {
+      d_use_smg = use_smg;
+   }
 
    /*!
     * @brief Specify boundary condition directly, without using
@@ -293,7 +323,15 @@ public:
       const std::string& boundary_type,
       const int fluxes = -1,
       const int flags = -1,
-      int* bdry_types = NULL);
+      int* bdry_types = NULL)
+   {
+      d_physical_bc_simple_case.setBoundaries(boundary_type,
+         fluxes,
+         flags,
+         bdry_types);
+      d_physical_bc_coef_strategy = &d_physical_bc_simple_case;
+      d_physical_bc_variable.reset();
+   }
 
    /*!
     * @brief Specify boundary condition through the use of a
@@ -318,7 +356,11 @@ public:
    setPhysicalBcCoefObject(
       const RobinBcCoefStrategy* physical_bc_coef_strategy,
       const boost::shared_ptr<hier::Variable>& variable =
-         boost::shared_ptr<hier::Variable>());
+         boost::shared_ptr<hier::Variable>())
+   {
+      d_physical_bc_coef_strategy = physical_bc_coef_strategy;
+      d_physical_bc_variable = variable;
+   }
 
    /*!
     * @brief Set the flag for printing solver information.
@@ -341,7 +383,10 @@ public:
     */
    void
    setPrintSolverInfo(
-      const bool print);
+      const bool print)
+   {
+      d_print_solver_info = print;
+   }
 
    /*!
     * @brief Get the name of this object.
@@ -349,7 +394,10 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*!
@@ -613,10 +661,6 @@ private:
 
 }
 } // namespace SAMRAI
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/CellPoissonHypreSolver.I"
-#endif
 
 #endif
 

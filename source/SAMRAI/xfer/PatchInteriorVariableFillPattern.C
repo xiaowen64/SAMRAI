@@ -15,10 +15,6 @@
 
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/PatchInteriorVariableFillPattern.I"
-#endif
-
 namespace SAMRAI {
 namespace xfer {
 
@@ -106,6 +102,18 @@ PatchInteriorVariableFillPattern::computeFillBoxesOverlap(
 
    return pdf.getBoxGeometry(patch_box)->setUpOverlap(overlap_boxes,
       transformation);
+}
+
+const hier::IntVector&
+PatchInteriorVariableFillPattern::getStencilWidth()
+{
+   return hier::IntVector::getZero(d_dim);
+}
+
+const std::string&
+PatchInteriorVariableFillPattern::getPatternName() const
+{
+   return s_name_id;
 }
 
 }

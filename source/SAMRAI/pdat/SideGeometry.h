@@ -133,14 +133,20 @@ public:
     * object.
     */
    const hier::Box&
-   getBox() const;
+   getBox() const
+   {
+      return d_box;
+   }
 
    /*!
     * @brief Return the ghost cell width for this side centered box
     * geometry object.
     */
    const hier::IntVector&
-   getGhosts() const;
+   getGhosts() const
+   {
+      return d_ghosts;
+   }
 
    /*!
     * Return constant reference to vector describing which coordinate
@@ -151,7 +157,10 @@ public:
     * A non-zero value indicates otherwise.
     */
    const hier::IntVector&
-   getDirectionVector() const;
+   getDirectionVector() const
+   {
+      return d_directions;
+   }
 
 private:
    /**
@@ -189,7 +198,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/SideGeometry.I"
-#endif
+
 #endif

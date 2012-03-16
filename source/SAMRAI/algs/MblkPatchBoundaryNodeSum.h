@@ -158,7 +158,10 @@ public:
     * @return The object name.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*
@@ -248,7 +251,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/algs/MblkPatchBoundaryNodeSum.I"
-#endif
 #endif

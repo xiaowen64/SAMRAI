@@ -15,10 +15,6 @@
 
 #include <iostream>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/PeriodicId.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 

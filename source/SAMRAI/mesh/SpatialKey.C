@@ -16,10 +16,6 @@
 #include <stdio.h>
 #include <iomanip>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/mesh/SpatialKey.I"
-#endif
-
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings

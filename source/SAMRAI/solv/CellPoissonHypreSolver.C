@@ -36,14 +36,9 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/make_shared.hpp>
 #include <cstdlib>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/CellPoissonHypreSolver.I"
-#endif
 
 extern "C" {
 
@@ -1253,14 +1248,12 @@ CellPoissonHypreSolver::solveSystem(
    t_solve_system->start();
 
    boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(u >= 0);
    TBOX_ASSERT(
       u < level->getPatchDescriptor()->getMaxNumberRegisteredComponents());
    TBOX_ASSERT(f >= 0);
    TBOX_ASSERT(
       f < level->getPatchDescriptor()->getMaxNumberRegisteredComponents());
-#endif
 
    if (d_physical_bc_coef_strategy == &d_physical_bc_simple_case) {
       /*
@@ -1299,9 +1292,7 @@ CellPoissonHypreSolver::solveSystem(
       boost::shared_ptr<pdat::CellData<double> > u_data_(
          patch->getPatchData(u),
          boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(u_data_);
-#endif
       pdat::CellData<double>& u_data = *u_data_;
       pdat::CellData<double> rhs_data(box, 1, no_ghosts);
 

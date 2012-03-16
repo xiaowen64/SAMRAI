@@ -15,9 +15,7 @@
 
 #ifdef HAVE_SUNDIALS
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/Sundials_SAMRAIVector.I"
-#endif
+#define SKVEC_CAST(x) (((Sundials_SAMRAIVector *)x))
 
 namespace SAMRAI {
 namespace solv {
@@ -34,9 +32,7 @@ SundialsAbstractVector*
 Sundials_SAMRAIVector::createSundialsVector(
    const boost::shared_ptr<SAMRAIVectorReal<double> >& samrai_vec)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(samrai_vec);
-#endif
    SundialsAbstractVector* skv = new Sundials_SAMRAIVector(samrai_vec);
 
    return skv;
@@ -55,9 +51,7 @@ boost::shared_ptr<SAMRAIVectorReal<double> >
 Sundials_SAMRAIVector::getSAMRAIVector(
    SundialsAbstractVector* sundials_vec)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(sundials_vec == (SundialsAbstractVector *)NULL));
-#endif
    return (dynamic_cast<Sundials_SAMRAIVector *>(sundials_vec))->
           getSAMRAIVector();
 }
@@ -66,9 +60,7 @@ boost::shared_ptr<SAMRAIVectorReal<double> >
 Sundials_SAMRAIVector::getSAMRAIVector(
    N_Vector sundials_vec)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(sundials_vec == NULL));
-#endif
 // sgs
    return static_cast<Sundials_SAMRAIVector *>(sundials_vec->content)->
           getSAMRAIVector();

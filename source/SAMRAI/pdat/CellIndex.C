@@ -13,10 +13,6 @@
 
 #include "SAMRAI/pdat/CellIndex.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/CellIndex.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 

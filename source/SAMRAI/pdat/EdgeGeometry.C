@@ -18,10 +18,6 @@
 
 #include <boost/make_shared.hpp>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/EdgeGeometry.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 

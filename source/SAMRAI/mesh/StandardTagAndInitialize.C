@@ -24,10 +24,6 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/mesh/StandardTagAndInitialize.I"
-#endif
-
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <stdio.h>
@@ -286,9 +282,8 @@ StandardTagAndInitialize::tagCellsForRefinement(
       NULL_USE(can_be_refined);
       NULL_USE(coarsest_sync_level);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(d_tag_strategy != ((StandardTagAndInitStrategy *)NULL));
-#endif
+
       d_tag_strategy->applyGradientDetector(hierarchy,
          level_number,
          regrid_time,
@@ -316,9 +311,8 @@ StandardTagAndInitialize::tagCellsForRefinement(
          boost::shared_ptr<pdat::CellData<int> > tag_data(
             patch->getPatchData(tag_index),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(tag_data);
-#endif
 
          for (hier::BoxContainer::Iterator ib(refine_boxes); ib != refine_boxes.end();
               ++ib) {
@@ -1044,9 +1038,7 @@ void
 StandardTagAndInitialize::getFromInput(
    const boost::shared_ptr<tbox::Database>& db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    tbox::Array<std::string> tagging_method;
    if (db->keyExists("tagging_method")) {

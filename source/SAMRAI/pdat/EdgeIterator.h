@@ -63,7 +63,12 @@ public:
     */
    EdgeIterator&
    operator = (
-      const EdgeIterator& iterator);
+      const EdgeIterator& iterator)
+   {
+      d_index = iterator.d_index;
+      d_box = iterator.d_box;
+      return *this;
+   }
 
    /**
     * Destructor for the edge iterator.
@@ -74,13 +79,19 @@ public:
     * Extract the edge index corresponding to the iterator position in the box.
     */
    const EdgeIndex&
-   operator * () const;
+   operator * () const
+   {
+      return d_index;
+   }
 
    /**
     * Extract the edge index corresponding to the iterator position in the box.
     */
    const EdgeIndex&
-   operator () () const;
+   operator () () const
+   {
+      return d_index;
+   }
 
    /**
     * Return true if the iterator points to a valid index within the box.
@@ -91,8 +102,10 @@ public:
    /**
     * Return a non-NULL if the iterator points to a valid index within the box.
     */
-   operator const void
-   * () const;
+   operator const void* () const
+   {
+      return EdgeIterator::operator bool () ? this : NULL;
+   }
 #endif
 
    /**
@@ -100,7 +113,10 @@ public:
     * This operator mimics the !p operation applied to a pointer p.
     */
    bool
-   operator ! () const;
+   operator ! () const
+   {
+      return !EdgeIterator::operator bool ();
+   }
 
    /**
     * Increment the iterator to point to the next index in the box.
@@ -114,14 +130,20 @@ public:
     */
    bool
    operator == (
-      const EdgeIterator& iterator) const;
+      const EdgeIterator& iterator) const
+   {
+      return d_index == iterator.d_index;
+   }
 
    /**
     * Test two iterators for inequality (different index values).
     */
    bool
    operator != (
-      const EdgeIterator& iterator) const;
+      const EdgeIterator& iterator) const
+   {
+      return d_index != iterator.d_index;
+   }
 
 private:
    EdgeIndex d_index;
@@ -130,7 +152,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/EdgeIterator.I"
-#endif
+
 #endif

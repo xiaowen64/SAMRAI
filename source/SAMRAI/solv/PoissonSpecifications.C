@@ -9,10 +9,6 @@
  ************************************************************************/
 #include "SAMRAI/solv/PoissonSpecifications.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/PoissonSpecifications.I"
-#endif
-
 namespace SAMRAI {
 namespace solv {
 

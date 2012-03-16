@@ -385,7 +385,10 @@ public:
     * @param[in]   block_id
     */
    const BoxContainer&
-   getPhysicalDomain() const;
+   getPhysicalDomain() const
+   {
+      return d_physical_domain;
+   }
 
    /*!
     * @brief Access the multiblock domain description as a tree
@@ -397,7 +400,10 @@ public:
     * @return The multiblock domain description as a search tree.
     */
    const BoxContainer&
-   getDomainSearchTree() const;
+   getDomainSearchTree() const
+   {
+      return d_physical_domain;
+   }
 
    /*!
     * @brief Access the multiblock domain description with periodic
@@ -407,7 +413,10 @@ public:
     * images (if any).
     */
    const BoxContainer& 
-   getPeriodicDomainSearchTree() const;
+   getPeriodicDomainSearchTree() const
+   {
+      return d_domain_with_images;
+   }
 
    /*!
     * @brief returns whether the physical domain for a block managed by this
@@ -420,7 +429,10 @@ public:
     */
    bool
    getDomainIsSingleBox(
-      const BlockId& block_id) const;
+      const BlockId& block_id) const
+   {
+      return d_domain_is_single_box[block_id.getBlockValue()];
+   }
 
    /*!
     * @brief Initialize the periodic shift on the coarsest level.
@@ -461,7 +473,10 @@ public:
     * @brief Get the number of blocks in the geometry.
     */
    int
-   getNumberBlocks() const;
+   getNumberBlocks() const
+   {
+      return d_number_blocks;
+   }
 
    /*!
     * @brief Get the max stencil width of all transfer operators.
@@ -474,7 +489,10 @@ public:
     * @return The max stencil width of all transfer operators.
     */
    IntVector
-   getMaxTransferOpStencilWidth();
+   getMaxTransferOpStencilWidth()
+   {
+      return d_transfer_operator_registry->getMaxTransferOpStencilWidth();
+   }
 
    /*!
     * @brief Create a pointer to a refined version of this grid geometry
@@ -638,7 +656,10 @@ public:
     */
    void
    addCoarsenOperator(
-      const boost::shared_ptr<CoarsenOperator>& coarsen_op);
+      const boost::shared_ptr<CoarsenOperator>& coarsen_op)
+   {
+      d_transfer_operator_registry->addCoarsenOperator(coarsen_op);
+   }
 
    /*!
     * @brief Add a concrete spatial refinement operator.
@@ -648,7 +669,10 @@ public:
     */
    void
    addRefineOperator(
-      const boost::shared_ptr<RefineOperator>& refine_op);
+      const boost::shared_ptr<RefineOperator>& refine_op)
+   {
+      d_transfer_operator_registry->addRefineOperator(refine_op);
+   }
 
    /*!
     * @brief Add a concrete time interpolation operator.
@@ -658,7 +682,10 @@ public:
     */
    void
    addTimeInterpolateOperator(
-      const boost::shared_ptr<TimeInterpolateOperator>& time_op);
+      const boost::shared_ptr<TimeInterpolateOperator>& time_op)
+   {
+      d_transfer_operator_registry->addTimeInterpolateOperator(time_op);
+   }
 
    /*!
     * @brief Lookup function for coarsening operator.
@@ -675,7 +702,11 @@ public:
    boost::shared_ptr<CoarsenOperator>
    lookupCoarsenOperator(
       const boost::shared_ptr<Variable>& var,
-      const std::string& op_name);
+      const std::string& op_name)
+   {
+      return d_transfer_operator_registry->lookupCoarsenOperator(
+         var, op_name);
+   }
 
    /*!
     * @brief Lookup function for refinement operator.
@@ -692,7 +723,11 @@ public:
    boost::shared_ptr<RefineOperator>
    lookupRefineOperator(
       const boost::shared_ptr<Variable>& var,
-      const std::string& op_name);
+      const std::string& op_name)
+   {
+      return d_transfer_operator_registry->lookupRefineOperator(
+         var, op_name);
+   }
 
    /*!
     * @brief Lookup function for time interpolation operator.
@@ -711,7 +746,11 @@ public:
    lookupTimeInterpolateOperator(
       const boost::shared_ptr<Variable>& var,
       const std::string& op_name =
-         "STD_LINEAR_TIME_INTERPOLATE");
+         "STD_LINEAR_TIME_INTERPOLATE")
+   {
+      return d_transfer_operator_registry->lookupTimeInterpolateOperator(
+         var, op_name);
+   }
 
    /*!
     * @brief Set a minimum value on the value returned by
@@ -727,7 +766,10 @@ public:
     */
    void
    setMinTransferOpStencilWidth(
-      const IntVector& min_value);
+      const IntVector& min_value)
+   {
+      d_transfer_operator_registry->setMinTransferOpStencilWidth(min_value);
+   }
 
    /*!
     * @brief Get the dimension of this object.
@@ -735,7 +777,10 @@ public:
     * @return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
    /*!
     * @brief Get the name of this object.
@@ -743,7 +788,10 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
    /*!
     * @brief Class to represent the neighbor of a given block.
@@ -777,39 +825,57 @@ public:
        * @brief Get the block number of the neighboring block.
        */
       const BlockId&
-      getBlockId() const;
+      getBlockId() const
+      {
+         return d_block_id;
+      }
 
       /*!
        * @brief Get the neighboring block's domain in the current block's
        * index space.
        */
       const BoxContainer&
-      getTransformedDomain() const;
+      getTransformedDomain() const
+      {
+         return d_transformed_domain;
+      }
 
       /*!
        * @brief Get the Transformation for the neighbor relationship.
        */
       const Transformation&
-      getTransformation() const;
+      getTransformation() const
+      {
+         return d_transformation;
+      }
 
       /*!
        * @brief Get the rotation identifier for the neighbor relationship.
        */
       Transformation::RotationIdentifier
-      getRotationIdentifier() const;
+      getRotationIdentifier() const
+      {
+         return d_transformation.getRotation();
+      }
 
       /*!
        * @brief Get the shift for the neighbor relationship.
        */
       const IntVector&
-      getShift() const;
+      getShift() const
+      {
+         return d_transformation.getOffset();
+      }
 
       /*!
        * @brief Tell if the neighboring block touch each other at an
        * enhanced connectivity singularity.
        */
       bool
-      isSingularity() const;
+      isSingularity() const
+      {
+         return d_is_singularity;
+      }
 
 private:
       /*!
@@ -881,7 +947,10 @@ private:
     * configuration.
     */
    int
-   getNumberOfBlockSingularities() const;
+   getNumberOfBlockSingularities() const
+   {
+      return d_number_of_block_singularities;
+   }
 
    /*!
     * @brief Return a BoxContainer that describes all of the singularities
@@ -898,7 +967,10 @@ private:
     */
    const BoxContainer&
    getSingularityBoxContainer(
-      const BlockId& block_id) const;
+      const BlockId& block_id) const
+   {
+      return d_singularity[block_id.getBlockValue()];
+   }
 
    /*!
     * @brief Return a list of integers indicating all of the
@@ -911,7 +983,10 @@ private:
     */
    const std::vector<int>&
    getSingularityIndices(
-      const BlockId& block_id) const;
+      const BlockId& block_id) const
+   {
+      return d_singularity_indices[block_id.getBlockValue()];
+   }
 
    /*!
     * @brief Tell if block represented by block_id touches
@@ -924,7 +999,10 @@ private:
     */
    bool
    reducedConnectivityExists(
-      const BlockId& block_id) const;
+      const BlockId& block_id) const
+   {
+      return d_reduced_connect[block_id.getBlockValue()];
+   }
 
    /*!
     * @brief Modify a box by rotating and shifting from the index space of
@@ -1006,7 +1084,10 @@ private:
     */
    const tbox::List<Neighbor>&
    getNeighbors(
-      const BlockId& block_id) const;
+      const BlockId& block_id) const
+   {
+      return d_block_neighbors[block_id.getBlockValue()];
+   }
 
    /*!
     * @brief Return the number of neighbors a specific block of the Multiblock
@@ -1021,7 +1102,10 @@ private:
     */
    int
    getNumberOfNeighbors(
-      const BlockId& block_id) const;
+      const BlockId& block_id) const
+   {
+      return d_block_neighbors[block_id.getBlockValue()].getNumberOfItems();
+   }
 
    /*!
     * @brief Tell if the given BlockIds represent neighboring blocks.
@@ -1059,7 +1143,10 @@ private:
     * @brief Query if the geometry has enhanced connectivity.
     */
    bool
-   hasEnhancedConnectivity() const;
+   hasEnhancedConnectivity() const
+   {
+      return d_has_enhanced_connectivity;
+   }
 
    /*!
     * @brief Print object data to the specified output stream.
@@ -1333,7 +1420,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/GridGeometry.I"
-#endif
 #endif

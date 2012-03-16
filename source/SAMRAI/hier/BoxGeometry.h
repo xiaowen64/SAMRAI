@@ -110,7 +110,18 @@ public:
       const Box& fill_box,
       const bool overwrite_interior,
       const Transformation& transformation,
-      const BoxContainer& dst_restrict_boxes = BoxContainer()) const;
+      const BoxContainer& dst_restrict_boxes = BoxContainer()) const
+   {
+      return this->calculateOverlap(
+         *this,
+         src_geometry,
+         src_mask,
+         fill_box,
+         overwrite_interior,
+         transformation,
+         true,
+         dst_restrict_boxes);
+   }
 
    /**
     * Calculate the overlap between two box geometry objects given the
@@ -159,9 +170,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxGeometry.I"
-#endif
 
 #endif

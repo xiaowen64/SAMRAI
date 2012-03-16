@@ -34,9 +34,8 @@ HierarchyEdgeDataOpsReal<TYPE>::HierarchyEdgeDataOpsReal(
    HierarchyDataOpsReal<TYPE>(),
    d_hierarchy(hierarchy)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(hierarchy);
-#endif
+
    if ((coarsest_level < 0) || (finest_level < 0)) {
       if (d_hierarchy->getNumberOfLevels() == 0) {
          d_coarsest_level = coarsest_level;
@@ -63,7 +62,8 @@ HierarchyEdgeDataOpsReal<TYPE>::~HierarchyEdgeDataOpsReal()
  */
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::setPatchHierarchy(
+void
+HierarchyEdgeDataOpsReal<TYPE>::setPatchHierarchy(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    TBOX_ASSERT(hierarchy);
@@ -72,16 +72,15 @@ void HierarchyEdgeDataOpsReal<TYPE>::setPatchHierarchy(
 }
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::resetLevels(
+void
+HierarchyEdgeDataOpsReal<TYPE>::resetLevels(
    const int coarsest_level,
    const int finest_level)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((coarsest_level >= 0)
       && (finest_level >= coarsest_level)
       && (finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    int dimVal = d_hierarchy->getDim().getValue();
 
@@ -136,7 +135,8 @@ HierarchyEdgeDataOpsReal<TYPE>::HierarchyEdgeDataOpsReal(
 }
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::operator = (
+void
+HierarchyEdgeDataOpsReal<TYPE>::operator = (
    const HierarchyEdgeDataOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -151,17 +151,16 @@ void HierarchyEdgeDataOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::copyData(
+void
+HierarchyEdgeDataOpsReal<TYPE>::copyData(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -175,9 +174,9 @@ void HierarchyEdgeDataOpsReal<TYPE>::copyData(
          boost::shared_ptr<pdat::EdgeData<TYPE> > src(
             p->getPatchData(src_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(dst);
-#endif
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.copyData(dst, src, box);
@@ -186,7 +185,8 @@ void HierarchyEdgeDataOpsReal<TYPE>::copyData(
 }
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::swapData(
+void
+HierarchyEdgeDataOpsReal<TYPE>::swapData(
    const int data1_id,
    const int data2_id) const
 {
@@ -202,12 +202,11 @@ void HierarchyEdgeDataOpsReal<TYPE>::swapData(
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
    TBOX_ASSERT(d1fact->getGhostCellWidth() == d2fact->getGhostCellWidth());
 #endif
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -221,17 +220,16 @@ void HierarchyEdgeDataOpsReal<TYPE>::swapData(
 }
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::printData(
+void
+HierarchyEdgeDataOpsReal<TYPE>::printData(
    const int data_id,
    std::ostream& s,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    s << "Patch descriptor id = " << data_id << std::endl;
    s << "Factory = " << typeid(*d_hierarchy->getPatchDescriptor()->
@@ -248,9 +246,9 @@ void HierarchyEdgeDataOpsReal<TYPE>::printData(
          boost::shared_ptr<pdat::EdgeData<TYPE> > d(
             p->getPatchData(data_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(d);
-#endif
+
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
          d_patch_ops.printData(d, box, s);
@@ -259,17 +257,16 @@ void HierarchyEdgeDataOpsReal<TYPE>::printData(
 }
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::setToScalar(
+void
+HierarchyEdgeDataOpsReal<TYPE>::setToScalar(
    const int data_id,
    const TYPE& alpha,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -280,9 +277,9 @@ void HierarchyEdgeDataOpsReal<TYPE>::setToScalar(
          boost::shared_ptr<pdat::EdgeData<TYPE> > d(
             p->getPatchData(data_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(d);
-#endif
+
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
          d_patch_ops.setToScalar(d, alpha, box);
@@ -299,18 +296,17 @@ void HierarchyEdgeDataOpsReal<TYPE>::setToScalar(
  */
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::scale(
+void
+HierarchyEdgeDataOpsReal<TYPE>::scale(
    const int dst_id,
    const TYPE& alpha,
    const int src_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -324,9 +320,9 @@ void HierarchyEdgeDataOpsReal<TYPE>::scale(
          boost::shared_ptr<pdat::EdgeData<TYPE> > src(
             p->getPatchData(src_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(dst);
-#endif
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.scale(dst, alpha, src, box);
@@ -335,18 +331,17 @@ void HierarchyEdgeDataOpsReal<TYPE>::scale(
 }
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::addScalar(
+void
+HierarchyEdgeDataOpsReal<TYPE>::addScalar(
    const int dst_id,
    const int src_id,
    const TYPE& alpha,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -360,9 +355,9 @@ void HierarchyEdgeDataOpsReal<TYPE>::addScalar(
          boost::shared_ptr<pdat::EdgeData<TYPE> > src(
             p->getPatchData(src_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(dst);
-#endif
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.addScalar(dst, src, alpha, box);
@@ -371,18 +366,17 @@ void HierarchyEdgeDataOpsReal<TYPE>::addScalar(
 }
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::add(
+void
+HierarchyEdgeDataOpsReal<TYPE>::add(
    const int dst_id,
    const int src1_id,
    const int src2_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -399,9 +393,9 @@ void HierarchyEdgeDataOpsReal<TYPE>::add(
          boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
             p->getPatchData(src2_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(dst);
-#endif
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.add(dst, src1, src2, box);
@@ -410,18 +404,17 @@ void HierarchyEdgeDataOpsReal<TYPE>::add(
 }
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::subtract(
+void
+HierarchyEdgeDataOpsReal<TYPE>::subtract(
    const int dst_id,
    const int src1_id,
    const int src2_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -438,9 +431,9 @@ void HierarchyEdgeDataOpsReal<TYPE>::subtract(
          boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
             p->getPatchData(src2_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(dst);
-#endif
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.subtract(dst, src1, src2, box);
@@ -449,18 +442,17 @@ void HierarchyEdgeDataOpsReal<TYPE>::subtract(
 }
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::multiply(
+void
+HierarchyEdgeDataOpsReal<TYPE>::multiply(
    const int dst_id,
    const int src1_id,
    const int src2_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -477,9 +469,9 @@ void HierarchyEdgeDataOpsReal<TYPE>::multiply(
          boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
             p->getPatchData(src2_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(dst);
-#endif
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.multiply(dst, src1, src2, box);
@@ -488,18 +480,17 @@ void HierarchyEdgeDataOpsReal<TYPE>::multiply(
 }
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::divide(
+void
+HierarchyEdgeDataOpsReal<TYPE>::divide(
    const int dst_id,
    const int src1_id,
    const int src2_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -516,9 +507,9 @@ void HierarchyEdgeDataOpsReal<TYPE>::divide(
          boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
             p->getPatchData(src2_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(dst);
-#endif
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.divide(dst, src1, src2, box);
@@ -527,17 +518,16 @@ void HierarchyEdgeDataOpsReal<TYPE>::divide(
 }
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::reciprocal(
+void
+HierarchyEdgeDataOpsReal<TYPE>::reciprocal(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -551,9 +541,9 @@ void HierarchyEdgeDataOpsReal<TYPE>::reciprocal(
          boost::shared_ptr<pdat::EdgeData<TYPE> > src(
             p->getPatchData(src_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(dst);
-#endif
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.reciprocal(dst, src, box);
@@ -562,7 +552,8 @@ void HierarchyEdgeDataOpsReal<TYPE>::reciprocal(
 }
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::linearSum(
+void
+HierarchyEdgeDataOpsReal<TYPE>::linearSum(
    const int dst_id,
    const TYPE& alpha,
    const int src1_id,
@@ -570,12 +561,10 @@ void HierarchyEdgeDataOpsReal<TYPE>::linearSum(
    const int src2_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -592,9 +581,9 @@ void HierarchyEdgeDataOpsReal<TYPE>::linearSum(
          boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
             p->getPatchData(src2_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(dst);
-#endif
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.linearSum(dst, alpha, src1, beta, src2, box);
@@ -603,19 +592,18 @@ void HierarchyEdgeDataOpsReal<TYPE>::linearSum(
 }
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::axpy(
+void
+HierarchyEdgeDataOpsReal<TYPE>::axpy(
    const int dst_id,
    const TYPE& alpha,
    const int src1_id,
    const int src2_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -632,9 +620,9 @@ void HierarchyEdgeDataOpsReal<TYPE>::axpy(
          boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
             p->getPatchData(src2_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(dst);
-#endif
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.axpy(dst, alpha, src1, src2, box);
@@ -643,19 +631,18 @@ void HierarchyEdgeDataOpsReal<TYPE>::axpy(
 }
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::axmy(
+void
+HierarchyEdgeDataOpsReal<TYPE>::axmy(
    const int dst_id,
    const TYPE& alpha,
    const int src1_id,
    const int src2_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -672,9 +659,9 @@ void HierarchyEdgeDataOpsReal<TYPE>::axmy(
          boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
             p->getPatchData(src2_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(dst);
-#endif
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.axmy(dst, alpha, src1, src2, box);
@@ -683,17 +670,16 @@ void HierarchyEdgeDataOpsReal<TYPE>::axmy(
 }
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::abs(
+void
+HierarchyEdgeDataOpsReal<TYPE>::abs(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -707,9 +693,9 @@ void HierarchyEdgeDataOpsReal<TYPE>::abs(
          boost::shared_ptr<pdat::EdgeData<TYPE> > src(
             p->getPatchData(src_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(dst);
-#endif
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.abs(dst, src, box);
@@ -718,18 +704,17 @@ void HierarchyEdgeDataOpsReal<TYPE>::abs(
 }
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::setRandomValues(
+void
+HierarchyEdgeDataOpsReal<TYPE>::setRandomValues(
    const int data_id,
    const TYPE& width,
    const TYPE& low,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -740,9 +725,9 @@ void HierarchyEdgeDataOpsReal<TYPE>::setRandomValues(
          boost::shared_ptr<pdat::EdgeData<TYPE> > data(
             p->getPatchData(data_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(data);
-#endif
+
          hier::Box box = (interior_only ? p->getBox() : data->getGhostBox());
 
          d_patch_ops.setRandomValues(data, width, low, box);
@@ -759,16 +744,16 @@ void HierarchyEdgeDataOpsReal<TYPE>::setRandomValues(
  */
 
 template<class TYPE>
-int HierarchyEdgeDataOpsReal<TYPE>::numberOfEntries(
+int
+HierarchyEdgeDataOpsReal<TYPE>::numberOfEntries(
    const int data_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
    int dimVal = d_hierarchy->getDim().getValue();
 
@@ -779,9 +764,8 @@ int HierarchyEdgeDataOpsReal<TYPE>::numberOfEntries(
       boost::shared_ptr<pdat::EdgeDataFactory<TYPE> > dfact(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id),
          boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
       TBOX_ASSERT(dfact);
-#endif
 
       for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
          boost::shared_ptr<hier::PatchLevel> level(
@@ -816,9 +800,9 @@ int HierarchyEdgeDataOpsReal<TYPE>::numberOfEntries(
             boost::shared_ptr<pdat::EdgeData<TYPE> > d(
                (*ip)->getPatchData(data_id),
                boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
             TBOX_ASSERT(d);
-#endif
+
             entries += d_patch_ops.numberOfEntries(d, d->getGhostBox());
          }
       }
@@ -835,17 +819,17 @@ int HierarchyEdgeDataOpsReal<TYPE>::numberOfEntries(
 }
 
 template<class TYPE>
-double HierarchyEdgeDataOpsReal<TYPE>::sumControlVolumes(
+double
+HierarchyEdgeDataOpsReal<TYPE>::sumControlVolumes(
    const int data_id,
    const int vol_id) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(vol_id >= 0);
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    double sum = 0.0;
@@ -862,9 +846,9 @@ double HierarchyEdgeDataOpsReal<TYPE>::sumControlVolumes(
          boost::shared_ptr<pdat::EdgeData<double> > cv(
             p->getPatchData(vol_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(cv);
-#endif
+
          hier::Box box = cv->getGhostBox();
 
          sum += d_patch_ops.sumControlVolumes(data, cv, box);
@@ -879,17 +863,17 @@ double HierarchyEdgeDataOpsReal<TYPE>::sumControlVolumes(
 }
 
 template<class TYPE>
-double HierarchyEdgeDataOpsReal<TYPE>::L1Norm(
+double
+HierarchyEdgeDataOpsReal<TYPE>::L1Norm(
    const int data_id,
    const int vol_id,
    bool local_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    double norm = 0.0;
@@ -907,9 +891,9 @@ double HierarchyEdgeDataOpsReal<TYPE>::L1Norm(
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-#ifdef DEBUG_CHECK_ASSERTIONS
+
             TBOX_ASSERT(data);
-#endif
+
             box = data->getGhostBox();
             pd = p->getPatchData(vol_id);
          }
@@ -932,7 +916,8 @@ double HierarchyEdgeDataOpsReal<TYPE>::L1Norm(
 }
 
 template<class TYPE>
-double HierarchyEdgeDataOpsReal<TYPE>::L2Norm(
+double
+HierarchyEdgeDataOpsReal<TYPE>::L2Norm(
    const int data_id,
    const int vol_id,
    bool local_only) const
@@ -946,17 +931,17 @@ double HierarchyEdgeDataOpsReal<TYPE>::L2Norm(
 }
 
 template<class TYPE>
-double HierarchyEdgeDataOpsReal<TYPE>::weightedL2Norm(
+double
+HierarchyEdgeDataOpsReal<TYPE>::weightedL2Norm(
    const int data_id,
    const int wgt_id,
    const int vol_id) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    double norm_squared = 0.0;
@@ -977,9 +962,9 @@ double HierarchyEdgeDataOpsReal<TYPE>::weightedL2Norm(
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-#ifdef DEBUG_CHECK_ASSERTIONS
+
             TBOX_ASSERT(data);
-#endif
+
             box = data->getGhostBox();
             pd = p->getPatchData(vol_id);
          }
@@ -1001,7 +986,8 @@ double HierarchyEdgeDataOpsReal<TYPE>::weightedL2Norm(
 }
 
 template<class TYPE>
-double HierarchyEdgeDataOpsReal<TYPE>::RMSNorm(
+double
+HierarchyEdgeDataOpsReal<TYPE>::RMSNorm(
    const int data_id,
    const int vol_id) const
 {
@@ -1015,7 +1001,8 @@ double HierarchyEdgeDataOpsReal<TYPE>::RMSNorm(
 }
 
 template<class TYPE>
-double HierarchyEdgeDataOpsReal<TYPE>::weightedRMSNorm(
+double
+HierarchyEdgeDataOpsReal<TYPE>::weightedRMSNorm(
    const int data_id,
    const int wgt_id,
    const int vol_id) const
@@ -1031,17 +1018,17 @@ double HierarchyEdgeDataOpsReal<TYPE>::weightedRMSNorm(
 }
 
 template<class TYPE>
-double HierarchyEdgeDataOpsReal<TYPE>::maxNorm(
+double
+HierarchyEdgeDataOpsReal<TYPE>::maxNorm(
    const int data_id,
    const int vol_id,
    bool local_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    double norm = 0.0;
@@ -1059,9 +1046,9 @@ double HierarchyEdgeDataOpsReal<TYPE>::maxNorm(
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-#ifdef DEBUG_CHECK_ASSERTIONS
+
             TBOX_ASSERT(data);
-#endif
+
             box = data->getGhostBox();
             pd = p->getPatchData(vol_id);
          }
@@ -1085,18 +1072,18 @@ double HierarchyEdgeDataOpsReal<TYPE>::maxNorm(
 }
 
 template<class TYPE>
-TYPE HierarchyEdgeDataOpsReal<TYPE>::dot(
+TYPE
+HierarchyEdgeDataOpsReal<TYPE>::dot(
    const int data1_id,
    const int data2_id,
    const int vol_id,
    bool local_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    TYPE dprod = 0.0;
@@ -1117,9 +1104,9 @@ TYPE HierarchyEdgeDataOpsReal<TYPE>::dot(
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-#ifdef DEBUG_CHECK_ASSERTIONS
+
             TBOX_ASSERT(data1);
-#endif
+
             box = data1->getGhostBox();
             pd = p->getPatchData(vol_id);
          }
@@ -1140,16 +1127,16 @@ TYPE HierarchyEdgeDataOpsReal<TYPE>::dot(
 }
 
 template<class TYPE>
-TYPE HierarchyEdgeDataOpsReal<TYPE>::integral(
+TYPE
+HierarchyEdgeDataOpsReal<TYPE>::integral(
    const int data_id,
    const int vol_id) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    TYPE local_integral = 0.0;
@@ -1167,10 +1154,8 @@ TYPE HierarchyEdgeDataOpsReal<TYPE>::integral(
             p->getPatchData(vol_id),
             boost::detail::dynamic_cast_tag());
 
-#ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(data);
          TBOX_ASSERT(vol);
-#endif
 
          hier::Box box = data->getGhostBox();
 
@@ -1194,17 +1179,17 @@ TYPE HierarchyEdgeDataOpsReal<TYPE>::integral(
  */
 
 template<class TYPE>
-int HierarchyEdgeDataOpsReal<TYPE>::computeConstrProdPos(
+int
+HierarchyEdgeDataOpsReal<TYPE>::computeConstrProdPos(
    const int data1_id,
    const int data2_id,
    const int vol_id) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    int test = 1;
@@ -1225,9 +1210,9 @@ int HierarchyEdgeDataOpsReal<TYPE>::computeConstrProdPos(
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-#ifdef DEBUG_CHECK_ASSERTIONS
+
             TBOX_ASSERT(data1);
-#endif
+
             box = data1->getGhostBox();
             pd = p->getPatchData(vol_id);
          }
@@ -1248,18 +1233,17 @@ int HierarchyEdgeDataOpsReal<TYPE>::computeConstrProdPos(
 }
 
 template<class TYPE>
-void HierarchyEdgeDataOpsReal<TYPE>::compareToScalar(
+void
+HierarchyEdgeDataOpsReal<TYPE>::compareToScalar(
    const int dst_id,
    const int src_id,
    const TYPE& alpha,
    const int vol_id) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -1277,9 +1261,9 @@ void HierarchyEdgeDataOpsReal<TYPE>::compareToScalar(
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-#ifdef DEBUG_CHECK_ASSERTIONS
+
             TBOX_ASSERT(dst);
-#endif
+
             box = dst->getGhostBox();
             pd = p->getPatchData(vol_id);
          }
@@ -1293,17 +1277,17 @@ void HierarchyEdgeDataOpsReal<TYPE>::compareToScalar(
 }
 
 template<class TYPE>
-int HierarchyEdgeDataOpsReal<TYPE>::testReciprocal(
+int
+HierarchyEdgeDataOpsReal<TYPE>::testReciprocal(
    const int dst_id,
    const int src_id,
    const int vol_id) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    int test = 1;
@@ -1324,9 +1308,9 @@ int HierarchyEdgeDataOpsReal<TYPE>::testReciprocal(
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-#ifdef DEBUG_CHECK_ASSERTIONS
+
             TBOX_ASSERT(dst);
-#endif
+
             box = dst->getGhostBox();
             pd = p->getPatchData(vol_id);
          }
@@ -1347,17 +1331,17 @@ int HierarchyEdgeDataOpsReal<TYPE>::testReciprocal(
 }
 
 template<class TYPE>
-TYPE HierarchyEdgeDataOpsReal<TYPE>::maxPointwiseDivide(
+TYPE
+HierarchyEdgeDataOpsReal<TYPE>::maxPointwiseDivide(
    const int numer_id,
    const int denom_id,
    bool local_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    TYPE max = 0.0;
@@ -1391,17 +1375,17 @@ TYPE HierarchyEdgeDataOpsReal<TYPE>::maxPointwiseDivide(
 }
 
 template<class TYPE>
-TYPE HierarchyEdgeDataOpsReal<TYPE>::minPointwiseDivide(
+TYPE
+HierarchyEdgeDataOpsReal<TYPE>::minPointwiseDivide(
    const int numer_id,
    const int denom_id,
    bool local_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    TYPE min = tbox::MathUtilities<TYPE>::getMax();
@@ -1435,16 +1419,16 @@ TYPE HierarchyEdgeDataOpsReal<TYPE>::minPointwiseDivide(
 }
 
 template<class TYPE>
-TYPE HierarchyEdgeDataOpsReal<TYPE>::min(
+TYPE
+HierarchyEdgeDataOpsReal<TYPE>::min(
    const int data_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    TYPE minval = tbox::MathUtilities<TYPE>::getMax();
@@ -1458,9 +1442,9 @@ TYPE HierarchyEdgeDataOpsReal<TYPE>::min(
          boost::shared_ptr<pdat::EdgeData<TYPE> > d(
             p->getPatchData(data_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(d);
-#endif
+
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
          minval = tbox::MathUtilities<TYPE>::Min(minval, d_patch_ops.min(d, box));
@@ -1475,16 +1459,16 @@ TYPE HierarchyEdgeDataOpsReal<TYPE>::min(
 }
 
 template<class TYPE>
-TYPE HierarchyEdgeDataOpsReal<TYPE>::max(
+TYPE
+HierarchyEdgeDataOpsReal<TYPE>::max(
    const int data_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    TYPE maxval = -tbox::MathUtilities<TYPE>::getMax();
@@ -1498,9 +1482,9 @@ TYPE HierarchyEdgeDataOpsReal<TYPE>::max(
          boost::shared_ptr<pdat::EdgeData<TYPE> > d(
             p->getPatchData(data_id),
             boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
          TBOX_ASSERT(d);
-#endif
+
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
          maxval = tbox::MathUtilities<TYPE>::Max(maxval, d_patch_ops.max(d, box));

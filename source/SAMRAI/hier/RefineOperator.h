@@ -97,7 +97,10 @@ public:
     * Return name std::string identifier of the refinement operation.
     */
    const std::string&
-   getOperatorName() const;
+   getOperatorName() const
+   {
+      return d_name;
+   }
 
    /**
     * Return the priority of this operator relative to other refinement
@@ -147,7 +150,10 @@ public:
     * Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    RefineOperator(
@@ -169,7 +175,11 @@ private:
     */
    void
    registerInLookupTable(
-      const std::string& name);
+      const std::string& name)
+   {
+      s_lookup_table.insert(
+         std::pair<std::string, RefineOperator *>(name, this));
+   }
 
    /*!
     * @brief Remove the operator with the given name.
@@ -183,7 +193,10 @@ private:
     * @brief Method registered with ShutdownManager to cleanup statics.
     */
    static void
-   finalizeCallback();
+   finalizeCallback()
+   {
+      s_lookup_table.clear();
+   }
 
    const std::string d_name;
 
@@ -199,7 +212,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/RefineOperator.I"
-#endif
 #endif

@@ -22,10 +22,6 @@ extern "C" {
 }
 #endif
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/Timer.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 
@@ -190,6 +186,39 @@ Timer::stop()
       d_user_total += double(d_user_stop_total - d_user_start_total);
       d_system_total += double(d_system_stop_total - d_system_start_total);
 
+   }
+#endif // ENABLE_SAMRAI_TIMERS
+}
+
+void
+Timer::startExclusive()
+{
+#ifdef ENABLE_SAMRAI_TIMERS
+   if (d_is_active) {
+
+      Clock::timestamp(d_user_start_exclusive,
+         d_system_start_exclusive,
+         d_wallclock_start_exclusive);
+
+   }
+#endif // ENABLE_SAMRAI_TIMERS
+}
+
+void
+Timer::stopExclusive()
+{
+#ifdef ENABLE_SAMRAI_TIMERS
+   if (d_is_active) {
+      Clock::timestamp(d_user_stop_exclusive,
+         d_system_stop_exclusive,
+         d_wallclock_stop_exclusive);
+
+      d_wallclock_exclusive +=
+         double(d_wallclock_stop_exclusive - d_wallclock_start_exclusive);
+      d_user_exclusive +=
+         double(d_user_stop_exclusive - d_user_start_exclusive);
+      d_system_exclusive +=
+         double(d_system_stop_exclusive - d_system_start_exclusive);
    }
 #endif // ENABLE_SAMRAI_TIMERS
 }

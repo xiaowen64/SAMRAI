@@ -136,7 +136,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/PatchLevelFullFillPattern.I"
-#endif
 #endif

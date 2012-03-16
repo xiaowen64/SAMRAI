@@ -15,10 +15,6 @@
 
 #include <stdlib.h>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/MemoryDatabase.I"
-#endif
-
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 
 #define MEMORY_DB_ERROR(X) \
@@ -1291,6 +1287,47 @@ std::string
 MemoryDatabase::getName() const
 {
    return d_database_name;
+}
+
+/*
+ *************************************************************************
+ *
+ * Search the current database for a matching key.  If found, delete
+ * that key and return true.  If the key does not exist, then return
+ * false.
+ *
+ *************************************************************************
+ */
+
+bool MemoryDatabase::deleteKeyIfFound(
+   const std::string& key)
+{
+   for (List<KeyData>::Iterator i(d_keyvalues); i; i++) {
+      if (i().d_key == key) {
+         d_keyvalues.removeItem(i);
+         return true;
+      }
+   }
+   return false;
+}
+
+/*
+ *************************************************************************
+ *
+ * Find the key data associated with the specified key and return a
+ * pointer to the record.  If no such key data exists, then return NULL.
+ *
+ *************************************************************************
+ */
+
+MemoryDatabase::KeyData *
+MemoryDatabase::findKeyData(
+   const std::string& key)
+{
+   for (List<KeyData>::Iterator i(d_keyvalues); i; i++) {
+      if (key == i().d_key) return &i();
+   }
+   return NULL;
 }
 
 /*

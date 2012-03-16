@@ -20,6 +20,7 @@
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/List.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
@@ -107,7 +108,10 @@ public:
     */
    void
    addTimeInterpolateOperator(
-      const boost::shared_ptr<TimeInterpolateOperator>& time_op);
+      const boost::shared_ptr<TimeInterpolateOperator>& time_op)
+   {
+      d_time_operators.addItem(time_op);
+   }
 
    /*!
     * @brief Lookup function for coarsening operator.
@@ -193,7 +197,11 @@ public:
     */
    void
    setMinTransferOpStencilWidth(
-      const IntVector& min_value);
+      const IntVector& min_value)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(d_min_stencil_width, min_value);
+      d_min_stencil_width = min_value;
+   }
 
    /*!
     * @brief Get the dimension of the hier::GridGeometry holding this object.
@@ -201,7 +209,10 @@ public:
     * @return The dimension of the hier::GridGeometry holding this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
    /*!
     * @brief Print class data representation.
@@ -304,7 +315,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/TransferOperatorRegistry.I"
-#endif
 #endif

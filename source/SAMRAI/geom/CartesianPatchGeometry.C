@@ -14,10 +14,6 @@
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/geom/CartesianPatchGeometry.I"
-#endif
-
 namespace SAMRAI {
 namespace geom {
 
@@ -42,11 +38,9 @@ CartesianPatchGeometry::CartesianPatchGeometry(
                        touches_regular_bdry,
                        touches_periodic_bdry)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(dx == (double *)NULL));
    TBOX_ASSERT(!(x_lo == (double *)NULL));
    TBOX_ASSERT(!(x_up == (double *)NULL));
-#endif
 
    const tbox::Dimension& dim(ratio_to_level_zero.getDim());
 

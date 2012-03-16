@@ -66,7 +66,10 @@ public:
     */
    static void
    setTraceStream(
-      std::ostream* stream);
+      std::ostream* stream)
+   {
+      s_stream = stream;
+   }
 
 private:
    std::string d_message;
@@ -76,7 +79,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/Tracer.I"
-#endif
 #endif

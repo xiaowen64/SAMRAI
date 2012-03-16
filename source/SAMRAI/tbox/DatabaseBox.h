@@ -100,39 +100,65 @@ public:
     * Return the dimension of this object.
     */
    const Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
    void
    setDim(
-      const Dimension& dim);
+      const Dimension& dim)
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM(dim);
+      TBOX_ASSERT(dim.getValue() <= DatabaseBox_MAX_DIM);
+      d_dim = Dimension(dim);
+      d_data.d_dimension = d_dim.getValue();
+   }
 
    /**
     * Return the specified component (non-const) of the lower index of the box.
     */
    int&
    lower(
-      const int i);
+      const int i)
+   {
+      TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
+      return d_data.d_lo[i];
+   }
 
    /**
     * Return the specified component (non-const) of the upper index of the box.
     */
    int&
    upper(
-      const int i);
+      const int i)
+   {
+      TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
+      return d_data.d_hi[i];
+   }
 
    /**
     * Return the specified component (const) of the lower index of the box.
     */
    int
    lower(
-      const int i) const;
+      const int i) const
+   {
+      TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
+      return d_data.d_lo[i];
+   }
 
    /**
     * Return the specified component (const) of the upper index of the box.
     */
    int
    upper(
-      const int i) const;
+      const int i) const
+   {
+      TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
+      return d_data.d_hi[i];
+   }
+
 
    /**
     * Check whether two boxes represent the same portion of index space.
@@ -160,7 +186,4 @@ public:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/DatabaseBox.I"
-#endif
 #endif

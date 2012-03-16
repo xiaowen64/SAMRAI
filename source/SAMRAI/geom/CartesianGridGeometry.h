@@ -196,21 +196,30 @@ public:
     * Return const pointer to dx array for reference level in hierarchy.
     */
    const double *
-   getDx() const;
+   getDx() const
+   {
+      return d_dx;
+   }
 
    /**
     * Return const pointer to lower spatial coordinate for reference
     * level in hierarchy.
     */
    const double *
-   getXLower() const;
+   getXLower() const
+   {
+      return d_x_lo;
+   }
 
    /**
     * Return const pointer to upper spatial coordinate for reference
     * level in hierarchy.
     */
    const double *
-   getXUpper() const;
+   getXUpper() const
+   {
+      return d_x_up;
+   }
 
    /**
     * Print class data representation.
@@ -283,7 +292,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/geom/CartesianGridGeometry.I"
-#endif
+
 #endif

@@ -21,10 +21,6 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/algs/ImplicitIntegrator.I"
-#endif
-
 namespace SAMRAI {
 namespace algs {
 
@@ -281,9 +277,7 @@ ImplicitIntegrator::getFromInput(
    const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(is_from_restart || db);
-#endif
 
    if (is_from_restart) {
 
@@ -359,9 +353,7 @@ void
 ImplicitIntegrator::putToDatabase(
    const boost::shared_ptr<tbox::Database>& db) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    db->putInteger("ALGS_IMPLICIT_INTEGRATOR_VERSION",
       ALGS_IMPLICIT_INTEGRATOR_VERSION);

@@ -28,10 +28,6 @@
 #pragma report(disable, CPPC5328)
 #endif
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/algs/OuteredgeSumTransaction.I"
-#endif
-
 namespace SAMRAI {
 namespace algs {
 

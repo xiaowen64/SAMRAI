@@ -149,7 +149,10 @@ public:
     * @brief Return the coarsen equivalence classes used in the schedule.
     */
    const boost::shared_ptr<CoarsenClasses>&
-   getEquivalenceClasses() const;
+   getEquivalenceClasses() const
+   {
+      return d_coarsen_classes;
+   }
 
    /*!
     * @brief Static function to set box intersection algorithm to use during
@@ -490,7 +493,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/CoarsenSchedule.I"
-#endif
 #endif

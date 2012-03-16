@@ -12,10 +12,6 @@
 
 #ifdef HAVE_SUNDIALS
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/CVODESolver.I"
-#endif
-
 namespace SAMRAI {
 namespace solv {
 
@@ -33,10 +29,8 @@ CVODESolver::CVODESolver(
    CVODEAbstractFunctions* my_functions,
    const bool uses_preconditioner)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(!(my_functions == (CVODEAbstractFunctions *)NULL));
-#endif
 
    d_object_name = object_name;
    d_cvode_functions = my_functions;
@@ -119,9 +113,7 @@ CVODESolver::~CVODESolver()
 void
 CVODESolver::initializeCVODE()
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(d_solution_vector == (SundialsAbstractVector *)NULL));
-#endif
 
 // Disable Intel warning on real comparison
 #ifdef __INTEL_COMPILER

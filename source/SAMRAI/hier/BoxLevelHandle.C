@@ -13,10 +13,6 @@
 #include "SAMRAI/hier/BoxLevelHandle.h"
 #include "SAMRAI/hier/BoxLevel.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxLevelHandle.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 

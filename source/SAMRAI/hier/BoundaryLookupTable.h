@@ -55,7 +55,14 @@ public:
     */
    static BoundaryLookupTable *
    getLookupTable(
-      const tbox::Dimension& dim);
+      const tbox::Dimension& dim)
+   {
+     int idx = dim.getValue() - 1;
+      if (!s_lookup_table_instance[idx]) {
+         s_lookup_table_instance[idx] = new BoundaryLookupTable(dim);
+      }
+      return s_lookup_table_instance[idx];
+   }
 
    /*!
     * @brief Get array of active directions for specific boundary
@@ -75,7 +82,13 @@ public:
    const tbox::Array<int>&
    getDirections(
       int loc,
-      int codim) const;
+      int codim) const
+   {
+      TBOX_ASSERT((codim > 0) && (codim <= d_dim.getValue()));
+      TBOX_ASSERT((loc >= 0) && (loc < d_max_li[codim - 1]));
+      int iloc = loc / (1 << codim);
+      return d_table[codim - 1][iloc];
+   }
 
    /*!
     * @brief Get array of maximum number of locations for each
@@ -91,7 +104,10 @@ public:
     *         codimension
     */
    const tbox::Array<int>&
-   getMaxLocationIndices() const;
+   getMaxLocationIndices() const
+   {
+      return d_max_li;
+   }
 
    /*!
     * @brief Determines if given boundary information indicates a
@@ -114,7 +130,13 @@ public:
    isLower(
       int loc,
       int codim,
-      int dim_index) const;
+      int dim_index) const
+   {
+      TBOX_ASSERT((codim > 0) && (codim <= d_dim.getValue()));
+      TBOX_ASSERT((loc >= 0) && (loc < d_max_li[codim - 1]));
+      TBOX_ASSERT((dim_index >= 0) && (dim_index < codim));
+      return !isUpper(loc, codim, dim_index);
+   }
 
    /*!
     * @brief Determines if given boundary information indicates a
@@ -137,7 +159,13 @@ public:
    isUpper(
       int loc,
       int codim,
-      int index) const;
+      int index) const
+   {
+      TBOX_ASSERT((codim > 0) && (codim <= d_dim.getValue()));
+      TBOX_ASSERT((loc >= 0) && (loc < d_max_li[codim - 1]));
+      TBOX_ASSERT((index >= 0) && (index < codim));
+      return (loc % (1 << codim)) & (1 << (index));
+   }
 
    /*!
     * @brief Get array of boundary direction IntVectors.
@@ -159,7 +187,11 @@ public:
     */
    const tbox::Array<IntVector>&
    getBoundaryDirections(
-      int codim) const;
+      int codim) const
+   {
+      TBOX_ASSERT((codim > 0) && (codim <= d_dim.getValue()));
+      return d_bdry_dirs[codim - 1];
+   }
 
 protected:
    /*!
@@ -263,9 +295,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoundaryLookupTable.I"
-#endif
 
 #endif

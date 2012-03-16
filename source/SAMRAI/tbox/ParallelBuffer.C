@@ -16,10 +16,6 @@
 #include <string>
 #include <cstring>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/ParallelBuffer.I"
-#endif
-
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -64,7 +60,9 @@ ParallelBuffer::ParallelBuffer()
 
 ParallelBuffer::~ParallelBuffer()
 {
-   if (d_buffer) delete[] d_buffer;
+   if (d_buffer) {
+      delete[] d_buffer;
+   }
 }
 
 /*
@@ -235,7 +233,9 @@ int
 ParallelBuffer::sync()
 {
    const int n = static_cast<int>(pptr() - pbase());
-   if (n > 0) outputString(pbase(), n);
+   if (n > 0) {
+      outputString(pbase(), n);
+   }
    return 0;
 }
 
@@ -290,15 +290,6 @@ ParallelBuffer::overflow(
    pbump(-n);
    return 0;
 }
-
-#ifdef _MSC_VER
-// Should never read from here
-int
-ParallelBuffer::underflow()
-{
-   return EOF;
-}
-#endif
 
 }
 }

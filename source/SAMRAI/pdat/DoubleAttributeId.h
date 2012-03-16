@@ -27,15 +27,30 @@ public:
    ~DoubleAttributeId();
    DoubleAttributeId&
    operator = (
-      const DoubleAttributeId& rhs);
+      const DoubleAttributeId& rhs)
+   {
+      if (this != &rhs) {
+         d_val = rhs.d_val;
+      }
+      return *this;
+   }
    bool
    operator == (
-      const DoubleAttributeId& other) const;
+      const DoubleAttributeId& other) const
+   {
+      return d_val == other.d_val;
+   }
    bool
    operator != (
-      const DoubleAttributeId& other) const;
+      const DoubleAttributeId& other) const
+   {
+      return !this->operator == (other);
+   }
    int
-   operator () () const;
+   operator () () const
+   {
+      return d_val;
+   }
 
    friend class Attributes;
 private:
@@ -45,9 +60,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/DoubleAttributeId.I"
-#endif
 
 #endif

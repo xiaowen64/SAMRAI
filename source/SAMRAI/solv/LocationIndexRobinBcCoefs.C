@@ -17,12 +17,8 @@
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include IOMANIP_HEADER_FILE
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/LocationIndexRobinBcCoefs.I"
-#endif
 
 namespace SAMRAI {
 namespace solv {
@@ -122,9 +118,7 @@ LocationIndexRobinBcCoefs::setBcCoefs(
    NULL_USE(fill_time);
 
    int location = bdry_box.getLocationIndex();
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(location >= 0 && location < 2 * d_dim.getValue());
-#endif
    if (acoef_data) {
       TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *acoef_data);
 

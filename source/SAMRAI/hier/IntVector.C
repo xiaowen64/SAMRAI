@@ -13,11 +13,6 @@
 
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-#include "SAMRAI/tbox/Utilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/IntVector.I"
-#endif
 
 namespace SAMRAI {
 namespace hier {

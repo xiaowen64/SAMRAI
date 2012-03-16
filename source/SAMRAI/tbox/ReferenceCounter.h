@@ -53,13 +53,19 @@ public:
     * reference count has gone to zero; false otherwise.
     */
    bool
-   deleteReference();
+   deleteReference()
+   {
+      return --d_references == 0;
+   }
 
    /**
     * Increment the number of references.
     */
    void
-   addReference();
+   addReference()
+   {
+      ++d_references;
+   }
 
    /**
     * Class-specific operator new.  Data is allocated off of an
@@ -83,7 +89,10 @@ public:
     * the pointer class and should not normally be used.
     */
    static bool
-   isFinalized();
+   isFinalized()
+   {
+      return s_is_finalized;
+   }
 
 private:
    ReferenceCounter(
@@ -115,7 +124,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/ReferenceCounter.I"
-#endif
 #endif

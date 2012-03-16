@@ -44,7 +44,8 @@ HierarchyDataOpsReal<TYPE>::HierarchyDataOpsReal(
 }
 
 template<class TYPE>
-void HierarchyDataOpsReal<TYPE>::operator = (
+void
+HierarchyDataOpsReal<TYPE>::operator = (
    const HierarchyDataOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);

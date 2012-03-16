@@ -15,12 +15,6 @@
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/Connector.h"
 
-#include "SAMRAI/tbox/Utilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/NeighborhoodSet.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 

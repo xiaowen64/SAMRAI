@@ -364,12 +364,10 @@ void
 SAMRAIVectorReal<TYPE>::allocateVectorData(
    const double timestamp)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -384,12 +382,10 @@ template<class TYPE>
 void
 SAMRAIVectorReal<TYPE>::deallocateVectorData()
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -1102,9 +1098,7 @@ SAMRAIVectorReal<TYPE>::getComponentPatchData(
    const int comp_id,
    const hier::Patch& patch) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(comp_id >= 0 && comp_id < d_number_components);
-#endif
    return patch.getPatchData(d_component_data_id[comp_id]);
 }
 
@@ -1114,11 +1108,9 @@ SAMRAIVectorReal<TYPE>::getComponentPatchData(
    const boost::shared_ptr<hier::Variable>& var,
    const hier::Patch& patch) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(var);
    TBOX_ASSERT(d_variableid_2_vectorcomponent_map[
          var->getInstanceIdentifier()] >= 0);
-#endif
    return patch.getPatchData(
       d_component_data_id[
          d_variableid_2_vectorcomponent_map[
@@ -1130,9 +1122,7 @@ boost::shared_ptr<hier::Variable>
 SAMRAIVectorReal<TYPE>::getComponentVariable(
    const int comp_id) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(comp_id >= 0 && comp_id < d_number_components);
-#endif
    return d_component_variable[comp_id];
 
 }
@@ -1142,9 +1132,7 @@ int
 SAMRAIVectorReal<TYPE>::getComponentDescriptorIndex(
    const int comp_id) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(comp_id >= 0 && comp_id < d_number_components);
-#endif
    return d_component_data_id[comp_id];
 }
 
@@ -1153,9 +1141,7 @@ int
 SAMRAIVectorReal<TYPE>::getControlVolumeIndex(
    const int comp_id) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(comp_id >= 0 && comp_id < d_number_components);
-#endif
    return d_control_volume_data_id[comp_id];
 }
 

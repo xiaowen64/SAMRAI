@@ -15,10 +15,6 @@
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/ParallelBuffer.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/PIO.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 
@@ -44,7 +40,7 @@ std::ostream plog(&plog_buffer);
 /*
  *************************************************************************
  *
- * Initialie the parallel I/O streams.  This routine must be called
+ * Initialize the parallel I/O streams.  This routine must be called
  * before pout, perr, and plog are used for output but after SAMRAI_MPI
  * has been initialized.  By default, logging is disabled.
  *
@@ -86,6 +82,23 @@ PIO::initialize()
    plog_buffer.setPrefixString(std::string());
    plog_buffer.setOutputStream1(NULL);
    plog_buffer.setOutputStream2(NULL);
+}
+
+/*
+ *************************************************************************
+ *
+ * Close the output streams.  Flush both cout and cerr.  If logging,
+ * then flush and close the log stream.
+ *
+ *************************************************************************
+ */
+
+void
+PIO::finalize()
+{
+   std::cout.flush();
+   std::cerr.flush();
+   shutdownFilestream();
 }
 
 /*

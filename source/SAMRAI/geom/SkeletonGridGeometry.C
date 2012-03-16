@@ -291,9 +291,7 @@ void
 SkeletonGridGeometry::putToDatabase(
    const boost::shared_ptr<tbox::Database>& db) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    const tbox::Dimension& dim(getDim());
 

@@ -96,45 +96,71 @@ public:
    initialize(
       const LocalId& local_id,
       const int owner_rank,
-      const PeriodicId& periodic_id = PeriodicId::zero());
+      const PeriodicId& periodic_id = PeriodicId::zero())
+   {
+      TBOX_ASSERT(periodic_id.isValid());
+      d_global_id.getLocalId() = local_id;
+      d_global_id.getOwnerRank() = owner_rank;
+      d_periodic_id = periodic_id;
+   }
 
    /*!
     * @brief Access the GlobalId.
     */
    const GlobalId&
-   getGlobalId() const;
+   getGlobalId() const
+   {
+      return d_global_id;
+   }
 
    /*!
     * @brief Access the owner rank.
     */
    int
-   getOwnerRank() const;
+   getOwnerRank() const
+   {
+      return d_global_id.getOwnerRank();
+   }
 
    /*!
     * @brief Access the LocalId.
     */
    const LocalId&
-   getLocalId() const;
+   getLocalId() const
+   {
+      return d_global_id.getLocalId();
+   }
 
    /*!
     * @brief Access the PeriodicId.
     */
    const PeriodicId&
-   getPeriodicId() const;
+   getPeriodicId() const
+   {
+      return d_periodic_id;
+   }
 
    /*!
     * @brief Whether the PeriodicId refers to a periodic
     * image.
     */
    bool
-   isPeriodicImage() const;
+   isPeriodicImage() const
+   {
+      return d_periodic_id != PeriodicId::zero();
+   }
 
    /*!
     * @brief Whether the BoxId is valid--meaning it has a valid
     * GlobalId and PeriodicId.
     */ 
    bool
-   isValid() const;
+   isValid() const
+   {
+      return (d_periodic_id.isValid() &&
+              d_global_id.getLocalId() != LocalId::getInvalidId() && 
+              d_global_id.getOwnerRank() != tbox::SAMRAI_MPI::getInvalidRank());
+   }
 
    //@{
 
@@ -147,7 +173,13 @@ public:
     */
    bool
    operator == (
-      const BoxId& r) const;
+      const BoxId& r) const
+   {
+      bool rval = d_global_id == r.d_global_id &&
+         d_periodic_id == r.d_periodic_id;
+      TBOX_ASSERT(d_periodic_id.isValid() && r.d_periodic_id.isValid());
+      return rval;
+   }
 
    /*!
     * @brief Inequality operator.
@@ -156,7 +188,13 @@ public:
     */
    bool
    operator != (
-      const BoxId& r) const;
+      const BoxId& r) const
+   {
+      TBOX_ASSERT(d_periodic_id.isValid() && r.d_periodic_id.isValid());
+      bool rval = d_global_id != r.d_global_id ||
+         d_periodic_id != r.d_periodic_id;
+      return rval;
+   }
 
    /*!
     * @brief Less-than operator.
@@ -166,7 +204,15 @@ public:
     */
    bool
    operator < (
-      const BoxId& r) const;
+      const BoxId& r) const
+   {
+      TBOX_ASSERT(d_periodic_id.isValid() && r.d_periodic_id.isValid());
+      return d_global_id.getOwnerRank() < r.d_global_id.getOwnerRank() ||
+             (d_global_id.getOwnerRank() == r.d_global_id.getOwnerRank() &&
+              (d_global_id.getLocalId() < r.d_global_id.getLocalId() ||
+               (d_global_id.getLocalId() == r.d_global_id.getLocalId() &&
+                (d_periodic_id < r.d_periodic_id))));
+   }
 
    /*!
     * @brief Greater-than operator.
@@ -176,21 +222,37 @@ public:
     */
    bool
    operator > (
-      const BoxId& r) const;
+      const BoxId& r) const
+   {
+      TBOX_ASSERT(d_periodic_id.isValid() && r.d_periodic_id.isValid());
+      return d_global_id.getOwnerRank() > r.d_global_id.getOwnerRank() ||
+             (d_global_id.getOwnerRank() == r.d_global_id.getOwnerRank() &&
+              (d_global_id.getLocalId() > r.d_global_id.getLocalId() ||
+               (d_global_id.getLocalId() == r.d_global_id.getLocalId() &&
+                (d_periodic_id > r.d_periodic_id))));
+   }
 
    /*!
     * @brief Less-than-or-equal-to operator.
     */
    bool
    operator <= (
-      const BoxId& r) const;
+      const BoxId& r) const
+   {
+      TBOX_ASSERT(d_periodic_id.isValid() && r.d_periodic_id.isValid());
+      return *this < r || *this == r;
+   }
 
    /*!
     * @brief Greater-than-or-equal-to operator.
     */
    bool
    operator >= (
-      const BoxId& r) const;
+      const BoxId& r) const
+   {
+      TBOX_ASSERT(d_periodic_id.isValid() && r.d_periodic_id.isValid());
+      return *this > r || *this == r;
+   }
 
    //@}
 
@@ -205,7 +267,10 @@ public:
     * @see putToIntBuffer(), getFromIntBuffer().
     */
    static int
-   commBufferSize();
+   commBufferSize()
+   {
+      return 3;
+   }
 
    /*!
     * @brief Put self into a int buffer.
@@ -215,7 +280,12 @@ public:
     */
    void
    putToIntBuffer(
-      int * buffer) const;
+      int * buffer) const
+   {
+      buffer[0] = getOwnerRank();
+      buffer[1] = getLocalId().getValue();
+      buffer[2] = getPeriodicId().getPeriodicValue();
+   }
 
    /*!
     * @brief Set attributes according to data in int buffer.
@@ -225,7 +295,12 @@ public:
     */
    void
    getFromIntBuffer(
-      const int * buffer);
+      const int * buffer)
+   {
+      initialize(LocalId(buffer[1]),
+         buffer[0],
+         PeriodicId(buffer[2]));
+   }
 
    //@}
 
@@ -245,9 +320,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxId.I"
-#endif
 
 #endif  // included_hier_BoxId

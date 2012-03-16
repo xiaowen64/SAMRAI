@@ -82,19 +82,28 @@ public:
     * @brief Return a pointer to the start of the message buffer.
     */
    void *
-   getBufferStart();
+   getBufferStart()
+   {
+      return (void *)d_buffer;
+   }
 
    /*!
     * @brief Return the current size of the buffer in bytes.
     */
    size_t
-   getCurrentSize() const;
+   getCurrentSize() const
+   {
+      return d_current_size;
+   }
 
    /*!
     * @brief Return the current index into the buffer.
     */
    size_t
-   getCurrentIndex() const;
+   getCurrentIndex() const
+   {
+      return d_buffer_index;
+   }
 
    /*!
     * @brief Set the current index into the buffer.  Further packing/unpacking
@@ -102,14 +111,20 @@ public:
     */
    void
    setCurrentIndex(
-      const size_t index);
+      const size_t index)
+   {
+      d_buffer_index = index;
+   }
 
    /*!
     * @brief Reset the index to the beginning of the buffer.  This is the same
     * as setting the buffer index to zero via setCurrentIndex().
     */
    void
-   resetIndex();
+   resetIndex()
+   {
+      setCurrentIndex(0);
+   }
 
    /*!
     * @brief Pack a single data item into message stream.
@@ -123,12 +138,10 @@ public:
       const DATA_TYPE& data)
    {
       TBOX_ASSERT(d_mode == MessageStream::Write);
-
-      static const unsigned int nbytes = MessageStream::getSizeof<DATA_TYPE>(1);
-
+      static const unsigned int nbytes =
+         MessageStream::getSizeof<DATA_TYPE>(1);
       void* ptr = getPointerAndAdvanceCursor(nbytes);
       memcpy(ptr, static_cast<const void *>(&data), nbytes);
-
       return *this;
    }
 
@@ -146,7 +159,6 @@ public:
       unsigned int size = 1)
    {
       TBOX_ASSERT(d_mode == MessageStream::Write);
-
       if (data && (size > 0)) {
          const unsigned int nbytes = MessageStream::getSizeof<DATA_TYPE>(size);
          void* ptr = getPointerAndAdvanceCursor(nbytes);
@@ -166,12 +178,10 @@ public:
       DATA_TYPE& data)
    {
       TBOX_ASSERT(d_mode == MessageStream::Read);
-
-      static const unsigned int nbytes = MessageStream::getSizeof<DATA_TYPE>(1);
-
+      static const unsigned int nbytes =
+         MessageStream::getSizeof<DATA_TYPE>(1);
       void* ptr = getPointerAndAdvanceCursor(nbytes);
       memcpy(static_cast<void *>(&data), ptr, nbytes);
-
       return *this;
    }
 
@@ -190,7 +200,6 @@ public:
       unsigned int size = 1)
    {
       TBOX_ASSERT(d_mode == MessageStream::Read);
-
       if (data && (size > 0)) {
          const unsigned int nbytes = MessageStream::getSizeof<DATA_TYPE>(size);
          void* ptr = getPointerAndAdvanceCursor(nbytes);
@@ -214,9 +223,16 @@ private:
     *
     * @param[in]  nbytes
     */
-   void *
+   void*
    getPointerAndAdvanceCursor(
-      const size_t nbytes);
+      const size_t nbytes)
+   {
+      void* ptr = &d_buffer[d_buffer_index];
+      d_buffer_index += nbytes;
+      TBOX_ASSERT(d_buffer_index <= d_buffer_size);
+      d_current_size = d_buffer_index;
+      return ptr;
+   }
 
    MessageStream(
       const MessageStream&);            // not implemented
@@ -253,9 +269,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/MessageStream.I"
-#endif
 
 #endif

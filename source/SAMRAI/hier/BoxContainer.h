@@ -17,6 +17,7 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <iostream>
 #include <list>
@@ -135,7 +136,15 @@ public:
        */
       BoxContainerConstIterator&
       operator = (
-         const BoxContainerConstIterator& rhs);
+         const BoxContainerConstIterator& rhs)
+      {
+         if (this != &rhs) {
+            d_list_iter = rhs.d_list_iter;
+            d_set_iter = rhs.d_set_iter;
+            d_ordered = rhs.d_ordered;
+         }
+         return *this;
+      }
 
       /*!
        * @brief The destructor releases all storage.
@@ -148,7 +157,10 @@ public:
        * @return An immutable reference to the current Box in the iteration.
        */
       const Box&
-      operator * () const;
+      operator * () const
+      {
+         return d_ordered ? **d_set_iter : *d_list_iter;
+      }
 
       /*!
        * @brief Get box corresponding to iterator's position in container.
@@ -156,7 +168,10 @@ public:
        * @return An immutable reference to the current Box in the iteration.
        */
       const Box&
-      operator () () const;
+      operator () () const
+      {
+         return d_ordered ? **d_set_iter : *d_list_iter;
+      }
 
       /*!
        * @brief Get pointer to box at iterator's position in container.
@@ -164,7 +179,10 @@ public:
        * @return Const pointer to the current box.
        */
       const Box*
-      operator -> () const;
+      operator -> () const
+      {
+         return d_ordered ? *d_set_iter : &(*d_list_iter);
+      }
 
       /*!
        * @brief Post-increment iterator to point to next box in the container.
@@ -174,7 +192,16 @@ public:
        */
       BoxContainerConstIterator
       operator ++ (
-         int);
+         int)
+      {
+         BoxContainerConstIterator return_iter(*this);
+         if (d_ordered) {
+            ++d_set_iter;
+         } else {
+            ++d_list_iter;
+         }
+         return return_iter;
+      }
 
       /*!
        * @brief Pre-increment iterator to point to next box in the container.
@@ -183,7 +210,15 @@ public:
        * the increment.
        */
       const BoxContainerConstIterator&
-      operator ++ ();
+      operator ++ ()
+      {
+         if (d_ordered) {
+            ++d_set_iter;
+         } else {
+            ++d_list_iter;
+         }
+         return *this;
+      }
 
       /*!
        * @brief Post-decrement iterator to point to next box in the container.
@@ -193,7 +228,16 @@ public:
        */
       BoxContainerConstIterator
       operator -- (
-         int);
+         int)
+      {
+         BoxContainerConstIterator return_iter(*this);
+         if (d_ordered) {
+            --d_set_iter;
+         } else {
+            --d_list_iter;
+         }
+         return return_iter;
+      }
 
       /*!
        * @brief Pre-decrement iterator to point to next box in the container.
@@ -202,7 +246,15 @@ public:
        * the decrement.
        */
       const BoxContainerConstIterator&
-      operator -- ();
+      operator -- ()
+      {
+         if (d_ordered) {
+            --d_set_iter;
+         } else {
+            --d_list_iter;
+         }
+         return *this;
+      }
 
       /*!
        * @brief Equality operator.
@@ -213,7 +265,11 @@ public:
        */
       bool
       operator == (
-         const BoxContainerConstIterator& other) const;
+         const BoxContainerConstIterator& other) const
+      {
+         return d_ordered ? d_set_iter == other.d_set_iter :
+                            d_list_iter == other.d_list_iter;
+      }
 
       /*!
        * @brief Inequality operator.
@@ -224,7 +280,11 @@ public:
        */
       bool
       operator != (
-         const BoxContainerConstIterator& other) const;
+         const BoxContainerConstIterator& other) const
+      {
+         return d_ordered ? d_set_iter != other.d_set_iter :
+                            d_list_iter != other.d_list_iter;
+      }
 
    private:
       /*
@@ -292,7 +352,15 @@ public:
        */
       BoxContainerIterator&
       operator = (
-         const BoxContainerIterator& rhs);
+         const BoxContainerIterator& rhs)
+      {
+         if (this != &rhs) {
+            d_list_iter = rhs.d_list_iter;
+            d_set_iter = rhs.d_set_iter;
+            d_ordered = rhs.d_ordered;
+         }
+         return *this;
+      }
 
       /*!
        * @brief The destructor releases all storage.
@@ -305,7 +373,10 @@ public:
        * @return A mutable reference to the current Box in the iteration.
        */
       Box&
-      operator * () const;
+      operator * () const
+      {
+         return d_ordered ? **d_set_iter : *d_list_iter;
+      }
 
       /*!
        * @brief Get box corresponding to iterator's position in container.
@@ -313,7 +384,10 @@ public:
        * @return A mutable reference to the current Box in the iteration.
        */
       Box&
-      operator () () const;
+      operator () () const
+      {
+         return d_ordered ? **d_set_iter : *d_list_iter;
+      }
 
       /*!
        * @brief Get pointer to box at iterator's position in container.
@@ -321,7 +395,10 @@ public:
        * @return Pointer to the current box.
        */ 
       Box*
-      operator -> () const;
+      operator -> () const
+      {
+         return d_ordered ? *d_set_iter : &(*d_list_iter);
+      }
 
       /*!
        * @brief Post-increment iterator to point to next box in the container.
@@ -331,7 +408,16 @@ public:
        */
       BoxContainerIterator 
       operator ++ (
-         int);
+         int)
+      {
+         BoxContainerIterator return_iter(*this);
+         if (d_ordered) {
+            ++d_set_iter;
+         } else {
+            ++d_list_iter;
+         }
+         return return_iter;
+      }
 
       /*!
        * @brief Pre-increment iterator to point to next box in the container.
@@ -340,7 +426,15 @@ public:
        * the increment.
        */
       const BoxContainerIterator&
-      operator ++ ();
+      operator ++ ()
+      {
+         if (d_ordered) {
+            ++d_set_iter;
+         } else {
+            ++d_list_iter;
+         }
+         return *this;
+      }
 
       /*!
        * @brief Post-decrement iterator to point to next box in the container.
@@ -350,7 +444,16 @@ public:
        */
       BoxContainerIterator
       operator -- (
-         int);
+         int)
+      {
+         BoxContainerIterator return_iter(*this);
+         if (d_ordered) {
+            --d_set_iter;
+         } else {
+            --d_list_iter;
+         }
+         return return_iter;
+      }
 
 
       /*!
@@ -360,7 +463,15 @@ public:
        * the decrement.
        */
       const BoxContainerIterator&
-      operator -- ();
+      operator -- ()
+      {
+         if (d_ordered) {
+            --d_set_iter;
+         } else {
+            --d_list_iter;
+         }
+         return *this;
+      }
 
 
       /*!
@@ -372,11 +483,19 @@ public:
        */
       bool
       operator == (
-         const BoxContainerIterator& other) const;
+         const BoxContainerIterator& other) const
+      {
+         return d_ordered ? d_set_iter == other.d_set_iter :
+                            d_list_iter == other.d_list_iter;
+      }
 
       bool
       operator == (
-         const BoxContainerConstIterator& other) const;
+         const BoxContainerConstIterator& other) const
+      {
+         return d_ordered ? d_set_iter == other.d_set_iter :
+                            d_list_iter == other.d_list_iter;
+      }
 
       /*!
        * @brief Inequality operators.
@@ -387,11 +506,19 @@ public:
        */
       bool
       operator != (
-         const BoxContainerIterator& other) const;
+         const BoxContainerIterator& other) const
+      {
+         return d_ordered ? d_set_iter != other.d_set_iter :
+                            d_list_iter != other.d_list_iter;
+      }
 
       bool
       operator != (
-         const BoxContainerConstIterator& other) const;
+         const BoxContainerConstIterator& other) const
+      {
+         return d_ordered ? d_set_iter != other.d_set_iter :
+                            d_list_iter != other.d_list_iter;
+      }
 
    private:
 
@@ -538,7 +665,14 @@ public:
     * @return The number of boxes in the container.
     */
    int
-   size() const;
+   size() const
+   {
+      if (!d_ordered) {
+         return static_cast<int>(d_list.size());
+      } else {
+         return static_cast<int>(d_set.size());
+      }
+   }
 
    /*!
     * @brief Returns true if there are no boxes in the container
@@ -546,7 +680,10 @@ public:
     * @return True if the container is empty.
     */
    bool
-   isEmpty() const;
+   isEmpty() const
+   {
+      return d_list.empty();
+   }
 
    /*!
     * @brief Return a ConstIterator pointing to the start of the container.
@@ -554,7 +691,10 @@ public:
     * @return An immutable iterator pointing to the first box.
     */
    ConstIterator
-   begin() const;
+   begin() const
+   {
+      return ConstIterator(*this);
+   }
 
    /*!
     * @brief Return a ConstIterator pointing to the end of the container.
@@ -562,7 +702,10 @@ public:
     * @return An immutable iterator pointing beyond the last box.
     */
    ConstIterator
-   end() const;
+   end() const
+   {
+      return ConstIterator(*this, false);
+   }
 
    /*!
     * @brief Return an Iterator pointing to the start of the container.
@@ -570,7 +713,10 @@ public:
     * @return A mutable iterator pointing to the first box.
     */
    Iterator
-   begin();
+   begin()
+   {
+      return Iterator(*this);
+   }
 
    /*!
     * @brief Return an Iterator pointing to the end of the container.
@@ -578,7 +724,10 @@ public:
     * @return A mutable iterator pointing beyond the last box.
     */
    Iterator
-   end();
+   end()
+   {
+      return Iterator(*this, false);
+   }
 
    /*!
     * @brief Returns the first element in the container.
@@ -586,7 +735,10 @@ public:
     * @return A const reference to the first Box in the container.
     */
    const Box&
-   front() const;
+   front() const
+   {
+      return d_ordered ? **(d_set.begin()) : d_list.front();
+   }
 
    /*!
     * @brief Returns the first element in the container.
@@ -594,7 +746,10 @@ public:
     * @return A const reference to the last Box in the container.
     */
    const Box&
-   back() const;
+   back() const
+   {
+      return d_ordered ? **(d_set.rbegin()) : d_list.back();
+   }
 
    /*!
     * @brief Remove the member of the container pointed to by "iter".
@@ -627,7 +782,13 @@ public:
     * unordered.
     */
    void
-   clear();
+   clear()
+   {
+      d_list.clear();
+      d_set.clear();
+      d_ordered = false;
+      d_tree.reset();
+   }
 
    /*!
     * @brief  Swap all contents and state with another BoxContainer.
@@ -639,7 +800,15 @@ public:
     */
    void
    swap(
-      BoxContainer& other);
+      BoxContainer& other)
+   {
+      d_list.swap(other.d_list);
+      d_set.swap(other.d_set);
+      bool other_set_created = other.d_ordered;
+      other.d_ordered = d_ordered;
+      d_ordered = other_set_created;
+      d_tree = other.d_tree;
+   }
 
    /*!
     * @brief  Get all of the ranks that own Boxes in this container
@@ -767,7 +936,10 @@ public:
     * @return  True if ordered, false if unordered.
     */
    bool
-   isOrdered() const;
+   isOrdered() const
+   {
+      return d_ordered;
+   }
 
    //@}
 
@@ -783,7 +955,22 @@ public:
     */
    void
    pushFront(
-      const Box& item);
+      const Box& item)
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (size() > 0) {
+         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), item);
+      }
+#endif
+      if (!d_ordered) {
+         d_list.push_front(item);
+      } else {
+         TBOX_ERROR("Attempted pushFront on an ordered BoxContainer");
+      }
+      if (d_tree) {
+         d_tree.reset();
+      }
+   }
 
    /*!
     * @brief Adds "item" to the "end" of the container.
@@ -795,7 +982,22 @@ public:
     */
    void
    pushBack(
-      const Box& item);
+      const Box& item)
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (size() > 0) {
+         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), item);
+      }
+#endif
+      if (!d_ordered) {
+         d_list.push_back(item);
+      } else {
+         TBOX_ERROR("Attempted pushBack on an ordered BoxContainer");
+      }
+      if (d_tree) {
+         d_tree.reset();
+      }
+   }
 
    /*!
     * @brief Add "item" to specific place in the container.
@@ -809,7 +1011,22 @@ public:
    void
    insertBefore(
       Iterator iter,
-      const Box& item);
+      const Box& item)
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (size() > 0) {
+         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), item);
+      }
+#endif
+      if (!d_ordered) {
+         d_list.insert(iter.d_list_iter, item);
+      } else {
+         TBOX_ERROR("Attempted insertBefore on an ordered BoxContainer");
+      }
+      if (d_tree) {
+         d_tree.reset();
+      }
+   }
 
    /*!
     * @brief Add "item" to specific place in the container.
@@ -823,7 +1040,23 @@ public:
    void
    insertAfter(
       Iterator iter,
-      const Box& item);
+      const Box& item)
+   {
+      if (!d_ordered) {
+         Iterator tmp = iter;
+         ++tmp;
+         if (tmp == end()) {
+            pushBack(item);
+         } else {
+            insertBefore(tmp, item);
+         }
+      } else {
+         TBOX_ERROR("Attempted insertAfter called on ordered BoxContainer.");
+      }
+      if (d_tree) {
+         d_tree.reset();
+      }
+   }
 
    /*!
     * @brief Prepends the Boxes in "boxes" to this BoxContainer.
@@ -834,7 +1067,22 @@ public:
     */
    void
    spliceFront(
-      BoxContainer& boxes);
+      BoxContainer& boxes)
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (size() > 0 && boxes.size() > 0) {
+         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), boxes.front());
+      }
+#endif
+      if (!d_ordered) {
+         d_list.splice(begin().d_list_iter, boxes.d_list);
+      } else {
+         TBOX_ERROR("Attempted spliceFront on an ordered BoxContainer");
+      }
+      if (d_tree) {
+         d_tree.reset();
+      }
+   }
 
    /*!
     * @brief Appends the Boxes in "boxes" to this BoxContainer.
@@ -845,19 +1093,55 @@ public:
     */
    void
    spliceBack(
-      BoxContainer& boxes);
+      BoxContainer& boxes)
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (size() > 0 && boxes.size() > 0) {
+         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), boxes.front());
+      }
+#endif
+      if (!d_ordered) {
+         boxes.spliceFront(*this);
+         d_list.swap(boxes.d_list);
+      } else {
+         TBOX_ERROR("Attempted spliceBack on an ordered BoxContainer");
+      }
+      if (d_tree) {
+         d_tree.reset();
+      }
+   }
 
    /*!
     * @brief Remove the first member of the unordered container.
     */
    void
-   popFront();
+   popFront()
+   {
+      if (!d_ordered) {
+         d_list.pop_front();
+      } else {
+         TBOX_ERROR("Attempted popFront on an ordered BoxContainer");
+      }
+      if (d_tree) {
+         d_tree.reset();
+      }
+   }
 
    /*!
     * @brief Remove the last member of the unordered container.
     */
    void
-   popBack();
+   popBack()
+   {
+      if (!d_ordered) {
+         d_list.pop_back();
+      } else {
+         TBOX_ERROR("Attempted popBack on an ordered BoxContainer");
+      }
+      if (d_tree) {
+         d_tree.reset();
+      }
+   }
 
    /*!
     * @brief Place the boxes in the container into a canonical ordering.
@@ -1123,7 +1407,16 @@ public:
     */  
    Iterator
    find(
-      const Box& box) const;
+      const Box& box) const
+   {
+      if (!d_ordered) {
+         TBOX_ERROR("find attempted on unordered BoxContainer.");
+      }
+      Iterator iter;
+      iter.d_set_iter = d_set.find(const_cast<Box*>(&box));
+      iter.d_ordered = true;
+      return iter;
+   }
 
    /*!
     * @brief  Get lower bound Iterator for a given Box.
@@ -1138,7 +1431,16 @@ public:
     */
    Iterator
    lowerBound(
-      const Box& box) const;
+      const Box& box) const
+   {
+      if (!d_ordered) {
+         TBOX_ERROR("lowerBound attempted on unordered BoxContainer.");
+      }
+      Iterator iter;
+      iter.d_set_iter = d_set.lower_bound(const_cast<Box*>(&box));
+      iter.d_ordered = true;
+      return iter;
+   }
 
    /*!
     * @brief  Get upper bound Iterator for a given Box.
@@ -1154,7 +1456,16 @@ public:
     */
    Iterator
    upperBound(
-      const Box& box) const;
+      const Box& box) const
+   {
+      if (!d_ordered) {
+         TBOX_ERROR("upperBound attempted on unordered BoxContainer.");
+      }
+      Iterator iter;
+      iter.d_set_iter = d_set.upper_bound(const_cast<Box*>(&box));
+      iter.d_ordered = true;
+      return iter;
+   }
 
    /*!
     * @brief  Erase a Box from the container.
@@ -1242,7 +1553,10 @@ public:
     */
    bool
    operator != (
-      const BoxContainer& rhs) const;
+      const BoxContainer& rhs) const
+   {
+      return !(*this == rhs);
+   }
 
    //@{ @name I/O
 
@@ -1375,7 +1689,10 @@ private:
     * @brief Query if the search tree representation exists.
     */
    bool
-   hasTree() const;
+   hasTree() const
+   {
+      return (d_tree.get() != 0);
+   }
 
    /*!
     * @brief Query if this BoxContainer contains any Box with the given
@@ -1589,9 +1906,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxContainer.I"
-#endif
 
 #endif

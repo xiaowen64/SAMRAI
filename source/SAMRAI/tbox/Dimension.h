@@ -13,6 +13,8 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/tbox/Utilities.h"
+
 #include <iostream>
 #include <limits>
 
@@ -68,8 +70,8 @@ public:
     * Constructor for Dimension, object is built using the specified dimension
     *
     * Note that the constructor is "explicit" thus making automatic
-    * type conversions from integers impossible.  This is intentionally to avoid
-    * unintended conversions.
+    * type conversions from integers impossible.  This is intentionally to
+    * avoid unintended conversions.
     *
     * When dimensional assertion checking is active an assert is
     * thrown when dim < 1 or dim > getMaxDimension() value specified when
@@ -94,7 +96,10 @@ public:
     *
     */
    bool
-   isValid() const;
+   isValid() const
+   {
+      return (d_dim != 0) && (d_dim <= Dimension::getMaxDimValue());
+   }
 
    /**
     * Returns true if Dimension is initialized (not set
@@ -102,49 +107,82 @@ public:
     *
     */
    bool
-   isInitialized() const;
+   isInitialized() const
+   {
+      return d_dim != Dimension::getInvalidDimValue();
+   }
 
    /**
     * Equality operator.
     */
    bool
    operator == (
-      const Dimension& rhs) const;
+      const Dimension& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM(*this);
+      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
+      return d_dim == rhs.d_dim;
+   }
 
    /**
     * Inequality operator.
     */
    bool
    operator != (
-      const Dimension& rhs) const;
+      const Dimension& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM(*this);
+      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
+      return d_dim != rhs.d_dim;
+   }
 
    /**
     * Greater than operator.
     */
    bool
    operator > (
-      const Dimension& rhs) const;
+      const Dimension& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM(*this);
+      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
+      return d_dim > rhs.d_dim;
+   }
 
    /**
     * Greater than or equal operator.
     */
    bool
    operator >= (
-      const Dimension& rhs) const;
+      const Dimension& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM(*this);
+      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
+      return d_dim >= rhs.d_dim;
+   }
 
    /**
     * Less than operator.
     */
    bool
    operator < (
-      const Dimension& rhs) const;
+      const Dimension& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM(*this);
+      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
+      return d_dim < rhs.d_dim;
+   }
 
    /**
     * Less than or equal operator.
     */
    bool
    operator <= (
-      const Dimension& rhs) const;
+      const Dimension& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM(*this);
+      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
+      return d_dim <= rhs.d_dim;
+   }
 
    /**
     * Returns the dimension of the Dimension as an unsigned short.
@@ -155,7 +193,10 @@ public:
     * better suited for that purpose.
     */
    unsigned short
-   getValue() const;
+   getValue() const
+   {
+      return d_dim;
+   }
 
    /**
     * Returns the maximum dimension for the currently compiled library
@@ -172,7 +213,10 @@ public:
    static const unsigned short MAXIMUM_DIMENSION_VALUE =
       SAMRAI_MAXIMUM_DIMENSION;
    static unsigned short
-   getMaxDimValue();
+   getMaxDimValue()
+   {
+      return SAMRAI_MAXIMUM_DIMENSION;
+   }
 
    /**
     * Returns the maximum dimension for the currently compiled library
@@ -184,13 +228,21 @@ public:
     *
     */
    static const Dimension&
-   getMaxDimension();
+   getMaxDimension()
+   {
+      static Dimension dim(SAMRAI_MAXIMUM_DIMENSION);
+      return dim;
+   }
 
    /**
     * An invalid dimension value as a Dimension object.
     */
    static const Dimension&
-   getInvalidDimension();
+   getInvalidDimension()
+   {
+      static Dimension invalidDim(Dimension::getInvalidDimValue());
+      return invalidDim;
+   }
 
    /**
     * An invalid dimension value as an unsigned short.
@@ -200,7 +252,12 @@ public:
     *
     */
    static unsigned short
-   getInvalidDimValue();
+   getInvalidDimValue()
+   {
+      static unsigned short invalid =
+         std::numeric_limits<unsigned short>::max();
+      return invalid;
+   }
 
    /*
     * Classes that are friends of dimension in order to access th
@@ -242,7 +299,11 @@ private:
     */
    Dimension&
    operator = (
-      const Dimension& rhs);
+      const Dimension& rhs)
+   {
+      d_dim = rhs.d_dim;
+      return *this;
+   }
 
    unsigned short d_dim;
 
@@ -251,9 +312,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/Dimension.I"
-#endif
 
 #endif

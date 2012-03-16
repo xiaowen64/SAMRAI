@@ -10,6 +10,7 @@
 
 #include "FaceMultiblockTest.h"
 
+#include "SAMRAI/xfer/BoxGeometryVariableFillPattern.h"
 #include "SAMRAI/geom/SAMRAITransferOperatorRegistry.h"
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/hier/VariableDatabase.h"

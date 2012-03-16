@@ -22,10 +22,6 @@
 
 #include <boost/make_shared.hpp>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/Statistician.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 

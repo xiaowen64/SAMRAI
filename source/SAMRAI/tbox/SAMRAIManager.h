@@ -82,7 +82,13 @@ public:
     * solving multiple SAMRAI problems.
     */
    static void
-   startup();
+   startup()
+   {
+      TBOX_ASSERT(s_initialized);
+      TBOX_ASSERT(!s_started);
+      StartupShutdownManager::startup();
+      s_started = true;
+   }
 
    /*!
     * @brief Shutdown the SAMRAI package.
@@ -93,7 +99,13 @@ public:
     * solving multiple SAMRAI problems.
     */
    static void
-   shutdown();
+   shutdown()
+   {
+      TBOX_ASSERT(s_initialized);
+      TBOX_ASSERT(s_started);
+      StartupShutdownManager::shutdown();
+      s_started = false;
+   }
 
    /*!
     * @brief Final cleanup of the SAMRAI package.
@@ -110,19 +122,31 @@ public:
     * This function should be invoked only once.
     */
    static void
-   finalize();
+   finalize()
+   {
+      TBOX_ASSERT(s_initialized);
+      StartupShutdownManager::finalize();
+      PIO::finalize();
+      s_initialized = false;
+   }
 
    /*!
     * @brief Returns true if SAMRAIManager has been initialized.
     */
    static bool
-   isInitialized();
+   isInitialized()
+   {
+      return s_initialized;
+   }
 
    /*!
     * @brief Returns true if SAMRAIManager has been started.
     */
    static bool
-   isStarted();
+   isStarted()
+   {
+      return s_started;
+   }
 
    /*!
     * @brief Return maximum number of patch data entries supported by SAMRAI.
@@ -131,7 +155,11 @@ public:
     * the setMaxNumberPatchDataEntries() function.
     */
    static int
-   getMaxNumberPatchDataEntries();
+   getMaxNumberPatchDataEntries()
+   {
+      s_max_patch_data_entries_accessed = true;
+      return s_max_patch_data_entries;
+   }
 
    /*!
     * @brief Set maximum number of patch data entries supported by SAMRAI.
@@ -177,7 +205,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/SAMRAIManager.I"
-#endif
 #endif

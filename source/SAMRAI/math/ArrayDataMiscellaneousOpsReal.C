@@ -46,7 +46,8 @@ ArrayDataMiscellaneousOpsReal<TYPE>::ArrayDataMiscellaneousOpsReal(
 }
 
 template<class TYPE>
-void ArrayDataMiscellaneousOpsReal<TYPE>::operator = (
+void
+ArrayDataMiscellaneousOpsReal<TYPE>::operator = (
    const ArrayDataMiscellaneousOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);

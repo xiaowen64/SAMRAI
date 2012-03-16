@@ -14,15 +14,10 @@
 #include "SAMRAI/pdat/OuteredgeGeometry.h"
 
 #include "SAMRAI/pdat/EdgeGeometry.h"
-#include "SAMRAI/pdat/EdgeOverlap.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/make_shared.hpp>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/OuteredgeGeometry.I"
-#endif
 
 namespace SAMRAI {
 namespace pdat {

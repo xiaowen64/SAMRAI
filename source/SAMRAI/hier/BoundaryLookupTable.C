@@ -14,10 +14,6 @@
 #include "SAMRAI/hier/BoundaryLookupTable.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/BoundaryLookupTable.I"
-#endif
-
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings

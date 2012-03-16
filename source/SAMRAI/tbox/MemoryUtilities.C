@@ -28,10 +28,6 @@ TAU_PROFILE_STMT(TauUserEvent ue("memory use"))
 #endif
 #endif
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/MemoryUtilities.I"
-#endif
-
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -189,6 +185,15 @@ MemoryUtilities::printMaxMemory(
          << ": " << maxmem / (1024. * 1024.) << " MB" << std::endl;
    }
 
+}
+
+size_t
+MemoryUtilities::align(
+   const size_t bytes)
+{
+   size_t aligned = bytes + ArenaAllocationAlignment - 1;
+   aligned -= aligned % ArenaAllocationAlignment;
+   return aligned;
 }
 
 }

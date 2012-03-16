@@ -15,12 +15,7 @@
 #include "SAMRAI/solv/FACPreconditioner.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/TimerManager.h"
-#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/FACPreconditioner.I"
-#endif
 
 #include IOMANIP_HEADER_FILE
 
@@ -849,6 +844,31 @@ FACPreconditioner::printClassData(
       << "d_rhs_norm = " << d_rhs_norm << "\n"
       << std::endl;
 
+}
+
+void
+FACPreconditioner::setAlgorithmChoice(
+   const std::string& choice)
+{
+   /* This ptr_function helps resolve to the correct tolower method */
+   int (* ptr_function)(
+      int) = std::tolower;
+   std::string lower = choice;
+   std::transform(lower.begin(),
+      lower.end(),
+      lower.begin(),
+      ptr_function);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (lower != "default"               /* Recursive from BTNG */
+       && lower != "mccormick-s4.3"     /* McCormick's section 4.3 */
+       && lower != "pernice"            /* Translation of Pernice's */
+       ) {
+      TBOX_ERROR(
+         d_object_name << ": algorithm should be set to one of\n"
+                       << "'default' (recommended), 'mccormick-s4.3' or 'pernice'\n");
+   }
+#endif
+   d_algorithm_choice = lower;
 }
 
 }

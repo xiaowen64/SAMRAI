@@ -16,10 +16,6 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/PatchLevelInteriorFillPattern.I"
-#endif
-
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -152,6 +148,36 @@ PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
       d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
             static_cast<int>(fill_boxes.size()));
    }
+}
+
+bool
+PatchLevelInteriorFillPattern::needsToCommunicateDestinationFillBoxes() const
+{
+   return false;
+}
+
+bool
+PatchLevelInteriorFillPattern::doesSourceLevelCommunicateToDestination() const
+{
+   return true;
+}
+
+bool
+PatchLevelInteriorFillPattern::fillingCoarseFineGhosts() const
+{
+   return false;
+}
+
+bool
+PatchLevelInteriorFillPattern::fillingEnhancedConnectivityOnly() const
+{
+   return false;
+}
+
+int
+PatchLevelInteriorFillPattern::getMaxFillBoxes() const
+{
+   return d_max_fill_boxes;
 }
 
 }

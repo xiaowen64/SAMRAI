@@ -12,13 +12,6 @@
 #define included_math_PatchCellDataNormOpsComplex_C
 
 #include "SAMRAI/math/PatchCellDataNormOpsComplex.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include "SAMRAI/tbox/Utilities.h"
-#endif
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/math/PatchCellDataNormOpsComplex.I"
-#endif
 
 namespace SAMRAI {
 namespace math {

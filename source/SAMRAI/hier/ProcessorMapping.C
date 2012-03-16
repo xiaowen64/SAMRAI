@@ -12,10 +12,6 @@
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/ProcessorMapping.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 

@@ -661,7 +661,10 @@ public:
     * timestep, or when a new level is initialized.
     */
    boost::shared_ptr<hier::VariableContext>
-   getCurrentContext() const;
+   getCurrentContext() const
+   {
+      return d_current;
+   }
 
    /**
     * Return pointer to "new" variable context used by integrator.
@@ -669,7 +672,10 @@ public:
     * The data is one timestep later than the "current" data.
     */
    boost::shared_ptr<hier::VariableContext>
-   getNewContext() const;
+   getNewContext() const
+   {
+      return d_new;
+   }
 
    /**
     * Return pointer to "old" variable context used by integrator.
@@ -682,7 +688,10 @@ public:
     * pointer will non-null.  See contructor for more information.
     */
    boost::shared_ptr<hier::VariableContext>
-   getOldContext() const;
+   getOldContext() const
+   {
+      return d_old;
+   }
 
    /**
     * Return pointer to "scratch" variable context used by integrator.
@@ -691,7 +700,10 @@ public:
     * in particular, scratch data contains ghost cells.
     */
    boost::shared_ptr<hier::VariableContext>
-   getScratchContext() const;
+   getScratchContext() const
+   {
+      return d_scratch;
+   }
 
    /**
     * Return pointer to variable context used for plotting.  This
@@ -699,7 +711,10 @@ public:
     * to plot files.  Typically, this is the same as the "current" context.
     */
    boost::shared_ptr<hier::VariableContext>
-   getPlotContext() const;
+   getPlotContext() const
+   {
+      return d_plot_context;
+   }
 
    /**
     * Return true if this class has been constructed to use refined
@@ -707,7 +722,10 @@ public:
     * synchronized timestepping.
     */
    bool
-   usingRefinedTimestepping() const;
+   usingRefinedTimestepping() const
+   {
+      return d_use_time_refinement;
+   }
 
    /*
     * Write out statistics recorded on numbers of cells and patches generated.
@@ -720,7 +738,10 @@ public:
     * Returns the object name.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 protected:
    /**
@@ -1118,7 +1139,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/algs/HyperbolicLevelIntegrator.I"
-#endif
 #endif

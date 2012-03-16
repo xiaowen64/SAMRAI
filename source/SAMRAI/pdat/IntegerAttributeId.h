@@ -27,15 +27,30 @@ public:
    ~IntegerAttributeId();
    IntegerAttributeId&
    operator = (
-      const IntegerAttributeId& rhs);
+      const IntegerAttributeId& rhs)
+   {
+      if (this != &rhs) {
+         d_val = rhs.d_val;
+      }
+      return *this;
+   }
    bool
    operator == (
-      const IntegerAttributeId& other) const;
+      const IntegerAttributeId& other) const
+   {
+      return d_val == other.d_val;
+   }
    bool
    operator != (
-      const IntegerAttributeId& other) const;
+      const IntegerAttributeId& other) const
+   {
+      return !this->operator == (other);
+   }
    int
-   operator () () const;
+   operator () () const
+   {
+      return d_val;
+   }
 
    friend class Attributes;
 private:
@@ -46,9 +61,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/IntegerAttributeId.I"
-#endif
 
 #endif

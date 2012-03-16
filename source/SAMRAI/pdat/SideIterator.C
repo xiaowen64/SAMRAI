@@ -13,10 +13,6 @@
 
 #include "SAMRAI/pdat/SideIterator.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/SideIterator.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 

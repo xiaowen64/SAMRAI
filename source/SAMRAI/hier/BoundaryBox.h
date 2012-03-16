@@ -85,7 +85,10 @@ public:
     * @return The Box
     */
    const Box&
-   getBox() const;
+   getBox() const
+   {
+      return d_box;
+   }
 
    /*!
     * @brief Return the boundary type (codimension) of the boundary box.
@@ -113,7 +116,10 @@ public:
     * @return boundary type value
     */
    int
-   getBoundaryType() const;
+   getBoundaryType() const
+   {
+      return d_bdry_type;
+   }
 
    /*!
     * @brief Return the location index for the boundary box.
@@ -187,7 +193,10 @@ public:
     * @return The location index
     */
    int
-   getLocationIndex() const;
+   getLocationIndex() const
+   {
+      return d_location_index;
+   }
 
    /*!
     * @brief Set the multiblock singularity flag to the argument value.
@@ -200,7 +209,10 @@ public:
     */
    void
    setIsMultiblockSingularity(
-      bool is_mblk_singularity);
+      bool is_mblk_singularity)
+   {
+      d_is_mblk_singularity = is_mblk_singularity;
+   }
 
    /*!
     * @brief Get the value of the multiblock singularity flag.
@@ -208,7 +220,10 @@ public:
     * @return The singularity flag value.
     */
    bool
-   getIsMultiblockSingularity() const;
+   getIsMultiblockSingularity() const
+   {
+      return d_is_mblk_singularity;
+   }
 
    /*!
     * @brief The assignment operator copies all data components.
@@ -217,7 +232,14 @@ public:
     */
    BoundaryBox&
    operator = (
-      const BoundaryBox& boundary_box);
+      const BoundaryBox& boundary_box)
+   {
+      d_box = boundary_box.d_box;
+      d_bdry_type = boundary_box.d_bdry_type;
+      d_location_index = boundary_box.d_location_index;
+      d_is_mblk_singularity = boundary_box.d_is_mblk_singularity;
+      return *this;
+   }
 
    /*!
     * @brief Enumerated type BoundaryOrientation is used to indicate where a
@@ -256,7 +278,10 @@ public:
     * @return The dimension
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    /*!
@@ -289,7 +314,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoundaryBox.I"
-#endif
 #endif

@@ -155,11 +155,9 @@ CartesianNodeComplexLinearRefine::refine(
    boost::shared_ptr<pdat::NodeData<dcomplex> > fdata(
       fine.getPatchData(dst_component),
       boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
-#endif
 
    const hier::Box cgbox(cdata->getGhostBox());
 

@@ -12,8 +12,8 @@
 #define included_hier_PatchDescriptor_C
 
 #include "SAMRAI/hier/PatchDescriptor.h"
+
 #include "SAMRAI/tbox/SAMRAIManager.h"
-#include "SAMRAI/tbox/Utilities.h"
 
 #include <typeinfo>
 
@@ -23,10 +23,6 @@
  */
 #pragma report(disable, CPPC5334)
 #pragma report(disable, CPPC5328)
-#endif
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchDescriptor.I"
 #endif
 
 namespace SAMRAI {

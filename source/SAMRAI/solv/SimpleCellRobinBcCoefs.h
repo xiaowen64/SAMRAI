@@ -215,7 +215,11 @@ public:
     */
    void
    setDiffusionCoefId(
-      int diffusion_coef_id);
+      int diffusion_coef_id)
+   {
+      d_diffusion_coef_id = diffusion_coef_id;
+      d_diffusion_coef_constant = 0.0;
+   }
 
    /*!
     * @brief Set the value of the diffusion coefficient
@@ -228,7 +232,11 @@ public:
     */
    void
    setDiffusionCoefConstant(
-      double diffusion_coef_value);
+      double diffusion_coef_value)
+   {
+      d_diffusion_coef_constant = diffusion_coef_value;
+      d_diffusion_coef_id = -1;
+   }
 
    /*!
     * @brief Get the name of this object.
@@ -236,7 +244,10 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    enum Bdry_Type {
@@ -332,7 +343,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/SimpleCellRobinBcCoefs.I"
-#endif
 #endif  // included_solv_SimpleCellRobinBcCoefs

@@ -47,7 +47,8 @@ PatchFaceDataNormOpsReal<TYPE>::PatchFaceDataNormOpsReal(
 }
 
 template<class TYPE>
-void PatchFaceDataNormOpsReal<TYPE>::operator = (
+void
+PatchFaceDataNormOpsReal<TYPE>::operator = (
    const PatchFaceDataNormOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -62,7 +63,8 @@ void PatchFaceDataNormOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-int PatchFaceDataNormOpsReal<TYPE>::numberOfEntries(
+int
+PatchFaceDataNormOpsReal<TYPE>::numberOfEntries(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
    const hier::Box& box) const
 {
@@ -89,14 +91,14 @@ int PatchFaceDataNormOpsReal<TYPE>::numberOfEntries(
  */
 
 template<class TYPE>
-double PatchFaceDataNormOpsReal<TYPE>::sumControlVolumes(
+double
+PatchFaceDataNormOpsReal<TYPE>::sumControlVolumes(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
    const boost::shared_ptr<pdat::FaceData<double> >& cvol,
    const hier::Box& box) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data && cvol);
-#endif
+
    int dimVal = data->getDim().getValue();
 
    double retval = 0.0;
@@ -110,7 +112,8 @@ double PatchFaceDataNormOpsReal<TYPE>::sumControlVolumes(
 }
 
 template<class TYPE>
-void PatchFaceDataNormOpsReal<TYPE>::abs(
+void
+PatchFaceDataNormOpsReal<TYPE>::abs(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
    const hier::Box& box) const
@@ -129,7 +132,8 @@ void PatchFaceDataNormOpsReal<TYPE>::abs(
 }
 
 template<class TYPE>
-double PatchFaceDataNormOpsReal<TYPE>::L1Norm(
+double
+PatchFaceDataNormOpsReal<TYPE>::L1Norm(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
@@ -159,7 +163,8 @@ double PatchFaceDataNormOpsReal<TYPE>::L1Norm(
 }
 
 template<class TYPE>
-double PatchFaceDataNormOpsReal<TYPE>::L2Norm(
+double
+PatchFaceDataNormOpsReal<TYPE>::L2Norm(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
@@ -192,7 +197,8 @@ double PatchFaceDataNormOpsReal<TYPE>::L2Norm(
 }
 
 template<class TYPE>
-double PatchFaceDataNormOpsReal<TYPE>::weightedL2Norm(
+double
+PatchFaceDataNormOpsReal<TYPE>::weightedL2Norm(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& weight,
    const hier::Box& box,
@@ -229,14 +235,14 @@ double PatchFaceDataNormOpsReal<TYPE>::weightedL2Norm(
 }
 
 template<class TYPE>
-double PatchFaceDataNormOpsReal<TYPE>::RMSNorm(
+double
+PatchFaceDataNormOpsReal<TYPE>::RMSNorm(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
+
    double retval = L2Norm(data, box, cvol);
    if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
@@ -247,15 +253,15 @@ double PatchFaceDataNormOpsReal<TYPE>::RMSNorm(
 }
 
 template<class TYPE>
-double PatchFaceDataNormOpsReal<TYPE>::weightedRMSNorm(
+double
+PatchFaceDataNormOpsReal<TYPE>::weightedRMSNorm(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& weight,
    const hier::Box& box,
    const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data && weight);
-#endif
+
    double retval = weightedL2Norm(data, weight, box, cvol);
    if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
@@ -266,14 +272,14 @@ double PatchFaceDataNormOpsReal<TYPE>::weightedRMSNorm(
 }
 
 template<class TYPE>
-double PatchFaceDataNormOpsReal<TYPE>::maxNorm(
+double
+PatchFaceDataNormOpsReal<TYPE>::maxNorm(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
+
    int dimVal = data->getDim().getValue();
 
    double retval = 0.0;
@@ -299,15 +305,15 @@ double PatchFaceDataNormOpsReal<TYPE>::maxNorm(
 }
 
 template<class TYPE>
-TYPE PatchFaceDataNormOpsReal<TYPE>::dot(
+TYPE
+PatchFaceDataNormOpsReal<TYPE>::dot(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& data1,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& data2,
    const hier::Box& box,
    const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
-#endif
+
    int dimVal = data1->getDim().getValue();
 
    TYPE retval = 0.0;
@@ -332,14 +338,14 @@ TYPE PatchFaceDataNormOpsReal<TYPE>::dot(
 }
 
 template<class TYPE>
-TYPE PatchFaceDataNormOpsReal<TYPE>::integral(
+TYPE
+PatchFaceDataNormOpsReal<TYPE>::integral(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::FaceData<double> >& vol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
+
    int dimVal = data->getDim().getValue();
 
    TYPE retval = 0.0;

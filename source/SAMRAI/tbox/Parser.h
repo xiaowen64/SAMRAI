@@ -83,13 +83,19 @@ public:
     * Return the total number of errors resulting from the parse.
     */
    int
-   getNumberErrors() const;
+   getNumberErrors() const
+   {
+      return d_errors;
+   }
 
    /**
     * Return the total number of warnings resulting from the parse.
     */
    int
-   getNumberWarnings() const;
+   getNumberWarnings() const
+   {
+      return d_warnings;
+   }
 
    /**
     * Return the parser object.  This mechanism is useful for communicating
@@ -97,14 +103,20 @@ public:
     * parser will be NULL outside of the parse call.
     */
    static Parser *
-   getParser();
+   getParser()
+   {
+      return s_default_parser;
+   }
 
    /**
     * Return the current database scope.  The current scope is modified
     * through the enterScope() and leaveScope() member functions.
     */
    boost::shared_ptr<Database>&
-   getScope();
+   getScope()
+   {
+      return d_scope_stack.getFirstItem();
+   }
 
    /**
     * Create a new database scope with the specified name.  This new scope
@@ -112,14 +124,20 @@ public:
     */
    void
    enterScope(
-      const std::string& name);
+      const std::string& name)
+   {
+      d_scope_stack.addItem(d_scope_stack.getFirstItem()->putDatabase(name));
+   }
 
    /**
     * Leave the current database scope and return to the previous scope.
     * It is an error to leave the outermost scope.
     */
    void
-   leaveScope();
+   leaveScope()
+   {
+      d_scope_stack.removeFirstItem();
+   }
 
    /**
     * Lookup the scope that contains the specified key.  If the scope does
@@ -170,7 +188,11 @@ public:
     */
    void
    setLine(
-      const std::string& line);
+      const std::string& line)
+   {
+      Parser::ParseData& pd = d_parse_stack.getFirstItem();
+      pd.d_linebuffer = line;
+   }
 
    /**
     * Advance the line number by the specified number of lines.  If no
@@ -205,12 +227,12 @@ private:
       const Parser&);           // not implemented
    void
    operator = (
-      const Parser&);                   // not implemented
+      const Parser&);           // not implemented
 
    struct ParseData {
       std::string d_filename;   // filename for description
       FILE* d_fstream;          // input stream to parse
-      std::string d_linebuffer;      // line being parsed
+      std::string d_linebuffer; // line being parsed
       int d_linenumber;         // line number in input stream
       int d_cursor;             // cursor position in line
       int d_nextcursor;         // next cursor position in line
@@ -219,11 +241,7 @@ private:
    int d_errors;                // total number of parse errors
    int d_warnings;              // total number of warnings
 
-#ifdef LACKS_NAMESPACE_IN_DECLARE
-   List<ParseData> d_parse_stack;
-#else
    List<Parser::ParseData> d_parse_stack;
-#endif
 
    List<boost::shared_ptr<Database> > d_scope_stack;
 
@@ -237,7 +255,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/Parser.I"
-#endif
 #endif

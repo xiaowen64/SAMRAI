@@ -18,10 +18,6 @@
 
 #include <new>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/SAMRAIManager.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 

@@ -847,8 +847,8 @@ public:
    /**
     * @brief Returns the name of this database.
     *
-    * The name for the root of the database is the name supplied when creating it.
-    * Names for nested databases are the keyname of the database.
+    * The name for the root of the database is the name supplied when creating
+    * it.  Names for nested databases are the keyname of the database.
     *
     * @param os Output stream.
     */
@@ -862,7 +862,11 @@ public:
     */
    bool
    keyAccessed(
-      const std::string& key);
+      const std::string& key)
+   {
+      KeyData* keydata = findKeyData(key);
+      return keydata ? keydata->d_accessed : false;
+   }
 
    /**
     * Print the current database to the specified output stream.  After
@@ -884,7 +888,10 @@ public:
     */
    void
    printUnusedKeys(
-      std::ostream& os = pout) const;
+      std::ostream& os = pout) const
+   {
+      printDatabase(os, 0, PRINT_UNUSED);
+   }
 
    /**
     * Print the database keys that were set via default calls to the specified
@@ -892,7 +899,10 @@ public:
     */
    void
    printDefaultKeys(
-      std::ostream& os = pout) const;
+      std::ostream& os = pout) const
+   {
+      printDatabase(os, 0, PRINT_DEFAULT);
+   }
 
 private:
    MemoryDatabase(
@@ -938,7 +948,12 @@ private:
    static void
    indentStream(
       std::ostream& os,
-      const long indent);
+      const long indent)
+   {
+      for (int i = 0; i < indent; i++) {
+         os << " ";
+      }
+   }
    void
    printDatabase(
       std::ostream& os,
@@ -960,7 +975,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/MemoryDatabase.I"
-#endif
 #endif

@@ -12,12 +12,7 @@
 #define included_xfer_RefinePatchStrategy_C
 
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
-#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/BoxContainer.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/RefinePatchStrategy.I"
-#endif
 
 namespace SAMRAI {
 namespace xfer {

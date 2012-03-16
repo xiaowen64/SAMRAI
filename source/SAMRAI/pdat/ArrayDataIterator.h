@@ -62,7 +62,12 @@ public:
     */
    ArrayDataIterator&
    operator = (
-      const ArrayDataIterator& iterator);
+      const ArrayDataIterator& iterator)
+   {
+      d_index = iterator.d_index;
+      d_box = iterator.d_box;
+      return *this;
+   }
 
    /**
     * Destructor for the array data iterator.
@@ -73,13 +78,19 @@ public:
     * Extract the index corresponding to the iterator position in the box.
     */
    const hier::Index&
-   operator * () const;
+   operator * () const
+   {
+      return d_index;
+   }
 
    /**
     * Extract the index corresponding to the iterator position in the box.
     */
    const hier::Index&
-   operator () () const;
+   operator () () const
+   {
+      return d_index;
+   }
 
    /**
     * Return true if the iterator points to a valid index within the box.
@@ -90,8 +101,10 @@ public:
    /**
     * Return a non-NULL if the iterator points to a valid index within the box.
     */
-   operator const void
-   * () const;
+   operator const void* () const
+   {
+      return ArrayDataIterator::operator bool () ? this : NULL;
+   }
 #endif
 
    /**
@@ -99,7 +112,10 @@ public:
     * This operator mimics the !p operation applied to a pointer p.
     */
    bool
-   operator ! () const;
+   operator ! () const
+   {
+      return !ArrayDataIterator::operator bool ();
+   }
 
    /**
     * Increment the iterator to point to the next index in the box.
@@ -113,14 +129,20 @@ public:
     */
    bool
    operator == (
-      const ArrayDataIterator& iterator) const;
+      const ArrayDataIterator& iterator) const
+   {
+      return d_index == iterator.d_index;
+   }
 
    /**
     * Test two iterators for inequality (different index values).
     */
    bool
    operator != (
-      const ArrayDataIterator& iterator) const;
+      const ArrayDataIterator& iterator) const
+   {
+      return d_index != iterator.d_index;
+   }
 
 private:
    hier::Index d_index;
@@ -129,7 +151,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/ArrayDataIterator.I"
-#endif
+
 #endif

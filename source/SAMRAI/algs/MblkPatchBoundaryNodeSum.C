@@ -30,10 +30,6 @@
 
 #include <boost/make_shared.hpp>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/algs/MblkPatchBoundaryNodeSum.I"
-#endif
-
 /*
  *************************************************************************
  *
@@ -298,9 +294,7 @@ void
 MblkPatchBoundaryNodeSum::setupSum(
    const boost::shared_ptr<hier::PatchLevel>& level)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level);
-#endif
 
    if (d_hierarchy_setup_called) {
 
@@ -407,9 +401,7 @@ void
 MblkPatchBoundaryNodeSum::doLevelSum(
    const boost::shared_ptr<hier::PatchLevel>& level) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level);
-#endif
 
    copyNodeToOuternodeOnLevel(level,
       d_user_node_data_id,
@@ -474,10 +466,8 @@ MblkPatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
    const tbox::Array<int>& onode_data_id,
    const tbox::Array<int>& node_data_id) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level);
    TBOX_ASSERT(node_data_id.size() == onode_data_id.size());
-#endif
 
    for (int bn = 0; bn < level->getNumberOfBlocks(); bn++) {
       boost::shared_ptr<hier::PatchLevel> patch_level(

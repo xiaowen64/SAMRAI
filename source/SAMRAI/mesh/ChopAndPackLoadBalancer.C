@@ -33,16 +33,11 @@
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/TimerManager.h"
-#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #include <boost/make_shared.hpp>
 #include <cstdlib>
 #include <fstream>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/mesh/ChopAndPackLoadBalancer.I"
-#endif
 
 namespace SAMRAI {
 namespace mesh {
@@ -142,9 +137,7 @@ ChopAndPackLoadBalancer::setMaxWorkloadFactor(
    double factor,
    int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(factor > 0.0);
-#endif
    if (level_number >= 0) {
       int asize = d_max_workload_factor.getSize();
       if (asize < level_number + 1) {
@@ -168,9 +161,7 @@ ChopAndPackLoadBalancer::setWorkloadTolerance(
    double tolerance,
    int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(tolerance > 0.0);
-#endif
    if (level_number >= 0) {
       int asize = d_workload_tolerance.getSize();
       if (asize < level_number + 1) {
@@ -448,7 +439,6 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
       cut_factor,
       bad_interval);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
    TBOX_ASSERT(physical_domain.size() > 0);
@@ -456,7 +446,6 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
    TBOX_ASSERT(max_size >= min_size);
    TBOX_ASSERT(cut_factor > hier::IntVector::getZero(d_dim));
    TBOX_ASSERT(bad_interval >= hier::IntVector::getZero(d_dim));
-#endif
 
    /*
     * This method assumes in_boxes is not empty and will fail

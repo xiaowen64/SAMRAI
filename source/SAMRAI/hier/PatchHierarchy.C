@@ -13,19 +13,13 @@
 
 #include "SAMRAI/hier/PatchHierarchy.h"
 
-#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/MathUtilities.h"
-#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/make_shared.hpp>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchHierarchy.I"
-#endif
 
 namespace SAMRAI {
 namespace hier {

@@ -20,6 +20,7 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Timer.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
@@ -254,33 +255,48 @@ public:
     * Return current integration time for coarsest hierarchy level.
     */
    double
-   getIntegratorTime() const;
+   getIntegratorTime() const
+   {
+      return d_integrator_time;
+   }
 
    /**
     * Return initial integration time.
     */
    double
-   getStartTime() const;
+   getStartTime() const
+   {
+      return d_start_time;
+   }
 
    /**
     * Return final integration time.
     */
    double
-   getEndTime() const;
+   getEndTime() const
+   {
+      return d_end_time;
+   }
 
    /**
     * Return integration step count for entire hierarchy
     * (i.e., number of steps taken by the coarsest level).
     */
    int
-   getIntegratorStep() const;
+   getIntegratorStep() const
+   {
+      return d_integrator_step;
+   }
 
    /**
     * Return maximum number of integration steps allowed for entire
     * hierarchy (i.e., steps allowed on coarsest level).
     */
    int
-   getMaxIntegratorSteps() const;
+   getMaxIntegratorSteps() const
+   {
+      return d_max_integrator_steps;
+   }
 
    /**
     * Return true if any steps remain in current step sequence on level
@@ -289,41 +305,69 @@ public:
     */
    bool
    stepsRemaining(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+         (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
+      return d_step_level[level_number] < d_max_steps_level[level_number];
+   }
 
    /**
     * Return true if any integration steps remain, false otherwise.
     */
    bool
-   stepsRemaining() const;
+   stepsRemaining() const
+   {
+      return d_integrator_step < d_max_integrator_steps;
+   }
 
    /**
     * Return current time increment used to advance level.
     */
    double
    getLevelDtActual(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+         (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
+      return d_dt_actual_level[level_number];
+   }
 
    /**
     * Return maximum time increment currently allowed on level.
     */
    double
    getLevelDtMax(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+         (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
+      return d_dt_max_level[level_number];
+   }
 
    /**
     * Return current simulation time for level.
     */
    double
    getLevelSimTime(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+         (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
+      return d_level_sim_time[level_number];
+   }
 
    /**
     * Return step count for current integration sequence on level.
     */
    int
    getLevelStep(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+         (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
+      return d_step_level[level_number];
+   }
 
    /**
     * Return maximum number of time steps allowed on level in
@@ -331,25 +375,39 @@ public:
     */
    int
    getLevelMaxSteps(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+         (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
+      return d_max_steps_level[level_number];
+   }
 
    /**
     * Return const pointer to patch hierarchy managed by integrator.
     */
    const boost::shared_ptr<hier::PatchHierarchy>
-   getPatchHierarchy() const;
+   getPatchHierarchy() const
+   {
+      return d_patch_hierarchy;
+   }
 
    /**
     * Return pointer to level integrator.
     */
    boost::shared_ptr<TimeRefinementLevelStrategy>
-   getLevelIntegrator() const;
+   getLevelIntegrator() const
+   {
+      return d_refine_level_integrator;
+   }
 
    /**
     * Return pointer to gridding algorithm object.
     */
    boost::shared_ptr<mesh::GriddingAlgorithmStrategy>
-   getGriddingAlgorithm() const;
+   getGriddingAlgorithm() const
+   {
+      return d_gridding_algorithm;
+   }
 
    /**
     * Return true if current step on level is first in current step
@@ -357,7 +415,12 @@ public:
     */
    bool
    firstLevelStep(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+         (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
+      return d_step_level[level_number] <= 0;
+   }
 
    /**
     * Return true if current step on level is last in current step
@@ -365,7 +428,12 @@ public:
     */
    bool
    lastLevelStep(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+         (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
+      return d_step_level[level_number] >= d_max_steps_level[level_number];
+   }
 
    /**
     * set the regrid interval to a new value.  This may only be used
@@ -373,7 +441,13 @@ public:
     */
    void
    setRegridInterval(
-      const int regrid_interval);
+      const int regrid_interval)
+   {
+      TBOX_ASSERT(!d_use_refined_timestepping);
+      for (int i = 0; i < d_regrid_interval.getSize(); i++) {
+         d_regrid_interval[i] = regrid_interval;
+      }
+   }
 
    /**
     * Print data representation of this object to given output stream.
@@ -403,7 +477,10 @@ public:
     * Returns the object name.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*
@@ -627,7 +704,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/algs/TimeRefinementIntegrator.I"
-#endif
+
 #endif

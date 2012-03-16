@@ -17,10 +17,6 @@
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/RefineCopyTransaction.I"
-#endif
-
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings

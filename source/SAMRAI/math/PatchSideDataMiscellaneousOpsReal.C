@@ -47,7 +47,8 @@ PatchSideDataMiscellaneousOpsReal<TYPE>::PatchSideDataMiscellaneousOpsReal(
 }
 
 template<class TYPE>
-void PatchSideDataMiscellaneousOpsReal<TYPE>::operator = (
+void
+PatchSideDataMiscellaneousOpsReal<TYPE>::operator = (
    const PatchSideDataMiscellaneousOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -62,16 +63,16 @@ void PatchSideDataMiscellaneousOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-int PatchSideDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
+int
+PatchSideDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
    const boost::shared_ptr<pdat::SideData<TYPE> >& data1,
    const boost::shared_ptr<pdat::SideData<TYPE> >& data2,
    const hier::Box& box,
    const boost::shared_ptr<pdat::SideData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
    TBOX_ASSERT(data1->getDirectionVector() == data2->getDirectionVector());
-#endif
+
    int retval = 1;
    int dimVal = data1->getDim().getValue();
 
@@ -89,10 +90,9 @@ int PatchSideDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
          }
       }
    } else {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
-#endif
+
       for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box =
@@ -110,17 +110,17 @@ int PatchSideDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 }
 
 template<class TYPE>
-void PatchSideDataMiscellaneousOpsReal<TYPE>::compareToScalar(
+void
+PatchSideDataMiscellaneousOpsReal<TYPE>::compareToScalar(
    const boost::shared_ptr<pdat::SideData<TYPE> >& dst,
    const boost::shared_ptr<pdat::SideData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box,
    const boost::shared_ptr<pdat::SideData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
-#endif
+
    int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
@@ -135,10 +135,9 @@ void PatchSideDataMiscellaneousOpsReal<TYPE>::compareToScalar(
          }
       }
    } else {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
-#endif
+
       for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
@@ -153,16 +152,16 @@ void PatchSideDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 }
 
 template<class TYPE>
-int PatchSideDataMiscellaneousOpsReal<TYPE>::testReciprocal(
+int
+PatchSideDataMiscellaneousOpsReal<TYPE>::testReciprocal(
    const boost::shared_ptr<pdat::SideData<TYPE> >& dst,
    const boost::shared_ptr<pdat::SideData<TYPE> >& src,
    const hier::Box& box,
    const boost::shared_ptr<pdat::SideData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
-#endif
+
    int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
@@ -180,10 +179,9 @@ int PatchSideDataMiscellaneousOpsReal<TYPE>::testReciprocal(
          }
       }
    } else {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
-#endif
+
       for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box =
@@ -201,14 +199,14 @@ int PatchSideDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 }
 
 template<class TYPE>
-TYPE PatchSideDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
+TYPE
+PatchSideDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
    const boost::shared_ptr<pdat::SideData<TYPE> >& numer,
    const boost::shared_ptr<pdat::SideData<TYPE> >& denom,
    const hier::Box& box) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(numer && denom);
-#endif
+
    int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;
@@ -224,14 +222,14 @@ TYPE PatchSideDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
 }
 
 template<class TYPE>
-TYPE PatchSideDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
+TYPE
+PatchSideDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
    const boost::shared_ptr<pdat::SideData<TYPE> >& numer,
    const boost::shared_ptr<pdat::SideData<TYPE> >& denom,
    const hier::Box& box) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(numer && denom);
-#endif
+
    int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;

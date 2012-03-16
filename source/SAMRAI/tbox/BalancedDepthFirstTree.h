@@ -103,13 +103,19 @@ public:
     * @brief Access the rank used to initialize.
     */
    unsigned int
-   getRank() const;
+   getRank() const
+   {
+      return d_rank;
+   }
 
    /*!
     * @brief Access the parent rank.
     */
    unsigned int
-   getParentRank() const;
+   getParentRank() const
+   {
+      return d_parent;
+   }
 
    /*!
     * @brief Access a child rank.
@@ -119,10 +125,16 @@ public:
     */
    unsigned int
    getChildRank(
-      unsigned int child_number) const;
+      unsigned int child_number) const
+   {
+      return d_children[child_number];
+   }
 
    unsigned short int
-   getNumberOfChildren() const;
+   getNumberOfChildren() const
+   {
+      return d_num_children;
+   }
 
    /*!
     * @brief What this class considers an invalid rank.
@@ -131,7 +143,10 @@ public:
     * the rank.
     */
    unsigned int
-   getInvalidRank() const;
+   getInvalidRank() const
+   {
+      return 1 << (8 * sizeof(unsigned int) - 2);
+   }
 
 private:
    /*!
@@ -152,7 +167,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/BalancedDepthFirstTree.I"
-#endif
 #endif  // included_tbox_BalancedDepthFirstTree

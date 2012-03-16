@@ -20,6 +20,7 @@
 #include "SAMRAI/pdat/FaceData.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <iostream>
@@ -92,7 +93,12 @@ public:
    setToScalar(
       const boost::shared_ptr<pdat::FaceData<dcomplex> >& dst,
       const dcomplex& alpha,
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      TBOX_ASSERT(dst);
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
+      dst->fillAll(alpha, box);
+   }
 
 private:
    // The following are not implemented:
@@ -107,7 +113,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/math/PatchFaceDataOpsComplex.I"
-#endif
 #endif

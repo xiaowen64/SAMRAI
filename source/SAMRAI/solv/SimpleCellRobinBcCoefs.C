@@ -27,9 +27,6 @@
 #pragma report(disable, CPPC5334)
 #pragma report(disable, CPPC5328)
 #endif
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/SimpleCellRobinBcCoefs.I"
-#endif
 
 namespace SAMRAI {
 namespace solv {

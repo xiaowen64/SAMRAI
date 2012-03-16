@@ -18,6 +18,8 @@
 #include "SAMRAI/hier/BoxId.h"
 #include "SAMRAI/hier/Transformation.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
+#include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <iostream>
 
@@ -193,7 +195,17 @@ public:
       const Box& box,
       const LocalId& local_id,
       const int owner_rank,
-      const PeriodicId& periodic_id = PeriodicId::zero());
+      const PeriodicId& periodic_id = PeriodicId::zero())
+   {
+      d_lo = box.d_lo;
+      d_hi = box.d_hi;
+      d_block_id = box.d_block_id;
+      if (!d_id_locked) {
+         d_id.initialize(local_id, owner_rank, periodic_id);
+      } else {
+         TBOX_ERROR("Attempted to change BoxId that is locked in an ordered BoxContainer.");
+      }
+   }
 
    /*!
     * @brief Set all the attributes identical to that of a reference
@@ -218,32 +230,53 @@ public:
    //! @brief Set the BoxId.
    void
    setId(
-      const BoxId& box_id);
+      const BoxId& box_id)
+   {
+      d_id = box_id;
+   }
 
    //! @brief Get the BoxId.
    const BoxId&
-   getId() const;
+   getId() const
+   {
+      return d_id;
+   }
 
    //! @brief Set the BlockId.
    void
    setBlockId(
-      const BlockId& block_id);
+      const BlockId& block_id)
+   {
+      d_block_id = block_id;
+   }
 
    //! @brief Get the BlockId.
    const BlockId&
-   getBlockId() const;
+   getBlockId() const
+   {
+      return d_block_id;
+   }
 
    //! @brief Get the LocalId.
    const LocalId&
-   getLocalId() const;
+   getLocalId() const
+   {
+      return d_id.getLocalId();
+   }
 
    //! @brief Get the GlobalId.
    const GlobalId&
-   getGlobalId() const;
+   getGlobalId() const
+   {
+      return d_id.getGlobalId();
+   }
 
    //! @brief Get the owner rank.
    int
-   getOwnerRank() const;
+   getOwnerRank() const
+   {
+      return d_id.getOwnerRank();
+   }
 
    /*!
     * @brief Get the periodic shift number.
@@ -251,15 +284,24 @@ public:
     * @see PeriodicShiftCatalog.
     */
    const PeriodicId&
-   getPeriodicId() const;
+   getPeriodicId() const
+   {
+      return d_id.getPeriodicId();
+   }
 
    //! @brief Whether the Box is a periodic image.
    bool
-   isPeriodicImage() const;
+   isPeriodicImage() const
+   {
+      return d_id.isPeriodicImage();
+   }
 
    bool
    isIdEqual(
-      const Box& other) const;
+      const Box& other) const
+   {
+      return d_id == other.d_id;
+   }
 
    struct id_equal {
       bool
@@ -300,7 +342,10 @@ public:
     */
    static int
    commBufferSize(
-      const tbox::Dimension& dim);
+      const tbox::Dimension& dim)
+   {
+      return BoxId::commBufferSize() + (2 * dim.getValue()) + 1;
+   }
 
    /*!
     * @brief Put self into a int buffer.
@@ -336,59 +381,88 @@ public:
     * @brief Return a non-const lower index of the box.
     */
    Index&
-   lower();
+   lower()
+   {
+      return d_lo;
+   }
 
    /*!
     * @brief Return a non-const upper index of the box.
     */
    Index&
-   upper();
+   upper()
+   {
+      return d_hi;
+   }
 
    /*!
     * @brief Return a const lower index of the box.
     */
    const Index&
-   lower() const;
+   lower() const
+   {
+      return d_lo;
+   }
 
    /*!
     * @brief Return a const upper index of the box.
     */
    const Index&
-   upper() const;
+   upper() const
+   {
+      return d_hi;
+   }
 
    /*!
     * @brief Return the i'th component (non-const) of the lower index.
     */
    int&
    lower(
-      const int i);
+      const int i)
+   {
+      return d_lo(i);
+   }
 
    /*!
     * @brief Return the i'th component (non-const) of the upper index.
     */
    int&
    upper(
-      const int i);
+      const int i)
+   {
+      return d_hi(i);
+   }
 
    /*!
     * @brief Return the i'th component (const) of the lower index.
     */
    const int&
    lower(
-      const int i) const;
+      const int i) const
+   {
+      return d_lo(i);
+   }
 
    /*!
     * @brief Return the i'th component (const) of the upper index.
     */
    const int&
    upper(
-      const int i) const;
+      const int i) const
+   {
+      return d_hi(i);
+   }
 
    /*!
     * @brief Set the state of the box to empty.
     */
    void
-   setEmpty();
+   setEmpty()
+   {
+      const tbox::Dimension& dim(getDim());
+      d_lo = Index(dim, tbox::MathUtilities<int>::getMax());
+      d_hi = Index(dim, tbox::MathUtilities<int>::getMin());
+   }
 
    /*!
     * @brief Return whether the box is ``empty''.
@@ -399,7 +473,15 @@ public:
     * @see isEmpty()
     */
    bool
-   empty() const;
+   empty() const
+   {
+      for (int i = 0; i < getDim().getValue(); i++) {
+         if (d_hi(i) < d_lo(i)) {
+            return true;
+         }
+      }
+      return false;
+   }
 
    /*!
     * @brief Return whether the box is ``empty''.
@@ -408,7 +490,15 @@ public:
     * corresponding upper bound.  An empty box has a size of zero.
     */
    bool
-   isEmpty() const;
+   isEmpty() const
+   {
+      for (int i = 0; i < getDim().getValue(); i++) {
+         if (d_hi(i) < d_lo(i)) {
+            return true;
+         }
+      }
+      return false;
+   }
 
    /*!
     * @brief Return the number of cells (an integer) represented by the box in
@@ -416,14 +506,28 @@ public:
     */
    int
    numberCells(
-      const int i) const;
+      const int i) const
+   {
+      if (empty()) {
+         return 0;
+      } else {
+         return d_hi(i) - d_lo(i) + 1;
+      }
+   }
 
    /*!
     * @brief Return the number of cells (a vector of integers) represented by
     * the box in every coordinate direction.
     */
    IntVector
-   numberCells() const;
+   numberCells() const
+   {
+      if (empty()) {
+         return IntVector::getZero(getDim());
+      } else {
+         return d_hi - d_lo + 1;
+      }
+   }
 
    /*!
     * @brief Calculate the number of indices represented by the box.
@@ -432,7 +536,17 @@ public:
     * zero.
     */
    int
-   size() const;
+   size() const
+   {
+      int mysize = 0;
+      if (!empty()) {
+         mysize = 1;
+         for (int i = 0; i < getDim().getValue(); i++) {
+            mysize *= (d_hi(i) - d_lo(i) + 1);
+         }
+      }
+      return mysize;
+   }
 
    /*!
     * @brief Return the dimension of the box that is longest.
@@ -449,7 +563,15 @@ public:
     */
    int
    offset(
-      const Index& p) const;
+      const Index& p) const
+   {
+      int myoffset = 0;
+      for (int i = getDim().getValue() - 1; i > 0; i--) {
+         myoffset = (d_hi(i - 1) - d_lo(i - 1) + 1) * (p(i) - d_lo(i) + myoffset);
+      }
+      myoffset += p(0) - d_lo(0);
+      return myoffset;
+   }
 
    /*!
     * @brief Given an offset, calculate the index of the offset into the box.
@@ -467,7 +589,15 @@ public:
     */
    bool
    contains(
-      const Index& p) const;
+      const Index& p) const
+   {
+      for (int i = 0; i < getDim().getValue(); i++) {
+         if ((p(i) < d_lo(i)) || (p(i) > d_hi(i))) {
+            return false;
+         }
+      }
+      return true;
+   }
 
    /*!
     * @brief Check whether a given box lies within the bounds of the box.
@@ -484,7 +614,11 @@ public:
     */
    bool
    isSpatiallyEqual(
-      const Box& box) const;
+      const Box& box) const
+   {
+      return ((d_lo == box.d_lo) && (d_hi == box.d_hi) &&
+              (d_block_id == box.d_block_id)) || (empty() && box.empty());
+   }
    struct box_equality {
       bool
       operator () (const Box& b1, const Box& b2) const
@@ -593,7 +727,14 @@ public:
     */
    void
    grow(
-      const IntVector& ghosts);
+      const IntVector& ghosts)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
+      if (!empty()) {
+         d_lo -= ghosts;
+         d_hi += ghosts;
+      }
+   }
 
    /*!
     * @brief Grow this box by the specified ghost cell width in the given
@@ -606,7 +747,14 @@ public:
    void
    grow(
       const int direction,
-      const int ghosts);
+      const int ghosts)
+   {
+      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      if (!empty()) {
+         d_lo(direction) -= ghosts;
+         d_hi(direction) += ghosts;
+      }
+   }
 
    /*!
     * @brief Similar to grow() functions. However, box is only grown in lower
@@ -614,7 +762,13 @@ public:
     */
    void
    growLower(
-      const IntVector& ghosts);
+      const IntVector& ghosts)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
+      if (!empty()) {
+         d_lo -= ghosts;
+      }
+   }
 
    /*!
     * @brief Similar to grow() functions. However, box is only grown in lower
@@ -623,7 +777,13 @@ public:
    void
    growLower(
       const int direction,
-      const int ghosts);
+      const int ghosts)
+   {
+      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      if (!empty()) {
+         d_lo(direction) -= ghosts;
+      }
+   }
 
    /*!
     * @brief Similar to grow() function. However, box is only grown in upper
@@ -631,7 +791,13 @@ public:
     */
    void
    growUpper(
-      const IntVector& ghosts);
+      const IntVector& ghosts)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
+      if (!empty()) {
+         d_hi += ghosts;
+      }
+   }
 
    /*!
     * @brief Similar to grow() functions. However, box is only grown in upper
@@ -640,7 +806,13 @@ public:
    void
    growUpper(
       const int direction,
-      const int ghosts);
+      const int ghosts)
+   {
+      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      if (!empty()) {
+         d_hi(direction) += ghosts;
+      }
+   }
 
    /*!
     * @brief Similar to growUpper() and growLower() functions. However, box is
@@ -673,7 +845,12 @@ public:
     */
    void
    shift(
-      const IntVector& offset);
+      const IntVector& offset)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, offset);
+      d_lo += offset;
+      d_hi += offset;
+   }
 
    /*!
     * @brief Similar to shift() function above, but shift occurs only in
@@ -684,7 +861,12 @@ public:
    void
    shift(
       const int direction,
-      const int offset);
+      const int offset)
+   {
+      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      d_lo(direction) += offset;
+      d_hi(direction) += offset;
+   }
 
    /*!
     * Rotate 90 degrees around origin.
@@ -714,14 +896,29 @@ public:
     */
    void
    coarsen(
-      const IntVector& ratio);
+      const IntVector& ratio)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio);
+      for (int i = 0; i < getDim().getValue(); i++) {
+         d_lo(i) = coarsen(d_lo(i), ratio(i));
+         d_hi(i) = coarsen(d_hi(i), ratio(i));
+      }
+   }
 
    /*!
     * @brief This assignment operator constructs a Box given a DatabaseBox.
     */
    Box&
    operator = (
-      const tbox::DatabaseBox& box);
+      const tbox::DatabaseBox& box)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+#ifdef BOX_TELEMETRY
+      // Increment the cumulative assigned count only.
+      ++s_cumulative_assigned_ct;
+#endif
+      return Box_from_DatabaseBox(box);
+   }
 
    /*!
     * @brief Sets a Box from a tbox::DatabaseBox and returns a reference to
@@ -729,7 +926,11 @@ public:
     */
    Box&
    Box_from_DatabaseBox(
-      const tbox::DatabaseBox& box);
+      const tbox::DatabaseBox& box)
+   {
+      set_Box_from_DatabaseBox(box);
+      return *this;
+   }
 
    /*!
     * @brief Sets a Box from a DatabaseBox.
@@ -747,12 +948,18 @@ public:
    /*!
     * Type conversion from Box to DatabaseBox
     */
-   operator tbox::DatabaseBox();
+   operator tbox::DatabaseBox()
+   {
+      return DatabaseBox_from_Box();
+   }
 
    /*!
     * Type conversion from Box to DatabaseBox
     */
-   operator tbox::DatabaseBox() const;
+   operator tbox::DatabaseBox() const
+   {
+      return DatabaseBox_from_Box();
+   }
 
    /*!
     * @brief Static function to grow a box by the specified vector ghost cell
@@ -761,7 +968,13 @@ public:
    static Box
    grow(
       const Box& box,
-      const IntVector& ghosts);
+      const IntVector& ghosts)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+      Box tmp = box;
+      tmp.grow(ghosts);
+      return tmp;
+   }
 
    /*!
     * @brief Static function to shift a box by the specified offset.
@@ -769,7 +982,11 @@ public:
    static Box
    shift(
       const Box& box,
-      const IntVector& offset);
+      const IntVector& offset)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(box, offset);
+      return Box(box.lower() + offset, box.upper() + offset, box.d_block_id);
+   }
 
    /*!
     * @brief Static function to refine the index space of a box by the
@@ -778,7 +995,13 @@ public:
    static Box
    refine(
       const Box& box,
-      const IntVector& ratio);
+      const IntVector& ratio)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(box, ratio);
+      Box tmp = box;
+      tmp.refine(ratio);
+      return tmp;
+   }
 
    /*!
     * @brief Static function to coarsen the index space of a box by the
@@ -787,20 +1010,32 @@ public:
    static Box
    coarsen(
       const Box& box,
-      const IntVector& ratio);
+      const IntVector& ratio)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(box, ratio);
+      Box tmp = box;
+      tmp.coarsen(ratio);
+      return tmp;
+   }
 
    /*!
     * @brief Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_lo.getDim();
+   }
 
    /*!
     * @brief Lock the BoxId of this Box so that it may not be changed in any
     * way.
     */
    void
-   lockId();
+   lockId()
+   {
+      d_id_locked = true;
+   }
 
    /*!
     * @brief Read the box description in the form [L,U], where L and U are the
@@ -827,7 +1062,11 @@ public:
     */
    static const Box&
    getEmptyBox(
-      const tbox::Dimension& dim);
+      const tbox::Dimension& dim)
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM(dim);
+      return *(s_emptys[dim.getValue() - 1]);
+   }
 
    /*!
     * @brief Returns a Box that represents the maximum allowed index extents
@@ -835,7 +1074,11 @@ public:
     */
    static const Box&
    getUniverse(
-      const tbox::Dimension& dim);
+      const tbox::Dimension& dim)
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM(dim);
+      return *(s_universes[dim.getValue() - 1]);
+   }
 
    /**
     * A box iterator iterates over the elements of a box.  This class is
@@ -872,7 +1115,10 @@ private:
    static int
    coarsen(
       const int index,
-      const int ratio);
+      const int ratio)
+   {
+      return index < 0 ? (index + 1) / ratio - 1 : index / ratio;
+   }
 
    static bool
    coalesceIntervals(
@@ -977,7 +1223,12 @@ public:
     */
    BoxIterator&
    operator = (
-      const BoxIterator& iterator);
+      const BoxIterator& iterator)
+   {
+      d_index = iterator.d_index;
+      d_box = iterator.d_box;
+      return *this;
+   }
 
    /**
     * Destructor for the box iterator.
@@ -991,32 +1242,54 @@ public:
     */
    void
    initialize(
-      const Box& box);
+      const Box& box)
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM(box.getDim());
+      d_index = box.lower();
+      d_box = box;
+   }
 
    /**
     * Return the current index in the box.  This operation is undefined
     * if the iterator is past the last Index in the box.
     */
    const Index&
-   operator * () const;
+   operator * () const
+   {
+      return d_index;
+   }
 
    /**
     * Return the current index in the box.  This operation is undefined
     * if the iterator is past the last Index in the box.
     */
    const Index&
-   operator () () const;
+   operator () () const
+   {
+      return d_index;
+   }
 
    /**
     * Return true if the iterator points to a valid index in the box.
     */
-   operator bool () const;
+   operator bool () const
+   {
+      for (int i = 0; i < d_index.getDim().getValue(); i++) {
+         if (d_index(i) > d_box.upper(i)) {
+            return false;
+         }
+      }
+      return true;
+   }
 
 #ifndef LACKS_BOOL_VOID_RESOLUTION
    /**
     * Return a non-NULL if the iterator points to a valid index in the box.
     */
-   operator const void * () const;
+   operator const void * () const
+   {
+      return BoxIterator::operator bool () ? this : NULL;
+   }
 #endif
 
    /**
@@ -1024,28 +1297,47 @@ public:
     * operator mimics the !p operation applied to a pointer p.
     */
    bool
-   operator ! () const;
+   operator ! () const
+   {
+      return !BoxIterator::operator bool ();
+   }
 
    /**
     * Increment the iterator to point to the next index in the box.
     */
    void
    operator ++ (
-      int);
+      int)
+   {
+      d_index(0)++;
+      for (int i = 0; i < (d_index.getDim().getValue() - 1); i++) {
+         if (d_index(i) > d_box.upper(i)) {
+            d_index(i) = d_box.lower(i);
+            d_index(i + 1)++;
+         } else
+            break;
+      }
+   }
 
    /**
     * Test two iterators for equality (same index value).
     */
    bool
    operator == (
-      const BoxIterator& iterator) const;
+      const BoxIterator& iterator) const
+   {
+      return d_index == iterator.d_index;
+   }
 
    /**
     * Test two iterators for inequality (different index values).
     */
    bool
    operator != (
-      const BoxIterator& iterator) const;
+      const BoxIterator& iterator) const
+   {
+      return d_index != iterator.d_index;
+   }
 
 private:
    Index d_index;
@@ -1055,9 +1347,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/Box.I"
-#endif
 
 #endif

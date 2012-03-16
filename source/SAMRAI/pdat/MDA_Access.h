@@ -108,7 +108,6 @@ public:
     * @b NOTE: the place of the starting points is different than
     * it is for the constructor taking final indices instead of sizes.
     */
-   SAMRAI_INLINE_KEYWORD
    MDA_IndexRange(
       /*! Array sizes                   */const size_t* sz = ((size_t *)0),
       /*! Array starting indices        */const index_t* st = ((index_t *)0))
@@ -145,7 +144,6 @@ public:
     * If @c si is @c NULL, starting indices are set to 0.
     * If @c sf is @c NULL, sizes are set to zero.
     */
-   SAMRAI_INLINE_KEYWORD
    MDA_IndexRange(
       /*! Array of initial indices      */const index_t* si,
       /*! Array of final indices        */const index_t* sf)
@@ -165,8 +163,8 @@ public:
    /*!
     * @brief Virtual destructor to support inheritance.
     */
-   SAMRAI_INLINE_KEYWORD
-   virtual ~MDA_IndexRange() {
+   virtual ~MDA_IndexRange()
+   {
    }
 
    //@{ @name Functions to set indices
@@ -174,7 +172,6 @@ public:
    /*!
     * Set size and starting indices.
     */
-   SAMRAI_INLINE_KEYWORD
    void setSizeAndStart(
       /*! Array sizes (NULL for no change)      */ const size_t* sz = ((size_t *)0),
       /*! Starting indices (NULL for no change) */ const index_t* st =
@@ -188,7 +185,6 @@ public:
    /*!
     * Set first and final indices (inclusive).
     */
-   SAMRAI_INLINE_KEYWORD
    void setInclusiveRange(
       /*! First valid indices (NULL for no change) */ const index_t first[
          MDA_DIM],
@@ -214,7 +210,6 @@ public:
     *
     * @return Adjusted MDA_IndexRange object
     */
-   SAMRAI_INLINE_KEYWORD
    const MDA_IndexRange& adjustDim(
       /*! Dimension to adjust      */ dim_t d,
       /*! Increment to first index */ index_t first,
@@ -241,9 +236,9 @@ public:
    /*!
     * @brief Equivalence comparison
     */
-   SAMRAI_INLINE_KEYWORD
    bool operator == (
-      const MDA_IndexRange& r) const {
+      const MDA_IndexRange& r) const
+   {
       dim_t d;
       for (d = 0; d < MDA_DIM; ++d) {
          if (d_start[d] != r.d_start[d]) return false;
@@ -256,9 +251,9 @@ public:
    /*!
     * @brief Inequivalence comparison
     */
-   SAMRAI_INLINE_KEYWORD
    bool operator != (
-      const MDA_IndexRange& r) const {
+      const MDA_IndexRange& r) const
+   {
       return !((*this) == r);
    }
 
@@ -307,9 +302,9 @@ public:
    /*!
     * @brief Give starting index of a given dimension.
     */
-   SAMRAI_INLINE_KEYWORD
    const index_t& beg(
-      /*! index of dimension */ size_t i) const {
+      /*! index of dimension */ size_t i) const
+   {
       return d_start[i];
    }
 
@@ -317,26 +312,26 @@ public:
     * @brief Give ending index (one more than the last valid index)
     * of a given dimension.
     */
-   SAMRAI_INLINE_KEYWORD
    const index_t& end(
-      /*! index of dimension */ size_t i) const {
+      /*! index of dimension */ size_t i) const
+   {
       return d_stop[i];
    }
 
    /*!
     * @brief Give size along a given dimension.
     */
-   SAMRAI_INLINE_KEYWORD
    const size_t& size(
-      /*! index of dimension */ size_t i) const {
+      /*! index of dimension */ size_t i) const
+   {
       return d_size[i];
    }
 
    /*!
     * @brief Give size for all dimensions.
     */
-   SAMRAI_INLINE_KEYWORD
-   size_t totalSize() const {
+   size_t totalSize() const
+   {
       dim_t i = 0;
       size_t total_size = d_size[i];
       for (i = 1; i < MDA_DIM; ++i) total_size *= d_size[i];
@@ -348,29 +343,29 @@ public:
    //@{ @name Error checking functions
 
    //! Check if indices are in range.
-   SAMRAI_INLINE_KEYWORD
    bool has(
-      index_t i0) const {
+      index_t i0) const
+   {
       return (MDA_DIM == 1)
              && (i0 >= d_start[D0]) && (i0 < d_stop[D0]);
    }
 
    //! Check if indices are in range.
-   SAMRAI_INLINE_KEYWORD
    bool has(
       index_t i0,
-      index_t i1) const {
+      index_t i1) const
+   {
       return (MDA_DIM == 2)
              && (i0 >= d_start[D0]) && (i0 < d_stop[D0])
              && (i1 >= d_start[D1]) && (i1 < d_stop[D1]);
    }
 
    //! Check if indices are in range.
-   SAMRAI_INLINE_KEYWORD
    bool has(
       index_t i0,
       index_t i1,
-      index_t i2) const {
+      index_t i2) const
+   {
       return (MDA_DIM == 3)
              && (i0 >= d_start[D0]) && (i0 < d_stop[D0])
              && (i1 >= d_start[D1]) && (i1 < d_stop[D1])
@@ -378,12 +373,12 @@ public:
    }
 
    //! Check if indices are in range.
-   SAMRAI_INLINE_KEYWORD
    bool has(
       index_t i0,
       index_t i1,
       index_t i2,
-      index_t i3) const {
+      index_t i3) const
+   {
       return (MDA_DIM == 4)
              && (i0 >= d_start[D0]) && (i0 < d_stop[D0])
              && (i1 >= d_start[D1]) && (i1 < d_stop[D1])
@@ -444,26 +439,25 @@ public:
    enum { MDA_Reduced_DIM = (MDA_DIM > 1 ? MDA_DIM - 1 : 1) };
    typedef MDA_OrderRowMajor<MDA_Reduced_DIM> reduced_order_t;
    //! @brief Similar to MDA_IndexRange constructor.
-   SAMRAI_INLINE_KEYWORD
    MDA_OrderRowMajor(
       /*! Array sizes            */ const size_t* sz = ((size_t *)0),
       /*! Array starting indices */ const index_t* st = ((index_t *)0)):
-      MDA_IndexRange<MDA_DIM>(sz, st) {
+      MDA_IndexRange<MDA_DIM>(sz, st)
+   {
       computeSizeDependentData();
    }
    //! @brief Similar to MDA_IndexRange constructor.
-   SAMRAI_INLINE_KEYWORD
    MDA_OrderRowMajor(
       /*! Array of initial indices */ const index_t* si,
       /*! Array of final indices   */ const index_t* sf):
-      MDA_IndexRange<MDA_DIM>(si, sf) {
+      MDA_IndexRange<MDA_DIM>(si, sf)
+   {
       computeSizeDependentData();
    }
 
    /*!
     * @brief Constructor for specifying index range object
     */
-   SAMRAI_INLINE_KEYWORD
    MDA_OrderRowMajor(
       /*! Array index object */ const range_t& r):
       MDA_IndexRange<MDA_DIM>(r) {
@@ -478,11 +472,11 @@ public:
     * The index range cannot be modified through this reference.
     * To modify the index range, use other member functions.
     */
-   SAMRAI_INLINE_KEYWORD const range_t& range() const {
+   const range_t& range() const
+   {
       return *this;
    }
    //! @brief Similar to MDA_IndexRange::setSizeAndStart().
-   SAMRAI_INLINE_KEYWORD
    const MDA_OrderRowMajor& setSizeAndStart(
       const size_t* sz = ((size_t *)0),
       const index_t* st = ((index_t *)0))
@@ -492,7 +486,6 @@ public:
       return *this;
    }
    //! @brief Similar to MDA_IndexRange::setInclusiveRange().
-   SAMRAI_INLINE_KEYWORD
    const MDA_OrderRowMajor& setInclusiveRange(
       const index_t first[MDA_DIM],
       const index_t final[MDA_DIM])
@@ -502,7 +495,6 @@ public:
       return *this;
    }
    //! @brief Similar to MDA_IndexRange::adjustDim().
-   SAMRAI_INLINE_KEYWORD
    const MDA_OrderRowMajor& adjustDim(
       dim_t d,
       index_t first,
@@ -521,9 +513,9 @@ public:
  *
  * Only independent data is compared, not dependent (redundant) data.
  */
-   SAMRAI_INLINE_KEYWORD
    bool operator == (
-      const MDA_OrderRowMajor& r) const {
+      const MDA_OrderRowMajor& r) const
+   {
       return range() == r.range();
    }
    /*!
@@ -531,9 +523,9 @@ public:
     *
     * Only independent data is compared, not dependent (redundant) data.
     */
-   SAMRAI_INLINE_KEYWORD
    bool operator != (
-      const MDA_OrderRowMajor& r) const {
+      const MDA_OrderRowMajor& r) const
+   {
       return range() != r.range();
    }
 //@}
@@ -546,51 +538,58 @@ public:
  * This is flexible but not efficient!
  * You should use dimension-specific offset computations whenever possible.
  */
-   SAMRAI_INLINE_KEYWORD index_t offset(
-      const index_t i[MDA_DIM]) const {
+   index_t offset(
+      const index_t i[MDA_DIM]) const
+   {
       int d;
       size_t o = i[MDA_DIM > 0 ? MDA_DIM - 1 : 0] - this->beg(MDA_DIM - 1);
       for (d = MDA_DIM - 2; d >= 0; --d) o +=
             (i[d] - this->d_start[d]) * d_total_size[d + 1];
       return o;
    }
-   SAMRAI_INLINE_KEYWORD index_t offset(
-      index_t i0) const {
+   index_t offset(
+      index_t i0) const
+   {
       return i0 - this->beg(0);
    }
-   SAMRAI_INLINE_KEYWORD index_t offset(
+   index_t offset(
       index_t i0,
-      index_t i1) const {
+      index_t i1) const
+   {
       return (i0 - this->d_start[D0]) * d_total_size[D1]
              + (i1 - this->d_start[D1]);
    }
-   SAMRAI_INLINE_KEYWORD index_t offset(
+   index_t offset(
       index_t i0,
       index_t i1,
-      index_t i2) const {
+      index_t i2) const
+   {
       return (i0 - this->d_start[D0]) * d_total_size[D1]
              + (i1 - this->d_start[D1]) * d_total_size[D2]
              + (i2 - this->d_start[D2]);
    }
-   SAMRAI_INLINE_KEYWORD index_t offset(
+   index_t offset(
       index_t i0,
       index_t i1,
       index_t i2,
-      index_t i3) const {
+      index_t i3) const
+   {
       return (i0 - this->d_start[D0]) * d_total_size[D1]
              + (i1 - this->d_start[D1]) * d_total_size[D2]
              + (i2 - this->d_start[D2]) * d_total_size[D3]
              + (i3 - this->d_start[D3]);
    }
-   SAMRAI_INLINE_KEYWORD index_t fixedOffset() const {
+   index_t fixedOffset() const
+   {
       return d_fixed_offset;
    }
    //@}
 /*!
  * @brief Return the total size of subarray starting with dimension d
  */
-   SAMRAI_INLINE_KEYWORD size_t totalSize(
-      unsigned short d) const {
+   size_t totalSize(
+      unsigned short d) const
+   {
       return d_total_size[d];
    }
 /*!
@@ -605,9 +604,10 @@ public:
  *
  * @return Pointer offset (always positive) to the reduced array pointer.
  */
-   SAMRAI_INLINE_KEYWORD size_t reduce(
+   size_t reduce(
       index_t i,
-      reduced_order_t& new_order) const {
+      reduced_order_t& new_order) const
+   {
       new_order.setSizeAndStart(&this->size(1), &this->beg(1));
       return offset(i) * d_total_size[1];
    }
@@ -615,7 +615,8 @@ private:
 /*!
  * @brief Recompute the total sizes array, which is dependent on sizes.
  */
-   SAMRAI_INLINE_KEYWORD void computeSizeDependentData() {
+   void computeSizeDependentData()
+   {
       d_total_size[MDA_DIM - 1] = this->d_size[MDA_DIM - 1];
       d_fixed_offset = -this->d_start[MDA_DIM - 1];
       int i = MDA_DIM - 2;
@@ -682,29 +683,29 @@ public:
    enum { MDA_Reduced_DIM = (MDA_DIM > 1 ? MDA_DIM - 1 : 1) };
    typedef MDA_OrderColMajor<MDA_Reduced_DIM> reduced_order_t;
    //! @brief Similar to MDA_IndexRange constructor.
-   SAMRAI_INLINE_KEYWORD
    MDA_OrderColMajor(
       /*! Array sizes            */ const size_t* sz = ((size_t *)0),
       /*! Array starting indices */ const index_t* st = ((index_t *)0)):
-      MDA_IndexRange<MDA_DIM>(sz, st) {
+      MDA_IndexRange<MDA_DIM>(sz, st)
+   {
       computeSizeDependentData();
    }
    //! @brief Similar to MDA_IndexRange constructor.
-   SAMRAI_INLINE_KEYWORD
    MDA_OrderColMajor(
       /*! Array of initial indices */ const index_t* si,
       /*! Array of final indices   */ const index_t* sf):
-      MDA_IndexRange<MDA_DIM>(si, sf) {
+      MDA_IndexRange<MDA_DIM>(si, sf)
+   {
       computeSizeDependentData();
    }
 
    /*!
     * @brief Constructor for specifying index range object
     */
-   SAMRAI_INLINE_KEYWORD
    MDA_OrderColMajor(
       /*! Array index object */ const range_t& r):
-      MDA_IndexRange<MDA_DIM>(r) {
+      MDA_IndexRange<MDA_DIM>(r)
+   {
       computeSizeDependentData();
    }
 
@@ -716,11 +717,11 @@ public:
     * The index range cannot be modified through this reference.
     * To modify the index range, use other member functions.
     */
-   SAMRAI_INLINE_KEYWORD const range_t& range() const {
+   const range_t& range() const
+   {
       return *this;
    }
    //! @brief Similar to MDA_IndexRange::setSizeAndStart().
-   SAMRAI_INLINE_KEYWORD
    const MDA_OrderColMajor& setSizeAndStart(
       const size_t* sz = ((size_t *)0),
       const index_t* st = ((index_t *)0))
@@ -730,7 +731,6 @@ public:
       return *this;
    }
    //! @brief Similar to MDA_IndexRange::setInclusiveRange().
-   SAMRAI_INLINE_KEYWORD
    const MDA_OrderColMajor& setInclusiveRange(
       const index_t first[MDA_DIM],
       const index_t final[MDA_DIM])
@@ -740,7 +740,6 @@ public:
       return *this;
    }
    //! @brief Similar to MDA_IndexRange::adjustDim().
-   SAMRAI_INLINE_KEYWORD
    const MDA_OrderColMajor& adjustDim(
       dim_t d,
       index_t first,
@@ -759,9 +758,9 @@ public:
  *
  * Only independent data is compared, not dependent (redundant) data.
  */
-   SAMRAI_INLINE_KEYWORD
    bool operator == (
-      const MDA_OrderColMajor& r) const {
+      const MDA_OrderColMajor& r) const
+   {
       return range() == r.range();
    }
    /*!
@@ -769,9 +768,9 @@ public:
     *
     * Only independent data is compared, not dependent (redundant) data.
     */
-   SAMRAI_INLINE_KEYWORD
    bool operator != (
-      const MDA_OrderColMajor& r) const {
+      const MDA_OrderColMajor& r) const
+   {
       return range() != r.range();
    }
 //@}
@@ -784,54 +783,61 @@ public:
  * This is flexible but not efficient!
  * You should use dimension-specific offset computations whenever possible.
  */
-   SAMRAI_INLINE_KEYWORD index_t offset(
-      const index_t i[MDA_DIM]) const {
+   index_t offset(
+      const index_t i[MDA_DIM]) const
+   {
       int d;
       size_t o = i[0] - this->beg(0);
       for (d = 1; d < MDA_DIM; ++d) o +=
             (i[d] - this->d_start[d]) * d_total_size[d - 1];
       return o;
    }
-   SAMRAI_INLINE_KEYWORD index_t offset(
-      index_t i0) const {
+   index_t offset(
+      index_t i0) const
+   {
       return i0 - this->beg(0);
    }
-   SAMRAI_INLINE_KEYWORD index_t offset(
+   index_t offset(
       index_t i0,
-      index_t i1) const {
+      index_t i1) const
+   {
       return (i0 - this->d_start[D0])
              + (i1 - this->d_start[D1])
              * static_cast<index_t>(d_total_size[D0]);
    }
-   SAMRAI_INLINE_KEYWORD index_t offset(
+   index_t offset(
       index_t i0,
       index_t i1,
-      index_t i2) const {
+      index_t i2) const
+   {
       return (i0 - this->d_start[D0])
              + (i1 - this->d_start[D1])
              * static_cast<index_t>(d_total_size[D0])
              + (i2 - this->d_start[D2])
              * static_cast<index_t>(d_total_size[D1]);
    }
-   SAMRAI_INLINE_KEYWORD index_t offset(
+   index_t offset(
       index_t i0,
       index_t i1,
       index_t i2,
-      index_t i3) const {
+      index_t i3) const
+   {
       return (i0 - this->d_start[D0])
              + (i1 - this->d_start[D1]) * d_total_size[D0]
              + (i2 - this->d_start[D2]) * d_total_size[D1]
              + (i3 - this->d_start[D3]) * d_total_size[D2];
    }
-   SAMRAI_INLINE_KEYWORD index_t fixedOffset() const {
+   index_t fixedOffset() const
+   {
       return d_fixed_offset;
    }
 //@}
 /*!
  * @brief Return the total size of subarray starting with dimension d
  */
-   SAMRAI_INLINE_KEYWORD size_t totalSize(
-      unsigned short d) const {
+   size_t totalSize(
+      unsigned short d) const
+   {
       return d_total_size[d];
    }
 /*!
@@ -846,9 +852,10 @@ public:
  *
  * @return Pointer offset (always positive) to the reduced array pointer.
  */
-   SAMRAI_INLINE_KEYWORD size_t reduce(
+   size_t reduce(
       index_t i,
-      reduced_order_t& new_order) const {
+      reduced_order_t& new_order) const
+   {
       new_order.setSizeAndStart(&this->size(0), &this->beg(0));
       return (i
               - this->d_start[MDA_Reduced_DIM])
@@ -859,7 +866,8 @@ private:
 /*!
  * @brief Recompute the total sizes array, which is dependent on sizes.
  */
-   SAMRAI_INLINE_KEYWORD void computeSizeDependentData() {
+   void computeSizeDependentData()
+   {
       d_total_size[0] = this->d_size[0];
       d_fixed_offset = -this->d_start[0];
       int i = 1;
@@ -962,13 +970,13 @@ public:
     * @b NOTE: the place of the initial indices is different than
     * it is for the constructor taking final indices instead of sizes.
     */
-   SAMRAI_INLINE_KEYWORD
    MDA_Access(
       /*! Pointer to data        */ value_t* p = ((value_t *)0),
       /*! Array sizes            */ const size_t* sz = ((size_t *)0),
       /*! Array starting indices */ const index_t* st = ((index_t *)0)):
       d_ptr(p),
-      d_order(sz, st) {
+      d_order(sz, st)
+   {
       setPtr1();
    }
 
@@ -990,44 +998,44 @@ public:
     * If @c si is @c NULL, starting indices are set to 0.
     * If @c sf is @c NULL, sizes are set to zero.
     */
-   SAMRAI_INLINE_KEYWORD
    MDA_Access(
       /*! Pointer to data          */ value_t* p,
       /*! Array of initial indices */ const index_t* si,
       /*! Array of final indices   */ const index_t* sf):
       d_ptr(p),
-      d_order(si, sf) {
+      d_order(si, sf)
+   {
       setPtr1();
    }
 
    /*!
     * @brief Constructor for specifying pointer and ordering object
     */
-   SAMRAI_INLINE_KEYWORD
    MDA_Access(
       /*! Pointer to data    */ value_t* p,
       /*! Array index object */ const order_t& r):
       d_ptr(p),
-      d_order(r) {
+      d_order(r)
+   {
       setPtr1();
    }
 
    /*!
     * @brief Copy constructor
     */
-   SAMRAI_INLINE_KEYWORD
    MDA_Access(
       /*! Copyee object */ const MDA_Access& r):
       d_ptr(r.d_ptr),
-      d_order(r.d_order) {
+      d_order(r.d_order)
+   {
       setPtr1();
    }
 
    /*!
     * @brief Virtual destructor to support inheritance.
     */
-   SAMRAI_INLINE_KEYWORD
-   virtual ~MDA_Access() {
+   virtual ~MDA_Access()
+   {
    }
 
    /*!
@@ -1035,8 +1043,8 @@ public:
     *
     * @return true iff data pointer is not NULL.
     */
-   SAMRAI_INLINE_KEYWORD
-   operator bool () const {
+   operator bool () const
+   {
       return d_ptr != (value_t *)0;
    }
 
@@ -1045,17 +1053,17 @@ public:
     *
     * @return the data pointer.
     */
-   SAMRAI_INLINE_KEYWORD
-   operator value_t * () const {
+   operator value_t * () const
+   {
       return d_ptr;
    }
 
    /*!
     * @brief Set the data pointer.
     */
-   SAMRAI_INLINE_KEYWORD
    void setPointer(
-      /*! Pointer value */ value_t* p) {
+      /*! Pointer value */ value_t* p)
+   {
       d_ptr = p;
       setPtr1();
    }
@@ -1065,7 +1073,6 @@ public:
     *
     * @see MDA_IndexRange
     */
-   SAMRAI_INLINE_KEYWORD
    void setSizeAndStart(
       /*! Array sizes (NULL for no change)      */ const size_t* sz = ((size_t *)0),
       /*! Starting indices (NULL for no change) */ const index_t* st =
@@ -1080,7 +1087,6 @@ public:
     *
     * @see MDA_IndexRange
     */
-   SAMRAI_INLINE_KEYWORD
    void setInclusiveRange(
       /*! First valid indices (NULL for no change) */ const index_t first[
          MDA_DIM],
@@ -1096,7 +1102,6 @@ public:
     *
     * @see MDA_IndexRange::adjustDim.
     */
-   SAMRAI_INLINE_KEYWORD
    const range_t& adjustDim(
       /*! Dimension to adjust      */ dim_t d,
       /*! Increment to first index */ index_t first,
@@ -1112,22 +1117,24 @@ public:
    /*!
     * @name Equivalence comparison
     */
-   SAMRAI_INLINE_KEYWORD
    bool operator == (
-      const MDA_Access& r) const {
-      if (d_order != r.d_order) return false;
-
-      if (d_ptr != r.d_ptr) return false;
-
+      const MDA_Access& r) const
+   {
+      if (d_order != r.d_order) {
+         return false;
+      }
+      if (d_ptr != r.d_ptr) {
+         return false;
+      }
       return true;
    }
 
    /*!
     * @name Inequivalence comparison
     */
-   SAMRAI_INLINE_KEYWORD
    bool operator != (
-      const MDA_Access& r) const {
+      const MDA_Access& r) const
+   {
       return !((*this) == r);
    }
 
@@ -1135,23 +1142,23 @@ public:
 
 //@{ @name Functions for accessing items
 
-   SAMRAI_INLINE_KEYWORD
-   const range_t& range() const {
+   const range_t& range() const
+   {
       return d_order.range();
    }
-   SAMRAI_INLINE_KEYWORD
    const index_t& beg(
-      size_t i) const {
+      size_t i) const
+   {
       return d_order.range().beg(i);
    }
-   SAMRAI_INLINE_KEYWORD
    const index_t& end(
-      size_t i) const {
+      size_t i) const
+   {
       return d_order.range().end(i);
    }
-   SAMRAI_INLINE_KEYWORD
    const size_t& size(
-      size_t i) const {
+      size_t i) const
+   {
       return d_order.range().size(i);
    }
 
@@ -1161,18 +1168,18 @@ public:
     * This is flexible but not efficient!
     * You should use dimension-specific accesses whenever possible.
     */
-   SAMRAI_INLINE_KEYWORD
    value_t& operator () (
-      const index_t i[MDA_DIM]) const {
+      const index_t i[MDA_DIM]) const
+   {
       return d_ptr[d_order.offset(i)];
    }
 
    /*!
     * @brief Grant general access to item in a 1D array.
     */
-   SAMRAI_INLINE_KEYWORD
    value_t& operator () (
-      index_t i0) const {
+      index_t i0) const
+   {
       return d_ptr[d_order.offset(i0)];
       /*
        * return d_ptr1[i0];
@@ -1182,33 +1189,33 @@ public:
    /*!
     * @brief Grant general access to item in a 2D array.
     */
-   SAMRAI_INLINE_KEYWORD
    value_t& operator () (
       index_t i0,
-      index_t i1) const {
+      index_t i1) const
+   {
       return d_ptr[d_order.offset(i0, i1)];
    }
 
    /*!
     * @brief Grant general access to item in a 3D array.
     */
-   SAMRAI_INLINE_KEYWORD
    value_t& operator () (
       index_t i0,
       index_t i1,
-      index_t i2) const {
+      index_t i2) const
+   {
       return d_ptr[d_order.offset(i0, i1, i2)];
    }
 
    /*!
     * @brief Grant general access to item in a 4D array.
     */
-   SAMRAI_INLINE_KEYWORD
    value_t& operator () (
       index_t i0,
       index_t i1,
       index_t i2,
-      index_t i3) const {
+      index_t i3) const
+    {
       return d_ptr[d_order.offset(i0, i1, i2, i3)];
    }
 
@@ -1222,9 +1229,9 @@ public:
     * the two gives a negative address, which the C standard leaves as
     * undefined behavior.
     */
-   SAMRAI_INLINE_KEYWORD
    value_t& operator [] (
-      index_t i0) const {
+      index_t i0) const
+   {
       return d_ptr1[i0];
       /*
        * return d_ptr[d_order.offset(i0)];
@@ -1263,10 +1270,10 @@ public:
  * @return The sub-array of dimension @c MDA_DIM-1, corresponding to
  * the index given.
  */
-   SAMRAI_INLINE_KEYWORD
    MDA_Access<MDA_TYPE, OrderType::MDA_Reduced_DIM,
               typename OrderType::reduced_order_t> reduce(
-      index_t i) const {
+      index_t i) const
+   {
       typename OrderType::reduced_order_t new_order;
       int ptr_offset;
       ptr_offset = d_order.reduce(i, new_order);
@@ -1357,7 +1364,6 @@ public:
     * @brief See the MDA_Access version of this function.
     * @see MDA_Access::MDA_Access(value_t*,const size_t*,const index_t*)
     */
-   SAMRAI_INLINE_KEYWORD
    MDA_AccessConst(
       /*! Pointer to data        */ value_t* p = ((MDA_TYPE *)0),
       /*! Array sizes            */ const size_t* sz = ((size_t *)0),
@@ -1369,7 +1375,6 @@ public:
     * @brief See the MDA_Access version of this function.
     * @see MDA_Access::MDA_Access(value_t*,const index_t*,const index_t*)
     */
-   SAMRAI_INLINE_KEYWORD
    MDA_AccessConst(
       /*! Pointer to data          */ value_t* p,
       /*! Array of initial indices */ const index_t* si,
@@ -1381,7 +1386,6 @@ public:
     * @brief See the MDA_Access version of this function.
     * @see MDA_Access::MDA_Access(value_t*,const MDA_IndexRange<MDA_DIM>&)
     */
-   SAMRAI_INLINE_KEYWORD
    MDA_AccessConst(
       /*! Pointer to data    */ value_t* p,
       /*! Array index object */ const MDA_IndexRange<MDA_DIM>& r):
@@ -1392,7 +1396,6 @@ public:
     * @brief Construct from an object of the non-const version.
     * @see MDA_Access::MDA_Access(const MDA_Access<const MDA_TYPE,MDA_DIM>&)
     */
-   SAMRAI_INLINE_KEYWORD
    MDA_AccessConst(
       const MDA_Access<MDA_TYPE, MDA_DIM, OrderType>& r):
       MDA_Access<const MDA_TYPE, MDA_DIM, OrderType>((const MDA_TYPE *)(r),
@@ -1402,7 +1405,6 @@ public:
    /*!
     * @brief Assign value from an object of the non-const version.
     */
-   SAMRAI_INLINE_KEYWORD
    const MDA_AccessConst& operator = (
       const MDA_Access<MDA_TYPE, MDA_DIM, OrderType>& r) {
       (MDA_Access<MDA_TYPE, MDA_DIM, OrderType>&)(*this) = r;

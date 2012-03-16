@@ -144,7 +144,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/PatchLevelBorderFillPattern.I"
-#endif
 #endif

@@ -13,12 +13,6 @@
 
 #include "SAMRAI/hier/TransferOperatorRegistry.h"
 
-#include "SAMRAI/tbox/Utilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/TransferOperatorRegistry.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 

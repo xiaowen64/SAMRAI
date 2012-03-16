@@ -17,6 +17,7 @@
 #include "SAMRAI/math/ArrayDataNormOpsComplex.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/Complex.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -216,7 +217,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/math/PatchEdgeDataNormOpsComplex.I"
-#endif
 #endif

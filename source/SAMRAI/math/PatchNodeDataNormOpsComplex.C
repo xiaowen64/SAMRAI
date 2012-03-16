@@ -13,13 +13,6 @@
 
 #include "SAMRAI/math/PatchNodeDataNormOpsComplex.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include "SAMRAI/tbox/Utilities.h"
-#endif
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/math/PatchNodeDataNormOpsComplex.I"
-#endif
 
 namespace SAMRAI {
 namespace math {
@@ -112,9 +105,8 @@ PatchNodeDataNormOpsComplex::RMSNorm(
    const hier::Box& box,
    const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
+
    double retval = L2Norm(data, box, cvol);
    if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
@@ -131,9 +123,8 @@ PatchNodeDataNormOpsComplex::weightedRMSNorm(
    const hier::Box& box,
    const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data && weight);
-#endif
+
    double retval = weightedL2Norm(data, weight, box, cvol);
    if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
@@ -149,9 +140,8 @@ PatchNodeDataNormOpsComplex::maxNorm(
    const hier::Box& box,
    const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
+
    double retval;
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    if (!cvol) {
@@ -171,9 +161,8 @@ PatchNodeDataNormOpsComplex::dot(
    const hier::Box& box,
    const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
-#endif
+
    dcomplex retval;
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    if (!cvol) {

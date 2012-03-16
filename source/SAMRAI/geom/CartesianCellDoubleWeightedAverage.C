@@ -122,11 +122,9 @@ CartesianCellDoubleWeightedAverage::coarsen(
    boost::shared_ptr<pdat::CellData<double> > cdata(
       coarse.getPatchData(dst_component),
       boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
-#endif
 
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();

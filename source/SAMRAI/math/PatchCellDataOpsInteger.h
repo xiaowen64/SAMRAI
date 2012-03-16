@@ -19,6 +19,7 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/PIO.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <iostream>
@@ -59,7 +60,12 @@ public:
    int
    numberOfEntries(
       const boost::shared_ptr<pdat::CellData<int> >& data,
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      TBOX_ASSERT(data);
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+      return ((box * data->getGhostBox()).size()) * data->getDepth();
+   }
 
    /**
     * Copy dst data to src data over given box.
@@ -68,7 +74,12 @@ public:
    copyData(
       const boost::shared_ptr<pdat::CellData<int> >& dst,
       const boost::shared_ptr<pdat::CellData<int> >& src,
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      TBOX_ASSERT(dst && src);
+      TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+      dst->getArrayData().copy(src->getArrayData(), box);
+   }
 
    /**
     * Swap pointers for patch data objects.  Objects are checked for
@@ -87,7 +98,14 @@ public:
    printData(
       const boost::shared_ptr<pdat::CellData<int> >& data,
       const hier::Box& box,
-      std::ostream& s = tbox::plog) const;
+      std::ostream& s = tbox::plog) const
+   {
+      TBOX_ASSERT(data);
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+      s << "Data box = " << box << std::endl;
+      data->print(box, s);
+      s << "\n";
+   }
 
    /**
     * Initialize data to given scalar over given box.
@@ -96,7 +114,12 @@ public:
    setToScalar(
       const boost::shared_ptr<pdat::CellData<int> >& dst,
       const int& alpha,
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      TBOX_ASSERT(dst);
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
+      dst->fillAll(alpha, box);
+   }
 
    /**
     * Set destination component to absolute value of source component.
@@ -106,7 +129,14 @@ public:
    abs(
       const boost::shared_ptr<pdat::CellData<int> >& dst,
       const boost::shared_ptr<pdat::CellData<int> >& src,
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      TBOX_ASSERT(dst && src);
+      TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+      d_array_ops.abs(dst->getArrayData(),
+         src->getArrayData(),
+         box);
+   }
 
 private:
    // The following are not implemented:
@@ -123,7 +153,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/math/PatchCellDataOpsInteger.I"
-#endif
 #endif

@@ -11,10 +11,6 @@
 
 #include "SAMRAI/pdat/DoubleAttributeId.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/DoubleAttributeId.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 

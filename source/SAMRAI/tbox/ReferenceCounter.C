@@ -14,10 +14,6 @@
 #include <cstdlib>
 #include <cstdio>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/ReferenceCounter.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 

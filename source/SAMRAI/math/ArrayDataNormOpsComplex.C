@@ -14,11 +14,6 @@
 #include "SAMRAI/math/ArrayDataNormOpsComplex.h"
 
 #include "SAMRAI/tbox/MathUtilities.h"
-#include "SAMRAI/tbox/Utilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/math/ArrayDataNormOpsComplex.I"
-#endif
 
 namespace SAMRAI {
 namespace math {

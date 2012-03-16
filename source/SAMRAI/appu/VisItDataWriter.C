@@ -84,10 +84,6 @@ void F77_FUNC(cpidat2buf2d, CPIDAT2BUF2D) (
 #pragma report(disable, CPPC5328)
 #endif
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/appu/VisItDataWriter.I"
-#endif
-
 namespace SAMRAI {
 namespace appu {
 

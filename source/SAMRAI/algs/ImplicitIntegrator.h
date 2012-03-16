@@ -173,37 +173,55 @@ public:
     * Return initial integration time.
     */
    double
-   getInitialTime() const;
+   getInitialTime() const
+   {
+      return d_initial_time;
+   }
 
    /**
     * Return final integration time.
     */
    double
-   getFinalTime() const;
+   getFinalTime() const
+   {
+      return d_final_time;
+   }
 
    /**
     * Return current integration time.
     */
    double
-   getCurrentTime() const;
+   getCurrentTime() const
+   {
+      return d_current_time;
+   }
 
    /**
     * Return current timestep.
     */
    double
-   getCurrentDt() const;
+   getCurrentDt() const
+   {
+      return d_current_dt;
+   }
 
    /**
     * Return current integration step number.
     */
    int
-   getIntegratorStep() const;
+   getIntegratorStep() const
+   {
+      return d_integrator_step;
+   }
 
    /**
     * Return maximum number of integration steps.
     */
    int
-   getMaxIntegratorSteps() const;
+   getMaxIntegratorSteps() const
+   {
+      return d_max_integrator_steps;
+   }
 
    /**
     * Return true if the number of integration steps performed by the
@@ -211,7 +229,10 @@ public:
     * otherwise.
     */
    bool
-   stepsRemaining() const;
+   stepsRemaining() const
+   {
+      return d_integrator_step < d_max_integrator_steps;
+   }
 
    /**
     * Print out all members of integrator instance to given output stream.
@@ -233,7 +254,10 @@ public:
     * Returns the object name.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*
@@ -306,7 +330,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/algs/ImplicitIntegrator.I"
-#endif
+
 #endif

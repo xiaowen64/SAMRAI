@@ -15,6 +15,7 @@
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Timer.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -284,7 +285,10 @@ public:
     */
    void
    setIgnoreLevelDomainIsSingleBox(
-      bool flag);
+      bool flag)
+   {
+      d_ignore_level_box_union_is_single_box = flag;
+   }
 
    /*!
     * Return true if load balancing procedure for given level depends on
@@ -381,7 +385,10 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    // The following are not implemented, but are provided here for
@@ -542,16 +549,43 @@ private:
     */
    int
    getWorkloadDataId(
-      int level_number) const;
+      int level_number) const
+   {
+      TBOX_ASSERT(level_number >= 0);
+      return (level_number < d_workload_data_id.getSize() ?
+              d_workload_data_id[level_number] :
+              d_master_workload_data_id);
+   }
+
    double
    getMaxWorkloadFactor(
-      int level_number) const;
+      int level_number) const
+   {
+      TBOX_ASSERT(level_number >= 0);
+      return (level_number < d_max_workload_factor.getSize() ?
+              d_max_workload_factor[level_number] :
+              d_master_max_workload_factor);
+   }
+
    double
    getWorkloadTolerance(
-      int level_number) const;
+      int level_number) const
+   {
+      TBOX_ASSERT(level_number >= 0);
+      return (level_number < d_workload_tolerance.getSize() ?
+              d_workload_tolerance[level_number] :
+              d_master_workload_tolerance);
+   }
+
    std::string
    getBinPackMethod(
-      int level_number) const;
+      int level_number) const
+   {
+      TBOX_ASSERT(level_number >= 0);
+      return (level_number < d_bin_pack_method.getSize() ?
+              d_bin_pack_method[level_number] :
+              d_master_bin_pack_method);
+   }
 
    /*!
     * @brief Initialize static objects and register shutdown routine.
@@ -632,7 +666,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/mesh/ChopAndPackLoadBalancer.I"
-#endif
 #endif

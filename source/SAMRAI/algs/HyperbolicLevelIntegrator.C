@@ -122,10 +122,6 @@ void F77_FUNC(upfluxsumside3d2, UPFLUXSUMSIDE3D2) (const int&, const int&,
    const double *, double *);
 }
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/algs/HyperbolicLevelIntegrator.I"
-#endif
-
 namespace SAMRAI {
 namespace algs {
 
@@ -1348,9 +1344,7 @@ HyperbolicLevelIntegrator::standardLevelSynchronization(
    for (int fine_ln = finest_level; fine_ln > coarsest_level; fine_ln--) {
       const int coarse_ln = fine_ln - 1;
 
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(sync_time >= old_times[coarse_ln]);
-#endif
 
       boost::shared_ptr<hier::PatchLevel> fine_level(
          hierarchy->getPatchLevel(fine_ln));
@@ -1490,12 +1484,10 @@ HyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
    const double sync_time,
    const double coarse_sim_time)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(fine_level);
    TBOX_ASSERT(coarse_level);
    TBOX_ASSERT(coarse_level->getLevelNumber() ==
       (fine_level->getLevelNumber() - 1));
-#endif
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, *fine_level, *coarse_level);
 
    /*
@@ -2148,18 +2140,14 @@ HyperbolicLevelIntegrator::preprocessFluxData(
                      patch->getPatchData(fsum_id),
                      boost::detail::dynamic_cast_tag());
 
-#ifdef DEBUG_CHECK_ASSERTIONS
                   TBOX_ASSERT(fsum_data);
-#endif
                   fsum_data->fillAll(0.0);
                } else {
                   boost::shared_ptr<pdat::OutersideData<double> > fsum_data(
                      patch->getPatchData(fsum_id),
                      boost::detail::dynamic_cast_tag());
 
-#ifdef DEBUG_CHECK_ASSERTIONS
                   TBOX_ASSERT(fsum_data);
-#endif
                   fsum_data->fillAll(0.0);
                }
 
@@ -2255,10 +2243,8 @@ HyperbolicLevelIntegrator::postprocessFluxData(
                   boost::dynamic_pointer_cast<pdat::OuterfaceData<double>,
                                               hier::PatchData>(fsum_data);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
                TBOX_ASSERT(fflux_data && ffsum_data);
                TBOX_ASSERT(fflux_data->getDepth() == ffsum_data->getDepth());
-#endif
                ddepth = fflux_data->getDepth();
                flux_ghosts = fflux_data->getGhostCellWidth();
             } else {
@@ -2269,10 +2255,8 @@ HyperbolicLevelIntegrator::postprocessFluxData(
                   boost::dynamic_pointer_cast<pdat::OutersideData<double>,
                                               hier::PatchData>(fsum_data);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
                TBOX_ASSERT(sflux_data && sfsum_data);
                TBOX_ASSERT(sflux_data->getDepth() == sfsum_data->getDepth());
-#endif
                ddepth = sflux_data->getDepth();
                flux_ghosts = sflux_data->getGhostCellWidth();
             }
@@ -2617,9 +2601,7 @@ void
 HyperbolicLevelIntegrator::putToDatabase(
    const boost::shared_ptr<tbox::Database>& db) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    db->putInteger("ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION",
       ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION);
@@ -2646,9 +2628,7 @@ HyperbolicLevelIntegrator::getFromInput(
    const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(is_from_restart || db);
-#endif
 
    if (is_from_restart) {
 

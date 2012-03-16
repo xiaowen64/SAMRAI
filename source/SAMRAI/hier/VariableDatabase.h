@@ -718,7 +718,10 @@ protected:
     * to be consistent with this database class.
     */
    static int
-   idUndefined();
+   idUndefined()
+   {
+      return -1;
+   }
 
    /**
     * @brief Return integer identifier for first variable found matching given
@@ -867,7 +870,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/VariableDatabase.I"
-#endif
+
 #endif

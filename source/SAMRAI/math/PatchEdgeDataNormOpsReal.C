@@ -48,7 +48,8 @@ PatchEdgeDataNormOpsReal<TYPE>::PatchEdgeDataNormOpsReal(
 }
 
 template<class TYPE>
-void PatchEdgeDataNormOpsReal<TYPE>::operator = (
+void
+PatchEdgeDataNormOpsReal<TYPE>::operator = (
    const PatchEdgeDataNormOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -63,7 +64,8 @@ void PatchEdgeDataNormOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-int PatchEdgeDataNormOpsReal<TYPE>::numberOfEntries(
+int
+PatchEdgeDataNormOpsReal<TYPE>::numberOfEntries(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box) const
 {
@@ -90,14 +92,14 @@ int PatchEdgeDataNormOpsReal<TYPE>::numberOfEntries(
  */
 
 template<class TYPE>
-double PatchEdgeDataNormOpsReal<TYPE>::sumControlVolumes(
+double
+PatchEdgeDataNormOpsReal<TYPE>::sumControlVolumes(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const boost::shared_ptr<pdat::EdgeData<double> >& cvol,
    const hier::Box& box) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data && cvol);
-#endif
+
    int dimVal = data->getDim().getValue();
 
    double retval = 0.0;
@@ -111,7 +113,8 @@ double PatchEdgeDataNormOpsReal<TYPE>::sumControlVolumes(
 }
 
 template<class TYPE>
-void PatchEdgeDataNormOpsReal<TYPE>::abs(
+void
+PatchEdgeDataNormOpsReal<TYPE>::abs(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
    const hier::Box& box) const
@@ -130,7 +133,8 @@ void PatchEdgeDataNormOpsReal<TYPE>::abs(
 }
 
 template<class TYPE>
-double PatchEdgeDataNormOpsReal<TYPE>::L1Norm(
+double
+PatchEdgeDataNormOpsReal<TYPE>::L1Norm(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
@@ -160,7 +164,8 @@ double PatchEdgeDataNormOpsReal<TYPE>::L1Norm(
 }
 
 template<class TYPE>
-double PatchEdgeDataNormOpsReal<TYPE>::L2Norm(
+double
+PatchEdgeDataNormOpsReal<TYPE>::L2Norm(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
@@ -193,7 +198,8 @@ double PatchEdgeDataNormOpsReal<TYPE>::L2Norm(
 }
 
 template<class TYPE>
-double PatchEdgeDataNormOpsReal<TYPE>::weightedL2Norm(
+double
+PatchEdgeDataNormOpsReal<TYPE>::weightedL2Norm(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& weight,
    const hier::Box& box,
@@ -230,14 +236,14 @@ double PatchEdgeDataNormOpsReal<TYPE>::weightedL2Norm(
 }
 
 template<class TYPE>
-double PatchEdgeDataNormOpsReal<TYPE>::RMSNorm(
+double
+PatchEdgeDataNormOpsReal<TYPE>::RMSNorm(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
+
    double retval = L2Norm(data, box, cvol);
    if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
@@ -248,15 +254,15 @@ double PatchEdgeDataNormOpsReal<TYPE>::RMSNorm(
 }
 
 template<class TYPE>
-double PatchEdgeDataNormOpsReal<TYPE>::weightedRMSNorm(
+double
+PatchEdgeDataNormOpsReal<TYPE>::weightedRMSNorm(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& weight,
    const hier::Box& box,
    const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data && weight);
-#endif
+
    double retval = weightedL2Norm(data, weight, box, cvol);
    if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
@@ -267,14 +273,14 @@ double PatchEdgeDataNormOpsReal<TYPE>::weightedRMSNorm(
 }
 
 template<class TYPE>
-double PatchEdgeDataNormOpsReal<TYPE>::maxNorm(
+double
+PatchEdgeDataNormOpsReal<TYPE>::maxNorm(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
+
    int dimVal = data->getDim().getValue();
 
    double retval = 0.0;
@@ -300,15 +306,15 @@ double PatchEdgeDataNormOpsReal<TYPE>::maxNorm(
 }
 
 template<class TYPE>
-TYPE PatchEdgeDataNormOpsReal<TYPE>::dot(
+TYPE
+PatchEdgeDataNormOpsReal<TYPE>::dot(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data1,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data2,
    const hier::Box& box,
    const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
-#endif
+
    int dimVal = data1->getDim().getValue();
 
    TYPE retval = 0.0;
@@ -333,14 +339,14 @@ TYPE PatchEdgeDataNormOpsReal<TYPE>::dot(
 }
 
 template<class TYPE>
-TYPE PatchEdgeDataNormOpsReal<TYPE>::integral(
+TYPE
+PatchEdgeDataNormOpsReal<TYPE>::integral(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::EdgeData<double> >& vol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
+
    int dimVal = data->getDim().getValue();
 
    TYPE retval = 0.0;

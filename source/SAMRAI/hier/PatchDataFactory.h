@@ -128,7 +128,10 @@ public:
     * ghost width is specified in the clone method.
     */
    const IntVector&
-   getGhostCellWidth() const;
+   getGhostCellWidth() const
+   {
+      return d_ghosts;
+   }
 
    /**
     * @brief Abstract virtual function to compute the amount of memory needed to
@@ -181,7 +184,10 @@ public:
     * Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_ghosts.getDim();
+   }
 
 protected:
    IntVector d_ghosts;
@@ -199,7 +205,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchDataFactory.I"
-#endif
+
 #endif

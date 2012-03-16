@@ -16,10 +16,6 @@
 
 #include <iostream>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/BlockId.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 
@@ -31,7 +27,8 @@ const BlockId BlockId::s_zero_id(0);
  *******************************************************************************
  */
 BlockId::BlockId():
-   d_value(invalidId().d_value) {
+   d_value(invalidId().d_value)
+{
 }
 
 /*
@@ -40,7 +37,8 @@ BlockId::BlockId():
  */
 BlockId::BlockId(
    const BlockId& other):
-   d_value(other.d_value) {
+   d_value(other.d_value)
+{
 }
 
 /*
@@ -49,7 +47,8 @@ BlockId::BlockId(
  */
 BlockId::BlockId(
    const int& value):
-   d_value(value) {
+   d_value(value)
+{
 }
 
 /*

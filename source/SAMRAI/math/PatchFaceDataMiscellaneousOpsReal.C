@@ -47,7 +47,8 @@ PatchFaceDataMiscellaneousOpsReal<TYPE>::PatchFaceDataMiscellaneousOpsReal(
 }
 
 template<class TYPE>
-void PatchFaceDataMiscellaneousOpsReal<TYPE>::operator = (
+void
+PatchFaceDataMiscellaneousOpsReal<TYPE>::operator = (
    const PatchFaceDataMiscellaneousOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -62,15 +63,15 @@ void PatchFaceDataMiscellaneousOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-int PatchFaceDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
+int
+PatchFaceDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& data1,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& data2,
    const hier::Box& box,
    const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
-#endif
+
    int dimVal = data1->getDim().getValue();
 
    int retval = 1;
@@ -100,16 +101,16 @@ int PatchFaceDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 }
 
 template<class TYPE>
-void PatchFaceDataMiscellaneousOpsReal<TYPE>::compareToScalar(
+void
+PatchFaceDataMiscellaneousOpsReal<TYPE>::compareToScalar(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box,
    const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);
-#endif
+
    int dimVal = dst->getDim().getValue();
 
    if (!cvol) {
@@ -133,15 +134,15 @@ void PatchFaceDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 }
 
 template<class TYPE>
-int PatchFaceDataMiscellaneousOpsReal<TYPE>::testReciprocal(
+int
+PatchFaceDataMiscellaneousOpsReal<TYPE>::testReciprocal(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
    const hier::Box& box,
    const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);
-#endif
+
    int dimVal = dst->getDim().getValue();
 
    int retval = 1;
@@ -171,14 +172,14 @@ int PatchFaceDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 }
 
 template<class TYPE>
-TYPE PatchFaceDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
+TYPE
+PatchFaceDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& numer,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& denom,
    const hier::Box& box) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(numer && denom);
-#endif
+
    int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;
@@ -194,14 +195,14 @@ TYPE PatchFaceDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
 }
 
 template<class TYPE>
-TYPE PatchFaceDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
+TYPE
+PatchFaceDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
    const boost::shared_ptr<pdat::FaceData<TYPE> >& numer,
    const boost::shared_ptr<pdat::FaceData<TYPE> >& denom,
    const hier::Box& box) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(numer && denom);
-#endif
+
    int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;

@@ -12,14 +12,8 @@
 #define included_hier_Box_C
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxId.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
-#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/Box.I"
-#endif
 
 namespace SAMRAI {
 namespace hier {

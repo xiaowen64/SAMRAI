@@ -19,10 +19,6 @@
 
 #include <boost/make_shared.hpp>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/VariableDatabase.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 

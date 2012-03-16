@@ -140,10 +140,6 @@
 #include <cstdlib>
 #include <fstream>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/geom/CartesianGridGeometry.I"
-#endif
-
 namespace SAMRAI {
 namespace geom {
 

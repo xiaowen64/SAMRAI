@@ -17,6 +17,10 @@
 #include "SAMRAI/solv/FACOperatorStrategy.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 #include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/tbox/Utilities.h"
+
+#include <algorithm>
+#include <cctype>
 
 #include <boost/shared_ptr.hpp>
 
@@ -229,7 +233,10 @@ public:
     */
    void
    setPresmoothingSweeps(
-      int num_pre_sweeps);
+      int num_pre_sweeps)
+   {
+      d_presmoothing_sweeps = num_pre_sweeps;
+   }
 
    /*!
     * @brief Set the number of post-smoothing sweeps during
@@ -242,14 +249,20 @@ public:
     */
    void
    setPostsmoothingSweeps(
-      int num_post_sweeps);
+      int num_post_sweeps)
+   {
+      d_postsmoothing_sweeps = num_post_sweeps;
+   }
 
    /*!
     * @brief Set the max number of iterations (cycles) to use per solve.
     */
    void
    setMaxCycles(
-      int max_cycles);
+      int max_cycles)
+   {
+      d_max_iterations = max_cycles;
+   }
 
    /*!
     * @brief Set the residual tolerance for stopping.
@@ -263,7 +276,11 @@ public:
    void
    setResidualTolerance(
       double residual_tol,
-      double relative_residual_tol = -1.0);
+      double relative_residual_tol = -1.0)
+   {
+      d_residual_tolerance = residual_tol;
+      d_relative_residual_tolerance = relative_residual_tol;
+   }
 
    /*!
     * @brief Set the choice of FAC cycling algorithm to use.
@@ -299,7 +316,10 @@ public:
     */
    void
    enableLogging(
-      bool enabled = true);
+      bool enabled = true)
+   {
+      d_do_log = enabled;
+   }
 
    //@}
 
@@ -311,7 +331,10 @@ public:
     * if there is one) FAC iteration process.
     */
    int
-   getNumberOfIterations() const;
+   getNumberOfIterations() const
+   {
+      return d_number_iterations;
+   }
 
    /*!
     * @brief Get convergance rates of
@@ -328,7 +351,17 @@ public:
    void
    getConvergenceFactors(
       double& avg_factor,
-      double& final_factor) const;
+      double& final_factor) const
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_number_iterations <= 0) {
+         TBOX_ERROR(d_object_name << ": Seeking convergence factors before\n"
+                                  << "a solve is invalid.\n");
+      }
+#endif
+      avg_factor = d_avg_convergence_factor;
+      final_factor = d_convergence_factor[d_number_iterations - 1];
+   }
 
    /*!
     * @brief Get the net convergance rate of
@@ -340,7 +373,17 @@ public:
     * so it may not be accurate if the initial residual is very small.
     */
    double
-   getNetConvergenceFactor() const;
+   getNetConvergenceFactor() const
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_number_iterations <= 0) {
+         TBOX_ERROR(d_object_name << ": Seeking convergence factors before\n"
+                                  << "a solve is invalid.\n");
+      }
+#endif
+      return d_net_convergence_factor;
+   }
+
    /*!
     * @brief Get the average convergance rates of
     * the last (or current if there is one) FAC solve.
@@ -350,7 +393,17 @@ public:
     * It may not be accurate if the initial residual is very small.
     */
    double
-   getAvgConvergenceFactor() const;
+   getAvgConvergenceFactor() const
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_number_iterations <= 0) {
+         TBOX_ERROR(d_object_name << ": Seeking convergence factors before\n"
+                                  << "a solve is invalid.\n");
+      }
+#endif
+      return d_avg_convergence_factor;
+   }
+
    /*!
     * @brief Get the final convergance rate of
     * the last (or current if there is one) FAC solve.
@@ -359,7 +412,16 @@ public:
     * has been reduced by the last FAC cycle.
     */
    double
-   getFinalConvergenceFactor() const;
+   getFinalConvergenceFactor() const
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_number_iterations <= 0) {
+         TBOX_ERROR(d_object_name << ": Seeking convergence factors before\n"
+                                  << "a solve is invalid.\n");
+      }
+#endif
+      return d_convergence_factor[d_number_iterations - 1];
+   }
 
    /*!
     * @brief Return residual norm from the just-completed FAC iteration.
@@ -371,7 +433,10 @@ public:
     * The latest computed norm is the one returned.
     */
    double
-   getResidualNorm() const;
+   getResidualNorm() const
+   {
+      return d_residual_norm;
+   }
 
    //@}
 
@@ -388,7 +453,10 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    //@{
@@ -636,9 +704,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/FACPreconditioner.I"
-#endif
 
 #endif

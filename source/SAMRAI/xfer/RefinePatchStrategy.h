@@ -16,6 +16,7 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchLevel.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <set>
 
@@ -221,7 +222,14 @@ public:
       hier::Patch& fine,
       const hier::Patch& coarse,
       const hier::BoxContainer& fine_boxes,
-      const hier::IntVector& ratio);
+      const hier::IntVector& ratio)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS3(fine, coarse, ratio);
+      for (hier::BoxContainer::ConstIterator b(fine_boxes);
+           b != fine_boxes.end(); ++b) {
+         preprocessRefine(fine, coarse, b(), ratio);
+      }
+   }
 
    /*!
     * Perform user-defined patch data refinement operations on a list of boxes.
@@ -243,13 +251,23 @@ public:
       hier::Patch& fine,
       const hier::Patch& coarse,
       const hier::BoxContainer& fine_boxes,
-      const hier::IntVector& ratio);
+      const hier::IntVector& ratio)
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim, fine, coarse, ratio);
+      for (hier::BoxContainer::ConstIterator b(fine_boxes);
+           b != fine_boxes.end(); ++b) {
+         postprocessRefine(fine, coarse, b(), ratio);
+      }
+   }
 
    /*!
     * @brief Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    /*!
@@ -257,7 +275,11 @@ private:
     * registered.
     */
    static std::set<RefinePatchStrategy *>&
-   getCurrentObjects();
+   getCurrentObjects()
+   {
+      static std::set<RefinePatchStrategy *> current_objects;
+      return current_objects;
+   }
 
    /*!
     * @brief Dimension of the object.
@@ -269,20 +291,29 @@ private:
     * objects used in an application.
     */
    void
-   registerObject();
+   registerObject()
+   {
+      std::set<RefinePatchStrategy *>& current_objects =
+         RefinePatchStrategy::getCurrentObjects();
+      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
+      current_objects.insert(this);
+   }
 
    /*!
     * @brief Unregister the object.
     */
    void
-   unregisterObject();
+   unregisterObject()
+   {
+      std::set<RefinePatchStrategy *>& current_objects =
+         RefinePatchStrategy::getCurrentObjects();
+      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
+      current_objects.erase(this);
+   }
 
 };
 
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/RefinePatchStrategy.I"
-#endif
 #endif

@@ -12,10 +12,6 @@
 
 #include "SAMRAI/hier/BoxContainerSingleOwnerIterator.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxContainerSingleOwnerIterator.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 

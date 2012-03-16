@@ -31,10 +31,6 @@
 #pragma report(disable, CPPC5328)
 #endif
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/mesh/BergerRigoutsosNode.I"
-#endif
-
 namespace SAMRAI {
 namespace mesh {
 
@@ -244,6 +240,33 @@ BergerRigoutsosNode::~BergerRigoutsosNode()
  ********************************************************************
  */
 void
+BergerRigoutsosNode::setClusteringParameters(
+   const int tag_data_index,
+   const int tag_val,
+   const hier::IntVector min_box,
+   const double efficiency_tol,
+   const double combine_tol,
+   const hier::IntVector& max_box_size,
+   const double max_lap_cut_from_center,
+   const bool laplace_cut_long_dir_only)
+{
+   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, min_box, max_box_size);
+
+   d_common->tag_data_index = tag_data_index;
+   d_common->tag_val = tag_val;
+   d_common->min_box = min_box;
+   d_common->efficiency_tol = efficiency_tol;
+   d_common->combine_tol = combine_tol;
+   d_common->max_box_size = max_box_size;
+   d_common->max_lap_cut_from_center = max_lap_cut_from_center;
+   d_common->laplace_cut_long_dir_only = laplace_cut_long_dir_only;
+}
+
+/*
+ ********************************************************************
+ ********************************************************************
+ */
+void
 BergerRigoutsosNode::clusterAndComputeRelationships(
    hier::BoxLevel& new_mapped_box_level,
    hier::Connector& tag_to_new,
@@ -318,9 +341,7 @@ BergerRigoutsosNode::clusterAndComputeRelationships(
 void
 BergerRigoutsosNode::clusterAndComputeRelationships()
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_parent == NULL);
-#endif
    tbox::SAMRAI_MPI mpi(d_common->mpi_object);
 
    d_common->t_cluster_and_compute_relationships->start();
@@ -353,11 +374,9 @@ BergerRigoutsosNode::clusterAndComputeRelationships()
            ++ni) {
          d_common->tag_to_new->makeEmptyLocalNeighborhood(ni->getId());
       }
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(
          static_cast<int>(d_common->tag_mapped_box_level->getLocalNumberOfBoxes()) ==
          d_common->tag_to_new->getLocalNumberOfNeighborSets());
-#endif
 
    }
 
@@ -470,10 +489,8 @@ void
 BergerRigoutsosNode::setMPI(
    const tbox::SAMRAI_MPI& mpi_object)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_parent == NULL);
    TBOX_ASSERT(d_common->tag_mapped_box_level != NULL);
-#endif
 
    /*
     * If a valid MPI communicator is given, use it instead of the
@@ -562,13 +579,11 @@ BergerRigoutsosNode::setMPI(
    } else {
       d_mpi_tag = 0;
    }
-#ifdef DEBUG_CHECK_ASSERTIONS
    /*
     * Even though owner has different way of getting MPI tag,
     * all processes should start with the same mpi tag.
     */
    TBOX_ASSERT(d_mpi_tag == 0);
-#endif
 
    /*
     * Set the processor group (for the root dendogram node).
@@ -596,11 +611,9 @@ BergerRigoutsosNode::continueAlgorithm()
    d_common->t_continue_algorithm->start();
    ++d_n_cont;
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_parent == NULL || d_parent->d_wait_phase != completed);
    // TBOX_ASSERT( ! inRelaunchQueue(this) );
    TBOX_ASSERT(inRelaunchQueue(this) == d_common->relaunch_queue.end());
-#endif
 
    /*
     * Skip right to where we left off,
@@ -663,9 +676,7 @@ TO_BE_LAUNCHED:
 
    if (d_parent == NULL || d_overlap > 0 || d_common->rank == d_owner) {
 
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(inGroup(d_group));
-#endif
 
       // Set up communication group for operations in participating group.
       d_comm_group = new tbox::AsyncCommGroup(
@@ -731,10 +742,8 @@ REDUCE_HISTOGRAM:
          computeMinimalBoundingBoxForTags();
          acceptOrSplitBox();
          d_common->t_local_tasks->stop();
-#ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(boxAccepted() || boxRejected() ||
             (boxHasNoTag() && d_parent == 0));
-#endif
          if (!boxHasNoTag()) {
             /*
              * A mapped_box_level node is created even if box is not acceptable,
@@ -862,13 +871,11 @@ RUN_CHILDREN:
       d_comm_group = NULL;
 
    } else {
-#ifdef DEBUG_CHECK_ASSERTIONS
       /*
        * This process is not in the group that decides on the box for
        * this dendogram node.
        */
       TBOX_ASSERT(!inGroup(d_group));
-#endif
    }
 
    if (d_parent == NULL) {
@@ -885,12 +892,10 @@ RUN_CHILDREN:
       }
    }
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_lft_child == NULL);
    TBOX_ASSERT(d_rht_child == NULL);
    // TBOX_ASSERT( ! inRelaunchQueue(this) );
    TBOX_ASSERT(inRelaunchQueue(this) == d_common->relaunch_queue.end());
-#endif
 
    /*
     * Broadcast the result to dropouts.
@@ -981,30 +986,22 @@ BCAST_TO_DROPOUTS:
       d_comm_group = NULL;
    }
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_common->num_nodes_owned >= 0);
-#endif
 
    // Adjust counters.
    --(d_common->num_nodes_active);
    ++(d_common->num_nodes_completed);
    if (d_owner == d_common->rank) {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(d_common->num_nodes_owned > 0);
-#endif
       --(d_common->num_nodes_owned);
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(d_common->num_nodes_owned >= 0);
-#endif
    }
    d_common->num_conts_to_complete += d_n_cont;
    if (d_common->max_conts_to_complete < d_n_cont) {
       d_common->max_conts_to_complete = d_n_cont;
    }
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_common->num_nodes_owned >= 0);
-#endif
 
    if (d_common->log_node_history) {
       tbox::plog << d_common->num_nodes_allocated << "-allocated  "
@@ -1030,11 +1027,9 @@ BCAST_TO_DROPOUTS:
    if (d_parent != NULL &&
        d_parent->d_lft_child->d_wait_phase == completed &&
        d_parent->d_rht_child->d_wait_phase == completed) {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(d_parent->d_wait_phase == run_children);
       // TBOX_ASSERT( ! inRelaunchQueue(d_parent) );
       TBOX_ASSERT(inRelaunchQueue(d_parent) == d_common->relaunch_queue.end());
-#endif
       // d_common->relaunch_queue.addItem(d_parent);
       d_common->relaunch_queue.push_front(d_parent);
       if (d_common->log_node_history) {
@@ -1072,6 +1067,40 @@ RETURN:
 
    return d_wait_phase;
 }
+
+void
+BergerRigoutsosNode::runChildren_start()
+{
+   /*
+    * Children were created to store temporary data
+    * and determine participation. Now, run them.
+    */
+
+   /*
+    * Should only be here if box is rejected based on calculation.
+    */
+   TBOX_ASSERT(d_box_acceptance == rejected_by_calculation ||
+      d_box_acceptance == rejected_by_owner);
+
+   d_lft_child->d_wait_phase = to_be_launched;
+   d_rht_child->d_wait_phase = to_be_launched;
+
+   /*
+    * Queue the children so they get executed.
+    * Put them at the front so that in synchronous
+    * mode, they can complete first before moving
+    * to another task (important in synchronous mode).
+    * It also does not hurt to put children at the
+    * front of the queue because they have
+    * immediate computation (compute histogram)
+    * to perform.  Put the left child in front
+    * of the right to more closely match the
+    * progression of the recursive BR (not essential).
+    */
+   d_common->relaunch_queue.push_front(d_rht_child);
+   d_common->relaunch_queue.push_front(d_lft_child);
+}
+
 
 /*
  ********************************************************************
@@ -1288,12 +1317,9 @@ BergerRigoutsosNode::broadcastAcceptability_start()
    ;
 
    if (d_common->rank == d_owner) {
-#ifdef DEBUG_CHECK_ASSERTION
       TBOX_ASSERT(d_box_acceptance == rejected_by_calculation ||
          d_box_acceptance == accepted_by_calculation ||
-         (d_parent == NULL && d_box_acceptance == hasnotag_by_owner)
-         );
-#endif
+         (d_parent == NULL && d_box_acceptance == hasnotag_by_owner));
       d_send_msg.resize(buffer_size, BAD_INTEGER);
       int* ptr = &d_send_msg[0];
       *(ptr++) = d_num_tags;
@@ -1341,10 +1367,8 @@ BergerRigoutsosNode::broadcastAcceptability_check()
          d_common->num_tags_in_all_nodes = d_num_tags;
       }
       d_box_acceptance = intToBoxAcceptance(*(ptr++));
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(boxAccepted() || boxRejected() ||
          (boxHasNoTag() && d_parent == NULL));
-#endif
       if (!boxHasNoTag()) {
          const hier::LocalId node_local_id(*(ptr++));
          ptr = getBoxFromBuffer(d_box, ptr);
@@ -1391,12 +1415,10 @@ BergerRigoutsosNode::broadcastAcceptability_check()
          d_lft_child->d_mpi_tag = *(ptr++);
          d_rht_child->d_mpi_tag = *(ptr++);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d_lft_child->d_box.numberCells() >= d_common->min_box);
          TBOX_ASSERT(d_rht_child->d_box.numberCells() >= d_common->min_box);
          TBOX_ASSERT(d_lft_child->d_mpi_tag > -1);
          TBOX_ASSERT(d_rht_child->d_mpi_tag > -1);
-#endif
          if (d_common->log_node_history) {
             tbox::plog << d_common->num_nodes_allocated << "-allocated  "
                        << d_common->num_nodes_active << "-active  "
@@ -1532,7 +1554,6 @@ BergerRigoutsosNode::broadcastChildGroups_check()
          d_rht_child->d_group[i] = *(ptr++);
       }
 
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(d_lft_child->d_owner >= 0);
       TBOX_ASSERT(d_lft_child->d_group.size() > 0);
       TBOX_ASSERT((d_lft_child->d_overlap > 0) ==
@@ -1541,7 +1562,6 @@ BergerRigoutsosNode::broadcastChildGroups_check()
       TBOX_ASSERT(d_rht_child->d_group.size() > 0);
       TBOX_ASSERT((d_rht_child->d_overlap > 0) ==
          inGroup(d_rht_child->d_group));
-#endif
 
    }
 
@@ -1551,9 +1571,7 @@ BergerRigoutsosNode::broadcastChildGroups_check()
 void
 BergerRigoutsosNode::broadcastToDropouts_start()
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_common->rank == d_owner || d_overlap == 0);
-#endif
    d_comm_group->setMPITag(d_mpi_tag + bcast_to_dropouts_tag);
 
    const int buffer_size = 1      // d_box_acceptance
@@ -1579,13 +1597,10 @@ BergerRigoutsosNode::broadcastToDropouts_start()
 bool
 BergerRigoutsosNode::broadcastToDropouts_check()
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_common->rank == d_owner || d_overlap == 0);
-#endif
    d_comm_group->checkBcast();
    if (d_comm_group->isDone()) {
       if (d_common->rank != d_owner) {
-#ifdef DEBUG_CHECK_ASSERTIONS
          /*
           * We check for the case of the box having no tags,
           * to keeps things explicit and help detect bugs.
@@ -1595,7 +1610,7 @@ BergerRigoutsosNode::broadcastToDropouts_check()
           * which has no dropout group.
           */
          TBOX_ASSERT(d_recv_msg[0] >= 0);
-#endif
+
          d_box_acceptance = intToBoxAcceptance((d_recv_msg[0] % 2)
                + rejected_by_dropout_bcast);
          const hier::LocalId local_id(d_recv_msg[1]);
@@ -1632,9 +1647,7 @@ BergerRigoutsosNode::makeLocalTagHistogram()
     * Compute the histogram size and allocate space for it.
     */
    for (int d = 0; d < d_dim.getValue(); ++d) {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(d_box.numberCells(d) > 0);
-#endif
       d_histogram[d].clear();
       d_histogram[d].insert(d_histogram[d].end(), d_box.numberCells(d), 0);
    }
@@ -1683,9 +1696,7 @@ BergerRigoutsosNode::makeLocalTagHistogram()
 void
 BergerRigoutsosNode::computeMinimalBoundingBoxForTags()
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!d_box.empty());
-#endif
 
    int d;
 
@@ -1701,9 +1712,7 @@ BergerRigoutsosNode::computeMinimalBoundingBoxForTags()
     * Do not make the box smaller than the min_box requirement.
     */
    for (d = 0; d < d_dim.getValue(); ++d) {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(d_histogram[d].size() != 0);
-#endif
       int* histogram_beg = &d_histogram[d][0];
       int* histogram_end = histogram_beg + d_box.numberCells(d) - 1;
       while (*histogram_beg == 0 &&
@@ -2008,10 +2017,8 @@ BergerRigoutsosNode::acceptOrSplitBox()
 
       d_lft_child->d_box = hier::Box(box_lo, lft_hi, d_block_id);
       d_rht_child->d_box = hier::Box(rht_lo, box_hi, d_block_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(d_lft_child->d_box.numberCells() >= d_common->min_box);
       TBOX_ASSERT(d_rht_child->d_box.numberCells() >= d_common->min_box);
-#endif
 
       d_lft_child->claimMPITag();
       d_rht_child->claimMPITag();
@@ -2240,9 +2247,7 @@ BergerRigoutsosNode::cutAtLaplacian(
 void
 BergerRigoutsosNode::createBox()
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_common->rank == d_owner);
-#endif
    hier::LocalId last_index =
       d_common->new_mapped_box_level->getBoxes().isEmpty() ? d_first_local_id :
       d_common->new_mapped_box_level->getBoxes().back().getLocalId();
@@ -2640,11 +2645,10 @@ BergerRigoutsosNode::shareNewNeighborhoodSetsWithOwners()
             owner,
             d_common->tag_upper_bound,
             &mpi_request[nsend]);
-#ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(ierr == MPI_SUCCESS);
-#else
+#ifndef DEBUG_CHECK_ASSERTIONS
       NULL_USE(ierr);
 #endif
+      TBOX_ASSERT(ierr == MPI_SUCCESS);
    }
    d_common->t_share_new_relationships_send->stop();
 
@@ -2680,18 +2684,14 @@ BergerRigoutsosNode::shareNewNeighborhoodSetsWithOwners()
       ierr = mpi.Probe(MPI_ANY_SOURCE,
             d_common->tag_upper_bound,
             &mpi_status);
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(ierr == MPI_SUCCESS);
-#endif
 
       const int sender = mpi_status.MPI_SOURCE;
       int mesg_size = -1;
       mpi.Get_count(&mpi_status, MPI_INT, &mesg_size);
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(relationship_senders.find(sender) != relationship_senders.end());
       TBOX_ASSERT(recved_from.find(sender) == recved_from.end());
       TBOX_ASSERT(mesg_size >= 0);
-#endif
 
       tbox::Array<int> buf(mesg_size);
       int* ptr = buf.getPointer();
@@ -2701,9 +2701,7 @@ BergerRigoutsosNode::shareNewNeighborhoodSetsWithOwners()
             sender,
             d_common->tag_upper_bound,
             &mpi_status);
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(ierr == MPI_SUCCESS);
-#endif
       d_common->t_share_new_relationships_recv->stop();
 
       d_common->t_share_new_relationships_unpack->start();
@@ -2712,9 +2710,7 @@ BergerRigoutsosNode::shareNewNeighborhoodSetsWithOwners()
          const hier::LocalId new_local_id(*(ptr++));
          hier::BoxId box_id(new_local_id, d_common->rank);
          int n_new_relationships = *(ptr++);
-#ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d_common->new_to_tag->hasNeighborSet(box_id));
-#endif
          if (n_new_relationships > 0) {
             hier::Connector::NeighborhoodIterator base_box_itr =
                d_common->new_to_tag->makeEmptyLocalNeighborhood(box_id);
@@ -2739,14 +2735,79 @@ BergerRigoutsosNode::shareNewNeighborhoodSetsWithOwners()
       ierr = mpi.Waitall(static_cast<int>(relationship_messages.size()),
             mpi_request.getPointer(),
             mpi_statuses.getPointer());
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(ierr == MPI_SUCCESS);
-#endif
       d_common->t_share_new_relationships_send->stop();
    }
 
    d_common->t_share_new_relationships->stop();
 
+}
+
+/*
+ ********************************************************************
+ * Utility methods.
+ ********************************************************************
+ */
+
+int*
+BergerRigoutsosNode::putHistogramToBuffer(
+      int* buffer)
+{
+  int dim_val = d_dim.getValue();
+   for (int d = 0; d < dim_val; ++d) {
+      d_histogram[d].resize(d_box.numberCells(d), BAD_INTEGER);
+      memcpy(buffer,
+         &d_histogram[d][0],
+         d_box.numberCells(d) * sizeof(int));
+      buffer += d_box.numberCells(d);
+   }
+   return buffer;
+}
+
+int*
+BergerRigoutsosNode::getHistogramFromBuffer(
+      int* buffer)
+{
+   unsigned int dim_val = d_dim.getValue();
+   for (unsigned int d = 0; d < dim_val; ++d) {
+      TBOX_ASSERT((int)d_histogram[d].size() == d_box.numberCells(d));
+      // d_histogram[d].resizeArray( d_box.numberCells(d) );
+      memcpy(&d_histogram[d][0],
+         buffer,
+         d_box.numberCells(d) * sizeof(int));
+      buffer += d_box.numberCells(d);
+   }
+   return buffer;
+}
+
+int*
+BergerRigoutsosNode:: putBoxToBuffer(
+      const hier::Box& box,
+      int* buffer) const
+{
+   const hier::IntVector& l = box.lower();
+   const hier::IntVector& u = box.upper();
+   int dim_val = d_dim.getValue();
+   for (int d = 0; d < dim_val; ++d) {
+      *(buffer++) = l(d);
+      *(buffer++) = u(d);
+   }
+   return buffer;
+}
+
+int*
+BergerRigoutsosNode::getBoxFromBuffer(
+   hier::Box& box,
+   int* buffer) const
+{
+   hier::IntVector& l = box.lower();
+   hier::IntVector& u = box.upper();
+   int dim_val = d_dim.getValue();
+   for (int d = 0; d < dim_val; ++d) {
+      l(d) = *(buffer++);
+      u(d) = *(buffer++);
+   }
+   return buffer;
 }
 
 /*
@@ -2767,10 +2828,7 @@ BergerRigoutsosNode::computeDropoutGroup(
    VectorOfInts& dropout_group,
    int add_root) const
 {
-
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(main_group.size() >= sub_group.size());
-#endif
 
    dropout_group.resize(main_group.size(), BAD_INTEGER);
 
@@ -2791,9 +2849,7 @@ BergerRigoutsosNode::computeDropoutGroup(
       }
    }
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(j = sub_group.size());
-#endif
    dropout_group.resize(k, BAD_INTEGER);
 }
 
@@ -2806,13 +2862,12 @@ BergerRigoutsosNode::computeDropoutGroup(
 void
 BergerRigoutsosNode::claimMPITag()
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    /*
     * Each dendogram node should claim no more than one MPI tag
     * so make sure it does not already have one.
     */
    TBOX_ASSERT(d_mpi_tag < 0);
-#endif
+
    d_mpi_tag = d_common->available_mpi_tag;
    d_common->available_mpi_tag = d_mpi_tag + total_phase_tags;
    if (d_mpi_tag + total_phase_tags - 1 >

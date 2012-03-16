@@ -12,10 +12,6 @@
 
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxContainerSingleBlockIterator.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 

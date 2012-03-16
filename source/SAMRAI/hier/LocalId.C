@@ -16,10 +16,6 @@
 
 #include <iostream>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/LocalId.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 

@@ -15,10 +15,6 @@
 
 #ifdef HAVE_SUNDIALS
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/SundialsAbstractVector.I"
-#endif
-
 namespace SAMRAI {
 namespace solv {
 

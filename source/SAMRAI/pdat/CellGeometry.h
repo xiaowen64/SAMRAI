@@ -53,7 +53,10 @@ public:
     */
    static hier::Box
    toCellBox(
-      const hier::Box& box);
+      const hier::Box& box)
+   {
+      return box;
+   }
 
    /*!
     * @brief Transform a CellIndex.
@@ -126,14 +129,20 @@ public:
     * object.
     */
    const hier::Box&
-   getBox() const;
+   getBox() const
+   {
+      return d_box;
+   }
 
    /*!
     * @brief Return the ghost cell width for this cell centered box
     * geometry object.
     */
    const hier::IntVector&
-   getGhosts() const;
+   getGhosts() const
+   {
+      return d_ghosts;
+   }
 
 private:
    /**
@@ -149,7 +158,20 @@ private:
       const hier::Box& fill_box,
       const bool overwrite_interior,
       const hier::Transformation& transformation,
-      const hier::BoxContainer& dst_restrict_boxes);
+      const hier::BoxContainer& dst_restrict_boxes)
+   {
+      hier::BoxContainer dst_boxes;
+      dst_geometry.computeDestinationBoxes(dst_boxes,
+         src_geometry,
+         src_mask,
+         fill_box,
+         overwrite_interior,
+         transformation,
+         dst_restrict_boxes);
+
+      // Create the cell overlap data object using the boxes and source shift
+      return boost::make_shared<CellOverlap>(dst_boxes, transformation);
+   }
 
    static void
    rotateAboutAxis(
@@ -170,7 +192,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/CellGeometry.I"
-#endif
+
 #endif

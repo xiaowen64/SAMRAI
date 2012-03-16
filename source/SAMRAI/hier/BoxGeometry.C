@@ -13,10 +13,6 @@
 
 #include "SAMRAI/hier/BoxGeometry.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxGeometry.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 

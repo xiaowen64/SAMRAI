@@ -245,7 +245,13 @@ public:
     */
    void
    initializeSourceVector(
-      hier::ComponentSelector& allocate_vector) const;
+      hier::ComponentSelector& allocate_vector) const
+   {
+      allocate_vector.clrAllFlags();
+      for (int iri = 0; iri < d_number_refine_items; iri++) {
+         allocate_vector.setFlag(d_refine_items[iri]->d_src);
+      }
+   }
 
    /*!
     * @brief Allocate destination space on the destination level and store the
@@ -287,7 +293,13 @@ public:
     */
    void
    initializeDestinationVector(
-      hier::ComponentSelector& allocate_vector) const;
+      hier::ComponentSelector& allocate_vector) const
+   {
+      allocate_vector.clrAllFlags();
+      for (int iri = 0; iri < d_number_refine_items; iri++) {
+         allocate_vector.setFlag(d_refine_items[iri]->d_dst);
+      }
+   }
 
    /*!
     * @brief Return refine equivalence classes.
@@ -295,14 +307,20 @@ public:
     * The equivalence class information is used in schedule classes.
     */
    const boost::shared_ptr<RefineClasses>&
-   getEquivalenceClasses() const;
+   getEquivalenceClasses() const
+   {
+      return d_refine_classes;
+   }
 
    /*!
     * @brief Return width of ghost cell region to fill which is passed to user
     * supplied physical boundary condition routine.
     */
    const hier::IntVector&
-   getBoundaryFillGhostWidth() const;
+   getBoundaryFillGhostWidth() const
+   {
+      return d_boundary_fill_ghost_width;
+   }
 
    /*!
     * @brief Print the refine schedule data to the specified data stream.
@@ -1241,7 +1259,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/RefineSchedule.I"
-#endif
 #endif

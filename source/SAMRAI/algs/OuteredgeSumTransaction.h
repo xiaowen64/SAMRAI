@@ -14,6 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Transaction.h"
+#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/xfer/RefineClasses.h"
@@ -51,7 +52,13 @@ public:
    static void
    setRefineItems(
       const xfer::RefineClasses::Data ** refine_items,
-      int num_refine_items);
+      int num_refine_items)
+   {
+      TBOX_ASSERT(refine_items != (const xfer::RefineClasses::Data **)NULL);
+      TBOX_ASSERT(num_refine_items >= 0);
+      s_refine_items = refine_items;
+      s_num_refine_items = num_refine_items;
+   }
 
    /*!
     * Static member function to unset the array of refine class data items that
@@ -61,7 +68,11 @@ public:
     * RefineSchedule class.
     */
    static void
-   unsetRefineItems();
+   unsetRefineItems()
+   {
+      s_refine_items = (const xfer::RefineClasses::Data **)NULL;
+      s_num_refine_items = 0;
+   }
 
    /*!
     * Construct a transaction with the specified source and destination
@@ -191,7 +202,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/algs/OuteredgeSumTransaction.I"
-#endif
 #endif

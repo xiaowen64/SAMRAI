@@ -15,6 +15,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Transaction.h"
+#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/xfer/RefineClasses.h"
@@ -52,7 +53,13 @@ public:
    static void
    setRefineItems(
       const RefineClasses::Data** refine_items,
-      int num_refine_items);
+      int num_refine_items)
+   {
+      TBOX_ASSERT(refine_items != (const RefineClasses::Data **)NULL);
+      TBOX_ASSERT(num_refine_items >= 0);
+      s_refine_items = refine_items;
+      s_num_refine_items = num_refine_items;
+   }
 
    /*!
     * Static member function to unset the array of refine class data items that
@@ -61,7 +68,11 @@ public:
     * of different schedules.  The array is unset in the RefineSchedule class.
     */
    static void
-   unsetRefineItems();
+   unsetRefineItems()
+   {
+      s_refine_items = (const RefineClasses::Data **)NULL;
+      s_num_refine_items = 0;
+   }
 
    /*!
     * Static member function to set the transaction time that will be shared
@@ -71,7 +82,10 @@ public:
     */
    static void
    setTransactionTime(
-      const double time);
+      const double time)
+   {
+      s_time = time;
+   }
 
    /*!
     * Construct a transaction with the specified source and destination levels,
@@ -206,7 +220,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/RefineTimeTransaction.I"
-#endif
 #endif

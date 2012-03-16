@@ -13,10 +13,6 @@
 
 #include "SAMRAI/pdat/FaceIterator.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/FaceIterator.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 

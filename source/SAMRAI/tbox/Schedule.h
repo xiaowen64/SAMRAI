@@ -119,7 +119,10 @@ public:
     * in the schedule.
     */
    int
-   getNumLocalTransactions() const;
+   getNumLocalTransactions() const
+   {
+      return d_local_set.size();
+   }
 
    /*!
     * @brief Set the MPI communicator used for communication.
@@ -131,7 +134,10 @@ public:
     */
    void
    setMPI(
-      const SAMRAI_MPI& mpi);
+      const SAMRAI_MPI& mpi)
+   {
+      d_mpi = mpi;
+   }
 
    /*!
     * @brief Specify MPI tag values to use in communication.
@@ -144,7 +150,13 @@ public:
    void
    setMPITag(
       const int first_tag,
-      const int second_tag);
+      const int second_tag)
+   {
+      TBOX_ASSERT(first_tag >= 0);
+      TBOX_ASSERT(second_tag >= 0);
+      d_first_tag = first_tag;
+      d_second_tag = second_tag;
+   }
 
    /*!
     * @brief Specify the message length (in bytes) used in the first
@@ -180,7 +192,11 @@ public:
     */
    void
    setFirstMessageLength(
-      int first_message_length);
+      int first_message_length)
+   {
+      TBOX_ASSERT(first_message_length > 0);
+      d_first_message_length = first_message_length;
+   }
 
    /*!
     * @brief Perform the communication described by the schedule.
@@ -236,7 +252,11 @@ private:
    void
    allocateCommunicationObjects();
    void
-   deallocateCommunicationObjects();
+   deallocateCommunicationObjects()
+   {
+      delete[] d_coms;
+      d_coms = NULL;
+   }
 
    void
    postReceives();
@@ -261,7 +281,11 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   initializeCallback();
+   initializeCallback()
+   {
+      TimerStruct& timers(s_static_timers[s_default_timer_prefix]);
+      getAllTimers(s_default_timer_prefix, timers);
+   }
 
    /*!
     * Free static timers.
@@ -269,7 +293,10 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   finalizeCallback();
+   finalizeCallback()
+   {
+      s_static_timers.clear();
+   }
 
    /*
     * @brief Transactions in this schedule.
@@ -392,7 +419,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/Schedule.I"
-#endif
 #endif

@@ -19,10 +19,6 @@
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/InputManager.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 

@@ -15,6 +15,7 @@
 #include "SAMRAI/tbox/AsyncCommStage.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/Timer.h"
+#include "SAMRAI/tbox/TimerManager.h"
 
 #include <vector>
 
@@ -184,7 +185,10 @@ public:
     */
    void
    setUseBlockingSendToParent(
-      const bool flag);
+      const bool flag)
+   {
+      d_use_blocking_send_to_parent = flag;
+   }
 
    /*!
     * @brief Set whether sends to children should be blocking.
@@ -195,7 +199,10 @@ public:
     */
    void
    setUseBlockingSendToChildren(
-      const bool flag);
+      const bool flag)
+   {
+      d_use_blocking_send_to_children = flag;
+   }
 
    //@{
 
@@ -296,7 +303,10 @@ public:
     * @return Whether operation is completed.
     */
    bool
-   checkSumReduce();
+   checkSumReduce()
+   {
+      return checkReduce();
+   }
 
    /*!
     * @brief Check the current communication and complete it if all
@@ -325,7 +335,10 @@ public:
    //@}
 
    int
-   getNumberOfChildren() const;
+   getNumberOfChildren() const
+   {
+      return static_cast<int>(d_nchild);
+   }
 
    void
    logCurrentState(
@@ -355,7 +368,12 @@ private:
     * Use MPI collective function call to do communication.
     */
    bool
-   bcastByMpiCollective();
+   bcastByMpiCollective()
+   {
+      d_mpi.Bcast(d_external_buf, d_external_size, MPI_INT, d_root_rank);
+      d_next_task_op = none;
+      return true;
+   }
 
    /*
     * Use MPI collective function call to do communication.
@@ -440,7 +458,12 @@ private:
       const int group_size);
 
    void
-   resetStatus();
+   resetStatus()
+   {
+      d_mpi_status.MPI_TAG=
+         d_mpi_status.MPI_SOURCE=
+            d_mpi_status.MPI_ERROR= -1;
+   }
 
    //@{
    /*!
@@ -505,7 +528,13 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   initializeCallback();
+   initializeCallback()
+   {
+      t_reduce_data = TimerManager::getManager()->
+         getTimer("tbox::AsyncCommGroup::reduceData()");
+      t_wait_all = TimerManager::getManager()->
+         getTimer("tbox::AsyncCommGroup::mpi_wait_all");
+   }
 
    /*!
     * @brief Free static timers.
@@ -513,7 +542,11 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   finalizeCallback();
+   finalizeCallback()
+   {
+      t_reduce_data.reset();
+      t_wait_all.reset();
+   }
 
    /*!
     * @brief Number of children per node.
@@ -654,9 +687,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/AsyncCommGroup.I"
-#endif
 
 #endif  // included_tbox_AsyncCommGroup

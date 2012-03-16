@@ -15,6 +15,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxId.h"
 #include "SAMRAI/tbox/Database.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <iostream>
@@ -86,77 +87,142 @@ public:
     */
 
    iterator
-   begin();
+   begin()
+   {
+      return d_map.begin();
+   }
 
    iterator
-   end();
+   end()
+   {
+      return d_map.end();
+   }
 
    const_iterator
-   begin() const;
+   begin() const
+   {
+      return d_map.begin();
+   }
 
    const_iterator
-   end() const;
+   end() const
+   {
+      return d_map.end();
+   }
 
    reverse_iterator
-   rbegin();
+   rbegin()
+   {
+      return d_map.rbegin();
+   }
 
    reverse_iterator
-   rend();
+   rend()
+   {
+      return d_map.rend();
+   }
 
    iterator
    insert(
       iterator i,
-      const value_type& v);
+      const value_type& v)
+   {
+      return d_map.insert(i, v);
+   }
 
    void
    erase(
-      iterator i);
+      iterator i)
+   {
+      d_map.erase(i);
+   }
 
    size_type
    erase(
-      const key_type& k);
+      const key_type& k)
+   {
+      TBOX_ASSERT(k.getPeriodicId().getPeriodicValue() == 0);
+      return d_map.erase(k);
+   }
 
    void
    erase(
       iterator first,
-      iterator last);
+      iterator last)
+   {
+      d_map.erase(first, last);
+   }
 
    size_t
-   size() const;
+   size() const
+   {
+      return d_map.size();
+   }
 
    bool
-   empty() const;
+   empty() const
+   {
+      return d_map.empty();
+   }
 
    void
-   clear();
+   clear()
+   {
+      d_map.clear();
+   }
 
    NeighborSet&
    operator [] (
-      const key_type& k);
+      const key_type& k)
+   {
+      TBOX_ASSERT(k.getPeriodicId().getPeriodicValue() == 0);
+      return d_map[k];
+   }
 
    iterator
    find(
-      const key_type& k);
+      const key_type& k)
+   {
+      TBOX_ASSERT(k.getPeriodicId().getPeriodicValue() == 0);
+      return d_map.find(k);
+   }
 
    const_iterator
    find(
-      const key_type& k) const;
+      const key_type& k) const
+   {
+      TBOX_ASSERT(k.getPeriodicId().getPeriodicValue() == 0);
+      return d_map.find(k);
+   }
 
    NeighborhoodSet&
    operator = (
-      const NeighborhoodSet& rhs);
+      const NeighborhoodSet& rhs)
+   {
+      d_map = rhs.d_map;
+      return *this;
+   }
 
    bool
    operator == (
-      const NeighborhoodSet& rhs) const;
+      const NeighborhoodSet& rhs) const
+   {
+      return (d_map == rhs.d_map);
+   }
 
    bool
    operator != (
-      const NeighborhoodSet& rhs) const;
+      const NeighborhoodSet& rhs) const
+   {
+      return (d_map != rhs.d_map);
+   }
 
    void
    swap(
-      NeighborhoodSet& other);
+      NeighborhoodSet& other)
+   {
+      d_map.swap(other.d_map);
+   }
 
    //@}
 
@@ -268,7 +334,12 @@ public:
     * @param[out] output_neighborhood_set
     */
    void
-   removePeriodicNeighbors();
+   removePeriodicNeighbors()
+   {
+      for (iterator ei = begin(); ei != end(); ++ei) {
+         ei->second.removePeriodicImageBoxes();
+      }
+   }
 
    /*!
     * @brief Insert all neighbors from a NeighborhoodSet into a
@@ -344,7 +415,11 @@ public:
       friend std::ostream&
       operator << (
          std::ostream& s,
-         const Outputter& f);
+         const Outputter& f)
+      {
+         f.d_set.recursivePrint(s, f.d_border, f.d_detail_depth);
+         return s;
+      }
 
 private:
       friend class NeighborhoodSet;
@@ -385,7 +460,10 @@ private:
    Outputter
    format(
       const std::string& border = std::string(),
-      int detail_depth = 0) const;
+      int detail_depth = 0) const
+   {
+      return Outputter(*this, border, detail_depth);
+   }
 
    /*!
     * @brief Print the contents of the object recursively.
@@ -417,9 +495,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/NeighborhoodSet.I"
-#endif
 
 #endif // included_hier_NeighborhoodSet

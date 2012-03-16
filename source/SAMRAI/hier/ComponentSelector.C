@@ -12,10 +12,8 @@
 #define included_hier_ComponentSelector_C
 
 #include "SAMRAI/hier/ComponentSelector.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/ComponentSelector.I"
-#endif
+#include "SAMRAI/tbox/SAMRAIManager.h"
+#include "SAMRAI/tbox/MathUtilities.h"
 
 namespace SAMRAI {
 namespace hier {

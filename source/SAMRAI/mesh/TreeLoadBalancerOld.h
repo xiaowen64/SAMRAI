@@ -23,6 +23,7 @@
 #include "SAMRAI/tbox/Statistic.h"
 #include "SAMRAI/tbox/Statistician.h"
 #include "SAMRAI/tbox/Timer.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <iostream>
@@ -168,7 +169,10 @@ public:
     */
    void
    setUniformWorkload(
-      int level_number = -1);
+      int level_number = -1)
+   {
+      d_workload_data_id[level_number] = -1;
+   }
 
    /*!
     * @brief Return true if load balancing procedure for given level
@@ -220,7 +224,12 @@ public:
     */
    void
    printStatistics(
-      std::ostream& output_stream = tbox::plog) const;
+      std::ostream& output_stream = tbox::plog) const
+   {
+      BalanceUtilities::gatherAndReportLoadBalance(d_load_stat,
+         tbox::SAMRAI_MPI::getSAMRAIWorld(),
+         output_stream);
+   }
 
 
 
@@ -289,30 +298,53 @@ private:
        * @param[in] other
        */
       const BoxInTransit&
-      operator = (const BoxInTransit& other);
+      operator = (const BoxInTransit& other)
+      {
+         d_box = other.d_box;
+         d_orig_box = other.d_orig_box;
+         d_load = other.d_load;
+         d_proc_hist = other.d_proc_hist;
+         return *this;
+      }
 
       //! @brief Return the owner rank.
       int
-      getOwnerRank() const;
+      getOwnerRank() const
+      {
+         return d_box.getOwnerRank();
+      }
 
       //! @brief Return the LocalId.
       hier::LocalId
-      getLocalId() const;
+      getLocalId() const
+      {
+         return d_box.getLocalId();
+      }
 
       //! @brief Return the Box.
       hier::Box&
-      getBox();
+      getBox()
+      {
+         return d_box;
+      }
 
       //! @brief Return the Box.
       const hier::Box&
-      getBox() const;
+      getBox() const
+      {
+         return d_box;
+      }
 
       /*!
        * @brief Return number of ints required for putting a putting the
        * object in message passing buffer.
        */
       int
-      commBufferSize() const;
+      commBufferSize() const
+      {
+         return 2 * hier::Box::commBufferSize(d_box.getDim()) + 2 +
+            static_cast<int>(d_proc_hist.size());
+      }
 
       /*!
        * @brief Put self into a int buffer.
@@ -396,7 +428,13 @@ private:
       bool
       operator () (
          const BoxInTransit& a,
-         const BoxInTransit& b) const;
+         const BoxInTransit& b) const
+      {
+         if (a.getBox().size() != b.getBox().size()) {
+            return a.d_load > b.d_load;
+         }
+         return a.d_box.getId() < b.d_box.getId();
+      }
    };
 
 
@@ -681,31 +719,56 @@ private:
    combinedBreakingPenalty(
       double balance_penalty,
       double surface_penalty,
-      double slender_penalty) const;
+      double slender_penalty) const
+   {
+      double combined_penalty =
+         d_balance_penalty_wt * balance_penalty * balance_penalty
+         + d_surface_penalty_wt * surface_penalty * surface_penalty
+         + d_slender_penalty_wt * slender_penalty * slender_penalty;
+      return combined_penalty;
+   }
 
    double
    computeBalancePenalty(
       const std::vector<hier::Box>& a,
       const std::vector<hier::Box>& b,
-      double off_balance) const;
+      double imbalance) const
+   {
+      NULL_USE(a);
+      NULL_USE(b);
+      return tbox::MathUtilities<double>::Abs(imbalance);
+   }
+
    double
    computeBalancePenalty(
       const TransitSet& a,
       const TransitSet& b,
-      double off_balance) const;
+      double imbalance) const
+   {
+      NULL_USE(a);
+      NULL_USE(b);
+      return tbox::MathUtilities<double>::Abs(imbalance);
+   }
+
    double
    computeBalancePenalty(
       const hier::Box& a,
-      double off_balance) const;
+      double imbalance) const
+   {
+      NULL_USE(a);
+      return tbox::MathUtilities<double>::Abs(imbalance);
+   }
 
    double
    computeSurfacePenalty(
       const std::vector<hier::Box>& a,
       const std::vector<hier::Box>& b) const;
+
    double
    computeSurfacePenalty(
       const TransitSet& a,
       const TransitSet& b) const;
+
    double
    computeSurfacePenalty(
       const hier::Box& a) const;
@@ -714,10 +777,12 @@ private:
    computeSlenderPenalty(
       const std::vector<hier::Box>& a,
       const std::vector<hier::Box>& b) const;
+
    double
    computeSlenderPenalty(
       const TransitSet& a,
       const TransitSet& b) const;
+
    double
    computeSlenderPenalty(
       const hier::Box& a) const;
@@ -751,14 +816,29 @@ private:
     */
    int
    getWorkloadDataId(
-      int level_number) const;
+      int level_number) const
+   {
+      TBOX_ASSERT(level_number >= 0);
+      return (level_number < d_workload_data_id.getSize() ?
+         d_workload_data_id[level_number] :
+         d_master_workload_data_id);
+   }
 
    /*!
     * @brief Compute the load for a Box.
     */
    double
    computeLoad(
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      /*
+       * Currently only for uniform loads, where the load is equal
+       * to the number of cells.  For non-uniform loads, this method
+       * needs the patch data index for the load.  It would summ up
+       * the individual cell loads in the cell.
+       */
+      return double(box.size());
+   }
 
    /*!
     * @brief Compute the load for the Box, restricted to where it
@@ -767,7 +847,16 @@ private:
    double
    computeLoad(
       const hier::Box& box,
-      const hier::Box& restriction) const;
+      const hier::Box& restriction) const
+   {
+      /*
+       * Currently only for uniform loads, where the load is equal
+       * to the number of cells.  For non-uniform loads, this method
+       * needs the patch data index for the load.  It would summ up
+       * the individual cell loads in the overlap region.
+       */
+      return double((box * restriction).size());
+   }
 
    /*
     * Count the local workload.
@@ -1013,7 +1102,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/mesh/TreeLoadBalancerOld.I"
-#endif
+
 #endif

@@ -15,10 +15,6 @@
 #include "SAMRAI/pdat/CellOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/CellGeometry.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 

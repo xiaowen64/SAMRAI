@@ -125,7 +125,14 @@ public:
     * Uninitialized trees can be initialized using generateTree().
     */
    void
-   clear();
+   clear()
+   {
+      d_bounding_box.setEmpty();
+      d_left_child.reset();
+      d_right_child.reset();
+      d_boxes.clear();
+      d_center_child.reset();
+   }
 
    /*!
     * @brief Check whether the tree has been initialized.
@@ -133,7 +140,10 @@ public:
     * Uninitialized trees can be initialized using generateTree().
     */
    bool
-   isInitialized() const;
+   isInitialized() const
+   {
+      return !d_bounding_box.empty();
+   }
 
    //@{
 
@@ -143,7 +153,10 @@ public:
     * @brief Return the dimension of the boxes in the tree.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
    //@}
 
@@ -326,7 +339,4 @@ public:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxTree.I"
-#endif
 #endif

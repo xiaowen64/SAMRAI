@@ -24,6 +24,7 @@
 #include "SAMRAI/hier/PatchLevelFactory.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Serializable.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
@@ -371,7 +372,11 @@ public:
     */
    boost::shared_ptr<PatchLevel>
    getPatchLevel(
-      const int level) const;
+      const int level) const
+   {
+      TBOX_ASSERT((level >= 0) && (level < d_number_levels));
+      return d_patch_levels[level];
+   }
 
    /*!
     * @brief Get the patch descriptor.
@@ -380,7 +385,10 @@ public:
     * the patch hierarchy.
     */
    boost::shared_ptr<PatchDescriptor>
-   getPatchDescriptor() const;
+   getPatchDescriptor() const
+   {
+      return d_patch_descriptor;
+   }
 
    /*!
     * @brief Check if the level exists
@@ -392,7 +400,10 @@ public:
     */
    bool
    levelExists(
-      const int level) const;
+      const int level) const
+   {
+      return (level < d_number_levels) && d_patch_levels[level];
+   }
 
    /*!
     * @brief Check if a finer level exists.
@@ -405,7 +416,10 @@ public:
     */
    bool
    finerLevelExists(
-      const int level) const;
+      const int level) const
+   {
+      return (level + 1 < d_number_levels) && d_patch_levels[level + 1];
+   }
 
    /*!
     * @brief Get the number of levels in the hierarchy.
@@ -413,7 +427,10 @@ public:
     * @return The number of levels that currently exist in the hierarchy.
     */
    int
-   getNumberOfLevels() const;
+   getNumberOfLevels() const
+   {
+      return d_number_levels;
+   }
 
    /*!
     * @brief Get the finest level in the hierarchy.
@@ -422,7 +439,10 @@ public:
     * existing in the hierarchy.
     */
    int
-   getFinestLevelNumber() const;
+   getFinestLevelNumber() const
+   {
+      return d_number_levels - 1;
+   }
 
    /*!
     * @brief Check whether specified level can be refined.
@@ -433,7 +453,11 @@ public:
     */
    bool
    levelCanBeRefined(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT(level_number >= 0);
+      return level_number < getMaxNumberOfLevels() - 1;
+   }
 
    /*!
     * @brief Return a pointer to the specified BoxLevel.
@@ -444,7 +468,10 @@ public:
     */
    const boost::shared_ptr<BoxLevel>&
    getBoxLevel(
-      const int level) const;
+      const int level) const
+   {
+      return d_patch_levels[level]->getBoxLevel();
+   }
 
    /*!
     * @brief Get the connector between two levels
@@ -534,14 +561,20 @@ public:
  * @return The domain description as a BoxLevel
  */
    const BoxLevel&
-   getDomainBoxLevel() const;
+   getDomainBoxLevel() const
+   {
+      return d_domain_mapped_box_level;
+   }
 
    /*!
     * @brief Returns the SAMRAI_MPI communicator over which the domain
     * BoxLevel is distributed.
     */
    const tbox::SAMRAI_MPI&
-   getMPI() const;
+   getMPI() const
+   {
+      return d_domain_mapped_box_level.getMPI();
+   }
 
    //@{
 
@@ -561,7 +594,23 @@ public:
     */
    void
    setMaxNumberOfLevels(
-      int max_levels);
+      int max_levels)
+   {
+      d_max_levels = max_levels;
+      if (d_max_levels != int(d_ratio_to_coarser.size())) {
+         d_ratio_to_coarser.resize(d_max_levels, d_ratio_to_coarser.back());
+         d_smallest_patch_size.resize(
+            d_max_levels,
+            d_smallest_patch_size.back());
+         d_largest_patch_size.resize(
+            d_max_levels,
+            d_largest_patch_size.back());
+         d_proper_nesting_buffer.resize(
+            d_max_levels - 1,
+            d_proper_nesting_buffer.empty() ?
+               1 : d_proper_nesting_buffer.back());
+      }
+   }
 
    /*!
     * @brief Get the maximum number of levels allowed on the hierarchy.
@@ -571,7 +620,10 @@ public:
     * @return The maximum number of levels allowed on the hierarchy.
     */
    int
-   getMaxNumberOfLevels() const;
+   getMaxNumberOfLevels() const
+   {
+      return d_max_levels;
+   }
 
    /*!
     * @brief Set the ratio to coarser level.
@@ -582,7 +634,11 @@ public:
    void
    setRatioToCoarserLevel(
       const IntVector& ratio,
-      int level);
+      int level)
+   {
+      TBOX_ASSERT(level > 0 && level < d_max_levels);
+      d_ratio_to_coarser[level] = ratio;
+   }
 
    /*!
     * @brief Get the ratio between specified level and next coarser level
@@ -593,7 +649,11 @@ public:
     */
    const IntVector&
    getRatioToCoarserLevel(
-      int level) const;
+      int level) const
+   {
+      TBOX_ASSERT(level < d_max_levels);
+      return d_ratio_to_coarser[level];
+   }
 
    /*!
     * @brief Set the smallest patch size on the given level.
@@ -604,7 +664,11 @@ public:
    void
    setSmallestPatchSize(
       const IntVector& size,
-      int level);
+      int level)
+   {
+      TBOX_ASSERT(level >= 0 && level < d_max_levels);
+      d_smallest_patch_size[level] = size;
+   }
 
    /*!
     * @brief Get the smallest patch size on the given level.
@@ -615,7 +679,11 @@ public:
     */
    const IntVector&
    getSmallestPatchSize(
-      int level) const;
+      int level) const
+   {
+      TBOX_ASSERT(level >= 0 && level < d_max_levels);
+      return d_smallest_patch_size[level];
+   }
 
    /*!
     * @brief Set the largest patch size on the given level.
@@ -626,7 +694,11 @@ public:
    void
    setLargestPatchSize(
       const IntVector& size,
-      int level);
+      int level)
+   {
+      TBOX_ASSERT(level >= 0 && level < d_max_levels);
+      d_largest_patch_size[level] = size;
+   }
 
    /*!
     * @brief Get the largest patch size.
@@ -637,7 +709,11 @@ public:
     */
    const IntVector&
    getLargestPatchSize(
-      int level) const;
+      int level) const
+   {
+      TBOX_ASSERT(level >= 0 && level < d_max_levels);
+      return d_largest_patch_size[level];
+   }
 
    /*!
     * @brief Get the proper nesting buffer for a specific level.
@@ -655,20 +731,30 @@ public:
     */
    int
    getProperNestingBuffer(
-      int ln) const;
+      int ln) const
+   {
+      TBOX_ASSERT(ln >= 0 && ln < d_max_levels);
+      return (ln < d_max_levels - 1) ? d_proper_nesting_buffer[ln] : -1;
+   }
 
    /*!
     * @brief Get flag for allowing patches smaller than ghost width.
     */
    bool
-   allowPatchesSmallerThanGhostWidth() const;
+   allowPatchesSmallerThanGhostWidth() const
+   {
+      return d_allow_patches_smaller_than_ghostwidth;
+   }
 
    /*!
     * @brief Get flag for allowing patches smaller than user-provided minimum
     * size.
     */
    bool
-   allowPatchesSmallerThanMinimumSize() const;
+   allowPatchesSmallerThanMinimumSize() const
+   {
+      return d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps;
+   }
 
    //@}
 
@@ -686,7 +772,10 @@ public:
     */
    void
    setPatchFactory(
-      const boost::shared_ptr<PatchFactory>& factory);
+      const boost::shared_ptr<PatchFactory>& factory)
+   {
+      d_patch_factory = factory;
+   }
 
    /*!
     * @brief Set the factory used to create patch level objects.
@@ -698,7 +787,10 @@ public:
     */
    void
    setPatchLevelFactory(
-      const boost::shared_ptr<PatchLevelFactory>& factory);
+      const boost::shared_ptr<PatchLevelFactory>& factory)
+   {
+      d_patch_level_factory = factory;
+   }
 
    /*!
     * @brief Get the grid geometry.
@@ -706,7 +798,10 @@ public:
     * @return a pointer to the grid geometry object.
     */
    boost::shared_ptr<GridGeometry>
-   getGridGeometry() const;
+   getGridGeometry() const
+   {
+      return d_grid_geometry;
+   }
 
    /*!
     * @brief Writes the state of the PatchHierarchy object and the PatchLevels
@@ -780,7 +875,10 @@ public:
     * @return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
    /*!
     * @brief Print a patch hierarchy to a specified degree of detail.
@@ -814,7 +912,10 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*
@@ -859,7 +960,12 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   initializeCallback();
+   initializeCallback()
+   {
+      /*
+       * No-op.  This class doesn't
+       */
+   }
 
    /*!
     * @brief Free static timers.
@@ -1076,7 +1182,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchHierarchy.I"
-#endif
 #endif

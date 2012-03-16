@@ -130,14 +130,20 @@ public:
     * @brief Return number of equivalence classes maintained by this object.
     */
    int
-   getNumberOfEquivalenceClasses() const;
+   getNumberOfEquivalenceClasses() const
+   {
+      return d_equivalence_class_indices.size();
+   }
 
    /*!
     * @brief Return total number of refine items that have been registered and
     * stored in the RefineClasses object
     */
    int
-   getNumberOfRefineItems() const;
+   getNumberOfRefineItems() const
+   {
+      return d_num_refine_items;
+   }
 
    /*!
     * @brief Get representative item for a given equivalence class index.
@@ -151,7 +157,13 @@ public:
     */
    const RefineClasses::Data&
    getClassRepresentative(
-      int equiv_class_index) const;
+      int equiv_class_index) const
+   {
+      TBOX_ASSERT((equiv_class_index >= 0) &&
+         (equiv_class_index < getNumberOfEquivalenceClasses()));
+      return d_refine_classes_data_items[
+         d_equivalence_class_indices[equiv_class_index].getFirstItem()];
+   }
 
    /*!
     * @brief Get a refine item from the array of all refine items held by
@@ -168,7 +180,10 @@ public:
     */
    RefineClasses::Data&
    getRefineItem(
-      const int refine_item_array_id);
+      const int refine_item_array_id)
+   {
+      return d_refine_classes_data_items[refine_item_array_id];
+   }
 
    /*!
     * @brief Return an iterator for the list of array ids corresponding to the
@@ -190,7 +205,14 @@ public:
     */
    tbox::List<int>::Iterator
    getIterator(
-      int equiv_class_index);
+      int equiv_class_index)
+   {
+      TBOX_ASSERT((equiv_class_index >= 0) &&
+         (equiv_class_index < getNumberOfEquivalenceClasses()));
+      return tbox::List<int>::Iterator(
+         d_equivalence_class_indices[equiv_class_index]);
+
+   }
 
    /*!
     * @brief Given a RefineClasses::Data object, insert it into the proper
@@ -323,7 +345,10 @@ public:
     * necessary or when increaseRefineItemArraySize() is called.
     */
    int
-   getRefineItemArraySize() const;
+   getRefineItemArraySize() const
+   {
+      return d_refine_classes_data_items.size();
+   }
 
    /*!
     * @brief Increase the allocated size of the array storing refine items.
@@ -337,7 +362,12 @@ public:
     */
    void
    increaseRefineItemArraySize(
-      const int size);
+      const int size)
+   {
+      if (size > d_refine_classes_data_items.size()) {
+         d_refine_classes_data_items.resizeArray(size);
+      }
+   }
 
    /*!
     * @brief Print data for all refine items to the specified output stream.
@@ -431,9 +461,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/RefineClasses.I"
-#endif
 
 #endif

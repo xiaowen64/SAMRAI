@@ -84,7 +84,11 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   initializeCallback();
+   initializeCallback()
+   {
+      hier::PatchHierarchy::registerAutoConnectorWidthRequestorStrategy(
+         s_auto_registered_connector_width_requestor);
+   }
 
    /*!
     * Free static timers.
@@ -92,7 +96,9 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   finalizeCallback();
+   finalizeCallback()
+   {
+   }
 
    /*!
     * @brief Static object that is auto-registered in PatchHierarchy
@@ -117,7 +123,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.I"
-#endif
 #endif

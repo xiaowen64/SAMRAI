@@ -19,6 +19,7 @@
 #include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 #include "SAMRAI/xfer/CoarsenTransactionFactory.h"
 #include "SAMRAI/hier/PatchLevel.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <iostream>
@@ -201,7 +202,11 @@ public:
       const int src,
       const boost::shared_ptr<hier::CoarsenOperator>& opcoarsen,
       const boost::shared_ptr<VariableFillPattern>& var_fill_pattern =
-         boost::shared_ptr<VariableFillPattern>());
+         boost::shared_ptr<VariableFillPattern>())
+   {
+      registerCoarsen(dst, src, opcoarsen,
+         hier::IntVector::getZero(d_dim), var_fill_pattern);
+   }
 
    /*!
     * @brief Create a communication schedule to coarsen data from the given
@@ -262,7 +267,11 @@ public:
     */
    bool
    checkConsistency(
-      const boost::shared_ptr<CoarsenSchedule>& schedule) const;
+      const boost::shared_ptr<CoarsenSchedule>& schedule) const
+   {
+      TBOX_ASSERT(schedule);
+      return d_coarsen_classes->classesMatch(schedule->getEquivalenceClasses());
+   }
 
    /*!
     * @brief Given a previously-generated coarsen schedule, reconfigure it to
@@ -296,7 +305,10 @@ public:
     * @brief Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    CoarsenAlgorithm(
@@ -335,7 +347,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/CoarsenAlgorithm.I"
-#endif
 #endif

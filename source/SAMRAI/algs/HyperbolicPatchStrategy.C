@@ -15,10 +15,6 @@
 
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/algs/HyperbolicPatchStrategy.I"
-#endif
-
 namespace SAMRAI {
 namespace algs {
 

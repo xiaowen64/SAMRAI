@@ -15,6 +15,7 @@
 
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Index.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
 namespace pdat {
@@ -64,7 +65,12 @@ public:
     */
    EdgeIndex&
    operator = (
-      const EdgeIndex& rhs);
+      const EdgeIndex& rhs)
+   {
+      hier::Index::operator = (rhs);
+      d_axis = rhs.d_axis;
+      return *this;
+   }
 
    /**
     * The edge index destructor does nothing interesting.
@@ -75,14 +81,20 @@ public:
     * Get the axis for which this edge index is defined (X=0, Y=1, Z=2).
     */
    int
-   getAxis() const;
+   getAxis() const
+   {
+      return d_axis;
+   }
 
    /**
     * Set the edge axis (X=0, Y=1, Z=2).
     */
    void
    setAxis(
-      const int axis);
+      const int axis)
+   {
+      d_axis = axis;
+   }
 
    /**
     * For dimension 2, converts the edge index into the index on the
@@ -102,84 +114,144 @@ public:
     */
    EdgeIndex&
    operator += (
-      const hier::IntVector& rhs);
+      const hier::IntVector& rhs)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      hier::Index::operator += (rhs);
+      return *this;
+   }
 
    /**
     * Plus operator for a edge index and an integer vector.
     */
    EdgeIndex
    operator + (
-      const hier::IntVector& rhs) const;
+      const hier::IntVector& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      EdgeIndex tmp = *this;
+      tmp += rhs;
+      return tmp;
+   }
 
    /**
     * Plus-equals operator for a edge index and an integer.
     */
    EdgeIndex&
    operator += (
-      const int rhs);
+      const int rhs)
+   {
+      hier::Index::operator += (rhs);
+      return *this;
+   }
 
    /**
     * Plus operator for a edge index and an integer.
     */
    EdgeIndex
    operator + (
-      const int rhs) const;
+      const int rhs) const
+   {
+      EdgeIndex tmp = *this;
+      tmp += rhs;
+      return tmp;
+   }
 
    /**
     * Minus-equals operator for a edge index and an integer vector.
     */
    EdgeIndex&
    operator -= (
-      const hier::IntVector& rhs);
+      const hier::IntVector& rhs)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      hier::Index::operator -= (rhs);
+      return *this;
+   }
 
    /**
     * Minus operator for a edge index and an integer vector.
     */
    EdgeIndex
    operator - (
-      const hier::IntVector& rhs) const;
+      const hier::IntVector& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      EdgeIndex tmp = *this;
+      tmp -= rhs;
+      return tmp;
+   }
 
    /**
     * Minus-equals operator for a edge index and an integer.
     */
    EdgeIndex&
    operator -= (
-      const int rhs);
+      const int rhs)
+   {
+      hier::Index::operator -= (rhs);
+      return *this;
+   }
 
    /**
     * Minus operator for a edge index and an integer.
     */
    EdgeIndex
    operator - (
-      const int rhs) const;
+      const int rhs) const
+   {
+      EdgeIndex tmp = *this;
+      tmp -= rhs;
+      return tmp;
+   }
 
    /**
     * Times-equals operator for a edge index and an integer vector.
     */
    EdgeIndex&
    operator *= (
-      const hier::IntVector& rhs);
+      const hier::IntVector& rhs)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      hier::Index::operator *= (rhs);
+      return *this;
+   }
 
    /**
     * Times operator for a edge index and an integer vector.
     */
    EdgeIndex
    operator * (
-      const hier::IntVector& rhs) const;
+      const hier::IntVector& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      EdgeIndex tmp = *this;
+      tmp *= rhs;
+      return tmp;
+   }
 
    /**
     * Times-equals operator for a edge index and an integer.
     */
    EdgeIndex&
    operator *= (
-      const int rhs);
+      const int rhs)
+   {
+      hier::Index::operator *= (rhs);
+      return *this;
+   }
 
    /**
     * Times operator for a edge index and an integer.
     */
    EdgeIndex
    operator * (
-      const int rhs) const;
+      const int rhs) const
+   {
+      EdgeIndex tmp = *this;
+      tmp *= rhs;
+      return tmp;
+   }
 
    /**
     * Returns true if two edge index objects are equal.  All components
@@ -187,7 +259,11 @@ public:
     */
    bool
    operator == (
-      const EdgeIndex& rhs) const;
+      const EdgeIndex& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      return ((hier::Index *)this)->operator == (rhs) && (d_axis == rhs.d_axis);
+   }
 
    /**
     * Returns true if two edge index objects are not equal.  Any of
@@ -195,7 +271,11 @@ public:
     */
    bool
    operator != (
-      const EdgeIndex& rhs) const;
+      const EdgeIndex& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      return ((hier::Index *)this)->operator != (rhs) || (d_axis != rhs.d_axis);
+   }
 
    enum {
 
@@ -217,7 +297,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/EdgeIndex.I"
-#endif
+
 #endif

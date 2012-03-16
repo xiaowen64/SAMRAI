@@ -13,9 +13,6 @@
 
 #include "SAMRAI/hier/Variable.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/Variable.I"
-#endif
 namespace SAMRAI {
 namespace hier {
 

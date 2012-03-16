@@ -14,6 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/PatchDataFactory.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
@@ -74,7 +75,10 @@ public:
     * number changes as new variable instances are created.
     */
    static int
-   getCurrentMaximumInstanceNumber();
+   getCurrentMaximumInstanceNumber()
+   {
+      return s_instance_counter;
+   }
 
    /**
     * Create a variable object with the specified name and patch data
@@ -95,13 +99,19 @@ public:
     * The instance identifiers are unique integers numbered starting from zero.
     */
    int
-   getInstanceIdentifier() const;
+   getInstanceIdentifier() const
+   {
+      return d_instance;
+   }
 
    /**
     * Return the name assigned to this variable.
     */
    const std::string&
-   getName() const;
+   getName() const
+   {
+      return d_name;
+   }
 
    /**
     * Return true if the fine data values represent the variable quantity
@@ -126,7 +136,11 @@ public:
     */
    void
    setPatchDataFactory(
-      const boost::shared_ptr<PatchDataFactory>& factory);
+      const boost::shared_ptr<PatchDataFactory>& factory)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *factory);
+      d_factory = factory;
+   }
 
    /**
     * Return a non-const pointer to a patch data factory that will be used
@@ -134,13 +148,19 @@ public:
     * returned will have been set by the variable subclasses.
     */
    boost::shared_ptr<PatchDataFactory>
-   getPatchDataFactory() const;
+   getPatchDataFactory() const
+   {
+      return d_factory;
+   }
 
    /**
     * Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    Variable(
@@ -161,7 +181,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/Variable.I"
-#endif
+
 #endif

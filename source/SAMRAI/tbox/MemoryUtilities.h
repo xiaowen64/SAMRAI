@@ -93,7 +93,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/MemoryUtilities.I"
-#endif
 #endif

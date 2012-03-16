@@ -265,7 +265,14 @@ public:
     */
    void
    initialize(
-      SundialsAbstractVector* solution);
+      SundialsAbstractVector* solution)
+   {
+      TBOX_ASSERT(!(solution == (SundialsAbstractVector *)NULL));
+      TBOX_ASSERT(d_solution_vector == (SundialsAbstractVector *)NULL);
+      d_solution_vector = solution;
+      d_CVODE_needs_initialization = true;
+      initializeCVODE();
+   }
 
    /**
     * Integrate ODE system specified t_f.  The integer return value is
@@ -348,7 +355,26 @@ public:
     *
     */
    int
-   solve();
+   solve()
+   {
+      initializeCVODE();
+
+      /*
+       * Check to make sure that user specified final value for t
+       * is greater than initial value for t.
+       */
+      TBOX_ASSERT(d_user_t_f > d_t_0);
+
+      /*
+       * See cvode.h header file for definition of return types.
+       */
+      int retval = CVode(d_cvode_mem,
+            d_user_t_f,
+            d_solution_vector->getNVector(),
+            &d_actual_t_f,
+            d_stepping_method);
+      return retval;
+   }
 
    /**
     * Accessor function for setting CVODE output log file name and output
@@ -360,7 +386,14 @@ public:
     */
    void
    setLogFileData(
-      const std::string& log_fname = std::string());
+      const std::string& log_fname = std::string())
+   {
+      TBOX_ASSERT(!log_fname.empty());
+      if (!(log_fname == d_cvode_log_file_name)) {
+         d_cvode_log_file_name = log_fname;
+         d_CVODE_needs_initialization = true;
+      }
+   }
 
    /**
     * Set CVODESolver to use my_functions as the concrete subclass
@@ -385,14 +418,23 @@ public:
    void
    setCVODEFunctions(
       CVODEAbstractFunctions* my_functions,
-      const bool uses_preconditioner);
+      const bool uses_preconditioner)
+   {
+      TBOX_ASSERT(!(my_functions == (CVODEAbstractFunctions *)NULL));
+      d_cvode_functions = my_functions;
+      d_uses_preconditioner = uses_preconditioner;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Return pointer to object that provides user-defined functions for
     * CVODE and CVSpgmr.
     */
    CVODEAbstractFunctions *
-   getCVODEFunctions() const;
+   getCVODEFunctions() const
+   {
+      return d_cvode_functions;
+   }
 
    // Methods for setting CVODE parameters.
 
@@ -418,7 +460,13 @@ public:
     */
    void
    setLinearMultistepMethod(
-      int linear_multistep_method);
+      int linear_multistep_method)
+   {
+      TBOX_ASSERT((linear_multistep_method == CV_ADAMS) ||
+         (linear_multistep_method == CV_BDF));
+      d_linear_multistep_method = linear_multistep_method;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Set iteration type.  The user can specify either FUNCTIONAL
@@ -445,7 +493,13 @@ public:
     */
    void
    setIterationType(
-      int iteration_type);
+      int iteration_type)
+   {
+      TBOX_ASSERT((iteration_type == CV_FUNCTIONAL) ||
+         (iteration_type == CV_NEWTON));
+      d_iteration_type = iteration_type;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Set tolerance type.  This parameter specifies the relative
@@ -471,7 +525,13 @@ public:
     */
    void
    setToleranceType(
-      int tolerance_type);
+      int tolerance_type)
+   {
+      TBOX_ASSERT((tolerance_type == CV_SS) ||
+         (tolerance_type == CV_SV));
+      d_tolerance_type = tolerance_type;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Set the relative tolerance level.
@@ -495,7 +555,12 @@ public:
     */
    void
    setRelativeTolerance(
-      double relative_tolerance);
+      double relative_tolerance)
+   {
+      TBOX_ASSERT(relative_tolerance >= 0.0);
+      d_relative_tolerance = relative_tolerance;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Set the scalar absolute tolerance level.
@@ -519,7 +584,13 @@ public:
     */
    void
    setAbsoluteTolerance(
-      double absolute_tolerance);
+      double absolute_tolerance)
+   {
+      TBOX_ASSERT(absolute_tolerance >= 0.0);
+      d_absolute_tolerance_scalar = absolute_tolerance;
+      d_use_scalar_absolute_tolerance = true;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Set the vector absolute tolerance level.
@@ -547,7 +618,14 @@ public:
     */
    void
    setAbsoluteTolerance(
-      SundialsAbstractVector* absolute_tolerance);
+      SundialsAbstractVector* absolute_tolerance)
+   {
+      TBOX_ASSERT(!(absolute_tolerance == (SundialsAbstractVector *)NULL));
+      TBOX_ASSERT(absolute_tolerance->vecMin() >= 0.0);
+      d_absolute_tolerance_vector = absolute_tolerance;
+      d_use_scalar_absolute_tolerance = false;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Set stepping method to use for integration.  There are
@@ -577,14 +655,24 @@ public:
     */
    void
    setSteppingMethod(
-      int stepping_method);
+      int stepping_method)
+   {
+      TBOX_ASSERT((stepping_method == CV_NORMAL) ||
+         (stepping_method == CV_ONE_STEP));
+      d_stepping_method = stepping_method;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Set initial value for independent variable.
     */
    void
    setInitialValueOfIndependentVariable(
-      double t_0);
+      double t_0)
+   {
+      d_t_0 = t_0;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Set final value for independent variable (i.e. the value of
@@ -596,7 +684,11 @@ public:
    void
    setFinalValueOfIndependentVariable(
       double t_f,
-      bool cvode_needs_initialization);
+      bool cvode_needs_initialization)
+   {
+      d_user_t_f = t_f;
+      d_CVODE_needs_initialization = cvode_needs_initialization;
+   }
 
    /**
     * Set initial condition vector.
@@ -615,7 +707,12 @@ public:
     */
    void
    setInitialConditionVector(
-      SundialsAbstractVector* ic_vector);
+      SundialsAbstractVector* ic_vector)
+   {
+      TBOX_ASSERT(!(ic_vector == (SundialsAbstractVector *)NULL));
+      d_ic_vector = ic_vector;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Set maximum order for the linear multistep method.
@@ -636,7 +733,12 @@ public:
     */
    void
    setMaximumLinearMultistepMethodOrder(
-      int max_order);
+      int max_order)
+   {
+      TBOX_ASSERT(max_order >= 0);
+      d_max_order = max_order;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Set maximum number of internal steps to be taken by
@@ -657,7 +759,12 @@ public:
     */
    void
    setMaximumNumberOfInternalSteps(
-      int max_num_internal_steps);
+      int max_num_internal_steps)
+   {
+      TBOX_ASSERT(max_num_internal_steps >= 0);
+      d_max_num_internal_steps = max_num_internal_steps;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Set maximum number of warning messages issued by the solver
@@ -678,7 +785,12 @@ public:
     */
    void
    setMaximumNumberOfNilStepWarnings(
-      int max_num_warnings);
+      int max_num_warnings)
+   {
+      TBOX_ASSERT(max_num_warnings >= 0);
+      d_max_num_warnings = max_num_warnings;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Set initial step size.
@@ -697,7 +809,12 @@ public:
     */
    void
    setInitialStepSize(
-      double init_step_size);
+      double init_step_size)
+   {
+      TBOX_ASSERT(init_step_size >= 0.0);
+      d_init_step_size = init_step_size;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Set maximum absolute value of step size allowed.
@@ -718,7 +835,12 @@ public:
     */
    void
    setMaximumAbsoluteStepSize(
-      double max_step_size);
+      double max_step_size)
+   {
+      TBOX_ASSERT(max_step_size >= 0.0);
+      d_max_step_size = max_step_size;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Set minimum absolute value of step size allowed.
@@ -738,7 +860,12 @@ public:
     */
    void
    setMinimumAbsoluteStepSize(
-      double min_step_size);
+      double min_step_size)
+   {
+      TBOX_ASSERT(min_step_size >= 0.0);
+      d_min_step_size = min_step_size;
+      d_CVODE_needs_initialization = true;
+   }
 
    // Methods for setting CVSpgmr parameters.
 
@@ -764,7 +891,15 @@ public:
     */
    void
    setPreconditioningType(
-      int precondition_type);
+      int precondition_type)
+   {
+      TBOX_ASSERT((precondition_type == PREC_NONE) ||
+         (precondition_type == PREC_LEFT) ||
+         (precondition_type == PREC_RIGHT) ||
+         (precondition_type == PREC_BOTH));
+      d_precondition_type = precondition_type;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Set the Gram-Schmidt orthogonalization type to be used by CVSpgmr.
@@ -786,7 +921,12 @@ public:
     */
    void
    setGramSchmidtType(
-      int gs_type);
+      int gs_type)
+   {
+      TBOX_ASSERT((gs_type == CLASSICAL_GS) || (gs_type == MODIFIED_GS));
+      d_gram_schmidt_type = gs_type;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Set the maximum Krylov dimension to be used by CVSpgmr.
@@ -807,7 +947,12 @@ public:
     */
    void
    setMaxKrylovDimension(
-      int max_krylov_dim);
+      int max_krylov_dim)
+   {
+      TBOX_ASSERT(max_krylov_dim >= 0);
+      d_max_krylov_dim = max_krylov_dim;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Set the factor by which the tolerance on the nonlinear
@@ -829,13 +974,21 @@ public:
     */
    void
    setCVSpgmrToleranceScaleFactor(
-      double tol_scale_factor);
+      double tol_scale_factor)
+   {
+      TBOX_ASSERT(tol_scale_factor >= 0);
+      d_tol_scale_factor = tol_scale_factor;
+      d_CVODE_needs_initialization = true;
+   }
 
    /**
     * Get solution vector.
     */
    SundialsAbstractVector *
-   getSolutionVector() const;
+   getSolutionVector() const
+   {
+      return d_solution_vector;
+   }
 
    /**
     * Get k-th derivative vector at the specified value of the
@@ -894,7 +1047,11 @@ public:
    getDkyVector(
       double t,
       int k,
-      SundialsAbstractVector* dky) const;
+      SundialsAbstractVector* dky) const
+   {
+      int return_code = CVodeGetDky(d_cvode_mem, t, k, dky->getNVector());
+      return return_code;
+   }
 
    /**
     * Get actual value of the independent variable that CVODE integrated
@@ -902,14 +1059,21 @@ public:
     * vector y).
     */
    double
-   getActualFinalValueOfIndependentVariable() const;
+   getActualFinalValueOfIndependentVariable() const
+   {
+      return d_actual_t_f;
+   }
 
    /**
     * Print CVODE and CVSpgmr statistics.
     */
    void
    printStatistics(
-      std::ostream& os) const;
+      std::ostream& os) const
+   {
+      printCVODEStatistics(os);
+      printCVSpgmrStatistics(os);
+   }
 
    /**
     * Print CVODE statistics to the stream.
@@ -980,7 +1144,13 @@ public:
     * a value of -1 is returned.
     */
    int
-   getNumberOfInternalStepsTaken() const;
+   getNumberOfInternalStepsTaken() const
+   {
+      long int r;
+      int ierr = CVodeGetNumSteps(d_cvode_mem, &r);
+      CVODE_SAMRAI_ERROR(ierr);
+      return static_cast<int>(r);
+   }
 
    /**
     * Return the number of calls to the right-hand side function.
@@ -989,7 +1159,13 @@ public:
     * a value of -1 is returned.
     */
    int
-   getNumberOfRHSFunctionCalls() const;
+   getNumberOfRHSFunctionCalls() const
+   {
+      long int r;
+      int ierr = CVodeGetNumRhsEvals(d_cvode_mem, &r);
+      CVODE_SAMRAI_ERROR(ierr);
+      return static_cast<int>(r);
+   }
 
    /**
     * Return the number of calls made to linear solver setup
@@ -999,7 +1175,13 @@ public:
     * a value of -1 is returned.
     */
    int
-   getNumberOfLinearSolverSetupCalls() const;
+   getNumberOfLinearSolverSetupCalls() const
+   {
+      long int r;
+      int ierr = CVodeGetNumLinSolvSetups(d_cvode_mem, &r);
+      CVODE_SAMRAI_ERROR(ierr);
+      return static_cast<int>(r);
+   }
 
    /**
     * Return the number of NEWTON iterations performed.
@@ -1008,7 +1190,13 @@ public:
     * a value of -1 is returned.
     */
    int
-   getNumberOfNewtonIterations() const;
+   getNumberOfNewtonIterations() const
+   {
+      long int r;
+      int ierr = CVodeGetNumNonlinSolvIters(d_cvode_mem, &r);
+      CVODE_SAMRAI_ERROR(ierr);
+      return static_cast<int>(r);
+   }
 
    /**
     * Return the number of nonlinear convergence failures that have
@@ -1018,7 +1206,13 @@ public:
     * a value of -1 is returned.
     */
    int
-   getNumberOfNonlinearConvergenceFailures() const;
+   getNumberOfNonlinearConvergenceFailures() const
+   {
+      long int r;
+      int ierr = CVodeGetNumNonlinSolvConvFails(d_cvode_mem, &r);
+      CVODE_SAMRAI_ERROR(ierr);
+      return static_cast<int>(r);
+   }
 
    /**
     * Return the number of local error test failures.
@@ -1027,7 +1221,13 @@ public:
     * a value of -1 is returned.
     */
    int
-   getNumberOfLocalErrorTestFailures() const;
+   getNumberOfLocalErrorTestFailures() const
+   {
+      long int r;
+      int ierr = CVodeGetNumErrTestFails(d_cvode_mem, &r);
+      CVODE_SAMRAI_ERROR(ierr);
+      return static_cast<int>(r);
+   }
 
    /**
     * Return the order of the linear multistep method used during
@@ -1037,7 +1237,13 @@ public:
     * a value of -1 is returned.
     */
    int
-   getOrderUsedDuringLastInternalStep() const;
+   getOrderUsedDuringLastInternalStep() const
+   {
+      int r;
+      int ierr = CVodeGetLastOrder(d_cvode_mem, &r);
+      CVODE_SAMRAI_ERROR(ierr);
+      return static_cast<int>(r);
+   }
 
    /**
     * Return the order of the linear multistep method to be used during
@@ -1047,7 +1253,13 @@ public:
     * a value of -1 is returned.
     */
    int
-   getOrderToBeUsedDuringNextInternalStep() const;
+   getOrderToBeUsedDuringNextInternalStep() const
+   {
+      int r;
+      int ierr = CVodeGetCurrentOrder(d_cvode_mem, &r);
+      CVODE_SAMRAI_ERROR(ierr);
+      return static_cast<int>(r);
+   }
 
    /**
     * Return the size (in LLNL_REAL words) of memory used
@@ -1057,7 +1269,14 @@ public:
     * a value of -1 is returned.
     */
    int
-   getCVODEMemoryUsageForDoubles() const;
+   getCVODEMemoryUsageForDoubles() const
+   {
+      long int r1;
+      long int r2;
+      int ierr = CVodeGetWorkSpace(d_cvode_mem, &r1, &r2);
+      CVODE_SAMRAI_ERROR(ierr);
+      return static_cast<int>(r1);
+   }
 
    /**
     * Return the size (in integer words) of memory used
@@ -1067,7 +1286,14 @@ public:
     * a value of -1 is returned.
     */
    int
-   getCVODEMemoryUsageForIntegers() const;
+   getCVODEMemoryUsageForIntegers() const
+   {
+      long int r1;
+      long int r2;
+      int ierr = CVodeGetWorkSpace(d_cvode_mem, &r1, &r2);
+      CVODE_SAMRAI_ERROR(ierr);
+      return static_cast<int>(r2);
+   }
 
    /**
     * Return the step size for the last internal step.
@@ -1076,7 +1302,13 @@ public:
     * a value of -1 is returned.
     */
    double
-   getStepSizeForLastInternalStep() const;
+   getStepSizeForLastInternalStep() const
+   {
+      realtype r;
+      int ierr = CVodeGetLastStep(d_cvode_mem, &r);
+      CVODE_SAMRAI_ERROR(ierr);
+      return r;
+   }
 
    /**
     * Return the step size to be used in the next internal step.
@@ -1085,7 +1317,13 @@ public:
     * a value of -1 is returned.
     */
    double
-   getStepSizeForNextInternalStep() const;
+   getStepSizeForNextInternalStep() const
+   {
+      realtype r;
+      int ierr = CVodeGetCurrentStep(d_cvode_mem, &r);
+      CVODE_SAMRAI_ERROR(ierr);
+      return r;
+   }
 
    /**
     * Return the current internal value of the independent
@@ -1096,7 +1334,13 @@ public:
     * returned.
     */
    double
-   getCurrentInternalValueOfIndependentVariable() const;
+   getCurrentInternalValueOfIndependentVariable() const
+   {
+      realtype r;
+      int ierr = CVodeGetCurrentStep(d_cvode_mem, &r);
+      CVODE_SAMRAI_ERROR(ierr);
+      return r;
+   }
 
    /**
     * Return the suggested tolerance scaling factor.
@@ -1105,7 +1349,13 @@ public:
     * a value of -1 is returned.
     */
    double
-   getCVODESuggestedToleranceScalingFactor() const;
+   getCVODESuggestedToleranceScalingFactor() const
+   {
+      realtype r;
+      int ierr = CVodeGetTolScaleFactor(d_cvode_mem, &r);
+      CVODE_SAMRAI_ERROR(ierr);
+      return r;
+   }
 
    // CVSpgmr optional return values.
 
@@ -1148,37 +1398,75 @@ public:
     * Return the number of preconditioner evaluations.
     */
    int
-   getNumberOfPreconditionerEvaluations() const;
+   getNumberOfPreconditionerEvaluations() const
+   {
+      long int r;
+      int ierr = CVSpilsGetNumPrecEvals(d_cvode_mem, &r);
+      CVODE_SAMRAI_ERROR(ierr);
+      return static_cast<int>(r);
+   }
 
    /**
     * Return the number of linear iterations.
     */
    int
-   getNumberOfLinearIterations() const;
+   getNumberOfLinearIterations() const
+   {
+      long int r;
+      int ierr = CVSpilsGetNumLinIters(d_cvode_mem, &r);
+      CVODE_SAMRAI_ERROR(ierr);
+      return static_cast<int>(r);
+   }
 
    /**
     * Return the number of CVSpgmrPrecondSolve() calls.
     */
    int
-   getNumberOfPrecondSolveCalls() const;
+   getNumberOfPrecondSolveCalls() const
+   {
+      long int r;
+      int ierr = CVSpilsGetNumPrecSolves(d_cvode_mem, &r);
+      CVODE_SAMRAI_ERROR(ierr);
+      return static_cast<int>(r);
+   }
 
    /**
     * Return the number of linear convergence failures.
     */
    int
-   getNumberOfLinearConvergenceFailures() const;
+   getNumberOfLinearConvergenceFailures() const
+   {
+      long int r;
+      int ierr = CVSpilsGetNumConvFails(d_cvode_mem, &r);
+      CVODE_SAMRAI_ERROR(ierr);
+      return static_cast<int>(r);
+   }
 
    /**
     * Return the size (in double words) of memory used for doubles.
     */
    int
-   getCVSpgmrMemoryUsageForDoubles() const;
+   getCVSpgmrMemoryUsageForDoubles() const
+   {
+      long int r1;
+      long int r2;
+      int ierr = CVodeGetWorkSpace(d_cvode_mem, &r1, &r2);
+      CVODE_SAMRAI_ERROR(ierr);
+      return static_cast<int>(r1);
+   }
 
    /**
     * Return the size (in integer words) of memory used for integers.
     */
    int
-   getCVSpgmrMemoryUsageForIntegers() const;
+   getCVSpgmrMemoryUsageForIntegers() const
+   {
+      long int r1;
+      long int r2;
+      int ierr = CVodeGetWorkSpace(d_cvode_mem, &r1, &r2);
+      CVODE_SAMRAI_ERROR(ierr);
+      return static_cast<int>(r2);
+   }
 
    /**
     * Print out all data members for this object.
@@ -1191,7 +1479,10 @@ public:
     * Returns the object name.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*
@@ -1208,7 +1499,11 @@ private:
       realtype t,
       N_Vector y,
       N_Vector y_dot,
-      void* my_solver);
+      void* my_solver)
+   {
+      return ((CVODESolver *)my_solver)->getCVODEFunctions()->
+              evaluateRHSFunction(t, SABSVEC_CAST(y), SABSVEC_CAST(y_dot));
+   }
 
    /*
     * Static member functions for linkage with CVSpgmr routines.
@@ -1224,7 +1519,20 @@ private:
       void* my_solver,
       N_Vector vtemp1,
       N_Vector vtemp2,
-      N_Vector vtemp3);
+      N_Vector vtemp3)
+   {
+      int success = ((CVODESolver *)my_solver)->getCVODEFunctions()->
+         CVSpgmrPrecondSet(t,
+            SABSVEC_CAST(y),
+            SABSVEC_CAST(fy),
+            jok,
+            jcurPtr,
+            gamma,
+            SABSVEC_CAST(vtemp1),
+            SABSVEC_CAST(vtemp2),
+            SABSVEC_CAST(vtemp3));
+      return success;
+   }
 
    static int
    CVSpgmrPrecondSolve(
@@ -1237,7 +1545,20 @@ private:
       realtype delta,
       int lr,
       void* my_solver,
-      N_Vector vtemp);
+      N_Vector vtemp)
+   {
+      int success = ((CVODESolver *)my_solver)->getCVODEFunctions()->
+         CVSpgmrPrecondSolve(t,
+            SABSVEC_CAST(y),
+            SABSVEC_CAST(fy),
+            SABSVEC_CAST(r),
+            SABSVEC_CAST(z),
+            gamma,
+            delta,
+            lr,
+            SABSVEC_CAST(vtemp));
+      return success;
+   }
 
    /*
     * Open CVODE log file, allocate main memory for CVODE and initialize
@@ -1351,8 +1672,5 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/CVODESolver.I"
-#endif
 #endif
 #endif

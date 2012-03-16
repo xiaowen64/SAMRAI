@@ -11,8 +11,6 @@
 #ifndef included_hier_GridGeometry_C
 #define included_hier_GridGeometry_C
 
-#include "SAMRAI/SAMRAI_config.h"
-
 #include "SAMRAI/hier/GridGeometry.h"
 
 #include "SAMRAI/hier/BoundaryLookupTable.h"
@@ -40,10 +38,6 @@
 #include <stdlib.h>
 
 #define HIER_GRID_GEOMETRY_VERSION (3)
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/GridGeometry.I"
-#endif
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*

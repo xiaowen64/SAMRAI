@@ -62,19 +62,28 @@ public:
     * Return const pointer to dx array for patch.
     */
    const double *
-   getDx() const;
+   getDx() const
+   {
+      return d_dx;
+   }
 
    /**
     * Return const pointer to lower spatial coordinate for patch.
     */
    const double *
-   getXLower() const;
+   getXLower() const
+   {
+      return d_x_lo;
+   }
 
    /**
     * Return const pointer to upper spatial coordinate for patch.
     */
    const double *
-   getXUpper() const;
+   getXUpper() const
+   {
+      return d_x_up;
+   }
 
    /**
     * Print CartesianPatchGeometry class data.
@@ -100,7 +109,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/geom/CartesianPatchGeometry.I"
-#endif
 #endif

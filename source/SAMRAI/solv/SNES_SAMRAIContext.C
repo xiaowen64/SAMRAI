@@ -16,13 +16,8 @@
 #include "SAMRAI/solv/PETSc_SAMRAIVectorReal.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 #include "SAMRAI/tbox/RestartManager.h"
-#include "SAMRAI/tbox/Utilities.h"
 
 #ifdef HAVE_PETSC
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/SNES_SAMRAIContext.I"
-#endif
 
 namespace SAMRAI {
 namespace solv {
@@ -186,9 +181,7 @@ void
 SNES_SAMRAIContext::initialize(
    const boost::shared_ptr<SAMRAIVectorReal<double> >& solution)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(solution);
-#endif
 
    /*
     * Set up vectors for solution and nonlinear residual.
@@ -766,9 +759,7 @@ void
 SNES_SAMRAIContext::putToDatabase(
    const boost::shared_ptr<tbox::Database>& db) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    db->putInteger("SOLV_SNES_SAMRAI_CONTEXT_VERSION",
       SOLV_SNES_SAMRAI_CONTEXT_VERSION);

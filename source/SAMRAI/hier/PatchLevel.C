@@ -30,10 +30,6 @@
 #pragma report(disable, CPPC5328)
 #endif
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchLevel.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 
@@ -608,6 +604,29 @@ PatchLevel::setCoarsenedPatchLevel(
       d_boundary_boxes_created = true;
    }
 
+}
+
+/*
+ * ************************************************************************
+ * ************************************************************************
+ */
+void
+PatchLevel::getBoxes(
+   BoxContainer& boxes,
+   const BlockId& block_id) const
+{
+   if (!d_has_globalized_data) {
+      initializeGlobalizedBoxLevel();
+   }
+
+   boxes.clear();
+   const BoxContainer& global_mapped_boxes =
+      d_mapped_box_level->getGlobalizedVersion().getGlobalBoxes();
+
+   for (BoxContainerSingleBlockIterator gi(global_mapped_boxes, block_id);
+        gi.isValid(); gi++) {
+      boxes.pushBack(*gi);
+   }
 }
 
 /*

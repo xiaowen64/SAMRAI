@@ -16,10 +16,6 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/BoundaryBoxUtils.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 

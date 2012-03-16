@@ -14,10 +14,6 @@
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/MessageStream.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 

@@ -16,6 +16,7 @@
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/Patch.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -134,7 +135,16 @@ public:
    void
    setBoundaryValue(
       int location_index,
-      double value);
+      double value)
+   {
+      if (location_index < 0 || location_index >= 2 * d_dim.getValue()) {
+         TBOX_ERROR("Location index in " << d_dim.getValue() << "D must be\n"
+                    << "in [0," << 2 * d_dim.getValue() - 1 << "].\n");
+      }
+      d_a_map[location_index] = 1.0;
+      d_b_map[location_index] = 0.0;
+      d_g_map[location_index] = value;
+   }
 
    /*!
     * @brief Set the boundary slope at a given location index.
@@ -145,7 +155,16 @@ public:
    void
    setBoundarySlope(
       int location_index,
-      double slope);
+      double slope)
+   {
+      if (location_index >= 2 * d_dim.getValue()) {
+         TBOX_ERROR("Location index in " << d_dim.getValue() << "D must be\n"
+                    << "in [0," << 2 * d_dim.getValue() - 1 << "].\n");
+      }
+      d_a_map[location_index] = 0.0;
+      d_b_map[location_index] = 1.0;
+      d_g_map[location_index] = slope;
+   }
 
    /*!
     * @brief Set the values of coefficients a and g at a
@@ -168,7 +187,16 @@ public:
       int location_index,
       double a,
       double b,
-      double g);
+      double g)
+   {
+      if (location_index >= 2 * d_dim.getValue()) {
+         TBOX_ERROR("Location index in " << d_dim.getValue() << "D must be\n"
+                    << "in [0," << 2 * d_dim.getValue() - 1 << "].\n");
+      }
+      d_a_map[location_index] = a;
+      d_b_map[location_index] = b;
+      d_g_map[location_index] = g;
+   }
 
    /*!
     * @brief Access coefficients.
@@ -178,7 +206,12 @@ public:
       int location_index,
       double& a,
       double& b,
-      double& g) const;
+      double& g) const
+   {
+      a = d_a_map[location_index];
+      b = d_b_map[location_index];
+      g = d_g_map[location_index];
+   }
 
    /**
     * @brief Get the name of this object.
@@ -186,7 +219,10 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
    /*!
     * @brief Assignment operator.
@@ -238,7 +274,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/LocationIndexRobinBcCoefs.I"
-#endif
 #endif

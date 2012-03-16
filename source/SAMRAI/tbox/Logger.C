@@ -11,10 +11,6 @@
 #include "SAMRAI/tbox/Logger.h"
 #include "SAMRAI/tbox/PIO.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/Logger.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 
@@ -39,13 +35,7 @@ class AbortAppender:public Logger::Appender
    logMessage(
       const std::string& message,
       const std::string& filename,
-      const int line)
-   {
-      perr << "Program abort called in file ``" << filename
-           << "'' at line " << line << std::endl;
-      perr << "ERROR MESSAGE: " << std::endl << message.c_str() << std::endl;
-      perr << std::flush;
-   }
+      const int line);
 };
 
 /*
@@ -58,13 +48,7 @@ class WarningAppender:public Logger::Appender
    logMessage(
       const std::string& message,
       const std::string& filename,
-      const int line)
-   {
-      plog << "Warning in file ``" << filename
-           << "'' at line " << line << std::endl;
-      plog << "WARNING MESSAGE: " << std::endl << message.c_str() << std::endl;
-      plog << std::flush;
-   }
+      const int line);
 };
 
 /*
@@ -77,14 +61,44 @@ class DebugAppender:public Logger::Appender
    logMessage(
       const std::string& message,
       const std::string& filename,
-      const int line)
-   {
-      plog << "Debug in file ``" << filename
-           << "'' at line " << line << std::endl;
-      plog << "DEBUG MESSAGE: " << std::endl << message.c_str() << std::endl;
-      plog << std::flush;
-   }
+      const int line);
 };
+
+void
+AbortAppender::logMessage(
+   const std::string& message,
+   const std::string& filename,
+   const int line)
+{
+   perr << "Program abort called in file ``" << filename
+        << "'' at line " << line << std::endl;
+   perr << "ERROR MESSAGE: " << std::endl << message.c_str() << std::endl;
+   perr << std::flush;
+}
+
+void
+WarningAppender::logMessage(
+   const std::string& message,
+   const std::string& filename,
+   const int line)
+{
+   plog << "Warning in file ``" << filename
+        << "'' at line " << line << std::endl;
+   plog << "WARNING MESSAGE: " << std::endl << message.c_str() << std::endl;
+   plog << std::flush;
+}
+
+void
+DebugAppender::logMessage(
+   const std::string& message,
+   const std::string& filename,
+   const int line)
+{
+   plog << "Debug in file ``" << filename
+        << "'' at line " << line << std::endl;
+   plog << "DEBUG MESSAGE: " << std::endl << message.c_str() << std::endl;
+   plog << std::flush;
+}
 
 /*
  * Default constructor for Logger singleton

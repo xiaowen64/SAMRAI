@@ -21,10 +21,6 @@
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/Connector.I"
-#endif
-
 #include <algorithm>
 //#include <iomanip>
 

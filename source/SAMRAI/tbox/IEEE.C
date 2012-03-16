@@ -34,10 +34,6 @@
 #include <sunmath.h>
 #endif
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/IEEE.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 

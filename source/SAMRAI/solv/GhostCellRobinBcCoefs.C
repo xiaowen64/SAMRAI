@@ -22,9 +22,6 @@
 #include IOMANIP_HEADER_FILE
 
 #include "SAMRAI/solv/GhostCellRobinBcCoefs.h"
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/GhostCellRobinBcCoefs.I"
-#endif
 
 namespace SAMRAI {
 namespace solv {

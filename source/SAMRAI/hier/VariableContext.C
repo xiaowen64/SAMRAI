@@ -12,11 +12,8 @@
 #define included_hier_VariableContext_C
 
 #include "SAMRAI/hier/VariableContext.h"
-#include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/VariableContext.I"
-#endif
+#include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
 namespace hier {

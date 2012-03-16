@@ -12,13 +12,8 @@
 #define included_pdat_NodeGeometry_C
 
 #include "SAMRAI/pdat/NodeGeometry.h"
-#include "SAMRAI/pdat/NodeOverlap.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/NodeGeometry.I"
-#endif
 
 namespace SAMRAI {
 namespace pdat {
@@ -109,7 +104,7 @@ NodeGeometry::computeDestinationBoxes(
    const hier::Transformation& transformation,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const hier::IntVector& src_offset(transformation.getOffset());
 #endif
    TBOX_DIM_ASSERT_CHECK_ARGS2(src_mask, src_offset);

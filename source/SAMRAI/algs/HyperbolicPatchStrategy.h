@@ -436,7 +436,10 @@ public:
     * Return pointer to patch data context.
     */
    boost::shared_ptr<hier::VariableContext>
-   getDataContext() const;
+   getDataContext() const
+   {
+      return d_data_context;
+   }
 
    /**
     * The hyperbolic integrator controls the context for the data to be used
@@ -446,16 +449,25 @@ public:
     */
    void
    setDataContext(
-      const boost::shared_ptr<hier::VariableContext>& context);
+      const boost::shared_ptr<hier::VariableContext>& context)
+   {
+      d_data_context = context;
+   }
 
    /**
     * The clearDataContext() routine resets the data context to be null.
     */
    void
-   clearDataContext();
+   clearDataContext()
+   {
+      d_data_context.reset();
+   }
 
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    const tbox::Dimension d_dim;
@@ -466,7 +478,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/algs/HyperbolicPatchStrategy.I"
-#endif
 #endif

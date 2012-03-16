@@ -32,10 +32,6 @@
 #include <ctype.h>
 #include <iomanip>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/mesh/GriddingAlgorithm.I"
-#endif
-
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -1725,7 +1721,7 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
       old_fine_level = d_hierarchy->getPatchLevel(new_ln);
       d_hierarchy->removePatchLevel(new_ln);
       // ratio = old_fine_level->getRatioToLevelZero();
-      assert(ratio == old_fine_level->getRatioToLevelZero());
+      TBOX_ASSERT(ratio == old_fine_level->getRatioToLevelZero());
 
    }
 

@@ -219,37 +219,55 @@ public:
     * Turn on gradient detector to tag cells for refinement.
     */
    void
-   turnOnGradientDetector();
+   turnOnGradientDetector()
+   {
+      d_use_gradient_detector = true;
+   }
 
    /*!
     * Turn off gradient detector.
     */
    void
-   turnOffGradientDetector();
+   turnOffGradientDetector()
+   {
+      d_use_gradient_detector = false;
+   }
 
    /*!
     * Turn on Richardson extrapolation to tag cells for refinement.
     */
    void
-   turnOnRichardsonExtrapolation();
+   turnOnRichardsonExtrapolation()
+   {
+      d_use_richardson_extrapolation = true;
+   }
 
    /*!
     * Turn off Richardson extrapolation.
     */
    void
-   turnOffRichardsonExtrapolation();
+   turnOffRichardsonExtrapolation()
+   {
+      d_use_richardson_extrapolation = false;
+   }
 
    /*!
     * Turn on static refine box regions where refinement should occur.
     */
    void
-   turnOnRefineBoxes();
+   turnOnRefineBoxes()
+   {
+      d_use_refine_boxes = true;
+   }
 
    /*!
     * Turn off static refine box regions.
     */
    void
-   turnOffRefineBoxes();
+   turnOffRefineBoxes()
+   {
+      d_use_refine_boxes = false;
+   }
 
    /*!
     * Read input values, indicated above, from given database.
@@ -261,7 +279,10 @@ public:
       const boost::shared_ptr<tbox::Database>& db);
 
    const StandardTagAndInitializeConnectorWidthRequestor&
-   getConnectorWidthRequestor() const;
+   getConnectorWidthRequestor() const
+   {
+      return d_staicwri;
+   }
 
 private:
    /*
@@ -323,7 +344,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/mesh/StandardTagAndInitialize.I"
-#endif
+
 #endif

@@ -61,8 +61,7 @@ public:
     */
    PatchSideDataOpsReal();
 
-   virtual ~PatchSideDataOpsReal<TYPE>() {
-   }
+   virtual ~PatchSideDataOpsReal<TYPE>();
 
    /**
     * Copy dst data to src data over given box.

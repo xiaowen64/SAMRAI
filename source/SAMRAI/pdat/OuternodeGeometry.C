@@ -14,14 +14,9 @@
 #include "SAMRAI/pdat/OuternodeGeometry.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
-#include "SAMRAI/pdat/NodeOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/make_shared.hpp>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/OuternodeGeometry.I"
-#endif
 
 namespace SAMRAI {
 namespace pdat {

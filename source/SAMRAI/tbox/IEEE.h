@@ -15,6 +15,7 @@
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Complex.h"
+#include "SAMRAI/tbox/MathUtilities.h"
 
 namespace SAMRAI {
 namespace tbox {
@@ -59,14 +60,20 @@ struct IEEE {
     * Using this value in a numerical expression will cause a program abort.
     */
    static float
-   getSignalingFloatNaN();
+   getSignalingFloatNaN()
+   {
+      return MathUtilities<float>::getSignalingNaN();
+   }
 
    /*!
     * Get the IEEE double signaling NaN on architectures that support it.
     * Using this value in a numerical expression will cause a program abort.
     */
    static double
-   getSignalingNaN();
+   getSignalingNaN()
+   {
+      return MathUtilities<double>::getSignalingNaN();
+   }
 
    /*!
     * Get the dcomplex value with real and imaginary parts set to the
@@ -74,21 +81,30 @@ struct IEEE {
     * Using this value in a numerical expression will cause a program abort.
     */
    static dcomplex
-   getSignalingComplexNaN();
+   getSignalingComplexNaN()
+   {
+      return MathUtilities<dcomplex>::getSignalingNaN();
+   }
 
    /*!
     * Set supplied float value to the signaling NaN.
     */
    static void
    setNaN(
-      float& f);
+      float& f)
+   {
+      f = MathUtilities<float>::getSignalingNaN();
+   }
 
    /*!
     * Set supplied double value to the signaling NaN.
     */
    static void
    setNaN(
-      double& d);
+      double& d)
+   {
+      d = MathUtilities<double>::getSignalingNaN();
+   }
 
    /*!
     * Set real and imaginary parts of supplied dcomplex value to the
@@ -96,7 +112,10 @@ struct IEEE {
     */
    static void
    setNaN(
-      dcomplex& dc);
+      dcomplex& dc)
+   {
+      dc = MathUtilities<dcomplex>::getSignalingNaN();
+   }
 
    /*!
     * Initialize an array of floats to signaling NaNs.  Before using this
@@ -106,7 +125,10 @@ struct IEEE {
     */
    static void
    initializeArrayToSignalingNaN(
-      Array<float>& array);
+      Array<float>& array)
+   {
+      MathUtilities<float>::setArrayToSignalingNaN(array);
+   }
 
    /*!
     * Initialize an array of doubles to signaling NaNs.  Before using this
@@ -116,7 +138,10 @@ struct IEEE {
     */
    static void
    initializeArrayToSignalingNaN(
-      Array<double>& array);
+      Array<double>& array)
+   {
+      MathUtilities<double>::setArrayToSignalingNaN(array);
+   }
 
    /*!
     * Initialize an array of dcomplex to signaling NaNs.  Before using this
@@ -126,7 +151,10 @@ struct IEEE {
     */
    static void
    initializeArrayToSignalingNaN(
-      Array<dcomplex>& array);
+      Array<dcomplex>& array)
+   {
+      MathUtilities<dcomplex>::setArrayToSignalingNaN(array);
+   }
 
    /*!
     * Initialize an array of floats to signaling NaNs.  Before using this
@@ -137,7 +165,10 @@ struct IEEE {
    static void
    initializeArrayToSignalingNaN(
       float* array,
-      int n = 1);
+      int n = 1)
+   {
+      MathUtilities<float>::setArrayToSignalingNaN(array, n);
+   }
 
    /*!
     * Initialize an array of doubles to signaling NaNs.  Before using this
@@ -148,7 +179,10 @@ struct IEEE {
    static void
    initializeArrayToSignalingNaN(
       double* array,
-      int n = 1);
+      int n = 1)
+   {
+      MathUtilities<double>::setArrayToSignalingNaN(array, n);
+   }
 
    /*!
     * Initialize an array of dcomplex to signaling NaNs.  Before using this
@@ -159,21 +193,30 @@ struct IEEE {
    static void
    initializeArrayToSignalingNaN(
       dcomplex* array,
-      int n = 1);
+      int n = 1)
+   {
+      MathUtilities<dcomplex>::setArrayToSignalingNaN(array, n);
+   }
 
    /*!
     * Return true if the supplied float value is NaN; else, false.
     */
    static bool
    isNaN(
-      const float& f);
+      const float& f)
+   {
+      return MathUtilities<float>::isNaN(f);
+   }
 
    /*!
     * Return true if the supplied double value is NaN; else, false.
     */
    static bool
    isNaN(
-      const double& d);
+      const double& d)
+   {
+      return MathUtilities<double>::isNaN(d);
+   }
 
    /*!
     * Return true if if either real and imaginary part of the supplied
@@ -181,13 +224,13 @@ struct IEEE {
     */
    static bool
    isNaN(
-      const dcomplex& dc);
+      const dcomplex& dc)
+   {
+      return MathUtilities<dcomplex>::isNaN(dc);
+   }
 };
 
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/IEEE.I"
-#endif
 #endif

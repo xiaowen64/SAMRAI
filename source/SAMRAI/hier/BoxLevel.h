@@ -13,6 +13,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxLevelHandle.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/PersistentOverlapConnectors.h"
@@ -212,7 +213,10 @@ public:
     * @brief Returns True if the object has been initialized.
     */
    bool
-   isInitialized() const;
+   isInitialized() const
+   {
+      return d_ratio(0) != 0;
+   }
 
    /*!
     * @brief Remove all the periodic image boxes in the BoxLevel.
@@ -246,7 +250,20 @@ public:
     */
    void
    clearForBoxChanges(
-      bool isInvalid = true);
+      bool isInvalid = true)
+   {
+      deallocateGlobalizedVersion();
+      clearPersistentOverlapConnectors();
+      if (isInvalid) {
+         /*
+          * Box removal can lead on inconsistent Connectors holding on to
+          * handle, so detach the handle.  Box addition does NOT lead to
+          * such inconsistencies, so we can leave the handle alone in
+          * those cases.
+          */
+         detachMyHandle();
+      }
+   }
 
    //@{
 
@@ -272,7 +289,10 @@ public:
     * @brief Returns the ParallelState of the object.
     */
    ParallelState
-   getParallelState() const;
+   getParallelState() const
+   {
+      return d_parallel_state;
+   }
 
    /*!
     * @brief If global reduced data (global Box count, global
@@ -314,14 +334,24 @@ public:
     * BoxLevel, if there is any.
     */
    void
-   deallocateGlobalizedVersion() const;
+   deallocateGlobalizedVersion() const
+   {
+      if (d_globalized_version != NULL) {
+         TBOX_ASSERT(d_globalized_version->getParallelState() == GLOBALIZED);
+         delete d_globalized_version;
+         d_globalized_version = NULL;
+      }
+   }
 
    /*!
     * @brief Returns the SAMRAI_MPI communicator over which the Boxes
     * are distributed.
     */
    const tbox::SAMRAI_MPI&
-   getMPI() const;
+   getMPI() const
+   {
+      return d_mpi;
+   }
 
    //@}
 
@@ -426,13 +456,19 @@ public:
     *
     */
    const BoxContainer&
-   getBoxes() const;
+   getBoxes() const
+   {
+      return d_boxes;
+   }
 
    /*!
     * @brief Returns the container of global Boxes.
     */
    const BoxContainer&
-   getGlobalBoxes() const;
+   getGlobalBoxes() const
+   {
+      return d_global_boxes;
+   }
 
    /*!
     * @brief Fill the container with the global Boxes.
@@ -467,7 +503,10 @@ public:
     * (with respect to a reference level).
     */
    const IntVector&
-   getRefinementRatio() const;
+   getRefinementRatio() const
+   {
+      return d_ratio;
+   }
 
    /*!
     * @brief Return local number of boxes.
@@ -475,7 +514,11 @@ public:
     * Periodic image Boxes are excluded.
     */
    size_t
-   getLocalNumberOfBoxes() const;
+   getLocalNumberOfBoxes() const
+   {
+      TBOX_ASSERT(isInitialized());
+      return d_local_number_of_boxes;
+   }
 
    /*!
     * @brief Return number of boxes local to the given rank.
@@ -501,7 +544,12 @@ public:
     * Periodic image Boxes are excluded.
     */
    int
-   getGlobalNumberOfBoxes() const;
+   getGlobalNumberOfBoxes() const
+   {
+      TBOX_ASSERT(isInitialized());
+      cacheGlobalReducedData();
+      return d_global_number_of_boxes;
+   }
 
    /*!
     * @brief Return maximum number of Boxes over all processes.
@@ -514,7 +562,12 @@ public:
     * Periodic image Boxes are excluded.
     */
    int
-   getMaxNumberOfBoxes() const;
+   getMaxNumberOfBoxes() const
+   {
+      TBOX_ASSERT(isInitialized());
+      cacheGlobalReducedData();
+      return d_max_number_of_boxes;
+   }
 
    /*!
     * @brief Return maximum number of Boxes over all processes.
@@ -527,7 +580,12 @@ public:
     * Periodic image Boxes are excluded.
     */
    int
-   getMinNumberOfBoxes() const;
+   getMinNumberOfBoxes() const
+   {
+      TBOX_ASSERT(isInitialized());
+      cacheGlobalReducedData();
+      return d_min_number_of_boxes;
+   }
 
    /*!
     * @brief Return local number of cells.
@@ -535,7 +593,11 @@ public:
     * Cells in periodic image Boxes are excluded.
     */
    size_t
-   getLocalNumberOfCells() const;
+   getLocalNumberOfCells() const
+   {
+      TBOX_ASSERT(isInitialized());
+      return d_local_number_of_cells;
+   }
 
    /*!
     * @brief Return maximum number of cells over all processes.
@@ -548,7 +610,12 @@ public:
     * Periodic image Boxes are excluded.
     */
    int
-   getMaxNumberOfCells() const;
+   getMaxNumberOfCells() const
+   {
+      TBOX_ASSERT(isInitialized());
+      cacheGlobalReducedData();
+      return d_max_number_of_cells;
+   }
 
    /*!
     * @brief Return maximum number of cells over all processes.
@@ -561,7 +628,12 @@ public:
     * Periodic image Boxes are excluded.
     */
    int
-   getMinNumberOfCells() const;
+   getMinNumberOfCells() const
+   {
+      TBOX_ASSERT(isInitialized());
+      cacheGlobalReducedData();
+      return d_min_number_of_cells;
+   }
 
    /*!
     * @brief Return number of cells local to the given rank.
@@ -587,14 +659,22 @@ public:
     * Cells in periodic image Boxes are excluded.
     */
    int
-   getGlobalNumberOfCells() const;
+   getGlobalNumberOfCells() const
+   {
+      TBOX_ASSERT(isInitialized());
+      cacheGlobalReducedData();
+      return d_global_number_of_cells;
+   }
 
    /*!
     * @brief Return bounding box for local Boxes in a block.
     */
    const Box&
    getLocalBoundingBox(
-      int block_number) const;
+      int block_number) const
+   {
+      return d_local_bounding_box[block_number];
+   }
 
    /*!
     * @brief Return bounding box for global Boxes in a block.
@@ -606,21 +686,31 @@ public:
     */
    const Box&
    getGlobalBoundingBox(
-      int block_number) const;
+      int block_number) const
+   {
+      cacheGlobalReducedData();
+      return d_global_bounding_box[block_number];
+   }
 
    /*!
     * @brief Return size of the largest local Box in a block.
     */
    const IntVector&
    getLocalMaxBoxSize(
-      int block_number) const;
+      int block_number) const
+   {
+      return d_local_max_box_size[block_number];
+   }
 
    /*!
     * @brief Return size of the smallest local Box in a block.
     */
    const IntVector&
    getLocalMinBoxSize(
-      int block_number) const;
+      int block_number) const
+   {
+      return d_local_min_box_size[block_number];
+   }
 
    /*!
     * @brief Return size of the largest Box globally in a block.
@@ -632,7 +722,11 @@ public:
     */
    const IntVector&
    getGlobalMaxBoxSize(
-      int block_number) const;
+      int block_number) const
+   {
+      cacheGlobalReducedData();
+      return d_global_max_box_size[block_number];
+   }
 
    /*!
     * @brief Return size of the smallest Box globally in a block.
@@ -644,7 +738,11 @@ public:
     */
    const IntVector&
    getGlobalMinBoxSize(
-      int block_number) const;
+      int block_number) const
+   {
+      cacheGlobalReducedData();
+      return d_global_min_box_size[block_number];
+   }
 
    /*!
     * @brief Return the dimension of this object.
@@ -653,7 +751,10 @@ public:
     * tbox::Dimension::getInvalidDimension().
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_ratio.getDim();
+   }
 
    /*!
     * @brief Return the GridGeometry associated with this object.
@@ -661,14 +762,24 @@ public:
     * If object has never been initialized, return NULL pointer.
     */
    const boost::shared_ptr<const GridGeometry>&
-   getGridGeometry() const;
+   getGridGeometry() const
+   {
+      return d_grid_geometry;
+   }
 
    //@}
 
    //@{
 
    //! @name Methods to modify all Boxes.
-
+   /*
+    ***************************************************************************
+    * TODO: This method puts finer in an inconsistent state by not
+    * updating the attributes depenent on what has been changed.  This
+    * method seems to be an initializer, but it is not clear from the
+    * name or documentation if that is so.  The same goes for coarsenBoxes.
+    ***************************************************************************
+    */
    /*!
     * @brief Refine all Boxes of this BoxLevel by ratio placing result into
     * finer making finer's ratio final_ratio.
@@ -681,7 +792,13 @@ public:
    refineBoxes(
       BoxLevel& finer,
       const IntVector& ratio,
-      const IntVector& final_ratio) const;
+      const IntVector& final_ratio) const
+   {
+      finer.d_boxes = d_boxes;
+      finer.d_boxes.refine(ratio);
+      finer.d_ratio = final_ratio;
+      return;
+   }
 
    /*!
     * @brief Coarsen all Boxes of this BoxLevel by ratio placing result into
@@ -695,7 +812,13 @@ public:
    coarsenBoxes(
       BoxLevel& coarser,
       const IntVector& ratio,
-      const IntVector& final_ratio) const;
+      const IntVector& final_ratio) const
+   {
+      coarser.d_boxes = d_boxes;
+      coarser.d_boxes.coarsen(ratio);
+      coarser.d_ratio = final_ratio;
+      return;
+   }
 
    //@}
 
@@ -778,7 +901,14 @@ public:
     */
    void
    addBoxWithoutUpdate(
-      const Box& box);
+      const Box& box)
+   {
+      if (d_parallel_state == GLOBALIZED) {
+         d_global_boxes.insert(box);
+      }
+      d_boxes.insert(box);
+      return;
+   }
 
    /*!
     * @brief Insert given periodic image of an existing Box.
@@ -862,7 +992,11 @@ public:
     */
    void
    eraseBoxWithoutUpdate(
-      const Box& box);
+      const Box& box)
+   {
+      d_boxes.erase(box);
+      return;
+   }
 
    /*!
     * @brief Find the Box matching the one given.
@@ -880,7 +1014,21 @@ public:
     */
    BoxContainer::ConstIterator
    getBox(
-      const Box& box) const;
+      const Box& box) const
+   {
+      if (box.getOwnerRank() == d_mpi.getRank()) {
+         return d_boxes.find(box);
+      } else {
+#ifdef DEBUG_CHECK_ASSERTIONS
+         if (d_parallel_state != GLOBALIZED) {
+            TBOX_ERROR(
+               "BoxLevel::getBox: cannot get remote box "
+               << box << " without being in globalized state.");
+         }
+#endif
+         return d_global_boxes.find(box);
+      }
+   }
 
    /*!
     * @brief Find the Box specified by the given BoxId and
@@ -895,7 +1043,11 @@ public:
     */
    BoxContainer::ConstIterator
    getBox(
-      const BoxId& box_id) const;
+      const BoxId& box_id) const
+   {
+      const Box box(getDim(), box_id);
+      return getBox(box);
+   }
 
    /*
     * TODO: What is different about these "strict" methods compared to
@@ -970,7 +1122,11 @@ public:
     */
    bool
    hasBox(
-      const BoxId& box_id) const;
+      const BoxId& box_id) const
+   {
+      const Box box(getDim(), box_id);
+      return hasBox(box);
+   }
 
    /*!
     * @brief Returns true when the object has a Box consistent with all
@@ -982,7 +1138,14 @@ public:
    bool
    hasBox(
       const GlobalId& global_id,
-      const PeriodicId& periodic_id) const;
+      const PeriodicId& periodic_id) const
+   {
+      const Box box(
+         getDim(),
+         global_id,
+         periodic_id);
+      return hasBox(box);
+   }
 
    /*!
     * @brief Returns true when this BoxLevel has a Box matching the
@@ -1104,7 +1267,23 @@ public:
     * @return A boost::shared_ptr to the BoxLevelHandle
     */
    const boost::shared_ptr<BoxLevelHandle>&
-   getBoxLevelHandle() const;
+   getBoxLevelHandle() const
+   {
+      if (!d_handle) {
+         /*
+          * No handle yet.  Generate one attached to this object.
+          */
+         d_handle.reset(new BoxLevelHandle(this));
+      }
+      if (d_handle->d_box_level != this) {
+         /*
+          * Sanity check: The handle for this object should be attached
+          * to this object.
+          */
+         TBOX_ERROR("Library error in BoxLevelHandle::getBoxLevel");
+      }
+      return d_handle;
+   }
 
    //@{
 
@@ -1218,7 +1397,15 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   initializeCallback();
+   initializeCallback()
+   {
+      t_initialize_private = tbox::TimerManager::getManager()->
+         getTimer("hier::BoxLevel::initializePrivate()");
+      t_acquire_remote_boxes = tbox::TimerManager::getManager()->
+         getTimer("hier::BoxLevel::acquireRemoteBoxes()");
+      t_cache_global_reduced_data = tbox::TimerManager::getManager()->
+         getTimer("hier::BoxLevel::cacheGlobalReducedData()");
+   }
 
    /*!
     * @brief Free static timers.
@@ -1226,7 +1413,12 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   finalizeCallback();
+   finalizeCallback()
+   {
+      t_initialize_private.reset();
+      t_acquire_remote_boxes.reset();
+      t_cache_global_reduced_data.reset();
+   }
 
 private:
    /*
@@ -1319,7 +1511,12 @@ private:
     * @brief Deallocate persistent overlap Connectors, if there are any.
     */
    void
-   clearPersistentOverlapConnectors();
+   clearPersistentOverlapConnectors()
+   {
+      if (d_persistent_overlap_connectors != NULL) {
+         d_persistent_overlap_connectors->clear();
+      }
+   }
 
    /*!
     * @brief Detach this object from the handle it has been using.
@@ -1328,7 +1525,13 @@ private:
     * be able to access this BoxLevel by the handle.
     */
    void
-   detachMyHandle() const;
+   detachMyHandle() const
+   {
+      if (d_handle) {
+         d_handle->detachMyBoxLevel();
+         d_handle.reset();
+      }
+   }
 
    /*!
     * @brief Encapsulates functionality common to all initialization
@@ -1528,9 +1731,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxLevel.I"
-#endif
 
 #endif  // included_hier_BoxLevel

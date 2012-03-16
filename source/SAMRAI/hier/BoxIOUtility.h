@@ -83,7 +83,10 @@ public:
     * Returns the number of levels in the database.
     */
    int
-   getNumberOfLevels();
+   getNumberOfLevels()
+   {
+      return d_level_boxes.getSize();
+   }
 
    /**
     * Returns the number of entries in the database for the specified
@@ -91,7 +94,18 @@ public:
     */
    int
    getNumberOfEntries(
-      const int level_number);
+      const int level_number)
+   {
+      if (level_number + 1 > d_level_boxes.getSize()) {
+         TBOX_ERROR("BoxIOUtility::getNumberOfEntries() error: "
+            << "invalid level number. "
+            << "\n The level boxes database holds data only up "
+            << "\n to level " << d_level_boxes.getSize() - 1
+            << "\n You requested data from level " << level_number
+            << std::endl);
+      }
+      return d_level_boxes[level_number].getSize();
+   }
 
    /**
     * Opens and writes to an HDF database directory with the prescribed
@@ -135,7 +149,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxIOUtility.I"
-#endif
 #endif

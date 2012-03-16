@@ -19,17 +19,12 @@
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Timer.h"
-#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #include <cstdlib>
 #include <fstream>
 
 // #define DEBUG_TIMES
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/algs/TimeRefinementIntegrator.I"
-#endif
 
 namespace SAMRAI {
 namespace algs {
@@ -303,9 +298,7 @@ TimeRefinementIntegrator::advanceHierarchy(
    const double dt,
    const bool rebalance_coarsest)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dt >= 0.0);
-#endif
 
    if (d_barrier_and_time) {
       t_advance_hier->barrierAndStart();
@@ -364,10 +357,8 @@ void
 TimeRefinementIntegrator::initializeRefinedTimesteppingLevelData(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    const boost::shared_ptr<hier::PatchLevel> patch_level(
       d_patch_hierarchy->getPatchLevel(level_number));
@@ -497,10 +488,8 @@ void
 TimeRefinementIntegrator::initializeSynchronizedTimesteppingLevelData(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    const boost::shared_ptr<hier::PatchLevel> patch_level(
       d_patch_hierarchy->getPatchLevel(level_number));
@@ -668,11 +657,9 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
    const int level_number,
    const double end_time)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(end_time >= d_integrator_time);
-#endif
 
    const boost::shared_ptr<hier::PatchLevel> patch_level(
       d_patch_hierarchy->getPatchLevel(level_number));
@@ -1040,9 +1027,7 @@ double
 TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
    const double end_time)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(end_time >= d_integrator_time);
-#endif
 
    double dt = end_time - d_integrator_time;
 
@@ -1290,12 +1275,10 @@ TimeRefinementIntegrator::findNextDtAndStepsRemaining(
    const double time_remaining,
    const double dt_bound)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(time_remaining >= 0.0);
    TBOX_ASSERT(dt_bound >= 0.0);
-#endif
 
    /*
     * Grow time increment from previous if possible, but time step size
@@ -1398,10 +1381,8 @@ bool
 TimeRefinementIntegrator::atRegridPoint(
    const int level_number) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    int step_number = ((level_number == 0) ? d_integrator_step
                       : d_step_level[level_number]);
@@ -1424,10 +1405,8 @@ bool
 TimeRefinementIntegrator::coarserLevelRegridsToo(
    const int level_number) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
    return (level_number > 0) ? atRegridPoint(level_number - 1) : false;
 }
 
@@ -1480,10 +1459,8 @@ TimeRefinementIntegrator::printDataForLevel(
    std::ostream& os,
    const int level_number) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
    os << "\nTimeRefinementIntegrator::printDataForLevel..." << std::endl;
    os << "\nd_level_sim_time[" << level_number << "] = "
       << d_level_sim_time[level_number] << std::endl;
@@ -1513,9 +1490,7 @@ void
 TimeRefinementIntegrator::putToDatabase(
    const boost::shared_ptr<tbox::Database>& db) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    db->putInteger("ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION",
       ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION);
@@ -1548,9 +1523,7 @@ TimeRefinementIntegrator::getFromInput(
    const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(is_from_restart || db);
-#endif
 
    if (is_from_restart) {
       if (db) {

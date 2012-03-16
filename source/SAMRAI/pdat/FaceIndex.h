@@ -64,7 +64,13 @@ public:
     */
    FaceIndex&
    operator = (
-      const FaceIndex& rhs);
+      const FaceIndex& rhs)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      hier::Index::operator = (rhs);
+      d_axis = rhs.d_axis;
+      return *this;
+   }
 
    /**
     * The face index destructor does nothing interesting.
@@ -75,14 +81,20 @@ public:
     * Get the axis for which this face index is defined (X=0, Y=1, Z=2).
     */
    int
-   getAxis() const;
+   getAxis() const
+   {
+      return d_axis;
+   }
 
    /**
     * Set the face axis (X=0, Y=1, Z=2).
     */
    void
    setAxis(
-      const int axis);
+      const int axis)
+   {
+      d_axis = axis;
+   }
 
    /**
     * Convert the face index into the index on the left hand face
@@ -97,84 +109,144 @@ public:
     */
    FaceIndex&
    operator += (
-      const hier::IntVector& rhs);
+      const hier::IntVector& rhs)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      hier::Index::operator += (rhs);
+      return *this;
+   }
 
    /**
     * Plus operator for a face index and an integer vector.
     */
    FaceIndex
    operator + (
-      const hier::IntVector& rhs) const;
+      const hier::IntVector& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      FaceIndex tmp = *this;
+      tmp += rhs;
+      return tmp;
+   }
 
    /**
     * Plus-equals operator for a face index and an integer.
     */
    FaceIndex&
    operator += (
-      const int rhs);
+      const int rhs)
+   {
+      hier::Index::operator += (rhs);
+      return *this;
+   }
 
    /**
     * Plus operator for a face index and an integer.
     */
    FaceIndex
    operator + (
-      const int rhs) const;
+      const int rhs) const
+   {
+      FaceIndex tmp = *this;
+      tmp += rhs;
+      return tmp;
+   }
 
    /**
     * Minus-equals operator for a face index and an integer vector.
     */
    FaceIndex&
    operator -= (
-      const hier::IntVector& rhs);
+      const hier::IntVector& rhs)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      hier::Index::operator -= (rhs);
+      return *this;
+   }
 
    /**
     * Minus operator for a face index and an integer vector.
     */
    FaceIndex
    operator - (
-      const hier::IntVector& rhs) const;
+      const hier::IntVector& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      FaceIndex tmp = *this;
+      tmp -= rhs;
+      return tmp;
+   }
 
    /**
     * Minus-equals operator for a face index and an integer.
     */
    FaceIndex&
    operator -= (
-      const int rhs);
+      const int rhs)
+   {
+      hier::Index::operator -= (rhs);
+      return *this;
+   }
 
    /**
     * Minus operator for a face index and an integer.
     */
    FaceIndex
    operator - (
-      const int rhs) const;
+      const int rhs) const
+   {
+      FaceIndex tmp = *this;
+      tmp -= rhs;
+      return tmp;
+   }
 
    /**
     * Times-equals operator for a face index and an integer vector.
     */
    FaceIndex&
    operator *= (
-      const hier::IntVector& rhs);
+      const hier::IntVector& rhs)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      hier::Index::operator *= (rhs);
+      return *this;
+   }
 
    /**
     * Times operator for a face index and an integer vector.
     */
    FaceIndex
    operator * (
-      const hier::IntVector& rhs) const;
+      const hier::IntVector& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      FaceIndex tmp = *this;
+      tmp *= rhs;
+      return tmp;
+   }
 
    /**
     * Times-equals operator for a face index and an integer.
     */
    FaceIndex&
    operator *= (
-      const int rhs);
+      const int rhs)
+   {
+      hier::Index::operator *= (rhs);
+      return *this;
+   }
 
    /**
     * Times operator for a face index and an integer.
     */
    FaceIndex
    operator * (
-      const int rhs) const;
+      const int rhs) const
+   {
+      FaceIndex tmp = *this;
+      tmp *= rhs;
+      return tmp;
+   }
 
    /**
     * Returns true if two face index objects are equal.  All components
@@ -182,7 +254,11 @@ public:
     */
    bool
    operator == (
-      const FaceIndex& rhs) const;
+      const FaceIndex& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      return ((hier::Index *)this)->operator == (rhs) && (d_axis == rhs.d_axis);
+   }
 
    /**
     * Returns true if two face index objects are not equal.  Any of
@@ -190,7 +266,11 @@ public:
     */
    bool
    operator != (
-      const FaceIndex& rhs) const;
+      const FaceIndex& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      return ((hier::Index *)this)->operator != (rhs) || (d_axis != rhs.d_axis);
+   }
 
    enum {
       X = 0,
@@ -206,7 +286,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/FaceIndex.I"
-#endif
+
 #endif

@@ -66,33 +66,50 @@ public:
     */
    RealBoxConstIterator&
    operator = (
-      const RealBoxConstIterator& r);
+      const RealBoxConstIterator& r)
+   {
+      d_mapped_boxes = r.d_mapped_boxes;
+      d_ni = r.d_ni;
+      return *this;
+   }
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
    const Box&
-   operator * () const;
+   operator * () const
+   {
+      return *d_ni;
+   }
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
    const Box *
-   operator -> () const;
+   operator -> () const
+   {
+      return &(*d_ni);
+   }
 
    /*!
     * @brief Equality comparison.
     */
    bool
    operator == (
-      const RealBoxConstIterator& r) const;
+      const RealBoxConstIterator& r) const
+   {
+      return d_mapped_boxes == r.d_mapped_boxes && d_ni == r.d_ni;
+   }
 
    /*!
     * @brief Inequality comparison.
     */
    bool
    operator != (
-      const RealBoxConstIterator& r) const;
+      const RealBoxConstIterator& r) const
+   {
+      return d_mapped_boxes != r.d_mapped_boxes || d_ni != r.d_ni;
+   }
 
    /*!
     * @brief Pre-increment iterator.
@@ -118,7 +135,12 @@ public:
     * iterator reaches its end, this returns false.
     */
    bool
-   isValid() const;
+   isValid() const
+   {
+      return d_mapped_boxes != NULL &&
+             d_ni != d_mapped_boxes->end() &&
+             !d_ni->isPeriodicImage();
+   }
 
 private:
    /*!
@@ -136,7 +158,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/RealBoxConstIterator.I"
-#endif
 #endif  // included_hier_RealBoxConstIterator

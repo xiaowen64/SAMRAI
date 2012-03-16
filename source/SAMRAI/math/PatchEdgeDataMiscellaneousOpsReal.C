@@ -47,7 +47,8 @@ PatchEdgeDataMiscellaneousOpsReal<TYPE>::PatchEdgeDataMiscellaneousOpsReal(
 }
 
 template<class TYPE>
-void PatchEdgeDataMiscellaneousOpsReal<TYPE>::operator = (
+void
+PatchEdgeDataMiscellaneousOpsReal<TYPE>::operator = (
    const PatchEdgeDataMiscellaneousOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -62,15 +63,15 @@ void PatchEdgeDataMiscellaneousOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-int PatchEdgeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
+int
+PatchEdgeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data1,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& data2,
    const hier::Box& box,
    const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
-#endif
+
    int dimVal = data1->getDim().getValue();
 
    int retval = 1;
@@ -100,16 +101,16 @@ int PatchEdgeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 }
 
 template<class TYPE>
-void PatchEdgeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
+void
+PatchEdgeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box,
    const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);
-#endif
+
    int dimVal = dst->getDim().getValue();
 
    if (!cvol) {
@@ -133,15 +134,15 @@ void PatchEdgeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 }
 
 template<class TYPE>
-int PatchEdgeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
+int
+PatchEdgeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
    const hier::Box& box,
    const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst && src);
-#endif
+
    int dimVal = dst->getDim().getValue();
 
    int retval = 1;
@@ -171,14 +172,14 @@ int PatchEdgeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 }
 
 template<class TYPE>
-TYPE PatchEdgeDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
+TYPE
+PatchEdgeDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& numer,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& denom,
    const hier::Box& box) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(numer && denom);
-#endif
+
    int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;
@@ -193,14 +194,14 @@ TYPE PatchEdgeDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
 }
 
 template<class TYPE>
-TYPE PatchEdgeDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
+TYPE
+PatchEdgeDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& numer,
    const boost::shared_ptr<pdat::EdgeData<TYPE> >& denom,
    const hier::Box& box) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(numer && denom);
-#endif
+
    int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;

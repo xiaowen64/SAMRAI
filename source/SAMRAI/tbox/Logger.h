@@ -112,7 +112,10 @@ public:
    logAbort(
       const std::string& message,
       const std::string& filename,
-      const int line);
+      const int line)
+   {
+      d_abort_appender->logMessage(message, filename, line);
+   }
 
    /*!
     * Logs warning message with file & location.
@@ -121,7 +124,12 @@ public:
    logWarning(
       const std::string& message,
       const std::string& filename,
-      const int line);
+      const int line)
+   {
+      if (d_log_warning) {
+         d_warning_appender->logMessage(message, filename, line);
+      }
+   }
 
    /*!
     * Logs debug message with file & location.
@@ -130,7 +138,12 @@ public:
    logDebug(
       const std::string& message,
       const std::string& filename,
-      const int line);
+      const int line)
+   {
+      if (d_log_debug) {
+         d_debug_appender->logMessage(message, filename, line);
+      }
+   }
 
    /*!
     * Set the Appender for logging abort messages to an
@@ -140,7 +153,10 @@ public:
     */
    void
    setAbortAppender(
-      const boost::shared_ptr<Appender>& appender);
+      const boost::shared_ptr<Appender>& appender)
+   {
+      d_abort_appender = appender;
+   }
 
    /*!
     * Set the Appender for logging warning messages to an
@@ -150,7 +166,10 @@ public:
     */
    void
    setWarningAppender(
-      const boost::shared_ptr<Appender>& appender);
+      const boost::shared_ptr<Appender>& appender)
+   {
+      d_warning_appender = appender;
+   }
 
    /*!
     * Set the Appender for logging debug messages to an
@@ -160,7 +179,10 @@ public:
     */
    void
    setDebugAppender(
-      const boost::shared_ptr<Appender>& appender);
+      const boost::shared_ptr<Appender>& appender)
+   {
+      d_debug_appender = appender;
+   }
 
    /*!
     * Turn logging of warning messages on or off.
@@ -169,7 +191,10 @@ public:
     */
    void
    setWarning(
-      bool onoff);
+      bool onoff)
+   {
+      d_log_warning = onoff;
+   }
 
    /*!
     * Turn logging of debug messages on or off.
@@ -178,7 +203,10 @@ public:
     */
    void
    setDebug(
-      bool onoff);
+      bool onoff)
+   {
+      d_log_debug = onoff;
+   }
 
 private:
    /*
@@ -225,7 +253,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/Logger.I"
-#endif
+
 #endif

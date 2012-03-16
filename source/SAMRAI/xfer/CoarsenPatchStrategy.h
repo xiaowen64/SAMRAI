@@ -143,7 +143,10 @@ public:
     * @brief Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    /*!
@@ -151,7 +154,11 @@ private:
     * registered.
     */
    static std::set<CoarsenPatchStrategy *>&
-   getCurrentObjects();
+   getCurrentObjects()
+   {
+      static std::set<CoarsenPatchStrategy *> current_objects;
+      return current_objects;
+   }
 
    /*!
     * @brief Dimension of the object.
@@ -163,13 +170,16 @@ private:
     * objects used in an application.
     */
    void
-   registerObject();
+   registerObject()
+   {
+      std::set<CoarsenPatchStrategy *>& current_objects =
+         CoarsenPatchStrategy::getCurrentObjects();
+      current_objects.insert(this);
+   }
 
 };
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/CoarsenPatchStrategy.I"
-#endif
+
 #endif

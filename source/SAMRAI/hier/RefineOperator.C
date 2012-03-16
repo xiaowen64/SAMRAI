@@ -14,9 +14,6 @@
 #include "SAMRAI/hier/RefineOperator.h"
 
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/RefineOperator.I"
-#endif
 
 namespace SAMRAI {
 namespace hier {

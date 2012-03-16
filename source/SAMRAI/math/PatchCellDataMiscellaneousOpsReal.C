@@ -45,7 +45,8 @@ PatchCellDataMiscellaneousOpsReal<TYPE>::PatchCellDataMiscellaneousOpsReal(
 }
 
 template<class TYPE>
-void PatchCellDataMiscellaneousOpsReal<TYPE>::operator = (
+void
+PatchCellDataMiscellaneousOpsReal<TYPE>::operator = (
    const PatchCellDataMiscellaneousOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -60,7 +61,8 @@ void PatchCellDataMiscellaneousOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-int PatchCellDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
+int
+PatchCellDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
    const boost::shared_ptr<pdat::CellData<TYPE> >& data1,
    const boost::shared_ptr<pdat::CellData<TYPE> >& data2,
    const hier::Box& box,
@@ -87,7 +89,8 @@ int PatchCellDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 }
 
 template<class TYPE>
-void PatchCellDataMiscellaneousOpsReal<TYPE>::compareToScalar(
+void
+PatchCellDataMiscellaneousOpsReal<TYPE>::compareToScalar(
    const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src,
    const TYPE& alpha,
@@ -113,7 +116,8 @@ void PatchCellDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 }
 
 template<class TYPE>
-int PatchCellDataMiscellaneousOpsReal<TYPE>::testReciprocal(
+int
+PatchCellDataMiscellaneousOpsReal<TYPE>::testReciprocal(
    const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src,
    const hier::Box& box,
@@ -140,7 +144,8 @@ int PatchCellDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 }
 
 template<class TYPE>
-TYPE PatchCellDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
+TYPE
+PatchCellDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
    const boost::shared_ptr<pdat::CellData<TYPE> >& numer,
    const boost::shared_ptr<pdat::CellData<TYPE> >& denom,
    const hier::Box& box) const
@@ -156,7 +161,8 @@ TYPE PatchCellDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
 }
 
 template<class TYPE>
-TYPE PatchCellDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
+TYPE
+PatchCellDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
    const boost::shared_ptr<pdat::CellData<TYPE> >& numer,
    const boost::shared_ptr<pdat::CellData<TYPE> >& denom,
    const hier::Box& box) const

@@ -10,6 +10,7 @@
 
 #include "EdgeMultiblockTest.h"
 
+#include "SAMRAI/xfer/BoxGeometryVariableFillPattern.h"
 #include "SAMRAI/geom/SAMRAITransferOperatorRegistry.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/EdgeDoubleConstantRefine.h"

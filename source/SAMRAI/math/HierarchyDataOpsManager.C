@@ -38,11 +38,6 @@
 #include "SAMRAI/pdat/EdgeVariable.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-#include "SAMRAI/tbox/Utilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/math/HierarchyDataOpsManager.I"
-#endif
 
 namespace SAMRAI {
 namespace math {

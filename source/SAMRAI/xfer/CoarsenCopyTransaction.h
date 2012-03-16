@@ -52,7 +52,13 @@ public:
    static void
    setCoarsenItems(
       const CoarsenClasses::Data** coarsen_items,
-      int num_coarsen_items);
+      int num_coarsen_items)
+   {
+      TBOX_ASSERT(coarsen_items != (const CoarsenClasses::Data **)NULL);
+      TBOX_ASSERT(num_coarsen_items >= 0);
+      s_coarsen_items = coarsen_items;
+      s_num_coarsen_items = num_coarsen_items;
+   }
 
    /*!
     * Static member function to unset the array of coarsen class data items that
@@ -61,7 +67,11 @@ public:
     * of different schedules.  The array is unset in the CoarsenSchedule class.
     */
    static void
-   unsetCoarsenItems();
+   unsetCoarsenItems()
+   {
+      s_coarsen_items = (const CoarsenClasses::Data **)NULL;
+      s_num_coarsen_items = 0;
+   }
 
    /*!
     * Construct a transaction with the specified source and destination
@@ -184,7 +194,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/CoarsenCopyTransaction.I"
-#endif
 #endif

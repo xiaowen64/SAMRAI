@@ -13,17 +13,13 @@
 
 #include "SAMRAI/xfer/CoarsenAlgorithm.h"
 
+#include "SAMRAI/xfer/BoxGeometryVariableFillPattern.h"
 #include "SAMRAI/xfer/StandardCoarsenTransactionFactory.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/VariableDatabase.h"
-#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/make_shared.hpp>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/CoarsenAlgorithm.I"
-#endif
 
 namespace SAMRAI {
 namespace xfer {

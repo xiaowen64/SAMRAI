@@ -225,7 +225,11 @@ public:
     */
    void
    setDefaultDerivedDataWriter(
-      VisDerivedDataStrategy* default_derived_writer);
+      VisDerivedDataStrategy* default_derived_writer)
+   {
+      TBOX_ASSERT(default_derived_writer != (VisDerivedDataStrategy *)NULL);
+      d_default_derived_writer = default_derived_writer;
+   }
 
    /*!
     * @brief This method sets the data writer to use for materials.
@@ -238,7 +242,11 @@ public:
     */
    void
    setMaterialsDataWriter(
-      VisMaterialsDataStrategy* materials_data_writer);
+      VisMaterialsDataStrategy* materials_data_writer)
+   {
+      TBOX_ASSERT(materials_data_writer != (VisMaterialsDataStrategy *)NULL);
+      d_materials_writer = materials_data_writer;
+   }
 
    /*!
     * @brief This method registers a variable with the VisIt data writer.
@@ -632,7 +640,11 @@ public:
     */
    void
    setSummaryFilename(
-      std::string& filename);
+      std::string& filename)
+   {
+      TBOX_ASSERT(!filename.empty());
+      d_summary_filename = filename + ".samrai";
+   }
 
    /*!
     * @brief Returns the object name.
@@ -640,7 +652,10 @@ public:
     * @return The object name.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*
@@ -1252,7 +1267,11 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   initializeCallback();
+   initializeCallback()
+   {
+      t_write_plot_data = tbox::TimerManager::getManager()->getTimer(
+         "appu:VisItDataWriter::writePlotData()");
+   }
 
    /*!
     * @brief Method registered with ShutdownRegister to cleanup statics.
@@ -1260,7 +1279,10 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   finalizeCallback();
+   finalizeCallback()
+   {
+      t_write_plot_data.reset();
+   }
 
    /*
     * Static initialization and cleanup handler.
@@ -1272,8 +1294,5 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/appu/VisItDataWriter.I"
-#endif
 #endif
 #endif

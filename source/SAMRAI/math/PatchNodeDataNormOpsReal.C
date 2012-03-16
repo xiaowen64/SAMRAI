@@ -46,7 +46,8 @@ PatchNodeDataNormOpsReal<TYPE>::PatchNodeDataNormOpsReal(
 }
 
 template<class TYPE>
-void PatchNodeDataNormOpsReal<TYPE>::operator = (
+void
+PatchNodeDataNormOpsReal<TYPE>::operator = (
    const PatchNodeDataNormOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -61,7 +62,8 @@ void PatchNodeDataNormOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-int PatchNodeDataNormOpsReal<TYPE>::numberOfEntries(
+int
+PatchNodeDataNormOpsReal<TYPE>::numberOfEntries(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box) const
 {
@@ -83,14 +85,14 @@ int PatchNodeDataNormOpsReal<TYPE>::numberOfEntries(
  */
 
 template<class TYPE>
-double PatchNodeDataNormOpsReal<TYPE>::sumControlVolumes(
+double
+PatchNodeDataNormOpsReal<TYPE>::sumControlVolumes(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
    const boost::shared_ptr<pdat::NodeData<double> >& cvol,
    const hier::Box& box) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data && cvol);
-#endif
+
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    return d_array_ops.sumControlVolumes(data->getArrayData(),
       cvol->getArrayData(),
@@ -98,7 +100,8 @@ double PatchNodeDataNormOpsReal<TYPE>::sumControlVolumes(
 }
 
 template<class TYPE>
-void PatchNodeDataNormOpsReal<TYPE>::abs(
+void
+PatchNodeDataNormOpsReal<TYPE>::abs(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
    const hier::Box& box) const
@@ -113,7 +116,8 @@ void PatchNodeDataNormOpsReal<TYPE>::abs(
 }
 
 template<class TYPE>
-double PatchNodeDataNormOpsReal<TYPE>::L1Norm(
+double
+PatchNodeDataNormOpsReal<TYPE>::L1Norm(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
@@ -136,7 +140,8 @@ double PatchNodeDataNormOpsReal<TYPE>::L1Norm(
 }
 
 template<class TYPE>
-double PatchNodeDataNormOpsReal<TYPE>::L2Norm(
+double
+PatchNodeDataNormOpsReal<TYPE>::L2Norm(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
@@ -159,7 +164,8 @@ double PatchNodeDataNormOpsReal<TYPE>::L2Norm(
 }
 
 template<class TYPE>
-double PatchNodeDataNormOpsReal<TYPE>::weightedL2Norm(
+double
+PatchNodeDataNormOpsReal<TYPE>::weightedL2Norm(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& weight,
    const hier::Box& box,
@@ -187,14 +193,14 @@ double PatchNodeDataNormOpsReal<TYPE>::weightedL2Norm(
 }
 
 template<class TYPE>
-double PatchNodeDataNormOpsReal<TYPE>::RMSNorm(
+double
+PatchNodeDataNormOpsReal<TYPE>::RMSNorm(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
+
    double retval = L2Norm(data, box, cvol);
    if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
@@ -205,15 +211,15 @@ double PatchNodeDataNormOpsReal<TYPE>::RMSNorm(
 }
 
 template<class TYPE>
-double PatchNodeDataNormOpsReal<TYPE>::weightedRMSNorm(
+double
+PatchNodeDataNormOpsReal<TYPE>::weightedRMSNorm(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& weight,
    const hier::Box& box,
    const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data && weight);
-#endif
+
    double retval = weightedL2Norm(data, weight, box, cvol);
    if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
@@ -224,14 +230,14 @@ double PatchNodeDataNormOpsReal<TYPE>::weightedRMSNorm(
 }
 
 template<class TYPE>
-double PatchNodeDataNormOpsReal<TYPE>::maxNorm(
+double
+PatchNodeDataNormOpsReal<TYPE>::maxNorm(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
+
    double retval;
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    if (!cvol) {
@@ -245,15 +251,15 @@ double PatchNodeDataNormOpsReal<TYPE>::maxNorm(
 }
 
 template<class TYPE>
-TYPE PatchNodeDataNormOpsReal<TYPE>::dot(
+TYPE
+PatchNodeDataNormOpsReal<TYPE>::dot(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& data1,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& data2,
    const hier::Box& box,
    const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
-#endif
+
    TYPE retval;
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    if (!cvol) {
@@ -271,14 +277,14 @@ TYPE PatchNodeDataNormOpsReal<TYPE>::dot(
 }
 
 template<class TYPE>
-TYPE PatchNodeDataNormOpsReal<TYPE>::integral(
+TYPE
+PatchNodeDataNormOpsReal<TYPE>::integral(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::NodeData<double> >& vol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
+
    TYPE retval;
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
 

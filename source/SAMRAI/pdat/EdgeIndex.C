@@ -13,10 +13,6 @@
 
 #include "SAMRAI/pdat/EdgeIndex.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/EdgeIndex.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 

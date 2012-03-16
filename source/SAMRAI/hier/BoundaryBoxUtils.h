@@ -52,7 +52,11 @@ public:
     */
    void
    setBoundaryBox(
-      const BoundaryBox& bbox);
+      const BoundaryBox& bbox)
+   {
+      d_bbox = bbox;
+      computeOutwardShift();
+   }
 
    /*!
     * @brief Get boundary box.
@@ -60,7 +64,10 @@ public:
     * @return The boundary box
     */
    const BoundaryBox&
-   getBoundaryBox() const;
+   getBoundaryBox() const
+   {
+      return d_bbox;
+   }
 
    /*!
     * @brief Get the outward direction in logical space.
@@ -80,7 +87,10 @@ public:
     * @return IntVector containing the outward direction values
     */
    const IntVector&
-   getOutwardShift() const;
+   getOutwardShift() const
+   {
+      return d_outward;
+   }
 
    /*!
     * @brief Stretch box outward by the given ghost cell width.
@@ -132,7 +142,10 @@ public:
     * @return The normal direction.
     */
    int
-   normalDir() const;
+   normalDir() const
+   {
+      return d_bbox.getLocationIndex() / 2;
+   }
 
    /*!
     * @brief Trim a boundary box so that it does not stick out
@@ -204,7 +217,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoundaryBoxUtils.I"
-#endif
 #endif

@@ -32,16 +32,11 @@
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Statistician.h"
 #include "SAMRAI/tbox/TimerManager.h"
-#include "SAMRAI/tbox/Utilities.h"
 
 #include <algorithm>
 #include <cstdlib>
 #include <fstream>
 #include <cmath>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/mesh/TreeLoadBalancerOld.I"
-#endif
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -3719,9 +3714,8 @@ TreeLoadBalancerOld::breakOffLoad_planar(
          if (difference < best_difference) {
             // This cut gives better difference, if it can be done.
 
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(brk_len >= 0 && brk_len <= bad.size());
-#endif
+
             if (brk_len == box_dims(brk_dir) ||
                 bad[brk_len] == false) {
                // Cutting brk_len from low side is ok.
@@ -4652,6 +4646,56 @@ TreeLoadBalancerOld::BoxInTransit::BoxInTransit(
    if (rank != other.getOwnerRank()) {
       d_proc_hist.push_back(other.getOwnerRank());
    }
+}
+
+int*
+TreeLoadBalancerOld::BoxInTransit::putToIntBuffer(
+   int* buffer,
+   bool skip_last_owner) const
+{
+   const int box_comm_buf_size = hier::Box::commBufferSize(d_box.getDim());
+   d_box.putToIntBuffer(buffer);
+   buffer += box_comm_buf_size;
+   d_orig_box.putToIntBuffer(buffer);
+   buffer += box_comm_buf_size;
+   *(buffer++) = d_load;
+   if (skip_last_owner) {
+      TBOX_ASSERT( !d_proc_hist.empty() );
+   }
+   *(buffer++) = static_cast<int>(d_proc_hist.size()-skip_last_owner);
+   for (unsigned int i = 0; i < d_proc_hist.size()-skip_last_owner; ++i) {
+      *(buffer++) = d_proc_hist[i];
+   }
+   return buffer;
+}
+
+const int*
+TreeLoadBalancerOld::BoxInTransit::getFromIntBuffer(
+   const int* buffer)
+{
+   const int box_comm_buf_size = hier::Box::commBufferSize(d_box.getDim());
+   d_box.getFromIntBuffer(buffer);
+   buffer += box_comm_buf_size;
+   d_orig_box.getFromIntBuffer(buffer);
+   buffer += box_comm_buf_size;
+   d_load = *(buffer++);
+   d_proc_hist.clear();
+   d_proc_hist.insert(d_proc_hist.end(), *(buffer++), 0);
+   for (unsigned int i = 0; i < d_proc_hist.size(); ++i) {
+      d_proc_hist[i] = *(buffer++);
+   }
+   return buffer;
+}
+
+void
+TreeLoadBalancerOld::BoxInTransit::packForPreviousOwner(
+   std::map<int,std::vector<int> > &outgoing_messages ) const
+{
+   const int prev_owner = d_proc_hist.back();
+   std::vector<int> &msg(outgoing_messages[prev_owner]);
+   const int cbs1 = commBufferSize()-1;
+   msg.insert(msg.end(), cbs1, 0);
+   putToIntBuffer(&msg[msg.size() - cbs1], true);
 }
 
 TreeLoadBalancerOld::SubtreeLoadData::SubtreeLoadData():

@@ -149,16 +149,12 @@ CartesianSideFloatWeightedAverage::coarsen(
    boost::shared_ptr<pdat::SideData<float> > cdata(
       coarse.getPatchData(dst_component),
       boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
-#endif
    const hier::IntVector& directions = cdata->getDirectionVector();
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(directions ==
       hier::IntVector::min(directions, fdata->getDirectionVector()));
-#endif
 
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();

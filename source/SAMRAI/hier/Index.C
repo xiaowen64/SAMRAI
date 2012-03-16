@@ -12,11 +12,8 @@
 #define included_hier_Index_C
 
 #include "SAMRAI/hier/Index.h"
+#include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/Index.I"
-#endif
 
 namespace SAMRAI {
 namespace hier {

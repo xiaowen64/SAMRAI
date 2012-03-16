@@ -144,13 +144,19 @@ public:
     * @brief Get the rotation
     */
    RotationIdentifier
-   getRotation() const;
+   getRotation() const
+   {
+      return d_rotation;
+   }
 
    /*!
     * @brief Get the offset
     */
    const IntVector&
-   getOffset() const;
+   getOffset() const
+   {
+      return d_offset;
+   }
 
    /*!
     * @brief Transform the Box in the way defined by this object
@@ -178,7 +184,14 @@ public:
     */
    Transformation&
    operator = (
-      const Transformation& rhs);
+      const Transformation& rhs)
+   {
+      d_rotation = rhs.d_rotation;
+      d_offset = rhs.d_offset;
+      d_begin_block = rhs.d_begin_block;
+      d_end_block = rhs.d_end_block;
+      return *this;
+   }
 
    /*!
     * @brief Map a string-based identifier of a rotation operation to a
@@ -317,7 +330,10 @@ public:
    static void
    rotateIndex(
       Index& index,
-      const RotationIdentifier rotation);
+      const RotationIdentifier rotation)
+   {
+      rotateIndex(&index[0], index.getDim(), rotation);
+   }
 
 private:
    /*!
@@ -354,9 +370,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/Transformation.I"
-#endif
 
 #endif

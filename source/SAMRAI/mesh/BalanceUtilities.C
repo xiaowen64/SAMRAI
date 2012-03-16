@@ -115,11 +115,9 @@ BalanceUtilities::privateRecursiveProcAssign(
    const double avg_weight)
 {
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(wt_index_hi >= wt_index_lo);
    TBOX_ASSERT(proc_index_hi >= proc_index_lo);
    TBOX_ASSERT((wt_index_hi - wt_index_lo) >= (proc_index_hi - proc_index_lo));
-#endif
 
    int i;
 
@@ -968,9 +966,7 @@ BalanceUtilities::binPack(
    tbox::Array<double>& weights,
    const int nproc)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(nproc > 0);
-#endif
 
    /*
     * Create the mapping array, find the average workload, and zero weights
@@ -981,9 +977,7 @@ BalanceUtilities::binPack(
 
    double avg_work = 0.0;
    for (int w = 0; w < nboxes; w++) {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(weights[w] >= 0.0);
-#endif
       avg_work += weights[w];
    }
    avg_work /= nproc;
@@ -1053,10 +1047,8 @@ BalanceUtilities::spatialBinPack(
    hier::BoxContainer& boxes,
    const int nproc)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(nproc > 0);
    TBOX_ASSERT(weights.getSize() == boxes.size());
-#endif
 
    const int nboxes = boxes.size();
 
@@ -1165,9 +1157,7 @@ BalanceUtilities::spatialBinPack(
 
    double avg_work = 0.0;
    for (i = 0; i < nboxes; i++) {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(weights[i] >= 0.0);
-#endif
       avg_work += weights[i];
    }
    avg_work /= nproc;
@@ -1613,9 +1603,7 @@ BalanceUtilities::sortDescendingBoxWorkloads(
    hier::BoxContainer& boxes,
    tbox::Array<double>& workload)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(boxes.size() == workload.getSize());
-#endif
 
    /*
     * Create the permutation array that represents indices in sorted order
@@ -1691,9 +1679,7 @@ BalanceUtilities::computeLoadBalanceEfficiency(
    std::ostream& os,
    int workload_data_id)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level);
-#endif
 
    NULL_USE(os);
    const tbox::SAMRAI_MPI& mpi(level->getBoxLevel()->getMPI());

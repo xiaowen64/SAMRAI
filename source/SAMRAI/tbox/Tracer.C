@@ -11,10 +11,6 @@
 #include "SAMRAI/tbox/Tracer.h"
 #include "SAMRAI/tbox/PIO.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/Tracer.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 

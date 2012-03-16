@@ -24,10 +24,6 @@
 #include <boost/make_shared.hpp>
 #include <fstream>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxIOUtility.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 

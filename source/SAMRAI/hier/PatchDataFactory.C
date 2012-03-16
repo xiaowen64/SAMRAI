@@ -13,9 +13,8 @@
 
 #include "SAMRAI/hier/PatchDataFactory.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchDataFactory.I"
-#endif
+#include "SAMRAI/tbox/Utilities.h"
+
 namespace SAMRAI {
 namespace hier {
 

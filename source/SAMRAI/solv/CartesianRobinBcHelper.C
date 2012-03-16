@@ -19,7 +19,6 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/TimerManager.h"
-#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #include IOMANIP_HEADER_FILE
@@ -77,10 +76,6 @@ void F77_FUNC(settype3cells3d, SETTYPE3CELLS3D) (
    const int& dkfirst, const int& dklast,
    const int* lower, const int* upper, const int& location);
 }
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/CartesianRobinBcHelper.I"
-#endif
 
 namespace SAMRAI {
 namespace solv {
@@ -530,9 +525,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
          const int n_node_boxes = node_boxes.getSize();
          for (int n = 0; n < n_node_boxes; ++n) {
             const hier::BoundaryBox& bb = node_boxes[n];
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(bb.getBoundaryType() == 2);        // Must be a node boundary.
-#endif
             const hier::Box& bb_box = bb.getBox();
             const hier::Index& lower = bb_box.lower();
             const hier::Index& upper = bb_box.upper();
@@ -560,9 +553,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
                d_coef_strategy->numberOfExtensionsFillable() >= extension_amount ?
                trimBoundaryBox(edge_boxes[n], ghost_box) :
                trimBoundaryBox(edge_boxes[n], patch_box);
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(boundary_box.getBoundaryType() == 2);
-#endif
             const hier::Index& lower = boundary_box.getBox().lower();
             const hier::Index& upper = boundary_box.getBox().upper();
             F77_FUNC(settype2cells3d, SETTYPE2CELLS3D) (data.getPointer(0),
@@ -581,15 +572,11 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
          const int n_node_boxes = node_boxes.getSize();
          for (int n = 0; n < n_node_boxes; ++n) {
             const hier::BoundaryBox& bb = node_boxes[n];
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(bb.getBoundaryType() == 3); // Must be an node boundary.
-#endif
             const hier::Box& bb_box = bb.getBox();
             const hier::Index& lower = bb_box.lower();
             const hier::Index& upper = bb_box.upper();
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(lower == upper);
-#endif
             const int location_index = bb.getLocationIndex();
             F77_FUNC(settype3cells3d, SETTYPE3CELLS3D) (data.getPointer(0),
                ghost_box.lower()[0], ghost_box.upper()[0],

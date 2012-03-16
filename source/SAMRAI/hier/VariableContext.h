@@ -59,7 +59,10 @@ public:
     * one.  Note that this number changes as new variable contexts are created.
     */
    static int
-   getCurrentMaximumInstanceNumber();
+   getCurrentMaximumInstanceNumber()
+   {
+      return s_instance_counter;
+   }
 
    /**
     * The variable context constructor creates a context with the given
@@ -80,13 +83,19 @@ public:
     * Return integer index for VariableContext object.
     */
    int
-   getIndex() const;
+   getIndex() const
+   {
+      return d_index;
+   }
 
    /**
     * Return name std::string identifier for VariableContext object.
     */
    const std::string&
-   getName() const;
+   getName() const
+   {
+      return d_name;
+   }
 
    /**
     * Check whether two contexts are the same.  Return true if the
@@ -95,7 +104,10 @@ public:
     */
    bool
    operator == (
-      const VariableContext& other) const;
+      const VariableContext& other) const
+   {
+      return d_index == other.d_index;
+   }
 
 private:
    VariableContext(
@@ -113,9 +125,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/VariableContext.I"
-#endif
 
 #endif

@@ -12,10 +12,6 @@
 
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/RealBoxConstIterator.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 

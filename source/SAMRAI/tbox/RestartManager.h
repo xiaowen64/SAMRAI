@@ -97,7 +97,10 @@ public:
     * has been opened from main()).  Returns false otherwise.
     */
    bool
-   isFromRestart();
+   isFromRestart()
+   {
+      return d_is_from_restart;
+   }
 
    /**
     * Attempts to mount, for reading, the restart file for the processor.
@@ -121,7 +124,10 @@ public:
     * Returns a boost::shared_ptr to the root of the database.
     */
    boost::shared_ptr<Database>
-   getRootDatabase();
+   getRootDatabase()
+   {
+      return d_database_root;
+   }
 
    /**
     * Sets the database for restore or dumps.
@@ -129,7 +135,16 @@ public:
     */
    void
    setRootDatabase(
-      const boost::shared_ptr<Database>& database);
+      const boost::shared_ptr<Database>& database)
+   {
+      if (!database) {
+         d_database_root.reset();
+         d_is_from_restart = false;
+      } else {
+         d_database_root = database;
+         d_is_from_restart = true;
+      }
+   }
 
    /**
     * Sets the database for restore or dumps.
@@ -137,7 +152,10 @@ public:
     */
    void
    setDatabaseFactory(
-      const boost::shared_ptr<DatabaseFactory>& database_factory);
+      const boost::shared_ptr<DatabaseFactory>& database_factory)
+   {
+      d_database_factory = database_factory;
+   }
 
    /**
     * Registers an object for restart with the given name.
@@ -166,7 +184,10 @@ public:
     * Clear all restart items managed by the restart manager.
     */
    void
-   clearRestartItems();
+   clearRestartItems()
+   {
+      d_restart_items_list.clearItems();
+   }
 
    /**
     * Write all objects registered to as restart objects to the
@@ -178,7 +199,10 @@ public:
     */
    void
    writeRestartFile(
-      const std::string& root_dirname);
+      const std::string& root_dirname)
+   {
+      writeRestartFile(root_dirname, 0);
+   }
 
    /**
     * Write all objects registered to as restart objects to the
@@ -265,11 +289,7 @@ private:
    /*
     * list of objects registered to be written to the restart database
     */
-#ifdef LACKS_NAMESPACE_IN_DECLARE
-   List<RestartItem> d_restart_items_list;
-#else
    List<RestartManager::RestartItem> d_restart_items_list;
-#endif
 
    boost::shared_ptr<Database> d_database_root;
 
@@ -287,7 +307,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/RestartManager.I"
-#endif
 #endif

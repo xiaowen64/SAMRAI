@@ -12,11 +12,8 @@
 #define included_hier_PatchGeometry_C
 
 #include "SAMRAI/hier/PatchGeometry.h"
-#include "SAMRAI/hier/BoundaryLookupTable.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchGeometry.I"
-#endif
+#include "SAMRAI/hier/BoundaryLookupTable.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*

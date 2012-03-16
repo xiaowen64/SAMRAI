@@ -14,10 +14,6 @@
 
 #include <iostream>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/GlobalId.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 

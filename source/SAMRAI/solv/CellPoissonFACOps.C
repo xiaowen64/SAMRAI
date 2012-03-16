@@ -33,7 +33,6 @@
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/TimerManager.h"
-#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/xfer/CoarsenAlgorithm.h"
 #include "SAMRAI/hier/CoarsenOperator.h"
@@ -44,10 +43,6 @@
 #include "SAMRAI/xfer/PatchLevelFullFillPattern.h"
 
 #include <boost/make_shared.hpp>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/CellPoissonFACOps.I"
-#endif
 
 namespace SAMRAI {
 namespace solv {

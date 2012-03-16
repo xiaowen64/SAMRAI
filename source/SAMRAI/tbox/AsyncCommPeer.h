@@ -109,7 +109,10 @@ public:
       int peer_rank);
 
    int
-   getPeerRank() const;
+   getPeerRank() const
+   {
+      return d_peer_rank;
+   }
 
    /*!
     * @brief Limit the data length in first message of a communication.
@@ -130,7 +133,10 @@ public:
     */
    void
    limitFirstDataLength(
-      size_t max_first_data_len);
+      size_t max_first_data_len)
+   {
+      d_max_first_data_len = max_first_data_len;
+   }
    //@}
 
    /*!
@@ -360,7 +366,12 @@ private:
 
    void
    resetStatus(
-      SAMRAI_MPI::Status& mpi_status);
+      SAMRAI_MPI::Status& mpi_status)
+   {
+      mpi_status.MPI_TAG =
+         mpi_status.MPI_SOURCE =
+            mpi_status.MPI_ERROR = -1;
+   }
 
    /*
     * @brief Resize the internal buffer to hold size FlexData unions.
@@ -479,19 +490,6 @@ private:
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;
-
-   /**
-    * \brief Has shutdown handler been initialized.
-    *
-    * This should be checked and set in every ctor.
-    */
-   static bool s_initialized;
-
-   /**
-    * \brief Initialize static state
-    */
-   static bool
-   initialize();
 
 };
 

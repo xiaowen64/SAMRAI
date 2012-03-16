@@ -7,6 +7,102 @@
 #define __GeomUtilsAMR_h
 
 //
+// calculate the flux through a face
+//
+real8
+UpwindFlux(
+   const real8 x1,
+   const real8 x2,
+   const real8 x3,
+   const real8 x4,
+   const real8 y1,
+   const real8 y2,
+   const real8 y3,
+   const real8 y4,
+   const real8 z1,
+   const real8 z2,
+   const real8 z3,
+   const real8 z4,
+   real8 u,
+   real8 v,
+   real8 w,
+   real8 psiLo,
+   real8 psiHi)
+{
+   real8 dx31 = x3 - x1;
+   real8 dx42 = x4 - x2;
+
+   real8 dy31 = y3 - y1;
+   real8 dy42 = y4 - y2;
+
+   real8 dz31 = z3 - z1;
+   real8 dz42 = z4 - z2;
+
+   real8 Ax = 0.5 * (dy42 * dz31 - dz42 * dy31);
+   real8 Ay = 0.5 * (dz42 * dx31 - dx42 * dz31);
+   real8 Az = 0.5 * (dx42 * dy31 - dy42 * dx31);
+
+   real8 Audotn = Ax * u + Ay * v + Az * w;
+
+   real8 flux = (Audotn > 0.0 ? psiLo : psiHi) * Audotn;
+
+   return flux;
+}
+
+//
+// calculate the flux through a face, assuming a velocity in the radial
+// direction
+//
+real8
+UpwindFluxRadial(
+   const real8 x1,
+   const real8 x2,
+   const real8 x3,
+   const real8 x4,
+   const real8 y1,
+   const real8 y2,
+   const real8 y3,
+   const real8 y4,
+   const real8 z1,
+   const real8 z2,
+   const real8 z3,
+   const real8 z4,
+   real8 u0,
+   real8 psiLo,
+   real8 psiHi)
+{
+   // --------- set the velocity
+   real8 xm = 0.25 * (x1 + x2 + x3 + x4);
+   real8 ym = 0.25 * (y1 + y2 + y3 + y4);
+   real8 zm = 0.25 * (z1 + z2 + z3 + z4);
+   real8 xnorm = sqrt(xm * xm + ym * ym + zm * zm);
+
+   real8 u = u0 * xm / xnorm;
+   real8 v = u0 * ym / xnorm;
+   real8 w = u0 * zm / xnorm;
+
+   // --------- set the flux
+   real8 dx31 = x3 - x1;
+   real8 dx42 = x4 - x2;
+
+   real8 dy31 = y3 - y1;
+   real8 dy42 = y4 - y2;
+
+   real8 dz31 = z3 - z1;
+   real8 dz42 = z4 - z2;
+
+   real8 Ax = 0.5 * (dy42 * dz31 - dz42 * dy31);
+   real8 Ay = 0.5 * (dz42 * dx31 - dx42 * dz31);
+   real8 Az = 0.5 * (dx42 * dy31 - dy42 * dx31);
+
+   real8 Audotn = Ax * u + Ay * v + Az * w;
+
+   real8 flux = (Audotn > 0.0 ? psiLo : psiHi) * Audotn;
+
+   return flux;
+}
+
+//
 // calculate the volume of a hexahedral element
 //
 real8

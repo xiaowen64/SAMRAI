@@ -13,10 +13,6 @@
 
 #include "SAMRAI/tbox/Dimension.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/Dimension.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 

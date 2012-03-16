@@ -8,11 +8,9 @@
  *
  ************************************************************************/
 
-#include "SAMRAI/SAMRAI_config.h"
+#include "SAMRAI/tbox/SiloDatabase.h"
 
 #ifdef HAVE_SILO
-
-#include "SAMRAI/tbox/SiloDatabase.h"
 
 #include "SAMRAI/tbox/IOStream.h"
 #include "SAMRAI/tbox/Utilities.h"

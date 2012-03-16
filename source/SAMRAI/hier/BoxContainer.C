@@ -15,10 +15,7 @@
 
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/GridGeometry.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxContainer.I"
-#endif
+#include "SAMRAI/hier/PeriodicShiftCatalog.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*

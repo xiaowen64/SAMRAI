@@ -13,13 +13,8 @@
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-#include "SAMRAI/tbox/Utilities.h"
 
 #include <iomanip>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/PeriodicShiftCatalog.I"
-#endif
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*

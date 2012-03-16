@@ -506,9 +506,7 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
 void
 BergerRigoutsos::initializeCallback()
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!t_global_reductions);
-#endif
    t_run_abr = tbox::TimerManager::getManager()->
       getTimer("mesh::BergerRigoutsos::run_abr");
    t_find_boxes_with_tags = tbox::TimerManager::getManager()->

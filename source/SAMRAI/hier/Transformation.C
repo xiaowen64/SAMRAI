@@ -12,18 +12,12 @@
 #ifndef included_hier_Transformation_C
 #define included_hier_Transformation_C
 
-#include "SAMRAI/SAMRAI_config.h"
-
 #include "SAMRAI/hier/Transformation.h"
 
 #include "SAMRAI/hier/MultiblockDataTranslator.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/Transformation.I"
-#endif
 
 namespace SAMRAI {
 namespace hier {

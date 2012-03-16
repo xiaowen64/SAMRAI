@@ -17,10 +17,6 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/PatchLevelEnhancedFillPattern.I"
-#endif
-
 namespace SAMRAI {
 namespace xfer {
 
@@ -159,6 +155,35 @@ PatchLevelEnhancedFillPattern::computeDestinationFillBoxesOnSourceProc(
    }
 }
 
+bool
+PatchLevelEnhancedFillPattern::needsToCommunicateDestinationFillBoxes() const
+{
+   return true;
+}
+
+bool
+PatchLevelEnhancedFillPattern::doesSourceLevelCommunicateToDestination() const
+{
+   return false;
+}
+
+bool
+PatchLevelEnhancedFillPattern::fillingCoarseFineGhosts() const
+{
+   return true;
+}
+
+bool
+PatchLevelEnhancedFillPattern::fillingEnhancedConnectivityOnly() const
+{
+   return true;
+}
+
+int
+PatchLevelEnhancedFillPattern::getMaxFillBoxes() const
+{
+   return d_max_fill_boxes;
+}
 
 }
 }

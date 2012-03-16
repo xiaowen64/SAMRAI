@@ -13,6 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -79,14 +80,21 @@ public:
     */
    void
    setNumberNodes(
-      const int n);
+      const int n)
+   {
+      d_nodes = n;
+   }
 
    /**
     * Return the processor assignment for the specified patch index.
     */
    int
    getProcessorAssignment(
-      const int i) const;
+      const int i) const
+   {
+      TBOX_ASSERT((i >= 0) && (i < d_mapping.getSize()));
+      return d_mapping[i];
+   }
 
    /**
     * Set the processor assignment (second argument) for the specified
@@ -95,13 +103,21 @@ public:
    void
    setProcessorAssignment(
       const int i,
-      const int p);
+      const int p)
+   {
+      TBOX_ASSERT((i >= 0) && (i < d_mapping.getSize()));
+      TBOX_ASSERT((p >= 0) && (p < d_nodes));
+      d_mapping[i] = p % d_nodes;
+   }
 
    /**
     * Return an tbox::Array<int> of the processor mappings.
     */
    tbox::Array<int>
-   getProcessorMapping() const;
+   getProcessorMapping() const
+   {
+      return d_mapping;
+   }
 
    /**
     * Sets the processor mappings from an tbox::Array<int>.  Remaps the
@@ -117,20 +133,31 @@ public:
     * the local processor).
     */
    int
-   getNumberOfLocalIndices() const;
+   getNumberOfLocalIndices() const
+   {
+      computeLocalIndices();
+      return d_local_id_count;
+   }
 
    /**
     * Return an array containing the local indices (that is,
     * those indices mapped to the local processor).
     */
    const tbox::Array<int>&
-   getLocalIndices() const;
+   getLocalIndices() const
+   {
+      computeLocalIndices();
+      return d_local_indices;
+   }
 
    /**
     * Return the total number of indices in the mapping array.
     */
    int
-   getSizeOfMappingArray() const;
+   getSizeOfMappingArray() const
+   {
+      return d_mapping.getSize();
+   }
 
    /**
     * Check whether the specified index is a local index (that is, mapped
@@ -138,7 +165,11 @@ public:
     */
    bool
    isMappingLocal(
-      const int i) const;
+      const int i) const
+   {
+      TBOX_ASSERT((i >= 0) && (i < d_mapping.getSize()));
+      return d_mapping[i] == d_my_rank;
+   }
 
 private:
    /**
@@ -160,9 +191,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/ProcessorMapping.I"
-#endif
 
 #endif

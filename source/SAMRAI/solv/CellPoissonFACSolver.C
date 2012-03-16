@@ -13,14 +13,9 @@
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/solv/CellPoissonFACSolver.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
 #include IOMANIP_HEADER_FILE
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/CellPoissonFACSolver.I"
-#endif
 
 namespace SAMRAI {
 namespace solv {

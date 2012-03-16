@@ -43,6 +43,7 @@
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Timer.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
@@ -144,7 +145,10 @@ public:
     */
    void
    setPoissonSpecifications(
-      const PoissonSpecifications& spec);
+      const PoissonSpecifications& spec)
+   {
+      d_poisson_spec = spec;
+   }
 
    /*!
     * @brief Enable logging.
@@ -154,7 +158,10 @@ public:
     */
    void
    enableLogging(
-      bool enable_logging);
+      bool enable_logging)
+   {
+      d_enable_logging = enable_logging;
+   }
 
    //@{
    /*!
@@ -169,7 +176,17 @@ public:
     */
    void
    setSmoothingChoice(
-      const std::string& smoothing_choice);
+      const std::string& smoothing_choice)
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (smoothing_choice != "redblack") {
+         TBOX_ERROR(d_object_name << ": Bad smoothing choice '"
+                                  << smoothing_choice
+                                  << "' in CellPoissonFACOps::setSmoothingChoice.");
+      }
+#endif
+      d_smoothing_choice = smoothing_choice;
+   }
 
    /*!
     * @brief Set coarse level solver.
@@ -180,7 +197,24 @@ public:
     */
    void
    setCoarsestLevelSolverChoice(
-      const std::string& choice);
+      const std::string& choice)
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+#ifndef HAVE_HYPRE
+      if (choice == "hypre") {
+         TBOX_ERROR(d_object_name << ": HYPRe library is not available.\n");
+      }
+#endif
+#endif
+      if (choice == "redblack" || choice == "hypre") {
+         d_coarse_solver_choice = choice;
+      } else {
+         TBOX_ERROR(
+            d_object_name << ": Bad coarse level solver choice '"
+                          << choice
+                          << "' in scapCellPoissonOpsX::setCoarseLevelSolver.");
+      }
+   }
 
    /*!
     * @brief Set tolerance for coarse level solve.
@@ -190,7 +224,10 @@ public:
     */
    void
    setCoarsestLevelSolverTolerance(
-      double tol);
+      double tol)
+   {
+      d_coarse_solver_tolerance = tol;
+   }
 
    /*!
     * @brief Set max iterations for coarse level solve.
@@ -200,7 +237,15 @@ public:
     */
    void
    setCoarsestLevelSolverMaxIterations(
-      int max_iterations);
+      int max_iterations)
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (max_iterations < 0) {
+         TBOX_ERROR(d_object_name << ": Invalid number of max iterations\n");
+      }
+#endif
+      d_coarse_solver_max_iterations = max_iterations;
+   }
 
    /*!
     * @brief Set the coarse-fine boundary discretization method.
@@ -225,7 +270,19 @@ public:
     */
    void
    setCoarseFineDiscretization(
-      const std::string& coarsefine_method);
+      const std::string& coarsefine_method)
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_hierarchy) {
+         TBOX_ERROR(
+            d_object_name << ": Cannot change coarse-fine\n"
+                          << "discretization method while operator state\n"
+                          << "is initialized because that causes a\n"
+                          << "corruption in the state.\n");
+      }
+#endif
+      d_cf_discretization = coarsefine_method;
+   }
 
    /*!
     * @brief Set the name of the prolongation method.
@@ -248,7 +305,18 @@ public:
     */
    void
    setProlongationMethod(
-      const std::string& prolongation_method);
+      const std::string& prolongation_method)
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_hierarchy) {
+         TBOX_ERROR(
+            d_object_name << ": Cannot change prolongation method\n"
+                          << "while operator state is initialized because\n"
+                          << "that causes a corruption in the state.\n");
+      }
+#endif
+      d_prolongation_method = prolongation_method;
+   }
 
 #ifdef HAVE_HYPRE
    /*!
@@ -270,7 +338,16 @@ public:
     */
    void
    setUseSMG(
-      bool use_smg);
+      bool use_smg)
+   {
+      if (d_hierarchy) {
+         TBOX_ERROR(
+            d_object_name << ": setUseSMG(bool) may NOT be called\n"
+                          << "while the solver state is initialized, as that\n"
+                          << "would lead to a corrupted solver state.\n");
+      }
+      d_hypre_solver.setUseSMG(use_smg);
+   }
 #endif
 
    //@}
@@ -293,7 +370,13 @@ public:
     */
    void
    setFluxId(
-      int flux_id);
+      int flux_id)
+   {
+      d_flux_id = flux_id;
+#ifdef DEBUG_CHECK_ASSERTIONS
+      checkInputPatchDataIndices();
+#endif
+   }
 
    //@}
 
@@ -318,7 +401,14 @@ public:
     */
    void
    setPhysicalBcCoefObject(
-      const RobinBcCoefStrategy* physical_bc_coef);
+      const RobinBcCoefStrategy* physical_bc_coef)
+   {
+      d_physical_bc_coef = physical_bc_coef;
+      d_bc_helper.setCoefImplementation(physical_bc_coef);
+#ifdef HAVE_HYPRE
+      d_hypre_solver.setPhysicalBcCoefObject(d_physical_bc_coef);
+#endif
+   }
 
    //@{
 
@@ -380,7 +470,10 @@ public:
     */
    void
    setPreconditioner(
-      const FACPreconditioner* preconditioner);
+      const FACPreconditioner* preconditioner)
+   {
+      d_preconditioner = preconditioner;
+   }
 
    /*!
     * @brief function to compute flux, using general diffusion
@@ -487,7 +580,10 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    //@{
@@ -1043,9 +1139,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/CellPoissonFACOps.I"
-#endif
 
 #endif // included_solv_CellPoissonFACOps

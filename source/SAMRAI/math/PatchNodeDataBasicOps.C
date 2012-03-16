@@ -46,7 +46,8 @@ PatchNodeDataBasicOps<TYPE>::PatchNodeDataBasicOps(
 }
 
 template<class TYPE>
-void PatchNodeDataBasicOps<TYPE>::operator = (
+void
+PatchNodeDataBasicOps<TYPE>::operator = (
    const PatchNodeDataBasicOps<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -61,7 +62,8 @@ void PatchNodeDataBasicOps<TYPE>::operator = (
  */
 
 template<class TYPE>
-void PatchNodeDataBasicOps<TYPE>::scale(
+void
+PatchNodeDataBasicOps<TYPE>::scale(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const TYPE& alpha,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
@@ -77,7 +79,8 @@ void PatchNodeDataBasicOps<TYPE>::scale(
 }
 
 template<class TYPE>
-void PatchNodeDataBasicOps<TYPE>::addScalar(
+void
+PatchNodeDataBasicOps<TYPE>::addScalar(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
    const TYPE& alpha,
@@ -93,7 +96,8 @@ void PatchNodeDataBasicOps<TYPE>::addScalar(
 }
 
 template<class TYPE>
-void PatchNodeDataBasicOps<TYPE>::add(
+void
+PatchNodeDataBasicOps<TYPE>::add(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src1,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src2,
@@ -109,7 +113,8 @@ void PatchNodeDataBasicOps<TYPE>::add(
 }
 
 template<class TYPE>
-void PatchNodeDataBasicOps<TYPE>::subtract(
+void
+PatchNodeDataBasicOps<TYPE>::subtract(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src1,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src2,
@@ -125,7 +130,8 @@ void PatchNodeDataBasicOps<TYPE>::subtract(
 }
 
 template<class TYPE>
-void PatchNodeDataBasicOps<TYPE>::multiply(
+void
+PatchNodeDataBasicOps<TYPE>::multiply(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src1,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src2,
@@ -141,7 +147,8 @@ void PatchNodeDataBasicOps<TYPE>::multiply(
 }
 
 template<class TYPE>
-void PatchNodeDataBasicOps<TYPE>::divide(
+void
+PatchNodeDataBasicOps<TYPE>::divide(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src1,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src2,
@@ -157,7 +164,8 @@ void PatchNodeDataBasicOps<TYPE>::divide(
 }
 
 template<class TYPE>
-void PatchNodeDataBasicOps<TYPE>::reciprocal(
+void
+PatchNodeDataBasicOps<TYPE>::reciprocal(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
    const hier::Box& box) const
@@ -172,7 +180,8 @@ void PatchNodeDataBasicOps<TYPE>::reciprocal(
 }
 
 template<class TYPE>
-void PatchNodeDataBasicOps<TYPE>::linearSum(
+void
+PatchNodeDataBasicOps<TYPE>::linearSum(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const TYPE& alpha,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src1,
@@ -191,7 +200,8 @@ void PatchNodeDataBasicOps<TYPE>::linearSum(
 }
 
 template<class TYPE>
-void PatchNodeDataBasicOps<TYPE>::axpy(
+void
+PatchNodeDataBasicOps<TYPE>::axpy(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const TYPE& alpha,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src1,
@@ -209,7 +219,8 @@ void PatchNodeDataBasicOps<TYPE>::axpy(
 }
 
 template<class TYPE>
-void PatchNodeDataBasicOps<TYPE>::axmy(
+void
+PatchNodeDataBasicOps<TYPE>::axmy(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const TYPE& alpha,
    const boost::shared_ptr<pdat::NodeData<TYPE> >& src1,
@@ -227,7 +238,8 @@ void PatchNodeDataBasicOps<TYPE>::axmy(
 }
 
 template<class TYPE>
-TYPE PatchNodeDataBasicOps<TYPE>::min(
+TYPE
+PatchNodeDataBasicOps<TYPE>::min(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box) const
 {
@@ -239,7 +251,8 @@ TYPE PatchNodeDataBasicOps<TYPE>::min(
 }
 
 template<class TYPE>
-TYPE PatchNodeDataBasicOps<TYPE>::max(
+TYPE
+PatchNodeDataBasicOps<TYPE>::max(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box) const
 {
@@ -251,7 +264,8 @@ TYPE PatchNodeDataBasicOps<TYPE>::max(
 }
 
 template<class TYPE>
-void PatchNodeDataBasicOps<TYPE>::setRandomValues(
+void
+PatchNodeDataBasicOps<TYPE>::setRandomValues(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const TYPE& width,
    const TYPE& low,

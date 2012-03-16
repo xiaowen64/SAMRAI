@@ -120,7 +120,10 @@ private:
     * Return SAMRAI vector owned by this Sundials_SAMRAIVector object.
     */
    boost::shared_ptr<SAMRAIVectorReal<double> >
-   getSAMRAIVector();
+   getSAMRAIVector()
+   {
+      return d_samrai_vector;
+   }
 
    /*
     * The makeNewVector() function clones the vector structure and allocate
@@ -300,9 +303,6 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/Sundials_SAMRAIVector.I"
-#endif
-#endif
 
+#endif
 #endif

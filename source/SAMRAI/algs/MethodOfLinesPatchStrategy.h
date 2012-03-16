@@ -238,30 +238,45 @@ public:
     * Return pointer to data context with ghost cells.
     */
    boost::shared_ptr<hier::VariableContext>
-   getInteriorWithGhostsContext() const;
+   getInteriorWithGhostsContext() const
+   {
+      return d_interior_with_ghosts;
+   }
 
    /*!
     * Return pointer to data context with NO ghosts.
     */
    boost::shared_ptr<hier::VariableContext>
-   getInteriorContext() const;
+   getInteriorContext() const
+   {
+      return d_interior;
+   }
 
    /*!
     * Set pointer to data context with ghosts.
     */
    void
    setInteriorWithGhostsContext(
-      const boost::shared_ptr<hier::VariableContext>& context);
+      const boost::shared_ptr<hier::VariableContext>& context)
+   {
+      d_interior_with_ghosts = context;
+   }
 
    /*!
     * Set pointer to data context with NO ghosts.
     */
    void
    setInteriorContext(
-      const boost::shared_ptr<hier::VariableContext>& context);
+      const boost::shared_ptr<hier::VariableContext>& context)
+   {
+      d_interior = context;
+   }
 
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    const tbox::Dimension d_dim;
@@ -273,7 +288,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/algs/MethodOfLinesPatchStrategy.I"
-#endif
 #endif

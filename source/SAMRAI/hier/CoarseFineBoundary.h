@@ -15,6 +15,7 @@
 
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/TimerManager.h"
+#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 
@@ -122,7 +123,10 @@ public:
     * @param[in] block_number  Optional argument for use in multiblock.
     */
    void
-   clear();
+   clear()
+   {
+      d_boundary_boxes.clear();
+   }
 
    //@{
    /*!
@@ -160,7 +164,10 @@ public:
    const tbox::Array<BoundaryBox>&
    getNodeBoundaries(
       const GlobalId& global_id,
-      const BlockId& block_id = BlockId::zero()) const;
+      const BlockId& block_id = BlockId::zero()) const
+   {
+      return getBoundaries(global_id, d_dim.getValue(), block_id);
+   }
 
    /*!
     * @brief Get an array of edge boundary boxes for a specified patch.
@@ -177,7 +184,16 @@ public:
    const tbox::Array<BoundaryBox>&
    getEdgeBoundaries(
       const GlobalId& global_id,
-      const BlockId& block_id = BlockId::zero()) const;
+      const BlockId& block_id = BlockId::zero()) const
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_dim.getValue() < 2) {
+         TBOX_ERROR("CoarseFineBoundary::getEdgeBoundaries():  There are\n"
+            << "no edge boundaries in " << d_dim << "d.\n");
+      }
+#endif
+      return getBoundaries(global_id, d_dim.getValue() - 1, block_id);
+   }
 
    /*!
     * @brief Get an array of face boundary boxes for a specified patch.
@@ -194,7 +210,16 @@ public:
    const tbox::Array<BoundaryBox>&
    getFaceBoundaries(
       const GlobalId& global_id,
-      const BlockId& block_id = BlockId::zero()) const;
+      const BlockId& block_id = BlockId::zero()) const
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_dim.getValue() < 3) {
+         TBOX_ERROR("CoarseFineBoundary::getFaceBoundaries():  There are\n"
+            << "no face boundaries in " << d_dim << "d.\n");
+      }
+#endif
+      return getBoundaries(global_id, d_dim.getValue() - 2, block_id);
+   }
 
    //@}
 
@@ -214,7 +239,12 @@ public:
     */
    CoarseFineBoundary&
    operator = (
-      const CoarseFineBoundary& rhs);
+      const CoarseFineBoundary& rhs)
+   {
+      d_initialized = rhs.d_initialized;
+      d_boundary_boxes = rhs.d_boundary_boxes;
+      return *this;
+   }
 
 private:
    /* Don't allow default ctor */
@@ -294,7 +324,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/CoarseFineBoundary.I"
-#endif
 #endif

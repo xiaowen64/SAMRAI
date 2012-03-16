@@ -20,6 +20,7 @@
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/Patch.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -305,7 +306,14 @@ public:
     */
    void
    setCoefImplementation(
-      const RobinBcCoefStrategy* coef_strategy);
+      const RobinBcCoefStrategy* coef_strategy)
+   {
+      if (!coef_strategy) {
+         TBOX_ERROR(d_object_name << ": Invalid pointer value"
+                                  << std::endl);
+      }
+      d_coef_strategy = coef_strategy;
+   }
 
    /*!
     * @brief Set the data id that should be filled when setting
@@ -318,7 +326,10 @@ public:
     */
    void
    setTargetDataId(
-      int target_data_id);
+      int target_data_id)
+   {
+      d_target_data_id = target_data_id;
+   }
 
    /*!
     * @brief Set whether boundary filling should assume homogeneous
@@ -333,7 +344,10 @@ public:
     */
    void
    setHomogeneousBc(
-      bool homogeneous_bc);
+      bool homogeneous_bc)
+   {
+      d_homogeneous_bc = homogeneous_bc;
+   }
 
    //@}
 
@@ -343,7 +357,10 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*!
@@ -439,7 +456,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/CartesianRobinBcHelper.I"
-#endif
 #endif  // included_solv_CartesianRobinBcHelper

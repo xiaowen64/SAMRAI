@@ -515,8 +515,8 @@ List<TYPE>::swap(
  */
 template<class TYPE>
 bool
-List<TYPE>::initializeHandler(
-   void) {
+List<TYPE>::initializeHandler()
+{
    static StartupShutdownManager::Handler handler(
       0,
       0,

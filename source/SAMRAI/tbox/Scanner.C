@@ -493,8 +493,6 @@ char *yytext;
 //
 
 
-#include "SAMRAI/SAMRAI_config.h"
-
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/Parser.h"
 

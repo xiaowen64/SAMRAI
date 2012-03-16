@@ -75,16 +75,26 @@ private:
     */
    bool
    hasBoxInBlock(
-      const BlockId& block_id) const;
+      const BlockId& block_id) const
+   {
+      return d_single_block_trees.find(block_id) !=
+             d_single_block_trees.end();
+   }
 
    /*!
     * @brief Return the number of blocks represented in this tree.
     */
    int
-   getNumberBlocksInTree() const;
+   getNumberBlocksInTree() const
+   {
+      return static_cast<int>(d_single_block_trees.size());
+   }
 
    const GridGeometry*
-   getGridGeometry() const;
+   getGridGeometry() const
+   {
+      return d_grid_geometry;
+   }
 
    /*!
     * @brief Reset to uninitialized state.
@@ -92,7 +102,10 @@ private:
     * Uninitialized trees can be initialized using generateTree().
     */
    void
-   clear();
+   clear()
+   {
+      d_single_block_trees.clear();
+   }
 
 
    //@{
@@ -226,7 +239,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/MultiblockBoxTree.I"
-#endif
 #endif

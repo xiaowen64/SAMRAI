@@ -13,10 +13,6 @@
 
 #include "SAMRAI/pdat/NodeIterator.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/NodeIterator.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 

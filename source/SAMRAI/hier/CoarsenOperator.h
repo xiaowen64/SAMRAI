@@ -97,7 +97,10 @@ public:
     * Return name std::string identifier of the coarsening operation.
     */
    const std::string&
-   getOperatorName() const;
+   getOperatorName() const
+   {
+      return d_name;
+   }
 
    /**
     * Return the priority of this operator relative to other coarsening
@@ -147,7 +150,10 @@ public:
     * Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    CoarsenOperator(
@@ -169,7 +175,11 @@ private:
     */
    void
    registerInLookupTable(
-      const std::string& name);
+      const std::string& name)
+   {
+      s_lookup_table.insert(
+         std::pair<std::string, CoarsenOperator *>(name, this));
+   }
 
    /*!
     * @brief Remove the operator with the given name.
@@ -183,22 +193,21 @@ private:
     * @brief Method registered with ShutdownRegister to cleanup statics.
     */
    static void
-   finalizeCallback();
+   finalizeCallback()
+   {
+      s_lookup_table.clear();
+   }
 
    const std::string d_name;
    const tbox::Dimension d_dim;
 
    static std::multimap<std::string, CoarsenOperator *> s_lookup_table;
 
-   static tbox::StartupShutdownManager::Handler
-      s_finalize_handler;
+   static tbox::StartupShutdownManager::Handler s_finalize_handler;
 
 };
 
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/CoarsenOperator.I"
-#endif
 #endif

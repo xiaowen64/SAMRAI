@@ -141,8 +141,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-// #include "SAMRAI/hier/ConnectorStatistics.I"
-#endif
-
 #endif  // included_hier_ConnectorStatistics

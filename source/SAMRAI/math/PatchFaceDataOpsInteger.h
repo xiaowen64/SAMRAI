@@ -19,6 +19,7 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/PIO.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <iostream>
@@ -97,7 +98,12 @@ public:
    setToScalar(
       const boost::shared_ptr<pdat::FaceData<int> >& dst,
       const int& alpha,
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      TBOX_ASSERT(dst);
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
+      dst->fillAll(alpha, box);
+   }
 
    /**
     * Set destination component to absolute value of source component.
@@ -124,7 +130,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/math/PatchFaceDataOpsInteger.I"
-#endif
 #endif

@@ -24,10 +24,6 @@
 
 #include <boost/make_shared.hpp>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/RefineAlgorithm.I"
-#endif
-
 namespace SAMRAI {
 namespace xfer {
 
@@ -271,11 +267,8 @@ RefineAlgorithm::createSchedule(
 {
    // TBOX_ERROR("Untried method!  I think this method should work, but it's never been excercised.  When code crashes here, remove this line and rerun.  If problem continues, it could well be due to excercising this code.  --BTNG");
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
-   hier::OverlapConnectorAlgorithm oca;
-#endif
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, *dst_level, *src_level);
    if (patch_strategy) {
@@ -324,10 +317,8 @@ RefineAlgorithm::createSchedule(
    bool use_time_refinement,
    const boost::shared_ptr<RefineTransactionFactory>& transaction_factory)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
-#endif
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, *dst_level, *src_level);
    if (patch_strategy) {
@@ -556,10 +547,8 @@ RefineAlgorithm::createSchedule(
 {
    NULL_USE(use_time_refinement);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
-#endif
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_level);
    if (src_level) {
@@ -612,18 +601,14 @@ bool
 RefineAlgorithm::checkConsistency(
    const boost::shared_ptr<RefineSchedule>& schedule) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(schedule);
-#endif
    return d_refine_classes->classesMatch(schedule->getEquivalenceClasses());
 }
 
 void RefineAlgorithm::resetSchedule(
    const boost::shared_ptr<RefineSchedule>& schedule) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(schedule);
-#endif
    if (d_refine_classes->classesMatch(schedule->getEquivalenceClasses())) {
       schedule->reset(d_refine_classes);
    } else {

@@ -11,10 +11,6 @@
 #include "SAMRAI/tbox/RankGroup.h"
 #include "SAMRAI/tbox/List.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/RankGroup.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 

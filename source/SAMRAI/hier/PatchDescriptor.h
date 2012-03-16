@@ -18,6 +18,7 @@
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/List.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
@@ -113,7 +114,11 @@ public:
     */
    boost::shared_ptr<PatchDataFactory>
    getPatchDataFactory(
-      int id) const;
+      int id) const
+   {
+      TBOX_ASSERT((id >= 0) && (id < d_max_number_registered_components));
+      return d_factories[id];
+   }
 
    /*!
     * Retrieve a patch data factory by name std::string identifier.  Recall that
@@ -143,7 +148,10 @@ public:
     * @return largest index assigned to this point.
     */
    int
-   getMaxNumberRegisteredComponents() const;
+   getMaxNumberRegisteredComponents() const
+   {
+      return d_max_number_registered_components;
+   }
 
    /*!
     * Lookup a factory by std::string name and return its integer index identifier.
@@ -160,7 +168,11 @@ public:
     */
    const std::string&
    mapIndexToName(
-      const int id) const;
+      const int id) const
+   {
+      TBOX_ASSERT((id >= 0) && (id < d_max_number_registered_components));
+      return d_names[id];
+   }
 
    /*!
     * Return the IntVector indicating the maximum ghost cell width of all registered
@@ -190,7 +202,10 @@ public:
     */
    void
    setMinGhostWidth(
-      const IntVector& min_value);
+      const IntVector& min_value)
+   {
+      d_min_gcw[min_value.getDim().getValue() - 1] = min_value;
+   }
 
    /*!
     * Print patch descriptor data to given output stream (plog by default).
@@ -225,7 +240,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchDescriptor.I"
-#endif
+
 #endif

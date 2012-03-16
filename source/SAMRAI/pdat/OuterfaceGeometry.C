@@ -13,15 +13,10 @@
 
 #include "SAMRAI/pdat/OuterfaceGeometry.h"
 #include "SAMRAI/pdat/FaceGeometry.h"
-#include "SAMRAI/pdat/FaceOverlap.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/make_shared.hpp>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/OuterfaceGeometry.I"
-#endif
 
 namespace SAMRAI {
 namespace pdat {

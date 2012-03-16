@@ -24,6 +24,7 @@
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Timer.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <iostream>
@@ -420,7 +421,14 @@ public:
    void
    setEfficiencyTolerance(
       const double efficiency_tolerance,
-      const int level_number);
+      const int level_number)
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+                  (level_number < d_hierarchy->getMaxNumberOfLevels()));
+      TBOX_ASSERT((efficiency_tolerance >= 0) &&
+                  (efficiency_tolerance <= 1.0));
+      d_efficiency_tolerance[level_number] = efficiency_tolerance;
+   }
 
    /*!
     * @brief Return efficiency tolerance for clustering tags on level.
@@ -429,7 +437,15 @@ public:
     */
    double
    getEfficiencyTolerance(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+                  (level_number < d_hierarchy->getMaxNumberOfLevels()));
+      int size = d_efficiency_tolerance.getSize();
+      return (level_number < size) ?
+         d_efficiency_tolerance[level_number] :
+         d_efficiency_tolerance[size - 1];
+   }
 
    /*!
     * @brief Set combine efficiency for clustering tags on level.
@@ -440,7 +456,13 @@ public:
    void
    setCombineEfficiency(
       const double combine_efficiency,
-      const int level_number);
+      const int level_number)
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+                  (level_number < d_hierarchy->getMaxNumberOfLevels()));
+      TBOX_ASSERT((combine_efficiency >= 0) && (combine_efficiency <= 1.0));
+      d_combine_efficiency[level_number] = combine_efficiency;
+   }
 
    /*!
     * @brief Return combine efficiency for clustering tags on level.
@@ -449,7 +471,15 @@ public:
     */
    double
    getCombineEfficiency(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+                  (level_number < d_hierarchy->getMaxNumberOfLevels()));
+      int size = d_combine_efficiency.getSize();
+      return (level_number < size) ?
+         d_combine_efficiency[level_number] :
+         d_combine_efficiency[size - 1];
+   }
 
    /*!
     * @brief Print all data members of the class instance to given output stream.
@@ -978,7 +1008,15 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   startupCallback();
+   startupCallback()
+   {
+      s_tag_indx = new tbox::Array<int>(
+         tbox::Dimension::MAXIMUM_DIMENSION_VALUE,
+         -1);
+      s_buf_tag_indx = new tbox::Array<int>(
+         tbox::Dimension::MAXIMUM_DIMENSION_VALUE,
+         -1);
+   }
 
    /*!
     * @brief Method registered with ShutdownRegister to cleanup statics.
@@ -986,7 +1024,11 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   shutdownCallback();
+   shutdownCallback()
+   {
+      delete s_tag_indx;
+      delete s_buf_tag_indx;
+   }
 
    /*!
     * @brief Initialize static objects and register shutdown routine.
@@ -994,7 +1036,9 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   initializeCallback();
+   initializeCallback()
+   {
+   }
 
    /*!
     * @brief Method registered with ShutdownRegister to cleanup statics.
@@ -1002,7 +1046,9 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   finalizeCallback();
+   finalizeCallback()
+   {
+   }
 
    /*
     * @brief Record statistics on how many patches and cells were generated.
@@ -1285,7 +1331,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/mesh/GriddingAlgorithm.I"
-#endif
+
 #endif

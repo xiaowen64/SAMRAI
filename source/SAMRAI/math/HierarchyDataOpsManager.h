@@ -18,6 +18,7 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -80,7 +81,13 @@ public:
     * Singleton instance.
     */
    static HierarchyDataOpsManager *
-   getManager();
+   getManager()
+   {
+      if (!s_pdat_op_manager_instance) {
+         s_pdat_op_manager_instance = new HierarchyDataOpsManager();
+      }
+      return s_pdat_op_manager_instance;
+   }
 
    //@{
    /*!
@@ -166,7 +173,16 @@ protected:
     */
    void
    registerSingletonSubclassInstance(
-      HierarchyDataOpsManager* subclass_instance);
+      HierarchyDataOpsManager* subclass_instance)
+   {
+      if (!s_pdat_op_manager_instance) {
+         s_pdat_op_manager_instance = subclass_instance;
+      } else {
+         TBOX_ERROR("HierarchyDataOpsManager internal error...\n"
+            << "Attempting to set Singleton instance to subclass instance,"
+            << "\n but Singleton instance already set." << std::endl);
+      }
+   }
 
 private:
    /**
@@ -175,7 +191,13 @@ private:
     * since it is automatically called by the StartupShutdownManager class.
     */
    static void
-   shutdownCallback();
+   shutdownCallback()
+   {
+      if (s_pdat_op_manager_instance) {
+         delete s_pdat_op_manager_instance;
+      }
+      s_pdat_op_manager_instance = ((HierarchyDataOpsManager *)NULL);
+   }
 
    static HierarchyDataOpsManager* s_pdat_op_manager_instance;
 
@@ -232,9 +254,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/math/HierarchyDataOpsManager.I"
-#endif
 
 #endif

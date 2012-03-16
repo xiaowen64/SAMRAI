@@ -17,6 +17,7 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/Database.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -77,20 +78,29 @@ public:
     * that box in different ways.
     */
    const Box&
-   getBox() const;
+   getBox() const
+   {
+      return d_box;
+   }
 
    /**
     * Return the ghost cell box.  The ghost cell box is defined to be
     * the interior box grown by the ghost cell width.
     */
    const Box&
-   getGhostBox() const;
+   getGhostBox() const
+   {
+      return d_ghost_box;
+   }
 
    /**
     * Get the ghost cell width associated with this patch data object.
     */
    const IntVector&
-   getGhostCellWidth() const;
+   getGhostCellWidth() const
+   {
+      return d_ghosts;
+   }
 
    /**
     * Set the simulation time stamp for the patch data type.  The simulation
@@ -98,13 +108,19 @@ public:
     */
    void
    setTime(
-      const double timestamp);
+      const double timestamp)
+   {
+      d_timestamp = timestamp;
+   }
 
    /**
     * Get the simulation time stamp for the patch data type.
     */
    double
-   getTime() const;
+   getTime() const
+   {
+      return d_timestamp;
+   }
 
    /**
     * A fast copy between the source and destination.  Data is copied from
@@ -238,7 +254,10 @@ public:
     * Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_box.getDim();
+   }
 
 protected:
    /**
@@ -253,7 +272,12 @@ protected:
     */
    void
    setGhostBox(
-      const Box& ghost_box);
+      const Box& ghost_box)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, ghost_box);
+      TBOX_ASSERT((ghost_box * d_box).isSpatiallyEqual(d_box));
+      d_ghost_box = ghost_box;
+   }
 
 private:
    /*
@@ -276,9 +300,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchData.I"
-#endif
 
 #endif

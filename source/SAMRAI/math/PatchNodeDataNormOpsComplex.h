@@ -17,6 +17,7 @@
 #include "SAMRAI/math/ArrayDataNormOpsComplex.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/Complex.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -68,7 +69,13 @@ public:
    int
    numberOfEntries(
       const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      TBOX_ASSERT(data);
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+      return (pdat::NodeGeometry::toNodeBox(box * data->getGhostBox())).size() *
+         data->getDepth();
+   }
 
    /**
     * Return sum of control volume entries for the node-centered data object.
@@ -77,7 +84,13 @@ public:
    sumControlVolumes(
       const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
       const boost::shared_ptr<pdat::NodeData<double> >& cvol,
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      TBOX_ASSERT(data && cvol);
+      return d_array_ops.sumControlVolumes(data->getArrayData(),
+         cvol->getArrayData(),
+         pdat::NodeGeometry::toNodeBox(box));
+   }
 
    /**
     * Set destination component to norm of source component.  That is,
@@ -88,7 +101,14 @@ public:
    abs(
       const boost::shared_ptr<pdat::NodeData<double> >& dst,
       const boost::shared_ptr<pdat::NodeData<dcomplex> >& src,
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      TBOX_ASSERT(dst && src);
+      TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+      d_array_ops.abs(dst->getArrayData(),
+         src->getArrayData(),
+         pdat::NodeGeometry::toNodeBox(box));
+   }
 
    /**
     * Return discrete \f$L_1\f$-norm of the data using the control volume to
@@ -200,7 +220,14 @@ public:
    integral(
       const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::NodeData<double> >& vol) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& vol) const
+   {
+      TBOX_ASSERT(data);
+      return d_array_ops.integral(
+         data->getArrayData(),
+         vol->getArrayData(),
+         pdat::NodeGeometry::toNodeBox(box));
+   }
 
 private:
    // The following are not implemented:
@@ -216,7 +243,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/math/PatchNodeDataNormOpsComplex.I"
-#endif
 #endif

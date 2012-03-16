@@ -12,13 +12,6 @@
 #define included_math_PatchCellDataOpsInteger_C
 
 #include "SAMRAI/math/PatchCellDataOpsInteger.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include "SAMRAI/tbox/Utilities.h"
-#endif
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/math/PatchCellDataOpsInteger.I"
-#endif
 
 namespace SAMRAI {
 namespace math {
@@ -53,12 +46,12 @@ PatchCellDataOpsInteger::swapData(
    boost::shared_ptr<pdat::CellData<int> > d2(
       patch->getPatchData(data2_id),
       boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
    TBOX_ASSERT(d1->getBox().isSpatiallyEqual(d2->getBox()));
    TBOX_ASSERT(d1->getGhostBox().isSpatiallyEqual(d2->getGhostBox()));
-#endif
+
    patch->setPatchData(data1_id, d2);
    patch->setPatchData(data2_id, d1);
 }

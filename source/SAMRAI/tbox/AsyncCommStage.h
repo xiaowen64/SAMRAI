@@ -127,7 +127,10 @@ public:
        * Member has not been initialized to a stage, zero is returned.
        */
       size_t
-      numberOfRequests() const;
+      numberOfRequests() const
+      {
+         return d_nreq;
+      }
 
       /*!
        * @brief Return the number of pending SAMRAI_MPI::Request
@@ -196,13 +199,19 @@ public:
        */
       void
       setHandler(
-         Handler* handler);
+         Handler* handler)
+      {
+         d_handler = handler;
+      }
 
       /*!
        * @brief Regurgitate the handler from setHandler().
        */
       Handler *
-      getHandler() const;
+      getHandler() const
+      {
+         return d_handler;
+      }
 
       /*!
        * @brief Push this onto the stage's list of completed Members.
@@ -210,13 +219,18 @@ public:
        * This causes the member to be returned by a call to
        * AsyncCommStage::popCompletionQueue(), eventually.
        */
-      void pushToCompletionQueue();
+      void
+      pushToCompletionQueue();
 
       /*!
        * @brief Yank this member from the stage's list of completed
        * Members.
        */
-      void yankFromCompletionQueue();
+      void
+      yankFromCompletionQueue()
+      {
+         d_stage->privateYankFromCompletionQueue(*this);
+      }
 
 protected:
       /*!
@@ -376,7 +390,12 @@ private:
     * through popCompletionQueue().  This method gives the size of
     * that queue.
     */
-   size_t numberOfCompletedMembers() const;
+   size_t
+   numberOfCompletedMembers() const
+   {
+      return d_completed_members.size();
+   }
+
    /*
     * @brief Return a Member that has fully completed its
     * communication operation.
@@ -387,14 +406,19 @@ private:
     * can also push Members onto the queue using the Member's
     * pushToCompletionQueue().
     */
-   Member *popCompletionQueue();
+   Member*
+   popCompletionQueue();
 
    /*!
     * @brief Clear the internal completion queue.
     *
     * @see popCompletionQueue(), Member::pushToCompletionQueue().
     */
-   void clearCompletionQueue();
+   void
+   clearCompletionQueue()
+   {
+      d_completed_members.clear();
+   }
 
    /*!
     * @brief Set optional timer for timing communication wait.
@@ -407,13 +431,19 @@ private:
     */
    void
    setCommunicationWaitTimer(
-      const boost::shared_ptr<Timer>& communication_timer);
+      const boost::shared_ptr<Timer>& communication_timer)
+   {
+      d_communication_timer = communication_timer;
+   }
 
    /*!
     * @brief Get the number of Members on this stage.
     */
    size_t
-   numberOfMembers() const;
+   numberOfMembers() const
+   {
+      return d_member_count;
+   }
 
    /*!
     * @brief Return whether the stage has any pending communication
@@ -515,13 +545,15 @@ private:
     * @brief Push the given Member onto the stage's list of completed
     * Members.
     */
-   void privatePushToCompletionQueue( Member &member );
+   void
+   privatePushToCompletionQueue( Member &member );
 
    /*!
     * @brief Yank the given Member from the stage's list of completed
     * Members.
     */
-   void privateYankFromCompletionQueue( Member &member );
+   void
+   privateYankFromCompletionQueue( Member &member );
 
    //@}
 
@@ -603,7 +635,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/AsyncCommStage.I"
-#endif
 #endif  // included_tbox_AsyncCommStage

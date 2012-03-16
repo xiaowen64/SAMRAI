@@ -202,7 +202,10 @@ public:
     * Return pointer to KINSOL solver C++ wrapper object.
     */
    KINSOLSolver *
-   getKINSOLSolver();
+   getKINSOLSolver()
+   {
+      return d_KINSOL_solver;
+   }
 
    /**
     * Read input parameters from given database.
@@ -245,7 +248,10 @@ public:
     * Returns the object name.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*
@@ -293,8 +299,5 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/KINSOL_SAMRAIContext.I"
-#endif
 #endif
 #endif

@@ -11,10 +11,6 @@
 
 #include "SAMRAI/pdat/IntegerAttributeId.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/IntegerAttributeId.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 

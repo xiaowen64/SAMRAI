@@ -13,13 +13,6 @@
 
 #include "SAMRAI/math/PatchFaceDataOpsInteger.h"
 #include "SAMRAI/pdat/FaceGeometry.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include "SAMRAI/tbox/Utilities.h"
-#endif
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/math/PatchFaceDataOpsInteger.I"
-#endif
 
 namespace SAMRAI {
 namespace math {
@@ -30,6 +23,32 @@ PatchFaceDataOpsInteger::PatchFaceDataOpsInteger()
 
 PatchFaceDataOpsInteger::~PatchFaceDataOpsInteger()
 {
+}
+
+/*
+ *************************************************************************
+ *
+ * Compute the number of data entries on a patch in the given box.
+ *
+ *************************************************************************
+ */
+
+int
+PatchFaceDataOpsInteger::numberOfEntries(
+      const boost::shared_ptr<pdat::FaceData<int> >& data,
+      const hier::Box& box) const
+{
+   TBOX_ASSERT(data);
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+
+   int dimVal = box.getDim().getValue();
+   int retval = 0;
+   const hier::Box ibox = box * data->getGhostBox();
+   const int data_depth = data->getDepth();
+   for (int d = 0; d < dimVal; d++) {
+      retval += ((pdat::FaceGeometry::toFaceBox(ibox, d).size()) * data_depth);
+   }
+   return retval;
 }
 
 /*
@@ -54,14 +73,61 @@ PatchFaceDataOpsInteger::swapData(
    boost::shared_ptr<pdat::FaceData<int> > d2(
       patch->getPatchData(data2_id),
       boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
    TBOX_ASSERT(d1->getBox().isSpatiallyEqual(d2->getBox()));
    TBOX_ASSERT(d1->getGhostBox().isSpatiallyEqual(d2->getGhostBox()));
-#endif
+
    patch->setPatchData(data1_id, d2);
    patch->setPatchData(data2_id, d1);
+}
+
+void
+PatchFaceDataOpsInteger::printData(
+      const boost::shared_ptr<pdat::FaceData<int> >& data,
+      const hier::Box& box,
+      std::ostream& s) const
+{
+   TBOX_ASSERT(data);
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+
+   s << "Data box = " << box << std::endl;
+   data->print(box, s);
+   s << "\n";
+}
+
+void
+PatchFaceDataOpsInteger::copyData(
+   const boost::shared_ptr<pdat::FaceData<int> >& dst,
+   const boost::shared_ptr<pdat::FaceData<int> >& src,
+   const hier::Box& box) const
+{
+   TBOX_ASSERT(dst && src);
+   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+
+   int dimVal = box.getDim().getValue();
+   for (int d = 0; d < dimVal; d++) {
+      dst->getArrayData(d).copy(src->getArrayData(d),
+         pdat::FaceGeometry::toFaceBox(box, d));
+   }
+}
+
+void
+PatchFaceDataOpsInteger::abs(
+   const boost::shared_ptr<pdat::FaceData<int> >& dst,
+   const boost::shared_ptr<pdat::FaceData<int> >& src,
+   const hier::Box& box) const
+{
+   TBOX_ASSERT(dst && src);
+   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+
+   int dimVal = box.getDim().getValue();
+   for (int d = 0; d < dimVal; d++) {
+      d_array_ops.abs(dst->getArrayData(d),
+         src->getArrayData(d),
+         pdat::FaceGeometry::toFaceBox(box, d));
+   }
 }
 
 }

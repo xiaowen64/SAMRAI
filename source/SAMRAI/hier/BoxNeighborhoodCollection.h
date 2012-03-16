@@ -19,6 +19,7 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Dimension.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <map>
@@ -246,7 +247,13 @@ class BoxNeighborhoodCollection
              */
             ConstIterator&
             operator = (
-               const ConstIterator& rhs);
+               const ConstIterator& rhs)
+            {
+               d_collection = rhs.d_collection;
+               d_itr = rhs.d_itr;
+               d_base_boxes_itr = rhs.d_base_boxes_itr;
+               return *this;
+            }
 
             /*!
              * @brief Assignment operator.
@@ -255,7 +262,13 @@ class BoxNeighborhoodCollection
              */
             ConstIterator&
             operator = (
-               const Iterator& rhs);
+               const Iterator& rhs)
+            {
+               d_collection = rhs.d_collection;
+               d_itr = rhs.d_itr;
+               d_base_boxes_itr = rhs.d_base_boxes_itr;
+               return *this;
+            }
 
 
             // Destructor
@@ -273,21 +286,35 @@ class BoxNeighborhoodCollection
              * neighborhood in the iteration.
              */
             const BoxId&
-            operator * () const;
+            operator * () const
+            {
+               return *(d_itr->first);
+            }
 
             /*!
              * @brief Extracts a pointer to the BoxId of the base Box of the
              * current neighborhood in the iteration.
              */
             const BoxId*
-            operator -> () const;
+            operator -> () const
+            {
+               return d_itr->first;
+            }
 
             /*!
              * @brief Pre-increment iterator to point to BoxId of the base Box
              * of next neighborhood in the collection.
              */
             ConstIterator&
-            operator ++ ();
+            operator ++ ()
+            {
+               // Go to the next base Box.
+               if (d_base_boxes_itr != d_collection->d_base_boxes.end()) {
+                  ++d_base_boxes_itr;
+                  ++d_itr;
+               }
+               return *this;
+            }
 
             /*!
              * @brief Determine if two iterators are equivalent.
@@ -296,7 +323,12 @@ class BoxNeighborhoodCollection
              */
             bool
             operator == (
-               const ConstIterator& rhs) const;
+               const ConstIterator& rhs) const
+            {
+               return d_collection == rhs.d_collection &&
+                      d_itr == rhs.d_itr &&
+                      d_base_boxes_itr == rhs.d_base_boxes_itr;
+            }
 
             /*!
              * @brief Determine if two iterators are not equivalent.
@@ -305,7 +337,10 @@ class BoxNeighborhoodCollection
              */
             bool
             operator != (
-               const ConstIterator& rhs) const;
+               const ConstIterator& rhs) const
+            {
+               return !(*this == rhs);
+            }
 
          private:
             // Default constructor does not exist.
@@ -371,7 +406,13 @@ class BoxNeighborhoodCollection
              */
             Iterator&
             operator = (
-               const Iterator& rhs);
+               const Iterator& rhs)
+            {
+               d_collection = rhs.d_collection;
+               d_itr = rhs.d_itr;
+               d_base_boxes_itr = rhs.d_base_boxes_itr;
+               return *this;
+            }
 
 
             // Destructor
@@ -389,21 +430,35 @@ class BoxNeighborhoodCollection
              * neighborhood in the iteration.
              */
             const BoxId&
-            operator * () const;
+            operator * () const
+            {
+               return *(d_itr->first);
+            }
 
             /*!
              * @brief Extracts a pointer to the BoxId of the base Box of the
              * current neighborhood in the iteration.
              */
             const BoxId*
-            operator -> () const;
+            operator -> () const
+            {
+               return d_itr->first;
+            }
 
             /*!
              * @brief Pre-increment iterator to point to BoxId of the base Box
              * of next neighborhood in the collection.
              */
             Iterator&
-            operator ++ ();
+            operator ++ ()
+            {
+               // Go to the next base Box.
+               if (d_base_boxes_itr != d_collection->d_base_boxes.end()) {
+                  ++d_base_boxes_itr;
+                  ++d_itr;
+               }
+               return *this;
+            }
 
             /*!
              * @brief Determine if two iterators are equivalent.
@@ -412,7 +467,12 @@ class BoxNeighborhoodCollection
              */
             bool
             operator == (
-               const Iterator& rhs) const;
+               const Iterator& rhs) const
+            {
+               return d_collection == rhs.d_collection &&
+                      d_itr == rhs.d_itr &&
+                      d_base_boxes_itr == rhs.d_base_boxes_itr;
+            }
 
             /*!
              * @brief Determine if two iterators are not equivalent.
@@ -421,7 +481,10 @@ class BoxNeighborhoodCollection
              */
             bool
             operator != (
-               const Iterator& rhs) const;
+               const Iterator& rhs) const
+            {
+               return !(*this == rhs);
+            }
 
          private:
             // Default constructor does not exist.
@@ -495,7 +558,13 @@ class BoxNeighborhoodCollection
              */
             ConstNeighborIterator&
             operator = (
-               const ConstNeighborIterator& rhs);
+               const ConstNeighborIterator& rhs)
+            {
+               d_collection = rhs.d_collection;
+               d_base_box = rhs.d_base_box;
+               d_itr = rhs.d_itr;
+               return *this;
+            }
 
             /*!
              * @brief Assignment operator.
@@ -504,7 +573,13 @@ class BoxNeighborhoodCollection
              */
             ConstNeighborIterator&
             operator = (
-               const NeighborIterator& rhs);
+               const NeighborIterator& rhs)
+            {
+               d_collection = rhs.d_collection;
+               d_base_box = rhs.d_base_box;
+               d_itr = rhs.d_itr;
+               return *this;
+            }
 
 
             // Destructor
@@ -522,21 +597,33 @@ class BoxNeighborhoodCollection
              * iteration of the neighborhood of the base Box.
              */
             const Box&
-            operator * () const;
+            operator * () const
+            {
+               return *(*d_itr);
+            }
 
             /*!
              * @brief Extracts a pointer to the Box which is current neighbor
              * in the iteration of the neighborhood of the base Box.
              */
             const Box*
-            operator -> () const;
+            operator -> () const
+            {
+               return *d_itr;
+            }
 
             /*!
              * @brief Pre-increment iterator to point to the Box which is the
              * next neighbor of the base Box.
              */
             ConstNeighborIterator&
-            operator ++ ();
+            operator ++ ()
+            {
+              if (d_itr != d_collection->d_adj_list.find(d_base_box)->second.end()) {
+                  ++d_itr;
+               }
+               return *this;
+            }
 
             /*!
              * @brief Determine if two iterators are equivalent.
@@ -545,7 +632,12 @@ class BoxNeighborhoodCollection
              */
             bool
             operator == (
-               const ConstNeighborIterator& rhs) const;
+               const ConstNeighborIterator& rhs) const
+            {
+               return d_collection == rhs.d_collection &&
+                      d_base_box == rhs.d_base_box &&
+                      d_itr == rhs.d_itr;
+            }
 
             /*!
              * @brief Determine if two iterators are not equivalent.
@@ -554,7 +646,10 @@ class BoxNeighborhoodCollection
              */
             bool
             operator != (
-               const ConstNeighborIterator& rhs) const;
+               const ConstNeighborIterator& rhs) const
+            {
+               return !(*this == rhs);
+            }
 
          private:
             // Default constructor does not exist.
@@ -609,7 +704,13 @@ class BoxNeighborhoodCollection
              */
             NeighborIterator&
             operator = (
-               const NeighborIterator& rhs);
+               const NeighborIterator& rhs)
+            {
+               d_collection = rhs.d_collection;
+               d_base_box = rhs.d_base_box;
+               d_itr = rhs.d_itr;
+               return *this;
+            }
 
 
             // Destructor
@@ -627,21 +728,33 @@ class BoxNeighborhoodCollection
              * iteration of the neighborhood of the base Box.
              */
             const Box&
-            operator * () const;
+            operator * () const
+            {
+               return *(*d_itr);
+            }
 
             /*!
              * @brief Extracts a pointer to the Box which is current neighbor
              * in the iteration of the neighborhood of the base Box.
              */
             const Box*
-            operator -> () const;
+            operator -> () const
+            {
+               return *d_itr;
+            }
 
             /*!
              * @brief Pre-increment iterator to point to the Box which is the
              * next neighbor of the base Box.
              */
             NeighborIterator&
-            operator ++ ();
+            operator ++ ()
+            {
+               if (d_itr != d_collection->d_adj_list.find(d_base_box)->second.end()) {
+                  ++d_itr;
+               }
+               return *this;
+            }
 
             /*!
              * @brief Determine if two iterators are equivalent.
@@ -650,7 +763,12 @@ class BoxNeighborhoodCollection
              */
             bool
             operator == (
-               const NeighborIterator& rhs) const;
+               const NeighborIterator& rhs) const
+            {
+               return d_collection == rhs.d_collection &&
+                      d_base_box == rhs.d_base_box &&
+                      d_itr == rhs.d_itr;
+            }
 
             /*!
              * @brief Determine if two iterators are not equivalent.
@@ -659,7 +777,10 @@ class BoxNeighborhoodCollection
              */
             bool
             operator != (
-               const NeighborIterator& rhs) const;
+               const NeighborIterator& rhs) const
+            {
+               return !(*this == rhs);
+            }
 
          private:
             // Default constructor does not exist.
@@ -677,28 +798,40 @@ class BoxNeighborhoodCollection
        * of neighborhoods.
        */
       Iterator
-      begin();
+      begin()
+      {
+         return Iterator(*this);
+      }
 
       /*!
        * @brief Returns an iterator pointing to the beginning of the collection
        * of neighborhoods.
        */
       ConstIterator
-      begin() const;
+      begin() const
+      {
+         return ConstIterator(*this);
+      }
 
       /*!
        * @brief Returns an iterator pointing just past the end of the
        * collection of neighborhoods.
        */
       Iterator
-      end();
+      end()
+      {
+         return Iterator(*this, false);
+      }
 
       /*!
        * @brief Returns an iterator pointing just past the end of the
        * collection of neighborhoods.
        */
       ConstIterator
-      end() const;
+      end() const
+      {
+         return ConstIterator(*this, false);
+      }
 
       /*!
        * @brief Returns an iterator pointing to the first neighbor in the
@@ -708,7 +841,11 @@ class BoxNeighborhoodCollection
        */
       NeighborIterator
       begin(
-         const BoxId& base_box_id);
+         const BoxId& base_box_id)
+      {
+         Iterator itr(find(base_box_id));
+         return begin(itr);
+      }
 
       /*!
        * @brief Returns an iterator pointing to the first neighbor in the
@@ -718,7 +855,10 @@ class BoxNeighborhoodCollection
        */
       ConstNeighborIterator
       begin(
-         const BoxId& base_box_id) const;
+         const BoxId& base_box_id) const
+      {
+         return begin(find(base_box_id));
+      }
 
       /*!
        * @brief Returns an iterator pointing to the first neighbor in the
@@ -728,7 +868,12 @@ class BoxNeighborhoodCollection
        */
       NeighborIterator
       begin(
-         Iterator& base_box_itr);
+         Iterator& base_box_itr)
+      {
+         TBOX_ASSERT(base_box_itr.d_collection == this);
+         TBOX_ASSERT(base_box_itr != end());
+         return NeighborIterator(base_box_itr);
+      }
 
       /*!
        * @brief Returns an iterator pointing to the first neighbor in the
@@ -738,7 +883,12 @@ class BoxNeighborhoodCollection
        */
       ConstNeighborIterator
       begin(
-         const ConstIterator& base_box_itr) const;
+         const ConstIterator& base_box_itr) const
+      {
+         TBOX_ASSERT(base_box_itr.d_collection == this);
+         TBOX_ASSERT(base_box_itr != end());
+         return ConstNeighborIterator(base_box_itr);
+      }
 
       /*!
        * @brief Returns an iterator pointing just past the last neighbor in the
@@ -748,7 +898,11 @@ class BoxNeighborhoodCollection
        */
       NeighborIterator
       end(
-         const BoxId& base_box_id);
+         const BoxId& base_box_id)
+      {
+         Iterator itr(find(base_box_id));
+         return end(itr);
+      }
 
       /*!
        * @brief Returns an iterator pointing just past the last neighbor in the
@@ -758,7 +912,10 @@ class BoxNeighborhoodCollection
        */
       ConstNeighborIterator
       end(
-         const BoxId& base_box_id) const;
+         const BoxId& base_box_id) const
+      {
+         return end(find(base_box_id));
+      }
 
       /*!
        * @brief Returns an iterator pointing just past the last neighbor in the
@@ -768,7 +925,12 @@ class BoxNeighborhoodCollection
        */
       NeighborIterator
       end(
-         Iterator& base_box_itr);
+         Iterator& base_box_itr)
+      {
+         TBOX_ASSERT(base_box_itr.d_collection == this);
+         TBOX_ASSERT(base_box_itr != end());
+         return NeighborIterator(base_box_itr, false);
+      }
 
       /*!
        * @brief Returns an iterator pointing just past the last neighbor in the
@@ -778,7 +940,12 @@ class BoxNeighborhoodCollection
        */
       ConstNeighborIterator
       end(
-         const ConstIterator& base_box_itr) const;
+         const ConstIterator& base_box_itr) const
+      {
+         TBOX_ASSERT(base_box_itr.d_collection == this);
+         TBOX_ASSERT(base_box_itr != end());
+         return ConstNeighborIterator(base_box_itr, false);
+      }
 
       //@}
 
@@ -796,7 +963,16 @@ class BoxNeighborhoodCollection
        */
       ConstIterator
       find(
-         const BoxId& base_box_id) const;
+         const BoxId& base_box_id) const
+      {
+         BaseBoxPoolItr base_boxes_itr = d_base_boxes.find(base_box_id);
+         if (base_boxes_itr == d_base_boxes.end()) {
+            return end();
+         }
+         else {
+            return ConstIterator(*this, d_adj_list.find(&(*base_boxes_itr)));
+         }
+      }
 
       /*!
        * @brief Returns an iterator pointing to the base Box with the supplied
@@ -807,7 +983,16 @@ class BoxNeighborhoodCollection
        */
       Iterator
       find(
-         const BoxId& base_box_id);
+         const BoxId& base_box_id)
+      {
+         BaseBoxPoolItr base_boxes_itr = d_base_boxes.find(base_box_id);
+         if (base_boxes_itr == d_base_boxes.end()) {
+            return end();
+         }
+         else {
+            return Iterator(*this, d_adj_list.find(&(*base_boxes_itr)));
+         }
+      }
 
       //@}
 
@@ -825,13 +1010,19 @@ class BoxNeighborhoodCollection
        * @brief Returns true if the number of box neighborhoods == 0.
        */
       bool
-      empty() const;
+      empty() const
+      {
+         return d_base_boxes.empty();
+      }
 
       /*!
        * @brief Returns the number of box neighborhoods.
        */
       int
-      numBoxNeighborhoods() const;
+      numBoxNeighborhoods() const
+      {
+         return static_cast<int>(d_base_boxes.size());
+      }
 
       /*!
        * @brief Returns true if the neighborhood of the base Box with the
@@ -841,7 +1032,10 @@ class BoxNeighborhoodCollection
        */
       bool
       emptyBoxNeighborhood(
-         const BoxId& base_box_id) const;
+         const BoxId& base_box_id) const
+      {
+         return emptyBoxNeighborhood(find(base_box_id));
+      }
 
       /*!
        * @brief Returns true if the neighborhood of the base Box pointed to by
@@ -851,7 +1045,12 @@ class BoxNeighborhoodCollection
        */
       bool
       emptyBoxNeighborhood(
-         const ConstIterator& base_box_itr) const;
+         const ConstIterator& base_box_itr) const
+      {
+         TBOX_ASSERT(base_box_itr.d_collection == this);
+         TBOX_ASSERT(base_box_itr != end());
+         return base_box_itr.d_itr->second.empty();
+      }
 
       /*!
        * @brief Returns the number of neighbors in the neighborhood of the base
@@ -861,7 +1060,10 @@ class BoxNeighborhoodCollection
        */
       int
       numNeighbors(
-         const BoxId& base_box_id) const;
+         const BoxId& base_box_id) const
+      {
+         return numNeighbors(find(base_box_id));
+      }
 
       /*!
        * @brief Returns the number of neighbors in the neighborhood of the base
@@ -871,7 +1073,12 @@ class BoxNeighborhoodCollection
        */
       int
       numNeighbors(
-         const ConstIterator& base_box_itr) const;
+         const ConstIterator& base_box_itr) const
+      {
+         TBOX_ASSERT(base_box_itr.d_collection == this);
+         TBOX_ASSERT(base_box_itr != end());
+         return static_cast<int>(base_box_itr.d_itr->second.size());
+      }
 
       /*!
        * @brief Returns the number of neighbors in all neighborhoods.
@@ -889,7 +1096,10 @@ class BoxNeighborhoodCollection
       bool
       hasNeighbor(
          const BoxId& base_box_id,
-         const Box& nbr) const;
+         const Box& nbr) const
+      {
+         return hasNeighbor(find(base_box_id), nbr);
+      }
 
       /*!
        * @brief Returns true if nbr is a neighbor of the base Box pointed to by
@@ -923,7 +1133,10 @@ class BoxNeighborhoodCollection
        */
       bool
       isBaseBox(
-         const BoxId& base_box_id) const;
+         const BoxId& base_box_id) const
+      {
+         return find(base_box_id) != end();
+      }
 
       /*!
        * @brief Returns true if all neighbors of all base Boxes are owned by
@@ -984,7 +1197,12 @@ class BoxNeighborhoodCollection
       Iterator
       insert(
          const BoxId& base_box_id,
-         const Box& new_nbr);
+         const Box& new_nbr)
+      {
+         Iterator base_boxes_itr = insert(base_box_id).first;
+         insert(base_boxes_itr, new_nbr);
+         return base_boxes_itr;
+      }
 
       /*!
        * @brief Inserts a new neighbor into the neighborhood of the base Box
@@ -1017,7 +1235,12 @@ class BoxNeighborhoodCollection
       Iterator
       insert(
          const BoxId& base_box_id,
-         const BoxContainer& new_nbrs);
+         const BoxContainer& new_nbrs)
+      {
+         Iterator base_boxes_itr = insert(base_box_id).first;
+         insert(base_boxes_itr, new_nbrs);
+         return base_boxes_itr;
+      }
 
       /*!
        * @brief Inserts new neighbors into the neighborhood of the base Box
@@ -1048,7 +1271,12 @@ class BoxNeighborhoodCollection
       void
       erase(
          const BoxId& base_box_id,
-         const Box& nbr);
+         const Box& nbr)
+      {
+         Iterator itr(find(base_box_id));
+         erase(itr, nbr);
+         return;
+      }
 
       /*!
        * @brief Erases a neighbor from the neighborhood of the base Box pointed
@@ -1074,7 +1302,12 @@ class BoxNeighborhoodCollection
       void
       erase(
          const BoxId& base_box_id,
-         const BoxContainer& nbrs);
+         const BoxContainer& nbrs)
+      {
+         Iterator itr(find(base_box_id));
+         erase(itr, nbrs);
+         return;
+      }
 
       /*!
        * @brief Erases neighbors from the neighborhood of the base Box pointed
@@ -1115,7 +1348,12 @@ class BoxNeighborhoodCollection
        */
       void
       erase(
-         const BoxId& base_box_id);
+         const BoxId& base_box_id)
+      {
+         Iterator itr(find(base_box_id));
+         erase(itr);
+         return;
+      }
 
       /*!
        * @brief Erases the neighbors of the base Box pointed to by base_box_itr
@@ -1351,9 +1589,5 @@ class BoxNeighborhoodCollection
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxNeighborhoodCollection.I"
-#endif
 
 #endif // included_hier_BoxNeighborhoodCollection

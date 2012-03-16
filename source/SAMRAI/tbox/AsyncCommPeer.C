@@ -47,13 +47,13 @@ template<class TYPE>
 boost::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_default_waitall_timer;
 
 template<class TYPE>
-tbox::StartupShutdownManager::Handler
+StartupShutdownManager::Handler
 AsyncCommPeer<TYPE>::s_initialize_finalize_handler(
    AsyncCommPeer<TYPE>::initializeCallback,
    0,
    0,
    AsyncCommPeer<TYPE>::finalizeCallback,
-   tbox::StartupShutdownManager::priorityTimers);
+   StartupShutdownManager::priorityTimers);
 
 /*
  ***********************************************************************
@@ -150,34 +150,6 @@ AsyncCommPeer<TYPE>::~AsyncCommPeer()
       free(d_internal_buf);
    }
 
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-template<class TYPE>
-AsyncCommPeer<TYPE>::AsyncCommPeer(
-   const AsyncCommPeer& r):
-   AsyncCommStage::Member(0, NULL, NULL)
-{
-   NULL_USE(r);
-   TBOX_ERROR(
-      "Copy constructor disallowed due to primitive internal memory management.");
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-template<class TYPE>
-AsyncCommPeer<TYPE>&
-AsyncCommPeer<TYPE>::operator = (
-   const AsyncCommPeer& r) {
-   NULL_USE(r);
-   TBOX_ERROR(
-      "Assignment operator disallowed due to primitive internal memory management.");
-   return *this;
 }
 
 /*
@@ -883,17 +855,6 @@ AsyncCommPeer<TYPE>::setMPI(
  ****************************************************************
  */
 template<class TYPE>
-bool
-AsyncCommPeer<TYPE>::isDone() const
-{
-   return d_next_task_op == none;
-}
-
-/*
- ****************************************************************
- ****************************************************************
- */
-template<class TYPE>
 void
 AsyncCommPeer<TYPE>::setPeerRank(
    int peer_rank)
@@ -910,47 +871,6 @@ AsyncCommPeer<TYPE>::setPeerRank(
  ****************************************************************
  */
 template<class TYPE>
-int
-AsyncCommPeer<TYPE>::getPeerRank() const
-{
-   return d_peer_rank;
-}
-
-/*
- ****************************************************************
- ****************************************************************
- */
-template<class TYPE>
-void
-AsyncCommPeer<TYPE>::limitFirstDataLength(
-   size_t limit)
-{
-   d_max_first_data_len = limit;
-}
-
-/*
- ****************************************************************
- ****************************************************************
- */
-template<class TYPE>
-void
-AsyncCommPeer<TYPE>::resetStatus(
-   SAMRAI_MPI::Status& mpi_status)
-{
-   /*
-    * Do not set stat.count because it is not guaranteed
-    * to exist in every implemenation.
-    */
-   mpi_status.MPI_TAG =
-      mpi_status.MPI_SOURCE =
-         mpi_status.MPI_ERROR = -1;
-}
-
-/*
- ****************************************************************
- ****************************************************************
- */
-template<class TYPE>
 size_t
 AsyncCommPeer<TYPE>::getNumberOfFlexData(
    size_t number_of_type_data) const
@@ -959,20 +879,6 @@ AsyncCommPeer<TYPE>::getNumberOfFlexData(
    number_of_flexdata = number_of_flexdata / sizeof(FlexData)
       + (number_of_flexdata % sizeof(FlexData) > 0);
    return number_of_flexdata;
-}
-
-template<class TYPE>
-bool
-AsyncCommPeer<TYPE>::initialize()
-{
-   static StartupShutdownManager::Handler handler(
-      0,
-      0,
-      0,
-      AsyncCommPeer::finalizeCallback,
-      StartupShutdownManager::priorityTimers);
-
-   return true;
 }
 
 /*
@@ -1033,10 +939,23 @@ AsyncCommPeer<TYPE>::setTimers(
    const boost::shared_ptr<Timer> &recv_timer,
    const boost::shared_ptr<Timer> &waitall_timer )
 {
-   if ( send_timer ) t_send_timer = send_timer;
-   if ( recv_timer ) t_recv_timer = recv_timer;
-   if ( waitall_timer ) t_waitall_timer = waitall_timer;
+   if ( send_timer ) {
+      t_send_timer = send_timer;
+   }
+   if ( recv_timer ) {
+      t_recv_timer = recv_timer;
+   }
+   if ( waitall_timer ) {
+      t_waitall_timer = waitall_timer;
+   }
    return;
+}
+
+template<class TYPE>
+bool
+AsyncCommPeer<TYPE>::isDone() const
+{
+   return d_next_task_op == none;
 }
 
 /*

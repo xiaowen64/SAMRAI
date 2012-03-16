@@ -13,15 +13,10 @@
 
 #include "SAMRAI/pdat/OutersideGeometry.h"
 #include "SAMRAI/pdat/SideGeometry.h"
-#include "SAMRAI/pdat/SideOverlap.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/make_shared.hpp>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/OutersideGeometry.I"
-#endif
 
 namespace SAMRAI {
 namespace pdat {
@@ -116,7 +111,7 @@ OutersideGeometry::doOverlap(
    const hier::Transformation& transformation,
    const hier::BoxContainer& dst_restrict_boxes)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const hier::IntVector& src_offset = transformation.getOffset();
 #endif
    TBOX_DIM_ASSERT_CHECK_ARGS2(src_mask, src_offset);

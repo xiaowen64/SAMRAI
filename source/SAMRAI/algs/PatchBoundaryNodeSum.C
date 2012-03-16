@@ -25,7 +25,6 @@
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/hier/RefineOperator.h"
-#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #include <boost/make_shared.hpp>
@@ -99,10 +98,6 @@ void F77_FUNC(nodehangnodeinterp3d, NODEHANGNODEINTERP3D) (
    double *);                             // node array
 }
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/algs/PatchBoundaryNodeSum.I"
-#endif
-
 namespace SAMRAI {
 namespace algs {
 
@@ -142,9 +137,7 @@ PatchBoundaryNodeSum::PatchBoundaryNodeSum(
    d_hierarchy_setup_called(false),
    d_sum_transaction_factory(boost::make_shared<OuternodeSumTransactionFactory>())
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
-#endif
 
    d_object_name = object_name;
 
@@ -364,9 +357,7 @@ void
 PatchBoundaryNodeSum::setupSum(
    const boost::shared_ptr<hier::PatchLevel>& level)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level);
-#endif
 
    const tbox::Dimension& dim(level->getDim());
 
@@ -679,9 +670,7 @@ void
 PatchBoundaryNodeSum::doLevelSum(
    const boost::shared_ptr<hier::PatchLevel>& level) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level);
-#endif
 
    copyNodeToOuternodeOnLevel(level,
       d_user_node_data_id,

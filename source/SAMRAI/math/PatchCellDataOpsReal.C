@@ -51,7 +51,8 @@ PatchCellDataOpsReal<TYPE>::PatchCellDataOpsReal(
 }
 
 template<class TYPE>
-void PatchCellDataOpsReal<TYPE>::operator = (
+void
+PatchCellDataOpsReal<TYPE>::operator = (
    const PatchCellDataOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -66,7 +67,8 @@ void PatchCellDataOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-void PatchCellDataOpsReal<TYPE>::swapData(
+void
+PatchCellDataOpsReal<TYPE>::swapData(
    const boost::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
@@ -79,18 +81,19 @@ void PatchCellDataOpsReal<TYPE>::swapData(
    boost::shared_ptr<pdat::CellData<TYPE> > d2(
       patch->getPatchData(data2_id),
       boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
    TBOX_ASSERT(d1->getBox().isSpatiallyEqual(d2->getBox()));
    TBOX_ASSERT(d1->getGhostBox().isSpatiallyEqual(d2->getGhostBox()));
-#endif
+
    patch->setPatchData(data1_id, d2);
    patch->setPatchData(data2_id, d1);
 }
 
 template<class TYPE>
-void PatchCellDataOpsReal<TYPE>::printData(
+void
+PatchCellDataOpsReal<TYPE>::printData(
    const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
    std::ostream& s) const
@@ -104,7 +107,8 @@ void PatchCellDataOpsReal<TYPE>::printData(
 }
 
 template<class TYPE>
-void PatchCellDataOpsReal<TYPE>::copyData(
+void
+PatchCellDataOpsReal<TYPE>::copyData(
    const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src,
    const hier::Box& box) const
@@ -116,7 +120,8 @@ void PatchCellDataOpsReal<TYPE>::copyData(
 }
 
 template<class TYPE>
-void PatchCellDataOpsReal<TYPE>::setToScalar(
+void
+PatchCellDataOpsReal<TYPE>::setToScalar(
    const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const TYPE& alpha,
    const hier::Box& box) const

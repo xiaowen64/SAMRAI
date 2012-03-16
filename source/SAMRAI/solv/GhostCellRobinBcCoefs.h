@@ -136,7 +136,10 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*!
@@ -194,7 +197,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/GhostCellRobinBcCoefs.I"
-#endif
 #endif  // included_solv_GhostCellRobinBcCoefs

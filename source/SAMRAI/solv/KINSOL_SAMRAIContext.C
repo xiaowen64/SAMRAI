@@ -19,10 +19,6 @@
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/KINSOL_SAMRAIContext.I"
-#endif
-
 namespace SAMRAI {
 namespace solv {
 
@@ -121,9 +117,7 @@ void
 KINSOL_SAMRAIContext::initialize(
    const boost::shared_ptr<SAMRAIVectorReal<double> >& solution)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(solution);
-#endif
 
    d_solution_vector = Sundials_SAMRAIVector::createSundialsVector(solution);
    d_KINSOL_solver->initialize(d_solution_vector);
@@ -337,9 +331,7 @@ void
 KINSOL_SAMRAIContext::putToDatabase(
    const boost::shared_ptr<tbox::Database>& db) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    db->putInteger("SOLV_KINSOL_SAMRAI_CONTEXT_VERSION",
       SOLV_KINSOL_SAMRAI_CONTEXT_VERSION);

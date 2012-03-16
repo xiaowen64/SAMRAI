@@ -48,7 +48,10 @@ public:
     */
    void
    setSanityCheckMethodPreconditions(
-      bool do_check);
+      bool do_check)
+   {
+      d_sanity_check_precond = do_check;
+   }
 
    /*!
     * @brief Set whether to run expensive sanity checks on output parameters.
@@ -59,7 +62,10 @@ public:
     */
    void
    setSanityCheckMethodPostconditions(
-      bool do_check);
+      bool do_check)
+   {
+      d_sanity_check_postcond = do_check;
+   }
 
    //@{
 
@@ -207,7 +213,18 @@ public:
       Connector& input_to_external,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
-      const BoxContainer& domain = BoxContainer()) const;
+      const BoxContainer& domain = BoxContainer()) const
+   {
+      t_compute_external_parts->start();
+      computeInternalOrExternalParts(
+         external,
+         input_to_external,
+         'e',
+         input_to_reference,
+         nesting_width,
+         domain);
+      t_compute_external_parts->stop();
+   }
 
    /*!
     * @brief Compute the parts of one BoxLevel that are internal
@@ -257,7 +274,18 @@ public:
       Connector& input_to_internal,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
-      const BoxContainer& domain = BoxContainer()) const;
+      const BoxContainer& domain = BoxContainer()) const
+   {
+      t_compute_internal_parts->start();
+      computeInternalOrExternalParts(
+         internal,
+         input_to_internal,
+         'i',
+         input_to_reference,
+         nesting_width,
+         domain);
+      t_compute_internal_parts->stop();
+   }
 
    //@}
 
@@ -469,7 +497,21 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   initializeCallback();
+   initializeCallback()
+   {
+      t_make_sorting_map = tbox::TimerManager::getManager()->
+         getTimer("BoxLevelConnectorUtils::makeSortingMap()");
+      t_compute_external_parts = tbox::TimerManager::getManager()->
+         getTimer("BoxLevelConnectorUtils::computeExternalParts()");
+      t_compute_external_parts_intersection =
+         tbox::TimerManager::getManager()->
+         getTimer("BoxLevelConnectorUtils::computeExternalParts()_intersection");
+      t_compute_internal_parts = tbox::TimerManager::getManager()->
+         getTimer("BoxLevelConnectorUtils::computeInternalParts()");
+      t_compute_internal_parts_intersection =
+         tbox::TimerManager::getManager()->
+         getTimer("BoxLevelConnectorUtils::computeInternalParts()_intersection");
+   }
 
    /*!
     * @brief Delete statics.
@@ -477,7 +519,14 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   finalizeCallback();
+   finalizeCallback()
+   {
+      t_make_sorting_map.reset();
+      t_compute_external_parts.reset();
+      t_compute_external_parts_intersection.reset();
+      t_compute_internal_parts.reset();
+      t_compute_internal_parts_intersection.reset();
+   }
 
    static boost::shared_ptr<tbox::Timer> t_make_sorting_map;
    static boost::shared_ptr<tbox::Timer> t_compute_external_parts;
@@ -495,9 +544,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxLevelConnectorUtils.I"
-#endif
 
 #endif  // included_hier_BoxLevelConnectorUtils

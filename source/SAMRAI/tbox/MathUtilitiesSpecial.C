@@ -4,7 +4,8 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   MathUtilities routines to set up handlers and get signaling NaNs
+ * Description:   MathUtilities routines to set up handlers and get
+ *                signaling NaNs
  *
  ************************************************************************/
 
@@ -161,7 +162,6 @@ template<>
 bool MathUtilities<float>::isNaN(
    const float& value)
 {
-
    int i;
    /* This mess should be fixed when the next C++ standard comes out */
 #if defined(HAVE_CMATH_ISNAN)
@@ -171,7 +171,7 @@ bool MathUtilities<float>::isNaN(
 #elif defined(HAVE_ISNAND)
    i = __isnanf(value);
 #elif defined(HAVE_INLINE_ISNAND)
-   i = __SAMRAI_INLINE_KEYWORD_isnanf(value);
+   i = __inline_isnanf(value);
 #else
    i = value != value;
 #endif
@@ -193,7 +193,7 @@ MathUtilities<double>::isNaN(
 #elif defined(HAVE_ISNAND)
    i = __isnand(value);
 #elif defined(HAVE_INLINE_ISNAND)
-   i = __SAMRAI_INLINE_KEYWORD_isnand(value);
+   i = __inline_isnand(value);
 #else
    i = value != value;
 #endif
@@ -206,7 +206,6 @@ bool
 MathUtilities<dcomplex>::isNaN(
    const dcomplex& value)
 {
-
    int i_re;
    int i_im;
 #if defined(HAVE_CMATH_ISNAN)
@@ -219,8 +218,8 @@ MathUtilities<dcomplex>::isNaN(
    i_re = __isnand(real(value));
    i_im = __isnand(imag(value));
 #elif defined(HAVE_INLINE_ISNAND)
-   i_re = __SAMRAI_INLINE_KEYWORD_isnand(real(value));
-   i_im = __SAMRAI_INLINE_KEYWORD_isnand(imag(value));
+   i_re = __inline_isnand(real(value));
+   i_im = __inline_isnand(imag(value));
 #else
    i_re = real(value) != real(value);
    i_im = imag(value) != imag(value);

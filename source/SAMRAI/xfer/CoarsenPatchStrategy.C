@@ -13,10 +13,6 @@
 
 #include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/CoarsenPatchStrategy.I"
-#endif
-
 namespace SAMRAI {
 namespace xfer {
 

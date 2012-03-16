@@ -25,10 +25,6 @@
 #include <cstdlib>
 #include <list>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxLevelConnectorUtils.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 

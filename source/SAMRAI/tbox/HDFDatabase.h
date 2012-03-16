@@ -475,8 +475,8 @@ public:
    /**
     * @brief Returns the name of this database.
     *
-    * The name for the root of the database is the name supplied when creating it.
-    * Names for nested databases are the keyname of the database.
+    * The name for the root of the database is the name supplied when creating
+    * it.  Names for nested databases are the keyname of the database.
     *
     */
    virtual std::string
@@ -486,7 +486,10 @@ public:
     * Return the group_id so VisIt can access an object's HDF database.
     */
    hid_t
-   getGroupId();
+   getGroupId()
+   {
+      return d_group_id;
+   }
 
    using Database::putBoolArray;
    using Database::getBoolArray;
@@ -699,8 +702,5 @@ private:
 }
 
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/HDFDatabase.I"
-#endif
 #endif
 #endif

@@ -15,10 +15,6 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/BoundaryLookupTable.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/BoundaryBox.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 

@@ -14,9 +14,6 @@
 #include "SAMRAI/hier/CoarsenOperator.h"
 
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/CoarsenOperator.I"
-#endif
 
 namespace SAMRAI {
 namespace hier {

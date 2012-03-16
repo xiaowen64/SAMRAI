@@ -32,16 +32,11 @@
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Statistician.h"
 #include "SAMRAI/tbox/TimerManager.h"
-#include "SAMRAI/tbox/Utilities.h"
 
 #include <algorithm>
 #include <cstdlib>
 #include <fstream>
 #include <cmath>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/mesh/TreeLoadBalancer.I"
-#endif
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -3750,9 +3745,8 @@ TreeLoadBalancer::breakOffLoad_planar(
          if (difference < best_difference) {
             // This cut gives better difference, if it can be done.
 
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(brk_len >= 0 && brk_len <= bad.size());
-#endif
+
             if (brk_len == box_dims(brk_dir) ||
                 bad[brk_len] == false) {
                // Cutting brk_len from low side is ok.
@@ -4674,6 +4668,32 @@ TreeLoadBalancer::BoxInTransit::BoxInTransit(
    d_orig_box(other.d_orig_box),
    d_load(d_box.size())
 {
+}
+
+int*
+TreeLoadBalancer::BoxInTransit::putToIntBuffer(
+   int* buffer) const
+{
+   const int box_comm_buf_size = hier::Box::commBufferSize(d_box.getDim());
+   d_box.putToIntBuffer(buffer);
+   buffer += box_comm_buf_size;
+   d_orig_box.putToIntBuffer(buffer);
+   buffer += box_comm_buf_size;
+   *(buffer++) = d_load;
+   return buffer;
+}
+
+const int*
+TreeLoadBalancer::BoxInTransit::getFromIntBuffer(
+   const int* buffer)
+{
+   const int box_comm_buf_size = hier::Box::commBufferSize(d_box.getDim());
+   d_box.getFromIntBuffer(buffer);
+   buffer += box_comm_buf_size;
+   d_orig_box.getFromIntBuffer(buffer);
+   buffer += box_comm_buf_size;
+   d_load = *(buffer++);
+   return buffer;
 }
 
 TreeLoadBalancer::SubtreeLoadData::SubtreeLoadData():

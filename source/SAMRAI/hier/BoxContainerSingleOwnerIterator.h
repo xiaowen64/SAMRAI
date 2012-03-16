@@ -48,40 +48,67 @@ public:
     */
    BoxContainerSingleOwnerIterator&
    operator = (
-      const BoxContainerSingleOwnerIterator& r);
+      const BoxContainerSingleOwnerIterator& r)
+   {
+      d_mapped_boxes = r.d_mapped_boxes;
+      d_iter = r.d_iter;
+      d_owner_rank = r.d_owner_rank;
+      return *this;
+   }
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
    const Box&
-   operator * () const;
+   operator * () const
+   {
+      return *d_iter;
+   }
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
    const Box *
-   operator -> () const;
+   operator -> () const
+   {
+      return &(*d_iter);
+   }
 
    /*!
     * @brief Equality comparison.
     */
    bool
    operator == (
-      const BoxContainerSingleOwnerIterator& r) const;
+      const BoxContainerSingleOwnerIterator& r) const
+   {
+      return d_mapped_boxes == r.d_mapped_boxes &&
+             d_owner_rank == r.d_owner_rank &&
+             d_iter == r.d_iter;
+   }
 
    /*!
     * @brief Inequality comparison.
     */
    bool
    operator != (
-      const BoxContainerSingleOwnerIterator& r) const;
+      const BoxContainerSingleOwnerIterator& r) const
+   {
+      return d_mapped_boxes != r.d_mapped_boxes ||
+             d_owner_rank != r.d_owner_rank ||
+             d_iter != r.d_iter;
+   }
 
    /*!
     * @brief Whether the iterator can be dereferenced.  When the
     * iterator reaches its end, this returns false.
     */
    bool
-   isValid() const;
+   isValid() const
+   {
+      return d_mapped_boxes != NULL &&
+             d_iter != d_mapped_boxes->end() &&
+             d_iter->getOwnerRank() == d_owner_rank;
+   }
 
    /*!
     * @brief Pre-increment iterator.
@@ -122,9 +149,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxContainerSingleOwnerIterator.I"
-#endif
 
 #endif  // included_hier_BoxContainerSingleOwnerIterator

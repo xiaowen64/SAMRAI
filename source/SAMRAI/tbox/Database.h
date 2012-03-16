@@ -1064,7 +1064,10 @@ public:
    void
    getScalar(
       const std::string& key,
-      bool& scalar);
+      bool& scalar)
+   {
+      scalar = getBool(key);
+   }
 
    /**
     * Get a bool entry from the database with the specified key
@@ -1078,7 +1081,10 @@ public:
    void
    putScalar(
       const std::string& key,
-      const bool scalar);
+      const bool scalar)
+   {
+      putBool(key, scalar);
+   }
 
    /**
     * Get a bool entry from the database with the specified key
@@ -1092,7 +1098,10 @@ public:
    void
    getArray(
       const std::string& key,
-      Array<bool>& array);
+      Array<bool>& array)
+   {
+      array = getBoolArray(key);
+   }
 
    /**
     * Create an bool array entry in the database with the specified
@@ -1105,7 +1114,10 @@ public:
    void
    putArray(
       const std::string& key,
-      const Array<bool> array);
+      const Array<bool> array)
+   {
+      putBoolArray(key, array);
+   }
 
    /**
     * Get a char entry in the database with the specified key name.
@@ -1119,7 +1131,10 @@ public:
    void
    getScalar(
       const std::string& key,
-      char& scalar);
+      char& scalar)
+   {
+      scalar = getChar(key);
+   }
 
    /**
     * Get a char entry from the database with the specified key
@@ -1133,7 +1148,10 @@ public:
    void
    putScalar(
       const std::string& key,
-      const char scalar);
+      const char scalar)
+   {
+      putChar(key, scalar);
+   }
 
    /**
     * Get a char entry from the database with the specified key
@@ -1147,7 +1165,10 @@ public:
    void
    getArray(
       const std::string& key,
-      Array<char>& array);
+      Array<char>& array)
+   {
+      array = getCharArray(key);
+   }
 
    /**
     * Create an char array entry in the database with the specified
@@ -1160,7 +1181,10 @@ public:
    void
    putArray(
       const std::string& key,
-      const Array<char> array);
+      const Array<char> array)
+   {
+      putCharArray(key, array);
+   }
 
    /**
     * Get a complex entry in the database with the specified key name.
@@ -1174,7 +1198,10 @@ public:
    void
    getScalar(
       const std::string& key,
-      dcomplex& scalar);
+      dcomplex& scalar)
+   {
+      scalar = getComplex(key);
+   }
 
    /**
     * Get a complex entry from the database with the specified key
@@ -1188,7 +1215,10 @@ public:
    void
    putScalar(
       const std::string& key,
-      const dcomplex scalar);
+      const dcomplex scalar)
+   {
+      putComplex(key, scalar);
+   }
 
    /**
     * Get a complex entry from the database with the specified key
@@ -1202,7 +1232,10 @@ public:
    void
    getArray(
       const std::string& key,
-      Array<dcomplex>& array);
+      Array<dcomplex>& array)
+   {
+      array = getComplexArray(key);
+   }
 
    /**
     * Create an complex array entry in the database with the specified
@@ -1215,7 +1248,10 @@ public:
    void
    putArray(
       const std::string& key,
-      const Array<dcomplex> array);
+      const Array<dcomplex> array)
+   {
+      putComplexArray(key, array);
+   }
 
    /**
     * Get a float entry in the database with the specified key name.
@@ -1229,7 +1265,10 @@ public:
    void
    getScalar(
       const std::string& key,
-      float& scalar);
+      float& scalar)
+   {
+      scalar = getFloat(key);
+   }
 
    /**
     * Get a float entry from the database with the specified key
@@ -1243,7 +1282,10 @@ public:
    void
    putScalar(
       const std::string& key,
-      const float scalar);
+      const float scalar)
+   {
+      putFloat(key, scalar);
+   }
 
    /**
     * Get a float entry from the database with the specified key
@@ -1257,7 +1299,10 @@ public:
    void
    getArray(
       const std::string& key,
-      Array<float>& array);
+      Array<float>& array)
+   {
+      array = getFloatArray(key);
+   }
 
    /**
     * Create an float array entry in the database with the specified
@@ -1270,7 +1315,10 @@ public:
    void
    putArray(
       const std::string& key,
-      const Array<float> array);
+      const Array<float> array)
+   {
+      putFloatArray(key, array);
+   }
 
    /**
     * Get a double entry in the database with the specified key name.
@@ -1284,7 +1332,10 @@ public:
    void
    getScalar(
       const std::string& key,
-      double& scalar);
+      double& scalar)
+   {
+      scalar = getDouble(key);
+   }
 
    /**
     * Get a double entry from the database with the specified key
@@ -1298,7 +1349,10 @@ public:
    void
    putScalar(
       const std::string& key,
-      const double scalar);
+      const double scalar)
+   {
+      putDouble(key, scalar);
+   }
 
    /**
     * Get a double entry from the database with the specified key
@@ -1312,7 +1366,10 @@ public:
    void
    getArray(
       const std::string& key,
-      Array<double>& array);
+      Array<double>& array)
+   {
+      array = getDoubleArray(key);
+   }
 
    /**
     * Create an double array entry in the database with the specified
@@ -1325,7 +1382,10 @@ public:
    void
    putArray(
       const std::string& key,
-      const Array<double> array);
+      const Array<double> array)
+   {
+      putDoubleArray(key, array);
+   }
 
    /**
     * Get a integer entry in the database with the specified key name.
@@ -1339,7 +1399,10 @@ public:
    void
    getScalar(
       const std::string& key,
-      int& scalar);
+      int& scalar)
+   {
+      scalar = getInteger(key);
+   }
 
    /**
     * Get a integer entry from the database with the specified key
@@ -1353,7 +1416,10 @@ public:
    void
    putScalar(
       const std::string& key,
-      const int scalar);
+      const int scalar)
+   {
+      putInteger(key, scalar);
+   }
 
    /**
     * Get a integer entry from the database with the specified key
@@ -1367,7 +1433,10 @@ public:
    void
    getArray(
       const std::string& key,
-      Array<int>& array);
+      Array<int>& array)
+   {
+      array = getIntegerArray(key);
+   }
 
    /**
     * Create an integer array entry in the database with the specified
@@ -1380,7 +1449,10 @@ public:
    void
    putArray(
       const std::string& key,
-      const Array<int> array);
+      const Array<int> array)
+   {
+      putIntegerArray(key, array);
+   }
 
    /**
     * Return whether the specified key represents a vector entry.  If
@@ -1443,8 +1515,8 @@ public:
    /**
     * @brief Returns the name of this database.
     *
-    * The name for the root of the database is the name supplied when creating it.
-    * Names for nested databases are the keyname of the database.
+    * The name for the root of the database is the name supplied when creating
+    * it.  Names for nested databases are the keyname of the database.
     *
     */
    virtual std::string
@@ -1464,9 +1536,5 @@ public:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/Database.I"
-#endif
 
 #endif

@@ -63,7 +63,13 @@ public:
     */
    const PatchBoundaries&
    operator = (
-      const PatchBoundaries& r);
+      const PatchBoundaries& r)
+   {
+      for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
+         d_array_of_bboxes[d] = r.d_array_of_bboxes[d];
+      }
+      return *this;
+   }
 
    /*!
     * @brief Array access operator.
@@ -72,7 +78,11 @@ public:
     */
    tbox::Array<BoundaryBox>&
    operator [] (
-      unsigned int i);
+      unsigned int i)
+   {
+      TBOX_ASSERT(i < d_dim.getValue());
+      return d_array_of_bboxes[i];
+   }
 
    /*!
     * @brief Const Array access operator.
@@ -81,7 +91,11 @@ public:
     */
    const tbox::Array<BoundaryBox>&
    operator [] (
-      unsigned int i) const;
+      unsigned int i) const
+   {
+      TBOX_ASSERT(i < d_dim.getValue());
+      return d_array_of_bboxes[i];
+   }
 
    /*!
     * @brief Get copy of the internal arrays.
@@ -89,7 +103,10 @@ public:
     * @return  Copy of the internal arrays.
     */
    tbox::Array<tbox::Array<BoundaryBox> >
-   getArrays();
+   getArrays()
+   {
+      return d_array_of_bboxes;
+   }
 
    /*!
     * @brief Get const copy of the internal arrays.
@@ -97,7 +114,10 @@ public:
     * @return  Const copy of the internal arrays.
     */
    const tbox::Array<tbox::Array<BoundaryBox> >
-   getArrays() const;
+   getArrays() const
+   {
+      return d_array_of_bboxes;
+   }
 
    /*!
     * @brief friend declaration
@@ -133,10 +153,6 @@ private:
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchBoundaries.I"
 #endif
 
 #endif

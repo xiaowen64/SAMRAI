@@ -13,10 +13,6 @@
 
 #include "SAMRAI/pdat/SideIndex.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/SideIndex.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 

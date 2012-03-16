@@ -12,10 +12,6 @@
 
 #ifdef HAVE_SUNDIALS
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/KINSOLSolver.I"
-#endif
-
 namespace SAMRAI {
 namespace solv {
 
@@ -32,10 +28,8 @@ KINSOLSolver::KINSOLSolver(
    const int uses_preconditioner,
    const int uses_jac_times_vector)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(!(my_functions == (KINSOLAbstractFunctions *)NULL));
-#endif
 
    d_object_name = object_name;
    d_KINSOL_functions = my_functions;
@@ -148,9 +142,7 @@ KINSOLSolver::initialize(
    SundialsAbstractVector* uscale,
    SundialsAbstractVector* fscale)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(solution == (SundialsAbstractVector *)NULL));
-#endif
 
    d_solution_vector = solution;
 
@@ -185,9 +177,7 @@ KINSOLSolver::initialize(
 void
 KINSOLSolver::initializeKINSOL()
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(d_solution_vector == (SundialsAbstractVector *)NULL));
-#endif
 
    if (d_KINSOL_needs_initialization) {
 
@@ -391,9 +381,7 @@ KINSOLSolver::setLogFileData(
    const std::string& log_fname,
    const int flag)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(flag >= 0 && flag <= 3);
-#endif
    if (!(log_fname == d_kinsol_log_file_name)) {
       if (!log_fname.empty()) {
          d_kinsol_log_file_name = log_fname;

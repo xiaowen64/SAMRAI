@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/xfer/BoxGeometryVariableFillPattern.h"
 #include "SAMRAI/xfer/RefineClasses.h"
 #include "SAMRAI/hier/RefineOperator.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
@@ -598,7 +597,10 @@ public:
     * @brief Return the refine equivalence classes used in the algorithm.
     */
    const boost::shared_ptr<RefineClasses>&
-   getEquivalenceClasses() const;
+   getEquivalenceClasses() const
+   {
+      return d_refine_classes;
+   }
 
    /*!
     * @brief Set the pointer to the refine equivalence classes to be equal
@@ -608,13 +610,19 @@ public:
     */
    void
    setEquivalenceClasses(
-      const boost::shared_ptr<RefineClasses>& refine_classes);
+      const boost::shared_ptr<RefineClasses>& refine_classes)
+   {
+      d_refine_classes = refine_classes;
+   }
 
    /*!
     * @brief Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
    /*!
     * @brief Print the refine algorithm state to the specified data stream.
@@ -657,7 +665,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/RefineAlgorithm.I"
-#endif
 #endif

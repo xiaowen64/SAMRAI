@@ -23,16 +23,10 @@ PatchSideDataOpsReal<TYPE>::PatchSideDataOpsReal()
 {
 }
 
-#if 0
-/*
- * This was moved into the header due to what looks like bug in the
- * XLC compiler.
- */
 template<class TYPE>
 PatchSideDataOpsReal<TYPE>::~PatchSideDataOpsReal()
 {
 }
-#endif
 
 /*
  *************************************************************************
@@ -52,7 +46,8 @@ PatchSideDataOpsReal<TYPE>::PatchSideDataOpsReal(
 }
 
 template<class TYPE>
-void PatchSideDataOpsReal<TYPE>::operator = (
+void
+PatchSideDataOpsReal<TYPE>::operator = (
    const PatchSideDataOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -67,7 +62,8 @@ void PatchSideDataOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-void PatchSideDataOpsReal<TYPE>::swapData(
+void
+PatchSideDataOpsReal<TYPE>::swapData(
    const boost::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
@@ -92,7 +88,8 @@ void PatchSideDataOpsReal<TYPE>::swapData(
 }
 
 template<class TYPE>
-void PatchSideDataOpsReal<TYPE>::printData(
+void
+PatchSideDataOpsReal<TYPE>::printData(
    const boost::shared_ptr<pdat::SideData<TYPE> >& data,
    const hier::Box& box,
    std::ostream& s) const
@@ -106,7 +103,8 @@ void PatchSideDataOpsReal<TYPE>::printData(
 }
 
 template<class TYPE>
-void PatchSideDataOpsReal<TYPE>::copyData(
+void
+PatchSideDataOpsReal<TYPE>::copyData(
    const boost::shared_ptr<pdat::SideData<TYPE> >& dst,
    const boost::shared_ptr<pdat::SideData<TYPE> >& src,
    const hier::Box& box) const
@@ -127,7 +125,8 @@ void PatchSideDataOpsReal<TYPE>::copyData(
 }
 
 template<class TYPE>
-void PatchSideDataOpsReal<TYPE>::setToScalar(
+void
+PatchSideDataOpsReal<TYPE>::setToScalar(
    const boost::shared_ptr<pdat::SideData<TYPE> >& dst,
    const TYPE& alpha,
    const hier::Box& box) const

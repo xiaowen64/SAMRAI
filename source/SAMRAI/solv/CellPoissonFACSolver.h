@@ -17,6 +17,7 @@
 #include "SAMRAI/solv/PoissonSpecifications.h"
 #include "SAMRAI/solv/SimpleCellRobinBcCoefs.h"
 #include "SAMRAI/tbox/Database.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -144,7 +145,12 @@ public:
     */
    void
    enableLogging(
-      bool logging);
+      bool logging)
+   {
+      d_enable_logging = logging;
+      d_fac_precond.enableLogging(d_enable_logging);
+      d_fac_ops.enableLogging(d_enable_logging);
+   }
 
    /*!
     * @brief Solve Poisson's equation, assuming an uninitialized
@@ -279,7 +285,17 @@ public:
     */
    void
    setBcObject(
-      const RobinBcCoefStrategy* bc_object);
+      const RobinBcCoefStrategy* bc_object)
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (!bc_object) {
+         TBOX_ERROR(d_object_name << ": NULL pointer for boundary condition\n"
+                                  << "object.\n");
+      }
+#endif
+      d_bc_object = bc_object;
+      d_fac_ops.setPhysicalBcCoefObject(d_bc_object);
+   }
 
    //!@{ @name Specifying PDE parameters
 
@@ -291,7 +307,10 @@ public:
     */
    void
    setDPatchDataId(
-      int id);
+      int id)
+   {
+      d_poisson_spec.setDPatchDataId(id);
+   }
 
    /*!
     * @brief Set the scalar value variable D.
@@ -301,7 +320,10 @@ public:
     */
    void
    setDConstant(
-      double scalar);
+      double scalar)
+   {
+      d_poisson_spec.setDConstant(scalar);
+   }
 
    /*!
     * @brief Set the scalar value variable C.
@@ -311,7 +333,10 @@ public:
     */
    void
    setCPatchDataId(
-      int id);
+      int id)
+   {
+      d_poisson_spec.setCPatchDataId(id);
+   }
 
    /*!
     * @brief Set the patch data index for variable C.
@@ -321,7 +346,18 @@ public:
     */
    void
    setCConstant(
-      double scalar);
+      double scalar)
+   {
+// Disable Intel warning on real comparison
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
+      if (scalar == 0.0) {
+         d_poisson_spec.setCZero();
+      } else {
+         d_poisson_spec.setCConstant(scalar);
+      }
+   }
 
    //@}
 
@@ -336,7 +372,10 @@ public:
     */
    void
    setCoarsestLevelSolverChoice(
-      const std::string& choice);
+      const std::string& choice)
+   {
+      d_fac_ops.setCoarsestLevelSolverChoice(choice);
+   }
 
    /*!
     * @brief Set tolerance for coarse level solve.
@@ -346,7 +385,10 @@ public:
     */
    void
    setCoarsestLevelSolverTolerance(
-      double tol);
+      double tol)
+   {
+      d_fac_ops.setCoarsestLevelSolverTolerance(tol);
+   }
 
    /*!
     * @brief Set max iterations for coarse level solve.
@@ -356,7 +398,10 @@ public:
     */
    void
    setCoarsestLevelSolverMaxIterations(
-      int max_iterations);
+      int max_iterations)
+   {
+      d_fac_ops.setCoarsestLevelSolverMaxIterations(max_iterations);
+   }
 
 #ifdef HAVE_HYPRE
    /*!
@@ -376,7 +421,16 @@ public:
     */
    void
    setUseSMG(
-      bool use_smg);
+      bool use_smg)
+   {
+      if (d_solver_is_initialized) {
+         TBOX_ERROR(
+            d_object_name << ": setUseSMG(bool) may NOT be called\n"
+                          << "while the solver state is initialized, as that\n"
+                          << "would lead to a corrupted solver state.\n");
+      }
+      d_fac_ops.setUseSMG(use_smg);
+   }
 #endif
 
    /*!
@@ -401,7 +455,10 @@ public:
     */
    void
    setCoarseFineDiscretization(
-      const std::string& coarsefine_method);
+      const std::string& coarsefine_method)
+   {
+      d_fac_ops.setCoarseFineDiscretization(coarsefine_method);
+   }
 
    /*!
     * @brief Set the name of the prolongation method.
@@ -423,7 +480,10 @@ public:
     */
    void
    setProlongationMethod(
-      const std::string& prolongation_method);
+      const std::string& prolongation_method)
+   {
+      d_fac_ops.setProlongationMethod(prolongation_method);
+   }
 
    /*!
     * @brief Set the number of pre-smoothing sweeps during
@@ -436,7 +496,10 @@ public:
     */
    void
    setPresmoothingSweeps(
-      int num_pre_sweeps);
+      int num_pre_sweeps)
+   {
+      d_fac_precond.setPresmoothingSweeps(num_pre_sweeps);
+   }
 
    /*!
     * @brief Set the number of post-smoothing sweeps during
@@ -449,14 +512,20 @@ public:
     */
    void
    setPostsmoothingSweeps(
-      int num_post_sweeps);
+      int num_post_sweeps)
+   {
+      d_fac_precond.setPostsmoothingSweeps(num_post_sweeps);
+   }
 
    /*!
     * @brief Set the max number of iterations (cycles) to use per solve.
     */
    void
    setMaxCycles(
-      int max_cycles);
+      int max_cycles)
+   {
+      d_fac_precond.setMaxCycles(max_cycles);
+   }
 
    /*!
     * @brief Set the residual tolerance for stopping.
@@ -466,7 +535,10 @@ public:
     */
    void
    setResidualTolerance(
-      double residual_tol);
+      double residual_tol)
+   {
+      d_fac_precond.setResidualTolerance(residual_tol);
+   }
 
    //@}
 
@@ -527,7 +599,10 @@ public:
     * if there is one) FAC iteration process.
     */
    int
-   getNumberOfIterations() const;
+   getNumberOfIterations() const
+   {
+      return d_fac_precond.getNumberOfIterations();
+   }
 
    /*!
     * @brief Get average convergance rate and convergence rate of
@@ -539,7 +614,10 @@ public:
    void
    getConvergenceFactors(
       double& avg_factor,
-      double& final_factor) const;
+      double& final_factor) const
+   {
+      d_fac_precond.getConvergenceFactors(avg_factor, final_factor);
+   }
 
    /*!
     * @brief Return residual norm from the just-completed FAC iteration.
@@ -551,7 +629,10 @@ public:
     * The latest computed norm is the one returned.
     */
    double
-   getResidualNorm() const;
+   getResidualNorm() const
+   {
+      return d_fac_precond.getResidualNorm();
+   }
 
    //@}
 
@@ -561,7 +642,10 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*!
@@ -590,7 +674,11 @@ private:
     * @brief Destroy vector wrappers referenced to by @c d_uv and @c d_fv.
     */
    void
-   destroyVectorWrappers();
+   destroyVectorWrappers()
+   {
+      d_uv.reset();
+      d_fv.reset();
+   }
 
    /*
     * @brief Initialize static members
@@ -660,9 +748,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/CellPoissonFACSolver.I"
-#endif
 
 #endif  // included_solv_CellPoissonFACSolver

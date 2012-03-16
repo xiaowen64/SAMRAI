@@ -15,10 +15,6 @@
 
 #include <cstring>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/Schedule.I"
-#endif
-
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings

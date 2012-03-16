@@ -15,6 +15,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Transaction.h"
+#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/xfer/RefineClasses.h"
@@ -115,7 +116,22 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_mapped_box,
       const hier::Box& src_mapped_box,
-      int ritem_id) const;
+      int ritem_id) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS4(*dst_level,
+         *src_level,
+         dst_mapped_box,
+         src_mapped_box);
+      return allocate(
+         dst_level,
+         src_level,
+         overlap,
+         dst_mapped_box,
+         src_mapped_box,
+         ritem_id,
+         hier::Box::getEmptyBox(src_level->getDim()),
+         false);
+   }
 
    /*!
     * @brief Virtual function to set simulation time for transaction objects.
@@ -160,7 +176,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/RefineTransactionFactory.I"
-#endif
 #endif

@@ -13,10 +13,6 @@
 
 #include "SAMRAI/pdat/EdgeIterator.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/EdgeIterator.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 

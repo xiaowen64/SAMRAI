@@ -15,10 +15,6 @@
 
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/BoxGeometryVariableFillPattern.I"
-#endif
-
 namespace SAMRAI {
 namespace xfer {
 

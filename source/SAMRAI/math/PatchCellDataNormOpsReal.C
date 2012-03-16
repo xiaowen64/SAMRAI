@@ -45,7 +45,8 @@ PatchCellDataNormOpsReal<TYPE>::PatchCellDataNormOpsReal(
 }
 
 template<class TYPE>
-void PatchCellDataNormOpsReal<TYPE>::operator = (
+void
+PatchCellDataNormOpsReal<TYPE>::operator = (
    const PatchCellDataNormOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -60,7 +61,8 @@ void PatchCellDataNormOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-int PatchCellDataNormOpsReal<TYPE>::numberOfEntries(
+int
+PatchCellDataNormOpsReal<TYPE>::numberOfEntries(
    const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box) const
 {
@@ -81,7 +83,8 @@ int PatchCellDataNormOpsReal<TYPE>::numberOfEntries(
  */
 
 template<class TYPE>
-double PatchCellDataNormOpsReal<TYPE>::sumControlVolumes(
+double
+PatchCellDataNormOpsReal<TYPE>::sumControlVolumes(
    const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const boost::shared_ptr<pdat::CellData<double> >& cvol,
    const hier::Box& box) const
@@ -95,7 +98,8 @@ double PatchCellDataNormOpsReal<TYPE>::sumControlVolumes(
 }
 
 template<class TYPE>
-void PatchCellDataNormOpsReal<TYPE>::abs(
+void
+PatchCellDataNormOpsReal<TYPE>::abs(
    const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src,
    const hier::Box& box) const
@@ -109,7 +113,8 @@ void PatchCellDataNormOpsReal<TYPE>::abs(
 }
 
 template<class TYPE>
-double PatchCellDataNormOpsReal<TYPE>::L1Norm(
+double
+PatchCellDataNormOpsReal<TYPE>::L1Norm(
    const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::CellData<double> >& cvol) const
@@ -131,7 +136,8 @@ double PatchCellDataNormOpsReal<TYPE>::L1Norm(
 }
 
 template<class TYPE>
-double PatchCellDataNormOpsReal<TYPE>::L2Norm(
+double
+PatchCellDataNormOpsReal<TYPE>::L2Norm(
    const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::CellData<double> >& cvol) const
@@ -153,7 +159,8 @@ double PatchCellDataNormOpsReal<TYPE>::L2Norm(
 }
 
 template<class TYPE>
-double PatchCellDataNormOpsReal<TYPE>::weightedL2Norm(
+double
+PatchCellDataNormOpsReal<TYPE>::weightedL2Norm(
    const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const boost::shared_ptr<pdat::CellData<TYPE> >& weight,
    const hier::Box& box,
@@ -180,14 +187,14 @@ double PatchCellDataNormOpsReal<TYPE>::weightedL2Norm(
 }
 
 template<class TYPE>
-double PatchCellDataNormOpsReal<TYPE>::RMSNorm(
+double
+PatchCellDataNormOpsReal<TYPE>::RMSNorm(
    const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
+
    double retval = L2Norm(data, box, cvol);
    if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
@@ -198,15 +205,15 @@ double PatchCellDataNormOpsReal<TYPE>::RMSNorm(
 }
 
 template<class TYPE>
-double PatchCellDataNormOpsReal<TYPE>::weightedRMSNorm(
+double
+PatchCellDataNormOpsReal<TYPE>::weightedRMSNorm(
    const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const boost::shared_ptr<pdat::CellData<TYPE> >& weight,
    const hier::Box& box,
    const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data && weight);
-#endif
+
    double retval = weightedL2Norm(data, weight, box, cvol);
    if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
@@ -217,14 +224,14 @@ double PatchCellDataNormOpsReal<TYPE>::weightedRMSNorm(
 }
 
 template<class TYPE>
-double PatchCellDataNormOpsReal<TYPE>::maxNorm(
+double
+PatchCellDataNormOpsReal<TYPE>::maxNorm(
    const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
+
    double retval;
    if (!cvol) {
       retval = d_array_ops.maxNorm(data->getArrayData(), box);
@@ -237,15 +244,15 @@ double PatchCellDataNormOpsReal<TYPE>::maxNorm(
 }
 
 template<class TYPE>
-TYPE PatchCellDataNormOpsReal<TYPE>::dot(
+TYPE
+PatchCellDataNormOpsReal<TYPE>::dot(
    const boost::shared_ptr<pdat::CellData<TYPE> >& data1,
    const boost::shared_ptr<pdat::CellData<TYPE> >& data2,
    const hier::Box& box,
    const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data1 && data2);
-#endif
+
    TYPE retval;
    if (!cvol) {
       retval = d_array_ops.dot(data1->getArrayData(),
@@ -262,14 +269,14 @@ TYPE PatchCellDataNormOpsReal<TYPE>::dot(
 }
 
 template<class TYPE>
-TYPE PatchCellDataNormOpsReal<TYPE>::integral(
+TYPE
+PatchCellDataNormOpsReal<TYPE>::integral(
    const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
    const boost::shared_ptr<pdat::CellData<double> >& vol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
+
    TYPE retval = 0.0;
 
    retval = d_array_ops.integral(data->getArrayData(),

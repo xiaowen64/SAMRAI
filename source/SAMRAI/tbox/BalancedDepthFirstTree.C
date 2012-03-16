@@ -15,10 +15,6 @@
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/BalancedDepthFirstTree.I"
-#endif
-
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -54,10 +50,8 @@ BalancedDepthFirstTree::initialize(
    unsigned int rank,
    bool do_left_leaf_switch)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(first_rank <= rank);
    TBOX_ASSERT(rank <= last_rank);
-#endif
 #if defined(BalancedDepthFirstTree_ExtraDebug)
    plog
    << "BalancedDepthFirstTree::initialize with first_rank,last_rank,x="
@@ -110,10 +104,8 @@ BalancedDepthFirstTree::initialize(
 
       if (node == rank) break;
       else {
-#ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(nl > 0);
          TBOX_ASSERT(cl != getInvalidRank());
-#endif
          upp = up;
          up = node;
          if (nr < 1 || rank < cr) {
@@ -123,10 +115,8 @@ BalancedDepthFirstTree::initialize(
             rbeg = cl;
             rend = cl + static_cast<int>(nl) - 1;
          } else {
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(nr > 0);
             TBOX_ASSERT(cr != getInvalidRank());
-#endif
 #if defined(BalancedDepthFirstTree_ExtraDebug)
             plog << "Going right to" << " " << cr << std::endl;
 #endif

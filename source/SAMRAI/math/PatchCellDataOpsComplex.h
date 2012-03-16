@@ -20,6 +20,7 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Complex.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <iostream>
@@ -64,7 +65,12 @@ public:
    copyData(
       const boost::shared_ptr<pdat::CellData<dcomplex> >& dst,
       const boost::shared_ptr<pdat::CellData<dcomplex> >& src,
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      TBOX_ASSERT(dst && src);
+      TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+      dst->getArrayData().copy(src->getArrayData(), box);
+   }
 
    /**
     * Swap pointers for patch data objects.  Objects are checked for
@@ -83,7 +89,14 @@ public:
    printData(
       const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
       const hier::Box& box,
-      std::ostream& s = tbox::plog) const;
+      std::ostream& s = tbox::plog) const
+   {
+      TBOX_ASSERT(data);
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+      s << "Data box = " << box << std::endl;
+      data->print(box, s);
+      s << "\n";
+   }
 
    /**
     * Initialize data to given scalar over given box.
@@ -92,7 +105,12 @@ public:
    setToScalar(
       const boost::shared_ptr<pdat::CellData<dcomplex> >& dst,
       const dcomplex& alpha,
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      TBOX_ASSERT(dst);
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
+      dst->fillAll(alpha, box);
+   }
 
 private:
    // The following are not implemented:
@@ -107,7 +125,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/math/PatchCellDataOpsComplex.I"
-#endif
 #endif

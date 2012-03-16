@@ -16,11 +16,6 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
-#include "SAMRAI/xfer/CoarsenClasses.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/CoarsenCopyTransaction.I"
-#endif
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*

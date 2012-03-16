@@ -21,10 +21,6 @@
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/RestartManager.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 
@@ -323,6 +319,24 @@ RestartManager::writeRestartFile(
 /*
  *************************************************************************
  *
+ * Write simulation state to root database
+ *
+ *************************************************************************
+ */
+void
+RestartManager::writeRestartToDatabase()
+{
+   if (d_database_root) {
+      writeRestartFile(d_database_root);
+   } else {
+      TBOX_ERROR("writeRestartToDatabase has no database to write to"
+         << std::endl);
+   }
+}
+
+/*
+ *************************************************************************
+ *
  * Creates the directory structure for the data files if they have not
  * already been created.
  *
@@ -348,6 +362,19 @@ RestartManager::createDirs(
    Utilities::recursiveMkdir(full_dirname);
 
    return full_dirname;
+}
+
+void
+RestartManager::registerSingletonSubclassInstance(
+   RestartManager* subclass_instance)
+{
+   if (!s_manager_instance) {
+      s_manager_instance = subclass_instance;
+   } else {
+      TBOX_ERROR("RestartManager internal error...\n"
+         << "Attemptng to set Singleton instance to subclass instance,"
+         << "\n but Singleton instance already set." << std::endl);
+   }
 }
 
 }

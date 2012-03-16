@@ -58,7 +58,10 @@ public:
     */
    void
    setPrefixString(
-      const std::string& text);
+      const std::string& text)
+   {
+      d_prefix = text;
+   }
 
    /**
     * Set the primary output stream.  If not NULL, then output data is
@@ -67,7 +70,10 @@ public:
     */
    void
    setOutputStream1(
-      std::ostream* stream);
+      std::ostream* stream)
+   {
+      d_ostream1 = stream;
+   }
 
    /**
     * Set the secondary output stream.  If not NULL, then output data is sent
@@ -76,7 +82,10 @@ public:
     */
    void
    setOutputStream2(
-      std::ostream* stream);
+      std::ostream* stream)
+   {
+      d_ostream2 = stream;
+   }
 
    /**
     * Write a text string to the output stream.  Note that the string is
@@ -84,7 +93,10 @@ public:
     */
    void
    outputString(
-      const std::string& text);
+      const std::string& text)
+   {
+      outputString(text, static_cast<int>(text.length()));
+   }
 
    /**
     * Write a text string of the specified length to the output file.  Note
@@ -128,7 +140,10 @@ public:
     * MSVC++ stream implementation.
     */
    int
-   underflow();
+   underflow()
+   {
+      return EOF;
+   }
 #endif
 
 private:
@@ -139,13 +154,13 @@ private:
    void
    outputBuffer();              // output internal buffer data to streams
 
-   bool d_active;                // whether this output stream is active
-   std::string d_prefix;         // string prefix to prepend output strings
-   std::ostream* d_ostream1;     // primary output stream for buffer
-   std::ostream* d_ostream2;     // secondary output stream (e.g., for log file)
-   char* d_buffer;               // internal buffer to store accumulated string
-   int d_buffer_size;            // size of the internal output buffer
-   int d_buffer_ptr;             // number of charcters in the output buffer
+   bool d_active;               // whether this output stream is active
+   std::string d_prefix;        // string prefix to prepend output strings
+   std::ostream* d_ostream1;    // primary output stream for buffer
+   std::ostream* d_ostream2;    // secondary output stream (e.g., for log file)
+   char* d_buffer;              // internal buffer to store accumulated string
+   int d_buffer_size;           // size of the internal output buffer
+   int d_buffer_ptr;            // number of charcters in the output buffer
 
    static const int DEFAULT_BUFFER_SIZE;
 };
@@ -153,7 +168,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/ParallelBuffer.I"
-#endif
 #endif

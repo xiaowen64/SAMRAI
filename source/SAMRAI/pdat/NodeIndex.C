@@ -13,10 +13,6 @@
 
 #include "SAMRAI/pdat/NodeIndex.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/NodeIndex.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 

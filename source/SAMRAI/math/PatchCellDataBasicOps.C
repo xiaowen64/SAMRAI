@@ -45,7 +45,8 @@ PatchCellDataBasicOps<TYPE>::PatchCellDataBasicOps(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::operator = (
+void
+PatchCellDataBasicOps<TYPE>::operator = (
    const PatchCellDataBasicOps<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -60,7 +61,8 @@ void PatchCellDataBasicOps<TYPE>::operator = (
  */
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::scale(
+void
+PatchCellDataBasicOps<TYPE>::scale(
    const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const TYPE& alpha,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src,
@@ -75,7 +77,8 @@ void PatchCellDataBasicOps<TYPE>::scale(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::addScalar(
+void
+PatchCellDataBasicOps<TYPE>::addScalar(
    const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src,
    const TYPE& alpha,
@@ -90,7 +93,8 @@ void PatchCellDataBasicOps<TYPE>::addScalar(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::add(
+void
+PatchCellDataBasicOps<TYPE>::add(
    const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
@@ -105,7 +109,8 @@ void PatchCellDataBasicOps<TYPE>::add(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::subtract(
+void
+PatchCellDataBasicOps<TYPE>::subtract(
    const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
@@ -120,7 +125,8 @@ void PatchCellDataBasicOps<TYPE>::subtract(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::multiply(
+void
+PatchCellDataBasicOps<TYPE>::multiply(
    const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
@@ -135,7 +141,8 @@ void PatchCellDataBasicOps<TYPE>::multiply(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::divide(
+void
+PatchCellDataBasicOps<TYPE>::divide(
    const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
@@ -150,7 +157,8 @@ void PatchCellDataBasicOps<TYPE>::divide(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::reciprocal(
+void
+PatchCellDataBasicOps<TYPE>::reciprocal(
    const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src,
    const hier::Box& box) const
@@ -164,7 +172,8 @@ void PatchCellDataBasicOps<TYPE>::reciprocal(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::linearSum(
+void
+PatchCellDataBasicOps<TYPE>::linearSum(
    const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const TYPE& alpha,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
@@ -182,7 +191,8 @@ void PatchCellDataBasicOps<TYPE>::linearSum(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::axpy(
+void
+PatchCellDataBasicOps<TYPE>::axpy(
    const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const TYPE& alpha,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
@@ -199,7 +209,8 @@ void PatchCellDataBasicOps<TYPE>::axpy(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::axmy(
+void
+PatchCellDataBasicOps<TYPE>::axmy(
    const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const TYPE& alpha,
    const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
@@ -216,7 +227,8 @@ void PatchCellDataBasicOps<TYPE>::axmy(
 }
 
 template<class TYPE>
-TYPE PatchCellDataBasicOps<TYPE>::min(
+TYPE
+PatchCellDataBasicOps<TYPE>::min(
    const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box) const
 {
@@ -227,7 +239,8 @@ TYPE PatchCellDataBasicOps<TYPE>::min(
 }
 
 template<class TYPE>
-TYPE PatchCellDataBasicOps<TYPE>::max(
+TYPE
+PatchCellDataBasicOps<TYPE>::max(
    const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box) const
 {
@@ -238,7 +251,8 @@ TYPE PatchCellDataBasicOps<TYPE>::max(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::setRandomValues(
+void
+PatchCellDataBasicOps<TYPE>::setRandomValues(
    const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const TYPE& width,
    const TYPE& low,

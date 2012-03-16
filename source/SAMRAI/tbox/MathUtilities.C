@@ -11,8 +11,6 @@
 #ifndef included_tbox_MathUtilities_C
 #define included_tbox_MathUtilities_C
 
-#include "SAMRAI/tbox/MathUtilities.h"
-
 namespace SAMRAI {
 namespace tbox {
 

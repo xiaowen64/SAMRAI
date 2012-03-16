@@ -15,6 +15,7 @@
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/List.h"
+#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/CoarsenOperator.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
 
@@ -126,14 +127,20 @@ private:
     * Return number of equivalence classes maintained by this object.
     */
    int
-   getNumberOfEquivalenceClasses() const;
+   getNumberOfEquivalenceClasses() const
+   {
+      return d_equivalence_class_indices.size();
+   }
 
    /*!
     * @brief Return total number of coarsen items that have been registered
     * and stored in the CoarsenClasses object
     */
    int
-   getNumberOfCoarsenItems() const;
+   getNumberOfCoarsenItems() const
+   {
+      return d_num_coarsen_items;
+   }
 
    /*!
     * @brief Get representative item for a given equivalence class index.
@@ -147,7 +154,13 @@ private:
     */
    const CoarsenClasses::Data&
    getClassRepresentative(
-      int equiv_class_index) const;
+      int equiv_class_index) const
+   {
+      TBOX_ASSERT((equiv_class_index >= 0) &&
+         (equiv_class_index < getNumberOfEquivalenceClasses()));
+      return d_coarsen_classes_data_items[
+         d_equivalence_class_indices[equiv_class_index].getFirstItem()];
+   }
 
    /*!
     * @brief Get a coarsen item from the array of all coarsen items held by
@@ -164,7 +177,10 @@ private:
     */
    CoarsenClasses::Data&
    getCoarsenItem(
-      const int coarsen_item_array_id);
+      const int coarsen_item_array_id)
+   {
+      return d_coarsen_classes_data_items[coarsen_item_array_id];
+   }
 
    /*!
     * @brief Return an iterator for the list of array ids corresponding to the
@@ -186,7 +202,13 @@ private:
     */
    tbox::List<int>::Iterator
    getIterator(
-      int equiv_class_index);
+      int equiv_class_index)
+   {
+      TBOX_ASSERT((equiv_class_index >= 0) &&
+         (equiv_class_index < getNumberOfEquivalenceClasses()));
+      return tbox::List<int>::Iterator(
+         d_equivalence_class_indices[equiv_class_index]);
+   }
 
    /*!
     * @brief Given a CoarsenClasses::Data object, insert it into the proper
@@ -310,7 +332,10 @@ private:
     * necessary or when increaseCoarsenItemArraySize() is called.
     */
    int
-   getCoarsenItemArraySize() const;
+   getCoarsenItemArraySize() const
+   {
+      return d_coarsen_classes_data_items.size();
+   }
 
    /*!
     * @brief Increase the allocated size of the array storing coarsen items.
@@ -325,7 +350,12 @@ private:
    void
    increaseCoarsenItemArraySize(
       const int size,
-      const tbox::Dimension& dim);
+      const tbox::Dimension& dim)
+   {
+      if (size > d_coarsen_classes_data_items.size()) {
+         d_coarsen_classes_data_items.resizeArray(size, Data(dim));
+      }
+   }
 
    /*!
     * @brief Print data for all coarsen items to the specified output stream.
@@ -425,9 +455,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/CoarsenClasses.I"
-#endif
 
 #endif

@@ -50,40 +50,67 @@ public:
     */
    BoxContainerSingleBlockIterator&
    operator = (
-      const BoxContainerSingleBlockIterator& r);
+      const BoxContainerSingleBlockIterator& r)
+   {
+      d_mapped_boxes = r.d_mapped_boxes;
+      d_iter = r.d_iter;
+      d_block_id = r.d_block_id;
+      return *this;
+   }
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
    const Box&
-   operator * () const;
+   operator * () const
+   {
+      return *d_iter;
+   }
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
    const Box *
-   operator -> () const;
+   operator -> () const
+   {
+      return &(*d_iter);
+   }
 
    /*!
     * @brief Equality comparison.
     */
    bool
    operator == (
-      const BoxContainerSingleBlockIterator& r) const;
+      const BoxContainerSingleBlockIterator& r) const
+   {
+      return d_mapped_boxes == r.d_mapped_boxes &&
+             d_block_id == r.d_block_id &&
+             d_iter == r.d_iter;
+   }
 
    /*!
     * @brief Inequality comparison.
     */
    bool
    operator != (
-      const BoxContainerSingleBlockIterator& r) const;
+      const BoxContainerSingleBlockIterator& r) const
+   {
+      return d_mapped_boxes != r.d_mapped_boxes ||
+             d_block_id != r.d_block_id ||
+             d_iter != r.d_iter;
+   }
 
    /*!
     * @brief Whether the iterator can be dereferenced.  When the
     * iterator reaches its end, this returns false.
     */
    bool
-   isValid() const;
+   isValid() const
+   {
+      return d_mapped_boxes != NULL &&
+             d_iter != d_mapped_boxes->end() &&
+             d_iter->getBlockId() == d_block_id;
+   }
 
    /*!
     * @brief Pre-increment iterator.
@@ -130,9 +157,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxContainerSingleBlockIterator.I"
-#endif
 
 #endif  // included_hier_BoxContainerSingleBlockIterator

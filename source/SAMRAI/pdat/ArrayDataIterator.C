@@ -13,10 +13,6 @@
 
 #include "SAMRAI/pdat/ArrayDataIterator.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/ArrayDataIterator.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 

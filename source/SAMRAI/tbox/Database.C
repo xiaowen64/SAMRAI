@@ -10,10 +10,6 @@
 
 #include "SAMRAI/tbox/Database.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/Database.I"
-#endif
-
 #include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
@@ -1031,7 +1027,8 @@ Database::getStringArray(
 
 bool
 Database::isVector(
-   const std::string& key) {
+   const std::string& key)
+{
    return isInteger(key + "_size");
 }
 

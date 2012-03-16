@@ -13,10 +13,6 @@
 
 #include "SAMRAI/hier/PatchBoundaries.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchBoundaries.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 
@@ -62,23 +58,6 @@ PatchBoundaries::PatchBoundaries(
    for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
       d_array_of_bboxes[d] = r.d_array_of_bboxes[d];
    }
-}
-
-/*
- *************************************************************************
- *
- * Assignment operator
- *
- *************************************************************************
- */
-const PatchBoundaries&
-PatchBoundaries::operator = (const PatchBoundaries& r)
-{
-   for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
-      d_array_of_bboxes[d] = r.d_array_of_bboxes[d];
-   }
-
-   return *this;
 }
 
 } // SAMRAI namespace

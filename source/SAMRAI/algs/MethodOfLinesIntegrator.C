@@ -24,10 +24,6 @@
 #include <cstdlib>
 #include <fstream>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/algs/MethodOfLinesIntegrator.I"
-#endif
-
 namespace SAMRAI {
 namespace algs {
 

@@ -42,9 +42,7 @@ PETSc_SAMRAIVectorReal<TYPE>::createPETScVector(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& samrai_vec,
    MPI_Comm comm)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(samrai_vec);
-#endif
 
    static const bool vector_created_via_duplicate = false;
 
@@ -63,9 +61,7 @@ PETSc_SAMRAIVectorReal<TYPE>::destroyPETScVector(
       PETSc_SAMRAIVectorReal<TYPE>* psv =
          static_cast<PETSc_SAMRAIVectorReal<TYPE> *>(petsc_vec->data);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(psv != NULL);
-#endif
 
       delete psv;
    }
@@ -76,9 +72,7 @@ boost::shared_ptr<SAMRAIVectorReal<TYPE> >
 PETSc_SAMRAIVectorReal<TYPE>::getSAMRAIVector(
    Vec petsc_vec)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(petsc_vec != static_cast<Vec>(NULL));
-#endif
 
    PETSc_SAMRAIVectorReal<TYPE>* psv =
       static_cast<PETSc_SAMRAIVectorReal<TYPE> *>(petsc_vec->data);

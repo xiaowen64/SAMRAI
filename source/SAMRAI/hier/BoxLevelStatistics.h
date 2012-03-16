@@ -119,8 +119,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-// #include "SAMRAI/hier/BoxLevelStatistics.I"
-#endif
-
 #endif  // included_hier_BoxLevelStatistics

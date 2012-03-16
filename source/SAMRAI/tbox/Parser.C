@@ -13,10 +13,6 @@
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/PIO.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/Parser.I"
-#endif
-
 #ifdef __INTEL_COMPILER
 // Ignore Intel warnings about external declarations
 #pragma warning (disable:1419)
@@ -236,7 +232,9 @@ Parser::getDatabaseWithKey(
 {
    List<boost::shared_ptr<Database> >::Iterator i(d_scope_stack);
    for ( ; i; i++) {
-      if (i()->keyExists(key)) return i();
+      if (i()->keyExists(key)) {
+         return i();
+      }
    }
    return boost::shared_ptr<Database>();
 }
@@ -305,7 +303,9 @@ void
 Parser::popIncludeFile()
 {
    Parser::ParseData& pd = d_parse_stack.getFirstItem();
-   if (pd.d_fstream) fclose(pd.d_fstream);
+   if (pd.d_fstream) {
+      fclose(pd.d_fstream);
+   }
    d_parse_stack.removeFirstItem();
 }
 

@@ -136,14 +136,20 @@ public:
     * by statistician.
     */
    int
-   getNumberProcessorStats() const;
+   getNumberProcessorStats() const
+   {
+      return d_num_proc_stats;
+   }
 
    /**
     * Return integer number of local patch statistics maintained
     * by statistician.
     */
    int
-   getNumberPatchStats() const;
+   getNumberPatchStats() const
+   {
+      return d_num_patch_stats;
+   }
 
    /**
     * Reset all processor statistics to contain no information. The primary
@@ -777,7 +783,10 @@ private:
     * the arrays should be resized.
     */
    int
-   getMaximumNumberOfStatistics();
+   getMaximumNumberOfStatistics()
+   {
+      return d_proc_statistics.getSize();
+   }
 
    /*
     * Set the maximum number of statistics.
@@ -786,7 +795,13 @@ private:
     */
    void
    setMaximumNumberOfStatistics(
-      const int size);
+      const int size)
+   {
+      if (size > d_proc_statistics.getSize()) {
+         d_proc_statistics.resizeArray(size);
+         d_patch_statistics.resizeArray(size);
+      }
+   }
 
    /**
     * Static data members to manage the singleton statistician instance.
@@ -971,7 +986,10 @@ public:
     * Return string name identifier for statistic object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    std::string d_object_name;
@@ -987,7 +1005,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/Statistician.I"
-#endif
 #endif

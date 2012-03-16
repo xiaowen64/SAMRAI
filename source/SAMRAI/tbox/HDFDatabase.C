@@ -16,12 +16,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/HDFDatabase.I"
-#endif
-
 #include <boost/make_shared.hpp>
-#include <cassert>
 #include <cstring>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)

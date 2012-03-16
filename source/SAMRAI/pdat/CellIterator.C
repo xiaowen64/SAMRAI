@@ -13,10 +13,6 @@
 
 #include "SAMRAI/pdat/CellIterator.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/CellIterator.I"
-#endif
-
 namespace SAMRAI {
 namespace pdat {
 

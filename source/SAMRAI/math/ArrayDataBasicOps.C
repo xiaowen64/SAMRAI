@@ -48,7 +48,8 @@ ArrayDataBasicOps<TYPE>::ArrayDataBasicOps(
 }
 
 template<class TYPE>
-void ArrayDataBasicOps<TYPE>::operator = (
+void
+ArrayDataBasicOps<TYPE>::operator = (
    const ArrayDataBasicOps<TYPE>& foo)
 {
    NULL_USE(foo);       // not implemented (but needed by some compilers)
