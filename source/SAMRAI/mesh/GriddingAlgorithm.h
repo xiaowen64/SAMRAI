@@ -972,6 +972,17 @@ private:
       const hier::PatchLevel& tag_level,
       int tag_ln) const;
 
+   /*
+    * @brief Reset data that handles tag buffering.
+    *
+    * Resets the tag buffering data so that it will be able to handle a
+    * a tag buffer of the given size.
+    *
+    * @param tag_buffer  The size of the buffer
+    */
+   void
+   resetTagBufferingData(const int tag_buffer);
+
    /*!
     * @brief Check for overlapping patches within a level.
     *
@@ -1076,6 +1087,8 @@ private:
    static tbox::Array<int> * s_buf_tag_indx;
 
    const tbox::Dimension d_dim;
+
+   hier::IntVector d_buf_tag_ghosts;
 
    /*
     * The object name is used for error reporting and accessing
