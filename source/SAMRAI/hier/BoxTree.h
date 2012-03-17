@@ -76,7 +76,7 @@ public:
     */
    ~BoxTree();
 
-public:
+private:
 
    BoxTree(
       const std::list<const Box*> boxes,
