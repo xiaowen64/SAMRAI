@@ -321,9 +321,6 @@
 /* Define if restrict is not properly supported */
 #undef RESTRICT_IS_BROKEN
 
-/* Enable inlining of methods */
-#undef SAMRAI_INLINE
-
 /* Maximum dimension allowed */
 #undef SAMRAI_MAXIMUM_DIMENSION
 
@@ -362,12 +359,6 @@
 
 #ifndef OMPI_SKIP_MPICXX
 #define OMPI_SKIP_MPICXX
-#endif
-
-#ifdef SAMRAI_INLINE
-#define SAMRAI_INLINE_KEYWORD inline
-#else
-#define SAMRAI_INLINE_KEYWORD 
 #endif
 
 /********************************************************************/
