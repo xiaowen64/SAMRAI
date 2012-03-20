@@ -781,6 +781,15 @@ int main(
       // const hier::BoxLevel &L2 = *hierarchy->getPatchLevel(2)->getBoxLevel();
 
 
+      tbox::plog << "\n==================== Final hierarchy ====================" << std::endl;
+      for ( int ln=0; ln<hierarchy->getNumberOfLevels(); ++ln ) {
+         tbox::plog << '\n'
+                    << "\tL" << ln << " summary:\n"
+                    << hierarchy->getPatchLevel(ln)->getBoxLevel()->format("\t\t", 0)
+                    << "\tL" << ln << " statistics:\n"
+                    << hierarchy->getPatchLevel(ln)->getBoxLevel()->formatStatistics("\t\t");
+      }
+      tbox::plog << "\n\n";
 
 
       bool write_visit =
