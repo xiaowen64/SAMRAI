@@ -1156,5 +1156,19 @@ void enforceNesting(
                &L1,
                &L1nested );
 
+   /*
+    * Remove overflow nesting.
+    */
+   blcu.computeInternalParts( L1nested,
+                              L1_to_L1nested,
+                              L1_to_L0,
+                              hier::IntVector::getZero(dim),
+                              hierarchy->getGridGeometry()->getDomainSearchTree() );
+   mca.modify( L0_to_L1,
+               L1_to_L0,
+               L1_to_L1nested,
+               &L1,
+               &L1nested );
+
    return;
 }
