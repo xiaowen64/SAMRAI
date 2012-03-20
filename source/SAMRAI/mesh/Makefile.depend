@@ -175,8 +175,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/vector.h BergerRigoutsos.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BergerRigoutsos.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
@@ -264,8 +263,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/vector.h BergerRigoutsosNode.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BergerRigoutsosNode.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\

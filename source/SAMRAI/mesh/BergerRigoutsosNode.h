@@ -13,7 +13,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/AsyncCommGroup.h"
-#include "SAMRAI/tbox/vector.h"
 #include "SAMRAI/hier/BlockId.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/Connector.h"
@@ -21,6 +20,7 @@
 
 #include <set>
 #include <list>
+#include <vector>
 
 namespace SAMRAI {
 namespace mesh {
@@ -353,16 +353,9 @@ private:
    typedef std::set<int> IntSet;
 
    /*!
-    * @brief Type of vector<int> for internal use.
-    *
-    * Choose either std::vector or tbox::vector.  tbox::vector is a
-    * wrapper for std::vector, adding array bounds checking.
+    * @brief Shorthand for std::vector<int> for internal use.
     */
-#ifdef DEBUG_CHECK_ASSERTIONS
-   typedef tbox::vector<int> VectorOfInts;
-#else
    typedef std::vector<int> VectorOfInts;
-#endif
 
    /*!
     * @brief Parameters shared among all dendogram nodes in
