@@ -626,12 +626,12 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
     * nesting_width.  If the nesting_width is non-negative, the
     * internal parts are the same as the reference, possibly after
     * growing.  If it is negative, shrinking the reference boxes does
-    * not work.  We grow its complement and grow the complement by
+    * not work.  We take its complement and grow the complement by
     * -nesting_width.  The result represents the external parts of the
     * reference.
     */
 
-   const bool search_tree_represents_internal = nesting_width >= zero_vec;
+   const bool search_tree_represents_internal = nonnegative_nesting_width;
 
    if (search_tree_represents_internal) {
 
@@ -713,9 +713,9 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
       if (!input_to_reference.hasNeighborSet(input_mapped_box_id)) {
          /*
-          * Absence of a neighbor set in the overlap Connector means
-          * the input Box does not overlap the reference
-          * BoxLevel.
+          * Absence of a reference neighbor set in the overlap
+          * Connector means the input Box does not overlap the
+          * reference BoxLevel.
           */
          if (compute_overlaps) {
             /*
@@ -769,6 +769,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
           * Make Boxes from parts_list and create
           * Connector from input.
           */
+         parts_list.simplify();
          if (parts_list.size() == 1 &&
              parts_list.front().isSpatiallyEqual(input_mapped_box)) {
 
@@ -784,7 +785,6 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
             Connector::NeighborhoodIterator base_box_itr =
                input_to_parts.makeEmptyLocalNeighborhood(input_mapped_box_id);
-            parts_list.simplify();
             for (BoxContainer::Iterator bi(parts_list);
                  bi != parts_list.end(); ++bi) {
                const Box
