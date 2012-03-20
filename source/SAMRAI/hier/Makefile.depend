@@ -77,7 +77,8 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
@@ -97,7 +98,8 @@ DEPENDS_1:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
@@ -132,7 +134,8 @@ DEPENDS_2:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
@@ -167,7 +170,8 @@ DEPENDS_3:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_3 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
@@ -192,7 +196,8 @@ DEPENDS_4:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_4 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
@@ -226,7 +231,8 @@ DEPENDS_5:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_5 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
@@ -288,7 +294,8 @@ DEPENDS_6:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_6 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
@@ -328,7 +335,8 @@ DEPENDS_7:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_7 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_7:X.o=${NDIM}.o}: ${DEPENDS_7}
@@ -368,7 +376,8 @@ DEPENDS_8:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_8 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_8:X.o=${NDIM}.o}: ${DEPENDS_8}
@@ -436,7 +445,8 @@ DEPENDS_9:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_9 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_9:X.o=${NDIM}.o}: ${DEPENDS_9}
@@ -476,7 +486,8 @@ DEPENDS_10:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_10 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}
@@ -518,7 +529,8 @@ DEPENDS_11:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_11 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_11:X.o=${NDIM}.o}: ${DEPENDS_11}
@@ -609,7 +621,8 @@ DEPENDS_13:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_13 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_13:X.o=${NDIM}.o}: ${DEPENDS_13}
@@ -685,7 +698,8 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_14 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_14:X.o=${NDIM}.o}: ${DEPENDS_14}
@@ -750,7 +764,8 @@ DEPENDS_15:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_15 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_15:X.o=${NDIM}.o}: ${DEPENDS_15}
@@ -817,7 +832,8 @@ DEPENDS_16:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_16 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_16:X.o=${NDIM}.o}: ${DEPENDS_16}
@@ -858,7 +874,8 @@ DEPENDS_17:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_17 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_17:X.o=${NDIM}.o}: ${DEPENDS_17}
@@ -886,7 +903,8 @@ DEPENDS_18:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_18 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_18:X.o=${NDIM}.o}: ${DEPENDS_18}
@@ -931,7 +949,8 @@ DEPENDS_19:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_19 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_19:X.o=${NDIM}.o}: ${DEPENDS_19}
@@ -972,7 +991,8 @@ DEPENDS_20:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_20 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_20:X.o=${NDIM}.o}: ${DEPENDS_20}
@@ -1046,7 +1066,8 @@ DEPENDS_21:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_21 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_21:X.o=${NDIM}.o}: ${DEPENDS_21}
@@ -1101,7 +1122,8 @@ DEPENDS_22:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_22 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_22:X.o=${NDIM}.o}: ${DEPENDS_22}
@@ -1127,7 +1149,8 @@ DEPENDS_23:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_23 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_23:X.o=${NDIM}.o}: ${DEPENDS_23}
@@ -1197,7 +1220,8 @@ DEPENDS_24:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_24 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_24:X.o=${NDIM}.o}: ${DEPENDS_24}
@@ -1265,7 +1289,8 @@ DEPENDS_25:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_25 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_25:X.o=${NDIM}.o}: ${DEPENDS_25}
@@ -1358,7 +1383,8 @@ DEPENDS_27:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_27 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_27:X.o=${NDIM}.o}: ${DEPENDS_27}
@@ -1383,7 +1409,8 @@ DEPENDS_28:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_28 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_28:X.o=${NDIM}.o}: ${DEPENDS_28}
@@ -1407,7 +1434,8 @@ DEPENDS_29:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_29 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_29:X.o=${NDIM}.o}: ${DEPENDS_29}
@@ -1427,7 +1455,8 @@ DEPENDS_30:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_30 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_30:X.o=${NDIM}.o}: ${DEPENDS_30}
@@ -1506,7 +1535,8 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_31 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_31:X.o=${NDIM}.o}: ${DEPENDS_31}
@@ -1566,7 +1596,8 @@ DEPENDS_32:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_32 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_32:X.o=${NDIM}.o}: ${DEPENDS_32}
@@ -1628,82 +1659,14 @@ DEPENDS_33:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_33 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
 ${FILE_33:X.o=${NDIM}.o}: ${DEPENDS_33}
 
-FILE_34=NeighborhoodSet.o
+FILE_34=OverlapConnectorAlgorithm.o
 DEPENDS_34:=\
-	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSingleBlockIterator.h	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxNeighborhoodCollection.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Connector.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/GridGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/NeighborhoodSet.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PersistentOverlapConnectors.h	\
-	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h NeighborhoodSet.C
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_34 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
-endif
-
-${FILE_34:X.o=${NDIM}.o}: ${DEPENDS_34}
-
-FILE_35=OverlapConnectorAlgorithm.o
-DEPENDS_35:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -1773,16 +1736,17 @@ DEPENDS_35:=\
 	OverlapConnectorAlgorithm.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_35 +=\
+DEPENDS_34 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_35:X.o=${NDIM}.o}: ${DEPENDS_35}
+${FILE_34:X.o=${NDIM}.o}: ${DEPENDS_34}
 
-FILE_36=Patch.o
-DEPENDS_36:=\
+FILE_35=Patch.o
+DEPENDS_35:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -1828,15 +1792,16 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Patch.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_36 +=\
+DEPENDS_35 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_36:X.o=${NDIM}.o}: ${DEPENDS_36}
+${FILE_35:X.o=${NDIM}.o}: ${DEPENDS_35}
 
-FILE_37=PatchBoundaries.o
-DEPENDS_37:=\
+FILE_36=PatchBoundaries.o
+DEPENDS_36:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -1864,14 +1829,15 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchBoundaries.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_37 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+DEPENDS_36 +=\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_37:X.o=${NDIM}.o}: ${DEPENDS_37}
+${FILE_36:X.o=${NDIM}.o}: ${DEPENDS_36}
 
-FILE_38=PatchData.o
-DEPENDS_38:=\
+FILE_37=PatchData.o
+DEPENDS_37:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
@@ -1900,14 +1866,15 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchData.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_38 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+DEPENDS_37 +=\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_38:X.o=${NDIM}.o}: ${DEPENDS_38}
+${FILE_37:X.o=${NDIM}.o}: ${DEPENDS_37}
 
-FILE_39=PatchDataFactory.o
-DEPENDS_39:=\
+FILE_38=PatchDataFactory.o
+DEPENDS_38:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
@@ -1943,14 +1910,15 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchDataFactory.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_39 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+DEPENDS_38 +=\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_39:X.o=${NDIM}.o}: ${DEPENDS_39}
+${FILE_38:X.o=${NDIM}.o}: ${DEPENDS_38}
 
-FILE_40=PatchDescriptor.o
-DEPENDS_40:=\
+FILE_39=PatchDescriptor.o
+DEPENDS_39:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
@@ -1989,15 +1957,16 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchDescriptor.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_40 +=\
+DEPENDS_39 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_40:X.o=${NDIM}.o}: ${DEPENDS_40}
+${FILE_39:X.o=${NDIM}.o}: ${DEPENDS_39}
 
-FILE_41=PatchFactory.o
-DEPENDS_41:=\
+FILE_40=PatchFactory.o
+DEPENDS_40:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -2044,15 +2013,16 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchFactory.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_41 +=\
+DEPENDS_40 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_41:X.o=${NDIM}.o}: ${DEPENDS_41}
+${FILE_40:X.o=${NDIM}.o}: ${DEPENDS_40}
 
-FILE_42=PatchGeometry.o
-DEPENDS_42:=\
+FILE_41=PatchGeometry.o
+DEPENDS_41:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -2083,15 +2053,16 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchGeometry.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_42 +=\
+DEPENDS_41 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_42:X.o=${NDIM}.o}: ${DEPENDS_42}
+${FILE_41:X.o=${NDIM}.o}: ${DEPENDS_41}
 
-FILE_43=PatchHierarchy.o
-DEPENDS_43:=\
+FILE_42=PatchHierarchy.o
+DEPENDS_42:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -2163,16 +2134,17 @@ DEPENDS_43:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchHierarchy.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_43 +=\
+DEPENDS_42 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_43:X.o=${NDIM}.o}: ${DEPENDS_43}
+${FILE_42:X.o=${NDIM}.o}: ${DEPENDS_42}
 
-FILE_44=PatchLevel.o
-DEPENDS_44:=\
+FILE_43=PatchLevel.o
+DEPENDS_43:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -2234,15 +2206,16 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchLevel.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_44 +=\
+DEPENDS_43 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_44:X.o=${NDIM}.o}: ${DEPENDS_44}
+${FILE_43:X.o=${NDIM}.o}: ${DEPENDS_43}
 
-FILE_45=PatchLevelFactory.o
-DEPENDS_45:=\
+FILE_44=PatchLevelFactory.o
+DEPENDS_44:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -2304,27 +2277,28 @@ DEPENDS_45:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchLevelFactory.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_45 +=\
+DEPENDS_44 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_45:X.o=${NDIM}.o}: ${DEPENDS_45}
+${FILE_44:X.o=${NDIM}.o}: ${DEPENDS_44}
 
-FILE_46=PeriodicId.o
-DEPENDS_46:=\
+FILE_45=PeriodicId.o
+DEPENDS_45:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h PeriodicId.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_46 +=\
+DEPENDS_45 +=\
 	
 endif
 
-${FILE_46:X.o=${NDIM}.o}: ${DEPENDS_46}
+${FILE_45:X.o=${NDIM}.o}: ${DEPENDS_45}
 
-FILE_47=PeriodicShiftCatalog.o
-DEPENDS_47:=\
+FILE_46=PeriodicShiftCatalog.o
+DEPENDS_46:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
@@ -2343,14 +2317,15 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PeriodicShiftCatalog.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_47 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+DEPENDS_46 +=\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_47:X.o=${NDIM}.o}: ${DEPENDS_47}
+${FILE_46:X.o=${NDIM}.o}: ${DEPENDS_46}
 
-FILE_48=PersistentOverlapConnectors.o
-DEPENDS_48:=\
+FILE_47=PersistentOverlapConnectors.o
+DEPENDS_47:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -2417,16 +2392,17 @@ DEPENDS_48:=\
 	PersistentOverlapConnectors.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_48 +=\
+DEPENDS_47 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_48:X.o=${NDIM}.o}: ${DEPENDS_48}
+${FILE_47:X.o=${NDIM}.o}: ${DEPENDS_47}
 
-FILE_49=ProcessorMapping.o
-DEPENDS_49:=\
+FILE_48=ProcessorMapping.o
+DEPENDS_48:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
@@ -2444,14 +2420,14 @@ DEPENDS_49:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h ProcessorMapping.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_49 +=\
+DEPENDS_48 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
 endif
 
-${FILE_49:X.o=${NDIM}.o}: ${DEPENDS_49}
+${FILE_48:X.o=${NDIM}.o}: ${DEPENDS_48}
 
-FILE_50=RealBoxConstIterator.o
-DEPENDS_50:=\
+FILE_49=RealBoxConstIterator.o
+DEPENDS_49:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
@@ -2483,14 +2459,15 @@ DEPENDS_50:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h RealBoxConstIterator.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_50 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+DEPENDS_49 +=\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_50:X.o=${NDIM}.o}: ${DEPENDS_50}
+${FILE_49:X.o=${NDIM}.o}: ${DEPENDS_49}
 
-FILE_51=RefineOperator.o
-DEPENDS_51:=\
+FILE_50=RefineOperator.o
+DEPENDS_50:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -2537,15 +2514,16 @@ DEPENDS_51:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h RefineOperator.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_51 +=\
+DEPENDS_50 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_51:X.o=${NDIM}.o}: ${DEPENDS_51}
+${FILE_50:X.o=${NDIM}.o}: ${DEPENDS_50}
 
-FILE_52=TimeInterpolateOperator.o
-DEPENDS_52:=\
+FILE_51=TimeInterpolateOperator.o
+DEPENDS_51:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
@@ -2583,14 +2561,15 @@ DEPENDS_52:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h TimeInterpolateOperator.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_52 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+DEPENDS_51 +=\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_52:X.o=${NDIM}.o}: ${DEPENDS_52}
+${FILE_51:X.o=${NDIM}.o}: ${DEPENDS_51}
 
-FILE_53=TransferOperatorRegistry.o
-DEPENDS_53:=\
+FILE_52=TransferOperatorRegistry.o
+DEPENDS_52:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -2641,15 +2620,16 @@ DEPENDS_53:=\
 	TransferOperatorRegistry.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_53 +=\
+DEPENDS_52 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_53:X.o=${NDIM}.o}: ${DEPENDS_53}
+${FILE_52:X.o=${NDIM}.o}: ${DEPENDS_52}
 
-FILE_54=Transformation.o
-DEPENDS_54:=\
+FILE_53=Transformation.o
+DEPENDS_53:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -2702,15 +2682,16 @@ DEPENDS_54:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Transformation.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_54 +=\
+DEPENDS_53 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_54:X.o=${NDIM}.o}: ${DEPENDS_54}
+${FILE_53:X.o=${NDIM}.o}: ${DEPENDS_53}
 
-FILE_55=Variable.o
-DEPENDS_55:=\
+FILE_54=Variable.o
+DEPENDS_54:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
@@ -2747,14 +2728,15 @@ DEPENDS_55:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Variable.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_55 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
+DEPENDS_54 +=\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_55:X.o=${NDIM}.o}: ${DEPENDS_55}
+${FILE_54:X.o=${NDIM}.o}: ${DEPENDS_54}
 
-FILE_56=VariableContext.o
-DEPENDS_56:=\
+FILE_55=VariableContext.o
+DEPENDS_55:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
@@ -2763,14 +2745,14 @@ DEPENDS_56:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h VariableContext.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_56 +=\
+DEPENDS_55 +=\
 	
 endif
 
-${FILE_56:X.o=${NDIM}.o}: ${DEPENDS_56}
+${FILE_55:X.o=${NDIM}.o}: ${DEPENDS_55}
 
-FILE_57=VariableDatabase.o
-DEPENDS_57:=\
+FILE_56=VariableDatabase.o
+DEPENDS_56:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
@@ -2812,10 +2794,11 @@ DEPENDS_57:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h VariableDatabase.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_57 +=\
+DEPENDS_56 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_57:X.o=${NDIM}.o}: ${DEPENDS_57}
+${FILE_56:X.o=${NDIM}.o}: ${DEPENDS_56}
 

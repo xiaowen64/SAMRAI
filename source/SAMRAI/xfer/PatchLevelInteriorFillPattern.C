@@ -142,11 +142,12 @@ PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
    }
    for (hier::BoxContainer::ConstIterator na = all_dst_nabrs.begin();
         na != all_dst_nabrs.end(); ++na) {
-      hier::BoxContainer& fill_boxes =
-         dst_fill_boxes_on_src_proc[na->getId()];
-      fill_boxes.insert(*na);
+      FillSet::Iterator dst_fill_boxes_iter =
+         dst_fill_boxes_on_src_proc.insert(na->getId()).first;
+      dst_fill_boxes_on_src_proc.insert(dst_fill_boxes_iter, *na);
       d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
-            static_cast<int>(fill_boxes.size()));
+            static_cast<int>(dst_fill_boxes_on_src_proc.numNeighbors(
+               dst_fill_boxes_iter)));
    }
 }
 

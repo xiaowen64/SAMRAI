@@ -14,7 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/hier/NeighborhoodSet.h"
+#include "SAMRAI/hier/BoxNeighborhoodCollection.h"
 
 namespace SAMRAI {
 namespace xfer {
@@ -28,18 +28,18 @@ namespace xfer {
  * a schedule may need to fill patch interiors only, ghost regions
  * only, or some combination thereof.  Concrete implementations of
  * this class will take a destination level and compute the desired
- * boxes to be filled as well as NeighborhoodSet information that will
- * be later used in the communications that fill those boxes.
+ * boxes to be filled as well as BoxNeighborhoodCollection information that
+ * will be later used in the communications that fill those boxes.
  *
  * @see xfer::RefineSchedule
- * @see hier::NeighborhoodSet
+ * @see hier::BoxNeighborhoodCollection
  */
 
 class PatchLevelFillPattern
 {
 public:
    typedef std::vector<hier::Box> BoxVector;
-   typedef hier::NeighborhoodSet FillSet;
+   typedef hier::BoxNeighborhoodCollection FillSet;
 
    /*!
     * @brief Default constructor
@@ -61,7 +61,7 @@ public:
     * patch interiors, ghost regions, or some combination thereof) will be
     * specified in the concrete implementations of this class.  Implementations
     * of this method should store the desired regions to be filled in the
-    * BoxSet fill_mapped_boxes, and should compute a NeighborhoodSet
+    * BoxSet fill_mapped_boxes, and should compute a BoxNeighborhoodCollection
     * describing the relationship between dst_mapped_box_level and
     * fill_mapped_boxes.
     *

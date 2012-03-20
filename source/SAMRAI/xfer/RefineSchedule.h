@@ -366,7 +366,7 @@ private:
    //! @brief Shorthand typedef.
    typedef hier::Connector Connector;
    //! @brief Shorthand typedef.
-   typedef hier::NeighborhoodSet NeighborhoodSet;
+   typedef hier::BoxNeighborhoodCollection BoxNeighborhoodCollection;
    //! @brief Mapping from a (potentially remote) Box to a set of neighbors.
    typedef std::map<hier::Box, hier::BoxContainer, hier::Box::id_less> FullNeighborhoodSet;
 
@@ -429,18 +429,19 @@ private:
     * @param[in] src_to_dst  Connector between src and dst levels given
     *                        in constructor.
     * @param[in] dst_is_coarse_interp_level  Tells if the destination level
-    *                                       is a temporary coarse interpolation level
-    *                                       used for interpolation.
+    *                                        is a temporary coarse
+    *                                        interpolation level used for
+    *                                        interpolation.
     * @param[in] src_growth_to_nest_dst  The minimum amount that the source
     *                                    level has to grow in order to nest the
     *                                    destination level.
     * @param[in] dst_to_fill  Connector describing the boxes to fill for each
     *                         destination patch.
-    * @param[in] src_owner_dst_to_fill  A NeighborhoodSet that maps each local
-    *                                   mapped box on the source level to
-    *                                   a BoxContainer that indicates what parts
-    *                                   of the destination fill boxes can be filled
-    *                                   by that source box.
+    * @param[in] src_owner_dst_to_fill  A BoxNeighborhoodCollection that maps
+    *                                   each local box on the source level to
+    *                                   a collection of boxes that indicates
+    *                                   what parts of the destination fill
+    *                                   boxes can be filled by that source box.
     * @param[in] use_time_interpolation  Boolean flag indicating whether to
     *                                    use time interpolation when setting
     *                                    data on the destination level.
@@ -458,7 +459,7 @@ private:
       const bool dst_is_coarse_interp_level,
       const hier::IntVector& src_growth_to_nest_dst,
       const Connector& dst_to_fill,
-      const NeighborhoodSet& src_owner_dst_to_fill,
+      const BoxNeighborhoodCollection& src_owner_dst_to_fill,
       bool use_time_interpolation,
       bool skip_generate_schedule = false);
 
@@ -560,11 +561,11 @@ private:
     *                        passed into the constructor
     * @param[in] dst_to_fill  Connector between dst_level and a level
     *                         representing the boxes that need to be filled.
-    * @param[in] src_owner_dst_to_fill  A NeighborhoodSet that maps each local
-    *                                   mapped box on the source level to
-    *                                   a BoxContainer that indicates what parts
-    *                                   of the fill can be filled by that
-    *                                   source box.
+    * @param[in] src_owner_dst_to_fill  A BoxNeighborhoodCollection that maps
+    *                                   each local box on the source level to
+    *                                   a collection of boxes that indicates
+    *                                   what parts of the fill can be filled by
+    *                                   that source box.
     * @param[in] use_time_interpolation  Boolean flag indicating whether to
     *                                    use time interpolation when setting
     *                                    data on the destination level.
@@ -578,7 +579,7 @@ private:
       const Connector& dst_to_src,
       const Connector& src_to_dst,
       const Connector& dst_to_fill,
-      const NeighborhoodSet& src_owner_dst_to_fill,
+      const BoxNeighborhoodCollection& src_owner_dst_to_fill,
       const bool use_time_interpolation,
       const bool create_transactions);
 
@@ -599,11 +600,11 @@ private:
     *                                    be filled.
     * @param[out] dst_to_fill  Connector from dst_level to
     *                          fill_mapped_box_level.
-    * @param[out] src_owner_dst_to_fill  A NeighborhoodSet that maps each local
-    *                                    mapped box on the source level to
-    *                                    a BoxContainer that indicates what parts
-    *                                    of fill_mapped_box_level can be filled
-    *                                    by that source box.
+    * @param[out] src_owner_dst_to_fill  A BoxNeighborhoodCollection that maps
+    *                                    each local box on the source level to
+    *                                    a collection of boxes that indicates
+    *                                    what parts of fill_mapped_box_level
+    *                                    can be filled by that source box.
     * @param[in] dst_mapped_box_level  Mapped box representation of the
     *                                  dst_level given to the constructor.
     * @param[in] dst_to_src  Connector from dst_level to src_level.
@@ -614,7 +615,7 @@ private:
    setDefaultFillBoxLevel(
       BoxLevel& fill_mapped_box_level,
       Connector& dst_to_fill,
-      NeighborhoodSet& src_owner_dst_to_fill,
+      BoxNeighborhoodCollection& src_owner_dst_to_fill,
       const hier::BoxLevel& dst_mapped_box_level,
       const hier::Connector* dst_to_src,
       const hier::Connector* src_to_dst,
@@ -699,11 +700,11 @@ private:
     * @brief Communicate dst_to_fill info to the src owners when the owners
     * would otherwise be unable to compute the info.
     *
-    * @param[out] src_owner_dst_to_fill  A NeighborhoodSet that maps each local
-    *                                    mapped box on the source level to
-    *                                    a BoxContainer that indicates what parts
-    *                                    of fill_mapped_box_level can be filled
-    *                                    by that source box.
+    * @param[out] src_owner_dst_to_fill  A BoxNeighborhoodCollection that maps
+    *                                    each local box on the source level to
+    *                                    a collection of boxes that indicates
+    *                                    what parts of fill_mapped_box_level
+    *                                    can be filled by that source box.
     * @param[in] dst_to_fill  Mapping from the dst_level to boxes it needs
     *                         need to have filled.
     * @param[in] dst_to_src  Mapping from the dst_level to src_level
@@ -711,7 +712,7 @@ private:
     */
    void
    communicateFillBoxes(
-      NeighborhoodSet& src_owner_dst_to_fill,
+      BoxNeighborhoodCollection& src_owner_dst_to_fill,
       const Connector& dst_to_fill,
       const Connector& dst_to_src,
       const Connector& src_to_dst);
@@ -852,7 +853,8 @@ private:
     */
    void
    constructScheduleTransactions(
-      const hier::BoxContainer& fill_boxes,
+      const BoxNeighborhoodCollection& dst_to_fill_on_src_proc,
+      BoxNeighborhoodCollection::ConstIterator& dst_to_fill_iter,
       const hier::Box& dst_mapped_box,
       const hier::Box& src_mapped_box,
       const bool use_time_interpolation);

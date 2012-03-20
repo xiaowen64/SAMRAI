@@ -196,7 +196,7 @@ RefineSchedule::RefineSchedule(
 
    BoxLevel fill_mapped_box_level(dim);
    Connector dst_to_fill;
-   NeighborhoodSet dst_to_fill_on_src_proc;
+   BoxNeighborhoodCollection dst_to_fill_on_src_proc;
    setDefaultFillBoxLevel(
       fill_mapped_box_level,
       dst_to_fill,
@@ -366,7 +366,7 @@ RefineSchedule::RefineSchedule(
 
    BoxLevel fill_mapped_box_level(dim);
    Connector dst_to_fill;
-   NeighborhoodSet dst_to_fill_on_src_proc;
+   BoxNeighborhoodCollection dst_to_fill_on_src_proc;
 
    setDefaultFillBoxLevel(
       fill_mapped_box_level,
@@ -519,7 +519,7 @@ RefineSchedule::RefineSchedule(
 
    BoxLevel fill_mapped_box_level(dim);
    Connector dst_to_fill;
-   NeighborhoodSet dst_to_fill_on_src_proc;
+   BoxNeighborhoodCollection dst_to_fill_on_src_proc;
    setDefaultFillBoxLevel(
       fill_mapped_box_level,
       dst_to_fill,
@@ -636,7 +636,7 @@ RefineSchedule::finishScheduleConstruction(
    const bool dst_is_coarse_interp_level,
    const hier::IntVector& src_growth_to_nest_dst,
    const Connector& dst_to_fill,
-   const NeighborhoodSet& dst_to_fill_on_src_proc,
+   const BoxNeighborhoodCollection& dst_to_fill_on_src_proc,
    bool use_time_interpolation,
    bool skip_generate_schedule)
 {
@@ -2326,7 +2326,7 @@ RefineSchedule::generateCommunicationSchedule(
    const Connector& dst_to_src,
    const Connector& src_to_dst,
    const Connector& dst_to_fill,
-   const NeighborhoodSet& dst_to_fill_on_src_proc,
+   const BoxNeighborhoodCollection& dst_to_fill_on_src_proc,
    const bool use_time_interpolation,
    const bool create_transactions)
 {
@@ -2398,7 +2398,7 @@ RefineSchedule::generateCommunicationSchedule(
          const hier::BoxContainer& local_src_mapped_boxes = ei->second;
          TBOX_ASSERT(!dst_mapped_box.isPeriodicImage());
 
-         NeighborhoodSet::const_iterator dst_fill_iter =
+         BoxNeighborhoodCollection::ConstIterator dst_fill_iter =
             dst_to_fill_on_src_proc.find(dst_mapped_box.getId());
          if (dst_fill_iter == dst_to_fill_on_src_proc.end()) {
             /*
@@ -2410,8 +2410,6 @@ RefineSchedule::generateCommunicationSchedule(
             continue;
          }
 
-         const hier::BoxContainer& dst_fill_boxes = dst_fill_iter->second;
-
          for (hier::BoxContainer::ConstIterator
               ni = local_src_mapped_boxes.begin();
               ni != local_src_mapped_boxes.end(); ++ni) {
@@ -2421,7 +2419,8 @@ RefineSchedule::generateCommunicationSchedule(
                 dst_mapped_box.getOwnerRank()) {
 
                constructScheduleTransactions(
-                  dst_fill_boxes,
+                  dst_to_fill_on_src_proc,
+                  dst_fill_iter,
                   dst_mapped_box,
                   src_mapped_box,
                   use_time_interpolation);
@@ -2857,7 +2856,7 @@ void
 RefineSchedule::setDefaultFillBoxLevel(
    BoxLevel& fill_mapped_box_level,
    Connector& dst_to_fill,
-   NeighborhoodSet& dst_to_fill_on_src_proc,
+   BoxNeighborhoodCollection& dst_to_fill_on_src_proc,
    const BoxLevel& dst_mapped_box_level,
    const hier::Connector* dst_to_src,
    const hier::Connector* src_to_dst,
@@ -3245,7 +3244,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
  */
 void
 RefineSchedule::communicateFillBoxes(
-   NeighborhoodSet& dst_to_fill_on_src_proc,
+   BoxNeighborhoodCollection& dst_to_fill_on_src_proc,
    const Connector& dst_to_fill,
    const Connector& dst_to_src,
    const Connector& src_to_dst)
@@ -3329,7 +3328,9 @@ RefineSchedule::communicateFillBoxes(
               so != tmp_owners.end(); ++so) {
             const int& src_owner = *so;
             if (src_owner == dst_mapped_box_id.getOwnerRank()) {
-               dst_to_fill_on_src_proc[dst_mapped_box_id] = tmp_fill_boxes;
+               dst_to_fill_on_src_proc.insert(
+                  dst_mapped_box_id,
+                  tmp_fill_boxes);
             } else {
                std::vector<int>& send_mesg = send_mesgs[src_owner];
                send_mesg.insert(send_mesg.end(),
@@ -3374,12 +3375,15 @@ RefineSchedule::communicateFillBoxes(
             d_max_fill_boxes = tbox::MathUtilities<int>::Max(
                d_max_fill_boxes,
                num_fill_mapped_boxes);
-            hier::BoxContainer& fill_boxes = dst_to_fill_on_src_proc[distributed_id];
+            BoxNeighborhoodCollection::Iterator fill_boxes_iter =
+               dst_to_fill_on_src_proc.insert(distributed_id).first;
             for (size_t ii = 0; ii < num_fill_mapped_boxes; ++ii) {
                hier::Box tmp_dst_mapped_box(dim);
                tmp_dst_mapped_box.getFromIntBuffer(ptr);
                ptr += hier::Box::commBufferSize(dim);
-               fill_boxes.insert(fill_boxes.end(), tmp_dst_mapped_box);
+               dst_to_fill_on_src_proc.insert(
+                  fill_boxes_iter,
+                  tmp_dst_mapped_box);
             }
          }
          TBOX_ASSERT(ptr == peer->getRecvData() + peer->getRecvSize());
@@ -3478,7 +3482,8 @@ RefineSchedule::getMaxStencilGhosts() const
 
 void
 RefineSchedule::constructScheduleTransactions(
-   const hier::BoxContainer& fill_boxes,
+   const BoxNeighborhoodCollection& dst_to_fill_on_src_proc,
+   BoxNeighborhoodCollection::ConstIterator& dst_to_fill_iter,
    const hier::Box& dst_mapped_box,
    const hier::Box& src_mapped_box,
    bool use_time_interpolation)
@@ -3502,9 +3507,9 @@ RefineSchedule::constructScheduleTransactions(
       tbox::plog << "  dst: L" << d_dst_level->getLevelNumber()
                  << "R" << d_dst_level->getRatioToLevelZero()
                  << " / " << dst_mapped_box << std::endl;
-      tbox::plog << "  fill_boxes (" << fill_boxes.size() << ")";
-      for (hier::BoxContainer::ConstIterator bi = fill_boxes.begin();
-           bi != fill_boxes.end(); ++bi) {
+      tbox::plog << "  fill_boxes (" << dst_to_fill_on_src_proc.numNeighbors(dst_to_fill_iter) << ")";
+      for (BoxNeighborhoodCollection::ConstNeighborIterator bi = dst_to_fill_on_src_proc.begin(dst_to_fill_iter);
+           bi != dst_to_fill_on_src_proc.end(dst_to_fill_iter); ++bi) {
          tbox::plog << " " << *bi;
       }
       tbox::plog << std::endl;
@@ -3742,8 +3747,9 @@ RefineSchedule::constructScheduleTransactions(
 
       hier::BoxContainer::Iterator box_itr(d_src_masks);
       int box_num = 0;
-      for (hier::BoxContainer::ConstIterator bi = fill_boxes.begin();
-           bi != fill_boxes.end(); ++bi) {
+      for (BoxNeighborhoodCollection::ConstNeighborIterator bi =
+              dst_to_fill_on_src_proc.begin(dst_to_fill_iter);
+           bi != dst_to_fill_on_src_proc.end(dst_to_fill_iter); ++bi) {
 
          const hier::Box& fill_box = *bi;
 
