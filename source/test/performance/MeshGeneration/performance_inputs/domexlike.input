@@ -13,7 +13,7 @@
 Main {
    dim = 3
 
-   base_name = "core2shell.3d.treelb"
+   base_name = "domexlike"
    log_all_nodes = FALSE
    write_visit = FALSE
    enforce_nesting = FALSE
@@ -25,23 +25,24 @@ Main {
    /*
      Specify domain as a box array in the reference index space.
    */
-   domain_boxes = [(0,0,0),(9,9,9)]
+   // domain_boxes = [(0,0,0),(15,7,7)]
+   domain_boxes = [(0,0,0),(15,15,15)]
 
    /*
      Specify physical domain box.
    */
    xlo = 0.0, 0.0, 0.0
-   xhi = 1.0, 1.0, 1.0
+   xhi = 4.0, 4.0, 4.0
+
+   ghost_cell_width = 4, 4, 4
 
    /*
      Base nprocs for automatic scaling.
    */
-   autoscale_base_nprocs = 4
+   autoscale_base_nprocs = 1
 
-   ghost_cell_width = 4, 4, 4
-
-   efficiency_tol = 0.85
-   combine_tol = 0.85
+   efficiency_tol = 0.80
+   combine_tol = 0.80
 
    BergerRigoutsos {
       laplace_cut_threshold_ar = 4
@@ -55,24 +56,25 @@ Main {
       // algo_advance_mode = "SYNCHRONOUS"
    }
 
-   mesh_generator_name = "SphericalShellGenerator"
+   mesh_generator_name = "SinusoidalFrontGenerator"
 
-   SphericalShellGenerator {
+   SinusoidalFrontGenerator {
       /*
-        Specify unbalanced layer by tagging a set of concentric shells,
-        centered at (0,0,0), with shell i having inner radius radii[2*i]
-        and outer radius radii[(2*i)+1].  Note that making shells too thin
-        can lead to discontinuous tagging.
+        Define a set of sinusoidal fronts oriented in perpendicular to the x-axis.
       */
-      radii = 0.0, 0.25,    0.40, 0.45,    0.85, 0.87
+      init_disp = 2.0, 0.0, 0.0
+      period = 4.1, 4.0, 4.0
+      amplitude = 0.5
 
-      // Tag L0 by buffering and l1 by buffering.
-      buffer_distance_0 = 0.032, 0.032, 0.032
-      buffer_distance_1 = 0.00, 0.00, 0.00
+      // Tag L0 by buffering and L1 by buffering.
+      // buffer_distance_0 = 0.08, 0.08, 0.08
+      // buffer_distance_1 = 0.02, 0.02, 0.02
+      buffer_distance_0 = 0.16, 0.16, 0.16
+      buffer_distance_1 = 0.02, 0.02, 0.02
 
       // Tag L0 by buffering and l1 by shrinking.
-      // buffer_distance_0 = 0.02, 0.02
-      // shrink_distance_1 = 0.06, 0.06
+      // buffer_distance_0 = 0.02, 0.02, 0.02
+      // shrink_distance_1 = 0.06, 0.06, 0.06
    }
 
 }
@@ -121,15 +123,14 @@ PatchHierarchy {
       // all finer levels will use same values as level_0...
    }
    smallest_patch_size {
-      level_0 = 3, 3, 3
+      level_0 = 6, 6, 6
       level_1 = 6, 6, 6
-      level_2 = 9, 9, 9
+      level_2 = 6, 6, 6
       // all finer levels will use same values as level_0...
    }
    ratio_to_coarser {
-      level_1            = 3, 3, 3
-      level_2            = 3, 3, 3
-      level_3            = 2, 2, 2
+      level_1            = 2, 2, 2
+      level_2            = 2, 2, 2
       //  etc.
    }
 

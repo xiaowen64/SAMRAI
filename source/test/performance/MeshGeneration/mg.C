@@ -231,6 +231,21 @@ int main(
       }
 
 
+      /*
+       * Whether to perform certain steps in mesh generation.
+       */
+
+      tbox::Array<bool> enforce_nesting(1, true);
+      if ( main_db->isBool("enforce_nesting") ) {
+         enforce_nesting = main_db->getBoolArray("enforce_nesting");
+      }
+
+      tbox::Array<bool> load_balance(1, true);
+      if ( main_db->isBool("load_balance") ) {
+         load_balance = main_db->getBoolArray("load_balance");
+      }
+
+
 
       /*
        * Parameters.  Some of these can be specified by input deck.
@@ -372,6 +387,12 @@ int main(
 
       mesh_gen->resetHierarchyConfiguration(hierarchy, 0, 1);
 
+      enforce_nesting.resizeArray( hierarchy->getMaxNumberOfLevels(),
+                                   bool(enforce_nesting.back()) );
+
+      load_balance.resizeArray( hierarchy->getMaxNumberOfLevels(),
+                                bool(load_balance.back()) );
+
 
       const int max_levels = hierarchy->getMaxNumberOfLevels();
 
@@ -405,8 +426,6 @@ int main(
       /*
        * Set up the load balancers.
        */
-
-      mesh::LoadBalanceStrategy* lb = NULL;
 
       std::string load_balancer_type =
          main_db->getStringWithDefault("load_balancer_type", "TreeLoadBalancer");
@@ -475,20 +494,22 @@ int main(
 
          outputPrebalance( L0, domain_box_level, ghost_cell_width, "L0: " );
 
-         tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
-         lb0->loadBalanceBoxLevel(
-            L0,
-            L0_to_domain,
-            domain_to_L0,
-            hierarchy,
-            0,
-            hier::Connector(),
-            hier::Connector(),
-            hierarchy->getSmallestPatchSize(0),
-            hierarchy->getLargestPatchSize(0),
-            domain_box_level,
-            bad_interval,
-            cut_factor);
+         if ( load_balance[0] ) {
+            tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
+            lb0->loadBalanceBoxLevel(
+               L0,
+               L0_to_domain,
+               domain_to_L0,
+               hierarchy,
+               0,
+               hier::Connector(),
+               hier::Connector(),
+               hierarchy->getSmallestPatchSize(0),
+               hierarchy->getLargestPatchSize(0),
+               domain_box_level,
+               bad_interval,
+               cut_factor);
+         }
 
          sortNodes(L0,
             domain_to_L0,
@@ -502,9 +523,6 @@ int main(
             L0.getMPI());
 
          outputPostbalance( L0, domain_box_level, ghost_cell_width, "L0: " );
-
-         oca.assertOverlapCorrectness(L0_to_domain);
-         oca.assertOverlapCorrectness(domain_to_L0);
 
          L0.cacheGlobalReducedData();
 
@@ -573,12 +591,14 @@ int main(
          /*
           * Enforce nesting.
           */
-         enforceNesting(
-            L1,
-            L0_to_L1,
-            L1_to_L0,
-            hierarchy,
-            coarser_ln);
+         if ( enforce_nesting[1] ) {
+            enforceNesting(
+               L1,
+               L0_to_L1,
+               L1_to_L0,
+               hierarchy,
+               coarser_ln);
+         }
 
          if ( L1.getGlobalNumberOfBoxes() == 0 ) {
             TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
@@ -596,23 +616,22 @@ int main(
             (double)L1.getLocalNumberOfCells(),
             L1.getMPI());
 
-         tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
-         lb1->loadBalanceBoxLevel(
-            L1,
-            L1_to_L0,
-            L0_to_L1,
-            hierarchy,
-            1,
-            hier::Connector(),
-            hier::Connector(),
-            hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
-            hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
-            domain_box_level,
-            bad_interval,
-            cut_factor);
-
-         oca.assertOverlapCorrectness(L1_to_L0);
-         oca.assertOverlapCorrectness(L0_to_L1);
+         if ( load_balance[1] ) {
+            tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
+            lb1->loadBalanceBoxLevel(
+               L1,
+               L1_to_L0,
+               L0_to_L1,
+               hierarchy,
+               1,
+               hier::Connector(),
+               hier::Connector(),
+               hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
+               hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
+               domain_box_level,
+               bad_interval,
+               cut_factor);
+         }
 
          sortNodes(L1,
                    L0_to_L1,
@@ -704,12 +723,14 @@ int main(
          /*
           * Enforce nesting.
           */
-         enforceNesting(
-            L2,
-            L1_to_L2,
-            L2_to_L1,
-            hierarchy,
-            coarser_ln);
+         if ( enforce_nesting[2] ) {
+            enforceNesting(
+               L2,
+               L1_to_L2,
+               L2_to_L1,
+               hierarchy,
+               coarser_ln);
+         }
 
          if ( L2.getGlobalNumberOfBoxes() == 0 ) {
             TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
@@ -728,23 +749,22 @@ int main(
             (double)L2.getLocalNumberOfCells(),
             L2.getMPI());
 
-         tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
-         lb2->loadBalanceBoxLevel(
-            L2,
-            L2_to_L1,
-            L1_to_L2,
-            hierarchy,
-            1,
-            hier::Connector(),
-            hier::Connector(),
-            hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
-            hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
-            domain_box_level,
-            bad_interval,
-            cut_factor);
-
-         oca.assertOverlapCorrectness(L2_to_L1);
-         oca.assertOverlapCorrectness(L1_to_L2);
+         if ( load_balance[2] ) {
+            tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
+            lb2->loadBalanceBoxLevel(
+               L2,
+               L2_to_L1,
+               L1_to_L2,
+               hierarchy,
+               1,
+               hier::Connector(),
+               hier::Connector(),
+               hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
+               hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
+               domain_box_level,
+               bad_interval,
+               cut_factor);
+         }
 
          sortNodes(L2,
                    L1_to_L2,
@@ -1137,6 +1157,8 @@ void enforceNesting(
 
    const tbox::Dimension dim(hierarchy->getDim());
 
+   const int cell_count = L1.getGlobalNumberOfCells();
+
    /*
     * Make L1 nest inside L0 by nesting_width.
     */
@@ -1169,6 +1191,14 @@ void enforceNesting(
                L1_to_L1nested,
                &L1,
                &L1nested );
+
+   if ( cell_count != L1.getGlobalNumberOfCells() ) {
+      tbox::plog << "\t\tWarning: enforceNesting changed number of cells from " << cell_count
+                 << " to " << L1.getGlobalNumberOfCells() << '\n';
+   }
+   else {
+      tbox::plog << "\t\tenforceNesting left number of cells at " << cell_count << '\n';
+   }
 
    return;
 }

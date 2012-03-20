@@ -70,6 +70,18 @@ namespace mesh {
  *   Zero means cut only at the center plane.  One means unlimited.
  *   Under most situations, one is fine.  A lower setting helps prevent
  *   parallel slivers.
+ * - laplace_cut_threshold_ar (0.0): specifies the mininum box
+ *   thickness that can be cut, as a ratio to the thinnest box
+ *   direction.  If the box doesn't have any direction thick
+ *   enough, then it has a reasonable aspect ratio, so we can
+ *   cut it in any direction.
+ *   Degenerate values of laplace_cut_threshold_ar:
+ *   1: cut any direction except the thinnest.
+ *   (0,1) and huge values: cut any direction.
+ *   0: Not a degenerate case but a special case meaning always
+ *   cut the thickest direction.  This leads to more cubic
+ *   boxes but may prevent cutting at important feature
+ *   changes.
  *
  * Debugging inputs (default):
  * - bool @b log_node_history (false):
@@ -195,8 +207,8 @@ private:
    //! @brief Max distance from center for Laplace cut.
    double d_max_lap_cut_from_center;
 
-   //! @brief Whether to do Laplace cut only along the longest direction.
-   bool d_laplace_cut_long_dir_only;
+   //! @brief Threshold for avoiding thinner dimensions for Laplace cut.
+   double d_laplace_cut_threshold_ar;
 
    //! @brief Whether to log execution node allocation and deallocation.
    bool d_log_node_history;

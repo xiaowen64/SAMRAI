@@ -15,7 +15,9 @@ Main {
 
    base_name = "mild_front.3d.treelb"
    log_all_nodes = FALSE
-   write_visit = TRUE
+   write_visit = FALSE
+   enforce_nesting = FALSE
+   load_balance = TRUE
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
    load_balancer_type = "TreeLoadBalancer"
@@ -23,7 +25,7 @@ Main {
    /*
      Specify domain as a box array in the reference index space.
    */
-   domain_boxes = [(0,0,0),(39,19,19)]
+   domain_boxes = [(0,0,0),(15,7,7)]
 
    /*
      Specify physical domain box.
@@ -36,12 +38,13 @@ Main {
    /*
      Base nprocs for automatic scaling.
    */
-   autoscale_base_nprocs = 1
+   autoscale_base_nprocs = 4
 
    efficiency_tol = 0.80
    combine_tol = 0.80
 
    BergerRigoutsos {
+      laplace_cut_threshold_ar = 4
       sort_output_nodes = TRUE
       log_node_history = FALSE
       log_cluster_summary = FALSE
@@ -58,13 +61,13 @@ Main {
       /*
         Define a set of sinusoidal fronts oriented in perpendicular to the x-axis.
       */
-      init_disp = 1.0, 1.0, 1.0
+      init_disp = 1.0, 0.0, 0.0
       period = 2.0, 4.0, 4.0
       amplitude = 0.5
 
       // Tag L0 by buffering and L1 by buffering.
       buffer_distance_0 = 0.08, 0.08, 0.08
-      buffer_distance_1 = 0.02, 0.02, 0.02
+      buffer_distance_1 = 0.04, 0.04, 0.04
 
       // Tag L0 by buffering and l1 by shrinking.
       // buffer_distance_0 = 0.02, 0.02, 0.02

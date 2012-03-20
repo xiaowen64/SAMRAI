@@ -54,7 +54,7 @@ BergerRigoutsos::BergerRigoutsos(
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_max_box_size(hier::IntVector(d_dim, tbox::MathUtilities<int>::getMax())),
    d_max_lap_cut_from_center(1.0),
-   d_laplace_cut_long_dir_only(true),
+   d_laplace_cut_threshold_ar(0.0),
    d_log_node_history(false),
    d_log_cluster_summary(false),
    d_log_cluster(false),
@@ -77,9 +77,9 @@ BergerRigoutsos::BergerRigoutsos(
       d_max_lap_cut_from_center =
          database->getDoubleWithDefault("max_lap_cut_from_center",
             d_max_lap_cut_from_center);
-      d_laplace_cut_long_dir_only =
-         database->getBoolWithDefault("laplace_cut_long_dir_only",
-            d_max_lap_cut_from_center);
+      d_laplace_cut_threshold_ar =
+         database->getDoubleWithDefault("laplace_cut_threshold_ar",
+            d_laplace_cut_threshold_ar);
       d_log_node_history =
          database->getBoolWithDefault("log_node_history",
             d_log_node_history);
@@ -257,7 +257,7 @@ BergerRigoutsos::findBoxesContainingTags(
       combine_tol,
       d_max_box_size,
                                      d_max_lap_cut_from_center,
-                                     d_laplace_cut_long_dir_only);
+                                     d_laplace_cut_threshold_ar);
 
    // Set the parallel algorithm and DLBG parameters.
    root_node.setAlgorithmAdvanceMode(d_algo_advance_mode);

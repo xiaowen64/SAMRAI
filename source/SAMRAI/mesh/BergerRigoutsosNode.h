@@ -125,7 +125,7 @@ public:
     *   Zero means cut only at the center plane.  One means unlimited.
     *   Under most situations, one is fine.
     *
-    * @param [i] laplace_cut_long_dir_only
+    * @param [i] laplace_cut_threshold_ar
     */
    void
    setClusteringParameters(
@@ -136,7 +136,7 @@ public:
       const double combine_tol,
       const hier::IntVector& max_box_size,
       const double max_lap_cut_from_center,
-      const bool laplace_cut_long_dir_only);
+      const double laplace_cut_threshold_ar);
 
    //@{
    //! @name Algorithm mode settings
@@ -445,22 +445,18 @@ public:
        */
       double max_lap_cut_from_center;
 
-      /*!
-       * @brief  Whether to try Laplace cut only along the longest direction.
+      /*
+       * @brief Threshold for favoring thicker directions for Laplace
+       * cuts.
+       *
+       * The higher the value, the more we tolerate high aspect
+       * ratios.  Box directions corresponding to aspect ratios lower
+       * than this will not be subject to Laplace cuts (except for the
+       * thickest direction).  Set to 0 to always cut the thickest
+       * direction.  Set to huge value to disregard high aspect
+       * ratios.
        */
-      double laplace_cut_long_dir_only;
-
-      /*!
-       * @brief List of processes that will send neighbor data
-       * for locally owned boxes after the BR algorithm completes.
-       */
-      IntSet relationship_senders;
-
-      /*!
-       * @brief Outgoing messages to be sent to graph node owners
-       * describing new relationships found by local process.
-       */
-      std::map<int, VectorOfInts> relationship_messages;
+      double laplace_cut_threshold_ar;
 
       /*!
        * @brief If a candidate box does not fit in this limit,
@@ -489,6 +485,18 @@ public:
        * See setComputeRelationships().
        */
       int compute_relationships;
+
+      /*!
+       * @brief List of processes that will send neighbor data
+       * for locally owned boxes after the BR algorithm completes.
+       */
+      IntSet relationship_senders;
+
+      /*!
+       * @brief Outgoing messages to be sent to graph node owners
+       * describing new relationships found by local process.
+       */
+      std::map<int, VectorOfInts> relationship_messages;
 
       //! @brief Ammount to grow a box when checking for overlap.
       hier::IntVector max_gcw;
@@ -963,6 +971,7 @@ public:
    static void
    finalizeCallback();
 
+   // TODO: d_dim is unneeded.  Dimension is already in d_common.
    const tbox::Dimension d_dim;
 
    /*!

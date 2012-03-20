@@ -28,7 +28,13 @@ public:
    /*!
     * @brief Constructor.
     *
-    * @param[i] box_level
+    * Compute and store statistics for the given BoxLevel.  The
+    * statistics reflects the current BoxLevel state and can be
+    * printed out afterwards.  All processes in the BoxLevel's
+    * SAMRAI_MPI must call this constructor because it requires
+    * collective communication.
+    *
+    * @param[i] box_level BoxLevel to compute statistics for.
     */
    explicit BoxLevelStatistics(
       const BoxLevel &box_level);
@@ -72,14 +78,14 @@ private:
    enum { HAS_ANY_BOX,
           NUMBER_OF_CELLS,
           NUMBER_OF_BOXES,
-          LARGEST_BOX_SIZE,
-          SMALLEST_BOX_SIZE,
-          LONGEST_BOX_LEN,
-          SHORTEST_BOX_LEN,
-          LARGEST_ASPECT_RATIO,
-          SMALLEST_ASPECT_RATIO,
+          MAX_BOX_VOL,
+          MIN_BOX_VOL,
+          MAX_BOX_LEN,
+          MIN_BOX_LEN,
+          MAX_ASPECT_RATIO,
+          SUM_ASPECT_RATIO,
           SUM_SURFACE_AREA,
-          SUM_NORMALIZED_SURFACE_AREA,
+          SUM_NORM_SURFACE_AREA,
           NUMBER_OF_QUANTITIES };
 
    /*
@@ -95,11 +101,26 @@ private:
    };
 
    void
-   computeLocalBoxLevelStatistics(
-      StatisticalQuantities &sq) const;
+   computeLocalBoxLevelStatistics( const BoxLevel &box_level );
 
-   //! @brief BoxLevel to compute statistics for.
-   const BoxLevel &d_box_level;
+   void
+   reduceStatistics();
+
+   tbox::SAMRAI_MPI d_mpi;
+
+   const tbox::Dimension d_dim;
+
+   //! @brief Statistics of local process.
+   StatisticalQuantities d_sq;
+   //! @brief Global min of d_sq.
+   StatisticalQuantities d_sq_min;
+   //! @brief Global max of d_sq.
+   StatisticalQuantities d_sq_max;
+   //! @brief Global sum of d_sq.
+   StatisticalQuantities d_sq_sum;
+
+   int d_rank_of_min[NUMBER_OF_QUANTITIES];
+   int d_rank_of_max[NUMBER_OF_QUANTITIES];
 
    /*!
     * @brief Names of the quantities in StatisticalQuantities.

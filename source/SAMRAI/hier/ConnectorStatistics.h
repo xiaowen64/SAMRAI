@@ -28,6 +28,12 @@ public:
    /*!
     * @brief Constructor.
     *
+    * Compute and store statistics for the given Connector.  The
+    * statistics reflects the current Connector state and can be
+    * printed out afterwards.  All processes in the Connector's
+    * SAMRAI_MPI must call this constructor because it requires
+    * collective communication.
+    *
     * @param[i] connector
     */
    explicit ConnectorStatistics(
@@ -116,11 +122,24 @@ private:
    };
 
    void
-   computeLocalConnectorStatistics(
-      StatisticalQuantities &sq) const;
+   computeLocalConnectorStatistics( const Connector &connector );
 
-   //! @brief Connector to compute statistics for.
-   const Connector &d_connector;
+   void
+   reduceStatistics();
+
+   tbox::SAMRAI_MPI d_mpi;
+
+   //! @brief Statistics of local process.
+   StatisticalQuantities d_sq;
+   //! @brief Global min of d_sq.
+   StatisticalQuantities d_sq_min;
+   //! @brief Global max of d_sq.
+   StatisticalQuantities d_sq_max;
+   //! @brief Global sum of d_sq.
+   StatisticalQuantities d_sq_sum;
+
+   int d_rank_of_min[NUMBER_OF_QUANTITIES];
+   int d_rank_of_max[NUMBER_OF_QUANTITIES];
 
    /*!
     * @brief Names of the quantities in StatisticalQuantities.

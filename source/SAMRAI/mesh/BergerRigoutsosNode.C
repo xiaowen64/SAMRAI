@@ -248,7 +248,7 @@ BergerRigoutsosNode::setClusteringParameters(
    const double combine_tol,
    const hier::IntVector& max_box_size,
    const double max_lap_cut_from_center,
-   const bool laplace_cut_long_dir_only)
+   const double laplace_cut_threshold_ar)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, min_box, max_box_size);
 
@@ -259,7 +259,7 @@ BergerRigoutsosNode::setClusteringParameters(
    d_common->combine_tol = combine_tol;
    d_common->max_box_size = max_box_size;
    d_common->max_lap_cut_from_center = max_lap_cut_from_center;
-   d_common->laplace_cut_long_dir_only = laplace_cut_long_dir_only;
+   d_common->laplace_cut_threshold_ar = laplace_cut_threshold_ar;
 }
 
 /*
@@ -735,6 +735,14 @@ REDUCE_HISTOGRAM:
          for (size_t i = 0; i < d_histogram[narrowest_dir].size(); ++i) {
             d_num_tags += d_histogram[narrowest_dir][i];
          }
+
+         /*
+          * If this is the root node, d_num_tags is the total tag count
+          * in all nodes.
+          */
+         if (d_parent == NULL) {
+            d_common->num_tags_in_all_nodes = d_num_tags;
+         }
       }
 
       if (d_common->rank == d_owner) {
@@ -788,7 +796,7 @@ BCAST_ACCEPTABILITY:
        * If this is the root node, d_num_tags is the total tag count
        * in all nodes.
        */
-      if (d_parent == NULL) {
+      if (d_parent == NULL && d_common->rank != d_owner) {
          d_common->num_tags_in_all_nodes = d_num_tags;
       }
 
@@ -1209,9 +1217,9 @@ BergerRigoutsosNode::CommonParams::CommonParams(
    new_mapped_box_level(NULL),
    tag_to_new(NULL),
    new_to_tag(NULL),
-   relationship_senders(),
-   relationship_messages(),
    // Parameters not from clustering algorithm interface ...
+   max_lap_cut_from_center(1.0),
+   laplace_cut_threshold_ar(0.0),
    max_box_size(d_dim, tbox::MathUtilities<int>::getMax()),
    // Parameters from clustering algorithm interface ...
    tag_data_index(-1),
@@ -1219,8 +1227,10 @@ BergerRigoutsosNode::CommonParams::CommonParams(
    min_box(d_dim, 1),
    efficiency_tol(tbox::MathUtilities<double>::getMax()),
    combine_tol(tbox::MathUtilities<double>::getMax()),
-   // Implementation flags ...
+   // Implementation flags and data...
    compute_relationships(2),
+   relationship_senders(),
+   relationship_messages(),
    max_gcw(d_dim, 1),
    owner_mode(MOST_OVERLAP),
    // Communication parameters ...
@@ -1875,7 +1885,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
       }
    }
 
-   hier::IntVector sorted_boxdims(d_dim);
+   hier::IntVector sorted_margins(d_dim);
 
    if (d_box_acceptance == undetermined) {
       /*
@@ -1885,25 +1895,28 @@ BergerRigoutsosNode::acceptOrSplitBox()
        */
       int dim;
       for (dim = 0; dim < d_dim.getValue(); dim++) {
-         sorted_boxdims(dim) = dim;
+         sorted_margins(dim) = dim;
       }
       for (int d0 = 0; d0 < d_dim.getValue() - 1; d0++) {
          for (int d1 = d0 + 1; d1 < d_dim.getValue(); d1++) {
-            if (cut_margin(sorted_boxdims(d0)) <
-                cut_margin(sorted_boxdims(d1))) {
-               int tmp_dim = sorted_boxdims(d0);
-               sorted_boxdims(d0) = sorted_boxdims(d1);
-               sorted_boxdims(d1) = tmp_dim;
+            if (cut_margin(sorted_margins(d0)) <
+                cut_margin(sorted_margins(d1))) {
+               int tmp_dim = sorted_margins(d0);
+               sorted_margins(d0) = sorted_margins(d1);
+               sorted_margins(d1) = tmp_dim;
             }
          }
       }
 #ifdef DEBUG_CHECK_ASSERTIONS
       for (dim = 0; dim < d_dim.getValue() - 1; dim++) {
-         TBOX_ASSERT(cut_margin(sorted_boxdims(dim)) >=
-            cut_margin(sorted_boxdims(dim + 1)));
+         TBOX_ASSERT(cut_margin(sorted_margins(dim)) >=
+            cut_margin(sorted_margins(dim + 1)));
       }
 #endif
    }
+
+   const int max_margin_dir = sorted_margins(0);
+   const int min_margin_dir = sorted_margins(d_dim.getValue()-1);
 
    int num_cuttable_dim = 0;
 
@@ -1914,7 +1927,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
        */
       for (num_cuttable_dim = 0; num_cuttable_dim < d_dim.getValue();
            num_cuttable_dim++) {
-         if (cut_margin(sorted_boxdims(num_cuttable_dim)) < 0) {
+         if (cut_margin(sorted_margins(num_cuttable_dim)) < 0) {
             break;
          }
       }
@@ -1939,7 +1952,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
       hier::Index rht_lo(box_lo);
 
       for (dir = 0; dir < d_dim.getValue(); dir++) {
-         cut_dir = sorted_boxdims(dir);
+         cut_dir = sorted_margins(dir);
          if (cut_margin(cut_dir) < 0) {
             continue;  // This direction is too small to cut.
          }
@@ -1967,30 +1980,53 @@ BergerRigoutsosNode::acceptOrSplitBox()
        */
 
       if (dir == d_dim.getValue()) {
-         const hier::IntVector margins = boxdims - (d_common->min_box) * 2;
+
+         /*
+          * laplace_cut_threshold_ar specifies the mininum box
+          * thickness that can be cut, as a ratio to the thinnest box
+          * direction.  If the box doesn't have any direction thick
+          * enough, then it has a reasonable aspect ratio, so we can
+          * cut it in any direction.
+          *
+          * Degenerate values of laplace_cut_threshold_ar:
+          *
+          * 1: cut any direction except the thinnest.
+          *
+          * (0,1) and huge values: cut any direction.
+          *
+          * 0: Not a degenerate case but a special case meaning cut
+          * only the thickest direction.  This leads to more cubic
+          * boxes but can miss feature edges aligned across other
+          * directions.
+          */
+         int max_box_length_to_leave = boxdims(max_margin_dir) - 1;
+         if ( d_common->laplace_cut_threshold_ar > 0.0 ) {
+            max_box_length_to_leave = static_cast<int>(0.5 + boxdims(min_margin_dir)*d_common->laplace_cut_threshold_ar);
+            if ( max_box_length_to_leave >= boxdims(max_margin_dir) ) {
+               /*
+                * Box aspect ratio is not too bad. Disable preference
+                * for cutting longer dirs.
+                */
+               max_box_length_to_leave = 0;
+            }
+         }
+
          int diff_laplace = -1;
-         if ( d_common->laplace_cut_long_dir_only ) {
-            cut_dir = 0;
-            for (int d = 1; d < d_dim.getValue(); ++d) {
-               if (margins(cut_dir) < margins(d)) {
-                  cut_dir = d;
-               }
+         for ( int d=0; d<d_dim.getValue(); ++d ) {
+            if ( cut_margin(d) < 0 || boxdims(d) <= max_box_length_to_leave ) {
+               continue;  // Direction d is too small to cut.
             }
-            cutAtLaplacian(cut_pt, diff_laplace, cut_dir);
-         }
-         else {
-            for ( int d=0; d<d_dim.getValue(); ++d ) {
-               int try_cut_pt, try_diff_laplace;
-               cutAtLaplacian(try_cut_pt, try_diff_laplace, d);
-               if ( diff_laplace < try_diff_laplace ||
-                    ( diff_laplace == try_diff_laplace && margins(d) > margins(cut_dir) ) ) {
-                  cut_dir = d;
-                  cut_pt = try_cut_pt;
-                  diff_laplace = try_diff_laplace;
-               }
+            int try_cut_pt, try_diff_laplace;
+            cutAtLaplacian(try_cut_pt, try_diff_laplace, d);
+            if ( diff_laplace < try_diff_laplace ||
+                 ( diff_laplace == try_diff_laplace && cut_margin(d) > cut_margin(cut_dir) ) ) {
+               cut_dir = d;
+               cut_pt = try_cut_pt;
+               diff_laplace = try_diff_laplace;
             }
-            TBOX_ASSERT( cut_dir >= 0 && cut_dir < d_dim.getValue() );
          }
+         TBOX_ASSERT( cut_dir >= 0 && cut_dir < d_dim.getValue() );
+
          // Split bound box at cut_pt; cut_dir is splitting dimension.
          lft_hi(cut_dir) = cut_pt - 1;
          rht_lo(cut_dir) = cut_pt;
@@ -2209,23 +2245,25 @@ BergerRigoutsosNode::cutAtLaplacian(
 
    while (cut_lo > cut_lo_lim || cut_hi < cut_hi_lim) {
       if (cut_lo > cut_lo_lim) {
-         int try_diff_laplace =
-            (hist[cut_lo - 1] - 2 * hist[cut_lo] + hist[cut_lo + 1])
-            - (hist[cut_lo - 2] - 2 * hist[cut_lo - 1] + hist[cut_lo]);
-         try_diff_laplace = tbox::MathUtilities<int>::Abs(try_diff_laplace);
-         if (try_diff_laplace > diff_laplace) {
-            cut_pt = cut_lo;
-            diff_laplace = try_diff_laplace;
+         const int la = (hist[cut_lo - 1] - 2 * hist[cut_lo] + hist[cut_lo + 1]);
+         const int lb = (hist[cut_lo - 2] - 2 * hist[cut_lo - 1] + hist[cut_lo]);
+         if ( la*lb <= 0 ) {
+            const int try_diff_laplace = tbox::MathUtilities<int>::Abs(la-lb);
+            if (try_diff_laplace > diff_laplace) {
+               cut_pt = cut_lo;
+               diff_laplace = try_diff_laplace;
+            }
          }
       }
       if (cut_hi < cut_hi_lim) {
-         int try_diff_laplace =
-            (hist[cut_hi - 1] - 2 * hist[cut_hi] + hist[cut_hi + 1])
-            - (hist[cut_hi - 2] - 2 * hist[cut_hi - 1] + hist[cut_hi]);
-         try_diff_laplace = tbox::MathUtilities<int>::Abs(try_diff_laplace);
-         if (try_diff_laplace > diff_laplace) {
-            cut_pt = cut_hi;
-            diff_laplace = try_diff_laplace;
+         const int la = (hist[cut_hi - 1] - 2 * hist[cut_hi] + hist[cut_hi + 1]);
+         const int lb = (hist[cut_hi - 2] - 2 * hist[cut_hi - 1] + hist[cut_hi]);
+         if ( la*lb <= 0 ) {
+            const int try_diff_laplace = tbox::MathUtilities<int>::Abs(la-lb);
+            if (try_diff_laplace > diff_laplace) {
+               cut_pt = cut_hi;
+               diff_laplace = try_diff_laplace;
+            }
          }
       }
       --cut_lo;

@@ -15,7 +15,9 @@ Main {
 
    base_name = "single_sphere.3d.treelb"
    log_all_nodes = FALSE
-   write_visit = TRUE
+   write_visit = FALSE
+   enforce_nesting = FALSE
+   load_balance = TRUE
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
    load_balancer_type = "TreeLoadBalancer"
@@ -23,7 +25,7 @@ Main {
    /*
      Specify domain as a box array in the reference index space.
    */
-   domain_boxes = [(0,0,0),(19,19,19)]
+   domain_boxes = [(0,0,0),(9,9,9)]
 
    /*
      Specify physical domain box.
@@ -34,14 +36,15 @@ Main {
    /*
      Base nprocs for automatic scaling.
    */
-   autoscale_base_nprocs = 1
+   autoscale_base_nprocs = 2
 
    ghost_cell_width = 4, 4, 4
 
-   efficiency_tol = 0.85
-   combine_tol = 0.85
+   efficiency_tol = 0.88
+   combine_tol = 0.88
 
    BergerRigoutsos {
+      laplace_cut_threshold_ar = 4
       sort_output_nodes = TRUE
       log_node_history = FALSE
       log_cluster_summary = FALSE
@@ -64,7 +67,7 @@ Main {
       radii = 0.0, 0.50
 
       // Tag L0 by buffering and l1 by buffering.
-      buffer_distance_0 = 0.03, 0.03, 0.03
+      buffer_distance_0 = 0.05, 0.05, 0.05
       buffer_distance_1 = 0.00, 0.00, 0.00
 
       // Tag L0 by buffering and l1 by shrinking.

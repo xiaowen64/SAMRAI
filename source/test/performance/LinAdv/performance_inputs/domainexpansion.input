@@ -135,6 +135,7 @@ LinAdv {
 BergerRigoutsos {
    algo_advance_mode = "ADVANCE_SOME"
    owner_mode = "MOST_OVERLAP"
+   laplace_cut_threshold_ar = 4
    log_node_history = FALSE
    use_level_boxes = TRUE // Used by SAMRAI-2, but not DLBG.
    use_private_communicator = TRUE
@@ -305,6 +306,8 @@ TreeLoadBalancer {
   print_swap_steps = FALSE
   print_break_steps = FALSE
   print_edge_steps = FALSE
+  slender_penalty_wt = 0.0
+  summarize_map = TRUE
 }
 
 HyperbolicLevelIntegrator {
