@@ -1007,6 +1007,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
     */
    t_get_load_from_children->start();
    for (int c = 0; c < num_children; ++c) {
+      child_recvs[c].setRecvTimer(t_child_recv_wait);
       child_recvs[c].beginRecv();
       if (child_recvs[c].isDone()) {
          child_recvs[c].pushToCompletionQueue();
@@ -1322,6 +1323,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
        */
       std::vector<int> msg;
       packSubtreeLoadData(msg, my_load_data);
+      parent_send->setSendTimer(t_parent_send_wait);
       parent_send->beginSend(&msg[0], static_cast<int>(msg.size()));
 
    }
@@ -1340,6 +1342,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       t_parent_load_comm->start();
       t_get_load_from_parent->start();
 
+      parent_recv->setRecvTimer(t_parent_recv_wait);
       parent_recv->beginRecv();
 
       t_get_load_from_parent->stop();
@@ -1367,9 +1370,9 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
        */
       t_get_load_from_parent->start();
 
-      t_parent_load_comm->start();
+      t_parent_recv_wait->start();
       parent_recv->completeCurrentOperation();
-      t_parent_load_comm->stop();
+      t_parent_recv_wait->stop();
 
       int old_size = static_cast<int>(unassigned.size());
       SubtreeLoadData parent_load_data;
@@ -1467,6 +1470,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
 
          std::vector<int> msg;
          packSubtreeLoadData(msg, recip_data);
+         child_recvs[ichild].setSendTimer(t_child_send_wait);
          child_sends[ichild].beginSend(&msg[0], static_cast<int>(msg.size()));
 
          if (d_print_steps) {

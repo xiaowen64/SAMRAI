@@ -290,20 +290,51 @@ public:
    void
    completeCurrentOperation();
 
+   //@}
+
+
+   //@{
+   //! @name Timers for MPI calls
+
    /*!
-    * @brief Set timers.
+    * @brief Set the send-timer.
     *
-    * Use the given timers for certain operations.  If a given
-    * timer is null, do not change the coresponding current timer.
+    * Set the timer for non-blocking sends.
+    * If the timer is null, revert to the default timer named
+    * ""tbox::AsyncCommPeer::MPI_ISend".
     *
-    * These timers are used when in this class and are not the same
-    * as the timers given to AsyncCommStage (unless the user sets
-    * it up that way explicitly).
+    * @param [in] send_timer
     */
-   void setTimers(
-      const boost::shared_ptr<Timer> &send_timer,
-      const boost::shared_ptr<Timer> &recv_timer,
-      const boost::shared_ptr<Timer> &waitall_timer );
+   void setSendTimer(
+      const boost::shared_ptr<Timer> &send_timer );
+
+   /*!
+    * @brief Set the receive-timer.
+    *
+    * Set the timer for non-blocking receives.
+    * If the timer is null, revert to the default timer named
+    * ""tbox::AsyncCommPeer::MPI_IRecv".
+    *
+    * @param [in] recv_timer
+    */
+   void setRecvTimer(
+      const boost::shared_ptr<Timer> &recv_timer );
+
+   /*!
+    * @brief Set the wait-timer.
+    *
+    * Set the timer for blocking waits.
+    * If the timer is null, revert to the default timer named
+    * ""tbox::AsyncCommPeer::wait_all()".
+    *
+    * This timer is used when in this class and is not the same
+    * as the timer given to AsyncCommStage (unless the user sets
+    * it up that way explicitly).
+    *
+    * @param [in] wait_timer
+    */
+   void setWaitTimer(
+      const boost::shared_ptr<Timer> &wait_timer );
 
    //@}
 
@@ -482,11 +513,11 @@ private:
 
    boost::shared_ptr<Timer> t_send_timer;
    boost::shared_ptr<Timer> t_recv_timer;
-   boost::shared_ptr<Timer> t_waitall_timer;
+   boost::shared_ptr<Timer> t_wait_timer;
 
    static boost::shared_ptr<Timer> t_default_send_timer;
    static boost::shared_ptr<Timer> t_default_recv_timer;
-   static boost::shared_ptr<Timer> t_default_waitall_timer;
+   static boost::shared_ptr<Timer> t_default_wait_timer;
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

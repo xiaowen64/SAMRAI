@@ -44,7 +44,7 @@ boost::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_default_send_timer;
 template<class TYPE>
 boost::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_default_recv_timer;
 template<class TYPE>
-boost::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_default_waitall_timer;
+boost::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_default_wait_timer;
 
 template<class TYPE>
 StartupShutdownManager::Handler
@@ -76,10 +76,10 @@ AsyncCommPeer<TYPE>::AsyncCommPeer():
    d_tag1(-1),
    t_send_timer(t_default_send_timer),
    t_recv_timer(t_default_recv_timer),
-   t_waitall_timer(t_default_waitall_timer)
+   t_wait_timer(t_default_wait_timer)
 {
    d_report_send_completion[0] = d_report_send_completion[1] = false;
-   if ( ! t_default_waitall_timer ) {
+   if ( ! t_default_wait_timer ) {
       /*
        * This should not be needed, but somehow initializeCallback()
        * may not have called yet.
@@ -87,7 +87,7 @@ AsyncCommPeer<TYPE>::AsyncCommPeer():
       initializeCallback();
       t_send_timer = t_default_send_timer;
       t_recv_timer = t_default_recv_timer;
-      t_waitall_timer = t_default_waitall_timer;
+      t_wait_timer = t_default_wait_timer;
    }
 }
 
@@ -117,10 +117,10 @@ AsyncCommPeer<TYPE>::AsyncCommPeer(
    d_tag1(-1),
    t_send_timer(t_default_send_timer),
    t_recv_timer(t_default_recv_timer),
-   t_waitall_timer(t_default_waitall_timer)
+   t_wait_timer(t_default_wait_timer)
 {
    d_report_send_completion[0] = d_report_send_completion[1] = false;
-   if ( ! t_default_waitall_timer ) {
+   if ( ! t_default_wait_timer ) {
       /*
        * This should not be needed, but somehow initializeCallback()
        * may not have called yet.
@@ -128,7 +128,7 @@ AsyncCommPeer<TYPE>::AsyncCommPeer(
       initializeCallback();
       t_send_timer = t_default_send_timer;
       t_recv_timer = t_default_recv_timer;
-      t_waitall_timer = t_default_waitall_timer;
+      t_wait_timer = t_default_wait_timer;
    }
 }
 
@@ -218,14 +218,14 @@ AsyncCommPeer<TYPE>::completeCurrentOperation()
 
    while (!isDone()) {
 
-      t_waitall_timer->start();
+      t_wait_timer->start();
       int errf = d_mpi.Waitall(2,
             req,
             mpi_status);
-      t_waitall_timer->stop();
+      t_wait_timer->stop();
 
       if (errf != MPI_SUCCESS) {
-         TBOX_ERROR("Error in MPI_Waitall call.\n"
+         TBOX_ERROR("Error in MPI_wait call.\n"
             << "mpi_communicator = " << d_mpi.getCommunicator()
             << "mpi_tag = " << d_tag0);
       }
@@ -934,22 +934,44 @@ AsyncCommPeer<TYPE>::clearRecvData()
  */
 template<class TYPE>
 void
-AsyncCommPeer<TYPE>::setTimers(
-   const boost::shared_ptr<Timer> &send_timer,
-   const boost::shared_ptr<Timer> &recv_timer,
-   const boost::shared_ptr<Timer> &waitall_timer )
+AsyncCommPeer<TYPE>::setSendTimer(
+   const boost::shared_ptr<Timer> &send_timer )
 {
-   if ( send_timer ) {
-      t_send_timer = send_timer;
-   }
-   if ( recv_timer ) {
-      t_recv_timer = recv_timer;
-   }
-   if ( waitall_timer ) {
-      t_waitall_timer = waitall_timer;
-   }
+   t_send_timer = send_timer ? send_timer : t_default_send_timer;
    return;
 }
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+template<class TYPE>
+void
+AsyncCommPeer<TYPE>::setRecvTimer(
+   const boost::shared_ptr<Timer> &recv_timer )
+{
+   t_recv_timer = recv_timer ? recv_timer : t_default_recv_timer;
+   return;
+}
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+template<class TYPE>
+void
+AsyncCommPeer<TYPE>::setWaitTimer(
+   const boost::shared_ptr<Timer> &wait_timer )
+{
+   t_wait_timer = wait_timer ? wait_timer : t_default_wait_timer;
+   return;
+}
+
+
 
 template<class TYPE>
 bool
@@ -971,7 +993,7 @@ AsyncCommPeer<TYPE>::initializeCallback()
       getTimer("tbox::AsyncCommPeer::MPI_ISend");
    t_default_recv_timer = TimerManager::getManager()->
       getTimer("tbox::AsyncCommPeer::MPI_Irecv");
-   t_default_waitall_timer = TimerManager::getManager()->
+   t_default_wait_timer = TimerManager::getManager()->
       getTimer("tbox::AsyncCommPeer::wait_all()");
 }
 
@@ -987,7 +1009,7 @@ AsyncCommPeer<TYPE>::finalizeCallback()
 {
    t_default_send_timer.reset();
    t_default_recv_timer.reset();
-   t_default_waitall_timer.reset();
+   t_default_wait_timer.reset();
 }
 
 template<class TYPE>
