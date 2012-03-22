@@ -151,7 +151,7 @@ void BoxLevelStatistics::computeLocalBoxLevelStatistics( const BoxLevel &box_lev
     * Smallest surface area possible for the number of cells perfectly
     * distributed in d_mpi.
     */
-   double ideal_surfarea =
+   const double ideal_surfarea =
       2*d_dim.getValue() *
       pow(double(box_level.getGlobalNumberOfCells()) / d_mpi.getSize(),
           double(d_dim.getValue() - 1) / d_dim.getValue());
@@ -212,7 +212,7 @@ void BoxLevelStatistics::printBoxStats(
     * Smallest surface area possible for the number of cells perfectly
     * distributed in d_mpi.
     */
-   double ideal_surfarea =
+   const double ideal_surfarea =
       2*d_dim.getValue() *
       pow(d_sq_sum.d_values[NUMBER_OF_CELLS] / d_mpi.getSize(),
           double(d_dim.getValue() - 1) / d_dim.getValue());
