@@ -14,13 +14,13 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/CoarsenOperator.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
 
 #include <boost/shared_ptr.hpp>
 #include <iostream>
+#include <list>
 
 namespace SAMRAI {
 namespace xfer {
@@ -159,7 +159,7 @@ private:
       TBOX_ASSERT((equiv_class_index >= 0) &&
          (equiv_class_index < getNumberOfEquivalenceClasses()));
       return d_coarsen_classes_data_items[
-         d_equivalence_class_indices[equiv_class_index].getFirstItem()];
+         d_equivalence_class_indices[equiv_class_index].front()];
    }
 
    /*!
@@ -200,14 +200,40 @@ private:
     *
     * @param[in] equiv_class_index
     */
-   tbox::List<int>::Iterator
+   std::list<int>::iterator
    getIterator(
       int equiv_class_index)
    {
       TBOX_ASSERT((equiv_class_index >= 0) &&
          (equiv_class_index < getNumberOfEquivalenceClasses()));
-      return tbox::List<int>::Iterator(
-         d_equivalence_class_indices[equiv_class_index]);
+      return d_equivalence_class_indices[equiv_class_index].begin();
+   }
+
+   /*!
+    * @brief Return an iterator for the list of array ids corresponding to the
+    * equivalence class with the given integer index.
+    *
+    * The number of quivalence classes can be determined via the
+    * getNumberOfEquivalenceClasses() member function.  Valid integer
+    * arguments are from 0 to getNumberOfEquivalenceClasses()-1.  When
+    * assertion checking is active, the id will be checked for validity.
+    *
+    * @note The list should not be modified through this iterator.
+    *
+    * @return The iterator iterates over a list of integers which are array
+    * ids that can be passed into getCoarsenItem().  The array ids in a
+    * single list all correspond to coarsen items in a single equivalence
+    * class.
+    *
+    * @param[in] equiv_class_index
+    */
+   std::list<int>::iterator
+   getIteratorEnd(
+      int equiv_class_index)
+   {
+      TBOX_ASSERT((equiv_class_index >= 0) &&
+         (equiv_class_index < getNumberOfEquivalenceClasses()));
+      return d_equivalence_class_indices[equiv_class_index].end();
    }
 
    /*!
@@ -444,7 +470,7 @@ private:
     * which items are part of an equivalence class.  The integers index into
     * the array d_coarsen_classes_data_items.
     */
-   tbox::Array<tbox::List<int> > d_equivalence_class_indices;
+   tbox::Array<std::list<int> > d_equivalence_class_indices;
 
    /*!
     * The number of coarsen items that have been registered.

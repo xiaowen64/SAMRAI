@@ -34,6 +34,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <string>
+#include <list>
 
 namespace SAMRAI {
 namespace appu {
@@ -1243,7 +1244,7 @@ private:
     *  tbox::List of scalar and vector variables registered with
     *  VisItDataWriter.
     */
-   tbox::List<VisItItem> d_plot_items;
+   std::list<VisItItem> d_plot_items;
 
    /*
     * Boolean that is set to true only in multiblock problems.

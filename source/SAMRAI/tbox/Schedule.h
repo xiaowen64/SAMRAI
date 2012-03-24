@@ -14,7 +14,6 @@
 
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Transaction.h"
@@ -22,6 +21,7 @@
 #include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <map>
+#include <list>
 
 namespace SAMRAI {
 namespace tbox {
@@ -49,7 +49,6 @@ namespace tbox {
  * executed in the order in which they appear in the list.
  *
  * @see tbox::Transaction
- * @see tbox::List
  */
 
 class Schedule
@@ -121,7 +120,7 @@ public:
    int
    getNumLocalTransactions() const
    {
-      return d_local_set.size();
+      return static_cast<int>(d_local_set.size());
    }
 
    /*!
@@ -304,7 +303,7 @@ private:
     * Three containers of transactions are maintained based on
     * source and destination.
     */
-   typedef std::map<int, List<boost::shared_ptr<Transaction> > > TransactionSets;
+   typedef std::map<int, std::list<boost::shared_ptr<Transaction> > > TransactionSets;
    TransactionSets d_send_sets;
    TransactionSets d_recv_sets;
 
@@ -312,7 +311,7 @@ private:
     * @brief Transactions where the source and destination are the
     * local process.
     */
-   List<boost::shared_ptr<Transaction> > d_local_set;
+   std::list<boost::shared_ptr<Transaction> > d_local_set;
 
    //@{ @name High-level asynchronous messages passing objects
 

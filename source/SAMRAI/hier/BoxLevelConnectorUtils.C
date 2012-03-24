@@ -944,11 +944,11 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
           */
          BoxContainer reduced_connectivity_singularity_boxes(
             grid_geometry->getSingularityBoxContainer(block_id));
-         const tbox::List<GridGeometry::Neighbor>& neighbors(
+         const std::list<GridGeometry::Neighbor>& neighbors(
             grid_geometry->getNeighbors(block_id));
 
-         for (tbox::List<GridGeometry::Neighbor>::Iterator ni(neighbors);
-              ni; ni++) {
+         for (std::list<GridGeometry::Neighbor>::const_iterator ni = neighbors.begin();
+              ni != neighbors.end(); ni++) {
             const GridGeometry::Neighbor& neighbor(*ni);
             if (neighbor.isSingularity()) {
                reduced_connectivity_singularity_boxes.removeIntersections(
@@ -978,8 +978,8 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
             singularity_boxes.refine(refinement_ratio);
          }
 
-         for (tbox::List<GridGeometry::Neighbor>::Iterator ni(neighbors);
-              ni; ni++) {
+         for (std::list<GridGeometry::Neighbor>::const_iterator ni = neighbors.begin();
+              ni != neighbors.end(); ni++) {
             const GridGeometry::Neighbor& neighbor(*ni);
             const BlockId neighbor_block_id(neighbor.getBlockId());
             if (neighbor.isSingularity() &&

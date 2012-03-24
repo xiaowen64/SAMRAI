@@ -14,7 +14,8 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/List.h"
+
+#include <list>
 
 namespace SAMRAI {
 namespace tbox {
@@ -964,7 +965,7 @@ private:
     * Private data members - name and a list of (key,value) pairs
     */
    std::string d_database_name;
-   List<KeyData> d_keyvalues;
+   std::list<KeyData> d_keyvalues;
 
    static const int PRINT_DEFAULT;
    static const int PRINT_INPUT;

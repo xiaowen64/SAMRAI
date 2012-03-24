@@ -2118,7 +2118,7 @@ RefineSchedule::refineScratchData(
    const boost::shared_ptr<hier::PatchLevel>& coarse_level,
    const Connector& coarse_to_fine,
    const Connector& coarse_to_unfilled,
-   const tbox::List<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >&
+   const std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >&
    overlaps) const
 {
    t_refine_scratch_data->start();
@@ -2126,8 +2126,8 @@ RefineSchedule::refineScratchData(
    const hier::IntVector ratio(fine_level->getRatioToLevelZero()
                                / coarse_level->getRatioToLevelZero());
 
-   tbox::ListIterator<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >
-   overlap_iter(overlaps);
+   std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >::const_iterator
+   overlap_iter(overlaps.begin());
 
    /*
     * Loop over all the coarse patches and find the corresponding
@@ -2180,7 +2180,7 @@ RefineSchedule::refineScratchData(
          if (ref_item->d_oprefine) {
 
             boost::shared_ptr<hier::BoxOverlap> refine_overlap(
-               overlap_iter()[ref_item->d_class_index]);
+               (*overlap_iter)[ref_item->d_class_index]);
 
             const int scratch_id = ref_item->d_scratch;
 
@@ -2213,7 +2213,7 @@ RefineSchedule::refineScratchData(
  */
 void
 RefineSchedule::computeRefineOverlaps(
-   tbox::List<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
+   std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
    const boost::shared_ptr<hier::PatchLevel>& fine_level,
    const boost::shared_ptr<hier::PatchLevel>& coarse_level,
    const Connector& coarse_to_fine,
@@ -2299,7 +2299,7 @@ RefineSchedule::computeRefineOverlaps(
 
          }
       }
-      overlaps.appendItem(refine_overlaps);
+      overlaps.push_back(refine_overlaps);
    }
 }
 
@@ -2599,15 +2599,15 @@ RefineSchedule::findEnconFillBoxes(
    boost::shared_ptr<hier::GridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
 
-   const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+   const std::list<hier::GridGeometry::Neighbor>& neighbors =
       grid_geometry->getNeighbors(dst_block_id);
 
    hier::BoxContainer encon_neighbor_list;
-   for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
-        ni(neighbors); ni; ni++) {
+   for (std::list<hier::GridGeometry::Neighbor>::const_iterator ni = neighbors.begin();
+        ni != neighbors.end(); ni++) {
 
-      if (ni().isSingularity()) {
-         hier::BoxContainer transformed_domain(ni().getTransformedDomain());  
+      if (ni->isSingularity()) {
+         hier::BoxContainer transformed_domain(ni->getTransformedDomain());  
          encon_fill_boxes.spliceFront(transformed_domain);
       }
 
@@ -2652,16 +2652,16 @@ RefineSchedule::findEnconUnfilledBoxes(
     */
    std::map<hier::BlockId, hier::BoxContainer> unfilled_encon_nbr_boxes;
 
-   const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+   const std::list<hier::GridGeometry::Neighbor>& neighbors =
       grid_geometry->getNeighbors(dst_block_id);
 
-   for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
-        ni(neighbors); ni; ni++) {
+   for (std::list<hier::GridGeometry::Neighbor>::const_iterator ni = neighbors.begin();
+        ni != neighbors.end(); ni++) {
 
-      if (ni().isSingularity()) {
-         const hier::BlockId nbr_block_id(ni().getBlockId());
+      if (ni->isSingularity()) {
+         const hier::BlockId nbr_block_id(ni->getBlockId());
 
-         hier::BoxContainer neighbor_boxes(ni().getTransformedDomain());
+         hier::BoxContainer neighbor_boxes(ni->getTransformedDomain());
          neighbor_boxes.refine(d_dst_level->getRatioToLevelZero());
          neighbor_boxes.intersectBoxes(encon_fill_boxes);
          unfilled_encon_nbr_boxes[nbr_block_id].spliceFront(neighbor_boxes);
@@ -3056,19 +3056,19 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
             grid_geometry->getSingularityBoxContainer(block_id);
 
          if (sing_boxes.size() > 0) {
-            const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+            const std::list<hier::GridGeometry::Neighbor>& neighbors =
                grid_geometry->getNeighbors(block_id);
 
             /*
              * Loop over neighboring blocks and find the ones that are
              * singularity neighbors.
              */
-            for (tbox::List<hier::GridGeometry::Neighbor>::
-                 Iterator ni(neighbors); ni; ni++) {
+            for (std::list<hier::GridGeometry::Neighbor>::const_iterator ni = neighbors.begin();
+                 ni != neighbors.end(); ni++) {
 
-               if (ni().isSingularity()) {
+               if (ni->isSingularity()) {
 
-                  const hier::BlockId& nbr_id = ni().getBlockId();
+                  const hier::BlockId& nbr_id = ni->getBlockId();
 
                   /*
                    * Get the transformation from neighbor block to dst
@@ -3076,8 +3076,8 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                    * domain in coordinate system of dst block.
                    */
                   hier::Transformation::RotationIdentifier rotation =
-                     ni().getRotationIdentifier();
-                  hier::IntVector offset(ni().getShift());
+                     ni->getRotationIdentifier();
+                  hier::IntVector offset(ni->getShift());
                   offset *= (d_dst_level->getRatioToLevelZero());
 
                   hier::Transformation transformation(rotation, offset,
@@ -3860,10 +3860,9 @@ RefineSchedule::constructScheduleTransactions(
       /*
        * Iterate over components in refine description list
        */
-      for (tbox::List<int>::Iterator
-           l(d_refine_classes->getIterator(nc)); l; l++) {
-         const RefineClasses::Data& item =
-            d_refine_classes->getRefineItem(l());
+      for (std::list<int>::iterator l(d_refine_classes->getIterator(nc));
+           l != d_refine_classes->getIteratorEnd(nc); l++) {
+         const RefineClasses::Data& item = d_refine_classes->getRefineItem(*l);
          TBOX_ASSERT(item.d_class_index == nc);
 
          const int dst_id = item.d_scratch;
@@ -4351,10 +4350,9 @@ RefineSchedule::constructScheduleTransactions(
       /*
        * Iterate over components in refine description list
        */
-      for (tbox::List<int>::Iterator
-           l(d_refine_classes->getIterator(nc)); l; l++) {
-         const RefineClasses::Data& item =
-            d_refine_classes->getRefineItem(l());
+      for (std::list<int>::iterator l(d_refine_classes->getIterator(nc));
+           l != d_refine_classes->getIteratorEnd(nc); l++) {
+         const RefineClasses::Data& item = d_refine_classes->getRefineItem(*l);
          TBOX_ASSERT(item.d_class_index == nc);
 
          const int dst_id = item.d_scratch;

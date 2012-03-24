@@ -17,12 +17,12 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
 #include <iostream>
+#include <list>
 
 namespace SAMRAI {
 namespace hier {
@@ -229,7 +229,7 @@ private:
    int d_max_number_registered_components;
    tbox::Array<std::string> d_names;
    tbox::Array<boost::shared_ptr<PatchDataFactory> > d_factories;
-   tbox::List<int> d_free_indices;
+   std::list<int> d_free_indices;
 
    /*!
     * @brief Value set by setMinGhostWidth().

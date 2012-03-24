@@ -172,11 +172,11 @@ TimerManager::~TimerManager()
    d_timers.clear();
    d_inactive_timers.clear();
 
-   d_exclusive_timer_stack.clearItems();
+   d_exclusive_timer_stack.clear();
 
-   d_package_names.clearItems();
-   d_class_names.clearItems();
-   d_class_method_names.clearItems();
+   d_package_names.clear();
+   d_class_names.clear();
+   d_class_method_names.clear();
 #endif
 }
 
@@ -389,12 +389,11 @@ TimerManager::startTime(
    }
 
    if (d_print_exclusive) {
-      if (!d_exclusive_timer_stack.isEmpty()) {
-         ((Timer *)d_exclusive_timer_stack.getFirstItem())->
-         stopExclusive();
+      if (!d_exclusive_timer_stack.empty()) {
+         ((Timer *)d_exclusive_timer_stack.front())->stopExclusive();
       }
       Timer* stack_timer = timer;
-      d_exclusive_timer_stack.addItem(stack_timer);
+      d_exclusive_timer_stack.push_front(stack_timer);
       stack_timer->startExclusive();
    }
 
@@ -417,11 +416,10 @@ TimerManager::stopTime(
 
    if (d_print_exclusive) {
       timer->stopExclusive();
-      if (!d_exclusive_timer_stack.isEmpty()) {
-         d_exclusive_timer_stack.removeFirstItem();
-         if (!d_exclusive_timer_stack.isEmpty()) {
-            ((Timer *)d_exclusive_timer_stack.getFirstItem())->
-            startExclusive();
+      if (!d_exclusive_timer_stack.empty()) {
+         d_exclusive_timer_stack.pop_front();
+         if (!d_exclusive_timer_stack.empty()) {
+            ((Timer *)d_exclusive_timer_stack.front())->startExclusive();
          }
       }
    }
@@ -503,12 +501,15 @@ TimerManager::checkTimerInNameLists(
           */
          bool package_exists = false;
          string_length = package.size();
-         for (List<std::string>::Iterator i(d_package_names); i; i++) {
-            list_entry_length = i().size();
+         for (std::list<std::string>::iterator i = d_package_names.begin();
+              i != d_package_names.end(); i++) {
+            list_entry_length = i->size();
             if (string_length == list_entry_length) {
-               package_exists = (i() == package);
+               package_exists = (*i == package);
             }
-            if (package_exists) break;
+            if (package_exists) {
+               break;
+            }
          }
          will_use_timer = package_exists;
       }
@@ -575,12 +576,15 @@ TimerManager::checkTimerInNameLists(
           */
          string_length = nondim_class_name.size();
          bool class_exists = false;
-         for (List<std::string>::Iterator i(d_class_names); i; i++) {
-            list_entry_length = i().size();
+         for (std::list<std::string>::iterator i = d_class_names.begin();
+              i != d_class_names.end(); i++) {
+            list_entry_length = i->size();
             if (string_length == list_entry_length) {
-               class_exists = (i() == nondim_class_name);
+               class_exists = (*i == nondim_class_name);
             }
-            if (class_exists) break;
+            if (class_exists) {
+               break;
+            }
          }
 
          /*
@@ -588,12 +592,15 @@ TimerManager::checkTimerInNameLists(
           */
          string_length = class_name.size();
          if (is_dimensional && !class_exists) {
-            for (List<std::string>::Iterator i(d_class_names); i; i++) {
-               list_entry_length = i().size();
+            for (std::list<std::string>::iterator i = d_class_names.begin();
+                 i != d_class_names.end(); i++) {
+               list_entry_length = i->size();
                if (string_length == list_entry_length) {
-                  class_exists = (i() == class_name);
+                  class_exists = (*i == class_name);
                }
-               if (class_exists) break;
+               if (class_exists) {
+                  break;
+               }
             }
          }
          will_use_timer = class_exists;
@@ -648,12 +655,15 @@ TimerManager::checkTimerInNameLists(
           */
          bool class_method_exists = false;
          string_length = nondim_name.size();
-         for (List<std::string>::Iterator i(d_class_method_names); i; i++) {
-            list_entry_length = i().size();
+         for (std::list<std::string>::iterator i = d_class_method_names.begin();
+              i != d_class_method_names.end(); i++) {
+            list_entry_length = i->size();
             if (string_length == list_entry_length) {
-               class_method_exists = (i() == nondim_name);
+               class_method_exists = (*i == nondim_name);
             }
-            if (class_method_exists) break;
+            if (class_method_exists) {
+               break;
+            }
          }
 
          /*
@@ -661,12 +671,15 @@ TimerManager::checkTimerInNameLists(
           */
          if (is_dimensional && !class_method_exists) {
             string_length = name.size();
-            for (List<std::string>::Iterator i(d_class_method_names); i; i++) {
-               list_entry_length = i().size();
+            for (std::list<std::string>::iterator i = d_class_method_names.begin();
+                 i != d_class_method_names.end(); i++) {
+               list_entry_length = i->size();
                if (string_length == list_entry_length) {
-                  class_method_exists = (i() == name);
+                  class_method_exists = (*i == name);
                }
-               if (class_method_exists) break;
+               if (class_method_exists) {
+                  break;
+               }
             }
          }
 
@@ -2210,9 +2223,9 @@ TimerManager::getFromInput(
          std::string entry = timer_list[i];
          addTimerToNameLists(entry);
       }
-      d_length_package_names = d_package_names.getNumberOfItems();
-      d_length_class_names = d_class_names.getNumberOfItems();
-      d_length_class_method_names = d_class_method_names.getNumberOfItems();
+      d_length_package_names = static_cast<int>(d_package_names.size());
+      d_length_class_names = static_cast<int>(d_class_names.size());
+      d_length_class_method_names = static_cast<int>(d_class_method_names.size());
 
    }
 #endif // ENABLE_SAMRAI_TIMERS
@@ -2262,17 +2275,17 @@ TimerManager::addTimerToNameLists(
       position = entry.find("*::*::*");  // if not found, "position" runs off
                                          // end of entry so pos > entry.size()
       if (position < entry.size()) {
-         d_package_names.addItem("algs");
-         d_package_names.addItem("apps");
-         d_package_names.addItem("appu");
-         d_package_names.addItem("geom");
-         d_package_names.addItem("hier");
-         d_package_names.addItem("math");
-         d_package_names.addItem("mesh");
-         d_package_names.addItem("pdat");
-         d_package_names.addItem("solv");
-         d_package_names.addItem("tbox");
-         d_package_names.addItem("xfer");
+         d_package_names.push_front("algs");
+         d_package_names.push_front("apps");
+         d_package_names.push_front("appu");
+         d_package_names.push_front("geom");
+         d_package_names.push_front("hier");
+         d_package_names.push_front("math");
+         d_package_names.push_front("mesh");
+         d_package_names.push_front("pdat");
+         d_package_names.push_front("solv");
+         d_package_names.push_front("tbox");
+         d_package_names.push_front("xfer");
          determined_entry = true;
       }
 
@@ -2284,7 +2297,7 @@ TimerManager::addTimerToNameLists(
          position = entry.find("::*::*");
          if (position < entry.size()) {
             entry = entry.substr(0, position);
-            d_package_names.addItem(entry);
+            d_package_names.push_front(entry);
             determined_entry = true;
          }
       }
@@ -2296,7 +2309,7 @@ TimerManager::addTimerToNameLists(
           */
          position = entry.find("::");
          if (position > entry.size()) {
-            d_class_names.addItem(entry);
+            d_class_names.push_front(entry);
             determined_entry = true;
          }
          if (!determined_entry) {    // Nested if #3
@@ -2330,7 +2343,7 @@ TimerManager::addTimerToNameLists(
                if (position < entry.size()) {
                   entry = entry.substr(position + 2);
                }
-               d_class_names.addItem(entry);
+               d_class_names.push_front(entry);
                determined_entry = true;
             }
 
@@ -2351,7 +2364,7 @@ TimerManager::addTimerToNameLists(
                    * There is no second "::".  Accept the entry as a class.
                    */
                   if (position > entry.size()) {
-                     d_class_names.addItem(entry);
+                     d_class_names.push_front(entry);
                      determined_entry = true;
                   } else {
 
@@ -2365,7 +2378,7 @@ TimerManager::addTimerToNameLists(
                      substring = entry.substr(string_length - 1, string_length);
                      if (substring == "*") {
                         entry = entry.substr(0, string_length - 3);
-                        d_class_names.addItem(entry);
+                        d_class_names.push_front(entry);
                         determined_entry = true;
                      }
                   }
@@ -2399,7 +2412,7 @@ TimerManager::addTimerToNameLists(
                         entry = entry.substr(position + 2);
                      }
                   }
-                  d_class_method_names.addItem(entry);
+                  d_class_method_names.push_front(entry);
 
                } // Nested if #5
 
@@ -2482,7 +2495,7 @@ TimerManager::clearArrays()
    d_timers.clear();
    d_inactive_timers.clear();
 
-   d_exclusive_timer_stack.clearItems();
+   d_exclusive_timer_stack.clear();
 #endif // ENABLE_SAMRAI_TIMERS
 }
 

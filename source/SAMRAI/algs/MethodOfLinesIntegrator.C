@@ -383,7 +383,7 @@ MethodOfLinesIntegrator::registerVariable(
           * be used to manage the allocation and deallocation of current and
           * scratch data.
           */
-         d_soln_variables.appendItem(variable);
+         d_soln_variables.push_back(variable);
 
          const hier::IntVector no_ghosts(dim, 0);
 
@@ -463,7 +463,7 @@ MethodOfLinesIntegrator::registerVariable(
           * NOTE:  The d_rhs_data component selector was added 3/23/00 to
           * facilitate allocation and de-allocation of rhs data for restarts.
           */
-         d_rhs_variables.appendItem(variable);
+         d_rhs_variables.push_back(variable);
 
          const int current = variable_db->registerVariableAndContext(variable,
                d_current,
@@ -832,15 +832,15 @@ MethodOfLinesIntegrator::copyCurrentToScratch(
    for (hier::PatchLevel::Iterator p(level); p; p++) {
       const boost::shared_ptr<hier::Patch>& patch = *p;
 
-      tbox::List<boost::shared_ptr<hier::Variable> >::Iterator soln_var =
-         d_soln_variables.listStart();
-      while (soln_var) {
+      std::list<boost::shared_ptr<hier::Variable> >::const_iterator soln_var =
+         d_soln_variables.begin();
+      while (soln_var != d_soln_variables.end()) {
 
          boost::shared_ptr<hier::PatchData> src_data(
-            patch->getPatchData(soln_var(), d_current));
+            patch->getPatchData(*soln_var, d_current));
 
          boost::shared_ptr<hier::PatchData> dst_data(
-            patch->getPatchData(soln_var(), d_scratch));
+            patch->getPatchData(*soln_var, d_scratch));
 
          dst_data->copy(*src_data);
          soln_var++;
@@ -868,15 +868,15 @@ MethodOfLinesIntegrator::copyScratchToCurrent(
    for (hier::PatchLevel::Iterator p(level); p; p++) {
       const boost::shared_ptr<hier::Patch>& patch = *p;
 
-      tbox::List<boost::shared_ptr<hier::Variable> >::Iterator soln_var =
-         d_soln_variables.listStart();
-      while (soln_var) {
+      std::list<boost::shared_ptr<hier::Variable> >::const_iterator soln_var =
+         d_soln_variables.begin();
+      while (soln_var != d_soln_variables.end()) {
 
          boost::shared_ptr<hier::PatchData> src_data(
-            patch->getPatchData(soln_var(), d_scratch));
+            patch->getPatchData(*soln_var, d_scratch));
 
          boost::shared_ptr<hier::PatchData> dst_data(
-            patch->getPatchData(soln_var(), d_current));
+            patch->getPatchData(*soln_var, d_current));
 
          dst_data->copy(*src_data);
          soln_var++;

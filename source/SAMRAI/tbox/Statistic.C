@@ -165,13 +165,13 @@ Statistic::recordPatchStat(
     *   }
     */
    if (seq_num < d_seq_counter) {
-      List<Statistic::PatchStatRecord>& records =
+      std::list<Statistic::PatchStatRecord>& records =
          d_patch_array[seq_num].patch_records;
       bool found_patch_id = false;
-      List<Statistic::PatchStatRecord>::Iterator ir(records);
-      for ( ; ir; ir++) {
-         if (ir().patch_id == patch_num) {
-            ir().value = value;
+      std::list<Statistic::PatchStatRecord>::iterator ir = records.begin();
+      for ( ; ir != records.end(); ir++) {
+         if (ir->patch_id == patch_num) {
+            ir->value = value;
             found_patch_id = true;
          }
       }
@@ -179,7 +179,7 @@ Statistic::recordPatchStat(
          PatchStatRecord patchitem_record;
          patchitem_record.value = value;
          patchitem_record.patch_id = patch_num;
-         d_patch_array[seq_num].patch_records.appendItem(patchitem_record);
+         d_patch_array[seq_num].patch_records.push_back(patchitem_record);
          d_total_patch_entries++;
       }
 
@@ -189,7 +189,7 @@ Statistic::recordPatchStat(
       PatchStatRecord patchitem_record;
       patchitem_record.value = value;
       patchitem_record.patch_id = patch_num;
-      d_patch_array[seq_num].patch_records.appendItem(patchitem_record);
+      d_patch_array[seq_num].patch_records.push_back(patchitem_record);
       d_total_patch_entries++;
       d_seq_counter = seq_num + 1;
    }
@@ -270,14 +270,14 @@ Statistic::packStream(
       int isr = 0;
 
       for (is = 0; is < d_seq_counter; is++) {
-         List<Statistic::PatchStatRecord>& lrec =
+         std::list<Statistic::PatchStatRecord>& lrec =
             d_patch_array[is].patch_records;
-         idata[4 + is] = lrec.getNumberOfItems();
+         idata[4 + is] = static_cast<int>(lrec.size());
 
-         List<Statistic::PatchStatRecord>::Iterator ilr(lrec);
-         for ( ; ilr; ilr++) {
-            idata[mark + isr] = ilr().patch_id;
-            ddata[isr] = ilr().value;
+         std::list<Statistic::PatchStatRecord>::iterator ilr = lrec.begin();
+         for ( ; ilr != lrec.end(); ilr++) {
+            idata[mark + isr] = ilr->patch_id;
+            ddata[isr] = ilr->value;
             isr++;
          }
       }
@@ -389,11 +389,13 @@ Statistic::printClassData(
          stream << "     sequence[" << is
                 << "]" << std::endl;
 
-         List<Statistic::PatchStatRecord>::Iterator ilr(
-            d_patch_array[is].patch_records);
-         for ( ; ilr; ilr++) {
-            stream << "        patch # = " << ilr().patch_id
-                   << " : value = " << ilr().value << std::endl;
+         const std::list<Statistic::PatchStatRecord>& psrl = 
+            d_patch_array[is].patch_records;
+         std::list<Statistic::PatchStatRecord>::const_iterator ilr =
+            psrl.begin();
+         for ( ; ilr != psrl.end(); ilr++) {
+            stream << "        patch # = " << ilr->patch_id
+                   << " : value = " << ilr->value << std::endl;
          }
       }
    }
@@ -472,13 +474,14 @@ Statistic::putUnregisteredToDatabase(
       int mark = d_seq_counter;
 
       for (i = 0; i < d_seq_counter; i++) {
-         const List<Statistic::PatchStatRecord>& records =
+         const std::list<Statistic::PatchStatRecord>& records =
             d_patch_array[i].patch_records;
-         idata[i] = records.getNumberOfItems();  // # patches at seq num
-         List<Statistic::PatchStatRecord>::Iterator ir(records);
-         for ( ; ir; ir++) {
-            idata[mark + il] = ir().patch_id;
-            ddata[il] = ir().value;
+         idata[i] = static_cast<int>(records.size());  // # patches at seq num
+         std::list<Statistic::PatchStatRecord>::const_iterator ir =
+            records.begin();
+         for ( ; ir != records.end(); ir++) {
+            idata[mark + il] = ir->patch_id;
+            ddata[il] = ir->value;
             il++;
          }
       }

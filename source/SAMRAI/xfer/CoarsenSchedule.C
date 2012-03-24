@@ -909,10 +909,10 @@ CoarsenSchedule::constructScheduleTransactions(
          if ( s_extra_debug ) {
             tbox::plog << " Overlap FINITE." << std::endl;
          }
-         for (tbox::List<int>::Iterator l(d_coarsen_classes->getIterator(nc));
-              l; l++) {
+         for (std::list<int>::iterator l(d_coarsen_classes->getIterator(nc));
+              l != d_coarsen_classes->getIteratorEnd(nc); l++) {
             const CoarsenClasses::Data& item =
-               d_coarsen_classes->getCoarsenItem(l());
+               d_coarsen_classes->getCoarsenItem(*l);
             TBOX_ASSERT(item.d_class_index == nc);
 
             const int citem_count = item.d_tag;

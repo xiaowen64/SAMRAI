@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/ProcessorMapping.h"
@@ -21,6 +20,7 @@
 #include "SAMRAI/mesh/SpatialKey.h"
 
 #include <iostream>
+#include <list>
 
 namespace SAMRAI {
 namespace mesh {
@@ -122,7 +122,7 @@ struct BalanceUtilities {
    static void
    recursiveBisectionUniform(
       hier::BoxContainer& out_boxes,
-      tbox::List<double>& out_workloads,
+      std::list<double>& out_workloads,
       const hier::BoxContainer& in_boxes,
       double ideal_workload,
       const double workload_tolerance,
@@ -179,7 +179,7 @@ struct BalanceUtilities {
    static void
    recursiveBisectionNonuniform(
       hier::BoxContainer& out_boxes,
-      tbox::List<double>& out_workloads,
+      std::list<double>& out_workloads,
       const boost::shared_ptr<hier::PatchLevel>& in_level,
       int work_id,
       double ideal_workload,
@@ -443,7 +443,7 @@ private:
    static void
    privateRecursiveBisectionUniformSingleBox(
       hier::BoxContainer& out_boxes,
-      tbox::List<double>& out_workloads,
+      std::list<double>& out_workloads,
       const hier::Box& in_box,
       double in_box_workload,
       double ideal_workload,
@@ -455,7 +455,7 @@ private:
    static void
    privateRecursiveBisectionNonuniformSingleBox(
       hier::BoxContainer& out_boxes,
-      tbox::List<double>& out_workloads,
+      std::list<double>& out_workloads,
       const boost::shared_ptr<hier::Patch>& patch,
       const hier::Box& in_box,
       double in_box_workload,

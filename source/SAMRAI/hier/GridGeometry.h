@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <list>
 
 namespace SAMRAI {
 namespace hier {
@@ -1082,7 +1083,7 @@ private:
     *
     * @param[in] block_id
     */
-   const tbox::List<Neighbor>&
+   const std::list<Neighbor>&
    getNeighbors(
       const BlockId& block_id) const
    {
@@ -1104,7 +1105,8 @@ private:
    getNumberOfNeighbors(
       const BlockId& block_id) const
    {
-      return d_block_neighbors[block_id.getBlockValue()].getNumberOfItems();
+      return static_cast<int>(
+         d_block_neighbors[block_id.getBlockValue()].size());
    }
 
    /*!
@@ -1362,7 +1364,7 @@ private:
     * @brief Associated with each block is a list of Neighbors that
     * it shares a block boundary with.
     */
-   tbox::Array<tbox::List<Neighbor> > d_block_neighbors;
+   tbox::Array<std::list<Neighbor> > d_block_neighbors;
 
    /*!
     * @brief An array of BoxContainers defining the singularities of a multiblock

@@ -318,7 +318,7 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
    const hier::BoxId& dst_mb_id = patch.getBox().getId();
    const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
-   const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+   const std::list<hier::GridGeometry::Neighbor>& neighbors =
       grid_geometry->getNeighbors(patch_blk_id);
 
    for (int i = 0; i < d_variables.getSize(); i++) {
@@ -376,12 +376,12 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
                   hier::Transformation::NO_ROTATE;
                hier::IntVector offset(dim);
 
-               for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
-                    nbri(neighbors); nbri; nbri++) {
+               for (std::list<hier::GridGeometry::Neighbor>::const_iterator
+                    nbri(neighbors.begin()); nbri != neighbors.end(); nbri++) {
 
-                  if (nbri().getBlockId() == encon_blk_id) {
-                     rotation = nbri().getRotationIdentifier();
-                     offset = nbri().getShift();
+                  if (nbri->getBlockId() == encon_blk_id) {
+                     rotation = nbri->getRotationIdentifier();
+                     offset = nbri->getShift();
                      break;
                   }
                }
@@ -547,7 +547,7 @@ bool SideMultiblockTest::verifyResults(
    hier::Box tbox(pbox);
    tbox.grow(tgcw);
 
-   const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+   const std::list<hier::GridGeometry::Neighbor>& neighbors =
       hierarchy->getGridGeometry()->getNeighbors(block_id);
    hier::BoxContainer singularity(
       hierarchy->getGridGeometry()->getSingularityBoxContainer(block_id));
@@ -597,14 +597,16 @@ bool SideMultiblockTest::verifyResults(
 
          hier::BoxContainer tested_neighbors;
 
-         for (tbox::List<hier::GridGeometry::Neighbor>::
-              Iterator ne(neighbors); ne; ne++) {
+         for (std::list<hier::GridGeometry::Neighbor>::const_iterator
+              ne(neighbors.begin()); ne != neighbors.end(); ne++) {
 
-            if (ne().isSingularity()) continue;
+              if (ne->isSingularity()) {
+                 continue;
+              }
 
-            correct = ne().getBlockId().getBlockValue();
+            correct = ne->getBlockId().getBlockValue();
 
-            hier::BoxContainer neighbor_ghost(ne().getTransformedDomain());
+            hier::BoxContainer neighbor_ghost(ne->getTransformedDomain());
             hier::BoxContainer neighbor_side_ghost;
             for (hier::BoxContainer::Iterator nn(neighbor_ghost);
                  nn != neighbor_ghost.end(); ++nn) {
@@ -665,17 +667,16 @@ bool SideMultiblockTest::verifyResults(
                correct = 0.0;
 
                int num_sing_neighbors = 0;
-               for (tbox::List
-                    <hier::GridGeometry::Neighbor>::
-                    Iterator ns(neighbors); ns; ns++) {
-                  if (ns().isSingularity()) {
+               for (std::list<hier::GridGeometry::Neighbor>::const_iterator
+                    ns(neighbors.begin()); ns != neighbors.end(); ns++) {
+                  if (ns->isSingularity()) {
                      hier::BoxContainer neighbor_ghost(
-                        ns().getTransformedDomain());
+                        ns->getTransformedDomain());
                      neighbor_ghost.refine(ratio);
                      neighbor_ghost.intersectBoxes(fill_box);
                      if (neighbor_ghost.size()) {
                         num_sing_neighbors++;
-                        correct += ns().getBlockId().getBlockValue();
+                        correct += ns->getBlockId().getBlockValue();
                      }
                   }
                }

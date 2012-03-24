@@ -336,14 +336,14 @@ void MblkHyperbolicLevelIntegrator::initializeLevelData(
 
       for (hier::PatchLevel::Iterator mi(mblk_level); mi; mi++) {
 
-         tbox::List<boost::shared_ptr<hier::Variable> >::Iterator
-            time_dep_var = d_time_dep_variables.listStart();
-         while (time_dep_var) {
+         std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =
+            d_time_dep_variables.begin();
+         while (time_dep_var != d_time_dep_variables.end()) {
             int old_indx =
-               variable_db->mapVariableAndContextToIndex(time_dep_var(),
+               variable_db->mapVariableAndContextToIndex(*time_dep_var,
                   d_old);
             int cur_indx =
-               variable_db->mapVariableAndContextToIndex(time_dep_var(),
+               variable_db->mapVariableAndContextToIndex(*time_dep_var,
                   d_current);
 
             (*mi)->setPatchData(old_indx, (*mi)->getPatchData(cur_indx));
@@ -1534,15 +1534,15 @@ void MblkHyperbolicLevelIntegrator::resetTimeDependentData(
 
    for (hier::PatchLevel::Iterator mi(level); mi; mi++) {
 
-      tbox::List<boost::shared_ptr<hier::Variable> >::Iterator time_dep_var =
-         d_time_dep_variables.listStart();
-      while (time_dep_var) {
+      std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =
+         d_time_dep_variables.begin();
+      while (time_dep_var != d_time_dep_variables.end()) {
 
          int cur_indx =
-            variable_db->mapVariableAndContextToIndex(time_dep_var(),
+            variable_db->mapVariableAndContextToIndex(*time_dep_var,
                d_current);
          int new_indx =
-            variable_db->mapVariableAndContextToIndex(time_dep_var(),
+            variable_db->mapVariableAndContextToIndex(*time_dep_var,
                d_new);
 
          cur_time = (*mi)->getPatchData(cur_indx)->getTime();
@@ -1550,7 +1550,7 @@ void MblkHyperbolicLevelIntegrator::resetTimeDependentData(
          if (can_be_refined && d_number_time_data_levels == 3) {
 
             int old_indx =
-               variable_db->mapVariableAndContextToIndex(time_dep_var(),
+               variable_db->mapVariableAndContextToIndex(*time_dep_var,
                   d_old);
 
             (*mi)->setPatchData(old_indx, (*mi)->getPatchData(cur_indx));
@@ -1562,7 +1562,7 @@ void MblkHyperbolicLevelIntegrator::resetTimeDependentData(
             if (d_number_time_data_levels == 3) {
 
                int old_indx =
-                  variable_db->mapVariableAndContextToIndex(time_dep_var(),
+                  variable_db->mapVariableAndContextToIndex(*time_dep_var,
                      d_old);
 
                (*mi)->setPatchData(old_indx, (*mi)->getPatchData(cur_indx));
@@ -1697,7 +1697,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
 
    const hier::IntVector zero_ghosts(d_dim, 0);
 
-   d_all_variables.appendItem(var);
+   d_all_variables.push_back(var);
 
    switch (h_v_type) {
 
@@ -1709,7 +1709,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
          //TBOX_ASSERT(time_int);
 #endif
 
-         d_time_dep_variables.appendItem(var);
+         d_time_dep_variables.push_back(var);
 
          int cur_id = variable_db->registerVariableAndContext(var,
                d_current,
@@ -1935,7 +1935,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
                              << "Flux is neither face- or side-centered." << endl);
          }
 
-         d_flux_variables.appendItem(var);
+         d_flux_variables.push_back(var);
 
          int scr_id = variable_db->registerVariableAndContext(var,
                d_scratch,
@@ -1970,7 +1970,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
             d_flux_side_registered = true;
          }
 
-         d_fluxsum_variables.appendItem(fluxsum);
+         d_fluxsum_variables.push_back(fluxsum);
 
          int fs_id = variable_db->registerVariableAndContext(fluxsum,
                d_scratch,
@@ -2060,12 +2060,12 @@ void MblkHyperbolicLevelIntegrator::preprocessFluxData(
 
          for (hier::PatchLevel::Iterator mi(mblk_level); mi; mi++) {
 
-            tbox::List<boost::shared_ptr<hier::Variable> >::Iterator fs_var =
-               d_fluxsum_variables.listStart();
+            std::list<boost::shared_ptr<hier::Variable> >::iterator fs_var =
+               d_fluxsum_variables.begin();
 
-            while (fs_var) {
+            while (fs_var != d_fluxsum_variables.end()) {
                int fsum_id =
-                  variable_db->mapVariableAndContextToIndex(fs_var(),
+                  variable_db->mapVariableAndContextToIndex(*fs_var,
                      d_scratch);
 
                if (d_flux_is_face) {
@@ -2140,21 +2140,21 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
 
       for (hier::PatchLevel::Iterator mi(mblk_level); mi; mi++) {
 
-         tbox::List<boost::shared_ptr<hier::Variable> >::Iterator flux_var =
-            d_flux_variables.listStart();
-         tbox::List<boost::shared_ptr<hier::Variable> >::Iterator fluxsum_var =
-            d_fluxsum_variables.listStart();
+         std::list<boost::shared_ptr<hier::Variable> >::iterator flux_var =
+            d_flux_variables.begin();
+         std::list<boost::shared_ptr<hier::Variable> >::iterator fluxsum_var =
+            d_fluxsum_variables.begin();
 
          const hier::Index& ilo = (*mi)->getBox().lower();
          const hier::Index& ihi = (*mi)->getBox().upper();
 
-         while (flux_var) {
+         while (flux_var != d_flux_variables.end()) {
 
             boost::shared_ptr<hier::PatchData> flux_data(
-               (*mi)->getPatchData(flux_var(), d_scratch),
+               (*mi)->getPatchData(*flux_var, d_scratch),
                boost::detail::dynamic_cast_tag());
             boost::shared_ptr<hier::PatchData> fsum_data(
-               (*mi)->getPatchData(fluxsum_var(), d_scratch),
+               (*mi)->getPatchData(*fluxsum_var, d_scratch),
                boost::detail::dynamic_cast_tag());
 
             boost::shared_ptr<pdat::FaceData<double> > fflux_data;
@@ -2328,14 +2328,14 @@ void MblkHyperbolicLevelIntegrator::copyTimeDependentData(
    for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
       boost::shared_ptr<hier::Patch> patch = *ip;
 
-      tbox::List<boost::shared_ptr<hier::Variable> >::Iterator time_dep_var =
-         d_time_dep_variables.listStart();
-      while (time_dep_var) {
+      std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =
+         d_time_dep_variables.begin();
+      while (time_dep_var != d_time_dep_variables.end()) {
          boost::shared_ptr<hier::PatchData> src_data(
-            patch->getPatchData(time_dep_var(), src_context),
+            patch->getPatchData(*time_dep_var, src_context),
             boost::detail::dynamic_cast_tag());
          boost::shared_ptr<hier::PatchData> dst_data(
-            patch->getPatchData(time_dep_var(), dst_context),
+            patch->getPatchData(*time_dep_var, dst_context),
             boost::detail::dynamic_cast_tag());
 
          dst_data->copy(*src_data);

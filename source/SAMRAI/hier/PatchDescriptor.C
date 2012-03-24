@@ -53,7 +53,7 @@ PatchDescriptor::PatchDescriptor():
    d_names.resizeArray(max_num_patch_data_components_allowed);
    d_factories.resizeArray(max_num_patch_data_components_allowed);
    for (int i = 0; i < max_num_patch_data_components_allowed; i++) {
-      d_free_indices.appendItem(i);
+      d_free_indices.push_back(i);
    }
    for (unsigned short d = 0; d < d_min_gcw.size(); ++d) {
       d_min_gcw[d] = IntVector::getZero(tbox::Dimension(static_cast<unsigned short>(d + 1)));
@@ -62,7 +62,7 @@ PatchDescriptor::PatchDescriptor():
 
 PatchDescriptor::~PatchDescriptor()
 {
-   d_free_indices.clearItems();
+   d_free_indices.clear();
 }
 
 /*
@@ -83,7 +83,7 @@ PatchDescriptor::definePatchDataComponent(
    TBOX_ASSERT(factory);
 
    int ret_index = INDEX_UNDEFINED;
-   if (d_free_indices.isEmpty()) {
+   if (d_free_indices.empty()) {
       TBOX_ERROR(
          "PatchDescriptor::definePatchDataComponent error...\n"
          << "No available patch data component indices left.\n"
@@ -91,8 +91,8 @@ PatchDescriptor::definePatchDataComponent(
          << "See tbox::SAMRAIManager utility for more information."
          << std::endl);
    } else {
-      ret_index = d_free_indices.getFirstItem();
-      d_free_indices.removeFirstItem();
+      ret_index = d_free_indices.front();
+      d_free_indices.pop_front();
       if (d_max_number_registered_components < ret_index + 1) {
          d_max_number_registered_components = ret_index + 1;
       }
@@ -121,7 +121,7 @@ PatchDescriptor::removePatchDataComponent(
       }
       if (d_factories[id]) {
          d_factories[id].reset();
-         d_free_indices.addItem(id);
+         d_free_indices.push_front(id);
       }
    }
 }

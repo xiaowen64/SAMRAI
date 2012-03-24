@@ -17,7 +17,6 @@
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/Database.h"
 
 #include <boost/shared_ptr.hpp>
@@ -492,7 +491,6 @@ private:
  * }
  * \endverbatim
  *
- * @see tbox::List
  * @see pdat::IndexData
  * @see pdat::IndexIterator
  */

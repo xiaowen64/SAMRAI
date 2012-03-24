@@ -123,10 +123,11 @@ MultiblockBoxTree::findOverlapBoxes(
     * Search in the index spaces neighboring block_id for overlaps.
     */
 
-   const tbox::List<GridGeometry::Neighbor>& block_neighbors(
+   const std::list<GridGeometry::Neighbor>& block_neighbors(
       d_grid_geometry->getNeighbors(block_id));
 
-   for (tbox::ListIterator<GridGeometry::Neighbor> ni(block_neighbors); ni; ni++) {
+   for (std::list<GridGeometry::Neighbor>::const_iterator ni = block_neighbors.begin();
+        ni != block_neighbors.end(); ni++) {
 
       const GridGeometry::Neighbor& neighbor(*ni);
 
@@ -186,10 +187,11 @@ MultiblockBoxTree::findOverlapBoxes(
     * Search in the index spaces neighboring block_id for overlaps.
     */
 
-   const tbox::List<GridGeometry::Neighbor>& block_neighbors(
+   const std::list<GridGeometry::Neighbor>& block_neighbors(
       d_grid_geometry->getNeighbors(block_id));
 
-   for (tbox::ListIterator<GridGeometry::Neighbor> ni(block_neighbors); ni; ni++) {
+   for (std::list<GridGeometry::Neighbor>::const_iterator ni = block_neighbors.begin();
+        ni != block_neighbors.end(); ni++) {
 
       const GridGeometry::Neighbor& neighbor(*ni);
 

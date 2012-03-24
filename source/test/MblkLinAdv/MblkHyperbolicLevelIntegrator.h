@@ -25,6 +25,8 @@ using namespace std;
 #include "SAMRAI/mesh/StandardTagAndInitStrategy.h"
 #include "SAMRAI/algs/TimeRefinementLevelStrategy.h"
 
+#include <list>
+
 #ifndef included_String
 #include <string>
 using namespace std;
@@ -948,10 +950,10 @@ private:
    boost::shared_ptr<hier::VariableContext> d_old;
    boost::shared_ptr<hier::VariableContext> d_plot_context;
 
-   tbox::List<boost::shared_ptr<hier::Variable> > d_all_variables;
-   tbox::List<boost::shared_ptr<hier::Variable> > d_time_dep_variables;
-   tbox::List<boost::shared_ptr<hier::Variable> > d_flux_variables;
-   tbox::List<boost::shared_ptr<hier::Variable> > d_fluxsum_variables;
+   std::list<boost::shared_ptr<hier::Variable> > d_all_variables;
+   std::list<boost::shared_ptr<hier::Variable> > d_time_dep_variables;
+   std::list<boost::shared_ptr<hier::Variable> > d_flux_variables;
+   std::list<boost::shared_ptr<hier::Variable> > d_fluxsum_variables;
 
    /*
     * SCRATCH descriptor indices for (non-TEMPORARY) variables

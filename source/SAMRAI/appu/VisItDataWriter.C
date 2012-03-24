@@ -177,11 +177,11 @@ VisItDataWriter::~VisItDataWriter()
    if (d_worker_min_max != (patchMinMaxStruct *)NULL)
       delete[] d_worker_min_max;
 
-   for (tbox::List<VisItItem>::Iterator ipi(d_plot_items);
-        ipi; ipi++) {
+   for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+        ipi != d_plot_items.end(); ipi++) {
       for (int comp = 0; comp < VISIT_MAX_NUMBER_COMPONENTS; comp++) {
-         if (ipi().d_master_min_max[comp] != (patchMinMaxStruct *)NULL)
-            delete[] ipi().d_master_min_max[comp];
+         if (ipi->d_master_min_max[comp] != (patchMinMaxStruct *)NULL)
+            delete[] ipi->d_master_min_max[comp];
       }
    }
 }
@@ -210,9 +210,9 @@ VisItDataWriter::registerPlotQuantity(
    /*
     * Check for name conflicts with existing registered variables.
     */
-   for (tbox::List<VisItItem>::Iterator
-        ipi(d_plot_items); ipi; ipi++) {
-      if (ipi().d_var_name == variable_name) {
+   for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+        ipi != d_plot_items.end(); ipi++) {
+      if (ipi->d_var_name == variable_name) {
          TBOX_ERROR("VisItDataWriter::registerPlotQuantity()"
             << "\n    Attempting to register variable with name "
             << variable_name << "\n    more than once." << std::endl);
@@ -234,7 +234,7 @@ VisItDataWriter::registerPlotQuantity(
 
    d_number_visit_variables++;
    d_number_visit_variables_plus_depth += plotitem.d_depth;
-   d_plot_items.appendItem(plotitem);
+   d_plot_items.push_back(plotitem);
 
 }
 
@@ -263,9 +263,9 @@ VisItDataWriter::registerDerivedPlotQuantity(
    /*
     * Check for name conflicts with existing registered variables.
     */
-   for (tbox::List<VisItItem>::Iterator
-        ipi(d_plot_items); ipi; ipi++) {
-      if (ipi().d_var_name == variable_name) {
+   for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+        ipi != d_plot_items.end(); ipi++) {
+      if (ipi->d_var_name == variable_name) {
          TBOX_ERROR("VisItDataWriter::registerDerivedPlotQuantity()"
             << "\n    Attempting to register variable with name "
             << variable_name << "\n    more than once." << std::endl);
@@ -343,7 +343,7 @@ VisItDataWriter::registerDerivedPlotQuantity(
 
    d_number_visit_variables++;
    d_number_visit_variables_plus_depth += plotitem.d_depth;
-   d_plot_items.appendItem(plotitem);
+   d_plot_items.push_back(plotitem);
 }
 
 /*
@@ -455,16 +455,16 @@ VisItDataWriter::resetLevelPlotQuantity(
     * Find variable in the list of maintained vars.
     */
    bool found_var = false;
-   for (tbox::List<VisItItem>::Iterator
-        ipi(d_plot_items); (!found_var && ipi); ipi++) {
-      if (ipi().d_var_name == variable_name) {
+   for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+        (!found_var && ipi != d_plot_items.end()); ipi++) {
+      if (ipi->d_var_name == variable_name) {
 
          /*
           * Check to make sure supplied variable has same type and
           * centering as registered one.
           */
-         if ((ipi().d_var_data_type != vdt) ||
-             (ipi().d_var_centering != vc)) {
+         if ((ipi->d_var_data_type != vdt) ||
+             (ipi->d_var_centering != vc)) {
             TBOX_ERROR("VisItDataWriter::resetLevelPlotQuantity()"
                << "\n     The supplied patch data id has a different"
                << "\n     type and centering from the one originally"
@@ -472,11 +472,11 @@ VisItDataWriter::resetLevelPlotQuantity(
                << variable_name
                << "\n     ***Exiting" << std::endl);
          }
-         if (level_number >= ipi().d_level_patch_data_index.getSize()) {
-            ipi().d_level_patch_data_index.resizeArray(level_number + 1);
+         if (level_number >= ipi->d_level_patch_data_index.getSize()) {
+            ipi->d_level_patch_data_index.resizeArray(level_number + 1);
          }
-         ipi().d_level_patch_data_index[level_number] = patch_data_index;
-         ipi().d_start_depth_index = start_depth_index;
+         ipi->d_level_patch_data_index[level_number] = patch_data_index;
+         ipi->d_start_depth_index = start_depth_index;
       }
    }
 
@@ -511,9 +511,9 @@ VisItDataWriter::registerNodeCoordinates(
    /*
     * Check to make sure "Coords" variable has not already been registered.
     */
-   for (tbox::List<VisItItem>::Iterator
-        ipi(d_plot_items); ipi; ipi++) {
-      if (ipi().d_var_name == "Coords") {
+   for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+        ipi != d_plot_items.end(); ipi++) {
+      if (ipi->d_var_name == "Coords") {
          TBOX_ERROR("VisItDataWriter::registerNodeCoordinates()"
             << "\n   Coordinates registered more than once." << std::endl);
       }
@@ -610,7 +610,7 @@ VisItDataWriter::registerNodeCoordinates(
 
    d_number_visit_variables++;
    d_number_visit_variables_plus_depth += plotitem.d_depth;
-   d_plot_items.appendItem(plotitem);
+   d_plot_items.push_back(plotitem);
 
 }
 
@@ -682,9 +682,9 @@ VisItDataWriter::registerSingleNodeCoordinate(
       /*
        * Check to make sure "Coords" variable has not already been registered.
        */
-      for (tbox::List<VisItItem>::Iterator
-           ipi(d_plot_items); ipi; ipi++) {
-         if (ipi().d_var_name == "Coords") {
+      for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+           ipi != d_plot_items.end(); ipi++) {
+         if (ipi->d_var_name == "Coords") {
             TBOX_ERROR("VisItDataWriter::registerSingleNodeCoordinate()"
                << "\n   Coordinate registered more than once."
                << std::endl);
@@ -722,25 +722,25 @@ VisItDataWriter::registerSingleNodeCoordinate(
       d_number_visit_variables++;
       d_number_visit_variables_plus_depth += plotitem.d_depth;
 
-      d_plot_items.appendItem(plotitem);
+      d_plot_items.push_back(plotitem);
 
    } else {
 
-      for (tbox::List<VisItItem>::Iterator
-           ipi(d_plot_items); ipi; ipi++) {
+      for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+           ipi != d_plot_items.end(); ipi++) {
 
-         if (ipi().d_is_deformed_coords) {
+         if (ipi->d_is_deformed_coords) {
 
-            ipi().d_var_type = VISIT_VECTOR;
-            ipi().d_depth = d_dim.getValue();
-            ipi().d_visit_var_name.resizeArray(d_dim.getValue());
+            ipi->d_var_type = VISIT_VECTOR;
+            ipi->d_depth = d_dim.getValue();
+            ipi->d_visit_var_name.resizeArray(d_dim.getValue());
 
             std::string var_name = "Coords";
             char temp_buf[VISIT_NAME_BUFSIZE];
             sprintf(temp_buf, ".%02d", coordinate_number);
-            ipi().d_visit_var_name[coordinate_number] = var_name + temp_buf;
+            ipi->d_visit_var_name[coordinate_number] = var_name + temp_buf;
 
-            ipi().d_coord_scale_factor[coordinate_number] = scale_factor;
+            ipi->d_coord_scale_factor[coordinate_number] = scale_factor;
             d_number_visit_variables_plus_depth += 1;
          }
       }
@@ -813,7 +813,7 @@ VisItDataWriter::registerMaterialNames(
       plotitem.d_isa_material = true;
       plotitem.d_material_name = material_names[i];
 
-      d_plot_items.appendItem(plotitem);
+      d_plot_items.push_back(plotitem);
    }
 }
 
@@ -889,7 +889,7 @@ VisItDataWriter::registerSparseMaterialNames(
    //   the sparse data writing when volume fractions are written out
    plotitem.d_is_material_state_variable = true;
 
-   d_plot_items.appendItem(plotitem);
+   d_plot_items.push_back(plotitem);
 }
 
 /*
@@ -920,8 +920,9 @@ VisItDataWriter::registerSpeciesNames(
    }
 
    bool found_material = false;
-   for (tbox::List<VisItItem>::Iterator ipi(d_plot_items); ipi; ipi++) {
-      if (ipi().d_material_name == material_name) {
+   for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+        ipi != d_plot_items.end(); ipi++) {
+      if (ipi->d_material_name == material_name) {
          found_material = true;
       }
    }
@@ -935,10 +936,11 @@ VisItDataWriter::registerSpeciesNames(
     * Find the material in the list of plot items
     */
    VisItItem* material_item = (VisItItem *)NULL;
-   for (tbox::List<VisItItem>::Iterator ipi(d_plot_items); ipi; ipi++) {
-      if ((ipi().d_material_name == material_name) &&
-          ipi().d_isa_material) {
-         if (ipi().d_species_names.getSize() > 0) {
+   for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+        ipi != d_plot_items.end(); ipi++) {
+      if ((ipi->d_material_name == material_name) &&
+          ipi->d_isa_material) {
+         if (ipi->d_species_names.getSize() > 0) {
             TBOX_ERROR("VisItDataWriter::registerSpeciesNames"
                << "\n    material name = " << material_name
                << "\n    registerSpeciesNames has already been"
@@ -946,7 +948,7 @@ VisItDataWriter::registerSpeciesNames(
                << "\n    possible to reset species during the"
                << "\n    simulation.  ***Exiting" << std::endl);
          }
-         material_item = &(ipi());
+         material_item = &(*ipi);
       }
    }
 
@@ -993,7 +995,7 @@ VisItDataWriter::registerSpeciesNames(
       plotitem.d_species_name = species_names[i];
       plotitem.d_parent_material_pointer = material_item;
 
-      d_plot_items.appendItem(plotitem);
+      d_plot_items.push_back(plotitem);
 
    }
 
@@ -1521,33 +1523,33 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
        * Master processor:  allocate array for each plot item to hold
        * min/max information for ALL patches, on all levels.
        */
-      for (tbox::List<VisItItem>::Iterator
-           ipi(d_plot_items); ipi; ipi++) {
+      for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+           ipi != d_plot_items.end(); ipi++) {
 
-         for (int comp = 0; comp < ipi().d_depth; comp++) {
+         for (int comp = 0; comp < ipi->d_depth; comp++) {
 
             /*
              * Create space for master min/max struct, if it doesn't
              * already exist.
              */
-            if (ipi().d_master_min_max[comp] != (patchMinMaxStruct *)NULL) {
-               delete[] ipi().d_master_min_max[comp];
+            if (ipi->d_master_min_max[comp] != (patchMinMaxStruct *)NULL) {
+               delete[] ipi->d_master_min_max[comp];
             }
             patchMinMaxStruct* mm =
                new patchMinMaxStruct[tot_number_of_patches];
             memset((char *)mm, 0,
                tot_number_of_patches * sizeof(patchMinMaxStruct));
-            ipi().d_master_min_max[comp] = mm;
+            ipi->d_master_min_max[comp] = mm;
 
             for (int pn = 0; pn < number_local_patches; pn++) {
-               ipi().d_master_min_max[comp][pn].patch_data_on_disk = false;
-               ipi().d_master_min_max[comp][pn].min =
+               ipi->d_master_min_max[comp][pn].patch_data_on_disk = false;
+               ipi->d_master_min_max[comp][pn].min =
                   tbox::MathUtilities<double>::getMax();
-               ipi().d_master_min_max[comp][pn].max =
+               ipi->d_master_min_max[comp][pn].max =
                   tbox::MathUtilities<double>::getMin();
-               ipi().d_master_min_max[comp][pn].material_composition_code =
+               ipi->d_master_min_max[comp][pn].material_composition_code =
                   VisMaterialsDataStrategy::VISIT_MIXED;
-               ipi().d_master_min_max[comp][pn].species_composition_code =
+               ipi->d_master_min_max[comp][pn].species_composition_code =
                   VisMaterialsDataStrategy::VISIT_MIXED;
             }
          }
@@ -1805,10 +1807,10 @@ VisItDataWriter::writeVisItVariablesToHDFFile(
     * Clean up from packing operations.  If this is not done there is a dangling smart
     * pointer reference to HDF5 groups and the file may not be written/closed.
     */
-   for (tbox::List<VisItItem>::Iterator
-        ipi(d_plot_items); ipi; ipi++) {
-      ipi().d_species_HDFGroup.reset();
-      ipi().d_extents_species_HDFGroup.reset();
+   for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+        ipi != d_plot_items.end(); ipi++) {
+      ipi->d_species_HDFGroup.reset();
+      ipi->d_extents_species_HDFGroup.reset();
    }
 }
 
@@ -1837,28 +1839,28 @@ VisItDataWriter::packRegularAndDerivedData(
     * Loop over variables and write out those that are NOT
     * material or species variables.
     */
-   for (tbox::List<VisItItem>::Iterator
-        ipi(d_plot_items); ipi; ipi++) {
+   for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+        ipi != d_plot_items.end(); ipi++) {
 
       /*
        * Only write regular (non-derived) and derived vars, not
        * material or spacies vars.
        */
-      if (!(ipi().d_isa_material || ipi().d_isa_species)) {
+      if (!(ipi->d_isa_material || ipi->d_isa_species)) {
 
          /*
           * create buffer to hold patch data
           */
          int buf_size = getBufferSize(patch.getBox(),
                hier::IntVector::getZero(d_dim),
-               ipi().d_var_centering);
+               ipi->d_var_centering);
 
          double* dbuffer = new double[buf_size]; // used to pack var
          float* fbuffer = new float[buf_size]; // copy to float for writing
 
          // Check for mixed/clean state variables
-         if (!(ipi().d_is_material_state_variable)) { // Conventional variable
-            for (int depth_id = 0; depth_id < ipi().d_depth; depth_id++) {
+         if (!(ipi->d_is_material_state_variable)) { // Conventional variable
+            for (int depth_id = 0; depth_id < ipi->d_depth; depth_id++) {
 
                /*
                 * If its derived data, pack via the derived writer.
@@ -1866,16 +1868,16 @@ VisItDataWriter::packRegularAndDerivedData(
                 */
                bool data_exists_on_patch = false;
                int patch_data_id = VISIT_UNDEFINED_INDEX;
-               if (ipi().d_is_derived) {
+               if (ipi->d_is_derived) {
 
                   // derived data
                   data_exists_on_patch =
-                     ipi().d_derived_writer->
+                     ipi->d_derived_writer->
                      packDerivedDataIntoDoubleBuffer(
                         dbuffer,
                         patch,
                         patch.getBox(),
-                        ipi().d_var_name,
+                        ipi->d_var_name,
                         depth_id);
 
                } else {
@@ -1884,27 +1886,27 @@ VisItDataWriter::packRegularAndDerivedData(
                    * Check if patch data id has been reset on the level.  If
                    * not, just use the original registered data id.
                    */
-                  patch_data_id = ipi().d_patch_data_index;
-                  if (ipi().d_level_patch_data_index.getSize() >
+                  patch_data_id = ipi->d_patch_data_index;
+                  if (ipi->d_level_patch_data_index.getSize() >
                       level_number) {
                      patch_data_id =
-                        ipi().d_level_patch_data_index[level_number];
+                        ipi->d_level_patch_data_index[level_number];
                   }
 
                   data_exists_on_patch =
                      patch.checkAllocated(patch_data_id);
 
                   if (data_exists_on_patch) {
-                     int new_depth_id = ipi().d_start_depth_index + depth_id;
+                     int new_depth_id = ipi->d_start_depth_index + depth_id;
 
                      // regular (non-derived) data
                      packPatchDataIntoDoubleBuffer(
                         patch.getPatchData(patch_data_id),
                         new_depth_id,
-                        ipi().d_var_data_type,
+                        ipi->d_var_data_type,
                         patch.getBox(),
                         dbuffer,
-                        ipi().d_var_centering);
+                        ipi->d_var_centering);
                   }
                }
 
@@ -1916,7 +1918,7 @@ VisItDataWriter::packRegularAndDerivedData(
                   /*
                    * Scale data (while still double)
                    */
-                  const double scale = ipi().d_scale_factor;
+                  const double scale = ipi->d_scale_factor;
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:1572)
 #endif
@@ -1939,7 +1941,7 @@ VisItDataWriter::packRegularAndDerivedData(
                      }
                   }
 
-                  checkFloatMinMax(ipi().d_visit_var_name[depth_id],
+                  checkFloatMinMax(ipi->d_visit_var_name[depth_id],
                      dmin,
                      dmax,
                      level_number,
@@ -1956,7 +1958,7 @@ VisItDataWriter::packRegularAndDerivedData(
                   /*
                    * Write to disk
                    */
-                  std::string vname = ipi().d_visit_var_name[depth_id];
+                  std::string vname = ipi->d_visit_var_name[depth_id];
                   patch_HDFGroup->putFloatArray(vname,
                      fbuffer,
                      buf_size);
@@ -1975,10 +1977,10 @@ VisItDataWriter::packRegularAndDerivedData(
                   int gpn = getGlobalPatchNumber(hierarchy,
                         level_number,
                         patch.getLocalId().getValue());
-                  ipi().d_master_min_max[depth_id][gpn].patch_data_on_disk =
+                  ipi->d_master_min_max[depth_id][gpn].patch_data_on_disk =
                      data_exists_on_patch;
-                  ipi().d_master_min_max[depth_id][gpn].min = dmin;
-                  ipi().d_master_min_max[depth_id][gpn].max = dmax;
+                  ipi->d_master_min_max[depth_id][gpn].min = dmin;
+                  ipi->d_master_min_max[depth_id][gpn].max = dmax;
                } else {
                   d_worker_min_max[d_var_id_ctr].patch_data_on_disk =
                      data_exists_on_patch;
@@ -1994,7 +1996,7 @@ VisItDataWriter::packRegularAndDerivedData(
             } // loop over var depths
          } // conventional (not material state) variable
          else { // Data is mixed
-            for (int depth_id = 0; depth_id < ipi().d_depth; depth_id++) {
+            for (int depth_id = 0; depth_id < ipi->d_depth; depth_id++) {
                std::vector<double> dmix_data;
 
                /*
@@ -2003,17 +2005,17 @@ VisItDataWriter::packRegularAndDerivedData(
                 */
                bool data_exists_on_patch = false;
                int patch_data_id = VISIT_UNDEFINED_INDEX;
-               if (ipi().d_is_derived) {
+               if (ipi->d_is_derived) {
 
                   // Single function packs clean and mixed data
                   data_exists_on_patch =
-                     ipi().d_derived_writer->
+                     ipi->d_derived_writer->
                      packMixedDerivedDataIntoDoubleBuffer(
                         dbuffer,
                         dmix_data,
                         patch,
                         patch.getBox(),
-                        ipi().d_var_name,
+                        ipi->d_var_name,
                         depth_id);
 
                } else {
@@ -2028,7 +2030,7 @@ VisItDataWriter::packRegularAndDerivedData(
                   /*
                    * Scale data (while still double)
                    */
-                  const double scale = ipi().d_scale_factor;
+                  const double scale = ipi->d_scale_factor;
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:1572)
 #endif
@@ -2067,7 +2069,7 @@ VisItDataWriter::packRegularAndDerivedData(
                      }
                   }
 
-                  checkFloatMinMax(ipi().d_visit_var_name[depth_id],
+                  checkFloatMinMax(ipi->d_visit_var_name[depth_id],
                      dmin,
                      dmax,
                      level_number,
@@ -2084,7 +2086,7 @@ VisItDataWriter::packRegularAndDerivedData(
                   /*
                    * Write to disk
                    */
-                  std::string vname = ipi().d_visit_var_name[depth_id];
+                  std::string vname = ipi->d_visit_var_name[depth_id];
                   patch_HDFGroup->putFloatArray(vname,
                      fbuffer,
                      buf_size);
@@ -2137,10 +2139,10 @@ VisItDataWriter::packRegularAndDerivedData(
                   int gpn = getGlobalPatchNumber(hierarchy,
                         level_number,
                         patch.getLocalId().getValue());
-                  ipi().d_master_min_max[depth_id][gpn].patch_data_on_disk =
+                  ipi->d_master_min_max[depth_id][gpn].patch_data_on_disk =
                      data_exists_on_patch;
-                  ipi().d_master_min_max[depth_id][gpn].min = dmin;
-                  ipi().d_master_min_max[depth_id][gpn].max = dmax;
+                  ipi->d_master_min_max[depth_id][gpn].min = dmin;
+                  ipi->d_master_min_max[depth_id][gpn].max = dmax;
                } else {
                   d_worker_min_max[d_var_id_ctr].patch_data_on_disk =
                      data_exists_on_patch;
@@ -2162,7 +2164,7 @@ VisItDataWriter::packRegularAndDerivedData(
 
       } // var is not species or material
       else {
-         for (int depth_id = 0; depth_id < ipi().d_depth; ++depth_id) {
+         for (int depth_id = 0; depth_id < ipi->d_depth; ++depth_id) {
             d_var_id_ctr++;
          }
       }
@@ -2197,17 +2199,17 @@ VisItDataWriter::packMaterialsData(
     */
    boost::shared_ptr<tbox::Database> materials_HDFGroup;
    boost::shared_ptr<tbox::Database> material_name_HDFGroup;
-   for (tbox::List<VisItItem>::Iterator
-        ipi(d_plot_items); ipi; ipi++) {
+   for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+        ipi != d_plot_items.end(); ipi++) {
 
-      if (ipi().d_isa_material) {
+      if (ipi->d_isa_material) {
 
          /*
           * create buffer to hold patch data
           */
          int buf_size = getBufferSize(patch.getBox(),
                hier::IntVector::getZero(d_dim),
-               ipi().d_var_centering);
+               ipi->d_var_centering);
 
          // Pointers to buffers for dense packing format
          double* dbuffer = NULL; // used to pack var
@@ -2216,14 +2218,14 @@ VisItDataWriter::packMaterialsData(
          int* ibuffer = NULL;      // used to pack mat_list
 
          // Allocate appropriate memory for packing format
-         if (!(ipi().d_is_material_state_variable)) {
+         if (!(ipi->d_is_material_state_variable)) {
             dbuffer = new double[buf_size];
             fbuffer = new float[buf_size];
          } else {
             ibuffer = new int[buf_size];
          }
 
-         for (int depth_id = 0; depth_id < ipi().d_depth; depth_id++) {
+         for (int depth_id = 0; depth_id < ipi->d_depth; depth_id++) {
 
             /*
              * Create the "materials" HDF database entry:
@@ -2247,7 +2249,7 @@ VisItDataWriter::packMaterialsData(
              * Method for Sparse representation of materials (and volume
              *   fractions)
              */
-            if ((ipi().d_is_material_state_variable)) {
+            if ((ipi->d_is_material_state_variable)) {
                /*
                 * Sparse packing method
                 * This requires packing an array of integers (mat_list) with
@@ -2321,7 +2323,7 @@ VisItDataWriter::packMaterialsData(
                   }
 
                   int dummy_pdata_id = VISIT_UNDEFINED_INDEX;
-                  checkFloatMinMax(ipi().d_visit_var_name[depth_id],
+                  checkFloatMinMax(ipi->d_visit_var_name[depth_id],
                      dmin,
                      dmax,
                      level_number,
@@ -2368,13 +2370,13 @@ VisItDataWriter::packMaterialsData(
                }
 
                // create materials_name HDF database
-               std::string mname = ipi().d_material_name;
+               std::string mname = ipi->d_material_name;
                material_name_HDFGroup =
                   materials_HDFGroup->putDatabase(mname);
 
                // create "species" HDF database for material name
-               if (ipi().d_species_names.getSize() > 0) {
-                  ipi().d_species_HDFGroup =
+               if (ipi->d_species_names.getSize() > 0) {
+                  ipi->d_species_HDFGroup =
                      material_name_HDFGroup->putDatabase("species");
                }
 
@@ -2384,7 +2386,7 @@ VisItDataWriter::packMaterialsData(
                      dbuffer,
                      patch,
                      patch.getBox(),
-                     ipi().d_material_name);
+                     ipi->d_material_name);
 
                // check return code
                if ((return_code != VisMaterialsDataStrategy::VISIT_MIXED)
@@ -2405,7 +2407,7 @@ VisItDataWriter::packMaterialsData(
                   /*
                    * Scale data (while still double)
                    */
-                  const double scale = ipi().d_scale_factor;
+                  const double scale = ipi->d_scale_factor;
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:1572)
 #endif
@@ -2429,7 +2431,7 @@ VisItDataWriter::packMaterialsData(
                   }
 
                   int dummy_pdata_id = VISIT_UNDEFINED_INDEX;
-                  checkFloatMinMax(ipi().d_visit_var_name[depth_id],
+                  checkFloatMinMax(ipi->d_visit_var_name[depth_id],
                      dmin,
                      dmax,
                      level_number,
@@ -2446,7 +2448,7 @@ VisItDataWriter::packMaterialsData(
                   /*
                    * Write to disk
                    */
-                  std::string vname = ipi().d_material_name;
+                  std::string vname = ipi->d_material_name;
                   vname = vname + "-fractions";
                   material_name_HDFGroup->putFloatArray(vname,
                      fbuffer,
@@ -2475,11 +2477,11 @@ VisItDataWriter::packMaterialsData(
                int gpn = getGlobalPatchNumber(hierarchy,
                      level_number,
                      patch.getLocalId().getValue());
-               ipi().d_master_min_max[depth_id][gpn].patch_data_on_disk =
+               ipi->d_master_min_max[depth_id][gpn].patch_data_on_disk =
                   data_on_disk;
-               ipi().d_master_min_max[depth_id][gpn].min = dmin;
-               ipi().d_master_min_max[depth_id][gpn].max = dmax;
-               ipi().d_master_min_max[depth_id][gpn].
+               ipi->d_master_min_max[depth_id][gpn].min = dmin;
+               ipi->d_master_min_max[depth_id][gpn].max = dmax;
+               ipi->d_master_min_max[depth_id][gpn].
                material_composition_code = return_code;
             } else {
                d_worker_min_max[d_var_id_ctr].patch_data_on_disk =
@@ -2498,7 +2500,7 @@ VisItDataWriter::packMaterialsData(
          } // loop over var depths
 
          // Dense packing format delete buffers
-         if (!(ipi().d_is_material_state_variable)) {
+         if (!(ipi->d_is_material_state_variable)) {
             delete[] fbuffer;
             delete[] dbuffer;
          } else { // Delete buffer used for sparse format
@@ -2507,7 +2509,7 @@ VisItDataWriter::packMaterialsData(
 
       } // var is a material
       else {
-         for (int depth_id = 0; depth_id < ipi().d_depth; depth_id++) {
+         for (int depth_id = 0; depth_id < ipi->d_depth; depth_id++) {
             d_var_id_ctr++;
          }
       }
@@ -2539,22 +2541,22 @@ VisItDataWriter::packSpeciesData(
    /*
     * Loop over variables and pull out those that are material variables.
     */
-   for (tbox::List<VisItItem>::Iterator
-        ipi(d_plot_items); ipi; ipi++) {
+   for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+        ipi != d_plot_items.end(); ipi++) {
 
-      if (ipi().d_isa_species) {
+      if (ipi->d_isa_species) {
 
          /*
           * create buffer to hold patch data
           */
          int buf_size = getBufferSize(patch.getBox(),
                hier::IntVector::getZero(d_dim),
-               ipi().d_var_centering);
+               ipi->d_var_centering);
 
          double* dbuffer = new double[buf_size]; // used to pack var
          float* fbuffer = new float[buf_size]; // copy to float for writing
 
-         for (int depth_id = 0; depth_id < ipi().d_depth; depth_id++) {
+         for (int depth_id = 0; depth_id < ipi->d_depth; depth_id++) {
 
             // pack the buffer with species data
             int return_code = d_materials_writer->
@@ -2562,8 +2564,8 @@ VisItDataWriter::packSpeciesData(
                   dbuffer,
                   patch,
                   patch.getBox(),
-                  ipi().d_material_name,
-                  ipi().d_species_name);
+                  ipi->d_material_name,
+                  ipi->d_species_name);
 
             // check return code
             if ((return_code != VisMaterialsDataStrategy::VISIT_MIXED)
@@ -2586,7 +2588,7 @@ VisItDataWriter::packSpeciesData(
                /*
                 * Scale data (while still double)
                 */
-               const double scale = ipi().d_scale_factor;
+               const double scale = ipi->d_scale_factor;
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:1572)
 #endif
@@ -2609,7 +2611,7 @@ VisItDataWriter::packSpeciesData(
                }
 
                int dummy_pdata_id = VISIT_UNDEFINED_INDEX;
-               checkFloatMinMax(ipi().d_visit_var_name[depth_id],
+               checkFloatMinMax(ipi->d_visit_var_name[depth_id],
                   dmin,
                   dmax,
                   level_number,
@@ -2626,8 +2628,8 @@ VisItDataWriter::packSpeciesData(
                /*
                 * Write to disk
                 */
-               std::string sname = ipi().d_species_name;
-               ipi().d_parent_material_pointer->
+               std::string sname = ipi->d_species_name;
+               ipi->d_parent_material_pointer->
                d_species_HDFGroup->putFloatArray(sname,
                   fbuffer,
                   buf_size);
@@ -2654,11 +2656,11 @@ VisItDataWriter::packSpeciesData(
                int gpn = getGlobalPatchNumber(hierarchy,
                      level_number,
                      patch.getLocalId().getValue());
-               ipi().d_master_min_max[depth_id][gpn].patch_data_on_disk =
+               ipi->d_master_min_max[depth_id][gpn].patch_data_on_disk =
                   data_on_disk;
-               ipi().d_master_min_max[depth_id][gpn].min = dmin;
-               ipi().d_master_min_max[depth_id][gpn].max = dmax;
-               ipi().d_master_min_max[depth_id][gpn].species_composition_code =
+               ipi->d_master_min_max[depth_id][gpn].min = dmin;
+               ipi->d_master_min_max[depth_id][gpn].max = dmax;
+               ipi->d_master_min_max[depth_id][gpn].species_composition_code =
                   return_code;
             } else {
                d_worker_min_max[d_var_id_ctr].patch_data_on_disk =
@@ -2681,7 +2683,7 @@ VisItDataWriter::packSpeciesData(
 
       } // var is a species
       else {
-         for (int depth_id = 0; depth_id < ipi().d_depth; depth_id++) {
+         for (int depth_id = 0; depth_id < ipi->d_depth; depth_id++) {
             d_var_id_ctr++;
          }
       }
@@ -2928,28 +2930,28 @@ VisItDataWriter::writeSummaryToHDFFile(
       }
 
       i = 0;
-      for (tbox::List<VisItItem>::Iterator
-           ipi(d_plot_items); ipi; ipi++) {
+      for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+           ipi != d_plot_items.end(); ipi++) {
 
-         if (!(ipi().d_isa_material || ipi().d_isa_species)) {
-            var_names[i] = ipi().d_var_name;
-            if ((ipi().d_var_centering == VISIT_CELL) ||
-                (ipi().d_var_centering == VISIT_UNKNOWN_CELL)) {
+         if (!(ipi->d_isa_material || ipi->d_isa_species)) {
+            var_names[i] = ipi->d_var_name;
+            if ((ipi->d_var_centering == VISIT_CELL) ||
+                (ipi->d_var_centering == VISIT_UNKNOWN_CELL)) {
                var_centering[i] = 1;
             } else {
                var_centering[i] = 0;
             }
-            if (ipi().d_is_deformed_coords) {
+            if (ipi->d_is_deformed_coords) {
                var_scale_factors[i] = 0.0;
             } else {
-               var_scale_factors[i] = ipi().d_scale_factor;
+               var_scale_factors[i] = ipi->d_scale_factor;
             }
-            var_depths[i] = ipi().d_depth;
+            var_depths[i] = ipi->d_depth;
             for (int dim = 0; dim < d_dim.getValue(); dim++) {
                var_ghosts[i * VISIT_FIXED_DIM + dim] =
                   0;
             }
-            if (ipi().d_is_material_state_variable) {
+            if (ipi->d_is_material_state_variable) {
                // var_material_state_variable[i] = VISIT_MATERIAL;
                var_material_state_variable[i] = 1;
             } else {
@@ -2981,13 +2983,13 @@ VisItDataWriter::writeSummaryToHDFFile(
 
       if (d_grid_type == VISIT_DEFORMED) {
          tbox::Array<double> coord_scaling(VISIT_FIXED_DIM);
-         for (tbox::List<VisItItem>::Iterator
-              ipi(d_plot_items); ipi; ipi++) {
-            if (ipi().d_is_deformed_coords) {
+         for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+              ipi != d_plot_items.end(); ipi++) {
+            if (ipi->d_is_deformed_coords) {
                for (i = 0; i < VISIT_FIXED_DIM; i++) {
                   coord_scaling[i] = 0.0;
                   if (i < d_dim.getValue()) {
-                     coord_scaling[i] = ipi().d_coord_scale_factor[i];
+                     coord_scaling[i] = ipi->d_coord_scale_factor[i];
                   }
                }
             }
@@ -3074,12 +3076,11 @@ VisItDataWriter::writeSummaryToHDFFile(
 
          int mat_ghosts[VISIT_FIXED_DIM];
          for (i = 0; i < VISIT_FIXED_DIM; i++) mat_ghosts[i] = 0;
-         for (tbox::List<VisItItem>::Iterator
-              ipi(d_plot_items); ipi; ipi++) {
-            if (ipi().d_isa_material) {
+         for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+              ipi != d_plot_items.end(); ipi++) {
+            if (ipi->d_isa_material) {
                for (int dim = 0; dim < d_dim.getValue(); dim++) {
-                  mat_ghosts[dim] =
-                     0;
+                  mat_ghosts[dim] = 0;
                }
             }
          }
@@ -3094,14 +3095,14 @@ VisItDataWriter::writeSummaryToHDFFile(
 
          for (i = 0; i < d_materials_names.getSize(); i++) {
             key_string = d_materials_names[i];
-            for (tbox::List<VisItItem>::Iterator
-                 ipi(d_plot_items); ipi; ipi++) {
-               if ((ipi().d_material_name == d_materials_names[i]) &&
-                   ipi().d_isa_material) {
-                  if (ipi().d_species_names.getSize() > 0) {
+            for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+                 ipi != d_plot_items.end(); ipi++) {
+               if ((ipi->d_material_name == d_materials_names[i]) &&
+                   ipi->d_isa_material) {
+                  if (ipi->d_species_names.getSize() > 0) {
                      species_HDFGroup->putStringArray(
                         key_string,
-                        ipi().d_species_names);
+                        ipi->d_species_names);
                   }
                }
             }
@@ -3317,23 +3318,23 @@ VisItDataWriter::writeSummaryToHDFFile(
        * Write patch min/max for each variable.
        */
       boost::shared_ptr<tbox::Database> extents_materials_HDFGroup;
-      for (tbox::List<VisItItem>::Iterator
-           ipi(d_plot_items); ipi; ipi++) {
-         for (int comp = 0; comp < ipi().d_depth; comp++) {
+      for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+           ipi != d_plot_items.end(); ipi++) {
+         for (int comp = 0; comp < ipi->d_depth; comp++) {
 
             /*
              * Regular (i.e. not materials or species) variables
              */
-            if (!(ipi().d_isa_material) && !(ipi().d_isa_species)) {
+            if (!(ipi->d_isa_material) && !(ipi->d_isa_species)) {
 
-               key_string = ipi().d_visit_var_name[comp] + "-Extents";
+               key_string = ipi->d_visit_var_name[comp] + "-Extents";
                HDFputPatchMinMaxStructArray(
                   key_string,
-                  ipi().d_master_min_max[comp],
+                  ipi->d_master_min_max[comp],
                   tot_number_of_patches,
                   extents_group_id);
 
-            } else if (ipi().d_isa_material) {
+            } else if (ipi->d_isa_material) {
 
                /*
                 * Create materials HDF group
@@ -3348,11 +3349,11 @@ VisItDataWriter::writeSummaryToHDFFile(
                      extents_HDFGroup->putDatabase("materials");
                }
 
-               key_string = ipi().d_material_name;
+               key_string = ipi->d_material_name;
                boost::shared_ptr<tbox::Database>
                   extents_material_name_HDFGroup;
-               if (!(ipi().d_is_material_state_variable)) {
-                  std::string mname = ipi().d_material_name;
+               if (!(ipi->d_is_material_state_variable)) {
+                  std::string mname = ipi->d_material_name;
                   // material_name group
                   extents_material_name_HDFGroup =
                      extents_materials_HDFGroup->putDatabase(mname);
@@ -3369,22 +3370,22 @@ VisItDataWriter::writeSummaryToHDFFile(
 
                HDFputPatchMinMaxStructArray(
                   key_string,
-                  ipi().d_master_min_max[comp],
+                  ipi->d_master_min_max[comp],
                   tot_number_of_patches,
                   extents_material_name_group_id);
 
                // species group
-               if (ipi().d_species_names.getSize() > 0) {
-                  ipi().d_extents_species_HDFGroup =
+               if (ipi->d_species_names.getSize() > 0) {
+                  ipi->d_extents_species_HDFGroup =
                      extents_material_name_HDFGroup->putDatabase("species");
                }
 
-            } else if (ipi().d_isa_species) {
+            } else if (ipi->d_isa_species) {
 
                // species
-               key_string = ipi().d_species_name;
+               key_string = ipi->d_species_name;
                boost::shared_ptr<tbox::HDFDatabase> extents_database(
-                  ipi().d_parent_material_pointer->d_extents_species_HDFGroup,
+                  ipi->d_parent_material_pointer->d_extents_species_HDFGroup,
                   boost::detail::dynamic_cast_tag());
 
                /*
@@ -3394,7 +3395,7 @@ VisItDataWriter::writeSummaryToHDFFile(
 
                HDFputPatchMinMaxStructArray(
                   key_string,
-                  ipi().d_master_min_max[comp],
+                  ipi->d_master_min_max[comp],
                   tot_number_of_patches,
                   species_group_id);
             }
@@ -3565,10 +3566,10 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
                if (proc_mapping[pn] == sending_proc) {
                   int global_patch_id =
                      getGlobalPatchNumber(hierarchy, ln, pn);
-                  for (tbox::List<VisItItem>::Iterator
-                       ipi(d_plot_items); ipi; ipi++) {
-                     for (comp = 0; comp < ipi().d_depth; comp++) {
-                        ipi().d_master_min_max[comp][global_patch_id] =
+                  for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
+                       ipi != d_plot_items.end(); ipi++) {
+                     for (comp = 0; comp < ipi->d_depth; comp++) {
+                        ipi->d_master_min_max[comp][global_patch_id] =
                            buf[item_ctr];
                         item_ctr++;
                      }

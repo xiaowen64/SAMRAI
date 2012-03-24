@@ -15,8 +15,6 @@
 #include "SAMRAI/pdat/IndexVariable.C"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Array.C"
-#include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/List.C"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
@@ -29,6 +27,7 @@
 #include "SAMRAI/pdat/IndexDataFactory.C"
 
 #include <boost/shared_ptr.hpp>
+#include <list>
 
 using namespace SAMRAI;
 using namespace hier;
@@ -116,9 +115,6 @@ template class pdat::IndexIterator<Item, pdat::CellGeometry>;
 template class pdat::IndexVariable<Item, pdat::CellGeometry>;
 
 template class tbox::Array<pdat::IndexDataNode<Item, pdat::CellGeometry> >;
-template class tbox::List<pdat::IndexDataNode<Item, pdat::CellGeometry> >;
-template class tbox::ListIterator<pdat::IndexDataNode<Item, pdat::CellGeometry> >;
-template class tbox::ListNode<pdat::IndexDataNode<Item, pdat::CellGeometry> >;
 template class boost::shared_ptr<pdat::IndexData<Item, pdat::CellGeometry> >;
 template class boost::shared_ptr<pdat::IndexVariable<Item, pdat::CellGeometry> >;
 template class boost::shared_ptr<pdat::IndexDataFactory<Item, pdat::CellGeometry> >;

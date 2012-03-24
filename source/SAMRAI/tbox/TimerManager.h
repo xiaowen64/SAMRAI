@@ -15,7 +15,6 @@
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Timer.h"
@@ -24,6 +23,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <list>
 
 namespace SAMRAI {
 namespace tbox {
@@ -491,15 +491,15 @@ private:
     * for a timer is its total elapsed time minus any time spent in other
     * timers while that timer is running.
     */
-   List<Timer *> d_exclusive_timer_stack;
+   std::list<Timer *> d_exclusive_timer_stack;
 
    /*
     * Lists of timer names generated from the input database.  These are
     * used to activate specific timers in the code when a program executes.
     */
-   List<std::string> d_package_names;
-   List<std::string> d_class_names;
-   List<std::string> d_class_method_names;
+   std::list<std::string> d_package_names;
+   std::list<std::string> d_class_names;
+   std::list<std::string> d_class_method_names;
 
    /*
     * These values hold the length of the package, class, and class_method

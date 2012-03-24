@@ -24,7 +24,6 @@
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
 #include "SAMRAI/tbox/Complex.h"
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/PIO.h"
 
 #include "silo.h"

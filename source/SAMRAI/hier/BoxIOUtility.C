@@ -17,7 +17,6 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/HDFDatabase.h"
 #endif
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Utilities.h"
 

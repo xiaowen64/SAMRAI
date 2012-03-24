@@ -378,14 +378,14 @@ HyperbolicLevelIntegrator::initializeLevelData(
       for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
          const boost::shared_ptr<hier::Patch>& patch = *ip;
 
-         tbox::List<boost::shared_ptr<hier::Variable> >::Iterator
-            time_dep_var = d_time_dep_variables.listStart();
-         while (time_dep_var) {
+         std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =
+            d_time_dep_variables.begin();
+         while (time_dep_var != d_time_dep_variables.end()) {
             int old_indx =
-               variable_db->mapVariableAndContextToIndex(time_dep_var(),
+               variable_db->mapVariableAndContextToIndex(*time_dep_var,
                   d_old);
             int cur_indx =
-               variable_db->mapVariableAndContextToIndex(time_dep_var(),
+               variable_db->mapVariableAndContextToIndex(*time_dep_var,
                   d_current);
 
             patch->setPatchData(old_indx, patch->getPatchData(cur_indx));
@@ -1588,15 +1588,15 @@ HyperbolicLevelIntegrator::resetTimeDependentData(
    for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
-      tbox::List<boost::shared_ptr<hier::Variable> >::Iterator time_dep_var =
-          d_time_dep_variables.listStart();
-      while (time_dep_var) {
+      std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =
+          d_time_dep_variables.begin();
+      while (time_dep_var != d_time_dep_variables.end()) {
 
          int cur_indx =
-            variable_db->mapVariableAndContextToIndex(time_dep_var(),
+            variable_db->mapVariableAndContextToIndex(*time_dep_var,
                d_current);
          int new_indx =
-            variable_db->mapVariableAndContextToIndex(time_dep_var(),
+            variable_db->mapVariableAndContextToIndex(*time_dep_var,
                d_new);
 
          cur_time = patch->getPatchData(cur_indx)->getTime();
@@ -1604,7 +1604,7 @@ HyperbolicLevelIntegrator::resetTimeDependentData(
          if (can_be_refined && d_number_time_data_levels == 3) {
 
             int old_indx =
-               variable_db->mapVariableAndContextToIndex(time_dep_var(),
+               variable_db->mapVariableAndContextToIndex(*time_dep_var,
                   d_old);
 
             patch->setPatchData(old_indx, patch->getPatchData(cur_indx));
@@ -1616,7 +1616,7 @@ HyperbolicLevelIntegrator::resetTimeDependentData(
             if (d_number_time_data_levels == 3) {
 
                int old_indx =
-                  variable_db->mapVariableAndContextToIndex(time_dep_var(),
+                  variable_db->mapVariableAndContextToIndex(*time_dep_var,
                      d_old);
 
                patch->setPatchData(old_indx, patch->getPatchData(cur_indx));
@@ -1756,13 +1756,13 @@ HyperbolicLevelIntegrator::registerVariable(
 
    const hier::IntVector& zero_ghosts(hier::IntVector::getZero(dim));
 
-   d_all_variables.appendItem(var);
+   d_all_variables.push_back(var);
 
    switch (h_v_type) {
 
       case TIME_DEP: {
 
-         d_time_dep_variables.appendItem(var);
+         d_time_dep_variables.push_back(var);
 
          int cur_id = variable_db->registerVariableAndContext(var,
                d_current,
@@ -1996,7 +1996,7 @@ HyperbolicLevelIntegrator::registerVariable(
                              << "Flux is neither face- or side-centered." << std::endl);
          }
 
-         d_flux_variables.appendItem(var);
+         d_flux_variables.push_back(var);
 
          int scr_id = variable_db->registerVariableAndContext(var,
                d_scratch,
@@ -2031,7 +2031,7 @@ HyperbolicLevelIntegrator::registerVariable(
             d_flux_side_registered = true;
          }
 
-         d_fluxsum_variables.appendItem(fluxsum);
+         d_fluxsum_variables.push_back(fluxsum);
 
          int fs_id = variable_db->registerVariableAndContext(fluxsum,
                d_scratch,
@@ -2127,12 +2127,12 @@ HyperbolicLevelIntegrator::preprocessFluxData(
          for (hier::PatchLevel::Iterator p(level); p; p++) {
             const boost::shared_ptr<hier::Patch>& patch = *p;
 
-            tbox::List<boost::shared_ptr<hier::Variable> >::Iterator fs_var =
-               d_fluxsum_variables.listStart();
+            std::list<boost::shared_ptr<hier::Variable> >::iterator fs_var =
+               d_fluxsum_variables.begin();
 
-            while (fs_var) {
+            while (fs_var != d_fluxsum_variables.end()) {
                int fsum_id =
-                  variable_db->mapVariableAndContextToIndex(fs_var(),
+                  variable_db->mapVariableAndContextToIndex(*fs_var,
                      d_scratch);
 
                if (d_flux_is_face) {
@@ -2211,20 +2211,20 @@ HyperbolicLevelIntegrator::postprocessFluxData(
       for (hier::PatchLevel::Iterator p(level); p; p++) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
-         tbox::List<boost::shared_ptr<hier::Variable> >::Iterator flux_var =
-            d_flux_variables.listStart();
-         tbox::List<boost::shared_ptr<hier::Variable> >::Iterator fluxsum_var =
-            d_fluxsum_variables.listStart();
+         std::list<boost::shared_ptr<hier::Variable> >::iterator flux_var =
+            d_flux_variables.begin();
+         std::list<boost::shared_ptr<hier::Variable> >::iterator fluxsum_var =
+            d_fluxsum_variables.begin();
 
          const hier::Index& ilo = patch->getBox().lower();
          const hier::Index& ihi = patch->getBox().upper();
 
-         while (flux_var) {
+         while (flux_var != d_flux_variables.end()) {
 
             boost::shared_ptr<hier::PatchData> flux_data(
-               patch->getPatchData(flux_var(), d_scratch));
+               patch->getPatchData(*flux_var, d_scratch));
             boost::shared_ptr<hier::PatchData> fsum_data(
-               patch->getPatchData(fluxsum_var(), d_scratch));
+               patch->getPatchData(*fluxsum_var, d_scratch));
 
             boost::shared_ptr<pdat::FaceData<double> > fflux_data;
             boost::shared_ptr<pdat::OuterfaceData<double> > ffsum_data;
@@ -2403,13 +2403,13 @@ HyperbolicLevelIntegrator::copyTimeDependentData(
    for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
-      tbox::List<boost::shared_ptr<hier::Variable> >::Iterator time_dep_var =
-         d_time_dep_variables.listStart();
-      while (time_dep_var) {
+      std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =
+         d_time_dep_variables.begin();
+      while (time_dep_var != d_time_dep_variables.end()) {
          boost::shared_ptr<hier::PatchData> src_data(
-            patch->getPatchData(time_dep_var(), src_context));
+            patch->getPatchData(*time_dep_var, src_context));
          boost::shared_ptr<hier::PatchData> dst_data(
-            patch->getPatchData(time_dep_var(), dst_context));
+            patch->getPatchData(*time_dep_var, dst_context));
 
          dst_data->copy(*src_data);
          time_dep_var++;

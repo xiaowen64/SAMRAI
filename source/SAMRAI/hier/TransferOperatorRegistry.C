@@ -55,7 +55,7 @@ TransferOperatorRegistry::addCoarsenOperator(
                                     << "\nwith stencil width greater than current maximum\n"
                                     << "after call to getMaxTransferOpStencilWidth.\n");
    }
-   d_coarsen_operators.addItem(coarsen_op);
+   d_coarsen_operators.push_front(coarsen_op);
 }
 
 void
@@ -69,7 +69,7 @@ TransferOperatorRegistry::addRefineOperator(
                                    << "\nwith stencil width greater than current maximum\n"
                                    << "after call to getMaxTransferOpStencilWidth.\n");
    }
-   d_refine_operators.addItem(refine_op);
+   d_refine_operators.push_front(refine_op);
 }
 
 /*
@@ -97,13 +97,13 @@ TransferOperatorRegistry::lookupCoarsenOperator(
       found_op = true;
    } else {
 
-      tbox::List<boost::shared_ptr<CoarsenOperator> >::Iterator lop =
-         d_coarsen_operators.listStart();
+      std::list<boost::shared_ptr<CoarsenOperator> >::iterator lop =
+         d_coarsen_operators.begin();
 
-      while (!coarsen_op && lop) {
-         if (lop()->findCoarsenOperator(var, op_name)) {
+      while (!coarsen_op && lop != d_coarsen_operators.end()) {
+         if ((*lop)->findCoarsenOperator(var, op_name)) {
             found_op = true;
-            coarsen_op = lop();
+            coarsen_op = *lop;
          }
          lop++;
       }
@@ -133,13 +133,13 @@ TransferOperatorRegistry::lookupRefineOperator(
       found_op = true;
    } else {
 
-      tbox::List<boost::shared_ptr<RefineOperator> >::Iterator lop =
-         d_refine_operators.listStart();
+      std::list<boost::shared_ptr<RefineOperator> >::iterator lop =
+         d_refine_operators.begin();
 
-      while (!refine_op && lop) {
-         if (lop()->findRefineOperator(var, op_name)) {
+      while (!refine_op && lop != d_refine_operators.end()) {
+         if ((*lop)->findRefineOperator(var, op_name)) {
             found_op = true;
-            refine_op = lop();
+            refine_op = *lop;
          }
          lop++;
       }
@@ -168,13 +168,13 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
       found_op = true;
    } else {
 
-      tbox::List<boost::shared_ptr<TimeInterpolateOperator> >::Iterator lop =
-         d_time_operators.listStart();
+      std::list<boost::shared_ptr<TimeInterpolateOperator> >::iterator lop =
+         d_time_operators.begin();
 
-      while (!time_op && lop) {
-         if (lop()->findTimeInterpolateOperator(var, op_name)) {
+      while (!time_op && lop != d_time_operators.end()) {
+         if ((*lop)->findTimeInterpolateOperator(var, op_name)) {
             found_op = true;
-            time_op = lop();
+            time_op = *lop;
          }
          lop++;
       }
@@ -220,26 +220,26 @@ TransferOperatorRegistry::printClassData(
       << (TransferOperatorRegistry *)this << std::endl;
 
    os << "Coarsen operator list: " << std::endl;
-   tbox::List<boost::shared_ptr<CoarsenOperator> >::Iterator cop =
-      d_coarsen_operators.listStart();
-   while (cop) {
-      os << cop().get() << std::endl;
+   std::list<boost::shared_ptr<CoarsenOperator> >::const_iterator cop =
+      d_coarsen_operators.begin();
+   while (cop != d_coarsen_operators.end()) {
+      os << cop->get() << std::endl;
       cop++;
    }
 
    os << "Refine operator list: " << std::endl;
-   tbox::List<boost::shared_ptr<RefineOperator> >::Iterator rop =
-      d_refine_operators.listStart();
-   while (rop) {
-      os << rop().get() << std::endl;
+   std::list<boost::shared_ptr<RefineOperator> >::const_iterator rop =
+      d_refine_operators.begin();
+   while (rop != d_refine_operators.end()) {
+      os << rop->get() << std::endl;
       rop++;
    }
 
    os << "Time interpolate operator list: " << std::endl;
-   tbox::List<boost::shared_ptr<TimeInterpolateOperator> >::Iterator top =
-      d_time_operators.listStart();
-   while (top) {
-      os << top().get() << std::endl;
+   std::list<boost::shared_ptr<TimeInterpolateOperator> >::const_iterator top =
+      d_time_operators.begin();
+   while (top != d_time_operators.end()) {
+      os << top->get() << std::endl;
       top++;
    }
 }

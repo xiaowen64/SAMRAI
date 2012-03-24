@@ -155,7 +155,7 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
    if (grid_geometry->hasEnhancedConnectivity()) {
 
-      const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+      const std::list<hier::GridGeometry::Neighbor>& neighbors =
          grid_geometry->getNeighbors(patch_blk_id);
 
       hier::Connector::ConstNeighborhoodIterator ni =
@@ -175,12 +175,12 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
                hier::Transformation::NO_ROTATE;
             hier::IntVector offset(dim);
 
-            for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
-                 nbri(neighbors); nbri; nbri++) {
+            for (std::list<hier::GridGeometry::Neighbor>::const_iterator
+                 nbri = neighbors.begin(); nbri != neighbors.end(); nbri++) {
 
-               if (nbri().getBlockId() == encon_blk_id) {
-                  rotation = nbri().getRotationIdentifier();
-                  offset = nbri().getShift();
+               if (nbri->getBlockId() == encon_blk_id) {
+                  rotation = nbri->getRotationIdentifier();
+                  offset = nbri->getShift();
                   break;
                }
             }

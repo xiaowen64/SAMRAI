@@ -31,13 +31,16 @@ using namespace std;
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/mesh/StandardTagAndInitStrategy.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/Serializable.h"
+
+#include <list>
+
 #ifndef included_String
 #include <string>
 using namespace std;
 #define included_String
 #endif
+
 #include "SAMRAI/xfer/CoarsenAlgorithm.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
@@ -971,10 +974,10 @@ private:
    boost::shared_ptr<hier::VariableContext> d_old;
    boost::shared_ptr<hier::VariableContext> d_plot_context;
 
-   tbox::List<boost::shared_ptr<hier::Variable> > d_all_variables;
-   tbox::List<boost::shared_ptr<hier::Variable> > d_time_dep_variables;
-   tbox::List<boost::shared_ptr<hier::Variable> > d_flux_variables;
-   tbox::List<boost::shared_ptr<hier::Variable> > d_fluxsum_variables;
+   std::list<boost::shared_ptr<hier::Variable> > d_all_variables;
+   std::list<boost::shared_ptr<hier::Variable> > d_time_dep_variables;
+   std::list<boost::shared_ptr<hier::Variable> > d_flux_variables;
+   std::list<boost::shared_ptr<hier::Variable> > d_fluxsum_variables;
 
    /*
     * SCRATCH descriptor indices for (non-TEMPORARY) variables

@@ -19,7 +19,6 @@
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/algs/MethodOfLinesPatchStrategy.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
@@ -34,6 +33,7 @@
 #include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <string>
+#include <list>
 
 namespace SAMRAI {
 namespace algs {
@@ -424,8 +424,8 @@ private:
    boost::shared_ptr<hier::VariableContext> d_current;
    boost::shared_ptr<hier::VariableContext> d_scratch;
 
-   tbox::List<boost::shared_ptr<hier::Variable> > d_soln_variables;
-   tbox::List<boost::shared_ptr<hier::Variable> > d_rhs_variables;
+   std::list<boost::shared_ptr<hier::Variable> > d_soln_variables;
+   std::list<boost::shared_ptr<hier::Variable> > d_rhs_variables;
 
    /*
     * The component selectors for current and scratch are used by the

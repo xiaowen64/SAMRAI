@@ -14,12 +14,12 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Serializable.h"
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/DatabaseFactory.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
+#include <list>
 
 namespace SAMRAI {
 namespace tbox {
@@ -186,7 +186,7 @@ public:
    void
    clearRestartItems()
    {
-      d_restart_items_list.clearItems();
+      d_restart_items_list.clear();
    }
 
    /**
@@ -289,7 +289,7 @@ private:
    /*
     * list of objects registered to be written to the restart database
     */
-   List<RestartManager::RestartItem> d_restart_items_list;
+   std::list<RestartManager::RestartItem> d_restart_items_list;
 
    boost::shared_ptr<Database> d_database_root;
 

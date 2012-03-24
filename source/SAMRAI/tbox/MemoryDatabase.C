@@ -72,7 +72,7 @@ MemoryDatabase::create(
    const std::string& name)
 {
    d_database_name = name;
-   d_keyvalues.clearItems();
+   d_keyvalues.clear();
 
    return true;
 }
@@ -96,7 +96,7 @@ MemoryDatabase::open(
 
    }
    d_database_name = name;
-   d_keyvalues.clearItems();
+   d_keyvalues.clear();
 
    return true;
 }
@@ -113,7 +113,7 @@ bool
 MemoryDatabase::close()
 {
    d_database_name = "";
-   d_keyvalues.clearItems();
+   d_keyvalues.clear();
 
    return true;
 }
@@ -144,12 +144,13 @@ MemoryDatabase::keyExists(
 Array<std::string>
 MemoryDatabase::getAllKeys()
 {
-   const int n = d_keyvalues.getNumberOfItems();
+   const int n = static_cast<int>(d_keyvalues.size());
    Array<std::string> keys(n);
 
    int k = 0;
-   for (List<KeyData>::Iterator i(d_keyvalues); i; i++) {
-      keys[k++] = i().d_key;
+   for (std::list<KeyData>::iterator i = d_keyvalues.begin();
+         i != d_keyvalues.end(); i++) {
+      keys[k++] = i->d_key;
    }
 
    return keys;
@@ -223,7 +224,7 @@ MemoryDatabase::putDatabase(
    keydata.d_accessed = false;
    keydata.d_from_default = false;
    keydata.d_database.reset(new MemoryDatabase(key));
-   d_keyvalues.appendItem(keydata);
+   d_keyvalues.push_back(keydata);
    return keydata.d_database;
 }
 
@@ -290,7 +291,7 @@ MemoryDatabase::putBoolArray(
       keydata.d_boolean[i] = data[i];
    }
 
-   d_keyvalues.appendItem(keydata);
+   d_keyvalues.push_back(keydata);
 }
 
 bool
@@ -315,7 +316,7 @@ MemoryDatabase::getBoolWithDefault(
    if (keydata) return getBool(key);
 
    putBool(key, defaultvalue);
-   d_keyvalues.getLastItem().d_from_default = true;
+   d_keyvalues.back().d_from_default = true;
    return defaultvalue;
 }
 
@@ -403,7 +404,7 @@ MemoryDatabase::putDatabaseBoxArray(
       keydata.d_box[i] = data[i];
    }
 
-   d_keyvalues.appendItem(keydata);
+   d_keyvalues.push_back(keydata);
 }
 
 DatabaseBox
@@ -428,7 +429,7 @@ MemoryDatabase::getDatabaseBoxWithDefault(
    if (keydata) return getDatabaseBox(key);
 
    putDatabaseBox(key, defaultvalue);
-   d_keyvalues.getLastItem().d_from_default = true;
+   d_keyvalues.back().d_from_default = true;
    return defaultvalue;
 }
 
@@ -516,7 +517,7 @@ MemoryDatabase::putCharArray(
       keydata.d_char[i] = data[i];
    }
 
-   d_keyvalues.appendItem(keydata);
+   d_keyvalues.push_back(keydata);
 }
 
 char
@@ -541,7 +542,7 @@ MemoryDatabase::getCharWithDefault(
    if (keydata) return getChar(key);
 
    putChar(key, defaultvalue);
-   d_keyvalues.getLastItem().d_from_default = true;
+   d_keyvalues.back().d_from_default = true;
    return defaultvalue;
 }
 
@@ -634,7 +635,7 @@ MemoryDatabase::putComplexArray(
       keydata.d_complex[i] = data[i];
    }
 
-   d_keyvalues.appendItem(keydata);
+   d_keyvalues.push_back(keydata);
 }
 
 dcomplex
@@ -678,7 +679,7 @@ MemoryDatabase::getComplexWithDefault(
    if (keydata) return getComplex(key);
 
    putComplex(key, defaultvalue);
-   d_keyvalues.getLastItem().d_from_default = true;
+   d_keyvalues.back().d_from_default = true;
    return defaultvalue;
 }
 
@@ -795,7 +796,7 @@ MemoryDatabase::putDoubleArray(
       keydata.d_double[i] = data[i];
    }
 
-   d_keyvalues.appendItem(keydata);
+   d_keyvalues.push_back(keydata);
 }
 
 double
@@ -836,7 +837,7 @@ MemoryDatabase::getDoubleWithDefault(
    if (keydata) return getDouble(key);
 
    putDouble(key, defaultvalue);
-   d_keyvalues.getLastItem().d_from_default = true;
+   d_keyvalues.back().d_from_default = true;
    return defaultvalue;
 }
 
@@ -948,7 +949,7 @@ MemoryDatabase::putFloatArray(
       keydata.d_float[i] = data[i];
    }
 
-   d_keyvalues.appendItem(keydata);
+   d_keyvalues.push_back(keydata);
 }
 
 float
@@ -995,7 +996,7 @@ MemoryDatabase::getFloatWithDefault(
    if (keydata) return getFloat(key);
 
    putFloat(key, defaultvalue);
-   d_keyvalues.getLastItem().d_from_default = true;
+   d_keyvalues.back().d_from_default = true;
    return defaultvalue;
 }
 
@@ -1102,7 +1103,7 @@ MemoryDatabase::putIntegerArray(
       keydata.d_integer[i] = data[i];
    }
 
-   d_keyvalues.appendItem(keydata);
+   d_keyvalues.push_back(keydata);
 }
 
 int
@@ -1127,7 +1128,7 @@ MemoryDatabase::getIntegerWithDefault(
    if (keydata) return getInteger(key);
 
    putInteger(key, defaultvalue);
-   d_keyvalues.getLastItem().d_from_default = true;
+   d_keyvalues.back().d_from_default = true;
    return defaultvalue;
 }
 
@@ -1215,7 +1216,7 @@ MemoryDatabase::putStringArray(
       keydata.d_string[i] = data[i];
    }
 
-   d_keyvalues.appendItem(keydata);
+   d_keyvalues.push_back(keydata);
 }
 
 std::string
@@ -1240,7 +1241,7 @@ MemoryDatabase::getStringWithDefault(
    if (keydata) return getString(key);
 
    putString(key, defaultvalue);
-   d_keyvalues.getLastItem().d_from_default = true;
+   d_keyvalues.back().d_from_default = true;
    return defaultvalue;
 }
 
@@ -1302,9 +1303,10 @@ MemoryDatabase::getName() const
 bool MemoryDatabase::deleteKeyIfFound(
    const std::string& key)
 {
-   for (List<KeyData>::Iterator i(d_keyvalues); i; i++) {
-      if (i().d_key == key) {
-         d_keyvalues.removeItem(i);
+   for (std::list<KeyData>::iterator i = d_keyvalues.begin();
+        i != d_keyvalues.end(); i++) {
+      if (i->d_key == key) {
+         d_keyvalues.erase(i);
          return true;
       }
    }
@@ -1324,8 +1326,11 @@ MemoryDatabase::KeyData *
 MemoryDatabase::findKeyData(
    const std::string& key)
 {
-   for (List<KeyData>::Iterator i(d_keyvalues); i; i++) {
-      if (key == i().d_key) return &i();
+   for (std::list<KeyData>::iterator i = d_keyvalues.begin();
+        i != d_keyvalues.end(); i++) {
+      if (key == i->d_key) {
+         return &(*i);
+      }
    }
    return NULL;
 }
@@ -1344,8 +1349,11 @@ MemoryDatabase::KeyData *
 MemoryDatabase::findKeyDataOrExit(
    const std::string& key)
 {
-   for (List<KeyData>::Iterator i(d_keyvalues); i; i++) {
-      if (key == i().d_key) return &i();
+   for (std::list<KeyData>::iterator i = d_keyvalues.begin();
+        i != d_keyvalues.end(); i++) {
+      if (key == i->d_key) {
+         return &(*i);
+      }
    }
    MEMORY_DB_ERROR("Key ``" << key << "'' does not exist in the database...");
    return NULL;
@@ -1385,13 +1393,16 @@ MemoryDatabase::printDatabase(
     */
 
    long width = 0;
-   for (List<KeyData>::Iterator k(d_keyvalues); k; k++) {
-      if (((k().d_from_default) && (toprint & PRINT_DEFAULT))
-          || ((k().d_accessed) && (toprint & PRINT_INPUT))
-          || (!(k().d_accessed) && (toprint & PRINT_UNUSED))) {
-         if (k().d_type != Database::SAMRAI_DATABASE) {
-            const long keywidth = k().d_key.length();
-            if (keywidth > width) width = keywidth;
+   for (std::list<KeyData>::const_iterator k = d_keyvalues.begin();
+        k != d_keyvalues.end(); k++) {
+      if (((k->d_from_default) && (toprint & PRINT_DEFAULT))
+          || ((k->d_accessed) && (toprint & PRINT_INPUT))
+          || (!(k->d_accessed) && (toprint & PRINT_UNUSED))) {
+         if (k->d_type != Database::SAMRAI_DATABASE) {
+            const long keywidth = k->d_key.length();
+            if (keywidth > width) {
+               width = keywidth;
+            }
          }
       }
    }
@@ -1402,11 +1413,12 @@ MemoryDatabase::printDatabase(
 
    indentStream(os, indent);
    os << d_database_name << " {\n";
-   for (List<KeyData>::Iterator i(d_keyvalues); i; i++) {
+   for (std::list<KeyData>::const_iterator i = d_keyvalues.begin();
+        i != d_keyvalues.end(); i++) {
 
-      if (((i().d_from_default) && (toprint & PRINT_DEFAULT))
-          || ((i().d_accessed) && (toprint & PRINT_INPUT))
-          || (!(i().d_accessed) && (toprint & PRINT_UNUSED))) {
+      if (((i->d_from_default) && (toprint & PRINT_DEFAULT))
+          || ((i->d_accessed) && (toprint & PRINT_INPUT))
+          || (!(i->d_accessed) && (toprint & PRINT_UNUSED))) {
 
 #ifndef LACKS_SSTREAM
          std::ostringstream sstream;
@@ -1415,7 +1427,7 @@ MemoryDatabase::printDatabase(
          std::ostrstream sstream(sstream_buffer, SSTREAM_BUFFER);
 #endif
 
-         switch (i().d_type) {
+         switch (i->d_type) {
 
             case Database::SAMRAI_INVALID: {
                break;
@@ -1427,115 +1439,135 @@ MemoryDatabase::printDatabase(
 
             case Database::SAMRAI_BOOL: {
                indentStream(sstream, indent + 3);
-               sstream << i().d_key;
-               indentStream(sstream, width - i().d_key.length());
+               sstream << i->d_key;
+               indentStream(sstream, width - i->d_key.length());
                sstream << " = ";
-               const int n = i().d_boolean.getSize();
+               const int n = i->d_boolean.getSize();
                for (int j = 0; j < n; j++) {
-                  sstream << (i().d_boolean[j] ? "TRUE" : "FALSE");
-                  if (j < n - 1) sstream << ", ";
+                  sstream << (i->d_boolean[j] ? "TRUE" : "FALSE");
+                  if (j < n - 1) {
+                     sstream << ", ";
+                  }
                }
                break;
             }
 
             case Database::SAMRAI_BOX: {
                indentStream(sstream, indent + 3);
-               sstream << i().d_key;
-               indentStream(sstream, width - i().d_key.length());
+               sstream << i->d_key;
+               indentStream(sstream, width - i->d_key.length());
                sstream << " = ";
-               const int n = i().d_box.getSize();
+               const int n = i->d_box.getSize();
                for (int j = 0; j < n; j++) {
-                  const int m = i().d_box[j].getDim().getValue();
+                  const int m = i->d_box[j].getDim().getValue();
                   sstream << "[(";
                   for (int k = 0; k < m; k++) {
-                     sstream << i().d_box[j].lower(k);
-                     if (k < m - 1) sstream << ",";
+                     sstream << i->d_box[j].lower(k);
+                     if (k < m - 1) {
+                        sstream << ",";
+                     }
                   }
                   sstream << "),(";
                   for (int l = 0; l < m; l++) {
-                     sstream << i().d_box[j].upper(l);
-                     if (l < m - 1) sstream << ",";
+                     sstream << i->d_box[j].upper(l);
+                     if (l < m - 1) {
+                        sstream << ",";
+                     }
                   }
                   sstream << ")]";
-                  if (j < n - 1) sstream << ", ";
+                  if (j < n - 1) {
+                     sstream << ", ";
+                  }
                }
                break;
             }
 
             case Database::SAMRAI_CHAR: {
                indentStream(sstream, indent + 3);
-               sstream << i().d_key;
-               indentStream(sstream, width - i().d_key.length());
+               sstream << i->d_key;
+               indentStream(sstream, width - i->d_key.length());
                sstream << " = ";
-               const int n = i().d_char.getSize();
+               const int n = i->d_char.getSize();
                for (int j = 0; j < n; j++) {
-                  sstream << "'" << i().d_char[j] << "'";
-                  if (j < n - 1) sstream << ", ";
+                  sstream << "'" << i->d_char[j] << "'";
+                  if (j < n - 1) {
+                     sstream << ", ";
+                  }
                }
                break;
             }
 
             case Database::SAMRAI_COMPLEX: {
                indentStream(sstream, indent + 3);
-               sstream << i().d_key;
-               indentStream(sstream, width - i().d_key.length());
+               sstream << i->d_key;
+               indentStream(sstream, width - i->d_key.length());
                sstream << " = ";
-               const int n = i().d_complex.getSize();
+               const int n = i->d_complex.getSize();
                for (int j = 0; j < n; j++) {
-                  sstream << i().d_complex[j];
-                  if (j < n - 1) sstream << ", ";
+                  sstream << i->d_complex[j];
+                  if (j < n - 1) {
+                     sstream << ", ";
+                  }
                }
                break;
             }
 
             case Database::SAMRAI_DOUBLE: {
                indentStream(sstream, indent + 3);
-               sstream << i().d_key;
-               indentStream(sstream, width - i().d_key.length());
+               sstream << i->d_key;
+               indentStream(sstream, width - i->d_key.length());
                sstream << " = ";
-               const int n = i().d_double.getSize();
+               const int n = i->d_double.getSize();
                for (int j = 0; j < n; j++) {
-                  sstream << i().d_double[j];
-                  if (j < n - 1) sstream << ", ";
+                  sstream << i->d_double[j];
+                  if (j < n - 1) {
+                     sstream << ", ";
+                  }
                }
                break;
             }
 
             case Database::SAMRAI_FLOAT: {
                indentStream(sstream, indent + 3);
-               sstream << i().d_key;
-               indentStream(sstream, width - i().d_key.length());
+               sstream << i->d_key;
+               indentStream(sstream, width - i->d_key.length());
                sstream << " = ";
-               const int n = i().d_float.getSize();
+               const int n = i->d_float.getSize();
                for (int j = 0; j < n; j++) {
-                  sstream << i().d_float[j];
-                  if (j < n - 1) sstream << ", ";
+                  sstream << i->d_float[j];
+                  if (j < n - 1) {
+                     sstream << ", ";
+                  }
                }
                break;
             }
 
             case Database::SAMRAI_INT: {
                indentStream(sstream, indent + 3);
-               sstream << i().d_key;
-               indentStream(sstream, width - i().d_key.length());
+               sstream << i->d_key;
+               indentStream(sstream, width - i->d_key.length());
                sstream << " = ";
-               const int n = i().d_integer.getSize();
+               const int n = i->d_integer.getSize();
                for (int j = 0; j < n; j++) {
-                  sstream << i().d_integer[j];
-                  if (j < n - 1) sstream << ", ";
+                  sstream << i->d_integer[j];
+                  if (j < n - 1) {
+                     sstream << ", ";
+                  }
                }
                break;
             }
 
             case Database::SAMRAI_STRING: {
                indentStream(sstream, indent + 3);
-               sstream << i().d_key;
-               indentStream(sstream, width - i().d_key.length());
+               sstream << i->d_key;
+               indentStream(sstream, width - i->d_key.length());
                sstream << " = ";
-               const int n = i().d_string.getSize();
+               const int n = i->d_string.getSize();
                for (int j = 0; j < n; j++) {
-                  sstream << "\"" << i().d_string[j] << "\"";
-                  if (j < n - 1) sstream << ", ";
+                  sstream << "\"" << i->d_string[j] << "\"";
+                  if (j < n - 1) {
+                     sstream << ", ";
+                  }
                }
                break;
             }
@@ -1545,16 +1577,18 @@ MemoryDatabase::printDatabase(
           * Output whether the key was used or default in column 60
           */
 
-         if (i().d_type != Database::SAMRAI_DATABASE) {
+         if (i->d_type != Database::SAMRAI_DATABASE) {
 #ifndef LACKS_SSTREAM
             const long tab = 59 - sstream.str().length();
 #else
             const long tab = 59 - sstream.pcount();
 #endif
-            if (tab > 0) indentStream(sstream, tab);
-            if (i().d_from_default) {
+            if (tab > 0) {
+               indentStream(sstream, tab);
+            }
+            if (i->d_from_default) {
                sstream << " // from default";
-            } else if (i().d_accessed) {
+            } else if (i->d_accessed) {
                sstream << " // input used";
             } else {
                sstream << " // input not used";
@@ -1571,10 +1605,11 @@ MemoryDatabase::printDatabase(
     * Finally, output all databases in the current key list
     */
 
-   for (List<KeyData>::Iterator j(d_keyvalues); j; j++) {
-      if (j().d_type == Database::SAMRAI_DATABASE) {
+   for (std::list<KeyData>::const_iterator j = d_keyvalues.begin();
+        j != d_keyvalues.end(); j++) {
+      if (j->d_type == Database::SAMRAI_DATABASE) {
          boost::shared_ptr<MemoryDatabase> db(
-            j().d_database,
+            j->d_database,
             boost::detail::dynamic_cast_tag());
          db->printDatabase(os, indent + 3, toprint);
       }

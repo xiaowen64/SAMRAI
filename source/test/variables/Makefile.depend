@@ -77,7 +77,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -109,7 +108,6 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 

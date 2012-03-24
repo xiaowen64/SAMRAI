@@ -13,7 +13,6 @@
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 AutoTester::AutoTester(

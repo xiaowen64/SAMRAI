@@ -90,7 +90,7 @@ RefineClasses::insertEquivalenceClassItem(
 
       d_refine_classes_data_items[d_num_refine_items] = data;
 
-      d_equivalence_class_indices[eq_index].appendItem(d_num_refine_items);
+      d_equivalence_class_indices[eq_index].push_back(d_num_refine_items);
 
       d_num_refine_items++;
 
@@ -300,8 +300,7 @@ RefineClasses::classesMatch(
       while (items_match && eq_index < getNumberOfEquivalenceClasses()) {
 
          if (d_equivalence_class_indices[eq_index].size() !=
-             test_classes->
-             d_equivalence_class_indices[eq_index].size()) {
+             test_classes->d_equivalence_class_indices[eq_index].size()) {
 
             items_match = false;
 
@@ -395,13 +394,14 @@ RefineClasses::printClassData(
    for (int i = 0; i < d_equivalence_class_indices.size(); i++) {
       stream << "EQUIVALENCE CLASS # " << i << std::endl;
       int j = 0;
-      for (tbox::List<int>::Iterator
-           li(d_equivalence_class_indices[i]); li; li++) {
+      const std::list<int>& indices = d_equivalence_class_indices[i];
+      for (std::list<int>::const_iterator li(indices.begin());
+           li != indices.end(); li++) {
 
          stream << "Item # " << j << std::endl;
          stream << "-----------------------------\n";
 
-         printRefineItem(stream, d_refine_classes_data_items[li()]);
+         printRefineItem(stream, d_refine_classes_data_items[*li]);
 
          j++;
       }

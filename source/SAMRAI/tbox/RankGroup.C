@@ -9,7 +9,6 @@
  ************************************************************************/
 
 #include "SAMRAI/tbox/RankGroup.h"
-#include "SAMRAI/tbox/List.h"
 
 namespace SAMRAI {
 namespace tbox {

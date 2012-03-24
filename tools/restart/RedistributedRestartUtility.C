@@ -13,11 +13,11 @@
 #ifdef HAVE_HDF5
 
 #include "SAMRAI/hier/BoxLevel.h"
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #include <cassert>
+#include <list>
 
 #define NAME_BUF_SIZE (32)
 
@@ -472,7 +472,7 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
    tbox::Array<boost::shared_ptr<tbox::Database> >
    mapped_box_level_dbs_in(input_proc_nums.size());
 
-   tbox::List<int> local_indices_used;
+   std::list<int> local_indices_used;
    int max_index_used = 0;
 
    //Each iteration of this loop processes the patches from one input
@@ -499,43 +499,44 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
       //This list will contain all of the patch numbers that came from a
       //single processor.
       int mbs_size = local_indices.size();
-      tbox::List<int> input_local_patch_nums;
-      tbox::List<int> input_local_block_ids;
-      tbox::List<int> output_local_patch_nums;
-      tbox::List<int> output_local_block_ids;
+      std::list<int> input_local_patch_nums;
+      std::list<int> input_local_block_ids;
+      std::list<int> output_local_patch_nums;
+      std::list<int> output_local_block_ids;
       int max_local_indices = 0;
       int min_local_indices = tbox::MathUtilities<int>::getMax();
 
       for (int j = 0; j < mbs_size; j++) {
          bool new_patch_num = true;
-         for (tbox::List<int>::Iterator p(input_local_patch_nums); p; p++) {
-            if (p() == local_indices[j]) {
+         for (std::list<int>::iterator p(input_local_patch_nums.begin());
+              p != input_local_patch_nums.end(); p++) {
+            if (*p == local_indices[j]) {
                new_patch_num = false;
                break;
             }
          }
          if (new_patch_num) {
-            input_local_patch_nums.addItem(local_indices[j]);
-            input_local_block_ids.addItem(block_ids[j]);
+            input_local_patch_nums.push_front(local_indices[j]);
+            input_local_block_ids.push_front(block_ids[j]);
          }
       }
 
       if (out_size == 1) {
          bool recompute_local_patch_nums = false;
          if (local_indices_used.size() == 0) {
-            for (tbox::List<int>::Iterator ni(input_local_patch_nums); ni;
-                 ni++) {
-               local_indices_used.addItem(ni());
+            for (std::list<int>::iterator ni(input_local_patch_nums.begin());
+                ni != input_local_patch_nums.end(); ni++) {
+               local_indices_used.push_front(*ni);
                max_index_used =
-                  tbox::MathUtilities<int>::Max(max_index_used, ni());
+                  tbox::MathUtilities<int>::Max(max_index_used, *ni);
             }
          } else {
-            for (tbox::List<int>::Iterator ni(input_local_patch_nums); ni;
-                 ni++) {
+            for (std::list<int>::iterator ni(input_local_patch_nums.begin());
+                 ni != input_local_patch_nums.end(); ni++) {
                bool repeat_found = false;
-               for (tbox::List<int>::Iterator li(local_indices_used); li;
-                    li++) {
-                  if (ni() == li()) {
+               for (std::list<int>::iterator li(local_indices_used.begin());
+                    li != local_indices_used.end(); li++) {
+                  if (*ni == *li) {
                      repeat_found = true;
                      break;
                   }
@@ -544,16 +545,16 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
                   recompute_local_patch_nums = true;
                   int new_value = max_index_used + 1;
                   for (int a = 0; a < mbs_size; a++) {
-                     if (local_indices[a] == ni()) {
+                     if (local_indices[a] == *ni) {
                         local_indices[a] = new_value;
                      }
                   }
-                  local_indices_used.addItem(new_value);
+                  local_indices_used.push_front(new_value);
                   max_index_used = new_value;
                } else {
-                  local_indices_used.addItem(ni());
+                  local_indices_used.push_front(*ni);
                   max_index_used =
-                     tbox::MathUtilities<int>::Max(max_index_used, ni());
+                     tbox::MathUtilities<int>::Max(max_index_used, *ni);
                }
             }
          }
@@ -561,17 +562,17 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
          if (recompute_local_patch_nums) {
             for (int j = 0; j < mbs_size; j++) {
                bool new_patch_num = true;
-               for (tbox::List<int>::Iterator p(output_local_patch_nums);
-                    p;
+               for (std::list<int>::iterator p(output_local_patch_nums.begin());
+                    p != output_local_patch_nums.end();
                     p++) {
-                  if (p() == local_indices[j]) {
+                  if (*p == local_indices[j]) {
                      new_patch_num = false;
                      break;
                   }
                }
                if (new_patch_num) {
-                  output_local_patch_nums.addItem(local_indices[j]);
-                  output_local_block_ids.addItem(block_ids[j]);
+                  output_local_patch_nums.push_front(local_indices[j]);
+                  output_local_block_ids.push_front(block_ids[j]);
                }
             }
          } else {
@@ -607,13 +608,14 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
       //For every patch number, get the patch database from input,
       //create a database for output, and call routine to read and
       //write patch database data.
-      tbox::List<int>::Iterator olp(output_local_patch_nums);
-      tbox::List<int>::Iterator ilb(input_local_block_ids);
-      tbox::List<int>::Iterator olb(output_local_block_ids);
-      for (tbox::List<int>::Iterator ilp(input_local_patch_nums); ilp; ) {
+      std::list<int>::iterator olp(output_local_patch_nums.begin());
+      std::list<int>::iterator ilb(input_local_block_ids.begin());
+      std::list<int>::iterator olb(output_local_block_ids.begin());
+      for (std::list<int>::iterator ilp(input_local_patch_nums.begin());
+           ilp != input_local_patch_nums.end(); ) {
          int output_id = 0;
          for (int a = 1; a < out_size; a++) {
-            if (olp() > output_dist_cutoff[a]) {
+            if (*olp > output_dist_cutoff[a]) {
                output_id = a;
             }
          }
@@ -621,12 +623,12 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
          string in_patch_name;
          string out_patch_name;
          in_patch_name = "level_" + tbox::Utilities::levelToString(level_number)
-            + "-patch_" + tbox::Utilities::patchToString(ilp())
-            + "-block_" + tbox::Utilities::blockToString(ilb());
+            + "-patch_" + tbox::Utilities::patchToString(*ilp)
+            + "-block_" + tbox::Utilities::blockToString(*ilb);
          out_patch_name = "level_" + tbox::Utilities::levelToString(
                level_number)
-            + "-patch_" + tbox::Utilities::patchToString(olp())
-            + "-block_" + tbox::Utilities::blockToString(olb());
+            + "-patch_" + tbox::Utilities::patchToString(*olp)
+            + "-block_" + tbox::Utilities::blockToString(*olb);
 
          boost::shared_ptr<tbox::Database> patch_in_db =
             level_in_dbs[i]->getDatabase(in_patch_name);
@@ -739,7 +741,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    int out_vec_size = 0;
    tbox::Array<int> out_mbs_size(out_size, 0);
 
-   tbox::List<int> local_indices_used;
+   std::list<int> local_indices_used;
    int max_index_used = 0;
 
    //Each iteration of this loop processes the patches from one input
@@ -771,31 +773,35 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
       }
 
       if (out_size == 1) {
-         tbox::List<int> new_indices;
+         std::list<int> new_indices;
          for (int k = 0; k < mbs_size; k++) {
             bool is_new_index = true;
-            for (tbox::List<int>::Iterator ni(new_indices); ni; ni++) {
-               if (local_indices[k] == ni()) {
+            for (std::list<int>::iterator ni(new_indices.begin());
+                 ni != new_indices.end(); ni++) {
+               if (local_indices[k] == *ni) {
                   is_new_index = false;
                   break;
                }
             }
             if (is_new_index) {
-               new_indices.addItem(local_indices[k]);
+               new_indices.push_front(local_indices[k]);
             }
          }
          if (local_indices_used.size() == 0) {
-            for (tbox::List<int>::Iterator ni(new_indices); ni; ni++) {
-               local_indices_used.addItem(ni());
+            for (std::list<int>::iterator ni(new_indices.begin());
+                 ni != new_indices.end(); ni++) {
+               local_indices_used.push_front(*ni);
                max_index_used =
-                  tbox::MathUtilities<int>::Max(max_index_used, ni());
+                  tbox::MathUtilities<int>::Max(max_index_used, *ni);
             }
          } else {
-            for (tbox::List<int>::Iterator ni(new_indices); ni; ni++) {
+            for (std::list<int>::iterator ni(new_indices.begin());
+                 ni != new_indices.end(); ni++) {
                bool repeat_found = false;
-               for (tbox::List<int>::Iterator li(local_indices_used); li;
+               for (std::list<int>::iterator li(local_indices_used.begin());
+                    li != local_indices_used.end();
                     li++) {
-                  if (ni() == li()) {
+                  if (*ni == *li) {
                      repeat_found = true;
                      break;
                   }
@@ -803,16 +809,16 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
                if (repeat_found) {
                   int new_value = max_index_used + 1;
                   for (int a = 0; a < mbs_size; a++) {
-                     if (local_indices[a] == ni()) {
+                     if (local_indices[a] == *ni) {
                         local_indices[a] = new_value;
                      }
                   }
-                  local_indices_used.addItem(new_value);
+                  local_indices_used.push_front(new_value);
                   max_index_used = new_value;
                } else {
-                  local_indices_used.addItem(ni());
+                  local_indices_used.push_front(*ni);
                   max_index_used =
-                     tbox::MathUtilities<int>::Max(max_index_used, ni());
+                     tbox::MathUtilities<int>::Max(max_index_used, *ni);
                }
             }
          }

@@ -514,7 +514,7 @@ IndexData<TYPE, BOX_GEOMETRY>::unpackStream(
 /*
  *************************************************************************
  *
- * tbox::List manipulation stuff.
+ * List manipulation stuff.
  *
  *************************************************************************
  */

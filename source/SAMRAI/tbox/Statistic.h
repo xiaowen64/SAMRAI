@@ -16,9 +16,9 @@
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/List.h"
 
 #include <string>
+#include <list>
 
 namespace SAMRAI {
 namespace tbox {
@@ -232,7 +232,7 @@ public:
    };
 
    struct PatchStat {
-      List<Statistic::PatchStatRecord> patch_records; // stat record
+      std::list<Statistic::PatchStatRecord> patch_records; // stat record
    };
 
 protected:

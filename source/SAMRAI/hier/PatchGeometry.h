@@ -18,10 +18,10 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/LocalId.h"
 #include "SAMRAI/hier/PatchBoundaries.h"
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <iostream>
+#include <list>
 
 namespace SAMRAI {
 namespace hier {
@@ -333,8 +333,6 @@ private:
    PatchBoundaries d_patch_boundaries;
 
    TwoDimBool d_touches_regular_bdry;
-
-   tbox::List<IntVector> d_periodic_shifts;
 };
 
 }

@@ -4237,30 +4237,32 @@ TreeLoadBalancerOld::prebalanceBoxLevel(
     */
    int num_recvs = 0;
    if (rank_group.isMember(d_mpi.getRank())) {
-      tbox::List<int> recv_ranks;
+      std::list<int> recv_ranks;
       for (int i = 0; i < d_mpi.getSize(); i++) {
          if (!rank_group.isMember(i) &&
              rank_group.getMappedRank(i % output_nproc) == d_mpi.getRank()) {
-            recv_ranks.appendItem(i);
+            recv_ranks.push_back(i);
          }
       }
-      num_recvs = recv_ranks.size();
+      num_recvs = static_cast<int>(recv_ranks.size());
       if (num_recvs > 0) {
          box_recv = new tbox::AsyncCommPeer<int>[num_recvs];
          id_send = new tbox::AsyncCommPeer<int>[num_recvs];
          int recv_count = 0;
-         for (tbox::List<int>::Iterator ri(recv_ranks); ri; ri++) {
+         for (std::list<int>::const_iterator ri(recv_ranks.begin());
+              ri != recv_ranks.end(); ri++) {
+            const int rank = *ri;
             box_recv[recv_count].initialize(&comm_stage);
-            box_recv[recv_count].setPeerRank(ri());
+            box_recv[recv_count].setPeerRank(rank);
             box_recv[recv_count].setMPI(d_mpi);
-            box_recv[recv_count].setMPITag(TreeLoadBalancerOld_PREBALANCE0 + 2 * ri(),
-               TreeLoadBalancerOld_PREBALANCE1 + 2 * ri());
+            box_recv[recv_count].setMPITag(TreeLoadBalancerOld_PREBALANCE0 + 2 * rank,
+               TreeLoadBalancerOld_PREBALANCE1 + 2 * rank);
 
             id_send[recv_count].initialize(&comm_stage);
-            id_send[recv_count].setPeerRank(ri());
+            id_send[recv_count].setPeerRank(rank);
             id_send[recv_count].setMPI(d_mpi);
-            id_send[recv_count].setMPITag(TreeLoadBalancerOld_PREBALANCE0 + 2 * ri(),
-               TreeLoadBalancerOld_PREBALANCE1 + 2 * ri());
+            id_send[recv_count].setMPITag(TreeLoadBalancerOld_PREBALANCE0 + 2 * rank,
+               TreeLoadBalancerOld_PREBALANCE1 + 2 * rank);
 
             recv_count++;
          }

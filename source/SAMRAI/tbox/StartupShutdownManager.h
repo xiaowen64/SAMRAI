@@ -186,12 +186,11 @@ public:
     * static variables in template classes are only initialized if
     * used.  For template classes a slightly different mechanism using
     * a static in a method is used.  Similar to the Meyer singleton
-    * implementation.  \see{tbox::List} class as an example.  This
-    * method has the disadvantage of having to check on each object
-    * construction if the static has been created (it is done under
-    * the hood by the compiler but still exists).  At this time we are
-    * not aware of a method to invoke a block of code only once for a
-    * template class.
+    * implementation.  This method has the disadvantage of having to check
+    * on each object construction if the static has been created (it is
+    * done under the hood by the compiler but still exists).  At this
+    * time we are not aware of a method to invoke a block of code only
+    * once for a template class.
     *
     * TODO:  Should implemenation be moved out of the header?
     *

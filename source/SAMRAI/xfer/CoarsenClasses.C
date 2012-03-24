@@ -95,7 +95,7 @@ CoarsenClasses::insertEquivalenceClassItem(
 
       d_coarsen_classes_data_items[d_num_coarsen_items] = data;
 
-      d_equivalence_class_indices[eq_index].appendItem(d_num_coarsen_items);
+      d_equivalence_class_indices[eq_index].push_back(d_num_coarsen_items);
 
       d_num_coarsen_items++;
    }
@@ -300,13 +300,14 @@ CoarsenClasses::printClassData(
    for (int i = 0; i < (int)d_equivalence_class_indices.size(); i++) {
       stream << "EQUIVALENCE CLASS # " << i << std::endl;
       int j = 0;
-      for (tbox::List<int>::Iterator
-           li(d_equivalence_class_indices[i]); li; li++) {
+      const std::list<int>& indices = d_equivalence_class_indices[i];
+      for (std::list<int>::const_iterator li(indices.begin());
+           li != indices.end(); li++) {
 
          stream << "Item # " << j << std::endl;
          stream << "-----------------------------\n";
 
-         printCoarsenItem(stream, d_coarsen_classes_data_items[li()]);
+         printCoarsenItem(stream, d_coarsen_classes_data_items[*li]);
 
          j++;
       }

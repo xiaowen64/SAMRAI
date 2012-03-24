@@ -197,12 +197,12 @@ RestartManager::registerRestartItem(
     * Run through list to see if there is another object registered
     * with the specified name.
     */
-   List<RestartManager::RestartItem>::Iterator
-   iter(d_restart_items_list);
+   std::list<RestartManager::RestartItem>::iterator iter =
+      d_restart_items_list.begin();
 
    bool found_item = false;
-   for ( ; !found_item && iter; iter++) {
-      found_item = (iter().name == name);
+   for ( ; !found_item && iter != d_restart_items_list.end(); iter++) {
+      found_item = (iter->name == name);
    }
 
    /*
@@ -215,7 +215,7 @@ RestartManager::registerRestartItem(
       r_obj.name = name;
       r_obj.obj = obj;
 
-      d_restart_items_list.appendItem(r_obj);
+      d_restart_items_list.push_back(r_obj);
 
    } else {
       TBOX_ERROR("Register restart item error..."
@@ -237,14 +237,13 @@ RestartManager::unregisterRestartItem(
 {
    TBOX_ASSERT(!name.empty());
 
-   List<RestartManager::RestartItem>::Iterator
-   iter(d_restart_items_list);
+   std::list<RestartManager::RestartItem>::iterator iter =
+      d_restart_items_list.begin();
 
-   bool found_item = false;
-   for ( ; !found_item && iter; iter++) {
-      if (iter().name == name) {
-         d_restart_items_list.removeItem(iter);
-         found_item = true;
+   for ( ; iter != d_restart_items_list.end(); iter++) {
+      if (iter->name == name) {
+         d_restart_items_list.erase(iter);
+         break;
       }
    }
 }
@@ -308,11 +307,12 @@ RestartManager::writeRestartFile(
 {
    TBOX_ASSERT(database);
 
-   List<RestartManager::RestartItem>::Iterator i(d_restart_items_list);
-   for ( ; i; i++) {
+   std::list<RestartManager::RestartItem>::iterator i =
+      d_restart_items_list.begin();
+   for ( ; i != d_restart_items_list.end(); i++) {
       boost::shared_ptr<Database> obj_db(
-         database->putDatabase(i().name));
-      (i().obj)->putToDatabase(obj_db);
+         database->putDatabase(i->name));
+      (i->obj)->putToDatabase(obj_db);
    }
 }
 

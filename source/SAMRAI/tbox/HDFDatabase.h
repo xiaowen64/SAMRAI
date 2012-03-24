@@ -24,7 +24,6 @@
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
 #include "SAMRAI/tbox/Complex.h"
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/PIO.h"
 
 #ifdef RCSID
@@ -34,6 +33,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <string>
+#include <list>
 
 namespace SAMRAI {
 namespace tbox {
@@ -667,7 +667,7 @@ private:
    /*
     * List of (key,type) pairs assembled when searching for keys.
     */
-   List<KeyData> d_keydata;
+   std::list<KeyData> d_keydata;
 
    /*
     *************************************************************************

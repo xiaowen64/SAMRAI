@@ -1978,11 +1978,13 @@ Statistician::finalize(
                                           global_patch_stats[is][ip]));
 
                for (ipsl = 0; ipsl < stat->getStatSequenceLength(); ipsl++) {
-                  List<Statistic::PatchStatRecord>::Iterator ilr(
-                     stat->getPatchStatSeqArray()[ipsl].patch_records);
-                  for ( ; ilr; ilr++) {
-                     int patch_id = ilr().patch_id;
-                     sdata[ipsl][patch_id] = ilr().value;
+                  const std::list<Statistic::PatchStatRecord>& psrl =
+                     stat->getPatchStatSeqArray()[ipsl].patch_records;
+                  std::list<Statistic::PatchStatRecord>::const_iterator ilr =
+                     psrl.begin();
+                  for ( ; ilr != psrl.end(); ilr++) {
+                     int patch_id = ilr->patch_id;
+                     sdata[ipsl][patch_id] = ilr->value;
                      spmap[ipsl][patch_id] = ip;
                   }
 
@@ -2258,8 +2260,8 @@ Statistician::checkStatsForConsistency(
       for (is = 0; is < d_num_patch_stats; is++) {
          for (ip = 0; ip < d_patch_statistics[is]->getStatSequenceLength();
               ip++) {
-            total_patches[ipsl] = d_patch_statistics[is]->
-               getPatchStatSeqArray()[ip].patch_records.getNumberOfItems();
+            total_patches[ipsl] = static_cast<int>(
+               d_patch_statistics[is]->getPatchStatSeqArray()[ip].patch_records.size());
             ipsl++;
          }
       }

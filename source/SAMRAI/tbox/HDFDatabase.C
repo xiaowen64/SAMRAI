@@ -256,7 +256,7 @@ HDFDatabase::addKeyToList(
    key_item.d_key = name;
    key_item.d_type = type;
 
-   ((HDFDatabase *)database)->d_keydata.appendItem(key_item);
+   ((HDFDatabase *)database)->d_keydata.push_back(key_item);
 }
 
 /*
@@ -281,7 +281,7 @@ HDFDatabase::HDFDatabase(
 
    TBOX_ASSERT(!name.empty());
 
-   d_keydata.clearItems();
+   d_keydata.clear();
 }
 
 /*
@@ -305,7 +305,7 @@ HDFDatabase::HDFDatabase(
 
    TBOX_ASSERT(!name.empty());
 
-   d_keydata.clearItems();
+   d_keydata.clear();
 }
 
 /*
@@ -399,11 +399,12 @@ HDFDatabase::getAllKeys()
 {
    performKeySearch();
 
-   Array<std::string> tmp_keys(d_keydata.getNumberOfItems());
+   Array<std::string> tmp_keys(static_cast<int>(d_keydata.size()));
 
    int k = 0;
-   for (List<KeyData>::Iterator i(d_keydata); i; i++) {
-      tmp_keys[k] = i().d_key;
+   for (std::list<KeyData>::iterator i = d_keydata.begin();
+        i != d_keydata.end(); i++) {
+      tmp_keys[k] = i->d_key;
       k++;
    }
 
@@ -2192,7 +2193,7 @@ HDFDatabase::printClassData(
 
    performKeySearch();
 
-   if (d_keydata.getNumberOfItems() == 0) {
+   if (d_keydata.size() == 0) {
       os << "Database named `" << d_database_name
          << "' has zero keys..." << std::endl;
    } else {
@@ -2200,57 +2201,58 @@ HDFDatabase::printClassData(
          << d_database_name << "'..." << std::endl;
    }
 
-   for (List<KeyData>::Iterator i(d_keydata); i; i++) {
-      int t = i().d_type;
+   for (std::list<KeyData>::iterator i = d_keydata.begin();
+        i != d_keydata.end(); i++) {
+      int t = i->d_type;
       switch (MathUtilities<int>::Abs(t)) {
          case KEY_DATABASE: {
-            os << "   Data entry `" << i().d_key << "' is"
+            os << "   Data entry `" << i->d_key << "' is"
                << " a database" << std::endl;
             break;
          }
          case KEY_BOOL_ARRAY: {
-            os << "   Data entry `" << i().d_key << "' is" << " a boolean ";
+            os << "   Data entry `" << i->d_key << "' is" << " a boolean ";
             os << ((t < 0) ? "scalar" : "array") << std::endl;
             break;
          }
          case KEY_BOX_ARRAY: {
-            os << "   Data entry `" << i().d_key << "' is" << " a box ";
+            os << "   Data entry `" << i->d_key << "' is" << " a box ";
             os << ((t < 0) ? "scalar" : "array") << std::endl;
             break;
          }
          case KEY_CHAR_ARRAY: {
-            os << "   Data entry `" << i().d_key << "' is" << " a char ";
+            os << "   Data entry `" << i->d_key << "' is" << " a char ";
             os << ((t < 0) ? "scalar" : "array") << std::endl;
             break;
          }
          case KEY_COMPLEX_ARRAY: {
-            os << "   Data entry `" << i().d_key << "' is" << " a complex ";
+            os << "   Data entry `" << i->d_key << "' is" << " a complex ";
             os << ((t < 0) ? "scalar" : "array") << std::endl;
             break;
          }
          case KEY_DOUBLE_ARRAY: {
-            os << "   Data entry `" << i().d_key << "' is" << " a double ";
+            os << "   Data entry `" << i->d_key << "' is" << " a double ";
             os << ((t < 0) ? "scalar" : "array") << std::endl;
             break;
          }
          case KEY_FLOAT_ARRAY: {
-            os << "   Data entry `" << i().d_key << "' is" << " a float ";
+            os << "   Data entry `" << i->d_key << "' is" << " a float ";
             os << ((t < 0) ? "scalar" : "array") << std::endl;
             break;
          }
          case KEY_INT_ARRAY: {
-            os << "   Data entry `" << i().d_key << "' is" << " an integer ";
+            os << "   Data entry `" << i->d_key << "' is" << " an integer ";
             os << ((t < 0) ? "scalar" : "array") << std::endl;
             break;
          }
          case KEY_STRING_ARRAY: {
-            os << "   Data entry `" << i().d_key << "' is" << " a string ";
+            os << "   Data entry `" << i->d_key << "' is" << " a string ";
             os << ((t < 0) ? "scalar" : "array") << std::endl;
             break;
          }
          default: {
             TBOX_ERROR("HDFDatabase::printClassData error....\n"
-               << "   Unable to identify key = " << i().d_key
+               << "   Unable to identify key = " << i->d_key
                << " as a known group or dataset" << std::endl);
          }
       }
@@ -2458,7 +2460,7 @@ HDFDatabase::cleanupKeySearch()
    d_still_searching = 0;
    d_found_group = 0;
 
-   d_keydata.clearItems();
+   d_keydata.clear();
 }
 
 /*

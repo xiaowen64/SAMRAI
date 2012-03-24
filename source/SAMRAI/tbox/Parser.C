@@ -102,11 +102,11 @@ Parser::parse(
    pd.d_linenumber = 1;
    pd.d_cursor = 1;
    pd.d_nextcursor = 1;
-   d_parse_stack.clearItems();
-   d_parse_stack.addItem(pd);
+   d_parse_stack.clear();
+   d_parse_stack.push_front(pd);
 
-   d_scope_stack.clearItems();
-   d_scope_stack.addItem(database);
+   d_scope_stack.clear();
+   d_scope_stack.push_front(database);
 
    s_default_parser = this;
    yyrestart(NULL);
@@ -115,8 +115,8 @@ Parser::parse(
    }
    s_default_parser = NULL;
 
-   d_parse_stack.clearItems();
-   d_scope_stack.clearItems();
+   d_parse_stack.clear();
+   d_scope_stack.clear();
 
    return d_errors;
 }
@@ -133,7 +133,7 @@ void
 Parser::advanceLine(
    const int nline)
 {
-   Parser::ParseData& pd = d_parse_stack.getFirstItem();
+   Parser::ParseData& pd = d_parse_stack.front();
    pd.d_linenumber += nline;
    pd.d_cursor = 1;
    pd.d_nextcursor = 1;
@@ -152,7 +152,7 @@ void
 Parser::advanceCursor(
    const std::string& token)
 {
-   Parser::ParseData& pd = d_parse_stack.getFirstItem();
+   Parser::ParseData& pd = d_parse_stack.front();
    pd.d_cursor = pd.d_nextcursor;
    for (std::string::const_iterator i = token.begin(); i != token.end(); i++) {
       if (*i == '\t') {
@@ -175,7 +175,7 @@ void
 Parser::error(
    const std::string& message)
 {
-   Parser::ParseData& pd = d_parse_stack.getFirstItem();
+   Parser::ParseData& pd = d_parse_stack.front();
 
    pout << "Error in " << pd.d_filename << " at line " << pd.d_linenumber
         << " column " << pd.d_cursor
@@ -202,7 +202,7 @@ void
 Parser::warning(
    const std::string& message)
 {
-   Parser::ParseData& pd = d_parse_stack.getFirstItem();
+   Parser::ParseData& pd = d_parse_stack.front();
 
    pout << "Warning in " << pd.d_filename << " at line " << pd.d_linenumber
         << " column " << pd.d_cursor
@@ -230,10 +230,10 @@ boost::shared_ptr<Database>
 Parser::getDatabaseWithKey(
    const std::string& key)
 {
-   List<boost::shared_ptr<Database> >::Iterator i(d_scope_stack);
-   for ( ; i; i++) {
-      if (i()->keyExists(key)) {
-         return i();
+   std::list<boost::shared_ptr<Database> >::iterator i = d_scope_stack.begin();
+   for ( ; i != d_scope_stack.end(); i++) {
+      if ((*i)->keyExists(key)) {
+         return *i;
       }
    }
    return boost::shared_ptr<Database>();
@@ -285,7 +285,7 @@ Parser::pushIncludeFile(
       pd.d_linenumber = 1;
       pd.d_cursor = 1;
       pd.d_nextcursor = 1;
-      d_parse_stack.addItem(pd);
+      d_parse_stack.push_front(pd);
    }
 
    return worked ? true : false;
@@ -302,11 +302,11 @@ Parser::pushIncludeFile(
 void
 Parser::popIncludeFile()
 {
-   Parser::ParseData& pd = d_parse_stack.getFirstItem();
+   Parser::ParseData& pd = d_parse_stack.front();
    if (pd.d_fstream) {
       fclose(pd.d_fstream);
    }
-   d_parse_stack.removeFirstItem();
+   d_parse_stack.pop_front();
 }
 
 /*
@@ -330,7 +330,7 @@ Parser::yyinput(
       byte = static_cast<int>(fread(buffer,
                                  1,
                                  max_size,
-                                 d_parse_stack.getFirstItem().d_fstream));
+                                 d_parse_stack.front().d_fstream));
    }
    mpi.Bcast(&byte, 1, MPI_INT, 0);
    if (byte > 0) {

@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/make_shared.hpp>

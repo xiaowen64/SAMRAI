@@ -26,7 +26,8 @@
 namespace SAMRAI {
 namespace tbox {
 
-typedef List<boost::shared_ptr<Transaction> >::Iterator Iterator;
+typedef std::list<boost::shared_ptr<Transaction> >::iterator Iterator;
+typedef std::list<boost::shared_ptr<Transaction> >::const_iterator ConstIterator;
 
 const int Schedule::s_default_first_tag = 0;
 const int Schedule::s_default_second_tag = 1;
@@ -94,12 +95,12 @@ Schedule::addTransaction(
    const int dst_id = transaction->getDestinationProcessor();
 
    if ((d_mpi.getRank() == src_id) && (d_mpi.getRank() == dst_id)) {
-      d_local_set.addItem(transaction);
+      d_local_set.push_front(transaction);
    } else {
       if (d_mpi.getRank() == dst_id) {
-         d_recv_sets[src_id].addItem(transaction);
+         d_recv_sets[src_id].push_front(transaction);
       } else if (d_mpi.getRank() == src_id) {
-         d_send_sets[dst_id].addItem(transaction);
+         d_send_sets[dst_id].push_front(transaction);
       }
    }
 }
@@ -119,12 +120,12 @@ Schedule::appendTransaction(
    const int dst_id = transaction->getDestinationProcessor();
 
    if ((d_mpi.getRank() == src_id) && (d_mpi.getRank() == dst_id)) {
-      d_local_set.appendItem(transaction);
+      d_local_set.push_back(transaction);
    } else {
       if (d_mpi.getRank() == dst_id) {
-         d_recv_sets[src_id].appendItem(transaction);
+         d_recv_sets[src_id].push_back(transaction);
       } else if (d_mpi.getRank() == src_id) {
-         d_send_sets[dst_id].appendItem(transaction);
+         d_send_sets[dst_id].push_back(transaction);
       }
    }
 }
@@ -141,7 +142,7 @@ Schedule::getNumSendTransactions(
    int size = 0;
    TransactionSets::const_iterator mi = d_send_sets.find(rank);
    if (mi != d_send_sets.end()) {
-      size = mi->second.size();
+      size = static_cast<int>(mi->second.size());
    }
    return size;
 }
@@ -158,7 +159,7 @@ Schedule::getNumRecvTransactions(
    int size = 0;
    TransactionSets::const_iterator mi = d_recv_sets.find(rank);
    if (mi != d_recv_sets.end()) {
-      size = mi->second.size();
+      size = static_cast<int>(mi->second.size());
    }
    return size;
 }
@@ -261,16 +262,18 @@ Schedule::postReceives()
       TBOX_ASSERT(mi->first == recv_coms[icom].getPeerRank());
 
       // Compute incoming message size, if possible.
-      const List<boost::shared_ptr<Transaction> >& transactions = mi->second;
+      const std::list<boost::shared_ptr<Transaction> >& transactions =
+         mi->second;
       unsigned int byte_count = 0;
       bool can_estimate_incoming_message_size = true;
-      for (Iterator r(transactions); r; r++) {
-         if (!r()->canEstimateIncomingMessageSize()) {
+      for (ConstIterator r = transactions.begin();
+           r != transactions.end(); r++) {
+         if (!(*r)->canEstimateIncomingMessageSize()) {
             can_estimate_incoming_message_size = false;
             break;
          }
          byte_count +=
-            static_cast<unsigned int>(r()->computeIncomingMessageSize());
+            static_cast<unsigned int>((*r)->computeIncomingMessageSize());
       }
 
       // Set AsyncCommPeer to receive known message length.
@@ -336,21 +339,24 @@ Schedule::postSends()
       TBOX_ASSERT(mi->first == send_coms[icom].getPeerRank());
 
       // Compute message size and whether receiver can estimate it.
-      const List<boost::shared_ptr<Transaction> >& transactions = mi->second;
+      const std::list<boost::shared_ptr<Transaction> >& transactions =
+         mi->second;
       size_t byte_count = 0;
       bool can_estimate_incoming_message_size = true;
-      for (Iterator pack(transactions); pack; pack++) {
-         if (!pack()->canEstimateIncomingMessageSize()) {
+      for (ConstIterator pack = transactions.begin();
+           pack != transactions.end(); pack++) {
+         if (!(*pack)->canEstimateIncomingMessageSize()) {
             can_estimate_incoming_message_size = false;
          }
-         byte_count += pack()->computeOutgoingMessageSize();
+         byte_count += (*pack)->computeOutgoingMessageSize();
       }
 
       // Pack outgoing data into a message.
       MessageStream outgoing_stream(byte_count, MessageStream::Write);
       d_object_timers->t_pack_stream->start();
-      for (Iterator pack(transactions); pack; pack++) {
-         pack()->packStream(outgoing_stream);
+      for (ConstIterator pack = transactions.begin();
+           pack != transactions.end(); pack++) {
+         (*pack)->packStream(outgoing_stream);
       }
       d_object_timers->t_pack_stream->stop();
 
@@ -380,8 +386,9 @@ void
 Schedule::performLocalCopies()
 {
    d_object_timers->t_local_copies->start();
-   for (Iterator local(d_local_set); local; local++) {
-      local()->copyLocalData();
+   for (Iterator local = d_local_set.begin();
+        local != d_local_set.end(); local++) {
+      (*local)->copyLocalData();
    }
    d_object_timers->t_local_copies->stop();
 }
@@ -421,8 +428,9 @@ Schedule::processCompletedCommunications()
          completed_comm->clearRecvData();
 
          d_object_timers->t_unpack_stream->start();
-         for (Iterator recv(d_recv_sets[sender]); recv; recv++) {
-            recv()->unpackStream(incoming_stream);
+         for (Iterator recv = d_recv_sets[sender].begin();
+              recv != d_recv_sets[sender].end(); recv++) {
+            (*recv)->unpackStream(incoming_stream);
          }
          d_object_timers->t_unpack_stream->stop();
       } else {
@@ -485,25 +493,28 @@ Schedule::printClassData(
 
    for (TransactionSets::const_iterator ss = d_send_sets.begin();
         ss != d_send_sets.end(); ++ss) {
-      const List<boost::shared_ptr<Transaction> >& send_set = ss->second;
+      const std::list<boost::shared_ptr<Transaction> >& send_set = ss->second;
       stream << "Send Set: " << ss->first << std::endl;
-      for (Iterator send(send_set); send; send++) {
-         send()->printClassData(stream);
+      for (ConstIterator send = send_set.begin();
+           send != send_set.end(); send++) {
+         (*send)->printClassData(stream);
       }
    }
 
    for (TransactionSets::const_iterator rs = d_recv_sets.begin();
         rs != d_recv_sets.end(); ++rs) {
-      const List<boost::shared_ptr<Transaction> >& recv_set = rs->second;
+      const std::list<boost::shared_ptr<Transaction> >& recv_set = rs->second;
       stream << "Recv Set: " << rs->first << std::endl;
-      for (Iterator recv(recv_set); recv; recv++) {
-         recv()->printClassData(stream);
+      for (ConstIterator recv = recv_set.begin();
+           recv != recv_set.end(); recv++) {
+         (*recv)->printClassData(stream);
       }
    }
 
    stream << "Local Set" << std::endl;
-   for (Iterator local(d_local_set); local; local++) {
-      local()->printClassData(stream);
+   for (ConstIterator local = d_local_set.begin();
+        local != d_local_set.end(); local++) {
+      (*local)->printClassData(stream);
    }
 }
 

@@ -352,7 +352,7 @@ BoxUtilities::chopBoxes(
 
       BoxContainer tmp_boxes;
 
-      tbox::Array<tbox::List<int> > cut_points(dim.getValue());
+      tbox::Array<std::list<int> > cut_points(dim.getValue());
       bool chop_box = findBestCutPointsGivenMax(cut_points,
             box,
             max_size,
@@ -365,7 +365,7 @@ BoxUtilities::chopBoxes(
 
          for (int id = 0; id < dim.getValue(); id++) {
 
-            if (cut_points[id].getNumberOfItems() > 0) {
+            if (!cut_points[id].empty()) {
 
                tbox::Array<bool> bad_cut_points;
 
@@ -415,7 +415,7 @@ void
 BoxUtilities::chopBox(
    BoxContainer& boxes,
    const Box& box,
-   const tbox::Array<tbox::List<int> > cut_points)
+   const tbox::Array<std::list<int> > cut_points)
 {
    const tbox::Dimension& dim(box.getDim());
 
@@ -438,18 +438,19 @@ BoxUtilities::chopBox(
 
             TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, chop_box);
 
-            if (cut_points[id].getNumberOfItems() > 0) {
+            if (!cut_points[id].empty()) {
 
                Index ilo = chop_box.lower();
                Index ihi = chop_box.upper();
                Index boxhi = chop_box.upper();
 
-               tbox::List<int>::Iterator cut = cut_points[id].listStart();
+               const std::list<int>& cut_points_list = cut_points[id];
+               std::list<int>::const_iterator cut = cut_points_list.begin();
 #ifdef DEBUG_CHECK_ASSERTIONS
                int last_cut = tbox::MathUtilities<int>::getMin();
 #endif
-               while (cut) {
-                  int cut_val = cut();
+               while (cut != cut_points_list.end()) {
+                  int cut_val = *cut;
 #ifdef DEBUG_CHECK_ASSERTIONS
                   TBOX_ASSERT(last_cut <= cut_val);
                   last_cut = cut_val;
@@ -832,7 +833,7 @@ BoxUtilities::growBoxWithinDomain(
 
 bool
 BoxUtilities::findBestCutPointsGivenMax(
-   tbox::Array<tbox::List<int> >& cut_points,
+   tbox::Array<std::list<int> >& cut_points,
    const Box& box,
    const IntVector& max_size,
    const IntVector& min_size,
@@ -888,7 +889,7 @@ BoxUtilities::findBestCutPointsGivenMax(
 bool
 BoxUtilities::findBestCutPointsForDirectionGivenMax(
    const int idir,
-   tbox::List<int>& cut_points,
+   std::list<int>& cut_points,
    const Box& box,
    const int max_size,
    const int min_size,
@@ -899,7 +900,7 @@ BoxUtilities::findBestCutPointsForDirectionGivenMax(
    TBOX_ASSERT(max_size >= min_size);
    TBOX_ASSERT(cut_factor > 0);
 
-   cut_points.clearItems();
+   cut_points.clear();
 
    bool chop_ok = (((box.numberCells(idir) % cut_factor)
                     || (box.numberCells(idir) <= max_size)
@@ -956,7 +957,7 @@ BoxUtilities::findBestCutPointsForDirectionGivenMax(
             int width = ((wide_count < num_wide_boxes)
                          ? max_width : min_width);
             mark += width;
-            cut_points.appendItem(mark);
+            cut_points.push_back(mark);
             wide_count++;
          }
 
@@ -989,7 +990,7 @@ BoxUtilities::findBestCutPointsForDirectionGivenMax(
 
 bool
 BoxUtilities::findBestCutPointsGivenNumber(
-   tbox::Array<tbox::List<int> >& cut_points,
+   tbox::Array<std::list<int> >& cut_points,
    const Box& box,
    const IntVector& number_boxes,
    const IntVector& min_size,
@@ -1010,7 +1011,7 @@ BoxUtilities::findBestCutPointsGivenNumber(
 
    tbox::Array<bool> chop_dir(dim.getValue());
    for (id = 0; id < dim.getValue(); id++) {
-      cut_points[id].clearItems();
+      cut_points[id].clear();
       chop_dir[id] = (((number_boxes(id) <= 1)
                        || (box.numberCells(id) % cut_factor(id))
                        || (box.numberCells(id) < 2 * min_size(id))
@@ -1064,7 +1065,7 @@ BoxUtilities::findBestCutPointsGivenNumber(
 bool
 BoxUtilities::findBestCutPointsForDirectionGivenNumber(
    const int idir,
-   tbox::List<int>& cut_points,
+   std::list<int>& cut_points,
    const Box& box,
    const int num_boxes,
    const int min_size,
@@ -1074,7 +1075,7 @@ BoxUtilities::findBestCutPointsForDirectionGivenNumber(
    TBOX_ASSERT(num_boxes > 0);
    TBOX_ASSERT(cut_factor > 0);
 
-   cut_points.clearItems();
+   cut_points.clear();
 
    bool chop_ok = (((num_boxes <= 1)
                     || (box.numberCells(idir) % cut_factor)
@@ -1117,7 +1118,7 @@ BoxUtilities::findBestCutPointsForDirectionGivenNumber(
             int width = ((wide_count < num_wide_boxes)
                          ? max_width : min_width);
             mark += width;
-            cut_points.appendItem(mark);
+            cut_points.push_back(mark);
             wide_count++;
          }
 
@@ -1453,7 +1454,7 @@ BoxUtilities::findBadCutPointsForDirection(
 
 void
 BoxUtilities::fixBadCutPoints(
-   tbox::Array<tbox::List<int> >& cuts,
+   tbox::Array<std::list<int> >& cuts,
    const tbox::Array<tbox::Array<bool> >& bad_cuts,
    const Box& box,
    const IntVector& min_size,
@@ -1506,22 +1507,24 @@ BoxUtilities::fixBadCutPoints(
 void
 BoxUtilities::fixBadCutPointsForDirection(
    const int id,
-   tbox::List<int>& cuts,
+   std::list<int>& cuts,
    const tbox::Array<bool>& bad_cuts,
    const Box& box,
    const int min_in,
    const int fact)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   tbox::List<int>::Iterator cut = cuts.listStart();
+   std::list<int>::iterator cut = cuts.begin();
    TBOX_ASSERT(bad_cuts.getSize() == box.numberCells(id));
    bool cuts_strictly_increase = true;
-   if (cut) {
-      int prev = cut();
+   if (cut != cuts.end()) {
+      int prev = *cut;
       cut++;
-      while (cut && cuts_strictly_increase) {
-         if (cut() <= prev) cuts_strictly_increase = false;
-         prev = cut();
+      while (cut != cuts.end() && cuts_strictly_increase) {
+         if (*cut <= prev) {
+            cuts_strictly_increase = false;
+         }
+         prev = *cut;
          cut++;
       }
    }
@@ -1530,9 +1533,11 @@ BoxUtilities::fixBadCutPointsForDirection(
    TBOX_ASSERT(min_in > 0);
    TBOX_ASSERT(fact > 0);
    bool cuts_satisfy_factor = true;
-   cut = cuts.listStart();
-   while (cut && cuts_satisfy_factor) {
-      if (((cut() - box.lower(id)) % fact) != 0) cuts_satisfy_factor = false;
+   cut = cuts.begin();
+   while (cut != cuts.end() && cuts_satisfy_factor) {
+      if ((((*cut) - box.lower(id)) % fact) != 0) {
+         cuts_satisfy_factor = false;
+      }
       cut++;
    }
    TBOX_ASSERT(cuts_satisfy_factor);
@@ -1545,45 +1550,51 @@ BoxUtilities::fixBadCutPointsForDirection(
    bool bad_point_exists = false;
    const int ncells = box.numberCells(id);
    for (int ic = 0; ic < ncells; ic++) {
-      if (bad_cuts[ic]) bad_point_exists = true;
+      if (bad_cuts[ic]) {
+         bad_point_exists = true;
+      }
    }
 
    if (bad_point_exists) {
 
-      tbox::List<int>::Iterator cutlo = cuts.listStart();
+      std::list<int>::iterator cutlo = cuts.begin();
 
-      if (cutlo) {
+      if (cutlo != cuts.end()) {
 
          int min = min_in;
 
-         if (min % fact) min = (min / fact + 1) * fact;
+         if (min % fact) {
+            min = (min / fact + 1) * fact;
+         }
 
          const int offset = box.lower(id);
          const int ilo = box.lower(id);
          const int ihi = box.upper(id) + 1;
 
-         tbox::List<int>::Iterator cuthi = cuts.listEnd();
+         int foo = 0;
+         std::list<int>::iterator cuthi = cuts.insert(cuts.end(), foo);
+         cuthi--;
+         cuts.pop_back();
 
-         while (cutlo && cuthi && (cutlo() <= cuthi())) {
+         while (cutlo != cuts.end() && cuthi != cuts.end() &&
+                (*cutlo <= *cuthi)) {
 
             int bad_cut_val, below, above, try_cut;
-            tbox::List<int>::Iterator tmplo;
-            tbox::List<int>::Iterator tmphi;
 
             if (cutlo == cuthi) {
 
-               if (bad_cuts[cutlo() - offset]) {
+               if (bad_cuts[*cutlo - offset]) {
 
                   bool found_good_cut = false;
 
-                  bad_cut_val = cutlo();
-                  tmplo = cutlo;
-                  tmphi = cutlo;
+                  bad_cut_val = *cutlo;
+                  std::list<int>::iterator tmplo = cutlo;
+                  std::list<int>::iterator tmphi = cutlo;
                   tmplo--;
                   tmphi++;
-                  cuts.removeItem(cutlo);
+                  cuts.erase(cutlo);
 
-                  below = (tmplo ? tmplo() : ilo);
+                  below = (tmplo != cuts.end() ? *tmplo : ilo);
 
                   try_cut = bad_cut_val - fact;
                   while ((try_cut >= (below + min))
@@ -1593,13 +1604,15 @@ BoxUtilities::fixBadCutPointsForDirection(
 
                   if (try_cut >= (below + min)) {
                      found_good_cut = true;
-                     if (tmplo) {
-                        cuts.addItemAfter(tmplo, try_cut);
+                     if (tmplo != cuts.end()) {
+                        std::list<int>::iterator tmp = tmplo;
+                        tmp++;
+                        cuts.insert(tmp, try_cut);
                         cutlo = tmplo;
                         cutlo++;
                      } else {
-                        cuts.addItem(try_cut);
-                        cutlo = cuts.listStart();
+                        cuts.push_front(try_cut);
+                        cutlo = cuts.begin();
                      }
                      cutlo++;
                   } else {
@@ -1607,7 +1620,7 @@ BoxUtilities::fixBadCutPointsForDirection(
                   }
 
                   if (!found_good_cut) {
-                     above = (tmphi ? tmphi() : ihi);
+                     above = (tmphi != cuts.end() ? *tmphi : ihi);
 
                      try_cut = bad_cut_val + fact;
                      while ((try_cut <= (above - min))
@@ -1616,13 +1629,12 @@ BoxUtilities::fixBadCutPointsForDirection(
                      }
 
                      if (try_cut <= (above - min)) {
-                        if (tmphi) {
-                           cuts.addItemBefore(tmphi, try_cut);
+                        if (tmphi != cuts.end()) {
+                           cuts.insert(tmphi, try_cut);
                            cuthi = tmphi;
                            cuthi--;
                         } else {
-                           cuts.appendItem(try_cut);
-                           cuthi = cuts.listEnd();
+                           cuthi = cuts.insert(cuts.end(), try_cut);
                         }
                         cuthi--;
                      } else {
@@ -1637,14 +1649,14 @@ BoxUtilities::fixBadCutPointsForDirection(
 
             } else {
 
-               if (bad_cuts[cutlo() - offset]) {
+               if (bad_cuts[*cutlo - offset]) {
 
-                  bad_cut_val = cutlo();
-                  tmplo = cutlo;
+                  bad_cut_val = *cutlo;
+                  std::list<int>::iterator tmplo = cutlo;
                   tmplo--;
-                  cuts.removeItem(cutlo);
+                  cuts.erase(cutlo);
 
-                  below = (tmplo ? tmplo() : ilo);
+                  below = (tmplo != cuts.end() ? *tmplo : ilo);
 
                   try_cut = bad_cut_val - fact;
                   while ((try_cut >= (below + min))
@@ -1653,21 +1665,23 @@ BoxUtilities::fixBadCutPointsForDirection(
                   }
 
                   if (try_cut >= (below + min)) {
-                     if (tmplo) {
-                        cuts.addItemAfter(tmplo, try_cut);
+                     if (tmplo != cuts.end()) {
+                        std::list<int>::iterator tmp = tmplo;
+                        tmp++;
+                        cuts.insert(tmplo, try_cut);
                         cutlo = tmplo;
                         cutlo++;
                      } else {
-                        cuts.addItem(try_cut);
-                        cutlo = cuts.listStart();
+                        cuts.push_front(try_cut);
+                        cutlo = cuts.begin();
                      }
                      cutlo++;
                   } else {
-                     if (tmplo) {
+                     if (tmplo != cuts.end()) {
                         cutlo = tmplo;
                         cutlo++;
                      } else {
-                        cutlo = cuts.listStart();
+                        cutlo = cuts.begin();
                      }
                   }
 
@@ -1675,14 +1689,14 @@ BoxUtilities::fixBadCutPointsForDirection(
                   cutlo++;
                }
 
-               if (bad_cuts[cuthi() - offset]) {
+               if (bad_cuts[*cuthi - offset]) {
 
-                  bad_cut_val = cuthi();
-                  tmphi = cuthi;
+                  bad_cut_val = *cuthi;
+                  std::list<int>::iterator tmphi = cuthi;
                   tmphi++;
-                  cuts.removeItem(cuthi);
+                  cuts.erase(cuthi);
 
-                  above = (tmphi ? tmphi() : ihi);
+                  above = (tmphi != cuts.end() ? *tmphi : ihi);
 
                   try_cut = bad_cut_val + fact;
                   while ((try_cut <= (above - min))
@@ -1691,21 +1705,22 @@ BoxUtilities::fixBadCutPointsForDirection(
                   }
 
                   if (try_cut <= (above - min)) {
-                     if (tmphi) {
-                        cuts.addItemBefore(tmphi, try_cut);
+                     if (tmphi != cuts.end()) {
+                        cuts.insert(tmphi, try_cut);
                         cuthi = tmphi;
                         cuthi--;
                      } else {
-                        cuts.appendItem(try_cut);
-                        cuthi = cuts.listEnd();
+                        cuthi = cuts.insert(cuts.end(), try_cut);
                      }
                      cuthi--;
                   } else {
-                     if (tmphi) {
+                     if (tmphi != cuts.end()) {
                         cuthi = tmphi;
                         cuthi--;
                      } else {
-                        cuthi = cuts.listEnd();
+                        cuthi = cuts.insert(cuts.end(), foo);
+                        cuthi--;
+                        cuts.pop_back();
                      }
                   }
 

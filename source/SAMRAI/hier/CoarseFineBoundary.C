@@ -300,10 +300,12 @@ CoarseFineBoundary::computeFromLevel(
 
          BoxContainer pseudo_domain(phys_domain);
          pseudo_domain.unorder();
-         for (tbox::List<GridGeometry::Neighbor>::Iterator
-              ni(grid_geometry->getNeighbors(block_id)); ni; ni++) {
+         const std::list<GridGeometry::Neighbor>& nbr_list =
+            grid_geometry->getNeighbors(block_id);
+         for (std::list<GridGeometry::Neighbor>::const_iterator ni = nbr_list.begin();
+              ni != nbr_list.end(); ni++) {
 
-            BoxContainer neighbor_domain(ni().getTransformedDomain());
+            BoxContainer neighbor_domain(ni->getTransformedDomain());
             neighbor_domain.refine(ratio);
 
             pseudo_domain.spliceFront(neighbor_domain);
@@ -339,13 +341,13 @@ CoarseFineBoundary::computeFromLevel(
           * boundaries from being identified as coarse-fine boundaries when
           * they are not.
           */
-         for (tbox::List<GridGeometry::Neighbor>::Iterator
-              ni(grid_geometry->getNeighbors(block_id)); ni; ni++) {
+         for (std::list<GridGeometry::Neighbor>::const_iterator ni = nbr_list.begin();
+              ni != nbr_list.end(); ni++) {
 
             /*
              * Construct the array of boxes on level in this neighbor's block.
              */
-            BlockId nbr_block_id(ni().getBlockId());
+            BlockId nbr_block_id(ni->getBlockId());
             BoxContainer neighbor_boxes(all_boxes_on_level, nbr_block_id);
 
             if (neighbor_boxes.size()) {

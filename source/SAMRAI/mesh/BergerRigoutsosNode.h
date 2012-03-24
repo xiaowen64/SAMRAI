@@ -917,7 +917,6 @@ public:
 
    //@{
    //! @name Utilities to help analysis and debugging
-   // tbox::List<BergerRigoutsosNode*>::Iterator
    std::list<BergerRigoutsosNode *>::const_iterator
    inRelaunchQueue(
       BergerRigoutsosNode* node_ptr) const

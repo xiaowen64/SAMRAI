@@ -19,11 +19,11 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/tbox/Dimension.h"
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
+#include <list>
 
 namespace SAMRAI {
 namespace hier {
@@ -110,7 +110,7 @@ public:
    addTimeInterpolateOperator(
       const boost::shared_ptr<TimeInterpolateOperator>& time_op)
    {
-      d_time_operators.addItem(time_op);
+      d_time_operators.push_front(time_op);
    }
 
    /*!
@@ -273,7 +273,7 @@ private:
     * package.  Additional operators may be added to this list at any time
     * (see addCoarsenOperator() function).
     */
-   tbox::List<boost::shared_ptr<CoarsenOperator> > d_coarsen_operators;
+   std::list<boost::shared_ptr<CoarsenOperator> > d_coarsen_operators;
 
    /*
     * The list of spatial refinement operators is maintained to lookup
@@ -283,7 +283,7 @@ private:
     * package.  Additional operators may be added to this list at any time
     * (see addRefineOperator() function).
     */
-   tbox::List<boost::shared_ptr<RefineOperator> > d_refine_operators;
+   std::list<boost::shared_ptr<RefineOperator> > d_refine_operators;
 
    /*
     * The list of time interpolation operators is maintained to lookup
@@ -293,7 +293,7 @@ private:
     * patchdata package.  Additional operators may be added to this list at
     * any time (see addTimeInterpolateOperator() function).
     */
-   tbox::List<boost::shared_ptr<TimeInterpolateOperator> > d_time_operators;
+   std::list<boost::shared_ptr<TimeInterpolateOperator> > d_time_operators;
 
    /*!
     * @brief Value set by setMinTransferOpStencilWidth().

@@ -13,11 +13,11 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/List.h"
 
 #include <boost/shared_ptr.hpp>
 #include <cstdio>
 #include <string>
+#include <list>
 
 namespace SAMRAI {
 namespace tbox {
@@ -115,7 +115,7 @@ public:
    boost::shared_ptr<Database>&
    getScope()
    {
-      return d_scope_stack.getFirstItem();
+      return d_scope_stack.front();
    }
 
    /**
@@ -126,7 +126,7 @@ public:
    enterScope(
       const std::string& name)
    {
-      d_scope_stack.addItem(d_scope_stack.getFirstItem()->putDatabase(name));
+      d_scope_stack.push_front(d_scope_stack.front()->putDatabase(name));
    }
 
    /**
@@ -136,7 +136,7 @@ public:
    void
    leaveScope()
    {
-      d_scope_stack.removeFirstItem();
+      d_scope_stack.pop_front();
    }
 
    /**
@@ -190,7 +190,7 @@ public:
    setLine(
       const std::string& line)
    {
-      Parser::ParseData& pd = d_parse_stack.getFirstItem();
+      Parser::ParseData& pd = d_parse_stack.front();
       pd.d_linebuffer = line;
    }
 
@@ -241,9 +241,9 @@ private:
    int d_errors;                // total number of parse errors
    int d_warnings;              // total number of warnings
 
-   List<Parser::ParseData> d_parse_stack;
+   std::list<Parser::ParseData> d_parse_stack;
 
-   List<boost::shared_ptr<Database> > d_scope_stack;
+   std::list<boost::shared_ptr<Database> > d_scope_stack;
 
    static Parser* s_default_parser;
 

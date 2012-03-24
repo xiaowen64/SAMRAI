@@ -28,7 +28,6 @@
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
@@ -38,6 +37,7 @@
 #include <boost/make_shared.hpp>
 #include <cstdlib>
 #include <fstream>
+#include <list>
 
 namespace SAMRAI {
 namespace mesh {
@@ -766,7 +766,7 @@ ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
    double average_work = work_factor * total_work / mpi.getSize();
 
    hier::BoxContainer tmp_box_list;
-   tbox::List<double> tmp_work_list;
+   std::list<double> tmp_work_list;
    BalanceUtilities::recursiveBisectionUniform(tmp_box_list,
       tmp_work_list,
       tmp_in_boxes_list,
@@ -777,7 +777,7 @@ ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
       bad_interval,
       physical_domain);
 
-   if (tmp_box_list.size() != tmp_work_list.size()) {
+   if (tmp_box_list.size() != static_cast<int>(tmp_work_list.size())) {
       TBOX_ERROR(
          d_object_name << ": "
                        << "Number of boxes generated != number of workload values generated."
@@ -792,8 +792,9 @@ ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
 
    out_workloads.resizeArray(out_boxes.size());
    int i = 0;
-   for (tbox::List<double>::Iterator il(tmp_work_list); il; il++) {
-      out_workloads[i] = il();
+   for (std::list<double>::const_iterator il(tmp_work_list.begin());
+        il != tmp_work_list.end(); il++) {
+      out_workloads[i] = *il;
       i++;
    }
 
@@ -932,7 +933,7 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    double average_work = work_factor * total_work / mpi.getSize();
 
    hier::BoxContainer tmp_box_list;
-   tbox::List<double> tmp_work_list;
+   std::list<double> tmp_work_list;
    BalanceUtilities::recursiveBisectionNonuniform(tmp_box_list,
       tmp_work_list,
       tmp_level,
@@ -947,7 +948,7 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    tmp_level->deallocatePatchData(wrk_indx);
    tmp_level.reset();
 
-   if (tmp_box_list.size() != tmp_work_list.size()) {
+   if (tmp_box_list.size() != static_cast<int>(tmp_work_list.size())) {
       TBOX_ERROR(
          d_object_name << ": "
                        << "Number of boxes generated != number of workload values generated."
@@ -963,8 +964,9 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    tbox::Array<double> local_out_workloads(local_out_boxes.size());
 
    int i = 0;
-   for (tbox::List<double>::Iterator il(tmp_work_list); il; il++) {
-      local_out_workloads[i] = il();
+   for (std::list<double>::const_iterator il(tmp_work_list.begin());
+        il != tmp_work_list.end(); il++) {
+      local_out_workloads[i] = *il;
       i++;
    }
 

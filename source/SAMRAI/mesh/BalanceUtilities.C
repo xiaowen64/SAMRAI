@@ -653,7 +653,7 @@ BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
 void
 BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
    hier::BoxContainer& out_boxes,
-   tbox::List<double>& out_workloads,
+   std::list<double>& out_workloads,
    const hier::Box& in_box,
    double in_box_workload,
    double ideal_workload,
@@ -669,7 +669,7 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
    if (in_box_workload <= ((1. + workload_tolerance) * ideal_workload)) {
 
       out_boxes.pushFront(in_box);
-      out_workloads.addItem(in_box_workload);
+      out_workloads.push_front(in_box_workload);
 
    } else {
 
@@ -748,7 +748,7 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
             bad_cut_points_for_boxlo);
 
          hier::BoxContainer boxes_hi;
-         tbox::List<double> work_hi;
+         std::list<double> work_hi;
 
          double box_hi_workload = (double)box_hi.size();
          privateRecursiveBisectionUniformSingleBox(boxes_hi,
@@ -762,12 +762,12 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
             bad_cut_points_for_boxhi);
 
          out_boxes.spliceBack(boxes_hi);
-         out_workloads.catenateItems(work_hi);
+         out_workloads.splice(out_workloads.end(), work_hi);
 
       } else {  // !can_cut_box
 
          out_boxes.pushFront(in_box);
-         out_workloads.addItem(in_box_workload);
+         out_workloads.push_front(in_box_workload);
 
       }
 
@@ -789,7 +789,7 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
 void
 BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
    hier::BoxContainer& out_boxes,
-   tbox::List<double>& out_workloads,
+   std::list<double>& out_workloads,
    const boost::shared_ptr<hier::Patch>& patch,
    const hier::Box& in_box,
    double in_box_workload,
@@ -808,7 +808,7 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
    if (in_box_workload <= ((1. + workload_tolerance) * ideal_workload)) {
 
       out_boxes.pushFront(in_box);
-      out_workloads.addItem(in_box_workload);
+      out_workloads.push_front(in_box_workload);
 
    } else {
 
@@ -895,7 +895,7 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
             bad_cut_points_for_boxlo);
 
          hier::BoxContainer boxes_hi;
-         tbox::List<double> work_hi;
+         std::list<double> work_hi;
 
          double box_hi_workload = in_box_workload - box_lo_workload;
          privateRecursiveBisectionNonuniformSingleBox(boxes_hi,
@@ -911,12 +911,12 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
             bad_cut_points_for_boxhi);
 
          out_boxes.spliceBack(boxes_hi);
-         out_workloads.catenateItems(work_hi);
+         out_workloads.splice(out_workloads.end(), work_hi);
 
       } else {  // !can_cut_box
 
          out_boxes.pushFront(in_box);
-         out_workloads.addItem(in_box_workload);
+         out_workloads.push_front(in_box_workload);
 
       }
 
@@ -1216,7 +1216,7 @@ BalanceUtilities::spatialBinPack(
 void
 BalanceUtilities::recursiveBisectionUniform(
    hier::BoxContainer& out_boxes,
-   tbox::List<double>& out_workloads,
+   std::list<double>& out_workloads,
    const hier::BoxContainer& in_boxes,
    const double ideal_workload,
    const double workload_tolerance,
@@ -1237,7 +1237,7 @@ BalanceUtilities::recursiveBisectionUniform(
    TBOX_ASSERT(physical_domain.size() > 0);
 
    out_boxes.clear();
-   out_workloads.clearItems();
+   out_workloads.clear();
 
    bool bad_domain_boundaries_exist =
       privateBadCutPointsExist(physical_domain);
@@ -1253,7 +1253,7 @@ BalanceUtilities::recursiveBisectionUniform(
       if (boxwork <= ((1.0 + workload_tolerance) * ideal_workload)) {
 
          out_boxes.pushFront(box2chop);
-         out_workloads.addItem(boxwork);
+         out_workloads.push_front(boxwork);
 
       } else {
 
@@ -1266,7 +1266,7 @@ BalanceUtilities::recursiveBisectionUniform(
             physical_domain);
 
          hier::BoxContainer tempboxes;
-         tbox::List<double> temploads;
+         std::list<double> temploads;
          privateRecursiveBisectionUniformSingleBox(
             tempboxes,
             temploads,
@@ -1279,7 +1279,7 @@ BalanceUtilities::recursiveBisectionUniform(
             bad_cut_points);
 
          out_boxes.spliceBack(tempboxes);
-         out_workloads.catenateItems(temploads);
+         out_workloads.splice(out_workloads.end(), temploads);
 
       }
    }
@@ -1301,7 +1301,7 @@ BalanceUtilities::recursiveBisectionUniform(
 void
 BalanceUtilities::recursiveBisectionNonuniform(
    hier::BoxContainer& out_boxes,
-   tbox::List<double>& out_workloads,
+   std::list<double>& out_workloads,
    const boost::shared_ptr<hier::PatchLevel>& in_level,
    int work_id,
    double ideal_workload,
@@ -1323,7 +1323,7 @@ BalanceUtilities::recursiveBisectionNonuniform(
    TBOX_ASSERT(physical_domain.size() > 0);
 
    out_boxes.clear();
-   out_workloads.clearItems();
+   out_workloads.clear();
 
    bool bad_domain_boundaries_exist =
       privateBadCutPointsExist(physical_domain);
@@ -1340,7 +1340,7 @@ BalanceUtilities::recursiveBisectionNonuniform(
       if (boxwork <= ((1. + workload_tolerance) * ideal_workload)) {
 
          out_boxes.pushFront(box2chop);
-         out_workloads.addItem(boxwork);
+         out_workloads.push_front(boxwork);
 
       } else {
 
@@ -1353,7 +1353,7 @@ BalanceUtilities::recursiveBisectionNonuniform(
             physical_domain);
 
          hier::BoxContainer tempboxes;
-         tbox::List<double> temploads;
+         std::list<double> temploads;
          privateRecursiveBisectionNonuniformSingleBox(
             tempboxes,
             temploads,
@@ -1368,7 +1368,7 @@ BalanceUtilities::recursiveBisectionNonuniform(
             bad_cut_points);
 
          out_boxes.spliceBack(tempboxes);
-         out_workloads.catenateItems(temploads);
+         out_workloads.splice(out_workloads.end(), temploads);
       }
 
    }

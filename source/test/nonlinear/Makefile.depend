@@ -181,7 +181,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/HDFDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -282,7 +281,6 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
@@ -476,7 +474,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/InputDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/InputManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryDatabase.h			\
@@ -579,7 +576,6 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
@@ -740,7 +736,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -837,7 +832,6 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
@@ -1009,7 +1003,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/HDFDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -1107,7 +1100,6 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SAMRAI/solv/SAMRAIVectorReal.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 

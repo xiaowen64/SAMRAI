@@ -62,7 +62,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -86,7 +85,6 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
@@ -185,7 +183,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -243,7 +240,6 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
@@ -304,7 +300,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
@@ -332,7 +327,6 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
@@ -450,7 +444,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/InputDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/InputManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryDatabase.h			\
@@ -516,7 +509,6 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
@@ -579,7 +571,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
@@ -613,7 +604,6 @@ ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
@@ -655,7 +645,6 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
@@ -671,7 +660,6 @@ DEPENDS_5:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_5 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
@@ -713,7 +701,6 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
@@ -729,7 +716,6 @@ DEPENDS_6:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_6 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
@@ -771,7 +757,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
@@ -787,7 +772,6 @@ DEPENDS_7:=\
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_7 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
@@ -840,7 +824,6 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -861,7 +844,6 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
@@ -914,7 +896,6 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -935,7 +916,6 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
@@ -995,7 +975,6 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -1021,7 +1000,6 @@ DEPENDS_10 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
@@ -1081,7 +1059,6 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -1107,7 +1084,6 @@ DEPENDS_11 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
@@ -1170,7 +1146,6 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
@@ -1198,7 +1173,6 @@ DEPENDS_12 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
@@ -1321,7 +1295,6 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/InputDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/InputManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryDatabase.h			\
@@ -1385,7 +1358,6 @@ DEPENDS_13 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/List.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
