@@ -67,11 +67,6 @@ OBJS = 	\
 	NodeDoubleInjection.o \
 	NodeFloatInjection.o \
 	NodeIntegerInjection.o \
-	MultiblockCellDataTranslator.o \
-	MultiblockEdgeDataTranslator.o \
-	MultiblockFaceDataTranslator.o \
-	MultiblockNodeDataTranslator.o \
-	MultiblockSideDataTranslator.o \
 	OuternodeDoubleConstantCoarsen.o \
 	CellIterator.o \
 	EdgeIterator.o \

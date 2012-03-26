@@ -14,7 +14,6 @@
 
 #include "SAMRAI/hier/Transformation.h"
 
-#include "SAMRAI/hier/MultiblockDataTranslator.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -619,66 +618,6 @@ Transformation::calculateReverseShift(
             << " Invalid RotationIdentifier value given" << std::endl);
       }
    }
-}
-
-/*
- *************************************************************************
- *
- * Determines the patch data type and calls the appropriate routine
- *
- *************************************************************************
- */
-
-void
-Transformation::translateAndCopyData(
-   Patch& dst_patch,
-   const int dst_id,
-   const Patch& src_patch,
-   const int src_id,
-   const IntVector& shift,
-   const RotationIdentifier rotate)
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS3(dst_patch, src_patch, shift);
-
-   boost::shared_ptr<PatchDataFactory> dst_pdf(
-      VariableDatabase::getDatabase()->getPatchDescriptor()->
-      getPatchDataFactory(dst_id));
-
-   MultiblockDataTranslator* mb_trans =
-      dst_pdf->getMultiblockDataTranslator();
-
-   mb_trans->translateAndCopyData(dst_patch,
-      dst_id,
-      src_patch,
-      src_id,
-      shift,
-      rotate);
-}
-
-void
-Transformation::translateAndFillData(
-   Patch& dst_patch,
-   const int dst_id,
-   const Patch& src_patch,
-   const int src_id,
-   const IntVector& shift,
-   const RotationIdentifier rotate)
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS3(dst_patch, src_patch, shift);
-
-   boost::shared_ptr<PatchDataFactory> dst_pdf(
-      VariableDatabase::getDatabase()->getPatchDescriptor()->
-      getPatchDataFactory(dst_id));
-
-   MultiblockDataTranslator* mb_trans =
-      dst_pdf->getMultiblockDataTranslator();
-
-   mb_trans->translateAndFillData(dst_patch,
-      dst_id,
-      src_patch,
-      src_id,
-      shift,
-      rotate);
 }
 
 /*

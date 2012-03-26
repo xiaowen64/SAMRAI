@@ -22,15 +22,12 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/GridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
@@ -38,9 +35,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
@@ -63,8 +57,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockFaceDataTranslator.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceData.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceGeometry.h			\
@@ -85,7 +77,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h main-var_db.C
@@ -101,8 +92,6 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceVariable.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.C	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockFaceDataTranslator.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceData.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceVariable.C			\

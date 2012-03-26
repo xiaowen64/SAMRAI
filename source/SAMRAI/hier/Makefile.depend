@@ -1568,69 +1568,8 @@ endif
 
 ${FILE_32:X.o=${NDIM}.o}: ${DEPENDS_32}
 
-FILE_33=MultiblockDataTranslator.o
+FILE_33=OverlapConnectorAlgorithm.o
 DEPENDS_33:=\
-	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/GridGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
-	MultiblockDataTranslator.C
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_33 +=\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
-
-${FILE_33:X.o=${NDIM}.o}: ${DEPENDS_33}
-
-FILE_34=OverlapConnectorAlgorithm.o
-DEPENDS_34:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -1699,16 +1638,16 @@ DEPENDS_34:=\
 	OverlapConnectorAlgorithm.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_34 +=\
+DEPENDS_33 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_34:X.o=${NDIM}.o}: ${DEPENDS_34}
+${FILE_33:X.o=${NDIM}.o}: ${DEPENDS_33}
 
-FILE_35=Patch.o
-DEPENDS_35:=\
+FILE_34=Patch.o
+DEPENDS_34:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -1753,15 +1692,15 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Patch.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_35 +=\
+DEPENDS_34 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_35:X.o=${NDIM}.o}: ${DEPENDS_35}
+${FILE_34:X.o=${NDIM}.o}: ${DEPENDS_34}
 
-FILE_36=PatchBoundaries.o
-DEPENDS_36:=\
+FILE_35=PatchBoundaries.o
+DEPENDS_35:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -1789,15 +1728,15 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchBoundaries.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_36 +=\
+DEPENDS_35 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_36:X.o=${NDIM}.o}: ${DEPENDS_36}
+${FILE_35:X.o=${NDIM}.o}: ${DEPENDS_35}
 
-FILE_37=PatchData.o
-DEPENDS_37:=\
+FILE_36=PatchData.o
+DEPENDS_36:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
@@ -1826,15 +1765,15 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchData.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_37 +=\
+DEPENDS_36 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_37:X.o=${NDIM}.o}: ${DEPENDS_37}
+${FILE_36:X.o=${NDIM}.o}: ${DEPENDS_36}
 
-FILE_38=PatchDataFactory.o
-DEPENDS_38:=\
+FILE_37=PatchDataFactory.o
+DEPENDS_37:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
@@ -1870,15 +1809,15 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchDataFactory.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_38 +=\
+DEPENDS_37 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_38:X.o=${NDIM}.o}: ${DEPENDS_38}
+${FILE_37:X.o=${NDIM}.o}: ${DEPENDS_37}
 
-FILE_39=PatchDescriptor.o
-DEPENDS_39:=\
+FILE_38=PatchDescriptor.o
+DEPENDS_38:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
@@ -1916,15 +1855,15 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchDescriptor.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_39 +=\
+DEPENDS_38 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_39:X.o=${NDIM}.o}: ${DEPENDS_39}
+${FILE_38:X.o=${NDIM}.o}: ${DEPENDS_38}
 
-FILE_40=PatchFactory.o
-DEPENDS_40:=\
+FILE_39=PatchFactory.o
+DEPENDS_39:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -1970,15 +1909,15 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchFactory.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_40 +=\
+DEPENDS_39 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_40:X.o=${NDIM}.o}: ${DEPENDS_40}
+${FILE_39:X.o=${NDIM}.o}: ${DEPENDS_39}
 
-FILE_41=PatchGeometry.o
-DEPENDS_41:=\
+FILE_40=PatchGeometry.o
+DEPENDS_40:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -2008,15 +1947,15 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchGeometry.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_41 +=\
+DEPENDS_40 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_41:X.o=${NDIM}.o}: ${DEPENDS_41}
+${FILE_40:X.o=${NDIM}.o}: ${DEPENDS_40}
 
-FILE_42=PatchHierarchy.o
-DEPENDS_42:=\
+FILE_41=PatchHierarchy.o
+DEPENDS_41:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -2087,16 +2026,16 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchHierarchy.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_42 +=\
+DEPENDS_41 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_42:X.o=${NDIM}.o}: ${DEPENDS_42}
+${FILE_41:X.o=${NDIM}.o}: ${DEPENDS_41}
 
-FILE_43=PatchLevel.o
-DEPENDS_43:=\
+FILE_42=PatchLevel.o
+DEPENDS_42:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -2157,15 +2096,15 @@ DEPENDS_43:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchLevel.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_43 +=\
+DEPENDS_42 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_43:X.o=${NDIM}.o}: ${DEPENDS_43}
+${FILE_42:X.o=${NDIM}.o}: ${DEPENDS_42}
 
-FILE_44=PatchLevelFactory.o
-DEPENDS_44:=\
+FILE_43=PatchLevelFactory.o
+DEPENDS_43:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -2226,27 +2165,27 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PatchLevelFactory.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_44 +=\
+DEPENDS_43 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_44:X.o=${NDIM}.o}: ${DEPENDS_44}
+${FILE_43:X.o=${NDIM}.o}: ${DEPENDS_43}
 
-FILE_45=PeriodicId.o
-DEPENDS_45:=\
+FILE_44=PeriodicId.o
+DEPENDS_44:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h PeriodicId.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_45 +=\
+DEPENDS_44 +=\
 	
 endif
 
-${FILE_45:X.o=${NDIM}.o}: ${DEPENDS_45}
+${FILE_44:X.o=${NDIM}.o}: ${DEPENDS_44}
 
-FILE_46=PeriodicShiftCatalog.o
-DEPENDS_46:=\
+FILE_45=PeriodicShiftCatalog.o
+DEPENDS_45:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
@@ -2265,15 +2204,15 @@ DEPENDS_46:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PeriodicShiftCatalog.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_46 +=\
+DEPENDS_45 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_46:X.o=${NDIM}.o}: ${DEPENDS_46}
+${FILE_45:X.o=${NDIM}.o}: ${DEPENDS_45}
 
-FILE_47=PersistentOverlapConnectors.o
-DEPENDS_47:=\
+FILE_46=PersistentOverlapConnectors.o
+DEPENDS_46:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -2339,16 +2278,16 @@ DEPENDS_47:=\
 	PersistentOverlapConnectors.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_47 +=\
+DEPENDS_46 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_47:X.o=${NDIM}.o}: ${DEPENDS_47}
+${FILE_46:X.o=${NDIM}.o}: ${DEPENDS_46}
 
-FILE_48=ProcessorMapping.o
-DEPENDS_48:=\
+FILE_47=ProcessorMapping.o
+DEPENDS_47:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
@@ -2366,14 +2305,14 @@ DEPENDS_48:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h ProcessorMapping.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_48 +=\
+DEPENDS_47 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
 endif
 
-${FILE_48:X.o=${NDIM}.o}: ${DEPENDS_48}
+${FILE_47:X.o=${NDIM}.o}: ${DEPENDS_47}
 
-FILE_49=RealBoxConstIterator.o
-DEPENDS_49:=\
+FILE_48=RealBoxConstIterator.o
+DEPENDS_48:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
@@ -2405,15 +2344,15 @@ DEPENDS_49:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h RealBoxConstIterator.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_49 +=\
+DEPENDS_48 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_49:X.o=${NDIM}.o}: ${DEPENDS_49}
+${FILE_48:X.o=${NDIM}.o}: ${DEPENDS_48}
 
-FILE_50=RefineOperator.o
-DEPENDS_50:=\
+FILE_49=RefineOperator.o
+DEPENDS_49:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -2459,15 +2398,15 @@ DEPENDS_50:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h RefineOperator.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_50 +=\
+DEPENDS_49 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_50:X.o=${NDIM}.o}: ${DEPENDS_50}
+${FILE_49:X.o=${NDIM}.o}: ${DEPENDS_49}
 
-FILE_51=TimeInterpolateOperator.o
-DEPENDS_51:=\
+FILE_50=TimeInterpolateOperator.o
+DEPENDS_50:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
@@ -2505,15 +2444,15 @@ DEPENDS_51:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h TimeInterpolateOperator.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_51 +=\
+DEPENDS_50 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_51:X.o=${NDIM}.o}: ${DEPENDS_51}
+${FILE_50:X.o=${NDIM}.o}: ${DEPENDS_50}
 
-FILE_52=TransferOperatorRegistry.o
-DEPENDS_52:=\
+FILE_51=TransferOperatorRegistry.o
+DEPENDS_51:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -2563,15 +2502,15 @@ DEPENDS_52:=\
 	TransferOperatorRegistry.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_52 +=\
+DEPENDS_51 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_52:X.o=${NDIM}.o}: ${DEPENDS_52}
+${FILE_51:X.o=${NDIM}.o}: ${DEPENDS_51}
 
-FILE_53=Transformation.o
-DEPENDS_53:=\
+FILE_52=Transformation.o
+DEPENDS_52:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -2581,15 +2520,12 @@ DEPENDS_53:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/GridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
@@ -2597,9 +2533,6 @@ DEPENDS_53:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
@@ -2617,21 +2550,20 @@ DEPENDS_53:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Transformation.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_53 +=\
+DEPENDS_52 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_53:X.o=${NDIM}.o}: ${DEPENDS_53}
+${FILE_52:X.o=${NDIM}.o}: ${DEPENDS_52}
 
-FILE_54=Variable.o
-DEPENDS_54:=\
+FILE_53=Variable.o
+DEPENDS_53:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
@@ -2668,15 +2600,15 @@ DEPENDS_54:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Variable.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_54 +=\
+DEPENDS_53 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_54:X.o=${NDIM}.o}: ${DEPENDS_54}
+${FILE_53:X.o=${NDIM}.o}: ${DEPENDS_53}
 
-FILE_55=VariableContext.o
-DEPENDS_55:=\
+FILE_54=VariableContext.o
+DEPENDS_54:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
@@ -2685,14 +2617,14 @@ DEPENDS_55:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h VariableContext.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_55 +=\
+DEPENDS_54 +=\
 	
 endif
 
-${FILE_55:X.o=${NDIM}.o}: ${DEPENDS_55}
+${FILE_54:X.o=${NDIM}.o}: ${DEPENDS_54}
 
-FILE_56=VariableDatabase.o
-DEPENDS_56:=\
+FILE_55=VariableDatabase.o
+DEPENDS_55:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
@@ -2733,10 +2665,10 @@ DEPENDS_56:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h VariableDatabase.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_56 +=\
+DEPENDS_55 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_56:X.o=${NDIM}.o}: ${DEPENDS_56}
+${FILE_55:X.o=${NDIM}.o}: ${DEPENDS_55}
 

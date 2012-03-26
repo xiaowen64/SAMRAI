@@ -40,7 +40,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
@@ -76,9 +75,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockNodeDataTranslator.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockSideDataTranslator.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeDoubleLinearTimeInterpolateOp.h	\
@@ -154,9 +150,6 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.C	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockNodeDataTranslator.C	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockSideDataTranslator.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeVariable.C			\
@@ -279,7 +272,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
@@ -319,8 +311,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockFaceDataTranslator.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockSideDataTranslator.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceData.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceGeometry.h			\
@@ -389,8 +379,6 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceVariable.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockFaceDataTranslator.C	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockSideDataTranslator.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceData.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceVariable.C			\
@@ -642,7 +630,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
@@ -690,9 +677,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockNodeDataTranslator.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockSideDataTranslator.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeGeometry.h			\
@@ -773,9 +757,6 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.C	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockNodeDataTranslator.C	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockSideDataTranslator.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeVariable.C			\

@@ -39,7 +39,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
@@ -81,8 +80,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockSideDataTranslator.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideData.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideDataFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideGeometry.h			\
@@ -141,8 +138,6 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.C	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockSideDataTranslator.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideData.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideVariable.C			\
@@ -185,7 +180,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
@@ -233,8 +227,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockSideDataTranslator.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideData.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideDataFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideGeometry.h			\
@@ -304,8 +296,6 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.C	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockSideDataTranslator.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideData.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideVariable.C			\

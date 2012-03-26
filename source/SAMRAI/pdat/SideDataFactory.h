@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/pdat/MultiblockSideDataTranslator.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
@@ -158,18 +157,10 @@ public:
    validCopyTo(
       const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const;
 
-   /**
-    * Return pointer to a multiblock data translator
-    */
-   hier::MultiblockDataTranslator *
-   getMultiblockDataTranslator();
-
 private:
    int d_depth;
    bool d_fine_boundary_represents_var;
    hier::IntVector d_directions;
-
-   MultiblockSideDataTranslator<TYPE>* d_mb_trans;
 
 };
 

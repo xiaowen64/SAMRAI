@@ -47,8 +47,7 @@ SideDataFactory<TYPE>::SideDataFactory(
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
    d_fine_boundary_represents_var(fine_boundary_represents_var),
-   d_directions(hier::IntVector::getOne(ghosts.getDim())),
-   d_mb_trans(NULL)
+   d_directions(hier::IntVector::getOne(ghosts.getDim()))
 {
 #ifndef DEBUG_CHECK_ASSERTIONS
    NULL_USE(directions);
@@ -66,8 +65,7 @@ SideDataFactory<TYPE>::SideDataFactory(
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
    d_fine_boundary_represents_var(fine_boundary_represents_var),
-   d_directions(ghosts.getDim(), 1),
-   d_mb_trans(NULL)
+   d_directions(ghosts.getDim(), 1)
 {
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
@@ -76,9 +74,6 @@ SideDataFactory<TYPE>::SideDataFactory(
 template<class TYPE>
 SideDataFactory<TYPE>::~SideDataFactory()
 {
-   if (d_mb_trans) {
-      delete d_mb_trans;
-   }
 }
 
 /*
@@ -256,15 +251,6 @@ SideDataFactory<TYPE>::dataLivesOnPatchBorder() const
    return true;
 }
 
-template<class TYPE>
-hier::MultiblockDataTranslator *
-SideDataFactory<TYPE>::getMultiblockDataTranslator()
-{
-   if (d_mb_trans == NULL) {
-      d_mb_trans = new MultiblockSideDataTranslator<TYPE>();
-   }
-   return d_mb_trans;
-}
 
 }
 }

@@ -39,8 +39,7 @@ NodeDataFactory<TYPE>::NodeDataFactory(
    bool fine_boundary_represents_var):
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
-   d_fine_boundary_represents_var(fine_boundary_represents_var),
-   d_mb_trans(NULL)
+   d_fine_boundary_represents_var(fine_boundary_represents_var)
 {
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
@@ -49,9 +48,6 @@ NodeDataFactory<TYPE>::NodeDataFactory(
 template<class TYPE>
 NodeDataFactory<TYPE>::~NodeDataFactory()
 {
-   if (d_mb_trans) {
-      delete d_mb_trans;
-   }
 }
 
 /*
@@ -213,16 +209,6 @@ template<class TYPE>
 bool
 NodeDataFactory<TYPE>::dataLivesOnPatchBorder() const {
    return true;
-}
-
-template<class TYPE>
-hier::MultiblockDataTranslator *
-NodeDataFactory<TYPE>::getMultiblockDataTranslator()
-{
-   if (d_mb_trans == NULL) {
-      d_mb_trans = new MultiblockNodeDataTranslator<TYPE>();
-   }
-   return d_mb_trans;
 }
 
 }

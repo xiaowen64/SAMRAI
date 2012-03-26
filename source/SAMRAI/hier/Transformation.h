@@ -256,46 +256,6 @@ public:
       const RotationIdentifier rotation);
 
    /*!
-    * @brief Copy patch data from src to dst using the shift and rotate
-    * arguments.
-    *
-    * @param dst_patch   destination data
-    * @param dst_id      destination id
-    * @param src_patch   source data
-    * @param src_id      source id
-    * @param shift       the shift needed after rotation
-    * @param rotate      identifier of the rotation between index spaces
-    */
-   static void
-   translateAndCopyData(
-      Patch& dst_patch,
-      const int dst_id,
-      const Patch& src_patch,
-      const int src_id,
-      const IntVector& shift,
-      const RotationIdentifier rotate);
-
-   /*!
-    * @brief Fill patch data from src to dst using the shift and rotate
-    * arguments.
-    *
-    * @param dst_patch   destination data
-    * @param dst_id      destination id
-    * @param src_patch   source data
-    * @param src_id      source id
-    * @param shift       the shift needed after rotation
-    * @param rotate      identifier of the rotation between index spaces
-    */
-   static void
-   translateAndFillData(
-      Patch& dst_patch,
-      const int dst_id,
-      const Patch& src_patch,
-      const int src_id,
-      const IntVector& shift,
-      const RotationIdentifier rotate);
-
-   /*!
     * @brief rotate an index from one index space to another
     *
     * The parameter index is an int pointer with points to an array of

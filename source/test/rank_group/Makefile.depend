@@ -44,7 +44,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappingConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockDataTranslator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/OverlapConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
@@ -86,7 +85,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
@@ -129,7 +127,6 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MultiblockCellDataTranslator.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\

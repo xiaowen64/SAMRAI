@@ -34,7 +34,6 @@ OBJS = 	\
 	PatchLevelFactory.o \
 	VariableDatabase.o \
 	Variable.o \
-	MultiblockDataTranslator.o \
 	PatchDescriptor.o \
 	PatchFactory.o \
 	PatchDataFactory.o \

@@ -39,8 +39,7 @@ FaceDataFactory<TYPE>::FaceDataFactory(
    bool fine_boundary_represents_var):
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
-   d_fine_boundary_represents_var(fine_boundary_represents_var),
-   d_mb_trans(NULL)
+   d_fine_boundary_represents_var(fine_boundary_represents_var)
 {
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
@@ -50,9 +49,6 @@ FaceDataFactory<TYPE>::FaceDataFactory(
 template<class TYPE>
 FaceDataFactory<TYPE>::~FaceDataFactory()
 {
-   if (d_mb_trans) {
-      delete d_mb_trans;
-   }
 }
 
 /*
@@ -206,16 +202,6 @@ template<class TYPE>
 bool
 FaceDataFactory<TYPE>::dataLivesOnPatchBorder() const {
    return true;
-}
-
-template<class TYPE>
-hier::MultiblockDataTranslator *
-FaceDataFactory<TYPE>::getMultiblockDataTranslator()
-{
-   if (d_mb_trans == NULL) {
-      d_mb_trans = new MultiblockFaceDataTranslator<TYPE>();
-   }
-   return d_mb_trans;
 }
 
 }

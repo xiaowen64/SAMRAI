@@ -43,21 +43,15 @@ CellDataFactory<TYPE>::CellDataFactory(
    int depth,
    const hier::IntVector& ghosts):
    hier::PatchDataFactory(ghosts),
-   d_depth(depth),
-   d_mb_trans(NULL)
+   d_depth(depth)
 {
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
-
-   d_mb_trans = NULL;
 }
 
 template<class TYPE>
 CellDataFactory<TYPE>::~CellDataFactory()
 {
-   if (d_mb_trans) {
-      delete d_mb_trans;
-   }
 }
 
 /*
@@ -206,16 +200,6 @@ bool
 CellDataFactory<TYPE>::dataLivesOnPatchBorder() const
 {
    return false;
-}
-
-template<class TYPE>
-hier::MultiblockDataTranslator *
-CellDataFactory<TYPE>::getMultiblockDataTranslator()
-{
-   if (d_mb_trans == NULL) {
-      d_mb_trans = new MultiblockCellDataTranslator<TYPE>();
-   }
-   return d_mb_trans;
 }
 
 }
