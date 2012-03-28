@@ -201,8 +201,8 @@ SparseDataTester::testPackStream()
    sample->printAttributes(tbox::plog);
 
    boost::shared_ptr<SparseDataType> sample2(_createEmptySparseData());
-   tbox::MessageStream upStr(strsize, tbox::MessageStream::Read);
-   memcpy(upStr.getBufferStart(), str.getBufferStart(), strsize);
+   tbox::MessageStream upStr(strsize, tbox::MessageStream::Read,
+                             str.getBufferStart());
 
    sample2->unpackStream(upStr, overlap);
 

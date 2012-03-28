@@ -18,6 +18,7 @@
 
 #include <cstring>
 #include <iostream>
+#include <vector>
 
 namespace SAMRAI {
 namespace tbox {
@@ -44,12 +45,17 @@ public:
    /*!
     * @brief Create a message stream of the specified size and mode
     *
-    * @param[in] bytes   Number of bytes in the stream.
+    * @param[in] num_bytes   Number of bytes in the stream.
+    *
     * @param[in] mode    MessageStream::Read or MessageStream::Write.
+    *
+    * @param[in] data_to_read    Data for unpacking, should be num_bytes bytes long.
+    *   This is used when mode == MessageStream::Read, ignored in write mode.
     */
    MessageStream(
       const size_t bytes,
-      const StreamMode mode);
+      const StreamMode mode,
+      const void *data_to_read = NULL);
 
    /*!
     * Destructor for a message stream.
@@ -81,10 +87,11 @@ public:
    /*!
     * @brief Return a pointer to the start of the message buffer.
     */
-   void *
-   getBufferStart()
+   const void *
+   getBufferStart() const
    {
-      return (void *)d_buffer;
+      TBOX_ASSERT( ! d_buffer.empty() );
+      return static_cast<const void *>(&d_buffer[0]);
    }
 
    /*!
@@ -194,9 +201,13 @@ private:
       const void *input_data,
       const size_t num_bytes)
       {
-         TBOX_ASSERT(d_buffer_index + num_bytes <= d_buffer_size);
-         memcpy(&d_buffer[d_buffer_index], input_data, num_bytes);
-         d_buffer_index += num_bytes;
+         TBOX_ASSERT(d_buffer_index + num_bytes <= d_buffer.capacity());
+         if ( num_bytes > 0 ) {
+            d_buffer.insert( d_buffer.end(),
+                             static_cast<const char*>(input_data),
+                             static_cast<const char*>(input_data) + num_bytes );
+            d_buffer_index += num_bytes;
+         }
          return;
       }
 
@@ -210,7 +221,7 @@ private:
       void *output_data,
       const size_t num_bytes)
       {
-         TBOX_ASSERT(d_buffer_index + num_bytes <= d_buffer_size);
+         TBOX_ASSERT(d_buffer_index + num_bytes <= d_buffer.size());
          memcpy(output_data, &d_buffer[d_buffer_index], num_bytes);
          d_buffer_index += num_bytes;
          return;
@@ -228,19 +239,14 @@ private:
    const StreamMode d_mode;
 
    /*!
-    * Number of bytes allocated in the buffer.
+    * The buffer for the streamed data.
     */
-   size_t d_buffer_size;
+   std::vector<char> d_buffer;
 
    /*!
     * Current index into the buffer used when traversing.
     */
    size_t d_buffer_index;
-
-   /*!
-    * The buffer for the streamed data.
-    */
-   char* d_buffer;
 
 };
 

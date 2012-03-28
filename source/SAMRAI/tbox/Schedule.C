@@ -367,7 +367,7 @@ Schedule::postSends()
 
       // Begin non-blocking send operation.
       send_coms[icom].beginSend(
-         (char *)outgoing_stream.getBufferStart(),
+         (const char *)outgoing_stream.getBufferStart(),
          static_cast<int>(outgoing_stream.getCurrentSize()));
       if (send_coms[icom].isDone()) {
          send_coms[icom].pushToCompletionQueue();
@@ -419,12 +419,10 @@ Schedule::processCompletedCommunications()
          const int sender = completed_comm->getPeerRank();
 
          // Copy message into stream.
-         MessageStream incoming_stream(completed_comm->getRecvSize(),
-                                       MessageStream::Read);
-         memcpy(
-            incoming_stream.getBufferStart(),
-            completed_comm->getRecvData(),
-            completed_comm->getRecvSize() * sizeof(char));
+         MessageStream incoming_stream(
+            completed_comm->getRecvSize() * sizeof(char),
+            MessageStream::Read,
+            completed_comm->getRecvData());
          completed_comm->clearRecvData();
 
          d_object_timers->t_unpack_stream->start();
