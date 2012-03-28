@@ -31,7 +31,8 @@ MessageStream::MessageStream(
    const void *data_to_read):
    d_mode(mode),
    d_buffer(),
-   d_buffer_index(0)
+   d_buffer_index(0),
+   d_grow_as_needed(false)
 {
    TBOX_ASSERT(num_bytes >= 1);
    d_buffer.reserve(num_bytes);

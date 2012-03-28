@@ -104,6 +104,20 @@ public:
    }
 
    /*!
+    * @brief Tell a Write-mode stream to allocate more buffer
+    * as needed for data.
+    *
+    * It is an error to use this method for a Read-mode stream.
+    */
+   void
+   growBufferAsNeeded()
+   {
+      TBOX_ASSERT( d_mode == Write );
+      d_grow_as_needed = true;
+      return;
+   }
+
+   /*!
     * @brief Pack a single data item into message stream.
     *
     * @param[in] data  Single item of type DATA_TYPE to be copied
@@ -201,7 +215,9 @@ private:
       const void *input_data,
       const size_t num_bytes)
       {
-         TBOX_ASSERT(d_buffer_index + num_bytes <= d_buffer.capacity());
+         if ( !d_grow_as_needed ) {
+            TBOX_ASSERT(d_buffer_index + num_bytes <= d_buffer.capacity());
+         }
          if ( num_bytes > 0 ) {
             d_buffer.insert( d_buffer.end(),
                              static_cast<const char*>(input_data),
@@ -247,6 +263,11 @@ private:
     * Current index into the buffer used when traversing.
     */
    size_t d_buffer_index;
+
+   /*!
+    * @brief Whether to grow buffer as needed in a Write-mode stream.
+    */
+   bool d_grow_as_needed;
 
 };
 
