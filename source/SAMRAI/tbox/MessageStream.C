@@ -30,7 +30,6 @@ MessageStream::MessageStream(
    const StreamMode mode):
    d_mode(mode),
    d_buffer_size(bytes),
-   d_current_size(0),
    d_buffer_index(0)
 {
    TBOX_ASSERT(d_buffer_size >= 1);
@@ -56,7 +55,6 @@ MessageStream::printClassData(
    std::ostream& os) const
 {
    os << "Maximum buffer size = " << d_buffer_size << std::endl;
-   os << "Current buffer size = " << d_current_size << std::endl;
    os << "Current buffer index = " << d_buffer_index << std::endl;
    os << "Pointer to buffer data = " << (void *)d_buffer << std::endl;
 }

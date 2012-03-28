@@ -93,37 +93,7 @@ public:
    size_t
    getCurrentSize() const
    {
-      return d_current_size;
-   }
-
-   /*!
-    * @brief Return the current index into the buffer.
-    */
-   size_t
-   getCurrentIndex() const
-   {
       return d_buffer_index;
-   }
-
-   /*!
-    * @brief Set the current index into the buffer.  Further packing/unpacking
-    * will begin at this new location.
-    */
-   void
-   setCurrentIndex(
-      const size_t index)
-   {
-      d_buffer_index = index;
-   }
-
-   /*!
-    * @brief Reset the index to the beginning of the buffer.  This is the same
-    * as setting the buffer index to zero via setCurrentIndex().
-    */
-   void
-   resetIndex()
-   {
-      setCurrentIndex(0);
    }
 
    /*!
@@ -230,7 +200,6 @@ private:
       void* ptr = &d_buffer[d_buffer_index];
       d_buffer_index += nbytes;
       TBOX_ASSERT(d_buffer_index <= d_buffer_size);
-      d_current_size = d_buffer_index;
       return ptr;
    }
 
@@ -249,11 +218,6 @@ private:
     * Number of bytes allocated in the buffer.
     */
    size_t d_buffer_size;
-
-   /*!
-    * Number of bytes currently being used in the buffer.
-    */
-   size_t d_current_size;
 
    /*!
     * Current index into the buffer used when traversing.
