@@ -110,8 +110,7 @@ public:
       TBOX_ASSERT(d_mode == MessageStream::Write);
       static const unsigned int nbytes =
          MessageStream::getSizeof<DATA_TYPE>(1);
-      void* ptr = getPointerAndAdvanceCursor(nbytes);
-      memcpy(ptr, static_cast<const void *>(&data), nbytes);
+      copyDataIn(static_cast<const void *>(&data), nbytes);
       return *this;
    }
 
@@ -131,8 +130,7 @@ public:
       TBOX_ASSERT(d_mode == MessageStream::Write);
       if (data && (size > 0)) {
          const unsigned int nbytes = MessageStream::getSizeof<DATA_TYPE>(size);
-         void* ptr = getPointerAndAdvanceCursor(nbytes);
-         memcpy(ptr, static_cast<const void *>(data), nbytes);
+         copyDataIn(static_cast<const void *>(data), nbytes);
       }
    }
 
@@ -150,8 +148,7 @@ public:
       TBOX_ASSERT(d_mode == MessageStream::Read);
       static const unsigned int nbytes =
          MessageStream::getSizeof<DATA_TYPE>(1);
-      void* ptr = getPointerAndAdvanceCursor(nbytes);
-      memcpy(static_cast<void *>(&data), ptr, nbytes);
+      copyDataOut(static_cast<void *>(&data), nbytes);
       return *this;
    }
 
@@ -172,8 +169,7 @@ public:
       TBOX_ASSERT(d_mode == MessageStream::Read);
       if (data && (size > 0)) {
          const unsigned int nbytes = MessageStream::getSizeof<DATA_TYPE>(size);
-         void* ptr = getPointerAndAdvanceCursor(nbytes);
-         memcpy(static_cast<void *>(data), ptr, nbytes);
+         copyDataOut(static_cast<void *>(data), nbytes);
       }
    }
 
@@ -187,21 +183,38 @@ public:
       std::ostream& os) const;
 
 private:
+
    /*!
-    * @brief  Helper function to get pointer into buffer at current
-    * position and advance buffer position by given number of bytes.
+    * @brief Copy data into the stream, advancing the stream pointer.
     *
-    * @param[in]  nbytes
+    * @param[in]  data
+    * @param[in]  num_bytes
     */
-   void*
-   getPointerAndAdvanceCursor(
-      const size_t nbytes)
-   {
-      void* ptr = &d_buffer[d_buffer_index];
-      d_buffer_index += nbytes;
-      TBOX_ASSERT(d_buffer_index <= d_buffer_size);
-      return ptr;
-   }
+   void copyDataIn(
+      const void *input_data,
+      const size_t num_bytes)
+      {
+         TBOX_ASSERT(d_buffer_index + num_bytes <= d_buffer_size);
+         memcpy(&d_buffer[d_buffer_index], input_data, num_bytes);
+         d_buffer_index += num_bytes;
+         return;
+      }
+
+   /*!
+    * @brief Copy data out of the stream, advancing the stream pointer.
+    *
+    * @param[in]  output_data
+    * @param[in]  num_bytes
+    */
+   void copyDataOut(
+      void *output_data,
+      const size_t num_bytes)
+      {
+         TBOX_ASSERT(d_buffer_index + num_bytes <= d_buffer_size);
+         memcpy(output_data, &d_buffer[d_buffer_index], num_bytes);
+         d_buffer_index += num_bytes;
+         return;
+      }
 
    MessageStream(
       const MessageStream&);            // not implemented
