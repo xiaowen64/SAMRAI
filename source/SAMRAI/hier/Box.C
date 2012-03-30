@@ -1088,11 +1088,6 @@ Box::finalizeCallback()
    }
 }
 
-BoxIterator::BoxIterator():
-   d_index(tbox::Dimension::getInvalidDimension())
-{
-}
-
 BoxIterator::BoxIterator(
    const Box& box):
    d_index(box.lower()),

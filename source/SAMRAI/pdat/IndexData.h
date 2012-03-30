@@ -29,8 +29,6 @@ template<class TYPE, class BOX_GEOMETRY>
 class IndexDataNode;
 template<class TYPE, class BOX_GEOMETRY>
 class IndexIterator;
-template<class TYPE, class BOX_GEOMETRY>
-class ConstIndexIterator;
 
 /**
  * IndexData is used for storing sparse data.  The iteration over the
@@ -109,7 +107,6 @@ public:
     * Define the iterator.
     */
    typedef IndexIterator<TYPE, BOX_GEOMETRY> Iterator;
-   typedef ConstIndexIterator<TYPE, BOX_GEOMETRY> ConstIterator;
 
    /**
     * The constructor for an IndexData object.  The box describes the interior
@@ -373,7 +370,6 @@ public:
 
 private:
    friend class IndexIterator<TYPE, BOX_GEOMETRY>;
-   friend class ConstIndexIterator<TYPE, BOX_GEOMETRY>;
 
    /*
     * Static integer constant describing this class's version number.
@@ -454,7 +450,6 @@ class IndexDataNode
 public:
    friend class IndexData<TYPE, BOX_GEOMETRY>;
    friend class IndexIterator<TYPE, BOX_GEOMETRY>;
-   friend class ConstIndexIterator<TYPE, BOX_GEOMETRY>;
 
    IndexDataNode<TYPE, BOX_GEOMETRY>();
 
@@ -499,12 +494,6 @@ template<class TYPE, class BOX_GEOMETRY>
 class IndexIterator
 {
 public:
-   /**
-    * Default constructor for the index list iterator.  The iterator must
-    * be initialized before it can be used to iterate over an IndexData object.
-    */
-   IndexIterator();
-
    /**
     * Constructor for the index list iterator.  The iterator will iterate
     * over the irregular index set of the argument data object.
@@ -555,12 +544,6 @@ public:
     */
    const TYPE&
    operator () () const;
-
-   /**
-    * Return the current item in the irregular index set.
-    */
-   TYPE&
-   getItem();
 
    /**
     * Return the index of the current item in the irregular index set
@@ -616,14 +599,7 @@ public:
    operator != (
       const IndexIterator<TYPE, BOX_GEOMETRY>& iterator) const;
 
-   void
-   rewindIterator();
-
-   void
-   fastforwardIterator();
-
 private:
-   friend class ConstIndexIterator<TYPE, BOX_GEOMETRY>;
    friend class IndexData<TYPE, BOX_GEOMETRY>;
 
    IndexIterator(
@@ -637,123 +613,6 @@ private:
 
    IndexDataNode<TYPE, BOX_GEOMETRY>* d_node;
 };
-
-#if 0
-
-template<class TYPE, class BOX_GEOMETRY>
-class ConstIndexIterator
-{
-public:
-   /**
-    * Default constructor for the index list iterator.  The iterator must
-    * be initialized before it can be used to iterate over an IndexData object.
-    */
-   ConstIndexIterator();
-
-   /**
-    * Constructor for the index list iterator.  The iterator will iterate
-    * over the irregular index set of the argument data object.
-    */
-   explicit ConstIndexIterator(
-      const IndexData<TYPE, BOX_GEOMETRY>& data);
-
-   /**
-    * Copy constructor for the index list iterator.
-    */
-   ConstIndexIterator(
-      const ConstIndexIterator<TYPE, BOX_GEOMETRY>& iterator);
-   ConstIndexIterator(
-      const IndexIterator<TYPE, BOX_GEOMETRY>& iterator);
-
-   /**
-    * Assignment operator for the index list iterator.
-    */
-   ConstIndexIterator<TYPE, BOX_GEOMETRY>&
-   operator = (
-      const ConstIndexIterator<TYPE, BOX_GEOMETRY>& iterator);
-   ConstIndexIterator<TYPE, BOX_GEOMETRY>&
-   operator = (
-      const IndexIterator<TYPE, BOX_GEOMETRY>& iterator);
-
-   /**
-    * Destructor for the index list iterator.
-    */
-   ~ConstIndexIterator<TYPE, BOX_GEOMETRY>();
-
-   /**
-    * Return the current item in the irregular index set.
-    */
-   const TYPE&
-   operator * ();
-
-   /**
-    * Return the current item in the irregular index set.
-    */
-   const TYPE&
-   operator () ();
-
-   /**
-    * Return the current item in the irregular index set.
-    */
-   const TYPE&
-   getItem();
-
-   /**
-    * Return the index of the current item in the irregular index set
-    */
-   const hier::Index&
-   getIndex() const;
-
-   /**
-    * Return true if the iterator points to a valid item in the index set.
-    */
-   operator bool () const;
-
-#ifndef LACKS_BOOL_VOID_RESOLUTION
-   /**
-    * Return a non-null if the iterator points to a valid item in the index
-    * set.
-    */
-   operator const void* () const;
-#endif
-
-   /**
-    * Return whether the iterator points to a valid item in the index set.
-    * This operator mimics the !p operation applied to a pointer p.
-    */
-   bool
-   operator ! () const;
-
-   /**
-    * Increment the iterator to point to the next item in the index set.
-    */
-   void
-   operator ++ (
-      int);
-
-   /**
-    * Test two iterators for equality (pointing to the same item).
-    */
-   bool
-   operator == (
-      const ConstIndexIterator<TYPE, BOX_GEOMETRY>& iterator) const;
-
-   /**
-    * Test two iterators for inequality (pointing to different items).
-    */
-   bool
-   operator != (
-      const ConstIndexIterator<TYPE, BOX_GEOMETRY>& iterator) const;
-
-private:
-   friend class IndexIterator<TYPE, BOX_GEOMETRY>;
-
-   const IndexData<TYPE, BOX_GEOMETRY>* d_index_data;
-
-   IndexDataNode<TYPE, BOX_GEOMETRY>* d_node;
-}
-
-#endif
 
 }
 }

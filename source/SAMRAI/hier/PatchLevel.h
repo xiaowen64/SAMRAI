@@ -26,7 +26,6 @@ namespace SAMRAI {
 namespace hier {
 
 class GridGeometry;
-class PatchLevelIterator;
 
 /*!
  * @brief Container class for patches defined at a single level of the
@@ -889,11 +888,6 @@ public:
    {
 public:
       /*!
-       * @brief Default constructor.
-       */
-      Iterator();
-
-      /*!
        * @brief Copy constructor.
        *
        * @param[in]  other
@@ -932,45 +926,6 @@ public:
        */
       explicit Iterator(
          const boost::shared_ptr<PatchLevel>& patch_level);
-
-      /*!
-       * @brief Initialize from a PatchLevel boost::shared_ptr.
-       *
-       * @param[in]  patch_level
-       */
-      void
-      initialize(
-         const boost::shared_ptr<PatchLevel>& patch_level)
-      {
-         d_iterator = patch_level->d_patches.begin();
-         d_patches = &patch_level->d_patches;
-      }
-
-      /*!
-       * @brief Initialize from a PatchLevel reference.
-       *
-       * @param[in]  patch_level
-       */
-      void
-      initialize(
-         const PatchLevel& patch_level)
-      {
-         d_iterator = patch_level.d_patches.begin();
-         d_patches = &patch_level.d_patches;
-      }
-
-      /*!
-       * @brief Initialize from a PatchLevel pointer.
-       *
-       * @param[in]  patch_level
-       */
-      void
-      initialize(
-         const PatchLevel * patch_level)
-      {
-         d_iterator = patch_level->d_patches.begin();
-         d_patches = &patch_level->d_patches;
-      }
 
       /*!
        * @brief Assignment operator
@@ -1062,6 +1017,11 @@ public:
       }
 
 private:
+      /*
+       * Unimplemented default constructor.
+       */
+      Iterator();
+
       /*!
        * @brief The real iterator (this class is basically a wrapper).
        */

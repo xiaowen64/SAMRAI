@@ -164,8 +164,7 @@ void HyprePoisson::initializeLevelData(
    /*
     * Initialize data in all patches in the level.
     */
-   hier::PatchLevel::Iterator pi(*level);
-   for (pi.initialize(*level); pi; pi++) {
+   for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
 
       const boost::shared_ptr<hier::Patch>& patch = *pi;
       if (!patch) {
@@ -253,8 +252,7 @@ bool HyprePoisson::solvePoisson()
     */
    boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(
          level_number));
-   hier::PatchLevel::Iterator ip(level);
-   for ( ; ip; ip++) {
+   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
       boost::shared_ptr<pdat::CellData<double> > data(
          patch->getPatchData(d_comp_soln_id),

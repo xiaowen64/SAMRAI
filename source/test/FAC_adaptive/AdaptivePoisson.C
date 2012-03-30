@@ -330,8 +330,7 @@ void AdaptivePoisson::initializeLevelData(
    /*
     * Initialize data in all patches in the level.
     */
-   hier::PatchLevel::Iterator pi;
-   for (pi.initialize(*level); pi; pi++) {
+   for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
 
       hier::Patch& patch = **pi;
       hier::Box pbox = patch.getBox();
@@ -479,10 +478,9 @@ void AdaptivePoisson::applyGradientDetector(
    hier::PatchHierarchy& hierarchy = *hierarchy_;
    hier::PatchLevel& level =
       (hier::PatchLevel &) * hierarchy.getPatchLevel(ln);
-   hier::PatchLevel::Iterator pi;
    int ntag = 0, ntotal = 0;
    double maxestimate = 0;
-   for (pi.initialize(level); pi; pi++) {
+   for (hier::PatchLevel::Iterator pi(level); pi; pi++) {
       hier::Patch& patch = **pi;
       boost::shared_ptr<hier::PatchData> tag_data(
          patch.getPatchData(tag_index));
@@ -518,8 +516,7 @@ void AdaptivePoisson::applyGradientDetector(
       computeAdaptionEstimate(estimate_data,
          soln_cell_data);
       tag_cell_data.fill(0);
-      hier::Box::Iterator i;
-      for (i.initialize(patch.getBox()); i; i++) {
+      for (hier::Box::Iterator i(patch.getBox()); i; i++) {
          const pdat::CellIndex cell_index(*i);
          if (maxestimate < estimate_data(cell_index)) maxestimate =
                estimate_data(cell_index);
@@ -905,8 +902,7 @@ int AdaptivePoisson::solvePoisson(
    for (int ln = coarsest_ln; ln <= finest_ln; ++ln) {
      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
 
-      hier::PatchLevel::Iterator pi;
-      for (pi.initialize(*level); pi; pi++) {
+      for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
          const boost::shared_ptr<hier::Patch>& patch = *pi;
 
          const hier::Box& box = patch->getBox();

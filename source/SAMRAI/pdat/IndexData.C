@@ -67,13 +67,6 @@ IndexIterator<TYPE, BOX_GEOMETRY>::getNode()
 }
 
 template<class TYPE, class BOX_GEOMETRY>
-IndexIterator<TYPE, BOX_GEOMETRY>::IndexIterator() :
-   d_index_data(0),
-   d_node(0)
-{
-}
-
-template<class TYPE, class BOX_GEOMETRY>
 IndexIterator<TYPE, BOX_GEOMETRY>::IndexIterator(
    const IndexData<TYPE, BOX_GEOMETRY>& index_data) :
    d_index_data(const_cast<IndexData<TYPE, BOX_GEOMETRY>*>(&index_data)),
@@ -128,13 +121,6 @@ IndexIterator<TYPE, BOX_GEOMETRY>::operator * () const
 }
 
 template<class TYPE, class BOX_GEOMETRY>
-TYPE&
-IndexIterator<TYPE, BOX_GEOMETRY>::getItem()
-{
-   return *d_node->d_item;
-}
-
-template<class TYPE, class BOX_GEOMETRY>
 const hier::Index&
 IndexIterator<TYPE, BOX_GEOMETRY>::getIndex() const
 {
@@ -145,7 +131,7 @@ template<class TYPE, class BOX_GEOMETRY>
 TYPE&
 IndexIterator<TYPE, BOX_GEOMETRY>::operator () ()
 {
-   return getItem();
+   return *d_node->d_item;
 }
 
 template<class TYPE, class BOX_GEOMETRY>
@@ -190,20 +176,6 @@ IndexIterator<TYPE, BOX_GEOMETRY>::operator -- (
    int)
 {
    if (d_node) d_node = d_node->d_prev;
-}
-
-template<class TYPE, class BOX_GEOMETRY>
-void
-IndexIterator<TYPE, BOX_GEOMETRY>::rewindIterator()
-{
-   d_node = d_index_data->d_list_head;
-}
-
-template<class TYPE, class BOX_GEOMETRY>
-void
-IndexIterator<TYPE, BOX_GEOMETRY>::fastforwardIterator()
-{
-   d_node = d_index_data->d_list_tail;
 }
 
 template<class TYPE, class BOX_GEOMETRY>

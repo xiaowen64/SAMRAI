@@ -1198,14 +1198,6 @@ class BoxIterator
 {
 public:
    /**
-    * Default constructor for the box iterator.  The iterator must
-    * be initialized before it can be used to iterate over a box.
-    *
-    * @see initialize().
-    */
-   BoxIterator();
-
-   /**
     * Constructor for the box iterator.  The iterator will enumerate the
     * indices in the argument box.
     */
@@ -1234,20 +1226,6 @@ public:
     * Destructor for the box iterator.
     */
    ~BoxIterator();
-
-   /**
-    * @brief Initializer for the box iterator.
-    *
-    * The iterator will enumerate the indices in the box.
-    */
-   void
-   initialize(
-      const Box& box)
-   {
-      TBOX_DIM_ASSERT_CHECK_DIM(box.getDim());
-      d_index = box.lower();
-      d_box = box;
-   }
 
    /**
     * Return the current index in the box.  This operation is undefined
@@ -1340,12 +1318,19 @@ public:
    }
 
 private:
+   /*
+    * Unimplemented default constructor.
+    */
+   BoxIterator();
+
    Index d_index;
+
    Box d_box;
 
 };
 
 }
 }
+
 
 #endif
