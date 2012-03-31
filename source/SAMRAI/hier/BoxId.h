@@ -17,6 +17,7 @@
 
 #include "SAMRAI/hier/GlobalId.h"
 #include "SAMRAI/hier/PeriodicId.h"
+#include "SAMRAI/tbox/MessageStream.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -300,6 +301,38 @@ public:
       initialize(LocalId(buffer[1]),
          buffer[0],
          PeriodicId(buffer[2]));
+   }
+
+   /*!
+    * @brief Put self into a MessageStream.
+    *
+    * This is the opposite of getFromMessageStream().  Number of ints
+    * written is given by commBufferSize().
+    */
+   void
+   putToMessageStream(
+      tbox::MessageStream &msg) const
+   {
+      msg << getOwnerRank();
+      msg << getLocalId().getValue();
+      msg << getPeriodicId().getPeriodicValue();
+   }
+
+   /*!
+    * @brief Set attributes according to data in MessageStream.
+    *
+    * This is the opposite of putToMessageStream().  Number of ints read
+    * is given by commBufferSize().
+    */
+   void
+   getFromMessageStream(
+      tbox::MessageStream &msg)
+   {
+      int i1, i2, i3;
+      msg >> i1;
+      msg >> i2;
+      msg >> i3;
+      initialize(LocalId(i2), i1, PeriodicId(i3));
    }
 
    //@}

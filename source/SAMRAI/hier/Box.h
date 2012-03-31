@@ -19,6 +19,7 @@
 #include "SAMRAI/hier/Transformation.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <iostream>
@@ -331,6 +332,9 @@ public:
       }
    };
 
+   //@{
+   //! @name Packing and unpacking Boxes
+
    /*!
     * @brief Give number of ints required for putting a Box in
     * message passing buffer.
@@ -366,6 +370,30 @@ public:
    void
    getFromIntBuffer(
       const int * buffer);
+
+   /*!
+    * @brief Put self into a MessageStream.
+    *
+    * This is the opposite of getFromMessageStream().
+    *
+    * @param msg [in] Stream.  Must be in write mode.
+    */
+   void
+   putToMessageStream(
+      tbox::MessageStream &msg) const;
+
+   /*!
+    * @brief Set attributes according to data in MessageStream.
+    *
+    * This is the opposite of putToMessageStream().
+    *
+    * @param msg [in] Stream.  Must be in read mode.
+    */
+   void
+   getFromMessageStream(
+      tbox::MessageStream &msg);
+
+   //@}
 
    /*!
     * @brief assignment operator

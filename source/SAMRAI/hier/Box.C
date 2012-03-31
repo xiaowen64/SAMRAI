@@ -729,6 +729,30 @@ Box::getFromIntBuffer(
 
 }
 
+void
+Box::putToMessageStream(
+   tbox::MessageStream &msg) const
+{
+   msg << d_block_id.getBlockValue();
+   d_id.putToMessageStream(msg);
+   msg.pack( &d_lo[0], d_lo.getDim().getValue() );
+   msg.pack( &d_hi[0], d_hi.getDim().getValue() );
+   return;
+}
+
+void
+Box::getFromMessageStream(
+   tbox::MessageStream &msg)
+{
+   int tmpi;
+   msg >> tmpi;
+   d_block_id = BlockId(tmpi);
+   d_id.getFromMessageStream(msg);
+   msg.unpack( &d_lo[0], d_lo.getDim().getValue() );
+   msg.unpack( &d_hi[0], d_hi.getDim().getValue() );
+   return;
+}
+
 /*
  *************************************************************************
  *
