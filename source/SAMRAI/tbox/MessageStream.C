@@ -28,11 +28,13 @@ namespace tbox {
 MessageStream::MessageStream(
    const size_t num_bytes,
    const StreamMode mode,
-   const void *data_to_read):
+   const void *data_to_read,
+   bool deep_copy):
    d_mode(mode),
    d_buffer(),
    d_buffer_index(0),
-   d_grow_as_needed(false)
+   d_grow_as_needed(false),
+   d_buffer_access(NULL)
 {
    TBOX_ASSERT(num_bytes >= 1);
    d_buffer.reserve(num_bytes);
@@ -42,15 +44,33 @@ MessageStream::MessageStream(
          TBOX_ERROR("MessageStream::MessageStream: error:\n"
                     <<"No data_to_read was given to a Read-mode MessageStream.\n");
       }
-      d_buffer.insert( d_buffer.end(),
-                       static_cast<const char*>(data_to_read),
-                       static_cast<const char*>(data_to_read)+num_bytes );
+      if ( deep_copy ) {
+         d_buffer.insert( d_buffer.end(),
+                          static_cast<const char*>(data_to_read),
+                          static_cast<const char*>(data_to_read)+num_bytes );
+         d_buffer_access = &d_buffer[0];
+      }
+      else {
+         d_buffer_access = static_cast<const char*>(data_to_read);
+      }
    }
+   return;
+}
+
+MessageStream::MessageStream()
+   : d_mode(Write),
+     d_buffer(),
+     d_buffer_index(0),
+     d_grow_as_needed(true),
+     d_buffer_access(NULL)
+{
+   d_buffer.reserve(10);
    return;
 }
 
 MessageStream::~MessageStream()
 {
+   d_buffer_access = NULL;
 }
 
 /*
@@ -67,7 +87,7 @@ MessageStream::printClassData(
 {
    os << "Maximum buffer size = " << d_buffer.size() << std::endl;
    os << "Current buffer index = " << d_buffer_index << std::endl;
-   os << "Pointer to buffer data = " << static_cast<const void *>(&d_buffer[0]) << std::endl;
+   os << "Pointer to buffer data = " << static_cast<const void *>(d_buffer_access) << std::endl;
 }
 
 }

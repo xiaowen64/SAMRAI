@@ -51,11 +51,24 @@ public:
     *
     * @param[in] data_to_read    Data for unpacking, should be num_bytes bytes long.
     *   This is used when mode == MessageStream::Read, ignored in write mode.
+    *
+    * @param[in] deep_copy Whether to make deep copy of data_to_read.
+    * The default is to make a deep copy, which is safer but slower
+    * than a shallow (pointer) copy.  This is used when mode ==
+    * MessageStream::Read, ignored in write mode.  In shallow copy mode,
+    * you cannot call growBufferAsNeeded().
     */
    MessageStream(
       const size_t bytes,
       const StreamMode mode,
-      const void *data_to_read = NULL);
+      const void *data_to_read = NULL,
+      bool deep_copy = true);
+
+   /*!
+    * @brief Default constructor creates a message stream with a
+    * buffer that automatically grows as needed, for writing.
+    */
+   MessageStream();
 
    /*!
     * Destructor for a message stream.
@@ -90,8 +103,8 @@ public:
    const void *
    getBufferStart() const
    {
-      TBOX_ASSERT( ! d_buffer.empty() );
-      return static_cast<const void *>(&d_buffer[0]);
+      TBOX_ASSERT( d_buffer_access != NULL );
+      return static_cast<const void *>(d_buffer_access);
    }
 
    /*!
@@ -223,6 +236,7 @@ private:
                              static_cast<const char*>(input_data),
                              static_cast<const char*>(input_data) + num_bytes );
             d_buffer_index += num_bytes;
+            d_buffer_access = &d_buffer[0];
          }
          return;
       }
@@ -258,6 +272,12 @@ private:
     * The buffer for the streamed data.
     */
    std::vector<char> d_buffer;
+
+   /*!
+    * @brief Pointer to either d_buffer space or, in shallow-copy Read
+    * mode, external memory.
+    */
+   const char *d_buffer_access;
 
    /*!
     * Current index into the buffer used when traversing.
