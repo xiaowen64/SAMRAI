@@ -32,9 +32,9 @@ MessageStream::MessageStream(
    bool deep_copy):
    d_mode(mode),
    d_buffer(),
+   d_buffer_access(NULL),
    d_buffer_index(0),
-   d_grow_as_needed(false),
-   d_buffer_access(NULL)
+   d_grow_as_needed(false)
 {
    TBOX_ASSERT(num_bytes >= 1);
    d_buffer.reserve(num_bytes);
@@ -60,9 +60,9 @@ MessageStream::MessageStream(
 MessageStream::MessageStream()
    : d_mode(Write),
      d_buffer(),
+     d_buffer_access(NULL),
      d_buffer_index(0),
-     d_grow_as_needed(true),
-     d_buffer_access(NULL)
+     d_grow_as_needed(true)
 {
    d_buffer.reserve(10);
    return;
