@@ -33,6 +33,7 @@ MessageStream::MessageStream(
    d_mode(mode),
    d_buffer(),
    d_buffer_access(NULL),
+   d_buffer_size(0),
    d_buffer_index(0),
    d_grow_as_needed(false)
 {
@@ -53,6 +54,7 @@ MessageStream::MessageStream(
       else {
          d_buffer_access = static_cast<const char*>(data_to_read);
       }
+      d_buffer_size = num_bytes;
    }
    return;
 }
@@ -61,6 +63,7 @@ MessageStream::MessageStream()
    : d_mode(Write),
      d_buffer(),
      d_buffer_access(NULL),
+     d_buffer_size(0),
      d_buffer_index(0),
      d_grow_as_needed(true)
 {
@@ -85,7 +88,7 @@ void
 MessageStream::printClassData(
    std::ostream& os) const
 {
-   os << "Maximum buffer size = " << d_buffer.size() << std::endl;
+   os << "Maximum buffer size = " << d_buffer_size << std::endl;
    os << "Current buffer index = " << d_buffer_index << std::endl;
    os << "Pointer to buffer data = " << static_cast<const void *>(d_buffer_access) << std::endl;
 }

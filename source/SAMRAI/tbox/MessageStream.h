@@ -235,6 +235,7 @@ private:
             d_buffer.insert( d_buffer.end(),
                              static_cast<const char*>(input_data),
                              static_cast<const char*>(input_data) + num_bytes );
+            d_buffer_size = d_buffer.size();
             d_buffer_index += num_bytes;
             d_buffer_access = &d_buffer[0];
          }
@@ -251,7 +252,7 @@ private:
       void *output_data,
       const size_t num_bytes)
       {
-         TBOX_ASSERT(d_buffer_index + num_bytes <= d_buffer.size());
+         TBOX_ASSERT( d_buffer_index + num_bytes <= d_buffer_size );
          memcpy(output_data, &d_buffer[d_buffer_index], num_bytes);
          d_buffer_index += num_bytes;
          return;
@@ -278,6 +279,14 @@ private:
     * mode, external memory.
     */
    const char *d_buffer_access;
+
+   /*!
+    * @brief Number of bytes in the buffer.
+    *
+    * Equal to d_buffer.size() if using internal buffer.  Otherwixe,
+    * equal to external buffer size.
+    */
+   size_t d_buffer_size;
 
    /*!
     * Current index into the buffer used when traversing.
