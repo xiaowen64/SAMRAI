@@ -123,9 +123,10 @@ Timer::start()
 #ifdef ENABLE_SAMRAI_TIMERS
    if (d_is_active) {
 
-      // Timer should not be running.  This would indicate two start calls being
-      // made before a stop.
-      TBOX_ASSERT(d_is_running == false);
+      if (d_is_running == true) {
+         TBOX_ERROR("Illegal attempt to start timer '" << d_name
+                    << "' when it is already started.");
+      }
       d_is_running = true;
 
       d_accesses++;
@@ -162,9 +163,10 @@ Timer::stop()
 #ifdef ENABLE_SAMRAI_TIMERS
    if (d_is_active) {
 
-      // Timer should be running.  This would indicate two stop calls being
-      // made before a start.
-      TBOX_ASSERT(d_is_running == true);
+      if (d_is_running == false) {
+         TBOX_ERROR("Illegal attempt to stop timer '" << d_name
+                    << "' when it is already stopped.");
+      }
       d_is_running = false;
 
       TimerManager::getManager()->stopTime(this);

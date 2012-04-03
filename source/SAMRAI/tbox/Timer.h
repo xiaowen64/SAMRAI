@@ -79,12 +79,16 @@ public:
 
    /**
     * Start the timer if active.
+    *
+    * It is an error to start a timer that is already started.
     */
    void
    start();
 
    /**
     * Stop the timer if active.
+    *
+    * It is an error to stop a timer that is already stopped.
     */
    void
    stop();
