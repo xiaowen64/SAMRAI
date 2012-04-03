@@ -253,7 +253,7 @@ private:
       const size_t num_bytes)
       {
          TBOX_ASSERT( d_buffer_index + num_bytes <= d_buffer_size );
-         memcpy(output_data, &d_buffer[d_buffer_index], num_bytes);
+         memcpy(output_data, &d_buffer_access[d_buffer_index], num_bytes);
          d_buffer_index += num_bytes;
          return;
       }
