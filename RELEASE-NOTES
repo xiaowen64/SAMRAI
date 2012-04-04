@@ -54,6 +54,9 @@ descriptions of items in the following list are provided below.
 
     THIS NOW MAKES BOOST HEADERS REQUIRED.
 
+(2) Starting/stopping a Timer that is already started/stopped is an
+    error in both optimize and debug modes.
+
 
 *****************************************************************************
 
@@ -76,6 +79,12 @@ descriptions of items in the following list are provided below.
     ConstPointer which was redundant as ConstPointer<X> was equivalent to
     Pointer<X>.
 
+
+(2) Starting/stopping a Timer that is already started/stopped is an
+    error in both optimize and debug modes.
+
+    Previous behavior: This caused a failed assert in debug mode but not
+    in optimized mode.
 
 
 =============================================================================
