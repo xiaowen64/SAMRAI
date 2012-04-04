@@ -241,6 +241,8 @@ public:
 
 private:
 
+   typedef int LoadType;
+
    /*!
     * @brief Data to save for each Box that gets passed along the tree
     * edges.
@@ -265,19 +267,6 @@ private:
        * @param[in] other
        */
       BoxInTransit(const hier::Box& origin);
-
-      /*!
-       * @brief Construct new object using integer data packed by
-       * putToIntBuffer().
-       *
-       * @param[i/o] ptr Pointer to integer data in buffer.  On return,
-       * @c ptr will be advanced past the data used by this object.
-       *
-       * @param[i] dim
-       */
-      BoxInTransit(
-         const int *&ptr,
-         const tbox::Dimension &dim );
 
       /*!
        * @brief Construct new object having the history an existing
@@ -307,7 +296,7 @@ private:
       {
          d_box = other.d_box;
          d_orig_box = other.d_orig_box;
-         d_load = other.d_load;
+         d_boxload = other.d_boxload;
          return *this;
       }
 
@@ -340,38 +329,22 @@ private:
       }
 
       /*!
-       * @brief Return number of ints required for putting a putting the
-       * object in message passing buffer.
+       * @brief Put self into a MessageStream.
+       *
+       * This is the opposite of getFromMessageStream().
        */
-      int
-      commBufferSize() const
-      {
-         return 2 * hier::Box::commBufferSize(d_box.getDim()) + 1;
-      }
+      void
+      putToMessageStream(
+         tbox::MessageStream &msg) const;
 
       /*!
-       * @brief Put self into a int buffer.
+       * @brief Set attributes according to data in a MessageStream.
        *
-       * This is the opposite of getFromIntBuffer().  Number of ints
-       * written is given by commBufferSize().
-       *
-       * @return The next unwritten position in the buffer.
+       * This is the opposite of putToMessageStream().
        */
-      int*
-      putToIntBuffer(
-         int* buffer) const;
-
-      /*!
-       * @brief Set attributes according to data in int buffer.
-       *
-       * This is the opposite of putToIntBuffer().  Number of ints read
-       * is given by what commBufferSize() AFTER this method is called.
-       *
-       * @return The next unread position in the buffer.
-       */
-      const int*
-      getFromIntBuffer(
-         const int* buffer);
+      void
+      getFromMessageStream(
+         tbox::MessageStream &msg);
 
       //! @brief The Box.
       hier::Box d_box;
@@ -379,8 +352,8 @@ private:
       //! @brief Originating Box.
       hier::Box d_orig_box;
 
-      //! @brief Work load.
-      int d_load;
+      //! @brief Work load in this box.
+      LoadType d_boxload;
    };
 
 
@@ -408,7 +381,7 @@ private:
          const BoxInTransit& b) const
       {
          if (a.getBox().size() != b.getBox().size()) {
-            return a.d_load > b.d_load;
+            return a.d_boxload > b.d_boxload;
          }
          return a.d_box.getId() < b.d_box.getId();
       }
@@ -462,7 +435,7 @@ private:
       /*!
        * @brief Current total work amount in the subtree
        */
-      int d_total_work;
+      LoadType d_total_work;
 
       /*!
        * @brief Load exported (or to be exported) to nonlocal process.
@@ -470,7 +443,7 @@ private:
        * If the object is for the local process, load_exported means
        * the load exported to the process's *parent*.
        */
-      int d_load_exported;
+      LoadType d_load_exported;
 
       /*!
        * @brief Load imported from nonlocal process.
@@ -478,12 +451,12 @@ private:
        * If the object is for the local process, load_imported means
        * the load imported from the process's *parent*.
        */
-      int d_load_imported;
+      LoadType d_load_imported;
 
       /*!
        * @brief Ideal work amount for the subtree
        */
-      int d_ideal_work;
+      LoadType d_ideal_work;
 
       /*!
        * @brief Work to export.
@@ -533,12 +506,12 @@ private:
     * src to dst (if negative, from dst to src).
     *
     */
-   int
+   LoadType
    reassignLoads(
       TransitSet& src,
       TransitSet& dst,
       hier::LocalId& next_available_index,
-      int ideal_transfer ) const;
+      LoadType ideal_transfer ) const;
 
    /*!
     * @brief Shift load from src to dst by swapping BoxInTransit
@@ -554,11 +527,11 @@ private:
     * @return Amount of load transfered.  If positive, load went
     * from src to dst (if negative, from dst to src).
     */
-   int
+   LoadType
    shiftLoadsBySwapping(
       TransitSet& src,
       TransitSet& dst,
-      int ideal_transfer ) const;
+      LoadType ideal_transfer ) const;
 
    /*!
     * @brief Shift load from src to dst by various box breaking strategies.
@@ -577,12 +550,12 @@ private:
     * @return Amount of load transfered.  If positive, load went
     * from src to dst (if negative, from dst to src).
     */
-   int
+   LoadType
    shiftLoadsByBreaking(
       TransitSet& src,
       TransitSet& dst,
       hier::LocalId& next_available_index,
-      int ideal_transfer ) const;
+      LoadType ideal_transfer ) const;
 
    /*!
     * @brief Find a BoxInTransit in each of the source and destination
@@ -593,8 +566,8 @@ private:
    swapLoadPair(
       TransitSet& src,
       TransitSet& dst,
-      int& actual_transfer,
-      int ideal_transfer ) const;
+      LoadType& actual_transfer,
+      LoadType ideal_transfer ) const;
 
    /*!
     * @brief Pack load/boxes for sending.
@@ -614,6 +587,24 @@ private:
       hier::LocalId& next_available_index,
       const int* received_data,
       int received_data_length ) const;
+
+   /*!
+    * @brief Pack load/boxes for sending.
+    */
+   void
+   packSubtreeLoadData(
+      tbox::MessageStream &msg,
+      const SubtreeLoadData& load_data) const;
+
+   /*!
+    * @brief Unpack load/boxes received.
+    */
+   void
+   unpackSubtreeLoadData(
+      SubtreeLoadData& proc_data,
+      TransitSet& receiving_bin,
+      hier::LocalId& next_available_index,
+      tbox::MessageStream &msg ) const;
 
    /*!
     * @brief Construct semilocal relationships in
@@ -882,9 +873,9 @@ private:
    void
    setupAsyncCommObjects(
       tbox::AsyncCommStage& child_stage,
-      tbox::AsyncCommPeer<int> *& child_comms,
+      tbox::AsyncCommPeer<char> *& child_comms,
       tbox::AsyncCommStage& parent_stage,
-      tbox::AsyncCommPeer<int> *& parent_comm,
+      tbox::AsyncCommPeer<char> *& parent_comm,
       const tbox::RankGroup &rank_group,
       const tbox::BalancedDepthFirstTree &bdfs ) const;
 
@@ -893,22 +884,22 @@ private:
     */
    void
    destroyAsyncCommObjects(
-      tbox::AsyncCommPeer<int> *& child_comms,
-      tbox::AsyncCommPeer<int> *& parent_comm) const;
+      tbox::AsyncCommPeer<char> *& child_comms,
+      tbox::AsyncCommPeer<char> *& parent_comm) const;
 
    /*!
     * @brief Sum up the work in a sequence of boxes.
     *
     * @return Sum of work in [first,last)
     */
-   int
+   LoadType
    sumWorkInBoxes(
       const TransitSet::const_iterator &first,
       const TransitSet::const_iterator &last ) const
    {
-      int sum = 0;
+      LoadType sum = 0;
       for ( TransitSet::const_iterator itr=first; itr!=last; ++itr ) {
-         sum += itr->d_load;
+         sum += itr->d_boxload;
       }
       return sum;
    }

@@ -703,10 +703,10 @@ Box::putToIntBuffer(
    d_id.putToIntBuffer(buffer);
    buffer += BoxId::commBufferSize();
 
-   const tbox::Dimension& dim(d_lo.getDim());
-   for (int d = 0; d < dim.getValue(); ++d) {
-      buffer[d * 2] = d_lo(d);
-      buffer[d * 2 + 1] = d_hi(d);
+   const int dim(d_lo.getDim().getValue());
+   for (int d = 0; d < dim; ++d) {
+      buffer[d] = d_lo(d);
+      buffer[dim + d] = d_hi(d);
    }
 
 }
@@ -721,10 +721,10 @@ Box::getFromIntBuffer(
    d_id.getFromIntBuffer(buffer);
    buffer += BoxId::commBufferSize();
 
-   const tbox::Dimension& dim(d_lo.getDim());
-   for (int d = 0; d < dim.getValue(); ++d) {
-      d_lo(d) = buffer[d * 2];
-      d_hi(d) = buffer[d * 2 + 1];
+   const int dim(d_lo.getDim().getValue());
+   for (int d = 0; d < dim; ++d) {
+      d_lo(d) = buffer[d];
+      d_hi(d) = buffer[dim + d];
    }
 
 }

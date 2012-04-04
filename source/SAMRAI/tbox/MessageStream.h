@@ -26,9 +26,13 @@ namespace tbox {
 /*!
  * @brief Class to provide buffers for communication of data.
  *
- * MessageStream provides a fixed size message buffer that can
- * hold data of any type.  It is used by communication routines in the
- * Schedule class.
+ * MessageStream provides a message buffer that can hold data of any
+ * type.  It is used by communication routines in the Schedule class.
+ *
+ * TODO: Because this class supports both read and write modes, it has
+ * extra data and methods that don't make sense, depending on the
+ * mode.  It should be rewritten as two classes, like std::cin and
+ * std::cout are.  BTNG.
  *
  * @see tbox::Schedule
  */
@@ -128,6 +132,16 @@ public:
       TBOX_ASSERT( d_mode == Write );
       d_grow_as_needed = true;
       return;
+   }
+
+   /*!
+    * @brief Whether a Read-mode MessageStream has reached the end of
+    * its data.
+    */
+   bool endOfData() const
+   {
+      TBOX_ASSERT( d_mode == Read );
+      return d_buffer_index >= d_buffer_size;
    }
 
    /*!
