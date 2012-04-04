@@ -560,7 +560,7 @@ AsyncCommPeer<TYPE>::checkRecv()
                   &req[0]);
             t_recv_timer->stop();
             if (d_mpi_err != MPI_SUCCESS) {
-               TBOX_ERROR("Error in MPI_Isend."
+               TBOX_ERROR("Error in MPI_Irecv."
                   << "mpi_communicator = " << d_mpi.getCommunicator()
                   << "mpi_tag = " << d_tag0);
             }
@@ -651,7 +651,7 @@ AsyncCommPeer<TYPE>::checkRecv()
                      &req[1]);
                t_recv_timer->stop();
                if (d_mpi_err != MPI_SUCCESS) {
-                  TBOX_ERROR("Error in MPI_Isend."
+                  TBOX_ERROR("Error in MPI_Irecv."
                      << "mpi_communicator = " << d_mpi.getCommunicator()
                      << "mpi_tag = " << d_tag0);
                }
