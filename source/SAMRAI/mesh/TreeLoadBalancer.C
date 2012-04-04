@@ -1328,7 +1328,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       tbox::MessageStream mstream;
       packSubtreeLoadData(mstream, my_load_data);
       parent_send->setSendTimer(t_parent_send_wait);
-      parent_send->beginSend((const char*)(mstream.getBufferStart()),
+      parent_send->beginSend(static_cast<const char*>(mstream.getBufferStart()),
                              static_cast<int>(sizeof(int)*mstream.getCurrentSize()));
 
    }
@@ -1477,7 +1477,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
          tbox::MessageStream mstream;
          packSubtreeLoadData(mstream, recip_data);
          child_recvs[ichild].setSendTimer(t_child_send_wait);
-         child_sends[ichild].beginSend((const char*)(mstream.getBufferStart()),
+         child_sends[ichild].beginSend(static_cast<const char*>(mstream.getBufferStart()),
                                        static_cast<int>(mstream.getCurrentSize()));
 
          if (d_print_steps) {
