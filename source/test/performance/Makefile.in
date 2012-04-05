@@ -17,7 +17,7 @@ default: library
 
 include $(OBJECT)/config/Makefile.config
 
-SUBDIRS = treesearch LoadBalancers LinAdv
+SUBDIRS = treesearch TreeCommunication MeshGeneration LoadBalancers LinAdv
 
 library:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
