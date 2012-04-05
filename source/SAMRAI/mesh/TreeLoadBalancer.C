@@ -1126,7 +1126,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       int ideal_transfer = int(0.5 + my_load_data.d_total_work - group_avg_load);
 
       if (d_print_steps) {
-         tbox::plog << "  Reassigning initial overload of " << ideal_transfer
+         tbox::plog << "Reassigning initial overload of " << ideal_transfer
                     << " to unassigned.\n";
       }
 
@@ -1227,7 +1227,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
             ni = unassigned.begin();
          for (int ii = 0; ii < old_size; ++ii) { ++ni; }
          if (d_print_steps) {
-            tbox::plog << "    Got " << unassigned.size() - old_size
+            tbox::plog << "Got " << unassigned.size() - old_size
                        << " boxes (" << child_load_data[cindex].d_load_imported
                        << " units) from child "
                        << child_recv->getPeerRank() << ":";
@@ -1295,7 +1295,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       if (ideal_transfer > 0) {
 
          if (d_print_steps) {
-            tbox::plog << "  Attempting to reassign " << ideal_transfer
+            tbox::plog << "Attempting to reassign " << ideal_transfer
                        << " of unassigned load to parent.\n";
          }
 
@@ -1308,7 +1308,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
          my_load_data.d_total_work -= actual_transfer;
 
          if (d_print_steps) {
-            tbox::plog << "  Giving " << my_load_data.d_for_export.size()
+            tbox::plog << "Giving " << my_load_data.d_for_export.size()
                        << " boxes (" << actual_transfer << " / "
                        << ideal_transfer << " units) to parent "
                        << parent_send->getPeerRank() << ":";
@@ -1401,7 +1401,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
             ++ni;
          }
          if (d_print_steps) {
-            tbox::plog << "    Got " << unassigned.size() - old_size
+            tbox::plog << "Got " << unassigned.size() - old_size
                        << " boxes (" << parent_load_data.d_load_imported
                        << " units) from parent "
                        << parent_recv->getPeerRank() << ":";
@@ -1448,7 +1448,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
          LoadType actual_transfer = 0;
 
          if (d_print_steps) {
-            tbox::plog << "  Attempting to reassign " << ideal_transfer
+            tbox::plog << "Attempting to reassign " << ideal_transfer
                        << " of unassigned load to child "
                        << child_sends[ichild].getPeerRank() << "\n";
          }
@@ -1464,7 +1464,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
          }
 
          if (d_print_steps) {
-            tbox::plog << "  Giving " << recip_data.d_for_export.size()
+            tbox::plog << "Giving " << recip_data.d_for_export.size()
                        << " boxes (" << actual_transfer << " / " << ideal_transfer
                        << " units) to child " << ichild << ':'
                        << child_sends[ichild].getPeerRank() << " for "
@@ -1486,7 +1486,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
 
          if (d_print_steps) {
             tbox::plog << "  After child " << ichild
-                       << " rank=" << child_sends[ichild].getPeerRank()
+                       << ':' << child_sends[ichild].getPeerRank()
                        << ", unassigned ammount is "
                        << sumWorkInBoxes(unassigned.begin(),unassigned.end())
                        << std::endl;
@@ -1752,7 +1752,7 @@ TreeLoadBalancer::reassignLoads(
             src,
             dst,
             actual_transfer - ideal_transfer);
-         tbox::plog << "    Balance penalty after shiftLoadsByBreaking = "
+         tbox::plog << "  Balance penalty after shiftLoadsByBreaking = "
                     << balance_penalty
                     << ", needs " << (ideal_transfer - actual_transfer)
                     << " more with " << src.size() << " source and "
@@ -2432,7 +2432,7 @@ TreeLoadBalancer::shiftLoadsByBreaking(
                trial_balance_penalty,
                trial_surface_penalty,
                trial_slender_penalty);
-         if (d_print_steps) {
+         if (d_print_break_steps) {
             tbox::plog.unsetf(std::ios::fixed | std::ios::scientific);
             tbox::plog.precision(6);
             tbox::plog << "    Trial's imbalance: "
@@ -2445,7 +2445,7 @@ TreeLoadBalancer::shiftLoadsByBreaking(
                        << std::endl;
          }
 
-         if (d_print_steps) {
+         if (d_print_break_steps) {
             if (trial_combined_penalty < best_combined_penalty) {
                tbox::plog << "    Keeping this trial." << std::endl;
             } else {
@@ -2857,7 +2857,7 @@ TreeLoadBalancer::swapLoadPair(
    if (found_swap) {
 
       // We can improve balance_penalty by swapping isrc with idst.
-      if (d_print_steps) {
+      if (d_print_swap_steps) {
          tbox::plog << "    Swapping " << actual_transfer << " units using ";
          if (isrc != src.end()) tbox::plog << *isrc;
          else tbox::plog << "X";
@@ -2878,7 +2878,7 @@ TreeLoadBalancer::swapLoadPair(
 
 
    } else {
-      if (d_print_steps) {
+      if (d_print_swap_steps) {
          tbox::plog << "    Cannot find swap pair for " << ideal_transfer
                     << " units." << std::endl;
       }
