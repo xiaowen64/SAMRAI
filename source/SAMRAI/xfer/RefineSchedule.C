@@ -2219,6 +2219,10 @@ RefineSchedule::computeRefineOverlaps(
    const Connector& coarse_to_fine,
    const Connector& coarse_to_unfilled)
 {
+   bool is_encon = (fine_level == d_encon_level);
+
+   boost::shared_ptr<BoxGeometryVariableFillPattern> bg_fill_pattern(
+      boost::make_shared<BoxGeometryVariableFillPattern>());
 
    boost::shared_ptr<hier::PatchDescriptor> fine_patch_descriptor(
       fine_level->getPatchDescriptor());
@@ -2290,13 +2294,22 @@ RefineSchedule::computeRefineOverlaps(
             hier::Box scratch_space(fine_patch->getBox());
             scratch_space.grow(fine_scratch_gcw);
 
-            refine_overlaps[ne] =
-               rep_item.d_var_fill_pattern->computeFillBoxesOverlap(
-                  fill_boxes,
-                  fine_patch->getBox(),
-                  scratch_space,
-                  *fine_pdf);
+            if (!is_encon) {
+               refine_overlaps[ne] =
+                  rep_item.d_var_fill_pattern->computeFillBoxesOverlap(
+                     fill_boxes,
+                     fine_patch->getBox(),
+                     scratch_space,
+                     *fine_pdf);
 
+            } else {
+               refine_overlaps[ne] =
+                  bg_fill_pattern->computeFillBoxesOverlap(
+                     fill_boxes,
+                     fine_patch->getBox(),
+                     scratch_space,
+                     *fine_pdf);
+            }
          }
       }
       overlaps.push_back(refine_overlaps);
