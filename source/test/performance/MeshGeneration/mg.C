@@ -571,6 +571,7 @@ int main(
           */
          tbox::pout << "\tClustering..." << std::endl;
          abr.setMPI(L0.getMPI());
+         tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
          abr.findBoxesContainingTags(
             L1,
             L0_to_L1,
@@ -703,6 +704,7 @@ int main(
           */
          tbox::pout << "\tClustering..." << std::endl;
          abr.setMPI(L0.getMPI());
+         tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
          abr.findBoxesContainingTags(
             L2,
             L1_to_L2,
