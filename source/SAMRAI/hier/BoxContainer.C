@@ -190,6 +190,9 @@ BoxContainer::operator == (
 {
    bool isEqual = (d_ordered && rhs.d_ordered); 
    if (isEqual) {
+      isEqual = size() == rhs.size();
+   }
+   if (isEqual) {
       if (!d_ordered) { 
          isEqual = std::equal(d_list.begin(), d_list.end(),
                       rhs.d_list.begin(), Box::box_equality());
@@ -1692,6 +1695,7 @@ void
 BoxContainer::print(
    std::ostream& co) const
 {
+   co << size() << " boxes, " << (d_ordered?"ordered":"unordered") << '\n';
    for (ConstIterator bi = begin(); bi != end(); ++bi) {
       Box box(*bi);
       co << "    "
