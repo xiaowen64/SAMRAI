@@ -1331,7 +1331,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       parent_send->setSendTimer(t_parent_send_wait);
       parent_send->setWaitTimer(t_parent_send_wait);
       parent_send->beginSend(static_cast<const char*>(mstream.getBufferStart()),
-                             static_cast<int>(sizeof(int)*mstream.getCurrentSize()));
+                             static_cast<int>(mstream.getCurrentSize()));
 
    }
    t_send_load_to_parent->stop();
