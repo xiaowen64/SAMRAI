@@ -499,7 +499,8 @@ public:
     * @brief Create a pointer to a refined version of this grid geometry
     *        object.
     *
-    * Pure virtual function.  Implementers must override this method.
+    * Virtual method -- should be overridden in specialized grid geometry
+    * classes
     *
     * @param[in]     fine_geom_name std::string name of the geometry object
     * @param[in]     refine_ratio the refinement ratio.
@@ -518,7 +519,8 @@ public:
     * @brief Create a pointer to a coarsened version of this grid geometry
     *        object.
     *
-    * Pure virtual function.  Implementers must override this method.
+    * Virtual method -- should be overridden in specialized grid geometry
+    * classes
     *
     * @param[in]     coarse_geom_name std::string name of the geometry object
     * @param[in]     coarsen_ratio the coasening ratio
@@ -536,7 +538,8 @@ public:
    /*!
     * @brief Compute and set grid data for patch.
     *
-    * Pure virtual function.  Implementers must override this method.
+    * Virtual method -- should be overridden in specialized grid geometry
+    * classes
     *
     * @param[in,out]    patch The patch on which to set grid data and the new
     *                   concrete patch geometry object.
