@@ -277,9 +277,9 @@ CartesianGridGeometry::makeCoarsenedGridGeometry(
     */
    const hier::BoxContainer& fine_domain = getPhysicalDomain();
    const int nboxes = fine_domain.size();
-   hier::BoxContainer::ConstIterator fine_domain_itr(fine_domain);
-   hier::BoxContainer::Iterator coarse_domain_itr(coarse_domain);
-   for (int ib = 0; ib < nboxes; ib++, fine_domain_itr++, coarse_domain_itr++) {
+   hier::BoxContainer::const_iterator fine_domain_itr(fine_domain);
+   hier::BoxContainer::iterator coarse_domain_itr(coarse_domain);
+   for (int ib = 0; ib < nboxes; ib++, ++fine_domain_itr, ++coarse_domain_itr) {
       hier::Box testbox = hier::Box::refine(*coarse_domain_itr, coarsen_ratio);
       if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -354,8 +354,8 @@ CartesianGridGeometry::setGeometryData(
 
    hier::Box bigbox(dim);
    const hier::BoxContainer& block_domain = getPhysicalDomain();
-   for (hier::BoxContainer::ConstIterator k(block_domain); k != block_domain.end();
-        ++k) {
+   for (hier::BoxContainer::const_iterator k(block_domain);
+        k != block_domain.end(); ++k) {
       bigbox += *k;
    }
 
@@ -554,7 +554,7 @@ CartesianGridGeometry::getFromInput(
                << std::endl);
          }
          hier::LocalId local_id(0);
-         for (hier::BoxContainer::Iterator itr = input_domain.begin();
+         for (hier::BoxContainer::iterator itr = input_domain.begin();
               itr != input_domain.end(); ++itr) {
             itr->setBlockId(hier::BlockId(0));
             domain.pushBack(hier::Box(*itr, local_id++, 0));
@@ -642,7 +642,7 @@ CartesianGridGeometry::getFromRestart()
 
    hier::BoxContainer domain;
    hier::LocalId local_id(0);
-   for (hier::BoxContainer::Iterator itr = restart_domain.begin();
+   for (hier::BoxContainer::iterator itr = restart_domain.begin();
         itr != restart_domain.end(); ++itr) {
       itr->setBlockId(hier::BlockId(0));
       domain.pushBack(hier::Box(*itr, local_id++, 0));

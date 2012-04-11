@@ -156,7 +156,8 @@ int main(
          os << "\nLevel: " << level->getLevelNumber() << " ";
 
          // loop over patches on level
-         for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+         for (hier::PatchLevel::iterator ip(level->begin());
+              ip != level->end(); ++ip) {
             boost::shared_ptr<hier::Patch> patch(level->getPatch(ip()));
             os << "Patch: " << patch->getLocalId() << std::endl;
 
@@ -167,10 +168,12 @@ int main(
 
             // iterate over cells of patch and invoke one "SampleIndexData"
             // instance on each cell (its possible to do more).
-            for (pdat::CellIterator ic(patch->getBox()); ic; ic++) {
-               SampleIndexData sd(ic());
+            pdat::CellIterator icend(patch->getBox(), false);
+            for (pdat::CellIterator ic(patch->getBox(), true);
+                 ic != icend; ++ic) {
+               SampleIndexData sd(*ic);
                sd.setInt(counter);
-               sample->appendItem(ic(), sd);
+               sample->appendItem(*ic, sd);
                counter++;
             }
 

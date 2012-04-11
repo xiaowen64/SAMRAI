@@ -193,9 +193,9 @@ SideGeometry::doOverlap(
 
          if (dst_restrict_boxes.size() && dst_boxes[d].size()) {
             hier::BoxContainer side_restrict_boxes;
-            for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
+            for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
                  b != dst_restrict_boxes.end(); ++b) {
-               side_restrict_boxes.pushBack(toSideBox(b(), d));
+               side_restrict_boxes.pushBack(toSideBox(*b, d));
             }
             dst_boxes[d].intersectBoxes(side_restrict_boxes);
          }
@@ -224,9 +224,9 @@ SideGeometry::setUpOverlap(
    const tbox::Dimension& dim(transformation.getOffset().getDim());
    tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
 
-   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
       for (int d = 0; d < dim.getValue(); d++) {
-         hier::Box side_box(SideGeometry::toSideBox(b(), d));
+         hier::Box side_box(SideGeometry::toSideBox(*b, d));
          dst_boxes[d].pushBack(side_box);
       }
    }

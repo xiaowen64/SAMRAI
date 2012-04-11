@@ -298,9 +298,9 @@ NodeData<TYPE>::copyWithRotation(
                                    node_rotatebox.getBlockId(),
                                    getBox().getBlockId());
 
-   for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
+   for (hier::BoxContainer::const_iterator bi(overlap_boxes);
         bi != overlap_boxes.end(); ++bi) {
-      const hier::Box& overlap_box = bi();
+      const hier::Box& overlap_box = *bi;
 
       const hier::Box copybox(node_rotatebox * overlap_box);
 
@@ -308,9 +308,10 @@ NodeData<TYPE>::copyWithRotation(
          const int depth = ((getDepth() < src.getDepth()) ?
                             getDepth() : src.getDepth());
 
-         for (hier::Box::Iterator ci(copybox); ci; ci++) {
+         hier::Box::iterator ciend(copybox, false);
+         for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
 
-            NodeIndex dst_index(ci(), hier::IntVector::getZero(dim));
+            NodeIndex dst_index(*ci, hier::IntVector::getZero(dim));
             NodeIndex src_index(dst_index);
             NodeGeometry::transform(src_index, back_trans);
 
@@ -445,18 +446,19 @@ NodeData<TYPE>::packWithRotation(
    tbox::Array<TYPE> buffer(size);
 
    int i = 0;
-   for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
+   for (hier::BoxContainer::const_iterator bi(overlap_boxes);
         bi != overlap_boxes.end(); ++bi) {
-      const hier::Box& overlap_box = bi();
+      const hier::Box& overlap_box = *bi;
 
       const hier::Box copybox(node_rotatebox * overlap_box);
 
       if (!copybox.empty()) {
 
          for (int d = 0; d < depth; d++) {
-            for (hier::Box::Iterator ci(copybox); ci; ci++) {
+            hier::Box::iterator ciend(copybox, false);
+            for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
 
-               NodeIndex src_index(ci(), hier::IntVector::getZero(dim));
+               NodeIndex src_index(*ci, hier::IntVector::getZero(dim));
                NodeGeometry::transform(src_index, back_trans);
 
                buffer[i] = d_data(src_index, d);
@@ -586,9 +588,10 @@ NodeData<TYPE>::print(
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    os.precision(prec);
-   for (NodeIterator i(box); i; i++) {
-      os << "array" << i() << " = "
-         << d_data(i(), depth) << std::endl << std::flush;
+   NodeIterator iend(box, false);
+   for (NodeIterator i(box, true); i != iend; ++i) {
+      os << "array" << *i << " = "
+         << d_data(*i, depth) << std::endl << std::flush;
    }
 }
 

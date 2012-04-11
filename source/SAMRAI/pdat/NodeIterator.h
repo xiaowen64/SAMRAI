@@ -28,7 +28,8 @@ namespace pdat {
  * \verbatim
  * hier::Box box;
  * ...
- * for (NodeIterator c(box); c; c++) {
+ * NodeIterator cend(box, false);
+ * for (NodeIterator c(box, true); c != cend; ++c) {
  *    // use index c of the box
  * }
  * \endverbatim
@@ -49,7 +50,8 @@ public:
     * the indices in the argument box.
     */
    explicit NodeIterator(
-      const hier::Box& box);
+      const hier::Box& box,
+      bool begin);
 
    /**
     * Copy constructor for the node iterator
@@ -84,43 +86,25 @@ public:
    }
 
    /**
-    * Extract the node index corresponding to the iterator position in the box.
+    * Extract a pointer to the node index corresponding to the iterator
+    * position in the box.
     */
-   const NodeIndex&
-   operator () () const
+   const NodeIndex*
+   operator -> () const
    {
-      return d_index;
+      return &d_index;
    }
 
    /**
-    * Return true if the iterator points to a valid index within the box.
+    * Pre-increment the iterator to point to the next index in the box.
     */
-   operator bool () const;
-
-#ifndef LACKS_BOOL_VOID_RESOLUTION
-   /**
-    * Return a non-NULL if the iterator points to a valid index within the box.
-    */
-   operator const void* () const
-   {
-      return NodeIterator::operator bool () ? this : NULL;
-   }
-#endif
+   NodeIterator&
+   operator ++ ();
 
    /**
-    * Return whether the iterator points to a valid index within the box.
-    * This operator mimics the !p operation applied to a pointer p.
+    * Post-increment the iterator to point to the next index in the box.
     */
-   bool
-   operator ! () const
-   {
-      return !NodeIterator::operator bool ();
-   }
-
-   /**
-    * Increment the iterator to point to the next index in the box.
-    */
-   void
+   NodeIterator
    operator ++ (
       int);
 

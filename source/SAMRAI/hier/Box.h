@@ -1112,7 +1112,7 @@ public:
     * A box iterator iterates over the elements of a box.  This class is
     * defined elsewhere, and the typedef is used to point to that class.
     */
-   typedef BoxIterator Iterator;
+   typedef BoxIterator iterator;
 
    template<class>
    friend class pdat::ArrayData;
@@ -1210,7 +1210,8 @@ private:
  * \verbatim
  * Box box;
  * ...
- * for (Box::Iterator b(box); b; b++) {
+ * Box::iterator bend(box, false);
+ * for (Box::iterator b(box, true); b != bend; ++b) {
  *    // use index b of the box
  * }
  * \endverbatim
@@ -1230,7 +1231,8 @@ public:
     * indices in the argument box.
     */
    explicit BoxIterator(
-      const Box& box);
+      const Box& box,
+      bool begin);
 
    /**
     * Copy constructor for the box iterator.
@@ -1266,54 +1268,39 @@ public:
    }
 
    /**
-    * Return the current index in the box.  This operation is undefined
-    * if the iterator is past the last Index in the box.
+    * Return a pointer to the current index in the box.  This operation is
+    * undefined if the iterator is past the last Index in the box.
     */
-   const Index&
-   operator () () const
+   const Index*
+   operator -> () const
    {
-      return d_index;
+      return &d_index;
    }
 
    /**
-    * Return true if the iterator points to a valid index in the box.
+    * Post-increment the iterator to point to the next index in the box.
     */
-   operator bool () const
-   {
-      for (int i = 0; i < d_index.getDim().getValue(); i++) {
-         if (d_index(i) > d_box.upper(i)) {
-            return false;
-         }
-      }
-      return true;
-   }
-
-#ifndef LACKS_BOOL_VOID_RESOLUTION
-   /**
-    * Return a non-NULL if the iterator points to a valid index in the box.
-    */
-   operator const void * () const
-   {
-      return BoxIterator::operator bool () ? this : NULL;
-   }
-#endif
-
-   /**
-    * Return whether the iterator points to a valid item in the box.  This
-    * operator mimics the !p operation applied to a pointer p.
-    */
-   bool
-   operator ! () const
-   {
-      return !BoxIterator::operator bool ();
-   }
-
-   /**
-    * Increment the iterator to point to the next index in the box.
-    */
-   void
+   BoxIterator
    operator ++ (
       int)
+   {
+      BoxIterator tmp = *this;
+      d_index(0)++;
+      for (int i = 0; i < (d_index.getDim().getValue() - 1); i++) {
+         if (d_index(i) > d_box.upper(i)) {
+            d_index(i) = d_box.lower(i);
+            d_index(i + 1)++;
+         } else
+            break;
+      }
+      return tmp;
+   }
+
+   /**
+    * Pre-increment the iterator to point to the next index in the box.
+    */
+   BoxIterator&
+   operator ++ ()
    {
       d_index(0)++;
       for (int i = 0; i < (d_index.getDim().getValue() - 1); i++) {
@@ -1323,6 +1310,7 @@ public:
          } else
             break;
       }
+      return *this;
    }
 
    /**

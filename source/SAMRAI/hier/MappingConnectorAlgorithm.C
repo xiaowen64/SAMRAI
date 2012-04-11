@@ -1100,9 +1100,9 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
        * the begining.)
        */
       const Box start_loop_here(dim, GlobalId(LocalId::getZero(), rank + 1));
-      BoxContainer::Iterator anchor_ni =
+      BoxContainer::iterator anchor_ni =
          visible_anchor_nabrs.lowerBound(start_loop_here);
-      BoxContainer::Iterator new_ni =
+      BoxContainer::iterator new_ni =
          visible_new_nabrs.lowerBound(start_loop_here);
 
       if (anchor_ni == visible_anchor_nabrs.end() &&
@@ -1124,12 +1124,12 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
 
       if (s_print_steps == 'y') {
          tbox::plog << "visible_anchor_nabrs:" << std::endl;
-         for (BoxContainer::ConstIterator na = visible_anchor_nabrs.begin();
+         for (BoxContainer::const_iterator na = visible_anchor_nabrs.begin();
               na != visible_anchor_nabrs.end(); ++na) {
             tbox::plog << "  " << *na << std::endl;
          }
          tbox::plog << "visible_new_nabrs:" << std::endl;
-         for (BoxContainer::ConstIterator na = visible_new_nabrs.begin();
+         for (BoxContainer::const_iterator na = visible_new_nabrs.begin();
               na != visible_new_nabrs.end(); ++na) {
             tbox::plog << "  " << *na << std::endl;
          }
@@ -1333,7 +1333,7 @@ void
 MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const int owner_rank,
    BoxContainer& visible_base_nabrs,
-   BoxContainer::Iterator& base_ni,
+   BoxContainer::iterator& base_ni,
    std::vector<int>& send_mesg,
    const int remote_box_counter_index,
    Connector& mapped_connector,
@@ -1540,8 +1540,8 @@ MappingConnectorAlgorithm::findMappingErrors(
     * Box that changed or disappeared.
     */
    const BoxContainer& old_mapped_boxes = connector.getBase().getBoxes();
-   for (RealBoxConstIterator ni(old_mapped_boxes); ni.isValid();
-        ++ni) {
+   for (RealBoxConstIterator ni(old_mapped_boxes.realBegin());
+        ni != old_mapped_boxes.realEnd(); ++ni) {
       const Box& old_mapped_box = *ni;
       if (!new_mapped_box_level.hasBox(old_mapped_box)) {
          // old_mapped_box disappeared.  Require a mapping for old_mapped_box.

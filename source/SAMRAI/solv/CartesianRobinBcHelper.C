@@ -610,7 +610,8 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, level, ghost_width_to_fill);
 
-   for (hier::PatchLevel::Iterator p(level); p; p++) {
+   for (hier::PatchLevel::iterator p(level.begin());
+        p != level.end(); ++p) {
       const boost::shared_ptr<hier::Patch>& patch = *p;
       setBoundaryValuesInCells(*patch,
          fill_time,

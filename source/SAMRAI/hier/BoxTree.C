@@ -105,7 +105,7 @@ BoxTree::BoxTree(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    // Catch empty boxes so sorting logic does not have to.
-   for (BoxContainer::ConstIterator ni = boxes.begin();
+   for (BoxContainer::const_iterator ni = boxes.begin();
         ni != boxes.end();
         ++ni) {
       TBOX_ASSERT(!ni->empty());
@@ -133,7 +133,7 @@ BoxTree::BoxTree(
       TBOX_ASSERT(boxes.begin()->getBlockId() != BlockId::invalidId());
       d_block_id = boxes.begin()->getBlockId();
    }
-   for (BoxContainer::ConstIterator ni = boxes.begin();
+   for (BoxContainer::const_iterator ni = boxes.begin();
         ni != boxes.end(); ++ni) {
       d_bounding_box += (*ni);
       TBOX_ASSERT(ni->getBlockId() == d_block_id);
@@ -146,7 +146,7 @@ BoxTree::BoxTree(
     * no right child, and no recursive d_center_child.
     */
    if (boxes.size() <= min_number) {
-      for (BoxContainer::ConstIterator ni = boxes.begin();
+      for (BoxContainer::const_iterator ni = boxes.begin();
         ni != boxes.end(); ++ni) {
          d_boxes.push_back(&(*ni));
       }
@@ -179,7 +179,7 @@ BoxTree::BoxTree(
           + d_bounding_box.upper(d_partition_dim)) / 2;
 
       std::list<const Box*> left_boxes, right_boxes;
-      for (BoxContainer::ConstIterator ni = boxes.begin();
+      for (BoxContainer::const_iterator ni = boxes.begin();
            ni != boxes.end(); ++ni) {
          const Box& box = *ni;
          if (box.upper(d_partition_dim) <= midpoint) {

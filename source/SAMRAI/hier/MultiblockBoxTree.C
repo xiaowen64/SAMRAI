@@ -45,7 +45,7 @@ MultiblockBoxTree::MultiblockBoxTree(
     * create a tree for each BlockId.
     */
    std::map<BlockId, std::list<const Box*> > single_block_boxes;
-   for (BoxContainer::ConstIterator bi = boxes.begin();
+   for (BoxContainer::const_iterator bi = boxes.begin();
         bi != boxes.end(); ++bi) {
       TBOX_ASSERT((*bi).getBlockId().isValid());
       const BlockId& block_id = (*bi).getBlockId();

@@ -583,7 +583,8 @@ int main(
             int level_cell_count = 0;
             boost::shared_ptr<hier::PatchLevel> patch_level(
                patch_hierarchy->getPatchLevel(ln));
-            for (hier::PatchLevel::Iterator pi(patch_level); pi; pi++) {
+            for (hier::PatchLevel::iterator pi(patch_level->begin());
+                 pi != patch_level->end(); ++pi) {
                boost::shared_ptr<hier::Patch> patch(
                   patch_level->getPatch(*pi));
                level_cell_count += patch->getBox().size();

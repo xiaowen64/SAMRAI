@@ -1945,9 +1945,9 @@ void MblkLinAdv::tagGradientDetectorCells(
          if (d_mblk_geometry->getRefineBoxes(refine_boxes,
                 block_number,
                 level_number)) {
-            for (hier::BoxContainer::Iterator b(refine_boxes); b != refine_boxes.end();
-                 ++b) {
-               hier::Box intersect = pbox * b();
+            for (hier::BoxContainer::iterator b(refine_boxes);
+                 b != refine_boxes.end(); ++b) {
+               hier::Box intersect = pbox * (*b);
                if (!intersect.empty()) {
                   temp_tags->fill(TRUE, intersect);
                }
@@ -1961,8 +1961,9 @@ void MblkLinAdv::tagGradientDetectorCells(
    //
    // Update tags
    //
-   for (pdat::CellIterator ic(pbox); ic; ic++) {
-      (*tags)(ic(), 0) = (*temp_tags)(ic(), 0);
+   pdat::CellIterator icend(pbox, false);
+   for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
+      (*tags)(*ic, 0) = (*temp_tags)(*ic, 0);
    }
 
    tbox::plog << "--------------------- end tagGradientCells" << endl;

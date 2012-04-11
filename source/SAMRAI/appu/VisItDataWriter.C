@@ -1465,8 +1465,8 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
       boost::shared_ptr<hier::PatchLevel> patch_level(
          hierarchy->getPatchLevel(ln));
       tot_number_of_patches += patch_level->getGlobalNumberOfPatches();
-      for (hier::PatchLevel::Iterator ip(patch_level);
-           ip; ip++) {
+      for (hier::PatchLevel::iterator ip(patch_level->begin());
+           ip != patch_level->end(); ++ip) {
          number_local_patches++;
       }
    }
@@ -1771,7 +1771,8 @@ VisItDataWriter::writeVisItVariablesToHDFFile(
 
       hier::IntVector coarsen_ratio(patch_level->getRatioToCoarserLevel());
 
-      for (hier::PatchLevel::Iterator ip(patch_level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(patch_level->begin());
+           ip != patch_level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& patch = *ip;
 
          /*
@@ -3287,8 +3288,8 @@ VisItDataWriter::writeSummaryToHDFFile(
          }
 
          pn = 0;
-         for (hier::BoxContainer::ConstIterator itr(boxes); itr != boxes.end();
-              ++itr, ++pn) {
+         for (hier::BoxContainer::const_iterator itr(boxes);
+              itr != boxes.end(); ++itr, ++pn) {
             int global_patch_id = getGlobalPatchNumber(hierarchy, ln, pn);
             const hier::Box& box = *itr;
             const int* lower = &box.lower()[0];
@@ -3482,7 +3483,8 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
       boost::shared_ptr<hier::PatchLevel> patch_level(
          hierarchy->getPatchLevel(ln));
       tot_number_of_patches += patch_level->getGlobalNumberOfPatches();
-      for (hier::PatchLevel::Iterator ip(patch_level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(patch_level->begin());
+           ip != patch_level->end(); ++ip) {
          number_local_patches++;
       }
    }
@@ -3663,8 +3665,8 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
          if (hierarchy->getGridGeometry()->getNumberBlocks() == 1) {
 
             hier::BoxContainer non_per_child_boxes;
-            for (hier::RealBoxConstIterator gi(global_child_boxes);
-                 gi.isValid(); ++gi) {
+            for (hier::RealBoxConstIterator gi(global_child_boxes.realBegin());
+                 gi != global_child_boxes.realEnd(); ++gi) {
                non_per_child_boxes.insert(*gi);
             }
 
@@ -3683,8 +3685,8 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
          }
       }
 
-      for (hier::RealBoxConstIterator bi(coarser_mapped_boxes);
-           bi.isValid(); ++bi) {
+      for (hier::RealBoxConstIterator bi(coarser_mapped_boxes.realBegin());
+           bi != coarser_mapped_boxes.realEnd(); ++bi) {
 
          if (ln == finest_level) {
             child_ptrs[child_ptrs_idx].u.number_children = 0;
@@ -3722,7 +3724,7 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
                   delete[] temp;
                }
 
-               for (hier::BoxContainer::Iterator
+               for (hier::BoxContainer::iterator
                     ob_itr = overlap_mapped_boxes.begin();
                     ob_itr != overlap_mapped_boxes.end(); ++ob_itr) { 
                   child_parent[child_parent_idx].child =

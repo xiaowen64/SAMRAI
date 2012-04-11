@@ -213,10 +213,10 @@ int HierarchyTester::runHierarchyTestAndVerify()
    const int npdboxes = init_phys_domain.size();
 
    // Test #0b:
-   hier::BoxContainer::ConstIterator ipditr(init_phys_domain);
-   hier::BoxContainer::ConstIterator tpditr(test_phys_domain);
+   hier::BoxContainer::const_iterator ipditr(init_phys_domain);
+   hier::BoxContainer::const_iterator tpditr(test_phys_domain);
    if (d_do_refine_test) {
-      for (int ib = 0; ib < npdboxes; ib++, ipditr++, tpditr++) {
+      for (int ib = 0; ib < npdboxes; ib++, ++ipditr, ++tpditr) {
          if (!Box::refine(*ipditr, d_ratio).isSpatiallyEqual(*tpditr)) {
             fail_count++;
             tbox::perr << "FAILED: - Test #0b: test hierarchy physical domain"
@@ -227,7 +227,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
       }
    }
    if (d_do_coarsen_test) {
-      for (int ib = 0; ib < npdboxes; ib++, ipditr++, tpditr++) {
+      for (int ib = 0; ib < npdboxes; ib++, ++ipditr, ++tpditr) {
          if (!Box::coarsen(*ipditr, d_ratio).isSpatiallyEqual(*tpditr)) {
             fail_count++;
             tbox::perr << "FAILED: - Test #0b: test hierarchy physical domain"
@@ -344,10 +344,10 @@ int HierarchyTester::runHierarchyTestAndVerify()
       const int nboxes = init_domain.size();
 
       // Test #8:
-      hier::BoxContainer::ConstIterator iditr(init_domain);
-      hier::BoxContainer::ConstIterator tditr(test_domain);
+      hier::BoxContainer::const_iterator iditr(init_domain);
+      hier::BoxContainer::const_iterator tditr(test_domain);
       if (d_do_refine_test) {
-         for (int ib = 0; ib < nboxes; ib++, iditr++, tditr++) {
+         for (int ib = 0; ib < nboxes; ib++, ++iditr, ++tditr) {
             if (!Box::refine(*iditr, d_ratio).isSpatiallyEqual(*tditr)) {
                fail_count++;
                tbox::perr << "FAILED: - Test #8: for level number " << ln
@@ -358,7 +358,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
          }
       }
       if (d_do_coarsen_test) {
-         for (int ib = 0; ib < nboxes; ib++, iditr++, tditr++) {
+         for (int ib = 0; ib < nboxes; ib++, ++iditr, ++tditr) {
             if (!Box::coarsen(*iditr, d_ratio).isSpatiallyEqual(*tditr)) {
                fail_count++;
                tbox::perr << "FAILED: - Test #8: for level number " << ln
@@ -395,7 +395,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
             test_connector_width,
             true /* exact width only */);
 
-      for (hier::PatchLevel::Iterator ip(test_level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(test_level->begin());
+           ip != test_level->end(); ++ip) {
          const BoxId& mapped_box_id = ip->getBox().getId();
          // Test #9:
          if (d_do_refine_test) {
@@ -453,7 +454,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
        *  Tests 13-19 check local data for patches on each level.
        **************************************************************
        */
-      for (PatchLevel::Iterator tip(test_level); tip; tip++) {
+      for (PatchLevel::iterator tip(test_level->begin());
+           tip != test_level->end(); ++tip) {
          const BoxId& mapped_box_id = tip->getBox().getId();
          boost::shared_ptr<Patch> test_patch(
             test_level->getPatch(mapped_box_id));

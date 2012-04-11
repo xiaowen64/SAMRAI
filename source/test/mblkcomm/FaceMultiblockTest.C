@@ -202,10 +202,12 @@ void FaceMultiblockTest::setPhysicalBoundaryConditions(
             hier::Box patch_face_box =
                pdat::FaceGeometry::toFaceBox(patch.getBox(), axis);
             if (!node_bdry[nb].getIsMultiblockSingularity()) {
-               for (pdat::FaceIterator ni(fill_box, axis); ni; ni++) {
-                  if (!patch_face_box.contains(ni())) {
+               pdat::FaceIterator niend(fill_box, axis, false);
+               for (pdat::FaceIterator ni(fill_box, axis, true);
+                    ni != niend; ++ni) {
+                  if (!patch_face_box.contains(*ni)) {
                      for (int d = 0; d < face_data->getDepth(); d++) {
-                        (*face_data)(ni(), d) =
+                        (*face_data)(*ni, d) =
                            (double)(node_bdry[nb].getLocationIndex() + 100);
                      }
                   }
@@ -231,13 +233,15 @@ void FaceMultiblockTest::setPhysicalBoundaryConditions(
                hier::Index pupper(patch_face_box.upper());
 
                if (!edge_bdry[eb].getIsMultiblockSingularity()) {
-                  for (pdat::FaceIterator ni(fill_box, axis); ni; ni++) {
-                     if (!patch_face_box.contains(ni())) {
+                  pdat::FaceIterator niend(fill_box, axis, false);
+                  for (pdat::FaceIterator ni(fill_box, axis, true);
+                      ni != niend; ++ni) {
+                     if (!patch_face_box.contains(*ni)) {
                         bool use_index = true;
                         for (int n = 0; n < d_dim.getValue(); n++) {
                            if (axis == n &&
                                edge_bdry[eb].getBox().numberCells(n) == 1) {
-                              if (ni() (0) == plower(0) || ni() (0) ==
+                              if ((*ni)(0) == plower(0) || (*ni)(0) ==
                                   pupper(0)) {
                                  use_index = false;
                                  break;
@@ -247,7 +251,7 @@ void FaceMultiblockTest::setPhysicalBoundaryConditions(
 
                         if (use_index) {
                            for (int d = 0; d < face_data->getDepth(); d++) {
-                              (*face_data)(ni(), d) =
+                              (*face_data)(*ni, d) =
                                  (double)(edge_bdry[eb].getLocationIndex()
                                           + 100);
                            }
@@ -276,13 +280,15 @@ void FaceMultiblockTest::setPhysicalBoundaryConditions(
                hier::Index pupper(patch_face_box.upper());
 
                if (!face_bdry[fb].getIsMultiblockSingularity()) {
-                  for (pdat::FaceIterator ni(fill_box, axis); ni; ni++) {
-                     if (!patch_face_box.contains(ni())) {
+                  pdat::FaceIterator niend(fill_box, axis, false);
+                  for (pdat::FaceIterator ni(fill_box, axis, true);
+                       ni != niend; ++ni) {
+                     if (!patch_face_box.contains(*ni)) {
                         bool use_index = true;
                         for (int n = 0; n < d_dim.getValue(); n++) {
                            if (axis == n &&
                                face_bdry[fb].getBox().numberCells(n) == 1) {
-                              if (ni() (0) == plower(0) || ni() (0) ==
+                              if ((*ni)(0) == plower(0) || (*ni)(0) ==
                                   pupper(0)) {
                                  use_index = false;
                                  break;
@@ -292,7 +298,7 @@ void FaceMultiblockTest::setPhysicalBoundaryConditions(
 
                         if (use_index) {
                            for (int d = 0; d < face_data->getDepth(); d++) {
-                              (*face_data)(ni(), d) =
+                              (*face_data)(*ni, d) =
                                  (double)(face_bdry[fb].getLocationIndex()
                                           + 100);
                            }
@@ -341,11 +347,13 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
          hier::Index plower(pbox.lower());
          hier::Index pupper(pbox.upper());
 
-         for (pdat::FaceIterator ni(sing_fill_box, axis); ni; ni++) {
+         pdat::FaceIterator niend(sing_fill_box, axis, false);
+         for (pdat::FaceIterator ni(sing_fill_box, axis, true);
+              ni != niend; ++ni) {
             bool use_index = true;
             for (int n = 0; n < d_dim.getValue(); n++) {
                if (axis == n && bbox.getBox().numberCells(n) == 1) {
-                  if (ni() (0) == plower(0) || ni() (0) == pupper(0)) {
+                  if ((*ni)(0) == plower(0) || (*ni)(0) == pupper(0)) {
                      use_index = false;
                      break;
                   }
@@ -353,7 +361,7 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
             }
             if (use_index) {
                for (int d = 0; d < depth; d++) {
-                  (*face_data)(ni(), d) = 0.0;
+                  (*face_data)(*ni, d) = 0.0;
                }
             }
          }
@@ -426,11 +434,13 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
                      hier::Index plower(pbox.lower());
                      hier::Index pupper(pbox.upper());
 
-                     for (pdat::FaceIterator ci(sing_fill_box, axis); ci; ci++) {
+                     pdat::FaceIterator ciend(sing_fill_box, axis, false);
+                     for (pdat::FaceIterator ci(sing_fill_box, axis, true);
+                          ci != ciend; ++ci) {
                         bool use_index = true;
                         for (int n = 0; n < d_dim.getValue(); n++) {
                            if (axis == n && bbox.getBox().numberCells(n) == 1) {
-                              if (ci() (0) == plower(0) || ci() (0) == pupper(0)) {
+                              if ((*ci)(0) == plower(0) || (*ci)(0) == pupper(0)) {
                                  use_index = false;
                                  break;
                               }
@@ -438,11 +448,11 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
                         }
                         if (use_index) {
 
-                           pdat::FaceIndex src_index(ci());
+                           pdat::FaceIndex src_index(*ci);
                            pdat::FaceGeometry::transform(src_index, back_trans);
 
                            for (int d = 0; d < depth; d++) {
-                              (*face_data)(ci(), d) += (*sing_data)(src_index, d);
+                              (*face_data)(*ci, d) += (*sing_data)(src_index, d);
                            }
                         }
                      }
@@ -464,11 +474,13 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
             hier::Index plower(pbox.lower());
             hier::Index pupper(pbox.upper());
 
-            for (pdat::FaceIterator ci(sing_fill_box, axis); ci; ci++) {
+            pdat::FaceIterator ciend(sing_fill_box, axis, false);
+            for (pdat::FaceIterator ci(sing_fill_box, axis, true);
+                 ci != ciend; ++ci) {
                bool use_index = true;
                for (int n = 0; n < d_dim.getValue(); n++) {
                   if (axis == n && bbox.getBox().numberCells(n) == 1) {
-                     if (ci() (0) == plower(0) || ci() (0) == pupper(0)) {
+                     if ((*ci)(0) == plower(0) || (*ci)(0) == pupper(0)) {
                         use_index = false;
                         break;
                      }
@@ -476,7 +488,7 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
                }
                if (use_index) {
                   for (int d = 0; d < depth; d++) {
-                     (*face_data)(ci(), d) /= num_encon_used;
+                     (*face_data)(*ci, d) /= num_encon_used;
                   }
                }
             }
@@ -497,11 +509,13 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
             hier::Index plower(pbox.lower());
             hier::Index pupper(pbox.upper());
 
-            for (pdat::FaceIterator ci(sing_fill_box, axis); ci; ci++) {
+            pdat::FaceIterator ciend(sing_fill_box, axis, false);
+            for (pdat::FaceIterator ci(sing_fill_box, axis, true);
+                 ci != ciend; ++ci) {
                bool use_index = true;
                for (int n = 0; n < d_dim.getValue(); n++) {
                   if (axis == n && bbox.getBox().numberCells(n) == 1) {
-                     if (ci() (0) == plower(0) || ci() (0) == pupper(0)) {
+                     if ((*ci)(0) == plower(0) || (*ci)(0) == pupper(0)) {
                         use_index = false;
                         break;
                      }
@@ -509,7 +523,7 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
                }
                if (use_index) {
                   for (int d = 0; d < depth; d++) {
-                     (*face_data)(ci(), d) =
+                     (*face_data)(*ci, d) =
                         (double)bbox.getLocationIndex() + 200.0;
                   }
                }
@@ -576,13 +590,15 @@ bool FaceMultiblockTest::verifyResults(
       interior_box.grow(hier::IntVector(d_dim, -1));
 
       for (int axis = 0; axis < d_dim.getValue(); axis++) {
-         for (pdat::FaceIterator ci(interior_box, axis); ci; ci++) {
+        pdat::FaceIterator ciend(interior_box, axis, false);
+        for (pdat::FaceIterator ci(interior_box, axis, true);
+             ci != ciend; ++ci) {
             for (int d = 0; d < depth; d++) {
-               double result = (*face_data)(ci(), d);
+               double result = (*face_data)(*ci, d);
 
                if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
-                             << " : face index = " << ci() << endl;
+                             << " : face index = " << *ci << endl;
                   tbox::perr << "    Variable = " << d_variable_src_name[i]
                              << " : depth index = " << d << endl;
                   tbox::perr << "    result = " << result
@@ -612,10 +628,10 @@ bool FaceMultiblockTest::verifyResults(
 
             hier::BoxContainer neighbor_ghost(ne->getTransformedDomain());
             hier::BoxContainer neighbor_face_ghost;
-            for (hier::BoxContainer::Iterator nn(neighbor_ghost);
+            for (hier::BoxContainer::iterator nn(neighbor_ghost);
                  nn != neighbor_ghost.end(); ++nn) {
                hier::Box neighbor_ghost_interior(
-                  pdat::FaceGeometry::toFaceBox(nn(), axis));
+                  pdat::FaceGeometry::toFaceBox(*nn, axis));
                neighbor_ghost_interior.grow(-hier::IntVector::getOne(d_dim));
                neighbor_face_ghost.pushFront(neighbor_ghost_interior);
             }
@@ -626,11 +642,12 @@ bool FaceMultiblockTest::verifyResults(
 
             neighbor_face_ghost.removeIntersections(tested_neighbors);
 
-            for (hier::BoxContainer::Iterator ng(neighbor_face_ghost);
+            for (hier::BoxContainer::iterator ng(neighbor_face_ghost);
                  ng != neighbor_face_ghost.end(); ++ng) {
 
-               for (hier::BoxIterator ci(ng()); ci; ci++) {
-                  pdat::FaceIndex fi(ci(), 0, 0);
+               hier::Box::iterator ciend(*ng, false);
+               for (hier::Box::iterator ci(*ng, true); ci != ciend; ++ci) {
+                  pdat::FaceIndex fi(*ci, 0, 0);
                   fi.setAxis(axis);
                   if (!patch_face_box.contains(fi)) {
                      for (int d = 0; d < depth; d++) {
@@ -703,16 +720,18 @@ bool FaceMultiblockTest::verifyResults(
                hier::Box patch_face_box =
                   pdat::FaceGeometry::toFaceBox(pbox, axis);
 
-               for (pdat::FaceIterator ci(fill_box, axis); ci; ci++) {
+               pdat::FaceIterator ciend(fill_box, axis, false);
+               for (pdat::FaceIterator ci(fill_box, axis, true);
+                    ci != ciend; ++ci) {
 
-                  if (!patch_face_box.contains(ci())) {
+                  if (!patch_face_box.contains(*ci)) {
 
                      bool use_index = true;
                      for (int n = 0; n < d_dim.getValue(); n++) {
                         if (axis == n && bdry[k].getBox().numberCells(n) ==
                             1) {
-                           if (ci() (0) == patch_face_box.lower() (0) ||
-                               ci() (0) == patch_face_box.upper() (0)) {
+                           if ((*ci)(0) == patch_face_box.lower() (0) ||
+                               (*ci)(0) == patch_face_box.upper() (0)) {
                               use_index = false;
                               break;
                            }
@@ -721,12 +740,12 @@ bool FaceMultiblockTest::verifyResults(
 
                      if (use_index) {
                         for (int d = 0; d < depth; d++) {
-                           double result = (*face_data)(ci(), d);
+                           double result = (*face_data)(*ci, d);
 
                            if (!tbox::MathUtilities<double>::equalEps(correct,
                                   result)) {
                               tbox::perr << "Test FAILED: ...."
-                                         << " : face index = " << ci() << endl;
+                                         << " : face index = " << *ci << endl;
                               tbox::perr << "  Variable = "
                                          << d_variable_src_name[i]
                                          << " : depth index = " << d << endl;

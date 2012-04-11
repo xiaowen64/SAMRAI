@@ -13,7 +13,6 @@
 
 #include "SAMRAI/hier/BoxNeighborhoodCollection.h"
 #include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -28,7 +27,7 @@ BoxNeighborhoodCollection::BoxNeighborhoodCollection(
    const BoxContainer& base_boxes)
 {
    // For each base Box in base_boxes create an empty neighborhood.
-   for (BoxContainer::ConstIterator itr(base_boxes.begin());
+   for (BoxContainer::const_iterator itr(base_boxes.begin());
         itr != base_boxes.end(); ++itr) {
       insert(itr->getId());
    }
@@ -261,7 +260,7 @@ BoxNeighborhoodCollection::insert(
    TBOX_ASSERT(base_box_itr != end());
 
    // Add each neighbor in the container to the base Box.
-   for (BoxContainer::ConstIterator new_nbr_itr(new_nbrs.begin());
+   for (BoxContainer::const_iterator new_nbr_itr(new_nbrs.begin());
         new_nbr_itr != new_nbrs.end(); ++new_nbr_itr) {
 
       // First add this new neighbor to the collection of neighbors if it is
@@ -323,7 +322,7 @@ BoxNeighborhoodCollection::erase(
    TBOX_ASSERT(base_box_itr != end());
 
    // Remove each neighbor in the container from the base Box.
-   for (BoxContainer::ConstIterator old_nbr_itr(nbrs.begin());
+   for (BoxContainer::const_iterator old_nbr_itr(nbrs.begin());
         old_nbr_itr != nbrs.end(); ++old_nbr_itr) {
 
       HeadBoxPool::iterator nbr_itr = d_nbrs.find(*old_nbr_itr);

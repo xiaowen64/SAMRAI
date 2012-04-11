@@ -356,9 +356,9 @@ FaceData<TYPE>::copyWithRotation(
 
       hier::Box face_rotatebox(FaceGeometry::toFaceBox(rotatebox, i));
 
-      for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
+      for (hier::BoxContainer::const_iterator bi(overlap_boxes);
            bi != overlap_boxes.end(); ++bi) {
-         const hier::Box& overlap_box = bi();
+         const hier::Box& overlap_box = *bi;
 
          const hier::Box copybox(face_rotatebox * overlap_box);
 
@@ -366,9 +366,10 @@ FaceData<TYPE>::copyWithRotation(
             const int depth = ((getDepth() < src.getDepth()) ?
                                getDepth() : src.getDepth());
 
-            for (hier::Box::Iterator ci(copybox); ci; ci++) {
+            hier::Box::iterator ciend(copybox, false);
+            for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
 
-               FaceIndex dst_index(ci(), 0, 0);
+               FaceIndex dst_index(*ci, 0, 0);
                dst_index.setAxis(i);
                FaceIndex src_index(dst_index);
                FaceGeometry::transform(src_index, back_trans);
@@ -532,9 +533,9 @@ FaceData<TYPE>::packWithRotation(
       hier::Box face_rotatebox(FaceGeometry::toFaceBox(rotatebox, i));
 
       int buf_count = 0;
-      for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
+      for (hier::BoxContainer::const_iterator bi(overlap_boxes);
            bi != overlap_boxes.end(); ++bi) {
-         const hier::Box& overlap_box = bi();
+         const hier::Box& overlap_box = *bi;
 
          const hier::Box copybox(face_rotatebox * overlap_box);
 
@@ -542,9 +543,10 @@ FaceData<TYPE>::packWithRotation(
 
             for (int d = 0; d < depth; d++) {
 
-               for (hier::Box::Iterator ci(copybox); ci; ci++) {
+               hier::Box::iterator ciend(copybox, false);
+               for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
 
-                  FaceIndex src_index(ci(), 0, 0);
+                  FaceIndex src_index(*ci, 0, 0);
                   src_index.setAxis(i);
                   FaceGeometry::transform(src_index, back_trans);
 
@@ -745,9 +747,10 @@ FaceData<TYPE>::printAxis(
    TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
 
    os.precision(prec);
-   for (FaceIterator i(box, face_normal); i; i++) {
-      os << "array" << i() << " = "
-         << d_data[face_normal](i(), depth) << std::endl << std::flush;
+   FaceIterator iend(box, face_normal, false);
+   for (FaceIterator i(box, face_normal, true); i != iend; ++i) {
+      os << "array" << *i << " = "
+         << d_data[face_normal](*i, depth) << std::endl << std::flush;
    }
 }
 

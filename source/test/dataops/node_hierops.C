@@ -202,7 +202,8 @@ int main(
       for (ln = 0; ln < 2; ln++) {
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
-         for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+         for (hier::PatchLevel::iterator ip(level->begin());
+              ip != level->end(); ++ip) {
             boost::shared_ptr<pdat::NodeData<double> > data;
             patch = level->getPatch(ip());
             pgeom = patch->getPatchGeometry();
@@ -512,7 +513,8 @@ int main(
       // set values
       boost::shared_ptr<hier::PatchLevel> level_zero(
          hierarchy->getPatchLevel(0));
-      for (hier::PatchLevel::Iterator ip(level_zero); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level_zero->begin());
+           ip != level_zero->end(); ++ip) {
          patch = level_zero->getPatch(ip());
          ndata = patch->getPatchData(nvindx[2]);
          hier::Index<2> index0(2, 2);
@@ -529,7 +531,8 @@ int main(
 
       // check values
       bool bogus_value_test_passed = true;
-      for (hier::PatchLevel::Iterator ipp(level_zero); ipp; ipp++) {
+      for (hier::PatchLevel::iterator ipp(level_zero->begin());
+           ipp != level_zero->end(); ++ipp) {
          patch = level_zero->getPatch(ipp());
          ndata = patch->getPatchData(nvindx[2]);
          pdat::NodeIndex index0(hier::Index<2>(2,
@@ -537,10 +540,11 @@ int main(
          pdat::NodeIndex index1(hier::Index<2>(5,
                                                3), pdat::NodeIndex::UpperRight);
 
-         for (pdat::NodeIterator c(ndata->getBox());
-              c && bogus_value_test_passed;
-              c++) {
-            pdat::NodeIndex node_index = c();
+         pdat::NodeIterator cend(ndata->getBox(), false);
+         for (pdat::NodeIterator c(ndata->getBox(), true);
+              c != cend && bogus_value_test_passed;
+              ++c) {
+            pdat::NodeIndex node_index = *c;
 
             if (node_index == index0) {
                if (!tbox::MathUtilities<double>::equalEps((*ndata)(node_index),
@@ -712,13 +716,16 @@ doubleDataSameAsValue(
    boost::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          patch = level->getPatch(ip());
          boost::shared_ptr<pdat::NodeData<double> > nvdata(
             patch->getPatchData(desc_id));
 
-         for (pdat::NodeIterator c(nvdata->getBox()); c && test_passed; c++) {
-            pdat::NodeIndex node_index = c();
+         pdat::NodeIterator cend(nvdata->getBox(), false);
+         for (pdat::NodeIterator c(nvdata->getBox(), true);
+              c != cend && test_passed; ++c) {
+            pdat::NodeIndex node_index = *c;
             if (!tbox::MathUtilities<double>::equalEps((*nvdata)(node_index),
                    value)) {
                test_passed = false;

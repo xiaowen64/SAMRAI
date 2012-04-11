@@ -1475,7 +1475,7 @@ void LinAdv::boundaryReset(
       bdrybox.pushBack(hier::Box(ibfirst, iblast, hier::BlockId(0)));
    }
 
-   hier::BoxContainer::Iterator ib(bdrybox);
+   hier::BoxContainer::iterator ib(bdrybox);
    for (idir = 0; idir < d_dim.getValue(); idir++) {
       bside = 2 * idir;
       if (d_dim == tbox::Dimension(2)) {
@@ -1485,15 +1485,16 @@ void LinAdv::boundaryReset(
          bdry_case = d_scalar_bdry_face_conds[bside];
       }
       if (bdry_case == BdryCond::REFLECT) {
-         for (pdat::CellIterator ic(ib()); ic; ic++) {
-            for (hier::BoxContainer::Iterator domain_boxes_itr(domain_boxes);
+         pdat::CellIterator icend(*ib, false);
+         for (pdat::CellIterator ic(*ib, true); ic != icend; ++ic) {
+            for (hier::BoxContainer::iterator domain_boxes_itr(domain_boxes);
                  domain_boxes_itr != domain_boxes.end();
                  ++domain_boxes_itr) {
-               if (domain_boxes_itr().contains(ic()))
+               if (domain_boxes_itr->contains(*ic))
                   bdry_cell = false;
             }
             if (bdry_cell) {
-               pdat::FaceIndex sidein = pdat::FaceIndex(ic(), idir, 1);
+               pdat::FaceIndex sidein = pdat::FaceIndex(*ic, idir, 1);
                (traced_left)(sidein, 0) = (traced_right)(sidein, 0);
             }
          }
@@ -1508,15 +1509,16 @@ void LinAdv::boundaryReset(
          bdry_case = d_scalar_bdry_face_conds[bnode];
       }
       if (bdry_case == BdryCond::REFLECT) {
-         for (pdat::CellIterator ic(ib()); ic; ic++) {
-            for (hier::BoxContainer::Iterator domain_boxes_itr(domain_boxes);
+         pdat::CellIterator icend(*ib, false);
+         for (pdat::CellIterator ic(*ib, true); ic != icend; ++ic) {
+            for (hier::BoxContainer::iterator domain_boxes_itr(domain_boxes);
                  domain_boxes_itr != domain_boxes.end();
                  ++domain_boxes_itr) {
-               if (domain_boxes_itr().contains(ic()))
+               if (domain_boxes_itr->contains(*ic))
                   bdry_cell = false;
             }
             if (bdry_cell) {
-               pdat::FaceIndex sidein = pdat::FaceIndex(ic(), idir, 0);
+               pdat::FaceIndex sidein = pdat::FaceIndex(*ic, idir, 0);
                (traced_right)(sidein, 0) = (traced_left)(sidein, 0);
             }
          }
@@ -1772,13 +1774,14 @@ void LinAdv::tagRichardsonExtrapolationCells(
             double diff = 0.;
             double error = 0.;
 
-            for (pdat::CellIterator ic(pbox); ic; ic++) {
+            pdat::CellIterator icend(pbox, false);
+            for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
 
                /*
                 * Compute error norm
                 */
-               diff = (*advanced_coarse_var)(ic(), 0)
-                  - (*coarsened_fine_var)(ic(), 0);
+               diff = (*advanced_coarse_var)(*ic, 0)
+                  - (*coarsened_fine_var)(*ic, 0);
                error =
                   tbox::MathUtilities<double>::Abs(diff) * rnminus1 * steps;
 
@@ -1793,10 +1796,10 @@ void LinAdv::tagRichardsonExtrapolationCells(
                 *
                 */
                if (error > tol) {
-                  if ((*tags)(ic(), 0)) {
-                     (*tags)(ic(), 0) = RICHARDSON_ALREADY_TAGGED;
+                  if ((*tags)(*ic, 0)) {
+                     (*tags)(*ic, 0) = RICHARDSON_ALREADY_TAGGED;
                   } else {
-                     (*tags)(ic(), 0) = RICHARDSON_NEWLY_TAGGED;
+                     (*tags)(*ic, 0) = RICHARDSON_NEWLY_TAGGED;
                   }
                }
 
@@ -1816,12 +1819,13 @@ void LinAdv::tagRichardsonExtrapolationCells(
     * use this information in the gradient detector.
     */
    if (!uses_gradient_detector_too) {
-      for (pdat::CellIterator ic(pbox); ic; ic++) {
-         if ((*tags)(ic(), 0) == RICHARDSON_ALREADY_TAGGED ||
-             (*tags)(ic(), 0) == RICHARDSON_NEWLY_TAGGED) {
-            (*tags)(ic(), 0) = TRUE;
+      pdat::CellIterator icend(pbox, false);
+      for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
+         if ((*tags)(*ic, 0) == RICHARDSON_ALREADY_TAGGED ||
+             (*tags)(*ic, 0) == RICHARDSON_NEWLY_TAGGED) {
+            (*tags)(*ic, 0) = TRUE;
          } else {
-            (*tags)(ic(), 0) = FALSE;
+            (*tags)(*ic, 0) = FALSE;
          }
       }
    }
@@ -1864,7 +1868,8 @@ void LinAdv::tagGradientDetectorCells(
     * Construct domain bounding box
     */
    hier::Box domain(d_dim);
-   for (hier::BoxContainer::Iterator i(domain_boxes); i != domain_boxes.end(); ++i) {
+   for (hier::BoxContainer::iterator i(domain_boxes);
+        i != domain_boxes.end(); ++i) {
       domain += *i;
    }
 
@@ -1938,17 +1943,18 @@ void LinAdv::tagGradientDetectorCells(
              * RICHARDSON_NEWLY_TAGGED since these were set most recently
              * by Richardson extrapolation.
              */
-            for (pdat::CellIterator ic(pbox); ic; ic++) {
+            pdat::CellIterator icend(pbox, false);
+            for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
                double locden = tol;
-               int tag_val = (*tags)(ic(), 0);
+               int tag_val = (*tags)(*ic, 0);
                if (tag_val) {
                   if (tag_val != RICHARDSON_NEWLY_TAGGED) {
                      locden *= 0.75;
                   }
                }
-               if (tbox::MathUtilities<double>::Abs((*var)(ic()) - dev) >
+               if (tbox::MathUtilities<double>::Abs((*var)(*ic) - dev) >
                    locden) {
-                  (*temp_tags)(ic(), 0) = refine_tag_val;
+                  (*temp_tags)(*ic, 0) = refine_tag_val;
                }
             }
          }
@@ -2056,10 +2062,11 @@ void LinAdv::tagGradientDetectorCells(
     * to be the designated "refine_tag_val".
     */
    if (uses_richardson_extrapolation_too) {
-      for (pdat::CellIterator ic(pbox); ic; ic++) {
-         if ((*tags)(ic(), 0) == RICHARDSON_ALREADY_TAGGED ||
-             (*tags)(ic(), 0) == RICHARDSON_NEWLY_TAGGED) {
-            (*temp_tags)(ic(), 0) = refine_tag_val;
+      pdat::CellIterator icend(pbox, false);
+      for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
+         if ((*tags)(*ic, 0) == RICHARDSON_ALREADY_TAGGED ||
+             (*tags)(*ic, 0) == RICHARDSON_NEWLY_TAGGED) {
+            (*temp_tags)(*ic, 0) = refine_tag_val;
          }
       }
    }
@@ -2067,8 +2074,9 @@ void LinAdv::tagGradientDetectorCells(
    /*
     * Update tags.
     */
-   for (pdat::CellIterator ic(pbox); ic; ic++) {
-      (*tags)(ic(), 0) = (*temp_tags)(ic(), 0);
+   pdat::CellIterator icend(pbox, false);
+   for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
+      (*tags)(*ic, 0) = (*temp_tags)(*ic, 0);
    }
 
 }

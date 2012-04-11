@@ -175,24 +175,25 @@ void CellDataTest::setLinearData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   for (pdat::CellIterator ci(sbox); ci; ci++) {
+   pdat::CellIterator ciend(sbox, false);
+   for (pdat::CellIterator ci(sbox, true); ci != ciend; ++ci) {
 
       /*
        * Compute spatial location of cell center and
        * set data to linear profile.
        */
 
-      x = lowerx[0] + pdx[0] * (ci() (0) - loweri(0) + 0.5);
+      x = lowerx[0] + pdx[0] * ((*ci)(0) - loweri(0) + 0.5);
       y = z = 0.;
       if (d_dim > tbox::Dimension(1)) {
-         y = lowerx[1] + pdx[1] * (ci() (1) - loweri(1) + 0.5);
+         y = lowerx[1] + pdx[1] * ((*ci)(1) - loweri(1) + 0.5);
       }
       if (d_dim > tbox::Dimension(2)) {
-         z = lowerx[2] + pdx[2] * (ci() (2) - loweri(2) + 0.5);
+         z = lowerx[2] + pdx[2] * ((*ci)(2) - loweri(2) + 0.5);
       }
 
       for (int d = 0; d < depth; d++) {
-         (*data)(ci(), d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
+         (*data)(*ci, d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
       }
 
    }
@@ -219,8 +220,8 @@ void CellDataTest::setConservativeData(
    const hier::BoxContainer& domain =
       level->getPhysicalDomain(hier::BlockId::zero());
    int ncells = 0;
-   for (hier::BoxContainer::ConstIterator i(domain); i != domain.end(); ++i) {
-      ncells += i().size();
+   for (hier::BoxContainer::const_iterator i(domain); i != domain.end(); ++i) {
+      ncells += i->size();
    }
 
    const int depth = data->getDepth();
@@ -233,14 +234,15 @@ void CellDataTest::setConservativeData(
        * Set cell value on level zero to u(i,j,k) = (i + j + k)/ncells.
        */
 
-      for (pdat::CellIterator fi(sbox); fi; fi++) {
+      pdat::CellIterator fiend(sbox, false);
+      for (pdat::CellIterator fi(sbox, true); fi != fiend; ++fi) {
          double value = 0.0;
          for (int d = 0; d < d_dim.getValue(); d++) {
-            value += (double)(fi() (d));
+            value += (double)((*fi)(d));
          }
          value /= ncells;
          for (int dep = 0; dep < depth; dep++) {
-            (*data)(fi(), dep) = value;
+            (*data)(*fi, dep) = value;
          }
       }
 
@@ -278,13 +280,14 @@ void CellDataTest::setConservativeData(
          }
       }
 
-      for (pdat::CellIterator fi(sbox); fi; fi++) {
+      pdat::CellIterator fiend(sbox, false);
+      for (pdat::CellIterator fi(sbox, true); fi != fiend; ++fi) {
 
          const hier::IntVector ci(hier::Index::coarsen(*fi, ratio));
          hier::IntVector del(ci.getDim());  // Index vector from ci to fi.
          double value = 0.0;
          for (int d = 0; d < d_dim.getValue(); d++) {
-            del(d) = (int)delta[d][fi() (d) - ci(d) * ratio(d)];
+            del(d) = (int)delta[d][(*fi)(d) - ci(d) * ratio(d)];
             value += (double)(ci(d));
          }
          value /= coarse_ncells;
@@ -294,7 +297,7 @@ void CellDataTest::setConservativeData(
          }
 
          for (int dep = 0; dep < depth; dep++) {
-            (*data)(fi(), dep) = value;
+            (*data)(*fi, dep) = value;
          }
 
       }
@@ -329,16 +332,17 @@ void CellDataTest::setPeriodicData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   for (pdat::CellIterator ci(sbox); ci; ci++) {
+   pdat::CellIterator ciend(sbox, false);
+   for (pdat::CellIterator ci(sbox, true); ci != ciend; ++ci) {
 
       double val = 1.0;
       for (int d = 0; d < d_dim.getValue(); ++d) {
-         double tmpf = dx[d] * (ci() (d) + 0.5) / domain_len[d];
+         double tmpf = dx[d] * ((*ci)(d) + 0.5) / domain_len[d];
          tmpf = sin(2 * M_PI * tmpf);
          val *= tmpf;
       }
       for (int d = 0; d < depth; d++) {
-         (*data)(ci(), d) = val;
+         (*data)(*ci, d) = val;
       }
 
    }
@@ -421,10 +425,11 @@ void CellDataTest::checkPatchInteriorData(
       setLinearData(correct_data, correct_data->getGhostBox(), patch);
    }
 
-   for (pdat::CellIterator ci(interior); ci; ci++) {
+   pdat::CellIterator ciend(interior, false);
+   for (pdat::CellIterator ci(interior, true); ci != ciend; ++ci) {
       for (int d = 0; d < depth; d++) {
-         if (!(tbox::MathUtilities<double>::equalEps((*data)(ci(), d),
-                  (*correct_data)(ci(), d)))) {
+         if (!(tbox::MathUtilities<double>::equalEps((*data)(*ci, d),
+                  (*correct_data)(*ci, d)))) {
             tbox::perr << "FAILED: -- patch interior not properly filled"
                        << endl;
          }
@@ -590,13 +595,14 @@ bool CellDataTest::verifyResults(
          int depth = cell_data->getDepth();
          hier::Box dbox = cell_data->getGhostBox();
 
-         for (pdat::CellIterator ci(dbox); ci; ci++) {
-            double correct = (*solution)(ci());
+         pdat::CellIterator ciend(dbox, false);
+         for (pdat::CellIterator ci(dbox, true); ci != ciend; ++ci) {
+            double correct = (*solution)(*ci);
             for (int d = 0; d < depth; d++) {
-               double result = (*cell_data)(ci(), d);
+               double result = (*cell_data)(*ci, d);
                if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
-                             << " : cell index = " << ci()
+                             << " : cell index = " << *ci
                              << " of L" << level_number
                              << " P" << patch.getLocalId()
                              << " " << patch.getBox() << endl;

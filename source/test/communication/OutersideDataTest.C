@@ -14,7 +14,6 @@
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellIndex.h"
-#include "SAMRAI/pdat/CellIterator.h"
 #include "CommTester.h"
 #include "SAMRAI/pdat/SideGeometry.h"
 #include "SAMRAI/pdat/SideIndex.h"
@@ -282,7 +281,8 @@ void OutersideDataTest::checkPatchInteriorData(
 
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       const pdat::SideIndex loweri(interior.lower(), axis, 0);
-      for (pdat::SideIterator si(interior, axis); si; si++) {
+      pdat::SideIterator siend(interior, axis, false);
+      for (pdat::SideIterator si(interior, axis, true); si != siend; ++si) {
 
          /*
           * Compute spatial location of face and
@@ -290,23 +290,23 @@ void OutersideDataTest::checkPatchInteriorData(
           */
 
          if (axis == 0) {
-            x = lowerx[0] + dx[0] * (si() (0) - loweri(0));
+            x = lowerx[0] + dx[0] * ((*si)(0) - loweri(0));
          } else {
-            x = lowerx[0] + dx[0] * (si() (0) - loweri(0) + 0.5);
+            x = lowerx[0] + dx[0] * ((*si)(0) - loweri(0) + 0.5);
          }
          y = z = 0.;
          if (d_dim > tbox::Dimension(1)) {
             if (axis == 1) {
-               y = lowerx[1] + dx[1] * (si() (1) - loweri(1));
+               y = lowerx[1] + dx[1] * ((*si)(1) - loweri(1));
             } else {
-               y = lowerx[1] + dx[1] * (si() (1) - loweri(1) + 0.5);
+               y = lowerx[1] + dx[1] * ((*si)(1) - loweri(1) + 0.5);
             }
          }
          if (d_dim > tbox::Dimension(2)) {
             if (axis == 2) {
-               z = lowerx[2] + dx[2] * (si() (2) - loweri(2));
+               z = lowerx[2] + dx[2] * ((*si)(2) - loweri(2));
             } else {
-               z = lowerx[2] + dx[2] * (si() (2) - loweri(2) + 0.5);
+               z = lowerx[2] + dx[2] * ((*si)(2) - loweri(2) + 0.5);
             }
          }
 
@@ -314,7 +314,7 @@ void OutersideDataTest::checkPatchInteriorData(
          for (int d = 0; d < depth; d++) {
             value = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
 
-            if (!(tbox::MathUtilities<double>::equalEps((*data)(si(),
+            if (!(tbox::MathUtilities<double>::equalEps((*data)(*si,
                                                                 d), value))) {
                tbox::perr << "FAILED: -- patch interior not properly filled"
                           << endl;
@@ -361,7 +361,8 @@ void OutersideDataTest::setLinearData(
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       if (directions(axis)) {
          const pdat::SideIndex loweri(patch.getBox().lower(), axis, 0);
-         for (pdat::SideIterator ei(sbox, axis); ei; ei++) {
+         pdat::SideIterator eiend(sbox, axis, false);
+         for (pdat::SideIterator ei(sbox, axis, true); ei != eiend; ++ei) {
 
             /*
              * Compute spatial location of cell center and
@@ -369,28 +370,28 @@ void OutersideDataTest::setLinearData(
              */
 
             if (axis == 0) {
-               x = lowerx[0] + dx[0] * (ei() (0) - loweri(0));
+               x = lowerx[0] + dx[0] * ((*ei)(0) - loweri(0));
             } else {
-               x = lowerx[0] + dx[0] * (ei() (0) - loweri(0) + 0.5);
+               x = lowerx[0] + dx[0] * ((*ei)(0) - loweri(0) + 0.5);
             }
             y = z = 0.;
             if (d_dim > tbox::Dimension(1)) {
                if (axis == 1) {
-                  y = lowerx[1] + dx[1] * (ei() (1) - loweri(1));
+                  y = lowerx[1] + dx[1] * ((*ei)(1) - loweri(1));
                } else {
-                  y = lowerx[1] + dx[1] * (ei() (1) - loweri(1) + 0.5);
+                  y = lowerx[1] + dx[1] * ((*ei)(1) - loweri(1) + 0.5);
                }
             }
             if (d_dim > tbox::Dimension(2)) {
                if (axis == 2) {
-                  z = lowerx[2] + dx[2] * (ei() (2) - loweri(2));
+                  z = lowerx[2] + dx[2] * ((*ei)(2) - loweri(2));
                } else {
-                  z = lowerx[2] + dx[2] * (ei() (2) - loweri(2) + 0.5);
+                  z = lowerx[2] + dx[2] * ((*ei)(2) - loweri(2) + 0.5);
                }
             }
 
             for (int d = 0; d < depth; d++) {
-               (*data)(ei(),
+               (*data)(*ei,
                        d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
             }
 
@@ -423,7 +424,8 @@ void OutersideDataTest::setLinearData(
       for (int s = 0; s < 2; s++) {
          const hier::Box databox = data->getArrayData(axis, s).getBox();
          const pdat::SideIndex loweri(patch.getBox().lower(), axis, 0);
-         for (hier::Box::Iterator bi(databox); bi; bi++) {
+         hier::Box::iterator biend(databox, false);
+         for (hier::Box::iterator bi(databox, true); bi != biend; ++bi) {
 
             /*
              * Compute spatial location of cell center and
@@ -431,28 +433,28 @@ void OutersideDataTest::setLinearData(
              */
 
             if (axis == 0) {
-               x = lowerx[0] + dx[0] * (bi() (0) - loweri(0));
+               x = lowerx[0] + dx[0] * ((*bi)(0) - loweri(0));
             } else {
-               x = lowerx[0] + dx[0] * (bi() (0) - loweri(0) + 0.5);
+               x = lowerx[0] + dx[0] * ((*bi)(0) - loweri(0) + 0.5);
             }
             y = z = 0.;
             if (d_dim > tbox::Dimension(1)) {
                if (axis == 1) {
-                  y = lowerx[1] + dx[1] * (bi() (1) - loweri(1));
+                  y = lowerx[1] + dx[1] * ((*bi)(1) - loweri(1));
                } else {
-                  y = lowerx[1] + dx[1] * (bi() (1) - loweri(1) + 0.5);
+                  y = lowerx[1] + dx[1] * ((*bi)(1) - loweri(1) + 0.5);
                }
             }
             if (d_dim > tbox::Dimension(2)) {
                if (axis == 2) {
-                  z = lowerx[2] + dx[2] * (bi() (2) - loweri(2));
+                  z = lowerx[2] + dx[2] * ((*bi)(2) - loweri(2));
                } else {
-                  z = lowerx[2] + dx[2] * (bi() (2) - loweri(2) + 0.5);
+                  z = lowerx[2] + dx[2] * ((*bi)(2) - loweri(2) + 0.5);
                }
             }
 
             double value = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
-            pdat::SideIndex si(bi(), axis, 0);
+            pdat::SideIndex si(*bi, axis, 0);
             for (int d = 0; d < depth; d++) {
                (*data)(si, s, d) = value;
             }
@@ -515,14 +517,16 @@ bool OutersideDataTest::verifyResults(
 
          for (int id = 0; id < d_dim.getValue(); id++) {
             if (directions(id)) {
-               for (pdat::SideIterator si(dbox, id); si; si++) {
-                  double correct = (*solution)(si());
+               pdat::SideIterator siend(dbox, id, false);
+               for (pdat::SideIterator si(dbox, id, true);
+                    si != siend; ++si) {
+                  double correct = (*solution)(*si);
                   for (int d = 0; d < depth; d++) {
-                     double result = (*side_data)(si(), d);
+                     double result = (*side_data)(*si, d);
                      if (!tbox::MathUtilities<double>::equalEps(correct,
                             result)) {
                         tbox::perr << "Test FAILED: ...."
-                                   << " : side_data index = " << si() << endl;
+                                   << " : side_data index = " << *si << endl;
                         tbox::perr << "    hier::Variable = "
                                    << d_variable_src_name[i]
                                    << " : depth index = " << d << endl;

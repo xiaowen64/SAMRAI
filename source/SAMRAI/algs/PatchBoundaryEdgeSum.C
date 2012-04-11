@@ -341,7 +341,8 @@ PatchBoundaryEdgeSum::doLevelSum(
 {
    TBOX_ASSERT(level);
 
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       for (int i = 0; i < d_user_edge_data_id.size(); i++) {
@@ -359,7 +360,8 @@ PatchBoundaryEdgeSum::doLevelSum(
 
    d_single_level_sum_schedule->fillData(0.0, false);
 
-   for (hier::PatchLevel::Iterator ip2(level); ip2; ip2++) {
+   for (hier::PatchLevel::iterator ip2(level->begin());
+        ip2 != level->end(); ++ip2) {
       const boost::shared_ptr<hier::Patch>& patch = *ip2;
 
       for (int i = 0; i < d_user_edge_data_id.size(); i++) {

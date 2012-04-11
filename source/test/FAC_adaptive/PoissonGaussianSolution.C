@@ -136,10 +136,11 @@ void PoissonGaussianSolution::setGridData(
       for (j = 0; j < d_dim.getValue(); ++j) {
          sl[j] = xl[j] + 0.5 * h[j];
       }
-      pdat::CellData<double>::Iterator iter(patch.getBox());
+      pdat::CellData<double>::Iterator iter(patch.getBox(), true);
+      pdat::CellData<double>::Iterator iterend(patch.getBox(), false);
       if (d_dim == tbox::Dimension(2)) {
          double x, y;
-         for ( ; iter; iter++) {
+         for ( ; iter != iterend; ++iter) {
             const pdat::CellIndex& index = *iter;
             x = sl[0] + (index[0] - il[0]) * h[0];
             y = sl[1] + (index[1] - il[1]) * h[1];
@@ -148,7 +149,7 @@ void PoissonGaussianSolution::setGridData(
          }
       } else if (d_dim == tbox::Dimension(3)) {
          double x, y, z;
-         for ( ; iter; iter++) {
+         for ( ; iter != iterend; ++iter) {
             const pdat::CellIndex& index = *iter;
             x = sl[0] + (index[0] - il[0]) * h[0];
             y = sl[1] + (index[1] - il[1]) * h[1];

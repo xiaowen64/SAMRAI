@@ -137,8 +137,8 @@ int main(
       hier::BoxLevel layer0(hier::IntVector(dim, 1), geometry);
       hier::BoxLevel layer1(ratio, geometry);
 
-      hier::BoxContainer::Iterator coarse_itr(coarse_domain);
-      for (int ib = 0; ib < n_coarse_boxes; ib++, coarse_itr++) {
+      hier::BoxContainer::iterator coarse_itr(coarse_domain);
+      for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_itr) {
          if (nproc > 1) {
             if (ib == layer0.getRank()) {
                layer0.addBox(hier::Box(*coarse_itr, ib,
@@ -149,8 +149,8 @@ int main(
          }
       }
 
-      hier::BoxContainer::Iterator fine_itr(fine_boxes);
-      for (int ib = 0; ib < n_fine_boxes; ib++, fine_itr++) {
+      hier::BoxContainer::iterator fine_itr(fine_boxes);
+      for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_itr) {
          if (nproc > 1) {
             if (ib == layer1.getRank()) {
                layer1.addBox(hier::Box(*fine_itr, ib,
@@ -221,7 +221,8 @@ int main(
       for (ln = 0; ln < 2; ln++) {
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
-         for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+         for (hier::PatchLevel::iterator ip(level->begin());
+              ip != level->end(); ++ip) {
             boost::shared_ptr<pdat::EdgeData<double> > data;
             patch = level->getPatch(ip());
             pgeom = patch->getPatchGeometry();
@@ -337,12 +338,13 @@ int main(
       // 0.0025 on fine level
 /*   bool vol_test_passed = true;
  *   for (ln = 0; ln < 2; ln++) {
- *   for (hier::PatchLevel::Iterator ip(hierarchy->getPatchLevel(ln)); ip; ip++) {
+ *   for (hier::PatchLevel::iterator ip(hierarchy->getPatchLevel(ln)->begin()); ip != hierarchy->getPatchLevel(ln)->end(); ++ip) {
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
  *   boost::shared_ptr< pdat::CellData<double> > svdata = patch->getPatchData(cwgt_id);
  *
- *   for (pdat::CellIterator c(svdata->getBox());c && vol_test_passed;c++) {
- *   pdat::CellIndex cell_index = c();
+ *   pdat::CellIterator cend(svdata->getBox(), false);
+ *   for (pdat::CellIterator c(svdata->getBox(), true); c != cend && vol_test_passed; ++c) {
+ *   pdat::CellIndex cell_index = *c;
  *
  *   if (ln == 0) {
  *   if ((coarse_fine * patch->getBox()).contains(cell_index)) {
@@ -571,7 +573,8 @@ int main(
 
       boost::shared_ptr<hier::PatchLevel> level_zero(
          hierarchy->getPatchLevel(0));
-      for (hier::PatchLevel::Iterator ip(level_zero); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level_zero->begin());
+           ip != level_zero->end(); ++ip) {
          patch = level_zero->getPatch(ip());
          sdata = patch->getPatchData(svindx[2]);
          hier::Index index0(2, 2);
@@ -588,7 +591,8 @@ int main(
 
       // check values
       bool bogus_value_test_passed = true;
-      for (hier::PatchLevel::Iterator ipp(level_zero); ipp; ipp++) {
+      for (hier::PatchLevel::iterator ipp(level_zero->begin());
+           ipp != level_zero->end(); ++ipp) {
          patch = level_zero->getPatch(ipp());
          sdata = patch->getPatchData(svindx[2]);
          pdat::EdgeIndex index0(hier::Index(2,
@@ -599,10 +603,11 @@ int main(
                                 pdat::EdgeIndex::Upper);
 
          // check X axis data
-         for (pdat::EdgeIterator c(sdata->getBox(), pdat::EdgeIndex::X);
-              c && bogus_value_test_passed;
-              c++) {
-            pdat::EdgeIndex edge_index = c();
+         pdat::EdgeIterator cend(sdata->getBox(), pdat::EdgeIndex::X, false);
+         for (pdat::EdgeIterator c(sdata->getBox(), pdat::EdgeIndex::X, true);
+              c != cend && bogus_value_test_passed;
+              ++c) {
+            pdat::EdgeIndex edge_index = *c;
 
             if (!tbox::MathUtilities<dcomplex>::equalEps((*sdata)(edge_index),
                    dcomplex(4.0, -3.0))) {
@@ -611,10 +616,11 @@ int main(
          }
 
          // check Y axis data
-         for (pdat::EdgeIterator cc(sdata->getBox(), pdat::EdgeIndex::Y);
-              cc && bogus_value_test_passed;
-              cc++) {
-            pdat::EdgeIndex edge_index = cc();
+         pdat::EdgeIterator ccend(sdata->getBox(), pdat::EdgeIndex::Y, false);
+         for (pdat::EdgeIterator cc(sdata->getBox(), pdat::EdgeIndex::Y, true);
+              cc != ccend && bogus_value_test_passed;
+              ++cc) {
+            pdat::EdgeIndex edge_index = *cc;
 
             if (edge_index == index0) {
                if (!tbox::MathUtilities<dcomplex>::equalEps((*sdata)(edge_index),
@@ -819,14 +825,16 @@ complexDataSameAsValue(
    boost::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          patch = level->getPatch(ip());
          boost::shared_ptr<pdat::EdgeData<dcomplex> > svdata(
             patch->getPatchData(desc_id));
 
-         for (pdat::EdgeIterator c(svdata->getBox(), 1); c && test_passed;
-              c++) {
-            pdat::EdgeIndex edge_index = c();
+         pdat::EdgeIterator cend(svdata->getBox(), 1, false);
+         for (pdat::EdgeIterator c(svdata->getBox(), 1, true);
+              c != cend && test_passed; ++c) {
+            pdat::EdgeIndex edge_index = *c;
             if (!tbox::MathUtilities<dcomplex>::equalEps((*svdata)(edge_index),
                    value)) {
                test_passed = false;
@@ -854,14 +862,16 @@ doubleDataSameAsValue(
    boost::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          patch = level->getPatch(ip());
          boost::shared_ptr<pdat::EdgeData<double> > svdata(
             patch->getPatchData(desc_id));
 
-         for (pdat::EdgeIterator c(svdata->getBox(), 1); c && test_passed;
-              c++) {
-            pdat::EdgeIndex edge_index = c();
+         pdat::EdgeIterator cend(svdata->getBox(), 1, false);
+         for (pdat::EdgeIterator c(svdata->getBox(), 1, true);
+              c != cend && test_passed; ++c) {
+            pdat::EdgeIndex edge_index = *c;
             if (!tbox::MathUtilities<double>::equalEps((*svdata)(edge_index),
                    value)) {
                test_passed = false;

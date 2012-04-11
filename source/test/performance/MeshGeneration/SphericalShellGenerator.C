@@ -52,7 +52,7 @@ SphericalShellGenerator::SphericalShellGenerator(
          }
 
          tbox::plog << "SphericalShellGenerator radii:\n";
-         for ( size_t i=0; i<d_radii.size(); ++i ) {
+         for ( int i=0; i<d_radii.size(); ++i ) {
             tbox::plog << "\tradii[" << i << "] = " << d_radii[i] << '\n';
          }
       }
@@ -149,7 +149,8 @@ void SphericalShellGenerator::setTags(
 
    resetHierarchyConfiguration(hierarchy, 0, 1);
 
-   for (hier::PatchLevel::Iterator pi(tag_level); pi; pi++) {
+   for (hier::PatchLevel::iterator pi(tag_level->begin());
+        pi != tag_level->end(); ++pi) {
 
       boost::shared_ptr<hier::Patch> patch = *pi;
 
@@ -189,7 +190,7 @@ void SphericalShellGenerator::setDomain(
                  << "for single-box domains.");
    }
 
-   hier::BoxContainer::ConstIterator ii = domain.begin();
+   hier::BoxContainer::const_iterator ii = domain.begin();
    hier::Box domain_box = *ii;
    hier::IntVector tmp_intvec = ii->numberCells();
    const tbox::Dimension &dim = domain.begin()->getDim();
@@ -253,8 +254,9 @@ void SphericalShellGenerator::tagShells(
    pdat::NodeData<double> node_tag_data(pbox, 1, tag_data.getGhostCellWidth()+buffer_cells);
    node_tag_data.getArrayData().fillAll(0);
 
-   for (pdat::NodeData<int>::Iterator ni(node_tag_data.getGhostBox());
-        ni; ni++) {
+   pdat::NodeData<int>::Iterator niend(node_tag_data.getGhostBox(), false);
+   for (pdat::NodeData<int>::Iterator ni(node_tag_data.getGhostBox(), true);
+        ni != niend; ++ni) {
       const pdat::NodeIndex& idx = *ni;
       double r[SAMRAI_MAXIMUM_DIMENSION];
       double rr = 0;
@@ -277,13 +279,16 @@ void SphericalShellGenerator::tagShells(
     */
    tag_data.getArrayData().fillAll(0);
 
-   for (pdat::CellData<int>::Iterator ci(tag_data.getGhostBox());
-        ci; ci++) {
+   pdat::CellData<int>::Iterator ciend(tag_data.getGhostBox(), false);
+   for (pdat::CellData<int>::Iterator ci(tag_data.getGhostBox(), true);
+        ci != ciend; ++ci) {
       const pdat::CellIndex& cid = *ci;
 
       hier::Box check_box(cid,cid, block_id);
       check_box.grow(buffer_cells);
-      for ( pdat::NodeIterator node_itr(check_box); node_itr; node_itr++ ) {
+      pdat::NodeIterator node_itr_end(check_box, false);
+      for ( pdat::NodeIterator node_itr(check_box, true);
+            node_itr != node_itr_end; ++node_itr ) {
          if ( node_tag_data(*node_itr) == tag_val ) {
             tag_data(cid) = tag_val;
             break;
@@ -314,7 +319,9 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
 
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
       tagShells(tag_data, dx, d_buffer_shrink_distance[patch.getPatchLevelNumber()]);
-      for (pdat::CellData<double>::Iterator ci(patch.getBox()); ci; ci++) {
+      pdat::CellData<double>::Iterator ciend(patch.getBox(), false);
+      for (pdat::CellData<double>::Iterator ci(patch.getBox(), true);
+           ci != ciend; ++ci) {
          *(buffer++) = tag_data(*ci);
       }
 

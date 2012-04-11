@@ -28,7 +28,8 @@ namespace pdat {
  * \verbatim
  * hier::Box box;
  * ...
- * for (CellIterator c(box); c; c++) {
+ * CellIterator cend(box, false);
+ * for (CellIterator c(box, true); c != cend; ++c) {
  *    // use index c of the box
  * }
  * \endverbatim
@@ -49,7 +50,8 @@ public:
     * the indices in the argument box.
     */
    explicit CellIterator(
-      const hier::Box& box);
+      const hier::Box& box,
+      bool begin);
 
    /**
     * Copy constructor for the cell iterator
@@ -84,43 +86,25 @@ public:
    }
 
    /**
-    * Extract the cell index corresponding to the iterator position in the box.
+    * Extract a pointer to the cell index corresponding to the iterator
+    * position in the box.
     */
-   const CellIndex&
-   operator () () const
+   const CellIndex*
+   operator -> () const
    {
-      return d_index;
+      return &d_index;
    }
 
    /**
-    * Return true if the iterator points to a valid index within the box.
+    * Pre-increment the iterator to point to the next index in the box.
     */
-   operator bool () const;
-
-#ifndef LACKS_BOOL_VOID_RESOLUTION
-   /**
-    * Return a non-NULL if the iterator points to a valid index within the box.
-    */
-   operator const void* () const
-   {
-      return CellIterator::operator bool () ? this : NULL;
-   }
-#endif
+   CellIterator&
+   operator ++ ();
 
    /**
-    * Return whether the iterator points to a valid index within the box.
-    * This operator mimics the !p operation applied to a pointer p.
+    * Post-increment the iterator to point to the next index in the box.
     */
-   bool
-   operator ! () const
-   {
-      return !CellIterator::operator bool ();
-   }
-
-   /**
-    * Increment the iterator to point to the next index in the box.
-    */
-   void
+   CellIterator
    operator ++ (
       int);
 

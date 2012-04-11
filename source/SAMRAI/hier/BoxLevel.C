@@ -284,7 +284,7 @@ BoxLevel::finalize()
 {
 
    // Erase non-local Boxes, if any, from d_boxes.
-   for (BoxContainer::Iterator mbi = d_boxes.begin();
+   for (BoxContainer::iterator mbi = d_boxes.begin();
         mbi != d_boxes.end(); /* incremented in loop */) {
       if (mbi->getOwnerRank() != d_mpi.getRank()) {
          d_boxes.erase(mbi++);
@@ -319,7 +319,7 @@ BoxLevel::initializePrivate(
    }
 
    // Erase non-local Boxes, if any, from d_boxes.
-   for (BoxContainer::Iterator mbi(d_boxes.begin());
+   for (BoxContainer::iterator mbi(d_boxes.begin());
         mbi != d_boxes.end(); /* incremented in loop */) {
       if (mbi->getOwnerRank() != d_mpi.getRank()) {
          d_boxes.erase(mbi++);
@@ -537,7 +537,8 @@ BoxLevel::computeLocalRedundantData()
       d_local_max_box_size.resize(nblocks, zero_vec);
    }
 
-   for (RealBoxConstIterator ni(d_boxes); ni.isValid(); ++ni) {
+   for (RealBoxConstIterator ni(d_boxes.realBegin());
+        ni != d_boxes.realEnd(); ++ni) {
 
       int block_num = ni->getBlockId().getBlockValue();
       const IntVector boxdim(ni->numberCells());
@@ -582,8 +583,8 @@ BoxLevel::cacheGlobalReducedData() const
    if (d_parallel_state == GLOBALIZED) {
       d_global_number_of_boxes = 0;
       d_global_number_of_cells = 0;
-      for (RealBoxConstIterator ni(d_global_boxes);
-           ni.isValid();
+      for (RealBoxConstIterator ni(d_global_boxes.realBegin());
+           ni != d_global_boxes.realEnd();
            ++ni) {
          ++d_global_number_of_boxes;
          d_global_number_of_cells += ni->size();
@@ -704,8 +705,8 @@ BoxLevel::getLocalNumberOfBoxes(
       return d_local_number_of_boxes;
    } else {
       size_t count = 0;
-      BoxContainerSingleOwnerIterator mbi(d_global_boxes, rank);
-      for ( ; mbi.isValid(); mbi++) {
+      BoxContainerSingleOwnerIterator mbi(d_global_boxes.begin(rank));
+      for ( ; mbi != d_global_boxes.end(rank); ++mbi) {
          if (!(*mbi).isPeriodicImage()) {
             ++count;
          }
@@ -732,8 +733,8 @@ BoxLevel::getLocalNumberOfCells(
       return d_local_number_of_cells;
    } else {
       size_t count = 0;
-      BoxContainerSingleOwnerIterator mbi(d_global_boxes, rank);
-      for ( ; mbi.isValid(); mbi++) {
+      BoxContainerSingleOwnerIterator mbi(d_global_boxes.begin(rank));
+      for ( ; mbi != d_global_boxes.end(rank); ++mbi) {
          if (!(*mbi).isPeriodicImage()) {
             count += (*mbi).size();
          }
@@ -750,8 +751,8 @@ BoxLevel::getSpatiallyEqualBox(
    Box& matching_box) const
 {
    bool box_exists = false;
-   for (BoxContainerSingleBlockIterator itr(d_boxes, block_id);
-        itr.isValid(); ++itr) {
+   for (BoxContainerSingleBlockIterator itr(d_boxes.begin(block_id));
+        itr != d_boxes.end(block_id); ++itr) {
       if (box_to_match.isSpatiallyEqual(*itr)) {
          box_exists = true;
          matching_box = *itr;
@@ -927,7 +928,7 @@ BoxLevel::acquireRemoteBoxes_pack(
    int* ptr = &send_mesg[0] + old_size;
    *(ptr++) = static_cast<int>(d_boxes.size());
 
-   for (BoxContainer::ConstIterator i_boxes = d_boxes.begin();
+   for (BoxContainer::const_iterator i_boxes = d_boxes.begin();
         i_boxes != d_boxes.end();
         ++i_boxes) {
       (*i_boxes).putToIntBuffer(ptr);
@@ -985,7 +986,7 @@ BoxLevel::acquireRemoteBoxes_unpack(
  ***********************************************************************
  */
 
-BoxContainer::ConstIterator
+BoxContainer::const_iterator
 BoxLevel::addBox(
    const Box& box,
    const BlockId& block_id,
@@ -1017,7 +1018,7 @@ BoxLevel::addBox(
 
    clearForBoxChanges(false);
 
-   BoxContainer::Iterator new_iterator(d_boxes);
+   BoxContainer::iterator new_iterator(d_boxes);
 
    if (d_boxes.size() == 0) {
       Box new_box(
@@ -1029,7 +1030,7 @@ BoxLevel::addBox(
       new_iterator = d_boxes.insert(d_boxes.end(), new_box);
    } else {
       // Set new_index to one more than the largest index used.
-      BoxContainer::Iterator ni = d_boxes.end();
+      BoxContainer::iterator ni = d_boxes.end();
       do {
          TBOX_ASSERT(ni != d_boxes.begin());   // There should not be all periodic images.
          --ni;
@@ -1216,7 +1217,7 @@ BoxLevel::addBox(
 
 void
 BoxLevel::eraseBox(
-   BoxContainer::Iterator& ibox)
+   BoxContainer::iterator& ibox)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != DISTRIBUTED) {
@@ -1289,7 +1290,7 @@ BoxLevel::eraseBox(
 
    d_local_bounding_box_up_to_date = d_global_data_up_to_date = false;
 
-   BoxContainer::Iterator ibox = d_boxes.find(box);
+   BoxContainer::iterator ibox = d_boxes.find(box);
    if (ibox == d_boxes.end()) {
       TBOX_ERROR("BoxLevel::eraseBox: Box to be erased ("
          << box << ") is NOT a part of the BoxLevel.\n");
@@ -1344,7 +1345,7 @@ BoxLevel::getFirstLocalId() const
    if (boxes.isEmpty()) {
       return s_negative_one_local_id;
    }
-   BoxContainer::ConstIterator ni = boxes.begin();
+   BoxContainer::const_iterator ni = boxes.begin();
    while (ni->isPeriodicImage()) {
       TBOX_ASSERT(ni != boxes.end());   // There should be a real box!
       ++ni;
@@ -1362,7 +1363,7 @@ BoxLevel::getLastLocalId() const
       return s_negative_one_local_id;
    }
    LocalId last_local_id(0);
-   for (BoxContainer::ConstIterator ni = boxes.begin();
+   for (BoxContainer::const_iterator ni = boxes.begin();
         ni != boxes.end(); ++ni) {
       if (last_local_id < ni->getLocalId()) {
          last_local_id = ni->getLocalId();
@@ -1381,7 +1382,7 @@ BoxLevel::hasBox(
 {
    if (box.getOwnerRank() == d_mpi.getRank()) {
 
-      BoxContainer::ConstIterator ni = d_boxes.find(box);
+      BoxContainer::const_iterator ni = d_boxes.find(box);
       return ni != d_boxes.end();
 
    } else {
@@ -1392,7 +1393,7 @@ BoxLevel::hasBox(
             << "See BoxLevel::setParallelState().");
       }
 #endif
-      BoxContainer::ConstIterator ni = d_global_boxes.find(box);
+      BoxContainer::const_iterator ni = d_global_boxes.find(box);
       return ni != d_global_boxes.end();
    }
 }
@@ -1401,12 +1402,12 @@ BoxLevel::hasBox(
  ***********************************************************************
  ***********************************************************************
  */
-BoxContainer::ConstIterator
+BoxContainer::const_iterator
 BoxLevel::getBoxStrict(
    const Box& box) const
 {
    if (box.getOwnerRank() == d_mpi.getRank()) {
-      BoxContainer::ConstIterator ni = d_boxes.find(box);
+      BoxContainer::const_iterator ni = d_boxes.find(box);
       if (ni == d_boxes.end()) {
          TBOX_ERROR(
             "BoxContainer::getBoxStrict: requested box "
@@ -1423,7 +1424,7 @@ BoxLevel::getBoxStrict(
             << box << " without being in globalized state.");
       }
 #endif
-      BoxContainer::ConstIterator ni = d_global_boxes.find(box);
+      BoxContainer::const_iterator ni = d_global_boxes.find(box);
       if (ni == d_global_boxes.end()) {
          TBOX_ERROR(
             "BoxContainer::getBoxStrict: requested box "
@@ -1439,7 +1440,7 @@ BoxLevel::getBoxStrict(
  ***********************************************************************
  ***********************************************************************
  */
-BoxContainer::ConstIterator
+BoxContainer::const_iterator
 BoxLevel::getBoxStrict(
    const BoxId& box_id) const
 {
@@ -1455,7 +1456,7 @@ BoxLevel::getBoxStrict(
    Box box(getDim(),
                   box_id);
    if (box.getOwnerRank() == d_mpi.getRank()) {
-      BoxContainer::ConstIterator ni = d_boxes.find(box);
+      BoxContainer::const_iterator ni = d_boxes.find(box);
       if (ni == d_boxes.end()) {
          TBOX_ERROR(
             "BoxContainer::getBoxStrict: requested box "
@@ -1464,7 +1465,7 @@ BoxLevel::getBoxStrict(
       }
       return ni;
    } else {
-      BoxContainer::ConstIterator ni = d_global_boxes.find(box);
+      BoxContainer::const_iterator ni = d_global_boxes.find(box);
       if (ni == d_global_boxes.end()) {
          TBOX_ERROR(
             "BoxContainer::getBoxStrict: requested box "
@@ -1482,7 +1483,7 @@ BoxLevel::getBoxStrict(
 void
 BoxLevel::getGlobalBoxes(BoxContainer& global_boxes) const
 {
-   for (BoxContainer::ConstIterator itr = d_global_boxes.begin();
+   for (BoxContainer::const_iterator itr = d_global_boxes.begin();
         itr != d_global_boxes.end(); ++itr) {
       global_boxes.pushBack(*itr);
    }
@@ -1675,7 +1676,7 @@ BoxLevel::recursivePrint(
          /*
           * Print boxes from all ranks.
           */
-         for (BoxContainer::ConstIterator bi = d_global_boxes.begin();
+         for (BoxContainer::const_iterator bi = d_global_boxes.begin();
               bi != d_global_boxes.end();
               ++bi) {
             Box box = *bi;
@@ -1687,7 +1688,7 @@ BoxLevel::recursivePrint(
          /*
           * Print local boxes only.
           */
-         for (BoxContainer::ConstIterator bi = d_boxes.begin();
+         for (BoxContainer::const_iterator bi = d_boxes.begin();
               bi != d_boxes.end();
               ++bi) {
             Box box = *bi;

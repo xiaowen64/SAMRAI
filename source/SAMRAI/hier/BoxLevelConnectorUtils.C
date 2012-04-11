@@ -197,7 +197,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
          base.getRefinementRatio(),
          grid_geom,
          base.getMPI());
-      for (BoxContainer::ConstIterator ni = base_mapped_boxes.begin();
+      for (BoxContainer::const_iterator ni = base_mapped_boxes.begin();
            ni != base_mapped_boxes.end(); ++ni) {
          Box swelledbase_mapped_box(*ni);
          swelledbase_mapped_box.grow(base_swell);
@@ -217,7 +217,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
          grid_geom,
          head.getMPI());
 
-      for (BoxContainer::ConstIterator ni = head_mapped_boxes.begin();
+      for (BoxContainer::const_iterator ni = head_mapped_boxes.begin();
            ni != head_mapped_boxes.end(); ++ni) {
          Box swelledhead_mapped_box(*ni);
 
@@ -277,7 +277,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
          grid_geom,
          connector.getMPI(),
          BoxLevel::GLOBALIZED);
-      for (BoxContainer::ConstIterator bi = domain->begin();
+      for (BoxContainer::const_iterator bi = domain->begin();
            bi != domain->end(); ++bi) {
          domain_mapped_box_level.addBox(*bi);
       }
@@ -412,7 +412,7 @@ BoxLevelConnectorUtils::makeSortingMap(
        * use the fact that a real mapped_box's image follows the real
        * mapped_box in a BoxContainer.
        */
-      BoxContainer::ConstIterator ini = cur_mapped_boxes.find(cur_mapped_box);
+      BoxContainer::const_iterator ini = cur_mapped_boxes.find(cur_mapped_box);
       TBOX_ASSERT(ini != cur_mapped_boxes.end());
       ++ini; // Skip the real mapped_box to look for its image mapped_boxes.
       while (ini != cur_mapped_boxes.end() &&
@@ -705,8 +705,8 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
    const BoxContainer& input_mapped_boxes = input.getBoxes();
 
-   for (RealBoxConstIterator ni(input_mapped_boxes); ni.isValid();
-        ++ni) {
+   for (RealBoxConstIterator ni(input_mapped_boxes.realBegin());
+        ni != input_mapped_boxes.realEnd(); ++ni) {
 
       const Box& input_mapped_box = *ni;
       const BoxId& input_mapped_box_id = input_mapped_box.getId();
@@ -785,7 +785,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
             Connector::NeighborhoodIterator base_box_itr =
                input_to_parts.makeEmptyLocalNeighborhood(input_mapped_box_id);
-            for (BoxContainer::Iterator bi(parts_list);
+            for (BoxContainer::iterator bi(parts_list);
                  bi != parts_list.end(); ++bi) {
                const Box
                parts_mapped_box((*bi),
@@ -859,7 +859,7 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
 
    std::map<BlockId, BoxContainer> single_block_reference;
    if (grid_geometry->getNumberOfBlockSingularities() > 0) {
-      for (BoxContainer::ConstIterator bi = boundary.begin();
+      for (BoxContainer::const_iterator bi = boundary.begin();
            bi != boundary.end(); ++bi) {
          single_block_reference[bi->getBlockId()].pushBack(*bi); 
       }
@@ -889,7 +889,7 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
     * the results for block_id back into boundary.
     */
    std::map<BlockId, BoxContainer> boundary_by_blocks;
-   for (BoxContainer::ConstIterator bi = boundary.begin();
+   for (BoxContainer::const_iterator bi = boundary.begin();
         bi != boundary.end(); ++bi) {
       boundary_by_blocks[bi->getBlockId()].pushBack(*bi);
    }
@@ -1021,7 +1021,7 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
    for (std::map<BlockId, BoxContainer>::iterator bi = boundary_by_blocks.begin();
         bi != boundary_by_blocks.end(); ++bi) {
       BoxContainer &boxes(bi->second);
-      for ( BoxContainer::Iterator bj=boxes.begin(); bj!=boxes.end(); ++bj ) {
+      for ( BoxContainer::iterator bj=boxes.begin(); bj!=boxes.end(); ++bj ) {
          bj->setId(BoxId( bj->getLocalId(), bj->getOwnerRank(),
                           bj->getPeriodicId() ));
       }
@@ -1079,7 +1079,7 @@ BoxLevelConnectorUtils::makeRemainderMap(
     */
    LocalId last_used_index = orig.getLastLocalId();
 
-   for (BoxContainer::ConstIterator ni = orig_nodes.begin();
+   for (BoxContainer::const_iterator ni = orig_nodes.begin();
         ni != orig_nodes.end(); ++ni) {
 
       const Box& orig_node = *ni;
@@ -1143,7 +1143,7 @@ BoxLevelConnectorUtils::makeRemainderMap(
           */
          Connector::NeighborhoodIterator base_box_itr =
             orig_to_remainder.makeEmptyLocalNeighborhood(mapped_box_id);
-         for (BoxContainer::Iterator bi(remaining_parts_list);
+         for (BoxContainer::iterator bi(remaining_parts_list);
               bi != remaining_parts_list.end(); ++bi) {
             Box new_box = (*bi);
             Box new_node(new_box,
@@ -1194,8 +1194,9 @@ BoxLevelConnectorUtils::addPeriodicImages(
 
    const IntVector& mapped_box_level_growth = threshold_distance;
 
-   for (RealBoxConstIterator ni(mapped_box_level.getBoxes());
-        ni.isValid(); ++ni) {
+   const BoxContainer& level_boxes(mapped_box_level.getBoxes());
+   for (RealBoxConstIterator ni(level_boxes.realBegin());
+        ni != level_boxes.realEnd(); ++ni) {
 
       const Box& mapped_box = *ni;
       for (int s = 1; s < shift_catalog->getNumberOfShifts(); ++s) {
@@ -1309,8 +1310,9 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
       const IntVector& mapped_box_level_growth =
          mapped_box_level_to_anchor.getConnectorWidth();
 
-      for (RealBoxConstIterator ni(mapped_box_level.getBoxes());
-           ni.isValid(); ++ni) {
+      const BoxContainer& level_boxes(mapped_box_level.getBoxes());
+      for (RealBoxConstIterator ni(level_boxes.realBegin());
+           ni != level_boxes.realEnd(); ++ni) {
 
          const Box& mapped_box = *ni;
          Box grown_box = mapped_box;

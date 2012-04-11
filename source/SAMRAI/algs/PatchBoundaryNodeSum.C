@@ -724,7 +724,8 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
    const hier::IntVector& ratio(fine_level->getRatioToCoarserLevel());
    const int level_number(fine_level->getLevelNumber());
 
-   for (hier::PatchLevel::Iterator ip(fine_level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(fine_level->begin());
+        ip != fine_level->end(); ++ip) {
 
       const tbox::Array<hier::BoundaryBox>& pboundaries =
          d_coarse_fine_boundary[level_number]->getBoundaries(ip->getGlobalId(), 1);
@@ -1055,7 +1056,8 @@ PatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
    TBOX_ASSERT(level);
    TBOX_ASSERT(node_data_id.size() == onode_data_id.size());
 
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       for (int i = 0; i < node_data_id.size(); i++) {
@@ -1081,7 +1083,8 @@ PatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
    TBOX_ASSERT(level);
    TBOX_ASSERT(node_data_id.size() == onode_data_id.size());
 
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       for (int i = 0; i < node_data_id.size(); i++) {

@@ -18,10 +18,15 @@ namespace pdat {
 
 EdgeIterator::EdgeIterator(
    const hier::Box& box,
-   const int axis):
+   const int axis,
+   bool begin):
    d_index(box.lower(), axis, 0),
    d_box(EdgeGeometry::toEdgeBox(box, axis))
 {
+   if (!d_box.empty() && !begin) {
+      d_index(d_box.getDim().getValue()-1) =
+         d_box.upper(d_box.getDim().getValue()-1) + 1;
+   }
 }
 
 EdgeIterator::EdgeIterator(
@@ -35,21 +40,8 @@ EdgeIterator::~EdgeIterator()
 {
 }
 
-EdgeIterator::operator bool () const
-{
-   bool retval = true;
-   for (int i = 0; i < d_box.getDim().getValue(); i++) {
-      if (d_index(i) > d_box.upper(i)) {
-         retval = false;
-         break;
-      }
-   }
-   return retval;
-}
-
-void
-EdgeIterator::operator ++ (
-   int)
+EdgeIterator&
+EdgeIterator::operator ++ ()
 {
    d_index(0)++;
    for (int i = 0; i < d_box.getDim().getValue() - 1; i++) {
@@ -60,6 +52,24 @@ EdgeIterator::operator ++ (
          break;
       }
    }
+   return *this;
+}
+
+EdgeIterator
+EdgeIterator::operator ++ (
+   int)
+{
+   EdgeIterator tmp = *this;
+   d_index(0)++;
+   for (int i = 0; i < d_box.getDim().getValue() - 1; i++) {
+      if (d_index(i) > d_box.upper(i)) {
+         d_index(i) = d_box.lower(i);
+         d_index(i + 1)++;
+      } else {
+         break;
+      }
+   }
+   return tmp;
 }
 
 }

@@ -480,10 +480,11 @@ int SkeletonBoundaryUtilities2::checkBdryData(
       dbox.upper(idir) = ilast(idir);
    }
 
-   pdat::CellIterator id(dbox);
-   for (pdat::CellIterator ic(cbox); ic; ic++) {
-      double checkval = valfact * (*vardata)(id(), depth) + constval;
-      pdat::CellIndex check = ic();
+   pdat::CellIterator id(dbox, true);
+   pdat::CellIterator icend(cbox, false);
+   for (pdat::CellIterator ic(cbox, true); ic != icend; ++ic) {
+      double checkval = valfact * (*vardata)(*id, depth) + constval;
+      pdat::CellIndex check = *ic;
       for (int p = 0; p < gbox_to_check.numberCells(idir); p++) {
          double offcheckval = checkval + dxfact * (p + 1);
          if ((*vardata)(check, depth) != offcheckval) {
@@ -496,7 +497,7 @@ int SkeletonBoundaryUtilities2::checkBdryData(
          }
          check(idir) += offsign;
       }
-      id++;
+      ++id;
    }
 
    return num_bad_values;

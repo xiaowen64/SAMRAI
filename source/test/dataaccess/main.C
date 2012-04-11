@@ -123,8 +123,9 @@ int main(
       }
 
       int j = 0;
-      for (pdat::CellIterator ci(box); ci; ci++) {
-         if (!tbox::MathUtilities<double>::equalEps(cell_data(ci()),
+      pdat::CellIterator ciend(box, false);
+      for (pdat::CellIterator ci(box, true); ci != ciend; ++ci) {
+         if (!tbox::MathUtilities<double>::equalEps(cell_data(*ci),
                 cell_ptr[j])) {
             tbox::perr << "FAILED: - CellIterator test" << std::endl;
             ++error_count;
@@ -152,8 +153,9 @@ int main(
          }
 
          j = 0;
-         for (pdat::FaceIterator fi(box, axis); fi; fi++) {
-            if (!tbox::MathUtilities<double>::equalEps(face_data(fi()),
+         pdat::FaceIterator fiend(box, axis, false);
+         for (pdat::FaceIterator fi(box, axis, true); fi != fiend; ++fi) {
+            if (!tbox::MathUtilities<double>::equalEps(face_data(*fi),
                    face_ptr[axis][j])) {
                tbox::perr << "FAILED: - FaceIterator test" << std::endl;
                ++error_count;
@@ -166,7 +168,8 @@ int main(
        * Test FaceIndex
        */
 
-      for (pdat::CellIterator ifc(box); ifc; ifc++) {
+      pdat::CellIterator ifcend(box, false);
+      for (pdat::CellIterator ifc(box, true); ifc != ifcend; ++ifc) {
 
          for (int a = 0; a < dim.getValue(); a++) {
 
@@ -176,7 +179,7 @@ int main(
             hier::Index fhi = face_box.upper();
             for (int f = 0; f < 2; f++) {
 
-               pdat::FaceIndex findx(ifc(), a, f);
+               pdat::FaceIndex findx(*ifc, a, f);
 
                int offset = 0;
                for (int i = dim.getValue() - 1; i > 0; i--) {
@@ -212,8 +215,9 @@ int main(
       }
 
       j = 0;
-      for (pdat::NodeIterator ni(box); ni; ni++) {
-         if (!tbox::MathUtilities<double>::equalEps(node_data(ni()),
+      pdat::NodeIterator niend(box, false);
+      for (pdat::NodeIterator ni(box, true); ni != niend; ++ni) {
+         if (!tbox::MathUtilities<double>::equalEps(node_data(*ni),
                 node_ptr[j])) {
             tbox::perr << "FAILED: - NodeIterator test" << std::endl;
             ++error_count;
@@ -225,7 +229,8 @@ int main(
        * Test NodeIndex
        */
 
-      for (pdat::CellIterator inc(box); inc; inc++) {
+      pdat::CellIterator incend(box, false);
+      for (pdat::CellIterator inc(box, true); inc != incend; ++inc) {
 
          hier::IntVector corner(dim, 0);
 
@@ -233,7 +238,7 @@ int main(
 
          while (!all_corners_complete) {
 
-            pdat::NodeIndex nindx(inc(), corner);
+            pdat::NodeIndex nindx(*inc, corner);
 
             int offset = 0;
             for (int i = dim.getValue() - 1; i > 0; i--) {
@@ -282,8 +287,9 @@ int main(
          }
 
          j = 0;
-         for (pdat::EdgeIterator ei(box, axis); ei; ei++) {
-            if (!tbox::MathUtilities<double>::equalEps(edge_data(ei()),
+         pdat::EdgeIterator eiend(box, axis, false);
+         for (pdat::EdgeIterator ei(box, axis, true); ei != eiend; ++ei) {
+            if (!tbox::MathUtilities<double>::equalEps(edge_data(*ei),
                    edge_ptr[axis][j])) {
                tbox::perr << "FAILED: - EdgeIterator test" << std::endl;
                ++error_count;
@@ -296,7 +302,8 @@ int main(
        * Test EdgeIndex
        */
 
-      for (pdat::CellIterator iec(box); iec; iec++) {
+      pdat::CellIterator iecend(box, false);
+      for (pdat::CellIterator iec(box, true); iec != iecend; ++iec) {
          for (int a = 0; a < dim.getValue(); a++) {
 
             hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box,
@@ -305,7 +312,7 @@ int main(
             hier::Index ehi = edge_box.upper();
 
             for (int f = 0; f < (1 << (dim.getValue() - 1)); f++) {
-               pdat::EdgeIndex eindx(iec(), a, f);
+               pdat::EdgeIndex eindx(*iec, a, f);
 
                int offset = 0;
                for (int i = dim.getValue() - 1; i > 0; i--) {
@@ -342,8 +349,9 @@ int main(
          }
 
          j = 0;
-         for (pdat::SideIterator si(box, axis); si; si++) {
-            if (!tbox::MathUtilities<double>::equalEps(side_data(si()),
+         pdat::SideIterator siend(box, axis, false);
+         for (pdat::SideIterator si(box, axis, true); si != siend; ++si) {
+            if (!tbox::MathUtilities<double>::equalEps(side_data(*si),
                    side_ptr[axis][j])) {
                tbox::perr << "FAILED: - SideIterator test" << std::endl;
                ++error_count;
@@ -356,7 +364,8 @@ int main(
        * Test SideIndex
        */
 
-      for (pdat::CellIterator isc(box); isc; isc++) {
+      pdat::CellIterator iscend(box, false);
+      for (pdat::CellIterator isc(box, true); isc != iscend; ++isc) {
          for (int a = 0; a < dim.getValue(); a++) {
 
             hier::Box side_box = pdat::SideGeometry::toSideBox(box,
@@ -365,7 +374,7 @@ int main(
             hier::Index shi = side_box.upper();
 
             for (int f = 0; f < 2; f++) {
-               pdat::SideIndex sindx(isc(), a, f);
+               pdat::SideIndex sindx(*isc, a, f);
 
                int offset = 0;
                for (int i = dim.getValue() - 1; i > 0; i--) {

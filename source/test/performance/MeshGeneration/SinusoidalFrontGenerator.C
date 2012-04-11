@@ -36,8 +36,8 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
    d_hierarchy(),
    d_amplitude(0.2)
 {
-   hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 #ifdef DEBUG_CHECK_ASSERTIONS
+   hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
    TBOX_ASSERT(variable_db != NULL);
 #endif
 
@@ -176,7 +176,8 @@ void SinusoidalFrontGenerator::setTags(
 
    resetHierarchyConfiguration(hierarchy, 0, 1);
 
-   for (hier::PatchLevel::Iterator pi(tag_level); pi; pi++) {
+   for (hier::PatchLevel::iterator pi(tag_level->begin());
+        pi != tag_level->end(); ++pi) {
 
       boost::shared_ptr<hier::Patch> patch = *pi;
 
@@ -215,13 +216,13 @@ void SinusoidalFrontGenerator::setDomain(
    TBOX_ASSERT( autoscale_base_nprocs <= mpi.getSize() );
    TBOX_ASSERT( !domain.isEmpty() );
 
-   hier::BoxContainer::ConstIterator ii = domain.begin();
+   hier::BoxContainer::const_iterator ii = domain.begin();
    ii->getDim();
    const tbox::Dimension &dim = domain.begin()->getDim();
 
    int doubling_dir = 1;
    while (autoscale_base_nprocs < mpi.getSize()) {
-      for ( hier::BoxContainer::Iterator bi=domain.begin();
+      for ( hier::BoxContainer::iterator bi=domain.begin();
             bi!=domain.end(); ++bi ) {
          hier::Box &input_box = *bi;
          input_box.upper()(doubling_dir) += input_box.numberCells(doubling_dir);
@@ -276,7 +277,6 @@ void SinusoidalFrontGenerator::computePatchData(
    const int ln = patch.getPatchLevelNumber();
    const boost::shared_ptr<hier::PatchLevel> level =
       d_hierarchy->getPatchLevel(ln);
-   const hier::IntVector& ratio(level->getRatioToLevelZero());
 
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
@@ -351,7 +351,9 @@ void SinusoidalFrontGenerator::computeFrontsData(
    // Squash front_box to a single plane.
    front_box.upper(0) = front_box.lower(0) = pbox.lower(0);
    pdat::ArrayData<double> front_x(front_box, 1);
-   for ( pdat::ArrayData<int>::Iterator ai(front_x.getBox()); ai; ai++ ) {
+   pdat::ArrayData<int>::Iterator aiend(front_x.getBox(), false);
+   for ( pdat::ArrayData<int>::Iterator ai(front_x.getBox(), true);
+         ai != aiend; ++ai ) {
 
       const hier::Index &index = *ai;
       double y=0.0, siny=0.0, z=0.0, sinz=1.0;
@@ -374,7 +376,9 @@ void SinusoidalFrontGenerator::computeFrontsData(
     */
    tmp_tag.fill(0);
    hier::BlockId blk0(0);
-   for ( pdat::CellData<int>::Iterator ci(tmp_tag.getGhostBox()); ci; ci++ ) {
+   pdat::CellData<int>::Iterator ciend(tmp_tag.getGhostBox(), false);
+   for ( pdat::CellData<int>::Iterator ci(tmp_tag.getGhostBox(), true);
+         ci != ciend; ++ci ) {
 
       const pdat::CellIndex &cell_index = *ci;
       const hier::Box cell_box(cell_index, cell_index, blk0);
@@ -382,7 +386,8 @@ void SinusoidalFrontGenerator::computeFrontsData(
       double min_distance_to_front =  tbox::MathUtilities<double>::getMax();
       double max_distance_to_front = -tbox::MathUtilities<double>::getMax();
       // tbox::plog << "initial distances to front: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
-      for ( pdat::NodeIterator ni(cell_box); ni; ni++ ) {
+      pdat::NodeIterator niend(cell_box, false);
+      for ( pdat::NodeIterator ni(cell_box, true); ni != niend; ++ni ) {
 
          const pdat::NodeIndex &node_index = *ni;
          hier::Index front_index = node_index;
@@ -423,8 +428,9 @@ void SinusoidalFrontGenerator::computeFrontsData(
       t_distance->start();
 
       pdat::NodeData<double> &dist_to_front(*dist_data);
-      pdat::NodeData<double>::Iterator ni(dist_to_front.getGhostBox());
-      for ( ; ni; ni++) {
+      pdat::NodeData<double>::Iterator ni(dist_to_front.getGhostBox(), true);
+      pdat::NodeData<double>::Iterator niend(dist_to_front.getGhostBox(), false);
+      for ( ; ni != niend; ++ni) {
          const pdat::NodeIndex& index = *ni;
          pdat::NodeIndex front_index(index);
          front_index(0) = 0;
@@ -457,13 +463,17 @@ bool SinusoidalFrontGenerator::packDerivedDataIntoDoubleBuffer(
       pdat::NodeData<double> dist_data(patch.getBox(), 1, hier::IntVector(d_dim,
                                           0));
       computePatchData(patch, 0.0, &dist_data, NULL);
-      for (pdat::NodeData<double>::Iterator ci(patch.getBox()); ci; ci++) {
+      pdat::NodeData<double>::Iterator ciend(patch.getBox(), false);
+      for (pdat::NodeData<double>::Iterator ci(patch.getBox(), true);
+           ci != ciend; ++ci) {
          *(buffer++) = dist_data(*ci);
       }
    } else if (variable_name == "Tag value") {
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
       computePatchData(patch, 0.0, NULL, &tag_data);
-      for (pdat::CellData<double>::Iterator ci(patch.getBox()); ci; ci++) {
+      pdat::CellData<double>::Iterator ciend(patch.getBox(), false);
+      for (pdat::CellData<double>::Iterator ci(patch.getBox(), true);
+           ci != ciend; ++ci) {
          *(buffer++) = tag_data(*ci);
       }
    } else {

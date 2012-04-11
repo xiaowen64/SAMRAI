@@ -17,10 +17,15 @@ namespace SAMRAI {
 namespace pdat {
 
 NodeIterator::NodeIterator(
-   const hier::Box& box):
+   const hier::Box& box,
+   bool begin):
    d_index(box.lower(), hier::IntVector::getZero(box.getDim())),
    d_box(NodeGeometry::toNodeBox(box))
 {
+   if (!d_box.empty() && !begin) {
+      d_index(d_box.getDim().getValue()-1) =
+         d_box.upper(d_box.getDim().getValue()-1) + 1;
+   }
 }
 
 NodeIterator::NodeIterator(
@@ -34,22 +39,8 @@ NodeIterator::~NodeIterator()
 {
 }
 
-NodeIterator::operator bool () const
-{
-   bool retval = true;
-   for (int i = 0; i < d_box.getDim().getValue(); i++) {
-      if (d_index(i) > d_box.upper(i)) {
-         retval = false;
-         break;
-      }
-   }
-
-   return retval;
-}
-
-void
-NodeIterator::operator ++ (
-   int)
+NodeIterator&
+NodeIterator::operator ++ ()
 {
    d_index(0)++;
    for (int i = 0; i < d_box.getDim().getValue() - 1; i++) {
@@ -60,6 +51,24 @@ NodeIterator::operator ++ (
          break;
       }
    }
+   return *this;
+}
+
+NodeIterator
+NodeIterator::operator ++ (
+   int)
+{
+   NodeIterator tmp = *this;
+   d_index(0)++;
+   for (int i = 0; i < d_box.getDim().getValue() - 1; i++) {
+      if (d_index(i) > d_box.upper(i)) {
+         d_index(i) = d_box.lower(i);
+         d_index(i + 1)++;
+      } else {
+         break;
+      }
+   }
+   return tmp;
 }
 
 }

@@ -88,7 +88,8 @@ HierarchyNodeDataOpsInteger::resetLevels(
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       hier::BoxContainer node_boxes = level->getBoxes();
-      for (hier::BoxContainer::Iterator i(node_boxes); i != node_boxes.end(); ++i) {
+      for (hier::BoxContainer::iterator i(node_boxes);
+           i != node_boxes.end(); ++i) {
          *i = pdat::NodeGeometry::toNodeBox(*i);
       }
       hier::BoxUtilities::makeNonOverlappingBoxContainers(
@@ -141,10 +142,10 @@ HierarchyNodeDataOpsInteger::numberOfEntries(
          TBOX_ASSERT(npatches == d_nonoverlapping_node_boxes[ln].getSize());
 
          for (int il = 0; il < npatches; il++) {
-            hier::BoxContainer::ConstIterator lb =
+            hier::BoxContainer::const_iterator lb =
                ((d_nonoverlapping_node_boxes[ln])[il]).begin();
             for ( ; lb != ((d_nonoverlapping_node_boxes[ln])[il]).end(); ++lb) {
-               entries += lb().size();
+               entries += lb->size();
             }
          }
       }
@@ -156,7 +157,8 @@ HierarchyNodeDataOpsInteger::numberOfEntries(
       for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
          boost::shared_ptr<hier::PatchLevel> level(
             d_hierarchy->getPatchLevel(ln));
-         for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+         for (hier::PatchLevel::iterator ip(level->begin());
+              ip != level->end(); ++ip) {
             boost::shared_ptr<pdat::NodeData<int> > d(
                (*ip)->getPatchData(data_id),
                boost::detail::dynamic_cast_tag());
@@ -192,7 +194,8 @@ HierarchyNodeDataOpsInteger::copyData(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::NodeData<int> > d(
@@ -237,7 +240,8 @@ HierarchyNodeDataOpsInteger::swapData(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          d_patch_ops.swapData(p, data1_id, data2_id);
@@ -265,7 +269,8 @@ HierarchyNodeDataOpsInteger::printData(
       s << "Level number = " << ln << std::endl;
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::NodeData<int> > d(
@@ -295,7 +300,8 @@ HierarchyNodeDataOpsInteger::setToScalar(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::NodeData<int> > d(
@@ -334,7 +340,8 @@ HierarchyNodeDataOpsInteger::scale(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::NodeData<int> > dst(
@@ -368,7 +375,8 @@ HierarchyNodeDataOpsInteger::addScalar(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::NodeData<int> > dst(
@@ -402,7 +410,8 @@ HierarchyNodeDataOpsInteger::add(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::NodeData<int> > d(
@@ -439,7 +448,8 @@ HierarchyNodeDataOpsInteger::subtract(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::NodeData<int> > d(
@@ -476,7 +486,8 @@ HierarchyNodeDataOpsInteger::multiply(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::NodeData<int> > d(
@@ -513,7 +524,8 @@ HierarchyNodeDataOpsInteger::divide(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::NodeData<int> > d(
@@ -549,7 +561,8 @@ HierarchyNodeDataOpsInteger::reciprocal(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::NodeData<int> > d(
@@ -585,7 +598,8 @@ HierarchyNodeDataOpsInteger::linearSum(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::NodeData<int> > d(
@@ -623,7 +637,8 @@ HierarchyNodeDataOpsInteger::axpy(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::NodeData<int> > d(
@@ -661,7 +676,8 @@ HierarchyNodeDataOpsInteger::axmy(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::NodeData<int> > d(
@@ -697,7 +713,8 @@ HierarchyNodeDataOpsInteger::abs(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::NodeData<int> > d(
@@ -733,7 +750,8 @@ HierarchyNodeDataOpsInteger::min(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::NodeData<int> > d(
@@ -773,7 +791,8 @@ HierarchyNodeDataOpsInteger::max(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::NodeData<int> > d(
@@ -811,7 +830,8 @@ HierarchyNodeDataOpsInteger::setRandomValues(
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::NodeData<int> > d(

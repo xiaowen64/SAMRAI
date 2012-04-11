@@ -180,24 +180,25 @@ void NodeDataTest::setLinearData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   for (pdat::NodeIterator ci(sbox); ci; ci++) {
+   pdat::NodeIterator ciend(sbox, false);
+   for (pdat::NodeIterator ci(sbox, true); ci != ciend; ++ci) {
 
       /*
        * Compute spatial location of node center and
        * set data to linear profile.
        */
 
-      x = lowerx[0] + dx[0] * (ci() (0) - loweri(0));
+      x = lowerx[0] + dx[0] * ((*ci)(0) - loweri(0));
       y = z = 0.;
       if (d_dim > tbox::Dimension(1)) {
-         y = lowerx[1] + dx[1] * (ci() (1) - loweri(1));
+         y = lowerx[1] + dx[1] * ((*ci)(1) - loweri(1));
       }
       if (d_dim > tbox::Dimension(2)) {
-         z = lowerx[2] + dx[2] * (ci() (2) - loweri(2));
+         z = lowerx[2] + dx[2] * ((*ci)(2) - loweri(2));
       }
 
       for (int d = 0; d < depth; d++) {
-         (*data)(ci(), d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
+         (*data)(*ci, d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
       }
 
    }
@@ -230,17 +231,18 @@ void NodeDataTest::setPeriodicData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   for (pdat::NodeIterator ni(sbox); ni; ni++) {
+   pdat::NodeIterator niend(sbox, false);
+   for (pdat::NodeIterator ni(sbox, true); ni != niend; ++ni) {
 
       double val = 1.0;
       for (int d = 0; d < d_dim.getValue(); ++d) {
-         double tmpf = dx[d] * ni() (d) / domain_len[d];
+         double tmpf = dx[d] * (*ni)(d) / domain_len[d];
          tmpf = sin(2 * M_PI * tmpf);
          val *= tmpf;
       }
       val = val + 20.0; // Shift function range to [1,3] to avoid bad floating point compares.
       for (int d = 0; d < depth; d++) {
-         (*data)(ni(), d) = val;
+         (*data)(*ni, d) = val;
       }
 
    }
@@ -327,10 +329,11 @@ void NodeDataTest::checkPatchInteriorData(
       setLinearData(correct_data, correct_data->getGhostBox(), patch);
    }
 
-   for (pdat::NodeIterator ni(interior); ni; ni++) {
+   pdat::NodeIterator niend(interior, false);
+   for (pdat::NodeIterator ni(interior, true); ni != niend; ++ni) {
       for (int d = 0; d < depth; d++) {
-         if (!(tbox::MathUtilities<double>::equalEps((*data)(ni(), d),
-                  (*correct_data)(ni(), d)))) {
+         if (!(tbox::MathUtilities<double>::equalEps((*data)(*ni, d),
+                  (*correct_data)(*ni, d)))) {
             tbox::perr << "FAILED: -- patch interior not properly filled"
                        << endl;
          }
@@ -497,13 +500,14 @@ bool NodeDataTest::verifyResults(
          int depth = node_data->getDepth();
          hier::Box dbox = node_data->getGhostBox();
 
-         for (pdat::NodeIterator ci(dbox); ci; ci++) {
-            double correct = (*solution)(ci());
+         pdat::NodeIterator ciend(dbox, false);
+         for (pdat::NodeIterator ci(dbox, true); ci != ciend; ++ci) {
+            double correct = (*solution)(*ci);
             for (int d = 0; d < depth; d++) {
-               double result = (*node_data)(ci(), d);
+               double result = (*node_data)(*ci, d);
                if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
-                             << " : node index = " << ci()
+                             << " : node index = " << *ci
                              << " of L" << level_number
                              << " P" << patch.getLocalId()
                              << " " << patch.getBox() << endl;

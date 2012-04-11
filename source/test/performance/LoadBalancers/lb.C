@@ -319,7 +319,7 @@ int main(
 
       hier::BoxContainer domain_boxes;
       hier::LocalId local_id(0);
-      for (hier::BoxContainer::Iterator itr = input_boxes.begin();
+      for (hier::BoxContainer::iterator itr = input_boxes.begin();
            itr != input_boxes.end(); ++itr) {
          itr->setBlockId(hier::BlockId(0));
          domain_boxes.pushBack(hier::Box(*itr, local_id++, 0));
@@ -352,7 +352,7 @@ int main(
          int doubling_dir = 1;
 
          while (num_procs_in_tile < mpi.getSize()) {
-            for ( hier::BoxContainer::Iterator bi=domain_boxes.begin();
+            for ( hier::BoxContainer::iterator bi=domain_boxes.begin();
                   bi!=domain_boxes.end(); ++bi ) {
                hier::Box &input_box = *bi;
                input_box.upper()(doubling_dir) += input_box.numberCells(doubling_dir);
@@ -425,7 +425,7 @@ int main(
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
          hier::BoxLevel::GLOBALIZED);
-      hier::BoxContainer::Iterator domain_boxes_itr(domain_boxes);
+      hier::BoxContainer::iterator domain_boxes_itr(domain_boxes);
       for (int i = 0; i < domain_boxes.size(); ++i, ++domain_boxes_itr) {
          domain_box_level.addBox(hier::Box(*domain_boxes_itr,
                hier::LocalId(i), 0));
@@ -463,11 +463,11 @@ int main(
          const int my_boxes_stop =
             tbox::MathUtilities<int>::Min(my_boxes_start + boxes_per_proc,
                L0_boxes.size());
-         hier::BoxContainer::Iterator L0_boxes_itr(L0_boxes);
+         hier::BoxContainer::iterator L0_boxes_itr(L0_boxes);
          for (int i = 0; i < my_boxes_start; ++i) {
             ++L0_boxes_itr;
          }
-         for (int i = my_boxes_start; i < my_boxes_stop; ++i, L0_boxes_itr++) {
+         for (int i = my_boxes_start; i < my_boxes_stop; ++i, ++L0_boxes_itr) {
             L0.addBox(*L0_boxes_itr, hier::BlockId::zero());
          }
       }
@@ -1029,12 +1029,14 @@ void generatePrebalanceByUserShells(
    const double* xlo = grid_geometry->getXLower();
    const double* h = grid_geometry->getDx();
    std::vector<double> r(dim.getValue());
-   for (hier::PatchLevel::Iterator pi(tag_level); pi; pi++) {
+   for (hier::PatchLevel::iterator pi(tag_level->begin());
+        pi != tag_level->end(); ++pi) {
       const boost::shared_ptr<hier::Patch>& patch = *pi;
 
       pdat::NodeData<double> node_tag_data(patch->getBox(), 1, zero_vec);
-      for (pdat::NodeData<int>::Iterator ni(node_tag_data.getGhostBox());
-           ni; ni++) {
+      pdat::NodeData<int>::Iterator niend(node_tag_data.getGhostBox(), false);
+      for (pdat::NodeData<int>::Iterator ni(node_tag_data.getGhostBox(), true);
+           ni != niend; ++ni) {
          const pdat::NodeIndex& idx = *ni;
          double rr = 0;
          for (int d = 0; d < dim.getValue(); ++d) {
@@ -1058,13 +1060,16 @@ void generatePrebalanceByUserShells(
 
       const hier::BlockId& block_id = patch->getBox().getBlockId();
 
-      for (pdat::CellData<int>::Iterator ci(tag_data->getGhostBox());
-           ci; ci++) {
+      pdat::CellData<int>::Iterator ciend(tag_data->getGhostBox(), false);
+      for (pdat::CellData<int>::Iterator ci(tag_data->getGhostBox(), true);
+           ci != ciend; ++ci) {
          const pdat::CellIndex& cid = *ci;
 
          // Loop through nodes of cell cid.  Tag cell if node is tagged.
          const hier::Box cell_box(cid,cid, block_id);
-         for ( pdat::NodeIterator node_itr(cell_box); node_itr; node_itr++ ) {
+         pdat::NodeIterator node_itr_end(cell_box, false);
+         for ( pdat::NodeIterator node_itr(cell_box, true);
+               node_itr != node_itr_end; ++node_itr ) {
             if ( node_tag_data(*node_itr) == tag_val ) {
                (*tag_data)(cid) = tag_val;
                break;
@@ -1207,7 +1212,8 @@ void generatePrebalanceByShrinkingLevel(
 
    tag_level->allocatePatchData(tag_id);
 
-   for (hier::PatchLevel::Iterator pi(tag_level); pi; pi++) {
+   for (hier::PatchLevel::iterator pi(tag_level->begin());
+        pi != tag_level->end(); ++pi) {
 
       const boost::shared_ptr<hier::Patch>& patch = *pi;
       boost::shared_ptr<pdat::CellData<int> > tag_data(
@@ -1365,7 +1371,8 @@ void generatePrebalanceBySinusoidalFront(
       sft_db.get() );
    sinusoidal_front_tagger.resetHierarchyConfiguration(hierarchy, 0, 1);
 
-   for (hier::PatchLevel::Iterator pi(tag_level); pi; pi++) {
+   for (hier::PatchLevel::iterator pi(tag_level->begin());
+        pi != tag_level->end(); ++pi) {
 
       const boost::shared_ptr<hier::Patch>& patch = *pi;
 
@@ -1468,7 +1475,7 @@ void generatePrebalanceByUserBoxes(
    L1.initialize(hier::IntVector(dim, 1),
       hierarchy->getGridGeometry(),
       L0.getMPI());
-   hier::BoxContainer::Iterator prebalance_boxes_itr(prebalance_boxes);
+   hier::BoxContainer::iterator prebalance_boxes_itr(prebalance_boxes);
    for (int i = 0; i < prebalance_boxes.size(); ++i, ++prebalance_boxes_itr) {
       const int owner = i % initial_owners.size();
       if (owner == L1.getMPI().getRank()) {

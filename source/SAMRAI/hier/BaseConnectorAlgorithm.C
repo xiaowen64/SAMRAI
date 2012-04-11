@@ -144,13 +144,13 @@ BaseConnectorAlgorithm::sendDiscoveryToOneProcess(
    int* ptr = &send_mesg[offset];
    *(ptr++) = static_cast<int>(referenced_new_base_nabrs.size());
    *(ptr++) = static_cast<int>(referenced_new_head_nabrs.size());
-   for (BoxContainer::ConstIterator ni = referenced_new_base_nabrs.begin();
+   for (BoxContainer::const_iterator ni = referenced_new_base_nabrs.begin();
         ni != referenced_new_base_nabrs.end(); ++ni) {
       const Box& mapped_box = *ni;
       mapped_box.putToIntBuffer(ptr);
       ptr += Box::commBufferSize(dim);
    }
-   for (BoxContainer::ConstIterator ni = referenced_new_head_nabrs.begin();
+   for (BoxContainer::const_iterator ni = referenced_new_head_nabrs.begin();
         ni != referenced_new_head_nabrs.end(); ++ni) {
       const Box& mapped_box = *ni;
       mapped_box.putToIntBuffer(ptr);
@@ -370,7 +370,7 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
             box_id.getFromIntBuffer(ptr);
             tmp_box.setId(box_id);
             ptr += BoxId::commBufferSize();
-            BoxContainer::ConstIterator na =
+            BoxContainer::const_iterator na =
                referenced_new_head_nabrs.find(tmp_box);
             TBOX_ASSERT(na != referenced_new_head_nabrs.end());
             const Box& new_head_nabr = *na;
@@ -394,7 +394,7 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
             box_id.getFromIntBuffer(ptr);
             tmp_box.setId(box_id);
             ptr += BoxId::commBufferSize();
-            BoxContainer::ConstIterator na =
+            BoxContainer::const_iterator na =
                referenced_new_base_nabrs.find(tmp_box);
             TBOX_ASSERT(na != referenced_new_base_nabrs.end());
             const Box& new_base_nabr = *na;

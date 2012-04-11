@@ -199,10 +199,11 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
          hier::Box patch_node_box =
             pdat::NodeGeometry::toNodeBox(patch.getBox());
          if (!node_bdry[nb].getIsMultiblockSingularity()) {
-            for (pdat::NodeIterator ni(fill_box); ni; ni++) {
-               if (!patch_node_box.contains(ni())) {
+            pdat::NodeIterator niend(fill_box, false);
+            for (pdat::NodeIterator ni(fill_box, true); ni != niend; ++ni) {
+               if (!patch_node_box.contains(*ni)) {
                   for (int d = 0; d < node_data->getDepth(); d++) {
-                     (*node_data)(ni(), d) =
+                     (*node_data)(*ni, d) =
                         (double)(node_bdry[nb].getLocationIndex() + 100);
                   }
                }
@@ -226,12 +227,13 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
             hier::Index pupper(patch_node_box.upper());
 
             if (!edge_bdry[eb].getIsMultiblockSingularity()) {
-               for (pdat::NodeIterator ni(fill_box); ni; ni++) {
-                  if (!patch_node_box.contains(ni())) {
+               pdat::NodeIterator niend(fill_box, false);
+               for (pdat::NodeIterator ni(fill_box, true); ni != niend; ++ni) {
+                  if (!patch_node_box.contains(*ni)) {
                      bool use_index = true;
                      for (int n = 0; n < d_dim.getValue(); n++) {
                         if (edge_bdry[eb].getBox().numberCells(n) == 1) {
-                           if (ni() (n) == plower(n) || ni() (n) ==
+                           if ((*ni)(n) == plower(n) || (*ni)(n) ==
                                pupper(n)) {
                               use_index = false;
                               break;
@@ -241,7 +243,7 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
 
                      if (use_index) {
                         for (int d = 0; d < node_data->getDepth(); d++) {
-                           (*node_data)(ni(), d) =
+                           (*node_data)(*ni, d) =
                               (double)(edge_bdry[eb].getLocationIndex() + 100);
                         }
                      }
@@ -267,12 +269,13 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
             hier::Index pupper(patch_node_box.upper());
 
             if (!face_bdry[fb].getIsMultiblockSingularity()) {
-               for (pdat::NodeIterator ni(fill_box); ni; ni++) {
-                  if (!patch_node_box.contains(ni())) {
+               pdat::NodeIterator niend(fill_box, false);
+               for (pdat::NodeIterator ni(fill_box, true); ni != niend; ++ni) {
+                  if (!patch_node_box.contains(*ni)) {
                      bool use_index = true;
                      for (int n = 0; n < d_dim.getValue(); n++) {
                         if (face_bdry[fb].getBox().numberCells(n) == 1) {
-                           if (ni() (n) == plower(n) || ni() (n) ==
+                           if ((*ni)(n) == plower(n) || (*ni)(n) ==
                                pupper(n)) {
                               use_index = false;
                               break;
@@ -282,7 +285,7 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
 
                      if (use_index) {
                         for (int d = 0; d < node_data->getDepth(); d++) {
-                           (*node_data)(ni(), d) =
+                           (*node_data)(*ni, d) =
                               (double)(face_bdry[fb].getLocationIndex() + 100);
                         }
                      }
@@ -327,11 +330,12 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
       hier::Index plower(pbox.lower());
       hier::Index pupper(pbox.upper());
 
-      for (pdat::NodeIterator ni(sing_fill_box); ni; ni++) {
+      pdat::NodeIterator niend(sing_fill_box, false);
+      for (pdat::NodeIterator ni(sing_fill_box, true); ni != niend; ++ni) {
          bool use_index = true;
          for (int n = 0; n < d_dim.getValue(); n++) {
             if (bbox.getBox().numberCells(n) == 1) {
-               if (ni() (n) == plower(n) || ni() (n) == pupper(n)) {
+               if ((*ni)(n) == plower(n) || (*ni)(n) == pupper(n)) {
                   use_index = false;
                   break;
                }
@@ -339,7 +343,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
          }
          if (use_index) {
             for (int d = 0; d < depth; d++) {
-               (*node_data)(ni(), d) = 0.0;
+               (*node_data)(*ni, d) = 0.0;
             }
          }
       }
@@ -402,21 +406,23 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                      encon_patch->getPatchData(d_variables[i], getDataContext()),
                      boost::detail::dynamic_cast_tag());
 
-                  for (pdat::NodeIterator ci(sing_fill_box); ci; ci++) {
+                  pdat::NodeIterator ciend(sing_fill_box, false);
+                  for (pdat::NodeIterator ci(sing_fill_box, true);
+                       ci != ciend; ++ci) {
                      bool use_index = true;
                      for (int n = 0; n < d_dim.getValue(); n++) {
                         if (bbox.getBox().numberCells(n) == 1) {
-                           if (ci() (n) == plower(n) || ci() (n) == pupper(n)) {
+                           if ((*ci)(n) == plower(n) || (*ci)(n) == pupper(n)) {
                               use_index = false;
                               break;
                            }
                         }
                      }
                      if (use_index) {
-                        pdat::NodeIndex src_index(ci());
+                        pdat::NodeIndex src_index(*ci);
                         pdat::NodeGeometry::transform(src_index, back_trans);
                         for (int d = 0; d < depth; d++) {
-                           (*node_data)(ci(), d) += (*sing_data)(src_index, d);
+                           (*node_data)(*ci, d) += (*sing_data)(src_index, d);
                         }
                      }
                   }
@@ -427,11 +433,12 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
       }
 
       if (num_encon_used) {
-         for (pdat::NodeIterator ci(sing_fill_box); ci; ci++) {
+         pdat::NodeIterator ciend(sing_fill_box, false);
+         for (pdat::NodeIterator ci(sing_fill_box, true); ci != ciend; ++ci) {
             bool use_index = true;
             for (int n = 0; n < d_dim.getValue(); n++) {
                if (bbox.getBox().numberCells(n) == 1) {
-                  if (ci() (n) == plower(n) || ci() (n) == pupper(n)) {
+                  if ((*ci)(n) == plower(n) || (*ci)(n) == pupper(n)) {
                      use_index = false;
                      break;
                   }
@@ -439,7 +446,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
             }
             if (use_index) {
                for (int d = 0; d < depth; d++) {
-                  (*node_data)(ci(), d) /= num_encon_used;
+                  (*node_data)(*ci, d) /= num_encon_used;
                }
             }
          }
@@ -451,11 +458,12 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
           * from which to acquire data.
           */
 
-         for (pdat::NodeIterator ci(sing_fill_box); ci; ci++) {
+         pdat::NodeIterator ciend(sing_fill_box, false);
+         for (pdat::NodeIterator ci(sing_fill_box, true); ci != ciend; ++ci) {
             bool use_index = true;
             for (int n = 0; n < d_dim.getValue(); n++) {
                if (bbox.getBox().numberCells(n) == 1) {
-                  if (ci() (n) == plower(n) || ci() (n) == pupper(n)) {
+                  if ((*ci)(n) == plower(n) || (*ci)(n) == pupper(n)) {
                      use_index = false;
                      break;
                   }
@@ -463,7 +471,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
             }
             if (use_index) {
                for (int d = 0; d < depth; d++) {
-                  (*node_data)(ci(),
+                  (*node_data)(*ci,
                                d) = (double)bbox.getLocationIndex() + 200.0;
                }
             }
@@ -528,13 +536,14 @@ bool NodeMultiblockTest::verifyResults(
       hier::Box interior_box(pbox);
       interior_box.grow(hier::IntVector(d_dim, -1));
 
-      for (pdat::NodeIterator ci(interior_box); ci; ci++) {
+      pdat::NodeIterator ciend(interior_box, false);
+      for (pdat::NodeIterator ci(interior_box, true); ci != ciend; ++ci) {
          for (int d = 0; d < depth; d++) {
-            double result = (*node_data)(ci(), d);
+            double result = (*node_data)(*ci, d);
 
             if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                tbox::perr << "Test FAILED: ...."
-                          << " : node index = " << ci() << endl;
+                          << " : node index = " << *ci << endl;
                tbox::perr << "    Variable = " << d_variable_src_name[i]
                           << " : depth index = " << d << endl;
                tbox::perr << "    result = " << result
@@ -552,9 +561,9 @@ bool NodeMultiblockTest::verifyResults(
          pdat::NodeGeometry::toNodeBox(pbox);
 
       hier::BoxContainer sing_node_boxlist;
-      for (hier::BoxContainer::Iterator si(singularity);
+      for (hier::BoxContainer::iterator si(singularity);
            si != singularity.end(); ++si) {
-         sing_node_boxlist.pushFront(pdat::NodeGeometry::toNodeBox(si()));
+         sing_node_boxlist.pushFront(pdat::NodeGeometry::toNodeBox(*si));
       }
 
       hier::BoxContainer tested_neighbors;
@@ -567,10 +576,10 @@ bool NodeMultiblockTest::verifyResults(
          hier::BoxContainer neighbor_ghost(ne->getTransformedDomain());
 
          hier::BoxContainer neighbor_node_ghost;
-         for (hier::BoxContainer::Iterator nn(neighbor_ghost);
+         for (hier::BoxContainer::iterator nn(neighbor_ghost);
               nn != neighbor_ghost.end(); ++nn) {
             hier::Box neighbor_ghost_interior(
-               pdat::NodeGeometry::toNodeBox(nn()));
+               pdat::NodeGeometry::toNodeBox(*nn));
             neighbor_ghost_interior.grow(-hier::IntVector::getOne(d_dim));
             neighbor_node_ghost.pushFront(neighbor_ghost_interior);
          }
@@ -583,11 +592,12 @@ bool NodeMultiblockTest::verifyResults(
          neighbor_node_ghost.removeIntersections(sing_node_boxlist);
          neighbor_node_ghost.removeIntersections(tested_neighbors);
 
-         for (hier::BoxContainer::Iterator ng(neighbor_node_ghost);
+         for (hier::BoxContainer::iterator ng(neighbor_node_ghost);
               ng != neighbor_node_ghost.end(); ++ng) {
 
-            for (hier::BoxIterator ci(ng()); ci; ci++) {
-               pdat::NodeIndex ni(ci(), hier::IntVector(d_dim, 0));
+            hier::Box::iterator ciend(*ng, false);
+            for (hier::Box::iterator ci(*ng, true); ci != ciend; ++ci) {
+               pdat::NodeIndex ni(*ci, hier::IntVector(d_dim, 0));
                if (!patch_node_box.contains(ni)) {
                   for (int d = 0; d < depth; d++) {
                      double result = (*node_data)(ni, d);
@@ -651,15 +661,16 @@ bool NodeMultiblockTest::verifyResults(
                correct = (double)(bdry[k].getLocationIndex() + 100);
             }
 
-            for (pdat::NodeIterator ci(fill_box); ci; ci++) {
+            pdat::NodeIterator ciend(fill_box, false);
+            for (pdat::NodeIterator ci(fill_box, true); ci != ciend; ++ci) {
 
-               if (!patch_node_box.contains(ci())) {
+               if (!patch_node_box.contains(*ci)) {
 
                   bool use_index = true;
                   for (int n = 0; n < d_dim.getValue(); n++) {
                      if (bdry[k].getBox().numberCells(n) == 1) {
-                        if (ci() (n) == patch_node_box.lower() (n) ||
-                            ci() (n) == patch_node_box.upper() (n)) {
+                        if ((*ci)(n) == patch_node_box.lower() (n) ||
+                            (*ci)(n) == patch_node_box.upper() (n)) {
                            use_index = false;
                            break;
                         }
@@ -668,12 +679,12 @@ bool NodeMultiblockTest::verifyResults(
 
                   if (use_index) {
                      for (int d = 0; d < depth; d++) {
-                        double result = (*node_data)(ci(), d);
+                        double result = (*node_data)(*ci, d);
 
                         if (!tbox::MathUtilities<double>::equalEps(correct,
                                result)) {
                            tbox::perr << "Test FAILED: ...."
-                                      << " : node index = " << ci() << endl;
+                                      << " : node index = " << *ci << endl;
                            tbox::perr << "  Variable = "
                                       << d_variable_src_name[i]
                                       << " : depth index = " << d << endl;

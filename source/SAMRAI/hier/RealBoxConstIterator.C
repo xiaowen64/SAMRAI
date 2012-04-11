@@ -16,12 +16,16 @@ namespace SAMRAI {
 namespace hier {
 
 RealBoxConstIterator::RealBoxConstIterator(
-   const BoxContainer& mapped_boxes):
+   const BoxContainer& mapped_boxes,
+   bool begin):
    d_mapped_boxes(&mapped_boxes),
-   d_ni(d_mapped_boxes->begin())
+   d_ni(begin ? d_mapped_boxes->begin() : d_mapped_boxes->end())
 {
-   while (d_ni != d_mapped_boxes->end() && d_ni->isPeriodicImage()) {
-      ++d_ni;
+   if (begin)
+   {
+      while (d_ni != d_mapped_boxes->end() && d_ni->isPeriodicImage()) {
+         ++d_ni;
+      }
    }
 }
 

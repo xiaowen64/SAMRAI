@@ -481,8 +481,9 @@ private:
  * \verbatim
  * IndexData<TYPE> data;
  * ...
- * for (IndexData<TYPE>::Iterator iter(data); iter; iter++ {
- *    ... = iter();
+ * IndexData<TYPE>::Iterator iterend(data, false);
+ * for (IndexData<TYPE>::Iterator iter(data, true); iter != iterend; ++iter) {
+ *    ... = *iter;
  * }
  * \endverbatim
  *
@@ -499,12 +500,13 @@ public:
     * over the irregular index set of the argument data object.
     */
    explicit IndexIterator(
-      const IndexData<TYPE, BOX_GEOMETRY>& data);
+      const IndexData<TYPE, BOX_GEOMETRY>& data,
+      bool begin);
 
    /**
     * Copy constructor for the index list iterator.
     */
-   explicit IndexIterator(
+   IndexIterator(
       const IndexIterator<TYPE, BOX_GEOMETRY>& iterator);
 
    /**
@@ -520,7 +522,7 @@ public:
    ~IndexIterator<TYPE, BOX_GEOMETRY>();
 
    /**
-    * Return the current item in the irregular index set.
+    * Return a reference to the current item in the irregular index set.
     */
    TYPE&
    operator * ();
@@ -533,17 +535,17 @@ public:
    operator * () const;
 
    /**
-    * Return the current item in the irregular index set.
+    * Return a pointer to the current item in the irregular index set.
     */
-   TYPE&
-   operator () ();
+   TYPE*
+   operator -> ();
 
    /**
-    * Return a const refeferene to the current item in the irregular
+    * Return a const pointer to the current item in the irregular
     * index set.
     */
-   const TYPE&
-   operator () () const;
+   const TYPE*
+   operator -> () const;
 
    /**
     * Return the index of the current item in the irregular index set
@@ -552,36 +554,30 @@ public:
    getIndex() const;
 
    /**
-    * Return true if the iterator points to a valid item in the index set.
+    * Pre-increment the iterator to point to the next item in the index set.
     */
-   operator bool () const;
-
-#ifndef LACKS_BOOL_VOID_RESOLUTION
-   /**
-    * Return a non-null if the iterator points to a valid item in the index
-    * set.
-    */
-   operator const void* () const;
-#endif
+   IndexIterator&
+   operator ++ ();
 
    /**
-    * Return whether the iterator points to a valid item in the index set.
-    * This operator mimics the !p operation applied to a pointer p.
+    * Post-increment the iterator to point to the next item in the index set.
     */
-   bool
-   operator ! () const;
-
-   /**
-    * Increment the iterator to point to the next item in the index set.
-    */
-   void
+   IndexIterator
    operator ++ (
       int);
 
    /**
-    * Decrement the iterator to point to the previous item in the index set.
+    * Pre-decrement the iterator to point to the previous item in the index
+    * set.
     */
-   void
+   IndexIterator&
+   operator -- ();
+
+   /**
+    * Post-decrement the iterator to point to the previous item in the index
+    * set.
+    */
+   IndexIterator
    operator -- (
       int);
 
@@ -606,8 +602,7 @@ private:
       IndexData<TYPE, BOX_GEOMETRY>* index_data,
       IndexDataNode<TYPE, BOX_GEOMETRY>* node);
 
-   IndexDataNode<TYPE, BOX_GEOMETRY>&
-   getNode();
+   IndexDataNode<TYPE, BOX_GEOMETRY>& getNode();
 
    IndexData<TYPE, BOX_GEOMETRY>* d_index_data;
 

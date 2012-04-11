@@ -1113,11 +1113,16 @@ Box::finalizeCallback()
 }
 
 BoxIterator::BoxIterator(
-   const Box& box):
+   const Box& box,
+   bool begin):
    d_index(box.lower()),
    d_box(box)
 {
    TBOX_DIM_ASSERT_CHECK_DIM(box.getDim());
+   if (!d_box.empty() && !begin) {
+      d_index(d_box.getDim().getValue()-1) =
+         d_box.upper(d_box.getDim().getValue()-1) + 1;
+   }
 }
 
 BoxIterator::BoxIterator(

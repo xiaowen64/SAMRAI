@@ -360,12 +360,13 @@ SimpleCellRobinBcCoefs::setBcCoefs(
          const int axis = location_index / 2;
          const int face = location_index % 2;
          pdat::ArrayData<double>& g = *gcoef_data;
-         pdat::ArrayDataIterator ai(g.getBox());
+         pdat::ArrayDataIterator ai(g.getBox(), true);
+         pdat::ArrayDataIterator aiend(g.getBox(), false);
          hier::Index offset_to_inside(d_dim, 0);
          if (face != 0) offset_to_inside(axis) = -1;
          if (d_diffusion_coef_id == -1) {
-            for ( ; ai; ai++) {
-               pdat::FaceIndex fi(ai() + offset_to_inside, axis, face);
+            for ( ; ai != aiend; ++ai) {
+               pdat::FaceIndex fi(*ai + offset_to_inside, axis, face);
                g(*ai, 0) = flux_data(fi, face) / d_diffusion_coef_constant;
                tbox::plog << location_index << '\t' << g(*ai, 0) << '\n';
             }
@@ -375,8 +376,8 @@ SimpleCellRobinBcCoefs::setBcCoefs(
                                            hier::PatchData>(patch.getPatchData(d_diffusion_coef_id));
             const pdat::ArrayData<double>& diffcoef_array_data =
                diffcoef_data_ptr->getArrayData(axis);
-            for ( ; ai; ai++) {
-               pdat::FaceIndex fi(ai() + offset_to_inside, axis, face);
+            for ( ; ai != aiend; ++ai) {
+               pdat::FaceIndex fi(*ai + offset_to_inside, axis, face);
                g(*ai, 0) = flux_data(fi, face) / diffcoef_array_data(*ai, 0);
                tbox::plog << location_index << '\t' << g(*ai, 0) << '\n';
             }
@@ -396,9 +397,10 @@ SimpleCellRobinBcCoefs::setBcCoefs(
 
       if (acoef_data) {
          pdat::ArrayData<double>& a = *acoef_data;
-         pdat::ArrayDataIterator ai(a.getBox());
-         for ( ; ai; ai++) {
-            pdat::FaceIndex fi(ai() + offset_to_inside, axis, face);
+         pdat::ArrayDataIterator ai(a.getBox(), true);
+         pdat::ArrayDataIterator aiend(a.getBox(), false);
+         for ( ; ai != aiend; ++ai) {
+            pdat::FaceIndex fi(*ai + offset_to_inside, axis, face);
             if (flag_data(fi, face) == 0) {
                a(*ai, 0) = 1.0;
             } else {
@@ -409,9 +411,10 @@ SimpleCellRobinBcCoefs::setBcCoefs(
 
       if (bcoef_data) {
          pdat::ArrayData<double>& b = *bcoef_data;
-         pdat::ArrayDataIterator bi(b.getBox());
-         for ( ; bi; bi++) {
-            pdat::FaceIndex fi(bi() + offset_to_inside, axis, face);
+         pdat::ArrayDataIterator bi(b.getBox(), true);
+         pdat::ArrayDataIterator biend(b.getBox(), false);
+         for ( ; bi != biend; ++bi) {
+            pdat::FaceIndex fi(*bi + offset_to_inside, axis, face);
             if (flag_data(fi, face) == 0) {
                b(*bi, 0) = 0.0;
             } else {
@@ -457,13 +460,14 @@ SimpleCellRobinBcCoefs::setBcCoefs(
                                         hier::PatchData>(patch.getPatchData(d_diffusion_coef_id));
          pdat::ArrayData<double>& g = *gcoef_data;
          pdat::OuterfaceData<double>& flux_data(*flux_data_ptr);
-         pdat::ArrayDataIterator ai(g.getBox());
-         for ( ; ai; ai++) {
-            pdat::FaceIndex fi(ai() + offset_to_inside, axis, face);
+         pdat::ArrayDataIterator ai(g.getBox(), true);
+         pdat::ArrayDataIterator aiend(g.getBox(), false);
+         for ( ; ai != aiend; ++ai) {
+            pdat::FaceIndex fi(*ai + offset_to_inside, axis, face);
             if (flag_data(fi, face) == 0) {
                g(*ai, 0) = dirichlet_array_data(*ai, 0);
             } else {
-               pdat::FaceIndex fi2(ai() + offset_to_inside, axis, face);
+               pdat::FaceIndex fi2(*ai + offset_to_inside, axis, face);
                if (d_diffusion_coef_id == -1) {
                   g(*ai, 0) = flux_data(fi2, face) / d_diffusion_coef_constant;
                } else {
@@ -534,8 +538,8 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
       hier::PatchLevel& level = (hier::PatchLevel &)
          * d_hierarchy->getPatchLevel(ln);
-      hier::PatchLevel::Iterator pi(level);
-      for ( ; pi; pi++) {
+      hier::PatchLevel::iterator pi(level.begin());
+      for ( ; pi != level.end(); ++pi) {
          hier::Patch& patch = **pi;
          const hier::GlobalId& global_id = patch.getGlobalId();
          hier::BoxId mapped_box_id(global_id);
@@ -552,8 +556,8 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
       hier::PatchLevel& level = (hier::PatchLevel &)
          * d_hierarchy->getPatchLevel(ln);
-      hier::PatchLevel::Iterator pi(level);
-      for ( ; pi; pi++) {
+      hier::PatchLevel::iterator pi(level.begin());
+      for ( ; pi != level.end(); ++pi) {
          hier::Patch& patch = **pi;
          const hier::GlobalId& global_id = patch.getGlobalId();
          hier::BoxId mapped_box_id(global_id);
@@ -605,8 +609,8 @@ SimpleCellRobinBcCoefs::restoreDirichletData(
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
       hier::PatchLevel& level = (hier::PatchLevel &)
          * d_hierarchy->getPatchLevel(ln);
-      hier::PatchLevel::Iterator pi(level);
-      for ( ; pi; pi++) {
+      hier::PatchLevel::iterator pi(level.begin());
+      for ( ; pi != level.end(); ++pi) {
          hier::Patch& patch = **pi;
          const hier::GlobalId& global_id = patch.getGlobalId();
          hier::BoxId mapped_box_id(global_id);

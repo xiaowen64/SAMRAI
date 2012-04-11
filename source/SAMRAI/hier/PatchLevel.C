@@ -145,7 +145,8 @@ PatchLevel::PatchLevel(
    d_in_hierarchy = false;
 
    const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
-   for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
+   for (RealBoxConstIterator ni(mapped_boxes.realBegin());
+        ni != mapped_boxes.realEnd(); ++ni) {
       const Box& mapped_box = *ni;
       const BoxId& ip = mapped_box.getId();
       boost::shared_ptr<Patch>& patch(d_patches[ip]);
@@ -367,7 +368,8 @@ PatchLevel::setRefinedPatchLevel(
     */
 
    const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
-   for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
+   for (RealBoxConstIterator ni(mapped_boxes.realBegin());
+        ni != mapped_boxes.realEnd(); ++ni) {
       const Box& mapped_box = *ni;
       const BoxId& mapped_box_id = mapped_box.getId();
       d_patches[mapped_box_id] = d_factory->allocate(mapped_box, d_descriptor);
@@ -378,7 +380,7 @@ PatchLevel::setRefinedPatchLevel(
    std::map<BoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
    std::map<BoxId, PatchGeometry::TwoDimBool> touches_periodic_bdry;
 
-   for (PatchLevel::Iterator ip(coarse_level); ip; ip++) {
+   for (iterator ip(coarse_level->begin()); ip != coarse_level->end(); ip++) {
       boost::shared_ptr<PatchGeometry> coarse_pgeom((*ip)->getPatchGeometry());
 
       /* If map does not contain values create them */
@@ -545,7 +547,8 @@ PatchLevel::setCoarsenedPatchLevel(
     */
 
    const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
-   for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
+   for (RealBoxConstIterator ni(mapped_boxes.realBegin());
+        ni != mapped_boxes.realEnd(); ++ni) {
       const Box& mapped_box = *ni;
       const BoxId& mapped_box_id = mapped_box.getId();
       d_patches[mapped_box_id] = d_factory->allocate(mapped_box, d_descriptor);
@@ -558,7 +561,7 @@ PatchLevel::setCoarsenedPatchLevel(
    std::map<BoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
    std::map<BoxId, PatchGeometry::TwoDimBool> touches_periodic_bdry;
 
-   for (PatchLevel::Iterator ip(fine_level); ip; ip++) {
+   for (iterator ip(fine_level->begin()); ip != fine_level->end(); ip++) {
       boost::shared_ptr<PatchGeometry> fine_pgeom((*ip)->getPatchGeometry());
 
       /* If map does not contain values create them */
@@ -623,8 +626,8 @@ PatchLevel::getBoxes(
    const BoxContainer& global_mapped_boxes =
       d_mapped_box_level->getGlobalizedVersion().getGlobalBoxes();
 
-   for (BoxContainerSingleBlockIterator gi(global_mapped_boxes, block_id);
-        gi.isValid(); gi++) {
+   for (BoxContainerSingleBlockIterator gi(global_mapped_boxes.begin(block_id));
+        gi != global_mapped_boxes.end(block_id); ++gi) {
       boxes.pushBack(*gi);
    }
 }
@@ -668,7 +671,7 @@ PatchLevel::getFromDatabase(
       std::string domain_name = "d_physical_domain_"
          + tbox::Utilities::blockToString(nb);
       d_physical_domain[nb] = database->getDatabaseBoxArray(domain_name);
-      for (BoxContainer::Iterator bi = d_physical_domain[nb].begin();
+      for (BoxContainer::iterator bi = d_physical_domain[nb].begin();
            bi != d_physical_domain[nb].end(); ++bi) {
          bi->setBlockId(BlockId(nb));
       }
@@ -700,7 +703,8 @@ PatchLevel::getFromDatabase(
    d_patches.clear();
 
    const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
-   for (RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni) {
+   for (RealBoxConstIterator ni(mapped_boxes.realBegin());
+        ni != mapped_boxes.realEnd(); ++ni) {
       const Box& mapped_box = *ni;
       const LocalId& local_id = mapped_box.getLocalId();
       const BoxId& mapped_box_id = mapped_box.getId();
@@ -793,7 +797,7 @@ PatchLevel::putUnregisteredToDatabase(
       database->putDatabase("mapped_box_level"));
    d_mapped_box_level->putUnregisteredToDatabase(mbl_database);
 
-   for (PatchLevel::Iterator ip(this); ip; ip++) {
+   for (iterator ip(begin()); ip != end(); ip++) {
 
       std::string patch_name = "level_" + tbox::Utilities::levelToString(
             d_level_number)
@@ -830,7 +834,7 @@ PatchLevel::recursivePrint(
    os << getBoxLevel()->format(border, 2) << std::endl;
 
    if (depth > 0) {
-      for (Iterator pi(this); pi; pi++) {
+      for (iterator pi(begin()); pi != end(); pi++) {
          const boost::shared_ptr<Patch>& patch = *pi;
          os << border << "Patch " << patch->getLocalId() << '/' << npatch << "\n";
          patch->recursivePrint(os, border + "\t", depth - 1);
@@ -869,8 +873,8 @@ PatchLevel::initializeGlobalizedBoxLevel() const
       int count = 0;
       const BoxContainer& mapped_boxes =
          globalized_mapped_box_level.getGlobalBoxes();
-      for (RealBoxConstIterator ni(mapped_boxes);
-           ni.isValid();
+      for (RealBoxConstIterator ni(mapped_boxes.realBegin());
+           ni != mapped_boxes.realEnd();
            ++ni) {
          d_mapping.setProcessorAssignment(count, ni->getOwnerRank());
          d_boxes.pushBack(*ni);
@@ -936,38 +940,12 @@ PatchLevel::Iterator::Iterator(
 {
 }
 
-/*
- *************************************************************************
- * Construct from raw iterator.
- *************************************************************************
- */
-PatchLevel::Iterator::Iterator(
-   const PatchLevel::PatchContainer::const_iterator& r):
-   d_iterator(r),
-   d_patches(NULL /* Unused since not backward compatibility not needed */)
-{
-}
-
 // Support for backward compatible interface by new PatchLevel::Iterator.
 PatchLevel::Iterator::Iterator(
-   const PatchLevel& patch_level):
-   d_iterator(patch_level.d_patches.begin()),
-   d_patches(&patch_level.d_patches)
-{
-}
-
-// Support for backward compatible interface by new PatchLevel::Iterator.
-PatchLevel::Iterator::Iterator(
-   const boost::shared_ptr<PatchLevel>& patch_level):
-   d_iterator(patch_level->d_patches.begin()),
-   d_patches(&patch_level->d_patches)
-{
-}
-
-// Support for backward compatible interface by new PatchLevel::Iterator.
-PatchLevel::Iterator::Iterator(
-   const PatchLevel* patch_level):
-   d_iterator(patch_level->d_patches.begin()),
+   const PatchLevel* patch_level,
+   bool begin):
+   d_iterator(begin ? patch_level->d_patches.begin() :
+                      patch_level->d_patches.end()),
    d_patches(&patch_level->d_patches)
 {
 }

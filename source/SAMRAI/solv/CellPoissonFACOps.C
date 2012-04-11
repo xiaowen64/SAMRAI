@@ -785,7 +785,8 @@ CellPoissonFACOps::initializeOperatorState(
       boost::shared_ptr<hier::PatchLevel> level_ptr(
          d_hierarchy->getPatchLevel(ln));
       hier::PatchLevel& level = *level_ptr;
-      for (hier::PatchLevel::Iterator pi(level); pi; pi++) {
+      for (hier::PatchLevel::iterator pi(level.begin());
+           pi != level.end(); ++pi) {
          hier::Patch& patch = **pi;
          boost::shared_ptr<hier::PatchData> fd(
             patch.getPatchData(rhs.getComponentDescriptorIndex(0)));
@@ -1363,7 +1364,8 @@ CellPoissonFACOps::smoothErrorByRedBlack(
 
       // Red sweep.
       xeqScheduleGhostFillNoCoarse(data_id, ln);
-      for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
+      for (hier::PatchLevel::iterator pi(level->begin());
+           pi != level->end(); ++pi) {
          const boost::shared_ptr<hier::Patch>& patch = *pi;
 
          bool deallocate_flux_data_when_done = false;
@@ -1410,7 +1412,8 @@ CellPoissonFACOps::smoothErrorByRedBlack(
       xeqScheduleGhostFillNoCoarse(data_id, ln);
 
       // Black sweep.
-      for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
+      for (hier::PatchLevel::iterator pi(level->begin());
+           pi != level->end(); ++pi) {
          const boost::shared_ptr<hier::Patch>& patch = *pi;
 
          bool deallocate_flux_data_when_done = false;
@@ -1817,7 +1820,8 @@ CellPoissonFACOps::computeCompositeResidualOnLevel(
    /*
     * S2. Compute flux on patches in level.
     */
-   for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
+   for (hier::PatchLevel::iterator pi(level->begin());
+        pi != level->end(); ++pi) {
       const boost::shared_ptr<hier::Patch>& patch = *pi;
 
       boost::shared_ptr<pdat::CellData<double> > soln_data(
@@ -1845,7 +1849,8 @@ CellPoissonFACOps::computeCompositeResidualOnLevel(
    /*
     * S4. Compute residual on patches in level.
     */
-   for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
+   for (hier::PatchLevel::iterator pi(level->begin());
+        pi != level->end(); ++pi) {
       const boost::shared_ptr<hier::Patch>& patch = *pi;
       boost::shared_ptr<pdat::CellData<double> > soln_data(
          solution.getComponentPatchData(0, *patch),
@@ -1961,7 +1966,8 @@ CellPoissonFACOps::computeVectorWeights(
        */
 
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
          boost::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
             patch->getPatchGeometry(),
@@ -2012,10 +2018,11 @@ CellPoissonFACOps::computeVectorWeights(
           * Note that all assignments are local.
           */
 
-         for (hier::PatchLevel::Iterator p(level); p; p++) {
+         for (hier::PatchLevel::iterator p(level->begin());
+              p != level->end(); ++p) {
 
             const boost::shared_ptr<hier::Patch>& patch = *p;
-            for (hier::BoxContainer::Iterator i(coarsened_boxes);
+            for (hier::BoxContainer::iterator i(coarsened_boxes);
                  i != coarsened_boxes.end(); ++i) {
 
                hier::Box intersection = *i * (patch->getBox());

@@ -17,13 +17,18 @@ namespace hier {
 
 BoxContainerSingleOwnerIterator::BoxContainerSingleOwnerIterator(
    const BoxContainer& mapped_boxes,
-   const int& owner_rank):
+   const int& owner_rank,
+   bool begin):
    d_mapped_boxes(&mapped_boxes),
    d_owner_rank(owner_rank),
-   d_iter(d_mapped_boxes->begin())
+   d_iter(begin ? d_mapped_boxes->begin() : d_mapped_boxes->end())
 {
-   while (d_iter != d_mapped_boxes->end() && d_iter->getOwnerRank() != d_owner_rank) {
-      ++d_iter;
+   if (begin)
+   {
+      while (d_iter != d_mapped_boxes->end() &&
+             d_iter->getOwnerRank() != d_owner_rank) {
+         ++d_iter;
+      }
    }
 }
 

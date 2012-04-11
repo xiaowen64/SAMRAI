@@ -167,8 +167,8 @@ void txt2boxes(
    }
 
    // Shift all boxes into SAMRAI coordinates
-   for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
-      itr().shift(-hier::IntVector(tbox::Dimension(2), 2));
+   for (hier::BoxContainer::iterator itr(boxes); itr != boxes.end(); ++itr) {
+      itr->shift(-hier::IntVector(tbox::Dimension(2), 2));
    }
 }
 
@@ -335,7 +335,8 @@ bool SingleLevelTestCase(
 
    hier::BoxContainer domain_boxes;
    hier::LocalId domain_id(0);
-   for (hier::BoxContainer::Iterator itr(level_boxes); itr != level_boxes.end(); ++itr) {
+   for (hier::BoxContainer::iterator itr(level_boxes);
+        itr != level_boxes.end(); ++itr) {
       domain_boxes.pushBack(hier::Box(*itr, domain_id++, 0));
    }
 
@@ -353,8 +354,8 @@ bool SingleLevelTestCase(
    const int num_boxes = level_boxes.size();
    hier::LocalId local_id(0);
    tbox::Array<int> local_indices(mpi.getSize(), 0);
-   hier::BoxContainer::Iterator level_boxes_itr(level_boxes);
-   for (int i = 0; i < num_boxes; ++i, level_boxes_itr++) {
+   hier::BoxContainer::iterator level_boxes_itr(level_boxes);
+   for (int i = 0; i < num_boxes; ++i, ++level_boxes_itr) {
 
       int proc;
       if (i < num_boxes / num_nodes) {
@@ -399,7 +400,8 @@ bool SingleLevelTestCase(
    if (pattern_name == "FIRST_LAYER_CELL_NO_CORNERS_FILL_PATTERN" ||
        pattern_name == "FIRST_LAYER_CELL_FILL_PATTERN") {
       // Loop over each patch and initialize data
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::CellData<int> > cdata(
             patch->getPatchData(data_id),
@@ -416,7 +418,8 @@ bool SingleLevelTestCase(
    } else if (pattern_name == "SECOND_LAYER_NODE_NO_CORNERS_FILL_PATTERN" ||
               pattern_name == "SECOND_LAYER_NODE_FILL_PATTERN") {
       // Loop over each patch and initialize data
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::NodeData<int> > ndata(
             patch->getPatchData(data_id),
@@ -446,7 +449,8 @@ bool SingleLevelTestCase(
 
    if (pattern_name == "FIRST_LAYER_CELL_NO_CORNERS_FILL_PATTERN" ||
        pattern_name == "FIRST_LAYER_CELL_FILL_PATTERN") {
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::CellData<int> > cdata(
             patch->getPatchData(data_id),
@@ -464,9 +468,10 @@ bool SingleLevelTestCase(
          txt2data(finaldata_txt[data_txt_id],
             expected, expected.getPointer(), false, false);
 
-         for (pdat::CellData<int>::Iterator ci(cdata->getGhostBox());
-              ci; ci++) {
-            if ((*cdata)(ci()) != expected(ci())) {
+         pdat::CellData<int>::Iterator ciend(cdata->getGhostBox(), false);
+         for (pdat::CellData<int>::Iterator ci(cdata->getGhostBox(), true);
+              ci != ciend; ++ci) {
+            if ((*cdata)(*ci) != expected(*ci)) {
                failed = true;
             }
          }
@@ -474,7 +479,8 @@ bool SingleLevelTestCase(
       }
    } else if (pattern_name == "SECOND_LAYER_NODE_NO_CORNERS_FILL_PATTERN" ||
               pattern_name == "SECOND_LAYER_NODE_FILL_PATTERN") {
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::NodeData<int> > ndata(
             patch->getPatchData(data_id),
@@ -492,9 +498,10 @@ bool SingleLevelTestCase(
          txt2data(finaldata_txt[data_txt_id],
             expected, expected.getPointer(), false, true);
 
-         for (pdat::NodeData<int>::Iterator ni(ndata->getGhostBox());
-              ni; ni++) {
-            if ((*ndata)(ni()) != expected(ni())) {
+         pdat::NodeData<int>::Iterator niend(ndata->getGhostBox(), false);
+         for (pdat::NodeData<int>::Iterator ni(ndata->getGhostBox(), true);
+              ni != niend; ++ni) {
+            if ((*ndata)(*ni) != expected(*ni)) {
                failed = true;
             }
          }

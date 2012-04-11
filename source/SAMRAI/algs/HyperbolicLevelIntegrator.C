@@ -375,7 +375,8 @@ HyperbolicLevelIntegrator::initializeLevelData(
       hier::VariableDatabase* variable_db =
          hier::VariableDatabase::getDatabase();
 
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& patch = *ip;
 
          std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =
@@ -403,7 +404,7 @@ HyperbolicLevelIntegrator::initializeLevelData(
     * Initialize data on patch interiors.
     */
    d_patch_strategy->setDataContext(d_current);
-   for (hier::PatchLevel::Iterator p(level); p; p++) {
+   for (hier::PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
       const boost::shared_ptr<hier::Patch>& patch = *p;
 
       patch->allocatePatchData(d_temp_var_scratch_data, init_data_time);
@@ -535,7 +536,8 @@ HyperbolicLevelIntegrator::applyGradientDetector(
    t_error_bdry_fill_comm->stop();
 
    t_tag_cells->start();
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
       d_patch_strategy->tagGradientDetectorCells(*patch,
          error_data_time,
@@ -724,7 +726,8 @@ HyperbolicLevelIntegrator::applyRichardsonExtrapolation(
    const int error_level_number =
       level->getNextCoarserHierarchyLevelNumber() + 1;
 
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       d_patch_strategy->
@@ -818,7 +821,8 @@ HyperbolicLevelIntegrator::getLevelDt(
       //tbox::plog << "!use ghosts for dt" << std::endl;
 
       d_patch_strategy->setDataContext(d_current);
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          patch->allocatePatchData(d_temp_var_scratch_data, dt_time);
@@ -832,7 +836,7 @@ HyperbolicLevelIntegrator::getLevelDt(
          dt = tbox::MathUtilities<double>::Min(dt, patch_dt);
          //tbox::plog.precision(12);
          //tbox::plog << "Level " << level->getLevelNumber()
-         //           << " Patch " << p()
+         //           << " Patch " << *p
          //           << " box " << patch->getBox()
          //           << " has patch_dt " << patch_dt
          //           << " dt " << dt
@@ -855,7 +859,8 @@ HyperbolicLevelIntegrator::getLevelDt(
       d_bdry_sched_advance[level->getLevelNumber()]->fillData(dt_time);
       t_advance_bdry_fill_comm->stop();
 
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& patch = *ip;
 
          patch->allocatePatchData(d_temp_var_scratch_data, dt_time);
@@ -869,7 +874,7 @@ HyperbolicLevelIntegrator::getLevelDt(
          dt = tbox::MathUtilities<double>::Min(dt, patch_dt);
          //tbox::plog.precision(12);
          //tbox::plog << "Level " << level->getLevelNumber()
-         //           << " Patch " << ip()
+         //           << " Patch " << *ip
          //           << " box " << patch->getBox()
          //           << " has patch_dt " << patch_dt
          //           << " dt " << dt
@@ -1150,7 +1155,8 @@ HyperbolicLevelIntegrator::advanceLevel(
    t_patch_num_kernel->stop();
 
    d_patch_strategy->setDataContext(d_scratch);
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       patch->allocatePatchData(d_temp_var_scratch_data, current_time);
@@ -1237,7 +1243,8 @@ HyperbolicLevelIntegrator::advanceLevel(
 
       }
 
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& patch = *ip;
 
          patch->allocatePatchData(d_temp_var_scratch_data, new_time);
@@ -1439,7 +1446,8 @@ HyperbolicLevelIntegrator::synchronizeNewLevels(
          sched->coarsenData();
          t_sync_initial_comm->stop();
 
-         for (hier::PatchLevel::Iterator p(coarse_level); p; p++) {
+         for (hier::PatchLevel::iterator p(coarse_level->begin());
+              p != coarse_level->end(); ++p) {
             const boost::shared_ptr<hier::Patch>& patch = *p;
 
             patch->allocatePatchData(d_temp_var_scratch_data, sync_time);
@@ -1523,7 +1531,8 @@ HyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
 
    const double reflux_dt = sync_time - coarse_sim_time;
 
-   for (hier::PatchLevel::Iterator ip(coarse_level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(coarse_level->begin());
+        ip != coarse_level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       patch->allocatePatchData(d_temp_var_scratch_data, coarse_sim_time);
@@ -1585,7 +1594,8 @@ HyperbolicLevelIntegrator::resetTimeDependentData(
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 
    double cur_time = 0.;
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =
@@ -2124,7 +2134,8 @@ HyperbolicLevelIntegrator::preprocessFluxData(
 
          level->allocatePatchData(d_fluxsum_data, new_time);
 
-         for (hier::PatchLevel::Iterator p(level); p; p++) {
+         for (hier::PatchLevel::iterator p(level->begin());
+              p != level->end(); ++p) {
             const boost::shared_ptr<hier::Patch>& patch = *p;
 
             std::list<boost::shared_ptr<hier::Variable> >::iterator fs_var =
@@ -2208,7 +2219,8 @@ HyperbolicLevelIntegrator::postprocessFluxData(
 
    if (!regrid_advance && (level->getLevelNumber() > 0)) {
 
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          std::list<boost::shared_ptr<hier::Variable> >::iterator flux_var =
@@ -2400,7 +2412,8 @@ HyperbolicLevelIntegrator::copyTimeDependentData(
    TBOX_ASSERT(dst_context);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *level);
 
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =
@@ -2457,7 +2470,8 @@ HyperbolicLevelIntegrator::recordStatistics(
 
       double level_gridcells = 0.;
       double level_local_patches = 0.;
-      for (hier::PatchLevel::Iterator ip(patch_level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(patch_level.begin());
+           ip != patch_level.end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& patch = *ip;
          level_gridcells += patch->getBox().size();
          level_local_patches += 1.0;

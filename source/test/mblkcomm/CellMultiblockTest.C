@@ -197,7 +197,7 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
       /*
        * Set node boundary data.
        */
-      for (int ni = 0; ni < num_node_bdry_boxes; ni++) {
+      for (int ni = 0; ni < num_node_bdry_boxes; ++ni) {
 
          hier::Box fill_box = pgeom->getBoundaryFillBox(node_bdry[ni],
                patch.getBox(),
@@ -336,11 +336,13 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
                      encon_patch->getPatchData(d_variables[i], getDataContext()),
                      boost::detail::dynamic_cast_tag());
 
-                  for (pdat::CellIterator ci(encon_fill_box); ci; ci++) {
-                     pdat::CellIndex src_index(ci());
+                  pdat::CellIterator ciend(encon_fill_box, false);
+                  for (pdat::CellIterator ci(encon_fill_box, true);
+                       ci != ciend; ++ci) {
+                     pdat::CellIndex src_index(*ci);
                      pdat::CellGeometry::transform(src_index, back_trans);
                      for (int d = 0; d < depth; d++) {
-                        (*cell_data)(ci(), d) += (*sing_data)(src_index, d);
+                        (*cell_data)(*ci, d) += (*sing_data)(src_index, d);
                      }
                   }
 
@@ -351,9 +353,10 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
       }
 
       if (num_encon_used) {
-         for (pdat::CellIterator ci(sing_fill_box); ci; ci++) {
+         pdat::CellIterator ciend(sing_fill_box, false);
+         for (pdat::CellIterator ci(sing_fill_box, true); ci != ciend; ++ci) {
             for (int d = 0; d < depth; d++) {
-               (*cell_data)(ci(), d) /= num_encon_used;
+               (*cell_data)(*ci, d) /= num_encon_used;
             }
          }
       } else {
@@ -435,13 +438,14 @@ bool CellMultiblockTest::verifyResults(
          boost::detail::dynamic_cast_tag());
       int depth = cell_data->getDepth();
 
-      for (pdat::CellIterator ci(pbox); ci; ci++) {
+      pdat::CellIterator ciend(pbox, false);
+      for (pdat::CellIterator ci(pbox, true); ci != ciend; ++ci) {
          for (int d = 0; d < depth; d++) {
-            double result = (*cell_data)(ci(), d);
+            double result = (*cell_data)(*ci, d);
 
             if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                tbox::perr << "Test FAILED: ...."
-                          << " : cell index = " << ci() << endl;
+                          << " : cell index = " << *ci << endl;
                tbox::perr << "    Variable = " << d_variable_src_name[i]
                           << " : depth index = " << d << endl;
                tbox::perr << "    result = " << result
@@ -466,17 +470,18 @@ bool CellMultiblockTest::verifyResults(
          neighbor_ghost.refine(ratio);
          neighbor_ghost.intersectBoxes(gbox);
 
-         for (hier::BoxContainer::Iterator ng(neighbor_ghost);
+         for (hier::BoxContainer::iterator ng(neighbor_ghost);
               ng != neighbor_ghost.end(); ++ng) {
 
-            for (pdat::CellIterator ci(ng()); ci; ci++) {
+           pdat::CellIterator ciend(*ng, false);
+           for (pdat::CellIterator ci(*ng, true); ci != ciend; ++ci) {
                for (int d = 0; d < depth; d++) {
-                  double result = (*cell_data)(ci(), d);
+                  double result = (*cell_data)(*ci, d);
 
                   if (!tbox::MathUtilities<double>::equalEps(correct,
                          result)) {
                      tbox::perr << "Test FAILED: ...."
-                                << " : cell index = " << ci() << endl;
+                                << " : cell index = " << *ci << endl;
                      tbox::perr << "    Variable = " << d_variable_src_name[i]
                                 << " : depth index = " << d << endl;
                      tbox::perr << "    result = " << result
@@ -534,14 +539,15 @@ bool CellMultiblockTest::verifyResults(
                correct = (double)(bdry[k].getLocationIndex() + 100);
             }
 
-            for (pdat::CellIterator ci(fill_box); ci; ci++) {
+            pdat::CellIterator ciend(fill_box, false);
+            for (pdat::CellIterator ci(fill_box, true); ci != ciend; ++ci) {
                for (int d = 0; d < depth; d++) {
-                  double result = (*cell_data)(ci(), d);
+                  double result = (*cell_data)(*ci, d);
 
                   if (!tbox::MathUtilities<double>::equalEps(correct,
                          result)) {
                      tbox::perr << "Test FAILED: ...."
-                                << " : cell index = " << ci() << endl;
+                                << " : cell index = " << *ci << endl;
                      tbox::perr << "    Variable = " << d_variable_src_name[i]
                                 << " : depth index = " << d << endl;
                      tbox::perr << "    result = " << result

@@ -711,7 +711,7 @@ TreeLoadBalancer::constrainMaxBoxSizes(
 
    hier::LocalId next_available_index = box_level.getLastLocalId() + 1;
 
-   for (hier::BoxContainer::ConstIterator ni = unconstrained_boxes.begin();
+   for (hier::BoxContainer::const_iterator ni = unconstrained_boxes.begin();
         ni != unconstrained_boxes.end(); ++ni) {
 
       const hier::Box& box = *ni;
@@ -753,7 +753,7 @@ TreeLoadBalancer::constrainMaxBoxSizes(
                unconstrained_to_constrained.makeEmptyLocalNeighborhood(
                   box.getId());
 
-            for (hier::BoxContainer::Iterator li(chopped);
+            for (hier::BoxContainer::iterator li(chopped);
                  li != chopped.end(); ++li) {
 
                const hier::Box fragment = *li;
@@ -1089,7 +1089,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
        */
       const hier::BoxContainer& unbalanced_boxes =
          balance_box_level.getBoxes();
-      for (hier::BoxContainer::ConstIterator ni = unbalanced_boxes.begin();
+      for (hier::BoxContainer::const_iterator ni = unbalanced_boxes.begin();
            ni != unbalanced_boxes.end(); ++ni) {
          balanced_box_level.addBox(*ni);
       }
@@ -1924,7 +1924,7 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
       unbalanced_to_balanced.getBase().getLocalNumberOfCells());
 
    const hier::BoxContainer &unbalanced_boxes = unbalanced_to_balanced.getBase().getBoxes();
-   for ( hier::BoxContainer::ConstIterator bi=unbalanced_boxes.begin();
+   for ( hier::BoxContainer::const_iterator bi=unbalanced_boxes.begin();
          bi!=unbalanced_boxes.end(); ++bi ) {
 
       const hier::Box &unbalanced_box = *bi;
@@ -3484,7 +3484,7 @@ TreeLoadBalancer::computeLocalLoads(
    // Count up workload.
    double load = 0.0;
    const hier::BoxContainer& boxes = box_level.getBoxes();
-   for (hier::BoxContainer::ConstIterator ni = boxes.begin();
+   for (hier::BoxContainer::const_iterator ni = boxes.begin();
         ni != boxes.end();
         ++ni) {
       double box_load = computeLoad(*ni);
@@ -4334,8 +4334,7 @@ TreeLoadBalancer::prebalanceBoxLevel(
       const hier::BoxContainer& unchanged_boxes =
          balance_box_level.getBoxes();
 
-      for (hier::BoxContainer::ConstIterator ni =
-              unchanged_boxes.begin();
+      for (hier::BoxContainer::const_iterator ni = unchanged_boxes.begin();
            ni != unchanged_boxes.end(); ++ni) {
 
          const hier::Box& box = *ni;
@@ -4356,7 +4355,7 @@ TreeLoadBalancer::prebalanceBoxLevel(
 
       int* buffer = new int[buf_size * num_sending_boxes];
       int box_count = 0;
-      for (hier::BoxContainer::ConstIterator ni = sending_boxes.begin();
+      for (hier::BoxContainer::const_iterator ni = sending_boxes.begin();
            ni != sending_boxes.end(); ++ni) {
 
          const hier::Box& box = *ni;
@@ -4394,11 +4393,11 @@ TreeLoadBalancer::prebalanceBoxLevel(
 
                   box.getFromIntBuffer(&buffer[b * buf_size]);
 
-                  hier::BoxContainer::ConstIterator tmp_iter =
+                  hier::BoxContainer::const_iterator tmp_iter =
                      tmp_box_level.addBox(box,
                         box.getBlockId());
 
-                  hier::BoxId tmp_box_id = (*tmp_iter).getId();
+                  hier::BoxId tmp_box_id = tmp_iter->getId();
 
                   tmp_to_balance.insertLocalNeighbor(box, tmp_box_id);
 
@@ -4438,12 +4437,11 @@ TreeLoadBalancer::prebalanceBoxLevel(
       TBOX_ASSERT(static_cast<int>(id_recv->getRecvSize()) == sending_boxes.size());
 
       int box_count = 0;
-      for (hier::BoxContainer::ConstIterator ni =
-              sending_boxes.begin();
+      for (hier::BoxContainer::const_iterator ni = sending_boxes.begin();
            ni != sending_boxes.end(); ++ni) {
 
          hier::Box new_box(
-            (*ni),
+            *ni,
             (hier::LocalId)buffer[box_count],
             rank_group.getMappedRank(d_mpi.getRank() % output_nproc));
 

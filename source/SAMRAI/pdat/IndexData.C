@@ -68,9 +68,10 @@ IndexIterator<TYPE, BOX_GEOMETRY>::getNode()
 
 template<class TYPE, class BOX_GEOMETRY>
 IndexIterator<TYPE, BOX_GEOMETRY>::IndexIterator(
-   const IndexData<TYPE, BOX_GEOMETRY>& index_data) :
+   const IndexData<TYPE, BOX_GEOMETRY>& index_data,
+   bool begin) :
    d_index_data(const_cast<IndexData<TYPE, BOX_GEOMETRY>*>(&index_data)),
-   d_node(d_index_data->d_list_head)
+   d_node(begin ? d_index_data->d_list_head : 0)
 {
 }
 
@@ -128,54 +129,61 @@ IndexIterator<TYPE, BOX_GEOMETRY>::getIndex() const
 }
 
 template<class TYPE, class BOX_GEOMETRY>
-TYPE&
-IndexIterator<TYPE, BOX_GEOMETRY>::operator () ()
+TYPE*
+IndexIterator<TYPE, BOX_GEOMETRY>::operator -> ()
 {
-   return *d_node->d_item;
+   return d_node->d_item;
 }
 
 template<class TYPE, class BOX_GEOMETRY>
-const TYPE&
-IndexIterator<TYPE, BOX_GEOMETRY>::operator () () const
+const TYPE*
+IndexIterator<TYPE, BOX_GEOMETRY>::operator -> () const
 {
-   return *d_node->d_item;
+   return d_node->d_item;
 }
 
 template<class TYPE, class BOX_GEOMETRY>
-IndexIterator<TYPE, BOX_GEOMETRY>::operator bool () const
+IndexIterator<TYPE, BOX_GEOMETRY>&
+IndexIterator<TYPE, BOX_GEOMETRY>::operator ++ ()
 {
-   return d_node ? true : false;
-}
-
-#ifndef LACKS_BOOL_VOID_RESOLUTION
-template<class TYPE, class BOX_GEOMETRY>
-IndexIterator<TYPE, BOX_GEOMETRY>::operator const void * () const
-{
-   return d_node ? this : NULL;
-}
-#endif
-
-template<class TYPE, class BOX_GEOMETRY>
-bool
-IndexIterator<TYPE, BOX_GEOMETRY>::operator ! () const
-{
-   return d_node ? false : true;
+   if (d_node) {
+      d_node = d_node->d_next;
+   }
+   return *this;
 }
 
 template<class TYPE, class BOX_GEOMETRY>
-void
+IndexIterator<TYPE, BOX_GEOMETRY>
 IndexIterator<TYPE, BOX_GEOMETRY>::operator ++ (
    int)
 {
-   if (d_node) d_node = d_node->d_next;
+   IndexIterator<TYPE, BOX_GEOMETRY> tmp = *this;
+   if (d_node) {
+      d_node = d_node->d_next;
+   }
+   return tmp;
 }
 
 template<class TYPE, class BOX_GEOMETRY>
-void
+IndexIterator<TYPE, BOX_GEOMETRY>&
+IndexIterator<TYPE, BOX_GEOMETRY>::operator -- ()
+{
+   if (d_node) {
+      d_node = d_node->d_prev;
+   }
+   return *this;
+}
+
+template<class TYPE, class BOX_GEOMETRY>
+IndexIterator<TYPE, BOX_GEOMETRY>
 IndexIterator<TYPE, BOX_GEOMETRY>::operator -- (
    int)
 {
-   if (d_node) d_node = d_node->d_prev;
+   IndexIterator<TYPE, BOX_GEOMETRY> tmp = *this;
+   if (d_node) {
+      d_node = d_node->d_prev;
+   }
+   return tmp;
 }
 
 template<class TYPE, class BOX_GEOMETRY>
@@ -273,12 +281,13 @@ IndexData<TYPE, BOX_GEOMETRY>::copy(
 
    const hier::Box& src_ghost_box = t_src->getGhostBox();
    removeInsideBox(src_ghost_box);
-   for (typename IndexData<TYPE, BOX_GEOMETRY>::Iterator
-        s(*t_src);
-        s;
-        s++) {
+
+   typename IndexData<TYPE, BOX_GEOMETRY>::Iterator send(*t_src, false);
+   for (typename IndexData<TYPE, BOX_GEOMETRY>::Iterator s(*t_src, true);
+        s != send;
+        ++s) {
       if (getGhostBox().contains(s.getNode().d_index)) {
-         appendItem(s.getNode().d_index, *s.getNode().d_item);
+         appendItem(s.getNode().d_index, *(s.getNode().d_item));
       }
    }
 }
@@ -322,13 +331,15 @@ IndexData<TYPE, BOX_GEOMETRY>::copy(
    const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer();
    const hier::Box& src_ghost_box = t_src->getGhostBox();
 
-   for (hier::BoxContainer::ConstIterator b(box_list); b != box_list.end(); b++) {
-      const hier::Box& dst_box = b();
-      const hier::Box src_box(hier::Box::shift(b(), -src_offset));
+   for (hier::BoxContainer::const_iterator b(box_list);
+        b != box_list.end(); ++b) {
+      const hier::Box& dst_box = *b;
+      const hier::Box src_box(hier::Box::shift(*b, -src_offset));
       removeInsideBox(dst_box);
-      for (typename IndexData<TYPE, BOX_GEOMETRY>::Iterator s(*t_src);
-           s;
-           s++) {
+      typename IndexData<TYPE, BOX_GEOMETRY>::Iterator send(*t_src, false);
+      for (typename IndexData<TYPE, BOX_GEOMETRY>::Iterator s(*t_src, true);
+           s != send;
+           ++s) {
          if (src_box.contains(s.getNode().d_index)) {
             TYPE new_item;
             new_item.copySourceItem(
@@ -381,11 +392,12 @@ IndexData<TYPE, BOX_GEOMETRY>::getDataStreamSize(
    size_t bytes = 0;
    int num_items = 0;
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
-   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
       hier::Box box = hier::PatchData::getBox()
-         * hier::Box::shift(b(), -(t_overlap->getSourceOffset()));
-      for (hier::Box::Iterator index(box); index; index++) {
-         TYPE* item = getItem(index());
+         * hier::Box::shift(*b, -(t_overlap->getSourceOffset()));
+      hier::Box::iterator indexend(box, false);
+      for (hier::Box::iterator index(box, true); index != indexend; ++index) {
+         TYPE* item = getItem(*index);
          if (item) {
             num_items++;
             bytes += item->getDataStreamSize();
@@ -418,10 +430,12 @@ IndexData<TYPE, BOX_GEOMETRY>::packStream(
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
    int num_items = 0;
-   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
       hier::Box box = hier::PatchData::getBox()
-         * hier::Box::shift(b(), -(t_overlap->getSourceOffset()));
-      for (typename IndexData<TYPE, BOX_GEOMETRY>::Iterator s(*this); s; s++) {
+         * hier::Box::shift(*b, -(t_overlap->getSourceOffset()));
+      typename IndexData<TYPE, BOX_GEOMETRY>::Iterator send(*this, false);
+      for (typename IndexData<TYPE, BOX_GEOMETRY>::Iterator s(*this, true);
+           s != send; ++s) {
          if (box.contains(s.getNode().d_index)) {
             num_items++;
          }
@@ -430,12 +444,14 @@ IndexData<TYPE, BOX_GEOMETRY>::packStream(
 
    stream << num_items;
 
-   for (hier::BoxContainer::ConstIterator c(boxes); c != boxes.end(); ++c) {
+   for (hier::BoxContainer::const_iterator c(boxes); c != boxes.end(); ++c) {
       hier::Box box = hier::PatchData::getBox()
-         * hier::Box::shift(c(), -(t_overlap->getSourceOffset()));
-      for (typename IndexData<TYPE, BOX_GEOMETRY>::Iterator t(*this); t; t++) {
+         * hier::Box::shift(*c, -(t_overlap->getSourceOffset()));
+      typename IndexData<TYPE, BOX_GEOMETRY>::Iterator tend(*this, false);
+      for (typename IndexData<TYPE, BOX_GEOMETRY>::Iterator t(*this, true);
+           t != tend; ++t) {
          if (box.contains(t.getNode().d_index)) {
-            TYPE* item = &t();
+            TYPE* item = &(*t);
             TBOX_ASSERT(item != NULL);
 
             int index_buf[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
@@ -464,8 +480,8 @@ IndexData<TYPE, BOX_GEOMETRY>::unpackStream(
    stream >> num_items;
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
-   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
-      removeInsideBox(b());
+   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+      removeInsideBox(*b);
    }
 
    int i;
@@ -817,15 +833,16 @@ IndexData<TYPE, BOX_GEOMETRY>::removeInsideBox(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
-   typename IndexData<TYPE, BOX_GEOMETRY>::Iterator l(*this);
+   typename IndexData<TYPE, BOX_GEOMETRY>::Iterator l(*this, true);
+   typename IndexData<TYPE, BOX_GEOMETRY>::Iterator lend(*this, false);
 
-   while (l) {
+   while (l != lend) {
       if (box.contains(l.getNode().d_index)) {
          hier::Index index(l.getNode().d_index);
-         l++;
+         ++l;
          removeItem(index);
       } else {
-         l++;
+         ++l;
       }
    }
 }
@@ -837,15 +854,16 @@ IndexData<TYPE, BOX_GEOMETRY>::removeOutsideBox(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
-   typename IndexData<TYPE, BOX_GEOMETRY>::Iterator l(*this);
+   typename IndexData<TYPE, BOX_GEOMETRY>::Iterator l(*this, true);
+   typename IndexData<TYPE, BOX_GEOMETRY>::Iterator lend(*this, false);
 
-   while (l) {
+   while (l != lend) {
       if (!box.contains(l.getNode().d_index)) {
          hier::Index index(l.getNode().d_index);
-         l++;
+         ++l;
          removeItem(index);
       } else {
-         l++;
+         ++l;
       }
    }
 }
@@ -958,7 +976,9 @@ IndexData<TYPE, BOX_GEOMETRY>::putSpecializedToDatabase(
    database->putInteger("PDAT_INDEXDATA_VERSION", PDAT_INDEXDATA_VERSION);
 
    int item_count = 0;
-   for (typename IndexData<TYPE, BOX_GEOMETRY>::Iterator s(*this); s; s++) {
+   typename IndexData<TYPE, BOX_GEOMETRY>::Iterator send(*this, false);
+   for (typename IndexData<TYPE, BOX_GEOMETRY>::Iterator s(*this, true);
+        s != send; ++s) {
 
       std::string index_keyword = "index_data_" + tbox::Utilities::intToString(
             item_count,

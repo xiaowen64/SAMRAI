@@ -74,8 +74,8 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
       dst_mapped_box_level.getBoxes();
 
    hier::LocalId last_id = dst_mapped_box_level.getLastLocalId();
-   for (hier::RealBoxConstIterator ni(dst_mapped_boxes);
-        ni.isValid(); ++ni) {
+   for (hier::RealBoxConstIterator ni(dst_mapped_boxes.realBegin());
+        ni != dst_mapped_boxes.realEnd(); ++ni) {
       const hier::Box& dst_mapped_box = *ni;
       const hier::BoxId& dst_mapped_box_id = dst_mapped_box.getId();
       hier::BoxContainer fill_boxes(
@@ -107,7 +107,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
                      dst_mapped_box_id);
                   has_base_box = true;
                }
-               for (hier::BoxContainer::Iterator ei(encon_boxes);
+               for (hier::BoxContainer::iterator ei(encon_boxes);
                     ei != encon_boxes.end(); ei++) {
 
                   hier::Box fill_mapped_box(

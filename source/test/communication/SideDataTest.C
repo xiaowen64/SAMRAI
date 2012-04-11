@@ -210,8 +210,8 @@ void SideDataTest::setConservativeData(
    const hier::BoxContainer& domain =
       level->getPhysicalDomain(hier::BlockId::zero());
    int ncells = 0;
-   for (hier::BoxContainer::ConstIterator i(domain); i != domain.end(); ++i) {
-      ncells += i().size();
+   for (hier::BoxContainer::const_iterator i(domain); i != domain.end(); ++i) {
+      ncells += i->size();
    }
 
    const int depth = data->getDepth();
@@ -232,17 +232,18 @@ void SideDataTest::setConservativeData(
 
       for (int axis = 0; axis < d_dim.getValue(); axis++) {
          if (directions(axis)) {
-            for (pdat::CellIterator ci(sbox); ci; ci++) {
+            pdat::CellIterator ciend(sbox, false);
+            for (pdat::CellIterator ci(sbox, true); ci != ciend; ++ci) {
                double value = 0.0;
                for (i = 0; i < d_dim.getValue(); i++) {
                   if (i != axis) {
-                     value += (double)(ci() (i));
+                     value += (double)((*ci)(i));
                   }
                }
                value /= ncells;
                for (int side = pdat::SideIndex::Lower;
                     side <= pdat::SideIndex::Upper; side++) {
-                  pdat::SideIndex si(ci(), axis, side);
+                  pdat::SideIndex si(*ci, axis, side);
                   for (int d = 0; d < depth; d++) {
                      (*data)(si, d) = value;
                   }
@@ -283,11 +284,12 @@ void SideDataTest::setConservativeData(
          if (directions(axis)) {
             hier::IntVector ci(ratio.getDim());
             hier::IntVector del(ratio.getDim());
-            for (pdat::CellIterator fi(sbox); fi; fi++) {
+            pdat::CellIterator fiend(sbox, false);
+            for (pdat::CellIterator fi(sbox, true); fi != fiend; ++fi) {
                double value = 0.0;
                for (i = 0; i < d_dim.getValue(); i++) {
                   if (i != axis) {
-                     int findx = fi() (i);
+                     int findx = (*fi)(i);
                      ci(i) = ((findx < 0) ? (findx + 1) / ratio(i) - 1
                               : findx / ratio(i));
                      del(i) =
@@ -305,7 +307,7 @@ void SideDataTest::setConservativeData(
 
                for (int side = pdat::SideIndex::Lower;
                     side <= pdat::SideIndex::Upper; side++) {
-                  pdat::SideIndex si(fi(), axis, side);
+                  pdat::SideIndex si(*fi, axis, side);
                   for (int d = 0; d < depth; d++) {
                      (*data)(si, d) = value;
                   }
@@ -405,13 +407,14 @@ void SideDataTest::checkPatchInteriorData(
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       if (directions(axis)) {
          const pdat::SideIndex loweri(interior.lower(), axis, 0);
-         for (pdat::SideIterator si(interior, axis); si; si++) {
+         pdat::SideIterator siend(interior, axis, false);
+         for (pdat::SideIterator si(interior, axis, true); si != siend; ++si) {
             for (int d = 0; d < depth; d++) {
-               if (!(tbox::MathUtilities<double>::equalEps((*data)(si(), d),
-                        (*correct_data)(si(), d)))) {
+               if (!(tbox::MathUtilities<double>::equalEps((*data)(*si, d),
+                        (*correct_data)(*si, d)))) {
                   tbox::perr << "FAILED: -- patch interior not properly filled"
                              << " : side_data index = "
-                             << si().getAxis() << '/' << si()
+                             << si->getAxis() << '/' << *si
                              << endl;
                }
             }
@@ -543,7 +546,8 @@ void SideDataTest::setLinearData(
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       if (directions(axis)) {
          const pdat::SideIndex loweri(patch.getBox().lower(), axis, 0);
-         for (pdat::SideIterator ei(sbox, axis); ei; ei++) {
+         pdat::SideIterator eiend(sbox, axis, false);
+         for (pdat::SideIterator ei(sbox, axis, true); ei != eiend; ++ei) {
 
             /*
              * Compute spatial location of cell center and
@@ -551,28 +555,28 @@ void SideDataTest::setLinearData(
              */
 
             if (axis == 0) {
-               x = lowerx[0] + dx[0] * (ei() (0) - loweri(0));
+               x = lowerx[0] + dx[0] * ((*ei)(0) - loweri(0));
             } else {
-               x = lowerx[0] + dx[0] * (ei() (0) - loweri(0) + 0.5);
+               x = lowerx[0] + dx[0] * ((*ei)(0) - loweri(0) + 0.5);
             }
             y = z = 0.;
             if (d_dim > tbox::Dimension(1)) {
                if (axis == 1) {
-                  y = lowerx[1] + dx[1] * (ei() (1) - loweri(1));
+                  y = lowerx[1] + dx[1] * ((*ei)(1) - loweri(1));
                } else {
-                  y = lowerx[1] + dx[1] * (ei() (1) - loweri(1) + 0.5);
+                  y = lowerx[1] + dx[1] * ((*ei)(1) - loweri(1) + 0.5);
                }
             }
             if (d_dim > tbox::Dimension(2)) {
                if (axis == 2) {
-                  z = lowerx[2] + dx[2] * (ei() (2) - loweri(2));
+                  z = lowerx[2] + dx[2] * ((*ei)(2) - loweri(2));
                } else {
-                  z = lowerx[2] + dx[2] * (ei() (2) - loweri(2) + 0.5);
+                  z = lowerx[2] + dx[2] * ((*ei)(2) - loweri(2) + 0.5);
                }
             }
 
             for (int d = 0; d < depth; d++) {
-               (*data)(ei(),
+               (*data)(*ei,
                        d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
             }
 
@@ -612,18 +616,19 @@ void SideDataTest::setPeriodicData(
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       if (directions(axis)) {
          const pdat::SideIndex loweri(patch.getBox().lower(), axis, 0);
-         for (pdat::SideIterator si(sbox, axis); si; si++) {
+         pdat::SideIterator siend(sbox, axis, false);
+         for (pdat::SideIterator si(sbox, axis, true); si != siend; ++si) {
 
             double val = 1.0;
             for (int d = 0; d < d_dim.getValue(); ++d) {
-               double tmpf = d == axis ? si() (d) : 0.5 + si() (d);
+               double tmpf = d == axis ? (*si)(d) : 0.5 + (*si)(d);
                tmpf = tmpf * dx[d] / domain_len[d];
                tmpf = sin(2 * M_PI * tmpf);
                val *= tmpf;
             }
             val = val + 2.0; // Shift function range to [1,3] to avoid bad floating point compares.
             for (int d = 0; d < depth; d++) {
-               (*data)(si(), d) = val;
+               (*data)(*si, d) = val;
             }
 
          }
@@ -697,16 +702,17 @@ bool SideDataTest::verifyResults(
 
          for (int id = 0; id < d_dim.getValue(); id++) {
             if (directions(id)) {
-               for (pdat::SideIterator si(dbox, id); si; si++) {
-                  double correct = (*solution)(si());
+               pdat::SideIterator siend(dbox, id, false);
+               for (pdat::SideIterator si(dbox, id, true); si != siend; ++si) {
+                  double correct = (*solution)(*si);
                   for (int d = 0; d < depth; d++) {
-                     double result = (*side_data)(si(), d);
+                     double result = (*side_data)(*si, d);
                      if (!tbox::MathUtilities<double>::equalEps(correct,
                             result)) {
                         test_failed = true;
                         tbox::perr << "Test FAILED: ...."
                                    << " : side_data index = "
-                                   << si().getAxis() << '/' << si() << endl;
+                                   << si->getAxis() << '/' << *si << endl;
                         tbox::perr << "    hier::Variable = "
                                    << d_variable_src_name[i]
                                    << " : depth index = " << d << endl;

@@ -603,7 +603,7 @@ private:
    privateBridge_findOverlapsForOneProcess(
       const int curr_owner,
       NeighborSet& visible_base_nabrs,
-      NeighborSet::Iterator& base_ni,
+      NeighborSet::iterator& base_ni,
       std::vector<int>& send_mesg,
       const int remote_mapped_box_counter_index,
       Connector& bridging_connector,

@@ -421,7 +421,7 @@ private:
    privateModify_findOverlapsForOneProcess(
       const int owner_rank,
       BoxContainer& visible_base_nabrs,
-      BoxContainer::Iterator& base_ni,
+      BoxContainer::iterator& base_ni,
       std::vector<int>& send_mesg,
       const int remote_box_counter_index,
       Connector& mapped_connector,

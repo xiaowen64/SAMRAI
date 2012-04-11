@@ -184,8 +184,8 @@ int main(
       hier::BoxLevel layer0(hier::IntVector(dim3d, 1), geometry);
       hier::BoxLevel layer1(ratio, geometry);
 
-      hier::BoxContainer::Iterator coarse_domain_itr(coarse_domain);
-      for (int ib = 0; ib < n_coarse_boxes; ib++, coarse_domain_itr++) {
+      hier::BoxContainer::iterator coarse_domain_itr(coarse_domain);
+      for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_domain_itr) {
          if (ib % nproc == layer0.getMPI().getRank()) {
             layer0.addBox(hier::Box(*coarse_domain_itr,
                   hier::LocalId(ib),
@@ -193,8 +193,8 @@ int main(
          }
       }
 
-      hier::BoxContainer::Iterator fine_boxes_itr(fine_boxes);
-      for (int ib = 0; ib < n_fine_boxes; ib++, fine_boxes_itr++) {
+      hier::BoxContainer::iterator fine_boxes_itr(fine_boxes);
+      for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_boxes_itr) {
          if (ib % nproc == layer1.getMPI().getRank()) {
             layer1.addBox(hier::Box(*fine_boxes_itr,
                   hier::LocalId(ib),
@@ -298,7 +298,8 @@ int main(
       for (ln = 0; ln < 2; ln++) {
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
-         for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+         for (hier::PatchLevel::iterator ip(level->begin());
+              ip != level->end(); ++ip) {
             patch = *ip;
             pgeom = boost::dynamic_pointer_cast<geom::CartesianPatchGeometry,
                                                 hier::PatchGeometry>(patch->getPatchGeometry());
@@ -317,7 +318,8 @@ int main(
 
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
-         for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+         for (hier::PatchLevel::iterator ip(level->begin());
+              ip != level->end(); ++ip) {
             patch = *ip;
             pgeom = boost::dynamic_pointer_cast<geom::CartesianPatchGeometry,
                                                 hier::PatchGeometry>(patch->getPatchGeometry());
@@ -445,7 +447,8 @@ int main(
 
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
-         for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+         for (hier::PatchLevel::iterator ip(level->begin());
+              ip != level->end(); ++ip) {
             patch = *ip;
             pgeom = boost::dynamic_pointer_cast<geom::CartesianPatchGeometry,
                                                 hier::PatchGeometry>(patch->getPatchGeometry());
@@ -1046,7 +1049,8 @@ int main(
 
       boost::shared_ptr<hier::PatchLevel> level_zero(
          hierarchy->getPatchLevel(0));
-      for (hier::PatchLevel::Iterator ip(level_zero); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level_zero->begin());
+           ip != level_zero->end(); ++ip) {
          patch = *ip;
 
          cdata = boost::dynamic_pointer_cast<pdat::CellData<double>,

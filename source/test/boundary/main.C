@@ -200,9 +200,9 @@ int main(
 
       hier::BoxLevelConnectorUtils edge_utils;
       hier::BoxLevel layer0(hier::IntVector(dim, 1), grid_geometry);
-      hier::BoxContainer::ConstIterator domain_boxes(domain);
-      for (hier::LocalId ib(0); ib < patch_boxes.size(); ib++, domain_boxes++) {
-         layer0.addBox(hier::Box(domain_boxes(), ib, 0));
+      hier::BoxContainer::const_iterator domain_boxes(domain);
+      for (hier::LocalId ib(0); ib < patch_boxes.size(); ib++, ++domain_boxes) {
+         layer0.addBox(hier::Box(*domain_boxes, ib, 0));
       }
       edge_utils.addPeriodicImages(
          layer0,

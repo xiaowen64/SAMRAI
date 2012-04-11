@@ -430,8 +430,9 @@ OuterfaceData<TYPE>::packStream(
                                              getBox().getBlockId(),
                                              boxes.begin()->getBlockId());
 
-         for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
-            hier::Box src_box(b());
+         for (hier::BoxContainer::const_iterator b(boxes);
+              b != boxes.end(); ++b) {
+            hier::Box src_box(*b);
             face_transform.inverseTransform(src_box);
             for (int f = 0; f < 2; f++) {
                hier::Box intersect(src_box * d_data[d][f].getBox());
@@ -469,9 +470,10 @@ OuterfaceData<TYPE>::unpackStream(
          }
       }
 
-      for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
+      for (hier::BoxContainer::const_iterator b(boxes);
+           b != boxes.end(); ++b) {
          for (int f = 0; f < 2; f++) {
-            const hier::Box intersect = b() * d_data[d][f].getBox();
+            const hier::Box intersect = (*b) * d_data[d][f].getBox();
             if (!intersect.empty()) {
                d_data[d][f].unpackStream(stream, intersect, face_offset);
             }
@@ -653,9 +655,10 @@ OuterfaceData<TYPE>::printAxisFace(
    const hier::Box region =
       facebox * d_data[face_normal][side].getBox();
    os.precision(prec);
-   for (hier::Box::Iterator i(region); i; i++) {
-      os << "array" << i() << " = "
-         << d_data[face_normal][side](i(), depth) << std::endl;
+   hier::Box::iterator iend(region, false);
+   for (hier::Box::iterator i(region, true); i != iend; ++i) {
+      os << "array" << *i << " = "
+         << d_data[face_normal][side](*i, depth) << std::endl;
       os << std::flush;
    }
 }

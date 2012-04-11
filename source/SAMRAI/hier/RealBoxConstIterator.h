@@ -44,18 +44,9 @@ namespace hier {
  */
 class RealBoxConstIterator
 {
+friend class BoxContainer;
 
 public:
-   /*!
-    * @brief Construct the iterator for the given BoxContainer.
-    *
-    * The iterator will iterate through the items in mapped_boxes.
-    *
-    * @param[in] mapped_boxes
-    */
-   explicit RealBoxConstIterator(
-      const BoxContainer& mapped_boxes);
-
    /*!
     * @brief Destructor.
     */
@@ -130,19 +121,19 @@ public:
    operator ++ (
       int);
 
-   /*!
-    * @brief Whether the iterator can be dereferenced.  When the
-    * iterator reaches its end, this returns false.
-    */
-   bool
-   isValid() const
-   {
-      return d_mapped_boxes != NULL &&
-             d_ni != d_mapped_boxes->end() &&
-             !d_ni->isPeriodicImage();
-   }
-
 private:
+   /*!
+    * @brief Construct the iterator for the given BoxContainer.
+    *
+    * The iterator will iterate through the items in mapped_boxes.
+    *
+    * @param[in] mapped_boxes
+    * @param[in] begin
+    */
+   explicit RealBoxConstIterator(
+      const BoxContainer& mapped_boxes,
+      bool begin);
+
    /*!
     * @brief BoxContainer being iterated through.
     */
@@ -151,7 +142,7 @@ private:
    /*!
     * @brief The iterator.
     */
-   BoxContainer::ConstIterator d_ni;
+   BoxContainer::const_iterator d_ni;
 
 };
 

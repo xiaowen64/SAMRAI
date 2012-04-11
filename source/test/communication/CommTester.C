@@ -442,7 +442,8 @@ bool CommTester::verifyCommunicationResults() const
       boost::shared_ptr<hier::PatchLevel> level(
          d_patch_hierarchy->getPatchLevel(ln));
 
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          tests_pass &=
@@ -488,7 +489,8 @@ void CommTester::initializeLevelData(
 
    level.allocatePatchData(d_patch_data_components, time);
 
-   for (hier::PatchLevel::Iterator p(level); p; p++) {
+   for (hier::PatchLevel::iterator p(level.begin());
+        p != level.end(); ++p) {
       hier::Patch& patch = **p;
 
       d_data_test_strategy->setDataContext(d_source);

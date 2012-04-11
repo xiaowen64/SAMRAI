@@ -69,8 +69,8 @@ int main(
 
          const hier::BlockId bid(b);
 
-         for (hier::BoxContainerSingleBlockIterator bi(mboxes, hier::BlockId(b));
-              bi.isValid(); ++bi) {
+         for (hier::BoxContainerSingleBlockIterator bi(mboxes.begin(hier::BlockId(b)));
+              bi != mboxes.end(hier::BlockId(b)); ++bi) {
 
             if (bi->getBlockId() != bid) {
                tbox::perr << "FAILED: - Test #1: box id " << bi->getBlockId()
@@ -85,8 +85,8 @@ int main(
 
       for (int owner_rank = 0; owner_rank < num_owners; ++owner_rank) {
 
-         for (hier::BoxContainerSingleOwnerIterator bi(mboxes, owner_rank);
-              bi.isValid(); ++bi) {
+         for (hier::BoxContainerSingleOwnerIterator bi(mboxes.begin(owner_rank));
+              bi != mboxes.end(owner_rank); ++bi) {
 
             if (bi->getOwnerRank() != owner_rank) {
                tbox::perr << "FAILED: - Test #2: box id " << bi->getBlockId()

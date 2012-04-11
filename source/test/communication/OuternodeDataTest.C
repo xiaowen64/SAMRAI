@@ -195,24 +195,25 @@ void OuternodeDataTest::setLinearData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   for (pdat::NodeIterator ci(sbox); ci; ci++) {
+   pdat::NodeIterator ciend(sbox, false);
+   for (pdat::NodeIterator ci(sbox, true); ci != ciend; ++ci) {
 
       /*
        * Compute spatial location of node center and
        * set data to linear profile.
        */
 
-      x = lowerx[0] + dx[0] * (ci() (0) - loweri(0));
+      x = lowerx[0] + dx[0] * ((*ci)(0) - loweri(0));
       y = z = 0.;
       if (d_dim > tbox::Dimension(1)) {
-         y = lowerx[1] + dx[1] * (ci() (1) - loweri(1));
+         y = lowerx[1] + dx[1] * ((*ci)(1) - loweri(1));
       }
       if (d_dim > tbox::Dimension(2)) {
-         z = lowerx[2] + dx[2] * (ci() (2) - loweri(2));
+         z = lowerx[2] + dx[2] * ((*ci)(2) - loweri(2));
       }
 
       for (int d = 0; d < depth; d++) {
-         (*data)(ci(), d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
+         (*data)(*ci, d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
       }
 
    }
@@ -250,23 +251,24 @@ void OuternodeDataTest::setLinearData(
    for (n = 0; n < d_dim.getValue(); ++n) {
       for (s = 0; s < 2; ++s) {
          const hier::Box databox = data->getDataBox(n, s);
-         for (hier::Box::Iterator bi(databox); bi; bi++) {
+         hier::Box::iterator biend(databox, false);
+         for (hier::Box::iterator bi(databox, true); bi != biend; ++bi) {
 
             /*
              * Compute spatial location of node center and
              * set data to linear profile.
              */
 
-            x = lowerx[0] + dx[0] * (bi() (0) - loweri(0));
+            x = lowerx[0] + dx[0] * ((*bi)(0) - loweri(0));
             y = z = 0.;
             if (d_dim > tbox::Dimension(1)) {
-               y = lowerx[1] + dx[1] * (bi() (1) - loweri(1));
+               y = lowerx[1] + dx[1] * ((*bi)(1) - loweri(1));
             }
             if (d_dim > tbox::Dimension(2)) {
-               z = lowerx[2] + dx[2] * (bi() (2) - loweri(2));
+               z = lowerx[2] + dx[2] * ((*bi)(2) - loweri(2));
             }
 
-            pdat::NodeIndex ni(bi(), (pdat::NodeIndex::Corner)0);
+            pdat::NodeIndex ni(*bi, (pdat::NodeIndex::Corner)0);
             for (int d = 0; d < depth; d++) {
                (*data)(ni,
                        d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
@@ -362,26 +364,27 @@ void OuternodeDataTest::checkPatchInteriorData(
 
    const int depth = data->getDepth();
 
-   for (pdat::NodeIterator ci(interior); ci; ci++) {
+   pdat::NodeIterator ciend(interior, false);
+   for (pdat::NodeIterator ci(interior, true); ci != ciend; ++ci) {
 
       /*
        * Compute spatial location of edge and
        * compare data to linear profile.
        */
 
-      x = lowerx[0] + dx[0] * (ci() (0) - loweri(0));
+      x = lowerx[0] + dx[0] * ((*ci)(0) - loweri(0));
       y = z = 0.;
       if (d_dim > tbox::Dimension(1)) {
-         y = lowerx[1] + dx[1] * (ci() (1) - loweri(1));
+         y = lowerx[1] + dx[1] * ((*ci)(1) - loweri(1));
       }
       if (d_dim > tbox::Dimension(2)) {
-         z = lowerx[2] + dx[2] * (ci() (2) - loweri(2));
+         z = lowerx[2] + dx[2] * ((*ci)(2) - loweri(2));
       }
 
       double value;
       for (int d = 0; d < depth; d++) {
          value = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
-         if (!(tbox::MathUtilities<double>::equalEps((*data)(ci(),
+         if (!(tbox::MathUtilities<double>::equalEps((*data)(*ci,
                                                              d), value))) {
             tbox::perr << "FAILED: -- patch interior not properly filled"
                        << endl;
@@ -454,13 +457,14 @@ bool OuternodeDataTest::verifyResults(
          int depth = node_data->getDepth();
          hier::Box dbox = node_data->getGhostBox();
 
-         for (pdat::NodeIterator ci(dbox); ci; ci++) {
-            double correct = (*solution)(ci());
+         pdat::NodeIterator ciend(dbox, false);
+         for (pdat::NodeIterator ci(dbox, true); ci != ciend; ++ci) {
+            double correct = (*solution)(*ci);
             for (int d = 0; d < depth; d++) {
-               double result = (*node_data)(ci(), d);
+               double result = (*node_data)(*ci, d);
                if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
-                             << " : node index = " << ci() << endl;
+                             << " : node index = " << *ci << endl;
                   tbox::perr << "    hier::Variable = "
                              << d_variable_src_name[i]
                              << " : depth index = " << d << endl;

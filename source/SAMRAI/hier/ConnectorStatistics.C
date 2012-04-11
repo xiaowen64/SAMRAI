@@ -180,7 +180,7 @@ void ConnectorStatistics::computeLocalConnectorStatistics( const Connector &conn
       static_cast<double>(visible_neighbors.size());
 
    std::set<int> remote_neighbor_owners;
-   for ( BoxContainer::ConstIterator bi=visible_neighbors.begin();
+   for ( BoxContainer::const_iterator bi=visible_neighbors.begin();
          bi!=visible_neighbors.end(); ++bi ) {
       const Box &neighbor = *bi;
 

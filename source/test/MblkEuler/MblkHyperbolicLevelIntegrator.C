@@ -342,7 +342,8 @@ void MblkHyperbolicLevelIntegrator::initializeLevelData(
       hier::VariableDatabase* variable_db =
          hier::VariableDatabase::getDatabase();
 
-      for (hier::PatchLevel::Iterator mi(mblk_level); mi; mi++) {
+      for (hier::PatchLevel::iterator mi(mblk_level->begin());
+           mi != mblk_level->end(); ++mi) {
          std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =
             d_time_dep_variables.begin();
          while (time_dep_var != d_time_dep_variables.end()) {
@@ -366,7 +367,8 @@ void MblkHyperbolicLevelIntegrator::initializeLevelData(
     */
    d_patch_strategy->setDataContext(d_current);
 
-   for (hier::PatchLevel::Iterator mi(mblk_level); mi; mi++) {
+   for (hier::PatchLevel::iterator mi(mblk_level->begin());
+        mi != mblk_level->end(); ++mi) {
 
       (*mi)->allocatePatchData(d_temp_var_scratch_data, init_data_time);
 
@@ -479,7 +481,8 @@ void MblkHyperbolicLevelIntegrator::applyGradientDetector(
    d_mblk_bdry_sched_advance[level_number]->fillData(error_data_time);
    t_error_bdry_fill_comm->stop();
 
-   for (hier::PatchLevel::Iterator mi(mblk_level); mi; mi++) {
+   for (hier::PatchLevel::iterator mi(mblk_level->begin());
+        mi != mblk_level->end(); ++mi) {
 
       d_patch_strategy->
       tagGradientDetectorCells(**mi,
@@ -625,7 +628,8 @@ MblkHyperbolicLevelIntegrator::applyRichardsonExtrapolation(
    int error_level_number =
       level->getNextCoarserHierarchyLevelNumber() + 1;
 
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       d_patch_strategy->
@@ -714,7 +718,8 @@ MblkHyperbolicLevelIntegrator::getLevelDt(
 
       d_patch_strategy->setDataContext(d_current);
 
-      for (hier::PatchLevel::Iterator mi(level); mi; mi++) {
+      for (hier::PatchLevel::iterator mi(level->begin());
+           mi != level->end(); ++mi) {
 
          (*mi)->allocatePatchData(d_temp_var_scratch_data, dt_time);
 
@@ -742,7 +747,8 @@ MblkHyperbolicLevelIntegrator::getLevelDt(
       d_mblk_bdry_sched_advance[level->getLevelNumber()]->fillData(dt_time);
       t_advance_bdry_fill_comm->stop();
 
-      for (hier::PatchLevel::Iterator mi(level); mi; mi++) {
+      for (hier::PatchLevel::iterator mi(level->begin());
+           mi != level->end(); ++mi) {
 
          (*mi)->allocatePatchData(d_temp_var_scratch_data, dt_time);
 
@@ -975,7 +981,8 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
    //}
    // to count gridcells on this processor
 
-   for (hier::PatchLevel::Iterator mi(level); mi; mi++) {
+   for (hier::PatchLevel::iterator mi(level->begin());
+        mi != level->end(); ++mi) {
       level_gridcells += (*mi)->getBox().size();
       level_local_patches += 1.0;
    }
@@ -1081,7 +1088,8 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
    t_patch_num_kernel->stop();
 
    d_patch_strategy->setDataContext(d_scratch);
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       patch->allocatePatchData(d_temp_var_scratch_data, current_time);
@@ -1169,7 +1177,8 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
 
       }
 
-      for (hier::PatchLevel::Iterator mi(level); mi; mi++) {
+      for (hier::PatchLevel::iterator mi(level->begin());
+           mi != level->end(); ++mi) {
 
          (*mi)->allocatePatchData(d_temp_var_scratch_data, new_time);
          // "false" argument indicates "initial_time" is false.
@@ -1375,7 +1384,8 @@ void MblkHyperbolicLevelIntegrator::synchronizeNewLevels(
          //sched->coarsenData();
          t_sync_initial_comm->stop();
 
-         for (hier::PatchLevel::Iterator mi(coarse_level); mi; mi++) {
+         for (hier::PatchLevel::iterator mi(coarse_level->begin());
+              mi != coarse_level->end(); ++mi) {
 
             (*mi)->allocatePatchData(d_temp_var_scratch_data, sync_time);
 
@@ -1475,7 +1485,8 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
 
    const double reflux_dt = sync_time - coarse_sim_time;
 
-   for (hier::PatchLevel::Iterator mi(mblk_coarse_level); mi; mi++) {
+   for (hier::PatchLevel::iterator mi(mblk_coarse_level->begin());
+        mi != mblk_coarse_level->end(); ++mi) {
 
       (*mi)->allocatePatchData(d_temp_var_scratch_data, coarse_sim_time);
 
@@ -1537,7 +1548,8 @@ void MblkHyperbolicLevelIntegrator::resetTimeDependentData(
 
    double cur_time = 0.;
 
-   for (hier::PatchLevel::Iterator mi(level); mi; mi++) {
+   for (hier::PatchLevel::iterator mi(level->begin());
+        mi != level->end(); ++mi) {
 
       std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =
          d_time_dep_variables.begin();
@@ -2065,7 +2077,8 @@ void MblkHyperbolicLevelIntegrator::preprocessFluxData(
 
          mblk_level->allocatePatchData(d_fluxsum_data, new_time);
 
-         for (hier::PatchLevel::Iterator mi(mblk_level); mi; mi++) {
+         for (hier::PatchLevel::iterator mi(mblk_level->begin());
+              mi != mblk_level->end(); ++mi) {
 
             std::list<boost::shared_ptr<hier::Variable> >::iterator fs_var =
                d_fluxsum_variables.begin();
@@ -2146,7 +2159,8 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
 
    if (!regrid_advance && (mblk_level->getLevelNumber() > 0)) {
 
-      for (hier::PatchLevel::Iterator mi(mblk_level); mi; mi++) {
+      for (hier::PatchLevel::iterator mi(mblk_level->begin());
+           mi != mblk_level->end(); ++mi) {
 
          std::list<boost::shared_ptr<hier::Variable> >::iterator flux_var =
             d_flux_variables.begin();
@@ -2335,7 +2349,8 @@ void MblkHyperbolicLevelIntegrator::copyTimeDependentData(
    TBOX_ASSERT(dst_context);
 #endif
 
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =

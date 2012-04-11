@@ -82,7 +82,7 @@ PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
    /*
     * Fill just the interior.  Disregard gcw.
     */
-   for (hier::BoxContainer::ConstIterator ni = dst_mapped_boxes.begin();
+   for (hier::BoxContainer::const_iterator ni = dst_mapped_boxes.begin();
         ni != dst_mapped_boxes.end(); ++ni) {
       const hier::BoxId& gid = ni->getId();
       const hier::Box& dst_mapped_box =
@@ -140,7 +140,7 @@ PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
    } else {
       src_to_dst.getLocalNeighbors(all_dst_nabrs);
    }
-   for (hier::BoxContainer::ConstIterator na = all_dst_nabrs.begin();
+   for (hier::BoxContainer::const_iterator na = all_dst_nabrs.begin();
         na != all_dst_nabrs.end(); ++na) {
       FillSet::Iterator dst_fill_boxes_iter =
          dst_fill_boxes_on_src_proc.insert(na->getId()).first;

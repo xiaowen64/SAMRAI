@@ -277,8 +277,9 @@ int main(
       boost::shared_ptr<hier::PatchLevel> level_zero(
          hierarchy->getPatchLevel(0));
       const hier::BoxContainer& level_0_boxes = level_zero->getBoxes();
-      for (hier::BoxContainer::ConstIterator i(level_0_boxes); i != level_0_boxes.end(); ++i) {
-         neq += i().size();
+      for (hier::BoxContainer::const_iterator i(level_0_boxes);
+           i != level_0_boxes.end(); ++i) {
+         neq += i->size();
       }
       cvode_solver->setIterationType(uses_newton ? CV_NEWTON : CV_FUNCTIONAL);
       //cvode_solver->setToleranceType(SV); // this is in craig's code, but
@@ -315,7 +316,8 @@ int main(
                init_hierarchy->getPatchLevel(ln));
             tbox::plog << "level = " << ln << endl;
 
-            for (hier::PatchLevel::Iterator p(level); p; p++) {
+            for (hier::PatchLevel::iterator p(level->begin());
+                 p != level->end(); ++p) {
                const boost::shared_ptr<hier::Patch>& patch = *p;
 
                boost::shared_ptr<CellData<double> > y_data(
@@ -393,7 +395,8 @@ int main(
                   result_hierarchy->getPatchLevel(ln));
                tbox::plog << "level = " << ln << endl;
 
-               for (hier::PatchLevel::Iterator p(level); p; p++) {
+               for (hier::PatchLevel::iterator p(level->begin());
+                    p != level->end(); ++p) {
                   const boost::shared_ptr<hier::Patch>& patch = *p;
 
                   boost::shared_ptr<CellData<double> > y_data(

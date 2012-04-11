@@ -317,7 +317,8 @@ int main(
 
          tbox::plog << "\n PRINTING PATCHES ON LEVEL " << pln << endl;
 
-         for (PatchLevel::Iterator ip(level); ip; ip++) {
+         for (PatchLevel::iterator ip(level->begin());
+              ip != level->end(); ++ip) {
             tbox::plog << "patch # " << ip->getBox().getId() << " : "
                        << ip->getBox() << endl;
          }

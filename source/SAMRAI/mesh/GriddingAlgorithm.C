@@ -2000,8 +2000,8 @@ GriddingAlgorithm::checkBoundaryProximityViolation(
 
    size_t nerr(0);
 
-   for (hier::RealBoxConstIterator bi(mapped_box_level.getBoxes());
-        bi.isValid(); ++bi) {
+   for (hier::RealBoxConstIterator bi(mapped_box_level.getBoxes().realBegin());
+        bi != mapped_box_level.getBoxes().realEnd(); ++bi) {
 
       hier::BoxContainer external_parts(*bi);
       external_parts.grow(extend_ghosts);
@@ -2009,8 +2009,9 @@ GriddingAlgorithm::checkBoundaryProximityViolation(
          mapped_box_level.getRefinementRatio(),
          refined_periodic_domain_search_tree);
 
-      for (hier::BoxContainer::Iterator bli(external_parts); bli != external_parts.end();
-           bli++) {
+      for (hier::BoxContainer::iterator bli(external_parts);
+           bli != external_parts.end();
+           ++bli) {
          hier::IntVector leftover_size((*bli).numberCells());
          for (int d = 0; d < d_dim.getValue(); ++d) {
             if (leftover_size(d) != 0 && leftover_size(d) < extend_ghosts(d)) {
@@ -2059,8 +2060,8 @@ GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes) cons
     * Check minimum size violations.
     */
    int i = 0;
-   for (hier::BoxContainer::ConstIterator itr(domain_boxes); itr != domain_boxes.end();
-        ++itr, ++i) {
+   for (hier::BoxContainer::const_iterator itr(domain_boxes);
+        itr != domain_boxes.end(); ++itr, ++i) {
 
       hier::Box test_box = *itr;
       for (int dir = 0; dir < d_dim.getValue(); dir++) {
@@ -2571,7 +2572,7 @@ GriddingAlgorithm::readLevelBoxes(
          d_hierarchy->getMPI(),
          hier::BoxLevel::GLOBALIZED);
       hier::LocalId i(0);
-      for (hier::BoxContainer::Iterator itr(boxes_to_refine);
+      for (hier::BoxContainer::iterator itr(boxes_to_refine);
            itr != boxes_to_refine.end(); ++itr, ++i) {
          hier::Box unbalanced_mapped_box(*itr, i, 0);
          unbalanced_mapped_box.setBlockId(hier::BlockId(0));
@@ -2685,7 +2686,8 @@ GriddingAlgorithm::fillTags(
 
    t_fill_tags->start();
 
-   for (hier::PatchLevel::Iterator ip(tag_level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(tag_level->begin());
+        ip != tag_level->end(); ++ip) {
 
       const boost::shared_ptr<hier::Patch>& patch = *ip;
       boost::shared_ptr<pdat::CellData<int> > tag_data(
@@ -2741,7 +2743,8 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
       hier::IntVector::ceilingDivide(fill_box_growth,
          tag_level_to_fill_mapped_box_level.getRatio());
 
-   for (hier::PatchLevel::Iterator ip(tag_level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(tag_level->begin());
+        ip != tag_level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       boost::shared_ptr<pdat::CellData<int> > tag_data(
@@ -2760,7 +2763,7 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
          mapped_box_id,
          growth_in_tag_resolution);
 
-      for (NeighborSet::ConstIterator
+      for (NeighborSet::const_iterator
            ni = neighbors.begin(); ni != neighbors.end(); ++ni) {
          const hier::Box& neighbor(*ni);
          hier::Box box = neighbor;
@@ -2821,7 +2824,8 @@ GriddingAlgorithm::bufferTagsOnLevel(
     * distance from actual tags.
     */
    const int not_tag = ((tag_value == d_true_tag) ? d_false_tag : d_true_tag);
-   for (hier::PatchLevel::Iterator ip1(level); ip1; ip1++) {
+   for (hier::PatchLevel::iterator ip1(level->begin());
+        ip1 != level->end(); ++ip1) {
       const boost::shared_ptr<hier::Patch>& patch = *ip1;
 
       boost::shared_ptr<pdat::CellData<int> > buf_tag_data(
@@ -2835,9 +2839,10 @@ GriddingAlgorithm::bufferTagsOnLevel(
 
       const hier::Box& interior(patch->getBox());
 
-      for (pdat::CellIterator ic(interior); ic; ic++) {
-         if ((*tag_data)(ic()) == tag_value) {
-            (*buf_tag_data)(ic()) = d_true_tag;
+      pdat::CellIterator icend(interior, false);
+      for (pdat::CellIterator ic(interior, true); ic != icend; ++ic) {
+         if ((*tag_data)(*ic) == tag_value) {
+            (*buf_tag_data)(*ic) = d_true_tag;
          }
       }
    }
@@ -2855,7 +2860,8 @@ GriddingAlgorithm::bufferTagsOnLevel(
    /*
     * Buffer tags on patch interior according to buffered tag data.
     */
-   for (hier::PatchLevel::Iterator ip2(level); ip2; ip2++) {
+   for (hier::PatchLevel::iterator ip2(level->begin());
+        ip2 != level->end(); ++ip2) {
       const boost::shared_ptr<hier::Patch>& patch = *ip2;
 
       boost::shared_ptr<pdat::CellData<int> > buf_tag_data(
@@ -2872,10 +2878,11 @@ GriddingAlgorithm::bufferTagsOnLevel(
 
       tag_data->fillAll(not_tag);
 
-      for (pdat::CellIterator ic(buf_tag_box); ic; ic++) {
-         if ((*buf_tag_data)(ic()) == d_true_tag) {
-            hier::Box buf_box(ic() - buffer_size,
-               ic() + buffer_size,
+      pdat::CellIterator icend(buf_tag_box, false);
+      for (pdat::CellIterator ic(buf_tag_box, true); ic != icend; ++ic) {
+         if ((*buf_tag_data)(*ic) == d_true_tag) {
+            hier::Box buf_box(*ic - buffer_size,
+               *ic + buffer_size,
                tag_box_block_id);
             tag_data->fill(tag_value, buf_box);
          }
@@ -3048,7 +3055,7 @@ GriddingAlgorithm::findRefinementBoxes(
       }
 #ifdef DEBUG_CHECK_ASSERTIONS
       std::set<int> local_ids;
-      for (hier::BoxContainer::Iterator
+      for (hier::BoxContainer::iterator
            ac_itr = accumulated_mapped_boxes.begin();
            ac_itr != accumulated_mapped_boxes.end(); ++ac_itr) {
          local_ids.insert(ac_itr->getId().getLocalId().getValue());
@@ -3359,8 +3366,7 @@ GriddingAlgorithm::findRefinementBoxes(
 #ifdef DEBUG_CHECK_ASSERTIONS
       std::set<int> new_local_ids;
       const hier::BoxContainer& new_boxes = new_mapped_box_level.getBoxes();
-      for (hier::BoxContainer::ConstIterator
-           new_itr = new_boxes.begin();
+      for (hier::BoxContainer::const_iterator new_itr = new_boxes.begin();
            new_itr != new_boxes.end(); ++new_itr) {
          new_local_ids.insert(new_itr->getId().getLocalId().getValue());
       }
@@ -3609,8 +3615,8 @@ GriddingAlgorithm::extendBoxesToDomainBoundary(
       extend_ghosts);
    before_to_after.setConnectorType(hier::Connector::MAPPING);
 
-   for (hier::BoxContainer::ConstIterator
-        nn = before_nodes.begin(); nn != before_nodes.end(); ++nn) {
+   for (hier::BoxContainer::const_iterator nn = before_nodes.begin();
+        nn != before_nodes.end(); ++nn) {
       const hier::Box& before_mapped_box = *nn;
       hier::Box after_mapped_box = before_mapped_box;
       hier::BoxUtilities::extendBoxToDomainBoundary(
@@ -3812,7 +3818,7 @@ GriddingAlgorithm::computeNestingViolator(
    refined_domain_search_tree.refine(candidate.getRefinementRatio());
    refined_domain_search_tree.makeTree(&grid_geometry);
 
-   for (hier::BoxContainer::ConstIterator ni = candidate_mapped_boxes.begin();
+   for (hier::BoxContainer::const_iterator ni = candidate_mapped_boxes.begin();
         ni != candidate_mapped_boxes.end(); ++ni) {
       const hier::Box& cmb = *ni;
       hier::BoxContainer addl_violators(cmb);
@@ -3842,9 +3848,9 @@ GriddingAlgorithm::computeNestingViolator(
                addl_violators.removeIntersections(*na);
             }
             if (!addl_violators.isEmpty()) {
-               for (hier::BoxContainer::Iterator bi(addl_violators);
+               for (hier::BoxContainer::iterator bi(addl_violators);
                     bi != addl_violators.end(); ++bi) {
-                  hier::BoxContainer::ConstIterator new_violator = violator.addBox(
+                  hier::BoxContainer::const_iterator new_violator = violator.addBox(
                         *bi, cmb.getBlockId());
                   candidate_to_violator.insertLocalNeighbor(*new_violator,
                      base_box_itr);
@@ -3962,8 +3968,8 @@ GriddingAlgorithm::computeProperNestingData(
          d_to_nesting_complement[ln - 1].getMPI());
       const hier::BoxContainer& lnm1_complement_mapped_boxes =
          d_proper_nesting_complement[ln - 1].getBoxes();
-      for (hier::BoxContainer::ConstIterator ni =
-              lnm1_complement_mapped_boxes.begin();
+      for (hier::BoxContainer::const_iterator ni =
+           lnm1_complement_mapped_boxes.begin();
            ni != lnm1_complement_mapped_boxes.end(); ++ni) {
          hier::Box tmp_mapped_box = *ni;
          TBOX_ASSERT(!tmp_mapped_box.isPeriodicImage());
@@ -4116,7 +4122,7 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
     * Box minus parts removed to satisfy nesting requirements.
     */
 
-   for (hier::BoxContainer::ConstIterator ni = new_mapped_boxes.begin();
+   for (hier::BoxContainer::const_iterator ni = new_mapped_boxes.begin();
         ni != new_mapped_boxes.end(); ++ni) {
       const hier::Box& omb = *ni;
       TBOX_ASSERT(!omb.isPeriodicImage());

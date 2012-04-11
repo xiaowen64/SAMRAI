@@ -189,7 +189,8 @@ HierSumTest::setInitialNodeValues(
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       // loop over patches on level
-      for (PatchLevel::Iterator ip(level); ip; ip++) {
+      for (PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<Patch>& patch = *ip;
 
          boost::shared_ptr<NodeData<double> > unode(
@@ -209,8 +210,9 @@ HierSumTest::setInitialNodeValues(
          Box pbox = patch->getBox();
          double cell_val;
          int d;
-         for (NodeIterator ni(pbox); ni; ni++) {
-            NodeIndex node = ni();
+         NodeIterator niend(pbox, false);
+         for (NodeIterator ni(pbox, true); ni != niend; ++ni) {
+            NodeIndex node = *ni;
             for (d = 0; d < ucell->getDepth(); d++) {
 
                (*unode)(node, d) = 0.;
@@ -222,7 +224,7 @@ HierSumTest::setInitialNodeValues(
                if (d_dim == tbox::Dimension(2)) {
                   for (int j = 0; j <= 1; j++) {
                      for (int i = 0; i <= 1; i++) {
-                        CellIndex cell(ni());
+                        CellIndex cell(*ni);
                         cell(0) -= i;
                         cell(1) -= j;
                         cell_val = (*ucell)(cell, d);
@@ -234,7 +236,7 @@ HierSumTest::setInitialNodeValues(
                   for (int k = 0; k <= 1; k++) {
                      for (int j = 0; j <= 1; j++) {
                         for (int i = 0; i <= 1; i++) {
-                           CellIndex cell(ni());
+                           CellIndex cell(*ni);
                            cell(0) -= i;
                            cell(1) -= j;
                            cell(2) -= k;
@@ -273,20 +275,22 @@ HierSumTest::setInitialNodeValues(
          complement.grow(IntVector(d_dim, 1));
          fine_overlap_shrunk.removeIntersections(complement);
 
-         for (PatchLevel::Iterator ip(level); ip; ip++) {
+         for (PatchLevel::iterator ip(level->begin());
+              ip != level->end(); ++ip) {
             const boost::shared_ptr<Patch>& patch = *ip;
 
             boost::shared_ptr<NodeData<double> > unode(
                patch->getPatchData(d_unode_id),
                boost::detail::dynamic_cast_tag());
 
-            for (BoxContainer::Iterator b = fine_overlap_shrunk.begin();
+            for (BoxContainer::iterator b = fine_overlap_shrunk.begin();
                  b != fine_overlap_shrunk.end(); ++b) {
-               Box fine_overlap = b();
+               Box fine_overlap = *b;
                Box patch_interior = patch->getBox();
                Box data_box = fine_overlap * patch_interior;
-               for (NodeIterator ni(data_box); ni; ni++) {
-                  NodeIndex node = ni();
+               NodeIterator niend(data_box, false);
+               for (NodeIterator ni(data_box, true); ni != niend; ++ni) {
+                  NodeIndex node = *ni;
                   for (int d = 0; d < unode->getDepth(); d++) {
                      double node_val = (*unode)(node, d);
                      if (tbox::MathUtilities<double>::equalEps(node_val,
@@ -299,7 +303,8 @@ HierSumTest::setInitialNodeValues(
          } // loop over patches
       } // if a finer level exists
 
-      for (PatchLevel::Iterator ip(level); ip; ip++) {
+      for (PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<Patch>& patch = *ip;
 
          boost::shared_ptr<NodeData<double> > unode(
@@ -336,7 +341,8 @@ HierSumTest::setInitialEdgeValues(
    /*
     * Set edge weight on patch interiors = sum(cell weights)
     */
-   for (PatchLevel::Iterator ip(level); ip; ip++) {
+   for (PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<Patch>& patch = *ip;
 
       boost::shared_ptr<EdgeData<double> > uedge(
@@ -570,7 +576,8 @@ int HierSumTest::checkNodeResult(
 
       // loop over patches on level
       bool all_correct = true;
-      for (PatchLevel::Iterator ip(level); ip; ip++) {
+      for (PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<Patch>& patch = *ip;
 
          boost::shared_ptr<NodeData<double> > unode(
@@ -578,9 +585,9 @@ int HierSumTest::checkNodeResult(
             boost::detail::dynamic_cast_tag());
 
          // loop over Level complement boxlist
-         for (BoxContainer::Iterator b = level_boxes_complement.begin();
+         for (BoxContainer::iterator b = level_boxes_complement.begin();
               b != level_boxes_complement.end(); ++b) {
-            Box complement = b();
+            Box complement = *b;
 
             // intersect patch box with level box complement
             Box patch_interior = patch->getBox();
@@ -589,8 +596,9 @@ int HierSumTest::checkNodeResult(
             /*
              * Iterate over nodes and check correctness of result.
              */
-            for (NodeIterator i(data_box); i; i++) {
-               NodeIndex node = i();  // i,j
+            NodeIterator iend(data_box, false);
+            for (NodeIterator i(data_box, true); i != iend; ++i) {
+               NodeIndex node = *i;  // i,j
                for (int d = 0; d < unode->getDepth(); d++) {
 
                   bool node_correct = false;
@@ -603,7 +611,7 @@ int HierSumTest::checkNodeResult(
 
                   if (!node_correct) {
                      tbox::pout << "BAD NODE = " << node_val << " at index "
-                                << i()
+                                << *i
                                 << " in L" << ln << " " << patch->getBox()
                                 << " depth = " << d << " should be "
                                 << correct_val << endl;
@@ -678,7 +686,8 @@ int HierSumTest::checkEdgeResult(
    }
 
    // loop over patches on level
-   for (PatchLevel::Iterator ip(level); ip; ip++) {
+   for (PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<Patch>& patch = *ip;
 
       boost::shared_ptr<EdgeData<double> > uedge(
@@ -807,7 +816,8 @@ void HierSumTest::initializeLevelData(
    /*
     * Set edge/node values to zero initially.
     */
-   for (PatchLevel::Iterator p0(level); p0; p0++) {
+   for (PatchLevel::iterator p0(level->begin());
+        p0 != level->end(); ++p0) {
       const boost::shared_ptr<Patch>& patch = *p0;
 
       boost::shared_ptr<NodeData<double> > unode(
@@ -826,7 +836,8 @@ void HierSumTest::initializeLevelData(
     * based on overlap with neighboring patches but this will be
     * in the next step).
     */
-   for (PatchLevel::Iterator p0(level); p0; p0++) {
+   for (PatchLevel::iterator p0(level->begin());
+        p0 != level->end(); ++p0) {
       const boost::shared_ptr<Patch>& patch = *p0;
 
       boost::shared_ptr<CellData<double> > ucell_node(
@@ -883,7 +894,8 @@ void HierSumTest::initializeLevelData(
       IntVector ratio(level->getRatioToCoarserLevel());
       fine_level_boxes.coarsen(ratio);
 
-      for (PatchLevel::Iterator p1(coarser_level); p1; p1++) {
+      for (PatchLevel::iterator p1(coarser_level->begin());
+      p1 != coarser_level->end(); ++p1) {
          const boost::shared_ptr<Patch>& cpatch = *p1;
 
          boost::shared_ptr<CellData<double> > ucell_node(
@@ -891,7 +903,7 @@ void HierSumTest::initializeLevelData(
             boost::detail::dynamic_cast_tag());
 
          Box cpbox = cpatch->getBox();
-         for (BoxContainer::Iterator fine_level_itr = fine_level_boxes.begin();
+         for (BoxContainer::iterator fine_level_itr = fine_level_boxes.begin();
               fine_level_itr != fine_level_boxes.end(); ++fine_level_itr) {
             Box setbox = cpbox * *fine_level_itr;
             if (!setbox.empty()) {
@@ -916,7 +928,8 @@ void HierSumTest::initializeLevelData(
                                 max_ghosts);
 
       level = hierarchy->getPatchLevel(level_number);
-      for (PatchLevel::Iterator p(level); p; p++) {
+      for (PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<Patch>& patch = *p;
          Box pbox = patch->getBox();
          const GlobalId global_id = patch->getGlobalId();
@@ -1047,8 +1060,9 @@ HierSumTest::setBoundaryConditions(
          shifted_pbox.shift(shift);
          fill_box = fill_box * shifted_pbox;
 
-         for (CellIterator ci(fill_box); ci; ci++) {
-            CellIndex cell = ci();
+         CellIterator ciend(fill_box, false);
+         for (CellIterator ci(fill_box, true); ci != ciend; ++ci) {
+            CellIndex cell = *ci;
             for (d = 0; d < ucell->getDepth(); d++) {
                (*ucell)(cell, d) = 1.0;
             }
@@ -1135,8 +1149,9 @@ HierSumTest::setBoundaryConditions(
       shifted_pbox.shift(shift);
       fill_box = fill_box * shifted_pbox;
 
-      for (CellIterator ci(fill_box); ci; ci++) {
-         CellIndex cell = ci();
+      CellIterator ciend(fill_box, false);
+      for (CellIterator ci(fill_box, true); ci != ciend; ++ci) {
+         CellIndex cell = *ci;
          for (d = 0; d < ucell->getDepth(); d++) {
             (*ucell)(cell, d) = 1.0;
          }
@@ -1151,8 +1166,9 @@ HierSumTest::setBoundaryConditions(
       Box fill_box = patch_geom->getBoundaryFillBox(node_bdry[i],
             pbox,
             ghost_cells);
-      for (CellIterator ci(fill_box); ci; ci++) {
-         CellIndex cell = ci();  //i,j
+      CellIterator ciend(fill_box, false);
+      for (CellIterator ci(fill_box, true); ci != ciend; ++ci) {
+         CellIndex cell = *ci;  //i,j
 
          for (d = 0; d < ucell->getDepth(); d++) {
             (*ucell)(cell, d) = 1.0;
@@ -1223,8 +1239,9 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
           *    4,5 - Z lower,upper
           */
          int loc_indx = face_bdry[i_box].getLocationIndex();
-         for (CellIterator ci(fill_box); ci; ci++) {
-            CellIndex boundary_cell = ci();
+         CellIterator ciend(fill_box, false);
+         for (CellIterator ci(fill_box, true); ci != ciend; ++ci) {
+            CellIndex boundary_cell = *ci;
             CellIndex interior = boundary_cell;
             if (loc_indx == 0) {
                interior(0) += 1;
@@ -1270,8 +1287,9 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
        *    2,3 - Ylo, Yhi
        */
       int loc_indx = edge_bdry[i].getLocationIndex();
-      for (CellIterator ci(fill_box); ci; ci++) {
-         CellIndex boundary_cell = ci();
+      CellIterator ciend(fill_box, false);
+      for (CellIterator ci(fill_box, true); ci != ciend; ++ci) {
+         CellIndex boundary_cell = *ci;
          CellIndex interior = boundary_cell;
          if (d_dim == tbox::Dimension(3)) {
             if (loc_indx == 0) {

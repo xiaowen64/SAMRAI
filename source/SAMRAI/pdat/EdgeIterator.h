@@ -28,7 +28,8 @@ namespace pdat {
  * \verbatim
  * hier::Box box;
  * ...
- * for (EdgeIterator c(box, axis); c; c++) {
+ * EdgeIterator cend(box, axis, false);
+ * for (EdgeIterator c(box, axis, true); c != cend; ++c) {
  *    // use index c of the box
  * }
  * \endverbatim
@@ -50,7 +51,8 @@ public:
     */
    EdgeIterator(
       const hier::Box& box,
-      const int axis);
+      const int axis,
+      bool begin);
 
    /**
     * Copy constructor for the edge iterator
@@ -85,43 +87,25 @@ public:
    }
 
    /**
-    * Extract the edge index corresponding to the iterator position in the box.
+    * Extract a pointer to the edge index corresponding to the iterator
+    * position in the box.
     */
-   const EdgeIndex&
-   operator () () const
+   const EdgeIndex*
+   operator -> () const
    {
-      return d_index;
+      return &d_index;
    }
 
    /**
-    * Return true if the iterator points to a valid index within the box.
+    * Pre-increment the iterator to point to the next index in the box.
     */
-   operator bool () const;
-
-#ifndef LACKS_BOOL_VOID_RESOLUTION
-   /**
-    * Return a non-NULL if the iterator points to a valid index within the box.
-    */
-   operator const void* () const
-   {
-      return EdgeIterator::operator bool () ? this : NULL;
-   }
-#endif
+   EdgeIterator&
+   operator ++ ();
 
    /**
-    * Return whether the iterator points to a valid index within the box.
-    * This operator mimics the !p operation applied to a pointer p.
+    * Post-increment the iterator to point to the next index in the box.
     */
-   bool
-   operator ! () const
-   {
-      return !EdgeIterator::operator bool ();
-   }
-
-   /**
-    * Increment the iterator to point to the next index in the box.
-    */
-   void
+   EdgeIterator
    operator ++ (
       int);
 

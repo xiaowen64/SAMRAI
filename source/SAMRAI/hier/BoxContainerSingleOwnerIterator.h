@@ -28,18 +28,9 @@ namespace hier {
  */
 class BoxContainerSingleOwnerIterator
 {
+friend class BoxContainer;
 
 public:
-   /*!
-    * @brief Constructor
-    *
-    * @param [i] container
-    * @param [i] owner_rank
-    */
-   BoxContainerSingleOwnerIterator(
-      const BoxContainer& container,
-      const int& owner_rank);
-
    //! @brief Destructor
    ~BoxContainerSingleOwnerIterator();
 
@@ -99,18 +90,6 @@ public:
    }
 
    /*!
-    * @brief Whether the iterator can be dereferenced.  When the
-    * iterator reaches its end, this returns false.
-    */
-   bool
-   isValid() const
-   {
-      return d_mapped_boxes != NULL &&
-             d_iter != d_mapped_boxes->end() &&
-             d_iter->getOwnerRank() == d_owner_rank;
-   }
-
-   /*!
     * @brief Pre-increment iterator.
     *
     * Pre-increment increment the iterator and returns the incremented
@@ -131,6 +110,18 @@ public:
 
 private:
    /*!
+    * @brief Constructor
+    *
+    * @param [i] container
+    * @param [i] owner_rank
+    * @param [i] begin
+    */
+   BoxContainerSingleOwnerIterator(
+      const BoxContainer& container,
+      const int& owner_rank,
+      bool begin);
+
+   /*!
     * @brief BoxContainer being iterated through.
     */
    const BoxContainer* d_mapped_boxes;
@@ -143,7 +134,7 @@ private:
    /*!
     * @brief The iterator.
     */
-   BoxContainer::ConstIterator d_iter;
+   BoxContainer::const_iterator d_iter;
 
 };
 

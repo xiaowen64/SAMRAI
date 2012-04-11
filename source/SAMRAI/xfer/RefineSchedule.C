@@ -1260,7 +1260,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
                      dst_mapped_box_mbid);
                has_base_box = true;
             }
-            for (hier::BoxContainer::Iterator b(sheared_coarse_interp_boxes);
+            for (hier::BoxContainer::iterator b(sheared_coarse_interp_boxes);
                  b != sheared_coarse_interp_boxes.end(); ++b) {
                const hier::Box& coarse_interp_mapped_box =
                   *coarse_interp_mapped_box_level.addBox(*b, ni->getBlockId());
@@ -1878,7 +1878,8 @@ RefineSchedule::fillPhysicalBoundaries(
    d_dst_level->setBoundaryBoxes();
 
    if (d_refine_patch_strategy) {
-      for (hier::PatchLevel::Iterator p(d_dst_level); p; p++) {
+      for (hier::PatchLevel::iterator p(d_dst_level->begin());
+           p != d_dst_level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch(*p);
          if (patch->getPatchGeometry()->intersectsPhysicalBoundary()) {
             d_refine_patch_strategy->
@@ -1923,16 +1924,19 @@ RefineSchedule::fillSingularityBoundaries(
 
             const hier::BoxContainer& sing_boxes =
                grid_geometry->getSingularityBoxContainer(block_id);
-            for (hier::BoxContainer::ConstIterator sb(sing_boxes);
+            for (hier::BoxContainer::const_iterator sb(sing_boxes);
                  sb != sing_boxes.end(); ++sb) {
 
-               hier::Box singularity(sb());
+               hier::Box singularity(*sb);
                singularity.refine(ratio);
 
+               const hier::BoxContainer& level_boxes(
+                  d_dst_level->getBoxLevel()->getBoxes());
                hier::BoxContainerSingleBlockIterator dst_local_iter(
-                  d_dst_level->getBoxLevel()->getBoxes(), block_id);
+                  level_boxes.begin(block_id));
 
-               for ( ; dst_local_iter.isValid(); dst_local_iter++) {
+               for ( ; dst_local_iter != level_boxes.end(block_id);
+                    ++dst_local_iter) {
 
                   const hier::BoxId& mapped_box_id =
                      dst_local_iter->getId();
@@ -2085,7 +2089,8 @@ RefineSchedule::copyScratchToDestination() const
 {
    TBOX_ASSERT(d_dst_level);
 
-   for (hier::PatchLevel::Iterator p(d_dst_level); p; p++) {
+   for (hier::PatchLevel::iterator p(d_dst_level->begin());
+        p != d_dst_level->end(); ++p) {
       const boost::shared_ptr<hier::Patch>& patch(*p);
 
       for (int iri = 0; iri < d_number_refine_items; iri++) {
@@ -2134,8 +2139,8 @@ RefineSchedule::refineScratchData(
     * destination patch and destination fill boxes.
     */
 
-   for ( hier::PatchLevel::Iterator crse_itr(*coarse_level);
-         crse_itr; ++crse_itr, overlap_iter++ )
+   for ( hier::PatchLevel::iterator crse_itr(coarse_level->begin());
+         crse_itr != coarse_level->end(); ++crse_itr, ++overlap_iter )
    {
       const hier::Box& crse_mapped_box = crse_itr->getBox();
       hier::Connector::ConstNeighborhoodIterator dst_nabrs =
@@ -2235,8 +2240,8 @@ RefineSchedule::computeRefineOverlaps(
     * destination patch and destination fill boxes.
     */
 
-   for ( hier::PatchLevel::Iterator crse_itr(*coarse_level);
-         crse_itr; ++crse_itr )
+   for ( hier::PatchLevel::iterator crse_itr(coarse_level->begin());
+         crse_itr != coarse_level->end(); ++crse_itr )
    {
       const hier::Box& coarse_mapped_box = crse_itr->getBox();
       hier::Connector::ConstNeighborhoodIterator fine_nabrs =
@@ -2423,7 +2428,7 @@ RefineSchedule::generateCommunicationSchedule(
             continue;
          }
 
-         for (hier::BoxContainer::ConstIterator
+         for (hier::BoxContainer::const_iterator
               ni = local_src_mapped_boxes.begin();
               ni != local_src_mapped_boxes.end(); ++ni) {
             const hier::Box& src_mapped_box = *ni;
@@ -2553,10 +2558,10 @@ RefineSchedule::generateCommunicationSchedule(
       if (unfilled_boxes_for_dst.size() > 0) {
          hier::Connector::NeighborhoodIterator base_box_itr =
             dst_to_unfilled->makeEmptyLocalNeighborhood(dst_mapped_box_id);
-         for (hier::BoxContainer::Iterator bi(unfilled_boxes_for_dst);
+         for (hier::BoxContainer::iterator bi(unfilled_boxes_for_dst);
               bi != unfilled_boxes_for_dst.end(); ++bi) {
 
-            hier::Box unfilled_mapped_box(bi(),
+            hier::Box unfilled_mapped_box(*bi,
                                           ++last_unfilled_local_id,
                                           dst_mapped_box.getOwnerRank());
             TBOX_ASSERT(unfilled_mapped_box.getBlockId() == dst_block_id);
@@ -2753,10 +2758,10 @@ RefineSchedule::findEnconUnfilledBoxes(
                hier::Connector::NeighborhoodIterator base_box_itr =
                   encon_to_unfilled_encon->makeEmptyLocalNeighborhood(
                      encon_mapped_box_id);
-               for (hier::BoxContainer::ConstIterator bi(unfilled_boxes);
+               for (hier::BoxContainer::const_iterator bi(unfilled_boxes);
                     bi != unfilled_boxes.end(); ++bi) {
 
-                  hier::Box unfilled_box(bi());
+                  hier::Box unfilled_box(*bi);
                   grid_geometry->transformBox(
                      unfilled_box,
                      d_dst_level->getRatioToLevelZero(),
@@ -3052,11 +3057,12 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
           * Test to see if there are any local destination boxes on this
           * block.  Move on to next block if not.
           */
+         const hier::BoxContainer& level_boxes(
+            d_dst_level->getBoxLevel()->getBoxes());
          hier::BoxContainerSingleBlockIterator dst_test_iter(
-            d_dst_level->getBoxLevel()->getBoxes(),
-            block_id);
+            level_boxes.begin(block_id));
 
-         if (!dst_test_iter.isValid()) {
+         if (dst_test_iter == level_boxes.end(block_id)) {
             continue;
          }
 
@@ -3109,10 +3115,10 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                    * at enhanced connectivity.
                    */
                   hier::BoxContainerSingleBlockIterator dst_local_iter(
-                     d_dst_level->getBoxLevel()->getBoxes(),
-                     block_id);
+                     level_boxes.begin(block_id));
 
-                  for ( ; dst_local_iter.isValid(); dst_local_iter++) {
+                  for ( ; dst_local_iter != level_boxes.end(block_id);
+                       ++dst_local_iter) {
 
                      const hier::BoxId& mapped_box_id =
                         dst_local_iter->getId();
@@ -3150,9 +3156,9 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                            hier::Connector::NeighborhoodIterator base_box_itr =
                               d_dst_to_encon.makeEmptyLocalNeighborhood(
                                  mapped_box_id);
-                           for (hier::BoxContainer::Iterator bi(encon_test_list);
+                           for (hier::BoxContainer::iterator bi(encon_test_list);
                                 bi != encon_test_list.end(); ++bi) {
-                              hier::Box encon_box(bi());
+                              hier::Box encon_box(*bi);
 
                               transformation.inverseTransform(encon_box);
 
@@ -3721,9 +3727,9 @@ RefineSchedule::constructScheduleTransactions(
             transaction_dst_mapped_box.setBlockId(src_mapped_box.getBlockId());
          } else {
             int max_nbr_size = 0;
-            for (hier::BoxContainer::Iterator en(encon_nbr_choices);
+            for (hier::BoxContainer::iterator en(encon_nbr_choices);
                  en != encon_nbr_choices.end(); ++en) {
-               const int box_size = (*en).size();
+               const int box_size = en->size();
                if (box_size > max_nbr_size) {
                   max_nbr_size = box_size;
                   transaction_dst_mapped_box = *en;
@@ -3758,7 +3764,7 @@ RefineSchedule::constructScheduleTransactions(
 
       const hier::IntVector& dst_gcw = dst_pdf->getGhostCellWidth();
 
-      hier::BoxContainer::Iterator box_itr(d_src_masks);
+      hier::BoxContainer::iterator box_itr(d_src_masks);
       int box_num = 0;
       for (BoxNeighborhoodCollection::ConstNeighborIterator bi =
               dst_to_fill_on_src_proc.begin(dst_to_fill_iter);
@@ -3892,7 +3898,7 @@ RefineSchedule::constructScheduleTransactions(
              * Iterate over the fill boxes and create transactions
              * for each box that has a non-empty overlap.
              */
-            hier::BoxContainer::Iterator itr(d_src_masks);
+            hier::BoxContainer::iterator itr(d_src_masks);
             for (int i = 0; i < box_num; i++, ++itr) {
 
                /*
@@ -4212,9 +4218,9 @@ RefineSchedule::constructScheduleTransactions(
             transaction_dst_mapped_box.setEmpty();
          } else {
             int max_nbr_size = 0;
-            for (hier::BoxContainer::Iterator en(encon_nbr_choices);
+            for (hier::BoxContainer::iterator en(encon_nbr_choices);
                  en != encon_nbr_choices.end(); ++en) {
-               const int box_size = (*en).size();
+               const int box_size = en->size();
                if (box_size > max_nbr_size) {
                   max_nbr_size = box_size;
                   transaction_dst_mapped_box = *en;
@@ -4249,7 +4255,7 @@ RefineSchedule::constructScheduleTransactions(
 
       const hier::IntVector& dst_gcw = dst_pdf->getGhostCellWidth();
 
-      hier::BoxContainer::Iterator box_itr(d_src_masks);
+      hier::BoxContainer::iterator box_itr(d_src_masks);
       int box_num = 0;
       for (hier::Connector::ConstNeighborIterator bi = dst_to_fill.begin(dst_itr);
            bi != dst_to_fill.end(dst_itr); ++bi) {
@@ -4382,7 +4388,7 @@ RefineSchedule::constructScheduleTransactions(
              * Iterate over the fill boxes and create transactions
              * for each box that has a non-empty overlap.
              */
-            hier::BoxContainer::Iterator itr(d_src_masks);
+            hier::BoxContainer::iterator itr(d_src_masks);
             for (int i = 0; i < box_num; i++, ++itr) {
 
                /*

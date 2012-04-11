@@ -339,9 +339,9 @@ EdgeData<TYPE>::copyWithRotation(
 
       hier::Box edge_rotatebox(EdgeGeometry::toEdgeBox(rotatebox, i));
 
-      for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
+      for (hier::BoxContainer::const_iterator bi(overlap_boxes);
            bi != overlap_boxes.end(); ++bi) {
-         const hier::Box& overlap_box = bi();
+         const hier::Box& overlap_box = *bi;
 
          const hier::Box copybox(edge_rotatebox * overlap_box);
 
@@ -349,9 +349,10 @@ EdgeData<TYPE>::copyWithRotation(
             const int depth = ((getDepth() < src.getDepth()) ?
                                getDepth() : src.getDepth());
 
-            for (hier::Box::Iterator ci(copybox); ci; ci++) {
+            hier::Box::iterator ciend(copybox, false);
+            for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
 
-               EdgeIndex dst_index(ci(), 0, 0);
+               EdgeIndex dst_index(*ci, 0, 0);
                dst_index.setAxis(i);
                EdgeIndex src_index(dst_index);
                EdgeGeometry::transform(src_index, back_trans);
@@ -503,9 +504,9 @@ EdgeData<TYPE>::packWithRotation(
       hier::Box edge_rotatebox(EdgeGeometry::toEdgeBox(rotatebox, i));
 
       int buf_count = 0;
-      for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
+      for (hier::BoxContainer::const_iterator bi(overlap_boxes);
            bi != overlap_boxes.end(); ++bi) {
-         const hier::Box& overlap_box = bi();
+         const hier::Box& overlap_box = *bi;
 
          const hier::Box copybox(edge_rotatebox * overlap_box);
 
@@ -513,9 +514,10 @@ EdgeData<TYPE>::packWithRotation(
 
             for (int d = 0; d < depth; d++) {
 
-               for (hier::Box::Iterator ci(copybox); ci; ci++) {
+               hier::Box::iterator ciend(copybox, false);
+               for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
 
-                  EdgeIndex src_index(ci(), 0, 0);
+                  EdgeIndex src_index(*ci, 0, 0);
                   src_index.setAxis(i);
                   EdgeGeometry::transform(src_index, back_trans);
 
@@ -707,8 +709,9 @@ EdgeData<TYPE>::printAxis(
    TBOX_ASSERT((axis >= 0) && (axis < getDim().getValue()));
 
    os.precision(prec);
-   for (EdgeIterator i(box, axis); i; i++) {
-      os << "array" << i() << " = " << d_data[axis](i(), depth)
+   EdgeIterator iend(box, axis, false);
+   for (EdgeIterator i(box, axis, true); i != iend; ++i) {
+      os << "array" << *i << " = " << d_data[axis](*i, depth)
          << std::endl << std::flush;
    }
 }

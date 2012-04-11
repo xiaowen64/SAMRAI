@@ -199,8 +199,8 @@ void FaceDataTest::setConservativeData(
    const hier::BoxContainer& domain =
       level->getPhysicalDomain(hier::BlockId::zero());
    int ncells = 0;
-   for (hier::BoxContainer::ConstIterator i(domain); i != domain.end(); ++i) {
-      ncells += i().size();
+   for (hier::BoxContainer::const_iterator i(domain); i != domain.end(); ++i) {
+      ncells += i->size();
    }
 
    const int depth = data->getDepth();
@@ -218,17 +218,18 @@ void FaceDataTest::setConservativeData(
        */
 
       for (int axis = 0; axis < d_dim.getValue(); axis++) {
-         for (pdat::CellIterator ci(sbox); ci; ci++) {
+         pdat::CellIterator ciend(sbox, false);
+         for (pdat::CellIterator ci(sbox, true); ci != ciend; ++ci) {
             double value = 0.0;
             for (i = 0; i < d_dim.getValue(); i++) {
                if (i != axis) {
-                  value += (double)(ci() (i));
+                  value += (double)((*ci)(i));
                }
             }
             value /= ncells;
             for (int face = pdat::FaceIndex::Lower;
                  face <= pdat::FaceIndex::Upper; face++) {
-               pdat::FaceIndex si(ci(), axis, face);
+               pdat::FaceIndex si(*ci, axis, face);
                for (int d = 0; d < depth; d++) {
                   (*data)(si, d) = value;
                }
@@ -267,11 +268,12 @@ void FaceDataTest::setConservativeData(
       for (int axis = 0; axis < d_dim.getValue(); axis++) {
          hier::IntVector ci(ratio.getDim());
          hier::IntVector del(ratio.getDim());
-         for (pdat::CellIterator fi(sbox); fi; fi++) {
+         pdat::CellIterator fiend(sbox, false);
+         for (pdat::CellIterator fi(sbox, true); fi != fiend; ++fi) {
             double value = 0.0;
             for (i = 0; i < d_dim.getValue(); i++) {
                if (i != axis) {
-                  int findx = fi() (i);
+                  int findx = (*fi)(i);
                   ci(i) = ((findx < 0) ? (findx + 1) / ratio(i) - 1
                            : findx / ratio(i));
                   del(i) = (int)delta[i * max_ratio + findx - ci(i) * ratio(i)];
@@ -288,7 +290,7 @@ void FaceDataTest::setConservativeData(
 
             for (int face = pdat::FaceIndex::Lower;
                  face <= pdat::FaceIndex::Upper; face++) {
-               pdat::FaceIndex si(fi(), axis, face);
+               pdat::FaceIndex si(*fi, axis, face);
                for (int d = 0; d < depth; d++) {
                   (*data)(si, d) = value;
                }
@@ -358,7 +360,8 @@ void FaceDataTest::checkPatchInteriorData(
 
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       const pdat::FaceIndex loweri(interior.lower(), axis, 0);
-      for (pdat::FaceIterator fi(interior, axis); fi; fi++) {
+      pdat::FaceIterator fiend(interior, axis, false);
+      for (pdat::FaceIterator fi(interior, axis, true); fi != fiend; ++fi) {
 
          /*
           * Compute spatial location of face and
@@ -366,36 +369,36 @@ void FaceDataTest::checkPatchInteriorData(
           */
 
          if (axis == 0) {
-            x = lowerx[0] + dx[0] * (fi() (0) - loweri(0));
+            x = lowerx[0] + dx[0] * ((*fi)(0) - loweri(0));
             if (d_dim > tbox::Dimension(1)) {
-               y = lowerx[1] + dx[1] * (fi() (1) - loweri(1) + 0.5);
+               y = lowerx[1] + dx[1] * ((*fi)(1) - loweri(1) + 0.5);
             }
             if (d_dim > tbox::Dimension(2)) {
-               z = lowerx[2] + dx[2] * (fi() (2) - loweri(2) + 0.5);
+               z = lowerx[2] + dx[2] * ((*fi)(2) - loweri(2) + 0.5);
             }
          } else if (axis == 1) {
             x = lowerx[0] + dx[0]
-               * (fi() (d_dim.getValue() - 1) - loweri(d_dim.getValue() - 1) + 0.5);
+               * ((*fi)(d_dim.getValue() - 1) - loweri(d_dim.getValue() - 1) + 0.5);
             if (d_dim > tbox::Dimension(1)) {
-               y = lowerx[1] + dx[1] * (fi() (0) - loweri(0));
+               y = lowerx[1] + dx[1] * ((*fi)(0) - loweri(0));
             }
             if (d_dim > tbox::Dimension(2)) {
-               z = lowerx[2] + dx[2] * (fi() (1) - loweri(1) + 0.5);
+               z = lowerx[2] + dx[2] * ((*fi)(1) - loweri(1) + 0.5);
             }
          } else if (axis == 2) {
-            x = lowerx[0] + dx[0] * (fi() (1) - loweri(1) + 0.5);
+            x = lowerx[0] + dx[0] * ((*fi)(1) - loweri(1) + 0.5);
             if (d_dim > tbox::Dimension(1)) {
-               y = lowerx[1] + dx[1] * (fi() (2) - loweri(2) + 0.5);
+               y = lowerx[1] + dx[1] * ((*fi)(2) - loweri(2) + 0.5);
             }
             if (d_dim > tbox::Dimension(2)) {
-               z = lowerx[2] + dx[2] * (fi() (0) - loweri(0));
+               z = lowerx[2] + dx[2] * ((*fi)(0) - loweri(0));
             }
          }
 
          double value;
          for (int d = 0; d < depth; d++) {
             value = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
-            if (!(tbox::MathUtilities<double>::equalEps((*data)(fi(),
+            if (!(tbox::MathUtilities<double>::equalEps((*data)(*fi,
                                                                 d), value))) {
                tbox::perr << "FAILED: -- patch interior not properly filled"
                           << endl;
@@ -507,7 +510,8 @@ void FaceDataTest::setLinearData(
 
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       const pdat::FaceIndex loweri(patch.getBox().lower(), axis, 0);
-      for (pdat::FaceIterator fi(sbox, axis); fi; fi++) {
+      pdat::FaceIterator fiend(sbox, axis, false);
+      for (pdat::FaceIterator fi(sbox, axis, true); fi != fiend; ++fi) {
 
          /*
           * Compute spatial location of cell center and
@@ -515,34 +519,34 @@ void FaceDataTest::setLinearData(
           */
 
          if (axis == 0) {
-            x = lowerx[0] + dx[0] * (fi() (0) - loweri(0));
+            x = lowerx[0] + dx[0] * ((*fi)(0) - loweri(0));
             if (d_dim > tbox::Dimension(1)) {
-               y = lowerx[1] + dx[1] * (fi() (1) - loweri(1) + 0.5);
+               y = lowerx[1] + dx[1] * ((*fi)(1) - loweri(1) + 0.5);
             }
             if (d_dim > tbox::Dimension(2)) {
-               z = lowerx[2] + dx[2] * (fi() (2) - loweri(2) + 0.5);
+               z = lowerx[2] + dx[2] * ((*fi)(2) - loweri(2) + 0.5);
             }
          } else if (axis == 1) {
             x = lowerx[0] + dx[0]
-               * (fi() (d_dim.getValue() - 1) - loweri(d_dim.getValue() - 1) + 0.5);
+               * ((*fi)(d_dim.getValue() - 1) - loweri(d_dim.getValue() - 1) + 0.5);
             if (d_dim > tbox::Dimension(1)) {
-               y = lowerx[1] + dx[1] * (fi() (0) - loweri(0));
+               y = lowerx[1] + dx[1] * ((*fi)(0) - loweri(0));
             }
             if (d_dim > tbox::Dimension(2)) {
-               z = lowerx[2] + dx[2] * (fi() (1) - loweri(1) + 0.5);
+               z = lowerx[2] + dx[2] * ((*fi)(1) - loweri(1) + 0.5);
             }
          } else if (axis == 2) {
-            x = lowerx[0] + dx[0] * (fi() (1) - loweri(1) + 0.5);
+            x = lowerx[0] + dx[0] * ((*fi)(1) - loweri(1) + 0.5);
             if (d_dim > tbox::Dimension(1)) {
-               y = lowerx[1] + dx[1] * (fi() (2) - loweri(2) + 0.5);
+               y = lowerx[1] + dx[1] * ((*fi)(2) - loweri(2) + 0.5);
             }
             if (d_dim > tbox::Dimension(2)) {
-               z = lowerx[2] + dx[2] * (fi() (0) - loweri(0));
+               z = lowerx[2] + dx[2] * ((*fi)(0) - loweri(0));
             }
          }
 
          for (int d = 0; d < depth; d++) {
-            (*data)(fi(),
+            (*data)(*fi,
                     d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
          }
 
@@ -603,15 +607,16 @@ bool FaceDataTest::verifyResults(
          }
 
          for (int id = 0; id < d_dim.getValue(); id++) {
-            for (pdat::FaceIterator si(dbox, id); si; si++) {
-               double correct = (*solution)(si());
+            pdat::FaceIterator siend(dbox, id, false);
+            for (pdat::FaceIterator si(dbox, id, true); si != siend; ++si) {
+               double correct = (*solution)(*si);
                for (int d = 0; d < depth; d++) {
-                  double result = (*face_data)(si(), d);
+                  double result = (*face_data)(*si, d);
                   if (!tbox::MathUtilities<double>::equalEps(correct,
                          result)) {
                      test_failed = true;
                      tbox::perr << "Test FAILED: ...."
-                                << " : face_data index = " << si() << endl;
+                                << " : face_data index = " << *si << endl;
                      tbox::perr << "    hier::Variable = "
                                 << d_variable_src_name[i]
                                 << " : depth index = " << d << endl;

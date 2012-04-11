@@ -829,13 +829,14 @@ static void dumpMatlabData1dPencil(
          level_pencil_box.refine(level->getRatioToLevelZero());
       }
 
-      for (hier::PatchLevel::Iterator i(level); i; i++) {
+      for (hier::PatchLevel::iterator i(level->begin());
+           i != level->end(); ++i) {
          const boost::shared_ptr<hier::Patch>& patch = *i;
          hier::Box pbox = patch->getBox();
 
-         for (hier::BoxContainer::Iterator b(outboxes[l5]);
+         for (hier::BoxContainer::iterator b(outboxes[l5]);
               b != outboxes[l5].end(); ++b) {
-            const hier::Box box = b() * pbox * level_pencil_box;
+            const hier::Box box = (*b) * pbox * level_pencil_box;
 
             euler_model->writeData1dPencil(patch,
                box,

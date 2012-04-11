@@ -282,9 +282,10 @@ int main(
          Index hi(v);
 
          Box box1(lo, hi, BlockId(0));
-         for (Box::Iterator bi(box1); bi; bi++) {
+         hier::Box::iterator biend(box1, false);
+         for (Box::iterator bi(box1, true); bi != biend; ++bi) {
 
-            Index idx = bi();
+            Index idx = *bi;
 
             idx_data.addItemPointer(idx, new Item);
 
@@ -309,9 +310,10 @@ int main(
          Index hi(v);
 
          Box box1(lo, hi, BlockId(0));
-         for (Box::Iterator bi(box1); bi; bi++) {
+         hier::Box::iterator biend(box1, false);
+         for (Box::iterator bi(box1, true); bi != biend; ++bi) {
 
-            Index idx = bi();
+            Index idx = *bi;
 
             idx_data.addItemPointer(idx, new Item);
 
@@ -339,8 +341,9 @@ int main(
          Index hi(v);
 
          Box box1(lo, hi, BlockId(0));
-         for (Box::Iterator bi(box1); bi; bi++) {
-            src.addItemPointer(bi(), new Item);
+         hier::Box::iterator biend(box1, false);
+         for (Box::iterator bi(box1, true); bi != biend; ++bi) {
+            src.addItemPointer(*bi, new Item);
          }
 
          assert(src.getNumberOfItems() == box1.size());
@@ -565,7 +568,9 @@ int main(
          data.addItemPointer(idx_item3, new Item);
 
          int count = 0;
-         for (IndexIterator<Item, pdat::CellGeometry> it(data); it; it++) {
+         IndexIterator<Item, pdat::CellGeometry> itend(data, false);
+         for (IndexIterator<Item, pdat::CellGeometry> it(data, true);
+              it != itend; ++it) {
             count++;
          }
          assert(3 == count);

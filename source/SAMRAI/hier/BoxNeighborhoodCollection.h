@@ -302,6 +302,23 @@ class BoxNeighborhoodCollection
             }
 
             /*!
+             * @brief Post-increment iterator to point to BoxId of the base Box
+             * of next neighborhood in the collection.
+             */
+            ConstIterator
+            operator ++ (
+               int)
+            {
+               // Go to the next base Box.
+               ConstIterator tmp = *this;
+               if (d_base_boxes_itr != d_collection->d_base_boxes.end()) {
+                  ++d_base_boxes_itr;
+                  ++d_itr;
+               }
+               return tmp;
+            }
+
+            /*!
              * @brief Pre-increment iterator to point to BoxId of the base Box
              * of next neighborhood in the collection.
              */
@@ -443,6 +460,23 @@ class BoxNeighborhoodCollection
             operator -> () const
             {
                return d_itr->first;
+            }
+
+            /*!
+             * @brief Post-increment iterator to point to BoxId of the base Box
+             * of next neighborhood in the collection.
+             */
+            Iterator
+            operator ++ (
+               int)
+            {
+               // Go to the next base Box.
+               Iterator tmp = *this;
+               if (d_base_boxes_itr != d_collection->d_base_boxes.end()) {
+                  ++d_base_boxes_itr;
+                  ++d_itr;
+               }
+               return tmp;
             }
 
             /*!
@@ -613,13 +647,28 @@ class BoxNeighborhoodCollection
             }
 
             /*!
+             * @brief Post-increment iterator to point to the Box which is the
+             * next neighbor of the base Box.
+             */
+            ConstNeighborIterator
+            operator ++ (
+               int)
+            {
+               ConstNeighborIterator tmp = *this;
+               if (d_itr != d_collection->d_adj_list.find(d_base_box)->second.end()) {
+                  ++d_itr;
+               }
+               return tmp;
+            }
+
+            /*!
              * @brief Pre-increment iterator to point to the Box which is the
              * next neighbor of the base Box.
              */
             ConstNeighborIterator&
             operator ++ ()
             {
-              if (d_itr != d_collection->d_adj_list.find(d_base_box)->second.end()) {
+               if (d_itr != d_collection->d_adj_list.find(d_base_box)->second.end()) {
                   ++d_itr;
                }
                return *this;
@@ -741,6 +790,21 @@ class BoxNeighborhoodCollection
             operator -> () const
             {
                return *d_itr;
+            }
+
+            /*!
+             * @brief Post-increment iterator to point to the Box which is the
+             * next neighbor of the base Box.
+             */
+            NeighborIterator
+            operator ++ (
+               int)
+            {
+               NeighborIterator tmp = *this;
+               if (d_itr != d_collection->d_adj_list.find(d_base_box)->second.end()) {
+                  ++d_itr;
+               }
+               return tmp;
             }
 
             /*!

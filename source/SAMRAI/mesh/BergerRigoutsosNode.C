@@ -370,8 +370,8 @@ BergerRigoutsosNode::clusterAndComputeRelationships()
        */
       const BoxContainer& tag_mapped_boxes =
          d_common->tag_mapped_box_level->getBoxes();
-      for (hier::RealBoxConstIterator ni(tag_mapped_boxes); ni.isValid();
-           ++ni) {
+      for (hier::RealBoxConstIterator ni(tag_mapped_boxes.realBegin());
+           ni != tag_mapped_boxes.realEnd(); ++ni) {
          d_common->tag_to_new->makeEmptyLocalNeighborhood(ni->getId());
       }
       TBOX_ASSERT(
@@ -1666,7 +1666,8 @@ BergerRigoutsosNode::makeLocalTagHistogram()
     * Accumulate tag counts in the histogram variable.
     */
    const hier::PatchLevel& tag_level = *d_common->tag_level;
-   for (hier::PatchLevel::Iterator ip(tag_level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(tag_level.begin());
+        ip != tag_level.end(); ++ip) {
       hier::Patch& patch = **ip;
 
       const hier::BlockId& block_id = patch.getBox().getBlockId();
@@ -1683,7 +1684,9 @@ BergerRigoutsosNode::makeLocalTagHistogram()
 
             pdat::CellData<int>& tag_data = *tag_data_;
 
-            for (pdat::CellIterator ci(intersection); ci; ci++) {
+            pdat::CellIterator ciend(intersection, false);
+            for (pdat::CellIterator ci(intersection, true);
+                 ci != ciend; ++ci) {
                if (tag_data(*ci) == d_common->tag_val) {
                   const hier::IntVector& idx = *ci;
                   for (int d = 0; d < d_dim.getValue(); ++d) {
@@ -2336,7 +2339,8 @@ BergerRigoutsosNode::countOverlapWithLocalPatches()
    lft_overlap = rht_overlap = 0;
 
    const hier::PatchLevel& tag_level = *d_common->tag_level;
-   for (hier::PatchLevel::Iterator ip(tag_level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(tag_level.begin());
+        ip != tag_level.end(); ++ip) {
 
       const hier::BlockId& block_id = (*ip)->getBox().getBlockId();
 
@@ -2584,7 +2588,8 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
    const BoxContainer& tag_mapped_boxes =
       d_common->tag_mapped_box_level->getBoxes();
 
-   for (hier::RealBoxConstIterator ni(tag_mapped_boxes); ni.isValid(); ++ni) {
+   for (hier::RealBoxConstIterator ni(tag_mapped_boxes.realBegin());
+        ni != tag_mapped_boxes.realEnd(); ++ni) {
 
       const hier::Box& tag_mapped_box = *ni;
 

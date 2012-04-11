@@ -477,17 +477,17 @@ CoarsenSchedule::generateScheduleNSquared()
    const hier::ProcessorMapping& src_mapping =
       d_temp_crse_level->getProcessorMapping();
 
-   hier::BoxContainer::ConstIterator crse_itr_dp(d_crse_level->getBoxes());
-   for (int dp = 0; dp < dst_npatches; dp++, crse_itr_dp++) {
+   hier::BoxContainer::const_iterator crse_itr_dp(d_crse_level->getBoxes());
+   for (int dp = 0; dp < dst_npatches; dp++, ++crse_itr_dp) {
 
       const hier::Box dst_mapped_box(*crse_itr_dp,
                                      hier::LocalId(dp),
                                      d_crse_level->getProcessorMapping().
                                      getProcessorAssignment(dp));
 
-      hier::BoxContainer::ConstIterator crse_itr_sp(
+      hier::BoxContainer::const_iterator crse_itr_sp(
          d_temp_crse_level->getBoxes());
-      for (int sp = 0; sp < src_npatches; sp++, crse_itr_sp++) {
+      for (int sp = 0; sp < src_npatches; sp++, ++crse_itr_sp) {
 
          const hier::Box src_mapped_box(
             *crse_itr_sp,
@@ -549,7 +549,7 @@ CoarsenSchedule::generateScheduleDLBG()
        * Construct transactions for data going from local source mapped_boxes
        * to remote coarse mapped_boxes.
        */
-      for (hier::BoxContainer::ConstIterator ni =
+      for (hier::BoxContainer::const_iterator ni =
               local_temp_mapped_boxes.begin();
            ni != local_temp_mapped_boxes.end(); ++ni) {
          const hier::Box& temp_mapped_box = *ni;
@@ -957,7 +957,8 @@ CoarsenSchedule::coarsenSourceData(
     * Loop over all local patches (fine and temp have the same mapping)
     */
 
-   for (hier::PatchLevel::Iterator p(d_fine_level); p; p++) {
+   for (hier::PatchLevel::iterator p(d_fine_level->begin());
+        p != d_fine_level->end(); ++p) {
       const boost::shared_ptr<hier::Patch>& fine_patch = *p;
       boost::shared_ptr<hier::Patch> temp_patch(
          d_temp_crse_level->getPatch(fine_patch->getGlobalId()));

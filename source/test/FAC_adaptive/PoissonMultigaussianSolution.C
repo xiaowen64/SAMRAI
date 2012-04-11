@@ -171,10 +171,11 @@ void PoissonMultigaussianSolution::setGridData(
       for (j = 0; j < d_dim.getValue(); ++j) {
          sl[j] = xl[j] + 0.5 * h[j];
       }
-      pdat::CellData<double>::Iterator iter(patch.getBox());
+      pdat::CellData<double>::Iterator iter(patch.getBox(), true);
+      pdat::CellData<double>::Iterator iterend(patch.getBox(), false);
       if (d_dim == tbox::Dimension(2)) {
          double x, y;
-         for ( ; iter; iter++) {
+         for ( ; iter != iterend; ++iter) {
             const pdat::CellIndex& index = *iter;
             x = sl[0] + (index[0] - il[0]) * h[0];
             y = sl[1] + (index[1] - il[1]) * h[1];
@@ -183,7 +184,7 @@ void PoissonMultigaussianSolution::setGridData(
          }
       } else if (d_dim == tbox::Dimension(3)) {
          double x, y, z;
-         for ( ; iter; iter++) {
+         for ( ; iter != iterend; ++iter) {
             const pdat::CellIndex& index = *iter;
             x = sl[0] + (index[0] - il[0]) * h[0];
             y = sl[1] + (index[1] - il[1]) * h[1];
@@ -244,15 +245,19 @@ void PoissonMultigaussianSolution::setBcCoefs(
    hier::Index upper = box.upper();
 
    if (d_dim == tbox::Dimension(2)) {
-      hier::BoxIterator boxit(acoef_data ?
-                              acoef_data->getBox() : gcoef_data->getBox());
+      hier::Box::iterator boxit(acoef_data ?
+                                acoef_data->getBox() : gcoef_data->getBox(),
+                                true);
+      hier::Box::iterator boxitend(acoef_data ?
+                                   acoef_data->getBox() : gcoef_data->getBox(),
+                                   false);
       int i, j;
       double x, y;
       switch (bdry_box.getLocationIndex()) {
          case 0:
             // min i edge
             x = xlo[0];
-            for ( ; boxit; boxit++) {
+            for ( ; boxit != boxitend; ++boxit) {
                j = (*boxit)[1];
                y = xlo[1] + dx[1] * (j - patch_box.lower()[1] + 0.5);
                if (acoef_data) (*acoef_data)(*boxit, 0) = 1.0;
@@ -263,7 +268,7 @@ void PoissonMultigaussianSolution::setBcCoefs(
          case 1:
             // max i edge
             x = xup[0];
-            for ( ; boxit; boxit++) {
+            for ( ; boxit != boxitend; ++boxit) {
                j = (*boxit)[1];
                y = xlo[1] + dx[1] * (j - patch_box.lower()[1] + 0.5);
                if (acoef_data) (*acoef_data)(*boxit, 0) = 1.0;
@@ -274,7 +279,7 @@ void PoissonMultigaussianSolution::setBcCoefs(
          case 2:
             // min j edge
             y = xlo[1];
-            for ( ; boxit; boxit++) {
+            for ( ; boxit != boxitend; ++boxit) {
                i = (*boxit)[0];
                x = xlo[1] + dx[1] * (i - patch_box.lower()[1] + 0.5);
                if (acoef_data) (*acoef_data)(*boxit, 0) = 1.0;
@@ -285,7 +290,7 @@ void PoissonMultigaussianSolution::setBcCoefs(
          case 3:
             // max j edge
             y = xup[1];
-            for ( ; boxit; boxit++) {
+            for ( ; boxit != boxitend; ++boxit) {
                i = (*boxit)[0];
                x = xlo[1] + dx[1] * (i - patch_box.lower()[1] + 0.5);
                if (acoef_data) (*acoef_data)(*boxit, 0) = 1.0;

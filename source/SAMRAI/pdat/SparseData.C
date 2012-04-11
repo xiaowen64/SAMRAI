@@ -329,11 +329,11 @@ SparseData<BOX_GEOMETRY>::copy(
    const hier::BoxContainer& box_list = tmp_overlap->getDestinationBoxContainer();
    const hier::Box& src_ghost_box = tmp_src->getGhostBox();
 
-   for (hier::BoxContainer::ConstIterator overlap_box(box_list);
+   for (hier::BoxContainer::const_iterator overlap_box(box_list);
         overlap_box != box_list.end(); ++overlap_box) {
 
-      const hier::Box& dst_box = overlap_box();
-      const hier::Box src_box(hier::Box::shift(overlap_box(), -src_offset));
+      const hier::Box& dst_box = *overlap_box;
+      const hier::Box src_box(hier::Box::shift(*overlap_box, -src_offset));
       _removeInsideBox(dst_box);
 
       typename IndexMap::const_iterator src_index_map_iter =
@@ -350,7 +350,7 @@ SparseData<BOX_GEOMETRY>::copy(
 
          } // if (src_ghost_box.contains(...
       } // for (; src_index_map_iter != ...
-   } // for (hier::BoxContainer::Iterator overlap_box(...
+   } // for (hier::BoxContainer::const_iterator overlap_box(...
 }
 
 /**********************************************************************
@@ -397,11 +397,11 @@ SparseData<BOX_GEOMETRY>::getDataStreamSize(
 
    // first count up the number of items that we'll need to deal
    // with
-   for (hier::BoxContainer::ConstIterator overlap_box(boxes);
+   for (hier::BoxContainer::const_iterator overlap_box(boxes);
         overlap_box != boxes.end(); ++overlap_box) {
 
       const hier::Box& box = hier::PatchData::getBox()
-         * hier::Box::shift(overlap_box(), -(tmp_overlap->getSourceOffset()));
+         * hier::Box::shift(*overlap_box, -(tmp_overlap->getSourceOffset()));
 
       typename IndexMap::const_iterator iter = d_index_to_attribute_map.begin();
       typename IndexMap::const_iterator iend = d_index_to_attribute_map.end();
@@ -490,17 +490,17 @@ SparseData<BOX_GEOMETRY>::packStream(
    int num_items = 0;
    int num_attributes = 0;
 
-   for (hier::BoxContainer::ConstIterator overlap_box(boxes);
+   for (hier::BoxContainer::const_iterator overlap_box(boxes);
         overlap_box != boxes.end(); ++overlap_box) {
       hier::Box box = hier::PatchData::getBox()
-         * hier::Box::shift(overlap_box(), -(tmp_overlap->getSourceOffset()));
+         * hier::Box::shift(*overlap_box, -(tmp_overlap->getSourceOffset()));
 
       typename IndexMap::const_iterator iter = d_index_to_attribute_map.begin();
       typename IndexMap::const_iterator iend = d_index_to_attribute_map.end();
 
       for ( ; iter != iend; ++iter) {
          if (box.contains(iter->first)) {
-            num_items++;
+            ++num_items;
             num_attributes += static_cast<int>(iter->second.size());
          }
       }
@@ -554,11 +554,11 @@ SparseData<BOX_GEOMETRY>::packStream(
    }
 
    // pack the individual items
-   for (hier::BoxContainer::ConstIterator overlap_box(boxes);
-        overlap_box != boxes.end(); overlap_box++) {
+   for (hier::BoxContainer::const_iterator overlap_box(boxes);
+        overlap_box != boxes.end(); ++overlap_box) {
 
       hier::Box box = hier::PatchData::getBox()
-         * hier::Box::shift(overlap_box(), -(tmp_overlap->getSourceOffset()));
+         * hier::Box::shift(*overlap_box, -(tmp_overlap->getSourceOffset()));
 
       typename IndexMap::const_iterator index_map_iter =
          d_index_to_attribute_map.begin();
@@ -573,7 +573,7 @@ SparseData<BOX_GEOMETRY>::packStream(
             // first pack the Index
             int index_buf[d_dim.getValue()];
 
-            for (int i = 0; i < d_dim.getValue(); i++) {
+            for (int i = 0; i < d_dim.getValue(); ++i) {
                index_buf[i] = index_map_iter->first(i);
             }
 
@@ -603,7 +603,7 @@ SparseData<BOX_GEOMETRY>::packStream(
             }
          } //  if (box.contains(...
       } // for (; index_map_iter
-   } // for (hier::BoxContainer::Iterator overlap_box(...
+   } // for (hier::BoxContainer::const_iterator overlap_box(...
 }
 
 /**********************************************************************
@@ -672,14 +672,14 @@ SparseData<BOX_GEOMETRY>::unpackStream(
    }
 
    const hier::BoxContainer& boxes = tmp_overlap->getDestinationBoxContainer();
-   for (hier::BoxContainer::ConstIterator overlap_box(boxes);
+   for (hier::BoxContainer::const_iterator overlap_box(boxes);
         overlap_box != boxes.end(); ++overlap_box) {
 
-      _removeInsideBox(overlap_box());
+      _removeInsideBox(*overlap_box);
    }
 
    // finally unpack the individual items.
-   for (int i = 0; i < num_items; i++) {
+   for (int i = 0; i < num_items; ++i) {
 
       int num_attrs = 0;
       // Unpack the Index
@@ -687,7 +687,7 @@ SparseData<BOX_GEOMETRY>::unpackStream(
       stream.unpack<int>(index_buf, d_dim.getValue());
 
       hier::Index index(d_dim);
-      for (int j = 0; j < d_dim.getValue(); j++) {
+      for (int j = 0; j < d_dim.getValue(); ++j) {
          index(j) = index_buf[j];
       }
 
@@ -781,7 +781,7 @@ SparseData<BOX_GEOMETRY>::getSpecializedFromDatabase(
          tbox::Array<int> index_array =
             item_db->getIntegerArray(index_keyword);
          hier::Index index(d_dim);
-         for (int j = 0; j < d_dim.getValue(); j++) {
+         for (int j = 0; j < d_dim.getValue(); ++j) {
             index(j) = index_array[j];
          }
 
@@ -906,7 +906,7 @@ SparseData<BOX_GEOMETRY>::putSpecializedToDatabase(
       // First deal with the Index
       const hier::Index& index = index_iter->first;
       tbox::Array<int> index_array(d_dim.getValue());
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
          index_array[i] = index(i);
       }
 
@@ -957,7 +957,7 @@ SparseData<BOX_GEOMETRY>::putSpecializedToDatabase(
       item_db->putIntegerArray(ivalues_keyword, ivalues,
          (d_int_attr_size * list_size));
 
-      curr_item++;
+      ++curr_item;
    }
 }
 
@@ -1367,19 +1367,23 @@ SparseDataIterator<BOX_GEOMETRY>::operator != (
  * pre-increment operator
  *********************************************************************/
 template<typename BOX_GEOMETRY>
-void
+SparseDataIterator<BOX_GEOMETRY>&
 SparseDataIterator<BOX_GEOMETRY>::operator ++ ()
 {
    ++d_iterator;
+   return *this;
 }
 
 /**********************************************************************
  * post-increment operator
  *********************************************************************/
 template<typename BOX_GEOMETRY>
-void
-SparseDataIterator<BOX_GEOMETRY>::operator ++ (int) {
-   d_iterator++;
+SparseDataIterator<BOX_GEOMETRY>
+SparseDataIterator<BOX_GEOMETRY>::operator ++ (int)
+{
+   SparseDataIterator<BOX_GEOMETRY> tmp = *this;
+   ++d_iterator;
+   return tmp;
 }
 
 /**********************************************************************
@@ -1545,20 +1549,23 @@ SparseDataAttributeIterator<BOX_GEOMETRY>::operator != (
  * pre-increment operator
  *********************************************************************/
 template<typename BOX_GEOMETRY>
-void
+SparseDataAttributeIterator<BOX_GEOMETRY>&
 SparseDataAttributeIterator<BOX_GEOMETRY>::operator ++ ()
 {
    ++d_list_iterator;
+   return *this;
 }
 
 /**********************************************************************
  * post-increment operator
  *********************************************************************/
 template<typename BOX_GEOMETRY>
-void
+SparseDataAttributeIterator<BOX_GEOMETRY>
 SparseDataAttributeIterator<BOX_GEOMETRY>::operator ++ (int)
 {
-   d_list_iterator++;
+   SparseDataAttributeIterator<BOX_GEOMETRY> tmp = *this;
+   ++d_list_iterator;
+   return tmp;
 }
 
 /**********************************************************************

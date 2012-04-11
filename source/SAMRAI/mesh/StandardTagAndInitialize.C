@@ -305,7 +305,8 @@ StandardTagAndInitialize::tagCellsForRefinement(
       boost::shared_ptr<hier::PatchLevel> level(
          hierarchy->getPatchLevel(level_number));
 
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& patch = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > tag_data(
@@ -314,8 +315,8 @@ StandardTagAndInitialize::tagCellsForRefinement(
 
          TBOX_ASSERT(tag_data);
 
-         for (hier::BoxContainer::Iterator ib(refine_boxes); ib != refine_boxes.end();
-              ++ib) {
+         for (hier::BoxContainer::iterator ib(refine_boxes);
+              ib != refine_boxes.end(); ++ib) {
             hier::Box intersection = *ib * tag_data->getBox();
             if (!(intersection.empty())) {
                tag_data->fill(1, intersection);
@@ -501,7 +502,8 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
     * Coarsen tags from level to coarser level.
     */
    hier::IntVector coarsen_ratio(dim, d_error_coarsen_ratio);
-   for (hier::PatchLevel::Iterator ip(coarser_level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(coarser_level->begin());
+        ip != coarser_level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& coarse_patch = *ip;
       boost::shared_ptr<hier::Patch> fine_patch(
          patch_level->getPatch(coarse_patch->getGlobalId()));
@@ -576,7 +578,8 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
     * Refine tags from coarser level to level.
     */
    pdat::CellIntegerConstantRefine copytags(dim);
-   for (hier::PatchLevel::Iterator ip(coarser_level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(coarser_level->begin());
+        ip != coarser_level->end(); ++ip) {
 
       const boost::shared_ptr<hier::Patch>& coarse_patch = *ip;
       boost::shared_ptr<hier::Patch> fine_patch(
@@ -914,8 +917,9 @@ StandardTagAndInitialize::coarsestLevelBoxesOK(
    bool boxes_ok = true;
    if (d_use_richardson_extrapolation) {
 
-      for (hier::BoxContainer::ConstIterator ib(boxes); ib != boxes.end(); ++ib) {
-         hier::IntVector n_cells = ib().numberCells();
+      for (hier::BoxContainer::const_iterator ib(boxes);
+           ib != boxes.end(); ++ib) {
+         hier::IntVector n_cells = ib->numberCells();
          for (int i = 0; i < getDim().getValue(); i++) {
             int error_coarsen_ratio = getErrorCoarsenRatio();
             if (!((n_cells(i) % error_coarsen_ratio) == 0)) {

@@ -402,7 +402,8 @@ void ModifiedBratuProblem::setVectorWeights(
 
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
          boost::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
             patch->getPatchGeometry(),
@@ -447,10 +448,11 @@ void ModifiedBratuProblem::setVectorWeights(
           * Note that all assignments are local.
           */
 
-         for (hier::PatchLevel::Iterator p(level); p; p++) {
+         for (hier::PatchLevel::iterator p(level->begin());
+              p != level->end(); ++p) {
 
             const boost::shared_ptr<hier::Patch>& patch = *p;
-            for (hier::BoxContainer::ConstIterator i(coarsened_boxes);
+            for (hier::BoxContainer::const_iterator i(coarsened_boxes);
                  i != coarsened_boxes.end(); ++i) {
 
                const hier::Box& coarse_box = *i;
@@ -522,7 +524,8 @@ void ModifiedBratuProblem::setInitialGuess(
 
          boost::shared_ptr<hier::PatchLevel> patch_level(
             hierarchy->getPatchLevel(amr_level));
-         for (hier::PatchLevel::Iterator p(patch_level); p; p++) {
+         for (hier::PatchLevel::iterator p(patch_level->begin());
+              p != patch_level->end(); ++p) {
             const boost::shared_ptr<hier::Patch>& patch = *p;
 
             boost::shared_ptr<pdat::CellData<double> > y_cur(
@@ -581,7 +584,8 @@ void ModifiedBratuProblem::setInitialGuess(
 
          boost::shared_ptr<hier::PatchLevel> patch_level(
             hierarchy->getPatchLevel(amr_level));
-         for (hier::PatchLevel::Iterator p(patch_level); p; p++) {
+         for (hier::PatchLevel::iterator p(patch_level->begin());
+              p != patch_level->end(); ++p) {
             const boost::shared_ptr<hier::Patch>& patch = *p;
 
             boost::shared_ptr<pdat::CellData<double> > y_cur(
@@ -719,7 +723,8 @@ bool ModifiedBratuProblem::checkNewSolution(
          hierarchy->getPatchLevel(amr_level));
       double levelerror = 0.0;
       double levell2error = 0.0;
-      for (hier::PatchLevel::Iterator p(patch_level); p; p++) {
+      for (hier::PatchLevel::iterator p(patch_level->begin());
+           p != patch_level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
          const hier::Index ifirst = patch->getBox().lower();
          const hier::Index ilast = patch->getBox().upper();
@@ -804,7 +809,8 @@ void ModifiedBratuProblem::updateSolution(
 
       boost::shared_ptr<hier::PatchLevel> patch_level(
          hierarchy->getPatchLevel(amr_level));
-      for (hier::PatchLevel::Iterator p(patch_level); p; p++) {
+      for (hier::PatchLevel::iterator p(patch_level->begin());
+           p != patch_level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          boost::shared_ptr<pdat::CellData<double> > y_cur(
@@ -896,7 +902,7 @@ void ModifiedBratuProblem::initializeLevelData(
     * coarser level using the "d_fill_new_level" algorithm above.
     */
 
-   for (hier::PatchLevel::Iterator p(level); p; p++) {
+   for (hier::PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
       const boost::shared_ptr<hier::Patch>& patch = *p;
 
       if (initial_time) {
@@ -1308,7 +1314,8 @@ void ModifiedBratuProblem::evaluateBratuFunction(
          level->allocatePatchData(d_coarse_fine_flux_id);
       }
 
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
@@ -1515,7 +1522,8 @@ void ModifiedBratuProblem::evaluateBratuFunction(
        *  complete function evaluation by differencing.
        */
 
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
@@ -1777,7 +1785,8 @@ ModifiedBratuProblem::jacobianTimesVector(
        * of cells.
        */
 
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          const hier::Index ifirst = patch->getBox().lower();
@@ -1997,7 +2006,8 @@ ModifiedBratuProblem::jacobianTimesVector(
        *  complete function evaluation by differencing.
        */
 
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
@@ -2130,7 +2140,8 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
       d_soln_fill_schedule[amr_level]->fillData(d_new_time);
       d_soln_fill.resetSchedule(d_soln_fill_schedule[amr_level]);
 
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
@@ -2421,7 +2432,8 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
 
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          boost::shared_ptr<pdat::CellData<double> > src_data(
@@ -2468,7 +2480,8 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
       d_soln_fill_schedule[amr_level]->fillData(d_new_time);
       d_soln_fill.resetSchedule(d_soln_fill_schedule[amr_level]);
 
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
@@ -2858,7 +2871,7 @@ void ModifiedBratuProblem::getLevelEdges(
 void ModifiedBratuProblem::correctLevelFlux(
    boost::shared_ptr<hier::PatchLevel> level)
 {
-   for (hier::PatchLevel::Iterator p(level); p; p++) {
+   for (hier::PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
       const boost::shared_ptr<hier::Patch>& patch = *p;
       const hier::Box box = patch->getBox();
       boost::shared_ptr<pdat::SideData<double> > flux_data(
@@ -2881,10 +2894,11 @@ void ModifiedBratuProblem::correctLevelFlux(
             twodelta(d) = ((s == 0) ? 2 : -2);
             hier::BoxContainer level_edges;
             getLevelEdges(level_edges, patch, level, d, s);
-            for (hier::BoxContainer::Iterator l(level_edges);
+            for (hier::BoxContainer::iterator l(level_edges);
                  l != level_edges.end(); ++l) {
-               for (pdat::CellIterator ic(l()); ic; ic++) {
-                  pdat::SideIndex iside(ic() + delta, d, s);
+               pdat::CellIterator icend(*l, false);
+               for (pdat::CellIterator ic(*l, true); ic != icend; ++ic) {
+                  pdat::SideIndex iside(*ic + delta, d, s);
                   (*flux_data)(iside) = 2.0 * (*flux_data)(iside) / 3.0;
                }   // cell loop
             }   // box loop
@@ -2916,13 +2930,14 @@ void ModifiedBratuProblem::correctPatchFlux(
          double factor = ((s == 0) ? 1.0 / dx[d] : -1.0 / dx[d]);
          hier::BoxContainer level_edges;
          getLevelEdges(level_edges, patch, level, d, s);
-         for (hier::BoxContainer::Iterator l(level_edges);
+         for (hier::BoxContainer::iterator l(level_edges);
               l != level_edges.end(); ++l) {
-            for (pdat::CellIterator ic(l()); ic; ic++) {
-               pdat::SideIndex iside(ic() + delta1, d, s);
-               (*flux_data)(iside) = factor * (-8.0 * (*u)(ic()) / 15.0
-                                               + (*u)(ic() + delta1) / 3.0
-                                               + (*u)(ic() + delta2) / 5.0);
+            pdat::CellIterator icend(*l, false);
+            for (pdat::CellIterator ic(*l, true); ic != icend; ++ic) {
+               pdat::SideIndex iside(*ic + delta1, d, s);
+               (*flux_data)(iside) = factor * (-8.0 * (*u)(*ic) / 15.0
+                                               + (*u)(*ic + delta1) / 3.0
+                                               + (*u)(*ic + delta2) / 5.0);
             } // cell loop
          } // box loop
       } // side loop

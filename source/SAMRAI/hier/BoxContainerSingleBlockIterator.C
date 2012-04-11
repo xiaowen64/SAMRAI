@@ -17,13 +17,17 @@ namespace hier {
 
 BoxContainerSingleBlockIterator::BoxContainerSingleBlockIterator(
    const BoxContainer& mapped_boxes,
-   const BlockId& block_id):
+   const BlockId& block_id,
+   bool begin):
    d_mapped_boxes(&mapped_boxes),
    d_block_id(block_id),
-   d_iter(d_mapped_boxes->begin())
+   d_iter(begin ? d_mapped_boxes->begin() : d_mapped_boxes->end())
 {
-   while (d_iter != d_mapped_boxes->end() && d_iter->getBlockId() != d_block_id) {
-      ++d_iter;
+   if (begin) {
+      while (d_iter != d_mapped_boxes->end() &&
+             d_iter->getBlockId() != d_block_id) {
+         ++d_iter;
+      }
    }
 }
 
@@ -70,8 +74,8 @@ int
 BoxContainerSingleBlockIterator::count() const
 {
    int ct = 0;
-   BoxContainerSingleBlockIterator iter(*d_mapped_boxes, d_block_id);
-   while (iter.isValid()) {
+   BoxContainerSingleBlockIterator iter(d_mapped_boxes->begin(d_block_id));
+   while (iter != d_mapped_boxes->end(d_block_id)) {
       ++ct;
       ++iter;
    }

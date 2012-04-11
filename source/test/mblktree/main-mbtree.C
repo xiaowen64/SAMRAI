@@ -269,7 +269,7 @@ int main(
 
       const hier::IntVector& refinement_ratio(one_vector);
 
-      for (hier::BoxContainer::ConstIterator bi = mapped_box_level.getBoxes().begin();
+      for (hier::BoxContainer::const_iterator bi = mapped_box_level.getBoxes().begin();
            bi != mapped_box_level.getBoxes().end(); ++bi) {
 
          const hier::Box& mapped_box(*bi);
@@ -300,7 +300,7 @@ int main(
             mapped_box_level,
             mapped_box_level,
             connector_width);
-         for (hier::BoxContainer::ConstIterator bi =
+         for (hier::BoxContainer::const_iterator bi =
               mapped_box_level.getBoxes().begin();
               bi != mapped_box_level.getBoxes().end(); ++bi) {
 
@@ -482,7 +482,7 @@ void exhaustiveFindOverlapBoxes(
       overlap_connector.findLocal(box_id);
    bool has_base_box = base_box_itr != overlap_connector.end();
 
-   for (hier::BoxContainer::ConstIterator bi = search_mapped_boxes.begin();
+   for (hier::BoxContainer::const_iterator bi = search_mapped_boxes.begin();
         bi != search_mapped_boxes.end(); ++bi) {
 
       const hier::Box& search_mapped_box(*bi);

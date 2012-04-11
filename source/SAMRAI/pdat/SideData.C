@@ -407,9 +407,9 @@ SideData<TYPE>::copyWithRotation(
 
          hier::Box side_rotatebox(SideGeometry::toSideBox(rotatebox, i));
 
-         for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
+         for (hier::BoxContainer::const_iterator bi(overlap_boxes);
               bi != overlap_boxes.end(); ++bi) {
-            const hier::Box& overlap_box = bi();
+            const hier::Box& overlap_box = *bi;
 
             const hier::Box copybox(side_rotatebox * overlap_box);
 
@@ -417,9 +417,10 @@ SideData<TYPE>::copyWithRotation(
                const int depth = ((getDepth() < src.getDepth()) ?
                                   getDepth() : src.getDepth());
 
-               for (hier::Box::Iterator ci(copybox); ci; ci++) {
+               hier::Box::iterator ciend(copybox, false);
+               for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
 
-                  SideIndex dst_index(ci(), 0, 0);
+                  SideIndex dst_index(*ci, 0, 0);
                   dst_index.setAxis(i);
                   SideIndex src_index(dst_index);
                   SideGeometry::transform(src_index, back_trans);
@@ -581,9 +582,9 @@ SideData<TYPE>::packWithRotation(
          hier::Box side_rotatebox(SideGeometry::toSideBox(rotatebox, i));
 
          int buf_count = 0;
-         for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
+         for (hier::BoxContainer::const_iterator bi(overlap_boxes);
               bi != overlap_boxes.end(); ++bi) {
-            const hier::Box& overlap_box = bi();
+            const hier::Box& overlap_box = *bi;
 
             const hier::Box copybox(side_rotatebox * overlap_box);
 
@@ -591,9 +592,10 @@ SideData<TYPE>::packWithRotation(
 
                for (int d = 0; d < depth; d++) {
 
-                  for (hier::Box::Iterator ci(copybox); ci; ci++) {
+                  hier::Box::iterator ciend(copybox, false);
+                  for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
 
-                     SideIndex src_index(ci(), 0, 0);
+                     SideIndex src_index(*ci, 0, 0);
                      src_index.setAxis(i);
                      SideGeometry::transform(src_index, back_trans);
 
@@ -802,9 +804,10 @@ SideData<TYPE>::printAxis(
 
    os.precision(prec);
    if (d_directions(side_normal)) {
-      for (SideIterator i(box, side_normal); i; i++) {
-         os << "array" << i() << " = "
-            << d_data[side_normal](i(), depth) << std::endl << std::flush;
+      SideIterator iend(box, side_normal, false);
+      for (SideIterator i(box, side_normal, true); i != iend; ++i) {
+         os << "array" << *i << " = "
+            << d_data[side_normal](*i, depth) << std::endl << std::flush;
       }
    } else {
       os << "No side data in " << side_normal << " side normal direction"

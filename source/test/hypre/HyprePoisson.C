@@ -164,7 +164,8 @@ void HyprePoisson::initializeLevelData(
    /*
     * Initialize data in all patches in the level.
     */
-   for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
+   for (hier::PatchLevel::iterator pi(level->begin());
+        pi != level->end(); ++pi) {
 
       const boost::shared_ptr<hier::Patch>& patch = *pi;
       if (!patch) {
@@ -252,7 +253,8 @@ bool HyprePoisson::solvePoisson()
     */
    boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(
          level_number));
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
       boost::shared_ptr<pdat::CellData<double> > data(
          patch->getPatchData(d_comp_soln_id),
@@ -362,7 +364,8 @@ bool HyprePoisson::packDerivedDataIntoDoubleBuffer(
    NULL_USE(region);
    NULL_USE(depth_id);
 
-   pdat::CellData<double>::Iterator icell(patch.getBox());
+   pdat::CellData<double>::Iterator icell(patch.getBox(), true);
+   pdat::CellData<double>::Iterator icellend(patch.getBox(), false);
 
    if (variable_name == "Error") {
       boost::shared_ptr<pdat::CellData<double> > current_solution_(
@@ -373,14 +376,14 @@ bool HyprePoisson::packDerivedDataIntoDoubleBuffer(
          boost::detail::dynamic_cast_tag());
       pdat::CellData<double>& current_solution = *current_solution_;
       pdat::CellData<double>& exact_solution = *exact_solution_;
-      for ( ; icell; icell++) {
+      for ( ; icell != icellend; ++icell) {
          double diff = (current_solution(*icell) - exact_solution(*icell));
          *buffer = diff;
          buffer += 1;
       }
    } else if (variable_name == "Patch level number") {
       double pln = patch.getPatchLevelNumber();
-      for ( ; icell; icell++) {
+      for ( ; icell != icellend; ++icell) {
          *buffer = pln;
          buffer += 1;
       }

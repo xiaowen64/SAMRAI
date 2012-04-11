@@ -194,9 +194,9 @@ OuternodeGeometry::doOverlap(
 
       if (dst_restrict_boxes.size() && dst_boxes.size()) {
          hier::BoxContainer node_restrict_boxes;
-         for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
+         for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
               b != dst_restrict_boxes.end(); ++b) {
-            node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
+            node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(*b));
          }
          dst_boxes.intersectBoxes(node_restrict_boxes);
       }
@@ -299,9 +299,9 @@ OuternodeGeometry::doOverlap(
 
       if (dst_restrict_boxes.size() && src_boxes.size()) {
          hier::BoxContainer node_restrict_boxes;
-         for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
+         for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
               b != dst_restrict_boxes.end(); ++b) {
-            node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
+            node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(*b));
          }
          src_boxes.intersectBoxes(node_restrict_boxes);
       }
@@ -429,9 +429,9 @@ OuternodeGeometry::doOverlap(
 
       if (dst_restrict_boxes.size() && dst_boxes.size()) {
          hier::BoxContainer node_restrict_boxes;
-         for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
+         for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
               b != dst_restrict_boxes.end(); ++b) {
-            node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
+            node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(*b));
          }
          dst_boxes.intersectBoxes(node_restrict_boxes);
       }
@@ -458,8 +458,8 @@ OuternodeGeometry::setUpOverlap(
 {
    hier::BoxContainer dst_boxes;
 
-   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
-      hier::Box node_box(NodeGeometry::toNodeBox(b()));
+   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+      hier::Box node_box(NodeGeometry::toNodeBox(*b));
       dst_boxes.pushBack(node_box);
    }
 

@@ -330,7 +330,8 @@ void AdaptivePoisson::initializeLevelData(
    /*
     * Initialize data in all patches in the level.
     */
-   for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
+   for (hier::PatchLevel::iterator pi(level->begin());
+        pi != level->end(); ++pi) {
 
       hier::Patch& patch = **pi;
       hier::Box pbox = patch.getBox();
@@ -480,7 +481,8 @@ void AdaptivePoisson::applyGradientDetector(
       (hier::PatchLevel &) * hierarchy.getPatchLevel(ln);
    int ntag = 0, ntotal = 0;
    double maxestimate = 0;
-   for (hier::PatchLevel::Iterator pi(level); pi; pi++) {
+   for (hier::PatchLevel::iterator pi(level.begin());
+        pi != level.end(); ++pi) {
       hier::Patch& patch = **pi;
       boost::shared_ptr<hier::PatchData> tag_data(
          patch.getPatchData(tag_index));
@@ -516,7 +518,8 @@ void AdaptivePoisson::applyGradientDetector(
       computeAdaptionEstimate(estimate_data,
          soln_cell_data);
       tag_cell_data.fill(0);
-      for (hier::Box::Iterator i(patch.getBox()); i; i++) {
+      hier::Box::iterator iend(patch.getBox(), false);
+      for (hier::Box::iterator i(patch.getBox(), true); i != iend; ++i) {
          const pdat::CellIndex cell_index(*i);
          if (maxestimate < estimate_data(cell_index)) maxestimate =
                estimate_data(cell_index);
@@ -745,7 +748,8 @@ int AdaptivePoisson::computeError(
 
       levell2n = levellin = levelwts = 0.0;
 
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          /*
@@ -902,7 +906,8 @@ int AdaptivePoisson::solvePoisson(
    for (int ln = coarsest_ln; ln <= finest_ln; ++ln) {
      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
 
-      for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
+      for (hier::PatchLevel::iterator pi(level->begin());
+           pi != level->end(); ++pi) {
          const boost::shared_ptr<hier::Patch>& patch = *pi;
 
          const hier::Box& box = patch->getBox();

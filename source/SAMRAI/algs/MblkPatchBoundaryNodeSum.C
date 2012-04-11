@@ -443,9 +443,9 @@ MblkPatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
 
       if (patch_level) {
 
-         for (hier::PatchLevel::Iterator ip(patch_level); ip; ip++) {
-            boost::shared_ptr<hier::Patch> patch(
-               patch_level->getPatch(ip()));
+         for (hier::PatchLevel::iterator ip(patch_level->begin());
+              ip != patch_level->end(); ++ip) {
+            boost::shared_ptr<hier::Patch> patch(patch_level->getPatch(*ip));
 
             for (int i = 0; i < node_data_id.size(); i++) {
                boost::shared_ptr<pdat::NodeData<double> > node_data(
@@ -475,9 +475,9 @@ MblkPatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
 
       if (patch_level) {
 
-         for (hier::PatchLevel::Iterator ip(patch_level); ip; ip++) {
-            boost::shared_ptr<hier::Patch> patch(
-               patch_level->getPatch(ip()));
+         for (hier::PatchLevel::iterator ip(patch_level->begin());
+              ip != patch_level->end(); ++ip) {
+            boost::shared_ptr<hier::Patch> patch(patch_level->getPatch(*ip));
 
             for (int i = 0; i < node_data_id.size(); i++) {
                boost::shared_ptr<pdat::OuternodeData<double> > onode_data(

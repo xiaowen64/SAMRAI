@@ -235,8 +235,8 @@ void EdgeDataTest::setConservativeData(
    const hier::BoxContainer& domain =
       level->getPhysicalDomain(hier::BlockId::zero());
    int ncells = 0;
-   for (hier::BoxContainer::ConstIterator i(domain); i != domain.end(); ++i) {
-      ncells += i().size();
+   for (hier::BoxContainer::const_iterator i(domain); i != domain.end(); ++i) {
+      ncells += i->size();
    }
 
    const int depth = data->getDepth();
@@ -254,17 +254,18 @@ void EdgeDataTest::setConservativeData(
        */
 
       for (int axis = 0; axis < d_dim.getValue(); axis++) {
-         for (pdat::CellIterator ci(sbox); ci; ci++) {
+         pdat::CellIterator ciend(sbox, false);
+         for (pdat::CellIterator ci(sbox, true); ci != ciend; ++ci) {
             double value = 0.0;
             for (i = 0; i < d_dim.getValue(); i++) {
                if (i == axis) {
-                  value += (double)(ci() (i));
+                  value += (double)((*ci)(i));
                }
             }
             value /= ncells;
             if (d_dim == tbox::Dimension(1)) {
                for (int edge = 0; edge < 1; edge++) {
-                  pdat::EdgeIndex si(ci(), axis, edge);
+                  pdat::EdgeIndex si(*ci, axis, edge);
                   for (int d = 0; d < depth; d++) {
                      (*data)(si, d) = value;
                   }
@@ -274,7 +275,7 @@ void EdgeDataTest::setConservativeData(
                for (int edge = pdat::EdgeIndex::Lower;
                     edge <= pdat::EdgeIndex::Upper;
                     edge++) {
-                  pdat::EdgeIndex si(ci(), axis, edge);
+                  pdat::EdgeIndex si(*ci, axis, edge);
                   for (int d = 0; d < depth; d++) {
                      (*data)(si, d) = value;
                   }
@@ -284,7 +285,7 @@ void EdgeDataTest::setConservativeData(
                for (int edge = pdat::EdgeIndex::LowerLeft;
                     edge <= pdat::EdgeIndex::UpperRight;
                     edge++) {
-                  pdat::EdgeIndex si(ci(), axis, edge);
+                  pdat::EdgeIndex si(*ci, axis, edge);
                   for (int d = 0; d < depth; d++) {
                      (*data)(si, d) = value;
                   }
@@ -324,11 +325,12 @@ void EdgeDataTest::setConservativeData(
       for (int axis = 0; axis < d_dim.getValue(); axis++) {
          hier::IntVector ci(ratio.getDim());
          hier::IntVector del(ratio.getDim());
-         for (pdat::CellIterator fi(sbox); fi; fi++) {
+         pdat::CellIterator fiend(sbox, false);
+         for (pdat::CellIterator fi(sbox, true); fi != fiend; ++fi) {
             double value = 0.0;
             for (i = 0; i < d_dim.getValue(); i++) {
                if (i == axis) {
-                  int findx = fi() (i);
+                  int findx = (*fi)(i);
                   ci(i) = ((findx < 0) ? (findx + 1) / ratio(i) - 1
                            : findx / ratio(i));
                   del(i) = (int)delta[i * max_ratio + findx - ci(i) * ratio(i)];
@@ -345,7 +347,7 @@ void EdgeDataTest::setConservativeData(
 
             if (d_dim == tbox::Dimension(1)) {
                for (int edge = 0; edge < 1; edge++) {
-                  pdat::EdgeIndex si(fi(), axis, edge);
+                  pdat::EdgeIndex si(*fi, axis, edge);
                   for (int d = 0; d < depth; d++) {
                      (*data)(si, d) = value;
                   }
@@ -355,7 +357,7 @@ void EdgeDataTest::setConservativeData(
                for (int edge = pdat::EdgeIndex::Lower;
                     edge <= pdat::EdgeIndex::Upper;
                     edge++) {
-                  pdat::EdgeIndex si(fi(), axis, edge);
+                  pdat::EdgeIndex si(*fi, axis, edge);
                   for (int d = 0; d < depth; d++) {
                      (*data)(si, d) = value;
                   }
@@ -365,7 +367,7 @@ void EdgeDataTest::setConservativeData(
                for (int edge = pdat::EdgeIndex::LowerLeft;
                     edge <= pdat::EdgeIndex::UpperRight;
                     edge++) {
-                  pdat::EdgeIndex si(fi(), axis, edge);
+                  pdat::EdgeIndex si(*fi, axis, edge);
                   for (int d = 0; d < depth; d++) {
                      (*data)(si, d) = value;
                   }
@@ -607,15 +609,16 @@ bool EdgeDataTest::verifyResults(
          }
 
          for (int id = 0; id < d_dim.getValue(); id++) {
-            for (pdat::EdgeIterator si(dbox, id); si; si++) {
-               double correct = (*solution)(si());
+            pdat::EdgeIterator siend(dbox, id, false);
+            for (pdat::EdgeIterator si(dbox, id, true); si != siend; ++si) {
+               double correct = (*solution)(*si);
                for (int d = 0; d < depth; d++) {
-                  double result = (*edge_data)(si(), d);
+                  double result = (*edge_data)(*si, d);
                   if (!tbox::MathUtilities<double>::equalEps(correct,
                          result)) {
                      test_failed = true;
                      tbox::perr << "Test FAILED: ...."
-                                << " : edge_data index = " << si() << endl;
+                                << " : edge_data index = " << *si << endl;
                      tbox::perr << "    hier::Variable = "
                                 << d_variable_src_name[i]
                                 << " : depth index = " << d << endl;
@@ -661,7 +664,8 @@ void EdgeDataTest::setLinearData(
 
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       const pdat::EdgeIndex loweri(patch.getBox().lower(), axis, 0);
-      for (pdat::EdgeIterator ei(sbox, axis); ei; ei++) {
+      pdat::EdgeIterator eiend(sbox, axis, false);
+      for (pdat::EdgeIterator ei(sbox, axis, true); ei != eiend; ++ei) {
 
          /*
           * Compute spatial location of cell center and
@@ -669,28 +673,28 @@ void EdgeDataTest::setLinearData(
           */
 
          if (axis != 0) {
-            x = lowerx[0] + dx[0] * (ei() (0) - loweri(0));
+            x = lowerx[0] + dx[0] * ((*ei)(0) - loweri(0));
          } else {
-            x = lowerx[0] + dx[0] * (ei() (0) - loweri(0) + 0.5);
+            x = lowerx[0] + dx[0] * ((*ei)(0) - loweri(0) + 0.5);
          }
          y = z = 0.;
          if (d_dim > tbox::Dimension(1)) {
             if (axis != 1) {
-               y = lowerx[1] + dx[1] * (ei() (1) - loweri(1));
+               y = lowerx[1] + dx[1] * ((*ei)(1) - loweri(1));
             } else {
-               y = lowerx[1] + dx[1] * (ei() (1) - loweri(1) + 0.5);
+               y = lowerx[1] + dx[1] * ((*ei)(1) - loweri(1) + 0.5);
             }
          }
          if (d_dim > tbox::Dimension(2)) {
             if (axis != 2) {
-               z = lowerx[2] + dx[2] * (ei() (2) - loweri(2));
+               z = lowerx[2] + dx[2] * ((*ei)(2) - loweri(2));
             } else {
-               z = lowerx[2] + dx[2] * (ei() (2) - loweri(2) + 0.5);
+               z = lowerx[2] + dx[2] * ((*ei)(2) - loweri(2) + 0.5);
             }
          }
 
          for (int d = 0; d < depth; d++) {
-            (*data)(ei(),
+            (*data)(*ei,
                     d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
          }
 
@@ -716,7 +720,8 @@ void EdgeDataTest::checkPatchInteriorData(
 
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       const pdat::EdgeIndex loweri(interior.lower(), axis, 0);
-      for (pdat::EdgeIterator ei(interior, axis); ei; ei++) {
+      pdat::EdgeIterator eiend(interior, axis, false);
+      for (pdat::EdgeIterator ei(interior, axis, true); ei != eiend; ++ei) {
 
          /*
           * Compute spatial location of cell center and
@@ -724,30 +729,30 @@ void EdgeDataTest::checkPatchInteriorData(
           */
 
          if (axis != 0) {
-            x = lowerx[0] + dx[0] * (ei() (0) - loweri(0));
+            x = lowerx[0] + dx[0] * ((*ei)(0) - loweri(0));
          } else {
-            x = lowerx[0] + dx[0] * (ei() (0) - loweri(0) + 0.5);
+            x = lowerx[0] + dx[0] * ((*ei)(0) - loweri(0) + 0.5);
          }
          y = z = 0.;
          if (d_dim > tbox::Dimension(1)) {
             if (axis != 1) {
-               y = lowerx[1] + dx[1] * (ei() (1) - loweri(1));
+               y = lowerx[1] + dx[1] * ((*ei)(1) - loweri(1));
             } else {
-               y = lowerx[1] + dx[1] * (ei() (1) - loweri(1) + 0.5);
+               y = lowerx[1] + dx[1] * ((*ei)(1) - loweri(1) + 0.5);
             }
          }
          if (d_dim > tbox::Dimension(2)) {
             if (axis != 2) {
-               z = lowerx[2] + dx[2] * (ei() (2) - loweri(2));
+               z = lowerx[2] + dx[2] * ((*ei)(2) - loweri(2));
             } else {
-               z = lowerx[2] + dx[2] * (ei() (2) - loweri(2) + 0.5);
+               z = lowerx[2] + dx[2] * ((*ei)(2) - loweri(2) + 0.5);
             }
          }
 
          double value;
          for (int d = 0; d < depth; d++) {
             value = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
-            if (!(tbox::MathUtilities<double>::equalEps((*data)(ei(),
+            if (!(tbox::MathUtilities<double>::equalEps((*data)(*ei,
                                                                 d), value))) {
                tbox::perr
                << "FAILED:  -- patch interior not properly filled" << endl;

@@ -181,7 +181,8 @@ MethodOfLinesIntegrator::getTimestep(
 
       TBOX_ASSERT(level);
 
-      for (hier::PatchLevel::Iterator p(level); p; p++) {
+      for (hier::PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
 
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
@@ -280,7 +281,8 @@ MethodOfLinesIntegrator::advanceHierarchy(
 
          TBOX_ASSERT(level);
 
-         for (hier::PatchLevel::Iterator p(level); p; p++) {
+         for (hier::PatchLevel::iterator p(level->begin());
+              p != level->end(); ++p) {
 
             const boost::shared_ptr<hier::Patch>& patch = *p;
             d_patch_strategy->singleStep(*patch,
@@ -545,7 +547,7 @@ MethodOfLinesIntegrator::initializeLevelData(
    /*
     * Initialize current data for new level.
     */
-   for (hier::PatchLevel::Iterator p(level); p; p++) {
+   for (hier::PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
       const boost::shared_ptr<hier::Patch>& patch = *p;
 
       d_patch_strategy->initializeDataOnPatch(*patch,
@@ -648,7 +650,8 @@ MethodOfLinesIntegrator::applyGradientDetector(
       hierarchy,
       d_patch_strategy)->fillData(time);
 
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       d_patch_strategy->tagGradientDetectorCells(*patch,
@@ -829,7 +832,7 @@ MethodOfLinesIntegrator::copyCurrentToScratch(
 {
    TBOX_ASSERT(level);
 
-   for (hier::PatchLevel::Iterator p(level); p; p++) {
+   for (hier::PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
       const boost::shared_ptr<hier::Patch>& patch = *p;
 
       std::list<boost::shared_ptr<hier::Variable> >::const_iterator soln_var =
@@ -865,7 +868,7 @@ MethodOfLinesIntegrator::copyScratchToCurrent(
 {
    TBOX_ASSERT(level);
 
-   for (hier::PatchLevel::Iterator p(level); p; p++) {
+   for (hier::PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
       const boost::shared_ptr<hier::Patch>& patch = *p;
 
       std::list<boost::shared_ptr<hier::Variable> >::const_iterator soln_var =

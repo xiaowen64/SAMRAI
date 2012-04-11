@@ -15,7 +15,6 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/ConnectorStatistics.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
-#include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -777,7 +776,7 @@ Connector::initializeToLocalTranspose(
         ci != connector.end(); ++ci) {
 
       const BoxId& mapped_box_id = *ci;
-      const BoxContainer::ConstIterator ni = getHead().getBox(mapped_box_id);
+      const BoxContainer::const_iterator ni = getHead().getBox(mapped_box_id);
       if (ni == getHead().getBoxes().end()) {
          TBOX_ERROR(
             "Connector::initializeToLocalTranspose: mapped_box index\n"
@@ -1007,7 +1006,7 @@ Connector::recursivePrint(
       os << border << "Mapped_boxes with neighbors:\n";
       for (ConstNeighborhoodIterator ei = begin(); ei != end(); ++ei) {
          const BoxId& box_id = *ei;
-         BoxContainer::ConstIterator ni = getBase().getBox(box_id);
+         BoxContainer::const_iterator ni = getBase().getBox(box_id);
          if (ni != getBase().getBoxes().end()) {
             os << border << "  "
                << (*ni) << "_"
@@ -1532,7 +1531,7 @@ Connector::checkConsistencyWithHead() const
          const Box unshifted_nabr(
             nabr, PeriodicId::zero(), head_mapped_box_level.getRefinementRatio());
 
-         BoxContainer::ConstIterator na_in_head =
+         BoxContainer::const_iterator na_in_head =
             head_mapped_boxes.find(unshifted_nabr);
 
          if (na_in_head == head_mapped_boxes.end()) {

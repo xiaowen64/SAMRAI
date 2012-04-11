@@ -134,7 +134,8 @@ OuteredgeSumTransactionFactory::preprocessScratchSpace(
    NULL_USE(fill_time);
    TBOX_ASSERT(level);
 
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       const int ncomponents = preprocess_vector.getSize();

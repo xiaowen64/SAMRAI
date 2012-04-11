@@ -75,7 +75,7 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
     * normally filled by coarser mapped_box_level.)
     */
    hier::LocalId last_id = dst_mapped_box_level.getLastLocalId();
-   for (hier::BoxContainer::ConstIterator ni = dst_mapped_boxes.begin();
+   for (hier::BoxContainer::const_iterator ni = dst_mapped_boxes.begin();
         ni != dst_mapped_boxes.end(); ++ni) {
 
       const hier::BoxId& gid(ni->getId());
@@ -128,7 +128,8 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
 
          hier::Connector::NeighborhoodIterator base_box_itr =
             dst_to_fill.makeEmptyLocalNeighborhood(gid);
-         for (hier::BoxContainer::Iterator li(fill_boxes); li != fill_boxes.end(); ++li) {
+         for (hier::BoxContainer::iterator li(fill_boxes);
+              li != fill_boxes.end(); ++li) {
             hier::Box fill_mapped_box(*li,
                                       ++last_id,
                                       dst_mapped_box.getOwnerRank());

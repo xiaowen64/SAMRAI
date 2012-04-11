@@ -47,7 +47,6 @@ using namespace std;
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/pdat/NodeData.h"
 #include "SAMRAI/pdat/NodeIndex.h"
-#include "SAMRAI/pdat/NodeIterator.h"
 #include "SAMRAI/pdat/NodeDoubleInjection.h"
 #include "SAMRAI/pdat/NodeDoubleLinearTimeInterpolateOp.h"
 #include "SAMRAI/hier/RefineOperator.h"
@@ -2068,17 +2067,18 @@ void MblkLinAdv::tagGradientDetectorCells(
              * RICHARDSON_NEWLY_TAGGED since these were set most recently
              * by Richardson extrapolation.
              */
-            for (pdat::CellIterator ic(pbox); ic; ic++) {
+           pdat::CellIterator icend(pbox, false);
+           for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
                double locden = tol;
-               int tag_val = (*tags)(ic(), 0);
+               int tag_val = (*tags)(*ic, 0);
                if (tag_val) {
                   if (tag_val != RICHARDSON_NEWLY_TAGGED) {
                      locden *= 0.75;
                   }
                }
-               if (tbox::MathUtilities<double>::Abs((*var)(ic()) - dev) >
+               if (tbox::MathUtilities<double>::Abs((*var)(*ic) - dev) >
                    locden) {
-                  (*temp_tags)(ic(), 0) = refine_tag_val;
+                  (*temp_tags)(*ic, 0) = refine_tag_val;
                }
             }
          }
@@ -2186,10 +2186,11 @@ void MblkLinAdv::tagGradientDetectorCells(
     * to be the designated "refine_tag_val".
     */
    if (uses_richardson_extrapolation_too) {
-      for (pdat::CellIterator ic(pbox); ic; ic++) {
-         if ((*tags)(ic(), 0) == RICHARDSON_ALREADY_TAGGED ||
-             (*tags)(ic(), 0) == RICHARDSON_NEWLY_TAGGED) {
-            (*temp_tags)(ic(), 0) = refine_tag_val;
+      pdat::CellIterator icend(pbox, false);
+      for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
+         if ((*tags)(*ic, 0) == RICHARDSON_ALREADY_TAGGED ||
+             (*tags)(*ic, 0) == RICHARDSON_NEWLY_TAGGED) {
+            (*temp_tags)(*ic, 0) = refine_tag_val;
          }
       }
    }
@@ -2197,8 +2198,9 @@ void MblkLinAdv::tagGradientDetectorCells(
    //
    // Update tags
    //
-   for (pdat::CellIterator ic(pbox); ic; ic++) {
-      (*tags)(ic(), 0) = (*temp_tags)(ic(), 0);
+   pdat::CellIterator icend(pbox, false);
+   for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
+      (*tags)(*ic, 0) = (*temp_tags)(*ic, 0);
    }
 
 //   tbox::plog << "--------------------- end tagGradientCells" << endl;

@@ -75,8 +75,8 @@ PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
     * the level from it.
     */
    hier::LocalId last_id = dst_mapped_box_level.getLastLocalId();
-   for (hier::RealBoxConstIterator ni(dst_mapped_boxes);
-        ni.isValid(); ++ni) {
+   for (hier::RealBoxConstIterator ni(dst_mapped_boxes.realBegin());
+        ni != dst_mapped_boxes.realEnd(); ++ni) {
       const hier::Box& dst_mapped_box = *ni;
       hier::BoxContainer fill_boxes(
          hier::Box::grow(dst_mapped_box, fill_ghost_width));
@@ -119,7 +119,8 @@ PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
                fill_boxes.size());
          hier::Connector::NeighborhoodIterator base_box_itr =
             dst_to_fill.makeEmptyLocalNeighborhood(dst_mapped_box.getId());
-         for (hier::BoxContainer::Iterator li(fill_boxes); li != fill_boxes.end(); ++li) {
+         for (hier::BoxContainer::iterator li(fill_boxes);
+              li != fill_boxes.end(); ++li) {
             hier::Box fill_mapped_box(*li,
                                       ++last_id,
                                       dst_mapped_box.getOwnerRank());

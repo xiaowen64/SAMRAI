@@ -445,8 +445,8 @@ ArrayData<TYPE>::copy(
    const hier::BoxContainer& boxes,
    const hier::IntVector& src_shift)
 {
-   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
-      copy(src, b(), src_shift);
+   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+      copy(src, *b, src_shift);
    }
 }
 
@@ -457,8 +457,8 @@ ArrayData<TYPE>::copy(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation)
 {
-   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
-      copy(src, b(), transformation);
+   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+      copy(src, *b, transformation);
    }
 }
 
@@ -659,8 +659,8 @@ ArrayData<TYPE>::sum(
    const hier::BoxContainer& boxes,
    const hier::IntVector& src_shift)
 {
-   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
-      sum(src, b(), src_shift);
+   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+      sum(src, *b, src_shift);
    }
 }
 
@@ -738,10 +738,11 @@ ArrayData<TYPE>::packStream(
    tbox::Array<TYPE> buffer(size);
 
    int ptr = 0;
-   for (hier::BoxContainer::ConstIterator b(dest_boxes); b != dest_boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b(dest_boxes);
+        b != dest_boxes.end(); ++b) {
       packBuffer(buffer.getPointer(ptr),
-         hier::Box::shift(b(), -src_shift));
-      ptr += d_depth * b().size();
+         hier::Box::shift(*b, -src_shift));
+      ptr += d_depth * b->size();
    }
 
    TBOX_ASSERT(ptr == size);
@@ -783,12 +784,13 @@ ArrayData<TYPE>::packStream(
    tbox::Array<TYPE> buffer(size);
 
    int ptr = 0;
-   for (hier::BoxContainer::ConstIterator b(dest_boxes); b != dest_boxes.end(); ++b) {
-      hier::Box pack_box(b());
+   for (hier::BoxContainer::const_iterator b(dest_boxes);
+        b != dest_boxes.end(); ++b) {
+      hier::Box pack_box(*b);
       transformation.inverseTransform(pack_box);
       packBuffer(buffer.getPointer(ptr), pack_box);
-//         hier::Box::shift(b(), -src_shift));
-      ptr += d_depth * b().size();
+//         hier::Box::shift(*b, -src_shift));
+      ptr += d_depth * b->size();
    }
 
    TBOX_ASSERT(ptr == size);
@@ -844,9 +846,10 @@ ArrayData<TYPE>::unpackStream(
    stream.unpack(buffer.getPointer(), size);
 
    int ptr = 0;
-   for (hier::BoxContainer::ConstIterator b(dest_boxes); b != dest_boxes.end(); ++b) {
-      unpackBuffer(buffer.getPointer(ptr), b());
-      ptr += d_depth * b().size();
+   for (hier::BoxContainer::const_iterator b(dest_boxes);
+        b != dest_boxes.end(); ++b) {
+      unpackBuffer(buffer.getPointer(ptr), *b);
+      ptr += d_depth * b->size();
    }
 
    TBOX_ASSERT(ptr == size);
@@ -898,9 +901,10 @@ ArrayData<TYPE>::unpackStreamAndSum(
    stream.unpack(buffer.getPointer(), size);
 
    int ptr = 0;
-   for (hier::BoxContainer::ConstIterator b(dest_boxes); b != dest_boxes.end(); ++b) {
-      unpackBufferAndSum(buffer.getPointer(ptr), b());
-      ptr += d_depth * b().size();
+   for (hier::BoxContainer::const_iterator b(dest_boxes);
+        b != dest_boxes.end(); ++b) {
+      unpackBufferAndSum(buffer.getPointer(ptr), *b);
+      ptr += d_depth * b->size();
    }
 
    TBOX_ASSERT(ptr == size);

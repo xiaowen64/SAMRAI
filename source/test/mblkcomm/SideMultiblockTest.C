@@ -199,10 +199,12 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
             hier::Box patch_side_box =
                pdat::SideGeometry::toSideBox(patch.getBox(), axis);
             if (!node_bdry[nb].getIsMultiblockSingularity()) {
-               for (pdat::SideIterator ni(fill_box, axis); ni; ni++) {
-                  if (!patch_side_box.contains(ni())) {
+               pdat::SideIterator niend(fill_box, axis, false);
+               for (pdat::SideIterator ni(fill_box, axis, true);
+                    ni != niend; ++ni) {
+                  if (!patch_side_box.contains(*ni)) {
                      for (int d = 0; d < side_data->getDepth(); d++) {
-                        (*side_data)(ni(), d) =
+                        (*side_data)(*ni, d) =
                            (double)(node_bdry[nb].getLocationIndex() + 100);
                      }
                   }
@@ -228,13 +230,15 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
                hier::Index pupper(patch_side_box.upper());
 
                if (!edge_bdry[eb].getIsMultiblockSingularity()) {
-                  for (pdat::SideIterator ni(fill_box, axis); ni; ni++) {
-                     if (!patch_side_box.contains(ni())) {
+                  pdat::SideIterator niend(fill_box, axis, false);
+                  for (pdat::SideIterator ni(fill_box, axis, true);
+                       ni != niend; ++ni) {
+                     if (!patch_side_box.contains(*ni)) {
                         bool use_index = true;
                         for (int n = 0; n < d_dim.getValue(); n++) {
                            if (axis == n &&
                                edge_bdry[eb].getBox().numberCells(n) == 1) {
-                              if (ni() (n) == plower(n) || ni() (n) ==
+                              if ((*ni)(n) == plower(n) || (*ni)(n) ==
                                   pupper(n)) {
                                  use_index = false;
                                  break;
@@ -244,7 +248,7 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
 
                         if (use_index) {
                            for (int d = 0; d < side_data->getDepth(); d++) {
-                              (*side_data)(ni(), d) =
+                              (*side_data)(*ni, d) =
                                  (double)(edge_bdry[eb].getLocationIndex()
                                           + 100);
                            }
@@ -273,13 +277,15 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
                hier::Index pupper(patch_side_box.upper());
 
                if (!face_bdry[fb].getIsMultiblockSingularity()) {
-                  for (pdat::SideIterator ni(fill_box, axis); ni; ni++) {
-                     if (!patch_side_box.contains(ni())) {
+                  pdat::SideIterator niend(fill_box, axis, false);
+                  for (pdat::SideIterator ni(fill_box, axis, true);
+                       ni != niend; ++ni) {
+                     if (!patch_side_box.contains(*ni)) {
                         bool use_index = true;
                         for (int n = 0; n < d_dim.getValue(); n++) {
                            if (axis == n &&
                                face_bdry[fb].getBox().numberCells(n) == 1) {
-                              if (ni() (n) == plower(n) || ni() (n) ==
+                              if ((*ni)(n) == plower(n) || (*ni)(n) ==
                                   pupper(n)) {
                                  use_index = false;
                                  break;
@@ -289,7 +295,7 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
 
                         if (use_index) {
                            for (int d = 0; d < side_data->getDepth(); d++) {
-                              (*side_data)(ni(), d) =
+                              (*side_data)(*ni, d) =
                                  (double)(face_bdry[fb].getLocationIndex()
                                           + 100);
                            }
@@ -338,11 +344,13 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
          hier::Index plower(pbox.lower());
          hier::Index pupper(pbox.upper());
 
-         for (pdat::SideIterator ni(sing_fill_box, axis); ni; ni++) {
+         pdat::SideIterator niend(sing_fill_box, axis, false);
+         for (pdat::SideIterator ni(sing_fill_box, axis, true);
+              ni != niend; ++ni) {
             bool use_index = true;
             for (int n = 0; n < d_dim.getValue(); n++) {
                if (axis == n && bbox.getBox().numberCells(n) == 1) {
-                  if (ni() (n) == plower(n) || ni() (n) == pupper(n)) {
+                  if ((*ni)(n) == plower(n) || (*ni)(n) == pupper(n)) {
                      use_index = false;
                      break;
                   }
@@ -350,7 +358,7 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
             }
             if (use_index) {
                for (int d = 0; d < depth; d++) {
-                  (*side_data)(ni(), d) = 0.0;
+                  (*side_data)(*ni, d) = 0.0;
                }
             }
          }
@@ -422,11 +430,13 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
                      hier::Index plower(pbox.lower());
                      hier::Index pupper(pbox.upper());
 
-                     for (pdat::SideIterator ci(sing_fill_box, axis); ci; ci++) {
+                     pdat::SideIterator ciend(sing_fill_box, axis, false);
+                     for (pdat::SideIterator ci(sing_fill_box, axis, true);
+                          ci != ciend; ++ci) {
                         bool use_index = true;
                         for (int n = 0; n < d_dim.getValue(); n++) {
                            if (axis == n && bbox.getBox().numberCells(n) == 1) {
-                              if (ci() (n) == plower(n) || ci() (n) == pupper(n)) {
+                              if ((*ci)(n) == plower(n) || (*ci)(n) == pupper(n)) {
                                  use_index = false;
                                  break;
                               }
@@ -435,11 +445,11 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
 
                         if (use_index) {
 
-                           pdat::SideIndex src_index(ci());
+                           pdat::SideIndex src_index(*ci);
                            pdat::SideGeometry::transform(src_index, back_trans);
 
                            for (int d = 0; d < depth; d++) {
-                              (*side_data)(ci(), d) += (*sing_data)(src_index, d);
+                              (*side_data)(*ci, d) += (*sing_data)(src_index, d);
                            }
                         }
                      }
@@ -460,11 +470,13 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
             hier::Index plower(pbox.lower());
             hier::Index pupper(pbox.upper());
 
-            for (pdat::SideIterator ci(sing_fill_box, axis); ci; ci++) {
+            pdat::SideIterator ciend(sing_fill_box, axis, false);
+            for (pdat::SideIterator ci(sing_fill_box, axis, true);
+                 ci != ciend; ++ci) {
                bool use_index = true;
                for (int n = 0; n < d_dim.getValue(); n++) {
                   if (axis == n && bbox.getBox().numberCells(n) == 1) {
-                     if (ci() (n) == plower(n) || ci() (n) == pupper(n)) {
+                     if ((*ci)(n) == plower(n) || (*ci)(n) == pupper(n)) {
                         use_index = false;
                         break;
                      }
@@ -472,7 +484,7 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
                }
                if (use_index) {
                   for (int d = 0; d < depth; d++) {
-                     (*side_data)(ci(), d) /= num_encon_used;
+                     (*side_data)(*ci, d) /= num_encon_used;
                   }
                }
             }
@@ -493,11 +505,13 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
             hier::Index plower(pbox.lower());
             hier::Index pupper(pbox.upper());
 
-            for (pdat::SideIterator ci(sing_fill_box, axis); ci; ci++) {
+            pdat::SideIterator ciend(sing_fill_box, axis, false);
+            for (pdat::SideIterator ci(sing_fill_box, axis, true);
+                 ci != ciend; ++ci) {
                bool use_index = true;
                for (int n = 0; n < d_dim.getValue(); n++) {
                   if (axis == n && bbox.getBox().numberCells(n) == 1) {
-                     if (ci() (n) == plower(n) || ci() (n) == pupper(n)) {
+                     if ((*ci)(n) == plower(n) || (*ci)(n) == pupper(n)) {
                         use_index = false;
                         break;
                      }
@@ -505,7 +519,7 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
                }
                if (use_index) {
                   for (int d = 0; d < depth; d++) {
-                     (*side_data)(ci(), d) =
+                     (*side_data)(*ci, d) =
                         (double)bbox.getLocationIndex() + 200.0;
                   }
                }
@@ -572,13 +586,15 @@ bool SideMultiblockTest::verifyResults(
       interior_box.grow(hier::IntVector(d_dim, -1));
 
       for (int axis = 0; axis < d_dim.getValue(); axis++) {
-         for (pdat::SideIterator ci(interior_box, axis); ci; ci++) {
+         pdat::SideIterator ciend(interior_box, axis, false);
+         for (pdat::SideIterator ci(interior_box, axis, true);
+              ci != ciend; ++ci) {
             for (int d = 0; d < depth; d++) {
-               double result = (*side_data)(ci(), d);
+               double result = (*side_data)(*ci, d);
 
                if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
-                             << " : side index = " << ci() << endl;
+                             << " : side index = " << *ci << endl;
                   tbox::perr << "    Variable = " << d_variable_src_name[i]
                              << " : depth index = " << d << endl;
                   tbox::perr << "    result = " << result
@@ -608,10 +624,10 @@ bool SideMultiblockTest::verifyResults(
 
             hier::BoxContainer neighbor_ghost(ne->getTransformedDomain());
             hier::BoxContainer neighbor_side_ghost;
-            for (hier::BoxContainer::Iterator nn(neighbor_ghost);
+            for (hier::BoxContainer::iterator nn(neighbor_ghost);
                  nn != neighbor_ghost.end(); ++nn) {
                hier::Box neighbor_ghost_interior(
-                  pdat::SideGeometry::toSideBox(nn(), axis));
+                  pdat::SideGeometry::toSideBox(*nn, axis));
                neighbor_ghost_interior.grow(-hier::IntVector::getOne(d_dim));
                neighbor_side_ghost.pushFront(neighbor_ghost_interior);
             }
@@ -622,11 +638,12 @@ bool SideMultiblockTest::verifyResults(
 
             neighbor_side_ghost.removeIntersections(tested_neighbors);
 
-            for (hier::BoxContainer::Iterator ng(neighbor_side_ghost);
+            for (hier::BoxContainer::iterator ng(neighbor_side_ghost);
                  ng != neighbor_side_ghost.end(); ++ng) {
 
-               for (hier::BoxIterator ci(ng()); ci; ci++) {
-                  pdat::SideIndex si(ci(), 0, 0);
+               hier::Box::iterator ciend(*ng, false);
+               for (hier::Box::iterator ci(*ng, true); ci != ciend; ++ci) {
+                  pdat::SideIndex si(*ci, 0, 0);
                   si.setAxis(axis);
                   if (!patch_side_box.contains(si)) {
                      for (int d = 0; d < depth; d++) {
@@ -699,16 +716,18 @@ bool SideMultiblockTest::verifyResults(
                hier::Box patch_side_box =
                   pdat::SideGeometry::toSideBox(pbox, axis);
 
-               for (pdat::SideIterator ci(fill_box, axis); ci; ci++) {
+               pdat::SideIterator ciend(fill_box, axis, false);
+               for (pdat::SideIterator ci(fill_box, axis, true);
+                    ci != ciend; ++ci) {
 
-                  if (!patch_side_box.contains(ci())) {
+                  if (!patch_side_box.contains(*ci)) {
 
                      bool use_index = true;
                      for (int n = 0; n < d_dim.getValue(); n++) {
                         if (axis == n && bdry[k].getBox().numberCells(n) ==
                             1) {
-                           if (ci() (n) == patch_side_box.lower() (n) ||
-                               ci() (n) == patch_side_box.upper() (n)) {
+                           if ((*ci)(n) == patch_side_box.lower() (n) ||
+                               (*ci)(n) == patch_side_box.upper() (n)) {
                               use_index = false;
                               break;
                            }
@@ -717,12 +736,12 @@ bool SideMultiblockTest::verifyResults(
 
                      if (use_index) {
                         for (int d = 0; d < depth; d++) {
-                           double result = (*side_data)(ci(), d);
+                           double result = (*side_data)(*ci, d);
 
                            if (!tbox::MathUtilities<double>::equalEps(correct,
                                   result)) {
                               tbox::perr << "Test FAILED: ...."
-                                         << " : side index = " << ci() << endl;
+                                         << " : side index = " << *ci << endl;
                               tbox::perr << "  Variable = "
                                          << d_variable_src_name[i]
                                          << " : depth index = " << d << endl;

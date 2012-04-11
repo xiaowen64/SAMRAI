@@ -320,9 +320,9 @@ CellData<TYPE>::copyWithRotation(
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
 
-   for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
+   for (hier::BoxContainer::const_iterator bi(overlap_boxes);
         bi != overlap_boxes.end(); ++bi) {
-      const hier::Box& overlap_box = bi();
+      const hier::Box& overlap_box = *bi;
 
       const hier::Box copybox(rotatebox * overlap_box);
 
@@ -330,9 +330,11 @@ CellData<TYPE>::copyWithRotation(
          const int depth = ((getDepth() < src.getDepth()) ?
                             getDepth() : src.getDepth());
 
-         for (CellData<double>::Iterator ci(copybox); ci; ci++) {
+         CellData<double>::Iterator ciend(copybox, false);
+         for (CellData<double>::Iterator ci(copybox, true);
+              ci != ciend; ++ci) {
 
-            const CellIndex& dst_index = ci();
+            const CellIndex& dst_index = *ci;
             CellIndex src_index(dst_index);
             hier::Transformation::rotateIndex(src_index, back_rotate);
             src_index += back_shift;
@@ -462,18 +464,20 @@ CellData<TYPE>::packWithRotation(
    tbox::Array<TYPE> buffer(size);
 
    int i = 0;
-   for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
+   for (hier::BoxContainer::const_iterator bi(overlap_boxes);
         bi != overlap_boxes.end(); ++bi) {
-      const hier::Box& overlap_box = bi();
+      const hier::Box& overlap_box = *bi;
 
       const hier::Box copybox(rotatebox * overlap_box);
 
       if (!copybox.empty()) {
 
          for (int d = 0; d < depth; d++) {
-            for (CellData<double>::Iterator ci(copybox); ci; ci++) {
+            CellData<double>::Iterator ciend(copybox, false);
+            for (CellData<double>::Iterator ci(copybox, true);
+                 ci != ciend; ++ci) {
 
-               CellIndex src_index(ci());
+               CellIndex src_index(*ci);
                hier::Transformation::rotateIndex(src_index, back_rotate);
                src_index += back_shift;
 
@@ -581,9 +585,10 @@ CellData<TYPE>::print(
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    os.precision(prec);
-   for (CellIterator i(box); i; i++) {
-      os << "array" << i() << " = "
-         << d_data(i(), depth) << std::endl << std::flush;
+   CellIterator iend(box, false);
+   for (CellIterator i(box, true); i != iend; ++i) {
+      os << "array" << *i << " = "
+         << d_data(*i, depth) << std::endl << std::flush;
       os << std::flush;
    }
 }

@@ -202,7 +202,8 @@ int main(
       for (ln = 0; ln < 2; ln++) {
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
-         for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+         for (hier::PatchLevel::iterator ip(level->begin());
+              ip != level->end(); ++ip) {
             patch = level->getPatch(ip());
             pgeom = patch->getPatchGeometry();
             const double* dx = pgeom->getDx();
@@ -227,15 +228,17 @@ int main(
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
 
-         for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+         for (hier::PatchLevel::iterator ip(level->begin());
+              ip != level->end(); ++ip) {
             patch = level->getPatch(ip());
             boost::shared_ptr<pdat::CellData<double> > cvdata(
                patch->getPatchData(cwgt_id));
 
-            for (pdat::CellIterator c(cvdata->getBox());
-                 c && vol_test_passed;
-                 c++) {
-               pdat::CellIndex cell_index = c();
+            pdat::CellIterator cend(cvdata->getBox(), false);
+            for (pdat::CellIterator c(cvdata->getBox(), true);
+                 c != cend && vol_test_passed;
+                 ++c) {
+               pdat::CellIndex cell_index = *c;
 
                if (ln == 0) {
                   if ((coarse_fine * patch->getBox()).contains(cell_index)) {
@@ -454,7 +457,8 @@ int main(
 
       // set values
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(0));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          patch = level->getPatch(ip());
          cdata = patch->getPatchData(cvindx[2]);
          hier::Index<2> index0(2, 2);
@@ -469,16 +473,18 @@ int main(
 
       // check values
       bool bogus_value_test_passed = true;
-      for (hier::PatchLevel::Iterator ipp(level); ipp; ipp++) {
+      for (hier::PatchLevel::iterator ipp(level->begin());
+           ipp != level->end(); ++ipp) {
          patch = level->getPatch(ipp());
          cdata = patch->getPatchData(cvindx[2]);
          hier::Index<2> index0(2, 2);
          hier::Index<2> index1(5, 3);
 
-         for (pdat::CellIterator c(cdata->getBox());
-              c && bogus_value_test_passed;
-              c++) {
-            pdat::CellIndex cell_index = c();
+         pdat::CellIterator cend(cdata->getBox(), false);
+         for (pdat::CellIterator c(cdata->getBox(), true);
+              c != cend && bogus_value_test_passed;
+              ++c) {
+            pdat::CellIndex cell_index = *c;
 
             if (cell_index == index0) {
                if (!tbox::MathUtilities<double>::equalEps((*cdata)(cell_index),
@@ -651,13 +657,16 @@ doubleDataSameAsValue(
    boost::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          patch = level->getPatch(ip());
          boost::shared_ptr<pdat::CellData<double> > cvdata(
             patch->getPatchData(desc_id));
 
-         for (pdat::CellIterator c(cvdata->getBox()); c && test_passed; c++) {
-            pdat::CellIndex cell_index = c();
+         pdat::CellIterator cend(cvdata->getBox(), false);
+         for (pdat::CellIterator c(cvdata->getBox(), true);
+              c != cend && test_passed; ++c) {
+            pdat::CellIndex cell_index = *c;
             if (!tbox::MathUtilities<double>::equalEps((*cvdata)(cell_index),
                    value)) {
                test_passed = false;

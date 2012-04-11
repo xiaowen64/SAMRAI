@@ -230,10 +230,10 @@ BoxUtilities::checkBoxConstraints(
             test_boxes.intersectBoxes(border_boxes);
             test_boxes.simplify();
 
-            BoxContainer::Iterator tb = test_boxes.begin();
+            BoxContainer::iterator tb = test_boxes.begin();
             while (!bad_cut_violation && tb != test_boxes.end()) {
-               if ((tb().lower(id) > (blo - bad))
-                   || (tb().upper(id) < (blo - 1))) {
+               if ((tb->lower(id) > (blo - bad))
+                   || (tb->upper(id) < (blo - 1))) {
                   bad_cut_violation = true;
                   cut_is_bad[id] = true;
                }
@@ -257,8 +257,8 @@ BoxUtilities::checkBoxConstraints(
 
                tb = test_boxes.begin();
                while (!bad_cut_violation && tb != test_boxes.end()) {
-                  if ((tb().lower(id) > (bhi + 1))
-                      || (tb().upper(id) < (bhi + bad))) {
+                  if ((tb->lower(id) > (bhi + 1))
+                      || (tb->upper(id) < (bhi + bad))) {
                      bad_cut_violation = true;
                      cut_is_bad[id] = true;
                   }
@@ -282,7 +282,7 @@ BoxUtilities::checkBoxConstraints(
                     << bad_interval << std::endl;
          tbox::perr << "Physical domain boxes ... " << std::endl;
          int ib = 0;
-         for (BoxContainer::ConstIterator itr(physical_boxes);
+         for (BoxContainer::const_iterator itr(physical_boxes);
               itr != physical_boxes.end(); ++itr, ++ib) {
             tbox::perr << "Box # " << ib << " -- " << *itr << std::endl;
          }
@@ -566,9 +566,9 @@ BoxUtilities::extendBoxToDomainBoundary(
             outside_boxes.intersectBoxes(test_region);
 
             int box_lo = box.lower(id);
-            BoxContainer::Iterator lb = outside_boxes.begin();
+            BoxContainer::iterator lb = outside_boxes.begin();
             for ( ; lb != outside_boxes.end(); ++lb) {
-               box_lo = tbox::MathUtilities<int>::Min(box_lo, lb().upper(
+               box_lo = tbox::MathUtilities<int>::Min(box_lo, lb->upper(
                         id) + 1);
             }
 
@@ -581,7 +581,7 @@ BoxUtilities::extendBoxToDomainBoundary(
 
             int box_hi = box.upper(id);
             for (lb = outside_boxes.begin(); lb != outside_boxes.end(); ++lb) {
-               box_hi = tbox::MathUtilities<int>::Max(box_hi, lb().lower(
+               box_hi = tbox::MathUtilities<int>::Max(box_hi, lb->lower(
                         id) - 1);
             }
 
@@ -669,10 +669,10 @@ BoxUtilities::growBoxesWithinDomain(
                outside_boxes.intersectBoxes(test_region);
 
                int grow_lo = try_box.lower(id) - grow;
-               BoxContainer::Iterator lb = outside_boxes.begin();
+               BoxContainer::iterator lb = outside_boxes.begin();
                for ( ; lb != outside_boxes.end(); ++lb) {
                   grow_lo =
-                     tbox::MathUtilities<int>::Max(grow_lo, lb().upper(id) + 1);
+                     tbox::MathUtilities<int>::Max(grow_lo, lb->upper(id) + 1);
                }
 
                // How far may box be grown within domain in upper direction?
@@ -686,7 +686,7 @@ BoxUtilities::growBoxesWithinDomain(
                int grow_up = try_box.upper(id) + grow;
                for (lb = outside_boxes.begin(); lb != outside_boxes.end(); ++lb) {
                   grow_up =
-                     tbox::MathUtilities<int>::Min(grow_up, lb().lower(id) - 1);
+                     tbox::MathUtilities<int>::Min(grow_up, lb->lower(id) - 1);
                }
 
                // Adjust box dimensions as necessary
@@ -764,11 +764,11 @@ BoxUtilities::growBoxWithinDomain(
          outside_boxes.unorder();
          outside_boxes.intersectBoxes(test_region);
 
-         BoxContainer::Iterator lb = outside_boxes.begin(); 
+         BoxContainer::iterator lb = outside_boxes.begin(); 
          int grow_lo = try_box.lower(id) - grow;
          for ( ; lb != outside_boxes.end(); ++lb) {
             grow_lo =
-               tbox::MathUtilities<int>::Max(grow_lo, lb().upper(id) + 1);
+               tbox::MathUtilities<int>::Max(grow_lo, lb->upper(id) + 1);
          }
 
          // How far may box be grown within domain in upper direction?
@@ -783,7 +783,7 @@ BoxUtilities::growBoxWithinDomain(
          int grow_up = try_box.upper(id) + grow;
          for (lb = outside_boxes.begin(); lb != outside_boxes.end(); ++lb) {
             grow_up =
-               tbox::MathUtilities<int>::Min(grow_up, lb().lower(id) - 1);
+               tbox::MathUtilities<int>::Min(grow_up, lb->lower(id) - 1);
          }
 
          // Adjust box dimensions as necessary
@@ -1222,10 +1222,10 @@ BoxUtilities::checkBoxForBadCutPointsInDirection(
             border_boxes.removeIntersections(physical_boxes);
             border_boxes.simplify();
 
-            BoxContainer::Iterator bb = border_boxes.begin();
+            BoxContainer::iterator bb = border_boxes.begin();
             while (!found_bad && bb != border_boxes.end()) {
-               found_bad = ((bb().lower(id) > (blo - bad))
-                            || (bb().upper(id) < (bhi + bad)));
+               found_bad = ((bb->lower(id) > (blo - bad))
+                            || (bb->upper(id) < (bhi + bad)));
                ++bb;
             }
 
@@ -1246,8 +1246,8 @@ BoxUtilities::checkBoxForBadCutPointsInDirection(
 
                bb = border_boxes.begin();
                while (!found_bad && bb != border_boxes.end()) {
-                  found_bad = ((bb().lower(id) > (blo - bad))
-                               || (bb().upper(id) < (bhi + bad)));
+                  found_bad = ((bb->lower(id) > (blo - bad))
+                               || (bb->upper(id) < (bhi + bad)));
                   ++bb;
                }
 
@@ -1361,7 +1361,8 @@ BoxUtilities::findBadCutPointsForDirection(
 
    for (int id2 = 0; id2 < dim.getValue(); id2++) {
 
-      if (((dim.getValue() == 1) && id2 == id) || ((dim.getValue() != 1) && (id2 != id))) {
+      if (((dim.getValue() == 1) && id2 == id) ||
+          ((dim.getValue() != 1) && (id2 != id))) {
          /*
           * Test lower box face in direction id2.
           */
@@ -1391,12 +1392,12 @@ BoxUtilities::findBadCutPointsForDirection(
          if (!border_boxes.isEmpty()) {
             border_boxes.simplify();
 
-            for (BoxContainer::Iterator bbox(border_boxes);
+            for (BoxContainer::iterator bbox(border_boxes);
                  bbox != border_boxes.end(); ++bbox) {
                findBadCutPointsForBorderAndDirection(id,
                   bad_cuts,
                   box,
-                  bbox(),
+                  *bbox,
                   bad_interval(id));
             }
          }
@@ -1430,12 +1431,12 @@ BoxUtilities::findBadCutPointsForDirection(
 
          if (!border_boxes.isEmpty()) {
             border_boxes.simplify();
-            for (BoxContainer::Iterator bbox(border_boxes);
+            for (BoxContainer::iterator bbox(border_boxes);
                  bbox != border_boxes.end(); ++bbox) {
                findBadCutPointsForBorderAndDirection(id,
                   bad_cuts,
                   box,
-                  bbox(),
+                  *bbox,
                   bad_interval(id));
             }
          }
@@ -1765,14 +1766,14 @@ BoxUtilities::makeNonOverlappingBoxContainers(
 
    // Remove portion of index space represented by array box from list.
    // Keep unique pieces on box list.
-   BoxContainer::ConstIterator itr(boxes);
+   BoxContainer::const_iterator itr(boxes);
    for (int ib = 0; ib < nb; ++ib, ++itr) {
       Box remove = *itr;
 
-      for (BoxContainer::Iterator l(box_list); l != box_list.end(); ++l) {
-         Box intersection = remove * l();
-         if (intersection.isSpatiallyEqual(l())) {
-            box_list_array[ib].pushBack(l());
+      for (BoxContainer::iterator l(box_list); l != box_list.end(); ++l) {
+         Box intersection = remove * (*l);
+         if (intersection.isSpatiallyEqual(*l)) {
+            box_list_array[ib].pushBack(*l);
          }
       }
       box_list_array[ib].coalesce();

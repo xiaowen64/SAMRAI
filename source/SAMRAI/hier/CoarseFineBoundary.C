@@ -274,12 +274,13 @@ CoarseFineBoundary::computeFromLevel(
       /*
        * Construct an iterator which filters only level's boxes in this block.
        */
-      BoxContainerSingleBlockIterator itr(all_boxes_on_level, block_id);
+      BoxContainerSingleBlockIterator itr(
+         all_boxes_on_level.begin(block_id));
 
       /*
        * Only do work if there any boxes in this block.
        */
-      if (itr.isValid()) {
+      if (itr != all_boxes_on_level.end(block_id)) {
 
          /*
           * Construct the array of boxes on level and level0 in this block.
@@ -322,7 +323,7 @@ CoarseFineBoundary::computeFromLevel(
          adjusted_level_domain[i] = level_domain;
          adjusted_level_domain[i].unorder();
 
-         for (PatchLevel::Iterator p(level); p; ++p) {
+         for (PatchLevel::iterator p(level.begin()); p != level.end(); ++p) {
             if ((*p)->getBox().getBlockId() == i &&
                 (*p)->getPatchGeometry()->getTouchesRegularBoundary()) {
 

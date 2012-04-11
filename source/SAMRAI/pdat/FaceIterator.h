@@ -28,7 +28,8 @@ namespace pdat {
  * \verbatim
  * hier::Box box;
  * ...
- * for (FaceIterator c(box, axis); c; c++) {
+ * FaceIterator cend(box, axis, false);
+ * for (FaceIterator c(box, axis, true); c != cend; ++c) {
  *    // use index c of the box
  * }
  * \endverbatim
@@ -50,7 +51,8 @@ public:
     */
    FaceIterator(
       const hier::Box& box,
-      const int axis);
+      const int axis,
+      bool begin);
 
    /**
     * Copy constructor for the face iterator
@@ -85,43 +87,25 @@ public:
    }
 
    /**
-    * Extract the face index corresponding to the iterator position in the box.
+    * Extract a pointer to the face index corresponding to the iterator
+    * position in the box.
     */
-   const FaceIndex&
-   operator () () const
+   const FaceIndex*
+   operator -> () const
    {
-      return d_index;
+      return &d_index;
    }
 
    /**
-    * Return true if the iterator points to a valid index within the box.
+    * Pre-increment the iterator to point to the next index in the box.
     */
-   operator bool () const;
-
-#ifndef LACKS_BOOL_VOID_RESOLUTION
-   /**
-    * Return a non-NULL if the iterator points to a valid index within the box.
-    */
-   operator const void* () const
-   {
-      return FaceIterator::operator bool () ? this : NULL;
-   }
-#endif
+   FaceIterator&
+   operator ++ ();
 
    /**
-    * Return whether the iterator points to a valid index within the box.
-    * This operator mimics the !p operation applied to a pointer p.
+    * Post-increment the iterator to point to the next index in the box.
     */
-   bool
-   operator ! () const
-   {
-      return !FaceIterator::operator bool ();
-   }
-
-   /**
-    * Increment the iterator to point to the next index in the box.
-    */
-   void
+   FaceIterator
    operator ++ (
       int);
 

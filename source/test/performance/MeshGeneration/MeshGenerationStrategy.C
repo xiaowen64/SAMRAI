@@ -43,9 +43,6 @@ void MeshGenerationStrategy::setTagsByShrinkingLevel(
 
    const int tag_val = 1;
 
-   hier::VariableDatabase* vdb =
-      hier::VariableDatabase::getDatabase();
-
    const boost::shared_ptr<hier::PatchLevel> &tag_level(
       hierarchy->getPatchLevel(tag_ln));
 
@@ -85,7 +82,8 @@ void MeshGenerationStrategy::setTagsByShrinkingLevel(
    tbox::plog << "Ltag_to_tagfootprint:\n" << Ltag_to_tagfootprint.format("Ltag->tagfootprint: ", 2);
 
 
-   for (hier::PatchLevel::Iterator pi(tag_level); pi; pi++) {
+   for (hier::PatchLevel::iterator pi(tag_level->begin());
+        pi != tag_level->end(); ++pi) {
 
       boost::shared_ptr<hier::Patch> patch = *pi;
       boost::shared_ptr<pdat::CellData<int> > tag_data(

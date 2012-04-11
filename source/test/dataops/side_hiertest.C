@@ -144,8 +144,8 @@ int main(
       hier::BoxLevel layer0(hier::IntVector(dim, 1), geometry);
       hier::BoxLevel layer1(ratio, geometry);
 
-      hier::BoxContainer::Iterator coarse_itr(coarse_domain);
-      for (int ib = 0; ib < n_coarse_boxes; ib++, coarse_itr++) {
+      hier::BoxContainer::iterator coarse_itr(coarse_domain);
+      for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_itr) {
          if (nproc > 1) {
             if (ib == layer0.getMPI().getRank()) {
                layer0.addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
@@ -156,8 +156,8 @@ int main(
          }
       }
 
-      hier::BoxContainer::Iterator fine_itr(fine_boxes);
-      for (int ib = 0; ib < n_fine_boxes; ib++, fine_itr++) {
+      hier::BoxContainer::iterator fine_itr(fine_boxes);
+      for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_itr) {
          if (nproc > 1) {
             if (ib == layer1.getMPI().getRank()) {
                layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib),
@@ -229,7 +229,8 @@ int main(
       for (ln = 0; ln < 2; ln++) {
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
-         for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+         for (hier::PatchLevel::iterator ip(level->begin());
+              ip != level->end(); ++ip) {
             patch = *ip;
             boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
                patch->getPatchGeometry(),
@@ -334,12 +335,13 @@ int main(
       // 0.0025 on fine level
 /*   bool vol_test_passed = true;
  *   for (ln = 0; ln < 2; ln++) {
- *   for (hier::PatchLevel::Iterator ip(hierarchy->getPatchLevel(ln)); ip; ip++) {
+ *   for (hier::PatchLevel::iterator ip(hierarchy->getPatchLevel(ln)->begin()); ip != hierarchy->getPatchLevel(ln)->end(); ++ip) {
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
  *   boost::shared_ptr< pdat::SideData<double> > cvdata = patch->getPatchData(cwgt_id);
  *
- *   for (pdat::SideIterator c(cvdata->getBox(),1);c && vol_test_passed;c++) {
- *   pdat::SideIndex side_index = c();
+ *   pdat::SideIterator cend(cvdata->getBox(), 1, false);
+ *   for (pdat::SideIterator c(cvdata->getBox(), 1, true); c != cend && vol_test_passed; ++c) {
+ *   pdat::SideIndex side_index = *c;
  *
  *   if (ln == 0) {
  *   if ((coarse_fine * patch->getBox()).contains(side_index)) {
@@ -580,7 +582,8 @@ int main(
       // set values
       boost::shared_ptr<hier::PatchLevel> level_zero(
          hierarchy->getPatchLevel(0));
-      for (hier::PatchLevel::Iterator ip(level_zero); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level_zero->begin());
+           ip != level_zero->end(); ++ip) {
          patch = *ip;
          cdata = boost::dynamic_pointer_cast<pdat::SideData<double>,
                                              hier::PatchData>(patch->getPatchData(svindx[2]));
@@ -598,7 +601,8 @@ int main(
 
       // check values
       bool bogus_value_test_passed = true;
-      for (hier::PatchLevel::Iterator ipp(level_zero); ipp; ipp++) {
+      for (hier::PatchLevel::iterator ipp(level_zero->begin());
+           ipp != level_zero->end(); ++ipp) {
          patch = *ipp;
          cdata = boost::dynamic_pointer_cast<pdat::SideData<double>,
                                              hier::PatchData>(patch->getPatchData(svindx[2]));
@@ -610,10 +614,11 @@ int main(
                                 pdat::SideIndex::Upper);
 
          // check X axis data
-         for (pdat::SideIterator c(cdata->getBox(), pdat::SideIndex::X);
-              c && bogus_value_test_passed;
-              c++) {
-            pdat::SideIndex side_index = c();
+         pdat::SideIterator cend(cdata->getBox(), pdat::SideIndex::X, false);
+         for (pdat::SideIterator c(cdata->getBox(), pdat::SideIndex::X, true);
+              c != cend && bogus_value_test_passed;
+              ++c) {
+            pdat::SideIndex side_index = *c;
 
             if (!tbox::MathUtilities<double>::equalEps((*cdata)(side_index),
                    4.0)) {
@@ -622,10 +627,11 @@ int main(
          }
 
          // check Y axis data
-         for (pdat::SideIterator cc(cdata->getBox(), pdat::SideIndex::Y);
-              cc && bogus_value_test_passed;
-              cc++) {
-            pdat::SideIndex side_index = cc();
+         pdat::SideIterator ccend(cdata->getBox(), pdat::SideIndex::Y, false);
+         for (pdat::SideIterator cc(cdata->getBox(), pdat::SideIndex::Y, true);
+              cc != ccend && bogus_value_test_passed;
+              ++cc) {
+            pdat::SideIndex side_index = *cc;
 
             if (side_index == index0) {
                if (!tbox::MathUtilities<double>::equalEps((*cdata)(side_index),
@@ -811,15 +817,18 @@ doubleDataSameAsValue(
    boost::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          patch = *ip;
          boost::shared_ptr<pdat::SideData<double> > cvdata(
                patch->getPatchData(desc_id),
                boost::detail::dynamic_cast_tag());
 
-         for (pdat::SideIterator c(cvdata->getBox(), 1); c && test_passed;
-              c++) {
-            pdat::SideIndex side_index = c();
+         pdat::SideIterator cend(cvdata->getBox(), 1, false);
+         for (pdat::SideIterator c(cvdata->getBox(), 1, true);
+              c != cend && test_passed;
+              ++c) {
+            pdat::SideIndex side_index = *c;
             if (!tbox::MathUtilities<double>::equalEps((*cvdata)(side_index),
                    value)) {
                test_passed = false;

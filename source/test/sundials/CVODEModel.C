@@ -17,7 +17,6 @@
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellIndex.h"
-#include "SAMRAI/pdat/CellIterator.h"
 #include "SAMRAI/xfer/CoarsenAlgorithm.h"
 #include "SAMRAI/hier/CoarsenOperator.h"
 #include "SAMRAI/xfer/CoarsenSchedule.h"
@@ -416,7 +415,7 @@ CVODEModel::applyGradientDetector(
    boost::shared_ptr<PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
 
-   for (PatchLevel::Iterator p(level); p; p++) {
+   for (PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
       const boost::shared_ptr<Patch>& patch = *p;
 
       boost::shared_ptr<CellData<int> > tag_data(
@@ -653,7 +652,7 @@ CVODEModel::evaluateRHSFunction(
    for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
 
-      for (PatchLevel::Iterator ip(level); ip; ip++) {
+      for (PatchLevel::iterator ip(level->begin()); ip != level->end(); ++ip) {
          const boost::shared_ptr<Patch>& patch = *ip;
 
          boost::shared_ptr<CellData<double> > y(
@@ -830,7 +829,7 @@ int CVODEModel::CVSpgmrPrecondSet(
          fill_soln_interior_on_coarser_sched->coarsenData();
       }
 
-      for (PatchLevel::Iterator p(level); p; p++) {
+      for (PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
          const boost::shared_ptr<Patch>& patch = *p;
 
          const Index ifirst(patch->getBox().lower());
@@ -1030,7 +1029,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
          level->allocatePatchData(d_soln_scr_id);
       }
 
-      for (PatchLevel::Iterator p(level); p; p++) {
+      for (PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
 
          const boost::shared_ptr<Patch>& patch = *p;
 
@@ -1136,7 +1135,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
    for (ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
 
-      for (PatchLevel::Iterator p(level); p; p++) {
+      for (PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
          const boost::shared_ptr<Patch>& patch = *p;
 
          boost::shared_ptr<CellData<double> > soln_scratch(
@@ -1254,11 +1253,11 @@ CVODEModel::setInitialConditions(
    boost::shared_ptr<PatchHierarchy> hierarchy(
       soln_init_samvect->getPatchHierarchy());
 
-   for (int ln = 0; ln < hierarchy->getNumberOfLevels(); ln++) {
+   for (int ln = 0; ln < hierarchy->getNumberOfLevels(); ++ln) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
 
-      for (int cn = 0; cn < soln_init_samvect->getNumberOfComponents(); cn++) {
-         for (PatchLevel::Iterator p(level); p; p++) {
+      for (int cn = 0; cn < soln_init_samvect->getNumberOfComponents(); ++cn) {
+         for (PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
             const boost::shared_ptr<Patch>& patch = *p;
 
             /*

@@ -465,7 +465,7 @@ CellPoissonHypreSolver::allocateHypreData()
    }
 
    HYPRE_StructGridCreate(communicator, d_dim.getValue(), &d_grid);
-   for (hier::PatchLevel::Iterator p(level); p; p++) {
+   for (hier::PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
       const hier::Box& box = (*p)->getBox();
       hier::Index lower = box.lower();
       hier::Index upper = box.upper();
@@ -477,10 +477,10 @@ CellPoissonHypreSolver::allocateHypreData()
       const hier::BoxContainer& level_domain =
          level->getPhysicalDomain(hier::BlockId::zero());
       hier::Box domain_bound(level_domain.front());
-      for (hier::BoxContainer::ConstIterator i(level_domain); i != level_domain.end();
-           ++i) {
-         domain_bound.lower().min(i().lower());
-         domain_bound.upper().max(i().upper());
+      for (hier::BoxContainer::const_iterator i(level_domain);
+           i != level_domain.end(); ++i) {
+         domain_bound.lower().min(i->lower());
+         domain_bound.upper().max(i->upper());
       }
       for (d = 0; d < d_dim.getValue(); ++d) {
          if (periodic_flag[d] == true) {
@@ -679,9 +679,10 @@ CellPoissonHypreSolver::copyToHypre(
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, src, box);
 
-   for (pdat::CellIterator c(box); c; c++) {
-      hier::IntVector ic = c();
-      HYPRE_StructVectorSetValues(vector, &ic[0], src(c(), depth));
+   pdat::CellIterator cend(box, false);
+   for (pdat::CellIterator c(box, true); c != cend; ++c) {
+      hier::IntVector ic = *c;
+      HYPRE_StructVectorSetValues(vector, &ic[0], src(*c, depth));
    }
 }
 
@@ -702,11 +703,12 @@ CellPoissonHypreSolver::copyFromHypre(
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, dst, box);
 
-   for (pdat::CellIterator c(box); c; c++) {
+   pdat::CellIterator cend(box, false);
+   for (pdat::CellIterator c(box, true); c != cend; ++c) {
       double value;
-      hier::IntVector ic = c();
+      hier::IntVector ic = *c;
       HYPRE_StructVectorGetValues(vector, &ic[0], &value);
-      dst(c(), depth) = value;
+      dst(*c, depth) = value;
    }
 }
 
@@ -765,7 +767,8 @@ CellPoissonHypreSolver::setMatrixCoefficients(
     */
    boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
    const hier::IntVector no_ghosts(d_dim, 0);
-   for (hier::PatchLevel::Iterator pi(*level); pi; pi++) {
+   for (hier::PatchLevel::iterator pi(level->begin());
+        pi != level->end(); ++pi) {
 
       hier::Patch& patch = **pi;
 
@@ -1000,30 +1003,31 @@ CellPoissonHypreSolver::setMatrixCoefficients(
 
       for (i = 0; i < stencil_size; i++) stencil_indices[i] = i;
 
-      pdat::CellIterator ic(patch_box);
+      pdat::CellIterator ic(patch_box, true);
+      pdat::CellIterator icend(patch_box, false);
 
       /*
        * To do: This loop uses inefficient high-level syntax.
        * See if it can be replaced by a Fortran loop or if we
        * can set matrix entries for an entire box at once.
        */
-      for ( ; ic; ic++) {
+      for ( ; ic != icend; ++ic) {
 
-         hier::IntVector icell = ic();
-         pdat::SideIndex ixlower(ic(),
+         hier::IntVector icell = *ic;
+         pdat::SideIndex ixlower(*ic,
                                  pdat::SideIndex::X,
                                  pdat::SideIndex::Lower);
          mat_entries[0] = (off_diagonal)(ixlower);
 
          if (d_dim > tbox::Dimension(1)) {
-            pdat::SideIndex iylower(ic(),
+            pdat::SideIndex iylower(*ic,
                                     pdat::SideIndex::Y,
                                     pdat::SideIndex::Lower);
             mat_entries[1] = (off_diagonal)(iylower);
          }
 
          if (d_dim > tbox::Dimension(2)) {
-            pdat::SideIndex izlower(ic(),
+            pdat::SideIndex izlower(*ic,
                                     pdat::SideIndex::Z,
                                     pdat::SideIndex::Lower);
             // The "funny" indexing prevents a warning when compiling for
@@ -1032,7 +1036,7 @@ CellPoissonHypreSolver::setMatrixCoefficients(
             mat_entries[d_dim.getValue() > 2 ? 2 : 0] = (off_diagonal)(izlower);
          }
 
-         mat_entries[d_dim.getValue()] = (diagonal)(ic());
+         mat_entries[d_dim.getValue()] = (diagonal)(*ic);
          HYPRE_StructMatrixSetValues(d_matrix, &icell[0],
             stencil_size, stencil_indices,
             mat_entries);
@@ -1281,7 +1285,7 @@ CellPoissonHypreSolver::solveSystem(
     */
    d_cf_bc_coef.setGhostDataId(u, hier::IntVector::getZero(d_dim));
 
-   for (hier::PatchLevel::Iterator p(level); p; p++) {
+   for (hier::PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
       const boost::shared_ptr<hier::Patch>& patch = *p;
 
       const hier::Box box = patch->getBox();
@@ -1380,7 +1384,8 @@ CellPoissonHypreSolver::solveSystem(
    /*
     * Pull the solution vector out of the HYPRE structures
     */
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
       boost::shared_ptr<pdat::CellData<double> > u_data_(
          patch->getPatchData(u),

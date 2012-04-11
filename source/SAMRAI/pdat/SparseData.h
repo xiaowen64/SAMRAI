@@ -746,13 +746,13 @@ public:
    /*!
     * @brief pre-increment operator
     */
-   void
+   SparseDataIterator&
    operator ++ ();
 
    /*!
     * @brief post-increment operator
     */
-   void
+   SparseDataIterator
    operator ++ (
       int);
 
@@ -914,13 +914,13 @@ public:
    /*!
     * @brief pre-increment operator
     */
-   void
+   SparseDataAttributeIterator&
    operator ++ ();
 
    /*!
     * @brief post-increment operator
     */
-   void
+   SparseDataAttributeIterator
    operator ++ (
       int);
 

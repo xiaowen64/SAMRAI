@@ -213,13 +213,15 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
                   encon_patch->getPatchData(d_buf_tag_indx),
                   boost::detail::dynamic_cast_tag());
 
-               for (pdat::CellIterator ci(encon_fill_box); ci; ci++) {
-                  pdat::CellIndex src_index(ci());
+               pdat::CellIterator ciend(encon_fill_box, false);
+               for (pdat::CellIterator ci(encon_fill_box, true);
+                    ci != ciend; ++ci) {
+                  pdat::CellIndex src_index(*ci);
                   pdat::CellGeometry::transform(src_index, back_trans);
 
                   int sing_val = (*sing_data)(src_index);
-                  if (sing_val != 0 && (*tag_data)(ci()) == 0) {
-                     (*tag_data)(ci()) = sing_val;
+                  if (sing_val != 0 && (*tag_data)(*ci) == 0) {
+                     (*tag_data)(*ci) = sing_val;
                   }
                }
             }

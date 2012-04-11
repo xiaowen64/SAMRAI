@@ -413,7 +413,8 @@ OverlapConnectorAlgorithm::findOverlaps_rbbt(
     */
    NeighborSet nabrs_for_box;
    const BoxContainer& base_mapped_boxes = base.getBoxes();
-   for (RealBoxConstIterator ni(base_mapped_boxes); ni.isValid(); ++ni) {
+   for (RealBoxConstIterator ni(base_mapped_boxes.realBegin());
+        ni != base_mapped_boxes.realEnd(); ++ni) {
 
       const Box& base_mapped_box = *ni;
 
@@ -1367,8 +1368,8 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
        * interested in the east-->west connector, then east_ni will
        * be unused.
        */
-      NeighborSet::Iterator west_ni(visible_west_nabrs);
-      NeighborSet::Iterator east_ni(visible_east_nabrs);
+      NeighborSet::iterator west_ni(visible_west_nabrs);
+      NeighborSet::iterator east_ni(visible_east_nabrs);
       /*
        * Local process can find some neighbors for the (local and
        * remote) Boxes in visible_west_nabrs and
@@ -1623,7 +1624,7 @@ void
 OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
    const int owner_rank,
    NeighborSet& visible_base_nabrs,
-   NeighborSet::Iterator& base_ni,
+   NeighborSet::iterator& base_ni,
    std::vector<int>& send_mesg,
    const int remote_mapped_box_counter_index,
    Connector& bridging_connector,
@@ -1699,7 +1700,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
             *(submesg++) = base_mapped_box.getLocalId().getValue();
             *(submesg++) = base_mapped_box.getBlockId().getBlockValue();
             *(submesg++) = static_cast<int>(found_nabrs.size());
-            for (BoxContainer::ConstIterator na = found_nabrs.begin();
+            for (BoxContainer::const_iterator na = found_nabrs.begin();
                  na != found_nabrs.end(); ++na) {
                const Box& head_nabr = *na;
                referenced_head_nabrs.insert(head_nabr);
@@ -1724,7 +1725,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
                Connector::NeighborhoodIterator base_box_itr =
                   bridging_connector.makeEmptyLocalNeighborhood(
                      unshifted_base_mapped_box_id);
-               for (BoxContainer::ConstIterator na = found_nabrs.begin();
+               for (BoxContainer::const_iterator na = found_nabrs.begin();
                     na != found_nabrs.end(); ++na) {
                   bridging_connector.insertLocalNeighbor(*na, base_box_itr);
                }
@@ -1769,7 +1770,7 @@ OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
 
    scratch_space.clear();
 //   scratch_space.reserve(neighbors.size());
-   for (BoxContainer::Iterator na = neighbors.begin();
+   for (BoxContainer::iterator na = neighbors.begin();
         na != neighbors.end(); ++na) {
       Box& nabr = *na;
       IntVector sum_shift =

@@ -570,8 +570,9 @@ void MblkGeometry::buildCartesianGridOnPatch(
    TBOX_ASSERT(xyz);
 #endif
 
-   for (pdat::NodeIterator ni(patch.getBox()); ni; ni++) {
-      pdat::NodeIndex node = ni();
+   pdat::NodeIterator niend(patch.getBox(), false);
+   for (pdat::NodeIterator ni(patch.getBox(), true); ni != niend; ++ni) {
+      pdat::NodeIndex node = *ni;
       if (d_block_rotation[block_number] == 0) {
 
          (*xyz)(node, 0) =

@@ -1057,8 +1057,8 @@ BalanceUtilities::spatialBinPack(
     * is positive.
     */
    hier::IntVector offset(boxes.front().lower());
-   for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
-      offset.min(itr().lower());
+   for (hier::BoxContainer::iterator itr(boxes); itr != boxes.end(); ++itr) {
+      offset.min(itr->lower());
    }
 
    /* construct array of spatialKeys */
@@ -1068,10 +1068,11 @@ BalanceUtilities::spatialBinPack(
    if (nboxes > 0) {
       const tbox::Dimension& dim = boxes.front().getDim();
 
-      for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+      for (hier::BoxContainer::iterator itr(boxes);
+           itr != boxes.end(); ++itr) {
 
          /* compute center of box */
-         hier::IntVector center = (itr().upper() + itr().lower()) / 2;
+         hier::IntVector center = (itr->upper() + itr->lower()) / 2;
 
          if (dim == tbox::Dimension(1)) {
             spatial_keys[i].setKey(center(0) - offset(0));
@@ -1118,14 +1119,16 @@ BalanceUtilities::spatialBinPack(
       tbox::Array<double> unsorted_weights(nboxes);
 
       i = 0;
-      for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+      for (hier::BoxContainer::iterator itr(boxes);
+           itr != boxes.end(); ++itr) {
          unsorted_boxes[i] = *itr;
          unsorted_weights[i] = weights[i];
          ++i;
       }
 
       i = 0;
-      for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+      for (hier::BoxContainer::iterator itr(boxes);
+           itr != boxes.end(); ++itr) {
          *itr = unsorted_boxes[permutation[i]];
          weights[i] = unsorted_weights[permutation[i]];
          ++i;
@@ -1242,9 +1245,10 @@ BalanceUtilities::recursiveBisectionUniform(
    bool bad_domain_boundaries_exist =
       privateBadCutPointsExist(physical_domain);
 
-   for (hier::BoxContainer::ConstIterator ib(in_boxes); ib != in_boxes.end(); ++ib) {
+   for (hier::BoxContainer::const_iterator ib(in_boxes);
+        ib != in_boxes.end(); ++ib) {
 
-      hier::Box box2chop = ib();
+      hier::Box box2chop = *ib;
 
       TBOX_ASSERT(!box2chop.empty());
 
@@ -1328,7 +1332,8 @@ BalanceUtilities::recursiveBisectionNonuniform(
    bool bad_domain_boundaries_exist =
       privateBadCutPointsExist(physical_domain);
 
-   for (hier::PatchLevel::Iterator ip(in_level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(in_level->begin());
+        ip != in_level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       hier::Box box2chop = patch->getBox();
@@ -1640,14 +1645,16 @@ BalanceUtilities::sortDescendingBoxWorkloads(
       tbox::Array<double> unsorted_workload(nboxes);
 
       int l = 0;
-      for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+      for (hier::BoxContainer::iterator itr(boxes);
+           itr != boxes.end(); ++itr) {
          unsorted_boxes[l] = *itr;
          unsorted_workload[l] = workload[l];
          ++l;
       }
 
       int m = 0;
-      for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+      for (hier::BoxContainer::iterator itr(boxes);
+           itr != boxes.end(); ++itr) {
          *itr = unsorted_boxes[permutation[m]];
          workload[m] = unsorted_workload[permutation[m]];
          ++m;
@@ -1697,14 +1704,16 @@ BalanceUtilities::computeLoadBalanceEfficiency(
 
    if (workload_data_id < 0) {
 
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          work[mapping.getProcessorAssignment(ip->getLocalId().getValue())] +=
             (*ip)->getBox().size();
       }
 
    } else {
 
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& patch = *ip;
          boost::shared_ptr<pdat::CellData<double> > weight(
             patch->getPatchData(workload_data_id),

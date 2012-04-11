@@ -27,6 +27,10 @@
 namespace SAMRAI {
 namespace hier {
 
+class BoxContainerSingleBlockIterator;
+class BoxContainerSingleOwnerIterator;
+class RealBoxConstIterator;
+
 /*!
  * @brief A container for Boxes.
  *
@@ -158,17 +162,6 @@ public:
        */
       const Box&
       operator * () const
-      {
-         return d_ordered ? **d_set_iter : *d_list_iter;
-      }
-
-      /*!
-       * @brief Get box corresponding to iterator's position in container.
-       *
-       * @return An immutable reference to the current Box in the iteration.
-       */
-      const Box&
-      operator () () const
       {
          return d_ordered ? **d_set_iter : *d_list_iter;
       }
@@ -379,17 +372,6 @@ public:
       }
 
       /*!
-       * @brief Get box corresponding to iterator's position in container.
-       *
-       * @return A mutable reference to the current Box in the iteration.
-       */
-      Box&
-      operator () () const
-      {
-         return d_ordered ? **d_set_iter : *d_list_iter;
-      }
-
-      /*!
        * @brief Get pointer to box at iterator's position in container.
        *
        * @return Pointer to the current box.
@@ -544,12 +526,12 @@ public:
    /*!
     * @brief The iterator for class BoxContainer.
     */
-   typedef BoxContainerIterator Iterator;
+   typedef BoxContainerIterator iterator;
 
    /*!
     * @brief The const iterator for class BoxContainer.
     */
-   typedef BoxContainerConstIterator ConstIterator;
+   typedef BoxContainerConstIterator const_iterator;
 
    //@{ @name Constructors, Destructors, Assignment
 
@@ -576,8 +558,8 @@ public:
     * @param[in] ordered  Container will be ordered if true, unordered if false.
     */
    BoxContainer(
-      ConstIterator first,
-      ConstIterator last,
+      const_iterator first,
+      const_iterator last,
       const bool ordered = false);
 
    /*!
@@ -686,48 +668,116 @@ public:
    }
 
    /*!
-    * @brief Return a ConstIterator pointing to the start of the container.
+    * @brief Return a const_iterator pointing to the start of the container.
     *
     * @return An immutable iterator pointing to the first box.
     */
-   ConstIterator
+   const_iterator
    begin() const
    {
-      return ConstIterator(*this);
+      return const_iterator(*this);
    }
 
    /*!
-    * @brief Return a ConstIterator pointing to the end of the container.
+    * @brief Return a const_iterator pointing to the end of the container.
     *
     * @return An immutable iterator pointing beyond the last box.
     */
-   ConstIterator
+   const_iterator
    end() const
    {
-      return ConstIterator(*this, false);
+      return const_iterator(*this, false);
    }
 
    /*!
-    * @brief Return an Iterator pointing to the start of the container.
+    * @brief Return an iterator pointing to the start of the container.
     *
     * @return A mutable iterator pointing to the first box.
     */
-   Iterator
+   iterator
    begin()
    {
-      return Iterator(*this);
+      return iterator(*this);
    }
 
    /*!
-    * @brief Return an Iterator pointing to the end of the container.
+    * @brief Return an iterator pointing to the end of the container.
     *
     * @return A mutable iterator pointing beyond the last box.
     */
-   Iterator
+   iterator
    end()
    {
-      return Iterator(*this, false);
+      return iterator(*this, false);
    }
+
+   /*!
+    * @brief Return a BoxContainerSingleBlockIterator pointing to the first
+    * box in the container with the given BlockId.
+    *
+    * @param block_id The BlockId of the boxes we want.
+    *
+    * @return A mutable iterator pointing to the first box with the given
+    * BlockId.
+    */
+   BoxContainerSingleBlockIterator
+   begin(
+      const BlockId& block_id) const;
+
+   /*!
+    * @brief Return a BoxContainerSingleBlockIterator pointing to the end of
+    * the container.
+    *
+    * @param block_id The BlockId of the boxes we want.
+    *
+    * @return A mutable iterator pointing beyond the last box.
+    */
+   BoxContainerSingleBlockIterator
+   end(
+      const BlockId& block_id) const;
+
+   /*!
+    * @brief Return a BoxContainerSingleOwnerIterator pointing to the first
+    * box in the container having the given owner.
+    *
+    * @param owner_rank The processaor whose boxes we want.
+    *
+    * @return A mutable iterator pointing to the first box having the given
+    * owner.
+    */
+   BoxContainerSingleOwnerIterator
+   begin(
+      const int& owner_rank) const;
+
+   /*!
+    * @brief Return a BoxContainerSingleOwnerIterator pointing to the end of
+    * the container.
+    *
+    * @param owner_rank The processaor whose boxes we want.
+    *
+    * @return A mutable iterator pointing beyond the last box.
+    */
+   BoxContainerSingleOwnerIterator
+   end(
+      const int& owner_rank) const;
+
+   /*!
+    * @brief Return a RealBoxConstIterator pointing to the first real
+    * (non-periodic) box in the container.
+    *
+    * @return A mutable iterator pointing to the first non-periodic box.
+    */
+   RealBoxConstIterator
+   realBegin() const;
+
+   /*!
+    * @brief Return a RealBoxConstIterator pointing to the end of the
+    * container.
+    *
+    * @return A mutable iterator pointing beyond the last box.
+    */
+   RealBoxConstIterator
+   realEnd() const;
 
    /*!
     * @brief Returns the first element in the container.
@@ -760,7 +810,7 @@ public:
     */
    void
    erase(
-      Iterator iter);
+      iterator iter);
 
    /*!
     * @brief Remove the members of the container in the range [first, last).
@@ -772,8 +822,8 @@ public:
     */
    void
    erase(
-      Iterator first,
-      Iterator last);
+      iterator first,
+      iterator last);
 
    /*!
     * @brief Removes all the members of the container.
@@ -1010,7 +1060,7 @@ public:
     */
    void
    insertBefore(
-      Iterator iter,
+      iterator iter,
       const Box& item)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1039,11 +1089,11 @@ public:
     */
    void
    insertAfter(
-      Iterator iter,
+      iterator iter,
       const Box& item)
    {
       if (!d_ordered) {
-         Iterator tmp = iter;
+         iterator tmp = iter;
          ++tmp;
          if (tmp == end()) {
             pushBack(item);
@@ -1350,27 +1400,27 @@ public:
     * contains a Box with the same BoxId.  If a Box with the same BoxId
     * does already exist in the contianer, the container will not be changed.
     *
-    * This version of insert includes an Iterator argument pointing somewhere
-    * in this container.  This Iterator indicates a position in the ordered
+    * This version of insert includes an iterator argument pointing somewhere
+    * in this container.  This iterator indicates a position in the ordered
     * container where the search for the proper place to insert the given
     * Box will begin.
     *
-    * The Iterator argument does not determine the place the Box will end up
+    * The iterator argument does not determine the place the Box will end up
     * in the ordered container, as that is always determined by BoxId; it
     * is intended only to provide a means of optimization when the calling
     * code knows something about the ordering of the container.
     *
-    * @return  Iterator pointing to the newly-added Box if the container
+    * @return  iterator pointing to the newly-added Box if the container
     *          did not already have a Box with the same BoxId.  If the
     *          container did have a Box with the same BoxId, the returned
-    *          Iterator points to that Box.
+    *          iterator points to that Box.
     *
     * @param[in] position  Location to begin searching for place to insert Box
     * @param[in] box       Box to attempt to insert into the container
     */
-   Iterator
+   iterator
    insert(
-      Iterator position,
+      iterator position,
       const Box& box );
 
    /*!
@@ -1385,8 +1435,8 @@ public:
     */
    void
    insert(
-      ConstIterator first,
-      ConstIterator last );
+      const_iterator first,
+      const_iterator last );
 
    //@} 
 
@@ -1399,69 +1449,69 @@ public:
     * may only be called on an ordered container.
     *
     * @return  If a Box with the same BoxId as the argument is found,
-    *          the Iterator points to that Box in this container, otherwise
+    *          the iterator points to that Box in this container, otherwise
     *          end() for this container is returned.
     *
     * @param[in]  box  Box serving as key for the find operation.  Only
     *                  its BoxId is compared to members of this container. 
     */  
-   Iterator
+   iterator
    find(
       const Box& box) const
    {
       if (!d_ordered) {
          TBOX_ERROR("find attempted on unordered BoxContainer.");
       }
-      Iterator iter;
+      iterator iter;
       iter.d_set_iter = d_set.find(const_cast<Box*>(&box));
       iter.d_ordered = true;
       return iter;
    }
 
    /*!
-    * @brief  Get lower bound Iterator for a given Box.
+    * @brief  Get lower bound iterator for a given Box.
     *
     * This may only be called on an ordered container.
     *
-    * @return  Iterator pointing to the first member of this container
+    * @return  iterator pointing to the first member of this container
     *          with a BoxId value greater than or equal to the BoxId of
     *          the argument Box.
     *
     * @param[in]  box  Box serving as key for the lower bound search.
     */
-   Iterator
+   iterator
    lowerBound(
       const Box& box) const
    {
       if (!d_ordered) {
          TBOX_ERROR("lowerBound attempted on unordered BoxContainer.");
       }
-      Iterator iter;
+      iterator iter;
       iter.d_set_iter = d_set.lower_bound(const_cast<Box*>(&box));
       iter.d_ordered = true;
       return iter;
    }
 
    /*!
-    * @brief  Get upper bound Iterator for a given Box.
+    * @brief  Get upper bound iterator for a given Box.
     *
     * This may only be called on an ordered container.
     *
-    * @return  Iterator pointing to the first member of this container
+    * @return  iterator pointing to the first member of this container
     *          with a BoxId value greater than the BoxId of the argument
     *          Box.  Will return end() if there are no members with a greater
     *          BoxId value.
     *
     * @param[in]  box  Box serving as key for the upper bound search.
     */
-   Iterator
+   iterator
    upperBound(
       const Box& box) const
    {
       if (!d_ordered) {
          TBOX_ERROR("upperBound attempted on unordered BoxContainer.");
       }
-      Iterator iter;
+      iterator iter;
       iter.d_set_iter = d_set.upper_bound(const_cast<Box*>(&box));
       iter.d_ordered = true;
       return iter;
@@ -1869,7 +1919,7 @@ private:
       const Box& bursty,
       const Box& solid,
       const int dimension,
-      Iterator& itr);
+      iterator& itr);
 
    /*!
     * @brief Remove from each box in the sublist of this container defined
@@ -1884,9 +1934,9 @@ private:
    void
    removeIntersectionsFromSublist(
       const Box& takeaway,
-      Iterator& sublist_start,
-      Iterator& sublist_end,
-      Iterator& insertion_pt);
+      iterator& sublist_start,
+      iterator& sublist_end,
+      iterator& insertion_pt);
 
    /*!
     * List that provides the internal storage for the member Boxes.

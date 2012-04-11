@@ -2480,9 +2480,9 @@ void MblkEuler::tagGradientDetectorCells(
          if (d_mblk_geometry->getRefineBoxes(refine_boxes,
                 patch.getBox().getBlockId().getBlockValue(),
                 level_number)) {
-            for (hier::BoxContainer::Iterator b(refine_boxes); b != refine_boxes.end();
-                 ++b) {
-               hier::Box intersect = pbox * b();
+            for (hier::BoxContainer::iterator b(refine_boxes);
+                 b != refine_boxes.end(); ++b) {
+               hier::Box intersect = pbox * (*b);
                if (!intersect.empty()) {
                   temp_tags->fill(TRUE, intersect);
                }
@@ -2496,8 +2496,9 @@ void MblkEuler::tagGradientDetectorCells(
    //
    // Update tags
    //
-   for (pdat::CellIterator ic(pbox); ic; ic++) {
-      (*tags)(ic(), 0) = (*temp_tags)(ic(), 0);
+   pdat::CellIterator icend(pbox, false);
+   for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
+      (*tags)(*ic, 0) = (*temp_tags)(*ic, 0);
    }
 
    tbox::plog << "--------------------- end tagGradientCells" << endl;
@@ -2557,23 +2558,23 @@ void MblkEuler::setMappedGridOnPatch(
    //
    d_dom_current_nboxes = domain_boxes.size();
 
-   hier::BoxContainer::Iterator itr(domain_boxes);
-   d_dom_current_bounds[0] = itr().lower(0);
-   d_dom_current_bounds[1] = itr().lower(1);
-   d_dom_current_bounds[2] = itr().lower(2);
-   d_dom_current_bounds[3] = itr().upper(0);
-   d_dom_current_bounds[4] = itr().upper(1);
-   d_dom_current_bounds[5] = itr().upper(2);
-   itr++;
+   hier::BoxContainer::iterator itr(domain_boxes);
+   d_dom_current_bounds[0] = itr->lower(0);
+   d_dom_current_bounds[1] = itr->lower(1);
+   d_dom_current_bounds[2] = itr->lower(2);
+   d_dom_current_bounds[3] = itr->upper(0);
+   d_dom_current_bounds[4] = itr->upper(1);
+   d_dom_current_bounds[5] = itr->upper(2);
+   ++itr;
 
-   for (int i = 1; i < d_dom_current_nboxes; i++, itr++) {
-      d_dom_current_bounds[0] = MIN(d_dom_current_bounds[0], itr().lower(0));
-      d_dom_current_bounds[1] = MIN(d_dom_current_bounds[1], itr().lower(1));
-      d_dom_current_bounds[2] = MIN(d_dom_current_bounds[2], itr().lower(2));
+   for (int i = 1; i < d_dom_current_nboxes; i++, ++itr) {
+      d_dom_current_bounds[0] = MIN(d_dom_current_bounds[0], itr->lower(0));
+      d_dom_current_bounds[1] = MIN(d_dom_current_bounds[1], itr->lower(1));
+      d_dom_current_bounds[2] = MIN(d_dom_current_bounds[2], itr->lower(2));
 
-      d_dom_current_bounds[3] = MAX(d_dom_current_bounds[3], itr().upper(0));
-      d_dom_current_bounds[4] = MAX(d_dom_current_bounds[4], itr().upper(1));
-      d_dom_current_bounds[5] = MAX(d_dom_current_bounds[5], itr().upper(2));
+      d_dom_current_bounds[3] = MAX(d_dom_current_bounds[3], itr->upper(0));
+      d_dom_current_bounds[4] = MAX(d_dom_current_bounds[4], itr->upper(1));
+      d_dom_current_bounds[5] = MAX(d_dom_current_bounds[5], itr->upper(2));
    }
 
    //

@@ -857,7 +857,7 @@ public:
     *
     * @return iterator to the new Box
     */
-   BoxContainer::ConstIterator
+   BoxContainer::const_iterator
    addBox(
       const Box& box,
       const BlockId& block_id,
@@ -961,7 +961,7 @@ public:
     */
    void
    eraseBox(
-      BoxContainer::Iterator& ibox);
+      BoxContainer::iterator& ibox);
 
    /*!
     * @brief Erase the Box matching the one given.
@@ -1012,7 +1012,7 @@ public:
     * @return Iterator to the box, or @c
     * getBoxes(owner).end() if box does not exist in set.
     */
-   BoxContainer::ConstIterator
+   BoxContainer::const_iterator
    getBox(
       const Box& box) const
    {
@@ -1041,7 +1041,7 @@ public:
     * @return Iterator to the box, or @c
     * getBoxes(owner).end() if box does not exist in set.
     */
-   BoxContainer::ConstIterator
+   BoxContainer::const_iterator
    getBox(
       const BoxId& box_id) const
    {
@@ -1075,7 +1075,7 @@ public:
     *
     * @return Iterator to the box.
     */
-   BoxContainer::ConstIterator
+   BoxContainer::const_iterator
    getBoxStrict(
       const Box& box) const;
 
@@ -1093,7 +1093,7 @@ public:
     *
     * @return Iterator to the box.
     */
-   BoxContainer::ConstIterator
+   BoxContainer::const_iterator
    getBoxStrict(
       const BoxId& box_id) const;
 

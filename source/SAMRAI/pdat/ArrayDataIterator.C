@@ -17,10 +17,15 @@ namespace SAMRAI {
 namespace pdat {
 
 ArrayDataIterator::ArrayDataIterator(
-   const hier::Box& box):
+   const hier::Box& box,
+   bool begin):
    d_index(box.lower()),
    d_box(box)
 {
+   if (!d_box.empty() && !begin) {
+      d_index(d_box.getDim().getValue()-1) =
+         d_box.upper(d_box.getDim().getValue()-1) + 1;
+   }
 }
 
 ArrayDataIterator::ArrayDataIterator(
@@ -34,23 +39,8 @@ ArrayDataIterator::~ArrayDataIterator()
 {
 }
 
-ArrayDataIterator::operator bool () const
-{
-   const tbox::Dimension& dim(d_box.getDim());
-   bool retval = true;
-   for (int i = 0; i < dim.getValue(); i++) {
-      if (d_index(i) > d_box.upper(i)) {
-         retval = false;
-         break;
-      }
-   }
-
-   return retval;
-}
-
-void
-ArrayDataIterator::operator ++ (
-   int)
+ArrayDataIterator&
+ArrayDataIterator::operator ++ ()
 {
    const tbox::Dimension& dim(d_box.getDim());
    d_index(0)++;
@@ -62,6 +52,25 @@ ArrayDataIterator::operator ++ (
          break;
       }
    }
+   return *this;
+}
+
+ArrayDataIterator
+ArrayDataIterator::operator ++ (
+   int)
+{
+   ArrayDataIterator tmp = *this;
+   const tbox::Dimension& dim(d_box.getDim());
+   d_index(0)++;
+   for (int i = 0; i < dim.getValue() - 1; i++) {
+      if (d_index(i) > d_box.upper(i)) {
+         d_index(i) = d_box.lower(i);
+         d_index(i + 1)++;
+      } else {
+         break;
+      }
+   }
+   return tmp;
 }
 
 }

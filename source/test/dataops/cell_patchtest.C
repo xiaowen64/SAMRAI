@@ -627,9 +627,10 @@ int main(
          tpatch->getPatchData(cdvindx[0]),
          boost::detail::dynamic_cast_tag());
 
-      for (pdat::CellIterator c(cvdata->getBox()); c &&
-           subtract_inbox_test_passed; c++) {
-         pdat::CellIndex cell_index = c();
+      pdat::CellIterator cend(cvdata->getBox(), false);
+      for (pdat::CellIterator c(cvdata->getBox(), true);
+           c != cend && subtract_inbox_test_passed; ++c) {
+         pdat::CellIndex cell_index = *c;
 
          double value;
          if (inbox.contains(cell_index)) {
@@ -687,9 +688,10 @@ int main(
       cvdata = boost::dynamic_pointer_cast<pdat::CellData<double>,
                                            hier::PatchData>(tpatch->getPatchData(cdvindx[0]));
 
-      for (pdat::CellIterator cc(cvdata->getBox()); cc &&
-           divide_inbox_test_passed; cc++) {
-         pdat::CellIndex cell_index = cc();
+      pdat::CellIterator ccend(cvdata->getBox(), false);
+      for (pdat::CellIterator cc(cvdata->getBox(), true);
+            cc != ccend && divide_inbox_test_passed; ++cc) {
+         pdat::CellIndex cell_index = *cc;
 
          double value;
          if (inbox.contains(cell_index)) {
@@ -767,9 +769,10 @@ int main(
       cvdata = boost::dynamic_pointer_cast<pdat::CellData<double>,
                                            hier::PatchData>(tpatch->getPatchData(cdvindx[0]));
 
-      for (pdat::CellIterator cci(cvdata->getBox()); cci &&
-           restricted_linSum_test_passed; cci++) {
-         pdat::CellIndex cell_index = cci();
+      pdat::CellIterator cciend(cvdata->getBox(), false);
+      for (pdat::CellIterator cci(cvdata->getBox(), true);
+           cci != cciend && restricted_linSum_test_passed; ++cci) {
+         pdat::CellIndex cell_index = *cci;
 
          double value;
          if (inbox.contains(cell_index)) {
@@ -829,9 +832,10 @@ int main(
 
       cvdata = boost::dynamic_pointer_cast<pdat::CellData<double>,
                                            hier::PatchData>(tpatch->getPatchData(cdvindx[1]));
-      for (pdat::CellIterator ci(cvdata->getBox()); ci &&
-           setToScalar_onBox_test_passed; ci++) {
-         pdat::CellIndex cell_index = ci();
+      pdat::CellIterator ciend(cvdata->getBox(), false);
+      for (pdat::CellIterator ci(cvdata->getBox(), true);
+           ci != ciend && setToScalar_onBox_test_passed; ++ci) {
+         pdat::CellIndex cell_index = *ci;
 
          double value;
          if (box1.contains(cell_index)) {
@@ -1252,8 +1256,10 @@ doubleDataSameAsValue(
       patch->getPatchData(desc_id),
       boost::detail::dynamic_cast_tag());
 
-   for (pdat::CellIterator c(cvdata->getBox()); c && test_passed; c++) {
-      pdat::CellIndex cell_index = c();
+   pdat::CellIterator cend(cvdata->getBox(), false);
+   for (pdat::CellIterator c(cvdata->getBox(), true);
+        c != cend&& test_passed; ++c) {
+      pdat::CellIndex cell_index = *c;
       if (!tbox::MathUtilities<double>::equalEps((*cvdata)(cell_index),
              value)) {
          test_passed = false;

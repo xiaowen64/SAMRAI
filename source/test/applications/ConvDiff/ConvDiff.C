@@ -40,7 +40,6 @@ using namespace std;
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellIndex.h"
-#include "SAMRAI/pdat/CellIterator.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/tbox/PIO.h"

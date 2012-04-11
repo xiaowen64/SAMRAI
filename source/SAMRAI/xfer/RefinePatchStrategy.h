@@ -225,9 +225,9 @@ public:
       const hier::IntVector& ratio)
    {
       TBOX_DIM_ASSERT_CHECK_ARGS3(fine, coarse, ratio);
-      for (hier::BoxContainer::ConstIterator b(fine_boxes);
+      for (hier::BoxContainer::const_iterator b(fine_boxes);
            b != fine_boxes.end(); ++b) {
-         preprocessRefine(fine, coarse, b(), ratio);
+         preprocessRefine(fine, coarse, *b, ratio);
       }
    }
 
@@ -254,9 +254,9 @@ public:
       const hier::IntVector& ratio)
    {
       TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim, fine, coarse, ratio);
-      for (hier::BoxContainer::ConstIterator b(fine_boxes);
+      for (hier::BoxContainer::const_iterator b(fine_boxes);
            b != fine_boxes.end(); ++b) {
-         postprocessRefine(fine, coarse, b(), ratio);
+         postprocessRefine(fine, coarse, *b, ratio);
       }
    }
 

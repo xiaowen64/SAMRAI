@@ -24,7 +24,6 @@
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
-#include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -163,7 +162,7 @@ GridGeometry::GridGeometry(
    }
 
    std::set<int> block_numbers;
-   for (BoxContainer::ConstIterator itr = domain.begin(); itr != domain.end();
+   for (BoxContainer::const_iterator itr = domain.begin(); itr != domain.end();
         ++itr) {
       block_numbers.insert(itr->getBlockId().getBlockValue());
    }
@@ -230,7 +229,7 @@ GridGeometry::computeBoundaryBoxesOnLevel(
    }
 #endif
 
-   for (PatchLevel::Iterator ip(&level); ip; ip++) {
+   for (PatchLevel::iterator ip(level.begin()); ip != level.end(); ++ip) {
       const boost::shared_ptr<Patch>& patch = *ip;
       const BoxId& patch_id = patch->getBox().getId();
       const int block_num = patch->getBox().getBlockId().getBlockValue();
@@ -311,7 +310,7 @@ GridGeometry::findPatchesTouchingBoundaries(
    }
 
    t_touching_boundaries_loop->start();
-   for (PatchLevel::Iterator ip(&level); ip; ip++) {
+   for (PatchLevel::iterator ip(level.begin()); ip != level.end(); ++ip) {
       const boost::shared_ptr<Patch>& patch = *ip;
       const Box& box(patch->getBox());
 
@@ -413,11 +412,12 @@ GridGeometry::computeBoxTouchingBoundaries(
 
             bool lower_side = false;
             bool upper_side = false;
-            for (BoxContainer::Iterator bl(bdry_list); bl != bdry_list.end(); ++bl) {
-               if (bl().lower() (nd) < box.lower(nd)) {
+            for (BoxContainer::iterator bl(bdry_list);
+                 bl != bdry_list.end(); ++bl) {
+               if (bl->lower() (nd) < box.lower(nd)) {
                   lower_side = true;
                }
-               if (bl().upper() (nd) > box.upper(nd)) {
+               if (bl->upper() (nd) > box.upper(nd)) {
                   upper_side = true;
                }
                if (lower_side && upper_side) {
@@ -467,7 +467,7 @@ GridGeometry::setGeometryOnPatches(
 #endif
 
    t_set_geometry_data_on_patches->start();
-   for (PatchLevel::Iterator ip(&level); ip; ip++) {
+   for (PatchLevel::iterator ip(level.begin()); ip != level.end(); ++ip) {
       const boost::shared_ptr<Patch>& patch = *ip;
       setGeometryDataOnPatch(*patch, ratio_to_level_zero,
          (*touches_regular_bdry.find(ip->getBox().getId())).second,
@@ -613,8 +613,8 @@ GridGeometry::makeCoarsenedGridGeometry(
     */
    const BoxContainer& fine_domain = getPhysicalDomain();
    const int nboxes = fine_domain.size();
-   BoxContainer::ConstIterator coarse_domain_itr(coarse_domain);
-   BoxContainer::ConstIterator fine_domain_itr(fine_domain);
+   BoxContainer::const_iterator coarse_domain_itr(coarse_domain);
+   BoxContainer::const_iterator fine_domain_itr(fine_domain);
    for (int ib = 0; ib < nboxes; ib++, ++coarse_domain_itr, ++fine_domain_itr) {
       Box testbox = Box::refine(*coarse_domain_itr, coarsen_ratio);
       if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
@@ -734,7 +734,7 @@ GridGeometry::getFromRestart()
                             << "Block " << b << " physical domain. ");
       }
 
-      for (BoxContainer::Iterator itr = block_domain_boxes.begin();
+      for (BoxContainer::iterator itr = block_domain_boxes.begin();
            itr != block_domain_boxes.end(); ++itr) {
          Box box(*itr, local_id++, 0);
          box.setBlockId(BlockId(b));
@@ -799,7 +799,7 @@ GridGeometry::getFromInput(
                                << "Key data '" << domain_name << "' not found in input.");
          }
 
-         for (BoxContainer::Iterator itr = block_domain_boxes.begin();
+         for (BoxContainer::iterator itr = block_domain_boxes.begin();
               itr != block_domain_boxes.end(); ++itr) {
             Box box(*itr, local_id++, 0);
             box.setBlockId(BlockId(b));
@@ -1147,7 +1147,7 @@ GridGeometry::getBoundaryBoxes(
 
                if (border_list.size() > 0) {
                   border_list.coalesce();
-                  for (BoxContainer::Iterator bl(border_list);
+                  for (BoxContainer::iterator bl(border_list);
                        bl != border_list.end(); ++bl) {
                      if (num_bboxes == bdry_array_size) {
                         patch_boundaries[d].resizeArray(
@@ -1156,7 +1156,7 @@ GridGeometry::getBoundaryBoxes(
                         bdry_array_size = patch_boundaries[d].size();
                      }
 
-                     BoundaryBox boundary_box(bl(), codim, loc);
+                     BoundaryBox boundary_box(*bl, codim, loc);
 
                      patch_boundaries[d][num_bboxes] = boundary_box;
 
@@ -1215,7 +1215,7 @@ GridGeometry::computePhysicalDomain(
 #endif
 
    domain_mapped_boxes.clear();
-   for (BoxContainer::ConstIterator itr = d_physical_domain.begin();
+   for (BoxContainer::const_iterator itr = d_physical_domain.begin();
         itr != d_physical_domain.end(); ++itr) {
       if (itr->getBlockId() == block_id) {
          domain_mapped_boxes.insert(*itr);
@@ -1274,7 +1274,7 @@ GridGeometry::computePhysicalDomain(
    }
 #endif
 
-   for (BoxContainer::ConstIterator itr = d_domain_with_images.begin();
+   for (BoxContainer::const_iterator itr = d_domain_with_images.begin();
         itr != d_domain_with_images.end();
         ++itr) {
       if (itr->getBlockId() == block_id) {
@@ -1395,7 +1395,7 @@ GridGeometry::computePhysicalDomain(
       }
    }
 
-   for (BoxContainer::ConstIterator bi = domain_boxes.begin();
+   for (BoxContainer::const_iterator bi = domain_boxes.begin();
         bi != domain_boxes.end(); ++bi) {
 
       box_level.addBoxWithoutUpdate(*bi);
@@ -1419,7 +1419,7 @@ GridGeometry::setPhysicalDomain(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(domain.size() > 0);
-   for (BoxContainer::ConstIterator itr = domain.begin(); itr != domain.end();
+   for (BoxContainer::const_iterator itr = domain.begin(); itr != domain.end();
         ++itr) {
       TBOX_ASSERT(itr->getBlockId().isValid());       
       TBOX_ASSERT(itr->getBlockId().getBlockValue() < number_blocks);       
@@ -1444,7 +1444,7 @@ GridGeometry::setPhysicalDomain(
          d_physical_domain.pushBack(box);
       } else {
          d_domain_is_single_box[b] = false;
-         for (BoxContainer::Iterator itr = block_domain.begin();
+         for (BoxContainer::iterator itr = block_domain.begin();
               itr != block_domain.end(); ++itr) {
             d_physical_domain.pushBack(*itr);
          }
@@ -1516,7 +1516,7 @@ GridGeometry::resetDomainBoxContainer()
 
       const IntVector &one_vector(IntVector::getOne(d_dim));
 
-      for ( BoxContainer::ConstIterator ni(d_physical_domain.begin());
+      for ( BoxContainer::const_iterator ni(d_physical_domain.begin());
             ni!=d_physical_domain.end(); ++ni ) {
 
          const Box &real_box = *ni;
@@ -1661,9 +1661,9 @@ GridGeometry::checkPeriodicValidity(
       dup_domain2.unorder();
       dup_domain2.removeIntersections(domain);
 
-      BoxContainer::Iterator n(dup_domain2);
+      BoxContainer::iterator n(dup_domain2);
       for ( ; n != dup_domain2.end(); ++n) {
-         Box this_box = n();
+         Box this_box = *n;
          Index box_lower = this_box.lower();
          Index box_upper = this_box.upper();
          if (d_periodic_shift(i) != 0) {
@@ -1897,10 +1897,10 @@ GridGeometry::readBlockDataFromInput(
          BoxContainer block_domain(d_physical_domain, block_id);
          pseudo_domain.spliceFront(block_domain);
 
-         for (BoxContainer::Iterator
+         for (BoxContainer::iterator
               si(d_singularity[b]); si != d_singularity[b].end(); ++si) {
             BoxContainer test_domain(pseudo_domain);
-            test_domain.intersectBoxes(si());
+            test_domain.intersectBoxes(*si);
             if (test_domain.size() == 0) {
                d_reduced_connect[b] = true;
                break;
@@ -1983,11 +1983,11 @@ GridGeometry::registerNeighbors(
    b_domain_in_a_space.shift(shift);
    a_domain_in_b_space.shift(back_shift);
 
-   for (BoxContainer::Iterator itr = b_domain_in_a_space.begin();
+   for (BoxContainer::iterator itr = b_domain_in_a_space.begin();
         itr != b_domain_in_a_space.end(); ++itr) {
       itr->setBlockId(block_a);
    }
-   for (BoxContainer::Iterator itr = a_domain_in_b_space.begin();
+   for (BoxContainer::iterator itr = a_domain_in_b_space.begin();
         itr != a_domain_in_b_space.end(); ++itr) {
       itr->setBlockId(block_b);
    }
@@ -2069,7 +2069,7 @@ GridGeometry::transformBoxContainer(
          IntVector refined_shift = (ni->getShift()) * (ratio);
          boxes.rotate(ni->getRotationIdentifier());
          boxes.shift(refined_shift);
-         for (BoxContainer::Iterator itr = boxes.begin(); itr != boxes.end();
+         for (BoxContainer::iterator itr = boxes.begin(); itr != boxes.end();
               ++itr) {
             itr->setBlockId(output_block);
          }
@@ -2152,10 +2152,10 @@ GridGeometry::adjustMultiblockPatchLevelBoundaries(
          pseudo_domain.spliceFront(sing_boxes);
          pseudo_domain.coalesce();
 
-         BoxContainerSingleBlockIterator mbi(d_mapped_boxes, block_id);
+         BoxContainerSingleBlockIterator mbi(d_mapped_boxes.begin(block_id));
 
-         for ( ; mbi.isValid(); mbi++) {
-            const BoxId& mapped_box_id = (*mbi).getId();
+         for ( ; mbi != d_mapped_boxes.end(block_id); ++mbi) {
+            const BoxId& mapped_box_id = mbi->getId();
             adjustBoundaryBoxesOnPatch(
                *patch_level.getPatch(mapped_box_id),
                pseudo_domain,
@@ -2389,7 +2389,7 @@ GridGeometry::printClassData(
       }
 
       stream << "      singularity Boxes (" << singularity_boxlist.size() << ")\n";
-      for (BoxContainer::ConstIterator bi(singularity_boxlist);
+      for (BoxContainer::const_iterator bi(singularity_boxlist);
            bi != singularity_boxlist.end(); ++bi) {
          stream << "         " << *bi << '\n';
       }

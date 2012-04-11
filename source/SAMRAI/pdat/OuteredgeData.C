@@ -663,10 +663,10 @@ OuteredgeData<TYPE>::packStream(
       const hier::BoxContainer& dst_boxes =
          t_overlap->getDestinationBoxContainer(axis);
 
-      for (hier::BoxContainer::ConstIterator dst_box(dst_boxes);
+      for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
            dst_box != dst_boxes.end(); ++dst_box) {
 
-         const hier::Box src_box = hier::Box::shift(dst_box(),
+         const hier::Box src_box = hier::Box::shift(*dst_box,
                -src_offset);
 
          for (int face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
@@ -718,7 +718,7 @@ OuteredgeData<TYPE>::unpackStream(
       const hier::BoxContainer& dst_boxes =
          t_overlap->getDestinationBoxContainer(axis);
 
-      for (hier::BoxContainer::ConstIterator dst_box(dst_boxes);
+      for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
            dst_box != dst_boxes.end(); ++dst_box) {
 
          for (int face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
@@ -728,7 +728,7 @@ OuteredgeData<TYPE>::unpackStream(
                for (int side = 0; side < 2; ++side) {
 
                   const hier::Box intersection =
-                     dst_box() * d_data[axis][face_normal][side].getBox();
+                     (*dst_box) * d_data[axis][face_normal][side].getBox();
 
                   if (!intersection.empty()) {
 
@@ -777,7 +777,7 @@ OuteredgeData<TYPE>::unpackStreamAndSum(
       const hier::BoxContainer& dst_boxes =
          t_overlap->getDestinationBoxContainer(axis);
 
-      for (hier::BoxContainer::ConstIterator dst_box(dst_boxes);
+      for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
            dst_box != dst_boxes.end(); ++dst_box) {
 
          for (int face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
@@ -787,7 +787,7 @@ OuteredgeData<TYPE>::unpackStreamAndSum(
                for (int side = 0; side < 2; ++side) {
 
                   const hier::Box intersection =
-                     dst_box() * d_data[axis][face_normal][side].getBox();
+                     (*dst_box) * d_data[axis][face_normal][side].getBox();
 
                   if (!intersection.empty()) {
 
@@ -1406,9 +1406,10 @@ OuteredgeData<TYPE>::printAxisSide(
       const hier::Box edgebox = EdgeGeometry::toEdgeBox(box, axis);
       const hier::Box region =
          edgebox * d_data[axis][face_normal][side].getBox();
-      for (hier::Box::Iterator ii(region); ii; ii++) {
-         os << "array" << ii() << " = "
-            << d_data[axis][face_normal][side](ii(), depth) << std::endl;
+      hier::Box::iterator iiend(region, false);
+      for (hier::Box::iterator ii(region, true); ii != iiend; ++ii) {
+         os << "array" << *ii << " = "
+            << d_data[axis][face_normal][side](*ii, depth) << std::endl;
          os << std::flush;
       }
 

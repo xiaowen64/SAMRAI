@@ -162,7 +162,7 @@ public:
       const int level)
    {
       d_level_number = level;
-      for (PatchLevel::Iterator p(this); p; p++) {
+      for (Iterator p(begin()); p != end(); p++) {
          p->setPatchLevelNumber(d_level_number);
       }
    }
@@ -224,7 +224,7 @@ public:
       bool in_hierarchy)
    {
       d_in_hierarchy = in_hierarchy;
-      for (PatchLevel::Iterator p(this); p; p++) {
+      for (Iterator p(begin()); p != end(); p++) {
          p->setPatchInHierarchy(d_in_hierarchy);
       }
    }
@@ -678,7 +678,7 @@ public:
       const int id,
       const double timestamp = 0.0)
    {
-      for (PatchLevel::Iterator ip(this); ip; ip++) {
+      for (Iterator ip(begin()); ip != end(); ip++) {
          ip->allocatePatchData(id, timestamp);
       }
    }
@@ -695,7 +695,7 @@ public:
       const ComponentSelector& components,
       const double timestamp = 0.0)
    {
-      for (PatchLevel::Iterator ip(this); ip; ip++) {
+      for (Iterator ip(begin()); ip != end(); ip++) {
          ip->allocatePatchData(components, timestamp);
       }
    }
@@ -732,7 +732,7 @@ public:
    deallocatePatchData(
       const int id)
    {
-      for (PatchLevel::Iterator ip(this); ip; ip++) {
+      for (Iterator ip(begin()); ip != end(); ip++) {
          ip->deallocatePatchData(id);
       }
    }
@@ -749,7 +749,7 @@ public:
    deallocatePatchData(
       const ComponentSelector& components)
    {
-      for (PatchLevel::Iterator ip(this); ip; ip++) {
+      for (Iterator ip(begin()); ip != end(); ip++) {
          ip->deallocatePatchData(components);
       }
    }
@@ -776,7 +776,7 @@ public:
       const double timestamp,
       const int id)
    {
-      for (PatchLevel::Iterator ip(this); ip; ip++) {
+      for (Iterator ip(begin()); ip != end(); ip++) {
          ip->setTime(timestamp, id);
       }
    }
@@ -793,7 +793,7 @@ public:
       const double timestamp,
       const ComponentSelector& components)
    {
-      for (PatchLevel::Iterator ip(this); ip; ip++) {
+      for (Iterator ip(begin()); ip != end(); ip++) {
          ip->setTime(timestamp, components);
       }
    }
@@ -807,7 +807,7 @@ public:
    setTime(
       const double timestamp)
    {
-      for (PatchLevel::Iterator ip(this); ip; ip++) {
+      for (Iterator ip(begin()); ip != end(); ip++) {
          ip->setTime(timestamp);
       }
    }
@@ -886,6 +886,8 @@ public:
     */
    class Iterator
    {
+friend class PatchLevel;
+
 public:
       /*!
        * @brief Copy constructor.
@@ -894,38 +896,6 @@ public:
        */
       Iterator(
          const Iterator& other);
-
-      /*!
-       * @brief Construct from raw iterator.
-       *
-       * @param[in]  raw_iter
-       */
-      explicit Iterator(
-         const PatchContainer::const_iterator& raw_iter);
-
-      /*!
-       * @brief Construct from a PatchLevel.
-       *
-       * @param[in]  patch_level
-       */
-      explicit Iterator(
-         const PatchLevel& patch_level);
-
-      /*!
-       * @brief Construct from a PatchLevel.
-       *
-       * @param[in]  patch_level
-       */
-      explicit Iterator(
-         const PatchLevel * patch_level);
-
-      /*!
-       * @brief Construct from a PatchLevel.
-       *
-       * @param[in]  patch_level
-       */
-      explicit Iterator(
-         const boost::shared_ptr<PatchLevel>& patch_level);
 
       /*!
        * @brief Assignment operator
@@ -944,15 +914,6 @@ public:
        */
       const boost::shared_ptr<Patch>&
       operator * () const
-      {
-         return d_iterator->second;
-      }
-
-      /*!
-       * @brief Alternative dereference operator.
-       */
-      const boost::shared_ptr<Patch>&
-      operator () () const
       {
          return d_iterator->second;
       }
@@ -989,7 +950,7 @@ public:
       /*!
        * @brief Pre-increment.
        */
-      const Iterator&
+      Iterator&
       operator ++ ()
       {
          ++d_iterator;
@@ -1008,19 +969,21 @@ public:
          return tmp_iterator;
       }
 
-      /*!
-       * @brief Get validity.
-       */
-      operator bool ()
-      {
-         return d_iterator != d_patches->end();
-      }
-
 private:
       /*
        * Unimplemented default constructor.
        */
       Iterator();
+
+      /*!
+       * @brief Construct from a PatchLevel.
+       *
+       * @param[in]  patch_level
+       * @param[in]  begin
+       */
+      explicit Iterator(
+         const PatchLevel* patch_level,
+         bool begin);
 
       /*!
        * @brief The real iterator (this class is basically a wrapper).
@@ -1033,6 +996,31 @@ private:
       const PatchContainer* d_patches;
 
    };
+
+   /*!
+    * @brief Construct an iterator pointing to the first Patch in the
+    * PatchLevel.
+    */
+   Iterator
+   begin() const
+   {
+      return Iterator(this, true);
+   }
+
+   /*!
+    * @brief Construct an iterator pointing to the last Patch in the
+    * PatchLevel.
+    */
+   Iterator
+   end() const
+   {
+      return Iterator(this, false);
+   }
+
+   /*!
+    * @brief Typdef PatchLevel::Iterator to standard iterator nomenclature.
+    */
+   typedef Iterator iterator;
 
 private:
    /**

@@ -190,7 +190,8 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
    /*
     * Undefine the data so it is initialized to some value.
     */
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       for (int iv = 0; iv < d_variables.getSize(); iv++) {
@@ -204,7 +205,8 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
 
    }
 
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       for (int iv = 0; iv < d_variables.getSize(); iv++) {

@@ -425,7 +425,7 @@ void alterAndGenerateMapping(
    c_to_b.setBase(mapped_box_level_c);
    c_to_b.setHead(mapped_box_level_b);
    c_to_b.setWidth(hier::IntVector::getZero(dim), true);
-   for (hier::BoxContainer::ConstIterator bi = mapped_boxes_b.begin();
+   for (hier::BoxContainer::const_iterator bi = mapped_boxes_b.begin();
         bi != mapped_boxes_b.end(); ++bi) {
       const hier::Box& mapped_box_b(*bi);
       hier::Box mapped_box_c(mapped_box_b,
