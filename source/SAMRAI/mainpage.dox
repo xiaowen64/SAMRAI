@@ -34,33 +34,31 @@
   package descriptions.
 
   - @ref package_toolbox "Toolbox":
-    The "Toolbox" package provides basic, general utility classes that are used 
-    throughout the library and in application development.  The utilities include:
-    memory management via arena mechanisms; smart pointers, arrays and 
-    other container classes; basic MPI utilities; stream classes for packing and 
-    unpacking data during interprocessor communication and reading and writing 
-    to files; tools for managing input and restart files; and event logging, 
-    tracing, and timing.
+    The "Toolbox" package provides basic utility classes that are used 
+    throughout the library and in application development.  These include:
+    MPI wrappers and utilities; stream classes for interprocess communication;
+    tools for managing input and restart files; and event logging, tracing, 
+    and timing.
 
   - @ref package_hierarchy "Hierarchy":
     The "Hierarchy" package supports abstract index spaces and box calculus 
     on which most operations on a structured AMR patch hierarchy depend.
     Structural classes such as patch, patch level, and patch hierarchy, 
-    and base classes for managing variables and data living on the hierarchy 
+    and base class interfaces for variables and data living on the hierarchy
     also reside here.
 
   - @ref package_transfer "Transfer":
     The "Transfer" package contains classes that provide routines for 
-    transferring data between patches on an structured AMR hierarchy.  
-    This includes communication algorithms and schedules of transactions
-    for moving data between patches on the same level as well as coarsening 
-    and refining data between different levels.  The package also contains 
+    data communication on an structured AMR hierarchy.  This includes 
+    communication algorithms and schedules of transactions for moving data 
+    between patches on the same level as well as coarsening and refining 
+    data between different levels.  The package also contains 
     base classes for operators that refine and coarsen data spatially, 
     interpolate data in time, and implement physical boundary conditions.
 
   - @ref package_patchdata "Patchdata":
-    The "Patchdata" package provides support for various concrete patch
-    data types that reside on an structured AMR patch hierarchy.  The
+    The "Patchdata" package provides support for various patch
+    data types on an structured AMR patch hierarchy.  The
     data types found here include a variety of array-based quantities
     (cell-centered, node-centered, face-centered, etc.) as well as 
     an "index" type for managing data associated with an arbitrary 
@@ -110,7 +108,7 @@
     The ``Application Utilities'' package contains utilities that
     are useful when construction applications with SAMRAI, such as 
     routines for setting physical boundary conditions and tools for 
-    generating Vizamrai and VisIt data files.
+    generating VisIt data files.
 
 
 
