@@ -226,14 +226,14 @@ private:
     * intersects the patch as a (DIM - codim)-dimensional object.
     * That is,
     *
-    * if DIM == 1: (co(dim == tbox::Dimension(1))) => same components as getNodeBoundaries.
+    * if DIM == 1: (codim == 1) => same components as getNodeBoundaries.
     *
-    * if DIM == 2, (co(dim == tbox::Dimension(1))) => same components as getEdgeBoundaries.
-    *              (co(dim == tbox::Dimension(2))) => same components as getNodeBoundaries.
+    * if DIM == 2, (codim == 1) => same components as getEdgeBoundaries.
+    *              (codim == 2) => same components as getNodeBoundaries.
     *
-    * if DIM == 3, (co(dim == tbox::Dimension(1))) => same components as getFaceBoundaries.
-    *              (co(dim == tbox::Dimension(2))) => same components as getEdgeBoundaries.
-    *              (co(dim == tbox::Dimension(3))) => same components as getNodeBoundaries.
+    * if DIM == 3, (codim == 1) => same components as getFaceBoundaries.
+    *              (codim == 2) => same components as getEdgeBoundaries.
+    *              (codim == 3) => same components as getNodeBoundaries.
     *
     * When assertion checking is active, this routine throws an assertion
     * when codim < 0 or codim > DIM.
