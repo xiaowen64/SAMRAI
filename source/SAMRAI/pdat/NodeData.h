@@ -384,7 +384,7 @@ public:
     * centered box geometry.  This typedef is a convenience for
     * using the NodeIterator class.
     */
-   typedef NodeIterator Iterator;
+   typedef NodeIterator iterator;
 
 private:
    /*

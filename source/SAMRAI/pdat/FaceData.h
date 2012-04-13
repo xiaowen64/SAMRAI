@@ -459,7 +459,7 @@ public:
     * centered box geometry.  This typedef is a convenience for using the
     * FaceIterator class.
     */
-   typedef FaceIterator Iterator;
+   typedef FaceIterator iterator;
 
 private:
    /*

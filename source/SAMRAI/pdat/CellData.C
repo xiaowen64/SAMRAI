@@ -330,8 +330,8 @@ CellData<TYPE>::copyWithRotation(
          const int depth = ((getDepth() < src.getDepth()) ?
                             getDepth() : src.getDepth());
 
-         CellData<double>::Iterator ciend(copybox, false);
-         for (CellData<double>::Iterator ci(copybox, true);
+         CellData<double>::iterator ciend(copybox, false);
+         for (CellData<double>::iterator ci(copybox, true);
               ci != ciend; ++ci) {
 
             const CellIndex& dst_index = *ci;
@@ -473,8 +473,8 @@ CellData<TYPE>::packWithRotation(
       if (!copybox.empty()) {
 
          for (int d = 0; d < depth; d++) {
-            CellData<double>::Iterator ciend(copybox, false);
-            for (CellData<double>::Iterator ci(copybox, true);
+            CellData<double>::iterator ciend(copybox, false);
+            for (CellData<double>::iterator ci(copybox, true);
                  ci != ciend; ++ci) {
 
                CellIndex src_index(*ci);

@@ -492,7 +492,7 @@ public:
     * centered box geometry.  This typedef is a convenience for using the
     * SideIterator class.
     */
-   typedef SideIterator Iterator;
+   typedef SideIterator iterator;
 
 private:
    /*

@@ -69,15 +69,15 @@ operator << (
  * access to the individual attribute.
  *
  * Access to the Indexed elements is done through the SparseData iterator.
- * Clients should use the SparseData<BOX_GEOMETRY>::Iterator interface.
+ * Clients should use the SparseData<BOX_GEOMETRY>::iterator interface.
  *
  * Access to an Index's attribute list is done through the AttributeIterator.
  * Individual elements within an attribute are then accessed through the
  * operator[].
  *
  * <code>
- * SparseData<BOX_GEOMETRY>::Iterator index_iter = sparse_data.begin();
- * SparseData<BOX_GEOMETRY>::Iterator index_iter_end = sparse_data.end();
+ * SparseData<BOX_GEOMETRY>::iterator index_iter = sparse_data.begin();
+ * SparseData<BOX_GEOMETRY>::iterator index_iter_end = sparse_data.end();
  *
  * for (; index_iter != index_iter_end; ++index_iter) {
  *    // operator over all Index elements in the SparseData collection.
@@ -106,7 +106,7 @@ operator << (
  * see copy() and copy2() methods.
  *
  * To remove a single element from the SparseData list, you must use
- * the Iterator interface to erase it.
+ * the iterator interface to erase it.
  *
  * To erase all elements in the list, use the clear() method.
  *
@@ -137,9 +137,9 @@ private:
 
 public:
    /*!
-    * @brief Iterator access through SparseData<BOX_GEOMETRY>::Iterator
+    * @brief Iterator access through SparseData<BOX_GEOMETRY>::iterator
     */
-   typedef SparseDataIterator<BOX_GEOMETRY> Iterator;
+   typedef SparseDataIterator<BOX_GEOMETRY> iterator;
 
    /*!
     * @brief AttributeIterator access through
@@ -375,7 +375,7 @@ public:
     *
     * @return The iterator pointing to the index item just added
     */
-   Iterator
+   iterator
    registerIndex(
       const hier::Index& index);
 
@@ -383,7 +383,7 @@ public:
     * @brief Remove this Index and its associated attributes
     * from the object.
     *
-    * Remove will invalidate Iterators. The proper way to use remove in
+    * Remove will invalidate iterators. The proper way to use remove in
     * a loop with iterators is as follows:
     *
     * <code>
@@ -401,7 +401,7 @@ public:
     */
    void
    remove(
-      Iterator& iter);
+      iterator& iter);
 
    /*!
     * @brief Erases all elements within the object.
@@ -438,7 +438,7 @@ public:
    /*!
     * @brief Provides an iterator to the first SparseData item.
     */
-   Iterator
+   iterator
    begin();
 
    /*!
@@ -447,7 +447,7 @@ public:
     * This iterator is a special value, and should never be considered to
     * contain any valid data.
     */
-   Iterator
+   iterator
    end();
 
    /*!

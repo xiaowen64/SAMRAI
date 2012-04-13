@@ -1034,8 +1034,8 @@ void generatePrebalanceByUserShells(
       const boost::shared_ptr<hier::Patch>& patch = *pi;
 
       pdat::NodeData<double> node_tag_data(patch->getBox(), 1, zero_vec);
-      pdat::NodeData<int>::Iterator niend(node_tag_data.getGhostBox(), false);
-      for (pdat::NodeData<int>::Iterator ni(node_tag_data.getGhostBox(), true);
+      pdat::NodeData<int>::iterator niend(node_tag_data.getGhostBox(), false);
+      for (pdat::NodeData<int>::iterator ni(node_tag_data.getGhostBox(), true);
            ni != niend; ++ni) {
          const pdat::NodeIndex& idx = *ni;
          double rr = 0;
@@ -1060,8 +1060,8 @@ void generatePrebalanceByUserShells(
 
       const hier::BlockId& block_id = patch->getBox().getBlockId();
 
-      pdat::CellData<int>::Iterator ciend(tag_data->getGhostBox(), false);
-      for (pdat::CellData<int>::Iterator ci(tag_data->getGhostBox(), true);
+      pdat::CellData<int>::iterator ciend(tag_data->getGhostBox(), false);
+      for (pdat::CellData<int>::iterator ci(tag_data->getGhostBox(), true);
            ci != ciend; ++ci) {
          const pdat::CellIndex& cid = *ci;
 

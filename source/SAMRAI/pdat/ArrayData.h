@@ -622,7 +622,7 @@ public:
     * associated with an ArrayData object.  This typedef is
     * convenient link to the ArrayDataIterator class.
     */
-   typedef ArrayDataIterator Iterator;
+   typedef ArrayDataIterator iterator;
 
    friend class tbox::Array<ArrayData<TYPE> >;
 

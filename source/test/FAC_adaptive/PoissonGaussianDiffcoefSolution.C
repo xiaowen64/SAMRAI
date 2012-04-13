@@ -195,8 +195,8 @@ void PoissonGaussianDiffcoefSolution::setGridData(
          for (j = 0; j < d_dim.getValue(); ++j) {
             sl[j] = j != axis ? xl[j] + 0.5 * h[j] : xl[j];
          }
-         pdat::SideData<double>::Iterator iter(patch.getBox(), axis, true);
-         pdat::SideData<double>::Iterator iterend(patch.getBox(), axis, false);
+         pdat::SideData<double>::iterator iter(patch.getBox(), axis, true);
+         pdat::SideData<double>::iterator iterend(patch.getBox(), axis, false);
          if (d_dim == tbox::Dimension(2)) {
             double x, y;
             for ( ; iter != iterend; ++iter) {
@@ -224,8 +224,8 @@ void PoissonGaussianDiffcoefSolution::setGridData(
       for (j = 0; j < d_dim.getValue(); ++j) {
          sl[j] = xl[j] + 0.5 * h[j];
       }
-      pdat::CellData<double>::Iterator iter(patch.getBox(), true);
-      pdat::CellData<double>::Iterator iterend(patch.getBox(), false);
+      pdat::CellData<double>::iterator iter(patch.getBox(), true);
+      pdat::CellData<double>::iterator iterend(patch.getBox(), false);
       if (d_dim == tbox::Dimension(2)) {
          double x, y;
          for ( ; iter != iterend; ++iter) {

@@ -106,7 +106,7 @@ public:
    /**
     * Define the iterator.
     */
-   typedef IndexIterator<TYPE, BOX_GEOMETRY> Iterator;
+   typedef IndexIterator<TYPE, BOX_GEOMETRY> iterator;
 
    /**
     * The constructor for an IndexData object.  The box describes the interior
@@ -475,14 +475,14 @@ private:
  * Class IndexIterator is the iterator associated with the IndexData
  * This class provides methods for stepping through the
  * list that contains the irregular index set.  The user should
- * access this class through the name IndexData<TYPE>::Iterator.
+ * access this class through the name IndexData<TYPE>::iterator.
  *
  * This iterator should be used as follows:
  * \verbatim
  * IndexData<TYPE> data;
  * ...
- * IndexData<TYPE>::Iterator iterend(data, false);
- * for (IndexData<TYPE>::Iterator iter(data, true); iter != iterend; ++iter) {
+ * IndexData<TYPE>::iterator iterend(data, false);
+ * for (IndexData<TYPE>::iterator iter(data, true); iter != iterend; ++iter) {
  *    ... = *iter;
  * }
  * \endverbatim

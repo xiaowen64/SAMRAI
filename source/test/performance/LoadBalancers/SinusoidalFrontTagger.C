@@ -483,8 +483,8 @@ void SinusoidalFrontTagger::computeFrontsData(
    // Squash front_box to a single plane.
    front_box.upper(0) = front_box.lower(0) = pbox.lower(0);
    pdat::ArrayData<double> front_x(front_box, 1);
-   pdat::ArrayData<int>::Iterator aiend(front_x.getBox(), false);
-   for ( pdat::ArrayData<int>::Iterator ai(front_x.getBox(), true);
+   pdat::ArrayData<int>::iterator aiend(front_x.getBox(), false);
+   for ( pdat::ArrayData<int>::iterator ai(front_x.getBox(), true);
          ai != aiend; ++ai ) {
 
       const hier::Index &index = *ai;
@@ -508,8 +508,8 @@ void SinusoidalFrontTagger::computeFrontsData(
     */
    tmp_tag.fill(0);
    hier::BlockId blk0(0);
-   pdat::CellData<int>::Iterator ciend(tmp_tag.getGhostBox(), false);
-   for ( pdat::CellData<int>::Iterator ci(tmp_tag.getGhostBox(), true);
+   pdat::CellData<int>::iterator ciend(tmp_tag.getGhostBox(), false);
+   for ( pdat::CellData<int>::iterator ci(tmp_tag.getGhostBox(), true);
          ci != ciend; ++ci ) {
 
       const pdat::CellIndex &cell_index = *ci;
@@ -580,8 +580,8 @@ void SinusoidalFrontTagger::computeFrontsData(
       t_distance->start();
 
       pdat::NodeData<double> &dist_to_front(*dist_data);
-      pdat::NodeData<double>::Iterator ni(dist_to_front.getGhostBox(), true);
-      pdat::NodeData<double>::Iterator niend(dist_to_front.getGhostBox(), false);
+      pdat::NodeData<double>::iterator ni(dist_to_front.getGhostBox(), true);
+      pdat::NodeData<double>::iterator niend(dist_to_front.getGhostBox(), false);
       for ( ; ni != niend; ++ni) {
          const pdat::NodeIndex& index = *ni;
          pdat::NodeIndex front_index(index);
@@ -639,16 +639,16 @@ bool SinusoidalFrontTagger::packDerivedDataIntoDoubleBuffer(
       pdat::NodeData<double> dist_data(patch.getBox(), 1, hier::IntVector(d_dim,
                                           0));
       computePatchData(patch, d_time, &dist_data, NULL);
-      pdat::NodeData<double>::Iterator ciend(patch.getBox(), false);
-      for (pdat::NodeData<double>::Iterator ci(patch.getBox(), true);
+      pdat::NodeData<double>::iterator ciend(patch.getBox(), false);
+      for (pdat::NodeData<double>::iterator ci(patch.getBox(), true);
            ci != ciend; ++ci) {
          *(buffer++) = dist_data(*ci);
       }
    } else if (variable_name == "Tag value") {
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
       computePatchData(patch, d_time, NULL, &tag_data);
-      pdat::CellData<double>::Iterator ciend(patch.getBox(), false);
-      for (pdat::CellData<double>::Iterator ci(patch.getBox(), true);
+      pdat::CellData<double>::iterator ciend(patch.getBox(), false);
+      for (pdat::CellData<double>::iterator ci(patch.getBox(), true);
            ci != ciend; ++ci) {
          *(buffer++) = tag_data(*ci);
       }

@@ -254,8 +254,8 @@ void SphericalShellGenerator::tagShells(
    pdat::NodeData<double> node_tag_data(pbox, 1, tag_data.getGhostCellWidth()+buffer_cells);
    node_tag_data.getArrayData().fillAll(0);
 
-   pdat::NodeData<int>::Iterator niend(node_tag_data.getGhostBox(), false);
-   for (pdat::NodeData<int>::Iterator ni(node_tag_data.getGhostBox(), true);
+   pdat::NodeData<int>::iterator niend(node_tag_data.getGhostBox(), false);
+   for (pdat::NodeData<int>::iterator ni(node_tag_data.getGhostBox(), true);
         ni != niend; ++ni) {
       const pdat::NodeIndex& idx = *ni;
       double r[SAMRAI_MAXIMUM_DIMENSION];
@@ -279,8 +279,8 @@ void SphericalShellGenerator::tagShells(
     */
    tag_data.getArrayData().fillAll(0);
 
-   pdat::CellData<int>::Iterator ciend(tag_data.getGhostBox(), false);
-   for (pdat::CellData<int>::Iterator ci(tag_data.getGhostBox(), true);
+   pdat::CellData<int>::iterator ciend(tag_data.getGhostBox(), false);
+   for (pdat::CellData<int>::iterator ci(tag_data.getGhostBox(), true);
         ci != ciend; ++ci) {
       const pdat::CellIndex& cid = *ci;
 
@@ -319,8 +319,8 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
 
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
       tagShells(tag_data, dx, d_buffer_shrink_distance[patch.getPatchLevelNumber()]);
-      pdat::CellData<double>::Iterator ciend(patch.getBox(), false);
-      for (pdat::CellData<double>::Iterator ci(patch.getBox(), true);
+      pdat::CellData<double>::iterator ciend(patch.getBox(), false);
+      for (pdat::CellData<double>::iterator ci(patch.getBox(), true);
            ci != ciend; ++ci) {
          *(buffer++) = tag_data(*ci);
       }

@@ -63,7 +63,7 @@ SparseDataTester::testConstruction()
       d_initialized = true;
    }
 
-   SparseDataType::Iterator iter = d_sparse_data->registerIndex(hi);
+   SparseDataType::iterator iter = d_sparse_data->registerIndex(hi);
 
    SparseDataType::AttributeIterator index_iter(d_sparse_data->begin(hi)),
    index_iterend(d_sparse_data->end(hi));
@@ -151,7 +151,7 @@ SparseDataTester::testRemove()
    hier::Index idx = _getRandomIndex();
 
    int size = d_sparse_data->size();
-   SparseDataType::Iterator iter = d_sparse_data->begin();
+   SparseDataType::iterator iter = d_sparse_data->begin();
    while (iter != d_sparse_data->end()) {
       if (iter.getIndex() == idx) {
          sample->remove(iter);
@@ -193,7 +193,7 @@ SparseDataTester::testPackStream()
 
    int strsize = sample->getDataStreamSize(overlap);
 
-   SparseDataType::Iterator iter(sample.get());
+   SparseDataType::iterator iter(sample.get());
 
    tbox::MessageStream str(strsize, tbox::MessageStream::Write);
    sample->packStream(str, overlap);
@@ -206,7 +206,7 @@ SparseDataTester::testPackStream()
 
    sample2->unpackStream(upStr, overlap);
 
-   SparseDataType::Iterator iter2(sample2.get());
+   SparseDataType::iterator iter2(sample2.get());
 
    sample2->printNames(tbox::plog);
    tbox::plog << "Printing sample2" << std::endl;
@@ -249,8 +249,8 @@ SparseDataTester::testDatabaseInterface()
    boost::shared_ptr<SparseDataType> sample2(_createEmptySparseData());
    sample2->getFromDatabase(input_db);
 
-   SparseDataType::Iterator iter1(sample.get());
-   SparseDataType::Iterator iter2(sample2.get());
+   SparseDataType::iterator iter1(sample.get());
+   SparseDataType::iterator iter2(sample2.get());
 
    for ( ; iter1 != sample->end() && iter2 != sample2->end() && success;
          ++iter1, ++iter2) {
@@ -278,7 +278,7 @@ SparseDataTester::testTiming()
    boost::shared_ptr<SparseDataType> sample(_createEmptySparseData());
 
    timer->start();
-   SparseDataType::Iterator iter;
+   SparseDataType::iterator iter;
    for (int i = 0; i < 100; ++i) {
       for (int j = 0; j < 100; ++j) {
          v[0] = i;
@@ -320,9 +320,9 @@ SparseDataTester::_testCopy(
    bool success = true;
    src->copy(*dst);
    TBOX_ASSERT(src->size() == dst->size());
-   pdat::SparseData<pdat::CellGeometry>::Iterator me(src.get());
-   pdat::SparseData<pdat::CellGeometry>::Iterator me_end = src->end();
-   pdat::SparseData<pdat::CellGeometry>::Iterator other(dst.get());
+   pdat::SparseData<pdat::CellGeometry>::iterator me(src.get());
+   pdat::SparseData<pdat::CellGeometry>::iterator me_end = src->end();
+   pdat::SparseData<pdat::CellGeometry>::iterator other(dst.get());
 
    for ( ; me != me_end && success != false; ++me, ++other) {
       if (me != other) {
@@ -355,7 +355,7 @@ SparseDataTester::_fillObject(
    int* ivalues = new int[ISIZE];
    _getIntValues(ivalues);
 
-   SparseDataType::Iterator iter;
+   SparseDataType::iterator iter;
    for (int i = 1; i < NUM_INDICES; ++i) {
       v[0] = i;
       v[1] = i;

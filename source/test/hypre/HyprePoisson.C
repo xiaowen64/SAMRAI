@@ -364,8 +364,8 @@ bool HyprePoisson::packDerivedDataIntoDoubleBuffer(
    NULL_USE(region);
    NULL_USE(depth_id);
 
-   pdat::CellData<double>::Iterator icell(patch.getBox(), true);
-   pdat::CellData<double>::Iterator icellend(patch.getBox(), false);
+   pdat::CellData<double>::iterator icell(patch.getBox(), true);
+   pdat::CellData<double>::iterator icellend(patch.getBox(), false);
 
    if (variable_name == "Error") {
       boost::shared_ptr<pdat::CellData<double> > current_solution_(

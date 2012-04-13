@@ -455,7 +455,7 @@ public:
     * centered box geometry.  This typedef is a convenience for
     * using the EdgeIterator class.
     */
-   typedef EdgeIterator Iterator;
+   typedef EdgeIterator iterator;
 
 private:
    /*

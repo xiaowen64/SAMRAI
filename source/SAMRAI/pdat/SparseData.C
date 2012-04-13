@@ -691,7 +691,7 @@ SparseData<BOX_GEOMETRY>::unpackStream(
          index(j) = index_buf[j];
       }
 
-      Iterator map_iter = registerIndex(index);
+      iterator map_iter = registerIndex(index);
 
       // unpack the number of attributes
       stream >> num_attrs;
@@ -787,7 +787,7 @@ SparseData<BOX_GEOMETRY>::getSpecializedFromDatabase(
 
          // register the new Index so that we can add the attributes
          // to its list.
-         Iterator new_item = registerIndex(index);
+         iterator new_item = registerIndex(index);
 
          // get the list size.
          std::string list_size_keyword = "attr_list_size_"
@@ -1026,7 +1026,7 @@ SparseData<BOX_GEOMETRY>::empty()
  * registerIndex(index)
  *********************************************************************/
 template<typename BOX_GEOMETRY>
-typename SparseData<BOX_GEOMETRY>::Iterator
+typename SparseData<BOX_GEOMETRY>::iterator
 SparseData<BOX_GEOMETRY>::registerIndex(
    const hier::Index& index)
 {
@@ -1042,7 +1042,7 @@ SparseData<BOX_GEOMETRY>::registerIndex(
  *********************************************************************/
 template<typename BOX_GEOMETRY>
 void
-SparseData<BOX_GEOMETRY>::remove(Iterator& iterToRemove)
+SparseData<BOX_GEOMETRY>::remove(iterator& iterToRemove)
 {
    d_index_to_attribute_map.erase(iterToRemove.d_iterator++);
 }
@@ -1093,7 +1093,7 @@ SparseData<BOX_GEOMETRY>::isValid(
  * begin()
  *********************************************************************/
 template<typename BOX_GEOMETRY>
-typename SparseData<BOX_GEOMETRY>::Iterator
+typename SparseData<BOX_GEOMETRY>::iterator
 SparseData<BOX_GEOMETRY>::begin()
 {
    return SparseDataIterator<BOX_GEOMETRY>(this);
@@ -1103,7 +1103,7 @@ SparseData<BOX_GEOMETRY>::begin()
  * end()
  *********************************************************************/
 template<typename BOX_GEOMETRY>
-typename SparseData<BOX_GEOMETRY>::Iterator
+typename SparseData<BOX_GEOMETRY>::iterator
 SparseData<BOX_GEOMETRY>::end()
 {
    return SparseDataIterator<BOX_GEOMETRY>(

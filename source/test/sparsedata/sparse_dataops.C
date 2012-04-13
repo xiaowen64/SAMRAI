@@ -225,8 +225,8 @@ int main(
             pdat::CellIterator icend(patch->getBox(), false);
             for ( ; ic != icend; ++ic) {
                const hier::Index* idx = &(*ic);
-               LSparseData::Iterator iter1 = sample1->registerIndex(*idx);
-               LSparseData::Iterator iter2 = sample2->registerIndex(*idx);
+               LSparseData::iterator iter1 = sample1->registerIndex(*idx);
+               LSparseData::iterator iter2 = sample2->registerIndex(*idx);
 
                double dvals1[DSIZE], dvals2[DSIZE];
                for (int i = 0; i < DSIZE; ++i) {
@@ -242,8 +242,8 @@ int main(
                iter2.insert(dvals2, ivals2);
             }
 
-            LSparseData::Iterator iter1(sample1.get());
-            LSparseData::Iterator iter2(sample2.get());
+            LSparseData::iterator iter1(sample1.get());
+            LSparseData::iterator iter2(sample2.get());
 
             for ( ; iter1 != sample1->end() && iter2 != sample2->end();
                   ++iter1, ++iter2) {
@@ -420,7 +420,7 @@ bool checkCopyOps(
             boost::detail::dynamic_cast_tag());
 
          int edit = copiedTo->size() / 2;
-         LSparseData::Iterator ct_it(copiedTo.get());
+         LSparseData::iterator ct_it(copiedTo.get());
          for ( ; ct_it != copiedTo->end() && edit > 0; ++ct_it, edit--) {
          }
 
@@ -432,7 +432,7 @@ bool checkCopyOps(
          edit = copiedTo->size() / 2;
          ct_it = copiedTo->begin();
 
-         LSparseData::Iterator ctrl_it(control.get());
+         LSparseData::iterator ctrl_it(control.get());
          bool first_passed = true;
          for (int i = 0; i < edit; ++i) {
             if (!ct_it.equals(ctrl_it)) {
@@ -442,7 +442,7 @@ bool checkCopyOps(
                ++ctrl_it;
             }
          }
-         LSparseData::Iterator cf_it(copiedFrom.get());
+         LSparseData::iterator cf_it(copiedFrom.get());
          edit = (copiedTo->size() / 2);
          for (int i = 0; i < edit; ++i) {
             ++cf_it;
@@ -489,7 +489,7 @@ bool checkRemoveOps(
             patch->getPatchData(data_id1),
             boost::detail::dynamic_cast_tag());
 
-         LSparseData::Iterator it;
+         LSparseData::iterator it;
          int stop = sample->size() / 2;
          for (it = sample->begin(); it != sample->end() && stop != 0;
               ++it, --stop) {

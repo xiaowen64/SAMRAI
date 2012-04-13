@@ -383,7 +383,7 @@ public:
     * centered box geometry.  This typedef is a convenience
     * for using the CellIterator class.
     */
-   typedef CellIterator Iterator;
+   typedef CellIterator iterator;
 
 private:
    /*
