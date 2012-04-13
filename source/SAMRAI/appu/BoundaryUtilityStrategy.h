@@ -65,17 +65,10 @@ public:
     * @param bdry_location_index Integer index for location of edge (in 2d)
     *                            or face (in 3d) boundary.
     */
-#if 0
    virtual void readDirichletBoundaryDataEntry(
       const boost::shared_ptr<tbox::Database>& db,
       std::string& db_name,
       int bdry_location_index) = 0;
-#else
-   virtual void readDirichletBoundaryDataEntry(
-      const boost::shared_ptr<tbox::Database>& db,
-      std::string& db_name,
-      int bdry_location_index) = 0;
-#endif
 
    /*!
     * Read NEUMANN boundary state values for an edge (in 2d) or a face
@@ -86,17 +79,10 @@ public:
     * @param bdry_location_index Integer index for location of edge (in 2d)
     *                            or face (in 3d) boundary.
     */
-#if 0
    virtual void readNeumannBoundaryDataEntry(
       const boost::shared_ptr<tbox::Database>& db,
       std::string& db_name,
       int bdry_location_index) = 0;
-#else
-   virtual void readNeumannBoundaryDataEntry(
-      const boost::shared_ptr<tbox::Database>& db,
-      std::string& db_name,
-      int bdry_location_index) = 0;
-#endif
 
 };
 
