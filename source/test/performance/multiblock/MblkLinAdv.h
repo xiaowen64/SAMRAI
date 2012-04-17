@@ -277,6 +277,14 @@ public:
       string& db_name,
       int bdry_location_index);
 
+   void
+   readNeumannBoundaryDataEntry(
+      const boost::shared_ptr<tbox::Database>& db,
+      string& db_name,
+      int bdry_location_index)
+   {
+   } 
+
    hier::IntVector
    getMultiblockRefineOpStencilWidth() const;
    hier::IntVector

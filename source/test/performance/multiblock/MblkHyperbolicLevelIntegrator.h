@@ -210,7 +210,7 @@ public:
       const tbox::Dimension& dim,
       boost::shared_ptr<tbox::Database> input_db,
       MblkHyperbolicPatchStrategy* patch_strategy,
-      boost::shared_ptr<hier::PatchHierarchy>& mblk_hierarchy,
+      boost::shared_ptr<hier::PatchHierarchy> mblk_hierarchy,
       bool register_for_restart = true,
       bool use_time_refinement = true);
 
@@ -231,7 +231,7 @@ public:
     */
    virtual void
    initializeLevelIntegrator(
-      boost::shared_ptr<mesh::GriddingAlgorithmStrategy> gridding_alg);
+      const boost::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_alg);
 
    /**
     * Determine time increment to advance data on level and return that
@@ -249,7 +249,7 @@ public:
     */
    virtual double
    getLevelDt(
-      const boost::shared_ptr<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       const double dt_time,
       const bool initial_time);
 
@@ -367,8 +367,8 @@ public:
 
    virtual double
    advanceLevel(
-      const boost::shared_ptr<hier::PatchLevel> level,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchLevel>& level,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const double current_time,
       const double new_time,
       const bool first_step,
@@ -391,7 +391,7 @@ public:
     */
    virtual void
    standardLevelSynchronization(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
@@ -405,7 +405,7 @@ public:
     */
    virtual void
    standardLevelSynchronization(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
@@ -434,7 +434,7 @@ public:
     */
    virtual void
    synchronizeNewLevels(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
@@ -448,7 +448,7 @@ public:
     */
    virtual void
    resetTimeDependentData(
-      const boost::shared_ptr<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       const double new_time,
       const bool can_be_refined);
 
@@ -461,7 +461,7 @@ public:
     */
    virtual void
    resetDataToPreadvanceState(
-      const boost::shared_ptr<hier::PatchLevel> level);
+      const boost::shared_ptr<hier::PatchLevel>& level);
 
    /**
     * Initialize data on a new level after it is inserted into an AMR patch
@@ -499,12 +499,12 @@ public:
     */
    virtual void
    initializeLevelData(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double init_data_time,
       const bool can_be_refined,
       const bool initial_time,
-      const boost::shared_ptr<hier::PatchLevel> old_level,
+      const boost::shared_ptr<hier::PatchLevel>& old_level,
       const bool allocate_data = true);
 
    /**
@@ -525,7 +525,7 @@ public:
     */
    virtual void
    resetHierarchyConfiguration(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -552,7 +552,7 @@ public:
     */
    virtual void
    applyGradientDetector(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double error_data_time,
       const int tag_index,
@@ -591,7 +591,7 @@ public:
     */
    virtual void
    applyRichardsonExtrapolation(
-      const boost::shared_ptr<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       const double error_data_time,
       const int tag_index,
       const double deltat,
@@ -614,9 +614,9 @@ public:
     */
    virtual void
    coarsenDataForRichardsonExtrapolation(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
-      const boost::shared_ptr<hier::PatchLevel> coarse_level,
+      const boost::shared_ptr<hier::PatchLevel>& coarse_level,
       const double coarsen_data_time,
       const bool before_advance);
 
