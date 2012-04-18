@@ -22,7 +22,6 @@ using namespace std;
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/PIO.h"
@@ -184,20 +183,6 @@ int main(
       }
       hier::BoxContainer patch_boxes(boxes);
 
-#if 0
-      hier::ProcessorMapping mapping(patch_boxes.size());
-
-      for (int ib = 0; ib < patch_boxes.size(); ib++) {
-         mapping.setProcessorAssignment(ib, 0);
-      }
-
-      patch_hierarchy->makeNewPatchLevel(0,
-         hier::IntVector(dim, 1),
-         patch_boxes,
-         mapping);
-
-#else
-
       hier::BoxLevelConnectorUtils edge_utils;
       hier::BoxLevel layer0(hier::IntVector(dim, 1), grid_geometry);
       hier::BoxContainer::const_iterator domain_boxes(domain);
@@ -218,8 +203,6 @@ int main(
       createConnector(
          *level0->getBoxLevel(),
          hier::IntVector(dim, 2));
-
-#endif
 
       /*
        * Allocate data on hierarchy and set variable data on patch interiors

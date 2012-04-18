@@ -38,7 +38,6 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/hier/ProcessorMapping.h"
 #include <string>
 
 #include "SAMRAI/tbox/Utilities.h"

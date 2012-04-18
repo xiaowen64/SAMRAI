@@ -12,6 +12,7 @@
 #define included_mesh_ChopAndPackLoadBalancer
 
 #include "SAMRAI/SAMRAI_config.h"
+#include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Timer.h"

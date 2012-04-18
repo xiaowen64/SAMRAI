@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/RankGroup.h"
 
@@ -35,7 +34,6 @@ namespace mesh {
  * new patches are mapped to processors.
  *
  * @see hier::PatchLevel
- * @see hier::ProcessorMapping
  */
 
 class LoadBalanceStrategy

@@ -482,8 +482,7 @@ CoarsenSchedule::generateScheduleNSquared()
 
       const hier::Box dst_mapped_box(*crse_itr_dp,
                                      hier::LocalId(dp),
-                                     d_crse_level->getProcessorMapping().
-                                     getProcessorAssignment(dp));
+                                     dst_mapping.getProcessorAssignment(dp));
 
       hier::BoxContainer::const_iterator crse_itr_sp(
          d_temp_crse_level->getBoxes());
@@ -492,7 +491,7 @@ CoarsenSchedule::generateScheduleNSquared()
          const hier::Box src_mapped_box(
             *crse_itr_sp,
             hier::LocalId(sp),
-            d_temp_crse_level->getProcessorMapping().getProcessorAssignment(sp));
+            src_mapping.getProcessorAssignment(sp));
 
          if (dst_mapping.isMappingLocal(dp)
              || src_mapping.isMappingLocal(sp)) {

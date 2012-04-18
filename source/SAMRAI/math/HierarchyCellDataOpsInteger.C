@@ -726,7 +726,7 @@ HierarchyCellDataOpsInteger::min(
 
    int global_min = minval;
    if (mpi.getSize() > 1) {
-      mpi.Allreduce(&minval, &global_min, 1, MPI_INT, MPI_SUM);
+      mpi.Allreduce(&minval, &global_min, 1, MPI_INT, MPI_MIN);
    }
    return global_min;
 }
@@ -761,7 +761,7 @@ HierarchyCellDataOpsInteger::max(
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
          maxval = tbox::MathUtilities<int>::Max(maxval,
-               d_patch_ops.min(d, box));
+               d_patch_ops.max(d, box));
       }
    }
 

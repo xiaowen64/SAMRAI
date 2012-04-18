@@ -44,7 +44,6 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
 
-#include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/hier/VariableDatabase.h"

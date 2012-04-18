@@ -776,7 +776,7 @@ HierarchyFaceDataOpsComplex::numberOfEntries(
 
       int global_entries = entries;
       if (mpi.getSize() > 1) {
-         mpi.Allreduce(&entries, &global_entries, 1, MPI_INT, MPI_MAX);
+         mpi.Allreduce(&entries, &global_entries, 1, MPI_INT, MPI_SUM);
       }
       entries = global_entries;
 
@@ -1019,7 +1019,7 @@ HierarchyFaceDataOpsComplex::maxNorm(
 
    double global_norm = norm;
    if (mpi.getSize() > 1) {
-      mpi.Allreduce(&norm, &global_norm, 1, MPI_DOUBLE, MPI_SUM);
+      mpi.Allreduce(&norm, &global_norm, 1, MPI_DOUBLE, MPI_MAX);
    }
    return global_norm;
 }

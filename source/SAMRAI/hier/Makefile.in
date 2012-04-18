@@ -48,7 +48,6 @@ OBJS = 	\
 	Connector.o \
 	ConnectorStatistics.o \
 	BoxLevelHandle.o \
-	BoxIOUtility.o \
 	PeriodicShiftCatalog.o \
 	RealBoxConstIterator.o \
 	BoxContainerSingleBlockIterator.o \

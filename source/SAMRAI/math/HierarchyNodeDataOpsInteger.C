@@ -804,7 +804,7 @@ HierarchyNodeDataOpsInteger::max(
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
          maxval = tbox::MathUtilities<int>::Max(maxval,
-               d_patch_ops.min(d, box));
+               d_patch_ops.max(d, box));
       }
    }
 

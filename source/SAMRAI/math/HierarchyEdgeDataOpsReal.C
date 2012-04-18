@@ -1251,7 +1251,7 @@ HierarchyEdgeDataOpsReal<TYPE>::computeConstrProdPos(
 
    int global_test = test;
    if (mpi.getSize() > 1) {
-      mpi.Allreduce(&test, &global_test, 1, MPI_INT, MPI_SUM);
+      mpi.Allreduce(&test, &global_test, 1, MPI_INT, MPI_MIN);
    }
    return global_test;
 }
@@ -1351,7 +1351,7 @@ HierarchyEdgeDataOpsReal<TYPE>::testReciprocal(
 
    int global_test = test;
    if (mpi.getSize() > 1) {
-      mpi.Allreduce(&test, &global_test, 1, MPI_INT, MPI_SUM);
+      mpi.Allreduce(&test, &global_test, 1, MPI_INT, MPI_MIN);
    }
    return global_test;
 }

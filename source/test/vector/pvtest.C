@@ -42,7 +42,6 @@ using namespace std;
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/solv/PETSc_SAMRAIVectorReal.h"
-#include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -175,40 +174,6 @@ int main(
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_boxes.size();
 
-#if 0
-      hier::ProcessorMapping mapping0(n_coarse_boxes);
-      hier::ProcessorMapping mapping1(n_fine_boxes);
-
-      int ib;
-      for (ib = 0; ib < n_coarse_boxes; ib++) {
-         if (nproc > 1) {
-            if (ib < n_coarse_boxes / 2) {
-               mapping0.setProcessorAssignment(ib, 0);
-            } else {
-               mapping0.setProcessorAssignment(ib, 1);
-            }
-         } else {
-            mapping0.setProcessorAssignment(ib, 0);
-         }
-      }
-
-      for (ib = 0; ib < n_fine_boxes; ib++) {
-         if (nproc > 1) {
-            if (ib < n_fine_boxes / 2) {
-               mapping1.setProcessorAssignment(ib, 0);
-            } else {
-               mapping1.setProcessorAssignment(ib, 1);
-            }
-         } else {
-            mapping1.setProcessorAssignment(ib, 0);
-         }
-      }
-
-      hierarchy->makeNewPatchLevel(0, hier::IntVector(dim3d,
-            1), coarse_domain, mapping0);
-      hierarchy->makeNewPatchLevel(1, ratio, fine_boxes, mapping1);
-#else
-
       hier::BoxLevel layer0(hier::IntVector(dim3d, 1), geometry);
       hier::BoxLevel layer1(ratio, geometry);
 
@@ -273,8 +238,6 @@ int main(
 
       hierarchy->makeNewPatchLevel(0, layer0);
       hierarchy->makeNewPatchLevel(1, layer1);
-
-#endif
 
       // Create instance of hier::Variable database
       hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
