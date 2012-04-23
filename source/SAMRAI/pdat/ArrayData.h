@@ -624,8 +624,6 @@ public:
     */
    typedef ArrayDataIterator iterator;
 
-   friend class tbox::Array<ArrayData<TYPE> >;
-
 private:
    ArrayData(
       const ArrayData<TYPE>&);          // not implemented
