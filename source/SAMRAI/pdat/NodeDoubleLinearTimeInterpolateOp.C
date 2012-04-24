@@ -84,21 +84,6 @@ NodeDoubleLinearTimeInterpolateOp::~NodeDoubleLinearTimeInterpolateOp()
 {
 }
 
-bool
-NodeDoubleLinearTimeInterpolateOp::findTimeInterpolateOperator(
-   const boost::shared_ptr<hier::Variable>& var,
-   const std::string& op_name) const
-{
-   const boost::shared_ptr<NodeVariable<double> > cast_var(
-      var,
-      boost::detail::dynamic_cast_tag());
-   if (cast_var && (op_name == "STD_LINEAR_TIME_INTERPOLATE")) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
 void
 NodeDoubleLinearTimeInterpolateOp::timeInterpolate(
    hier::PatchData& dst_data,

@@ -14,7 +14,6 @@
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
-#include "SAMRAI/geom/SAMRAITransferOperatorRegistry.h"
 
 // Cell data coarsen operators
 #include "SAMRAI/geom/CartesianCellComplexWeightedAverage.h"
@@ -28,10 +27,6 @@
 #include "SAMRAI/geom/CartesianCellDoubleLinearRefine.h"
 #include "SAMRAI/geom/CartesianCellFloatConservativeLinearRefine.h"
 #include "SAMRAI/geom/CartesianCellFloatLinearRefine.h"
-#include "SAMRAI/pdat/CellComplexConstantRefine.h"
-#include "SAMRAI/pdat/CellDoubleConstantRefine.h"
-#include "SAMRAI/pdat/CellFloatConstantRefine.h"
-#include "SAMRAI/pdat/CellIntegerConstantRefine.h"
 
 // Edge data coarsen operators
 #include "SAMRAI/geom/CartesianEdgeComplexWeightedAverage.h"
@@ -41,10 +36,6 @@
 // Edge data refine operators
 #include "SAMRAI/geom/CartesianEdgeDoubleConservativeLinearRefine.h"
 #include "SAMRAI/geom/CartesianEdgeFloatConservativeLinearRefine.h"
-#include "SAMRAI/pdat/EdgeComplexConstantRefine.h"
-#include "SAMRAI/pdat/EdgeDoubleConstantRefine.h"
-#include "SAMRAI/pdat/EdgeFloatConstantRefine.h"
-#include "SAMRAI/pdat/EdgeIntegerConstantRefine.h"
 
 // Face data coarsen operators
 #include "SAMRAI/geom/CartesianFaceComplexWeightedAverage.h"
@@ -54,16 +45,6 @@
 // Face data refine operators
 #include "SAMRAI/geom/CartesianFaceDoubleConservativeLinearRefine.h"
 #include "SAMRAI/geom/CartesianFaceFloatConservativeLinearRefine.h"
-#include "SAMRAI/pdat/FaceComplexConstantRefine.h"
-#include "SAMRAI/pdat/FaceDoubleConstantRefine.h"
-#include "SAMRAI/pdat/FaceFloatConstantRefine.h"
-#include "SAMRAI/pdat/FaceIntegerConstantRefine.h"
-
-// Node data coarsen operators
-#include "SAMRAI/pdat/NodeComplexInjection.h"
-#include "SAMRAI/pdat/NodeDoubleInjection.h"
-#include "SAMRAI/pdat/NodeFloatInjection.h"
-#include "SAMRAI/pdat/NodeIntegerInjection.h"
 
 // Node data refine operators
 #include "SAMRAI/geom/CartesianNodeComplexLinearRefine.h"
@@ -74,15 +55,6 @@
 #include "SAMRAI/geom/CartesianOuterfaceComplexWeightedAverage.h"
 #include "SAMRAI/geom/CartesianOuterfaceDoubleWeightedAverage.h"
 #include "SAMRAI/geom/CartesianOuterfaceFloatWeightedAverage.h"
-
-// Outerface data refine operators
-#include "SAMRAI/pdat/OuterfaceComplexConstantRefine.h"
-#include "SAMRAI/pdat/OuterfaceDoubleConstantRefine.h"
-#include "SAMRAI/pdat/OuterfaceFloatConstantRefine.h"
-#include "SAMRAI/pdat/OuterfaceIntegerConstantRefine.h"
-
-// Outernode data coarsen operators
-#include "SAMRAI/pdat/OuternodeDoubleConstantCoarsen.h"
 
 // Outerside data coarsen operators
 #include "SAMRAI/geom/CartesianOutersideDoubleWeightedAverage.h"
@@ -95,33 +67,14 @@
 // Side data refine operators
 #include "SAMRAI/geom/CartesianSideDoubleConservativeLinearRefine.h"
 #include "SAMRAI/geom/CartesianSideFloatConservativeLinearRefine.h"
-#include "SAMRAI/pdat/SideComplexConstantRefine.h"
-#include "SAMRAI/pdat/SideDoubleConstantRefine.h"
-#include "SAMRAI/pdat/SideFloatConstantRefine.h"
-#include "SAMRAI/pdat/SideIntegerConstantRefine.h"
 
-// Time interpolation operators
-#include "SAMRAI/pdat/CellComplexLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/CellDoubleLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/CellFloatLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/EdgeComplexLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/EdgeDoubleLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/EdgeFloatLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/FaceComplexLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/FaceDoubleLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/FaceFloatLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/NodeComplexLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/NodeDoubleLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/NodeFloatLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/OuterfaceComplexLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/OuterfaceDoubleLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/OuterfaceFloatLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/OutersideComplexLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/OutersideDoubleLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/OutersideFloatLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/SideComplexLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/SideDoubleLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/SideFloatLinearTimeInterpolateOp.h"
+#include "SAMRAI/pdat/CellVariable.h"
+#include "SAMRAI/pdat/EdgeVariable.h"
+#include "SAMRAI/pdat/FaceVariable.h"
+#include "SAMRAI/pdat/NodeVariable.h"
+#include "SAMRAI/pdat/OuterfaceVariable.h"
+#include "SAMRAI/pdat/OutersideVariable.h"
+#include "SAMRAI/pdat/SideVariable.h"
 
 #include "SAMRAI/hier/BoundaryLookupTable.h"
 #include "SAMRAI/hier/Box.h"
@@ -139,6 +92,7 @@
 #include <boost/make_shared.hpp>
 #include <cstdlib>
 #include <fstream>
+#include <typeinfo>
 
 namespace SAMRAI {
 namespace geom {
@@ -162,11 +116,9 @@ CartesianGridGeometry::CartesianGridGeometry(
    const std::string& object_name,
    const boost::shared_ptr<tbox::Database>& input_db,
    bool register_for_restart):
-   hier::GridGeometry(dim, object_name,
-                      boost::make_shared<SAMRAITransferOperatorRegistry>(dim)),
+   GridGeometry(dim, object_name),
    d_domain_box(dim)
 {
-   TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
 
    d_registered_for_restart = register_for_restart;
@@ -182,7 +134,6 @@ CartesianGridGeometry::CartesianGridGeometry(
    }
 
    getFromInput(input_db, is_from_restart);
-
 }
 
 CartesianGridGeometry::CartesianGridGeometry(
@@ -191,12 +142,10 @@ CartesianGridGeometry::CartesianGridGeometry(
    const double* x_up,
    const hier::BoxContainer& domain,
    bool register_for_restart):
-   hier::GridGeometry(domain.front().getDim(), object_name,
-                      boost::make_shared<SAMRAITransferOperatorRegistry>(domain.front().getDim())),
+   GridGeometry(domain.front().getDim(), object_name),
    d_domain_box(domain.front().getDim())
 {
    TBOX_ASSERT(domain.size() > 0);
-   TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(!(x_lo == (double *)NULL));
    TBOX_ASSERT(!(x_up == (double *)NULL));
 
@@ -208,7 +157,42 @@ CartesianGridGeometry::CartesianGridGeometry(
    }
 
    setGeometryData(x_lo, x_up, domain);
+}
 
+CartesianGridGeometry::CartesianGridGeometry(
+   const std::string& object_name,
+   const double* x_lo,
+   const double* x_up,
+   const hier::BoxContainer& domain,
+   const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg,
+   bool register_for_restart) :
+   GridGeometry(domain.front().getDim(), object_name, op_reg),
+   d_domain_box(domain.front().getDim())
+{
+   TBOX_ASSERT(domain.size() > 0);
+   TBOX_ASSERT(!(x_lo == (double *)NULL));
+   TBOX_ASSERT(!(x_up == (double *)NULL));
+
+   d_registered_for_restart = register_for_restart;
+
+   if (d_registered_for_restart) {
+      tbox::RestartManager::getManager()->
+      registerRestartItem(getObjectName(), this);
+   }
+
+   setGeometryData(x_lo, x_up, domain);
+}
+
+/*
+ *************************************************************************
+ *
+ * Destructor for CartesianGridGeometry deallocates grid storage.
+ *
+ *************************************************************************
+ */
+
+CartesianGridGeometry::~CartesianGridGeometry()
+{
 }
 
 /*
@@ -220,7 +204,7 @@ CartesianGridGeometry::CartesianGridGeometry(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::GridGeometry>
+boost::shared_ptr<hier::BaseGridGeometry>
 CartesianGridGeometry::makeRefinedGridGeometry(
    const std::string& fine_geom_name,
    const hier::IntVector& refine_ratio,
@@ -235,11 +219,12 @@ CartesianGridGeometry::makeRefinedGridGeometry(
    hier::BoxContainer fine_domain(getPhysicalDomain());
    fine_domain.refine(refine_ratio);
 
-   boost::shared_ptr<hier::GridGeometry> fine_geometry(
+   boost::shared_ptr<hier::BaseGridGeometry> fine_geometry(
       boost::make_shared<CartesianGridGeometry>(fine_geom_name,
          d_x_lo,
          d_x_up,
          fine_domain,
+         d_transfer_operator_registry,
          register_for_restart));
 
    fine_geometry->initializePeriodicShift(getPeriodicShift(hier::
@@ -257,7 +242,7 @@ CartesianGridGeometry::makeRefinedGridGeometry(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::GridGeometry>
+boost::shared_ptr<hier::BaseGridGeometry>
 CartesianGridGeometry::makeCoarsenedGridGeometry(
    const std::string& coarse_geom_name,
    const hier::IntVector& coarsen_ratio,
@@ -298,32 +283,18 @@ CartesianGridGeometry::makeCoarsenedGridGeometry(
       }
    }
 
-   boost::shared_ptr<hier::GridGeometry> coarse_geometry(
+   boost::shared_ptr<hier::BaseGridGeometry> coarse_geometry(
       boost::make_shared<CartesianGridGeometry>(coarse_geom_name,
          d_x_lo,
          d_x_up,
          coarse_domain,
+         d_transfer_operator_registry,
          register_for_restart));
 
    coarse_geometry->initializePeriodicShift(getPeriodicShift(hier::
          IntVector::getOne(dim)));
 
    return coarse_geometry;
-}
-
-/*
- *************************************************************************
- *
- * Destructor for CartesianGridGeometry deallocates grid storage.
- *
- *************************************************************************
- */
-
-CartesianGridGeometry::~CartesianGridGeometry()
-{
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->unregisterRestartItem(getObjectName());
-   }
 }
 
 /*
@@ -447,6 +418,109 @@ CartesianGridGeometry::setGeometryDataOnPatch(
 
 }
 
+void
+CartesianGridGeometry::buildOperators()
+{
+   GridGeometry::buildOperators();
+
+   // CartesianGridGeometry specific Coarsening Operators
+   addCoarsenOperator(
+      typeid(pdat::CellVariable<dcomplex>).name(),
+      boost::make_shared<CartesianCellComplexWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::CellVariable<double>).name(),
+      boost::make_shared<CartesianCellDoubleWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::CellVariable<float>).name(),
+      boost::make_shared<CartesianCellFloatWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::EdgeVariable<dcomplex>).name(),
+      boost::make_shared<CartesianEdgeComplexWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::EdgeVariable<double>).name(),
+      boost::make_shared<CartesianEdgeDoubleWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::EdgeVariable<float>).name(),
+      boost::make_shared<CartesianEdgeFloatWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::FaceVariable<dcomplex>).name(),
+      boost::make_shared<CartesianFaceComplexWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::FaceVariable<double>).name(),
+      boost::make_shared<CartesianFaceDoubleWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::FaceVariable<float>).name(),
+      boost::make_shared<CartesianFaceFloatWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::OuterfaceVariable<dcomplex>).name(),
+      boost::make_shared<CartesianOuterfaceComplexWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::OuterfaceVariable<double>).name(),
+      boost::make_shared<CartesianOuterfaceDoubleWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::OuterfaceVariable<float>).name(),
+      boost::make_shared<CartesianOuterfaceFloatWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::OutersideVariable<double>).name(),
+      boost::make_shared<CartesianOutersideDoubleWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::SideVariable<dcomplex>).name(),
+      boost::make_shared<CartesianSideComplexWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::SideVariable<double>).name(),
+      boost::make_shared<CartesianSideDoubleWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::SideVariable<float>).name(),
+      boost::make_shared<CartesianSideFloatWeightedAverage>(d_dim));
+
+   // CartesianGridGeometry specific Refinement Operators
+   addRefineOperator(
+      typeid(pdat::CellVariable<dcomplex>).name(),
+      boost::make_shared<CartesianCellComplexConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::CellVariable<double>).name(),
+      boost::make_shared<CartesianCellDoubleConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::CellVariable<float>).name(),
+      boost::make_shared<CartesianCellFloatConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::EdgeVariable<double>).name(),
+      boost::make_shared<CartesianEdgeDoubleConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::EdgeVariable<float>).name(),
+      boost::make_shared<CartesianEdgeFloatConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::FaceVariable<double>).name(),
+      boost::make_shared<CartesianFaceDoubleConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::FaceVariable<float>).name(),
+      boost::make_shared<CartesianFaceFloatConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::SideVariable<double>).name(),
+      boost::make_shared<CartesianSideDoubleConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::SideVariable<float>).name(),
+      boost::make_shared<CartesianSideFloatConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::CellVariable<dcomplex>).name(),
+      boost::make_shared<CartesianCellComplexLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::CellVariable<double>).name(),
+      boost::make_shared<CartesianCellDoubleLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::CellVariable<float>).name(),
+      boost::make_shared<CartesianCellFloatLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::NodeVariable<dcomplex>).name(),
+      boost::make_shared<CartesianNodeComplexLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::NodeVariable<double>).name(),
+      boost::make_shared<CartesianNodeDoubleLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::NodeVariable<float>).name(),
+      boost::make_shared<CartesianNodeFloatLinearRefine>(d_dim));
+}
+
 /*
  *************************************************************************
  *
@@ -484,7 +558,7 @@ CartesianGridGeometry::printClassData(
 
    os << "d_domain_box = " << d_domain_box << std::endl;
 
-   hier::GridGeometry::printClassData(os);
+   GridGeometry::printClassData(os);
 }
 
 /*

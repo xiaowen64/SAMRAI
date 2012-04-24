@@ -1280,7 +1280,7 @@ public:
     * relative to the coarse-level domain.
     *
     * @param[in] takeaway  The boxes to take away from this BoxContainer.  An
-    * error will occur if makeTree with a non-null GridGeometry argument
+    * error will occur if makeTree with a non-null BaseGridGeometry argument
     * has not been previously called on this container.
     *
     * @param[in] include_singularity_block_neighbors  If true, intersections
@@ -1352,7 +1352,7 @@ public:
     * relative to the coarse-level domain.
     *
     * @param[in] keep  The boxes to intersect with this BoxContainer.  An
-    * error will occur if makeTree with a non-null GridGeometry argument
+    * error will occur if makeTree with a non-null BaseGridGeometry argument
     * has not been previously called on this container.
     *
     * @param[in] include_singularity_block_neighbors  If true, intersections
@@ -1721,10 +1721,10 @@ private:
     * by adding or removing boxes, or by changing the spatial coordinates of
     * the boxes, the tree representation is destroyed.
     *
-    * A non-null pointer to a GridGeometry must be provided if this container
-    * is going to be used in any of the methods that handle multiblock
-    * transformations.  If this container is used only in a single-block
-    * context, no GridGeometry argument is necessary.
+    * A non-null pointer to a BaseGridGeometry must be provided if this
+    * container is going to be used in any of the methods that handle
+    * multiblock transformations.  If this container is used only in a
+    * single-block context, no BaseGridGeometry argument is necessary.
     * 
     * @param[in]  grid_geometry  To handle multiblock transformations if
     *                            needed.  
@@ -1732,7 +1732,7 @@ private:
     */
    void
    makeTree(
-      const GridGeometry* grid_geometry = NULL,
+      const BaseGridGeometry* grid_geometry = NULL,
       const int min_number = 10) const;
 
    /*!
@@ -1802,7 +1802,7 @@ private:
     *
     * Uses refinement ratio and grid geometry to handle intersections
     * across block boundaries if needed.  The makeTree method with a non-null
-    * GridGeometry pointer must be called on this container before calling
+    * BaseGridGeometry pointer must be called on this container before calling
     * this version of findOverlapBoxes.
     *
     * Every Box in this BoxContainer that intersects with the box argument

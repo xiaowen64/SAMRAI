@@ -24,7 +24,7 @@ namespace hier {
  *
  * Class BoundaryLookupTable is a singleton class that maintains
  * a table that organizes all of the possible boundary region cases
- * for a patch.  It is used primarily by the GridGeometry during the
+ * for a patch.  It is used primarily by the grid geometry during the
  * construction of physical boundary boxes for patches and by the
  * PatchGeometry class to determine box regions to be filled during
  * a physical boundary fill.
@@ -35,7 +35,7 @@ namespace hier {
  * a dimension-independent way.
  *
  * @see hier::BoundaryBox
- * @see hier::GridGeometry
+ * @see hier::BaseGridGeometry
  * @see hier::PatchGeometry
  */
 

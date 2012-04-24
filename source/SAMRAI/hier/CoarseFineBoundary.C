@@ -134,7 +134,7 @@ CoarseFineBoundary::computeFromLevel(
    const BoxLevel& mapped_box_level = *level.getBoxLevel();
    const IntVector& ratio = level.getRatioToLevelZero();
 
-   boost::shared_ptr<GridGeometry> grid_geometry (level.getGridGeometry());
+   boost::shared_ptr<BaseGridGeometry> grid_geometry (level.getGridGeometry());
 
    /*
     * Get the domain's periodic shift.
@@ -200,15 +200,15 @@ CoarseFineBoundary::computeFromLevel(
    mapped_box_level_to_self.getLocalNeighbors(fake_domain_list);
 
    /*
-    * Call GridGeometry::computeBoundaryGeometry with arguments contrived
+    * Call BaseGridGeometry::computeBoundaryGeometry with arguments contrived
     * such that they give the coarse-fine boundaries instead of the domain
     * boundaries.  The basic algorithm used by
-    * GridGeometry::computeBoundaryGeometry is
+    * BaseGridGeometry::computeBoundaryGeometry is
     * 1. grow boxes by ghost width
     * 2. remove intersection with domain
     * 3. reorganize and classify resulting boxes
     *
-    * This is how we get GridGeometry::computeBoundaryGeometry to
+    * This is how we get BaseGridGeometry::computeBoundaryGeometry to
     * compute the coarse-fine boundary instead of the physical boundary.
     *
     * Since we handle the periodic boundaries ourselves, do not treat
@@ -256,9 +256,9 @@ CoarseFineBoundary::computeFromLevel(
       level0.getBoxLevel()->getGlobalizedVersion().getGlobalBoxes();
 
    /*
-    * Get the dimension and number of blocks from the GridGeometry.
+    * Get the dimension and number of blocks from the grid geometry.
     */
-   boost::shared_ptr<GridGeometry> grid_geometry(level.getGridGeometry());
+   boost::shared_ptr<BaseGridGeometry> grid_geometry(level.getGridGeometry());
    int nblocks = grid_geometry->getNumberBlocks();
 
    tbox::Array<BoxContainer> adjusted_level_domain(nblocks);
@@ -301,9 +301,10 @@ CoarseFineBoundary::computeFromLevel(
 
          BoxContainer pseudo_domain(phys_domain);
          pseudo_domain.unorder();
-         const std::list<GridGeometry::Neighbor>& nbr_list =
+         const std::list<BaseGridGeometry::Neighbor>& nbr_list =
             grid_geometry->getNeighbors(block_id);
-         for (std::list<GridGeometry::Neighbor>::const_iterator ni = nbr_list.begin();
+         for (std::list<BaseGridGeometry::Neighbor>::const_iterator ni =
+              nbr_list.begin();
               ni != nbr_list.end(); ni++) {
 
             BoxContainer neighbor_domain(ni->getTransformedDomain());
@@ -342,7 +343,8 @@ CoarseFineBoundary::computeFromLevel(
           * boundaries from being identified as coarse-fine boundaries when
           * they are not.
           */
-         for (std::list<GridGeometry::Neighbor>::const_iterator ni = nbr_list.begin();
+         for (std::list<BaseGridGeometry::Neighbor>::const_iterator ni =
+              nbr_list.begin();
               ni != nbr_list.end(); ni++) {
 
             /*
@@ -376,15 +378,15 @@ CoarseFineBoundary::computeFromLevel(
    d_boundary_boxes.clear();
 
    /*
-    * Call GridGeometry::computeBoundaryGeometry with arguments contrived
+    * Call BaseGridGeometry::computeBoundaryGeometry with arguments contrived
     * such that they give the coarse-fine boundaries instead of the
     * domain boundaries.  The basic algorithm used by
-    * GridGeometry::computeBoundaryGeometry is
+    * BaseGridGeometry::computeBoundaryGeometry is
     * 1. grow boxes by ghost width
     * 2. remove intersection with domain
     * 3. reorganize and classify resulting boxes
     *
-    * This is how we get GridGeometry::computeBoundaryGeometry to
+    * This is how we get BaseGridGeometry::computeBoundaryGeometry to
     * compute the coarse-fine boundary instead of the physical boundary.
     *
     * Send the adjusted level boxes as the domain for the

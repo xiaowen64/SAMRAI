@@ -356,7 +356,7 @@ public:
       const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const boost::shared_ptr<hier::GridGeometry>& grid_geometry) = 0;
+      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry) = 0;
 
    /**
     * Return maximum stencil width needed for user-defined

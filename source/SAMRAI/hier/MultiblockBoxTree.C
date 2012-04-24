@@ -14,7 +14,7 @@
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 
 #include <boost/make_shared.hpp>
 
@@ -36,7 +36,7 @@ namespace hier {
  */
 MultiblockBoxTree::MultiblockBoxTree(
    const BoxContainer& boxes,
-   const GridGeometry* grid_geometry,
+   const BaseGridGeometry* grid_geometry,
    int min_number)
  : d_grid_geometry(grid_geometry)
 {
@@ -123,13 +123,14 @@ MultiblockBoxTree::findOverlapBoxes(
     * Search in the index spaces neighboring block_id for overlaps.
     */
 
-   const std::list<GridGeometry::Neighbor>& block_neighbors(
+   const std::list<BaseGridGeometry::Neighbor>& block_neighbors(
       d_grid_geometry->getNeighbors(block_id));
 
-   for (std::list<GridGeometry::Neighbor>::const_iterator ni = block_neighbors.begin();
+   for (std::list<BaseGridGeometry::Neighbor>::const_iterator ni =
+        block_neighbors.begin();
         ni != block_neighbors.end(); ni++) {
 
-      const GridGeometry::Neighbor& neighbor(*ni);
+      const BaseGridGeometry::Neighbor& neighbor(*ni);
 
       if (!include_singularity_block_neighbors && neighbor.isSingularity()) {
          continue;
@@ -187,13 +188,14 @@ MultiblockBoxTree::findOverlapBoxes(
     * Search in the index spaces neighboring block_id for overlaps.
     */
 
-   const std::list<GridGeometry::Neighbor>& block_neighbors(
+   const std::list<BaseGridGeometry::Neighbor>& block_neighbors(
       d_grid_geometry->getNeighbors(block_id));
 
-   for (std::list<GridGeometry::Neighbor>::const_iterator ni = block_neighbors.begin();
+   for (std::list<BaseGridGeometry::Neighbor>::const_iterator ni =
+        block_neighbors.begin();
         ni != block_neighbors.end(); ni++) {
 
-      const GridGeometry::Neighbor& neighbor(*ni);
+      const BaseGridGeometry::Neighbor& neighbor(*ni);
 
       if (!include_singularity_block_neighbors && neighbor.isSingularity()) {
          continue;

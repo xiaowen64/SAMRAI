@@ -67,7 +67,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
    NULL_USE(src_to_dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
-   boost::shared_ptr<const hier::GridGeometry> grid_geometry(
+   boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
       dst_mapped_box_level.getGridGeometry());
 
    const hier::BoxContainer& dst_mapped_boxes =
@@ -81,7 +81,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
       hier::BoxContainer fill_boxes(
          hier::Box::grow(dst_mapped_box, fill_ghost_width));
 
-      const std::list<hier::GridGeometry::Neighbor>& neighbors =
+      const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
          grid_geometry->getNeighbors(dst_mapped_box.getBlockId());
 
       hier::BoxContainer constructed_fill_boxes;
@@ -90,7 +90,8 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
          dst_to_fill.findLocal(dst_mapped_box_id);
       bool has_base_box = base_box_itr != dst_to_fill.end();
 
-      for (std::list<hier::GridGeometry::Neighbor>::const_iterator ni = neighbors.begin();
+      for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator ni =
+           neighbors.begin();
            ni != neighbors.end(); ni++) {
 
          if (ni->isSingularity()) {

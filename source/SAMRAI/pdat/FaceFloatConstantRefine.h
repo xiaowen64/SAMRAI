@@ -31,9 +31,6 @@ namespace pdat {
  * mesh.  It is derived from the hier::RefineOperator base class.
  * The numerical operations for interpolation use FORTRAN numerical routines.
  *
- * The findRefineOperator() operator function returns true if the input
- * variable is face-centered float, and the string is "CONSTANT_REFINE".
- *
  * @see hier::RefineOperator
  */
 
@@ -51,15 +48,6 @@ public:
     * Uninteresting virtual destructor.
     */
    virtual ~FaceFloatConstantRefine();
-
-   /**
-    * Return true if the variable and name string match face-centered
-    * float constant interpolation; otherwise, return false.
-    */
-   bool
-   findRefineOperator(
-      const boost::shared_ptr<hier::Variable>& var,
-      const std::string& op_name) const;
 
    /**
     * The priority of face-centered float constant interpolation is 0.

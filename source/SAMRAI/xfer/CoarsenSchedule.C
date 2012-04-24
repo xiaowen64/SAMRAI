@@ -795,7 +795,7 @@ CoarsenSchedule::constructScheduleTransactions(
       const hier::BlockId& dst_block_id = dst_mapped_box.getBlockId();
       const hier::BlockId& src_block_id = src_mapped_box.getBlockId();
 
-      boost::shared_ptr<hier::GridGeometry> grid_geometry(
+      boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
          d_crse_level->getGridGeometry());
 
       hier::Transformation::RotationIdentifier rotation =

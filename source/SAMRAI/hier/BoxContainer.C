@@ -16,7 +16,7 @@
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/BoxContainerSingleOwnerIterator.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -851,7 +851,7 @@ BoxContainer::removeIntersections(
       TBOX_ERROR("Multiblock removeIntersections called without makeTree.");
    }
 
-   const GridGeometry& grid_geometry(*takeaway.d_tree->getGridGeometry());
+   const BaseGridGeometry& grid_geometry(*takeaway.d_tree->getGridGeometry());
 
    std::vector<const Box *> overlap_mapped_boxes;
    iterator itr(*this);
@@ -1149,7 +1149,7 @@ BoxContainer::intersectBoxes(
       TBOX_ERROR("Multiblock intersectBoxes called without makeTree.");
    }
 
-   const GridGeometry& grid_geometry(*keep.d_tree->getGridGeometry());
+   const BaseGridGeometry& grid_geometry(*keep.d_tree->getGridGeometry());
 
    std::vector<const Box *> overlap_mapped_boxes;
    Box overlap(front().getDim());
@@ -1573,7 +1573,7 @@ BoxContainer::coarsen(
 
 void
 BoxContainer::makeTree(
-   const GridGeometry* grid_geometry,
+   const BaseGridGeometry* grid_geometry,
    const int min_number) const
 {
    TBOX_ASSERT(min_number > 0);

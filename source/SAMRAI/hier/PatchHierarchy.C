@@ -48,7 +48,7 @@ PatchHierarchy::s_initialize_finalize_handler(
 
 PatchHierarchy::PatchHierarchy(
    const std::string& object_name,
-   const boost::shared_ptr<GridGeometry>& geometry,
+   const boost::shared_ptr<BaseGridGeometry>& geometry,
    const boost::shared_ptr<tbox::Database>& database,
    bool register_for_restart):
 
@@ -82,7 +82,7 @@ PatchHierarchy::PatchHierarchy(
 
    /*
     * Grab the physical domain (including periodic images) from the
-    * GridGeometry and set up domain data dependent on it.
+    * grid geometry and set up domain data dependent on it.
     */
    d_domain_mapped_box_level.initialize(
       IntVector::getOne(d_dim),
@@ -447,7 +447,7 @@ PatchHierarchy::makeRefinedPatchHierarchy(
    TBOX_ASSERT(fine_hierarchy_name != d_object_name);
    TBOX_ASSERT(refine_ratio > IntVector::getZero(refine_ratio.getDim()));
 
-   boost::shared_ptr<GridGeometry> fine_geometry(
+   boost::shared_ptr<BaseGridGeometry> fine_geometry(
       d_grid_geometry->makeRefinedGridGeometry(
          fine_hierarchy_name + "GridGeometry",
          refine_ratio,
@@ -518,7 +518,7 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
    TBOX_ASSERT(coarse_hierarchy_name != d_object_name);
    TBOX_ASSERT(coarsen_ratio > IntVector::getZero(coarsen_ratio.getDim()));
 
-   boost::shared_ptr<GridGeometry> coarse_geometry(
+   boost::shared_ptr<BaseGridGeometry> coarse_geometry(
       d_grid_geometry->makeCoarsenedGridGeometry(
          coarse_hierarchy_name + "GridGeometry",
          coarsen_ratio,

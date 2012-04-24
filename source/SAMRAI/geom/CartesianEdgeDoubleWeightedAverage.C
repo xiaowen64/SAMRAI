@@ -101,23 +101,6 @@ CartesianEdgeDoubleWeightedAverage::~CartesianEdgeDoubleWeightedAverage()
 {
 }
 
-bool
-CartesianEdgeDoubleWeightedAverage::findCoarsenOperator(
-   const boost::shared_ptr<hier::Variable>& var,
-   const std::string& op_name) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
-
-   const boost::shared_ptr<pdat::EdgeVariable<double> > cast_var(
-      var,
-      boost::detail::dynamic_cast_tag());
-   if (cast_var && (op_name == getOperatorName())) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
 int
 CartesianEdgeDoubleWeightedAverage::getOperatorPriority() const
 {

@@ -33,10 +33,10 @@ namespace hier {
  * ghost cells and is used in the inter-level transfer operators for refining
  * or coarsening data between two patches associated with different index
  * spaces.  The boundary information for patches is actually computed by
- * the GridGeometry class.
+ * the BaseGridGeometry class.
  *
  * @see hier::BoundaryBox
- * @see hier::GridGeometry
+ * @see hier::BaseGridGeometry
  */
 
 class PatchGeometry

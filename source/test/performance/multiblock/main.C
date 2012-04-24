@@ -31,7 +31,6 @@ using namespace std;
 
 // Headers for major algorithm/data structure objects
 
-#include "SAMRAI/geom/SAMRAITransferOperatorRegistry.h"
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
@@ -65,7 +64,7 @@ using namespace SAMRAI;
  *    hier::PatchHierarchy - A container for the AMR patch hierarchy and
  *       the data on the grid.
  *
- *    hier::GridGeometry - Defines and maintains the Skeleton
+ *    hier::BaseGridGeometry - Defines and maintains the Skeleton
  *       coordinate system on the grid.  The hier::PatchHierarchy
  *       maintains a reference to this object.
  *
@@ -153,7 +152,7 @@ void
 setupHierarchy(
    boost::shared_ptr<tbox::Database> main_input_db,
    const tbox::Dimension& dim,
-   boost::shared_ptr<hier::GridGeometry>& geometry,
+   boost::shared_ptr<hier::BaseGridGeometry>& geometry,
    boost::shared_ptr<hier::PatchHierarchy>& mblk_hierarchy);
 
 int main(
@@ -353,7 +352,7 @@ int main(
        * CREATE THE MULTIBLOCK HIERARCHY
        */
       boost::shared_ptr<hier::PatchHierarchy> mblk_patch_hierarchy;
-      boost::shared_ptr<hier::GridGeometry> geom;
+      boost::shared_ptr<hier::BaseGridGeometry> geom;
 
       setupHierarchy(input_db,
          dim,
@@ -598,7 +597,7 @@ int main(
 void setupHierarchy(
    boost::shared_ptr<tbox::Database> main_input_db,
    const tbox::Dimension& dim,
-   boost::shared_ptr<hier::GridGeometry>& geometry,
+   boost::shared_ptr<hier::BaseGridGeometry>& geometry,
    boost::shared_ptr<hier::PatchHierarchy>& mblk_hierarchy)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -613,11 +612,9 @@ void setupHierarchy(
    sprintf(geom_name, "BlockGeometry");
    if (main_input_db->keyExists(geom_name)) {
       geometry.reset(
-         new hier::GridGeometry(
+         new geom::GridGeometry(
             dim,
             geom_name,
-            boost::shared_ptr<hier::TransferOperatorRegistry>(
-               new geom::SAMRAITransferOperatorRegistry(dim)),
             main_input_db->getDatabase(geom_name)));
    } else {
       TBOX_ERROR("main::setupHierarchy(): could not find entry `"

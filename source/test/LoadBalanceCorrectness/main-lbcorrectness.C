@@ -851,7 +851,7 @@ int checkBalanceCorrectness(
    const hier::BoxLevel& globalized_prebalance =
       prebalance.getGlobalizedVersion();
 
-   const hier::GridGeometry& grid_geometry(*postbalance.getGridGeometry());
+   const hier::BaseGridGeometry& grid_geometry(*postbalance.getGridGeometry());
 
    const hier::BoxContainer& globalized_prebalance_mapped_box_set =
       globalized_prebalance.getGlobalBoxes();

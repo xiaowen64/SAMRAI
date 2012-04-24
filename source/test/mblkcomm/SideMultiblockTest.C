@@ -11,7 +11,6 @@
 #include "SideMultiblockTest.h"
 
 #include "SAMRAI/xfer/BoxGeometryVariableFillPattern.h"
-#include "SAMRAI/geom/SAMRAITransferOperatorRegistry.h"
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/SideDoubleConstantRefine.h"
@@ -51,11 +50,9 @@ SideMultiblockTest::SideMultiblockTest(
 
    if (main_input_db->keyExists(geom_name)) {
       getGridGeometry().reset(
-         new hier::GridGeometry(
+         new geom::GridGeometry(
             dim,
             geom_name,
-            boost::shared_ptr<hier::TransferOperatorRegistry>(
-               new geom::SAMRAITransferOperatorRegistry(dim)),
             main_input_db->getDatabase(geom_name)));
 
    } else {
@@ -317,14 +314,14 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
    const hier::Connector& dst_to_encon,
    const hier::Box& fill_box,
    const hier::BoundaryBox& bbox,
-   const boost::shared_ptr<hier::GridGeometry>& grid_geometry)
+   const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
 {
    const tbox::Dimension& dim = fill_box.getDim();
 
    const hier::BoxId& dst_mb_id = patch.getBox().getId();
    const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
-   const std::list<hier::GridGeometry::Neighbor>& neighbors =
+   const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
       grid_geometry->getNeighbors(patch_blk_id);
 
    for (int i = 0; i < d_variables.getSize(); i++) {
@@ -384,7 +381,7 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
                   hier::Transformation::NO_ROTATE;
                hier::IntVector offset(dim);
 
-               for (std::list<hier::GridGeometry::Neighbor>::const_iterator
+               for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator
                     nbri(neighbors.begin()); nbri != neighbors.end(); nbri++) {
 
                   if (nbri->getBlockId() == encon_blk_id) {
@@ -561,7 +558,7 @@ bool SideMultiblockTest::verifyResults(
    hier::Box tbox(pbox);
    tbox.grow(tgcw);
 
-   const std::list<hier::GridGeometry::Neighbor>& neighbors =
+   const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
       hierarchy->getGridGeometry()->getNeighbors(block_id);
    hier::BoxContainer singularity(
       hierarchy->getGridGeometry()->getSingularityBoxContainer(block_id));
@@ -613,7 +610,7 @@ bool SideMultiblockTest::verifyResults(
 
          hier::BoxContainer tested_neighbors;
 
-         for (std::list<hier::GridGeometry::Neighbor>::const_iterator
+         for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator
               ne(neighbors.begin()); ne != neighbors.end(); ne++) {
 
               if (ne->isSingularity()) {
@@ -684,7 +681,7 @@ bool SideMultiblockTest::verifyResults(
                correct = 0.0;
 
                int num_sing_neighbors = 0;
-               for (std::list<hier::GridGeometry::Neighbor>::const_iterator
+               for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator
                     ns(neighbors.begin()); ns != neighbors.end(); ns++) {
                   if (ns->isSingularity()) {
                      hier::BoxContainer neighbor_ghost(

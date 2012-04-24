@@ -26,10 +26,6 @@ namespace pdat {
  * It is derived from the hier::TimeInterpolateOperator base class.
  * The interpolation uses FORTRAN numerical routines.
  *
- * The findCoarsenOperator() operator function returns true if the input
- * variable is a cell-centered complex, and the string is
- * "STD_LINEAR_TIME_INTERPOLATE".
- *
  * @see hier::TimeInterpolateOperator
  */
 
@@ -46,15 +42,6 @@ public:
     * Uninteresting virtual destructor.
     */
    virtual ~CellComplexLinearTimeInterpolateOp();
-
-   /**
-    * Return true if the variable and name string match the standard
-    * cell-centered complex interpolation; otherwise, return false.
-    */
-   bool
-   findTimeInterpolateOperator(
-      const boost::shared_ptr<hier::Variable>& var,
-      const std::string& op_name) const;
 
    /**
     * Perform linear time interpolation between two cell-centered complex

@@ -8,10 +8,10 @@
  *
  ************************************************************************/
 
-#ifndef included_hier_GridGeometry_C
-#define included_hier_GridGeometry_C
+#ifndef included_hier_BaseGridGeometry_C
+#define included_hier_BaseGridGeometry_C
 
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 
 #include "SAMRAI/hier/BoundaryLookupTable.h"
 #include "SAMRAI/hier/Box.h"
@@ -50,48 +50,47 @@ namespace SAMRAI {
 namespace hier {
 
 tbox::StartupShutdownManager::Handler
-GridGeometry::s_initialize_handler(
-   GridGeometry::initializeCallback,
+BaseGridGeometry::s_initialize_handler(
+   BaseGridGeometry::initializeCallback,
    0,
    0,
-   GridGeometry::finalizeCallback,
+   BaseGridGeometry::finalizeCallback,
    tbox::StartupShutdownManager::priorityTimers);
 
-boost::shared_ptr<tbox::Timer> GridGeometry::t_find_patches_touching_boundaries;
-boost::shared_ptr<tbox::Timer> GridGeometry::t_touching_boundaries_init;
-boost::shared_ptr<tbox::Timer> GridGeometry::t_touching_boundaries_loop;
-boost::shared_ptr<tbox::Timer> GridGeometry::t_set_geometry_on_patches;
-boost::shared_ptr<tbox::Timer> GridGeometry::t_set_boundary_boxes;
-boost::shared_ptr<tbox::Timer> GridGeometry::t_set_geometry_data_on_patches;
-boost::shared_ptr<tbox::Timer> GridGeometry::t_compute_boundary_boxes_on_level;
-boost::shared_ptr<tbox::Timer> GridGeometry::t_get_boundary_boxes;
+boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_find_patches_touching_boundaries;
+boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_touching_boundaries_init;
+boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_touching_boundaries_loop;
+boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_set_geometry_on_patches;
+boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_set_boundary_boxes;
+boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_set_geometry_data_on_patches;
+boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_compute_boundary_boxes_on_level;
+boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_get_boundary_boxes;
 
 /*
  *************************************************************************
  *
- * Constructors for GridGeometry.  Both set up operator
+ * Constructors for BaseGridGeometry.  Both set up operator
  * handlers.  However, one initializes data members based on arguments.
  * The other initializes the object based on input database information.
  *
  *************************************************************************
  */
-GridGeometry::GridGeometry(
+BaseGridGeometry::BaseGridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   const boost::shared_ptr<TransferOperatorRegistry>& op_reg,
    const boost::shared_ptr<tbox::Database>& input_db,
    bool register_for_restart):
+   d_transfer_operator_registry(
+      boost::make_shared<TransferOperatorRegistry>(dim)),
    d_dim(dim),
    d_object_name(object_name),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_has_enhanced_connectivity(false),
-   d_transfer_operator_registry(op_reg)
+   d_registered_for_restart(register_for_restart)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
-
-   d_registered_for_restart = register_for_restart;
 
    if (d_registered_for_restart) {
       tbox::RestartManager::getManager()->
@@ -109,16 +108,54 @@ GridGeometry::GridGeometry(
 /*
  *************************************************************************
  *
- * Constructors for GridGeometry.  Both set up operator
+ * Constructors for BaseGridGeometry.  Both set up operator
  * handlers.  However, one initializes data members based on arguments.
  * The other initializes the object based on input database information.
  *
  *************************************************************************
  */
-GridGeometry::GridGeometry(
+BaseGridGeometry::BaseGridGeometry(
+   const std::string& object_name,
+   const BoxContainer& domain,
+   bool register_for_restart):
+   d_transfer_operator_registry(
+      boost::make_shared<TransferOperatorRegistry>(
+         (*(domain.begin())).getDim())),
+   d_dim((*(domain.begin())).getDim()),
+   d_object_name(object_name),
+   d_physical_domain(domain),
+   d_periodic_shift(IntVector::getZero(d_dim)),
+   d_max_data_ghost_width(IntVector(d_dim, -1)),
+   d_number_of_block_singularities(0),
+   d_has_enhanced_connectivity(false),
+   d_registered_for_restart(register_for_restart)
+{
+   TBOX_ASSERT(!object_name.empty());
+   TBOX_ASSERT(domain.size() > 0);
+
+   if (d_registered_for_restart) {
+      tbox::RestartManager::getManager()->
+      registerRestartItem(getObjectName(), this);
+   }
+
+   std::set<int> block_numbers;
+   for (BoxContainer::const_iterator itr = domain.begin(); itr != domain.end();
+        ++itr) {
+      block_numbers.insert(itr->getBlockId().getBlockValue());
+   }
+   d_number_blocks = static_cast<int>(block_numbers.size());
+   d_reduced_connect.resizeArray(d_number_blocks, false);
+   d_block_neighbors.resizeArray(d_number_blocks);
+
+   setPhysicalDomain(domain, d_number_blocks);
+
+}
+
+BaseGridGeometry::BaseGridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
    const boost::shared_ptr<TransferOperatorRegistry>& op_reg):
+   d_transfer_operator_registry(op_reg),
    d_dim(dim),
    d_object_name(object_name),
    d_periodic_shift(IntVector::getZero(d_dim)),
@@ -130,19 +167,38 @@ GridGeometry::GridGeometry(
    d_singularity_indices(1),
    d_reduced_connect(1),
    d_has_enhanced_connectivity(false),
-   d_transfer_operator_registry(op_reg)
+   d_registered_for_restart(false)
 {
    TBOX_ASSERT(!object_name.empty());
-
-   d_registered_for_restart = false;
-
 }
 
-GridGeometry::GridGeometry(
+BaseGridGeometry::BaseGridGeometry(
+   const tbox::Dimension& dim,
+   const std::string& object_name):
+   d_transfer_operator_registry(
+      boost::make_shared<TransferOperatorRegistry>(dim)),
+   d_dim(dim),
+   d_object_name(object_name),
+   d_periodic_shift(IntVector::getZero(d_dim)),
+   d_max_data_ghost_width(IntVector(d_dim, -1)),
+   d_number_blocks(1),
+   d_number_of_block_singularities(0),
+   d_block_neighbors(1),
+   d_singularity(1),
+   d_singularity_indices(1),
+   d_reduced_connect(1),
+   d_has_enhanced_connectivity(false),
+   d_registered_for_restart(false)
+{
+   TBOX_ASSERT(!object_name.empty());
+}
+
+BaseGridGeometry::BaseGridGeometry(
    const std::string& object_name,
    const BoxContainer& domain,
    const boost::shared_ptr<TransferOperatorRegistry>& op_reg,
-   bool register_for_restart):
+   bool register_for_restart) :
+   d_transfer_operator_registry(op_reg),
    d_dim((*(domain.begin())).getDim()),
    d_object_name(object_name),
    d_physical_domain(domain),
@@ -150,12 +206,11 @@ GridGeometry::GridGeometry(
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
    d_has_enhanced_connectivity(false),
-   d_transfer_operator_registry(op_reg)
+   d_registered_for_restart(register_for_restart)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(domain.size() > 0);
 
-   d_registered_for_restart = register_for_restart;
    if (d_registered_for_restart) {
       tbox::RestartManager::getManager()->
       registerRestartItem(getObjectName(), this);
@@ -177,12 +232,12 @@ GridGeometry::GridGeometry(
 /*
  *************************************************************************
  *
- * Empty destructor.
+ * Destructor.
  *
  *************************************************************************
  */
 
-GridGeometry::~GridGeometry()
+BaseGridGeometry::~BaseGridGeometry()
 {
    if (d_registered_for_restart) {
       tbox::RestartManager::getManager()->unregisterRestartItem(getObjectName());
@@ -201,7 +256,7 @@ GridGeometry::~GridGeometry()
  */
 
 void
-GridGeometry::computeBoundaryBoxesOnLevel(
+BaseGridGeometry::computeBoundaryBoxesOnLevel(
    std::map<BoxId, PatchBoundaries>& boundaries,
    const PatchLevel& level,
    const IntVector& periodic_shift,
@@ -290,7 +345,7 @@ GridGeometry::computeBoundaryBoxesOnLevel(
  */
 
 void
-GridGeometry::findPatchesTouchingBoundaries(
+BaseGridGeometry::findPatchesTouchingBoundaries(
    std::map<BoxId, TwoDimBool>& touches_regular_bdry,
    std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
    const PatchLevel& level) const
@@ -345,7 +400,7 @@ GridGeometry::findPatchesTouchingBoundaries(
 }
 
 void
-GridGeometry::computeBoxTouchingBoundaries(
+BaseGridGeometry::computeBoxTouchingBoundaries(
    TwoDimBool& touches_regular_bdry,
    TwoDimBool& touches_periodic_bdry,
    const Box& box,
@@ -440,7 +495,7 @@ GridGeometry::computeBoxTouchingBoundaries(
  */
 
 void
-GridGeometry::setGeometryOnPatches(
+BaseGridGeometry::setGeometryOnPatches(
    PatchLevel& level,
    const IntVector& ratio_to_level_zero,
    std::map<BoxId, TwoDimBool>& touches_regular_bdry,
@@ -490,7 +545,7 @@ GridGeometry::setGeometryOnPatches(
  */
 
 void
-GridGeometry::setBoundaryBoxes(
+BaseGridGeometry::setBoundaryBoxes(
    PatchLevel& level)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, level);
@@ -506,10 +561,10 @@ GridGeometry::setBoundaryBoxes(
    if (d_max_data_ghost_width != -1 &&
        !(ghost_width <= d_max_data_ghost_width)) {
 
-      TBOX_ERROR("Error in GridGeometry object with name = "
+      TBOX_ERROR("Error in BaseGridGeometry object with name = "
          << d_object_name << ": in computeMaxGhostWidth():  "
          << "Cannot add variables and increase maximum ghost "
-         << "width after creating the GridGeometry!");
+         << "width after creating the BaseGridGeometry!");
    }
 
    d_max_data_ghost_width = ghost_width;
@@ -540,7 +595,7 @@ GridGeometry::setBoundaryBoxes(
  */
 
 void
-GridGeometry::setGeometryDataOnPatch(
+BaseGridGeometry::setGeometryDataOnPatch(
    Patch& patch,
    const IntVector& ratio_to_level_zero,
    const PatchGeometry::TwoDimBool& touches_regular_bdry,
@@ -583,110 +638,6 @@ const
 
 /*
  *************************************************************************
- *
- * Create and return pointer to coarsened version of this
- * grid geometry object coarsened by the given ratio.
- *
- *************************************************************************
- */
-
-boost::shared_ptr<GridGeometry>
-GridGeometry::makeCoarsenedGridGeometry(
-   const std::string& coarse_geom_name,
-   const IntVector& coarsen_ratio,
-   bool register_for_restart) const
-{
-   const tbox::Dimension& dim(getDim());
-
-   TBOX_ASSERT(!coarse_geom_name.empty());
-   TBOX_ASSERT(coarse_geom_name != getObjectName());
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, coarsen_ratio);
-   TBOX_ASSERT(coarsen_ratio > IntVector::getZero(dim));
-
-   BoxContainer coarse_domain;
-
-   coarse_domain = getPhysicalDomain();
-   coarse_domain.coarsen(coarsen_ratio);
-
-   /*
-    * Need to check that domain can be coarsened by given ratio.
-    */
-   const BoxContainer& fine_domain = getPhysicalDomain();
-   const int nboxes = fine_domain.size();
-   BoxContainer::const_iterator coarse_domain_itr(coarse_domain);
-   BoxContainer::const_iterator fine_domain_itr(fine_domain);
-   for (int ib = 0; ib < nboxes; ib++, ++coarse_domain_itr, ++fine_domain_itr) {
-      Box testbox = Box::refine(*coarse_domain_itr, coarsen_ratio);
-      if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
-#ifdef DEBUG_CHECK_ASSERTIONS
-         tbox::plog
-         << "GridGeometry::makeCoarsenedGridGeometry : Box # "
-         << ib << std::endl;
-         tbox::plog << "   fine box = " << *fine_domain_itr << std::endl;
-         tbox::plog << "f   coarse box = " << *coarse_domain_itr << std::endl;
-         tbox::plog << "   refined coarse box = " << testbox << std::endl;
-#endif
-         TBOX_ERROR(
-            "GridGeometry::makeCoarsenedGridGeometry() error...\n"
-            << "    geometry object with name = " << getObjectName()
-            << "\n    Cannot be coarsened by ratio " << coarsen_ratio
-            << std::endl);
-      }
-   }
-
-   boost::shared_ptr<GridGeometry> coarse_geometry(
-      boost::make_shared<GridGeometry>(
-         coarse_geom_name,
-         coarse_domain,
-         d_transfer_operator_registry,
-         register_for_restart));
-
-   coarse_geometry->initializePeriodicShift(getPeriodicShift(
-         IntVector::getOne(dim)));
-
-   return coarse_geometry;
-}
-
-/*
- *************************************************************************
- *
- * Create and return pointer to refined version of this
- * grid geometry object refined by the given ratio.
- *
- *************************************************************************
- */
-
-boost::shared_ptr<GridGeometry>
-GridGeometry::makeRefinedGridGeometry(
-   const std::string& fine_geom_name,
-   const IntVector& refine_ratio,
-   bool register_for_restart) const
-{
-   const tbox::Dimension& dim(getDim());
-
-   TBOX_ASSERT(!fine_geom_name.empty());
-   TBOX_ASSERT(fine_geom_name != getObjectName());
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, refine_ratio);
-   TBOX_ASSERT(refine_ratio > IntVector::getZero(dim));
-
-   BoxContainer fine_domain(getPhysicalDomain());
-   fine_domain.refine(refine_ratio);
-
-   boost::shared_ptr<GridGeometry> fine_geometry(
-      boost::make_shared<GridGeometry>(
-         fine_geom_name,
-         fine_domain,
-         d_transfer_operator_registry,
-         register_for_restart));
-
-   fine_geometry->initializePeriodicShift(getPeriodicShift(
-         IntVector::getOne(dim)));
-
-   return fine_geometry;
-}
-
-/*
- *************************************************************************
  * Checks to see if the version number for the class is the same as
  * as the version number of the restart file.
  * If they are equal, then the data from the database are read to local
@@ -695,7 +646,7 @@ GridGeometry::makeRefinedGridGeometry(
  *************************************************************************
  */
 void
-GridGeometry::getFromRestart()
+BaseGridGeometry::getFromRestart()
 {
    const tbox::Dimension dim(getDim());
 
@@ -763,7 +714,7 @@ GridGeometry::getFromRestart()
  */
 
 void
-GridGeometry::getFromInput(
+BaseGridGeometry::getFromInput(
    const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
@@ -834,7 +785,7 @@ GridGeometry::getFromInput(
  */
 
 void
-GridGeometry::putToDatabase(
+BaseGridGeometry::putToDatabase(
    const boost::shared_ptr<tbox::Database>& db) const
 {
    TBOX_ASSERT(db);
@@ -874,7 +825,7 @@ GridGeometry::putToDatabase(
  */
 
 void
-GridGeometry::computeShiftsForBox(
+BaseGridGeometry::computeShiftsForBox(
    std::vector<IntVector>& shifts,
    const Box& box,
    const BoxContainer& domain_search_tree,
@@ -1016,7 +967,7 @@ GridGeometry::computeShiftsForBox(
  */
 
 void
-GridGeometry::getBoundaryBoxes(
+BaseGridGeometry::getBoundaryBoxes(
    PatchBoundaries& patch_boundaries,
    const Box& box,
    const BoxContainer& domain_boxes,
@@ -1188,7 +1139,7 @@ GridGeometry::getBoundaryBoxes(
  */
 
 void
-GridGeometry::computePhysicalDomain(
+BaseGridGeometry::computePhysicalDomain(
    BoxContainer& domain_mapped_boxes,
    const IntVector& ratio_to_level_zero,
    const BlockId& block_id) const
@@ -1248,7 +1199,7 @@ GridGeometry::computePhysicalDomain(
  */
 
 void
-GridGeometry::computePhysicalDomain(
+BaseGridGeometry::computePhysicalDomain(
    BoxLevel& box_level,
    const IntVector& ratio_to_level_zero,
    const BlockId& block_id) const
@@ -1310,7 +1261,7 @@ GridGeometry::computePhysicalDomain(
  */
 
 void
-GridGeometry::computePhysicalDomain(
+BaseGridGeometry::computePhysicalDomain(
    BoxContainer& domain_mapped_boxes,
    const IntVector& ratio_to_level_zero) const
 {
@@ -1354,7 +1305,7 @@ GridGeometry::computePhysicalDomain(
 }
 
 void
-GridGeometry::computePhysicalDomain(
+BaseGridGeometry::computePhysicalDomain(
    BoxLevel& box_level,
    const IntVector& ratio_to_level_zero) const
 {
@@ -1413,7 +1364,7 @@ GridGeometry::computePhysicalDomain(
  */
 
 void
-GridGeometry::setPhysicalDomain(
+BaseGridGeometry::setPhysicalDomain(
    const BoxContainer& domain,
    const int number_blocks)
 {
@@ -1477,7 +1428,7 @@ GridGeometry::setPhysicalDomain(
             }
 
          } else {
-            TBOX_ERROR("Error in GridGeometry object with name = "
+            TBOX_ERROR("Error in BaseGridGeometry object with name = "
                << d_object_name << ": in initializePeriodicShift():  "
                << "Domain is not periodic for one (or more) of the dimensions "
                << "specified in the geometry input file!");
@@ -1499,7 +1450,7 @@ GridGeometry::setPhysicalDomain(
  */
 
 void
-GridGeometry::resetDomainBoxContainer()
+BaseGridGeometry::resetDomainBoxContainer()
 {
    d_physical_domain.makeTree(this);
 
@@ -1549,7 +1500,7 @@ GridGeometry::resetDomainBoxContainer()
  */
 
 void
-GridGeometry::initializePeriodicShift(
+BaseGridGeometry::initializePeriodicShift(
    const IntVector& directions)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, directions);
@@ -1574,7 +1525,7 @@ GridGeometry::initializePeriodicShift(
  */
 
 IntVector
-GridGeometry::getPeriodicShift(
+BaseGridGeometry::getPeriodicShift(
    const IntVector& ratio_to_level_zero) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio_to_level_zero);
@@ -1621,7 +1572,7 @@ GridGeometry::getPeriodicShift(
  */
 
 bool
-GridGeometry::checkPeriodicValidity(
+BaseGridGeometry::checkPeriodicValidity(
    const BoxContainer& domain)
 {
    bool is_valid = true;
@@ -1696,7 +1647,7 @@ GridGeometry::checkPeriodicValidity(
  */
 
 bool
-GridGeometry::checkBoundaryBox(
+BaseGridGeometry::checkBoundaryBox(
    const BoundaryBox& boundary_box,
    const Patch& patch,
    const BoxContainer& domain,
@@ -1788,7 +1739,7 @@ GridGeometry::checkBoundaryBox(
  ***************************************************************************
  */
 void
-GridGeometry::readBlockDataFromInput(
+BaseGridGeometry::readBlockDataFromInput(
    const boost::shared_ptr<tbox::Database>& input_db)
 {
    TBOX_ASSERT(input_db);
@@ -1919,7 +1870,7 @@ GridGeometry::readBlockDataFromInput(
  */
 
 void
-GridGeometry::getDomainOutsideBlock(
+BaseGridGeometry::getDomainOutsideBlock(
    BoxContainer& domain_outside_block,
    const BlockId& block_id) const
 {
@@ -1941,7 +1892,7 @@ GridGeometry::getDomainOutsideBlock(
  */
 
 void
-GridGeometry::registerNeighbors(
+BaseGridGeometry::registerNeighbors(
    const BlockId& block_a,
    const BlockId& block_b,
    const Transformation::RotationIdentifier rotation,
@@ -1964,7 +1915,7 @@ GridGeometry::registerNeighbors(
    if (d_dim.getValue() == 2 || d_dim.getValue() == 3) {
       Transformation::calculateReverseShift(back_shift, shift, rotation);
    } else {
-      TBOX_ERROR("GridGeometry::registerNeighbors error...\n"
+      TBOX_ERROR("BaseGridGeometry::registerNeighbors error...\n"
          << "  object name = " << d_object_name
          << " Multiblock only works for 2D and 3D" << std::endl);
    }
@@ -2021,7 +1972,7 @@ GridGeometry::registerNeighbors(
  */
 
 bool
-GridGeometry::transformBox(
+BaseGridGeometry::transformBox(
    Box& box,
    const IntVector& ratio,
    const BlockId& output_block,
@@ -2055,7 +2006,7 @@ GridGeometry::transformBox(
  */
 
 bool
-GridGeometry::transformBoxContainer(
+BaseGridGeometry::transformBoxContainer(
    BoxContainer& boxes,
    const IntVector& ratio,
    const BlockId& output_block,
@@ -2089,7 +2040,7 @@ GridGeometry::transformBoxContainer(
  */
 
 void
-GridGeometry::getTransformedBlock(
+BaseGridGeometry::getTransformedBlock(
    BoxContainer& block,
    const BlockId& base_block,
    const BlockId& transformed_block)
@@ -2115,7 +2066,7 @@ GridGeometry::getTransformedBlock(
  */
 
 void
-GridGeometry::adjustMultiblockPatchLevelBoundaries(
+BaseGridGeometry::adjustMultiblockPatchLevelBoundaries(
    PatchLevel& patch_level)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch_level);
@@ -2176,7 +2127,7 @@ GridGeometry::adjustMultiblockPatchLevelBoundaries(
  */
 
 void
-GridGeometry::adjustBoundaryBoxesOnPatch(
+BaseGridGeometry::adjustBoundaryBoxesOnPatch(
    const Patch& patch,
    const BoxContainer& pseudo_domain,
    const IntVector& gcw,
@@ -2247,7 +2198,7 @@ GridGeometry::adjustBoundaryBoxesOnPatch(
  *************************************************************************
  */
 Transformation::RotationIdentifier
-GridGeometry::getRotationIdentifier(
+BaseGridGeometry::getRotationIdentifier(
    const BlockId& dst,
    const BlockId& src) const
 {
@@ -2273,7 +2224,7 @@ GridGeometry::getRotationIdentifier(
  *************************************************************************
  */
 const IntVector&
-GridGeometry::getOffset(
+BaseGridGeometry::getOffset(
    const BlockId& dst,
    const BlockId& src) const
 {
@@ -2297,7 +2248,7 @@ GridGeometry::getOffset(
  *************************************************************************
  */
 bool
-GridGeometry::areNeighbors(
+BaseGridGeometry::areNeighbors(
    const BlockId& block_a,
    const BlockId& block_b) const
 {
@@ -2322,7 +2273,7 @@ GridGeometry::areNeighbors(
  *************************************************************************
  */
 bool
-GridGeometry::areSingularityNeighbors(
+BaseGridGeometry::areSingularityNeighbors(
    const BlockId& block_a,
    const BlockId& block_b) const
 {
@@ -2352,13 +2303,13 @@ GridGeometry::areSingularityNeighbors(
  */
 
 void
-GridGeometry::printClassData(
+BaseGridGeometry::printClassData(
    std::ostream& stream) const
 {
 
-   stream << "\nGridGeometry::printClassData..." << std::endl;
-   stream << "GridGeometry: this = "
-          << (GridGeometry *)this << std::endl;
+   stream << "\nBaseGridGeometry::printClassData..." << std::endl;
+   stream << "BaseGridGeometry: this = "
+          << (BaseGridGeometry *)this << std::endl;
    stream << "d_object_name = " << d_object_name << std::endl;
 
    const int n = d_physical_domain.size();
@@ -2404,31 +2355,31 @@ GridGeometry::printClassData(
  */
 
 void
-GridGeometry::initializeCallback()
+BaseGridGeometry::initializeCallback()
 {
    t_find_patches_touching_boundaries = tbox::TimerManager::getManager()->
-      getTimer("hier::GridGeometry::findPatchesTouchingBoundaries()");
+      getTimer("hier::BaseGridGeometry::findPatchesTouchingBoundaries()");
    TBOX_ASSERT(t_find_patches_touching_boundaries);
    t_touching_boundaries_init = tbox::TimerManager::getManager()->
-      getTimer("hier::GridGeometry::...TouchingBoundaries()_init");
+      getTimer("hier::BaseGridGeometry::...TouchingBoundaries()_init");
    TBOX_ASSERT(t_touching_boundaries_init);
    t_touching_boundaries_loop = tbox::TimerManager::getManager()->
-      getTimer("hier::GridGeometry::...TouchingBoundaries()_loop");
+      getTimer("hier::BaseGridGeometry::...TouchingBoundaries()_loop");
    TBOX_ASSERT(t_touching_boundaries_loop);
    t_set_geometry_on_patches = tbox::TimerManager::getManager()->
-      getTimer("hier::GridGeometry::setGeometryOnPatches()");
+      getTimer("hier::BaseGridGeometry::setGeometryOnPatches()");
    TBOX_ASSERT(t_set_geometry_on_patches);
    t_set_boundary_boxes = tbox::TimerManager::getManager()->
-      getTimer("hier::GridGeometry::setBoundaryBoxes()");
+      getTimer("hier::BaseGridGeometry::setBoundaryBoxes()");
    TBOX_ASSERT(t_set_boundary_boxes);
    t_set_geometry_data_on_patches = tbox::TimerManager::getManager()->
-      getTimer("hier::GridGeometry::set_geometry_data_on_patches");
+      getTimer("hier::BaseGridGeometry::set_geometry_data_on_patches");
    TBOX_ASSERT(t_set_geometry_data_on_patches);
    t_compute_boundary_boxes_on_level = tbox::TimerManager::getManager()->
-      getTimer("hier::GridGeometry::computeBoundaryBoxesOnLevel()");
+      getTimer("hier::BaseGridGeometry::computeBoundaryBoxesOnLevel()");
    TBOX_ASSERT(t_compute_boundary_boxes_on_level);
    t_get_boundary_boxes = tbox::TimerManager::getManager()->
-      getTimer("hier::GridGeometry::getBoundaryBoxes()");
+      getTimer("hier::BaseGridGeometry::getBoundaryBoxes()");
    TBOX_ASSERT(t_get_boundary_boxes);
 }
 
@@ -2438,7 +2389,7 @@ GridGeometry::initializeCallback()
  */
 
 void
-GridGeometry::finalizeCallback()
+BaseGridGeometry::finalizeCallback()
 {
    t_find_patches_touching_boundaries.reset();
    t_touching_boundaries_init.reset();
@@ -2455,7 +2406,7 @@ GridGeometry::finalizeCallback()
  *************************************************************************
  */
 
-GridGeometry::Neighbor::Neighbor(
+BaseGridGeometry::Neighbor::Neighbor(
    const BlockId& block_id,
    const BoxContainer& domain,
    const Transformation& transformation,

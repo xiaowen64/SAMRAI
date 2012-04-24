@@ -671,7 +671,7 @@ RefineSchedule::finishScheduleConstruction(
     */
 
    boost::shared_ptr<Connector> dst_to_unfilled;
-   const boost::shared_ptr<hier::GridGeometry>& grid_geometry(
+   const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry(
       d_dst_level->getGridGeometry());
    boost::shared_ptr<Connector> encon_to_unfilled_encon;
 
@@ -1136,7 +1136,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
 
    const bool fully_periodic = d_num_periodic_directions == dim.getValue();
 
-   const boost::shared_ptr<const hier::GridGeometry>& grid_geometry(
+   const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry(
       dst_to_unfilled.getBase().getGridGeometry());
 
    const int nblocks(grid_geometry->getNumberBlocks());
@@ -1905,7 +1905,7 @@ RefineSchedule::fillSingularityBoundaries(
 {
    TBOX_ASSERT(d_dst_level);
 
-   boost::shared_ptr<hier::GridGeometry> grid_geometry(
+   boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
 
    if (grid_geometry->getNumberBlocks() > 1) {
@@ -2350,7 +2350,7 @@ RefineSchedule::generateCommunicationSchedule(
 {
    t_gen_comm_sched->start();
 
-   boost::shared_ptr<hier::GridGeometry> grid_geometry(
+   boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
 
    if (s_extra_debug) {
@@ -2614,14 +2614,15 @@ RefineSchedule::findEnconFillBoxes(
 {
    TBOX_ASSERT(encon_fill_boxes.size() == 0);
 
-   boost::shared_ptr<hier::GridGeometry> grid_geometry(
+   boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
 
-   const std::list<hier::GridGeometry::Neighbor>& neighbors =
+   const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
       grid_geometry->getNeighbors(dst_block_id);
 
    hier::BoxContainer encon_neighbor_list;
-   for (std::list<hier::GridGeometry::Neighbor>::const_iterator ni = neighbors.begin();
+   for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator ni =
+        neighbors.begin();
         ni != neighbors.end(); ni++) {
 
       if (ni->isSingularity()) {
@@ -2654,7 +2655,7 @@ RefineSchedule::findEnconUnfilledBoxes(
    const Connector& dst_to_src,
    const hier::BoxContainer& encon_fill_boxes)
 {
-   boost::shared_ptr<hier::GridGeometry> grid_geometry(
+   boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
 
    const hier::BoxId& dst_mapped_box_id = dst_mapped_box.getId();
@@ -2670,10 +2671,11 @@ RefineSchedule::findEnconUnfilledBoxes(
     */
    std::map<hier::BlockId, hier::BoxContainer> unfilled_encon_nbr_boxes;
 
-   const std::list<hier::GridGeometry::Neighbor>& neighbors =
+   const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
       grid_geometry->getNeighbors(dst_block_id);
 
-   for (std::list<hier::GridGeometry::Neighbor>::const_iterator ni = neighbors.begin();
+   for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator ni =
+        neighbors.begin();
         ni != neighbors.end(); ni++) {
 
       if (ni->isSingularity()) {
@@ -3018,7 +3020,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
 {
    const tbox::Dimension& dim = fill_gcw.getDim();
 
-   boost::shared_ptr<hier::GridGeometry> grid_geometry(
+   boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
    const int num_blocks = grid_geometry->getNumberBlocks();
 
@@ -3075,14 +3077,14 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
             grid_geometry->getSingularityBoxContainer(block_id);
 
          if (sing_boxes.size() > 0) {
-            const std::list<hier::GridGeometry::Neighbor>& neighbors =
+            const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
                grid_geometry->getNeighbors(block_id);
 
             /*
              * Loop over neighboring blocks and find the ones that are
              * singularity neighbors.
              */
-            for (std::list<hier::GridGeometry::Neighbor>::const_iterator ni = neighbors.begin();
+            for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator ni = neighbors.begin();
                  ni != neighbors.end(); ni++) {
 
                if (ni->isSingularity()) {
@@ -3638,7 +3640,7 @@ RefineSchedule::constructScheduleTransactions(
       const hier::BlockId& dst_block_id = dst_mapped_box.getBlockId();
       const hier::BlockId& src_block_id = src_mapped_box.getBlockId();
 
-      boost::shared_ptr<hier::GridGeometry> grid_geometry(
+      boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
          d_dst_level->getGridGeometry());
 
       hier::Transformation::RotationIdentifier rotation =
@@ -4130,7 +4132,7 @@ RefineSchedule::constructScheduleTransactions(
       const hier::BlockId& dst_block_id = dst_mapped_box.getBlockId();
       const hier::BlockId& src_block_id = src_mapped_box.getBlockId();
 
-      boost::shared_ptr<hier::GridGeometry> grid_geometry(
+      boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
          d_dst_level->getGridGeometry());
 
       hier::Transformation::RotationIdentifier rotation =
@@ -4496,7 +4498,7 @@ RefineSchedule::initializeDomainAndGhostInformation(
       d_force_boundary_fill = false;
    }
 
-   boost::shared_ptr<hier::GridGeometry> grid_geom(
+   boost::shared_ptr<hier::BaseGridGeometry> grid_geom(
       d_dst_level->getGridGeometry());
    const hier::IntVector& ratio_to_level_zero =
       d_dst_level->getRatioToLevelZero();

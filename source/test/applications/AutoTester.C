@@ -227,7 +227,7 @@ int AutoTester::evalTestData(
             boost::shared_ptr<tbox::Database> level_db(
                step_db->getDatabase(level_name));
             hier::BoxLevel correct_mapped_box_level(d_dim);
-            boost::shared_ptr<const hier::GridGeometry> grid_geometry(
+            boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
                hierarchy->getGridGeometry());
             correct_mapped_box_level.getFromDatabase(*level_db,
                grid_geometry);
@@ -397,7 +397,7 @@ int AutoTester::evalTestData(
             boost::shared_ptr<tbox::Database> level_db(
                step_db->getDatabase(level_name));
             hier::BoxLevel correct_mapped_box_level(d_dim);
-            boost::shared_ptr<const hier::GridGeometry> grid_geometry(
+            boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
                hierarchy->getGridGeometry());
             correct_mapped_box_level.getFromDatabase(*level_db,
                grid_geometry);

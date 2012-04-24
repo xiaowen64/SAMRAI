@@ -15,7 +15,7 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchGeometry.h"
@@ -190,9 +190,9 @@ int HierarchyTester::runHierarchyTestAndVerify()
     **************************************************************
     */
 
-   boost::shared_ptr<GridGeometry> init_geometry(
+   boost::shared_ptr<BaseGridGeometry> init_geometry(
       d_initial_patch_hierarchy->getGridGeometry());
-   boost::shared_ptr<GridGeometry> test_geometry(
+   boost::shared_ptr<BaseGridGeometry> test_geometry(
       d_test_patch_hierarchy->getGridGeometry());
 
    hier::IntVector one_vector(d_dim, 1);

@@ -16,7 +16,7 @@
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/ComponentSelector.h"
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/PatchFactory.h"
@@ -266,7 +266,7 @@ public:
  */
    PatchHierarchy(
       const std::string& object_name,
-      const boost::shared_ptr<GridGeometry>& geometry,
+      const boost::shared_ptr<BaseGridGeometry>& geometry,
       const boost::shared_ptr<tbox::Database>& database =
          boost::shared_ptr<tbox::Database>(),
       bool register_for_restart = true);
@@ -549,7 +549,7 @@ public:
 
 /*
  * TODO: This DomainBoxLevel, etc. stuff (if it is really needed) should
- * be moved to the GridGeometry class.  It makes the role of this class
+ * be moved to the BaseGridGeometry class.  It makes the role of this class
  * too divergent by having it here.
  */
 /*!
@@ -797,7 +797,7 @@ public:
     *
     * @return a pointer to the grid geometry object.
     */
-   boost::shared_ptr<GridGeometry>
+   boost::shared_ptr<BaseGridGeometry>
    getGridGeometry() const
    {
       return d_grid_geometry;
@@ -1003,9 +1003,9 @@ private:
    tbox::Array<boost::shared_ptr<PatchLevel> > d_patch_levels;
 
    /*!
-    * @brief GridGeometry that was used to construct the hierarchy
+    * @brief BaseGridGeometry that was used to construct the hierarchy
     */
-   boost::shared_ptr<GridGeometry> d_grid_geometry;
+   boost::shared_ptr<BaseGridGeometry> d_grid_geometry;
 
    /*!
     * @brief PatchDescriptor that is shared by every patch on the hierarchy
@@ -1157,11 +1157,11 @@ private:
    //! @name Domain-related objects.
 
 /*
- * TODO: These things (if really needed) should be moved to the GridGeometry
- * class.  However, the GridGeometry object cannot own a MappedBoxLevel
- * because the GridGeometry object is incapable of creating a boost::shared_ptr
- * to itself.  Might need to change BoxLevel to take a raw pointer to
- * GridGeometry.
+ * TODO: These things (if really needed) should be moved to the
+ * BaseGridGeometry class.  However, the BaseGridGeometry object cannot own a
+ * MappedBoxLevel because the BaseGridGeometry object is incapable of creating
+ * a boost::shared_ptr to itself.  Might need to change BoxLevel to take a raw
+ * pointer to BaseGridGeometry.
  */
 
    /*!

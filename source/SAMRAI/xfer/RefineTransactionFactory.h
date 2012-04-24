@@ -16,7 +16,7 @@
 
 #include "SAMRAI/tbox/Transaction.h"
 #include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/xfer/RefineClasses.h"
 

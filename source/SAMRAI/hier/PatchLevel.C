@@ -15,7 +15,7 @@
 
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/TimerManager.h"
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 
@@ -90,7 +90,7 @@ PatchLevel::PatchLevel(
 
 PatchLevel::PatchLevel(
    const BoxLevel& mapped_box_level,
-   const boost::shared_ptr<GridGeometry>& grid_geometry,
+   const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
    const boost::shared_ptr<PatchDescriptor>& descriptor,
    const boost::shared_ptr<PatchFactory>& factory,
    bool defer_boundary_box_creation):
@@ -200,7 +200,7 @@ PatchLevel::PatchLevel(
 
 PatchLevel::PatchLevel(
    const boost::shared_ptr<tbox::Database>& level_database,
-   const boost::shared_ptr<GridGeometry>& grid_geometry,
+   const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
    const boost::shared_ptr<PatchDescriptor>& descriptor,
    const boost::shared_ptr<PatchFactory>& factory,
    const ComponentSelector& component_selector,
@@ -271,7 +271,7 @@ void
 PatchLevel::setRefinedPatchLevel(
    const boost::shared_ptr<PatchLevel>& coarse_level,
    const IntVector& refine_ratio,
-   const boost::shared_ptr<GridGeometry>& fine_grid_geometry,
+   const boost::shared_ptr<BaseGridGeometry>& fine_grid_geometry,
    bool defer_boundary_box_creation)
 {
    TBOX_ASSERT(coarse_level);
@@ -441,7 +441,7 @@ void
 PatchLevel::setCoarsenedPatchLevel(
    const boost::shared_ptr<PatchLevel>& fine_level,
    const IntVector& coarsen_ratio,
-   const boost::shared_ptr<GridGeometry>& coarse_grid_geom,
+   const boost::shared_ptr<BaseGridGeometry>& coarse_grid_geom,
    bool defer_boundary_box_creation)
 {
    TBOX_ASSERT(fine_level);
@@ -696,7 +696,7 @@ PatchLevel::getFromDatabase(
       database->getDatabase("mapped_box_level"));
    boost::shared_ptr<BoxLevel> mapped_box_level(
       boost::make_shared<BoxLevel>(getDim()));
-   boost::shared_ptr<const GridGeometry> grid_geometry(getGridGeometry());
+   boost::shared_ptr<const BaseGridGeometry> grid_geometry(getGridGeometry());
    mapped_box_level->getFromDatabase(*mbl_database, grid_geometry);
    d_mapped_box_level = mapped_box_level;
 

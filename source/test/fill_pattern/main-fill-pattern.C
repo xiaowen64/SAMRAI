@@ -10,7 +10,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/geom/SkeletonGridGeometry.h"
+#include "SAMRAI/geom/GridGeometry.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/pdat/NodeData.h"
@@ -340,8 +340,8 @@ bool SingleLevelTestCase(
       domain_boxes.pushBack(hier::Box(*itr, domain_id++, 0));
    }
 
-   boost::shared_ptr<geom::SkeletonGridGeometry> geom(
-      new geom::SkeletonGridGeometry(
+   boost::shared_ptr<geom::GridGeometry> geom(
+      new geom::GridGeometry(
          "GridGeometry",
          domain_boxes));
 

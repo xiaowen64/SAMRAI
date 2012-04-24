@@ -167,7 +167,7 @@ OverlapConnectorAlgorithm::extractNeighbors(
     */
    TBOX_ASSERT(mapped_box_id.getOwnerRank() == connector.getMPI().getRank());
 
-   const boost::shared_ptr<const GridGeometry>& grid_geom(
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geom(
       connector.getBase().getGridGeometry());
 
    const Box& mapped_box(*connector.getBase().getBox(Box(dim, mapped_box_id)));
@@ -261,7 +261,7 @@ OverlapConnectorAlgorithm::extractNeighbors(
        */
       TBOX_ASSERT(mapped_box_id.getOwnerRank() == connector.getMPI().getRank());
 
-      const boost::shared_ptr<const GridGeometry>& grid_geom (
+      const boost::shared_ptr<const BaseGridGeometry>& grid_geom (
          connector.getBase().getGridGeometry());
 
       const Box& mapped_box =
@@ -1346,7 +1346,7 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
          (east_to_west != NULL && east_to_west != &west_to_east);
 
       const BoxLevel& east(west_to_east.getBase());
-      const boost::shared_ptr<const GridGeometry> &grid_geometry(
+      const boost::shared_ptr<const BaseGridGeometry> &grid_geometry(
          east.getGridGeometry());
 
       const tbox::Dimension& dim(east.getDim());

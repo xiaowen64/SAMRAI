@@ -32,10 +32,6 @@ namespace geom {
  * hier::RefineOperator.  The numerical operations for the interpolation
  * use FORTRAN numerical routines.
  *
- * The findRefineOperator() operator function returns true if the input
- * variable is edge-centered double, and the std::string is
- * "CONSERVATIVE_LINEAR_REFINE".
- *
  * @see hier::RefineOperator
  */
 
@@ -53,15 +49,6 @@ public:
     * Uninteresting virtual destructor.
     */
    virtual ~CartesianEdgeDoubleConservativeLinearRefine();
-
-   /**
-    * Return true if the variable and name std::string match edge-centered
-    * double conservative linear interpolation; otherwise, return false.
-    */
-   bool
-   findRefineOperator(
-      const boost::shared_ptr<hier::Variable>& var,
-      const std::string& op_name) const;
 
    /**
     * The priority of edge-centered double conservative linear is 0.

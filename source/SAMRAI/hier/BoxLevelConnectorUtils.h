@@ -309,7 +309,7 @@ public:
    computeBoxesAroundBoundary(
       BoxContainer& boundary,
       const IntVector& refinement_ratio,
-      const boost::shared_ptr<const GridGeometry>& grid_geometry,
+      const boost::shared_ptr<const BaseGridGeometry>& grid_geometry,
       const bool simplify_boundary_boxes = true) const;
 
    //@{

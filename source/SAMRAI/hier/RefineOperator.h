@@ -48,12 +48,11 @@ namespace hier {
  * or for a new time refinement routine on an existing type), define
  * the operator by inheriting from this abstract base class.  The operator
  * subclass must implement the refinement operation in the refine()
- * fnction, and provide a response to a general operator request in the
- * findRefineOperator() function.  The stencil width and operator priority
- * must be returned from the getStencilWidth() and getOperatorPriority()
- * functions, respectively.  Then, the new operator must be added to the
+ * fnction.  The stencil width and operator priority must be returned
+ * from the getStencilWidth() and getOperatorPriority() functions,
+ * respectively.  Then, the new operator must be added to the
  * operator list for the appropriate transfer geometry object using the
- * GridGeometry::addRefineOperator() function.
+ * BaseGridGeometry::addRefineOperator() function.
  *
  * Since spatial refinement operators usually depend on patch data centering
  * and data type as well as the mesh coordinate system, they are defined
@@ -83,15 +82,6 @@ public:
     * nothing interesting.
     */
    virtual ~RefineOperator();
-
-   /**
-    * Return true if the refinement operation matches the variable and
-    * name std::string identifier request; false, otherwise.
-    */
-   virtual bool
-   findRefineOperator(
-      const boost::shared_ptr<Variable>& var,
-      const std::string& op_name) const = 0;
 
    /**
     * Return name std::string identifier of the refinement operation.

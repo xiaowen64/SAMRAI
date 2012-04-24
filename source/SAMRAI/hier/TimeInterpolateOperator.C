@@ -16,7 +16,9 @@
 namespace SAMRAI {
 namespace hier {
 
-TimeInterpolateOperator::TimeInterpolateOperator()
+TimeInterpolateOperator::TimeInterpolateOperator(
+   const std::string& name) :
+   d_name(name)
 {
 }
 

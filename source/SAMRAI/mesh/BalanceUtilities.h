@@ -13,7 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/math/PatchCellDataNormOpsReal.h"

@@ -31,9 +31,6 @@ namespace pdat {
  * mesh.  It is derived from the hier::RefineOperator base class.
  * The numerical operations for interpolation use FORTRAN numerical routines.
  *
- * The findRefineOperator() operator function returns true if the input
- * variable is cell-centered double, and the string is "CONSTANT_REFINE".
- *
  * @see hier::RefineOperator
  */
 
@@ -51,15 +48,6 @@ public:
     * Uninteresting virtual destructor.
     */
    virtual ~CellDoubleConstantRefine();
-
-   /**
-    * Return true if the variable and name string match cell-centered
-    * double constant interpolation; otherwise, return false.
-    */
-   bool
-   findRefineOperator(
-      const boost::shared_ptr<hier::Variable>& var,
-      const std::string& op_name) const;
 
    /**
     * The priority of cell-centered double constant interpolation is 0.

@@ -19,7 +19,7 @@ using namespace std;
  * Headers for basic SAMRAI objects used in this sample code.
  */
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/RestartManager.h"

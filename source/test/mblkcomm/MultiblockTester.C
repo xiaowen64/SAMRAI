@@ -106,7 +106,7 @@ void MultiblockTester::registerVariable(
    const boost::shared_ptr<hier::Variable> dst_variable,
    const hier::IntVector& src_ghosts,
    const hier::IntVector& dst_ghosts,
-   const boost::shared_ptr<hier::GridGeometry> xfer_geom,
+   const boost::shared_ptr<hier::BaseGridGeometry> xfer_geom,
    const string& operator_name)
 {
    TBOX_ASSERT(src_variable);
@@ -179,7 +179,7 @@ void MultiblockTester::registerVariableForReset(
    const boost::shared_ptr<hier::Variable> dst_variable,
    const hier::IntVector& src_ghosts,
    const hier::IntVector& dst_ghosts,
-   const boost::shared_ptr<hier::GridGeometry> xfer_geom,
+   const boost::shared_ptr<hier::BaseGridGeometry> xfer_geom,
    const string& operator_name)
 {
    TBOX_ASSERT(src_variable);
@@ -599,7 +599,7 @@ void MultiblockTester::fillSingularityBoundaryConditions(
    const double time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
-   const boost::shared_ptr<hier::GridGeometry>& grid_geometry)
+   const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
 {
    NULL_USE(grid_geometry);
    NULL_USE(time);

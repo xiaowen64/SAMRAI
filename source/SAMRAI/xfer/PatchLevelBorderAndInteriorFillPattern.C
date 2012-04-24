@@ -93,7 +93,7 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
                fill_boxes.removeIntersections(*na);
             } else {
 
-               boost::shared_ptr<const hier::GridGeometry> grid_geometry(
+               boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
                   dst_mapped_box_level.getGridGeometry());
 
                const hier::BlockId& dst_block_id = dst_mapped_box.getBlockId();

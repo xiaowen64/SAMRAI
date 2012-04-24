@@ -31,9 +31,6 @@ namespace geom {
  * mesh.  It is derived from the hier::RefineOperator base class.
  * The numerical operations for interpolation use FORTRAN numerical routines.
  *
- * The findRefineOperator() operator function returns true if the input
- * variable is node-centered complex, and the std::string is "LINEAR_REFINE".
- *
  * @see hier::RefineOperator
  */
 
@@ -51,15 +48,6 @@ public:
     * Uninteresting virtual destructor.
     */
    virtual ~CartesianNodeComplexLinearRefine();
-
-   /**
-    * Return true if the variable and name std::string match node-centered
-    * complex linear interpolation; otherwise, return false.
-    */
-   bool
-   findRefineOperator(
-      const boost::shared_ptr<hier::Variable>& var,
-      const std::string& op_name) const;
 
    /**
     * The priority of node-centered complex linear interpolation is 0.

@@ -10,10 +10,9 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxLevel.h"
-#include "SAMRAI/hier/TransferOperatorRegistry.h"
+#include "SAMRAI/geom/GridGeometry.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
@@ -50,7 +49,7 @@ exhaustiveFindOverlapBoxes(
    hier::Connector& overlap_connector,
    const hier::Box& mapped_box,
    const hier::IntVector& refinement_ratio,
-   const boost::shared_ptr<const hier::GridGeometry>& grid_geometry,
+   const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry,
    const hier::BoxContainer& search_mapped_boxes);
 
 /*
@@ -150,17 +149,16 @@ int main(
       input_db->printClassData(plog);
 
       /*
-       * Generate the GridGeometry.
+       * Generate the grid geometry.
        */
       if (!main_db->keyExists("GridGeometry")) {
          TBOX_ERROR("Multiblock tree search test: could not find entry GridGeometry"
             << "\nin input.");
       }
-      boost::shared_ptr<const hier::GridGeometry> grid_geometry(
-         new hier::GridGeometry(
+      boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
+         new geom::GridGeometry(
             dim,
             "GridGeometry",
-            boost::shared_ptr<hier::TransferOperatorRegistry>(),
             main_db->getDatabase("GridGeometry")));
 
       /*
@@ -472,7 +470,7 @@ void exhaustiveFindOverlapBoxes(
    hier::Connector& overlap_connector,
    const hier::Box& mapped_box,
    const hier::IntVector& refinement_ratio,
-   const boost::shared_ptr<const hier::GridGeometry>& grid_geometry,
+   const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry,
    const hier::BoxContainer& search_mapped_boxes)
 {
    const hier::BoxId& box_id = mapped_box.getId();

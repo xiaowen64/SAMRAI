@@ -25,7 +25,7 @@
 namespace SAMRAI {
 namespace hier {
 
-class GridGeometry;
+class BaseGridGeometry;
 
 /*!
  * @brief Container class for patches defined at a single level of the
@@ -85,7 +85,7 @@ public:
     */
    PatchLevel(
       const BoxLevel& mapped_box_level,
-      const boost::shared_ptr<GridGeometry>& grid_geometry,
+      const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
       const boost::shared_ptr<PatchDescriptor>& descriptor,
       const boost::shared_ptr<PatchFactory>& factory =
          boost::shared_ptr<PatchFactory>(),
@@ -119,7 +119,7 @@ public:
     */
    PatchLevel(
       const boost::shared_ptr<tbox::Database>& level_database,
-      const boost::shared_ptr<GridGeometry>& grid_geometry,
+      const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
       const boost::shared_ptr<PatchDescriptor>& descriptor,
       const boost::shared_ptr<PatchFactory>& factory,
       const ComponentSelector& component_selector =
@@ -338,11 +338,11 @@ public:
    }
 
    /*!
-    * @brief Get the GridGeometry
+    * @brief Get the grid geometry
     *
     * @return A boost::shared_ptr to the grid geometry description.
     */
-   boost::shared_ptr<GridGeometry>
+   boost::shared_ptr<BaseGridGeometry>
    getGridGeometry() const
    {
       return d_geometry;
@@ -393,8 +393,8 @@ public:
    setRefinedPatchLevel(
       const boost::shared_ptr<PatchLevel>& coarse_level,
       const IntVector& refine_ratio,
-      const boost::shared_ptr<GridGeometry>& fine_grid_geometry =
-         boost::shared_ptr<GridGeometry>(),
+      const boost::shared_ptr<BaseGridGeometry>& fine_grid_geometry =
+         boost::shared_ptr<BaseGridGeometry>(),
       bool defer_boundary_box_creation = false);
 
    /*!
@@ -441,8 +441,8 @@ public:
    setCoarsenedPatchLevel(
       const boost::shared_ptr<PatchLevel>& fine_level,
       const IntVector& coarsen_ratio,
-      const boost::shared_ptr<GridGeometry>& coarse_grid_geom =
-         boost::shared_ptr<GridGeometry>(),
+      const boost::shared_ptr<BaseGridGeometry>& coarse_grid_geom =
+         boost::shared_ptr<BaseGridGeometry>(),
       bool defer_boundary_box_creation = false);
 
    /*!
@@ -1083,7 +1083,7 @@ private:
    /*
     * Grid geometry description.
     */
-   boost::shared_ptr<GridGeometry> d_geometry;
+   boost::shared_ptr<BaseGridGeometry> d_geometry;
    /*
     * PatchDescriptor - patch data info shared by all patches in the hierarchy
     */

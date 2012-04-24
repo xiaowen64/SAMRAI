@@ -132,7 +132,7 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    const double fill_time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
-   const boost::shared_ptr<hier::GridGeometry>& grid_geometry)
+   const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
 {
    NULL_USE(fill_time);
    NULL_USE(boundary_box);
@@ -155,7 +155,7 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
    if (grid_geometry->hasEnhancedConnectivity()) {
 
-      const std::list<hier::GridGeometry::Neighbor>& neighbors =
+      const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
          grid_geometry->getNeighbors(patch_blk_id);
 
       hier::Connector::ConstNeighborhoodIterator ni =
@@ -175,7 +175,7 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
                hier::Transformation::NO_ROTATE;
             hier::IntVector offset(dim);
 
-            for (std::list<hier::GridGeometry::Neighbor>::const_iterator
+            for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator
                  nbri = neighbors.begin(); nbri != neighbors.end(); nbri++) {
 
                if (nbri->getBlockId() == encon_blk_id) {

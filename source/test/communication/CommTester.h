@@ -20,7 +20,7 @@
 #include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 #include "SAMRAI/xfer/CoarsenSchedule.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "PatchDataTestStrategy.h"
@@ -102,7 +102,7 @@ public:
       const boost::shared_ptr<hier::Variable> dst_variable,
       const hier::IntVector& src_ghosts,
       const hier::IntVector& dst_ghosts,
-      const boost::shared_ptr<hier::GridGeometry> xfer_geom,
+      const boost::shared_ptr<hier::BaseGridGeometry> xfer_geom,
       const std::string& operator_name);
 
    /**
@@ -116,7 +116,7 @@ public:
       const boost::shared_ptr<hier::Variable> dst_variable,
       const hier::IntVector& src_ghosts,
       const hier::IntVector& dst_ghosts,
-      const boost::shared_ptr<hier::GridGeometry> xfer_geom,
+      const boost::shared_ptr<hier::BaseGridGeometry> xfer_geom,
       const std::string& operator_name);
 
    /**
@@ -248,7 +248,7 @@ public:
       const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const boost::shared_ptr<hier::GridGeometry>& grid_geometry)
+      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
    {
       NULL_USE(patch);
       NULL_USE(encon_level);

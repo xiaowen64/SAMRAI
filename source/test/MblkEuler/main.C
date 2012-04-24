@@ -28,10 +28,10 @@ using namespace std;
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/hier/VariableDatabase.h"
+#include "SAMRAI/geom/GridGeometry.h"
 
 // Headers for major algorithm/data structure objects
 
-#include "SAMRAI/geom/SAMRAITransferOperatorRegistry.h"
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
@@ -49,7 +49,7 @@ void
 setupHierarchy(
    boost::shared_ptr<tbox::Database> main_input_db,
    const tbox::Dimension& dim,
-   boost::shared_ptr<hier::GridGeometry>& geometry,
+   boost::shared_ptr<hier::BaseGridGeometry>& geometry,
    boost::shared_ptr<hier::PatchHierarchy>& mblk_hierarchy);
 
 //
@@ -230,7 +230,7 @@ int main(
    // CREATE THE MULTIBLOCK HIERARCHY
    //
    boost::shared_ptr<hier::PatchHierarchy> mblk_patch_hierarchy;
-   boost::shared_ptr<hier::GridGeometry> geom;
+   boost::shared_ptr<hier::BaseGridGeometry> geom;
 
    setupHierarchy(input_db,
       dim,
@@ -465,7 +465,7 @@ int main(
 void setupHierarchy(
    boost::shared_ptr<tbox::Database> main_input_db,
    const tbox::Dimension& dim,
-   boost::shared_ptr<hier::GridGeometry>& geometry,
+   boost::shared_ptr<hier::BaseGridGeometry>& geometry,
    boost::shared_ptr<hier::PatchHierarchy>& mblk_hierarchy)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -484,11 +484,9 @@ void setupHierarchy(
    sprintf(geom_name, "BlockGeometry");
    if (main_input_db->keyExists(geom_name)) {
       geometry.reset(
-         new hier::GridGeometry(
+         new geom::GridGeometry(
             dim,
             geom_name,
-            boost::shared_ptr<hier::TransferOperatorRegistry>(
-               new geom::SAMRAITransferOperatorRegistry(dim)),
             main_input_db->getDatabase(geom_name)));
    } else {
       TBOX_ERROR("main::setupHierarchy(): could not find entry `"

@@ -8,8 +8,8 @@
  *
  ************************************************************************/
 
-#ifndef included_hier_GridGeometry
-#define included_hier_GridGeometry
+#ifndef included_hier_BaseGridGeometry
+#define included_hier_BaseGridGeometry
 
 #include "SAMRAI/SAMRAI_config.h"
 
@@ -37,15 +37,12 @@ class PatchLevel;
 class BoxTree;
 
 /*!
- * @brief Class GridGeometry manages the index space that determines the
+ * @brief Class BaseGridGeometry manages the index space that determines the
  * extent of the coarse-level domain of a SAMRAI hierarchy.
  *
- * A GridGeometry object can be directly constructed with a consistent state,
- * or it may be used as a base class to derive child classes that manage
- * particular grid types (%e.g., Cartesian, cylindrical, etc.).  Direct
- * construction of a GridGeometry object is recommended for multiblock
- * problems and other problems where the physical locations of mesh
- * coordinates are managed by user code.
+ * A BaseGridGeometry object may be used as a base class to derive child
+ * classes that manage particular grid types (%e.g., Cartesian, cylindrical,
+ * etc.).
  *
  * The grid geometry class is responsible for maintaining information
  * about the index space describing the physical domain and computing this
@@ -108,16 +105,19 @@ class BoxTree;
  * @see hier::BoundaryBox
  */
 
-class GridGeometry:
+class BaseGridGeometry:
    public tbox::Serializable
 {
+   friend class TransferOperatorRegistry;
+
 public:
    typedef  PatchGeometry::TwoDimBool TwoDimBool;
 
    /*!
-    * @brief Construct a new GridGeometry object and initialize from input.
+    * @brief Construct a new BaseBaseGridGeometry object and initialize from
+    * input.
     *
-    * This constructor for GridGeometry initializes data members
+    * This constructor for BaseGridGeometry initializes data members
     * based on parameters read from the specified input database.
     * The constructor also registers this object for restart using
     * the specified object name, when the boolean argument is true.
@@ -125,7 +125,7 @@ public:
     * program execution is determined by this argument.
     *
     * This constructor is intended for use when directly constructing a
-    * GridGeometry without using a derived child class.  The object will
+    * BaseGridGeometry without using a derived child class.  The object will
     * contain all index space grid information for a mesh, but nothing about
     * the physical coordinates of the mesh.
     *
@@ -139,17 +139,16 @@ public:
     * @param[in]  register_for_restart Flag indicating whether this instance
     *             should be registered for restart.  @b Default: true
     */
-   GridGeometry(
+   BaseGridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      const boost::shared_ptr<TransferOperatorRegistry>& op_reg,
       const boost::shared_ptr<tbox::Database>& input_db,
       bool register_for_restart = true);
 
    /*!
-    * @brief Construct a new GridGeometry object based on arguments.
+    * @brief Construct a new BaseGridGeometry object based on arguments.
     *
-    * This constructor creates a new GridGeometry object based on the
+    * This constructor creates a new BaseGridGeometry object based on the
     * arguments, rather than relying on input or restart data.  The
     * constructor also registers this object for restart using
     * the specified object name, when the boolean argument is true.
@@ -162,16 +161,15 @@ public:
     * @param[in]  register_for_restart Flag indicating whether this instance
     *             should be registered for restart.  @b Default: true
     */
-   GridGeometry(
+   BaseGridGeometry(
       const std::string& object_name,
       const BoxContainer& domain,
-      const boost::shared_ptr<TransferOperatorRegistry>& op_reg,
       bool register_for_restart = true);
 
    /*!
     * @brief Virtual destructor
     */
-   virtual ~GridGeometry();
+   virtual ~BaseGridGeometry();
 
    //! @{
    /*!
@@ -365,7 +363,7 @@ public:
     * for a single block
     *
     * The extents of the input domain boxes are used, but their
-    * LocalId's are disregarded.  GridGeometry will assign new and
+    * LocalId's are disregarded.  BaseGridGeometry will assign new and
     * unique LocalId's to the domain box description.  Subsequent
     * calls to getPhysicalDomain() will return boxes with the new
     * LocalId's.
@@ -509,11 +507,11 @@ public:
     *
     * @return The pointer to the grid geometry object.
     */
-   virtual boost::shared_ptr<GridGeometry>
+   virtual boost::shared_ptr<BaseGridGeometry>
    makeRefinedGridGeometry(
       const std::string& fine_geom_name,
       const IntVector& refine_ratio,
-      bool register_for_restart) const;
+      bool register_for_restart) const = 0;
 
    /*!
     * @brief Create a pointer to a coarsened version of this grid geometry
@@ -529,11 +527,11 @@ public:
     *
     * @return The pointer to a coarsened version of this grid geometry object.
     */
-   virtual boost::shared_ptr<GridGeometry>
+   virtual boost::shared_ptr<BaseGridGeometry>
    makeCoarsenedGridGeometry(
       const std::string& coarse_geom_name,
       const IntVector& coarsen_ratio,
-      bool register_for_restart) const;
+      bool register_for_restart) const = 0;
 
    /*!
     * @brief Compute and set grid data for patch.
@@ -655,40 +653,55 @@ public:
    /*!
     * @brief Add a concrete spatial coarsening operator.
     *
+    * @param[in]  var_type_name The type name of the variable with which
+    *             coarsen_op is associated.
     * @param[in]  coarsen_op The concrete coarsening operator to add to the
     *             lookup list.
     */
    void
    addCoarsenOperator(
+      const char* var_type_name,
       const boost::shared_ptr<CoarsenOperator>& coarsen_op)
    {
-      d_transfer_operator_registry->addCoarsenOperator(coarsen_op);
+      d_transfer_operator_registry->addCoarsenOperator(
+         var_type_name,
+         coarsen_op);
    }
 
    /*!
     * @brief Add a concrete spatial refinement operator.
     *
+    * @param[in]  var_type_name The type name of the variable with which
+    *             refine_op is associated.
     * @param[in]  refine_op The concrete refinement operator to add to the
     *             lookup list.
     */
    void
    addRefineOperator(
+      const char* var_type_name,
       const boost::shared_ptr<RefineOperator>& refine_op)
    {
-      d_transfer_operator_registry->addRefineOperator(refine_op);
+      d_transfer_operator_registry->addRefineOperator(
+         var_type_name,
+         refine_op);
    }
 
    /*!
     * @brief Add a concrete time interpolation operator.
     *
+    * @param[in]  var_type_name The type name of the variable with which
+    *             time_op is associated.
     * @param[in]  time_op The concrete time interpolation operator to add
     *             to the lookup list.
     */
    void
    addTimeInterpolateOperator(
+      const char* var_type_name,
       const boost::shared_ptr<TimeInterpolateOperator>& time_op)
    {
-      d_transfer_operator_registry->addTimeInterpolateOperator(time_op);
+      d_transfer_operator_registry->addTimeInterpolateOperator(
+         var_type_name,
+         time_op);
    }
 
    /*!
@@ -709,7 +722,7 @@ public:
       const std::string& op_name)
    {
       return d_transfer_operator_registry->lookupCoarsenOperator(
-         var, op_name);
+         *this, var, op_name);
    }
 
    /*!
@@ -730,7 +743,7 @@ public:
       const std::string& op_name)
    {
       return d_transfer_operator_registry->lookupRefineOperator(
-         var, op_name);
+         *this, var, op_name);
    }
 
    /*!
@@ -753,7 +766,7 @@ public:
          "STD_LINEAR_TIME_INTERPOLATE")
    {
       return d_transfer_operator_registry->lookupTimeInterpolateOperator(
-         var, op_name);
+         *this, var, op_name);
    }
 
    /*!
@@ -1163,7 +1176,7 @@ private:
       std::ostream& stream) const;
 
    /*!
-    * @brief Writes the state of the GridGeometry object to the
+    * @brief Writes the state of the BaseGridGeometry object to the
     * database.
     *
     * When assertion checking is active, db cannot be a null database pointer.
@@ -1176,20 +1189,52 @@ private:
 
 protected:
    /*!
-    * @brief Construct a new GridGeometry object in its default state.
+    * @brief Construct a new BaseGridGeometry object in its default state.
     *
     * This constructor is intended to be called from a child class derived
-    * from GridGeometry.  It will not register for restart nor read any input
-    * data, as it is expected that the child class will handle those
+    * from BaseGridGeometry.  It will not register for restart nor read any
+    * input data, as it is expected that the child class will handle those
+    * operations.
+    *
+    * @param[in]  dim
+    * @param[in]  object_name
+    * @param[in]  op_reg
+    */
+   BaseGridGeometry(
+      const tbox::Dimension& dim,
+      const std::string& object_name,
+      const boost::shared_ptr<TransferOperatorRegistry>& op_reg);
+
+   /*!
+    * @brief Construct a new BaseGridGeometry object in its default state.
+    *
+    * This constructor is intended to be called from a child class derived
+    * from BaseGridGeometry.  It will not register for restart nor read any
+    * input data, as it is expected that the child class will handle those
     * operations.
     *
     * @param[in]  dim
     * @param[in]  object_name
     */
-   GridGeometry(
+   BaseGridGeometry(
       const tbox::Dimension& dim,
+      const std::string& object_name);
+
+   /*!
+    * @brief Construct a new BaseGridGeometry object based on arguments.
+    *
+    * @param[in]  object_name
+    * @param[in]  domain      Each element of the array describes the index
+    *                         space for a block.
+    * @param[in]  op_reg
+    * @param[in]  register_for_restart Flag indicating whether this instance
+    *             should be registered for restart.  @b Default: true
+    */
+   BaseGridGeometry(
       const std::string& object_name,
-      const boost::shared_ptr<TransferOperatorRegistry>& op_reg);
+      const BoxContainer& domain,
+      const boost::shared_ptr<TransferOperatorRegistry>& op_reg,
+      bool register_for_restart);
 
    /*!
     * @brief Read multiblock metadata input from the input database
@@ -1200,7 +1245,22 @@ protected:
    readBlockDataFromInput(
       const boost::shared_ptr<tbox::Database>& input_db);
 
+   /*!
+    * The holder of all the transfer operators.
+    */
+   boost::shared_ptr<TransferOperatorRegistry> d_transfer_operator_registry;
+
+   tbox::Dimension d_dim;
+
 private:
+   /*!
+    * @brief Virtual method to build operators appropriate to a specific
+    * grid geometry.  This must be defined by all sub-classes of
+    * BaseGridGeometry.
+    */
+   virtual void
+   buildOperators() = 0;
+
    /*!
     * @brief Reset domain BoxContainer after data it depends on has changed.
     */
@@ -1316,8 +1376,6 @@ private:
    static void
    finalizeCallback();
 
-   tbox::Dimension d_dim;
-
    /*!
     * Object name used for error reporting purposes.
     */
@@ -1354,7 +1412,7 @@ private:
    IntVector d_max_data_ghost_width;
 
    /*!
-    * The number of blocks represented in the GridGeometry.
+    * The number of blocks represented in the BaseGridGeometry.
     */
    int d_number_blocks;
 
@@ -1399,11 +1457,6 @@ private:
     * Flag to determine whether this instance is registered for restart.
     */
    bool d_registered_for_restart;
-
-   /*!
-    * The holder of all the transfer operators.
-    */
-   boost::shared_ptr<TransferOperatorRegistry> d_transfer_operator_registry;
 
    static boost::shared_ptr<tbox::Timer> t_find_patches_touching_boundaries;
    static boost::shared_ptr<tbox::Timer> t_touching_boundaries_init;

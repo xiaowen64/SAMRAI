@@ -343,7 +343,7 @@ const IntVector& new_width)
    const bool base_coarser = !getHeadCoarserFlag() &&
       getBase().getRefinementRatio() != getHead().getRefinementRatio();
 
-   const boost::shared_ptr<const GridGeometry>& grid_geom(
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geom(
       getBase().getGridGeometry());
 
    for (NeighborhoodIterator ei = begin(); ei != end(); ++ei) {
@@ -529,7 +529,7 @@ Connector::finalizeContext()
    if (base.getGridGeometry() != head.getGridGeometry()) {
       TBOX_ERROR("Connector::finalizeContext():\n"
          << "Connector must be finalized with\n"
-         << "BoxLevels using the same GridGeometry.");
+         << "BoxLevels using the same grid geometry.");
    }
    if (!(baseRefinementRatio >= headRefinementRatio ||
          baseRefinementRatio <= headRefinementRatio)) {

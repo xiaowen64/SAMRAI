@@ -33,9 +33,6 @@ namespace geom {
  * Cartesian mesh.  It is derived from the hier::CoarsenOperator base class.
  * The numerical operations for theaveraging use FORTRAN numerical routines.
  *
- * The findCoarsenOperator() operator function returns true if the input
- * variable is edge-centered float, and the std::string is "CONSERVATIVE_COARSEN".
- *
  * @see hier::CoarsenOperator
  */
 
@@ -53,15 +50,6 @@ public:
     * Uninteresting virtual destructor.
     */
    virtual ~CartesianEdgeFloatWeightedAverage();
-
-   /**
-    * Return true if the variable and name std::string match the edge-centered
-    * float weighted averaging; otherwise, return false.
-    */
-   bool
-   findCoarsenOperator(
-      const boost::shared_ptr<hier::Variable>& var,
-      const std::string& op_name) const;
 
    /**
     * The priority of edge-centered float weighted averaging is 0.

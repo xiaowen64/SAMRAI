@@ -158,7 +158,7 @@ using namespace SAMRAI;
  *       Appropriate input sections must be provided for these objects
  *       as needed.
  *
- *     o Each test must register a hier::GridGeometry object
+ *     o Each test must register a hier::BaseGridGeometry object
  *       with the
  *       PatchDataTestStrategy base class so the hierarchy can be
  *       constructed.  Consult the constructor of each test class

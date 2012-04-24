@@ -1988,7 +1988,8 @@ GriddingAlgorithm::checkBoundaryProximityViolation(
     *    it means they are partially inside the domain.
     */
 
-   const hier::GridGeometry& grid_geometry(*d_hierarchy->getGridGeometry()); 
+   const hier::BaseGridGeometry& grid_geometry(
+      *d_hierarchy->getGridGeometry()); 
 
    const hier::BoxContainer& periodic_domain_search_tree(
       grid_geometry.getPeriodicDomainSearchTree());
@@ -2433,7 +2434,8 @@ GriddingAlgorithm::checkOverlappingPatches(
 {
    bool has_overlap = false;
    const hier::BoxLevel& mapped_box_level = mapped_box_level_to_self.getBase();
-   const hier::GridGeometry& grid_geom = *mapped_box_level.getGridGeometry();
+   const hier::BaseGridGeometry& grid_geom =
+      *mapped_box_level.getGridGeometry();
    const hier::IntVector& ratio = mapped_box_level.getRefinementRatio();
 
    for (hier::Connector::ConstNeighborhoodIterator ei = mapped_box_level_to_self.begin();
@@ -2734,7 +2736,7 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
 
    const hier::OverlapConnectorAlgorithm oca;
 
-   const boost::shared_ptr<const hier::GridGeometry>& grid_geom(
+   const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geom(
       d_hierarchy->getGridGeometry());
 
    const hier::IntVector& ratio = tag_level_to_fill_mapped_box_level.getRatio();
@@ -3781,7 +3783,8 @@ GriddingAlgorithm::computeNestingViolator(
    TBOX_ASSERT(hierarchy_to_candidate.getRatio() ==
       hier::IntVector::getOne(d_dim));
 
-   const hier::GridGeometry& grid_geometry(*d_hierarchy->getGridGeometry());
+   const hier::BaseGridGeometry& grid_geometry(
+      *d_hierarchy->getGridGeometry());
 
    t_compute_nesting_violator->start();
 
@@ -4045,7 +4048,8 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
 
    const hier::OverlapConnectorAlgorithm oca;
 
-   const hier::GridGeometry& grid_geometry(*d_hierarchy->getGridGeometry());
+   const hier::BaseGridGeometry& grid_geometry(
+      *d_hierarchy->getGridGeometry());
    const int nblocks = grid_geometry.getNumberBlocks();
    hier::IntVector current_min_size(d_dim, tbox::MathUtilities<int>::getMax());
    for (int bn = 0; bn < nblocks; ++bn) {

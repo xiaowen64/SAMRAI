@@ -158,7 +158,7 @@ BoxLevel::BoxLevel(
 
 BoxLevel::BoxLevel(
    const IntVector& ratio,
-   const boost::shared_ptr<const GridGeometry>& grid_geom,
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state):
    d_mpi(tbox::SAMRAI_MPI::commNull),
@@ -250,7 +250,7 @@ BoxLevel::operator = (
 void
 BoxLevel::initialize(
    const IntVector& ratio,
-   const boost::shared_ptr<const GridGeometry>& grid_geom,
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
@@ -267,7 +267,7 @@ void
 BoxLevel::swapInitialize(
    BoxContainer& boxes,
    const IntVector& ratio,
-   const boost::shared_ptr<const GridGeometry>& grid_geom,
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
@@ -300,7 +300,7 @@ BoxLevel::finalize()
 void
 BoxLevel::initializePrivate(
    const IntVector& ratio,
-   const boost::shared_ptr<const GridGeometry>& grid_geom,
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
@@ -473,7 +473,7 @@ BoxLevel::swap(
       ParallelState tmpstate;
       const BoxLevel* tmpmbl;
       tbox::SAMRAI_MPI tmpmpi(tbox::SAMRAI_MPI::commNull);
-      boost::shared_ptr<const GridGeometry> tmpgridgeom(
+      boost::shared_ptr<const BaseGridGeometry> tmpgridgeom(
          level_a.getGridGeometry());
 
       tmpstate = level_a.d_parallel_state;
@@ -1521,7 +1521,7 @@ BoxLevel::putUnregisteredToDatabase(
 void
 BoxLevel::getFromDatabase(
    tbox::Database& database,
-   const boost::shared_ptr<const GridGeometry>& grid_geom)
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geom)
 {
    TBOX_ASSERT(database.isInteger("dim"));
    const tbox::Dimension dim(static_cast<unsigned short>(database.getInteger("dim")));

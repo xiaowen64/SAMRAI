@@ -22,7 +22,7 @@
 namespace SAMRAI {
 namespace hier {
 
-class GridGeometry;
+class BaseGridGeometry;
 class BoxContainer;
 
 /*!
@@ -61,7 +61,7 @@ private:
     */
    MultiblockBoxTree(
       const BoxContainer& boxes, 
-      const GridGeometry* grid_geometry,
+      const BaseGridGeometry* grid_geometry,
       const int min_number = 10);
 
    /*!
@@ -90,7 +90,7 @@ private:
       return static_cast<int>(d_single_block_trees.size());
    }
 
-   const GridGeometry*
+   const BaseGridGeometry*
    getGridGeometry() const
    {
       return d_grid_geometry;
@@ -157,7 +157,7 @@ private:
     *
     * @param[in]  refinement_ratio  All boxes in this BoxContainer
     * are assumed to exist in index space that has this refinement ratio 
-    * relative to the coarse-level domain stored in the GridGeometry.
+    * relative to the coarse-level domain stored in the grid geometry.
     *
     * @param[in]  include_singularity_block_neighbors  If true, intersections
     * with neighboring blocks that touch only across an enhanced connectivity
@@ -208,7 +208,7 @@ private:
     *
     * @param[in]  refinement_ratio  All boxes in this BoxContainer
     * are assumed to exist in index space that has this refinement ratio 
-    * relative to the coarse-level domain stored in the GridGeometry.
+    * relative to the coarse-level domain stored in the grid geometry.
     *
     * @param[in]  include_singularity_block_neighbors  If true, intersections
     * with neighboring blocks that touch only across an enhanced connectivity
@@ -233,7 +233,7 @@ private:
     */
    std::map<BlockId, boost::shared_ptr<BoxTree> > d_single_block_trees;
 
-   const GridGeometry* d_grid_geometry;
+   const BaseGridGeometry* d_grid_geometry;
 };
 
 }

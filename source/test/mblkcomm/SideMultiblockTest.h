@@ -61,7 +61,7 @@ public:
       const hier::Connector& dst_to_encon,
       const hier::Box& fill_box,
       const hier::BoundaryBox& bbox,
-      const boost::shared_ptr<hier::GridGeometry>& grid_geometry);
+      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
 
    /**
     * This function is called from the MultiblockTester constructor.  Its

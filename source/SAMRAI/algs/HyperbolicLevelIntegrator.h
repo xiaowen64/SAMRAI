@@ -18,7 +18,7 @@
 #include "SAMRAI/algs/HyperbolicPatchStrategy.h"
 #include "SAMRAI/algs/TimeRefinementLevelStrategy.h"
 #include "SAMRAI/hier/ComponentSelector.h"
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
@@ -633,7 +633,7 @@ public:
       const boost::shared_ptr<hier::Variable>& var,
       const hier::IntVector ghosts,
       const HYP_VAR_TYPE h_v_type,
-      const boost::shared_ptr<hier::GridGeometry>& transfer_geom,
+      const boost::shared_ptr<hier::BaseGridGeometry>& transfer_geom,
       const std::string& coarsen_name = std::string(),
       const std::string& refine_name = std::string());
 

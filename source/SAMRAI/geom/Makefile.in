@@ -22,10 +22,7 @@ include $(OBJECT)/config/Makefile.config
 SUBDIRS = fortran
 
 OBJS = 	\
-	SkeletonCoarsen.o \
-	SkeletonPatchGeometry.o \
-	SkeletonGridGeometry.o \
-	SkeletonRefine.o \
+	GridGeometry.o \
 	CartesianPatchGeometry.o \
 	CartesianGridGeometry.o \
 	CartesianCellDoubleLinearRefine.o \
@@ -58,8 +55,7 @@ OBJS = 	\
 	CartesianEdgeComplexWeightedAverage.o \
 	CartesianNodeComplexLinearRefine.o \
 	CartesianOuterfaceComplexWeightedAverage.o \
-	CartesianFaceComplexWeightedAverage.o \
-	SAMRAITransferOperatorRegistry.o
+	CartesianFaceComplexWeightedAverage.o
 
 library: $(OBJS)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done

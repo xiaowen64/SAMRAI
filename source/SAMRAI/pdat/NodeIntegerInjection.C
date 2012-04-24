@@ -72,23 +72,6 @@ NodeIntegerInjection::~NodeIntegerInjection()
 {
 }
 
-bool
-NodeIntegerInjection::findCoarsenOperator(
-   const boost::shared_ptr<hier::Variable>& var,
-   const std::string& op_name) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
-
-   const boost::shared_ptr<NodeVariable<int> > cast_var(
-      var,
-      boost::detail::dynamic_cast_tag());
-   if (cast_var && (op_name == getOperatorName())) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
 int
 NodeIntegerInjection::getOperatorPriority() const
 {

@@ -122,21 +122,6 @@ SideComplexLinearTimeInterpolateOp::~SideComplexLinearTimeInterpolateOp()
 {
 }
 
-bool
-SideComplexLinearTimeInterpolateOp::findTimeInterpolateOperator(
-   const boost::shared_ptr<hier::Variable>& var,
-   const std::string& op_name) const
-{
-   const boost::shared_ptr<SideVariable<dcomplex> > cast_var(
-      var,
-      boost::detail::dynamic_cast_tag());
-   if (cast_var && (op_name == "STD_LINEAR_TIME_INTERPOLATE")) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
 void
 SideComplexLinearTimeInterpolateOp::timeInterpolate(
    hier::PatchData& dst_data,

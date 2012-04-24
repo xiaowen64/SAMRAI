@@ -27,7 +27,7 @@ OBJS = 	\
 	PeriodicId.o \
 	BoxContainer.o \
 	CoarseFineBoundary.o \
-	GridGeometry.o \
+	BaseGridGeometry.o \
 	PatchBoundaries.o \
 	PatchHierarchy.o \
 	PatchLevel.o \

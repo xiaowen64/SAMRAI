@@ -364,7 +364,7 @@ MethodOfLinesIntegrator::registerVariable(
    const boost::shared_ptr<hier::Variable>& variable,
    const hier::IntVector& ghosts,
    const MOL_VAR_TYPE m_v_type,
-   const boost::shared_ptr<hier::GridGeometry>& transfer_geom,
+   const boost::shared_ptr<hier::BaseGridGeometry>& transfer_geom,
    const std::string& coarsen_name,
    const std::string& refine_name)
 {

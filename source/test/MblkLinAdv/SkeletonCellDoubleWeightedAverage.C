@@ -65,20 +65,6 @@ SkeletonCellDoubleWeightedAverage::~SkeletonCellDoubleWeightedAverage()
 {
 }
 
-bool SkeletonCellDoubleWeightedAverage::findCoarsenOperator(
-   const boost::shared_ptr<hier::Variable>& var,
-   const string& op_name) const
-{
-   const boost::shared_ptr<pdat::CellVariable<double> > cast_var(
-      var,
-      boost::detail::dynamic_cast_tag());
-   if (cast_var && (op_name == getOperatorName())) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
 int SkeletonCellDoubleWeightedAverage::getOperatorPriority() const
 {
    return 0;

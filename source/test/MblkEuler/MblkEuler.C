@@ -96,7 +96,7 @@ MblkEuler::MblkEuler(
    const string& object_name,
    const tbox::Dimension& dim,
    boost::shared_ptr<tbox::Database> input_db,
-   boost::shared_ptr<hier::GridGeometry>& grid_geom):
+   boost::shared_ptr<hier::BaseGridGeometry>& grid_geom):
    MblkHyperbolicPatchStrategy(dim),
    d_object_name(object_name),
    d_dim(dim),
@@ -2519,7 +2519,7 @@ void MblkEuler::fillSingularityBoundaryConditions(
    const double fill_time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
-   const boost::shared_ptr<hier::GridGeometry>& grid_geometry)
+   const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
 {
 
    NULL_USE(patch);
@@ -2709,7 +2709,7 @@ void MblkEuler::printClassData(
    os << "d_object_name = " << d_object_name << endl;
    os << "d_grid_geometry = " << endl;
    for (j = 0; j < d_grid_geometry->getNumberBlocks(); j++) {
-//      os << (geom::BlockGridGeometry*)d_grid_geometry[j] << endl;
+//      os << (geom::GridGeometry*)d_grid_geometry[j] << endl;
    }
 
    // ----------------------------------------------

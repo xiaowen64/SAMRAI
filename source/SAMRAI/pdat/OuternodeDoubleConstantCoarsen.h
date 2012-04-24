@@ -35,9 +35,6 @@ namespace pdat {
  * The numerical operations for the averaging use FORTRAN numerical
  * routines.
  *
- * The findCoarsenOperator() operator function returns true if the input
- * variable is outernode-centered double, and the string is "CONSTANT_COARSEN".
- *
  * @see hier::CoarsenOperator
  */
 
@@ -55,18 +52,6 @@ public:
     * @brief Uninteresting virtual destructor.
     */
    virtual ~OuternodeDoubleConstantCoarsen();
-
-   /*!
-    * @brief Determine if object is for coarsening the specified
-    * hier_Variable type using the given descriptive operator name.
-    *
-    * @return True if the variable and name string match the outernode-centered
-    * constant averaging; otherwise, return false.
-    */
-   bool
-   findCoarsenOperator(
-      const boost::shared_ptr<hier::Variable>& var,
-      const std::string& op_name) const;
 
    /*!
     * @brief Give the operator priority.

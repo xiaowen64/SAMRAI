@@ -45,7 +45,7 @@ public:
       const string& object_name,
       const tbox::Dimension& dim,
       boost::shared_ptr<tbox::Database> input_db,
-      boost::shared_ptr<hier::GridGeometry>& grid_geom);
+      boost::shared_ptr<hier::BaseGridGeometry>& grid_geom);
 
    ~MblkEuler();
 
@@ -186,7 +186,7 @@ public:
       const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const boost::shared_ptr<hier::GridGeometry>& grid_geometry);
+      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
 
    /**
     * Build mapped grid on patch
@@ -276,7 +276,7 @@ private:
     * object to set up initial data, set physical boundary conditions,
     * and register plot variables.
     */
-   boost::shared_ptr<hier::GridGeometry> d_grid_geometry;
+   boost::shared_ptr<hier::BaseGridGeometry> d_grid_geometry;
 #ifdef HAVE_HDF5
    boost::shared_ptr<appu::VisItDataWriter> d_visit_writer;
 #endif
@@ -406,7 +406,7 @@ private:
    tbox::Array<int> d_wall_factors;
 
    //
-   // Operators to be used with BlockGridGeometry
+   // Operators to be used with GridGeometry
    //
    boost::shared_ptr<hier::TimeInterpolateOperator> d_cell_time_interp_op;
 };

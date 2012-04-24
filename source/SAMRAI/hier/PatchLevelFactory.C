@@ -29,7 +29,7 @@ PatchLevelFactory::~PatchLevelFactory()
 boost::shared_ptr<PatchLevel>
 PatchLevelFactory::allocate(
    const BoxLevel& mapped_box_level,
-   const boost::shared_ptr<GridGeometry>& grid_geometry,
+   const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
    const boost::shared_ptr<PatchDescriptor>& descriptor,
    const boost::shared_ptr<PatchFactory>& factory) const
 {
@@ -46,7 +46,7 @@ PatchLevelFactory::allocate(
 boost::shared_ptr<PatchLevel>
 PatchLevelFactory::allocate(
    const boost::shared_ptr<tbox::Database>& database,
-   const boost::shared_ptr<GridGeometry>& grid_geometry,
+   const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
    const boost::shared_ptr<PatchDescriptor>& descriptor,
    const ComponentSelector& component_selector,
    const boost::shared_ptr<PatchFactory>& factory,

@@ -109,12 +109,12 @@ public:
    virtual ~PatchMultiblockTestStrategy();
 
    void setGridGeometry(
-      boost::shared_ptr<hier::GridGeometry>& grid_geom)
+      boost::shared_ptr<hier::BaseGridGeometry>& grid_geom)
    {
       d_grid_geometry = grid_geom;
    }
 
-   boost::shared_ptr<hier::GridGeometry>&
+   boost::shared_ptr<hier::BaseGridGeometry>&
    getGridGeometry()
    {
       return d_grid_geometry;
@@ -222,7 +222,7 @@ public:
       const hier::Connector& dst_to_encon,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const boost::shared_ptr<hier::GridGeometry>& grid_geometry)
+      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
    {
       NULL_USE(patch);
       NULL_USE(encon_level);
@@ -333,7 +333,7 @@ protected:
    tbox::Array<hier::BoxContainer> d_refine_level_boxes;
 
 private:
-   boost::shared_ptr<hier::GridGeometry> d_grid_geometry;
+   boost::shared_ptr<hier::BaseGridGeometry> d_grid_geometry;
 
    boost::shared_ptr<hier::VariableContext> d_data_context;
    boost::shared_ptr<hier::VariableContext> d_dst_context;

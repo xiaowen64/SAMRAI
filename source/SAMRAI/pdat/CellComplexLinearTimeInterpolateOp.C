@@ -83,21 +83,6 @@ CellComplexLinearTimeInterpolateOp::~CellComplexLinearTimeInterpolateOp()
 {
 }
 
-bool
-CellComplexLinearTimeInterpolateOp::findTimeInterpolateOperator(
-   const boost::shared_ptr<hier::Variable>& var,
-   const std::string& op_name) const
-{
-   const boost::shared_ptr<CellVariable<dcomplex> > cast_var(
-      var,
-      boost::detail::dynamic_cast_tag());
-   if (cast_var && (op_name == "STD_LINEAR_TIME_INTERPOLATE")) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
 void
 CellComplexLinearTimeInterpolateOp::timeInterpolate(
    hier::PatchData& dst_data,

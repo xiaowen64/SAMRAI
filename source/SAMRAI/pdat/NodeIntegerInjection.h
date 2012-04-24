@@ -31,9 +31,6 @@ namespace pdat {
  * class.  The numerical operations for theaveraging use FORTRAN numerical
  * routines.
  *
- * The findCoarsenOperator() operator function returns true if the input
- * variable is node-centered integer, and the string is "CONSTANT_COARSEN".
- *
  * @see hier::CoarsenOperator
  */
 
@@ -51,15 +48,6 @@ public:
     * Uninteresting virtual destructor.
     */
    virtual ~NodeIntegerInjection();
-
-   /**
-    * Return true if the variable and name string match the node-centered
-    * constant averaging; otherwise, return false.
-    */
-   bool
-   findCoarsenOperator(
-      const boost::shared_ptr<hier::Variable>& var,
-      const std::string& op_name) const;
 
    /**
     * The priority of node-centered constant averaging is 0.

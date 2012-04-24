@@ -175,7 +175,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
 
    const BoxLevel& base = connector.getBase();
    const BoxLevel& head = connector.getHead();
-   const boost::shared_ptr<const GridGeometry>& grid_geom(
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geom(
       base.getGridGeometry());
 
    /*
@@ -549,7 +549,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
 {
    const BoxLevel& input = input_to_reference.getBase();
 
-   const boost::shared_ptr<const GridGeometry>& grid_geometry(
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
       input.getGridGeometry());
 
    const tbox::Dimension& dim(input.getDim());
@@ -847,7 +847,7 @@ void
 BoxLevelConnectorUtils::computeBoxesAroundBoundary(
    BoxContainer& boundary,
    const IntVector& refinement_ratio,
-   const boost::shared_ptr<const GridGeometry>& grid_geometry,
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geometry,
    const bool simplify_boundary_boxes) const
 {
 
@@ -944,12 +944,13 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
           */
          BoxContainer reduced_connectivity_singularity_boxes(
             grid_geometry->getSingularityBoxContainer(block_id));
-         const std::list<GridGeometry::Neighbor>& neighbors(
+         const std::list<BaseGridGeometry::Neighbor>& neighbors(
             grid_geometry->getNeighbors(block_id));
 
-         for (std::list<GridGeometry::Neighbor>::const_iterator ni = neighbors.begin();
+         for (std::list<BaseGridGeometry::Neighbor>::const_iterator ni =
+              neighbors.begin();
               ni != neighbors.end(); ni++) {
-            const GridGeometry::Neighbor& neighbor(*ni);
+            const BaseGridGeometry::Neighbor& neighbor(*ni);
             if (neighbor.isSingularity()) {
                reduced_connectivity_singularity_boxes.removeIntersections(
                   neighbor.getTransformedDomain());
@@ -978,9 +979,10 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
             singularity_boxes.refine(refinement_ratio);
          }
 
-         for (std::list<GridGeometry::Neighbor>::const_iterator ni = neighbors.begin();
+         for (std::list<BaseGridGeometry::Neighbor>::const_iterator ni =
+              neighbors.begin();
               ni != neighbors.end(); ni++) {
-            const GridGeometry::Neighbor& neighbor(*ni);
+            const BaseGridGeometry::Neighbor& neighbor(*ni);
             const BlockId neighbor_block_id(neighbor.getBlockId());
             if (neighbor.isSingularity() &&
                 reference_mapped_boxes_tree.hasBoxInBlock(neighbor_block_id)) {

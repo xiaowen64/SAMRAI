@@ -120,21 +120,6 @@ SideDoubleLinearTimeInterpolateOp::~SideDoubleLinearTimeInterpolateOp()
 {
 }
 
-bool
-SideDoubleLinearTimeInterpolateOp::findTimeInterpolateOperator(
-   const boost::shared_ptr<hier::Variable>& var,
-   const std::string& op_name) const
-{
-   const boost::shared_ptr<SideVariable<double> > cast_var(
-      var,
-      boost::detail::dynamic_cast_tag());
-   if (cast_var && (op_name == "STD_LINEAR_TIME_INTERPOLATE")) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
 void
 SideDoubleLinearTimeInterpolateOp::timeInterpolate(
    hier::PatchData& dst_data,

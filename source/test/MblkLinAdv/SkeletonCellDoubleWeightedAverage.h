@@ -33,9 +33,6 @@ using namespace SAMRAI;
  * Skeleton mesh.  It is derived from the hier::CoarsenOperator base class.
  * The numerical operations for the averaging use FORTRAN numerical routines.
  *
- * The findCoarsenOperator() operator function returns true if the input
- * variable is cell-centered double, and the string is "CONSERVATIVE_COARSEN".
- *
  * @see hier::CoarsenOperator
  */
 
@@ -53,15 +50,6 @@ public:
     * Uninteresting virtual destructor.
     */
    virtual ~SkeletonCellDoubleWeightedAverage();
-
-   /**
-    * Return true if the variable and name string match cell-centered
-    * double weighted averaging; otherwise, return false.
-    */
-   bool
-   findCoarsenOperator(
-      const boost::shared_ptr<hier::Variable>& var,
-      const string& op_name) const;
 
    /**
     * The priority of cell-centered double weighted averaging is 0.

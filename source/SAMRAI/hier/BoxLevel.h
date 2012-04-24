@@ -15,7 +15,7 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxLevelHandle.h"
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/PersistentOverlapConnectors.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
@@ -134,7 +134,7 @@ public:
     */
    BoxLevel(
       const IntVector& ratio,
-      const boost::shared_ptr<const GridGeometry>& grid_geom,
+      const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -166,7 +166,7 @@ public:
    void
    initialize(
       const IntVector& ratio,
-      const boost::shared_ptr<const GridGeometry>& grid_geom,
+      const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -196,7 +196,7 @@ public:
    swapInitialize(
       BoxContainer& boxes,
       const IntVector& ratio,
-      const boost::shared_ptr<const GridGeometry>& grid_geom,
+      const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -757,11 +757,11 @@ public:
    }
 
    /*!
-    * @brief Return the GridGeometry associated with this object.
+    * @brief Return the grid geometry associated with this object.
     *
     * If object has never been initialized, return NULL pointer.
     */
-   const boost::shared_ptr<const GridGeometry>&
+   const boost::shared_ptr<const BaseGridGeometry>&
    getGridGeometry() const
    {
       return d_grid_geometry;
@@ -1200,7 +1200,7 @@ public:
    void
    getFromDatabase(
       tbox::Database& database,
-      const boost::shared_ptr<const GridGeometry>& grid_geom);
+      const boost::shared_ptr<const BaseGridGeometry>& grid_geom);
 
    //@}
 
@@ -1540,7 +1540,7 @@ private:
    void
    initializePrivate(
       const IntVector& ratio,
-      const boost::shared_ptr<const GridGeometry>& grid_geom,
+      const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -1715,9 +1715,10 @@ private:
    static boost::shared_ptr<tbox::Timer> t_cache_global_reduced_data;
 
    /*!
-    * @brief boost::shared_ptr to the GridGeometry associated with this object.
+    * @brief boost::shared_ptr to the grid geometry associated with this
+    * object.
     */
-   boost::shared_ptr<const GridGeometry> d_grid_geometry;
+   boost::shared_ptr<const BaseGridGeometry> d_grid_geometry;
 
    /*!
     * @brief A LocalId object with value of -1.

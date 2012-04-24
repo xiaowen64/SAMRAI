@@ -12,7 +12,7 @@
 #define included_hier_PatchLevelFactory
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/PatchFactory.h"
@@ -61,7 +61,7 @@ public:
    virtual boost::shared_ptr<PatchLevel>
    allocate(
       const BoxLevel& mapped_box_level,
-      const boost::shared_ptr<GridGeometry>& grid_geometry,
+      const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
       const boost::shared_ptr<PatchDescriptor>& descriptor,
       const boost::shared_ptr<PatchFactory>& factory =
          boost::shared_ptr<PatchFactory>()) const;
@@ -92,7 +92,7 @@ public:
    virtual boost::shared_ptr<PatchLevel>
    allocate(
       const boost::shared_ptr<tbox::Database>& database,
-      const boost::shared_ptr<GridGeometry>& grid_geometry,
+      const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
       const boost::shared_ptr<PatchDescriptor>& descriptor,
       const ComponentSelector& component_selector,
       const boost::shared_ptr<PatchFactory>& factory =

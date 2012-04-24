@@ -149,7 +149,7 @@ using namespace SAMRAI;
  *       Appropriate input sections must be provided for these objects
  *       as needed.
  *
- *     o Each test must register a GridGeometry object with the
+ *     o Each test must register a BaseGridGeometry object with the
  *       PatchMultiblockTestStrategy base class so the hierarchy can be
  *       constructed.  Consult the constructor of each test class
  *       for inforamation about which geomteyr object is constructed,

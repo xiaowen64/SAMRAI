@@ -1345,7 +1345,7 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const IntVector& refinement_ratio) const
 {
    const BoxLevel& old = mapping_connector.getBase();
-   const boost::shared_ptr<const GridGeometry>& grid_geometry(
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
       old.getGridGeometry());
    const int rank = old.getMPI().getRank();
 

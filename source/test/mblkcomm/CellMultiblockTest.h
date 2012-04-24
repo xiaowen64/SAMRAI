@@ -61,7 +61,7 @@ public:
       const hier::Connector& dst_to_encon,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const boost::shared_ptr<hier::GridGeometry>& grid_geometry);
+      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
 
    /**
     * This function is called from the MultiblockTester constructor.  Its
@@ -135,7 +135,7 @@ private:
    /*
     * Data members specific to this cell data test.
     */
-//   tbox::Array<boost::shared_ptr<hier::GridGeometry> > d_skel_grid_geometry;
+//   tbox::Array<boost::shared_ptr<hier::BaseGridGeometry> > d_skel_grid_geometry;
 
    string d_refine_option;
    int d_finest_level_number;

@@ -96,19 +96,6 @@ SkeletonOutersideDoubleWeightedAverage::~SkeletonOutersideDoubleWeightedAverage(
 {
 }
 
-bool SkeletonOutersideDoubleWeightedAverage::findCoarsenOperator(
-   const boost::shared_ptr<hier::Variable>& var,
-   const string& op_name) const
-{
-   const boost::shared_ptr<pdat::OuterfaceVariable<double> > cast_var(
-      var, boost::detail::dynamic_cast_tag());
-   if (cast_var && (op_name == getOperatorName())) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
 int SkeletonOutersideDoubleWeightedAverage::getOperatorPriority() const
 {
    return 0;

@@ -1751,7 +1751,7 @@ HyperbolicLevelIntegrator::registerVariable(
    const boost::shared_ptr<hier::Variable>& var,
    const hier::IntVector ghosts,
    const HYP_VAR_TYPE h_v_type,
-   const boost::shared_ptr<hier::GridGeometry>& transfer_geom,
+   const boost::shared_ptr<hier::BaseGridGeometry>& transfer_geom,
    const std::string& coarsen_name,
    const std::string& refine_name)
 {
