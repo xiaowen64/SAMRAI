@@ -24,6 +24,22 @@
 
 #include <iostream>
 
+/*
+ * Forward declaration, which is questionable with respect to SAMRAI 
+ * package ordering.   This is needed since pdat::ArrayData class
+ * needs to access private Box default constructor.
+ *
+ * It would be good to come up with an alternative to this.
+ */
+namespace SAMRAI {
+
+namespace pdat {
+template<class TYPE>
+class ArrayData;
+}
+
+}
+
 namespace SAMRAI {
 namespace hier {
 

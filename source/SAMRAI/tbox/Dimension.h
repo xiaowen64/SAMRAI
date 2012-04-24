@@ -19,18 +19,16 @@
 #include <limits>
 
 /*
- * These forward declarations are obviously bad and creates a
- * dependency in the packages that violates the general nesting of
- * SAMRAI packages.  Was needed as IntVector needed the default ctor
- * in order to make the library work reasonable close to previous
- * versions and some performance issues would result if we did not
- * allow this.
+ * Forward declarations, which are questionable with respect to SAMRAI 
+ * package ordering.   These are needed since pdat::ArrayData and 
+ * hier::IntVector classes need to access private Dimension assignment
+ * constructor.
  *
- * It would be very good to come up with something better than this.
+ * It would be good to come up with an alternative to this.
  */
 namespace SAMRAI {
-namespace hier {
 
+namespace hier {
 class IntVector;
 }
 
