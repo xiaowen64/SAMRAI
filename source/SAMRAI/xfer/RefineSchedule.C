@@ -1312,6 +1312,8 @@ RefineSchedule::createCoarseInterpPatchLevel(
    const boost::shared_ptr<hier::PatchLevel> &dst_level, 
    const bool dst_is_coarse_interp_level )
 {
+   const tbox::Dimension& dim(hierarchy->getDim());
+
    hier::OverlapConnectorAlgorithm oca;
    hier::BoxLevelConnectorUtils edge_utils;
 
@@ -1355,13 +1357,15 @@ RefineSchedule::createCoarseInterpPatchLevel(
 
    if (dst_is_coarse_interp_level) {
 
-      const hier::BoxLevel& src_mapped_box_level =
-         dst_to_src.getHead();
+      const hier::BoxLevel& src_box_level =
+         *(d_src_level->getBoxLevel());
       if (hierarchy->getBoxLevel(next_coarser_ln + 1).get() !=
-          &src_mapped_box_level) {
+          &src_box_level) {
          TBOX_ERROR("Missing dst<==>hiercoarse connector and\n"
             << "src is not from hierarchy.");
       }
+
+      const hier::BoxLevel& dst_box_level = dst_to_src.getBase();
 
       const hier::IntVector& hiercoarse_to_src_width =
          fine_connector_widths[next_coarser_ln];
@@ -1402,21 +1406,66 @@ RefineSchedule::createCoarseInterpPatchLevel(
             *d_src_level->getBoxLevel(),
             hiercoarse_to_src_width);
 
-      if (s_barrier_and_time) {
-         t_bridge_dst_hiercoarse->barrierAndStart();
-      }
+      const hier::IntVector& src_to_dst_width = src_to_dst.getConnectorWidth();
+      const hier::IntVector& dst_to_src_width = dst_to_src.getConnectorWidth();
+      if (src_to_dst_width > hier::IntVector::getZero(dim) &&
+          dst_to_src_width > hier::IntVector::getZero(dim)) {
 
-      oca.bridge(
-         bridged_dst_to_hiercoarse,
-         bridged_hiercoarse_to_dst,
-         dst_to_src,
-         src_to_hiercoarse,
-         hiercoarse_to_src,
-         src_to_dst,
-         fine_connector_widths[next_coarser_ln]);
+         if (s_barrier_and_time) {
+            t_bridge_dst_hiercoarse->barrierAndStart();
+         }
 
-      if (s_barrier_and_time) {
-         t_bridge_dst_hiercoarse->stop();
+         oca.bridge(
+            bridged_dst_to_hiercoarse,
+            bridged_hiercoarse_to_dst,
+            dst_to_src,
+            src_to_hiercoarse,
+            hiercoarse_to_src,
+            src_to_dst,
+            fine_connector_widths[next_coarser_ln]);
+
+         if (s_barrier_and_time) {
+            t_bridge_dst_hiercoarse->stop();
+         }
+      } else {
+         /*
+          * This should be entered when setting up recursive schedules for
+          * enhanced connectivity. 
+          */
+ 
+         hier::IntVector connector_width(src_to_dst_width); 
+         connector_width.max(hier::IntVector::getOne(dim));
+         const hier::Connector& found_src_to_dst =
+            src_box_level.getPersistentOverlapConnectors()
+            .findConnector(
+               dst_box_level,
+               connector_width);
+
+         connector_width = dst_to_src_width;
+         connector_width.max(hier::IntVector::getOne(dim));
+         const hier::Connector& found_dst_to_src =
+            dst_box_level.getPersistentOverlapConnectors()
+            .findConnector(
+               src_box_level,
+               connector_width);
+
+         if (s_barrier_and_time) {
+            t_bridge_dst_hiercoarse->barrierAndStart();
+         }
+
+         oca.bridge(
+            bridged_dst_to_hiercoarse,
+            bridged_hiercoarse_to_dst,
+            found_dst_to_src,
+            src_to_hiercoarse,
+            hiercoarse_to_src,
+            found_src_to_dst,
+            fine_connector_widths[next_coarser_ln]);
+
+         if (s_barrier_and_time) {
+            t_bridge_dst_hiercoarse->stop();
+         }
+
       }
 
       bridged_dst_to_hiercoarse.removePeriodicRelationships();
@@ -2551,6 +2600,41 @@ RefineSchedule::generateCommunicationSchedule(
          }
       }
 
+      if (grid_geometry->hasEnhancedConnectivity() &&
+          unfilled_boxes_for_dst.size()) {
+         hier::BoxContainer fixed_unfilled_boxes(unfilled_boxes_for_dst);
+         hier::BoxContainer dst_block_domain;
+         grid_geometry->computePhysicalDomain(
+            dst_block_domain,
+            d_dst_level->getRatioToLevelZero(),
+            dst_mapped_box.getBlockId());
+         fixed_unfilled_boxes.intersectBoxes(dst_block_domain);
+
+         for (hier::BoxContainer::iterator bi(unfilled_boxes_for_dst);
+              bi != unfilled_boxes_for_dst.end(); ++bi) {
+
+            const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
+               grid_geometry->getNeighbors(dst_mapped_box.getBlockId());
+
+            for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator
+                 ni = neighbors.begin(); ni != neighbors.end(); ++ni) {
+
+               hier::BoxContainer transformed_domain(
+                  ni->getTransformedDomain());
+
+               transformed_domain.refine(d_dst_level->getRatioToLevelZero()); 
+
+               transformed_domain.intersectBoxes(*bi);
+
+               if (transformed_domain.size()) {
+                  fixed_unfilled_boxes.spliceBack(transformed_domain);
+               }
+            }
+         }
+         unfilled_boxes_for_dst.clear();
+         unfilled_boxes_for_dst.spliceBack(fixed_unfilled_boxes);
+      }
+
       /*
        * Add mapping information to unfilled boxes and add them to
        * containers for the level.
@@ -3038,8 +3122,6 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
 
    d_dst_to_encon.clearNeighborhoods();
    d_dst_to_encon.setBase(*(d_dst_level->getBoxLevel()));
-   d_dst_to_encon.setHead(encon_box_level);
-   d_dst_to_encon.setWidth(hier::IntVector::getOne(dim), true);
 
    if (num_blocks > 1) {
       hier::IntVector encon_gcw(
@@ -3214,28 +3296,21 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
 
    d_encon_level->setLevelNumber(d_dst_level->getLevelNumber());
 
+   d_dst_to_encon.setHead(*(d_encon_level->getBoxLevel()));
+   d_dst_to_encon.setWidth(hier::IntVector::getOne(dim), true);
+
    if (d_src_level) {
-      d_src_to_encon.clearNeighborhoods();
-      d_src_to_encon.setBase(*(d_src_level->getBoxLevel()));
-      d_src_to_encon.setHead(*(d_encon_level->getBoxLevel()));
-      d_src_to_encon.setWidth(hier::IntVector::getZero(dim), true);
-      d_encon_to_src.clearNeighborhoods();
-      d_encon_to_src.setBase(*(d_encon_level->getBoxLevel()));
-      d_encon_to_src.setHead(*(d_src_level->getBoxLevel()));
-      d_encon_to_src.setWidth(hier::IntVector::getZero(dim), true);
-
-
       const Connector& dst_to_src =
          d_dst_level->getBoxLevel()->getPersistentOverlapConnectors().
             findConnector(
                *d_src_level->getBoxLevel(),
-               hier::IntVector::getZero(dim));
+               hier::IntVector::getOne(dim));
 
       const Connector& src_to_dst =
          d_src_level->getBoxLevel()->getPersistentOverlapConnectors().
             findConnector(
                *d_dst_level->getBoxLevel(),
-               hier::IntVector::getZero(dim));
+               hier::IntVector::getOne(dim));
 
       Connector encon_to_dst;
       encon_to_dst.initializeToLocalTranspose(d_dst_to_encon);
