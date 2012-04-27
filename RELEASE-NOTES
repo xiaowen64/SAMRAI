@@ -39,7 +39,8 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
 This section contains a summary of additions to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
 
-(1) 
+(1) BoxContainer can create and hold its own internal tree representation
+    for effiencent search operations.
 
 
 -----------------------------------------------------------------------------
@@ -57,6 +58,9 @@ descriptions of items in the following list are provided below.
 (2) Starting/stopping a Timer that is already started/stopped is an
     error in both optimize and debug modes.
 
+(3) BlockId is now part of Box's state rather than part of BoxId.
+
+(4) 
 
 *****************************************************************************
 
@@ -64,7 +68,23 @@ descriptions of items in the following list are provided below.
                 Details about what's new
 -----------------------------------------------------------------------------
 
-(1) 
+(1) BoxContainer can create and hold its own internal tree representation
+    for effiencent search operations.
+
+    The method makeTree() can be used to create an internal spatially-based
+    tree representation of the BoxContainer, which can increase efficiency
+    when the container is used as a constant argument to search-based
+    methods such as intersectBoxes() or findOverlapBoxes().  The cost of
+    building a tree is O(N log(N)), while it reduces the cost of the search
+    methods from O(N) to O(log(N)), so users should only use the tree
+    representation when it is expected that the same BoxContainer will be
+    used repeatedly as an argument to search operations, such that the
+    gain in efficiency outweighs the cost of building the tree.
+
+    With this functionality added to BoxContainer, most of the public
+    interfaces of the BoxTree and MultiblockBoxTree classes have been
+    removed, as theses classes are intended to only be used internally by
+    BoxContainer.
 
 -----------------------------------------------------------------------------
                 Details about what's changed
@@ -79,13 +99,24 @@ descriptions of items in the following list are provided below.
     ConstPointer which was redundant as ConstPointer<X> was equivalent to
     Pointer<X>.
 
-
 (2) Starting/stopping a Timer that is already started/stopped is an
     error in both optimize and debug modes.
 
     Previous behavior: This caused a failed assert in debug mode but not
     in optimized mode.
 
+(3) BlockId is now part of Box's state rather than part of BoxId.  This means
+    that every Box should have a valid BlockId that identifies which block it
+    lies on within a multiblock mesh configuration.  For single-block
+    configurations, the value of every Box's BlockId is zero.
+
+    Transformations of a Box from the coordinate system of one block to,
+    another, using methods in the Transformation or grid geometry classes,
+    will automatically change the BlockId as appropriate.
+
+    There is now no BlockId held inside BoxId, and thus BoxId's ordering,
+    scheme, which is used in some containers such as BoxContainer, no longer
+    takes into account BlockId.
 
 =============================================================================
 =============================================================================
