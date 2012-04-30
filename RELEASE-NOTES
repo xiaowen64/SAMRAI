@@ -42,6 +42,16 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
     a max.  All of the operations in this component have been carefully
     examined and all errors of this type have been fixed.
 
+(2) Bugs that were causing incorrect Connectors and fill patterns to be used
+    for filling ghost data at multiblock enhanced connectivity coarse-fine
+    boundaries have been fixed.
+
+(3) GriddingAlgorithm forces patches on new levels that lie very near to a
+    physical or block boundary to be extended to touch that boundary.  In
+    multiblock configurations, this requirement was not being enforced
+    correctly on blocks other than block 0.  This has now been fixed.
+
+     
 *****************************************************************************
 
 ----------------------------------------------------------------------------
