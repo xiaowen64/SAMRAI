@@ -1,7 +1,7 @@
 c
 c  File:        $URL$
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Modified:    $LastChangedDate$
 c  Description: F77 routines for Cartesian 2d boundary conditions
@@ -9,7 +9,7 @@ c
 c
 c  File:        $URL$
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Modified:    $LastChangedDate$
 c  Description: m4 include file for dimensioning 2d arrays in FORTRAN routines.
@@ -40,7 +40,7 @@ c***********************************************************************
 c
 c  File:        $URL$
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Modified:    $LastChangedDate$
 c  Description: m4 include file for 2d boundary constant common blocks
@@ -224,7 +224,7 @@ c***********************************************************************
 c
 c  File:        $URL$
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Modified:    $LastChangedDate$
 c  Description: m4 include file for 2d boundary constant common blocks
@@ -409,7 +409,7 @@ c***********************************************************************
 c
 c  File:        $URL$
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Modified:    $LastChangedDate$
 c  Description: m4 include file for 2d boundary constant common blocks
@@ -463,7 +463,7 @@ c***********************************************************************
 c
 c  File:        $URL$
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Modified:    $LastChangedDate$
 c  Description: m4 include file for 2d boundary constant common blocks

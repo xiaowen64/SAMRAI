@@ -1,5 +1,5 @@
 *****************************************************************************
-  Copyright 1997-2011
+  Copyright 1997-2012
   Lawrence Livermore National Security, LLC.
   All rights reserved.
 *****************************************************************************
@@ -33,6 +33,18 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
 *****************************************************************************
 
 ----------------------------------------------------------------------------
+                Significant bug fixes
+----------------------------------------------------------------------------
+
+(1) Random operations in the math component passed the improper reduction
+    to Allreduce (e.g. MPI_MAX instead of MPI_SUM).  In addition there were
+    a couple of operations which took the max of a min rather than the max of
+    a max.  All of the operations in this component have been carefully
+    examined and all errors of this type have been fixed.
+
+*****************************************************************************
+
+----------------------------------------------------------------------------
                 Summary of what's new
 -----------------------------------------------------------------------------
 
@@ -60,7 +72,13 @@ descriptions of items in the following list are provided below.
 
 (3) BlockId is now part of Box's state rather than part of BoxId.
 
-(4) 
+(4) SAMRAI's iterator classes have been modified to use a consistent syntax
+    which matches the accepted conventions of the STL.
+
+(5) SAMRAI's tbox containers which effectively replicated equivalent STL
+    containers have been removed.
+
+(6) The GridGeometry class hierarchy has been changed.
 
 *****************************************************************************
 
@@ -97,7 +115,7 @@ descriptions of items in the following list are provided below.
     with boost's shared_ptr.  This class provides a more efficient
     implementation and an API which uses common idioms.  We have also removed
     ConstPointer which was redundant as ConstPointer<X> was equivalent to
-    Pointer<X>.
+    Pointer<const X>.
 
 (2) Starting/stopping a Timer that is already started/stopped is an
     error in both optimize and debug modes.
@@ -117,6 +135,56 @@ descriptions of items in the following list are provided below.
     There is now no BlockId held inside BoxId, and thus BoxId's ordering,
     scheme, which is used in some containers such as BoxContainer, no longer
     takes into account BlockId.
+
+(4) The syntax of SAMRAI's iterator classes have, for some time, not been self
+    consistent.  In addition they have not been particularly consistent with
+    accepted iterator syntax found in the STL.  We have modified all of the
+    libraries iterator so that they have the following methods/operators:
+    a)  Both pre and post increment operators.  The pre-increment operator
+        returns a reference to the incremented iterator.  The post-increment
+        operator returns the iterator as it existed prior to being incremented.
+    b)  Both == and != operators.
+    c)  The conventional dereference operator, *.
+    d)  The conventional member access operator, ->, which is equivalent to
+        (*itr)..
+    e)  An assignment operator.
+    f)  For bidirectional iterator, both pre and post decrement operators.
+
+    In addition, there are now the usual iterator/const_iterator typedefs for
+    the iterators defined in the classes on which the iterators operate.  An
+    example is BoxContainer::iterator.
+
+    Since the iterators now have syntax consistent with the STL it is possible
+    to use ths STL's algorithms with SAMRAI's iterators.
+
+    Modifications to client code will be necessary but we believe that the
+    future ease of use resulting from a consistent API along with the potential
+    for use of STL algorithms makes this an acceptable cost.
+
+(5) When SAMRAI was first developed, the STL was not a widely used and accepted
+    library.  As a result the SAMRAI library included its own container classes
+    which were effectively identical to those in the STL.  We have removed them
+    from the library as of 3.4.  These classes are vector and List.
+    Applications should now use vector and list from the STL.
+
+(6) hier::GridGeometry has been renamed hier::BaseGridGeometry and is now an
+    abstract class.  A new class, geom::GridGeometry, provides the concrete
+    equivalent of hier::GridGeometry.  The class, geom::CartesianGridGeometry
+    is derived from geom::GridGeometry.  The class, geom::SkeletonGridGeometry
+    has been removed as it is essentially equivalent to geom::GridGeometry.
+
+    If your application uses hier::GridGeometry you should just need to change
+    "hier" to "geom".
+
+    These changes were necessary because knowledge of how refine, coarsen, and
+    time interpolations operators are bound to different variables must be
+    bound to the GridGeometry.  Only a specific, concrete GridGeometry can
+    know which, if any, operator is valid for a given variable.  Thus, a pure
+    virtual method, buildOperators() has been introduced to
+    hier::BaseGridGeometry.  It is defined by geom::GridGeometry to build the
+    proper operators for that grid geometry context.  Class
+    geom::CartesianGridGeometry overrides the method to add the Cartesian
+    operators.
 
 =============================================================================
 =============================================================================

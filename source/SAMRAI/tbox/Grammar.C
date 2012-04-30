@@ -175,7 +175,7 @@
 //
 // File:	$URL$
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2011 Lawrence Livermore National Security, LLC
+// Copyright:	(c) 1997-2012 Lawrence Livermore National Security, LLC
 
 // Modified:	$LastChangedDate$
 // Description:	Yacc grammar description for the input database

@@ -4309,7 +4309,7 @@ fi
 dnl
 dnl  File:           $HeadURL$
 dnl  Package:        SAMRAI
-dnl  Copyright:      (c) 1997-2011 Lawrence Livermore National Security, LLC
+dnl  Copyright:      (c) 1997-2012 Lawrence Livermore National Security, LLC
 dnl  Date:           $Date$
 dnl  Revision:       $LastChangedRevision$
 dnl  Modified:       $LastChangedDate$ 
