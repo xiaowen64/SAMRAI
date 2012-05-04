@@ -31,31 +31,6 @@ PatchNodeDataNormOpsReal<TYPE>::~PatchNodeDataNormOpsReal()
 /*
  *************************************************************************
  *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-PatchNodeDataNormOpsReal<TYPE>::PatchNodeDataNormOpsReal(
-   const PatchNodeDataNormOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-PatchNodeDataNormOpsReal<TYPE>::operator = (
-   const PatchNodeDataNormOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * Compute the number of data entries on a patch in the given box.
  *
  *************************************************************************

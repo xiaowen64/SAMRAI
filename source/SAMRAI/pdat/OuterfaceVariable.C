@@ -52,32 +52,6 @@ int OuterfaceVariable<TYPE>::getDepth() const
    return factory->getDepth();
 }
 
-/*
- *************************************************************************
- *
- * These are private and should not be used.  They are defined here
- * because some template instantiation methods fail if some member
- * functions are left undefined.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-OuterfaceVariable<TYPE>::OuterfaceVariable(
-   const OuterfaceVariable<TYPE>& foo):
-   hier::Variable(NULL,
-                  boost::shared_ptr<hier::PatchDataFactory>())
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void OuterfaceVariable<TYPE>::operator = (
-   const OuterfaceVariable<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
 }
 }
 #endif

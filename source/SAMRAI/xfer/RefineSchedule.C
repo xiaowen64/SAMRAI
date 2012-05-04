@@ -123,6 +123,15 @@ RefineSchedule::RefineSchedule(
    d_coarse_priority_level_schedule(boost::make_shared<tbox::Schedule>()),
    d_fine_priority_level_schedule(boost::make_shared<tbox::Schedule>()),
    d_encon_level(boost::make_shared<hier::PatchLevel>(dst_level->getDim())),
+   d_coarse_interp_to_dst(dst_level->getDim()),
+   d_dst_to_coarse_interp(dst_level->getDim()),
+   d_encon_to_coarse_interp_encon(dst_level->getDim()),
+   d_coarse_interp_to_unfilled(dst_level->getDim()),
+   d_coarse_interp_encon_to_unfilled_encon(dst_level->getDim()),
+   d_coarse_interp_encon_to_encon(dst_level->getDim()),
+   d_dst_to_encon(dst_level->getDim()),
+   d_src_to_encon(dst_level->getDim()),
+   d_encon_to_src(dst_level->getDim()),
    d_max_fill_boxes(0),
    d_dst_level_fill_pattern(dst_level_fill_pattern),
    d_constructing_internal_schedule(false)
@@ -195,7 +204,7 @@ RefineSchedule::RefineSchedule(
     */
 
    BoxLevel fill_mapped_box_level(dim);
-   Connector dst_to_fill;
+   Connector dst_to_fill(dim);
    BoxNeighborhoodCollection dst_to_fill_on_src_proc;
    setDefaultFillBoxLevel(
       fill_mapped_box_level,
@@ -295,6 +304,15 @@ RefineSchedule::RefineSchedule(
    d_num_periodic_directions(0),
    d_periodic_shift(dst_level->getDim()),
    d_encon_level(boost::make_shared<hier::PatchLevel>(dst_level->getDim())),
+   d_coarse_interp_to_dst(dst_level->getDim()),
+   d_dst_to_coarse_interp(dst_level->getDim()),
+   d_encon_to_coarse_interp_encon(dst_level->getDim()),
+   d_coarse_interp_to_unfilled(dst_level->getDim()),
+   d_coarse_interp_encon_to_unfilled_encon(dst_level->getDim()),
+   d_coarse_interp_encon_to_encon(dst_level->getDim()),
+   d_dst_to_encon(dst_level->getDim()),
+   d_src_to_encon(dst_level->getDim()),
+   d_encon_to_src(dst_level->getDim()),
    d_max_fill_boxes(0),
    d_dst_level_fill_pattern(dst_level_fill_pattern),
    d_constructing_internal_schedule(false)
@@ -330,7 +348,7 @@ RefineSchedule::RefineSchedule(
    bool recursive_schedule = false;
    initializeDomainAndGhostInformation(recursive_schedule);
 
-   const Connector dummy_connector;
+   const Connector dummy_connector(dim);
 
    const Connector* dst_to_src = &dummy_connector;
    const Connector* src_to_dst = &dummy_connector;
@@ -365,7 +383,7 @@ RefineSchedule::RefineSchedule(
     */
 
    BoxLevel fill_mapped_box_level(dim);
-   Connector dst_to_fill;
+   Connector dst_to_fill(dim);
    BoxNeighborhoodCollection dst_to_fill_on_src_proc;
 
    setDefaultFillBoxLevel(
@@ -457,6 +475,15 @@ RefineSchedule::RefineSchedule(
    d_num_periodic_directions(0),
    d_periodic_shift(dst_level->getDim()),
    d_encon_level(boost::make_shared<hier::PatchLevel>(dst_level->getDim())),
+   d_coarse_interp_to_dst(dst_level->getDim()),
+   d_dst_to_coarse_interp(dst_level->getDim()),
+   d_encon_to_coarse_interp_encon(dst_level->getDim()),
+   d_coarse_interp_to_unfilled(dst_level->getDim()),
+   d_coarse_interp_encon_to_unfilled_encon(dst_level->getDim()),
+   d_coarse_interp_encon_to_encon(dst_level->getDim()),
+   d_dst_to_encon(dst_level->getDim()),
+   d_src_to_encon(dst_level->getDim()),
+   d_encon_to_src(dst_level->getDim()),
    d_max_fill_boxes(0),
    d_dst_level_fill_pattern(boost::make_shared<PatchLevelFullFillPattern>()),
    d_constructing_internal_schedule(true)
@@ -518,7 +545,7 @@ RefineSchedule::RefineSchedule(
     */
 
    BoxLevel fill_mapped_box_level(dim);
-   Connector dst_to_fill;
+   Connector dst_to_fill(dim);
    BoxNeighborhoodCollection dst_to_fill_on_src_proc;
    setDefaultFillBoxLevel(
       fill_mapped_box_level,
@@ -803,8 +830,8 @@ RefineSchedule::finishScheduleConstruction(
        * BoxLevel (the next recursion's src).
        */
 
-      hier::Connector coarse_interp_to_hiercoarse;
-      hier::Connector hiercoarse_to_coarse_interp;
+      hier::Connector coarse_interp_to_hiercoarse(dim);
+      hier::Connector hiercoarse_to_coarse_interp(dim);
 
       createCoarseInterpPatchLevel(
          d_coarse_interp_level,
@@ -966,8 +993,10 @@ RefineSchedule::createEnconFillSchedule(
       hiercoarse_mapped_box_level,
       encon_to_unfilled_encon);
 
-   hier::Connector coarse_interp_encon_to_hiercoarse;
-   hier::Connector hiercoarse_to_coarse_interp_encon;
+   hier::Connector coarse_interp_encon_to_hiercoarse(
+      coarse_interp_encon_box_level.getDim());
+   hier::Connector hiercoarse_to_coarse_interp_encon(
+      coarse_interp_encon_box_level.getDim());
 
    createCoarseInterpPatchLevel(
       d_coarse_interp_encon_level,
@@ -1074,7 +1103,7 @@ RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
          hierarchy->getDomainBoxLevel(),
          dst_to_unfilled.getConnectorWidth()));
 
-   Connector unfilled_to_sheared;
+   Connector unfilled_to_sheared(dim);
    BoxLevel sheared_mapped_box_level(dim);
 
    hier::BoxLevelConnectorUtils edge_utils;
@@ -1352,8 +1381,8 @@ RefineSchedule::createCoarseInterpPatchLevel(
 
    const Connector* dst_to_hiercoarse = NULL;
    const Connector* hiercoarse_to_dst = NULL;
-   Connector bridged_dst_to_hiercoarse;
-   Connector bridged_hiercoarse_to_dst;
+   Connector bridged_dst_to_hiercoarse(hiercoarse_mapped_box_level.getDim());
+   Connector bridged_hiercoarse_to_dst(hiercoarse_mapped_box_level.getDim());
 
    if (dst_is_coarse_interp_level) {
 
@@ -1648,7 +1677,8 @@ RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
 
 
    BoxLevel external(hiercoarse_to_coarse_interp.getBase().getDim());
-   Connector coarse_interp_to_external;
+   Connector coarse_interp_to_external(
+      hiercoarse_to_coarse_interp.getBase().getDim());
    hier::BoxLevelConnectorUtils edge_utils;
    edge_utils.computeExternalParts(
       external,
@@ -2995,7 +3025,7 @@ RefineSchedule::setDefaultFillBoxLevel(
       fill_gcw.max(constant_one_intvector);
    }
 
-   const Connector dummy_connector;
+   const Connector dummy_connector(dim);
    const Connector* dst_to_dst =
       dst_mapped_box_level.getPersistentOverlapConnectors().hasConnector(
          dst_mapped_box_level,
@@ -3312,7 +3342,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                *d_dst_level->getBoxLevel(),
                hier::IntVector::getOne(dim));
 
-      Connector encon_to_dst;
+      Connector encon_to_dst(dim);
       encon_to_dst.initializeToLocalTranspose(d_dst_to_encon);
 
       hier::OverlapConnectorAlgorithm oca;

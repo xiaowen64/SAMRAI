@@ -45,7 +45,7 @@ const int PatchDescriptor::INDEX_UNDEFINED = -1;
  */
 
 PatchDescriptor::PatchDescriptor():
-   d_min_gcw(tbox::Dimension::MAXIMUM_DIMENSION_VALUE)
+   d_min_gcw()
 {
    const int max_num_patch_data_components_allowed =
       tbox::SAMRAIManager::getMaxNumberPatchDataEntries();
@@ -55,8 +55,9 @@ PatchDescriptor::PatchDescriptor():
    for (int i = 0; i < max_num_patch_data_components_allowed; i++) {
       d_free_indices.push_back(i);
    }
-   for (unsigned short d = 0; d < d_min_gcw.size(); ++d) {
-      d_min_gcw[d] = IntVector::getZero(tbox::Dimension(static_cast<unsigned short>(d + 1)));
+   for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
+      d_min_gcw.push_back(
+         IntVector::getZero(tbox::Dimension(static_cast<unsigned short>(d + 1))));
    }
 }
 

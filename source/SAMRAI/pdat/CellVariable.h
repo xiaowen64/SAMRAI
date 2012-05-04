@@ -79,11 +79,14 @@ public:
    getDepth() const;
 
 private:
+   // Unimplemented copy constructor
    CellVariable(
-      const CellVariable<TYPE>&);          // not implemented
+      const CellVariable<TYPE>&);
+
+   // Unimplemented assignment operator
    void
    operator = (
-      const CellVariable<TYPE>&);               // not implemented
+      const CellVariable<TYPE>&);
 };
 
 }

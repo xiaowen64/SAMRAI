@@ -46,39 +46,13 @@ NodeData<TYPE>::NodeData(
    TBOX_ASSERT(ghosts.min() >= 0);
 
    const hier::Box node = NodeGeometry::toNodeBox(getGhostBox());
-   d_data.initializeArray(node, depth);
+   d_data.reset(new ArrayData<TYPE>(node, depth));
 
 }
 
 template<class TYPE>
 NodeData<TYPE>::~NodeData()
 {
-}
-
-/*
- *************************************************************************
- *
- * The following are private and cannot be used, but they are defined
- * here for compilers that require that every template declaration have
- * a definition (a stupid requirement, if you ask me).
- *
- *************************************************************************
- */
-
-template<class TYPE>
-NodeData<TYPE>::NodeData(
-   const NodeData<TYPE>& foo):
-   hier::PatchData(foo.getBox(), foo.getGhostCellWidth())
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-NodeData<TYPE>::operator = (
-   const NodeData<TYPE>& foo)
-{
-   NULL_USE(foo);
 }
 
 template<class TYPE>
@@ -92,14 +66,14 @@ template<class TYPE>
 ArrayData<TYPE>&
 NodeData<TYPE>::getArrayData()
 {
-   return d_data;
+   return *d_data;
 }
 
 template<class TYPE>
 const ArrayData<TYPE>&
 NodeData<TYPE>::getArrayData() const
 {
-   return d_data;
+   return *d_data;
 }
 
 template<class TYPE>
@@ -109,7 +83,7 @@ NodeData<TYPE>::getPointer(
 {
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
-   return d_data.getPointer(depth);
+   return d_data->getPointer(depth);
 }
 
 template<class TYPE>
@@ -119,7 +93,7 @@ NodeData<TYPE>::getPointer(
 {
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
-   return d_data.getPointer(depth);
+   return d_data->getPointer(depth);
 }
 
 template<class TYPE>
@@ -131,7 +105,7 @@ NodeData<TYPE>::operator () (
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
-   return d_data(i, depth);
+   return (*d_data)(i, depth);
 }
 
 template<class TYPE>
@@ -143,7 +117,7 @@ NodeData<TYPE>::operator () (
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
-   return d_data(i, depth);
+   return (*d_data)(i, depth);
 }
 
 /*
@@ -167,9 +141,9 @@ NodeData<TYPE>::copy(
    if (t_src == NULL) {
       src.copy2(*this);
    } else {
-      const hier::Box box = d_data.getBox() * t_src->d_data.getBox();
+      const hier::Box box = d_data->getBox() * t_src->d_data->getBox();
       if (!box.empty()) {
-         d_data.copy(t_src->d_data, box);
+         d_data->copy(*(t_src->d_data), box);
       }
    }
 }
@@ -186,9 +160,9 @@ NodeData<TYPE>::copy2(
 
    TBOX_ASSERT(t_dst != NULL);
 
-   const hier::Box box = d_data.getBox() * t_dst->d_data.getBox();
+   const hier::Box box = d_data->getBox() * t_dst->d_data->getBox();
    if (!box.empty()) {
-      t_dst->d_data.copy(d_data, box);
+      t_dst->d_data->copy(*d_data, box);
    }
 }
 
@@ -219,7 +193,7 @@ NodeData<TYPE>::copy(
    } else {
       if (t_overlap->getTransformation().getRotation() ==
           hier::Transformation::NO_ROTATE) {
-         d_data.copy(t_src->d_data,
+         d_data->copy(*(t_src->d_data),
             t_overlap->getDestinationBoxContainer(),
             t_overlap->getTransformation());
       } else {
@@ -246,7 +220,7 @@ NodeData<TYPE>::copy2(
 
    if (t_overlap->getTransformation().getRotation() ==
        hier::Transformation::NO_ROTATE) {
-      t_dst->d_data.copy(d_data,
+      t_dst->d_data->copy(*d_data,
          t_overlap->getDestinationBoxContainer(),
          t_overlap->getTransformation());
    } else {
@@ -262,7 +236,7 @@ NodeData<TYPE>::copyOnBox(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS3(*this, src, box);
    const hier::Box node_box = NodeGeometry::toNodeBox(box);
-   d_data.copy(src.getArrayData(), node_box);
+   d_data->copy(src.getArrayData(), node_box);
 }
 
 template<class TYPE>
@@ -316,7 +290,7 @@ NodeData<TYPE>::copyWithRotation(
             NodeGeometry::transform(src_index, back_trans);
 
             for (int d = 0; d < depth; d++) {
-               d_data(dst_index, d) = src.d_data(src_index, d);
+               (*d_data)(dst_index, d) = (*(src.d_data))(src_index, d);
             }
          }
       }
@@ -341,9 +315,9 @@ NodeData<TYPE>::copyDepth(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
 
-   const hier::Box box = d_data.getBox() * src.d_data.getBox();
+   const hier::Box box = d_data->getBox() * src.d_data->getBox();
    if (!box.empty()) {
-      d_data.copyDepth(dst_depth, src.d_data, src_depth, box);
+      d_data->copyDepth(dst_depth, *(src.d_data), src_depth, box);
    }
 }
 
@@ -373,7 +347,8 @@ NodeData<TYPE>::getDataStreamSize(
 
    TBOX_ASSERT(t_overlap != NULL);
 
-   return d_data.getDataStreamSize(t_overlap->getDestinationBoxContainer(),
+   return d_data->getDataStreamSize(
+      t_overlap->getDestinationBoxContainer(),
       t_overlap->getSourceOffset());
 }
 
@@ -399,7 +374,7 @@ NodeData<TYPE>::packStream(
 
    if (t_overlap->getTransformation().getRotation() ==
        hier::Transformation::NO_ROTATE) {
-      d_data.packStream(stream,
+      d_data->packStream(stream,
          t_overlap->getDestinationBoxContainer(),
          t_overlap->getTransformation());
    } else {
@@ -461,7 +436,7 @@ NodeData<TYPE>::packWithRotation(
                NodeIndex src_index(*ci, hier::IntVector::getZero(dim));
                NodeGeometry::transform(src_index, back_trans);
 
-               buffer[i] = d_data(src_index, d);
+               buffer[i] = (*d_data)(src_index, d);
                i++;
             }
          }
@@ -482,7 +457,7 @@ NodeData<TYPE>::unpackStream(
 
    TBOX_ASSERT(t_overlap != NULL);
 
-   d_data.unpackStream(stream,
+   d_data->unpackStream(stream,
       t_overlap->getDestinationBoxContainer(),
       t_overlap->getSourceOffset());
 }
@@ -495,7 +470,7 @@ NodeData<TYPE>::fill(
 {
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
-   d_data.fill(t, d);
+   d_data->fill(t, d);
 }
 
 template<class TYPE>
@@ -508,7 +483,7 @@ NodeData<TYPE>::fill(
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
-   d_data.fill(t, NodeGeometry::toNodeBox(box), d);
+   d_data->fill(t, NodeGeometry::toNodeBox(box), d);
 }
 
 template<class TYPE>
@@ -516,7 +491,7 @@ void
 NodeData<TYPE>::fillAll(
    const TYPE& t)
 {
-   d_data.fillAll(t);
+   d_data->fillAll(t);
 }
 
 template<class TYPE>
@@ -526,7 +501,7 @@ NodeData<TYPE>::fillAll(
    const hier::Box& box)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
-   d_data.fillAll(t, NodeGeometry::toNodeBox(box));
+   d_data->fillAll(t, NodeGeometry::toNodeBox(box));
 }
 
 /*
@@ -591,7 +566,7 @@ NodeData<TYPE>::print(
    NodeIterator iend(box, false);
    for (NodeIterator i(box, true); i != iend; ++i) {
       os << "array" << *i << " = "
-         << d_data(*i, depth) << std::endl << std::flush;
+         << (*d_data)(*i, depth) << std::endl << std::flush;
    }
 }
 
@@ -620,7 +595,7 @@ NodeData<TYPE>::getSpecializedFromDatabase(
 
    d_depth = database->getInteger("d_depth");
 
-   d_data.getFromDatabase(database->getDatabase("d_data"));
+   d_data->getFromDatabase(database->getDatabase("d_data"));
 }
 
 /*
@@ -644,7 +619,7 @@ NodeData<TYPE>::putSpecializedToDatabase(
 
    database->putInteger("d_depth", d_depth);
 
-   d_data.putUnregisteredToDatabase(database->putDatabase("d_data"));
+   d_data->putUnregisteredToDatabase(database->putDatabase("d_data"));
 }
 
 }

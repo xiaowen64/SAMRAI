@@ -318,10 +318,10 @@ private:
    //
 
    /// center of the sphere or revolution origin
-   double d_center[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_center[SAMRAI::MAX_DIM_VAL];
 
    /// revolution axis
-   double d_axis[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_axis[SAMRAI::MAX_DIM_VAL];
 
    /// revolution radius and pos on axis of radius
    tbox::Array<tbox::Array<double> > d_rev_rad;
@@ -346,7 +346,7 @@ private:
    //
    int d_advection_test;      // run the linear advection unit test
    int d_advection_vel_type;  // type of velocity to use
-   double d_advection_velocity[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_advection_velocity[SAMRAI::MAX_DIM_VAL];
 
    //
    // sizing of zonal, flux, and nodal ghosts

@@ -99,7 +99,7 @@ public:
 private:
    const tbox::Dimension d_dim;
 
-   bool d_neumann_location[2 * tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   bool d_neumann_location[2 * SAMRAI::MAX_DIM_VAL];
    double d_linear_coef;
    SinusoidFcn d_exact;
 

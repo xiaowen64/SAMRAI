@@ -41,8 +41,7 @@ namespace mesh {
 
 MultiblockGriddingTagger::MultiblockGriddingTagger(
    const tbox::Dimension& dim):
-   xfer::RefinePatchStrategy(dim),
-   d_dim(dim)
+   xfer::RefinePatchStrategy(dim)
 {
 }
 

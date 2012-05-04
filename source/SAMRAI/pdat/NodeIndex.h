@@ -279,9 +279,8 @@ private:
    void
    setOffsets();
 
-   static std::vector<hier::IntVector> s_offsets[tbox::Dimension::
-                                                 MAXIMUM_DIMENSION_VALUE];
-   static bool s_offsets_are_set[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static std::vector<hier::IntVector> s_offsets[SAMRAI::MAX_DIM_VAL];
+   static bool s_offsets_are_set[SAMRAI::MAX_DIM_VAL];
 };
 
 }

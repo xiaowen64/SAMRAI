@@ -329,7 +329,7 @@ private:
    /*
     * Convection-diffusion equation constant vectors
     */
-   double d_convection_coeff[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_convection_coeff[SAMRAI::MAX_DIM_VAL];
    double d_diffusion_coeff;
    double d_source_coeff;
 
@@ -361,7 +361,7 @@ private:
     * Input for SPHERE problem
     */
    double d_radius;
-   double d_center[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_center[SAMRAI::MAX_DIM_VAL];
    double d_val_inside[NEQU];
    double d_val_outside[NEQU];
 

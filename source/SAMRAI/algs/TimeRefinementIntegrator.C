@@ -224,9 +224,6 @@ TimeRefinementIntegrator::~TimeRefinementIntegrator()
 double
 TimeRefinementIntegrator::initializeHierarchy()
 {
-
-   TBOX_DIM_ASSERT_CHECK_ARGS1(*d_patch_hierarchy);
-
    if (d_barrier_and_time) {
       t_initialize_hier->barrierAndStart();
    }

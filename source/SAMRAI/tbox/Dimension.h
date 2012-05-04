@@ -73,8 +73,7 @@ public:
     *
     * When dimensional assertion checking is active an assert is
     * thrown when dim < 1 or dim > getMaxDimension() value specified when
-    * the library is configured (defaults to 3).  dim also cannot be
-    * the getInvalidDimension() (the largest unsigned short value).
+    * the library is configured (defaults to 3).
     *
     */
    explicit Dimension(
@@ -89,25 +88,13 @@ public:
    /**
     * Returns true if Dimension is valid.
     *
-    * A valid Dimension != 0; != getInvalidDimension(),
-    * and <= getMaxDimension().
+    * A valid Dimension != 0, and <= getMaxDimension().
     *
     */
    bool
    isValid() const
    {
-      return (d_dim != 0) && (d_dim <= Dimension::getMaxDimValue());
-   }
-
-   /**
-    * Returns true if Dimension is initialized (not set
-    * to getInvalidDimension()).
-    *
-    */
-   bool
-   isInitialized() const
-   {
-      return d_dim != Dimension::getInvalidDimValue();
+      return (d_dim != 0) && (d_dim <= SAMRAI::MAX_DIM_VAL);
    }
 
    /**
@@ -117,8 +104,6 @@ public:
    operator == (
       const Dimension& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(*this);
-      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
       return d_dim == rhs.d_dim;
    }
 
@@ -129,8 +114,6 @@ public:
    operator != (
       const Dimension& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(*this);
-      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
       return d_dim != rhs.d_dim;
    }
 
@@ -141,8 +124,6 @@ public:
    operator > (
       const Dimension& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(*this);
-      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
       return d_dim > rhs.d_dim;
    }
 
@@ -153,8 +134,6 @@ public:
    operator >= (
       const Dimension& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(*this);
-      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
       return d_dim >= rhs.d_dim;
    }
 
@@ -165,8 +144,6 @@ public:
    operator < (
       const Dimension& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(*this);
-      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
       return d_dim < rhs.d_dim;
    }
 
@@ -177,8 +154,6 @@ public:
    operator <= (
       const Dimension& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(*this);
-      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
       return d_dim <= rhs.d_dim;
    }
 
@@ -198,26 +173,6 @@ public:
 
    /**
     * Returns the maximum dimension for the currently compiled library
-    * as an unsigned short.
-    *
-    * When the SAMRAI library is compiled a maximum dimension allowed
-    * is specified (the default is 3).  This method is typically used
-    * to allocate arrays.
-    *
-    *  double array[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-    *
-    * The value must be >= 1 and < numeric_limits<unsigned short>::max()
-    */
-   static const unsigned short MAXIMUM_DIMENSION_VALUE =
-      SAMRAI_MAXIMUM_DIMENSION;
-   static unsigned short
-   getMaxDimValue()
-   {
-      return SAMRAI_MAXIMUM_DIMENSION;
-   }
-
-   /**
-    * Returns the maximum dimension for the currently compiled library
     * as a Dimension object.
     *
     * When the SAMRAI library is compiled a maximum dimension allowed
@@ -228,48 +183,9 @@ public:
    static const Dimension&
    getMaxDimension()
    {
-      static Dimension dim(SAMRAI_MAXIMUM_DIMENSION);
+      static Dimension dim(SAMRAI::MAX_DIM_VAL);
       return dim;
    }
-
-   /**
-    * An invalid dimension value as a Dimension object.
-    */
-   static const Dimension&
-   getInvalidDimension()
-   {
-      static Dimension invalidDim(Dimension::getInvalidDimValue());
-      return invalidDim;
-   }
-
-   /**
-    * An invalid dimension value as an unsigned short.
-    *
-    * Currently this value is numeric_limits<unsigned short>::max() but
-    * use this symbol as it is more readable.
-    *
-    */
-   static unsigned short
-   getInvalidDimValue()
-   {
-      static unsigned short invalid =
-         std::numeric_limits<unsigned short>::max();
-      return invalid;
-   }
-
-   /*
-    * Classes that are friends of dimension in order to access th
-    * private ctor which builds invalid dimensions.
-    *
-    * This is obviously not a very good design but so far
-    * a better solution has been elusive.   Allowing
-    * any code to create invalid dimensions seemed too
-    * error prone.
-    */
-   template<class>
-   friend class pdat::ArrayData;
-   friend class hier::IntVector;
-   friend class DatabaseBox;
 
    /**
     * Output operator for debugging and error messages.
@@ -280,13 +196,8 @@ public:
       const Dimension& rhs);
 
 private:
-   /**
-    * @brief Create an invalid dimension object.
-    *
-    * This ctor is private to prevent a default constructor call.
-    * Currently Dimension objects must always created with a dimension
-    * specified for normal code.  Several special classes are allowed
-    * and are declared to be friends to access this ctor.
+   /*
+    * Unimplemented default constructor.
     */
    Dimension();
 
@@ -304,8 +215,6 @@ private:
    }
 
    unsigned short d_dim;
-
-   static Dimension s_maximum_dimension;
 };
 
 }

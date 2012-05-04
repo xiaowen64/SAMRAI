@@ -52,40 +52,6 @@ BoxLevel::s_initialize_finalize_handler(
    BoxLevel::finalizeCallback,
    tbox::StartupShutdownManager::priorityTimers);
 
-BoxLevel::BoxLevel():
-   d_mpi(tbox::SAMRAI_MPI::commNull),
-   d_ratio(tbox::Dimension::getInvalidDimension(), 0),
-
-   d_local_number_of_cells(0),
-   d_global_number_of_cells(-1),
-   d_local_number_of_boxes(0),
-   d_global_number_of_boxes(-1),
-
-   d_max_number_of_boxes(-1),
-   d_min_number_of_boxes(-1),
-   d_max_number_of_cells(-1),
-   d_min_number_of_cells(-1),
-
-   d_local_max_box_size(0),
-   d_global_max_box_size(0),
-   d_local_min_box_size(0),
-   d_global_min_box_size(0),
-
-   d_local_bounding_box(0),
-   d_local_bounding_box_up_to_date(false),
-   d_global_bounding_box(0),
-   d_global_data_up_to_date(false),
-
-   d_parallel_state(DISTRIBUTED),
-   d_globalized_version(NULL),
-   d_persistent_overlap_connectors(NULL),
-   d_handle(),
-   d_grid_geometry()
-{
-   // This ctor should never be invoked.
-   TBOX_ERROR("Somehow, we entered code that was never meant to be used.");
-}
-
 BoxLevel::BoxLevel(
    const tbox::Dimension& dim):
 
@@ -102,14 +68,14 @@ BoxLevel::BoxLevel(
    d_max_number_of_cells(-1),
    d_min_number_of_cells(-1),
 
-   d_local_max_box_size(0),
-   d_global_max_box_size(0),
-   d_local_min_box_size(0),
-   d_global_min_box_size(0),
+   d_local_max_box_size(),
+   d_global_max_box_size(),
+   d_local_min_box_size(),
+   d_global_min_box_size(),
 
-   d_local_bounding_box(0),
+   d_local_bounding_box(),
    d_local_bounding_box_up_to_date(false),
-   d_global_bounding_box(0),
+   d_global_bounding_box(),
    d_global_data_up_to_date(false),
 
    d_parallel_state(DISTRIBUTED),
@@ -174,14 +140,14 @@ BoxLevel::BoxLevel(
    d_max_number_of_cells(-1),
    d_min_number_of_cells(-1),
 
-   d_local_max_box_size(0),
-   d_global_max_box_size(0),
-   d_local_min_box_size(0),
-   d_global_min_box_size(0),
+   d_local_max_box_size(),
+   d_global_max_box_size(),
+   d_local_min_box_size(),
+   d_global_min_box_size(),
 
-   d_local_bounding_box(0),
+   d_local_bounding_box(),
    d_local_bounding_box_up_to_date(false),
-   d_global_bounding_box(0),
+   d_global_bounding_box(),
    d_global_data_up_to_date(false),
 
    d_parallel_state(DISTRIBUTED),

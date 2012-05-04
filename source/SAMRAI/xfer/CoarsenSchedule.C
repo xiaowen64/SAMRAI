@@ -104,6 +104,8 @@ CoarsenSchedule::CoarsenSchedule(
    d_coarsen_items((const CoarsenClasses::Data **)NULL),
    d_crse_level(crse_level),
    d_fine_level(fine_level),
+   d_temp_to_coarse(crse_level->getDim()),
+   d_coarse_to_temp(crse_level->getDim()),
    d_coarsen_patch_strategy(patch_strategy),
    d_transaction_factory(transaction_factory),
    d_ratio_between_levels(crse_level->getDim()),

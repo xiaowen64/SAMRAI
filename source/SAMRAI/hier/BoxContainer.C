@@ -649,24 +649,20 @@ Box
 BoxContainer::getBoundingBox() const
 {
    if (isEmpty()) {
-      TBOX_WARNING("Bounding box container is empty");
-      const tbox::Dimension dim(tbox::Dimension::getInvalidDimension());
-      Box empty(dim);
-      return empty;
-   } else {
-      const_iterator i = begin();
-      Box bbox(*i);
-      const BlockId& block_id = bbox.getBlockId();
-      ++i;
-      for ( ; i != end(); ++i) {
-         if (i->getBlockId() == block_id) {
-            bbox += *i;
-         } else {
-            TBOX_ERROR("Attempted to find bounding box for BoxContainer with boxes from different blocks");
-         }
-      }
-      return bbox;
+      TBOX_ERROR("Bounding box container is empty");
    }
+   const_iterator i = begin();
+   Box bbox(*i);
+   const BlockId& block_id = bbox.getBlockId();
+   ++i;
+   for ( ; i != end(); ++i) {
+      if (i->getBlockId() == block_id) {
+         bbox += *i;
+      } else {
+         TBOX_ERROR("Attempted to find bounding box for BoxContainer with boxes from different blocks");
+      }
+   }
+   return bbox;
 }
 
 
@@ -675,44 +671,41 @@ BoxContainer::getBoundingBox(
    const BlockId& block_id) const
 {
    if (isEmpty()) {
-      TBOX_WARNING("Bounding box container is empty");
-      const tbox::Dimension dim(tbox::Dimension::getInvalidDimension());
-      Box empty(dim);
-      return empty;
-   } else {
-      const tbox::Dimension& dim = d_list.front().getDim();
-      Box bbox(dim);
+      TBOX_ERROR("Bounding box container is empty");
+   }
 
-      /*
-       * First find the first box with the given BlockId
-       */ 
-      const_iterator i = begin();
+   const tbox::Dimension& dim = d_list.front().getDim();
+   Box bbox(dim);
+
+   /*
+    * First find the first box with the given BlockId
+    */ 
+   const_iterator i = begin();
+   for ( ; i != end(); ++i) {
+      if (i->getBlockId() == block_id) {
+         bbox = *i;
+         break;
+      }
+   }
+
+   /*
+    * If no boxes were found with the desired BlockId, then the returned
+    * box will be empty.
+    */
+   if (i == end()) {
+      TBOX_WARNING("Container has no boxes with the given BlockId");
+   } else {
+
+      ++i;
+
       for ( ; i != end(); ++i) {
          if (i->getBlockId() == block_id) {
-            bbox = *i;
-            break;
+            bbox += *i;
          }
       }
-
-      /*
-       * If no boxes were found with the desired BlockId, then the returned
-       * box will be empty.
-       */
-      if (i == end()) {
-         TBOX_WARNING("Container has no boxes with the given BlockId");
-      } else {
-
-         ++i;
-
-         for ( ; i != end(); ++i) {
-            if (i->getBlockId() == block_id) {
-               bbox += *i;
-            }
-         }
-      }
-
-      return bbox;
    }
+
+   return bbox;
 }
 
 /*

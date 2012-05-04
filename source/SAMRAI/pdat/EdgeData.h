@@ -463,11 +463,14 @@ private:
     */
    static const int PDAT_EDGEDATA_VERSION;
 
+   // Unimplemented copy constructor
    EdgeData(
-      const EdgeData<TYPE>&);           // not implemented
+      const EdgeData<TYPE>&);
+
+   // Unimplemented assignment operator
    void
    operator = (
-      const EdgeData<TYPE>&);                           // not implemented
+      const EdgeData<TYPE>&);
 
    void
    copyWithRotation(
@@ -480,7 +483,8 @@ private:
       const EdgeOverlap& overlap) const;
 
    int d_depth;
-   ArrayData<TYPE> d_data[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+
+   boost::shared_ptr<ArrayData<TYPE> > d_data[SAMRAI::MAX_DIM_VAL];
 
 };
 

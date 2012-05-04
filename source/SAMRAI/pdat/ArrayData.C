@@ -62,16 +62,17 @@ ArrayData<TYPE>::getSizeOfData(
 /*
  *************************************************************************
  *
- * Default constructor creates an object that absolutely should
- * not be used until it is initialized using initializeArray().
+ * Default constructor creates an empty ArrayData object.
  *
  *************************************************************************
  */
 template<class TYPE>
-ArrayData<TYPE>::ArrayData():
-   d_dim(tbox::Dimension::getInvalidDimension()),
+ArrayData<TYPE>::ArrayData(
+   const tbox::Dimension& dim):
+   d_dim(dim),
    d_depth(0),
    d_offset(0),
+   d_box(hier::Box::getEmptyBox(dim)),
    d_array(0)
 {
 }
@@ -106,88 +107,6 @@ ArrayData<TYPE>::ArrayData(
 template<class TYPE>
 ArrayData<TYPE>::~ArrayData()
 {
-}
-
-/*
- *************************************************************************
- *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-ArrayData<TYPE>::ArrayData(
-   const ArrayData<TYPE>& foo):
-   d_dim(foo.d_dim),
-   d_depth(0),
-   d_offset(0),
-   d_box(d_dim),
-   d_array(0)
-{
-   /*
-    * Throw an assertion if this method is used.
-    */
-   TBOX_ASSERT(true);
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-ArrayData<TYPE>::operator = (
-   const ArrayData<TYPE>& foo)
-{
-   /*
-    * Throw an assertion if this method is used.
-    */
-   TBOX_ASSERT(true);
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
- * Initialize the array using the specified box, depth.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-void
-ArrayData<TYPE>::initializeArray(
-   const hier::Box& box,
-   int depth)
-{
-   TBOX_ASSERT(depth > 0);
-
-   d_dim = box.getDim();
-   d_depth = depth;
-   d_offset = box.size();
-   d_box = box;
-
-   /*
-    * If array is a different size then create a new one, otherwise
-    * just use existing array; there is no reason to
-    * deallocate/allocate if existing is the correct size.
-    *
-    * Also note that the array is not initialized to anything.  This is
-    * to avoid the performance hit of initializing but is potentially
-    * bad.  In debug mode will explicitly initialize the array.
-    *
-    * Performance timing of some sample applications (LinAdv) showed
-    * the impact of initialization was significant.  This is probably
-    * not the safest programming practice.
-    */
-   if (d_array.size() != depth * d_offset) {
-      d_array = tbox::Array<TYPE>(depth * d_offset,
-                                  tbox::Array<TYPE>::UNINITIALIZED);
-   }
-
-#ifdef DEBUG_INITIALIZE_UNDEFINED
-   undefineData();
-#endif
 }
 
 template<class TYPE>
@@ -974,9 +893,9 @@ ArrayData<TYPE>::fill(
 
    if (!ispace.empty()) {
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int dst_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < d_dim.getValue(); i++) {
          box_w[i] = ispace.numberCells(i);
          dst_w[i] = d_box.numberCells(i);
@@ -987,7 +906,7 @@ ArrayData<TYPE>::fill(
 
       int dst_counter = d_box.offset(ispace.lower()) + d * d_offset;
 
-      int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int dst_b[SAMRAI::MAX_DIM_VAL];
       for (int nd = 0; nd < d_dim.getValue(); nd++) {
          dst_b[nd] = dst_counter;
       }
@@ -1107,16 +1026,6 @@ const tbox::Dimension&
 ArrayData<TYPE>::getDim() const
 {
    return d_dim;
-}
-
-template<class TYPE>
-void
-ArrayData<TYPE>::invalidateArray(
-   const tbox::Dimension& dim) {
-   d_dim = dim;
-   d_depth = 0;
-   d_offset = 0;
-   d_box = hier::Box::getEmptyBox(dim);
 }
 
 template<class TYPE>

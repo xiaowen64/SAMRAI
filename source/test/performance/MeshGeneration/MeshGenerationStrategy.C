@@ -67,7 +67,7 @@ void MeshGenerationStrategy::setTagsByShrinkingLevel(
 
 
    hier::BoxLevel tagfootprint(dim);
-   hier::Connector Ltag_to_tagfootprint;
+   hier::Connector Ltag_to_tagfootprint(dim);
    const hier::Connector &Ltag_to_Ltag =
       Ltag.getPersistentOverlapConnectors().findOrCreateConnector(
          Ltag,

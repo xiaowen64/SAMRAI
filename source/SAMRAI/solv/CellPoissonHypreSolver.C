@@ -258,7 +258,7 @@ namespace SAMRAI {
 namespace solv {
 
 boost::shared_ptr<pdat::OutersideVariable<double> >
-CellPoissonHypreSolver::s_Ak0_var[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+CellPoissonHypreSolver::s_Ak0_var[SAMRAI::MAX_DIM_VAL];
 
 tbox::StartupShutdownManager::Handler CellPoissonHypreSolver::s_finalize_handler(
    0,
@@ -456,7 +456,7 @@ CellPoissonHypreSolver::allocateHypreData()
    hier::IntVector periodic_shift =
       grid_geometry->getPeriodicShift(ratio);
 
-   int periodic_flag[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   int periodic_flag[SAMRAI::MAX_DIM_VAL];
    int d;
    bool is_periodic = false;
    for (d = 0; d < d_dim.getValue(); ++d) {
@@ -1518,7 +1518,7 @@ CellPoissonHypreSolver::adjustBoundaryEntries(
    const hier::Box bccoef_box,
    pdat::ArrayData<double>& Ak0_data,
    const hier::BoundaryBox& trimmed_boundary_box,
-   const double h[tbox::Dimension::MAXIMUM_DIMENSION_VALUE])
+   const double h[SAMRAI::MAX_DIM_VAL])
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS8(d_dim, diagonal, off_diagonal, patch_box,
       acoef_data, bcoef_data,
@@ -1583,7 +1583,7 @@ CellPoissonHypreSolver::adjustBoundaryEntries(
 void
 CellPoissonHypreSolver::finalizeCallback()
 {
-   for (int d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
+   for (int d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       s_Ak0_var[d].reset();
    }
 }

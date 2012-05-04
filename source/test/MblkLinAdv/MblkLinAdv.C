@@ -457,7 +457,7 @@ void MblkLinAdv::initializeDataOnPatch(
    /*
     * Set the dx in the operators
     */
-   double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double dx[SAMRAI::MAX_DIM_VAL];
    d_mblk_geometry->getDx(level_number, dx);
    d_dx_set = true;
 

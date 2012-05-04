@@ -52,32 +52,6 @@ int OuternodeVariable<TYPE>::getDepth() const
    return factory->getDepth();
 }
 
-/*
- *************************************************************************
- *
- * These are private and should not be used.  They are defined here
- * because some template instantiation methods fail if some member
- * functions are left undefined.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-OuternodeVariable<TYPE>::OuternodeVariable(
-   const OuternodeVariable<TYPE>& foo):
-   hier::Variable(NULL,
-                  boost::shared_ptr<hier::PatchDataFactory>())
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void OuternodeVariable<TYPE>::operator = (
-   const OuternodeVariable<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
 }
 }
 #endif

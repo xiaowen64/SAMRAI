@@ -37,7 +37,8 @@ namespace hier {
  * @verbatim
  *  BoxContainer mapped_boxes;
  *  // fill in mapped_boxes
- *  for ( RealBoxConstIterator ni(mapped_boxes); ni.isValid(); ++ni ) {
+ *  for ( RealBoxConstIterator ni(mapped_boxes.realBegin());
+ *        ni != mapped_boxes.realEnd()(); ++ni ) {
  *    TBOX_ASSERT( ! ni->isPeriodicImage() );
  *  }
  * @endverbatim

@@ -25,7 +25,6 @@ BoundaryBox::BoundaryBox(
    d_bdry_type(-1),
    d_location_index(-1)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
 }
 
 BoundaryBox::BoundaryBox(

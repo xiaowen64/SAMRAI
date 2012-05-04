@@ -506,14 +506,18 @@ private:
     */
    static const int PDAT_OUTERFACEDATA_VERSION;
 
+   // Unimplemented copy constructor
    OuterfaceData(
-      const OuterfaceData<TYPE>&);            // not implemented
+      const OuterfaceData<TYPE>&);
+
+   // Unimplemented assignment operator
    void
    operator = (
-      const OuterfaceData<TYPE>&);                // not implemented
+      const OuterfaceData<TYPE>&);
 
    int d_depth;
-   ArrayData<TYPE> d_data[tbox::Dimension::MAXIMUM_DIMENSION_VALUE][2];
+
+   boost::shared_ptr<ArrayData<TYPE> > d_data [SAMRAI::MAX_DIM_VAL][2];
 };
 
 }

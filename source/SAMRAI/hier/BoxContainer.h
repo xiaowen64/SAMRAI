@@ -933,6 +933,7 @@ public:
    /*!
     * @brief  Returns the bounding box for all the boxes in the container.
     *
+    * Requires that the container is not empty.
     * A run-time error will occur if Boxes in this container have different
     * BlockIds.
     */
@@ -942,6 +943,10 @@ public:
    /*!
     * @brief  Returns the bounding box for all the boxes in the container
     *         having the given BlockId.
+    *
+    * Requires that the container is not empty.
+    *
+    * @param[in] block_id
     */
    Box
    getBoundingBox(

@@ -316,20 +316,18 @@ private:
    /*
     * Timers are static to keep the objects light-weight.
     */
-   static boost::shared_ptr<tbox::Timer> t_build_tree[tbox::Dimension::
-                                                      MAXIMUM_DIMENSION_VALUE];
-   static boost::shared_ptr<tbox::Timer> t_search[tbox::Dimension::
-                                                  MAXIMUM_DIMENSION_VALUE];
+   static boost::shared_ptr<tbox::Timer> t_build_tree[SAMRAI::MAX_DIM_VAL];
+   static boost::shared_ptr<tbox::Timer> t_search[SAMRAI::MAX_DIM_VAL];
 
-   static unsigned int s_num_build[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static unsigned int s_num_generate[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static unsigned int s_num_duplicate[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static unsigned int s_num_search[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static unsigned int s_num_sorted_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static unsigned int s_num_found_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static unsigned int s_max_sorted_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static unsigned int s_max_found_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static unsigned int s_max_lin_search[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static unsigned int s_num_build[SAMRAI::MAX_DIM_VAL];
+   static unsigned int s_num_generate[SAMRAI::MAX_DIM_VAL];
+   static unsigned int s_num_duplicate[SAMRAI::MAX_DIM_VAL];
+   static unsigned int s_num_search[SAMRAI::MAX_DIM_VAL];
+   static unsigned int s_num_sorted_box[SAMRAI::MAX_DIM_VAL];
+   static unsigned int s_num_found_box[SAMRAI::MAX_DIM_VAL];
+   static unsigned int s_max_sorted_box[SAMRAI::MAX_DIM_VAL];
+   static unsigned int s_max_found_box[SAMRAI::MAX_DIM_VAL];
+   static unsigned int s_max_lin_search[SAMRAI::MAX_DIM_VAL];
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

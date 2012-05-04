@@ -48,13 +48,13 @@ namespace SAMRAI {
 namespace solv {
 
 boost::shared_ptr<pdat::CellVariable<double> >
-CellPoissonFACOps::s_cell_scratch_var[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+CellPoissonFACOps::s_cell_scratch_var[SAMRAI::MAX_DIM_VAL];
 
 boost::shared_ptr<pdat::SideVariable<double> >
-CellPoissonFACOps::s_flux_scratch_var[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+CellPoissonFACOps::s_flux_scratch_var[SAMRAI::MAX_DIM_VAL];
 
 boost::shared_ptr<pdat::OutersideVariable<double> >
-CellPoissonFACOps::s_oflux_scratch_var[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+CellPoissonFACOps::s_oflux_scratch_var[SAMRAI::MAX_DIM_VAL];
 
 tbox::StartupShutdownManager::Handler
 CellPoissonFACOps::s_finalize_handler(
@@ -2836,7 +2836,7 @@ CellPoissonFACOps::xeqScheduleGhostFillNoCoarse(
 void
 CellPoissonFACOps::finalizeCallback()
 {
-   for (int d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
+   for (int d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       s_cell_scratch_var[d].reset();
       s_flux_scratch_var[d].reset();
       s_oflux_scratch_var[d].reset();

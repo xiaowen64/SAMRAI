@@ -522,7 +522,7 @@ private:
    int d_diff_id;
    int d_flag_id;
    int d_neuf_id;
-   int d_bdry_types[2 * tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   int d_bdry_types[2 * SAMRAI::MAX_DIM_VAL];
 
    solv::CellPoissonFACSolver d_FAC_solver;
    bool d_FAC_solver_allocated;

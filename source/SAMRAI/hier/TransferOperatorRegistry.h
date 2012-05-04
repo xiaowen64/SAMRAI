@@ -222,18 +222,6 @@ public:
    }
 
    /*!
-    * @brief Get the dimension of the hier::BaseGridGeometry holding this
-    * object.
-    *
-    * @return The dimension of the hier::BaseGridGeometry holding this object.
-    */
-   const tbox::Dimension&
-   getDim() const
-   {
-      return d_dim;
-   }
-
-   /*!
     * @brief Print class data representation.
     *
     * @param[in]  os The std::ostream to print to.
@@ -280,11 +268,6 @@ private:
     * @brief Value set by setMinTransferOpStencilWidth().
     */
    IntVector d_min_stencil_width;
-
-   /*!
-    * @brief The dimension of the grid geometry holding this object.
-    */
-   tbox::Dimension d_dim;
 
    /*!
     * @brief true if a call to getMaxTransferOpStencilWidth has been made.

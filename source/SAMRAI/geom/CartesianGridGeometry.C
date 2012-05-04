@@ -376,9 +376,9 @@ CartesianGridGeometry::setGeometryDataOnPatch(
    }
 #endif
 
-   double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   double x_lo[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   double x_up[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double dx[SAMRAI::MAX_DIM_VAL];
+   double x_lo[SAMRAI::MAX_DIM_VAL];
+   double x_up[SAMRAI::MAX_DIM_VAL];
 
    bool coarsen = false;
    if (ratio_to_level_zero(0) < 0) coarsen = true;
@@ -639,8 +639,8 @@ CartesianGridGeometry::getFromInput(
             << "\n    Key data `domain_boxes' not found in input." << std::endl);
       }
 
-      double x_lo[tbox::Dimension::MAXIMUM_DIMENSION_VALUE],
-             x_up[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      double x_lo[SAMRAI::MAX_DIM_VAL],
+             x_up[SAMRAI::MAX_DIM_VAL];
 
       if (db->keyExists("x_lo")) {
          db->getDoubleArray("x_lo", x_lo, dim.getValue());
@@ -657,7 +657,7 @@ CartesianGridGeometry::getFromInput(
             << "\n   Key data `x_up' not found in input." << std::endl);
       }
 
-      int pbc[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int pbc[SAMRAI::MAX_DIM_VAL];
       hier::IntVector per_bc(dim, 0);
       if (db->keyExists("periodic_dimension")) {
          db->getIntegerArray("periodic_dimension", pbc, dim.getValue());
@@ -709,8 +709,8 @@ CartesianGridGeometry::getFromRestart()
    }
    hier::BoxContainer restart_domain(
       db->getDatabaseBoxArray("d_physical_domain"));
-   double x_lo[tbox::Dimension::MAXIMUM_DIMENSION_VALUE],
-          x_up[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double x_lo[SAMRAI::MAX_DIM_VAL],
+          x_up[SAMRAI::MAX_DIM_VAL];
    db->getDoubleArray("d_x_lo", x_lo, dim.getValue());
    db->getDoubleArray("d_x_up", x_up, dim.getValue());
 

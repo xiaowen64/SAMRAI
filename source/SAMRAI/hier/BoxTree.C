@@ -31,31 +31,29 @@
 namespace SAMRAI {
 namespace hier {
 
-boost::shared_ptr<tbox::Timer> BoxTree::t_build_tree[tbox::Dimension::
-                                                     MAXIMUM_DIMENSION_VALUE];
-boost::shared_ptr<tbox::Timer> BoxTree::t_search[tbox::Dimension::
-                                                 MAXIMUM_DIMENSION_VALUE];
-unsigned int BoxTree::s_num_build[tbox::Dimension::MAXIMUM_DIMENSION_VALUE] =
+boost::shared_ptr<tbox::Timer> BoxTree::t_build_tree[SAMRAI::MAX_DIM_VAL];
+boost::shared_ptr<tbox::Timer> BoxTree::t_search[SAMRAI::MAX_DIM_VAL];
+unsigned int BoxTree::s_num_build[SAMRAI::MAX_DIM_VAL] =
 { 0 };
-unsigned int BoxTree::s_num_generate[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
+unsigned int BoxTree::s_num_generate[SAMRAI::MAX_DIM_VAL]
    =
    { 0 };
-unsigned int BoxTree::s_num_duplicate[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
+unsigned int BoxTree::s_num_duplicate[SAMRAI::MAX_DIM_VAL]
    =
    { 0 };
-unsigned int BoxTree::s_num_search[tbox::Dimension::MAXIMUM_DIMENSION_VALUE] =
+unsigned int BoxTree::s_num_search[SAMRAI::MAX_DIM_VAL] =
 { 0 };
-unsigned int BoxTree::s_num_sorted_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE
+unsigned int BoxTree::s_num_sorted_box[SAMRAI::MAX_DIM_VAL
 ] = { 0 };
-unsigned int BoxTree::s_num_found_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
+unsigned int BoxTree::s_num_found_box[SAMRAI::MAX_DIM_VAL]
    =
    { 0 };
-unsigned int BoxTree::s_max_sorted_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE
+unsigned int BoxTree::s_max_sorted_box[SAMRAI::MAX_DIM_VAL
 ] = { 0 };
-unsigned int BoxTree::s_max_found_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
+unsigned int BoxTree::s_max_found_box[SAMRAI::MAX_DIM_VAL]
    =
    { 0 };
-unsigned int BoxTree::s_max_lin_search[tbox::Dimension::MAXIMUM_DIMENSION_VALUE
+unsigned int BoxTree::s_max_lin_search[SAMRAI::MAX_DIM_VAL
 ] = { 0 };
 
 tbox::StartupShutdownManager::Handler
@@ -565,7 +563,7 @@ BoxTree::findOverlapBoxes(
 void
 BoxTree::initializeCallback()
 {
-   for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
+   for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
       const std::string dim_str(tbox::Utilities::intToString(i + 1));
       t_build_tree[i] = tbox::TimerManager::getManager()->
          getTimer(std::string("hier::BoxTree::build_tree[") + dim_str + "]");
@@ -583,7 +581,7 @@ BoxTree::initializeCallback()
 void
 BoxTree::finalizeCallback()
 {
-   for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
+   for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
       t_build_tree[i].reset();
       t_search[i].reset();
    }

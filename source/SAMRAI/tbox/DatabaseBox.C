@@ -13,8 +13,7 @@
 namespace SAMRAI {
 namespace tbox {
 
-DatabaseBox::DatabaseBox():
-   d_dim(Dimension::getInvalidDimension())
+DatabaseBox::DatabaseBox()
 {
    d_data.d_dimension = 0;
    d_data.d_lo[0] = d_data.d_hi[0] = 0;
@@ -23,8 +22,7 @@ DatabaseBox::DatabaseBox():
 }
 
 DatabaseBox::DatabaseBox(
-   const DatabaseBox& box):
-   d_dim(box.d_dim)
+   const DatabaseBox& box)
 {
    d_data.d_dimension = box.d_data.d_dimension;
    d_data.d_lo[0] = box.d_data.d_lo[0];
@@ -38,17 +36,14 @@ DatabaseBox::DatabaseBox(
 DatabaseBox::DatabaseBox(
    const Dimension& dim,
    const int* lower,
-   const int* upper):
-   d_dim(dim)
+   const int* upper)
 {
-   TBOX_ASSERT(dim.getValue() <= DatabaseBox_MAX_DIM);
-
    d_data.d_dimension = dim.getValue();
    for (int i = 0; i < d_data.d_dimension; i++) {
       d_data.d_lo[i] = lower[i];
       d_data.d_hi[i] = upper[i];
    }
-   for (int j = d_data.d_dimension; j < DatabaseBox_MAX_DIM; j++) {
+   for (int j = d_data.d_dimension; j < SAMRAI::MAX_DIM_VAL; j++) {
       d_data.d_lo[j] = 0;
       d_data.d_hi[j] = 0;
    }
@@ -62,7 +57,6 @@ DatabaseBox&
 DatabaseBox::operator = (
    const DatabaseBox& box)
 {
-   d_dim = box.d_dim;
    d_data.d_dimension = box.d_data.d_dimension;
    d_data.d_lo[0] = box.d_data.d_lo[0];
    d_data.d_lo[1] = box.d_data.d_lo[1];

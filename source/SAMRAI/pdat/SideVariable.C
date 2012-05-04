@@ -84,32 +84,6 @@ int SideVariable<TYPE>::getDepth() const
    return factory->getDepth();
 }
 
-/*
- *************************************************************************
- *
- * These are private and should not be used.  They are defined here
- * because some template instantiation methods fail if some member
- * functions are left undefined.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-SideVariable<TYPE>::SideVariable(
-   const SideVariable<TYPE>& foo):
-   hier::Variable(NULL, boost::shared_ptr<hier::PatchDataFactory>()),
-   d_directions(hier::IntVector(foo.getDim()))
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void SideVariable<TYPE>::operator = (
-   const SideVariable<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
 }
 }
 #endif

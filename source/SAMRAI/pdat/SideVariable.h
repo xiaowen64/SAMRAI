@@ -121,11 +121,14 @@ private:
    bool d_fine_boundary_represents_var;
    hier::IntVector d_directions;
 
+   // Unimplemented copy constructor
    SideVariable(
-      const SideVariable<TYPE>&);            // not implemented
+      const SideVariable<TYPE>&);
+
+   // Unimplemented assignment operator
    void
    operator = (
-      const SideVariable<TYPE>&);               // not implemented
+      const SideVariable<TYPE>&);
 
 };
 

@@ -1961,7 +1961,8 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
 #endif
    TBOX_ASSERT(!connector.hasPeriodicLocalNeighborhoodBaseBoxes());
 
-   Connector missing, extra;
+   Connector missing(connector.getRatio().getDim()),
+             extra(connector.getRatio().getDim());
    findOverlapErrors(connector, missing, extra, ignore_self_overlap);
 
    if (!assert_completeness) {

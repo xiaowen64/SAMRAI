@@ -759,7 +759,7 @@ BaseGridGeometry::getFromInput(
 
       }
 
-      int pbc[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int pbc[SAMRAI::MAX_DIM_VAL];
       IntVector per_bc(dim, 0);
       if (db->keyExists("periodic_dimension")) {
          db->getIntegerArray("periodic_dimension", pbc, dim.getValue());
@@ -1385,6 +1385,7 @@ BaseGridGeometry::setPhysicalDomain(
       BlockId block_id(b);
 
       BoxContainer block_domain(domain, block_id);
+      TBOX_ASSERT(!block_domain.isEmpty());
       Box bounding_box(block_domain.getBoundingBox());
       BoxContainer bounding_cntnr(bounding_box);
       bounding_cntnr.removeIntersections(block_domain);
@@ -2149,10 +2150,8 @@ BaseGridGeometry::adjustBoundaryBoxesOnPatch(
          gcw,
          IntVector::getZero(d_dim));
 
-      tbox::Array<BoundaryBox> codim_boundaries[tbox::Dimension::
-                                                MAXIMUM_DIMENSION_VALUE];
-      std::list<int> boundaries_in_sing[tbox::Dimension::
-                                        MAXIMUM_DIMENSION_VALUE];
+      tbox::Array<BoundaryBox> codim_boundaries[SAMRAI::MAX_DIM_VAL];
+      std::list<int> boundaries_in_sing[SAMRAI::MAX_DIM_VAL];
       for (int codim = 2; codim <= d_dim.getValue(); codim++) {
 
          codim_boundaries[codim - 1] =

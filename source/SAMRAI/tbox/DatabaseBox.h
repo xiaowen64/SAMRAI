@@ -15,12 +15,6 @@
 
 #include "SAMRAI/tbox/Dimension.h"
 
-#ifndef DatabaseBox_MAX_DIM
-#define DatabaseBox_MAX_DIM 3
-#else
-Macro overloaded : DatabaseBox_MAX_DIM
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 
@@ -33,8 +27,8 @@ namespace tbox {
  */
 struct DatabaseBox_POD {
    int d_dimension;
-   int d_lo[DatabaseBox_MAX_DIM];
-   int d_hi[DatabaseBox_MAX_DIM];
+   int d_lo[SAMRAI::MAX_DIM_VAL];
+   int d_hi[SAMRAI::MAX_DIM_VAL];
 };
 
 /**
@@ -99,20 +93,17 @@ public:
    /**
     * Return the dimension of this object.
     */
-   const Dimension&
-   getDim() const
+   const int&
+   getDimVal() const
    {
-      return d_dim;
+      return d_data.d_dimension;
    }
 
    void
    setDim(
       const Dimension& dim)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(dim);
-      TBOX_ASSERT(dim.getValue() <= DatabaseBox_MAX_DIM);
-      d_dim = Dimension(dim);
-      d_data.d_dimension = d_dim.getValue();
+      d_data.d_dimension = dim.getValue();
    }
 
    /**
@@ -179,8 +170,6 @@ public:
     * mirror this structure in defining a compound type for HDF.
     */
    DatabaseBox_POD d_data;
-
-   Dimension d_dim;
 };
 
 }

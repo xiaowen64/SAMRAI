@@ -61,11 +61,11 @@ OuteredgeData<TYPE>::OuteredgeData(
                      side);
 
                if (!oedge_data_box.empty()) {
-                  d_data[axis][face_normal][side].
-                  initializeArray(oedge_data_box, depth);
+                  d_data[axis][face_normal][side].reset(
+                     new ArrayData<TYPE>(oedge_data_box, depth));
                } else {
-                  d_data[axis][face_normal][side].
-                  invalidateArray(getDim());
+                  d_data[axis][face_normal][side].reset(
+                     new ArrayData<TYPE>(getDim()));
                }
 
             }   // iterate over lower/upper sides
@@ -81,32 +81,6 @@ OuteredgeData<TYPE>::OuteredgeData(
 template<class TYPE>
 OuteredgeData<TYPE>::~OuteredgeData()
 {
-}
-
-/*
- *************************************************************************
- *
- * The following are private and cannot be used, but they are defined
- * here for compilers that require that every template declaration have
- * a definition (a stupid requirement, if you ask me).
- *
- *************************************************************************
- */
-
-template<class TYPE>
-OuteredgeData<TYPE>::OuteredgeData(
-   const OuteredgeData<TYPE>& foo):
-   hier::PatchData(foo.getBox(), foo.getGhostCellWidth())
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-OuteredgeData<TYPE>::operator = (
-   const OuteredgeData<TYPE>& foo)
-{
-   NULL_USE(foo);
 }
 
 template<class TYPE>
@@ -125,7 +99,7 @@ OuteredgeData<TYPE>::dataExists(
    TBOX_ASSERT((axis >= 0) && (axis < getDim().getValue()));
    TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
 
-   return d_data[axis][face_normal][0].isInitialized();
+   return d_data[axis][face_normal][0]->isInitialized();
 }
 
 template<class TYPE>
@@ -141,7 +115,7 @@ OuteredgeData<TYPE>::getPointer(
    TBOX_ASSERT((side == 0) || (side == 1));
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
-   return d_data[axis][face_normal][side].getPointer(depth);
+   return d_data[axis][face_normal][side]->getPointer(depth);
 }
 
 template<class TYPE>
@@ -157,7 +131,7 @@ OuteredgeData<TYPE>::getPointer(
    TBOX_ASSERT((side == 0) || (side == 1));
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
-   return d_data[axis][face_normal][side].getPointer(depth);
+   return d_data[axis][face_normal][side]->getPointer(depth);
 }
 
 template<class TYPE>
@@ -179,8 +153,8 @@ OuteredgeData<TYPE>::operator () (
 
          for (int side = 0; side < 2; ++side) {
 
-            if (d_data[axis][face_normal][side].getBox().contains(i)) {
-               return d_data[axis][face_normal][side](i, depth);
+            if (d_data[axis][face_normal][side]->getBox().contains(i)) {
+               return (*(d_data[axis][face_normal][side]))(i, depth);
             }
 
          }  // iterate over lower/upper sides
@@ -191,7 +165,7 @@ OuteredgeData<TYPE>::operator () (
 
    TBOX_ERROR("Attempt to access OuteredgeData value with bad index"
       " edge index " << i << " with axis = " << axis << std::endl);
-   return d_data[0][0][0](i, depth);
+   return (*(d_data[0][0][0]))(i, depth);
 }
 
 template<class TYPE>
@@ -213,8 +187,8 @@ OuteredgeData<TYPE>::operator () (
 
          for (int side = 0; side < 2; ++side) {
 
-            if (d_data[axis][face_normal][side].getBox().contains(i)) {
-               return d_data[axis][face_normal][side](i, depth);
+            if (d_data[axis][face_normal][side]->getBox().contains(i)) {
+               return (*(d_data[axis][face_normal][side]))(i, depth);
             }
 
          }  // iterate over lower/upper sides
@@ -225,7 +199,7 @@ OuteredgeData<TYPE>::operator () (
 
    TBOX_ERROR("Attempt to access OuteredgeData value with bad index"
       " edge index " << i << " with axis = " << axis << std::endl);
-   return d_data[0][0][0](i, depth);
+   return (*(d_data[0][0][0]))(i, depth);
 }
 
 template<class TYPE>
@@ -239,7 +213,7 @@ OuteredgeData<TYPE>::getArrayData(
    TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
    TBOX_ASSERT((side == 0) || (side == 1));
 
-   return d_data[axis][face_normal][side];
+   return *(d_data[axis][face_normal][side]);
 }
 
 template<class TYPE>
@@ -253,7 +227,7 @@ OuteredgeData<TYPE>::getArrayData(
    TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
    TBOX_ASSERT((side == 0) || (side == 1));
 
-   return d_data[axis][face_normal][side];
+   return *(d_data[axis][face_normal][side]);
 }
 
 /*
@@ -414,18 +388,12 @@ OuteredgeData<TYPE>::copyDepth(
             for (int side = 0; side < 2; ++side) {
 
                ArrayData<TYPE>& dst_oedge_array =
-                  d_data[axis][face_normal][side];
+                  *(d_data[axis][face_normal][side]);
 
-               /*
-                * Some d_data entries are not valid, don't try to copy
-                * them.
-                */
-               if (dst_oedge_array.getDim().isValid()) {
-                  dst_oedge_array.copyDepth(dst_depth,
-                     src_edge_array,
-                     src_depth,
-                     dst_oedge_array.getBox());
-               }
+               dst_oedge_array.copyDepth(dst_depth,
+                  src_edge_array,
+                  src_depth,
+                  dst_oedge_array.getBox());
 
             }  // iterate over lower/upper sides
 
@@ -466,7 +434,7 @@ OuteredgeData<TYPE>::copyDepth2(
             for (int side = 0; side < 2; ++side) {
 
                const ArrayData<TYPE>& src_oedge_array =
-                  d_data[axis][face_normal][side];
+                  *(d_data[axis][face_normal][side]);
 
                dst_edge_array.copyDepth(dst_depth,
                   src_oedge_array,
@@ -534,11 +502,11 @@ OuteredgeData<TYPE>::sum(
 
                for (int src_side = 0; src_side < 2; ++src_side) {
 
-                  if (t_oedge_src->d_data[axis][src_face_normal][src_side].
+                  if (t_oedge_src->d_data[axis][src_face_normal][src_side]->
                       isInitialized()) {
 
                      const ArrayData<TYPE>& src_array =
-                        t_oedge_src->d_data[axis][src_face_normal][src_side];
+                        *(t_oedge_src->d_data[axis][src_face_normal][src_side]);
 
                      for (int dst_face_normal = 0;
                           dst_face_normal < getDim().getValue(); ++dst_face_normal) {
@@ -547,10 +515,10 @@ OuteredgeData<TYPE>::sum(
 
                            for (int dst_side = 0; dst_side < 2; ++dst_side) {
 
-                              if (d_data[axis][dst_face_normal][dst_side].
+                              if (d_data[axis][dst_face_normal][dst_side]->
                                   isInitialized()) {
 
-                                 d_data[axis][dst_face_normal][dst_side].
+                                 d_data[axis][dst_face_normal][dst_side]->
                                  sum(src_array,
                                     box_list,
                                     src_offset);
@@ -618,9 +586,9 @@ OuteredgeData<TYPE>::getDataStreamSize(
 
             for (int side = 0; side < 2; ++side) {
 
-               if (d_data[axis][face_normal][side].isInitialized()) {
+               if (d_data[axis][face_normal][side]->isInitialized()) {
 
-                  size += d_data[axis][face_normal][side].
+                  size += d_data[axis][face_normal][side]->
                      getDataStreamSize(boxlist, src_offset);
 
                }   // if data arrays is initialized
@@ -676,11 +644,11 @@ OuteredgeData<TYPE>::packStream(
                for (int side = 0; side < 2; ++side) {
 
                   const hier::Box intersection =
-                     src_box * d_data[axis][face_normal][side].getBox();
+                     src_box * d_data[axis][face_normal][side]->getBox();
 
                   if (!intersection.empty()) {
 
-                     d_data[axis][face_normal][side].
+                     d_data[axis][face_normal][side]->
                      packStream(stream,
                         hier::Box::shift(intersection,
                            src_offset),
@@ -728,11 +696,11 @@ OuteredgeData<TYPE>::unpackStream(
                for (int side = 0; side < 2; ++side) {
 
                   const hier::Box intersection =
-                     (*dst_box) * d_data[axis][face_normal][side].getBox();
+                     (*dst_box) * d_data[axis][face_normal][side]->getBox();
 
                   if (!intersection.empty()) {
 
-                     d_data[axis][face_normal][side].unpackStream(stream,
+                     d_data[axis][face_normal][side]->unpackStream(stream,
                         intersection,
                         src_offset);
 
@@ -787,11 +755,11 @@ OuteredgeData<TYPE>::unpackStreamAndSum(
                for (int side = 0; side < 2; ++side) {
 
                   const hier::Box intersection =
-                     (*dst_box) * d_data[axis][face_normal][side].getBox();
+                     (*dst_box) * d_data[axis][face_normal][side]->getBox();
 
                   if (!intersection.empty()) {
 
-                     d_data[axis][face_normal][side].
+                     d_data[axis][face_normal][side]->
                      unpackStreamAndSum(stream,
                         intersection,
                         src_offset);
@@ -903,8 +871,8 @@ OuteredgeData<TYPE>::fill(
 
             for (int side = 0; side < 2; ++side) {
 
-               if (d_data[axis][face_normal][side].isInitialized()) {
-                  d_data[axis][face_normal][side].fill(t, d);
+               if (d_data[axis][face_normal][side]->isInitialized()) {
+                  d_data[axis][face_normal][side]->fill(t, d);
                }
 
             }   // iterate over lower/upper sides
@@ -937,8 +905,8 @@ OuteredgeData<TYPE>::fill(
 
             for (int side = 0; side < 2; ++side) {
 
-               if (d_data[axis][face_normal][side].isInitialized()) {
-                  d_data[axis][face_normal][side].fill(t, databox, d);
+               if (d_data[axis][face_normal][side]->isInitialized()) {
+                  d_data[axis][face_normal][side]->fill(t, databox, d);
                }
 
             }   // iterate over lower/upper sides
@@ -965,8 +933,8 @@ OuteredgeData<TYPE>::fillAll(
 
             for (int side = 0; side < 2; ++side) {
 
-               if (d_data[axis][face_normal][side].isInitialized()) {
-                  d_data[axis][face_normal][side].fillAll(t);
+               if (d_data[axis][face_normal][side]->isInitialized()) {
+                  d_data[axis][face_normal][side]->fillAll(t);
                }
 
             }   // iterate over lower/upper sides
@@ -997,8 +965,8 @@ OuteredgeData<TYPE>::fillAll(
 
             for (int side = 0; side < 2; ++side) {
 
-               if (d_data[axis][face_normal][side].isInitialized()) {
-                  d_data[axis][face_normal][side].fillAll(t, databox);
+               if (d_data[axis][face_normal][side]->isInitialized()) {
+                  d_data[axis][face_normal][side]->fillAll(t, databox);
                }
 
             }   // iterate over lower/upper sides
@@ -1038,7 +1006,7 @@ OuteredgeData<TYPE>::copyFromEdge(
             for (int side = 0; side < 2; ++side) {
 
                ArrayData<TYPE>& dst_oedge_array =
-                  d_data[axis][face_normal][side];
+                  *(d_data[axis][face_normal][side]);
 
                dst_oedge_array.copy(src_edge_array,
                   dst_oedge_array.getBox());
@@ -1071,7 +1039,7 @@ OuteredgeData<TYPE>::copyToEdge(
             for (int side = 0; side < 2; ++side) {
 
                const ArrayData<TYPE>& src_oedge_array =
-                  d_data[axis][face_normal][side];
+                  *(d_data[axis][face_normal][side]);
 
                dst_edge_array.copy(src_oedge_array,
                   src_oedge_array.getBox());
@@ -1117,7 +1085,7 @@ OuteredgeData<TYPE>::copyFromEdge(
             for (int side = 0; side < 2; ++side) {
 
                ArrayData<TYPE>& dst_oedge_array =
-                  d_data[axis][face_normal][side];
+                  *(d_data[axis][face_normal][side]);
 
                dst_oedge_array.copy(src_edge_array,
                   box_list,
@@ -1155,7 +1123,7 @@ OuteredgeData<TYPE>::copyToEdge(
             for (int side = 0; side < 2; ++side) {
 
                const ArrayData<TYPE>& src_oedge_array =
-                  d_data[axis][face_normal][side];
+                  *(d_data[axis][face_normal][side]);
 
                dst_edge_array.copy(src_oedge_array,
                   box_list,
@@ -1189,7 +1157,7 @@ OuteredgeData<TYPE>::copyFromOuteredge(
             for (int src_side = 0; src_side < 2; ++src_side) {
 
                const ArrayData<TYPE>& src_oedge_array =
-                  src.d_data[axis][src_face_normal][src_side];
+                  *(src.d_data[axis][src_face_normal][src_side]);
 
                for (int dst_face_normal = 0;
                     dst_face_normal < getDim().getValue();
@@ -1200,7 +1168,7 @@ OuteredgeData<TYPE>::copyFromOuteredge(
                      for (int dst_side = 0; dst_side < 2; ++dst_side) {
 
                         ArrayData<TYPE>& dst_oedge_array =
-                           d_data[axis][dst_face_normal][dst_side];
+                           *(d_data[axis][dst_face_normal][dst_side]);
 
                         dst_oedge_array.copy(src_oedge_array,
                            dst_oedge_array.getBox());
@@ -1245,7 +1213,7 @@ OuteredgeData<TYPE>::copyFromOuteredge(
             for (int src_side = 0; src_side < 2; ++src_side) {
 
                const ArrayData<TYPE>& src_oedge_array =
-                  src.d_data[axis][src_face_normal][src_side];
+                  *(src.d_data[axis][src_face_normal][src_side]);
 
                for (int dst_face_normal = 0;
                     dst_face_normal < getDim().getValue();
@@ -1256,7 +1224,7 @@ OuteredgeData<TYPE>::copyFromOuteredge(
                      for (int dst_side = 0; dst_side < 2; ++dst_side) {
 
                         ArrayData<TYPE>& dst_oedge_array =
-                           d_data[axis][dst_face_normal][dst_side];
+                           *(d_data[axis][dst_face_normal][dst_side]);
 
                         dst_oedge_array.copy(src_oedge_array,
                            box_list,
@@ -1405,11 +1373,11 @@ OuteredgeData<TYPE>::printAxisSide(
 
       const hier::Box edgebox = EdgeGeometry::toEdgeBox(box, axis);
       const hier::Box region =
-         edgebox * d_data[axis][face_normal][side].getBox();
+         edgebox * d_data[axis][face_normal][side]->getBox();
       hier::Box::iterator iiend(region, false);
       for (hier::Box::iterator ii(region, true); ii != iiend; ++ii) {
          os << "array" << *ii << " = "
-            << d_data[axis][face_normal][side](*ii, depth) << std::endl;
+            << (*(d_data[axis][face_normal][side]))(*ii, depth) << std::endl;
          os << std::flush;
       }
 
@@ -1457,7 +1425,7 @@ OuteredgeData<TYPE>::getSpecializedFromDatabase(
                   + "_" + tbox::Utilities::intToString(face_normal) + "_"
                   + tbox::Utilities::intToString(side);
                array_database = database->getDatabase(array_name);
-               (d_data[axis][face_normal][side]).getFromDatabase(array_database);
+               d_data[axis][face_normal][side]->getFromDatabase(array_database);
 
             }  // iterate over lower/upper sides
 
@@ -1505,7 +1473,7 @@ OuteredgeData<TYPE>::putSpecializedToDatabase(
                   + "_" + tbox::Utilities::intToString(face_normal) + "_"
                   + tbox::Utilities::intToString(side);
                array_database = database->putDatabase(array_name);
-               (d_data[axis][face_normal][side]).putUnregisteredToDatabase(
+               d_data[axis][face_normal][side]->putUnregisteredToDatabase(
                   array_database);
 
             }  // iterate over lower/upper sides

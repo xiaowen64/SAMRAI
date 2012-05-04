@@ -18,8 +18,8 @@
 namespace SAMRAI {
 namespace hier {
 
-Box * Box::s_emptys[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-Box * Box::s_universes[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+Box * Box::s_emptys[SAMRAI::MAX_DIM_VAL];
+Box * Box::s_universes[SAMRAI::MAX_DIM_VAL];
 
 tbox::StartupShutdownManager::Handler
 Box::s_initialize_finalize_handler(
@@ -42,23 +42,6 @@ int Box::s_active_ct = 0;
 int Box::s_high_water = 0;
 #endif
 
-Box::Box():
-   d_lo(tbox::Dimension::getInvalidDimension(), tbox::MathUtilities<int>::getMax()),
-   d_hi(tbox::Dimension::getInvalidDimension(), tbox::MathUtilities<int>::getMin()),
-   d_block_id(BlockId::invalidId()),
-   d_id_locked(false)
-{
-#ifdef BOX_TELEMETRY
-   // Increment the cumulative constructed count, active box count and reset
-   // the high water mark of active boxes if necessary.
-   ++s_cumulative_constructed_ct;
-   ++s_active_ct;
-   if (s_active_ct > s_high_water) {
-      s_high_water = s_active_ct;
-   }
-#endif
-}
-
 Box::Box(
    const tbox::Dimension& dim):
    d_lo(dim, tbox::MathUtilities<int>::getMax()),
@@ -67,7 +50,6 @@ Box::Box(
    d_id(GlobalId(), PeriodicId::zero()),
    d_id_locked(false)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM(dim);
 #ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active box count and reset
    // the high water mark of active boxes if necessary.
@@ -123,8 +105,10 @@ Box::Box(
 
 Box::Box(
    const tbox::DatabaseBox& box):
-   d_lo(box.getDim(), tbox::MathUtilities<int>::getMax()),
-   d_hi(box.getDim(), tbox::MathUtilities<int>::getMin()),
+   d_lo(tbox::Dimension(static_cast<unsigned short>(box.getDimVal())),
+      tbox::MathUtilities<int>::getMax()),
+   d_hi(tbox::Dimension(static_cast<unsigned short>(box.getDimVal())),
+      tbox::MathUtilities<int>::getMin()),
    d_id(GlobalId(), PeriodicId::zero()),
    d_id_locked(false)
 {
@@ -299,18 +283,8 @@ Box&
 Box::operator = (
    const Box& rhs)
 {
-
    if (this != &rhs) {
-      /*
-       * Allow assignment of to an uninitialized box but
-       * not from an uninitialized box.
-       * This is needed for tbox::Array and vector.
-       */
-      if (getDim().isValid()) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
-      } else {
-         TBOX_DIM_ASSERT_CHECK_DIM(rhs.getDim());
-      }
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
 
       d_lo = rhs.d_lo;
       d_hi = rhs.d_hi;
@@ -667,8 +641,6 @@ Box::longestDimension() const
 tbox::DatabaseBox
 Box::DatabaseBox_from_Box() const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM(getDim());
-
    tbox::DatabaseBox new_Box;
 
    new_Box.setDim(getDim());
@@ -685,9 +657,7 @@ void
 Box::set_Box_from_DatabaseBox(
    const tbox::DatabaseBox& box)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM(getDim());
-
-   for (int i = 0; i < box.getDim().getValue(); i++) {
+   for (int i = 0; i < box.getDimVal(); i++) {
       d_lo(i) = box.lower(i);
       d_hi(i) = box.upper(i);
    }
@@ -766,8 +736,6 @@ operator >> (
    std::istream& s,
    Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM(box.getDim());
-
    while (s.get() != '[') ;
    s >> box.lower();
    while (s.get() != ',') NULL_STATEMENT;
@@ -781,8 +749,6 @@ operator << (
    std::ostream& s,
    const Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM(box.getDim());
-
    if (box.empty()) {
       s << "[(),()]";
    } else {
@@ -846,10 +812,10 @@ Box::coalesceIntervals(
       for (int id = 0; id < dim; id++) {
          if ((lo1[id] == lo2[id]) && (hi1[id] == hi2[id])) {
             int id2;
-            int low1[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-            int high1[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-            int low2[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-            int high2[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+            int low1[SAMRAI::MAX_DIM_VAL];
+            int high1[SAMRAI::MAX_DIM_VAL];
+            int low2[SAMRAI::MAX_DIM_VAL];
+            int high2[SAMRAI::MAX_DIM_VAL];
             for (id2 = 0; id2 < id; id2++) {
                low1[id2] = lo1[id2];
                high1[id2] = hi1[id2];
@@ -901,8 +867,8 @@ Box::coalesceWith(
       int id;
       const int* box_lo = &box.lower()[0];
       const int* box_hi = &box.upper()[0];
-      int me_lo[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int me_hi[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int me_lo[SAMRAI::MAX_DIM_VAL];
+      int me_hi[SAMRAI::MAX_DIM_VAL];
       for (id = 0; id < getDim().getValue(); id++) {
          me_lo[id] = d_lo(id);
          me_hi[id] = d_hi(id);
@@ -950,7 +916,6 @@ Box::rotateAboutAxis(
    const int axis,
    const int num_rotations)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM(getDim());
    TBOX_ASSERT(axis < getDim().getValue());
    TBOX_ASSERT(getDim().getValue() == 3);
 
@@ -987,7 +952,6 @@ Box::rotate(
    if (rotation_ident == Transformation::NO_ROTATE)
       return;
 
-   TBOX_DIM_ASSERT_CHECK_DIM(getDim());
    TBOX_ASSERT(getDim().getValue() == 2 || getDim().getValue() == 3);
 
    if (getDim().getValue() == 2) {
@@ -1084,7 +1048,7 @@ Box::rotate(
 void
 Box::initializeCallback()
 {
-   for (unsigned short d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
+   for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       tbox::Dimension dim(static_cast<unsigned short>(d + 1));
       s_emptys[d] = new Box(dim);
 
@@ -1106,7 +1070,7 @@ Box::initializeCallback()
 void
 Box::finalizeCallback()
 {
-   for (int d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
+   for (int d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       delete s_emptys[d];
       delete s_universes[d];
    }
@@ -1118,7 +1082,6 @@ BoxIterator::BoxIterator(
    d_index(box.lower()),
    d_box(box)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM(box.getDim());
    if (!d_box.empty() && !begin) {
       d_index(d_box.getDim().getValue()-1) =
          d_box.upper(d_box.getDim().getValue()-1) + 1;

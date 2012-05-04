@@ -502,8 +502,8 @@ int main(
                domain_to_L0,
                hierarchy,
                0,
-               hier::Connector(),
-               hier::Connector(),
+               hier::Connector(dim),
+               hier::Connector(dim),
                hierarchy->getSmallestPatchSize(0),
                hierarchy->getLargestPatchSize(0),
                domain_box_level,
@@ -533,9 +533,9 @@ int main(
 
 
 
-      hier::Connector L1_to_L0;
-      hier::Connector L0_to_L1;
-      hier::Connector L1_to_L1;
+      hier::Connector L1_to_L0(dim);
+      hier::Connector L0_to_L1(dim);
+      hier::Connector L1_to_L1(dim);
 
 
 
@@ -625,8 +625,8 @@ int main(
                L0_to_L1,
                hierarchy,
                1,
-               hier::Connector(),
-               hier::Connector(),
+               hier::Connector(dim),
+               hier::Connector(dim),
                hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
                hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
                domain_box_level,
@@ -668,9 +668,9 @@ int main(
 
       const hier::BoxLevel &L1 = *hierarchy->getPatchLevel(1)->getBoxLevel();
 
-      hier::Connector L2_to_L1;
-      hier::Connector L1_to_L2;
-      hier::Connector L2_to_L2;
+      hier::Connector L2_to_L1(dim);
+      hier::Connector L1_to_L2(dim);
+      hier::Connector L2_to_L2(dim);
 
       if ( max_levels > 2 ) {
          /*
@@ -759,8 +759,8 @@ int main(
                L1_to_L2,
                hierarchy,
                1,
-               hier::Connector(),
-               hier::Connector(),
+               hier::Connector(dim),
+               hier::Connector(dim),
                hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
                hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
                domain_box_level,
@@ -1040,7 +1040,7 @@ void sortNodes(
 {
    const hier::MappingConnectorAlgorithm mca;
 
-   hier::Connector sorting_map;
+   hier::Connector sorting_map(new_box_level.getDim());
    hier::BoxLevel seq_box_level(new_box_level.getDim());
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(
@@ -1166,7 +1166,7 @@ void enforceNesting(
     */
    const hier::IntVector nesting_width(dim, hierarchy->getProperNestingBuffer(coarser_ln));
    hier::BoxLevel L1nested(dim);
-   hier::Connector L1_to_L1nested;
+   hier::Connector L1_to_L1nested(dim);
    hier::BoxLevelConnectorUtils blcu;
    blcu.computeInternalParts( L1nested,
                               L1_to_L1nested,

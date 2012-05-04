@@ -137,7 +137,7 @@ int main(
        * Test FaceIterator
        */
 
-      double* face_ptr[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      double* face_ptr[SAMRAI::MAX_DIM_VAL];
 
       for (int axis = 0; axis < dim.getValue(); axis++) {
 
@@ -272,7 +272,7 @@ int main(
        * Test EdgeIterator
        */
 
-      double* edge_ptr[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      double* edge_ptr[SAMRAI::MAX_DIM_VAL];
 
       for (int axis = 0; axis < dim.getValue(); axis++) {
 
@@ -334,7 +334,7 @@ int main(
        * Test SideIterator
        */
 
-      double* side_ptr[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      double* side_ptr[SAMRAI::MAX_DIM_VAL];
 
       for (int axis = 0; axis < dim.getValue(); axis++) {
 

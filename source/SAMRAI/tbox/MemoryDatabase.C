@@ -1459,7 +1459,7 @@ MemoryDatabase::printDatabase(
                sstream << " = ";
                const int n = i->d_box.getSize();
                for (int j = 0; j < n; j++) {
-                  const int m = i->d_box[j].getDim().getValue();
+                  const int m = i->d_box[j].getDimVal();
                   sstream << "[(";
                   for (int k = 0; k < m; k++) {
                      sstream << i->d_box[j].lower(k);

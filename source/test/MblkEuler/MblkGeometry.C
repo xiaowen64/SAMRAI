@@ -122,7 +122,7 @@ void MblkGeometry::getFromInput(
    bool found = false;
    int i, nb;
    char block_name[128];
-   double temp_domain[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double temp_domain[SAMRAI::MAX_DIM_VAL];
 
    //
    // Cartesian geometry
@@ -532,8 +532,8 @@ void MblkGeometry::buildCartesianGridOnPatch(
    hier::Index upper(domain.upper());
    hier::Index diff(upper - lower + hier::Index(lower.getDim(), 1));
 
-   double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   double xlo[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double dx[SAMRAI::MAX_DIM_VAL];
+   double xlo[SAMRAI::MAX_DIM_VAL];
    for (int i = 0; i < d_dim.getValue(); i++) {
       dx[i] = (d_cart_xhi[0][i] - d_cart_xlo[0][i]) / (double)diff(i);
       xlo[i] = d_cart_xlo[0][i];
@@ -603,7 +603,7 @@ void MblkGeometry::buildWedgeGridOnPatch(
    //
    // Set dx (dr, dth, dz) for the level
    //
-   double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double dx[SAMRAI::MAX_DIM_VAL];
 
    double nr = (domain.upper(0) - domain.lower(0) + 1);
    double nth = (domain.upper(1) - domain.lower(1) + 1);

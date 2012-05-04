@@ -743,15 +743,15 @@ void MblkLinAdv::initializeDataOnPatch(
    /*
     * Set the dx in the operators
     */
-   double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double dx[SAMRAI::MAX_DIM_VAL];
    d_mblk_geometry->getDx(level_number, dx);
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(d_xyz, getDataContext()),
       boost::detail::dynamic_cast_tag());
 
-   double xlo[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   double xhi[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double xlo[SAMRAI::MAX_DIM_VAL];
+   double xhi[SAMRAI::MAX_DIM_VAL];
    pdat::NodeIndex plo(patch.getBox().lower(), hier::IntVector(dim, 0));
    pdat::NodeIndex phi(patch.getBox().upper(), hier::IntVector(dim, 1));
    for (int d = 0; d < dim.getValue(); d++) {
@@ -918,7 +918,7 @@ double MblkLinAdv::computeStableDtOnPatch(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double dx[SAMRAI::MAX_DIM_VAL];
    d_mblk_geometry->getDx(level_number, dx);
 
    boost::shared_ptr<pdat::CellData<double> > uval(
@@ -992,7 +992,7 @@ void MblkLinAdv::computeFluxesOnPatch(
       TBOX_ASSERT(CELLG == FACEG);
 #endif
 
-      double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      double dx[SAMRAI::MAX_DIM_VAL];
       d_mblk_geometry->getDx(level_number, dx);
 
       hier::Box pbox = patch.getBox();
@@ -1173,7 +1173,7 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport1(
    /*
     * Set the dx in the operators
     */
-   double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double dx[SAMRAI::MAX_DIM_VAL];
    d_mblk_geometry->getDx(level_number, dx);
 
    hier::Box pbox = patch.getBox();
@@ -1479,7 +1479,7 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport2(
    /*
     * Set the dx in the operators
     */
-   double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double dx[SAMRAI::MAX_DIM_VAL];
    d_mblk_geometry->getDx(level_number, dx);
 
    hier::Box pbox = patch.getBox();
@@ -1719,7 +1719,7 @@ void MblkLinAdv::conservativeDifferenceOnPatch(
    /*
     * Set the dx in the operators
     */
-   double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double dx[SAMRAI::MAX_DIM_VAL];
    d_mblk_geometry->getDx(level_number, dx);
 
    const hier::Index ifirst = patch.getBox().lower();
@@ -1883,8 +1883,8 @@ void MblkLinAdv::preprocessRefine(
       setMappedGridOnPatch(fine, fln, block_number);
    }
 
-   double fdx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   double cdx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double fdx[SAMRAI::MAX_DIM_VAL];
+   double cdx[SAMRAI::MAX_DIM_VAL];
    d_mblk_geometry->getDx(fln, fdx);
    d_mblk_geometry->getDx(cln, cdx);
 
@@ -1935,8 +1935,8 @@ void MblkLinAdv::preprocessCoarsen(
       setMappedGridOnPatch(fine, fln, block_number);
    }
 
-   double fdx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   double cdx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double fdx[SAMRAI::MAX_DIM_VAL];
+   double cdx[SAMRAI::MAX_DIM_VAL];
    d_mblk_geometry->getDx(fln, fdx);
    d_mblk_geometry->getDx(cln, cdx);
 
@@ -1990,7 +1990,7 @@ void MblkLinAdv::tagGradientDetectorCells(
    /*
     * Set the dx in the operators
     */
-   double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double dx[SAMRAI::MAX_DIM_VAL];
    d_mblk_geometry->getDx(level_number, dx);
 
    boost::shared_ptr<pdat::CellData<int> > tags(

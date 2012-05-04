@@ -467,20 +467,22 @@ static int createAndTestDLBG(
 
    pout << "Generating boxgraph in parallel." << std::endl;
 
-   Connector* crse_connectors = NULL;
-   Connector* fine_connectors = NULL;
-   Connector* peer_connectors = NULL;
+   std::vector<Connector> crse_connectors;
+   std::vector<Connector> fine_connectors;
+   std::vector<Connector> peer_connectors;
 
    int ln;
 
    tbox::Array<BoxLevel> mapped_box_levels(
       patch_hierarchy.getNumberOfLevels(), BoxLevel(dim));
-   if (build_peer_edge) {
-      peer_connectors = new Connector[patch_hierarchy.getNumberOfLevels()];
-   }
-   if (build_cross_edge) {
-      crse_connectors = new Connector[patch_hierarchy.getNumberOfLevels()];
-      fine_connectors = new Connector[patch_hierarchy.getNumberOfLevels()];
+   for (int conn = 0; conn < patch_hierarchy.getNumberOfLevels(); ++conn) {
+      if (build_peer_edge) {
+         peer_connectors.push_back(Connector(dim));
+      }
+      if (build_cross_edge) {
+         crse_connectors.push_back(Connector(dim));
+         fine_connectors.push_back(Connector(dim));
+      }
    }
 
    /*
@@ -614,10 +616,6 @@ static int createAndTestDLBG(
    patch_hierarchy.recursivePrint(plog, "", 2);
 
    mapped_box_levels.clear();
-
-   if (crse_connectors) delete[] crse_connectors;
-   if (fine_connectors) delete[] fine_connectors;
-   if (peer_connectors) delete[] peer_connectors;
 
    return 0;
 }

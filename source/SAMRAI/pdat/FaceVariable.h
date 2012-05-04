@@ -92,11 +92,14 @@ public:
 private:
    bool d_fine_boundary_represents_var;
 
+   // Unimplemented copy constructor
    FaceVariable(
-      const FaceVariable<TYPE>&);           // not implemented
+      const FaceVariable<TYPE>&);
+
+   // Unimplemented assignment operator
    void
    operator = (
-      const FaceVariable<TYPE>&);               // not implemented
+      const FaceVariable<TYPE>&);
 };
 
 }

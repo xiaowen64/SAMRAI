@@ -95,16 +95,14 @@ public:
          return d_dim;
       }
 
-      friend class::std::map<LocalId, PatchGeometry::TwoDimBool>;
-
 private:
       /*
-       * Needed by brain dead STL. Don't use for other purposes.
+       * Unimplemented default constructor.
        */
       TwoDimBool();
 
       const tbox::Dimension d_dim;
-      bool d_data[2 * tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      bool d_data[2 * SAMRAI::MAX_DIM_VAL];
    };
 
    /**

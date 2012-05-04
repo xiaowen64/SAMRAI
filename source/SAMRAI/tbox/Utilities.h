@@ -165,21 +165,6 @@ typedef int mode_t;
 
 #endif
 
-#define TBOX_DIM_ASSERT_CHECK_DIM(dim)  \
-   TBOX_DIM_ASSERT(                     \
-   (dim).isValid()                      \
-   )
-
-#define TBOX_DIM_ASSERT_CHECK_DIM_ALLOW_UNINITIALIZED(dim)  \
-   TBOX_DIM_ASSERT(                                         \
-   !(dim).isInitialized || (dim).isValid()                  \
-   )
-
-#define TBOX_DIM_ASSERT_CHECK_ARGS1(arg1)  \
-   TBOX_DIM_ASSERT(                        \
-   (arg1).getDim().isValid()               \
-   )
-
 #define TBOX_DIM_ASSERT_CHECK_ARGS2(arg1, arg2)  \
    TBOX_DIM_ASSERT(                              \
    (arg1).getDim().isValid() &&                  \

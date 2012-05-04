@@ -82,7 +82,8 @@ public:
 
 private:
    // neither of the following functions are implemented
-   OuternodeVariable<TYPE>(const OuternodeVariable<TYPE>&);
+   OuternodeVariable<TYPE>(
+      const OuternodeVariable<TYPE>&);
    void
    operator = (
       const OuternodeVariable<TYPE>&);

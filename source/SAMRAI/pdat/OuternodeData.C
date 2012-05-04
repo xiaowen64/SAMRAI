@@ -72,15 +72,15 @@ OuternodeData<TYPE>::OuternodeData(
       outernodebox.upper(d) = nodebox.lower(d);
       outernodebox.lower(d) = nodebox.lower(d);
       if (outernodebox.size() > 0) {
-         d_data[d][0].initializeArray(outernodebox, depth);
+         d_data[d][0].reset(new ArrayData<TYPE>(outernodebox, depth));
       } else {
-         d_data[d][0].invalidateArray(dim);
+         d_data[d][0].reset(new ArrayData<TYPE>(dim));
       }
 
       outernodebox = nodebox;
       outernodebox.lower(d) = nodebox.upper(d);
       outernodebox.upper(d) = nodebox.upper(d);
-      d_data[d][1].initializeArray(outernodebox, depth);
+      d_data[d][1].reset(new ArrayData<TYPE>(outernodebox, depth));
 
    }
 }
@@ -88,33 +88,6 @@ OuternodeData<TYPE>::OuternodeData(
 template<class TYPE>
 OuternodeData<TYPE>::~OuternodeData()
 {
-}
-
-/*
- *************************************************************************
- *
- * The following are private and cannot be used, but they are defined
- * here for compilers that require that every template declaration have
- * a definition (a stupid requirement, if you ask me).
- *
- *************************************************************************
- */
-
-template<class TYPE>
-OuternodeData<TYPE>::OuternodeData(
-   const OuternodeData<TYPE>& foo):
-   hier::PatchData(foo.getBox(), foo.getGhostCellWidth())
-
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-OuternodeData<TYPE>::operator = (
-   const OuternodeData<TYPE>& foo)
-{
-   NULL_USE(foo);
 }
 
 template<class TYPE>
@@ -131,7 +104,7 @@ OuternodeData<TYPE>::dataExists(
 {
    TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
 
-   return d_data[face_normal][0].isInitialized();
+   return d_data[face_normal][0]->isInitialized();
 }
 
 template<class TYPE>
@@ -145,7 +118,7 @@ OuternodeData<TYPE>::getPointer(
    TBOX_ASSERT((side == 0) || (side == 1));
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
-   return d_data[face_normal][side].getPointer(depth);
+   return d_data[face_normal][side]->getPointer(depth);
 }
 
 template<class TYPE>
@@ -159,7 +132,7 @@ OuternodeData<TYPE>::getPointer(
    TBOX_ASSERT((side == 0) || (side == 1));
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
-   return d_data[face_normal][side].getPointer(depth);
+   return d_data[face_normal][side]->getPointer(depth);
 }
 
 template<class TYPE>
@@ -171,7 +144,7 @@ OuternodeData<TYPE>::getArrayData(
    TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
    TBOX_ASSERT((side == 0) || (side == 1));
 
-   return d_data[face_normal][side];
+   return *(d_data[face_normal][side]);
 }
 
 template<class TYPE>
@@ -183,7 +156,7 @@ OuternodeData<TYPE>::getArrayData(
    TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
    TBOX_ASSERT((side == 0) || (side == 1));
 
-   return d_data[face_normal][side];
+   return *(d_data[face_normal][side]);
 }
 
 template<class TYPE>
@@ -193,11 +166,11 @@ OuternodeData<TYPE>::operator () (
    int depth)
 {
    for (int d = getDim().getValue() - 1; d >= 0; d--) {
-      if (i[d] == d_data[d][0].getBox().lower()[d]) {
-         return d_data[d][0](i, depth);
+      if (i[d] == d_data[d][0]->getBox().lower()[d]) {
+         return (*(d_data[d][0]))(i, depth);
       }
-      if (i[d] == d_data[d][1].getBox().upper()[d]) {
-         return d_data[d][1](i, depth);
+      if (i[d] == d_data[d][1]->getBox().upper()[d]) {
+         return (*(d_data[d][1]))(i, depth);
       }
    }
 
@@ -207,7 +180,7 @@ OuternodeData<TYPE>::operator () (
     */
    TBOX_ERROR("Bad index used to access outernode data\n"
       << "Given index is not an outernode of this instance.\n");
-   return d_data[0][0](i, depth);
+   return (*(d_data[0][0]))(i, depth);
 }
 
 template<class TYPE>
@@ -219,11 +192,11 @@ OuternodeData<TYPE>::operator () (
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
 
    for (int d = getDim() - 1; d >= 0; d--) {
-      if (i[d] == d_data[d][0].getBox().lower()[d]) {
-         return d_data[d][0](i, depth);
+      if (i[d] == d_data[d][0]->getBox().lower()[d]) {
+         return (*(d_data[d][0]))(i, depth);
       }
-      if (i[d] == d_data[d][1].getBox().upper()[d]) {
-         return d_data[d][1](i, depth);
+      if (i[d] == d_data[d][1]->getBox().upper()[d]) {
+         return (*(d_data[d][1]))(i, depth);
       }
    }
    /*
@@ -232,7 +205,7 @@ OuternodeData<TYPE>::operator () (
     */
    TBOX_ERROR("Bad index used to access outernode data\n"
       << "Given index is not an outernode of this instance.\n");
-   return d_data[0][0](i, depth);
+   return (*(d_data[0][0]))(i, depth);
 }
 
 /*
@@ -385,7 +358,7 @@ OuternodeData<TYPE>::copyDepth(
    const ArrayData<TYPE>& node_array = src.getArrayData();
    for (int d = 0; d < getDim().getValue(); d++) {
       for (int loc = 0; loc < 2; loc++) {
-         ArrayData<TYPE>& onode_array = d_data[d][loc];
+         ArrayData<TYPE>& onode_array = *(d_data[d][loc]);
          onode_array.copyDepth(dst_depth,
             node_array,
             src_depth,
@@ -415,7 +388,7 @@ OuternodeData<TYPE>::copyDepth2(
    ArrayData<TYPE>& node_array = dst.getArrayData();
    for (int d = 0; d < getDim().getValue(); d++) {
       for (int loc = 0; loc < 2; loc++) {
-         const ArrayData<TYPE>& onode_array = d_data[d][loc];
+         const ArrayData<TYPE>& onode_array = *(d_data[d][loc]);
          node_array.copyDepth(dst_depth,
             onode_array,
             src_depth,
@@ -466,14 +439,14 @@ OuternodeData<TYPE>::sum(
          for (int src_p = 0; src_p < 2; src_p++) {
 
             const ArrayData<TYPE>& src_array =
-               t_onode_src->d_data[src_d][src_p];
+               *(t_onode_src->d_data[src_d][src_p]);
             const hier::BoxContainer& box_list =
                t_overlap->getDestinationBoxContainer();
 
             for (int dst_d = 0; dst_d < getDim().getValue(); dst_d++) {
                for (int dst_p = 0; dst_p < 2; dst_p++) {
-                  if (d_data[dst_d][dst_p].isInitialized()) {
-                     d_data[dst_d][dst_p].sum(
+                  if (d_data[dst_d][dst_p]->isInitialized()) {
+                     d_data[dst_d][dst_p]->sum(
                         src_array, box_list, src_offset);
                   }
                }
@@ -516,8 +489,8 @@ OuternodeData<TYPE>::getDataStreamSize(
    const hier::BoxContainer& boxlist = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
-      size += d_data[d][0].getDataStreamSize(boxlist, src_offset);
-      size += d_data[d][1].getDataStreamSize(boxlist, src_offset);
+      size += d_data[d][0]->getDataStreamSize(boxlist, src_offset);
+      size += d_data[d][1]->getDataStreamSize(boxlist, src_offset);
    }
    return size;
 }
@@ -550,11 +523,11 @@ OuternodeData<TYPE>::packStream(
          hier::Box::shift(*dst_box, -src_offset);
       for (int d = 0; d < getDim().getValue(); d++) {
          for (int loc = 0; loc < 2; loc++) {
-            const hier::Box intersect = src_box * d_data[d][loc].getBox();
+            const hier::Box intersect = src_box * d_data[d][loc]->getBox();
             if (!intersect.empty()) {
                const hier::Box pack_box =
                   hier::Box::shift(intersect, src_offset);
-               d_data[d][loc].packStream(stream, pack_box, src_offset);
+               d_data[d][loc]->packStream(stream, pack_box, src_offset);
             }
          }
       }
@@ -579,9 +552,9 @@ OuternodeData<TYPE>::unpackStream(
       for (int d = 0; d < getDim().getValue(); d++) {
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect =
-               (*dst_box) * d_data[d][f].getBox();
+               (*dst_box) * d_data[d][f]->getBox();
             if (!intersect.empty()) {
-               d_data[d][f].unpackStream(stream, intersect, src_offset);
+               d_data[d][f]->unpackStream(stream, intersect, src_offset);
             }
          }
       }
@@ -615,9 +588,9 @@ OuternodeData<TYPE>::unpackStreamAndSum(
            dst_box != dst_boxes.end(); ++dst_box) {
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect =
-               (*dst_box) * d_data[d][f].getBox();
+               (*dst_box) * d_data[d][f]->getBox();
             if (!intersect.empty()) {
-               d_data[d][f].unpackStreamAndSum(stream, intersect, src_offset);
+               d_data[d][f]->unpackStreamAndSum(stream, intersect, src_offset);
             }
          }
       }
@@ -733,11 +706,11 @@ OuternodeData<TYPE>::fill(
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
    for (int i = 0; i < getDim().getValue(); i++) {
-      if (d_data[i][0].isInitialized()) {
-         d_data[i][0].fill(t, d);
+      if (d_data[i][0]->isInitialized()) {
+         d_data[i][0]->fill(t, d);
       }
-      if (d_data[i][1].isInitialized()) {
-         d_data[i][1].fill(t, d);
+      if (d_data[i][1]->isInitialized()) {
+         d_data[i][1]->fill(t, d);
       }
    }
 }
@@ -753,11 +726,11 @@ OuternodeData<TYPE>::fill(
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
    for (int i = 0; i < getDim().getValue(); i++) {
-      if (d_data[i][0].isInitialized()) {
-         d_data[i][0].fill(t, NodeGeometry::toNodeBox(box), d);
+      if (d_data[i][0]->isInitialized()) {
+         d_data[i][0]->fill(t, NodeGeometry::toNodeBox(box), d);
       }
-      if (d_data[i][1].isInitialized()) {
-         d_data[i][1].fill(t, NodeGeometry::toNodeBox(box), d);
+      if (d_data[i][1]->isInitialized()) {
+         d_data[i][1]->fill(t, NodeGeometry::toNodeBox(box), d);
       }
    }
 }
@@ -768,11 +741,11 @@ OuternodeData<TYPE>::fillAll(
    const TYPE& t)
 {
    for (int i = 0; i < getDim().getValue(); i++) {
-      if (d_data[i][0].isInitialized()) {
-         d_data[i][0].fillAll(t);
+      if (d_data[i][0]->isInitialized()) {
+         d_data[i][0]->fillAll(t);
       }
-      if (d_data[i][1].isInitialized()) {
-         d_data[i][1].fillAll(t);
+      if (d_data[i][1]->isInitialized()) {
+         d_data[i][1]->fillAll(t);
       }
    }
 }
@@ -786,11 +759,11 @@ OuternodeData<TYPE>::fillAll(
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
    for (int i = 0; i < getDim().getValue(); i++) {
-      if (d_data[i][0].isInitialized()) {
-         d_data[i][0].fillAll(t, NodeGeometry::toNodeBox(box));
+      if (d_data[i][0]->isInitialized()) {
+         d_data[i][0]->fillAll(t, NodeGeometry::toNodeBox(box));
       }
-      if (d_data[i][1].isInitialized()) {
-         d_data[i][1].fillAll(t, NodeGeometry::toNodeBox(box));
+      if (d_data[i][1]->isInitialized()) {
+         d_data[i][1]->fillAll(t, NodeGeometry::toNodeBox(box));
       }
    }
 }
@@ -814,7 +787,7 @@ OuternodeData<TYPE>::copyFromNode(
    const ArrayData<TYPE>& node_array = src.getArrayData();
    for (int d = 0; d < getDim().getValue(); d++) {
       for (int loc = 0; loc < 2; loc++) {
-         ArrayData<TYPE>& onode_array = d_data[d][loc];
+         ArrayData<TYPE>& onode_array = *(d_data[d][loc]);
          if (onode_array.isInitialized()) {
             onode_array.copy(node_array, onode_array.getBox());
          }
@@ -832,8 +805,8 @@ OuternodeData<TYPE>::copyToNode(
    ArrayData<TYPE>& node_array = dst.getArrayData();
    for (int d = 0; d < getDim().getValue(); d++) {
       for (int loc = 0; loc < 2; loc++) {
-         if (d_data[d][loc].isInitialized()) {
-            node_array.copy(d_data[d][loc], d_data[d][loc].getBox());
+         if (d_data[d][loc]->isInitialized()) {
+            node_array.copy(*(d_data[d][loc]), d_data[d][loc]->getBox());
          }
       }
    }
@@ -859,11 +832,11 @@ OuternodeData<TYPE>::copyFromNode(
    const hier::IntVector& src_offset = overlap.getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
       const hier::BoxContainer& box_list = overlap.getDestinationBoxContainer();
-      if (d_data[d][0].isInitialized()) {
-         d_data[d][0].copy(src.getArrayData(), box_list, src_offset);
+      if (d_data[d][0]->isInitialized()) {
+         d_data[d][0]->copy(src.getArrayData(), box_list, src_offset);
       }
-      if (d_data[d][1].isInitialized()) {
-         d_data[d][1].copy(src.getArrayData(), box_list, src_offset);
+      if (d_data[d][1]->isInitialized()) {
+         d_data[d][1]->copy(src.getArrayData(), box_list, src_offset);
       }
    }
 }
@@ -879,11 +852,11 @@ OuternodeData<TYPE>::copyToNode(
    const hier::IntVector& src_offset = overlap.getSourceOffset();
    const hier::BoxContainer& box_list = overlap.getDestinationBoxContainer();
    for (int d = 0; d < getDim().getValue(); d++) {
-      if (d_data[d][0].isInitialized()) {
-         dst.getArrayData().copy(d_data[d][0], box_list, src_offset);
+      if (d_data[d][0]->isInitialized()) {
+         dst.getArrayData().copy(*(d_data[d][0]), box_list, src_offset);
       }
-      if (d_data[d][1].isInitialized()) {
-         dst.getArrayData().copy(d_data[d][1], box_list, src_offset);
+      if (d_data[d][1]->isInitialized()) {
+         dst.getArrayData().copy(*(d_data[d][1]), box_list, src_offset);
       }
    }
 }
@@ -898,11 +871,11 @@ OuternodeData<TYPE>::copyFromOuternode(
    for (int src_d = 0; src_d < getDim().getValue(); src_d++) {
       for (int src_p = 0; src_p < 2; src_p++) {
 
-         const ArrayData<TYPE>& src_array = src.d_data[src_d][src_p];
+         const ArrayData<TYPE>& src_array = *(src.d_data[src_d][src_p]);
 
          for (int dst_d = 0; dst_d < getDim().getValue(); dst_d++) {
             for (int dst_p = 0; dst_p < 2; dst_p++) {
-               ArrayData<TYPE>& onode_array = d_data[dst_d][dst_p];
+               ArrayData<TYPE>& onode_array = *(d_data[dst_d][dst_p]);
                if (onode_array.isInitialized()) {
                   onode_array.copy(src_array, onode_array.getBox());
                }
@@ -924,13 +897,13 @@ OuternodeData<TYPE>::copyFromOuternode(
    for (int src_d = 0; src_d < getDim().getValue(); src_d++) {
       for (int src_p = 0; src_p < 2; src_p++) {
 
-         const ArrayData<TYPE>& src_array = src.d_data[src_d][src_p];
+         const ArrayData<TYPE>& src_array = *(src.d_data[src_d][src_p]);
          const hier::BoxContainer& box_list = overlap.getDestinationBoxContainer();
 
          for (int dst_d = 0; dst_d < getDim().getValue(); dst_d++) {
             for (int dst_p = 0; dst_p < 2; dst_p++) {
-               if (d_data[dst_d][dst_p].isInitialized()) {
-                  d_data[dst_d][dst_p].copy(src_array, box_list, src_offset);
+               if (d_data[dst_d][dst_p]->isInitialized()) {
+                  d_data[dst_d][dst_p]->copy(src_array, box_list, src_offset);
                }
             }
          }
@@ -948,13 +921,13 @@ OuternodeData<TYPE>::copyToOuternode(
    for (int dst_d = 0; dst_d < getDim().getValue(); dst_d++) {
       for (int dst_p = 0; dst_p < 2; dst_p++) {
 
-         ArrayData<TYPE>& dst_array = dst.d_data[dst_d][dst_p];
+         ArrayData<TYPE>& dst_array = *(dst.d_data[dst_d][dst_p]);
 
          for (int src_d = 0; src_d < getDim().getValue(); src_d++) {
             for (int src_p = 0; src_p < 2; src_p++) {
-               if (d_data[src_d][src_p].isInitialized()) {
-                  dst_array.copy(d_data[src_d][src_p],
-                     d_data[src_d][src_p].getBox());
+               if (d_data[src_d][src_p]->isInitialized()) {
+                  dst_array.copy(*(d_data[src_d][src_p]),
+                     d_data[src_d][src_p]->getBox());
                }
             }
          }
@@ -976,11 +949,11 @@ OuternodeData<TYPE>::copyToOuternode(
    for (int dst_d = 0; dst_d < getDim().getValue(); dst_d++) {
       for (int dst_p = 0; dst_p < 2; dst_p++) {
 
-         ArrayData<TYPE>& dst_array = dst.d_data[dst_d][dst_p];
+         ArrayData<TYPE>& dst_array = *(dst.d_data[dst_d][dst_p]);
          for (int src_d = 0; src_d < getDim().getValue(); src_d++) {
             for (int src_p = 0; src_p < 2; src_p++) {
-               if (d_data[src_d][src_p].isInitialized()) {
-                  dst_array.copy(d_data[src_d][src_p], box_list, src_offset);
+               if (d_data[src_d][src_p]->isInitialized()) {
+                  dst_array.copy(*(d_data[src_d][src_p]), box_list, src_offset);
                }
             }
          }
@@ -1065,12 +1038,13 @@ OuternodeData<TYPE>::printAxisSide(
    TBOX_ASSERT((side == 0) || (side == 1));
 
    const hier::Box nodebox = NodeGeometry::toNodeBox(box);
-   const hier::Box region = nodebox * d_data[face_normal][side].getBox();
+   const hier::Box region = nodebox * d_data[face_normal][side]->getBox();
    os.precision(prec);
    hier::Box::iterator iend(region, false);
    for (hier::Box::iterator i(region, true); i != iend; ++i) {
       os << "array" << *i << " = "
-         << d_data[face_normal][side](*i, depth) << std::endl << std::flush;
+         << (*(d_data[face_normal][side]))(*i, depth) << std::endl
+         << std::flush;
    }
 }
 
@@ -1105,13 +1079,13 @@ OuternodeData<TYPE>::getSpecializedFromDatabase(
          + "_1";
       if (database->keyExists(array_name)) {
          array_database = database->getDatabase(array_name);
-         (d_data[i][0]).getFromDatabase(array_database);
+         d_data[i][0]->getFromDatabase(array_database);
       }
 
       array_name = "d_data" + tbox::Utilities::intToString(i) + "_2";
       if (database->keyExists(array_name)) {
          array_database = database->getDatabase(array_name);
-         (d_data[i][1]).getFromDatabase(array_database);
+         d_data[i][1]->getFromDatabase(array_database);
       }
    }
 }
@@ -1140,15 +1114,15 @@ OuternodeData<TYPE>::putSpecializedToDatabase(
    std::string array_name;
    boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
-      if (d_data[i][0].isInitialized()) {
+      if (d_data[i][0]->isInitialized()) {
          array_name = "d_data" + tbox::Utilities::intToString(i) + "_1";
          array_database = database->putDatabase(array_name);
-         (d_data[i][0]).putUnregisteredToDatabase(array_database);
+         d_data[i][0]->putUnregisteredToDatabase(array_database);
       }
-      if (d_data[i][1].isInitialized()) {
+      if (d_data[i][1]->isInitialized()) {
          array_name = "d_data" + tbox::Utilities::intToString(i) + "_2";
          array_database = database->putDatabase(array_name);
-         (d_data[i][1]).putUnregisteredToDatabase(array_database);
+         d_data[i][1]->putUnregisteredToDatabase(array_database);
       }
    }
 }

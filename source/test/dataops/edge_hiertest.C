@@ -76,7 +76,7 @@ int main(
 
    const unsigned short d = static_cast<unsigned short>(atoi(argv[1]));
    TBOX_ASSERT(d > 0);
-   TBOX_ASSERT(d <= tbox::Dimension::MAXIMUM_DIMENSION_VALUE);
+   TBOX_ASSERT(d <= SAMRAI::MAX_DIM_VAL);
    const tbox::Dimension dim(d);
 
    if (dim != tbox::Dimension(2)) {

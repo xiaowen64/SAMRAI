@@ -29,6 +29,13 @@
 namespace SAMRAI {
 namespace pdat {
 
+template <class TYPE>
+class OuteredgeData;
+template <class TYPE>
+class OuternodeData;
+template <class TYPE>
+class SideData;
+
 /*!
  * @brief Class ArrayData<TYPE> is a basic templated array structure defined
  * over the index space of a box (with a specified depth) that provides
@@ -82,13 +89,6 @@ public:
       int depth);
 
    /*!
-    * The default constructor creates an empty array data object.
-    * The initializeArray() member function must be called before the
-    * array can be used.
-    */
-   ArrayData();
-
-   /*!
     * Construct an array data object.
     *
     * @param box   Const reference to box object describing the spatial extents
@@ -101,27 +101,18 @@ public:
       int depth);
 
    /*!
+    * @brief Constructor creating an empty array data object.
+    *
+    * @param dim
+    */
+   ArrayData(
+      const tbox::Dimension& dim);
+
+   /*!
     * The destructor for an array data object releases all memory allocated
     * for the array elements.
     */
    ~ArrayData();
-
-   /*!
-    * Initialize the size of array data and depth.  This method is
-    * somewhat poorly named as the data is NOT initialized to anything
-    * to avoid the performance cost of the data initialization.
-    *
-    * Use undefineData to initialize the data.
-    *
-    * @param box   Const reference to box object describing the spatial extents
-    *              of the index space associated with the array data object.
-    * @param depth Integer number of data values at each spatial location in
-    *              the array.
-    */
-   void
-   initializeArray(
-      const hier::Box& box,
-      int depth);
 
    /*!
     * @brief Returns true when the array has been properly initialized
@@ -599,20 +590,7 @@ public:
    getDim() const;
 
    /**
-    * @brief Invalidate an array as opposed to initializing it.
-    *
-    * The box associated with the array will be set to empty so
-    * intersections will be the empty set.
-    *
-    */
-   void
-   invalidateArray(
-      const tbox::Dimension& dim);
-
-   /**
     * @brief Returns true if the array is valid.
-    *
-    * Invalid state can be set using the invalidateArray method.
     */
    bool
    isValid();
@@ -625,11 +603,17 @@ public:
    typedef ArrayDataIterator iterator;
 
 private:
+   // Unimplemented default constructor.
+   ArrayData();
+
+   // Unimplemented copy constructor.
    ArrayData(
-      const ArrayData<TYPE>&);          // not implemented
+      const ArrayData<TYPE>&);
+
+   // Unimplemented assignment operator.
    void
    operator = (
-      const ArrayData<TYPE>&);                  // not implemented
+      const ArrayData<TYPE>&);
 
    /*
     * Static integer constant describing this class's version number.

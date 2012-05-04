@@ -956,7 +956,7 @@ public:
    operator = (
       const tbox::DatabaseBox& box)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+      TBOX_ASSERT(getDim().getValue() == box.getDimVal());
 #ifdef BOX_TELEMETRY
       // Increment the cumulative assigned count only.
       ++s_cumulative_assigned_ct;
@@ -1108,7 +1108,6 @@ public:
    getEmptyBox(
       const tbox::Dimension& dim)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(dim);
       return *(s_emptys[dim.getValue() - 1]);
    }
 
@@ -1120,7 +1119,6 @@ public:
    getUniverse(
       const tbox::Dimension& dim)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(dim);
       return *(s_universes[dim.getValue() - 1]);
    }
 
@@ -1130,10 +1128,7 @@ public:
     */
    typedef BoxIterator iterator;
 
-   template<class>
-   friend class pdat::ArrayData;
    friend class BoxIterator;
-   friend class std::vector<Box>;
 
 #ifdef BOX_TELEMETRY
    // These are to optionally track the cumulative number of Boxes constructed,
@@ -1150,9 +1145,7 @@ public:
 
 private:
    /**
-    * The default constructor creates an uninitialized box.
-    *
-    * This should never be invoked, it will cause assertions
+    * Unimplemented default constructor.
     */
    Box();
 
@@ -1206,13 +1199,13 @@ private:
     * them in multiple places.
     */
 
-   static Box* s_emptys[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static Box* s_emptys[SAMRAI::MAX_DIM_VAL];
 
    /*
     * Box that represents the maximum allowed index extents,
     * the "universe" that can be represented.
     */
-   static Box* s_universes[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static Box* s_universes[SAMRAI::MAX_DIM_VAL];
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

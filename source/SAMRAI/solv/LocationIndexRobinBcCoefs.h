@@ -258,16 +258,16 @@ private:
    /*
     * @brief Mapping for a coefficient.
     */
-   double d_a_map[2 * tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_a_map[2 * SAMRAI::MAX_DIM_VAL];
 
    /*
     * @brief Mapping for b coefficient.
     */
-   double d_b_map[2 * tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_b_map[2 * SAMRAI::MAX_DIM_VAL];
    /*
     * @brief Mapping for g coefficient.
     */
-   double d_g_map[2 * tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_g_map[2 * SAMRAI::MAX_DIM_VAL];
 
 };
 

@@ -1761,7 +1761,7 @@ yyreduce:
                Parser::getParser()->error("Type mismatch in box array");
                delete (yyvsp[(3) - (3)].u_keydata);
                (yyval.u_keydata) = (yyvsp[(1) - (3)].u_keydata);
-            } else if ((yyvsp[(3) - (3)].u_keydata)->d_box.getDim() != (yyvsp[(1) - (3)].u_keydata)->d_box.getDim()) {
+            } else if ((yyvsp[(3) - (3)].u_keydata)->d_box.getDimVal() != (yyvsp[(1) - (3)].u_keydata)->d_box.getDimVal()) {
                Parser::getParser()->error("Box array dimension mismatch");
                delete (yyvsp[(3) - (3)].u_keydata);
                (yyval.u_keydata) = (yyvsp[(1) - (3)].u_keydata);

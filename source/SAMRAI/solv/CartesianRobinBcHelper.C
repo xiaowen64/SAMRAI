@@ -93,7 +93,6 @@ CartesianRobinBcHelper::CartesianRobinBcHelper(
    std::string object_name,
    RobinBcCoefStrategy* coef_strategy):
    xfer::RefinePatchStrategy(dim),
-   d_dim(dim),
    d_object_name(object_name),
    d_coef_strategy(NULL),
    d_target_data_id(-1),

@@ -30,7 +30,6 @@ namespace hier {
 TransferOperatorRegistry::TransferOperatorRegistry(
    const tbox::Dimension& dim):
    d_min_stencil_width(dim, 0),
-   d_dim(dim),
    d_max_op_stencil_width_req(false)
 {
 }
@@ -127,7 +126,7 @@ TransferOperatorRegistry::lookupCoarsenOperator(
    const std::string& op_name)
 {
    TBOX_ASSERT(var);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
+   TBOX_DIM_ASSERT_CHECK_ARGS2(d_min_stencil_width, *var);
 
    boost::shared_ptr<CoarsenOperator> coarsen_op;
 
@@ -171,7 +170,7 @@ TransferOperatorRegistry::lookupRefineOperator(
    const std::string& op_name)
 {
    TBOX_ASSERT(var);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
+   TBOX_DIM_ASSERT_CHECK_ARGS2(d_min_stencil_width, *var);
 
    boost::shared_ptr<RefineOperator> refine_op;
 
@@ -215,7 +214,7 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
    const std::string& op_name)
 {
    TBOX_ASSERT(var);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
+   TBOX_DIM_ASSERT_CHECK_ARGS2(d_min_stencil_width, *var);
 
    boost::shared_ptr<TimeInterpolateOperator> time_op;
 
@@ -261,8 +260,10 @@ IntVector
 TransferOperatorRegistry::getMaxTransferOpStencilWidth()
 {
    IntVector max_width(d_min_stencil_width);
-   max_width.max(RefineOperator::getMaxRefineOpStencilWidth(getDim()));
-   max_width.max(CoarsenOperator::getMaxCoarsenOpStencilWidth(getDim()));
+   max_width.max(RefineOperator::getMaxRefineOpStencilWidth(
+      d_min_stencil_width.getDim()));
+   max_width.max(CoarsenOperator::getMaxCoarsenOpStencilWidth(
+      d_min_stencil_width.getDim()));
    d_max_op_stencil_width_req = true;
    return max_width;
 }

@@ -188,6 +188,7 @@ public:
    getSurfaceBoxFromBoundaryBox() const;
 
 private:
+   // Unimplemented default constructor.
    BoundaryBoxUtils();
 
    /*!

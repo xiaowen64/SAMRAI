@@ -229,7 +229,7 @@ private:
    buildTable(int* table,
               int codim,
               int ibeg,
-              int(&work)[tbox::Dimension::MAXIMUM_DIMENSION_VALUE],
+              int(&work)[SAMRAI::MAX_DIM_VAL],
               int& lvl,
               int * & ptr);
 
@@ -256,8 +256,7 @@ private:
     * @brief Static data members used to control access to and destruction of
     * singleton variable database instance.
     */
-   static BoundaryLookupTable* s_lookup_table_instance[tbox::Dimension::
-                                                       MAXIMUM_DIMENSION_VALUE];
+   static BoundaryLookupTable* s_lookup_table_instance[SAMRAI::MAX_DIM_VAL];
 
    /*!
     * @brief Dimension of the object
@@ -280,7 +279,7 @@ private:
     * @brief Data member used to store the lookup table.
     */
    tbox::Array<tbox::Array<int> >
-   d_table[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      d_table[SAMRAI::MAX_DIM_VAL];
 
    /*!
     * @brief Array to hold information about possible directions for each

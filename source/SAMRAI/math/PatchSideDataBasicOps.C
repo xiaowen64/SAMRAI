@@ -32,31 +32,6 @@ PatchSideDataBasicOps<TYPE>::~PatchSideDataBasicOps()
 /*
  *************************************************************************
  *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-PatchSideDataBasicOps<TYPE>::PatchSideDataBasicOps(
-   const PatchSideDataBasicOps<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-PatchSideDataBasicOps<TYPE>::operator = (
-   const PatchSideDataBasicOps<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * General basic templated opertions for side data.
  *
  *************************************************************************

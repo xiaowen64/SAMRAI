@@ -497,7 +497,7 @@ private:
       const hier::Box bccoef_box,
       pdat::ArrayData<double>& Ak0_data,
       const hier::BoundaryBox& trimmed_boundary_box,
-      const double h[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]);
+      const double h[SAMRAI::MAX_DIM_VAL]);
 
    //@}
 
@@ -596,7 +596,7 @@ private:
    int d_Ak0_id;
 
    static boost::shared_ptr<pdat::OutersideVariable<double> >
-      s_Ak0_var[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+     s_Ak0_var[SAMRAI::MAX_DIM_VAL];
 
    /*!
     * @brief Depth of the solution variable.

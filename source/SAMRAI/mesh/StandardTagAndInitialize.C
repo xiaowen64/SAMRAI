@@ -800,8 +800,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
        * Get Connectors coarsened<==>coarser, which are used for recursive
        * refinement filling of the coarsened level's ghosts.
        */
-      hier::Connector* coarsened_to_coarser = new hier::Connector;
-      hier::Connector* coarser_to_coarsened = new hier::Connector;
+      hier::Connector* coarsened_to_coarser = new hier::Connector(dim);
+      hier::Connector* coarser_to_coarsened = new hier::Connector(dim);
       boost::shared_ptr<hier::PatchLevel> coarser_level(
          hierarchy->getPatchLevel(level_number - 1));
       const hier::Connector& level_to_coarser =

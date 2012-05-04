@@ -330,7 +330,8 @@ int main(
                        << connector_from_exhaustive_search.format("EXHAUSTIVE: ", 2)
                        << std::endl;
 
-            hier::Connector exhaustive_minus_tree, tree_minus_exhaustive;
+            hier::Connector exhaustive_minus_tree(dim),
+                            tree_minus_exhaustive(dim);
             hier::Connector::computeNeighborhoodDifferences(
                exhaustive_minus_tree,
                connector_from_exhaustive_search,
@@ -364,7 +365,7 @@ int main(
          /*
           * Get the baseline Connector NeighborhoodSet and compare.
           */
-         hier::Connector baseline_connector;
+         hier::Connector baseline_connector(dim);
          baseline_connector.getNeighborhoodsFromDatabase(*connector_db);
          if (!baseline_connector.localNeighborhoodsEqual(connector)) {
             tbox::perr << "Multiblock Tree test problem:\n"
@@ -439,7 +440,7 @@ void breakUpBoxes(
 
    mesh::TreeLoadBalancer load_balancer(mapped_box_level.getDim());
 
-   hier::Connector dummy_connector;
+   hier::Connector dummy_connector(dim);
 
    const hier::IntVector min_size(dim, 2);
    const hier::IntVector bad_interval(dim, 1);

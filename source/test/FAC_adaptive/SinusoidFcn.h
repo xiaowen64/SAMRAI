@@ -174,9 +174,9 @@ private:
    //! Amplitude
    double d_amp;
    //! Wave number in half-cycles
-   double d_npi[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_npi[SAMRAI::MAX_DIM_VAL];
    //! Phase shift in half-cycles
-   double d_ppi[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_ppi[SAMRAI::MAX_DIM_VAL];
 
 };
 

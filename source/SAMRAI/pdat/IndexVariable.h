@@ -77,11 +77,14 @@ public:
    }
 
 private:
+   // Unimplemented copy constructor
    IndexVariable(
-      const IndexVariable<TYPE, BOX_GEOMETRY>&);           // not implemented
+      const IndexVariable<TYPE, BOX_GEOMETRY>&);
+
+   // Unimplemented assignment operator
    void
    operator = (
-      const IndexVariable<TYPE, BOX_GEOMETRY>&);                 // not implemented
+      const IndexVariable<TYPE, BOX_GEOMETRY>&);
 
 };
 

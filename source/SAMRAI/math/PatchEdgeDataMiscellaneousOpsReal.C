@@ -32,31 +32,6 @@ PatchEdgeDataMiscellaneousOpsReal<TYPE>::~PatchEdgeDataMiscellaneousOpsReal()
 /*
  *************************************************************************
  *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-PatchEdgeDataMiscellaneousOpsReal<TYPE>::PatchEdgeDataMiscellaneousOpsReal(
-   const PatchEdgeDataMiscellaneousOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-PatchEdgeDataMiscellaneousOpsReal<TYPE>::operator = (
-   const PatchEdgeDataMiscellaneousOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * Templated miscellaneous opertions for real edge-centered data.
  *
  *************************************************************************

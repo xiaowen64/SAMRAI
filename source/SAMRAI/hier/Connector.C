@@ -54,11 +54,12 @@ Connector::s_initialize_finalize_handler(
  ***********************************************************************
  */
 
-Connector::Connector():
+Connector::Connector(
+   const tbox::Dimension& dim):
    d_base_handle(),
    d_head_handle(),
-   d_base_width(tbox::Dimension::getInvalidDimension()),
-   d_ratio(tbox::Dimension::getInvalidDimension()),
+   d_base_width(dim),
+   d_ratio(dim),
    d_ratio_is_exact(false),
    d_head_coarser(false),
    d_relationships(),
@@ -519,7 +520,6 @@ Connector::finalizeContext()
 {
    TBOX_ASSERT(d_base_handle);
    TBOX_ASSERT(d_head_handle);
-   TBOX_ASSERT(d_base_width.getDim().isValid());
 
    const BoxLevel& base = d_base_handle->getBoxLevel();
    const BoxLevel& head = d_head_handle->getBoxLevel();

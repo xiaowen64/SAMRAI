@@ -1022,10 +1022,10 @@ private:
    startupCallback()
    {
       s_tag_indx = new tbox::Array<int>(
-         tbox::Dimension::MAXIMUM_DIMENSION_VALUE,
+         SAMRAI::MAX_DIM_VAL,
          -1);
       s_buf_tag_indx = new tbox::Array<int>(
-         tbox::Dimension::MAXIMUM_DIMENSION_VALUE,
+         SAMRAI::MAX_DIM_VAL,
          -1);
    }
 

@@ -53,10 +53,10 @@ ArrayDataNormOpsInteger::abs(
 
    if (!ibox.empty()) {
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int src_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int dst_w[SAMRAI::MAX_DIM_VAL];
+      int src_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
@@ -81,8 +81,8 @@ ArrayDataNormOpsInteger::abs(
          int dst_counter = dst_begin;
          int src_counter = src_begin;
 
-         int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int dst_b[SAMRAI::MAX_DIM_VAL];
+         int src_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             dst_b[nd] = dst_counter;
             src_b[nd] = src_counter;

@@ -319,7 +319,7 @@ P_EXPRESSION_LIST
                Parser::getParser()->error("Type mismatch in box array");
                delete $3;
                $$ = $1;
-            } else if ($3->d_box.getDim() != $1->d_box.getDim()) {
+            } else if ($3->d_box.getDimVal() != $1->d_box.getDimVal()) {
                Parser::getParser()->error("Box array dimension mismatch");
                delete $3;
                $$ = $1;

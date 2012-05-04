@@ -197,16 +197,10 @@ PatchGeometry::printClassData(
    }
 }
 
-PatchGeometry::TwoDimBool::TwoDimBool():
-   d_dim(tbox::Dimension::getInvalidDimension())
-{
-}
-
 PatchGeometry::TwoDimBool::TwoDimBool(
    const tbox::Dimension& dim):
    d_dim(dim)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM(dim);
    setAll(false);
 }
 

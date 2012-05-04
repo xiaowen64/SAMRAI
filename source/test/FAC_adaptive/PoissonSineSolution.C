@@ -117,8 +117,8 @@ void PoissonSineSolution::setGridData(
    setCellDataToSinusoid(source_data,
       patch,
       d_exact);
-   double npi[tbox::Dimension::MAXIMUM_DIMENSION_VALUE],
-          ppi[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double npi[SAMRAI::MAX_DIM_VAL],
+          ppi[SAMRAI::MAX_DIM_VAL];
    d_exact.getWaveNumbers(npi);
    d_exact.getPhaseAngles(ppi);
    double source_scale = 0.0;

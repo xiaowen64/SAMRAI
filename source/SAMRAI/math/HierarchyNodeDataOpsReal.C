@@ -111,32 +111,6 @@ HierarchyNodeDataOpsReal<TYPE>::getPatchHierarchy() const
 /*
  *************************************************************************
  *
- * The following are private and cannot be used, but they are defined
- * here for compilers that require that every template declaration have
- * a definition (a stupid requirement, if you ask me).
- *
- *************************************************************************
- */
-
-template<class TYPE>
-HierarchyNodeDataOpsReal<TYPE>::HierarchyNodeDataOpsReal(
-   const HierarchyNodeDataOpsReal<TYPE>& foo):
-   HierarchyDataOpsReal<TYPE>()
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-HierarchyNodeDataOpsReal<TYPE>::operator = (
-   const HierarchyNodeDataOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * Basic generic operations.
  *
  *************************************************************************

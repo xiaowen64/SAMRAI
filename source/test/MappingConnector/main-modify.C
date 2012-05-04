@@ -244,7 +244,7 @@ int main(
        */
 
       hier::BoxLevel mapped_box_level_c(dim);
-      hier::Connector b_to_c, c_to_b;
+      hier::Connector b_to_c(dim), c_to_b(dim);
       boost::shared_ptr<Database> alteration_db(
          main_db->getDatabase("Alteration"));
 
@@ -369,7 +369,7 @@ void breakUpBoxes(
 
    const int level_number(0);
 
-   hier::Connector dummy_connector;
+   hier::Connector dummy_connector(dim);
 
    const hier::IntVector bad_interval(dim, 1);
    const hier::IntVector cut_factor(dim, 1);

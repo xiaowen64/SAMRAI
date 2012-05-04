@@ -859,7 +859,7 @@ public:
       const hier::Box& box) const
    {
       int size = box.numberCells(0);
-      int dim_val = d_dim.getValue();
+      int dim_val = d_common->d_dim.getValue();
       for (int d = 1; d < dim_val; ++d) {
          size += box.numberCells(d);
       }
@@ -970,9 +970,6 @@ public:
    static void
    finalizeCallback();
 
-   // TODO: d_dim is unneeded.  Dimension is already in d_common.
-   const tbox::Dimension d_dim;
-
    /*!
     * @brief Unique id in the binary dendogram.
     *
@@ -1060,7 +1057,7 @@ public:
     * local histogram, then later, the reduced histogram.
     * If not, it is just the local histogram.
     */
-   VectorOfInts d_histogram[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   VectorOfInts d_histogram[SAMRAI::MAX_DIM_VAL];
 
    /*!
     * @brief Number of tags in the candidate box.

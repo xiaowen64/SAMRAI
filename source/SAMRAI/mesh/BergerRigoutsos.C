@@ -398,7 +398,7 @@ BergerRigoutsos::sortOutputBoxes(
    /*
     * Sort local indices by corners to make the output deterministic.
     */
-   hier::Connector sorting_map;
+   hier::Connector sorting_map(d_dim);
    hier::BoxLevel sorted_mapped_box_level(d_dim);
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(

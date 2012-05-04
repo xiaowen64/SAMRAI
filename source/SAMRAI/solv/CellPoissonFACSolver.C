@@ -29,10 +29,8 @@ namespace solv {
  */
 
 bool CellPoissonFACSolver::s_initialized = 0;
-int CellPoissonFACSolver::s_weight_id[tbox::Dimension::
-                                      MAXIMUM_DIMENSION_VALUE];
-int CellPoissonFACSolver::s_instance_counter[tbox::Dimension::
-                                             MAXIMUM_DIMENSION_VALUE];
+int CellPoissonFACSolver::s_weight_id[SAMRAI::MAX_DIM_VAL];
+int CellPoissonFACSolver::s_instance_counter[SAMRAI::MAX_DIM_VAL];
 
 /*
  *************************************************************************
@@ -529,7 +527,7 @@ CellPoissonFACSolver::createVectorWrappers(
 void
 CellPoissonFACSolver::initializeStatics()
 {
-   for (int d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
+   for (int d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       s_weight_id[d] = -1;
       s_instance_counter[d] = -1;
    }

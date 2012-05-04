@@ -1230,7 +1230,7 @@ ChopAndPackLoadBalancer::getFromInput(
             d_ignore_level_box_union_is_single_box);
 
       d_processor_layout_specified = false;
-      int temp_processor_layout[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int temp_processor_layout[SAMRAI::MAX_DIM_VAL];
       if (db->keyExists("processor_layout")) {
          db->getIntegerArray("processor_layout", temp_processor_layout, d_dim.getValue());
 

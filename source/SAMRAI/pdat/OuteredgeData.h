@@ -619,10 +619,14 @@ private:
     */
    static const int PDAT_OUTEREDGEDATA_VERSION;
 
-   OuteredgeData<TYPE>(const OuteredgeData<TYPE>&); // not implemented
+   // Unimplemented copy constructor
+   OuteredgeData<TYPE>(
+      const OuteredgeData<TYPE>&);
+
+   // Unimplemented assignment operator
    void
    operator = (
-      const OuteredgeData<TYPE>&);                // not implemented
+      const OuteredgeData<TYPE>&);
 
    //@{
    //! @name Internal implementations for data copy operations.
@@ -657,9 +661,9 @@ private:
    //@}
 
    int d_depth;
-   ArrayData<TYPE> d_data[tbox::Dimension::MAXIMUM_DIMENSION_VALUE][tbox::Dimension::
-                                                                    MAXIMUM_DIMENSION_VALUE
-   ][2];
+
+   boost::shared_ptr<ArrayData<TYPE> >
+      d_data [SAMRAI::MAX_DIM_VAL][SAMRAI::MAX_DIM_VAL][2];
 };
 
 }

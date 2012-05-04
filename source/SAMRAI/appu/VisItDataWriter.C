@@ -1361,7 +1361,7 @@ VisItDataWriter::writePlotData(
       const hier::BoxLevel& unsorted_mapped_box_level =
          *hierarchy->getPatchLevel(ln)->getBoxLevel();
       hier::BoxLevel sorted_mapped_box_level(d_dim);
-      hier::Connector unused_sorting_map;
+      hier::Connector unused_sorting_map(d_dim);
       dlbg_edge_utils.makeSortingMap(
          sorted_mapped_box_level,
          unused_sorting_map,
@@ -3118,7 +3118,7 @@ VisItDataWriter::writeSummaryToHDFFile(
        */
       double geom_lo[VISIT_FIXED_DIM] = { 0., 0., 0. };
 
-      double dx_curr_lev[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      double dx_curr_lev[SAMRAI::MAX_DIM_VAL];
       double patch_xlo, patch_xhi;
 
       for (i = 0; i < d_dim.getValue(); i++) {

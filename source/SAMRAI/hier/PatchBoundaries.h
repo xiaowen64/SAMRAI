@@ -119,17 +119,9 @@ public:
       return d_array_of_bboxes;
    }
 
-   /*!
-    * @brief friend declaration
-    */
-   friend class::std::map<int, PatchBoundaries>;
-
 private:
-   /*!
-    * @brief Private default constructor.
-    *
-    * This constructor is need by the brain dead STL and should not be used
-    * for any other purpose.
+   /*
+    * Unimplemented default constructor.
     */
    PatchBoundaries();
 

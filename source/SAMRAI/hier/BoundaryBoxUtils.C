@@ -19,12 +19,6 @@
 namespace SAMRAI {
 namespace hier {
 
-BoundaryBoxUtils::BoundaryBoxUtils():
-   d_bbox(tbox::Dimension::getInvalidDimension()),
-   d_outward(tbox::Dimension::getInvalidDimension(), 0)
-{
-}
-
 BoundaryBoxUtils::BoundaryBoxUtils(
    const BoundaryBox& bbox):
    d_bbox(bbox),

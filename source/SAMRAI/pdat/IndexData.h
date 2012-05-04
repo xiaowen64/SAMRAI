@@ -419,11 +419,14 @@ private:
    removeNodeFromList(
       IndexDataNode<TYPE, BOX_GEOMETRY> * node);
 
+   // Unimplemented copy constructor
    IndexData(
-      const IndexData<TYPE, BOX_GEOMETRY>&);       // not implemented
+      const IndexData<TYPE, BOX_GEOMETRY>&);
+
+   // Unimplemented assignment operator
    void
    operator = (
-      const IndexData<TYPE, BOX_GEOMETRY>&);              // not implemented
+      const IndexData<TYPE, BOX_GEOMETRY>&);
 
    const tbox::Dimension d_dim;
 
@@ -451,8 +454,6 @@ public:
    friend class IndexData<TYPE, BOX_GEOMETRY>;
    friend class IndexIterator<TYPE, BOX_GEOMETRY>;
 
-   IndexDataNode<TYPE, BOX_GEOMETRY>();
-
    IndexDataNode<TYPE, BOX_GEOMETRY>(
       const hier::Index & index,
       const int d_offset,
@@ -463,6 +464,9 @@ public:
    virtual ~IndexDataNode<TYPE, BOX_GEOMETRY>();
 
 private:
+   // Unimplemented default constructor.
+   IndexDataNode<TYPE, BOX_GEOMETRY>();
+
    hier::Index d_index;
    int d_offset;
    TYPE* d_item;

@@ -86,11 +86,14 @@ public:
 private:
    bool d_fine_boundary_represents_var;
 
+   // Unimplemented copy constructor
    NodeVariable(
-      const NodeVariable<TYPE>&);          // not implemented
+      const NodeVariable<TYPE>&);
+
+   // Unimplemented assignment operator
    void
    operator = (
-      const NodeVariable<TYPE>&);               // not implemented
+      const NodeVariable<TYPE>&);
 };
 
 }

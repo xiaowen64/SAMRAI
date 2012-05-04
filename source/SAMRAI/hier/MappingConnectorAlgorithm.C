@@ -329,7 +329,7 @@ MappingConnectorAlgorithm::modify(
       << "MappingConnectorAlgorithm::modify: No new_to_old.\n";
    }
 
-   Connector dummy_new_to_old;
+   Connector dummy_new_to_old(anchor_to_mapped.getRatio().getDim());
    privateModify(anchor_to_mapped,
       mapped_to_anchor,
       old_to_new,
@@ -407,7 +407,7 @@ MappingConnectorAlgorithm::modify(
     * No need to check that anchor_to_mapped is strictly local,
     * because initializeToLocalTranspose checks that.
     */
-   Connector mapped_to_anchor;
+   Connector mapped_to_anchor(anchor_to_mapped.getRatio().getDim());
    mapped_to_anchor.initializeToLocalTranspose(anchor_to_mapped);
 
    if (s_print_steps == 'y') {
@@ -429,7 +429,7 @@ MappingConnectorAlgorithm::modify(
       << new_mapped_box_level.format(s_dbgbord, 2);
    }
 
-   Connector dummy_new_to_old;
+   Connector dummy_new_to_old(anchor_to_mapped.getRatio().getDim());
    privateModify(anchor_to_mapped,
       mapped_to_anchor,
       old_to_new,

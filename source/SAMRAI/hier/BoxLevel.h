@@ -746,9 +746,6 @@ public:
 
    /*!
     * @brief Return the dimension of this object.
-    *
-    * If object has never been initialized, return
-    * tbox::Dimension::getInvalidDimension().
     */
    const tbox::Dimension&
    getDim() const
@@ -1386,12 +1383,6 @@ private:
    //@}
 
    /*!
-    * @brief Allows std::vector to allocate objects with
-    * uninitialized dimensions.
-    */
-   friend class std::vector<BoxLevel>;
-
-   /*!
     * @brief Set up things for the entire class.
     *
     * Only called by StartupShutdownManager.
@@ -1441,13 +1432,8 @@ private:
     */
    enum { BAD_INT = (1 << (8 * sizeof(int) - 2)) };
 
-   /*!
-    * @brief Construct uninitialized object.
-    *
-    * Constructor creates an uninitialized object in distributed state.
-    *
-    * Private to limit where an uninitialized object can
-    * be created.
+   /*
+    * Unimplemented default constructor.
     */
    BoxLevel();
 

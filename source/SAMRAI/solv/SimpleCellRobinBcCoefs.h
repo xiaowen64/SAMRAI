@@ -296,7 +296,7 @@ private:
    /*!
     * @brief array of boundary type on each side
     */
-   int d_bdry_types[2 * tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   int d_bdry_types[2 * SAMRAI::MAX_DIM_VAL];
    /*!
     * @brief patch index for fluxes
     */

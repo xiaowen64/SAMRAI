@@ -76,28 +76,19 @@ public:
    /**
     * The assignment operator sets the integer vector equal to the argument.
     *
-    * An assignment to an uninitialized Index is allowed but assigning
-    * from an uninitialized Index will result in an assert.
+    * Assigning between IntVectors of different
+    * dimensions will result in an assert.
     */
    IntVector&
    operator = (
       const IntVector& rhs)
    {
-      /*
-       * Allow assignment of to an uninitialized but do not allow
-       * assignment from an uninitialized.
-       */
-      if (d_dim.isValid()) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
-      } else {
-         TBOX_DIM_ASSERT_CHECK_DIM(rhs.getDim());
-         d_dim = rhs.getDim();
-      }
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
       for (int i = 0; i < d_dim.getValue(); i++) {
          d_vector[i] = rhs.d_vector[i];
       }
 #ifdef DEBUG_INITIALIZE_UNDEFINED
-      for (int i = d_dim.getValue(); i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
+      for (int i = d_dim.getValue(); i < SAMRAI::MAX_DIM_VAL; i++) {
          d_vector[i] = tbox::MathUtilities<int>::getMin();
       }
 #endif
@@ -116,7 +107,6 @@ public:
    operator [] (
       const int i)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
       return d_vector[i];
    }
@@ -129,7 +119,6 @@ public:
    operator [] (
       const int i) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
       return d_vector[i];
    }
@@ -142,7 +131,6 @@ public:
    operator () (
       const int i)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
       return d_vector[i];
    }
@@ -155,7 +143,6 @@ public:
    operator () (
       const int i) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
       return d_vector[i];
    }
@@ -194,7 +181,6 @@ public:
    operator += (
       const int rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       for (int i = 0; i < d_dim.getValue(); i++) {
          d_vector[i] += rhs;
       }
@@ -208,7 +194,6 @@ public:
    operator + (
       const int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       IntVector tmp = *this;
       tmp += rhs;
       return tmp;
@@ -248,7 +233,6 @@ public:
    operator -= (
       const int rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       for (int i = 0; i < d_dim.getValue(); i++) {
          d_vector[i] -= rhs;
       }
@@ -262,7 +246,6 @@ public:
    operator - (
       const int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       IntVector tmp = *this;
       tmp -= rhs;
       return tmp;
@@ -302,7 +285,6 @@ public:
    operator *= (
       const int rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       for (int i = 0; i < d_dim.getValue(); i++) {
          d_vector[i] *= rhs;
       }
@@ -316,7 +298,6 @@ public:
    operator * (
       const int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       IntVector tmp = *this;
       tmp *= rhs;
       return tmp;
@@ -411,7 +392,6 @@ public:
    operator /= (
       const int rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       for (int i = 0; i < d_dim.getValue(); i++) {
          d_vector[i] /= rhs;
       }
@@ -425,7 +405,6 @@ public:
    operator / (
       const int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       IntVector tmp = *this;
       tmp /= rhs;
       return tmp;
@@ -437,7 +416,6 @@ public:
    IntVector
    operator - () const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       IntVector tmp(d_dim);
       for (int i = 0; i < d_dim.getValue(); i++) {
          tmp.d_vector[i] = -d_vector[i];
@@ -452,7 +430,6 @@ public:
    operator == (
       int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       bool result = true;
       for (int i = 0; result && (i < d_dim.getValue()); i++) {
          result = d_vector[i] == rhs;
@@ -467,7 +444,6 @@ public:
    operator != (
       int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       bool result = true;
       for (int i = 0; result && (i < d_dim.getValue()); i++) {
          result = d_vector[i] != rhs;
@@ -588,7 +564,6 @@ public:
    int
    min() const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       int min = d_vector[0];
       for (int i = 1; i < d_dim.getValue(); i++) {
          if (d_vector[i] < min) {
@@ -605,7 +580,6 @@ public:
    max(
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
       for (int i = 0; i < d_dim.getValue(); i++) {
          if (rhs.d_vector[i] > d_vector[i]) {
             d_vector[i] = rhs.d_vector[i];
@@ -619,7 +593,6 @@ public:
    int
    max() const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       int max = d_vector[0];
       for (int i = 1; i < d_dim.getValue(); i++) {
          if (d_vector[i] > max) {
@@ -751,18 +724,12 @@ public:
       std::ostream& s,
       const IntVector& rhs);
 
-   friend class std::vector<IntVector>;
-
-protected:
-   /**
-    * Default ctor for IntVector is protected to disallow normal use.
-    * This is needed by the poorly designed STL container library.
-    *
-    *
+private:
+   /*
+    * Unimplemented default constructor
     */
    IntVector();
 
-private:
    /*!
     * @brief Initialize static objects and register shutdown routine.
     *
@@ -782,10 +749,10 @@ private:
 
    tbox::Dimension d_dim;
 
-   int d_vector[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   int d_vector[SAMRAI::MAX_DIM_VAL];
 
-   static IntVector* s_zeros[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static IntVector* s_ones[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static IntVector* s_zeros[SAMRAI::MAX_DIM_VAL];
+   static IntVector* s_ones[SAMRAI::MAX_DIM_VAL];
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

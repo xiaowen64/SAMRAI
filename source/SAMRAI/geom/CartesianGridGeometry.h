@@ -101,8 +101,6 @@ namespace geom {
 class CartesianGridGeometry:
    public geom::GridGeometry
 {
-   friend class TransferOperatorRegistry;
-
    typedef hier::PatchGeometry::TwoDimBool TwoDimBool;
 
 public:
@@ -312,10 +310,10 @@ private:
     */
    bool d_registered_for_restart;
 
-   double d_dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];                // mesh increments for level 0.
-   double d_x_lo[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];              // spatial coordinates of lower corner
+   double d_dx[SAMRAI::MAX_DIM_VAL];     // mesh increments for level 0.
+   double d_x_lo[SAMRAI::MAX_DIM_VAL];   // spatial coordinates of lower corner
    // (i.e., box corner) of problem domain.
-   double d_x_up[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];              // spatial coordinates of upper corner
+   double d_x_up[SAMRAI::MAX_DIM_VAL];   // spatial coordinates of upper corner
    // (i.e., box corner) of problem domain.
 
    hier::Box d_domain_box;           // smallest box covering coarsest level

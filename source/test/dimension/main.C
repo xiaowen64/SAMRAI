@@ -39,7 +39,7 @@ int main(
     */
    {
       /* This test assumes that the maximum dim is at least 3 which is the default */
-      assert(tbox::Dimension::MAXIMUM_DIMENSION_VALUE >= 3);
+      assert(SAMRAI::MAX_DIM_VAL >= 3);
 
       tbox::Dimension dim1(1);
       tbox::Dimension dim2(2);
@@ -58,11 +58,6 @@ int main(
       if (dim3.getValue() != 3) {
          fail_count++;
          TBOX_ERROR("Failed dim check; dim = 3");
-      }
-
-      if (!dim3.isValid()) {
-         fail_count++;
-         TBOX_ERROR("Failed dim check: isValid");
       }
 
       tbox::Dimension a(2), b(2);

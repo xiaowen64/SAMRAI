@@ -30,31 +30,6 @@ PatchCellDataMiscellaneousOpsReal<TYPE>::~PatchCellDataMiscellaneousOpsReal()
 /*
  *************************************************************************
  *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-PatchCellDataMiscellaneousOpsReal<TYPE>::PatchCellDataMiscellaneousOpsReal(
-   const PatchCellDataMiscellaneousOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-PatchCellDataMiscellaneousOpsReal<TYPE>::operator = (
-   const PatchCellDataMiscellaneousOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * Templated miscellaneous operations for real cell-centered data.
  *
  *************************************************************************

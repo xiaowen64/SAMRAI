@@ -31,31 +31,6 @@ PatchNodeDataBasicOps<TYPE>::~PatchNodeDataBasicOps()
 /*
  *************************************************************************
  *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-PatchNodeDataBasicOps<TYPE>::PatchNodeDataBasicOps(
-   const PatchNodeDataBasicOps<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-PatchNodeDataBasicOps<TYPE>::operator = (
-   const PatchNodeDataBasicOps<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * Generic basic templated operations for node-centered patch data.
  *
  *************************************************************************

@@ -28,7 +28,7 @@ namespace SAMRAI {
 namespace hier {
 
 PeriodicShiftCatalog * PeriodicShiftCatalog::s_periodic_shift_catalog_instance[
-   tbox::Dimension::MAXIMUM_DIMENSION_VALUE] = { 0 };
+   SAMRAI::MAX_DIM_VAL] = { 0 };
 
 tbox::StartupShutdownManager::Handler
 PeriodicShiftCatalog::s_finalize_handler(
@@ -61,7 +61,7 @@ PeriodicShiftCatalog::getCatalog(
 void
 PeriodicShiftCatalog::finalizeCallback()
 {
-   for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
+   for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
       if (s_periodic_shift_catalog_instance[i] != NULL) {
          delete s_periodic_shift_catalog_instance[i];
          s_periodic_shift_catalog_instance[i] = NULL;

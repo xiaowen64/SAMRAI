@@ -129,9 +129,15 @@ public:
     * @brief Creates an uninitialized Connector object in the
     * distributed state.
     *
-    * @see initialize()
+    * @param The dimension of the head and base BoxLevels this object will
+    * eventually connect.
+    *
+    * @see setBase()
+    * @see setHead()
+    * @see setWidth()
     */
-   Connector();
+   Connector(
+      const tbox::Dimension& dim);
 
    /*!
     * @brief Copy constructor.
@@ -871,8 +877,8 @@ public:
    /*!
     * @brief Set the parallel distribution state.
     *
-    * Before a Connector can be in a GLOBALIZED state, The base
-    * BoxLevel given in initialize() must already be in
+    * Before a Connector can be in a GLOBALIZED state, the base
+    * BoxLevel given in setBase() must already be in
     * GLOBALIZED mode.  The base BoxLevel should remain in
     * GLOBALIZED mode for compatibility with the Connector.
     *
@@ -1345,6 +1351,11 @@ private:
    static const int HIER_CONNECTOR_VERSION;
 
    enum { BAD_INT = (1 << (8 * sizeof(int) - 2)) };
+
+   /*
+    * Uninitialized default constructor.
+    */
+   Connector();
 
    /*!
     * @brief Return the globalized relationship data.

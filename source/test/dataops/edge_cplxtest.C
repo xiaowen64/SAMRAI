@@ -78,7 +78,7 @@ int main(
 
    const int d = atoi(argv[1]);
    TBOX_ASSERT(d > 0);
-   TBOX_ASSERT(d <= SAMRAI_MAXIMUM_DIMENSION_VALUE);
+   TBOX_ASSERT(d <= SAMRAI::MAX_DIM_VAL);
    const tbox::Dimension dim(d);
 
    if (dim != 2) {

@@ -411,7 +411,7 @@ void SinusoidalFrontTagger::computePatchData(
     * Determine what x-cell-index contains the sinusoidal front.
     */
 
-   double wave_number[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double wave_number[SAMRAI::MAX_DIM_VAL];
    for (int idim = 0; idim < d_dim.getValue(); ++idim) {
       wave_number[idim] = 2 * 3.141592654 / d_period[idim];
    }

@@ -509,12 +509,12 @@ private:
     * Input for SPHERE problem
     */
    double d_radius;
-   double d_center[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_center[SAMRAI::MAX_DIM_VAL];
    double d_density_inside;
-   double d_velocity_inside[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_velocity_inside[SAMRAI::MAX_DIM_VAL];
    double d_pressure_inside;
    double d_density_outside;
-   double d_velocity_outside[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_velocity_outside[SAMRAI::MAX_DIM_VAL];
    double d_pressure_outside;
 
    /*

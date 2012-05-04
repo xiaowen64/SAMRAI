@@ -77,5 +77,6 @@ int ilo[3] = { 0, 0, 0 };
 int ihi[3] = { 1, 1, 1 };
 tbox::DatabaseBox scalardb_full_thisBox(tbox::Dimension(3), ilo, ihi);
 
+hier::IntVector intVector0(tbox::Dimension(2), 0);
 hier::IntVector intVector1(tbox::Dimension(2), 1);
 hier::IntVector intVector2(tbox::Dimension(2), 1);

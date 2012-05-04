@@ -89,33 +89,6 @@ CellVariable<TYPE>::dataLivesOnPatchBorder() const
    return false;
 }
 
-/*
- *************************************************************************
- *
- * These are private and should not be used.  They are defined here
- * because some template instantiation methods fail if some member
- * functions are left undefined.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-CellVariable<TYPE>::CellVariable(
-   const CellVariable<TYPE>& foo):
-   hier::Variable(NULL,
-                  boost::shared_ptr<hier::PatchDataFactory>())
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-CellVariable<TYPE>::operator = (
-   const CellVariable<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
 }
 }
 #endif

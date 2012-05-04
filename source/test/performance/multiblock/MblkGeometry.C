@@ -189,7 +189,7 @@ void MblkGeometry::getFromInput(
    bool found = false;
    int i, nb;
    char block_name[128];
-   double temp_domain[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double temp_domain[SAMRAI::MAX_DIM_VAL];
 
    /*
     * Cartesian geometry
@@ -669,7 +669,7 @@ void MblkGeometry::buildWedgeGridOnPatch(
    int nd_nxny = nd_nx * nd_ny;
    //int nd_nel  = nd_nx*nd_ny*nd_nz;
 
-   double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double dx[SAMRAI::MAX_DIM_VAL];
    dx[0] = d_dx[level_number][0];
    dx[1] = d_dx[level_number][1];
 

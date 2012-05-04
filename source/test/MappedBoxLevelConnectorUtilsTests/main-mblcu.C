@@ -419,7 +419,7 @@ int main(
           * small_mapped_box_level to nothing.
           */
          hier::BoxLevel everything(dim), nothing(dim);
-         hier::Connector small_to_everything, small_to_nothing;
+         hier::Connector small_to_everything(dim), small_to_nothing(dim);
          mblcu.computeExternalParts(
             nothing,
             small_to_nothing,
@@ -508,7 +508,7 @@ int main(
           */
 
          hier::BoxLevel internal_mapped_box_level(dim);
-         hier::Connector big_to_internal;
+         hier::Connector big_to_internal(dim);
          mblcu.computeInternalParts(
             internal_mapped_box_level,
             big_to_internal,
@@ -575,7 +575,7 @@ int main(
           *   is empty.
           */
          hier::BoxLevel external_mapped_box_level(dim);
-         hier::Connector big_to_external;
+         hier::Connector big_to_external(dim);
          mblcu.computeExternalParts(
             external_mapped_box_level,
             big_to_external,
@@ -709,7 +709,7 @@ void partitionBoxes(
 
    mesh::TreeLoadBalancer load_balancer(mapped_box_level.getDim());
 
-   hier::Connector dummy_connector;
+   hier::Connector dummy_connector(dim);
 
    const hier::IntVector bad_interval(dim, 1);
    const hier::IntVector cut_factor(dim, 1);

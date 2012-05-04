@@ -72,19 +72,18 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    const tbox::Dimension& dim,
    const hier::BlockId& block_id,
    const hier::LocalId& first_local_id):
-   d_dim(dim),
    d_pos(1),
-   d_common(new CommonParams(d_dim)),
+   d_common(new CommonParams(dim)),
    d_parent(NULL),
    d_lft_child(NULL),
    d_rht_child(NULL),
-   d_box(d_dim),
+   d_box(dim),
    d_owner(0),
    d_group(0),
    d_mpi_tag(-1),
    d_overlap(-1),
    d_box_acceptance(undetermined),
-   d_mapped_box(d_dim),
+   d_mapped_box(dim),
    d_mapped_box_iterator(hier::BoxContainer().end()),
    d_wait_phase(to_be_launched),
    d_send_msg(),
@@ -126,7 +125,6 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    const int child_number,
    const hier::BlockId& block_id,
    const hier::LocalId& first_local_id):
-   d_dim(parent->d_dim),
    d_pos((parent->d_pos > 0 && parent->d_pos <
           tbox::MathUtilities<int>::getMax() / 2) ?
          2 * parent->d_pos + child_number :
@@ -135,13 +133,13 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_parent(parent),
    d_lft_child(NULL),
    d_rht_child(NULL),
-   d_box(d_dim),
+   d_box(common_params->d_dim),
    d_owner(-1),
    d_group(0),
    d_mpi_tag(-1),
    d_overlap(-1),
    d_box_acceptance(undetermined),
-   d_mapped_box(d_dim),
+   d_mapped_box(common_params->d_dim),
    d_mapped_box_iterator(hier::BoxContainer().end()),
    d_wait_phase(for_data_only),
    d_send_msg(),
@@ -250,7 +248,7 @@ BergerRigoutsosNode::setClusteringParameters(
    const double max_lap_cut_from_center,
    const double laplace_cut_threshold_ar)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, min_box, max_box_size);
+   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_common->d_dim, min_box, max_box_size);
 
    d_common->tag_data_index = tag_data_index;
    d_common->tag_val = tag_val;
@@ -276,7 +274,7 @@ BergerRigoutsosNode::clusterAndComputeRelationships(
    const tbox::SAMRAI_MPI& mpi_object)
 {
    TBOX_ASSERT(d_parent == NULL);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim,
+   TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_common->d_dim,
       new_mapped_box_level,
       bound_box,
       *tag_level);
@@ -727,7 +725,7 @@ REDUCE_HISTOGRAM:
           * analysis (not required) and I expect it to have trivial cost.
           */
          int narrowest_dir = 0;
-         for (int d = 0; d < d_dim.getValue(); ++d) {
+         for (int d = 0; d < d_common->d_dim.getValue(); ++d) {
             if (d_histogram[d].size() < d_histogram[narrowest_dir].size())
                narrowest_dir = d;
          }
@@ -1321,8 +1319,8 @@ BergerRigoutsosNode::broadcastAcceptability_start()
    const int buffer_size = 1          // Number of tags in candidate
       + 1                             // Acceptability flag.
       + 1                             // Local index of node.
-      + d_dim.getValue() * 2       // Box.
-      + d_dim.getValue() * 4       // Children boxes.
+      + d_common->d_dim.getValue() * 2       // Box.
+      + d_common->d_dim.getValue() * 4       // Children boxes.
       + 2                             // Children MPI tags
    ;
 
@@ -1586,7 +1584,7 @@ BergerRigoutsosNode::broadcastToDropouts_start()
 
    const int buffer_size = 1      // d_box_acceptance
       + 1                         // local index of graph node
-      + d_dim.getValue() * 2   // d_box (in case it got reduced)
+      + d_common->d_dim.getValue() * 2   // d_box (in case it got reduced)
    ;
    d_send_msg.clear();
    d_recv_msg.clear();
@@ -1656,7 +1654,7 @@ BergerRigoutsosNode::makeLocalTagHistogram()
    /*
     * Compute the histogram size and allocate space for it.
     */
-   for (int d = 0; d < d_dim.getValue(); ++d) {
+   for (int d = 0; d < d_common->d_dim.getValue(); ++d) {
       TBOX_ASSERT(d_box.numberCells(d) > 0);
       d_histogram[d].clear();
       d_histogram[d].insert(d_histogram[d].end(), d_box.numberCells(d), 0);
@@ -1689,7 +1687,7 @@ BergerRigoutsosNode::makeLocalTagHistogram()
                  ci != ciend; ++ci) {
                if (tag_data(*ci) == d_common->tag_val) {
                   const hier::IntVector& idx = *ci;
-                  for (int d = 0; d < d_dim.getValue(); ++d) {
+                  for (int d = 0; d < d_common->d_dim.getValue(); ++d) {
                      ++(d_histogram[d][idx(d) - lower(d)]);
                   }
                }
@@ -1724,7 +1722,7 @@ BergerRigoutsosNode::computeMinimalBoundingBoxForTags()
     * Bring the upper side of the box down past untagged index planes.
     * Do not make the box smaller than the min_box requirement.
     */
-   for (d = 0; d < d_dim.getValue(); ++d) {
+   for (d = 0; d < d_common->d_dim.getValue(); ++d) {
       TBOX_ASSERT(d_histogram[d].size() != 0);
       int* histogram_beg = &d_histogram[d][0];
       int* histogram_end = histogram_beg + d_box.numberCells(d) - 1;
@@ -1761,7 +1759,7 @@ BergerRigoutsosNode::computeMinimalBoundingBoxForTags()
        * Is this step really required?  No, we can just keep the
        * shift in a hier::IntVector and adjust.
        */
-      for (d = 0; d < d_dim.getValue(); ++d) {
+      for (d = 0; d < d_common->d_dim.getValue(); ++d) {
          VectorOfInts& h = d_histogram[d];
          const int shift = new_lower(d) - d_box.lower() (d);
          if (shift > 0) {
@@ -1828,7 +1826,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
     */
 
    if (d_box_acceptance == undetermined) {
-      if (oversize <= hier::IntVector::getZero(d_dim)) {
+      if (oversize <= hier::IntVector::getZero(d_common->d_dim)) {
          /*
           * See if d_box should be accepted based on efficiency.
           */
@@ -1883,12 +1881,12 @@ BergerRigoutsosNode::acceptOrSplitBox()
        * If d_box cannot be split without violating min_box, it should
        * be accepted.
        */
-      if (cut_margin < hier::IntVector::getZero(d_dim)) {
+      if (cut_margin < hier::IntVector::getZero(d_common->d_dim)) {
          d_box_acceptance = accepted_by_calculation;
       }
    }
 
-   hier::IntVector sorted_margins(d_dim);
+   hier::IntVector sorted_margins(d_common->d_dim);
 
    if (d_box_acceptance == undetermined) {
       /*
@@ -1897,11 +1895,11 @@ BergerRigoutsosNode::acceptOrSplitBox()
        * favor the direction with the greatest cut_margin.
        */
       int dim;
-      for (dim = 0; dim < d_dim.getValue(); dim++) {
+      for (dim = 0; dim < d_common->d_dim.getValue(); dim++) {
          sorted_margins(dim) = dim;
       }
-      for (int d0 = 0; d0 < d_dim.getValue() - 1; d0++) {
-         for (int d1 = d0 + 1; d1 < d_dim.getValue(); d1++) {
+      for (int d0 = 0; d0 < d_common->d_dim.getValue() - 1; d0++) {
+         for (int d1 = d0 + 1; d1 < d_common->d_dim.getValue(); d1++) {
             if (cut_margin(sorted_margins(d0)) <
                 cut_margin(sorted_margins(d1))) {
                int tmp_dim = sorted_margins(d0);
@@ -1911,7 +1909,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
          }
       }
 #ifdef DEBUG_CHECK_ASSERTIONS
-      for (dim = 0; dim < d_dim.getValue() - 1; dim++) {
+      for (dim = 0; dim < d_common->d_dim.getValue() - 1; dim++) {
          TBOX_ASSERT(cut_margin(sorted_margins(dim)) >=
             cut_margin(sorted_margins(dim + 1)));
       }
@@ -1919,7 +1917,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
    }
 
    const int max_margin_dir = sorted_margins(0);
-   const int min_margin_dir = sorted_margins(d_dim.getValue()-1);
+   const int min_margin_dir = sorted_margins(d_common->d_dim.getValue()-1);
 
    int num_cuttable_dim = 0;
 
@@ -1928,7 +1926,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
        * Determine number of coordinate directions that are cuttable
        * according to the cut_margin.
        */
-      for (num_cuttable_dim = 0; num_cuttable_dim < d_dim.getValue();
+      for (num_cuttable_dim = 0; num_cuttable_dim < d_common->d_dim.getValue();
            num_cuttable_dim++) {
          if (cut_margin(sorted_margins(num_cuttable_dim)) < 0) {
             break;
@@ -1954,7 +1952,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
       hier::Index lft_hi(box_hi);
       hier::Index rht_lo(box_lo);
 
-      for (dir = 0; dir < d_dim.getValue(); dir++) {
+      for (dir = 0; dir < d_common->d_dim.getValue(); dir++) {
          cut_dir = sorted_margins(dir);
          if (cut_margin(cut_dir) < 0) {
             continue;  // This direction is too small to cut.
@@ -1982,7 +1980,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
        * If no zero point found, try Laplacian cut.
        */
 
-      if (dir == d_dim.getValue()) {
+      if (dir == d_common->d_dim.getValue()) {
 
          /*
           * laplace_cut_threshold_ar specifies the mininum box
@@ -2015,7 +2013,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
          }
 
          int diff_laplace = -1;
-         for ( int d=0; d<d_dim.getValue(); ++d ) {
+         for ( int d=0; d<d_common->d_dim.getValue(); ++d ) {
             if ( cut_margin(d) < 0 || boxdims(d) <= max_box_length_to_leave ) {
                continue;  // Direction d is too small to cut.
             }
@@ -2028,7 +2026,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
                diff_laplace = try_diff_laplace;
             }
          }
-         TBOX_ASSERT( cut_dir >= 0 && cut_dir < d_dim.getValue() );
+         TBOX_ASSERT( cut_dir >= 0 && cut_dir < d_common->d_dim.getValue() );
 
          // Split bound box at cut_pt; cut_dir is splitting dimension.
          lft_hi(cut_dir) = cut_pt - 1;
@@ -2318,7 +2316,7 @@ BergerRigoutsosNode::eraseBox()
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
    d_mapped_box_iterator = BoxContainer().end();
-   d_mapped_box = hier::Box(d_dim);
+   d_mapped_box = hier::Box(d_common->d_dim);
 #endif
 }
 
@@ -2583,7 +2581,7 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
 
    const int index_of_counter =
       (relationship_message != NULL ? static_cast<int>(relationship_message->size()) : 0) - 1;
-   const int ints_per_node = hier::Box::commBufferSize(d_dim);
+   const int ints_per_node = hier::Box::commBufferSize(d_common->d_dim);
 
    const BoxContainer& tag_mapped_boxes =
       d_common->tag_mapped_box_level->getBoxes();
@@ -2666,7 +2664,7 @@ BergerRigoutsosNode::shareNewNeighborhoodSetsWithOwners()
    IntSet relationship_senders = d_common->relationship_senders;
    std::map<int, VectorOfInts>& relationship_messages = d_common->relationship_messages;
 
-   const int ints_per_node = hier::Box::commBufferSize(d_dim);
+   const int ints_per_node = hier::Box::commBufferSize(d_common->d_dim);
 
    int ierr;
    tbox::SAMRAI_MPI::Status mpi_status;
@@ -2758,7 +2756,7 @@ BergerRigoutsosNode::shareNewNeighborhoodSetsWithOwners()
             hier::Connector::NeighborhoodIterator base_box_itr =
                d_common->new_to_tag->makeEmptyLocalNeighborhood(box_id);
             for (int n = 0; n < n_new_relationships; ++n) {
-               hier::Box node(d_dim);
+               hier::Box node(d_common->d_dim);
                node.getFromIntBuffer(ptr);
                ptr += ints_per_node;
                d_common->new_to_tag->insertLocalNeighbor(node, base_box_itr);
@@ -2796,7 +2794,7 @@ int*
 BergerRigoutsosNode::putHistogramToBuffer(
       int* buffer)
 {
-  int dim_val = d_dim.getValue();
+  int dim_val = d_common->d_dim.getValue();
    for (int d = 0; d < dim_val; ++d) {
       d_histogram[d].resize(d_box.numberCells(d), BAD_INTEGER);
       memcpy(buffer,
@@ -2811,7 +2809,7 @@ int*
 BergerRigoutsosNode::getHistogramFromBuffer(
       int* buffer)
 {
-   unsigned int dim_val = d_dim.getValue();
+   unsigned int dim_val = d_common->d_dim.getValue();
    for (unsigned int d = 0; d < dim_val; ++d) {
       TBOX_ASSERT((int)d_histogram[d].size() == d_box.numberCells(d));
       // d_histogram[d].resizeArray( d_box.numberCells(d) );
@@ -2830,7 +2828,7 @@ BergerRigoutsosNode:: putBoxToBuffer(
 {
    const hier::IntVector& l = box.lower();
    const hier::IntVector& u = box.upper();
-   int dim_val = d_dim.getValue();
+   int dim_val = d_common->d_dim.getValue();
    for (int d = 0; d < dim_val; ++d) {
       *(buffer++) = l(d);
       *(buffer++) = u(d);
@@ -2845,7 +2843,7 @@ BergerRigoutsosNode::getBoxFromBuffer(
 {
    hier::IntVector& l = box.lower();
    hier::IntVector& u = box.upper();
-   int dim_val = d_dim.getValue();
+   int dim_val = d_common->d_dim.getValue();
    for (int d = 0; d < dim_val; ++d) {
       l(d) = *(buffer++);
       u(d) = *(buffer++);
@@ -3068,7 +3066,7 @@ BergerRigoutsosNode::setComputeRelationships(
          << "bad mode '" << mode << "' specified.\n"
          << "Should be one of NONE, TAG_TO_NEW, BIDIRECTIONAL");
    }
-   TBOX_ASSERT(ghost_cell_width >= hier::IntVector::getZero(d_dim));
+   TBOX_ASSERT(ghost_cell_width >= hier::IntVector::getZero(d_common->d_dim));
    d_common->max_gcw = ghost_cell_width;
 }
 

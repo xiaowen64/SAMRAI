@@ -37,11 +37,9 @@ int CoarsenClasses::s_default_coarsen_item_array_size = 20;
 CoarsenClasses::CoarsenClasses(
    bool fill_coarse_data):
    d_fill_coarse_data(fill_coarse_data),
+   d_coarsen_classes_data_items(),
    d_num_coarsen_items(0)
 {
-   d_coarsen_classes_data_items.resizeArray(
-      s_default_coarsen_item_array_size,
-      Data(tbox::Dimension::getInvalidDimension()));
 }
 
 /*

@@ -696,7 +696,7 @@ TreeLoadBalancer::constrainMaxBoxSizes(
    const hier::IntVector& zero_vector(hier::IntVector::getZero(d_dim));
 
    hier::BoxLevel constrained(box_level.getDim());
-   hier::Connector unconstrained_to_constrained;
+   hier::Connector unconstrained_to_constrained(box_level.getDim());
 
    constrained.initialize(
       box_level.getRefinementRatio(),
@@ -856,8 +856,8 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    hier::BoxLevel balanced_box_level(balance_box_level.getDim());
-   hier::Connector unbalanced_to_balanced;
-   hier::Connector balanced_to_unbalanced;
+   hier::Connector unbalanced_to_balanced(balance_box_level.getDim());
+   hier::Connector balanced_to_unbalanced(balance_box_level.getDim());
 
    /*
     * Initialize empty balanced_box_level and mappings.

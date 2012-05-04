@@ -391,11 +391,14 @@ private:
     */
    static const int PDAT_CELLDATA_VERSION;
 
+   // Unimplemented copy constructor
    CellData(
-      const CellData<TYPE>&);           // not implemented
+      const CellData<TYPE>&);
+
+   // Unimplemented assignment operator
    void
    operator = (
-      const CellData<TYPE>&);                           // not implemented
+      const CellData<TYPE>&);
 
    void
    copyWithRotation(
@@ -408,7 +411,8 @@ private:
       const CellOverlap& overlap) const;
 
    int d_depth;
-   ArrayData<TYPE> d_data;
+
+   boost::shared_ptr<ArrayData<TYPE> > d_data;
 
 };
 

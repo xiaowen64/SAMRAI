@@ -99,18 +99,7 @@ public:
    operator = (
       const Index& rhs)
    {
-#ifdef DEBUG_CHECK_ASSERTIONS
-      /*
-       * Allow assignment of to an uninitialized
-       * but do not allow assignment from an
-       * uninitialized.
-       */
-      if (getDim().isValid()) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
-      } else {
-         TBOX_DIM_ASSERT_CHECK_DIM(rhs.getDim());
-      }
-#endif
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
       IntVector::operator = (rhs);
       return *this;
    }
@@ -164,7 +153,6 @@ public:
    operator += (
       const int rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(getDim());
       IntVector::operator += (rhs);
       return *this;
    }
@@ -176,7 +164,6 @@ public:
    operator + (
       const int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(getDim());
       Index tmp = *this;
       tmp += rhs;
       return tmp;
@@ -214,7 +201,6 @@ public:
    operator -= (
       const int rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(getDim());
       IntVector::operator -= (rhs);
       return *this;
    }
@@ -226,7 +212,6 @@ public:
    operator - (
       const int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(getDim());
       Index tmp = *this;
       tmp -= rhs;
       return tmp;
@@ -264,7 +249,6 @@ public:
    operator *= (
       const int rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(getDim());
       IntVector::operator *= (rhs);
       return *this;
    }
@@ -276,7 +260,6 @@ public:
    operator * (
       const int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(getDim());
       Index tmp = *this;
       tmp *= rhs;
       return tmp;
@@ -314,7 +297,6 @@ public:
    operator /= (
       const int rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(getDim());
       IntVector::operator /= (rhs);
       return *this;
    }
@@ -326,7 +308,6 @@ public:
    operator / (
       const int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(getDim());
       Index tmp = *this;
       tmp /= rhs;
       return tmp;
@@ -418,10 +399,8 @@ public:
    }
 
 private:
-   friend class std::vector<Index>;
-
-   /**
-    * The default constructor for Index creates an uninitialized index.
+   /*
+    * Unimplemented default constructor
     */
    Index();
 
@@ -451,11 +430,11 @@ private:
    static void
    finalizeCallback();
 
-   static Index* s_zeros[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static Index* s_ones[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static Index* s_zeros[SAMRAI::MAX_DIM_VAL];
+   static Index* s_ones[SAMRAI::MAX_DIM_VAL];
 
-   static Index* s_maxs[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static Index* s_mins[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static Index* s_maxs[SAMRAI::MAX_DIM_VAL];
+   static Index* s_mins[SAMRAI::MAX_DIM_VAL];
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

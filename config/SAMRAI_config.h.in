@@ -324,6 +324,10 @@
 /* Maximum dimension allowed */
 #undef SAMRAI_MAXIMUM_DIMENSION
 
+namespace SAMRAI {
+   static const unsigned short MAX_DIM_VAL = SAMRAI_MAXIMUM_DIMENSION;
+}
+
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 

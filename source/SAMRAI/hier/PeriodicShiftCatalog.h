@@ -211,10 +211,7 @@ private:
 
    const tbox::Dimension d_dim;
 
-   static PeriodicShiftCatalog* s_periodic_shift_catalog_instance[tbox::
-                                                                  Dimension::
-                                                                  MAXIMUM_DIMENSION_VALUE
-   ];
+   static PeriodicShiftCatalog* s_periodic_shift_catalog_instance[SAMRAI::MAX_DIM_VAL];
 
    std::vector<IntVector> d_shifts;
 

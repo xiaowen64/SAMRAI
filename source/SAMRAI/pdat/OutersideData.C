@@ -51,42 +51,16 @@ OutersideData<TYPE>::OutersideData(
       const hier::Box sidebox = SideGeometry::toSideBox(ghosts, d);
       hier::Box outersidebox = sidebox;
       outersidebox.upper(d) = sidebox.lower(d);
-      d_data[d][0].initializeArray(outersidebox, depth);
+      d_data[d][0].reset(new ArrayData<TYPE>(outersidebox, depth));
       outersidebox.lower(d) = sidebox.upper(d);
       outersidebox.upper(d) = sidebox.upper(d);
-      d_data[d][1].initializeArray(outersidebox, depth);
+      d_data[d][1].reset(new ArrayData<TYPE>(outersidebox, depth));
    }
 }
 
 template<class TYPE>
 OutersideData<TYPE>::~OutersideData()
 {
-}
-
-/*
- *************************************************************************
- *
- * The following are private and cannot be used, but they are defined
- * here for compilers that require that every template declaration have
- * a definition (a stupid requirement, if you ask me).
- *
- *************************************************************************
- */
-
-template<class TYPE>
-OutersideData<TYPE>::OutersideData(
-   const OutersideData<TYPE>& foo):
-   hier::PatchData(foo.getBox(), foo.getGhostCellWidth())
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-OutersideData<TYPE>::operator = (
-   const OutersideData<TYPE>& foo)
-{
-   NULL_USE(foo);
 }
 
 template<class TYPE>
@@ -107,7 +81,7 @@ OutersideData<TYPE>::getPointer(
    TBOX_ASSERT((side == 0) || (side == 1));
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
-   return d_data[side_normal][side].getPointer(depth);
+   return d_data[side_normal][side]->getPointer(depth);
 }
 
 template<class TYPE>
@@ -121,7 +95,7 @@ OutersideData<TYPE>::getPointer(
    TBOX_ASSERT((side == 0) || (side == 1));
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
-   return d_data[side_normal][side].getPointer(depth);
+   return d_data[side_normal][side]->getPointer(depth);
 }
 
 template<class TYPE>
@@ -133,7 +107,7 @@ OutersideData<TYPE>::getArrayData(
    TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
    TBOX_ASSERT((side == 0) || (side == 1));
 
-   return d_data[side_normal][side];
+   return *(d_data[side_normal][side]);
 }
 
 template<class TYPE>
@@ -145,7 +119,7 @@ OutersideData<TYPE>::getArrayData(
    TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
    TBOX_ASSERT((side == 0) || (side == 1));
 
-   return d_data[side_normal][side];
+   return *(d_data[side_normal][side]);
 }
 
 template<class TYPE>
@@ -161,7 +135,7 @@ OutersideData<TYPE>::operator () (
    TBOX_ASSERT((side == 0) || (side == 1));
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
-   return d_data[axis][side](i, depth);
+   return (*(d_data[axis][side]))(i, depth);
 }
 
 template<class TYPE>
@@ -179,7 +153,7 @@ OutersideData<TYPE>::operator () (
    TBOX_ASSERT((side == 0) || (side == 1));
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
-   return d_data[axis][side](i, depth);
+   return (*(d_data[axis][side]))(i, depth);
 }
 
 /*
@@ -206,7 +180,7 @@ OutersideData<TYPE>::copy(
    for (int axis = 0; axis < getDim().getValue(); axis++) {
       const ArrayData<TYPE>& side_array = t_src->getArrayData(axis);
       for (int loc = 0; loc < 2; loc++) {
-         ArrayData<TYPE>& oside_array = d_data[axis][loc];
+         ArrayData<TYPE>& oside_array = *(d_data[axis][loc]);
          oside_array.copy(side_array, oside_array.getBox());
       }
    }
@@ -226,8 +200,8 @@ OutersideData<TYPE>::copy2(
    TBOX_ASSERT(t_dst != NULL);
 
    for (int d = 0; d < getDim().getValue(); d++) {
-      t_dst->getArrayData(d).copy(d_data[d][0], d_data[d][0].getBox());
-      t_dst->getArrayData(d).copy(d_data[d][1], d_data[d][1].getBox());
+      t_dst->getArrayData(d).copy(*(d_data[d][0]), d_data[d][0]->getBox());
+      t_dst->getArrayData(d).copy(*(d_data[d][1]), d_data[d][1]->getBox());
    }
 }
 
@@ -271,8 +245,8 @@ OutersideData<TYPE>::copy2(
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
       const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer(d);
-      t_dst->getArrayData(d).copy(d_data[d][0], box_list, src_offset);
-      t_dst->getArrayData(d).copy(d_data[d][1], box_list, src_offset);
+      t_dst->getArrayData(d).copy(*(d_data[d][0]), box_list, src_offset);
+      t_dst->getArrayData(d).copy(*(d_data[d][1]), box_list, src_offset);
    }
 }
 
@@ -297,7 +271,7 @@ OutersideData<TYPE>::copyDepth(
    for (int axis = 0; axis < getDim().getValue(); axis++) {
       const ArrayData<TYPE>& src_side_array = src.getArrayData(axis);
       for (int loc = 0; loc < 2; loc++) {
-         ArrayData<TYPE>& dst_oside_array = d_data[axis][loc];
+         ArrayData<TYPE>& dst_oside_array = *(d_data[axis][loc]);
          dst_oside_array.copyDepth(dst_depth,
             src_side_array,
             src_depth,
@@ -327,7 +301,7 @@ OutersideData<TYPE>::copyDepth2(
    for (int axis = 0; axis < getDim().getValue(); axis++) {
       ArrayData<TYPE>& dst_side_array = dst.getArrayData(axis);
       for (int loc = 0; loc < 2; loc++) {
-         const ArrayData<TYPE>& src_oside_array = d_data[axis][loc];
+         const ArrayData<TYPE>& src_oside_array = *(d_data[axis][loc]);
          dst_side_array.copyDepth(dst_depth,
             src_oside_array,
             src_depth,
@@ -367,8 +341,8 @@ OutersideData<TYPE>::getDataStreamSize(
    int size = 0;
    for (int d = 0; d < getDim().getValue(); d++) {
       const hier::BoxContainer& boxlist = t_overlap->getDestinationBoxContainer(d);
-      size += d_data[d][0].getDataStreamSize(boxlist, src_offset);
-      size += d_data[d][1].getDataStreamSize(boxlist, src_offset);
+      size += d_data[d][0]->getDataStreamSize(boxlist, src_offset);
+      size += d_data[d][1]->getDataStreamSize(boxlist, src_offset);
    }
    return size;
 }
@@ -400,9 +374,9 @@ OutersideData<TYPE>::packStream(
            b != boxes.end(); ++b) {
          const hier::Box src_box = hier::Box::shift(*b, -src_offset);
          for (int f = 0; f < 2; f++) {
-            const hier::Box intersect = src_box * d_data[d][f].getBox();
+            const hier::Box intersect = src_box * d_data[d][f]->getBox();
             if (!intersect.empty()) {
-               d_data[d][f].packStream(stream,
+               d_data[d][f]->packStream(stream,
                   hier::Box::shift(intersect, src_offset),
                   src_offset);
             }
@@ -428,9 +402,9 @@ OutersideData<TYPE>::unpackStream(
       for (hier::BoxContainer::const_iterator b(boxes);
            b != boxes.end(); ++b) {
          for (int f = 0; f < 2; f++) {
-            const hier::Box intersect = (*b) * d_data[d][f].getBox();
+            const hier::Box intersect = (*b) * d_data[d][f]->getBox();
             if (!intersect.empty()) {
-               d_data[d][f].unpackStream(stream, intersect, src_offset);
+               d_data[d][f]->unpackStream(stream, intersect, src_offset);
             }
          }
       }
@@ -483,8 +457,8 @@ OutersideData<TYPE>::fill(
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
    for (int i = 0; i < getDim().getValue(); i++) {
-      d_data[i][0].fill(t, d);
-      d_data[i][1].fill(t, d);
+      d_data[i][0]->fill(t, d);
+      d_data[i][1]->fill(t, d);
    }
 }
 
@@ -499,8 +473,8 @@ OutersideData<TYPE>::fill(
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
    for (int i = 0; i < getDim().getValue(); i++) {
-      d_data[i][0].fill(t, SideGeometry::toSideBox(box, i), d);
-      d_data[i][1].fill(t, SideGeometry::toSideBox(box, i), d);
+      d_data[i][0]->fill(t, SideGeometry::toSideBox(box, i), d);
+      d_data[i][1]->fill(t, SideGeometry::toSideBox(box, i), d);
    }
 }
 
@@ -510,8 +484,8 @@ OutersideData<TYPE>::fillAll(
    const TYPE& t)
 {
    for (int i = 0; i < getDim().getValue(); i++) {
-      d_data[i][0].fillAll(t);
-      d_data[i][1].fillAll(t);
+      d_data[i][0]->fillAll(t);
+      d_data[i][1]->fillAll(t);
    }
 }
 
@@ -524,8 +498,8 @@ OutersideData<TYPE>::fillAll(
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
    for (int i = 0; i < getDim().getValue(); i++) {
-      d_data[i][0].fillAll(t, SideGeometry::toSideBox(box, i));
-      d_data[i][1].fillAll(t, SideGeometry::toSideBox(box, i));
+      d_data[i][0]->fillAll(t, SideGeometry::toSideBox(box, i));
+      d_data[i][1]->fillAll(t, SideGeometry::toSideBox(box, i));
    }
 }
 
@@ -608,12 +582,12 @@ OutersideData<TYPE>::printAxisSide(
    const hier::Box sidebox =
       SideGeometry::toSideBox(box, side_normal);
    const hier::Box region =
-      sidebox * d_data[side_normal][side].getBox();
+      sidebox * d_data[side_normal][side]->getBox();
    os.precision(prec);
    hier::Box::iterator iend(region, false);
    for (hier::Box::iterator i(region, true); i != iend; ++i) {
       os << "array" << *i << " = "
-         << d_data[side_normal][side](*i, depth) << std::endl;
+         << (*(d_data[side_normal][side]))(*i, depth) << std::endl;
       os << std::flush;
    }
 }
@@ -648,11 +622,11 @@ OutersideData<TYPE>::getSpecializedFromDatabase(
       std::string array_name = "d_data" + tbox::Utilities::intToString(i)
          + "_1";
       array_database = database->getDatabase(array_name);
-      (d_data[i][0]).getFromDatabase(array_database);
+      d_data[i][0]->getFromDatabase(array_database);
 
       array_name = "d_data%d_" + tbox::Utilities::intToString(i) + "_2";
       array_database = database->getDatabase(array_name);
-      (d_data[i][1]).getFromDatabase(array_database);
+      d_data[i][1]->getFromDatabase(array_database);
    }
 }
 
@@ -682,11 +656,11 @@ OutersideData<TYPE>::putSpecializedToDatabase(
       std::string array_name = "d_data%d_" + tbox::Utilities::intToString(i)
          + "_1";
       array_database = database->putDatabase(array_name);
-      (d_data[i][0]).putUnregisteredToDatabase(array_database);
+      d_data[i][0]->putUnregisteredToDatabase(array_database);
 
       array_name = "d_data%d_" + tbox::Utilities::intToString(i) + "_2";
       array_database = database->putDatabase(array_name);
-      (d_data[i][1]).putUnregisteredToDatabase(array_database);
+      d_data[i][1]->putUnregisteredToDatabase(array_database);
    }
 }
 

@@ -500,11 +500,14 @@ private:
     */
    static const int PDAT_SIDEDATA_VERSION;
 
+   // Unimplemented copy constructor
    SideData(
-      const SideData<TYPE>&);           // not implemented
+      const SideData<TYPE>&);
+
+   // Unimplemented assignment operator
    void
    operator = (
-      const SideData<TYPE>&);                           // not implemented
+      const SideData<TYPE>&);
 
    void
    copyWithRotation(
@@ -519,7 +522,7 @@ private:
    int d_depth;
    hier::IntVector d_directions;
 
-   ArrayData<TYPE> d_data[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   boost::shared_ptr<ArrayData<TYPE> > d_data [SAMRAI::MAX_DIM_VAL];
 };
 
 }

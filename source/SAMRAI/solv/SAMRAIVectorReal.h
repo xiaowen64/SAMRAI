@@ -679,19 +679,19 @@ private:
       const boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >& vop =
          boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >());
 
-   static int s_instance_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static int s_instance_counter[SAMRAI::MAX_DIM_VAL];
 
    // shared data operations for variaous array-based types...
    static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
-      s_cell_ops[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      s_cell_ops[SAMRAI::MAX_DIM_VAL];
    static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
-      s_edge_ops[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      s_edge_ops[SAMRAI::MAX_DIM_VAL];
    static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
-      s_face_ops[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      s_face_ops[SAMRAI::MAX_DIM_VAL];
    static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
-      s_node_ops[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      s_node_ops[SAMRAI::MAX_DIM_VAL];
    static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
-      s_side_ops[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      s_side_ops[SAMRAI::MAX_DIM_VAL];
 
    std::string d_vector_name;
 

@@ -258,7 +258,7 @@ void SphericalShellGenerator::tagShells(
    for (pdat::NodeData<int>::iterator ni(node_tag_data.getGhostBox(), true);
         ni != niend; ++ni) {
       const pdat::NodeIndex& idx = *ni;
-      double r[SAMRAI_MAXIMUM_DIMENSION];
+      double r[SAMRAI::MAX_DIM_VAL];
       double rr = 0;
       for (int d = 0; d < dim.getValue(); ++d) {
          r[d] = dx[d] * idx(d);

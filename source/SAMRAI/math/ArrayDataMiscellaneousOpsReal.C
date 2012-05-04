@@ -31,31 +31,6 @@ ArrayDataMiscellaneousOpsReal<TYPE>::~ArrayDataMiscellaneousOpsReal()
 /*
  *************************************************************************
  *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-ArrayDataMiscellaneousOpsReal<TYPE>::ArrayDataMiscellaneousOpsReal(
-   const ArrayDataMiscellaneousOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-ArrayDataMiscellaneousOpsReal<TYPE>::operator = (
-   const ArrayDataMiscellaneousOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * General templated miscellaneous operations for array data.
  *
  *************************************************************************
@@ -86,11 +61,11 @@ ArrayDataMiscellaneousOpsReal<TYPE>::computeConstrProdPosWithControlVolume(
       const int cvdepth = cvol.getDepth();
       TBOX_ASSERT((ddepth == cvdepth) || (cvdepth == 1));
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int cv_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int d1_w[SAMRAI::MAX_DIM_VAL];
+      int d2_w[SAMRAI::MAX_DIM_VAL];
+      int cv_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d1_w[i] = d1_box.numberCells(i);
@@ -119,9 +94,9 @@ ArrayDataMiscellaneousOpsReal<TYPE>::computeConstrProdPosWithControlVolume(
          int d2_counter = d2_begin;
          int cv_counter = cv_begin;
 
-         int d1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int d2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int cv_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d1_b[SAMRAI::MAX_DIM_VAL];
+         int d2_b[SAMRAI::MAX_DIM_VAL];
+         int cv_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d1_b[nd] = d1_counter;
             d2_b[nd] = d2_counter;
@@ -206,10 +181,10 @@ ArrayDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
    if (!ibox.empty()) {
       const int ddepth = data1.getDepth();
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int d1_w[SAMRAI::MAX_DIM_VAL];
+      int d2_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d1_w[i] = d1_box.numberCells(i);
@@ -233,8 +208,8 @@ ArrayDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
          int d1_counter = d1_begin;
          int d2_counter = d2_begin;
 
-         int d1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int d2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d1_b[SAMRAI::MAX_DIM_VAL];
+         int d2_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d1_b[nd] = d1_counter;
             d2_b[nd] = d2_counter;
@@ -313,11 +288,11 @@ ArrayDataMiscellaneousOpsReal<TYPE>::compareToScalarWithControlVolume(
 
       TBOX_ASSERT((ddepth == cvdepth) || (cvdepth == 1));
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int s_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int cv_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int d_w[SAMRAI::MAX_DIM_VAL];
+      int s_w[SAMRAI::MAX_DIM_VAL];
+      int cv_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
@@ -346,9 +321,9 @@ ArrayDataMiscellaneousOpsReal<TYPE>::compareToScalarWithControlVolume(
          int s_counter = s_begin;
          int cv_counter = cv_begin;
 
-         int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int s_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int cv_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d_b[SAMRAI::MAX_DIM_VAL];
+         int s_b[SAMRAI::MAX_DIM_VAL];
+         int cv_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
             s_b[nd] = s_counter;
@@ -429,10 +404,10 @@ ArrayDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 
       const int ddepth = dst.getDepth();
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int s_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int d_w[SAMRAI::MAX_DIM_VAL];
+      int s_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
@@ -456,8 +431,8 @@ ArrayDataMiscellaneousOpsReal<TYPE>::compareToScalar(
          int d_counter = d_begin;
          int s_counter = s_begin;
 
-         int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int s_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d_b[SAMRAI::MAX_DIM_VAL];
+         int s_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
             s_b[nd] = s_counter;
@@ -539,11 +514,11 @@ ArrayDataMiscellaneousOpsReal<TYPE>::testReciprocalWithControlVolume(
 
       TBOX_ASSERT((ddepth == cvdepth) || (cvdepth == 1));
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int s_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int cv_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int d_w[SAMRAI::MAX_DIM_VAL];
+      int s_w[SAMRAI::MAX_DIM_VAL];
+      int cv_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
@@ -572,9 +547,9 @@ ArrayDataMiscellaneousOpsReal<TYPE>::testReciprocalWithControlVolume(
          int s_counter = s_begin;
          int cv_counter = cv_begin;
 
-         int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int s_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int cv_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d_b[SAMRAI::MAX_DIM_VAL];
+         int s_b[SAMRAI::MAX_DIM_VAL];
+         int cv_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
             s_b[nd] = s_counter;
@@ -662,10 +637,10 @@ ArrayDataMiscellaneousOpsReal<TYPE>::testReciprocal(
    if (!ibox.empty()) {
       const int ddepth = dst.getDepth();
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int s_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int d_w[SAMRAI::MAX_DIM_VAL];
+      int s_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
@@ -689,8 +664,8 @@ ArrayDataMiscellaneousOpsReal<TYPE>::testReciprocal(
          int d_counter = d_begin;
          int s_counter = s_begin;
 
-         int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int s_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d_b[SAMRAI::MAX_DIM_VAL];
+         int s_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
             s_b[nd] = s_counter;
@@ -765,10 +740,10 @@ ArrayDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
    if (!ibox.empty()) {
       const int ddepth = denom.getDepth();
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int n_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int n_w[SAMRAI::MAX_DIM_VAL];
+      int d_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          n_w[i] = n_box.numberCells(i);
@@ -792,8 +767,8 @@ ArrayDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
          int n_counter = n_begin;
          int d_counter = d_begin;
 
-         int n_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int n_b[SAMRAI::MAX_DIM_VAL];
+         int d_b[SAMRAI::MAX_DIM_VAL];
          for (int nm = 0; nm < dimVal; nm++) {
             n_b[nm] = n_counter;
             d_b[nm] = d_counter;
@@ -870,10 +845,10 @@ ArrayDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
    if (!ibox.empty()) {
       const int ddepth = denom.getDepth();
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int n_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int n_w[SAMRAI::MAX_DIM_VAL];
+      int d_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          n_w[i] = n_box.numberCells(i);
@@ -897,8 +872,8 @@ ArrayDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
          int n_counter = n_begin;
          int d_counter = d_begin;
 
-         int n_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int n_b[SAMRAI::MAX_DIM_VAL];
+         int d_b[SAMRAI::MAX_DIM_VAL];
          for (int nm = 0; nm < dimVal; nm++) {
             n_b[nm] = n_counter;
             d_b[nm] = d_counter;

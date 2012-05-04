@@ -742,8 +742,8 @@ private:
    bool d_enable_logging;
 
    static bool s_initialized;
-   static int s_weight_id[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static int s_instance_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static int s_weight_id[SAMRAI::MAX_DIM_VAL];
+   static int s_instance_counter[SAMRAI::MAX_DIM_VAL];
 };
 
 }

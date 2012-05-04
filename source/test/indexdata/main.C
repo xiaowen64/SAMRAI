@@ -114,7 +114,6 @@ template class pdat::IndexDataNode<Item, pdat::CellGeometry>;
 template class pdat::IndexIterator<Item, pdat::CellGeometry>;
 template class pdat::IndexVariable<Item, pdat::CellGeometry>;
 
-template class tbox::Array<pdat::IndexDataNode<Item, pdat::CellGeometry> >;
 template class boost::shared_ptr<pdat::IndexData<Item, pdat::CellGeometry> >;
 template class boost::shared_ptr<pdat::IndexVariable<Item, pdat::CellGeometry> >;
 template class boost::shared_ptr<pdat::IndexDataFactory<Item, pdat::CellGeometry> >;

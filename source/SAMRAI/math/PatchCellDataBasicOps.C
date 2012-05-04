@@ -30,31 +30,6 @@ PatchCellDataBasicOps<TYPE>::~PatchCellDataBasicOps()
 /*
  *************************************************************************
  *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-PatchCellDataBasicOps<TYPE>::PatchCellDataBasicOps(
-   const PatchCellDataBasicOps<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-PatchCellDataBasicOps<TYPE>::operator = (
-   const PatchCellDataBasicOps<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * Generic templated basic operations for cell-centered patch data.
  *
  *************************************************************************

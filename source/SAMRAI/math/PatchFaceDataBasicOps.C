@@ -32,31 +32,6 @@ PatchFaceDataBasicOps<TYPE>::~PatchFaceDataBasicOps()
 /*
  *************************************************************************
  *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-PatchFaceDataBasicOps<TYPE>::PatchFaceDataBasicOps(
-   const PatchFaceDataBasicOps<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-PatchFaceDataBasicOps<TYPE>::operator = (
-   const PatchFaceDataBasicOps<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * General basic templated opertions for face data.
  *
  *************************************************************************

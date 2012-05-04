@@ -100,9 +100,9 @@ private:
    operator = (
       const CartesianPatchGeometry&);
 
-   double d_dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];           // mesh increments for patch.
-   double d_x_lo[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];         // spatial coords of lower end of patch.
-   double d_x_up[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];         // spatial coords of upper end of patch.
+   double d_dx[SAMRAI::MAX_DIM_VAL];   // mesh increments for patch.
+   double d_x_lo[SAMRAI::MAX_DIM_VAL]; // spatial coords of lower end of patch.
+   double d_x_up[SAMRAI::MAX_DIM_VAL]; // spatial coords of upper end of patch.
 
 };
 

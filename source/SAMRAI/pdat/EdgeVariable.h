@@ -86,11 +86,14 @@ public:
 private:
    bool d_fine_boundary_represents_var;
 
+   // Unimplemented copy constructor
    EdgeVariable(
-      const EdgeVariable<TYPE>&);          // not implemented
+      const EdgeVariable<TYPE>&);
+
+   // Unimplemented assignment operator
    void
    operator = (
-      const EdgeVariable<TYPE>&);               // not implemented
+      const EdgeVariable<TYPE>&);
 
 };
 

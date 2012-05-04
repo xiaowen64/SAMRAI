@@ -31,31 +31,6 @@ PatchSideDataOpsReal<TYPE>::~PatchSideDataOpsReal()
 /*
  *************************************************************************
  *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-PatchSideDataOpsReal<TYPE>::PatchSideDataOpsReal(
-   const PatchSideDataOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-PatchSideDataOpsReal<TYPE>::operator = (
-   const PatchSideDataOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * General templated operations for real side-centered patch data.
  *
  *************************************************************************

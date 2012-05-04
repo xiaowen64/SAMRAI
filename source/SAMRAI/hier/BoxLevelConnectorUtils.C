@@ -249,7 +249,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
    }
 
    BoxLevel external(dim);
-   Connector swelledbase_to_external;
+   Connector swelledbase_to_external(dim);
    if (domain) {
       computeExternalParts(
          external,
@@ -287,7 +287,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
          base_swell);
       oca.findOverlaps(external_to_domain);
       BoxLevel finalexternal(dim);
-      Connector external_to_finalexternal;
+      Connector external_to_finalexternal(dim);
       computeInternalParts(
          finalexternal,
          external_to_finalexternal,

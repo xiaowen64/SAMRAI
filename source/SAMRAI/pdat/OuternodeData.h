@@ -566,10 +566,14 @@ private:
     */
    static const int PDAT_OUTERNODEDATA_VERSION;
 
-   OuternodeData<TYPE>(const OuternodeData<TYPE>&); // not implemented
+   // Unimplemented copy constructor
+   OuternodeData<TYPE>(
+      const OuternodeData<TYPE>&);
+
+   // Unimplemented assignment operator
    void
    operator = (
-      const OuternodeData<TYPE>&);                // not implemented
+      const OuternodeData<TYPE>&);
 
    //@
    //! @name Internal implementations of data copy operations.
@@ -604,7 +608,8 @@ private:
    //@
 
    int d_depth;
-   ArrayData<TYPE> d_data[tbox::Dimension::MAXIMUM_DIMENSION_VALUE][2];
+
+   boost::shared_ptr<ArrayData<TYPE> > d_data[SAMRAI::MAX_DIM_VAL][2];
 };
 
 }

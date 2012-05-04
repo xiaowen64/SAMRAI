@@ -426,8 +426,6 @@ private:
    makeFaceBoundaryBox(
       const hier::BoundaryBox& boundary_box) const;
 
-   const tbox::Dimension d_dim;
-
    std::string d_object_name;
 
    /*!

@@ -306,9 +306,9 @@ int main(
       hier::BoxLevel anchor_mapped_box_level(hier::IntVector(dim, 1),
                                              grid_geometry);
       hier::BoxLevel balance_mapped_box_level(dim);
-      hier::Connector balance_to_anchor;
-      hier::Connector anchor_to_balance;
-      hier::Connector balance_to_balance;
+      hier::Connector balance_to_anchor(dim);
+      hier::Connector anchor_to_balance(dim);
+      hier::Connector balance_to_balance(dim);
 
       {
          hier::BoxContainer anchor_boxes(main_db->getDatabaseBoxArray("anchor_boxes"));
@@ -373,8 +373,8 @@ int main(
             domain_to_anchor,
             hierarchy,
             0,
-            hier::Connector(),
-            hier::Connector(),
+            hier::Connector(dim),
+            hier::Connector(dim),
             min_size,
             max_size,
             domain_mapped_box_level,
@@ -482,8 +482,8 @@ int main(
             anchor_to_balance,
             hierarchy,
             1,
-            hier::Connector(),
-            hier::Connector(),
+            hier::Connector(dim),
+            hier::Connector(dim),
             min_size,
             max_size,
             domain_mapped_box_level,
@@ -806,7 +806,7 @@ void sortNodes(
 {
    const hier::MappingConnectorAlgorithm mca;
 
-   hier::Connector sorting_map;
+   hier::Connector sorting_map(new_mapped_box_level.getDim());
    hier::BoxLevel seq_mapped_box_level(new_mapped_box_level.getDim());
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(

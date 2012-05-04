@@ -988,13 +988,13 @@ private:
    //@{ @name Internal context and scratch data
 
    static boost::shared_ptr<pdat::CellVariable<double> >
-   s_cell_scratch_var[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   s_cell_scratch_var[SAMRAI::MAX_DIM_VAL];
 
    static boost::shared_ptr<pdat::SideVariable<double> >
-   s_flux_scratch_var[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   s_flux_scratch_var[SAMRAI::MAX_DIM_VAL];
 
    static boost::shared_ptr<pdat::OutersideVariable<double> >
-   s_oflux_scratch_var[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   s_oflux_scratch_var[SAMRAI::MAX_DIM_VAL];
 
    /*!
     * @brief Default context of internally maintained hierarchy data.

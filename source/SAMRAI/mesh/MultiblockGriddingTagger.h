@@ -162,8 +162,6 @@ public:
       const hier::IntVector& ratio);
 
 private:
-   const tbox::Dimension d_dim;
-
    /*
     * Patch data index for
     */

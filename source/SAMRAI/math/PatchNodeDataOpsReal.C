@@ -38,31 +38,6 @@ PatchNodeDataOpsReal<TYPE>::~PatchNodeDataOpsReal()
 /*
  *************************************************************************
  *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-PatchNodeDataOpsReal<TYPE>::PatchNodeDataOpsReal(
-   const PatchNodeDataOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-PatchNodeDataOpsReal<TYPE>::operator = (
-   const PatchNodeDataOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * General templated operations for real node-centered patch data.
  *
  *************************************************************************

@@ -401,7 +401,7 @@ private:
    /**
     * linear advection velocity vector
     */
-   double d_advection_velocity[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_advection_velocity[SAMRAI::MAX_DIM_VAL];
 
    /*
     *  Parameters for numerical method:
@@ -433,7 +433,7 @@ private:
     * Input for SPHERE problem
     */
    double d_radius;
-   double d_center[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_center[SAMRAI::MAX_DIM_VAL];
    double d_uval_inside;
    double d_uval_outside;
 
@@ -474,7 +474,7 @@ private:
     * Input for Sine problem initialization
     */
    double d_amplitude;
-   double d_frequency[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_frequency[SAMRAI::MAX_DIM_VAL];
 
    /*
     * Refinement criteria parameters for gradient detector and

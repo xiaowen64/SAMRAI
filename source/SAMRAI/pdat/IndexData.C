@@ -34,12 +34,6 @@ template<class TYPE, class BOX_GEOMETRY>
 const int IndexData<TYPE, BOX_GEOMETRY>::PDAT_INDEXDATA_VERSION = 1;
 
 template<class TYPE, class BOX_GEOMETRY>
-IndexDataNode<TYPE, BOX_GEOMETRY>::IndexDataNode():
-   d_index(tbox::Dimension::getInvalidDimension())
-{
-}
-
-template<class TYPE, class BOX_GEOMETRY>
 IndexDataNode<TYPE, BOX_GEOMETRY>::IndexDataNode(
    const hier::Index& index,
    const int offset,
@@ -229,35 +223,6 @@ template<class TYPE, class BOX_GEOMETRY>
 IndexData<TYPE, BOX_GEOMETRY>::~IndexData()
 {
    removeAllItems();
-}
-
-/*
- *************************************************************************
- *
- * The following are private and cannot be used, but they are defined
- * here for compilers that require that every template declaration have
- * a definition (a stupid requirement, if you ask me).
- *
- *************************************************************************
- */
-
-template<class TYPE, class BOX_GEOMETRY>
-IndexData<TYPE, BOX_GEOMETRY>::IndexData(
-   const IndexData<TYPE, BOX_GEOMETRY>& foo):
-   hier::PatchData(foo.getBox(), foo.getGhostCellWidth()),
-   d_dim(foo.getDim())
-{
-
-   // private and not used (but included for some compilers)
-}
-
-template<class TYPE, class BOX_GEOMETRY>
-void
-IndexData<TYPE, BOX_GEOMETRY>::operator = (
-   const IndexData<TYPE, BOX_GEOMETRY>& foo)
-{
-   // private and not used (but included for some compilers)
-   NULL_USE(foo);
 }
 
 /*
@@ -454,7 +419,7 @@ IndexData<TYPE, BOX_GEOMETRY>::packStream(
             TYPE* item = &(*t);
             TBOX_ASSERT(item != NULL);
 
-            int index_buf[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+            int index_buf[SAMRAI::MAX_DIM_VAL];
             for (int i = 0; i < d_dim.getValue(); i++) {
                index_buf[i] = t.getNode().d_index(i);
             }
@@ -487,7 +452,7 @@ IndexData<TYPE, BOX_GEOMETRY>::unpackStream(
    int i;
    TYPE* items = new TYPE[num_items];
    for (i = 0; i < num_items; i++) {
-      int index_buf[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int index_buf[SAMRAI::MAX_DIM_VAL];
       stream.unpack(index_buf, d_dim.getValue());
       hier::Index index(d_dim);
       for (int j = 0; j < d_dim.getValue(); j++) {

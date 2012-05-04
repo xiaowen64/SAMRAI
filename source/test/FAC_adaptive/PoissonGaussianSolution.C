@@ -89,7 +89,7 @@ double PoissonGaussianSolution::exactFcn(
 double PoissonGaussianSolution::sourceFcn(
    double x,
    double y) const {
-   double gauss_ctr[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double gauss_ctr[SAMRAI::MAX_DIM_VAL];
    d_gauss.getCenter(gauss_ctr);
    double rval;
    rval = 4 * d_gauss.getLambda() * ((x - gauss_ctr[0]) * (x - gauss_ctr[0])
@@ -104,7 +104,7 @@ double PoissonGaussianSolution::sourceFcn(
    double x,
    double y,
    double z) const {
-   double gauss_ctr[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double gauss_ctr[SAMRAI::MAX_DIM_VAL];
    d_gauss.getCenter(gauss_ctr);
    double rval;
    rval = 4 * d_gauss.getLambda() * ((x - gauss_ctr[0]) * (x - gauss_ctr[0])
@@ -131,7 +131,7 @@ void PoissonGaussianSolution::setGridData(
 
    {
       /* Set cell-centered data. */
-      double sl[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]; // Like XLower, except for cell.
+      double sl[SAMRAI::MAX_DIM_VAL]; // Like XLower, except for cell.
       int j;
       for (j = 0; j < d_dim.getValue(); ++j) {
          sl[j] = xl[j] + 0.5 * h[j];

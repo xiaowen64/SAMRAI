@@ -170,8 +170,8 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
    if (flev_num < 0) flev_num = clev_num + 1;
    if (clev_num < 0) clev_num = flev_num - 1;
 
-   double cdx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   double fdx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double cdx[SAMRAI::MAX_DIM_VAL];
+   double fdx[SAMRAI::MAX_DIM_VAL];
    getDx(clev_num, cdx);
    getDx(flev_num, fdx);
 

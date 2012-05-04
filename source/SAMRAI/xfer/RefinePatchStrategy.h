@@ -269,6 +269,12 @@ public:
       return d_dim;
    }
 
+protected:
+   /*!
+    * @brief Dimension of the object.
+    */
+   const tbox::Dimension d_dim;
+
 private:
    /*!
     * @brief Get the set of RefinePatchStrategy objects that have been
@@ -282,11 +288,6 @@ private:
    }
 
    /*!
-    * @brief Dimension of the object.
-    */
-   const tbox::Dimension d_dim;
-
-   /*!
     * @brief Register the object with a set of all RefinePatchStrategy
     * objects used in an application.
     */
@@ -295,7 +296,6 @@ private:
    {
       std::set<RefinePatchStrategy *>& current_objects =
          RefinePatchStrategy::getCurrentObjects();
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       current_objects.insert(this);
    }
 
@@ -307,7 +307,6 @@ private:
    {
       std::set<RefinePatchStrategy *>& current_objects =
          RefinePatchStrategy::getCurrentObjects();
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       current_objects.erase(this);
    }
 

@@ -71,7 +71,7 @@ int main(
 
    const unsigned short d = static_cast<unsigned short>(atoi(argv[1]));
    TBOX_ASSERT(d > 0);
-   TBOX_ASSERT(d <= tbox::Dimension::MAXIMUM_DIMENSION_VALUE);
+   TBOX_ASSERT(d <= SAMRAI::MAX_DIM_VAL);
    const tbox::Dimension dim(d);
 
    const std::string log_fn = std::string("cell_hiertest.")
@@ -87,8 +87,8 @@ int main(
       int ln, iv;
 
       // Make a dummy hierarchy domain
-      double lo[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      double hi[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      double lo[SAMRAI::MAX_DIM_VAL];
+      double hi[SAMRAI::MAX_DIM_VAL];
 
       hier::Index clo0(dim);
       hier::Index chi0(dim);

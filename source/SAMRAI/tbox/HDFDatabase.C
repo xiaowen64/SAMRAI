@@ -1054,7 +1054,7 @@ HDFDatabase::createCompoundDatabaseBox(
          int_type_spec);
    TBOX_ASSERT(errf >= 0);
 
-   const hsize_t box_dim = DatabaseBox_MAX_DIM /* defined in DatabaseBox.h */;
+   const hsize_t box_dim = SAMRAI::MAX_DIM_VAL;
    insertArray(type, "lo", HOFFSET(DatabaseBox_POD, d_lo), 1, &box_dim,
       NULL, int_type_spec);
    insertArray(type, "hi", HOFFSET(DatabaseBox_POD, d_hi), 1, &box_dim,

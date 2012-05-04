@@ -179,17 +179,17 @@ private:
    /*!
     * @brief Period of sinusoid.
     */
-   double d_period[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_period[SAMRAI::MAX_DIM_VAL];
 
    /*!
     * @brief Initial displacement.
     */
-   double d_init_disp[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_init_disp[SAMRAI::MAX_DIM_VAL];
 
    /*!
     * @brief Front velocity.
     */
-   double d_velocity[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_velocity[SAMRAI::MAX_DIM_VAL];
 
    /*!
     * @brief Amplitude of sinusoid.
