@@ -1492,7 +1492,7 @@ CellPoissonFACOps::ewingFixFlux(
    pdat::SideData<double>& flux_data,
    const hier::IntVector& ratio_to_coarser) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(d_dim, patch, soln_data, flux_data,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(d_dim, patch, soln_data, flux_data,
       ratio_to_coarser);
 
    const int patch_ln = patch.getPatchLevelNumber();
@@ -1949,7 +1949,7 @@ CellPoissonFACOps::computeVectorWeights(
    int finest_ln) const
 {
    TBOX_ASSERT(hierarchy);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
 
    if (coarsest_ln == -1) coarsest_ln = 0;
    if (finest_ln == -1) finest_ln = hierarchy->getFinestLevelNumber();
@@ -2104,8 +2104,8 @@ CellPoissonFACOps::computeFluxOnPatch(
    const pdat::CellData<double>& w_data,
    pdat::SideData<double>& Dgradw_data) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(d_dim, patch, ratio_to_coarser_level, w_data,
-      Dgradw_data);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(d_dim, patch, ratio_to_coarser_level,
+      w_data, Dgradw_data);
    TBOX_ASSERT(patch.inHierarchy());
    TBOX_ASSERT(w_data.getGhostCellWidth() >=
       hier::IntVector::getOne(ratio_to_coarser_level.getDim()));
@@ -2216,8 +2216,8 @@ CellPoissonFACOps::computeResidualOnPatch(
    const pdat::CellData<double>& rhs_data,
    pdat::CellData<double>& residual_data) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS5(d_dim, patch, flux_data, soln_data, rhs_data,
-      residual_data);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY5(d_dim, patch, flux_data, soln_data,
+      rhs_data, residual_data);
 
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
@@ -2379,7 +2379,8 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
    char red_or_black,
    double* p_maxres) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(d_dim, patch, flux_data, soln_data, rhs_data);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(d_dim, patch, flux_data, soln_data,
+      rhs_data);
    TBOX_ASSERT(red_or_black == 'r' || red_or_black == 'b');
 
    const int offset = red_or_black == 'r' ? 0 : 1;

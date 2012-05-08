@@ -337,7 +337,7 @@ BalanceUtilities::privateInitializeBadCutPointsForBox(
    const hier::IntVector& bad_interval,
    const hier::BoxContainer& physical_domain)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, bad_interval);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, bad_interval);
 
    const tbox::Dimension dim(box.getDim());
 
@@ -408,7 +408,7 @@ BalanceUtilities::privateFindBestCutDimension(
    const hier::IntVector& cut_factor,
    tbox::Array<tbox::Array<bool> >& bad_cut_points)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(in_box, min_size, cut_factor);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(in_box, min_size, cut_factor);
 
    const tbox::Dimension& dim(in_box.getDim());
 
@@ -596,7 +596,7 @@ BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
    const tbox::Array<tbox::Array<bool> >& bad_cut_points)
 {
 
-   TBOX_DIM_ASSERT_CHECK_ARGS3(box_lo, box_hi, in_box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(box_lo, box_hi, in_box);
 
    const tbox::Dimension& dim(box_lo.getDim());
 
@@ -662,7 +662,7 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
    const hier::IntVector& cut_factor,
    tbox::Array<tbox::Array<bool> >& bad_cut_points)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(in_box, min_size, cut_factor);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(in_box, min_size, cut_factor);
 
    const tbox::Dimension dim(in_box.getDim());
 
@@ -801,7 +801,7 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
    tbox::Array<tbox::Array<bool> >& bad_cut_points)
 {
    TBOX_ASSERT(patch);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*patch, in_box, min_size, cut_factor);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*patch, in_box, min_size, cut_factor);
 
    const tbox::Dimension dim(in_box.getDim());
 
@@ -939,7 +939,7 @@ BalanceUtilities::computeNonUniformWorkload(
    const hier::Box& box)
 {
    TBOX_ASSERT(patch);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*patch, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*patch, box);
 
    const boost::shared_ptr<pdat::CellData<double> > work_data(
       patch->getPatchData(wrk_indx),
@@ -1228,7 +1228,7 @@ BalanceUtilities::recursiveBisectionUniform(
    const hier::IntVector& bad_interval,
    const hier::BoxContainer& physical_domain)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(min_size, cut_factor, bad_interval);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(min_size, cut_factor, bad_interval);
 
    const tbox::Dimension dim(min_size.getDim());
 
@@ -1315,7 +1315,7 @@ BalanceUtilities::recursiveBisectionNonuniform(
    const hier::IntVector& bad_interval,
    const hier::BoxContainer& physical_domain)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(min_size, cut_factor, bad_interval);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(min_size, cut_factor, bad_interval);
 
    const tbox::Dimension dim(min_size.getDim());
 
@@ -1401,7 +1401,7 @@ BalanceUtilities::computeDomainDependentProcessorLayout(
    int num_procs,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(proc_dist, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(proc_dist, box);
 
    const tbox::Dimension& dim(proc_dist.getDim());
 
@@ -1512,7 +1512,7 @@ BalanceUtilities::computeDomainIndependentProcessorLayout(
    int num_procs,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(proc_dist, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(proc_dist, box);
 
    int i;
    const tbox::Dimension& dim(proc_dist.getDim());

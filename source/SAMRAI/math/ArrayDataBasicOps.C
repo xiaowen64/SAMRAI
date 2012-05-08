@@ -51,7 +51,7 @@ ArrayDataBasicOps<TYPE>::scale(
 #pragma warning (disable:1572)
 #endif
 
-   TBOX_DIM_ASSERT_CHECK_ARGS3(dst, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(dst, src, box);
 
    int dimVal = dst.getDim().getValue();
 
@@ -163,7 +163,7 @@ ArrayDataBasicOps<TYPE>::addScalar(
 #pragma warning (disable:1572)
 #endif
 
-   TBOX_DIM_ASSERT_CHECK_ARGS3(dst, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(dst, src, box);
 
    int dimVal = dst.getDim().getValue();
 
@@ -268,7 +268,7 @@ ArrayDataBasicOps<TYPE>::add(
    const pdat::ArrayData<TYPE>& src2,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
    int dimVal = dst.getDim().getValue();
 
@@ -384,7 +384,7 @@ ArrayDataBasicOps<TYPE>::subtract(
    const pdat::ArrayData<TYPE>& src2,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
    int dimVal = dst.getDim().getValue();
 
@@ -500,7 +500,7 @@ ArrayDataBasicOps<TYPE>::multiply(
    const pdat::ArrayData<TYPE>& src2,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
    int dimVal = dst.getDim().getValue();
    const int ddepth = dst.getDepth();
@@ -615,7 +615,7 @@ ArrayDataBasicOps<TYPE>::divide(
    const pdat::ArrayData<TYPE>& src2,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
    int dimVal = dst.getDim().getValue();
    const int ddepth = dst.getDepth();
@@ -726,7 +726,7 @@ ArrayDataBasicOps<TYPE>::reciprocal(
    const pdat::ArrayData<TYPE>& src,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(dst, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(dst, src, box);
 
    int dimVal = dst.getDim().getValue();
    const int ddepth = dst.getDepth();
@@ -834,7 +834,7 @@ ArrayDataBasicOps<TYPE>::linearSum(
 #pragma warning (disable:1572)
 #endif
 
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
    int dimVal = dst.getDim().getValue();
    const int ddepth = dst.getDepth();
@@ -969,7 +969,7 @@ ArrayDataBasicOps<TYPE>::axpy(
    const pdat::ArrayData<TYPE>& src2,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
    int dimVal = dst.getDim().getValue();
 
@@ -1094,7 +1094,7 @@ ArrayDataBasicOps<TYPE>::axmy(
    const pdat::ArrayData<TYPE>& src2,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
    int dimVal = dst.getDim().getValue();
 
@@ -1214,7 +1214,7 @@ ArrayDataBasicOps<TYPE>::min(
    const pdat::ArrayData<TYPE>& data,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(data, box);
 
    int dimVal = data.getDim().getValue();
    TYPE minval = tbox::MathUtilities<TYPE>::getMax();
@@ -1294,7 +1294,7 @@ ArrayDataBasicOps<TYPE>::max(
    const pdat::ArrayData<TYPE>& data,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(data, box);
 
    int dimVal = data.getDim().getValue();
    TYPE maxval = -(tbox::MathUtilities<TYPE>::getMax());
@@ -1377,7 +1377,7 @@ ArrayDataBasicOps<TYPE>::setRandomValues(
    const TYPE& low,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(dst, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(dst, box);
 
    int dimVal = dst.getDim().getValue();
    const hier::Box d_box = dst.getBox();

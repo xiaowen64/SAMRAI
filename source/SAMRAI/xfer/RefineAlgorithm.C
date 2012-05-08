@@ -74,7 +74,7 @@ RefineAlgorithm::registerRefine(
 {
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    if (oprefine) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *oprefine);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *oprefine);
    }
 #endif
 
@@ -177,9 +177,9 @@ RefineAlgorithm::createSchedule(
 {
    TBOX_ASSERT(level);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *level);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *level);
    if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *patch_strategy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *patch_strategy);
    }
 #endif
 
@@ -223,9 +223,9 @@ RefineAlgorithm::createSchedule(
 {
    TBOX_ASSERT(level);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *level);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *level);
    if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *patch_strategy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *patch_strategy);
    }
 #endif
 
@@ -270,9 +270,9 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, *dst_level, *src_level);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, *dst_level, *src_level);
    if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *patch_strategy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *patch_strategy);
    }
 #endif
 
@@ -320,9 +320,9 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, *dst_level, *src_level);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, *dst_level, *src_level);
    if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *patch_strategy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *patch_strategy);
    }
 #endif
 
@@ -369,12 +369,12 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT(level);
    TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *level);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *level);
    if (hierarchy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *hierarchy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *hierarchy);
    }
    if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *patch_strategy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *patch_strategy);
    }
 #endif
 
@@ -427,12 +427,12 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT(level);
    TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *level);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *level);
    if (hierarchy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *hierarchy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *hierarchy);
    }
    if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *patch_strategy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *patch_strategy);
    }
 #endif
 
@@ -482,15 +482,15 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_level);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *dst_level);
    if (src_level) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *src_level);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *src_level);
    }
    if (hierarchy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *hierarchy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *hierarchy);
    }
    if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *patch_strategy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *patch_strategy);
    }
 #endif
 
@@ -550,15 +550,15 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_level);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *dst_level);
    if (src_level) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *src_level);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *src_level);
    }
    if (hierarchy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *hierarchy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *hierarchy);
    }
    if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *patch_strategy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *patch_strategy);
    }
 #endif
 

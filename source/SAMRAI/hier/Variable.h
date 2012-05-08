@@ -138,7 +138,7 @@ public:
    setPatchDataFactory(
       const boost::shared_ptr<PatchDataFactory>& factory)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *factory);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *factory);
       d_factory = factory;
    }
 

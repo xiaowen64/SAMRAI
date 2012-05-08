@@ -126,7 +126,7 @@ TransferOperatorRegistry::lookupCoarsenOperator(
    const std::string& op_name)
 {
    TBOX_ASSERT(var);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_min_stencil_width, *var);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_min_stencil_width, *var);
 
    boost::shared_ptr<CoarsenOperator> coarsen_op;
 
@@ -170,7 +170,7 @@ TransferOperatorRegistry::lookupRefineOperator(
    const std::string& op_name)
 {
    TBOX_ASSERT(var);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_min_stencil_width, *var);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_min_stencil_width, *var);
 
    boost::shared_ptr<RefineOperator> refine_op;
 
@@ -214,7 +214,7 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
    const std::string& op_name)
 {
    TBOX_ASSERT(var);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_min_stencil_width, *var);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_min_stencil_width, *var);
 
    boost::shared_ptr<TimeInterpolateOperator> time_op;
 

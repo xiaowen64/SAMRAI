@@ -175,7 +175,7 @@ GridGeometry::makeCoarsenedGridGeometry(
 
    TBOX_ASSERT(!coarse_geom_name.empty());
    TBOX_ASSERT(coarse_geom_name != getObjectName());
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, coarsen_ratio);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, coarsen_ratio);
    TBOX_ASSERT(coarsen_ratio > hier::IntVector::getZero(dim));
 
    hier::BoxContainer coarse_domain;
@@ -241,7 +241,7 @@ GridGeometry::makeRefinedGridGeometry(
 
    TBOX_ASSERT(!fine_geom_name.empty());
    TBOX_ASSERT(fine_geom_name != getObjectName());
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, refine_ratio);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, refine_ratio);
    TBOX_ASSERT(refine_ratio > hier::IntVector::getZero(dim));
 
    hier::BoxContainer fine_domain(getPhysicalDomain());

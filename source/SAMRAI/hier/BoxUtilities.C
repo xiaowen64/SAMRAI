@@ -43,7 +43,7 @@ BoxUtilities::findBadCutPointsForBorderAndDirection(
    const Box& border,
    const int bad_interval)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, border);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, border);
 
    TBOX_ASSERT((0 <= id) && (id < box.getDim().getValue()));
    TBOX_ASSERT(bad_cuts.getSize() == box.numberCells(id));
@@ -123,7 +123,7 @@ BoxUtilities::checkBoxConstraints(
    const BoxContainer& physical_boxes)
 {
 
-   TBOX_DIM_ASSERT_CHECK_ARGS3(min_size, cut_factor, bad_interval);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(min_size, cut_factor, bad_interval);
 
    TBOX_ASSERT(min_size > IntVector::getZero(min_size.getDim()));
    TBOX_ASSERT(cut_factor > IntVector::getZero(min_size.getDim()));
@@ -331,7 +331,7 @@ BoxUtilities::chopBoxes(
    const IntVector& bad_interval,
    const BoxContainer& physical_boxes)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(max_size, min_size, cut_factor, bad_interval);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(max_size, min_size, cut_factor, bad_interval);
 
    TBOX_ASSERT(min_size > IntVector::getZero(min_size.getDim()));
    TBOX_ASSERT(max_size >= min_size);
@@ -436,7 +436,7 @@ BoxUtilities::chopBox(
             Box chop_box = boxes.front();
             boxes.popFront();
 
-            TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, chop_box);
+            TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, chop_box);
 
             if (!cut_points[id].empty()) {
 
@@ -841,7 +841,7 @@ BoxUtilities::findBestCutPointsGivenMax(
 {
    const tbox::Dimension& dim(max_size.getDim());
 
-   TBOX_DIM_ASSERT_CHECK_ARGS3(max_size, min_size, cut_factor);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(max_size, min_size, cut_factor);
 
    TBOX_ASSERT(min_size > IntVector::getZero(dim));
    TBOX_ASSERT(min_size <= max_size);
@@ -996,7 +996,7 @@ BoxUtilities::findBestCutPointsGivenNumber(
    const IntVector& min_size,
    const IntVector& cut_factor)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(number_boxes, min_size, cut_factor);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(number_boxes, min_size, cut_factor);
 
    const tbox::Dimension& dim(number_boxes.getDim());
 
@@ -1151,7 +1151,7 @@ BoxUtilities::checkBoxForBadCutPoints(
    const BoxContainer& physical_boxes,
    const IntVector& bad_interval)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(bad_cut_information, box,
+   TBOX_ASSERT_OBJDIM_EQUALITY3(bad_cut_information, box,
       bad_interval);
 
    const tbox::Dimension& dim(box.getDim());
@@ -1190,7 +1190,7 @@ BoxUtilities::checkBoxForBadCutPointsInDirection(
    const BoxContainer& physical_boxes,
    const IntVector& bad_interval)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, bad_interval);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, bad_interval);
 
    const tbox::Dimension& dim(box.getDim());
 
@@ -1324,7 +1324,7 @@ BoxUtilities::findBadCutPointsForDirection(
    const BoxContainer& physical_boxes,
    const IntVector& bad_interval)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, bad_interval);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, bad_interval);
 
    const tbox::Dimension& dim(box.getDim());
 
@@ -1461,7 +1461,7 @@ BoxUtilities::fixBadCutPoints(
    const IntVector& min_size,
    const IntVector& cut_factor)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(box, min_size, cut_factor);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(box, min_size, cut_factor);
 
    const tbox::Dimension& dim(box.getDim());
 

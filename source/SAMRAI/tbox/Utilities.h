@@ -165,90 +165,85 @@ typedef int mode_t;
 
 #endif
 
-#define TBOX_DIM_ASSERT_CHECK_ARGS2(arg1, arg2)  \
+#define TBOX_ASSERT_OBJDIM_EQUALITY2(arg1, arg2) \
    TBOX_DIM_ASSERT(                              \
-   (arg1).getDim().isValid() &&                  \
    ((arg1).getDim() == (arg2).getDim())          \
    )
 
-#define TBOX_DIM_ASSERT_CHECK_ARGS3(arg1, arg2, arg3)   \
-   TBOX_DIM_ASSERT(                                     \
-   (arg1).getDim().isValid() &&                         \
-   ((arg1).getDim() == (arg2).getDim()) &&              \
-   ((arg1).getDim() == (arg3).getDim())                 \
+#define TBOX_ASSERT_OBJDIM_EQUALITY3(arg1, arg2, arg3) \
+   TBOX_DIM_ASSERT(                                    \
+   ((arg1).getDim() == (arg2).getDim()) &&             \
+   ((arg1).getDim() == (arg3).getDim())                \
    )
 
-#define TBOX_DIM_ASSERT_CHECK_ARGS4(arg1, arg2, arg3, arg4)  \
+#define TBOX_ASSERT_OBJDIM_EQUALITY4(arg1, arg2, arg3, arg4) \
    TBOX_DIM_ASSERT(                                          \
-   (arg1).getDim().isValid() &&                              \
    ((arg1).getDim() == (arg2).getDim()) &&                   \
    ((arg1).getDim() == (arg3).getDim()) &&                   \
    ((arg1).getDim() == (arg4).getDim())                      \
    )
 
-#define TBOX_DIM_ASSERT_CHECK_ARGS5(arg1, arg2, arg3, arg4, arg5)  \
+#define TBOX_ASSERT_OBJDIM_EQUALITY5(arg1, arg2, arg3, arg4, arg5) \
    TBOX_DIM_ASSERT(                                                \
-   (arg1).getDim().isValid() &&                                    \
    ((arg1).getDim() == (arg2).getDim()) &&                         \
    ((arg1).getDim() == (arg3).getDim()) &&                         \
    ((arg1).getDim() == (arg4).getDim()) &&                         \
    ((arg1).getDim() == (arg5).getDim())                            \
    )
 
-#define TBOX_DIM_ASSERT_CHECK_ARGS6(arg1, arg2, arg3, arg4, arg5, arg6)  \
-   TBOX_DIM_ASSERT(                                                      \
-   (arg1).getDim().isValid() &&                                          \
-   ((arg1).getDim() == (arg2).getDim()) &&                               \
-   ((arg1).getDim() == (arg3).getDim()) &&                               \
-   ((arg1).getDim() == (arg4).getDim()) &&                               \
-   ((arg1).getDim() == (arg5).getDim()) &&                               \
-   ((arg1).getDim() == (arg6).getDim())                                  \
+#define TTBOX_ASSERT_OBJDIM_EQUALITY6(arg1, arg2, arg3, arg4, arg5, arg6) \
+   TBOX_DIM_ASSERT(                                                       \
+   ((arg1).getDim() == (arg2).getDim()) &&                                \
+   ((arg1).getDim() == (arg3).getDim()) &&                                \
+   ((arg1).getDim() == (arg4).getDim()) &&                                \
+   ((arg1).getDim() == (arg5).getDim()) &&                                \
+   ((arg1).getDim() == (arg6).getDim())                                   \
    )
 
-#define TBOX_DIM_ASSERT_CHECK_ARGS7(arg1, arg2, arg3, arg4, arg5, arg6, arg7) \
-   TBOX_DIM_ASSERT(                                                           \
-   (arg1).getDim().isValid() &&                                               \
-   ((arg1).getDim() == (arg2).getDim()) &&                                    \
-   ((arg1).getDim() == (arg3).getDim()) &&                                    \
-   ((arg1).getDim() == (arg4).getDim()) &&                                    \
-   ((arg1).getDim() == (arg5).getDim()) &&                                    \
-   ((arg1).getDim() == (arg6).getDim()) &&                                    \
-   ((arg1).getDim() == (arg7).getDim())                                       \
+#define TBOX_ASSERT_OBJDIM_EQUALITY7(arg1, \
+                                     arg2, \
+                                     arg3, \
+                                     arg4, \
+                                     arg5, \
+                                     arg6, \
+                                     arg7) \
+   TBOX_DIM_ASSERT(                        \
+   ((arg1).getDim() == (arg2).getDim()) && \
+   ((arg1).getDim() == (arg3).getDim()) && \
+   ((arg1).getDim() == (arg4).getDim()) && \
+   ((arg1).getDim() == (arg5).getDim()) && \
+   ((arg1).getDim() == (arg6).getDim()) && \
+   ((arg1).getDim() == (arg7).getDim())    \
    )
 
-#define TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, arg1)  \
+#define TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, arg1) \
    TBOX_DIM_ASSERT(                                 \
-   (dim).isValid() &&                               \
    ((dim) == (arg1).getDim())                       \
    )                                                \
 
-#define TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(dim, arg1, arg2)  \
+#define TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, arg1, arg2) \
    TBOX_DIM_ASSERT(                                       \
-   (dim).isValid() &&                                     \
    ((dim) == (arg1).getDim()) &&                          \
    ((dim) == (arg2).getDim())                             \
    )
 
-#define TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(dim, arg1, arg2, arg3)  \
+#define TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, arg1, arg2, arg3) \
    TBOX_DIM_ASSERT(                                             \
-   (dim).isValid() &&                                           \
    ((dim) == (arg1).getDim()) &&                                \
    ((dim) == (arg2).getDim()) &&                                \
    ((dim) == (arg3).getDim())                                   \
    )
 
-#define TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(dim, arg1, arg2, arg3, arg4)  \
+#define TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(dim, arg1, arg2, arg3, arg4) \
    TBOX_DIM_ASSERT(                                                   \
-   (dim).isValid() &&                                                 \
    ((dim) == (arg1).getDim()) &&                                      \
    ((dim) == (arg2).getDim()) &&                                      \
    ((dim) == (arg3).getDim()) &&                                      \
    ((dim) == (arg4).getDim())                                         \
    )
 
-#define TBOX_DIM_ASSERT_CHECK_DIM_ARGS5(dim, arg1, arg2, arg3, arg4, arg5)  \
+#define TBOX_ASSERT_DIM_OBJDIM_EQUALITY5(dim, arg1, arg2, arg3, arg4, arg5) \
    TBOX_DIM_ASSERT(                                                         \
-   (dim).isValid() &&                                                       \
    ((dim) == (arg1).getDim()) &&                                            \
    ((dim) == (arg2).getDim()) &&                                            \
    ((dim) == (arg3).getDim()) &&                                            \
@@ -256,55 +251,58 @@ typedef int mode_t;
    ((dim) == (arg5).getDim())                                               \
    )
 
-#define TBOX_DIM_ASSERT_CHECK_DIM_ARGS6(dim, arg1, arg2, arg3, arg4, arg5, arg6) \
-   TBOX_DIM_ASSERT(                                                  \
-   (dim).isValid() &&                                                \
-   ((dim) == (arg1).getDim()) &&                                     \
-   ((dim) == (arg2).getDim()) &&                                     \
-   ((dim) == (arg3).getDim()) &&                                     \
-   ((dim) == (arg4).getDim()) &&                                     \
-   ((dim) == (arg5).getDim()) &&                                     \
-   ((dim) == (arg6).getDim())                                        \
+#define TBOX_ASSERT_DIM_OBJDIM_EQUALITY6(dim,  \
+                                         arg1, \
+                                         arg2, \
+                                         arg3, \
+                                         arg4, \
+                                         arg5, \
+                                         arg6) \
+   TBOX_DIM_ASSERT(                            \
+   ((dim) == (arg1).getDim()) &&               \
+   ((dim) == (arg2).getDim()) &&               \
+   ((dim) == (arg3).getDim()) &&               \
+   ((dim) == (arg4).getDim()) &&               \
+   ((dim) == (arg5).getDim()) &&               \
+   ((dim) == (arg6).getDim())                  \
    )
 
-#define TBOX_DIM_ASSERT_CHECK_DIM_ARGS7(dim,  \
-                                        arg1, \
-                                        arg2, \
-                                        arg3, \
-                                        arg4, \
-                                        arg5, \
-                                        arg6, \
-                                        arg7) \
-   TBOX_DIM_ASSERT(                           \
-   (dim).isValid() &&                         \
-   ((dim) == (arg1).getDim()) &&              \
-   ((dim) == (arg2).getDim()) &&              \
-   ((dim) == (arg3).getDim()) &&              \
-   ((dim) == (arg4).getDim()) &&              \
-   ((dim) == (arg5).getDim()) &&              \
-   ((dim) == (arg6).getDim()) &&              \
-   ((dim) == (arg7).getDim())                 \
+#define TBOX_ASSERT_DIM_OBJDIM_EQUALITY7(dim,  \
+                                         arg1, \
+                                         arg2, \
+                                         arg3, \
+                                         arg4, \
+                                         arg5, \
+                                         arg6, \
+                                         arg7) \
+   TBOX_DIM_ASSERT(                            \
+   ((dim) == (arg1).getDim()) &&               \
+   ((dim) == (arg2).getDim()) &&               \
+   ((dim) == (arg3).getDim()) &&               \
+   ((dim) == (arg4).getDim()) &&               \
+   ((dim) == (arg5).getDim()) &&               \
+   ((dim) == (arg6).getDim()) &&               \
+   ((dim) == (arg7).getDim())                  \
    )
 
-#define TBOX_DIM_ASSERT_CHECK_DIM_ARGS8(dim,  \
-                                        arg1, \
-                                        arg2, \
-                                        arg3, \
-                                        arg4, \
-                                        arg5, \
-                                        arg6, \
-                                        arg7, \
-                                        arg8) \
-   TBOX_DIM_ASSERT(                           \
-   (dim).isValid() &&                         \
-   ((dim) == (arg1).getDim()) &&              \
-   ((dim) == (arg2).getDim()) &&              \
-   ((dim) == (arg3).getDim()) &&              \
-   ((dim) == (arg4).getDim()) &&              \
-   ((dim) == (arg5).getDim()) &&              \
-   ((dim) == (arg6).getDim()) &&              \
-   ((dim) == (arg7).getDim()) &&              \
-   ((dim) == (arg8).getDim())                 \
+#define TBOX_ASSERT_DIM_OBJDIM_EQUALITY8(dim,  \
+                                         arg1, \
+                                         arg2, \
+                                         arg3, \
+                                         arg4, \
+                                         arg5, \
+                                         arg6, \
+                                         arg7, \
+                                         arg8) \
+   TBOX_DIM_ASSERT(                            \
+   ((dim) == (arg1).getDim()) &&               \
+   ((dim) == (arg2).getDim()) &&               \
+   ((dim) == (arg3).getDim()) &&               \
+   ((dim) == (arg4).getDim()) &&               \
+   ((dim) == (arg5).getDim()) &&               \
+   ((dim) == (arg6).getDim()) &&               \
+   ((dim) == (arg7).getDim()) &&               \
+   ((dim) == (arg8).getDim())                  \
    )
 
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS

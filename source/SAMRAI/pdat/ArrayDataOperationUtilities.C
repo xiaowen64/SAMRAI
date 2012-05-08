@@ -39,7 +39,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
    int num_depth,
    const OP& op)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src, opbox, src_shift);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src, opbox, src_shift);
    TBOX_ASSERT(num_depth >= 0);
    TBOX_ASSERT((0 <= dst_start_depth) &&
       (dst_start_depth + num_depth <= dst.getDepth()));
@@ -177,7 +177,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
    bool src_is_buffer,
    const OP& op)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(arraydata, opbox);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(arraydata, opbox);
    TBOX_ASSERT(buffer != (const TYPE *)NULL);
    TBOX_ASSERT(opbox.isSpatiallyEqual((opbox * arraydata.getBox())));
 

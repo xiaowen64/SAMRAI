@@ -76,7 +76,7 @@ OuteredgeSumTransaction::OuteredgeSumTransaction(
    TBOX_ASSERT(refine_item_id >= 0);
    // Note: s_num_refine_items cannot be used at this point!
 
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst_level, *src_level, dst_node, src_node);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level, *src_level, dst_node, src_node);
 }
 
 OuteredgeSumTransaction::~OuteredgeSumTransaction()

@@ -97,7 +97,7 @@ HierarchyDataOpsManager::getOperationsDouble(
 {
    TBOX_ASSERT(variable);
    TBOX_ASSERT(hierarchy);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*variable, *hierarchy);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*variable, *hierarchy);
 
    const boost::shared_ptr<pdat::CellVariable<double> > cellvar(
       variable,
@@ -247,7 +247,7 @@ HierarchyDataOpsManager::getOperationsFloat(
 {
    TBOX_ASSERT(variable);
    TBOX_ASSERT(hierarchy);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*variable, *hierarchy);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*variable, *hierarchy);
 
    const boost::shared_ptr<pdat::CellVariable<float> > cellvar(
       variable,
@@ -392,7 +392,7 @@ HierarchyDataOpsManager::getOperationsComplex(
 {
    TBOX_ASSERT(variable);
    TBOX_ASSERT(hierarchy);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*variable, *hierarchy);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*variable, *hierarchy);
 
    const boost::shared_ptr<pdat::CellVariable<dcomplex> > cellvar(
       variable,
@@ -542,7 +542,7 @@ HierarchyDataOpsManager::getOperationsInteger(
 {
    TBOX_ASSERT(variable);
    TBOX_ASSERT(hierarchy);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*variable, *hierarchy);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*variable, *hierarchy);
 
    const boost::shared_ptr<pdat::CellVariable<int> > cellvar(
       variable,

@@ -44,7 +44,7 @@ FaceData<TYPE>::FaceData(
    hier::PatchData(box, ghosts),
    d_depth(depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 
@@ -96,7 +96,7 @@ FaceData<TYPE>::operator () (
    const FaceIndex& i,
    int depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
 
    const int axis = i.getAxis();
 
@@ -112,7 +112,7 @@ FaceData<TYPE>::operator () (
    const FaceIndex& i,
    int depth) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
 
    const int axis = i.getAxis();
 
@@ -158,7 +158,7 @@ void
 FaceData<TYPE>::copy(
    const hier::PatchData& src)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const FaceData<TYPE>* t_src =
       dynamic_cast<const FaceData<TYPE> *>(&src);
@@ -180,7 +180,7 @@ void
 FaceData<TYPE>::copy2(
    hier::PatchData& dst) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    FaceData<TYPE>* t_dst =
       dynamic_cast<FaceData<TYPE> *>(&dst);
@@ -210,7 +210,7 @@ FaceData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const FaceData<TYPE>* t_src =
       dynamic_cast<const FaceData<TYPE> *>(&src);
@@ -250,7 +250,7 @@ FaceData<TYPE>::copy2(
    hier::PatchData& dst,
    const hier::BoxOverlap& overlap) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    FaceData<TYPE>* t_dst =
       dynamic_cast<FaceData<TYPE> *>(&dst);
@@ -286,7 +286,7 @@ FaceData<TYPE>::copyOnBox(
    const FaceData<TYPE>& src,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, src, box);
 
    for (int axis = 0; axis < getDim().getValue(); axis++) {
       const hier::Box face_box = FaceGeometry::toFaceBox(box, axis);
@@ -373,7 +373,7 @@ FaceData<TYPE>::copyDepth(
    const FaceData<TYPE>& src,
    int src_depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    for (int d = 0; d < getDim().getValue(); d++) {
       const hier::Box box = d_data[d]->getBox() * src.d_data[d]->getBox();
@@ -576,7 +576,7 @@ FaceData<TYPE>::getSizeOfData(
    int depth,
    const hier::IntVector& ghosts)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
 
    TBOX_ASSERT(depth > 0);
 
@@ -617,7 +617,7 @@ FaceData<TYPE>::fill(
    const hier::Box& box,
    int d)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
@@ -642,7 +642,7 @@ FaceData<TYPE>::fillAll(
    const TYPE& t,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    for (int i = 0; i < getDim().getValue(); i++) {
       d_data[i]->fillAll(t, FaceGeometry::toFaceBox(box, i));
@@ -665,7 +665,7 @@ FaceData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    for (int axis = 0; axis < getDim().getValue(); axis++) {
       os << "Array face normal = " << axis << std::endl;
@@ -681,7 +681,7 @@ FaceData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
    for (int axis = 0; axis < getDim().getValue(); axis++) {
@@ -698,7 +698,7 @@ FaceData<TYPE>::printAxis(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
 
    for (int d = 0; d < d_depth; d++) {
@@ -716,7 +716,7 @@ FaceData<TYPE>::printAxis(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
    TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
 

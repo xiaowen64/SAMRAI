@@ -162,7 +162,7 @@ CartesianBoundaryUtilities2::fillEdgeBoundaryData(
    TBOX_ASSERT(bdry_edge_values.getSize() == NUM_2D_EDGES * (vardata->getDepth()));
 
    TBOX_DIM_ASSERT(ghost_fill_width.getDim() == tbox::Dimension(2));
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*vardata, patch, ghost_fill_width);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*vardata, patch, ghost_fill_width);
 
    NULL_USE(varname);
 
@@ -243,7 +243,7 @@ CartesianBoundaryUtilities2::fillNodeBoundaryData(
    TBOX_ASSERT(bdry_edge_values.getSize() == NUM_2D_EDGES * (vardata->getDepth()));
 
    TBOX_DIM_ASSERT(ghost_fill_width.getDim() == tbox::Dimension(2));
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*vardata, patch, ghost_fill_width);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*vardata, patch, ghost_fill_width);
 
    NULL_USE(varname);
 
@@ -390,7 +390,7 @@ CartesianBoundaryUtilities2::checkBdryData(
    TBOX_ASSERT(depth >= 0);
 
    TBOX_DIM_ASSERT(gcw_to_check.getDim() == tbox::Dimension(2));
-   TBOX_DIM_ASSERT_CHECK_ARGS3(patch, gcw_to_check, bbox);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(patch, gcw_to_check, bbox);
 
    int num_bad_values = 0;
 

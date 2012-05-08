@@ -151,7 +151,7 @@ OuterfaceComplexConstantRefine::refine(
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*this, fine, coarse, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*this, fine, coarse, ratio);
 
    const hier::Box cgbox(cdata->getGhostBox());
 
@@ -167,7 +167,7 @@ OuterfaceComplexConstantRefine::refine(
            b != boxes.end(); ++b) {
 
          const hier::Box& face_box = *b;
-         TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, face_box);
+         TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, face_box);
 
          hier::Box fine_box(dim);
          for (int i = 0; i < dim.getValue(); i++) {

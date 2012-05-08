@@ -334,7 +334,7 @@ GriddingAlgorithm::makeCoarsestLevel(
    const double level_time)
 {
 
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *d_hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *d_hierarchy);
 
    if (d_barrier_and_time) {
       t_make_coarsest->barrierAndStart();
@@ -2327,7 +2327,7 @@ GriddingAlgorithm::checkNonrefinedTags(
    const hier::PatchLevel& level,
    int tag_ln) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, level);
 
    const hier::BoxLevel& tag_mapped_box_level = *d_hierarchy->getBoxLevel(tag_ln);
    hier::BoxLevel violator(d_dim);
@@ -2506,7 +2506,7 @@ GriddingAlgorithm::readLevelBoxes(
    TBOX_ASSERT((tag_ln >= 0)
       && (tag_ln <= d_hierarchy->getFinestLevelNumber()));
 
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, *d_hierarchy, new_mapped_box_level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, *d_hierarchy, new_mapped_box_level);
 
    const hier::BoxLevel& coarser_mapped_box_level = *d_hierarchy->getBoxLevel(
          tag_ln);
@@ -2686,7 +2686,7 @@ GriddingAlgorithm::fillTags(
    TBOX_ASSERT((tag_value == d_true_tag) || (tag_value == d_false_tag));
    TBOX_ASSERT(tag_level);
    TBOX_ASSERT(tag_index == d_tag_indx || tag_index == d_buf_tag_indx);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *tag_level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *tag_level);
 
    t_fill_tags->start();
 
@@ -2726,7 +2726,7 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
    TBOX_ASSERT((tag_value == d_true_tag) || (tag_value == d_false_tag));
    TBOX_ASSERT(tag_level);
    TBOX_ASSERT(tag_index == d_tag_indx || tag_index == d_buf_tag_indx);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, *tag_level, fill_box_growth);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, *tag_level, fill_box_growth);
 
    /*
     * This method assumes fill is finer than tag, but that is easy to
@@ -2817,7 +2817,7 @@ GriddingAlgorithm::bufferTagsOnLevel(
    TBOX_ASSERT((tag_value == d_true_tag) || (tag_value == d_false_tag));
    TBOX_ASSERT(level);
    TBOX_ASSERT(buffer_size >= 0);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *level);
    /*
     * Start timer for this method.
     */
@@ -2924,7 +2924,7 @@ GriddingAlgorithm::findRefinementBoxes(
    TBOX_ASSERT((tag_ln >= 0)
       && (tag_ln <= d_hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(d_hierarchy->getPatchLevel(tag_ln));
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, new_mapped_box_level, *d_hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, new_mapped_box_level, *d_hierarchy);
 
    if (d_print_steps) {
       tbox::plog
@@ -3518,7 +3518,7 @@ GriddingAlgorithm::renumberBoxes(
    bool sort_by_corners,
    bool sequentialize_global_indices) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, new_mapped_box_level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, new_mapped_box_level);
 
    t_sort_nodes->start();
 
@@ -3555,7 +3555,7 @@ GriddingAlgorithm::refineNewBoxLevel(
    hier::Connector& new_to_tag,
    const hier::IntVector& ratio) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, new_mapped_box_level, ratio);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, new_mapped_box_level, ratio);
 
    new_mapped_box_level.refineBoxes(new_mapped_box_level,
       ratio,
@@ -3590,7 +3590,7 @@ GriddingAlgorithm::extendBoxesToDomainBoundary(
    const tbox::Array<hier::BoxContainer>& physical_domain_array,
    const hier::IntVector& extend_ghosts) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, new_mapped_box_level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, new_mapped_box_level);
 
    tbox::SAMRAI_MPI mpi(new_mapped_box_level.getMPI());
 
@@ -3663,7 +3663,7 @@ GriddingAlgorithm::makeOverflowNestingMap(
    NULL_USE(unnested_mapped_box_level);
 #endif
 
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim,
       unnested_mapped_box_level,
       nested_mapped_box_level);
 
@@ -3721,7 +3721,7 @@ GriddingAlgorithm::makeProperNestingMap(
    const hier::Connector& unnested_to_hierarchy,
    const int unnested_ln) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(d_dim,
       unnested_mapped_box_level,
       nested_mapped_box_level,
       nested_mapped_box_level);
@@ -3775,7 +3775,7 @@ GriddingAlgorithm::computeNestingViolator(
    const hier::Connector& hierarchy_to_candidate,
    const int tag_ln) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, candidate, violator);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, candidate, violator);
 
    const hier::IntVector& zero_vector(hier::IntVector::getZero(d_dim));
 
@@ -4044,7 +4044,7 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
    const hier::IntVector& min_size,
    const int tag_ln) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim,
       new_mapped_box_level,
       min_size);
 
@@ -4196,7 +4196,7 @@ GriddingAlgorithm::getGriddingParameters(
    const int level_number,
    const bool for_building_finer) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(d_dim,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(d_dim,
       smallest_patch,
       smallest_box_to_refine,
       largest_patch,

@@ -63,7 +63,7 @@ boost::shared_ptr<hier::PatchDataFactory>
 NodeDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
    return boost::make_shared<NodeDataFactory<TYPE> >(
       d_depth,
@@ -84,7 +84,7 @@ boost::shared_ptr<hier::PatchData>
 NodeDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
    return boost::make_shared<NodeData<TYPE> >(
       patch.getBox(),
@@ -105,7 +105,7 @@ boost::shared_ptr<hier::BoxGeometry>
 NodeDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    return boost::make_shared<NodeGeometry>(box, d_ghosts);
 }
@@ -130,7 +130,7 @@ size_t
 NodeDataFactory<TYPE>::getSizeOfMemory(
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    const size_t obj =
       tbox::MemoryUtilities::align(sizeof(NodeData<TYPE>));
@@ -153,7 +153,7 @@ bool
 NodeDataFactory<TYPE>::validCopyTo(
    const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *dst_pdf);
 
    bool valid_copy = false;
 

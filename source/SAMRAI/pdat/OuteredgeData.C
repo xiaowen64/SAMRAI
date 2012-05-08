@@ -140,7 +140,7 @@ OuteredgeData<TYPE>::operator () (
    const EdgeIndex& i,
    int depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
 
    const int axis = i.getAxis();
 
@@ -174,7 +174,7 @@ OuteredgeData<TYPE>::operator () (
    const EdgeIndex& i,
    int depth) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
 
    const int axis = i.getAxis();
 
@@ -244,7 +244,7 @@ void
 OuteredgeData<TYPE>::copy(
    const hier::PatchData& src)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const EdgeData<TYPE> * const t_edge_src =
       dynamic_cast<const EdgeData<TYPE> *>(&src);
@@ -269,7 +269,7 @@ void
 OuteredgeData<TYPE>::copy2(
    hier::PatchData& dst) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    EdgeData<TYPE>* t_edge_dst =
       dynamic_cast<EdgeData<TYPE> *>(&dst);
@@ -303,7 +303,7 @@ OuteredgeData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const EdgeOverlap* t_overlap =
       dynamic_cast<const EdgeOverlap *>(&overlap);
@@ -334,7 +334,7 @@ OuteredgeData<TYPE>::copy2(
    hier::PatchData& dst,
    const hier::BoxOverlap& overlap) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    const EdgeOverlap* t_overlap =
       dynamic_cast<const EdgeOverlap *>(&overlap);
@@ -375,7 +375,7 @@ OuteredgeData<TYPE>::copyDepth(
    const EdgeData<TYPE>& src,
    int src_depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    for (int axis = 0; axis < getDim().getValue(); ++axis) {
 
@@ -421,7 +421,7 @@ OuteredgeData<TYPE>::copyDepth2(
    EdgeData<TYPE>& dst,
    int src_depth) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    for (int axis = 0; axis < getDim().getValue(); ++axis) {
 
@@ -465,7 +465,7 @@ OuteredgeData<TYPE>::sum(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const EdgeOverlap* t_overlap =
       dynamic_cast<const EdgeOverlap *>(&overlap);
@@ -892,7 +892,7 @@ OuteredgeData<TYPE>::fill(
    const hier::Box& box,
    int d)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
    for (int axis = 0; axis < getDim().getValue(); ++axis) {
@@ -953,7 +953,7 @@ OuteredgeData<TYPE>::fillAll(
    const TYPE& t,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    for (int axis = 0; axis < getDim().getValue(); ++axis) {
 
@@ -993,7 +993,7 @@ void
 OuteredgeData<TYPE>::copyFromEdge(
    const EdgeData<TYPE>& src)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    for (int axis = 0; axis < getDim().getValue(); ++axis) {
 
@@ -1026,7 +1026,7 @@ void
 OuteredgeData<TYPE>::copyToEdge(
    EdgeData<TYPE>& dst) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    for (int axis = 0; axis < getDim().getValue(); ++axis) {
 
@@ -1069,7 +1069,7 @@ OuteredgeData<TYPE>::copyFromEdge(
    const EdgeData<TYPE>& src,
    const EdgeOverlap& overlap)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const hier::IntVector& src_offset = overlap.getSourceOffset();
 
@@ -1107,7 +1107,7 @@ OuteredgeData<TYPE>::copyToEdge(
    EdgeData<TYPE>& dst,
    const EdgeOverlap& overlap) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    const hier::IntVector& src_offset = overlap.getSourceOffset();
 
@@ -1144,7 +1144,7 @@ void
 OuteredgeData<TYPE>::copyFromOuteredge(
    const OuteredgeData<TYPE>& src)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    for (int axis = 0; axis < getDim().getValue(); ++axis) {
 
@@ -1195,7 +1195,7 @@ OuteredgeData<TYPE>::copyFromOuteredge(
    const OuteredgeData<TYPE>& src,
    const EdgeOverlap& overlap)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const hier::IntVector& src_offset = overlap.getSourceOffset();
 
@@ -1251,7 +1251,7 @@ void
 OuteredgeData<TYPE>::copyToOuteredge(
    OuteredgeData<TYPE>& dst) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    dst.copyFromOuteredge(*this);
 }
@@ -1262,7 +1262,7 @@ OuteredgeData<TYPE>::copyToOuteredge(
    OuteredgeData<TYPE>& dst,
    const EdgeOverlap& overlap) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    dst.copyFromOuteredge(*this, overlap);
 }
@@ -1282,7 +1282,7 @@ OuteredgeData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    for (int d = 0; d < d_depth; d++) {
       print(box, d, os, prec);
@@ -1297,7 +1297,7 @@ OuteredgeData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    for (int axis = 0; axis < getDim().getValue(); ++axis) {
@@ -1333,7 +1333,7 @@ OuteredgeData<TYPE>::printAxisSide(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((axis >= 0) && (axis < getDim().getValue()));
    TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
    TBOX_ASSERT((side == 0) || (side == 1));
@@ -1357,7 +1357,7 @@ OuteredgeData<TYPE>::printAxisSide(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
    TBOX_ASSERT((axis >= 0) && (axis < getDim().getValue()));
    TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));

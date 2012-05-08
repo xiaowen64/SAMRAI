@@ -94,7 +94,7 @@ NodeComplexInjection::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS5(*this, coarse, fine, coarse_box, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY5(*this, coarse, fine, coarse_box, ratio);
 
    boost::shared_ptr<NodeData<dcomplex> > fdata(
       fine.getPatchData(src_component),

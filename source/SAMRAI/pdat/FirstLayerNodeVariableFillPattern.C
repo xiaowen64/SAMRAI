@@ -69,7 +69,7 @@ FirstLayerNodeVariableFillPattern::calculateOverlap(
    const bool overwrite_interior,
    const hier::Transformation& transformation) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(dst_patch_box, src_mask);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(dst_patch_box, src_mask);
 
    hier::BoxContainer stencil_boxes;
    computeStencilBoxes(stencil_boxes, dst_patch_box);

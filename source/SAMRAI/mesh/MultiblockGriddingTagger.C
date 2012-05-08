@@ -92,7 +92,7 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
    const double fill_time,
    const hier::IntVector& ghost_width_to_fill)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, patch);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, patch);
 
    NULL_USE(fill_time);
 
@@ -137,7 +137,7 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    NULL_USE(boundary_box);
    NULL_USE(grid_geometry);
 
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim, patch, fill_box, boundary_box);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(d_dim, patch, fill_box, boundary_box);
 
    const tbox::Dimension& dim = fill_box.getDim();
 
@@ -249,7 +249,7 @@ MultiblockGriddingTagger::postprocessRefine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(d_dim, fine, coarse, fine_box, ratio);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(d_dim, fine, coarse, fine_box, ratio);
 
    NULL_USE(fine);
    NULL_USE(coarse);

@@ -75,7 +75,7 @@ PatchFaceDataOpsReal<TYPE>::printData(
    std::ostream& s) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    s << "Data box = " << box << std::endl;
    data->print(box, s);
@@ -90,7 +90,7 @@ PatchFaceDataOpsReal<TYPE>::copyData(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -108,7 +108,7 @@ PatchFaceDataOpsReal<TYPE>::setToScalar(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*dst, box);
 
    dst->fillAll(alpha, box);
 }

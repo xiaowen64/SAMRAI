@@ -41,7 +41,7 @@ NodeData<TYPE>::NodeData(
    hier::PatchData(box, ghosts),
    d_depth(depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 
@@ -102,7 +102,7 @@ NodeData<TYPE>::operator () (
    const NodeIndex& i,
    int depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    return (*d_data)(i, depth);
@@ -114,7 +114,7 @@ NodeData<TYPE>::operator () (
    const NodeIndex& i,
    int depth) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    return (*d_data)(i, depth);
@@ -134,7 +134,7 @@ void
 NodeData<TYPE>::copy(
    const hier::PatchData& src)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const NodeData<TYPE>* t_src =
       dynamic_cast<const NodeData<TYPE> *>(&src);
@@ -153,7 +153,7 @@ void
 NodeData<TYPE>::copy2(
    hier::PatchData& dst) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    NodeData<TYPE>* t_dst =
       dynamic_cast<NodeData<TYPE> *>(&dst);
@@ -181,7 +181,7 @@ NodeData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const NodeData<TYPE>* t_src =
       dynamic_cast<const NodeData<TYPE> *>(&src);
@@ -208,7 +208,7 @@ NodeData<TYPE>::copy2(
    hier::PatchData& dst,
    const hier::BoxOverlap& overlap) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    NodeData<TYPE>* t_dst =
       dynamic_cast<NodeData<TYPE> *>(&dst);
@@ -234,7 +234,7 @@ NodeData<TYPE>::copyOnBox(
    const NodeData<TYPE>& src,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, src, box);
    const hier::Box node_box = NodeGeometry::toNodeBox(box);
    d_data->copy(src.getArrayData(), node_box);
 }
@@ -313,7 +313,7 @@ NodeData<TYPE>::copyDepth(
    const NodeData<TYPE>& src,
    int src_depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const hier::Box box = d_data->getBox() * src.d_data->getBox();
    if (!box.empty()) {
@@ -480,7 +480,7 @@ NodeData<TYPE>::fill(
    const hier::Box& box,
    int d)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
    d_data->fill(t, NodeGeometry::toNodeBox(box), d);
@@ -500,7 +500,7 @@ NodeData<TYPE>::fillAll(
    const TYPE& t,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    d_data->fillAll(t, NodeGeometry::toNodeBox(box));
 }
 
@@ -520,7 +520,7 @@ NodeData<TYPE>::getSizeOfData(
    int depth,
    const hier::IntVector& ghosts)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(depth > 0);
 
    const hier::Box ghost_box = hier::Box::grow(box, ghosts);
@@ -543,7 +543,7 @@ NodeData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    for (int d = 0; d < d_depth; d++) {
       os << "Array depth = " << d << std::endl;
@@ -559,7 +559,7 @@ NodeData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    os.precision(prec);

@@ -43,7 +43,7 @@ ArrayDataNormOpsReal<TYPE>::abs(
    const pdat::ArrayData<TYPE>& src,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(dst, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(dst, src, box);
    TBOX_ASSERT(dst.getDepth() == src.getDepth());
 
    int dimVal = dst.getDim().getValue();
@@ -139,7 +139,7 @@ ArrayDataNormOpsReal<TYPE>::sumControlVolumes(
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(data, cvol, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(data, cvol, box);
 
    int dimVal = data.getDim().getValue();
 
@@ -226,7 +226,7 @@ ArrayDataNormOpsReal<TYPE>::L1NormWithControlVolume(
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(data, cvol, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(data, cvol, box);
 
    int dimVal = data.getDim().getValue();
 
@@ -325,7 +325,7 @@ ArrayDataNormOpsReal<TYPE>::L1Norm(
    const pdat::ArrayData<TYPE>& data,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(data, box);
 
    int dimVal = data.getDim().getValue();
 
@@ -408,7 +408,7 @@ ArrayDataNormOpsReal<TYPE>::L2NormWithControlVolume(
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(data, cvol, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(data, cvol, box);
 
    return sqrt(ArrayDataNormOpsReal<TYPE>::
       dotWithControlVolume(data, data, cvol, box));
@@ -420,7 +420,7 @@ ArrayDataNormOpsReal<TYPE>::L2Norm(
    const pdat::ArrayData<TYPE>& data,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(data, box);
 
    return sqrt(ArrayDataNormOpsReal<TYPE>::dot(data, data, box));
 }
@@ -433,7 +433,7 @@ ArrayDataNormOpsReal<TYPE>::weightedL2NormWithControlVolume(
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(data, weight, cvol, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(data, weight, cvol, box);
    TBOX_ASSERT(data.getDepth() == weight.getDepth());
 
    int dimVal = data.getDim().getValue();
@@ -548,7 +548,7 @@ ArrayDataNormOpsReal<TYPE>::weightedL2Norm(
    const pdat::ArrayData<TYPE>& weight,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(data, weight, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(data, weight, box);
    TBOX_ASSERT(data.getDepth() == weight.getDepth());
 
    int dimVal = data.getDim().getValue();
@@ -646,7 +646,7 @@ ArrayDataNormOpsReal<TYPE>::maxNormWithControlVolume(
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(data, cvol, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(data, cvol, box);
 
    int dimVal = data.getDim().getValue();
 
@@ -749,7 +749,7 @@ ArrayDataNormOpsReal<TYPE>::maxNorm(
    const pdat::ArrayData<TYPE>& data,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(data, box);
 
    int dimVal = data.getDim().getValue();
 
@@ -834,7 +834,7 @@ ArrayDataNormOpsReal<TYPE>::dotWithControlVolume(
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(data1, data2, cvol, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(data1, data2, cvol, box);
    TBOX_ASSERT(data1.getDepth() == data2.getDepth());
 
 // Disable Intel warning about conversions
@@ -957,7 +957,7 @@ ArrayDataNormOpsReal<TYPE>::dot(
    const pdat::ArrayData<TYPE>& data2,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(data1, data2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(data1, data2, box);
    TBOX_ASSERT(data1.getDepth() == data2.getDepth());
 
    int dimVal = data1.getDim().getValue();
@@ -1058,7 +1058,7 @@ ArrayDataNormOpsReal<TYPE>::integral(
    const pdat::ArrayData<double>& vol,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(data, vol, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(data, vol, box);
 
    int dimVal = data.getDim().getValue();
 

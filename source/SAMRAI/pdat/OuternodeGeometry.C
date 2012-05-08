@@ -36,7 +36,7 @@ OuternodeGeometry::OuternodeGeometry(
    d_ghosts(ghosts)
 
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(ghosts.min() >= 0);
 }
 
@@ -70,7 +70,7 @@ OuternodeGeometry::calculateOverlap(
    const bool retry,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_box, src_mask);
 
    const NodeGeometry* t_dst_node =
       dynamic_cast<const NodeGeometry *>(&dst_geometry);
@@ -124,7 +124,7 @@ OuternodeGeometry::doOverlap(
    const hier::BoxContainer& dst_restrict_boxes)
 {
    const hier::IntVector& src_offset = transformation.getOffset();
-   TBOX_DIM_ASSERT_CHECK_ARGS2(src_mask, src_offset);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 
    const tbox::Dimension& dim(src_mask.getDim());
 
@@ -230,7 +230,7 @@ OuternodeGeometry::doOverlap(
    const hier::BoxContainer& dst_restrict_boxes)
 {
    const hier::IntVector& src_offset = transformation.getOffset();
-   TBOX_DIM_ASSERT_CHECK_ARGS2(src_mask, src_offset);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 
    const tbox::Dimension& dim(src_mask.getDim());
 
@@ -335,7 +335,7 @@ OuternodeGeometry::doOverlap(
    const hier::BoxContainer& dst_restrict_boxes)
 {
    const hier::IntVector& src_offset = transformation.getOffset();
-   TBOX_DIM_ASSERT_CHECK_ARGS2(src_mask, src_offset);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 
    const tbox::Dimension& dim(src_mask.getDim());
 

@@ -773,7 +773,7 @@ public:
    grow(
       const IntVector& ghosts)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
       if (!empty()) {
          d_lo -= ghosts;
          d_hi += ghosts;
@@ -808,7 +808,7 @@ public:
    growLower(
       const IntVector& ghosts)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
       if (!empty()) {
          d_lo -= ghosts;
       }
@@ -837,7 +837,7 @@ public:
    growUpper(
       const IntVector& ghosts)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
       if (!empty()) {
          d_hi += ghosts;
       }
@@ -891,7 +891,7 @@ public:
    shift(
       const IntVector& offset)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, offset);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, offset);
       d_lo += offset;
       d_hi += offset;
    }
@@ -942,7 +942,7 @@ public:
    coarsen(
       const IntVector& ratio)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
       for (int i = 0; i < getDim().getValue(); i++) {
          d_lo(i) = coarsen(d_lo(i), ratio(i));
          d_hi(i) = coarsen(d_hi(i), ratio(i));
@@ -1014,7 +1014,7 @@ public:
       const Box& box,
       const IntVector& ghosts)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
       Box tmp = box;
       tmp.grow(ghosts);
       return tmp;
@@ -1028,7 +1028,7 @@ public:
       const Box& box,
       const IntVector& offset)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(box, offset);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(box, offset);
       return Box(box.lower() + offset, box.upper() + offset, box.d_block_id);
    }
 
@@ -1041,7 +1041,7 @@ public:
       const Box& box,
       const IntVector& ratio)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(box, ratio);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(box, ratio);
       Box tmp = box;
       tmp.refine(ratio);
       return tmp;
@@ -1056,7 +1056,7 @@ public:
       const Box& box,
       const IntVector& ratio)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(box, ratio);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(box, ratio);
       Box tmp = box;
       tmp.coarsen(ratio);
       return tmp;

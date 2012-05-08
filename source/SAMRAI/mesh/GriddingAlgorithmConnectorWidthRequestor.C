@@ -126,7 +126,7 @@ GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFrom
 
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const tbox::Dimension& dim(fine_to_fine_width.getDim());
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS7(dim,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY7(dim,
       coarse_to_fine_width,
       coarse_to_coarse_width,
       fine_to_fine_width,

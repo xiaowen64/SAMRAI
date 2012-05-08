@@ -78,7 +78,7 @@ public:
 #ifndef DEBUG_CHECK_DIM_ASSERTIONS
       NULL_USE(dst_patch_box);
 #endif
-      TBOX_DIM_ASSERT_CHECK_ARGS2(dst_patch_box, src_mask);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(dst_patch_box, src_mask);
       return dst_geometry.calculateOverlap(src_geometry, src_mask, fill_box,
          overwrite_interior, transformation);
    }

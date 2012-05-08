@@ -104,7 +104,7 @@ public:
       const pdat::ArrayData<double>& cvol,
       const hier::Box& box) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS3(data, cvol, box);
+      TBOX_ASSERT_OBJDIM_EQUALITY3(data, cvol, box);
       return sqrt(real(dotWithControlVolume(data, data, cvol, box)));
    }
 
@@ -118,7 +118,7 @@ public:
       const pdat::ArrayData<dcomplex>& data,
       const hier::Box& box) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(data, box);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(data, box);
       return sqrt(real(dot(data, data, box)));
    }
 

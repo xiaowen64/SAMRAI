@@ -122,7 +122,7 @@ Connector::Connector(
    d_global_data_up_to_date(true),
    d_connector_type(UNKNOWN)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(base_mapped_box_level,
+   TBOX_ASSERT_OBJDIM_EQUALITY3(base_mapped_box_level,
       head_mapped_box_level,
       base_width);
 

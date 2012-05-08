@@ -26,7 +26,7 @@ PatchData::PatchData(
    d_ghosts(ghosts),
    d_timestamp(0.0)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(domain, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(domain, ghosts);
 
    d_ghost_box.grow(ghosts);
 }

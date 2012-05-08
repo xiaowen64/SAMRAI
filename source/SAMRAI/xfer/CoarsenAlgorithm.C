@@ -74,7 +74,7 @@ CoarsenAlgorithm::registerCoarsen(
 {
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    if (opcoarsen) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *opcoarsen);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *opcoarsen);
    }
 #endif
 
@@ -121,7 +121,7 @@ CoarsenAlgorithm::createSchedule(
    CoarsenPatchStrategy* patch_strategy,
    const boost::shared_ptr<CoarsenTransactionFactory>& transaction_factory)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, *crse_level, *fine_level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, *crse_level, *fine_level);
 
    d_schedule_created = true;
 

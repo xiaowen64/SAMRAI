@@ -111,7 +111,7 @@ LocationIndexRobinBcCoefs::setBcCoefs(
    const hier::BoundaryBox& bdry_box,
    double fill_time) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, patch, bdry_box);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, patch, bdry_box);
 
    NULL_USE(variable);
    NULL_USE(patch);
@@ -120,17 +120,17 @@ LocationIndexRobinBcCoefs::setBcCoefs(
    int location = bdry_box.getLocationIndex();
    TBOX_ASSERT(location >= 0 && location < 2 * d_dim.getValue());
    if (acoef_data) {
-      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *acoef_data);
+      TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *acoef_data);
 
       acoef_data->fill(d_a_map[location]);
    }
    if (bcoef_data) {
-      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *bcoef_data);
+      TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *bcoef_data);
 
       bcoef_data->fill(d_b_map[location]);
    }
    if (gcoef_data) {
-      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *gcoef_data);
+      TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *gcoef_data);
 
       gcoef_data->fill(d_g_map[location]);
    }

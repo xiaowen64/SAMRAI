@@ -71,7 +71,7 @@ public:
       const hier::Box& box) const
    {
       TBOX_ASSERT(data);
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
       return ((box * data->getGhostBox()).size()) * data->getDepth();
    }
 
@@ -85,7 +85,7 @@ public:
       const hier::Box& box) const
    {
       TBOX_ASSERT(data && cvol);
-      TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *cvol, box);
+      TBOX_ASSERT_OBJDIM_EQUALITY3(*data, *cvol, box);
       return d_array_ops.sumControlVolumes(data->getArrayData(),
          cvol->getArrayData(),
          box);
@@ -103,7 +103,7 @@ public:
       const hier::Box& box) const
    {
       TBOX_ASSERT(dst && src);
-      TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+      TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
       d_array_ops.abs(dst->getArrayData(),
          src->getArrayData(),
          box);
@@ -223,7 +223,7 @@ public:
    {
       TBOX_ASSERT(data);
       TBOX_ASSERT(vol);
-      TBOX_DIM_ASSERT_CHECK_ARGS3(*data, box, *vol);
+      TBOX_ASSERT_OBJDIM_EQUALITY3(*data, box, *vol);
       return d_array_ops.integral(
          data->getArrayData(),
          vol->getArrayData(),

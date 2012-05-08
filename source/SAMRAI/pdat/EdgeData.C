@@ -42,7 +42,7 @@ EdgeData<TYPE>::EdgeData(
    hier::PatchData(box, ghosts),
    d_depth(depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
 
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
@@ -96,7 +96,7 @@ EdgeData<TYPE>::operator () (
    const EdgeIndex& i,
    int depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
 
    const int axis = i.getAxis();
 
@@ -112,7 +112,7 @@ EdgeData<TYPE>::operator () (
    const EdgeIndex& i,
    int depth) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
 
    const int axis = i.getAxis();
 
@@ -156,7 +156,7 @@ void
 EdgeData<TYPE>::copy(
    const hier::PatchData& src)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const EdgeData<TYPE>* t_src =
       dynamic_cast<const EdgeData<TYPE> *>(&src);
@@ -177,7 +177,7 @@ void
 EdgeData<TYPE>::copy2(
    hier::PatchData& dst) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    EdgeData<TYPE>* t_dst =
       dynamic_cast<EdgeData<TYPE> *>(&dst);
@@ -207,7 +207,7 @@ EdgeData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const EdgeData<TYPE>* t_src =
       dynamic_cast<const EdgeData<TYPE> *>(&src);
@@ -239,7 +239,7 @@ EdgeData<TYPE>::copy2(
    hier::PatchData& dst,
    const hier::BoxOverlap& overlap) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    EdgeData<TYPE>* t_dst =
       dynamic_cast<EdgeData<TYPE> *>(&dst);
@@ -268,7 +268,7 @@ EdgeData<TYPE>::copyOnBox(
    const EdgeData<TYPE>& src,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, src, box);
 
    for (int axis = 0; axis < getDim().getValue(); axis++) {
       const hier::Box edge_box = EdgeGeometry::toEdgeBox(box, axis);
@@ -356,7 +356,7 @@ EdgeData<TYPE>::copyDepth(
    const EdgeData<TYPE>& src,
    int src_depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    for (int d = 0; d < getDim().getValue(); d++) {
       const hier::Box box = d_data[d]->getBox() * src.d_data[d]->getBox();
@@ -542,7 +542,7 @@ EdgeData<TYPE>::getSizeOfData(
    int depth,
    const hier::IntVector& ghosts)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(depth > 0);
 
    size_t size = 0;
@@ -582,7 +582,7 @@ EdgeData<TYPE>::fill(
    const hier::Box& box,
    int d)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
@@ -607,7 +607,7 @@ EdgeData<TYPE>::fillAll(
    const TYPE& t,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    for (int i = 0; i < getDim().getValue(); i++) {
       d_data[i]->fillAll(t, EdgeGeometry::toEdgeBox(box, i));
@@ -644,7 +644,7 @@ EdgeData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    for (int axis = 0; axis < getDim().getValue(); axis++) {
@@ -661,7 +661,7 @@ EdgeData<TYPE>::printAxis(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((axis >= 0) && (axis < getDim().getValue()));
 
    for (int d = 0; d < d_depth; d++) {
@@ -679,7 +679,7 @@ EdgeData<TYPE>::printAxis(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
    TBOX_ASSERT((axis >= 0) && (axis < getDim().getValue()));
 

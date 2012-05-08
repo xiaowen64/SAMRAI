@@ -107,7 +107,7 @@ NodeComplexLinearTimeInterpolateOp::timeInterpolate(
    TBOX_ASSERT((where * old_dat->getGhostBox()).isSpatiallyEqual(where));
    TBOX_ASSERT((where * new_dat->getGhostBox()).isSpatiallyEqual(where));
    TBOX_ASSERT((where * dst_dat->getGhostBox()).isSpatiallyEqual(where));
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst_data, where, src_data_old, src_data_new);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst_data, where, src_data_old, src_data_new);
 
    const hier::Index old_ilo = old_dat->getGhostBox().lower();
    const hier::Index old_ihi = old_dat->getGhostBox().upper();

@@ -63,7 +63,7 @@ public:
       const hier::Box& box) const
    {
       TBOX_ASSERT(data);
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
       return ((box * data->getGhostBox()).size()) * data->getDepth();
    }
 
@@ -77,7 +77,7 @@ public:
       const hier::Box& box) const
    {
       TBOX_ASSERT(dst && src);
-      TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+      TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
       dst->getArrayData().copy(src->getArrayData(), box);
    }
 
@@ -101,7 +101,7 @@ public:
       std::ostream& s = tbox::plog) const
    {
       TBOX_ASSERT(data);
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
       s << "Data box = " << box << std::endl;
       data->print(box, s);
       s << "\n";
@@ -117,7 +117,7 @@ public:
       const hier::Box& box) const
    {
       TBOX_ASSERT(dst);
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst, box);
       dst->fillAll(alpha, box);
    }
 
@@ -132,7 +132,7 @@ public:
       const hier::Box& box) const
    {
       TBOX_ASSERT(dst && src);
-      TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+      TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
       d_array_ops.abs(dst->getArrayData(),
          src->getArrayData(),
          box);

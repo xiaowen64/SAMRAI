@@ -60,7 +60,7 @@ RefineCopyTransaction::RefineCopyTransaction(
    TBOX_ASSERT(dst_mapped_box.getLocalId() >= 0);
    TBOX_ASSERT(src_mapped_box.getLocalId() >= 0);
    TBOX_ASSERT(refine_item_id >= 0);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst_level,
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level,
       *src_level,
       dst_mapped_box,
       src_mapped_box);

@@ -86,18 +86,6 @@ public:
       const Dimension& dimension);
 
    /**
-    * Returns true if Dimension is valid.
-    *
-    * A valid Dimension != 0, and <= getMaxDimension().
-    *
-    */
-   bool
-   isValid() const
-   {
-      return (d_dim != 0) && (d_dim <= SAMRAI::MAX_DIM_VAL);
-   }
-
-   /**
     * Equality operator.
     */
    bool

@@ -71,7 +71,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
 
    tbox::Dimension dim(head.getDim());
 
-   TBOX_DIM_ASSERT_CHECK_ARGS2(head_nesting_margin, base_swell);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(head_nesting_margin, base_swell);
 
    TBOX_ASSERT(head.getMPI() == base.getMPI());
 
@@ -144,7 +144,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
    const IntVector& head_nesting_margin,
    const BoxContainer* domain) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(
+   TBOX_ASSERT_OBJDIM_EQUALITY3(
       connector.getBase(), base_swell, head_nesting_margin);
    TBOX_ASSERT(connector.isFinalized());
    const tbox::Dimension& dim(connector.getBase().getDim());

@@ -33,7 +33,7 @@ PatchLevelFactory::allocate(
    const boost::shared_ptr<PatchDescriptor>& descriptor,
    const boost::shared_ptr<PatchFactory>& factory) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(mapped_box_level, *grid_geometry);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(mapped_box_level, *grid_geometry);
    boost::shared_ptr<PatchLevel> pl(
       boost::make_shared<PatchLevel>(
          mapped_box_level,

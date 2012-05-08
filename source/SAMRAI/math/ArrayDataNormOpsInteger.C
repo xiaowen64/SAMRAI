@@ -42,7 +42,7 @@ ArrayDataNormOpsInteger::abs(
    const pdat::ArrayData<int>& src,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(dst, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(dst, src, box);
    TBOX_ASSERT(dst.getDepth() == src.getDepth());
 
    int dimVal = dst.getDim().getValue();

@@ -35,7 +35,7 @@ EdgeGeometry::EdgeGeometry(
    d_box(box),
    d_ghosts(ghosts)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(ghosts.min() >= 0);
 }
 
@@ -68,7 +68,7 @@ EdgeGeometry::calculateOverlap(
    const bool retry,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_box, src_mask);
 
    const EdgeGeometry* t_dst =
       dynamic_cast<const EdgeGeometry *>(&dst_geometry);

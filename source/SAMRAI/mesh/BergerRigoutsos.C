@@ -182,7 +182,7 @@ BergerRigoutsos::findBoxesContainingTags(
    const hier::BlockId& block_id,
    const hier::LocalId& first_local_id) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS5(new_mapped_box_level,
+   TBOX_ASSERT_OBJDIM_EQUALITY5(new_mapped_box_level,
       *tag_level,
       bound_box,
       min_box,

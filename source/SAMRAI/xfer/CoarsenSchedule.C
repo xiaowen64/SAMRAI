@@ -114,7 +114,7 @@ CoarsenSchedule::CoarsenSchedule(
    TBOX_ASSERT(crse_level);
    TBOX_ASSERT(fine_level);
    TBOX_ASSERT(coarsen_classes);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*crse_level, *fine_level);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*crse_level, *fine_level);
 
    if ( s_extra_debug ) {
       tbox::plog << "CoarsenSchedule::CoarsenSchedule " << this << " entered" << std::endl;
@@ -716,7 +716,7 @@ CoarsenSchedule::constructScheduleTransactions(
 
    const tbox::Dimension& dim(d_crse_level->getDim());
 
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(dim,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(dim,
       *dst_level,
       *src_level,
       dst_mapped_box,

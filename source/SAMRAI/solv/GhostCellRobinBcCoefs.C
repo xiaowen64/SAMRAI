@@ -68,7 +68,7 @@ GhostCellRobinBcCoefs::setGhostDataId(
    int ghost_data_id,
    hier::IntVector extensions_fillable)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, extensions_fillable);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, extensions_fillable);
 
    d_ghost_data_id = ghost_data_id;
    d_extensions_fillable = extensions_fillable;
@@ -116,7 +116,7 @@ GhostCellRobinBcCoefs::setBcCoefs(
    const hier::BoundaryBox& bdry_box,
    double fill_time) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim, *variable, patch, bdry_box);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(d_dim, *variable, patch, bdry_box);
 
    NULL_USE(variable);
    NULL_USE(fill_time);
@@ -136,18 +136,18 @@ GhostCellRobinBcCoefs::setBcCoefs(
     * the ghost cell centers.  bcoef_data is 1-acoef_data.
     */
    if (acoef_data) {
-      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *acoef_data);
+      TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *acoef_data);
 
       acoef_data->fill(1.0 / (1 + 0.5 * h));
    }
    if (bcoef_data) {
-      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *bcoef_data);
+      TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *bcoef_data);
 
       bcoef_data->fill(0.5 * h / (1 + 0.5 * h));
    }
 
    if (gcoef_data) {
-      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *gcoef_data);
+      TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *gcoef_data);
 
       if (d_ghost_data_id == -1) {
          TBOX_ERROR(d_object_name << ": Coefficient g requested without\n"
@@ -227,7 +227,7 @@ hier::Box
 GhostCellRobinBcCoefs::makeSideBoundaryBox(
    const hier::BoundaryBox& boundary_box) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, boundary_box);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, boundary_box);
 
    if (boundary_box.getBoundaryType() != 1) {
       TBOX_ERROR(

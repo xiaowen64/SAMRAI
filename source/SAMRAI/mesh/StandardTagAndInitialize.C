@@ -178,7 +178,7 @@ StandardTagAndInitialize::initializeLevelData(
    }
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
 #endif
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(getDim(), *hierarchy);
 
    if (d_tag_strategy != ((StandardTagAndInitStrategy *)NULL)) {
       d_tag_strategy->initializeLevelData(hierarchy,
@@ -217,7 +217,7 @@ StandardTagAndInitialize::resetHierarchyConfiguration(
       TBOX_ASSERT(hierarchy->getPatchLevel(ln0));
    }
 #endif
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(getDim(), *hierarchy);
 
    if (d_tag_strategy != ((StandardTagAndInitStrategy *)NULL)) {
       d_tag_strategy->resetHierarchyConfiguration(hierarchy,
@@ -263,7 +263,7 @@ StandardTagAndInitialize::tagCellsForRefinement(
       && (level_number <= hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(tag_index >= 0);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(getDim(), *hierarchy);
 
    if (d_use_richardson_extrapolation) {
       tagCellsUsingRichardsonExtrapolation(hierarchy,
@@ -398,7 +398,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
    const bool coarsest_sync_level,
    const bool can_be_refined)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(getDim(), *hierarchy);
    TBOX_ASSERT(regrid_start_time <= regrid_time);
    TBOX_ASSERT(d_tag_strategy != ((StandardTagAndInitStrategy *)NULL));
 
@@ -626,7 +626,7 @@ StandardTagAndInitialize::preprocessErrorEstimation(
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(getDim(), *hierarchy);
 
    if (d_use_richardson_extrapolation) {
       preprocessRichardsonExtrapolation(hierarchy,
@@ -681,7 +681,7 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
    const bool initial_time)
 {
    TBOX_ASSERT(hierarchy);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(getDim(), *hierarchy);
    TBOX_ASSERT(regrid_start_time <= regrid_time);
    TBOX_ASSERT(d_tag_strategy != ((StandardTagAndInitStrategy *)NULL));
 

@@ -83,7 +83,7 @@ public:
    operator = (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       for (int i = 0; i < d_dim.getValue(); i++) {
          d_vector[i] = rhs.d_vector[i];
       }
@@ -154,7 +154,7 @@ public:
    operator += (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       for (int i = 0; i < d_dim.getValue(); i++) {
          d_vector[i] += rhs.d_vector[i];
       }
@@ -168,7 +168,7 @@ public:
    operator + (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector tmp(*this);
       tmp += rhs;
       return tmp;
@@ -206,7 +206,7 @@ public:
    operator -= (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       for (int i = 0; i < d_dim.getValue(); i++) {
          d_vector[i] -= rhs.d_vector[i];
       }
@@ -220,7 +220,7 @@ public:
    operator - (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector tmp = *this;
       tmp -= rhs;
       return tmp;
@@ -258,7 +258,7 @@ public:
    operator *= (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       for (int i = 0; i < d_dim.getValue(); i++) {
          d_vector[i] *= rhs.d_vector[i];
       }
@@ -272,7 +272,7 @@ public:
    operator * (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector tmp = *this;
       tmp *= rhs;
       return tmp;
@@ -310,7 +310,7 @@ public:
    operator /= (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       for (int i = 0; i < d_dim.getValue(); i++) {
          d_vector[i] /= rhs.d_vector[i];
       }
@@ -324,7 +324,7 @@ public:
    ceilingDivide(
       const IntVector& denominator)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, denominator);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, denominator);
       for (int i = 0; i < getDim().getValue(); i++) {
          /*
           * This is the formula for integer divide, rounding away from
@@ -351,7 +351,7 @@ public:
       const IntVector& numerator,
       const IntVector& denominator)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(numerator, denominator);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(numerator, denominator);
       IntVector rval(numerator.getDim());
       for (int i = 0; i < numerator.getDim().getValue(); i++) {
          /*
@@ -379,7 +379,7 @@ public:
    operator / (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector tmp = *this;
       tmp /= rhs;
       return tmp;
@@ -459,7 +459,7 @@ public:
    operator == (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       bool result = true;
       for (int i = 0; result && (i < d_dim.getValue()); i++) {
          result = result && (d_vector[i] == rhs.d_vector[i]);
@@ -475,7 +475,7 @@ public:
    operator != (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       return !(*this == rhs);
    }
 
@@ -487,7 +487,7 @@ public:
    operator < (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       bool result = true;
       for (int i = 0; result && (i < d_dim.getValue()); i++) {
          result = result && (d_vector[i] < rhs.d_vector[i]);
@@ -503,7 +503,7 @@ public:
    operator <= (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       bool result = true;
       for (int i = 0; result && (i < d_dim.getValue()); i++) {
          result = result && (d_vector[i] <= rhs.d_vector[i]);
@@ -519,7 +519,7 @@ public:
    operator > (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       bool result = true;
       for (int i = 0; result && (i < d_dim.getValue()); i++) {
          result = result && (d_vector[i] > rhs.d_vector[i]);
@@ -535,7 +535,7 @@ public:
    operator >= (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       bool result = true;
       for (int i = 0; result && (i < d_dim.getValue()); i++) {
          result = result && (d_vector[i] >= rhs.d_vector[i]);
@@ -550,7 +550,7 @@ public:
    min(
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       for (int i = 0; i < d_dim.getValue(); i++) {
          if (rhs.d_vector[i] < d_vector[i]) {
             d_vector[i] = rhs.d_vector[i];
@@ -610,7 +610,7 @@ public:
       const IntVector& a,
       const IntVector& b)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(a, b);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(a, b);
       IntVector tmp = a;
       tmp.min(b);
       return tmp;
@@ -624,7 +624,7 @@ public:
       const IntVector& a,
       const IntVector& b)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(a, b);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(a, b);
       IntVector tmp = a;
       tmp.max(b);
       return tmp;

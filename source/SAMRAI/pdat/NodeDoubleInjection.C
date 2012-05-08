@@ -103,7 +103,7 @@ NodeDoubleInjection::coarsen(
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
-   TBOX_DIM_ASSERT_CHECK_ARGS5(*this, coarse, fine, coarse_box, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY5(*this, coarse, fine, coarse_box, ratio);
 
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();

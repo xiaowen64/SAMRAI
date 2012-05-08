@@ -388,7 +388,7 @@ CellPoissonHypreSolver::initializeSolverState(
    int ln)
 {
    TBOX_ASSERT(hierarchy);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
 
    deallocateSolverState();
 
@@ -677,7 +677,7 @@ CellPoissonHypreSolver::copyToHypre(
    int depth,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, src, box);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, src, box);
 
    pdat::CellIterator cend(box, false);
    for (pdat::CellIterator c(box, true); c != cend; ++c) {
@@ -701,7 +701,7 @@ CellPoissonHypreSolver::copyFromHypre(
    HYPRE_StructVector vector,
    const hier::Box box)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, dst, box);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, dst, box);
 
    pdat::CellIterator cend(box, false);
    for (pdat::CellIterator c(box, true); c != cend; ++c) {
@@ -1074,7 +1074,7 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
    const RobinBcCoefStrategy* robin_bc_coef,
    pdat::CellData<double>& rhs)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, patch, rhs);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, patch, rhs);
 
    /*
     * g*A*k0(a) is the storage for adjustments to be made to the rhs
@@ -1409,7 +1409,7 @@ CellPoissonHypreSolver::computeDiagonalEntries(
    const pdat::SideData<double>& off_diagonal,
    const hier::Box& patch_box)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(d_dim,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(d_dim,
       diagonal,
       C_data,
       off_diagonal,
@@ -1446,7 +1446,7 @@ CellPoissonHypreSolver::computeDiagonalEntries(
    const pdat::SideData<double>& off_diagonal,
    const hier::Box& patch_box)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim, diagonal, off_diagonal, patch_box);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(d_dim, diagonal, off_diagonal, patch_box);
 
    const hier::Index patch_lo = patch_box.lower();
    const hier::Index patch_up = patch_box.upper();
@@ -1481,7 +1481,7 @@ CellPoissonHypreSolver::computeDiagonalEntries(
    const pdat::SideData<double>& off_diagonal,
    const hier::Box& patch_box)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim, diagonal, off_diagonal, patch_box);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(d_dim, diagonal, off_diagonal, patch_box);
 
    const hier::Index patch_lo = patch_box.lower();
    const hier::Index patch_up = patch_box.upper();
@@ -1520,7 +1520,7 @@ CellPoissonHypreSolver::adjustBoundaryEntries(
    const hier::BoundaryBox& trimmed_boundary_box,
    const double h[SAMRAI::MAX_DIM_VAL])
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS8(d_dim, diagonal, off_diagonal, patch_box,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY8(d_dim, diagonal, off_diagonal, patch_box,
       acoef_data, bcoef_data,
       bccoef_box, Ak0_data, trimmed_boundary_box);
 

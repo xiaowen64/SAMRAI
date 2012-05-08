@@ -140,9 +140,9 @@ RefineSchedule::RefineSchedule(
    TBOX_ASSERT(src_level);
    TBOX_ASSERT(refine_classes);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *src_level);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *src_level);
    if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *patch_strategy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *patch_strategy);
    }
 #endif
 
@@ -322,13 +322,13 @@ RefineSchedule::RefineSchedule(
    TBOX_ASSERT(refine_classes);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    if (src_level) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *src_level);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *src_level);
    }
    if (hierarchy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *hierarchy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *hierarchy);
    }
    if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *patch_strategy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *patch_strategy);
    }
 #endif
 
@@ -494,13 +494,13 @@ RefineSchedule::RefineSchedule(
    TBOX_ASSERT(refine_classes);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    if (src_level) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *src_level);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *src_level);
    }
    if (hierarchy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *hierarchy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *hierarchy);
    }
    if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *patch_strategy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *patch_strategy);
    }
 #endif
 
@@ -3009,7 +3009,8 @@ RefineSchedule::setDefaultFillBoxLevel(
 
    const tbox::Dimension& dim(d_dst_level->getDim());
 
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(dim, dst_mapped_box_level, fill_ghost_width);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, dst_mapped_box_level,
+      fill_ghost_width);
 
    const hier::IntVector& constant_one_intvector(hier::IntVector::getOne(dim));
 

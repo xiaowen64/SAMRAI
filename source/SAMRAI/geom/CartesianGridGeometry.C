@@ -357,7 +357,7 @@ CartesianGridGeometry::setGeometryDataOnPatch(
 {
    const tbox::Dimension& dim(getDim());
 
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(dim, patch, ratio_to_level_zero);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, patch, ratio_to_level_zero);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    /*

@@ -105,7 +105,7 @@ PatchLevel::PatchLevel(
 {
    d_number_blocks = grid_geometry->getNumberBlocks();
 
-   TBOX_DIM_ASSERT_CHECK_ARGS2(mapped_box_level, *grid_geometry);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(mapped_box_level, *grid_geometry);
 
    t_level_constructor->start();
 
@@ -277,9 +277,9 @@ PatchLevel::setRefinedPatchLevel(
    TBOX_ASSERT(coarse_level);
    TBOX_ASSERT(refine_ratio > IntVector::getZero(getDim()));
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, *coarse_level, refine_ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, *coarse_level, refine_ratio);
    if (fine_grid_geometry) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *fine_grid_geometry);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *fine_grid_geometry);
    }
 #endif
 
@@ -448,9 +448,9 @@ PatchLevel::setCoarsenedPatchLevel(
    TBOX_ASSERT(coarsen_ratio > IntVector::getZero(getDim()));
 
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, *fine_level, coarsen_ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, *fine_level, coarsen_ratio);
    if (coarse_grid_geom) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *coarse_grid_geom);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *coarse_grid_geom);
    }
 #endif
 

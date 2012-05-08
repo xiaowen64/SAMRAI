@@ -442,7 +442,7 @@ PatchHierarchy::makeRefinedPatchHierarchy(
    const IntVector& refine_ratio,
    bool register_for_restart) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, refine_ratio);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, refine_ratio);
    TBOX_ASSERT(!fine_hierarchy_name.empty());
    TBOX_ASSERT(fine_hierarchy_name != d_object_name);
    TBOX_ASSERT(refine_ratio > IntVector::getZero(refine_ratio.getDim()));
@@ -513,7 +513,7 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
    const IntVector& coarsen_ratio,
    bool register_for_restart) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, coarsen_ratio);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, coarsen_ratio);
    TBOX_ASSERT(!coarse_hierarchy_name.empty());
    TBOX_ASSERT(coarse_hierarchy_name != d_object_name);
    TBOX_ASSERT(coarsen_ratio > IntVector::getZero(coarsen_ratio.getDim()));
@@ -573,7 +573,7 @@ PatchHierarchy::makeNewPatchLevel(
    const int ln,
    const BoxLevel& new_mapped_box_level)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, new_mapped_box_level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, new_mapped_box_level);
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(ln >= 0);
    for (int i = 0; i < d_dim.getValue(); i++) {

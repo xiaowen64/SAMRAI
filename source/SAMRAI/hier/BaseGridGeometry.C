@@ -264,7 +264,7 @@ BaseGridGeometry::computeBoundaryBoxesOnLevel(
    const tbox::Array<BoxContainer>& domain,
    bool do_all_patches) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(d_dim,
       level,
       periodic_shift,
       ghost_width);
@@ -502,7 +502,7 @@ BaseGridGeometry::setGeometryOnPatches(
    std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
    bool defer_boundary_box_creation)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, level, ratio_to_level_zero);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, level, ratio_to_level_zero);
 
    t_set_geometry_on_patches->start();
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -548,7 +548,7 @@ void
 BaseGridGeometry::setBoundaryBoxes(
    PatchLevel& level)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, level);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, level);
 
    t_set_boundary_boxes->start();
    std::map<BoxId, PatchBoundaries> boundaries;
@@ -605,7 +605,7 @@ const
 #ifdef DEBUG_CHECK_ASSERTIONS
    const tbox::Dimension& dim(getDim());
 
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(dim, patch, ratio_to_level_zero,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(dim, patch, ratio_to_level_zero,
       touches_regular_bdry, touches_periodic_bdry);
 
    /*
@@ -831,7 +831,7 @@ BaseGridGeometry::computeShiftsForBox(
    const BoxContainer& domain_search_tree,
    const IntVector& periodic_shift) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, box, periodic_shift);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, box, periodic_shift);
 
    shifts.clear();
 
@@ -974,7 +974,7 @@ BaseGridGeometry::getBoundaryBoxes(
    const IntVector& ghosts,
    const IntVector& periodic_shift) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*this, box, ghosts, periodic_shift);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*this, box, ghosts, periodic_shift);
 
    t_get_boundary_boxes->start();
 
@@ -1144,7 +1144,7 @@ BaseGridGeometry::computePhysicalDomain(
    const IntVector& ratio_to_level_zero,
    const BlockId& block_id) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio_to_level_zero);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio_to_level_zero);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    /*
@@ -1204,7 +1204,7 @@ BaseGridGeometry::computePhysicalDomain(
    const IntVector& ratio_to_level_zero,
    const BlockId& block_id) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio_to_level_zero);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio_to_level_zero);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    /*
@@ -1265,7 +1265,7 @@ BaseGridGeometry::computePhysicalDomain(
    BoxContainer& domain_mapped_boxes,
    const IntVector& ratio_to_level_zero) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio_to_level_zero);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio_to_level_zero);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    /*
@@ -1309,7 +1309,7 @@ BaseGridGeometry::computePhysicalDomain(
    BoxLevel& box_level,
    const IntVector& ratio_to_level_zero) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio_to_level_zero);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio_to_level_zero);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    /*
@@ -1504,7 +1504,7 @@ void
 BaseGridGeometry::initializePeriodicShift(
    const IntVector& directions)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, directions);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, directions);
 
    d_periodic_shift = directions;
 
@@ -1529,7 +1529,7 @@ IntVector
 BaseGridGeometry::getPeriodicShift(
    const IntVector& ratio_to_level_zero) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio_to_level_zero);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio_to_level_zero);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    /*
@@ -1655,7 +1655,7 @@ BaseGridGeometry::checkBoundaryBox(
    const int num_per_dirs,
    const IntVector& max_data_ghost_width) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*this,
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*this,
       boundary_box,
       patch,
       max_data_ghost_width);
@@ -1900,7 +1900,7 @@ BaseGridGeometry::registerNeighbors(
    const IntVector& shift,
    const int is_singularity)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, shift);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, shift);
 
    const int& a = block_a.getBlockValue();
    const int& b = block_b.getBlockValue();
@@ -1979,7 +1979,7 @@ BaseGridGeometry::transformBox(
    const BlockId& output_block,
    const BlockId& input_block) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, box, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, box, ratio);
 
    const std::list<Neighbor>& nbr_list =
       d_block_neighbors[output_block.getBlockValue()];
@@ -2070,7 +2070,7 @@ void
 BaseGridGeometry::adjustMultiblockPatchLevelBoundaries(
    PatchLevel& patch_level)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch_level);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch_level);
    TBOX_ASSERT(patch_level.getGridGeometry()->getNumberBlocks() == d_number_blocks);
 
    if (d_number_blocks > 1) {
@@ -2134,7 +2134,7 @@ BaseGridGeometry::adjustBoundaryBoxesOnPatch(
    const IntVector& gcw,
    const BoxContainer& singularity)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, patch, gcw);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, patch, gcw);
 
    /*
     * Avoid adjusting boundary boxes for the case where we just use

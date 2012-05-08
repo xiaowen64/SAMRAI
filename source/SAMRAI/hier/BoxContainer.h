@@ -1014,7 +1014,7 @@ public:
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (size() > 0) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), item);
+         TBOX_ASSERT_OBJDIM_EQUALITY2(front(), item);
       }
 #endif
       if (!d_ordered) {
@@ -1041,7 +1041,7 @@ public:
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (size() > 0) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), item);
+         TBOX_ASSERT_OBJDIM_EQUALITY2(front(), item);
       }
 #endif
       if (!d_ordered) {
@@ -1070,7 +1070,7 @@ public:
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (size() > 0) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), item);
+         TBOX_ASSERT_OBJDIM_EQUALITY2(front(), item);
       }
 #endif
       if (!d_ordered) {
@@ -1126,7 +1126,7 @@ public:
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (size() > 0 && boxes.size() > 0) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), boxes.front());
+         TBOX_ASSERT_OBJDIM_EQUALITY2(front(), boxes.front());
       }
 #endif
       if (!d_ordered) {
@@ -1152,7 +1152,7 @@ public:
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (size() > 0 && boxes.size() > 0) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), boxes.front());
+         TBOX_ASSERT_OBJDIM_EQUALITY2(front(), boxes.front());
       }
 #endif
       if (!d_ordered) {

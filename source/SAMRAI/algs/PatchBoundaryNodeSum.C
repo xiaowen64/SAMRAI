@@ -717,7 +717,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
       TBOX_ASSERT(coarsened_fine_level->checkAllocated(onode_data_id[i]));
    }
 #endif
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*fine_level, *coarsened_fine_level);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*fine_level, *coarsened_fine_level);
 
    const tbox::Dimension& dim(fine_level->getDim());
 

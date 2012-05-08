@@ -46,7 +46,7 @@ PatchEdgeDataBasicOps<TYPE>::scale(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -67,7 +67,7 @@ PatchEdgeDataBasicOps<TYPE>::addScalar(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -88,7 +88,7 @@ PatchEdgeDataBasicOps<TYPE>::add(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -109,7 +109,7 @@ PatchEdgeDataBasicOps<TYPE>::subtract(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -130,7 +130,7 @@ PatchEdgeDataBasicOps<TYPE>::multiply(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -151,7 +151,7 @@ PatchEdgeDataBasicOps<TYPE>::divide(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -171,7 +171,7 @@ PatchEdgeDataBasicOps<TYPE>::reciprocal(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -194,7 +194,7 @@ PatchEdgeDataBasicOps<TYPE>::linearSum(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -217,7 +217,7 @@ PatchEdgeDataBasicOps<TYPE>::axpy(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -240,7 +240,7 @@ PatchEdgeDataBasicOps<TYPE>::axmy(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -262,7 +262,7 @@ PatchEdgeDataBasicOps<TYPE>::setRandomValues(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*dst, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -280,7 +280,7 @@ PatchEdgeDataBasicOps<TYPE>::min(
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = box.getDim().getValue();
    TYPE minval = tbox::MathUtilities<TYPE>::getMax();
@@ -300,7 +300,7 @@ PatchEdgeDataBasicOps<TYPE>::max(
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = box.getDim().getValue();
 

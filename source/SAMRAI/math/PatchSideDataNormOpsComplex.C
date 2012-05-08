@@ -40,7 +40,7 @@ PatchSideDataNormOpsComplex::numberOfEntries(
       const hier::Box& box) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = box.getDim().getValue();
    int retval = 0;
@@ -97,7 +97,7 @@ PatchSideDataNormOpsComplex::abs(
 {
    TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = box.getDim().getValue();
    const hier::IntVector& directions = dst->getDirectionVector();
@@ -117,7 +117,7 @@ PatchSideDataNormOpsComplex::L1Norm(
    const boost::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -133,7 +133,7 @@ PatchSideDataNormOpsComplex::L1Norm(
    } else {
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
@@ -154,7 +154,7 @@ PatchSideDataNormOpsComplex::L2Norm(
    const boost::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -171,7 +171,7 @@ PatchSideDataNormOpsComplex::L2Norm(
    } else {
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
@@ -195,7 +195,7 @@ PatchSideDataNormOpsComplex::weightedL2Norm(
    const boost::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*data, *weight, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -218,7 +218,7 @@ PatchSideDataNormOpsComplex::weightedL2Norm(
    } else {
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {

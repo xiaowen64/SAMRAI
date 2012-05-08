@@ -1763,7 +1763,7 @@ OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
    BoxContainer& scratch_space,
    const IntVector& neighbor_refinement_ratio) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(mapped_box, neighbor_refinement_ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(mapped_box, neighbor_refinement_ratio);
 
    const PeriodicShiftCatalog* shift_catalog =
       PeriodicShiftCatalog::getCatalog(mapped_box.getDim());

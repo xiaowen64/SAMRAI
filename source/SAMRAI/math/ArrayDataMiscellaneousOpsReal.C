@@ -44,7 +44,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::computeConstrProdPosWithControlVolume(
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(data1, data2, cvol, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(data1, data2, cvol, box);
    TBOX_ASSERT(data1.getDepth() == data2.getDepth());
 
    int dimVal = data1.getDim().getValue();
@@ -167,7 +167,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
    const pdat::ArrayData<TYPE>& data2,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(data1, data2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(data1, data2, box);
    TBOX_ASSERT(data1.getDepth() == data2.getDepth());
 
    int dimVal = data1.getDim().getValue();
@@ -272,7 +272,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::compareToScalarWithControlVolume(
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src, cvol, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src, cvol, box);
    TBOX_ASSERT(dst.getDepth() == src.getDepth());
 
    int dimVal = dst.getDim().getValue();
@@ -391,7 +391,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::compareToScalar(
    const TYPE& alpha,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(dst, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(dst, src, box);
    TBOX_ASSERT(dst.getDepth() == src.getDepth());
 
    int dimVal = dst.getDim().getValue();
@@ -491,7 +491,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::testReciprocalWithControlVolume(
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src, cvol, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src, cvol, box);
    TBOX_ASSERT(dst.getDepth() == src.getDepth());
 
 // Ignore Intel warning about floating point comparisons
@@ -623,7 +623,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 #pragma warning (disable:1572)
 #endif
 
-   TBOX_DIM_ASSERT_CHECK_ARGS3(dst, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(dst, src, box);
    TBOX_ASSERT(dst.getDepth() == src.getDepth());
 
    int dimVal = dst.getDim().getValue();
@@ -726,7 +726,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
    const pdat::ArrayData<TYPE>& denom,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(numer, denom, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(numer, denom, box);
    TBOX_ASSERT(denom.getDepth() == numer.getDepth());
 
    int dimVal = numer.getDim().getValue();
@@ -830,7 +830,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
    const pdat::ArrayData<TYPE>& denom,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(numer, denom, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(numer, denom, box);
    TBOX_ASSERT(denom.getDepth() == numer.getDepth());
 
    int dimVal = numer.getDim().getValue();

@@ -94,7 +94,7 @@ public:
    operator = (
       const NodeIndex& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       hier::Index::operator = (rhs);
       return *this;
    }
@@ -111,7 +111,7 @@ public:
    operator += (
       const hier::IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       hier::Index::operator += (rhs);
       return *this;
    }
@@ -123,7 +123,7 @@ public:
    operator + (
       const hier::IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       NodeIndex tmp = *this;
       tmp += rhs;
       return tmp;
@@ -159,7 +159,7 @@ public:
    operator -= (
       const hier::IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       hier::Index::operator -= (rhs);
       return *this;
    }
@@ -171,7 +171,7 @@ public:
    operator - (
       const hier::IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       NodeIndex tmp = *this;
       tmp -= rhs;
       return tmp;
@@ -207,7 +207,7 @@ public:
    operator *= (
       const hier::IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       hier::Index::operator *= (rhs);
       return *this;
    }
@@ -219,7 +219,7 @@ public:
    operator * (
       const hier::IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       NodeIndex tmp = *this;
       tmp *= rhs;
       return tmp;
@@ -256,7 +256,7 @@ public:
    operator == (
       const NodeIndex& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       return ((hier::Index *)this)->operator == (rhs);
    }
 
@@ -268,7 +268,7 @@ public:
    operator != (
       const NodeIndex& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       return ((hier::Index *)this)->operator != (rhs);
    }
 

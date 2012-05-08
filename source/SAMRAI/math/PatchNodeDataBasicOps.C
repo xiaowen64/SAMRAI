@@ -45,7 +45,7 @@ PatchNodeDataBasicOps<TYPE>::scale(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    d_array_ops.scale(dst->getArrayData(),
@@ -62,7 +62,7 @@ PatchNodeDataBasicOps<TYPE>::addScalar(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    d_array_ops.addScalar(dst->getArrayData(),
@@ -79,7 +79,7 @@ PatchNodeDataBasicOps<TYPE>::add(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    d_array_ops.add(dst->getArrayData(),
@@ -96,7 +96,7 @@ PatchNodeDataBasicOps<TYPE>::subtract(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    d_array_ops.subtract(dst->getArrayData(),
@@ -113,7 +113,7 @@ PatchNodeDataBasicOps<TYPE>::multiply(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    d_array_ops.multiply(dst->getArrayData(),
@@ -130,7 +130,7 @@ PatchNodeDataBasicOps<TYPE>::divide(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    d_array_ops.divide(dst->getArrayData(),
@@ -146,7 +146,7 @@ PatchNodeDataBasicOps<TYPE>::reciprocal(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    d_array_ops.reciprocal(dst->getArrayData(),
@@ -165,7 +165,7 @@ PatchNodeDataBasicOps<TYPE>::linearSum(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    d_array_ops.linearSum(dst->getArrayData(),
@@ -184,7 +184,7 @@ PatchNodeDataBasicOps<TYPE>::axpy(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    d_array_ops.axpy(dst->getArrayData(),
@@ -203,7 +203,7 @@ PatchNodeDataBasicOps<TYPE>::axmy(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    d_array_ops.axmy(dst->getArrayData(),
@@ -219,7 +219,7 @@ PatchNodeDataBasicOps<TYPE>::min(
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    return d_array_ops.min(data->getArrayData(), node_box);
@@ -232,7 +232,7 @@ PatchNodeDataBasicOps<TYPE>::max(
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    return d_array_ops.max(data->getArrayData(), node_box);
@@ -247,7 +247,7 @@ PatchNodeDataBasicOps<TYPE>::setRandomValues(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*dst, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    d_array_ops.setRandomValues(dst->getArrayData(),

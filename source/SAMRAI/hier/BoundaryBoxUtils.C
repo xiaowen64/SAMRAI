@@ -107,7 +107,7 @@ BoundaryBoxUtils::stretchBoxToGhostWidth(
    Box& box,
    const IntVector& ghost_cell_width) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_bbox, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_bbox, box);
 
    const tbox::Dimension& dim(d_bbox.getDim());
 
@@ -135,7 +135,7 @@ BoundaryBoxUtils::extendBoxOutward(
    Box& box,
    const IntVector& extension) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_bbox, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_bbox, box);
 
    const tbox::Dimension& dim(d_bbox.getDim());
 
@@ -183,7 +183,7 @@ BoundaryBox
 BoundaryBoxUtils::trimBoundaryBox(
    const Box& limit_box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_bbox, limit_box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_bbox, limit_box);
 
    const tbox::Dimension& dim(d_bbox.getDim());
 

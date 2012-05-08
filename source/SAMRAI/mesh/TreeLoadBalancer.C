@@ -219,7 +219,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    if (anchor_to_balance.isFinalized()) {
       TBOX_ASSERT(anchor_to_balance.isTransposeOf(balance_to_anchor));
    }
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS6(d_dim,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY6(d_dim,
       balance_box_level,
       min_size,
       max_size,
@@ -227,7 +227,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       bad_interval,
       cut_factor);
    if (hierarchy) {
-      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
+      TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
    }
 
 
@@ -683,7 +683,7 @@ TreeLoadBalancer::constrainMaxBoxSizes(
    hier::Connector &anchor_to_level,
    hier::Connector &level_to_anchor ) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, box_level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, box_level);
 
    t_map_big_boxes->start();
 
@@ -849,7 +849,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
    const tbox::RankGroup& rank_group,
    const double group_sum_load ) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim,
       balance_box_level);
 
    double group_avg_load = group_sum_load / rank_group.size();

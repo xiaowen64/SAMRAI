@@ -142,7 +142,7 @@ CartesianSideFloatConservativeLinearRefine::refine(
    const hier::IntVector& ratio) const
 {
    const tbox::Dimension& dim(getDim());
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(dim, fine, coarse, ratio);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, fine, coarse, ratio);
 
    boost::shared_ptr<pdat::SideData<float> > cdata(
       coarse.getPatchData(src_component),
@@ -186,7 +186,7 @@ CartesianSideFloatConservativeLinearRefine::refine(
            b != boxes.end(); ++b) {
 
          hier::Box fine_box(*b);
-         TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, fine_box);
+         TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, fine_box);
 
          fine_box.upper(axis) -= 1;
 

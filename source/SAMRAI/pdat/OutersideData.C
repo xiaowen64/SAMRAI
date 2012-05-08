@@ -145,7 +145,7 @@ OutersideData<TYPE>::operator () (
    int side,
    int depth) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
 
    const int axis = i.getAxis();
 
@@ -170,7 +170,7 @@ void
 OutersideData<TYPE>::copy(
    const hier::PatchData& src)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const SideData<TYPE> * const t_src =
       dynamic_cast<const SideData<TYPE> *>(&src);
@@ -192,7 +192,7 @@ void
 OutersideData<TYPE>::copy2(
    hier::PatchData& dst) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    SideData<TYPE>* t_dst =
       dynamic_cast<SideData<TYPE> *>(&dst);
@@ -232,7 +232,7 @@ OutersideData<TYPE>::copy2(
    hier::PatchData& dst,
    const hier::BoxOverlap& overlap) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    SideData<TYPE>* t_dst =
       dynamic_cast<SideData<TYPE> *>(&dst);
@@ -266,7 +266,7 @@ OutersideData<TYPE>::copyDepth(
    const SideData<TYPE>& src,
    int src_depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    for (int axis = 0; axis < getDim().getValue(); axis++) {
       const ArrayData<TYPE>& src_side_array = src.getArrayData(axis);
@@ -296,7 +296,7 @@ OutersideData<TYPE>::copyDepth2(
    SideData<TYPE>& dst,
    int src_depth) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    for (int axis = 0; axis < getDim().getValue(); axis++) {
       ArrayData<TYPE>& dst_side_array = dst.getArrayData(axis);
@@ -469,7 +469,7 @@ OutersideData<TYPE>::fill(
    const hier::Box& box,
    int d)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
    for (int i = 0; i < getDim().getValue(); i++) {
@@ -495,7 +495,7 @@ OutersideData<TYPE>::fillAll(
    const TYPE& t,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    for (int i = 0; i < getDim().getValue(); i++) {
       d_data[i][0]->fillAll(t, SideGeometry::toSideBox(box, i));
@@ -518,7 +518,7 @@ OutersideData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    for (int d = 0; d < d_depth; d++) {
       print(box, d, os, prec);
@@ -533,7 +533,7 @@ OutersideData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    for (int side_normal = 0; side_normal < getDim().getValue(); side_normal++) {
@@ -554,7 +554,7 @@ OutersideData<TYPE>::printAxisSide(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
    TBOX_ASSERT((side == 0) || (side == 1));
 
@@ -574,7 +574,7 @@ OutersideData<TYPE>::printAxisSide(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
    TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
    TBOX_ASSERT((side == 0) || (side == 1));

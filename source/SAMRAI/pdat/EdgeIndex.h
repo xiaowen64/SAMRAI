@@ -116,7 +116,7 @@ public:
    operator += (
       const hier::IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       hier::Index::operator += (rhs);
       return *this;
    }
@@ -128,7 +128,7 @@ public:
    operator + (
       const hier::IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       EdgeIndex tmp = *this;
       tmp += rhs;
       return tmp;
@@ -164,7 +164,7 @@ public:
    operator -= (
       const hier::IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       hier::Index::operator -= (rhs);
       return *this;
    }
@@ -176,7 +176,7 @@ public:
    operator - (
       const hier::IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       EdgeIndex tmp = *this;
       tmp -= rhs;
       return tmp;
@@ -212,7 +212,7 @@ public:
    operator *= (
       const hier::IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       hier::Index::operator *= (rhs);
       return *this;
    }
@@ -224,7 +224,7 @@ public:
    operator * (
       const hier::IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       EdgeIndex tmp = *this;
       tmp *= rhs;
       return tmp;
@@ -261,7 +261,7 @@ public:
    operator == (
       const EdgeIndex& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       return ((hier::Index *)this)->operator == (rhs) && (d_axis == rhs.d_axis);
    }
 
@@ -273,7 +273,7 @@ public:
    operator != (
       const EdgeIndex& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       return ((hier::Index *)this)->operator != (rhs) || (d_axis != rhs.d_axis);
    }
 

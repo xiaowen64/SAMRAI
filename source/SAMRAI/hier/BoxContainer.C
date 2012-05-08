@@ -224,7 +224,7 @@ BoxContainer::insert(
    TBOX_ASSERT(box.getId().isValid());
    TBOX_ASSERT(box.getBlockId() != BlockId::invalidId());
    if (size() > 0) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(front(), box);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(front(), box);
    }
 #endif
 
@@ -263,7 +263,7 @@ BoxContainer::insert(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(box.getId().isValid());
    if (size() > 0) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(front(), box);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(front(), box);
    }
 #endif
 
@@ -323,7 +323,7 @@ BoxContainer::insert (
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT((**set_iter).getId().isValid());
       if (size() > 0) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), **set_iter);
+         TBOX_ASSERT_OBJDIM_EQUALITY2(front(), **set_iter);
       }
 #endif
 
@@ -1220,7 +1220,7 @@ BoxContainer::burstBoxes(
    const Box& solid,
    const int dimension)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(bursty, solid);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(bursty, solid);
    TBOX_ASSERT(dimension <= bursty.getDim().getValue());
 
    // Set up the lower and upper bounds of the regions for ease of access
@@ -1267,7 +1267,7 @@ BoxContainer::burstBoxes(
    const int dimension,
    iterator& insertion_pt)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(bursty, solid);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(bursty, solid);
    TBOX_ASSERT(dimension <= bursty.getDim().getValue());
 
    // Set up the lower and upper bounds of the regions for ease of access

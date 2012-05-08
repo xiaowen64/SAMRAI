@@ -99,7 +99,7 @@ public:
    operator = (
       const Index& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector::operator = (rhs);
       return *this;
    }
@@ -111,7 +111,7 @@ public:
    operator = (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector::operator = (rhs);
       return *this;
    }
@@ -128,7 +128,7 @@ public:
    operator += (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector::operator += (rhs);
       return *this;
    }
@@ -140,7 +140,7 @@ public:
    operator + (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       Index tmp = *this;
       tmp += rhs;
       return tmp;
@@ -176,7 +176,7 @@ public:
    operator -= (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector::operator -= (rhs);
       return *this;
    }
@@ -188,7 +188,7 @@ public:
    operator - (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       Index tmp = *this;
       tmp -= rhs;
       return tmp;
@@ -224,7 +224,7 @@ public:
    operator *= (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector::operator *= (rhs);
       return *this;
    }
@@ -236,7 +236,7 @@ public:
    operator * (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       Index tmp = *this;
       tmp *= rhs;
       return tmp;
@@ -272,7 +272,7 @@ public:
    operator /= (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector::operator /= (rhs);
       return *this;
    }
@@ -284,7 +284,7 @@ public:
    operator / (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       Index tmp = *this;
       tmp /= rhs;
       return tmp;
@@ -322,7 +322,7 @@ public:
    coarsen(
       const IntVector& ratio)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
       for (int d = 0; d < getDim().getValue(); ++d) {
          (*this)(d) = coarsen((*this)(d), ratio(d));
       }
@@ -389,7 +389,7 @@ public:
       const Index& index,
       const IntVector& ratio)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(index, ratio);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(index, ratio);
       tbox::Dimension dim(index.getDim());
       Index tmp(dim);
       for (int d = 0; d < dim.getValue(); ++d) {

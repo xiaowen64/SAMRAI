@@ -141,7 +141,7 @@ CartesianFaceFloatConservativeLinearRefine::refine(
    const hier::IntVector& ratio) const
 {
    const tbox::Dimension& dim(getDim());
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(dim, fine, coarse, ratio);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, fine, coarse, ratio);
 
    boost::shared_ptr<pdat::FaceData<float> > cdata(
       coarse.getPatchData(src_component),
@@ -180,7 +180,7 @@ CartesianFaceFloatConservativeLinearRefine::refine(
            b != boxes.end(); ++b) {
 
          const hier::Box& face_box = *b;
-         TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, face_box);
+         TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, face_box);
 
          hier::Box fine_box(dim);
          for (int i = 0; i < dim.getValue(); i++) {

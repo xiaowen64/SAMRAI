@@ -96,7 +96,7 @@ public:
       const hier::Box& box) const
    {
       TBOX_ASSERT(dst);
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst, box);
       dst->fillAll(alpha, box);
    }
 

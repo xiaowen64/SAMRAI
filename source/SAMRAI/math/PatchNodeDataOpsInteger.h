@@ -64,7 +64,7 @@ public:
       const hier::Box& box) const
    {
       TBOX_ASSERT(data);
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
       return (pdat::NodeGeometry::toNodeBox(box * data->getGhostBox()).size()) *
           data->getDepth();
    }
@@ -79,7 +79,7 @@ public:
       const hier::Box& box) const
    {
       TBOX_ASSERT(dst && src);
-      TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+      TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
       dst->getArrayData().copy(src->getArrayData(),
          pdat::NodeGeometry::toNodeBox(box));
    }
@@ -113,7 +113,7 @@ public:
       const hier::Box& box) const
    {
       TBOX_ASSERT(dst);
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst, box);
       dst->fillAll(alpha, box);
    }
 
@@ -128,7 +128,7 @@ public:
       const hier::Box& box) const
    {
       TBOX_ASSERT(dst && src);
-      TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+      TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
       d_array_ops.abs(dst->getArrayData(),
          src->getArrayData(),
          pdat::NodeGeometry::toNodeBox(box));

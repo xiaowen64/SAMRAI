@@ -43,7 +43,7 @@ PatchNodeDataNormOpsReal<TYPE>::numberOfEntries(
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    const hier::Box ibox =
       pdat::NodeGeometry::toNodeBox(box * data->getGhostBox());
@@ -82,7 +82,7 @@ PatchNodeDataNormOpsReal<TYPE>::abs(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    d_array_ops.abs(dst->getArrayData(),
@@ -98,14 +98,14 @@ PatchNodeDataNormOpsReal<TYPE>::L1Norm(
    const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    double retval;
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    if (!cvol) {
       retval = d_array_ops.L1Norm(data->getArrayData(), node_box);
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       retval = d_array_ops.L1NormWithControlVolume(data->getArrayData(),
             cvol->getArrayData(),
@@ -122,14 +122,14 @@ PatchNodeDataNormOpsReal<TYPE>::L2Norm(
    const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    double retval;
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    if (!cvol) {
       retval = d_array_ops.L2Norm(data->getArrayData(), node_box);
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       retval = d_array_ops.L2NormWithControlVolume(data->getArrayData(),
             cvol->getArrayData(),
@@ -147,7 +147,7 @@ PatchNodeDataNormOpsReal<TYPE>::weightedL2Norm(
    const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*data, *weight, box);
 
    double retval;
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
@@ -156,7 +156,7 @@ PatchNodeDataNormOpsReal<TYPE>::weightedL2Norm(
             weight->getArrayData(),
             node_box);
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       retval = d_array_ops.weightedL2NormWithControlVolume(
             data->getArrayData(),

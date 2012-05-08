@@ -66,7 +66,7 @@ SimpleCellRobinBcCoefs::setHierarchy(
    const int ln_max)
 {
    TBOX_ASSERT(hierarchy);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
 
    d_hierarchy = hierarchy;
    d_ln_min = ln_min;
@@ -186,7 +186,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
    const hier::BoundaryBox& bdry_box,
    double fill_time) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, patch, bdry_box);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, patch, bdry_box);
 
    NULL_USE(variable);
    NULL_USE(fill_time);
@@ -204,7 +204,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (gcoef_data) {
-      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *gcoef_data);
+      TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *gcoef_data);
 
       if (d_bdry_types[location_index] == DIRICHLET
           || d_bdry_types[location_index] == MIXED) {
@@ -292,10 +292,10 @@ SimpleCellRobinBcCoefs::setBcCoefs(
 
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    if (acoef_data) {
-      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *acoef_data);
+      TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *acoef_data);
    }
    if (bcoef_data) {
-      TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *bcoef_data);
+      TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *bcoef_data);
    }
 #endif
 

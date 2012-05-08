@@ -217,7 +217,7 @@ public:
    setMinTransferOpStencilWidth(
       const IntVector& min_value)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(d_min_stencil_width, min_value);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(d_min_stencil_width, min_value);
       d_min_stencil_width = min_value;
    }
 

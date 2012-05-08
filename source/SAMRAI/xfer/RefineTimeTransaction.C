@@ -77,7 +77,7 @@ RefineTimeTransaction::RefineTimeTransaction(
    TBOX_ASSERT(dst_mapped_box.getLocalId() >= 0);
    TBOX_ASSERT(src_mapped_box.getLocalId() >= 0);
    TBOX_ASSERT(refine_item_id >= 0);
-   TBOX_DIM_ASSERT_CHECK_ARGS5(*dst_level,
+   TBOX_ASSERT_OBJDIM_EQUALITY5(*dst_level,
       *src_level,
       dst_mapped_box,
       src_mapped_box,
@@ -246,7 +246,7 @@ RefineTimeTransaction::timeInterpolate(
 {
    TBOX_ASSERT(pd_old);
    TBOX_ASSERT(pd_dst);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*pd_dst, *pd_old);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*pd_dst, *pd_old);
    TBOX_ASSERT(tbox::MathUtilities<double>::equalEps(pd_dst->getTime(), s_time));
 
    if (tbox::MathUtilities<double>::equalEps(pd_old->getTime(), s_time)) {
@@ -255,7 +255,7 @@ RefineTimeTransaction::timeInterpolate(
    } else {
 
       TBOX_ASSERT(pd_new);
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*pd_dst, *pd_new);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*pd_dst, *pd_new);
       TBOX_ASSERT(pd_old->getTime() < s_time);
       TBOX_ASSERT(pd_new->getTime() >= s_time);
 

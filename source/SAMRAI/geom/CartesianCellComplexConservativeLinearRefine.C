@@ -136,7 +136,7 @@ CartesianCellComplexConservativeLinearRefine::refine(
 {
    const tbox::Dimension& dim(getDim());
 
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(dim, fine, coarse, fine_box, ratio);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(dim, fine, coarse, fine_box, ratio);
 
    boost::shared_ptr<pdat::CellData<dcomplex> > cdata(
       coarse.getPatchData(src_component),

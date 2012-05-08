@@ -131,7 +131,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
    int target_data_id,
    bool homogeneous_bc) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, patch, ghost_width_to_fill);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, patch, ghost_width_to_fill);
 
    NULL_USE(fill_time);
 
@@ -607,7 +607,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
    int target_data_id,
    bool homogeneous_bc) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, level, ghost_width_to_fill);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, level, ghost_width_to_fill);
 
    for (hier::PatchLevel::iterator p(level.begin());
         p != level.end(); ++p) {
@@ -633,7 +633,7 @@ CartesianRobinBcHelper::setBoundaryValuesAtNodes(
    int target_data_id,
    bool homogeneous_bc) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
    NULL_USE(patch);
    NULL_USE(fill_time);
@@ -661,7 +661,7 @@ CartesianRobinBcHelper::setPhysicalBoundaryConditions(
    const double fill_time,
    const hier::IntVector& ghost_width_to_fill)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, patch, ghost_width_to_fill);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, patch, ghost_width_to_fill);
 
    setBoundaryValuesInCells(patch,
       fill_time,
@@ -756,7 +756,7 @@ CartesianRobinBcHelper::trimBoundaryBox(
    const hier::BoundaryBox& boundary_box,
    const hier::Box& limit_box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, boundary_box, limit_box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, boundary_box, limit_box);
 
    if (boundary_box.getBoundaryType() == d_dim.getValue()) {
       // This is a node boundary box and cannot be trimmed anymore.
@@ -821,7 +821,7 @@ hier::Box
 CartesianRobinBcHelper::makeFaceBoundaryBox(
    const hier::BoundaryBox& boundary_box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, boundary_box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, boundary_box);
 
    if (boundary_box.getBoundaryType() != 1) {
       TBOX_ERROR(d_object_name << ": makeFaceBoundaryBox called with\n"
@@ -851,7 +851,7 @@ hier::Box
 CartesianRobinBcHelper::makeNodeBoundaryBox(
    const hier::BoundaryBox& boundary_box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, boundary_box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, boundary_box);
 
    if (boundary_box.getBoundaryType() != 1) {
       TBOX_ERROR(d_object_name << ": makeNodeBoundaryBox called with\n"

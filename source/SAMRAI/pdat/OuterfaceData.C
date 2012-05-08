@@ -145,7 +145,7 @@ OuterfaceData<TYPE>::operator () (
    int side,
    int depth) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
 
    const int axis = i.getAxis();
 
@@ -170,7 +170,7 @@ void
 OuterfaceData<TYPE>::copy(
    const hier::PatchData& src)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const FaceData<TYPE> * const t_src =
       dynamic_cast<const FaceData<TYPE> *>(&src);
@@ -191,7 +191,7 @@ void
 OuterfaceData<TYPE>::copy2(
    hier::PatchData& dst) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    FaceData<TYPE>* t_dst =
       dynamic_cast<FaceData<TYPE> *>(&dst);
@@ -232,7 +232,7 @@ OuterfaceData<TYPE>::copy2(
    hier::PatchData& dst,
    const hier::BoxOverlap& overlap) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    FaceData<TYPE>* t_dst =
       dynamic_cast<FaceData<TYPE> *>(&dst);
@@ -280,7 +280,7 @@ OuterfaceData<TYPE>::copyDepth(
    const FaceData<TYPE>& src,
    int src_depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    for (int axis = 0; axis < getDim().getValue(); axis++) {
       const ArrayData<TYPE>& src_face_array = src.getArrayData(axis);
@@ -310,7 +310,7 @@ OuterfaceData<TYPE>::copyDepth2(
    FaceData<TYPE>& dst,
    int src_depth) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    for (int axis = 0; axis < getDim().getValue(); axis++) {
       ArrayData<TYPE>& dst_face_array = dst.getArrayData(axis);
@@ -514,7 +514,7 @@ OuterfaceData<TYPE>::fill(
    const hier::Box& box,
    int d)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
    for (int i = 0; i < getDim().getValue(); i++) {
@@ -540,7 +540,7 @@ OuterfaceData<TYPE>::fillAll(
    const TYPE& t,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    for (int i = 0; i < getDim().getValue(); i++) {
       d_data[i][0]->fillAll(t, FaceGeometry::toFaceBox(box, i));
@@ -563,7 +563,7 @@ OuterfaceData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    for (int d = 0; d < d_depth; d++) {
       print(box, d, os, prec);
@@ -578,7 +578,7 @@ OuterfaceData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    for (int face_normal = 0; face_normal < getDim().getValue(); face_normal++) {
@@ -599,7 +599,7 @@ OuterfaceData<TYPE>::printAxisFace(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
    TBOX_ASSERT((side == 0) || (side == 1));
 
@@ -619,7 +619,7 @@ OuterfaceData<TYPE>::printAxisFace(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
    TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
    TBOX_ASSERT((side == 0) || (side == 1));

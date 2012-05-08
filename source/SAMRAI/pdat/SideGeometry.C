@@ -38,7 +38,7 @@ SideGeometry::SideGeometry(
    d_directions(directions)
 
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(ghosts.min() >= 0);
    TBOX_ASSERT(directions.min() >= 0);
 }
@@ -72,7 +72,7 @@ SideGeometry::calculateOverlap(
    const bool retry,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_box, src_mask);
 
    const SideGeometry* t_dst =
       dynamic_cast<const SideGeometry *>(&dst_geometry);
@@ -147,7 +147,7 @@ SideGeometry::doOverlap(
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS 
    const hier::IntVector& src_offset = transformation.getOffset();
 #endif
-   TBOX_DIM_ASSERT_CHECK_ARGS2(src_mask, src_offset);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
    TBOX_ASSERT(
       dst_geometry.getDirectionVector() == src_geometry.getDirectionVector());
 

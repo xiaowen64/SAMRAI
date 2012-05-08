@@ -31,7 +31,7 @@ NodeIndex::NodeIndex(
    const Corner corner):
    hier::Index(rhs.getDim())
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(* this, rhs);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(* this, rhs);
 
    setOffsets();
    hier::IntVector::operator = (
@@ -43,7 +43,7 @@ NodeIndex::NodeIndex(
    const hier::IntVector& corner):
    hier::Index(rhs.getDim())
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int i = 0; i < getDim().getValue(); i++) {
@@ -59,7 +59,7 @@ NodeIndex::NodeIndex(
    const NodeIndex& rhs):
    hier::Index(rhs)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
 
    setOffsets();
 }

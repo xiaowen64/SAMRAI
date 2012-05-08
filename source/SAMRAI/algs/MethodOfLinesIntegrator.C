@@ -370,7 +370,7 @@ MethodOfLinesIntegrator::registerVariable(
 {
    TBOX_ASSERT(variable);
    TBOX_ASSERT(transfer_geom);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*variable, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*variable, ghosts);
 
    tbox::Dimension dim(ghosts.getDim());
 
@@ -519,7 +519,7 @@ MethodOfLinesIntegrator::initializeLevelData(
    TBOX_ASSERT(level_number >= 0);
    if (old_level) {
       TBOX_ASSERT(level_number == old_level->getLevelNumber());
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*hierarchy, *old_level);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*hierarchy, *old_level);
    }
 #endif
 

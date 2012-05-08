@@ -291,7 +291,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
    const hier::IntVector& cut_factor,
    const tbox::RankGroup& rank_group) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS6(d_dim,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY6(d_dim,
       balance_mapped_box_level,
       min_size,
       max_size,
@@ -434,7 +434,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
 {
    t_load_balance_boxes->start();
 
-   TBOX_DIM_ASSERT_CHECK_ARGS5(ratio_to_hierarchy_level_zero,
+   TBOX_ASSERT_OBJDIM_EQUALITY5(ratio_to_hierarchy_level_zero,
       min_size,
       max_size,
       cut_factor,
@@ -644,7 +644,7 @@ ChopAndPackLoadBalancer::chopUniformSingleBox(
    const tbox::SAMRAI_MPI& mpi) const
 {
 
-   TBOX_DIM_ASSERT_CHECK_ARGS4(min_size, max_size, cut_factor, bad_interval);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(min_size, max_size, cut_factor, bad_interval);
 
    /*
     * Determine processor layout that corresponds to box dimensions.
@@ -734,7 +734,7 @@ ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
    const tbox::SAMRAI_MPI& mpi) const
 {
    NULL_USE(hierarchy);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS5(d_dim,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY5(d_dim,
       *hierarchy,
       min_size,
       max_size,
@@ -831,7 +831,7 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    const tbox::SAMRAI_MPI& mpi) const
 {
 
-   TBOX_DIM_ASSERT_CHECK_ARGS5(ratio_to_hierarchy_level_zero,
+   TBOX_ASSERT_OBJDIM_EQUALITY5(ratio_to_hierarchy_level_zero,
       min_size,
       max_size,
       cut_factor,

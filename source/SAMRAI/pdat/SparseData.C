@@ -271,7 +271,7 @@ void
 SparseData<BOX_GEOMETRY>::copy(
    const hier::PatchData& src)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const SparseData<BOX_GEOMETRY>* tmp_src =
       static_cast<const SparseData<BOX_GEOMETRY> *>(&src);
@@ -301,7 +301,7 @@ void
 SparseData<BOX_GEOMETRY>::copy2(
    hier::PatchData& dst) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
    dst.copy(*this);
 }
 
@@ -314,7 +314,7 @@ SparseData<BOX_GEOMETRY>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const SparseData<BOX_GEOMETRY>* tmp_src =
       static_cast<const SparseData<BOX_GEOMETRY> *>(&src);
@@ -362,7 +362,7 @@ SparseData<BOX_GEOMETRY>::copy2(
    hier::PatchData& dst,
    const hier::BoxOverlap& overlap) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
    dst.copy(*this, overlap);
 }
 
@@ -1241,7 +1241,7 @@ void
 SparseData<BOX_GEOMETRY>::_removeInsideBox(
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    typename IndexMap::iterator index_map_iter =
       d_index_to_attribute_map.begin();

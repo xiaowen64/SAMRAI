@@ -492,7 +492,7 @@ Transformation::calculateReverseShift(
    const IntVector& shift,
    const RotationIdentifier rotation)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(back_shift, shift);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(back_shift, shift);
 
    const tbox::Dimension& dim(back_shift.getDim());
 

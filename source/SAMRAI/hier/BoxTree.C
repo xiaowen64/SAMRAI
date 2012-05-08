@@ -409,7 +409,7 @@ bool
 BoxTree::hasOverlap(
    const Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    bool has_overlap = false;
    if (box.intersects(d_bounding_box)) {
 
@@ -454,7 +454,7 @@ BoxTree::findOverlapBoxes(
       t_search[d_dim.getValue() - 1]->start();
    }
 
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT(box.getBlockId() == d_block_id);
 
    if (box.intersects(d_bounding_box)) {
@@ -509,7 +509,7 @@ BoxTree::findOverlapBoxes(
       t_search[d_dim.getValue() - 1]->start();
    }
 
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT(box.getBlockId() == d_block_id);
 
    if (box.intersects(d_bounding_box)) {

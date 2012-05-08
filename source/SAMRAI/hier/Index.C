@@ -50,8 +50,7 @@ Index::Index(
    const int j):
    IntVector(tbox::Dimension(2))
 {
-   TBOX_DIM_ASSERT(
-      tbox::Dimension::getMaxDimension() >= tbox::Dimension(2));
+   TBOX_DIM_ASSERT(tbox::Dimension::getMaxDimension() >= tbox::Dimension(2));
 
    (*this)[0] = i;
    if (SAMRAI::MAX_DIM_VAL > 1) {

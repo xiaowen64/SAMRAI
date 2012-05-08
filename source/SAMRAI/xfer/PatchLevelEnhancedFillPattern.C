@@ -65,7 +65,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
    NULL_USE(dst_to_dst);
    NULL_USE(dst_to_src);
    NULL_USE(src_to_dst);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(dst_mapped_box_level, fill_ghost_width);
 
    boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
       dst_mapped_box_level.getGridGeometry());

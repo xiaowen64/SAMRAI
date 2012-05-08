@@ -49,7 +49,7 @@ CellData<TYPE>::getSizeOfData(
    int depth,
    const hier::IntVector& ghosts)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(depth > 0);
 
    const hier::Box ghost_box = hier::Box::grow(box, ghosts);
@@ -73,7 +73,7 @@ CellData<TYPE>::CellData(
    hier::PatchData(box, ghosts),
    d_depth(depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 
@@ -118,7 +118,7 @@ CellData<TYPE>::operator () (
    const CellIndex& i,
    int depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    return (*d_data)(i, depth);
@@ -130,7 +130,7 @@ CellData<TYPE>::operator () (
    const CellIndex& i,
    int depth) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    return (*d_data)(i, depth);
@@ -164,7 +164,7 @@ void
 CellData<TYPE>::copy(
    const hier::PatchData& src)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*d_data, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*d_data, src);
 
    const CellData<TYPE>* t_src =
       dynamic_cast<const CellData<TYPE> *>(&src);
@@ -183,7 +183,7 @@ void
 CellData<TYPE>::copy2(
    hier::PatchData& dst) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*d_data, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*d_data, dst);
 
    CellData<TYPE>* t_dst = dynamic_cast<CellData<TYPE> *>(&dst);
 
@@ -260,7 +260,7 @@ CellData<TYPE>::copyOnBox(
    const CellData<TYPE>& src,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, src, box);
    const hier::Box cell_box = CellGeometry::toCellBox(box);
    d_data->copy(src.getArrayData(), cell_box);
 }
@@ -336,7 +336,7 @@ CellData<TYPE>::copyDepth(
    const CellData<TYPE>& src,
    int src_depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*d_data, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*d_data, src);
 
    const hier::Box box = d_data->getBox() * src.d_data->getBox();
    if (!box.empty()) {
@@ -517,7 +517,7 @@ CellData<TYPE>::fillAll(
    const TYPE& t,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    d_data->fillAll(t, box);
 }
 
@@ -537,7 +537,7 @@ CellData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    for (int d = 0; d < d_depth; d++) {
       os << "Array depth = " << d << std::endl;
@@ -553,7 +553,7 @@ CellData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 

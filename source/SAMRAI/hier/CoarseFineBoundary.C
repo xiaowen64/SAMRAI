@@ -57,7 +57,7 @@ CoarseFineBoundary::CoarseFineBoundary(
    d_dim(max_ghost_width.getDim()),
    d_initialized(hierarchy.getGridGeometry()->getNumberBlocks(), false)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, max_ghost_width);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, max_ghost_width);
    TBOX_ASSERT(max_ghost_width > IntVector(d_dim, -1));
 
    if (hierarchy.getGridGeometry()->getNumberBlocks() == 1) {
@@ -98,7 +98,7 @@ CoarseFineBoundary::CoarseFineBoundary(
    d_dim(max_ghost_width.getDim()),
    d_initialized(1, false)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, max_ghost_width);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, max_ghost_width);
    TBOX_ASSERT(max_ghost_width > IntVector(d_dim, -1));
 
    computeFromLevel(level,
@@ -127,7 +127,7 @@ CoarseFineBoundary::computeFromLevel(
    const IntVector& max_ghost_width)
 {
 //this is single block version.
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, max_ghost_width);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, max_ghost_width);
 
    clear();
 
@@ -245,7 +245,7 @@ CoarseFineBoundary::computeFromLevel(
    const PatchLevel& level0,
    const IntVector& max_ghost_width)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, max_ghost_width);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, max_ghost_width);
 
    /*
     * Get all the boxes on level and level0.  These will be used later.

@@ -63,7 +63,7 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
 {
    NULL_USE(dst_to_src);
    NULL_USE(src_to_dst);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(dst_mapped_box_level, fill_ghost_width);
 
    const hier::BoxContainer& dst_mapped_boxes =
       dst_mapped_box_level.getBoxes();

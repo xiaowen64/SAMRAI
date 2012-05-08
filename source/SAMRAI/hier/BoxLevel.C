@@ -270,7 +270,7 @@ BoxLevel::initializePrivate(
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
    t_initialize_private->start();
 
    clearForBoxChanges();
@@ -413,7 +413,7 @@ BoxLevel::swap(
 
    if (&level_a != &level_b) {
       if (level_a.isInitialized() && level_b.isInitialized()) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(level_a, level_b);
+         TBOX_ASSERT_OBJDIM_EQUALITY2(level_a, level_b);
       }
 
       level_a.clearPersistentOverlapConnectors();

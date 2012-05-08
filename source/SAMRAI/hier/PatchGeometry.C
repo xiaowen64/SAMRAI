@@ -40,7 +40,7 @@ PatchGeometry::PatchGeometry(
    NULL_USE(touches_periodic_bdry);
 #endif
 
-   TBOX_DIM_ASSERT_CHECK_ARGS3(ratio_to_level_zero,
+   TBOX_ASSERT_OBJDIM_EQUALITY3(ratio_to_level_zero,
       touches_regular_bdry,
       touches_periodic_bdry);
 
@@ -89,7 +89,7 @@ PatchGeometry::getBoundaryFillBox(
    const IntVector& gcw) const
 {
 
-   TBOX_DIM_ASSERT_CHECK_ARGS3(bbox, patch_box, gcw);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(bbox, patch_box, gcw);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int i = 0; i < d_dim.getValue(); i++) {

@@ -243,7 +243,7 @@ CellPoissonFACSolver::initializeSolverState(
    const int fine_level)
 {
    TBOX_ASSERT(hierarchy);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
 
    if (d_bc_object == NULL) {
       TBOX_ERROR(
@@ -441,7 +441,7 @@ CellPoissonFACSolver::solveSystem(
    int fine_ln)
 {
    TBOX_ASSERT(hierarchy);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
 
    if (d_enable_logging) {
       tbox::plog << "CellPoissonFACSolver::solveSystem (" << d_object_name

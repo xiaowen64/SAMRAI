@@ -189,7 +189,7 @@ OuternodeData<TYPE>::operator () (
    const NodeIndex& i,
    int depth) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
 
    for (int d = getDim() - 1; d >= 0; d--) {
       if (i[d] == d_data[d][0]->getBox().lower()[d]) {
@@ -222,7 +222,7 @@ void
 OuternodeData<TYPE>::copy(
    const hier::PatchData& src)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const NodeData<TYPE> * const t_node_src =
       dynamic_cast<const NodeData<TYPE> *>(&src);
@@ -247,7 +247,7 @@ void
 OuternodeData<TYPE>::copy2(
    hier::PatchData& dst) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    NodeData<TYPE>* t_node_dst =
       dynamic_cast<NodeData<TYPE> *>(&dst);
@@ -281,7 +281,7 @@ OuternodeData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const NodeOverlap* t_overlap =
       dynamic_cast<const NodeOverlap *>(&overlap);
@@ -312,7 +312,7 @@ OuternodeData<TYPE>::copy2(
    hier::PatchData& dst,
    const hier::BoxOverlap& overlap) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    const NodeOverlap* t_overlap =
       dynamic_cast<const NodeOverlap *>(&overlap);
@@ -353,7 +353,7 @@ OuternodeData<TYPE>::copyDepth(
    const NodeData<TYPE>& src,
    int src_depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const ArrayData<TYPE>& node_array = src.getArrayData();
    for (int d = 0; d < getDim().getValue(); d++) {
@@ -383,7 +383,7 @@ OuternodeData<TYPE>::copyDepth2(
    NodeData<TYPE>& dst,
    int src_depth) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    ArrayData<TYPE>& node_array = dst.getArrayData();
    for (int d = 0; d < getDim().getValue(); d++) {
@@ -411,7 +411,7 @@ OuternodeData<TYPE>::sum(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const NodeOverlap* t_overlap =
       dynamic_cast<const NodeOverlap *>(&overlap);
@@ -722,7 +722,7 @@ OuternodeData<TYPE>::fill(
    const hier::Box& box,
    int d)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
    for (int i = 0; i < getDim().getValue(); i++) {
@@ -756,7 +756,7 @@ OuternodeData<TYPE>::fillAll(
    const TYPE& t,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    for (int i = 0; i < getDim().getValue(); i++) {
       if (d_data[i][0]->isInitialized()) {
@@ -782,7 +782,7 @@ void
 OuternodeData<TYPE>::copyFromNode(
    const NodeData<TYPE>& src)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const ArrayData<TYPE>& node_array = src.getArrayData();
    for (int d = 0; d < getDim().getValue(); d++) {
@@ -800,7 +800,7 @@ void
 OuternodeData<TYPE>::copyToNode(
    NodeData<TYPE>& dst) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    ArrayData<TYPE>& node_array = dst.getArrayData();
    for (int d = 0; d < getDim().getValue(); d++) {
@@ -827,7 +827,7 @@ OuternodeData<TYPE>::copyFromNode(
    const NodeData<TYPE>& src,
    const NodeOverlap& overlap)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const hier::IntVector& src_offset = overlap.getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
@@ -847,7 +847,7 @@ OuternodeData<TYPE>::copyToNode(
    NodeData<TYPE>& dst,
    const NodeOverlap& overlap) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    const hier::IntVector& src_offset = overlap.getSourceOffset();
    const hier::BoxContainer& box_list = overlap.getDestinationBoxContainer();
@@ -866,7 +866,7 @@ void
 OuternodeData<TYPE>::copyFromOuternode(
    const OuternodeData<TYPE>& src)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    for (int src_d = 0; src_d < getDim().getValue(); src_d++) {
       for (int src_p = 0; src_p < 2; src_p++) {
@@ -891,7 +891,7 @@ OuternodeData<TYPE>::copyFromOuternode(
    const OuternodeData<TYPE>& src,
    const NodeOverlap& overlap)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const hier::IntVector& src_offset = overlap.getSourceOffset();
    for (int src_d = 0; src_d < getDim().getValue(); src_d++) {
@@ -916,7 +916,7 @@ void
 OuternodeData<TYPE>::copyToOuternode(
    OuternodeData<TYPE>& dst) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    for (int dst_d = 0; dst_d < getDim().getValue(); dst_d++) {
       for (int dst_p = 0; dst_p < 2; dst_p++) {
@@ -941,7 +941,7 @@ OuternodeData<TYPE>::copyToOuternode(
    OuternodeData<TYPE>& dst,
    const NodeOverlap& overlap) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
    const hier::IntVector& src_offset = overlap.getSourceOffset();
    const hier::BoxContainer& box_list = overlap.getDestinationBoxContainer();
@@ -976,7 +976,7 @@ OuternodeData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    for (int d = 0; d < d_depth; d++) {
       print(box, d, os, prec);
@@ -991,7 +991,7 @@ OuternodeData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    for (int axis = 0; axis < getDim().getValue(); axis++) {
@@ -1012,7 +1012,7 @@ OuternodeData<TYPE>::printAxisSide(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
    TBOX_ASSERT((side == 0) || (side == 1));
 
@@ -1032,7 +1032,7 @@ OuternodeData<TYPE>::printAxisSide(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
    TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
    TBOX_ASSERT((side == 0) || (side == 1));

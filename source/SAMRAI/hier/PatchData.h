@@ -274,7 +274,7 @@ protected:
    setGhostBox(
       const Box& ghost_box)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, ghost_box);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(d_box, ghost_box);
       TBOX_ASSERT((ghost_box * d_box).isSpatiallyEqual(d_box));
       d_ghost_box = ghost_box;
    }

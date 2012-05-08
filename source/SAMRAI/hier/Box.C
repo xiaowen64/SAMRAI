@@ -71,7 +71,7 @@ Box::Box(
    d_id(GlobalId(), PeriodicId::zero()),
    d_id_locked(false)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(lower, upper);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(lower, upper);
    TBOX_ASSERT(block_id != BlockId::invalidId());
 #ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active box count and reset
@@ -213,7 +213,7 @@ Box::Box(
         periodic_id),
    d_id_locked(false)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, other, refinement_ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, other, refinement_ratio);
 #ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active mapped box count and
    // reset the high water mark of active mapped boxes if necessary.
@@ -284,7 +284,7 @@ Box::operator = (
    const Box& rhs)
 {
    if (this != &rhs) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
 
       d_lo = rhs.d_lo;
       d_hi = rhs.d_hi;
@@ -321,7 +321,7 @@ Box::initialize(
    const PeriodicId& periodic_id,
    const IntVector& refinement_ratio)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, other, refinement_ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, other, refinement_ratio);
 
    const tbox::Dimension& dim(d_lo.getDim());
 
@@ -421,7 +421,7 @@ bool
 Box::contains(
    const Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    if (box.empty()) {
       return true;
@@ -446,7 +446,7 @@ Box
 Box::operator * (
    const Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    Box both(*this);
 
@@ -468,7 +468,7 @@ Box&
 Box::operator *= (
    const Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    if (d_block_id != box.d_block_id) {
       if (empty() || box.empty()) {
@@ -489,7 +489,7 @@ Box::intersect(
    const Box& other,
    Box& result) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, other);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, other);
 
    result = *this;
    if (result.d_block_id != other.d_block_id) {
@@ -508,7 +508,7 @@ bool
 Box::intersects(
    const Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    if (d_block_id != box.d_block_id) {
       if (empty() || box.empty()) {
@@ -532,7 +532,7 @@ Box
 Box::operator + (
    const Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    Box bbox(*this);
 
@@ -582,7 +582,7 @@ void
 Box::refine(
    const IntVector& ratio)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
 
    bool negative_ratio = false;
    for (int d = 0; d < getDim().getValue(); d++) {
@@ -761,7 +761,7 @@ Box&
 Box::operator += (
    const Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    if (!box.empty()) {
       if (empty()) {
@@ -856,7 +856,7 @@ bool
 Box::coalesceWith(
    const Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    bool retval = false;
 

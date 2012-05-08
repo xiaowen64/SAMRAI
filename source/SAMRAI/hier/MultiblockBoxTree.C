@@ -103,7 +103,7 @@ MultiblockBoxTree::findOverlapBoxes(
    const IntVector& refinement_ratio,
    bool include_singularity_block_neighbors) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*d_grid_geometry, box, refinement_ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*d_grid_geometry, box, refinement_ratio);
 
    const BlockId &block_id = box.getBlockId();
    TBOX_ASSERT(block_id.getBlockValue() >= 0 &&
@@ -168,7 +168,7 @@ MultiblockBoxTree::findOverlapBoxes(
    const IntVector& refinement_ratio,
    bool include_singularity_block_neighbors) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*d_grid_geometry, box, refinement_ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*d_grid_geometry, box, refinement_ratio);
 
    const BlockId &block_id = box.getBlockId();
    TBOX_ASSERT(block_id.getBlockValue() >= 0 &&

@@ -200,7 +200,7 @@ CartesianBoundaryUtilities3::fillFaceBoundaryData(
    TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES * (vardata->getDepth()));
 
    TBOX_DIM_ASSERT(ghost_fill_width.getDim() == tbox::Dimension(3));
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*vardata, patch, ghost_fill_width);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*vardata, patch, ghost_fill_width);
 
    NULL_USE(varname);
 
@@ -283,7 +283,7 @@ CartesianBoundaryUtilities3::fillEdgeBoundaryData(
    TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES * (vardata->getDepth()));
 
    TBOX_DIM_ASSERT(ghost_fill_width.getDim() == tbox::Dimension(3));
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*vardata, patch, ghost_fill_width);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*vardata, patch, ghost_fill_width);
 
    NULL_USE(varname);
 
@@ -366,7 +366,7 @@ CartesianBoundaryUtilities3::fillNodeBoundaryData(
    TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES * (vardata->getDepth()));
 
    TBOX_DIM_ASSERT(ghost_fill_width.getDim() == tbox::Dimension(3));
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*vardata, patch, ghost_fill_width);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*vardata, patch, ghost_fill_width);
 
    NULL_USE(varname);
 
@@ -627,7 +627,7 @@ CartesianBoundaryUtilities3::checkBdryData(
    TBOX_ASSERT(depth >= 0);
 
    TBOX_DIM_ASSERT(gcw_to_check.getDim() == tbox::Dimension(3));
-   TBOX_DIM_ASSERT_CHECK_ARGS3(patch, gcw_to_check, bbox);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(patch, gcw_to_check, bbox);
 
    int num_bad_values = 0;
 

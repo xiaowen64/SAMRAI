@@ -44,7 +44,7 @@ SideData<TYPE>::SideData(
    d_depth(depth),
    d_directions(directions)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(box, ghosts, directions);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(box, ghosts, directions);
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
    TBOX_ASSERT(directions.min() >= 0);
@@ -72,7 +72,7 @@ SideData<TYPE>::SideData(
    d_depth(depth),
    d_directions(hier::IntVector::getOne(box.getDim()))
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
    TBOX_ASSERT(d_directions.min() >= 0);
@@ -141,7 +141,7 @@ SideData<TYPE>::operator () (
    const SideIndex& i,
    int depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
 
    const int axis = i.getAxis();
 
@@ -158,7 +158,7 @@ SideData<TYPE>::operator () (
    const SideIndex& i,
    int depth) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
 
    const int axis = i.getAxis();
 
@@ -205,7 +205,7 @@ void
 SideData<TYPE>::copy(
    const hier::PatchData& src)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_directions, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, src);
 
    const SideData<TYPE>* t_src =
       dynamic_cast<const SideData<TYPE> *>(&src);
@@ -233,7 +233,7 @@ void
 SideData<TYPE>::copy2(
    hier::PatchData& dst) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_directions, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, dst);
 
    SideData<TYPE>* t_dst =
       dynamic_cast<SideData<TYPE> *>(&dst);
@@ -266,7 +266,7 @@ SideData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_directions, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, src);
 
    const SideData<TYPE>* t_src =
       dynamic_cast<const SideData<TYPE> *>(&src);
@@ -302,7 +302,7 @@ SideData<TYPE>::copy2(
    hier::PatchData& dst,
    const hier::BoxOverlap& overlap) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_directions, dst);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, dst);
 
    SideData<TYPE>* t_dst =
       dynamic_cast<SideData<TYPE> *>(&dst);
@@ -334,7 +334,7 @@ SideData<TYPE>::copyOnBox(
    const SideData<TYPE>& src,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, src, box);
 
    for (int axis = 0; axis < getDim().getValue(); axis++) {
       const hier::Box side_box = SideGeometry::toSideBox(box, axis);
@@ -423,7 +423,7 @@ SideData<TYPE>::copyDepth(
    const SideData<TYPE>& src,
    int src_depth)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_directions, src);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, src);
    TBOX_ASSERT(src.d_directions == d_directions);
 
    for (int d = 0; d < getDim().getValue(); d++) {
@@ -622,7 +622,7 @@ SideData<TYPE>::getSizeOfData(
    const hier::IntVector& ghosts,
    const hier::IntVector& directions)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(box, ghosts, directions);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(box, ghosts, directions);
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(directions.min() >= 0);
 
@@ -667,7 +667,7 @@ SideData<TYPE>::fill(
    const hier::Box& box,
    int d)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_directions, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
    for (int i = 0; i < getDim().getValue(); i++) {
@@ -695,7 +695,7 @@ SideData<TYPE>::fillAll(
    const TYPE& t,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_directions, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
 
    for (int i = 0; i < getDim().getValue(); i++) {
       if (d_directions(i)) {
@@ -720,7 +720,7 @@ SideData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_directions, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
 
    for (int axis = 0; axis < getDim().getValue(); axis++) {
       os << "Array side normal = " << axis << std::endl;
@@ -736,7 +736,7 @@ SideData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_directions, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
    for (int axis = 0; axis < getDim().getValue(); axis++) {
@@ -753,7 +753,7 @@ SideData<TYPE>::printAxis(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_directions, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
    TBOX_ASSERT((axis >= 0) && (axis < getDim().getValue()));
 
    for (int d = 0; d < d_depth; d++) {
@@ -771,7 +771,7 @@ SideData<TYPE>::printAxis(
    std::ostream& os,
    int prec) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_directions, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
    TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
 

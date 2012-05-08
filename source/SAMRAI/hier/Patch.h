@@ -177,7 +177,7 @@ public:
       const boost::shared_ptr<Variable>& variable,
       const boost::shared_ptr<VariableContext>& context) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *variable);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *variable);
       int id = VariableDatabase::getDatabase()->
          mapVariableAndContextToIndex(variable, context);
       TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
@@ -205,7 +205,7 @@ public:
       const int id,
       const boost::shared_ptr<PatchData>& data)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *data);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *data);
       TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
       d_patch_data[id] = data;
    }

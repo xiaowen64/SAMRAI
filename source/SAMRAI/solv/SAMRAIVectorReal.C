@@ -437,7 +437,7 @@ SAMRAIVectorReal<TYPE>::setComponent(
 
    const tbox::Dimension& dim(d_hierarchy->getDim());
 
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, *var);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, *var);
 
    d_component_variable[comp_id] = var;
    d_component_data_id[comp_id] = data_id;

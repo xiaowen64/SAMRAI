@@ -248,7 +248,7 @@ BergerRigoutsosNode::setClusteringParameters(
    const double max_lap_cut_from_center,
    const double laplace_cut_threshold_ar)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_common->d_dim, min_box, max_box_size);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_common->d_dim, min_box, max_box_size);
 
    d_common->tag_data_index = tag_data_index;
    d_common->tag_val = tag_val;
@@ -274,7 +274,7 @@ BergerRigoutsosNode::clusterAndComputeRelationships(
    const tbox::SAMRAI_MPI& mpi_object)
 {
    TBOX_ASSERT(d_parent == NULL);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_common->d_dim,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(d_common->d_dim,
       new_mapped_box_level,
       bound_box,
       *tag_level);

@@ -321,7 +321,7 @@ HyperbolicLevelIntegrator::initializeLevelData(
    }
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
 #endif
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
 
    boost::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
@@ -450,7 +450,7 @@ HyperbolicLevelIntegrator::resetHierarchyConfiguration(
       TBOX_ASSERT(hierarchy->getPatchLevel(ln0));
    }
 #endif
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
 
    int finest_hiera_level = hierarchy->getFinestLevelNumber();
 
@@ -513,7 +513,7 @@ HyperbolicLevelIntegrator::applyGradientDetector(
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
 
    t_apply_gradient_detector->start();
 
@@ -597,7 +597,7 @@ HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
       && (level_number <= hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(coarse_level);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, *hierarchy, *coarse_level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, *hierarchy, *coarse_level);
 
    t_coarsen_rich_extrap->start();
 
@@ -714,7 +714,7 @@ HyperbolicLevelIntegrator::applyRichardsonExtrapolation(
    const bool uses_gradient_detector_too)
 {
    TBOX_ASSERT(level);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *level);
 
    /*
     * Compare solutions computed on level (stored in NEW context) and on
@@ -808,7 +808,7 @@ HyperbolicLevelIntegrator::getLevelDt(
    const bool initial_time)
 {
    TBOX_ASSERT(level);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *level);
 
    const tbox::SAMRAI_MPI& mpi(level->getBoxLevel()->getMPI());
 
@@ -946,7 +946,7 @@ HyperbolicLevelIntegrator::getMaxFinerLevelDt(
 {
    NULL_USE(finer_level_number);
 
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, ratio);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, ratio);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int id = 0; id < d_dim.getValue(); id++) {
@@ -1045,7 +1045,7 @@ HyperbolicLevelIntegrator::advanceLevel(
    TBOX_ASSERT(level);
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(current_time <= new_time);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, *level, *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, *level, *hierarchy);
 
 // HLI_RECORD_STATS is defined in HyperbolicLevelIntegrator.h
 #ifdef HLI_RECORD_STATS
@@ -1316,7 +1316,7 @@ HyperbolicLevelIntegrator::standardLevelSynchronization(
    const double old_time)
 {
    TBOX_ASSERT(hierarchy);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
 
    tbox::Array<double> old_times(finest_level - coarsest_level + 1);
    for (int i = coarsest_level; i <= finest_level; i++) {
@@ -1418,7 +1418,7 @@ HyperbolicLevelIntegrator::synchronizeNewLevels(
       TBOX_ASSERT(hierarchy->getPatchLevel(ln));
    }
 #endif
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
 
    t_sync_new_levels->start();
 
@@ -1496,7 +1496,7 @@ HyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
    TBOX_ASSERT(coarse_level);
    TBOX_ASSERT(coarse_level->getLevelNumber() ==
       (fine_level->getLevelNumber() - 1));
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, *fine_level, *coarse_level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, *fine_level, *coarse_level);
 
    /*
     * Coarsen flux integrals around fine patch boundaries to coarser level
@@ -1589,7 +1589,7 @@ HyperbolicLevelIntegrator::resetTimeDependentData(
    const bool can_be_refined)
 {
    TBOX_ASSERT(level);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *level);
 
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 
@@ -1667,7 +1667,7 @@ HyperbolicLevelIntegrator::resetDataToPreadvanceState(
    const boost::shared_ptr<hier::PatchLevel>& level)
 {
    TBOX_ASSERT(level);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *level);
 
    /*
     * De-allocate new context
@@ -1760,7 +1760,7 @@ HyperbolicLevelIntegrator::registerVariable(
 
    TBOX_ASSERT(var);
    TBOX_ASSERT(transfer_geom);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, *var);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, *var);
 
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 
@@ -2108,7 +2108,7 @@ HyperbolicLevelIntegrator::preprocessFluxData(
    TBOX_ASSERT(level);
    TBOX_ASSERT(cur_time <= new_time);
 
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *level);
 
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 
@@ -2206,7 +2206,7 @@ HyperbolicLevelIntegrator::postprocessFluxData(
    NULL_USE(last_step);
 
    TBOX_ASSERT(level);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *level);
 
    if (d_dim > tbox::Dimension(3)) {
       TBOX_ERROR(
@@ -2410,7 +2410,7 @@ HyperbolicLevelIntegrator::copyTimeDependentData(
    TBOX_ASSERT(level);
    TBOX_ASSERT(src_context);
    TBOX_ASSERT(dst_context);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *level);
 
    for (hier::PatchLevel::iterator ip(level->begin());
         ip != level->end(); ++ip) {
@@ -2443,7 +2443,7 @@ HyperbolicLevelIntegrator::recordStatistics(
    const hier::PatchLevel& patch_level,
    double current_time)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, patch_level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, patch_level);
 
    const int ln = patch_level.getLevelNumber();
 

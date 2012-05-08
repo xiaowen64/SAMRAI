@@ -118,7 +118,7 @@ public:
       const hier::Box& src_mapped_box,
       int ritem_id) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS4(*dst_level,
+      TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level,
          *src_level,
          dst_mapped_box,
          src_mapped_box);

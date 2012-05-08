@@ -129,7 +129,7 @@ CellFloatConstantRefine::refine(
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
-   TBOX_DIM_ASSERT_CHECK_ARGS5(*this, fine, coarse, fine_box, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY5(*this, fine, coarse, fine_box, ratio);
 
    const hier::Box cgbox(cdata->getGhostBox());
 

@@ -121,7 +121,7 @@ void CommTester::registerVariable(
    const boost::shared_ptr<hier::BaseGridGeometry> xfer_geom,
    const string& operator_name)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(src_ghosts, dst_ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(src_ghosts, dst_ghosts);
 
    TBOX_ASSERT(src_variable);
    TBOX_ASSERT(dst_variable);
@@ -196,7 +196,7 @@ void CommTester::registerVariableForReset(
    const boost::shared_ptr<hier::BaseGridGeometry> xfer_geom,
    const string& operator_name)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(src_ghosts, dst_ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(src_ghosts, dst_ghosts);
 
    TBOX_ASSERT(src_variable);
    TBOX_ASSERT(dst_variable);

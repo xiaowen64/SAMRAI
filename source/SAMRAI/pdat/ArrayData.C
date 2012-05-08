@@ -178,7 +178,7 @@ ArrayData<TYPE>::operator () (
    const hier::Index& i,
    int d) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
 
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
@@ -209,7 +209,7 @@ ArrayData<TYPE>::copy(
    const ArrayData<TYPE>& src,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, src, box);
 
    CopyOperation<TYPE> copyop;
 
@@ -593,7 +593,7 @@ ArrayData<TYPE>::getDataStreamSize(
    NULL_USE(source_shift);
 #endif
 
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, source_shift);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, source_shift);
 
    const int nelements = boxes.getTotalSizeOfBoxes();
 
