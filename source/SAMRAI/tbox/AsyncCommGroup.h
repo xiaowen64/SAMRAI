@@ -85,6 +85,8 @@ public:
     *
     * @param nchild Number of children per tree node in the group,
     *        i.e., nchild=2 is a binary tree.
+    * @param stage
+    * @param handler
     */
    AsyncCommGroup(
       const size_t nchild,

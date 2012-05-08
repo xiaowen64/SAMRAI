@@ -120,12 +120,18 @@ public:
     * These parameters are not specific to the asynchronous algorithm
     * or DLBG.
     *
-    * @param max_lap_cut_from_center: Limit the Laplace cut to this
+    * @param[in] tag_data_index
+    * @param[in] tag_val
+    * @param[in] min_box
+    * @param[in] efficiency_tol
+    * @param[in] combine_tol
+    * @param[in] max_box_size
+    * @param[in] max_lap_cut_from_center Limit the Laplace cut to this
     *   fraction of the distance from the center plane to the end.
     *   Zero means cut only at the center plane.  One means unlimited.
     *   Under most situations, one is fine.
     *
-    * @param [i] laplace_cut_threshold_ar
+    * @param[in] laplace_cut_threshold_ar
     */
    void
    setClusteringParameters(

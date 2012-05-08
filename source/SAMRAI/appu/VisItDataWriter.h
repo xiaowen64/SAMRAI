@@ -187,6 +187,7 @@ public:
     *   - when assertion checking is active, the object name string is
     *     empty, or the number_procs_per_file is <= 0.
     *
+    * @param dim
     * @param object_name String name for data writer object
     * @param dump_directory_name String name for dump directory, which
     *   may include a path.
@@ -334,7 +335,7 @@ public:
     * @param scale_factor (optional) scale factor with which to multiply
     *    all data values
     * @param variable_centering (optional) centering of derived data - "CELL" or "NODE"
-    * @param mix type (optional) indicate whether or not the mixed material
+    * @param variable_mix_type (optional) indicate whether or not the mixed material
     *    state will be stored, "MIXED", or the default of using cell averages
     *    "CLEAN". If "MIXED" then packMixedDerivedDataIntoDoubleBuffer() must
     *    be provided.

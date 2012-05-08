@@ -52,12 +52,10 @@ public:
    virtual ~PatchLevelFullFillPattern();
 
    /*!
-    * @copybrief PatchLevelFillPattern::computeFillBoxesAndNeighborhoodSets()
+    * @copydoc PatchLevelFillPattern::computeFillBoxesAndNeighborhoodSets()
     *
     * The computed fill_mapped_boxes for this fill pattern will be the
     * boxes of dst_mapped_box_level grown by the fill_ghost_width.
-    *
-    * @copydetails PatchLevelFillPattern::computeFillBoxesAndNeighborhoodSets()
     */
    void
    computeFillBoxesAndNeighborhoodSets(
@@ -70,13 +68,11 @@ public:
       const hier::IntVector& fill_ghost_width);
 
    /*!
-    * @copybrief PatchLevelFillPattern::needsToCommunicateDestinationFillBoxes()
+    * @copydoc PatchLevelFillPattern::needsToCommunicateDestinationFillBoxes()
     *
     * For this fill pattern, the source owner can compute fill boxes for
     * all of its destination neighbors using local data, so this method
     * returns false, allowing a communication step to be skipped.
-    *
-    * @copydetails PatchLevelFillPattern::needsToCommunicateDestinationFillBoxes()
     */
    bool
    needsToCommunicateDestinationFillBoxes() const;
@@ -92,12 +88,10 @@ public:
       const hier::IntVector& fill_ghost_width);
 
    /*!
-    * @copybrief PatchLevelFillPattern::doesSourceLevelCommunicateToDestination()
+    * @copydoc PatchLevelFillPattern::doesSourceLevelCommunicateToDestination()
     *
     * RefineSchedule should attempt to fill the destination level from
     * the source level on the same resolution to the extent possible.
-    *
-    * @copydetails PatchLevelFillPattern::doesSourceLevelCommunicateToDestination()
     */
    bool
    doesSourceLevelCommunicateToDestination() const;

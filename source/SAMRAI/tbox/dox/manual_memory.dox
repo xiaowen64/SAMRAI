@@ -16,11 +16,7 @@ namespace SAMRAI {
   include smart pointers and memory arenas for fast memory allocation
   and deallocation.
   - SAMRAI::tbox::Array
-  - SAMRAI::tbox::ConstPointer
-  - SAMRAI::tbox::ConstPointerBase
   - SAMRAI::tbox::MemoryUtilities
-  - SAMRAI::tbox::Pointer
-  - SAMRAI::tbox::PointerBase
   - SAMRAI::tbox::ReferenceCounter
 */
 

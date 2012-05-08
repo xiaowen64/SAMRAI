@@ -101,6 +101,7 @@ public:
    /*!
     * @brief Constructor.
     *
+    * @param dim
     * @param object_name Name of object.
     * @param database tbox::Database for input.
     */

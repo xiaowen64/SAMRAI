@@ -151,7 +151,7 @@ public:
     * individual cells are not mixed, as this indicates that the patch contains
     * multiple materials.
     *
-    * @param buffer Double precision array into which the material
+    * @param mat_list Double precision array into which the material
     *  numbers (or negative indices) are packed.
     * @param mix_zones std::vector<int> into which the cell number
     *  associated with the mixed components are packed.

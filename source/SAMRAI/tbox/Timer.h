@@ -29,6 +29,8 @@
 namespace SAMRAI {
 namespace tbox {
 
+class TimerManager;
+
 /**
  * Class Timer holds the exclusive and total start, stop, and elapsed
  * time for timers instrumented in SAMRAI.  Total time is simply the time
@@ -56,8 +58,6 @@ namespace tbox {
  *
  * @see tbox::TimerManager
  */
-
-class TimerManager;
 
 class Timer
 {

@@ -68,7 +68,7 @@ public:
    ~Schedule();
 
    /*!
-    * @beief Add a data transaction to the head of the list of transactions
+    * @brief Add a data transaction to the head of the list of transactions
     * in the schedule.
     *
     * The transaction must involve the local processor as either a

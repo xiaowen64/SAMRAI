@@ -44,7 +44,7 @@ public:
     *
     * @param[in] output_stream
     *
-    * @param[in] left_border
+    * @param[in] border
     *
     * @param[in] detail_depth
     */

@@ -59,6 +59,7 @@ public:
     *
     * Requires a concrete implementation of RobinBcCoefStrategy.
     *
+    * @param dim
     * @param object_name Name of the object, for general referencing.
     * @param coef_strategy Coefficients strategy being helped.
     */

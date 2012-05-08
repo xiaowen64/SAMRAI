@@ -18,9 +18,8 @@ namespace SAMRAI {
   spatial coarsening and refining) depend on the mesh description, they 
   are included here.  Time interpolation operators and constant data transfer
   operators are also included here although they are independent of the
-  mesh description.  Geometry support is divided into three categories:
+  mesh description.
   -# @ref package_geometry_cartesian "simple Cartesian mesh (grid geometry and operators)"
-  -# @ref package_geometry_skeleton "generic 'skeleton' geometry classes"
  
   All class names in the Geometry package are in the SAMRAI::geom namespace.
 

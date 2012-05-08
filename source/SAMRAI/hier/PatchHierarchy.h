@@ -222,15 +222,17 @@ public:
        * requested between levels in the given PatchHierarchy. The two vector
        * parameters will contain the computed widths.
        * @par Assumptions
+       * <ul>
        * <li> On completion of the function call, self_connector_width must be
        *      of length @c patch_hierarchy.getMaxNumberOfLevels().
        * <li> On completion of the function call, fine_connector_width must be
        *      of length @c patch_hierarchy.getMaxNumberOfLevels() - 1.
+       * </ul>
        *
-       * @param[out] self_connector_width Array of widths for Connectors
+       * @param[out] self_connector_widths Array of widths for Connectors
        * from a level to itself.
        *
-       * @param[out] fine_connector_width Array of widths for Connectors
+       * @param[out] fine_connector_widths Array of widths for Connectors
        * from a level to the next finer level.
        *
        * @param[in]  patch_hierarchy
@@ -727,7 +729,7 @@ public:
     *
     * @return The proper nesting buffer
     *
-    * @param[in]  level
+    * @param[in]  ln
     */
    int
    getProperNestingBuffer(
@@ -829,10 +831,12 @@ public:
     * object_name specified in the constructor.
     *
     * @note
+    * <ul>
     * <li> This method handles the memory allocation for each PatchLevel
     *      it reads in.
     * <li> The number of levels read in is the minimum of the d_max_levels
     *      and the number of levels stored in the database.
+    * </ul>
     *
     * @par Assertions
     * When assertion checking is active, @c d_max_levels must be
@@ -850,16 +854,20 @@ public:
     * to read in from the database.
     *
     * @note
+    * <ul>
     * <li>   Warning messages will be printed to the log file if
     *        any patch data component specified in the
     *        component_selector cannot be found in the database.
     * <li>   This method handles the memory allocation for each PatchLevel
     *        it reads in.
+    * </ul>
     *
     * @par Assertions
     *
+    * <ul>
     * <li>   The database argument must not be null.
     * <li>   The number of levels (if given) must be greater than zero.
+    * </ul>
     *
     * @param[in]  database
     * @param[in]  component_selector
@@ -898,7 +906,7 @@ public:
     *
     * @param[in,out]    os The output stream
     * @param[in]        border string around output text
-    * @param[depth]     depth
+    * @param[in]     depth
     */
    int
    recursivePrint(

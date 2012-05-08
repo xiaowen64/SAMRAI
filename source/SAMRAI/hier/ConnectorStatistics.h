@@ -34,7 +34,7 @@ public:
     * SAMRAI_MPI must call this constructor because it requires
     * collective communication.
     *
-    * @param[i] connector
+    * @param[in] connector
     */
    explicit ConnectorStatistics(
       const Connector &connector);

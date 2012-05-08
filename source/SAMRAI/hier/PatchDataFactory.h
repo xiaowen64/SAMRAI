@@ -23,6 +23,9 @@
 namespace SAMRAI {
 namespace hier {
 
+class Patch;
+class MultiblockDataTranslator;
+
 /**
  * Class PatchDataFactory is an abstract base class used to allocate
  * new instances of patch data objects.  Recall that patch data objects (PDs)
@@ -37,7 +40,6 @@ namespace hier {
  * PDF is unknown to most of the framework; the PDF only defines enough
  * information to create the PD instance.  For example, to add a new type
  * of PD object MyPD (MyPatchData):
- * \begin{enumerate}
  * - Derive MyPDF from PDF and implement the abstract virtual
  *       function calls as appropriate for the concrete subclass;
  *       in particular, the allocate() function will return an instance
@@ -48,7 +50,6 @@ namespace hier {
  *       MyPDF to the patch descriptor list.
  * - Now whenever the PDF base class of MyPDF is asked to create
  *       a concrete class, it will create MyPD.
- * \end{enumerate}
  * The creation of concrete PD objects is managed through the allocate()
  * interfaces in PDF.
  *
@@ -64,9 +65,6 @@ namespace hier {
  * @see hier::PatchData
  * @see hier::PatchDescriptor
  */
-
-class Patch;
-class MultiblockDataTranslator;
 
 class PatchDataFactory
 {

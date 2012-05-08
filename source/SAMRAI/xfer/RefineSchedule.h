@@ -171,10 +171,10 @@ public:
     *                            boundary filling operations.  This pointer
     *                            may be null, in which case no boundary filling
     *                            or user-defined refine operations will occur.
-    * @param[in] use_time_interpolation  Boolean flag indicating whether to use
-    *                                    time interpolation when setting data
-    *                                    on the destination level.  Default
-    *                                    is no time interpolation.
+    * @param[in] use_time_refinement  Boolean flag indicating whether to use
+    *                                 time interpolation when setting data
+    *                                 on the destination level.  Default
+    *                                 is no time interpolation.
     */
    RefineSchedule(
       const boost::shared_ptr<PatchLevelFillPattern>& dst_level_fill_pattern,

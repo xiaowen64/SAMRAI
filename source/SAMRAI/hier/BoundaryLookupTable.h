@@ -130,12 +130,12 @@ public:
    isLower(
       int loc,
       int codim,
-      int dim_index) const
+      int dir_index) const
    {
       TBOX_ASSERT((codim > 0) && (codim <= d_dim.getValue()));
       TBOX_ASSERT((loc >= 0) && (loc < d_max_li[codim - 1]));
-      TBOX_ASSERT((dim_index >= 0) && (dim_index < codim));
-      return !isUpper(loc, codim, dim_index);
+      TBOX_ASSERT((dir_index >= 0) && (dir_index < codim));
+      return !isUpper(loc, codim, dir_index);
    }
 
    /*!
@@ -159,12 +159,12 @@ public:
    isUpper(
       int loc,
       int codim,
-      int index) const
+      int dir_index) const
    {
       TBOX_ASSERT((codim > 0) && (codim <= d_dim.getValue()));
       TBOX_ASSERT((loc >= 0) && (loc < d_max_li[codim - 1]));
-      TBOX_ASSERT((index >= 0) && (index < codim));
-      return (loc % (1 << codim)) & (1 << (index));
+      TBOX_ASSERT((dir_index >= 0) && (dir_index < codim));
+      return (loc % (1 << codim)) & (1 << (dir_index));
    }
 
    /*!

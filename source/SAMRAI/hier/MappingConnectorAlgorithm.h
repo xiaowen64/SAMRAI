@@ -277,9 +277,8 @@ public:
     *
     * @param[in,out] anchor_to_mapped Connector to be modified.  On input, this
     *   points to the BoxLevel being mapped.
-    * @param[in,out] mapped_to_anchor Reverse (transpose) of anchor_to_mapped.
+    * @param[in,out] old_to_new Reverse (transpose) of anchor_to_mapped.
     *   points to the BoxLevel being mapped.
-    * @param[in] new_to_old Reverse (transpose) of old_to_new.
     * @param[in,out] mutable_new See comments.
     * @param[in,out] mutable_old See comments.
     */

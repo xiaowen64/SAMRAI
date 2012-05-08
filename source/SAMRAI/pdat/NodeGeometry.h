@@ -69,7 +69,6 @@ public:
     * transformation defined by the Transformation object.
     *
     * @param[in,out]  box
-    * @param[in,out]  normal_direction
     * @param[in]      transformation
     */
    static void

@@ -18,7 +18,7 @@ namespace SAMRAI {
 namespace hier {
 
 /*!
- * @breif Class BoundaryBox is is used to describe boundaries of a patch.
+ * @brief Class BoundaryBox is is used to describe boundaries of a patch.
  *
  * Objects of this type are held by a PatchGeometry object.
  * The BoundaryBox consists of a Box, a boundary type (codimension), and a

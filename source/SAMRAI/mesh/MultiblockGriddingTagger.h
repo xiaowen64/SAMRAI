@@ -95,6 +95,7 @@ public:
     * @param boundary_box         BoundaryBox object that stores information
     *                             about the type and location of the boundary
     *                             where ghost cells will be filled
+    * @param grid_geometry
     */
    virtual void
    fillSingularityBoundaryConditions(

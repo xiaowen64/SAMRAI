@@ -124,6 +124,7 @@ public:
     *
     * If you want standard output and logging,
     * pass in valid pointers for those streams.
+    * @param dim
     * @param object_name Ojbect name
     * @param database Input database
     */

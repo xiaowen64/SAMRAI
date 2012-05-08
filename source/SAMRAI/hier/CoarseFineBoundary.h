@@ -117,10 +117,7 @@ public:
    ~CoarseFineBoundary();
 
    /*!
-    * @brief Clear all boundary data or clear boundary data for a given block
-    * for multiblock.
-    *
-    * @param[in] block_number  Optional argument for use in multiblock.
+    * @brief Clear all boundary data.
     */
    void
    clear()
@@ -142,7 +139,7 @@ public:
     *
     * @param[in] global_id
     * @param[in] boundary_type Codimension of boundaries.
-    * @param[in] block_num     Defaults to 0 for the single block case
+    * @param[in] block_id     Defaults to 0 for the single block case
     */
    const tbox::Array<BoundaryBox>&
    getBoundaries(
@@ -159,7 +156,7 @@ public:
     * the internal state or it is an error.
     *
     * @param[in] global_id
-    * @param[in] block_num     Defaults to 0 for the single block case
+    * @param[in] block_id     Defaults to 0 for the single block case
     */
    const tbox::Array<BoundaryBox>&
    getNodeBoundaries(
@@ -179,7 +176,7 @@ public:
     * the internal state or it is an error.
     *
     * @param[in] global_id
-    * @param[in] block_num     Defaults to 0 for the single block case
+    * @param[in] block_id     Defaults to 0 for the single block case
     */
    const tbox::Array<BoundaryBox>&
    getEdgeBoundaries(
@@ -205,7 +202,7 @@ public:
     * the internal state or it is an error.
     *
     * @param[in] global_id
-    * @param[in] block_num     Defaults to 0 for the single block case
+    * @param[in] block_id     Defaults to 0 for the single block case
     */
    const tbox::Array<BoundaryBox>&
    getFaceBoundaries(

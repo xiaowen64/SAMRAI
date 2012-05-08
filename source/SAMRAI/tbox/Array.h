@@ -89,7 +89,6 @@ public:
     * location to invoke a constructor.  This is shown in the
     * following example:
     *
-    * \Example
     * \code
     * for(int i = 0; i < d_elements; i++) {
     *       void *p = &d_objects[i];
@@ -104,6 +103,8 @@ public:
     * loop over the array elements doing an assiggment to the
     * default_value is avoided.
     *
+    * @param n
+    * @param do_not_initialize_flag
     */
 
    Array(

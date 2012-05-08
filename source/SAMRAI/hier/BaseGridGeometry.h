@@ -182,9 +182,9 @@ public:
     * For every patch on the given PatchLevel, this routine determines which
     * kinds of boundaries are touched (regular, periodic, both, or neither).
     *
-    * @param[out]   touches_regular_bdry map to store which patches touch
+    * @param[out]   touches_regular_boundary map to store which patches touch
     *               non-periodic boundaries.
-    * @param[out]   touches_periodic_bdry map to store which patches touch
+    * @param[out]   touches_periodic_boundary map to store which patches touch
     *               periodic boundaries.
     * @param[in]    level containing the patches to be checked
     */
@@ -205,7 +205,7 @@ public:
     *
     * @param[in] refinement_ratio Refinement ratio of given box
     *
-    * @param[in refined_periodic_domain_tree
+    * @param[in] refined_periodic_domain_tree
     */
    void
    computeBoxTouchingBoundaries(
@@ -369,6 +369,7 @@ public:
     * LocalId's.
     *
     * @param[in]     domain The input array of BoxContainer
+    * @param[in]     number_blocks
     */
    void
    setPhysicalDomain(
@@ -376,12 +377,9 @@ public:
       const int number_blocks);
 
    /*!
-    * @brief Get the physical domain description for a given block on level
-    * zero.
+    * @brief Get the physical domain description on level zero.
     *
     * @return const reference to physical domain description for level 0.
-    *
-    * @param[in]   block_id
     */
    const BoxContainer&
    getPhysicalDomain() const
@@ -823,11 +821,8 @@ public:
        * @param[in] block_id   The block id of the neighboring block
        * @param[in] domain     The neighboring block's domain in the current
        *                       block's index space
-       * @param[in] rotation   The rotation needed to align the axes of the
-       *                       neighboring index spaces
-       * @param[in] shift      The shift needed to shift the neighboring block
-       *                       to its correct position in the current index
-       *                       space.
+       * @param[in] transformation The transformation needed to align the
+       *                           neighboring index spaces
        * @param[in] is_singularity True if the current block and the
        *                           neighboring block abut at a reduced
        *                           or enhanced connectivity singularity
@@ -980,7 +975,7 @@ private:
     * lying outside the block's coarse-level domain and touching the domain
     * only along the line of singularity.
     *
-    * @param[io] block_id
+    * @param[in] block_id
     */
    const BoxContainer&
    getSingularityBoxContainer(
@@ -996,7 +991,7 @@ private:
     * @return For every singularity point the block touches, the
     * vector<int> will contain the index of that singularity.
     *
-    * @param[i] block_id
+    * @param[in] block_id
     */
    const std::vector<int>&
    getSingularityIndices(
@@ -1029,7 +1024,7 @@ private:
     * @param[in,out] box The boxes will be transformed from the
     *                      transformed_block index space to the base_block
     *                      index space.
-    * @param[in] ratio_to_level_zero
+    * @param[in] ratio
     * @param[in] output_block Integer identifier of the block whose index space
     *                       will be represented in the boxes at output
     * @param[in] input_block Integer identifier of the block whose index
@@ -1054,7 +1049,7 @@ private:
     * @param[in,out] boxes The boxes will be transformed from the
     *                      input_block index space to the output_block
     *                      index space.
-    * @param[in] ratio_to_level_zero
+    * @param[in] ratio
     * @param[in] output_block Integer identifier of the block whose index space
     *                       will be represented in the boxes at output
     * @param[in] input_block Integer identifier of the block whose index

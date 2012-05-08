@@ -91,6 +91,8 @@ public:
     * communication group.
     *
     * @param rank The rank whose parent and children are sought.
+    *
+    * @param do_left_leaf_switch
     */
    void
    initialize(

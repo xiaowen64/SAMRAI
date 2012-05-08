@@ -150,7 +150,7 @@ private:
     * @return Given an index of an existing equivalence class, one item
     * from that class is returned.
     *
-    * @param[in] equiv_class_id
+    * @param[in] equiv_class_index
     */
    const CoarsenClasses::Data&
    getClassRepresentative(
@@ -372,6 +372,7 @@ private:
     * allocated size of the array, then the size of the array is not changed.
     *
     * @param[in] size
+    * @param[in] dim
     */
    void
    increaseCoarsenItemArraySize(

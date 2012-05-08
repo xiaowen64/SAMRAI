@@ -314,7 +314,7 @@ struct BalanceUtilities {
     *
     * To be used for performance evaluation.  Not recommended for general use.
     *
-    * @param[in] local_workloads Sequence of workloads of the local
+    * @param[in] local_loads Sequence of workloads of the local
     * process.  The size of @c local_loads is the number times load
     * balancing has been used.  It must be the same across all
     * processors in @c mpi.

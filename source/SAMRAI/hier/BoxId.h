@@ -63,7 +63,7 @@ public:
    /*!
     * @brief Initializing constructor.
     *
-    * @param[in] global_id
+    * @param[in] id
     *
     * @param[in] periodic_id
     */

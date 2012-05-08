@@ -850,8 +850,6 @@ public:
     *
     * The name for the root of the database is the name supplied when creating
     * it.  Names for nested databases are the keyname of the database.
-    *
-    * @param os Output stream.
     */
    virtual std::string
    getName();

@@ -277,10 +277,9 @@ public:
    }
 
    /*!
-    * @brief Get a Patch based on its GlobalId and BlockId.
+    * @brief Get a Patch based on its GlobalId.
     *
     * @param[in]  gid
-    * @param[in]  bid
     *
     * @return A boost::shared_ptr to the Patch indicated by the GlobalId.
     */
@@ -433,7 +432,7 @@ public:
     *
     * @param[in]  fine_level
     * @param[in]  coarsen_ratio
-    * @param[in]  coarse_grid_geometry @b Default: boost::shared_ptr to a null
+    * @param[in]  coarse_grid_geom @b Default: boost::shared_ptr to a null
     *             grid geometry
     * @param[in]  defer_boundary_box_creation @b Default: false
     */

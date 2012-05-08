@@ -723,7 +723,7 @@ public:
     * true then this is the last atomic change being made and finalizeContext
     * should be called.
     *
-    * @param new_level
+    * @param new_base
     * @param finalize_context
     */
    void
@@ -1236,8 +1236,8 @@ public:
     * @param[in] baseRefinementRatio
     * @param[in] headRefinementRatio
     * @param[out] ratio
-    * @param[out[ head_coarser
-    * @param[out] ratio_exact
+    * @param[out] head_coarser
+    * @param[out] ratio_is_exact
     */
    static void
    computeRatioInfo(
@@ -1259,7 +1259,7 @@ public:
    /*!
     * @brief Writes the requested neighborhood to tbox::perr.
     *
-    * @param[in[ box_id
+    * @param[in] box_id
     */
    void
    writeNeighborhoodToErrorStream(

@@ -57,6 +57,7 @@ namespace hier {
  * (@see PatchLevel::getBoxes()).
  *
  * @par Performance notes
+ * <ul>
  * <li> The parallel state is changed by calling setParallelState().  Going
  * from DISTRIBUTED to GLOBALIZED state is an expensive operation requiring
  * all-to-all communication.  Using this state can incur a significant
@@ -66,12 +67,15 @@ namespace hier {
  *
  * <li> Transitioning from GLOBALIZED state to DISTRIBUTED state is
  * cheap.
+ * </ul>
  *
  * @note
  * The general attributes of a BoxLevel are
+ * <ul>
  * <li> the set of Box objects with unique BoxIds,
  * <li> the refinement ratio defining their index space, and
  * <li> the parallel state.
+ * </ul>
  *
  * Box object uniqueness is based on the Box equality operator,
  * which compares owner MPI ranks and local indices.  Therefore,
@@ -1193,6 +1197,7 @@ public:
     * Check that database is a non-null Pointer.
     *
     * @param[in,out] database
+    * @param[in] grid_geom
     */
    void
    getFromDatabase(

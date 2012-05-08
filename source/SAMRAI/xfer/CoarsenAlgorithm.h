@@ -83,6 +83,7 @@ namespace xfer {
  *         user-defined spatial data coarsening operations.
  *    <li> Invoke the coarsenData() method in the communication schedule to
  *         perform the data transfers.
+ * </ul>
  *
  * Note that each coarsen schedule created by a coarsen algorithm remains valid
  * as long as the levels involved in the communication process do not change;
@@ -229,7 +230,7 @@ public:
     *
     * @param[in] crse_level     boost::shared_ptr to coarse (destination) level.
     * @param[in] fine_level     boost::shared_ptr to fine (source) level.
-    * @param[in] patch_strategy boost::shared_ptr to a coarsen patch strategy
+    * @param[in] coarsen_strategy boost::shared_ptr to a coarsen patch strategy
     *                           that provides user-defined coarsen operations.
     *                           If this patch strategy is null (default state),
     *                           then no user-defined coarsen operations will be

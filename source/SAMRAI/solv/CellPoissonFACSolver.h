@@ -124,6 +124,7 @@ public:
     * The solver is uninitialized until initializeSolverState()
     * is called.
     *
+    * @param dim
     * @param object_name Name of object used in outputs
     * @param database tbox::Database for initialization (may be NULL)
     */

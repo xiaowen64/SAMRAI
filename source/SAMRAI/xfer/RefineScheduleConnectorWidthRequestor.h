@@ -41,10 +41,10 @@ public:
     * Implements the pure virtual method
     * hier::PatchHierarchy::ConnectorWidthRequestorStrategy::computeRequiredConnectorWidths()
     *
-    * @param[out] self_connector_width Array of widths for Connectors
+    * @param[out] self_connector_widths Array of widths for Connectors
     * from a level to itself.
     *
-    * @param[out] fine_connector_width Array of widths for Connectors
+    * @param[out] fine_connector_widths Array of widths for Connectors
     * from a level to the next finer level.
     *
     * @param[in]  patch_hierarchy

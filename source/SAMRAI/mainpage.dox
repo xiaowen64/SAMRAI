@@ -79,14 +79,13 @@
     include clustering of tagged cells into box regions (algorithm due to 
     Berger and Rigoutsos) and load balancing based on on either 
     spatially-uniform or nonuniform workload estimates.
- 
-  - @ref package_algorithm "Algorithm":
-    The "Algorithm" package houses classes that are useful for constructing
-    solution algorithms for certain classes of PDE problems on a structured 
-    AMR patch hierarchy.  For example, this package contains time integration 
-    routines, including local time cycling on hierarchy levels, method of lines, 
-    and methods for hyperbolic conservation laws.  Additional algorithmic 
-    support may be introduced to meet application needs as they arise.
+
+  - @ref package_geometry "Geometry":
+    The "Geometry" package provides support for specific coordinate
+    systems on structured AMR patch hierarchies.  This includes mesh
+    spacing, locations of patches in space, as well as a variety of spatial
+    refine/coarsen operators and time interpolation operators for
+    array-based patch data types.
 
   - @ref package_solvers "Solvers":
     The "Solvers" package contains support for applying linear and nonlinear
@@ -97,12 +96,13 @@
     ODE solver library, and the hypre preconditioner library.  An FAC algorithm
     for solving Poisson problems on an AMR hierarchy is also included.
 
-  - @ref package_geometry "Geometry":
-    The "Geometry" package provides support for specific coordinate 
-    systems on structured AMR patch hierarchies.  This includes mesh 
-    spacing, locations of patches in space, as well as a variety of spatial 
-    refine/coarsen operators and time interpolation operators for 
-    array-based patch data types.  
+  - @ref package_algorithm "Algorithm":
+    The "Algorithm" package houses classes that are useful for constructing
+    solution algorithms for certain classes of PDE problems on a structured
+    AMR patch hierarchy.  For example, this package contains time integration
+    routines, including local time cycling on hierarchy levels, method of lines, 
+    and methods for hyperbolic conservation laws.  Additional algorithmic
+    support may be introduced to meet application needs as they arise.
 
   - @ref package_apputils "Application Utilities":
     The ``Application Utilities'' package contains utilities that

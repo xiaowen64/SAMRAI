@@ -26,11 +26,10 @@ namespace SAMRAI {
   - SAMRAI::hier::BoxLevel
   - SAMRAI::hier::BoxLevelHandle
   - SAMRAI::hier::BoxLevelConnectorUtils
+  - SAMRAI::hier::BoxNeighborhoodCollection
   - SAMRAI::hier::BoxTree
   - SAMRAI::hier::MappingConnectorAlgorithm
   - SAMRAI::hier::MultiblockBoxTree
-  - SAMRAI::hier::BoxNeighborhoodCollection
-  - SAMRAI::hier::NeighborhoodSet
   - SAMRAI::hier::OverlapConnectorAlgorithm
   - SAMRAI::hier::PersistentOverlapConnectors
   - SAMRAI::hier::PeriodicId

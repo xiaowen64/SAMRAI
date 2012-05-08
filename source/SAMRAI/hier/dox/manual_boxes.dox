@@ -18,7 +18,6 @@ namespace SAMRAI {
   a rectangular region of index space.
   - SAMRAI::hier::Box
   - SAMRAI::hier::BoxContainer
-  - SAMRAI::hier::BoxIOUtility
   - SAMRAI::hier::BoxUtilities
   - SAMRAI::hier::Index
   - SAMRAI::hier::IntVector

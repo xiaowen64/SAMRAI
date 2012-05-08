@@ -26,7 +26,6 @@ namespace SAMRAI {
   - @ref toolbox_complex "dcomplex"
   - SAMRAI::tbox::Dimension
   - SAMRAI::tbox::IEEE
-  - SAMRAI::tbox::List
   - SAMRAI::tbox::MathUtilities
   - SAMRAI::tbox::PIO
   - SAMRAI::tbox::ParallelBuffer

@@ -198,13 +198,13 @@ class BoxNeighborhoodCollection
        * @name Iteration
        */
 
+      class Iterator;
+      class ConstNeighborIterator;
       /*!
        * @brief An iterator over the base Boxes of the neighborhoods in a const
        * BoxNeighborhoodCollection.  The interface does not allow modification
        * of the base Boxes.
        */
-      class Iterator;
-      class ConstNeighborIterator;
       class ConstIterator
       {
          friend class BoxNeighborhoodCollection;
@@ -219,6 +219,7 @@ class BoxNeighborhoodCollection
              * supplied collection.
              *
              * @param nbrhds
+             * @param from_start
              */
             ConstIterator(
                const BoxNeighborhoodCollection& nbrhds,
@@ -382,12 +383,13 @@ class BoxNeighborhoodCollection
             BaseBoxPoolItr d_base_boxes_itr;
       };
 
+      class NeighborIterator;
+
       /*!
        * @brief An iterator over the base Boxes of the neighborhoods in a
        * BoxNeighborhoodCollection.  The interface does not allow modification
        * of the base Boxes.
        */
-      class NeighborIterator;
       class Iterator
       {
          friend class BoxNeighborhoodCollection;
@@ -403,6 +405,7 @@ class BoxNeighborhoodCollection
              * supplied collection.
              *
              * @param nbrhds
+             * @param from_start
              */
             Iterator(
                BoxNeighborhoodCollection& nbrhds,
@@ -1235,6 +1238,7 @@ class BoxNeighborhoodCollection
        * @brief Insert the rank of the processor owning each neighbor in each
        * neighborhood into the supplied set.
        *
+       * @param itr
        * @param owners
        */
       void

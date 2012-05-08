@@ -69,7 +69,7 @@ public:
       int d_src_tnew;
 
       /*!
-       * @breif Scratch patch data component
+       * @brief Scratch patch data component
        */
       int d_scratch;
 
@@ -255,7 +255,7 @@ public:
     * descriptor associated with the variable database Singleton object will be
     * used.
     *
-    * @param[in,out] data
+    * @param[in,out] data_item
     * @param[in] descriptor
     */
    void

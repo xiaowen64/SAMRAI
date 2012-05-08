@@ -100,7 +100,7 @@ public:
     *                        refine operator (cell-centered represtentation)
     * @param[in] patch_box   box representing the patch where a refine operator
     *                        will fill data.  (cell-centered representation)
-    * @param[in] data box    box representing the full extent of the region
+    * @param[in] data_box    box representing the full extent of the region
     *                        covered by a patch data object, including all
     *                        ghosts (cell-centered representation)
     * @param[in] pdf         patch data factory for the data that is to be

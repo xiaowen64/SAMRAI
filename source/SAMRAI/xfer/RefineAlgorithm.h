@@ -106,6 +106,7 @@ namespace xfer {
  *         spatial data interpolation operations.
  *    <li> Invoke the fillData() method in the communication schedule to
  *         perform the data transfers.
+ * </ul>
  *
  * Note that each refine schedule created by a refine algorithm remains valid
  * as long as the patches involved in the communication process do not change;
@@ -239,9 +240,6 @@ public:
     *                            filling operations.  If this patch strategy is
     *                            null (default state), then no physical
     *                            boundary filling is performed.
-    * @param[in] block_id       Identifies the block that this schedule will
-    *                           operate on.  Defaults to zero for single-block
-    *                           problems.
     * @param[in] transaction_factory Optional boost::shared_ptr to a refine
     *                                transaction factory that creates data
     *                                transactions for the schedule.  If this
@@ -327,6 +325,11 @@ public:
     * @param[in] fill_pattern  Indicates which parts of the destination level
     *                          to fill.  See RefineSchedule for available
     *                          patterns.
+    * @param[in] dst_level
+    * @param[in] src_level
+    * @param patch_strategy
+    * @param[in] use_time_interpolation
+    * @param[in] transaction_factory
     */
    boost::shared_ptr<RefineSchedule>
    createSchedule(
@@ -392,9 +395,6 @@ public:
     *                            may cause problems if the interpolation
     *                            stencils require physical boundary data on
     *                            the coarser levels.
-    * @param[in] block_id       Identifies the block that this schedule will
-    *                           operate on.  Defaults to zero for single-block
-    *                           problems.
     * @param[in] use_time_interpolation  Boolean flag to create the schedule
     *                                    the ability to perform time
     *                                    interpolation on the destination
@@ -423,6 +423,12 @@ public:
     * @param[in] fill_pattern  Indicates which parts of the destination level
     *                          to fill.  See RefineSchedule for available
     *                          patterns.
+    * @param[in] level
+    * @param[in] next_coarser_level
+    * @param[in] hierarchy
+    * @param patch_strategy
+    * @param[in] use_time_interpolation
+    * @param[in] transaction_factory
     */
    boost::shared_ptr<RefineSchedule>
    createSchedule(
@@ -505,9 +511,6 @@ public:
     *                            may cause problems if the interpolation
     *                            stencils require physical boundary data on
     *                            the coarser levels.
-    * @param[in] block_id       Identifies the block that this schedule will
-    *                           operate on.  Defaults to zero for single-block
-    *                           problems.
     * @param[in] use_time_interpolation  Boolean flag to create the schedule
     *                                    the ability to perform time
     *                                    interpolation on the destination
@@ -537,6 +540,13 @@ public:
     * @param[in] fill_pattern  Indicates which parts of the destination level
     *                          to fill.  See RefineSchedule for available
     *                          patterns.
+    * @param[in] dst_level
+    * @param[in] src_level
+    * @param[in] next_coarser_level
+    * @param[in] hierarchy
+    * @param patch_strategy
+    * @param[in] use_time_interpolation
+    * @param[in] transaction_factory
     */
    boost::shared_ptr<RefineSchedule>
    createSchedule(

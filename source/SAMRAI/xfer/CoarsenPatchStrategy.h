@@ -102,11 +102,11 @@ public:
     * are specified in calls to the registerCoarsen() function in the
     * CoarsenAlgorithm class.
     *
-    * @param coarse[out] Coarse patch that will receive coarsened data.
-    * @param fine[in]    Fine patch containing source data.
-    * @param coarse_box[in]  Box region on coarse patch into which data is
+    * @param[out] coarse Coarse patch that will receive coarsened data.
+    * @param[in] fine    Fine patch containing source data.
+    * @param[in] coarse_box  Box region on coarse patch into which data is
     *                        coarsened.
-    * @param ratio[in]   Refinement ratio between coarse and fine patches.
+    * @param[in] ratio   Refinement ratio between coarse and fine patches.
     */
    virtual void
    preprocessCoarsen(
@@ -126,11 +126,11 @@ public:
     * specified in calls to the registerCoarsen() function in the
     * CoarsenAlgorithm class.
     *
-    * @param coarse[out]  Coarse patch that will receive coarsened data.
-    * @param fine[in]     Fine patch containing source data.
-    * @param coarse_box[in]  hier::Box region on coarse patch into which data
+    * @param[out] coarse  Coarse patch that will receive coarsened data.
+    * @param[in] fine     Fine patch containing source data.
+    * @param[in] coarse_box  hier::Box region on coarse patch into which data
     *                        is coarsened.
-    * @param ratio[in]    Refinement ratio between coarse and fine patches.
+    * @param[in] ratio    Refinement ratio between coarse and fine patches.
     */
    virtual void
    postprocessCoarsen(

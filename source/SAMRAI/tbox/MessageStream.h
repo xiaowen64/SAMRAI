@@ -49,7 +49,7 @@ public:
    /*!
     * @brief Create a message stream of the specified size and mode
     *
-    * @param[in] num_bytes   Number of bytes in the stream.
+    * @param[in] bytes   Number of bytes in the stream.
     *
     * @param[in] mode    MessageStream::Read or MessageStream::Write.
     *

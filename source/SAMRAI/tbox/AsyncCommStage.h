@@ -242,8 +242,6 @@ protected:
        * @param nreq Number of SAMRAI_MPI::Requests needed by the member.
        *
        * @param stage Register with this AsyncCommStage.
-       *
-       * @param handler See getHandler()
        */
       void
       attachStage(

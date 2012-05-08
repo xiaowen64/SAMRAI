@@ -34,7 +34,7 @@ public:
     * SAMRAI_MPI must call this constructor because it requires
     * collective communication.
     *
-    * @param[i] box_level BoxLevel to compute statistics for.
+    * @param[in] box_level BoxLevel to compute statistics for.
     */
    explicit BoxLevelStatistics(
       const BoxLevel &box_level);

@@ -164,6 +164,7 @@ public:
     *
     * @param buffer Double precision array into which derived data is
     *  packed.
+    * @param mixbuffer
     * @param patch hier::Patch on which to calculate and pack derived data.
     * @param region hier::Box region over which to pack data.
     * @param variable_name Name identifier for the derived variable as

@@ -325,7 +325,7 @@ public:
     *
     * @param[in] tag_buffer See above text.
     *
-    * @param regrid_start_time[in] The simulation time when the
+    * @param[in] regrid_start_time The simulation time when the
     * regridding operation began (this parameter is ignored except
     * when using Richardson extrapolation)
     */

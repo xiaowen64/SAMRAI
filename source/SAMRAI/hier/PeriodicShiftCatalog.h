@@ -163,7 +163,7 @@ public:
     * This method must only be called once for each dimension
     * (indicated by the dimension of @c shift_distances).
     *
-    * @param[in] shift_distances_along_index_directions The periodic
+    * @param[in] shift_distance_along_index_directions The periodic
     * shift distance in each index direction.
     *
     * TODO: possible refactor?  This method should probably be changed

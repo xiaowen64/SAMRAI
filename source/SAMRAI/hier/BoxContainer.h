@@ -85,6 +85,8 @@ friend class BoxContainerConstIterator;
 
 public:
 
+   class BoxContainerIterator;
+
    /*!
     * @brief A immutable iterator over the boxes in a BoxContainer.
     *
@@ -96,7 +98,6 @@ public:
     * @see BoxContainer
     * @see BoxContainerIterator
     */
-   class BoxContainerIterator;
    class BoxContainerConstIterator
    {
       friend class BoxContainer;
@@ -1392,7 +1393,7 @@ public:
     * @return  True if the container did not already have a Box with the
     *          same BoxId, false otherwise.
     *
-    * @param[in]  Box to attempt to insert into the container.
+    * @param[in]  box Box to attempt to insert into the container.
     */ 
    bool
    insert(

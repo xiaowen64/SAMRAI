@@ -85,8 +85,8 @@ public:
     *
     * Attach self to the given stage and set the Handler.
     *
-    * @param state The stage handling communicaiton requests for the object.
-    * @param hander Optional pointer to user-defined data.
+    * @param stage The stage handling communicaiton requests for the object.
+    * @param handler Optional pointer to user-defined data.
     */
    void
    initialize(

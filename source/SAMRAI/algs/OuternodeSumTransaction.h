@@ -89,10 +89,8 @@ public:
     * @param src_level        boost::shared_ptr to source patch level.
     * @param overlap          boost::shared_ptr to overlap region between
     *                         patches.
-    * @param dst_patch        Integer index of destination patch in destination
-    *                         patch level.
-    * @param src_patch        Integer index of source patch in source patch
-    *                         level.
+    * @param dst_node         Destination Box in destination patch level.
+    * @param src_node         Source Box in source patch level.
     * @param refine_item_id   Integer id of refine data item owned by refine
     *                         schedule.
     *

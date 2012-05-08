@@ -133,7 +133,7 @@ public:
     *
     * @param[in] dim
     *
-    * @param[in] global_id
+    * @param[in] id
     *
     * @param[in] periodic_id
     */
@@ -883,7 +883,7 @@ public:
       const int ghosts);
 
    /*!
-    * @breif Shift this box by the specified offset.
+    * @brief Shift this box by the specified offset.
     *
     * The box will be located at (lower+offset, upper+offset).
     */

@@ -173,7 +173,7 @@ public:
     * If transform() and inverseTransform() are called consecutively on
     * a Box, the Box will end up in its original state.
     *
-    * @param[in,out]
+    * @param[in,out] box
     */
    void
    inverseTransform(
@@ -265,7 +265,7 @@ public:
     * values in the array pointed to by index.
     *
     * @param index array identifying a point in index space
-    * @param dimension of the index and the hierarchy where it is located
+    * @param dim Dimension of the index and the hierarchy where it is located
     * @param rotation    identifier of the rotation that will be applied
     *                        to index
     */
@@ -283,7 +283,6 @@ public:
     * Index.
     *
     * @param index a point in index space
-    * @param dim   dimension of the index and the hierarchy where it is located
     * @param rotation    identifier of the rotation that will be applied
     *                        to index
     */

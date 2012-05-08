@@ -162,9 +162,10 @@ public:
     * Construct load balancer object, including setting default object state
     * and reading input data from the input data base, if required.
     *
-    * @param name       User-defined string identifier used for error
+    * @param[in] dim
+    * @param[in] name   User-defined string identifier used for error
     *                   reporting.  This string must be non-empty.
-    * @param input_db   (optional) database pointer providing parameters from
+    * @param[in] input_db (optional) database pointer providing parameters from
     *                   input file.  This pointer may be null indicating no
     *                   input will be read.
     */
@@ -181,9 +182,10 @@ public:
     * identifier input.  If this constructor is used, the default object name
     * "ChopAndPackLoadBalancer" applies.
     *
-    * @param input_db   (optional) database pointer providing parameters from
-    *                   input file.  This pointer may be null indicating no
-    *                   input will be read.
+    * @param[in] dim
+    * @param[in] input_db (optional) database pointer providing parameters from
+    *                     input file.  This pointer may be null indicating no
+    *                     input will be read.
     */
    explicit ChopAndPackLoadBalancer(
       const tbox::Dimension& dim,
@@ -216,7 +218,7 @@ public:
     * hierarchy levels.  See discussion about inputs above for information
     * on how this value is used during load balancing operations.
     *
-    * @param factor        Double value of tolerance. The default value is 0.0;
+    * @param tolerance     Double value of tolerance. The default value is 0.0;
     *
     * @param level_number  Optional integer number for level to which factor
     *                      is applied. If no value is given, the value will
@@ -318,28 +320,19 @@ public:
     * The load balancing algorithm should ignore any periodic image Boxes
     * in the input balance_mapped_box_level.
     *
-    * @param out_boxes       Output box array for generating patches on level.
-    * @param mapping         Output processor mapping for patches on level.
-    * @param in_boxes        Input box list representing union of patches on level.
+    * @param balance_mapped_box_level
+    * @param balance_to_anchor
+    * @param anchor_to_balance
     * @param hierarchy       Input patch hierarchy in which level will reside.
     * @param level_number    Input integer number of level in patch hierarchy.
     *                        This value must be >= 0.
-    * @param physical_domain Array of boxes describing the physical extent of
-    *                        the problem domain in the index space associated
-    *                        with the level.  This box array cannot be empty.
-    * @param ratio_to_hierarchy_level_zero  Input integer vector indicating
-    *                        ratio between index space of level to load balance
-    *                        and hierarchy level 0 (i.e., coarsest hierarchy level).
+    * @param unbalanced_to_attractor
+    * @param attractor_to_unbalanced 
     * @param min_size        Input integer vector of minimum dimensions for
     *                        output boxes. All entries must be > 0.
     * @param max_size        Input integer vector of maximum dimensions for
     *                        output boxes. All entries must be >= min_size.
-    * @param cut_factor      Input integer vector used to create boxes with
-    *                        correct dimensions.  The length of each box
-    *                        dimension will be an integer multiple of the
-    *                        corresponding cut factor vector entry.  All
-    *                        vector entries must be > 0.  See hier::BoxUtilities
-    *                        documentation for more details.
+    * @param domain_mapped_box_level
     * @param bad_interval    Input integer vector used to create boxes near
     *                        physical domain boundary with sufficient number
     *                        of cells.  No box face will be closer to the
@@ -354,6 +347,12 @@ public:
     *                        will be either in the domain interior or outside
     *                        the domain.  All entries must be >= 0. See
     *                        hier::BoxUtilities documentation for more details.
+    * @param cut_factor      Input integer vector used to create boxes with
+    *                        correct dimensions.  The length of each box
+    *                        dimension will be an integer multiple of the
+    *                        corresponding cut factor vector entry.  All
+    *                        vector entries must be > 0.  See hier::BoxUtilities
+    *                        documentation for more details.
     * @param rank_group      Needed for compatibility with parent class.
     *                        This argument is ignored.
     */

@@ -148,7 +148,7 @@ public:
     * @param[in] head_swell the amount that the head is grown by, given in the
     * head index space and non-negative
     *
-    * @param[in] head_nesting_margin given in the head index space.
+    * @param[in] head_margin given in the head index space.
     *
     * @param[in] domain Domain description, in reference index space,
     * in search tree format.
@@ -186,9 +186,9 @@ public:
     *
     * This method does not require any communication.
     *
-    * @param[out] external.  The existing state will be discarded.
+    * @param[out] external  The existing state will be discarded.
     *
-    * @param[out] input_to_external.  The existing state will be
+    * @param[out] input_to_external  The existing state will be
     * discarded.
     *
     * @param[in] input_to_reference Overlap Connector from input to
@@ -247,9 +247,9 @@ public:
     *
     * This method does not require any communication.
     *
-    * @param[out] internal.  The existing state will be discarded.
+    * @param[out] internal  The existing state will be discarded.
     *
-    * @param[out] input_to_internal.  The existing state will be
+    * @param[out] input_to_internal  The existing state will be
     * discarded.
     *
     * @param[in] input_to_reference Overlap Connector from input to
@@ -293,14 +293,12 @@ public:
     * @brief Given a set of Boxes, compute its boundary as a set
     * of boxes located just outside it.
     *
-    * @param boundary_boxes[o] Boundary boxes, sorted into BoxContainers
+    * @param[out] boundary Boundary boxes, sorted into BoxContainers
     * according to the BlockId.
     *
-    * @param mapped_boxes[i] Boxes to find the boundary for.
+    * @param[in] refinement_ratio Refinement ratio of mapped_boxes.
     *
-    * @param refinement_ratio[i] Refinement ratio of mapped_boxes.
-    *
-    * @param grid_geometry[i]
+    * @param[in] grid_geometry
     *
     * @param simplify_boundary_boxes Whether to simplify the boundary
     * boxes after computing them.
