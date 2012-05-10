@@ -36,6 +36,7 @@
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include <vector>
+#include <algorithm>
 
 using namespace SAMRAI;
 using namespace tbox;
@@ -364,6 +365,7 @@ int main(
             for (int i = 0; i < nnodes / 2; i++) {
                active_ranks[i] = (i + 1) % (nnodes / 2);
             }
+            std::sort( &active_ranks[0], &active_ranks[0]+active_ranks.size() );
          }
          tbox::RankGroup rank_group_0(active_ranks, mpi);
 
