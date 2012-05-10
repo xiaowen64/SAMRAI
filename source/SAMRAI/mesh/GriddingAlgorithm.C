@@ -1728,7 +1728,6 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
       zero_vector,
       zero_vector,
       d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln));
-   new_to_new->setConnectorType(hier::Connector::COMPLETE_OVERLAP);
 
    t_bridge_new_to_new->stop();
    t_bridge_links->stop();
@@ -1881,8 +1880,6 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
          zero_vector,
          -hier::IntVector::getOne(d_dim),
          d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln + 1));
-      new_to_finer->setConnectorType(hier::Connector::COMPLETE_OVERLAP);
-      finer_to_new->setConnectorType(hier::Connector::COMPLETE_OVERLAP);
       t_bridge_new_to_finer->stop();
 
       TBOX_ASSERT(
@@ -1933,8 +1930,6 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
          zero_vector,
          zero_vector,
          d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln));
-      old_to_new->setConnectorType(hier::Connector::COMPLETE_OVERLAP);
-      new_to_old->setConnectorType(hier::Connector::COMPLETE_OVERLAP);
       t_bridge_new_to_old->stop();
 
       new_level->getBoxLevel()->getPersistentOverlapConnectors().
@@ -3617,7 +3612,6 @@ GriddingAlgorithm::extendBoxesToDomainBoundary(
       new_mapped_box_level,
       after_mapped_box_level,
       extend_ghosts);
-   before_to_after.setConnectorType(hier::Connector::MAPPING);
 
    for (hier::BoxContainer::const_iterator nn = before_nodes.begin();
         nn != before_nodes.end(); ++nn) {
@@ -4111,7 +4105,6 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
       new_mapped_box_level,
       grown_mapped_box_level,
       min_size);
-   new_to_grown.setConnectorType(hier::Connector::MAPPING);
 
    hier::BoxContainer refined_domain_search_tree(
       grid_geometry.getDomainSearchTree());

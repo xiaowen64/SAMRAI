@@ -780,7 +780,6 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
    tmp_coarsened.setBase( *patch_level->getBoxLevel());
    tmp_coarsened.setHead(*coarsened_level->getBoxLevel(), true);
    tmp_coarsened.coarsenLocalNeighbors(coarsen_ratio);
-   tmp_coarsened.setConnectorType(hier::Connector::COMPLETE_OVERLAP);
 
    const hier::Connector& level_to_coarsened =
       patch_level->getBoxLevel()->getPersistentOverlapConnectors().
@@ -823,8 +822,6 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
          level_to_coarser,
          coarser_to_level,
          level_to_coarsened);
-      coarsened_to_coarser->setConnectorType(hier::Connector::COMPLETE_OVERLAP);
-      coarser_to_coarsened->setConnectorType(hier::Connector::COMPLETE_OVERLAP);
       coarsened_level->getBoxLevel()->getPersistentOverlapConnectors().
       cacheConnector(
          *coarser_level->getBoxLevel(),

@@ -760,8 +760,6 @@ TreeLoadBalancerOld::constrainMaxBoxSizes(
 
    }
 
-   unconstrained_to_constrained.setConnectorType(hier::Connector::MAPPING);
-
    if (d_print_steps) {
       tbox::plog
       << " TreeLoadBalancerOld::constrainMaxBoxSizes completed building unconstrained_to_constrained"
@@ -834,12 +832,10 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
       balance_box_level.getRefinementRatio(),
       balance_box_level.getGridGeometry(),
       balance_box_level.getMPI());
-   balanced_to_unbalanced.setConnectorType(hier::Connector::MAPPING);
    balanced_to_unbalanced.clearNeighborhoods();
    balanced_to_unbalanced.setBase(balanced_box_level);
    balanced_to_unbalanced.setHead(balance_box_level);
    balanced_to_unbalanced.setWidth(hier::IntVector::getZero(d_dim), true);
-   unbalanced_to_balanced.setConnectorType(hier::Connector::MAPPING);
    unbalanced_to_balanced.clearNeighborhoods();
    unbalanced_to_balanced.setBase(balance_box_level);
    unbalanced_to_balanced.setHead(balanced_box_level);
@@ -4410,8 +4406,6 @@ TreeLoadBalancerOld::prebalanceBoxLevel(
          box_count++;
       }
    }
-   balance_to_tmp.setConnectorType(hier::Connector::MAPPING);
-   tmp_to_balance.setConnectorType(hier::Connector::MAPPING);
 
    if (anchor_to_balance.isFinalized()) {
       /*

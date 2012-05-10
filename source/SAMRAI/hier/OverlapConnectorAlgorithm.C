@@ -443,7 +443,6 @@ OverlapConnectorAlgorithm::findOverlaps_rbbt(
       }
 
    }
-   connector.setConnectorType(Connector::COMPLETE_OVERLAP);
 
    if (d_sanity_check_method_postconditions) {
       connector.assertConsistencyWithBase();
@@ -816,13 +815,11 @@ OverlapConnectorAlgorithm::privateBridge(
     * overlaps below as they are discovered or received from other procs.
     */
    west_to_east.clearNeighborhoods();
-   west_to_east.setConnectorType(Connector::UNKNOWN);
    west_to_east.setBase(west);
    west_to_east.setHead(east);
    west_to_east.setWidth(west_to_east_width, true);
    if (compute_reverse) {
       east_to_west->clearNeighborhoods();
-      east_to_west->setConnectorType(Connector::UNKNOWN);
       east_to_west->setBase(east);
       east_to_west->setHead(west);
       east_to_west->setWidth(east_to_west_width, true);
@@ -1105,13 +1102,11 @@ OverlapConnectorAlgorithm::privateBridge(
     * below as they are discovered or received from other procs.
     */
    west_to_cent.clearNeighborhoods();
-   west_to_cent.setConnectorType(Connector::UNKNOWN);
    west_to_cent.setBase(west);
    west_to_cent.setHead(east);
    west_to_cent.setWidth(west_to_east_width, true);
    if (compute_reverse) {
       cent_to_west.clearNeighborhoods();
-      cent_to_west.setConnectorType(Connector::UNKNOWN);
       cent_to_west.setBase(east);
       cent_to_west.setHead(west);
       cent_to_west.setWidth(east_to_west_width, true);

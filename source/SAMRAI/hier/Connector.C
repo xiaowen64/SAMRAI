@@ -69,8 +69,7 @@ Connector::Connector(
    d_finalized(false),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
-   d_global_data_up_to_date(false),
-   d_connector_type(UNKNOWN)
+   d_global_data_up_to_date(false)
 {
 }
 
@@ -94,8 +93,7 @@ Connector::Connector(
    d_finalized(other.d_finalized),
    d_global_number_of_neighbor_sets(other.d_global_number_of_neighbor_sets),
    d_global_number_of_relationships(other.d_global_number_of_relationships),
-   d_global_data_up_to_date(other.d_global_data_up_to_date),
-   d_connector_type(other.d_connector_type)
+   d_global_data_up_to_date(other.d_global_data_up_to_date)
 {
 }
 
@@ -119,8 +117,7 @@ Connector::Connector(
    d_finalized(false),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
-   d_global_data_up_to_date(true),
-   d_connector_type(UNKNOWN)
+   d_global_data_up_to_date(true)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(base_mapped_box_level,
       head_mapped_box_level,
@@ -163,7 +160,6 @@ Connector::operator = (
       d_head_coarser = rhs.d_head_coarser;
       d_parallel_state = rhs.d_parallel_state;
       d_finalized = rhs.d_finalized;
-      d_connector_type = rhs.d_connector_type;
    }
    return *this;
 }

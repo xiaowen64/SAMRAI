@@ -415,11 +415,9 @@ void alterAndGenerateMapping(
       mapped_box_level_b.getGridGeometry(),
       mapped_box_level_b.getMPI());
 
-   b_to_c.setConnectorType(hier::Connector::MAPPING);
    b_to_c.setBase(mapped_box_level_b);
    b_to_c.setHead(mapped_box_level_c);
    b_to_c.setWidth(hier::IntVector::getZero(dim), true);
-   c_to_b.setConnectorType(hier::Connector::MAPPING);
    c_to_b.setBase(mapped_box_level_c);
    c_to_b.setHead(mapped_box_level_b);
    c_to_b.setWidth(hier::IntVector::getZero(dim), true);

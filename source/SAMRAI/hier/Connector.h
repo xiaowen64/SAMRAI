@@ -79,52 +79,6 @@ public:
     */
    typedef BoxNeighborhoodCollection::NeighborIterator NeighborIterator;
 
-   /// TODO:  Possible refactor?  Since Connectors do not imply relationship
-   // meanings, why is this even defined?  The "getConnectorType function
-   // is never called; The individual types are never used except in
-   // conjunction with the "setConnectorType" function.  This seems to be
-   // a useless enumeration producing unused code.  SGH.
-
-   /*!
-    * @brief Types of Connectors
-    *
-    * The types describe the meaning of the relationships in a Connector.
-    *
-    * @b COMPLETE_OVERLAP: The relationships represent overlaps, and every
-    * overlap is represented by an relationship, including overlaps with
-    * periodic images.
-    *
-    * @b COMPLETE_OVERLAP_NO_PERIODIC: The relationships represent overlaps,
-    * and every overlap is represented by an relationship.  Overlaps with
-    * periodic images are omitted.
-    *
-    * @b INCOMPLETE_OVERLAP: The relationships represent overlaps, but not
-    * all overlaps are represented.
-    *
-    * @b BASE_GENERATED: The head is generated from the base.  Each
-    * head Box comes from a base Box and there is an relationship
-    * from the base Box to the head Box.
-    *
-    * @b MAPPING: relationships indicate a mapping relationship.  Applying
-    * the map would change Connectors incident to the base into
-    * Connectors incident to the head.
-    *
-    * @b UNKNOWN: Meaning of relationships are unknown.
-    *
-    * See setConnectorType(), getConnectorType().
-    *
-    * The Connector types are not exclusive.  For example, a mapping
-    * Connector may also be used as an overlap Connector.
-    */
-   enum ConnectorType {
-      COMPLETE_OVERLAP = 1,
-      COMPLETE_OVERLAP_NO_PERIODIC = 2,
-      INCOMPLETE_OVERLAP = 3,
-      BASE_GENERATED = 4,
-      MAPPING = 5,
-      UNKNOWN = 6
-   };
-
    /*!
     * @brief Creates an uninitialized Connector object in the
     * distributed state.
@@ -1118,27 +1072,6 @@ public:
    //@}
 
    /*!
-    * @brief Set the Connector type.
-    *
-    * @param[in] connector_type
-    */
-   void
-   setConnectorType(
-      ConnectorType connector_type)
-   {
-      d_connector_type = connector_type;
-   }
-
-   /*!
-    * @brief Return the Connector type.
-    */
-   ConnectorType
-   getConnectorType() const
-   {
-      return d_connector_type;
-   }
-
-   /*!
     * @brief Return local number of neighbor sets.
     */
    int
@@ -1557,8 +1490,6 @@ private:
     * recomputing using cacheGlobalReducedData().
     */
    mutable bool d_global_data_up_to_date;
-
-   ConnectorType d_connector_type;
 
    static boost::shared_ptr<tbox::Timer> t_acquire_remote_relationships;
    static boost::shared_ptr<tbox::Timer> t_cache_global_reduced_data;

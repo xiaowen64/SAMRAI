@@ -344,7 +344,6 @@ CoarsenSchedule::generateTemporaryLevel()
     * temp are very similar to those between coarse and fine.
     */
    d_coarse_to_temp = coarse_to_fine;
-   d_coarse_to_temp.setConnectorType(hier::Connector::BASE_GENERATED);
    d_coarse_to_temp.setBase(*d_crse_level->getBoxLevel());
    d_coarse_to_temp.setHead(*d_temp_crse_level->getBoxLevel());
    d_coarse_to_temp.setWidth(coarse_to_fine.getConnectorWidth(), true);
@@ -358,7 +357,6 @@ CoarsenSchedule::generateTemporaryLevel()
     * keeping the neighborhoods that we just set.
     */
    d_temp_to_coarse = fine_to_coarse;
-   d_temp_to_coarse.setConnectorType(hier::Connector::BASE_GENERATED);
    d_temp_to_coarse.setBase(*d_temp_crse_level->getBoxLevel());
    d_temp_to_coarse.setHead(coarse_to_fine.getBase());
    d_temp_to_coarse.setWidth(coarse_to_fine.getConnectorWidth(), true);

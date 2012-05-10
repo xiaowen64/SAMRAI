@@ -342,7 +342,6 @@ BoxLevelConnectorUtils::makeSortingMap(
       // Make a blank map.
       sorted_mapped_box_level = unsorted_mapped_box_level;
       output_map.clearNeighborhoods();
-      output_map.setConnectorType(Connector::MAPPING);
       output_map.setBase(unsorted_mapped_box_level);
       output_map.setHead(sorted_mapped_box_level);
       output_map.setWidth(IntVector::getZero(dim), true);
@@ -391,7 +390,6 @@ BoxLevelConnectorUtils::makeSortingMap(
       unsorted_mapped_box_level.getMPI(),
       BoxLevel::DISTRIBUTED);
    output_map.clearNeighborhoods();
-   output_map.setConnectorType(Connector::MAPPING);
    output_map.setBase(unsorted_mapped_box_level);
    output_map.setHead(sorted_mapped_box_level);
    output_map.setWidth(IntVector::getZero(dim), true);
@@ -690,7 +688,6 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
     * extent.
     */
    input_to_parts.clearNeighborhoods();
-   input_to_parts.setConnectorType(Connector::UNKNOWN);
    input_to_parts.setBase(input);
    input_to_parts.setHead(parts);
    input_to_parts.setWidth(zero_vec, true);
@@ -1069,7 +1066,6 @@ BoxLevelConnectorUtils::makeRemainderMap(
    remainder = orig;
 
    orig_to_remainder.clearNeighborhoods();
-   orig_to_remainder.setConnectorType(Connector::MAPPING);
    orig_to_remainder.setBase(orig);
    orig_to_remainder.setHead(remainder);
    orig_to_remainder.setWidth(IntVector::getZero(dim), true);
