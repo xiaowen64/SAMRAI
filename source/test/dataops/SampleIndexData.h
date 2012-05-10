@@ -32,27 +32,7 @@ using namespace SAMRAI;
 class SampleIndexData
 {
 public:
-   SampleIndexData(
-      const tbox::Dimension& d);
-   /**
-    * Copy constructor.
-    */
-   SampleIndexData(
-      const SampleIndexData& data);
-
-   /**
-    * Constructor supplying cell index where data is defined.
-    */
-   SampleIndexData(
-      const hier::Index& ic);
-//      const pdat::CellIndex& ic);
-
-   /**
-    * The assignment operator copies the data of the argument cell.
-    */
-   SampleIndexData&
-   operator = (
-      const SampleIndexData& cell);
+   SampleIndexData();
 
    /**
     * The destructor for SampleIndexData.
@@ -66,30 +46,11 @@ public:
    setInt(
       const int dummy);
 
-   void
-   setIndex(
-      const hier::Index& index);
-
    /**
     * Returns a dummy integer in this class.
     */
    int
    getInt() const;
-
-   /**
-    * Returns the cell index where the index data is stored.
-    */
-   //pdat::CellIndex
-   const hier::Index&
-   getIndex() const;
-
-   /**
-    * Print class data representation when an unrecoverable run-time
-    * assertion is thrown. Or, when desired.
-    */
-   void
-   printClassData(
-      std::ostream& os) const;
 
    /**
     * The copySourceItem() method allows SampleIndexData to be a templated
@@ -101,8 +62,9 @@ public:
     */
    void
    copySourceItem(
-      hier::Index& index,
-      SampleIndexData& src_item);
+      const hier::Index& index,
+      const hier::IntVector& src_offset,
+      const SampleIndexData& src_item);
 
    /**
     * The following functions enable parallel communication with SampleIndexDatas.
@@ -126,18 +88,12 @@ public:
     */
    void
    getFromDatabase(
-      const boost::shared_ptr<tbox::Database>& database);
+      boost::shared_ptr<tbox::Database>& database);
    void
    putUnregisteredToDatabase(
-      const boost::shared_ptr<tbox::Database>& database) const;
+      boost::shared_ptr<tbox::Database>& database) const;
 
 private:
-   /*
-    * Cell index where SampleIndexData is defined.
-    */
-   //pdat::CellIndex d_index;
-   hier::Index d_index;
-
    /*
     * Dummy int data
     */

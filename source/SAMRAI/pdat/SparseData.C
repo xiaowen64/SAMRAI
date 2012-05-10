@@ -23,8 +23,10 @@
 
 #include <stdexcept>
 
+#ifdef __GNUC__
 #if __GNUC__ == 4 && __GNUC_MINOR__ == 1
 #define GNUC_VERSION_412 412
+#endif
 #endif
 
 namespace SAMRAI {
@@ -971,7 +973,7 @@ SparseData<BOX_GEOMETRY>::getDblAttributeId(
 {
    DoubleAttributeId id(-1);
 // stupid need
-#if GNUC_VERSION_412
+#ifdef GNUC_VERSION_412
    DoubleAttrNameMap::const_iterator iter = d_dbl_names.find(attribute);
    if (iter != d_dbl_names.end()) {
       id = iter->second;
@@ -996,7 +998,7 @@ SparseData<BOX_GEOMETRY>::getIntAttributeId(
    const std::string& attribute) const
 {
    IntegerAttributeId id(-1);
-#if GNUC_VERSION_412
+#ifdef GNUC_VERSION_412
    IntAttrNameMap::const_iterator iter = d_int_names.find(attribute);
    if (iter != d_int_names.end()) {
       id = iter->second;

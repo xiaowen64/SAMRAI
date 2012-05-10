@@ -1,8 +1,10 @@
 #ifdef __GNUC__
+#ifndef __INTEL_COMPILER
 #if __GNUC__ > 4 ||               (__GNUC__ == 4 && (__GNUC_MINOR__ > 2 ||                                  (__GNUC_MINOR__ == 2 &&                                   __GNUC_PATCHLEVEL__ > 0)))
 #pragma GCC diagnostic ignored "-Wall"
 #pragma GCC diagnostic ignored "-Wextra"
 #pragma GCC diagnostic ignored "-Wconversion"
+#endif
 #endif
 #endif
 

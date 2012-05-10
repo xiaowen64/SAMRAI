@@ -114,7 +114,7 @@ SAMCLEAN=@$(RM) *.o *.ii *.int.c *.log *.log.* stamp-* core core.* stats -r ti_f
 
 # Used to control which types are created.
 # Default is double, integer, bool, float, complex, char
-SAMRAI_LIBRARY_TARGETS=libdefault
+SAMRAI_LIBRARY_TARGETS=libdefault libdcomplex
 
 ######################################################################
 # Rules for SAMRAI developer builds only.
