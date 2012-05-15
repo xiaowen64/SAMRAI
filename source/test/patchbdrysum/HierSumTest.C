@@ -575,9 +575,9 @@ int HierSumTest::checkNodeResult(
       }
 
       // loop over patches on level
-      bool all_correct = true;
       for (PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
+         bool all_correct = true;
          const boost::shared_ptr<Patch>& patch = *ip;
 
          boost::shared_ptr<NodeData<double> > unode(
@@ -610,7 +610,7 @@ int HierSumTest::checkNodeResult(
                   }
 
                   if (!node_correct) {
-                     tbox::pout << "BAD NODE = " << node_val << " at index "
+                     tbox::perr << "BAD NODE = " << node_val << " at index "
                                 << *i
                                 << " in L" << ln << " " << patch->getBox()
                                 << " depth = " << d << " should be "
