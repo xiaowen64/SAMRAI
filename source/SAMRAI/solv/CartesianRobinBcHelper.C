@@ -92,8 +92,9 @@ CartesianRobinBcHelper::CartesianRobinBcHelper(
    const tbox::Dimension& dim,
    std::string object_name,
    RobinBcCoefStrategy* coef_strategy):
-   xfer::RefinePatchStrategy(dim),
+   xfer::RefinePatchStrategy(),
    d_object_name(object_name),
+   d_dim(dim),
    d_coef_strategy(NULL),
    d_target_data_id(-1),
    d_homogeneous_bc(false)
@@ -131,9 +132,11 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
    int target_data_id,
    bool homogeneous_bc) const
 {
-   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, patch, ghost_width_to_fill);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(patch, ghost_width_to_fill);
 
    NULL_USE(fill_time);
+
+   const tbox::Dimension &dim(patch.getDim());
 
    t_set_boundary_values_in_cells->start();
 
@@ -144,7 +147,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
    }
 #endif
 
-   if (d_dim == tbox::Dimension(1)) {
+   if (patch.getDim() == tbox::Dimension(1)) {
       TBOX_ERROR(d_object_name << ": dim = 1 not supported");
    }
    math::PatchCellDataOpsReal<double> cops;
@@ -191,7 +194,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
       cell_data_ptr->getGhostCellWidth();
    hier::IntVector gcw_to_fill = hier::IntVector::min(ghost_cells,
          ghost_width_to_fill);
-   if (!(gcw_to_fill == hier::IntVector::getZero(d_dim))) {
+   if (!(gcw_to_fill == hier::IntVector::getZero(dim))) {
       /*
        * Given a and g in a*u + (1-a)*un = g,
        * where un is the derivative in the outward normal direction,
@@ -607,7 +610,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
    int target_data_id,
    bool homogeneous_bc) const
 {
-   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, level, ghost_width_to_fill);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(level, ghost_width_to_fill);
 
    for (hier::PatchLevel::iterator p(level.begin());
         p != level.end(); ++p) {
@@ -633,8 +636,6 @@ CartesianRobinBcHelper::setBoundaryValuesAtNodes(
    int target_data_id,
    bool homogeneous_bc) const
 {
-   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
-
    NULL_USE(patch);
    NULL_USE(fill_time);
    NULL_USE(target_data_id);
@@ -661,7 +662,7 @@ CartesianRobinBcHelper::setPhysicalBoundaryConditions(
    const double fill_time,
    const hier::IntVector& ghost_width_to_fill)
 {
-   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, patch, ghost_width_to_fill);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(patch, ghost_width_to_fill);
 
    setBoundaryValuesInCells(patch,
       fill_time,
@@ -756,7 +757,7 @@ CartesianRobinBcHelper::trimBoundaryBox(
    const hier::BoundaryBox& boundary_box,
    const hier::Box& limit_box) const
 {
-   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, boundary_box, limit_box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(boundary_box, limit_box);
 
    if (boundary_box.getBoundaryType() == d_dim.getValue()) {
       // This is a node boundary box and cannot be trimmed anymore.
@@ -821,8 +822,6 @@ hier::Box
 CartesianRobinBcHelper::makeFaceBoundaryBox(
    const hier::BoundaryBox& boundary_box) const
 {
-   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, boundary_box);
-
    if (boundary_box.getBoundaryType() != 1) {
       TBOX_ERROR(d_object_name << ": makeFaceBoundaryBox called with\n"
                                << "improper boundary box\n"
@@ -851,8 +850,6 @@ hier::Box
 CartesianRobinBcHelper::makeNodeBoundaryBox(
    const hier::BoundaryBox& boundary_box) const
 {
-   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, boundary_box);
-
    if (boundary_box.getBoundaryType() != 1) {
       TBOX_ERROR(d_object_name << ": makeNodeBoundaryBox called with\n"
                                << "improper boundary box\n"

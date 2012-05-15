@@ -385,6 +385,14 @@ public:
       return hier::IntVector(d_dim, 0);
    }
 
+   /*!
+    * @brief Return the dimension of this object.
+    */
+   const tbox::Dimension& getDim() const
+   {
+      return d_dim;
+   }
+
    //@}
 
    /**

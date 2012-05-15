@@ -363,6 +363,14 @@ public:
       return d_object_name;
    }
 
+   /*!
+    * @brief Return the dimension of this object.
+    */
+   const tbox::Dimension& getDim() const
+   {
+      return d_dim;
+   }
+
 private:
    /*!
     * @brief Trim a boundary box so that it does not stick out
@@ -428,6 +436,8 @@ private:
       const hier::BoundaryBox& boundary_box) const;
 
    std::string d_object_name;
+
+   const tbox::Dimension d_dim;
 
    /*!
     * @brief Coefficient strategy giving a way to get to

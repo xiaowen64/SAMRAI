@@ -162,7 +162,18 @@ public:
       const hier::Box& fine_box,
       const hier::IntVector& ratio);
 
+   /*!
+    * @brief Return the dimension of this object.
+    */
+   const tbox::Dimension& getDim() const
+   {
+      return d_dim;
+   }
+
 private:
+
+   tbox::Dimension d_dim;
+
    /*
     * Patch data index for
     */

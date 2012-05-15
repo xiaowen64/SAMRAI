@@ -40,8 +40,8 @@ CommTester::CommTester(
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
-   RefinePatchStrategy(dim),
-   CoarsenPatchStrategy(dim),
+   RefinePatchStrategy(),
+   CoarsenPatchStrategy(),
    d_dim(dim),
    d_fill_source_algorithm(dim),
    d_refine_algorithm(dim),

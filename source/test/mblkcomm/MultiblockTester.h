@@ -275,6 +275,14 @@ public:
       boost::shared_ptr<tbox::Database> main_input_db,
       boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger);
 
+   /*!
+    * @brief Return the dimension of this object.
+    */
+   const tbox::Dimension& getDim() const
+   {
+      return d_dim;
+   }
+
 private:
    /*
     * Object name for error reporting.

@@ -69,8 +69,7 @@ public:
     * The constructor will register the constructed object with a static
     * set that manages all CoarsenPatchStrategy objects in an application.
     */
-   explicit CoarsenPatchStrategy(
-      const tbox::Dimension& dim);
+   explicit CoarsenPatchStrategy();
 
    /*!
     * @brief Destructor.
@@ -142,11 +141,7 @@ public:
    /*!
     * @brief Return the dimension of this object.
     */
-   const tbox::Dimension&
-   getDim() const
-   {
-      return d_dim;
-   }
+   virtual const tbox::Dimension& getDim() const = 0;
 
 private:
    /*!
@@ -159,11 +154,6 @@ private:
       static std::set<CoarsenPatchStrategy *> current_objects;
       return current_objects;
    }
-
-   /*!
-    * @brief Dimension of the object.
-    */
-   const tbox::Dimension d_dim;
 
    /*!
     * @brief Register the object with a set of all CoarsenPatchStrategy

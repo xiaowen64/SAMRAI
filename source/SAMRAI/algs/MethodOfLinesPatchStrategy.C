@@ -29,8 +29,8 @@ namespace algs {
 
 MethodOfLinesPatchStrategy::MethodOfLinesPatchStrategy(
    const tbox::Dimension& dim):
-   xfer::RefinePatchStrategy(dim),
-   xfer::CoarsenPatchStrategy(dim),
+   xfer::RefinePatchStrategy(),
+   xfer::CoarsenPatchStrategy(),
    d_dim(dim)
 {
    d_interior_with_ghosts.reset();

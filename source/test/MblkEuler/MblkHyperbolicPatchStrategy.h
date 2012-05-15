@@ -369,7 +369,7 @@ public:
     */
    virtual hier::IntVector getRefineOpStencilWidth() const
    {
-      return hier::IntVector(xfer::CoarsenPatchStrategy::getDim(), 0);
+      return hier::IntVector(d_dim, 0);
    }
 
    /**
@@ -435,7 +435,7 @@ public:
     */
    virtual hier::IntVector getCoarsenOpStencilWidth() const
    {
-      return hier::IntVector(xfer::CoarsenPatchStrategy::getDim(), 0);
+      return hier::IntVector(d_dim, 0);
    }
 
    /**
@@ -515,6 +515,14 @@ public:
    void clearDataContext()
    {
       d_data_context.reset();
+   }
+
+   /*!
+    * @brief Return the dimension of this object.
+    */
+   const tbox::Dimension& getDim() const
+   {
+      return d_dim;
    }
 
 private:

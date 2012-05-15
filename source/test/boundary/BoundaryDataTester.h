@@ -146,6 +146,14 @@ public:
    printClassData(
       ostream& os) const;
 
+   /*!
+    * @brief Return the dimension of this object.
+    */
+   const tbox::Dimension& getDim() const
+   {
+      return d_dim;
+   }
+
 private:
    /*
     * The object name is used for error/warning reporting.

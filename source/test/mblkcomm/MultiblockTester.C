@@ -41,8 +41,8 @@ MultiblockTester::MultiblockTester(
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
-   xfer::CoarsenPatchStrategy(dim),
-   xfer::RefinePatchStrategy(dim),
+   xfer::CoarsenPatchStrategy(),
+   xfer::RefinePatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
    d_data_test_strategy(data_test),

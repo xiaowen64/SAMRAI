@@ -867,11 +867,6 @@ private:
       double current_time);
 
    /*
-    * Dimension of the problem.
-    */
-   const tbox::Dimension d_dim;
-
-   /*
     * The patch strategy supplies the application-specific operations
     * needed to treat data on patches in the AMR hierarchy.
     */

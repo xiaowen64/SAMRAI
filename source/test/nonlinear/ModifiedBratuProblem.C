@@ -115,8 +115,8 @@ ModifiedBratuProblem::ModifiedBratuProblem(
    boost::shared_ptr<tbox::Database> input_db,
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry,
    boost::shared_ptr<appu::VisItDataWriter> visit_writer):
-   RefinePatchStrategy(dim),
-   CoarsenPatchStrategy(dim),
+   RefinePatchStrategy(),
+   CoarsenPatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
    d_grid_geometry(grid_geometry),

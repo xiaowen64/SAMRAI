@@ -79,8 +79,7 @@ public:
     * The constructor will register the constructed object with a static
     * set that manages all RefinePatchStrategy objects in an application.
     */
-   explicit RefinePatchStrategy(
-      const tbox::Dimension& dim);
+   explicit RefinePatchStrategy();
 
    /*!
     * @brief Destructor
@@ -253,7 +252,7 @@ public:
       const hier::BoxContainer& fine_boxes,
       const hier::IntVector& ratio)
    {
-      TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(d_dim, fine, coarse, ratio);
+      TBOX_ASSERT_OBJDIM_EQUALITY3(fine, coarse, ratio);
       for (hier::BoxContainer::const_iterator b(fine_boxes);
            b != fine_boxes.end(); ++b) {
          postprocessRefine(fine, coarse, *b, ratio);
@@ -263,17 +262,9 @@ public:
    /*!
     * @brief Return the dimension of this object.
     */
-   const tbox::Dimension&
-   getDim() const
-   {
-      return d_dim;
-   }
+   virtual const tbox::Dimension& getDim() const = 0;
 
 protected:
-   /*!
-    * @brief Dimension of the object.
-    */
-   const tbox::Dimension d_dim;
 
 private:
    /*!

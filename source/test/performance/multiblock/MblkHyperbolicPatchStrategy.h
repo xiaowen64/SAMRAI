@@ -517,6 +517,14 @@ public:
       d_data_context.reset();
    }
 
+   /*!
+    * @brief Return the dimension of this object.
+    */
+   const tbox::Dimension& getDim() const
+   {
+      return d_dim;
+   }
+
 private:
    const tbox::Dimension d_dim;
 

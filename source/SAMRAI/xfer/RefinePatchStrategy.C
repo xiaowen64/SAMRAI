@@ -26,9 +26,7 @@ namespace xfer {
  *************************************************************************
  */
 
-RefinePatchStrategy::RefinePatchStrategy(
-   const tbox::Dimension& dim):
-   d_dim(dim)
+RefinePatchStrategy::RefinePatchStrategy()
 {
    registerObject();
 }
@@ -77,9 +75,9 @@ RefinePatchStrategy::getMaxRefineOpStencilWidth(
       RefinePatchStrategy::getCurrentObjects();
    for (std::set<RefinePatchStrategy *>::const_iterator
         si = current_objects.begin(); si != current_objects.end(); ++si) {
-      const RefinePatchStrategy* op = *si;
-      if (op->getDim() == dim) {
-         max_width.max(op->getRefineOpStencilWidth());
+      const RefinePatchStrategy* strategy = *si;
+      if (strategy->getDim() == dim) {
+         max_width.max(strategy->getRefineOpStencilWidth());
       }
    }
 

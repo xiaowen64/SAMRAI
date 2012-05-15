@@ -106,8 +106,8 @@ CVODEModel::CVODEModel(
    const tbox::Dimension& dim,
    boost::shared_ptr<Database> input_db,
    boost::shared_ptr<CartesianGridGeometry> grid_geom):
-   RefinePatchStrategy(dim),
-   CoarsenPatchStrategy(dim),
+   RefinePatchStrategy(),
+   CoarsenPatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
    d_soln_var(new CellVariable<double>(dim, "soln", 1)),

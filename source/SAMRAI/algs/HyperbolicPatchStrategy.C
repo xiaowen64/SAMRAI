@@ -20,8 +20,8 @@ namespace algs {
 
 HyperbolicPatchStrategy::HyperbolicPatchStrategy(
    const tbox::Dimension& dim):
-   xfer::RefinePatchStrategy(dim),
-   xfer::CoarsenPatchStrategy(dim),
+   xfer::RefinePatchStrategy(),
+   xfer::CoarsenPatchStrategy(),
    d_dim(dim),
    d_data_context()
 {
