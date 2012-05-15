@@ -933,53 +933,106 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
 
             if ((dim == tbox::Dimension(2))) {
 
-               if (tmp_onode_data.getArrayData(0, 0).isInitialized() &&
-                   tmp_onode_data.getArrayData(0, 1).isInitialized() &&
-                   tmp_onode_data.getArrayData(1, 0).isInitialized() &&
-                   tmp_onode_data.getArrayData(1, 1).isInitialized()) {
-
-                  F77_FUNC(nodeouternodesum2d, NODEOUTERNODESUM2D) (
-                     filo(0), filo(1),
-                     fihi(0), fihi(1),
-                     cilo(0), cilo(1),
-                     cihi(0), cihi(1),
-                     &ratio[0],
-                     node_data->getDepth(),
-                     node_gcw(0), node_gcw(1),
-                     node_data->getPointer(),     // node data dst
-                     tmp_onode_data.getPointer(0, 0), // x lower src
-                     tmp_onode_data.getPointer(0, 1), // x upper src
-                     tmp_onode_data.getPointer(1, 0), // y lower src
-                     tmp_onode_data.getPointer(1, 1)); // y upper src
+               double *tmp_onode_data_ptr00, *tmp_onode_data_ptr01,
+                      *tmp_onode_data_ptr10, *tmp_onode_data_ptr11;
+               if (tmp_onode_data.getArrayData(0, 0).isInitialized()) {
+                  tmp_onode_data_ptr00 = tmp_onode_data.getPointer(0, 0);
                }
+               else {
+                  tmp_onode_data_ptr00 = NULL;
+               }
+               if (tmp_onode_data.getArrayData(0, 1).isInitialized()) {
+                  tmp_onode_data_ptr01 = tmp_onode_data.getPointer(0, 1);
+               }
+               else {
+                  tmp_onode_data_ptr01 = NULL;
+               }
+               if (tmp_onode_data.getArrayData(1, 0).isInitialized()) {
+                  tmp_onode_data_ptr10 = tmp_onode_data.getPointer(1, 0);
+               }
+               else {
+                  tmp_onode_data_ptr10 = NULL;
+               }
+               if (tmp_onode_data.getArrayData(1, 1).isInitialized()) {
+                  tmp_onode_data_ptr11 = tmp_onode_data.getPointer(1, 1);
+               }
+               else {
+                  tmp_onode_data_ptr11 = NULL;
+               }
+
+               F77_FUNC(nodeouternodesum2d, NODEOUTERNODESUM2D) (
+                  filo(0), filo(1),
+                  fihi(0), fihi(1),
+                  cilo(0), cilo(1),
+                  cihi(0), cihi(1),
+                  &ratio[0],
+                  node_data->getDepth(),
+                  node_gcw(0), node_gcw(1),
+                  node_data->getPointer(),     // node data dst
+                  tmp_onode_data_ptr00, // x lower src
+                  tmp_onode_data_ptr01, // x upper src
+                  tmp_onode_data_ptr10, // y lower src
+                  tmp_onode_data_ptr11); // y upper src
 
             } // (dim == tbox::Dimension(2))
 
             if ((dim == tbox::Dimension(3))) {
 
-               if (tmp_onode_data.getArrayData(0, 0).isInitialized() &&
-                   tmp_onode_data.getArrayData(0, 1).isInitialized() &&
-                   tmp_onode_data.getArrayData(1, 0).isInitialized() &&
-                   tmp_onode_data.getArrayData(1, 1).isInitialized() &&
-                   tmp_onode_data.getArrayData(2, 0).isInitialized() &&
-                   tmp_onode_data.getArrayData(2, 1).isInitialized()) {
-
-                  F77_FUNC(nodeouternodesum3d, NODEOUTERNODESUM3D) (
-                     filo(0), filo(1), filo(2),
-                     fihi(0), fihi(1), fihi(2),
-                     cilo(0), cilo(1), cilo(2),
-                     cihi(0), cihi(1), cihi(2),
-                     &ratio[0],
-                     node_data->getDepth(),
-                     node_gcw(0), node_gcw(1), node_gcw(2),
-                     node_data->getPointer(),     // node data dst
-                     tmp_onode_data.getPointer(0, 0), // x lower src
-                     tmp_onode_data.getPointer(0, 1), // x upper src
-                     tmp_onode_data.getPointer(1, 0), // y lower src
-                     tmp_onode_data.getPointer(1, 1), // y upper src
-                     tmp_onode_data.getPointer(2, 0), // z lower src
-                     tmp_onode_data.getPointer(2, 1)); // z upper src
+               double *tmp_onode_data_ptr00, *tmp_onode_data_ptr01,
+                      *tmp_onode_data_ptr10, *tmp_onode_data_ptr11,
+                      *tmp_onode_data_ptr20, *tmp_onode_data_ptr21;
+               if (tmp_onode_data.getArrayData(0, 0).isInitialized()) {
+                  tmp_onode_data_ptr00 = tmp_onode_data.getPointer(0, 0);
                }
+               else {
+                  tmp_onode_data_ptr00 = NULL;
+               }
+               if (tmp_onode_data.getArrayData(0, 1).isInitialized()) {
+                  tmp_onode_data_ptr01 = tmp_onode_data.getPointer(0, 1);
+               }
+               else {
+                  tmp_onode_data_ptr01 = NULL;
+               }
+               if (tmp_onode_data.getArrayData(1, 0).isInitialized()) {
+                  tmp_onode_data_ptr10 = tmp_onode_data.getPointer(1, 0);
+               }
+               else {
+                  tmp_onode_data_ptr10 = NULL;
+               }
+               if (tmp_onode_data.getArrayData(1, 1).isInitialized()) {
+                  tmp_onode_data_ptr11 = tmp_onode_data.getPointer(1, 1);
+               }
+               else {
+                  tmp_onode_data_ptr11 = NULL;
+               }
+               if (tmp_onode_data.getArrayData(2, 0).isInitialized()) {
+                  tmp_onode_data_ptr20 = tmp_onode_data.getPointer(2, 0);
+               }
+               else {
+                  tmp_onode_data_ptr20 = NULL;
+               }
+               if (tmp_onode_data.getArrayData(2, 1).isInitialized()) {
+                  tmp_onode_data_ptr21 = tmp_onode_data.getPointer(2, 1);
+               }
+               else {
+                  tmp_onode_data_ptr21 = NULL;
+               }
+
+               F77_FUNC(nodeouternodesum3d, NODEOUTERNODESUM3D) (
+                  filo(0), filo(1), filo(2),
+                  fihi(0), fihi(1), fihi(2),
+                  cilo(0), cilo(1), cilo(2),
+                  cihi(0), cihi(1), cihi(2),
+                  &ratio[0],
+                  node_data->getDepth(),
+                  node_gcw(0), node_gcw(1), node_gcw(2),
+                  node_data->getPointer(),     // node data dst
+                  tmp_onode_data_ptr00, // x lower src
+                  tmp_onode_data_ptr01, // x upper src
+                  tmp_onode_data_ptr10, // y lower src
+                  tmp_onode_data_ptr11, // y upper src
+                  tmp_onode_data_ptr20, // z lower src
+                  tmp_onode_data_ptr21); // z upper src
 
             } // (dim == tbox::Dimension(3))
 

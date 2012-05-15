@@ -1255,10 +1255,6 @@ ChopAndPackLoadBalancer::getFromInput(
          }
       }
 
-      d_ignore_level_box_union_is_single_box =
-         db->getBoolWithDefault("ignore_level_box_union_is_single_box",
-            d_ignore_level_box_union_is_single_box);
-
    }
 
 }

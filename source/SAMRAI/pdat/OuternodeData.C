@@ -80,7 +80,11 @@ OuternodeData<TYPE>::OuternodeData(
       outernodebox = nodebox;
       outernodebox.lower(d) = nodebox.upper(d);
       outernodebox.upper(d) = nodebox.upper(d);
-      d_data[d][1].reset(new ArrayData<TYPE>(outernodebox, depth));
+      if (outernodebox.size() > 0) {
+         d_data[d][1].reset(new ArrayData<TYPE>(outernodebox, depth));
+      } else {
+         d_data[d][1].reset(new ArrayData<TYPE>(dim));
+      }
 
    }
 }
