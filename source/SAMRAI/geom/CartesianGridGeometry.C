@@ -582,7 +582,6 @@ CartesianGridGeometry::putToDatabase(
    tbox::Array<tbox::DatabaseBox> temp_box_array = getPhysicalDomain();
    db->putDatabaseBoxArray("d_physical_domain", temp_box_array);
 
-   db->putDoubleArray("d_dx", d_dx, dim.getValue());
    db->putDoubleArray("d_x_lo", d_x_lo, dim.getValue());
    db->putDoubleArray("d_x_up", d_x_up, dim.getValue());
 

@@ -543,9 +543,7 @@ public:
 
    /*!
     * Check to make sure that the class version and restart file
-    * version are equal.  If so, read in data from database.  This
-    * routine calls getSpecializedFromDatabase() to read in the
-    * proper data type.
+    * version are equal.  If so, read in data from database.
     *
     * Assertions:  database must be a non-null pointer.
     */
@@ -566,22 +564,6 @@ public:
    putUnregisteredToDatabase(
       const boost::shared_ptr<tbox::Database>& database,
       bool data_only = false) const;
-
-   /*!
-    * Use specialized template method to get the correct behavior
-    * when reading in the array of data.
-    */
-   void
-   getSpecializedFromDatabase(
-      const boost::shared_ptr<tbox::Database>& database);
-
-   /*!
-    * Use specialized template method to get the correct behavior
-    * when writing out the array of data.
-    */
-   void
-   putSpecializedToDatabase(
-      const boost::shared_ptr<tbox::Database>& database) const;
 
    /**
     * Return the dimension of this object.

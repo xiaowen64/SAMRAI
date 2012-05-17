@@ -950,8 +950,7 @@ ArrayData<TYPE>::fill(
  *
  * Checks to make sure that class and restart file version numbers are
  * equal.  If so, reads in d_depth, d_offset, and d_box from the
- * database.  Then calls getSpecializedFromDatabase() to read in the
- * actual data.
+ * database.
  *
  *************************************************************************
  */
@@ -973,15 +972,14 @@ ArrayData<TYPE>::getFromDatabase(
    d_offset = database->getInteger("d_offset");
    d_box = database->getDatabaseBox("d_box");
 
-   getSpecializedFromDatabase(database);
+   database->getArray("d_array", d_array);
 }
 
 /*
  *************************************************************************
  *
- * Write out the class version number, d_depth, d_offset, and d_box
- * to the database.  Then calls putSpecializedToDatabase() to write
- * in the actual data.
+ * Write out the class version number, d_depth, d_offset, d_box, and
+ * d_array to the database.
  *
  *************************************************************************
  */
@@ -1002,23 +1000,7 @@ ArrayData<TYPE>::putUnregisteredToDatabase(
       database->putDatabaseBox("d_box", d_box);
    }
 
-   putSpecializedToDatabase(database);
-}
-
-template<class TYPE>
-void
-ArrayData<TYPE>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database) const
-{
    database->putArray("d_array", d_array);
-}
-
-template<class TYPE>
-void
-ArrayData<TYPE>::getSpecializedFromDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
-{
-   database->getArray("d_array", d_array);
 }
 
 template<class TYPE>

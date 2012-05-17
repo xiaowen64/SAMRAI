@@ -313,9 +313,8 @@ private:
       const int axis,
       const int num_rotations);
 
-   /*!
-    * @brief For now there is no need to construct/destroy this class as it
-    * only holds static functions.
+   /*
+    * Unimplemented default constructor.
     */
    Transformation();
 

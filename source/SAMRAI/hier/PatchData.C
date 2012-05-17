@@ -38,7 +38,7 @@ PatchData::~PatchData()
 /*
  *************************************************************************
  *
- * Checks that clas and restart file version number are same.  If so,
+ * Checks that class and restart file version number are same.  If so,
  * reads in data members common to all patch data and then invoke
  * getSpecializedFromDatabase() to read in data particular to the
  * specific derived class.

@@ -624,7 +624,7 @@ OutersideData<TYPE>::getSpecializedFromDatabase(
       array_database = database->getDatabase(array_name);
       d_data[i][0]->getFromDatabase(array_database);
 
-      array_name = "d_data%d_" + tbox::Utilities::intToString(i) + "_2";
+      array_name = "d_data" + tbox::Utilities::intToString(i) + "_2";
       array_database = database->getDatabase(array_name);
       d_data[i][1]->getFromDatabase(array_database);
    }
@@ -653,12 +653,12 @@ OutersideData<TYPE>::putSpecializedToDatabase(
 
    boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
-      std::string array_name = "d_data%d_" + tbox::Utilities::intToString(i)
+      std::string array_name = "d_data" + tbox::Utilities::intToString(i)
          + "_1";
       array_database = database->putDatabase(array_name);
       d_data[i][0]->putUnregisteredToDatabase(array_database);
 
-      array_name = "d_data%d_" + tbox::Utilities::intToString(i) + "_2";
+      array_name = "d_data" + tbox::Utilities::intToString(i) + "_2";
       array_database = database->putDatabase(array_name);
       d_data[i][1]->putUnregisteredToDatabase(array_database);
    }

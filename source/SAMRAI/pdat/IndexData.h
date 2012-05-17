@@ -60,7 +60,7 @@ class IndexIterator;
  * faster.
  *
  * The template parameter TYPE * defines the storage at each index
- * location.  IndexDaga is derived from * hier::PatchData.
+ * location.  IndexData is derived from * hier::PatchData.
  *
  * The data type TYPE must define the following five methods which are
  * require by this class:
@@ -91,7 +91,7 @@ class IndexIterator;
  * More information about the templated TYPE is provided in the IndexData
  * README file.
  *
- * IndexData<DIM> objects are created by the IndexDataFactory<DIM>
+ * IndexData objects are created by the IndexDataFactory
  * factory object just as all other patch data types.
  *
  * @see pdat::IndexData

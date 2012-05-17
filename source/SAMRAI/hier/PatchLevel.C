@@ -764,10 +764,6 @@ PatchLevel::putUnregisteredToDatabase(
       database->putDatabaseBoxArray("d_boxes", temp_boxes);
    }
 
-   // database->putInteger("d_global_number_patches",d_global_number_patches);
-
-   // database->putIntegerArray("d_mapping", d_mapping.getProcessorMapping());
-
    const int* temp_ratio_to_level_zero = &d_ratio_to_level_zero[0];
    database->putIntegerArray("d_ratio_to_level_zero",
       temp_ratio_to_level_zero, getDim().getValue());

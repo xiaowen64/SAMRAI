@@ -1141,7 +1141,7 @@ public:
     * @param[in] database
     */
    void
-   putNeighborhoodsToDatabase(
+   putToDatabase(
       const boost::shared_ptr<tbox::Database>& database)
    {
       d_relationships.putUnregisteredToDatabase(database);
@@ -1154,7 +1154,7 @@ public:
     * @param[in] database
     */
    void
-   getNeighborhoodsFromDatabase(
+   getFromDatabase(
       tbox::Database& database)
    {
       d_relationships.getFromDatabase(database);

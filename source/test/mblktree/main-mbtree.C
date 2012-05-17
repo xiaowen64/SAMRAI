@@ -351,7 +351,7 @@ int main(
             ++fail_count;
          } else {
 
-            connector.putNeighborhoodsToDatabase(connector_db);
+            connector.putToDatabase(connector_db);
             tbox::pout << "Connector for review:\n"
                        << connector.format("REVIEW: ", 2)
                        << "This data has been verified by comparing against the results\n"
@@ -366,7 +366,7 @@ int main(
           * Get the baseline Connector NeighborhoodSet and compare.
           */
          hier::Connector baseline_connector(dim);
-         baseline_connector.getNeighborhoodsFromDatabase(*connector_db);
+         baseline_connector.getFromDatabase(*connector_db);
          if (!baseline_connector.localNeighborhoodsEqual(connector)) {
             tbox::perr << "Multiblock Tree test problem:\n"
                        << "the NeighborhoodSets generated is different\n"

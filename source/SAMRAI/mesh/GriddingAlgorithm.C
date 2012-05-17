@@ -4417,9 +4417,6 @@ GriddingAlgorithm::putToDatabase(
    db->putInteger("ALGS_GRIDDING_ALGORITHM_VERSION",
       ALGS_GRIDDING_ALGORITHM_VERSION);
 
-   db->putInteger("d_true_tag", d_true_tag);
-   db->putInteger("d_false_tag", d_false_tag);
-
    db->putDoubleArray("d_efficiency_tolerance", d_efficiency_tolerance);
    db->putDoubleArray("d_combine_efficiency", d_combine_efficiency);
 
