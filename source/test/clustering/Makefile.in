@@ -15,9 +15,6 @@ SUBDIR        = source/test/clustering
 
 SUBDIRS = async_br
 
-# TODO SGS need to add parallel back in
-#SUBDIRS = parallel_br async_br
-
 default: check	
 
 include $(OBJECT)/config/Makefile.config
