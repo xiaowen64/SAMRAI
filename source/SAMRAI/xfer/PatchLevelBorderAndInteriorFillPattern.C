@@ -78,13 +78,13 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
    for (hier::BoxContainer::const_iterator ni = dst_mapped_boxes.begin();
         ni != dst_mapped_boxes.end(); ++ni) {
 
-      const hier::BoxId& gid(ni->getId());
+      const hier::BoxId& gid(ni->getBoxId());
       const hier::Box& dst_mapped_box =
          *dst_mapped_box_level.getBox(gid);
       hier::BoxContainer fill_boxes(
          hier::Box::grow(dst_mapped_box, fill_ghost_width));
       hier::Connector::ConstNeighborhoodIterator nabrs =
-         dst_to_dst.find(dst_mapped_box.getId());
+         dst_to_dst.find(dst_mapped_box.getBoxId());
 
       for (hier::Connector::ConstNeighborIterator na = dst_to_dst.begin(nabrs);
            na != dst_to_dst.end(nabrs); ++na) {

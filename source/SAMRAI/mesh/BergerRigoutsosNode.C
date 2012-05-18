@@ -370,7 +370,7 @@ BergerRigoutsosNode::clusterAndComputeRelationships()
          d_common->tag_mapped_box_level->getBoxes();
       for (hier::RealBoxConstIterator ni(tag_mapped_boxes.realBegin());
            ni != tag_mapped_boxes.realEnd(); ++ni) {
-         d_common->tag_to_new->makeEmptyLocalNeighborhood(ni->getId());
+         d_common->tag_to_new->makeEmptyLocalNeighborhood(ni->getBoxId());
       }
       TBOX_ASSERT(
          static_cast<int>(d_common->tag_mapped_box_level->getLocalNumberOfBoxes()) ==
@@ -2556,7 +2556,7 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
     */
    bool on_owner_process = d_common->rank == d_owner;
    if (on_owner_process) {
-      d_common->new_to_tag->makeEmptyLocalNeighborhood(d_mapped_box.getId());
+      d_common->new_to_tag->makeEmptyLocalNeighborhood(d_mapped_box.getBoxId());
    }
 
    // Data to send to d_owner regarding new relationships found by local process.
@@ -2598,12 +2598,12 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
 
             // Add d_mapped_box as a neighbor of tag_mapped_box.
             d_common->tag_to_new->insertLocalNeighbor(d_mapped_box,
-               tag_mapped_box.getId());
+               tag_mapped_box.getBoxId());
 
             if (on_owner_process) {
                // Owner adds tag_mapped_box as a neighbor of d_mapped_box.
                d_common->new_to_tag->insertLocalNeighbor(tag_mapped_box,
-                  d_mapped_box.getId());
+                  d_mapped_box.getBoxId());
             }
 
             if (relationship_message != NULL) {

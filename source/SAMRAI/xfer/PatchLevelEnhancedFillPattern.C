@@ -77,7 +77,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
    for (hier::RealBoxConstIterator ni(dst_mapped_boxes.realBegin());
         ni != dst_mapped_boxes.realEnd(); ++ni) {
       const hier::Box& dst_mapped_box = *ni;
-      const hier::BoxId& dst_mapped_box_id = dst_mapped_box.getId();
+      const hier::BoxId& dst_mapped_box_id = dst_mapped_box.getBoxId();
       hier::BoxContainer fill_boxes(
          hier::Box::grow(dst_mapped_box, fill_ghost_width));
 

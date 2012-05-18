@@ -720,7 +720,7 @@ TreeLoadBalancerOld::constrainMaxBoxSizes(
 
             hier::Connector::NeighborhoodIterator base_box_itr =
                unconstrained_to_constrained.makeEmptyLocalNeighborhood(
-                  box.getId());
+                  box.getBoxId());
 
             for (hier::BoxContainer::iterator li(chopped);
                  li != chopped.end(); ++li) {
@@ -1112,10 +1112,10 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
              box_in_transit.d_orig_box.getLocalId()) {
             balanced_to_unbalanced.insertLocalNeighbor(
                box_in_transit.d_orig_box,
-               box_in_transit.d_box.getId());
+               box_in_transit.d_box.getBoxId());
             unbalanced_to_balanced.insertLocalNeighbor(
                box_in_transit.d_box,
-               box_in_transit.d_orig_box.getId());
+               box_in_transit.d_orig_box.getBoxId());
          }
       }
 
@@ -1457,12 +1457,12 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
 
          balanced_to_unbalanced.insertLocalNeighbor(
             box_in_transit.d_orig_box,
-            box_in_transit.d_box.getId());
+            box_in_transit.d_box.getBoxId());
 
          if (box_in_transit.d_orig_box.getOwnerRank() == d_mpi.getRank()) {
             unbalanced_to_balanced.insertLocalNeighbor(
                box_in_transit.d_box,
-               box_in_transit.d_orig_box.getId());
+               box_in_transit.d_orig_box.getBoxId());
             unassigned.erase(ni++);
          }
          else {
@@ -1994,7 +1994,7 @@ TreeLoadBalancerOld::unpackAndRouteNeighborhoodSets(
 
          unbalanced_to_balanced.insertLocalNeighbor(
             box_in_transit.d_box,
-            box_in_transit.d_orig_box.getId());
+            box_in_transit.d_orig_box.getBoxId());
 
       } else {
          box_in_transit.packForPreviousOwner(outgoing_messages);
@@ -4354,7 +4354,7 @@ TreeLoadBalancerOld::prebalanceBoxLevel(
                      tmp_box_level.addBox(box,
                         box.getBlockId());
 
-                  hier::BoxId tmp_box_id = tmp_iter->getId();
+                  hier::BoxId tmp_box_id = tmp_iter->getBoxId();
 
                   tmp_to_balance.insertLocalNeighbor(box, tmp_box_id);
 
@@ -4402,7 +4402,7 @@ TreeLoadBalancerOld::prebalanceBoxLevel(
             (hier::LocalId)buffer[box_count],
             rank_group.getMappedRank(d_mpi.getRank() % output_nproc));
 
-         balance_to_tmp.insertLocalNeighbor(new_box, (*ni).getId());
+         balance_to_tmp.insertLocalNeighbor(new_box, (*ni).getBoxId());
          box_count++;
       }
    }

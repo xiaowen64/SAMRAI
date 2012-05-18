@@ -319,7 +319,7 @@ int main(
 
          for (PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
-            tbox::plog << "patch # " << ip->getBox().getId() << " : "
+            tbox::plog << "patch # " << ip->getBox().getBoxId() << " : "
                        << ip->getBox() << endl;
          }
       }

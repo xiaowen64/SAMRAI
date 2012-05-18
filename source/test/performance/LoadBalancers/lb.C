@@ -1222,12 +1222,12 @@ void generatePrebalanceByShrinkingLevel(
 
       tag_data->getArrayData().fillAll(0);
 
-      if ( !L1_to_L1tags.hasNeighborSet(patch->getBox().getId()) ) {
+      if ( !L1_to_L1tags.hasNeighborSet(patch->getBox().getBoxId()) ) {
          tag_data->getArrayData().fillAll(1);
       }
       else {
          hier::Connector::ConstNeighborhoodIterator ni =
-            L1_to_L1tags.find(patch->getBox().getId());
+            L1_to_L1tags.find(patch->getBox().getBoxId());
 
          for ( hier::Connector::ConstNeighborIterator na = L1_to_L1tags.begin(ni);
                na != L1_to_L1tags.end(ni); ++na ) {

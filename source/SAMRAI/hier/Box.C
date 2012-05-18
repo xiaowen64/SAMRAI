@@ -752,7 +752,7 @@ operator << (
    if (box.empty()) {
       s << "[(),()]";
    } else {
-      s << box.getId() << " [" << box.lower() << "," << box.upper() << "]";
+      s << box.getBoxId() << " [" << box.lower() << "," << box.upper() << "]";
    }
    return s;
 }

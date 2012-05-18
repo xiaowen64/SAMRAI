@@ -397,7 +397,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
 
       for (hier::PatchLevel::iterator ip(test_level->begin());
            ip != test_level->end(); ++ip) {
-         const BoxId& mapped_box_id = ip->getBox().getId();
+         const BoxId& mapped_box_id = ip->getBox().getBoxId();
          // Test #9:
          if (d_do_refine_test) {
             if (!Box::refine(init_level->getBoxForPatch(mapped_box_id),
@@ -456,7 +456,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
        */
       for (PatchLevel::iterator tip(test_level->begin());
            tip != test_level->end(); ++tip) {
-         const BoxId& mapped_box_id = tip->getBox().getId();
+         const BoxId& mapped_box_id = tip->getBox().getBoxId();
          boost::shared_ptr<Patch> test_patch(
             test_level->getPatch(mapped_box_id));
          boost::shared_ptr<Patch> init_patch(

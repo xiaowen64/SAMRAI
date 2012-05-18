@@ -81,7 +81,7 @@ PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
       hier::BoxContainer fill_boxes(
          hier::Box::grow(dst_mapped_box, fill_ghost_width));
       hier::Connector::ConstNeighborhoodIterator nabrs =
-         dst_to_dst.find(dst_mapped_box.getId());
+         dst_to_dst.find(dst_mapped_box.getBoxId());
       for (hier::Connector::ConstNeighborIterator na = dst_to_dst.begin(nabrs);
            na != dst_to_dst.end(nabrs); ++na) {
          if (dst_mapped_box.getBlockId() == na->getBlockId()) {
@@ -118,7 +118,7 @@ PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
          d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
                fill_boxes.size());
          hier::Connector::NeighborhoodIterator base_box_itr =
-            dst_to_fill.makeEmptyLocalNeighborhood(dst_mapped_box.getId());
+            dst_to_fill.makeEmptyLocalNeighborhood(dst_mapped_box.getBoxId());
          for (hier::BoxContainer::iterator li(fill_boxes);
               li != fill_boxes.end(); ++li) {
             hier::Box fill_mapped_box(*li,

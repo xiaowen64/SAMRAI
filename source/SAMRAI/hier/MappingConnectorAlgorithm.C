@@ -971,21 +971,21 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
                                 << std::endl;
                   }
 
-                  TBOX_ASSERT(anchor_to_new.hasNeighborSet(ianchor->getId()));
+                  TBOX_ASSERT(anchor_to_new.hasNeighborSet(ianchor->getBoxId()));
 
                   if (s_print_steps == 'y') {
                      anchor_to_new.writeNeighborhoodToErrorStream(
-                        ianchor->getId());
+                        ianchor->getBoxId());
                      tbox::plog << std::endl;
                   }
-                  if (anchor_to_new.hasLocalNeighbor(ianchor->getId(),
+                  if (anchor_to_new.hasLocalNeighbor(ianchor->getBoxId(),
                                                      old_mapped_box_gone)) {
                      if (s_print_steps == 'y') {
                         tbox::plog << "    Removing neighbor " << old_mapped_box_gone
                                    << " from list for " << *ianchor << std::endl;
                      }
                      anchor_to_new.eraseNeighbor(old_mapped_box_gone,
-                                                 ianchor->getId());
+                                                 ianchor->getBoxId());
                   }
 
                   ++ianchor;
@@ -1425,7 +1425,7 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
                  na != found_nabrs.end(); ++na) {
                const Box& nabr = *na;
                referenced_head_nabrs.insert(nabr);
-               nabr.getId().putToIntBuffer(submesg);
+               nabr.getBoxId().putToIntBuffer(submesg);
                submesg += BoxId::commBufferSize();
             }
          }
@@ -1438,7 +1438,7 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
              */
             if (!found_nabrs.empty()) {
                Connector::NeighborhoodIterator base_box_itr =
-                  mapped_connector.makeEmptyLocalNeighborhood(base_box.getId());
+                  mapped_connector.makeEmptyLocalNeighborhood(base_box.getBoxId());
                for (std::vector<Box>::const_iterator na = found_nabrs.begin();
                     na != found_nabrs.end(); ++na) {
                   mapped_connector.insertLocalNeighbor(*na, base_box_itr);
@@ -1545,7 +1545,7 @@ MappingConnectorAlgorithm::findMappingErrors(
       const Box& old_mapped_box = *ni;
       if (!new_mapped_box_level.hasBox(old_mapped_box)) {
          // old_mapped_box disappeared.  Require a mapping for old_mapped_box.
-         if (!connector.hasNeighborSet(old_mapped_box.getId())) {
+         if (!connector.hasNeighborSet(old_mapped_box.getBoxId())) {
             ++error_count;
             tbox::perr << "MappingConnectorAlgorithm::findMappingError ("
                        << error_count
@@ -1557,7 +1557,7 @@ MappingConnectorAlgorithm::findMappingErrors(
             *(new_mapped_box_level.getBoxStrict(old_mapped_box));
          if (!new_mapped_box.isSpatiallyEqual(old_mapped_box)) {
             // old_mapped_box has changed its box.  A mapping must exist for it.
-            if (!connector.hasNeighborSet(old_mapped_box.getId())) {
+            if (!connector.hasNeighborSet(old_mapped_box.getBoxId())) {
                ++error_count;
                tbox::perr << "MappingConnectorAlgorithm::findMappingError ("
                           << error_count
@@ -1615,7 +1615,7 @@ MappingConnectorAlgorithm::findMappingErrors(
                           << nabr << std::endl;
             } else {
                const Box& head_mapped_box =
-                  *(new_mapped_box_level.getBoxStrict(nabr.getId()));
+                  *(new_mapped_box_level.getBoxStrict(nabr.getBoxId()));
                if (!nabr.isSpatiallyEqual(head_mapped_box)) {
                   ++error_count;
                   tbox::perr << "MappingConnectorAlgorithm::findMappingError ("

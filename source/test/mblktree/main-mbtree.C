@@ -282,7 +282,7 @@ int main(
             refinement_ratio,
             true);
 
-         connector.insertNeighbors(overlap_boxes, mapped_box.getId());
+         connector.insertNeighbors(overlap_boxes, mapped_box.getBoxId());
       }
 
       /*
@@ -474,7 +474,7 @@ void exhaustiveFindOverlapBoxes(
    const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry,
    const hier::BoxContainer& search_mapped_boxes)
 {
-   const hier::BoxId& box_id = mapped_box.getId();
+   const hier::BoxId& box_id = mapped_box.getBoxId();
    hier::Box transformed_box(mapped_box);
    hier::BlockId transformed_block_id(mapped_box.getBlockId());
    hier::Connector::NeighborhoodIterator base_box_itr =

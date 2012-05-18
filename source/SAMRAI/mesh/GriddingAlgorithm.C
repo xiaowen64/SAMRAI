@@ -2752,7 +2752,7 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
 
       TBOX_ASSERT(tag_data);
 
-      const hier::BoxId& mapped_box_id(patch->getBox().getId());
+      const hier::BoxId& mapped_box_id(patch->getBox().getBoxId());
 
       NeighborSet neighbors;
 
@@ -3047,7 +3047,7 @@ GriddingAlgorithm::findRefinementBoxes(
                new_mapped_box_level.getBoxes().end());
             if (accumulated_mapped_boxes.size() > 0) {
                first_local_id =
-                  accumulated_mapped_boxes.back().getId().getLocalId() + 1;
+                  accumulated_mapped_boxes.back().getBoxId().getLocalId() + 1;
             }
          }
 
@@ -3057,7 +3057,7 @@ GriddingAlgorithm::findRefinementBoxes(
       for (hier::BoxContainer::iterator
            ac_itr = accumulated_mapped_boxes.begin();
            ac_itr != accumulated_mapped_boxes.end(); ++ac_itr) {
-         local_ids.insert(ac_itr->getId().getLocalId().getValue());
+         local_ids.insert(ac_itr->getBoxId().getLocalId().getValue());
       }
       TBOX_ASSERT(static_cast<int>(local_ids.size()) == accumulated_mapped_boxes.size());
 #endif
@@ -3367,7 +3367,7 @@ GriddingAlgorithm::findRefinementBoxes(
       const hier::BoxContainer& new_boxes = new_mapped_box_level.getBoxes();
       for (hier::BoxContainer::const_iterator new_itr = new_boxes.begin();
            new_itr != new_boxes.end(); ++new_itr) {
-         new_local_ids.insert(new_itr->getId().getLocalId().getValue());
+         new_local_ids.insert(new_itr->getBoxId().getLocalId().getValue());
       }
       TBOX_ASSERT(static_cast<int>(new_local_ids.size()) == new_boxes.size());
 #endif
@@ -3624,7 +3624,7 @@ GriddingAlgorithm::extendBoxesToDomainBoundary(
       after_mapped_box_level.addBox(after_mapped_box);
       before_to_after.insertLocalNeighbor(
          after_mapped_box,
-         before_mapped_box.getId());
+         before_mapped_box.getBoxId());
    }
 
    const hier::MappingConnectorAlgorithm mca;
@@ -4139,9 +4139,9 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
          omb,
          new_mapped_box_level.getRefinementRatio());
 
-      if (new_to_nesting_complement.hasNeighborSet(omb.getId())) {
+      if (new_to_nesting_complement.hasNeighborSet(omb.getBoxId())) {
          hier::Connector::ConstNeighborhoodIterator neighbors =
-            new_to_nesting_complement.find(omb.getId());
+            new_to_nesting_complement.find(omb.getBoxId());
          for (hier::Connector::ConstNeighborIterator na = new_to_nesting_complement.begin(neighbors);
               na != new_to_nesting_complement.end(neighbors); ++na) {
             nesting_domain.removeIntersections(*na);
@@ -4160,7 +4160,7 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
        */
       if (!omb.isSpatiallyEqual(grown_mapped_box)) {
          grown_mapped_box_level.addBox(grown_mapped_box);
-         new_to_grown.insertLocalNeighbor(grown_mapped_box, omb.getId());
+         new_to_grown.insertLocalNeighbor(grown_mapped_box, omb.getBoxId());
       } else {
          grown_mapped_box_level.addBox(omb);
       }

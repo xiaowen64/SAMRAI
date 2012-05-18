@@ -221,7 +221,7 @@ BoxContainer::insert(
    const Box& box)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(box.getId().isValid());
+   TBOX_ASSERT(box.getBoxId().isValid());
    TBOX_ASSERT(box.getBlockId() != BlockId::invalidId());
    if (size() > 0) {
       TBOX_ASSERT_OBJDIM_EQUALITY2(front(), box);
@@ -261,7 +261,7 @@ BoxContainer::insert(
    const Box& box)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(box.getId().isValid());
+   TBOX_ASSERT(box.getBoxId().isValid());
    if (size() > 0) {
       TBOX_ASSERT_OBJDIM_EQUALITY2(front(), box);
    }
@@ -321,7 +321,7 @@ BoxContainer::insert (
         set_iter != last.d_set_iter; ++set_iter) {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT((**set_iter).getId().isValid());
+      TBOX_ASSERT((**set_iter).getBoxId().isValid());
       if (size() > 0) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), **set_iter);
       }
@@ -1316,7 +1316,7 @@ BoxContainer::getOwners(
    } else {
       for (const_iterator i_nabr = begin();
            i_nabr != end(); ++i_nabr) {
-         if (i_nabr->getId().isValid()) {
+         if (i_nabr->getBoxId().isValid()) {
             const int owner = i_nabr->getOwnerRank();
             owners.insert(owner);
          } else {
@@ -1372,7 +1372,7 @@ BoxContainer::order()
    if (!d_ordered) {
       d_set.clear();
       for (iterator i(*this); i != end(); ++i) {
-         if (!i->getId().isValid()) {
+         if (!i->getBoxId().isValid()) {
             TBOX_ERROR("Attempted to order a BoxContainer that has a member with an invalid BoxId.");
          }
          if (d_set.insert(&(*i)).second == false) {
@@ -1416,7 +1416,7 @@ BoxContainer::erase(
 
       for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end();
            ++bi) {
-         if (bi->getId() == box.getId()) {
+         if (bi->getBoxId() == box.getBoxId()) {
             d_list.erase(bi);
             break;
          }
@@ -1456,7 +1456,7 @@ BoxContainer::erase(
    int ret = static_cast<int>(d_set.erase(const_cast<Box*>(&box)));
    for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end();
         ++bi) {
-      if (bi->getId() == box.getId()) {
+      if (bi->getBoxId() == box.getBoxId()) {
          d_list.erase(bi++);
          break;
       }

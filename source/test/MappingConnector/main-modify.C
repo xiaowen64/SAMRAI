@@ -429,8 +429,8 @@ void alterAndGenerateMapping(
                              mapped_box_b.getOwnerRank(),
                              mapped_box_b.getPeriodicId());
       mapped_box_level_c.addBoxWithoutUpdate(mapped_box_c);
-      b_to_c.insertLocalNeighbor(mapped_box_c, mapped_box_b.getId());
-      c_to_b.insertLocalNeighbor(mapped_box_b, mapped_box_c.getId());
+      b_to_c.insertLocalNeighbor(mapped_box_c, mapped_box_b.getBoxId());
+      c_to_b.insertLocalNeighbor(mapped_box_b, mapped_box_c.getBoxId());
    }
 
    mapped_box_level_c.finalize();

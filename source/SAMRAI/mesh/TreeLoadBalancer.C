@@ -751,7 +751,7 @@ TreeLoadBalancer::constrainMaxBoxSizes(
 
             hier::Connector::NeighborhoodIterator base_box_itr =
                unconstrained_to_constrained.makeEmptyLocalNeighborhood(
-                  box.getId());
+                  box.getBoxId());
 
             for (hier::BoxContainer::iterator li(chopped);
                  li != chopped.end(); ++li) {
@@ -1146,10 +1146,10 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
              box_in_transit.d_orig_box.getLocalId()) {
             balanced_to_unbalanced.insertLocalNeighbor(
                box_in_transit.d_orig_box,
-               box_in_transit.d_box.getId());
+               box_in_transit.d_box.getBoxId());
             unbalanced_to_balanced.insertLocalNeighbor(
                box_in_transit.d_box,
-               box_in_transit.d_orig_box.getId());
+               box_in_transit.d_orig_box.getBoxId());
          }
       }
       /*
@@ -1159,7 +1159,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
        * empty for now.
        */
       for (TransitSet::const_iterator ni=unassigned.begin(); ni!=unassigned.end(); ++ni ) {
-         unbalanced_to_balanced.makeEmptyLocalNeighborhood(ni->d_orig_box.getId());
+         unbalanced_to_balanced.makeEmptyLocalNeighborhood(ni->d_orig_box.getBoxId());
       }
 
       if (d_print_steps) {
@@ -1518,19 +1518,19 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
 
       if (box_in_transit.d_box.isIdEqual(box_in_transit.d_orig_box)) {
          // Unchanged box requires no mapping.  Nothing else need to be done.
-         TBOX_ASSERT( unbalanced_to_balanced.isEmptyNeighborhood(ni->d_box.getId()) );
-         unbalanced_to_balanced.eraseLocalNeighborhood(ni->d_box.getId());
+         TBOX_ASSERT( unbalanced_to_balanced.isEmptyNeighborhood(ni->d_box.getBoxId()) );
+         unbalanced_to_balanced.eraseLocalNeighborhood(ni->d_box.getBoxId());
          unassigned.erase(ni++);
       } else {
 
          balanced_to_unbalanced.insertLocalNeighbor(
             box_in_transit.d_orig_box,
-            box_in_transit.d_box.getId());
+            box_in_transit.d_box.getBoxId());
 
          if (box_in_transit.d_orig_box.getOwnerRank() == d_mpi.getRank()) {
             unbalanced_to_balanced.insertLocalNeighbor(
                box_in_transit.d_box,
-               box_in_transit.d_orig_box.getId());
+               box_in_transit.d_orig_box.getBoxId());
             unassigned.erase(ni++);
          }
          else {
@@ -1926,7 +1926,7 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
       const hier::Box &unbalanced_box = *bi;
 
       hier::Connector::ConstNeighborhoodIterator neighborhood_itr =
-         unbalanced_to_balanced.findLocal(unbalanced_box.getId());
+         unbalanced_to_balanced.findLocal(unbalanced_box.getBoxId());
 
       if ( neighborhood_itr != unbalanced_to_balanced.end() ) {
 
@@ -1984,7 +1984,7 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
          TBOX_ASSERT( balanced_box_in_transit.d_orig_box.getOwnerRank() == d_mpi.getRank() );
          unbalanced_to_balanced.insertLocalNeighbor(
             balanced_box_in_transit.d_box,
-            balanced_box_in_transit.d_orig_box.getId() );
+            balanced_box_in_transit.d_orig_box.getBoxId() );
          num_unaccounted_cells -= balanced_box_in_transit.d_box.size();
 
       }
@@ -4393,7 +4393,7 @@ TreeLoadBalancer::prebalanceBoxLevel(
                      tmp_box_level.addBox(box,
                         box.getBlockId());
 
-                  hier::BoxId tmp_box_id = tmp_iter->getId();
+                  hier::BoxId tmp_box_id = tmp_iter->getBoxId();
 
                   tmp_to_balance.insertLocalNeighbor(box, tmp_box_id);
 
@@ -4441,7 +4441,7 @@ TreeLoadBalancer::prebalanceBoxLevel(
             (hier::LocalId)buffer[box_count],
             rank_group.getMappedRank(d_mpi.getRank() % output_nproc));
 
-         balance_to_tmp.insertLocalNeighbor(new_box, (*ni).getId());
+         balance_to_tmp.insertLocalNeighbor(new_box, (*ni).getBoxId());
          box_count++;
       }
    }

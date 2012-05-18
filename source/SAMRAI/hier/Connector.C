@@ -810,7 +810,7 @@ Connector::initializeToLocalTranspose(
             }
          } else {
             d_relationships.insert(
-               my_base_mapped_box.getId(),
+               my_base_mapped_box.getBoxId(),
                my_head_mapped_box);
          }
       }
@@ -1330,9 +1330,9 @@ Connector::checkTransposeCorrectness(
                << " as a neighbor.\n"
                << "But base mapped_box " << base_mapped_box
                << " does not have a mapped_box indexed "
-               << nabr_nabr.getId()
+               << nabr_nabr.getBoxId()
                << " in its neighbor list." << std::endl;
-               tbox::perr << "Neighbors of head mapped_box " << nabr_nabr.getId()
+               tbox::perr << "Neighbors of head mapped_box " << nabr_nabr.getBoxId()
                << ":" << std::endl;
                for (ConstNeighborIterator nj = tran_relationships.begin(ci);
                     nj != tran_relationships.end(ci); ++nj) {
@@ -1450,10 +1450,10 @@ Connector::computeNeighborhoodDifferences(
          ConstNeighborIterator na = left.begin(ai);
          ConstNeighborIterator nb = right.begin(bi);
          while (na != left.end(ai) && nb != right.end(bi)) {
-            if (na->getId() < nb->getId()) {
+            if (na->getBoxId() < nb->getBoxId()) {
                left_minus_right.insertLocalNeighbor(*na, base_box_itr);
                ++na;
-            } else if (nb->getId() < na->getId()) {
+            } else if (nb->getBoxId() < na->getBoxId()) {
                ++nb;
             } else {
                ++na;

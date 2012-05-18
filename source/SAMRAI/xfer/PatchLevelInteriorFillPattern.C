@@ -84,7 +84,7 @@ PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
     */
    for (hier::BoxContainer::const_iterator ni = dst_mapped_boxes.begin();
         ni != dst_mapped_boxes.end(); ++ni) {
-      const hier::BoxId& gid = ni->getId();
+      const hier::BoxId& gid = ni->getBoxId();
       const hier::Box& dst_mapped_box =
          *dst_mapped_box_level.getBox(gid);
       fill_mapped_boxes.addBoxWithoutUpdate(dst_mapped_box);
@@ -143,7 +143,7 @@ PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
    for (hier::BoxContainer::const_iterator na = all_dst_nabrs.begin();
         na != all_dst_nabrs.end(); ++na) {
       FillSet::Iterator dst_fill_boxes_iter =
-         dst_fill_boxes_on_src_proc.insert(na->getId()).first;
+         dst_fill_boxes_on_src_proc.insert(na->getBoxId()).first;
       dst_fill_boxes_on_src_proc.insert(dst_fill_boxes_iter, *na);
       d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
             static_cast<int>(dst_fill_boxes_on_src_proc.numNeighbors(

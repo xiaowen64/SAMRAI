@@ -92,12 +92,12 @@ void MeshGenerationStrategy::setTagsByShrinkingLevel(
 
       tag_data->getArrayData().fillAll(0);
 
-      if ( !Ltag_to_tagfootprint.hasNeighborSet(patch->getBox().getId()) ) {
+      if ( !Ltag_to_tagfootprint.hasNeighborSet(patch->getBox().getBoxId()) ) {
          tag_data->getArrayData().fillAll(1);
       }
       else {
          hier::Connector::ConstNeighborhoodIterator ni =
-            Ltag_to_tagfootprint.find(patch->getBox().getId());
+            Ltag_to_tagfootprint.find(patch->getBox().getBoxId());
 
          for ( hier::Connector::ConstNeighborIterator na = Ltag_to_tagfootprint.begin(ni);
                na != Ltag_to_tagfootprint.end(ni); ++na ) {

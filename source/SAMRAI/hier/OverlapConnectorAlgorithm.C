@@ -438,7 +438,7 @@ OverlapConnectorAlgorithm::findOverlaps_rbbt(
          nabrs_for_box.erase(base_mapped_box);
       }
       if (!nabrs_for_box.isEmpty()) {
-         connector.insertNeighbors(nabrs_for_box, base_mapped_box.getId());
+         connector.insertNeighbors(nabrs_for_box, base_mapped_box.getBoxId());
          nabrs_for_box.clear();
       }
 
@@ -1699,7 +1699,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
                  na != found_nabrs.end(); ++na) {
                const Box& head_nabr = *na;
                referenced_head_nabrs.insert(head_nabr);
-               head_nabr.getId().putToIntBuffer(submesg);
+               head_nabr.getBoxId().putToIntBuffer(submesg);
                submesg += BoxId::commBufferSize();
             }
          }
@@ -1707,7 +1707,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
             // Save neighbor info locally.
             BoxId unshifted_base_mapped_box_id;
             if (!base_mapped_box.isPeriodicImage()) {
-               unshifted_base_mapped_box_id = base_mapped_box.getId();
+               unshifted_base_mapped_box_id = base_mapped_box.getBoxId();
             }
             else {
                unshifted_base_mapped_box_id.initialize(

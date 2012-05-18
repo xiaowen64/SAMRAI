@@ -1299,7 +1299,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
 
                coarse_interp_to_unfilled.insertLocalNeighbor(
                   unfilled_mapped_box,
-                  coarse_interp_mapped_box.getId());
+                  coarse_interp_mapped_box.getBoxId());
             }
 
          }
@@ -2018,7 +2018,7 @@ RefineSchedule::fillSingularityBoundaries(
                     ++dst_local_iter) {
 
                   const hier::BoxId& mapped_box_id =
-                     dst_local_iter->getId();
+                     dst_local_iter->getBoxId();
 
                   boost::shared_ptr<hier::Patch> patch(
                      d_dst_level->getPatch(mapped_box_id));
@@ -2223,7 +2223,7 @@ RefineSchedule::refineScratchData(
    {
       const hier::Box& crse_mapped_box = crse_itr->getBox();
       hier::Connector::ConstNeighborhoodIterator dst_nabrs =
-         coarse_to_fine.find(crse_mapped_box.getId());
+         coarse_to_fine.find(crse_mapped_box.getBoxId());
       hier::Connector::ConstNeighborIterator na =
          coarse_to_fine.begin(dst_nabrs);
       const hier::Box& dst_mapped_box = *na;
@@ -2245,9 +2245,9 @@ RefineSchedule::refineScratchData(
                                                 crse_mapped_box.getGlobalId()));
 
       TBOX_ASSERT(coarse_to_unfilled.numLocalNeighbors(
-         crse_mapped_box.getId()) == 1);
+         crse_mapped_box.getBoxId()) == 1);
       hier::Connector::ConstNeighborhoodIterator unfilled_nabrs =
-         coarse_to_unfilled.find(crse_mapped_box.getId());
+         coarse_to_unfilled.find(crse_mapped_box.getBoxId());
       const hier::Box& unfilled_nabr =
          *coarse_to_unfilled.begin(unfilled_nabrs);
       hier::BoxContainer fill_boxes(unfilled_nabr);
@@ -2324,7 +2324,7 @@ RefineSchedule::computeRefineOverlaps(
    {
       const hier::Box& coarse_mapped_box = crse_itr->getBox();
       hier::Connector::ConstNeighborhoodIterator fine_nabrs =
-         coarse_to_fine.find(coarse_mapped_box.getId());
+         coarse_to_fine.find(coarse_mapped_box.getBoxId());
       hier::Connector::ConstNeighborIterator na =
          coarse_to_fine.begin(fine_nabrs);
       const hier::Box& fine_mapped_box = *na;
@@ -2341,12 +2341,12 @@ RefineSchedule::computeRefineOverlaps(
       }
 #endif
       boost::shared_ptr<hier::Patch> fine_patch(fine_level->getPatch(
-                                                fine_mapped_box.getId()));
+                                                fine_mapped_box.getBoxId()));
 
       TBOX_ASSERT(coarse_to_unfilled.numLocalNeighbors(
-         coarse_mapped_box.getId()) == 1);
+         coarse_mapped_box.getBoxId()) == 1);
       hier::Connector::ConstNeighborhoodIterator unfilled_nabrs =
-         coarse_to_unfilled.find(coarse_mapped_box.getId());
+         coarse_to_unfilled.find(coarse_mapped_box.getBoxId());
       const hier::Box& unfilled_nabr = *coarse_to_unfilled.begin(
          unfilled_nabrs);
       hier::BoxContainer fill_boxes(unfilled_nabr);
@@ -2496,7 +2496,7 @@ RefineSchedule::generateCommunicationSchedule(
          TBOX_ASSERT(!dst_mapped_box.isPeriodicImage());
 
          BoxNeighborhoodCollection::ConstIterator dst_fill_iter =
-            dst_to_fill_on_src_proc.find(dst_mapped_box.getId());
+            dst_to_fill_on_src_proc.find(dst_mapped_box.getBoxId());
          if (dst_fill_iter == dst_to_fill_on_src_proc.end()) {
             /*
              * Missing fill boxes should indicate that the dst mapped_box
@@ -2772,7 +2772,7 @@ RefineSchedule::findEnconUnfilledBoxes(
    boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
 
-   const hier::BoxId& dst_mapped_box_id = dst_mapped_box.getId();
+   const hier::BoxId& dst_mapped_box_id = dst_mapped_box.getBoxId();
    const hier::BlockId& dst_block_id = dst_mapped_box.getBlockId();
 
    /*
@@ -2856,7 +2856,7 @@ RefineSchedule::findEnconUnfilledBoxes(
          for (hier::Connector::ConstNeighborIterator de_iter = d_dst_to_encon.begin(find_encon_nabrs);
               de_iter != d_dst_to_encon.end(find_encon_nabrs); ++de_iter) {
 
-            const hier::BoxId& encon_mapped_box_id = de_iter->getId();
+            const hier::BoxId& encon_mapped_box_id = de_iter->getBoxId();
             const hier::BlockId& nbr_block_id = de_iter->getBlockId();
 
             const hier::BoxContainer& unfilled_boxes =
@@ -3236,7 +3236,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                        ++dst_local_iter) {
 
                      const hier::BoxId& mapped_box_id =
-                        dst_local_iter->getId();
+                        dst_local_iter->getBoxId();
 
                      boost::shared_ptr<hier::Patch> patch(
                         d_dst_level->getPatch(mapped_box_id));
@@ -3790,7 +3790,7 @@ RefineSchedule::constructScheduleTransactions(
       if (dst_mapped_box.getOwnerRank() == my_rank) {
 
          hier::Connector::ConstNeighborhoodIterator ei =
-            d_dst_to_encon.findLocal(dst_mapped_box.getId());
+            d_dst_to_encon.findLocal(dst_mapped_box.getBoxId());
 
          const hier::BlockId& src_block_id = src_mapped_box.getBlockId();
 
@@ -3816,7 +3816,7 @@ RefineSchedule::constructScheduleTransactions(
          test_dst_box.grow(test_gcw);
 
          hier::Connector::ConstNeighborhoodIterator ei =
-            d_src_to_encon.findLocal(src_mapped_box.getId());
+            d_src_to_encon.findLocal(src_mapped_box.getBoxId());
 
          hier::BoxContainer encon_nbr_choices;
          for (hier::Connector::ConstNeighborIterator ni = d_src_to_encon.begin(ei);
@@ -4282,7 +4282,7 @@ RefineSchedule::constructScheduleTransactions(
       if (dst_mapped_box.getOwnerRank() == my_rank) {
 
          hier::Connector::ConstNeighborhoodIterator ei =
-            d_dst_to_encon.findLocal(dst_mapped_box.getId());
+            d_dst_to_encon.findLocal(dst_mapped_box.getBoxId());
 
          const hier::BlockId& src_block_id = src_mapped_box.getBlockId();
 
@@ -4308,7 +4308,7 @@ RefineSchedule::constructScheduleTransactions(
          test_dst_box.grow(test_gcw);
 
          hier::Connector::ConstNeighborhoodIterator ei =
-            d_src_to_encon.findLocal(src_mapped_box.getId());
+            d_src_to_encon.findLocal(src_mapped_box.getBoxId());
 
          hier::BoxContainer encon_nbr_choices;
          for (hier::Connector::ConstNeighborIterator ni = d_src_to_encon.begin(ei);

@@ -254,7 +254,7 @@ public:
 
    //! @brief Get the BoxId.
    const BoxId&
-   getId() const
+   getBoxId() const
    {
       return d_id;
    }
@@ -338,13 +338,13 @@ public:
       bool
       operator () (const Box& b1, const Box& b2) const
       {
-         return b1.getId() < b2.getId();
+         return b1.getBoxId() < b2.getBoxId();
       }
 
       bool
       operator () (const Box* b1, const Box* b2) const
       {
-         return b1->getId() < b2->getId();
+         return b1->getBoxId() < b2->getBoxId();
       }
    };
 

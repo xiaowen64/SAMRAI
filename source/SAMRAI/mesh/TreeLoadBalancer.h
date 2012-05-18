@@ -383,7 +383,7 @@ private:
          if (a.getBox().size() != b.getBox().size()) {
             return a.d_boxload > b.d_boxload;
          }
-         return a.d_box.getId() < b.d_box.getId();
+         return a.d_box.getBoxId() < b.d_box.getBoxId();
       }
    };
 

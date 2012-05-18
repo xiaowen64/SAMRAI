@@ -84,8 +84,8 @@ PatchLevelFullFillPattern::computeFillBoxesAndNeighborhoodSets(
       hier::Box fill_mapped_box(dst_mapped_box);
       fill_mapped_box.grow(fill_ghost_width);
       fill_mapped_boxes.addBoxWithoutUpdate(fill_mapped_box);
-      dst_to_fill.insertLocalNeighbor(fill_mapped_box, dst_mapped_box.getId());
-      TBOX_ASSERT(dst_to_fill.numLocalNeighbors(dst_mapped_box.getId()) == 1);
+      dst_to_fill.insertLocalNeighbor(fill_mapped_box, dst_mapped_box.getBoxId());
+      TBOX_ASSERT(dst_to_fill.numLocalNeighbors(dst_mapped_box.getBoxId()) == 1);
    }
    fill_mapped_boxes.finalize();
 }
@@ -139,7 +139,7 @@ PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
    for (hier::BoxContainer::const_iterator na = all_dst_nabrs.begin();
         na != all_dst_nabrs.end(); ++na) {
       FillSet::Iterator dst_fill_boxes_iter =
-         dst_fill_boxes_on_src_proc.insert(na->getId()).first;
+         dst_fill_boxes_on_src_proc.insert(na->getBoxId()).first;
       hier::Box fill_box(*na);
       fill_box.grow(fill_ghost_width);
       dst_fill_boxes_on_src_proc.insert(dst_fill_boxes_iter, fill_box);

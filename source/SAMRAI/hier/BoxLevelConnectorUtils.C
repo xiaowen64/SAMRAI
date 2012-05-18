@@ -434,7 +434,7 @@ BoxLevelConnectorUtils::makeSortingMap(
        */
       if (cur_mapped_box.getLocalId() != new_mapped_box.getLocalId()) {
          output_map.insertLocalNeighbor(new_mapped_box,
-            cur_mapped_box.getId());
+            cur_mapped_box.getBoxId());
       }
       sorted_mapped_box_level.finalize();
    }
@@ -706,7 +706,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
         ni != input_mapped_boxes.realEnd(); ++ni) {
 
       const Box& input_mapped_box = *ni;
-      const BoxId& input_mapped_box_id = input_mapped_box.getId();
+      const BoxId& input_mapped_box_id = input_mapped_box.getBoxId();
 
       if (!input_to_reference.hasNeighborSet(input_mapped_box_id)) {
          /*
@@ -800,7 +800,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
          } // parts_list
 
-      } // !input_to_reference.hasNeighborSet(ni->getId())
+      } // !input_to_reference.hasNeighborSet(ni->getBoxId())
 
    } // Loop through input_mapped_boxes
 
@@ -1081,7 +1081,7 @@ BoxLevelConnectorUtils::makeRemainderMap(
         ni != orig_nodes.end(); ++ni) {
 
       const Box& orig_node = *ni;
-      const BoxId mapped_box_id = orig_node.getId();
+      const BoxId mapped_box_id = orig_node.getBoxId();
 
       if (!orig_to_rejection.hasNeighborSet(mapped_box_id)) {
          /*
@@ -1329,8 +1329,8 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
          }
          if (d_sanity_check_precond) {
             if (images_added &&
-                (!mapped_box_level_to_anchor.hasNeighborSet(mapped_box.getId()) ||
-                 mapped_box_level_to_anchor.isEmptyNeighborhood(mapped_box.getId()))) {
+                (!mapped_box_level_to_anchor.hasNeighborSet(mapped_box.getBoxId()) ||
+                 mapped_box_level_to_anchor.isEmptyNeighborhood(mapped_box.getBoxId()))) {
                TBOX_WARNING(
                   "BoxLevelConnectorUtils::addPeriodicImages: Box " << mapped_box
                                                                     <<

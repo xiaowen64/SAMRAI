@@ -286,7 +286,7 @@ BaseGridGeometry::computeBoundaryBoxesOnLevel(
 
    for (PatchLevel::iterator ip(level.begin()); ip != level.end(); ++ip) {
       const boost::shared_ptr<Patch>& patch = *ip;
-      const BoxId& patch_id = patch->getBox().getId();
+      const BoxId& patch_id = patch->getBox().getBoxId();
       const int block_num = patch->getBox().getBlockId().getBlockValue();
 
       if (patch->getPatchGeometry()->getTouchesRegularBoundary() ||
@@ -297,7 +297,7 @@ BaseGridGeometry::computeBoundaryBoxesOnLevel(
          /*
           * patch_boundaries is an array of DIM BoxContainers for each patch.
           * patch_boundaries[DIM-1] will store boundary boxes of the
-          * mapped_box type. If DIM > 1, patch_boundaries[DIM-2] will store
+          * nodetype. If DIM > 1, patch_boundaries[DIM-2] will store
           * boundary boxes of the edge type, and if DIM > 2,
           * patch_boundaries[DIM-3] will store boundary boxes of the face
           * type.
@@ -370,19 +370,19 @@ BaseGridGeometry::findPatchesTouchingBoundaries(
       const Box& box(patch->getBox());
 
       std::map<BoxId, TwoDimBool>::iterator iter_touches_regular_bdry(
-         touches_regular_bdry.find(ip->getBox().getId()));
+         touches_regular_bdry.find(ip->getBox().getBoxId()));
       if (iter_touches_regular_bdry == touches_regular_bdry.end()) {
          iter_touches_regular_bdry = touches_regular_bdry.insert(
                iter_touches_regular_bdry,
-               std::pair<BoxId, TwoDimBool>(ip->getBox().getId(), TwoDimBool(d_dim)));
+               std::pair<BoxId, TwoDimBool>(ip->getBox().getBoxId(), TwoDimBool(d_dim)));
       }
 
       std::map<BoxId, TwoDimBool>::iterator iter_touches_periodic_bdry(
-         touches_periodic_bdry.find(ip->getBox().getId()));
+         touches_periodic_bdry.find(ip->getBox().getBoxId()));
       if (iter_touches_periodic_bdry == touches_periodic_bdry.end()) {
          iter_touches_periodic_bdry = touches_periodic_bdry.insert(
                iter_touches_periodic_bdry,
-               std::pair<BoxId, TwoDimBool>(ip->getBox().getId(), TwoDimBool(d_dim)));
+               std::pair<BoxId, TwoDimBool>(ip->getBox().getBoxId(), TwoDimBool(d_dim)));
       }
 
       computeBoxTouchingBoundaries(
@@ -409,7 +409,7 @@ BaseGridGeometry::computeBoxTouchingBoundaries(
 {
 
    /*
-    * Create a list of boxes inside a mapped_box_level of one cell outside the
+    * Create a list of boxes inside a layer of one cell outside the
     * patch.  Remove the intersections with the domain's interior, so that only
     * boxes outside the physical domain (if any) remain in the list.
     */
@@ -525,8 +525,8 @@ BaseGridGeometry::setGeometryOnPatches(
    for (PatchLevel::iterator ip(level.begin()); ip != level.end(); ++ip) {
       const boost::shared_ptr<Patch>& patch = *ip;
       setGeometryDataOnPatch(*patch, ratio_to_level_zero,
-         (*touches_regular_bdry.find(ip->getBox().getId())).second,
-         (*touches_periodic_bdry.find(ip->getBox().getId())).second);
+         (*touches_regular_bdry.find(ip->getBox().getBoxId())).second,
+         (*touches_periodic_bdry.find(ip->getBox().getBoxId())).second);
    }
    t_set_geometry_data_on_patches->stop();
 
@@ -1140,7 +1140,7 @@ BaseGridGeometry::getBoundaryBoxes(
 
 void
 BaseGridGeometry::computePhysicalDomain(
-   BoxContainer& domain_mapped_boxes,
+   BoxContainer& domain_boxes,
    const IntVector& ratio_to_level_zero,
    const BlockId& block_id) const
 {
@@ -1165,11 +1165,11 @@ BaseGridGeometry::computePhysicalDomain(
    }
 #endif
 
-   domain_mapped_boxes.clear();
+   domain_boxes.clear();
    for (BoxContainer::const_iterator itr = d_physical_domain.begin();
         itr != d_physical_domain.end(); ++itr) {
       if (itr->getBlockId() == block_id) {
-         domain_mapped_boxes.insert(*itr);
+         domain_boxes.insert(*itr);
       }
    }
 
@@ -1181,9 +1181,9 @@ BaseGridGeometry::computePhysicalDomain(
          tmp_rat(id) = abs(ratio_to_level_zero(id));
       }
       if (coarsen) {
-         domain_mapped_boxes.coarsen(tmp_rat);
+         domain_boxes.coarsen(tmp_rat);
       } else {
-         domain_mapped_boxes.refine(tmp_rat);
+         domain_boxes.refine(tmp_rat);
       }
    }
 }
@@ -1262,7 +1262,7 @@ BaseGridGeometry::computePhysicalDomain(
 
 void
 BaseGridGeometry::computePhysicalDomain(
-   BoxContainer& domain_mapped_boxes,
+   BoxContainer& domain_boxes,
    const IntVector& ratio_to_level_zero) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio_to_level_zero);
@@ -1286,7 +1286,7 @@ BaseGridGeometry::computePhysicalDomain(
    }
 #endif
 
-   domain_mapped_boxes = d_domain_with_images;
+   domain_boxes = d_domain_with_images;
 
    if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
       bool coarsen = false;
@@ -1296,9 +1296,9 @@ BaseGridGeometry::computePhysicalDomain(
          tmp_rat(id) = abs(ratio_to_level_zero(id));
       }
       if (coarsen) {
-         domain_mapped_boxes.coarsen(tmp_rat);
+         domain_boxes.coarsen(tmp_rat);
       } else {
-         domain_mapped_boxes.refine(tmp_rat);
+         domain_boxes.refine(tmp_rat);
       }
    }
 
@@ -2075,7 +2075,7 @@ BaseGridGeometry::adjustMultiblockPatchLevelBoundaries(
 
    if (d_number_blocks > 1) {
 
-      const BoxContainer& d_mapped_boxes =
+      const BoxContainer& d_boxes =
          patch_level.getBoxLevel()->getBoxes();
 
       IntVector gcw(patch_level.getPatchDescriptor()->getMaxGhostWidth(d_dim));
@@ -2104,12 +2104,12 @@ BaseGridGeometry::adjustMultiblockPatchLevelBoundaries(
          pseudo_domain.spliceFront(sing_boxes);
          pseudo_domain.coalesce();
 
-         BoxContainerSingleBlockIterator mbi(d_mapped_boxes.begin(block_id));
+         BoxContainerSingleBlockIterator mbi(d_boxes.begin(block_id));
 
-         for ( ; mbi != d_mapped_boxes.end(block_id); ++mbi) {
-            const BoxId& mapped_box_id = mbi->getId();
+         for ( ; mbi != d_boxes.end(block_id); ++mbi) {
+            const BoxId& box_id = mbi->getBoxId();
             adjustBoundaryBoxesOnPatch(
-               *patch_level.getPatch(mapped_box_id),
+               *patch_level.getPatch(box_id),
                pseudo_domain,
                gcw,
                singularity);

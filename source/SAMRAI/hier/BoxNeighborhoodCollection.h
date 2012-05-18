@@ -47,7 +47,7 @@ class BoxNeighborhoodCollection
          bool
          operator () (const Box* box0, const Box* box1) const
          {
-            return box0->getId() < box1->getId();
+            return box0->getBoxId() < box1->getBoxId();
          }
       };
 
@@ -56,7 +56,7 @@ class BoxNeighborhoodCollection
          bool
          operator () (const Box& box0, const Box& box1) const
          {
-            return box0.getId() < box1.getId();
+            return box0.getBoxId() < box1.getBoxId();
          }
       };
 

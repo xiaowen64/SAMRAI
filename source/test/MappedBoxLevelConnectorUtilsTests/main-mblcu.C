@@ -446,9 +446,9 @@ int main(
               bi != small_mapped_box_set.end(); ++bi) {
             const hier::Box& small_mapped_box = *bi;
 
-            if (small_to_everything.hasNeighborSet(small_mapped_box.getId())) {
+            if (small_to_everything.hasNeighborSet(small_mapped_box.getBoxId())) {
                hier::Connector::ConstNeighborhoodIterator neighbors =
-                  small_to_everything.find(small_mapped_box.getId());
+                  small_to_everything.find(small_mapped_box.getBoxId());
 
                hier::BoxContainer neighbor_box_list;
                for (hier::Connector::ConstNeighborIterator na = small_to_everything.begin(neighbors);
@@ -471,18 +471,18 @@ int main(
                   tbox::perr << "Mapping small_to_everything erroneously mapped "
                              << small_mapped_box << " to something less than itself:\n";
                   small_to_everything.writeNeighborhoodToErrorStream(
-                     small_mapped_box.getId());
+                     small_mapped_box.getBoxId());
                }
 
             }
 
-            if (small_to_nothing.hasNeighborSet(small_mapped_box.getId())) {
+            if (small_to_nothing.hasNeighborSet(small_mapped_box.getBoxId())) {
                if (!small_to_nothing.isEmptyNeighborhood(
-                       small_mapped_box.getId())) {
+                       small_mapped_box.getBoxId())) {
                   tbox::perr << "Mapping small_to_nothing erroneously mapped " << small_mapped_box
                              << " to:\n";
                   small_to_nothing.writeNeighborhoodToErrorStream(
-                     small_mapped_box.getId());
+                     small_mapped_box.getBoxId());
                   tbox::perr << "\nIt should be mapped to nothing\n";
                   ++fail_count;
                }

@@ -29,7 +29,7 @@ BoxNeighborhoodCollection::BoxNeighborhoodCollection(
    // For each base Box in base_boxes create an empty neighborhood.
    for (BoxContainer::const_iterator itr(base_boxes.begin());
         itr != base_boxes.end(); ++itr) {
-      insert(itr->getId());
+      insert(itr->getBoxId());
    }
 }
 
