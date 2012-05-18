@@ -21,18 +21,18 @@ namespace SAMRAI {
 namespace pdat {
 
 /*!
- * @brief Class OuternodeVariable<DIM> is a templated variable class
+ * @brief Class OuternodeVariable<TYPE> is a templated variable class
  * used to define node-centered data quantities only on patch boundaries.
  * It is a subclass of hier::Variable and is templated on the type
  * of the underlying data (e.g., double, int, bool, etc.).
  *
  * Note that the data layout in the outernode data arrays matches the corresponding
  * array sections provided by the node data implementation.  See header file for
- * the OuternodeData<DIM> class for a more detailed description of the data layout.
+ * the OuternodeData<TYPE> class for a more detailed description of the data layout.
  *
- * @see NodeData<DIM>
- * @see OuternodeData<DIM>
- * @see OuternodeDataFactory<DIM>
+ * @see NodeData<TYPE>
+ * @see OuternodeData<TYPE>
+ * @see OuternodeDataFactory<TYPE>
  * @see hier::Variable
  */
 

@@ -138,7 +138,7 @@ OuterfaceDataFactory<TYPE>::getSizeOfMemory(
  *
  * Return a boolean true value indicating that fine data for the outerface
  * quantity will take precedence on coarse-fine interfaces.  See the
- * OuterfaceVariable<DIM> class header file for more information.
+ * OuterfaceVariable<TYPE> class header file for more information.
  *
  *************************************************************************
  */

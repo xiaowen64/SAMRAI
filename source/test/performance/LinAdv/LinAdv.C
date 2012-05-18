@@ -2177,7 +2177,7 @@ bool LinAdv::packDerivedDataIntoDoubleBuffer(
       // Did not register this name.
       TBOX_ERROR(
          "Unregistered variable name '" << variable_name << "' in\n"
-                                        << "DLBGTest<DIM>::packDerivedPatchDataIntoDoubleBuffer");
+                                        << "LinAdv::packDerivedPatchDataIntoDoubleBuffer");
    }
 
    return true;

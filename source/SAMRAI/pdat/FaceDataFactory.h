@@ -43,7 +43,7 @@ public:
     * The constructor for the face data factory class.  The ghost cell width, depth
     * (number of components), and fine boundary representation arguments give the
     * defaults for all edge data objects created with this factory.  See
-    * the FaceVariable<DIM> class header file for more information.
+    * the FaceVariable<TYPE> class header file for more information.
     */
    FaceDataFactory(
       int depth,
@@ -105,7 +105,7 @@ public:
    /**
     * Return a boolean value indicating how data for the face quantity will be
     * treated on coarse-fine interfaces.  This value is passed into the
-    * constructor.  See the FaceVariable<DIM> class header file for more
+    * constructor.  See the FaceVariable<TYPE> class header file for more
     * information.
     */
    bool fineBoundaryRepresentsVariable() const;

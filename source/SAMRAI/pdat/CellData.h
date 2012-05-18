@@ -27,7 +27,7 @@ namespace SAMRAI {
 namespace pdat {
 
 /*!
- * @brief Class CellData<DIM> provides an implementation for data defined
+ * @brief Class CellData<TYPE> provides an implementation for data defined
  * at cell centers on AMR patches.  It is derived from the
  * hier::PatchData interface common to all SAMRAI patch data types.
  * Given a CELL-centered AMR index space box, a cell data object represents

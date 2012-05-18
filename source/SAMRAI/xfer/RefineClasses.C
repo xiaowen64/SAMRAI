@@ -202,7 +202,7 @@ RefineClasses::itemIsValid(
       if (fill_pattern->getPatternName() != "BOX_GEOMETRY_FILL_PATTERN") {
          if (fill_pattern->getStencilWidth() > scratch_gcw) {
             item_good = false;
-            TBOX_ERROR("Bad data given to RefineClasses<DIM>...\n"
+            TBOX_ERROR("Bad data given to RefineClasses...\n"
                << "VariableFillPattern " << fill_pattern->getPatternName()
                << "\nhas larger stencil width than ghost cell width"
                << "of `Scratch' patch data" << pd->mapIndexToName(

@@ -28,7 +28,7 @@ namespace SAMRAI {
 namespace pdat {
 
 /*!
- * @brief Class OutersideData<DIM> provides an implementation for data defined
+ * @brief Class OutersideData<TYPE> provides an implementation for data defined
  * at cell sides (faces) on the boundaries of AMR patches.  It is derived from
  * the hier::PatchData interface common to all SAMRAI patch data types.  Given
  * a CELL-centered AMR index space box, an outerside data object represents
@@ -70,7 +70,7 @@ namespace pdat {
  * The data type TYPE must define a default constructor (that takes no
  * arguments) and also the assignment operator.
  *
- * IMPORTANT: The OuterfaceData<DIM> class provides the same storage
+ * IMPORTANT: The OuterfaceData<TYPE> class provides the same storage
  * as this outerside data class, except that the coordinate directions of the
  * individual arrays are permuted; i.e., OuterfaceData is consistent
  * with the FaceData implementation.

@@ -23,7 +23,7 @@ namespace math {
 /**
  * Class ArrayDataNormOpsComplex provides a set of common norm
  * operations that may be applied to arrays of complex data values
- * maintained as pdat::ArrayData<DIM> objects.  The intent of this class is to
+ * maintained as pdat::ArrayData<TYPE> objects.  The intent of this class is to
  * provide a single implementation of these operations as they are needed
  * by objects that perform these operations on the standard array-based patch
  * data types (i.e., cell-centered, face-centered, node-centered).  Each of
@@ -34,7 +34,7 @@ namespace math {
  * vector kernels where the data resides over multiple levels in an AMR
  * hierarchy.  Note also that each operation will be performed on the
  * intersection of the box in the function argument list and the boxes
- * associated with all pdat::ArrayData<DIM> objects.
+ * associated with all pdat::ArrayData<TYPE> objects.
  *
  * Note that a similar set of norm operations is implemented for real array
  * data (double and float) in the class ArrayDataNormOpsReal.

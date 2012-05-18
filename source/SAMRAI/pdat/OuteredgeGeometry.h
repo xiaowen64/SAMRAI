@@ -33,7 +33,7 @@ class EdgeGeometry;
  * box geometries and edge or outeredge box geometries for communication
  * operations.
  *
- * See header file for OuteredgeData<DIM> class for a more detailed
+ * See header file for OuteredgeData<TYPE> class for a more detailed
  * description of the data layout.
  *
  * @see hier::BoxGeometry

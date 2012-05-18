@@ -105,7 +105,7 @@ public:
     * Return a boolean true value indicating that the cell data quantities will
     * always be treated as though fine values represent them on coarse-fine
     * interfaces.
-    * See the CellVariable<DIM> class header file for more information.
+    * See the CellVariable<TYPE> class header file for more information.
     */
    bool
    fineBoundaryRepresentsVariable() const;

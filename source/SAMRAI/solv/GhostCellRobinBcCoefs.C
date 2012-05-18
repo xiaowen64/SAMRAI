@@ -156,8 +156,8 @@ GhostCellRobinBcCoefs::setBcCoefs(
 
       /*
        * Fill in gcoef_data with data from d_ghost_data_id.
-       * The data is first looked for in a pdat::OutersideData<DIM> object
-       * and a pdat::CellData<DIM> object in that order.  Data from the
+       * The data is first looked for in a pdat::OutersideData<TYPE> object
+       * and a pdat::CellData<TYPE> object in that order.  Data from the
        * first place with allocated storage is used.
        */
       boost::shared_ptr<hier::PatchData> patch_data(

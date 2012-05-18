@@ -38,8 +38,8 @@ namespace xfer {
  *       concrete subclass; in particular, the allocate() function must return
  *       a new instance of the desired transaction object.
  * -# The type of the transaction allocated by the concrete factory is a
- *       Transaction<DIM>.  Thus, the new transaction object must be derived
- *       from the Transaction<DIM> base class and implement the abstract
+ *       Transaction.  Thus, the new transaction object must be derived
+ *       from the Transaction base class and implement the abstract
  *       virtual functions declared by the base class.
  *
  * @see tbox::Transaction

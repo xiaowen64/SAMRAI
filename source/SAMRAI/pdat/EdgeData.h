@@ -27,7 +27,7 @@ namespace SAMRAI {
 namespace pdat {
 
 /*!
- * @brief Class EdgeData<DIM> provides an implementation for data defined
+ * @brief Class EdgeData<TYPE> provides an implementation for data defined
  * at cell edges on AMR patches.  It is derived from the hier::PatchData
  * interface common to all SAMRAI patch data types.  Given a CELL-centered
  * AMR index space box, an edge data object represents data of some template

@@ -25,7 +25,7 @@ namespace SAMRAI {
 namespace hier {
 
 /**
- * Class RefineOperator<DIM> is an abstract base class for each
+ * Class RefineOperator is an abstract base class for each
  * spatial refinement operator used in the SAMRAI framework.  This class
  * defines the interface between numerical refinement routines and the
  * rest of the framework.  Each concrete refinement operator subclass

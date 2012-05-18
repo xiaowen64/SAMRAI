@@ -479,14 +479,14 @@ private:
  * Class IndexIterator is the iterator associated with the IndexData
  * This class provides methods for stepping through the
  * list that contains the irregular index set.  The user should
- * access this class through the name IndexData<TYPE>::iterator.
+ * access this class through the name IndexData<TYPE, BOX_GEOMETRY>::iterator.
  *
  * This iterator should be used as follows:
  * \verbatim
- * IndexData<TYPE> data;
+ * IndexData<TYPE, BOX_GEOMETRY> data;
  * ...
- * IndexData<TYPE>::iterator iterend(data, false);
- * for (IndexData<TYPE>::iterator iter(data, true); iter != iterend; ++iter) {
+ * IndexData<TYPE, BOX_GEOMETRY>::iterator iterend(data, false);
+ * for (IndexData<TYPE, BOX_GEOMETRY>::iterator iter(data, true); iter != iterend; ++iter) {
  *    ... = *iter;
  * }
  * \endverbatim

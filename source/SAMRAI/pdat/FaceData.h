@@ -27,7 +27,7 @@ namespace SAMRAI {
 namespace pdat {
 
 /*!
- * @brief Class FaceData<DIM> provides an implementation for data defined
+ * @brief Class FaceData<TYPE> provides an implementation for data defined
  * at cell faces on AMR patches.  It is derived from the hier::PatchData
  * interface common to all SAMRAI patch data types.  Given a CELL-centered
  * AMR index space box, a face data object represents data of some template
@@ -71,7 +71,7 @@ namespace pdat {
  * The data type TYPE must define a default constructor (that takes no
  * arguments) and also the assignment operator.
  *
- * IMPORTANT: The SideData<DIM> class provides the same storage
+ * IMPORTANT: The SideData<TYPE> class provides the same storage
  * as this face data class, except that the coordinate directions of the
  * individual arrays are not permuted.
  *

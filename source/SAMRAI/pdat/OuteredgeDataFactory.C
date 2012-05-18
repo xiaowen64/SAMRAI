@@ -139,7 +139,7 @@ OuteredgeDataFactory<TYPE>::getSizeOfMemory(
  *
  * Return a boolean true value indicating that fine data for the outeredge
  * quantity will take precedence on coarse-fine interfaces.  See the
- * OuteredgeVariable<DIM> class header file for more information.
+ * OuteredgeVariable<TYPE> class header file for more information.
  *
  *************************************************************************
  */

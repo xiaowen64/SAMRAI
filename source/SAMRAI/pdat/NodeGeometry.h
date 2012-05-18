@@ -32,7 +32,7 @@ namespace pdat {
  * hier::BoxGeometry and it computes intersections between node-
  * centered box geometries for communication operations.
  *
- * See header file for NodeData<DIM> class for a more detailed
+ * See header file for NodeData<TYPE> class for a more detailed
  * description of the data layout.
  *
  * @see hier::BoxGeometry

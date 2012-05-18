@@ -33,7 +33,7 @@ class SideGeometry;
  * box geometries and side or outerside box geometries for communication
  * operations.
  *
- * See header file for OutersideData<DIM> class for a more detailed
+ * See header file for OutersideData<TYPE> class for a more detailed
  * description of the data layout.
  *
  * @see hier::BoxGeometry

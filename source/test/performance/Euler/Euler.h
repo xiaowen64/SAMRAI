@@ -222,13 +222,13 @@ public:
    setPhysicalBoundaryConditions(
       hier::Patch& patch,
       const double fill_time,
-      const hier::IntVector<NDIM>&
+      const hier::IntVector&
       ghost_width_to_fill);
 
    /**
     * Return stencil width of conservative linear interpolation operations.
     */
-   hier::IntVector<NDIM>
+   hier::IntVector
    getRefineOpStencilWidth() const;
 
    /**
@@ -240,7 +240,7 @@ public:
       hier::Patch& fine,
       const hier::Patch& coarse,
       const hier::Box& fine_box,
-      const hier::IntVector<NDIM>& ratio);
+      const hier::IntVector& ratio);
 
    ///
    ///  The following routines:
@@ -255,7 +255,7 @@ public:
    /**
     * Return stencil width of conservative averaging operations.
     */
-   hier::IntVector<NDIM>
+   hier::IntVector
    getCoarsenOpStencilWidth() const;
 
    /**
@@ -267,7 +267,7 @@ public:
       hier::Patch& coarse,
       const hier::Patch& fine,
       const hier::Box& coarse_box,
-      const hier::IntVector<NDIM>& ratio);
+      const hier::IntVector& ratio);
 
    /**
     * Write state of Euler object to the given database for restart.
@@ -396,7 +396,7 @@ private:
    checkBoundaryData(
       int btype,
       const hier::Patch& patch,
-      const hier::IntVector<NDIM>& ghost_width_to_fill,
+      const hier::IntVector& ghost_width_to_fill,
       const tbox::Array<int>& scalar_bconds,
       const tbox::Array<int>& vector_bconds) const;
 
@@ -477,8 +477,8 @@ private:
    int d_riemann_solve_int;
    int d_godunov_order;
    string d_corner_transport;
-   hier::IntVector<NDIM> d_nghosts;
-   hier::IntVector<NDIM> d_fluxghosts;
+   hier::IntVector d_nghosts;
+   hier::IntVector d_fluxghosts;
 
    /*
     * Indicator for problem type and initial conditions

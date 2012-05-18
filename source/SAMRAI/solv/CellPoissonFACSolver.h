@@ -29,12 +29,6 @@ namespace solv {
  * wrapping up lower-level components (FAC cycling, Poisson equation
  * operations and boundary conditions) in a single high-level interface.
  *
- * Note: this class provides a backward-compatible interface to
- * the soon-to-be obsolete PoissonHierarchySolver<DIM> class.
- * Although this class hides the lower-level components (FAC cycling,
- * Poisson equation operations and boundary conditions), it is
- * perfectly acceptable to use those lower-level components directly.
- *
  * We solve the equation
  *    div(D grad(u)) + Cu = f
  * where D is a side-centered array and C is a cell-centered array.

@@ -25,7 +25,7 @@ namespace SAMRAI {
 namespace hier {
 
 /**
- * Class CoarsenOperator<DIM> is an abstract base class for each
+ * Class CoarsenOperator is an abstract base class for each
  * spatial coarsening operator used in the SAMRAI framework.  This class
  * defines the interface between numerical coarsening routines and the
  * rest of the framework.  Each concrete coarsening operator subclass
@@ -52,7 +52,7 @@ namespace hier {
  * from the getStencilWidth() and getOperatorPriority() functions,
  * respectively.  Then, the new operator must be added to the
  * operator list for the appropriate transfer geometry object using the
- * Geometry<DIM>::addCarsenOperator() function.
+ * BaseGridGeometry::addCarsenOperator() function.
  *
  * Since spatial coarsening operators usually depend on patch data centering
  * and data type as well as the mesh coordinate system, they are defined

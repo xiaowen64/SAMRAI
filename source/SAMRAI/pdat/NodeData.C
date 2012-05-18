@@ -589,7 +589,7 @@ NodeData<TYPE>::getSpecializedFromDatabase(
 
    int ver = database->getInteger("PDAT_NODEDATA_VERSION");
    if (ver != PDAT_NODEDATA_VERSION) {
-      TBOX_ERROR("NodeData<DIM>::getSpecializedFromDatabase error...\n"
+      TBOX_ERROR("NodeData<TYPE>::getSpecializedFromDatabase error...\n"
          << " : Restart file version different than class version" << std::endl);
    }
 

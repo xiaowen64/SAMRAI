@@ -362,7 +362,7 @@ public:
     * @brief Set the scratch patch data index for the flux.
     *
     * The use of this function is optional.
-    * The patch data index should be a pdat::SideData<DIM> type of variable.
+    * The patch data index should be a pdat::SideData<TYPE> type of variable.
     * If the flux id is -1 (the default initial value), scratch space
     * for the flux is allocated as needed and immediately deallocated
     * afterward, level by level.  If you have space preallocated for

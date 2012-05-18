@@ -172,8 +172,8 @@ Euler::Euler(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(CELLG == FACEG);
 #endif
-   d_nghosts = hier::IntVector<NDIM>(CELLG);
-   d_fluxghosts = hier::IntVector<NDIM>(FLUXG);
+   d_nghosts = hier::IntVector(CELLG);
+   d_fluxghosts = hier::IntVector(FLUXG);
 
    /*
     * Defaults for problem type and initial data
@@ -596,7 +596,7 @@ void Euler::initializeDataOnPatch(
       TBOX_ASSERT(velocity);
       TBOX_ASSERT(pressure);
 #endif
-      hier::IntVector<NDIM> ghost_cells = density->getGhostCellWidth();
+      hier::IntVector ghost_cells = density->getGhostCellWidth();
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(velocity->getGhostCellWidth() == ghost_cells);
       TBOX_ASSERT(pressure->getGhostCellWidth() == ghost_cells);
@@ -709,7 +709,7 @@ double Euler::computeStableDtOnPatch(
    TBOX_ASSERT(velocity);
    TBOX_ASSERT(pressure);
 #endif
-   hier::IntVector<NDIM> ghost_cells = density->getGhostCellWidth();
+   hier::IntVector ghost_cells = density->getGhostCellWidth();
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(velocity->getGhostCellWidth() == ghost_cells);
    TBOX_ASSERT(pressure->getGhostCellWidth() == ghost_cells);
@@ -1761,16 +1761,16 @@ void Euler::boundaryReset(
  *************************************************************************
  */
 
-hier::IntVector<NDIM> Euler::getRefineOpStencilWidth() const
+hier::IntVector Euler::getRefineOpStencilWidth() const
 {
-   return hier::IntVector<NDIM>(1);
+   return hier::IntVector(1);
 }
 
 void Euler::postprocessRefine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const hier::Box& fine_box,
-   const hier::IntVector<NDIM>& ratio)
+   const hier::IntVector& ratio)
 {
 
    boost::shared_ptr<pdat::CellData<double> > cdensity(
@@ -1795,7 +1795,7 @@ void Euler::postprocessRefine(
    TBOX_ASSERT(fvelocity);
    TBOX_ASSERT(fpressure);
 
-   hier::IntVector<NDIM> gccheck = cdensity->getGhostCellWidth();
+   hier::IntVector gccheck = cdensity->getGhostCellWidth();
    TBOX_ASSERT(cvelocity->getGhostCellWidth() == gccheck);
    TBOX_ASSERT(cpressure->getGhostCellWidth() == gccheck);
 
@@ -1822,10 +1822,10 @@ void Euler::postprocessRefine(
    const hier::Index ifirstf = fine_box.lower();
    const hier::Index ilastf = fine_box.upper();
 
-   const hier::IntVector<NDIM> cons_ghosts(1);
+   const hier::IntVector cons_ghosts(1);
    pdat::CellData<double> conserved(coarse_box, 1, cons_ghosts);
 
-   const hier::IntVector<NDIM> tmp_ghosts(0);
+   const hier::IntVector tmp_ghosts(0);
 
    double* diff0 = new double[coarse_box.numberCells(0) + 1];
    pdat::CellData<double> slope0(coarse_box, 1, tmp_ghosts);
@@ -1936,16 +1936,16 @@ void Euler::postprocessRefine(
  *************************************************************************
  */
 
-hier::IntVector<NDIM> Euler::getCoarsenOpStencilWidth() const
+hier::IntVector Euler::getCoarsenOpStencilWidth() const
 {
-   return hier::IntVector<NDIM>(0);
+   return hier::IntVector(0);
 }
 
 void Euler::postprocessCoarsen(
    hier::Patch& coarse,
    const hier::Patch& fine,
    const hier::Box& coarse_box,
-   const hier::IntVector<NDIM>& ratio)
+   const hier::IntVector& ratio)
 {
 
    boost::shared_ptr<pdat::CellData<double> > fdensity(
@@ -1969,7 +1969,7 @@ void Euler::postprocessCoarsen(
    TBOX_ASSERT(fvelocity);
    TBOX_ASSERT(fpressure);
 
-   hier::IntVector<NDIM> gccheck = cdensity->getGhostCellWidth();
+   hier::IntVector gccheck = cdensity->getGhostCellWidth();
    TBOX_ASSERT(cvelocity->getGhostCellWidth() == gccheck);
    TBOX_ASSERT(cpressure->getGhostCellWidth() == gccheck);
 
@@ -1994,7 +1994,7 @@ void Euler::postprocessCoarsen(
    const hier::Index ifirstf = fine_box.lower();
    const hier::Index ilastf = fine_box.upper();
 
-   const hier::IntVector<NDIM> cons_ghosts(0);
+   const hier::IntVector cons_ghosts(0);
    pdat::CellData<double> conserved(fine_box, 1, cons_ghosts);
 
 #if (NDIM == 2)
@@ -2051,7 +2051,7 @@ void Euler::postprocessCoarsen(
 void Euler::setPhysicalBoundaryConditions(
    hier::Patch& patch,
    const double fill_time,
-   const hier::IntVector<NDIM>& ghost_width_to_fill)
+   const hier::IntVector& ghost_width_to_fill)
 {
    NULL_USE(fill_time);
 
@@ -2069,7 +2069,7 @@ void Euler::setPhysicalBoundaryConditions(
    TBOX_ASSERT(velocity);
    TBOX_ASSERT(pressure);
 #endif
-   hier::IntVector<NDIM> ghost_cells = density->getGhostCellWidth();
+   hier::IntVector ghost_cells = density->getGhostCellWidth();
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(velocity->getGhostCellWidth() == ghost_cells);
    TBOX_ASSERT(pressure->getGhostCellWidth() == ghost_cells);
@@ -2326,7 +2326,7 @@ void Euler::tagGradientDetectorCells(
       if (error_level_number < 2) {
          hier::Box tagbox(hier::Index(9, 0), hier::Index(9, 3));
          if (error_level_number == 1) {
-            tagbox.refine(hier::IntVector<NDIM>(2));
+            tagbox.refine(hier::IntVector(2));
          }
          hier::Box ibox = pbox * tagbox;
 
@@ -2482,8 +2482,8 @@ void Euler::tagGradientDetectorCells(
          TBOX_ASSERT(var);
 #endif
 
-         hier::IntVector<NDIM> vghost = var->getGhostCellWidth();
-         hier::IntVector<NDIM> tagghost = tags->getGhostCellWidth();
+         hier::IntVector vghost = var->getGhostCellWidth();
+         hier::IntVector tagghost = tags->getGhostCellWidth();
 
          if (ref == "DENSITY_DEVIATION" || ref == "PRESSURE_DEVIATION") {
 
@@ -3922,7 +3922,7 @@ void Euler::getFromInput(
 
    } // if !is_from_restart read in problem data
 
-   hier::IntVector<NDIM> periodic = d_grid_geometry->getPeriodicShift();
+   hier::IntVector periodic = d_grid_geometry->getPeriodicShift();
    int num_per_dirs = 0;
    for (int id = 0; id < NDIM; id++) {
       if (periodic(id)) num_per_dirs++;
@@ -4393,7 +4393,7 @@ void Euler::readStateDataEntry(
 void Euler::checkBoundaryData(
    int btype,
    const hier::Patch& patch,
-   const hier::IntVector<NDIM>& ghost_width_to_check,
+   const hier::IntVector& ghost_width_to_check,
    const tbox::Array<int>& scalar_bconds,
    const tbox::Array<int>& vector_bconds) const
 {

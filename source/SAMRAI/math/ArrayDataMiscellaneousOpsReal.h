@@ -21,7 +21,7 @@ namespace math {
 /**
  * Class ArrayDataMiscellaneousOpsReal provides various operations that
  * may be applied to arrays of real (double and float) numerical data
- * values maintained using pdat::ArrayData<DIM> objects.  These operations are
+ * values maintained using pdat::ArrayData<TYPE> objects.  These operations are
  * sufficiently different from basic arithmetic and norm operations that we
  * chose to implement them in a separate class.  However, as in the case of the  * more common operations, the intent of this class is to provide a single
  * implementation of the operations as they are needed by objects that
@@ -33,7 +33,7 @@ namespace math {
  * operations are used in vector kernels where the data resides over multiple
  * levels of spatial resolution in an AMR hierarchy.  The actual index
  * region on which each operation occurs is the intersection of this box
- * and the boxes of all the pdat::ArrayData<DIM> objects involved.
+ * and the boxes of all the pdat::ArrayData<TYPE> objects involved.
  *
  * Since these operations are used only by the vector kernels for the KINSOL
  * and CVODE solver packages at this time, they are intended to be instantiated

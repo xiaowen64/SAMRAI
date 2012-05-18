@@ -25,9 +25,9 @@ namespace SAMRAI {
 namespace pdat {
 
 /**
- * Class IndexDataFactory<DIM> is the factory class used to allocate
- * new instances of IndexData<DIM> objects.  It is a subclass of the
- * hier::PatchDataFactory base class.
+ * Class IndexDataFactory<TYPE, BOX_GEOMETRY> is the factory class used to
+ * allocate new instances of IndexData<TYPE, BOX_GEOMETRY> objects.  It is a
+ * subclass of the hier::PatchDataFactory base class.
  *
  * @see pdat::IndexData
  * @see pdat::IndexVariable
@@ -39,8 +39,8 @@ class IndexDataFactory:public hier::PatchDataFactory
 {
 public:
    /**
-    * The default constructor for the IndexDataFactory<DIM> class.
-    * The ghost cell width argument gives the default width for all
+    * The default constructor for the IndexDataFactory<TYPE, BOX_GEOMETRY>
+    * class.  The ghost cell width argument gives the default width for all
     * irregular data objects created with this factory.
     */
    explicit IndexDataFactory(
@@ -97,8 +97,8 @@ public:
    /**
     * Return a boolean true value indicating that the index data quantities
     * will always be treated as though fine values represent them on
-    * coarse-fine interfaces. See the IndexVariable<DIM> class header file for
-    * more information.
+    * coarse-fine interfaces. See the IndexVariable<TYPE, BOX_GEOMETRY> class
+    * header file for more information.
     */
    bool
    fineBoundaryRepresentsVariable() const;

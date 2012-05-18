@@ -1821,7 +1821,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
     *
     * Instead of writing from scratch,
     * the code to find the split plane was copied
-    * from mesh::BergerRigoutsos<DIM>::splitTagBoundBox()
+    * from mesh::BergerRigoutsos::splitTagBoundBox()
     * and modified.
     */
 

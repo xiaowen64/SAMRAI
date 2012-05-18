@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
- * Description:   Variable<DIM> class for defining outernode centered variables
+ * Description:   Variable class for defining outernode centered variables
  *
  ************************************************************************/
 

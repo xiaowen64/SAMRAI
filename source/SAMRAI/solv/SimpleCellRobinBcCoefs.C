@@ -147,7 +147,7 @@ SimpleCellRobinBcCoefs::setBoundaries(
    } else {
       TBOX_ERROR(
          d_object_name << ": Non-existing case of\n"
-                       << "boundary_type in PoissonSolver<DIM>::setBoundaries()");
+                       << "boundary_type in SimpleCellRobinBcCoefs::setBoundaries()");
    }
 
 }
@@ -487,7 +487,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
  ***********************************************************************
  * This class cannot set coefficients for boundary boxes that extend
  * past the patch in the direction parallel to the boundary,
- * because it relies on data, such as pdat::OutersideData<DIM>,
+ * because it relies on data, such as pdat::OutersideData<TYPE>,
  * that does not extend.
  ***********************************************************************
  */
@@ -501,18 +501,18 @@ SimpleCellRobinBcCoefs::numberOfExtensionsFillable() const
  ************************************************************************
  *
  * Copy and save cell-centered Dirichlet data in ghost cells.
- * For each boundary box in the hierarchy, we create a pdat::ArrayData<DIM>
+ * For each boundary box in the hierarchy, we create a pdat::ArrayData<TYPE>
  * object indexed on the side indices corresponding to boundary boxes.
  * The ghost-cell-centered data is shifted to the side indices and
- * saved in the pdat::ArrayData<DIM> objects.
+ * saved in the pdat::ArrayData<TYPE> objects.
  *
  * First, loop through the hierarchy to compute how many
- * pdat::ArrayData<DIM> objects we need and the position of each one.
+ * pdat::ArrayData<TYPE> objects we need and the position of each one.
  *
- * Second, allocate the pdat::ArrayData<DIM> objects.
+ * Second, allocate the pdat::ArrayData<TYPE> objects.
  *
  * Third, loop through the hierarchy again to allocate the data in each
- * pdat::ArrayData<DIM> object and cache the ghost data.
+ * pdat::ArrayData<TYPE> object and cache the ghost data.
  *
  * The position of the appropriate boundary box bn of patch pn
  * of level ln is d_dirichlet_data_pos[ln][pn]+bn

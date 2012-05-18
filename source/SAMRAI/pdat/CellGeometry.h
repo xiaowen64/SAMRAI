@@ -32,7 +32,7 @@ namespace pdat {
  * hier::BoxGeometry and it computes intersections between cell-
  * centered box geometries for communication operations.
  *
- * See header file for CellData<DIM> class for a more detailed
+ * See header file for CellData<TYPE> class for a more detailed
  * description of the data layout.
  *
  * @see hier::BoxGeometry

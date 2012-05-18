@@ -611,7 +611,7 @@ OutersideData<TYPE>::getSpecializedFromDatabase(
 
    int ver = database->getInteger("PDAT_OUTERSIDEDATA_VERSION");
    if (ver != PDAT_OUTERSIDEDATA_VERSION) {
-      TBOX_ERROR("OutersideData<DIM>::getSpecializedFromDatabase error...\n"
+      TBOX_ERROR("OutersideData<TYPE>::getSpecializedFromDatabase error...\n"
          << " : Restart file version different than class version" << std::endl);
    }
 

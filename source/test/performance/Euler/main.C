@@ -432,7 +432,7 @@ int main(
       boost::shared_ptr<mesh::BergerRigoutsos> new_box_generator(
          new mesh::BergerRigoutsos(abr_db));
 #if 0
-      boost::shared_ptr<mesh::BergerRigoutsos<NDIM> > old_box_generator;
+      boost::shared_ptr<mesh::BergerRigoutsos > old_box_generator;
       const char which_br = main_db->getCharWithDefault("which_br", 'o');
       boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator(
          which_br == 'o'

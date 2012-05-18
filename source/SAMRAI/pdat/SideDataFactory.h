@@ -53,7 +53,7 @@ public:
     * with a single direction only, provide the directions vector argument.
     * A zero entry indicates that data for that direction is not wanted.
     * Otherwise, data will be created for that direction.  See the
-    * SideVariable<DIM> class header file for more information.
+    * SideVariable<TYPE> class header file for more information.
     */
    SideDataFactory(
       int depth,
@@ -135,7 +135,7 @@ public:
    /**
     * Return a boolean value indicating how data for the side quantity will be
     * treated on coarse-fine interfaces.  This value is passed into the
-    * constructor.  See the FaceVariable<DIM> class header file for more
+    * constructor.  See the FaceVariable<TYPE> class header file for more
     * information.
     */
    bool

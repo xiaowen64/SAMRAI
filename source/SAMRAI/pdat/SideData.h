@@ -27,7 +27,7 @@ namespace SAMRAI {
 namespace pdat {
 
 /*!
- * @brief Class SideData<DIM> provides an implementation for data defined
+ * @brief Class SideData<TYPE> provides an implementation for data defined
  * at cell sides (faces) on AMR patches.  It is derived from the hier::PatchData
  * interface common to all SAMRAI patch data types.  Given a CELL-centered
  * AMR index space box, a side data object represents data of some template
@@ -36,7 +36,7 @@ namespace pdat {
  * SideGeometry class provides the translation between the standard SAMRAI
  * cell-centered AMR index space and side-centered data.
  *
- * IMPORTANT: The FaceData<DIM> class provides the same storage
+ * IMPORTANT: The FaceData<TYPE> class provides the same storage
  * as this side data class, except that the coordinate directions of the
  * individual arrays are permuted in the face data implementation.
  *

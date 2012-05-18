@@ -103,7 +103,7 @@ public:
    /**
     * Return a boolean true value indicating that fine data for the outerside
     * quantity will take precedence on coarse-fine interfaces.  See the
-    * OutersideVariable<DIM> class header file for more information.
+    * OutersideVariable<TYPE> class header file for more information.
     */
    bool
    fineBoundaryRepresentsVariable() const;

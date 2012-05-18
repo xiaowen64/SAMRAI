@@ -33,7 +33,7 @@ class NodeGeometry;
  * box geometries and node or outernode box geometries for communication
  * operations.
  *
- * See header file for OuternodeData<DIM> class for a more detailed
+ * See header file for OuternodeData<TYPE> class for a more detailed
  * description of the data layout.
  *
  * @see hier::BoxGeometry

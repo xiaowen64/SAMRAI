@@ -27,11 +27,10 @@ namespace math {
  * Class PatchEdgeDataBasicOps provides access to a collection
  * of basic numerical operations that may be applied to numerical edge-
  * centered patch data.  These operations include simple arithmetic
- * operations as well as min and max, etc.  The primary intent of this
- * class is to provide the interface to these standard operations for
- * an PatchEdgeDataOps<DIM> object which provides access to a complete set
- * of operations that may be used to manipulate edge-centered patch data
- * objects.   Each member function accepts a box argument indicating the
+ * operations as well as min and max, etc.  This class provides a single
+ * implementation of these operations that may be used to manipulate any
+ * edge-centered patch data object.   Each  member function accepts a box
+ * argument indicating the
  * region of index space on which the operation should be performed.  The
  * operation will be performed on the intersection of this box and those
  * boxes corresponding to the patch data objects involved.

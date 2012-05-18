@@ -43,7 +43,7 @@ public:
     * The constructor for the node data factory class. The ghost cell width, depth
     * (number of components), and fine boundary representation arguments give the
     * defaults for all edge data objects created with this factory.  See
-    * the NodeVariable<DIM> class header file for more information.
+    * the NodeVariable<TYPE> class header file for more information.
     */
    NodeDataFactory(
       int depth,
@@ -106,7 +106,7 @@ public:
    /**
     * Return a boolean value indicating how data for the node quantity will be
     * treated on coarse-fine interfaces.  This value is passed into the
-    * constructor.  See the NodeVariable<DIM> class header file for more
+    * constructor.  See the NodeVariable<TYPE> class header file for more
     * information.
     */
    bool

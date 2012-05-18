@@ -33,7 +33,7 @@ class FaceGeometry;
  * box geometries and face or outerface box geometries for communication
  * operations.
  *
- * See header file for OuterfaceData<DIM> class for a more detailed
+ * See header file for OuterfaceData<TYPE> class for a more detailed
  * description of the data layout.
  *
  * @see hier::BoxGeometry

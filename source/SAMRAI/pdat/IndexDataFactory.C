@@ -156,8 +156,8 @@ IndexDataFactory<TYPE, BOX_GEOMETRY>::validCopyTo(
  *
  * Return a boolean true value indicating that the index data quantities
  * will always be treated as though fine values represent them on
- * coarse-fine interfaces. See the IndexVariable<DIM> class header file for
- * more information.
+ * coarse-fine interfaces. See the IndexVariable<TYPE, BOX_GEOMETRY> class
+ * header file for more information.
  *
  *************************************************************************
  */

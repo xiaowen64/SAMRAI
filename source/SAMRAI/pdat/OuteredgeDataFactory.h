@@ -26,8 +26,8 @@ namespace pdat {
 
 /*!
  * @brief
- * Class OuteredgeDataFactory<DIM> is a factory class used to allocate new
- * instances of OuteredgeData<DIM> objects.  It is a subclass of the patch
+ * Class OuteredgeDataFactory<TYPE> is a factory class used to allocate new
+ * instances of OuteredgeData<TYPE> objects.  It is a subclass of the patch
  * data factory class and outeredge data is a subclass of patch data.  Both
  * the factory and data classes are templated on the type of the contained
  * object (e.g., double or int).
@@ -115,7 +115,7 @@ public:
    /*!
     * Return a boolean true value indicating that fine data for the outeredge
     * quantity will take precedence on coarse-fine interfaces.  See the
-    * OuteredgeVariable<DIM> class header file for more information.
+    * OuteredgeVariable<TYPE> class header file for more information.
     */
    bool
    fineBoundaryRepresentsVariable() const;

@@ -21,7 +21,7 @@ namespace math {
 
 /**
  * Class ArrayDataBasicOps implements a set of basic operations
- * that apply to numerical data maintained as pdat::ArrayData<DIM> objects.
+ * that apply to numerical data maintained as pdat::ArrayData<TYPE> objects.
  * These operations include simple arithmetic operations as well as min
  * and max, etc.  This class provides a single implementation of these
  * operations that may used to manipulate any of the standard array-based
@@ -29,7 +29,7 @@ namespace math {
  * accepts a box argument which specifies the portion of the array data
  * on which the associated operation is performed.   The actual index
  * region on which the operation occurs is the intersection of this box
- * and the boxes of all the pdat::ArrayData<DIM> objects involved.
+ * and the boxes of all the pdat::ArrayData<TYPE> objects involved.
  *
  * These operations typically apply only to the numerical standard built-in
  * types, such as double, float, and int, and the complex type (which may or

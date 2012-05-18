@@ -224,7 +224,7 @@ SideDataFactory<TYPE>::validCopyTo(
  *
  * Return a boolean value indicating how data for the side quantity will be
  * treated on coarse-fine interfaces.  This value is passed into the
- * constructor.  See the FaceVariable<DIM> class header file for more
+ * constructor.  See the FaceVariable class header file for more
  * information.
  *
  *************************************************************************

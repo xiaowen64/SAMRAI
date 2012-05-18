@@ -586,7 +586,7 @@ CellData<TYPE>::getSpecializedFromDatabase(
 
    int ver = database->getInteger("PDAT_CELLDATA_VERSION");
    if (ver != PDAT_CELLDATA_VERSION) {
-      TBOX_ERROR("CellData<DIM>::getSpecializedFromDatabase error...\n"
+      TBOX_ERROR("CellData<TYPE>::getSpecializedFromDatabase error...\n"
          << "Restart file version different than class version" << std::endl);
    }
 

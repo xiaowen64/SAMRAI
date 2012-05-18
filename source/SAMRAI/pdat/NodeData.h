@@ -27,7 +27,7 @@ namespace SAMRAI {
 namespace pdat {
 
 /*!
- * @brief Class NodeData<DIM> provides an implementation for data defined
+ * @brief Class NodeData<TYPE> provides an implementation for data defined
  * at nodes on AMR patches.  It is derived from the hier::PatchData
  * interface common to all SAMRAI patch data types.  Given a CELL-centered
  * AMR index space box, a node data object represents data of some template

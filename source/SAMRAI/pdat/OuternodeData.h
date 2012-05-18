@@ -28,7 +28,7 @@ namespace SAMRAI {
 namespace pdat {
 
 /*!
- * @brief Class OuternodeData<DIM> provides an implementation for data defined
+ * @brief Class OuternodeData<TYPE> provides an implementation for data defined
  * at cell nodes on the boundaries of AMR patches.  It is derived from the
  * hier::PatchData interface common to all SAMRAI patch data types.  Given
  * a CELL-centered AMR index space box, an outernode data object represents

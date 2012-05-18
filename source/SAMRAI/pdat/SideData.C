@@ -807,7 +807,7 @@ SideData<TYPE>::getSpecializedFromDatabase(
 
    int ver = database->getInteger("PDAT_SIDEDATA_VERSION");
    if (ver != PDAT_SIDEDATA_VERSION) {
-      TBOX_ERROR("SideData<DIM>::getSpecializedFromDatabase error...\n"
+      TBOX_ERROR("SideData<TYPE>::getSpecializedFromDatabase error...\n"
          << " : Restart file version different than class version" << std::endl);
    }
 

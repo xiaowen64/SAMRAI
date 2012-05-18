@@ -47,7 +47,7 @@ public:
    virtual ~OuternodeSumTransactionFactory();
 
    /*!
-    * @brief Set the array of xfer::RefineClass<DIM>::Data items used by the
+    * @brief Set the array of xfer::RefineClasses::Data items used by the
     * transactions.
     */
    void
@@ -56,7 +56,7 @@ public:
       int num_refine_items);
 
    /*!
-    * @brief Clear the array of xfer::RefineClass<DIM>::Data items used by the
+    * @brief Clear the array of xfer::RefineClasses::Data items used by the
     * transactions.
     */
    void
@@ -71,7 +71,7 @@ public:
     *                       patches.
     * @param dst_node       Destination Box in destination patch level.
     * @param src_node       Source Box in source patch level.
-    * @param ritem_id       Integer index of xfer::RefineClass<DIM>::Data item
+    * @param ritem_id       Integer index of xfer::RefineClasses::Data item
     *                       associated with transaction.
     * @param box            Const reference to box defining region of
     *                       refine transaction.  Use following allocate method

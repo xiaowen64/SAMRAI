@@ -29,7 +29,7 @@ namespace SAMRAI {
 namespace pdat {
 
 /*!
- * @brief Class OuteredgeData<DIM> provides an implementation for data defined
+ * @brief Class OuteredgeData<TYPE> provides an implementation for data defined
  * at cell edges on the boundaries of AMR patches.  It is derived from the
  * hier::PatchData interface common to all SAMRAI patch data types.  Given
  * a CELL-centered AMR index space box, an outeredge data object represents
