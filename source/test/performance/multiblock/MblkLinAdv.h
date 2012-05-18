@@ -283,6 +283,9 @@ public:
       string& db_name,
       int bdry_location_index)
    {
+      NULL_USE(db);
+      NULL_USE(db_name);
+      NULL_USE(bdry_location_index);
    } 
 
    hier::IntVector

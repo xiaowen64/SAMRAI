@@ -28,6 +28,7 @@ using namespace std;
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/hier/VariableDatabase.h"
+#include "SAMRAI/geom/GridGeometry.h"
 
 // Headers for major algorithm/data structure objects
 
