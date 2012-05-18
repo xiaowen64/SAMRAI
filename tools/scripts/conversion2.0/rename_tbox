@@ -4,7 +4,6 @@
 ## Package:     SAMRAI scripts
 ## Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 ## Revision:    $LastChangedRevision$
-## Modified:    $LastChangedDate$
 ## Description: shell script to run rename X class names to template on <DIM>
 ##
 

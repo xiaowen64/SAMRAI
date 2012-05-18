@@ -4106,7 +4106,6 @@ dnl  Package:        SAMRAI
 dnl  Copyright:      (c) 1997-2010 Lawrence Livermore National Security, LLC
 dnl  Date:           $Date$
 dnl  Revision:       $LastChangedRevision$
-dnl  Modified:       $LastChangedDate$ 
 dnl  Description:    Misc SAMRAI macros
 dnl
 
@@ -4312,7 +4311,6 @@ dnl  Package:        SAMRAI
 dnl  Copyright:      (c) 1997-2012 Lawrence Livermore National Security, LLC
 dnl  Date:           $Date$
 dnl  Revision:       $LastChangedRevision$
-dnl  Modified:       $LastChangedDate$ 
 dnl  Description:    Macro to control whether timers are compile into or
 dnl                  out of SAMRAI
 dnl               

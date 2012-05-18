@@ -4,7 +4,6 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
- * Description:   $LastChangedDate
  *
  ************************************************************************/
 

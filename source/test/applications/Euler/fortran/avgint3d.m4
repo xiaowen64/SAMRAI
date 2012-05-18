@@ -3,7 +3,6 @@ c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/examples/E
 c  Package:     SAMRAI applications
 c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision: 1917 $
-c  Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
 c  Description: F77 routines for conservative interlevel transfer of velocity 
 c               and pressure for 3d euler equations.
 c

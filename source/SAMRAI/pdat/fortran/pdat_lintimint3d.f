@@ -3,7 +3,6 @@ c  File:        $URL$
 c  Package:     SAMRAI gerometry
 c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
-c  Modified:    $LastChangedDate$
 c  Description: FORTRAN routines for standard linear time interpolation 
 c               of 3d patch data types.
 c
@@ -12,7 +11,6 @@ c  File:        $URL$
 c  Package:     SAMRAI patchdata
 c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
-c  Modified:    $LastChangedDate$
 c  Description: m4 include file for 3d std linear time interpolation operators.
 c
 c
@@ -20,7 +18,6 @@ c  File:        $URL$
 c  Package:     SAMRAI patchdata
 c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
-c  Modified:    $LastChangedDate$
 c  Description: m4 include file for dimensioning 3d arrays in FORTRAN routines.
 c
 c

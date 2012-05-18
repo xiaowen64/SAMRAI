@@ -3,7 +3,6 @@ c  File:        $URL$
 c  Package:     SAMRAI patchdata
 c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
-c  Modified:    $LastChangedDate$
 c  Description: m4 include file for 3d patchdata debugging routines
 c
 define(SAMRAI_FORTDIR,../../pdat/fortran)dnl

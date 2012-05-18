@@ -14,7 +14,6 @@
 ## Package:     SAMRAI tests
 ## Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 ## Revision:    $LastChangedRevision$
-## Modified:    $LastChangedDate$
 ## Description: Code-generating script in inputdb package.
 
 while(<>) {

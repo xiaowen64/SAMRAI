@@ -3,7 +3,6 @@ c  File:        algs_upfluxsum3d.m4
 c  Package:     SAMRAI algorithms
 c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
-c  Modified:    $LastChangedDate$
 c  Description: F77 routines for updating 3d flux sums from fluxes.
 c
 c
@@ -11,7 +10,6 @@ c  File:        pdat_m4arrdim3d.i
 c  Package:     SAMRAI patchdata
 c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
-c  Modified:    $LastChangedDate$
 c  Description: m4 include file for dimensioning 3d arrays in FORTRAN routines.
 c
 c

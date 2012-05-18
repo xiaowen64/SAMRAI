@@ -3,7 +3,6 @@ c  File:        $URL$
 c  Package:     SAMRAI patchdata
 c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
-c  Modified:    $LastChangedDate$
 c  Description: FORTRAN routines for standard linear time interpolation 
 c               of 1d patch data types.
 c
@@ -12,7 +11,6 @@ c  File:        $URL$
 c  Package:     SAMRAI patchdata
 c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
-c  Modified:    $LastChangedDate$
 c  Description: m4 include file for standard 1d time interpolation operators.
 c
 c
@@ -20,7 +18,6 @@ c  File:        $URL$
 c  Package:     SAMRAI patchdata
 c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
-c  Modified:    $LastChangedDate$
 c  Description: m4 include file for dimensioning 1d arrays in FORTRAN routines.
 c
 c

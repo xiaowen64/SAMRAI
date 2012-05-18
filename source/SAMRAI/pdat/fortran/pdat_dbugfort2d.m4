@@ -3,7 +3,6 @@ c  File:        $URL$
 c  Package:     SAMRAI patchdata
 c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
-c  Modified:    $LastChangedDate$
 c  Description: F77 routines for debugging 2d patch data types.
 c
 include(pdat_dbugstuff2d.i)dnl

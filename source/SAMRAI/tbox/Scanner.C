@@ -490,7 +490,6 @@ char *yytext;
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2012 Lawrence Livermore National Security, LLC
 
-// Modified:	$LastChangedDate$
 // Description:	Lex scanner description for the SAMRAI input database
 //
 

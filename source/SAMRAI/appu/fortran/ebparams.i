@@ -3,7 +3,6 @@ c File:        $URL$
 c Package:     SAMRAI application
 c Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c Revision:    $LastChangedRevision$
-c Modified:    $LastChangedDate$
 c Description: Commonblock in embedded boundary test code.
 c
 

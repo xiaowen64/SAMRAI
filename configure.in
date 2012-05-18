@@ -3,7 +3,6 @@ dnl File:        $HeadURL$
 dnl Package:     SAMRAI build system
 dnl Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 dnl Revision:    $LastChangedRevision$
-dnl Modified:    $LastChangedDate$
 dnl Description: autoconfig configuration file
 dnl
 

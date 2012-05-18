@@ -14,7 +14,6 @@
 ## Package:     SAMRAI application
 ## Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 ## Revision:    $LastChangedRevision$
-## Modified:    $LastChangedDate$
 ## Description: Script in source-manipulation utility.
 
 

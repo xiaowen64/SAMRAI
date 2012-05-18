@@ -3,7 +3,6 @@ c  File:        $URL$
 c  Package:     SAMRAI patchdata
 c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
-c  Modified:    $LastChangedDate$
 c  Description: m4 include file for dimensioning 2d arrays in FORTRAN routines.
 c
 define(SAMRAICELL2d,`$1$4-$3:$2$4+$3,
