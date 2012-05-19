@@ -277,20 +277,20 @@ int main(
       // tbox::pout << "checking b--->a consistency with head:" << std::endl;
       b_to_a.checkConsistencyWithHead();
 
-      tbox::pout << "Checking for a--->b errors:" << std::endl;
+      tbox::pout << "Checking for a--->b overlap correctness:" << std::endl;
       const int a_to_b_errors = oca.checkOverlapCorrectness(a_to_b);
       if (a_to_b_errors) {
          tbox::pout << "... " << a_to_b_errors << " errors." << std::endl;
       } else {
-         tbox::pout << "... none." << std::endl;
+         tbox::pout << "... OK." << std::endl;
       }
 
-      tbox::pout << "Checking for b--->a errors:" << std::endl;
+      tbox::pout << "Checking for b--->a overlap correctness:" << std::endl;
       const int b_to_a_errors = oca.checkOverlapCorrectness(b_to_a);
       if (b_to_a_errors) {
          tbox::pout << "... " << b_to_a_errors << " errors." << std::endl;
       } else {
-         tbox::pout << "... none." << std::endl;
+         tbox::pout << "... OK." << std::endl;
       }
 
       fail_count += a_to_b_errors + b_to_a_errors;
