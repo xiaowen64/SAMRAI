@@ -10,6 +10,7 @@
 
 #include "MblkGeometry.h"
 
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
@@ -33,7 +34,7 @@ MblkGeometry::MblkGeometry(
    const std::string& object_name,
    const tbox::Dimension& dim,
    boost::shared_ptr<tbox::Database> input_db,
-   const int nblocks):
+   const hier::BaseGridGeometry& grid_geom):
    d_dim(dim)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -44,7 +45,7 @@ MblkGeometry::MblkGeometry(
    d_object_name = object_name;
    //tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 
-   d_nblocks = nblocks;
+   d_nblocks = grid_geom.getNumberBlocks(); 
 
    d_metrics_set.resizeArray(10);
    for (int i = 0; i < 10; i++) {
@@ -59,6 +60,31 @@ MblkGeometry::MblkGeometry(
 //      getFromRestart();  // ADD
    }
    getFromInput(input_db, is_from_restart);
+
+   hier::BoxContainer domain_boxes;
+   grid_geom.computePhysicalDomain(domain_boxes,
+                                   hier::IntVector::getOne(dim),
+                                   hier::BlockId(0));
+
+   TBOX_ASSERT(domain_boxes.size() == 1);
+
+   if (d_geom_problem == "CARTESIAN") {
+      if (!d_metrics_set[0]) {
+         setCartesianMetrics(domain_boxes.front(), 0);
+      }
+   }
+
+   if (d_geom_problem == "WEDGE") {
+      if (!d_metrics_set[0]) {
+         setWedgeMetrics(domain_boxes.front(), 0);
+      }
+   }
+   if (d_geom_problem == "SPHERICAL_SHELL") {
+      if (!d_metrics_set[0]) {
+         setSShellMetrics(domain_boxes.front(), 0);
+      }
+   }
+
 
 }
 

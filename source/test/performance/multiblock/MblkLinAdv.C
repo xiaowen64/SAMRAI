@@ -446,7 +446,7 @@ MblkLinAdv::MblkLinAdv(
    d_mblk_geometry(new MblkGeometry("MblkGeometry",
          dim,
          input_db,
-         grid_geoms->getNumberBlocks()))
+         *grid_geoms))
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);

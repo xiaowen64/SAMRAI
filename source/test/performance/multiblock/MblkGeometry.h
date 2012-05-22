@@ -41,7 +41,7 @@ public:
       const std::string& object_name,
       const tbox::Dimension& dim,
       boost::shared_ptr<tbox::Database> input_db,
-      const int nblocks);
+      const hier::BaseGridGeometry& grid_geom);
 
    ~MblkGeometry();
 
