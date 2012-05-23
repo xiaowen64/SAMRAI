@@ -2596,12 +2596,12 @@ StatisticRestartDatabase::~StatisticRestartDatabase()
    }
 }
 
-void StatisticRestartDatabase::putToDatabase(
-   const boost::shared_ptr<Database>& db) const
+void StatisticRestartDatabase::putToRestart(
+   const boost::shared_ptr<Database>& restart_db) const
 {
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 
-   db->putInteger("TBOX_STATISTICRESTARTDATABASE_VERSION",
+   restart_db->putInteger("TBOX_STATISTICRESTARTDATABASE_VERSION",
       TBOX_STATISTICRESTARTDATABASE_VERSION);
 
    /*
@@ -2613,10 +2613,10 @@ void StatisticRestartDatabase::putToDatabase(
     * Write the number of statistics
     */
    int number_of_procstats = statistician->getNumberProcessorStats();
-   db->putInteger("number_of_procstats", number_of_procstats);
+   restart_db->putInteger("number_of_procstats", number_of_procstats);
 
    int number_of_patchstats = statistician->getNumberPatchStats();
-   db->putInteger("number_of_patchstats", number_of_patchstats);
+   restart_db->putInteger("number_of_patchstats", number_of_patchstats);
 
    /*
     * Iterate through the list of statistics and write out a
@@ -2636,15 +2636,15 @@ void StatisticRestartDatabase::putToDatabase(
    for (n = 0; n < number_of_procstats; n++) {
       stat = statistician->d_proc_statistics[n];
       proc_stat_names[n] = stat->getName();
-      stat_database = db->putDatabase(proc_stat_names[n]);
-      stat->putUnregisteredToDatabase(stat_database);
+      stat_database = restart_db->putDatabase(proc_stat_names[n]);
+      stat->putToRestart(stat_database);
    }
 
    for (n = 0; n < number_of_patchstats; n++) {
       stat = statistician->d_patch_statistics[n];
       patch_stat_names[n] = stat->getName();
-      stat_database = db->putDatabase(patch_stat_names[n]);
-      stat->putUnregisteredToDatabase(stat_database);
+      stat_database = restart_db->putDatabase(patch_stat_names[n]);
+      stat->putToRestart(stat_database);
    }
 
    /*
@@ -2653,11 +2653,11 @@ void StatisticRestartDatabase::putToDatabase(
     * which to read the stat info.
     */
    if (number_of_procstats > 0) {
-      db->putStringArray("proc_stat_names", proc_stat_names);
+      restart_db->putStringArray("proc_stat_names", proc_stat_names);
    }
 
    if (number_of_patchstats > 0) {
-      db->putStringArray("patch_stat_names", patch_stat_names);
+      restart_db->putStringArray("patch_stat_names", patch_stat_names);
    }
 }
 

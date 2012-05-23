@@ -254,13 +254,13 @@ public:
 
    /**
     * Writes the state of the CartesianGridGeometry object to the
-    * database.
+    * restart database.
     *
-    * When assertion checking is active, db cannot be a null database pointer.
+    * When assertion checking is active, restart_db cannot be a null pointer.
     */
    virtual void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
 protected:
    /*!
@@ -285,7 +285,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& db,
+      const boost::shared_ptr<tbox::Database>& input_db,
       bool is_from_restart);
 
    /*

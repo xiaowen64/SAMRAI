@@ -32,7 +32,7 @@ namespace solv {
 LocationIndexRobinBcCoefs::LocationIndexRobinBcCoefs(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& database):
+   const boost::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_object_name(object_name)
 {
@@ -42,7 +42,7 @@ LocationIndexRobinBcCoefs::LocationIndexRobinBcCoefs(
       d_b_map[i] = tbox::MathUtilities<double>::getSignalingNaN();
       d_g_map[i] = tbox::MathUtilities<double>::getSignalingNaN();
    }
-   getFromInput(database);
+   getFromInput(input_db);
 }
 
 /*
@@ -63,16 +63,16 @@ LocationIndexRobinBcCoefs::~LocationIndexRobinBcCoefs()
 
 void
 LocationIndexRobinBcCoefs::getFromInput(
-   const boost::shared_ptr<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& input_db)
 {
-   if (database) {
+   if (input_db) {
       int i;
       for (i = 0; i < 2 * d_dim.getValue(); ++i) {
          std::string name = "boundary_" + tbox::Utilities::intToString(i);
-         if (database->isString(name)) {
+         if (input_db->isString(name)) {
             d_a_map[i] = 1.0;
             d_g_map[i] = 0.0;
-            tbox::Array<std::string> specs = database->getStringArray(name);
+            tbox::Array<std::string> specs = input_db->getStringArray(name);
             if (specs[0] == "value") {
                d_a_map[i] = 1.0;
                d_b_map[i] = 0.0;

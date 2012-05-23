@@ -454,7 +454,7 @@ int main(
       }
 
       if (generate_baseline) {
-         balance_mapped_box_level.putUnregisteredToDatabase(
+         balance_mapped_box_level.putToRestart(
             prebalance_mapped_box_level_db);
       }
 
@@ -507,7 +507,7 @@ int main(
       }
 
       if (generate_baseline) {
-         balance_mapped_box_level.putUnregisteredToDatabase(
+         balance_mapped_box_level.putToRestart(
             postbalance_mapped_box_level_db);
       }
 
@@ -544,7 +544,7 @@ int main(
           * Compare the prebalance_mapped_box_level against its baseline.
           */
          hier::BoxLevel baseline_prebalance_mapped_box_level(dim);
-         baseline_prebalance_mapped_box_level.getFromDatabase(
+         baseline_prebalance_mapped_box_level.getFromRestart(
             *prebalance_mapped_box_level_db,
             grid_geometry);
 
@@ -564,7 +564,7 @@ int main(
           * Compare the balance_mapped_box_level against its baseline.
           */
          hier::BoxLevel baseline_postbalance_mapped_box_level(dim);
-         baseline_postbalance_mapped_box_level.getFromDatabase(
+         baseline_postbalance_mapped_box_level.getFromRestart(
             *postbalance_mapped_box_level_db,
             grid_geometry);
 

@@ -324,12 +324,12 @@ public:
    refineUserBoxInputOnly() const = 0;
 
    /*!
-    * Read user supplied refine boxes from the provided database.  The
+    * Read user supplied refine boxes from the provided database.  The input
     * database must be non-null, or an unrecoverable assertion will be thrown.
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& db);
+      const boost::shared_ptr<tbox::Database>& input_db);
 
    /*!
     * Return the dimension of this object.

@@ -570,7 +570,7 @@ CellData<TYPE>::print(
  *************************************************************************
  *
  * Checks that class version and restart file version are equal.  If so,
- * reads in the d_depth data member to the database.  Then tells
+ * reads in the d_depth data member to the restart database.  Then tells
  * d_data to read itself in from the database.
  *
  *************************************************************************
@@ -578,44 +578,48 @@ CellData<TYPE>::print(
 
 template<class TYPE>
 void
-CellData<TYPE>::getSpecializedFromDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+CellData<TYPE>::getFromRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db)
 {
 
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   int ver = database->getInteger("PDAT_CELLDATA_VERSION");
+   hier::PatchData::getFromRestart(restart_db);
+
+   int ver = restart_db->getInteger("PDAT_CELLDATA_VERSION");
    if (ver != PDAT_CELLDATA_VERSION) {
-      TBOX_ERROR("CellData<TYPE>::getSpecializedFromDatabase error...\n"
+      TBOX_ERROR("CellData<TYPE>::getFromRestart error...\n"
          << "Restart file version different than class version" << std::endl);
    }
 
-   d_depth = database->getInteger("d_depth");
+   d_depth = restart_db->getInteger("d_depth");
 
-   d_data->getFromDatabase(database->getDatabase("d_data"));
+   d_data->getFromRestart(restart_db->getDatabase("d_data"));
 }
 
 /*
  *************************************************************************
  *
  * Write out the class version number, d_depth data member to the
- * database.  Then tells d_data to write itself to the database.
+ * restart database.  Then tells d_data to write itself to the database.
  *
  *************************************************************************
  */
 
 template<class TYPE>
 void
-CellData<TYPE>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database) const
+CellData<TYPE>::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   database->putInteger("PDAT_CELLDATA_VERSION", PDAT_CELLDATA_VERSION);
+   hier::PatchData::putToRestart(restart_db);
 
-   database->putInteger("d_depth", d_depth);
+   restart_db->putInteger("PDAT_CELLDATA_VERSION", PDAT_CELLDATA_VERSION);
 
-   d_data->putUnregisteredToDatabase(database->putDatabase("d_data"));
+   restart_db->putInteger("d_depth", d_depth);
+
+   d_data->putToRestart(restart_db->putDatabase("d_data"));
 }
 
 }

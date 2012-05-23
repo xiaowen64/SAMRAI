@@ -81,12 +81,12 @@ public:
       NULL_USE(offset);
    }
 
-   void putUnregisteredToDatabase(
+   void putToRestart(
       boost::shared_ptr<tbox::Database> dbase)
    {
       NULL_USE(dbase);
    }
-   void getFromDatabase(
+   void getFromRestart(
       boost::shared_ptr<tbox::Database> dbase)
    {
       NULL_USE(dbase);

@@ -49,7 +49,7 @@ namespace tbox {
  *
  * It is important to note in the initialization process, some objects
  * will need to be constructed in the "empty" state and filled in later
- * using some sort of getFromDatabase() method.
+ * using some sort of getFromRestart() method.
  *
  * The process for writing out state to a restart file is somewhat more
  * complicated.  The following things need to be taken care of.
@@ -57,7 +57,7 @@ namespace tbox {
  *
  * \li Each object that has state that needs to be saved for restart
  *       must be derived from the Serializable class (which
- *       responds to the putToDatabase() method).
+ *       responds to the putToRestart() method).
  * \li Any object that needs to save its state to the restart file
  *       must be registered with the restart manager using the
  *       registerRestartItem() method.   NOTE THAT NO TWO RESTARTABLE

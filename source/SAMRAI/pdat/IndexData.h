@@ -77,9 +77,9 @@ class IndexIterator;
  *             unpackStream(MessageStream\& stream,
  *             const hier::IntVector\& offset)
  *    - \b - Write to restart;
- *             putToDatabase(boost::shared_ptr<tbox::Database>\& database)
+ *             putToRestart(boost::shared_ptr<tbox::Database>\& restart_db)
  *    - \b - Retrieve from restart;
- *             getFromDatabase(boost::shared_ptr<tbox::Database>\& database)
+ *             getFromRestart(boost::shared_ptr<tbox::Database>\& restart_db)
  *
  * The BOX_GEOMETRY template parameter defines the geometry.   BOX_GEOMETRY must
  * have a nested class name Overlap that implements he following methods:
@@ -353,20 +353,20 @@ public:
     * Check to make sure that the class version number is the same
     * as the restart file version number.
     *
-    * Assertions: database must be a non-null pointer.
+    * Assertions: restart_db must be a non-null pointer.
     */
    virtual void
-   getSpecializedFromDatabase(
-      const boost::shared_ptr<tbox::Database>& database);
+   getFromRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db);
 
    /**
-    * Write out the class version number to the database.
+    * Write out the class version number to the restart database.
     *
-    * Assertions: database must be a non-null pointer.
+    * Assertions: restart_db must be a non-null pointer.
     */
    virtual void
-   putSpecializedToDatabase(
-      const boost::shared_ptr<tbox::Database>& database) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
 private:
    friend class IndexIterator<TYPE, BOX_GEOMETRY>;

@@ -550,7 +550,7 @@ void BoundaryDataTester::readBoundaryDataInput(
 
          if (d_dim == tbox::Dimension(2)) {
             appu::CartesianBoundaryUtilities2::
-            readBoundaryInput(this,
+            getFromInput(this,
                bdry_db,
                d_master_bdry_edge_conds,
                d_master_bdry_node_conds,
@@ -558,7 +558,7 @@ void BoundaryDataTester::readBoundaryDataInput(
          }
          if (d_dim == tbox::Dimension(3)) {
             appu::CartesianBoundaryUtilities3::
-            readBoundaryInput(this,
+            getFromInput(this,
                bdry_db,
                d_master_bdry_face_conds,
                d_master_bdry_edge_conds,

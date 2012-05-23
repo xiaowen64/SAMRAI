@@ -1174,15 +1174,15 @@ ChopAndPackLoadBalancer::printClassData(
 
 void
 ChopAndPackLoadBalancer::getFromInput(
-   const boost::shared_ptr<tbox::Database>& db)
+   const boost::shared_ptr<tbox::Database>& input_db)
 {
 
-   if (db) {
+   if (input_db) {
 
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       d_master_bin_pack_method =
-         db->getStringWithDefault("bin_pack_method",
+         input_db->getStringWithDefault("bin_pack_method",
             d_master_bin_pack_method);
       if (!(d_master_bin_pack_method == "GREEDY" ||
             d_master_bin_pack_method == "SPATIAL")) {
@@ -1194,8 +1194,9 @@ ChopAndPackLoadBalancer::getFromInput(
          d_master_bin_pack_method = "GREEDY";
       }
 
-      if (db->keyExists("max_workload_factor")) {
-         d_max_workload_factor = db->getDoubleArray("max_workload_factor");
+      if (input_db->keyExists("max_workload_factor")) {
+         d_max_workload_factor = input_db->getDoubleArray(
+            "max_workload_factor");
          for (int i = 0; i < d_max_workload_factor.getSize(); i++) {
             if (d_max_workload_factor[i] < 0.0) {
                TBOX_ERROR(
@@ -1209,8 +1210,8 @@ ChopAndPackLoadBalancer::getFromInput(
             d_max_workload_factor[d_max_workload_factor.getSize() - 1];
       }
 
-      if (db->keyExists("workload_tolerance")) {
-         d_workload_tolerance = db->getDoubleArray("workload_tolerance");
+      if (input_db->keyExists("workload_tolerance")) {
+         d_workload_tolerance = input_db->getDoubleArray("workload_tolerance");
          for (int i = 0; i < d_workload_tolerance.getSize(); i++) {
             if (d_workload_tolerance[i] < 0.0 || d_workload_tolerance[i] >=
                 1.0) {
@@ -1226,13 +1227,14 @@ ChopAndPackLoadBalancer::getFromInput(
       }
 
       d_ignore_level_box_union_is_single_box =
-         db->getBoolWithDefault("ignore_level_box_union_is_single_box",
+         input_db->getBoolWithDefault("ignore_level_box_union_is_single_box",
             d_ignore_level_box_union_is_single_box);
 
       d_processor_layout_specified = false;
       int temp_processor_layout[SAMRAI::MAX_DIM_VAL];
-      if (db->keyExists("processor_layout")) {
-         db->getIntegerArray("processor_layout", temp_processor_layout, d_dim.getValue());
+      if (input_db->keyExists("processor_layout")) {
+         input_db->getIntegerArray("processor_layout",
+            temp_processor_layout, d_dim.getValue());
 
          /* consistency check */
          int totprocs = 1;

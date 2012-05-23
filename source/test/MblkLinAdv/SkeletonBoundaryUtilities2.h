@@ -119,7 +119,7 @@ public:
     *
     * @param bdry_strategy user-defined object that reads DIRICHLET or NEUMANN
     *                      conditions
-    * @param bdry_db       input database containing all boundary data
+    * @param input_db      input database containing all boundary data
     * @param edge_conds    array into which integer edge boundary condition types
     *                      are read
     * @param node_conds    array into which integer node boundary condition types
@@ -129,9 +129,9 @@ public:
     *                      GridGeometry2::getPeriodicShift())
     */
    static void
-   readBoundaryInput(
+   getFromInput(
       BoundaryUtilityStrategy* bdry_strategy,
-      const boost::shared_ptr<tbox::Database>& bdry_db,
+      const boost::shared_ptr<tbox::Database>& input_db,
       tbox::Array<int>& edge_conds,
       tbox::Array<int>& node_conds,
       const hier::IntVector& periodic);
@@ -238,13 +238,13 @@ private:
    static void
    read2dBdryEdges(
       BoundaryUtilityStrategy* bdry_strategy,
-      boost::shared_ptr<tbox::Database> bdry_db,
+      boost::shared_ptr<tbox::Database> input_db,
       tbox::Array<int>& edge_conds,
       const hier::IntVector& periodic);
 
    static void
    read2dBdryNodes(
-      boost::shared_ptr<tbox::Database> bdry_db,
+      boost::shared_ptr<tbox::Database> input_db,
       const tbox::Array<int>& edge_conds,
       tbox::Array<int>& node_conds,
       const hier::IntVector& periodic);

@@ -203,20 +203,20 @@ public:
       int precision = 12) const;
 
    /**
-    * Write statistic data members to database. When assertion checking
-    * is on, the database pointer must be non-null.
+    * Write statistic data members to restart database. The restart_db pointer
+    * must be non-null.
     */
    void
-   putUnregisteredToDatabase(
-      const boost::shared_ptr<Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<Database>& restart_db) const;
 
    /**
     * Read restarted times from restart database.  When assertion checking
-    * is on, the database pointer must be non-null.
+    * is on, the restart_db pointer must be non-null.
     */
    void
    getFromRestart(
-      const boost::shared_ptr<Database>& db);
+      const boost::shared_ptr<Database>& restart_db);
 
    /*
     * These structures are used to store statistic data entries.

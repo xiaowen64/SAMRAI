@@ -636,13 +636,13 @@ public:
       ostream& os) const;
 
    /**
-    * Write out object state to the given database.
+    * Write out object state to the given restart database.
     *
-    * When assertion checking is active, database point must be non-null.
+    * When assertion checking is active, restart_db point must be non-null.
     */
    virtual void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * Return pointer to "current" variable context used by integrator.
@@ -700,7 +700,7 @@ public:
 
 protected:
    /**
-    * Read input values, indicated above, from given database.  The boolean
+    * Read values, indicated above, from given input database.  The boolean
     * argument is_from_restart should be set to true if the simulation
     * is beginning from restart.  Otherwise it should be set to false.
     *
@@ -708,7 +708,7 @@ protected:
     */
    virtual void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
 
    /**

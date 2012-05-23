@@ -489,13 +489,14 @@ public:
       std::ostream& os) const;
 
    /*!
-    * @brief Write object state out to the gien database.
+    * @brief Write object state out to the given restart database.
     *
-    * When assertion checking is active, the database pointer must be non-null.
+    * When assertion checking is active, the restart_db pointer must be
+    * non-null.
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /*
     * @brief Write out statistics recorded on numbers of cells and patches generated.
@@ -518,16 +519,11 @@ private:
     *
     * When assertion checking is active, the database pointer must be non-null.
     *
-    * @param[in] db
-    *
-    * @param[in] is_from_restart Should be set to true if the
-    * simulation is from restart.  Otherwise, it should be set to
-    * false.
+    * @param[in] input_db
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& db,
-      bool is_from_restart);
+      const boost::shared_ptr<tbox::Database>& input_db);
 
    /*
     * @brief Read object state from the restart file and initialize

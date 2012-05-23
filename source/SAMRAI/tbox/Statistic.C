@@ -436,21 +436,21 @@ Statistic::checkArraySizes(
 }
 
 void
-Statistic::putUnregisteredToDatabase(
-   const boost::shared_ptr<Database>& db) const
+Statistic::putToRestart(
+   const boost::shared_ptr<Database>& restart_db) const
 {
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 
-   db->putInteger("TBOX_STATISTIC_VERSION",
+   restart_db->putInteger("TBOX_STATISTIC_VERSION",
       TBOX_STATISTIC_VERSION);
 
-   db->putString("object_name", d_object_name);
-   db->putInteger("stat_type", d_stat_type);
-   db->putInteger("instance_id", d_instance_id);
-   db->putInteger("seq_counter", d_seq_counter);
-   db->putInteger("total_patch_entries", d_total_patch_entries);
-   db->putInteger("proc_stat_array_size", d_proc_stat_array_size);
-   db->putInteger("patch_stat_array_size", d_patch_stat_array_size);
+   restart_db->putString("object_name", d_object_name);
+   restart_db->putInteger("stat_type", d_stat_type);
+   restart_db->putInteger("instance_id", d_instance_id);
+   restart_db->putInteger("seq_counter", d_seq_counter);
+   restart_db->putInteger("total_patch_entries", d_total_patch_entries);
+   restart_db->putInteger("proc_stat_array_size", d_proc_stat_array_size);
+   restart_db->putInteger("patch_stat_array_size", d_patch_stat_array_size);
 
    int i;
 
@@ -461,7 +461,7 @@ Statistic::putUnregisteredToDatabase(
       }
 
       if (d_seq_counter > 0) {
-         db->putDoubleArray("ddata", ddata);
+         restart_db->putDoubleArray("ddata", ddata);
       }
 
    }
@@ -487,9 +487,9 @@ Statistic::putUnregisteredToDatabase(
       }
 
       if (d_seq_counter > 0) {
-         db->putIntegerArray("idata", idata);
+         restart_db->putIntegerArray("idata", idata);
          if (d_total_patch_entries > 0) {
-            db->putDoubleArray("ddata", ddata);
+            restart_db->putDoubleArray("ddata", ddata);
          }
       }
    }
@@ -497,22 +497,22 @@ Statistic::putUnregisteredToDatabase(
 
 void
 Statistic::getFromRestart(
-   const boost::shared_ptr<Database>& db)
+   const boost::shared_ptr<Database>& restart_db)
 {
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 
-   int ver = db->getInteger("TBOX_STATISTIC_VERSION");
+   int ver = restart_db->getInteger("TBOX_STATISTIC_VERSION");
    if (ver != TBOX_STATISTIC_VERSION) {
       TBOX_ERROR("Restart file version different than class version.");
    }
 
-   d_object_name = db->getString("object_name");
-   d_stat_type = db->getInteger("stat_type");
-   d_instance_id = db->getInteger("instance_id");
-   int seq_entries = db->getInteger("seq_counter");
-   int total_patches = db->getInteger("total_patch_entries");
-   d_proc_stat_array_size = db->getInteger("proc_stat_array_size");
-   d_patch_stat_array_size = db->getInteger("patch_stat_array_size");
+   d_object_name = restart_db->getString("object_name");
+   d_stat_type = restart_db->getInteger("stat_type");
+   d_instance_id = restart_db->getInteger("instance_id");
+   int seq_entries = restart_db->getInteger("seq_counter");
+   int total_patches = restart_db->getInteger("total_patch_entries");
+   d_proc_stat_array_size = restart_db->getInteger("proc_stat_array_size");
+   d_patch_stat_array_size = restart_db->getInteger("patch_stat_array_size");
 
    d_proc_array.resizeArray(d_proc_stat_array_size);
    d_patch_array.resizeArray(d_patch_stat_array_size);
@@ -520,7 +520,7 @@ Statistic::getFromRestart(
    int i;
    if (d_stat_type == PROC_STAT) {
       if (seq_entries > 0) {
-         Array<double> ddata = db->getDoubleArray("ddata");
+         Array<double> ddata = restart_db->getDoubleArray("ddata");
          for (i = 0; i < seq_entries; i++) {
             recordProcStat(ddata[i], i);
          }
@@ -529,7 +529,7 @@ Statistic::getFromRestart(
 
    if (d_stat_type == PATCH_STAT) {
       if (seq_entries > 0) {
-         Array<int> idata = db->getIntegerArray("idata");
+         Array<int> idata = restart_db->getIntegerArray("idata");
 
          Array<int> inum_patches(seq_entries);
          for (i = 0; i < seq_entries; i++) {
@@ -537,7 +537,7 @@ Statistic::getFromRestart(
          }
 
          if (total_patches > 0) {
-            Array<double> ddata = db->getDoubleArray("ddata");
+            Array<double> ddata = restart_db->getDoubleArray("ddata");
 
             int il = 0;
             int mark = seq_entries;

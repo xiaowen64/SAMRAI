@@ -259,7 +259,7 @@ private:
     */
    virtual void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> input_db);
 
    /*
     * Set boundary conditions at physical boundaries and coarse-fine

@@ -1635,22 +1635,24 @@ class BoxNeighborhoodCollection
        */
 
       /*!
-       * @brief Writes the neighborhood information to the supplied database.
+       * @brief Writes the neighborhood information to the supplied restart
+       * database.
        *
-       * @param database
+       * @param restart_db
        */
       void
-      putUnregisteredToDatabase(
-         const boost::shared_ptr<tbox::Database>& database) const;
+      putToRestart(
+         const boost::shared_ptr<tbox::Database>& restart_db) const;
 
       /*!
-       * @brief Constructs the neighborhoods from the supplied database.
+       * @brief Constructs the neighborhoods from the supplied restart
+       * database.
        *
-       * @param database
+       * @param restart_db
        */
       void
-      getFromDatabase(
-         tbox::Database& database);
+      getFromRestart(
+         tbox::Database& restart_db);
 
       //@}
 };

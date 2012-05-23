@@ -1037,13 +1037,13 @@ StandardTagAndInitialize::refineUserBoxInputOnly() const
 
 void
 StandardTagAndInitialize::getFromInput(
-   const boost::shared_ptr<tbox::Database>& db)
+   const boost::shared_ptr<tbox::Database>& input_db)
 {
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(input_db);
 
    tbox::Array<std::string> tagging_method;
-   if (db->keyExists("tagging_method")) {
-      tagging_method = db->getStringArray("tagging_method");
+   if (input_db->keyExists("tagging_method")) {
+      tagging_method = input_db->getStringArray("tagging_method");
    }
 
    if (tagging_method.getSize() > 3) {
@@ -1106,7 +1106,7 @@ StandardTagAndInitialize::getFromInput(
     * this class is derived.
     */
    if (d_use_refine_boxes) {
-      TagAndInitializeStrategy::getFromInput(db);
+      TagAndInitializeStrategy::getFromInput(input_db);
    }
 
 }

@@ -3501,47 +3501,51 @@ TreeLoadBalancerOld::printClassData(
 
 void
 TreeLoadBalancerOld::getFromInput(
-   const boost::shared_ptr<tbox::Database>& db)
+   const boost::shared_ptr<tbox::Database>& input_db)
 {
 
-   if (db) {
+   if (input_db) {
 
       d_print_steps =
-         db->getBoolWithDefault("print_steps",
+         input_db->getBoolWithDefault("print_steps",
             d_print_steps);
       d_print_break_steps =
-         db->getBoolWithDefault("print_break_steps",
+         input_db->getBoolWithDefault("print_break_steps",
             d_print_break_steps);
       d_print_swap_steps =
-         db->getBoolWithDefault("print_swap_steps",
+         input_db->getBoolWithDefault("print_swap_steps",
             d_print_swap_steps);
       d_print_edge_steps =
-         db->getBoolWithDefault("print_edge_steps",
+         input_db->getBoolWithDefault("print_edge_steps",
             d_print_edge_steps);
       d_check_connectivity =
-         db->getBoolWithDefault("check_connectivity",
+         input_db->getBoolWithDefault("check_connectivity",
             d_check_connectivity);
       d_check_map =
-         db->getBoolWithDefault("check_map",
+         input_db->getBoolWithDefault("check_map",
             d_check_map);
 
-      d_report_load_balance = db->getBoolWithDefault("report_load_balance",
+      d_report_load_balance = input_db->getBoolWithDefault(
+            "report_load_balance",
             d_report_load_balance);
-      d_barrier_before = db->getBoolWithDefault("barrier_before",
+      d_barrier_before = input_db->getBoolWithDefault("barrier_before",
             d_barrier_before);
-      d_barrier_after = db->getBoolWithDefault("barrier_after",
+      d_barrier_after = input_db->getBoolWithDefault("barrier_after",
             d_barrier_after);
 
-      d_n_root_cycles = db->getIntegerWithDefault("n_root_cycles",
+      d_n_root_cycles = input_db->getIntegerWithDefault("n_root_cycles",
             d_n_root_cycles);
 
-      d_balance_penalty_wt = db->getDoubleWithDefault("balance_penalty_wt",
+      d_balance_penalty_wt = input_db->getDoubleWithDefault(
+            "balance_penalty_wt",
             d_balance_penalty_wt);
-      d_surface_penalty_wt = db->getDoubleWithDefault("surface_penalty_wt",
+      d_surface_penalty_wt = input_db->getDoubleWithDefault(
+            "surface_penalty_wt",
             d_surface_penalty_wt);
-      d_slender_penalty_wt = db->getDoubleWithDefault("slender_penalty_wt",
+      d_slender_penalty_wt = input_db->getDoubleWithDefault(
+            "slender_penalty_wt",
             d_slender_penalty_wt);
-      d_precut_penalty_wt = db->getDoubleWithDefault("precut_penalty_wt",
+      d_precut_penalty_wt = input_db->getDoubleWithDefault("precut_penalty_wt",
             d_precut_penalty_wt);
 
    }

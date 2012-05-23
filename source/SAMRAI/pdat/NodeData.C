@@ -575,51 +575,54 @@ NodeData<TYPE>::print(
  *
  * Checks to make sure that the class version and restart file
  * version are equal.  If so, reads in d_depth and has d_data
- * retrieve its own data from the database.
+ * retrieve its own data from the restart database.
  *
  *************************************************************************
  */
 
 template<class TYPE>
 void
-NodeData<TYPE>::getSpecializedFromDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+NodeData<TYPE>::getFromRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db)
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   int ver = database->getInteger("PDAT_NODEDATA_VERSION");
+   hier::PatchData::getFromRestart(restart_db);
+
+   int ver = restart_db->getInteger("PDAT_NODEDATA_VERSION");
    if (ver != PDAT_NODEDATA_VERSION) {
-      TBOX_ERROR("NodeData<TYPE>::getSpecializedFromDatabase error...\n"
+      TBOX_ERROR("NodeData<TYPE>::getFromRestart error...\n"
          << " : Restart file version different than class version" << std::endl);
    }
 
-   d_depth = database->getInteger("d_depth");
+   d_depth = restart_db->getInteger("d_depth");
 
-   d_data->getFromDatabase(database->getDatabase("d_data"));
+   d_data->getFromRestart(restart_db->getDatabase("d_data"));
 }
 
 /*
  *************************************************************************
  *
  * Writes out the class version number and d_depth, Then has d_data
- * write its own data to the database.
+ * write its own data to the restart database.
  *
  *************************************************************************
  */
 
 template<class TYPE>
 void
-NodeData<TYPE>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database) const
+NodeData<TYPE>::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
+   TBOX_ASSERT(restart_db);
 
-   TBOX_ASSERT(database);
+   hier::PatchData::putToRestart(restart_db);
 
-   database->putInteger("PDAT_NODEDATA_VERSION", PDAT_NODEDATA_VERSION);
+   restart_db->putInteger("PDAT_NODEDATA_VERSION", PDAT_NODEDATA_VERSION);
 
-   database->putInteger("d_depth", d_depth);
+   restart_db->putInteger("d_depth", d_depth);
 
-   d_data->putUnregisteredToDatabase(database->putDatabase("d_data"));
+   d_data->putToRestart(restart_db->putDatabase("d_data"));
 }
 
 }

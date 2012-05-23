@@ -117,7 +117,7 @@ bool SkeletonBoundaryUtilities3::s_fortran_constants_stuffed = false;
  *
  * Arguments are:
  *    bdry_strategy .... object that reads DIRICHLET or NEUMANN conditions
- *    bdry_db .......... input database containing all boundary data
+ *    input_db ......... input database containing all boundary data
  *    face_conds ....... array into which integer boundary conditions
  *                       for faces are read
  *    edge_conds ....... array into which integer boundary conditions
@@ -129,9 +129,9 @@ bool SkeletonBoundaryUtilities3::s_fortran_constants_stuffed = false;
  *                       GridGeometry3::getPeriodicShift())
  */
 
-void SkeletonBoundaryUtilities3::readBoundaryInput(
+void SkeletonBoundaryUtilities3::getFromInput(
    BoundaryUtilityStrategy* bdry_strategy,
-   const boost::shared_ptr<tbox::Database>& bdry_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    tbox::Array<int>& face_conds,
    tbox::Array<int>& edge_conds,
    tbox::Array<int>& node_conds,
@@ -139,7 +139,7 @@ void SkeletonBoundaryUtilities3::readBoundaryInput(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(bdry_db);
+   TBOX_ASSERT(input_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(edge_conds.getSize() == NUM_3D_EDGES);
    TBOX_ASSERT(node_conds.getSize() == NUM_3D_NODES);
@@ -150,16 +150,16 @@ void SkeletonBoundaryUtilities3::readBoundaryInput(
    }
 
    read3dBdryFaces(bdry_strategy,
-      bdry_db,
+      input_db,
       face_conds,
       periodic);
 
-   read3dBdryEdges(bdry_db,
+   read3dBdryEdges(input_db,
       face_conds,
       edge_conds,
       periodic);
 
-   read3dBdryNodes(bdry_db,
+   read3dBdryNodes(input_db,
       face_conds,
       node_conds,
       periodic);
@@ -772,13 +772,13 @@ int SkeletonBoundaryUtilities3::checkBdryData(
 
 void SkeletonBoundaryUtilities3::read3dBdryFaces(
    BoundaryUtilityStrategy* bdry_strategy,
-   boost::shared_ptr<tbox::Database> bdry_db,
+   boost::shared_ptr<tbox::Database> input_db,
    tbox::Array<int>& face_conds,
    const hier::IntVector& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(bdry_db);
+   TBOX_ASSERT(input_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
 #endif
 
@@ -826,9 +826,9 @@ void SkeletonBoundaryUtilities3::read3dBdryFaces(
          }
 
          if (need_data_read) {
-            if (bdry_db->keyExists(bdry_loc_str)) {
+            if (input_db->keyExists(bdry_loc_str)) {
                boost::shared_ptr<tbox::Database> bdry_loc_db(
-                  bdry_db->getDatabase(bdry_loc_str));
+                  input_db->getDatabase(bdry_loc_str));
                if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
                      string bdry_cond_str =
@@ -875,13 +875,13 @@ void SkeletonBoundaryUtilities3::read3dBdryFaces(
  */
 
 void SkeletonBoundaryUtilities3::read3dBdryEdges(
-   boost::shared_ptr<tbox::Database> bdry_db,
+   boost::shared_ptr<tbox::Database> input_db,
    const tbox::Array<int>& face_conds,
    tbox::Array<int>& edge_conds,
    const hier::IntVector& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(bdry_db);
+   TBOX_ASSERT(input_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(edge_conds.getSize() == NUM_3D_EDGES);
 #endif
@@ -966,9 +966,9 @@ void SkeletonBoundaryUtilities3::read3dBdryEdges(
          }
 
          if (need_data_read) {
-            if (bdry_db->keyExists(bdry_loc_str)) {
+            if (input_db->keyExists(bdry_loc_str)) {
                boost::shared_ptr<tbox::Database> bdry_loc_db(
-                  bdry_db->getDatabase(bdry_loc_str));
+                  input_db->getDatabase(bdry_loc_str));
                if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
                      string bdry_cond_str =
@@ -1221,13 +1221,13 @@ void SkeletonBoundaryUtilities3::read3dBdryEdges(
  */
 
 void SkeletonBoundaryUtilities3::read3dBdryNodes(
-   boost::shared_ptr<tbox::Database> bdry_db,
+   boost::shared_ptr<tbox::Database> input_db,
    const tbox::Array<int>& face_conds,
    tbox::Array<int>& node_conds,
    const hier::IntVector& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(bdry_db);
+   TBOX_ASSERT(input_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(node_conds.getSize() == NUM_3D_NODES);
 #endif
@@ -1278,9 +1278,9 @@ void SkeletonBoundaryUtilities3::read3dBdryNodes(
             default: NULL_STATEMENT;
          }
 
-         if (bdry_db->keyExists(bdry_loc_str)) {
+         if (input_db->keyExists(bdry_loc_str)) {
             boost::shared_ptr<tbox::Database> bdry_loc_db(
-               bdry_db->getDatabase(bdry_loc_str));
+               input_db->getDatabase(bdry_loc_str));
             if (bdry_loc_db) {
                if (bdry_loc_db->keyExists("boundary_condition")) {
                   string bdry_cond_str =

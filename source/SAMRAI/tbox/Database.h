@@ -1484,12 +1484,12 @@ public:
       size_t size = getInteger(key + "_size");
       for (unsigned int i = 0; i < size; ++i) {
          const std::string index_str = Utilities::intToString(i);
-         vector[i].getFromDatabase(*this, key + "_" + index_str);
+         vector[i].getFromRestart(*this, key + "_" + index_str);
       }
    }
 
    /**
-    * Create an vector entry in the database with the specified
+    * Create a vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     *
@@ -1508,7 +1508,7 @@ public:
       putInteger(key + "_size", size);
       for (unsigned int i = 0; i < size; ++i) {
          const std::string index_str = Utilities::intToString(i);
-         vector[i].putUnregisteredToDatabase(*this, key + "_" + index_str);
+         vector[i].putToRestart(*this, key + "_" + index_str);
       }
    }
 

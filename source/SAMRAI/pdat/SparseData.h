@@ -294,7 +294,7 @@ public:
 
    /*!
     * @brief Obtain the specific information for this SparseData object
-    *        from the Database.
+    *        from the restart Database.
     *
     * The parent PatchData part of this class will call this function
     * to get the parts of it specified within this concrete child.  It
@@ -302,25 +302,25 @@ public:
     * it is valid.
     *
     * ASSERTIONS:
-    *    The database must be a non-null pointer.
+    *    The restart_db must be a non-null pointer.
     *    The version must match with the class-specified version
     */
    void
-   getSpecializedFromDatabase(
-      const boost::shared_ptr<tbox::Database>& database);
+   getFromRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db);
 
    /*!
-    * @brief Write out the specialized data to the Database.
+    * @brief Write out the specialized data to the restart Database.
     *
     * A version number is written out as well, in order to maintain
     * validity across runs.
     *
     * ASSERTION:
-    *    The database must be a non-null pointer.
+    *    The restart_db must be a non-null pointer.
     */
    void
-   putSpecializedToDatabase(
-      const boost::shared_ptr<tbox::Database>& database) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * @brief Returns the attribute ID associated with the named

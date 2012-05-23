@@ -437,7 +437,7 @@ public:
    }
 
    /*!
-    * @brief Get the patch data items from the database.
+    * @brief Get the patch data items from the restart database.
     *
     * Patch state is read in from the database and all patch
     * data objects specified in the component_selector are created.
@@ -445,7 +445,7 @@ public:
     * The class version and restart file version must be equal.
     *
     * @par Assertions
-    * Checks that the database is a non-null boost::shared_ptr,
+    * Checks that the restart_db is a non-null boost::shared_ptr,
     * that data retrieved from the database are of the type
     * expected, and that the patch_number read in from the database
     * matches the patch number assigned to this Patch.
@@ -454,29 +454,30 @@ public:
     * some patch data components that were requested through the
     * component_selector are not found in the database.
     *
-    * @param[in]  database
+    * @param[in]  restart_db
     * @param[in]  component_selector
     */
    void
-   getFromDatabase(
-      const boost::shared_ptr<tbox::Database>& database,
+   getFromRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db,
       const ComponentSelector& component_selector);
 
    /*!
-    * @brief Write patch data and other patch information to the database.
+    * @brief Write patch data and other patch information to the restart
+    * database.
     *
     * Class version number and the state of the patch object are written.
     * Patch data objects specified in the component selector are also written.
     * @par Assertions
-    * Check that database is a non-null boost::shared_ptr.
+    * Check that restart_db is a non-null boost::shared_ptr.
     *
-    * @param[in]  database
+    * @param[in]  restart_db
     * @param[in]  patchdata_write_table The ComponentSelector specifying the
     *             patch data components to write.
     */
    void
-   putUnregisteredToDatabase(
-      const boost::shared_ptr<tbox::Database>& database,
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db,
       const ComponentSelector& patchdata_write_table) const;
 
    /*!

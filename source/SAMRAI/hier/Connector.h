@@ -1136,28 +1136,28 @@ public:
    cacheGlobalReducedData() const;
 
    /*!
-    * @brief Write the neighborhoods to a database.
+    * @brief Write the neighborhoods to a restart database.
     *
-    * @param[in] database
+    * @param[in] restart_db
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& database)
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db)
    {
-      d_relationships.putUnregisteredToDatabase(database);
+      d_relationships.putToRestart(restart_db);
       return;
    }
 
    /*!
-    * @brief Read the neighborhoods from a database.
+    * @brief Read the neighborhoods from a restart database.
     *
-    * @param[in] database
+    * @param[in] restart_db
     */
    void
-   getFromDatabase(
-      tbox::Database& database)
+   getFromRestart(
+      tbox::Database& restart_db)
    {
-      d_relationships.getFromDatabase(database);
+      d_relationships.getFromRestart(restart_db);
       return;
    }
 

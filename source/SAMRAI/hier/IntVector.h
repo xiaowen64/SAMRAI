@@ -644,23 +644,23 @@ public:
    }
 
    /**
-    * Store the object state to the specified database
+    * Store the object state to the specified restart database
     * with the provided name.
     *
     */
    virtual void
-   putUnregisteredToDatabase(
-      tbox::Database& database,
+   putToRestart(
+      tbox::Database& restart_db,
       const std::string& name) const;
 
    /**
-    * Restores the object state from the specified database
-    * with the provided name.
+    * Restores the object giving it the provided name and getting its state
+    * from the specified restart database.
     *
     */
    virtual void
-   getFromDatabase(
-      tbox::Database& database,
+   getFromRestart(
+      tbox::Database& restart_db,
       const std::string& name);
 
    /**

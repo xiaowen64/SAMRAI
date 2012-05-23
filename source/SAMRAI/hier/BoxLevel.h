@@ -1166,22 +1166,22 @@ public:
     */
 
    /*!
-    * @brief Write the BoxLevel to a database.
+    * @brief Write the BoxLevel to a restart database.
     *
     * Write only local parts regardless of parallel state (to avoid
     * writing tons of repetitive data).
     *
     * @par Assertions
-    * Check that database is a non-null Pointer.
+    * Check that restart_db is a non-null Pointer.
     *
-    * @param[in,out] database
+    * @param[in,out] restart_db
     */
    void
-   putUnregisteredToDatabase(
-      const boost::shared_ptr<tbox::Database>& database) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
-    * @brief Read the BoxLevel from a database.
+    * @brief Read the BoxLevel from a restart database.
     *
     * Put the BoxLevel in the DISTRIBUTED parallel state and
     * read only local parts.
@@ -1196,12 +1196,12 @@ public:
     * @par Assertions
     * Check that database is a non-null Pointer.
     *
-    * @param[in,out] database
+    * @param[in,out] restart_db
     * @param[in] grid_geom
     */
    void
-   getFromDatabase(
-      tbox::Database& database,
+   getFromRestart(
+      tbox::Database& restart_db,
       const boost::shared_ptr<const BaseGridGeometry>& grid_geom);
 
    //@}

@@ -297,7 +297,7 @@ RestartManager::writeRestartFile(
 /*
  *************************************************************************
  *
- * Write simulation state to supplied database.
+ * Write simulation state to supplied restart database.
  *
  *************************************************************************
  */
@@ -312,7 +312,7 @@ RestartManager::writeRestartFile(
    for ( ; i != d_restart_items_list.end(); i++) {
       boost::shared_ptr<Database> obj_db(
          database->putDatabase(i->name));
-      (i->obj)->putToDatabase(obj_db);
+      (i->obj)->putToRestart(obj_db);
    }
 }
 

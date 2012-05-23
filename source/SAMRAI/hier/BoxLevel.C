@@ -1457,25 +1457,25 @@ BoxLevel::getGlobalBoxes(BoxContainer& global_boxes) const
 
 /*
  ***********************************************************************
- * Write the BoxLevel to a database.
+ * Write the BoxLevel to a restart database.
  *
  * Write only local parts.
  ***********************************************************************
  */
 
 void
-BoxLevel::putUnregisteredToDatabase(
-   const boost::shared_ptr<tbox::Database>& database) const
+BoxLevel::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   database->putBool("d_is_mapped_box_level", true);
-   database->putInteger(
+   restart_db->putBool("d_is_mapped_box_level", true);
+   restart_db->putInteger(
       "HIER_MAPPED_BOX_LEVEL_VERSION", HIER_MAPPED_BOX_LEVEL_VERSION);
-   database->putInteger("d_nproc", d_mpi.getSize());
-   database->putInteger("d_rank", d_mpi.getRank());
-   database->putInteger("dim", d_ratio.getDim().getValue());
-   database->putIntegerArray(
+   restart_db->putInteger("d_nproc", d_mpi.getSize());
+   restart_db->putInteger("d_rank", d_mpi.getRank());
+   restart_db->putInteger("dim", d_ratio.getDim().getValue());
+   restart_db->putIntegerArray(
       "d_ratio", &d_ratio[0], d_ratio.getDim().getValue());
-   getBoxes().putUnregisteredToDatabase(database->putDatabase("mapped_boxes"));
+   getBoxes().putToRestart(restart_db->putDatabase("mapped_boxes"));
 }
 
 /*
@@ -1485,21 +1485,22 @@ BoxLevel::putUnregisteredToDatabase(
  */
 
 void
-BoxLevel::getFromDatabase(
-   tbox::Database& database,
+BoxLevel::getFromRestart(
+   tbox::Database& restart_db,
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom)
 {
-   TBOX_ASSERT(database.isInteger("dim"));
-   const tbox::Dimension dim(static_cast<unsigned short>(database.getInteger("dim")));
+   TBOX_ASSERT(restart_db.isInteger("dim"));
+   const tbox::Dimension dim(static_cast<unsigned short>(
+      restart_db.getInteger("dim")));
    TBOX_ASSERT(getDim() == dim);
 
    IntVector ratio(dim);
-   database.getIntegerArray("d_ratio", &ratio[0], dim.getValue());
+   restart_db.getIntegerArray("d_ratio", &ratio[0], dim.getValue());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   const int version = database.getInteger("HIER_MAPPED_BOX_LEVEL_VERSION");
-   const int nproc = database.getInteger("d_nproc");
-   const int rank = database.getInteger("d_rank");
+   const int version = restart_db.getInteger("HIER_MAPPED_BOX_LEVEL_VERSION");
+   const int nproc = restart_db.getInteger("d_nproc");
+   const int rank = restart_db.getInteger("d_rank");
    TBOX_ASSERT(ratio >= IntVector::getOne(dim));
    TBOX_ASSERT(version <= HIER_MAPPED_BOX_LEVEL_VERSION);
 #endif
@@ -1518,7 +1519,7 @@ BoxLevel::getFromDatabase(
       }
    } else {
       TBOX_WARNING(
-         "BoxLevel::getFromDatabase: Uninitialized MPI communicator.\n"
+         "BoxLevel::getFromRestart: Uninitialized MPI communicator.\n"
          << "Using tbox::SAMRAI_MPI::getSAMRAIWorld().");
       initialize(ratio, grid_geom,
          tbox::SAMRAI_MPI::getSAMRAIWorld(), DISTRIBUTED);
@@ -1526,13 +1527,13 @@ BoxLevel::getFromDatabase(
 
    /*
     * Failing these asserts means that we don't have a compatible
-    * database for the number of processors or we are reading another
+    * restart database for the number of processors or we are reading another
     * processor's data.
     */
    TBOX_ASSERT(nproc == d_mpi.getSize());
    TBOX_ASSERT(rank == d_mpi.getRank());
 
-   d_boxes.getFromDatabase(*database.getDatabase("mapped_boxes"));
+   d_boxes.getFromRestart(*restart_db.getDatabase("mapped_boxes"));
    computeLocalRedundantData();
 
 }

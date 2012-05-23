@@ -795,8 +795,8 @@ public:
     * will result if database pointer is null.
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * Print out all members of integrator instance to given output stream.
@@ -904,7 +904,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& db);
+      const boost::shared_ptr<tbox::Database>& input_db);
 
    /*!
     * Read solver parameters from restart database matching object name.

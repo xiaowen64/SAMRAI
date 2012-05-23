@@ -144,7 +144,7 @@ public:
     *
     * @param bdry_strategy user-defined object that reads DIRICHLET or NEUMANN
     *                      conditions
-    * @param bdry_db       input database containing all boundary data
+    * @param input_db       input database containing all boundary data
     * @param face_conds    array into which integer face boundary condition types
     *                      are read
     * @param edge_conds    array into which integer edge boundary condition types
@@ -156,9 +156,9 @@ public:
     *                      GridGeometry2::getPeriodicShift())
     */
    static void
-   readBoundaryInput(
+   getFromInput(
       appu::BoundaryUtilityStrategy* bdry_strategy,
-      const boost::shared_ptr<tbox::Database>& bdry_db,
+      const boost::shared_ptr<tbox::Database>& input_db,
       tbox::Array<int>& face_conds,
       tbox::Array<int>& edge_conds,
       tbox::Array<int>& node_conds,
@@ -308,20 +308,20 @@ private:
    static void
    read3dBdryFaces(
       appu::BoundaryUtilityStrategy* bdry_strategy,
-      boost::shared_ptr<tbox::Database> bdry_db,
+      boost::shared_ptr<tbox::Database> input_db,
       tbox::Array<int>& face_conds,
       const hier::IntVector& periodic);
 
    static void
    read3dBdryEdges(
-      boost::shared_ptr<tbox::Database> bdry_db,
+      boost::shared_ptr<tbox::Database> input_db,
       const tbox::Array<int>& face_conds,
       tbox::Array<int>& edge_conds,
       const hier::IntVector& periodic);
 
    static void
    read3dBdryNodes(
-      boost::shared_ptr<tbox::Database> bdry_db,
+      boost::shared_ptr<tbox::Database> input_db,
       const tbox::Array<int>& face_conds,
       tbox::Array<int>& node_conds,
       const hier::IntVector& periodic);

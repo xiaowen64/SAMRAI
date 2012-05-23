@@ -274,24 +274,25 @@ ImplicitIntegrator::updateSolution()
 
 void
 ImplicitIntegrator::getFromInput(
-   const boost::shared_ptr<tbox::Database>& db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart)
 {
-   TBOX_ASSERT(is_from_restart || db);
+   TBOX_ASSERT(is_from_restart || input_db);
 
    if (is_from_restart) {
 
-      if (db) {
-         if (db->keyExists("final_time")) {
-            d_final_time = db->getDouble("final_time");
+      if (input_db) {
+         if (input_db->keyExists("final_time")) {
+            d_final_time = input_db->getDouble("final_time");
             if (d_final_time < d_initial_time) {
                TBOX_ERROR(d_object_name << " -- Error in input data "
                                         << "final_time < initial_time.");
             }
          }
 
-         if (db->keyExists("max_integrator_steps")) {
-            d_max_integrator_steps = db->getInteger("max_integrator_steps");
+         if (input_db->keyExists("max_integrator_steps")) {
+            d_max_integrator_steps = input_db->getInteger(
+               "max_integrator_steps");
             if (d_max_integrator_steps < 0) {
                TBOX_ERROR(d_object_name << " -- Error in input data "
                                         << "max_integrator_steps < 0.");
@@ -308,15 +309,15 @@ ImplicitIntegrator::getFromInput(
 
    } else {
 
-      if (db->keyExists("initial_time")) {
-         d_initial_time = db->getDouble("initial_time");
+      if (input_db->keyExists("initial_time")) {
+         d_initial_time = input_db->getDouble("initial_time");
       } else {
          TBOX_ERROR(d_object_name << " -- Key data `initial_time'"
                                   << " missing in input.");
       }
 
-      if (db->keyExists("final_time")) {
-         d_final_time = db->getDouble("final_time");
+      if (input_db->keyExists("final_time")) {
+         d_final_time = input_db->getDouble("final_time");
          if (d_final_time < d_initial_time) {
             TBOX_ERROR(d_object_name << " -- Error in input data "
                                      << "final_time < initial_time.");
@@ -326,8 +327,8 @@ ImplicitIntegrator::getFromInput(
                                   << " missing in input.");
       }
 
-      if (db->keyExists("max_integrator_steps")) {
-         d_max_integrator_steps = db->getInteger("max_integrator_steps");
+      if (input_db->keyExists("max_integrator_steps")) {
+         d_max_integrator_steps = input_db->getInteger("max_integrator_steps");
          if (d_max_integrator_steps < 0) {
             TBOX_ERROR(d_object_name << " -- Error in input data "
                                      << "max_integrator_steps < 0.");
@@ -344,28 +345,28 @@ ImplicitIntegrator::getFromInput(
 /*
  *************************************************************************
  *
- * Write out class version number and data members to database.
+ * Write out class version number and data members to restart database.
  *
  *************************************************************************
  */
 
 void
-ImplicitIntegrator::putToDatabase(
-   const boost::shared_ptr<tbox::Database>& db) const
+ImplicitIntegrator::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 
-   db->putInteger("ALGS_IMPLICIT_INTEGRATOR_VERSION",
+   restart_db->putInteger("ALGS_IMPLICIT_INTEGRATOR_VERSION",
       ALGS_IMPLICIT_INTEGRATOR_VERSION);
 
-   db->putDouble("d_initial_time", d_initial_time);
-   db->putDouble("d_final_time", d_final_time);
-   db->putDouble("d_current_time", d_current_time);
-   db->putDouble("d_current_dt", d_current_dt);
-   db->putDouble("d_old_dt", d_old_dt);
+   restart_db->putDouble("d_initial_time", d_initial_time);
+   restart_db->putDouble("d_final_time", d_final_time);
+   restart_db->putDouble("d_current_time", d_current_time);
+   restart_db->putDouble("d_current_dt", d_current_dt);
+   restart_db->putDouble("d_old_dt", d_old_dt);
 
-   db->putInteger("d_integrator_step", d_integrator_step);
-   db->putInteger("d_max_integrator_steps", d_max_integrator_steps);
+   restart_db->putInteger("d_integrator_step", d_integrator_step);
+   restart_db->putInteger("d_max_integrator_steps", d_max_integrator_steps);
 
 }
 

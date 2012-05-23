@@ -431,14 +431,14 @@ public:
       tbox::Array<int>& counters);
 
    /**
-    * Writes state of CVODEModel object to the specified database.
+    * Writes state of CVODEModel object to the specified restart database.
     *
     * This routine is a concrete implementation of the function
     * declared in the tbox::Serializable abstract base class.
     */
    void
-   putUnregisteredToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * This routine is a concrete implementation of the virtual function
@@ -479,7 +479,7 @@ private:
     */
    virtual void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
 
    virtual void

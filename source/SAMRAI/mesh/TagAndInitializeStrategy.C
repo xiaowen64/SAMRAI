@@ -235,14 +235,14 @@ TagAndInitializeStrategy::resetRefineBoxes(
 
 void
 TagAndInitializeStrategy::getFromInput(
-   const boost::shared_ptr<tbox::Database>& db)
+   const boost::shared_ptr<tbox::Database>& input_db)
 {
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(input_db);
 
    /*
     * Read refine boxes.
     */
-   if (!db->keyExists("RefineBoxes")) {
+   if (!input_db->keyExists("RefineBoxes")) {
       TBOX_ERROR("If REFINE_BOXES is used as a tagging_method, you must\n"
          << "provide a `RefineBoxes' database entry in the input\n"
          << "to specify the level boxes to be refined.  See header\n"
@@ -250,7 +250,7 @@ TagAndInitializeStrategy::getFromInput(
          << "discussion of the entry format." << std::endl);
    }
    boost::shared_ptr<tbox::Database> refine_box_db(
-      db->getDatabase("RefineBoxes"));
+      input_db->getDatabase("RefineBoxes"));
    tbox::Array<std::string> box_keys = refine_box_db->getAllKeys();
    int nkeys = box_keys.getSize();
 

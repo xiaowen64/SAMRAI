@@ -970,11 +970,11 @@ public:
 
    /*
     * Put all statistics and their state in the given restart database.
-    * This function is overloaded from Serializable.
+    * This function is inherited from Serializable.
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<Database>& restart_db) const;
 
    /*
     * Construct those statistics saved in the restart database.

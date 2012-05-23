@@ -209,8 +209,8 @@ public:
     * declared in the tbox::Serializable abstract base class.
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    hier::IntVector
    getMultiblockRefineOpStencilWidth() const;
@@ -237,17 +237,14 @@ public:
 
 private:
    /*
-    * These private member functions read data from input and restart.
-    * When beginning a run from a restart file, all data members are read
-    * from the restart file.  If the boolean flag is true when reading
-    * from input, some restart values may be overridden by those in the
-    * input file.
+    * This private member function reads data from input.  If the boolean flag
+    * is true all input must be present in input database.
     *
     * An assertion results if the database pointer is null.
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
 
    void

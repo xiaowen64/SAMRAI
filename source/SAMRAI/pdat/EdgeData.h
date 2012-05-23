@@ -432,23 +432,23 @@ public:
 
    /*!
     * Check that class version and restart file version are equal.  If so,
-    * read data members from the database.
+    * read data members from the restart database.
     *
-    * Assertions: database must be non-null pointer.
+    * Assertions: restart_db must be non-null pointer.
     */
    virtual void
-   getSpecializedFromDatabase(
-      const boost::shared_ptr<tbox::Database>& database);
+   getFromRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db);
 
    /*!
     * Write out the class version number and other data members to
-    * the database.
+    * the restart database.
     *
-    * Assertions: database must be non-null pointer.
+    * Assertions: restart_db must be non-null pointer.
     */
    virtual void
-   putSpecializedToDatabase(
-      const boost::shared_ptr<tbox::Database>& database) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * The edge iterator iterates over the elements on one axis of an edge

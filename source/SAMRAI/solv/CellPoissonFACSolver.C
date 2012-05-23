@@ -50,7 +50,7 @@ int CellPoissonFACSolver::s_instance_counter[SAMRAI::MAX_DIM_VAL];
 CellPoissonFACSolver::CellPoissonFACSolver(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& database):
+   const boost::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_object_name(object_name),
    d_poisson_spec(object_name + "::poisson_spec"),
@@ -126,7 +126,7 @@ CellPoissonFACSolver::CellPoissonFACSolver(
     */
    d_fac_ops.setPreconditioner((const FACPreconditioner *)(&d_fac_precond));
 
-   getFromInput(database);
+   getFromInput(input_db);
 
    s_instance_counter[d_dim.getValue() - 1]++;
 }
@@ -169,52 +169,52 @@ CellPoissonFACSolver::~CellPoissonFACSolver()
 
 void
 CellPoissonFACSolver::getFromInput(
-   const boost::shared_ptr<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& input_db)
 {
-   if (database) {
-      if (database->isBool("enable_logging")) {
-         bool logging = database->getBool("enable_logging");
+   if (input_db) {
+      if (input_db->isBool("enable_logging")) {
+         bool logging = input_db->getBool("enable_logging");
          enableLogging(logging);
       }
-      if (database->isInteger("max_cycles")) {
-         int max_cycles = database->getInteger("max_cycles");
+      if (input_db->isInteger("max_cycles")) {
+         int max_cycles = input_db->getInteger("max_cycles");
          setMaxCycles(max_cycles);
       }
-      if (database->isDouble("residual_tol")) {
-         double residual_tol = database->getDouble("residual_tol");
+      if (input_db->isDouble("residual_tol")) {
+         double residual_tol = input_db->getDouble("residual_tol");
          setResidualTolerance(residual_tol);
       }
-      if (database->isInteger("num_pre_sweeps")) {
-         int num_pre_sweeps = database->getInteger("num_pre_sweeps");
+      if (input_db->isInteger("num_pre_sweeps")) {
+         int num_pre_sweeps = input_db->getInteger("num_pre_sweeps");
          setPresmoothingSweeps(num_pre_sweeps);
       }
-      if (database->isInteger("num_post_sweeps")) {
-         int num_post_sweeps = database->getInteger("num_post_sweeps");
+      if (input_db->isInteger("num_post_sweeps")) {
+         int num_post_sweeps = input_db->getInteger("num_post_sweeps");
          setPostsmoothingSweeps(num_post_sweeps);
       }
-      if (database->isString("coarse_fine_discretization")) {
-         std::string s = database->getString("coarse_fine_discretization");
+      if (input_db->isString("coarse_fine_discretization")) {
+         std::string s = input_db->getString("coarse_fine_discretization");
          setCoarseFineDiscretization(s);
       }
-      if (database->isString("prolongation_method")) {
-         std::string s = database->getString("prolongation_method");
+      if (input_db->isString("prolongation_method")) {
+         std::string s = input_db->getString("prolongation_method");
          setProlongationMethod(s);
       }
-      if (database->isString("coarse_solver_choice")) {
-         std::string s = database->getString("coarse_solver_choice");
+      if (input_db->isString("coarse_solver_choice")) {
+         std::string s = input_db->getString("coarse_solver_choice");
          setCoarsestLevelSolverChoice(s);
       }
-      if (database->isDouble("coarse_solver_tolerance")) {
-         double tol = database->getDouble("coarse_solver_tolerance");
+      if (input_db->isDouble("coarse_solver_tolerance")) {
+         double tol = input_db->getDouble("coarse_solver_tolerance");
          setCoarsestLevelSolverTolerance(tol);
       }
-      if (database->isInteger("coarse_solver_max_iterations")) {
-         int itr = database->getInteger("coarse_solver_max_iterations");
+      if (input_db->isInteger("coarse_solver_max_iterations")) {
+         int itr = input_db->getInteger("coarse_solver_max_iterations");
          setCoarsestLevelSolverMaxIterations(itr);
       }
 #ifdef HAVE_HYPRE
-      if (database->isBool("use_smg")) {
-         bool smg = database->getBool("use_smg");
+      if (input_db->isBool("use_smg")) {
+         bool smg = input_db->getBool("use_smg");
          setUseSMG(smg);
       }
 #endif

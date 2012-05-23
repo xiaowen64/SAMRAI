@@ -268,11 +268,11 @@ public:
    computeMaxWallclock();
 
    /**
-    * Write timer data members to database.
+    * Write timer data members to restart database.
     */
    void
-   putUnregisteredToDatabase(
-      const boost::shared_ptr<Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<Database>& restart_db) const;
 
    /**
     * Read restarted times from restart database.  When assertion checking
@@ -280,7 +280,7 @@ public:
     */
    void
    getFromRestart(
-      const boost::shared_ptr<Database>& db);
+      const boost::shared_ptr<Database>& restart_db);
 
 protected:
    /**

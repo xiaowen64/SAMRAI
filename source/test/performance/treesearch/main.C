@@ -357,7 +357,7 @@ void generateBoxesUniform(
    if (db->isInteger("boxsize")) {
       db->getIntegerArray("boxsize", &boxsize[0], dim.getValue());
    } else {
-      TBOX_ERROR("CartesianGridGeometry::getFromInput() error...\n"
+      TBOX_ERROR("generateBoxesUniform() error...\n"
          << "    box size is absent.");
    }
 

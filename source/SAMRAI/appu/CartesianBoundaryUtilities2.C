@@ -103,9 +103,9 @@ bool CartesianBoundaryUtilities2::s_fortran_constants_stuffed = false;
  */
 
 void
-CartesianBoundaryUtilities2::readBoundaryInput(
+CartesianBoundaryUtilities2::getFromInput(
    BoundaryUtilityStrategy* bdry_strategy,
-   const boost::shared_ptr<tbox::Database>& bdry_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    tbox::Array<int>& edge_conds,
    tbox::Array<int>& node_conds,
    const hier::IntVector& periodic)
@@ -113,7 +113,7 @@ CartesianBoundaryUtilities2::readBoundaryInput(
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(2));
    TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(bdry_db);
+   TBOX_ASSERT(input_db);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
    TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
 
@@ -122,11 +122,11 @@ CartesianBoundaryUtilities2::readBoundaryInput(
    }
 
    read2dBdryEdges(bdry_strategy,
-      bdry_db,
+      input_db,
       edge_conds,
       periodic);
 
-   read2dBdryNodes(bdry_db,
+   read2dBdryNodes(input_db,
       edge_conds,
       node_conds,
       periodic);
@@ -543,14 +543,14 @@ CartesianBoundaryUtilities2::checkBdryData(
 void
 CartesianBoundaryUtilities2::read2dBdryEdges(
    BoundaryUtilityStrategy* bdry_strategy,
-   const boost::shared_ptr<tbox::Database>& bdry_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    tbox::Array<int>& edge_conds,
    const hier::IntVector& periodic)
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(2));
 
    TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(bdry_db);
+   TBOX_ASSERT(input_db);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
 
    int num_per_dirs = 0;
@@ -589,9 +589,9 @@ CartesianBoundaryUtilities2::read2dBdryEdges(
          }
 
          if (need_data_read) {
-            if (bdry_db->keyExists(bdry_loc_str)) {
+            if (input_db->keyExists(bdry_loc_str)) {
                boost::shared_ptr<tbox::Database> bdry_loc_db(
-                  bdry_db->getDatabase(bdry_loc_str));
+                  input_db->getDatabase(bdry_loc_str));
                if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
                      std::string bdry_cond_str =
@@ -639,14 +639,14 @@ CartesianBoundaryUtilities2::read2dBdryEdges(
 
 void
 CartesianBoundaryUtilities2::read2dBdryNodes(
-   const boost::shared_ptr<tbox::Database>& bdry_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    const tbox::Array<int>& edge_conds,
    tbox::Array<int>& node_conds,
    const hier::IntVector& periodic)
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(2));
 
-   TBOX_ASSERT(bdry_db);
+   TBOX_ASSERT(input_db);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
    TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
 
@@ -680,9 +680,9 @@ CartesianBoundaryUtilities2::read2dBdryNodes(
             default: NULL_STATEMENT;
          }
 
-         if (bdry_db->keyExists(bdry_loc_str)) {
+         if (input_db->keyExists(bdry_loc_str)) {
             boost::shared_ptr<tbox::Database> bdry_loc_db(
-               bdry_db->getDatabase(bdry_loc_str));
+               input_db->getDatabase(bdry_loc_str));
             if (bdry_loc_db) {
                if (bdry_loc_db->keyExists("boundary_condition")) {
                   std::string bdry_cond_str =

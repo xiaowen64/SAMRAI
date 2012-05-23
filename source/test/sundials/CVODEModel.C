@@ -1334,14 +1334,14 @@ CVODEModel::getFromInput(
          input_db->getDatabase("Boundary_data"));
 
       if (d_dim == tbox::Dimension(2)) {
-         CartesianBoundaryUtilities2::readBoundaryInput(this,
+         CartesianBoundaryUtilities2::getFromInput(this,
             boundary_db,
             d_scalar_bdry_edge_conds,
             d_scalar_bdry_node_conds,
             periodic);
       }
       if (d_dim == tbox::Dimension(3)) {
-         CartesianBoundaryUtilities3::readBoundaryInput(this,
+         CartesianBoundaryUtilities3::getFromInput(this,
             boundary_db,
             d_scalar_bdry_face_conds,
             d_scalar_bdry_edge_conds,
@@ -1379,26 +1379,29 @@ CVODEModel::getFromInput(
  *
  *************************************************************************
  */
-void CVODEModel::putUnregisteredToDatabase(
-   const boost::shared_ptr<Database>& db) const
+void CVODEModel::putToRestart(
+   const boost::shared_ptr<Database>& restart_db) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 #endif
 
-   db->putInteger("CVODE_MODEL_VERSION", CVODE_MODEL_VERSION);
+   restart_db->putInteger("CVODE_MODEL_VERSION", CVODE_MODEL_VERSION);
 
-   db->putDouble("d_initial_value", d_initial_value);
+   restart_db->putDouble("d_initial_value", d_initial_value);
 
-   db->putIntegerArray("d_scalar_bdry_edge_conds", d_scalar_bdry_edge_conds);
-   db->putIntegerArray("d_scalar_bdry_node_conds", d_scalar_bdry_node_conds);
+   restart_db->putIntegerArray("d_scalar_bdry_edge_conds",
+      d_scalar_bdry_edge_conds);
+   restart_db->putIntegerArray("d_scalar_bdry_node_conds",
+      d_scalar_bdry_node_conds);
 
    if (d_dim == tbox::Dimension(2)) {
-      db->putDoubleArray("d_bdry_edge_val", d_bdry_edge_val);
+      restart_db->putDoubleArray("d_bdry_edge_val", d_bdry_edge_val);
    }
    if (d_dim == tbox::Dimension(3)) {
-      db->putIntegerArray("d_scalar_bdry_face_conds", d_scalar_bdry_face_conds);
-      db->putDoubleArray("d_bdry_face_val", d_bdry_face_val);
+      restart_db->putIntegerArray("d_scalar_bdry_face_conds",
+         d_scalar_bdry_face_conds);
+      restart_db->putDoubleArray("d_bdry_face_val", d_bdry_face_val);
    }
 
 }

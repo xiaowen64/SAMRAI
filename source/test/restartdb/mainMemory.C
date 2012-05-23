@@ -39,13 +39,13 @@ public:
    virtual ~RestartTester() {
    }
 
-   void putToDatabase(
+   void putToRestart(
       const boost::shared_ptr<tbox::Database>& db) const
    {
       writeTestData(db);
    }
 
-   void getFromDatabase()
+   void getFromRestart()
    {
       boost::shared_ptr<tbox::Database> root_db(
          tbox::RestartManager::getManager()->getRootDatabase());
@@ -99,7 +99,7 @@ int main(
 
       // In this test just read the database stored in memory that
       // was just created.
-      memory_tester.getFromDatabase();
+      memory_tester.getFromRestart();
 
       database->close();
 

@@ -120,12 +120,12 @@ public:
     *
     * @param dim
     * @param object_name Name of object used in outputs
-    * @param database tbox::Database for initialization (may be NULL)
+    * @param input_db tbox::Database for initialization (may be NULL)
     */
    CellPoissonFACSolver(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& database =
+      const boost::shared_ptr<tbox::Database>& input_db =
          boost::shared_ptr<tbox::Database>());
 
    /*!
@@ -649,12 +649,12 @@ private:
     * See the class description for the parameters that can be set
     * from a database.
     *
-    * @param database Input database.  If a NULL pointer is given,
+    * @param input_db Input database.  If a NULL pointer is given,
     * nothing is done.
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& database);
+      const boost::shared_ptr<tbox::Database>& input_db);
 
    /*
     * @brief Set @c d_uv and @c d_fv to vectors wrapping the data

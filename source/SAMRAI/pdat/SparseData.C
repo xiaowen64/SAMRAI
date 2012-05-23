@@ -708,34 +708,37 @@ SparseData<BOX_GEOMETRY>::unpackStream(
 }
 
 /**********************************************************************
- * getSpecializedFromDatabase(database)
+ * getFromRestart(database)
  *********************************************************************/
 template<typename BOX_GEOMETRY>
 void
-SparseData<BOX_GEOMETRY>::getSpecializedFromDatabase(
-   const boost::shared_ptr<tbox::Database>& db)
+SparseData<BOX_GEOMETRY>::getFromRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db)
 {
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
+
+   hier::PatchData::getFromRestart(restart_db);
 
    // get and check the version
-   int ver = db->getInteger("PDAT_SPARSEDATA_VERSION");
+   int ver = restart_db->getInteger("PDAT_SPARSEDATA_VERSION");
    if (ver != PDAT_SPARSEDATA_VERSION) {
-      TBOX_ERROR("SparseData::getSpecializedFromDatabase error...\n"
+      TBOX_ERROR("SparseData::getFromRestart error...\n"
          << " : Restart file version is "
          << "different than class version" << std::endl);
    }
 
    // Number of elements in this SparseData object
-   int count = db->getInteger("sparse_data_count");
+   int count = restart_db->getInteger("sparse_data_count");
 
    // number of double node item attributes
-   TBOX_ASSERT(db->getInteger("dbl_attr_item_count") == d_dbl_attr_size);
+   TBOX_ASSERT(restart_db->getInteger("dbl_attr_item_count") ==
+               d_dbl_attr_size);
 
    // get the registered double keys and their associated id.
    std::string* keys = new std::string[d_dbl_attr_size];
    int* ids = new int[d_dbl_attr_size];
-   db->getStringArray("sparse_data_dbl_keys", keys, d_dbl_attr_size);
-   db->getIntegerArray("sparse_data_dbl_ids", ids, d_dbl_attr_size);
+   restart_db->getStringArray("sparse_data_dbl_keys", keys, d_dbl_attr_size);
+   restart_db->getIntegerArray("sparse_data_dbl_ids", ids, d_dbl_attr_size);
 
    d_dbl_names.clear();
    for (int i = 0; i < d_dbl_attr_size; ++i) {
@@ -748,13 +751,14 @@ SparseData<BOX_GEOMETRY>::getSpecializedFromDatabase(
    delete[] ids;
 
    // number of double node item attributes
-   TBOX_ASSERT(db->getInteger("int_attr_item_count") == d_int_attr_size);
+   TBOX_ASSERT(restart_db->getInteger("int_attr_item_count") ==
+               d_int_attr_size);
 
    // get the registered integer keys and their associated id.
    keys = new std::string[d_int_attr_size];
    ids = new int[d_int_attr_size];
-   db->getStringArray("sparse_data_int_keys", keys, d_int_attr_size);
-   db->getIntegerArray("sparse_data_int_ids", ids, d_int_attr_size);
+   restart_db->getStringArray("sparse_data_int_keys", keys, d_int_attr_size);
+   restart_db->getIntegerArray("sparse_data_int_ids", ids, d_int_attr_size);
 
    d_int_names.clear();
    for (int i = 0; i < d_int_attr_size; ++i) {
@@ -775,9 +779,9 @@ SparseData<BOX_GEOMETRY>::getSpecializedFromDatabase(
          "attr_index_data_" + tbox::Utilities::intToString(curr_item, 6);
 
       // get the next item
-      if (db->isDatabase(index_keyword)) {
+      if (restart_db->isDatabase(index_keyword)) {
          boost::shared_ptr<tbox::Database> item_db(
-            db->getDatabase(index_keyword));
+            restart_db->getDatabase(index_keyword));
 
          // unpack the index
          tbox::Array<int> index_array =
@@ -834,27 +838,29 @@ SparseData<BOX_GEOMETRY>::getSpecializedFromDatabase(
             doffset += d_dbl_attr_size;
             ioffset += d_int_attr_size;
          } // for (int curr_list ...
-      } // if (db->isDatabase(...
+      } // if (restart_db->isDatabase(...
    } // for (int curr_item = ...
 }
 
 /**********************************************************************
- * putSpecializedToDatabase(database)
+ * putToRestart(database)
  *********************************************************************/
 template<typename BOX_GEOMETRY>
 void
-SparseData<BOX_GEOMETRY>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& db) const
+SparseData<BOX_GEOMETRY>::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
+
+   hier::PatchData::putToRestart(restart_db);
 
    // record the version
-   db->putInteger("PDAT_SPARSEDATA_VERSION", PDAT_SPARSEDATA_VERSION);
+   restart_db->putInteger("PDAT_SPARSEDATA_VERSION", PDAT_SPARSEDATA_VERSION);
 
    // record the number of sparse data elements
-   db->putInteger("sparse_data_count",
+   restart_db->putInteger("sparse_data_count",
       static_cast<int>(d_index_to_attribute_map.size()));
-   db->putInteger("dbl_attr_item_count", d_dbl_attr_size);
+   restart_db->putInteger("dbl_attr_item_count", d_dbl_attr_size);
 
    // record the keys for the attributes
    std::string* keys = new std::string[d_dbl_attr_size];
@@ -867,14 +873,14 @@ SparseData<BOX_GEOMETRY>::putSpecializedToDatabase(
       ids[i] = dbl_name_iter->second();
    }
 
-   db->putStringArray("sparse_data_dbl_keys", keys, d_dbl_attr_size);
-   db->putIntegerArray("sparse_data_dbl_ids", ids, d_dbl_attr_size);
+   restart_db->putStringArray("sparse_data_dbl_keys", keys, d_dbl_attr_size);
+   restart_db->putIntegerArray("sparse_data_dbl_ids", ids, d_dbl_attr_size);
 
    delete[] keys;
    delete[] ids;
 
    // record the keys for the attributes
-   db->putInteger("int_attr_item_count", d_int_attr_size);
+   restart_db->putInteger("int_attr_item_count", d_int_attr_size);
 
    keys = new std::string[d_int_attr_size];
    ids = new int[d_int_attr_size];
@@ -885,8 +891,8 @@ SparseData<BOX_GEOMETRY>::putSpecializedToDatabase(
       ids[i] = int_name_iter->second();
    }
 
-   db->putStringArray("sparse_data_int_keys", keys, d_int_attr_size);
-   db->putIntegerArray("sparse_data_int_ids", ids, d_int_attr_size);
+   restart_db->putStringArray("sparse_data_int_keys", keys, d_int_attr_size);
+   restart_db->putIntegerArray("sparse_data_int_ids", ids, d_int_attr_size);
 
    delete[] keys;
    keys = NULL;
@@ -913,7 +919,7 @@ SparseData<BOX_GEOMETRY>::putSpecializedToDatabase(
       }
 
       boost::shared_ptr<tbox::Database> item_db(
-         db->putDatabase(index_keyword));
+         restart_db->putDatabase(index_keyword));
 
       item_db->putIntegerArray(index_keyword, index_array);
 

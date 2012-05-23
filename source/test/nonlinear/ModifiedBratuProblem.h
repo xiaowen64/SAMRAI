@@ -396,13 +396,13 @@ public:
    //@}
 
    /**
-    * Write data members to given data base for restart.
+    * Write data members to given database for restart.
     *
-    * Overloaded from tbox::Serializable.
+    * Inherited from tbox::Serializable.
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * Write class data to given output stream.
@@ -413,16 +413,14 @@ public:
 
 private:
    /*
-    * Functions to read data from input and restart databases. If the boolean
-    * flag is true, all data members are read from restart.  They can
-    * later be overwritten from values in the input file.  When the flag
-    * is false, all data values are set from thos given in input.
+    * Functions to read data from input database. If the boolean
+    * flag is true, all data members must be present in input.
     *
     * An assertion results if the database pointer is null.
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
 
    /*

@@ -1617,18 +1617,18 @@ public:
    //@{ @name I/O
 
    /*!
-    * @brief Write the BoxContainer to a database.
+    * @brief Write the BoxContainer to a restart database.
     */
    void
-   putUnregisteredToDatabase(
-      const boost::shared_ptr<tbox::Database>& database) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
-    * @brief Read the BoxContainer from a database.
+    * @brief Read the BoxContainer from a restart database.
     */
    void
-   getFromDatabase(
-      tbox::Database& database);
+   getFromRestart(
+      tbox::Database& restart_db);
 
    /*!
     * @brief Conversion from BoxContainer to tbox::Array<tbox::DatabaseBox>.

@@ -49,7 +49,7 @@ BergerRigoutsos::s_initialize_finalize_handler(
  */
 BergerRigoutsos::BergerRigoutsos(
    const tbox::Dimension& dim,
-   const boost::shared_ptr<tbox::Database>& database):
+   const boost::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_max_box_size(hier::IntVector(d_dim, tbox::MathUtilities<int>::getMax())),
@@ -70,53 +70,8 @@ BergerRigoutsos::BergerRigoutsos(
     * Set database-dependent parameters or cache them for use
     * when we construct a dendogram root.
     */
-   if (database) {
-      if (database->isInteger("max_box_size")) {
-         database->getIntegerArray("max_box_size", &d_max_box_size[0], d_dim.getValue());
-      }
-      d_max_lap_cut_from_center =
-         database->getDoubleWithDefault("max_lap_cut_from_center",
-            d_max_lap_cut_from_center);
-      d_laplace_cut_threshold_ar =
-         database->getDoubleWithDefault("laplace_cut_threshold_ar",
-            d_laplace_cut_threshold_ar);
-      d_log_node_history =
-         database->getBoolWithDefault("log_node_history",
-            d_log_node_history);
-      d_log_cluster_summary =
-         database->getBoolWithDefault("log_cluster_summary",
-            d_log_cluster_summary);
-      d_log_cluster =
-         database->getBoolWithDefault("log_cluster",
-            d_log_cluster);
-      d_algo_advance_mode =
-         database->getStringWithDefault("algo_advance_mode",
-            d_algo_advance_mode);
-      d_owner_mode =
-         database->getStringWithDefault("owner_mode",
-            d_owner_mode);
-      d_sort_output_nodes =
-         database->getBoolWithDefault("sort_output_nodes",
-            d_sort_output_nodes);
-
-      std::string tmp_str;
-
-      tmp_str = database->getStringWithDefault("check_min_box_size",
-            std::string("WARN"));
-      d_check_min_box_size = char(tolower(*tmp_str.c_str()));
-      if (d_check_min_box_size != 'i' &&
-          d_check_min_box_size != 'w' &&
-          d_check_min_box_size != 'e') {
-         TBOX_ERROR("BergerRigoutsos: input parameter check_min_box_size\n"
-            << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
-      }
-
-      d_barrier_before =
-         database->getBoolWithDefault("barrier_before",
-            d_barrier_before);
-      d_barrier_after =
-         database->getBoolWithDefault("barrier_after",
-            d_barrier_after);
+   if (input_db) {
+      getFromInput(input_db);
    }
 
 }
@@ -131,6 +86,60 @@ BergerRigoutsos::~BergerRigoutsos()
          d_mpi.freeCommunicator();
       }
    }
+}
+
+void
+BergerRigoutsos::getFromInput(
+   const boost::shared_ptr<tbox::Database>& input_db)
+{
+   if (input_db->isInteger("max_box_size")) {
+      input_db->getIntegerArray("max_box_size",
+         &d_max_box_size[0],
+         d_dim.getValue());
+   }
+   d_max_lap_cut_from_center =
+      input_db->getDoubleWithDefault("max_lap_cut_from_center",
+         d_max_lap_cut_from_center);
+   d_laplace_cut_threshold_ar =
+      input_db->getDoubleWithDefault("laplace_cut_threshold_ar",
+         d_laplace_cut_threshold_ar);
+   d_log_node_history =
+      input_db->getBoolWithDefault("log_node_history",
+         d_log_node_history);
+   d_log_cluster_summary =
+      input_db->getBoolWithDefault("log_cluster_summary",
+         d_log_cluster_summary);
+   d_log_cluster =
+      input_db->getBoolWithDefault("log_cluster",
+         d_log_cluster);
+   d_algo_advance_mode =
+      input_db->getStringWithDefault("algo_advance_mode",
+         d_algo_advance_mode);
+   d_owner_mode =
+      input_db->getStringWithDefault("owner_mode",
+         d_owner_mode);
+   d_sort_output_nodes =
+      input_db->getBoolWithDefault("sort_output_nodes",
+         d_sort_output_nodes);
+
+   std::string tmp_str;
+
+   tmp_str = input_db->getStringWithDefault("check_min_box_size",
+         std::string("WARN"));
+   d_check_min_box_size = char(tolower(*tmp_str.c_str()));
+   if (d_check_min_box_size != 'i' &&
+       d_check_min_box_size != 'w' &&
+       d_check_min_box_size != 'e') {
+      TBOX_ERROR("BergerRigoutsos: input parameter check_min_box_size\n"
+         << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
+   }
+
+   d_barrier_before =
+      input_db->getBoolWithDefault("barrier_before",
+         d_barrier_before);
+   d_barrier_after =
+      input_db->getBoolWithDefault("barrier_after",
+         d_barrier_after);
 }
 
 /*

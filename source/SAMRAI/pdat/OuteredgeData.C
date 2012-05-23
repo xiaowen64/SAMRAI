@@ -1389,7 +1389,7 @@ OuteredgeData<TYPE>::printAxisSide(
  *************************************************************************
  *
  * Checks that class version and restart file version are equal.
- * If so, reads in d_depth from the database.
+ * If so, reads in d_depth from the restart database.
  * Then has each item in d_data read in its data from the database.
  *
  *************************************************************************
@@ -1397,19 +1397,21 @@ OuteredgeData<TYPE>::printAxisSide(
 
 template<class TYPE>
 void
-OuteredgeData<TYPE>::getSpecializedFromDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+OuteredgeData<TYPE>::getFromRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db)
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   int ver = database->getInteger("PDAT_OUTEREDGEDATA_VERSION");
+   hier::PatchData::getFromRestart(restart_db);
+
+   int ver = restart_db->getInteger("PDAT_OUTEREDGEDATA_VERSION");
    if (ver != PDAT_OUTEREDGEDATA_VERSION) {
       TBOX_ERROR(
-         "OuteredgeData<getDim()>::getSpecializedFromDatabase error...\n"
+         "OuteredgeData<getDim()>::getFromRestart error...\n"
          << " : Restart file version different than class version" << std::endl);
    }
 
-   d_depth = database->getInteger("d_depth");
+   d_depth = restart_db->getInteger("d_depth");
 
    boost::shared_ptr<tbox::Database> array_database;
 
@@ -1424,8 +1426,8 @@ OuteredgeData<TYPE>::getSpecializedFromDatabase(
                      axis)
                   + "_" + tbox::Utilities::intToString(face_normal) + "_"
                   + tbox::Utilities::intToString(side);
-               array_database = database->getDatabase(array_name);
-               d_data[axis][face_normal][side]->getFromDatabase(array_database);
+               array_database = restart_db->getDatabase(array_name);
+               d_data[axis][face_normal][side]->getFromRestart(array_database);
 
             }  // iterate over lower/upper sides
 
@@ -1440,7 +1442,7 @@ OuteredgeData<TYPE>::getSpecializedFromDatabase(
 /*
  *************************************************************************
  *
- * Writes out class version number, d_depth to the database.
+ * Writes out class version number, d_depth to the restart database.
  * Then has each item in d_data write out its data to the database.
  *
  *************************************************************************
@@ -1448,15 +1450,17 @@ OuteredgeData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void
-OuteredgeData<TYPE>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database) const
+OuteredgeData<TYPE>::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   database->putInteger("PDAT_OUTEREDGEDATA_VERSION",
+   hier::PatchData::putToRestart(restart_db);
+
+   restart_db->putInteger("PDAT_OUTEREDGEDATA_VERSION",
       PDAT_OUTEREDGEDATA_VERSION);
 
-   database->putInteger("d_depth", d_depth);
+   restart_db->putInteger("d_depth", d_depth);
 
    boost::shared_ptr<tbox::Database> array_database;
 
@@ -1472,8 +1476,8 @@ OuteredgeData<TYPE>::putSpecializedToDatabase(
                      axis)
                   + "_" + tbox::Utilities::intToString(face_normal) + "_"
                   + tbox::Utilities::intToString(side);
-               array_database = database->putDatabase(array_name);
-               d_data[axis][face_normal][side]->putUnregisteredToDatabase(
+               array_database = restart_db->putDatabase(array_name);
+               d_data[axis][face_normal][side]->putToRestart(
                   array_database);
 
             }  // iterate over lower/upper sides

@@ -229,6 +229,13 @@ private:
    explicit PersistentOverlapConnectors(
       const BoxLevel& my_mapped_box_level);
 
+   /*
+    * Read from the input database.
+    */
+   void
+   getFromInput(
+      const boost::shared_ptr<tbox::Database>& input_db);
+
    //@}
 
    //@{

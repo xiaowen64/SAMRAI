@@ -669,24 +669,24 @@ MethodOfLinesIntegrator::applyGradientDetector(
  *************************************************************************
  *
  * Writes the class version number, order, and
- * alpha array to the database.
+ * alpha array to the restart database.
  *
  *************************************************************************
  */
 
 void
-MethodOfLinesIntegrator::putToDatabase(
-   const boost::shared_ptr<tbox::Database>& db) const
+MethodOfLinesIntegrator::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 
-   db->putInteger("ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION",
+   restart_db->putInteger("ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION",
       ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION);
 
-   db->putInteger("d_order", d_order);
-   db->putDoubleArray("d_alpha_1", d_alpha_1);
-   db->putDoubleArray("d_alpha_2", d_alpha_2);
-   db->putDoubleArray("d_beta", d_beta);
+   restart_db->putInteger("d_order", d_order);
+   restart_db->putDoubleArray("d_alpha_1", d_alpha_1);
+   restart_db->putDoubleArray("d_alpha_2", d_alpha_2);
+   restart_db->putDoubleArray("d_beta", d_beta);
 }
 
 /*

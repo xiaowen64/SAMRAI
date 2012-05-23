@@ -199,7 +199,7 @@ PatchLevel::PatchLevel(
  */
 
 PatchLevel::PatchLevel(
-   const boost::shared_ptr<tbox::Database>& level_database,
+   const boost::shared_ptr<tbox::Database>& restart_database,
    const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
    const boost::shared_ptr<PatchDescriptor>& descriptor,
    const boost::shared_ptr<PatchFactory>& factory,
@@ -216,7 +216,7 @@ PatchLevel::PatchLevel(
 {
    d_number_blocks = grid_geometry->getNumberBlocks();
 
-   TBOX_ASSERT(level_database);
+   TBOX_ASSERT(restart_database);
    TBOX_ASSERT(grid_geometry);
    TBOX_ASSERT(descriptor);
 
@@ -225,7 +225,7 @@ PatchLevel::PatchLevel(
    d_geometry = grid_geometry;
    d_descriptor = descriptor;
 
-   getFromDatabase(level_database, component_selector);
+   getFromRestart(restart_database, component_selector);
 
    d_boundary_boxes_created = false;
 
@@ -636,68 +636,68 @@ PatchLevel::getBoxes(
  * ************************************************************************
  *
  *  Check that class version and restart file number are the same.  If
- *  so, read in data from database and build patch level from data.
+ *  so, read in data from restart database and build patch level from data.
  *
  * ************************************************************************
  */
 
 void
-PatchLevel::getFromDatabase(
-   const boost::shared_ptr<tbox::Database>& database,
+PatchLevel::getFromRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db,
    const ComponentSelector& component_selector)
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   int ver = database->getInteger("HIER_PATCH_LEVEL_VERSION");
+   int ver = restart_db->getInteger("HIER_PATCH_LEVEL_VERSION");
    if (ver != HIER_PATCH_LEVEL_VERSION) {
-      TBOX_ERROR("PatchLevel::getFromDatabase() error...\n"
+      TBOX_ERROR("PatchLevel::getFromRestart() error...\n"
          << "   Restart file version different than class version.");
    }
 
-   if (database->keyExists("d_boxes")) {
-      d_boxes = database->getDatabaseBoxArray("d_boxes");
+   if (restart_db->keyExists("d_boxes")) {
+      d_boxes = restart_db->getDatabaseBoxArray("d_boxes");
    }
 
    int* temp_ratio = &d_ratio_to_level_zero[0];
-   database->getIntegerArray(
+   restart_db->getIntegerArray(
       "d_ratio_to_level_zero",
       temp_ratio,
       getDim().getValue());
 
-   d_number_blocks = database->getInteger("d_number_blocks");
+   d_number_blocks = restart_db->getInteger("d_number_blocks");
 
    d_physical_domain.resizeArray(d_number_blocks);
    for (int nb = 0; nb < d_number_blocks; nb++) {
       std::string domain_name = "d_physical_domain_"
          + tbox::Utilities::blockToString(nb);
-      d_physical_domain[nb] = database->getDatabaseBoxArray(domain_name);
+      d_physical_domain[nb] = restart_db->getDatabaseBoxArray(domain_name);
       for (BoxContainer::iterator bi = d_physical_domain[nb].begin();
            bi != d_physical_domain[nb].end(); ++bi) {
          bi->setBlockId(BlockId(nb));
       }
    }
 
-   d_level_number = database->getInteger("d_level_number");
+   d_level_number = restart_db->getInteger("d_level_number");
    d_next_coarser_level_number =
-      database->getInteger("d_next_coarser_level_number");
-   d_in_hierarchy = database->getBool("d_in_hierarchy");
+      restart_db->getInteger("d_next_coarser_level_number");
+   d_in_hierarchy = restart_db->getBool("d_in_hierarchy");
 
    temp_ratio = &d_ratio_to_coarser_level[0];
-   database->getIntegerArray(
+   restart_db->getIntegerArray(
       "d_ratio_to_coarser_level",
       temp_ratio,
       getDim().getValue());
 
    /*
-    * Put local patches in database.
+    * Put local patches in restart database.
     */
 
    boost::shared_ptr<tbox::Database> mbl_database(
-      database->getDatabase("mapped_box_level"));
+      restart_db->getDatabase("mapped_box_level"));
    boost::shared_ptr<BoxLevel> mapped_box_level(
       boost::make_shared<BoxLevel>(getDim()));
    boost::shared_ptr<const BaseGridGeometry> grid_geometry(getGridGeometry());
-   mapped_box_level->getFromDatabase(*mbl_database, grid_geometry);
+   mapped_box_level->getFromRestart(*mbl_database, grid_geometry);
    d_mapped_box_level = mapped_box_level;
 
    d_patches.clear();
@@ -715,18 +715,18 @@ PatchLevel::getFromDatabase(
          + "-block_"
          + tbox::Utilities::blockToString(
             mapped_box.getBlockId().getBlockValue());
-      if (!(database->isDatabase(patch_name))) {
-         TBOX_ERROR("PatchLevel::getFromDatabase() error...\n"
+      if (!(restart_db->isDatabase(patch_name))) {
+         TBOX_ERROR("PatchLevel::getFromRestart() error...\n"
             << "   patch name " << patch_name
-            << " not found in database" << std::endl);
+            << " not found in restart database" << std::endl);
       }
 
       boost::shared_ptr<Patch>& patch(d_patches[mapped_box_id]);
       patch = d_factory->allocate(mapped_box, d_descriptor);
       patch->setPatchLevelNumber(d_level_number);
       patch->setPatchInHierarchy(d_in_hierarchy);
-      patch->getFromDatabase(
-         database->getDatabase(patch_name),
+      patch->getFromRestart(
+         restart_db->getDatabase(patch_name),
          component_selector);
    }
 
@@ -736,8 +736,9 @@ PatchLevel::getFromDatabase(
  * ************************************************************************
  *
  *  Write out class version number and patch_level data members to the
- *  database, then has each patch on the local processor write itself
- *  to the database.   The following are written out to the database:
+ *  restart database, then has each patch on the local processor write itself
+ *  to the restart database.   The following are written out to the restart
+ *  database:
  *  d_physical_domain, d_ratio_to_level_zero, d_boxes, d_mapping,
  *  d_global_number_patches, d_level_number, d_next_coarser_level_number,
  *  d_in_hierarchy, d_patches[].
@@ -749,49 +750,50 @@ PatchLevel::getFromDatabase(
  * ************************************************************************
  */
 void
-PatchLevel::putUnregisteredToDatabase(
-   const boost::shared_ptr<tbox::Database>& database,
+PatchLevel::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db,
    const ComponentSelector& patchdata_write_table) const
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   database->putInteger("HIER_PATCH_LEVEL_VERSION", HIER_PATCH_LEVEL_VERSION);
+   restart_db->putInteger("HIER_PATCH_LEVEL_VERSION",
+      HIER_PATCH_LEVEL_VERSION);
 
-   database->putBool("d_is_patch_level", true);
+   restart_db->putBool("d_is_patch_level", true);
 
    tbox::Array<tbox::DatabaseBox> temp_boxes = d_boxes;
    if (temp_boxes.getSize() > 0) {
-      database->putDatabaseBoxArray("d_boxes", temp_boxes);
+      restart_db->putDatabaseBoxArray("d_boxes", temp_boxes);
    }
 
    const int* temp_ratio_to_level_zero = &d_ratio_to_level_zero[0];
-   database->putIntegerArray("d_ratio_to_level_zero",
+   restart_db->putIntegerArray("d_ratio_to_level_zero",
       temp_ratio_to_level_zero, getDim().getValue());
 
-   database->putInteger("d_number_blocks", d_number_blocks);
+   restart_db->putInteger("d_number_blocks", d_number_blocks);
 
    for (int nb = 0; nb < d_number_blocks; nb++) {
       tbox::Array<tbox::DatabaseBox> temp_domain = d_physical_domain[nb];
       std::string domain_name = "d_physical_domain_"
          + tbox::Utilities::blockToString(nb);
-      database->putDatabaseBoxArray(domain_name, temp_domain);
+      restart_db->putDatabaseBoxArray(domain_name, temp_domain);
    }
-   database->putInteger("d_level_number", d_level_number);
-   database->putInteger("d_next_coarser_level_number",
+   restart_db->putInteger("d_level_number", d_level_number);
+   restart_db->putInteger("d_next_coarser_level_number",
       d_next_coarser_level_number);
-   database->putBool("d_in_hierarchy", d_in_hierarchy);
+   restart_db->putBool("d_in_hierarchy", d_in_hierarchy);
 
    const int* temp_ratio_to_coarser_level = &d_ratio_to_coarser_level[0];
-   database->putIntegerArray("d_ratio_to_coarser_level",
+   restart_db->putIntegerArray("d_ratio_to_coarser_level",
       temp_ratio_to_coarser_level, getDim().getValue());
 
    /*
-    * Put local patches in database.
+    * Put local patches in restart_db.
     */
 
    boost::shared_ptr<tbox::Database> mbl_database(
-      database->putDatabase("mapped_box_level"));
-   d_mapped_box_level->putUnregisteredToDatabase(mbl_database);
+      restart_db->putDatabase("mapped_box_level"));
+   d_mapped_box_level->putToRestart(mbl_database);
 
    for (iterator ip(begin()); ip != end(); ip++) {
 
@@ -803,8 +805,8 @@ PatchLevel::putUnregisteredToDatabase(
          + tbox::Utilities::blockToString(
             ip->getBox().getBlockId().getBlockValue());
 
-      ip->putUnregisteredToDatabase(
-         database->putDatabase(patch_name),
+      ip->putToRestart(
+         restart_db->putDatabase(patch_name),
          patchdata_write_table);
    }
 

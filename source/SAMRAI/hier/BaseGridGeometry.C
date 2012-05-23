@@ -715,17 +715,17 @@ BaseGridGeometry::getFromRestart()
 
 void
 BaseGridGeometry::getFromInput(
-   const boost::shared_ptr<tbox::Database>& db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart)
 {
 
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(input_db);
 
    const tbox::Dimension dim(getDim());
 
    if (!is_from_restart) {
 
-      d_number_blocks = db->getIntegerWithDefault("num_blocks", 1);
+      d_number_blocks = input_db->getIntegerWithDefault("num_blocks", 1);
 
       std::string domain_name;
       BoxContainer domain;
@@ -736,8 +736,8 @@ BaseGridGeometry::getFromInput(
          domain_name = "domain_boxes_" + tbox::Utilities::intToString(b);
 
          BoxContainer block_domain_boxes; 
-         if (db->keyExists(domain_name)) {
-            block_domain_boxes = db->getDatabaseBoxArray(domain_name);
+         if (input_db->keyExists(domain_name)) {
+            block_domain_boxes = input_db->getDatabaseBoxArray(domain_name);
             if (block_domain_boxes.size() == 0) {
                TBOX_ERROR(
                   getObjectName() << ":  "
@@ -761,8 +761,8 @@ BaseGridGeometry::getFromInput(
 
       int pbc[SAMRAI::MAX_DIM_VAL];
       IntVector per_bc(dim, 0);
-      if (db->keyExists("periodic_dimension")) {
-         db->getIntegerArray("periodic_dimension", pbc, dim.getValue());
+      if (input_db->keyExists("periodic_dimension")) {
+         input_db->getIntegerArray("periodic_dimension", pbc, dim.getValue());
          for (int i = 0; i < dim.getValue(); i++) {
             per_bc(i) = ((pbc[i] == 0) ? 0 : 1);
          }
@@ -773,29 +773,29 @@ BaseGridGeometry::getFromInput(
       initializePeriodicShift(per_bc);
    }
 
-   readBlockDataFromInput(db);
+   readBlockDataFromInput(input_db);
 }
 
 /*
  *************************************************************************
  *
- * Writes out version number and data members for the class.
+ * Writes version number and data members for the class to restart database.
  *
  *************************************************************************
  */
 
 void
-BaseGridGeometry::putToDatabase(
-   const boost::shared_ptr<tbox::Database>& db) const
+BaseGridGeometry::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 
    const tbox::Dimension dim(getDim());
 
-   db->putInteger("HIER_GRID_GEOMETRY_VERSION",
+   restart_db->putInteger("HIER_GRID_GEOMETRY_VERSION",
       HIER_GRID_GEOMETRY_VERSION);
 
-   db->putInteger("d_number_blocks", d_number_blocks);
+   restart_db->putInteger("d_number_blocks", d_number_blocks);
 
    std::string domain_name;
 
@@ -806,14 +806,15 @@ BaseGridGeometry::putToDatabase(
       BoxContainer block_phys_domain(getPhysicalDomain(), BlockId(b));
       tbox::Array<tbox::DatabaseBox> temp_box_array = block_phys_domain;
 
-      db->putDatabaseBoxArray(domain_name, temp_box_array);
+      restart_db->putDatabaseBoxArray(domain_name, temp_box_array);
    }
 
    IntVector level0_shift(getPeriodicShift(IntVector::getOne(dim)));
    int* temp_shift = &level0_shift[0];
-   db->putIntegerArray("d_periodic_shift", temp_shift, dim.getValue());
+   restart_db->putIntegerArray("d_periodic_shift", temp_shift, dim.getValue());
 
-   db->putBool("d_has_enhanced_connectivity", d_has_enhanced_connectivity);
+   restart_db->putBool("d_has_enhanced_connectivity",
+      d_has_enhanced_connectivity);
 }
 
 /*

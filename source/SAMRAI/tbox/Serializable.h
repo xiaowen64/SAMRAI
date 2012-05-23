@@ -24,11 +24,11 @@ namespace tbox {
  * database serialization for objects.
  *
  * Objects needing to serialize their data to a database implement the
- * function putToDatabase(boost::shared_ptr<tbox::Database>) specifying
+ * function putToRestart(boost::shared_ptr<tbox::Database>) specifying
  * how to put its data members into the database instance.
  *
  * @note The interface asymmetric in that is no corresponding
- * "getFromDatabase" function.  This stems from SAMRAI's historical
+ * "getFromRestart" function.  This stems from SAMRAI's historical
  * restart procedure and object creation is object initialization
  * pattern.  Thus restarting is done in the constructors for classes
  * implementing Serializable not by an additional method.  The
@@ -51,12 +51,12 @@ public:
 
    /*!
     * @brief Serializes the object by writing necessary state to the
-    * specified database.
+    * specified restart database.
     *
     */
    virtual void
-   putToDatabase(
-      const boost::shared_ptr<Database>& database) const = 0;
+   putToRestart(
+      const boost::shared_ptr<Database>& restart_db) const = 0;
 
 };
 

@@ -216,39 +216,20 @@ public:
 
    /**
     * Checks that class version and restart file version are equal.  If so,
-    * reads in the data members common to all patch data types from database.
-    * This method then calls the getSpecializedFromDatabase() method
-    * to retrieve the data special to the concrete patch data type.
+    * reads in the data members common to all patch data types from restart
+    * database.
     */
    virtual void
-   getFromDatabase(
-      const boost::shared_ptr<tbox::Database>& database);
+   getFromRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db);
 
    /**
-    * Writes out the class version number to the database.  Then,
-    * writes the data members common to all patch data types from database.
-    * After the common data is written to the database, the
-    * putSpecializedToDatabase() method is invoked.
+    * Writes out the class version number to the restart database.  Then,
+    * writes the data members common to all patch data types to database.
     */
    virtual void
-   putUnregisteredToDatabase(
-      const boost::shared_ptr<tbox::Database>& database) const;
-
-   /**
-    * This pure abstract method is used by concrete patch data subclasses
-    * to retrieve from the database data special to the concrete class.
-    */
-   virtual void
-   getSpecializedFromDatabase(
-      const boost::shared_ptr<tbox::Database>& database) = 0;
-
-   /**
-    * This pure abstract method is used by concrete patch data subclasses
-    * to put to the database data special to the concrete class.
-    */
-   virtual void
-   putSpecializedToDatabase(
-      const boost::shared_ptr<tbox::Database>& database) const = 0;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * Return the dimension of this object.

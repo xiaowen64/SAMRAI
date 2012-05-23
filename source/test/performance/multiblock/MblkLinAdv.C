@@ -2909,14 +2909,14 @@ void MblkLinAdv::getFromInput(
          db->getDatabase("Boundary_data"));
 
       if (d_dim == tbox::Dimension(2)) {
-         SkeletonBoundaryUtilities2::readBoundaryInput(this,
+         SkeletonBoundaryUtilities2::getFromInput(this,
             bdry_db,
             d_scalar_bdry_edge_conds,
             d_scalar_bdry_node_conds,
             periodic);
       }
       if (d_dim == tbox::Dimension(3)) {
-         SkeletonBoundaryUtilities3::readBoundaryInput(this,
+         SkeletonBoundaryUtilities3::getFromInput(this,
             bdry_db,
             d_scalar_bdry_face_conds,
             d_scalar_bdry_edge_conds,
@@ -2940,29 +2940,33 @@ void MblkLinAdv::getFromInput(
  *************************************************************************
  */
 
-void MblkLinAdv::putToDatabase(
-   const boost::shared_ptr<tbox::Database>& db) const
+void MblkLinAdv::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 #endif
 
-   db->putInteger("MBLKLINADV_VERSION", MBLKLINADV_VERSION);
+   restart_db->putInteger("MBLKLINADV_VERSION", MBLKLINADV_VERSION);
 
-   db->putDoubleArray("d_advection_velocity", d_advection_velocity, d_dim.getValue());
+   restart_db->putDoubleArray("d_advection_velocity",
+      d_advection_velocity,
+      d_dim.getValue());
 
-   db->putInteger("d_godunov_order", d_godunov_order);
-   db->putString("d_corner_transport", d_corner_transport);
-   db->putIntegerArray("d_nghosts", &d_nghosts[0], d_dim.getValue());
-   db->putIntegerArray("d_fluxghosts", &d_fluxghosts[0], d_dim.getValue());
+   restart_db->putInteger("d_godunov_order", d_godunov_order);
+   restart_db->putString("d_corner_transport", d_corner_transport);
+   restart_db->putIntegerArray("d_nghosts", &d_nghosts[0], d_dim.getValue());
+   restart_db->putIntegerArray("d_fluxghosts",
+      &d_fluxghosts[0],
+      d_dim.getValue());
 
-   db->putString("d_data_problem", d_data_problem);
+   restart_db->putString("d_data_problem", d_data_problem);
 
    if (d_data_problem == "SPHERE") {
-      db->putDouble("d_radius", d_radius);
-      db->putDoubleArray("d_center", d_center, d_dim.getValue());
-      db->putDouble("d_uval_inside", d_uval_inside);
-      db->putDouble("d_uval_outside", d_uval_outside);
+      restart_db->putDouble("d_radius", d_radius);
+      restart_db->putDoubleArray("d_center", d_center, d_dim.getValue());
+      restart_db->putDouble("d_uval_inside", d_uval_inside);
+      restart_db->putDouble("d_uval_outside", d_uval_outside);
    }
 
    if ((d_data_problem == "PIECEWISE_CONSTANT_X") ||
@@ -2971,43 +2975,47 @@ void MblkLinAdv::putToDatabase(
        (d_data_problem == "SINE_CONSTANT_X") ||
        (d_data_problem == "SINE_CONSTANT_Y") ||
        (d_data_problem == "SINE_CONSTANT_Z")) {
-      db->putInteger("d_number_of_intervals", d_number_of_intervals);
+      restart_db->putInteger("d_number_of_intervals", d_number_of_intervals);
       if (d_number_of_intervals > 0) {
-         db->putDoubleArray("d_front_position", d_front_position);
-         db->putDoubleArray("d_interval_uval", d_interval_uval);
+         restart_db->putDoubleArray("d_front_position", d_front_position);
+         restart_db->putDoubleArray("d_interval_uval", d_interval_uval);
       }
    }
 
-   db->putIntegerArray("d_scalar_bdry_edge_conds", d_scalar_bdry_edge_conds);
-   db->putIntegerArray("d_scalar_bdry_node_conds", d_scalar_bdry_node_conds);
+   restart_db->putIntegerArray("d_scalar_bdry_edge_conds",
+      d_scalar_bdry_edge_conds);
+   restart_db->putIntegerArray("d_scalar_bdry_node_conds",
+      d_scalar_bdry_node_conds);
 
-   db->putDoubleArray("d_bdry_edge_uval", d_bdry_edge_uval);
-   db->putIntegerArray("d_scalar_bdry_face_conds", d_scalar_bdry_face_conds);
-   db->putDoubleArray("d_bdry_face_uval", d_bdry_face_uval);
+   restart_db->putDoubleArray("d_bdry_edge_uval", d_bdry_edge_uval);
+   restart_db->putIntegerArray("d_scalar_bdry_face_conds",
+      d_scalar_bdry_face_conds);
+   restart_db->putDoubleArray("d_bdry_face_uval", d_bdry_face_uval);
 
    if (d_refinement_criteria.getSize() > 0) {
-      db->putStringArray("d_refinement_criteria", d_refinement_criteria);
+      restart_db->putStringArray("d_refinement_criteria",
+         d_refinement_criteria);
    }
    for (int i = 0; i < d_refinement_criteria.getSize(); i++) {
 
       if (d_refinement_criteria[i] == "UVAL_DEVIATION") {
-         db->putDoubleArray("d_dev_tol", d_dev_tol);
-         db->putDoubleArray("d_dev", d_dev);
-         db->putDoubleArray("d_dev_time_max", d_dev_time_max);
-         db->putDoubleArray("d_dev_time_min", d_dev_time_min);
+         restart_db->putDoubleArray("d_dev_tol", d_dev_tol);
+         restart_db->putDoubleArray("d_dev", d_dev);
+         restart_db->putDoubleArray("d_dev_time_max", d_dev_time_max);
+         restart_db->putDoubleArray("d_dev_time_min", d_dev_time_min);
       } else if (d_refinement_criteria[i] == "UVAL_GRADIENT") {
-         db->putDoubleArray("d_grad_tol", d_grad_tol);
-         db->putDoubleArray("d_grad_time_max", d_grad_time_max);
-         db->putDoubleArray("d_grad_time_min", d_grad_time_min);
+         restart_db->putDoubleArray("d_grad_tol", d_grad_tol);
+         restart_db->putDoubleArray("d_grad_time_max", d_grad_time_max);
+         restart_db->putDoubleArray("d_grad_time_min", d_grad_time_min);
       } else if (d_refinement_criteria[i] == "UVAL_SHOCK") {
-         db->putDoubleArray("d_shock_onset", d_shock_onset);
-         db->putDoubleArray("d_shock_tol", d_shock_tol);
-         db->putDoubleArray("d_shock_time_max", d_shock_time_max);
-         db->putDoubleArray("d_shock_time_min", d_shock_time_min);
+         restart_db->putDoubleArray("d_shock_onset", d_shock_onset);
+         restart_db->putDoubleArray("d_shock_tol", d_shock_tol);
+         restart_db->putDoubleArray("d_shock_time_max", d_shock_time_max);
+         restart_db->putDoubleArray("d_shock_time_min", d_shock_time_min);
       } else if (d_refinement_criteria[i] == "UVAL_RICHARDSON") {
-         db->putDoubleArray("d_rich_tol", d_rich_tol);
-         db->putDoubleArray("d_rich_time_max", d_rich_time_max);
-         db->putDoubleArray("d_rich_time_min", d_rich_time_min);
+         restart_db->putDoubleArray("d_rich_tol", d_rich_tol);
+         restart_db->putDoubleArray("d_rich_time_max", d_rich_time_max);
+         restart_db->putDoubleArray("d_rich_time_min", d_rich_time_min);
       }
 
    }

@@ -2700,22 +2700,22 @@ void ModifiedBratuProblem::setPhysicalBoundaryConditions(
  */
 
 void ModifiedBratuProblem::getFromInput(
-   boost::shared_ptr<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> input_db,
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(input_db);
 #endif
 
-   if (db->keyExists("lambda")) {
-      d_lambda = db->getDouble("lambda");
+   if (input_db->keyExists("lambda")) {
+      d_lambda = input_db->getDouble("lambda");
    } else {
       TBOX_ERROR(d_object_name << " -- Key data `lambda'"
                                << " missing in input.");
    }
 
-   if (db->keyExists("timestep")) {
-      d_input_dt = db->getDouble("timestep");
+   if (input_db->keyExists("timestep")) {
+      d_input_dt = input_db->getDouble("timestep");
       if (d_input_dt < 0.0) {
          TBOX_ERROR(d_object_name << " Input error: timestep < 0.0");
       }
@@ -2726,8 +2726,8 @@ void ModifiedBratuProblem::getFromInput(
       }
    }
 
-   if (db->keyExists("max_precond_its")) {
-      d_max_precond_its = db->getInteger("max_precond_its");
+   if (input_db->keyExists("max_precond_its")) {
+      d_max_precond_its = input_db->getInteger("max_precond_its");
       if (d_max_precond_its < 0) {
          TBOX_ERROR(d_object_name << " Input error: max_precond_its < 0");
       }
@@ -2738,8 +2738,8 @@ void ModifiedBratuProblem::getFromInput(
       }
    }
 
-   if (db->keyExists("precond_tol")) {
-      d_precond_tol = db->getDouble("precond_tol");
+   if (input_db->keyExists("precond_tol")) {
+      d_precond_tol = input_db->getDouble("precond_tol");
       if (d_precond_tol <= 0.0) {
          TBOX_ERROR(d_object_name << " Input error: precond_tol <= 0.0");
       }
@@ -2755,24 +2755,24 @@ void ModifiedBratuProblem::getFromInput(
 /*
  *************************************************************************
  *
- * Put class version number and data members in database.
+ * Put class version number and data members in restart database.
  *
  *************************************************************************
  */
 
-void ModifiedBratuProblem::putToDatabase(
-   const boost::shared_ptr<tbox::Database>& db) const
+void ModifiedBratuProblem::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 #endif
 
-   db->putInteger("MODIFIED_BRATU_PROBLEM", MODIFIED_BRATU_PROBLEM);
+   restart_db->putInteger("MODIFIED_BRATU_PROBLEM", MODIFIED_BRATU_PROBLEM);
 
-   db->putDouble("d_lambda", d_lambda);
-   db->putDouble("d_input_dt", d_input_dt);
-   db->putInteger("d_max_precond_its", d_max_precond_its);
-   db->putDouble("d_precond_tol", d_precond_tol);
+   restart_db->putDouble("d_lambda", d_lambda);
+   restart_db->putDouble("d_input_dt", d_input_dt);
+   restart_db->putInteger("d_max_precond_its", d_max_precond_its);
+   restart_db->putDouble("d_precond_tol", d_precond_tol);
 
 }
 

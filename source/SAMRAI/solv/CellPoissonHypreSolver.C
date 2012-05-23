@@ -276,7 +276,7 @@ tbox::StartupShutdownManager::Handler CellPoissonHypreSolver::s_finalize_handler
 CellPoissonHypreSolver::CellPoissonHypreSolver(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& database):
+   const boost::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_object_name(object_name),
    d_ln(-1),
@@ -322,7 +322,7 @@ CellPoissonHypreSolver::CellPoissonHypreSolver(
          d_context,
          hier::IntVector::getZero(d_dim));
 
-   getFromInput(database);
+   getFromInput(input_db);
 }
 
 /*
@@ -333,38 +333,38 @@ CellPoissonHypreSolver::CellPoissonHypreSolver(
 
 void
 CellPoissonHypreSolver::getFromInput(
-   const boost::shared_ptr<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& input_db)
 {
-   if (database) {
-      d_print_solver_info = database->getBoolWithDefault("print_solver_info",
+   if (input_db) {
+      d_print_solver_info = input_db->getBoolWithDefault("print_solver_info",
             d_print_solver_info);
-      d_max_iterations = database->getIntegerWithDefault("max_iterations",
+      d_max_iterations = input_db->getIntegerWithDefault("max_iterations",
             d_max_iterations);
-      d_relative_residual_tol = database->getDoubleWithDefault(
+      d_relative_residual_tol = input_db->getDoubleWithDefault(
             "relative_residual_tol",
             d_relative_residual_tol);
-      if (database->isDouble("residual_tol")) {
+      if (input_db->isDouble("residual_tol")) {
          TBOX_ERROR("CellPoissonHypreSolver input error.\n"
             << "The parameter 'residual_tol' has been replaced\n"
             << "by 'relative_residual_tol' to be more descriptive.\n"
             << "Please change the parameter name in the input database.");
       }
       d_num_pre_relax_steps =
-         database->getIntegerWithDefault("num_pre_relax_steps",
+         input_db->getIntegerWithDefault("num_pre_relax_steps",
             d_num_pre_relax_steps);
       if (d_num_pre_relax_steps < 0) {
          TBOX_ERROR(d_object_name << ": Number of relaxation steps must be\n"
                                   << "non-negative.\n");
       }
       d_num_post_relax_steps =
-         database->getIntegerWithDefault("num_post_relax_steps",
+         input_db->getIntegerWithDefault("num_post_relax_steps",
             d_num_post_relax_steps);
       if (d_num_post_relax_steps < 0) {
          TBOX_ERROR(d_object_name << ": Number of relaxation steps must be\n"
                                   << "non-negative.\n");
       }
-      if (database->isBool("use_smg")) {
-         bool use_smg = database->getBool("use_smg");
+      if (input_db->isBool("use_smg")) {
+         bool use_smg = input_db->getBool("use_smg");
          if (use_smg != d_use_smg) {
             setUseSMG(use_smg);
          }

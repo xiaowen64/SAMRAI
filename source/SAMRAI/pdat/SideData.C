@@ -792,7 +792,7 @@ SideData<TYPE>::printAxis(
  *************************************************************************
  *
  * Checks that class version and restart file version are equal.  If so,
- * reads in the d_depth data member to the database.  Then tells
+ * reads in the d_depth data member to the restart database.  Then tells
  * d_data to read itself in from the database.
  *
  *************************************************************************
@@ -800,25 +800,27 @@ SideData<TYPE>::printAxis(
 
 template<class TYPE>
 void
-SideData<TYPE>::getSpecializedFromDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+SideData<TYPE>::getFromRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db)
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   int ver = database->getInteger("PDAT_SIDEDATA_VERSION");
+   hier::PatchData::getFromRestart(restart_db);
+
+   int ver = restart_db->getInteger("PDAT_SIDEDATA_VERSION");
    if (ver != PDAT_SIDEDATA_VERSION) {
-      TBOX_ERROR("SideData<TYPE>::getSpecializedFromDatabase error...\n"
+      TBOX_ERROR("SideData<TYPE>::getFromRestart error...\n"
          << " : Restart file version different than class version" << std::endl);
    }
 
-   d_depth = database->getInteger("d_depth");
+   d_depth = restart_db->getInteger("d_depth");
 
    boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
       if (d_directions(i)) {
          std::string array_name = "d_data" + tbox::Utilities::intToString(i);
-         array_database = database->getDatabase(array_name);
-         d_data[i]->getFromDatabase(array_database);
+         array_database = restart_db->getDatabase(array_name);
+         d_data[i]->getFromRestart(array_database);
       }
    }
 }
@@ -834,21 +836,23 @@ SideData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void
-SideData<TYPE>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database) const
+SideData<TYPE>::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   database->putInteger("PDAT_SIDEDATA_VERSION", PDAT_SIDEDATA_VERSION);
+   hier::PatchData::putToRestart(restart_db);
 
-   database->putInteger("d_depth", d_depth);
+   restart_db->putInteger("PDAT_SIDEDATA_VERSION", PDAT_SIDEDATA_VERSION);
+
+   restart_db->putInteger("d_depth", d_depth);
 
    boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
       if (d_directions(i)) {
          std::string array_name = "d_data" + tbox::Utilities::intToString(i);
-         array_database = database->putDatabase(array_name);
-         d_data[i]->putUnregisteredToDatabase(array_database);
+         array_database = restart_db->putDatabase(array_name);
+         d_data[i]->putToRestart(array_database);
       }
    }
 }

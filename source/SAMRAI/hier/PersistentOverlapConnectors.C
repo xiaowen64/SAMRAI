@@ -34,25 +34,7 @@ PersistentOverlapConnectors::PersistentOverlapConnectors(
    d_my_mapped_box_level(my_mapped_box_level)
 {
    if (s_check_created_connectors == '\0') {
-      boost::shared_ptr<tbox::Database> idb(
-         tbox::InputManager::getInputDatabase());
-      if (idb && idb->isDatabase("PersistentOverlapConnectors")) {
-         boost::shared_ptr<tbox::Database> rsdb(
-            idb->getDatabase("PersistentOverlapConnectors"));
-
-         const bool check_created_connectors(
-            rsdb->getBoolWithDefault("check_created_connectors", false));
-         s_check_created_connectors = check_created_connectors ? 'y' : 'n';
-
-         const bool check_accessed_connectors(
-            rsdb->getBoolWithDefault("check_accessed_connectors", false));
-         s_check_accessed_connectors = check_accessed_connectors ? 'y' : 'n';
-
-         s_always_create_missing_connector =
-            rsdb->getBoolWithDefault("always_create_missing_connector",
-               s_always_create_missing_connector);
-      }
-
+      getFromInput(tbox::InputManager::getInputDatabase());
    }
 }
 
@@ -64,6 +46,33 @@ PersistentOverlapConnectors::PersistentOverlapConnectors(
 PersistentOverlapConnectors::~PersistentOverlapConnectors()
 {
    clear();
+}
+
+/*
+ ************************************************************************
+ * Read input parameters.
+ ************************************************************************
+ */
+void
+PersistentOverlapConnectors::getFromInput(
+   const boost::shared_ptr<tbox::Database>& input_db)
+{
+   if (input_db && input_db->isDatabase("PersistentOverlapConnectors")) {
+      boost::shared_ptr<tbox::Database> rsdb(
+         input_db->getDatabase("PersistentOverlapConnectors"));
+
+      const bool check_created_connectors(
+         rsdb->getBoolWithDefault("check_created_connectors", false));
+      s_check_created_connectors = check_created_connectors ? 'y' : 'n';
+
+      const bool check_accessed_connectors(
+         rsdb->getBoolWithDefault("check_accessed_connectors", false));
+      s_check_accessed_connectors = check_accessed_connectors ? 'y' : 'n';
+
+      s_always_create_missing_connector =
+         rsdb->getBoolWithDefault("always_create_missing_connector",
+            s_always_create_missing_connector);
+   }
 }
 
 /*

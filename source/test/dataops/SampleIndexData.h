@@ -57,8 +57,8 @@ public:
     * data type for IndexData - i.e. IndexData<SampleIndexData>.  In
     * addition to this method, the other methods that must be defined are
     * getDataStreamSize(), packStream(), unpackStream() for communication,
-    * putToDatabase(), getFromDatabase for restart.  These are described
-    * below.
+    * putToRestart(), getFromRestart() for restart.  These are
+    * described below.
     */
    void
    copySourceItem(
@@ -87,11 +87,11 @@ public:
     * restart.
     */
    void
-   getFromDatabase(
-      boost::shared_ptr<tbox::Database>& database);
+   getFromRestart(
+      boost::shared_ptr<tbox::Database>& restart_db);
    void
-   putUnregisteredToDatabase(
-      boost::shared_ptr<tbox::Database>& database) const;
+   putToRestart(
+      boost::shared_ptr<tbox::Database>& restart_db) const;
 
 private:
    /*

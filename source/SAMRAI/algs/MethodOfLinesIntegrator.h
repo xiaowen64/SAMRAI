@@ -288,13 +288,14 @@ public:
       const bool uses_richardson_extrapolation_too);
 
    /*!
-    * Writes object state out to the given database.
+    * Writes object state out to the given restart database.
     *
-    * When assertion checking is enabled, the database pointer must be non-null.
+    * When assertion checking is enabled, the restart_db pointer must be
+    * non-null.
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * Returns the object name.
@@ -334,7 +335,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& db,
+      const boost::shared_ptr<tbox::Database>& input_db,
       bool is_from_restart);
 
    /*

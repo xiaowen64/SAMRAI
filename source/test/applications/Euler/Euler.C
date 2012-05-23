@@ -3461,11 +3461,11 @@ void Euler::printClassData(
  */
 
 void Euler::getFromInput(
-   boost::shared_ptr<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> input_db,
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(input_db);
 #endif
 
    /*
@@ -3474,21 +3474,21 @@ void Euler::getFromInput(
     */
    if (!is_from_restart) {
       d_use_nonuniform_workload =
-         db->getBoolWithDefault("use_nonuniform_workload",
+         input_db->getBoolWithDefault("use_nonuniform_workload",
             d_use_nonuniform_workload);
    } else {
       if (d_use_nonuniform_workload) {
          d_use_nonuniform_workload =
-            db->getBool("use_nonuniform_workload");
+            input_db->getBool("use_nonuniform_workload");
       }
    }
 
    if (!is_from_restart) {
-      d_gamma = db->getDoubleWithDefault("gamma", d_gamma);
+      d_gamma = input_db->getDoubleWithDefault("gamma", d_gamma);
    }
 
-   if (db->keyExists("riemann_solve")) {
-      d_riemann_solve = db->getString("riemann_solve");
+   if (input_db->keyExists("riemann_solve")) {
+      d_riemann_solve = input_db->getString("riemann_solve");
       if ((d_riemann_solve != "APPROX_RIEM_SOLVE") &&
           (d_riemann_solve != "EXACT_RIEM_SOLVE") &&
           (d_riemann_solve != "HLLC_RIEM_SOLVE")) {
@@ -3500,12 +3500,12 @@ void Euler::getFromInput(
 
       }
    } else {
-      d_riemann_solve = db->getStringWithDefault("d_riemann_solve",
+      d_riemann_solve = input_db->getStringWithDefault("d_riemann_solve",
             d_riemann_solve);
    }
 
-   if (db->keyExists("godunov_order")) {
-      d_godunov_order = db->getInteger("godunov_order");
+   if (input_db->keyExists("godunov_order")) {
+      d_godunov_order = input_db->getInteger("godunov_order");
       if ((d_godunov_order != 1) &&
           (d_godunov_order != 2) &&
           (d_godunov_order != 4)) {
@@ -3515,12 +3515,12 @@ void Euler::getFromInput(
 
       }
    } else {
-      d_godunov_order = db->getIntegerWithDefault("d_godunov_order",
+      d_godunov_order = input_db->getIntegerWithDefault("d_godunov_order",
             d_godunov_order);
    }
 
-   if (db->keyExists("corner_transport")) {
-      d_corner_transport = db->getString("corner_transport");
+   if (input_db->keyExists("corner_transport")) {
+      d_corner_transport = input_db->getString("corner_transport");
       if ((d_corner_transport != "CORNER_TRANSPORT_1") &&
           (d_corner_transport != "CORNER_TRANSPORT_2")) {
          TBOX_ERROR(
@@ -3529,13 +3529,13 @@ void Euler::getFromInput(
                           << " 'CORNER_TRANSPORT_1' or 'CORNER_TRANSPORT_2'." << endl);
       }
    } else {
-      d_corner_transport = db->getStringWithDefault("corner_transport",
+      d_corner_transport = input_db->getStringWithDefault("corner_transport",
             d_corner_transport);
    }
 
-   if (db->keyExists("Refinement_data")) {
+   if (input_db->keyExists("Refinement_data")) {
       boost::shared_ptr<tbox::Database> refine_db(
-         db->getDatabase("Refinement_data"));
+         input_db->getDatabase("Refinement_data"));
       tbox::Array<string> refinement_keys = refine_db->getAllKeys();
       int num_keys = refinement_keys.getSize();
 
@@ -3892,8 +3892,8 @@ void Euler::getFromInput(
 
    if (!is_from_restart) {
 
-      if (db->keyExists("data_problem")) {
-         d_data_problem = db->getString("data_problem");
+      if (input_db->keyExists("data_problem")) {
+         d_data_problem = input_db->getString("data_problem");
       } else {
          TBOX_ERROR(
             d_object_name << ": "
@@ -3901,13 +3901,13 @@ void Euler::getFromInput(
                           << endl);
       }
 
-      if (!db->keyExists("Initial_data")) {
+      if (!input_db->keyExists("Initial_data")) {
          TBOX_ERROR(
             d_object_name << ": "
                           << "No `Initial_data' database found in input." << endl);
       }
       boost::shared_ptr<tbox::Database> init_data_db(
-         db->getDatabase("Initial_data"));
+         input_db->getDatabase("Initial_data"));
 
       bool found_problem_data = false;
 
@@ -4079,20 +4079,20 @@ void Euler::getFromInput(
 
    if (num_per_dirs < d_dim.getValue()) {
 
-      if (db->keyExists("Boundary_data")) {
+      if (input_db->keyExists("Boundary_data")) {
 
-         boost::shared_ptr<tbox::Database> bdry_db = db->getDatabase(
+         boost::shared_ptr<tbox::Database> bdry_db = input_db->getDatabase(
                "Boundary_data");
 
          if (d_dim == tbox::Dimension(2)) {
-            appu::CartesianBoundaryUtilities2::readBoundaryInput(this,
+            appu::CartesianBoundaryUtilities2::getFromInput(this,
                bdry_db,
                d_master_bdry_edge_conds,
                d_master_bdry_node_conds,
                periodic);
          }
          if (d_dim == tbox::Dimension(3)) {
-            appu::CartesianBoundaryUtilities3::readBoundaryInput(this,
+            appu::CartesianBoundaryUtilities3::getFromInput(this,
                bdry_db,
                d_master_bdry_face_conds,
                d_master_bdry_edge_conds,
@@ -4118,148 +4118,159 @@ void Euler::getFromInput(
  *************************************************************************
  */
 
-void Euler::putToDatabase(
-   const boost::shared_ptr<tbox::Database>& db) const
+void Euler::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 #endif
 
-   db->putInteger("EULER_VERSION", EULER_VERSION);
+   restart_db->putInteger("EULER_VERSION", EULER_VERSION);
 
-   db->putDouble("d_gamma", d_gamma);
+   restart_db->putDouble("d_gamma", d_gamma);
 
-   db->putString("d_riemann_solve", d_riemann_solve);
-   db->putInteger("d_godunov_order", d_godunov_order);
-   db->putString("d_corner_transport", d_corner_transport);
-   db->putIntegerArray("d_nghosts", &d_nghosts[0], d_dim.getValue());
-   db->putIntegerArray("d_fluxghosts", &d_fluxghosts[0], d_dim.getValue());
+   restart_db->putString("d_riemann_solve", d_riemann_solve);
+   restart_db->putInteger("d_godunov_order", d_godunov_order);
+   restart_db->putString("d_corner_transport", d_corner_transport);
+   restart_db->putIntegerArray("d_nghosts", &d_nghosts[0], d_dim.getValue());
+   restart_db->putIntegerArray("d_fluxghosts",
+      &d_fluxghosts[0],
+      d_dim.getValue());
 
-   db->putString("d_data_problem", d_data_problem);
+   restart_db->putString("d_data_problem", d_data_problem);
 
    if (d_data_problem == "SPHERE") {
-      db->putDouble("d_radius", d_radius);
-      db->putDoubleArray("d_center", d_center, d_dim.getValue());
-      db->putDouble("d_density_inside", d_density_inside);
-      db->putDoubleArray("d_velocity_inside", d_velocity_inside, d_dim.getValue());
-      db->putDouble("d_pressure_inside", d_pressure_inside);
-      db->putDouble("d_density_outside", d_density_outside);
-      db->putDoubleArray("d_velocity_outside", d_velocity_outside, d_dim.getValue());
-      db->putDouble("d_pressure_outside", d_pressure_outside);
+      restart_db->putDouble("d_radius", d_radius);
+      restart_db->putDoubleArray("d_center", d_center, d_dim.getValue());
+      restart_db->putDouble("d_density_inside", d_density_inside);
+      restart_db->putDoubleArray("d_velocity_inside",
+         d_velocity_inside,
+         d_dim.getValue());
+      restart_db->putDouble("d_pressure_inside", d_pressure_inside);
+      restart_db->putDouble("d_density_outside", d_density_outside);
+      restart_db->putDoubleArray("d_velocity_outside",
+         d_velocity_outside,
+         d_dim.getValue());
+      restart_db->putDouble("d_pressure_outside", d_pressure_outside);
    }
 
    if ((d_data_problem == "PIECEWISE_CONSTANT_X") ||
        (d_data_problem == "PIECEWISE_CONSTANT_Y") ||
        (d_data_problem == "PIECEWISE_CONSTANT_Z") ||
        (d_data_problem == "STEP")) {
-      db->putInteger("d_number_of_intervals", d_number_of_intervals);
+      restart_db->putInteger("d_number_of_intervals", d_number_of_intervals);
       if (d_number_of_intervals > 0) {
-         db->putDoubleArray("d_front_position", d_front_position);
-         db->putDoubleArray("d_interval_density", d_interval_density);
-         db->putDoubleArray("d_interval_velocity", d_interval_velocity);
-         db->putDoubleArray("d_interval_pressure", d_interval_pressure);
+         restart_db->putDoubleArray("d_front_position", d_front_position);
+         restart_db->putDoubleArray("d_interval_density", d_interval_density);
+         restart_db->putDoubleArray("d_interval_velocity",
+            d_interval_velocity);
+         restart_db->putDoubleArray("d_interval_pressure",
+            d_interval_pressure);
       }
    }
 
-   db->putIntegerArray("d_master_bdry_edge_conds", d_master_bdry_edge_conds);
-   db->putIntegerArray("d_master_bdry_node_conds", d_master_bdry_node_conds);
+   restart_db->putIntegerArray("d_master_bdry_edge_conds",
+      d_master_bdry_edge_conds);
+   restart_db->putIntegerArray("d_master_bdry_node_conds",
+      d_master_bdry_node_conds);
 
    if (d_dim == tbox::Dimension(2)) {
-      db->putDoubleArray("d_bdry_edge_density", d_bdry_edge_density);
-      db->putDoubleArray("d_bdry_edge_velocity", d_bdry_edge_velocity);
-      db->putDoubleArray("d_bdry_edge_pressure", d_bdry_edge_pressure);
+      restart_db->putDoubleArray("d_bdry_edge_density", d_bdry_edge_density);
+      restart_db->putDoubleArray("d_bdry_edge_velocity", d_bdry_edge_velocity);
+      restart_db->putDoubleArray("d_bdry_edge_pressure", d_bdry_edge_pressure);
    }
    if (d_dim == tbox::Dimension(3)) {
-      db->putIntegerArray("d_master_bdry_face_conds", d_master_bdry_face_conds);
+      restart_db->putIntegerArray("d_master_bdry_face_conds",
+         d_master_bdry_face_conds);
 
-      db->putDoubleArray("d_bdry_face_density", d_bdry_face_density);
-      db->putDoubleArray("d_bdry_face_velocity", d_bdry_face_velocity);
-      db->putDoubleArray("d_bdry_face_pressure", d_bdry_face_pressure);
+      restart_db->putDoubleArray("d_bdry_face_density", d_bdry_face_density);
+      restart_db->putDoubleArray("d_bdry_face_velocity", d_bdry_face_velocity);
+      restart_db->putDoubleArray("d_bdry_face_pressure", d_bdry_face_pressure);
    }
 
    if (d_refinement_criteria.getSize() > 0) {
-      db->putStringArray("d_refinement_criteria", d_refinement_criteria);
+      restart_db->putStringArray("d_refinement_criteria", d_refinement_criteria);
    }
    for (int i = 0; i < d_refinement_criteria.getSize(); i++) {
 
       if (d_refinement_criteria[i] == "DENSITY_DEVIATION") {
 
-         db->putDoubleArray("d_density_dev_tol",
+         restart_db->putDoubleArray("d_density_dev_tol",
             d_density_dev_tol);
-         db->putDoubleArray("d_density_dev",
+         restart_db->putDoubleArray("d_density_dev",
             d_density_dev);
-         db->putDoubleArray("d_density_dev_time_max",
+         restart_db->putDoubleArray("d_density_dev_time_max",
             d_density_dev_time_max);
-         db->putDoubleArray("d_density_dev_time_min",
+         restart_db->putDoubleArray("d_density_dev_time_min",
             d_density_dev_time_min);
 
       } else if (d_refinement_criteria[i] == "DENSITY_GRADIENT") {
 
-         db->putDoubleArray("d_density_grad_tol",
+         restart_db->putDoubleArray("d_density_grad_tol",
             d_density_grad_tol);
-         db->putDoubleArray("d_density_grad_time_max",
+         restart_db->putDoubleArray("d_density_grad_time_max",
             d_density_grad_time_max);
-         db->putDoubleArray("d_density_grad_time_min",
+         restart_db->putDoubleArray("d_density_grad_time_min",
             d_density_grad_time_min);
 
       } else if (d_refinement_criteria[i] == "DENSITY_SHOCK") {
 
-         db->putDoubleArray("d_density_shock_onset",
+         restart_db->putDoubleArray("d_density_shock_onset",
             d_density_shock_onset);
-         db->putDoubleArray("d_density_shock_tol",
+         restart_db->putDoubleArray("d_density_shock_tol",
             d_density_shock_tol);
-         db->putDoubleArray("d_density_shock_time_max",
+         restart_db->putDoubleArray("d_density_shock_time_max",
             d_density_shock_time_max);
-         db->putDoubleArray("d_density_shock_time_min",
+         restart_db->putDoubleArray("d_density_shock_time_min",
             d_density_shock_time_min);
 
       } else if (d_refinement_criteria[i] == "DENSITY_RICHARDSON") {
 
-         db->putDoubleArray("d_density_rich_tol",
+         restart_db->putDoubleArray("d_density_rich_tol",
             d_density_rich_tol);
-         db->putDoubleArray("d_density_rich_time_max",
+         restart_db->putDoubleArray("d_density_rich_time_max",
             d_density_rich_time_max);
-         db->putDoubleArray("d_density_rich_time_min",
+         restart_db->putDoubleArray("d_density_rich_time_min",
             d_density_rich_time_min);
 
       } else if (d_refinement_criteria[i] == "PRESSURE_DEVIATION") {
 
-         db->putDoubleArray("d_pressure_dev_tol",
+         restart_db->putDoubleArray("d_pressure_dev_tol",
             d_pressure_dev_tol);
-         db->putDoubleArray("d_pressure_dev",
+         restart_db->putDoubleArray("d_pressure_dev",
             d_pressure_dev);
-         db->putDoubleArray("d_pressure_dev_time_max",
+         restart_db->putDoubleArray("d_pressure_dev_time_max",
             d_pressure_dev_time_max);
-         db->putDoubleArray("d_pressure_dev_time_min",
+         restart_db->putDoubleArray("d_pressure_dev_time_min",
             d_pressure_dev_time_min);
 
       } else if (d_refinement_criteria[i] == "PRESSURE_GRADIENT") {
 
-         db->putDoubleArray("d_pressure_grad_tol",
+         restart_db->putDoubleArray("d_pressure_grad_tol",
             d_pressure_grad_tol);
-         db->putDoubleArray("d_pressure_grad_time_max",
+         restart_db->putDoubleArray("d_pressure_grad_time_max",
             d_pressure_grad_time_max);
-         db->putDoubleArray("d_pressure_grad_time_min",
+         restart_db->putDoubleArray("d_pressure_grad_time_min",
             d_pressure_grad_time_min);
 
       } else if (d_refinement_criteria[i] == "PRESSURE_SHOCK") {
 
-         db->putDoubleArray("d_pressure_shock_onset",
+         restart_db->putDoubleArray("d_pressure_shock_onset",
             d_pressure_shock_onset);
-         db->putDoubleArray("d_pressure_shock_tol",
+         restart_db->putDoubleArray("d_pressure_shock_tol",
             d_pressure_shock_tol);
-         db->putDoubleArray("d_pressure_shock_time_max",
+         restart_db->putDoubleArray("d_pressure_shock_time_max",
             d_pressure_shock_time_max);
-         db->putDoubleArray("d_pressure_shock_time_min",
+         restart_db->putDoubleArray("d_pressure_shock_time_min",
             d_pressure_shock_time_min);
 
       } else if (d_refinement_criteria[i] == "PRESSURE_RICHARDSON") {
 
-         db->putDoubleArray("d_pressure_rich_tol",
+         restart_db->putDoubleArray("d_pressure_rich_tol",
             d_pressure_rich_tol);
-         db->putDoubleArray("d_pressure_rich_time_max",
+         restart_db->putDoubleArray("d_pressure_rich_time_max",
             d_pressure_rich_time_max);
-         db->putDoubleArray("d_pressure_rich_time_min",
+         restart_db->putDoubleArray("d_pressure_rich_time_min",
             d_pressure_rich_time_min);
       }
 

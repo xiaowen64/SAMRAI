@@ -641,7 +641,7 @@ OuterfaceData<TYPE>::printAxisFace(
  *************************************************************************
  *
  * Checks that class version and restart file version are equal.  If so,
- * reads in d_depth from the database.  Then has each item in d_data
+ * reads in d_depth from the restart database.  Then has each item in d_data
  * read in its data from the database.
  *
  *************************************************************************
@@ -649,37 +649,39 @@ OuterfaceData<TYPE>::printAxisFace(
 
 template<class TYPE>
 void
-OuterfaceData<TYPE>::getSpecializedFromDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+OuterfaceData<TYPE>::getFromRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db)
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   int ver = database->getInteger("PDAT_OUTERFACEDATA_VERSION");
+   hier::PatchData::getFromRestart(restart_db);
+
+   int ver = restart_db->getInteger("PDAT_OUTERFACEDATA_VERSION");
    if (ver != PDAT_OUTERFACEDATA_VERSION) {
       TBOX_ERROR(
-         "OuterfaceData<getDim()>::getSpecializedFromDatabase error...\n"
+         "OuterfaceData<getDim()>::getFromRestart error...\n"
          << " : Restart file version different than class version" << std::endl);
    }
 
-   d_depth = database->getInteger("d_depth");
+   d_depth = restart_db->getInteger("d_depth");
 
    boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
       std::string array_name = "d_data" + tbox::Utilities::intToString(i)
          + "_1";
-      array_database = database->getDatabase(array_name);
-      d_data[i][0]->getFromDatabase(array_database);
+      array_database = restart_db->getDatabase(array_name);
+      d_data[i][0]->getFromRestart(array_database);
 
       array_name = "d_data" + tbox::Utilities::intToString(i) + "_2";
-      array_database = database->getDatabase(array_name);
-      d_data[i][1]->getFromDatabase(array_database);
+      array_database = restart_db->getDatabase(array_name);
+      d_data[i][1]->getFromRestart(array_database);
    }
 }
 
 /*
  *************************************************************************
  *
- * Writes out class version number, d_depth to the database.
+ * Writes out class version number, d_depth to the restart database.
  * Then has each item in d_data write out its data to the database.
  *
  *************************************************************************
@@ -687,27 +689,29 @@ OuterfaceData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void
-OuterfaceData<TYPE>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database) const
+OuterfaceData<TYPE>::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
 
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   database->putInteger("PDAT_OUTERFACEDATA_VERSION",
+   hier::PatchData::putToRestart(restart_db);
+
+   restart_db->putInteger("PDAT_OUTERFACEDATA_VERSION",
       PDAT_OUTERFACEDATA_VERSION);
 
-   database->putInteger("d_depth", d_depth);
+   restart_db->putInteger("d_depth", d_depth);
 
    boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
       std::string array_name = "d_data" + tbox::Utilities::intToString(i)
          + "_1";
-      array_database = database->putDatabase(array_name);
-      d_data[i][0]->putUnregisteredToDatabase(array_database);
+      array_database = restart_db->putDatabase(array_name);
+      d_data[i][0]->putToRestart(array_database);
 
       array_name = "d_data" + tbox::Utilities::intToString(i) + "_2";
-      array_database = database->putDatabase(array_name);
-      d_data[i][1]->putUnregisteredToDatabase(array_database);
+      array_database = restart_db->putDatabase(array_name);
+      d_data[i][1]->putToRestart(array_database);
    }
 }
 

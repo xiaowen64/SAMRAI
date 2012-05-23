@@ -35,7 +35,7 @@ namespace solv {
 FACPreconditioner::FACPreconditioner(
    const std::string& name,
    FACOperatorStrategy& user_ops,
-   const boost::shared_ptr<tbox::Database>& database):
+   const boost::shared_ptr<tbox::Database>& input_db):
    d_object_name(name),
    d_fac_operator(user_ops),
    d_coarsest_ln(0),
@@ -62,7 +62,7 @@ FACPreconditioner::FACPreconditioner(
    /*
     * Initialize object with data read from input database.
     */
-   getFromInput(database);
+   getFromInput(input_db);
 }
 
 /*
@@ -86,32 +86,32 @@ FACPreconditioner::~FACPreconditioner()
 
 void
 FACPreconditioner::getFromInput(
-   const boost::shared_ptr<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& input_db)
 {
-   if (database) {
-      if (database->isBool("enable_logging")) {
-         bool logging = database->getBool("enable_logging");
+   if (input_db) {
+      if (input_db->isBool("enable_logging")) {
+         bool logging = input_db->getBool("enable_logging");
          enableLogging(logging);
       }
-      if (database->isInteger("max_cycles")) {
-         int max_cycles = database->getInteger("max_cycles");
+      if (input_db->isInteger("max_cycles")) {
+         int max_cycles = input_db->getInteger("max_cycles");
          setMaxCycles(max_cycles);
       }
-      if (database->isDouble("residual_tol")) {
-         double residual_tol = database->getDouble("residual_tol");
+      if (input_db->isDouble("residual_tol")) {
+         double residual_tol = input_db->getDouble("residual_tol");
          setResidualTolerance(residual_tol, d_relative_residual_tolerance);
       }
-      if (database->isDouble("relative_residual_tol")) {
-         double relative_residual_tol = database->getDouble(
+      if (input_db->isDouble("relative_residual_tol")) {
+         double relative_residual_tol = input_db->getDouble(
                "relative_residual_tol");
          setResidualTolerance(d_residual_tolerance, relative_residual_tol);
       }
-      if (database->isInteger("num_pre_sweeps")) {
-         int num_pre_sweeps = database->getInteger("num_pre_sweeps");
+      if (input_db->isInteger("num_pre_sweeps")) {
+         int num_pre_sweeps = input_db->getInteger("num_pre_sweeps");
          setPresmoothingSweeps(num_pre_sweeps);
       }
-      if (database->isInteger("num_post_sweeps")) {
-         int num_post_sweeps = database->getInteger("num_post_sweeps");
+      if (input_db->isInteger("num_post_sweeps")) {
+         int num_post_sweeps = input_db->getInteger("num_post_sweeps");
          setPostsmoothingSweeps(num_post_sweeps);
       }
    }

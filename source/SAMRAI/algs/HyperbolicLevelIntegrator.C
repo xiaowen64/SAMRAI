@@ -2605,24 +2605,24 @@ HyperbolicLevelIntegrator::printClassData(
  *************************************************************************
  *
  * Writes out the class version number, d_cfl, d_cfl_init,
- * d_lag_dt_computation, and d_use_ghosts_for_dt to the database.
+ * d_lag_dt_computation, and d_use_ghosts_for_dt to the restart database.
  *
  *************************************************************************
  */
 
 void
-HyperbolicLevelIntegrator::putToDatabase(
-   const boost::shared_ptr<tbox::Database>& db) const
+HyperbolicLevelIntegrator::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 
-   db->putInteger("ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION",
+   restart_db->putInteger("ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION",
       ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION);
 
-   db->putDouble("d_cfl", d_cfl);
-   db->putDouble("d_cfl_init", d_cfl_init);
-   db->putBool("d_lag_dt_computation", d_lag_dt_computation);
-   db->putBool("d_use_ghosts_for_dt", d_use_ghosts_for_dt);
+   restart_db->putDouble("d_cfl", d_cfl);
+   restart_db->putDouble("d_cfl_init", d_cfl_init);
+   restart_db->putBool("d_lag_dt_computation", d_lag_dt_computation);
+   restart_db->putBool("d_use_ghosts_for_dt", d_use_ghosts_for_dt);
 }
 
 /*
@@ -2638,51 +2638,52 @@ HyperbolicLevelIntegrator::putToDatabase(
 
 void
 HyperbolicLevelIntegrator::getFromInput(
-   const boost::shared_ptr<tbox::Database>& db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart)
 {
-   TBOX_ASSERT(is_from_restart || db);
+   TBOX_ASSERT(is_from_restart || input_db);
 
    if (is_from_restart) {
 
-      if (db) {
-         if (db->keyExists("cfl")) {
-            d_cfl = db->getDouble("cfl");
+      if (input_db) {
+         if (input_db->keyExists("cfl")) {
+            d_cfl = input_db->getDouble("cfl");
          }
 
-         if (db->keyExists("cfl_init")) {
-            d_cfl_init = db->getDouble("cfl_init");
+         if (input_db->keyExists("cfl_init")) {
+            d_cfl_init = input_db->getDouble("cfl_init");
          }
 
-         if (db->keyExists("lag_dt_computation")) {
-            d_lag_dt_computation = db->getBool("lag_dt_computation");
+         if (input_db->keyExists("lag_dt_computation")) {
+            d_lag_dt_computation = input_db->getBool("lag_dt_computation");
          }
 
-         if (db->keyExists("use_ghosts_to_compute_dt")) {
-            d_use_ghosts_for_dt = db->getBool("use_ghosts_to_compute_dt");
+         if (input_db->keyExists("use_ghosts_to_compute_dt")) {
+            d_use_ghosts_for_dt = input_db->getBool(
+               "use_ghosts_to_compute_dt");
          }
 
-         if (db->keyExists("distinguish_mpi_reduction_costs")) {
+         if (input_db->keyExists("distinguish_mpi_reduction_costs")) {
             d_distinguish_mpi_reduction_costs =
-               db->getBool("distinguish_mpi_reduction_costs");
+               input_db->getBool("distinguish_mpi_reduction_costs");
          }
       }
    } else {
 
-      if (db->keyExists("cfl")) {
-         d_cfl = db->getDouble("cfl");
+      if (input_db->keyExists("cfl")) {
+         d_cfl = input_db->getDouble("cfl");
       }
 
-      if (db->keyExists("cfl_init")) {
-         d_cfl_init = db->getDouble("cfl_init");
+      if (input_db->keyExists("cfl_init")) {
+         d_cfl_init = input_db->getDouble("cfl_init");
       }
 
-      if (db->keyExists("lag_dt_computation")) {
-         d_lag_dt_computation = db->getBool("lag_dt_computation");
+      if (input_db->keyExists("lag_dt_computation")) {
+         d_lag_dt_computation = input_db->getBool("lag_dt_computation");
       }
 
-      if (db->keyExists("use_ghosts_to_compute_dt")) {
-         d_use_ghosts_for_dt = db->getBool("use_ghosts_to_compute_dt");
+      if (input_db->keyExists("use_ghosts_to_compute_dt")) {
+         d_use_ghosts_for_dt = input_db->getBool("use_ghosts_to_compute_dt");
       } else {
          TBOX_WARNING(
             d_object_name << ":  "
@@ -2691,9 +2692,9 @@ HyperbolicLevelIntegrator::getFromInput(
                           << d_use_ghosts_for_dt << std::endl);
       }
 
-      if (db->keyExists("distinguish_mpi_reduction_costs")) {
+      if (input_db->keyExists("distinguish_mpi_reduction_costs")) {
          d_distinguish_mpi_reduction_costs =
-            db->getBool("distinguish_mpi_reduction_costs");
+            input_db->getBool("distinguish_mpi_reduction_costs");
       }
    }
 }

@@ -229,7 +229,7 @@ int AutoTester::evalTestData(
             hier::BoxLevel correct_mapped_box_level(d_dim);
             boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
                hierarchy->getGridGeometry());
-            correct_mapped_box_level.getFromDatabase(*level_db,
+            correct_mapped_box_level.getFromRestart(*level_db,
                grid_geometry);
 
             num_failures += checkHierarchyBoxes(hierarchy,
@@ -258,7 +258,7 @@ int AutoTester::evalTestData(
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
             boost::shared_ptr<tbox::Database> level_db(
                step_db->putDatabase(level_name));
-            level->getBoxLevel()->putUnregisteredToDatabase(level_db);
+            level->getBoxLevel()->putToRestart(level_db);
          }
 
          if (d_output_correct) {
@@ -399,7 +399,7 @@ int AutoTester::evalTestData(
             hier::BoxLevel correct_mapped_box_level(d_dim);
             boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
                hierarchy->getGridGeometry());
-            correct_mapped_box_level.getFromDatabase(*level_db,
+            correct_mapped_box_level.getFromRestart(*level_db,
                grid_geometry);
 
             num_failures += checkHierarchyBoxes(hierarchy,
@@ -432,7 +432,7 @@ int AutoTester::evalTestData(
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
             boost::shared_ptr<tbox::Database> level_db(
                step_db->putDatabase(level_name));
-            level->getBoxLevel()->putUnregisteredToDatabase(level_db);
+            level->getBoxLevel()->putToRestart(level_db);
          }
 
       }

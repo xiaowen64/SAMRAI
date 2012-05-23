@@ -120,7 +120,7 @@ void SampleIndexData::unpackStream(
 /*
  *************************************************************************
  *
- * The putToDatabase() and getFromDatabase() methods
+ * The putToRestart() and getFromRestart() methods
  * are required to template SampleIndexData as IndexData type - i.e.
  * IndexData<SampleIndexData>.  They are used to write/read SampleIndexData,
  * data to/from the restart database.
@@ -128,16 +128,16 @@ void SampleIndexData::unpackStream(
  *************************************************************************
  */
 
-void SampleIndexData::putUnregisteredToDatabase(
-   boost::shared_ptr<tbox::Database>& database) const
+void SampleIndexData::putToRestart(
+   boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   NULL_USE(database);
+   NULL_USE(restart_db);
 }
 
-void SampleIndexData::getFromDatabase(
-   boost::shared_ptr<tbox::Database>& database)
+void SampleIndexData::getFromRestart(
+   boost::shared_ptr<tbox::Database>& restart_db)
 {
-   NULL_USE(database);
+   NULL_USE(restart_db);
 }
 
 /*

@@ -224,13 +224,13 @@ int main(
          tbox::pout << "\nBoxLevel for review:\n"
                     << mapped_box_level.format("REVIEW: ", 2)
                     << std::endl;
-         mapped_box_level.putUnregisteredToDatabase(mapped_box_level_db);
+         mapped_box_level.putToRestart(mapped_box_level_db);
       } else {
          /*
           * Get the baselined BoxLevel and compare.
           */
          hier::BoxLevel baseline_mapped_box_level(dim);
-         baseline_mapped_box_level.getFromDatabase(
+         baseline_mapped_box_level.getFromRestart(
             *mapped_box_level_db,
             grid_geometry);
          if (mapped_box_level != baseline_mapped_box_level) {
@@ -351,7 +351,7 @@ int main(
             ++fail_count;
          } else {
 
-            connector.putToDatabase(connector_db);
+            connector.putToRestart(connector_db);
             tbox::pout << "Connector for review:\n"
                        << connector.format("REVIEW: ", 2)
                        << "This data has been verified by comparing against the results\n"
@@ -366,7 +366,7 @@ int main(
           * Get the baseline Connector NeighborhoodSet and compare.
           */
          hier::Connector baseline_connector(dim);
-         baseline_connector.getFromDatabase(*connector_db);
+         baseline_connector.getFromRestart(*connector_db);
          if (!baseline_connector.localNeighborhoodsEqual(connector)) {
             tbox::perr << "Multiblock Tree test problem:\n"
                        << "the NeighborhoodSets generated is different\n"

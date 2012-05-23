@@ -223,7 +223,7 @@ GriddingAlgorithm::GriddingAlgorithm(
       getFromRestart();
    }
 
-   getFromInput(input_db, is_from_restart);
+   getFromInput(input_db);
 
    if (d_hierarchy->getMaxNumberOfLevels() > 1) {
       tbox::Array<hier::IntVector> ratio_to_coarser(d_hierarchy->getMaxNumberOfLevels(),
@@ -4403,24 +4403,27 @@ GriddingAlgorithm::printClassData(
 /*
  *************************************************************************
  *
- * Write out class version number and data members to database.
+ * Write out class version number and data members to restart database.
  *
  *************************************************************************
  */
 
 void
-GriddingAlgorithm::putToDatabase(
-   const boost::shared_ptr<tbox::Database>& db) const
+GriddingAlgorithm::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 
-   db->putInteger("ALGS_GRIDDING_ALGORITHM_VERSION",
+   restart_db->putInteger("ALGS_GRIDDING_ALGORITHM_VERSION",
       ALGS_GRIDDING_ALGORITHM_VERSION);
 
-   db->putDoubleArray("d_efficiency_tolerance", d_efficiency_tolerance);
-   db->putDoubleArray("d_combine_efficiency", d_combine_efficiency);
+   restart_db->putDoubleArray("d_efficiency_tolerance",
+      d_efficiency_tolerance);
+   restart_db->putDoubleArray("d_combine_efficiency",
+      d_combine_efficiency);
 
-   db->putBool("d_sequentialize_patch_indices", d_sequentialize_patch_indices);
+   restart_db->putBool("d_sequentialize_patch_indices",
+      d_sequentialize_patch_indices);
 }
 
 /*
@@ -4435,30 +4438,31 @@ GriddingAlgorithm::putToDatabase(
 
 void
 GriddingAlgorithm::getFromInput(
-   const boost::shared_ptr<tbox::Database>& db,
-   bool is_from_restart)
+   const boost::shared_ptr<tbox::Database>& input_db)
 {
-   NULL_USE(is_from_restart);
+   TBOX_ASSERT(input_db);
 
-   TBOX_ASSERT(db);
-
-   d_check_overflow_nesting =
-      db->getBoolWithDefault("check_overflow_nesting", d_check_overflow_nesting);
-   d_check_proper_nesting =
-      db->getBoolWithDefault("check_proper_nesting", d_check_proper_nesting);
+   d_check_overflow_nesting = input_db->getBoolWithDefault(
+      "check_overflow_nesting",
+      d_check_overflow_nesting);
+   d_check_proper_nesting = input_db->getBoolWithDefault(
+      "check_proper_nesting",
+      d_check_proper_nesting);
    d_check_connectors =
-      db->getBoolWithDefault("check_connectors", d_check_connectors);
+      input_db->getBoolWithDefault("check_connectors", d_check_connectors);
    d_print_steps =
-      db->getBoolWithDefault("print_steps", d_print_steps);
-   d_log_metadata_statistics =
-      db->getBoolWithDefault("log_metadata_statistics", d_log_metadata_statistics);
+      input_db->getBoolWithDefault("print_steps", d_print_steps);
+   d_log_metadata_statistics = input_db->getBoolWithDefault(
+      "log_metadata_statistics",
+      d_log_metadata_statistics);
 
    /*
     * Read input for efficiency tolerance.
     */
 
-   if (db->keyExists("efficiency_tolerance")) {
-      tbox::Array<double> efficiency_tolerance = db->getDoubleArray("efficiency_tolerance");
+   if (input_db->keyExists("efficiency_tolerance")) {
+      tbox::Array<double> efficiency_tolerance =
+         input_db->getDoubleArray("efficiency_tolerance");
 
       int ln;
       for (ln = 0;
@@ -4482,8 +4486,9 @@ GriddingAlgorithm::getFromInput(
     * Read input for combine efficiency.
     */
 
-   if (db->keyExists("combine_efficiency")) {
-      tbox::Array<double> combine_efficiency = db->getDoubleArray("combine_efficiency");
+   if (input_db->keyExists("combine_efficiency")) {
+      tbox::Array<double> combine_efficiency =
+         input_db->getDoubleArray("combine_efficiency");
 
       int ln;
       for (ln = 0;
@@ -4513,7 +4518,7 @@ GriddingAlgorithm::getFromInput(
 
    std::string tmp_str;
 
-   tmp_str = db->getStringWithDefault("check_nonrefined_tags",
+   tmp_str = input_db->getStringWithDefault("check_nonrefined_tags",
          std::string("WARN"));
    d_check_nonrefined_tags = char(tolower(*tmp_str.c_str()));
    if (d_check_nonrefined_tags != 'i' &&
@@ -4523,7 +4528,7 @@ GriddingAlgorithm::getFromInput(
          << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
    }
 
-   tmp_str = db->getStringWithDefault("check_overlapping_patches",
+   tmp_str = input_db->getStringWithDefault("check_overlapping_patches",
          std::string("IGNORE"));
    d_check_overlapping_patches = char(tolower(*tmp_str.c_str()));
    if (d_check_overlapping_patches != 'i' &&
@@ -4534,7 +4539,7 @@ GriddingAlgorithm::getFromInput(
          << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
    }
 
-   tmp_str = db->getStringWithDefault("check_nonnesting_user_boxes",
+   tmp_str = input_db->getStringWithDefault("check_nonnesting_user_boxes",
          std::string("ERROR"));
    d_check_nonnesting_user_boxes = char(tolower(*tmp_str.c_str()));
    if (d_check_nonnesting_user_boxes != 'i' &&
@@ -4544,7 +4549,8 @@ GriddingAlgorithm::getFromInput(
          << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
    }
 
-   tmp_str = db->getStringWithDefault("check_boundary_proximity_violation",
+   tmp_str = input_db->getStringWithDefault(
+         "check_boundary_proximity_violation",
          std::string("ERROR"));
    d_check_boundary_proximity_violation = char(tolower(*tmp_str.c_str()));
    if (d_check_boundary_proximity_violation != 'i' &&
@@ -4555,19 +4561,20 @@ GriddingAlgorithm::getFromInput(
    }
 
    d_sequentialize_patch_indices =
-      db->getBoolWithDefault("sequentialize_patch_indices",
+      input_db->getBoolWithDefault("sequentialize_patch_indices",
          d_sequentialize_patch_indices);
 
    d_enforce_proper_nesting =
-      db->getBoolWithDefault("enforce_proper_nesting", d_enforce_proper_nesting);
+      input_db->getBoolWithDefault("enforce_proper_nesting",
+         d_enforce_proper_nesting);
    d_extend_to_domain_boundary =
-      db->getBoolWithDefault("extend_to_domain_boundary",
+      input_db->getBoolWithDefault("extend_to_domain_boundary",
          d_extend_to_domain_boundary);
    d_load_balance =
-      db->getBoolWithDefault("load_balance", d_load_balance);
+      input_db->getBoolWithDefault("load_balance", d_load_balance);
 
    d_barrier_and_time =
-      db->getBoolWithDefault("barrier_and_time", d_barrier_and_time);
+      input_db->getBoolWithDefault("barrier_and_time", d_barrier_and_time);
 }
 
 /*

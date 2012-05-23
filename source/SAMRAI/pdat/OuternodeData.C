@@ -1056,7 +1056,7 @@ OuternodeData<TYPE>::printAxisSide(
  *************************************************************************
  *
  * Checks that class version and restart file version are equal.
- * If so, reads in d_depth from the database.
+ * If so, reads in d_depth from the restart database.
  * Then has each item in d_data read in its data from the database.
  *
  *************************************************************************
@@ -1064,32 +1064,34 @@ OuternodeData<TYPE>::printAxisSide(
 
 template<class TYPE>
 void
-OuternodeData<TYPE>::getSpecializedFromDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+OuternodeData<TYPE>::getFromRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db)
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   int ver = database->getInteger("PDAT_OUTERNODEDATA_VERSION");
+   hier::PatchData::getFromRestart(restart_db);
+
+   int ver = restart_db->getInteger("PDAT_OUTERNODEDATA_VERSION");
    if (ver != PDAT_OUTERNODEDATA_VERSION) {
-      TBOX_ERROR("OuternodeData<dim>::getSpecializedFromDatabase error...\n"
+      TBOX_ERROR("OuternodeData<dim>::getFromRestart error...\n"
          << " : Restart file version different than class version" << std::endl);
    }
 
-   d_depth = database->getInteger("d_depth");
+   d_depth = restart_db->getInteger("d_depth");
 
    boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
       std::string array_name = "d_data" + tbox::Utilities::intToString(i)
          + "_1";
-      if (database->keyExists(array_name)) {
-         array_database = database->getDatabase(array_name);
-         d_data[i][0]->getFromDatabase(array_database);
+      if (restart_db->keyExists(array_name)) {
+         array_database = restart_db->getDatabase(array_name);
+         d_data[i][0]->getFromRestart(array_database);
       }
 
       array_name = "d_data" + tbox::Utilities::intToString(i) + "_2";
-      if (database->keyExists(array_name)) {
-         array_database = database->getDatabase(array_name);
-         d_data[i][1]->getFromDatabase(array_database);
+      if (restart_db->keyExists(array_name)) {
+         array_database = restart_db->getDatabase(array_name);
+         d_data[i][1]->getFromRestart(array_database);
       }
    }
 }
@@ -1097,7 +1099,7 @@ OuternodeData<TYPE>::getSpecializedFromDatabase(
 /*
  *************************************************************************
  *
- * Writes out class version number, d_depth to the database.
+ * Writes out class version number, d_depth to the restart database.
  * Then has each item in d_data write out its data to the database.
  *
  *************************************************************************
@@ -1105,28 +1107,30 @@ OuternodeData<TYPE>::getSpecializedFromDatabase(
 
 template<class TYPE>
 void
-OuternodeData<TYPE>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database) const
+OuternodeData<TYPE>::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   database->putInteger("PDAT_OUTERNODEDATA_VERSION",
+   hier::PatchData::putToRestart(restart_db);
+
+   restart_db->putInteger("PDAT_OUTERNODEDATA_VERSION",
       PDAT_OUTERNODEDATA_VERSION);
 
-   database->putInteger("d_depth", d_depth);
+   restart_db->putInteger("d_depth", d_depth);
 
    std::string array_name;
    boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
       if (d_data[i][0]->isInitialized()) {
          array_name = "d_data" + tbox::Utilities::intToString(i) + "_1";
-         array_database = database->putDatabase(array_name);
-         d_data[i][0]->putUnregisteredToDatabase(array_database);
+         array_database = restart_db->putDatabase(array_name);
+         d_data[i][0]->putToRestart(array_database);
       }
       if (d_data[i][1]->isInitialized()) {
          array_name = "d_data" + tbox::Utilities::intToString(i) + "_2";
-         array_database = database->putDatabase(array_name);
-         d_data[i][1]->putUnregisteredToDatabase(array_database);
+         array_database = restart_db->putDatabase(array_name);
+         d_data[i][1]->putToRestart(array_database);
       }
    }
 }

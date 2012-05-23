@@ -465,13 +465,14 @@ public:
       const int level_number) const;
 
    /**
-    * Write object state out to the given database.
+    * Write object state out to the given restart database.
     *
-    * When assertion checking is active, the database pointer must be non-null.
+    * When assertion checking is active, the restart_db pointer must be
+    * non-null.
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * Returns the object name.
@@ -545,9 +546,9 @@ private:
       const int level_number) const;
 
    /*
-    * Read input data from specified database and initialize class members.
-    * The argument is_from_restart should be set to true if the simulation
-    * is from restart.  Otherwise, it should be set to false.
+    * Read input data from specified input database and initialize class
+    * members.  The argument is_from_restart should be set to true if the
+    * simulation is from restart.  Otherwise, it should be set to false.
     *
     * If the simulation is not from restart, read in start_time, end_time,
     * grow_dt, max_integrator_step, and possibly tag_buffer
@@ -561,7 +562,7 @@ private:
     */
    virtual void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& db,
+      const boost::shared_ptr<tbox::Database>& input_db,
       bool is_from_restart);
 
    /*

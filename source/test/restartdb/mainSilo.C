@@ -39,13 +39,13 @@ public:
    virtual ~RestartTester() {
    }
 
-   void putToDatabase(
+   void putToRestart(
       const boost::shared_ptr<tbox::Database>& db) const
    {
       writeTestData(db);
    }
 
-   void getFromDatabase()
+   void getFromRestart()
    {
       boost::shared_ptr<tbox::Database> root_db(
          tbox::RestartManager::getManager()->getRootDatabase());
@@ -114,7 +114,7 @@ int main(
 
       restart_manager->setRootDatabase(database);
 
-      silo_tester.getFromDatabase();
+      silo_tester.getFromRestart();
 
       database->close();
 

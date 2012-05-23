@@ -3063,21 +3063,25 @@ void MblkEuler::getFromInput(
  *************************************************************************
  */
 
-void MblkEuler::putToDatabase(
-   const boost::shared_ptr<tbox::Database>& db) const
+void MblkEuler::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 #endif
 
-   db->putInteger("MBLKEULER_VERSION", MBLKEULER_VERSION);
+   restart_db->putInteger("MBLKEULER_VERSION", MBLKEULER_VERSION);
 
-   db->putDoubleArray("d_advection_velocity", d_advection_velocity, d_dim.getValue());
+   restart_db->putDoubleArray("d_advection_velocity",
+      d_advection_velocity,
+      d_dim.getValue());
 
-   db->putIntegerArray("d_nghosts", &d_nghosts[0], d_dim.getValue());
-   db->putIntegerArray("d_fluxghosts", &d_fluxghosts[0], d_dim.getValue());
+   restart_db->putIntegerArray("d_nghosts", &d_nghosts[0], d_dim.getValue());
+   restart_db->putIntegerArray("d_fluxghosts",
+      &d_fluxghosts[0],
+      d_dim.getValue());
 
-   db->putString("d_data_problem", d_data_problem);
+   restart_db->putString("d_data_problem", d_data_problem);
 }
 
 /*

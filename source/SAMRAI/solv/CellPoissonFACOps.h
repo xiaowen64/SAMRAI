@@ -126,12 +126,12 @@ public:
     * pass in valid pointers for those streams.
     * @param dim
     * @param object_name Ojbect name
-    * @param database Input database
+    * @param input_db Input database
     */
    explicit CellPoissonFACOps(
       const tbox::Dimension& dim,
       const std::string& object_name = std::string(),
-      const boost::shared_ptr<tbox::Database>& database =
+      const boost::shared_ptr<tbox::Database>& input_db =
          boost::shared_ptr<tbox::Database>());
 
    /*!
@@ -585,6 +585,16 @@ public:
    {
       return d_object_name;
    }
+
+protected:
+   /*!
+    * @brief Read parameters from input database.
+    *
+    * @param input_db Input Database.
+    */
+   void
+   getFromInput(
+      const boost::shared_ptr<tbox::Database>& input_db);
 
 private:
    //@{

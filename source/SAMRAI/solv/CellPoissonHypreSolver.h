@@ -103,12 +103,12 @@ public:
     *
     * @param dim
     * @param object_name Name of object.
-    * @param database tbox::Database for input.
+    * @param input_db tbox::Database for input.
     */
    CellPoissonHypreSolver(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& database =
+      const boost::shared_ptr<tbox::Database>& input_db =
          boost::shared_ptr<tbox::Database>());
 
    /*!
@@ -405,14 +405,14 @@ private:
     * @brief Set state using database
     *
     * See the class description for the parameters that can be set
-    * from a database.
+    * from an input database.
     *
-    * @param database Input database.  If a NULL pointer is given,
+    * @param input_db Input database.  If a NULL pointer is given,
     * nothing is done.
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& database);
+      const boost::shared_ptr<tbox::Database>& input_db);
 
    void
    setupHypreSolver();

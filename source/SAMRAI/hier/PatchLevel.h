@@ -92,22 +92,23 @@ public:
       bool defer_boundary_box_creation = false);
 
    /*!
-    * @brief Construct a new patch level from the specified PatchLevel database.
+    * @brief Construct a new patch level from the specified PatchLevel 
+    * restart database.
     *
     * The box, mapping, and ratio to level zero data which are normally
     * passed in during the construction of a new patch level are
-    * retrieved from the specified database.  The component_selector
+    * retrieved from the specified restart database.  The component_selector
     * argument specifies which patch data components should be allocated
-    * and read in from the level_database.  By default, all bits in the
+    * and read in from the restart_database.  By default, all bits in the
     * component selector are set to false so that no patch data are
     * allocated.
     *
     * @par Error conditions
-    * When assertion checking is turned on, the level_database,
+    * When assertion checking is turned on, the restart_database,
     * grid_geometry, and descriptor are checked to make sure that
     * they are not null.  If null, an unrecoverable assertion will result.
     *
-    * @param[in]  level_database
+    * @param[in]  restart_database
     * @param[in]  grid_geometry
     * @param[in]  descriptor The PatchDescriptor used to allocate patch
     *             data.
@@ -812,8 +813,8 @@ public:
    }
 
    /*!
-    * @brief Use the PatchLevel database to set the state of the PatchLevel
-    * and to create all patches on the local processor.
+    * @brief Use the PatchLevel restart database to set the state of the
+    * PatchLevel and to create all patches on the local processor.
     *
     * @par Assertions
     * Assertions will check that database is a non-null boost::shared_ptr,
@@ -823,31 +824,31 @@ public:
     * same, and that the number of patches and the number of boxes on the
     * level are equal.
     *
-    * @param[in,out] database
+    * @param[in,out] restart_db
     * @param[in]     component_selector
     */
    void
-   getFromDatabase(
-      const boost::shared_ptr<tbox::Database>& database,
+   getFromRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db,
       const ComponentSelector& component_selector);
 
    /*!
-    * @brief Write data to the database.
+    * @brief Write data to the restart database.
     *
-    * Writes the data from the PatchLevel to the database.
+    * Writes the data from the PatchLevel to the restart database.
     * Also tells all local patches to write out their state to
-    * the database.
+    * the restart database.
     *
     * @par Assertions
-    * Check that database is a non-null boost::shared_ptr.
+    * Check that restart_db is a non-null boost::shared_ptr.
     *
-    * @param[in,out]  database
+    * @param[in,out]  restart_db
     * @param[in]      patchdata_write_table The ComponentSelector specifying
     *                 which patch data to write to the database
     */
    void
-   putUnregisteredToDatabase(
-      const boost::shared_ptr<tbox::Database>& database,
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db,
       const ComponentSelector& patchdata_write_table) const;
 
    /*!

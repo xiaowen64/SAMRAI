@@ -482,23 +482,23 @@ public:
 
    /*!
     * @brief Check that class version and restart file version are equal.
-    * If so, read data members from the database.
+    * If so, read data members from the restart database.
     *
-    * Assertions: database must be a non-null pointer.
+    * Assertions: restart_db must be a non-null pointer.
     */
    virtual void
-   getSpecializedFromDatabase(
-      const boost::shared_ptr<tbox::Database>& database);
+   getFromRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db);
 
    /*!
     * @brief Write out the class version number and other data members to
-    * the database.
+    * the restart database.
     *
-    * Assertions: database must be a non-null pointer.
+    * Assertions: restart_db must be a non-null pointer.
     */
    virtual void
-   putSpecializedToDatabase(
-      const boost::shared_ptr<tbox::Database>& database) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
 private:
    /*

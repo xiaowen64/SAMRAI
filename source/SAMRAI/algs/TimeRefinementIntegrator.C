@@ -1478,31 +1478,31 @@ TimeRefinementIntegrator::printDataForLevel(
 /*
  *************************************************************************
  *
- * Write the class version number and data members to database object.
+ * Write the class version number and data members to restart database object.
  *
  *************************************************************************
  */
 
 void
-TimeRefinementIntegrator::putToDatabase(
-   const boost::shared_ptr<tbox::Database>& db) const
+TimeRefinementIntegrator::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 
-   db->putInteger("ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION",
+   restart_db->putInteger("ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION",
       ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION);
 
-   db->putDouble("d_start_time", d_start_time);
-   db->putDouble("d_end_time", d_end_time);
-   db->putDouble("d_grow_dt", d_grow_dt);
-   db->putInteger("d_max_integrator_steps", d_max_integrator_steps);
-   db->putIntegerArray("d_regrid_interval", d_regrid_interval);
-   db->putIntegerArray("d_tag_buffer", d_tag_buffer);
-   db->putDouble("d_integrator_time", d_integrator_time);
-   db->putInteger("d_integrator_step", d_integrator_step);
-   db->putInteger("d_last_finest_level", d_last_finest_level);
-   db->putDoubleArray("d_dt_max_level", d_dt_max_level);
-   db->putDoubleArray("d_dt_actual_level", d_dt_actual_level);
+   restart_db->putDouble("d_start_time", d_start_time);
+   restart_db->putDouble("d_end_time", d_end_time);
+   restart_db->putDouble("d_grow_dt", d_grow_dt);
+   restart_db->putInteger("d_max_integrator_steps", d_max_integrator_steps);
+   restart_db->putIntegerArray("d_regrid_interval", d_regrid_interval);
+   restart_db->putIntegerArray("d_tag_buffer", d_tag_buffer);
+   restart_db->putDouble("d_integrator_time", d_integrator_time);
+   restart_db->putInteger("d_integrator_step", d_integrator_step);
+   restart_db->putInteger("d_last_finest_level", d_last_finest_level);
+   restart_db->putDoubleArray("d_dt_max_level", d_dt_max_level);
+   restart_db->putDoubleArray("d_dt_actual_level", d_dt_actual_level);
 }
 
 /*
@@ -1517,34 +1517,35 @@ TimeRefinementIntegrator::putToDatabase(
 
 void
 TimeRefinementIntegrator::getFromInput(
-   const boost::shared_ptr<tbox::Database>& db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart)
 {
-   TBOX_ASSERT(is_from_restart || db);
+   TBOX_ASSERT(is_from_restart || input_db);
 
    if (is_from_restart) {
-      if (db) {
+      if (input_db) {
          if (!d_use_refined_timestepping) {
             int regrid_interval =
-               db->getIntegerWithDefault("regrid_interval", 1);
+               input_db->getIntegerWithDefault("regrid_interval", 1);
             setRegridInterval(regrid_interval);
          }
 
-         if (db->keyExists("end_time")) {
-            d_end_time = db->getDouble("end_time");
+         if (input_db->keyExists("end_time")) {
+            d_end_time = input_db->getDouble("end_time");
          }
 
-         if (db->keyExists("grow_dt")) {
-            d_grow_dt = db->getDouble("grow_dt");
+         if (input_db->keyExists("grow_dt")) {
+            d_grow_dt = input_db->getDouble("grow_dt");
          }
 
-         if (db->keyExists("max_integrator_steps")) {
-            d_max_integrator_steps = db->getInteger("max_integrator_steps");
+         if (input_db->keyExists("max_integrator_steps")) {
+            d_max_integrator_steps = input_db->getInteger(
+               "max_integrator_steps");
          }
 
-         if (db->keyExists("tag_buffer")) {
+         if (input_db->keyExists("tag_buffer")) {
             tbox::Array<int> temp_tag_buffer =
-               db->getIntegerArray("tag_buffer");
+               input_db->getIntegerArray("tag_buffer");
             if (temp_tag_buffer.getSize() <
                 (d_patch_hierarchy->getMaxNumberOfLevels() - 1)) {
                int tsize = temp_tag_buffer.getSize();
@@ -1565,42 +1566,43 @@ TimeRefinementIntegrator::getFromInput(
        */
 
       if (!d_use_refined_timestepping) {
-         int regrid_interval = db->getIntegerWithDefault("regrid_interval", 1);
+         int regrid_interval = input_db->getIntegerWithDefault(
+            "regrid_interval", 1);
          setRegridInterval(regrid_interval);
       }
 
-      if (db->keyExists("start_time")) {
-         d_start_time = db->getDouble("start_time");
+      if (input_db->keyExists("start_time")) {
+         d_start_time = input_db->getDouble("start_time");
       } else {
          TBOX_ERROR(
             d_object_name << ":  "
                           << "Key data `start_time' not found in input.");
       }
 
-      if (db->keyExists("end_time")) {
-         d_end_time = db->getDouble("end_time");
+      if (input_db->keyExists("end_time")) {
+         d_end_time = input_db->getDouble("end_time");
       } else {
          TBOX_ERROR(d_object_name << ":  "
                                   << "Key data `end_time' not found in input.");
       }
 
-      if (db->keyExists("grow_dt")) {
-         d_grow_dt = db->getDouble("grow_dt");
+      if (input_db->keyExists("grow_dt")) {
+         d_grow_dt = input_db->getDouble("grow_dt");
       } else {
          TBOX_ERROR(d_object_name << ":  "
                                   << "Key data `grow_dt' not found in input.");
       }
 
-      if (db->keyExists("max_integrator_steps")) {
-         d_max_integrator_steps = db->getInteger("max_integrator_steps");
+      if (input_db->keyExists("max_integrator_steps")) {
+         d_max_integrator_steps = input_db->getInteger("max_integrator_steps");
       } else {
          TBOX_ERROR(
             d_object_name << ":  "
                           << "Key data `max_integrator_steps' not found in input.");
       }
 
-      if (db->keyExists("tag_buffer")) {
-         d_tag_buffer = db->getIntegerArray("tag_buffer");
+      if (input_db->keyExists("tag_buffer")) {
+         d_tag_buffer = input_db->getIntegerArray("tag_buffer");
          if (d_tag_buffer.getSize() <
              (d_patch_hierarchy->getMaxNumberOfLevels() - 1)) {
             int tsize = d_tag_buffer.getSize();
@@ -1628,7 +1630,7 @@ TimeRefinementIntegrator::getFromInput(
       }
 
       d_barrier_and_time =
-         db->getBoolWithDefault("barrier_and_time", d_barrier_and_time);
+         input_db->getBoolWithDefault("barrier_and_time", d_barrier_and_time);
    }
 }
 

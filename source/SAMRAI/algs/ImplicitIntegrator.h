@@ -242,13 +242,14 @@ public:
       std::ostream& os) const;
 
    /**
-    * Write out state of object to given database.
+    * Write out state of object to given restart database.
     *
-    * When assertion checking is active, the database pointer must be non-null.
+    * When assertion checking is active, the restart_db pointer must be
+    * non-null.
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * Returns the object name.
@@ -274,7 +275,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& db,
+      const boost::shared_ptr<tbox::Database>& input_db,
       bool is_from_restart);
 
    /*

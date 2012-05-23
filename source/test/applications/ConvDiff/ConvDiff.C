@@ -942,39 +942,39 @@ void ConvDiff::printClassData(
  *************************************************************************
  */
 void ConvDiff::getFromInput(
-   boost::shared_ptr<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> input_db,
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(input_db);
 #endif
 
-   if (db->keyExists("convection_coeff")) {
-      db->getDoubleArray("convection_coeff",
+   if (input_db->keyExists("convection_coeff")) {
+      input_db->getDoubleArray("convection_coeff",
          d_convection_coeff, d_dim.getValue());
    } else {
       TBOX_ERROR(
          d_object_name << ":  "
                        << "Key data `convection_coeff' not found in input.");
    }
-   if (db->keyExists("diffusion_coeff")) {
-      d_diffusion_coeff = db->getDouble("diffusion_coeff");
+   if (input_db->keyExists("diffusion_coeff")) {
+      d_diffusion_coeff = input_db->getDouble("diffusion_coeff");
    } else {
       TBOX_ERROR(
          d_object_name << ":  "
                        << "Key data `diffusion_coeff' not found in input.");
    }
-   if (db->keyExists("source_coeff")) {
-      d_source_coeff = db->getDouble("source_coeff");
+   if (input_db->keyExists("source_coeff")) {
+      d_source_coeff = input_db->getDouble("source_coeff");
    } else {
       TBOX_ERROR(d_object_name << ":  "
                                << "Key data `source_coeff' not found in input.");
    }
 
-   d_cfl = db->getDoubleWithDefault("cfl", d_cfl);
+   d_cfl = input_db->getDoubleWithDefault("cfl", d_cfl);
 
-   if (db->keyExists("cell_tagging_tolerance")) {
-      db->getDoubleArray("cell_tagging_tolerance",
+   if (input_db->keyExists("cell_tagging_tolerance")) {
+      input_db->getDoubleArray("cell_tagging_tolerance",
          d_tolerance, NEQU);
    } else {
       TBOX_ERROR(
@@ -984,8 +984,8 @@ void ConvDiff::getFromInput(
 
    if (!is_from_restart) {
 
-      if (db->keyExists("data_problem")) {
-         d_data_problem = db->getString("data_problem");
+      if (input_db->keyExists("data_problem")) {
+         d_data_problem = input_db->getString("data_problem");
       } else {
          TBOX_ERROR(
             d_object_name << ": "
@@ -993,13 +993,13 @@ void ConvDiff::getFromInput(
                           << endl);
       }
 
-      if (!db->keyExists("Initial_data")) {
+      if (!input_db->keyExists("Initial_data")) {
          TBOX_ERROR(
             d_object_name << ": "
                           << "No `Initial_data' database found in input." << endl);
       }
       boost::shared_ptr<tbox::Database> init_data_db(
-         db->getDatabase("Initial_data"));
+         input_db->getDatabase("Initial_data"));
 
       bool found_problem_data = false;
 
@@ -1052,19 +1052,19 @@ void ConvDiff::getFromInput(
          if (periodic(id)) num_per_dirs++;
       }
 
-      if (db->keyExists("Boundary_data")) {
+      if (input_db->keyExists("Boundary_data")) {
          boost::shared_ptr<tbox::Database> boundary_db(
-            db->getDatabase("Boundary_data"));
+            input_db->getDatabase("Boundary_data"));
 
          if (d_dim == tbox::Dimension(2)) {
-            appu::CartesianBoundaryUtilities2::readBoundaryInput(this,
+            appu::CartesianBoundaryUtilities2::getFromInput(this,
                boundary_db,
                d_scalar_bdry_edge_conds,
                d_scalar_bdry_node_conds,
                periodic);
          }
          if (d_dim == tbox::Dimension(3)) {
-            appu::CartesianBoundaryUtilities3::readBoundaryInput(this,
+            appu::CartesianBoundaryUtilities3::getFromInput(this,
                boundary_db,
                d_scalar_bdry_face_conds,
                d_scalar_bdry_edge_conds,
@@ -1089,38 +1089,43 @@ void ConvDiff::getFromInput(
  *************************************************************************
  */
 
-void ConvDiff::putToDatabase(
-   const boost::shared_ptr<tbox::Database>& db) const
+void ConvDiff::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 #endif
 
-   db->putInteger("CONV_DIFF_VERSION", CONV_DIFF_VERSION);
+   restart_db->putInteger("CONV_DIFF_VERSION", CONV_DIFF_VERSION);
 
-   db->putDouble("d_diffusion_coeff", d_diffusion_coeff);
-   db->putDoubleArray("d_convection_coeff", d_convection_coeff, d_dim.getValue());
-   db->putDouble("d_source_coeff", d_source_coeff);
-   db->putIntegerArray("d_nghosts", &d_nghosts[0], d_dim.getValue());
+   restart_db->putDouble("d_diffusion_coeff", d_diffusion_coeff);
+   restart_db->putDoubleArray("d_convection_coeff",
+      d_convection_coeff,
+      d_dim.getValue());
+   restart_db->putDouble("d_source_coeff", d_source_coeff);
+   restart_db->putIntegerArray("d_nghosts", &d_nghosts[0], d_dim.getValue());
 
-   db->putString("d_data_problem", d_data_problem);
+   restart_db->putString("d_data_problem", d_data_problem);
 
-   db->putDouble("d_radius", d_radius);
-   db->putDoubleArray("d_center", d_center, d_dim.getValue());
-   db->putDoubleArray("d_val_inside", d_val_inside, NEQU);
-   db->putDoubleArray("d_val_outside", d_val_outside, NEQU);
+   restart_db->putDouble("d_radius", d_radius);
+   restart_db->putDoubleArray("d_center", d_center, d_dim.getValue());
+   restart_db->putDoubleArray("d_val_inside", d_val_inside, NEQU);
+   restart_db->putDoubleArray("d_val_outside", d_val_outside, NEQU);
 
-   db->putDouble("d_cfl", d_cfl);
+   restart_db->putDouble("d_cfl", d_cfl);
 
-   db->putIntegerArray("d_scalar_bdry_edge_conds", d_scalar_bdry_edge_conds);
-   db->putIntegerArray("d_scalar_bdry_node_conds", d_scalar_bdry_node_conds);
+   restart_db->putIntegerArray("d_scalar_bdry_edge_conds",
+      d_scalar_bdry_edge_conds);
+   restart_db->putIntegerArray("d_scalar_bdry_node_conds",
+      d_scalar_bdry_node_conds);
 
    if (d_dim == tbox::Dimension(2)) {
-      db->putDoubleArray("d_bdry_edge_val", d_bdry_edge_val);
+      restart_db->putDoubleArray("d_bdry_edge_val", d_bdry_edge_val);
    }
    if (d_dim == tbox::Dimension(3)) {
-      db->putIntegerArray("d_scalar_bdry_face_conds", d_scalar_bdry_face_conds);
-      db->putDoubleArray("d_bdry_face_val", d_bdry_face_val);
+      restart_db->putIntegerArray("d_scalar_bdry_face_conds",
+         d_scalar_bdry_face_conds);
+      restart_db->putDoubleArray("d_bdry_face_val", d_bdry_face_val);
    }
 
 }

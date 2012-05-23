@@ -70,12 +70,12 @@ class LocationIndexRobinBcCoefs:
 
 public:
    /*!
-    * @brief Constructor using database.
+    * @brief Constructor using input database.
     */
    LocationIndexRobinBcCoefs(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& database);
+      const boost::shared_ptr<tbox::Database>& input_db);
 
    /*!
     * @brief Destructor.
@@ -238,12 +238,12 @@ private:
     * See the class description for the parameters that can be set
     * from a database.
     *
-    * @param database Input database.  If a NULL pointer is given,
+    * @param input_db Input database.  If a NULL pointer is given,
     * nothing is done.
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& database);
+      const boost::shared_ptr<tbox::Database>& input_db);
 
    /*
     * @brief Object dimension

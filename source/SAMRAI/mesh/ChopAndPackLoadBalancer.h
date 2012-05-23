@@ -404,7 +404,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& db);
+      const boost::shared_ptr<tbox::Database>& input_db);
 
    /*!
     * Given a list of boxes, representing the domain of a level in the AMR

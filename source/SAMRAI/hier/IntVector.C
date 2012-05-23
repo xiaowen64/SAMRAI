@@ -129,21 +129,21 @@ std::ostream& operator << (
 }
 
 void
-IntVector::putUnregisteredToDatabase(
-   tbox::Database& database,
+IntVector::putToRestart(
+   tbox::Database& restart_db,
    const std::string& name) const
 {
-   database.putIntegerArray(name, d_vector, d_dim.getValue());
+   restart_db.putIntegerArray(name, d_vector, d_dim.getValue());
 }
 
 void
-IntVector::getFromDatabase(
-   tbox::Database& database,
+IntVector::getFromRestart(
+   tbox::Database& restart_db,
    const std::string& name)
 {
    TBOX_ASSERT(d_dim.getValue() ==
-      static_cast<unsigned short>(database.getArraySize(name)));
-   database.getIntegerArray(name, d_vector, d_dim.getValue());
+      static_cast<unsigned short>(restart_db.getArraySize(name)));
+   restart_db.getIntegerArray(name, d_vector, d_dim.getValue());
 }
 
 /*

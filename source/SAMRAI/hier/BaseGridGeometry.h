@@ -1172,15 +1172,16 @@ private:
 
    /*!
     * @brief Writes the state of the BaseGridGeometry object to the
-    * database.
+    * restart database.
     *
-    * When assertion checking is active, db cannot be a null database pointer.
+    * When assertion checking is active, restart_db cannot be a null database
+    * pointer.
     *
-    * @param[in,out]    db The database to write to write/serialize.
+    * @param[in,out]  restart_db The restart database to write/serialize to.
     */
    virtual void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
 protected:
    /*!
@@ -1329,12 +1330,12 @@ private:
     * If the simulation is from restart, these values are taken from restart
     * and newly specified values in the input database are ignored.
     *
-    * @param[in] db  input database, must not be NULL pointer
+    * @param[in] input_db  input database, must not be NULL pointer
     * @param[in] is_from_restart  set to true if simulation is from restart
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& db,
+      const boost::shared_ptr<tbox::Database>& input_db,
       bool is_from_restart);
 
    /*!

@@ -555,7 +555,7 @@ void F77_FUNC(ewingfixfluxcondc3d, EWINGFIXFLUXCONDC3D) (
 CellPoissonFACOps::CellPoissonFACOps(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& database):
+   const boost::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_object_name(object_name),
    d_ln_min(-1),
@@ -579,8 +579,8 @@ CellPoissonFACOps::CellPoissonFACOps(
 #ifdef HAVE_HYPRE
    d_hypre_solver(dim,
                   object_name + "::hypre_solver",
-                  database && database->isDatabase("hypre_solver") ?
-                  database->getDatabase("hypre_solver") :
+                  input_db && input_db->isDatabase("hypre_solver") ?
+                  input_db->getDatabase("hypre_solver") :
                   boost::shared_ptr<tbox::Database>()),
 #endif
    d_physical_bc_coef(NULL),
@@ -649,33 +649,8 @@ CellPoissonFACOps::CellPoissonFACOps(
    /*
     * Some variables initialized by default are overriden by input.
     */
-   if (database) {
-
-      d_coarse_solver_choice =
-         database->getStringWithDefault("coarse_solver_choice",
-            d_coarse_solver_choice);
-      d_coarse_solver_tolerance =
-         database->getDoubleWithDefault("coarse_solver_tolerance",
-            d_coarse_solver_tolerance);
-      d_coarse_solver_max_iterations =
-         database->getIntegerWithDefault("coarse_solver_max_iterations",
-            d_coarse_solver_max_iterations);
-      d_smoothing_choice =
-         database->getStringWithDefault("smoothing_choice",
-            d_smoothing_choice);
-
-      d_cf_discretization =
-         database->getStringWithDefault("cf_discretization",
-            d_cf_discretization);
-
-      d_prolongation_method =
-         database->getStringWithDefault("prolongation_method",
-            d_prolongation_method);
-
-      d_enable_logging =
-         database->getBoolWithDefault("enable_logging",
-            d_enable_logging);
-
+   if (input_db) {
+     getFromInput(input_db);
    }
 
    /*
@@ -687,6 +662,41 @@ CellPoissonFACOps::CellPoissonFACOps(
 
 CellPoissonFACOps::~CellPoissonFACOps()
 {
+}
+
+/*
+ ************************************************************************
+ * Read input parameters from database.
+ ************************************************************************
+ */
+void
+CellPoissonFACOps::getFromInput(
+   const boost::shared_ptr<tbox::Database>& input_db)
+{
+   d_coarse_solver_choice =
+      input_db->getStringWithDefault("coarse_solver_choice",
+         d_coarse_solver_choice);
+   d_coarse_solver_tolerance =
+      input_db->getDoubleWithDefault("coarse_solver_tolerance",
+         d_coarse_solver_tolerance);
+   d_coarse_solver_max_iterations =
+      input_db->getIntegerWithDefault("coarse_solver_max_iterations",
+         d_coarse_solver_max_iterations);
+   d_smoothing_choice =
+      input_db->getStringWithDefault("smoothing_choice",
+         d_smoothing_choice);
+
+   d_cf_discretization =
+      input_db->getStringWithDefault("cf_discretization",
+         d_cf_discretization);
+
+   d_prolongation_method =
+      input_db->getStringWithDefault("prolongation_method",
+         d_prolongation_method);
+
+   d_enable_logging =
+      input_db->getBoolWithDefault("enable_logging",
+         d_enable_logging);
 }
 
 /*

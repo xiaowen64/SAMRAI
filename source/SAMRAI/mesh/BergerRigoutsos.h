@@ -102,7 +102,7 @@ public:
     */
    explicit BergerRigoutsos(
       const tbox::Dimension& dim,
-      const boost::shared_ptr<tbox::Database>& database =
+      const boost::shared_ptr<tbox::Database>& input_db =
          boost::shared_ptr<tbox::Database>());
 
    /*!
@@ -169,6 +169,16 @@ public:
       const hier::IntVector& max_gcw,
       const hier::BlockId& block_id,
       const hier::LocalId& first_local_id) const;
+
+protected:
+   /*!
+    * @brief Read parameters from input database.
+    *
+    * @param input_db Input Database.
+    */
+   void
+   getFromInput(
+      const boost::shared_ptr<tbox::Database>& input_db);
 
 private:
    const tbox::Dimension d_dim;

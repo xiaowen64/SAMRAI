@@ -957,50 +957,50 @@ ArrayData<TYPE>::fill(
 
 template<class TYPE>
 void
-ArrayData<TYPE>::getFromDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+ArrayData<TYPE>::getFromRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db)
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   int ver = database->getInteger("PDAT_ARRAYDATA_VERSION");
+   int ver = restart_db->getInteger("PDAT_ARRAYDATA_VERSION");
    if (ver != PDAT_ARRAYDATA_VERSION) {
-      TBOX_ERROR("ArrayData::getFromDatabase error...\n"
+      TBOX_ERROR("ArrayData::getFromRestart error...\n"
          << " : Restart file version different than class version" << std::endl);
    }
 
-   d_depth = database->getInteger("d_depth");
-   d_offset = database->getInteger("d_offset");
-   d_box = database->getDatabaseBox("d_box");
+   d_depth = restart_db->getInteger("d_depth");
+   d_offset = restart_db->getInteger("d_offset");
+   d_box = restart_db->getDatabaseBox("d_box");
 
-   database->getArray("d_array", d_array);
+   restart_db->getArray("d_array", d_array);
 }
 
 /*
  *************************************************************************
  *
  * Write out the class version number, d_depth, d_offset, d_box, and
- * d_array to the database.
+ * d_array to the restart database.
  *
  *************************************************************************
  */
 
 template<class TYPE>
 void
-ArrayData<TYPE>::putUnregisteredToDatabase(
-   const boost::shared_ptr<tbox::Database>& database,
+ArrayData<TYPE>::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db,
    bool data_only) const
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
    if (!data_only) {
-      database->putInteger("PDAT_ARRAYDATA_VERSION", PDAT_ARRAYDATA_VERSION);
+      restart_db->putInteger("PDAT_ARRAYDATA_VERSION", PDAT_ARRAYDATA_VERSION);
 
-      database->putInteger("d_depth", d_depth);
-      database->putInteger("d_offset", d_offset);
-      database->putDatabaseBox("d_box", d_box);
+      restart_db->putInteger("d_depth", d_depth);
+      restart_db->putInteger("d_offset", d_offset);
+      restart_db->putDatabaseBox("d_box", d_box);
    }
 
-   database->putArray("d_array", d_array);
+   restart_db->putArray("d_array", d_array);
 }
 
 template<class TYPE>

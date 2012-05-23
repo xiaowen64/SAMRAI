@@ -67,12 +67,12 @@ public:
     *
     * @param name Object name
     * @param user_ops Reference to user-specified FAC operator
-    * @param database Input database with initialization parameters
+    * @param input_db Input database with initialization parameters
     */
    FACPreconditioner(
       const std::string& name,
       FACOperatorStrategy& user_ops,
-      const boost::shared_ptr<tbox::Database>& database =
+      const boost::shared_ptr<tbox::Database>& input_db =
          boost::shared_ptr<tbox::Database>());
 
    /*!
@@ -474,12 +474,12 @@ private:
     * See the class description for the parameters that can be set
     * from a database.
     *
-    * @param database Input database.  If a NULL pointer is given,
+    * @param input_db Input database.  If a NULL pointer is given,
     * nothing is done.
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& database);
+      const boost::shared_ptr<tbox::Database>& input_db);
 
    /*!
     * @brief Compute composite residual on all levels and

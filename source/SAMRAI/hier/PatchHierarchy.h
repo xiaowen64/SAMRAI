@@ -263,13 +263,13 @@ public:
  *
  * @param[in]  object_name
  * @param[in]  geometry
- * @param[in]  database Database specifying hierarchy parameters.
+ * @param[in]  input_db Input database specifying hierarchy parameters.
  * @param[in]  register_for_restart @b Default: true
  */
    PatchHierarchy(
       const std::string& object_name,
       const boost::shared_ptr<BaseGridGeometry>& geometry,
-      const boost::shared_ptr<tbox::Database>& database =
+      const boost::shared_ptr<tbox::Database>& input_db =
          boost::shared_ptr<tbox::Database>(),
       bool register_for_restart = true);
 
@@ -807,7 +807,7 @@ public:
 
    /*!
     * @brief Writes the state of the PatchHierarchy object and the PatchLevels
-    * it contains to the database.
+    * it contains to the restart database.
     *
     * @note
     * Only those patch data which have been registered for restart with
@@ -816,13 +816,14 @@ public:
     * class which is used by the tbox::RestartManager for writing the
     * PatchHierarchy to a restart file.
     * @par Assertions
-    * When assertion checking is active, the database pointer must be non-null.
+    * When assertion checking is active, the restart_db pointer must be
+    * non-null.
     *
-    * @param[out]  database
+    * @param[out]  restart_db
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& database) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * @brief Read in the entire hierarchy from the restart file.
@@ -848,7 +849,7 @@ public:
    getFromRestart();
 
    /*!
-    * @brief Read in the entire hierarchy from the specified database.
+    * @brief Read in the entire hierarchy from the specified restart database.
     *
     * The component_selector specifies which patch data components
     * to read in from the database.
@@ -865,16 +866,16 @@ public:
     * @par Assertions
     *
     * <ul>
-    * <li>   The database argument must not be null.
+    * <li>   The restart_db argument must not be null.
     * <li>   The number of levels (if given) must be greater than zero.
     * </ul>
     *
-    * @param[in]  database
+    * @param[in]  restart_db
     * @param[in]  component_selector
     */
    void
-   getFromDatabase(
-      const boost::shared_ptr<tbox::Database>& database,
+   getFromRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db,
       const ComponentSelector& component_selector);
 
    /*!
@@ -933,20 +934,21 @@ private:
 
    /*!
     * @brief Writes the state of the PatchHierarchy object and the PatchLevels
-    * it contains to the database.
+    * it contains to the restart database.
     *
     * Only those patch data indicated in the ComponentSelector are written to
     * the specified database.
     *
     * @par Assertions
-    * When assertion checking is active, the database pointer must be non-null.
+    * When assertion checking is active, the restart_db pointer must be
+    * non-null.
     *
-    * @param[out]  database
+    * @param[out] restart_db
     * @param[in]  patchdata_write_table
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& database,
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db,
       const ComponentSelector& patchdata_write_table) const;
 
    /*!
@@ -956,11 +958,11 @@ private:
     * When assertion checking is active, the database pointer must be
     * non-null.
     *
-    * @param[in]  database   Input database
+    * @param[in]  input_db   Input database
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& database);
+      const boost::shared_ptr<tbox::Database>& input_db);
 
    /*!
     * @brief Set up things for the entire class.

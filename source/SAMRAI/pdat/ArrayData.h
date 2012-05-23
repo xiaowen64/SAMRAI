@@ -543,26 +543,24 @@ public:
 
    /*!
     * Check to make sure that the class version and restart file
-    * version are equal.  If so, read in data from database.
+    * version are equal.  If so, read in data from restart database.
     *
-    * Assertions:  database must be a non-null pointer.
+    * Assertions:  restart_db must be a non-null pointer.
     */
    void
-   getFromDatabase(
-      const boost::shared_ptr<tbox::Database>& database);
+   getFromRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db);
 
    /*!
-    * Write out array data object data to database.  This
-    * routine calls putSpecializedToDatabase() to read in the
-    * proper data type.  The default behavior (boolean argument is
-    * false) is to put all data members in database.  Otherwise, only
-    * the array contents are written out.
+    * Write out array data object data to restart database.  The default
+    * behavior (boolean argument is false) is to put all data members in
+    * database.  Otherwise, only the array contents are written out.
     *
-    * Assertions:  database must be a non-null pointer.
+    * Assertions:  restart_db must be a non-null pointer.
     */
    void
-   putUnregisteredToDatabase(
-      const boost::shared_ptr<tbox::Database>& database,
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db,
       bool data_only = false) const;
 
    /**

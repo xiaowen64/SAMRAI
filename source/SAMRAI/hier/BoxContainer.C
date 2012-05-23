@@ -1595,18 +1595,18 @@ BoxContainer::hasBoxInBlock(
 
 /*
  ***********************************************************************
- * Write the BoxContainer to a database.
+ * Write the BoxContainer to a restart database.
  ***********************************************************************
  */
 void
-BoxContainer::putUnregisteredToDatabase(
-   const boost::shared_ptr<tbox::Database>& database) const
+BoxContainer::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   database->putInteger(
+   restart_db->putInteger(
       "HIER_BOX_CONTAINER_VERSION", HIER_BOX_CONTAINER_VERSION);
 
    const int mbs_size = size();
-   database->putInteger("mapped_box_set_size", mbs_size);
+   restart_db->putInteger("mapped_box_set_size", mbs_size);
    if (mbs_size > 0) {
 
       std::vector<int> local_ids;
@@ -1629,25 +1629,25 @@ BoxContainer::putUnregisteredToDatabase(
          db_box_array[++counter] = *ni;
       }
 
-      database->putIntegerArray("local_indices", &local_ids[0], mbs_size);
-      database->putIntegerArray("ranks", &ranks[0], mbs_size);
-      database->putIntegerArray("block_ids", &block_ids[0], mbs_size);
-      database->putIntegerArray("periodic_ids", &periodic_ids[0], mbs_size);
-      database->putDatabaseBoxArray("boxes", &db_box_array[0], mbs_size);
+      restart_db->putIntegerArray("local_indices", &local_ids[0], mbs_size);
+      restart_db->putIntegerArray("ranks", &ranks[0], mbs_size);
+      restart_db->putIntegerArray("block_ids", &block_ids[0], mbs_size);
+      restart_db->putIntegerArray("periodic_ids", &periodic_ids[0], mbs_size);
+      restart_db->putDatabaseBoxArray("boxes", &db_box_array[0], mbs_size);
    }
 }
 
 
 /*
  ***********************************************************************
- * Read the BoxContainer from a database.
+ * Read the BoxContainer from a restart database.
  ***********************************************************************
  */
 void
-BoxContainer::getFromDatabase(
-   tbox::Database& database)
+BoxContainer::getFromRestart(
+   tbox::Database& restart_db)
 {
-   const unsigned int mbs_size = database.getInteger("mapped_box_set_size");
+   const unsigned int mbs_size = restart_db.getInteger("mapped_box_set_size");
    if (mbs_size > 0) {
       std::vector<int> local_ids(mbs_size);
       std::vector<int> ranks(mbs_size);
@@ -1655,15 +1655,15 @@ BoxContainer::getFromDatabase(
       std::vector<int> periodic_ids(mbs_size);
       tbox::Array<tbox::DatabaseBox> db_box_array(mbs_size);
 
-      database.getIntegerArray(
+      restart_db.getIntegerArray(
          "local_indices", &local_ids[0], mbs_size);
-      database.getIntegerArray(
+      restart_db.getIntegerArray(
          "ranks", &ranks[0], mbs_size);
-      database.getIntegerArray(
+      restart_db.getIntegerArray(
          "block_ids", &block_ids[0], mbs_size);
-      database.getIntegerArray(
+      restart_db.getIntegerArray(
          "periodic_ids", &periodic_ids[0], mbs_size);
-      database.getDatabaseBoxArray(
+      restart_db.getDatabaseBoxArray(
          "boxes", &db_box_array[0], mbs_size);
 
       for (unsigned int i = 0; i < mbs_size; ++i) {

@@ -877,14 +877,16 @@ IndexData<TYPE, BOX_GEOMETRY>::isElement(
 
 template<class TYPE, class BOX_GEOMETRY>
 void
-IndexData<TYPE, BOX_GEOMETRY>::getSpecializedFromDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+IndexData<TYPE, BOX_GEOMETRY>::getFromRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db)
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   int ver = database->getInteger("PDAT_INDEXDATA_VERSION");
+   hier::PatchData::getFromRestart(restart_db);
+
+   int ver = restart_db->getInteger("PDAT_INDEXDATA_VERSION");
    if (ver != PDAT_INDEXDATA_VERSION) {
-      TBOX_ERROR("IndexData::getSpecializedFromDatabase error...\n"
+      TBOX_ERROR("IndexData::getFromRestart error...\n"
          << " : Restart file version different than class version" << std::endl);
    }
 
@@ -896,10 +898,10 @@ IndexData<TYPE, BOX_GEOMETRY>::getSpecializedFromDatabase(
             item_count,
             6);
 
-      if (database->isDatabase(index_keyword)) {
+      if (restart_db->isDatabase(index_keyword)) {
 
          boost::shared_ptr<tbox::Database> item_db(
-            database->getDatabase(index_keyword));
+            restart_db->getDatabase(index_keyword));
 
          tbox::Array<int> index_array =
             item_db->getIntegerArray(index_keyword);
@@ -909,7 +911,7 @@ IndexData<TYPE, BOX_GEOMETRY>::getSpecializedFromDatabase(
          }
 
          TYPE item;
-         item.getFromDatabase(item_db);
+         item.getFromRestart(item_db);
 
          appendItem(index, item);
 
@@ -926,19 +928,21 @@ IndexData<TYPE, BOX_GEOMETRY>::getSpecializedFromDatabase(
 /*
  *************************************************************************
  *
- * Just writes out the class version number to the database.
+ * Just writes out the class version number to the restart database.
  *
  *************************************************************************
  */
 
 template<class TYPE, class BOX_GEOMETRY>
 void
-IndexData<TYPE, BOX_GEOMETRY>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database) const
+IndexData<TYPE, BOX_GEOMETRY>::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   database->putInteger("PDAT_INDEXDATA_VERSION", PDAT_INDEXDATA_VERSION);
+   hier::PatchData::putToRestart(restart_db);
+
+   restart_db->putInteger("PDAT_INDEXDATA_VERSION", PDAT_INDEXDATA_VERSION);
 
    int item_count = 0;
    typename IndexData<TYPE, BOX_GEOMETRY>::iterator send(*this, false);
@@ -955,13 +959,13 @@ IndexData<TYPE, BOX_GEOMETRY>::putSpecializedToDatabase(
       }
 
       boost::shared_ptr<tbox::Database> item_db(
-         database->putDatabase(index_keyword));
+         restart_db->putDatabase(index_keyword));
 
       item_db->putIntegerArray(index_keyword, index_array);
 
       TYPE* item = getItem(index);
 
-      item->putUnregisteredToDatabase(item_db);
+      item->putToRestart(item_db);
 
       item_count++;
    }
