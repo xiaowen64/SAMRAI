@@ -4417,12 +4417,12 @@ GriddingAlgorithm::putToRestart(
    restart_db->putInteger("ALGS_GRIDDING_ALGORITHM_VERSION",
       ALGS_GRIDDING_ALGORITHM_VERSION);
 
-   restart_db->putDoubleArray("d_efficiency_tolerance",
+   restart_db->putDoubleArray("efficiency_tolerance",
       d_efficiency_tolerance);
-   restart_db->putDoubleArray("d_combine_efficiency",
+   restart_db->putDoubleArray("combine_efficiency",
       d_combine_efficiency);
 
-   restart_db->putBool("d_sequentialize_patch_indices",
+   restart_db->putBool("sequentialize_patch_indices",
       d_sequentialize_patch_indices);
 }
 
@@ -4611,10 +4611,10 @@ GriddingAlgorithm::getFromRestart()
    d_proper_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels(),
       hier::BoxLevel(d_dim));
 
-   d_efficiency_tolerance = db->getDoubleArray("d_efficiency_tolerance");
-   d_combine_efficiency = db->getDoubleArray("d_combine_efficiency");
+   d_efficiency_tolerance = db->getDoubleArray("efficiency_tolerance");
+   d_combine_efficiency = db->getDoubleArray("combine_efficiency");
 
-   d_sequentialize_patch_indices = db->getBool("d_sequentialize_patch_indices");
+   d_sequentialize_patch_indices = db->getBool("sequentialize_patch_indices");
 
 }
 

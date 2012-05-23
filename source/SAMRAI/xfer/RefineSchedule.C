@@ -53,6 +53,7 @@ static const std::string errbord("E-> ");
 
 bool RefineSchedule::s_extra_debug = false;
 bool RefineSchedule::s_barrier_and_time = false;
+bool RefineSchedule::s_read_static_input = false;
 
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_data;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_recursive_fill;
@@ -145,6 +146,8 @@ RefineSchedule::RefineSchedule(
       TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *patch_strategy);
    }
 #endif
+
+   getFromInput();
 
    const tbox::Dimension& dim(dst_level->getDim());
 
@@ -332,6 +335,8 @@ RefineSchedule::RefineSchedule(
    }
 #endif
 
+   getFromInput();
+
    const tbox::Dimension& dim(dst_level->getDim());
 
    setRefineItems(refine_classes);
@@ -504,6 +509,8 @@ RefineSchedule::RefineSchedule(
    }
 #endif
 
+   getFromInput();
+
    const tbox::Dimension& dim(dst_level->getDim());
 
    /*
@@ -612,6 +619,32 @@ RefineSchedule::~RefineSchedule()
 {
    clearRefineItems();
 }
+
+/*
+ *************************************************************************
+ *
+ * Read static member data from input database once.
+ *
+ ************************************************************************
+ */
+void
+RefineSchedule::getFromInput()
+{
+   if (!s_read_static_input) {
+      s_read_static_input = true;
+      boost::shared_ptr<tbox::Database> idb(
+         tbox::InputManager::getInputDatabase());
+      if (idb && idb->isDatabase("RefineSchedule")) {
+         boost::shared_ptr<tbox::Database> rsdb(
+            idb->getDatabase("RefineSchedule"));
+         s_extra_debug =
+            rsdb->getBoolWithDefault("extra_debug", s_extra_debug);
+         s_barrier_and_time =
+            rsdb->getBoolWithDefault("barrier_and_time", s_barrier_and_time);
+      }
+   }
+}
+
 
 /*
  *************************************************************************
@@ -4775,17 +4808,6 @@ RefineSchedule::printClassData(
 void
 RefineSchedule::initializeCallback()
 {
-   boost::shared_ptr<tbox::Database> idb(
-      tbox::InputManager::getInputDatabase());
-   if (idb && idb->isDatabase("RefineSchedule")) {
-      boost::shared_ptr<tbox::Database> rsdb(
-         idb->getDatabase("RefineSchedule"));
-      s_extra_debug =
-         rsdb->getBoolWithDefault("extra_debug", s_extra_debug);
-      s_barrier_and_time =
-         rsdb->getBoolWithDefault("barrier_and_time", s_barrier_and_time);
-   }
-
    t_fill_data = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::fillData()");
    t_recursive_fill = tbox::TimerManager::getManager()->

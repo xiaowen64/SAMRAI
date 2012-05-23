@@ -1492,12 +1492,12 @@ TimeRefinementIntegrator::putToRestart(
    restart_db->putInteger("ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION",
       ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION);
 
-   restart_db->putDouble("d_start_time", d_start_time);
-   restart_db->putDouble("d_end_time", d_end_time);
-   restart_db->putDouble("d_grow_dt", d_grow_dt);
-   restart_db->putInteger("d_max_integrator_steps", d_max_integrator_steps);
-   restart_db->putIntegerArray("d_regrid_interval", d_regrid_interval);
-   restart_db->putIntegerArray("d_tag_buffer", d_tag_buffer);
+   restart_db->putDouble("start_time", d_start_time);
+   restart_db->putDouble("end_time", d_end_time);
+   restart_db->putDouble("grow_dt", d_grow_dt);
+   restart_db->putInteger("max_integrator_steps", d_max_integrator_steps);
+   restart_db->putIntegerArray("regrid_interval", d_regrid_interval);
+   restart_db->putIntegerArray("tag_buffer", d_tag_buffer);
    restart_db->putDouble("d_integrator_time", d_integrator_time);
    restart_db->putInteger("d_integrator_step", d_integrator_step);
    restart_db->putInteger("d_last_finest_level", d_last_finest_level);
@@ -1672,12 +1672,12 @@ TimeRefinementIntegrator::getFromRestart()
                        << "Restart file version different than class version.");
    }
 
-   d_start_time = db->getDouble("d_start_time");
-   d_end_time = db->getDouble("d_end_time");
-   d_grow_dt = db->getDouble("d_grow_dt");
-   d_max_integrator_steps = db->getInteger("d_max_integrator_steps");
-   d_regrid_interval = db->getIntegerArray("d_regrid_interval");
-   d_tag_buffer = db->getIntegerArray("d_tag_buffer");
+   d_start_time = db->getDouble("start_time");
+   d_end_time = db->getDouble("end_time");
+   d_grow_dt = db->getDouble("grow_dt");
+   d_max_integrator_steps = db->getInteger("max_integrator_steps");
+   d_regrid_interval = db->getIntegerArray("regrid_interval");
+   d_tag_buffer = db->getIntegerArray("tag_buffer");
    d_integrator_time = db->getDouble("d_integrator_time");
    d_integrator_step = db->getInteger("d_integrator_step");
    d_last_finest_level = db->getInteger("d_last_finest_level");

@@ -43,6 +43,12 @@ public:
    virtual ~MappingConnectorAlgorithm();
 
    /*!
+    * @brief Read extra debugging flag from input database.
+    */
+   void
+   getFromInput();
+
+   /*!
     * @brief Set whether to run expensive sanity checks on input
     * parameters when at the beginning of certain methods.
     *
@@ -446,6 +452,9 @@ private:
     */
    static void
    finalizeCallback();
+
+   // Extra checks independent of optimization/debug.
+   static char s_print_steps;
 
    /*
     * @brief Border for debugging output.

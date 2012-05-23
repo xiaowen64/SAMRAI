@@ -39,9 +39,9 @@ namespace xfer {
  *************************************************************************
  */
 
-std::string
-CoarsenSchedule::s_schedule_generation_method = "DLBG";
+std::string CoarsenSchedule::s_schedule_generation_method = "DLBG";
 bool CoarsenSchedule::s_extra_debug = false;
+  bool CoarsenSchedule::s_read_static_input = false;
 
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarsen_data;
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_gen_sched_n_squared;
@@ -116,6 +116,8 @@ CoarsenSchedule::CoarsenSchedule(
    TBOX_ASSERT(coarsen_classes);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*crse_level, *fine_level);
 
+   getFromInput();
+
    if ( s_extra_debug ) {
       tbox::plog << "CoarsenSchedule::CoarsenSchedule " << this << " entered" << std::endl;
    }
@@ -183,6 +185,29 @@ CoarsenSchedule::CoarsenSchedule(
 CoarsenSchedule::~CoarsenSchedule()
 {
    clearCoarsenItems();
+}
+
+/*
+ * ***********************************************************************
+ *
+ * Read static member data from input database once.
+ *
+ * ***********************************************************************
+ */
+void
+CoarsenSchedule::getFromInput()
+{
+   if (!s_read_static_input) {
+      s_read_static_input = true;
+      boost::shared_ptr<tbox::Database> idb(
+         tbox::InputManager::getInputDatabase());
+      if (idb && idb->isDatabase("CoarsenSchedule")) {
+         boost::shared_ptr<tbox::Database> csdb(
+            idb->getDatabase("CoarsenSchedule"));
+         s_extra_debug =
+            csdb->getBoolWithDefault("extra_debug", s_extra_debug);
+      }
+   }
 }
 
 /*
@@ -1189,14 +1214,6 @@ CoarsenSchedule::printClassData(
 void
 CoarsenSchedule::initializeCallback()
 {
-   boost::shared_ptr<tbox::Database> idb(
-      tbox::InputManager::getInputDatabase());
-   if (idb && idb->isDatabase("CoarsenSchedule")) {
-      boost::shared_ptr<tbox::Database> rsdb(idb->getDatabase(
-                                            "CoarsenSchedule"));
-      s_extra_debug =
-         rsdb->getBoolWithDefault("extra_debug", s_extra_debug);
-   }
    t_coarsen_data = tbox::TimerManager::getManager()->
       getTimer("xfer::CoarsenSchedule::coarsenData()");
    t_gen_sched_n_squared = tbox::TimerManager::getManager()->

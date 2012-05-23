@@ -44,7 +44,8 @@ protected:
       const std::set<int>& incoming_ranks,
       const std::set<int>& outgoing_ranks,
       const boost::shared_ptr<tbox::Timer>& mpi_wait_timer,
-      int& operation_mpi_tag) const;
+      int& operation_mpi_tag,
+      bool print_steps) const;
 
    //! @brief Send discovery to one processor during privateBridge/Modify.
    void
@@ -54,7 +55,8 @@ protected:
       BoxContainer& referenced_new_head_nabrs,
       BoxContainer& referenced_new_base_nabrs,
       tbox::AsyncCommPeer<int>& outgoing_comm,
-      const tbox::Dimension& dim) const;
+      const tbox::Dimension& dim,
+      bool print_steps) const;
 
    /*!
     * @brief Receive messages and unpack info sent from other processes.
@@ -66,23 +68,22 @@ protected:
       std::set<int>& incoming_ranks,
       tbox::AsyncCommPeer<int> all_comms[],
       tbox::AsyncCommStage& comm_stage,
-      const boost::shared_ptr<tbox::Timer>& receive_and_unpack_timer) const;
-
-   //! @brief Unpack message sent by sendDiscoverytoOneProcess().
-   void
-   unpackDiscoveryMessage(
-      const tbox::AsyncCommPeer<int>* incoming_comm,
-      Connector& west_to_east,
-      Connector* east_to_west) const;
-
-   // Extra checks independent of optimization/debug.
-   static char s_print_steps;
+      const boost::shared_ptr<tbox::Timer>& receive_and_unpack_timer,
+      bool print_steps) const;
 
 private:
    /*
     * Data length limit on first message of a communication.
     */
    static const int BASE_CONNECTOR_ALGORITHM_FIRST_DATA_LENGTH;
+
+   //! @brief Unpack message sent by sendDiscoverytoOneProcess().
+   void
+   unpackDiscoveryMessage(
+      const tbox::AsyncCommPeer<int>* incoming_comm,
+      Connector& west_to_east,
+      Connector* east_to_west,
+      bool print_steps) const;
 };
 
 }

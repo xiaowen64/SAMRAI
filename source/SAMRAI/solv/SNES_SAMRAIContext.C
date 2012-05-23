@@ -718,45 +718,45 @@ SNES_SAMRAIContext::getFromRestart()
                                << "than class version.");
    }
 
-   d_uses_preconditioner = db->getBool("d_uses_preconditioner");
-   d_uses_explicit_jacobian = db->getBool("d_uses_explicit_jacobian");
+   d_uses_preconditioner = db->getBool("uses_preconditioner");
+   d_uses_explicit_jacobian = db->getBool("uses_explicit_jacobian");
 
    d_maximum_nonlinear_iterations =
-      db->getInteger("d_maximum_nonlinear_iterations");
-   d_maximum_function_evals = db->getInteger("d_maximum_function_evals");
+      db->getInteger("maximum_nonlinear_iterations");
+   d_maximum_function_evals = db->getInteger("maximum_function_evals");
 
-   d_absolute_tolerance = db->getDouble("d_absolute_tolerance");
-   d_relative_tolerance = db->getDouble("d_relative_tolerance");
-   d_step_tolerance = db->getDouble("d_step_tolerance");
+   d_absolute_tolerance = db->getDouble("absolute_tolerance");
+   d_relative_tolerance = db->getDouble("relative_tolerance");
+   d_step_tolerance = db->getDouble("step_tolerance");
 
-   d_forcing_term_strategy = db->getString("d_forcing_term_strategy");
+   d_forcing_term_strategy = db->getString("forcing_term_strategy");
    d_forcing_term_flag = db->getInteger("d_forcing_term_flag");
 
-   d_constant_forcing_term = db->getDouble("d_constant_forcing_term");
-   d_initial_forcing_term = db->getDouble("d_initial_forcing_term");
-   d_maximum_forcing_term = db->getDouble("d_maximum_forcing_term");
-   d_EW_choice2_alpha = db->getDouble("d_EW_choice2_alpha");
-   d_EW_choice2_gamma = db->getDouble("d_EW_choice2_gamma");
-   d_EW_safeguard_exponent = db->getDouble("d_EW_safeguard_exponent");
+   d_constant_forcing_term = db->getDouble("constant_forcing_term");
+   d_initial_forcing_term = db->getDouble("initial_forcing_term");
+   d_maximum_forcing_term = db->getDouble("maximum_forcing_term");
+   d_EW_choice2_alpha = db->getDouble("EW_choice2_alpha");
+   d_EW_choice2_gamma = db->getDouble("EW_choice2_gamma");
+   d_EW_safeguard_exponent = db->getDouble("EW_safeguard_exponent");
    d_EW_safeguard_disable_threshold =
-      db->getDouble("d_EW_safeguard_disable_threshold");
+      db->getDouble("EW_safeguard_disable_threshold");
 
-   d_linear_solver_type = db->getString("d_linear_solver_type");
+   d_linear_solver_type = db->getString("linear_solver_type");
    d_linear_solver_absolute_tolerance =
-      db->getDouble("d_linear_solver_absolute_tolerance");
+      db->getDouble("linear_solver_absolute_tolerance");
    d_linear_solver_divergence_tolerance =
-      db->getDouble("d_linear_solver_divergence_tolerance");
+      db->getDouble("linear_solver_divergence_tolerance");
    d_maximum_linear_iterations =
-      db->getInteger("d_maximum_linear_iterations");
+      db->getInteger("maximum_linear_iterations");
 
    d_maximum_gmres_krylov_dimension =
-      db->getInteger("d_maximum_gmres_krylov_dimension");
+      db->getInteger("maximum_gmres_krylov_dimension");
    d_gmres_orthogonalization_algorithm =
-      db->getString("d_gmres_orthogonalization_algorithm");
+      db->getString("gmres_orthogonalization_algorithm");
 
-   d_function_evaluation_error = db->getDouble("d_function_evaluation_error");
+   d_function_evaluation_error = db->getDouble("function_evaluation_error");
    d_differencing_parameter_strategy =
-      db->getString("d_differencing_parameter_strategy");
+      db->getString("differencing_parameter_strategy");
 
 }
 
@@ -769,46 +769,46 @@ SNES_SAMRAIContext::putToRestart(
    restart_db->putInteger("SOLV_SNES_SAMRAI_CONTEXT_VERSION",
       SOLV_SNES_SAMRAI_CONTEXT_VERSION);
 
-   restart_db->putBool("d_uses_preconditioner", d_uses_preconditioner);
-   restart_db->putBool("d_uses_explicit_jacobian", d_uses_explicit_jacobian);
+   restart_db->putBool("uses_preconditioner", d_uses_preconditioner);
+   restart_db->putBool("uses_explicit_jacobian", d_uses_explicit_jacobian);
 
-   restart_db->putInteger("d_maximum_nonlinear_iterations",
+   restart_db->putInteger("maximum_nonlinear_iterations",
       d_maximum_nonlinear_iterations);
-   restart_db->putInteger("d_maximum_function_evals",
+   restart_db->putInteger("maximum_function_evals",
       d_maximum_function_evals);
 
-   restart_db->putDouble("d_absolute_tolerance", d_absolute_tolerance);
-   restart_db->putDouble("d_relative_tolerance", d_relative_tolerance);
-   restart_db->putDouble("d_step_tolerance", d_step_tolerance);
+   restart_db->putDouble("absolute_tolerance", d_absolute_tolerance);
+   restart_db->putDouble("relative_tolerance", d_relative_tolerance);
+   restart_db->putDouble("step_tolerance", d_step_tolerance);
 
-   restart_db->putString("d_forcing_term_strategy", d_forcing_term_strategy);
+   restart_db->putString("forcing_term_strategy", d_forcing_term_strategy);
    restart_db->putInteger("d_forcing_term_flag", d_forcing_term_flag);
 
-   restart_db->putDouble("d_constant_forcing_term", d_constant_forcing_term);
-   restart_db->putDouble("d_initial_forcing_term", d_initial_forcing_term);
-   restart_db->putDouble("d_maximum_forcing_term", d_maximum_forcing_term);
-   restart_db->putDouble("d_EW_choice2_alpha", d_EW_choice2_alpha);
-   restart_db->putDouble("d_EW_choice2_gamma", d_EW_choice2_gamma);
-   restart_db->putDouble("d_EW_safeguard_exponent", d_EW_safeguard_exponent);
-   restart_db->putDouble("d_EW_safeguard_disable_threshold",
+   restart_db->putDouble("constant_forcing_term", d_constant_forcing_term);
+   restart_db->putDouble("initial_forcing_term", d_initial_forcing_term);
+   restart_db->putDouble("maximum_forcing_term", d_maximum_forcing_term);
+   restart_db->putDouble("EW_choice2_alpha", d_EW_choice2_alpha);
+   restart_db->putDouble("EW_choice2_gamma", d_EW_choice2_gamma);
+   restart_db->putDouble("EW_safeguard_exponent", d_EW_safeguard_exponent);
+   restart_db->putDouble("EW_safeguard_disable_threshold",
       d_EW_safeguard_disable_threshold);
 
-   restart_db->putString("d_linear_solver_type", d_linear_solver_type);
-   restart_db->putDouble("d_linear_solver_absolute_tolerance",
+   restart_db->putString("linear_solver_type", d_linear_solver_type);
+   restart_db->putDouble("linear_solver_absolute_tolerance",
       d_linear_solver_absolute_tolerance);
-   restart_db->putDouble("d_linear_solver_divergence_tolerance",
+   restart_db->putDouble("linear_solver_divergence_tolerance",
       d_linear_solver_divergence_tolerance);
-   restart_db->putInteger("d_maximum_linear_iterations",
+   restart_db->putInteger("maximum_linear_iterations",
       d_maximum_linear_iterations);
 
-   restart_db->putInteger("d_maximum_gmres_krylov_dimension",
+   restart_db->putInteger("maximum_gmres_krylov_dimension",
       d_maximum_gmres_krylov_dimension);
-   restart_db->putString("d_gmres_orthogonalization_algorithm",
+   restart_db->putString("gmres_orthogonalization_algorithm",
       d_gmres_orthogonalization_algorithm);
 
-   restart_db->putDouble("d_function_evaluation_error",
+   restart_db->putDouble("function_evaluation_error",
       d_function_evaluation_error);
-   restart_db->putString("d_differencing_parameter_strategy",
+   restart_db->putString("differencing_parameter_strategy",
       d_differencing_parameter_strategy);
 
 }

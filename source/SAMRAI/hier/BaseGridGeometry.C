@@ -667,14 +667,14 @@ BaseGridGeometry::getFromRestart()
                          << "Restart file version is different than class version.");
    }
 
-   d_number_blocks = db->getInteger("d_number_blocks");
+   d_number_blocks = db->getInteger("num_blocks");
 
    std::string domain_name;
    BoxContainer domain;
    LocalId local_id(0);
 
    for (int b = 0; b < d_number_blocks; b++) {
-      domain_name = "d_physical_domain_" + tbox::Utilities::intToString(b);
+      domain_name = "domain_boxes_" + tbox::Utilities::intToString(b);
       BoxContainer block_domain_boxes;
       if (db->keyExists(domain_name)) {
          block_domain_boxes = db->getDatabaseBoxArray(domain_name);
@@ -696,7 +696,7 @@ BaseGridGeometry::getFromRestart()
 
    IntVector periodic_shift(dim);
    int* temp_shift = &periodic_shift[0];
-   db->getIntegerArray("d_periodic_shift", temp_shift, dim.getValue());
+   db->getIntegerArray("periodic_dimension", temp_shift, dim.getValue());
    initializePeriodicShift(periodic_shift);
 
    d_has_enhanced_connectivity = db->getBool("d_has_enhanced_connectivity");
@@ -795,13 +795,13 @@ BaseGridGeometry::putToRestart(
    restart_db->putInteger("HIER_GRID_GEOMETRY_VERSION",
       HIER_GRID_GEOMETRY_VERSION);
 
-   restart_db->putInteger("d_number_blocks", d_number_blocks);
+   restart_db->putInteger("num_blocks", d_number_blocks);
 
    std::string domain_name;
 
    for (int b = 0; b < d_number_blocks; b++) {
 
-      domain_name = "d_physical_domain_" + tbox::Utilities::intToString(b);
+      domain_name = "domain_boxes_" + tbox::Utilities::intToString(b);
 
       BoxContainer block_phys_domain(getPhysicalDomain(), BlockId(b));
       tbox::Array<tbox::DatabaseBox> temp_box_array = block_phys_domain;
@@ -811,7 +811,9 @@ BaseGridGeometry::putToRestart(
 
    IntVector level0_shift(getPeriodicShift(IntVector::getOne(dim)));
    int* temp_shift = &level0_shift[0];
-   restart_db->putIntegerArray("d_periodic_shift", temp_shift, dim.getValue());
+   restart_db->putIntegerArray("periodic_dimension",
+      temp_shift,
+      dim.getValue());
 
    restart_db->putBool("d_has_enhanced_connectivity",
       d_has_enhanced_connectivity);

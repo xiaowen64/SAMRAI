@@ -683,10 +683,10 @@ MethodOfLinesIntegrator::putToRestart(
    restart_db->putInteger("ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION",
       ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION);
 
-   restart_db->putInteger("d_order", d_order);
-   restart_db->putDoubleArray("d_alpha_1", d_alpha_1);
-   restart_db->putDoubleArray("d_alpha_2", d_alpha_2);
-   restart_db->putDoubleArray("d_beta", d_beta);
+   restart_db->putInteger("order", d_order);
+   restart_db->putDoubleArray("alpha_1", d_alpha_1);
+   restart_db->putDoubleArray("alpha_2", d_alpha_2);
+   restart_db->putDoubleArray("beta", d_beta);
 }
 
 /*
@@ -804,10 +804,10 @@ MethodOfLinesIntegrator::getFromRestart()
                        << "Restart file version different than class version.");
    }
 
-   d_order = restart_db->getInteger("d_order");
-   d_alpha_1 = restart_db->getDoubleArray("d_alpha_1");
-   d_alpha_2 = restart_db->getDoubleArray("d_alpha_2");
-   d_beta = restart_db->getDoubleArray("d_beta");
+   d_order = restart_db->getInteger("order");
+   d_alpha_1 = restart_db->getDoubleArray("alpha_1");
+   d_alpha_2 = restart_db->getDoubleArray("alpha_2");
+   d_beta = restart_db->getDoubleArray("beta");
 
    if (d_alpha_1.getSize() != d_order) {
       TBOX_ERROR(

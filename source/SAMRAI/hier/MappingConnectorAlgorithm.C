@@ -34,6 +34,8 @@ boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_receive_and_u
 boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_MPI_wait;
 boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_misc;
 
+char MappingConnectorAlgorithm::s_print_steps = '\0';
+
 const std::string MappingConnectorAlgorithm::s_dbgbord;
 
 int MappingConnectorAlgorithm::s_operation_mpi_tag = 0;
@@ -63,6 +65,7 @@ MappingConnectorAlgorithm::MappingConnectorAlgorithm():
    d_sanity_check_inputs(false),
    d_sanity_check_outputs(false)
 {
+   getFromInput();
 }
 
 /*
@@ -72,6 +75,28 @@ MappingConnectorAlgorithm::MappingConnectorAlgorithm():
 
 MappingConnectorAlgorithm::~MappingConnectorAlgorithm()
 {
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+MappingConnectorAlgorithm::getFromInput()
+{
+   if (s_print_steps == '\0') {
+      s_print_steps = 'n';
+      if (tbox::InputManager::inputDatabaseExists()) {
+         boost::shared_ptr<tbox::Database> idb(
+            tbox::InputManager::getInputDatabase());
+         if (idb->isDatabase("MappingConnectorAlgorithm")) {
+            boost::shared_ptr<tbox::Database> ocu_db(
+               idb->getDatabase("MappingConnectorAlgorithm"));
+            s_print_steps = ocu_db->getCharWithDefault("print_modify_steps",
+                  s_print_steps);
+         }
+      }
+   }
 }
 
 /*
@@ -668,7 +693,8 @@ MappingConnectorAlgorithm::privateModify(
       incoming_ranks,
       outgoing_ranks,
       t_modify_MPI_wait,
-      s_operation_mpi_tag);
+      s_operation_mpi_tag,
+      s_print_steps == 'y');
 
    t_modify_setup_comm->stop();
 
@@ -737,7 +763,8 @@ MappingConnectorAlgorithm::privateModify(
       incoming_ranks,
       all_comms,
       comm_stage,
-      t_modify_receive_and_unpack);
+      t_modify_receive_and_unpack,
+      s_print_steps == 'y');
 
    t_modify_misc->start();
 
@@ -1280,7 +1307,8 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
                referenced_new_nabrs,
                referenced_anchor_nabrs,
                outgoing_comm,
-               dim);
+               dim,
+               s_print_steps == 'y');
 
             TBOX_ASSERT(owners_sent_to.find(curr_owner) == owners_sent_to.end());
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1652,26 +1680,6 @@ MappingConnectorAlgorithm::initializeCallback()
    if (tbox::SAMRAI_MPI::usingMPI()) {
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
       s_class_mpi.dupCommunicator(mpi);
-   }
-
-   /*
-    * - gets timers from the TimerManager.
-    * - sets up their deallocation.
-    * - sets up debugging flags.
-    */
-
-   if (s_print_steps == '\0') {
-      if (tbox::InputManager::inputDatabaseExists()) {
-         s_print_steps = 'n';
-         boost::shared_ptr<tbox::Database> idb(
-            tbox::InputManager::getInputDatabase());
-         if (idb->isDatabase("MappingConnectorAlgorithm")) {
-            boost::shared_ptr<tbox::Database> ocu_db(
-               idb->getDatabase("MappingConnectorAlgorithm"));
-            s_print_steps = ocu_db->getCharWithDefault("print_modify_steps",
-                  s_print_steps);
-         }
-      }
    }
 
    t_modify = tbox::TimerManager::getManager()->

@@ -119,6 +119,12 @@ public:
     * storage.
     */
    ~CoarsenSchedule();
+ 
+   /*!
+    * @brief Read static data from input database.
+    */
+   void
+   getFromInput();
 
    /*!
     * @brief Reset this coarsen schedule to perform data transfers asssociated
@@ -388,6 +394,12 @@ private:
     * @brief Shared debug checking flag.
     */
    static bool s_extra_debug;
+ 
+   /*!
+    * @brief Flag indicating if any RefineSchedule has read the input database
+    * for static data.
+    */
+   static bool s_read_static_input;
 
    /*!
     * @brief Structures that store coarsen data items.

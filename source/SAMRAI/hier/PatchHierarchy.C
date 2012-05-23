@@ -707,19 +707,19 @@ PatchHierarchy::putToRestart(
    /*
     * Write hierarchy parameters.
     */
-   restart_db->putInteger("d_max_levels", d_max_levels);
-   restart_db->putBool("d_allow_patches_smaller_than_ghostwidth",
+   restart_db->putInteger("max_levels", d_max_levels);
+   restart_db->putBool("allow_patches_smaller_than_ghostwidth",
       d_allow_patches_smaller_than_ghostwidth);
-   restart_db->putBool("d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps",
+   restart_db->putBool("allow_patches_smaller_than_minimum_size_to_prevent_overlaps",
       d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps);
    if (d_max_levels > 1) {
-      restart_db->putIntegerArray("d_proper_nesting_buffer",
+      restart_db->putIntegerArray("proper_nesting_buffer",
          &d_proper_nesting_buffer[0],
          static_cast<int>(d_proper_nesting_buffer.size()));
    }
 
    boost::shared_ptr<tbox::Database> ratio_to_coarser_db(
-      restart_db->putDatabase("d_ratio_to_coarser"));
+      restart_db->putDatabase("ratio_to_coarser"));
    for (unsigned int ln = 0; ln < d_ratio_to_coarser.size(); ln++) {
       const int* tmp_array = &d_ratio_to_coarser[ln][0];
       ratio_to_coarser_db->putIntegerArray(level_names[ln], tmp_array,
@@ -727,7 +727,7 @@ PatchHierarchy::putToRestart(
    }
 
    boost::shared_ptr<tbox::Database> largest_patch_db(
-      restart_db->putDatabase("d_largest_patch_size"));
+      restart_db->putDatabase("largest_patch_size"));
    for (unsigned int ln = 0; ln < d_largest_patch_size.size(); ln++) {
       const int* tmp_array = &d_largest_patch_size[ln][0];
       largest_patch_db->putIntegerArray(level_names[ln], tmp_array,
@@ -735,7 +735,7 @@ PatchHierarchy::putToRestart(
    }
 
    boost::shared_ptr<tbox::Database> smallest_patch_db(
-      restart_db->putDatabase("d_smallest_patch_size"));
+      restart_db->putDatabase("smallest_patch_size"));
    for (unsigned int ln = 0; ln < d_smallest_patch_size.size(); ln++) {
       const int* tmp_array = &d_smallest_patch_size[ln][0];
       smallest_patch_db->putIntegerArray(level_names[ln], tmp_array,
@@ -838,25 +838,25 @@ PatchHierarchy::getFromRestart(
     */
    if (d_max_levels > 0) {
       d_max_levels = tbox::MathUtilities<int>::Min(
-            d_max_levels, restart_db->getInteger("d_max_levels"));
+            d_max_levels, restart_db->getInteger("max_levels"));
    } else {
-      d_max_levels = restart_db->getInteger("d_max_levels");
+      d_max_levels = restart_db->getInteger("max_levels");
    }
 
    d_allow_patches_smaller_than_ghostwidth = restart_db->getBool(
-      "d_allow_patches_smaller_than_ghostwidth");
+      "allow_patches_smaller_than_ghostwidth");
    d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps =
       restart_db->getBool(
-         "d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps");
+         "allow_patches_smaller_than_minimum_size_to_prevent_overlaps");
    d_proper_nesting_buffer.resize(d_max_levels - 1, 0);
    if (d_max_levels > 1) {
-      restart_db->getIntegerArray("d_proper_nesting_buffer",
+      restart_db->getIntegerArray("proper_nesting_buffer",
          &d_proper_nesting_buffer[0],
          d_max_levels - 1);
    }
 
    boost::shared_ptr<tbox::Database> ratio_to_coarser_db(
-      restart_db->getDatabase("d_ratio_to_coarser"));
+      restart_db->getDatabase("ratio_to_coarser"));
    for (unsigned int ln = 0; ln < d_ratio_to_coarser.size(); ln++) {
       int* tmp_array = &d_ratio_to_coarser[ln][0];
       ratio_to_coarser_db->getIntegerArray(level_names[ln], tmp_array,
@@ -864,7 +864,7 @@ PatchHierarchy::getFromRestart(
    }
 
    boost::shared_ptr<tbox::Database> largest_patch_db(
-      restart_db->getDatabase("d_largest_patch_size"));
+      restart_db->getDatabase("largest_patch_size"));
    for (unsigned int ln = 0; ln < d_largest_patch_size.size(); ln++) {
       int* tmp_array = &d_largest_patch_size[ln][0];
       largest_patch_db->getIntegerArray(level_names[ln], tmp_array,
@@ -872,7 +872,7 @@ PatchHierarchy::getFromRestart(
    }
 
    boost::shared_ptr<tbox::Database> smallest_patch_db(
-      restart_db->getDatabase("d_smallest_patch_size"));
+      restart_db->getDatabase("smallest_patch_size"));
    for (unsigned int ln = 0; ln < d_smallest_patch_size.size(); ln++) {
       int* tmp_array = &d_smallest_patch_size[ln][0];
       smallest_patch_db->getIntegerArray(level_names[ln], tmp_array,

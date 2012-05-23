@@ -47,6 +47,8 @@ boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_share;
 boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_receive_and_unpack;
 boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_MPI_wait;
 
+char OverlapConnectorAlgorithm::s_print_steps = 'y';
+
 int OverlapConnectorAlgorithm::s_operation_mpi_tag = 0;
 /*
  * Do we even need to use different tags each time we bridge???
@@ -88,6 +90,7 @@ OverlapConnectorAlgorithm::OverlapConnectorAlgorithm():
       }
    }
 
+   getFromInput();
 }
 
 /*
@@ -97,6 +100,28 @@ OverlapConnectorAlgorithm::OverlapConnectorAlgorithm():
 
 OverlapConnectorAlgorithm::~OverlapConnectorAlgorithm()
 {
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+OverlapConnectorAlgorithm::getFromInput()
+{
+   if (s_print_steps == '\0') {
+      if (tbox::InputManager::inputDatabaseExists()) {
+         s_print_steps = 'n';
+         boost::shared_ptr<tbox::Database> idb(
+            tbox::InputManager::getInputDatabase());
+         if (idb->isDatabase("OverlapConnectorAlgorithm")) {
+            boost::shared_ptr<tbox::Database> ocu_db(
+               idb->getDatabase("OverlapConnectorAlgorithm"));
+            s_print_steps = ocu_db->getCharWithDefault("print_bridge_steps",
+               s_print_steps);
+         }
+      }
+   }
 }
 
 /*
@@ -857,7 +882,8 @@ OverlapConnectorAlgorithm::privateBridge(
       incoming_ranks,
       outgoing_ranks,
       t_bridge_MPI_wait,
-      s_operation_mpi_tag);
+      s_operation_mpi_tag,
+      s_print_steps == 'y');
 
    t_bridge_setup_comm->stop();
    t_bridge_share->stop();
@@ -898,7 +924,8 @@ OverlapConnectorAlgorithm::privateBridge(
       incoming_ranks,
       all_comms,
       comm_stage,
-      t_bridge_receive_and_unpack);
+      t_bridge_receive_and_unpack,
+      s_print_steps == 'y');
 
    t_bridge_share->stop();
 
@@ -1144,7 +1171,8 @@ OverlapConnectorAlgorithm::privateBridge(
       incoming_ranks,
       outgoing_ranks,
       t_bridge_MPI_wait,
-      s_operation_mpi_tag);
+      s_operation_mpi_tag,
+      s_print_steps == 'y');
 
    t_bridge_setup_comm->stop();
    t_bridge_share->stop();
@@ -1185,7 +1213,8 @@ OverlapConnectorAlgorithm::privateBridge(
       incoming_ranks,
       all_comms,
       comm_stage,
-      t_bridge_receive_and_unpack);
+      t_bridge_receive_and_unpack,
+      s_print_steps == 'y');
 
    t_bridge_share->stop();
 
@@ -1561,7 +1590,8 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
                referenced_east_nabrs,
                referenced_west_nabrs,
                outgoing_comm,
-               dim);
+               dim,
+               s_print_steps == 'y');
 
             TBOX_ASSERT(owners_sent_to.find(curr_owner) == owners_sent_to.end());
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -2206,21 +2236,6 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
 void
 OverlapConnectorAlgorithm::initializeCallback()
 {
-
-   if (s_print_steps == '\0') {
-      if (tbox::InputManager::inputDatabaseExists()) {
-         s_print_steps = 'n';
-         boost::shared_ptr<tbox::Database> idb(
-            tbox::InputManager::getInputDatabase());
-         if (idb->isDatabase("OverlapConnectorAlgorithm")) {
-            boost::shared_ptr<tbox::Database> ocu_db(
-               idb->getDatabase("OverlapConnectorAlgorithm"));
-            s_print_steps = ocu_db->getCharWithDefault("print_bridge_steps",
-                  s_print_steps);
-         }
-      }
-   }
-
    t_find_overlaps_rbbt = tbox::TimerManager::getManager()->
       getTimer("hier::OverlapConnectorAlgorithm::findOverlaps_rbbt()");
    t_bridge = tbox::TimerManager::getManager()->

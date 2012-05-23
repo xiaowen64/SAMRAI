@@ -46,6 +46,12 @@ public:
    virtual ~OverlapConnectorAlgorithm();
 
    /*!
+    * @brief Read extra debugging flag from input database.
+    */
+   void
+   getFromInput();
+
+   /*!
     * @brief Discover and add overlaps from base to head for an
     * overlap Connector.
     *
@@ -662,6 +668,9 @@ private:
     */
    static void
    finalizeCallback();
+
+   // Extra checks independent of optimization/debug.
+   static char s_print_steps;
 
    /*!
     * @brief Private communicator object shared by all objects in class,

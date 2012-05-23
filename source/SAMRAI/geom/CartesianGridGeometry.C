@@ -580,15 +580,17 @@ CartesianGridGeometry::putToRestart(
    restart_db->putInteger("GEOM_CARTESIAN_GRID_GEOMETRY_VERSION",
       GEOM_CARTESIAN_GRID_GEOMETRY_VERSION);
    tbox::Array<tbox::DatabaseBox> temp_box_array = getPhysicalDomain();
-   restart_db->putDatabaseBoxArray("d_physical_domain", temp_box_array);
+   restart_db->putDatabaseBoxArray("domain_boxes", temp_box_array);
 
-   restart_db->putDoubleArray("d_x_lo", d_x_lo, dim.getValue());
-   restart_db->putDoubleArray("d_x_up", d_x_up, dim.getValue());
+   restart_db->putDoubleArray("x_lo", d_x_lo, dim.getValue());
+   restart_db->putDoubleArray("x_up", d_x_up, dim.getValue());
 
    hier::IntVector level0_shift(
       getPeriodicShift(hier::IntVector::getOne(dim)));
    int* temp_shift = &level0_shift[0];
-   restart_db->putIntegerArray("d_periodic_shift", temp_shift, dim.getValue());
+   restart_db->putIntegerArray("periodic_dimension",
+      temp_shift,
+      dim.getValue());
 
 }
 
@@ -707,11 +709,11 @@ CartesianGridGeometry::getFromRestart()
          << "Restart file version is different than class version" << std::endl);
    }
    hier::BoxContainer restart_domain(
-      db->getDatabaseBoxArray("d_physical_domain"));
+      db->getDatabaseBoxArray("domain_boxes"));
    double x_lo[SAMRAI::MAX_DIM_VAL],
           x_up[SAMRAI::MAX_DIM_VAL];
-   db->getDoubleArray("d_x_lo", x_lo, dim.getValue());
-   db->getDoubleArray("d_x_up", x_up, dim.getValue());
+   db->getDoubleArray("x_lo", x_lo, dim.getValue());
+   db->getDoubleArray("x_up", x_up, dim.getValue());
 
    hier::BoxContainer domain;
    hier::LocalId local_id(0);
@@ -725,7 +727,7 @@ CartesianGridGeometry::getFromRestart()
 
    hier::IntVector periodic_shift(dim);
    int* temp_shift = &periodic_shift[0];
-   db->getIntegerArray("d_periodic_shift", temp_shift, dim.getValue());
+   db->getIntegerArray("periodic_dimension", temp_shift, dim.getValue());
    initializePeriodicShift(periodic_shift);
 
 }

@@ -193,6 +193,12 @@ public:
    ~RefineSchedule();
 
    /*!
+    * @brief Read static data from input database.
+    */
+   void
+   getFromInput();
+
+   /*!
     * @brief Reset this refine schedule to perform data transfers
     * asssociated with refine class items in function argument.
     *
@@ -1223,6 +1229,12 @@ private:
     * @brief Flag that turns on barrier calls for use in performance analysis.
     */
    static bool s_barrier_and_time;
+
+   /*!
+    * @brief Flag indicating if any RefineSchedule has read the input database
+    * for static data.
+    */
+   static bool s_read_static_input;
 
    //@{
    /*!

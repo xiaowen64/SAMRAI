@@ -2619,10 +2619,10 @@ HyperbolicLevelIntegrator::putToRestart(
    restart_db->putInteger("ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION",
       ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION);
 
-   restart_db->putDouble("d_cfl", d_cfl);
-   restart_db->putDouble("d_cfl_init", d_cfl_init);
-   restart_db->putBool("d_lag_dt_computation", d_lag_dt_computation);
-   restart_db->putBool("d_use_ghosts_for_dt", d_use_ghosts_for_dt);
+   restart_db->putDouble("cfl", d_cfl);
+   restart_db->putDouble("cfl_init", d_cfl_init);
+   restart_db->putBool("lag_dt_computation", d_lag_dt_computation);
+   restart_db->putBool("use_ghosts_to_compute_dt", d_use_ghosts_for_dt);
 }
 
 /*
@@ -2733,10 +2733,10 @@ HyperbolicLevelIntegrator::getFromRestart()
                                << "than class version." << std::endl);
    }
 
-   d_cfl = db->getDouble("d_cfl");
-   d_cfl_init = db->getDouble("d_cfl_init");
-   d_lag_dt_computation = db->getBool("d_lag_dt_computation");
-   d_use_ghosts_for_dt = db->getBool("d_use_ghosts_for_dt");
+   d_cfl = db->getDouble("cfl");
+   d_cfl_init = db->getDouble("cfl_init");
+   d_lag_dt_computation = db->getBool("lag_dt_computation");
+   d_use_ghosts_for_dt = db->getBool("use_ghosts_to_compute_dt");
 }
 
 /*
