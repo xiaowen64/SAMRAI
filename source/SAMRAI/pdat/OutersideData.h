@@ -46,7 +46,7 @@ namespace pdat {
  * memory allocation is in column-major ordering (e.g., Fortran style) so that
  * the leftmost index runs fastest in memory.  For example, a three-dimensional
  * outerside data object created over a CELL-centered AMR index space
- * [l0:u0,l1:u1,l2:u2] allocates six data arrays dimensioned as follows:
+ * [l0:u0,l1:u1,l2:u2] allocates six data arrays sized as follows:
  * \verbatim
  *
  * face normal 0:

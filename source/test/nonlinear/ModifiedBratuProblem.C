@@ -2879,7 +2879,7 @@ void ModifiedBratuProblem::correctLevelFlux(
          boost::detail::dynamic_cast_tag());
 
       /*
-       * For each dimension, for each side:  compute the index space that
+       * For each direction, for each side:  compute the index space that
        * describes the part of the patch that lies on the outer edge of
        * the refinement level.  Then, scale the fluxes along that edge
        * to account for the different grid spacing when CONSTANT_REFINE
@@ -2903,7 +2903,7 @@ void ModifiedBratuProblem::correctLevelFlux(
                }   // cell loop
             }   // box loop
          }   // side loop
-      }   // dimension loop
+      }   // direction loop
    }   // patch loop
 }
 
@@ -2941,7 +2941,7 @@ void ModifiedBratuProblem::correctPatchFlux(
             } // cell loop
          } // box loop
       } // side loop
-   } // dimension loop
+   } // direction loop
 }
 
 #endif

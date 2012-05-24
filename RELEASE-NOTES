@@ -90,6 +90,8 @@ descriptions of items in the following list are provided below.
 
 (6) The GridGeometry class hierarchy has been changed.
 
+(7) Meaning of "dimension" clarified.
+
 *****************************************************************************
 
 -----------------------------------------------------------------------------
@@ -195,6 +197,16 @@ descriptions of items in the following list are provided below.
     proper operators for that grid geometry context.  Class
     geom::CartesianGridGeometry overrides the method to add the Cartesian
     operators.
+
+(7) Meaning of "dimension" clarified.
+
+    We had been using "dimension" to mean three things: (1) the number
+    of independent variable required to specify a point in space
+    (2-dimensional, 3-dimensional, etc.); (2) the coordinate direction;
+    and (3) the size of a box.  Dimension now refers to the first definition.
+    The other two are now explicitly called direction and size.  The source
+    code documentation has been changed to reflect this.  Box::longestDimension()
+    has been renamed Box::longestDirection().
 
 =============================================================================
 =============================================================================

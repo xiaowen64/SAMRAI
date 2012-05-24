@@ -611,7 +611,7 @@ public:
     * @brief Compute boundary boxes for patch
     *
     * Decompose patch boundary region into pieces depending on spatial
-    * dimensions. Boxes are extended along the boundary to the edge
+    * directions. Boxes are extended along the boundary to the edge
     * of the ghost mapped_box_level if necessary.
     *
     * @param[out]    patch_boundaries output boundaries
@@ -971,7 +971,7 @@ private:
     * @return For every singularity point the block touches, the BoxContainer will
     * contain a single-cell box that lies just outside the block domain,
     * touching the block only at the singularity point.  For line singularities,
-    * the BoxContainer will contain boxes of width 1 in all dimensions except one,
+    * the BoxContainer will contain boxes of width 1 in all directions except one,
     * lying outside the block's coarse-level domain and touching the domain
     * only along the line of singularity.
     *

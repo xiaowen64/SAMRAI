@@ -116,9 +116,9 @@ BoundaryBoxUtils::stretchBoxToGhostWidth(
    box = d_bbox.getBox();
    for (int d = 0; d < dim.getValue(); ++d) {
       /*
-       * If gcw along dimension d is > 1, stretch it out to that width.
-       * If gcw a long dimension d is 0, shrink the box down to nothing
-       * in that dimension.
+       * If gcw along direction d is > 1, stretch it out to that width.
+       * If gcw a long direction d is 0, shrink the box down to nothing
+       * in that direction.
        */
       if (d_outward(d) == -1) {
          if (ghost_cell_width(d) > 1) box.growLower(d, ghost_cell_width(d) - 1);

@@ -128,7 +128,7 @@ public:
    void
    setGhostDataId(
       int ghost_data_id,
-      hier::IntVector extensions_fillable // Default v2.x.x = hier::IntVector::getZero(tbox::Dimension(DIM)) );
+      hier::IntVector extensions_fillable // Default v2.x.x = zero );
       );
 
    /*!

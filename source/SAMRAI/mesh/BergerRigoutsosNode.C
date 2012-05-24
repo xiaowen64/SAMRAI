@@ -1890,7 +1890,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
 
    if (d_box_acceptance == undetermined) {
       /*
-       * Sort the bounding box dimensions from largest to smallest cut
+       * Sort the bounding box directions from largest to smallest cut
        * margin.  If there are multiple cuttable directions, we will
        * favor the direction with the greatest cut_margin.
        */
@@ -1958,7 +1958,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
             continue;  // This direction is too small to cut.
          }
          if (findZeroCutSwath(cut_lo, cut_hi, cut_dir)) {
-            // Split bound box at cut_pt; cut_dir is splitting dimension.
+            // Split bound box at cut_pt; cut_dir is splitting direction.
             TBOX_ASSERT(cut_hi - cut_lo >= 0);
             lft_hi(cut_dir) = cut_lo - 1;
             rht_lo(cut_dir) = cut_hi + 1;
@@ -2028,7 +2028,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
          }
          TBOX_ASSERT( cut_dir >= 0 && cut_dir < d_common->d_dim.getValue() );
 
-         // Split bound box at cut_pt; cut_dir is splitting dimension.
+         // Split bound box at cut_pt; cut_dir is splitting direction.
          lft_hi(cut_dir) = cut_pt - 1;
          rht_lo(cut_dir) = cut_pt;
          if (d_common->log_node_history) {

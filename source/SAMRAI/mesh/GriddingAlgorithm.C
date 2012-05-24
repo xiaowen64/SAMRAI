@@ -2017,7 +2017,7 @@ GriddingAlgorithm::checkBoundaryProximityViolation(
                TBOX_WARNING("GriddingAlgorithm::makeFinerLevel:\n"
                   << "User-specified box (refined) " << *bi
                   << " violates boundary proximity.\n"
-                  << "In dimension " << d << ", it is "
+                  << "In direction " << d << ", it is "
                   << extend_ghosts(d) - leftover_size(d)
                   << " cells from a physical domain boundary.\n"
                   << "All boxes must be at least " << extend_ghosts
@@ -4339,7 +4339,7 @@ GriddingAlgorithm::warnIfDomainTooSmallInPeriodicDir() const
                   << domain_bounding_box_size << " is smaller\n"
                   << "than the smallest patch size "
                   << smallest_patch_size << " on level "
-                  << ln << " in dimension " << d << "\n");
+                  << ln << " in direction " << d << "\n");
                break;
             }
          }

@@ -531,7 +531,7 @@ Connector::finalizeContext()
          baseRefinementRatio <= headRefinementRatio)) {
       TBOX_ERROR("Connector::finalizeContext():\n"
          << "Refinement ratio between base and head box_levels\n"
-         << "cannot be mixed (bigger in some dimension and\n"
+         << "cannot be mixed (bigger in some direction and\n"
          << "smaller in others).\n"
          << "Input base ratio = " << baseRefinementRatio
          << "\n"

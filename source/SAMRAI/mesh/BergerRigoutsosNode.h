@@ -1057,7 +1057,7 @@ public:
    BoxAcceptance d_box_acceptance;
 
    /*!
-    * @brief Histogram for all dimensions of box d_box.
+    * @brief Histogram for all directions of box d_box.
     *
     * If local process is d_owner, this is initially the
     * local histogram, then later, the reduced histogram.

@@ -53,7 +53,7 @@ namespace mesh {
  *   Whether to sort the output.  This makes the normally
  *   non-deterministic ordering deterministic and the results repeatable.
  * - bool @b max_box_size:
- *   The maximum cluster dimension allowed.  This parameter is not
+ *   The maximum cluster size allowed.  This parameter is not
  *   critical to clustering but limiting the cluster size may improve
  *   performance of load balancing algorithms (due to the excessive work
  *   required by the owner of huge clusters).
@@ -217,7 +217,7 @@ private:
    //! @brief Max distance from center for Laplace cut.
    double d_max_lap_cut_from_center;
 
-   //! @brief Threshold for avoiding thinner dimensions for Laplace cut.
+   //! @brief Threshold for avoiding thinner directions for Laplace cut.
    double d_laplace_cut_threshold_ar;
 
    //! @brief Whether to log execution node allocation and deallocation.

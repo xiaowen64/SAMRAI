@@ -152,8 +152,8 @@ public:
     * past a limiting box in direction transverse to the boundary
     * normal.
     *
-    * This method affects the only box dimensions parallel to
-    * the boundary.  For methods affecting other box dimensions,
+    * This method affects the only box directions parallel to
+    * the boundary.  For methods affecting other box directions,
     * see stretchBoxToGhostWidth().
     *
     * The boundary type of the BoundaryBox that was given to the

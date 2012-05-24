@@ -48,7 +48,7 @@ namespace mesh {
  *    be described as a single parallelepiped region (i.e., a box). If
  *    no input value is provided, or if the product of these entries
  *    does not equal the number of processors, then the processor
- *    layout computed will be computed from the dimensions of the
+ *    layout computed will be computed from the size of the
  *    domain box and the number of processors in use if necessary.
  *
  *       NOTE: The largest patch size constraint specified in the
@@ -328,9 +328,9 @@ public:
     *                        This value must be >= 0.
     * @param unbalanced_to_attractor
     * @param attractor_to_unbalanced 
-    * @param min_size        Input integer vector of minimum dimensions for
+    * @param min_size        Input integer vector of minimum sizes for
     *                        output boxes. All entries must be > 0.
-    * @param max_size        Input integer vector of maximum dimensions for
+    * @param max_size        Input integer vector of maximum sizes for
     *                        output boxes. All entries must be >= min_size.
     * @param domain_mapped_box_level
     * @param bad_interval    Input integer vector used to create boxes near
@@ -348,8 +348,8 @@ public:
     *                        the domain.  All entries must be >= 0. See
     *                        hier::BoxUtilities documentation for more details.
     * @param cut_factor      Input integer vector used to create boxes with
-    *                        correct dimensions.  The length of each box
-    *                        dimension will be an integer multiple of the
+    *                        correct sizes.  The length of each box
+    *                        direction will be an integer multiple of the
     *                        corresponding cut factor vector entry.  All
     *                        vector entries must be > 0.  See hier::BoxUtilities
     *                        documentation for more details.
@@ -426,13 +426,13 @@ private:
     * @param ratio_to_hierarchy_level_zero  Input integer vector indicating
     *                        ratio between index space of level to load balance
     *                        and hierarchy level 0 (i.e., coarsest hierarchy level).
-    * @param min_size        Input integer vector of minimum dimensions for
+    * @param min_size        Input integer vector of minimum sizes for
     *                        output boxes. All entries must be > 0.
-    * @param max_size        Input integer vector of maximum dimensions for
+    * @param max_size        Input integer vector of maximum sizes for
     *                        output boxes. All entries must be >= min_size.
     * @param cut_factor      Input integer vector used to create boxes with
-    *                        correct dimensions.  The length of each box
-    *                        dimension will be an integer multiple of the
+    *                        correct sizes.  The length of each box
+    *                        direction will be an integer multiple of the
     *                        corresponding cut factor vector entry.  All
     *                        vector entries must be > 0.  See hier::BoxUtilities
     *                        documentation for more details.

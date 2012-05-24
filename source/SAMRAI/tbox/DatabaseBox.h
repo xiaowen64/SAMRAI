@@ -32,9 +32,9 @@ struct DatabaseBox_POD {
 };
 
 /**
- * Class DatabaseBox represents a one, two, or three dimensional box in the
- * AMR index space.  It is defined by lower and upper bounds given by integer
- * arrays.
+ * Class DatabaseBox represents a box of up to MAX_DIM_VAL
+ * dimensions in the AMR index space.  It is defined by lower and
+ * upper bounds given by integer arrays.
  *
  * This box is an auxilliary data structure used by the database routines to
  * manipulate boxes.  This box type removes cyclic dependencies among the
@@ -56,8 +56,7 @@ public:
 
    /**
     * Create a box of the specified dimension describing the index space
-    * between lower and upper.  The dimension argument must be zero, one,
-    * two, or three.
+    * between lower and upper.
     */
    DatabaseBox(
       const Dimension& dim,
@@ -84,8 +83,8 @@ public:
 
    /**
     * Return whether the box is empty.  A box is empty if it has dimension
-    * zero or if any of the upper dimensions is less than its corresponding
-    * lower dimension.
+    * zero or if any part of the upper index is less than its corresponding
+    * part of the lower index.
     */
    bool
    empty() const;

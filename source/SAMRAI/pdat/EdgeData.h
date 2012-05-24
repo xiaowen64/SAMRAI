@@ -44,7 +44,7 @@ namespace pdat {
  * style) so that the leftmost index runs fastest in memory.
  * For example, a three-dimensional edge data object created over a
  * CELL-centered AMR index space [l0:u0,l1:u1,l2:u2] allocates three data
- * arrays dimensioned as follows:
+ * arrays sized as follows:
  * \verbatim
  *
  * axis 0

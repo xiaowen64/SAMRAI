@@ -16,21 +16,15 @@ namespace tbox {
 DatabaseBox::DatabaseBox()
 {
    d_data.d_dimension = 0;
-   d_data.d_lo[0] = d_data.d_hi[0] = 0;
-   d_data.d_lo[1] = d_data.d_hi[1] = 0;
-   d_data.d_lo[2] = d_data.d_hi[2] = 0;
+   for ( int i=0; i<MAX_DIM_VAL; ++i ) {
+      d_data.d_lo[i] = d_data.d_hi[i] = 0;
+   }
 }
 
 DatabaseBox::DatabaseBox(
    const DatabaseBox& box)
 {
-   d_data.d_dimension = box.d_data.d_dimension;
-   d_data.d_lo[0] = box.d_data.d_lo[0];
-   d_data.d_lo[1] = box.d_data.d_lo[1];
-   d_data.d_lo[2] = box.d_data.d_lo[2];
-   d_data.d_hi[0] = box.d_data.d_hi[0];
-   d_data.d_hi[1] = box.d_data.d_hi[1];
-   d_data.d_hi[2] = box.d_data.d_hi[2];
+   d_data = box.d_data;
 }
 
 DatabaseBox::DatabaseBox(
@@ -57,13 +51,7 @@ DatabaseBox&
 DatabaseBox::operator = (
    const DatabaseBox& box)
 {
-   d_data.d_dimension = box.d_data.d_dimension;
-   d_data.d_lo[0] = box.d_data.d_lo[0];
-   d_data.d_lo[1] = box.d_data.d_lo[1];
-   d_data.d_lo[2] = box.d_data.d_lo[2];
-   d_data.d_hi[0] = box.d_data.d_hi[0];
-   d_data.d_hi[1] = box.d_data.d_hi[1];
-   d_data.d_hi[2] = box.d_data.d_hi[2];
+   d_data = box.d_data;
    return *this;
 }
 

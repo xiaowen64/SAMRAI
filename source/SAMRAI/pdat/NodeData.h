@@ -42,7 +42,7 @@ namespace pdat {
  * so that the leftmost index runs fastest in memory.  For example, a
  * three-dimensional node data object created over a CELL-centered
  * AMR index space box [l0:u0,l1:u1,l2:u2] allocates a data array
- * dimensioned as
+ * sized as
  * \verbatim
  *
  *   [ l0 : u0+1 ,

@@ -1636,7 +1636,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
       patch.getBox().getBlockId().getBlockValue(),
       d_dom_local_blocks);
    //
-   // loop over the dimensions, filling in boundary conditions where needed
+   // loop over the directions, filling in boundary conditions where needed
    // note that here we have a check for is this really a physical boundary or is it
    // just a periodic boundary condition, or is it just an internal block boundary
    //
@@ -1693,7 +1693,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
 
       } // end of periodic check
 
-   } // end of dimension loop
+   } // end of direction loop
 
 }
 

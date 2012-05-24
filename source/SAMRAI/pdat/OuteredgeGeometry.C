@@ -395,7 +395,7 @@ OuteredgeGeometry::toOuteredgeBox(
 
          if (d != axis) {    // do not trim in axis direction
 
-            for (int dh = d + 1; dh < dim.getValue(); ++dh) { // trim in higher dimensions
+            for (int dh = d + 1; dh < dim.getValue(); ++dh) { // trim higher directions
 
                if (dh != axis && dh != face_normal) {
                   // do not trim in axis or face_normal direction

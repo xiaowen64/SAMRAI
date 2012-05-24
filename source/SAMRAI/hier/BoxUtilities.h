@@ -63,15 +63,15 @@ namespace hier {
  *
  *    - \b min_size
  *       min_size is a IntVector that specifies the minimum
- *       allowable box length in each dimension.  For example, if
+ *       allowable box length in each direction.  For example, if
  *       min_size = (10,4,15), then the minimum box length in the
- *       x, y, and z dimensions are 10, 4, and 15 respectively.
+ *       x, y, and z directions are 10, 4, and 15 respectively.
  *
  *    - \b max_size
  *       max_size is a IntVector that specifies the maximum
- *       allowable box length in each dimension.  For example, if
+ *       allowable box length in each direction.  For example, if
  *       max_size = (10,40,50), then the maximum box length in the
- *       x, y, and z dimensions are 10, 40, and 50 respectively.
+ *       x, y, and z directions are 10, 40, and 50 respectively.
  *
  *       It should be noted that the max_size constraint has lower
  *       priority than the other constraints.  In instances where
@@ -80,9 +80,9 @@ namespace hier {
  *
  *    - \b cut_factor
  *       cut_factor is a IntVector that constrains the
- *       dimensions of a box to be multiples of the components of the
+ *       size of a box to be multiples of the components of the
  *       cut_factor.  For instance, if cut_factor = (2,4,5), then the
- *       x, y, and z dimensions of a 8 box that satisfies the cut_factor
+ *       x, y, and z directions of a 8 box that satisfies the cut_factor
  *       constraint would be multiples of 2, 4, and 5 respectively.
  *
  *       This constraint is usually enforced with the cut_factor equal
@@ -802,7 +802,7 @@ struct BoxUtilities {
     *    - cuts and bad_cuts must have size equal to dim
     *
     *    - Each array of integers in bad_cuts must have length
-    *      equal to the number of cells for the box in that dimension.
+    *      equal to the number of cells for the box in that direction.
     *
     *    - The cut points for each direction must be strictly increasing
     *      and all satisfy the cut_factor restriction.

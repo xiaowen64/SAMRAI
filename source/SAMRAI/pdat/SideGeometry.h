@@ -48,8 +48,8 @@ public:
 
    /*!
     * @brief Convert an AMR index box space box into an side geometry box.
-    * An side geometry box extends the given AMR index box space box
-    * by one in upper dimension for the side normal coordinate direction.
+    * An side geometry box extends the given AMR index space box
+    * by one at upper end for the side normal coordinate direction.
     */
    static hier::Box
    toSideBox(

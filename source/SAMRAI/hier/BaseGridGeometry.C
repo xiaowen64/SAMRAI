@@ -1421,7 +1421,7 @@ BaseGridGeometry::setPhysicalDomain(
          /*
           * Check if the physical domain is valid for the specified
           * periodic conditions.  If so, compute the shift in each
-          * dimension based on the the number of cells.
+          * direction based on the the number of cells.
           */
          if (checkPeriodicValidity(d_physical_domain)) {
 
@@ -1434,7 +1434,7 @@ BaseGridGeometry::setPhysicalDomain(
          } else {
             TBOX_ERROR("Error in BaseGridGeometry object with name = "
                << d_object_name << ": in initializePeriodicShift():  "
-               << "Domain is not periodic for one (or more) of the dimensions "
+               << "Domain is not periodic for one (or more) of the directions "
                << "specified in the geometry input file!");
          }
       }
@@ -1601,12 +1601,12 @@ BaseGridGeometry::checkPeriodicValidity(
    }
 
    /*
-    * Next, for each dimension, grow another "duplicate" domain
+    * Next, for each direction, grow another "duplicate" domain
     * by 1.  Remove the intersections with the original domain,
     * and loop through the remaining box list, checking if the
     * upper index of the box matches the bounding box max or the
     * lower index of the box matches the bounding box min.  If
-    * not, this dimension is not a valid periodic dimension.
+    * not, this direction is not a valid periodic direction.
     */
    for (i = 0; i < d_dim.getValue(); i++) {
       BoxContainer dup_domain2(domain);

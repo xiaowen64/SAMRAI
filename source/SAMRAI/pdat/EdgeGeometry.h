@@ -49,7 +49,7 @@ public:
    /*!
     * @brief Convert an AMR index box space box into an edge geometry box.
     * An edge geometry box extends the given AMR index box space box
-    * by one in upper dimension for each coordinate direction not equal
+    * by one in upper end for each coordinate direction not equal
     * to the axis direction.
     */
    static hier::Box

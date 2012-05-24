@@ -26,7 +26,7 @@ namespace pdat {
  * vector for node centered variables.  Given a hier::Box in the AMR abstract
  * index space, the index space for a node-centered variable runs from the
  * lower corner of the box to the upper corner of the box plus one in each
- * dimension.  See the node box geometry class for more information about
+ * direction.  See the node box geometry class for more information about
  * the mapping between the AMR index space and the node indices.
  *
  * @see hier::Index
@@ -72,9 +72,9 @@ public:
    /**
     * Construct a node index from a regular index and an hier::IntVector.  The
     * hier::IntVector is binary--an assertion failure will result if it contains
-    * any values other than 0 or 1.  For each dimension, if the hier::IntVector
+    * any values other than 0 or 1.  For each direction, if the hier::IntVector
     * contains a 0, the node index will represent a lower bound in that
-    * dimensional direction, and if 1 will represent an upper bound in that
+    * direction, and if 1 will represent an upper bound in that
     * direction.
     */
    NodeIndex(

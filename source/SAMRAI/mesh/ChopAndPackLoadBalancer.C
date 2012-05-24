@@ -647,7 +647,7 @@ ChopAndPackLoadBalancer::chopUniformSingleBox(
    TBOX_ASSERT_OBJDIM_EQUALITY4(min_size, max_size, cut_factor, bad_interval);
 
    /*
-    * Determine processor layout that corresponds to box dimensions.
+    * Determine processor layout that corresponds to box size.
     */
 
    hier::IntVector processor_distribution(d_dim);
@@ -661,7 +661,7 @@ ChopAndPackLoadBalancer::chopUniformSingleBox(
    }
 
    /*
-    * The ideal box size will be the dimensions of the input box divided
+    * The ideal box size will be the size of the input box divided
     * by the number of processors in each direction.  Compute this
     * ideal size and then adjust as necessary to fit within min/max size
     * constraints.

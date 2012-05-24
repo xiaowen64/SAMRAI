@@ -611,13 +611,13 @@ Box::refine(
 /*
  *************************************************************************
  *
- * Return the dimension of the box that is the longest.
+ * Return the direction of the box that is the longest.
  *
  *************************************************************************
  */
 
 int
-Box::longestDimension() const
+Box::longestDirection() const
 {
    int max = upper(0) - lower(0);
    int dim = 0;
@@ -780,7 +780,7 @@ Box::operator += (
  *************************************************************************
  *
  * Static member function called from coalesceWith().  It attempts to
- * recursively coalesce intervals individual dimensions in index space.
+ * recursively coalesce intervals individual directions in index space.
  * If it is possible to coalesce two intervals (defined by a proper
  * overlap or adjacency relationship), the value true is returned.
  * If this is impossible, false is returned.

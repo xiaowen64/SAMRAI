@@ -99,7 +99,7 @@ namespace appu {
  *
  *    - Register hierarchy variable data fields using
  *      registerPlotQuantity(). The variables registered may be scalar,
- *      vector, or tensor (depth 1, DIM, and DIM*DIM, respectively)
+ *      vector, or tensor (depth 1, dim, and dim*dim, respectively)
  *      which is specified in the argument list.  All variables require a
  *      string identifier and an index into the patch data array on the
  *      AMR hierarchy. Optionally, a start depth index may be supplied
@@ -183,7 +183,7 @@ public:
     * registered.
     *
     * An error results and the program will halt if:
-    *   - the data is not 2D nor 3D, i.e. DIM != 2 and DIM != 3
+    *   - the data is not 2D nor 3D, i.e. dim != 2 and dim != 3
     *   - when assertion checking is active, the object name string is
     *     empty, or the number_procs_per_file is <= 0.
     *
@@ -256,8 +256,8 @@ public:
     * Each plot quantity requires a variable name, which is what VisIt
     * will label the plotted quantity.  The variable type is a string
     * specifying either "SCALAR", "VECTOR", or "TENSOR".  By default, the
-    * dimension of a scalar variable is 1, vector is DIM, and tensor is
-    * DIM*DIM. The integer patch data array index and optional depth
+    * dimension of a scalar variable is 1, vector is dim, and tensor is
+    * dim*dim. The integer patch data array index and optional depth
     * index indicate where the data may be found on patches in the hierarchy.
     *
     * A number of optional parameters may be used to further specify
@@ -311,8 +311,8 @@ public:
     * Each derived variable requires a variable name, which is what VisIt
     * will label the plotted quantity.  The variable type is a string
     * specifying either "SCALAR", "VECTOR", or "TENSOR".  By default, the
-    * dimension of a scalar variable is 1, vector is DIM, and tensor is
-    * DIM*DIM.  The derived writer should implement methods defined in
+    * dimension of a scalar variable is 1, vector is dim, and tensor is
+    * dim*dim.  The derived writer should implement methods defined in
     * the derived data strategy which compute the derived data.
     *
     * Optional parameters may be used to further define characteristics
@@ -394,13 +394,13 @@ public:
     * @brief This method is used to register node coordinates for
     * deformed structured AMR grids (moving grids).
     *
-    * The patch data index must correspond to an DIM dimensional vector
+    * The patch data index must correspond to an dim-dimensional vector
     * that defines the coordinate location ([X,Y] in 2D, [X,Y,Z] in 3D).
     * The data defining the node locations must be node centered.
     *
     * An error results and the program will halt if:
     *   - the patch data array index is invalid.
-    *   - the depth of the patch data index is less than DIM.
+    *   - the depth of the patch data index is less than dim.
     *
     * If the nodal coordinates are not in a NodeData object on the
     * hierarchy, you can use registerDerivedPlotQuantity() with the
@@ -749,8 +749,8 @@ private:
    /*
     * hier::Variable type:
     *   SCALAR - scalar plot variable (depth = 1)
-    *   VECTOR - vector plot variable (depth = DIM)
-    *   TENSOR - tensor plot variable (depth = DIM*DIM)
+    *   VECTOR - vector plot variable (depth = dim)
+    *   TENSOR - tensor plot variable (depth = dim*dim)
     */
    enum variable_type { VISIT_SCALAR = 0,
                         VISIT_VECTOR = 1,
@@ -1043,7 +1043,7 @@ private:
       const int finest_plot_level);
 
    /*
-    * Pack DIM patch data into 1D double precision buffer,
+    * Pack dim patch data into 1D double precision buffer,
     * eliminating ghost data if necessary
     */
    void

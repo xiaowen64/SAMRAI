@@ -128,7 +128,7 @@ EdgeGeometry::toEdgeBox(
  * is fairly straight-forward.  First, we perform a quick-and-dirty
  * intersection to see if the boxes might overlap.  If that intersection
  * is not empty, then we need to do a better job calculating the overlap
- * for each dimension.  Note that the AMR index space boxes must be
+ * for each direction.  Note that the AMR index space boxes must be
  * shifted into the edge centered space before we calculate the proper
  * intersections.
  *

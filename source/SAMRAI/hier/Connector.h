@@ -83,8 +83,8 @@ public:
     * @brief Creates an uninitialized Connector object in the
     * distributed state.
     *
-    * @param The dimension of the head and base BoxLevels this object will
-    * eventually connect.
+    * @param dim The dimension of the head and base BoxLevels that
+    * this object will eventually connect.
     *
     * @see setBase()
     * @see setHead()

@@ -3644,7 +3644,7 @@ TreeLoadBalancer::assertNoMessageForPrivateCommunicator() const
 /*
  *************************************************************************
  * Break off a load from a box by making a single planar cut across
- * the box's longest dimension.
+ * the box's longest direction.
  *
  * Currently assuming uniform load of one unit per cell.
  *
@@ -3956,7 +3956,7 @@ TreeLoadBalancer::breakOffLoad_cubic(
    }
 
    /*
-    * stop_growing: whether dimensions of brk_size is already
+    * stop_growing: whether brk_size is already
     * big engough so that it cannot not be grown without breaking
     * off too much.
     */
@@ -3970,8 +3970,8 @@ TreeLoadBalancer::breakOffLoad_cubic(
        * The do loop gradually increases brk_size to bring brk_load
        * closer to ideal_load_to_break.
        *
-       * Select dimension to increase in size, inc_dim.  Use the
-       * smallest dimension that is still allowed to grow.
+       * Select direction to increase in size, inc_dir.  Use the
+       * smallest direction that is still allowed to grow.
        *
        * Try a new break size that is bigger than the current brk_size
        * by the minimal allowed amount.  If this brings us closer to
@@ -3982,32 +3982,32 @@ TreeLoadBalancer::breakOffLoad_cubic(
        */
       do {
 
-         int inc_dim = -1;
+         int inc_dir = -1;
          for (int d = 0; d < d_dim.getValue(); ++d) {
             if (!stop_growing(d) &&
-                (inc_dim == -1 || brk_size(inc_dim) > brk_size(d))) inc_dim = d;
+                (inc_dir == -1 || brk_size(inc_dir) > brk_size(d))) inc_dir = d;
          }
-         if (inc_dim == -1) break; // No growable dimension.
+         if (inc_dir == -1) break; // No growable direction.
 
-         TBOX_ASSERT(brk_size(inc_dim) < box_dims(inc_dim));
+         TBOX_ASSERT(brk_size(inc_dir) < box_dims(inc_dir));
 
          hier::IntVector new_brk_size(brk_size);
-         new_brk_size(inc_dim) += d_cut_factor(inc_dim);
+         new_brk_size(inc_dir) += d_cut_factor(inc_dir);
          if (d_print_break_steps) {
             tbox::plog << "  " << brk_size << "=>" << brk_load << std::flush;
          }
 
          // Prevent remainder being smaller than d_min_size.
-         if (box_dims(inc_dim) - new_brk_size(inc_dim) < d_min_size(inc_dim)) {
-            new_brk_size(inc_dim) = box_dims(inc_dim);
+         if (box_dims(inc_dir) - new_brk_size(inc_dir) < d_min_size(inc_dir)) {
+            new_brk_size(inc_dir) = box_dims(inc_dir);
             if (d_print_break_steps) {
                tbox::plog << "  " << brk_size << "==>" << brk_load
                           << std::flush;
             }
          }
 
-         if (new_brk_size(inc_dim) == box_dims(inc_dim)) {
-            stop_growing(inc_dim) = 1;
+         if (new_brk_size(inc_dir) == box_dims(inc_dir)) {
+            stop_growing(inc_dir) = 1;
          }
 
          int new_brk_load = new_brk_size.getProduct();
@@ -4041,11 +4041,11 @@ TreeLoadBalancer::breakOffLoad_cubic(
             break;
          } else {
             /*
-             * Even though dimension inc_dim has not reached the box
-             * dimension, stop growing it because any further growth
+             * Even though direction inc_dir has not reached the box
+             * size, stop growing it because any further growth
              * leads to too big a load.
              */
-            stop_growing(inc_dim) = 1;
+            stop_growing(inc_dir) = 1;
          }
 
       } while (true);
@@ -4074,7 +4074,7 @@ TreeLoadBalancer::breakOffLoad_cubic(
        * To minimize the number of boxes remaining after breakoff_box
        * is removed, prefer to place breakoff_box against the upper or
        * lower side of the Box.  First try putting the breakoff_box
-       * along the upper side of dimension d.  If it cuts the box at a
+       * along the upper side of direction d.  If it cuts the box at a
        * bad point, try the lower side.  If it still cuts at a bad
        * points, slide the box toward the upper side until it does not
        * cut at any bad points, being careful not to be so close to
@@ -4129,8 +4129,8 @@ TreeLoadBalancer::breakOffLoad_cubic(
       }
       placement_impossible = true;
       /*
-       * Cannot find place for breakoff_box along dimension d.
-       * No point in looking at higher dimensions.
+       * Cannot find place for breakoff_box along direction d.
+       * No point in looking at higher directions.
        */
       break;
    }

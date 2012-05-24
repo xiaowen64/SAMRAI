@@ -311,7 +311,7 @@ private:
     * @brief Dimension along which the input box triples are
     * partitioned.
     */
-   int d_partition_dim;
+   int d_partition_dir;
 
    /*
     * Timers are static to keep the objects light-weight.

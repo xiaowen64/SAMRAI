@@ -50,7 +50,7 @@ public:
    /*!
     * @brief Convert an AMR index box space box into a node geometry box.
     * A node geometry box is extends the given AMR index box space box
-    * by one in upper dimension for each coordinate direction.
+    * by one at upper end for each coordinate direction.
     */
    static hier::Box
    toNodeBox(

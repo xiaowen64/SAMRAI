@@ -103,7 +103,9 @@ public:
     * For dimension 3, converts the edge index into the index on the lower
     * left (argument edge == 0), the lower right (argument edge == 1),
     * the upper left (argument edge == 2), or the upper right
-    * (argument edge == 3) of thw edge.
+    * (argument edge == 3) of the edge.
+    *
+    * TODO: I find the above comment confusing.
     */
    hier::Index
    toCell(

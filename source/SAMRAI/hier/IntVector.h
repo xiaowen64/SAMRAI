@@ -59,7 +59,7 @@ public:
       const tbox::Array<int>& a);
 
    /**
-    * Construct a n-dimensional integer vector with the value with
+    * Construct a n-dimensional integer vector with
     * values provided by the array.
     *
     */

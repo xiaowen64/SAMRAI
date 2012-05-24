@@ -1203,8 +1203,8 @@ public:
     * @brief Place the boxes in the container into a canonical ordering.
     *
     * The canonical ordering for boxes is defined such that boxes that lie
-    * next to each other in higher dimensions are coalesced together before
-    * boxes that lie next to each other in lower dimensions.  This ordering
+    * next to each other in higher directions are coalesced together before
+    * boxes that lie next to each other in lower directions.  This ordering
     * provides a standard representation that can be used to compare box
     * containers.  The canonical ordering also does not allow any overlap
     * between the boxes in the container.  This routine is potentially
@@ -1893,38 +1893,38 @@ private:
    /*!
     * @brief Break up bursty against solid and adds the pieces to container.
     *
-    * The bursting is done on dimensions 0 through dimension-1, starting
-    * with lowest dimensions first to try to maintain the canonical
+    * The bursting is done on directions 0 through dimension-1, starting
+    * with lowest directions first to try to maintain the canonical
     * representation for the bursted domains.
     *
     * @param[in] bursty
     * @param[in] solid
-    * @param[in] dimension
+    * @param[in] direction
     */
    void
    burstBoxes(
       const Box& bursty,
       const Box& solid,
-      const int dimension);
+      const int direction);
 
    /*!
     * @brief Break up bursty against solid and adds the pieces to container
     * starting at location pointed to by itr.
     *
-    * The bursting is done on dimensions 0 through dimension-1, starting
-    * with lowest dimensions first to try to maintain the canonical
+    * The bursting is done on directions 0 through dimension-1, starting
+    * with lowest directions first to try to maintain the canonical
     * representation for the bursted domains.
     *
     * @param[in] bursty
     * @param[in] solid
-    * @param[in] dimension
+    * @param[in] direction
     * @param[in] itr
     */
    void
    burstBoxes(
       const Box& bursty,
       const Box& solid,
-      const int dimension,
+      const int direction,
       iterator& itr);
 
    /*!

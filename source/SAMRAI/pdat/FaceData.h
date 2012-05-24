@@ -39,12 +39,12 @@ namespace pdat {
  * Face data is stored in DIM arrays, each of which contains the
  * data for the faces normal to a corresponding coordinate direction.
  * In addition, the array indices are permuted so that the fastest array
- * dimension is the same as the normal direction of the face.
+ * direction is the same as the normal direction of the face.
  * Memory allocation is in column-major ordering (e.g., Fortran
  * style) so that the leftmost index runs fastest in memory.
  * For example, a three-dimensional face data object created over a
  * CELL-centered AMR index space [l0:u0,l1:u1,l2:u2] allocates three data
- * arrays dimensioned as follows:
+ * arrays sized as follows:
  * \verbatim
  *
  * face normal 0

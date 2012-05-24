@@ -41,7 +41,7 @@ namespace pdat {
  * Memory allocation is in column-major ordering (e.g., Fortran style)
  * so that the leftmost index runs fastest in memory.  For example, a
  * three-dimensional cell data object defined over a box
- * [l0:u0,l1:u1,l2:u2] holds a data array dimensioned as
+ * [l0:u0,l1:u1,l2:u2] holds a data array sized as
  * \verbatim
  *
  *   [ l0 : u0 ,

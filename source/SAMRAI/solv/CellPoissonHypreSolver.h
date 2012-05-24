@@ -459,7 +459,7 @@ private:
    //@{
 
    /*!
-    * @name Dimension-independent functions to organize Fortran interface.
+    * @name Functions to organize Fortran interface.
     */
 
    //! @brief Compute diagonal entries of the matrix when C is variable.

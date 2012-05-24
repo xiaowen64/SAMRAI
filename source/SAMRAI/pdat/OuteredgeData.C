@@ -829,7 +829,7 @@ OuteredgeData<TYPE>::getSizeOfData(
  *************************************************************************
  *
  * Compute the box of valid edge indices given values of
- * dimension and side designating the set of data indices.
+ * direction and side designating the set of data indices.
  *
  *************************************************************************
  */

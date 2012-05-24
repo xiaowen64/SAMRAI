@@ -953,7 +953,7 @@ StandardTagAndInitialize::checkCoarsenRatios(
    if (d_use_richardson_extrapolation) {
 
       /*
-       * Compute GCD on first dimension of level 1
+       * Compute GCD on first coordinate direction of level 1
        */
       int error_coarsen_ratio = 0;
       int gcd_level1 = ratio_to_coarser[1](0);
@@ -968,7 +968,7 @@ StandardTagAndInitialize::checkCoarsenRatios(
 
       /*
        * Iterate through levels and check the coarsen ratios to make sure the
-       * error coarsen ratios computed in every dimension on every
+       * error coarsen ratios computed in every coordinate direction on every
        * level are between the supported 2 or 3, and that the error coarsen
        * ratios are constant over the hierarchy.
        */
@@ -983,7 +983,7 @@ StandardTagAndInitialize::checkCoarsenRatios(
                                   << "Unable to perform Richardson extrapolation because\n"
                                   << "the error coarsen ratio computed from the\n"
                                   << "ratio_to_coarser entries is not constant across all\n"
-                                  << "levels, in all dimensions, of the hierarchy. In\n"
+                                  << "levels, in all coordinate directions, of the hierarchy. In\n"
                                   << "order to use Richardson extrapolation, the minimum\n"
                                   << "divisor (> 1) of all the ratio_to_coarser entries must\n"
                                   << "be 2 -or- 3:\n"

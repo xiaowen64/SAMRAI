@@ -346,20 +346,20 @@ BoxContainer::insert (
  * coalesces regions together where possible.
  *
  * The canonical ordering for boxes is defined such that boxes which
- * lie next to each other in higher dimensions are coalesced together
- * before boxes which lie next to each other in lower dimensions.
+ * lie next to each other in higher directions are coalesced together
+ * before boxes which lie next to each other in lower directions.
  * Thus, we try to coalesce two boxes together on the higher
- * dimensions first.
+ * directions first.
  *
  * Assuming that two boxes a and b of dimension DIM are in canonical
- * order for dimensions d+1, ..., D, we can coalesce them together on
- * dimension d if:
+ * order for directions d+1, ..., D, we can coalesce them together on
+ * direction d if:
  *
  *      (1) the lower and upper bounds for a and b agree for all
- *          dimensions greater than d
+ *          directions greater than d
  *      (2) boxes a and b overlap or are next to each other in
- *          dimension d
- *      (3) boxes a and b overlap for all dimensions less than d
+ *          direction d
+ *      (3) boxes a and b overlap for all directions less than d
  *
  * If these conditions hold, then we break up the two boxes and put
  * them into the container of non-canonical boxes.
@@ -386,7 +386,7 @@ BoxContainer::simplify()
       d_tree.reset();
    }
 
-   // Start coalescing on the highest dimension of the containers and work down
+   // Start coalescing on the highest direction of the containers and work down
    // While there are non-canonical boxes, pick somebody out of the container.
 
    if (!isEmpty()) {
@@ -1208,8 +1208,8 @@ BoxContainer::operator tbox::Array<tbox::DatabaseBox>() const
  *************************************************************************
  *
  * Break up box bursty against box solid and adds the pieces to
- * container.  The bursting is done on dimensions 0 through dimension-1,
- * starting with lowest dimensions first to try to maintain the
+ * container.  The bursting is done on directions 0 through dimension-1,
+ * starting with lowest directions first to try to maintain the
  * canonical representation for the bursted domains.
  *
  *************************************************************************
@@ -1231,7 +1231,7 @@ BoxContainer::burstBoxes(
    const Index& solidh = solid.upper();
    const BlockId& block_id = bursty.getBlockId();
 
-   // Break bursty region against solid region along low dimensions first
+   // Break bursty region against solid region along low directions first
 
    for (int d = 0; d < dimension; d++) {
       if (bursth(d) > solidh(d)) {
@@ -1254,8 +1254,8 @@ BoxContainer::burstBoxes(
  *
  * Break up box bursty against box solid and adds the pieces to
  * container starting at the location pointed to by the supplied
- * iterator.  The bursting is done on dimensions 0 through dimension-1,
- * starting with lowest dimensions first to try to maintain the
+ * iterator.  The bursting is done on directions 0 through dimension-1,
+ * starting with lowest directions first to try to maintain the
  * canonical representation for the bursted domains.
  *
  *************************************************************************
@@ -1264,11 +1264,11 @@ void
 BoxContainer::burstBoxes(
    const Box& bursty,
    const Box& solid,
-   const int dimension,
+   const int direction,
    iterator& insertion_pt)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(bursty, solid);
-   TBOX_ASSERT(dimension <= bursty.getDim().getValue());
+   TBOX_ASSERT(direction <= bursty.getDim().getValue());
 
    // Set up the lower and upper bounds of the regions for ease of access
 
@@ -1278,9 +1278,9 @@ BoxContainer::burstBoxes(
    const Index& solidh = solid.upper();
    const BlockId& block_id = bursty.getBlockId();
 
-   // Break bursty region against solid region along low dimensions first
+   // Break bursty region against solid region along low directions first
 
-   for (int d = 0; d < dimension; d++) {
+   for (int d = 0; d < direction; d++) {
       if (bursth(d) > solidh(d)) {
          Index newl = burstl;
          newl(d) = solidh(d) + 1;

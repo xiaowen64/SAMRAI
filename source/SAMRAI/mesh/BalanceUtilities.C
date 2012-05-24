@@ -389,12 +389,12 @@ BalanceUtilities::privateInitializeBadCutPointsForBox(
 /*
  *************************************************************************
  *
- * Internal function to determine best cut dimension for a box based
+ * Internal function to determine best cut direction for a box based
  * on constraints and adjust bad cut points as needed.  Return
- * value is true if some dimension can be cut; false, otherwise.
- * If the box can be cut along some dimension, then cut_dim_out is
- * set to the longest box dimension that can be cut; otherwise,
- * cut_dim_out is set to -1 (an invalid box dimension.
+ * value is true if some direction can be cut; false, otherwise.
+ * If the box can be cut along some direction, then cut_dim_out is
+ * set to the longest box direction that can be cut; otherwise,
+ * cut_dim_out is set to -1 (an invalid box direction).
  * Note no error checking is done.
  *
  *************************************************************************
@@ -428,12 +428,12 @@ BalanceUtilities::privateFindBestCutDimension(
    if (size_test_box.size() > 1) {
 
       /*
-       * Find good cut points along some box dimension, starting with longest
-       * dimension, then trying next longest, etc., until good cut points found.
+       * Find good cut points along some box direction, starting with longest
+       * direction, then trying next longest, etc., until good cut points found.
        */
 
       hier::Box test_box(size_test_box);
-      int cutdim = test_box.longestDimension();
+      int cutdim = test_box.longestDirection();
       int numcells = test_box.numberCells(cutdim);
       int cutfact = cut_factor(cutdim);
       int mincut = tbox::MathUtilities<int>::Max(min_size(cutdim), cutfact);
@@ -468,7 +468,7 @@ BalanceUtilities::privateFindBestCutDimension(
             test_box.lower(cutdim) = test_box.upper(cutdim);
          }
 
-         cutdim = test_box.longestDimension();
+         cutdim = test_box.longestDirection();
          numcells = test_box.numberCells(cutdim);
          cutfact = cut_factor(cutdim);
          mincut = tbox::MathUtilities<int>::Max(min_size(cutdim), cutfact);
@@ -489,7 +489,7 @@ BalanceUtilities::privateFindBestCutDimension(
 /*
  *************************************************************************
  *
- * Internal function to determine cut point for a single dimension
+ * Internal function to determine cut point for a single direction
  * given min cut, ideal workload, bad cut point constraints.
  * Note no error checking is done.
  *
@@ -575,7 +575,7 @@ BalanceUtilities::privateFindCutPoint(
  *************************************************************************
  *
  * Internal function to cut box in two at given cut point along given
- * dimension.  box_lo, box_hi will be new disjoint boxes whose union
+ * direction.  box_lo, box_hi will be new disjoint boxes whose union
  * is the box to be cut (in_box).  bad_cut_points_for_boxlo, and
  * bad_cut_points_for_boxhi are associated arrays of bad cut points
  * defined by given bad cut point arrays for in_box.
@@ -674,7 +674,7 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
    } else {
 
       /*
-       * Determine best dimension to chop box.
+       * Determine best direction to chop box.
        */
       int cut_dim;
       bool can_cut_box = privateFindBestCutDimension(cut_dim,
@@ -692,7 +692,7 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
             tbox::MathUtilities<int>::Max(min_size(cut_dim), cut_factor(cut_dim));
 
          /*
-          * Search for chop point along chosen dimension.
+          * Search for chop point along chosen direction.
           */
 
          double work_in_single_slice = 1.0;
@@ -813,7 +813,7 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
    } else {
 
       /*
-       * Determine best dimension to chop box.
+       * Determine best direction to chop box.
        */
       int cut_dim;
       bool can_cut_box = privateFindBestCutDimension(cut_dim,
@@ -831,7 +831,7 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
             tbox::MathUtilities<int>::Max(min_size(cut_dim), cut_factor(cut_dim));
 
          /*
-          * Search for chop point along chosen dimension.
+          * Search for chop point along chosen direction.
           */
 
          hier::Box slice_box = in_box;
@@ -1384,7 +1384,7 @@ BalanceUtilities::recursiveBisectionNonuniform(
  *************************************************************************
  *
  * Computes processor layout that corresponds, as closely as possible,
- * to the dimensions of the supplied box.
+ * to the size of the supplied box.
  *
  * Inputs:
  *   num_procs - number of processors
@@ -1440,7 +1440,7 @@ BalanceUtilities::computeDomainDependentProcessorLayout(
     *              factors until # processors is reached
     *              or we have run out of prime factors.
     *  NOTE:  infinite loop conditions occur if no
-    *         box dimensions can be divided by any of the prime factors
+    *         box directions can be divided by any of the prime factors
     *         of num_procs.  Adding a counter prevents this condition.
     */
    int counter = 0;
@@ -1457,7 +1457,7 @@ BalanceUtilities::computeDomainDependentProcessorLayout(
             if (d[j] > nx) i = j;
          }
 
-         // Divide the dimension by the largest possible prime
+         // Divide the length by the largest possible prime
          // factor and update processors accordingly. Remove the
          // chosen prime factor from the prime factors array.
          if (d[i] % pnew[k] == 0) {
@@ -1482,7 +1482,7 @@ BalanceUtilities::computeDomainDependentProcessorLayout(
 
    /*
     * This routine can fail under certain circumstances, such as
-    * when no box dimension exactly divides by any of the prime factors.
+    * when no box direction exactly divides by any of the prime factors.
     * In this case, revert to the less stringent routine which simply
     * breaks up the domain into prime factors.
     */
@@ -1500,7 +1500,7 @@ BalanceUtilities::computeDomainDependentProcessorLayout(
  *
  * Computes processor layout that simply uses largest prime factors in
  * the decomposition.  The box is only used to determine the largest
- * dimensions in each direction.  The processor decomposition will NOT
+ * size in each direction.  The processor decomposition will NOT
  * necessarily correspond to box dimensions.
  *
  *************************************************************************

@@ -69,7 +69,7 @@ namespace pdat {
  *        Note: Boxes are trimmed at edges intersecting faces with
  *              normal directions 1 and 2 so that node indices shared
  *              with those faces appear in data arrays associated with
- *              higher dimension faces.
+ *              higher direction faces.
  *
  *    face normal 1:
  *        lower    [ l0 : u0+1   , l1 : l1     , l2+1 : u2 , d ]
@@ -77,7 +77,7 @@ namespace pdat {
  *        Note: Boxes are trimmed at edges intersecting faces with
  *              normal direction 2 so that node indices shared
  *              with those faces appear in data arrays associated with
- *              higher dimension faces.
+ *              higher direction faces.
  *
  *    face normal 2:
  *        lower    [ l0 : u0+1   , l1 : u1+1   , l2 : l2     , d ]

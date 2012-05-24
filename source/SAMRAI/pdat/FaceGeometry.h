@@ -49,7 +49,7 @@ public:
    /*!
     * @brief Convert an AMR index box space box into an face geometry box.
     * An face geometry box extends the given AMR index box space box
-    * by one in upper dimension for the face normal coordinate direction.
+    * by one in upper end for the face normal coordinate direction.
     *
     * Recall that box indices are cyclically shifted such that the face normal
     * direction is the first coordinate index.  See SideData header file.

@@ -1675,7 +1675,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
    else {
-      TBOX_ERROR("Can't coarsen in one dimension and refine in another");
+      TBOX_ERROR("Can't coarsen in one direction and refine in another");
    }
 #endif
 

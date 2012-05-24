@@ -590,7 +590,7 @@ BoxUtilities::extendBoxToDomainBoundary(
                           (box.upper(id) != box_hi));
             }
 
-            // Adjust box dimensions as necessary
+            // Adjust box sizes as necessary
             box.lower(id) = box_lo;
             box.upper(id) = box_hi;
 
@@ -689,7 +689,7 @@ BoxUtilities::growBoxesWithinDomain(
                      tbox::MathUtilities<int>::Min(grow_up, lb->lower(id) - 1);
                }
 
-               // Adjust box dimensions as necessary
+               // Adjust box sizes as necessary
                if ((grow_up - grow_lo + 1) < min_size(id)) {
                   try_box.lower(id) = grow_lo;
                   try_box.upper(id) = grow_up;
@@ -786,7 +786,7 @@ BoxUtilities::growBoxWithinDomain(
                tbox::MathUtilities<int>::Min(grow_up, lb->lower(id) - 1);
          }
 
-         // Adjust box dimensions as necessary
+         // Adjust box sizes as necessary
          if ((grow_up - grow_lo + 1) < min_size(id)) {
             try_box.lower(id) = grow_lo;
             try_box.upper(id) = grow_up;

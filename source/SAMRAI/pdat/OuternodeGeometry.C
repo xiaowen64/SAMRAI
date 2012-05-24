@@ -156,7 +156,7 @@ OuternodeGeometry::doOverlap(
          hier::Box trimmed_src_node_box = src_node_box;
          for (int dh = d + 1; dh < dim.getValue(); ++dh) {
             /*
-             * For dimensions higher than d, narrow the box down to avoid
+             * For directions higher than d, narrow the box down to avoid
              * representing edge and corner nodes multiple times.
              */
             ++trimmed_src_node_box.lower(dh);
@@ -263,7 +263,7 @@ OuternodeGeometry::doOverlap(
          hier::Box trimmed_dst_node_box(dst_node_box * fill_node_box);
          for (int dh = d + 1; dh < dim.getValue(); ++dh) {
             /*
-             * For dimensions higher than d, narrow the box down to avoid
+             * For directions higher than d, narrow the box down to avoid
              * representing edge and corner nodes multiple times.
              */
             ++trimmed_dst_node_box.lower(dh);

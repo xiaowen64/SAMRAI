@@ -75,7 +75,7 @@ BoxTree::BoxTree(
    d_dim(dim),
    d_bounding_box(dim),
    d_block_id(BlockId::invalidId()),
-   d_partition_dim(0)
+   d_partition_dir(0)
 {
 }
 
@@ -152,7 +152,7 @@ BoxTree::BoxTree(
 
       /*
        * Partition the boxes into three sets, using the midpoint of
-       * the longest dimension of the bounding box:
+       * the longest direction of the bounding box:
        *
        * - those that belong to me (intersects the midpoint plane).  Put
        * these in d_boxes.
@@ -165,24 +165,24 @@ BoxTree::BoxTree(
        */
 
       const IntVector bbsize = d_bounding_box.numberCells();
-      d_partition_dim = 0;
+      d_partition_dir = 0;
       for (int d = 1; d < d_dim.getValue(); ++d) {
-         if (bbsize(d_partition_dim) < bbsize(d)) {
-            d_partition_dim = d;
+         if (bbsize(d_partition_dir) < bbsize(d)) {
+            d_partition_dir = d;
          }
       }
 
       int midpoint =
-         (d_bounding_box.lower(d_partition_dim)
-          + d_bounding_box.upper(d_partition_dim)) / 2;
+         (d_bounding_box.lower(d_partition_dir)
+          + d_bounding_box.upper(d_partition_dir)) / 2;
 
       std::list<const Box*> left_boxes, right_boxes;
       for (BoxContainer::const_iterator ni = boxes.begin();
            ni != boxes.end(); ++ni) {
          const Box& box = *ni;
-         if (box.upper(d_partition_dim) <= midpoint) {
+         if (box.upper(d_partition_dir) <= midpoint) {
             left_boxes.push_back(&box);
-         } else if (box.lower(d_partition_dim) > midpoint) {
+         } else if (box.lower(d_partition_dir) > midpoint) {
             right_boxes.push_back(&box);
          } else {
             d_boxes.push_back(&box);
@@ -280,7 +280,7 @@ BoxTree::privateGenerateTree(
    if (d_boxes.size() > static_cast<std::list<const Box*>::size_type>(min_number)) {
       /*
        * Partition the boxes into three sets, using the midpoint of
-       * the longest dimension of the bounding box:
+       * the longest direction of the bounding box:
        *
        * - those that belong to me (intersects the midpoint plane).  Put
        * these in d_boxes.
@@ -293,27 +293,27 @@ BoxTree::privateGenerateTree(
        */
 
       const IntVector bbsize = d_bounding_box.numberCells();
-      d_partition_dim = 0;
+      d_partition_dir = 0;
       for (int d = 1; d < d_dim.getValue(); ++d) {
-         if (bbsize(d_partition_dim) < bbsize(d)) {
-            d_partition_dim = d;
+         if (bbsize(d_partition_dir) < bbsize(d)) {
+            d_partition_dir = d;
          }
       }
 
       int midpoint =
-         (d_bounding_box.lower(d_partition_dim)
-          + d_bounding_box.upper(d_partition_dim)) / 2;
+         (d_bounding_box.lower(d_partition_dir)
+          + d_bounding_box.upper(d_partition_dir)) / 2;
 
       std::list<const Box*> left_boxes, right_boxes;
       for (std::list<const Box*>::iterator ni = d_boxes.begin();
            ni != d_boxes.end(); ) {
          const Box* box = *ni;
-         if (box->upper(d_partition_dim) <= midpoint) {
+         if (box->upper(d_partition_dir) <= midpoint) {
             left_boxes.push_back(box);
             std::list<const Box*>::iterator curr = ni;
             ++ni;
             d_boxes.erase(curr);
-         } else if (box->lower(d_partition_dim) > midpoint) {
+         } else if (box->lower(d_partition_dir) > midpoint) {
             right_boxes.push_back(box);
             std::list<const Box*>::iterator curr = ni;
             ++ni;
@@ -367,7 +367,7 @@ BoxTree::setupChildren(
 
 #if 0
    tbox::plog << "Split " << d_boxes.size() << "  " << d_bounding_box
-              << " across " << d_partition_dim << " at " << mid << " into "
+              << " across " << d_partition_dir << " at " << mid << " into "
               << ' ' << left_boxes.size()
               << ' ' << cent_boxes.size()
               << ' ' << right_boxes.size()

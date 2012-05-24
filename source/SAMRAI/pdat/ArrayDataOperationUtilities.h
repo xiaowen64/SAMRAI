@@ -23,9 +23,9 @@ template<class TYPE>
 class ArrayData;
 
 /*!
- * @brief Struct ArrayDataOperationUtilities<DIM, TYPE, OP> provides
+ * @brief Struct ArrayDataOperationUtilities<TYPE, OP> provides
  * generic looping operations for all array-based patch data types.
- * The operations are templated on spatial dimension, data type,
+ * The operations are templated on data type
  * and the operation that will be performed on individual array
  * elements in the innermost loop.
  *

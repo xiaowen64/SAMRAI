@@ -54,7 +54,7 @@ OuternodeData<TYPE>::OuternodeData(
       for (int dh = d + 1; dh < dim.getValue(); dh++) {
 
          /*
-          * For dimensions higher than d, narrow the box down to avoid
+          * For directions higher than d, narrow the box down to avoid
           * representing edge and corner nodes multiple times.
           *
           *  i.e.    Y--Y--Y  outernodeX0 defined on nodes (0,1)
@@ -630,7 +630,7 @@ OuternodeData<TYPE>::getSizeOfData(
       for (int dh = d + 1; dh < box.getDim().getValue(); dh++) {
 
          /*
-          * For dimensions higher than d, narrow the box down to avoid
+          * For directions higher than d, narrow the box down to avoid
           * representing edge and corner nodes multiple times.
           */
          loc0.lower(dh) += 1;
@@ -647,8 +647,8 @@ OuternodeData<TYPE>::getSizeOfData(
 /*
  *************************************************************************
  *
- * Compute the box of valid node indices given values of
- * dimension and side designating the set of data indices.
+ * Compute the box of valid node indices given
+ * direction and side designating the set of data indices.
  *
  *************************************************************************
  */
@@ -674,7 +674,7 @@ OuternodeData<TYPE>::getDataBox(
    for (int dh = face_normal + 1; dh < getDim().getValue(); dh++) {
 
       /*
-       * For dimensions higher than d, narrow the box down to avoid
+       * For directions higher than d, narrow the box down to avoid
        * representing edge and corner nodes multiple times.
        */
       databox.lower(dh) += 1;

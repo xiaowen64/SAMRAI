@@ -593,10 +593,10 @@ public:
    }
 
    /*!
-    * @brief Return the dimension of the box that is longest.
+    * @brief Return the direction of the box that is longest.
     */
    int
-   longestDimension() const;
+   longestDirection() const;
 
    /*!
     * @brief Given an index, calculate the offset of the index into the box.
@@ -765,9 +765,9 @@ public:
     * @brief Grow this box by the specified ghost cell width.
     *
     * The lower bound decremented by the width, and the upper bound is
-    * incremented by the width.  All dimensions are grown by the corresponding
+    * incremented by the width.  All directions are grown by the corresponding
     * component in the IntVector; ghost cell widths may be different in each
-    * dimension.  Negative ghost cell widths will shrink the box.
+    * direction.  Negative ghost cell widths will shrink the box.
     */
    void
    grow(

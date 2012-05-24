@@ -256,7 +256,7 @@ CoarseFineBoundary::computeFromLevel(
       level0.getBoxLevel()->getGlobalizedVersion().getGlobalBoxes();
 
    /*
-    * Get the dimension and number of blocks from the grid geometry.
+    * Get the number of blocks from the grid geometry.
     */
    boost::shared_ptr<BaseGridGeometry> grid_geometry(level.getGridGeometry());
    int nblocks = grid_geometry->getNumberBlocks();

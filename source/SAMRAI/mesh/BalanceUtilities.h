@@ -93,11 +93,11 @@ struct BalanceUtilities {
     * @param in_boxes        Input boxlist for chopping.
     * @param ideal_workload  Input double ideal box workload, must be > 0.
     * @param workload_tolerance Input double workload tolerance, must be >= 0 and < 1.0
-    * @param min_size        Input integer vector of minimum dimensions for
+    * @param min_size        Input integer vector of minimum sizes for
     *                        output boxes. All entries must be > 0.
     * @param cut_factor      Input integer vector used to create boxes with
-    *                        correct dimensions.  The length of each box
-    *                        dimension will be an integer multiple of the
+    *                        correct sizes.  The box size in each
+    *                        direction will be an integer multiple of the
     *                        corresponding cut factor vector entry.  All
     *                        vector entries must be > 0.  See hier::BoxUtilities
     *                        documentation for more details.
@@ -150,11 +150,11 @@ struct BalanceUtilities {
     *                        double work estimate for each cell.
     * @param ideal_workload  Input double ideal box workload, must be > 0.
     * @param workload_tolerance Input double workload tolerance, must be >= 0 and < 1.0
-    * @param min_size        Input integer vector of minimum dimensions for
+    * @param min_size        Input integer vector of minimum sizes for
     *                        output boxes. All entries must be > 0.
     * @param cut_factor      Input integer vector used to create boxes with
-    *                        correct dimensions.  The length of each box
-    *                        dimension will be an integer multiple of the
+    *                        correct sizes.  The box size in each
+    *                        direction will be an integer multiple of the
     *                        corresponding cut factor vector entry.  All
     *                        vector entries must be > 0.  See hier::BoxUtilities
     *                        documentation for more details.
@@ -191,7 +191,7 @@ struct BalanceUtilities {
 
    /*!
     * Compute factorization of processors corresponding to
-    * dimensions of given box.
+    * size of given box.
     *
     * @param proc_dist  Output number of processors for each
     *                   coordinate direction.

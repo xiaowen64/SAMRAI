@@ -58,14 +58,14 @@ namespace hier {
  *
  *   - \b    largest_patch_size
  *      A set of max_levels integer vectors (each has length = DIM) each of
- *      which indicates the dimensions of largest patch allowed on the level
+ *      which indicates the size of largest patch allowed on the level
  *      in the hierarchy.  Non-positive values for patch size corresponds to
  *      no upper limit on patch size.  The input is given for each level n,
  *      where n (= 0, 1,..., N-1) is the level number.
  *
  *   - \b    smallest_patch_size
  *      A set of max_levels integer vectors (each has length = DIM) each of
- *      which indicates the dimensions of smallest patch allowed on the level
+ *      which indicates the size of smallest patch allowed on the level
  *      in the hierarchy.  The smallest patch allowed must be at least as
  *      large as the maximum ghost cell width for all variables in the problem.
  *      If some smaller patch size is given in input, then it will be

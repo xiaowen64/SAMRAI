@@ -127,7 +127,7 @@ public:
     * The location index is an integer which indicates the location of the
     * the boundary box in relation to the location of the associated patch.
     * The conventions for the location index depend on the dimension of
-    * the problem and the boundary type (codimentsion) of the BoundaryBox.
+    * the problem and the boundary type (codimension) of the BoundaryBox.
     *
     * \verbatim
     * Conventions:
