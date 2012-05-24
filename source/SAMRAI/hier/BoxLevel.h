@@ -828,9 +828,6 @@ public:
    //! @name Individual Box methods.
 
    /*
-    * TODO: Why the vacant index thing?  The comments say that the
-    * box will be assigned an unused index.  Isn't this a "vacant" index?
-    *
     * TODO: Why does the first method require "distributed" state and the ones
     * after require GLOBALIZED state for a remote box?  These comments
     * are inconsistent and confusing.  I think it would be best to have the
@@ -850,19 +847,15 @@ public:
     * The new Box will have a periodic shift number
     * corresponding to zero-shift.
     *
-    * It is faster not to request a vacant index when adding a box.
-    *
     * @param[in] box
     * @param[in] block_id
-    * @param[in] use_vacant_index
     *
     * @return iterator to the new Box
     */
    BoxContainer::const_iterator
    addBox(
       const Box& box,
-      const BlockId& block_id,
-      const bool use_vacant_index = true);
+      const BlockId& block_id);
 
    /*!
     * @brief Add a Box to this level.

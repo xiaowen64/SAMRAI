@@ -955,8 +955,7 @@ BoxLevel::acquireRemoteBoxes_unpack(
 BoxContainer::const_iterator
 BoxLevel::addBox(
    const Box& box,
-   const BlockId& block_id,
-   const bool use_vacant_index)
+   const BlockId& block_id)
 {
    const tbox::Dimension& dim(getDim());
    /*
@@ -1002,29 +1001,6 @@ BoxLevel::addBox(
          --ni;
       } while (ni->isPeriodicImage());
       LocalId new_index = ni->getLocalId() + 1;
-      if (use_vacant_index) {
-         TBOX_ASSERT(new_index >= 0);
-
-         if (new_index.getValue() !=
-             static_cast<int>(d_local_number_of_boxes)) {
-            /*
-             * There is a smaller unused index we can use for the new index.
-             */
-            for (new_index = 0, ni = d_boxes.begin();
-                 ni != d_boxes.end();
-                 ++ni) {
-               if (new_index != (*ni).getLocalId()) {
-                  break;
-               }
-               if (!ni->isPeriodicImage()) {
-                  ++new_index;
-               }
-            }
-            // We should have found an unused index.
-            TBOX_ASSERT(ni != d_boxes.end());
-         }
-      }
-
       Box new_box(
          box, new_index, d_mpi.getRank());
       new_box.setBlockId(block_id);
