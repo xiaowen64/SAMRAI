@@ -2051,7 +2051,7 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
-               Box ovlap = ghost_box * nabr_box;
+               Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
                           << std::endl;
@@ -2072,7 +2072,7 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
-               Box ovlap = ghost_box * nabr_box;
+               Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
                           << std::endl;
@@ -2093,7 +2093,7 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
-               Box ovlap = ghost_box * nabr_box;
+               Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
                           << std::endl;
@@ -2134,7 +2134,7 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
-               Box ovlap = ghost_box * nabr_box;
+               Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
                           << std::endl;
@@ -2155,7 +2155,7 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
-               Box ovlap = ghost_box * nabr_box;
+               Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
                           << std::endl;
@@ -2193,7 +2193,7 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
-               Box ovlap = ghost_box * nabr_box;
+               Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
                           << std::endl;
@@ -2214,7 +2214,7 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
                } else if (connector.getRatio() != 1) {
                   nabr_box.coarsen(connector.getRatio());
                }
-               Box ovlap = ghost_box * nabr_box;
+               Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
                           << "\tov" << ovlap << '_' << ovlap.numberCells()
                           << std::endl;
