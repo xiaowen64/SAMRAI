@@ -1581,8 +1581,6 @@ RefineSchedule::createCoarseInterpPatchLevel(
       neg1);
    TBOX_ASSERT( coarse_interp_to_hiercoarse.getConnectorWidth() >= d_max_stencil_width );
    TBOX_ASSERT( hiercoarse_to_coarse_interp.getConnectorWidth() >= d_max_stencil_width );
-   coarse_interp_to_hiercoarse.removePeriodicRelationships();
-   hiercoarse_to_coarse_interp.removePeriodicRelationships();
    if (s_barrier_and_time) {
       t_bridge_coarse_interp_hiercoarse->stop();
    }
@@ -1686,20 +1684,33 @@ RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
 
    hier::OverlapConnectorAlgorithm oca;
 
-   // Check completeness of coarse_interp<==>hiercoarse Connectors.
-   oca.assertOverlapCorrectness( coarse_interp_to_hiercoarse );
-   oca.assertOverlapCorrectness( hiercoarse_to_coarse_interp );
+   /*
+    * For certain, the completeness of coarse_interp_to_hiercoarse and
+    * hiercoarse_to_coarse_interp can not be guaranteed for periodic problems.
+    * The comment immediately following this block of code implies that their
+    * correctness can not ever be guaranteed.  However, the author of the code
+    * is uncertain of the validity of that comment.  Therefore, for the time
+    * being, the overlap correctness be checked only for non-periodic problems.
+    * If the validity of the following comment block is ever verified then
+    * these checks need to be completely removed.
+    */
+   if (d_num_periodic_directions == 0) {
+      // Check completeness of coarse_interp<==>hiercoarse Connectors.
+      oca.assertOverlapCorrectness( coarse_interp_to_hiercoarse );
+      oca.assertOverlapCorrectness( hiercoarse_to_coarse_interp );
+   }
 
    /*
     * To work properly, we must ensure that
-    * coarse_interp^d_max_stencil_width nests in hiercoarse^fine_connector_width.
+    * coarse_interp^d_max_stencil_width nests in
+    * hiercoarse^fine_connector_width.
     *
     * The nesting guarantees that the Connectors sees enough of its
     * surroundings to generate all the necessary relationships in
     * further RefineSchedule recursions.  We know that
-    * coarse_interp_to_hiercoarse and hiercoarse_to_coarse_interp are not complete, but
-    * this nesting guarantees we still have enough relationships to
-    * avoid miss any relationships when we use these Connectors in
+    * coarse_interp_to_hiercoarse and hiercoarse_to_coarse_interp are not
+    * complete, but this nesting guarantees we still have enough relationships
+    * to avoid missing any relationships when we use these Connectors in
     * bridge operations.
     */
    Connector wider_coarse_interp_to_hiercoarse(

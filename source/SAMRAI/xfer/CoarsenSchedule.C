@@ -41,7 +41,7 @@ namespace xfer {
 
 std::string CoarsenSchedule::s_schedule_generation_method = "DLBG";
 bool CoarsenSchedule::s_extra_debug = false;
-  bool CoarsenSchedule::s_read_static_input = false;
+bool CoarsenSchedule::s_read_static_input = false;
 
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarsen_data;
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_gen_sched_n_squared;
