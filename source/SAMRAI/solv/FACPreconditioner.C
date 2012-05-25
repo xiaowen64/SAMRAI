@@ -223,7 +223,7 @@ FACPreconditioner::initializeSolverState(
 #endif
    for (int ln = d_coarsest_ln; ln <= d_finest_ln; ln++) {
       if (!d_patch_hierarchy->getPatchLevel(ln)) {
-         TBOX_ERROR("FACPreconditioner::FACPreconditioner error ..."
+         TBOX_ERROR("FACPreconditioner::initializeSolverState error ..."
             << "\n   object name = " << d_object_name
             << "\n   hierarchy level " << ln
             << " does not exist" << std::endl);
