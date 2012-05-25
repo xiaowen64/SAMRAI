@@ -200,7 +200,7 @@ OverlapConnectorUtil {
 }
 
 MappingConnectorUtil {
-   print_modify_steps = 'y'
+   print_modify_steps = 'n'
 }
 
 RefineSchedule {

@@ -205,7 +205,7 @@ MappingConnectorUtil {
 }
 
 RefineSchedule {
-   extra_debug = TRUE
+   extra_debug = FALSE
 }
 
 TreeLoadBalancer{
