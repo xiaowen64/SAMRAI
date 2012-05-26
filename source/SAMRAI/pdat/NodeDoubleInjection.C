@@ -81,7 +81,7 @@ NodeDoubleInjection::getOperatorPriority() const
 hier::IntVector
 NodeDoubleInjection::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(getDim());
+   return hier::IntVector::getZero(dim);
 }
 
 void
@@ -103,7 +103,7 @@ NodeDoubleInjection::coarsen(
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
-   TBOX_ASSERT_OBJDIM_EQUALITY5(*this, coarse, fine, coarse_box, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(coarse, fine, coarse_box, ratio);
 
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
@@ -114,14 +114,14 @@ NodeDoubleInjection::coarsen(
    const hier::Index ilastc = coarse_box.upper();
 
    for (int d = 0; d < cdata->getDepth(); d++) {
-      if (getDim() == tbox::Dimension(1)) {
+      if (fine.getDim() == tbox::Dimension(1)) {
          F77_FUNC(conavgnodedoub1d, CONAVGNODEDOUB1D) (ifirstc(0), ilastc(0),
             filo(0), fihi(0),
             cilo(0), cihi(0),
             &ratio[0],
             fdata->getPointer(d),
             cdata->getPointer(d));
-      } else if (getDim() == tbox::Dimension(2)) {
+      } else if (fine.getDim() == tbox::Dimension(2)) {
          F77_FUNC(conavgnodedoub2d, CONAVGNODEDOUB2D) (ifirstc(0), ifirstc(1),
             ilastc(0), ilastc(1),
             filo(0), filo(1), fihi(0), fihi(1),
@@ -129,7 +129,7 @@ NodeDoubleInjection::coarsen(
             &ratio[0],
             fdata->getPointer(d),
             cdata->getPointer(d));
-      } else if (getDim() == tbox::Dimension(3)) {
+      } else if (fine.getDim() == tbox::Dimension(3)) {
          F77_FUNC(conavgnodedoub3d, CONAVGNODEDOUB3D) (ifirstc(0), ifirstc(1),
             ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),

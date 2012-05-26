@@ -72,12 +72,6 @@ CoarsenAlgorithm::registerCoarsen(
    const hier::IntVector& gcw_to_coarsen,
    const boost::shared_ptr<VariableFillPattern>& var_fill_pattern)
 {
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   if (opcoarsen) {
-      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *opcoarsen);
-   }
-#endif
-
    if (d_schedule_created) {
       TBOX_ERROR(
          "CoarsenAlgorithm::registerCoarsen error..."

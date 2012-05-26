@@ -42,9 +42,7 @@ CoarsenPatchStrategy::getMaxCoarsenOpStencilWidth(
    for (std::set<CoarsenPatchStrategy *>::const_iterator
         si = current_objects.begin(); si != current_objects.end(); ++si) {
       const CoarsenPatchStrategy* strategy = *si;
-      if (strategy->getDim() == dim) {
-         max_width.max(strategy->getCoarsenOpStencilWidth(dim));
-      }
+      max_width.max(strategy->getCoarsenOpStencilWidth(dim));
    }
 
    return max_width;

@@ -112,7 +112,7 @@ FaceFloatConstantRefine::getOperatorPriority() const
 hier::IntVector
 FaceFloatConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(getDim());
+   return hier::IntVector::getZero(dim);
 }
 
 void
@@ -124,7 +124,7 @@ FaceFloatConstantRefine::refine(
    const hier::BoxOverlap& fine_overlap,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(getDim());
+   const tbox::Dimension& dim(fine.getDim());
 
    boost::shared_ptr<FaceData<float> > cdata(
       coarse.getPatchData(src_component),
@@ -141,7 +141,7 @@ FaceFloatConstantRefine::refine(
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
-   TBOX_ASSERT_OBJDIM_EQUALITY4(*this, fine, coarse, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(fine, coarse, ratio);
 
    const hier::Box cgbox(cdata->getGhostBox());
 

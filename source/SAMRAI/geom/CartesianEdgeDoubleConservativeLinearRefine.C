@@ -130,7 +130,7 @@ CartesianEdgeDoubleConservativeLinearRefine::getOperatorPriority() const
 hier::IntVector
 CartesianEdgeDoubleConservativeLinearRefine::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getOne(getDim());
+   return hier::IntVector::getOne(dim);
 }
 
 void
@@ -142,7 +142,7 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
    const hier::BoxOverlap& fine_overlap,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(getDim());
+   const tbox::Dimension& dim(fine.getDim());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, fine, coarse, ratio);
 
    boost::shared_ptr<pdat::EdgeData<double> > cdata(

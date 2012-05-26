@@ -88,7 +88,7 @@ CellComplexConstantRefine::getOperatorPriority() const
 hier::IntVector
 CellComplexConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(getDim());
+   return hier::IntVector::getZero(dim);
 }
 
 void
@@ -135,9 +135,11 @@ CellComplexConstantRefine::refine(
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
-   TBOX_ASSERT_OBJDIM_EQUALITY5(*this, fine, coarse, fine_box, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(fine, coarse, fine_box, ratio);
 
    const hier::Box cgbox(cdata->getGhostBox());
+
+   const tbox::Dimension &dim = fine.getDim();
 
    const hier::Index cilo = cgbox.lower();
    const hier::Index cihi = cgbox.upper();
@@ -151,7 +153,7 @@ CellComplexConstantRefine::refine(
    const hier::Index ilastf = fine_box.upper();
 
    for (int d = 0; d < fdata->getDepth(); d++) {
-      if (getDim() == tbox::Dimension(1)) {
+      if (fine.getDim() == tbox::Dimension(1)) {
          F77_FUNC(conrefcellcplx1d, CONREFCELLCPLX1D) (ifirstc(0), ilastc(0),
             ifirstf(0), ilastf(0),
             cilo(0), cihi(0),
@@ -159,7 +161,7 @@ CellComplexConstantRefine::refine(
             &ratio[0],
             cdata->getPointer(d),
             fdata->getPointer(d));
-      } else if (getDim() == tbox::Dimension(2)) {
+      } else if (fine.getDim() == tbox::Dimension(2)) {
          F77_FUNC(conrefcellcplx2d, CONREFCELLCPLX2D) (ifirstc(0), ifirstc(1),
             ilastc(0), ilastc(1),
             ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
@@ -168,7 +170,7 @@ CellComplexConstantRefine::refine(
             &ratio[0],
             cdata->getPointer(d),
             fdata->getPointer(d));
-      } else if (getDim() == tbox::Dimension(3)) {
+      } else if (fine.getDim() == tbox::Dimension(3)) {
          F77_FUNC(conrefcellcplx3d, CONREFCELLCPLX3D) (ifirstc(0), ifirstc(1),
             ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
