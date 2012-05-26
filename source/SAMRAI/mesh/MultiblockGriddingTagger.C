@@ -51,7 +51,7 @@ MultiblockGriddingTagger::~MultiblockGriddingTagger()
 }
 
 hier::IntVector
-MultiblockGriddingTagger::getRefineOpStencilWidth() const
+MultiblockGriddingTagger::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
 {
    return hier::IntVector::getOne(d_dim);
 }

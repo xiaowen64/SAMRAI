@@ -108,7 +108,7 @@ CartesianEdgeFloatWeightedAverage::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianEdgeFloatWeightedAverage::getStencilWidth() const
+CartesianEdgeFloatWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const
 {
    return hier::IntVector::getZero(getDim());
 }

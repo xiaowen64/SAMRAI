@@ -71,7 +71,7 @@ int SkeletonCellDoubleWeightedAverage::getOperatorPriority() const
 }
 
 hier::IntVector
-SkeletonCellDoubleWeightedAverage::getStencilWidth() const {
+SkeletonCellDoubleWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const {
    return hier::IntVector(getDim(), 0);
 }
 

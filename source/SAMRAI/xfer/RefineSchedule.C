@@ -3629,12 +3629,12 @@ RefineSchedule::getMaxStencilGhosts() const
 
    hier::IntVector gcw(dim, 0);
    if (d_refine_patch_strategy) {
-      gcw = d_refine_patch_strategy->getRefineOpStencilWidth();
+      gcw = d_refine_patch_strategy->getRefineOpStencilWidth(dim);
    }
 
    for (int iri = 0; iri < d_number_refine_items; iri++) {
       if (d_refine_items[iri]->d_oprefine) {
-         gcw.max(d_refine_items[iri]->d_oprefine->getStencilWidth());
+         gcw.max(d_refine_items[iri]->d_oprefine->getStencilWidth(dim));
       }
    }
 
@@ -4724,7 +4724,7 @@ RefineSchedule::initialCheckRefineClassItems() const
 
    hier::IntVector user_gcw(constant_zero_intvector);
    if (d_refine_patch_strategy) {
-      user_gcw = d_refine_patch_strategy->getRefineOpStencilWidth();
+      user_gcw = d_refine_patch_strategy->getRefineOpStencilWidth(dim);
    }
 
    if (user_gcw > constant_zero_intvector) {

@@ -93,7 +93,7 @@ SkeletonCellDoubleConservativeLinearRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-SkeletonCellDoubleConservativeLinearRefine::getStencilWidth() const {
+SkeletonCellDoubleConservativeLinearRefine::getStencilWidth( const tbox::Dimension &dim ) const {
    return hier::IntVector(getDim(), 1);
 }
 

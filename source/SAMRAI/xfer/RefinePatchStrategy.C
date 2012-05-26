@@ -77,7 +77,7 @@ RefinePatchStrategy::getMaxRefineOpStencilWidth(
         si = current_objects.begin(); si != current_objects.end(); ++si) {
       const RefinePatchStrategy* strategy = *si;
       if (strategy->getDim() == dim) {
-         max_width.max(strategy->getRefineOpStencilWidth());
+         max_width.max(strategy->getRefineOpStencilWidth(dim));
       }
    }
 

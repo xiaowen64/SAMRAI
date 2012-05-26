@@ -53,7 +53,7 @@ GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
       patch_hierarchy.getPatchDescriptor()->getMaxGhostWidth(dim));
 
    const hier::IntVector max_stencil_width(
-      patch_hierarchy.getGridGeometry()->getMaxTransferOpStencilWidth());
+      patch_hierarchy.getGridGeometry()->getMaxTransferOpStencilWidth(dim));
 
    fine_connector_widths.resize(max_levels - 1, hier::IntVector(dim));
    self_connector_widths.resize(max_levels, hier::IntVector(dim));

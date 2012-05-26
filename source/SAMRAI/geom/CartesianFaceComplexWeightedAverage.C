@@ -109,7 +109,7 @@ CartesianFaceComplexWeightedAverage::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianFaceComplexWeightedAverage::getStencilWidth() const
+CartesianFaceComplexWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const
 {
    return hier::IntVector::getZero(getDim());
 }

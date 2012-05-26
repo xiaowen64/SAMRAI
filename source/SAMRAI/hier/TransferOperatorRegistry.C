@@ -51,12 +51,15 @@ TransferOperatorRegistry::addCoarsenOperator(
    const char* var_type_name,
    const boost::shared_ptr<CoarsenOperator>& coarsen_op)
 {
-   if (d_max_op_stencil_width_req &&
-       (coarsen_op->getStencilWidth() > getMaxTransferOpStencilWidth())) {
-      TBOX_WARNING(
-         "Adding coarsen operator " << coarsen_op->getOperatorName()
-                                    << "\nwith stencil width greater than current maximum\n"
-                                    << "after call to getMaxTransferOpStencilWidth.\n");
+   if (d_max_op_stencil_width_req) {
+      for ( int d(1); d<=SAMRAI::MAX_DIM_VAL; ++d ) {
+         if (coarsen_op->getStencilWidth(tbox::Dimension(d)) > getMaxTransferOpStencilWidth(tbox::Dimension(d))) {
+            TBOX_WARNING(
+               "Adding coarsen operator " << coarsen_op->getOperatorName()
+               << "\nwith stencil width greater than current maximum\n"
+               << "after call to getMaxTransferOpStencilWidth.\n");
+         }
+      }
    }
    boost::unordered_map<std::string, boost::unordered_map<std::string,
       boost::shared_ptr<CoarsenOperator> > >::iterator coarsen_ops =
@@ -75,12 +78,15 @@ TransferOperatorRegistry::addRefineOperator(
    const char* var_type_name,
    const boost::shared_ptr<RefineOperator>& refine_op)
 {
-   if (d_max_op_stencil_width_req &&
-       (refine_op->getStencilWidth() > getMaxTransferOpStencilWidth())) {
-      TBOX_WARNING(
-         "Adding refine operator " << refine_op->getOperatorName()
-                                   << "\nwith stencil width greater than current maximum\n"
-                                   << "after call to getMaxTransferOpStencilWidth.\n");
+   if (d_max_op_stencil_width_req) {
+      for ( int d(1); d<=SAMRAI::MAX_DIM_VAL; ++d ) {
+         if (refine_op->getStencilWidth(tbox::Dimension(d)) > getMaxTransferOpStencilWidth(tbox::Dimension(d))) {
+            TBOX_WARNING(
+               "Adding refine operator " << refine_op->getOperatorName()
+               << "\nwith stencil width greater than current maximum\n"
+               << "after call to getMaxTransferOpStencilWidth.\n");
+         }
+      }
    }
    boost::unordered_map<std::string, boost::unordered_map<std::string,
       boost::shared_ptr<RefineOperator> > >::iterator refine_ops =
@@ -257,7 +263,7 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
  *************************************************************************
  */
 IntVector
-TransferOperatorRegistry::getMaxTransferOpStencilWidth()
+TransferOperatorRegistry::getMaxTransferOpStencilWidth( const tbox::Dimension &dim )
 {
    IntVector max_width(d_min_stencil_width);
    max_width.max(RefineOperator::getMaxRefineOpStencilWidth(

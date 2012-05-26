@@ -486,9 +486,9 @@ public:
     * @return The max stencil width of all transfer operators.
     */
    IntVector
-   getMaxTransferOpStencilWidth()
+   getMaxTransferOpStencilWidth( const tbox::Dimension &dim )
    {
-      return d_transfer_operator_registry->getMaxTransferOpStencilWidth();
+      return d_transfer_operator_registry->getMaxTransferOpStencilWidth(dim);
    }
 
    /*!

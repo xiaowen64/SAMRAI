@@ -69,7 +69,7 @@ public:
     * zeros.  That is, its stencil does not extend outside the fine box.
     */
    hier::IntVector
-   getStencilWidth() const;
+   getStencilWidth( const tbox::Dimension &dim ) const;
 
    /*!
     * @brief Coarsen the source component on the fine patch to the destination

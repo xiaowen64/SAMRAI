@@ -108,7 +108,7 @@ CartesianSideDoubleWeightedAverage::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianSideDoubleWeightedAverage::getStencilWidth() const
+CartesianSideDoubleWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const
 {
    return hier::IntVector::getZero(getDim());
 }
