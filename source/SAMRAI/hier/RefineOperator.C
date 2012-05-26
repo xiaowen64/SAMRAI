@@ -45,7 +45,7 @@ RefineOperator::removeFromLookupTable(
 {
    /*
     * The lookup table might be empty if static RefineOperator's are used
-    * in which case the table will have been removed before the statics
+    * in which case the table will have been cleared before the statics
     * are destroyed.
     */
    if (!s_lookup_table.empty()) {
