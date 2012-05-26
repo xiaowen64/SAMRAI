@@ -73,9 +73,7 @@ public:
     * registered under this name with the hier::TransferOperatorRegistry class.
     * The name must be unique, as duplicate names are not allowed.
     */
-   RefineOperator(
-      const tbox::Dimension& dim,
-      const std::string& name);
+   RefineOperator(const std::string& name);
 
    /**
     * The virtual destructor for the refinement operator does

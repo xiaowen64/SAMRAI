@@ -95,7 +95,7 @@ namespace pdat {
 
 FaceDoubleConstantRefine::FaceDoubleConstantRefine(
    const tbox::Dimension& dim):
-   hier::RefineOperator(dim, "CONSTANT_REFINE")
+   hier::RefineOperator("CONSTANT_REFINE")
 {
 }
 

@@ -57,7 +57,7 @@ using namespace SAMRAI;
 
 SkeletonCellDoubleWeightedAverage::SkeletonCellDoubleWeightedAverage(
    const tbox::Dimension& dim):
-   hier::CoarsenOperator(dim, "SKELETON_CONSERVATIVE_COARSEN"),
+   hier::CoarsenOperator("SKELETON_CONSERVATIVE_COARSEN"),
    d_dim(dim)
 {
 }

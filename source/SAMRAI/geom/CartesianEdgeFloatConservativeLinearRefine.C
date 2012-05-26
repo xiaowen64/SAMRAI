@@ -111,7 +111,7 @@ namespace geom {
 CartesianEdgeFloatConservativeLinearRefine::
 CartesianEdgeFloatConservativeLinearRefine(
    const tbox::Dimension& dim):
-   hier::RefineOperator(dim, "CONSERVATIVE_LINEAR_REFINE")
+   hier::RefineOperator("CONSERVATIVE_LINEAR_REFINE")
 {
 }
 
