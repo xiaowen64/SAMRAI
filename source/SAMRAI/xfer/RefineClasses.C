@@ -152,8 +152,6 @@ RefineClasses::itemIsValid(
    boost::shared_ptr<hier::PatchDataFactory> scratch_fact(
       pd->getPatchDataFactory(scratch_id));
 
-   const tbox::Dimension &dim = dst_fact->getDim();
-
    if (item_good && !(src_fact->validCopyTo(scratch_fact))) {
       item_good = false;
       TBOX_ERROR("Bad data given to RefineClasses...\n"
@@ -187,13 +185,13 @@ RefineClasses::itemIsValid(
 
    boost::shared_ptr<hier::RefineOperator> refop(data_item.d_oprefine);
    if (item_good && refop) {
-      if (refop->getStencilWidth(dim) > scratch_gcw) {
+      if (refop->getStencilWidth() > scratch_gcw) {
          item_good = false;
          TBOX_ERROR("Bad data given to RefineClasses...\n"
             << "Refine operator " << refop->getOperatorName()
             << "\nhas larger stencil width than ghost cell width"
             << "of `Scratch' patch data" << pd->mapIndexToName(scratch_id)
-            << "\noperator stencil width = " << refop->getStencilWidth(scratch_gcw.getDim())
+            << "\noperator stencil width = " << refop->getStencilWidth()
             << "\n`Scratch'  ghost width = " << scratch_gcw << std::endl);
       }
    }
@@ -348,7 +346,6 @@ RefineClasses::itemsAreEquivalent(
    if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
-   const tbox::Dimension &dim = pd->getPatchDataFactory(data1.d_dst)->getDim();
 
    equivalent = patchDataMatch(data1.d_dst, data2.d_dst, pd);
 
@@ -366,8 +363,8 @@ RefineClasses::itemsAreEquivalent(
 
    equivalent &= (!data1.d_oprefine == !data2.d_oprefine);
    if (equivalent && data1.d_oprefine) {
-      equivalent &= (data1.d_oprefine->getStencilWidth(dim) ==
-                     data2.d_oprefine->getStencilWidth(dim));
+      equivalent &= (data1.d_oprefine->getStencilWidth() ==
+                     data2.d_oprefine->getStencilWidth());
    }
 
    equivalent &= (!data1.d_var_fill_pattern ==
@@ -440,7 +437,7 @@ RefineClasses::printRefineItem(
              << data.d_oprefine->getOperatorPriority()
              << std::endl;
       stream << "operator stencil width: "
-             << data.d_oprefine->getStencilWidth(hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(data.d_dst)->getDim())
+             << data.d_oprefine->getStencilWidth()
              << std::endl;
    }
    if (!data.d_time_interpolate) {

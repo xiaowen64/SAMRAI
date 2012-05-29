@@ -95,7 +95,7 @@ CartesianCellComplexConservativeLinearRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianCellComplexConservativeLinearRefine::getStencilWidth( const tbox::Dimension &dim ) const
+CartesianCellComplexConservativeLinearRefine::getStencilWidth() const
 {
    return hier::IntVector::getOne(getDim());
 }

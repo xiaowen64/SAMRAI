@@ -81,7 +81,7 @@ CoarsenOperator::getMaxCoarsenOpStencilWidth(
         mi = s_lookup_table.begin(); mi != s_lookup_table.end(); ++mi) {
       const CoarsenOperator* op = mi->second;
       if (op->getDim() == dim) {
-         max_width.max(op->getStencilWidth(dim));
+         max_width.max(op->getStencilWidth());
       }
    }
 

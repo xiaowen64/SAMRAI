@@ -110,7 +110,7 @@ FaceIntegerConstantRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-FaceIntegerConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
+FaceIntegerConstantRefine::getStencilWidth() const
 {
    return hier::IntVector::getZero(getDim());
 }

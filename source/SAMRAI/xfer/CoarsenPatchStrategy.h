@@ -86,11 +86,9 @@ public:
     * For any user-defined coarsening operations implemented in the
     * preprocess or postprocess methods, return the maximum stencil needed
     * on a fine patch to coarsen data to a coarse patch.
-    * If your implementation doesn't work with the given dimension, return
-    * zero.
     */
    virtual hier::IntVector
-   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const = 0;
+   getCoarsenOpStencilWidth() const = 0;
 
    /*!
     * @brief Perform user-defined patch data coarsening operations.

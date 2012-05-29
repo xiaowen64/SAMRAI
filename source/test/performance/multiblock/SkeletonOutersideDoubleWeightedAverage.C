@@ -102,7 +102,7 @@ int SkeletonOutersideDoubleWeightedAverage::getOperatorPriority() const
 }
 
 hier::IntVector
-SkeletonOutersideDoubleWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const {
+SkeletonOutersideDoubleWeightedAverage::getStencilWidth() const {
    return hier::IntVector(getDim(), 0);
 }
 

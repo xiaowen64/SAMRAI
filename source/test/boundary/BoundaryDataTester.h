@@ -68,7 +68,7 @@ public:
     * They are not needed for this example since we only have one level
     * in the hierarchy.
     */
-   hier::IntVector getRefineOpStencilWidth( const tbox::Dimension &dim ) const {
+   hier::IntVector getRefineOpStencilWidth() const {
       return hier::IntVector(d_dim, 0);
    }
 

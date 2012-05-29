@@ -42,13 +42,13 @@ MethodOfLinesPatchStrategy::~MethodOfLinesPatchStrategy()
 }
 
 hier::IntVector
-MethodOfLinesPatchStrategy::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
+MethodOfLinesPatchStrategy::getRefineOpStencilWidth() const
 {
    return hier::IntVector::getZero(d_dim);
 }
 
 hier::IntVector
-MethodOfLinesPatchStrategy::getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
+MethodOfLinesPatchStrategy::getCoarsenOpStencilWidth() const
 {
    return hier::IntVector::getZero(d_dim);
 }

@@ -128,7 +128,7 @@ CartesianFaceDoubleConservativeLinearRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianFaceDoubleConservativeLinearRefine::getStencilWidth( const tbox::Dimension &dim ) const
+CartesianFaceDoubleConservativeLinearRefine::getStencilWidth() const
 {
    return hier::IntVector::getOne(getDim());
 }

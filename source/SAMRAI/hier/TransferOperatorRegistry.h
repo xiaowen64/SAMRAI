@@ -199,7 +199,7 @@ public:
     * @see hier::CoarsenOperator::getMaxCoarsenOpStencilWidth().
     */
    IntVector
-   getMaxTransferOpStencilWidth( const tbox::Dimension &dim );
+   getMaxTransferOpStencilWidth();
 
    /*!
     * @brief Set a minimum value on the value returned by

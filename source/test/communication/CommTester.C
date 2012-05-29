@@ -154,7 +154,7 @@ void CommTester::registerVariable(
                                         dst_ghosts));
       scratch_ghosts.max(hier::IntVector(scratch_ghosts.getDim(), 1));
       if (refine_operator) {
-         scratch_ghosts.max(refine_operator->getStencilWidth(dim));
+         scratch_ghosts.max(refine_operator->getStencilWidth());
       }
       int scratch_id =
          variable_db->registerVariableAndContext(src_variable,
@@ -224,7 +224,7 @@ void CommTester::registerVariableForReset(
                                         dst_ghosts));
       scratch_ghosts.max(hier::IntVector(scratch_ghosts.getDim(), 1));
       if (refine_operator) {
-         scratch_ghosts.max(refine_operator->getStencilWidth(scratch_ghosts.getDim()));
+         scratch_ghosts.max(refine_operator->getStencilWidth());
       }
       int scratch_id =
          variable_db->registerVariableAndContext(src_variable,
@@ -571,7 +571,7 @@ void CommTester::setPhysicalBoundaryConditions(
       gcw);
 }
 
-hier::IntVector CommTester::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
+hier::IntVector CommTester::getRefineOpStencilWidth() const
 {
    return hier::IntVector::getOne(d_dim);
 }
@@ -594,7 +594,7 @@ void CommTester::postprocessRefine(
    d_data_test_strategy->postprocessRefine(fine, coarse, fine_box, ratio);
 }
 
-hier::IntVector CommTester::getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
+hier::IntVector CommTester::getCoarsenOpStencilWidth() const
 {
    return hier::IntVector::getZero(d_dim);
 }

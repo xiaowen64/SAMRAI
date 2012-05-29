@@ -230,7 +230,7 @@ public:
     * Return stencil width of conservative linear interpolation operations.
     */
    virtual hier::IntVector
-   getRefineOpStencilWidth( const tbox::Dimension &dim ) const;
+   getRefineOpStencilWidth() const;
 
    /**
     * Refine velocity and pressure from coarse patch to fine patch
@@ -257,7 +257,7 @@ public:
     * Return stencil width of conservative averaging operations.
     */
    hier::IntVector
-   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const;
+   getCoarsenOpStencilWidth() const;
 
    /**
     * Coarsen velocity and pressure from coarse patch to fine patch

@@ -709,7 +709,7 @@ CoarsenSchedule::getMaxGhostsToGrow() const
 
       hier::IntVector gcw1 = d_coarsen_items[ici]->d_gcw_to_coarsen;
       if (d_coarsen_items[ici]->d_opcoarsen) {
-         gcw1 += d_coarsen_items[ici]->d_opcoarsen->getStencilWidth(dim);
+         gcw1 += d_coarsen_items[ici]->d_opcoarsen->getStencilWidth();
       }
       gcw.max(gcw1);
    }
@@ -1091,7 +1091,7 @@ CoarsenSchedule::initialCheckCoarsenClassItems() const
 
    hier::IntVector user_gcw(dim, 0);
    if (d_coarsen_patch_strategy) {
-      user_gcw = d_coarsen_patch_strategy->getCoarsenOpStencilWidth(dim);
+      user_gcw = d_coarsen_patch_strategy->getCoarsenOpStencilWidth();
    }
 
    for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {

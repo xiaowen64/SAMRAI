@@ -108,7 +108,7 @@ CartesianFaceFloatWeightedAverage::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianFaceFloatWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const
+CartesianFaceFloatWeightedAverage::getStencilWidth() const
 {
    return hier::IntVector::getZero(getDim());
 }

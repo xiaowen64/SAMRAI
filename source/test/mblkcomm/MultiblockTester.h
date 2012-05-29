@@ -223,7 +223,7 @@ public:
       const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
 
    hier::IntVector
-   getRefineOpStencilWidth( const tbox::Dimension &dim ) const;
+   getRefineOpStencilWidth() const;
 
    void
    preprocessRefine(
@@ -240,7 +240,7 @@ public:
       const hier::IntVector& ratio);
 
    hier::IntVector
-   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const;
+   getCoarsenOpStencilWidth() const;
 
    void
    preprocessCoarsen(

@@ -112,7 +112,7 @@ OuternodeDoubleConstantCoarsen::getOperatorPriority() const
 }
 
 hier::IntVector
-OuternodeDoubleConstantCoarsen::getStencilWidth( const tbox::Dimension &dim ) const
+OuternodeDoubleConstantCoarsen::getStencilWidth() const
 {
    return hier::IntVector::getZero(getDim());
 }

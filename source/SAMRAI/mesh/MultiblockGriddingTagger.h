@@ -115,7 +115,7 @@ public:
     * Always returns an IntVector of ones, because that is the maximum
     * stencil needed for the operations in GriddingAlgorithm
     */
-   virtual hier::IntVector getRefineOpStencilWidth( const tbox::Dimension &dim ) const;
+   virtual hier::IntVector getRefineOpStencilWidth() const;
 
    /*!
     * Perform user-defined refining operations.  This member function

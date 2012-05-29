@@ -112,7 +112,7 @@ SideIntegerConstantRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-SideIntegerConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
+SideIntegerConstantRefine::getStencilWidth() const
 {
    return hier::IntVector::getZero(getDim());
 }
