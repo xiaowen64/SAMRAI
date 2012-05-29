@@ -28,7 +28,9 @@ CoarsenOperator::s_finalize_handler(
    CoarsenOperator::finalizeCallback,
    tbox::StartupShutdownManager::priorityList);
 
-CoarsenOperator::CoarsenOperator(const std::string& name):
+CoarsenOperator::CoarsenOperator(
+   const tbox::Dimension& dim,
+   const std::string& name):
    d_name(name)
 {
    registerInLookupTable(name);

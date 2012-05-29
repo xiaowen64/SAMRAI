@@ -75,7 +75,7 @@ namespace geom {
 
 CartesianCellComplexLinearRefine::CartesianCellComplexLinearRefine(
    const tbox::Dimension& dim):
-   hier::RefineOperator("LINEAR_REFINE")
+   hier::RefineOperator(dim, "LINEAR_REFINE")
 {
 }
 

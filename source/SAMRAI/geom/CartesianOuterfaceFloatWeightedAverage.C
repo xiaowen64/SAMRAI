@@ -99,7 +99,7 @@ namespace geom {
 
 CartesianOuterfaceFloatWeightedAverage::CartesianOuterfaceFloatWeightedAverage(
    const tbox::Dimension& dim):
-   hier::CoarsenOperator("CONSERVATIVE_COARSEN")
+   hier::CoarsenOperator(dim, "CONSERVATIVE_COARSEN")
 {
 }
 

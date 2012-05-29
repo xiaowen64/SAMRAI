@@ -88,7 +88,7 @@ using namespace SAMRAI;
 
 SkeletonOutersideDoubleWeightedAverage::SkeletonOutersideDoubleWeightedAverage(
    const tbox::Dimension& dim):
-   hier::CoarsenOperator("SKELETON_CONSERVATIVE_COARSEN"),
+   hier::CoarsenOperator(dim, "SKELETON_CONSERVATIVE_COARSEN"),
    d_dim(dim)
 {
 }

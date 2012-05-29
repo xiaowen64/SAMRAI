@@ -72,7 +72,7 @@ namespace geom {
 
 CartesianCellFloatLinearRefine::CartesianCellFloatLinearRefine(
    const tbox::Dimension& dim):
-   hier::RefineOperator("LINEAR_REFINE")
+   hier::RefineOperator(dim, "LINEAR_REFINE")
 {
 }
 

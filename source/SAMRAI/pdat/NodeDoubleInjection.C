@@ -64,7 +64,7 @@ namespace pdat {
 
 NodeDoubleInjection::NodeDoubleInjection(
    const tbox::Dimension& dim):
-   hier::CoarsenOperator("CONSTANT_COARSEN")
+   hier::CoarsenOperator(dim, "CONSTANT_COARSEN")
 {
 }
 

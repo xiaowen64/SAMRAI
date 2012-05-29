@@ -28,7 +28,9 @@ RefineOperator::s_finalize_handler(
    RefineOperator::finalizeCallback,
    tbox::StartupShutdownManager::priorityList);
 
-RefineOperator::RefineOperator(const std::string& name):
+RefineOperator::RefineOperator(
+   const tbox::Dimension& dim,
+   const std::string& name):
    d_name(name)
 {
    registerInLookupTable(name);

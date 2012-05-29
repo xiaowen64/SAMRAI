@@ -93,7 +93,7 @@ namespace geom {
 
 CartesianSideDoubleWeightedAverage::CartesianSideDoubleWeightedAverage(
    const tbox::Dimension& dim):
-   hier::CoarsenOperator("CONSERVATIVE_COARSEN")
+   hier::CoarsenOperator(dim, "CONSERVATIVE_COARSEN")
 {
 }
 

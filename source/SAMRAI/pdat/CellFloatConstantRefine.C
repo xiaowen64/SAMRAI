@@ -65,7 +65,7 @@ namespace pdat {
 
 CellFloatConstantRefine::CellFloatConstantRefine(
    const tbox::Dimension& dim):
-   hier::RefineOperator("CONSTANT_REFINE")
+   hier::RefineOperator(dim, "CONSTANT_REFINE")
 {
 }
 

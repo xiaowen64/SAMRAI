@@ -97,7 +97,7 @@ namespace pdat {
 
 OuternodeDoubleConstantCoarsen::OuternodeDoubleConstantCoarsen(
    const tbox::Dimension& dim):
-   hier::CoarsenOperator("CONSTANT_COARSEN")
+   hier::CoarsenOperator(dim, "CONSTANT_COARSEN")
 {
 }
 
