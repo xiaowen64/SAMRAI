@@ -72,6 +72,12 @@ RefineAlgorithm::registerRefine(
    const boost::shared_ptr<hier::RefineOperator>& oprefine,
    const boost::shared_ptr<VariableFillPattern>& var_fill_pattern)
 {
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS
+   if (oprefine) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *oprefine);
+   }
+#endif
+
    if (d_schedule_created) {
       TBOX_ERROR("RefineAlgorithm::registerRefine error..."
          << "\nCannot call registerRefine with a RefineAlgorithm"
@@ -172,6 +178,9 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT(level);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *level);
+   if (patch_strategy) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *patch_strategy);
+   }
 #endif
 
    d_schedule_created = true;
@@ -215,6 +224,9 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT(level);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *level);
+   if (patch_strategy) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *patch_strategy);
+   }
 #endif
 
    d_schedule_created = true;
@@ -259,6 +271,9 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT(src_level);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, *dst_level, *src_level);
+   if (patch_strategy) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *patch_strategy);
+   }
 #endif
 
    d_schedule_created = true;
@@ -306,6 +321,9 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT(src_level);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, *dst_level, *src_level);
+   if (patch_strategy) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *patch_strategy);
+   }
 #endif
 
    d_schedule_created = true;
@@ -354,6 +372,9 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *level);
    if (hierarchy) {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *hierarchy);
+   }
+   if (patch_strategy) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *patch_strategy);
    }
 #endif
 
@@ -409,6 +430,9 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *level);
    if (hierarchy) {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *hierarchy);
+   }
+   if (patch_strategy) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *patch_strategy);
    }
 #endif
 
@@ -464,6 +488,9 @@ RefineAlgorithm::createSchedule(
    }
    if (hierarchy) {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *hierarchy);
+   }
+   if (patch_strategy) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *patch_strategy);
    }
 #endif
 
@@ -529,6 +556,9 @@ RefineAlgorithm::createSchedule(
    }
    if (hierarchy) {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *hierarchy);
+   }
+   if (patch_strategy) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *patch_strategy);
    }
 #endif
 

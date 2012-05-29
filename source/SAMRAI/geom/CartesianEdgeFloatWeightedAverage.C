@@ -110,7 +110,7 @@ CartesianEdgeFloatWeightedAverage::getOperatorPriority() const
 hier::IntVector
 CartesianEdgeFloatWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(dim);
+   return hier::IntVector::getZero(getDim());
 }
 
 void
@@ -122,7 +122,7 @@ CartesianEdgeFloatWeightedAverage::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(fine.getDim());
+   const tbox::Dimension& dim(getDim());
 
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(dim, coarse, fine, coarse_box, ratio);
 

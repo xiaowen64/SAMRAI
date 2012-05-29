@@ -82,7 +82,7 @@ CellFloatConstantRefine::getOperatorPriority() const
 hier::IntVector
 CellFloatConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(dim);
+   return hier::IntVector::getZero(getDim());
 }
 
 void
@@ -129,7 +129,7 @@ CellFloatConstantRefine::refine(
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
-   TBOX_ASSERT_OBJDIM_EQUALITY4(fine, coarse, fine_box, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY5(*this, fine, coarse, fine_box, ratio);
 
    const hier::Box cgbox(cdata->getGhostBox());
 
@@ -145,7 +145,7 @@ CellFloatConstantRefine::refine(
    const hier::Index ilastf = fine_box.upper();
 
    for (int d = 0; d < fdata->getDepth(); d++) {
-      if (fine.getDim() == tbox::Dimension(1)) {
+      if (getDim() == tbox::Dimension(1)) {
          F77_FUNC(conrefcellflot1d, CONREFCELLFLOT1D) (ifirstc(0), ilastc(0),
             ifirstf(0), ilastf(0),
             cilo(0), cihi(0),
@@ -153,7 +153,7 @@ CellFloatConstantRefine::refine(
             &ratio[0],
             cdata->getPointer(d),
             fdata->getPointer(d));
-      } else if (fine.getDim() == tbox::Dimension(2)) {
+      } else if (getDim() == tbox::Dimension(2)) {
          F77_FUNC(conrefcellflot2d, CONREFCELLFLOT2D) (ifirstc(0), ifirstc(1),
             ilastc(0), ilastc(1),
             ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
@@ -162,7 +162,7 @@ CellFloatConstantRefine::refine(
             &ratio[0],
             cdata->getPointer(d),
             fdata->getPointer(d));
-      } else if (fine.getDim() == tbox::Dimension(3)) {
+      } else if (getDim() == tbox::Dimension(3)) {
          F77_FUNC(conrefcellflot3d, conrefcellflot3d) (ifirstc(0), ifirstc(1),
             ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),

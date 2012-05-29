@@ -138,6 +138,15 @@ public:
    getMaxRefineOpStencilWidth(
       const tbox::Dimension& dim);
 
+   /**
+    * Return the dimension of this object.
+    */
+   const tbox::Dimension&
+   getDim() const
+   {
+      return d_dim;
+   }
+
 private:
    RefineOperator(
       const RefineOperator&);                   // not implemented
@@ -182,6 +191,8 @@ private:
    }
 
    const std::string d_name;
+
+   const tbox::Dimension d_dim;
 
    static std::multimap<std::string, RefineOperator *> s_lookup_table;
 

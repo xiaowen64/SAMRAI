@@ -31,7 +31,8 @@ CoarsenOperator::s_finalize_handler(
 CoarsenOperator::CoarsenOperator(
    const tbox::Dimension& dim,
    const std::string& name):
-   d_name(name)
+   d_name(name),
+   d_dim(dim)
 {
    registerInLookupTable(name);
 }
@@ -79,7 +80,9 @@ CoarsenOperator::getMaxCoarsenOpStencilWidth(
    for (std::multimap<std::string, CoarsenOperator *>::const_iterator
         mi = s_lookup_table.begin(); mi != s_lookup_table.end(); ++mi) {
       const CoarsenOperator* op = mi->second;
-      max_width.max(op->getStencilWidth(dim));
+      if (op->getDim() == dim) {
+         max_width.max(op->getStencilWidth(dim));
+      }
    }
 
    return max_width;

@@ -82,7 +82,7 @@ NodeComplexInjection::getOperatorPriority() const
 hier::IntVector
 NodeComplexInjection::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(dim);
+   return hier::IntVector::getZero(getDim());
 }
 
 void
@@ -94,7 +94,7 @@ NodeComplexInjection::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   TBOX_ASSERT_OBJDIM_EQUALITY4(coarse, fine, coarse_box, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY5(*this, coarse, fine, coarse_box, ratio);
 
    boost::shared_ptr<NodeData<dcomplex> > fdata(
       fine.getPatchData(src_component),
@@ -116,14 +116,14 @@ NodeComplexInjection::coarsen(
    const hier::Index ilastc = coarse_box.upper();
 
    for (int d = 0; d < cdata->getDepth(); d++) {
-      if (fine.getDim() == tbox::Dimension(1)) {
+      if (getDim() == tbox::Dimension(1)) {
          F77_FUNC(conavgnodecplx1d, CONAVGNODECPLX1D) (ifirstc(0), ilastc(0),
             filo(0), fihi(0),
             cilo(0), cihi(0),
             &ratio[0],
             fdata->getPointer(d),
             cdata->getPointer(d));
-      } else if (fine.getDim() == tbox::Dimension(2)) {
+      } else if (getDim() == tbox::Dimension(2)) {
          F77_FUNC(conavgnodecplx2d, CONAVGNODECPLX2D) (ifirstc(0), ifirstc(1),
             ilastc(0), ilastc(1),
             filo(0), filo(1), fihi(0), fihi(1),
@@ -131,7 +131,7 @@ NodeComplexInjection::coarsen(
             &ratio[0],
             fdata->getPointer(d),
             cdata->getPointer(d));
-      } else if (fine.getDim() == tbox::Dimension(3)) {
+      } else if (getDim() == tbox::Dimension(3)) {
          F77_FUNC(conavgnodecplx3d, CONAVGNODECPLX3D) (ifirstc(0), ifirstc(1),
             ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),

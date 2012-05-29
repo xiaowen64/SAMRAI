@@ -142,6 +142,9 @@ RefineSchedule::RefineSchedule(
    TBOX_ASSERT(refine_classes);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *src_level);
+   if (patch_strategy) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *patch_strategy);
+   }
 #endif
 
    getFromInput();
@@ -327,6 +330,9 @@ RefineSchedule::RefineSchedule(
    if (hierarchy) {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *hierarchy);
    }
+   if (patch_strategy) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *patch_strategy);
+   }
 #endif
 
    getFromInput();
@@ -497,6 +503,9 @@ RefineSchedule::RefineSchedule(
    }
    if (hierarchy) {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *hierarchy);
+   }
+   if (patch_strategy) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *patch_strategy);
    }
 #endif
 

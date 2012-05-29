@@ -113,7 +113,7 @@ EdgeComplexConstantRefine::getOperatorPriority() const
 hier::IntVector
 EdgeComplexConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(dim);
+   return hier::IntVector::getZero(getDim());
 }
 
 void
@@ -125,7 +125,7 @@ EdgeComplexConstantRefine::refine(
    const hier::BoxOverlap& fine_overlap,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(fine.getDim());
+   const tbox::Dimension& dim(getDim());
 
    boost::shared_ptr<EdgeData<dcomplex> > cdata(
       coarse.getPatchData(src_component),
@@ -142,7 +142,7 @@ EdgeComplexConstantRefine::refine(
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
-   TBOX_ASSERT_OBJDIM_EQUALITY3(fine, coarse, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*this, fine, coarse, ratio);
 
    const hier::Box cgbox(cdata->getGhostBox());
 

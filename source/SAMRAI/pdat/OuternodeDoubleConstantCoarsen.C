@@ -114,7 +114,7 @@ OuternodeDoubleConstantCoarsen::getOperatorPriority() const
 hier::IntVector
 OuternodeDoubleConstantCoarsen::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(dim);
+   return hier::IntVector::getZero(getDim());
 }
 
 void
@@ -126,7 +126,7 @@ OuternodeDoubleConstantCoarsen::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(fine.getDim());
+   const tbox::Dimension& dim(getDim());
 
    boost::shared_ptr<OuternodeData<double> > fdata(
       fine.getPatchData(src_component),
@@ -138,7 +138,7 @@ OuternodeDoubleConstantCoarsen::coarsen(
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
-   TBOX_ASSERT_OBJDIM_EQUALITY4(coarse, fine, coarse_box, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY5(*this, coarse, fine, coarse_box, ratio);
 
    const hier::Index filo = fine.getBox().lower();
    const hier::Index fihi = fine.getBox().upper();

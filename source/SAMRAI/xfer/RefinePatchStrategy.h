@@ -261,6 +261,11 @@ public:
       }
    }
 
+   /*!
+    * @brief Return the dimension of this object.
+    */
+   virtual const tbox::Dimension& getDim() const = 0;
+
 private:
    /*!
     * @brief Get the set of RefinePatchStrategy objects that have been
