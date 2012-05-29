@@ -124,12 +124,12 @@ CartesianGridGeometry::CartesianGridGeometry(
    d_registered_for_restart = register_for_restart;
 
    if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->
-      registerRestartItem(getObjectName(), this);
+      tbox::RestartManager::getManager()->registerRestartItem(getObjectName(),
+         this);
    }
 
    bool is_from_restart = tbox::RestartManager::getManager()->isFromRestart();
-   if (is_from_restart && d_registered_for_restart) {
+   if (is_from_restart) {
       getFromRestart();
    }
 
@@ -689,8 +689,6 @@ CartesianGridGeometry::getFromInput(
 void
 CartesianGridGeometry::getFromRestart()
 {
-   const tbox::Dimension& dim(getDim());
-
    boost::shared_ptr<tbox::Database> restart_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
@@ -701,6 +699,8 @@ CartesianGridGeometry::getFromRestart()
    }
    boost::shared_ptr<tbox::Database> db(
       restart_db->getDatabase(getObjectName()));
+
+   const tbox::Dimension& dim(getDim());
 
    int ver = db->getInteger("GEOM_CARTESIAN_GRID_GEOMETRY_VERSION");
    if (ver != GEOM_CARTESIAN_GRID_GEOMETRY_VERSION) {

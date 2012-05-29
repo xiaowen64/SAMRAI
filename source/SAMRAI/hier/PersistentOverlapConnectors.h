@@ -233,8 +233,7 @@ private:
     * Read from the input database.
     */
    void
-   getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db);
+   getFromInput();
 
    //@}
 

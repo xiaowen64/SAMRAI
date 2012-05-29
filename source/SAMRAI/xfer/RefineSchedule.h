@@ -347,7 +347,7 @@ private:
       const RefineSchedule&);                   // not implemented
    void
    operator = (
-      const RefineSchedule&);                           // not implemented
+      const RefineSchedule&);                   // not implemented
 
    /*!
     * @brief Allocate static timers.

@@ -206,8 +206,8 @@ HyperbolicLevelIntegrator::HyperbolicLevelIntegrator(
    d_registered_for_restart = register_for_restart;
 
    if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->
-      registerRestartItem(d_object_name, this);
+      tbox::RestartManager::getManager()->registerRestartItem(d_object_name,
+         this);
    }
 
    d_patch_strategy = patch_strategy;
@@ -233,16 +233,25 @@ HyperbolicLevelIntegrator::HyperbolicLevelIntegrator(
    /*
     * Communication algorithms.
     */
-   d_bdry_fill_advance.reset(new xfer::RefineAlgorithm(d_patch_strategy->getDim()));
-   d_bdry_fill_advance_new.reset(new xfer::RefineAlgorithm(d_patch_strategy->getDim()));
-   d_bdry_fill_advance_old.reset(new xfer::RefineAlgorithm(d_patch_strategy->getDim()));
-   d_fill_new_level.reset(new xfer::RefineAlgorithm(d_patch_strategy->getDim()));
-   d_coarsen_fluxsum.reset(new xfer::CoarsenAlgorithm(d_patch_strategy->getDim()));
-   d_coarsen_sync_data.reset(new xfer::CoarsenAlgorithm(d_patch_strategy->getDim()));
-   d_sync_initial_data.reset(new xfer::CoarsenAlgorithm(d_patch_strategy->getDim()));
+   d_bdry_fill_advance.reset(new xfer::RefineAlgorithm(
+      d_patch_strategy->getDim()));
+   d_bdry_fill_advance_new.reset(new xfer::RefineAlgorithm(
+      d_patch_strategy->getDim()));
+   d_bdry_fill_advance_old.reset(new xfer::RefineAlgorithm(
+      d_patch_strategy->getDim()));
+   d_fill_new_level.reset(new xfer::RefineAlgorithm(
+      d_patch_strategy->getDim()));
+   d_coarsen_fluxsum.reset(new xfer::CoarsenAlgorithm(
+      d_patch_strategy->getDim()));
+   d_coarsen_sync_data.reset(new xfer::CoarsenAlgorithm(
+      d_patch_strategy->getDim()));
+   d_sync_initial_data.reset(new xfer::CoarsenAlgorithm(
+      d_patch_strategy->getDim()));
 
-   d_coarsen_rich_extrap_init.reset(new xfer::CoarsenAlgorithm(d_patch_strategy->getDim()));
-   d_coarsen_rich_extrap_final.reset(new xfer::CoarsenAlgorithm(d_patch_strategy->getDim()));
+   d_coarsen_rich_extrap_init.reset(new xfer::CoarsenAlgorithm(
+      d_patch_strategy->getDim()));
+   d_coarsen_rich_extrap_final.reset(new xfer::CoarsenAlgorithm(
+      d_patch_strategy->getDim()));
 
    /*
     * hier::Variable contexts used in algorithm.  Note that "OLD" context
@@ -260,7 +269,7 @@ HyperbolicLevelIntegrator::HyperbolicLevelIntegrator(
     */
 
    bool from_restart = tbox::RestartManager::getManager()->isFromRestart();
-   if (from_restart && d_registered_for_restart) {
+   if (from_restart) {
       getFromRestart();
    }
    getFromInput(input_db, from_restart);

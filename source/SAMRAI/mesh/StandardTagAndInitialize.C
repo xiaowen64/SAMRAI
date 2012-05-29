@@ -113,19 +113,7 @@ StandardTagAndInitialize::StandardTagAndInitialize(
    d_use_richardson_extrapolation = false;
    d_use_refine_boxes = false;
 
-   /*
-    * If no input database is provided, no criteria is set to tag cells
-    * so cell-tagging will not occur.  Print a warning to indicate if
-    * this is the case.
-    */
-   if (!input_db) {
-      TBOX_WARNING(
-         getObjectName() << ":constructor \n"
-                         << "no input database specified - NO METHOD IS SPECIFIED TO TAG \n"
-                         << "CELLS FOR REFINEMENT so no tagging is performed.");
-   } else {
-      getFromInput(input_db);
-   }
+   getFromInput(input_db);
 
    /*
     * If the user wishes to only use the REFINE_BOXES tagging option,
@@ -1039,74 +1027,86 @@ void
 StandardTagAndInitialize::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db)
 {
-   TBOX_ASSERT(input_db);
-
-   tbox::Array<std::string> tagging_method;
-   if (input_db->keyExists("tagging_method")) {
-      tagging_method = input_db->getStringArray("tagging_method");
-   }
-
-   if (tagging_method.getSize() > 3) {
-      TBOX_ERROR(getObjectName() << ":getFromInput\n"
-                                 << tagging_method.getSize()
-                                 << "entries specified"
-                                 << "in `tagging_method' input.  Maximum allowable is 3.");
-   }
-
-   d_use_gradient_detector = false;
-   d_use_richardson_extrapolation = false;
-   d_use_refine_boxes = false;
-
    /*
-    * Check tagging method input.
+    * If no input database is provided, no criteria is set to tag cells
+    * so cell-tagging will not occur.  Print a warning to indicate if
+    * this is the case.
     */
+   if (input_db) {
 
-   bool found_method = false;
-   for (int i = 0; i < tagging_method.getSize(); i++) {
-
-      if (tagging_method[i] == "GRADIENT_DETECTOR") {
-
-         d_use_gradient_detector = true;
-         found_method = true;
-
+      tbox::Array<std::string> tagging_method;
+      if (input_db->keyExists("tagging_method")) {
+         tagging_method = input_db->getStringArray("tagging_method");
       }
 
-      if (tagging_method[i] == "RICHARDSON_EXTRAPOLATION") {
-
-         d_use_richardson_extrapolation = true;
-         found_method = true;
-
+      if (tagging_method.getSize() > 3) {
+         TBOX_ERROR(getObjectName() << "::getFromInput\n"
+                                    << tagging_method.getSize()
+                                    << "entries specified"
+                                    << "in `tagging_method' input.  Maximum allowable is 3.");
       }
 
-      if (tagging_method[i] == "REFINE_BOXES") {
+      d_use_gradient_detector = false;
+      d_use_richardson_extrapolation = false;
+      d_use_refine_boxes = false;
 
-         d_use_refine_boxes = true;
-         found_method = true;
+      /*
+       * Check tagging method input.
+       */
 
+      bool found_method = false;
+      for (int i = 0; i < tagging_method.getSize(); i++) {
+
+         if (tagging_method[i] == "GRADIENT_DETECTOR") {
+
+            d_use_gradient_detector = true;
+            found_method = true;
+
+         }
+
+         if (tagging_method[i] == "RICHARDSON_EXTRAPOLATION") {
+
+            d_use_richardson_extrapolation = true;
+            found_method = true;
+
+         }
+
+         if (tagging_method[i] == "REFINE_BOXES") {
+
+            d_use_refine_boxes = true;
+            found_method = true;
+
+         }
+      }
+
+      /*
+       * Check for valid entries
+       */
+      if (!found_method) {
+         TBOX_WARNING(
+            getObjectName() << "::getFromInput \n"
+                            << "No `tagging_method' entry specified, so cell tagging \n"
+                            << "will NOT be performed.  If you wish to invoke cell \n"
+                            << "tagging, you must enter one or more valid tagging \n"
+                            << "methods, of type GRADIENT_DETECTOR, "
+                            << "RICHARDSON_EXTRAPOLATION, or REFINE_BOXES\n"
+                            << "See class header for details.\n");
+      }
+
+      /*
+       * If user-supplied refine boxes are to be used, get refine box
+       * information from input using the TagAndInitializeStrategy class, from
+       * which this class is derived.
+       */
+      if (d_use_refine_boxes) {
+         TagAndInitializeStrategy::getFromInput(input_db);
       }
    }
-
-   /*
-    * Check for valid entries
-    */
-   if (!found_method) {
+   else {
       TBOX_WARNING(
-         getObjectName() << ":getFromInput \n"
-                         << "No `tagging_method' entry specified, so cell tagging \n"
-                         << "will NOT be performed.  If you wish to invoke cell \n"
-                         << "tagging, you must enter one or more valid tagging \n"
-                         << "methods, of type GRADIENT_DETECTOR, "
-                         << "RICHARDSON_EXTRAPOLATION, or REFINE_BOXES\n"
-                         << "See class header for details.\n");
-   }
-
-   /*
-    * If user-supplied refine boxes are to be used, get refine box information
-    * from input using the TagAndInitializeStrategy class, from which
-    * this class is derived.
-    */
-   if (d_use_refine_boxes) {
-      TagAndInitializeStrategy::getFromInput(input_db);
+         getObjectName() << "::getFromInput \n"
+                         << "no input database specified - NO METHOD IS SPECIFIED TO TAG \n"
+                         << "CELLS FOR REFINEMENT so no tagging is performed.");
    }
 
 }

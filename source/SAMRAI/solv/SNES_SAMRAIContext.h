@@ -217,8 +217,9 @@ public:
     */
    SNES_SAMRAIContext(
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& input_db,
-      SNESAbstractFunctions* my_functions);
+      SNESAbstractFunctions* my_functions,
+      const boost::shared_ptr<tbox::Database>& input_db =
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * Destructor for solve_SNES_SAMRAIContext destroys the SNES

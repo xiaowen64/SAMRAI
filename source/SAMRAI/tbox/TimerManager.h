@@ -160,7 +160,8 @@ public:
     */
    static void
    createManager(
-      const boost::shared_ptr<Database>& input_db);
+      const boost::shared_ptr<Database>& input_db =
+         boost::shared_ptr<Database>());
 
    /*!
     * Return a pointer to the singleton instance of the timer manager.
@@ -233,7 +234,8 @@ protected:
     * can have access to the constructor for the class.
     */
    explicit TimerManager(
-      const boost::shared_ptr<Database>& input_db);
+      const boost::shared_ptr<Database>& input_db =
+         boost::shared_ptr<Database>());
 
    /*!
     * TimerManager is a Singleton class; its destructor is protected.

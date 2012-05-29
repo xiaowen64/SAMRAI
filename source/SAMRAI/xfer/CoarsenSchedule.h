@@ -190,7 +190,7 @@ private:
       const CoarsenSchedule&);              // not implemented
    void
    operator = (
-      const CoarsenSchedule&);                    // not implemented
+      const CoarsenSchedule&);              // not implemented
 
    /*!
     * @brief Set up things for the entire class.

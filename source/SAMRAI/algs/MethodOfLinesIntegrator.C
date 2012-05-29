@@ -52,8 +52,8 @@ MethodOfLinesIntegrator::MethodOfLinesIntegrator(
    d_registered_for_restart = register_for_restart;
 
    if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->
-      registerRestartItem(d_object_name, this);
+      tbox::RestartManager::getManager()->registerRestartItem(d_object_name,
+         this);
    }
 
    d_patch_strategy = patch_strategy;
@@ -95,7 +95,7 @@ MethodOfLinesIntegrator::MethodOfLinesIntegrator(
     * Initialize object with data read from input and restart databases.
     */
    bool is_from_restart = tbox::RestartManager::getManager()->isFromRestart();
-   if (is_from_restart && d_registered_for_restart) {
+   if (is_from_restart) {
       getFromRestart();
    }
 
@@ -789,13 +789,12 @@ MethodOfLinesIntegrator::getFromRestart()
    boost::shared_ptr<tbox::Database> root_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
-   boost::shared_ptr<tbox::Database> restart_db;
-   if (root_db->isDatabase(d_object_name)) {
-      restart_db = root_db->getDatabase(d_object_name);
-   } else {
+   if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file.");
    }
+   boost::shared_ptr<tbox::Database> restart_db(
+      root_db->getDatabase(d_object_name));
 
    int ver = restart_db->getInteger("ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION");
    if (ver != ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION) {

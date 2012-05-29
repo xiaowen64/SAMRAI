@@ -649,9 +649,7 @@ CellPoissonFACOps::CellPoissonFACOps(
    /*
     * Some variables initialized by default are overriden by input.
     */
-   if (input_db) {
-     getFromInput(input_db);
-   }
+   getFromInput(input_db);
 
    /*
     * Check input validity and correctness.
@@ -673,30 +671,32 @@ void
 CellPoissonFACOps::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db)
 {
-   d_coarse_solver_choice =
-      input_db->getStringWithDefault("coarse_solver_choice",
-         d_coarse_solver_choice);
-   d_coarse_solver_tolerance =
-      input_db->getDoubleWithDefault("coarse_solver_tolerance",
-         d_coarse_solver_tolerance);
-   d_coarse_solver_max_iterations =
-      input_db->getIntegerWithDefault("coarse_solver_max_iterations",
-         d_coarse_solver_max_iterations);
-   d_smoothing_choice =
-      input_db->getStringWithDefault("smoothing_choice",
-         d_smoothing_choice);
+   if (input_db) {
+      d_coarse_solver_choice =
+         input_db->getStringWithDefault("coarse_solver_choice",
+            d_coarse_solver_choice);
+      d_coarse_solver_tolerance =
+         input_db->getDoubleWithDefault("coarse_solver_tolerance",
+            d_coarse_solver_tolerance);
+      d_coarse_solver_max_iterations =
+         input_db->getIntegerWithDefault("coarse_solver_max_iterations",
+            d_coarse_solver_max_iterations);
+      d_smoothing_choice =
+         input_db->getStringWithDefault("smoothing_choice",
+            d_smoothing_choice);
 
-   d_cf_discretization =
-      input_db->getStringWithDefault("cf_discretization",
-         d_cf_discretization);
+      d_cf_discretization =
+         input_db->getStringWithDefault("cf_discretization",
+            d_cf_discretization);
 
-   d_prolongation_method =
-      input_db->getStringWithDefault("prolongation_method",
-         d_prolongation_method);
+      d_prolongation_method =
+         input_db->getStringWithDefault("prolongation_method",
+            d_prolongation_method);
 
-   d_enable_logging =
-      input_db->getBoolWithDefault("enable_logging",
-         d_enable_logging);
+      d_enable_logging =
+         input_db->getBoolWithDefault("enable_logging",
+            d_enable_logging);
+   }
 }
 
 /*

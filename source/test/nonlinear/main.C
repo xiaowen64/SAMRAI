@@ -301,8 +301,8 @@ int main(
 #ifdef HAVE_PETSC
          nonlinear_solver =
             new solv::SNES_SAMRAIContext("SNESSolver",
-               input_db->getDatabase("SNESSolver"),
-               bratu_model);
+               bratu_model,
+               input_db->getDatabase("SNESSolver"));
 #else
          TBOX_ERROR("Cannot use PETSc-SNES option because SAMRAI was\n"
             << "not configured to use it.");
@@ -313,8 +313,8 @@ int main(
 #ifdef HAVE_SUNDIALS
          nonlinear_solver =
             new solv::KINSOL_SAMRAIContext("KINSOLSolver",
-               input_db->getDatabase("KINSOLSolver"),
-               bratu_model);
+               bratu_model,
+               input_db->getDatabase("KINSOLSolver"));
 #else
          TBOX_ERROR("Cannot use KINSOL option because SAMRAI was\n"
             << "not configured to use it.");

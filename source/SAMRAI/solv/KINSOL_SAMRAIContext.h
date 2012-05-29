@@ -169,8 +169,9 @@ public:
     */
    KINSOL_SAMRAIContext(
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& input_db,
-      KINSOLAbstractFunctions* my_functions);
+      KINSOLAbstractFunctions* my_functions,
+      const boost::shared_ptr<tbox::Database>& input_db =
+         boost::shared_ptr<tbox::Database>());
 
    /**
     * Destructor for algs::KINSOL_SAMRAIContext destroys the KINSOL

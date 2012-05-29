@@ -77,8 +77,8 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
    d_registered_for_restart = register_for_restart;
 
    if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->
-      registerRestartItem(d_object_name, this);
+      tbox::RestartManager::getManager()->registerRestartItem(d_object_name,
+         this);
    }
 
    d_patch_hierarchy = hierarchy;
@@ -172,7 +172,7 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
     * from input and restart databases.
     */
    bool is_from_restart = tbox::RestartManager::getManager()->isFromRestart();
-   if (is_from_restart && d_registered_for_restart) {
+   if (is_from_restart) {
       getFromRestart();
    }
    getFromInput(input_db, is_from_restart);
@@ -238,8 +238,7 @@ TimeRefinementIntegrator::initializeHierarchy()
       getTagAndInitializeStrategy()->
       resetHierarchyConfiguration(d_patch_hierarchy,
          0,
-         d_patch_hierarchy->
-         getFinestLevelNumber());
+         d_patch_hierarchy->getFinestLevelNumber());
 
    } else {
 
@@ -262,8 +261,7 @@ TimeRefinementIntegrator::initializeHierarchy()
          // "true" argument: const bool initial_time = true;
          d_refine_level_integrator->synchronizeNewLevels(d_patch_hierarchy,
             0,
-            d_patch_hierarchy->
-            getFinestLevelNumber(),
+            d_patch_hierarchy->getFinestLevelNumber(),
             d_start_time,
             true);
       }
@@ -392,8 +390,7 @@ TimeRefinementIntegrator::initializeRefinedTimesteppingLevelData(
             d_refine_level_integrator->getMaxFinerLevelDt(
                level_number,
                d_dt_actual_level[level_number - 1],
-               d_patch_hierarchy->
-               getRatioToCoarserLevel(level_number)));
+               d_patch_hierarchy->getRatioToCoarserLevel(level_number)));
    }
 
    d_dt_max_level[level_number] = d_dt_actual_level[level_number] = dt_level;
@@ -687,8 +684,7 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
                d_refine_level_integrator->getMaxFinerLevelDt(
                   level_number,
                   d_dt_actual_level[level_number - 1],
-                  d_patch_hierarchy->
-                  getRatioToCoarserLevel(level_number)));
+                  d_patch_hierarchy->getRatioToCoarserLevel(level_number)));
 
          if (d_patch_hierarchy->levelCanBeRefined(level_number)) {
             d_dt_max_level[level_number] =
@@ -841,8 +837,7 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
                resetTimeDependentData(d_patch_hierarchy->
                   getPatchLevel(finest_level_number),
                   new_level_time,
-                  d_patch_hierarchy->
-                  levelCanBeRefined(finest_level_number));
+                  d_patch_hierarchy->levelCanBeRefined(finest_level_number));
             }
          }
 
@@ -891,8 +886,7 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
                   d_refine_level_integrator->resetTimeDependentData(
                      d_patch_hierarchy->getPatchLevel(finest_level_number),
                      new_level_time,
-                     d_patch_hierarchy->
-                     levelCanBeRefined(finest_level_number));
+                     d_patch_hierarchy->levelCanBeRefined(finest_level_number));
                }
             } else {
                for (int ln = level_number; ln <= finest_level_number; ln++) {
@@ -984,8 +978,7 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
             d_refine_level_integrator->resetTimeDependentData(
                patch_level,
                d_level_sim_time[level_number],
-               d_patch_hierarchy->
-               levelCanBeRefined(level_number));
+               d_patch_hierarchy->levelCanBeRefined(level_number));
          }
 
          if (d_just_regridded) {
@@ -1148,13 +1141,11 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
        */
 
       if (d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
-         if (!d_patch_hierarchy->
-             levelCanBeRefined(finest_level_number)) {
+         if (!d_patch_hierarchy->levelCanBeRefined(finest_level_number)) {
             d_refine_level_integrator->resetTimeDependentData(
                d_patch_hierarchy->getPatchLevel(finest_level_number),
                d_integrator_time,
-               d_patch_hierarchy->
-               levelCanBeRefined(finest_level_number));
+               d_patch_hierarchy->levelCanBeRefined(finest_level_number));
          }
       } else {
          for (int ln = 0; ln <= finest_level_number; ln++) {
@@ -1657,13 +1648,12 @@ TimeRefinementIntegrator::getFromRestart()
    boost::shared_ptr<tbox::Database> restart_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
-   boost::shared_ptr<tbox::Database> db;
-   if (restart_db->isDatabase(d_object_name)) {
-      db = restart_db->getDatabase(d_object_name);
-   } else {
+   if (!restart_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file.");
    }
+   boost::shared_ptr<tbox::Database> db(
+      restart_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION");
    if (ver != ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION) {

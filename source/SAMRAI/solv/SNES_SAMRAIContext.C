@@ -71,8 +71,8 @@ SNES_SAMRAIContext::SNESJacobianSet(
  */
 SNES_SAMRAIContext::SNES_SAMRAIContext(
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& input_db,
-   SNESAbstractFunctions* my_functions)
+   SNESAbstractFunctions* my_functions,
+   const boost::shared_ptr<tbox::Database>& input_db)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(!(my_functions == (SNESAbstractFunctions *)NULL));

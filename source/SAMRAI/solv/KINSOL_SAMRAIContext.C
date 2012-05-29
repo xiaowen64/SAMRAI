@@ -38,8 +38,8 @@ const int KINSOL_SAMRAIContext::SOLV_KINSOL_SAMRAI_CONTEXT_VERSION = 1;
 
 KINSOL_SAMRAIContext::KINSOL_SAMRAIContext(
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& input_db,
-   KINSOLAbstractFunctions* my_functions)
+   KINSOLAbstractFunctions* my_functions,
+   const boost::shared_ptr<tbox::Database>& input_db)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(!(my_functions == (KINSOLAbstractFunctions *)NULL));

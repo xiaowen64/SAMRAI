@@ -33,9 +33,7 @@ PersistentOverlapConnectors::PersistentOverlapConnectors(
    const BoxLevel& my_mapped_box_level):
    d_my_mapped_box_level(my_mapped_box_level)
 {
-   if (s_check_created_connectors == '\0') {
-      getFromInput(tbox::InputManager::getInputDatabase());
-   }
+   getFromInput();
 }
 
 /*
@@ -54,24 +52,31 @@ PersistentOverlapConnectors::~PersistentOverlapConnectors()
  ************************************************************************
  */
 void
-PersistentOverlapConnectors::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db)
+PersistentOverlapConnectors::getFromInput()
 {
-   if (input_db && input_db->isDatabase("PersistentOverlapConnectors")) {
-      boost::shared_ptr<tbox::Database> rsdb(
-         input_db->getDatabase("PersistentOverlapConnectors"));
+   if (s_check_created_connectors == '\0') {
+      s_check_created_connectors = 'n';
+      if (tbox::InputManager::inputDatabaseExists()) {
+         boost::shared_ptr<tbox::Database> input_db(
+            tbox::InputManager::getInputDatabase());
+         if (input_db->isDatabase("PersistentOverlapConnectors")) {
+            boost::shared_ptr<tbox::Database> pocdb(
+               input_db->getDatabase("PersistentOverlapConnectors"));
 
-      const bool check_created_connectors(
-         rsdb->getBoolWithDefault("check_created_connectors", false));
-      s_check_created_connectors = check_created_connectors ? 'y' : 'n';
+            const bool check_created_connectors(
+               pocdb->getBoolWithDefault("check_created_connectors", false));
+            s_check_created_connectors = check_created_connectors ? 'y' : 'n';
 
-      const bool check_accessed_connectors(
-         rsdb->getBoolWithDefault("check_accessed_connectors", false));
-      s_check_accessed_connectors = check_accessed_connectors ? 'y' : 'n';
+            const bool check_accessed_connectors(
+               pocdb->getBoolWithDefault("check_accessed_connectors", false));
+            s_check_accessed_connectors =
+               check_accessed_connectors ? 'y' : 'n';
 
-      s_always_create_missing_connector =
-         rsdb->getBoolWithDefault("always_create_missing_connector",
-            s_always_create_missing_connector);
+            s_always_create_missing_connector =
+               pocdb->getBoolWithDefault("always_create_missing_connector",
+                  s_always_create_missing_connector);
+         }
+      }
    }
 }
 

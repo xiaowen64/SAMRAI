@@ -219,7 +219,7 @@ GriddingAlgorithm::GriddingAlgorithm(
     * Initialize object with data read from input and restart databases.
     */
    bool is_from_restart = tbox::RestartManager::getManager()->isFromRestart();
-   if (is_from_restart && d_registered_for_restart) {
+   if (is_from_restart) {
       getFromRestart();
    }
 
