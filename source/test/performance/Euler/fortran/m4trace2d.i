@@ -47,7 +47,7 @@ define(trace_call,`dnl
               enddo
             enddo
 
-            call trace(dt,ifirst$1,ilast$1,mc,
+            call trace2d(dt,ifirst$1,ilast$1,mc,
      &        dx,idir,igdnv,ttsound,
      &        ttraclft,ttracrgt,
      &        ttcelslp,ttedgslp)

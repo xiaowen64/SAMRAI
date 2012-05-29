@@ -10,87 +10,113 @@
 
 extern "C" {
 
-void F77_FUNC(eulerinit, EULERINIT) (
+void F77_FUNC(eulerinit2d, EULERINIT2D) (
    const int&, const double *, const double *, const double *,
    const int&, const int&,
    const int&, const int&,
-#if (NDIM > 2)
-   const int&, const int&,
-#endif
    const int&,
    const int&,
-#if (NDIM > 2)
-   const int&,
-#endif
    const double&,
    double *, double *, double *,
    const int&,
    const double *,
    const double *, const double *, const double *);
 
-void F77_FUNC(eulerinitsphere, EULERINITSPHERE) (
+void F77_FUNC(eulerinit3d, EULERINIT3D) (
    const int&, const double *, const double *, const double *,
    const int&, const int&,
    const int&, const int&,
-#if (NDIM > 2)
    const int&, const int&,
-#endif
    const int&,
    const int&,
-#if (NDIM > 2)
    const int&,
-#endif
+   const double&,
+   double *, double *, double *,
+   const int&,
+   const double *,
+   const double *, const double *, const double *);
+
+void F77_FUNC(eulerinitsphere2d, EULERINITSPHERE2D) (
+   const int&, const double *, const double *, const double *,
+   const int&, const int&,
+   const int&, const int&,
+   const int&,
+   const int&,
    const double&,
    double *, double *, double *,
    const double&, const double *, const double&,
    const double&, const double *, const double&,
    const double *, const double&);
 
-void F77_FUNC(stabledt, STABLEDT) (
+void F77_FUNC(eulerinitsphere3d, EULERINITSPHERE3D) (
+   const int&, const double *, const double *, const double *,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&,
+   const int&,
+   const int&,
+   const double&,
+   double *, double *, double *,
+   const double&, const double *, const double&,
+   const double&, const double *, const double&,
+   const double *, const double&);
+
+void F77_FUNC(stabledt2d, STABLEDT2D) (
    const double *,
    const int&, const int&,
    const int&, const int&,
-#if (NDIM > 2)
-   const int&, const int&,
-#endif
    const int&,
    const int&,
-#if (NDIM > 2)
-   const int&,
-#endif
    const double&,
    const double *, const double *, const double *, double&);
 
-void F77_FUNC(inittraceflux, INITTRACEFLUX) (
+void F77_FUNC(stabledt3d, STABLEDT3D) (
+   const double *,
    const int&, const int&,
    const int&, const int&,
-#if (NDIM > 2)
    const int&, const int&,
-#endif
+   const int&,
+   const int&,
+   const int&,
+   const double&,
+   const double *, const double *, const double *, double&);
+
+void F77_FUNC(inittraceflux2d, INITTRACEFLUX2D) (
+   const int&, const int&,
+   const int&, const int&,
    const double *, const double *, const double *,
    double *, double *, double *,
-#if (NDIM > 2)
-   double *, double *, double *,
-#endif
    double *, double *, double *);
 
-void F77_FUNC(computesound, COMPUTESOUND) (
+void F77_FUNC(inittraceflux3d, INITTRACEFLUX3D) (
    const int&, const int&,
    const int&, const int&,
-#if (NDIM > 2)
    const int&, const int&,
-#endif
+   const double *, const double *, const double *,
+   double *, double *, double *,
+   double *, double *, double *,
+   double *, double *, double *);
+
+void F77_FUNC(computesound2d, COMPUTESOUND2D) (
+   const int&, const int&,
+   const int&, const int&,
    const double&,
    const double *, const double *, const double *,
    double *);
 
-void F77_FUNC(chartracing0, CHARTRACING0) (
+void F77_FUNC(computesound3d, COMPUTESOUND3D) (
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const double&,
+   const double *, const double *, const double *,
+   double *);
+
+void F77_FUNC(chartracing2d0, CHARTRACING2D0) (
    const double&,
    const int&, const int&,
    const int&, const int&,
-#if (NDIM > 2)
-   const int&, const int&,
-#endif
    const int&, const double&, const double&, const int&,
    const double *,
    double *, double *,
@@ -98,22 +124,7 @@ void F77_FUNC(chartracing0, CHARTRACING0) (
    double *,
    double *, double *);
 
-void F77_FUNC(chartracing1, CHARTRACING1) (
-   const double&,
-   const int&, const int&,
-   const int&, const int&,
-#if (NDIM > 2)
-   const int&, const int&,
-#endif
-   const int&, const double&, const double&, const int&,
-   const double *,
-   double *, double *,
-   double *, double *,
-   double *,
-   double *, double *);
-
-#if (NDIM == 3)
-void F77_FUNC(chartracing2, CHARTRACING2) (
+void F77_FUNC(chartracing3d0, CHARTRACING3D0) (
    const double&,
    const int&, const int&,
    const int&, const int&,
@@ -124,30 +135,69 @@ void F77_FUNC(chartracing2, CHARTRACING2) (
    double *, double *,
    double *,
    double *, double *);
-#endif
 
-void F77_FUNC(fluxcalculation, FLUXCALCULATION) (
+void F77_FUNC(chartracing2d1, CHARTRACING2D1) (
+   const double&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const double&, const double&, const int&,
+   const double *,
+   double *, double *,
+   double *, double *,
+   double *,
+   double *, double *);
+
+void F77_FUNC(chartracing3d1, CHARTRACING3D1) (
+   const double&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const double&, const double&, const int&,
+   const double *,
+   double *, double *,
+   double *, double *,
+   double *,
+   double *, double *);
+
+void F77_FUNC(chartracing3d2, CHARTRACING3D2) (
+   const double&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const double&, const double&, const int&,
+   const double *,
+   double *, double *,
+   double *, double *,
+   double *,
+   double *, double *);
+
+void F77_FUNC(fluxcalculation2d, FLUXCALCULATION2D) (
    const double&, const int&,
-#if (NDIM > 2)
-   const int&,
-#endif
    const int&,
    const double *,
    const int&, const int&,
    const int&, const int&,
-#if (NDIM > 2)
-   const int&, const int&,
-#endif
    const double&,
    const int&,
    const double *, const double *, const double *,
-#if (NDIM > 2)
-   double *, double *, double *,
-#endif
    double *, double *, double *,
    double *, double *, double *);
 
-#if (NDIM == 3)
+void F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (
+   const double&, const int&,
+   const int&,
+   const int&,
+   const double *,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const double&,
+   const int&,
+   const double *, const double *, const double *,
+   double *, double *, double *,
+   double *, double *, double *,
+   double *, double *, double *);
+
 void F77_FUNC(fluxcorrec2d, FLUXCORREC2D) (
    const double&,
    const int&, const int&, const int&, const int&, const int&, const int&,
@@ -170,9 +220,7 @@ void F77_FUNC(fluxcorrec3d, FLUXCORREC3D) (
    const double *, const double *, const double *,
    double *, double *, double *,
    double *, double *, double *);
-#endif
 
-#if (NDIM == 2)
 void F77_FUNC(fluxcorrec, FLUXCORREC) (
    const double&,
    const int&, const int&, const int&, const int&,
@@ -181,25 +229,28 @@ void F77_FUNC(fluxcorrec, FLUXCORREC) (
    double *, double *,
    double *, double *,
    double *, double *);
-#endif
 
-void F77_FUNC(consdiff, CONSDIFF) (
+void F77_FUNC(consdiff2d, CONSDIFF2D) (
    const int&, const int&,
    const int&, const int&,
-#if (NDIM > 2)
-   const int&, const int&,
-#endif
    const double *,
    const double *,
    const double *,
-#if (NDIM > 2)
-   const double *,
-#endif
    const double&,
    double *, double *, double *);
 
-#if (NDIM > 2)
-void F77_FUNC(onethirdstate, ONETHIRDSTATE) (
+void F77_FUNC(consdiff3d, CONSDIFF3D) (
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const double *,
+   const double *,
+   const double *,
+   const double *,
+   const double&,
+   double *, double *, double *);
+
+void F77_FUNC(onethirdstate, onethirdstate) (
    const double&, const double *, const int&,
    const int&, const int&, const int&, const int&, const int&, const int&,
    const double&,
@@ -207,7 +258,7 @@ void F77_FUNC(onethirdstate, ONETHIRDSTATE) (
    const double *, const double *, const double *,
    double *);
 
-void F77_FUNC(fluxthird, FLUXTHIRD) (
+void F77_FUNC(fluxthird, fluxthird) (
    const double&, const double *, const int&,
    const int&, const int&, const int&, const int&, const int&, const int&,
    const double&,
@@ -215,7 +266,7 @@ void F77_FUNC(fluxthird, FLUXTHIRD) (
    const double *, const double *, const double *, const double *,
    double *, double *, double *);
 
-void F77_FUNC(fluxcorrecjt, FLUXCORRECJT) (
+void F77_FUNC(fluxcorrecjt, fluxcorrecjt) (
    const double&, const double *, const int&,
    const int&, const int&, const int&, const int&, const int&, const int&,
    const double&,
@@ -223,10 +274,8 @@ void F77_FUNC(fluxcorrecjt, FLUXCORRECJT) (
    const double *, const double *, const double *,
    double *, double *, double *,
    double *, double *, double *);
-#endif
 
-#if (NDIM == 2)
-void F77_FUNC(conservlinint2d, CONSERVLININT2D) (
+void F77_FUNC(conservlinint2d, conservlinint2d) (
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -241,7 +290,7 @@ void F77_FUNC(conservlinint2d, CONSERVLININT2D) (
    double *, double *,
    double *, double *, double *, double *);
 
-void F77_FUNC(conservavg2d, CONSERVAVG2D) (
+void F77_FUNC(conservavg2d, conservavg2d) (
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -251,9 +300,7 @@ void F77_FUNC(conservavg2d, CONSERVAVG2D) (
    const double *, const double *,
    double *, double *,
    double *);
-#endif
-#if (NDIM == 3)
-void F77_FUNC(conservlinint3d, CONSERVLININT3D) (
+void F77_FUNC(conservlinint3d, conservlinint3d) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -272,7 +319,7 @@ void F77_FUNC(conservlinint3d, CONSERVLININT3D) (
    double *, double *, double *,
    double *, double *, double *, double *, double *, double *);
 
-void F77_FUNC(conservavg3d, CONSERVAVG3D) (
+void F77_FUNC(conservavg3d, conservavg3d) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -286,43 +333,56 @@ void F77_FUNC(conservavg3d, CONSERVAVG3D) (
    const double *, const double *,
    double *, double *,
    double *);
-#endif
 
-void F77_FUNC(detectgrad, DETECTGRAD) (
+void F77_FUNC(detectgrad2d, detectgrad2d) (
    const int&, const int&,
    const int&, const int&,
-#if (NDIM > 2)
-   const int&, const int&,
-#endif
    const int&, const int&, const int&,
    const int&, const int&, const int&,
-#if (NDIM > 2)
-   const int&, const int&, const int&,
-#endif
    const double *,
    const double&,
    const int&, const int&,
    const double *,
    int *, int *);
 
-void F77_FUNC(detectshock, DETECTSHOCK) (
+void F77_FUNC(detectgrad3d, detectgrad3d) (
    const int&, const int&,
    const int&, const int&,
-#if (NDIM > 2)
    const int&, const int&,
-#endif
    const int&, const int&, const int&,
    const int&, const int&, const int&,
-#if (NDIM > 2)
    const int&, const int&, const int&,
-#endif
+   const double *,
+   const double&,
+   const int&, const int&,
+   const double *,
+   int *, int *);
+
+void F77_FUNC(detectshock2d, detectshock2d) (
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
    const double *,
    const double&, const double&,
    const int&, const int&,
    const double *,
    int *, int *);
 
-void F77_FUNC(stufprobc, STUFPROBC) (
+void F77_FUNC(detectshock3d, detectshock3d) (
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&,
+   const double *,
+   const double&, const double&,
+   const int&, const int&,
+   const double *,
+   int *, int *);
+
+void F77_FUNC(stufprobc, stufprobc) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&,

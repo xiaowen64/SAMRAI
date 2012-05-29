@@ -2,7 +2,7 @@ define(NDIM,2)dnl
 define(NEQU,4)dnl
 define(REAL,`double precision')dnl
 include(SAMRAI_FORTDIR/pdat_m4arrdim2d.i)dnl
-include(FORTDIR/m4flux.i)dnl
+include(FORTDIR/m4flux2d.i)dnl
 
       subroutine fluxcorrec(dt,
      &  ifirst0,ilast0,ifirst1,ilast1,
@@ -13,8 +13,8 @@ include(FORTDIR/m4flux.i)dnl
      &  trrgt0,trrgt1)
 c***********************************************************************
       implicit none 
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c***********************************************************************     
 c input arrays:
@@ -134,7 +134,7 @@ c
 c***********************************************************************
 c***********************************************************************
 c***********************************************************************
-      subroutine fluxcalculation(dt,extra_cell,visco,dx,
+      subroutine fluxcalculation2d(dt,extra_cell,visco,dx,
      &  ifirst0,ilast0,ifirst1,ilast1,
      &  gamma,rpchoice,
      &  density,velocity,pressure,
@@ -143,8 +143,8 @@ c***********************************************************************
      
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c***********************************************************************
 c input arrays:
@@ -190,7 +190,7 @@ c solve riemann problems for conservative flux
 c  arguments: ( axis for RP, other axis, extra cells-direction)
 c***********************************************************************
 c      
-c     write(6,*) "In fluxcalculation(",extra_cell,")"
+c     write(6,*) "In fluxcalculation2d(",extra_cell,")"
 c     write(6,*) "ifirst0,ilast0,ifirst1,ilast1,extra_cell",
 c    &       ifirst0,ilast0,ifirst1,ilast1,extra_cell
       gam_min_one = gamma-one
@@ -213,13 +213,13 @@ c***********************************************************************
 c***********************************************************************
 c***********************************************************************
   
-      subroutine consdiff(ifirst0,ilast0,ifirst1,ilast1,dx,
+      subroutine consdiff2d(ifirst0,ilast0,ifirst1,ilast1,dx,
      &  flux0,flux1,
      &  gamma,density,velocity,pressure)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
       integer ifirst0, ilast0,ifirst1, ilast1
       REAL dx(0:NDIM-1)
@@ -273,5 +273,5 @@ c
       return
       end
 c***********************************************************************
-include(FORTDIR/../gas1d_approxrp.i)dnl
-include(FORTDIR/../gas1d_exactrp.i)dnl
+include(FORTDIR/gas1d_approxrp2d.i)dnl
+include(FORTDIR/gas1d_exactrp2d.i)dnl

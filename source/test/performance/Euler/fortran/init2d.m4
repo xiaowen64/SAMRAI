@@ -3,7 +3,7 @@ define(NEQU,4)dnl
 define(REAL,`double precision')dnl
 include(SAMRAI_FORTDIR/pdat_m4arrdim2d.i)dnl
 
-      subroutine eulerinit(data_problem,dx,xlo,xhi,
+      subroutine eulerinit2d(data_problem,dx,xlo,xhi,
      &  ifirst0,ilast0,ifirst1,ilast1,
      &  gcw0,gcw1,
      &  gamma,
@@ -12,8 +12,8 @@ include(SAMRAI_FORTDIR/pdat_m4arrdim2d.i)dnl
      &  i_dens,i_vel,i_pres)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c***********************************************************************     
 c input arrays:
@@ -99,7 +99,7 @@ c
 c    Initialization routine where we use a spherical profile 
 c
 c***********************************************************************
-      subroutine eulerinitsphere(data_problem,dx,xlo,xhi,
+      subroutine eulerinitsphere2d(data_problem,dx,xlo,xhi,
      &  ifirst0,ilast0,ifirst1,ilast1,
      &  gcw0,gcw1,
      &  gamma,
@@ -109,8 +109,8 @@ c***********************************************************************
      &  center,radius)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c***********************************************************************     
 c input arrays:

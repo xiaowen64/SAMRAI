@@ -1,14 +1,14 @@
 define(NEQU,4)dnl
 define(REAL,`double precision')dnl
 
-      subroutine trace(dt,ifirst,ilast,mc,
+      subroutine trace2d(dt,ifirst,ilast,mc,
      &  dx,dir,igdnv,sound,
      &  tracelft,tracergt, 
      &  celslope,edgslope)
 c+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       REAL dt
       integer ifirst,ilast,mc,dir,igdnv
@@ -79,10 +79,11 @@ c       ****************************************************************
 c       * second-order slopes
 c       ****************************************************************
         do ic=ifirst+1-CELLG,ilast+CELLG-1
-           call flaten(ifirst,ilast,ic,mc,dir,tracergt,sound,flattn(ic))
+           call flaten2d(
+     &       ifirst,ilast,ic,mc,dir,tracergt,sound,flattn(ic))
         enddo
         do ic=ifirst+1-CELLG,ilast+CELLG-1
-c         call flaten(ifirst,ilast,ic,mc,dir,tracergt,sound,flattn)
+c         call flaten2d(ifirst,ilast,ic,mc,dir,tracergt,sound,flattn)
 c         flattn=one
           do i=1,NEQU
             slope2=half*(edgslope(ic,i)+edgslope(ic+1,i))
@@ -105,10 +106,11 @@ c       ****************************************************************
 c       * fourth-order slopes
 c       ****************************************************************
         do ic=ifirst+1-CELLG,ilast+CELLG-1
-           call flaten(ifirst,ilast,ic,mc,dir,tracergt,sound,flattn(ic))
+           call flaten2d(
+     &       ifirst,ilast,ic,mc,dir,tracergt,sound,flattn(ic))
         enddo
         do ic=ifirst+2-CELLG,ilast+CELLG-2
-c         call flaten(ifirst,ilast,ic,mc,dir,tracergt,sound,flattn)
+c         call flaten2d(ifirst,ilast,ic,mc,dir,tracergt,sound,flattn)
 c         flattn=one
           do i=1,NEQU
             slope4=fourth*(tracergt(ic+2,i)-tracergt(ic-2,i))

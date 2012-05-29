@@ -3,7 +3,7 @@ c***********************************************************************
 c flatten routine
 c***********************************************************************
 c
-      subroutine amrflaten(ifirst,ilast,
+      subroutine amrflaten3d(ifirst,ilast,
      &                  cilo,cihi,
      &                  mc,gamma,
      &                  densc,presc,velc,flattn,flat2,sound)

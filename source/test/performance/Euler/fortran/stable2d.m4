@@ -2,13 +2,13 @@ define(NDIM,2)dnl
 define(NEQU,4)dnl
 define(REAL,`double precision')dnl
 include(SAMRAI_FORTDIR/pdat_m4arrdim2d.i)dnl
-      subroutine stabledt(dx,
+      subroutine stabledt2d(dx,
      &  ifirst0,ilast0,ifirst1,ilast1,
      &  ngc0,ngc1,
      &  gamma,density,velocity,pressure,stabdt)
 c+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       implicit none
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/const.i)dnl
 c+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       REAL stabdt,dx(0:NDIM-1)
       integer ifirst0,ilast0,ifirst1,ilast1,ngc0,ngc1

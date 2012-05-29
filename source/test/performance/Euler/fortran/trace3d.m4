@@ -2,18 +2,18 @@ define(NDIM,3)dnl
 define(NEQU,5)dnl
 define(REAL,`double precision')dnl
 include(SAMRAI_FORTDIR/pdat_m4arrdim3d.i)dnl
-include(FORTDIR/m4trace.i)dnl
+include(FORTDIR/m4trace3d.i)dnl
 
-      subroutine computesound(ifirst0,ilast0,ifirst1,ilast1,
+      subroutine computesound3d(ifirst0,ilast0,ifirst1,ilast1,
      &  ifirst2,ilast2,gamma,density,velocity,pressure,sound)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c input arrays:
       integer ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2
-c variables indexed as 2dimensional
+c variables indexed as 3dimensional
       REAL
      &      gamma,
      &      density(CELL3d(ifirst,ilast,CELLG)),
@@ -42,7 +42,7 @@ c***********************************************************************
 c***********************************************************************
 c***********************************************************************
 c
-      subroutine inittraceflux(
+      subroutine inittraceflux3d(
      &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
      &  density,velocity,pressure,
      &  tracelft0,tracelft1,tracelft2,
@@ -50,8 +50,8 @@ c
      &  fluxriem0,fluxriem1,fluxriem2)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c***********************************************************************
 c input arrays:
@@ -127,7 +127,7 @@ c***********************************************************************
 c***********************************************************************
 c***********************************************************************
 c
-      subroutine chartracing0(dt,
+      subroutine chartracing3d0(dt,
      &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
      &  mc,dx,
      &  gamma,igdnv,
@@ -138,8 +138,8 @@ c
      &  ttraclft, ttracrgt)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c input arrays:
       integer ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2
@@ -175,7 +175,7 @@ c***********************************************************************
 c***********************************************************************
 c***********************************************************************
 c***********************************************************************
-      subroutine chartracing1(dt,
+      subroutine chartracing3d1(dt,
      &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
      &  mc,dx,
      &  gamma,igdnv,
@@ -186,8 +186,8 @@ c***********************************************************************
      &  ttraclft, ttracrgt)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c input arrays:
       integer ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2
@@ -224,7 +224,7 @@ c
 c***********************************************************************
 c***********************************************************************
 c***********************************************************************
-      subroutine chartracing2(dt,
+      subroutine chartracing3d2(dt,
      &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
      &  mc,dx,
      &  gamma,igdnv,
@@ -235,8 +235,8 @@ c***********************************************************************
      &  ttraclft, ttracrgt)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c input arrays:
       integer ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2

@@ -48,9 +48,9 @@ c     write(6,*) "         dt= ",dt
              stateR(4) = stateR(3)/gam_min_one
 
              if (rpchoice.eq.APPROX_RIEM_SOLVE) then
-                call gas1dapproxrp(gamma,stateL,stateR,riemst)
+                call gas1dapproxrp3d(gamma,stateL,stateR,riemst)
              else if (rpchoice.eq.EXACT_RIEM_SOLVE) then
-                call gas1dexactrp(gamma,smallr,stateL,stateR,riemst)
+                call gas1dexactrp3d(gamma,smallr,stateL,stateR,riemst)
 c            else if (rpchoice.eq.ROE_RIEM_SOLVE) then
 c            else if (rpchoice.eq.HLLC_RIEM_SOLVE) then
              endif

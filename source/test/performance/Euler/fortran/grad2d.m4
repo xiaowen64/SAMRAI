@@ -4,7 +4,7 @@ define(REAL,`double precision')dnl
 include(SAMRAI_FORTDIR/pdat_m4arrdim2d.i)dnl
 
 
-      subroutine detectgrad(
+      subroutine detectgrad2d(
      &  ifirst0,ilast0,ifirst1,ilast1,
      &  vghost0,tagghost0,ttagghost0,
      &  vghost1,tagghost1,ttagghost1,
@@ -15,8 +15,8 @@ include(SAMRAI_FORTDIR/pdat_m4arrdim2d.i)dnl
      &  tags,temptags)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c input arrays:
       integer
@@ -93,7 +93,7 @@ c
       return
       end
 
-      subroutine detectshock(
+      subroutine detectshock2d(
      &  ifirst0,ilast0,ifirst1,ilast1,
      &  vghost0,tagghost0,ttagghost0,
      &  vghost1,tagghost1,ttagghost1,
@@ -104,8 +104,8 @@ c
      &  tags,temptags)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c input arrays:
       integer

@@ -2,7 +2,7 @@ define(NDIM,3)dnl
 define(NEQU,5)dnl
 define(REAL,`double precision')dnl
 include(SAMRAI_FORTDIR/pdat_m4arrdim3d.i)dnl
-include(FORTDIR/m4fluxcorner.i)dnl
+include(FORTDIR/m4fluxcorner3d.i)dnl
 
       subroutine onethirdstate(dt,dx,idir,
      &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
@@ -11,8 +11,8 @@ include(FORTDIR/m4fluxcorner.i)dnl
      &  st3)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************     
 c input arrays:
       integer idir,ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2
@@ -78,8 +78,8 @@ c***********************************************************************
      
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c***********************************************************************
 c input arrays:
@@ -150,8 +150,8 @@ c***********************************************************************
      &  tracergt0,tracergt1,tracergt2)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c***********************************************************************     
 c input arrays:

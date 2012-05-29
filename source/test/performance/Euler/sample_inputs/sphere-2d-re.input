@@ -93,6 +93,7 @@ Euler {
 }
 
 Main {
+   dim = 2
 // log file parameters 
    log_file_name    = "sphere-2d.log"
    log_all_nodes    = TRUE

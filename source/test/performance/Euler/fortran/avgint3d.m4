@@ -1,15 +1,15 @@
 c
-c  File:        $URL$
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/examples/Euler/fortran/3d/avgint.m4 $
 c  Package:     SAMRAI applications
 c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
-c  Revision:    $LastChangedRevision$
+c  Revision:    $LastChangedRevision: 1917 $
 c  Description: F77 routines for conservative interlevel transfer of velocity 
 c               and pressure for 3d euler equations.
 c
 define(NDIM,3)dnl
 define(REAL,`double precision')dnl
 include(SAMRAI_FORTDIR/pdat_m4arrdim3d.i)dnl
-include(FORTDIR/../amrflaten.i)dnl
+include(FORTDIR/amrflaten3d.i)dnl
 c
 define(coarsen_index,`dnl
       if ($1.lt.0) then
@@ -132,7 +132,7 @@ c
                tpresc(it) = presc(ic0,ic1,ic2)
                tvelc(it)  = velc(ic0,ic1,ic2,0)
             enddo
-            call amrflaten(ifirstc0,ilastc0,cilo0,cihi0,mc,gamma,
+            call amrflaten3d(ifirstc0,ilastc0,cilo0,cihi0,mc,gamma,
      &                     tdensc,tpresc,tvelc,tflat,tflat2,sound)
             do ic0=ifirstc0,ilastc0
                  flat0(ic0,ic1,ic2) = tflat(ic0-ifirstc0)
@@ -148,7 +148,7 @@ c
                tpresc(it) = presc(ic0,ic1,ic2)
                tvelc(it)  = velc(ic0,ic1,ic2,1)
             enddo
-            call amrflaten(ifirstc1,ilastc1,cilo1,cihi1,mc,gamma,
+            call amrflaten3d(ifirstc1,ilastc1,cilo1,cihi1,mc,gamma,
      &                     tdensc,tpresc,tvelc,tflat,tflat2,sound)
             do ic1=ifirstc1,ilastc1
                  flat1(ic0,ic1,ic2) = tflat(ic1-ifirstc1)
@@ -164,7 +164,7 @@ c
                tpresc(it) = presc(ic0,ic1,ic2)
                tvelc(it)  = velc(ic0,ic1,ic2,2)
             enddo
-            call amrflaten(ifirstc2,ilastc2,cilo2,cihi2,mc,gamma,
+            call amrflaten3d(ifirstc2,ilastc2,cilo2,cihi2,mc,gamma,
      &                  tdensc,tpresc,tvelc,tflat,tflat2,sound)
             do ic2=ifirstc2,ilastc2
                  flat2(ic0,ic1,ic2) = tflat(ic2-ifirstc2)

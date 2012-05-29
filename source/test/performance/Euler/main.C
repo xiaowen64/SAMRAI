@@ -10,35 +10,9 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string>
-#include <fstream>
-using namespace std;
+// Header for application-specific algorithm/data structure object
 
-#ifndef _MSC_VER
-#include <unistd.h>
-#endif
-
-#include <sys/stat.h>
-
-// Headers for basic SAMRAI objects
-
-#include "SAMRAI/tbox/SAMRAIManager.h"
-#include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/hier/BoxList.h"
-#include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/hier/Index.h"
-#include "SAMRAI/tbox/InputDatabase.h"
-#include "SAMRAI/tbox/InputManager.h"
-#include "SAMRAI/tbox/SAMRAI_MPI.h"
-#include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/RestartManager.h"
-#include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/tbox/Timer.h"
-#include "SAMRAI/tbox/TimerManager.h"
-#include "SAMRAI/hier/VariableDatabase.h"
+#include "Euler.h"
 
 // Headers for major algorithm/data structure objects from SAMRAI
 
@@ -53,6 +27,39 @@ using namespace std;
 #include "SAMRAI/algs/TimeRefinementLevelStrategy.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
 
+// Headers for basic SAMRAI objects
+
+#include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/hier/Index.h"
+#include "SAMRAI/hier/PatchLevel.h"
+#include "SAMRAI/hier/VariableDatabase.h"
+#include "SAMRAI/tbox/Database.h"
+#include "SAMRAI/tbox/SiloDatabaseFactory.h"
+#include "SAMRAI/tbox/InputDatabase.h"
+#include "SAMRAI/tbox/InputManager.h"
+#include "SAMRAI/tbox/SAMRAI_MPI.h"
+#include "SAMRAI/tbox/SAMRAIManager.h"
+#include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/tbox/PIO.h"
+#include "SAMRAI/tbox/RestartManager.h"
+#include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/tbox/Timer.h"
+#include "SAMRAI/tbox/TimerManager.h"
+
+#include <boost/shared_ptr.hpp>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <fstream>
+using namespace std;
+
+#ifndef _MSC_VER
+#include <unistd.h>
+#endif
+
+#include <sys/stat.h>
+
+
 #define RECORD_STATS
 //#undef RECORD_STATS
 #ifdef RECORD_STATS
@@ -60,17 +67,13 @@ using namespace std;
 #include "SAMRAI/tbox/Statistician.h"
 #endif
 
-// Header for application-specific algorithm/data structure object
-
-#include "Euler.h"
-
 // Classes for autotesting.
 
 #if (TESTING == 1)
 #include "AutoTester.h"
 #endif
 
-#include <boost/shared_ptr.hpp>
+using namespace SAMRAI;
 
 void
 outputStats(
@@ -78,8 +81,6 @@ outputStats(
    algs::HyperbolicLevelIntegrator& hyp_level_integrator);
 
 using namespace SAMRAI;
-
-using namespace tbox;
 
 /*
  ************************************************************************
@@ -173,14 +174,6 @@ using namespace tbox;
  *          executable <input file name> <restart directory> \
  *                     <restart number>
  *
- * Accessory routines used within the main program:
- *
- *   dumpVizData1dPencil - Writes 1d pencil of Euler solution data
- *      to plot files so that it may be viewed in MatLab.  This
- *      routine assumes a single patch level in 2d and 3d.  In
- *      other words, it only plots data on level zero.  It can
- *      handle AMR in 1d.
- *
  *******************************************************************
  */
 
@@ -196,12 +189,11 @@ int main(
    tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::initialize();
    tbox::SAMRAIManager::startup();
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    int num_failures = 0;
 
    {
-      const tbox::Dimension dim(NDIM);
-
       string input_filename;
       string restart_read_dirname;
       int restore_num = 0;
@@ -210,7 +202,7 @@ int main(
       bool is_from_restart = false;
 
       if ((argc != 2) && (argc != 3) && (argc != 4)) {
-         pout << "USAGE:\n"
+         tbox::pout << "USAGE:\n"
               << argv[0] << " <input filename> "
               << "or\n"
               << argv[0] << " <input filename> <case name>"
@@ -236,16 +228,17 @@ int main(
          }
       }
 
-      plog << "input_filename = " << input_filename << endl;
-      plog << "restart_read_dirname = " << restart_read_dirname << endl;
-      plog << "restore_num = " << restore_num << endl;
+      tbox::plog << "input_filename = " << input_filename << endl;
+      tbox::plog << "restart_read_dirname = " << restart_read_dirname << endl;
+      tbox::plog << "restore_num = " << restore_num << endl;
 
       /*
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<Database> input_db(new InputDatabase("input_db"));
-      InputManager::getManager()->parseInputFile(input_filename, input_db);
+      boost::shared_ptr<tbox::InputDatabase> input_db(
+         new tbox::InputDatabase("input_db"));
+      tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
        * Retrieve "Main" section of the input database.  First, read dump
@@ -254,9 +247,11 @@ int main(
        * restart interval is non-zero, create a restart database.
        */
 
-      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
+      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       string base_name = main_db->getStringWithDefault("base_name", "unnamed");
+
+      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
       /*
        * Modify basename for this particular run.
@@ -266,10 +261,10 @@ int main(
          base_name = base_name + '-' + case_name;
       }
       base_name = base_name + '-' + tbox::Utilities::intToString(
-            SAMRAI_MPI::getNodes(),
+            mpi.getSize(),
             5);
-      pout << "Added case name (" << case_name << ") and nprocs ("
-           << SAMRAI_MPI::getNodes() << ") to base name -> '"
+      tbox::pout << "Added case name (" << case_name << ") and nprocs ("
+           << mpi.getSize() << ") to base name -> '"
            << base_name << "'\n";
 
       /*
@@ -283,9 +278,9 @@ int main(
       log_all_nodes =
          main_db->getBoolWithDefault("log_all_nodes", log_all_nodes);
       if (log_all_nodes) {
-         PIO::logAllNodes(log_filename);
+         tbox::PIO::logAllNodes(log_filename);
       } else {
-         PIO::logOnlyNodeZero(log_filename);
+         tbox::PIO::logOnlyNodeZero(log_filename);
       }
 
       int viz_dump_interval = 0;
@@ -293,7 +288,7 @@ int main(
          viz_dump_interval = main_db->getInteger("viz_dump_interval");
       }
 
-      Array<string> viz_writer(1);
+      tbox::Array<string> viz_writer(1);
       viz_writer[0] = "VisIt";
       string viz_dump_filename;
       string visit_dump_dirname = base_name + ".visit";
@@ -371,12 +366,12 @@ int main(
        * restart, open the restart file.
        */
 
-      RestartManager* restart_manager = RestartManager::getManager();
+      tbox::RestartManager* restart_manager = tbox::RestartManager::getManager();
 
       if (is_from_restart) {
          restart_manager->
          openRestartFile(restart_read_dirname, restore_num,
-            tbox::SAMRAI_MPI::getNodes());
+            mpi.getSize());
       }
 
       /*
@@ -388,7 +383,7 @@ int main(
        * reset using the TimerManager::resetAllTimers() routine.
        */
 
-      TimerManager::createManager(input_db->getDatabase("TimerManager"));
+      tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
 
       /*
        * Create major algorithm and data objects which comprise application.
@@ -400,6 +395,7 @@ int main(
 
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
+            dim,
             "CartesianGeometry",
             input_db->getDatabase("CartesianGeometry")));
 
@@ -410,6 +406,7 @@ int main(
             input_db->getDatabase("PatchHierarchy")));
 
       Euler* euler_model = new Euler("Euler",
+            dim,
             input_db->getDatabase("Euler"),
             grid_geometry);
 
@@ -423,14 +420,17 @@ int main(
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
          new mesh::StandardTagAndInitialize(
+            dim,
             "StandardTagAndInitialize",
-            hyp_level_integrator,
+            hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
-      boost::shared_ptr<Database> abr_db(
-         input_db->getDatabase("BergerRigoutsos"));
       boost::shared_ptr<mesh::BergerRigoutsos> new_box_generator(
-         new mesh::BergerRigoutsos(abr_db));
+         new mesh::BergerRigoutsos(
+            dim,
+            input_db->getDatabaseWithDefault(
+               "BergerRigoutsos",
+               boost::shared_ptr<tbox::Database>())));
 #if 0
       boost::shared_ptr<mesh::BergerRigoutsos > old_box_generator;
       const char which_br = main_db->getCharWithDefault("which_br", 'o');
@@ -449,7 +449,7 @@ int main(
 
       boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
-            dim,
+            patch_hierarchy,
             "GriddingAlgorithm",
             input_db->getDatabase("GriddingAlgorithm"),
             error_detector,
@@ -473,6 +473,7 @@ int main(
 #ifdef HAVE_HDF5
       boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
          new appu::VisItDataWriter(
+            dim,
             "Euler VisIt Writer",
             visit_dump_dirname,
             visit_number_procs_per_file));
@@ -490,7 +491,7 @@ int main(
       tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier(); // Synchronize for the sake of accurate timings.
       double dt_now = time_integrator->initializeHierarchy();
 
-      RestartManager::getManager()->closeRestartFile();
+      tbox::RestartManager::getManager()->closeRestartFile();
 
 #if (TESTING == 1)
       /*
@@ -508,23 +509,23 @@ int main(
        */
 
 #if 1
-      plog << "\nCheck input data and variables before simulation:" << endl;
-      plog << "Input database..." << endl;
-      input_db->printClassData(plog);
-      plog << "\nVariable database..." << endl;
-      hier::VariableDatabase::getDatabase()->printClassData(plog);
+      tbox::plog << "\nCheck input data and variables before simulation:" << endl;
+      tbox::plog << "Input database..." << endl;
+      input_db->printClassData(tbox::plog);
+      tbox::plog << "\nVariable database..." << endl;
+      hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
 
 #endif
-      plog << "\nCheck Euler data... " << endl;
-      euler_model->printClassData(plog);
+      tbox::plog << "\nCheck Euler data... " << endl;
+      euler_model->printClassData(tbox::plog);
 
       /*
        * Create timers for measuring I/O.
        */
-      boost::shared_ptr<Timer> t_write_viz(
-         TimerManager::getManager()->getTimer("apps::main::write_viz"));
-      boost::shared_ptr<Timer> t_write_restart(
-         TimerManager::getManager()->getTimer("apps::main::write_restart");
+      boost::shared_ptr<tbox::Timer> t_write_viz(
+         tbox::TimerManager::getManager()->getTimer("apps::main::write_viz"));
+      boost::shared_ptr<tbox::Timer> t_write_restart(
+         tbox::TimerManager::getManager()->getTimer("apps::main::write_restart"));
 
       t_write_viz->start();
       if (viz_dump_interval > 0) {
@@ -564,13 +565,13 @@ int main(
 
          int iteration_num = time_integrator->getIntegratorStep() + 1;
 
-         plog << endl << endl;
-         pout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
-         pout << "At begining of timestep # " << iteration_num - 1 << endl;
-         pout << "Simulation time is " << loop_time << endl;
-         pout << "Current dt is " << dt_now << endl;
-         pout << "++++++++++++++++++++++++++++++++++++++++++++\n\n" << endl;
-         plog << endl << endl;
+         tbox::plog << endl << endl;
+         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
+         tbox::pout << "At begining of timestep # " << iteration_num - 1 << endl;
+         tbox::pout << "Simulation time is " << loop_time << endl;
+         tbox::pout << "Current dt is " << dt_now << endl;
+         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++\n\n" << endl;
+         tbox::plog << endl << endl;
 
          double dt_new = time_integrator->advanceHierarchy(dt_now);
 
@@ -598,23 +599,23 @@ int main(
          }
          cell_count_stat[patch_hierarchy->getMaxNumberOfLevels()]->
          recordProcStat(hierarchy_cell_count);
-         patch_hierarchy->recursivePrint(plog, "", 2);
+         patch_hierarchy->recursivePrint(tbox::plog, "", 2);
          sim_time_stat->recordProcStat(dt_now);
 #endif
 
-         plog << "Hierarchy summary:\n";
-         patch_hierarchy->recursivePrint(plog, "H-> ", 1);
-         plog << "PatchHierarchy summary:\n";
-         patch_hierarchy->recursivePrint(plog,
+         tbox::plog << "Hierarchy summary:\n";
+         patch_hierarchy->recursivePrint(tbox::plog, "H-> ", 1);
+         tbox::plog << "PatchHierarchy summary:\n";
+         patch_hierarchy->recursivePrint(tbox::plog,
             "H-> ",
             1);
 
-         plog << endl << endl;
-         pout << "\n\n++++++++++++++++++++++++++++++++++++++++++++" << endl;
-         pout << "At end of timestep # " << iteration_num - 1 << endl;
-         pout << "Simulation time is " << loop_time << endl;
-         pout << "++++++++++++++++++++++++++++++++++++++++++++\n\n" << endl;
-         plog << endl << endl;
+         tbox::plog << endl << endl;
+         tbox::pout << "\n\n++++++++++++++++++++++++++++++++++++++++++++" << endl;
+         tbox::pout << "At end of timestep # " << iteration_num - 1 << endl;
+         tbox::pout << "Simulation time is " << loop_time << endl;
+         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++\n\n" << endl;
+         tbox::plog << endl << endl;
 
          /*
           * At specified intervals, write restart files.
@@ -623,7 +624,7 @@ int main(
 
             if ((iteration_num % restart_interval) == 0) {
                t_write_restart->start();
-               RestartManager::getManager()->
+               tbox::RestartManager::getManager()->
                writeRestartFile(restart_write_dirname,
                   iteration_num);
                t_write_restart->stop();
@@ -675,7 +676,7 @@ int main(
       /*
        * Output timer results.
        */
-      TimerManager::getManager()->print(plog);
+      tbox::TimerManager::getManager()->print(tbox::plog);
 
 #ifdef RECORD_STATS
       outputStats(*gridding_algorithm, *hyp_level_integrator);

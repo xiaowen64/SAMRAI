@@ -25,9 +25,9 @@ c           ************************************************************
             stateR(3) = trrgt$1(ie$1,ic$2,NEQU)
 
             if (rpchoice.eq.APPROX_RIEM_SOLVE) then
-               call gas1dapproxrp(gamma,stateL,stateR,riemst)
+               call gas1dapproxrp2d(gamma,stateL,stateR,riemst)
             else 
-               call gas1dexactrp(gamma,smallr,stateL,stateR,riemst)
+               call gas1dexactrp2d(gamma,smallr,stateL,stateR,riemst)
             endif
 
             if (riemst(2).le.zero) then

@@ -1,4 +1,4 @@
-      subroutine gas1dapproxrp(eosgam,wleft,wright, striem)
+      subroutine gas1dapproxrp3d(eosgam,wleft,wright, striem)
 c***********************************************************************
 c description of arguments:
 c   input:
@@ -11,7 +11,7 @@ c     striem (density,velocity,pressure)
 c             <== solution to riemann problem
 c+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       implicit none
-include(FORTDIR/../const.i)
+include(FORTDIR/const.i)
 c+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       REAL wleft(3),wright(3),eosgam,striem(3)
 c

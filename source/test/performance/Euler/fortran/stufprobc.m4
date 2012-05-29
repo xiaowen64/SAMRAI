@@ -11,7 +11,7 @@
      &  PIECEWISE_CONSTANT_Zin,
      &  SPHEREin,STEPin,
      &  CELLGin,FACEGin,FLUXGin
-include(FORTDIR/../probparams.i)dnl
+include(FORTDIR/probparams.i)dnl
 
       APPROX_RIEM_SOLVE=APPROX_RIEM_SOLVEin
       EXACT_RIEM_SOLVE=EXACT_RIEM_SOLVEin

@@ -92,6 +92,7 @@ Euler {
 }
 
 Main {
+   dim = 2
    base_name = "room-2d"
 // log file parameters 
    log_file_name    = "room-2d.log"

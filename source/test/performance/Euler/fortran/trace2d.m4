@@ -2,14 +2,14 @@ define(NDIM,2)dnl
 define(NEQU,4)dnl
 define(REAL,`double precision')dnl
 include(SAMRAI_FORTDIR/pdat_m4arrdim2d.i)dnl
-include(FORTDIR/m4trace.i)dnl
+include(FORTDIR/m4trace2d.i)dnl
 
-      subroutine computesound(ifirst0,ilast0,ifirst1,ilast1,
+      subroutine computesound2d(ifirst0,ilast0,ifirst1,ilast1,
      &  gamma,density, velocity,pressure,sound)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c input arrays:
       integer ifirst0,ilast0,ifirst1,ilast1
@@ -59,7 +59,7 @@ c***********************************************************************
 c***********************************************************************
 c***********************************************************************
 c
-      subroutine inittraceflux(
+      subroutine inittraceflux2d(
      &  ifirst0,ilast0,ifirst1,ilast1,
      &  density,velocity,pressure,
      &  tracelft0,tracelft1,
@@ -67,8 +67,8 @@ c
      &  fluxriem0,fluxriem1)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c***********************************************************************
 c input arrays:
@@ -136,7 +136,7 @@ c
 c***********************************************************************
 c***********************************************************************
 c***********************************************************************
-      subroutine chartracing0(dt,
+      subroutine chartracing2d0(dt,
      &  ifirst0,ilast0,ifirst1,ilast1,
      &  mc, dx,
      &  gamma,igdnv,
@@ -147,8 +147,8 @@ c***********************************************************************
      &  ttraclft, ttracrgt)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c input arrays:
       integer ifirst0,ilast0,ifirst1,ilast1
@@ -178,7 +178,7 @@ c***********************************************************************
 c***********************************************************************
 c trace higher order states at cell edges
 c***********************************************************************
-c     write(6,*) "traced right chartracing0"
+c     write(6,*) "traced right chartracing2d0"
 c     do  ic1=ifirst1-FACEG,ilast1+FACEG
 c       do  ic0=ifirst0-FACEG,ilast0+FACEG+1
 c         write(6,*) "ic,state=",ic0,ic1,
@@ -195,7 +195,7 @@ c
 trace_call(0,1)dnl
 c
 c***********************************************************************
-c     write(6,*) "leaving chartracing"
+c     write(6,*) "leaving chartracing2d"
 c      call flush(6)
       return
       end
@@ -203,7 +203,7 @@ c
 c***********************************************************************
 c***********************************************************************
 c***********************************************************************
-      subroutine chartracing1(dt,
+      subroutine chartracing2d1(dt,
      &  ifirst0,ilast0,ifirst1,ilast1,
      &  mc, dx,
      &  gamma,igdnv,
@@ -214,8 +214,8 @@ c***********************************************************************
      &  ttraclft, ttracrgt)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c input arrays:
       integer ifirst0,ilast0,ifirst1,ilast1
@@ -245,14 +245,14 @@ c***********************************************************************
 c***********************************************************************
 c trace higher order states at cell edges
 c***********************************************************************
-c     write(6,*) "Entering chartracing1"
+c     write(6,*) "Entering chartracing2d1"
 c     call flush(6)
 c
       idir = 1
 trace_call(1,0)dnl
 c
 c***********************************************************************
-c     write(6,*) "leaving chartracing"
+c     write(6,*) "leaving chartracing2d"
 c      call flush(6)
       return
       end

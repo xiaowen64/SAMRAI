@@ -2,7 +2,7 @@ define(NDIM,3)dnl
 define(NEQU,5)dnl
 define(REAL,`double precision')dnl
 include(SAMRAI_FORTDIR/pdat_m4arrdim3d.i)dnl
-include(FORTDIR/m4flux.i)dnl
+include(FORTDIR/m4flux3d.i)dnl
 
       subroutine fluxcorrec2d(dt,
      &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
@@ -15,8 +15,8 @@ include(FORTDIR/m4flux.i)dnl
      &  ttracergt0,ttracergt1,ttracergt2)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c***********************************************************************     
 c input arrays:
@@ -105,8 +105,8 @@ c***********************************************************************
      &  tracergt0,tracergt1,tracergt2)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c***********************************************************************     
 c input arrays:
@@ -165,7 +165,7 @@ c
 c***********************************************************************
 c***********************************************************************
 c***********************************************************************
-      subroutine fluxcalculation(dt,xcell0,xcell1,visco,dx,
+      subroutine fluxcalculation3d(dt,xcell0,xcell1,visco,dx,
      &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
      &  gamma,rpchoice,
      &  density,velocity,pressure,
@@ -175,8 +175,8 @@ c***********************************************************************
      
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
 c***********************************************************************
 c input arrays:
@@ -226,7 +226,7 @@ c***********************************************************************
 c      
       gam_min_one = gamma-one
 
-c     write(6,*) "in fluxcalculation..."
+c     write(6,*) "in fluxcalculation3d..."
 c     write(6,*) "ifirst = ",ifirst0,ifirst1,ifirst2
 c     write(6,*) "ilast = ",ilast0,ilast1,ilast2
 c     write(6,*) "xcell0,xcell1 = ",xcell0,xcell1
@@ -259,14 +259,15 @@ c***********************************************************************
 c***********************************************************************
 c***********************************************************************
   
-      subroutine consdiff(ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
+      subroutine consdiff3d(
+     &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
      &  dx,
      &  flux0,flux1,flux2,
      &  gamma,density,velocity,pressure)
 c***********************************************************************
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c***********************************************************************
       integer ifirst0, ilast0,ifirst1, ilast1,ifirst2,ilast2
       REAL dx(0:NDIM-1)
@@ -331,5 +332,5 @@ c
       return
       end
 c***********************************************************************
-include(FORTDIR/../gas1d_approxrp.i)dnl
-include(FORTDIR/../gas1d_exactrp.i)dnl
+include(FORTDIR/gas1d_approxrp3d.i)dnl
+include(FORTDIR/gas1d_exactrp3d.i)dnl

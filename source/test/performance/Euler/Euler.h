@@ -13,14 +13,14 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/MessageStream.h"
-#include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/hier/VariableContext.h"
+#include "SAMRAI/appu/VisDerivedDataStrategy.h"
+#include "SAMRAI/appu/VisItDataWriter.h"
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/appu/BoundaryUtilityStrategy.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/pdat/CellVariable.h"
-#include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/pdat/FaceData.h"
 #include "SAMRAI/pdat/FaceVariable.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
@@ -29,14 +29,14 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/Serializable.h"
-#include <string>
-using namespace std;
-#define included_String
-#include "SAMRAI/hier/VariableContext.h"
-#include "SAMRAI/appu/VisDerivedDataStrategy.h"
-#include "SAMRAI/appu/VisItDataWriter.h"
+#include "SAMRAI/tbox/Database.h"
+#include "SAMRAI/tbox/MessageStream.h"
+#include "SAMRAI/tbox/Array.h"
+
 
 #include <boost/shared_ptr.hpp>
+#include <string>
+using namespace std;
 
 /**
  * The Euler class provides routines for a sample application code that
@@ -76,6 +76,7 @@ public:
     */
    Euler(
       const string& object_name,
+      const tbox::Dimension& dim,
       boost::shared_ptr<tbox::Database> input_db,
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geom);
 
@@ -151,7 +152,7 @@ public:
 
    /**
     * Compute time integral of fluxes to be used in conservative difference
-    * for patch integration.  When NDIM == 3, this function calls either
+    * for patch integration.  When d_dim == tbox::Dimension(3)), this function calls either
     * compute3DFluxesWithCornerTransport1(), or
     * compute3DFluxesWithCornerTransport2() depending on which
     * transverse flux correction option that is specified in input.
@@ -193,8 +194,8 @@ public:
    tagRichardsonExtrapolationCells(
       hier::Patch& patch,
       const int error_level_number,
-      const boost::shared_ptr<hier::VariableContext> coarsened_fine,
-      const boost::shared_ptr<hier::VariableContext> advanced_coarse,
+      const boost::shared_ptr<hier::VariableContext>& coarsened_fine,
+      const boost::shared_ptr<hier::VariableContext>& advanced_coarse,
       const double regrid_time,
       const double deltat,
       const int error_coarsen_ratio,
@@ -228,7 +229,7 @@ public:
    /**
     * Return stencil width of conservative linear interpolation operations.
     */
-   hier::IntVector
+   virtual hier::IntVector
    getRefineOpStencilWidth() const;
 
    /**
@@ -294,6 +295,17 @@ public:
       int bdry_location_index);
 
    /**
+    * This routine is a concrete implementation of the virtual function
+    * in the base class BoundaryUtilityStrategy.  It is a blank implementation
+    * for the purposes of this class.
+    */
+   void
+   readNeumannBoundaryDataEntry(
+      const boost::shared_ptr<tbox::Database>& db,
+      string& db_name,
+      int bdry_location_index);
+
+   /**
     * Register a VisIt data writer so this class will write
     * plot files that may be postprocessed with the VisIt
     * visualization tool.
@@ -305,20 +317,21 @@ public:
 #endif
 
    /**
-    * This routine is a concrete implementation of the virtual
-    * function in the base class appu::VisDerivedDataStrategy.
-    * It computes derived plot quantities registered with the VisIt
-    * data writer from data that is maintained on each patch in the
+    * This routine is a concrete implementation of the virtual function
+    * in the base class appu::VisDerivedDataStrategy.  It computes derived
+    * plot quantities registered with the VisIt data
+    * writers from data  that is maintained on each patch in the
     * hierarchy.  In particular, it writes the plot quantity
-    * identified by the string variable name to the specified double
-    * buffer on the patch in the given region.  The depth_id integer
-    * argument indicates which entry in the "depth" of the vector is
-    * being written; for a scalar quantity, this may be ignored.  For
-    * a vector quantity, it may be used to compute the quantity at the
-    * particular depth (e.g. mom[depth_id] = rho * vel[depth_id]).
-    * The boolean return value specifies whether or not derived data
-    * exists on the patch.  Generally, this will be TRUE.  If the
-    * derived data does NOT exist on the patch, return FALSE.
+    * identified by the string variable name to the specified
+    * double buffer on the patch in the given region.  The depth_id
+    * integer argument indicates which entry in the "depth" of the
+    * vector is being written; for a scalar quantity, this may be
+    * ignored.  For a vector quantity, it may be used to compute
+    * the quantity at the particular depth (e.g. mom[depth_id] =
+    * rho * vel[depth_id]).  The boolean return value specifies
+    * whether or not derived data exists on the patch.  Generally,
+    * this will be TRUE.  If the derived data does NOT exist on
+    * the patch, return FALSE.
     */
    bool
    packDerivedDataIntoDoubleBuffer(
@@ -427,10 +440,16 @@ private:
     * plot context passed to the variable registration routine.
     */
    boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
+
 #ifdef HAVE_HDF5
    boost::shared_ptr<appu::VisItDataWriter> d_visit_writer;
 #endif
    boost::shared_ptr<hier::VariableContext> d_plot_context;
+
+   /*
+    * Problem dimension.
+    */
+   const tbox::Dimension d_dim;
 
    /*
     * Data items used for nonuniform load balance, if used.
@@ -490,12 +509,12 @@ private:
     * Input for SPHERE problem
     */
    double d_radius;
-   double d_center[NDIM];
+   double d_center[SAMRAI::MAX_DIM_VAL];
    double d_density_inside;
-   double d_velocity_inside[NDIM];
+   double d_velocity_inside[SAMRAI::MAX_DIM_VAL];
    double d_pressure_inside;
    double d_density_outside;
-   double d_velocity_outside[NDIM];
+   double d_velocity_outside[SAMRAI::MAX_DIM_VAL];
    double d_pressure_outside;
 
    /*
@@ -516,9 +535,7 @@ private:
     */
    tbox::Array<int> d_master_bdry_edge_conds;
    tbox::Array<int> d_master_bdry_node_conds;
-#if (NDIM == 3)
-   tbox::Array<int> d_master_bdry_face_conds;
-#endif
+   tbox::Array<int> d_master_bdry_face_conds; // Used in 3D only.
 
    /*
     * Boundary condition cases for scalar and vector (i.e., depth > 1)
@@ -531,32 +548,22 @@ private:
    tbox::Array<int> d_scalar_bdry_node_conds;
    tbox::Array<int> d_vector_bdry_node_conds;
 
-#if (NDIM == 3)
-   tbox::Array<int> d_scalar_bdry_face_conds;
-   tbox::Array<int> d_vector_bdry_face_conds;
-#endif
+   tbox::Array<int> d_scalar_bdry_face_conds; // Used in 3D only.
+   tbox::Array<int> d_vector_bdry_face_conds; // Used in 3D only.
 
-#if (NDIM == 2)
-   tbox::Array<int> d_node_bdry_edge;
-#endif
-#if (NDIM == 3)
-   tbox::Array<int> d_edge_bdry_face;
-   tbox::Array<int> d_node_bdry_face;
-#endif
+   tbox::Array<int> d_node_bdry_edge; // Used in 2D only.
+   tbox::Array<int> d_edge_bdry_face; // Used in 3D only.
+   tbox::Array<int> d_node_bdry_face; // Used in 3D only.
 
    /*
     * Arrays of face (3d) or edge (2d) boundary values for DIRICHLET case.
     */
-#if (NDIM == 2)
-   tbox::Array<double> d_bdry_edge_density;
-   tbox::Array<double> d_bdry_edge_velocity;
-   tbox::Array<double> d_bdry_edge_pressure;
-#endif
-#if (NDIM == 3)
-   tbox::Array<double> d_bdry_face_density;
-   tbox::Array<double> d_bdry_face_velocity;
-   tbox::Array<double> d_bdry_face_pressure;
-#endif
+   tbox::Array<double> d_bdry_edge_density; // Used in 2D only.
+   tbox::Array<double> d_bdry_edge_velocity; // Used in 2D only.
+   tbox::Array<double> d_bdry_edge_pressure; // Used in 2D only.
+   tbox::Array<double> d_bdry_face_density; // Used in 3D only.
+   tbox::Array<double> d_bdry_face_velocity; // Used in 3D only.
+   tbox::Array<double> d_bdry_face_pressure; // Used in 3D only.
 
    /*
     * Refinement criteria parameters for gradient detector and

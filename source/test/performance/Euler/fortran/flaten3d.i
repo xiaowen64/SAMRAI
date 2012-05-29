@@ -1,5 +1,5 @@
 c***********************************************************************
-      subroutine flaten(ifirst,ilast,i,mc,idir,
+      subroutine flaten3d(ifirst,ilast,i,mc,idir,
      &                  tracest,sound,flattn)
 c***********************************************************************
 c Compute "flattn" (flattening coefficient) for cell i
@@ -14,8 +14,8 @@ c   output:
 c     flattn   ==> flattening coefficient
 c+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       implicit none
-include(FORTDIR/../probparams.i)dnl
-include(FORTDIR/../const.i)dnl
+include(FORTDIR/probparams.i)dnl
+include(FORTDIR/const.i)dnl
 c+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       integer ifirst,ilast,i,mc,idir
       REAL tracest(ifirst-FACEG:ifirst+mc+FACEG,NEQU)

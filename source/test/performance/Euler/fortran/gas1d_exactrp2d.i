@@ -18,7 +18,7 @@ define(dersvel,`dnl
 c***********************************************************************
 c***********************************************************************
 c***********************************************************************
-      subroutine gas1dexactrp(gamma,minpres,wleft,wright,striem)
+      subroutine gas1dexactrp2d(gamma,minpres,wleft,wright,striem)
 c***********************************************************************
 c description of arguments:
 c   input:
@@ -30,7 +30,7 @@ c     striem (density,velocity,pressure)
 c             <== solution to riemann problem)
 c+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       implicit none
-include(FORTDIR/../const.i)
+include(FORTDIR/const.i)
 c+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 c+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       REAL wleft(3),wright(3),striem(3)

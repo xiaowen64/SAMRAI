@@ -179,6 +179,7 @@ BergerRigoutsos {
 
 // BaselineMain is used only by the baseline code.
 BaselineMain {
+   dim = 3
    base_name = "spbsl-4l4x"
    log_all_nodes = TRUE
 
@@ -197,6 +198,7 @@ BaselineMain {
 
 // Main is used only by the new code.
 Main {
+   dim = 3
    base_name = "spnew-4l4x"
    log_all_nodes = TRUE
 
