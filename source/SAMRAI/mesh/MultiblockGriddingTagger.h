@@ -43,8 +43,7 @@ public:
    /*!
     * @brief The constructor does nothing interesting.
     */
-   explicit MultiblockGriddingTagger(
-      const tbox::Dimension& dim);
+   explicit MultiblockGriddingTagger();
 
    /*!
     * @brief The virtual destructor does nothing interesting.
@@ -162,17 +161,7 @@ public:
       const hier::Box& fine_box,
       const hier::IntVector& ratio);
 
-   /*!
-    * @brief Return the dimension of this object.
-    */
-   const tbox::Dimension& getDim() const
-   {
-      return d_dim;
-   }
-
 private:
-
-   tbox::Dimension d_dim;
 
    /*
     * Patch data index for

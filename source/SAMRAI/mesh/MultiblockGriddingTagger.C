@@ -39,10 +39,8 @@ namespace mesh {
  *************************************************************************
  */
 
-MultiblockGriddingTagger::MultiblockGriddingTagger(
-   const tbox::Dimension& dim):
-   xfer::RefinePatchStrategy(),
-   d_dim(dim)
+MultiblockGriddingTagger::MultiblockGriddingTagger():
+   xfer::RefinePatchStrategy()
 {
 }
 
@@ -53,7 +51,7 @@ MultiblockGriddingTagger::~MultiblockGriddingTagger()
 hier::IntVector
 MultiblockGriddingTagger::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getOne(d_dim);
+   return hier::IntVector::getOne(dim);
 }
 
 void
@@ -93,9 +91,9 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
    const double fill_time,
    const hier::IntVector& ghost_width_to_fill)
 {
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, patch);
-
    NULL_USE(fill_time);
+
+   const tbox::Dimension &dim = patch.getDim();
 
    const boost::shared_ptr<pdat::CellData<int> > tag_data(
       patch.getPatchData(d_buf_tag_indx),
@@ -107,7 +105,7 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
 
    boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
-   for (int d = 0; d < d_dim.getValue(); d++) {
+   for (int d = 0; d < dim.getValue(); d++) {
 
       tbox::Array<hier::BoundaryBox> bbox =
          pgeom->getCodimensionBoundaries(d + 1);
@@ -138,7 +136,7 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    NULL_USE(boundary_box);
    NULL_USE(grid_geometry);
 
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(d_dim, patch, fill_box, boundary_box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(patch, fill_box, boundary_box);
 
    const tbox::Dimension& dim = fill_box.getDim();
 
@@ -250,7 +248,7 @@ MultiblockGriddingTagger::postprocessRefine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio)
 {
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(d_dim, fine, coarse, fine_box, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(fine, coarse, fine_box, ratio);
 
    NULL_USE(fine);
    NULL_USE(coarse);

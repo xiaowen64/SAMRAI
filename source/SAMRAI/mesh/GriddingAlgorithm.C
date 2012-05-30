@@ -185,7 +185,7 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_buf_tag_indx = (*s_buf_tag_indx)[d_dim.getValue() - 1];
 
    if (d_hierarchy->getGridGeometry()->getNumberBlocks() > 1) {
-      d_mb_tagger_strategy = new MultiblockGriddingTagger(d_dim);
+      d_mb_tagger_strategy = new MultiblockGriddingTagger();
       d_mb_tagger_strategy->setScratchTagPatchDataIndex(d_buf_tag_indx);
    }
 
