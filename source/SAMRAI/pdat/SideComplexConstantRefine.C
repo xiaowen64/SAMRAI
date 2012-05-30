@@ -114,7 +114,7 @@ SideComplexConstantRefine::getOperatorPriority() const
 hier::IntVector
 SideComplexConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(getDim());
+   return hier::IntVector::getZero(dim);
 }
 
 void SideComplexConstantRefine::refine(
@@ -125,7 +125,7 @@ void SideComplexConstantRefine::refine(
    const hier::BoxOverlap& fine_overlap,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(getDim());
+   const tbox::Dimension& dim(fine.getDim());
 
    boost::shared_ptr<SideData<dcomplex> > cdata(
       coarse.getPatchData(src_component),
@@ -142,7 +142,7 @@ void SideComplexConstantRefine::refine(
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
-   TBOX_ASSERT_OBJDIM_EQUALITY4(*this, fine, coarse, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(fine, coarse, ratio);
 
    const hier::IntVector& directions = fdata->getDirectionVector();
 

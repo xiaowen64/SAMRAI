@@ -68,13 +68,14 @@ using namespace SAMRAI;
 SkeletonCellDoubleConservativeLinearRefine::
 SkeletonCellDoubleConservativeLinearRefine(
    const tbox::Dimension& dim):
-   hier::RefineOperator(dim, "SKELETON_CONSERVATIVE_LINEAR_REFINE")
+   hier::RefineOperator(dim, "SKELETON_CONSERVATIVE_LINEAR_REFINE"),
+   d_dim(dim)
 {
    const int max_levels = 10;
    d_dx.resizeArray(max_levels);
    for (int n = 0; n < max_levels; n++) {
-      d_dx[n].resizeArray(getDim().getValue());
-      for (int i = 0; i < getDim().getValue(); i++) {
+      d_dx[n].resizeArray(dim.getValue());
+      for (int i = 0; i < dim.getValue(); i++) {
          d_dx[n][i] = 1.;
       }
    }
@@ -94,7 +95,7 @@ SkeletonCellDoubleConservativeLinearRefine::getOperatorPriority() const
 
 hier::IntVector
 SkeletonCellDoubleConservativeLinearRefine::getStencilWidth( const tbox::Dimension &dim ) const {
-   return hier::IntVector(getDim(), 1);
+   return hier::IntVector(dim, 1);
 }
 
 void SkeletonCellDoubleConservativeLinearRefine::refine(
@@ -160,7 +161,7 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
    const hier::Index ifirstf = fine_box.lower();
    const hier::Index ilastf = fine_box.upper();
 
-   const hier::IntVector tmp_ghosts(getDim(), 0);
+   const hier::IntVector tmp_ghosts(fine.getDim(), 0);
    tbox::Array<double> diff0(cgbox.numberCells(0) + 1);
    pdat::CellData<double> slope0(cgbox, 1, tmp_ghosts);
 
@@ -177,7 +178,7 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
    getDx(flev_num, fdx);
 
    for (int d = 0; d < fdata->getDepth(); d++) {
-      if (getDim() == tbox::Dimension(1)) {
+      if (fine.getDim() == tbox::Dimension(1)) {
          F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (
             ifirstc(0), ilastc(0),
             ifirstf(0), ilastf(0),
@@ -189,7 +190,7 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
             cdata->getPointer(d),
             fdata->getPointer(d),
             diff0.getPointer(), slope0.getPointer());
-      } else if (getDim() == tbox::Dimension(2)) {
+      } else if (fine.getDim() == tbox::Dimension(2)) {
 
          tbox::Array<double> diff1(cgbox.numberCells(1) + 1);
          pdat::CellData<double> slope1(cgbox, 1, tmp_ghosts);
@@ -206,7 +207,7 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
             fdata->getPointer(d),
             diff0.getPointer(), slope0.getPointer(),
             diff1.getPointer(), slope1.getPointer());
-      } else if (getDim() == tbox::Dimension(3)) {
+      } else if (fine.getDim() == tbox::Dimension(3)) {
 
          tbox::Array<double> diff1(cgbox.numberCells(1) + 1);
          pdat::CellData<double> slope1(cgbox, 1, tmp_ghosts);
@@ -233,7 +234,7 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
             diff2.getPointer(), slope2.getPointer());
       } else {
          TBOX_ERROR("SkeletonCellDoubleConservativeLinearRefine error...\n"
-            << "getDim() > 3 not supported." << endl);
+            << "dimension > 3 not supported." << endl);
 
       }
    }
@@ -245,8 +246,8 @@ void SkeletonCellDoubleConservativeLinearRefine::setDx(
 {
    if (level_number >= d_dx.getSize()) {
       d_dx.resizeArray(level_number + 1);
-      d_dx[level_number].resizeArray(getDim().getValue());
-      for (int i = 0; i < getDim().getValue(); i++) {
+      d_dx[level_number].resizeArray(d_dim.getValue());
+      for (int i = 0; i < d_dim.getValue(); i++) {
          d_dx[level_number][i] = dx[i];
       }
    }
@@ -256,7 +257,7 @@ void SkeletonCellDoubleConservativeLinearRefine::getDx(
    const int level_number,
    double* dx) const
 {
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); i++) {
       dx[i] = d_dx[level_number][i];
    }
 }

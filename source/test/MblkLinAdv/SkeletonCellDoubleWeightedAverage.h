@@ -99,6 +99,7 @@ private:
       const int level_number,
       double* dx) const;
 
+   const tbox::Dimension d_dim;
    tbox::Array<tbox::Array<double> > d_dx;
 
 };

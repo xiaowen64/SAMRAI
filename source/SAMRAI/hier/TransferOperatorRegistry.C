@@ -265,11 +265,12 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
 IntVector
 TransferOperatorRegistry::getMaxTransferOpStencilWidth( const tbox::Dimension &dim )
 {
-   IntVector max_width(d_min_stencil_width);
-   max_width.max(RefineOperator::getMaxRefineOpStencilWidth(
-      d_min_stencil_width.getDim()));
-   max_width.max(CoarsenOperator::getMaxCoarsenOpStencilWidth(
-      d_min_stencil_width.getDim()));
+   IntVector max_width(dim,0);
+   if ( d_min_stencil_width.getDim() == dim ) {
+      max_width.max(d_min_stencil_width);
+   }
+   max_width.max(RefineOperator::getMaxRefineOpStencilWidth(dim));
+   max_width.max(CoarsenOperator::getMaxCoarsenOpStencilWidth(dim));
    d_max_op_stencil_width_req = true;
    return max_width;
 }

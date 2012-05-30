@@ -92,7 +92,7 @@ CartesianCellComplexLinearRefine::getOperatorPriority() const
 hier::IntVector
 CartesianCellComplexLinearRefine::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getOne(getDim());
+   return hier::IntVector::getOne(dim);
 }
 
 void
@@ -129,7 +129,7 @@ CartesianCellComplexLinearRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(getDim());
+   const tbox::Dimension& dim(fine.getDim());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(dim, fine, coarse, fine_box, ratio);
 
    boost::shared_ptr<pdat::CellData<dcomplex> > cdata(

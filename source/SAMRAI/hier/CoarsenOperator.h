@@ -138,15 +138,6 @@ public:
    getMaxCoarsenOpStencilWidth(
       const tbox::Dimension& dim);
 
-   /**
-    * Return the dimension of this object.
-    */
-   const tbox::Dimension&
-   getDim() const
-   {
-      return d_dim;
-   }
-
 private:
    CoarsenOperator(
       const CoarsenOperator&);                  // not implemented
@@ -191,7 +182,6 @@ private:
    }
 
    const std::string d_name;
-   const tbox::Dimension d_dim;
 
    static std::multimap<std::string, CoarsenOperator *> s_lookup_table;
 
