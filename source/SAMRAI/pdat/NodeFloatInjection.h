@@ -42,8 +42,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit NodeFloatInjection(
-      const tbox::Dimension& dim);
+   explicit NodeFloatInjection();
 
    /**
     * Uninteresting virtual destructor.

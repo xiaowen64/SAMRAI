@@ -108,8 +108,7 @@ namespace SAMRAI {
 namespace geom {
 
 CartesianFaceFloatConservativeLinearRefine::
-CartesianFaceFloatConservativeLinearRefine(
-   const tbox::Dimension& dim):
+CartesianFaceFloatConservativeLinearRefine():
    hier::RefineOperator("CONSERVATIVE_LINEAR_REFINE")
 {
 }

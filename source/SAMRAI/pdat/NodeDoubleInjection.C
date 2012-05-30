@@ -62,8 +62,7 @@ void F77_FUNC(conavgnodedoub3d, CONAVGNODEDOUB3D) (const int&, const int&,
 namespace SAMRAI {
 namespace pdat {
 
-NodeDoubleInjection::NodeDoubleInjection(
-   const tbox::Dimension& dim):
+NodeDoubleInjection::NodeDoubleInjection():
    hier::CoarsenOperator("CONSTANT_COARSEN")
 {
 }

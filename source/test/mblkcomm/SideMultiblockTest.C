@@ -777,9 +777,7 @@ void SideMultiblockTest::postprocessRefine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(fine.getDim());
-
-   pdat::SideDoubleConstantRefine ref_op(dim);
+   pdat::SideDoubleConstantRefine ref_op;
 
    hier::BoxContainer fine_box_list(fine_box);
 

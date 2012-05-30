@@ -95,8 +95,7 @@ void F77_FUNC(conrefsideflot3d2, CONREFSIDEFLOT3D2) (const int&, const int&,
 namespace SAMRAI {
 namespace pdat {
 
-SideFloatConstantRefine::SideFloatConstantRefine(
-   const tbox::Dimension& dim):
+SideFloatConstantRefine::SideFloatConstantRefine():
    hier::RefineOperator("CONSTANT_REFINE")
 {
 }

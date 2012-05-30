@@ -289,7 +289,7 @@ public:
     */
    virtual IntVector getRefineOpStencilWidth( const tbox::Dimension &dim ) const
    {
-      return IntVector(d_dim, 0);
+      return IntVector(dim, 0);
    }
 
 /*************************************************************************
@@ -333,7 +333,7 @@ public:
     */
    virtual IntVector getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
    {
-      return IntVector(d_dim, 0);
+      return IntVector(dim, 0);
    }
 
    /*!

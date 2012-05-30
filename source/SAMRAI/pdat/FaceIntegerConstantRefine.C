@@ -93,8 +93,7 @@ void F77_FUNC(conreffaceintg3d2, CONREFFACEINTG3D2) (const int&, const int&,
 namespace SAMRAI {
 namespace pdat {
 
-FaceIntegerConstantRefine::FaceIntegerConstantRefine(
-   const tbox::Dimension& dim):
+FaceIntegerConstantRefine::FaceIntegerConstantRefine():
    hier::RefineOperator("CONSTANT_REFINE")
 {
 }

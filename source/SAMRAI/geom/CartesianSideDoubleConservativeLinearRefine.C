@@ -109,8 +109,7 @@ namespace SAMRAI {
 namespace geom {
 
 CartesianSideDoubleConservativeLinearRefine::
-CartesianSideDoubleConservativeLinearRefine(
-   const tbox::Dimension& dim):
+CartesianSideDoubleConservativeLinearRefine():
    hier::RefineOperator("CONSERVATIVE_LINEAR_REFINE")
 {
 }

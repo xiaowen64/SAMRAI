@@ -68,8 +68,7 @@ void F77_FUNC(cartlinrefnodeflot3d, CARTLINREFNODEFLOT3D) (const int&,
 namespace SAMRAI {
 namespace geom {
 
-CartesianNodeFloatLinearRefine::CartesianNodeFloatLinearRefine(
-   const tbox::Dimension& dim):
+CartesianNodeFloatLinearRefine::CartesianNodeFloatLinearRefine():
    hier::RefineOperator("LINEAR_REFINE")
 {
 }

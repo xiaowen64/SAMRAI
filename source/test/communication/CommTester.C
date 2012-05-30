@@ -573,7 +573,7 @@ void CommTester::setPhysicalBoundaryConditions(
 
 hier::IntVector CommTester::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getOne(d_dim);
+   return hier::IntVector::getOne(dim);
 }
 
 void CommTester::preprocessRefine(
@@ -596,7 +596,7 @@ void CommTester::postprocessRefine(
 
 hier::IntVector CommTester::getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(d_dim);
+   return hier::IntVector::getZero(dim);
 }
 
 void CommTester::preprocessCoarsen(

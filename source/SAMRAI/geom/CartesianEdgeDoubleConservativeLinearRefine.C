@@ -110,8 +110,7 @@ namespace geom {
 // using namespace std;
 
 CartesianEdgeDoubleConservativeLinearRefine::
-CartesianEdgeDoubleConservativeLinearRefine(
-   const tbox::Dimension& dim):
+CartesianEdgeDoubleConservativeLinearRefine():
    hier::RefineOperator("CONSERVATIVE_LINEAR_REFINE")
 {
 }

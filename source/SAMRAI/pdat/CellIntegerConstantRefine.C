@@ -66,8 +66,7 @@ void F77_FUNC(conrefcellintg3d, CONREFCELLINTG3D) (const int&, const int&,
 namespace SAMRAI {
 namespace pdat {
 
-CellIntegerConstantRefine::CellIntegerConstantRefine(
-   const tbox::Dimension& dim):
+CellIntegerConstantRefine::CellIntegerConstantRefine():
    hier::RefineOperator("CONSTANT_REFINE")
 {
 

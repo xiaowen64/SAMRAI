@@ -565,7 +565,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
    /*
     * Refine tags from coarser level to level.
     */
-   pdat::CellIntegerConstantRefine copytags(dim);
+   pdat::CellIntegerConstantRefine copytags;
    for (hier::PatchLevel::iterator ip(coarser_level->begin());
         ip != coarser_level->end(); ++ip) {
 

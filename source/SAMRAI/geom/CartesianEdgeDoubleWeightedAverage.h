@@ -41,8 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CartesianEdgeDoubleWeightedAverage(
-      const tbox::Dimension& dim);
+   explicit CartesianEdgeDoubleWeightedAverage();
 
    /**
     * Uninteresting virtual destructor.

@@ -370,9 +370,7 @@ void CellMultiblockTest::postprocessRefine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(fine.getDim());
-
-   pdat::CellDoubleConstantRefine ref_op(dim);
+   pdat::CellDoubleConstantRefine ref_op;
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 

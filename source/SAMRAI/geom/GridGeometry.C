@@ -266,81 +266,81 @@ GridGeometry::buildOperators()
    // Coarsening Operators
    addCoarsenOperator(
       typeid(pdat::NodeVariable<dcomplex>).name(),
-      boost::make_shared<pdat::NodeComplexInjection>(d_dim));
+      boost::make_shared<pdat::NodeComplexInjection>());
    addCoarsenOperator(
       typeid(pdat::NodeVariable<double>).name(),
-      boost::make_shared<pdat::NodeDoubleInjection>(d_dim));
+      boost::make_shared<pdat::NodeDoubleInjection>());
    addCoarsenOperator(
       typeid(pdat::NodeVariable<float>).name(),
-      boost::make_shared<pdat::NodeFloatInjection>(d_dim));
+      boost::make_shared<pdat::NodeFloatInjection>());
    addCoarsenOperator(
       typeid(pdat::NodeVariable<int>).name(),
-      boost::make_shared<pdat::NodeIntegerInjection>(d_dim));
+      boost::make_shared<pdat::NodeIntegerInjection>());
    addCoarsenOperator(
       typeid(pdat::OuternodeVariable<double>).name(),
-      boost::make_shared<pdat::OuternodeDoubleConstantCoarsen>(d_dim));
+      boost::make_shared<pdat::OuternodeDoubleConstantCoarsen>());
 
    // Refinement Operators
    addRefineOperator(
       typeid(pdat::CellVariable<dcomplex>).name(),
-      boost::make_shared<pdat::CellComplexConstantRefine>(d_dim));
+      boost::make_shared<pdat::CellComplexConstantRefine>());
    addRefineOperator(
       typeid(pdat::CellVariable<double>).name(),
-      boost::make_shared<pdat::CellDoubleConstantRefine>(d_dim));
+      boost::make_shared<pdat::CellDoubleConstantRefine>());
    addRefineOperator(
       typeid(pdat::CellVariable<float>).name(),
-      boost::make_shared<pdat::CellFloatConstantRefine>(d_dim));
+      boost::make_shared<pdat::CellFloatConstantRefine>());
    addRefineOperator(
       typeid(pdat::CellVariable<int>).name(),
-      boost::make_shared<pdat::CellIntegerConstantRefine>(d_dim));
+      boost::make_shared<pdat::CellIntegerConstantRefine>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<dcomplex>).name(),
-      boost::make_shared<pdat::EdgeComplexConstantRefine>(d_dim));
+      boost::make_shared<pdat::EdgeComplexConstantRefine>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<double>).name(),
-      boost::make_shared<pdat::EdgeDoubleConstantRefine>(d_dim));
+      boost::make_shared<pdat::EdgeDoubleConstantRefine>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<float>).name(),
-      boost::make_shared<pdat::EdgeFloatConstantRefine>(d_dim));
+      boost::make_shared<pdat::EdgeFloatConstantRefine>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<int>).name(),
-      boost::make_shared<pdat::EdgeIntegerConstantRefine>(d_dim));
+      boost::make_shared<pdat::EdgeIntegerConstantRefine>());
    addRefineOperator(
       typeid(pdat::FaceVariable<dcomplex>).name(),
-      boost::make_shared<pdat::FaceComplexConstantRefine>(d_dim));
+      boost::make_shared<pdat::FaceComplexConstantRefine>());
    addRefineOperator(
       typeid(pdat::FaceVariable<double>).name(),
-      boost::make_shared<pdat::FaceDoubleConstantRefine>(d_dim));
+      boost::make_shared<pdat::FaceDoubleConstantRefine>());
    addRefineOperator(
       typeid(pdat::FaceVariable<float>).name(),
-      boost::make_shared<pdat::FaceFloatConstantRefine>(d_dim));
+      boost::make_shared<pdat::FaceFloatConstantRefine>());
    addRefineOperator(
       typeid(pdat::FaceVariable<int>).name(),
-      boost::make_shared<pdat::FaceIntegerConstantRefine>(d_dim));
+      boost::make_shared<pdat::FaceIntegerConstantRefine>());
    addRefineOperator(
       typeid(pdat::OuterfaceVariable<dcomplex>).name(),
-      boost::make_shared<pdat::OuterfaceComplexConstantRefine>(d_dim));
+      boost::make_shared<pdat::OuterfaceComplexConstantRefine>());
    addRefineOperator(
       typeid(pdat::OuterfaceVariable<double>).name(),
-      boost::make_shared<pdat::OuterfaceDoubleConstantRefine>(d_dim));
+      boost::make_shared<pdat::OuterfaceDoubleConstantRefine>());
    addRefineOperator(
       typeid(pdat::OuterfaceVariable<float>).name(),
-      boost::make_shared<pdat::OuterfaceFloatConstantRefine>(d_dim));
+      boost::make_shared<pdat::OuterfaceFloatConstantRefine>());
    addRefineOperator(
       typeid(pdat::OuterfaceVariable<int>).name(),
-      boost::make_shared<pdat::OuterfaceIntegerConstantRefine>(d_dim));
+      boost::make_shared<pdat::OuterfaceIntegerConstantRefine>());
    addRefineOperator(
       typeid(pdat::SideVariable<dcomplex>).name(),
-      boost::make_shared<pdat::SideComplexConstantRefine>(d_dim));
+      boost::make_shared<pdat::SideComplexConstantRefine>());
    addRefineOperator(
       typeid(pdat::SideVariable<double>).name(),
-      boost::make_shared<pdat::SideDoubleConstantRefine>(d_dim));
+      boost::make_shared<pdat::SideDoubleConstantRefine>());
    addRefineOperator(
       typeid(pdat::SideVariable<float>).name(),
-      boost::make_shared<pdat::SideFloatConstantRefine>(d_dim));
+      boost::make_shared<pdat::SideFloatConstantRefine>());
    addRefineOperator(
       typeid(pdat::SideVariable<int>).name(),
-      boost::make_shared<pdat::SideIntegerConstantRefine>(d_dim));
+      boost::make_shared<pdat::SideIntegerConstantRefine>());
 
    // Time Interpolation Operators
    addTimeInterpolateOperator(

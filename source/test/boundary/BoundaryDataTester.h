@@ -69,7 +69,7 @@ public:
     * in the hierarchy.
     */
    hier::IntVector getRefineOpStencilWidth( const tbox::Dimension &dim ) const {
-      return hier::IntVector(d_dim, 0);
+      return hier::IntVector(dim, 0);
    }
 
    void preprocessRefine(

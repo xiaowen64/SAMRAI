@@ -42,8 +42,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit NodeComplexInjection(
-      const tbox::Dimension& dim);
+   explicit NodeComplexInjection();
 
    /**
     * Uninteresting virtual destructor.

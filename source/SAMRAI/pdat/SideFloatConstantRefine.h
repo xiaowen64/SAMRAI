@@ -41,8 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit SideFloatConstantRefine(
-      const tbox::Dimension& dim);
+   explicit SideFloatConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

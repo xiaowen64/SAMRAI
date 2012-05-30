@@ -41,8 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CellFloatConstantRefine(
-      const tbox::Dimension& dim);
+   explicit CellFloatConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

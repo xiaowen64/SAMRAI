@@ -790,9 +790,7 @@ void EdgeMultiblockTest::postprocessRefine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(fine.getDim());
-
-   pdat::EdgeDoubleConstantRefine ref_op(dim);
+   pdat::EdgeDoubleConstantRefine ref_op;
 
    hier::BoxContainer fine_box_list(fine_box);
 

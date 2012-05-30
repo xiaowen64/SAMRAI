@@ -40,8 +40,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CellComplexConstantRefine(
-      const tbox::Dimension& dim);
+   explicit CellComplexConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

@@ -454,7 +454,7 @@ PatchBoundaryNodeSum::setupSum(
       // each finer level to node data on next coarser level
       xfer::CoarsenAlgorithm sync_coarsen_algorithm(dim, false);
       boost::shared_ptr<pdat::OuternodeDoubleConstantCoarsen> coarsen_op(
-         boost::make_shared<pdat::OuternodeDoubleConstantCoarsen>(dim));
+         boost::make_shared<pdat::OuternodeDoubleConstantCoarsen>());
 
       for (int i = 0; i < d_num_reg_sum; i++) {
          single_level_sum_algorithm.registerRefine(d_onode_dst_id[i],  // dst data

@@ -84,8 +84,7 @@ namespace geom {
 // using namespace std;
 
 CartesianCellDoubleConservativeLinearRefine::
-CartesianCellDoubleConservativeLinearRefine(
-   const tbox::Dimension& dim):
+CartesianCellDoubleConservativeLinearRefine():
    hier::RefineOperator("CONSERVATIVE_LINEAR_REFINE")
 {
 }

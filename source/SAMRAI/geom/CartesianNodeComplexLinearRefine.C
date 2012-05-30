@@ -71,8 +71,7 @@ namespace geom {
 
 // using namespace std;
 
-CartesianNodeComplexLinearRefine::CartesianNodeComplexLinearRefine(
-   const tbox::Dimension& dim):
+CartesianNodeComplexLinearRefine::CartesianNodeComplexLinearRefine():
    hier::RefineOperator("LINEAR_REFINE")
 {
 }

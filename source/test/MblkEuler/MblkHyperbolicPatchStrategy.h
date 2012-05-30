@@ -369,7 +369,7 @@ public:
     */
    virtual hier::IntVector getRefineOpStencilWidth( const tbox::Dimension &dim ) const
    {
-      return hier::IntVector(d_dim, 0);
+      return hier::IntVector(dim, 0);
    }
 
    /**
@@ -435,7 +435,7 @@ public:
     */
    virtual hier::IntVector getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
    {
-      return hier::IntVector(d_dim, 0);
+      return hier::IntVector(dim, 0);
    }
 
    /**

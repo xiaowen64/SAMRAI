@@ -41,8 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CartesianNodeComplexLinearRefine(
-      const tbox::Dimension& dim);
+   explicit CartesianNodeComplexLinearRefine();
 
    /**
     * Uninteresting virtual destructor.

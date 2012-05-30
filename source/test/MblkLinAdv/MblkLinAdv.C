@@ -372,7 +372,7 @@ void MblkLinAdv::registerModelVariables(
    // which we explicitly set on any new patch
    boost::shared_ptr<hier::RefineOperator> node_linear_refine_op;
    boost::shared_ptr<pdat::NodeDoubleInjection> node_cons_coarsen_op(
-      new pdat::NodeDoubleInjection(d_dim));
+      new pdat::NodeDoubleInjection());
 
    integrator->registerVariable(d_uval, d_nghosts,
       MblkHyperbolicLevelIntegrator::TIME_DEP,

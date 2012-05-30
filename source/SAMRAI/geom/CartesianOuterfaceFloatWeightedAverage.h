@@ -41,8 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CartesianOuterfaceFloatWeightedAverage(
-      const tbox::Dimension& dim);
+   explicit CartesianOuterfaceFloatWeightedAverage();
 
    /**
     * Uninteresting virtual destructor.

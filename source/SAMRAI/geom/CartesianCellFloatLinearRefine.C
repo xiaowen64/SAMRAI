@@ -70,8 +70,7 @@ namespace geom {
 
 // using namespace std;
 
-CartesianCellFloatLinearRefine::CartesianCellFloatLinearRefine(
-   const tbox::Dimension& dim):
+CartesianCellFloatLinearRefine::CartesianCellFloatLinearRefine():
    hier::RefineOperator("LINEAR_REFINE")
 {
 }

@@ -67,8 +67,7 @@ namespace geom {
 
 // using namespace std;
 
-CartesianCellComplexWeightedAverage::CartesianCellComplexWeightedAverage(
-   const tbox::Dimension& dim):
+CartesianCellComplexWeightedAverage::CartesianCellComplexWeightedAverage():
    hier::CoarsenOperator("CONSERVATIVE_COARSEN")
 {
 }

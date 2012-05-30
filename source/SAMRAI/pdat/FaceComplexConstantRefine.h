@@ -41,8 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit FaceComplexConstantRefine(
-      const tbox::Dimension& dim);
+   explicit FaceComplexConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

@@ -93,8 +93,7 @@ void F77_FUNC(conrefedgeflot3d2, CONREFEDGEFLOT3D2) (const int&, const int&,
 namespace SAMRAI {
 namespace pdat {
 
-EdgeFloatConstantRefine::EdgeFloatConstantRefine(
-   const tbox::Dimension& dim):
+EdgeFloatConstantRefine::EdgeFloatConstantRefine():
    hier::RefineOperator("CONSTANT_REFINE")
 {
 }

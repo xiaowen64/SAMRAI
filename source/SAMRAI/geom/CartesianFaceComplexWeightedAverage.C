@@ -92,8 +92,7 @@ namespace geom {
 
 // using namespace std;
 
-CartesianFaceComplexWeightedAverage::CartesianFaceComplexWeightedAverage(
-   const tbox::Dimension& dim):
+CartesianFaceComplexWeightedAverage::CartesianFaceComplexWeightedAverage():
    hier::CoarsenOperator("CONSERVATIVE_COARSEN")
 {
 }

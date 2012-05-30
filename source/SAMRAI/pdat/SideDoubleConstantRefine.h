@@ -41,8 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit SideDoubleConstantRefine(
-      const tbox::Dimension& dim);
+   explicit SideDoubleConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

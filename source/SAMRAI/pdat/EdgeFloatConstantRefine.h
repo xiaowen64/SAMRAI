@@ -41,8 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit EdgeFloatConstantRefine(
-      const tbox::Dimension& dim);
+   explicit EdgeFloatConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

@@ -41,8 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit EdgeDoubleConstantRefine(
-      const tbox::Dimension& dim);
+   explicit EdgeDoubleConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

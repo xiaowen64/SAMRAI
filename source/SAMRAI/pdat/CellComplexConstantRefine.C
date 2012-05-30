@@ -68,8 +68,7 @@ void F77_FUNC(conrefcellcplx3d, CONREFCELLCPLX3D) (const int&, const int&,
 namespace SAMRAI {
 namespace pdat {
 
-CellComplexConstantRefine::CellComplexConstantRefine(
-   const tbox::Dimension& dim):
+CellComplexConstantRefine::CellComplexConstantRefine():
    hier::RefineOperator("CONSTANT_REFINE")
 {
 
@@ -138,8 +137,6 @@ CellComplexConstantRefine::refine(
    TBOX_ASSERT_OBJDIM_EQUALITY4(fine, coarse, fine_box, ratio);
 
    const hier::Box cgbox(cdata->getGhostBox());
-
-   const tbox::Dimension &dim = fine.getDim();
 
    const hier::Index cilo = cgbox.lower();
    const hier::Index cihi = cgbox.upper();

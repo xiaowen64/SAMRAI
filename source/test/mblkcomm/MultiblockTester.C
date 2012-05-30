@@ -626,7 +626,7 @@ void MultiblockTester::fillSingularityBoundaryConditions(
 
 hier::IntVector MultiblockTester::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector(d_dim, 0);
+   return hier::IntVector(dim, 0);
 }
 
 void MultiblockTester::preprocessRefine(
@@ -651,7 +651,7 @@ void MultiblockTester::postprocessRefine(
 
 hier::IntVector MultiblockTester::getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector(d_dim, 0);
+   return hier::IntVector(dim, 0);
 }
 
 void MultiblockTester::preprocessCoarsen(

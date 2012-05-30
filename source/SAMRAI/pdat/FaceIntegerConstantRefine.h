@@ -40,8 +40,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit FaceIntegerConstantRefine(
-      const tbox::Dimension& dim);
+   explicit FaceIntegerConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

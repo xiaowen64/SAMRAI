@@ -45,8 +45,7 @@ public:
    /*!
     * @brief Uninteresting default constructor.
     */
-   explicit OuternodeDoubleConstantCoarsen(
-      const tbox::Dimension& dim);
+   explicit OuternodeDoubleConstantCoarsen();
 
    /*!
     * @brief Uninteresting virtual destructor.

@@ -52,7 +52,7 @@ TransferOperatorRegistry::addCoarsenOperator(
    const boost::shared_ptr<CoarsenOperator>& coarsen_op)
 {
    if (d_max_op_stencil_width_req) {
-      for ( int d(1); d<=SAMRAI::MAX_DIM_VAL; ++d ) {
+      for ( short unsigned int d(1); d<=SAMRAI::MAX_DIM_VAL; ++d ) {
          if (coarsen_op->getStencilWidth(tbox::Dimension(d)) > getMaxTransferOpStencilWidth(tbox::Dimension(d))) {
             TBOX_WARNING(
                "Adding coarsen operator " << coarsen_op->getOperatorName()
@@ -79,7 +79,7 @@ TransferOperatorRegistry::addRefineOperator(
    const boost::shared_ptr<RefineOperator>& refine_op)
 {
    if (d_max_op_stencil_width_req) {
-      for ( int d(1); d<=SAMRAI::MAX_DIM_VAL; ++d ) {
+      for ( short unsigned int d(1); d<=SAMRAI::MAX_DIM_VAL; ++d ) {
          if (refine_op->getStencilWidth(tbox::Dimension(d)) > getMaxTransferOpStencilWidth(tbox::Dimension(d))) {
             TBOX_WARNING(
                "Adding refine operator " << refine_op->getOperatorName()

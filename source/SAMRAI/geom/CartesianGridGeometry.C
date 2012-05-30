@@ -426,99 +426,99 @@ CartesianGridGeometry::buildOperators()
    // CartesianGridGeometry specific Coarsening Operators
    addCoarsenOperator(
       typeid(pdat::CellVariable<dcomplex>).name(),
-      boost::make_shared<CartesianCellComplexWeightedAverage>(d_dim));
+      boost::make_shared<CartesianCellComplexWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::CellVariable<double>).name(),
-      boost::make_shared<CartesianCellDoubleWeightedAverage>(d_dim));
+      boost::make_shared<CartesianCellDoubleWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::CellVariable<float>).name(),
-      boost::make_shared<CartesianCellFloatWeightedAverage>(d_dim));
+      boost::make_shared<CartesianCellFloatWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::EdgeVariable<dcomplex>).name(),
-      boost::make_shared<CartesianEdgeComplexWeightedAverage>(d_dim));
+      boost::make_shared<CartesianEdgeComplexWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::EdgeVariable<double>).name(),
-      boost::make_shared<CartesianEdgeDoubleWeightedAverage>(d_dim));
+      boost::make_shared<CartesianEdgeDoubleWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::EdgeVariable<float>).name(),
-      boost::make_shared<CartesianEdgeFloatWeightedAverage>(d_dim));
+      boost::make_shared<CartesianEdgeFloatWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::FaceVariable<dcomplex>).name(),
-      boost::make_shared<CartesianFaceComplexWeightedAverage>(d_dim));
+      boost::make_shared<CartesianFaceComplexWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::FaceVariable<double>).name(),
-      boost::make_shared<CartesianFaceDoubleWeightedAverage>(d_dim));
+      boost::make_shared<CartesianFaceDoubleWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::FaceVariable<float>).name(),
-      boost::make_shared<CartesianFaceFloatWeightedAverage>(d_dim));
+      boost::make_shared<CartesianFaceFloatWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::OuterfaceVariable<dcomplex>).name(),
-      boost::make_shared<CartesianOuterfaceComplexWeightedAverage>(d_dim));
+      boost::make_shared<CartesianOuterfaceComplexWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::OuterfaceVariable<double>).name(),
-      boost::make_shared<CartesianOuterfaceDoubleWeightedAverage>(d_dim));
+      boost::make_shared<CartesianOuterfaceDoubleWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::OuterfaceVariable<float>).name(),
-      boost::make_shared<CartesianOuterfaceFloatWeightedAverage>(d_dim));
+      boost::make_shared<CartesianOuterfaceFloatWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::OutersideVariable<double>).name(),
-      boost::make_shared<CartesianOutersideDoubleWeightedAverage>(d_dim));
+      boost::make_shared<CartesianOutersideDoubleWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::SideVariable<dcomplex>).name(),
-      boost::make_shared<CartesianSideComplexWeightedAverage>(d_dim));
+      boost::make_shared<CartesianSideComplexWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::SideVariable<double>).name(),
-      boost::make_shared<CartesianSideDoubleWeightedAverage>(d_dim));
+      boost::make_shared<CartesianSideDoubleWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::SideVariable<float>).name(),
-      boost::make_shared<CartesianSideFloatWeightedAverage>(d_dim));
+      boost::make_shared<CartesianSideFloatWeightedAverage>());
 
    // CartesianGridGeometry specific Refinement Operators
    addRefineOperator(
       typeid(pdat::CellVariable<dcomplex>).name(),
-      boost::make_shared<CartesianCellComplexConservativeLinearRefine>(d_dim));
+      boost::make_shared<CartesianCellComplexConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::CellVariable<double>).name(),
-      boost::make_shared<CartesianCellDoubleConservativeLinearRefine>(d_dim));
+      boost::make_shared<CartesianCellDoubleConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::CellVariable<float>).name(),
-      boost::make_shared<CartesianCellFloatConservativeLinearRefine>(d_dim));
+      boost::make_shared<CartesianCellFloatConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<double>).name(),
-      boost::make_shared<CartesianEdgeDoubleConservativeLinearRefine>(d_dim));
+      boost::make_shared<CartesianEdgeDoubleConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<float>).name(),
-      boost::make_shared<CartesianEdgeFloatConservativeLinearRefine>(d_dim));
+      boost::make_shared<CartesianEdgeFloatConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::FaceVariable<double>).name(),
-      boost::make_shared<CartesianFaceDoubleConservativeLinearRefine>(d_dim));
+      boost::make_shared<CartesianFaceDoubleConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::FaceVariable<float>).name(),
-      boost::make_shared<CartesianFaceFloatConservativeLinearRefine>(d_dim));
+      boost::make_shared<CartesianFaceFloatConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::SideVariable<double>).name(),
-      boost::make_shared<CartesianSideDoubleConservativeLinearRefine>(d_dim));
+      boost::make_shared<CartesianSideDoubleConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::SideVariable<float>).name(),
-      boost::make_shared<CartesianSideFloatConservativeLinearRefine>(d_dim));
+      boost::make_shared<CartesianSideFloatConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::CellVariable<dcomplex>).name(),
-      boost::make_shared<CartesianCellComplexLinearRefine>(d_dim));
+      boost::make_shared<CartesianCellComplexLinearRefine>());
    addRefineOperator(
       typeid(pdat::CellVariable<double>).name(),
-      boost::make_shared<CartesianCellDoubleLinearRefine>(d_dim));
+      boost::make_shared<CartesianCellDoubleLinearRefine>());
    addRefineOperator(
       typeid(pdat::CellVariable<float>).name(),
-      boost::make_shared<CartesianCellFloatLinearRefine>(d_dim));
+      boost::make_shared<CartesianCellFloatLinearRefine>());
    addRefineOperator(
       typeid(pdat::NodeVariable<dcomplex>).name(),
-      boost::make_shared<CartesianNodeComplexLinearRefine>(d_dim));
+      boost::make_shared<CartesianNodeComplexLinearRefine>());
    addRefineOperator(
       typeid(pdat::NodeVariable<double>).name(),
-      boost::make_shared<CartesianNodeDoubleLinearRefine>(d_dim));
+      boost::make_shared<CartesianNodeDoubleLinearRefine>());
    addRefineOperator(
       typeid(pdat::NodeVariable<float>).name(),
-      boost::make_shared<CartesianNodeFloatLinearRefine>(d_dim));
+      boost::make_shared<CartesianNodeFloatLinearRefine>());
 }
 
 /*

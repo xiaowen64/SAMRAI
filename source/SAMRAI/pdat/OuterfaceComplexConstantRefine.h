@@ -41,8 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit OuterfaceComplexConstantRefine(
-      const tbox::Dimension& dim);
+   explicit OuterfaceComplexConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

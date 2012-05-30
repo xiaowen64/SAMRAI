@@ -41,8 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CartesianCellFloatLinearRefine(
-      const tbox::Dimension& dim);
+   explicit CartesianCellFloatLinearRefine();
 
    /**
     * Uninteresting virtual destructor.

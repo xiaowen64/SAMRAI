@@ -93,8 +93,7 @@ void F77_FUNC(conreffacecplx3d2, CONREFFACECPLX3D2) (const int&, const int&,
 namespace SAMRAI {
 namespace pdat {
 
-FaceComplexConstantRefine::FaceComplexConstantRefine(
-   const tbox::Dimension& dim):
+FaceComplexConstantRefine::FaceComplexConstantRefine():
    hier::RefineOperator("CONSTANT_REFINE")
 {
 }

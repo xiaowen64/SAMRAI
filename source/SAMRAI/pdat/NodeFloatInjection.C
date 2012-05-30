@@ -62,8 +62,7 @@ void F77_FUNC(conavgnodeflot3d, CONAVGNODEFLOT3D) (const int&, const int&,
 namespace SAMRAI {
 namespace pdat {
 
-NodeFloatInjection::NodeFloatInjection(
-   const tbox::Dimension& dim):
+NodeFloatInjection::NodeFloatInjection():
    hier::CoarsenOperator("CONSTANT_COARSEN")
 {
 

@@ -42,8 +42,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit NodeDoubleInjection(
-      const tbox::Dimension& dim);
+   explicit NodeDoubleInjection();
 
    /**
     * Uninteresting virtual destructor.

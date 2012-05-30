@@ -91,8 +91,7 @@ namespace geom {
 
 // using namespace std;
 
-CartesianEdgeDoubleWeightedAverage::CartesianEdgeDoubleWeightedAverage(
-   const tbox::Dimension& dim):
+CartesianEdgeDoubleWeightedAverage::CartesianEdgeDoubleWeightedAverage():
    hier::CoarsenOperator("CONSERVATIVE_COARSEN")
 {
 }

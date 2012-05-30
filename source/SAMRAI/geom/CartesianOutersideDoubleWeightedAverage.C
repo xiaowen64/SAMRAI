@@ -98,8 +98,7 @@ namespace geom {
 // using namespace std;
 
 CartesianOutersideDoubleWeightedAverage::
-CartesianOutersideDoubleWeightedAverage(
-   const tbox::Dimension& dim):
+CartesianOutersideDoubleWeightedAverage():
    hier::CoarsenOperator("CONSERVATIVE_COARSEN")
 {
 }

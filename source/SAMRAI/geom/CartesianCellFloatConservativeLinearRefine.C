@@ -76,8 +76,7 @@ namespace geom {
 // using namespace std;
 
 CartesianCellFloatConservativeLinearRefine::
-CartesianCellFloatConservativeLinearRefine(
-   const tbox::Dimension& dim):
+CartesianCellFloatConservativeLinearRefine():
    hier::RefineOperator("CONSERVATIVE_LINEAR_REFINE")
 {
 }

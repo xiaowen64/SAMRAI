@@ -95,8 +95,7 @@ void F77_FUNC(conavgouternodedoub3d2, CONAVGOUTERNODEDOUB3D2) (const int&,
 namespace SAMRAI {
 namespace pdat {
 
-OuternodeDoubleConstantCoarsen::OuternodeDoubleConstantCoarsen(
-   const tbox::Dimension& dim):
+OuternodeDoubleConstantCoarsen::OuternodeDoubleConstantCoarsen():
    hier::CoarsenOperator("CONSTANT_COARSEN")
 {
 }

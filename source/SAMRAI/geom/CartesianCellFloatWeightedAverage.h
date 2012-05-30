@@ -41,8 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CartesianCellFloatWeightedAverage(
-      const tbox::Dimension& dim);
+   explicit CartesianCellFloatWeightedAverage();
 
    /**
     * Uninteresting virtual destructor.

@@ -42,8 +42,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CartesianEdgeDoubleConservativeLinearRefine(
-      const tbox::Dimension& dim);
+   explicit CartesianEdgeDoubleConservativeLinearRefine();
 
    /**
     * Uninteresting virtual destructor.

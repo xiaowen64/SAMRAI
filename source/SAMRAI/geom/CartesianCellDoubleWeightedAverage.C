@@ -64,8 +64,7 @@ void F77_FUNC(cartwgtavgcelldoub3d, CARTWGTAVGCELLDOUB3D) (const int&,
 namespace SAMRAI {
 namespace geom {
 
-CartesianCellDoubleWeightedAverage::CartesianCellDoubleWeightedAverage(
-   const tbox::Dimension& dim):
+CartesianCellDoubleWeightedAverage::CartesianCellDoubleWeightedAverage():
    hier::CoarsenOperator("CONSERVATIVE_COARSEN")
 {
 }

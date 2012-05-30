@@ -40,8 +40,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit SideIntegerConstantRefine(
-      const tbox::Dimension& dim);
+   explicit SideIntegerConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

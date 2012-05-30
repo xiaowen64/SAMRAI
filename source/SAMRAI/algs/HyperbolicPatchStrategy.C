@@ -131,7 +131,7 @@ HyperbolicPatchStrategy::postprocessAdvanceLevelState(
 hier::IntVector
 HyperbolicPatchStrategy::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(d_dim);
+   return hier::IntVector::getZero(dim);
 }
 
 void
@@ -163,7 +163,7 @@ HyperbolicPatchStrategy::postprocessRefine(
 hier::IntVector
 HyperbolicPatchStrategy::getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(d_dim);
+   return hier::IntVector::getZero(dim);
 }
 
 void

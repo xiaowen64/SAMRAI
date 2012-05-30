@@ -63,8 +63,7 @@ void F77_FUNC(conrefcellflot3d, CONREFCELLFLOT3D) (const int&, const int&,
 namespace SAMRAI {
 namespace pdat {
 
-CellFloatConstantRefine::CellFloatConstantRefine(
-   const tbox::Dimension& dim):
+CellFloatConstantRefine::CellFloatConstantRefine():
    hier::RefineOperator("CONSTANT_REFINE")
 {
 }
