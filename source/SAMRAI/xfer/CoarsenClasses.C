@@ -343,7 +343,7 @@ CoarsenClasses::printCoarsenItem(
              << data.d_opcoarsen->getOperatorPriority()
              << std::endl;
       stream << "operator stencil width: "
-             << data.d_opcoarsen->getStencilWidth(hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(data.d_dst)->getDim())
+             << data.d_opcoarsen->getStencilWidth(hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataDim(data.d_dst))
              << std::endl;
    }
    stream << std::endl;

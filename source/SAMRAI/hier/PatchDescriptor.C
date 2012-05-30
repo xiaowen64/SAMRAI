@@ -228,6 +228,19 @@ PatchDescriptor::getMaxGhostWidth(
    return max_gcw;
 }
 
+/*
+ *************************************************************************
+ * Return the dimension of the data for the given data_id.
+ *************************************************************************
+ */
+
+tbox::Dimension
+PatchDescriptor::getPatchDataDim(
+   int patch_id) const
+{
+   return d_factories[patch_id]->getDim();
+}
+
 }
 }
 

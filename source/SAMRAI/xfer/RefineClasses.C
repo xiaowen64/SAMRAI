@@ -440,7 +440,7 @@ RefineClasses::printRefineItem(
              << data.d_oprefine->getOperatorPriority()
              << std::endl;
       stream << "operator stencil width: "
-             << data.d_oprefine->getStencilWidth(hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(data.d_dst)->getDim())
+             << data.d_oprefine->getStencilWidth(hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataDim(data.d_dst))
              << std::endl;
    }
    if (!data.d_time_interpolate) {

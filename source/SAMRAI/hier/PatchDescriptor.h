@@ -208,6 +208,15 @@ public:
    }
 
    /*!
+    * @brief Return the Dimension of the data for the given data_id.
+    *
+    * @param[i] data_id
+    */
+   tbox::Dimension
+   getPatchDataDim(
+      int data_id) const;
+
+   /*!
     * Print patch descriptor data to given output stream (plog by default).
     */
    void
