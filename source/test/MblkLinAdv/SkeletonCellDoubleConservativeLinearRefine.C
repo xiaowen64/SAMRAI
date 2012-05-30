@@ -68,7 +68,7 @@ using namespace SAMRAI;
 SkeletonCellDoubleConservativeLinearRefine::
 SkeletonCellDoubleConservativeLinearRefine(
    const tbox::Dimension& dim):
-   hier::RefineOperator(dim, "SKELETON_CONSERVATIVE_LINEAR_REFINE"),
+   hier::RefineOperator("SKELETON_CONSERVATIVE_LINEAR_REFINE"),
    d_dim(dim)
 {
    const int max_levels = 10;

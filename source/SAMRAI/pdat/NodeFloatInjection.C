@@ -64,7 +64,7 @@ namespace pdat {
 
 NodeFloatInjection::NodeFloatInjection(
    const tbox::Dimension& dim):
-   hier::CoarsenOperator(dim, "CONSTANT_COARSEN")
+   hier::CoarsenOperator("CONSTANT_COARSEN")
 {
 
 }

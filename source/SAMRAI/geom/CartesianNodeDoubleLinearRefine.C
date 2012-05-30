@@ -72,7 +72,7 @@ namespace geom {
 
 CartesianNodeDoubleLinearRefine::CartesianNodeDoubleLinearRefine(
    const tbox::Dimension& dim):
-   hier::RefineOperator(dim, "LINEAR_REFINE")
+   hier::RefineOperator("LINEAR_REFINE")
 {
 }
 
