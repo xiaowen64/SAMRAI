@@ -134,7 +134,7 @@ public:
     * zero, assuming no user-defined operations provided.
     */
    virtual hier::IntVector
-   getRefineOpStencilWidth() const;
+   getRefineOpStencilWidth( const tbox::Dimension &dim ) const;
 
    /*!
     * Pre- and post-processing routines for implementing user-defined
@@ -185,7 +185,7 @@ public:
     * zero, assuming no user-defined operations provided.
     */
    virtual hier::IntVector
-   getCoarsenOpStencilWidth() const;
+   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const;
 
    /*!
     * Pre- and post-processing routines for implementing user-defined

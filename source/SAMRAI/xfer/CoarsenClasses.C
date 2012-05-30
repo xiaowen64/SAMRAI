@@ -126,6 +126,7 @@ CoarsenClasses::itemIsValid(
    if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
+   const tbox::Dimension &dim = pd->getPatchDataFactory(data_item.d_dst)->getDim();
 
    const int dst_id = data_item.d_dst;
    const int src_id = data_item.d_src;
@@ -156,13 +157,13 @@ CoarsenClasses::itemIsValid(
 
    boost::shared_ptr<hier::CoarsenOperator> coarsop(data_item.d_opcoarsen);
    if (item_good && coarsop) {
-      if (coarsop->getStencilWidth() > sfact->getGhostCellWidth()) {
+      if (coarsop->getStencilWidth(dim) > sfact->getGhostCellWidth()) {
          item_good = false;
          TBOX_ERROR("Bad data given to CoarsenClasses...\n"
             << "Coarsen operator " << coarsop->getOperatorName()
             << "\nhas larger stencil width than ghost cell width"
             << "of `Source' patch data" << pd->mapIndexToName(src_id)
-            << "\noperator stencil width = " << coarsop->getStencilWidth()
+            << "\noperator stencil width = " << coarsop->getStencilWidth(dim)
             << "\n`Source'  ghost width = "
             << sfact->getGhostCellWidth()
             << std::endl);
@@ -256,6 +257,7 @@ CoarsenClasses::itemsAreEquivalent(
    if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
+   const tbox::Dimension &dim = pd->getPatchDataFactory(data1.d_dst)->getDim();
 
    equivalent = patchDataMatch(data1.d_dst, data2.d_dst, pd);
 
@@ -267,8 +269,8 @@ CoarsenClasses::itemsAreEquivalent(
 
    equivalent &= (!data1.d_opcoarsen == !data2.d_opcoarsen);
    if (equivalent && data1.d_opcoarsen) {
-      equivalent &= (data1.d_opcoarsen->getStencilWidth() ==
-                     data2.d_opcoarsen->getStencilWidth());
+      equivalent &= (data1.d_opcoarsen->getStencilWidth(dim) ==
+                     data2.d_opcoarsen->getStencilWidth(dim));
    }
 
    equivalent &= (!data1.d_var_fill_pattern ==
@@ -341,7 +343,7 @@ CoarsenClasses::printCoarsenItem(
              << data.d_opcoarsen->getOperatorPriority()
              << std::endl;
       stream << "operator stencil width: "
-             << data.d_opcoarsen->getStencilWidth()
+             << data.d_opcoarsen->getStencilWidth(hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(data.d_dst)->getDim())
              << std::endl;
    }
    stream << std::endl;

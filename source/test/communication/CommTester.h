@@ -196,7 +196,7 @@ public:
       const hier::IntVector& gcw);
 
    hier::IntVector
-   getRefineOpStencilWidth() const;
+   getRefineOpStencilWidth( const tbox::Dimension &dim ) const;
 
    void
    preprocessRefine(
@@ -213,7 +213,7 @@ public:
       const hier::IntVector& ratio);
 
    hier::IntVector
-   getCoarsenOpStencilWidth() const;
+   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const;
 
    void
    preprocessCoarsen(

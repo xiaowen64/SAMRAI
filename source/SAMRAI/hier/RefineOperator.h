@@ -106,9 +106,11 @@ public:
     * The SAMRAI transfer routines guarantee that the source patch will
     * contain sufficient ghost cell data surrounding the interior to
     * satisfy the stencil width requirements for each refinement operator.
+    * If your implementation doesn't work with the given dimension, return
+    * zero.
     */
    virtual IntVector
-   getStencilWidth() const = 0;
+   getStencilWidth( const tbox::Dimension &dim ) const = 0;
 
    /**
     * Refine the source component on the coarse patch to the destination

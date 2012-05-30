@@ -120,7 +120,7 @@ OuterfaceFloatConstantRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-OuterfaceFloatConstantRefine::getStencilWidth() const
+OuterfaceFloatConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
 {
    return hier::IntVector::getZero(getDim());
 }

@@ -144,7 +144,7 @@ void MultiblockTester::registerVariable(
          hier::IntVector::max(src_ghosts, dst_ghosts);
       scratch_ghosts.max(hier::IntVector(d_dim, 1));
       if (refine_operator) {
-         scratch_ghosts.max(refine_operator->getStencilWidth());
+         scratch_ghosts.max(refine_operator->getStencilWidth(d_dim));
       }
       int scratch_id =
          variable_db->registerVariableAndContext(src_variable,
@@ -213,7 +213,7 @@ void MultiblockTester::registerVariableForReset(
 
       scratch_ghosts.max(hier::IntVector(d_dim, 1));
       if (refine_operator) {
-         scratch_ghosts.max(refine_operator->getStencilWidth());
+         scratch_ghosts.max(refine_operator->getStencilWidth(d_dim));
       }
       int scratch_id =
          variable_db->registerVariableAndContext(src_variable,
@@ -624,7 +624,7 @@ void MultiblockTester::fillSingularityBoundaryConditions(
    d_data_test_strategy->setDataContext(save_context);
 }
 
-hier::IntVector MultiblockTester::getRefineOpStencilWidth() const
+hier::IntVector MultiblockTester::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
 {
    return hier::IntVector(d_dim, 0);
 }
@@ -649,7 +649,7 @@ void MultiblockTester::postprocessRefine(
       fine_box, ratio);
 }
 
-hier::IntVector MultiblockTester::getCoarsenOpStencilWidth() const
+hier::IntVector MultiblockTester::getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
 {
    return hier::IntVector(d_dim, 0);
 }

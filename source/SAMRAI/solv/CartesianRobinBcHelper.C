@@ -672,7 +672,7 @@ CartesianRobinBcHelper::setPhysicalBoundaryConditions(
 }
 
 hier::IntVector
-CartesianRobinBcHelper::getRefineOpStencilWidth() const
+CartesianRobinBcHelper::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
 {
    return hier::IntVector::getZero(d_dim);
 }

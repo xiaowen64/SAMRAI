@@ -79,7 +79,7 @@ NodeDoubleInjection::getOperatorPriority() const
 }
 
 hier::IntVector
-NodeDoubleInjection::getStencilWidth() const
+NodeDoubleInjection::getStencilWidth( const tbox::Dimension &dim ) const
 {
    return hier::IntVector::getZero(getDim());
 }

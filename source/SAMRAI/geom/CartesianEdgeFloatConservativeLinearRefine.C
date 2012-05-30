@@ -127,7 +127,7 @@ CartesianEdgeFloatConservativeLinearRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianEdgeFloatConservativeLinearRefine::getStencilWidth() const
+CartesianEdgeFloatConservativeLinearRefine::getStencilWidth( const tbox::Dimension &dim ) const
 {
    return hier::IntVector::getOne(getDim());
 }

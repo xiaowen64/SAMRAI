@@ -85,7 +85,7 @@ CartesianNodeFloatLinearRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianNodeFloatLinearRefine::getStencilWidth() const
+CartesianNodeFloatLinearRefine::getStencilWidth( const tbox::Dimension &dim ) const
 {
    return hier::IntVector::getZero(getDim());
 }

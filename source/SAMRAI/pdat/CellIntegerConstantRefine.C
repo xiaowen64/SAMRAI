@@ -84,7 +84,7 @@ CellIntegerConstantRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CellIntegerConstantRefine::getStencilWidth() const
+CellIntegerConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
 {
    return hier::IntVector::getZero(getDim());
 }

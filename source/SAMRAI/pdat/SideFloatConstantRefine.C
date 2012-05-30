@@ -112,7 +112,7 @@ SideFloatConstantRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-SideFloatConstantRefine::getStencilWidth() const
+SideFloatConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
 {
    return hier::IntVector::getZero(getDim());
 }

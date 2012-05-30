@@ -287,7 +287,7 @@ public:
     * data interpolation operations.  Default is to return
     * zero, assuming no user-defined operations provided.
     */
-   virtual IntVector getRefineOpStencilWidth() const
+   virtual IntVector getRefineOpStencilWidth( const tbox::Dimension &dim ) const
    {
       return IntVector(d_dim, 0);
    }
@@ -331,7 +331,7 @@ public:
     * data interpolation operations.  Default is to return
     * zero, assuming no user-defined operations provided.
     */
-   virtual IntVector getCoarsenOpStencilWidth() const
+   virtual IntVector getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
    {
       return IntVector(d_dim, 0);
    }

@@ -152,9 +152,11 @@ public:
     * For any user-defined interpolation operations implemented in the
     * preprocess or postprocess methods, return the maximum stencil needed
     * on a coarse patch to refine data to a fine patch.
+    * If your implementation doesn't work with the given dimension, return
+    * zero.
     */
    virtual hier::IntVector
-   getRefineOpStencilWidth() const = 0;
+   getRefineOpStencilWidth( const tbox::Dimension &dim ) const = 0;
 
    /*!
     * @brief Perform user-defined patch data refinement operations.
