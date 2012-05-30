@@ -390,7 +390,7 @@ private:
       const boost::shared_ptr<Database>& input_db);
 
    /*
-    * Private member used by the above routine (processInputStringData)
+    * Private member used by the above routine (getFromInput)
     * and the addTimer routine to add a timer name to the d_package,
     * d_class, or d_class_method lists.
     */
