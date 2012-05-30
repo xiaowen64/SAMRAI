@@ -110,8 +110,8 @@ void
 OverlapConnectorAlgorithm::getFromInput()
 {
    if (s_print_steps == '\0') {
+      s_print_steps = 'n';
       if (tbox::InputManager::inputDatabaseExists()) {
-         s_print_steps = 'n';
          boost::shared_ptr<tbox::Database> idb(
             tbox::InputManager::getInputDatabase());
          if (idb->isDatabase("OverlapConnectorAlgorithm")) {
