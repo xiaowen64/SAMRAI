@@ -222,7 +222,7 @@ public:
     * will pass the information to the concrete implementation of the
     * geometry class, and construct boundary boxes if required.
     *
-    * @param[in]   level containing the patches to be checked.
+    * @param[in,out]   level containing the patches to be checked.
     * @param[in]   ratio_to_level_zero ratio to the coarsest level.
     * @param[in]   touches_regular_bdry Array storing which patches touch
     *              non-periodic boundaries.
@@ -232,9 +232,6 @@ public:
     *              boxes should be created
     */
    /*
-    * TODO:  Are all these parameters really only input params?  If so, these
-    * should be const references rather than non-const.
-    *
     * TODO:  The confusing coordination and sequence of calls between
     *        grid geometry classes and patch geometry classes should
     *        be reworked, including simplification of the data we're
@@ -246,9 +243,9 @@ public:
    setGeometryOnPatches(
       PatchLevel& level,
       const IntVector& ratio_to_level_zero,
-      std::map<BoxId, TwoDimBool>& touches_regular_bdry,
-      std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
-      bool defer_boundary_box_creation);
+      const std::map<BoxId, TwoDimBool>& touches_regular_bdry,
+      const std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
+      const bool defer_boundary_box_creation);
 
    /*!
     * @brief Construct and set the boundary boxes for each patch.
@@ -257,11 +254,9 @@ public:
     * Once constructed, the boundary boxes are set on each patch's
     * PatchGeometry object.
     *
-    * @param[in] level The level for which boundary boxes are constructed.
+    * @param[in,out] level The level for which boundary boxes are constructed.
     */
    /*
-    * TODO:  really input param?  If so, should be const qualified.
-    *
     * TODO:  See the second TODO item for the previous method.
     */
    void

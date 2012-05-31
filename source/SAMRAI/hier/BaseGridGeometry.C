@@ -498,9 +498,9 @@ void
 BaseGridGeometry::setGeometryOnPatches(
    PatchLevel& level,
    const IntVector& ratio_to_level_zero,
-   std::map<BoxId, TwoDimBool>& touches_regular_bdry,
-   std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
-   bool defer_boundary_box_creation)
+   const std::map<BoxId, TwoDimBool>& touches_regular_bdry,
+   const std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
+   const bool defer_boundary_box_creation)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, level, ratio_to_level_zero);
 
