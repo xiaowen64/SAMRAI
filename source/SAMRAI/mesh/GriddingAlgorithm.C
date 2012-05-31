@@ -2099,7 +2099,6 @@ GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes) cons
 
    /*
     * Check for overlapping boxes.
-    * TODO: This check only works for single-block.
     */
    if (domain_boxes.boxesIntersect()) {
       TBOX_ERROR(d_object_name << ":  "

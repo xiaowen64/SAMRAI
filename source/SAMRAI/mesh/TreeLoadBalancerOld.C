@@ -376,10 +376,6 @@ TreeLoadBalancerOld::loadBalanceBoxLevel(
       /*
        * Determine the total load and number of processes that has any
        * initial load.
-       *
-       * TODO: If there's more than one rank group, shouldn't this a
-       * global reduction for each rank group instead of a single one
-       * for all?
        */
       t_compute_global_load->start();
       if (d_mpi.getSize() > 1) {

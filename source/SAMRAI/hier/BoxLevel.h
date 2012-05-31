@@ -89,10 +89,6 @@ public:
    /*!
     * @brief Names of parallel states.
     */
-   /*
-    * TODO: We should only have one enum for this. Currently, we have
-    * this one and a similar one in Connector.h.
-    */
    enum ParallelState { DISTRIBUTED, GLOBALIZED };
 
    /*!

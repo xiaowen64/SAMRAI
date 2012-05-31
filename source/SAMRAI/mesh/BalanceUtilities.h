@@ -296,8 +296,6 @@ struct BalanceUtilities {
     *
     * @param[in] output_stream
     *
-    * TODO: This method is a utility that doesn't strictly belong in a
-    * strategy design pattern.  It should be moved elsewhere.
     */
    static void
    gatherAndReportLoadBalance(

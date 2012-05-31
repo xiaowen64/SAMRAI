@@ -49,10 +49,6 @@ public:
     * The object can be initialized using the assignment operator or
     * the non-const versions of the getOwnerRank() and getLocalId() methods.
     */
-   /*
-    * TODO: Replace the magic number with a method returning the
-    * official invalid value.  See artifact artf13924.
-    */
    GlobalId();
 
    /*!
