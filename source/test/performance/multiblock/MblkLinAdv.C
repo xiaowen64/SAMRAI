@@ -2987,10 +2987,14 @@ void MblkLinAdv::putToRestart(
    restart_db->putIntegerArray("d_scalar_bdry_node_conds",
       d_scalar_bdry_node_conds);
 
-   restart_db->putDoubleArray("d_bdry_edge_uval", d_bdry_edge_uval);
-   restart_db->putIntegerArray("d_scalar_bdry_face_conds",
-      d_scalar_bdry_face_conds);
-   restart_db->putDoubleArray("d_bdry_face_uval", d_bdry_face_uval);
+   if (d_dim == tbox::Dimension(2)) {
+      restart_db->putDoubleArray("d_bdry_edge_uval", d_bdry_edge_uval);
+   }
+   if (d_dim == tbox::Dimension(3)) {
+      restart_db->putIntegerArray("d_scalar_bdry_face_conds",
+         d_scalar_bdry_face_conds);
+      restart_db->putDoubleArray("d_bdry_face_uval", d_bdry_face_uval);
+   }
 
    if (d_refinement_criteria.getSize() > 0) {
       restart_db->putStringArray("d_refinement_criteria",
