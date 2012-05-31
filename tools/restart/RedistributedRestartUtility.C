@@ -734,6 +734,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    std::vector<int>* out_ranks = new std::vector<int>[out_size];
    std::vector<int>* out_periodic_ids =
       new std::vector<int>[out_size];
+   std::vector<int>* out_block_ids = new std::vector<int>[out_size];
 
    tbox::Array<tbox::DatabaseBox>* out_box_array =
       new tbox::Array<tbox::DatabaseBox>[out_size];
@@ -756,6 +757,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
       tbox::Array<int> local_indices;
       tbox::Array<int> ranks;
       tbox::Array<int> periodic_ids;
+      tbox::Array<int> block_ids;
       tbox::Array<tbox::DatabaseBox> boxes;
 
       if (mapped_boxes_in_db->keyExists("local_indices")) {
@@ -767,6 +769,9 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
       if (mapped_boxes_in_db->keyExists("periodic_ids")) {
          periodic_ids =
             mapped_boxes_in_db->getIntegerArray("periodic_ids");
+      }
+      if (mapped_boxes_in_db->keyExists("block_ids")) {
+         block_ids = mapped_boxes_in_db->getIntegerArray("block_ids");
       }
       if (mapped_boxes_in_db->keyExists("boxes")) {
          boxes = mapped_boxes_in_db->getDatabaseBoxArray("boxes");
@@ -859,6 +864,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
             out_local_indices[j].reserve(out_vec_size);
             out_ranks[j].reserve(out_vec_size);
             out_periodic_ids[j].reserve(out_vec_size);
+            out_block_ids[j].reserve(out_vec_size);
 
             out_box_array[j].resizeArray(out_vec_size);
             for (int k = 0; k < mbs_size; k++) {
@@ -866,8 +872,8 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
                   int output_rank = num_files_written + output_ids[k];
                   out_local_indices[j].push_back(local_indices[k]);
                   out_ranks[j].push_back(output_rank);
-                  out_periodic_ids[j].push_back(
-                     periodic_ids[k]);
+                  out_periodic_ids[j].push_back(periodic_ids[k]);
+                  out_block_ids[j].push_back(block_ids[k]);
                   out_box_array[j][out_mbs_size[j]++] = boxes[k];
                }
             }
@@ -885,18 +891,21 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
       putInteger("mapped_box_set_size", out_mbs_size[j]);
 
       if (out_mbs_size[j]) {
-         mapped_boxes_out_db->
-         putIntegerArray("local_indices",
+         mapped_boxes_out_db->putIntegerArray("local_indices",
             &out_local_indices[j][0],
             out_mbs_size[j]);
-         mapped_boxes_out_db->
-         putIntegerArray("periodic_ids",
+         mapped_boxes_out_db->putIntegerArray("periodic_ids",
             &out_periodic_ids[j][0],
             out_mbs_size[j]);
-         mapped_boxes_out_db->
-         putIntegerArray("ranks", &out_ranks[j][0], out_mbs_size[j]);
-         mapped_boxes_out_db->
-         putDatabaseBoxArray("boxes", &out_box_array[j][0], out_mbs_size[j]);
+         mapped_boxes_out_db->putIntegerArray("block_ids",
+            &out_block_ids[j][0],
+            out_mbs_size[j]);
+         mapped_boxes_out_db->putIntegerArray("ranks",
+            &out_ranks[j][0],
+            out_mbs_size[j]);
+         mapped_boxes_out_db->putDatabaseBoxArray("boxes",
+            &out_box_array[j][0],
+            out_mbs_size[j]);
 
       }
    }
@@ -904,6 +913,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    delete[] out_local_indices;
    delete[] out_ranks;
    delete[] out_periodic_ids;
+   delete[] out_block_ids;
    delete[] out_box_array;
 /*
  *    for (int j = 0; j < out_size; j++) {
