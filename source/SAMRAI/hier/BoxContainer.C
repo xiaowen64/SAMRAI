@@ -1497,9 +1497,8 @@ BoxContainer::contains(
    const BlockId& block_id) const
 {
    for (const_iterator i(*this); i != end(); ++i) {
-      //TODO: Change this when BoxContainer can no longer accept invalid BlockId
-      if (i->getBlockId() == block_id ||
-          i->getBlockId() == BlockId::invalidId()) {
+      TBOX_ASSERT(i->getBlockId().isValid());
+      if (i->getBlockId() == block_id) {
          if (i->contains(idx)) {
             return true;
          }
