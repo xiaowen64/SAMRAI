@@ -192,8 +192,6 @@ public:
     * time we are not aware of a method to invoke a block of code only
     * once for a template class.
     *
-    * TODO:  Should implemenation be moved out of the header?
-    *
     */
    class Handler:public AbstractHandler
    {
@@ -410,8 +408,6 @@ private:
 
    /*!
     * @brief Used to maintain a list of registered handlers.
-    *
-    * TODO:  Should implementation be pulled out of header?
     */
    class ListElement
    {
