@@ -203,11 +203,15 @@ public:
       const int tag_index,
       const bool uses_gradient_detector_too);
 
+   //@{
+   //! @name Required implementations of HyperbolicPatchStrategy pure virtuals.
+
    ///
    ///  The following routines:
    ///
    ///      setPhysicalBoundaryConditions(),
    ///      getRefineOpStencilWidth(),
+   ///      preprocessRefine()
    ///      postprocessRefine()
    ///
    ///  are concrete implementations of functions declared in the
@@ -229,8 +233,22 @@ public:
    /**
     * Return stencil width of conservative linear interpolation operations.
     */
-   virtual hier::IntVector
-   getRefineOpStencilWidth( const tbox::Dimension &dim ) const;
+   hier::IntVector
+   getRefineOpStencilWidth( const tbox::Dimension &dim ) const {
+      return hier::IntVector::getOne(dim);
+   }
+
+   void
+   preprocessRefine(
+      hier::Patch& fine,
+      const hier::Patch& coarse,
+      const hier::Box& fine_box,
+      const hier::IntVector& ratio) {
+      NULL_USE(fine);
+      NULL_USE(coarse);
+      NULL_USE(fine_box);
+      NULL_USE(ratio);
+   }
 
    /**
     * Refine velocity and pressure from coarse patch to fine patch
@@ -247,17 +265,33 @@ public:
    ///  The following routines:
    ///
    ///      getCoarsenOpStencilWidth(),
+   ///      preprocessCoarsen()
    ///      postprocessCoarsen()
    ///
    ///  are concrete implementations of functions declared in the
-   ///  CoarsenPatchStrategy abstract base class.
+   ///  CoarsenPatchStrategy abstract base class.  They are trivial
+   ///  because this class doesn't do any pre/postprocessCoarsen.
    ///
 
    /**
     * Return stencil width of conservative averaging operations.
     */
    hier::IntVector
-   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const;
+   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const {
+      return hier::IntVector::getZero(dim);
+   }
+
+   void
+   preprocessCoarsen(
+      hier::Patch& coarse,
+      const hier::Patch& fine,
+      const hier::Box& coarse_box,
+      const hier::IntVector& ratio) {
+      NULL_USE(coarse);
+      NULL_USE(fine);
+      NULL_USE(coarse_box);
+      NULL_USE(ratio);
+   }
 
    /**
     * Coarsen velocity and pressure from coarse patch to fine patch
@@ -269,6 +303,8 @@ public:
       const hier::Patch& fine,
       const hier::Box& coarse_box,
       const hier::IntVector& ratio);
+
+   //@}
 
    /**
     * Write state of Euler object to the given database for restart.

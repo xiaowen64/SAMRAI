@@ -1819,11 +1819,6 @@ void Euler::boundaryReset(
  *************************************************************************
  */
 
-hier::IntVector Euler::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
-{
-   return hier::IntVector(dim, 1);
-}
-
 void Euler::postprocessRefine(
    hier::Patch& fine,
    const hier::Patch& coarse,
@@ -2006,11 +2001,6 @@ void Euler::postprocessRefine(
  *
  *************************************************************************
  */
-
-hier::IntVector Euler::getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
-{
-   return hier::IntVector(dim, 0);
-}
 
 void Euler::postprocessCoarsen(
    hier::Patch& coarse,

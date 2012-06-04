@@ -162,38 +162,6 @@ public:
       const int tag_index,
       const bool uses_richardson_extrapolation_too);
 
-   /*
-    * Pre- and post-processing routines for implementing user-defined
-    * spatial interpolation routines applied to variables.
-    */
-   virtual void preprocessRefine(
-      hier::Patch& fine,
-      const hier::Patch& coarse,
-      const hier::Box& fine_box,
-      const hier::IntVector& ratio);
-
-   virtual void postprocessRefine(
-      hier::Patch& fine,
-      const hier::Patch& coarse,
-      const hier::Box& fine_box,
-      const hier::IntVector& ratio);
-
-   /*
-    * Pre- and post-processing routines for implementing user-defined
-    * spatial coarsening routines applied to variables.
-    */
-   virtual void preprocessCoarsen(
-      hier::Patch& coarse,
-      const hier::Patch& fine,
-      const hier::Box& coarse_box,
-      const hier::IntVector& ratio);
-
-   virtual void postprocessCoarsen(
-      hier::Patch& coarse,
-      const hier::Patch& fine,
-      const hier::Box& coarse_box,
-      const hier::IntVector& ratio);
-
    ///
    ///  The following routines:
    ///
@@ -214,6 +182,69 @@ public:
       const double fill_time,
       const hier::IntVector&
       ghost_width_to_fill);
+
+   //@{
+   //! @name Required implementations of MethodOfLinesPatchStrategy pure virtuals.
+
+   hier::IntVector
+   getRefineOpStencilWidth( const tbox::Dimension &dim ) const {
+      return hier::IntVector::getZero(dim);
+   }
+
+   void
+   preprocessRefine(
+      hier::Patch& fine,
+      const hier::Patch& coarse,
+      const hier::Box& fine_box,
+      const hier::IntVector& ratio) {
+      NULL_USE(fine);
+      NULL_USE(coarse);
+      NULL_USE(fine_box);
+      NULL_USE(ratio);
+   }
+
+   void
+   postprocessRefine(
+      hier::Patch& fine,
+      const hier::Patch& coarse,
+      const hier::Box& fine_box,
+      const hier::IntVector& ratio) {
+      NULL_USE(fine);
+      NULL_USE(coarse);
+      NULL_USE(fine_box);
+      NULL_USE(ratio);
+   }
+
+   hier::IntVector
+   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const {
+      return hier::IntVector::getZero(dim);
+   }
+
+   void
+   preprocessCoarsen(
+      hier::Patch& coarse,
+      const hier::Patch& fine,
+      const hier::Box& coarse_box,
+      const hier::IntVector& ratio) {
+      NULL_USE(coarse);
+      NULL_USE(fine);
+      NULL_USE(coarse_box);
+      NULL_USE(ratio);
+   }
+
+   void
+   postprocessCoarsen(
+      hier::Patch& coarse,
+      const hier::Patch& fine,
+      const hier::Box& coarse_box,
+      const hier::IntVector& ratio) {
+      NULL_USE(coarse);
+      NULL_USE(fine);
+      NULL_USE(coarse_box);
+      NULL_USE(ratio);
+   }
+
+   //@}
 
    /**
     * Writes state of ConvDiff object to the specified restart database.
