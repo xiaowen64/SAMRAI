@@ -53,8 +53,7 @@ public:
    /*!
     * Blank constructor for MethodOfLinesPatchStrategy.
     */
-   explicit MethodOfLinesPatchStrategy(
-      const tbox::Dimension& dim);
+   explicit MethodOfLinesPatchStrategy();
 
    /*!
     * Virtual destructor for MethodOfLinesPatchStrategy.
@@ -272,14 +271,7 @@ public:
       d_interior = context;
    }
 
-   const tbox::Dimension&
-   getDim() const
-   {
-      return d_dim;
-   }
-
 private:
-   const tbox::Dimension d_dim;
 
    boost::shared_ptr<hier::VariableContext> d_interior_with_ghosts;
    boost::shared_ptr<hier::VariableContext> d_interior;

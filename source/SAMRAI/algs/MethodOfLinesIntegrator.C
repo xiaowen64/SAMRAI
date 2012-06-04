@@ -46,8 +46,6 @@ MethodOfLinesIntegrator::MethodOfLinesIntegrator(
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(patch_strategy != ((MethodOfLinesPatchStrategy *)NULL));
 
-   const tbox::Dimension dim(patch_strategy->getDim());
-
    d_object_name = object_name;
    d_registered_for_restart = register_for_restart;
 
@@ -57,14 +55,6 @@ MethodOfLinesIntegrator::MethodOfLinesIntegrator(
    }
 
    d_patch_strategy = patch_strategy;
-
-   /*
-    * Communication algorithms.
-    */
-   d_bdry_fill_advance.reset(new xfer::RefineAlgorithm(dim));
-   d_fill_after_regrid.reset(new xfer::RefineAlgorithm(dim));
-   d_fill_before_tagging.reset(new xfer::RefineAlgorithm(dim));
-   d_coarsen_algorithm.reset(new xfer::CoarsenAlgorithm(dim));
 
    /*
     * hier::Variable contexts used in algorithm.
@@ -373,6 +363,17 @@ MethodOfLinesIntegrator::registerVariable(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*variable, ghosts);
 
    tbox::Dimension dim(ghosts.getDim());
+
+   if ( !d_bdry_fill_advance ) {
+      /*
+       * One-time set-up for communication algorithms.
+       * We wait until this point to do this because we need a dimension.
+       */
+      d_bdry_fill_advance.reset(new xfer::RefineAlgorithm(dim));
+      d_fill_after_regrid.reset(new xfer::RefineAlgorithm(dim));
+      d_fill_before_tagging.reset(new xfer::RefineAlgorithm(dim));
+      d_coarsen_algorithm.reset(new xfer::CoarsenAlgorithm(dim));
+   }
 
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 

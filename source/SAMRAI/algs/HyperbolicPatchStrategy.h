@@ -66,8 +66,7 @@ public:
    /**
     * Blank constructor for HyperbolicPatchStrategy.
     */
-   explicit HyperbolicPatchStrategy(
-      const tbox::Dimension& dim);
+   explicit HyperbolicPatchStrategy();
 
    /**
     * Virtual destructor for HyperbolicPatchStrategy.
@@ -463,14 +462,7 @@ public:
       d_data_context.reset();
    }
 
-   const tbox::Dimension&
-   getDim() const
-   {
-      return d_dim;
-   }
-
 private:
-   const tbox::Dimension d_dim;
 
    boost::shared_ptr<hier::VariableContext> d_data_context;
 };

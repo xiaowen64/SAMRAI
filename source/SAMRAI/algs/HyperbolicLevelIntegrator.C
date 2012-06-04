@@ -231,29 +231,6 @@ HyperbolicLevelIntegrator::HyperbolicLevelIntegrator(
    d_cfl_init = tbox::MathUtilities<double>::getSignalingNaN();
 
    /*
-    * Communication algorithms.
-    */
-   d_bdry_fill_advance.reset(new xfer::RefineAlgorithm(
-      d_patch_strategy->getDim()));
-   d_bdry_fill_advance_new.reset(new xfer::RefineAlgorithm(
-      d_patch_strategy->getDim()));
-   d_bdry_fill_advance_old.reset(new xfer::RefineAlgorithm(
-      d_patch_strategy->getDim()));
-   d_fill_new_level.reset(new xfer::RefineAlgorithm(
-      d_patch_strategy->getDim()));
-   d_coarsen_fluxsum.reset(new xfer::CoarsenAlgorithm(
-      d_patch_strategy->getDim()));
-   d_coarsen_sync_data.reset(new xfer::CoarsenAlgorithm(
-      d_patch_strategy->getDim()));
-   d_sync_initial_data.reset(new xfer::CoarsenAlgorithm(
-      d_patch_strategy->getDim()));
-
-   d_coarsen_rich_extrap_init.reset(new xfer::CoarsenAlgorithm(
-      d_patch_strategy->getDim()));
-   d_coarsen_rich_extrap_final.reset(new xfer::CoarsenAlgorithm(
-      d_patch_strategy->getDim()));
-
-   /*
     * hier::Variable contexts used in algorithm.  Note that "OLD" context
     * is only created and used in the case of Richardson extrapolation
     * and a refinement ratio of 3 (see registerModelVariables()).
@@ -329,7 +306,6 @@ HyperbolicLevelIntegrator::initializeLevelData(
    }
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
 #endif
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_patch_strategy->getDim(), *hierarchy);
 
    boost::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
@@ -458,7 +434,6 @@ HyperbolicLevelIntegrator::resetHierarchyConfiguration(
       TBOX_ASSERT(hierarchy->getPatchLevel(ln0));
    }
 #endif
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_patch_strategy->getDim(), *hierarchy);
 
    int finest_hiera_level = hierarchy->getFinestLevelNumber();
 
@@ -521,7 +496,6 @@ HyperbolicLevelIntegrator::applyGradientDetector(
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_patch_strategy->getDim(), *hierarchy);
 
    t_apply_gradient_detector->start();
 
@@ -605,16 +579,16 @@ HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
       && (level_number <= hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(coarse_level);
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_patch_strategy->getDim(), *hierarchy, *coarse_level);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*hierarchy, *coarse_level);
 
    t_coarsen_rich_extrap->start();
 
-   const hier::IntVector& zero_vector(hier::IntVector::getZero(d_patch_strategy->getDim()));
+   const hier::IntVector& zero_vector(hier::IntVector::getZero(hierarchy->getDim()));
 
    boost::shared_ptr<hier::PatchLevel> hier_level(
       hierarchy->getPatchLevel(level_number));
 
-   hier::IntVector coarsen_ratio(d_patch_strategy->getDim());
+   hier::IntVector coarsen_ratio(hierarchy->getDim());
    if (coarse_level->getRatioToLevelZero() < zero_vector) {
       if (hier_level->getRatioToLevelZero() < zero_vector) {
          coarsen_ratio = coarse_level->getRatioToLevelZero()
@@ -722,7 +696,6 @@ HyperbolicLevelIntegrator::applyRichardsonExtrapolation(
    const bool uses_gradient_detector_too)
 {
    TBOX_ASSERT(level);
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_patch_strategy->getDim(), *level);
 
    /*
     * Compare solutions computed on level (stored in NEW context) and on
@@ -816,7 +789,6 @@ HyperbolicLevelIntegrator::getLevelDt(
    const bool initial_time)
 {
    TBOX_ASSERT(level);
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_patch_strategy->getDim(), *level);
 
    const tbox::SAMRAI_MPI& mpi(level->getBoxLevel()->getMPI());
 
@@ -954,10 +926,9 @@ HyperbolicLevelIntegrator::getMaxFinerLevelDt(
 {
    NULL_USE(finer_level_number);
 
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_patch_strategy->getDim(), ratio);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int id = 0; id < d_patch_strategy->getDim().getValue(); id++) {
+   for (int id = 0; id < ratio.getDim().getValue(); id++) {
       TBOX_ASSERT(ratio(id) > 0);
    }
 #endif
@@ -1053,7 +1024,7 @@ HyperbolicLevelIntegrator::advanceLevel(
    TBOX_ASSERT(level);
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(current_time <= new_time);
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_patch_strategy->getDim(), *level, *hierarchy);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*level, *hierarchy);
 
 // HLI_RECORD_STATS is defined in HyperbolicLevelIntegrator.h
 #ifdef HLI_RECORD_STATS
@@ -1324,7 +1295,6 @@ HyperbolicLevelIntegrator::standardLevelSynchronization(
    const double old_time)
 {
    TBOX_ASSERT(hierarchy);
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_patch_strategy->getDim(), *hierarchy);
 
    tbox::Array<double> old_times(finest_level - coarsest_level + 1);
    for (int i = coarsest_level; i <= finest_level; i++) {
@@ -1426,7 +1396,6 @@ HyperbolicLevelIntegrator::synchronizeNewLevels(
       TBOX_ASSERT(hierarchy->getPatchLevel(ln));
    }
 #endif
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_patch_strategy->getDim(), *hierarchy);
 
    t_sync_new_levels->start();
 
@@ -1504,7 +1473,7 @@ HyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
    TBOX_ASSERT(coarse_level);
    TBOX_ASSERT(coarse_level->getLevelNumber() ==
       (fine_level->getLevelNumber() - 1));
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_patch_strategy->getDim(), *fine_level, *coarse_level);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*fine_level, *coarse_level);
 
    /*
     * Coarsen flux integrals around fine patch boundaries to coarser level
@@ -1597,7 +1566,6 @@ HyperbolicLevelIntegrator::resetTimeDependentData(
    const bool can_be_refined)
 {
    TBOX_ASSERT(level);
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_patch_strategy->getDim(), *level);
 
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 
@@ -1675,7 +1643,6 @@ HyperbolicLevelIntegrator::resetDataToPreadvanceState(
    const boost::shared_ptr<hier::PatchLevel>& level)
 {
    TBOX_ASSERT(level);
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_patch_strategy->getDim(), *level);
 
    /*
     * De-allocate new context
@@ -1769,6 +1736,23 @@ HyperbolicLevelIntegrator::registerVariable(
    TBOX_ASSERT(var);
    TBOX_ASSERT(transfer_geom);
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, *var);
+
+   if ( !d_bdry_fill_advance ) {
+      /*
+       * One-time set-up for communication algorithms.
+       * We wait until this point to do this because we need a dimension.
+       */
+      d_bdry_fill_advance.reset(new xfer::RefineAlgorithm(dim));
+      d_bdry_fill_advance_new.reset(new xfer::RefineAlgorithm(dim));
+      d_bdry_fill_advance_old.reset(new xfer::RefineAlgorithm(dim));
+      d_fill_new_level.reset(new xfer::RefineAlgorithm(dim));
+      d_coarsen_fluxsum.reset(new xfer::CoarsenAlgorithm(dim));
+      d_coarsen_sync_data.reset(new xfer::CoarsenAlgorithm(dim));
+      d_sync_initial_data.reset(new xfer::CoarsenAlgorithm(dim));
+
+      d_coarsen_rich_extrap_init.reset(new xfer::CoarsenAlgorithm(dim));
+      d_coarsen_rich_extrap_final.reset(new xfer::CoarsenAlgorithm(dim));
+   }
 
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 
@@ -2116,7 +2100,6 @@ HyperbolicLevelIntegrator::preprocessFluxData(
    TBOX_ASSERT(level);
    TBOX_ASSERT(cur_time <= new_time);
 
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_patch_strategy->getDim(), *level);
 
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 
@@ -2214,9 +2197,8 @@ HyperbolicLevelIntegrator::postprocessFluxData(
    NULL_USE(last_step);
 
    TBOX_ASSERT(level);
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_patch_strategy->getDim(), *level);
 
-   if (d_patch_strategy->getDim() > tbox::Dimension(3)) {
+   if (level->getDim() > tbox::Dimension(3)) {
       TBOX_ERROR(
          "HyperbolicLevelIntegrator::postprocessFluxData : DIM > 3 not implemented");
    }
@@ -2253,7 +2235,7 @@ HyperbolicLevelIntegrator::postprocessFluxData(
             boost::shared_ptr<pdat::OutersideData<double> > sfsum_data;
 
             int ddepth;
-            hier::IntVector flux_ghosts(d_patch_strategy->getDim());
+            hier::IntVector flux_ghosts(level->getDim());
 
             if (d_flux_is_face) {
                fflux_data =
@@ -2284,7 +2266,7 @@ HyperbolicLevelIntegrator::postprocessFluxData(
             for (int d = 0; d < ddepth; d++) {
                // loop over lower and upper parts of outer face/side arrays
                for (int ifs = 0; ifs < 2; ifs++) {
-                  if (d_patch_strategy->getDim() == tbox::Dimension(1)) {
+                  if (level->getDim() == tbox::Dimension(1)) {
                      F77_FUNC(upfluxsum1d, UPFLUXSUM1D) (ilo(0), ihi(0),
                         flux_ghosts(0),
                         ifs,
@@ -2293,7 +2275,7 @@ HyperbolicLevelIntegrator::postprocessFluxData(
                   } else {
 
                      if (d_flux_is_face) {
-                        if (d_patch_strategy->getDim() == tbox::Dimension(2)) {
+                        if (level->getDim() == tbox::Dimension(2)) {
                            F77_FUNC(upfluxsumface2d0, UPFLUXSUMFACE2D0) (ilo(0),
                               ilo(1), ihi(0), ihi(1),
                               flux_ghosts(0),
@@ -2310,7 +2292,7 @@ HyperbolicLevelIntegrator::postprocessFluxData(
                               ffsum_data->getPointer(1, ifs, d));
                         }
 
-                        if (d_patch_strategy->getDim() == tbox::Dimension(3)) {
+                        if (level->getDim() == tbox::Dimension(3)) {
                            F77_FUNC(upfluxsumface3d0, UPFLUXSUMFACE3D0) (ilo(0),
                               ilo(1), ilo(2),
                               ihi(0), ihi(1), ihi(2),
@@ -2340,7 +2322,7 @@ HyperbolicLevelIntegrator::postprocessFluxData(
                               ffsum_data->getPointer(2, ifs, d));
                         }
                      } else {
-                        if (d_patch_strategy->getDim() == tbox::Dimension(2)) {
+                        if (level->getDim() == tbox::Dimension(2)) {
                            F77_FUNC(upfluxsumside2d0, UPFLUXSUMSIDE2D0) (ilo(0),
                               ilo(1), ihi(0), ihi(1),
                               flux_ghosts(0),
@@ -2356,7 +2338,7 @@ HyperbolicLevelIntegrator::postprocessFluxData(
                               sflux_data->getPointer(1, d),
                               sfsum_data->getPointer(1, ifs, d));
                         }
-                        if (d_patch_strategy->getDim() == tbox::Dimension(3)) {
+                        if (level->getDim() == tbox::Dimension(3)) {
                            F77_FUNC(upfluxsumside3d0, UPFLUXSUMSIDE3D0) (ilo(0),
                               ilo(1), ilo(2),
                               ihi(0), ihi(1), ihi(2),
@@ -2418,7 +2400,6 @@ HyperbolicLevelIntegrator::copyTimeDependentData(
    TBOX_ASSERT(level);
    TBOX_ASSERT(src_context);
    TBOX_ASSERT(dst_context);
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_patch_strategy->getDim(), *level);
 
    for (hier::PatchLevel::iterator ip(level->begin());
         ip != level->end(); ++ip) {
@@ -2451,7 +2432,6 @@ HyperbolicLevelIntegrator::recordStatistics(
    const hier::PatchLevel& patch_level,
    double current_time)
 {
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_patch_strategy->getDim(), patch_level);
 
    const int ln = patch_level.getLevelNumber();
 

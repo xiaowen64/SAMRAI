@@ -121,7 +121,7 @@ LinAdv::LinAdv(
    boost::shared_ptr<tbox::Database> input_db,
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geom,
    SinusoidalFrontTagger* analytical_tagger):
-   algs::HyperbolicPatchStrategy(dim),
+   algs::HyperbolicPatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
    d_analytical_tagger(analytical_tagger),

@@ -18,11 +18,9 @@
 namespace SAMRAI {
 namespace algs {
 
-HyperbolicPatchStrategy::HyperbolicPatchStrategy(
-   const tbox::Dimension& dim):
+HyperbolicPatchStrategy::HyperbolicPatchStrategy():
    xfer::RefinePatchStrategy(),
    xfer::CoarsenPatchStrategy(),
-   d_dim(dim),
    d_data_context()
 {
 }
