@@ -196,55 +196,37 @@ HyperbolicLevelIntegrator::HyperbolicLevelIntegrator(
    const boost::shared_ptr<tbox::Database>& input_db,
    HyperbolicPatchStrategy* patch_strategy,
    bool register_for_restart,
-   bool use_time_refinement)
+   bool use_time_refinement) :
+   d_patch_strategy(patch_strategy),
+   d_object_name(object_name),
+   d_use_time_refinement(use_time_refinement),
+   d_registered_for_restart(register_for_restart),
+   d_cfl(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_cfl_init(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_lag_dt_computation(true),
+   d_use_ghosts_for_dt(false),
+   d_flux_is_face(true),
+   d_flux_face_registered(false),
+   d_flux_side_registered(false),
+   d_number_time_data_levels(2),
+   d_scratch(hier::VariableDatabase::getDatabase()->getContext("SCRATCH")),
+   d_current(hier::VariableDatabase::getDatabase()->getContext("CURRENT")),
+   d_new(hier::VariableDatabase::getDatabase()->getContext("NEW")),
+   d_plot_context(d_current),
+   d_have_flux_on_level_zero(false),
+   d_distinguish_mpi_reduction_costs(false)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(patch_strategy != ((HyperbolicPatchStrategy *)NULL));
-
-   d_object_name = object_name;
-   d_use_time_refinement = use_time_refinement;
-   d_registered_for_restart = register_for_restart;
 
    if (d_registered_for_restart) {
       tbox::RestartManager::getManager()->registerRestartItem(d_object_name,
          this);
    }
 
-   d_patch_strategy = patch_strategy;
-
-   /*
-    * Default parameter values.
-    */
-   d_number_time_data_levels = 2;
-
-   d_flux_is_face = true;
-   d_flux_face_registered = false;
-   d_flux_side_registered = false;
-
-   d_have_flux_on_level_zero = false;
-
-   d_lag_dt_computation = true;
-   d_use_ghosts_for_dt = false;
-   d_distinguish_mpi_reduction_costs = false;
-
-   d_cfl = tbox::MathUtilities<double>::getSignalingNaN();
-   d_cfl_init = tbox::MathUtilities<double>::getSignalingNaN();
-
-   /*
-    * hier::Variable contexts used in algorithm.  Note that "OLD" context
-    * is only created and used in the case of Richardson extrapolation
-    * and a refinement ratio of 3 (see registerModelVariables()).
-    */
-   d_scratch = hier::VariableDatabase::getDatabase()->getContext("SCRATCH");
-   d_current = hier::VariableDatabase::getDatabase()->getContext("CURRENT");
-   d_new = hier::VariableDatabase::getDatabase()->getContext("NEW");
-
-   d_plot_context = d_current;
-
    /*
     * Initialize object with data read from the input and restart databases.
     */
-
    bool from_restart = tbox::RestartManager::getManager()->isFromRestart();
    if (from_restart) {
       getFromRestart();

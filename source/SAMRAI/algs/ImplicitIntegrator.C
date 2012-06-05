@@ -44,30 +44,24 @@ ImplicitIntegrator::ImplicitIntegrator(
    const boost::shared_ptr<tbox::Database>& input_db,
    ImplicitEquationStrategy* implicit_equations,
    solv::NonlinearSolverStrategy* nonlinear_solver,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy) :
+   d_object_name(object_name),
+   d_implicit_equations(implicit_equations),
+   d_nonlinear_solver(nonlinear_solver),
+   d_patch_hierarchy(hierarchy),
+   d_finest_level(-1),
+   d_initial_time(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_final_time(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_current_time(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_current_dt(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_old_dt(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_integrator_step(0),
+   d_max_integrator_steps(0)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(implicit_equations != ((ImplicitEquationStrategy *)NULL));
    TBOX_ASSERT(nonlinear_solver != ((solv::NonlinearSolverStrategy *)NULL));
    TBOX_ASSERT(hierarchy);
-
-   d_object_name = object_name;
-   d_implicit_equations = implicit_equations;
-   d_nonlinear_solver = nonlinear_solver;
-   d_patch_hierarchy = hierarchy;
-
-   d_solution_vector.reset();
-
-   d_initial_time =
-      d_final_time =
-         d_current_time =
-            d_current_dt =
-               d_old_dt = tbox::MathUtilities<double>::getSignalingNaN();
-
-   d_integrator_step = 0;
-   d_max_integrator_steps = 0;
-
-   d_finest_level = -1;
 
    /*
     * Initialize object with data read from input and restart databases.

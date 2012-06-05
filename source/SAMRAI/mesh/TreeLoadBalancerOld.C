@@ -3503,30 +3503,30 @@ TreeLoadBalancerOld::getFromInput(
    if (input_db) {
 
       d_print_steps =
-         input_db->getBoolWithDefault("print_steps",
+         input_db->getBoolWithDefault("DEV_print_steps",
             d_print_steps);
       d_print_break_steps =
-         input_db->getBoolWithDefault("print_break_steps",
+         input_db->getBoolWithDefault("DEV_print_break_steps",
             d_print_break_steps);
       d_print_swap_steps =
-         input_db->getBoolWithDefault("print_swap_steps",
+         input_db->getBoolWithDefault("DEV_print_swap_steps",
             d_print_swap_steps);
       d_print_edge_steps =
-         input_db->getBoolWithDefault("print_edge_steps",
+         input_db->getBoolWithDefault("DEV_print_edge_steps",
             d_print_edge_steps);
       d_check_connectivity =
-         input_db->getBoolWithDefault("check_connectivity",
+         input_db->getBoolWithDefault("DEV_check_connectivity",
             d_check_connectivity);
       d_check_map =
-         input_db->getBoolWithDefault("check_map",
+         input_db->getBoolWithDefault("DEV_check_map",
             d_check_map);
 
       d_report_load_balance = input_db->getBoolWithDefault(
-            "report_load_balance",
+            "DEV_report_load_balance",
             d_report_load_balance);
-      d_barrier_before = input_db->getBoolWithDefault("barrier_before",
+      d_barrier_before = input_db->getBoolWithDefault("DEV_barrier_before",
             d_barrier_before);
-      d_barrier_after = input_db->getBoolWithDefault("barrier_after",
+      d_barrier_after = input_db->getBoolWithDefault("DEV_barrier_after",
             d_barrier_after);
 
       d_n_root_cycles = input_db->getIntegerWithDefault("n_root_cycles",

@@ -92,8 +92,8 @@ MappingConnectorAlgorithm::getFromInput()
          if (idb->isDatabase("MappingConnectorAlgorithm")) {
             boost::shared_ptr<tbox::Database> ocu_db(
                idb->getDatabase("MappingConnectorAlgorithm"));
-            s_print_steps = ocu_db->getCharWithDefault("print_modify_steps",
-                  s_print_steps);
+            s_print_steps =
+               ocu_db->getCharWithDefault("DEV_print_modify_steps", s_print_steps);
          }
       }
    }

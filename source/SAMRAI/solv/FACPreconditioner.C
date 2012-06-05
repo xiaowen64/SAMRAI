@@ -52,7 +52,6 @@ FACPreconditioner::FACPreconditioner(
    d_convergence_factor(),
    d_avg_convergence_factor(tbox::MathUtilities<double>::getSignalingNaN()),
    d_net_convergence_factor(tbox::MathUtilities<double>::getSignalingNaN()),
-   d_do_log(false),
    d_controlled_level_ops()
 {
 
@@ -89,10 +88,6 @@ FACPreconditioner::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db)
 {
    if (input_db) {
-      if (input_db->isBool("enable_logging")) {
-         bool logging = input_db->getBool("enable_logging");
-         enableLogging(logging);
-      }
       if (input_db->isInteger("max_cycles")) {
          int max_cycles = input_db->getInteger("max_cycles");
          setMaxCycles(max_cycles);

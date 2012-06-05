@@ -41,18 +41,15 @@ DLBGTest {
 
 
 BergerRigoutsos {
-  log_node_history = FALSE
-  log_cluster_summary = TRUE
-  log_cluster = FALSE
-    // algo_advance_mode: "SYNCHRONOUS", "ADVANCE_SOME", "ROUND_ROBIN" or "ADVANCE_ANY"
-  algo_advance_mode = "ADVANCE_SOME"
-  // algo_advance_mode = "SYNCHRONOUS"
-  // owner_mode: "SINGLE_OWNER", "MOST_OVERLAP" (default), "FEWEST_OWNED", "LEAST_ACTIVE"
-  owner_mode = "MOST_OVERLAP"
-  // owner_mode = "SINGLE_OWNER"
-  use_level_boxes = FALSE
-  use_private_communicator = TRUE
-  sequentialize_output_indices = TRUE
+  DEV_log_node_history = FALSE
+  DEV_log_cluster_summary = TRUE
+  DEV_log_cluster = FALSE
+  // DEV_algo_advance_mode: "SYNCHRONOUS", "ADVANCE_SOME", "ROUND_ROBIN" or "ADVANCE_ANY"
+  DEV_algo_advance_mode = "ADVANCE_SOME"
+  // DEV_algo_advance_mode = "SYNCHRONOUS"
+  // DEV_owner_mode: "SINGLE_OWNER", "MOST_OVERLAP" (default), "FEWEST_OWNED", "LEAST_ACTIVE"
+  DEV_owner_mode = "MOST_OVERLAP"
+  // DEV_owner_mode = "SINGLE_OWNER"
 }
 
 
@@ -68,18 +65,18 @@ StandardTagAndInitialize {
 }
 
 TreeLoadBalancer {
-  report_load_balance = TRUE
-  barrier_before = FALSE
-  barrier_after = FALSE
+  DEV_report_load_balance = TRUE
+  DEV_barrier_before = FALSE
+  DEV_barrier_after = FALSE
   n_root_cycles = -1
 
   // Debugging options
-  check_map = FALSE
-  check_connectivity = FALSE
-  print_steps = FALSE
-  print_swap_steps = FALSE
-  print_break_steps = FALSE
-  print_edge_steps = FALSE
+  DEV_check_map = FALSE
+  DEV_check_connectivity = FALSE
+  DEV_print_steps = FALSE
+  DEV_print_swap_steps = FALSE
+  DEV_print_break_steps = FALSE
+  DEV_print_edge_steps = FALSE
 }
 
 PatchHierarchy {

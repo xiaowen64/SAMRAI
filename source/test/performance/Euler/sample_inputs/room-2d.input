@@ -7,15 +7,6 @@
  * Description:   Input file for SAMRAI Euler example problem (2d room) 
  *
  ************************************************************************/
-check_input_connectors = 'y'
-check_output_connectors = 'y'
-DistributedLoadBalancer_print_steps = 'y'
-DistributedLoadBalancer_check_connectivity = 'y'
-check_connectivity = 'y'
-print_steps = 'y'
-print_break_steps = 'y'
-print_edge_steps = 'y'
-
 Euler {
    gamma            = 1.4      // gamma = Ratio of specific heats
 
@@ -183,22 +174,15 @@ TimeRefinementIntegrator{
    // max_integrator_steps = 100      // max number of simulation timesteps
 }
 
-DistributedLoadBalancer {
-  algorithm_index = 1
-  report_load_balance = TRUE
-  num_cycles = 2
-}
-
 BergerRigoutsos {
-  log_node_history = TRUE
-  log_cluster_summary = TRUE
-  sequentialize_output_indices = TRUE
+  DEV_log_node_history = TRUE
+  DEV_log_cluster_summary = TRUE
 }
 
 TreeLoadBalancer {
-  report_load_balance = TRUE
-  barrier_before = FALSE
-  barrier_after = FALSE
+  DEV_report_load_balance = TRUE
+  DEV_barrier_before = FALSE
+  DEV_barrier_after = FALSE
   n_root_cycles = 2
 }
 

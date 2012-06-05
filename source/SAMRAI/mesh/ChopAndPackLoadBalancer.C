@@ -80,12 +80,6 @@ ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    d_master_bin_pack_method("SPATIAL")
 {
    TBOX_ASSERT(!name.empty());
-
-   d_workload_data_id.resizeArray(0);
-   d_max_workload_factor.resizeArray(0);
-   d_workload_tolerance.resizeArray(0);
-   d_bin_pack_method.resizeArray(0);
-
    getFromInput(input_db);
 }
 
@@ -96,20 +90,13 @@ ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    d_object_name("ChopAndPackLoadBalancer"),
    d_processor_layout_specified(false),
    d_processor_layout(hier::IntVector::getZero(d_dim)),
+   d_ignore_level_box_union_is_single_box(false),
    d_master_workload_data_id(-1),
    d_master_max_workload_factor(1.0),
    d_master_workload_tolerance(0.0),
    d_master_bin_pack_method("SPATIAL")
 
 {
-
-   d_workload_data_id.resizeArray(0);
-   d_max_workload_factor.resizeArray(0);
-   d_workload_tolerance.resizeArray(0);
-   d_bin_pack_method.resizeArray(0);
-
-   d_ignore_level_box_union_is_single_box = false;
-
    getFromInput(input_db);
 }
 

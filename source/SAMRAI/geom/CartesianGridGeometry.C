@@ -117,11 +117,10 @@ CartesianGridGeometry::CartesianGridGeometry(
    const boost::shared_ptr<tbox::Database>& input_db,
    bool register_for_restart):
    GridGeometry(dim, object_name),
+   d_registered_for_restart(register_for_restart),
    d_domain_box(dim)
 {
    TBOX_ASSERT(input_db);
-
-   d_registered_for_restart = register_for_restart;
 
    if (d_registered_for_restart) {
       tbox::RestartManager::getManager()->registerRestartItem(getObjectName(),

@@ -101,17 +101,14 @@ StandardTagAndInitialize::StandardTagAndInitialize(
    const std::string& object_name,
    StandardTagAndInitStrategy* tag_strategy,
    const boost::shared_ptr<tbox::Database>& input_db):
-   TagAndInitializeStrategy(dim, object_name)
+  TagAndInitializeStrategy(dim, object_name),
+  d_use_refine_boxes(false),
+  d_use_gradient_detector(false),
+  d_use_richardson_extrapolation(false),
+  d_tag_strategy(tag_strategy),
+  d_error_coarsen_ratio(1)
 {
    TBOX_ASSERT(!object_name.empty());
-
-   d_tag_strategy = tag_strategy;
-
-   d_error_coarsen_ratio = 1;
-
-   d_use_gradient_detector = false;
-   d_use_richardson_extrapolation = false;
-   d_use_refine_boxes = false;
 
    getFromInput(input_db);
 

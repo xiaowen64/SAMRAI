@@ -109,14 +109,11 @@ LinAdv {
 }
 
 BergerRigoutsos {
-   use_level_boxes = TRUE
-   // algo_advance_mode = "SYNCHRONOUS"
-   algo_advance_mode = "ADVANCE_SOME"
-   single_owner = TRUE
-   use_private_communicator = TRUE
+   // DEV_algo_advance_mode = "SYNCHRONOUS"
+   DEV_algo_advance_mode = "ADVANCE_SOME"
 
-   log_cluster_summary = TRUE
-   log_node_history = FALSE
+   DEV_log_cluster_summary = TRUE
+   DEV_log_node_history = FALSE
 }
 
 Main {
@@ -197,7 +194,6 @@ GriddingAlgorithm {
                                       // boxes < efficiency * vol of large box
 //   write_regrid_boxes    = TRUE
    // regrid_boxes_filename  = "regrid_boxes"
-   barrier_before_clustering = TRUE
    sort_boxes_after_clustering = TRUE
    extend_tags_to_bdry = TRUE
    use_new_alg = TRUE

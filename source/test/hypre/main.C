@@ -168,9 +168,7 @@ int main(
       HyprePoisson hypre_poisson(
          base_name + "::HyprePoisson",
          dim,
-         input_db->isDatabase("HyprePoisson") ?
-         input_db->getDatabase("HyprePoisson") :
-         boost::shared_ptr<tbox::Database>());
+         input_db->getDatabase("HyprePoisson"));
 
       /*
        * Create the tag-and-initializer, box-generator and load-balancer

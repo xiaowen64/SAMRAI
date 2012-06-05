@@ -51,9 +51,12 @@ PatchHierarchy::PatchHierarchy(
    const boost::shared_ptr<BaseGridGeometry>& geometry,
    const boost::shared_ptr<tbox::Database>& input_db,
    bool register_for_restart):
-
    d_dim(geometry->getDim()),
-
+   d_registered_for_restart(register_for_restart),
+   d_number_levels(0),
+   d_patch_descriptor(VariableDatabase::getDatabase()->getPatchDescriptor()),
+   d_patch_factory(new PatchFactory),
+   d_patch_level_factory(new PatchLevelFactory),
    d_max_levels(1),
    d_ratio_to_coarser(1, IntVector(d_dim, 1)),
    d_proper_nesting_buffer(d_max_levels - 1, 1),
@@ -71,13 +74,7 @@ PatchHierarchy::PatchHierarchy(
    TBOX_ASSERT(geometry);
 
    d_object_name = object_name;
-   d_registered_for_restart = register_for_restart;
-   d_number_levels = 0;
    d_grid_geometry = geometry;
-   d_patch_descriptor = VariableDatabase::getDatabase()->
-      getPatchDescriptor();
-   d_patch_factory.reset(new PatchFactory);
-   d_patch_level_factory.reset(new PatchLevelFactory);
    d_number_blocks = d_grid_geometry->getNumberBlocks();
 
    /*

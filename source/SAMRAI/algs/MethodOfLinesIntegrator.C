@@ -41,33 +41,31 @@ MethodOfLinesIntegrator::MethodOfLinesIntegrator(
    const std::string& object_name,
    const boost::shared_ptr<tbox::Database>& input_db,
    MethodOfLinesPatchStrategy* patch_strategy,
-   bool register_for_restart)
+   bool register_for_restart) :
+   d_object_name(object_name),
+   d_registered_for_restart(register_for_restart),
+   d_order(3),
+   d_patch_strategy(patch_strategy),
+   d_current(hier::VariableDatabase::getDatabase()->getContext("CURRENT")),
+   d_scratch(hier::VariableDatabase::getDatabase()->getContext("SCRATCH"))
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(patch_strategy != ((MethodOfLinesPatchStrategy *)NULL));
-
-   d_object_name = object_name;
-   d_registered_for_restart = register_for_restart;
 
    if (d_registered_for_restart) {
       tbox::RestartManager::getManager()->registerRestartItem(d_object_name,
          this);
    }
 
-   d_patch_strategy = patch_strategy;
-
    /*
     * hier::Variable contexts used in algorithm.
     */
-   d_current = hier::VariableDatabase::getDatabase()->getContext("CURRENT");
-   d_scratch = hier::VariableDatabase::getDatabase()->getContext("SCRATCH");
    d_patch_strategy->setInteriorContext(d_current);
    d_patch_strategy->setInteriorWithGhostsContext(d_scratch);
 
    /*
     * Set default to third-order SSP Runge-Kutta method.
     */
-   d_order = 3;
    d_alpha_1.resizeArray(d_order);
    d_alpha_1[0] = 1.0;
    d_alpha_1[1] = 0.75;

@@ -142,8 +142,7 @@ GriddingAlgorithm::GriddingAlgorithm(
     * function call.  Note that variables are registered and patch data
     * indices are made only for the first time through the constructor.
     */
-   hier::VariableDatabase* var_db =
-      hier::VariableDatabase::getDatabase();
+   hier::VariableDatabase* var_db = hier::VariableDatabase::getDatabase();
 
    std::string tag_interior_variable_name("GriddingAlgorithm__tag-interior");
    std::string tag_buffer_variable_name("GriddingAlgorithm__tag-buffer");
@@ -194,8 +193,7 @@ GriddingAlgorithm::GriddingAlgorithm(
     */
    d_bdry_fill_tags.reset(new xfer::RefineAlgorithm(d_dim));
 
-   d_bdry_fill_tags->
-   registerRefine(d_buf_tag_indx,
+   d_bdry_fill_tags->registerRefine(d_buf_tag_indx,
       d_buf_tag_indx,
       d_buf_tag_indx,
       boost::shared_ptr<hier::RefineOperator>());

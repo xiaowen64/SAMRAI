@@ -72,82 +72,50 @@ SNES_SAMRAIContext::SNESJacobianSet(
 SNES_SAMRAIContext::SNES_SAMRAIContext(
    const std::string& object_name,
    SNESAbstractFunctions* my_functions,
-   const boost::shared_ptr<tbox::Database>& input_db)
+   const boost::shared_ptr<tbox::Database>& input_db) :
+   d_object_name(object_name),
+   d_context_needs_initialization(true),
+   d_SNES_solver(((SNES)NULL)),
+   d_krylov_solver(((KSP)NULL)),
+   d_jacobian(((Mat)NULL)),
+   d_preconditioner(((PC)NULL)),
+   d_solution_vector(((Vec)NULL)),
+   d_residual_vector(((Vec)NULL)),
+   d_SNES_functions(my_functions),
+   d_maximum_nonlinear_iterations(PETSC_DEFAULT),
+   d_maximum_function_evals(PETSC_DEFAULT),
+   d_absolute_tolerance(PETSC_DEFAULT),
+   d_relative_tolerance(PETSC_DEFAULT),
+   d_step_tolerance(PETSC_DEFAULT),
+   d_forcing_term_strategy("CONSTANT"),
+   d_forcing_term_flag(PETSC_DEFAULT),
+   d_constant_forcing_term(PETSC_DEFAULT),
+   d_initial_forcing_term(PETSC_DEFAULT),
+   d_maximum_forcing_term(PETSC_DEFAULT),
+   d_EW_choice2_alpha(PETSC_DEFAULT),
+   d_EW_choice2_gamma(PETSC_DEFAULT),
+   d_EW_safeguard_exponent(PETSC_DEFAULT),
+   d_EW_safeguard_disable_threshold(PETSC_DEFAULT),
+   d_SNES_completion_code(SNES_CONVERGED_ITERATING),
+   d_linear_solver_absolute_tolerance(PETSC_DEFAULT),
+   d_linear_solver_divergence_tolerance(PETSC_DEFAULT),
+   d_maximum_linear_iterations(PETSC_DEFAULT),
+   d_maximum_gmres_krylov_dimension(PETSC_DEFAULT),
+   d_differencing_parameter_strategy(MATMFFD_WP),
+   d_function_evaluation_error(PETSC_DEFAULT),
+   d_nonlinear_iterations(0)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(!(my_functions == (SNESAbstractFunctions *)NULL));
 
-   d_object_name = object_name;
-   d_context_needs_initialization = true;
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name,
       this);
-
-   /*
-    * Set default state.
-    */
-
-   d_SNES_solver = ((SNES)NULL);
-   d_krylov_solver = ((KSP)NULL);
-   d_jacobian = ((Mat)NULL);
-   d_preconditioner = ((PC)NULL);
-   d_solution_vector = ((Vec)NULL);
-   d_residual_vector = ((Vec)NULL);
-
-   d_SNES_functions = my_functions;
-
-   /*
-    * Default nonlinear solver parameters.
-    */
-
-   d_absolute_tolerance = PETSC_DEFAULT;
-   d_relative_tolerance = PETSC_DEFAULT;
-   d_step_tolerance = PETSC_DEFAULT;
-   d_maximum_nonlinear_iterations = PETSC_DEFAULT;
-   d_maximum_function_evals = PETSC_DEFAULT;
-
-   d_forcing_term_strategy = "CONSTANT";
-   d_forcing_term_flag = PETSC_DEFAULT;
-
-   d_constant_forcing_term = PETSC_DEFAULT;
-   d_initial_forcing_term = PETSC_DEFAULT;
-   d_maximum_forcing_term = PETSC_DEFAULT;
-   d_EW_choice2_alpha = PETSC_DEFAULT;
-   d_EW_choice2_gamma = PETSC_DEFAULT;
-   d_EW_safeguard_exponent = PETSC_DEFAULT;
-   d_EW_safeguard_disable_threshold = PETSC_DEFAULT;
-
-   d_SNES_completion_code = SNES_CONVERGED_ITERATING;
-
-   /*
-    * Default linear solver parameters.
-    */
-
-   d_linear_solver_absolute_tolerance = PETSC_DEFAULT;
-   d_linear_solver_divergence_tolerance = PETSC_DEFAULT;
-   d_maximum_linear_iterations = PETSC_DEFAULT;
-
-   d_maximum_gmres_krylov_dimension = PETSC_DEFAULT;
-   d_gmres_orthogonalization_algorithm = PETSC_DEFAULT;
-
-   /*
-    * Default "Matrix-free" parameters.
-    */
-
-   d_function_evaluation_error = PETSC_DEFAULT;
-   d_differencing_parameter_strategy = MATMFFD_WP;
-
-   /*
-    * Default output parameters.
-    */
-
-   d_nonlinear_iterations = 0;
 
    /*
     * Initialize members with data read from the input and restart
     * databases.  Note that PETSc object parameters are set in
     * initialize().
     */
-
    if (tbox::RestartManager::getManager()->isFromRestart()) {
       getFromRestart();
    }

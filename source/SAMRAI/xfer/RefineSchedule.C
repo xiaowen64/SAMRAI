@@ -629,9 +629,10 @@ RefineSchedule::getFromInput()
          boost::shared_ptr<tbox::Database> rsdb(
             idb->getDatabase("RefineSchedule"));
          s_extra_debug =
-            rsdb->getBoolWithDefault("extra_debug", s_extra_debug);
+            rsdb->getBoolWithDefault("DEV_extra_debug", s_extra_debug);
          s_barrier_and_time =
-            rsdb->getBoolWithDefault("barrier_and_time", s_barrier_and_time);
+            rsdb->getBoolWithDefault("DEV_barrier_and_time",
+               s_barrier_and_time);
       }
    }
 }

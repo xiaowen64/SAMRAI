@@ -199,10 +199,10 @@ TreeLoadBalancer {
 
 
 RefineSchedule {
-   extra_debug = FALSE
+   DEV_extra_debug = FALSE
 }
 
 PersistentOverlapConnectors {
-   check_created_connectors = TRUE
-   check_accessed_connectors = TRUE
+   DEV_check_created_connectors = TRUE
+   DEV_check_accessed_connectors = TRUE
 }

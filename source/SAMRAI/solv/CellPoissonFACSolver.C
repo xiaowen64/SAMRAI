@@ -70,6 +70,7 @@ CellPoissonFACSolver::CellPoissonFACSolver(
       initializeStatics();
    }
 
+   // Set more default values.
    setMaxCycles(10);
    setResidualTolerance(1e-6);
    setPresmoothingSweeps(1);
@@ -85,6 +86,23 @@ CellPoissonFACSolver::CellPoissonFACSolver(
    setCoarsestLevelSolverTolerance(1e-8);
    setCoarsestLevelSolverMaxIterations(500);
 #endif
+
+   /*
+    * The default RobinBcCoefStrategy used,
+    * SimpleCellRobinBcCoefs only works with constant refine
+    * for prolongation.  So we use constant refinement
+    * for prolongation by default.
+    */
+   setProlongationMethod("CONSTANT_REFINE");
+
+   /*
+    * The FAC operator optionally uses the preconditioner
+    * to get data for logging.
+    */
+   d_fac_ops.setPreconditioner((const FACPreconditioner *)(&d_fac_precond));
+
+   // Read user input.
+   getFromInput(input_db);
 
    /*
     * Construct integer tag variables and add to variable database.  Note that
@@ -111,22 +129,6 @@ CellPoissonFACSolver::CellPoissonFACSolver(
             weight,
             hier::IntVector::getZero(d_dim));
    }
-
-   /*
-    * The default RobinBcCoefStrategy used,
-    * SimpleCellRobinBcCoefs only works with constant refine
-    * for prolongation.  So we use constant refinement
-    * for prolongation by default.
-    */
-   setProlongationMethod("CONSTANT_REFINE");
-
-   /*
-    * The FAC operator optionally uses the preconditioner
-    * to get data for logging.
-    */
-   d_fac_ops.setPreconditioner((const FACPreconditioner *)(&d_fac_precond));
-
-   getFromInput(input_db);
 
    s_instance_counter[d_dim.getValue() - 1]++;
 }

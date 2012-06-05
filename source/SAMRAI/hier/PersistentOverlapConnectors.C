@@ -64,11 +64,11 @@ PersistentOverlapConnectors::getFromInput()
                input_db->getDatabase("PersistentOverlapConnectors"));
 
             const bool check_created_connectors(
-               pocdb->getBoolWithDefault("check_created_connectors", false));
+               pocdb->getBoolWithDefault("DEV_check_created_connectors", false));
             s_check_created_connectors = check_created_connectors ? 'y' : 'n';
 
             const bool check_accessed_connectors(
-               pocdb->getBoolWithDefault("check_accessed_connectors", false));
+               pocdb->getBoolWithDefault("DEV_check_accessed_connectors", false));
             s_check_accessed_connectors =
                check_accessed_connectors ? 'y' : 'n';
 

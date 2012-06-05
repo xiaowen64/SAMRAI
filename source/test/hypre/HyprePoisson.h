@@ -86,12 +86,13 @@ public:
     * pass in valid pointers for those streams.
     *
     * @param object_name Ojbect name
+    * @param dim
+    * @param database
     */
    HyprePoisson(
       const string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database> database =
-         boost::shared_ptr<tbox::Database>());
+      boost::shared_ptr<tbox::Database> database);
 
    virtual ~HyprePoisson();
 

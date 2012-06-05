@@ -168,16 +168,6 @@ GriddingAlgorithm {
    combine_efficiency = 0.85
    extend_tags_to_bdry = TRUE
    check_nonrefined_tags = "IGNORE"
-   barrier_before_regrid                 = FALSE
-   barrier_before_find_refinement        = FALSE
-   barrier_after_find_refinement         = FALSE
-   barrier_before_tag_cells              = FALSE
-   barrier_before_cluster                = FALSE
-   barrier_before_nest                   = FALSE
-   barrier_before_limit                  = FALSE
-   barrier_before_extend                 = FALSE
-   barrier_before_balance                = FALSE
-   barrier_before_make_new               = FALSE
 }
 
 
@@ -205,10 +195,10 @@ StandardTaggingAndInitializer {
 }
 
 RefineSchedule {
-   extra_debug = FALSE
+   DEV_extra_debug = FALSE
 }
 
 PersistentOverlapConnectors {
-   check_created_connectors = TRUE
-   check_accessed_connectors = TRUE
+   DEV_check_created_connectors = TRUE
+   DEV_check_accessed_connectors = TRUE
 }

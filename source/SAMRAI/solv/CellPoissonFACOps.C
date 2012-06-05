@@ -594,6 +594,9 @@ CellPoissonFACOps::CellPoissonFACOps(
    d_enable_logging(false),
    d_preconditioner(NULL)
 {
+   if (d_dim == tbox::Dimension(1) || d_dim > tbox::Dimension(3)) {
+      TBOX_ERROR("CellPoissonFACOps : DIM == 1 or > 3 not implemented yet.\n");
+   }
 
    t_restrict_solution = tbox::TimerManager::getManager()->
       getTimer("solv::CellPoissonFACOps::restrictSolution()");
@@ -609,10 +612,6 @@ CellPoissonFACOps::CellPoissonFACOps(
       getTimer("solv::CellPoissonFACOps::computeCompositeResidualOnLevel()");
    t_compute_residual_norm = tbox::TimerManager::getManager()->
       getTimer("solv::CellPoissonFACOps::computeResidualNorm()");
-
-   if (d_dim == tbox::Dimension(1) || d_dim > tbox::Dimension(3)) {
-      TBOX_ERROR("CellPoissonFACOps : DIM == 1 or > 3 not implemented yet.\n");
-   }
 
    if (!s_cell_scratch_var[dim.getValue() - 1]) {
       TBOX_ASSERT(!s_cell_scratch_var[dim.getValue() - 1]);
@@ -632,6 +631,11 @@ CellPoissonFACOps::CellPoissonFACOps(
          new pdat::OutersideVariable<double>(dim, ss.str()));
    }
 
+   /*
+    * Some variables initialized by default are overriden by input.
+    */
+   getFromInput(input_db);
+
    hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
    d_cell_scratch_id = vdb->
       registerVariableAndContext(s_cell_scratch_var[dim.getValue() - 1],
@@ -645,11 +649,6 @@ CellPoissonFACOps::CellPoissonFACOps(
       registerVariableAndContext(s_oflux_scratch_var[dim.getValue() - 1],
          d_context,
          hier::IntVector::getZero(d_dim));
-
-   /*
-    * Some variables initialized by default are overriden by input.
-    */
-   getFromInput(input_db);
 
    /*
     * Check input validity and correctness.

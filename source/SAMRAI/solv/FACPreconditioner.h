@@ -305,24 +305,6 @@ public:
 
    //@}
 
-   //@{ @name Logging functions
-
-   /*!
-    * @brief Enable or disable logging.
-    *
-    * Set streams to NULL to turn off output.
-    *
-    * @param enabled Logging state.  true=on, false=off.
-    */
-   void
-   enableLogging(
-      bool enabled = true)
-   {
-      d_do_log = enabled;
-   }
-
-   //@}
-
    //@{
    //! @name Functions to get data on last solve.
 
@@ -683,11 +665,6 @@ private:
     */
    double d_net_convergence_factor;
    //@}
-
-   /*!
-    * @brief Flag stating whether to log.
-    */
-   bool d_do_log;
 
    /*!
     * @brief Objects facilitating operations over a specific range

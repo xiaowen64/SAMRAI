@@ -39,47 +39,38 @@ const int KINSOL_SAMRAIContext::SOLV_KINSOL_SAMRAI_CONTEXT_VERSION = 1;
 KINSOL_SAMRAIContext::KINSOL_SAMRAIContext(
    const std::string& object_name,
    KINSOLAbstractFunctions* my_functions,
-   const boost::shared_ptr<tbox::Database>& input_db)
+   const boost::shared_ptr<tbox::Database>& input_db) :
+   d_object_name(object_name),
+   d_KINSOL_solver(new KINSOLSolver(object_name, my_functions, 0, 0)),
+   d_solution_vector(((SundialsAbstractVector *)NULL)),
+   d_residual_stop_tolerance(0.0),
+   d_max_nonlinear_iterations(0),
+   d_max_krylov_dimension(0),
+   d_global_newton_strategy(0),
+   d_max_newton_step(0.0),
+   d_nonlinear_step_tolerance(0.0),
+   d_relative_function_error(0.0),
+   d_solution_update_constraint(0.0),
+   d_linear_convergence_test(0),
+   d_linear_solver_constant_tolerance(0.0),
+   d_precond_setup_flag(0),
+   d_max_solves_no_precond_setup(0),
+   d_max_linear_solve_restarts(0),
+   d_KINSOL_print_flag(0),
+   d_uses_preconditioner(false),
+   d_uses_jac_times_vector(false)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(!(my_functions == (KINSOLAbstractFunctions *)NULL));
 
-   d_object_name = object_name;
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 
-   /*
-    * Set default state.
-    */
-
-   d_KINSOL_solver = new KINSOLSolver(object_name,
-         my_functions,
-         0, 0);
-
-   d_solution_vector = ((SundialsAbstractVector *)NULL);
-
-   d_residual_stop_tolerance = 0.0;
-   d_max_nonlinear_iterations = 0;
-   d_max_krylov_dimension = 0;
-   d_global_newton_strategy = 0;
-   d_max_newton_step = 0.0;
-   d_nonlinear_step_tolerance = 0.0;
-   d_relative_function_error = 0.0;
-   d_solution_update_constraint = 0.0;
-   d_linear_convergence_test = 0;
    d_eisenstat_walker_params[0] = 0.0;
    d_eisenstat_walker_params[1] = 0.0;
-   d_linear_solver_constant_tolerance = 0.0;
-   d_precond_setup_flag = 0;
-   d_max_solves_no_precond_setup = 0;
-   d_max_linear_solve_restarts = 0;
-   d_KINSOL_print_flag = 0;
-   d_uses_preconditioner = false;
-   d_uses_jac_times_vector = false;
 
    /*
     * Initialize object with data read from the input and restart databases.
     */
-
    bool is_from_restart = tbox::RestartManager::getManager()->isFromRestart();
    if (is_from_restart) {
       getFromRestart();

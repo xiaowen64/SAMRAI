@@ -248,5 +248,5 @@ LoadBalancer {
 }
 
 RefineSchedule {
-  extra_debug = FALSE
+  DEV_extra_debug = FALSE
 }

@@ -194,21 +194,21 @@ StandardTaggingAndInitializer {
 }
 
 OverlapConnectorUtil {
-   print_bridge_steps = 'n'
+   DEV_print_bridge_steps = 'n'
 }
 
 MappingConnectorUtil {
-   print_modify_steps = 'n'
+   DEV_print_modify_steps = 'n'
 }
 
 RefineSchedule {
-   extra_debug = FALSE
+   DEV_extra_debug = FALSE
 }
 
 TreeLoadBalancer{
 }
 
 PersistentOverlapConnectors {
-   check_created_connectors = TRUE
-   check_accessed_connectors = TRUE
+   DEV_check_created_connectors = TRUE
+   DEV_check_accessed_connectors = TRUE
 }

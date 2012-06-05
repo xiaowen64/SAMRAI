@@ -7,11 +7,6 @@
  * Description:   Input file for SAMRAI Euler example problem (2d step) 
  *
  ************************************************************************/
-check_connectivity = 'y'
-print_steps = 'n'
-print_break_steps = 'n'
-print_edge_steps = 'n'
-
 Euler {
    gamma            = 1.4      // gamma = Ratio of specific heats
 
@@ -172,14 +167,13 @@ LoadBalancer {
 }
 
 TreeLoadBalancer {
-  report_load_balance = FALSE
-  barrier_before = TRUE
-  barrier_after = TRUE
+  DEV_report_load_balance = FALSE
+  DEV_barrier_before = TRUE
+  DEV_barrier_after = TRUE
   n_root_cycles = 2
 }
 
 BergerRigoutsos {
-  log_node_history = TRUE
-  log_cluster_summary = TRUE
-  sequentialize_output_indices = TRUE
+  DEV_log_node_history = TRUE
+  DEV_log_cluster_summary = TRUE
 }

@@ -66,6 +66,18 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
    const boost::shared_ptr<TimeRefinementLevelStrategy>& level_integrator,
    const boost::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_algorithm,
    bool register_for_restart):
+   d_object_name(object_name),
+   d_registered_for_restart(register_for_restart),
+   d_patch_hierarchy(hierarchy),
+   d_refine_level_integrator(level_integrator),
+   d_gridding_algorithm(gridding_algorithm),
+   d_start_time(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_end_time(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_grow_dt(1.0),
+   d_max_integrator_steps(tbox::MathUtilities<int>::getMax()),
+   d_integrator_time(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_integrator_step(tbox::MathUtilities<int>::getMax()),
+   d_just_regridded(false),
    d_barrier_and_time(false)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -73,33 +85,14 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
    TBOX_ASSERT(level_integrator);
    TBOX_ASSERT(gridding_algorithm);
 
-   d_object_name = object_name;
-   d_registered_for_restart = register_for_restart;
-
    if (d_registered_for_restart) {
       tbox::RestartManager::getManager()->registerRestartItem(d_object_name,
          this);
    }
 
-   d_patch_hierarchy = hierarchy;
-   d_refine_level_integrator = level_integrator;
-   d_gridding_algorithm = gridding_algorithm;
-
    d_use_refined_timestepping = level_integrator->usingRefinedTimestepping();
 
-   /*
-    * Set default values for debugging.
-    */
-
-   d_start_time = tbox::MathUtilities<double>::getSignalingNaN();
-   d_end_time = tbox::MathUtilities<double>::getSignalingNaN();
-   d_integrator_time = tbox::MathUtilities<double>::getSignalingNaN();
-   d_integrator_step = tbox::MathUtilities<int>::getMax();
-   d_grow_dt = 1.0;
-   d_max_integrator_steps = tbox::MathUtilities<int>::getMax();
-
    const int max_levels = d_patch_hierarchy->getMaxNumberOfLevels();
-
    d_regrid_interval.resizeArray(max_levels);
 
    d_level_old_old_time.resizeArray(max_levels);
@@ -180,8 +173,6 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
    /*
     * Initialize remaining integrator data members.
     */
-
-   d_just_regridded = false;
 
    if (!is_from_restart) {
       d_integrator_time = d_start_time;

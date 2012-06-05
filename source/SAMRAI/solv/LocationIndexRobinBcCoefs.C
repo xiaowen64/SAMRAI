@@ -36,8 +36,9 @@ LocationIndexRobinBcCoefs::LocationIndexRobinBcCoefs(
    d_dim(dim),
    d_object_name(object_name)
 {
-   int i;
-   for (i = 0; i < 2 * d_dim.getValue(); ++i) {
+   TBOX_ASSERT(input_db);
+
+   for (int i = 0; i < 2 * d_dim.getValue(); ++i) {
       d_a_map[i] = tbox::MathUtilities<double>::getSignalingNaN();
       d_b_map[i] = tbox::MathUtilities<double>::getSignalingNaN();
       d_g_map[i] = tbox::MathUtilities<double>::getSignalingNaN();
@@ -65,30 +66,30 @@ void
 LocationIndexRobinBcCoefs::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db)
 {
-   if (input_db) {
-      for (int i = 0; i < 2 * d_dim.getValue(); ++i) {
-         std::string name = "boundary_" + tbox::Utilities::intToString(i);
-         if (input_db->isString(name)) {
+   TBOX_ASSERT(input_db);
+
+   for (int i = 0; i < 2 * d_dim.getValue(); ++i) {
+      std::string name = "boundary_" + tbox::Utilities::intToString(i);
+      if (input_db->isString(name)) {
+         d_a_map[i] = 1.0;
+         d_g_map[i] = 0.0;
+         tbox::Array<std::string> specs = input_db->getStringArray(name);
+         if (specs[0] == "value") {
             d_a_map[i] = 1.0;
-            d_g_map[i] = 0.0;
-            tbox::Array<std::string> specs = input_db->getStringArray(name);
-            if (specs[0] == "value") {
-               d_a_map[i] = 1.0;
-               d_b_map[i] = 0.0;
-               if (specs.size() > 1) d_g_map[i] = atof(specs[1].c_str());
-            } else if (specs[0] == "slope") {
-               d_a_map[i] = 0.0;
-               d_b_map[i] = 1.0;
-               if (specs.size() > 1) d_g_map[i] = atof(specs[1].c_str());
-            } else if (specs[0] == "coefficients") {
-               if (specs.size() > 1) d_a_map[i] = atof(specs[1].c_str());
-               if (specs.size() > 2) d_b_map[i] = atof(specs[2].c_str());
-               if (specs.size() > 3) d_g_map[i] = atof(specs[3].c_str());
-            } else {
-               TBOX_ERROR(d_object_name << ": Bad boundary specifier\n"
-                                        << "'" << specs[0] << "'.  Use either 'value'\n"
-                                        << "'slope' or 'coefficients'.\n");
-            }
+            d_b_map[i] = 0.0;
+            if (specs.size() > 1) d_g_map[i] = atof(specs[1].c_str());
+         } else if (specs[0] == "slope") {
+            d_a_map[i] = 0.0;
+            d_b_map[i] = 1.0;
+            if (specs.size() > 1) d_g_map[i] = atof(specs[1].c_str());
+         } else if (specs[0] == "coefficients") {
+            if (specs.size() > 1) d_a_map[i] = atof(specs[1].c_str());
+            if (specs.size() > 2) d_b_map[i] = atof(specs[2].c_str());
+            if (specs.size() > 3) d_g_map[i] = atof(specs[3].c_str());
+         } else {
+            TBOX_ERROR(d_object_name << ": Bad boundary specifier\n"
+                                     << "'" << specs[0] << "'.  Use either 'value'\n"
+                                     << "'slope' or 'coefficients'.\n");
          }
       }
    }

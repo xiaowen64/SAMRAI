@@ -59,14 +59,12 @@ HyprePoisson::HyprePoisson(
    d_dim(dim),
    d_poisson_hypre(dim,
                    object_name + "::poisson_hypre",
-                   (database &&
-                    database->isDatabase("CellPoissonHypreSolver")) ?
+                   database->isDatabase("CellPoissonHypreSolver") ?
                    database->getDatabase("CellPoissonHypreSolver") :
                    boost::shared_ptr<tbox::Database>()),
    d_bc_coefs(dim,
               object_name + "::bc_coefs",
-              (database &&
-               database->isDatabase("bc_coefs")) ?
+              database->isDatabase("bc_coefs") ?
               database->getDatabase("bc_coefs") :
               boost::shared_ptr<tbox::Database>())
 {

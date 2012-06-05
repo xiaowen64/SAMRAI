@@ -75,8 +75,7 @@ public:
    LocationIndexRobinBcCoefs(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>());
+      const boost::shared_ptr<tbox::Database>& input_db);
 
    /*!
     * @brief Destructor.

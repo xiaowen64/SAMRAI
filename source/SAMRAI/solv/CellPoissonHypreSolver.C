@@ -317,6 +317,7 @@ CellPoissonHypreSolver::CellPoissonHypreSolver(
      s_Ak0_var[d_dim.getValue() - 1].reset(
         new pdat::OutersideVariable<double>(d_dim, d_object_name + "::Ak0", 1));
    }
+
    d_Ak0_id =
       vdb->registerVariableAndContext(s_Ak0_var[d_dim.getValue() - 1],
          d_context,

@@ -7,23 +7,6 @@
  * Description:   Input file for SAMRAI Euler example problem (3d sphere) 
  *
  ************************************************************************/
-
-// 2-level Euler strong scaling performance test.
-log_actions = 'n'
-check_input_connectors = 'n'
-check_output_connectors = 'n'
-check_connectors = 'n'
-print_layer_hierarchy = 'n'
-DistributedLoadBalancer_print_steps = 'n'
-DistributedLoadBalancer_check_connectivity = 'n'
-check_map = 'n'
-check_connectivity = 'n'
-print_steps = 'n'
-print_swap_steps = 'n'
-print_break_steps = 'n'
-print_edge_steps = 'n'
-
-
 GlobalInputs {
    //use_new_comm_sched = FALSE  // uncomment to turn on OLD
    use_newest_comm_sched = TRUE // uncomment to turn on NEW
@@ -166,13 +149,11 @@ Euler {
 
 
 BergerRigoutsos {
-   algo_advance_mode = "ADVANCE_SOME"
-   owner_mode = "MOST_OVERLAP"
-   log_node_history = FALSE
-   use_level_boxes = FALSE
-   use_private_communicator = TRUE
+   DEV_algo_advance_mode = "ADVANCE_SOME"
+   DEV_owner_mode = "MOST_OVERLAP"
+   DEV_log_node_history = FALSE
    sort_output_nodes = TRUE
-   log_cluster_summary = TRUE
+   DEV_log_cluster_summary = TRUE
 }
 
 // BaselineMain is used only by the baseline code.
@@ -258,7 +239,6 @@ GriddingAlgorithm {
    efficiency_tolerance   = 0.90e0    // min % of tag cells in new patch level
    combine_efficiency     = 0.90e0    // chop box if sum of volumes of smaller
                                       // boxes < efficiency * vol of large box
-   barrier_before_clustering = FALSE
    sequentialize_patch_indices = FALSE
    check_nonrefined_tags = "IGNORE"
 }
@@ -279,15 +259,10 @@ TimeRefinementIntegrator {
    // max_integrator_steps  = 1     // max number of simulation timesteps
 }
 
-// DistributedLoadBalancer is used by the new code.
-DistributedLoadBalancer {
-  report_load_balance = FALSE
-}
-
 TreeLoadBalancer {
-  report_load_balance = FALSE
-  barrier_before = TRUE
-  barrier_after = TRUE
+  DEV_report_load_balance = FALSE
+  DEV_barrier_before = TRUE
+  DEV_barrier_after = TRUE
   n_root_cycles = 2
 }
 
