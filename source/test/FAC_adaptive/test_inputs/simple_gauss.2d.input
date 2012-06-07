@@ -12,12 +12,25 @@ Main {
   dim = 2
   base_name = "simple-gauss2d"
   do_plot = TRUE
-  max_cycles = 15
-  residual_tol = 3e-10
-  pre_sweeps = 1
-  post_sweeps = 3
   max_adaptions = 5
   target_l2norm = 1.0e-3
+}
+
+fac_precond {
+  max_cycles = 15
+  residual_tol = 3e-10
+  num_pre_sweeps = 1
+  num_post_sweeps = 3
+}
+
+fac_ops {
+  coarse_solver_tolerance = 1e-8
+  coarse_solver_max_iterations = 10
+  prolongation_method = "LINEAR_REFINE"
+}
+
+hypre_solver {
+  use_smg = FALSE
 }
 
 AdaptivePoisson {

@@ -60,16 +60,15 @@ using namespace SAMRAI;
 AdaptivePoisson::AdaptivePoisson(
    const std::string& object_name,
    const tbox::Dimension& dim,
+   boost::shared_ptr<solv::CellPoissonFACOps>& fac_ops,
+   boost::shared_ptr<solv::FACPreconditioner>& fac_precond,
    tbox::Database& database,
    /*! Standard output stream */ std::ostream* out_stream,
    /*! Log output stream */ std::ostream* log_stream):
    d_name(object_name),
    d_dim(dim),
-   d_fac_ops(d_dim,
-             object_name + ":scalar poisson operator",
-             database.getDatabase("ScalarPoissonOps")),
-   d_fac_preconditioner("FAC preconditioner for Poisson's equation",
-                        d_fac_ops),
+   d_fac_ops(fac_ops),
+   d_fac_preconditioner(fac_precond),
    d_context_persistent(new hier::VariableContext("PERSISTENT")),
    d_context_scratch(new hier::VariableContext("SCRATCH")),
    d_diffcoef(new pdat::SideVariable<double>(d_dim, "solution:diffcoef", 1)),
@@ -178,7 +177,7 @@ AdaptivePoisson::AdaptivePoisson(
     * Experiment with algorithm choices in solv::FACPreconditioner.
     */
    std::string fac_algo = database.getStringWithDefault("fac_algo", "default");
-   d_fac_preconditioner.setAlgorithmChoice(fac_algo);
+   d_fac_preconditioner->setAlgorithmChoice(fac_algo);
 
    d_adaption_threshold =
       database.getDoubleWithDefault("adaption_threshold",
@@ -264,12 +263,10 @@ AdaptivePoisson::AdaptivePoisson(
     * Tell ScalarPoissonOperator where to find some of the data
     * we are providing it.
     */
-   d_fac_ops.setPoissonSpecifications(d_sps);
-   d_fac_ops.setFluxId(-1);
+   d_fac_ops->setPoissonSpecifications(d_sps);
+   d_fac_ops->setFluxId(-1);
 
-   d_fac_ops.setPhysicalBcCoefObject(d_physical_bc_coef);
-
-   d_fac_ops.setProlongationMethod("LINEAR_REFINE");
+   d_fac_ops->setPhysicalBcCoefObject(d_physical_bc_coef);
 
    tbox::plog << "Gaussian solution parameters:\n"
               << d_gaussian_solution << "\n\n" << std::endl;
@@ -283,7 +280,7 @@ AdaptivePoisson::AdaptivePoisson(
 #endif
    tbox::plog << "Problem name is: " << d_problem_name << "\n\n" << std::endl;
 
-   d_fac_ops.setPreconditioner(&d_fac_preconditioner);
+   d_fac_ops->setPreconditioner(d_fac_preconditioner);
 }
 
 void AdaptivePoisson::initializeLevelData(
@@ -433,7 +430,7 @@ void AdaptivePoisson::initializeLevelData(
    }
 
    /* Set vector weight. */
-   d_fac_ops.computeVectorWeights(hierarchy, d_weight_persistent);
+   d_fac_ops->computeVectorWeights(hierarchy, d_weight_persistent);
 }
 
 void AdaptivePoisson::resetHierarchyConfiguration(
@@ -872,10 +869,6 @@ int AdaptivePoisson::computeError(
 
 int AdaptivePoisson::solvePoisson(
    boost::shared_ptr<hier::PatchHierarchy> hierarchy,
-   int max_cycles,
-   double residual_tol,
-   int pre_sweeps,
-   int post_sweeps,
    std::string initial_u)
 {
 
@@ -928,7 +921,7 @@ int AdaptivePoisson::solvePoisson(
    if (0) {
       x.setToScalar(1.0);
       double weightsums =
-         d_fac_ops.computeResidualNorm(x, finest_ln, coarsest_ln);
+         d_fac_ops->computeResidualNorm(x, finest_ln, coarsest_ln);
       tbox::pout << "weightsums: " << weightsums << std::endl;
    }
 
@@ -957,31 +950,29 @@ int AdaptivePoisson::solvePoisson(
    /*
     * Set up FAC preconditioner object.
     */
-   d_fac_preconditioner.setMaxCycles(max_cycles);
-   d_fac_preconditioner.setResidualTolerance(residual_tol);
-   d_fac_preconditioner.setPresmoothingSweeps(pre_sweeps);
-   d_fac_preconditioner.setPostsmoothingSweeps(post_sweeps);
-   if (d_lstream) d_fac_preconditioner.printClassData(*d_lstream);
-   d_fac_preconditioner.initializeSolverState(x, b);
+   if (d_lstream) {
+      d_fac_preconditioner->printClassData(*d_lstream);
+   }
+   d_fac_preconditioner->initializeSolverState(x, b);
 
    /*
     * Solve the system.
     */
-   d_fac_preconditioner.solveSystem(x, b);
+   d_fac_preconditioner->solveSystem(x, b);
    if (d_lstream) *d_lstream
       << "FAC solve completed with\n"
       << std::setw(30) << "number of iterations: "
-      << d_fac_preconditioner.getNumberOfIterations() << "\n"
+      << d_fac_preconditioner->getNumberOfIterations() << "\n"
       << std::setw(30) << "residual norm: "
-      << d_fac_preconditioner.getResidualNorm() << "\n"
+      << d_fac_preconditioner->getResidualNorm() << "\n"
       ;
-   d_fac_preconditioner.deallocateSolverState();
+   d_fac_preconditioner->deallocateSolverState();
 
    /*
     * Get data on the solve.
     */
    double avg_convergence_factor, final_convergence_factor;
-   d_fac_preconditioner.getConvergenceFactors(avg_convergence_factor,
+   d_fac_preconditioner->getConvergenceFactors(avg_convergence_factor,
       final_convergence_factor);
    if (d_lstream) *d_lstream
       << "Final result: \n"

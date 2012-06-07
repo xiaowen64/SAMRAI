@@ -92,6 +92,9 @@ LocationIndexRobinBcCoefs::getFromInput(
                                      << "'slope' or 'coefficients'.\n");
          }
       }
+      else {
+         TBOX_ERROR(d_object_name << ": Missing boundary specifier.\n");
+      }
    }
 }
 

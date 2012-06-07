@@ -106,6 +106,7 @@ public:
    ModifiedBratuProblem(
       const string& object_name,
       const tbox::Dimension& dim,
+      const boost::shared_ptr<solv::CellPoissonFACSolver> fac_solver,
       boost::shared_ptr<tbox::Database> input_db,
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry,
       boost::shared_ptr<appu::VisItDataWriter> visit_data_writer =

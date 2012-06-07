@@ -112,6 +112,7 @@ boost::shared_ptr<tbox::Timer> ModifiedBratuProblem::s_pc_timer;
 ModifiedBratuProblem::ModifiedBratuProblem(
    const string& object_name,
    const tbox::Dimension& dim,
+   const boost::shared_ptr<solv::CellPoissonFACSolver> fac_solver,
    boost::shared_ptr<tbox::Database> input_db,
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry,
    boost::shared_ptr<appu::VisItDataWriter> visit_writer):
@@ -157,6 +158,7 @@ ModifiedBratuProblem::ModifiedBratuProblem(
    d_current_time(tbox::MathUtilities<double>::getSignalingNaN()),
    d_new_time(tbox::MathUtilities<double>::getSignalingNaN()),
    d_current_dt(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_FAC_solver(fac_solver),
    d_max_precond_its(tbox::MathUtilities<int>::getMax()),
    d_precond_tol(tbox::MathUtilities<double>::getSignalingNaN())
 {
@@ -497,17 +499,6 @@ void ModifiedBratuProblem::setInitialGuess(
 
    boost::shared_ptr<hier::PatchHierarchy> hierarchy(
       d_solution_vector->getPatchHierarchy());
-
-   if (first_step) {
-
-      if (d_FAC_solver) {
-         d_FAC_solver.reset();
-      }
-
-      d_FAC_solver.reset(
-         new solv::CellPoissonFACSolver(d_dim, d_object_name + ":FAC_solver"));
-
-   }
 
    for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
       hierarchy->getPatchLevel(ln)->

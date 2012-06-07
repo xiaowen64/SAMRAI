@@ -257,28 +257,6 @@ public:
    }
 
    /*!
-    * @brief Set the number of pre-relax steps used by the Hypre solve.
-    */
-   void
-   setNumPreRelaxSteps(
-      const int steps)
-   {
-      TBOX_ASSERT(d_hierarchy);
-      d_num_pre_relax_steps = steps;
-   }
-
-   /*!
-    * @brief Set the number of post-relax steps used by the Hypre solve.
-    */
-   void
-   setNumPostRelaxSteps(
-      const int steps)
-   {
-      TBOX_ASSERT(d_hierarchy);
-      d_num_post_relax_steps = steps;
-   }
-
-   /*!
     * @brief Return the final residual norm returned by the Hypre solve.
     * @return final residual norm returned by the Hypre solve.
     */
@@ -286,25 +264,6 @@ public:
    getRelativeResidualNorm() const
    {
       return d_relative_residual_norm;
-   }
-
-   /*!
-    * @brief Set whether to use Hypre's PFMG algorithm instead of the
-    * SMG algorithm.
-    *
-    * The flag is used to select which of HYPRE's linear solver algorithms
-    * to use if true, the semicoarsening multigrid algorithm is used, and if
-    * false, the "PF" multigrid algorithm is used.
-    * By default, the SMG algorithm is used.
-    *
-    * Changing the algorithm must be done before setting up the matrix
-    * coefficients.
-    */
-   void
-   setUseSMG(
-      bool use_smg)
-   {
-      d_use_smg = use_smg;
    }
 
    /*!

@@ -120,11 +120,15 @@ public:
     *
     * @param dim
     * @param object_name Name of object used in outputs
+    * @param fac_precond
+    * @param fac_ops
     * @param input_db tbox::Database for initialization (may be NULL)
     */
    CellPoissonFACSolver(
       const tbox::Dimension& dim,
       const std::string& object_name,
+      const boost::shared_ptr<FACPreconditioner>& fac_precond,
+      const boost::shared_ptr<CellPoissonFACOps>& fac_ops,
       const boost::shared_ptr<tbox::Database>& input_db =
          boost::shared_ptr<tbox::Database>());
 
@@ -132,19 +136,6 @@ public:
     * @brief Destructor.
     */
    ~CellPoissonFACSolver();
-
-   /*!
-    * @brief Enable logging.
-    *
-    * To disable, pass in @c false.
-    */
-   void
-   enableLogging(
-      bool logging)
-   {
-      d_enable_logging = logging;
-      d_fac_ops.enableLogging(d_enable_logging);
-   }
 
    /*!
     * @brief Solve Poisson's equation, assuming an uninitialized
@@ -288,7 +279,7 @@ public:
       }
 #endif
       d_bc_object = bc_object;
-      d_fac_ops.setPhysicalBcCoefObject(d_bc_object);
+      d_fac_ops->setPhysicalBcCoefObject(d_bc_object);
    }
 
    //!@{ @name Specifying PDE parameters
@@ -355,187 +346,6 @@ public:
 
    //@}
 
-   //@{ @name Functions for setting solver mathematic algorithm controls
-
-   /*!
-    * @brief Set coarse level solver.
-    *
-    * Select from these:
-    * - @c "redblack"
-    * - @c "hypre" (only if the HYPRE library is available).
-    */
-   void
-   setCoarsestLevelSolverChoice(
-      const std::string& choice)
-   {
-      d_fac_ops.setCoarsestLevelSolverChoice(choice);
-   }
-
-   /*!
-    * @brief Set tolerance for coarse level solve.
-    *
-    * If the coarse level solver requires a tolerance
-    * (currently, they all do), the specified value is used.
-    */
-   void
-   setCoarsestLevelSolverTolerance(
-      double tol)
-   {
-      d_fac_ops.setCoarsestLevelSolverTolerance(tol);
-   }
-
-   /*!
-    * @brief Set max iterations for coarse level solve.
-    *
-    * If the coarse level solver requires a max iteration limit
-    * (currently, they all do), the specified value is used.
-    */
-   void
-   setCoarsestLevelSolverMaxIterations(
-      int max_iterations)
-   {
-      d_fac_ops.setCoarsestLevelSolverMaxIterations(max_iterations);
-   }
-
-#ifdef HAVE_HYPRE
-   /*!
-    * @brief Set whether to use HYPRe's PFMG algorithm instead of the
-    * SMG algorithm.
-    *
-    * The flag is used to select which of HYPRE's linear solver algorithms
-    * to use if true, the semicoarsening multigrid algorithm is used, and if
-    * false, the ``PF'' multigrid algorithm is used.
-    * By default, the SMG algorithm is used.
-    *
-    * This setting has effect only when HYPRe is chosen for the coarsest
-    * level solver.  See setCoarsestLevelSolverChoice().
-    *
-    * Changing the algorithm must be done before setting up the matrix
-    * coefficients.
-    */
-   void
-   setUseSMG(
-      bool use_smg)
-   {
-      if (d_solver_is_initialized) {
-         TBOX_ERROR(
-            d_object_name << ": setUseSMG(bool) may NOT be called\n"
-                          << "while the solver state is initialized, as that\n"
-                          << "would lead to a corrupted solver state.\n");
-      }
-      d_fac_ops.setUseSMG(use_smg);
-   }
-#endif
-
-   /*!
-    * @brief Set the coarse-fine boundary discretization method.
-    *
-    * Specify the @c op_name std::string which will be passed to
-    * xfer::Geometry::lookupRefineOperator() to get the operator
-    * for setting fine grid ghost cells from the coarse grid.
-    * Note that chosing this operator implicitly choses the
-    * discretization method at the coarse-fine boundary.
-    *
-    * There is one important instance where this std::string is
-    * @em not passed to xfer::Geometry::lookupRefineOperator().
-    * If this variable is set to "Ewing", a constant refinement
-    * method is used along with Ewing's correction.
-    * For a reference to the correction method, see
-    * "Local Refinement Techniques for Elliptic Problems on Cell-Centered
-    * Grids, I. Error Analysis", Mathematics of Computation, Vol. 56, No. 194,
-    * April 1991, pp. 437-461.
-    *
-    * @param coarsefine_method String selecting the coarse-fine discretization method.
-    */
-   void
-   setCoarseFineDiscretization(
-      const std::string& coarsefine_method)
-   {
-      d_fac_ops.setCoarseFineDiscretization(coarsefine_method);
-   }
-
-   /*!
-    * @brief Set the name of the prolongation method.
-    *
-    * Specify the @c op_name std::string which will be passed to
-    * xfer::Geometry::lookupRefineOperator() to get the operator
-    * for prolonging the coarse-grid correction.
-    *
-    * By default, "CONSTANT_REFINE" is used.  "LINEAR_REFINE" seems to
-    * to lead to faster convergence, but it does NOT satisfy the Galerkin
-    * condition.
-    *
-    * Prolonging using linear refinement requires a Robin bc
-    * coefficient implementation that is capable of delivering
-    * coefficients for non-hierarchy data, because linear refinement
-    * requires boundary conditions to be set on temporary levels.
-    *
-    * @param prolongation_method String selecting the coarse-fine discretization method.
-    */
-   void
-   setProlongationMethod(
-      const std::string& prolongation_method)
-   {
-      d_fac_ops.setProlongationMethod(prolongation_method);
-   }
-
-   /*!
-    * @brief Set the number of pre-smoothing sweeps during
-    * FAC iteration process.
-    *
-    * Presmoothing is applied during the fine-to-coarse phase of the
-    * iteration.  The default is to use one sweep.
-    *
-    * @param num_pre_sweeps Number of presmoothing sweeps
-    */
-   void
-   setPresmoothingSweeps(
-      int num_pre_sweeps)
-   {
-      d_fac_precond.setPresmoothingSweeps(num_pre_sweeps);
-   }
-
-   /*!
-    * @brief Set the number of post-smoothing sweeps during
-    * FAC iteration process.
-    *
-    * Postsmoothing is applied during the coarse-to-fine phase of the
-    * iteration.  The default is to use one sweep.
-    *
-    * @param num_post_sweeps Number of postsmoothing sweeps
-    */
-   void
-   setPostsmoothingSweeps(
-      int num_post_sweeps)
-   {
-      d_fac_precond.setPostsmoothingSweeps(num_post_sweeps);
-   }
-
-   /*!
-    * @brief Set the max number of iterations (cycles) to use per solve.
-    */
-   void
-   setMaxCycles(
-      int max_cycles)
-   {
-      d_fac_precond.setMaxCycles(max_cycles);
-   }
-
-   /*!
-    * @brief Set the residual tolerance for stopping.
-    *
-    * If you want the prescribed maximum number of cycles to always be taken,
-    * set the residual tolerance to a negative number.
-    */
-   void
-   setResidualTolerance(
-      double residual_tol)
-   {
-      d_fac_precond.setResidualTolerance(residual_tol);
-   }
-
-   //@}
-
    /*!
     * @brief Prepare the solver's internal state for solving
     *
@@ -595,7 +405,7 @@ public:
    int
    getNumberOfIterations() const
    {
-      return d_fac_precond.getNumberOfIterations();
+      return d_fac_precond->getNumberOfIterations();
    }
 
    /*!
@@ -610,7 +420,7 @@ public:
       double& avg_factor,
       double& final_factor) const
    {
-      d_fac_precond.getConvergenceFactors(avg_factor, final_factor);
+      d_fac_precond->getConvergenceFactors(avg_factor, final_factor);
    }
 
    /*!
@@ -625,7 +435,7 @@ public:
    double
    getResidualNorm() const
    {
-      return d_fac_precond.getResidualNorm();
+      return d_fac_precond->getResidualNorm();
    }
 
    //@}
@@ -696,12 +506,12 @@ private:
     * @brief FAC operator implementation corresponding to cell-centered
     * Poisson discretization.
     */
-   CellPoissonFACOps d_fac_ops;
+   boost::shared_ptr<CellPoissonFACOps> d_fac_ops;
 
    /*!
     * @brief FAC preconditioner algorithm.
     */
-   FACPreconditioner d_fac_precond;
+   boost::shared_ptr<FACPreconditioner> d_fac_precond;
 
    /*!
     * @brief Robin bc object in use.

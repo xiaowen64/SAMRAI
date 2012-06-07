@@ -71,13 +71,15 @@ public:
     * pass in valid pointers for those streams.
     *
     * @param object_name Ojbect name
-    * @param database Input database (may be NULL)
+    * @param dim
+    * @param fac_solver
+    * @param bc_coefs
     */
    FACPoisson(
       const std::string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database> database =
-         boost::shared_ptr<tbox::Database>());
+      const boost::shared_ptr<solv::CellPoissonFACSolver>& fac_solver,
+      const boost::shared_ptr<solv::LocationIndexRobinBcCoefs>& bc_coefs);
 
    virtual ~FACPoisson();
 
@@ -176,12 +178,12 @@ private:
    /*!
     * @brief FAC poisson solver.
     */
-   solv::CellPoissonFACSolver d_poisson_fac_solver;
+   boost::shared_ptr<solv::CellPoissonFACSolver> d_poisson_fac_solver;
 
    /*!
     * @brief Boundary condition coefficient implementation.
     */
-   solv::LocationIndexRobinBcCoefs d_bc_coefs;
+   boost::shared_ptr<solv::LocationIndexRobinBcCoefs> d_bc_coefs;
 
    //@}
 

@@ -155,6 +155,66 @@ int main(
             grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
+      std::string fac_poisson_name = base_name + "::FACPoisson";
+      std::string fac_solver_name = fac_poisson_name + "::poisson_hypre";
+      std::string fac_ops_name = fac_solver_name + "::fac_ops";
+      std::string fac_precond_name = fac_solver_name + "::fac_precond";
+      std::string hypre_poisson_name = fac_ops_name + "::hypre_solver";
+      std::string bc_coefs_name = fac_poisson_name + "::bc_coefs";
+
+#ifdef HAVE_HYPRE
+      boost::shared_ptr<solv::CellPoissonHypreSolver> hypre_poisson(
+         new solv::CellPoissonHypreSolver(
+            dim,
+            hypre_poisson_name,
+            input_db->isDatabase("hypre_solver") ?
+            input_db->getDatabase("hypre_solver") :
+            boost::shared_ptr<tbox::Database>()));
+
+      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+         new solv::CellPoissonFACOps(
+            hypre_poisson,
+            dim,
+            fac_ops_name,
+            input_db->isDatabase("fac_ops") ?
+            input_db->getDatabase("fac_ops") :
+            boost::shared_ptr<tbox::Database>()));
+#else
+      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+         new solv::CellPoissonFACOps(
+            dim,
+            fac_ops_name,
+            input_db->isDatabase("fac_ops") ?
+            input_db->getDatabase("fac_ops") :
+            boost::shared_ptr<tbox::Database>()));
+#endif
+
+      boost::shared_ptr<solv::FACPreconditioner> fac_precond(
+         new solv::FACPreconditioner(
+            fac_precond_name,
+            fac_ops,
+            input_db->isDatabase("fac_precond") ?
+            input_db->getDatabase("fac_precond") :
+            boost::shared_ptr<tbox::Database>()));
+
+      boost::shared_ptr<solv::CellPoissonFACSolver> fac_solver(
+         new solv::CellPoissonFACSolver(
+            dim,
+            fac_solver_name,
+            fac_precond,
+            fac_ops,
+            input_db->isDatabase("fac_solver") ?
+            input_db->getDatabase("fac_solver") :
+            boost::shared_ptr<tbox::Database>()));
+
+      boost::shared_ptr<solv::LocationIndexRobinBcCoefs> bc_coefs(
+         new solv::LocationIndexRobinBcCoefs(
+            dim,
+            bc_coefs_name,
+            input_db->isDatabase("bc_coefs") ?
+            input_db->getDatabase("bc_coefs") :
+            boost::shared_ptr<tbox::Database>()));
+
       /*
        * The FACPoisson object is the main user object specific to the
        * problem being solved.  It provides the implementations for setting
@@ -162,11 +222,10 @@ int main(
        * process that includes making the initial guess, specifying the
        * boundary conditions and call the solver.
        */
-      FACPoisson fac_poisson(base_name + "::FACPoisson",
+      FACPoisson fac_poisson(fac_poisson_name,
                              dim,
-                             input_db->isDatabase("FACPoisson") ?
-                             input_db->getDatabase("FACPoisson") :
-                             boost::shared_ptr<tbox::Database>());
+                             fac_solver,
+                             bc_coefs);
 
       /*
        * Create the tag-and-initializer, box-generator and load-balancer

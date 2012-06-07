@@ -105,12 +105,12 @@ namespace solv {
  *
  * Input Examples
  * @verbatim
- * coarse_solver_choice = "hypre"    // see setCoarsestLevelSolverChoice()
- * coarse_solver_tolerance = 1e-14   // see setCoarsestLevelSolverTolerance()
- * coarse_solver_max_iterations = 10 // see setCoarsestLevelSolverMaxIterations()
- * smoothing_choice = "redblack"     // see setSmoothingChoice()
- * cf_discretization = "Ewing"       // see setCoarseFineDiscretization()
- * prolongation_method = "LINEAR_REFINE" // see setProlongationMethod()
+ * coarse_solver_choice = "hypre"
+ * coarse_solver_tolerance = 1e-14
+ * coarse_solver_max_iterations = 10
+ * smoothing_choice = "redblack"
+ * cf_discretization = "Ewing"
+ * prolongation_method = "LINEAR_REFINE"
  * hypre_solver = { ... }            // tbox::Database for initializing Hypre solver
  * @endverbatim
  */
@@ -119,20 +119,39 @@ class CellPoissonFACOps:
 {
 
 public:
+#ifdef HAVE_HYPRE
    /*!
     * @brief Constructor.
     *
     * If you want standard output and logging,
     * pass in valid pointers for those streams.
     * @param dim
-    * @param object_name Ojbect name
+    * @param object_name Object name
+    * @param hypre_solver underlying hypre solver
     * @param input_db Input database
     */
-   explicit CellPoissonFACOps(
+   CellPoissonFACOps(
+      const boost::shared_ptr<CellPoissonHypreSolver>& hypre_solver,
       const tbox::Dimension& dim,
       const std::string& object_name = std::string(),
       const boost::shared_ptr<tbox::Database>& input_db =
          boost::shared_ptr<tbox::Database>());
+#else
+   /*!
+    * @brief Constructor.
+    *
+    * If you want standard output and logging,
+    * pass in valid pointers for those streams.
+    * @param dim
+    * @param object_name Object name
+    * @param input_db Input database
+    */
+   CellPoissonFACOps(
+      const tbox::Dimension& dim,
+      const std::string& object_name = std::string(),
+      const boost::shared_ptr<tbox::Database>& input_db =
+         boost::shared_ptr<tbox::Database>());
+#endif
 
    /*!
     * @brief Destructor.
@@ -150,208 +169,6 @@ public:
    {
       d_poisson_spec = spec;
    }
-
-   /*!
-    * @brief Enable logging.
-    *
-    * By default, logging is disabled.  The logging flag is
-    * propagated to the major components used by this class.
-    */
-   void
-   enableLogging(
-      bool enable_logging)
-   {
-      d_enable_logging = enable_logging;
-   }
-
-   //@{
-   /*!
-    * @name Functions for setting solver mathematic algorithm controls
-    */
-
-   /*!
-    * @brief Set the choice of smoothing algorithms.
-    *
-    * Current smoothing choices are:
-    * - "redblack": Red-black Gauss-Seidel smoothing.
-    */
-   void
-   setSmoothingChoice(
-      const std::string& smoothing_choice)
-   {
-#ifdef DEBUG_CHECK_ASSERTIONS
-      if (smoothing_choice != "redblack") {
-         TBOX_ERROR(d_object_name << ": Bad smoothing choice '"
-                                  << smoothing_choice
-                                  << "' in CellPoissonFACOps::setSmoothingChoice.");
-      }
-#endif
-      d_smoothing_choice = smoothing_choice;
-   }
-
-   /*!
-    * @brief Set coarse level solver.
-    *
-    * Select from these:
-    * - @c "redblack" (red-black smoothing until convergence--very slow!)
-    * - @c "hypre" (only if the HYPRE library is available).
-    */
-   void
-   setCoarsestLevelSolverChoice(
-      const std::string& choice)
-   {
-#ifdef DEBUG_CHECK_ASSERTIONS
-#ifndef HAVE_HYPRE
-      if (choice == "hypre") {
-         TBOX_ERROR(d_object_name << ": HYPRe library is not available.\n");
-      }
-#endif
-#endif
-      if (choice == "redblack" || choice == "hypre") {
-         d_coarse_solver_choice = choice;
-      } else {
-         TBOX_ERROR(
-            d_object_name << ": Bad coarse level solver choice '"
-                          << choice
-                          << "' in scapCellPoissonOpsX::setCoarseLevelSolver.");
-      }
-   }
-
-   /*!
-    * @brief Set tolerance for coarse level solve.
-    *
-    * If the coarse level solver requires a tolerance (currently, they all do),
-    * the specified value is used.
-    */
-   void
-   setCoarsestLevelSolverTolerance(
-      double tol)
-   {
-      d_coarse_solver_tolerance = tol;
-   }
-
-   /*!
-    * @brief Set max iterations for coarse level solve.
-    *
-    * If the coarse level solver requires a max iteration limit
-    * (currently, they all do), the specified value is used.
-    */
-   void
-   setCoarsestLevelSolverMaxIterations(
-      int max_iterations)
-   {
-#ifdef DEBUG_CHECK_ASSERTIONS
-      if (max_iterations < 0) {
-         TBOX_ERROR(d_object_name << ": Invalid number of max iterations\n");
-      }
-#endif
-      d_coarse_solver_max_iterations = max_iterations;
-   }
-
-   /*!
-    * @brief Set the coarse-fine boundary discretization method.
-    *
-    * Specify the @c op_name std::string which will be passed to
-    * xfer::Geometry::lookupRefineOperator() to get the operator
-    * for setting fine grid ghost cells from the coarse grid.
-    * Note that chosing this operator implicitly choses the
-    * discretization method at the coarse-fine boundary.
-    *
-    * There is one important instance where this std::string is
-    * @em not passed to xfer::Geometry::lookupRefineOperator.
-    * If this variable is set to "Ewing", Ewing's coarse-fine
-    * discretization is used (a constant refinement is performed,
-    * and the flux is later corrected to result in Ewing's scheme).
-    * For a reference to Ewing's discretization method, see
-    * "Local Refinement Techniques for Elliptic Problems on Cell-Centered
-    * Grids, I. Error Analysis", Mathematics of Computation, Vol. 56, No. 194,
-    * April 1991, pp. 437-461.
-    *
-    * @param coarsefine_method String selecting the coarse-fine discretization method.
-    */
-   void
-   setCoarseFineDiscretization(
-      const std::string& coarsefine_method)
-   {
-#ifdef DEBUG_CHECK_ASSERTIONS
-      if (d_hierarchy) {
-         TBOX_ERROR(
-            d_object_name << ": Cannot change coarse-fine\n"
-                          << "discretization method while operator state\n"
-                          << "is initialized because that causes a\n"
-                          << "corruption in the state.\n");
-      }
-#endif
-      d_cf_discretization = coarsefine_method;
-   }
-
-   /*!
-    * @brief Set the name of the prolongation method.
-    *
-    * Specify the @c op_name std::string which will be passed to
-    * xfer::Geometry::lookupRefineOperator() to get the operator
-    * for prolonging the coarse-grid correction.
-    *
-    * By default, "CONSTANT_REFINE" is used.  "LINEAR_REFINE" seems to
-    * to lead to faster convergence, but it does NOT satisfy the Galerkin
-    * condition.
-    *
-    * Prolonging using linear refinement requires a Robin bc
-    * coefficient implementation that is capable of delivering
-    * coefficients for non-hierarchy data, because linear refinement
-    * requires boundary conditions to be set on temporary levels.
-    *
-    * @param prolongation_method String selecting the coarse-fine
-    *        discretization method.
-    */
-   void
-   setProlongationMethod(
-      const std::string& prolongation_method)
-   {
-#ifdef DEBUG_CHECK_ASSERTIONS
-      if (d_hierarchy) {
-         TBOX_ERROR(
-            d_object_name << ": Cannot change prolongation method\n"
-                          << "while operator state is initialized because\n"
-                          << "that causes a corruption in the state.\n");
-      }
-#endif
-      d_prolongation_method = prolongation_method;
-   }
-
-#ifdef HAVE_HYPRE
-   /*!
-    * @brief Set whether to use Hypre's PFMG algorithm instead of the
-    * SMG algorithm.
-    *
-    * This flag affects the Hypre solver (used to solve the coarsest level).
-    * The flag is used to select which of HYPRE's linear solver algorithms
-    * to use if true, the semicoarsening multigrid algorithm is used, and if
-    * false, the ``PF'' multigrid algorithm is used.
-    * By default, the SMG algorithm is used.
-    *
-    * This setting has effect only when Hypre is chosen for the coarsest
-    * level solver.  See setCoarsestLevelSolverChoice().
-    *
-    * Changing the algorithm must be done before initializing the solver
-    * state and must NOT be done while the state is initialized
-    * (the program will exit), as that would corrupt the state.
-    */
-   void
-   setUseSMG(
-      bool use_smg)
-   {
-      if (d_hierarchy) {
-         TBOX_ERROR(
-            d_object_name << ": setUseSMG(bool) may NOT be called\n"
-                          << "while the solver state is initialized, as that\n"
-                          << "would lead to a corrupted solver state.\n");
-      }
-      d_hypre_solver.setUseSMG(use_smg);
-   }
-#endif
-
-   //@}
 
    //@{
    /*!
@@ -407,7 +224,7 @@ public:
       d_physical_bc_coef = physical_bc_coef;
       d_bc_helper.setCoefImplementation(physical_bc_coef);
 #ifdef HAVE_HYPRE
-      d_hypre_solver.setPhysicalBcCoefObject(d_physical_bc_coef);
+      d_hypre_solver->setPhysicalBcCoefObject(d_physical_bc_coef);
 #endif
    }
 
@@ -471,7 +288,7 @@ public:
     */
    void
    setPreconditioner(
-      const FACPreconditioner* preconditioner)
+      const boost::shared_ptr<FACPreconditioner> preconditioner)
    {
       d_preconditioner = preconditioner;
    }
@@ -597,6 +414,11 @@ protected:
       const boost::shared_ptr<tbox::Database>& input_db);
 
 private:
+   // Internals of both constructors
+   void
+   buildObject(
+      const boost::shared_ptr<tbox::Database>& input_db);
+
    //@{
    /*!
     * @name Private workhorse functions.
@@ -916,20 +738,12 @@ private:
    PoissonSpecifications d_poisson_spec;
 
    /*!
-    * @brief Smoothing choice.
-    * @see setSmoothingChoice.
-    */
-   std::string d_smoothing_choice;
-
-   /*!
     * @brief Coarse level solver.
-    * @see setCoarsestLevelSolverChoice
     */
    std::string d_coarse_solver_choice;
 
    /*!
     * @brief Coarse-fine discretization method.
-    * @see setCoarseFineDiscretization().
     */
    std::string d_cf_discretization;
 
@@ -938,20 +752,16 @@ private:
     *
     * The name of the refinement operator used to prolong the
     * coarse grid correction.
-    *
-    * @see setProlongationMethod()
     */
    std::string d_prolongation_method;
 
    /*!
     * @brief Tolerance specified to coarse solver
-    * @see setCoarsestLevelSolverTolerance()
     */
    double d_coarse_solver_tolerance;
 
    /*!
     * @brief Coarse level solver iteration limit.
-    * @see setCoarsestLevelSolverMaxIterations()
     */
    int d_coarse_solver_max_iterations;
 
@@ -984,7 +794,7 @@ private:
    /*!
     * @brief HYPRE coarse-level solver object.
     */
-   CellPoissonHypreSolver d_hypre_solver;
+   boost::shared_ptr<CellPoissonHypreSolver> d_hypre_solver;
 #endif
 
    /*!
@@ -1121,7 +931,7 @@ private:
     *
     * See setPreconditioner().
     */
-   const FACPreconditioner* d_preconditioner;
+   boost::shared_ptr<FACPreconditioner> d_preconditioner;
 
    /*!
     * @brief Hierarchy cell operator used in debugging.

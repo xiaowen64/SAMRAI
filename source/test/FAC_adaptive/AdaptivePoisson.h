@@ -87,6 +87,8 @@ public:
    AdaptivePoisson(
       const std::string& object_name,
       const tbox::Dimension& dim,
+      boost::shared_ptr<solv::CellPoissonFACOps>& fac_ops,
+      boost::shared_ptr<solv::FACPreconditioner>& fac_precond,
       tbox::Database& database,
       /*! Standard output stream */ std::ostream* out_stream = NULL,
       /*! Log output stream */ std::ostream* log_stream = NULL);
@@ -172,9 +174,6 @@ public:
     * solv::FACPreconditioner object to solve it.
     *
     * @param hierarchy the hierarchy to solve on
-    * @param max_cycle max number of FAC cycles to use
-    * @param pre_sweeps number of presmoothing sweeps to use
-    * @param pre_sweeps number of postsmoothing sweeps to use
     * @param initial_u how to set the initial guess for u.
     *       A std::string is used so the option "random" can be
     *       used.  If "random" is not used, set the std::string
@@ -183,10 +182,6 @@ public:
    int
    solvePoisson(
       boost::shared_ptr<hier::PatchHierarchy> hierarchy,
-      int max_cycles = 10,
-      double residual_tol = 1e-6,
-      int pre_sweeps = 5,
-      int post_sweeps = 5,
       std::string initial_u = std::string("0.0"));
 
 #ifdef HAVE_HDF5
@@ -233,9 +228,9 @@ private:
     * @name Major algorithm objects.
     */
 
-   solv::CellPoissonFACOps d_fac_ops;
+   boost::shared_ptr<solv::CellPoissonFACOps> d_fac_ops;
 
-   solv::FACPreconditioner d_fac_preconditioner;
+   boost::shared_ptr<solv::FACPreconditioner> d_fac_preconditioner;
 
    //@}
 

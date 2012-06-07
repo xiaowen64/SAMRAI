@@ -50,12 +50,14 @@ int CellPoissonFACSolver::s_instance_counter[SAMRAI::MAX_DIM_VAL];
 CellPoissonFACSolver::CellPoissonFACSolver(
    const tbox::Dimension& dim,
    const std::string& object_name,
+   const boost::shared_ptr<FACPreconditioner>& fac_precond,
+   const boost::shared_ptr<CellPoissonFACOps>& fac_ops,
    const boost::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_object_name(object_name),
    d_poisson_spec(object_name + "::poisson_spec"),
-   d_fac_ops(d_dim, object_name + "::fac_ops"),
-   d_fac_precond(object_name + "::fac_precond", d_fac_ops),
+   d_fac_ops(fac_ops),
+   d_fac_precond(fac_precond),
    d_bc_object(NULL),
    d_simple_bc(d_dim, object_name + "::bc"),
    d_ln_min(-1),
@@ -70,36 +72,11 @@ CellPoissonFACSolver::CellPoissonFACSolver(
       initializeStatics();
    }
 
-   // Set more default values.
-   setMaxCycles(10);
-   setResidualTolerance(1e-6);
-   setPresmoothingSweeps(1);
-   setPostsmoothingSweeps(1);
-   setCoarseFineDiscretization("Ewing");
-#ifdef HAVE_HYPRE
-   setCoarsestLevelSolverChoice("hypre");
-   setCoarsestLevelSolverTolerance(1e-10);
-   setCoarsestLevelSolverMaxIterations(20);
-   setUseSMG(true);
-#else
-   setCoarsestLevelSolverChoice("redblack");
-   setCoarsestLevelSolverTolerance(1e-8);
-   setCoarsestLevelSolverMaxIterations(500);
-#endif
-
-   /*
-    * The default RobinBcCoefStrategy used,
-    * SimpleCellRobinBcCoefs only works with constant refine
-    * for prolongation.  So we use constant refinement
-    * for prolongation by default.
-    */
-   setProlongationMethod("CONSTANT_REFINE");
-
    /*
     * The FAC operator optionally uses the preconditioner
     * to get data for logging.
     */
-   d_fac_ops.setPreconditioner((const FACPreconditioner *)(&d_fac_precond));
+   d_fac_ops->setPreconditioner(d_fac_precond);
 
    // Read user input.
    getFromInput(input_db);
@@ -174,52 +151,8 @@ CellPoissonFACSolver::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db)
 {
    if (input_db) {
-      if (input_db->isBool("enable_logging")) {
-         bool logging = input_db->getBool("enable_logging");
-         enableLogging(logging);
-      }
-      if (input_db->isInteger("max_cycles")) {
-         int max_cycles = input_db->getInteger("max_cycles");
-         setMaxCycles(max_cycles);
-      }
-      if (input_db->isDouble("residual_tol")) {
-         double residual_tol = input_db->getDouble("residual_tol");
-         setResidualTolerance(residual_tol);
-      }
-      if (input_db->isInteger("num_pre_sweeps")) {
-         int num_pre_sweeps = input_db->getInteger("num_pre_sweeps");
-         setPresmoothingSweeps(num_pre_sweeps);
-      }
-      if (input_db->isInteger("num_post_sweeps")) {
-         int num_post_sweeps = input_db->getInteger("num_post_sweeps");
-         setPostsmoothingSweeps(num_post_sweeps);
-      }
-      if (input_db->isString("coarse_fine_discretization")) {
-         std::string s = input_db->getString("coarse_fine_discretization");
-         setCoarseFineDiscretization(s);
-      }
-      if (input_db->isString("prolongation_method")) {
-         std::string s = input_db->getString("prolongation_method");
-         setProlongationMethod(s);
-      }
-      if (input_db->isString("coarse_solver_choice")) {
-         std::string s = input_db->getString("coarse_solver_choice");
-         setCoarsestLevelSolverChoice(s);
-      }
-      if (input_db->isDouble("coarse_solver_tolerance")) {
-         double tol = input_db->getDouble("coarse_solver_tolerance");
-         setCoarsestLevelSolverTolerance(tol);
-      }
-      if (input_db->isInteger("coarse_solver_max_iterations")) {
-         int itr = input_db->getInteger("coarse_solver_max_iterations");
-         setCoarsestLevelSolverMaxIterations(itr);
-      }
-#ifdef HAVE_HYPRE
-      if (input_db->isBool("use_smg")) {
-         bool smg = input_db->getBool("use_smg");
-         setUseSMG(smg);
-      }
-#endif
+      d_enable_logging =
+        input_db->getBoolWithDefault("enable_logging", d_enable_logging);
    }
 }
 
@@ -290,7 +223,7 @@ CellPoissonFACSolver::initializeSolverState(
          s_weight_id[d_dim.getValue() - 1]);
    }
 
-   d_fac_ops.computeVectorWeights(d_hierarchy,
+   d_fac_ops->computeVectorWeights(d_hierarchy,
       s_weight_id[d_dim.getValue() - 1],
       d_ln_min,
       d_ln_max);
@@ -306,11 +239,11 @@ CellPoissonFACSolver::initializeSolverState(
       }
    }
 
-   d_fac_ops.setPoissonSpecifications(d_poisson_spec);
+   d_fac_ops->setPoissonSpecifications(d_poisson_spec);
 
    createVectorWrappers(solution, rhs);
 
-   d_fac_precond.initializeSolverState(*d_uv, *d_fv);
+   d_fac_precond->initializeSolverState(*d_uv, *d_fv);
 
    d_solver_is_initialized = true;
 }
@@ -320,7 +253,7 @@ CellPoissonFACSolver::deallocateSolverState()
 {
    if (d_hierarchy) {
 
-      d_fac_precond.deallocateSolverState();
+      d_fac_precond->deallocateSolverState();
 
       /*
        * Delete internally managed data.
@@ -360,7 +293,7 @@ CellPoissonFACSolver::setBoundaries(
       flags,
       bdry_types);
    d_bc_object = &d_simple_bc;
-   d_fac_ops.setPhysicalBcCoefObject(d_bc_object);
+   d_fac_ops->setPhysicalBcCoefObject(d_bc_object);
 }
 
 /*
@@ -407,7 +340,7 @@ CellPoissonFACSolver::solveSystem(
 
    createVectorWrappers(u, f);
    bool solver_rval;
-   solver_rval = d_fac_precond.solveSystem(*d_uv, *d_fv);
+   solver_rval = d_fac_precond->solveSystem(*d_uv, *d_fv);
 
    if (d_bc_object == &d_simple_bc) {
       /*

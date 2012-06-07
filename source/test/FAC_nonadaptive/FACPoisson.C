@@ -54,21 +54,12 @@ namespace SAMRAI {
 FACPoisson::FACPoisson(
    const std::string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> database):
+   const boost::shared_ptr<solv::CellPoissonFACSolver>& fac_solver,
+   const boost::shared_ptr<solv::LocationIndexRobinBcCoefs>& bc_coefs):
    d_object_name(object_name),
    d_dim(dim),
-   d_poisson_fac_solver((d_dim),
-                        object_name + "::poisson_hypre",
-                        (database &&
-                         database->isDatabase("fac_solver")) ?
-                        database->getDatabase("fac_solver") :
-                        boost::shared_ptr<tbox::Database>()),
-   d_bc_coefs(d_dim,
-              object_name + "::bc_coefs",
-              (database &&
-               database->isDatabase("bc_coefs")) ?
-              database->getDatabase("bc_coefs") :
-              boost::shared_ptr<tbox::Database>())
+   d_poisson_fac_solver(fac_solver),
+   d_bc_coefs(bc_coefs)
 {
 
    hier::VariableDatabase* vdb =
@@ -121,7 +112,7 @@ FACPoisson::FACPoisson(
     * We use the implementation solv::LocationIndexRobinBcCoefs, but other
     * implementations are possible, including user-implemented.
     */
-   d_poisson_fac_solver.setBcObject(&d_bc_coefs);
+   d_poisson_fac_solver->setBcObject(d_bc_coefs.get());
 }
 
 /*
@@ -274,10 +265,10 @@ int FACPoisson::solvePoisson()
     * (D is the diffusion coefficient.
     * C is the source term which is not used in this example.)
     */
-   d_poisson_fac_solver.setDConstant(1.0);
-   d_poisson_fac_solver.setCConstant(0.0);
+   d_poisson_fac_solver->setDConstant(1.0);
+   d_poisson_fac_solver->setCConstant(0.0);
 
-   d_poisson_fac_solver.initializeSolverState(
+   d_poisson_fac_solver->initializeSolverState(
       d_comp_soln_id,
       d_rhs_id,
       d_hierarchy,
@@ -286,23 +277,22 @@ int FACPoisson::solvePoisson()
 
    tbox::plog << "solving..." << std::endl;
    int solver_ret;
-   solver_ret = d_poisson_fac_solver.solveSystem(d_comp_soln_id,
-         d_rhs_id);
+   solver_ret = d_poisson_fac_solver->solveSystem(d_comp_soln_id, d_rhs_id);
    /*
     * Present data on the solve.
     */
    double avg_factor, final_factor;
-   d_poisson_fac_solver.getConvergenceFactors(avg_factor, final_factor);
+   d_poisson_fac_solver->getConvergenceFactors(avg_factor, final_factor);
    tbox::plog << "\t" << (solver_ret ? "" : "NOT ") << "converged " << "\n"
               << "      iterations: "
-              << d_poisson_fac_solver.getNumberOfIterations() << "\n"
-              << "      residual: "<< d_poisson_fac_solver.getResidualNorm()
+              << d_poisson_fac_solver->getNumberOfIterations() << "\n"
+              << "      residual: "<< d_poisson_fac_solver->getResidualNorm()
               << "\n"
               << "      average convergence: "<< avg_factor << "\n"
               << "      final convergence: "<< final_factor << "\n"
               << std::flush;
 
-   d_poisson_fac_solver.deallocateSolverState();
+   d_poisson_fac_solver->deallocateSolverState();
 
    return 0;
 }

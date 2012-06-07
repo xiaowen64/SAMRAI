@@ -92,7 +92,8 @@ public:
    HyprePoisson(
       const string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database> database);
+      boost::shared_ptr<solv::CellPoissonHypreSolver>& hypre_solver,
+      boost::shared_ptr<solv::LocationIndexRobinBcCoefs>& bc_coefs);
 
    virtual ~HyprePoisson();
 
@@ -192,12 +193,12 @@ private:
    /*!
     * @brief HYPRE poisson solver.
     */
-   solv::CellPoissonHypreSolver d_poisson_hypre;
+   boost::shared_ptr<solv::CellPoissonHypreSolver> d_poisson_hypre;
 
    /*!
     * @brief Boundary condition coefficient implementation.
     */
-   solv::LocationIndexRobinBcCoefs d_bc_coefs;
+   boost::shared_ptr<solv::LocationIndexRobinBcCoefs> d_bc_coefs;
 
    //@}
 

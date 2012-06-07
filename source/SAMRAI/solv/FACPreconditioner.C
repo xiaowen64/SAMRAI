@@ -34,15 +34,15 @@ namespace solv {
 
 FACPreconditioner::FACPreconditioner(
    const std::string& name,
-   FACOperatorStrategy& user_ops,
+   boost::shared_ptr<FACOperatorStrategy> user_ops,
    const boost::shared_ptr<tbox::Database>& input_db):
    d_object_name(name),
    d_fac_operator(user_ops),
    d_coarsest_ln(0),
    d_finest_ln(0),
-   d_max_iterations(0),
-   d_residual_tolerance(tbox::MathUtilities<double>::getSignalingNaN()),
-   d_relative_residual_tolerance(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_max_iterations(10),
+   d_residual_tolerance(1.0e-6),
+   d_relative_residual_tolerance(-1),
    d_presmoothing_sweeps(1),
    d_postsmoothing_sweeps(1),
    d_algorithm_choice("default"),
@@ -88,27 +88,19 @@ FACPreconditioner::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db)
 {
    if (input_db) {
-      if (input_db->isInteger("max_cycles")) {
-         int max_cycles = input_db->getInteger("max_cycles");
-         setMaxCycles(max_cycles);
-      }
-      if (input_db->isDouble("residual_tol")) {
-         double residual_tol = input_db->getDouble("residual_tol");
-         setResidualTolerance(residual_tol, d_relative_residual_tolerance);
-      }
-      if (input_db->isDouble("relative_residual_tol")) {
-         double relative_residual_tol = input_db->getDouble(
-               "relative_residual_tol");
-         setResidualTolerance(d_residual_tolerance, relative_residual_tol);
-      }
-      if (input_db->isInteger("num_pre_sweeps")) {
-         int num_pre_sweeps = input_db->getInteger("num_pre_sweeps");
-         setPresmoothingSweeps(num_pre_sweeps);
-      }
-      if (input_db->isInteger("num_post_sweeps")) {
-         int num_post_sweeps = input_db->getInteger("num_post_sweeps");
-         setPostsmoothingSweeps(num_post_sweeps);
-      }
+      d_max_iterations =
+         input_db->getIntegerWithDefault("max_cycles", d_max_iterations);
+      d_residual_tolerance =
+         input_db->getDoubleWithDefault("residual_tol", d_residual_tolerance);
+      d_relative_residual_tolerance =
+         input_db->getDoubleWithDefault("relative_residual_tol",
+            d_relative_residual_tolerance);
+      d_presmoothing_sweeps =
+         input_db->getIntegerWithDefault("num_pre_sweeps",
+            d_presmoothing_sweeps);
+      d_postsmoothing_sweeps =
+         input_db->getIntegerWithDefault("num_post_sweeps",
+            d_postsmoothing_sweeps);
    }
 }
 
@@ -149,7 +141,7 @@ FACPreconditioner::deallocateSolverState()
       }
 
       d_controlled_level_ops.setNull();
-      d_fac_operator.deallocateOperatorState();
+      d_fac_operator->deallocateOperatorState();
    }
 }
 
@@ -224,7 +216,7 @@ FACPreconditioner::initializeSolverState(
             << " does not exist" << std::endl);
       }
    }
-   d_fac_operator.initializeOperatorState(solution, rhs);
+   d_fac_operator->initializeOperatorState(solution, rhs);
 }
 
 bool
@@ -317,7 +309,7 @@ FACPreconditioner::solveSystem(
 
    double effective_residual_tolerance = d_residual_tolerance;
    if (d_relative_residual_tolerance >= 0) {
-      double tmp = d_fac_operator.computeResidualNorm(f,
+      double tmp = d_fac_operator->computeResidualNorm(f,
             d_finest_ln,
             d_coarsest_ln);
       tmp *= d_relative_residual_tolerance;
@@ -389,7 +381,7 @@ FACPreconditioner::solveSystem(
        * more accurate fine-level solutions.
        */
       for (int ln = d_finest_ln - 1; ln >= d_coarsest_ln; --ln) {
-         d_fac_operator.restrictSolution(u,
+         d_fac_operator->restrictSolution(u,
             u,
             ln);
       }
@@ -421,7 +413,7 @@ FACPreconditioner::solveSystem(
       /*
        * Increment the iteration counter.
        * The rest of this block expects it to have the incremented value.
-       * In particular, d_fac_operator.postprocessOneCycle does.
+       * In particular, d_fac_operator->postprocessOneCycle does.
        */
       ++d_number_iterations;
 
@@ -434,7 +426,7 @@ FACPreconditioner::solveSystem(
       d_avg_convergence_factor = pow(d_net_convergence_factor,
             1.0 / d_number_iterations);
 
-      d_fac_operator.postprocessOneCycle(d_number_iterations - 1,
+      d_fac_operator->postprocessOneCycle(d_number_iterations - 1,
          u,
          *d_residual_vector);
 
@@ -481,23 +473,23 @@ FACPreconditioner::facCycle_Recursive(
 
    /* Step 1. */
    if (ln == lmin) {
-      d_fac_operator.solveCoarsestLevel(e,
+      d_fac_operator->solveCoarsestLevel(e,
          r,
          ln);
    } else {
 
       /* Step 2. */
-      d_fac_operator.smoothError(e,
+      d_fac_operator->smoothError(e,
          r,
          ln,
          d_presmoothing_sweeps);
       /* Step 3. */
-      d_fac_operator.computeCompositeResidualOnLevel(*d_tmp_residual,
+      d_fac_operator->computeCompositeResidualOnLevel(*d_tmp_residual,
          e,
          r,
          ln,
          true);
-      d_fac_operator.restrictResidual(*d_tmp_residual,
+      d_fac_operator->restrictResidual(*d_tmp_residual,
          r,
          ln - 1);
       facCycle_Recursive(e,
@@ -506,11 +498,11 @@ FACPreconditioner::facCycle_Recursive(
          lmax,
          lmin,
          ln - 1);
-      d_fac_operator.prolongErrorAndCorrect(e,
+      d_fac_operator->prolongErrorAndCorrect(e,
          e,
          ln);
       /* Step 4. */
-      d_fac_operator.smoothError(e,
+      d_fac_operator->smoothError(e,
          r,
          ln,
          d_postsmoothing_sweeps);
@@ -554,7 +546,7 @@ FACPreconditioner::facCycle_McCormick(
       /*
        * Solve coarsest level.
        */
-      d_fac_operator.solveCoarsestLevel(e,
+      d_fac_operator->solveCoarsestLevel(e,
          r,
          ln);
    } else {
@@ -564,7 +556,7 @@ FACPreconditioner::facCycle_McCormick(
       /*
        * Step 2a.
        */
-      d_fac_operator.computeCompositeResidualOnLevel(*d_tmp_residual,
+      d_fac_operator->computeCompositeResidualOnLevel(*d_tmp_residual,
          e,
          r,
          ln,
@@ -579,7 +571,7 @@ FACPreconditioner::facCycle_McCormick(
       /*
        * Step 2b.
        */
-      d_fac_operator.smoothError(*d_tmp_error,
+      d_fac_operator->smoothError(*d_tmp_error,
          *d_tmp_residual,
          ln,
          d_presmoothing_sweeps);
@@ -598,12 +590,12 @@ FACPreconditioner::facCycle_McCormick(
       /*
        * Step 3a.
        */
-      d_fac_operator.computeCompositeResidualOnLevel(*d_tmp_residual,
+      d_fac_operator->computeCompositeResidualOnLevel(*d_tmp_residual,
          e,
          r,
          ln,
          true);
-      d_fac_operator.restrictResidual(*d_tmp_residual,
+      d_fac_operator->restrictResidual(*d_tmp_residual,
          *d_tmp_residual,
          ln - 1);
       /*
@@ -628,13 +620,13 @@ FACPreconditioner::facCycle_McCormick(
       /*
        * Step 3d.
        */
-      d_fac_operator.prolongErrorAndCorrect(e,
+      d_fac_operator->prolongErrorAndCorrect(e,
          e,
          ln);
       /*
        * Step 4a.
        */
-      d_fac_operator.computeCompositeResidualOnLevel(*d_tmp_residual,
+      d_fac_operator->computeCompositeResidualOnLevel(*d_tmp_residual,
          e,
          r,
          ln,
@@ -649,7 +641,7 @@ FACPreconditioner::facCycle_McCormick(
       /*
        * Step 4b.
        */
-      d_fac_operator.smoothError(*d_tmp_error,
+      d_fac_operator->smoothError(*d_tmp_error,
          *d_tmp_residual,
          ln,
          d_postsmoothing_sweeps);
@@ -698,7 +690,7 @@ FACPreconditioner::facCycle(
       /*
        * Presmoothing.
        */
-      d_fac_operator.smoothError(e,
+      d_fac_operator->smoothError(e,
          r,
          ln,
          d_presmoothing_sweeps);
@@ -706,7 +698,7 @@ FACPreconditioner::facCycle(
        * Compute residual to see how much correction is still needed:
        * d_tmp_residual <- r - A e
        */
-      d_fac_operator.computeCompositeResidualOnLevel(*d_tmp_residual,
+      d_fac_operator->computeCompositeResidualOnLevel(*d_tmp_residual,
          e,
          r,
          ln,
@@ -717,7 +709,7 @@ FACPreconditioner::facCycle(
        * level really solves for the correction for this level
        * where they overlap.
        */
-      d_fac_operator.restrictResidual(*d_tmp_residual,
+      d_fac_operator->restrictResidual(*d_tmp_residual,
          r,
          ln - 1);
    }    // End V-cycle descent.
@@ -734,14 +726,14 @@ FACPreconditioner::facCycle(
          /*
           * Solve coarsest level.
           */
-         d_fac_operator.solveCoarsestLevel(e,
+         d_fac_operator->solveCoarsestLevel(e,
             r,
             ln);
       } else {
          /*
           * Apply the coarse level correction to this level.
           */
-         d_fac_operator.prolongErrorAndCorrect(e,
+         d_fac_operator->prolongErrorAndCorrect(e,
             e,
             ln);
 
@@ -752,7 +744,7 @@ FACPreconditioner::facCycle(
          /*
           * Postsmoothing.
           */
-         d_fac_operator.smoothError(e,
+         d_fac_operator->smoothError(e,
             r,
             ln,
             d_postsmoothing_sweeps);
@@ -778,7 +770,7 @@ FACPreconditioner::computeFullCompositeResidual(
    SAMRAIVectorReal<double>& f)
 {
 
-   d_fac_operator.computeCompositeResidualOnLevel
+   d_fac_operator->computeCompositeResidualOnLevel
       (r,
       u,
       f,
@@ -788,9 +780,9 @@ FACPreconditioner::computeFullCompositeResidual(
    for (int ln = d_finest_ln - 1; ln >= d_coarsest_ln; --ln) {
 
       // Bring down more accurate solution from finer level.
-      d_fac_operator.restrictSolution(u, u, ln);
+      d_fac_operator->restrictSolution(u, u, ln);
 
-      d_fac_operator.computeCompositeResidualOnLevel
+      d_fac_operator->computeCompositeResidualOnLevel
          (r,
          u,
          f,
@@ -798,14 +790,14 @@ FACPreconditioner::computeFullCompositeResidual(
          false);
 
       // Bring down more accurate residual from finer level.
-      d_fac_operator.restrictResidual(r,
+      d_fac_operator->restrictResidual(r,
          r,
          ln);
 
    }
 
    double residual_norm =
-      d_fac_operator.computeResidualNorm(r,
+      d_fac_operator->computeResidualNorm(r,
          d_finest_ln,
          d_coarsest_ln);
 

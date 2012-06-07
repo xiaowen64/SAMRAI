@@ -294,7 +294,7 @@ CellPoissonHypreSolver::CellPoissonHypreSolver(
    d_num_pre_relax_steps(1),
    d_num_post_relax_steps(1),
    d_relative_residual_norm(-1.0),
-   d_use_smg(false),
+   d_use_smg(true),
    d_grid(NULL),
    d_stencil(NULL),
    d_matrix(NULL),
@@ -364,12 +364,7 @@ CellPoissonHypreSolver::getFromInput(
          TBOX_ERROR(d_object_name << ": Number of relaxation steps must be\n"
                                   << "non-negative.\n");
       }
-      if (input_db->isBool("use_smg")) {
-         bool use_smg = input_db->getBool("use_smg");
-         if (use_smg != d_use_smg) {
-            setUseSMG(use_smg);
-         }
-      }
+      d_use_smg = input_db->getBoolWithDefault("use_smg", d_use_smg);
    }
 }
 

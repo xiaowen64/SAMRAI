@@ -133,9 +133,10 @@ public:
     */
    CVODEModel(
       const string& object_name,
-      const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database> input_db,
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geom);
+      const Dimension& dim,
+      boost::shared_ptr<CellPoissonFACSolver> fac_solver,
+      boost::shared_ptr<Database> input_db,
+      boost::shared_ptr<CartesianGridGeometry> grid_geom);
 
    /**
     * Empty destructor for CVODEModel.
@@ -287,7 +288,7 @@ public:
     * data interpolation operations.  Default is to return
     * zero, assuming no user-defined operations provided.
     */
-   virtual IntVector getRefineOpStencilWidth( const tbox::Dimension &dim ) const
+   virtual IntVector getRefineOpStencilWidth( const Dimension &dim ) const
    {
       return IntVector(dim, 0);
    }
@@ -331,7 +332,7 @@ public:
     * data interpolation operations.  Default is to return
     * zero, assuming no user-defined operations provided.
     */
-   virtual IntVector getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
+   virtual IntVector getCoarsenOpStencilWidth( const Dimension &dim ) const
    {
       return IntVector(dim, 0);
    }
@@ -339,7 +340,7 @@ public:
    /*!
     * @brief Return the dimension of this object.
     */
-   const tbox::Dimension& getDim() const
+   const Dimension& getDim() const
    {
       return d_dim;
    }
@@ -428,7 +429,7 @@ public:
     */
    void
    getCounters(
-      tbox::Array<int>& counters);
+      Array<int>& counters);
 
    /**
     * Writes state of CVODEModel object to the specified restart database.
@@ -438,7 +439,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const boost::shared_ptr<Database>& restart_db) const;
 
    /**
     * This routine is a concrete implementation of the virtual function
@@ -450,13 +451,13 @@ public:
     */
    void
    readDirichletBoundaryDataEntry(
-      const boost::shared_ptr<tbox::Database>& db,
+      const boost::shared_ptr<Database>& db,
       string& db_name,
       int bdry_location_index);
 
    void
    readNeumannBoundaryDataEntry(
-      const boost::shared_ptr<tbox::Database>& db,
+      const boost::shared_ptr<Database>& db,
       string& db_name,
       int bdry_location_index);
 
@@ -479,7 +480,7 @@ private:
     */
    virtual void
    getFromInput(
-      boost::shared_ptr<tbox::Database> input_db,
+      boost::shared_ptr<Database> input_db,
       bool is_from_restart);
 
    virtual void
@@ -487,10 +488,10 @@ private:
 
    void
    readStateDataEntry(
-      boost::shared_ptr<tbox::Database> db,
+      boost::shared_ptr<Database> db,
       const string& db_name,
       int array_indx,
-      tbox::Array<double>& uval);
+      Array<double>& uval);
 
    /*
     * Object name used for error/warning reporting and as a label
@@ -498,7 +499,7 @@ private:
     */
    string d_object_name;
 
-   const tbox::Dimension d_dim;
+   const Dimension d_dim;
 
    /*
     * Pointer to solution vector
@@ -530,15 +531,13 @@ private:
    int d_diff_id;
    int d_flag_id;
    int d_neuf_id;
-   int d_bdry_types[2 * SAMRAI::MAX_DIM_VAL];
+   int d_bdry_types[2 * MAX_DIM_VAL];
 
-   solv::CellPoissonFACSolver d_FAC_solver;
+   boost::shared_ptr<CellPoissonFACSolver> d_FAC_solver;
    bool d_FAC_solver_allocated;
    bool d_level_solver_allocated;
    bool d_use_neumann_bcs;
 
-   int d_max_fac_its;
-   double d_fac_tol;
    int d_max_hypre_its;
    double d_hypre_tol;
    double d_current_soln_time;
@@ -552,7 +551,7 @@ private:
    /*
     * Grid geometry
     */
-   boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
+   boost::shared_ptr<CartesianGridGeometry> d_grid_geometry;
 
    /*
     * Initial value
@@ -576,24 +575,24 @@ private:
     *
     * Input file values are read into these arrays.
     */
-   tbox::Array<int> d_scalar_bdry_edge_conds;
-   tbox::Array<int> d_scalar_bdry_node_conds;
-   tbox::Array<int> d_scalar_bdry_face_conds; // Only used for 3D.
+   Array<int> d_scalar_bdry_edge_conds;
+   Array<int> d_scalar_bdry_node_conds;
+   Array<int> d_scalar_bdry_face_conds; // Only used for 3D.
 
    /*
     * Boundary condition cases for scalar and vector (i.e., depth > 1)
     * variables.  These are post-processed input values and are passed
     * to the boundary routines.
     */
-   tbox::Array<int> d_node_bdry_edge; // Only used for 2D.
-   tbox::Array<int> d_edge_bdry_face; // Only used for 3D.
-   tbox::Array<int> d_node_bdry_face; // Only used for 3D.
+   Array<int> d_node_bdry_edge; // Only used for 2D.
+   Array<int> d_edge_bdry_face; // Only used for 3D.
+   Array<int> d_node_bdry_face; // Only used for 3D.
 
    /*
     * Arrays of face (3d) or edge (2d) boundary values for DIRICHLET case.
     */
-   tbox::Array<double> d_bdry_edge_val; // Only used for 2D
-   tbox::Array<double> d_bdry_face_val; // Only used for 3D
+   Array<double> d_bdry_edge_val; // Only used for 2D
+   Array<double> d_bdry_face_val; // Only used for 3D
 
 };
 #endif // HAVE_SUNDIALS

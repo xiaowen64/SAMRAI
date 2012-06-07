@@ -552,6 +552,38 @@ void F77_FUNC(ewingfixfluxcondc3d, EWINGFIXFLUXCONDC3D) (
  * Constructor.
  ********************************************************************
  */
+#ifdef HAVE_HYPRE
+CellPoissonFACOps::CellPoissonFACOps(
+   const boost::shared_ptr<CellPoissonHypreSolver>& hypre_solver,
+   const tbox::Dimension& dim,
+   const std::string& object_name,
+   const boost::shared_ptr<tbox::Database>& input_db):
+   d_dim(dim),
+   d_object_name(object_name),
+   d_ln_min(-1),
+   d_ln_max(-1),
+   d_poisson_spec(object_name + "::Poisson specs"),
+   d_coarse_solver_choice("hypre"),
+   d_cf_discretization("Ewing"),
+   d_prolongation_method("CONSTANT_REFINE"),
+   d_coarse_solver_tolerance(1.e-10),
+   d_coarse_solver_max_iterations(20),
+   d_residual_tolerance_during_smoothing(-1.0),
+   d_flux_id(-1),
+   d_hypre_solver(hypre_solver),
+   d_physical_bc_coef(NULL),
+   d_context(hier::VariableDatabase::getDatabase()->getContext(
+             object_name + "::PRIVATE_CONTEXT")),
+   d_cell_scratch_id(-1),
+   d_flux_scratch_id(-1),
+   d_oflux_scratch_id(-1),
+   d_bc_helper(dim,
+               d_object_name + "::bc helper"),
+   d_enable_logging(false)
+{
+   buildObject(input_db);
+}
+#else
 CellPoissonFACOps::CellPoissonFACOps(
    const tbox::Dimension& dim,
    const std::string& object_name,
@@ -561,28 +593,13 @@ CellPoissonFACOps::CellPoissonFACOps(
    d_ln_min(-1),
    d_ln_max(-1),
    d_poisson_spec(object_name + "::Poisson specs"),
-   d_smoothing_choice("redblack"),
-   d_coarse_solver_choice(
-#ifdef HAVE_HYPRE
-      "hypre"
-#else
-      "redblack"
-#endif
-
-      ),
+   d_coarse_solver_choice("redblack"),
    d_cf_discretization("Ewing"),
    d_prolongation_method("CONSTANT_REFINE"),
    d_coarse_solver_tolerance(1.e-8),
-   d_coarse_solver_max_iterations(10),
+   d_coarse_solver_max_iterations(500),
    d_residual_tolerance_during_smoothing(-1.0),
    d_flux_id(-1),
-#ifdef HAVE_HYPRE
-   d_hypre_solver(dim,
-                  object_name + "::hypre_solver",
-                  input_db && input_db->isDatabase("hypre_solver") ?
-                  input_db->getDatabase("hypre_solver") :
-                  boost::shared_ptr<tbox::Database>()),
-#endif
    d_physical_bc_coef(NULL),
    d_context(hier::VariableDatabase::getDatabase()->getContext(
              object_name + "::PRIVATE_CONTEXT")),
@@ -591,8 +608,19 @@ CellPoissonFACOps::CellPoissonFACOps(
    d_oflux_scratch_id(-1),
    d_bc_helper(dim,
                d_object_name + "::bc helper"),
-   d_enable_logging(false),
-   d_preconditioner(NULL)
+   d_enable_logging(false)
+{
+   buildObject(input_db);
+}
+#endif
+
+CellPoissonFACOps::~CellPoissonFACOps()
+{
+}
+
+void
+CellPoissonFACOps::buildObject(
+   const boost::shared_ptr<tbox::Database>& input_db)
 {
    if (d_dim == tbox::Dimension(1) || d_dim > tbox::Dimension(3)) {
       TBOX_ERROR("CellPoissonFACOps : DIM == 1 or > 3 not implemented yet.\n");
@@ -613,22 +641,21 @@ CellPoissonFACOps::CellPoissonFACOps(
    t_compute_residual_norm = tbox::TimerManager::getManager()->
       getTimer("solv::CellPoissonFACOps::computeResidualNorm()");
 
-   if (!s_cell_scratch_var[dim.getValue() - 1]) {
-      TBOX_ASSERT(!s_cell_scratch_var[dim.getValue() - 1]);
-      TBOX_ASSERT(!s_cell_scratch_var[dim.getValue() - 1]);
+   if (!s_cell_scratch_var[d_dim.getValue() - 1]) {
+      TBOX_ASSERT(!s_cell_scratch_var[d_dim.getValue() - 1]);
 
       std::ostringstream ss;
-      ss << "CellPoissonFACOps::private_cell_scratch" << dim.getValue();
-      s_cell_scratch_var[dim.getValue() - 1].reset(
-         new pdat::CellVariable<double>(dim, ss.str()));
+      ss << "CellPoissonFACOps::private_cell_scratch" << d_dim.getValue();
+      s_cell_scratch_var[d_dim.getValue() - 1].reset(
+         new pdat::CellVariable<double>(d_dim, ss.str()));
       ss.str("");
-      ss << "CellPoissonFACOps::private_flux_scratch" << dim.getValue();
-      s_flux_scratch_var[dim.getValue() - 1].reset(
-         new pdat::SideVariable<double>(dim, ss.str()));
+      ss << "CellPoissonFACOps::private_flux_scratch" << d_dim.getValue();
+      s_flux_scratch_var[d_dim.getValue() - 1].reset(
+         new pdat::SideVariable<double>(d_dim, ss.str()));
       ss.str("");
-      ss << "CellPoissonFACOps::private_oflux_scratch" << dim.getValue();
-      s_oflux_scratch_var[dim.getValue() - 1].reset(
-         new pdat::OutersideVariable<double>(dim, ss.str()));
+      ss << "CellPoissonFACOps::private_oflux_scratch" << d_dim.getValue();
+      s_oflux_scratch_var[d_dim.getValue() - 1].reset(
+         new pdat::OutersideVariable<double>(d_dim, ss.str()));
    }
 
    /*
@@ -638,15 +665,15 @@ CellPoissonFACOps::CellPoissonFACOps(
 
    hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
    d_cell_scratch_id = vdb->
-      registerVariableAndContext(s_cell_scratch_var[dim.getValue() - 1],
+      registerVariableAndContext(s_cell_scratch_var[d_dim.getValue() - 1],
          d_context,
-         hier::IntVector::getOne(dim));
+         hier::IntVector::getOne(d_dim));
    d_flux_scratch_id = vdb->
-      registerVariableAndContext(s_flux_scratch_var[dim.getValue() - 1],
+      registerVariableAndContext(s_flux_scratch_var[d_dim.getValue() - 1],
          d_context,
          hier::IntVector::getZero(d_dim));
    d_oflux_scratch_id = vdb->
-      registerVariableAndContext(s_oflux_scratch_var[dim.getValue() - 1],
+      registerVariableAndContext(s_oflux_scratch_var[d_dim.getValue() - 1],
          d_context,
          hier::IntVector::getZero(d_dim));
 
@@ -654,11 +681,6 @@ CellPoissonFACOps::CellPoissonFACOps(
     * Check input validity and correctness.
     */
    checkInputPatchDataIndices();
-
-}
-
-CellPoissonFACOps::~CellPoissonFACOps()
-{
 }
 
 /*
@@ -680,9 +702,6 @@ CellPoissonFACOps::getFromInput(
       d_coarse_solver_max_iterations =
          input_db->getIntegerWithDefault("coarse_solver_max_iterations",
             d_coarse_solver_max_iterations);
-      d_smoothing_choice =
-         input_db->getStringWithDefault("smoothing_choice",
-            d_smoothing_choice);
 
       d_cf_discretization =
          input_db->getStringWithDefault("cf_discretization",
@@ -693,8 +712,7 @@ CellPoissonFACOps::getFromInput(
             d_prolongation_method);
 
       d_enable_logging =
-         input_db->getBoolWithDefault("enable_logging",
-            d_enable_logging);
+         input_db->getBoolWithDefault("enable_logging", d_enable_logging);
    }
 }
 
@@ -870,14 +888,14 @@ CellPoissonFACOps::initializeOperatorState(
    }
 #ifdef HAVE_HYPRE
    if (d_coarse_solver_choice == "hypre") {
-      d_hypre_solver.initializeSolverState(d_hierarchy, d_ln_min);
+      d_hypre_solver->initializeSolverState(d_hierarchy, d_ln_min);
       /*
        * Share the boundary condition object with the hypre solver
        * to make sure that boundary condition settings are consistent
        * between the two objects.
        */
-      d_hypre_solver.setPhysicalBcCoefObject(d_physical_bc_coef);
-      d_hypre_solver.setMatrixCoefficients(d_poisson_spec);
+      d_hypre_solver->setPhysicalBcCoefObject(d_physical_bc_coef);
+      d_hypre_solver->setMatrixCoefficients(d_poisson_spec);
    }
 #endif
 
@@ -1100,7 +1118,7 @@ CellPoissonFACOps::deallocateOperatorState()
       }
       d_cf_boundary.resizeArray(0);
 #ifdef HAVE_HYPRE
-      d_hypre_solver.deallocateSolverState();
+      d_hypre_solver->deallocateSolverState();
 #endif
       d_hierarchy.reset();
       d_ln_min = -1;
@@ -1295,17 +1313,11 @@ CellPoissonFACOps::smoothError(
    t_smooth_error->start();
 
    checkInputPatchDataIndices();
-   if (d_smoothing_choice == "redblack") {
-      smoothErrorByRedBlack(data,
-         residual,
-         ln,
-         num_sweeps,
-         d_residual_tolerance_during_smoothing);
-   } else {
-      TBOX_ERROR(d_object_name << ": Bad smoothing choice '"
-                               << d_smoothing_choice
-                               << "' in CellPoissonFACOps.");
-   }
+   smoothErrorByRedBlack(data,
+      residual,
+      ln,
+      num_sweeps,
+      d_residual_tolerance_during_smoothing);
 
    t_smooth_error->stop();
 }
@@ -1716,10 +1728,10 @@ CellPoissonFACOps::solveCoarsestLevel_HYPRE(
 #else
 
    checkInputPatchDataIndices();
-   d_hypre_solver.setStoppingCriteria(d_coarse_solver_max_iterations,
+   d_hypre_solver->setStoppingCriteria(d_coarse_solver_max_iterations,
       d_coarse_solver_tolerance);
    const int solver_ret =
-      d_hypre_solver.solveSystem(
+      d_hypre_solver->solveSystem(
          data.getComponentDescriptorIndex(0),
          residual.getComponentDescriptorIndex(0),
          true);
@@ -1730,8 +1742,8 @@ CellPoissonFACOps::solveCoarsestLevel_HYPRE(
    if (d_enable_logging) tbox::plog
       << d_object_name << " Hypre solve " << (solver_ret ? "" : "NOT ")
       << "converged\n"
-      << "\titerations: " << d_hypre_solver.getNumberOfIterations() << "\n"
-      << "\tresidual: " << d_hypre_solver.getRelativeResidualNorm() << "\n";
+      << "\titerations: " << d_hypre_solver->getNumberOfIterations() << "\n"
+      << "\tresidual: " << d_hypre_solver->getRelativeResidualNorm() << "\n";
 
    return !solver_ret;
 

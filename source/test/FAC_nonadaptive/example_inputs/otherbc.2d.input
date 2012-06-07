@@ -25,47 +25,52 @@ Main {
   vis_writer = "Vizamrai", "VisIt"
 }
 
-FACPoisson {
-  // The FACPoisson class is the "user class" in this example.
-  // It owns the solver and contains the code to set up the solver.
-  // The inputs for FACPoisson is simply the inputs for the individual
-  // parts owned by the FACPoisson class.
-  fac_solver {
-    // This is the input for the cell-centered Poisson FAC solver
-    // class in the SAMRAI library.
-    enable_logging = TRUE   // Bool flag to switch logging on/off
-    max_cycles = 10         // Max number of FAC cycles to use
-    residual_tol = 1e-8     // Residual tolerance to solve for
-    num_pre_sweeps = 1      // Number of presmoothing sweeps to use
-    num_post_sweeps = 3     // Number of postsmoothing sweeps to use
-    prolongation_method = "LINEAR_REFINE" // Type of refinement
-      					  // used in prolongation.
-                                          // Suggested values are
-                                          // "LINEAR_REFINE"
-                                          // "CONSTANT_REFINE"
-    use_smg = TRUE	// Whether to use HYPRE's SMG instead of PFMG.
-  }
-  bc_coefs {
-    // These are the boundary condition specifications.  The number
-    // after "boundary_" is the location index of the boundary.
-    // The inputs are arrays of strings where the first string
-    // indicates the type of values you want to set.  "slope" means
-    // boundary slope, "value" means boundary value, and "coefficients"
-    // mean the raw Robin boundary condition coefficients.
-    // The remaining strings are converted into numbers as
-    // appropriate for what boundary condition you specified with
-    // the first string.  Other boundary conditions are possible.
-    // see the solv_RobinBcCoefStrategy class.
-    // Examples:
-    // boundary_0 = "slope", "0"
-    // boundary_1 = "coefficients", "0", "0"
-    // boundary_2 = "value", "0"
-    // boundary_3 = "value", "0"
-    boundary_0 = "slope", "0"
-    boundary_1 = "coefficients", "0", "0"
-    boundary_2 = "value", "0"
-    boundary_3 = "value", "0"
-  }
+fac_solver {
+  // This is the input for the cell-centered Poisson FAC solver
+  // class in the SAMRAI library.
+  enable_logging = TRUE   // Bool flag to switch logging on/off
+}
+
+fac_precond {
+  max_cycles = 10         // Max number of FAC cycles to use
+  residual_tol = 1e-8     // Residual tolerance to solve for
+  num_pre_sweeps = 1      // Number of presmoothing sweeps to use
+  num_post_sweeps = 3     // Number of postsmoothing sweeps to use
+}
+
+fac_ops {
+  prolongation_method = "LINEAR_REFINE" // Type of refinement
+                                        // used in prolongation.
+                                        // Suggested values are
+                                        // "LINEAR_REFINE"
+                                        // "CONSTANT_REFINE"
+  enable_logging = TRUE   // Bool flag to switch logging on/off
+}
+
+hypre_poisson {
+  use_smg = TRUE        // Whether to use HYPRE's SMG instead of PFMG.
+}
+
+bc_coefs {
+  // These are the boundary condition specifications.  The number
+  // after "boundary_" is the location index of the boundary.
+  // The inputs are arrays of strings where the first string
+  // indicates the type of values you want to set.  "slope" means
+  // boundary slope, "value" means boundary value, and "coefficients"
+  // mean the raw Robin boundary condition coefficients.
+  // The remaining strings are converted into numbers as
+  // appropriate for what boundary condition you specified with
+  // the first string.  Other boundary conditions are possible.
+  // see the solv_RobinBcCoefStrategy class.
+  // Examples:
+  // boundary_0 = "slope", "0"
+  // boundary_1 = "coefficients", "0", "0"
+  // boundary_2 = "value", "0"
+  // boundary_3 = "value", "0"
+  boundary_0 = "slope", "0"
+  boundary_1 = "coefficients", "0", "0"
+  boundary_2 = "value", "0"
+  boundary_3 = "value", "0"
 }
 
 CartesianGridGeometry {

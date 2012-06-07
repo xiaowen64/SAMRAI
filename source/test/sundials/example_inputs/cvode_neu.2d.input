@@ -36,8 +36,6 @@ CVODEModel {
 
    initial_value         = 0.0
 
-   max_fac_its           = 1
-   fac_tol               = 1.e-40
    max_hypre_its         = 1
    hypre_tol             = 1.e-40
    use_neumann_bcs      = TRUE 
@@ -81,6 +79,15 @@ CVODEModel {
       }
    }
 
+}
+
+fac_precond {
+   max_cycles           = 1
+   residual_tol         = 1.e-40
+}
+
+hypre_solver {
+   use_smg              = FALSE
 }
 
 StandardTagAndInitialize{

@@ -71,7 +71,7 @@ public:
     */
    FACPreconditioner(
       const std::string& name,
-      FACOperatorStrategy& user_ops,
+      boost::shared_ptr<FACOperatorStrategy> user_ops,
       const boost::shared_ptr<tbox::Database>& input_db =
          boost::shared_ptr<tbox::Database>());
 
@@ -221,66 +221,6 @@ public:
 
    //@{
    //! @name Functions to set solving parameters.
-
-   /*!
-    * @brief Set the number of pre-smoothing sweeps during
-    * FAC iteration process.
-    *
-    * Presmoothing is applied during the fine-to-coarse phase of the
-    * iteration.  The default is to use one sweep.
-    *
-    * @param num_pre_sweeps Number of presmoothing sweeps
-    */
-   void
-   setPresmoothingSweeps(
-      int num_pre_sweeps)
-   {
-      d_presmoothing_sweeps = num_pre_sweeps;
-   }
-
-   /*!
-    * @brief Set the number of post-smoothing sweeps during
-    * FAC iteration process.
-    *
-    * Postsmoothing is applied during the coarse-to-fine phase of the
-    * iteration.  The default is to use one sweep.
-    *
-    * @param num_post_sweeps Number of postsmoothing sweeps
-    */
-   void
-   setPostsmoothingSweeps(
-      int num_post_sweeps)
-   {
-      d_postsmoothing_sweeps = num_post_sweeps;
-   }
-
-   /*!
-    * @brief Set the max number of iterations (cycles) to use per solve.
-    */
-   void
-   setMaxCycles(
-      int max_cycles)
-   {
-      d_max_iterations = max_cycles;
-   }
-
-   /*!
-    * @brief Set the residual tolerance for stopping.
-    *
-    * The solution is considered converged if ||b-Ax|| <= residual_tol
-    * @b or ||b-Ax|| <= relative_residual_tol*||b||.
-    *
-    * If you want the prescribed maximum number of cycles to always be taken,
-    * set both residual tolerances to negative numbers.
-    */
-   void
-   setResidualTolerance(
-      double residual_tol,
-      double relative_residual_tol = -1.0)
-   {
-      d_residual_tolerance = residual_tol;
-      d_relative_residual_tolerance = relative_residual_tol;
-   }
 
    /*!
     * @brief Set the choice of FAC cycling algorithm to use.
@@ -587,7 +527,7 @@ private:
     *
     * Reference is initialized by constructor @em never changes.
     */
-   FACOperatorStrategy& d_fac_operator;
+   boost::shared_ptr<FACOperatorStrategy> d_fac_operator;
 
    //@{
    /*!

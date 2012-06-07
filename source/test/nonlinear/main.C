@@ -52,6 +52,9 @@ using namespace std;
 #ifdef HAVE_SUNDIALS
 #include "SAMRAI/solv/KINSOL_SAMRAIContext.h"
 #endif
+#ifdef HAVE_HYPRE
+#include "SAMRAI/solv/CellPoissonHypreSolver.h"
+#endif
 #include "ModifiedBratuProblem.h"
 #include "SAMRAI/solv/NonlinearSolverStrategy.h"
 
@@ -288,11 +291,64 @@ int main(
             grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
-      ModifiedBratuProblem* bratu_model = new ModifiedBratuProblem(
-            "ModifiedBratuProblem",
+      std::string mod_bratu_prob_name = "ModifiedBratuProblem";
+      std::string fac_solver_name = mod_bratu_prob_name + ":FAC_solver";
+      std::string fac_ops_name = fac_solver_name + "::fac_ops";
+      std::string fac_precond_name = fac_solver_name + "::fac_precond";
+      std::string hypre_poisson_name = fac_ops_name + "::hypre_solver";
+
+#ifdef HAVE_HYPRE
+      boost::shared_ptr<solv::CellPoissonHypreSolver> hypre_poisson(
+         new solv::CellPoissonHypreSolver(
             dim,
+            hypre_poisson_name,
+            input_db->isDatabase("hypre_solver") ?
+            input_db->getDatabase("hypre_solver") :
+            boost::shared_ptr<tbox::Database>()));
+
+      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+         new solv::CellPoissonFACOps(
+            hypre_poisson,
+            dim,
+            fac_ops_name,
+            input_db->isDatabase("fac_ops") ?
+            input_db->getDatabase("fac_ops") :
+            boost::shared_ptr<tbox::Database>()));
+#else
+      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+         new solv::CellPoissonFACOps(
+            dim,
+            fac_ops_name,
+            input_db->isDatabase("fac_ops") ?
+            input_db->getDatabase("fac_ops") :
+            boost::shared_ptr<tbox::Database>()));
+#endif
+
+      boost::shared_ptr<solv::FACPreconditioner> fac_precond(
+         new solv::FACPreconditioner(
+            fac_precond_name,
+            fac_ops,
+            input_db->isDatabase("fac_precond") ?
+            input_db->getDatabase("fac_precond") :
+            boost::shared_ptr<tbox::Database>()));
+
+      boost::shared_ptr<solv::CellPoissonFACSolver> fac_solver(
+         new solv::CellPoissonFACSolver(
+            dim,
+            fac_solver_name,
+            fac_precond,
+            fac_ops,
+            input_db->isDatabase("fac_solver") ?
+            input_db->getDatabase("fac_solver") :
+            boost::shared_ptr<tbox::Database>()));
+
+      ModifiedBratuProblem* bratu_model = new ModifiedBratuProblem(
+            mod_bratu_prob_name,
+            dim,
+            fac_solver,
             input_db->getDatabase("ModifiedBratuProblem"),
-            grid_geometry, visit_data_writer);
+            grid_geometry,
+            visit_data_writer);
 
       solv::NonlinearSolverStrategy* nonlinear_solver = NULL;
 
