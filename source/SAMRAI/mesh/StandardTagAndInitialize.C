@@ -1096,7 +1096,170 @@ StandardTagAndInitialize::getFromInput(
        * which this class is derived.
        */
       if (d_use_refine_boxes) {
-         TagAndInitializeStrategy::getFromInput(input_db);
+         /*
+          * Read refine boxes.
+          */
+         if (!input_db->keyExists("RefineBoxes")) {
+            TBOX_ERROR("If REFINE_BOXES is used as a tagging_method, you must\n"
+               << "provide a `RefineBoxes' database entry in the input\n"
+               << "to specify the level boxes to be refined.  See header\n"
+               << "for TagAndInitializeStrategy class for \n"
+               << "discussion of the entry format." << std::endl);
+         }
+         boost::shared_ptr<tbox::Database> refine_box_db(
+            input_db->getDatabase("RefineBoxes"));
+         tbox::Array<std::string> box_keys = refine_box_db->getAllKeys();
+         int nkeys = box_keys.getSize();
+         if (nkeys == 0) {
+            TBOX_ERROR(
+               getObjectName() << "::getFromInput \n"
+                               << "No refine boxes supplied." << std::endl);
+         }
+
+         d_refine_boxes.resizeArray(nkeys);
+         d_refine_boxes_cycles.resizeArray(nkeys);
+         d_refine_boxes_times.resizeArray(nkeys);
+         d_refine_boxes_use_times.resizeArray(nkeys);
+         d_refine_boxes_cycle_counter.resizeArray(nkeys);
+         d_refine_boxes_old_seq_num.resizeArray(nkeys);
+
+         /*
+          * Do a check here to see if we are using the "old" version of input
+          * (i.e. v1.3.1 or before) which only allows you to specify a single
+          * set of refine boxes, or the "new" input format which allows you
+          * to specify a specified sequence of refine boxes.
+          */
+         bool use_new_input = false;
+         for (int ln = 0; ln < nkeys; ln++) {
+            std::string level_boxes_name =
+               "level_" + tbox::Utilities::intToString(ln);
+            if (refine_box_db->isDatabase(level_boxes_name)) {
+               use_new_input = true;
+            }
+
+            /*
+             * Set counter for each level to zero.
+             */
+            d_refine_boxes_cycle_counter[ln] = 0;
+
+            /*
+             * Set old sequence number to -1, assuring it will always
+             * interpret a new sequence at initialization, when the
+             * counter is zero.
+             */
+            d_refine_boxes_old_seq_num[ln] = -1;
+         }
+
+         if (use_new_input) {
+            /*
+             * We are using the updated input format that allows multiple
+             * sequence entries.
+             */
+            for (int ln = 0; ln < nkeys; ln++) {
+               std::string level_boxes_name =
+                  "level_" + tbox::Utilities::intToString(ln);
+               if (!refine_box_db->keyExists(level_boxes_name)) {
+                  TBOX_ERROR(
+                     getObjectName() << "::getFromInput \n"
+                                     << "Expected sub-database level entries in the\n"
+                                     << " 'RefineBoxes' database to specify boxes for\n"
+                                     << "  different time or cycle sequences: \n"
+                                     << "  e.g.  Level0 { boxes_0 = <box array> \n"
+                                     << "                 boxes_1 = <box array> \n"
+                                     << "                 ...} \n"
+                                     << "        Level1 { boxes_0 = <box array> \n"
+                                     << "                 ...} \n"
+                                     << "See header for this class for further discussion\n"
+                                     << "of the expected input format."
+                                     << std::endl);
+               }
+               boost::shared_ptr<tbox::Database> level_refine_box_db(
+                  refine_box_db->getDatabase(level_boxes_name));
+
+               /*
+                * Read cycles.
+                */
+               bool use_cycles = false;
+               if (level_refine_box_db->keyExists("cycles")) {
+                  d_refine_boxes_cycles[ln] =
+                     level_refine_box_db->getIntegerArray("cycles");
+                  use_cycles = true;
+               } else {
+                  d_refine_boxes_cycles[ln].resizeArray(1);
+                  d_refine_boxes_cycles[ln][0] = 0;
+               }
+
+               /*
+                * Read times.
+                */
+               if (level_refine_box_db->keyExists("times")) {
+                  d_refine_boxes_use_times[ln] = true;
+                  d_refine_boxes_times[ln] =
+                     level_refine_box_db->getDoubleArray("times");
+                  if (use_cycles) {
+                     TBOX_WARNING(
+                        getObjectName() << "::getFromInput \n"
+                                        << "You have entries for both 'cycles' "
+                                      << "and 'times' for level " << ln
+                                      << ".\n Because 'times' takes precedence, the "
+                                      << "'cycles' entries will be ignored." << std::endl);
+                  }
+               } else {
+                  d_refine_boxes_times[ln].resizeArray(1);
+                  d_refine_boxes_times[ln][0] = 0.;
+                  d_refine_boxes_use_times[ln] = false;
+               }
+
+               /*
+                * Use the size of the "cycles" or "times" arrays to govern
+                * how many boxes entries there may be.
+                */
+               int max_seq = 1;
+               if (d_refine_boxes_use_times[ln]) {
+                  max_seq = d_refine_boxes_times[ln].getSize();
+               } else {
+                  max_seq = d_refine_boxes_cycles[ln].getSize();
+               }
+               d_refine_boxes[ln].resizeArray(max_seq);
+
+               /*
+                * Read boxes.
+                */
+               for (int i = 0; i < max_seq; i++) {
+                  std::string boxes_name =
+                     "boxes_" + tbox::Utilities::intToString(i);
+                  if (level_refine_box_db->keyExists(boxes_name)) {
+                     d_refine_boxes[ln][i] =
+                        level_refine_box_db->getDatabaseBoxArray(boxes_name);
+                  }
+                  else {
+                     TBOX_ERROR(
+                        getObjectName() << "::getFromInput \n"
+                                        << "Refine boxes input not supplied for "
+                                        << i << "th cycle or time for level "
+                                        << ln << "." << std::endl);
+                  }
+               }
+
+            } // loop over levels
+         } else {
+
+            for (int ln = 0; ln < nkeys; ln++) {
+               std::string level_boxes_name =
+                   "level_" + tbox::Utilities::intToString(ln);
+               d_refine_boxes[ln].resizeArray(1);
+               d_refine_boxes_cycles[ln].resizeArray(1);
+               d_refine_boxes_times[ln].resizeArray(1);
+
+               if (refine_box_db->keyExists(level_boxes_name)) {
+                  d_refine_boxes[ln][0] =
+                     refine_box_db->getDatabaseBoxArray(level_boxes_name);
+               }
+               d_refine_boxes_cycles[ln][0] = 0;
+               d_refine_boxes_times[ln][0] = 0.;
+               d_refine_boxes_use_times[ln] = false;
+            }
+         } // not using new input format
       }
    }
    else {

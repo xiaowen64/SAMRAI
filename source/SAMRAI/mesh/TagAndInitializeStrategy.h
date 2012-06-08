@@ -324,14 +324,6 @@ public:
    refineUserBoxInputOnly() const = 0;
 
    /*!
-    * Read user supplied refine boxes from the provided database.  The input
-    * database must be non-null, or an unrecoverable assertion will be thrown.
-    */
-   void
-   getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db);
-
-   /*!
     * Return the dimension of this object.
     */
    const tbox::Dimension&
@@ -349,11 +341,7 @@ public:
       return d_object_name;
    }
 
-private:
-   const tbox::Dimension d_dim;
-
-   std::string d_object_name;
-
+protected:
    /*
     * Arrays of data for user-specified refinement.  The user controls
     * the particular boxes to be used for refinement by specifying
@@ -381,6 +369,11 @@ private:
    tbox::Array<bool> d_refine_boxes_reset;
    tbox::Array<hier::BoxContainer> d_reset_refine_boxes;
    tbox::Array<int> d_refine_boxes_old_seq_num;
+
+private:
+   const tbox::Dimension d_dim;
+
+   std::string d_object_name;
 
    // The following are not implemented:
    TagAndInitializeStrategy(
