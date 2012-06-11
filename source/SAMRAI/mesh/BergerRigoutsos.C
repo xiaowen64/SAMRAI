@@ -98,25 +98,25 @@ BergerRigoutsos::getFromInput(
             d_dim.getValue());
       }
       d_max_lap_cut_from_center =
-         input_db->getDoubleWithDefault("max_lap_cut_from_center",
+         input_db->getDoubleWithDefault("DEV_max_lap_cut_from_center",
             d_max_lap_cut_from_center);
       d_laplace_cut_threshold_ar =
-         input_db->getDoubleWithDefault("laplace_cut_threshold_ar",
+         input_db->getDoubleWithDefault("DEV_laplace_cut_threshold_ar",
             d_laplace_cut_threshold_ar);
       d_log_node_history =
-         input_db->getBoolWithDefault("log_node_history",
+         input_db->getBoolWithDefault("DEV_log_node_history",
             d_log_node_history);
       d_log_cluster_summary =
-         input_db->getBoolWithDefault("log_cluster_summary",
+         input_db->getBoolWithDefault("DEV_log_cluster_summary",
             d_log_cluster_summary);
       d_log_cluster =
-         input_db->getBoolWithDefault("log_cluster",
+         input_db->getBoolWithDefault("DEV_log_cluster",
             d_log_cluster);
       d_algo_advance_mode =
-         input_db->getStringWithDefault("algo_advance_mode",
+         input_db->getStringWithDefault("DEV_algo_advance_mode",
             d_algo_advance_mode);
       d_owner_mode =
-         input_db->getStringWithDefault("owner_mode",
+         input_db->getStringWithDefault("DEV_owner_mode",
             d_owner_mode);
       d_sort_output_nodes =
          input_db->getBoolWithDefault("sort_output_nodes",
@@ -135,10 +135,10 @@ BergerRigoutsos::getFromInput(
       }
 
       d_barrier_before =
-         input_db->getBoolWithDefault("barrier_before",
+         input_db->getBoolWithDefault("DEV_barrier_before",
             d_barrier_before);
       d_barrier_after =
-         input_db->getBoolWithDefault("barrier_after",
+         input_db->getBoolWithDefault("DEV_barrier_after",
             d_barrier_after);
    }
 }
@@ -266,8 +266,8 @@ BergerRigoutsos::findBoxesContainingTags(
       efficiency_tol,
       combine_tol,
       d_max_box_size,
-                                     d_max_lap_cut_from_center,
-                                     d_laplace_cut_threshold_ar);
+      d_max_lap_cut_from_center,
+      d_laplace_cut_threshold_ar);
 
    // Set the parallel algorithm and DLBG parameters.
    root_node.setAlgorithmAdvanceMode(d_algo_advance_mode);
