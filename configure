@@ -20705,7 +20705,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20709:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20708:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20719,7 +20719,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20723:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20722:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 

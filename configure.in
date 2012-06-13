@@ -21,6 +21,10 @@ AH_TOP([
 ])
 AH_BOTTOM([
 
+namespace SAMRAI {
+   static const unsigned short MAX_DIM_VAL = SAMRAI_MAXIMUM_DIMENSION;
+}
+
 /*
  * Prevent inclusion of mpi C++ bindings in mpi.h includes.
  * This is done in here rather than SAMRAI_MPI.h since other
