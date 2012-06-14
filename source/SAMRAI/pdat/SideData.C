@@ -499,12 +499,12 @@ SideData<TYPE>::packStream(
    if (t_overlap->getTransformation().getRotation() ==
        hier::Transformation::NO_ROTATE) {
 
-      const hier::IntVector& offset = t_overlap->getSourceOffset();
+      const hier::Transformation& transformation = t_overlap->getTransformation();
       for (int d = 0; d < getDim().getValue(); d++) {
          if (d_directions(d)) {
             const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
             if (boxes.size() > 0) {
-               d_data[d]->packStream(stream, boxes, offset);
+               d_data[d]->packStream(stream, boxes, transformation);
             }
          }
       }

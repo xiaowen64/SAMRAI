@@ -194,6 +194,22 @@ public:
    }
 
    /*!
+    * @brief Get the BlockId for the Box before transformation.
+    */ 
+   const BlockId& getBeginBlock() const
+   {
+      return d_begin_block;
+   }
+
+   /*!
+    * @brief Get the BlockId for the Box after transformation.
+    */
+   const BlockId& getEndBlock() const
+   {
+      return d_end_block;
+   }
+
+   /*!
     * @brief Map a string-based identifier of a rotation operation to a
     * RotationIdentifier value.
     *

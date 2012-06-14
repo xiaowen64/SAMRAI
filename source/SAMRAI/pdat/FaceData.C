@@ -272,8 +272,13 @@ FaceData<TYPE>::copy2(
                face_offset(i) = src_offset((d + i) % getDim().getValue());
             }
          }
+         hier::Transformation transform(hier::Transformation::NO_ROTATE,
+                                        face_offset,
+                                        getBox().getBlockId(),
+                                        t_dst->getBox().getBlockId());
+
          const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer(d);
-         t_dst->d_data[d]->copy(*(d_data[d]), box_list, face_offset);
+         t_dst->d_data[d]->copy(*(d_data[d]), box_list, transform);
       }
    } else {
       t_dst->copyWithRotation(*this, *t_overlap);
@@ -445,7 +450,9 @@ FaceData<TYPE>::packStream(
 
    TBOX_ASSERT(t_overlap != NULL);
 
-   if (t_overlap->getTransformation().getRotation() ==
+   const hier::Transformation& transformation =
+      t_overlap->getTransformation();
+   if (transformation.getRotation() ==
        hier::Transformation::NO_ROTATE) {
       const hier::IntVector& offset = t_overlap->getSourceOffset();
       for (int d = 0; d < getDim().getValue(); d++) {
@@ -455,9 +462,14 @@ FaceData<TYPE>::packStream(
                face_offset(i) = offset((d + i) % getDim().getValue());
             }
          }
+         hier::Transformation transform(hier::Transformation::NO_ROTATE,
+                                        face_offset,
+                                        transformation.getBeginBlock(),
+                                        transformation.getEndBlock());
+
          const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
          if (boxes.size() > 0) {
-            d_data[d]->packStream(stream, boxes, face_offset);
+            d_data[d]->packStream(stream, boxes, transform);
          }
       }
    } else {
@@ -553,6 +565,7 @@ FaceData<TYPE>::unpackStream(
             face_offset(i) = offset((d + i) % getDim().getValue());
          }
       }
+
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
       if (boxes.size() > 0) {
          d_data[d]->unpackStream(stream, boxes, face_offset);
