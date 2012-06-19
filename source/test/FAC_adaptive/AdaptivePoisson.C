@@ -280,7 +280,7 @@ AdaptivePoisson::AdaptivePoisson(
 #endif
    tbox::plog << "Problem name is: " << d_problem_name << "\n\n" << std::endl;
 
-   d_fac_ops->setPreconditioner(d_fac_preconditioner);
+   d_fac_ops->setPreconditioner(d_fac_preconditioner.get());
 }
 
 void AdaptivePoisson::initializeLevelData(

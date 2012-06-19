@@ -76,7 +76,7 @@ CellPoissonFACSolver::CellPoissonFACSolver(
     * The FAC operator optionally uses the preconditioner
     * to get data for logging.
     */
-   d_fac_ops->setPreconditioner(d_fac_precond);
+   d_fac_ops->setPreconditioner(d_fac_precond.get());
 
    // Read user input.
    getFromInput(input_db);

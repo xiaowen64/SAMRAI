@@ -288,7 +288,7 @@ public:
     */
    void
    setPreconditioner(
-      const boost::shared_ptr<FACPreconditioner> preconditioner)
+      const FACPreconditioner* preconditioner)
    {
       d_preconditioner = preconditioner;
    }
@@ -929,9 +929,15 @@ private:
    /*!
     * @brief Preconditioner using this object.
     *
+    * This must remain a raw pointer.  Do not attempt to make this a smart
+    * pointer.  The preconditioner and this class have data members referring
+    * to each other.  If this is made into a smart pointer then things will not
+    * tear themselves down properly leading to memory leaks unless there is
+    * explicit action to reset the smart pointer.
+    *
     * See setPreconditioner().
     */
-   boost::shared_ptr<FACPreconditioner> d_preconditioner;
+   const FACPreconditioner* d_preconditioner;
 
    /*!
     * @brief Hierarchy cell operator used in debugging.
