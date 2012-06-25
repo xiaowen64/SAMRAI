@@ -258,8 +258,8 @@ private:
     * boundary will be empty.
     *
     * @param[in] level
-    * @param[in] mapped_box_level_to_domain
-    * @param[in] mapped_box_level_to_self
+    * @param[in] level_to_domain Connector from level to physical domain level
+    * @param[in] level_to_level  Connector from level to itself
     * @param[in] max_ghost_width The ghost width determines the extent of the
     *                            boundary boxes along the level domain boundary,
     *                            similar to regular domain boundary boxes.  Note
@@ -270,8 +270,8 @@ private:
    void
    computeFromLevel(
       const PatchLevel& level,
-      const Connector& mapped_box_level_to_domain,
-      const Connector& mapped_box_level_to_self,
+      const Connector& level_to_domain,
+      const Connector& level_to_level,
       const IntVector& max_ghost_width);
 
    /*!
@@ -284,7 +284,8 @@ private:
     * boundary will be empty.
     *
     * @param[in] level
-    * @param[in] level0
+    * @param[in] level_to_domain Connector from level to physical domain level
+    * @param[in] level_to_level  Connector from level to itself
     * @param[in] max_ghost_width The ghost width determines the extent of the
     *                            boundary boxes along the level domain boundary,
     *                            similar to regular domain boundary boxes.  Note
@@ -293,9 +294,10 @@ private:
     *                            direction perpendicular to the patch boundary.
     */
    void
-   computeFromLevel(
+   computeFromMultiblockLevel(
       const PatchLevel& level,
-      const PatchLevel& level0,
+      const Connector& level_to_domain,
+      const Connector& level_to_level,
       const IntVector& max_ghost_width);
 
    /*!
