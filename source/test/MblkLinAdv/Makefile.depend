@@ -205,6 +205,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	MblkHyperbolicLevelIntegrator.C MblkHyperbolicLevelIntegrator.h	\
 	MblkHyperbolicPatchStrategy.h
@@ -310,6 +311,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	MblkHyperbolicPatchStrategy.C MblkHyperbolicPatchStrategy.h
 
@@ -459,6 +461,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h GeomUtilsAMR.h	\
 	MblkGeometry.h MblkHyperbolicLevelIntegrator.h			\
 	MblkHyperbolicPatchStrategy.h MblkLinAdv.C MblkLinAdv.h		\
@@ -578,6 +581,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	MblkHyperbolicLevelIntegrator.h MblkHyperbolicPatchStrategy.h	\
 	Pointer-MblkHyperbolicLevelIntegrator.C
@@ -1281,6 +1285,7 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h MblkGeometry.h	\
 	MblkHyperbolicLevelIntegrator.h MblkHyperbolicPatchStrategy.h	\
 	MblkLinAdv.h SkeletonCellDoubleConservativeLinearRefine.h	\

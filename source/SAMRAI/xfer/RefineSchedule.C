@@ -114,6 +114,7 @@ RefineSchedule::RefineSchedule(
    d_dst_level(dst_level),
    d_src_level(src_level),
    d_refine_patch_strategy(patch_strategy),
+   d_singularity_patch_strategy(dynamic_cast<SingularityPatchStrategy*>(patch_strategy)),
    d_transaction_factory(transaction_factory),
    d_max_stencil_width(dst_level->getDim()),
    d_max_scratch_gcw(dst_level->getDim()),
@@ -147,6 +148,16 @@ RefineSchedule::RefineSchedule(
    getFromInput();
 
    const tbox::Dimension& dim(dst_level->getDim());
+
+   if ( dst_level->getGridGeometry()->getNumberOfBlockSingularities() > 0 &&
+        !d_singularity_patch_strategy ) {
+      TBOX_ERROR("RefineSchedule: Schedules for meshes with singularities\n"
+                 <<"requires a SingularityPatchStrategy implementation along\n"
+                 <<"with the RefinePatchStrategy.  To do this,\n"
+                 <<"inherit SinglarityPatchStrategy with the user class\n"
+                 <<"that inherited RefinePatchStrategy and implement\n"
+                 <<"the SingularityPatchStrategy pure virtual methods.");
+   }
 
    setRefineItems(refine_classes);
    initialCheckRefineClassItems();
@@ -296,6 +307,7 @@ RefineSchedule::RefineSchedule(
    d_dst_level(dst_level),
    d_src_level(src_level),
    d_refine_patch_strategy(patch_strategy),
+   d_singularity_patch_strategy(dynamic_cast<SingularityPatchStrategy*>(patch_strategy)),
    d_transaction_factory(transaction_factory),
    d_max_stencil_width(dst_level->getDim()),
    d_max_scratch_gcw(dst_level->getDim()),
@@ -332,6 +344,16 @@ RefineSchedule::RefineSchedule(
    getFromInput();
 
    const tbox::Dimension& dim(dst_level->getDim());
+
+   if ( dst_level->getGridGeometry()->getNumberOfBlockSingularities() > 0 &&
+        !d_singularity_patch_strategy ) {
+      TBOX_ERROR("RefineSchedule: Schedules for meshes with singularities\n"
+                 <<"requires a SingularityPatchStrategy implementation along\n"
+                 <<"with the RefinePatchStrategy.  To do this,\n"
+                 <<"inherit SinglarityPatchStrategy with the user class\n"
+                 <<"that inherited RefinePatchStrategy and implement\n"
+                 <<"the SingularityPatchStrategy pure virtual methods.");
+   }
 
    setRefineItems(refine_classes);
    initialCheckRefineClassItems();
@@ -465,6 +487,7 @@ RefineSchedule::RefineSchedule(
    d_dst_level(dst_level),
    d_src_level(src_level),
    d_refine_patch_strategy(patch_strategy),
+   d_singularity_patch_strategy(dynamic_cast<SingularityPatchStrategy*>(patch_strategy)),
    d_transaction_factory(transaction_factory),
    d_max_stencil_width(dst_level->getDim()),
    d_max_scratch_gcw(dst_level->getDim()),
@@ -1973,7 +1996,9 @@ RefineSchedule::recursiveFill(
       fillPhysicalBoundaries(fill_time);
    }
 
-   fillSingularityBoundaries(fill_time);
+   if ( d_dst_level->getGridGeometry()->getNumberOfBlockSingularities() > 0 ) {
+      fillSingularityBoundaries(fill_time);
+   }
 }
 
 /*
@@ -2031,7 +2056,7 @@ RefineSchedule::fillSingularityBoundaries(
 
       hier::IntVector ratio(d_dst_level->getRatioToLevelZero());
 
-      if (d_refine_patch_strategy) {
+      if (d_singularity_patch_strategy) {
 
          for (int bn = 0; bn < grid_geometry->getNumberBlocks(); bn++) {
 
@@ -2075,14 +2100,12 @@ RefineSchedule::fillSingularityBoundaries(
                                  d_boundary_fill_ghost_width));
 
                            if (!(fill_box.empty())) {
-
-                              d_refine_patch_strategy->
-                              fillSingularityBoundaryConditions(
-                                 *patch, *d_encon_level,
-                                 d_dst_to_encon,
-                                 fill_time, fill_box, nboxes[bb],
-                                 grid_geometry);
-
+                              d_singularity_patch_strategy->
+                                 fillSingularityBoundaryConditions(
+                                    *patch, *d_encon_level,
+                                    d_dst_to_encon,
+                                    fill_box, nboxes[bb],
+                                    grid_geometry);
                            }
                         }
                      }
@@ -2103,13 +2126,12 @@ RefineSchedule::fillSingularityBoundaries(
                                     d_boundary_fill_ghost_width));
 
                               if (!(fill_box.empty())) {
-
-                                 d_refine_patch_strategy->
-                                 fillSingularityBoundaryConditions(
-                                    *patch, *d_encon_level,
-                                    d_dst_to_encon,
-                                    fill_time, fill_box, eboxes[bb],
-                                    grid_geometry);
+                                 d_singularity_patch_strategy->
+                                    fillSingularityBoundaryConditions(
+                                       *patch, *d_encon_level,
+                                       d_dst_to_encon,
+                                       fill_box, eboxes[bb],
+                                       grid_geometry);
                               }
                            }
                         }
@@ -3182,7 +3204,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
     * boundaries, data communicated by this schedule will not be written
     * directly into those ghost regions, but rather into patches on
     * d_encon_level.  This level, once filled with data, will be provided
-    * to RefinePatchStrategy's fillSingularityBoundaryConditions.
+    * to SingularityPatchStrategy's fillSingularityBoundaryConditions.
     */
    hier::BoxLevel encon_box_level(d_dst_level->getRatioToLevelZero(),
                                   grid_geometry);

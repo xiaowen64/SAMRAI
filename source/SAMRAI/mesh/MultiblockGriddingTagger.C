@@ -40,7 +40,8 @@ namespace mesh {
  */
 
 MultiblockGriddingTagger::MultiblockGriddingTagger():
-   xfer::RefinePatchStrategy()
+   xfer::RefinePatchStrategy(),
+   xfer::SingularityPatchStrategy()
 {
 }
 
@@ -127,12 +128,10 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    hier::Patch& patch,
    const hier::PatchLevel& encon_level,
    const hier::Connector& dst_to_encon,
-   const double fill_time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
    const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
 {
-   NULL_USE(fill_time);
    NULL_USE(boundary_box);
    NULL_USE(grid_geometry);
 
@@ -204,8 +203,7 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
                hier::Transformation back_trans(back_rotate, back_shift,
                                                encon_fill_box.getBlockId(),
-                                               encon_patch->getBox().getBlockId()); 
-                                               
+                                               encon_patch->getBox().getBlockId());
 
                boost::shared_ptr<pdat::CellData<int> > sing_data(
                   encon_patch->getPatchData(d_buf_tag_indx),

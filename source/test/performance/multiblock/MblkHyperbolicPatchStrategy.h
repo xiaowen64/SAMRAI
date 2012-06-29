@@ -61,7 +61,8 @@ class MblkHyperbolicLevelIntegrator;
 
 class MblkHyperbolicPatchStrategy:
    public xfer::RefinePatchStrategy,
-   public xfer::CoarsenPatchStrategy
+   public xfer::CoarsenPatchStrategy,
+   public xfer::SingularityPatchStrategy
 {
 public:
    /**

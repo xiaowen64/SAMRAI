@@ -17,6 +17,7 @@
 #include "SAMRAI/xfer/RefineClasses.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
+#include "SAMRAI/xfer/SingularityPatchStrategy.h"
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
@@ -100,11 +101,13 @@ public:
     *                            RefineAlgorithm object.
     * @param[in] transaction_factory  boost::shared_ptr to a factory object
     *                                 that will create data transactions.
-    * @param[in] patch_strategy  boost::shared_ptr to a refine patch strategy
+    * @param[in] patch_strategy  Pointer to a refine patch strategy
     *                            object that provides user-defined physical
     *                            boundary filling operations.   This pointer
     *                            may be null, in which case no boundary filling
-    *                            operations will occur.
+    *                            operations will occur.  If your mesh has a
+    *                            singularity, the object this points to should
+    *                            have also inherited from SingularityPatchStrategy.
     * @param[in] use_time_interpolation  Boolean flag indicating whether to
     *                                    use time interpolation when setting
     *                                    data on the destination level.
@@ -166,11 +169,13 @@ public:
     *                            RefineAlgorithm object.
     * @param[in] transaction_factory  boost::shared_ptr to a factory object
     *                                 that will create data transactions.
-    * @param[in] patch_strategy  boost::shared_ptr to a refine patch strategy
+    * @param[in] patch_strategy  Pointer to a refine patch strategy
     *                            object that provides user-defined physical
     *                            boundary filling operations.  This pointer
     *                            may be null, in which case no boundary filling
-    *                            or user-defined refine operations will occur.
+    *                            or user-defined refine operations will occur.  If your mesh has a
+    *                            singularity, the object this points to should
+    *                            have also inherited from SingularityPatchStrategy.
     * @param[in] use_time_refinement  Boolean flag indicating whether to use
     *                                 time interpolation when setting data
     *                                 on the destination level.  Default
@@ -980,6 +985,12 @@ private:
     * spatial data interpolation operations.
     */
    RefinePatchStrategy* d_refine_patch_strategy;
+
+   /*!
+    * @brief Object supporting interface to user-defined ghost data
+    * filling at block singularities.
+    */
+   SingularityPatchStrategy* d_singularity_patch_strategy;
 
    /*!
     * @brief Factory object used to create data transactions when schedule is

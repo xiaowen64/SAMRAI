@@ -78,10 +78,10 @@ RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
    const hier::IntVector max_data_gcw(
       patch_hierarchy.getPatchDescriptor()->getMaxGhostWidth(dim) * d_gcw_factor);
 
-   const hier::IntVector max_stencil_width(
-      hier::IntVector::max(
-         patch_hierarchy.getGridGeometry()->getMaxTransferOpStencilWidth(dim),
-         RefinePatchStrategy::getMaxRefineOpStencilWidth(dim)));
+   hier::IntVector max_stencil_width =
+      patch_hierarchy.getGridGeometry()->getMaxTransferOpStencilWidth(dim);
+   max_stencil_width.max(
+      RefinePatchStrategy::getMaxRefineOpStencilWidth(dim));
 
    const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
 

@@ -2516,7 +2516,6 @@ void MblkEuler::fillSingularityBoundaryConditions(
    hier::Patch& patch,
    const hier::PatchLevel& encon_level,
    const hier::Connector& dst_to_encon,
-   const double fill_time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
    const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
@@ -2525,7 +2524,6 @@ void MblkEuler::fillSingularityBoundaryConditions(
    NULL_USE(patch);
    NULL_USE(encon_level);
    NULL_USE(dst_to_encon);
-   NULL_USE(fill_time);
    NULL_USE(fill_box);
    NULL_USE(boundary_box);
    NULL_USE(grid_geometry);

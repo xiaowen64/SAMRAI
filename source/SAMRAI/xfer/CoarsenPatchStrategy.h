@@ -55,9 +55,7 @@ public:
     * getCoarsenOpStencilWidth() for every CoarsenPatchStrategy of the
     * given Dimension used in an application.
     *
-    * @param[in] dim   Only objects with this dimension will be used to
-    *                  calculate the max.  If a CoarsenPatchStrategy with
-    *                  another dimension is registered, it will be ignored.
+    * @param[in] dim
     */
    static hier::IntVector
    getMaxCoarsenOpStencilWidth(

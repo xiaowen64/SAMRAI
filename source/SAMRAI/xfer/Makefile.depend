@@ -138,6 +138,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/StandardCoarsenTransactionFactory.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	CoarsenAlgorithm.C
@@ -423,6 +424,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	CoarsenSchedule.C
 
@@ -1056,6 +1058,7 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/StandardRefineTransactionFactory.h	\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	RefineAlgorithm.C
@@ -1358,6 +1361,7 @@ DEPENDS_18:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.h\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTimeTransaction.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	RefineSchedule.C
 
@@ -1592,8 +1596,79 @@ endif
 
 ${FILE_21:X.o=${NDIM}.o}: ${DEPENDS_21}
 
-FILE_22=StandardCoarsenTransactionFactory.o
+FILE_22=SingularityPatchStrategy.o
 DEPENDS_22:=\
+	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSingleBlockIterator.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PersistentOverlapConnectors.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
+	SingularityPatchStrategy.C
+
+ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
+DEPENDS_22 +=\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
+endif
+
+${FILE_22:X.o=${NDIM}.o}: ${DEPENDS_22}
+
+FILE_23=StandardCoarsenTransactionFactory.o
+DEPENDS_23:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -1661,15 +1736,15 @@ DEPENDS_22:=\
 	StandardCoarsenTransactionFactory.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_22 +=\
+DEPENDS_23 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_22:X.o=${NDIM}.o}: ${DEPENDS_22}
+${FILE_23:X.o=${NDIM}.o}: ${DEPENDS_23}
 
-FILE_23=StandardRefineTransactionFactory.o
-DEPENDS_23:=\
+FILE_24=StandardRefineTransactionFactory.o
+DEPENDS_24:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -1738,15 +1813,15 @@ DEPENDS_23:=\
 	StandardRefineTransactionFactory.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_23 +=\
+DEPENDS_24 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_23:X.o=${NDIM}.o}: ${DEPENDS_23}
+${FILE_24:X.o=${NDIM}.o}: ${DEPENDS_24}
 
-FILE_24=VariableFillPattern.o
-DEPENDS_24:=\
+FILE_25=VariableFillPattern.o
+DEPENDS_25:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
@@ -1784,10 +1859,10 @@ DEPENDS_24:=\
 	VariableFillPattern.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_24 +=\
+DEPENDS_25 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_24:X.o=${NDIM}.o}: ${DEPENDS_24}
+${FILE_25:X.o=${NDIM}.o}: ${DEPENDS_25}
 

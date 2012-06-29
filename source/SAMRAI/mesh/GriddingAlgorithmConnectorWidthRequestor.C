@@ -148,7 +148,7 @@ GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFrom
    /*
     * Coarse-to-fine width must be big enough for the [ln] -> [ln+1]
     * Connector to see all the [ln+1] Boxes that are used to add
-    * tags to [ln-1] Boxes for ensuring [ln] properly nests
+    * tags to [ln-1] for ensuring [ln] properly nests
     * [ln+1] when [ln] is being regenerated.
     *
     * The rationale for this adjustment is illustrated by the following

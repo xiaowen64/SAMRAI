@@ -19,6 +19,7 @@ MblkHyperbolicPatchStrategy::MblkHyperbolicPatchStrategy(
    const tbox::Dimension& dim):
    xfer::RefinePatchStrategy(),
    xfer::CoarsenPatchStrategy(),
+   xfer::SingularityPatchStrategy(),
    d_dim(dim)
 {
 }

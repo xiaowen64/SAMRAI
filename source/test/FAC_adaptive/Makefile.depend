@@ -202,6 +202,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	AdaptivePoisson.C AdaptivePoisson.h GaussianFcn.h		\
 	PoissonGaussianDiffcoefSolution.h PoissonGaussianSolution.h	\
@@ -389,6 +390,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h GaussianFcn.h	\
 	PoissonGaussianDiffcoefSolution.C				\
 	PoissonGaussianDiffcoefSolution.h QuarticFcn.h SinusoidFcn.h	\
@@ -506,6 +508,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h GaussianFcn.h	\
 	PoissonGaussianSolution.C PoissonGaussianSolution.h QuarticFcn.h\
 	SinusoidFcn.h patchFcns.h
@@ -622,6 +625,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h GaussianFcn.h	\
 	PoissonMultigaussianSolution.C PoissonMultigaussianSolution.h	\
 	QuarticFcn.h SinusoidFcn.h patchFcns.h
@@ -738,6 +742,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	PoissonPolynomialSolution.C PoissonPolynomialSolution.h		\
 	QuarticFcn.h SinusoidFcn.h patchFcns.h
@@ -854,6 +859,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	PoissonSineSolution.C PoissonSineSolution.h QuarticFcn.h	\
 	SinusoidFcn.h patchFcns.h
@@ -1126,6 +1132,7 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	AdaptivePoisson.h GaussianFcn.h					\
 	PoissonGaussianDiffcoefSolution.h PoissonGaussianSolution.h	\

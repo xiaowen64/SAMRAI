@@ -43,6 +43,7 @@ MultiblockTester::MultiblockTester(
    const string& refine_option):
    xfer::CoarsenPatchStrategy(),
    xfer::RefinePatchStrategy(),
+   xfer::SingularityPatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
    d_data_test_strategy(data_test),
@@ -596,7 +597,6 @@ void MultiblockTester::fillSingularityBoundaryConditions(
    hier::Patch& patch,
    const hier::PatchLevel& encon_level,
    const hier::Connector& dst_to_encon,
-   const double time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
    const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)

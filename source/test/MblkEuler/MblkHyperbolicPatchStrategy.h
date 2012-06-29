@@ -18,6 +18,7 @@
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
+#include "SAMRAI/xfer/SingularityPatchStrategy.h"
 #include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 #include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
 #include "SAMRAI/xfer/RefineSchedule.h"
@@ -53,6 +54,7 @@
  * @see algs::MblkHyperbolicLevelIntegrator
  * @see xfer::RefinePatchStrategy
  * @see xfer::CoarsenPatchStrategy
+ * @see xfer::SingularityPatchStrategy
  */
 
 using namespace SAMRAI;
@@ -61,7 +63,8 @@ class MblkHyperbolicLevelIntegrator;
 
 class MblkHyperbolicPatchStrategy:
    public xfer::RefinePatchStrategy,
-   public xfer::CoarsenPatchStrategy
+   public xfer::CoarsenPatchStrategy,
+   public xfer::SingularityPatchStrategy
 {
 public:
    /**
@@ -353,7 +356,6 @@ public:
       hier::Patch& patch,
       const hier::PatchLevel& encon_level,
       const hier::Connector& dst_to_encon,
-      const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
       const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry) = 0;

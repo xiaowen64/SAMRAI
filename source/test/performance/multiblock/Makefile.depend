@@ -14,6 +14,7 @@
 FILE_0=MblkGeometry.o
 DEPENDS_0:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
@@ -22,6 +23,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
@@ -35,6 +37,9 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
@@ -55,6 +60,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
@@ -211,6 +217,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	MblkHyperbolicLevelIntegrator.C MblkHyperbolicLevelIntegrator.h	\
 	MblkHyperbolicPatchStrategy.h
@@ -317,6 +324,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	MblkHyperbolicPatchStrategy.C MblkHyperbolicPatchStrategy.h
 
@@ -469,6 +477,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h MblkGeometry.h	\
 	MblkHyperbolicLevelIntegrator.h MblkHyperbolicPatchStrategy.h	\
 	MblkLinAdv.C MblkLinAdv.h SkeletonBoundaryUtilities2.h		\
@@ -588,6 +597,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	MblkHyperbolicLevelIntegrator.h MblkHyperbolicPatchStrategy.h	\
 	Pointer-MblkHyperbolicLevelIntegrator.C
@@ -1155,6 +1165,7 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisDerivedDataStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisItDataWriter.h			\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisMaterialsDataStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/geom/GridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -1290,6 +1301,7 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h MblkGeometry.h	\
 	MblkHyperbolicLevelIntegrator.h MblkHyperbolicPatchStrategy.h	\
 	MblkLinAdv.h SkeletonCellDoubleConservativeLinearRefine.h	\

@@ -109,6 +109,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	CellMultiblockTest.C CellMultiblockTest.h MultiblockTester.h	\
 	PatchMultiblockTestStrategy.h
@@ -231,6 +232,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	EdgeMultiblockTest.C EdgeMultiblockTest.h MultiblockTester.h	\
 	PatchMultiblockTestStrategy.h
@@ -355,6 +357,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	FaceMultiblockTest.C FaceMultiblockTest.h MultiblockTester.h	\
 	PatchMultiblockTestStrategy.h
@@ -491,6 +494,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	MultiblockTester.C MultiblockTester.h				\
 	PatchMultiblockTestStrategy.h
@@ -613,6 +617,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	MultiblockTester.h NodeMultiblockTest.C NodeMultiblockTest.h	\
 	PatchMultiblockTestStrategy.h
@@ -730,6 +735,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	MultiblockTester.h PatchMultiblockTestStrategy.C		\
 	PatchMultiblockTestStrategy.h
@@ -832,6 +838,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	MultiblockTester.h Pointer-MultiblockTester.C
 
@@ -946,6 +953,7 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	MultiblockTester.h PatchMultiblockTestStrategy.h		\
 	SideMultiblockTest.C SideMultiblockTest.h
@@ -1093,6 +1101,7 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	CellMultiblockTest.h EdgeMultiblockTest.h FaceMultiblockTest.h	\
 	MultiblockTester.h NodeMultiblockTest.h				\

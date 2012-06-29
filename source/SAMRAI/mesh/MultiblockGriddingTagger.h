@@ -13,6 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
+#include "SAMRAI/xfer/SingularityPatchStrategy.h"
 
 namespace SAMRAI {
 namespace mesh {
@@ -25,7 +26,7 @@ namespace mesh {
  * This class is needed for the calls to RefineSchedule in
  * the GriddingAlgorithm.
  *
- * This class implements the interface from RefinePatchStrategy for
+ * This class implements the interface from SingularityPatchStrategy for
  * fillSingularityBoundaryConditions(), so that boundary conditions for
  * tag data that abuts a singularity can be properly filled.  Also
  * implemented are the interfaces for xfer::RefinePatchStrategy, needed
@@ -37,7 +38,8 @@ namespace mesh {
  */
 
 class MultiblockGriddingTagger:
-   public xfer::RefinePatchStrategy
+      public xfer::RefinePatchStrategy,
+      public xfer::SingularityPatchStrategy
 {
 public:
    /*!
@@ -88,7 +90,6 @@ public:
     * @param encon_level  Level representing enhanced connectivity ghost
     *                     regions
     * @param dst_to_encon  Connector from destination level to encon_level
-    * @param fill_time            Simulation time when filling occurs
     * @param fill_box             All ghost data to be filled will be within
     *                             this box
     * @param boundary_box         BoundaryBox object that stores information
@@ -101,7 +102,6 @@ public:
       hier::Patch& patch,
       const hier::PatchLevel& encon_level,
       const hier::Connector& dst_to_encon,
-      const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
       const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
