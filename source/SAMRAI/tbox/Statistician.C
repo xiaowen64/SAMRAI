@@ -2055,7 +2055,7 @@ Statistician::reduceGlobalStatistics()
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
    std::vector<double> sum_proc_stat_values(proc_stat_values);
-   if (mpi.getSize() > 1) {
+   if (mpi.getSize() > 1 && d_num_proc_stats > 0) {
       mpi.Allreduce(&proc_stat_values[0],
          &sum_proc_stat_values[0],
          static_cast<int>(proc_stat_values.size()),
@@ -2065,7 +2065,7 @@ Statistician::reduceGlobalStatistics()
 
    std::vector<double> max_proc_stat_values(proc_stat_values);
    std::vector<int> imax_proc_stat_values(proc_stat_values.size(), mpi.getRank());
-   if (mpi.getSize() > 1) {
+   if (mpi.getSize() > 1 && d_num_proc_stats > 0) {
       mpi.AllReduce(&max_proc_stat_values[0],
          static_cast<int>(max_proc_stat_values.size()),
          MPI_MAXLOC,
@@ -2074,7 +2074,7 @@ Statistician::reduceGlobalStatistics()
 
    std::vector<double> min_proc_stat_values(proc_stat_values);
    std::vector<int> imin_proc_stat_values(proc_stat_values.size(), mpi.getRank());
-   if (mpi.getSize() > 1) {
+   if (mpi.getSize() > 1 && d_num_proc_stats > 0) {
       mpi.AllReduce(&min_proc_stat_values[0],
          static_cast<int>(min_proc_stat_values.size()),
          MPI_MINLOC,
