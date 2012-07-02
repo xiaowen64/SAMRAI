@@ -209,8 +209,6 @@ private:
    static void
    finalizeCallback();
 
-   const tbox::Dimension d_dim;
-
    static PeriodicShiftCatalog* s_periodic_shift_catalog_instance[SAMRAI::MAX_DIM_VAL];
 
    std::vector<IntVector> d_shifts;

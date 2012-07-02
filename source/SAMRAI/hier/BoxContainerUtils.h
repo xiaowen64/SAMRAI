@@ -20,14 +20,6 @@ namespace hier {
 /*!
  * @brief Utilities for performing simple common tasks on a container
  * of Boxes.
- *
- * TODO: Arguments should be re-ordered to the SAMRAI standard, output
- * before input.
- *
- * TODO: There are some very similar methods in this class.  In many cases,
- * one version supports input and output being the same object, but the other
- * does not.  For uniformity, all these methods should support input and
- * output containers being the same object.  It's simple to implement.
  */
 class BoxContainerUtils
 {
