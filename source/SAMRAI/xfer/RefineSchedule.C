@@ -2045,6 +2045,8 @@ RefineSchedule::fillSingularityBoundaries(
 {
    TBOX_ASSERT(d_dst_level);
 
+   NULL_USE(fill_time);
+
    boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
 
