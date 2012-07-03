@@ -152,9 +152,10 @@ void HierarchyTester::setupInitialHierarchy(
 
    for (int ln = 0; d_initial_patch_hierarchy->levelCanBeRefined(ln); ln++) {
       d_gridding_algorithm->makeFinerLevel(
-         0.0,                                      // dummy time
-         true,                                     // indicates initial time
-         0);                                       // dummy tag buffer
+         0,                                        // dummy tag buffer
+         true,                                     // indicates initial cycle
+         0,                                        // dummy cycle
+         0.0);                                     // dummy time
 
    }
 

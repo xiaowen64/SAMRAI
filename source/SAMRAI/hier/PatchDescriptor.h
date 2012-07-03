@@ -210,7 +210,7 @@ public:
    /*!
     * @brief Return the Dimension of the data for the given data_id.
     *
-    * @param[i] data_id
+    * @param[in] data_id
     */
    tbox::Dimension
    getPatchDataDim(

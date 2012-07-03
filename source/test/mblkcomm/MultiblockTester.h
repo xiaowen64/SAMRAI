@@ -320,6 +320,11 @@ private:
    double d_fake_time;
 
    /*
+    * Dummy cycle for all data operations.
+    */
+   int d_fake_cycle;
+
+   /*
     * The MultiblockTester uses two variable contexts for each variable.
     * The "source", and "destination" contexts indicate the source
     * and destination patch data for the transfer operation.

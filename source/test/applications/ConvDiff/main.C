@@ -418,6 +418,7 @@ int main(
       regrid_start_time(patch_hierarchy->getMaxNumberOfLevels());
 
       double loop_time = main_restart_data->getLoopTime();
+      int loop_cycle = main_restart_data->getIterationNumber();
 
       if (tbox::RestartManager::getManager()->isFromRestart()) {
 
@@ -433,14 +434,15 @@ int main(
          gridding_algorithm->makeCoarsestLevel(loop_time);
 
          bool done = false;
-         bool initial_time = true;
+         bool initial_cycle = true;
          for (int ln = 0;
               patch_hierarchy->levelCanBeRefined(ln) && !done;
               ln++) {
             gridding_algorithm->makeFinerLevel(
-               loop_time,
-               initial_time,
-               tag_buffer_array[ln]);
+               tag_buffer_array[ln],
+               initial_cycle,
+               loop_cycle,
+               loop_time);
             done = !(patch_hierarchy->finerLevelExists(ln));
          }
       }
@@ -564,8 +566,9 @@ int main(
                        << patch_hierarchy->getFinestLevelNumber() << endl;
 
             gridding_algorithm->regridAllFinerLevels(0,
-               loop_time,
                tag_buffer_array,
+               iteration_num,
+               loop_time,
                regrid_start_time);
 
             tbox::plog << "Finest level after regrid: "

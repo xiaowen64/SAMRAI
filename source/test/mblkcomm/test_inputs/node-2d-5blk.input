@@ -261,9 +261,8 @@ TreeLoadBalancer {
 
 StandardTaggingAndInitializer {
    tagging_method = "REFINE_BOXES"
-
-   RefineBoxes {
-      level_0 = [ (9,9) , (10,10) ]
+   level_0 {
+      level = 0
+      boxes = [ (9,9) , (10,10) ]
    }
-
 }

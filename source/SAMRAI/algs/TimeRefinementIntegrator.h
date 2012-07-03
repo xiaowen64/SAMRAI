@@ -536,6 +536,18 @@ private:
       const double time_remaining,
       const double dt_bound);
 
+   /**
+    * Return true if the current step count for the level indicates
+    * that regridding should occur.  In particular, true is returned
+    * if both the level allows refinement and the step count is an
+    * integer multiple of the regrid step interval.
+    * Otherwise, false is returned.
+    */
+   bool
+   atRegridPointPrivate(
+      const int level_number,
+      bool qeury_for_coarser_level = false) const;
+
    /*
     * Return true if the this level can be regridded at the current step
     * and the next coarser level can be regridded too.  Otherwise,

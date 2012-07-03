@@ -392,20 +392,22 @@ TimeRefinementIntegrator::initializeRefinedTimesteppingLevelData(
 
    if (d_patch_hierarchy->levelCanBeRefined(level_number)) {
 
-      int buffer;
-      if (d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
-         buffer = d_regrid_interval[level_number];
+      int tag_buffer;
+      if (d_gridding_algorithm->getTagAndInitializeStrategy()->
+          usesTimeIntegration(d_integrator_step, d_integrator_time)) {
+         tag_buffer = d_regrid_interval[level_number];
       } else {
-         buffer = d_tag_buffer[level_number];
+         tag_buffer = d_tag_buffer[level_number];
       }
 
       double regrid_start_time =
          d_level_sim_time[level_number] - d_dt_actual_level[level_number];
       // "true" argument: const bool initial_time = true;
       d_gridding_algorithm->makeFinerLevel(
-         d_level_sim_time[level_number],
+         tag_buffer,
          true,
-         buffer,
+         d_integrator_step,
+         d_level_sim_time[level_number],
          regrid_start_time);
 
       /*
@@ -426,7 +428,8 @@ TimeRefinementIntegrator::initializeRefinedTimesteppingLevelData(
           * regridding on the finer level.
           */
          if (d_patch_hierarchy->levelCanBeRefined(level_number + 1) &&
-             d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+             d_gridding_algorithm->getTagAndInitializeStrategy()->
+             usesTimeIntegration(d_integrator_step, d_integrator_time)) {
 
             if (d_barrier_and_time) {
                t_advance_level->barrierAndStart();
@@ -461,7 +464,8 @@ TimeRefinementIntegrator::initializeRefinedTimesteppingLevelData(
           */
 
          if (d_patch_hierarchy->levelCanBeRefined(level_number + 1) &&
-             d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+             d_gridding_algorithm->getTagAndInitializeStrategy()->
+             usesTimeIntegration(d_integrator_step, d_integrator_time)) {
             d_refine_level_integrator->
             resetDataToPreadvanceState(patch_level);
          }
@@ -516,20 +520,22 @@ TimeRefinementIntegrator::initializeSynchronizedTimesteppingLevelData(
 
    if (d_patch_hierarchy->levelCanBeRefined(level_number)) {
 
-      int buffer;
-      if (d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
-         buffer = d_regrid_interval[level_number];
+      int tag_buffer;
+      if (d_gridding_algorithm->getTagAndInitializeStrategy()->
+          usesTimeIntegration(d_integrator_step, d_integrator_time)) {
+         tag_buffer = d_regrid_interval[level_number];
       } else {
-         buffer = d_tag_buffer[level_number];
+         tag_buffer = d_tag_buffer[level_number];
       }
 
       double regrid_start_time =
          d_level_sim_time[level_number] - d_dt_actual_level[level_number];
       // "true" argument: const bool initial_time = true;
       d_gridding_algorithm->makeFinerLevel(
-         d_level_sim_time[level_number],
+         tag_buffer,
          true,
-         buffer,
+         d_integrator_step,
+         d_level_sim_time[level_number],
          regrid_start_time);
 
       /*
@@ -550,7 +556,8 @@ TimeRefinementIntegrator::initializeSynchronizedTimesteppingLevelData(
           * regridding on the finer level.
           */
          if (d_patch_hierarchy->levelCanBeRefined(level_number + 1) &&
-             d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+             d_gridding_algorithm->getTagAndInitializeStrategy()->
+             usesTimeIntegration(d_integrator_step, d_integrator_time)) {
 
             if (d_barrier_and_time) {
                t_advance_level->barrierAndStart();
@@ -585,7 +592,8 @@ TimeRefinementIntegrator::initializeSynchronizedTimesteppingLevelData(
           * may require a different initial time increment size.
           */
          if (d_patch_hierarchy->levelCanBeRefined(level_number + 1) &&
-             d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+             d_gridding_algorithm->getTagAndInitializeStrategy()->
+             usesTimeIntegration(d_integrator_step, d_integrator_time)) {
             d_refine_level_integrator->
             resetDataToPreadvanceState(patch_level);
          }
@@ -765,12 +773,15 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
        * Update step count information.  Then, advance all finer levels.
        */
 
-      if (level_number == 0) d_integrator_step++;
       d_step_level[level_number]++;
 
       if (d_patch_hierarchy->finerLevelExists(level_number)) {
          advanceRecursivelyForRefinedTimestepping(level_number + 1,
             new_level_time);
+      }
+
+      if (level_number == 0) {
+         d_integrator_step++;
       }
 
       /*
@@ -871,7 +882,8 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
              * gridding algorithm does not used time integration, reset data
              * on all levels.
              */
-            if (d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+            if (d_gridding_algorithm->getTagAndInitializeStrategy()->
+                usesTimeIntegration(d_integrator_step, d_integrator_time)) {
                if (!d_patch_hierarchy->
                    levelCanBeRefined(finest_level_number)) {
                   d_refine_level_integrator->resetTimeDependentData(
@@ -906,7 +918,8 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
              */
 
             tbox::Array<double> regrid_start_time;
-            if (!d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+            if (!d_gridding_algorithm->getTagAndInitializeStrategy()->
+                usesTimeIntegration(d_integrator_step, d_integrator_time)) {
 
                int max_levels = d_patch_hierarchy->getMaxNumberOfLevels();
                regrid_start_time.resizeArray(max_levels);
@@ -937,8 +950,9 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
             d_gridding_algorithm->
             regridAllFinerLevels(
                level_number,
-               d_level_sim_time[level_number],
                d_tag_buffer,
+               d_integrator_step,
+               d_level_sim_time[level_number],
                regrid_start_time,
                (coarsest_sync_level >= level_number));
 
@@ -1131,7 +1145,8 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
        * this is properly done in the level integrator.
        */
 
-      if (d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+      if (d_gridding_algorithm->getTagAndInitializeStrategy()->
+          usesTimeIntegration(d_integrator_step, d_integrator_time)) {
          if (!d_patch_hierarchy->levelCanBeRefined(finest_level_number)) {
             d_refine_level_integrator->resetTimeDependentData(
                d_patch_hierarchy->getPatchLevel(finest_level_number),
@@ -1164,7 +1179,8 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
        */
 
       tbox::Array<double> regrid_start_time;
-      if (!d_gridding_algorithm->getTagAndInitializeStrategy()->usesTimeIntegration()) {
+      if (!d_gridding_algorithm->getTagAndInitializeStrategy()->
+          usesTimeIntegration(d_integrator_step, d_integrator_time)) {
 
          int max_levels = d_patch_hierarchy->getMaxNumberOfLevels();
          regrid_start_time.resizeArray(max_levels);
@@ -1194,8 +1210,9 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
       d_gridding_algorithm->
       regridAllFinerLevels(
          coarse_level_number,
-         d_integrator_time,
          d_tag_buffer,
+         d_integrator_step,
+         d_integrator_time,
          regrid_start_time);
 
       /*
@@ -1360,11 +1377,38 @@ bool
 TimeRefinementIntegrator::atRegridPoint(
    const int level_number) const
 {
+   return atRegridPointPrivate(level_number);
+}
+
+/*
+ *************************************************************************
+ *
+ * Return true if the level can be remeshed at the current step.
+ * regrid step interval.  Otherwise, return false.
+ *
+ *************************************************************************
+ */
+
+bool
+TimeRefinementIntegrator::atRegridPointPrivate(
+   const int level_number,
+   const bool query_for_coarser_level) const
+{
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
 
-   int step_number = ((level_number == 0) ? d_integrator_step
-                      : d_step_level[level_number]);
+   int step_number;
+   if (level_number == 0) {
+      if (query_for_coarser_level) {
+         step_number = d_integrator_step + 1;
+      }
+      else {
+         step_number = d_integrator_step;
+      }
+   }
+   else {
+      step_number = d_step_level[level_number];
+   }
 
    return (step_number > 0)
           && d_patch_hierarchy->levelCanBeRefined(level_number)
@@ -1386,7 +1430,8 @@ TimeRefinementIntegrator::coarserLevelRegridsToo(
 {
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-   return (level_number > 0) ? atRegridPoint(level_number - 1) : false;
+   return (level_number > 0) ? atRegridPointPrivate(level_number - 1, true) :
+           false;
 }
 
 /*

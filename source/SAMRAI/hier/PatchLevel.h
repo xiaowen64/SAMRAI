@@ -108,7 +108,7 @@ public:
     * grid_geometry, and descriptor are checked to make sure that
     * they are not null.  If null, an unrecoverable assertion will result.
     *
-    * @param[in]  restart_database
+    * @param[in]  level_database
     * @param[in]  grid_geometry
     * @param[in]  descriptor The PatchDescriptor used to allocate patch
     *             data.

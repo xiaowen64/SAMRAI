@@ -319,11 +319,13 @@ public:
     * evolve before regridding occurs (e.g., number of timesteps
     * taken) when calculating the tag_buffer.
     *
-    * @param[in] level_time See above text.
-    *
-    * @param[in] initial_time See above text.
-    *
     * @param[in] tag_buffer See above text.
+    *
+    * @param[in] initial_cycle See above text
+    *
+    * @param[in] cycle See above text.
+    *
+    * @param[in] level_time See above text..
     *
     * @param[in] regrid_start_time The simulation time when the
     * regridding operation began (this parameter is ignored except
@@ -331,9 +333,10 @@ public:
     */
    void
    makeFinerLevel(
-      const double level_time,
-      const bool initial_time,
       const int tag_buffer,
+      const bool initial_cycle,
+      const int cycle,
+      const double level_time,
       const double regrid_start_time = 0.0);
 
    /*!
@@ -363,10 +366,13 @@ public:
     * @param[in] level_number Coarsest level on which cells will be
     * tagged for refinement
     *
-    * @param[in] regrid_time Simulaition time when regridding occurs
-    *
     * @param[in] tag_buffer Size of buffer on each level around tagged
     * cells that will be covered by the next finer level
+    *
+    * @param[in] cycle Simulaition cycle when regridding occurs
+    *
+    * @param[in] level_time Simulation time of the level corresponding to
+    *                       level_num when regridding occurs
     *
     * @param[in] regrid_start_time The simulation time when the
     * regridding operation began on each level (this parameter is
@@ -377,8 +383,9 @@ public:
    void
    regridAllFinerLevels(
       const int level_number,
-      const double regrid_time,
       const tbox::Array<int>& tag_buffer,
+      const int cycle,
+      const double level_time,
       tbox::Array<double> regrid_start_time = tbox::Array<double>(),
       const bool level_is_coarsest_to_sync = true);
 
@@ -555,6 +562,7 @@ private:
    regridFinerLevel(
       const int level_number,
       const double regrid_time,
+      const int regrid_cycle,
       const int finest_level_not_regridded,
       const bool level_is_coarsest_to_sync,
       const tbox::Array<int>& tag_buffer,
@@ -568,7 +576,8 @@ private:
       const int tag_ln,
       const bool level_is_coarsest_sync_level,
       const tbox::Array<double>& regrid_start_time,
-      const double regrid_time);
+      const double regrid_time,
+      const int regrid_cycle);
 
    /*
     * @brief Tagging stuff after recursive regrid, called from regridFinerLevel.
@@ -857,6 +866,7 @@ private:
       hier::Connector& new_to_coarser,
       const int level_number,
       const double regrid_time,
+      const int regrid_cycle,
       bool& remove_old_fine_level);
 
    /*

@@ -401,7 +401,7 @@ int main(
          new mesh::StandardTagAndInitialize(
             dim,
             "StandardTagAndInitialize",
-             hyp_level_integrator.get(),
+            hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
       boost::shared_ptr<Database> abr_db(

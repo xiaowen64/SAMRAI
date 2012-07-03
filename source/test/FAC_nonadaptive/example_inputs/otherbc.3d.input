@@ -94,11 +94,15 @@ CartesianGridGeometry {
 }
 
 StandardTagAndInitialize {
-  tagging_method = "REFINE_BOXES"
-  RefineBoxes {
-    level_0 = [(0,0,0),(7,7,7)]
-    level_1 = [(0,0,0),(7,7,7)]
-  }
+   tagging_method = "REFINE_BOXES"
+   level_0 {
+      level = 0
+      boxes = [(0,0,0),(7,7,7)]
+   }
+   level_1 {
+      level = 1
+      boxes = [(0,0,0),(7,7,7)]
+   }
 }
 
 PatchHierarchy {

@@ -354,8 +354,9 @@ int main(
             }
             gridding_algorithm->regridAllFinerLevels(
                0,
-               0.0,
-               tag_buffer);
+               tag_buffer,
+               0,
+               0.0);
             tbox::plog << "Newly adapted hierarchy\n";
             patch_hierarchy->recursivePrint(tbox::plog, "    ", 1);
             if (0) {

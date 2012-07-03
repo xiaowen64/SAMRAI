@@ -52,6 +52,7 @@ MultiblockTester::MultiblockTester(
    d_refine_option(refine_option),
    d_patch_hierarchy(hierarchy),
    d_fake_time(0.0),
+   d_fake_cycle(0),
    d_source(
      hier::VariableDatabase::getDatabase()->getContext("SOURCE")),
    d_destination(
@@ -718,10 +719,13 @@ void MultiblockTester::setupHierarchy(
 
    gridding_alg->makeCoarsestLevel(d_fake_time);
 
-   bool initial_time = true;
+   bool initial_cycle = true;
    for (int ln = 0; d_patch_hierarchy->levelCanBeRefined(ln); ln++) {
-      gridding_alg->makeFinerLevel(d_fake_time,
-         initial_time, fake_tag_buffer,
+      gridding_alg->makeFinerLevel(
+         fake_tag_buffer,
+         initial_cycle,
+         d_fake_cycle,
+         d_fake_time,
          d_fake_time);
    }
 

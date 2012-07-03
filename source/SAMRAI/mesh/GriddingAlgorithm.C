@@ -647,9 +647,10 @@ GriddingAlgorithm::makeCoarsestLevel(
 
 void
 GriddingAlgorithm::makeFinerLevel(
-   const double level_time,
-   const bool initial_time,
    const int tag_buffer,
+   const bool initial_cycle,
+   const int cycle,
+   const double level_time,
    const double regrid_start_time)
 {
    if (d_print_steps) {
@@ -709,7 +710,10 @@ GriddingAlgorithm::makeFinerLevel(
        * are NOT necessary so do_tagging will be set to false.
        */
       bool do_tagging = true;
-      if (d_tag_init_strategy->refineUserBoxInputOnly()) do_tagging = false;
+      if (d_tag_init_strategy->refineUserBoxInputOnly(cycle, level_time)) {
+         do_tagging = false;
+      }
+
       t_make_finer_setup->stop();
 
       /*
@@ -729,12 +733,12 @@ GriddingAlgorithm::makeFinerLevel(
          /*
           * Perform pre-processing of error estimation data.
           */
-         d_tag_init_strategy->
-         preprocessErrorEstimation(d_hierarchy,
+         d_tag_init_strategy->preprocessErrorEstimation(d_hierarchy,
             tag_ln,
+            cycle,
             level_time,
             regrid_start_time,
-            initial_time);
+            initial_cycle);
 
          /*
           * Determine cells needing refinement on level and set tags to true.
@@ -742,12 +746,12 @@ GriddingAlgorithm::makeFinerLevel(
           * the coarsest_sync_level argument is always false.
           */
          bool coarsest_sync_level = false;
-         d_tag_init_strategy->
-         tagCellsForRefinement(d_hierarchy,
+         d_tag_init_strategy->tagCellsForRefinement(d_hierarchy,
             tag_ln,
+            cycle,
             level_time,
             d_tag_indx,
-            initial_time,
+            initial_cycle,
             coarsest_sync_level,
             d_hierarchy->levelCanBeRefined(tag_ln),
             regrid_start_time);
@@ -899,6 +903,7 @@ GriddingAlgorithm::makeFinerLevel(
             *new_to_tag,
             tag_ln,
             level_time,
+            cycle,
             remove_old_fine_level);
 
          /*
@@ -973,7 +978,7 @@ GriddingAlgorithm::makeFinerLevel(
             new_ln,
             level_time,
             d_hierarchy->levelCanBeRefined(new_ln),
-            initial_time);
+            initial_cycle);
 
          t_reset_hier->barrierAndStart();
          d_tag_init_strategy->resetHierarchyConfiguration(d_hierarchy,
@@ -1020,8 +1025,9 @@ GriddingAlgorithm::makeFinerLevel(
 void
 GriddingAlgorithm::regridAllFinerLevels(
    const int level_number,
-   const double regrid_time,
    const tbox::Array<int>& tag_buffer,
+   const int cycle,
+   const double level_time,
    const tbox::Array<double> regrid_start_time,
    const bool level_is_coarsest_sync_level)
 {
@@ -1058,7 +1064,7 @@ GriddingAlgorithm::regridAllFinerLevels(
        * Perform pre-processing of error estimation data, if
        * appropriate.
        */
-      if (d_tag_init_strategy->usesTimeIntegration()) {
+      if (d_tag_init_strategy->usesTimeIntegration(cycle, level_time)) {
          for (int ln = level_number;
               ln <= d_hierarchy->getFinestLevelNumber(); ln++) {
             if (d_hierarchy->levelCanBeRefined(ln)) {
@@ -1070,10 +1076,10 @@ GriddingAlgorithm::regridAllFinerLevels(
                   level_regrid_start_time = regrid_start_time[ln];
                }
 
-               d_tag_init_strategy->
-               preprocessErrorEstimation(d_hierarchy,
+               d_tag_init_strategy->preprocessErrorEstimation(d_hierarchy,
                   ln,
-                  regrid_time,
+                  cycle,
+                  level_time,
                   level_regrid_start_time,
                   initial_time);
             }
@@ -1088,7 +1094,8 @@ GriddingAlgorithm::regridAllFinerLevels(
       const int finest_level_not_regridded = level_number;
       regridFinerLevel(
          level_number,
-         regrid_time,
+         level_time,
+         cycle,
          finest_level_not_regridded,
          level_is_coarsest_sync_level,
          tag_buffer,
@@ -1134,7 +1141,7 @@ GriddingAlgorithm::regridAllFinerLevels(
 
 #ifdef GA_RECORD_STATS
    // Verified that this does not use much time.
-   recordStatistics(regrid_time);
+   recordStatistics(level_time);
 #endif
 
    t_misc5->stop();
@@ -1183,6 +1190,7 @@ void
 GriddingAlgorithm::regridFinerLevel(
    const int tag_ln,
    const double regrid_time,
+   const int regrid_cycle,
    const int finest_level_not_regridded,
    const bool level_is_coarsest_sync_level,
    const tbox::Array<int>& tag_buffer,
@@ -1244,7 +1252,10 @@ GriddingAlgorithm::regridFinerLevel(
        * be removed.
        */
       bool do_tagging = true;
-      if (d_tag_init_strategy->refineUserBoxInputOnly()) do_tagging = false;
+      if (d_tag_init_strategy->refineUserBoxInputOnly(regrid_cycle,
+             regrid_time)) {
+         do_tagging = false;
+      }
       bool remove_old_fine_level = true;
 
       hier::BoxLevel new_mapped_box_level(d_dim);
@@ -1279,7 +1290,8 @@ GriddingAlgorithm::regridFinerLevel(
             tag_ln,
             level_is_coarsest_sync_level,
             regrid_start_time,
-            regrid_time);
+            regrid_time,
+            regrid_cycle);
 
          /*
           * Perform regridding recursively on finer levels, if appropriate.
@@ -1296,6 +1308,7 @@ GriddingAlgorithm::regridFinerLevel(
             regridFinerLevel(
                new_ln,
                regrid_time,
+               regrid_cycle,
                finest_level_not_regridded,
                false,
                tag_buffer,
@@ -1361,6 +1374,7 @@ GriddingAlgorithm::regridFinerLevel(
             regridFinerLevel(
                new_ln,
                regrid_time,
+               regrid_cycle,
                finest_level_not_regridded,
                false,
                tag_buffer,
@@ -1377,6 +1391,7 @@ GriddingAlgorithm::regridFinerLevel(
             *new_to_tag,
             tag_ln,
             regrid_time,
+            regrid_cycle,
             remove_old_fine_level);
 
       } /* end do_tagging == false */
@@ -1436,7 +1451,8 @@ GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
    const int tag_ln,
    const bool level_is_coarsest_sync_level,
    const tbox::Array<double>& regrid_start_time,
-   const double regrid_time)
+   const double regrid_time,
+   const int regrid_cycle)
 {
    if (d_print_steps) {
       tbox::plog
@@ -1515,9 +1531,9 @@ GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
    if (d_barrier_and_time) {
       t_tag_cells_for_refinement->barrierAndStart();
    }
-   d_tag_init_strategy->
-   tagCellsForRefinement(d_hierarchy,
+   d_tag_init_strategy->tagCellsForRefinement(d_hierarchy,
       tag_ln,
+      regrid_cycle,
       regrid_time,
       d_tag_indx,
       initial_time,
@@ -2493,6 +2509,7 @@ GriddingAlgorithm::readLevelBoxes(
    hier::Connector& new_to_coarser,
    const int tag_ln,
    const double regrid_time,
+   const int regrid_cycle,
    bool& remove_old_fine_level)
 {
    TBOX_ASSERT((tag_ln >= 0)
@@ -2514,11 +2531,12 @@ GriddingAlgorithm::readLevelBoxes(
     * it returns true.  If they are unchanged, it returns false.
     */
    bool new_level_has_new_boxes = true;
-   if (d_tag_init_strategy->refineUserBoxInputOnly()) {
+   if (d_tag_init_strategy->refineUserBoxInputOnly(regrid_cycle, regrid_time)) {
 
       new_level_has_new_boxes = d_tag_init_strategy->
          getUserSuppliedRefineBoxes(boxes_to_refine,
             tag_ln,
+            regrid_cycle,
             regrid_time);
 
    }

@@ -395,8 +395,7 @@ int main(
             dim,
             "CellTaggingMethod",
             bratu_model,
-            input_db->
-            getDatabase("StandardTagAndInitialize")));
+            input_db->getDatabase("StandardTagAndInitialize")));
 
       boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
          new mesh::BergerRigoutsos(dim));
@@ -485,13 +484,14 @@ int main(
          gridding_algorithm->makeCoarsestLevel(sim_time);
 
          bool done = false;
-         bool initial_time = true;
+         bool initial_cycle = true;
          for (int lnum = 0;
               patch_hierarchy->levelCanBeRefined(lnum) && !done; lnum++) {
             gridding_algorithm->makeFinerLevel(
-               sim_time,
-               initial_time,
-               tag_buffer[lnum]);
+               tag_buffer[lnum],
+               initial_cycle,
+               imp_integrator->getIntegratorStep(),
+               sim_time);
             done = !(patch_hierarchy->finerLevelExists(lnum));
          }
 
@@ -577,8 +577,9 @@ int main(
             if ((regrid_interval > 0)
                 && ((iteration_num % regrid_interval) == 0)) {
                gridding_algorithm->regridAllFinerLevels(0,
-                  sim_time,
-                  tag_buffer);
+                  tag_buffer,
+                  iteration_num,
+                  sim_time);
 #if defined(HAVE_PETSC) || defined(HAVE_SUNDIALS)
                bratu_model->setVectorWeights(patch_hierarchy);
 #endif

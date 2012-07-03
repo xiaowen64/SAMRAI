@@ -281,6 +281,7 @@ int main(
       ****************************************************************/
 
       double loop_time = 0.;
+      int loop_cycle = 0;
       tbox::Array<int> tag_buffer_array(patch_hierarchy->getMaxNumberOfLevels());
       for (int il = 0; il < patch_hierarchy->getMaxNumberOfLevels(); il++) {
          tag_buffer_array[il] = 1;
@@ -288,14 +289,15 @@ int main(
       gridding_algorithm->makeCoarsestLevel(loop_time);
 
       bool done = false;
-      bool initial_time = true;
+      bool initial_cycle = true;
       for (int ln = 0;
            patch_hierarchy->levelCanBeRefined(ln) && !done;
            ln++) {
          gridding_algorithm->makeFinerLevel(
-            loop_time,
-            initial_time,
-            tag_buffer_array[ln]);
+            tag_buffer_array[ln],
+            initial_cycle,
+            loop_cycle,
+            loop_time);
          done = !(patch_hierarchy->finerLevelExists(ln));
       }
 

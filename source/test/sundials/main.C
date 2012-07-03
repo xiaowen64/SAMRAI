@@ -145,6 +145,7 @@ int main(
       int max_order = main_db->getInteger("max_order");
       int max_internal_steps = main_db->getInteger("max_internal_steps");
       double init_time = main_db->getDouble("init_time");
+      int init_cycle = main_db->getInteger("init_cycle");
       double print_interval = main_db->getDouble("print_interval");
       int num_print_intervals = main_db->getInteger("num_print_intervals");
 
@@ -286,13 +287,14 @@ int main(
       }
 
       bool done = false;
-      bool initial_time = true;
+      bool initial_cycle = true;
       for (int ln = 0; hierarchy->levelCanBeRefined(ln) && !done;
            ln++) {
          gridding_algorithm->makeFinerLevel(
-            init_time,
-            initial_time,
-            tag_buffer_array[ln]);
+            tag_buffer_array[ln],
+            initial_cycle,
+            init_cycle,
+            init_time);
          done = !(hierarchy->finerLevelExists(ln));
       }
 

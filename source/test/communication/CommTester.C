@@ -62,6 +62,8 @@ CommTester::CommTester(
 
    d_fake_time = 0.0;
 
+   d_fake_cycle = 0;
+
    d_is_reset = false;
 
    d_do_refine = do_refine;
@@ -663,12 +665,13 @@ void CommTester::setupHierarchy(
 
    gridding_algorithm->makeCoarsestLevel(d_fake_time);
 
-   bool initial_time = true;
+   bool initial_cycle = true;
    for (int ln = 0; d_patch_hierarchy->levelCanBeRefined(ln); ln++) {
       gridding_algorithm->makeFinerLevel(
-         d_fake_time,
-         initial_time,
-         fake_tag_buffer);
+         fake_tag_buffer,
+         initial_cycle,
+         d_fake_cycle,
+         d_fake_time);
    }
 
    /*

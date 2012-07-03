@@ -270,9 +270,10 @@ int main(
            patch_hierarchy->levelCanBeRefined(lnum) && !done; lnum++) {
          tbox::plog << "Adding finner levels with lnum = " << lnum << endl;
          gridding_algorithm->makeFinerLevel(
-            0.0,
+            0,
             true,
-            0);
+            0,
+            0.0);
          tbox::plog << "Just added finer levels with lnum = " << lnum << endl;
          done = !(patch_hierarchy->finerLevelExists(lnum));
       }

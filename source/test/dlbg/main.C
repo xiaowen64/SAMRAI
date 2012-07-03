@@ -311,9 +311,10 @@ int main(
          boost::shared_ptr<hier::PatchLevel> level_(
             patch_hierarchy->getPatchLevel(ln));
          gridding_algorithm->makeFinerLevel(
-            /* simulation time */ 0.0,
-            /* whether initial time */ true,
-            /* tag buffer size */ tag_buffer[ln]);
+            /* tag buffer size */ tag_buffer[ln],
+            /* whether initial cycle */ true,
+            /* simulation cycle */ 0,
+            /* simulation time */ 0.0);
          tbox::plog << "Just added finer level " << ln << " -> " << ln + 1;
          if (patch_hierarchy->getNumberOfLevels() < ln + 2) {
             tbox::plog << " (no new level!)" << std::endl;
@@ -386,8 +387,9 @@ int main(
 
          gridding_algorithm->regridAllFinerLevels(
             0,
-            double(istep),
             tag_buffer,
+            istep,
+            double(istep),
             regrid_start_time);
 
          patch_hierarchy->recursivePrint(tbox::plog, std::string("    "), 1);
