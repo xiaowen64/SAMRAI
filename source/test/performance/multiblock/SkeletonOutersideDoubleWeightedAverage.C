@@ -88,7 +88,8 @@ using namespace SAMRAI;
 
 SkeletonOutersideDoubleWeightedAverage::SkeletonOutersideDoubleWeightedAverage(
    const tbox::Dimension& dim):
-   hier::CoarsenOperator(dim, "SKELETON_CONSERVATIVE_COARSEN")
+   d_dim(dim),
+   hier::CoarsenOperator("SKELETON_CONSERVATIVE_COARSEN")
 {
 }
 
@@ -103,7 +104,7 @@ int SkeletonOutersideDoubleWeightedAverage::getOperatorPriority() const
 
 hier::IntVector
 SkeletonOutersideDoubleWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const {
-   return hier::IntVector(getDim(), 0);
+   return hier::IntVector(d_dim, 0);
 }
 
 void SkeletonOutersideDoubleWeightedAverage::coarsen(
@@ -154,7 +155,7 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
    for (int d = 0; d < cdata->getDepth(); d++) {
       // loop over lower and upper outerside arrays
       for (int i = 0; i < 2; i++) {
-         if (getDim() == tbox::Dimension(1)) {
+         if (d_dim == tbox::Dimension(1)) {
             F77_FUNC(cartwgtavgoutfacedoub1d, CARTWGTAVGOUTFACEDOUB1D) (
                ifirstc(0), ilastc(0),
                filo(0), fihi(0),
@@ -164,7 +165,7 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
                cdx,
                fdata->getPointer(0, i, d),
                cdata->getPointer(0, i, d));
-         } else if (getDim() == tbox::Dimension(2)) {
+         } else if (d_dim == tbox::Dimension(2)) {
             F77_FUNC(cartwgtavgoutfacedoub2d0, CARTWGTAVGOUTFACEDOUB2D0) (
                ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                filo(0), filo(1), fihi(0), fihi(1),
@@ -183,7 +184,7 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
                cdx,
                fdata->getPointer(1, i, d),
                cdata->getPointer(1, i, d));
-         } else if (getDim() == tbox::Dimension(3)) {
+         } else if (d_dim == tbox::Dimension(3)) {
             F77_FUNC(cartwgtavgoutfacedoub3d0, CARTWGTAVGOUTFACEDOUB3D0) (
                ifirstc(0), ifirstc(1), ifirstc(2),
                ilastc(0), ilastc(1), ilastc(2),
@@ -222,7 +223,7 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
                cdata->getPointer(2, i, d));
          } else {
             TBOX_ERROR("SkeletonOutersideDoubleWeightedAverage error...\n"
-               << "getDim() > 3 not supported." << endl);
+               << "d_dim > 3 not supported." << endl);
          }
       }
    }
@@ -235,9 +236,9 @@ void SkeletonOutersideDoubleWeightedAverage::setDx(
    if (level_number >= d_dx.getSize()) {
       d_dx.resizeArray(level_number + 1);
    }
-   if (d_dx[level_number].size() < getDim().getValue()) {
-      d_dx[level_number].resizeArray(getDim().getValue());
-      for (int i = 0; i < getDim().getValue(); i++) {
+   if (d_dx[level_number].size() < d_dim.getValue()) {
+      d_dx[level_number].resizeArray(d_dim.getValue());
+      for (int i = 0; i < d_dim.getValue(); i++) {
          d_dx[level_number][i] = dx[i];
       }
    }
@@ -247,7 +248,7 @@ void SkeletonOutersideDoubleWeightedAverage::getDx(
    const int level_number,
    double* dx) const
 {
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); i++) {
       dx[i] = d_dx[level_number][i];
    }
 }

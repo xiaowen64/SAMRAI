@@ -377,7 +377,7 @@ bool SingleLevelTestCase(
 
    // There is one variable-context pair with a gcw of 2
 
-   xfer::RefineAlgorithm refine_alg(dim);
+   xfer::RefineAlgorithm refine_alg;
 
    boost::shared_ptr<hier::VariableContext> context(
       hier::VariableDatabase::getDatabase()->getContext("CONTEXT"));

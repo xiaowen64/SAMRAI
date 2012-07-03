@@ -277,14 +277,12 @@ PatchBoundaryEdgeSum::setupSum(
 {
    TBOX_ASSERT(level);
 
-   const tbox::Dimension& dim(level->getDim());
-
    d_setup_called = true;
 
    d_level = level;
 
    // Communication algorithm for summing outeredge values on a level
-   xfer::RefineAlgorithm single_level_sum_algorithm(dim);
+   xfer::RefineAlgorithm single_level_sum_algorithm;
 
    for (int i = 0; i < d_num_reg_sum; i++) {
       single_level_sum_algorithm.registerRefine(d_oedge_dst_id[i],  // dst data

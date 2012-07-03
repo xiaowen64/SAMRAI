@@ -35,9 +35,7 @@ namespace xfer {
  *************************************************************************
  */
 
-RefineAlgorithm::RefineAlgorithm(
-   const tbox::Dimension& dim):
-   d_dim(dim),
+RefineAlgorithm::RefineAlgorithm():
    d_refine_classes(boost::make_shared<RefineClasses>()),
    d_schedule_created(false)
 {
@@ -170,9 +168,6 @@ RefineAlgorithm::createSchedule(
    const boost::shared_ptr<RefineTransactionFactory>& transaction_factory)
 {
    TBOX_ASSERT(level);
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *level);
-#endif
 
    d_schedule_created = true;
 
@@ -213,9 +208,6 @@ RefineAlgorithm::createSchedule(
    const boost::shared_ptr<RefineTransactionFactory>& transaction_factory)
 {
    TBOX_ASSERT(level);
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *level);
-#endif
 
    d_schedule_created = true;
 
@@ -257,9 +249,7 @@ RefineAlgorithm::createSchedule(
 
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, *dst_level, *src_level);
-#endif
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *src_level);
 
    d_schedule_created = true;
 
@@ -304,9 +294,7 @@ RefineAlgorithm::createSchedule(
 {
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, *dst_level, *src_level);
-#endif
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *src_level);
 
    d_schedule_created = true;
 
@@ -351,9 +339,8 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT(level);
    TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *level);
    if (hierarchy) {
-      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *hierarchy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*level, *hierarchy);
    }
 #endif
 
@@ -406,9 +393,8 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT(level);
    TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *level);
    if (hierarchy) {
-      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *hierarchy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*level, *hierarchy);
    }
 #endif
 
@@ -458,12 +444,11 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *dst_level);
    if (src_level) {
-      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *src_level);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *src_level);
    }
    if (hierarchy) {
-      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *hierarchy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *hierarchy);
    }
 #endif
 
@@ -523,12 +508,11 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *dst_level);
    if (src_level) {
-      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *src_level);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *src_level);
    }
    if (hierarchy) {
-      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *hierarchy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *hierarchy);
    }
 #endif
 

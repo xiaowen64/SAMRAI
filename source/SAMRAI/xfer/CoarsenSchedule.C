@@ -403,12 +403,10 @@ CoarsenSchedule::generateTemporaryLevel()
 void
 CoarsenSchedule::setupRefineAlgorithm()
 {
-   const tbox::Dimension& dim(d_crse_level->getDim());
-
    if (d_fill_coarse_data) {
       t_coarse_data_fill->barrierAndStart();
 
-      d_precoarsen_refine_algorithm.reset(new RefineAlgorithm(dim));
+      d_precoarsen_refine_algorithm.reset(new RefineAlgorithm());
 
       for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
          const int src_id = d_coarsen_items[ici]->d_src;

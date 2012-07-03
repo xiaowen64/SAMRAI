@@ -359,8 +359,6 @@ PatchBoundaryNodeSum::setupSum(
 {
    TBOX_ASSERT(level);
 
-   const tbox::Dimension& dim(level->getDim());
-
    if (d_hierarchy_setup_called) {
 
       TBOX_ERROR("PatchBoundaryNodeSum::setupSum error...\n"
@@ -377,7 +375,7 @@ PatchBoundaryNodeSum::setupSum(
       d_single_level_sum_schedule.resizeArray(1);
 
       // Communication algorithm for summing outernode values on a level
-      xfer::RefineAlgorithm single_level_sum_algorithm(dim);
+      xfer::RefineAlgorithm single_level_sum_algorithm;
 
       for (int i = 0; i < d_num_reg_sum; i++) {
          single_level_sum_algorithm.registerRefine(d_onode_dst_id[i],  // dst data
@@ -443,12 +441,12 @@ PatchBoundaryNodeSum::setupSum(
       d_coarse_fine_boundary.resizeArray(num_levels);
 
       // Communication algorithm for summing outernode values on each level
-      xfer::RefineAlgorithm single_level_sum_algorithm(dim);
+      xfer::RefineAlgorithm single_level_sum_algorithm;
 
       // Communication algorithm for copying node values on each coarser
       // level to outernode values on coarsened version of patches on
       // next finer level
-      xfer::RefineAlgorithm cfbdry_copy_algorithm(dim);
+      xfer::RefineAlgorithm cfbdry_copy_algorithm;
 
       // Communication algorithm for coarsening outernode values on
       // each finer level to node data on next coarser level

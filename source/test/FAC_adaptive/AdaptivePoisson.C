@@ -375,7 +375,7 @@ void AdaptivePoisson::initializeLevelData(
     * Refine solution data from coarser level and, if provided, old level.
     */
    {
-      xfer::RefineAlgorithm refiner(d_dim);
+      xfer::RefineAlgorithm refiner;
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry_(
          patch_hierarchy->getGridGeometry(),
          boost::detail::dynamic_cast_tag());
@@ -989,7 +989,7 @@ int AdaptivePoisson::solvePoisson(
     * the solver finishes.
     */
    {
-      xfer::RefineAlgorithm refiner(d_dim);
+      xfer::RefineAlgorithm refiner;
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry_(
          hierarchy->getGridGeometry(),
          boost::detail::dynamic_cast_tag());

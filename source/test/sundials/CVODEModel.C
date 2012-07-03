@@ -619,7 +619,7 @@ CVODEModel::evaluateRHSFunction(
     * 4) Use the refine schedule to fill data on fine level.
     */
    boost::shared_ptr<RefineAlgorithm> bdry_fill_alg(
-      new RefineAlgorithm(d_dim));
+      new RefineAlgorithm());
    boost::shared_ptr<RefineOperator> refine_op(d_grid_geometry->
       lookupRefineOperator(d_soln_var, "CONSERVATIVE_LINEAR_REFINE"));
    bdry_fill_alg->registerRefine(d_soln_scr_id,  // dest
@@ -772,7 +772,7 @@ int CVODEModel::CVSpgmrPrecondSet(
    /*
     * Construct refine algorithm to fill boundaries of solution vector
     */
-   RefineAlgorithm fill_soln_vector_bounds(d_dim);
+   RefineAlgorithm fill_soln_vector_bounds;
    boost::shared_ptr<RefineOperator> refine_op(d_grid_geometry->
       lookupRefineOperator(d_soln_var, "CONSERVATIVE_LINEAR_REFINE"));
    fill_soln_vector_bounds.registerRefine(d_soln_scr_id,
@@ -995,7 +995,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
     * Construct a communication schedule which will fill ghosts of
     * soln_scratch with z vector data (z -> soln_scratch).
     */
-   RefineAlgorithm fill_z_vector_bounds(d_dim);
+   RefineAlgorithm fill_z_vector_bounds;
    boost::shared_ptr<RefineOperator> refine_op(d_grid_geometry->
       lookupRefineOperator(d_soln_var, "CONSERVATIVE_LINEAR_REFINE"));
    fill_z_vector_bounds.registerRefine(d_soln_scr_id,

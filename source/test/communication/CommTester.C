@@ -43,10 +43,10 @@ CommTester::CommTester(
    RefinePatchStrategy(),
    CoarsenPatchStrategy(),
    d_dim(dim),
-   d_fill_source_algorithm(dim),
-   d_refine_algorithm(dim),
+   d_fill_source_algorithm(),
+   d_refine_algorithm(),
    d_coarsen_algorithm(dim),
-   d_reset_refine_algorithm(dim),
+   d_reset_refine_algorithm(),
    d_reset_coarsen_algorithm(dim)
 {
    NULL_USE(main_input_db);

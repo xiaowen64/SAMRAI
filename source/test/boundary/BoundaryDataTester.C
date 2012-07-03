@@ -254,7 +254,7 @@ int BoundaryDataTester::runBoundaryTest(
 
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 
-   xfer::RefineAlgorithm boundary_fill(d_dim);
+   xfer::RefineAlgorithm boundary_fill;
 
    for (int iv = 0; iv < d_variables.getSize(); iv++) {
       int datid =

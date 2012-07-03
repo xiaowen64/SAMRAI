@@ -127,8 +127,7 @@ public:
     * before it can do anything useful.  See the registerRefine() routines
     * for details
     */
-   explicit RefineAlgorithm(
-      const tbox::Dimension& dim);
+   RefineAlgorithm();
 
    /*!
     * @brief The destructor releases all internal storage.
@@ -626,17 +625,6 @@ public:
    }
 
    /*!
-    * @brief Return the dimension of this object.
-    * TODO: This method seems superfluous, only used for error checking,
-    * which can use d_dim directly.  BTNG
-    */
-   const tbox::Dimension&
-   getDim() const
-   {
-      return d_dim;
-   }
-
-   /*!
     * @brief Print the refine algorithm state to the specified data stream.
     *
     * @param[out] stream Output data stream.
@@ -656,11 +644,6 @@ private:
    typedef hier::Box MBox;
    //! @brief Shorthand typedef.
    typedef hier::BoxLevel BoxLevel;
-
-   /*!
-    * @brief Dimension of the object
-    */
-   const tbox::Dimension d_dim;
 
    /*!
     * RefineClasses object holds all of the registered refine items

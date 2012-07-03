@@ -986,7 +986,7 @@ CellPoissonFACOps::initializeOperatorState(
    d_flux_coarsen_schedules.resizeArray(d_ln_max + 1);
 
    d_prolongation_refine_algorithm.reset(
-      new xfer::RefineAlgorithm(d_dim));
+      new xfer::RefineAlgorithm());
    d_urestriction_coarsen_algorithm.reset(
       new xfer::CoarsenAlgorithm(d_dim));
    d_rrestriction_coarsen_algorithm.reset(
@@ -994,9 +994,9 @@ CellPoissonFACOps::initializeOperatorState(
    d_flux_coarsen_algorithm.reset(
       new xfer::CoarsenAlgorithm(d_dim));
    d_ghostfill_refine_algorithm.reset(
-      new xfer::RefineAlgorithm(d_dim));
+      new xfer::RefineAlgorithm());
    d_ghostfill_nocoarse_refine_algorithm.reset(
-      new xfer::RefineAlgorithm(d_dim));
+      new xfer::RefineAlgorithm());
 
    d_prolongation_refine_algorithm->registerRefine(
       d_cell_scratch_id,
@@ -2742,7 +2742,7 @@ CellPoissonFACOps::xeqScheduleProlongation(
    if (!d_prolongation_refine_schedules[dest_ln]) {
       TBOX_ERROR("Expected schedule not found.");
    }
-   xfer::RefineAlgorithm refiner(d_dim);
+   xfer::RefineAlgorithm refiner;
    refiner.registerRefine(dst_id,
       src_id,
       scr_id,
@@ -2821,7 +2821,7 @@ CellPoissonFACOps::xeqScheduleGhostFill(
    if (!d_ghostfill_refine_schedules[dest_ln]) {
       TBOX_ERROR("Expected schedule not found.");
    }
-   xfer::RefineAlgorithm refiner(d_dim);
+   xfer::RefineAlgorithm refiner;
    refiner.
    registerRefine(dst_id,
       dst_id,
@@ -2842,7 +2842,7 @@ CellPoissonFACOps::xeqScheduleGhostFillNoCoarse(
    if (!d_ghostfill_nocoarse_refine_schedules[dest_ln]) {
       TBOX_ERROR("Expected schedule not found.");
    }
-   xfer::RefineAlgorithm refiner(d_dim);
+   xfer::RefineAlgorithm refiner;
    refiner.
    registerRefine(dst_id,
       dst_id,

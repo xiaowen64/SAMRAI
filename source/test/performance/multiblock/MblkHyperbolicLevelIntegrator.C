@@ -168,15 +168,15 @@ MblkHyperbolicLevelIntegrator::MblkHyperbolicLevelIntegrator(
    d_flux_is_face(true),
    d_flux_face_registered(false),
    d_flux_side_registered(false),
-   d_mblk_bdry_fill_advance(new xfer::RefineAlgorithm(d_dim)),
-   d_mblk_bdry_fill_advance_new(new xfer::RefineAlgorithm(d_dim)),
-   d_mblk_bdry_fill_advance_old(new xfer::RefineAlgorithm(d_dim)),
+   d_mblk_bdry_fill_advance(new xfer::RefineAlgorithm()),
+   d_mblk_bdry_fill_advance_new(new xfer::RefineAlgorithm()),
+   d_mblk_bdry_fill_advance_old(new xfer::RefineAlgorithm()),
    d_mblk_coarsen_fluxsum(new xfer::CoarsenAlgorithm(d_dim)),
    d_mblk_coarsen_sync_data(new xfer::CoarsenAlgorithm(d_dim)),
    d_mblk_sync_initial_data(new xfer::CoarsenAlgorithm(d_dim)),
    d_coarsen_rich_extrap_init(new xfer::CoarsenAlgorithm(dim)),
    d_coarsen_rich_extrap_final(new xfer::CoarsenAlgorithm(dim)),
-   d_mblk_fill_new_level(new xfer::RefineAlgorithm(d_dim)),
+   d_mblk_fill_new_level(new xfer::RefineAlgorithm()),
    d_number_time_data_levels(2),
    d_scratch(hier::VariableDatabase::getDatabase()->getContext("SCRATCH")),
    d_current(hier::VariableDatabase::getDatabase()->getContext("CURRENT")),
@@ -265,13 +265,13 @@ MblkHyperbolicLevelIntegrator::MblkHyperbolicLevelIntegrator(
 
    // multi-block versions of Coarsen/Refine algs
    d_mblk_bdry_fill_advance.reset(
-      new xfer::RefineAlgorithm(d_dim));
+      new xfer::RefineAlgorithm());
    d_mblk_bdry_fill_advance_new.reset(
-      new xfer::RefineAlgorithm(d_dim));
+      new xfer::RefineAlgorithm());
    d_mblk_bdry_fill_advance_old.reset(
-      new xfer::RefineAlgorithm(d_dim));
+      new xfer::RefineAlgorithm());
    d_mblk_fill_new_level.reset(
-      new xfer::RefineAlgorithm(d_dim));
+      new xfer::RefineAlgorithm());
    d_mblk_coarsen_fluxsum.reset(
       new xfer::CoarsenAlgorithm(d_dim));
    d_mblk_coarsen_sync_data.reset(

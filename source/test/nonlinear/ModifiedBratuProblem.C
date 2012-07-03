@@ -150,8 +150,8 @@ ModifiedBratuProblem::ModifiedBratuProblem(
    d_nghosts(hier::IntVector(dim, NUM_GHOSTS_U)),
    d_weight(new pdat::CellVariable<double>(
       dim, object_name + "weight", 1)),
-   d_fill_new_level(dim),
-   d_soln_fill(dim),
+   d_fill_new_level(),
+   d_soln_fill(),
    d_flux_coarsen(dim),
    d_soln_coarsen(dim),
    d_scratch_soln_coarsen(dim),
@@ -1281,7 +1281,7 @@ void ModifiedBratuProblem::evaluateBratuFunction(
     */
 
    s_copy_timer->start();
-   RefineAlgorithm eval_fill(d_dim);
+   RefineAlgorithm eval_fill;
    eval_fill.registerRefine(d_soln_scratch_id,
       x->getComponentDescriptorIndex(0),
       d_soln_scratch_id,
@@ -1716,7 +1716,7 @@ ModifiedBratuProblem::jacobianTimesVector(
     * multiplied.
     */
    s_copy_timer->start();
-   RefineAlgorithm jacv_fill(d_dim);
+   RefineAlgorithm jacv_fill;
    jacv_fill.registerRefine(d_soln_scratch_id,
       v->getComponentDescriptorIndex(0),
       d_soln_scratch_id,
@@ -2115,7 +2115,7 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
    boost::shared_ptr<hier::PatchHierarchy> hierarchy(
       d_solution_vector->getPatchHierarchy());
 
-   RefineAlgorithm eval_fill(d_dim);
+   RefineAlgorithm eval_fill;
    eval_fill.registerRefine(d_soln_scratch_id,
       x->getComponentDescriptorIndex(0),
       d_soln_scratch_id,
@@ -2455,7 +2455,7 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
    boost::shared_ptr<hier::PatchHierarchy> hierarchy(
       d_solution_vector->getPatchHierarchy());
 
-   RefineAlgorithm eval_fill(d_dim);
+   RefineAlgorithm eval_fill;
    eval_fill.registerRefine(d_soln_scratch_id,
       x->getComponentDescriptorIndex(0),
       d_soln_scratch_id,

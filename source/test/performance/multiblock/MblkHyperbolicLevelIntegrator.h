@@ -43,7 +43,6 @@ using namespace std;
 
 #include "SAMRAI/xfer/CoarsenAlgorithm.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
-#include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/tbox/Timer.h"
 

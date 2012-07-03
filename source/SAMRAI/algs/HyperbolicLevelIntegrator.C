@@ -1724,10 +1724,10 @@ HyperbolicLevelIntegrator::registerVariable(
        * One-time set-up for communication algorithms.
        * We wait until this point to do this because we need a dimension.
        */
-      d_bdry_fill_advance.reset(new xfer::RefineAlgorithm(dim));
-      d_bdry_fill_advance_new.reset(new xfer::RefineAlgorithm(dim));
-      d_bdry_fill_advance_old.reset(new xfer::RefineAlgorithm(dim));
-      d_fill_new_level.reset(new xfer::RefineAlgorithm(dim));
+      d_bdry_fill_advance.reset(new xfer::RefineAlgorithm());
+      d_bdry_fill_advance_new.reset(new xfer::RefineAlgorithm());
+      d_bdry_fill_advance_old.reset(new xfer::RefineAlgorithm());
+      d_fill_new_level.reset(new xfer::RefineAlgorithm());
       d_coarsen_fluxsum.reset(new xfer::CoarsenAlgorithm(dim));
       d_coarsen_sync_data.reset(new xfer::CoarsenAlgorithm(dim));
       d_sync_initial_data.reset(new xfer::CoarsenAlgorithm(dim));

@@ -191,7 +191,7 @@ GriddingAlgorithm::GriddingAlgorithm(
    /*
     * Initialize communication algorithm for exchanging buffered tag data.
     */
-   d_bdry_fill_tags.reset(new xfer::RefineAlgorithm(d_dim));
+   d_bdry_fill_tags.reset(new xfer::RefineAlgorithm());
 
    d_bdry_fill_tags->registerRefine(d_buf_tag_indx,
       d_buf_tag_indx,
@@ -2425,7 +2425,7 @@ void GriddingAlgorithm::resetTagBufferingData(const int tag_buffer)
       d_mb_tagger_strategy->setScratchTagPatchDataIndex(d_buf_tag_indx);
    }
 
-   d_bdry_fill_tags.reset(new xfer::RefineAlgorithm(d_dim));
+   d_bdry_fill_tags.reset(new xfer::RefineAlgorithm());
 
    d_bdry_fill_tags->
    registerRefine(d_buf_tag_indx,

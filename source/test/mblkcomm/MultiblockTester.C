@@ -65,7 +65,7 @@ MultiblockTester::MultiblockTester(
       hier::VariableDatabase::getDatabase()->getContext("DESTINATION")),
    d_reset_refine_scratch(
       hier::VariableDatabase::getDatabase()->getContext("REFINE_SCRATCH")),
-   d_reset_refine_algorithm(dim),
+   d_reset_refine_algorithm(),
    d_reset_coarsen_algorithm(dim),
    d_is_reset(false)
 {
@@ -140,7 +140,7 @@ void MultiblockTester::registerVariable(
       refine_operator = xfer_geom->lookupRefineOperator(src_variable,
             operator_name);
 
-      d_mblk_refine_alg.reset(new xfer::RefineAlgorithm(d_dim));
+      d_mblk_refine_alg.reset(new xfer::RefineAlgorithm());
 
       hier::IntVector scratch_ghosts =
          hier::IntVector::max(src_ghosts, dst_ghosts);

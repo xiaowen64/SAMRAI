@@ -883,7 +883,7 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
 
    tmp_level->allocatePatchData(wrk_indx);
 
-   xfer::RefineAlgorithm fill_work_algorithm(d_dim);
+   xfer::RefineAlgorithm fill_work_algorithm;
 
    boost::shared_ptr<hier::RefineOperator> work_refine_op(
       boost::make_shared<pdat::CellDoubleConstantRefine>());
