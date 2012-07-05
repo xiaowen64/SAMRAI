@@ -71,20 +71,12 @@ OuternodeData<TYPE>::OuternodeData(
       hier::Box outernodebox = nodebox;
       outernodebox.upper(d) = nodebox.lower(d);
       outernodebox.lower(d) = nodebox.lower(d);
-      if (outernodebox.size() > 0) {
-         d_data[d][0].reset(new ArrayData<TYPE>(outernodebox, depth));
-      } else {
-         d_data[d][0].reset(new ArrayData<TYPE>(dim));
-      }
+      d_data[d][0].reset(new ArrayData<TYPE>(outernodebox, depth));
 
       outernodebox = nodebox;
       outernodebox.lower(d) = nodebox.upper(d);
       outernodebox.upper(d) = nodebox.upper(d);
-      if (outernodebox.size() > 0) {
-         d_data[d][1].reset(new ArrayData<TYPE>(outernodebox, depth));
-      } else {
-         d_data[d][1].reset(new ArrayData<TYPE>(dim));
-      }
+      d_data[d][1].reset(new ArrayData<TYPE>(outernodebox, depth));
 
    }
 }

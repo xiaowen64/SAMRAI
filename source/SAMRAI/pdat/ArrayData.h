@@ -101,14 +101,6 @@ public:
       int depth);
 
    /*!
-    * @brief Constructor creating an empty array data object.
-    *
-    * @param dim
-    */
-   ArrayData(
-      const tbox::Dimension& dim);
-
-   /*!
     * The destructor for an array data object releases all memory allocated
     * for the array elements.
     */
@@ -624,8 +616,6 @@ private:
    unpackBufferAndSum(
       const TYPE* buffer,
       const hier::Box& box);
-
-   tbox::Dimension d_dim;
 
    int d_depth;
    int d_offset;

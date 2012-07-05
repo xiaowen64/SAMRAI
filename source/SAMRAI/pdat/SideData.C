@@ -57,7 +57,7 @@ SideData<TYPE>::SideData(
             SideGeometry::toSideBox(getGhostBox(), d);
          d_data[d].reset(new ArrayData<TYPE>(side, depth));
       } else {
-         d_data[d].reset(new ArrayData<TYPE>(dim));
+         d_data[d].reset(new ArrayData<TYPE>(hier::Box::getEmptyBox(dim), depth));
       }
    }
 }
@@ -85,7 +85,7 @@ SideData<TYPE>::SideData(
             SideGeometry::toSideBox(getGhostBox(), d);
          d_data[d].reset(new ArrayData<TYPE>(side, depth));
       } else {
-         d_data[d].reset(new ArrayData<TYPE>(dim));
+         d_data[d].reset(new ArrayData<TYPE>(hier::Box::getEmptyBox(dim), depth));
       }
    }
 }

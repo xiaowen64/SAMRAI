@@ -60,13 +60,8 @@ OuteredgeData<TYPE>::OuteredgeData(
                      face_normal,
                      side);
 
-               if (!oedge_data_box.empty()) {
-                  d_data[axis][face_normal][side].reset(
-                     new ArrayData<TYPE>(oedge_data_box, depth));
-               } else {
-                  d_data[axis][face_normal][side].reset(
-                     new ArrayData<TYPE>(getDim()));
-               }
+               d_data[axis][face_normal][side].reset(
+                  new ArrayData<TYPE>(oedge_data_box, depth));
 
             }   // iterate over lower/upper sides
 

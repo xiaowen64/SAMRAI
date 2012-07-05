@@ -62,24 +62,6 @@ ArrayData<TYPE>::getSizeOfData(
 /*
  *************************************************************************
  *
- * Default constructor creates an empty ArrayData object.
- *
- *************************************************************************
- */
-template<class TYPE>
-ArrayData<TYPE>::ArrayData(
-   const tbox::Dimension& dim):
-   d_dim(dim),
-   d_depth(0),
-   d_offset(0),
-   d_box(hier::Box::getEmptyBox(dim)),
-   d_array(0)
-{
-}
-
-/*
- *************************************************************************
- *
  * The main constructor allocates data for the given box and depth.  It
  * does not initialize the memory.  The destructor automatically
  * deallocates memory via the array destructor.
@@ -91,7 +73,6 @@ template<class TYPE>
 ArrayData<TYPE>::ArrayData(
    const hier::Box& box,
    int depth):
-   d_dim(box.getDim()),
    d_depth(depth),
    d_offset(box.size()),
    d_box(box),
@@ -237,7 +218,7 @@ ArrayData<TYPE>::copy(
          const int dst_start_depth = 0;
          const int src_start_depth = 0;
          const int num_depth = (d_depth < src.d_depth ? d_depth : src.d_depth);
-         const hier::IntVector src_shift(d_dim, 0);
+         const hier::IntVector src_shift(box.getDim(), 0);
 
          ArrayDataOperationUtilities<TYPE, CopyOperation<TYPE> >::
          doArrayDataOperationOnBox(*this,
@@ -272,7 +253,7 @@ ArrayData<TYPE>::copy(
    const hier::IntVector& src_shift)
 {
 
-   if (src_shift == hier::IntVector::getZero(d_dim)) {
+   if (src_shift == hier::IntVector::getZero(box.getDim())) {
 
       copy(src, box);
 
@@ -313,7 +294,7 @@ ArrayData<TYPE>::copy(
    const hier::Transformation& transformation)
 {
    if (transformation.getRotation() == hier::Transformation::NO_ROTATE
-       && transformation.getOffset() == hier::IntVector::getZero(d_dim)) {
+       && transformation.getOffset() == hier::IntVector::getZero(box.getDim())) {
 
       copy(src, box);
 
@@ -430,7 +411,7 @@ ArrayData<TYPE>::copyDepth(
          const int dst_start_depth = dst_depth;
          const int src_start_depth = src_depth;
          const int num_depth = 1;
-         const hier::IntVector src_shift(d_dim, 0);
+         const hier::IntVector src_shift(box.getDim(), 0);
 
          ArrayDataOperationUtilities<TYPE, CopyOperation<TYPE> >::
          doArrayDataOperationOnBox(*this,
@@ -494,7 +475,7 @@ ArrayData<TYPE>::sum(
          const int dst_start_depth = 0;
          const int src_start_depth = 0;
          const int num_depth = (d_depth < src.d_depth ? d_depth : src.d_depth);
-         const hier::IntVector src_shift(d_dim, 0);
+         const hier::IntVector src_shift(box.getDim(), 0);
 
          ArrayDataOperationUtilities<TYPE, SumOperation<TYPE> >::
          doArrayDataOperationOnBox(*this,
@@ -529,7 +510,7 @@ ArrayData<TYPE>::sum(
    const hier::IntVector& src_shift)
 {
 
-   if (src_shift == hier::IntVector::getZero(d_dim)) {
+   if (src_shift == hier::IntVector::getZero(box.getDim())) {
 
       sum(src, box);
 
@@ -893,10 +874,12 @@ ArrayData<TYPE>::fill(
 
    if (!ispace.empty()) {
 
+      const tbox::Dimension& dim = box.getDim();
+
       int box_w[SAMRAI::MAX_DIM_VAL];
       int dst_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < dim.getValue(); i++) {
          box_w[i] = ispace.numberCells(i);
          dst_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
@@ -907,7 +890,7 @@ ArrayData<TYPE>::fill(
       int dst_counter = d_box.offset(ispace.lower()) + d * d_offset;
 
       int dst_b[SAMRAI::MAX_DIM_VAL];
-      for (int nd = 0; nd < d_dim.getValue(); nd++) {
+      for (int nd = 0; nd < dim.getValue(); nd++) {
          dst_b[nd] = dst_counter;
       }
 
@@ -920,7 +903,7 @@ ArrayData<TYPE>::fill(
          }
          int dim_jump = 0;
 
-         for (int j = 1; j < d_dim.getValue(); j++) {
+         for (int j = 1; j < dim.getValue(); j++) {
             if (dim_counter[j] < box_w[j] - 1) {
                ++dim_counter[j];
                dim_jump = j;
@@ -1007,7 +990,7 @@ template<class TYPE>
 const tbox::Dimension&
 ArrayData<TYPE>::getDim() const
 {
-   return d_dim;
+   return d_box.getDim();
 }
 
 template<class TYPE>
