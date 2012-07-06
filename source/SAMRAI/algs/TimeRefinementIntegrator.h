@@ -285,7 +285,7 @@ public:
    int
    getIntegratorStep() const
    {
-      return d_integrator_step;
+      return d_step_level[0];
    }
 
    /**
@@ -295,7 +295,7 @@ public:
    int
    getMaxIntegratorSteps() const
    {
-      return d_max_integrator_steps;
+      return d_max_steps_level[0];
    }
 
    /**
@@ -309,7 +309,12 @@ public:
    {
       TBOX_ASSERT((level_number >= 0) &&
          (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-      return d_step_level[level_number] < d_max_steps_level[level_number];
+      if (level_number == 0) {
+         return !d_level_0_advanced;
+      }
+      else {
+         return d_step_level[level_number] < d_max_steps_level[level_number];
+      }
    }
 
    /**
@@ -318,7 +323,7 @@ public:
    bool
    stepsRemaining() const
    {
-      return d_integrator_step < d_max_integrator_steps;
+      return d_step_level[0] < d_max_steps_level[0];
    }
 
    /**
@@ -366,7 +371,12 @@ public:
    {
       TBOX_ASSERT((level_number >= 0) &&
          (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-      return d_step_level[level_number];
+      if (level_number == 0) {
+         return d_level_0_advanced ? 1 : 0;
+      }
+      else {
+         return d_step_level[level_number];
+      }
    }
 
    /**
@@ -379,7 +389,12 @@ public:
    {
       TBOX_ASSERT((level_number >= 0) &&
          (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-      return d_max_steps_level[level_number];
+      if (level_number == 0) {
+         return 1;
+      }
+      else {
+         return d_max_steps_level[level_number];
+      }
    }
 
    /**
@@ -419,7 +434,12 @@ public:
    {
       TBOX_ASSERT((level_number >= 0) &&
          (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-      return d_step_level[level_number] <= 0;
+      if (level_number == 0) {
+         return !d_level_0_advanced;
+      }
+      else {
+         return d_step_level[level_number] <= 0;
+      }
    }
 
    /**
@@ -432,7 +452,12 @@ public:
    {
       TBOX_ASSERT((level_number >= 0) &&
          (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-      return d_step_level[level_number] >= d_max_steps_level[level_number];
+      if (level_number == 0) {
+         return d_level_0_advanced;
+      }
+      else {
+         return d_step_level[level_number] >= d_max_steps_level[level_number];
+      }
    }
 
    /**
@@ -536,18 +561,6 @@ private:
       const double time_remaining,
       const double dt_bound);
 
-   /**
-    * Return true if the current step count for the level indicates
-    * that regridding should occur.  In particular, true is returned
-    * if both the level allows refinement and the step count is an
-    * integer multiple of the regrid step interval.
-    * Otherwise, false is returned.
-    */
-   bool
-   atRegridPointPrivate(
-      const int level_number,
-      bool qeury_for_coarser_level = false) const;
-
    /*
     * Return true if the this level can be regridded at the current step
     * and the next coarser level can be regridded too.  Otherwise,
@@ -623,7 +636,6 @@ private:
    double d_start_time;
    double d_end_time;
    double d_grow_dt;
-   int d_max_integrator_steps;
 
    /*
     * The regrid interval indicates the number of integration steps taken
@@ -661,7 +673,6 @@ private:
     * the state of the timestep sequence over the levels in the AMR hierarchy.
     */
    double d_integrator_time;
-   int d_integrator_step;
    bool d_just_regridded;
    int d_last_finest_level;
    tbox::Array<double> d_level_old_old_time;
@@ -671,6 +682,8 @@ private:
    tbox::Array<double> d_dt_actual_level;
    tbox::Array<int> d_step_level;
    tbox::Array<int> d_max_steps_level;
+   bool d_level_0_advanced;
+   bool d_hierarchy_advanced;
 
    double d_dt;
 
