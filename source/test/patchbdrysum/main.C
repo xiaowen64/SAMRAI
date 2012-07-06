@@ -216,7 +216,6 @@ int main(
        */
       boost::shared_ptr<StandardTagAndInitialize> tag_and_init_ops(
          new StandardTagAndInitialize(
-            dim,
             "StandardTagAndInitialize",
             hier_sum_test,
             input_db->getDatabase("StandardTagAndInitialize")));

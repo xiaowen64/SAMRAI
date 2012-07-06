@@ -252,7 +252,6 @@ int main(
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> error_est(
          new mesh::StandardTagAndInitialize(
-            dim,
             "StandardTagAndInitialize",
             cvode_model.get(),
             input_db->getDatabase("StandardTagAndInitialize")));

@@ -338,7 +338,6 @@ int main(
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger(
          new mesh::StandardTagAndInitialize(
-            dim,
             "StandardTagggingAndInitializer",
             comm_tester.get(),
             input_db->getDatabase("StandardTaggingAndInitializer")));

@@ -263,12 +263,6 @@ public:
       double time) = 0;
 
    /*!
-    * Return the dimension of this object.
-    */
-   virtual const tbox::Dimension&
-   getDim() const = 0;
-
-   /*!
     * Returns the object name.
     */
    const std::string&

@@ -235,7 +235,6 @@ int main(
        */
       boost::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
          new mesh::StandardTagAndInitialize(
-            dim,
             "CellTaggingMethod",
             abrtest.getStandardTagAndInitObject(),
             input_db->getDatabase("StandardTagAndInitialize")));

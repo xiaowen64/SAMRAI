@@ -376,7 +376,7 @@ int main(
             use_refined_timestepping));
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
-         new mesh::StandardTagAndInitialize(dim,
+         new mesh::StandardTagAndInitialize(
             "StandardTagAndInitialize",
             mblk_hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));

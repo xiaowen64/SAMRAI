@@ -134,7 +134,6 @@ void HierarchyTester::setupInitialHierarchy(
 
    boost::shared_ptr<StandardTagAndInitialize> dummy_error_detector(
       new StandardTagAndInitialize(
-         d_dim,
          "StandardTagAndInitialize",
          this,
          main_input_db->getDatabase("StandardTagAndInitialize")));

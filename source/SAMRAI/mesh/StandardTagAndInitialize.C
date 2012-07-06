@@ -96,12 +96,10 @@ GCD(
  */
 
 StandardTagAndInitialize::StandardTagAndInitialize(
-   const tbox::Dimension& dim,
    const std::string& object_name,
    StandardTagAndInitStrategy* tag_strategy,
    const boost::shared_ptr<tbox::Database>& input_db):
   TagAndInitializeStrategy(object_name),
-  d_dim(dim),
   d_tag_strategy(tag_strategy),
   d_error_coarsen_ratio(1),
   d_use_cycle_criteria(false),
@@ -170,7 +168,6 @@ StandardTagAndInitialize::initializeLevelData(
    }
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
 #endif
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
 
    if (d_tag_strategy != ((StandardTagAndInitStrategy *)NULL)) {
       d_tag_strategy->initializeLevelData(hierarchy,
@@ -209,7 +206,6 @@ StandardTagAndInitialize::resetHierarchyConfiguration(
       TBOX_ASSERT(hierarchy->getPatchLevel(ln0));
    }
 #endif
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
 
    if (d_tag_strategy != ((StandardTagAndInitStrategy *)NULL)) {
       d_tag_strategy->resetHierarchyConfiguration(hierarchy,
@@ -256,7 +252,6 @@ StandardTagAndInitialize::tagCellsForRefinement(
       && (level_number <= hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(tag_index >= 0);
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
 
    bool usesRichExtrap =
       usesRichardsonExtrapolation(regrid_cycle, regrid_time);
@@ -396,9 +391,10 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
    const bool coarsest_sync_level,
    const bool can_be_refined)
 {
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
    TBOX_ASSERT(regrid_start_time <= regrid_time);
    TBOX_ASSERT(d_tag_strategy != ((StandardTagAndInitStrategy *)NULL));
+
+   const tbox::Dimension& dim = hierarchy->getDim();
 
    boost::shared_ptr<hier::PatchLevel> patch_level(
       hierarchy->getPatchLevel(level_number));
@@ -497,7 +493,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
    /*
     * Coarsen tags from level to coarser level.
     */
-   hier::IntVector coarsen_ratio(d_dim, d_error_coarsen_ratio);
+   hier::IntVector coarsen_ratio(dim, d_error_coarsen_ratio);
    for (hier::PatchLevel::iterator ip(coarser_level->begin());
         ip != coarser_level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& coarse_patch = *ip;
@@ -523,14 +519,14 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
       const hier::Index ilastc = coarse_patch->getBox().upper();
 
       for (int d = 0; d < ctags->getDepth(); d++) {
-         if (d_dim == tbox::Dimension(1)) {
+         if (dim == tbox::Dimension(1)) {
             F77_FUNC(coarsentags1d, COARSENTAGS1D) (ifirstc(0), ilastc(0),
                filo(0), fihi(0),
                cilo(0), cihi(0),
                &coarsen_ratio[0],
                ftags->getPointer(d),
                ctags->getPointer(d));
-         } else if ((d_dim == tbox::Dimension(2))) {
+         } else if ((dim == tbox::Dimension(2))) {
             F77_FUNC(coarsentags2d, COARSENTAGS2D) (ifirstc(0), ifirstc(1),
                ilastc(0), ilastc(1),
                filo(0), filo(1), fihi(0), fihi(1),
@@ -538,7 +534,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
                &coarsen_ratio[0],
                ftags->getPointer(d),
                ctags->getPointer(d));
-         } else if ((d_dim == tbox::Dimension(3))) {
+         } else if ((dim == tbox::Dimension(3))) {
             F77_FUNC(coarsentags3d, COARSENTAGS3D) (ifirstc(0), ifirstc(1),
                ifirstc(2),
                ilastc(0), ilastc(1), ilastc(2),
@@ -623,7 +619,6 @@ StandardTagAndInitialize::preprocessErrorEstimation(
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
 
    if (usesRichardsonExtrapolation(cycle, regrid_time)) {
       preprocessRichardsonExtrapolation(hierarchy,
@@ -678,9 +673,10 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
    const bool initial_time)
 {
    TBOX_ASSERT(hierarchy);
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
    TBOX_ASSERT(regrid_start_time <= regrid_time);
    TBOX_ASSERT(d_tag_strategy != ((StandardTagAndInitStrategy *)NULL));
+
+   const tbox::Dimension& dim = hierarchy->getDim();
 
    boost::shared_ptr<hier::PatchLevel> patch_level(
       hierarchy->getPatchLevel(level_number));
@@ -737,8 +733,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
     */
 
    boost::shared_ptr<hier::PatchLevel> coarsened_level(
-      boost::make_shared<hier::PatchLevel>(d_dim));
-   hier::IntVector coarsen_ratio(d_dim, d_error_coarsen_ratio);
+      boost::make_shared<hier::PatchLevel>(dim));
+   hier::IntVector coarsen_ratio(dim, d_error_coarsen_ratio);
    coarsened_level->setCoarsenedPatchLevel(patch_level, coarsen_ratio);
 
    if ((level_number > 0)
@@ -794,8 +790,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
        * Get Connectors coarsened<==>coarser, which are used for recursive
        * refinement filling of the coarsened level's ghosts.
        */
-      hier::Connector* coarsened_to_coarser = new hier::Connector(d_dim);
-      hier::Connector* coarser_to_coarsened = new hier::Connector(d_dim);
+      hier::Connector* coarsened_to_coarser = new hier::Connector(dim);
+      hier::Connector* coarser_to_coarsened = new hier::Connector(dim);
       boost::shared_ptr<hier::PatchLevel> coarser_level(
          hierarchy->getPatchLevel(level_number - 1));
       const hier::Connector& level_to_coarser =
@@ -909,10 +905,12 @@ StandardTagAndInitialize::coarsestLevelBoxesOK(
    bool boxes_ok = true;
    if (everUsesRichardsonExtrapolation()) {
 
+      const tbox::Dimension& dim = boxes.begin()->getDim();
+
       for (hier::BoxContainer::const_iterator ib(boxes);
            ib != boxes.end(); ++ib) {
          hier::IntVector n_cells = ib->numberCells();
-         for (int i = 0; i < d_dim.getValue(); i++) {
+         for (int i = 0; i < dim.getValue(); i++) {
             int error_coarsen_ratio = getErrorCoarsenRatio();
             if (!((n_cells(i) % error_coarsen_ratio) == 0)) {
                tbox::perr << "Bad domain box: " << *ib << std::endl;
@@ -946,6 +944,7 @@ StandardTagAndInitialize::checkCoarsenRatios(
    const tbox::Array<hier::IntVector>& ratio_to_coarser)
 {
    if (everUsesRichardsonExtrapolation()) {
+      const tbox::Dimension& dim = ratio_to_coarser[1].getDim();
 
       /*
        * Compute GCD on first coordinate direction of level 1
@@ -969,7 +968,7 @@ StandardTagAndInitialize::checkCoarsenRatios(
        */
       for (int ln = 1; ln < ratio_to_coarser.getSize(); ln++) {
 
-         for (int d = 0; d < d_dim.getValue(); d++) {
+         for (int d = 0; d < dim.getValue(); d++) {
             int gcd = GCD(error_coarsen_ratio, ratio_to_coarser[ln](d));
             if ((gcd % error_coarsen_ratio) != 0) {
                gcd = ratio_to_coarser[ln](d);

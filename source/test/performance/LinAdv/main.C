@@ -399,7 +399,6 @@ int main(
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
          new mesh::StandardTagAndInitialize(
-            dim,
             "StandardTagAndInitialize",
             hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));

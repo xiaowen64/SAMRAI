@@ -392,7 +392,6 @@ int main(
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
          new mesh::StandardTagAndInitialize(
-            dim,
             "CellTaggingMethod",
             bratu_model,
             input_db->getDatabase("StandardTagAndInitialize")));

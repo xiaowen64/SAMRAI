@@ -163,7 +163,6 @@ public:
     * is desired so no cell-tagging will be performed.
     */
    StandardTagAndInitialize(
-      const tbox::Dimension& dim,
       const std::string& object_name,
       StandardTagAndInitStrategy* tag_strategy,
       const boost::shared_ptr<tbox::Database>& input_db =
@@ -373,15 +372,6 @@ public:
       const hier::BoxContainer& refine_boxes,
       const int level_number);
 
-   /*!
-    * Return the dimension of this object.
-    */
-   const tbox::Dimension&
-   getDim() const
-   {
-      return d_dim;
-   }
-
 private:
    /*
     * Apply preprocessing for Richardson extrapolation.
@@ -427,11 +417,6 @@ private:
    void
    getFromInput(
       const boost::shared_ptr<tbox::Database>& input_db);
-
-   /*
-    * Dimension of hierarchy this object is intended to work with.
-    */
-   const tbox::Dimension d_dim;
 
    /*
     * Concrete object that supplies problem-specific initialization
