@@ -36,7 +36,7 @@ extern "C" {
 #endif
 
 // in lintimint1d.f:
-void F77_FUNC(lintimeintfacedoub1d, LINTIMEINTFACEDOUB1D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintfacedoub1d, LINTIMEINTFACEDOUB1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -45,7 +45,7 @@ void F77_FUNC(lintimeintfacedoub1d, LINTIMEINTFACEDOUB1D) (const int&,
    const double *, const double *,
    double *);
 // in lintimint2d.f:
-void F77_FUNC(lintimeintfacedoub2d0, LINTIMEINTFACEDOUB2D0) (const int&,
+void SAMRAI_F77_FUNC(lintimeintfacedoub2d0, LINTIMEINTFACEDOUB2D0) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -57,7 +57,7 @@ void F77_FUNC(lintimeintfacedoub2d0, LINTIMEINTFACEDOUB2D0) (const int&,
    const double&,
    const double *, const double *,
    double *);
-void F77_FUNC(lintimeintfacedoub2d1, LINTIMEINTFACEDOUB2D1) (const int&,
+void SAMRAI_F77_FUNC(lintimeintfacedoub2d1, LINTIMEINTFACEDOUB2D1) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -70,7 +70,7 @@ void F77_FUNC(lintimeintfacedoub2d1, LINTIMEINTFACEDOUB2D1) (const int&,
    const double *, const double *,
    double *);
 // in lintimint3d.f:
-void F77_FUNC(lintimeintfacedoub3d0, LINTIMEINTFACEDOUB3D0) (const int&,
+void SAMRAI_F77_FUNC(lintimeintfacedoub3d0, LINTIMEINTFACEDOUB3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -82,7 +82,7 @@ void F77_FUNC(lintimeintfacedoub3d0, LINTIMEINTFACEDOUB3D0) (const int&,
    const double&,
    const double *, const double *,
    double *);
-void F77_FUNC(lintimeintfacedoub3d1, LINTIMEINTFACEDOUB3D1) (const int&,
+void SAMRAI_F77_FUNC(lintimeintfacedoub3d1, LINTIMEINTFACEDOUB3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -94,7 +94,7 @@ void F77_FUNC(lintimeintfacedoub3d1, LINTIMEINTFACEDOUB3D1) (const int&,
    const double&,
    const double *, const double *,
    double *);
-void F77_FUNC(lintimeintfacedoub3d2, LINTIMEINTFACEDOUB3D2) (const int&,
+void SAMRAI_F77_FUNC(lintimeintfacedoub3d2, LINTIMEINTFACEDOUB3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -174,7 +174,7 @@ FaceDoubleLinearTimeInterpolateOp::timeInterpolate(
 
    for (int d = 0; d < dst_dat->getDepth(); d++) {
       if (dim == tbox::Dimension(1)) {
-         F77_FUNC(lintimeintfacedoub1d, LINTIMEINTFACEDOUB1D) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintfacedoub1d, LINTIMEINTFACEDOUB1D) (ifirst(0),
             ilast(0),
             old_ilo(0), old_ihi(0),
             new_ilo(0), new_ihi(0),
@@ -184,7 +184,7 @@ FaceDoubleLinearTimeInterpolateOp::timeInterpolate(
             new_dat->getPointer(0, d),
             dst_dat->getPointer(0, d));
       } else if (dim == tbox::Dimension(2)) {
-         F77_FUNC(lintimeintfacedoub2d0, LINTIMEINTFACEDOUB2D0) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintfacedoub2d0, LINTIMEINTFACEDOUB2D0) (ifirst(0),
             ifirst(1), ilast(0), ilast(1),
             old_ilo(0), old_ilo(1), old_ihi(0), old_ihi(1),
             new_ilo(0), new_ilo(1), new_ihi(0), new_ihi(1),
@@ -193,7 +193,7 @@ FaceDoubleLinearTimeInterpolateOp::timeInterpolate(
             old_dat->getPointer(0, d),
             new_dat->getPointer(0, d),
             dst_dat->getPointer(0, d));
-         F77_FUNC(lintimeintfacedoub2d1, LINTIMEINTFACEDOUB2D1) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintfacedoub2d1, LINTIMEINTFACEDOUB2D1) (ifirst(0),
             ifirst(1), ilast(0), ilast(1),
             old_ilo(0), old_ilo(1), old_ihi(0), old_ihi(1),
             new_ilo(0), new_ilo(1), new_ihi(0), new_ihi(1),
@@ -203,7 +203,7 @@ FaceDoubleLinearTimeInterpolateOp::timeInterpolate(
             new_dat->getPointer(1, d),
             dst_dat->getPointer(1, d));
       } else if (dim == tbox::Dimension(3)) {
-         F77_FUNC(lintimeintfacedoub3d0, LINTIMEINTFACEDOUB3D0) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintfacedoub3d0, LINTIMEINTFACEDOUB3D0) (ifirst(0),
             ifirst(1), ifirst(2),
             ilast(0), ilast(1), ilast(2),
             old_ilo(0), old_ilo(1), old_ilo(2),
@@ -216,7 +216,7 @@ FaceDoubleLinearTimeInterpolateOp::timeInterpolate(
             old_dat->getPointer(0, d),
             new_dat->getPointer(0, d),
             dst_dat->getPointer(0, d));
-         F77_FUNC(lintimeintfacedoub3d1, LINTIMEINTFACEDOUB3D1) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintfacedoub3d1, LINTIMEINTFACEDOUB3D1) (ifirst(0),
             ifirst(1), ifirst(2),
             ilast(0), ilast(1), ilast(2),
             old_ilo(0), old_ilo(1), old_ilo(2),
@@ -229,7 +229,7 @@ FaceDoubleLinearTimeInterpolateOp::timeInterpolate(
             old_dat->getPointer(1, d),
             new_dat->getPointer(1, d),
             dst_dat->getPointer(1, d));
-         F77_FUNC(lintimeintfacedoub3d2, LINTIMEINTFACEDOUB3D2) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintfacedoub3d2, LINTIMEINTFACEDOUB3D2) (ifirst(0),
             ifirst(1), ifirst(2),
             ilast(0), ilast(1), ilast(2),
             old_ilo(0), old_ilo(1), old_ilo(2),

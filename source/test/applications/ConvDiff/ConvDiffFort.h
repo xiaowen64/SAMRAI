@@ -14,7 +14,7 @@
 // Function argument list interfaces
 extern "C" {
 
-void F77_FUNC(initsphere2d, INITSPHERE2D) (
+void SAMRAI_F77_FUNC(initsphere2d, INITSPHERE2D) (
    const double *, const double *, const double *,
    const int&, const int&, const int&, const int&,
    const int&, const int&,
@@ -25,7 +25,7 @@ void F77_FUNC(initsphere2d, INITSPHERE2D) (
    const double&,
    const int&);
 
-void F77_FUNC(initsphere3d, INITSPHERE3D) (
+void SAMRAI_F77_FUNC(initsphere3d, INITSPHERE3D) (
    const double *, const double *, const double *,
    const int&, const int&, const int&, const int&,
    const int&, const int&,
@@ -38,7 +38,7 @@ void F77_FUNC(initsphere3d, INITSPHERE3D) (
    const double&,
    const int&);
 
-void F77_FUNC(computerhs2d, COMPUTERHS2D) (
+void SAMRAI_F77_FUNC(computerhs2d, COMPUTERHS2D) (
    const int&, const int&, const int&, const int&,
    const int&, const int&,
    const double *, // dx
@@ -49,7 +49,7 @@ void F77_FUNC(computerhs2d, COMPUTERHS2D) (
    double *,      // function_eval
    const int&);   // NEQU
 
-void F77_FUNC(computerhs3d, COMPUTERHS3D) (
+void SAMRAI_F77_FUNC(computerhs3d, COMPUTERHS3D) (
    const int&, const int&, const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -62,7 +62,7 @@ void F77_FUNC(computerhs3d, COMPUTERHS3D) (
    double *,      // function_eval
    const int&);   // NEQU
 
-void F77_FUNC(rkstep2d, RKSTEP2D) (
+void SAMRAI_F77_FUNC(rkstep2d, RKSTEP2D) (
    const int&, const int&, const int&, const int&,
    const int&, const int&,
    const double&, const double&, const double&, const double&,
@@ -74,7 +74,7 @@ void F77_FUNC(rkstep2d, RKSTEP2D) (
    const double *,
    const int&);
 
-void F77_FUNC(rkstep3d, RKSTEP3D) (
+void SAMRAI_F77_FUNC(rkstep3d, RKSTEP3D) (
    const int&, const int&, const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -88,7 +88,7 @@ void F77_FUNC(rkstep3d, RKSTEP3D) (
    const double *,
    const int&);
 
-void F77_FUNC(tagcells2d, TAGCELLS2D) (
+void SAMRAI_F77_FUNC(tagcells2d, TAGCELLS2D) (
    const int&, const int&, const int&, const int&,
    const int&, const int&,
    int *,
@@ -97,7 +97,7 @@ void F77_FUNC(tagcells2d, TAGCELLS2D) (
    const double *,
    const int&);
 
-void F77_FUNC(tagcells3d, TAGCELLS3D) (
+void SAMRAI_F77_FUNC(tagcells3d, TAGCELLS3D) (
    const int&, const int&, const int&, const int&,
    const int&, const int&,
    const int&, const int&,

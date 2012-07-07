@@ -34,7 +34,7 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void F77_FUNC(stufcartbdryloc3d, STUFCARTBDRYLOC3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(stufcartbdryloc3d, STUFCARTBDRYLOC3D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -43,7 +43,7 @@ void F77_FUNC(stufcartbdryloc3d, STUFCARTBDRYLOC3D) (const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&);
 
-void F77_FUNC(stufcartbdrycond3d, STUFCARTBDRYCOND3D) (const int&,
+void SAMRAI_F77_FUNC(stufcartbdrycond3d, STUFCARTBDRYCOND3D) (const int&,
    const int&, const int&, const int&,
    const int&,
    const int&, const int&, const int&,
@@ -52,7 +52,7 @@ void F77_FUNC(stufcartbdrycond3d, STUFCARTBDRYCOND3D) (const int&,
    const int&,
    const int&, const int&, const int&);
 
-void F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -66,7 +66,7 @@ void F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (const int&, const int&,
    double *,
    const int&);
 
-void F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -80,7 +80,7 @@ void F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (const int&, const int&,
    double *,
    const int&);
 
-void F77_FUNC(getcartnodebdry3d, GETCARTNODEBDRY3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(getcartnodebdry3d, GETCARTNODEBDRY3D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -236,7 +236,7 @@ CartesianBoundaryUtilities3::fillFaceBoundaryData(
       const hier::Index& ibeg(fill_box.lower());
       const hier::Index& iend(fill_box.upper());
 
-      F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (ifirst(0), ilast(0),
+      SAMRAI_F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          ibeg(0), iend(0),
@@ -319,7 +319,7 @@ CartesianBoundaryUtilities3::fillEdgeBoundaryData(
       const hier::Index& ibeg(fill_box.lower());
       const hier::Index& iend(fill_box.upper());
 
-      F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (ifirst(0), ilast(0),
+      SAMRAI_F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          ibeg(0), iend(0),
@@ -402,7 +402,7 @@ CartesianBoundaryUtilities3::fillNodeBoundaryData(
       const hier::Index& ibeg(fill_box.lower());
       const hier::Index& iend(fill_box.upper());
 
-      F77_FUNC(getcartnodebdry3d, GETCARTNODEBDRY3D) (ifirst(0), ilast(0),
+      SAMRAI_F77_FUNC(getcartnodebdry3d, GETCARTNODEBDRY3D) (ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          ibeg(0), iend(0),
@@ -1733,7 +1733,7 @@ CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues(
 void
 CartesianBoundaryUtilities3::stuff3dBdryFortConst()
 {
-   F77_FUNC(stufcartbdryloc3d, STUFCARTBDRYLOC3D) (BdryLoc::XLO, BdryLoc::XHI,
+   SAMRAI_F77_FUNC(stufcartbdryloc3d, STUFCARTBDRYLOC3D) (BdryLoc::XLO, BdryLoc::XHI,
       BdryLoc::YLO, BdryLoc::YHI, BdryLoc::ZLO, BdryLoc::ZHI,
       EdgeBdyLoc3D::YLO_ZLO, EdgeBdyLoc3D::YHI_ZLO, EdgeBdyLoc3D::YLO_ZHI,
       EdgeBdyLoc3D::YHI_ZHI, EdgeBdyLoc3D::XLO_ZLO, EdgeBdyLoc3D::XLO_ZHI,
@@ -1743,7 +1743,7 @@ CartesianBoundaryUtilities3::stuff3dBdryFortConst()
       NodeBdyLoc3D::XLO_YHI_ZLO, NodeBdyLoc3D::XHI_YHI_ZLO,
       NodeBdyLoc3D::XLO_YLO_ZHI, NodeBdyLoc3D::XHI_YLO_ZHI,
       NodeBdyLoc3D::XLO_YHI_ZHI, NodeBdyLoc3D::XHI_YHI_ZHI);
-   F77_FUNC(stufcartbdrycond3d, STUFCARTBDRYCOND3D) (BdryCond::FLOW,
+   SAMRAI_F77_FUNC(stufcartbdrycond3d, STUFCARTBDRYCOND3D) (BdryCond::FLOW,
       BdryCond::XFLOW, BdryCond::YFLOW, BdryCond::ZFLOW,
       BdryCond::REFLECT,
       BdryCond::XREFLECT, BdryCond::YREFLECT, BdryCond::ZREFLECT,

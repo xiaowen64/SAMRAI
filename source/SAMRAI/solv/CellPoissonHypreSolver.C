@@ -46,7 +46,7 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void F77_FUNC(compdiagvariablec2d, COMPDIAGVARIABLEC2D) (
+void SAMRAI_F77_FUNC(compdiagvariablec2d, COMPDIAGVARIABLEC2D) (
    double* diag,
    const double* c,
    const double* offdiagi,
@@ -57,7 +57,7 @@ void F77_FUNC(compdiagvariablec2d, COMPDIAGVARIABLEC2D) (
    const int* jlast,
    const double* cscale,
    const double* dscale);
-void F77_FUNC(compdiagscalarc2d, COMPDIAGSCALARC2D) (
+void SAMRAI_F77_FUNC(compdiagscalarc2d, COMPDIAGSCALARC2D) (
    double* diag,
    const double* c,
    const double* offdiagi,
@@ -68,7 +68,7 @@ void F77_FUNC(compdiagscalarc2d, COMPDIAGSCALARC2D) (
    const int* jlast,
    const double* cscale,
    const double* dscale);
-void F77_FUNC(compdiagzeroc2d, COMPDIAGZEROC2D) (
+void SAMRAI_F77_FUNC(compdiagzeroc2d, COMPDIAGZEROC2D) (
    double* diag,
    const double* offdiagi,
    const double* offdiagj,
@@ -78,7 +78,7 @@ void F77_FUNC(compdiagzeroc2d, COMPDIAGZEROC2D) (
    const int* jlast,
    const double* cscale,
    const double* dscale);
-void F77_FUNC(adjbdry2d, ADJBDRY2D) (
+void SAMRAI_F77_FUNC(adjbdry2d, ADJBDRY2D) (
    double* diag,
    const double* offdiagi,
    const double* offdiagj,
@@ -94,7 +94,7 @@ void F77_FUNC(adjbdry2d, ADJBDRY2D) (
    const int* lower, const int* upper,
    const int* location,
    const double* h);
-void F77_FUNC(adjbdryconstoffdiags2d, ADJBDRYCONSTOFFDIAGS2D) (
+void SAMRAI_F77_FUNC(adjbdryconstoffdiags2d, ADJBDRYCONSTOFFDIAGS2D) (
    double* diag,
    const double* offdiag,
    const int* pifirst,
@@ -114,7 +114,7 @@ void F77_FUNC(adjbdryconstoffdiags2d, ADJBDRYCONSTOFFDIAGS2D) (
    const int* lower, const int* upper,
    const int* location,
    const double* h);
-void F77_FUNC(adjustrhs2d, ADJUSTRHS2D) (double* rhs,
+void SAMRAI_F77_FUNC(adjustrhs2d, ADJUSTRHS2D) (double* rhs,
    const int* rifirst,
    const int* rilast,
    const int* rjfirst,
@@ -132,7 +132,7 @@ void F77_FUNC(adjustrhs2d, ADJUSTRHS2D) (double* rhs,
    const int* lower, const int* upper,
    const int* location);
 
-void F77_FUNC(compdiagvariablec3d, COMPDIAGVARIABLEC3D) (
+void SAMRAI_F77_FUNC(compdiagvariablec3d, COMPDIAGVARIABLEC3D) (
    double* diag,
    const double* c,
    const double* offdiagi,
@@ -146,7 +146,7 @@ void F77_FUNC(compdiagvariablec3d, COMPDIAGVARIABLEC3D) (
    const int* klast,
    const double* cscale,
    const double* dscale);
-void F77_FUNC(compdiagscalarc3d, COMPDIAGSCALARC3D) (
+void SAMRAI_F77_FUNC(compdiagscalarc3d, COMPDIAGSCALARC3D) (
    double* diag,
    const double* c,
    const double* offdiagi,
@@ -160,7 +160,7 @@ void F77_FUNC(compdiagscalarc3d, COMPDIAGSCALARC3D) (
    const int* klast,
    const double* cscale,
    const double* dscale);
-void F77_FUNC(compdiagzeroc3d, COMPDIAGZEROC3D) (
+void SAMRAI_F77_FUNC(compdiagzeroc3d, COMPDIAGZEROC3D) (
    double* diag,
    const double* offdiagi,
    const double* offdiagj,
@@ -173,7 +173,7 @@ void F77_FUNC(compdiagzeroc3d, COMPDIAGZEROC3D) (
    const int* klast,
    const double* cscale,
    const double* dscale);
-void F77_FUNC(adjbdry3d, ADJBDRY3D) (
+void SAMRAI_F77_FUNC(adjbdry3d, ADJBDRY3D) (
    double* diag,
    const double* offdiagi,
    const double* offdiagj,
@@ -202,7 +202,7 @@ void F77_FUNC(adjbdry3d, ADJBDRY3D) (
    const int* lower, const int* upper,
    const int* location,
    const double* h);
-void F77_FUNC(adjbdryconstoffdiags3d, ADJBDRYCONSTOFFDIAGS3D) (
+void SAMRAI_F77_FUNC(adjbdryconstoffdiags3d, ADJBDRYCONSTOFFDIAGS3D) (
    double* diag,
    const double* offdiag,
    const int* pifirst,
@@ -228,7 +228,7 @@ void F77_FUNC(adjbdryconstoffdiags3d, ADJBDRYCONSTOFFDIAGS3D) (
    const int* lower, const int* upper,
    const int* location,
    const double* h);
-void F77_FUNC(adjustrhs3d, ADJUSTRHS3D) (double* rhs,
+void SAMRAI_F77_FUNC(adjustrhs3d, ADJUSTRHS3D) (double* rhs,
    const int* rifirst,
    const int* rilast,
    const int* rjfirst,
@@ -1120,7 +1120,7 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
        * beg=beginning, end=ending.
        */
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(adjustrhs2d, ADJUSTRHS2D) (rhs.getPointer(d_rhs_depth),
+         SAMRAI_F77_FUNC(adjustrhs2d, ADJUSTRHS2D) (rhs.getPointer(d_rhs_depth),
             &rhsbox.lower()[0],
             &rhsbox.upper()[0],
             &rhsbox.lower()[1],
@@ -1138,7 +1138,7 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
             &lower[0], &upper[0],
             &location_index);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(adjustrhs3d, ADJUSTRHS3D) (rhs.getPointer(d_rhs_depth),
+         SAMRAI_F77_FUNC(adjustrhs3d, ADJUSTRHS3D) (rhs.getPointer(d_rhs_depth),
             &rhsbox.lower()[0],
             &rhsbox.upper()[0],
             &rhsbox.lower()[1],
@@ -1415,7 +1415,7 @@ CellPoissonHypreSolver::computeDiagonalEntries(
    const hier::Index patch_up = patch_box.upper();
    const double c = 1.0, d = 1.0;
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(compdiagvariablec2d, COMPDIAGVARIABLEC2D) (diagonal.getPointer(),
+      SAMRAI_F77_FUNC(compdiagvariablec2d, COMPDIAGVARIABLEC2D) (diagonal.getPointer(),
          C_data.getPointer(),
          off_diagonal.getPointer(0),
          off_diagonal.getPointer(1),
@@ -1423,7 +1423,7 @@ CellPoissonHypreSolver::computeDiagonalEntries(
          &patch_lo[1], &patch_up[1],
          &c, &d);
    } else if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(compdiagvariablec3d, COMPDIAGVARIABLEC3D) (diagonal.getPointer(),
+      SAMRAI_F77_FUNC(compdiagvariablec3d, COMPDIAGVARIABLEC3D) (diagonal.getPointer(),
          C_data.getPointer(),
          off_diagonal.getPointer(0),
          off_diagonal.getPointer(1),
@@ -1448,7 +1448,7 @@ CellPoissonHypreSolver::computeDiagonalEntries(
    const hier::Index patch_up = patch_box.upper();
    const double c = 1.0, d = 1.0;
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(compdiagscalarc2d, COMPDIAGSCALARC2D) (diagonal.getPointer(),
+      SAMRAI_F77_FUNC(compdiagscalarc2d, COMPDIAGSCALARC2D) (diagonal.getPointer(),
          &C,
          off_diagonal.getPointer(0),
          off_diagonal.getPointer(1),
@@ -1456,7 +1456,7 @@ CellPoissonHypreSolver::computeDiagonalEntries(
          &patch_lo[1], &patch_up[1],
          &c, &d);
    } else if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(compdiagscalarc3d, COMPDIAGSCALARC3D) (diagonal.getPointer(),
+      SAMRAI_F77_FUNC(compdiagscalarc3d, COMPDIAGSCALARC3D) (diagonal.getPointer(),
          &C,
          off_diagonal.getPointer(0),
          off_diagonal.getPointer(1),
@@ -1483,14 +1483,14 @@ CellPoissonHypreSolver::computeDiagonalEntries(
    const hier::Index patch_up = patch_box.upper();
    const double c = 1.0, d = 1.0;
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(compdiagzeroc2d, COMPDIAGZEROC2D) (diagonal.getPointer(),
+      SAMRAI_F77_FUNC(compdiagzeroc2d, COMPDIAGZEROC2D) (diagonal.getPointer(),
          off_diagonal.getPointer(0),
          off_diagonal.getPointer(1),
          &patch_lo[0], &patch_up[0],
          &patch_lo[1], &patch_up[1],
          &c, &d);
    } else if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(compdiagzeroc3d, COMPDIAGZEROC3D) (diagonal.getPointer(),
+      SAMRAI_F77_FUNC(compdiagzeroc3d, COMPDIAGZEROC3D) (diagonal.getPointer(),
          off_diagonal.getPointer(0),
          off_diagonal.getPointer(1),
          off_diagonal.getPointer(2),
@@ -1527,7 +1527,7 @@ CellPoissonHypreSolver::adjustBoundaryEntries(
    const hier::Index& upper = trimmed_boundary_box.getBox().upper();
    const hier::Box& Ak0_box = Ak0_data.getBox();
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(adjbdry2d, ADJBDRY2D) (diagonal.getPointer(),
+      SAMRAI_F77_FUNC(adjbdry2d, ADJBDRY2D) (diagonal.getPointer(),
          off_diagonal.getPointer(0),
          off_diagonal.getPointer(1),
          &patch_lo[0], &patch_up[0],
@@ -1546,7 +1546,7 @@ CellPoissonHypreSolver::adjustBoundaryEntries(
          &lower[0], &upper[0],
          &location_index, h);
    } else if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(adjbdry3d, ADJBDRY3D) (diagonal.getPointer(),
+      SAMRAI_F77_FUNC(adjbdry3d, ADJBDRY3D) (diagonal.getPointer(),
          off_diagonal.getPointer(0),
          off_diagonal.getPointer(1),
          off_diagonal.getPointer(2),

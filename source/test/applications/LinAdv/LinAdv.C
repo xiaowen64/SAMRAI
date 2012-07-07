@@ -308,7 +308,7 @@ LinAdv::LinAdv(
 
    }
 
-   F77_FUNC(stufprobc, STUFPROBC) (PIECEWISE_CONSTANT_X, PIECEWISE_CONSTANT_Y,
+   SAMRAI_F77_FUNC(stufprobc, STUFPROBC) (PIECEWISE_CONSTANT_X, PIECEWISE_CONSTANT_Y,
       PIECEWISE_CONSTANT_Z,
       SINE_CONSTANT_X, SINE_CONSTANT_Y, SINE_CONSTANT_Z, SPHERE,
       CELLG, FACEG, FLUXG);
@@ -471,7 +471,7 @@ void LinAdv::initializeDataOnPatch(
       if ((d_data_problem_int == SPHERE)) {
 
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(initsphere2d, INITSPHERE2D) (d_data_problem_int, dx, xlo,
+            SAMRAI_F77_FUNC(initsphere2d, INITSPHERE2D) (d_data_problem_int, dx, xlo,
                xhi,
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
@@ -483,7 +483,7 @@ void LinAdv::initializeDataOnPatch(
                &d_center[0], d_radius);
          }
          if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(initsphere3d, INITSPHERE3D) (d_data_problem_int, dx, xlo,
+            SAMRAI_F77_FUNC(initsphere3d, INITSPHERE3D) (d_data_problem_int, dx, xlo,
                xhi,
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
@@ -509,7 +509,7 @@ void LinAdv::initializeDataOnPatch(
          }
 
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(linadvinitsine2d, LINADVINITSINE2D) (d_data_problem_int,
+            SAMRAI_F77_FUNC(linadvinitsine2d, LINADVINITSINE2D) (d_data_problem_int,
                dx, xlo,
                domain_xlo, &domain_length[0],
                ifirst(0), ilast(0),
@@ -524,7 +524,7 @@ void LinAdv::initializeDataOnPatch(
                &d_frequency[0]);
          }
          if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(linadvinitsine3d, LINADVINITSINE3D) (d_data_problem_int,
+            SAMRAI_F77_FUNC(linadvinitsine3d, LINADVINITSINE3D) (d_data_problem_int,
                dx, xlo,
                domain_xlo, &domain_length[0],
                ifirst(0), ilast(0),
@@ -543,7 +543,7 @@ void LinAdv::initializeDataOnPatch(
       } else {
 
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(linadvinit2d, LINADVINIT2D) (d_data_problem_int, dx, xlo,
+            SAMRAI_F77_FUNC(linadvinit2d, LINADVINIT2D) (d_data_problem_int, dx, xlo,
                xhi,
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
@@ -555,7 +555,7 @@ void LinAdv::initializeDataOnPatch(
                d_interval_uval.getPointer());
          }
          if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(linadvinit3d, LINADVINIT3D) (d_data_problem_int, dx, xlo,
+            SAMRAI_F77_FUNC(linadvinit3d, LINADVINIT3D) (d_data_problem_int, dx, xlo,
                xhi,
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
@@ -619,7 +619,7 @@ double LinAdv::computeStableDtOnPatch(
 
    double stabdt;
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(stabledt2d, STABLEDT2D) (dx,
+      SAMRAI_F77_FUNC(stabledt2d, STABLEDT2D) (dx,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ghost_cells(0),
@@ -629,7 +629,7 @@ double LinAdv::computeStableDtOnPatch(
          stabdt);
    }
    if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(stabledt3d, STABLEDT3D) (dx,
+      SAMRAI_F77_FUNC(stabledt3d, STABLEDT3D) (dx,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
@@ -712,7 +712,7 @@ void LinAdv::computeFluxesOnPatch(
       pdat::FaceData<double> traced_right(pbox, 1, d_nghosts);
 
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(inittraceflux2d, INITTRACEFLUX2D) (ifirst(0), ilast(0),
+         SAMRAI_F77_FUNC(inittraceflux2d, INITTRACEFLUX2D) (ifirst(0), ilast(0),
             ifirst(1), ilast(1),
             uval->getPointer(),
             traced_left.getPointer(0),
@@ -749,7 +749,7 @@ void LinAdv::computeFluxesOnPatch(
  *  Output: w^L, w^R
  */
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(chartracing2d0, CHARTRACING2D0) (dt,
+            SAMRAI_F77_FUNC(chartracing2d0, CHARTRACING2D0) (dt,
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                Mcells, dx[0], d_advection_velocity[0], d_godunov_order,
@@ -761,7 +761,7 @@ void LinAdv::computeFluxesOnPatch(
                ttraclft.getPointer(),
                ttracrgt.getPointer());
 
-            F77_FUNC(chartracing2d1, CHARTRACING2D1) (dt,
+            SAMRAI_F77_FUNC(chartracing2d1, CHARTRACING2D1) (dt,
                ifirst(0), ilast(0), ifirst(1), ilast(1),
                Mcells, dx[1], d_advection_velocity[1], d_godunov_order,
                uval->getPointer(),
@@ -784,7 +784,7 @@ void LinAdv::computeFluxesOnPatch(
 // fluxcalculation_(dt,*,1,dx, to get artificial viscosity
 // fluxcalculation_(dt,*,0,dx, to get NO artificial viscosity
 
-         F77_FUNC(fluxcalculation2d, FLUXCALCULATION2D) (dt, 1, 0, dx,
+         SAMRAI_F77_FUNC(fluxcalculation2d, FLUXCALCULATION2D) (dt, 1, 0, dx,
             ifirst(0), ilast(0), ifirst(1), ilast(1),
             &d_advection_velocity[0],
             uval->getPointer(),
@@ -800,7 +800,7 @@ void LinAdv::computeFluxesOnPatch(
  *  Inputs: F (flux)
  *  Output: w^L, w^R (traced_left/right)
  */
-         F77_FUNC(fluxcorrec, FLUXCORREC) (dt, ifirst(0), ilast(0), ifirst(1),
+         SAMRAI_F77_FUNC(fluxcorrec, FLUXCORREC) (dt, ifirst(0), ilast(0), ifirst(1),
             ilast(1),
             dx, &d_advection_velocity[0],
             uval->getPointer(),
@@ -818,7 +818,7 @@ void LinAdv::computeFluxesOnPatch(
  *  Inputs: w^L, w^R (traced_left/right)
  *  Output: F (flux)
  */
-         F77_FUNC(fluxcalculation2d, FLUXCALCULATION2D) (dt, 0, 0, dx,
+         SAMRAI_F77_FUNC(fluxcalculation2d, FLUXCALCULATION2D) (dt, 0, 0, dx,
             ifirst(0), ilast(0), ifirst(1), ilast(1),
             &d_advection_velocity[0],
             uval->getPointer(),
@@ -886,7 +886,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    pdat::FaceData<double> temp_traced_left(pbox, 1, d_nghosts);
    pdat::FaceData<double> temp_traced_right(pbox, 1, d_nghosts);
 
-   F77_FUNC(inittraceflux3d, INITTRACEFLUX3D) (
+   SAMRAI_F77_FUNC(inittraceflux3d, INITTRACEFLUX3D) (
       ifirst(0), ilast(0),
       ifirst(1), ilast(1),
       ifirst(2), ilast(2),
@@ -929,7 +929,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
        *  Inputs: w^L, w^R (traced_left/right)
        *  Output: w^L, w^R
        */
-      F77_FUNC(chartracing3d0, CHARTRACING3D0) (dt,
+      SAMRAI_F77_FUNC(chartracing3d0, CHARTRACING3D0) (dt,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
@@ -942,7 +942,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
          ttraclft.getPointer(),
          ttracrgt.getPointer());
 
-      F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
+      SAMRAI_F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
@@ -955,7 +955,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
          ttraclft.getPointer(),
          ttracrgt.getPointer());
 
-      F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
+      SAMRAI_F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
@@ -978,7 +978,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
 
 //  fluxcalculation_(dt,*,*,1,dx,  to do artificial viscosity
 //  fluxcalculation_(dt,*,*,0,dx,  to do NO artificial viscosity
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 1, 0, 0, dx,
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 1, 0, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
       uval->getPointer(),
@@ -998,7 +998,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
     *  Inputs: F (flux), w^L, w^R (traced_left/right)
     *  Output: temp_traced_left/right
     */
-   F77_FUNC(fluxcorrec2d, FLUXCORREC2D) (dt, ifirst(0), ilast(0), ifirst(1),
+   SAMRAI_F77_FUNC(fluxcorrec2d, FLUXCORREC2D) (dt, ifirst(0), ilast(0), ifirst(1),
       ilast(1), ifirst(2), ilast(2),
       dx, &d_advection_velocity[0], 1,
       uval->getPointer(),
@@ -1026,7 +1026,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
     *  Inputs: temp_traced_left/right
     *  Output: temp_flux
     */
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 0, 1, 0, dx,
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 0, 1, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
       uval->getPointer(),
@@ -1046,7 +1046,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
     *  Inputs: F (flux), w^L, w^R (traced_left/right)
     *  Output: temp_traced_left/right
     */
-   F77_FUNC(fluxcorrec2d, FLUXCORREC2D) (dt, ifirst(0), ilast(0), ifirst(1),
+   SAMRAI_F77_FUNC(fluxcorrec2d, FLUXCORREC2D) (dt, ifirst(0), ilast(0), ifirst(1),
       ilast(1), ifirst(2), ilast(2),
       dx, &d_advection_velocity[0], -1,
       uval->getPointer(),
@@ -1077,7 +1077,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
     *  Inputs: temp_traced_left/right
     *  Output: flux
     */
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 1, 0, 0, dx,
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 1, 0, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
       uval->getPointer(),
@@ -1098,7 +1098,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
     *  Inputs: temp_flux, flux
     *  Output: w^L, w^R (traced_left/right)
     */
-   F77_FUNC(fluxcorrec3d, FLUXCORREC3D) (dt, ifirst(0), ilast(0), ifirst(1),
+   SAMRAI_F77_FUNC(fluxcorrec3d, FLUXCORREC3D) (dt, ifirst(0), ilast(0), ifirst(1),
       ilast(1), ifirst(2), ilast(2),
       dx, &d_advection_velocity[0],
       uval->getPointer(),
@@ -1119,7 +1119,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
     *  Inputs:  w^L, w^R (traced_left/right)
     *  Output:  F (flux)
     */
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 0, 0, 0, dx,
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 0, 0, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
       uval->getPointer(),
@@ -1191,7 +1191,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
    /*
     *  Initialize trace fluxes (w^R and w^L) with cell-centered values.
     */
-   F77_FUNC(inittraceflux3d, INITTRACEFLUX3D) (
+   SAMRAI_F77_FUNC(inittraceflux3d, INITTRACEFLUX3D) (
       ifirst(0), ilast(0),
       ifirst(1), ilast(1),
       ifirst(2), ilast(2),
@@ -1212,7 +1212,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
     *  Inputs: w^L, w^R (traced_left/right)
     *  Output: F (flux)
     */
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 1, 1, 0, dx,
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 1, 1, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
       uval->getPointer(),
@@ -1254,7 +1254,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
        *  Inputs: w^L, w^R (traced_left/right)
        *  Output: w^L, w^R
        */
-      F77_FUNC(chartracing3d0, CHARTRACING3D0) (dt,
+      SAMRAI_F77_FUNC(chartracing3d0, CHARTRACING3D0) (dt,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
@@ -1267,7 +1267,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
          ttraclft.getPointer(),
          ttracrgt.getPointer());
 
-      F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
+      SAMRAI_F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
          ifirst(0), ilast(0), ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          Mcells, dx[1], d_advection_velocity[1], d_godunov_order,
@@ -1279,7 +1279,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
          ttraclft.getPointer(),
          ttracrgt.getPointer());
 
-      F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
+      SAMRAI_F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
          ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
          Mcells, dx[2], d_advection_velocity[2], d_godunov_order,
          uval->getPointer(),
@@ -1300,7 +1300,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
        *    Inputs:  F (flux)
        *    Output:  third_state
        */
-      F77_FUNC(onethirdstate3d, ONETHIRDSTATE3D) (dt, dx, idir,
+      SAMRAI_F77_FUNC(onethirdstate3d, ONETHIRDSTATE3D) (dt, dx, idir,
          ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
          &d_advection_velocity[0],
          uval->getPointer(),
@@ -1315,7 +1315,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
        *    Output:  temp_flux (only two directions (i.e. those other than idir)
        *             are modified)
        */
-      F77_FUNC(fluxthird3d, FLUXTHIRD3D) (dt, dx, idir,
+      SAMRAI_F77_FUNC(fluxthird3d, FLUXTHIRD3D) (dt, dx, idir,
          ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
          &d_advection_velocity[0],
          uval->getPointer(),
@@ -1331,7 +1331,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
        *    Inputs:  temp_flux
        *    Output:  w^L, w^R (traced_left/right)
        */
-      F77_FUNC(fluxcorrecjt3d, FLUXCORRECJT3D) (dt, dx, idir,
+      SAMRAI_F77_FUNC(fluxcorrecjt3d, FLUXCORRECJT3D) (dt, dx, idir,
          ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
          &d_advection_velocity[0],
          uval->getPointer(),
@@ -1354,7 +1354,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
     *  Inputs:  w^L, w^R (traced_left/right)
     *  Output:  F (flux)
     */
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (dt, 0, 0, 0, dx,
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (dt, 0, 0, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
       uval->getPointer(),
@@ -1414,7 +1414,7 @@ void LinAdv::conservativeDifferenceOnPatch(
 #endif
 
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(consdiff2d, CONSDIFF2D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
+      SAMRAI_F77_FUNC(consdiff2d, CONSDIFF2D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
          dx,
          flux->getPointer(0),
          flux->getPointer(1),
@@ -1422,7 +1422,7 @@ void LinAdv::conservativeDifferenceOnPatch(
          uval->getPointer());
    }
    if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(consdiff3d, CONSDIFF3D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
+      SAMRAI_F77_FUNC(consdiff3d, CONSDIFF3D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
          ifirst(2), ilast(2), dx,
          flux->getPointer(0),
          flux->getPointer(1),
@@ -1978,7 +1978,7 @@ void LinAdv::tagGradientDetectorCells(
          if (time_allowed) {
 
             if (d_dim == tbox::Dimension(2)) {
-               F77_FUNC(detectgrad2d, DETECTGRAD2D) (
+               SAMRAI_F77_FUNC(detectgrad2d, DETECTGRAD2D) (
                   ifirst(0), ilast(0), ifirst(1), ilast(1),
                   vghost(0), tagghost(0), d_nghosts(0),
                   vghost(1), tagghost(1), d_nghosts(1),
@@ -1989,7 +1989,7 @@ void LinAdv::tagGradientDetectorCells(
                   tags->getPointer(), temp_tags->getPointer());
             }
             if (d_dim == tbox::Dimension(3)) {
-               F77_FUNC(detectgrad3d, DETECTGRAD3D) (
+               SAMRAI_F77_FUNC(detectgrad3d, DETECTGRAD3D) (
                   ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
                   vghost(0), tagghost(0), d_nghosts(0),
                   vghost(1), tagghost(1), d_nghosts(1),
@@ -2026,7 +2026,7 @@ void LinAdv::tagGradientDetectorCells(
          if (time_allowed) {
 
             if (d_dim == tbox::Dimension(2)) {
-               F77_FUNC(detectshock2d, DETECTSHOCK2D) (
+               SAMRAI_F77_FUNC(detectshock2d, DETECTSHOCK2D) (
                   ifirst(0), ilast(0), ifirst(1), ilast(1),
                   vghost(0), tagghost(0), d_nghosts(0),
                   vghost(1), tagghost(1), d_nghosts(1),
@@ -2038,7 +2038,7 @@ void LinAdv::tagGradientDetectorCells(
                   tags->getPointer(), temp_tags->getPointer());
             }
             if (d_dim == tbox::Dimension(3)) {
-               F77_FUNC(detectshock3d, DETECTSHOCK3D) (
+               SAMRAI_F77_FUNC(detectshock3d, DETECTSHOCK3D) (
                   ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
                   vghost(0), tagghost(0), d_nghosts(0),
                   vghost(1), tagghost(1), d_nghosts(1),

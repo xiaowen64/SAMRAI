@@ -756,6 +756,13 @@ esac],
 AC_MSG_RESULT(no))
 
 dnl
+dnl Rename the F77_FUNC macros SAMRAI_F77_FUNC to avoid conflicts
+dnl with client code using a different version of AC_F77_WRAPPERS.
+dnl
+sed 's/F77_FUNC/SAMRAI_F77_FUNC/' confdefs.h > confdefs1.h
+mv confdefs1.h confdefs.h
+
+dnl
 dnl Find the X11 include directory, library directory, and associated
 dnl libraries.
 dnl

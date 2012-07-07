@@ -70,7 +70,7 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void F77_FUNC(compfluxvardc2d, COMPFLUXVARDC2D) (
+void SAMRAI_F77_FUNC(compfluxvardc2d, COMPFLUXVARDC2D) (
    double* xflux,
    double* yflux,
    const int* fluxgi,
@@ -87,7 +87,7 @@ void F77_FUNC(compfluxvardc2d, COMPFLUXVARDC2D) (
    const int* jfirst,
    const int* jlast,
    const double* dx);
-void F77_FUNC(compfluxcondc2d, COMPFLUXCONDC2D) (
+void SAMRAI_F77_FUNC(compfluxcondc2d, COMPFLUXCONDC2D) (
    double* xflux,
    double* yflux,
    const int* fluxgi,
@@ -101,7 +101,7 @@ void F77_FUNC(compfluxcondc2d, COMPFLUXCONDC2D) (
    const int* jfirst,
    const int* jlast,
    const double* dx);
-void F77_FUNC(rbgswithfluxmaxvardcvarsf2d, RBGSWITHFLUXMAXVARDCVARSF2D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxvardcvarsf2d, RBGSWITHFLUXMAXVARDCVARSF2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -126,7 +126,7 @@ void F77_FUNC(rbgswithfluxmaxvardcvarsf2d, RBGSWITHFLUXMAXVARDCVARSF2D) (
    const double* dx,
    const int* offset,
    const double* maxres);
-void F77_FUNC(rbgswithfluxmaxcondcvarsf2d, RBGSWITHFLUXMAXCONDCVARSF2D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxcondcvarsf2d, RBGSWITHFLUXMAXCONDCVARSF2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -148,7 +148,7 @@ void F77_FUNC(rbgswithfluxmaxcondcvarsf2d, RBGSWITHFLUXMAXCONDCVARSF2D) (
    const double* dx,
    const int* offset,
    const double* maxres);
-void F77_FUNC(rbgswithfluxmaxvardcconsf2d, RBGSWITHFLUXMAXVARDCCONSF2D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxvardcconsf2d, RBGSWITHFLUXMAXVARDCCONSF2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -171,7 +171,7 @@ void F77_FUNC(rbgswithfluxmaxvardcconsf2d, RBGSWITHFLUXMAXVARDCCONSF2D) (
    const double* dx,
    const int* offset,
    const double* maxres);
-void F77_FUNC(rbgswithfluxmaxcondcconsf2d, RBGSWITHFLUXMAXCONDCCONSF2D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxcondcconsf2d, RBGSWITHFLUXMAXCONDCCONSF2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -191,7 +191,7 @@ void F77_FUNC(rbgswithfluxmaxcondcconsf2d, RBGSWITHFLUXMAXCONDCCONSF2D) (
    const double* dx,
    const int* offset,
    const double* maxres);
-void F77_FUNC(compresvarsca2d, COMPRESVARSCA2D) (
+void SAMRAI_F77_FUNC(compresvarsca2d, COMPRESVARSCA2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -213,7 +213,7 @@ void F77_FUNC(compresvarsca2d, COMPRESVARSCA2D) (
    const int* jfirst,
    const int* jlast,
    const double* dx);
-void F77_FUNC(compresconsca2d, COMPRESCONSCA2D) (
+void SAMRAI_F77_FUNC(compresconsca2d, COMPRESCONSCA2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -233,7 +233,7 @@ void F77_FUNC(compresconsca2d, COMPRESCONSCA2D) (
    const int* jfirst,
    const int* jlast,
    const double* dx);
-void F77_FUNC(ewingfixfluxvardc2d, EWINGFIXFLUXVARDC2D) (
+void SAMRAI_F77_FUNC(ewingfixfluxvardc2d, EWINGFIXFLUXVARDC2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -254,7 +254,7 @@ void F77_FUNC(ewingfixfluxvardc2d, EWINGFIXFLUXVARDC2D) (
    const int* blower,
    const int* bupper,
    const double* dx);
-void F77_FUNC(ewingfixfluxcondc2d, EWINGFIXFLUXCONDC2D) (
+void SAMRAI_F77_FUNC(ewingfixfluxcondc2d, EWINGFIXFLUXCONDC2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -273,7 +273,7 @@ void F77_FUNC(ewingfixfluxcondc2d, EWINGFIXFLUXCONDC2D) (
    const int* bupper,
    const double* dx);
 
-void F77_FUNC(compfluxvardc3d, COMPFLUXVARDC3D) (
+void SAMRAI_F77_FUNC(compfluxvardc3d, COMPFLUXVARDC3D) (
    double* xflux,
    double* yflux,
    double* zflux,
@@ -297,7 +297,7 @@ void F77_FUNC(compfluxvardc3d, COMPFLUXVARDC3D) (
    const int* kfirst,
    const int* klast,
    const double* dx);
-void F77_FUNC(compfluxcondc3d, COMPFLUXCONDC3D) (
+void SAMRAI_F77_FUNC(compfluxcondc3d, COMPFLUXCONDC3D) (
    double* xflux,
    double* yflux,
    double* zflux,
@@ -316,7 +316,7 @@ void F77_FUNC(compfluxcondc3d, COMPFLUXCONDC3D) (
    const int* kfirst,
    const int* klast,
    const double* dx);
-void F77_FUNC(rbgswithfluxmaxvardcvarsf3d, RBGSWITHFLUXMAXVARDCVARSF3D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxvardcvarsf3d, RBGSWITHFLUXMAXVARDCVARSF3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -350,7 +350,7 @@ void F77_FUNC(rbgswithfluxmaxvardcvarsf3d, RBGSWITHFLUXMAXVARDCVARSF3D) (
    const double* dx,
    const int* offset,
    const double* maxres);
-void F77_FUNC(rbgswithfluxmaxcondcvarsf3d, RBGSWITHFLUXMAXCONDCVARSF3D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxcondcvarsf3d, RBGSWITHFLUXMAXCONDCVARSF3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -379,7 +379,7 @@ void F77_FUNC(rbgswithfluxmaxcondcvarsf3d, RBGSWITHFLUXMAXCONDCVARSF3D) (
    const double* dx,
    const int* offset,
    const double* maxres);
-void F77_FUNC(rbgswithfluxmaxvardcconsf3d, RBGSWITHFLUXMAXVARDCCONSF3D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxvardcconsf3d, RBGSWITHFLUXMAXVARDCCONSF3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -410,7 +410,7 @@ void F77_FUNC(rbgswithfluxmaxvardcconsf3d, RBGSWITHFLUXMAXVARDCCONSF3D) (
    const double* dx,
    const int* offset,
    const double* maxres);
-void F77_FUNC(rbgswithfluxmaxcondcconsf3d, RBGSWITHFLUXMAXCONDCCONSF3D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxcondcconsf3d, RBGSWITHFLUXMAXCONDCCONSF3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -436,7 +436,7 @@ void F77_FUNC(rbgswithfluxmaxcondcconsf3d, RBGSWITHFLUXMAXCONDCCONSF3D) (
    const double* dx,
    const int* offset,
    const double* maxres);
-void F77_FUNC(compresvarsca3d, COMPRESVARSCA3D) (
+void SAMRAI_F77_FUNC(compresvarsca3d, COMPRESVARSCA3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -466,7 +466,7 @@ void F77_FUNC(compresvarsca3d, COMPRESVARSCA3D) (
    const int* kfirst,
    const int* klast,
    const double* dx);
-void F77_FUNC(compresconsca3d, COMPRESCONSCA3D) (
+void SAMRAI_F77_FUNC(compresconsca3d, COMPRESCONSCA3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -493,7 +493,7 @@ void F77_FUNC(compresconsca3d, COMPRESCONSCA3D) (
    const int* kfirst,
    const int* klast,
    const double* dx);
-void F77_FUNC(ewingfixfluxvardc3d, EWINGFIXFLUXVARDC3D) (
+void SAMRAI_F77_FUNC(ewingfixfluxvardc3d, EWINGFIXFLUXVARDC3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -521,7 +521,7 @@ void F77_FUNC(ewingfixfluxvardc3d, EWINGFIXFLUXVARDC3D) (
    const int* blower,
    const int* bupper,
    const double* dx);
-void F77_FUNC(ewingfixfluxcondc3d, EWINGFIXFLUXCONDC3D) (
+void SAMRAI_F77_FUNC(ewingfixfluxcondc3d, EWINGFIXFLUXCONDC3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -1546,7 +1546,7 @@ CellPoissonFACOps::ewingFixFlux(
          const hier::Index& bupper = bdry_box.upper();
          const int location_index = boundary_box.getLocationIndex();
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(ewingfixfluxvardc2d, EWINGFIXFLUXVARDC2D) (
+            SAMRAI_F77_FUNC(ewingfixfluxvardc2d, EWINGFIXFLUXVARDC2D) (
                flux_data.getPointer(0), flux_data.getPointer(1),
                &flux_data.getGhostCellWidth()[0],
                &flux_data.getGhostCellWidth()[1],
@@ -1562,7 +1562,7 @@ CellPoissonFACOps::ewingFixFlux(
                &blower[0], &bupper[0],
                dx);
          } else if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(ewingfixfluxvardc3d, EWINGFIXFLUXVARDC3D) (
+            SAMRAI_F77_FUNC(ewingfixfluxvardc3d, EWINGFIXFLUXVARDC3D) (
                flux_data.getPointer(0),
                flux_data.getPointer(1),
                flux_data.getPointer(2),
@@ -1605,7 +1605,7 @@ CellPoissonFACOps::ewingFixFlux(
          const hier::Index& bupper = bdry_box.upper();
          const int location_index = boundary_box.getLocationIndex();
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(ewingfixfluxcondc2d, EWINGFIXFLUXCONDC2D) (
+            SAMRAI_F77_FUNC(ewingfixfluxcondc2d, EWINGFIXFLUXCONDC2D) (
                flux_data.getPointer(0), flux_data.getPointer(1),
                &flux_data.getGhostCellWidth()[0],
                &flux_data.getGhostCellWidth()[1],
@@ -1620,7 +1620,7 @@ CellPoissonFACOps::ewingFixFlux(
                &blower[0], &bupper[0],
                dx);
          } else if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(ewingfixfluxcondc3d, EWINGFIXFLUXCONDC3D) (
+            SAMRAI_F77_FUNC(ewingfixfluxcondc3d, EWINGFIXFLUXCONDC3D) (
                flux_data.getPointer(0),
                flux_data.getPointer(1),
                flux_data.getPointer(2),
@@ -2142,7 +2142,7 @@ CellPoissonFACOps::computeFluxOnPatch(
    if (d_poisson_spec.dIsConstant()) {
       double D_value = d_poisson_spec.getDConstant();
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(compfluxcondc2d, COMPFLUXCONDC2D) (
+         SAMRAI_F77_FUNC(compfluxcondc2d, COMPFLUXCONDC2D) (
             Dgradw_data.getPointer(0),
             Dgradw_data.getPointer(1),
             &Dgradw_data.getGhostCellWidth()[0],
@@ -2155,7 +2155,7 @@ CellPoissonFACOps::computeFluxOnPatch(
             &lower[1], &upper[1],
             dx);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(compfluxcondc3d, COMPFLUXCONDC3D) (
+         SAMRAI_F77_FUNC(compfluxcondc3d, COMPFLUXCONDC3D) (
             Dgradw_data.getPointer(0),
             Dgradw_data.getPointer(1),
             Dgradw_data.getPointer(2),
@@ -2177,7 +2177,7 @@ CellPoissonFACOps::computeFluxOnPatch(
          boost::dynamic_pointer_cast<pdat::SideData<double>, hier::PatchData>(
             patch.getPatchData(d_poisson_spec.getDPatchDataId())));
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(compfluxvardc2d, COMPFLUXVARDC2D) (
+         SAMRAI_F77_FUNC(compfluxvardc2d, COMPFLUXVARDC2D) (
             Dgradw_data.getPointer(0),
             Dgradw_data.getPointer(1),
             &Dgradw_data.getGhostCellWidth()[0],
@@ -2194,7 +2194,7 @@ CellPoissonFACOps::computeFluxOnPatch(
             dx);
       }
       if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(compfluxvardc3d, COMPFLUXVARDC3D) (
+         SAMRAI_F77_FUNC(compfluxvardc3d, COMPFLUXVARDC3D) (
             Dgradw_data.getPointer(0),
             Dgradw_data.getPointer(1),
             Dgradw_data.getPointer(2),
@@ -2254,7 +2254,7 @@ CellPoissonFACOps::computeResidualOnPatch(
          boost::dynamic_pointer_cast<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_poisson_spec.getCPatchDataId())));
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(compresvarsca2d, COMPRESVARSCA2D) (
+         SAMRAI_F77_FUNC(compresvarsca2d, COMPRESVARSCA2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2274,7 +2274,7 @@ CellPoissonFACOps::computeResidualOnPatch(
             &lower[0], &upper[0], &lower[1], &upper[1],
             dx);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(compresvarsca3d, COMPRESVARSCA3D) (
+         SAMRAI_F77_FUNC(compresvarsca3d, COMPRESVARSCA3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),
@@ -2303,7 +2303,7 @@ CellPoissonFACOps::computeResidualOnPatch(
    } else if (d_poisson_spec.cIsConstant()) {
       scalar_field_constant = d_poisson_spec.getCConstant();
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(compresconsca2d, COMPRESCONSCA2D) (
+         SAMRAI_F77_FUNC(compresconsca2d, COMPRESCONSCA2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2321,7 +2321,7 @@ CellPoissonFACOps::computeResidualOnPatch(
             &lower[0], &upper[0], &lower[1], &upper[1],
             dx);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(compresconsca3d, COMPRESCONSCA3D) (
+         SAMRAI_F77_FUNC(compresconsca3d, COMPRESCONSCA3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),
@@ -2347,7 +2347,7 @@ CellPoissonFACOps::computeResidualOnPatch(
    } else {
       scalar_field_constant = 0.0;
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(compresconsca2d, COMPRESCONSCA2D) (
+         SAMRAI_F77_FUNC(compresconsca2d, COMPRESCONSCA2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2365,7 +2365,7 @@ CellPoissonFACOps::computeResidualOnPatch(
             &lower[0], &upper[0], &lower[1], &upper[1],
             dx);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(compresconsca3d, COMPRESCONSCA3D) (
+         SAMRAI_F77_FUNC(compresconsca3d, COMPRESCONSCA3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),
@@ -2437,7 +2437,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
    double maxres = 0.0;
    if (d_poisson_spec.dIsVariable() && d_poisson_spec.cIsVariable()) {
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(rbgswithfluxmaxvardcvarsf2d, RBGSWITHFLUXMAXVARDCVARSF2D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxvardcvarsf2d, RBGSWITHFLUXMAXVARDCVARSF2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2460,7 +2460,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
             dx,
             &offset, &maxres);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(rbgswithfluxmaxvardcvarsf3d, RBGSWITHFLUXMAXVARDCVARSF3D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxvardcvarsf3d, RBGSWITHFLUXMAXVARDCVARSF3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),
@@ -2493,7 +2493,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
       }
    } else if (d_poisson_spec.dIsVariable() && d_poisson_spec.cIsConstant()) {
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(rbgswithfluxmaxvardcconsf2d, RBGSWITHFLUXMAXVARDCCONSF2D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxvardcconsf2d, RBGSWITHFLUXMAXVARDCCONSF2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2514,7 +2514,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
             dx,
             &offset, &maxres);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(rbgswithfluxmaxvardcconsf3d, RBGSWITHFLUXMAXVARDCCONSF3D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxvardcconsf3d, RBGSWITHFLUXMAXVARDCCONSF3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),
@@ -2544,7 +2544,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
       }
    } else if (d_poisson_spec.dIsVariable() && d_poisson_spec.cIsZero()) {
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(rbgswithfluxmaxvardcconsf2d, RBGSWITHFLUXMAXVARDCCONSF2D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxvardcconsf2d, RBGSWITHFLUXMAXVARDCCONSF2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2565,7 +2565,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
             dx,
             &offset, &maxres);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(rbgswithfluxmaxvardcconsf3d, RBGSWITHFLUXMAXVARDCCONSF3D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxvardcconsf3d, RBGSWITHFLUXMAXVARDCCONSF3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),
@@ -2595,7 +2595,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
       }
    } else if (!d_poisson_spec.dIsVariable() && d_poisson_spec.cIsVariable()) {
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(rbgswithfluxmaxcondcvarsf2d, RBGSWITHFLUXMAXCONDCVARSF2D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxcondcvarsf2d, RBGSWITHFLUXMAXCONDCVARSF2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2615,7 +2615,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
             dx,
             &offset, &maxres);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(rbgswithfluxmaxcondcvarsf3d, RBGSWITHFLUXMAXCONDCVARSF3D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxcondcvarsf3d, RBGSWITHFLUXMAXCONDCVARSF3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),
@@ -2643,7 +2643,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
       }
    } else if (!d_poisson_spec.dIsVariable() && d_poisson_spec.cIsConstant()) {
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(rbgswithfluxmaxcondcconsf2d, RBGSWITHFLUXMAXCONDCCONSF2D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxcondcconsf2d, RBGSWITHFLUXMAXCONDCCONSF2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2661,7 +2661,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
             dx,
             &offset, &maxres);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(rbgswithfluxmaxcondcconsf3d, RBGSWITHFLUXMAXCONDCCONSF3D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxcondcconsf3d, RBGSWITHFLUXMAXCONDCCONSF3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),
@@ -2686,7 +2686,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
       }
    } else if (!d_poisson_spec.dIsVariable() && d_poisson_spec.cIsZero()) {
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(rbgswithfluxmaxcondcconsf2d, RBGSWITHFLUXMAXCONDCCONSF2D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxcondcconsf2d, RBGSWITHFLUXMAXCONDCCONSF2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2704,7 +2704,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
             dx,
             &offset, &maxres);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(rbgswithfluxmaxcondcconsf3d, RBGSWITHFLUXMAXCONDCCONSF3D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxcondcconsf3d, RBGSWITHFLUXMAXCONDCCONSF3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),

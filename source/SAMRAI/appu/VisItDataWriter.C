@@ -36,19 +36,19 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void F77_FUNC(cpfdat2buf3d, CPFDAT2BUF3D) (
+void SAMRAI_F77_FUNC(cpfdat2buf3d, CPFDAT2BUF3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    float *, double *, const int&);
-void F77_FUNC(cpddat2buf3d, CPDDAT2BUF3D) (
+void SAMRAI_F77_FUNC(cpddat2buf3d, CPDDAT2BUF3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    double *, double *, const int&);
-void F77_FUNC(cpidat2buf3d, CPIDAT2BUF3D) (
+void SAMRAI_F77_FUNC(cpidat2buf3d, CPIDAT2BUF3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -56,19 +56,19 @@ void F77_FUNC(cpidat2buf3d, CPIDAT2BUF3D) (
    int *, double *, const int&);
 }
 extern "C" {
-void F77_FUNC(cpfdat2buf2d, CPFDAT2BUF2D) (
+void SAMRAI_F77_FUNC(cpfdat2buf2d, CPFDAT2BUF2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    float *, double *, const int&);
-void F77_FUNC(cpddat2buf2d, CPDDAT2BUF2D) (
+void SAMRAI_F77_FUNC(cpddat2buf2d, CPDDAT2BUF2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    double *, double *, const int&);
-void F77_FUNC(cpidat2buf2d, CPIDAT2BUF2D) (
+void SAMRAI_F77_FUNC(cpidat2buf2d, CPIDAT2BUF2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -3971,14 +3971,14 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
             dat_ptr = node_copy.getPointer();
          }
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(cpfdat2buf2d, CPFDAT2BUF2D) (databox_lower(0),
+            SAMRAI_F77_FUNC(cpfdat2buf2d, CPFDAT2BUF2D) (databox_lower(0),
                databox_lower(1),
                plolower(0), plolower(1),
                ploupper(0), ploupper(1),
                databox_upper(0), databox_upper(1),
                dat_ptr, buffer, buf_size);
          } else if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(cpfdat2buf3d, CPFDAT2BUF3D) (databox_lower(0),
+            SAMRAI_F77_FUNC(cpfdat2buf3d, CPFDAT2BUF3D) (databox_lower(0),
                databox_lower(1), databox_lower(2),
                plolower(0), plolower(1), plolower(2),
                ploupper(0), ploupper(1), ploupper(2),
@@ -4018,14 +4018,14 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
             dat_ptr = node_copy.getPointer();
          }
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(cpddat2buf2d, CPDDAT2BUF2D) (databox_lower(0),
+            SAMRAI_F77_FUNC(cpddat2buf2d, CPDDAT2BUF2D) (databox_lower(0),
                databox_lower(1),
                plolower(0), plolower(1),
                ploupper(0), ploupper(1),
                databox_upper(0), databox_upper(1),
                dat_ptr, buffer, buf_size);
          } else if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(cpddat2buf3d, CPDDAT2BUF3D) (databox_lower(0),
+            SAMRAI_F77_FUNC(cpddat2buf3d, CPDDAT2BUF3D) (databox_lower(0),
                databox_lower(1), databox_lower(2),
                plolower(0), plolower(1), plolower(2),
                ploupper(0), ploupper(1), ploupper(2),
@@ -4065,14 +4065,14 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
             dat_ptr = node_copy.getPointer();
          }
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(cpidat2buf2d, CPIDAT2BUF2D) (databox_lower(0),
+            SAMRAI_F77_FUNC(cpidat2buf2d, CPIDAT2BUF2D) (databox_lower(0),
                databox_lower(1),
                plolower(0), plolower(1),
                ploupper(0), ploupper(1),
                databox_upper(0), databox_upper(1),
                dat_ptr, buffer, buf_size);
          } else if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(cpidat2buf3d, CPIDAT2BUF3D) (databox_lower(0),
+            SAMRAI_F77_FUNC(cpidat2buf3d, CPIDAT2BUF3D) (databox_lower(0),
                databox_lower(1), databox_lower(2),
                plolower(0), plolower(1), plolower(2),
                ploupper(0), ploupper(1), ploupper(2),

@@ -30,7 +30,7 @@
 #include "SAMRAI/hier/CoarseFineBoundary.h"
 
 extern "C" {
-void F77_FUNC(setedges2d, SETEDGES2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(setedges2d, SETEDGES2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -38,14 +38,14 @@ void F77_FUNC(setedges2d, SETEDGES2D) (const int&, const int&,
    double *,
    double *);
 
-void F77_FUNC(checkedges2d, CHECKEDGES2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(checkedges2d, CHECKEDGES2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const double&,
    int&,
    const double *,
    const double *);
-void F77_FUNC(setedges3d, SETEDGES3D) (const int&, const int&, const int&,
+void SAMRAI_F77_FUNC(setedges3d, SETEDGES3D) (const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -54,7 +54,7 @@ void F77_FUNC(setedges3d, SETEDGES3D) (const int&, const int&, const int&,
    double *,
    double *);
 
-void F77_FUNC(checkedges3d, CHECKEDGES3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(checkedges3d, CHECKEDGES3D) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -367,7 +367,7 @@ HierSumTest::setInitialEdgeValues(
       for (int d = 0; d < uedge->getDepth(); d++) {
 
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(setedges2d, SETEDGES2D) (ifirst(0), ifirst(1),
+            SAMRAI_F77_FUNC(setedges2d, SETEDGES2D) (ifirst(0), ifirst(1),
                ilast(0), ilast(1),
                cellg(0), cellg(1),
                edgeg(0), edgeg(1),
@@ -376,7 +376,7 @@ HierSumTest::setInitialEdgeValues(
                uedge->getPointer(1, d));
          }
          if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(setedges3d, SETEDGES3D) (ifirst(0), ifirst(1), ifirst(2),
+            SAMRAI_F77_FUNC(setedges3d, SETEDGES3D) (ifirst(0), ifirst(1), ifirst(2),
                ilast(0), ilast(1), ilast(2),
                cellg(0), cellg(1), cellg(2),
                edgeg(0), edgeg(1), edgeg(2),
@@ -399,7 +399,7 @@ HierSumTest::setInitialEdgeValues(
             int fort_all_correct = 1;
 
             if (d_dim == tbox::Dimension(2)) {
-               F77_FUNC(checkedges2d, CHECKEDGES2D) (ifirst(0), ifirst(1),
+               SAMRAI_F77_FUNC(checkedges2d, CHECKEDGES2D) (ifirst(0), ifirst(1),
                   ilast(0), ilast(1),
                   edgeg(0), edgeg(1),
                   correct_val,
@@ -408,7 +408,7 @@ HierSumTest::setInitialEdgeValues(
                   uedge->getPointer(1, d));
             }
             if (d_dim == tbox::Dimension(3)) {
-               F77_FUNC(checkedges3d, CHECKEDGES3D) (ifirst(0), ifirst(1),
+               SAMRAI_F77_FUNC(checkedges3d, CHECKEDGES3D) (ifirst(0), ifirst(1),
                   ifirst(2),
                   ilast(0), ilast(1), ilast(2),
                   edgeg(0), edgeg(1), edgeg(2),
@@ -708,7 +708,7 @@ int HierSumTest::checkEdgeResult(
          int fort_all_correct = 1;
 
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(checkedges2d, CHECKEDGES2D) (ifirst(0), ifirst(1),
+            SAMRAI_F77_FUNC(checkedges2d, CHECKEDGES2D) (ifirst(0), ifirst(1),
                ilast(0), ilast(1),
                edgeg(0), edgeg(1),
                correct_val,
@@ -717,7 +717,7 @@ int HierSumTest::checkEdgeResult(
                uedge->getPointer(1, d));
          }
          if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(checkedges3d, CHECKEDGES3D) (ifirst(0), ifirst(1),
+            SAMRAI_F77_FUNC(checkedges3d, CHECKEDGES3D) (ifirst(0), ifirst(1),
                ifirst(2),
                ilast(0), ilast(1), ilast(2),
                edgeg(0), edgeg(1), edgeg(2),

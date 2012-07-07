@@ -36,14 +36,14 @@ extern "C" {
 #endif
 
 // in pdat_concoarsen1d.f:
-void F77_FUNC(conavgouternodedoub1d, CONAVGOUTERNODEDOUB1D) (const int&,
+void SAMRAI_F77_FUNC(conavgouternodedoub1d, CONAVGOUTERNODEDOUB1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const double *, double *);
 // in pdat_concoarsen2d.f:
-void F77_FUNC(conavgouternodedoub2d0, CONAVGOUTERNODEDOUB2D0) (const int&,
+void SAMRAI_F77_FUNC(conavgouternodedoub2d0, CONAVGOUTERNODEDOUB2D0) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -52,7 +52,7 @@ void F77_FUNC(conavgouternodedoub2d0, CONAVGOUTERNODEDOUB2D0) (const int&,
    const int&, const int&,
    const int *,
    const double *, double *);
-void F77_FUNC(conavgouternodedoub2d1, CONAVGOUTERNODEDOUB2D1) (const int&,
+void SAMRAI_F77_FUNC(conavgouternodedoub2d1, CONAVGOUTERNODEDOUB2D1) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -63,7 +63,7 @@ void F77_FUNC(conavgouternodedoub2d1, CONAVGOUTERNODEDOUB2D1) (const int&,
    const double *, double *);
 
 // in pdat_concoarsen3d.f:
-void F77_FUNC(conavgouternodedoub3d0, CONAVGOUTERNODEDOUB3D0) (const int&,
+void SAMRAI_F77_FUNC(conavgouternodedoub3d0, CONAVGOUTERNODEDOUB3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -72,7 +72,7 @@ void F77_FUNC(conavgouternodedoub3d0, CONAVGOUTERNODEDOUB3D0) (const int&,
    const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void F77_FUNC(conavgouternodedoub3d1, CONAVGOUTERNODEDOUB3D1) (const int&,
+void SAMRAI_F77_FUNC(conavgouternodedoub3d1, CONAVGOUTERNODEDOUB3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -81,7 +81,7 @@ void F77_FUNC(conavgouternodedoub3d1, CONAVGOUTERNODEDOUB3D1) (const int&,
    const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void F77_FUNC(conavgouternodedoub3d2, CONAVGOUTERNODEDOUB3D2) (const int&,
+void SAMRAI_F77_FUNC(conavgouternodedoub3d2, CONAVGOUTERNODEDOUB3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -156,7 +156,7 @@ OuternodeDoubleConstantCoarsen::coarsen(
             for (int d = 0; d < cdata->getDepth(); d++) {
 
                if (dim == tbox::Dimension(1)) {
-                  F77_FUNC(conavgouternodedoub1d,
+                  SAMRAI_F77_FUNC(conavgouternodedoub1d,
                      CONAVGOUTERNODEDOUB1D) (ifirstc(0), ilastc(0),
                      filo(0), fihi(0),
                      cilo(0), cihi(0),
@@ -165,7 +165,7 @@ OuternodeDoubleConstantCoarsen::coarsen(
                      cdata->getPointer(axis, i, d));
                } else if (dim == tbox::Dimension(2)) {
                   if (axis == 0) {
-                     F77_FUNC(conavgouternodedoub2d0,
+                     SAMRAI_F77_FUNC(conavgouternodedoub2d0,
                         CONAVGOUTERNODEDOUB2D0) (ifirstc(0), ifirstc(1),
                         ilastc(0), ilastc(1),
                         filo(0), filo(1),
@@ -178,7 +178,7 @@ OuternodeDoubleConstantCoarsen::coarsen(
                   }
 
                   if (axis == 1) {
-                     F77_FUNC(conavgouternodedoub2d1,
+                     SAMRAI_F77_FUNC(conavgouternodedoub2d1,
                         CONAVGOUTERNODEDOUB2D1) (ifirstc(0), ifirstc(1),
                         ilastc(0), ilastc(1),
                         filo(0), filo(1),
@@ -191,7 +191,7 @@ OuternodeDoubleConstantCoarsen::coarsen(
                   }
                } else if (dim == tbox::Dimension(3)) {
                   if (axis == 0) {
-                     F77_FUNC(conavgouternodedoub3d0,
+                     SAMRAI_F77_FUNC(conavgouternodedoub3d0,
                         CONAVGOUTERNODEDOUB3D0) (ifirstc(0), ifirstc(1),
                         ifirstc(2),
                         ilastc(0), ilastc(1), ilastc(2),
@@ -204,7 +204,7 @@ OuternodeDoubleConstantCoarsen::coarsen(
                         cdata->getPointer(axis, i, d));
                   }
                   if (axis == 1) {
-                     F77_FUNC(conavgouternodedoub3d1,
+                     SAMRAI_F77_FUNC(conavgouternodedoub3d1,
                         CONAVGOUTERNODEDOUB3D1) (ifirstc(0), ifirstc(1),
                         ifirstc(2),
                         ilastc(0), ilastc(1), ilastc(2),
@@ -217,7 +217,7 @@ OuternodeDoubleConstantCoarsen::coarsen(
                         cdata->getPointer(axis, i, d));
                   }
                   if (axis == 2) {
-                     F77_FUNC(conavgouternodedoub3d2,
+                     SAMRAI_F77_FUNC(conavgouternodedoub3d2,
                         CONAVGOUTERNODEDOUB3D2) (ifirstc(0), ifirstc(1),
                         ifirstc(2),
                         ilastc(0), ilastc(1), ilastc(2),

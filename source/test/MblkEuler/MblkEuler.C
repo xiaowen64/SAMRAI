@@ -1571,7 +1571,7 @@ void MblkEuler::markPhysicalBoundaryConditions(
  */
 
 extern "C" {
-void F77_FUNC(bcmultiblock, BCMULTIBLOCK) (
+void SAMRAI_F77_FUNC(bcmultiblock, BCMULTIBLOCK) (
    const int *, const int *, const int *,
    const int *, const int *, const int *,
    double *,
@@ -1660,7 +1660,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
          if ((ghost_box.lower(dir) < domain_box.lower(dir)) &&
              (d_dom_local_blocks[dir] == block_number)) {
             int iside = 0;
-            F77_FUNC(bcmultiblock, BCMULTIBLOCK) (
+            SAMRAI_F77_FUNC(bcmultiblock, BCMULTIBLOCK) (
                &nd_imin, &nd_imax, &nd_jmin, &nd_jmax, &nd_kmin, &nd_kmax,
                position_ptr,
                &imin, &imax, &jmin, &jmax, &kmin, &kmax, state_ptr,
@@ -1677,7 +1677,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
          if ((ghost_box.upper(dir) > domain_box.upper(dir)) &&
              (d_dom_local_blocks[d_dim.getValue() + dir] == block_number)) {
             int iside = 1;
-            F77_FUNC(bcmultiblock, BCMULTIBLOCK) (
+            SAMRAI_F77_FUNC(bcmultiblock, BCMULTIBLOCK) (
                &nd_imin, &nd_imax, &nd_jmin, &nd_jmax, &nd_kmin, &nd_kmax,
                position_ptr,
                &imin, &imax, &jmin, &jmax, &kmin, &kmax, state_ptr,

@@ -38,7 +38,7 @@ extern "C" {
 #endif
 
 // in cartrefine1d.f:
-void F77_FUNC(cartclinrefsidedoub1d, CARTCLINREFSIDEDOUB1D) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefsidedoub1d, CARTCLINREFSIDEDOUB1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -47,7 +47,7 @@ void F77_FUNC(cartclinrefsidedoub1d, CARTCLINREFSIDEDOUB1D) (const int&,
    const double *, double *,
    double *, double *);
 // in cartrefine2d.f:
-void F77_FUNC(cartclinrefsidedoub2d0, CARTCLINREFSIDEDOUB2D0) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefsidedoub2d0, CARTCLINREFSIDEDOUB2D0) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -55,7 +55,7 @@ void F77_FUNC(cartclinrefsidedoub2d0, CARTCLINREFSIDEDOUB2D0) (const int&,
    const int *, const double *, const double *,
    const double *, double *,
    double *, double *, double *, double *);
-void F77_FUNC(cartclinrefsidedoub2d1, CARTCLINREFSIDEDOUB2D1) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefsidedoub2d1, CARTCLINREFSIDEDOUB2D1) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -64,7 +64,7 @@ void F77_FUNC(cartclinrefsidedoub2d1, CARTCLINREFSIDEDOUB2D1) (const int&,
    const double *, double *,
    double *, double *, double *, double *);
 // in cartrefine3d.f:
-void F77_FUNC(cartclinrefsidedoub3d0, CARTCLINREFSIDEDOUB3D0) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefsidedoub3d0, CARTCLINREFSIDEDOUB3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -77,7 +77,7 @@ void F77_FUNC(cartclinrefsidedoub3d0, CARTCLINREFSIDEDOUB3D0) (const int&,
    const double *, double *,
    double *, double *, double *,
    double *, double *, double *);
-void F77_FUNC(cartclinrefsidedoub3d1, CARTCLINREFSIDEDOUB3D1) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefsidedoub3d1, CARTCLINREFSIDEDOUB3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -90,7 +90,7 @@ void F77_FUNC(cartclinrefsidedoub3d1, CARTCLINREFSIDEDOUB3D1) (const int&,
    const double *, double *,
    double *, double *, double *,
    double *, double *, double *);
-void F77_FUNC(cartclinrefsidedoub3d2, CARTCLINREFSIDEDOUB3D2) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefsidedoub3d2, CARTCLINREFSIDEDOUB3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -203,7 +203,7 @@ CartesianSideDoubleConservativeLinearRefine::refine(
          for (int d = 0; d < fdata->getDepth(); d++) {
             if ((dim == tbox::Dimension(1))) {
                if (directions(axis)) {
-                  F77_FUNC(cartclinrefsidedoub1d, CARTCLINREFSIDEDOUB1D) (
+                  SAMRAI_F77_FUNC(cartclinrefsidedoub1d, CARTCLINREFSIDEDOUB1D) (
                      ifirstc(0), ilastc(0),
                      ifirstf(0), ilastf(0),
                      cilo(0), cihi(0),
@@ -221,7 +221,7 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                                              directions);
 
                if (axis == 0 && directions(0)) {
-                  F77_FUNC(cartclinrefsidedoub2d0, CARTCLINREFSIDEDOUB2D0) (
+                  SAMRAI_F77_FUNC(cartclinrefsidedoub2d0, CARTCLINREFSIDEDOUB2D0) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
                      cilo(0), cilo(1), cihi(0), cihi(1),
@@ -235,7 +235,7 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                      diff1.getPointer(), slope1.getPointer(0));
                }
                if (axis == 1 && directions(1)) {
-                  F77_FUNC(cartclinrefsidedoub2d1, CARTCLINREFSIDEDOUB2D1) (
+                  SAMRAI_F77_FUNC(cartclinrefsidedoub2d1, CARTCLINREFSIDEDOUB2D1) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
                      cilo(0), cilo(1), cihi(0), cihi(1),
@@ -258,7 +258,7 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                                              directions);
 
                if (axis == 0 && directions(0)) {
-                  F77_FUNC(cartclinrefsidedoub3d0, CARTCLINREFSIDEDOUB3D0) (
+                  SAMRAI_F77_FUNC(cartclinrefsidedoub3d0, CARTCLINREFSIDEDOUB3D0) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),
@@ -277,7 +277,7 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                      diff2.getPointer(), slope2.getPointer(0));
                }
                if (axis == 1 && directions(1)) {
-                  F77_FUNC(cartclinrefsidedoub3d1, CARTCLINREFSIDEDOUB3D1) (
+                  SAMRAI_F77_FUNC(cartclinrefsidedoub3d1, CARTCLINREFSIDEDOUB3D1) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),
@@ -296,7 +296,7 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                      diff0.getPointer(), slope0.getPointer(1));
                }
                if (axis == 2 && directions(2)) {
-                  F77_FUNC(cartclinrefsidedoub3d2, CARTCLINREFSIDEDOUB3D2) (
+                  SAMRAI_F77_FUNC(cartclinrefsidedoub3d2, CARTCLINREFSIDEDOUB3D2) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),

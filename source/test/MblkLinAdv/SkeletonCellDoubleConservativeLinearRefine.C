@@ -30,7 +30,7 @@
 
 extern "C" {
 // in cartrefine1d.f:
-void F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (
+void SAMRAI_F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -39,7 +39,7 @@ void F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (
    const double *, double *,
    double *, double *);
 // in cartrefine2d.f:
-void F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D) (
+void SAMRAI_F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D) (
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -48,7 +48,7 @@ void F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D) (
    const double *, double *,
    double *, double *, double *, double *);
 // in cartrefine3d.f:
-void F77_FUNC(cartclinrefcelldoub3d, CARTCLINREFCELLDOUB3D) (
+void SAMRAI_F77_FUNC(cartclinrefcelldoub3d, CARTCLINREFCELLDOUB3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -179,7 +179,7 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
 
    for (int d = 0; d < fdata->getDepth(); d++) {
       if (fine.getDim() == tbox::Dimension(1)) {
-         F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (
+         SAMRAI_F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (
             ifirstc(0), ilastc(0),
             ifirstf(0), ilastf(0),
             cilo(0), cihi(0),
@@ -195,7 +195,7 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
          tbox::Array<double> diff1(cgbox.numberCells(1) + 1);
          pdat::CellData<double> slope1(cgbox, 1, tmp_ghosts);
 
-         F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D) (
+         SAMRAI_F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D) (
             ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
             ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
             cilo(0), cilo(1), cihi(0), cihi(1),
@@ -215,7 +215,7 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
          tbox::Array<double> diff2(cgbox.numberCells(2) + 1);
          pdat::CellData<double> slope2(cgbox, 1, tmp_ghosts);
 
-         F77_FUNC(cartclinrefcelldoub3d, CARTCLINREFCELLDOUB3D) (
+         SAMRAI_F77_FUNC(cartclinrefcelldoub3d, CARTCLINREFCELLDOUB3D) (
             ifirstc(0), ifirstc(1), ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
             ifirstf(0), ifirstf(1), ifirstf(2),

@@ -36,7 +36,7 @@ extern "C" {
 #endif
 
 // in lintimint1d.f:
-void F77_FUNC(lintimeintcellfloat1d, LINTIMEINTCELLFLOAT1D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintcellfloat1d, LINTIMEINTCELLFLOAT1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -45,7 +45,7 @@ void F77_FUNC(lintimeintcellfloat1d, LINTIMEINTCELLFLOAT1D) (const int&,
    const float *, const float *,
    float *);
 // in lintimint2d.f:
-void F77_FUNC(lintimeintcellfloat2d, LINTIMEINTCELLFLOAT2D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintcellfloat2d, LINTIMEINTCELLFLOAT2D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -58,7 +58,7 @@ void F77_FUNC(lintimeintcellfloat2d, LINTIMEINTCELLFLOAT2D) (const int&,
    const float *, const float *,
    float *);
 // in lintimint3d.f:
-void F77_FUNC(lintimeintcellfloat3d, LINTIMEINTCELLFLOAT3D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintcellfloat3d, LINTIMEINTCELLFLOAT3D) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -138,7 +138,7 @@ CellFloatLinearTimeInterpolateOp::timeInterpolate(
 
    for (int d = 0; d < dst_dat->getDepth(); d++) {
       if (dim == tbox::Dimension(1)) {
-         F77_FUNC(lintimeintcellfloat1d, LINTIMEINTCELLFLOAT1D) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintcellfloat1d, LINTIMEINTCELLFLOAT1D) (ifirst(0),
             ilast(0),
             old_ilo(0), old_ihi(0),
             new_ilo(0), new_ihi(0),
@@ -148,7 +148,7 @@ CellFloatLinearTimeInterpolateOp::timeInterpolate(
             new_dat->getPointer(d),
             dst_dat->getPointer(d));
       } else if (dim == tbox::Dimension(2)) {
-         F77_FUNC(lintimeintcellfloat2d, LINTIMEINTCELLFLOAT2D) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintcellfloat2d, LINTIMEINTCELLFLOAT2D) (ifirst(0),
             ifirst(1), ilast(0), ilast(1),
             old_ilo(0), old_ilo(1), old_ihi(0), old_ihi(1),
             new_ilo(0), new_ilo(1), new_ihi(0), new_ihi(1),
@@ -158,7 +158,7 @@ CellFloatLinearTimeInterpolateOp::timeInterpolate(
             new_dat->getPointer(d),
             dst_dat->getPointer(d));
       } else if (dim == tbox::Dimension(3)) {
-         F77_FUNC(lintimeintcellfloat3d, LINTIMEINTCELLFLOAT3D) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintcellfloat3d, LINTIMEINTCELLFLOAT3D) (ifirst(0),
             ifirst(1), ifirst(2),
             ilast(0), ilast(1), ilast(2),
             old_ilo(0), old_ilo(1), old_ilo(2),

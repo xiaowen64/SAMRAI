@@ -37,28 +37,28 @@ extern "C" {
 #endif
 
 // in cartcoarsen1d.f:
-void F77_FUNC(cartwgtavgsidecplx1d, CARTWGTAVGSIDECPLX1D) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgsidecplx1d, CARTWGTAVGSIDECPLX1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 // in cartcoarsen2d.f:
-void F77_FUNC(cartwgtavgsidecplx2d0, CARTWGTAVGSIDECPLX2D0) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgsidecplx2d0, CARTWGTAVGSIDECPLX2D0) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 
-void F77_FUNC(cartwgtavgsidecplx2d1, CARTWGTAVGSIDECPLX2D1) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgsidecplx2d1, CARTWGTAVGSIDECPLX2D1) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 // in cartcoarsen3d.f:
-void F77_FUNC(cartwgtavgsidecplx3d0, CARTWGTAVGSIDECPLX3D0) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgsidecplx3d0, CARTWGTAVGSIDECPLX3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -67,7 +67,7 @@ void F77_FUNC(cartwgtavgsidecplx3d0, CARTWGTAVGSIDECPLX3D0) (const int&,
    const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
-void F77_FUNC(cartwgtavgsidecplx3d1, CARTWGTAVGSIDECPLX3D1) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgsidecplx3d1, CARTWGTAVGSIDECPLX3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -76,7 +76,7 @@ void F77_FUNC(cartwgtavgsidecplx3d1, CARTWGTAVGSIDECPLX3D1) (const int&,
    const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
-void F77_FUNC(cartwgtavgsidecplx3d2, CARTWGTAVGSIDECPLX3D2) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgsidecplx3d2, CARTWGTAVGSIDECPLX3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -160,7 +160,7 @@ CartesianSideComplexWeightedAverage::coarsen(
    for (int d = 0; d < cdata->getDepth(); d++) {
       if ((dim == tbox::Dimension(1))) {
          if (directions(0)) {
-            F77_FUNC(cartwgtavgsidecplx1d, CARTWGTAVGSIDECPLX1D) (ifirstc(0),
+            SAMRAI_F77_FUNC(cartwgtavgsidecplx1d, CARTWGTAVGSIDECPLX1D) (ifirstc(0),
                ilastc(0),
                filo(0), fihi(0),
                cilo(0), cihi(0),
@@ -172,7 +172,7 @@ CartesianSideComplexWeightedAverage::coarsen(
          }
       } else if ((dim == tbox::Dimension(2))) {
          if (directions(0)) {
-            F77_FUNC(cartwgtavgsidecplx2d0, CARTWGTAVGSIDECPLX2D0) (ifirstc(0),
+            SAMRAI_F77_FUNC(cartwgtavgsidecplx2d0, CARTWGTAVGSIDECPLX2D0) (ifirstc(0),
                ifirstc(1), ilastc(0), ilastc(1),
                filo(0), filo(1), fihi(0), fihi(1),
                cilo(0), cilo(1), cihi(0), cihi(1),
@@ -183,7 +183,7 @@ CartesianSideComplexWeightedAverage::coarsen(
                cdata->getPointer(0, d));
          }
          if (directions(1)) {
-            F77_FUNC(cartwgtavgsidecplx2d1, CARTWGTAVGSIDECPLX2D1) (ifirstc(0),
+            SAMRAI_F77_FUNC(cartwgtavgsidecplx2d1, CARTWGTAVGSIDECPLX2D1) (ifirstc(0),
                ifirstc(1), ilastc(0), ilastc(1),
                filo(0), filo(1), fihi(0), fihi(1),
                cilo(0), cilo(1), cihi(0), cihi(1),
@@ -195,7 +195,7 @@ CartesianSideComplexWeightedAverage::coarsen(
          }
       } else if ((dim == tbox::Dimension(3))) {
          if (directions(0)) {
-            F77_FUNC(cartwgtavgsidecplx3d0, CARTWGTAVGSIDECPLX3D0) (ifirstc(0),
+            SAMRAI_F77_FUNC(cartwgtavgsidecplx3d0, CARTWGTAVGSIDECPLX3D0) (ifirstc(0),
                ifirstc(1), ifirstc(2),
                ilastc(0), ilastc(1), ilastc(2),
                filo(0), filo(1), filo(2),
@@ -209,7 +209,7 @@ CartesianSideComplexWeightedAverage::coarsen(
                cdata->getPointer(0, d));
          }
          if (directions(1)) {
-            F77_FUNC(cartwgtavgsidecplx3d1, CARTWGTAVGSIDECPLX3D1) (ifirstc(0),
+            SAMRAI_F77_FUNC(cartwgtavgsidecplx3d1, CARTWGTAVGSIDECPLX3D1) (ifirstc(0),
                ifirstc(1), ifirstc(2),
                ilastc(0), ilastc(1), ilastc(2),
                filo(0), filo(1), filo(2),
@@ -223,7 +223,7 @@ CartesianSideComplexWeightedAverage::coarsen(
                cdata->getPointer(1, d));
          }
          if (directions(2)) {
-            F77_FUNC(cartwgtavgsidecplx3d2, CARTWGTAVGSIDECPLX3D2) (ifirstc(0),
+            SAMRAI_F77_FUNC(cartwgtavgsidecplx3d2, CARTWGTAVGSIDECPLX3D2) (ifirstc(0),
                ifirstc(1), ifirstc(2),
                ilastc(0), ilastc(1), ilastc(2),
                filo(0), filo(1), filo(2),

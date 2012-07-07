@@ -37,7 +37,7 @@ extern "C" {
 #endif
 
 // in cartrefine1d.f:
-void F77_FUNC(cartclinrefcellflot1d, CARTCLINREFCELLFLOT1D) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefcellflot1d, CARTCLINREFCELLFLOT1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -46,7 +46,7 @@ void F77_FUNC(cartclinrefcellflot1d, CARTCLINREFCELLFLOT1D) (const int&,
    const float *, float *,
    float *, float *);
 // in cartrefine2d.f:
-void F77_FUNC(cartclinrefcellflot2d, CARTCLINREFCELLFLOT2D) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefcellflot2d, CARTCLINREFCELLFLOT2D) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -55,7 +55,7 @@ void F77_FUNC(cartclinrefcellflot2d, CARTCLINREFCELLFLOT2D) (const int&,
    const float *, float *,
    float *, float *, float *, float *);
 // in cartrefine3d.f:
-void F77_FUNC(cartclinrefcellflot3d, CARTCLINREFCELLFLOT3D) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefcellflot3d, CARTCLINREFCELLFLOT3D) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -172,7 +172,7 @@ CartesianCellFloatConservativeLinearRefine::refine(
 
    for (int d = 0; d < fdata->getDepth(); d++) {
       if ((dim == tbox::Dimension(1))) {
-         F77_FUNC(cartclinrefcellflot1d, CARTCLINREFCELLFLOT1D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartclinrefcellflot1d, CARTCLINREFCELLFLOT1D) (ifirstc(0),
             ilastc(0),
             ifirstf(0), ilastf(0),
             cilo(0), cihi(0),
@@ -187,7 +187,7 @@ CartesianCellFloatConservativeLinearRefine::refine(
          tbox::Array<float> diff1(cgbox.numberCells(1) + 1);
          pdat::CellData<float> slope1(cgbox, 1, tmp_ghosts);
 
-         F77_FUNC(cartclinrefcellflot2d, CARTCLINREFCELLFLOT2D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartclinrefcellflot2d, CARTCLINREFCELLFLOT2D) (ifirstc(0),
             ifirstc(1), ilastc(0), ilastc(1),
             ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
             cilo(0), cilo(1), cihi(0), cihi(1),
@@ -206,7 +206,7 @@ CartesianCellFloatConservativeLinearRefine::refine(
          tbox::Array<float> diff2(cgbox.numberCells(2) + 1);
          pdat::CellData<float> slope2(cgbox, 1, tmp_ghosts);
 
-         F77_FUNC(cartclinrefcellflot3d, CARTCLINREFCELLFLOT3D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartclinrefcellflot3d, CARTCLINREFCELLFLOT3D) (ifirstc(0),
             ifirstc(1), ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
             ifirstf(0), ifirstf(1), ifirstf(2),

@@ -33,7 +33,7 @@ extern "C" {
 #endif
 
 // in conrefine1d.f:
-void F77_FUNC(conrefoutfaceintg1d, CONREFOUTFACEINTG1D) (const int&,
+void SAMRAI_F77_FUNC(conrefoutfaceintg1d, CONREFOUTFACEINTG1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -41,7 +41,7 @@ void F77_FUNC(conrefoutfaceintg1d, CONREFOUTFACEINTG1D) (const int&,
    const int *,
    const int *, int *);
 // in conrefine2d.f:
-void F77_FUNC(conrefoutfaceintg2d0, CONREFOUTFACEINTG2D0) (const int&,
+void SAMRAI_F77_FUNC(conrefoutfaceintg2d0, CONREFOUTFACEINTG2D0) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -52,7 +52,7 @@ void F77_FUNC(conrefoutfaceintg2d0, CONREFOUTFACEINTG2D0) (const int&,
    const int&, const int&,
    const int *,
    const int *, int *);
-void F77_FUNC(conrefoutfaceintg2d1, CONREFOUTFACEINTG2D1) (const int&,
+void SAMRAI_F77_FUNC(conrefoutfaceintg2d1, CONREFOUTFACEINTG2D1) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -64,7 +64,7 @@ void F77_FUNC(conrefoutfaceintg2d1, CONREFOUTFACEINTG2D1) (const int&,
    const int *,
    const int *, int *);
 // in conrefine3d.f:
-void F77_FUNC(conrefoutfaceintg3d0, CONREFOUTFACEINTG3D0) (const int&,
+void SAMRAI_F77_FUNC(conrefoutfaceintg3d0, CONREFOUTFACEINTG3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -75,7 +75,7 @@ void F77_FUNC(conrefoutfaceintg3d0, CONREFOUTFACEINTG3D0) (const int&,
    const int&, const int&, const int&,
    const int *,
    const int *, int *);
-void F77_FUNC(conrefoutfaceintg3d1, CONREFOUTFACEINTG3D1) (const int&,
+void SAMRAI_F77_FUNC(conrefoutfaceintg3d1, CONREFOUTFACEINTG3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -86,7 +86,7 @@ void F77_FUNC(conrefoutfaceintg3d1, CONREFOUTFACEINTG3D1) (const int&,
    const int&, const int&, const int&,
    const int *,
    const int *, int *);
-void F77_FUNC(conrefoutfaceintg3d2, CONREFOUTFACEINTG3D2) (const int&,
+void SAMRAI_F77_FUNC(conrefoutfaceintg3d2, CONREFOUTFACEINTG3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -186,7 +186,7 @@ OuterfaceIntegerConstantRefine::refine(
             // loop over lower and upper outerface arrays
             for (int i = 0; i < 2; i++) {
                if (dim == tbox::Dimension(1)) {
-                  F77_FUNC(conrefoutfaceintg1d, CONREFOUTFACEINTG1D) (
+                  SAMRAI_F77_FUNC(conrefoutfaceintg1d, CONREFOUTFACEINTG1D) (
                      ifirstc(0), ilastc(0),
                      ifirstf(0), ilastf(0),
                      cilo(0), cihi(0),
@@ -196,7 +196,7 @@ OuterfaceIntegerConstantRefine::refine(
                      fdata->getPointer(0, i, d));
                } else if (dim == tbox::Dimension(2)) {
                   if (axis == 0) {
-                     F77_FUNC(conrefoutfaceintg2d0, CONREFOUTFACEINTG2D0) (
+                     SAMRAI_F77_FUNC(conrefoutfaceintg2d0, CONREFOUTFACEINTG2D0) (
                         ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                         ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
                         cilo(0), cilo(1), cihi(0), cihi(1),
@@ -205,7 +205,7 @@ OuterfaceIntegerConstantRefine::refine(
                         cdata->getPointer(0, i, d),
                         fdata->getPointer(0, i, d));
                   } else if (axis == 1) {
-                     F77_FUNC(conrefoutfaceintg2d1, CONREFOUTFACEINTG2D1) (
+                     SAMRAI_F77_FUNC(conrefoutfaceintg2d1, CONREFOUTFACEINTG2D1) (
                         ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                         ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
                         cilo(0), cilo(1), cihi(0), cihi(1),
@@ -216,7 +216,7 @@ OuterfaceIntegerConstantRefine::refine(
                   }
                } else if (dim == tbox::Dimension(3)) {
                   if (axis == 0) {
-                     F77_FUNC(conrefoutfaceintg3d0, CONREFOUTFACEINTG3D0) (
+                     SAMRAI_F77_FUNC(conrefoutfaceintg3d0, CONREFOUTFACEINTG3D0) (
                         ifirstc(0), ifirstc(1), ifirstc(2),
                         ilastc(0), ilastc(1), ilastc(2),
                         ifirstf(0), ifirstf(1), ifirstf(2),
@@ -229,7 +229,7 @@ OuterfaceIntegerConstantRefine::refine(
                         cdata->getPointer(0, i, d),
                         fdata->getPointer(0, i, d));
                   } else if (axis == 1) {
-                     F77_FUNC(conrefoutfaceintg3d1, CONREFOUTFACEINTG3D1) (
+                     SAMRAI_F77_FUNC(conrefoutfaceintg3d1, CONREFOUTFACEINTG3D1) (
                         ifirstc(0), ifirstc(1), ifirstc(2),
                         ilastc(0), ilastc(1), ilastc(2),
                         ifirstf(0), ifirstf(1), ifirstf(2),
@@ -242,7 +242,7 @@ OuterfaceIntegerConstantRefine::refine(
                         cdata->getPointer(1, i, d),
                         fdata->getPointer(1, i, d));
                   } else if (axis == 2) {
-                     F77_FUNC(conrefoutfaceintg3d2, CONREFOUTFACEINTG3D2) (
+                     SAMRAI_F77_FUNC(conrefoutfaceintg3d2, CONREFOUTFACEINTG3D2) (
                         ifirstc(0), ifirstc(1), ifirstc(2),
                         ilastc(0), ilastc(1), ilastc(2),
                         ifirstf(0), ifirstf(1), ifirstf(2),

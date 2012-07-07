@@ -59,7 +59,7 @@
 #endif
 
 extern "C" {
-void F77_FUNC(comprhs2d, COMPRHS2D) (
+void SAMRAI_F77_FUNC(comprhs2d, COMPRHS2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -68,14 +68,14 @@ void F77_FUNC(comprhs2d, COMPRHS2D) (
    const double *, const double *,
    double *);
 #ifdef USE_FAC_PRECONDITIONER
-void F77_FUNC(setneufluxvalues2d, SETNEUFLUXVALUES2D) (
+void SAMRAI_F77_FUNC(setneufluxvalues2d, SETNEUFLUXVALUES2D) (
    const int&, const int&,
    const int&, const int&,
    const int *, const double *,
    int *, int *, int *, int *,
    double *, double *, double *, double *);
 #endif
-void F77_FUNC(comprhs3d, COMPRHS3D) (
+void SAMRAI_F77_FUNC(comprhs3d, COMPRHS3D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -85,7 +85,7 @@ void F77_FUNC(comprhs3d, COMPRHS3D) (
    const double *, const double *, const double *,
    double *);
 #ifdef USE_FAC_PRECONDITIONER
-void F77_FUNC(setneufluxvalues3d, SETNEUFLUXVALUES3D) (
+void SAMRAI_F77_FUNC(setneufluxvalues3d, SETNEUFLUXVALUES3D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -678,7 +678,7 @@ CVODEModel::evaluateRHSFunction(
           * 1 eqn radiation diffusion
           */
          if (d_dim == Dimension(2)) {
-            F77_FUNC(comprhs2d, COMPRHS2D) (
+            SAMRAI_F77_FUNC(comprhs2d, COMPRHS2D) (
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                ghost_cells(0), ghost_cells(1),
@@ -688,7 +688,7 @@ CVODEModel::evaluateRHSFunction(
                diff->getPointer(1),
                rhs->getPointer());
          } else if (d_dim == Dimension(3)) {
-            F77_FUNC(comprhs3d, COMPRHS3D) (
+            SAMRAI_F77_FUNC(comprhs3d, COMPRHS3D) (
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                ifirst(2), ilast(2),
@@ -865,7 +865,7 @@ int CVODEModel::CVSpgmrPrecondSet(
              */
 
             if (d_dim == Dimension(2)) {
-               F77_FUNC(setneufluxvalues2d, SETNEUFLUXVALUES2D) (
+               SAMRAI_F77_FUNC(setneufluxvalues2d, SETNEUFLUXVALUES2D) (
                   ifirst(0), ilast(0),
                   ifirst(1), ilast(1),
                   d_bdry_types,
@@ -880,7 +880,7 @@ int CVODEModel::CVSpgmrPrecondSet(
                   neuf_data->getPointer(1, 1)); // y upper
             }
             if (d_dim == Dimension(3)) {
-               F77_FUNC(setneufluxvalues3d, SETNEUFLUXVALUES3D) (
+               SAMRAI_F77_FUNC(setneufluxvalues3d, SETNEUFLUXVALUES3D) (
                   ifirst(0), ilast(0),
                   ifirst(1), ilast(1),
                   ifirst(2), ilast(2),

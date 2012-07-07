@@ -59,59 +59,59 @@ using namespace std;
 extern "C" {
 // in upfluxsum.m4:
 // for 2D:
-void F77_FUNC(upfluxsumface2d0, UPFLUXSUMFACe2d0) (const int&, const int&,
+void SAMRAI_F77_FUNC(upfluxsumface2d0, UPFLUXSUMFACe2d0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&,
    const double *, double *);
-void F77_FUNC(upfluxsumface2d1, UPFLUXSUMFACE2D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(upfluxsumface2d1, UPFLUXSUMFACE2D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&,
    const double *, double *);
-void F77_FUNC(upfluxsumside2d0, UPFLUXSUMSIDE2D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(upfluxsumside2d0, UPFLUXSUMSIDE2D0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&,
    const double *, double *);
-void F77_FUNC(upfluxsumside2d1, UPFLUXSUMSIDE2D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(upfluxsumside2d1, UPFLUXSUMSIDE2D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&,
    const double *, double *);
 
 // for 3D:
-void F77_FUNC(upfluxsumface3d0, UPFLUXSUMFACE3D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(upfluxsumface3d0, UPFLUXSUMFACE3D0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&,
    const double *, double *);
-void F77_FUNC(upfluxsumface3d1, UPFLUXSUMFACE3D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(upfluxsumface3d1, UPFLUXSUMFACE3D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&,
    const double *, double *);
-void F77_FUNC(upfluxsumface3d2, UPFLUXSUMFACE3D2) (const int&, const int&,
+void SAMRAI_F77_FUNC(upfluxsumface3d2, UPFLUXSUMFACE3D2) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&,
    const double *, double *);
-void F77_FUNC(upfluxsumside3d0, UPFLUXSUMSIDE3D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(upfluxsumside3d0, UPFLUXSUMSIDE3D0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&,
    const double *, double *);
-void F77_FUNC(upfluxsumside3d1, UPFLUXSUMSIDE3D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(upfluxsumside3d1, UPFLUXSUMSIDE3D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&,
    const double *, double *);
-void F77_FUNC(upfluxsumside3d2, UPFLUXSUMSIDE3D2) (const int&, const int&,
+void SAMRAI_F77_FUNC(upfluxsumside3d2, UPFLUXSUMSIDE3D2) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&,
@@ -2221,7 +2221,7 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
                for (int ifs = 0; ifs < 2; ifs++) {
                   if (d_flux_is_face) {
                      if (d_dim == tbox::Dimension(2)) {
-                        F77_FUNC(upfluxsumface2d0,
+                        SAMRAI_F77_FUNC(upfluxsumface2d0,
                            UPFLUXSUMFACE2D0) (ilo(0), ilo(1), ihi(0),
                            ihi(1),
                            flux_ghosts(0),
@@ -2229,7 +2229,7 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
                            ifs,
                            fflux_data->getPointer(0, d),
                            ffsum_data->getPointer(0, ifs, d));
-                        F77_FUNC(upfluxsumface2d1,
+                        SAMRAI_F77_FUNC(upfluxsumface2d1,
                            UPFLUXSUMFACE2D1) (ilo(0), ilo(1), ihi(0),
                            ihi(1),
                            flux_ghosts(0),
@@ -2239,7 +2239,7 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
                            ffsum_data->getPointer(1, ifs, d));
                      }
                      if (d_dim == tbox::Dimension(3)) {
-                        F77_FUNC(upfluxsumface3d0,
+                        SAMRAI_F77_FUNC(upfluxsumface3d0,
                            UPFLUXSUMFACE3D0) (ilo(0), ilo(1), ilo(2),
                            ihi(0), ihi(1), ihi(2),
                            flux_ghosts(0),
@@ -2248,7 +2248,7 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
                            ifs,
                            fflux_data->getPointer(0, d),
                            ffsum_data->getPointer(0, ifs, d));
-                        F77_FUNC(upfluxsumface3d1,
+                        SAMRAI_F77_FUNC(upfluxsumface3d1,
                            UPFLUXSUMFACE3D1) (ilo(0), ilo(1), ilo(2),
                            ihi(0), ihi(1), ihi(2),
                            flux_ghosts(0),
@@ -2257,7 +2257,7 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
                            ifs,
                            fflux_data->getPointer(1, d),
                            ffsum_data->getPointer(1, ifs, d));
-                        F77_FUNC(upfluxsumface3d2,
+                        SAMRAI_F77_FUNC(upfluxsumface3d2,
                            UPFLUXSUMFACE3D2) (ilo(0), ilo(1), ilo(2),
                            ihi(0), ihi(1), ihi(2),
                            flux_ghosts(0),
@@ -2269,7 +2269,7 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
                      }
                   } else {
                      if (d_dim == tbox::Dimension(2)) {
-                        F77_FUNC(upfluxsumside2d0,
+                        SAMRAI_F77_FUNC(upfluxsumside2d0,
                            UPFLUXSUMSIDE2D0) (ilo(0), ilo(1), ihi(0),
                            ihi(1),
                            flux_ghosts(0),
@@ -2277,7 +2277,7 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
                            ifs,
                            sflux_data->getPointer(0, d),
                            sfsum_data->getPointer(0, ifs, d));
-                        F77_FUNC(upfluxsumside2d1,
+                        SAMRAI_F77_FUNC(upfluxsumside2d1,
                            UPFLUXSUMSIDE2D1) (ilo(0), ilo(1), ihi(0),
                            ihi(1),
                            flux_ghosts(0),
@@ -2287,7 +2287,7 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
                            sfsum_data->getPointer(1, ifs, d));
                      }
                      if (d_dim == tbox::Dimension(3)) {
-                        F77_FUNC(upfluxsumside3d0,
+                        SAMRAI_F77_FUNC(upfluxsumside3d0,
                            UPFLUXSUMSIDE3D0) (ilo(0), ilo(1), ilo(2),
                            ihi(0), ihi(1), ihi(2),
                            flux_ghosts(0),
@@ -2296,7 +2296,7 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
                            ifs,
                            sflux_data->getPointer(0, d),
                            sfsum_data->getPointer(0, ifs, d));
-                        F77_FUNC(upfluxsumside3d1,
+                        SAMRAI_F77_FUNC(upfluxsumside3d1,
                            UPFLUXSUMSIDE3D1) (ilo(0), ilo(1), ilo(2),
                            ihi(0), ihi(1), ihi(2),
                            flux_ghosts(0),
@@ -2305,7 +2305,7 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
                            ifs,
                            sflux_data->getPointer(1, d),
                            sfsum_data->getPointer(1, ifs, d));
-                        F77_FUNC(upfluxsumside3d2,
+                        SAMRAI_F77_FUNC(upfluxsumside3d2,
                            UPFLUXSUMSIDE3D2) (ilo(0), ilo(1), ilo(2),
                            ihi(0), ihi(1), ihi(2),
                            flux_ghosts(0),

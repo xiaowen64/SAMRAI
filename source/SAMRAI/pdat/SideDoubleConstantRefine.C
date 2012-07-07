@@ -35,21 +35,21 @@ extern "C" {
 #endif
 
 // in conrefine1d.f:
-void F77_FUNC(conrefsidedoub1d, CONREFSIDEDOUB1D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefsidedoub1d, CONREFSIDEDOUB1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const double *, double *);
 // in conrefine2d.f:
-void F77_FUNC(conrefsidedoub2d0, CONREFSIDEDOUB2D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefsidedoub2d0, CONREFSIDEDOUB2D0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void F77_FUNC(conrefsidedoub2d1, CONREFSIDEDOUB2D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefsidedoub2d1, CONREFSIDEDOUB2D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -57,7 +57,7 @@ void F77_FUNC(conrefsidedoub2d1, CONREFSIDEDOUB2D1) (const int&, const int&,
    const int *,
    const double *, double *);
 // in conrefine3d.f:
-void F77_FUNC(conrefsidedoub3d0, CONREFSIDEDOUB3D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefsidedoub3d0, CONREFSIDEDOUB3D0) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -68,7 +68,7 @@ void F77_FUNC(conrefsidedoub3d0, CONREFSIDEDOUB3D0) (const int&, const int&,
    const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void F77_FUNC(conrefsidedoub3d1, CONREFSIDEDOUB3D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefsidedoub3d1, CONREFSIDEDOUB3D1) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -79,7 +79,7 @@ void F77_FUNC(conrefsidedoub3d1, CONREFSIDEDOUB3D1) (const int&, const int&,
    const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void F77_FUNC(conrefsidedoub3d2, CONREFSIDEDOUB3D2) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefsidedoub3d2, CONREFSIDEDOUB3D2) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -176,7 +176,7 @@ SideDoubleConstantRefine::refine(
          for (int d = 0; d < fdata->getDepth(); d++) {
             if (dim == tbox::Dimension(1)) {
                if (directions(axis)) {
-                  F77_FUNC(conrefsidedoub1d, CONREFSIDEDOUB1D) (
+                  SAMRAI_F77_FUNC(conrefsidedoub1d, CONREFSIDEDOUB1D) (
                      ifirstc(0), ilastc(0),
                      ifirstf(0), ilastf(0),
                      cilo(0), cihi(0),
@@ -187,7 +187,7 @@ SideDoubleConstantRefine::refine(
                }
             } else if (dim == tbox::Dimension(2)) {
                if (axis == 0 && directions(0)) {
-                  F77_FUNC(conrefsidedoub2d0, CONREFSIDEDOUB2D0) (
+                  SAMRAI_F77_FUNC(conrefsidedoub2d0, CONREFSIDEDOUB2D0) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
                      cilo(0), cilo(1), cihi(0), cihi(1),
@@ -197,7 +197,7 @@ SideDoubleConstantRefine::refine(
                      fdata->getPointer(0, d));
                }
                if (axis == 1 && directions(1)) {
-                  F77_FUNC(conrefsidedoub2d1, CONREFSIDEDOUB2D1) (
+                  SAMRAI_F77_FUNC(conrefsidedoub2d1, CONREFSIDEDOUB2D1) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
                      cilo(0), cilo(1), cihi(0), cihi(1),
@@ -208,7 +208,7 @@ SideDoubleConstantRefine::refine(
                }
             } else if (dim == tbox::Dimension(3)) {
                if (axis == 0 && directions(0)) {
-                  F77_FUNC(conrefsidedoub3d0, CONREFSIDEDOUB3D0) (
+                  SAMRAI_F77_FUNC(conrefsidedoub3d0, CONREFSIDEDOUB3D0) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),
@@ -222,7 +222,7 @@ SideDoubleConstantRefine::refine(
                      fdata->getPointer(0, d));
                }
                if (axis == 1 && directions(1)) {
-                  F77_FUNC(conrefsidedoub3d1, CONREFSIDEDOUB3D1) (
+                  SAMRAI_F77_FUNC(conrefsidedoub3d1, CONREFSIDEDOUB3D1) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),
@@ -236,7 +236,7 @@ SideDoubleConstantRefine::refine(
                      fdata->getPointer(1, d));
                }
                if (axis == 2 && directions(2)) {
-                  F77_FUNC(conrefsidedoub3d2, CONREFSIDEDOUB3D2) (
+                  SAMRAI_F77_FUNC(conrefsidedoub3d2, CONREFSIDEDOUB3D2) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),

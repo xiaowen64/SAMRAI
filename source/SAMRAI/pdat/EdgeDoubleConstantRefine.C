@@ -33,21 +33,21 @@ extern "C" {
 #endif
 
 // in conrefine1d.f:
-void F77_FUNC(conrefedgedoub1d, CONREFEDGEDOUB1D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefedgedoub1d, CONREFEDGEDOUB1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const double *, double *);
 // in conrefine2d.f:
-void F77_FUNC(conrefedgedoub2d0, CONREFEDGEDOUB2D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefedgedoub2d0, CONREFEDGEDOUB2D0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void F77_FUNC(conrefedgedoub2d1, CONREFEDGEDOUB2D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefedgedoub2d1, CONREFEDGEDOUB2D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -55,7 +55,7 @@ void F77_FUNC(conrefedgedoub2d1, CONREFEDGEDOUB2D1) (const int&, const int&,
    const int *,
    const double *, double *);
 // in conrefine3d.f:
-void F77_FUNC(conrefedgedoub3d0, CONREFEDGEDOUB3D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefedgedoub3d0, CONREFEDGEDOUB3D0) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -66,7 +66,7 @@ void F77_FUNC(conrefedgedoub3d0, CONREFEDGEDOUB3D0) (const int&, const int&,
    const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void F77_FUNC(conrefedgedoub3d1, CONREFEDGEDOUB3D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefedgedoub3d1, CONREFEDGEDOUB3D1) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -77,7 +77,7 @@ void F77_FUNC(conrefedgedoub3d1, CONREFEDGEDOUB3D1) (const int&, const int&,
    const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void F77_FUNC(conrefedgedoub3d2, CONREFEDGEDOUB3D2) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefedgedoub3d2, CONREFEDGEDOUB3D2) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -172,7 +172,7 @@ EdgeDoubleConstantRefine::refine(
 
          for (int d = 0; d < fdata->getDepth(); d++) {
             if (dim == tbox::Dimension(1)) {
-               F77_FUNC(conrefedgedoub1d, CONREFEDGEDOUB1D) (
+               SAMRAI_F77_FUNC(conrefedgedoub1d, CONREFEDGEDOUB1D) (
                   ifirstc(0), ilastc(0),
                   ifirstf(0), ilastf(0),
                   cilo(0), cihi(0),
@@ -182,7 +182,7 @@ EdgeDoubleConstantRefine::refine(
                   fdata->getPointer(0, d));
             } else if (dim == tbox::Dimension(2)) {
                if (axis == 0) {
-                  F77_FUNC(conrefedgedoub2d0, CONREFEDGEDOUB2D0) (
+                  SAMRAI_F77_FUNC(conrefedgedoub2d0, CONREFEDGEDOUB2D0) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
                      cilo(0), cilo(1), cihi(0), cihi(1),
@@ -191,7 +191,7 @@ EdgeDoubleConstantRefine::refine(
                      cdata->getPointer(0, d),
                      fdata->getPointer(0, d));
                } else if (axis == 1) {
-                  F77_FUNC(conrefedgedoub2d1, CONREFEDGEDOUB2D1) (
+                  SAMRAI_F77_FUNC(conrefedgedoub2d1, CONREFEDGEDOUB2D1) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
                      cilo(0), cilo(1), cihi(0), cihi(1),
@@ -202,7 +202,7 @@ EdgeDoubleConstantRefine::refine(
                }
             } else if (dim == tbox::Dimension(3)) {
                if (axis == 0) {
-                  F77_FUNC(conrefedgedoub3d0, CONREFEDGEDOUB3D0) (
+                  SAMRAI_F77_FUNC(conrefedgedoub3d0, CONREFEDGEDOUB3D0) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),
@@ -215,7 +215,7 @@ EdgeDoubleConstantRefine::refine(
                      cdata->getPointer(0, d),
                      fdata->getPointer(0, d));
                } else if (axis == 1) {
-                  F77_FUNC(conrefedgedoub3d1, CONREFEDGEDOUB3D1) (
+                  SAMRAI_F77_FUNC(conrefedgedoub3d1, CONREFEDGEDOUB3D1) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),
@@ -228,7 +228,7 @@ EdgeDoubleConstantRefine::refine(
                      cdata->getPointer(1, d),
                      fdata->getPointer(1, d));
                } else if (axis == 2) {
-                  F77_FUNC(conrefedgedoub3d2, CONREFEDGEDOUB3D2) (
+                  SAMRAI_F77_FUNC(conrefedgedoub3d2, CONREFEDGEDOUB3D2) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),

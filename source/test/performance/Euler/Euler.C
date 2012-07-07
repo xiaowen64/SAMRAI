@@ -387,7 +387,7 @@ Euler::Euler(
 
    }
 
-   F77_FUNC(stufprobc, STUFPROBC) (APPROX_RIEM_SOLVE, EXACT_RIEM_SOLVE,
+   SAMRAI_F77_FUNC(stufprobc, STUFPROBC) (APPROX_RIEM_SOLVE, EXACT_RIEM_SOLVE,
       HLLC_RIEM_SOLVE,
       PIECEWISE_CONSTANT_X, PIECEWISE_CONSTANT_Y, PIECEWISE_CONSTANT_Z,
       SPHERE, STEP,
@@ -605,7 +605,7 @@ void Euler::initializeDataOnPatch(
       if (d_data_problem == "SPHERE") {
 
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(eulerinitsphere2d, EULERINITSPHERE2d) (d_data_problem_int,
+            SAMRAI_F77_FUNC(eulerinitsphere2d, EULERINITSPHERE2d) (d_data_problem_int,
                dx, xlo, xhi,
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
@@ -623,7 +623,7 @@ void Euler::initializeDataOnPatch(
                d_pressure_outside,
                d_center, d_radius);
          } else if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(eulerinitsphere3d, EULERINITSPHERE3d) (d_data_problem_int,
+            SAMRAI_F77_FUNC(eulerinitsphere3d, EULERINITSPHERE3d) (d_data_problem_int,
                dx, xlo, xhi,
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
@@ -647,7 +647,7 @@ void Euler::initializeDataOnPatch(
       } else {
 
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(eulerinit2d, EULERINIT2D) (d_data_problem_int,
+            SAMRAI_F77_FUNC(eulerinit2d, EULERINIT2D) (d_data_problem_int,
                dx, xlo, xhi,
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
@@ -663,7 +663,7 @@ void Euler::initializeDataOnPatch(
                d_interval_velocity.getPointer(),
                d_interval_pressure.getPointer());
          } else if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(eulerinit3d, EULERINIT3D) (d_data_problem_int,
+            SAMRAI_F77_FUNC(eulerinit3d, EULERINIT3D) (d_data_problem_int,
                dx, xlo, xhi,
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
@@ -749,7 +749,7 @@ double Euler::computeStableDtOnPatch(
 
    double stabdt = 0.;
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(stabledt2d, STABLEDT2D) (dx,
+      SAMRAI_F77_FUNC(stabledt2d, STABLEDT2D) (dx,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ghost_cells(0),
@@ -760,7 +760,7 @@ double Euler::computeStableDtOnPatch(
          pressure->getPointer(),
          stabdt);
    } else if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(stabledt3d, STABLEDT3D) (dx,
+      SAMRAI_F77_FUNC(stabledt3d, STABLEDT3D) (dx,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
@@ -854,7 +854,7 @@ void Euler::computeFluxesOnPatch(
       /*
        *  Initialize traced states (w^R and w^L) with proper cell-centered values.
        */
-      F77_FUNC(inittraceflux2d, INITTRACEFLUX2D) (ifirst(0), ilast(0),
+      SAMRAI_F77_FUNC(inittraceflux2d, INITTRACEFLUX2D) (ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          density->getPointer(),
          velocity->getPointer(),
@@ -892,7 +892,7 @@ void Euler::computeFluxesOnPatch(
          /*
           * Compute local sound speed in each computational cell.
           */
-         F77_FUNC(computesound2d, COMPUTESOUND2D) (ifirst(0), ilast(0),
+         SAMRAI_F77_FUNC(computesound2d, COMPUTESOUND2D) (ifirst(0), ilast(0),
             ifirst(1), ilast(1),
             d_gamma,
             density->getPointer(),
@@ -906,7 +906,7 @@ void Euler::computeFluxesOnPatch(
           *  Inputs: sound_speed, w^L, w^R (traced_left/right)
           *  Output: w^L, w^R
           */
-         F77_FUNC(chartracing2d0, CHARTRACING2D0) (dt,
+         SAMRAI_F77_FUNC(chartracing2d0, CHARTRACING2D0) (dt,
             ifirst(0), ilast(0),
             ifirst(1), ilast(1),
             Mcells, dx[0], d_gamma, d_godunov_order,
@@ -919,7 +919,7 @@ void Euler::computeFluxesOnPatch(
             ttraclft.getPointer(),
             ttracrgt.getPointer());
 
-         F77_FUNC(chartracing2d1, CHARTRACING2D1) (dt,
+         SAMRAI_F77_FUNC(chartracing2d1, CHARTRACING2D1) (dt,
             ifirst(0), ilast(0),
             ifirst(1), ilast(1),
             Mcells, dx[1], d_gamma, d_godunov_order,
@@ -934,8 +934,8 @@ void Euler::computeFluxesOnPatch(
 
       }  // if (d_godunov_order > 1) ...
 
-// F77_FUNC(fluxcalculation,FLUXCALCULATION)(dt,*,1,dx, to get artificial viscosity
-// F77_FUNC(fluxcalculation,FLUXCALCULATION)(dt,*,0,dx, to get NO artificial viscosity
+// SAMRAI_F77_FUNC(fluxcalculation,FLUXCALCULATION)(dt,*,1,dx, to get artificial viscosity
+// SAMRAI_F77_FUNC(fluxcalculation,FLUXCALCULATION)(dt,*,0,dx, to get NO artificial viscosity
 
       /*
        *  Compute preliminary fluxes at faces by solving approximate
@@ -943,7 +943,7 @@ void Euler::computeFluxesOnPatch(
        *  Inputs: P, rho, v, w^L, w^R (traced_left/right)
        *  Output: F (flux)
        */
-      F77_FUNC(fluxcalculation2d, FLUXCALCULATION2D) (dt, 1, 0, dx,
+      SAMRAI_F77_FUNC(fluxcalculation2d, FLUXCALCULATION2D) (dt, 1, 0, dx,
          ifirst(0), ilast(0), ifirst(1), ilast(1),
          d_gamma,
          d_riemann_solve_int,
@@ -962,7 +962,7 @@ void Euler::computeFluxesOnPatch(
        *  Inputs: F (flux)
        *  Output: w^L, w^R (traced_left/right)
        */
-      F77_FUNC(fluxcorrec, FLUXCORREC) (dt,
+      SAMRAI_F77_FUNC(fluxcorrec, FLUXCORREC) (dt,
          ifirst(0), ilast(0), ifirst(1), ilast(1),
          dx, d_gamma,
          density->getPointer(),
@@ -982,7 +982,7 @@ void Euler::computeFluxesOnPatch(
        *  Inputs: w^L, w^R (traced_left/right)
        *  Output: F (flux)
        */
-      F77_FUNC(fluxcalculation2d, FLUXCALCULATION2D) (dt, 0, 0, dx,
+      SAMRAI_F77_FUNC(fluxcalculation2d, FLUXCALCULATION2D) (dt, 0, 0, dx,
          ifirst(0), ilast(0), ifirst(1), ilast(1),
          d_gamma,
          d_riemann_solve_int,
@@ -1065,7 +1065,7 @@ void Euler::compute3DFluxesWithCornerTransport1(
    /*
     *  Initialize traced states (w^R and w^L) with proper cell-centered values.
     */
-   F77_FUNC(inittraceflux3d, INITTRACEFLUX3D) (ifirst(0), ilast(0),
+   SAMRAI_F77_FUNC(inittraceflux3d, INITTRACEFLUX3D) (ifirst(0), ilast(0),
       ifirst(1), ilast(1),
       ifirst(2), ilast(2),
       density->getPointer(),
@@ -1107,7 +1107,7 @@ void Euler::compute3DFluxesWithCornerTransport1(
       /*
        * Compute local sound speed in each computational cell.
        */
-      F77_FUNC(computesound3d, COMPUTESOUND3D) (ifirst(0), ilast(0),
+      SAMRAI_F77_FUNC(computesound3d, COMPUTESOUND3D) (ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          d_gamma,
@@ -1122,7 +1122,7 @@ void Euler::compute3DFluxesWithCornerTransport1(
        *  Inputs: sound_speed, w^L, w^R (traced_left/right)
        *  Output: w^L, w^R
        */
-      F77_FUNC(chartracing3d0, CHARTRACING3D0) (dt,
+      SAMRAI_F77_FUNC(chartracing3d0, CHARTRACING3D0) (dt,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
@@ -1136,7 +1136,7 @@ void Euler::compute3DFluxesWithCornerTransport1(
          ttraclft.getPointer(),
          ttracrgt.getPointer());
 
-      F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
+      SAMRAI_F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
@@ -1150,7 +1150,7 @@ void Euler::compute3DFluxesWithCornerTransport1(
          ttraclft.getPointer(),
          ttracrgt.getPointer());
 
-      F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
+      SAMRAI_F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
@@ -1172,9 +1172,9 @@ void Euler::compute3DFluxesWithCornerTransport1(
     *  Inputs: P, rho, v, w^L, w^R (traced_left/right)
     *  Output: F (flux)
     */
-//  F77_FUNC(fluxcalculation,FLUXCALCULATION)(dt,*,*,1,dx,  to do artificial viscosity
-//  F77_FUNC(fluxcalculation,FLUXCALCULATION)(dt,*,*,0,dx,  to do NO artificial viscosity
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (dt, 1, 0, 0, dx,
+//  SAMRAI_F77_FUNC(fluxcalculation,FLUXCALCULATION)(dt,*,*,1,dx,  to do artificial viscosity
+//  SAMRAI_F77_FUNC(fluxcalculation,FLUXCALCULATION)(dt,*,*,0,dx,  to do NO artificial viscosity
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (dt, 1, 0, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       d_gamma,
       d_riemann_solve_int,
@@ -1198,7 +1198,7 @@ void Euler::compute3DFluxesWithCornerTransport1(
     *  Inputs: F (flux), P, rho, v, w^L, w^R (traced_left/right)
     *  Output: temp_traced_left/right
     */
-   F77_FUNC(fluxcorrec2d, FLUXCORREC2D) (dt,
+   SAMRAI_F77_FUNC(fluxcorrec2d, FLUXCORREC2D) (dt,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       dx, d_gamma, 1,
       density->getPointer(),
@@ -1228,7 +1228,7 @@ void Euler::compute3DFluxesWithCornerTransport1(
     *  Inputs: P, rho, v, temp_traced_left/right
     *  Output: temp_flux
     */
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (dt, 0, 1, 0, dx,
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (dt, 0, 1, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       d_gamma,
       d_riemann_solve_int,
@@ -1251,7 +1251,7 @@ void Euler::compute3DFluxesWithCornerTransport1(
     *  Inputs: F (flux), P, rho, v, w^L, w^R (traced_left/right)
     *  Output: temp_traced_left/right
     */
-   F77_FUNC(fluxcorrec2d, FLUXCORREC2D) (dt,
+   SAMRAI_F77_FUNC(fluxcorrec2d, FLUXCORREC2D) (dt,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       dx, d_gamma, -1,
       density->getPointer(),
@@ -1284,7 +1284,7 @@ void Euler::compute3DFluxesWithCornerTransport1(
     *  Inputs: P, rho, v, temp_traced_left/right
     *  Output: flux
     */
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (dt, 1, 0, 0, dx,
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (dt, 1, 0, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       d_gamma,
       d_riemann_solve_int,
@@ -1307,7 +1307,7 @@ void Euler::compute3DFluxesWithCornerTransport1(
     *  Inputs: temp_flux, flux
     *  Output: w^L, w^R (traced_left/right)
     */
-   F77_FUNC(fluxcorrec3d, FLUXCORREC3D) (dt,
+   SAMRAI_F77_FUNC(fluxcorrec3d, FLUXCORREC3D) (dt,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       dx, d_gamma,
       density->getPointer(),
@@ -1331,7 +1331,7 @@ void Euler::compute3DFluxesWithCornerTransport1(
     *  Inputs:  w^L, w^R (traced_left/right)
     *  Output:  F (flux)
     */
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (dt, 0, 0, 0, dx,
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (dt, 0, 0, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       d_gamma,
       d_riemann_solve_int,
@@ -1413,7 +1413,7 @@ void Euler::compute3DFluxesWithCornerTransport2(
    /*
     *  Initialize traced states (w^R and w^L) with proper cell-centered values.
     */
-   F77_FUNC(inittraceflux3d, INITTRACEFLUX3D) (ifirst(0), ilast(0),
+   SAMRAI_F77_FUNC(inittraceflux3d, INITTRACEFLUX3D) (ifirst(0), ilast(0),
       ifirst(1), ilast(1),
       ifirst(2), ilast(2),
       density->getPointer(),
@@ -1435,9 +1435,9 @@ void Euler::compute3DFluxesWithCornerTransport2(
     *  Inputs: P, rho, v, w^L, w^R (traced_left/right)
     *  Output: F (flux)
     */
-//  F77_FUNC(fluxcalculation,FLUXCALCULATION)(dt,*,*,1,dx,  to do artificial viscosity
-//  F77_FUNC(fluxcalculation,FLUXCALCULATION)(dt,*,*,0,dx,  to do NO artificial viscosity
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (dt, 1, 1, 0, dx,
+//  SAMRAI_F77_FUNC(fluxcalculation,FLUXCALCULATION)(dt,*,*,1,dx,  to do artificial viscosity
+//  SAMRAI_F77_FUNC(fluxcalculation,FLUXCALCULATION)(dt,*,*,0,dx,  to do NO artificial viscosity
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (dt, 1, 1, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       d_gamma,
       d_riemann_solve_int,
@@ -1480,7 +1480,7 @@ void Euler::compute3DFluxesWithCornerTransport2(
       /*
        * Compute local sound speed in each computational cell.
        */
-      F77_FUNC(computesound3d, COMPUTESOUND3D) (ifirst(0), ilast(0),
+      SAMRAI_F77_FUNC(computesound3d, COMPUTESOUND3D) (ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          d_gamma,
@@ -1494,7 +1494,7 @@ void Euler::compute3DFluxesWithCornerTransport2(
        *  Inputs: sound_speed, w^L, w^R (traced_left/right)
        *  Output: w^L, w^R
        */
-      F77_FUNC(chartracing3d0, CHARTRACING3D0) (dt,
+      SAMRAI_F77_FUNC(chartracing3d0, CHARTRACING3D0) (dt,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
@@ -1508,7 +1508,7 @@ void Euler::compute3DFluxesWithCornerTransport2(
          ttraclft.getPointer(),
          ttracrgt.getPointer());
 
-      F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
+      SAMRAI_F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
@@ -1522,7 +1522,7 @@ void Euler::compute3DFluxesWithCornerTransport2(
          ttraclft.getPointer(),
          ttracrgt.getPointer());
 
-      F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
+      SAMRAI_F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
@@ -1546,7 +1546,7 @@ void Euler::compute3DFluxesWithCornerTransport2(
        *    Inputs:  F (flux), rho, v, P
        *    Output:  third_state
        */
-      F77_FUNC(onethirdstate, ONETHIRDSTATE) (dt, dx, idir,
+      SAMRAI_F77_FUNC(onethirdstate, ONETHIRDSTATE) (dt, dx, idir,
          ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
          d_gamma,
          density->getPointer(),
@@ -1563,7 +1563,7 @@ void Euler::compute3DFluxesWithCornerTransport2(
        *    Inputs:  third_state, rho, v, P
        *    Output:  temp_flux (only directions other than idir are modified)
        */
-      F77_FUNC(fluxthird, FLUXTHIRD) (dt, dx, idir,
+      SAMRAI_F77_FUNC(fluxthird, FLUXTHIRD) (dt, dx, idir,
          ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
          d_gamma,
          d_riemann_solve_int,
@@ -1581,7 +1581,7 @@ void Euler::compute3DFluxesWithCornerTransport2(
        *    Inputs:  temp_flux, rho, v, P
        *    Output:  w^L, w^R (traced_left/right)
        */
-      F77_FUNC(fluxcorrecjt, FLUXCORRECJT) (dt, dx, idir,
+      SAMRAI_F77_FUNC(fluxcorrecjt, FLUXCORRECJT) (dt, dx, idir,
          ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
          d_gamma,
          density->getPointer(),
@@ -1606,7 +1606,7 @@ void Euler::compute3DFluxesWithCornerTransport2(
     *  Inputs:  w^L, w^R (traced_left/right)
     *  Output:  F (flux)
     */
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (dt, 0, 0, 0, dx,
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (dt, 0, 0, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       d_gamma,
       d_riemann_solve_int,
@@ -1683,7 +1683,7 @@ void Euler::conservativeDifferenceOnPatch(
 #endif
 
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(consdiff2d, CONSDIFF2D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
+      SAMRAI_F77_FUNC(consdiff2d, CONSDIFF2D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
          dx,
          flux->getPointer(0),
          flux->getPointer(1),
@@ -1692,7 +1692,7 @@ void Euler::conservativeDifferenceOnPatch(
          velocity->getPointer(),
          pressure->getPointer());
    } else if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(consdiff3d, CONSDIFF3D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
+      SAMRAI_F77_FUNC(consdiff3d, CONSDIFF3D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
          ifirst(2), ilast(2), dx,
          flux->getPointer(0),
          flux->getPointer(1),
@@ -1914,7 +1914,7 @@ void Euler::postprocessRefine(
       double* tdensc = new double[mc];
       double* tpresc = new double[mc];
       double* tvelc = new double[mc];
-      F77_FUNC(conservlinint2d, CONSERVLININT2D) (ifirstc(0), ifirstc(1),
+      SAMRAI_F77_FUNC(conservlinint2d, CONSERVLININT2D) (ifirstc(0), ifirstc(1),
          ilastc(0), ilastc(1),                                                              /* input */
          ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
          cilo(0), cilo(1), cihi(0), cihi(1),
@@ -1956,7 +1956,7 @@ void Euler::postprocessRefine(
       double* tdensc = new double[mc];
       double* tpresc = new double[mc];
       double* tvelc = new double[mc];
-      F77_FUNC(conservlinint3d, CONSERVLININT3D) (ifirstc(0), ifirstc(1),
+      SAMRAI_F77_FUNC(conservlinint3d, CONSERVLININT3D) (ifirstc(0), ifirstc(1),
          ifirstc(2),                                                                      /* input */
          ilastc(0), ilastc(1), ilastc(2),
          ifirstf(0), ifirstf(1), ifirstf(2),
@@ -2077,7 +2077,7 @@ void Euler::postprocessCoarsen(
    pdat::CellData<double> conserved(fine_box, 1, cons_ghosts);
 
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(conservavg2d, CONSERVAVG2D) (ifirstf(0), ifirstf(1), ilastf(0),
+      SAMRAI_F77_FUNC(conservavg2d, CONSERVAVG2D) (ifirstf(0), ifirstf(1), ilastf(0),
          ilastf(1),                                                                   /* input */
          ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
          filo(0), filo(1), fihi(0), fihi(1),
@@ -2095,7 +2095,7 @@ void Euler::postprocessCoarsen(
          conserved.getPointer());                              /* temporary */
    }
    if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(conservavg3d, CONSERVAVG3D) (ifirstf(0), ifirstf(1), ifirstf(2),       /* input */
+      SAMRAI_F77_FUNC(conservavg3d, CONSERVAVG3D) (ifirstf(0), ifirstf(1), ifirstf(2),       /* input */
          ilastf(0), ilastf(1), ilastf(2),
          ifirstc(0), ifirstc(1), ifirstc(2),
          ilastc(0), ilastc(1), ilastc(2),
@@ -2600,7 +2600,7 @@ void Euler::tagGradientDetectorCells(
 
          if (ref == "DENSITY_GRADIENT" || ref == "PRESSURE_GRADIENT") {
             if (d_dim == tbox::Dimension(2)) {
-               F77_FUNC(detectgrad2d, DETECTGRAD2D) (ifirst(0), ilast(0),
+               SAMRAI_F77_FUNC(detectgrad2d, DETECTGRAD2D) (ifirst(0), ilast(0),
                   ifirst(1), ilast(1),
                   vghost(0), tagghost(0), d_nghosts(0),
                   vghost(1), tagghost(1), d_nghosts(1),
@@ -2610,7 +2610,7 @@ void Euler::tagGradientDetectorCells(
                   var->getPointer(),
                   tags->getPointer(), temp_tags->getPointer());
             } else if (d_dim == tbox::Dimension(3)) {
-               F77_FUNC(detectgrad3d, DETECTGRAD3D) (ifirst(0), ilast(0),
+               SAMRAI_F77_FUNC(detectgrad3d, DETECTGRAD3D) (ifirst(0), ilast(0),
                   ifirst(1), ilast(1),
                   ifirst(2), ilast(2),
                   vghost(0), tagghost(0), d_nghosts(0),
@@ -2626,7 +2626,7 @@ void Euler::tagGradientDetectorCells(
 
          if (ref == "DENSITY_SHOCK" || ref == "PRESSURE_SHOCK") {
             if (d_dim == tbox::Dimension(2)) {
-               F77_FUNC(detectshock2d, DETECTSHOCK2D) (ifirst(0), ilast(0),
+               SAMRAI_F77_FUNC(detectshock2d, DETECTSHOCK2D) (ifirst(0), ilast(0),
                   ifirst(1), ilast(1),
                   vghost(0), tagghost(0), d_nghosts(0),
                   vghost(1), tagghost(1), d_nghosts(1),
@@ -2637,7 +2637,7 @@ void Euler::tagGradientDetectorCells(
                   var->getPointer(),
                   tags->getPointer(), temp_tags->getPointer());
             } else if (d_dim == tbox::Dimension(3)) {
-               F77_FUNC(detectshock3d, DETECTSHOCK3D) (ifirst(0), ilast(0),
+               SAMRAI_F77_FUNC(detectshock3d, DETECTSHOCK3D) (ifirst(0), ilast(0),
                   ifirst(1), ilast(1),
                   ifirst(2), ilast(2),
                   vghost(0), tagghost(0), d_nghosts(0),

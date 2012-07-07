@@ -22,7 +22,7 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 
 extern "C" {
-void F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (const int& ifirst0,
+void SAMRAI_F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (const int& ifirst0,
    const int& ilast0,
    const int& ifirst1,
    const int& ilast1,
@@ -31,7 +31,7 @@ void F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (const int& ifirst0,
    const double* dx,
    const double* xlower);
 
-void F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (const int& ifirst0,
+void SAMRAI_F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (const int& ifirst0,
    const int& ilast0,
    const int& ifirst1,
    const int& ilast1,
@@ -184,7 +184,7 @@ void FACPoisson::initializeLevelData(
        * Set source function and exact solution.
        */
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (
+         SAMRAI_F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (
             pbox.lower()[0],
             pbox.upper()[0],
             pbox.lower()[1],
@@ -194,7 +194,7 @@ void FACPoisson::initializeLevelData(
             patch_geom->getDx(),
             patch_geom->getXLower());
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (
+         SAMRAI_F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (
             pbox.lower()[0],
             pbox.upper()[0],
             pbox.lower()[1],

@@ -36,20 +36,20 @@ extern "C" {
 #endif
 
 // in concoarsen1d.f:
-void F77_FUNC(conavgnodecplx1d, CONAVGNODECPLX1D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conavgnodecplx1d, CONAVGNODECPLX1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
 // in concoarsen2d.f:
-void F77_FUNC(conavgnodecplx2d, CONAVGNODECPLX2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conavgnodecplx2d, CONAVGNODECPLX2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
 // in concoarsen3d.f:
-void F77_FUNC(conavgnodecplx3d, CONAVGNODECPLX3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conavgnodecplx3d, CONAVGNODECPLX3D) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -116,14 +116,14 @@ NodeComplexInjection::coarsen(
 
    for (int d = 0; d < cdata->getDepth(); d++) {
       if (fine.getDim() == tbox::Dimension(1)) {
-         F77_FUNC(conavgnodecplx1d, CONAVGNODECPLX1D) (ifirstc(0), ilastc(0),
+         SAMRAI_F77_FUNC(conavgnodecplx1d, CONAVGNODECPLX1D) (ifirstc(0), ilastc(0),
             filo(0), fihi(0),
             cilo(0), cihi(0),
             &ratio[0],
             fdata->getPointer(d),
             cdata->getPointer(d));
       } else if (fine.getDim() == tbox::Dimension(2)) {
-         F77_FUNC(conavgnodecplx2d, CONAVGNODECPLX2D) (ifirstc(0), ifirstc(1),
+         SAMRAI_F77_FUNC(conavgnodecplx2d, CONAVGNODECPLX2D) (ifirstc(0), ifirstc(1),
             ilastc(0), ilastc(1),
             filo(0), filo(1), fihi(0), fihi(1),
             cilo(0), cilo(1), cihi(0), cihi(1),
@@ -131,7 +131,7 @@ NodeComplexInjection::coarsen(
             fdata->getPointer(d),
             cdata->getPointer(d));
       } else if (fine.getDim() == tbox::Dimension(3)) {
-         F77_FUNC(conavgnodecplx3d, CONAVGNODECPLX3D) (ifirstc(0), ifirstc(1),
+         SAMRAI_F77_FUNC(conavgnodecplx3d, CONAVGNODECPLX3D) (ifirstc(0), ifirstc(1),
             ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
             filo(0), filo(1), filo(2),

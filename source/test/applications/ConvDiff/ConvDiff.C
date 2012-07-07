@@ -413,7 +413,7 @@ void ConvDiff::initializeDataOnPatch(
       const hier::Index ilast = patch.getBox().upper();
 
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(initsphere2d, INITSPHERE2D) (dx, xlo, xhi,
+         SAMRAI_F77_FUNC(initsphere2d, INITSPHERE2D) (dx, xlo, xhi,
             ifirst(0), ilast(0), ifirst(1), ilast(1),
             ghost_cells(0), ghost_cells(1),
             primitive_vars->getPointer(),
@@ -423,7 +423,7 @@ void ConvDiff::initializeDataOnPatch(
             NEQU);
       }
       if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(initsphere3d, INITSPHERE3D) (dx, xlo, xhi,
+         SAMRAI_F77_FUNC(initsphere3d, INITSPHERE3D) (dx, xlo, xhi,
             ifirst(0), ilast(0), ifirst(1), ilast(1),
             ifirst(2), ilast(2),
             ghost_cells(0), ghost_cells(1),
@@ -541,7 +541,7 @@ void ConvDiff::singleStep(
 // Evaluate Right hand side F(prim_var_scratch)
 //
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(computerhs2d, COMPUTERHS2D) (ifirst(0), ilast(0), ifirst(1),
+      SAMRAI_F77_FUNC(computerhs2d, COMPUTERHS2D) (ifirst(0), ilast(0), ifirst(1),
          ilast(1),
          d_nghosts(0), d_nghosts(1),
          dx,
@@ -553,7 +553,7 @@ void ConvDiff::singleStep(
          NEQU);
    }
    if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(computerhs3d, COMPUTERHS3D) (ifirst(0), ilast(0), ifirst(1),
+      SAMRAI_F77_FUNC(computerhs3d, COMPUTERHS3D) (ifirst(0), ilast(0), ifirst(1),
          ilast(1),
          ifirst(2), ilast(2),
          d_nghosts(0), d_nghosts(1),
@@ -573,7 +573,7 @@ void ConvDiff::singleStep(
 // Take RK step
 //
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(rkstep2d, RKSTEP2D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
+      SAMRAI_F77_FUNC(rkstep2d, RKSTEP2D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
          d_nghosts(0), d_nghosts(1),
          dt, alpha_1, alpha_2, beta,
          d_convection_coeff,
@@ -585,7 +585,7 @@ void ConvDiff::singleStep(
          NEQU);
    }
    if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(rkstep3d, RKSTEP3D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
+      SAMRAI_F77_FUNC(rkstep3d, RKSTEP3D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          d_nghosts(0), d_nghosts(1),
          d_nghosts(2),
@@ -635,7 +635,7 @@ void ConvDiff::tagGradientDetectorCells(
    const hier::IntVector var_ghosts = primitive_vars->getGhostCellWidth();
 
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(tagcells2d, TAGCELLS2D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
+      SAMRAI_F77_FUNC(tagcells2d, TAGCELLS2D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
          var_ghosts(0), var_ghosts(1),
          tags->getPointer(),
          primitive_vars->getPointer(),
@@ -644,7 +644,7 @@ void ConvDiff::tagGradientDetectorCells(
          NEQU);
    }
    if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(tagcells3d, TAGCELLS3D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
+      SAMRAI_F77_FUNC(tagcells3d, TAGCELLS3D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          var_ghosts(0), var_ghosts(1),
          var_ghosts(2),

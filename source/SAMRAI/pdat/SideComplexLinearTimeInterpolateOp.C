@@ -38,7 +38,7 @@ extern "C" {
 #endif
 
 // in lintimint1d.f:
-void F77_FUNC(lintimeintsidecmplx1d, LINTIMEINTSIDECMPLX1D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidecmplx1d, LINTIMEINTSIDECMPLX1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -47,7 +47,7 @@ void F77_FUNC(lintimeintsidecmplx1d, LINTIMEINTSIDECMPLX1D) (const int&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
 // in lintimint2d.f:
-void F77_FUNC(lintimeintsidecmplx2d0, LINTIMEINTSIDECMPLX2D0) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidecmplx2d0, LINTIMEINTSIDECMPLX2D0) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -59,7 +59,7 @@ void F77_FUNC(lintimeintsidecmplx2d0, LINTIMEINTSIDECMPLX2D0) (const int&,
    const double&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
-void F77_FUNC(lintimeintsidecmplx2d1, LINTIMEINTSIDECMPLX2D1) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidecmplx2d1, LINTIMEINTSIDECMPLX2D1) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -72,7 +72,7 @@ void F77_FUNC(lintimeintsidecmplx2d1, LINTIMEINTSIDECMPLX2D1) (const int&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
 // in lintimint3d.f:
-void F77_FUNC(lintimeintsidecmplx3d0, LINTIMEINTSIDECMPLX3D0) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidecmplx3d0, LINTIMEINTSIDECMPLX3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -84,7 +84,7 @@ void F77_FUNC(lintimeintsidecmplx3d0, LINTIMEINTSIDECMPLX3D0) (const int&,
    const double&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
-void F77_FUNC(lintimeintsidecmplx3d1, LINTIMEINTSIDECMPLX3D1) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidecmplx3d1, LINTIMEINTSIDECMPLX3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -96,7 +96,7 @@ void F77_FUNC(lintimeintsidecmplx3d1, LINTIMEINTSIDECMPLX3D1) (const int&,
    const double&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
-void F77_FUNC(lintimeintsidecmplx3d2, LINTIMEINTSIDECMPLX3D2) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidecmplx3d2, LINTIMEINTSIDECMPLX3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -184,7 +184,7 @@ SideComplexLinearTimeInterpolateOp::timeInterpolate(
    for (int d = 0; d < dst_dat->getDepth(); d++) {
       if (dim == tbox::Dimension(1)) {
          if (directions(0)) {
-            F77_FUNC(lintimeintsidecmplx1d, LINTIMEINTSIDECMPLX1D) (ifirst(0),
+            SAMRAI_F77_FUNC(lintimeintsidecmplx1d, LINTIMEINTSIDECMPLX1D) (ifirst(0),
                ilast(0),
                old_ilo(0), old_ihi(0),
                new_ilo(0), new_ihi(0),
@@ -196,7 +196,7 @@ SideComplexLinearTimeInterpolateOp::timeInterpolate(
          }
       } else if (dim == tbox::Dimension(2)) {
          if (directions(0)) {
-            F77_FUNC(lintimeintsidecmplx2d0, LINTIMEINTSIDECMPLX2D0) (ifirst(0),
+            SAMRAI_F77_FUNC(lintimeintsidecmplx2d0, LINTIMEINTSIDECMPLX2D0) (ifirst(0),
                ifirst(1), ilast(0), ilast(1),
                old_ilo(0), old_ilo(1), old_ihi(0), old_ihi(1),
                new_ilo(0), new_ilo(1), new_ihi(0), new_ihi(1),
@@ -207,7 +207,7 @@ SideComplexLinearTimeInterpolateOp::timeInterpolate(
                dst_dat->getPointer(0, d));
          }
          if (directions(1)) {
-            F77_FUNC(lintimeintsidecmplx2d1, LINTIMEINTSIDECMPLX2D1) (ifirst(0),
+            SAMRAI_F77_FUNC(lintimeintsidecmplx2d1, LINTIMEINTSIDECMPLX2D1) (ifirst(0),
                ifirst(1), ilast(0), ilast(1),
                old_ilo(0), old_ilo(1), old_ihi(0), old_ihi(1),
                new_ilo(0), new_ilo(1), new_ihi(0), new_ihi(1),
@@ -219,7 +219,7 @@ SideComplexLinearTimeInterpolateOp::timeInterpolate(
          }
       } else if (dim == tbox::Dimension(3)) {
          if (directions(0)) {
-            F77_FUNC(lintimeintsidecmplx3d0, LINTIMEINTSIDECMPLX3D0) (ifirst(0),
+            SAMRAI_F77_FUNC(lintimeintsidecmplx3d0, LINTIMEINTSIDECMPLX3D0) (ifirst(0),
                ifirst(1), ifirst(2),
                ilast(0), ilast(1), ilast(2),
                old_ilo(0), old_ilo(1), old_ilo(2),
@@ -234,7 +234,7 @@ SideComplexLinearTimeInterpolateOp::timeInterpolate(
                dst_dat->getPointer(0, d));
          }
          if (directions(1)) {
-            F77_FUNC(lintimeintsidecmplx3d1, LINTIMEINTSIDECMPLX3D1) (ifirst(0),
+            SAMRAI_F77_FUNC(lintimeintsidecmplx3d1, LINTIMEINTSIDECMPLX3D1) (ifirst(0),
                ifirst(1), ifirst(2),
                ilast(0), ilast(1), ilast(2),
                old_ilo(0), old_ilo(1), old_ilo(2),
@@ -249,7 +249,7 @@ SideComplexLinearTimeInterpolateOp::timeInterpolate(
                dst_dat->getPointer(1, d));
          }
          if (directions(2)) {
-            F77_FUNC(lintimeintsidecmplx3d2, LINTIMEINTSIDECMPLX3D2) (ifirst(0),
+            SAMRAI_F77_FUNC(lintimeintsidecmplx3d2, LINTIMEINTSIDECMPLX3D2) (ifirst(0),
                ifirst(1), ifirst(2),
                ilast(0), ilast(1), ilast(2),
                old_ilo(0), old_ilo(1), old_ilo(2),

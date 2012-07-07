@@ -28,21 +28,21 @@
  */
 extern "C" {
 // in cartcoarsen1d.f:
-void F77_FUNC(cartwgtavgcelldoub1d, CARTWGTAVGCELLDOUB1D) (
+void SAMRAI_F77_FUNC(cartwgtavgcelldoub1d, CARTWGTAVGCELLDOUB1D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 // in cartcoarsen2d.f:
-void F77_FUNC(cartwgtavgcelldoub2d, CARTWGTAVGCELLDOUB2D) (
+void SAMRAI_F77_FUNC(cartwgtavgcelldoub2d, CARTWGTAVGCELLDOUB2D) (
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 // in cartcoarsen3d.f:
-void F77_FUNC(cartwgtavgcelldoub3d, CARTWGTAVGCELLDOUB3D) (
+void SAMRAI_F77_FUNC(cartwgtavgcelldoub3d, CARTWGTAVGCELLDOUB3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -125,7 +125,7 @@ void SkeletonCellDoubleWeightedAverage::coarsen(
 
    for (int d = 0; d < cdata->getDepth(); d++) {
       if (fine.getDim() == tbox::Dimension(1)) {
-         F77_FUNC(cartwgtavgcelldoub1d, CARTWGTAVGCELLDOUB1D) (
+         SAMRAI_F77_FUNC(cartwgtavgcelldoub1d, CARTWGTAVGCELLDOUB1D) (
             ifirstc(0), ilastc(0),
             filo(0), fihi(0),
             cilo(0), cihi(0),
@@ -135,7 +135,7 @@ void SkeletonCellDoubleWeightedAverage::coarsen(
             fdata->getPointer(d),
             cdata->getPointer(d));
       } else if (fine.getDim() == tbox::Dimension(2)) {
-         F77_FUNC(cartwgtavgcelldoub2d, CARTWGTAVGCELLDOUB2D) (
+         SAMRAI_F77_FUNC(cartwgtavgcelldoub2d, CARTWGTAVGCELLDOUB2D) (
             ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
             filo(0), filo(1), fihi(0), fihi(1),
             cilo(0), cilo(1), cihi(0), cihi(1),
@@ -145,7 +145,7 @@ void SkeletonCellDoubleWeightedAverage::coarsen(
             fdata->getPointer(d),
             cdata->getPointer(d));
       } else if (fine.getDim() == tbox::Dimension(3)) {
-         F77_FUNC(cartwgtavgcelldoub3d, CARTWGTAVGCELLDOUB3D) (
+         SAMRAI_F77_FUNC(cartwgtavgcelldoub3d, CARTWGTAVGCELLDOUB3D) (
             ifirstc(0), ifirstc(1), ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
             filo(0), filo(1), filo(2),

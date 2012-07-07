@@ -28,16 +28,16 @@
 
 extern "C" {
 
-void F77_FUNC(stufskelbdryloc2d, STUFSKELBDRYLOC2D) (
+void SAMRAI_F77_FUNC(stufskelbdryloc2d, STUFSKELBDRYLOC2D) (
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&);
 
-void F77_FUNC(stufskelbdrycond2d, STUFSKELBDRYCOND2D) (
+void SAMRAI_F77_FUNC(stufskelbdrycond2d, STUFSKELBDRYCOND2D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&);
 
-void F77_FUNC(getskeledgebdry2d, GETSKELEDGEBDRY2D) (
+void SAMRAI_F77_FUNC(getskeledgebdry2d, GETSKELEDGEBDRY2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -49,7 +49,7 @@ void F77_FUNC(getskeledgebdry2d, GETSKELEDGEBDRY2D) (
    double *,
    const int&);
 
-void F77_FUNC(getskelnodebdry2d, GETSKELNODEBDRY2D) (
+void SAMRAI_F77_FUNC(getskelnodebdry2d, GETSKELNODEBDRY2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -189,7 +189,7 @@ void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
          const hier::Index& ibeg(fill_box.lower());
          const hier::Index& iend(fill_box.upper());
 
-         F77_FUNC(getskeledgebdry2d, GETSKELEDGEBDRY2D) (
+         SAMRAI_F77_FUNC(getskeledgebdry2d, GETSKELEDGEBDRY2D) (
             ifirst(0), ilast(0),
             ifirst(1), ilast(1),
             ibeg(0), iend(0),
@@ -269,7 +269,7 @@ void SkeletonBoundaryUtilities2::fillNodeBoundaryData(
          const hier::Index& ibeg(fill_box.lower());
          const hier::Index& iend(fill_box.upper());
 
-         F77_FUNC(getskelnodebdry2d, GETSKELNODEBDRY2D) (
+         SAMRAI_F77_FUNC(getskelnodebdry2d, GETSKELNODEBDRY2D) (
             ifirst(0), ilast(0),
             ifirst(1), ilast(1),
             ibeg(0), iend(0),
@@ -863,11 +863,11 @@ void SkeletonBoundaryUtilities2::get2dBdryDirectionCheckValues(
 
 void SkeletonBoundaryUtilities2::stuff2dBdryFortConst()
 {
-   F77_FUNC(stufskelbdryloc2d, STUFSKELBDRYLOC2D) (
+   SAMRAI_F77_FUNC(stufskelbdryloc2d, STUFSKELBDRYLOC2D) (
       BdryLoc::XLO, BdryLoc::XHI, BdryLoc::YLO, BdryLoc::YHI,
       NodeBdyLoc2D::XLO_YLO, NodeBdyLoc2D::XHI_YLO,
       NodeBdyLoc2D::XLO_YHI, NodeBdyLoc2D::XHI_YHI);
-   F77_FUNC(stufskelbdrycond2d, STUFSKELBDRYCOND2D) (
+   SAMRAI_F77_FUNC(stufskelbdrycond2d, STUFSKELBDRYCOND2D) (
       BdryCond::FLOW,
       BdryCond::XFLOW, BdryCond::YFLOW,
       BdryCond::REFLECT,

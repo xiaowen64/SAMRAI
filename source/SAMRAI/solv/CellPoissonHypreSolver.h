@@ -16,13 +16,13 @@
 
 #ifndef included_HYPRE_struct_ls
 /*
- * This might break things if F77_FUNC_ is different for hypre vs
+ * This might break things if SAMRAI_F77_FUNC_ is different for hypre vs
  * SAMRAI autoconf detection.  But then C/C++ macros are totally
  * broken due to namespace collision as this example highlights so
  * resorting to hacks are necessary.
  */
-#ifdef F77_FUNC_
-#undef F77_FUNC_
+#ifdef SAMRAI_F77_FUNC_
+#undef SAMRAI_F77_FUNC_
 #endif
 #include "HYPRE_struct_ls.h"
 #define included_HYPRE_struct_ls

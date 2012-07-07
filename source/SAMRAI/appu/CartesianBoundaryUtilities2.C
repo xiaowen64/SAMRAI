@@ -33,17 +33,17 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void F77_FUNC(stufcartbdryloc2d, STUFCARTBDRYLOC2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(stufcartbdryloc2d, STUFCARTBDRYLOC2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&);
 
-void F77_FUNC(stufcartbdrycond2d, STUFCARTBDRYCOND2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(stufcartbdrycond2d, STUFCARTBDRYCOND2D) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&);
 
-void F77_FUNC(getcartedgebdry2d, GETCARTEDGEBDRY2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(getcartedgebdry2d, GETCARTEDGEBDRY2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -55,7 +55,7 @@ void F77_FUNC(getcartedgebdry2d, GETCARTEDGEBDRY2D) (const int&, const int&,
    double *,
    const int&);
 
-void F77_FUNC(getcartnodebdry2d, GETCARTNODEBDRY2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(getcartnodebdry2d, GETCARTNODEBDRY2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -198,7 +198,7 @@ CartesianBoundaryUtilities2::fillEdgeBoundaryData(
       const hier::Index& ibeg(fill_box.lower());
       const hier::Index& iend(fill_box.upper());
 
-      F77_FUNC(getcartedgebdry2d, GETCARTEDGEBDRY2D) (ifirst(0), ilast(0),
+      SAMRAI_F77_FUNC(getcartedgebdry2d, GETCARTEDGEBDRY2D) (ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ibeg(0), iend(0),
          ibeg(1), iend(1),
@@ -279,7 +279,7 @@ CartesianBoundaryUtilities2::fillNodeBoundaryData(
       const hier::Index& ibeg(fill_box.lower());
       const hier::Index& iend(fill_box.upper());
 
-      F77_FUNC(getcartnodebdry2d, GETCARTNODEBDRY2D) (ifirst(0), ilast(0),
+      SAMRAI_F77_FUNC(getcartnodebdry2d, GETCARTNODEBDRY2D) (ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ibeg(0), iend(0),
          ibeg(1), iend(1),
@@ -923,10 +923,10 @@ CartesianBoundaryUtilities2::get2dBdryDirectionCheckValues(
 void
 CartesianBoundaryUtilities2::stuff2dBdryFortConst()
 {
-   F77_FUNC(stufcartbdryloc2d, STUFCARTBDRYLOC2D) (BdryLoc::XLO, BdryLoc::XHI,
+   SAMRAI_F77_FUNC(stufcartbdryloc2d, STUFCARTBDRYLOC2D) (BdryLoc::XLO, BdryLoc::XHI,
       BdryLoc::YLO, BdryLoc::YHI, NodeBdyLoc2D::XLO_YLO, NodeBdyLoc2D::XHI_YLO,
       NodeBdyLoc2D::XLO_YHI, NodeBdyLoc2D::XHI_YHI);
-   F77_FUNC(stufcartbdrycond2d, STUFCARTBDRYCOND2D) (BdryCond::FLOW,
+   SAMRAI_F77_FUNC(stufcartbdrycond2d, STUFCARTBDRYCOND2D) (BdryCond::FLOW,
       BdryCond::XFLOW, BdryCond::YFLOW,
       BdryCond::REFLECT,
       BdryCond::XREFLECT, BdryCond::YREFLECT,

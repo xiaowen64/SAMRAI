@@ -33,21 +33,21 @@ extern "C" {
 #endif
 
 // in refine1d.f:
-void F77_FUNC(conreffaceflot1d, CONREFFACEFLOT1D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot1d, CONREFFACEFLOT1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const float *, float *);
 // in refine2d.f:
-void F77_FUNC(conreffaceflot2d0, CONREFFACEFLOT2D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot2d0, CONREFFACEFLOT2D0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const float *, float *);
-void F77_FUNC(conreffaceflot2d1, CONREFFACEFLOT2D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot2d1, CONREFFACEFLOT2D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -55,7 +55,7 @@ void F77_FUNC(conreffaceflot2d1, CONREFFACEFLOT2D1) (const int&, const int&,
    const int *,
    const float *, float *);
 // in refine3d.f:
-void F77_FUNC(conreffaceflot3d0, CONREFFACEFLOT3D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot3d0, CONREFFACEFLOT3D0) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -66,7 +66,7 @@ void F77_FUNC(conreffaceflot3d0, CONREFFACEFLOT3D0) (const int&, const int&,
    const int&, const int&, const int&,
    const int *,
    const float *, float *);
-void F77_FUNC(conreffaceflot3d1, CONREFFACEFLOT3D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot3d1, CONREFFACEFLOT3D1) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -77,7 +77,7 @@ void F77_FUNC(conreffaceflot3d1, CONREFFACEFLOT3D1) (const int&, const int&,
    const int&, const int&, const int&,
    const int *,
    const float *, float *);
-void F77_FUNC(conreffaceflot3d2, CONREFFACEFLOT3D2) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot3d2, CONREFFACEFLOT3D2) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -174,7 +174,7 @@ FaceFloatConstantRefine::refine(
 
          for (int d = 0; d < fdata->getDepth(); d++) {
             if (dim == tbox::Dimension(1)) {
-               F77_FUNC(conreffaceflot1d, CONREFFACEFLOT1D) (
+               SAMRAI_F77_FUNC(conreffaceflot1d, CONREFFACEFLOT1D) (
                   ifirstc(0), ilastc(0),
                   ifirstf(0), ilastf(0),
                   cilo(0), cihi(0),
@@ -184,7 +184,7 @@ FaceFloatConstantRefine::refine(
                   fdata->getPointer(0, d));
             } else if (dim == tbox::Dimension(2)) {
                if (axis == 0) {
-                  F77_FUNC(conreffaceflot2d0, CONREFFACEFLOT2D0) (
+                  SAMRAI_F77_FUNC(conreffaceflot2d0, CONREFFACEFLOT2D0) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
                      cilo(0), cilo(1), cihi(0), cihi(1),
@@ -193,7 +193,7 @@ FaceFloatConstantRefine::refine(
                      cdata->getPointer(0, d),
                      fdata->getPointer(0, d));
                } else if (axis == 1) {
-                  F77_FUNC(conreffaceflot2d1, CONREFFACEFLOT2D1) (
+                  SAMRAI_F77_FUNC(conreffaceflot2d1, CONREFFACEFLOT2D1) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
                      cilo(0), cilo(1), cihi(0), cihi(1),
@@ -204,7 +204,7 @@ FaceFloatConstantRefine::refine(
                }
             } else if (dim == tbox::Dimension(3)) {
                if (axis == 0) {
-                  F77_FUNC(conreffaceflot3d0, CONREFFACEFLOT3D0) (
+                  SAMRAI_F77_FUNC(conreffaceflot3d0, CONREFFACEFLOT3D0) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),
@@ -217,7 +217,7 @@ FaceFloatConstantRefine::refine(
                      cdata->getPointer(0, d),
                      fdata->getPointer(0, d));
                } else if (axis == 1) {
-                  F77_FUNC(conreffaceflot3d1, CONREFFACEFLOT3D1) (
+                  SAMRAI_F77_FUNC(conreffaceflot3d1, CONREFFACEFLOT3D1) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),
@@ -230,7 +230,7 @@ FaceFloatConstantRefine::refine(
                      cdata->getPointer(1, d),
                      fdata->getPointer(1, d));
                } else if (axis == 2) {
-                  F77_FUNC(conreffaceflot3d2, CONREFFACEFLOT3D2) (
+                  SAMRAI_F77_FUNC(conreffaceflot3d2, CONREFFACEFLOT3D2) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),

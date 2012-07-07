@@ -33,7 +33,7 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void F77_FUNC(settype1cells2d, SETTYPE1CELLS2D) (
+void SAMRAI_F77_FUNC(settype1cells2d, SETTYPE1CELLS2D) (
    double* data,
    const int& difirst, const int& dilast,
    const int& djfirst, const int& djlast,
@@ -44,12 +44,12 @@ void F77_FUNC(settype1cells2d, SETTYPE1CELLS2D) (
    const int& jbeg, const int& jend,
    const int& face, const int& ghos, const int& inte, const int& location,
    const double& h, const int& zerog);
-void F77_FUNC(settype2cells2d, SETTYPE2CELLS2D) (
+void SAMRAI_F77_FUNC(settype2cells2d, SETTYPE2CELLS2D) (
    double* data,
    const int& difirst, const int& dilast,
    const int& djfirst, const int& djlast,
    const int* lower, const int* upper, const int& location);
-void F77_FUNC(settype1cells3d, SETTYPE1CELLS3D) (
+void SAMRAI_F77_FUNC(settype1cells3d, SETTYPE1CELLS3D) (
    double* data,
    const int& difirst, const int& dilast,
    const int& djfirst, const int& djlast,
@@ -63,13 +63,13 @@ void F77_FUNC(settype1cells3d, SETTYPE1CELLS3D) (
    const int& kbeg, const int& kend,
    const int& face, const int& ghos, const int& inte, const int& location,
    const double& h, const int& zerog);
-void F77_FUNC(settype2cells3d, SETTYPE2CELLS3D) (
+void SAMRAI_F77_FUNC(settype2cells3d, SETTYPE2CELLS3D) (
    double* data,
    const int& difirst, const int& dilast,
    const int& djfirst, const int& djlast,
    const int& dkfirst, const int& dklast,
    const int* lower, const int* upper, const int& location);
-void F77_FUNC(settype3cells3d, SETTYPE3CELLS3D) (
+void SAMRAI_F77_FUNC(settype3cells3d, SETTYPE3CELLS3D) (
    double* data,
    const int& difirst, const int& dilast,
    const int& djfirst, const int& djlast,
@@ -277,7 +277,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
                   iint = igho + 1;
                   jbeg = lower[1];
                   jend = upper[1];
-                  F77_FUNC(settype1cells2d, SETTYPE1CELLS2D) (data.getPointer(0),
+                  SAMRAI_F77_FUNC(settype1cells2d, SETTYPE1CELLS2D) (data.getPointer(0),
                   ghost_box.lower()[0], ghost_box.upper()[0],
                   ghost_box.lower()[1], ghost_box.upper()[1],
                   acoef_data->getPointer(),
@@ -297,7 +297,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
                   iint = igho - 1;
                   jbeg = lower[1];
                   jend = upper[1];
-                  F77_FUNC(settype1cells2d, SETTYPE1CELLS2D) (data.getPointer(0),
+                  SAMRAI_F77_FUNC(settype1cells2d, SETTYPE1CELLS2D) (data.getPointer(0),
                   ghost_box.lower()[0], ghost_box.upper()[0],
                   ghost_box.lower()[1], ghost_box.upper()[1],
                   acoef_data->getPointer(),
@@ -317,7 +317,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
                   jint = jgho + 1;
                   ibeg = lower[0];
                   iend = upper[0];
-                  F77_FUNC(settype1cells2d, SETTYPE1CELLS2D) (data.getPointer(0),
+                  SAMRAI_F77_FUNC(settype1cells2d, SETTYPE1CELLS2D) (data.getPointer(0),
                   ghost_box.lower()[0], ghost_box.upper()[0],
                   ghost_box.lower()[1], ghost_box.upper()[1],
                   acoef_data->getPointer(),
@@ -337,7 +337,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
                   jint = jgho - 1;
                   ibeg = lower[0];
                   iend = upper[0];
-                  F77_FUNC(settype1cells2d, SETTYPE1CELLS2D) (data.getPointer(0),
+                  SAMRAI_F77_FUNC(settype1cells2d, SETTYPE1CELLS2D) (data.getPointer(0),
                   ghost_box.lower()[0], ghost_box.upper()[0],
                   ghost_box.lower()[1], ghost_box.upper()[1],
                   acoef_data->getPointer(),
@@ -366,7 +366,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
                   jend = upper[1];
                   kbeg = lower[2];
                   kend = upper[2];
-                  F77_FUNC(settype1cells3d, SETTYPE1CELLS3D) (data.getPointer(0),
+                  SAMRAI_F77_FUNC(settype1cells3d, SETTYPE1CELLS3D) (data.getPointer(0),
                   ghost_box.lower()[0], ghost_box.upper()[0],
                   ghost_box.lower()[1], ghost_box.upper()[1],
                   ghost_box.lower()[2], ghost_box.upper()[2],
@@ -390,7 +390,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
                   jend = upper[1];
                   kbeg = lower[2];
                   kend = upper[2];
-                  F77_FUNC(settype1cells3d, SETTYPE1CELLS3D) (data.getPointer(0),
+                  SAMRAI_F77_FUNC(settype1cells3d, SETTYPE1CELLS3D) (data.getPointer(0),
                   ghost_box.lower()[0], ghost_box.upper()[0],
                   ghost_box.lower()[1], ghost_box.upper()[1],
                   ghost_box.lower()[2], ghost_box.upper()[2],
@@ -414,7 +414,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
                   iend = upper[0];
                   kbeg = lower[2];
                   kend = upper[2];
-                  F77_FUNC(settype1cells3d, SETTYPE1CELLS3D) (data.getPointer(0),
+                  SAMRAI_F77_FUNC(settype1cells3d, SETTYPE1CELLS3D) (data.getPointer(0),
                   ghost_box.lower()[0], ghost_box.upper()[0],
                   ghost_box.lower()[1], ghost_box.upper()[1],
                   ghost_box.lower()[2], ghost_box.upper()[2],
@@ -438,7 +438,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
                   iend = upper[0];
                   kbeg = lower[2];
                   kend = upper[2];
-                  F77_FUNC(settype1cells3d, SETTYPE1CELLS3D) (data.getPointer(0),
+                  SAMRAI_F77_FUNC(settype1cells3d, SETTYPE1CELLS3D) (data.getPointer(0),
                   ghost_box.lower()[0], ghost_box.upper()[0],
                   ghost_box.lower()[1], ghost_box.upper()[1],
                   ghost_box.lower()[2], ghost_box.upper()[2],
@@ -462,7 +462,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
                   iend = upper[0];
                   jbeg = lower[1];
                   jend = upper[1];
-                  F77_FUNC(settype1cells3d, SETTYPE1CELLS3D) (data.getPointer(0),
+                  SAMRAI_F77_FUNC(settype1cells3d, SETTYPE1CELLS3D) (data.getPointer(0),
                   ghost_box.lower()[0], ghost_box.upper()[0],
                   ghost_box.lower()[1], ghost_box.upper()[1],
                   ghost_box.lower()[2], ghost_box.upper()[2],
@@ -486,7 +486,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
                   iend = upper[0];
                   jbeg = lower[1];
                   jend = upper[1];
-                  F77_FUNC(settype1cells3d, SETTYPE1CELLS3D) (data.getPointer(0),
+                  SAMRAI_F77_FUNC(settype1cells3d, SETTYPE1CELLS3D) (data.getPointer(0),
                   ghost_box.lower()[0], ghost_box.upper()[0],
                   ghost_box.lower()[1], ghost_box.upper()[1],
                   ghost_box.lower()[2], ghost_box.upper()[2],
@@ -532,7 +532,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
             const hier::Index& lower = bb_box.lower();
             const hier::Index& upper = bb_box.upper();
             const int location_index = bb.getLocationIndex();
-            F77_FUNC(settype2cells2d, SETTYPE2CELLS2D) (data.getPointer(0),
+            SAMRAI_F77_FUNC(settype2cells2d, SETTYPE2CELLS2D) (data.getPointer(0),
                ghost_box.lower()[0], ghost_box.upper()[0],
                ghost_box.lower()[1], ghost_box.upper()[1],
                &lower[0], &upper[0], location_index);
@@ -558,7 +558,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
             TBOX_ASSERT(boundary_box.getBoundaryType() == 2);
             const hier::Index& lower = boundary_box.getBox().lower();
             const hier::Index& upper = boundary_box.getBox().upper();
-            F77_FUNC(settype2cells3d, SETTYPE2CELLS3D) (data.getPointer(0),
+            SAMRAI_F77_FUNC(settype2cells3d, SETTYPE2CELLS3D) (data.getPointer(0),
                ghost_box.lower()[0], ghost_box.upper()[0],
                ghost_box.lower()[1], ghost_box.upper()[1],
                ghost_box.lower()[2], ghost_box.upper()[2],
@@ -580,7 +580,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
             const hier::Index& upper = bb_box.upper();
             TBOX_ASSERT(lower == upper);
             const int location_index = bb.getLocationIndex();
-            F77_FUNC(settype3cells3d, SETTYPE3CELLS3D) (data.getPointer(0),
+            SAMRAI_F77_FUNC(settype3cells3d, SETTYPE3CELLS3D) (data.getPointer(0),
                ghost_box.lower()[0], ghost_box.upper()[0],
                ghost_box.lower()[1], ghost_box.upper()[1],
                ghost_box.lower()[2], ghost_box.upper()[2],

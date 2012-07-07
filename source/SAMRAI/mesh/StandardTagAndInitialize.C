@@ -42,20 +42,20 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 // in coarsentags1d.f:
-void F77_FUNC(coarsentags1d, COARSENTAGS1D) (const int&, const int&,
+void SAMRAI_F77_FUNC(coarsentags1d, COARSENTAGS1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const int *, int *);
 // in coarsentags2d.f:
-void F77_FUNC(coarsentags2d, COARSENTAGS2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(coarsentags2d, COARSENTAGS2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const int *, int *);
 // in coarsentags3d.f:
-void F77_FUNC(coarsentags3d, COARSENTAGS3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(coarsentags3d, COARSENTAGS3D) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -520,14 +520,14 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
 
       for (int d = 0; d < ctags->getDepth(); d++) {
          if (dim == tbox::Dimension(1)) {
-            F77_FUNC(coarsentags1d, COARSENTAGS1D) (ifirstc(0), ilastc(0),
+            SAMRAI_F77_FUNC(coarsentags1d, COARSENTAGS1D) (ifirstc(0), ilastc(0),
                filo(0), fihi(0),
                cilo(0), cihi(0),
                &coarsen_ratio[0],
                ftags->getPointer(d),
                ctags->getPointer(d));
          } else if ((dim == tbox::Dimension(2))) {
-            F77_FUNC(coarsentags2d, COARSENTAGS2D) (ifirstc(0), ifirstc(1),
+            SAMRAI_F77_FUNC(coarsentags2d, COARSENTAGS2D) (ifirstc(0), ifirstc(1),
                ilastc(0), ilastc(1),
                filo(0), filo(1), fihi(0), fihi(1),
                cilo(0), cilo(1), cihi(0), cihi(1),
@@ -535,7 +535,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
                ftags->getPointer(d),
                ctags->getPointer(d));
          } else if ((dim == tbox::Dimension(3))) {
-            F77_FUNC(coarsentags3d, COARSENTAGS3D) (ifirstc(0), ifirstc(1),
+            SAMRAI_F77_FUNC(coarsentags3d, COARSENTAGS3D) (ifirstc(0), ifirstc(1),
                ifirstc(2),
                ilastc(0), ilastc(1), ilastc(2),
                filo(0), filo(1), filo(2),

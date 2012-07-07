@@ -2031,7 +2031,7 @@ ModifiedBratuProblem::jacobianTimesVector(
 #endif
 
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(compjv2d, COMPJV2D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compjv2d, COMPJV2D) (ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                NUM_GHOSTS_U,
                jac_a->getPointer(),
@@ -2053,7 +2053,7 @@ ModifiedBratuProblem::jacobianTimesVector(
 #endif
          }
          if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(compjv3d, COMPJV3D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compjv3d, COMPJV3D) (ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                ifirst(2), ilast(2),
                NUM_GHOSTS_U,
@@ -2185,7 +2185,7 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
           * Compute exponential = lambda * exp(u)
           */
          if (d_dim == tbox::Dimension(1)) {
-            F77_FUNC(compexpu1d, COMPEXPU1D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compexpu1d, COMPEXPU1D) (ifirst(0), ilast(0),
                NUM_GHOSTS_U,
                d_lambda,
                u->getPointer(),
@@ -2194,7 +2194,7 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
             /*
              * Compute source = df/du
              */
-            F77_FUNC(compsrcderv1d, COMPSRCDERV1D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compsrcderv1d, COMPSRCDERV1D) (ifirst(0), ilast(0),
                NUM_GHOSTS_U,
                xlo, dx,
                d_new_time,
@@ -2203,7 +2203,7 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
                source->getPointer());
          }
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(compexpu2d, COMPEXPU2D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compexpu2d, COMPEXPU2D) (ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                NUM_GHOSTS_U,
                d_lambda,
@@ -2213,7 +2213,7 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
             /*
              * Compute source = df/du
              */
-            F77_FUNC(compsrcderv2d, COMPSRCDERV2D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compsrcderv2d, COMPSRCDERV2D) (ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                NUM_GHOSTS_U,
                xlo, dx,
@@ -2223,7 +2223,7 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
                source->getPointer());
          }
          if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(compexpu3d, COMPEXPU3D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compexpu3d, COMPEXPU3D) (ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                ifirst(2), ilast(2),
                NUM_GHOSTS_U,
@@ -2234,7 +2234,7 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
             /*
              * Compute source = df/du
              */
-            F77_FUNC(compsrcderv3d, COMPSRCDERV3D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compsrcderv3d, COMPSRCDERV3D) (ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                ifirst(2), ilast(2),
                NUM_GHOSTS_U,
@@ -2248,7 +2248,7 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
           * Compute a = cell_vol * ( 1 - d_current_dt*(exponential + source))
           */
          if (d_dim == tbox::Dimension(1)) {
-            F77_FUNC(compfacdiag1d, COMPFACDIAG1D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compfacdiag1d, COMPFACDIAG1D) (ifirst(0), ilast(0),
                d_current_dt,
                cell_vol,
                exponential->getPointer(),
@@ -2256,7 +2256,7 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
                a->getPointer());
          }
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(compfacdiag2d, COMPFACDIAG2D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compfacdiag2d, COMPFACDIAG2D) (ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                d_current_dt,
                cell_vol,
@@ -2265,7 +2265,7 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
                a->getPointer());
          }
          if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(compfacdiag3d, COMPFACDIAG3D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compfacdiag3d, COMPFACDIAG3D) (ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                ifirst(2), ilast(2),
                d_current_dt,
@@ -2280,14 +2280,14 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
           * and multiply by cell_vol*d_current_dt.
           */
          if (d_dim == tbox::Dimension(1)) {
-            F77_FUNC(compfacoffdiag1d, COMPFACOFFDIAG1D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compfacoffdiag1d, COMPFACOFFDIAG1D) (ifirst(0), ilast(0),
                d_current_dt,
                cell_vol,
                diffusion->getPointer(0),
                b->getPointer(0));
          }
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(compfacoffdiag2d, COMPFACOFFDIAG2D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compfacoffdiag2d, COMPFACOFFDIAG2D) (ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                d_current_dt,
                cell_vol,
@@ -2297,7 +2297,7 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
                b->getPointer(1));
          }
          if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(compfacoffdiag3d, COMPFACOFFDIAG3D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compfacoffdiag3d, COMPFACOFFDIAG3D) (ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                ifirst(2), ilast(2),
                d_current_dt,
@@ -2517,7 +2517,7 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
             /*
              * Compute exponential = lambda * exp(u)
              */
-            F77_FUNC(compexpu1d, COMPEXPU1D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compexpu1d, COMPEXPU1D) (ifirst(0), ilast(0),
                NUM_GHOSTS_U,
                d_lambda,
                u->getPointer(),
@@ -2526,7 +2526,7 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
             /*
              * Compute source = df/du
              */
-            F77_FUNC(compsrcderv1d, COMPSRCDERV1D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compsrcderv1d, COMPSRCDERV1D) (ifirst(0), ilast(0),
                NUM_GHOSTS_U,
                xlo, dx,
                d_new_time,
@@ -2538,7 +2538,7 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
             /*
              * Compute exponential = lambda * exp(u)
              */
-            F77_FUNC(compexpu2d, COMPEXPU2D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compexpu2d, COMPEXPU2D) (ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                NUM_GHOSTS_U,
                d_lambda,
@@ -2548,7 +2548,7 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
             /*
              * Compute source = df/du
              */
-            F77_FUNC(compsrcderv2d, COMPSRCDERV2D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compsrcderv2d, COMPSRCDERV2D) (ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                NUM_GHOSTS_U,
                xlo, dx,
@@ -2561,7 +2561,7 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
             /*
              * Compute exponential = lambda * exp(u)
              */
-            F77_FUNC(compexpu3d, COMPEXPU3D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compexpu3d, COMPEXPU3D) (ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                ifirst(2), ilast(2),
                NUM_GHOSTS_U,
@@ -2572,7 +2572,7 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
             /*
              * Compute source = df/du
              */
-            F77_FUNC(compsrcderv3d, COMPSRCDERV3D) (ifirst(0), ilast(0),
+            SAMRAI_F77_FUNC(compsrcderv3d, COMPSRCDERV3D) (ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                ifirst(2), ilast(2),
                NUM_GHOSTS_U,

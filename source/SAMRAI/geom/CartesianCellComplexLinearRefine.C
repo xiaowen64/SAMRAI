@@ -39,7 +39,7 @@ extern "C" {
 #endif
 
 // in cartrefine1d.f:
-void F77_FUNC(cartlinrefcellcplx1d, CARTLINREFCELLCPLX1D) (const int&,
+void SAMRAI_F77_FUNC(cartlinrefcellcplx1d, CARTLINREFCELLCPLX1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -47,7 +47,7 @@ void F77_FUNC(cartlinrefcellcplx1d, CARTLINREFCELLCPLX1D) (const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 // in cartrefine2d.f:
-void F77_FUNC(cartlinrefcellcplx2d, CARTLINREFCELLCPLX2D) (const int&,
+void SAMRAI_F77_FUNC(cartlinrefcellcplx2d, CARTLINREFCELLCPLX2D) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -55,7 +55,7 @@ void F77_FUNC(cartlinrefcellcplx2d, CARTLINREFCELLCPLX2D) (const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 // in cartrefine3d.f:
-void F77_FUNC(cartlinrefcellcplx3d, CARTLINREFCELLCPLX3D) (const int&,
+void SAMRAI_F77_FUNC(cartlinrefcellcplx3d, CARTLINREFCELLCPLX3D) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -164,7 +164,7 @@ CartesianCellComplexLinearRefine::refine(
 
    for (int d = 0; d < fdata->getDepth(); d++) {
       if ((dim == tbox::Dimension(1))) {
-         F77_FUNC(cartlinrefcellcplx1d, CARTLINREFCELLCPLX1D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartlinrefcellcplx1d, CARTLINREFCELLCPLX1D) (ifirstc(0),
             ilastc(0),
             ifirstf(0), ilastf(0),
             cilo(0), cihi(0),
@@ -175,7 +175,7 @@ CartesianCellComplexLinearRefine::refine(
             cdata->getPointer(d),
             fdata->getPointer(d));
       } else if ((dim == tbox::Dimension(2))) {
-         F77_FUNC(cartlinrefcellcplx2d, CARTLINREFCELLCPLX2D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartlinrefcellcplx2d, CARTLINREFCELLCPLX2D) (ifirstc(0),
             ifirstc(1), ilastc(0), ilastc(1),
             ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
             cilo(0), cilo(1), cihi(0), cihi(1),
@@ -186,7 +186,7 @@ CartesianCellComplexLinearRefine::refine(
             cdata->getPointer(d),
             fdata->getPointer(d));
       } else if ((dim == tbox::Dimension(3))) {
-         F77_FUNC(cartlinrefcellcplx3d, CARTLINREFCELLCPLX3D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartlinrefcellcplx3d, CARTLINREFCELLCPLX3D) (ifirstc(0),
             ifirstc(1), ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
             ifirstf(0), ifirstf(1), ifirstf(2),

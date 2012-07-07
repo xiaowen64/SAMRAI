@@ -28,14 +28,14 @@
  */
 extern "C" {
 // in cartcoarsen1d.f:
-void F77_FUNC(cartwgtavgoutfacedoub1d, CARTWGTAVGOUTFACEDOUB1D) (
+void SAMRAI_F77_FUNC(cartwgtavgoutfacedoub1d, CARTWGTAVGOUTFACEDOUB1D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 // in cartcoarsen2d.f:
-void F77_FUNC(cartwgtavgoutfacedoub2d0, CARTWGTAVGOUTFACEDOUB2D0) (
+void SAMRAI_F77_FUNC(cartwgtavgoutfacedoub2d0, CARTWGTAVGOUTFACEDOUB2D0) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -45,7 +45,7 @@ void F77_FUNC(cartwgtavgoutfacedoub2d0, CARTWGTAVGOUTFACEDOUB2D0) (
    const int *, const double *, const double *,
    const double *, double *);
 
-void F77_FUNC(cartwgtavgoutfacedoub2d1, CARTWGTAVGOUTFACEDOUB2D1) (
+void SAMRAI_F77_FUNC(cartwgtavgoutfacedoub2d1, CARTWGTAVGOUTFACEDOUB2D1) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -55,7 +55,7 @@ void F77_FUNC(cartwgtavgoutfacedoub2d1, CARTWGTAVGOUTFACEDOUB2D1) (
    const int *, const double *, const double *,
    const double *, double *);
 // in cartcoarsen3d.f:
-void F77_FUNC(cartwgtavgoutfacedoub3d0, CARTWGTAVGOUTFACEDOUB3D0) (
+void SAMRAI_F77_FUNC(cartwgtavgoutfacedoub3d0, CARTWGTAVGOUTFACEDOUB3D0) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -64,7 +64,7 @@ void F77_FUNC(cartwgtavgoutfacedoub3d0, CARTWGTAVGOUTFACEDOUB3D0) (
    const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
-void F77_FUNC(cartwgtavgoutfacedoub3d1, CARTWGTAVGOUTFACEDOUB3D1) (
+void SAMRAI_F77_FUNC(cartwgtavgoutfacedoub3d1, CARTWGTAVGOUTFACEDOUB3D1) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -73,7 +73,7 @@ void F77_FUNC(cartwgtavgoutfacedoub3d1, CARTWGTAVGOUTFACEDOUB3D1) (
    const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
-void F77_FUNC(cartwgtavgoutfacedoub3d2, CARTWGTAVGOUTFACEDOUB3D2) (
+void SAMRAI_F77_FUNC(cartwgtavgoutfacedoub3d2, CARTWGTAVGOUTFACEDOUB3D2) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -156,7 +156,7 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
       // loop over lower and upper outerside arrays
       for (int i = 0; i < 2; i++) {
          if (d_dim == tbox::Dimension(1)) {
-            F77_FUNC(cartwgtavgoutfacedoub1d, CARTWGTAVGOUTFACEDOUB1D) (
+            SAMRAI_F77_FUNC(cartwgtavgoutfacedoub1d, CARTWGTAVGOUTFACEDOUB1D) (
                ifirstc(0), ilastc(0),
                filo(0), fihi(0),
                cilo(0), cihi(0),
@@ -166,7 +166,7 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
                fdata->getPointer(0, i, d),
                cdata->getPointer(0, i, d));
          } else if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(cartwgtavgoutfacedoub2d0, CARTWGTAVGOUTFACEDOUB2D0) (
+            SAMRAI_F77_FUNC(cartwgtavgoutfacedoub2d0, CARTWGTAVGOUTFACEDOUB2D0) (
                ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                filo(0), filo(1), fihi(0), fihi(1),
                cilo(0), cilo(1), cihi(0), cihi(1),
@@ -175,7 +175,7 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
                cdx,
                fdata->getPointer(0, i, d),
                cdata->getPointer(0, i, d));
-            F77_FUNC(cartwgtavgoutfacedoub2d1, CARTWGTAVGOUTFACEDOUB2D1) (
+            SAMRAI_F77_FUNC(cartwgtavgoutfacedoub2d1, CARTWGTAVGOUTFACEDOUB2D1) (
                ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                filo(0), filo(1), fihi(0), fihi(1),
                cilo(0), cilo(1), cihi(0), cihi(1),
@@ -185,7 +185,7 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
                fdata->getPointer(1, i, d),
                cdata->getPointer(1, i, d));
          } else if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(cartwgtavgoutfacedoub3d0, CARTWGTAVGOUTFACEDOUB3D0) (
+            SAMRAI_F77_FUNC(cartwgtavgoutfacedoub3d0, CARTWGTAVGOUTFACEDOUB3D0) (
                ifirstc(0), ifirstc(1), ifirstc(2),
                ilastc(0), ilastc(1), ilastc(2),
                filo(0), filo(1), filo(2),
@@ -197,7 +197,7 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
                cdx,
                fdata->getPointer(0, i, d),
                cdata->getPointer(0, i, d));
-            F77_FUNC(cartwgtavgoutfacedoub3d1, CARTWGTAVGOUTFACEDOUB3D1) (
+            SAMRAI_F77_FUNC(cartwgtavgoutfacedoub3d1, CARTWGTAVGOUTFACEDOUB3D1) (
                ifirstc(0), ifirstc(1), ifirstc(2),
                ilastc(0), ilastc(1), ilastc(2),
                filo(0), filo(1), filo(2),
@@ -209,7 +209,7 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
                cdx,
                fdata->getPointer(1, i, d),
                cdata->getPointer(1, i, d));
-            F77_FUNC(cartwgtavgoutfacedoub3d2, CARTWGTAVGOUTFACEDOUB3D2) (
+            SAMRAI_F77_FUNC(cartwgtavgoutfacedoub3d2, CARTWGTAVGOUTFACEDOUB3D2) (
                ifirstc(0), ifirstc(1), ifirstc(2),
                ilastc(0), ilastc(1), ilastc(2),
                filo(0), filo(1), filo(2),

@@ -39,7 +39,7 @@ extern "C" {
 #endif
 
 // in cartrefine1d.f:
-void F77_FUNC(cartclinrefcellcplx1d, CARTCLINREFCELLCPLX1D) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefcellcplx1d, CARTCLINREFCELLCPLX1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -48,7 +48,7 @@ void F77_FUNC(cartclinrefcellcplx1d, CARTCLINREFCELLCPLX1D) (const int&,
    const dcomplex *, dcomplex *,
    dcomplex *, dcomplex *);
 // in cartrefine2d.f:
-void F77_FUNC(cartclinrefcellcplx2d, CARTCLINREFCELLCPLX2D) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefcellcplx2d, CARTCLINREFCELLCPLX2D) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -56,7 +56,7 @@ void F77_FUNC(cartclinrefcellcplx2d, CARTCLINREFCELLCPLX2D) (const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *,
    dcomplex *, dcomplex *, dcomplex *, dcomplex *);
-void F77_FUNC(cartclinrefcellcplx3d, CARTCLINREFCELLCPLX3D) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefcellcplx3d, CARTCLINREFCELLCPLX3D) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -173,7 +173,7 @@ CartesianCellComplexConservativeLinearRefine::refine(
 
    for (int d = 0; d < fdata->getDepth(); d++) {
       if ((dim == tbox::Dimension(1))) {
-         F77_FUNC(cartclinrefcellcplx1d, CARTCLINREFCELLCPLX1D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartclinrefcellcplx1d, CARTCLINREFCELLCPLX1D) (ifirstc(0),
             ilastc(0),
             ifirstf(0), ilastf(0),
             cilo(0), cihi(0),
@@ -188,7 +188,7 @@ CartesianCellComplexConservativeLinearRefine::refine(
          tbox::Array<dcomplex> diff1(cgbox.numberCells(1) + 1);
          pdat::CellData<dcomplex> slope1(cgbox, 1, tmp_ghosts);
 
-         F77_FUNC(cartclinrefcellcplx2d, CARTCLINREFCELLCPLX2D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartclinrefcellcplx2d, CARTCLINREFCELLCPLX2D) (ifirstc(0),
             ifirstc(1), ilastc(0), ilastc(1),
             ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
             cilo(0), cilo(1), cihi(0), cihi(1),
@@ -207,7 +207,7 @@ CartesianCellComplexConservativeLinearRefine::refine(
          tbox::Array<dcomplex> diff2(cgbox.numberCells(2) + 1);
          pdat::CellData<dcomplex> slope2(cgbox, 1, tmp_ghosts);
 
-         F77_FUNC(cartclinrefcellcplx3d, CARTCLINREFCELLCPLX3D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartclinrefcellcplx3d, CARTCLINREFCELLCPLX3D) (ifirstc(0),
             ifirstc(1), ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
             ifirstf(0), ifirstf(1), ifirstf(2),

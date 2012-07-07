@@ -45,7 +45,7 @@ extern "C" {
 #endif
 
 // in algs_nodeouternodeops2d.f:
-void F77_FUNC(nodeouternodesum2d, NODEOUTERNODESUM2D) (
+void SAMRAI_F77_FUNC(nodeouternodesum2d, NODEOUTERNODESUM2D) (
    const int&, const int&,     // fine patch lo
    const int&, const int&,     // fine patch hi
    const int&, const int&,     // coarse patch lo
@@ -57,7 +57,7 @@ void F77_FUNC(nodeouternodesum2d, NODEOUTERNODESUM2D) (
    const double *, const double *,   // onode arrays
    const double *, const double *);
 
-void F77_FUNC(nodehangnodeinterp2d, NODEHANGNODEINTERP2D) (
+void SAMRAI_F77_FUNC(nodehangnodeinterp2d, NODEHANGNODEINTERP2D) (
    const int&, const int&,    // fine patch lo
    const int&, const int&,    // fine patch hi
    const int&, const int&,    // coarse patch lo
@@ -71,7 +71,7 @@ void F77_FUNC(nodehangnodeinterp2d, NODEHANGNODEINTERP2D) (
    double *);                 // node array
 
 // in algs_nodeouternodeops3d.f:
-void F77_FUNC(nodeouternodesum3d, NODEOUTERNODESUM3D) (
+void SAMRAI_F77_FUNC(nodeouternodesum3d, NODEOUTERNODESUM3D) (
    const int&, const int&, const int&,    // fine patch lo
    const int&, const int&, const int&,    // fine patch hi
    const int&, const int&, const int&,    // coarse patch lo
@@ -84,7 +84,7 @@ void F77_FUNC(nodeouternodesum3d, NODEOUTERNODESUM3D) (
    const double *, const double *,
    const double *, const double *);
 
-void F77_FUNC(nodehangnodeinterp3d, NODEHANGNODEINTERP3D) (
+void SAMRAI_F77_FUNC(nodehangnodeinterp3d, NODEHANGNODEINTERP3D) (
    const int&, const int&, const int&,    // fine patch lo
    const int&, const int&, const int&,    // fine patch hi
    const int&, const int&, const int&,    // coarse patch lo
@@ -958,7 +958,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
                   tmp_onode_data_ptr11 = NULL;
                }
 
-               F77_FUNC(nodeouternodesum2d, NODEOUTERNODESUM2D) (
+               SAMRAI_F77_FUNC(nodeouternodesum2d, NODEOUTERNODESUM2D) (
                   filo(0), filo(1),
                   fihi(0), fihi(1),
                   cilo(0), cilo(1),
@@ -1016,7 +1016,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
                   tmp_onode_data_ptr21 = NULL;
                }
 
-               F77_FUNC(nodeouternodesum3d, NODEOUTERNODESUM3D) (
+               SAMRAI_F77_FUNC(nodeouternodesum3d, NODEOUTERNODESUM3D) (
                   filo(0), filo(1), filo(2),
                   fihi(0), fihi(1), fihi(2),
                   cilo(0), cilo(1), cilo(2),
@@ -1048,7 +1048,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
                   const int bbox_loc = bbox.getLocationIndex();
 
                   if ((dim == tbox::Dimension(2))) {
-                     F77_FUNC(nodehangnodeinterp2d, NODEHANGNODEINTERP2D) (
+                     SAMRAI_F77_FUNC(nodehangnodeinterp2d, NODEHANGNODEINTERP2D) (
                         filo(0), filo(1),
                         fihi(0), fihi(1),
                         cilo(0), cilo(1),
@@ -1063,7 +1063,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
                   }
 
                   if ((dim == tbox::Dimension(3))) {
-                     F77_FUNC(nodehangnodeinterp3d, NODEHANGNODEINTERP3D) (
+                     SAMRAI_F77_FUNC(nodehangnodeinterp3d, NODEHANGNODEINTERP3D) (
                         filo(0), filo(1), filo(2),
                         fihi(0), fihi(1), fihi(2),
                         cilo(0), cilo(1), cilo(2),
