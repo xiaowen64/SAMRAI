@@ -1289,7 +1289,7 @@ StandardTagAndInitialize::getFromInput(
             // Read information specific to a cycle or a time criteria.
             CycleTagCriteria this_cycle_crit;
             TimeTagCriteria this_time_crit;
-            bool is_cycle;
+            bool is_cycle = false;
             if (at_db->keyExists("cycle")) {
                /*
                 * Read cycle tagging criteria.
@@ -1316,7 +1316,6 @@ StandardTagAndInitialize::getFromInput(
                                      << std::endl);
                }
                this_time_crit.d_time = time;
-               is_cycle = false;
             }
             else {
                TBOX_ERROR(
