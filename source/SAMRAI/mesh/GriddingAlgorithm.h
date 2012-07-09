@@ -1092,8 +1092,6 @@ private:
    static tbox::Array<int> * s_tag_indx;
    static tbox::Array<int> * s_buf_tag_indx;
 
-   const tbox::Dimension d_dim;
-
    hier::IntVector d_buf_tag_ghosts;
 
    /*
