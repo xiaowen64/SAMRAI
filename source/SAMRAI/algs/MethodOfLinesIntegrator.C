@@ -682,7 +682,6 @@ MethodOfLinesIntegrator::putToRestart(
    restart_db->putInteger("ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION",
       ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION);
 
-   restart_db->putInteger("order", d_order);
    restart_db->putDoubleArray("alpha_1", d_alpha_1);
    restart_db->putDoubleArray("alpha_2", d_alpha_2);
    restart_db->putDoubleArray("beta", d_beta);
@@ -705,23 +704,7 @@ MethodOfLinesIntegrator::getFromInput(
 {
    TBOX_ASSERT(is_from_restart || input_db);
 
-   if (is_from_restart) {
-
-      if (input_db) {
-         if (input_db->keyExists("order")) {
-            d_order = input_db->getInteger("order");
-            if (d_order < 0) {
-               TBOX_ERROR(
-                  d_object_name << ":  "
-                                << "Negative `order' value specified in input.");
-            }
-
-         }
-      }
-
-   } else {
-
-      d_order = input_db->getIntegerWithDefault("order", d_order);
+   if (!is_from_restart) {
 
       if (input_db->keyExists("alpha_1")) {
          d_alpha_1 = input_db->getDoubleArray("alpha_1");
@@ -750,22 +733,16 @@ MethodOfLinesIntegrator::getFromInput(
                           << "Using default values.  See class header.");
       }
 
-   }
+      if (d_alpha_1.getSize() != d_alpha_2.getSize() ||
+          d_alpha_2.getSize() != d_beta.getSize()) {
+         TBOX_ERROR(
+            d_object_name << ":  "
+                          << "The number of alpha_1, alpha_2, and beta values "
+                          << "specified in input is not consistent");
+      }
 
-   if (d_alpha_1.getSize() != d_alpha_2.getSize() ||
-       d_alpha_2.getSize() != d_beta.getSize()) {
-      TBOX_ERROR(
-         d_object_name << ":  "
-                       << "The number of alpha_1, alpha_2, and beta values "
-                       << "specified in input is not consistent");
-   }
-
-   if (d_alpha_1.getSize() != d_order) {
-      TBOX_WARNING(
-         d_object_name << ":  "
-                       << "The number of alpha values specified in input "
-                       << "does not equal the Runga-Kutta order");
       d_order = d_alpha_1.getSize();
+
    }
 
 }
@@ -774,8 +751,8 @@ MethodOfLinesIntegrator::getFromInput(
  *************************************************************************
  *
  * Checks that class and restart file version numbers are equal.  If so,
- * reads in d_order and d_alpha from the database.  Also, does a
- * consistency check to make sure that the number of alpha values
+ * reads in d_alpha_1, d_alpha_2, and d_beta from the database.  Also,
+ * dooes a consistency check to make sure that the number of alpha values
  * specified equals the order of the Runga-Kutta scheme.
  *
  *************************************************************************
@@ -802,17 +779,19 @@ MethodOfLinesIntegrator::getFromRestart()
                        << "Restart file version different than class version.");
    }
 
-   d_order = restart_db->getInteger("order");
    d_alpha_1 = restart_db->getDoubleArray("alpha_1");
    d_alpha_2 = restart_db->getDoubleArray("alpha_2");
    d_beta = restart_db->getDoubleArray("beta");
 
-   if (d_alpha_1.getSize() != d_order) {
+   if (d_alpha_1.getSize() != d_alpha_2.getSize() ||
+       d_alpha_2.getSize() != d_beta.getSize()) {
       TBOX_ERROR(
          d_object_name << ":  "
-                       << "The number of alpha values read from restart "
-                       << "does not equal the Runga-Kutta order");
+                       << "The number of alpha_1, alpha_2, and beta values "
+                       << "specified in restart is not consistent");
    }
+
+   d_order = d_alpha_1.getSize();
 
 }
 

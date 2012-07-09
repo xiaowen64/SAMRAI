@@ -280,14 +280,12 @@ private:
    double d_max_newton_step;
    double d_nonlinear_step_tolerance;
    double d_relative_function_error;
-   double d_solution_update_constraint;
    int d_linear_convergence_test;
    int d_max_subsetup_calls;
    double d_residual_monitoring_params[2];
    double d_residual_monitoring_constant;
    double d_eisenstat_walker_params[2];
    double d_linear_solver_constant_tolerance;
-   int d_precond_setup_flag;
    int d_max_solves_no_precond_setup;
    int d_max_linear_solve_restarts;
    std::string d_KINSOL_log_filename;

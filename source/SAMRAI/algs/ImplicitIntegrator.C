@@ -355,9 +355,6 @@ ImplicitIntegrator::putToRestart(
 
    restart_db->putDouble("initial_time", d_initial_time);
    restart_db->putDouble("final_time", d_final_time);
-   restart_db->putDouble("d_current_time", d_current_time);
-   restart_db->putDouble("d_current_dt", d_current_dt);
-   restart_db->putDouble("d_old_dt", d_old_dt);
 
    restart_db->putInteger("d_integrator_step", d_integrator_step);
    restart_db->putInteger("max_integrator_steps", d_max_integrator_steps);
@@ -396,9 +393,6 @@ ImplicitIntegrator::getFromRestart()
 
    d_initial_time = db->getDouble("initial_time");
    d_final_time = db->getDouble("final_time");
-   d_current_time = db->getDouble("d_current_time");
-   d_current_dt = db->getDouble("d_current_dt");
-   d_old_dt = db->getDouble("d_old_dt");
 
    d_integrator_step = db->getInteger("d_integrator_step");
    d_max_integrator_steps = db->getInteger("max_integrator_steps");

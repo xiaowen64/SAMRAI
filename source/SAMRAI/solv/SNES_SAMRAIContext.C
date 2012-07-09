@@ -82,6 +82,8 @@ SNES_SAMRAIContext::SNES_SAMRAIContext(
    d_solution_vector(((Vec)NULL)),
    d_residual_vector(((Vec)NULL)),
    d_SNES_functions(my_functions),
+   d_uses_preconditioner(true),
+   d_uses_explicit_jacobian(true),
    d_maximum_nonlinear_iterations(PETSC_DEFAULT),
    d_maximum_function_evals(PETSC_DEFAULT),
    d_absolute_tolerance(PETSC_DEFAULT),
@@ -295,12 +297,10 @@ SNES_SAMRAIContext::createPetscObjects()
     * Create the nonlinear solver, specify linesearch backtracking,
     * and register method for nonlinear residual evaluation.
     */
-   ierr = SNESCreate(PETSC_COMM_SELF,
-         &d_SNES_solver);
+   ierr = SNESCreate(PETSC_COMM_SELF, &d_SNES_solver);
    PETSC_SAMRAI_ERROR(ierr);
 
-   ierr = SNESSetType(d_SNES_solver,
-         SNESLS);
+   ierr = SNESSetType(d_SNES_solver, SNESLS);
    PETSC_SAMRAI_ERROR(ierr);
 
    ierr = SNESSetFunction(d_SNES_solver,
@@ -320,16 +320,13 @@ SNES_SAMRAIContext::createPetscObjects()
 //                     &d_krylov_solver);
 //                     PETSC_SAMRAI_ERROR(ierr);
 
-   ierr = SNESGetKSP(d_SNES_solver,
-         &d_krylov_solver);
+   ierr = SNESGetKSP(d_SNES_solver, &d_krylov_solver);
    PETSC_SAMRAI_ERROR(ierr);
 
-   ierr = KSPSetPreconditionerSide(d_krylov_solver,
-         PC_RIGHT);
+   ierr = KSPSetPreconditionerSide(d_krylov_solver, PC_RIGHT);
    PETSC_SAMRAI_ERROR(ierr);
 
-   ierr = KSPGetPC(d_krylov_solver,
-         &d_preconditioner);
+   ierr = KSPGetPC(d_krylov_solver, &d_preconditioner);
    PETSC_SAMRAI_ERROR(ierr);
 
 }
@@ -382,7 +379,9 @@ SNES_SAMRAIContext::initializePetscObjects()
     *
     * First delete any Jacobian object that already has been created.
     */
-   if (d_jacobian) MatDestroy(d_jacobian);
+   if (d_jacobian) {
+      MatDestroy(d_jacobian);
+   }
    if (d_uses_explicit_jacobian) {
 
       ierr = MatCreateShell(PETSC_COMM_SELF,
@@ -437,8 +436,7 @@ SNES_SAMRAIContext::initializePetscObjects()
     * type of Krylov method that is used and tolerances used by the
     * method.
     */
-   ierr = KSPSetType(d_krylov_solver,
-         (KSPType)d_linear_solver_type.c_str());
+   ierr = KSPSetType(d_krylov_solver, (KSPType)d_linear_solver_type.c_str());
    PETSC_SAMRAI_ERROR(ierr);
 
    if (d_linear_solver_type == "gmres") {
@@ -490,12 +488,10 @@ SNES_SAMRAIContext::initializePetscObjects()
    if (d_uses_preconditioner) {
 
       std::string pc_type = "shell";
-      ierr = PCSetType(d_preconditioner,
-            (PCType)pc_type.c_str());
+      ierr = PCSetType(d_preconditioner, (PCType)pc_type.c_str());
       PETSC_SAMRAI_ERROR(ierr);
 
-      ierr = PCShellSetSetUp(
-            d_preconditioner,
+      ierr = PCShellSetSetUp(d_preconditioner,
             SNES_SAMRAIContext::SNESsetupPreconditioner);
       PETSC_SAMRAI_ERROR(ierr);
 
@@ -509,8 +505,7 @@ SNES_SAMRAIContext::initializePetscObjects()
    } else {
 
       std::string pc_type = "none";
-      ierr = PCSetType(d_preconditioner,
-            (PCType)pc_type.c_str());
+      ierr = PCSetType(d_preconditioner, (PCType)pc_type.c_str());
       PETSC_SAMRAI_ERROR(ierr);
 
    }
@@ -567,8 +562,7 @@ SNES_SAMRAIContext::getFromInput(
          d_uses_preconditioner = input_db->getBool("uses_preconditioner");
       }
       if (input_db->keyExists("uses_explicit_jacobian")) {
-         d_uses_explicit_jacobian = input_db->getBool(
-            "uses_explicit_jacobian");
+         d_uses_explicit_jacobian = input_db->getBool("uses_explicit_jacobian");
       }
       if (input_db->keyExists("absolute_tolerance")) {
          d_absolute_tolerance = input_db->getDouble("absolute_tolerance");

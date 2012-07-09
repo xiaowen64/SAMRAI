@@ -50,10 +50,8 @@ KINSOL_SAMRAIContext::KINSOL_SAMRAIContext(
    d_max_newton_step(0.0),
    d_nonlinear_step_tolerance(0.0),
    d_relative_function_error(0.0),
-   d_solution_update_constraint(0.0),
    d_linear_convergence_test(0),
    d_linear_solver_constant_tolerance(0.0),
-   d_precond_setup_flag(0),
    d_max_solves_no_precond_setup(0),
    d_max_linear_solve_restarts(0),
    d_KINSOL_print_flag(0),
@@ -299,13 +297,11 @@ KINSOL_SAMRAIContext::getFromRestart()
    d_max_newton_step = db->getDouble("max_newton_step");
    d_nonlinear_step_tolerance = db->getDouble("nonlinear_step_tolerance");
    d_relative_function_error = db->getDouble("relative_function_error");
-   d_solution_update_constraint = db->getDouble("d_solution_update_constraint");
    d_linear_convergence_test = db->getInteger("linear_convergence_test");
    db->getDoubleArray("eisenstat_walker_params",
       d_eisenstat_walker_params, 2);
    d_linear_solver_constant_tolerance =
       db->getDouble("linear_solver_constant_tolerance");
-   d_precond_setup_flag = db->getInteger("d_precond_setup_flag");
    d_max_solves_no_precond_setup =
       db->getInteger("max_solves_no_precond_setup");
    d_max_linear_solve_restarts = db->getInteger("max_linear_solve_restarts");
@@ -343,15 +339,12 @@ KINSOL_SAMRAIContext::putToRestart(
       d_nonlinear_step_tolerance);
    restart_db->putDouble("relative_function_error",
       d_relative_function_error);
-   restart_db->putDouble("d_solution_update_constraint",
-      d_solution_update_constraint);
    restart_db->putInteger("linear_convergence_test",
       d_linear_convergence_test);
    restart_db->putDoubleArray("eisenstat_walker_params",
       d_eisenstat_walker_params, 2);
    restart_db->putDouble("linear_solver_constant_tolerance",
       d_linear_solver_constant_tolerance);
-   restart_db->putInteger("d_precond_setup_flag", d_precond_setup_flag);
    restart_db->putInteger("max_solves_no_precond_setup",
       d_max_solves_no_precond_setup);
    restart_db->putInteger("max_linear_solve_restarts",
@@ -390,7 +383,6 @@ KINSOL_SAMRAIContext::printClassData(
       << std::endl;
    os << "d_relative_function_error = " << d_relative_function_error
       << std::endl;
-   os << "d_solution_update_constraint = " << d_solution_update_constraint;
    os << "\nd_linear_convergence_test = " << d_linear_convergence_test
       << std::endl;
    os << "d_eisenstat_walker_params = "
@@ -398,7 +390,6 @@ KINSOL_SAMRAIContext::printClassData(
       << d_eisenstat_walker_params[1] << std::endl;
    os << "d_linear_solver_constant_tolerance = "
       << d_linear_solver_constant_tolerance << std::endl;
-   os << "d_precond_setup_flag = " << d_precond_setup_flag << std::endl;
    os << "d_max_solves_no_precond_setup = " << d_max_solves_no_precond_setup;
    os << "\nd_max_linear_solve_restarts = " << d_max_linear_solve_restarts;
    os << "\nd_KINSOL_log_filename = " << d_KINSOL_log_filename << std::endl;

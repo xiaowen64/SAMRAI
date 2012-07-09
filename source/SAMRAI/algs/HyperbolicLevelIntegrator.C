@@ -2641,13 +2641,9 @@ HyperbolicLevelIntegrator::getFromInput(
       }
    } else {
 
-      if (input_db->keyExists("cfl")) {
-         d_cfl = input_db->getDouble("cfl");
-      }
+      d_cfl = input_db->getDouble("cfl");
 
-      if (input_db->keyExists("cfl_init")) {
-         d_cfl_init = input_db->getDouble("cfl_init");
-      }
+      d_cfl_init = input_db->getDouble("cfl_init");
 
       if (input_db->keyExists("lag_dt_computation")) {
          d_lag_dt_computation = input_db->getBool("lag_dt_computation");

@@ -119,7 +119,6 @@ GriddingAlgorithm::GriddingAlgorithm(
 {
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(input_db);
    TBOX_ASSERT(tag_init_strategy);
    TBOX_ASSERT(generator);
    TBOX_ASSERT(balancer);
@@ -4482,143 +4481,144 @@ void
 GriddingAlgorithm::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db)
 {
-   TBOX_ASSERT(input_db);
+   if (input_db) {
 
-   d_check_overflow_nesting = input_db->getBoolWithDefault(
-      "check_overflow_nesting",
-      d_check_overflow_nesting);
-   d_check_proper_nesting = input_db->getBoolWithDefault(
-      "check_proper_nesting",
-      d_check_proper_nesting);
-   d_check_connectors =
-      input_db->getBoolWithDefault("check_connectors", d_check_connectors);
-   d_print_steps =
-      input_db->getBoolWithDefault("print_steps", d_print_steps);
-   d_log_metadata_statistics = input_db->getBoolWithDefault(
-      "log_metadata_statistics",
-      d_log_metadata_statistics);
+      d_check_overflow_nesting = input_db->getBoolWithDefault(
+         "check_overflow_nesting",
+         d_check_overflow_nesting);
+      d_check_proper_nesting = input_db->getBoolWithDefault(
+         "check_proper_nesting",
+         d_check_proper_nesting);
+      d_check_connectors =
+        input_db->getBoolWithDefault("check_connectors", d_check_connectors);
+      d_print_steps =
+         input_db->getBoolWithDefault("print_steps", d_print_steps);
+      d_log_metadata_statistics = input_db->getBoolWithDefault(
+         "log_metadata_statistics",
+         d_log_metadata_statistics);
 
-   /*
-    * Read input for efficiency tolerance.
-    */
+      /*
+       * Read input for efficiency tolerance.
+       */
 
-   if (input_db->keyExists("efficiency_tolerance")) {
-      tbox::Array<double> efficiency_tolerance =
-         input_db->getDoubleArray("efficiency_tolerance");
+      if (input_db->keyExists("efficiency_tolerance")) {
+         tbox::Array<double> efficiency_tolerance =
+            input_db->getDoubleArray("efficiency_tolerance");
 
-      int ln;
-      for (ln = 0;
-           ln < efficiency_tolerance.getSize() && ln < d_hierarchy->getMaxNumberOfLevels();
-           ++ln) {
-         if ((efficiency_tolerance[ln] <= 0.0e0) ||
-             (efficiency_tolerance[ln] >= 1.0e0)) {
-            TBOX_ERROR(d_object_name << ":  "
-                                     << "Key data `efficiency_tolerance' has values"
-                                     << " out of range 0.0 < tol < 1.0.");
+         int ln;
+         for (ln = 0;
+              ln < efficiency_tolerance.getSize() && ln < d_hierarchy->getMaxNumberOfLevels();
+              ++ln) {
+            if ((efficiency_tolerance[ln] <= 0.0e0) ||
+                (efficiency_tolerance[ln] >= 1.0e0)) {
+               TBOX_ERROR(d_object_name << ":  "
+                                        << "Key data `efficiency_tolerance' has values"
+                                        << " out of range 0.0 < tol < 1.0.");
+            }
+            d_efficiency_tolerance[ln] = efficiency_tolerance[ln];
          }
-         d_efficiency_tolerance[ln] = efficiency_tolerance[ln];
-      }
-      for ( ; ln < d_hierarchy->getMaxNumberOfLevels(); ++ln) {
-         d_efficiency_tolerance[ln] = efficiency_tolerance.back();
-      }
-
-   }
-
-   /*
-    * Read input for combine efficiency.
-    */
-
-   if (input_db->keyExists("combine_efficiency")) {
-      tbox::Array<double> combine_efficiency =
-         input_db->getDoubleArray("combine_efficiency");
-
-      int ln;
-      for (ln = 0;
-           ln < combine_efficiency.getSize() && ln < d_hierarchy->getMaxNumberOfLevels();
-           ++ln) {
-         if ((combine_efficiency[ln] <= 0.0e0) ||
-             (combine_efficiency[ln] >= 1.0e0)) {
-            TBOX_ERROR(
-               d_object_name << ":  "
-                             << "Key data `combine_efficiency' has values"
-                             << " out of range 0.0 < tol < 1.0.");
+         for ( ; ln < d_hierarchy->getMaxNumberOfLevels(); ++ln) {
+            d_efficiency_tolerance[ln] = efficiency_tolerance.back();
          }
-         d_combine_efficiency[ln] = combine_efficiency[ln];
-      }
-      for ( ; ln < d_hierarchy->getMaxNumberOfLevels(); ++ln) {
-         d_combine_efficiency[ln] = combine_efficiency.back();
+
       }
 
-   }
+      /*
+       * Read input for combine efficiency.
+       */
 
-   const tbox::Dimension& dim = d_hierarchy->getDim();
+      if (input_db->keyExists("combine_efficiency")) {
+         tbox::Array<double> combine_efficiency =
+            input_db->getDoubleArray("combine_efficiency");
 
-   d_proper_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels(),
-      hier::BoxLevel(dim));
-   d_to_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels(),
-      hier::Connector(dim));
-   d_from_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels(),
-      hier::Connector(dim));
+         int ln;
+         for (ln = 0;
+              ln < combine_efficiency.getSize() && ln < d_hierarchy->getMaxNumberOfLevels();
+              ++ln) {
+            if ((combine_efficiency[ln] <= 0.0e0) ||
+                (combine_efficiency[ln] >= 1.0e0)) {
+               TBOX_ERROR(
+                  d_object_name << ":  "
+                                << "Key data `combine_efficiency' has values"
+                                << " out of range 0.0 < tol < 1.0.");
+            }
+            d_combine_efficiency[ln] = combine_efficiency[ln];
+         }
+         for ( ; ln < d_hierarchy->getMaxNumberOfLevels(); ++ln) {
+            d_combine_efficiency[ln] = combine_efficiency.back();
+         }
 
-   std::string tmp_str;
+      }
 
-   tmp_str = input_db->getStringWithDefault("check_nonrefined_tags",
-         std::string("WARN"));
-   d_check_nonrefined_tags = char(tolower(*tmp_str.c_str()));
-   if (d_check_nonrefined_tags != 'i' &&
-       d_check_nonrefined_tags != 'w' &&
-       d_check_nonrefined_tags != 'e') {
-      TBOX_ERROR("GriddingAlgorithm: input parameter check_nonrefined_tags\n"
-         << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
-   }
+      const tbox::Dimension& dim = d_hierarchy->getDim();
 
-   tmp_str = input_db->getStringWithDefault("check_overlapping_patches",
+      d_proper_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels(),
+         hier::BoxLevel(dim));
+      d_to_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels(),
+         hier::Connector(dim));
+      d_from_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels(),
+         hier::Connector(dim));
+
+      std::string tmp_str;
+
+      tmp_str = input_db->getStringWithDefault("check_nonrefined_tags",
+            std::string("WARN"));
+      d_check_nonrefined_tags = char(tolower(*tmp_str.c_str()));
+      if (d_check_nonrefined_tags != 'i' &&
+          d_check_nonrefined_tags != 'w' &&
+          d_check_nonrefined_tags != 'e') {
+         TBOX_ERROR("GriddingAlgorithm: input parameter check_nonrefined_tags\n"
+            << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
+      }
+
+      tmp_str = input_db->getStringWithDefault("check_overlapping_patches",
          std::string("IGNORE"));
-   d_check_overlapping_patches = char(tolower(*tmp_str.c_str()));
-   if (d_check_overlapping_patches != 'i' &&
-       d_check_overlapping_patches != 'w' &&
-       d_check_overlapping_patches != 'e') {
-      TBOX_ERROR(
-         "GriddingAlgorithm: input parameter check_overlapping_patches\n"
-         << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
+      d_check_overlapping_patches = char(tolower(*tmp_str.c_str()));
+      if (d_check_overlapping_patches != 'i' &&
+          d_check_overlapping_patches != 'w' &&
+          d_check_overlapping_patches != 'e') {
+         TBOX_ERROR(
+            "GriddingAlgorithm: input parameter check_overlapping_patches\n"
+            << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
+      }
+
+      tmp_str = input_db->getStringWithDefault("check_nonnesting_user_boxes",
+            std::string("ERROR"));
+      d_check_nonnesting_user_boxes = char(tolower(*tmp_str.c_str()));
+      if (d_check_nonnesting_user_boxes != 'i' &&
+          d_check_nonnesting_user_boxes != 'w' &&
+          d_check_nonnesting_user_boxes != 'e') {
+         TBOX_ERROR("GriddingAlgorithm: input parameter check_nonnesting_user_boxes\n"
+            << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
+      }
+
+      tmp_str = input_db->getStringWithDefault(
+            "check_boundary_proximity_violation",
+            std::string("ERROR"));
+      d_check_boundary_proximity_violation = char(tolower(*tmp_str.c_str()));
+      if (d_check_boundary_proximity_violation != 'i' &&
+          d_check_boundary_proximity_violation != 'w' &&
+          d_check_boundary_proximity_violation != 'e') {
+         TBOX_ERROR("GriddingAlgorithm: input parameter check_boundary_proximity_violation\n"
+            << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
+      }
+
+      d_sequentialize_patch_indices =
+         input_db->getBoolWithDefault("sequentialize_patch_indices",
+            d_sequentialize_patch_indices);
+
+      d_enforce_proper_nesting =
+         input_db->getBoolWithDefault("enforce_proper_nesting",
+            d_enforce_proper_nesting);
+      d_extend_to_domain_boundary =
+         input_db->getBoolWithDefault("extend_to_domain_boundary",
+            d_extend_to_domain_boundary);
+      d_load_balance =
+         input_db->getBoolWithDefault("load_balance", d_load_balance);
+
+      d_barrier_and_time =
+         input_db->getBoolWithDefault("barrier_and_time", d_barrier_and_time);
    }
-
-   tmp_str = input_db->getStringWithDefault("check_nonnesting_user_boxes",
-         std::string("ERROR"));
-   d_check_nonnesting_user_boxes = char(tolower(*tmp_str.c_str()));
-   if (d_check_nonnesting_user_boxes != 'i' &&
-       d_check_nonnesting_user_boxes != 'w' &&
-       d_check_nonnesting_user_boxes != 'e') {
-      TBOX_ERROR("GriddingAlgorithm: input parameter check_nonnesting_user_boxes\n"
-         << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
-   }
-
-   tmp_str = input_db->getStringWithDefault(
-         "check_boundary_proximity_violation",
-         std::string("ERROR"));
-   d_check_boundary_proximity_violation = char(tolower(*tmp_str.c_str()));
-   if (d_check_boundary_proximity_violation != 'i' &&
-       d_check_boundary_proximity_violation != 'w' &&
-       d_check_boundary_proximity_violation != 'e') {
-      TBOX_ERROR("GriddingAlgorithm: input parameter check_boundary_proximity_violation\n"
-         << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
-   }
-
-   d_sequentialize_patch_indices =
-      input_db->getBoolWithDefault("sequentialize_patch_indices",
-         d_sequentialize_patch_indices);
-
-   d_enforce_proper_nesting =
-      input_db->getBoolWithDefault("enforce_proper_nesting",
-         d_enforce_proper_nesting);
-   d_extend_to_domain_boundary =
-      input_db->getBoolWithDefault("extend_to_domain_boundary",
-         d_extend_to_domain_boundary);
-   d_load_balance =
-      input_db->getBoolWithDefault("load_balance", d_load_balance);
-
-   d_barrier_and_time =
-      input_db->getBoolWithDefault("barrier_and_time", d_barrier_and_time);
 }
 
 /*
