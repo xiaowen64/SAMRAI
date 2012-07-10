@@ -698,8 +698,6 @@ BaseGridGeometry::getFromRestart()
    int* temp_shift = &periodic_shift[0];
    db->getIntegerArray("periodic_dimension", temp_shift, dim.getValue());
    initializePeriodicShift(periodic_shift);
-
-   d_has_enhanced_connectivity = db->getBool("d_has_enhanced_connectivity");
 }
 
 /*
@@ -814,9 +812,6 @@ BaseGridGeometry::putToRestart(
    restart_db->putIntegerArray("periodic_dimension",
       temp_shift,
       dim.getValue());
-
-   restart_db->putBool("d_has_enhanced_connectivity",
-      d_has_enhanced_connectivity);
 }
 
 /*
