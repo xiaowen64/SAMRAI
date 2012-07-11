@@ -40,10 +40,8 @@ const int MethodOfLinesIntegrator::ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION = 2;
 MethodOfLinesIntegrator::MethodOfLinesIntegrator(
    const std::string& object_name,
    const boost::shared_ptr<tbox::Database>& input_db,
-   MethodOfLinesPatchStrategy* patch_strategy,
-   bool register_for_restart) :
+   MethodOfLinesPatchStrategy* patch_strategy) :
    d_object_name(object_name),
-   d_registered_for_restart(register_for_restart),
    d_order(3),
    d_patch_strategy(patch_strategy),
    d_current(hier::VariableDatabase::getDatabase()->getContext("CURRENT")),
@@ -52,10 +50,8 @@ MethodOfLinesIntegrator::MethodOfLinesIntegrator(
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(patch_strategy != ((MethodOfLinesPatchStrategy *)NULL));
 
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->registerRestartItem(d_object_name,
-         this);
-   }
+   tbox::RestartManager::getManager()->registerRestartItem(d_object_name,
+      this);
 
    /*
     * hier::Variable contexts used in algorithm.
@@ -102,9 +98,7 @@ MethodOfLinesIntegrator::MethodOfLinesIntegrator(
 
 MethodOfLinesIntegrator::~MethodOfLinesIntegrator()
 {
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->unregisterRestartItem(d_object_name);
-   }
+   tbox::RestartManager::getManager()->unregisterRestartItem(d_object_name);
 }
 
 /*

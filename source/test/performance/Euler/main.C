@@ -415,12 +415,10 @@ int main(
             "HyperbolicLevelIntegrator",
             input_db->getDatabase("HyperbolicLevelIntegrator"),
             euler_model,
-            true,
             use_refined_timestepping));
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
          new mesh::StandardTagAndInitialize(
-            dim,
             "StandardTagAndInitialize",
             hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));

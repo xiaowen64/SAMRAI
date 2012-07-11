@@ -372,7 +372,6 @@ int main(
             input_db->getDatabase("HyperbolicLevelIntegrator"),
             linear_advection_model,
             mblk_patch_hierarchy,
-            true,
             use_refined_timestepping));
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
@@ -623,7 +622,6 @@ void setupHierarchy(
    }
 
    mblk_hierarchy.reset(
-      new hier::PatchHierarchy("PatchHierarchy",
-         geometry, mult_db, true));
+      new hier::PatchHierarchy("PatchHierarchy", geometry, mult_db));
 
 }

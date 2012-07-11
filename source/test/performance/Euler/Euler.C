@@ -125,7 +125,7 @@ Euler::Euler(
    const tbox::Dimension& dim,
    boost::shared_ptr<tbox::Database> input_db,
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geom):
-   algs::HyperbolicPatchStrategy(dim),
+   algs::HyperbolicPatchStrategy(),
    d_object_name(object_name),
    d_grid_geometry(grid_geom),
    d_dim(dim),
@@ -1819,7 +1819,8 @@ void Euler::boundaryReset(
  *************************************************************************
  */
 
-hier::IntVector Euler::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
+hier::IntVector Euler::getRefineOpStencilWidth(
+   const tbox::Dimension &dim) const
 {
    return hier::IntVector(dim, 1);
 }
@@ -2007,9 +2008,10 @@ void Euler::postprocessRefine(
  *************************************************************************
  */
 
-hier::IntVector Euler::getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
+hier::IntVector Euler::getCoarsenOpStencilWidth(
+   const tbox::Dimension &dim) const
 {
-   return hier::IntVector(d_dim, 0);
+   return hier::IntVector(dim, 0);
 }
 
 void Euler::postprocessCoarsen(

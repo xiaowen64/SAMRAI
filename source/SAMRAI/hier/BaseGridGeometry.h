@@ -119,10 +119,6 @@ public:
     *
     * This constructor for BaseGridGeometry initializes data members
     * based on parameters read from the specified input database.
-    * The constructor also registers this object for restart using
-    * the specified object name, when the boolean argument is true.
-    * Whether the object will write its state to restart files during
-    * program execution is determined by this argument.
     *
     * This constructor is intended for use when directly constructing a
     * BaseGridGeometry without using a derived child class.  The object will
@@ -136,35 +132,25 @@ public:
     * @param[in]  dim
     * @param[in]  object_name
     * @param[in]  input_db
-    * @param[in]  register_for_restart Flag indicating whether this instance
-    *             should be registered for restart.  @b Default: true
     */
    BaseGridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& input_db,
-      bool register_for_restart = true);
+      const boost::shared_ptr<tbox::Database>& input_db);
 
    /*!
     * @brief Construct a new BaseGridGeometry object based on arguments.
     *
     * This constructor creates a new BaseGridGeometry object based on the
-    * arguments, rather than relying on input or restart data.  The
-    * constructor also registers this object for restart using
-    * the specified object name, when the boolean argument is true.
-    * Whether the object will write its state to restart files during
-    * program execution is determined by this argument.
+    * arguments, rather than relying on input or restart data.
     *
     * @param[in]  object_name
     * @param[in]  domain      Each element of the array describes the index
     *                         space for a block.
-    * @param[in]  register_for_restart Flag indicating whether this instance
-    *             should be registered for restart.  @b Default: true
     */
    BaseGridGeometry(
       const std::string& object_name,
-      const BoxContainer& domain,
-      bool register_for_restart = true);
+      const BoxContainer& domain);
 
    /*!
     * @brief Virtual destructor
@@ -495,16 +481,13 @@ public:
     *
     * @param[in]     fine_geom_name std::string name of the geometry object
     * @param[in]     refine_ratio the refinement ratio.
-    * @param[in]     register_for_restart Flag to indicate whether to register
-    *                for restart.
     *
     * @return The pointer to the grid geometry object.
     */
    virtual boost::shared_ptr<BaseGridGeometry>
    makeRefinedGridGeometry(
       const std::string& fine_geom_name,
-      const IntVector& refine_ratio,
-      bool register_for_restart) const = 0;
+      const IntVector& refine_ratio) const = 0;
 
    /*!
     * @brief Create a pointer to a coarsened version of this grid geometry
@@ -515,16 +498,13 @@ public:
     *
     * @param[in]     coarse_geom_name std::string name of the geometry object
     * @param[in]     coarsen_ratio the coasening ratio
-    * @param[in]     register_for_restart Flag to indicate whether to register
-    *                for restart.
     *
     * @return The pointer to a coarsened version of this grid geometry object.
     */
    virtual boost::shared_ptr<BaseGridGeometry>
    makeCoarsenedGridGeometry(
       const std::string& coarse_geom_name,
-      const IntVector& coarsen_ratio,
-      bool register_for_restart) const = 0;
+      const IntVector& coarsen_ratio) const = 0;
 
    /*!
     * @brief Compute and set grid data for patch.
@@ -1183,8 +1163,8 @@ protected:
     * @brief Construct a new BaseGridGeometry object in its default state.
     *
     * This constructor is intended to be called from a child class derived
-    * from BaseGridGeometry.  It will not register for restart nor read any
-    * input data, as it is expected that the child class will handle those
+    * from BaseGridGeometry.  It will not read any
+    * input data, as it is expected that the child class will handle that
     * operations.
     *
     * @param[in]  dim
@@ -1200,8 +1180,8 @@ protected:
     * @brief Construct a new BaseGridGeometry object in its default state.
     *
     * This constructor is intended to be called from a child class derived
-    * from BaseGridGeometry.  It will not register for restart nor read any
-    * input data, as it is expected that the child class will handle those
+    * from BaseGridGeometry.  It will not read any
+    * input data, as it is expected that the child class will handle that
     * operations.
     *
     * @param[in]  dim
@@ -1218,14 +1198,11 @@ protected:
     * @param[in]  domain      Each element of the array describes the index
     *                         space for a block.
     * @param[in]  op_reg
-    * @param[in]  register_for_restart Flag indicating whether this instance
-    *             should be registered for restart.  @b Default: true
     */
    BaseGridGeometry(
       const std::string& object_name,
       const BoxContainer& domain,
-      const boost::shared_ptr<TransferOperatorRegistry>& op_reg,
-      bool register_for_restart);
+      const boost::shared_ptr<TransferOperatorRegistry>& op_reg);
 
    /*!
     * @brief Read multiblock metadata input from the input database
@@ -1443,11 +1420,6 @@ private:
     * geometry.
     */
    bool d_has_enhanced_connectivity;
-
-   /*!
-    * Flag to determine whether this instance is registered for restart.
-    */
-   bool d_registered_for_restart;
 
    static boost::shared_ptr<tbox::Timer> t_find_patches_touching_boundaries;
    static boost::shared_ptr<tbox::Timer> t_touching_boundaries_init;

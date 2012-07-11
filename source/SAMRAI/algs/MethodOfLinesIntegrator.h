@@ -123,11 +123,7 @@ public:
     * (containing problem-specific numerical routines) and initializes
     * integration algorithm parameters provided in the specified input
     * database and in the restart database corresponding to the
-    * specified object_name.  The constructor also registers this object
-    * for restart using the specified object name when the boolean
-    * argument is true.  Whether object will write its state to
-    * restart files during program execution is determined by this argument.
-    * Note that it has a default state of true.
+    * specified object_name.
     *
     * When assertion checking is active, passing in any null pointer
     * or an empty std::string will result in an unrecoverable assertion.
@@ -135,12 +131,11 @@ public:
    MethodOfLinesIntegrator(
       const std::string& object_name,
       const boost::shared_ptr<tbox::Database>& input_db,
-      MethodOfLinesPatchStrategy* patch_strategy,
-      bool register_for_restart = true);
+      MethodOfLinesPatchStrategy* patch_strategy);
 
    /*!
     * The destructor for MethodOfLinesIntegrator unregisters
-    * the integrator object with the restart manager when so registered.
+    * the integrator object with the restart manager.
     */
    virtual ~MethodOfLinesIntegrator();
 
@@ -359,11 +354,9 @@ private:
 
    /*
     * The object name is used as a handle to the database stored in
-    * restart files and for error reporting purposes.  The boolean
-    * is used to control restart file writing operations.
+    * restart files and for error reporting purposes.
     */
    std::string d_object_name;
-   bool d_registered_for_restart;
 
    /*
     * Order of the Runge-Kutta method, and array of alpha values used in

@@ -49,10 +49,8 @@ PatchHierarchy::s_initialize_finalize_handler(
 PatchHierarchy::PatchHierarchy(
    const std::string& object_name,
    const boost::shared_ptr<BaseGridGeometry>& geometry,
-   const boost::shared_ptr<tbox::Database>& input_db,
-   bool register_for_restart):
+   const boost::shared_ptr<tbox::Database>& input_db):
    d_dim(geometry->getDim()),
-   d_registered_for_restart(register_for_restart),
    d_number_levels(0),
    d_patch_descriptor(VariableDatabase::getDatabase()->getPatchDescriptor()),
    d_patch_factory(new PatchFactory),
@@ -98,10 +96,7 @@ PatchHierarchy::PatchHierarchy(
     */
    getFromInput(input_db);
 
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->registerRestartItem(d_object_name,
-         this);
-   }
+   tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 }
 
 /*
@@ -116,9 +111,7 @@ PatchHierarchy::PatchHierarchy(
 
 PatchHierarchy::~PatchHierarchy()
 {
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->unregisterRestartItem(d_object_name);
-   }
+   tbox::RestartManager::getManager()->unregisterRestartItem(d_object_name);
 }
 
 /*
@@ -438,8 +431,7 @@ PatchHierarchy::getConnector(
 boost::shared_ptr<PatchHierarchy>
 PatchHierarchy::makeRefinedPatchHierarchy(
    const std::string& fine_hierarchy_name,
-   const IntVector& refine_ratio,
-   bool register_for_restart) const
+   const IntVector& refine_ratio) const
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, refine_ratio);
    TBOX_ASSERT(!fine_hierarchy_name.empty());
@@ -449,14 +441,12 @@ PatchHierarchy::makeRefinedPatchHierarchy(
    boost::shared_ptr<BaseGridGeometry> fine_geometry(
       d_grid_geometry->makeRefinedGridGeometry(
          fine_hierarchy_name + "GridGeometry",
-         refine_ratio,
-         register_for_restart));
+         refine_ratio));
 
    PatchHierarchy* fine_hierarchy =
       new PatchHierarchy(fine_hierarchy_name,
          fine_geometry,
-         boost::shared_ptr<tbox::Database>(),
-         register_for_restart);
+         boost::shared_ptr<tbox::Database>());
 
    // Set hierarchy parameters.
 
@@ -509,8 +499,7 @@ PatchHierarchy::makeRefinedPatchHierarchy(
 boost::shared_ptr<PatchHierarchy>
 PatchHierarchy::makeCoarsenedPatchHierarchy(
    const std::string& coarse_hierarchy_name,
-   const IntVector& coarsen_ratio,
-   bool register_for_restart) const
+   const IntVector& coarsen_ratio) const
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, coarsen_ratio);
    TBOX_ASSERT(!coarse_hierarchy_name.empty());
@@ -520,14 +509,12 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
    boost::shared_ptr<BaseGridGeometry> coarse_geometry(
       d_grid_geometry->makeCoarsenedGridGeometry(
          coarse_hierarchy_name + "GridGeometry",
-         coarsen_ratio,
-         register_for_restart));
+         coarsen_ratio));
 
    PatchHierarchy* coarse_hierarchy =
       new PatchHierarchy(coarse_hierarchy_name,
          coarse_geometry,
-         boost::shared_ptr<tbox::Database>(),
-         register_for_restart);
+         boost::shared_ptr<tbox::Database>());
 
    // Set hierarchy parameters.
 

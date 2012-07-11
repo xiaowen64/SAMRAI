@@ -48,10 +48,9 @@ Statistician::s_finalize_handler(
 
 Statistician*
 Statistician::createStatistician(
-   bool register_for_restart,
    bool read_from_restart)
 {
-   makeStatisticianInstance(register_for_restart, read_from_restart);
+   makeStatisticianInstance(read_from_restart);
    return s_statistician_instance;
 }
 
@@ -148,7 +147,6 @@ Statistician::~Statistician()
 
 void
 Statistician::makeStatisticianInstance(
-   bool register_for_restart,
    bool read_from_restart)
 {
    /* If reading from restart then force new instance
@@ -161,19 +159,16 @@ Statistician::makeStatisticianInstance(
 
    if (!s_statistician_instance) {
       s_statistician_instance = new Statistician();
-      s_statistician_instance->initRestartDatabase(register_for_restart,
-         read_from_restart);
+      s_statistician_instance->initRestartDatabase(read_from_restart);
    }
 }
 
 void
 Statistician::initRestartDatabase(
-   bool register_for_restart,
    bool read_from_restart)
 {
    d_restart_database_instance =
       new StatisticRestartDatabase("StatisticRestartDatabase",
-         register_for_restart,
          read_from_restart);
 }
 
@@ -2571,17 +2566,12 @@ Statistician::printSpreadSheetOutputForProcessor(
 
 StatisticRestartDatabase::StatisticRestartDatabase(
    const std::string& object_name,
-   bool register_for_restart,
-   bool read_from_restart)
+   bool read_from_restart) :
+  d_object_name(object_name)
 {
    TBOX_ASSERT(!object_name.empty());
 
-   d_object_name = object_name;
-   d_registered_for_restart = register_for_restart;
-
-   if (d_registered_for_restart) {
-      RestartManager::getManager()->registerRestartItem(d_object_name, this);
-   }
+   RestartManager::getManager()->registerRestartItem(d_object_name, this);
 
    bool is_from_restart = RestartManager::getManager()->isFromRestart();
    if (is_from_restart && read_from_restart) {
@@ -2591,9 +2581,7 @@ StatisticRestartDatabase::StatisticRestartDatabase(
 
 StatisticRestartDatabase::~StatisticRestartDatabase()
 {
-   if (d_registered_for_restart) {
-      RestartManager::getManager()->unregisterRestartItem(d_object_name);
-   }
+   RestartManager::getManager()->unregisterRestartItem(d_object_name);
 }
 
 void StatisticRestartDatabase::putToRestart(

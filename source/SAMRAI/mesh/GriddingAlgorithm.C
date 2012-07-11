@@ -86,14 +86,12 @@ GriddingAlgorithm::GriddingAlgorithm(
    const boost::shared_ptr<TagAndInitializeStrategy>& tag_init_strategy,
    const boost::shared_ptr<BoxGeneratorStrategy>& generator,
    const boost::shared_ptr<LoadBalanceStrategy>& balancer,
-   const boost::shared_ptr<LoadBalanceStrategy>& balancer0,
-   bool register_for_restart):
+   const boost::shared_ptr<LoadBalanceStrategy>& balancer0):
    GriddingAlgorithmStrategy(),
    d_hierarchy(hierarchy),
    d_connector_width_requestor(),
    d_buf_tag_ghosts(hierarchy->getDim(), 0),
    d_object_name(object_name),
-   d_registered_for_restart(register_for_restart),
    d_tag_init_strategy(tag_init_strategy),
    d_box_generator(generator),
    d_load_balancer(balancer),
@@ -123,10 +121,8 @@ GriddingAlgorithm::GriddingAlgorithm(
    TBOX_ASSERT(generator);
    TBOX_ASSERT(balancer);
 
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->
-      registerRestartItem(d_object_name, this);
-   }
+   tbox::RestartManager::getManager()->
+   registerRestartItem(d_object_name, this);
 
    d_hierarchy->registerConnectorWidthRequestor(
       d_connector_width_requestor);
@@ -281,9 +277,7 @@ GriddingAlgorithm::GriddingAlgorithm(
  */
 GriddingAlgorithm::~GriddingAlgorithm()
 {
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->unregisterRestartItem(d_object_name);
-   }
+   tbox::RestartManager::getManager()->unregisterRestartItem(d_object_name);
    delete d_mb_tagger_strategy;
    d_mb_tagger_strategy = NULL;
 }

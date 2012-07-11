@@ -395,7 +395,7 @@ int main(
          new algs::HyperbolicLevelIntegrator(
             "HyperbolicLevelIntegrator",
             hli_db,
-            linear_advection_model, true, use_refined_timestepping));
+            linear_advection_model, use_refined_timestepping));
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
          new mesh::StandardTagAndInitialize(

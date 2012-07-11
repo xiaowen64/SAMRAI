@@ -108,11 +108,7 @@ public:
     * Constructor for CartesianGridGeometry initializes data
     * members based on parameters read from the specified input database
     * or from the restart database corresponding to the specified
-    * object name.  The constructor also registers this object
-    * for restart using the specified object name when the boolean
-    * argument is true.  Whether object will write its state to restart
-    * files during program execution is determined by this argument.
-    * Note that it has a default state of true.
+    * object name.
     *
     * Errors: passing in a null database pointer or an empty std::string
     * will result in an unrecoverable assertion.
@@ -120,16 +116,11 @@ public:
    CartesianGridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& input_db,
-      bool register_for_restart = true);
+      const boost::shared_ptr<tbox::Database>& input_db);
 
    /**
     * Constructor for CartesianGridGeometry sets data members
-    * based on arguments.  The constructor also registers this object
-    * for restart using the specified object name when the boolean
-    * argument is true.  Whether object will write its state to restart
-    * files during program execution is determined by this argument.
-    * Note that it has a default state of true.
+    * based on arguments.
     *
     * Errors: passing in an empty std::string, or null data pointers will
     * result in an unrecoverable assertion.
@@ -138,8 +129,7 @@ public:
       const std::string& object_name,
       const double* x_lo,
       const double* x_up,
-      const hier::BoxContainer& domain,
-      bool register_for_restart = true);
+      const hier::BoxContainer& domain);
 
    /*!
     * @brief Construct a new coarsened/refined CartesianGridGeometry object
@@ -158,21 +148,18 @@ public:
     * @param[in] domain The coarsened/refined domain.
     * @param[in] op_reg The same operator registry as the uncoarsened/unrefined
     *            grid geometry.
-    * @param[in] register_for_restart Flag indicating whether this instance
-    *            should be registered for restart.
     */
    CartesianGridGeometry(
       const std::string& object_name,
       const double* x_lo,
       const double* x_up,
       const hier::BoxContainer& domain,
-      const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg,
-      bool register_for_restart);
+      const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg);
 
    /**
     * Destructor for CartesianGridGeometry deallocates
     * data describing grid geometry and unregisters the object with
-    * the restart manager if previously registered.
+    * the restart manager.
     */
    virtual ~CartesianGridGeometry();
 
@@ -183,8 +170,7 @@ public:
    boost::shared_ptr<hier::BaseGridGeometry>
    makeRefinedGridGeometry(
       const std::string& fine_geom_name,
-      const hier::IntVector& refine_ratio,
-      bool register_for_restart) const;
+      const hier::IntVector& refine_ratio) const;
 
    /**
     * Create and return a pointer to a coarsened version of this Cartesian grid
@@ -193,8 +179,7 @@ public:
    boost::shared_ptr<hier::BaseGridGeometry>
    makeCoarsenedGridGeometry(
       const std::string& coarse_geom_name,
-      const hier::IntVector& coarsen_ratio,
-      bool register_for_restart) const;
+      const hier::IntVector& coarsen_ratio) const;
 
    /*
     * Compute grid data for patch and assign new geom_CartesianPatchGeometry
@@ -304,11 +289,6 @@ private:
     */
    void
    getFromRestart();
-
-   /*
-    * Flag to determine whether this instance is registered for restart.
-    */
-   bool d_registered_for_restart;
 
    double d_dx[SAMRAI::MAX_DIM_VAL];     // mesh increments for level 0.
    double d_x_lo[SAMRAI::MAX_DIM_VAL];   // spatial coordinates of lower corner

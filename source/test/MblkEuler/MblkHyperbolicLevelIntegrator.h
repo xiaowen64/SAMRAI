@@ -183,11 +183,7 @@ public:
     * integration parameters to default values and constructs standard
     * communication algorithms.  Other data members are read in from
     * the specified input database or the restart database corresponding
-    * to the specified object_name.  The constructor also registers
-    * this object for restart using the specified object name when
-    * the boolean argument is true.  Whether object will write its state to
-    * restart files during program execution is determined by this argument.
-    * Note that it has a default state of true.  This class is used by
+    * to the specified object_name.  This class is used by
     * the time refinement integrator for refined timestepping when the
     * use_time_refinement argument is true, and for synchronized
     * timestepping when the boolean is false.
@@ -201,12 +197,11 @@ public:
       const boost::shared_ptr<tbox::Database> input_db,
       MblkHyperbolicPatchStrategy* patch_strategy,
       const boost::shared_ptr<hier::PatchHierarchy>& mblk_hierarchy,
-      const bool register_for_restart = true,
       const bool use_time_refinement = true);
 
    /**
     * The destructor for MblkHyperbolicLevelIntegrator unregisters
-    * the integrator object with the restart manager when so registered.
+    * the integrator object with the restart manager.
     */
    virtual ~MblkHyperbolicLevelIntegrator();
 
@@ -824,15 +819,13 @@ private:
 
    /*
     * The object name is used as a handle to databases stored in
-    * restart files and for error reporting purposes.  The boolean
-    * is used to control restart file writing operations.
+    * restart files and for error reporting purposes.
     */
    string d_object_name;
 
    const tbox::Dimension d_dim;
 
    bool d_use_time_refinement;
-   bool d_registered_for_restart;
 
    /*
     * Courant-Friedrichs-Levy parameters for time increment selection.

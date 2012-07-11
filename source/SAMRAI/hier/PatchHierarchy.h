@@ -253,8 +253,7 @@ public:
  *
  * The constructor for the PatchHierarchy initializes the number of
  * levels to zero, sets the geometry for the PatchHierarchy, and
- * registers the PatchHierarchy for restart with the specified name
- * by default.
+ * registers the PatchHierarchy for restart with the specified name.
  *
  * @par Errors/Assertions
  * Passing in an empty std::string or a null grid geometry pointer
@@ -264,14 +263,12 @@ public:
  * @param[in]  object_name
  * @param[in]  geometry
  * @param[in]  input_db Input database specifying hierarchy parameters.
- * @param[in]  register_for_restart @b Default: true
  */
    PatchHierarchy(
       const std::string& object_name,
       const boost::shared_ptr<BaseGridGeometry>& geometry,
       const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>(),
-      bool register_for_restart = true);
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * @brief Destructor for PatchHierarchy.
@@ -298,13 +295,11 @@ public:
     *
     * @param[in]  fine_hierarchy_name
     * @param[in]  refine_ratio
-    * @param[in]  register_for_restart
     */
    boost::shared_ptr<PatchHierarchy>
    makeRefinedPatchHierarchy(
       const std::string& fine_hierarchy_name,
-      const IntVector& refine_ratio,
-      bool register_for_restart) const;
+      const IntVector& refine_ratio) const;
 
    /*!
     * @brief Create a coarsened version of this patch hierarchy.
@@ -327,13 +322,11 @@ public:
     *
     * @param[in]  coarse_hierarchy_name
     * @param[in]  coarsen_ratio
-    * @param[in]  register_for_restart
     */
    boost::shared_ptr<PatchHierarchy>
    makeCoarsenedPatchHierarchy(
       const std::string& coarse_hierarchy_name,
-      const IntVector& coarsen_ratio,
-      bool register_for_restart) const;
+      const IntVector& coarsen_ratio) const;
 
 /*
  * TODO: Is it an error to call this method when a level with the given
@@ -994,11 +987,6 @@ private:
     * @brief Dimension of the object
     */
    const tbox::Dimension d_dim;
-
-   /*!
-    * @brief Boolean telling if object is registered for restart
-    */
-   bool d_registered_for_restart;
 
    /*!
     * @brief Number of levels currently in the hierarchy

@@ -437,7 +437,6 @@ int main(
             "HyperbolicLevelIntegrator",
             input_db->getDatabase("HyperbolicLevelIntegrator"),
             euler_model,
-            true,
             use_refined_timestepping));
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(

@@ -64,10 +64,8 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
    const boost::shared_ptr<tbox::Database>& input_db,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const boost::shared_ptr<TimeRefinementLevelStrategy>& level_integrator,
-   const boost::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_algorithm,
-   bool register_for_restart):
+   const boost::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_algorithm):
    d_object_name(object_name),
-   d_registered_for_restart(register_for_restart),
    d_patch_hierarchy(hierarchy),
    d_refine_level_integrator(level_integrator),
    d_gridding_algorithm(gridding_algorithm),
@@ -85,10 +83,8 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
    TBOX_ASSERT(level_integrator);
    TBOX_ASSERT(gridding_algorithm);
 
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->registerRestartItem(d_object_name,
-         this);
-   }
+   tbox::RestartManager::getManager()->registerRestartItem(d_object_name,
+      this);
 
    d_use_refined_timestepping = level_integrator->usingRefinedTimestepping();
 
@@ -193,9 +189,7 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
 
 TimeRefinementIntegrator::~TimeRefinementIntegrator()
 {
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->unregisterRestartItem(d_object_name);
-   }
+   tbox::RestartManager::getManager()->unregisterRestartItem(d_object_name);
 }
 
 /*

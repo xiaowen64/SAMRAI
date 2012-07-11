@@ -88,8 +88,8 @@ using namespace SAMRAI;
 
 SkeletonOutersideDoubleWeightedAverage::SkeletonOutersideDoubleWeightedAverage(
    const tbox::Dimension& dim):
-   d_dim(dim),
-   hier::CoarsenOperator("SKELETON_CONSERVATIVE_COARSEN")
+   hier::CoarsenOperator("SKELETON_CONSERVATIVE_COARSEN"),
+   d_dim(dim)
 {
 }
 
@@ -104,7 +104,7 @@ int SkeletonOutersideDoubleWeightedAverage::getOperatorPriority() const
 
 hier::IntVector
 SkeletonOutersideDoubleWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const {
-   return hier::IntVector(d_dim, 0);
+   return hier::IntVector(dim, 0);
 }
 
 void SkeletonOutersideDoubleWeightedAverage::coarsen(

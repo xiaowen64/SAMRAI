@@ -78,24 +78,20 @@ boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_get_boundary_boxes;
 BaseGridGeometry::BaseGridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& input_db,
-   bool register_for_restart):
+   const boost::shared_ptr<tbox::Database>& input_db):
    d_transfer_operator_registry(
       boost::make_shared<TransferOperatorRegistry>(dim)),
    d_dim(dim),
    d_object_name(object_name),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
-   d_has_enhanced_connectivity(false),
-   d_registered_for_restart(register_for_restart)
+   d_has_enhanced_connectivity(false)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
 
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->registerRestartItem(getObjectName(),
-         this);
-   }
+   tbox::RestartManager::getManager()->registerRestartItem(getObjectName(),
+      this);
 
    bool is_from_restart = tbox::RestartManager::getManager()->isFromRestart();
    if (is_from_restart) {
@@ -116,8 +112,7 @@ BaseGridGeometry::BaseGridGeometry(
  */
 BaseGridGeometry::BaseGridGeometry(
    const std::string& object_name,
-   const BoxContainer& domain,
-   bool register_for_restart):
+   const BoxContainer& domain):
    d_transfer_operator_registry(
       boost::make_shared<TransferOperatorRegistry>(
          (*(domain.begin())).getDim())),
@@ -127,16 +122,13 @@ BaseGridGeometry::BaseGridGeometry(
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
-   d_has_enhanced_connectivity(false),
-   d_registered_for_restart(register_for_restart)
+   d_has_enhanced_connectivity(false)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(domain.size() > 0);
 
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->
-      registerRestartItem(getObjectName(), this);
-   }
+   tbox::RestartManager::getManager()->
+   registerRestartItem(getObjectName(), this);
 
    std::set<int> block_numbers;
    for (BoxContainer::const_iterator itr = domain.begin(); itr != domain.end();
@@ -166,8 +158,7 @@ BaseGridGeometry::BaseGridGeometry(
    d_singularity(1),
    d_singularity_indices(1),
    d_reduced_connect(1),
-   d_has_enhanced_connectivity(false),
-   d_registered_for_restart(false)
+   d_has_enhanced_connectivity(false)
 {
    TBOX_ASSERT(!object_name.empty());
 }
@@ -187,8 +178,7 @@ BaseGridGeometry::BaseGridGeometry(
    d_singularity(1),
    d_singularity_indices(1),
    d_reduced_connect(1),
-   d_has_enhanced_connectivity(false),
-   d_registered_for_restart(false)
+   d_has_enhanced_connectivity(false)
 {
    TBOX_ASSERT(!object_name.empty());
 }
@@ -196,8 +186,7 @@ BaseGridGeometry::BaseGridGeometry(
 BaseGridGeometry::BaseGridGeometry(
    const std::string& object_name,
    const BoxContainer& domain,
-   const boost::shared_ptr<TransferOperatorRegistry>& op_reg,
-   bool register_for_restart) :
+   const boost::shared_ptr<TransferOperatorRegistry>& op_reg) :
    d_transfer_operator_registry(op_reg),
    d_dim((*(domain.begin())).getDim()),
    d_object_name(object_name),
@@ -205,16 +194,13 @@ BaseGridGeometry::BaseGridGeometry(
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
-   d_has_enhanced_connectivity(false),
-   d_registered_for_restart(register_for_restart)
+   d_has_enhanced_connectivity(false)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(domain.size() > 0);
 
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->
-      registerRestartItem(getObjectName(), this);
-   }
+   tbox::RestartManager::getManager()->
+   registerRestartItem(getObjectName(), this);
 
    std::set<int> block_numbers;
    for (BoxContainer::const_iterator itr = domain.begin(); itr != domain.end();
@@ -239,9 +225,7 @@ BaseGridGeometry::BaseGridGeometry(
 
 BaseGridGeometry::~BaseGridGeometry()
 {
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->unregisterRestartItem(getObjectName());
-   }
+   tbox::RestartManager::getManager()->unregisterRestartItem(getObjectName());
 }
 
 /*

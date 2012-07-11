@@ -203,11 +203,15 @@ public:
       const int tag_index,
       const bool uses_gradient_detector_too);
 
+   //@{
+   //! @name Required implementations of HyperbolicPatchStrategy pure virtuals.
+
    ///
    ///  The following routines:
    ///
    ///      setPhysicalBoundaryConditions(),
    ///      getRefineOpStencilWidth(),
+   ///      preprocessRefine()
    ///      postprocessRefine()
    ///
    ///  are concrete implementations of functions declared in the
@@ -232,6 +236,18 @@ public:
    hier::IntVector
    getRefineOpStencilWidth( const tbox::Dimension &dim ) const;
 
+   void
+   preprocessRefine(
+      hier::Patch& fine,
+      const hier::Patch& coarse,
+      const hier::Box& fine_box,
+      const hier::IntVector& ratio) {
+      NULL_USE(fine);
+      NULL_USE(coarse);
+      NULL_USE(fine_box);
+      NULL_USE(ratio);
+   }
+
    /**
     * Refine velocity and pressure from coarse patch to fine patch
     * so that momentum and total energy are conserved.
@@ -247,6 +263,7 @@ public:
    ///  The following routines:
    ///
    ///      getCoarsenOpStencilWidth(),
+   ///      preprocessCoarsen()
    ///      postprocessCoarsen()
    ///
    ///  are concrete implementations of functions declared in the
@@ -259,6 +276,18 @@ public:
    hier::IntVector
    getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const;
 
+   void
+   preprocessCoarsen(
+      hier::Patch& coarse,
+      const hier::Patch& fine,
+      const hier::Box& coarse_box,
+      const hier::IntVector& ratio) {
+      NULL_USE(coarse);
+      NULL_USE(fine);
+      NULL_USE(coarse_box);
+      NULL_USE(ratio);
+   }
+
    /**
     * Coarsen velocity and pressure from coarse patch to fine patch
     * so that momentum and total energy are conserved.
@@ -269,6 +298,8 @@ public:
       const hier::Patch& fine,
       const hier::Box& coarse_box,
       const hier::IntVector& ratio);
+
+   //@}
 
    /**
     * Write state of Euler object to the given database for restart.

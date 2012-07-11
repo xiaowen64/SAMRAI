@@ -172,16 +172,14 @@ int HierarchyTester::runHierarchyTestAndVerify()
       d_test_patch_hierarchy =
          d_initial_patch_hierarchy->makeRefinedPatchHierarchy(
             "FinePatchHierarchy",
-            d_ratio,
-            false);
+            d_ratio);
    }
 
    if (d_do_coarsen_test) {
       d_test_patch_hierarchy =
          d_initial_patch_hierarchy->makeCoarsenedPatchHierarchy(
             "CoarsePatchHierarchy",
-            d_ratio,
-            false);
+            d_ratio);
    }
 
    /*

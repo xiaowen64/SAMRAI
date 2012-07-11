@@ -322,8 +322,7 @@ int main(
          new hier::PatchHierarchy(
             "PatchHierarchy",
             patch_data_test->getGridGeometry(),
-            hier_db,
-            true));
+            hier_db));
 
       boost::shared_ptr<MultiblockTester> comm_tester(
          new MultiblockTester(

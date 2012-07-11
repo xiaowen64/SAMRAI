@@ -151,11 +151,7 @@ public:
     * hierarchy.   Some data is set to default values; others are read
     * from the specified input database and the restart database
     * corresponding to the specified object_name.  Consult top of
-    * this header file for further details.  The constructor also
-    * registers this object for restart using the specified object name
-    * when the boolean argument is true.  Whether object will write its state
-    * to restart files during program execution is determined by this argument.
-    * Note that it has a default state of true.
+    * this header file for further details.
     *
     * Note that this object also invokes the variable creation and
     * registration process in the level strategy.
@@ -171,12 +167,11 @@ public:
       const boost::shared_ptr<tbox::Database>& input_db,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const boost::shared_ptr<TimeRefinementLevelStrategy>& level_integrator,
-      const boost::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_algorithm,
-      bool register_for_restart = true);
+      const boost::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_algorithm);
 
    /**
     * The destructor for TimeRefinementIntegrator unregisters
-    * the integrator object with the restart manager when so registered.
+    * the integrator object with the restart manager.
     */
    virtual ~TimeRefinementIntegrator();
 
@@ -609,11 +604,9 @@ private:
 
    /*
     * The object name is used as a handle to databases stored in
-    * restart files and for error reporting purposes.  The boolean
-    * is used to control restart file writing operations.
+    * restart files and for error reporting purposes.
     */
    std::string d_object_name;
-   bool d_registered_for_restart;
 
    /*
     * Pointers to the patch hierarchy, level integration and gridding

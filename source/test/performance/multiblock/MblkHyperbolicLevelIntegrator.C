@@ -154,13 +154,11 @@ MblkHyperbolicLevelIntegrator::MblkHyperbolicLevelIntegrator(
    boost::shared_ptr<tbox::Database> input_db,
    MblkHyperbolicPatchStrategy* patch_strategy,
    boost::shared_ptr<hier::PatchHierarchy> mblk_hierarchy,
-   bool register_for_restart,
    bool use_time_refinement):
    d_patch_strategy(patch_strategy),
    d_object_name(object_name),
    d_dim(dim),
    d_use_time_refinement(use_time_refinement),
-   d_registered_for_restart(register_for_restart),
    d_cfl(tbox::MathUtilities<double>::getSignalingNaN()),
    d_cfl_init(tbox::MathUtilities<double>::getSignalingNaN()),
    d_lag_dt_computation(true),
@@ -233,10 +231,8 @@ MblkHyperbolicLevelIntegrator::MblkHyperbolicLevelIntegrator(
    TBOX_ASSERT(patch_strategy != ((MblkHyperbolicPatchStrategy *)NULL));
 #endif
 
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->
-      registerRestartItem(d_object_name, this);
-   }
+   tbox::RestartManager::getManager()->
+   registerRestartItem(d_object_name, this);
 
    /*
     * Default parameter values.
@@ -357,9 +353,7 @@ MblkHyperbolicLevelIntegrator::MblkHyperbolicLevelIntegrator(
  */
 MblkHyperbolicLevelIntegrator::~MblkHyperbolicLevelIntegrator()
 {
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->unregisterRestartItem(d_object_name);
-   }
+   tbox::RestartManager::getManager()->unregisterRestartItem(d_object_name);
 }
 
 /*

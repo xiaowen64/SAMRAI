@@ -97,9 +97,8 @@ namespace geom {
 GridGeometry::GridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& input_db,
-   bool register_for_restart):
-   hier::BaseGridGeometry(dim, object_name, input_db, register_for_restart)
+   const boost::shared_ptr<tbox::Database>& input_db):
+   hier::BaseGridGeometry(dim, object_name, input_db)
 {
 }
 
@@ -114,9 +113,8 @@ GridGeometry::GridGeometry(
  */
 GridGeometry::GridGeometry(
    const std::string& object_name,
-   const hier::BoxContainer& domain,
-   bool register_for_restart):
-   hier::BaseGridGeometry(object_name, domain, register_for_restart)
+   const hier::BoxContainer& domain):
+   hier::BaseGridGeometry(object_name, domain)
 {
 }
 
@@ -138,9 +136,8 @@ GridGeometry::GridGeometry(
 GridGeometry::GridGeometry(
    const std::string& object_name,
    const hier::BoxContainer& domain,
-   const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg,
-   bool register_for_restart):
-   hier::BaseGridGeometry(object_name, domain, op_reg, register_for_restart)
+   const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg):
+   hier::BaseGridGeometry(object_name, domain, op_reg)
 {
 }
 
@@ -168,8 +165,7 @@ GridGeometry::~GridGeometry()
 boost::shared_ptr<hier::BaseGridGeometry>
 GridGeometry::makeCoarsenedGridGeometry(
    const std::string& coarse_geom_name,
-   const hier::IntVector& coarsen_ratio,
-   bool register_for_restart) const
+   const hier::IntVector& coarsen_ratio) const
 {
    const tbox::Dimension& dim(getDim());
 
@@ -213,8 +209,7 @@ GridGeometry::makeCoarsenedGridGeometry(
       boost::make_shared<GridGeometry>(
          coarse_geom_name,
          coarse_domain,
-         d_transfer_operator_registry,
-         register_for_restart));
+         d_transfer_operator_registry));
 
    coarse_geometry->initializePeriodicShift(getPeriodicShift(
       hier::IntVector::getOne(dim)));
@@ -234,8 +229,7 @@ GridGeometry::makeCoarsenedGridGeometry(
 boost::shared_ptr<hier::BaseGridGeometry>
 GridGeometry::makeRefinedGridGeometry(
    const std::string& fine_geom_name,
-   const hier::IntVector& refine_ratio,
-   bool register_for_restart) const
+   const hier::IntVector& refine_ratio) const
 {
    const tbox::Dimension& dim(getDim());
 
@@ -251,8 +245,7 @@ GridGeometry::makeRefinedGridGeometry(
       boost::make_shared<GridGeometry>(
          fine_geom_name,
          fine_domain,
-         d_transfer_operator_registry,
-         register_for_restart));
+         d_transfer_operator_registry));
 
    fine_geometry->initializePeriodicShift(getPeriodicShift(
       hier::IntVector::getOne(dim)));

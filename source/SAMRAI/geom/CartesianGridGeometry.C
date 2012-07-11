@@ -114,18 +114,14 @@ const int CartesianGridGeometry::GEOM_CARTESIAN_GRID_GEOMETRY_VERSION = 2;
 CartesianGridGeometry::CartesianGridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& input_db,
-   bool register_for_restart):
+   const boost::shared_ptr<tbox::Database>& input_db):
    GridGeometry(dim, object_name),
-   d_registered_for_restart(register_for_restart),
    d_domain_box(dim)
 {
    TBOX_ASSERT(input_db);
 
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->registerRestartItem(getObjectName(),
-         this);
-   }
+   tbox::RestartManager::getManager()->registerRestartItem(getObjectName(),
+      this);
 
    bool is_from_restart = tbox::RestartManager::getManager()->isFromRestart();
    if (is_from_restart) {
@@ -139,8 +135,7 @@ CartesianGridGeometry::CartesianGridGeometry(
    const std::string& object_name,
    const double* x_lo,
    const double* x_up,
-   const hier::BoxContainer& domain,
-   bool register_for_restart):
+   const hier::BoxContainer& domain):
    GridGeometry(domain.front().getDim(), object_name),
    d_domain_box(domain.front().getDim())
 {
@@ -148,12 +143,8 @@ CartesianGridGeometry::CartesianGridGeometry(
    TBOX_ASSERT(!(x_lo == (double *)NULL));
    TBOX_ASSERT(!(x_up == (double *)NULL));
 
-   d_registered_for_restart = register_for_restart;
-
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->
-      registerRestartItem(getObjectName(), this);
-   }
+   tbox::RestartManager::getManager()->
+   registerRestartItem(getObjectName(), this);
 
    setGeometryData(x_lo, x_up, domain);
 }
@@ -163,8 +154,7 @@ CartesianGridGeometry::CartesianGridGeometry(
    const double* x_lo,
    const double* x_up,
    const hier::BoxContainer& domain,
-   const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg,
-   bool register_for_restart) :
+   const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg) :
    GridGeometry(domain.front().getDim(), object_name, op_reg),
    d_domain_box(domain.front().getDim())
 {
@@ -172,12 +162,8 @@ CartesianGridGeometry::CartesianGridGeometry(
    TBOX_ASSERT(!(x_lo == (double *)NULL));
    TBOX_ASSERT(!(x_up == (double *)NULL));
 
-   d_registered_for_restart = register_for_restart;
-
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->
-      registerRestartItem(getObjectName(), this);
-   }
+   tbox::RestartManager::getManager()->
+   registerRestartItem(getObjectName(), this);
 
    setGeometryData(x_lo, x_up, domain);
 }
@@ -206,8 +192,7 @@ CartesianGridGeometry::~CartesianGridGeometry()
 boost::shared_ptr<hier::BaseGridGeometry>
 CartesianGridGeometry::makeRefinedGridGeometry(
    const std::string& fine_geom_name,
-   const hier::IntVector& refine_ratio,
-   bool register_for_restart) const
+   const hier::IntVector& refine_ratio) const
 {
    const tbox::Dimension dim(getDim());
 
@@ -223,8 +208,7 @@ CartesianGridGeometry::makeRefinedGridGeometry(
          d_x_lo,
          d_x_up,
          fine_domain,
-         d_transfer_operator_registry,
-         register_for_restart));
+         d_transfer_operator_registry));
 
    fine_geometry->initializePeriodicShift(getPeriodicShift(hier::
          IntVector::getOne(dim)));
@@ -244,8 +228,7 @@ CartesianGridGeometry::makeRefinedGridGeometry(
 boost::shared_ptr<hier::BaseGridGeometry>
 CartesianGridGeometry::makeCoarsenedGridGeometry(
    const std::string& coarse_geom_name,
-   const hier::IntVector& coarsen_ratio,
-   bool register_for_restart) const
+   const hier::IntVector& coarsen_ratio) const
 {
    const tbox::Dimension& dim(getDim());
 
@@ -287,8 +270,7 @@ CartesianGridGeometry::makeCoarsenedGridGeometry(
          d_x_lo,
          d_x_up,
          coarse_domain,
-         d_transfer_operator_registry,
-         register_for_restart));
+         d_transfer_operator_registry));
 
    coarse_geometry->initializePeriodicShift(getPeriodicShift(hier::
          IntVector::getOne(dim)));

@@ -255,7 +255,6 @@ int main(
          input_db->getDatabase("HyperbolicLevelIntegrator"),
          euler_model,
          mblk_patch_hierarchy,
-         true,
          use_refined_timestepping));
 
    //
@@ -496,7 +495,6 @@ void setupHierarchy(
       new hier::PatchHierarchy(
          "PatchHierarchy",
          geometry,
-         mult_db,
-         true));
+         mult_db));
 
 }

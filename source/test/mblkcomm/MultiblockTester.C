@@ -712,8 +712,7 @@ void MultiblockTester::setupHierarchy(
          cell_tagger,
          box_generator,
          load_balancer,
-         load_balancer,
-         true));
+         load_balancer));
 
    int fake_tag_buffer = 0;
 

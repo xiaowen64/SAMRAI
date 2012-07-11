@@ -72,13 +72,8 @@ public:
     * users can control whether statistic information will be written
     * to/read from restart files.
     *
-    * The statistic restart database object is also resistered for writing
-    * subsequent restart files when the first boolean argument is true.
-    * Whether the statistic database will write statistics to restart files
-    * during program execution is determined by this argument (true by
-    * default).  Regardless of the value of this argument, statistics that
-    * exist in the restart file will be read from restart when a run is
-    * restarted and the second argument is true.
+    * Statistics that exist in the restart file will be read from restart
+    * when a run is restarted and the second argument is true.
     *
     * Generally, this routine should only be called once during program
     * execution.  If the statistician has been previously created (e.g.,
@@ -87,7 +82,6 @@ public:
     */
    static Statistician *
    createStatistician(
-      bool register_for_restart = true,
       bool read_from_restart = true);
 
    /**
@@ -810,7 +804,6 @@ private:
 
    static void
    makeStatisticianInstance(
-      bool register_for_restart = true,
       bool read_from_restart = true);
 
    /*
@@ -818,7 +811,6 @@ private:
     */
    void
    initRestartDatabase(
-      bool register_for_restart,
       bool read_from_restart);
 
    /**
@@ -953,18 +945,17 @@ public:
    /*
     * The StatisticRestartDatabase constructor caches a copy of the
     * database object name and registers the object with the restart
-    * manager for subsequent restart files if the first boolean argument
-    * is true.  If the run is started froma restart file and the second
-    * boolean argument is true, we initialize the statistics from restart.
+    * manager for subsequent restart files.  If the run is started from
+    * a restart file and the boolean argument is true, we initialize
+    * the statistics from restart.
     */
    StatisticRestartDatabase(
       const std::string& object_name,
-      bool register_for_restart,
       bool read_from_restart);
 
    /*
     * The destructor for StatisticRestartDatabase unregisters
-    * the database object with the restart manager when so registered.
+    * the database object with the restart manager.
     */
    virtual ~StatisticRestartDatabase();
 
@@ -993,7 +984,6 @@ public:
 
 private:
    std::string d_object_name;
-   bool d_registered_for_restart;
 
    /*
     * Static integer constant describing this class's version number.

@@ -229,9 +229,7 @@ public:
     *
     * Gridding parameters are initialized from values provided in the
     * specified input and in the restart database corresponding to the
-    * specified object_name argument.  The constructor also registers
-    * this object for restart using the specified object name when the
-    * boolean argument is true (default).
+    * specified object_name argument.
     *
     * If assertion checking is turned on, an unrecoverable assertion
     * will result if any of the required pointer arguments is null.
@@ -255,8 +253,6 @@ public:
     *
     * @param[in] balancer_zero Special load balancer to use for level
     * zero.  If omitted, will use @c balancer instead.
-    *
-    * @param[in] register_for_restart
     */
    GriddingAlgorithm(
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -266,8 +262,7 @@ public:
       const boost::shared_ptr<BoxGeneratorStrategy>& generator,
       const boost::shared_ptr<LoadBalanceStrategy>& balancer,
       const boost::shared_ptr<LoadBalanceStrategy>& balancer_zero =
-         boost::shared_ptr<LoadBalanceStrategy>(),
-      bool register_for_restart = true);
+         boost::shared_ptr<LoadBalanceStrategy>());
 
    /*!
     * @brief Destructor
@@ -1096,12 +1091,9 @@ private:
 
    /*
     * The object name is used for error reporting and accessing
-    * restart file information.  Whether the object writes restart
-    * file data depends on the value of this boolean which is
-    * set in the constructor.
+    * restart file information.
     */
    std::string d_object_name;
-   bool d_registered_for_restart;
 
    /*
     * Data members that manage application-specific level initialization
