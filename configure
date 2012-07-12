@@ -20556,7 +20556,7 @@ ac_config_files="$ac_config_files config/serpa-run"
 
 case $CONFIGURED_WITH_MPI in
   with_mpi)
-    TEST_NPROCS='1,2'
+    TEST_NPROCS='1,2,4'
   ;;
   *)
     TEST_NPROCS='0'

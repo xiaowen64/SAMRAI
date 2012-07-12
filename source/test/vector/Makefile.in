@@ -31,6 +31,9 @@ kvtest:		kvtest.o $(FOBJS) $(LIBSAMRAIDEPEND)
 NUM_TESTS = 2
 
 TEST_NPROCS = @TEST_NPROCS@
+ifeq ($(findstring 4, ${TEST_NPROCS}),4)
+TEST_NPROCS = 1,2
+endif
 
 check:
 		$(MAKE) check2d

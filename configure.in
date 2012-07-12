@@ -1479,7 +1479,7 @@ dnl Specify how many processors to use in testing.
 dnl
 case $CONFIGURED_WITH_MPI in
   with_mpi)
-    TEST_NPROCS='1,2'
+    TEST_NPROCS='1,2,4'
   ;;
   *)
     TEST_NPROCS='0'

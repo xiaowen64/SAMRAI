@@ -111,7 +111,6 @@ public:
     * and storage has been allocated; otherwise, return false.
     *
     * Note: Only arrays that have been initialized can do anything useful.
-    * Initialize an uninitialized array by calling the initializeArray() method.
     */
    bool
    isInitialized() const;

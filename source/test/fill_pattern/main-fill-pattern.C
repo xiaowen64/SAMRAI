@@ -394,7 +394,7 @@ bool SingleLevelTestCase(
 
    level->allocatePatchData(data_id);
 
-   TBOX_ASSERT(mpi.getSize() <= 2);
+//   TBOX_ASSERT(mpi.getSize() <= 2);
 
    if (pattern_name == "FIRST_LAYER_CELL_NO_CORNERS_FILL_PATTERN" ||
        pattern_name == "FIRST_LAYER_CELL_FILL_PATTERN") {

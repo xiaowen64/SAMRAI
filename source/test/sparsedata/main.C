@@ -27,12 +27,6 @@ int main(
    SAMRAI_MPI mpi(SAMRAI_MPI::getSAMRAIWorld());
    const Dimension dim(2);
 
-   // for these tests we allow at most 2 procs
-#ifdef DEBUG_CHECK_ASSERTIONS
-   const int nproc = mpi.getSize();
-#endif
-   TBOX_ASSERT(nproc < 3);
-
    //if (argc < 2) {
    //   TBOX_ERROR("Usage: " << argv[0] << " [input file]");
    //}

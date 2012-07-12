@@ -133,9 +133,7 @@ int main(
       hierarchy->setMaxNumberOfLevels(2);
       hierarchy->setRatioToCoarserLevel(ratio, 1);
 
-      // Note: For these simple tests we allow at most 2 processors.
       const int nproc = mpi.getSize();
-      TBOX_ASSERT(nproc < 3);
 
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_boxes.size();

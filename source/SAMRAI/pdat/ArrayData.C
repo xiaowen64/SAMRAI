@@ -94,7 +94,7 @@ template<class TYPE>
 bool
 ArrayData<TYPE>::isInitialized() const
 {
-   return d_depth > 0;
+   return d_depth * d_offset > 0;
 }
 
 template<class TYPE>

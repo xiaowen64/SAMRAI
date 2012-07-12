@@ -87,7 +87,6 @@ int main(
    // Note: For these simple tests we allow at most 2 processors.
    tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    const int nproc = mpi.getSize();
-   TBOX_ASSERT(nproc < 3);
 
    // Currently this test only works for 2 dimensions.
    const tbox::Dimension dim(2);
