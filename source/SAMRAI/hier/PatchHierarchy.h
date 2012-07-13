@@ -145,7 +145,7 @@ class PatchHierarchy:public tbox::Serializable
 {
 public:
    /*
-    *  TODO: There must be a better way to do what this base class
+    *  TODO: There must be a better way to do what this class
     *  provides.  If not, then we need to make this documentation clearer.
     *  Specifically, it is not clear how one actually determines the
     *  correct width information to provide.  Also, the documentation

@@ -304,8 +304,6 @@ public:
 
    /*!
     * @brief Return the dimension of this object.
-    * TODO: This method seems superfluous, only used for error checking,
-    * which can use d_dim directly.  BTNG
     */
    const tbox::Dimension&
    getDim() const
