@@ -493,7 +493,6 @@ TreeLoadBalancer::loadBalanceBoxLevel(
        * on cycles.
        */
 
-      const tbox::RankGroup *rank_group_in_use = &rank_group;
       int number_of_groups = 1;
       int group_num = 0;
 
@@ -505,7 +504,6 @@ TreeLoadBalancer::loadBalanceBoxLevel(
             group_num,
             icycle,
             number_of_cycles);
-         rank_group_in_use = &cycle_rank_group;
       }
 
 

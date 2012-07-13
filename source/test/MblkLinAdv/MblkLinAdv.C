@@ -2549,7 +2549,6 @@ void MblkLinAdv::getFromInput(
              (d_data_problem == "SINE_CONSTANT_Y") ||
              (d_data_problem == "SINE_CONSTANT_Z"))) {
 
-         int idir = 0;
          if (d_data_problem == "PIECEWISE_CONSTANT_Y") {
             if (d_dim < tbox::Dimension(2)) {
                TBOX_ERROR(
@@ -2557,7 +2556,6 @@ void MblkLinAdv::getFromInput(
                                 << "problem invalid in 1 dimension."
                                 << endl);
             }
-            idir = 1;
          }
 
          if (d_data_problem == "PIECEWISE_CONSTANT_Z") {
@@ -2566,7 +2564,6 @@ void MblkLinAdv::getFromInput(
                   d_object_name << ": `PIECEWISE_CONSTANT_Z' "
                                 << "problem invalid in 1 or 2 dimensions." << endl);
             }
-            idir = 2;
          }
 
          tbox::Array<string> init_data_keys = init_data_db->getAllKeys();

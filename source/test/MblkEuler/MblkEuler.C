@@ -477,8 +477,6 @@ void MblkEuler::initializeDataOnPatch(
       //  the spherical initialization
       //
       else if (d_data_problem == "SPHERE") {
-         double zero = 0.0;
-         double angle = 0.0;
          double* front = d_front_position.getPointer();
          for (int k = kmin; k <= kmax; k++) {
             for (int j = jmin; j <= jmax; j++) {
@@ -488,12 +486,6 @@ void MblkEuler::initializeDataOnPatch(
                   double x2 = zc[ind] - d_center[2];
                   double x1 = yc[ind] - d_center[1];
                   double x0 = xc[ind] - d_center[0];
-
-                  if (x1 == zero && x0 == zero) {
-                     angle = zero;
-                  } else {
-                     angle = atan2(x1, x0);
-                  }
 
                   double rad2 = sqrt(x0 * x0 + x1 * x1);
                   // double phi  = atan2(rad2,x2);

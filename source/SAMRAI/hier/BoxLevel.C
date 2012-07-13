@@ -605,9 +605,7 @@ BoxLevel::cacheGlobalReducedData() const
 
          std::vector<int> send_mesg;
          send_mesg.reserve(nblocks * 4 * dim.getValue() + 4);
-         int bishift;
          for (int bn = 0; bn < nblocks; ++bn) {
-            bishift = bn * nblocks;
             for (int i = 0; i < dim.getValue(); ++i) {
                send_mesg.push_back(-d_local_bounding_box[bn].lower()[i]);
                send_mesg.push_back(d_local_bounding_box[bn].upper()[i]);
