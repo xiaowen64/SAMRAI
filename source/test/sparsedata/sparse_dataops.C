@@ -32,7 +32,7 @@
 #include "SAMRAI/pdat/SparseData.h"
 #include "SAMRAI/pdat/SparseDataVariable.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 

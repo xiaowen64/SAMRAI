@@ -38,7 +38,7 @@ using namespace std;
 #include "MblkHyperbolicLevelIntegrator.h"
 #include "MblkHyperbolicPatchStrategy.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 /**
  * The MblkLinAdv class provides routines for a sample application code that

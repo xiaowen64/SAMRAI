@@ -19,7 +19,7 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace pdat {

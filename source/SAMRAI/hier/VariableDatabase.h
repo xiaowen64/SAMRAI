@@ -20,7 +20,7 @@
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/tbox/Array.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 #include <iostream>
 

@@ -17,7 +17,7 @@
 #include "SAMRAI/xfer/RefineClasses.h"
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace algs {

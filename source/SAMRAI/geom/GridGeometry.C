@@ -70,7 +70,7 @@
 
 #include <typeinfo>
 #include <stdlib.h>
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 #define GEOM_BLOCK_GRID_GEOMETRY_VERSION (1)
 

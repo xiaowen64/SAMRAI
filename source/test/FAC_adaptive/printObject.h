@@ -16,7 +16,7 @@
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/hier/Box.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 
 using namespace std;

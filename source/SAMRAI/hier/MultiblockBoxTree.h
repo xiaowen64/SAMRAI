@@ -15,7 +15,7 @@
 
 #include "SAMRAI/hier/BoxTree.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <vector>
 #include <map>
 

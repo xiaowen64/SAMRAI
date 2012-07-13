@@ -30,7 +30,7 @@ using namespace std;
 
 #include "HyprePoisson.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 

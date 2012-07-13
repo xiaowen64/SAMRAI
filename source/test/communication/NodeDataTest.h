@@ -29,7 +29,7 @@ using namespace std;
 #endif
 #include "SAMRAI/hier/Variable.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 

@@ -41,7 +41,7 @@ using namespace std;
 #include "OuterfaceDataTest.h"
 //#include "MultiVariableDataTest.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 

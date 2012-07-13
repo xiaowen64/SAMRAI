@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/Variable.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 #include <map>
 

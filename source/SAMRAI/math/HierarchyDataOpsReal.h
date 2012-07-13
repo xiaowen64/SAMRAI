@@ -15,7 +15,7 @@
 
 #include <iostream>
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include "SAMRAI/hier/PatchHierarchy.h"
 
 namespace SAMRAI {

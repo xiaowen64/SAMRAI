@@ -10,7 +10,7 @@
 
 #include "SkeletonCellDoubleWeightedAverage.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 

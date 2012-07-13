@@ -30,8 +30,8 @@ extern "C" {
 #include "kinsol/kinsol_spgmr.h"
 }
 
-#include <kinsol/kinsol_impl.h>
-#include <kinsol/kinsol_spils.h>
+#include "kinsol/kinsol_impl.h"
+#include "kinsol/kinsol_spils.h"
 
 #include <string>
 

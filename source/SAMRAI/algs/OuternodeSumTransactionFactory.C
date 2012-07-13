@@ -16,7 +16,7 @@
 #include "SAMRAI/pdat/OuternodeData.h"
 #include "SAMRAI/algs/OuternodeSumTransaction.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace algs {

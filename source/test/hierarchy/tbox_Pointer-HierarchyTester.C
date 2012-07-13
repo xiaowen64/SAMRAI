@@ -10,6 +10,6 @@
 
 #include "HierarchyTester.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 template class boost::shared_ptr<HierarchyTester>;

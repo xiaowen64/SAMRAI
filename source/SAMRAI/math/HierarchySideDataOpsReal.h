@@ -20,7 +20,7 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace math {

@@ -19,7 +19,7 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/Database.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <vector>
 
 namespace SAMRAI {

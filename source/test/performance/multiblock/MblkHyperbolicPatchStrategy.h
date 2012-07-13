@@ -23,7 +23,7 @@
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 /**
  * Class MblkHyperbolicPatchStrategy is an abstract base class defining the

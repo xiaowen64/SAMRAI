@@ -72,7 +72,7 @@ using namespace std;
 #include "SAMRAI/solv/SundialsAbstractVector.h"
 #include "SAMRAI/solv/Sundials_SAMRAIVector.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 using namespace tbox;

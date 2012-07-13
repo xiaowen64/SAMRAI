@@ -43,7 +43,7 @@
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/solv/FACPreconditioner.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 

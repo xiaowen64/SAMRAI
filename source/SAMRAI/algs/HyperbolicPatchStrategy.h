@@ -21,7 +21,7 @@
 #include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace algs {

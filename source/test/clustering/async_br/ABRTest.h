@@ -13,7 +13,7 @@
 #include <string>
 using namespace std;
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include "SAMRAI/tbox/Database.h"
 
 /*

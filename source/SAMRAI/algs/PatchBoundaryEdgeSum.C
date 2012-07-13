@@ -22,7 +22,7 @@
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/hier/RefineOperator.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace algs {

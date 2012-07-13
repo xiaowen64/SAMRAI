@@ -23,7 +23,7 @@
 #include "SAMRAI/pdat/SideData.h"
 #include "SAMRAI/pdat/OutersideData.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 

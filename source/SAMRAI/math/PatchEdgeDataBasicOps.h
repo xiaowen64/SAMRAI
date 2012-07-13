@@ -18,7 +18,7 @@
 #include "SAMRAI/math/ArrayDataBasicOps.h"
 #include "SAMRAI/hier/Box.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace math {

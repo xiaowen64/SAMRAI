@@ -19,7 +19,7 @@
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace pdat {

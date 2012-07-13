@@ -20,7 +20,7 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/Serializable.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 

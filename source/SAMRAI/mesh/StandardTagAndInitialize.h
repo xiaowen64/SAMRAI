@@ -16,7 +16,7 @@
 #include "SAMRAI/mesh/StandardTagAndInitializeConnectorWidthRequestor.h"
 #include "SAMRAI/mesh/TagAndInitializeStrategy.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace mesh {

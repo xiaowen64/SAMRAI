@@ -10,7 +10,7 @@
 
 #include "SAMRAI/solv/CellPoissonFACSolver.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 using namespace solv;

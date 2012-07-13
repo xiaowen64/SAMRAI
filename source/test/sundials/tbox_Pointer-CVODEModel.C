@@ -9,7 +9,7 @@
  ************************************************************************/
 #include "CVODEModel.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 #if defined(HAVE_SUNDIALS) && defined(HAVE_HYPRE)
 

@@ -16,7 +16,7 @@
 #include "SAMRAI/mesh/TagAndInitializeStrategy.h"
 #include "SAMRAI/tbox/Serializable.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace mesh {

@@ -26,7 +26,7 @@
 #include "SAMRAI/pdat/IndexDataFactory.h"
 #include "SAMRAI/pdat/IndexDataFactory.C"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <list>
 
 using namespace SAMRAI;

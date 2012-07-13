@@ -18,7 +18,7 @@
 #include "SAMRAI/hier/CoarsenOperator.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <list>
 

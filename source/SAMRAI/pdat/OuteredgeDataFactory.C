@@ -19,7 +19,7 @@
 #include "SAMRAI/pdat/OuteredgeGeometry.h"
 #include "SAMRAI/hier/Patch.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {

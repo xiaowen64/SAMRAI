@@ -16,13 +16,13 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/PIO.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 #include <vector>
 
 #ifdef HAVE_TAU
 #if (PROFILING_ON || TRACING_ON)
-#include <Profile/Profiler.h>
+#include "Profile/Profiler.h"
 #endif
 #endif
 

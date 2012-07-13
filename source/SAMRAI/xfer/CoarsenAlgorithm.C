@@ -19,7 +19,7 @@
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace xfer {

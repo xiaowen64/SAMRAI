@@ -31,7 +31,7 @@
 #endif
 #include "hdf5.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 #include <list>
 

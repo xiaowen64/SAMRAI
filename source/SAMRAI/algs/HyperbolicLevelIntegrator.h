@@ -31,7 +31,7 @@
 #include "SAMRAI/tbox/Timer.h"
 
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <list>
 
 #define HLI_RECORD_STATS

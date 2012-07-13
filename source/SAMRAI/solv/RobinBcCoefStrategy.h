@@ -16,7 +16,7 @@
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/Patch.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace solv {

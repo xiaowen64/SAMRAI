@@ -48,7 +48,7 @@ using namespace std;
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 #ifndef NULL
 #define NULL (0)

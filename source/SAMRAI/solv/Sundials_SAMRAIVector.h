@@ -24,7 +24,7 @@
 #include "SAMRAI/solv/SundialsAbstractVector.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace solv {

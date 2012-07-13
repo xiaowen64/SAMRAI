@@ -20,7 +20,7 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/IOStream.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 /**
  * The SampleClass struct holds some dummy data and methods.  It's intent

@@ -36,7 +36,7 @@ using namespace std;
 
 #include "SinusoidalFrontTagger.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 /**
  * The LinAdv class provides routines for a sample application code that

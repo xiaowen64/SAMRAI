@@ -49,7 +49,7 @@
 
 #include "get-input-filename.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 using namespace tbox;

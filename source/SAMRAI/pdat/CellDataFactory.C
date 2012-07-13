@@ -17,7 +17,7 @@
 #include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/hier/Patch.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*

@@ -16,7 +16,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BaseGridGeometry.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*

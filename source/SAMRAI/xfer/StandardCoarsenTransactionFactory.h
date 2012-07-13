@@ -20,7 +20,7 @@
 #include "SAMRAI/xfer/CoarsenClasses.h"
 #include "SAMRAI/xfer/CoarsenTransactionFactory.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace xfer {

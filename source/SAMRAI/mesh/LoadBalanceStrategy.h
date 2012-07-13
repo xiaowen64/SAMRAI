@@ -17,7 +17,7 @@
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/RankGroup.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace mesh {

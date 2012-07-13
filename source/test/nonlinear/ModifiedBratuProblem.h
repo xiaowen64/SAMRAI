@@ -64,7 +64,7 @@
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 
 using namespace SAMRAI;

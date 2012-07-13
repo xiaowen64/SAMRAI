@@ -19,7 +19,7 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/tbox/Array.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <iostream>
 
 namespace SAMRAI {

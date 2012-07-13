@@ -16,7 +16,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 #include <cstring>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)

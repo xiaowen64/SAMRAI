@@ -20,7 +20,7 @@
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/RestartManager.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 
 using namespace std;

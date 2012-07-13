@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace pdat {

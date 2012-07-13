@@ -16,7 +16,7 @@
 #include "SAMRAI/pdat/OuteredgeData.h"
 #include "SAMRAI/algs/OuteredgeSumTransaction.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace algs {

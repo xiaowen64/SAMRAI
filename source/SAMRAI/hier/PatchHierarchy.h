@@ -26,7 +26,7 @@
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 
 namespace SAMRAI {

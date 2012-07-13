@@ -32,7 +32,7 @@
 #include "NodeMultiblockTest.h"
 #include "SideMultiblockTest.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 

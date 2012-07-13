@@ -46,7 +46,7 @@
 #include "AutoTester.h"
 #endif
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 #ifndef _MSC_VER
 #include <unistd.h>

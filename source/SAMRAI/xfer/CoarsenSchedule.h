@@ -25,7 +25,7 @@
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/CoarsenTransactionFactory.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <iostream>
 
 namespace SAMRAI {

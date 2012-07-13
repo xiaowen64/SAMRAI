@@ -18,7 +18,7 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchData.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace hier {
