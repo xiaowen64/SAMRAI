@@ -106,14 +106,14 @@ public:
     *
     * The Connector's relationships are initialized to a dummy state.
     *
-    * @param[in] base_mapped_box_level
-    * @param[in] head_mapped_box_level
+    * @param[in] base_box_level
+    * @param[in] head_box_level
     * @param[in] base_width
     * @param[in] parallel_state
     */
    Connector(
-      const BoxLevel& base_mapped_box_level,
-      const BoxLevel& head_mapped_box_level,
+      const BoxLevel& base_box_level,
+      const BoxLevel& head_box_level,
       const IntVector& base_width,
       const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED);
 
@@ -335,16 +335,14 @@ public:
     * @brief Return true if a neighbor set exists for the specified
     * BoxId.
     *
-    * @param[in] mapped_box_id
+    * @param[in] box_id
     */
    bool
    hasNeighborSet(
-      const BoxId& mapped_box_id) const
+      const BoxId& box_id) const
    {
-      const BoxNeighborhoodCollection& relationships =
-         getRelations(mapped_box_id);
-      BoxId non_per_id(mapped_box_id.getGlobalId(),
-                       PeriodicId::zero());
+      const BoxNeighborhoodCollection& relationships = getRelations(box_id);
+      BoxId non_per_id(box_id.getGlobalId(), PeriodicId::zero());
       ConstNeighborhoodIterator ei = relationships.find(non_per_id);
       return ei != relationships.end();
    }
@@ -494,12 +492,12 @@ public:
     * It is an error to to specify a non-existent BoxId.
     *
     * @param[in] neighbor
-    * @param[in] mapped_box_id
+    * @param[in] box_id
     */
    void
    eraseNeighbor(
       const Box& neighbor,
-      const BoxId& mapped_box_id);
+      const BoxId& box_id);
 
    /*!
     * @brief Adds a neighbor of the specified BoxId.
@@ -886,8 +884,8 @@ public:
     * @brief Return the Connector width associated with the relationships.
     *
     * For overlap Connectors, an relationship exists between a base and head
-    * Boxes if the base mapped_box, grown by this width,
-    * overlaps the head mapped_box.  For mapping Connectors, the width
+    * Boxes if the base box, grown by this width,
+    * overlaps the head box.  For mapping Connectors, the width
     * the amount that a pre-map box must grow to nest the post-map
     * boxes.
     */
@@ -1405,9 +1403,8 @@ private:
    /*!
     * @brief Connector width for the base BoxLevel.
     *
-    * This is the amount of growth applied to a mapped_box in the base BoxLevel
-    * before checking if the mapped_box overlaps a mapped_box in the head
-    * BoxLevel.
+    * This is the amount of growth applied to a box in the base BoxLevel
+    * before checking if the box overlaps a box in the head BoxLevel.
     */
    IntVector d_base_width;
 

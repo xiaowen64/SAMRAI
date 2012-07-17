@@ -73,7 +73,7 @@ public:
     * null, or if the number of boxes in the array does not match the
     * mapping array.
     *
-    * @param[in]  mapped_box_level
+    * @param[in]  box_level
     * @param[in]  grid_geometry
     * @param[in]  descriptor The PatchDescriptor used to allocate patch data
     *             on the local processor
@@ -84,7 +84,7 @@ public:
     *
     */
    PatchLevel(
-      const BoxLevel& mapped_box_level,
+      const BoxLevel& box_level,
       const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
       const boost::shared_ptr<PatchDescriptor>& descriptor,
       const boost::shared_ptr<PatchFactory>& factory =
@@ -247,7 +247,7 @@ public:
    int
    getLocalNumberOfPatches() const
    {
-      return static_cast<int>(d_mapped_box_level->getLocalNumberOfBoxes());
+      return static_cast<int>(d_box_level->getLocalNumberOfBoxes());
    }
 
    /*!
@@ -256,7 +256,7 @@ public:
    int
    getGlobalNumberOfPatches() const
    {
-      return d_mapped_box_level->getGlobalNumberOfBoxes();
+      return d_box_level->getGlobalNumberOfBoxes();
    }
 
    /*!
@@ -265,7 +265,7 @@ public:
    int
    getLocalNumberOfCells() const
    {
-      return static_cast<int>(d_mapped_box_level->getLocalNumberOfCells());
+      return static_cast<int>(d_box_level->getLocalNumberOfCells());
    }
 
    /*!
@@ -274,7 +274,7 @@ public:
    int
    getGlobalNumberOfCells() const
    {
-      return d_mapped_box_level->getGlobalNumberOfCells();
+      return d_box_level->getGlobalNumberOfCells();
    }
 
    /*!
@@ -527,7 +527,7 @@ public:
    const boost::shared_ptr<BoxLevel>&
    getBoxLevel() const
    {
-      return d_mapped_box_level;
+      return d_box_level;
    }
 
    /*!
@@ -547,7 +547,7 @@ public:
       if (!d_has_globalized_data) {
          initializeGlobalizedBoxLevel();
       }
-      return d_mapped_box_level->getGlobalizedVersion();
+      return d_box_level->getGlobalizedVersion();
    }
 
    /*!
@@ -615,22 +615,22 @@ public:
     * @return the processor that owns the specified patch.  The patches
     * are numbered starting at zero.
     *
-    * @param[in] mapped_box_id Patch's BoxId
+    * @param[in] box_id Patch's BoxId
     */
    int
    getMappingForPatch(
-      const BoxId& mapped_box_id) const
+      const BoxId& box_id) const
    {
       // Note: p is required to be a local index.
       /*
        * This must be for backward compatability, because if p is a local
-       * index, the mapping is always to d_mapped_box_level->getRank().
+       * index, the mapping is always to d_box_level->getRank().
        * Here is the old code:
        *
-       * return d_mapped_box_level->getBoxStrict(p)->getOwnerRank();
+       * return d_box_level->getBoxStrict(p)->getOwnerRank();
        */
-      NULL_USE(mapped_box_id);
-      return d_mapped_box_level->getMPI().getRank();
+      NULL_USE(box_id);
+      return d_box_level->getMPI().getRank();
    }
 
    /*!
@@ -638,33 +638,31 @@ public:
     *
     * @return The box for the specified patch.
     *
-    * @param[in] mapped_box_id Patch's BoxId
+    * @param[in] box_id Patch's BoxId
     */
    const Box&
    getBoxForPatch(
-      const BoxId& mapped_box_id) const
+      const BoxId& box_id) const
    {
-      TBOX_ASSERT(mapped_box_id.getOwnerRank() ==
-                  d_mapped_box_level->getMPI().getRank());
-      return getPatch(mapped_box_id)->getBox();
+      TBOX_ASSERT(box_id.getOwnerRank() == d_box_level->getMPI().getRank());
+      return getPatch(box_id)->getBox();
    }
 
    /*!
     * @brief Determine if the patch is adjacent to a non-periodic
     * physical domain boundary.
     *
-    * @param[in] mapped_box_id Patch's BoxId
+    * @param[in] box_id Patch's BoxId
     *
     * @return True if patch with given number is adjacent to a non-periodic
     * physical domain boundary.  Otherwise, false.
     */
    bool
    patchTouchesRegularBoundary(
-      const BoxId& mapped_box_id) const
+      const BoxId& box_id) const
    {
-      TBOX_ASSERT(mapped_box_id.getOwnerRank() ==
-                  d_mapped_box_level->getMPI().getRank());
-      return getPatch(mapped_box_id)->getPatchGeometry()->getTouchesRegularBoundary();
+      TBOX_ASSERT(box_id.getOwnerRank() == d_box_level->getMPI().getRank());
+      return getPatch(box_id)->getPatchGeometry()->getTouchesRegularBoundary();
    }
 
    /*!
@@ -1055,16 +1053,16 @@ private:
    /*!
     * Primary metadata describing the PatchLevel.
     */
-   boost::shared_ptr<BoxLevel> d_mapped_box_level;
+   boost::shared_ptr<BoxLevel> d_box_level;
 
    /*
-    * Whether we have a globalized version of d_mapped_box_level.
+    * Whether we have a globalized version of d_box_level.
     */
    mutable bool d_has_globalized_data;
    /*
     * Boxes for all level patches.
     *
-    * d_boxes is slave to d_mapped_box_level and computed only if getBoxes() is called.
+    * d_boxes is slave to d_box_level and computed only if getBoxes() is called.
     * This means that the first getBoxes() has to be called by all processors,
     * because it requires communication.
     */

@@ -35,10 +35,10 @@ namespace hier {
  *
  * Example usage:
  * @verbatim
- *  BoxContainer mapped_boxes;
- *  // fill in mapped_boxes
- *  for ( RealBoxConstIterator ni(mapped_boxes.realBegin());
- *        ni != mapped_boxes.realEnd()(); ++ni ) {
+ *  BoxContainer boxes;
+ *  // fill in boxes
+ *  for ( RealBoxConstIterator ni(boxes.realBegin());
+ *        ni != boxes.realEnd()(); ++ni ) {
  *    TBOX_ASSERT( ! ni->isPeriodicImage() );
  *  }
  * @endverbatim
@@ -60,7 +60,7 @@ public:
    operator = (
       const RealBoxConstIterator& r)
    {
-      d_mapped_boxes = r.d_mapped_boxes;
+      d_boxes = r.d_boxes;
       d_ni = r.d_ni;
       return *this;
    }
@@ -90,7 +90,7 @@ public:
    operator == (
       const RealBoxConstIterator& r) const
    {
-      return d_mapped_boxes == r.d_mapped_boxes && d_ni == r.d_ni;
+      return d_boxes == r.d_boxes && d_ni == r.d_ni;
    }
 
    /*!
@@ -100,7 +100,7 @@ public:
    operator != (
       const RealBoxConstIterator& r) const
    {
-      return d_mapped_boxes != r.d_mapped_boxes || d_ni != r.d_ni;
+      return d_boxes != r.d_boxes || d_ni != r.d_ni;
    }
 
    /*!
@@ -126,19 +126,19 @@ private:
    /*!
     * @brief Construct the iterator for the given BoxContainer.
     *
-    * The iterator will iterate through the items in mapped_boxes.
+    * The iterator will iterate through the items in boxes.
     *
-    * @param[in] mapped_boxes
+    * @param[in] boxes
     * @param[in] begin
     */
    explicit RealBoxConstIterator(
-      const BoxContainer& mapped_boxes,
+      const BoxContainer& boxes,
       bool begin);
 
    /*!
     * @brief BoxContainer being iterated through.
     */
-   const BoxContainer* d_mapped_boxes;
+   const BoxContainer* d_boxes;
 
    /*!
     * @brief The iterator.

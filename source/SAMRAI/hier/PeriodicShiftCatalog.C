@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
- * Description:   Set of edges incident from a mapped_box_level of a distributed box graph.
+ * Description:   Set of edges incident from a box_level of a distributed box graph.
  *
  ************************************************************************/
 #ifndef included_hier_PeriodicShiftCatalog_C

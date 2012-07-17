@@ -30,15 +30,15 @@ const int Patch::HIER_PATCH_VERSION = 2;
  */
 
 Patch::Patch(
-   const Box& mapped_box,
+   const Box& box,
    const boost::shared_ptr<PatchDescriptor>& descriptor):
-   d_mapped_box(mapped_box),
+   d_box(box),
    d_descriptor(descriptor),
    d_patch_data(d_descriptor->getMaxNumberRegisteredComponents()),
    d_patch_level_number(-1),
    d_patch_in_hierarchy(false)
 {
-   TBOX_ASSERT(mapped_box.getLocalId() >= 0);
+   TBOX_ASSERT(box.getLocalId() >= 0);
 }
 
 /*
@@ -73,7 +73,7 @@ Patch::getSizeOfPatchData(
 
    for (int i = 0; i < max_set_component && components.isSet(i); i++) {
       size += d_descriptor->getPatchDataFactory(i)->getSizeOfMemory(
-            d_mapped_box);
+            d_box);
    }
 
    return size;
@@ -209,7 +209,7 @@ Patch::getFromRestart(
    int patch_owner = restart_db->getInteger("d_patch_owner");
    int block_id = restart_db->getInteger("d_block_id");
    box.setBlockId(BlockId(block_id));
-   d_mapped_box.initialize(box,
+   d_box.initialize(box,
       patch_local_id,
       patch_owner);
 
@@ -266,7 +266,7 @@ Patch::getFromRestart(
  * Write out the class version number to restart database.  Then,
  * writes out data to restart database and have each patch_data item write
  * itself out to the restart database.  The following data
- * members are written out: d_mapped_box, d_patch_number,
+ * members are written out: d_box, d_patch_number,
  * d_patch_level_number,
  * d_patch_in_hierarchy, d_patch_data[].
  * The database key for all data members is identical to the
@@ -290,13 +290,10 @@ Patch::putToRestart(
    int i;
 
    restart_db->putInteger("HIER_PATCH_VERSION", HIER_PATCH_VERSION);
-   restart_db->putDatabaseBox("d_box", d_mapped_box);
-   restart_db->putInteger("d_patch_local_id",
-      d_mapped_box.getLocalId().getValue());
-   restart_db->putInteger("d_patch_owner",
-      d_mapped_box.getOwnerRank());
-   restart_db->putInteger("d_block_id",
-      d_mapped_box.getBlockId().getBlockValue());
+   restart_db->putDatabaseBox("d_box", d_box);
+   restart_db->putInteger("d_patch_local_id", d_box.getLocalId().getValue());
+   restart_db->putInteger("d_patch_owner", d_box.getOwnerRank());
+   restart_db->putInteger("d_block_id", d_box.getBlockId().getBlockValue());
    restart_db->putInteger("d_patch_level_number", d_patch_level_number);
    restart_db->putBool("d_patch_in_hierarchy", d_patch_in_hierarchy);
 
@@ -342,16 +339,16 @@ Patch::recursivePrint(
 {
    NULL_USE(depth);
 
-   const tbox::Dimension& dim(d_mapped_box.getDim());
+   const tbox::Dimension& dim(d_box.getDim());
 
    os << border
-      << d_mapped_box
-      << "\tdims: " << d_mapped_box.numberCells(0)
+      << d_box
+      << "\tdims: " << d_box.numberCells(0)
    ;
    for (int i = 1; i < dim.getValue(); ++i) {
-      os << " X " << d_mapped_box.numberCells(i);
+      os << " X " << d_box.numberCells(i);
    }
-   os << "\tsize: " << d_mapped_box.size()
+   os << "\tsize: " << d_box.size()
       << "\n";
    return 0;
 }
@@ -361,8 +358,8 @@ operator << (
    std::ostream& s,
    const Patch& patch)
 {
-   s << "Patch::mapped_box = "
-   << patch.d_mapped_box << std::endl << std::flush;
+   s << "Patch::box = "
+   << patch.d_box << std::endl << std::flush;
    s << "Patch::patch_level_number = " << patch.d_patch_level_number
    << std::endl << std::flush;
    s << "Patch::patch_in_hierarchy = " << patch.d_patch_in_hierarchy

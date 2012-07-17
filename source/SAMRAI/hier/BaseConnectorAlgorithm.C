@@ -146,14 +146,14 @@ BaseConnectorAlgorithm::sendDiscoveryToOneProcess(
    *(ptr++) = static_cast<int>(referenced_new_head_nabrs.size());
    for (BoxContainer::const_iterator ni = referenced_new_base_nabrs.begin();
         ni != referenced_new_base_nabrs.end(); ++ni) {
-      const Box& mapped_box = *ni;
-      mapped_box.putToIntBuffer(ptr);
+      const Box& box = *ni;
+      box.putToIntBuffer(ptr);
       ptr += Box::commBufferSize(dim);
    }
    for (BoxContainer::const_iterator ni = referenced_new_head_nabrs.begin();
         ni != referenced_new_head_nabrs.end(); ++ni) {
-      const Box& mapped_box = *ni;
-      mapped_box.putToIntBuffer(ptr);
+      const Box& box = *ni;
+      box.putToIntBuffer(ptr);
       ptr += Box::commBufferSize(dim);
    }
    if (print_steps) {

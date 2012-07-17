@@ -1358,17 +1358,17 @@ VisItDataWriter::writePlotData(
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
 
    for (int ln = 0; ln < hierarchy->getNumberOfLevels(); ++ln) {
-      const hier::BoxLevel& unsorted_mapped_box_level =
+      const hier::BoxLevel& unsorted_box_level =
          *hierarchy->getPatchLevel(ln)->getBoxLevel();
-      hier::BoxLevel sorted_mapped_box_level(d_dim);
+      hier::BoxLevel sorted_box_level(d_dim);
       hier::Connector unused_sorting_map(d_dim);
       dlbg_edge_utils.makeSortingMap(
-         sorted_mapped_box_level,
+         sorted_box_level,
          unused_sorting_map,
-         unsorted_mapped_box_level,
+         unsorted_box_level,
          false,
          true);
-      if (!d_is_multiblock && sorted_mapped_box_level != unsorted_mapped_box_level) {
+      if (!d_is_multiblock && sorted_box_level != unsorted_box_level) {
          TBOX_ERROR(
             "VisItDataWriter: Encountered existing limitation of VisItDataWriter\n"
             << "This class cannot write files unless all patch levels have\n"
@@ -3642,7 +3642,7 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
    int child_ptrs_idx = 0;
 
    for (ln = 0; ln <= finest_level; ln++) {
-      const hier::BoxContainer& coarser_mapped_boxes =
+      const hier::BoxContainer& coarser_boxes =
          hierarchy->getPatchLevel(ln)->getBoxLevel()->getGlobalizedVersion().getGlobalBoxes();
 
       boost::shared_ptr<hier::BoxContainer> child_box_tree;
@@ -3685,8 +3685,8 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
          }
       }
 
-      for (hier::RealBoxConstIterator bi(coarser_mapped_boxes.realBegin());
-           bi != coarser_mapped_boxes.realEnd(); ++bi) {
+      for (hier::RealBoxConstIterator bi(coarser_boxes.realBegin());
+           bi != coarser_boxes.realEnd(); ++bi) {
 
          if (ln == finest_level) {
             child_ptrs[child_ptrs_idx].u.number_children = 0;
@@ -3696,14 +3696,14 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
             hier::Box compare_box(*bi);
             compare_box.refine(ratio);
 
-            hier::BoxContainer overlap_mapped_boxes;
+            hier::BoxContainer overlap_boxes;
 
             child_box_tree->findOverlapBoxes(
-               overlap_mapped_boxes,
+               overlap_boxes,
                compare_box,
                ratio);
 
-            int num_kids = static_cast<int>(overlap_mapped_boxes.size());
+            int num_kids = static_cast<int>(overlap_boxes.size());
             child_ptrs[child_ptrs_idx].u.number_children = num_kids;
 
             if (num_kids == 0) {
@@ -3725,8 +3725,8 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
                }
 
                for (hier::BoxContainer::iterator
-                    ob_itr = overlap_mapped_boxes.begin();
-                    ob_itr != overlap_mapped_boxes.end(); ++ob_itr) { 
+                    ob_itr = overlap_boxes.begin();
+                    ob_itr != overlap_boxes.end(); ++ob_itr) { 
                   child_parent[child_parent_idx].child =
                      getGlobalPatchNumber(hierarchy, ln + 1,
                         ob_itr->getLocalId().getValue());

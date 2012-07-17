@@ -4,7 +4,8 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
- * Description:   Set of edges incident from a mapped_box_level of a distributed box graph.
+ * Description:   Set of edges incident from a box_level of a distributed
+ *                box graph.
  *
  ************************************************************************/
 #ifndef included_hier_Connector_C
@@ -103,8 +104,8 @@ Connector::Connector(
  */
 
 Connector::Connector(
-   const BoxLevel& base_mapped_box_level,
-   const BoxLevel& head_mapped_box_level,
+   const BoxLevel& base_box_level,
+   const BoxLevel& head_box_level,
    const IntVector& base_width,
    const BoxLevel::ParallelState parallel_state):
    d_base_width(base_width.getDim(), 0),
@@ -112,19 +113,19 @@ Connector::Connector(
    d_head_coarser(false),
    d_relationships(),
    d_global_relationships(),
-   d_mpi(base_mapped_box_level.getMPI()),
+   d_mpi(base_box_level.getMPI()),
    d_parallel_state(parallel_state),
    d_finalized(false),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
    d_global_data_up_to_date(true)
 {
-   TBOX_ASSERT_OBJDIM_EQUALITY3(base_mapped_box_level,
-      head_mapped_box_level,
+   TBOX_ASSERT_OBJDIM_EQUALITY3(base_box_level,
+      head_box_level,
       base_width);
 
-   setBase(base_mapped_box_level);
-   setHead(head_mapped_box_level);
+   setBase(base_box_level);
+   setHead(head_box_level);
    setWidth(base_width, true);
 }
 
@@ -285,27 +286,27 @@ Connector::insertNeighbors(
 void
 Connector::eraseNeighbor(
    const Box& neighbor,
-   const BoxId& mapped_box_id)
+   const BoxId& box_id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state == BoxLevel::DISTRIBUTED &&
-       mapped_box_id.getOwnerRank() != getBase().getMPI().getRank()) {
+       box_id.getOwnerRank() != getBase().getMPI().getRank()) {
       TBOX_ERROR("Connector::eraseNeighbor error: Cannot work on remote\n"
          << "data in DISTRIBUTED mode.");
    }
-   if (!getBase().hasBox(mapped_box_id)) {
+   if (!getBase().hasBox(box_id)) {
       TBOX_ERROR(
          "Connector::eraseNeighbors: Cannot access neighbors for\n"
-         << "id " << mapped_box_id << " because it does not "
+         << "id " << box_id << " because it does not "
          << "exist in the base.\n"
          << "base:\n" << getBase().format("", 2));
    }
 #endif
    if (d_parallel_state == BoxLevel::GLOBALIZED) {
-      d_global_relationships.erase(mapped_box_id, neighbor);
+      d_global_relationships.erase(box_id, neighbor);
    }
-   if (mapped_box_id.getOwnerRank() == getBase().getMPI().getRank()) {
-      d_relationships.erase(mapped_box_id, neighbor);
+   if (box_id.getOwnerRank() == getBase().getMPI().getRank()) {
+      d_relationships.erase(box_id, neighbor);
    }
 }
 
@@ -344,29 +345,28 @@ const IntVector& new_width)
       getBase().getGridGeometry());
 
    for (NeighborhoodIterator ei = begin(); ei != end(); ++ei) {
-      const BoxId& mapped_box_id = *ei;
-      const Box& mapped_box = *getBase().getBoxStrict(
-            mapped_box_id);
-      Box mapped_box_box = mapped_box;
-      mapped_box_box.grow(new_width);
+      const BoxId& box_id = *ei;
+      const Box& box = *getBase().getBoxStrict(box_id);
+      Box box_box = box;
+      box_box.grow(new_width);
       if (base_coarser) {
-         mapped_box_box.refine(getRatio());
+         box_box.refine(getRatio());
       }
       for (NeighborIterator na = begin(ei);
            na != end(ei); /* incremented in loop */) {
          const Box& nabr = *na;
          Box nabr_box = nabr;
-         if (nabr.getBlockId() != mapped_box.getBlockId()) {
+         if (nabr.getBlockId() != box.getBlockId()) {
             grid_geom->transformBox(nabr_box,
                getHead().getRefinementRatio(),
-               mapped_box.getBlockId(),
+               box.getBlockId(),
                nabr.getBlockId());
          }
          if (head_coarser) {
             nabr_box.refine(getRatio());
          }
          ++na;
-         if (!mapped_box_box.intersects(nabr_box)) {
+         if (!box_box.intersects(nabr_box)) {
             d_relationships.erase(ei, nabr);
          }
       }
@@ -396,8 +396,8 @@ Connector::acquireRemoteNeighborhoods()
    std::vector<int> send_mesg;
    std::vector<int> recv_mesg;
    /*
-    * Pack relationships from all mapped_box_level relationship sets into a single message.
-    * Note that each mapped_box_level relationship set object packs the size of its
+    * Pack relationships from all box_level relationship sets into a single message.
+    * Note that each box_level relationship set object packs the size of its
     * sub-message into send_mesg.
     */
    acquireRemoteNeighborhoods_pack(send_mesg);
@@ -727,8 +727,7 @@ Connector::writeNeighborhoodToErrorStream(
    const BoxId& box_id) const
 {
    const BoxNeighborhoodCollection& relationships = getRelations(box_id);
-   BoxId non_per_id(box_id.getGlobalId(),
-                    PeriodicId::zero());
+   BoxId non_per_id(box_id.getGlobalId(), PeriodicId::zero());
    ConstNeighborhoodIterator ei = relationships.find(non_per_id);
    if (ei == relationships.end()) {
       TBOX_ERROR("Connector::find: No neighbor set exists for\n"
@@ -771,47 +770,47 @@ Connector::initializeToLocalTranspose(
    for (ConstNeighborhoodIterator ci = connector.begin();
         ci != connector.end(); ++ci) {
 
-      const BoxId& mapped_box_id = *ci;
-      const BoxContainer::const_iterator ni = getHead().getBox(mapped_box_id);
+      const BoxId& box_id = *ci;
+      const BoxContainer::const_iterator ni = getHead().getBox(box_id);
       if (ni == getHead().getBoxes().end()) {
          TBOX_ERROR(
-            "Connector::initializeToLocalTranspose: mapped_box index\n"
-            << mapped_box_id
-            << " not found in local part of head mapped_box_level.\n"
+            "Connector::initializeToLocalTranspose: box index\n"
+            << box_id
+            << " not found in local part of head box_level.\n"
             << "This means that the incoming Connector data was not a\n"
             << "self-consistent local mapping.\n");
       }
-      const Box& my_head_mapped_box = *ni;
+      const Box& my_head_box = *ni;
 
       for (ConstNeighborIterator na = connector.begin(ci);
            na != connector.end(ci); ++na) {
-         const Box& my_base_mapped_box = *na;
-         if (my_base_mapped_box.getOwnerRank() != getMPI().getRank()) {
+         const Box& my_base_box = *na;
+         if (my_base_box.getOwnerRank() != getMPI().getRank()) {
             TBOX_ERROR(
-               "Connector::initializeToLocalTranspose: base mapped_box "
-               << my_head_mapped_box << "\n"
-               << "has remote neighbor " << my_base_mapped_box
+               "Connector::initializeToLocalTranspose: base box "
+               << my_head_box << "\n"
+               << "has remote neighbor " << my_base_box
                << " which is disallowed.\n"
-               << "Mapped_boxes must have only local neighbors in this method.");
+               << "Boxes must have only local neighbors in this method.");
          }
-         if (my_base_mapped_box.isPeriodicImage()) {
-            Box my_shifted_head_mapped_box(
-               my_head_mapped_box,
+         if (my_base_box.isPeriodicImage()) {
+            Box my_shifted_head_box(
+               my_head_box,
                shift_catalog->getOppositeShiftNumber(
-                  my_base_mapped_box.getPeriodicId()),
+                  my_base_box.getPeriodicId()),
                getHead().getRefinementRatio());
-            if (getHead().hasBox(my_shifted_head_mapped_box)) {
+            if (getHead().hasBox(my_shifted_head_box)) {
                BoxId base_non_per_id(
-                  my_base_mapped_box.getGlobalId(),
+                  my_base_box.getGlobalId(),
                   PeriodicId::zero());
                d_relationships.insert(
                   base_non_per_id,
-                  my_shifted_head_mapped_box);
+                  my_shifted_head_box);
             }
          } else {
             d_relationships.insert(
-               my_base_mapped_box.getBoxId(),
-               my_head_mapped_box);
+               my_base_box.getBoxId(),
+               my_head_box);
          }
       }
 
@@ -925,7 +924,7 @@ Connector::convertHeadWidthToBase(
    if (!(base_refinement_ratio >= head_refinement_ratio ||
          base_refinement_ratio <= head_refinement_ratio)) {
       TBOX_ERROR("Connector::convertHeadWidthToBase:\n"
-         << "head mapped_box_level must be either\n"
+         << "head box_level must be either\n"
          << "finer or coarser than base.\n"
          << "Combined refinement and coarsening not allowed.");
    }
@@ -999,7 +998,7 @@ Connector::recursivePrint(
       << " (" << getLocalNumberOfNeighborSets() << " with neighbor lists)\n"
    ;
    if (detail_depth > 0) {
-      os << border << "Mapped_boxes with neighbors:\n";
+      os << border << "Bboxes with neighbors:\n";
       for (ConstNeighborhoodIterator ei = begin(); ei != end(); ++ei) {
          const BoxId& box_id = *ei;
          BoxContainer::const_iterator ni = getBase().getBox(box_id);
@@ -1136,7 +1135,7 @@ Connector::assertTransposeCorrectness(
  *
  * This method does not check whether the Connectors are defined to
  * form logical transposes (based on their widths and their base and
- * head mapped_box_levels).  For that, see isTransposeOf().
+ * head box_levels).  For that, see isTransposeOf().
  *
  ***********************************************************************
  */
@@ -1161,8 +1160,8 @@ Connector::checkTransposeCorrectness(
     * Check for extraneous relationships.
     * For every relationship in this, there should be reverse relationship in transpose.
     */
-   Box shifted_mapped_box(dim);   // Shifted version of an unshifted Box.
-   Box unshifted_mapped_box(dim); // Unhifted version of a shifted Box.
+   Box shifted_box(dim);   // Shifted version of an unshifted Box.
+   Box unshifted_box(dim); // Unhifted version of a shifted Box.
 
    size_t err_count = 0;
 
@@ -1171,8 +1170,8 @@ Connector::checkTransposeCorrectness(
       transpose->getGlobalNeighborhoodSets();
    for (ConstNeighborhoodIterator ci = begin(); ci != end(); ++ci) {
 
-      const BoxId& mapped_box_id = *ci;
-      const Box& mapped_box = *getBase().getBox(mapped_box_id);
+      const BoxId& box_id = *ci;
+      const Box& box = *getBase().getBox(box_id);
 
       size_t err_count_for_current_index = 0;
 
@@ -1195,7 +1194,7 @@ Connector::checkTransposeCorrectness(
 
          if (cn == tran_relationships.end()) {
             tbox::perr << "\nConnector::checkTransposeCorrectness:\n"
-            << "Local mapped_box " << mapped_box
+            << "Local box " << box
             << " has relationship to " << nabr
             << " but " << nabr << " has no relationship container.\n";
             ++err_count_for_current_index;
@@ -1206,21 +1205,21 @@ Connector::checkTransposeCorrectness(
 
          bool nabr_has_box;
          if (nabr.isPeriodicImage()) {
-            shifted_mapped_box.initialize(
-               mapped_box,
+            shifted_box.initialize(
+               box,
                shift_catalog->getOppositeShiftNumber(nabr.getPeriodicId()),
                getBase().getRefinementRatio());
             nabr_has_box =
-               tran_relationships.hasNeighbor(cn, shifted_mapped_box);
+               tran_relationships.hasNeighbor(cn, shifted_box);
          } else {
-            nabr_has_box = tran_relationships.hasNeighbor(cn, mapped_box);
+            nabr_has_box = tran_relationships.hasNeighbor(cn, box);
          }
 
          if (!nabr_has_box) {
             tbox::perr << "\nConnector::checkTransposeCorrectness:\n"
-            << "Local mapped_box " << mapped_box;
+            << "Local box " << box;
             if (nabr.isPeriodicImage()) {
-               tbox::perr << " (shifted version " << shifted_mapped_box << ")";
+               tbox::perr << " (shifted version " << shifted_box << ")";
             }
             tbox::perr << " has relationship to " << nabr << " but "
             << nabr << " does not have the reverse relationship.\n"
@@ -1237,7 +1236,7 @@ Connector::checkTransposeCorrectness(
       }
 
       if (err_count_for_current_index > 0) {
-         tbox::perr << "Mapped_box " << mapped_box << " had "
+         tbox::perr << "Box " << box << " had "
          << err_count_for_current_index
          << " errors.  Neighbors are:\n";
          for (ConstNeighborIterator nj = begin(ci); nj != end(ci); ++nj) {
@@ -1257,14 +1256,14 @@ Connector::checkTransposeCorrectness(
    for (ConstNeighborhoodIterator ci = tran_relationships.begin();
         ci != tran_relationships.end(); ++ci) {
 
-      const BoxId& mapped_box_id = *ci;
+      const BoxId& box_id = *ci;
 
       size_t err_count_for_current_index = 0;
 
-      if (!head.hasBox(mapped_box_id)) {
-         TBOX_ASSERT(head.hasBox(mapped_box_id));
+      if (!head.hasBox(box_id)) {
+         TBOX_ASSERT(head.hasBox(box_id));
       }
-      const Box& head_mapped_box = *head.getBoxStrict(mapped_box_id);
+      const Box& head_box = *head.getBoxStrict(box_id);
 
       for (ConstNeighborIterator na = tran_relationships.begin(ci);
            na != tran_relationships.end(ci); ++na) {
@@ -1279,12 +1278,12 @@ Connector::checkTransposeCorrectness(
 
             if (!getBase().hasBox(nabr)) {
                tbox::perr << "\nConnector::checkTransposeCorrectness:\n"
-               << "Head mapped_box " << head_mapped_box
+               << "Head box " << head_box
                << " has neighbor " << nabr << "\n"
                << " but the neighbor does not exist "
-               << "in the base mapped_box_level.\n";
-               tbox::perr << "Neighbors of head mapped_box "
-               << mapped_box_id << " are:\n";
+               << "in the base box_level.\n";
+               tbox::perr << "Neighbors of head box "
+               << box_id << " are:\n";
                for (ConstNeighborIterator nj = tran_relationships.begin(ci);
                     nj != tran_relationships.end(ci); ++nj) {
                   tbox::perr << "   " << *nj << std::endl;
@@ -1293,23 +1292,21 @@ Connector::checkTransposeCorrectness(
                continue;
             }
 
-            const Box& base_mapped_box = *getBase().getBoxStrict(nabr);
+            const Box& base_box = *getBase().getBoxStrict(nabr);
 
             /*
              * Non-periodic BoxId needed for NeighborhoodSet::find()
              */
-            BoxId base_non_per_id(base_mapped_box.getGlobalId(),
-                                  PeriodicId::zero());
+            BoxId base_non_per_id(base_box.getGlobalId(), PeriodicId::zero());
 
             if (!d_relationships.isBaseBox(base_non_per_id)) {
                tbox::perr << "\nConnector::checkTransposeCorrectness:\n"
-               << "Head mapped_box " << head_mapped_box << "\n"
-               << " has base mapped_box "
-               << base_mapped_box << " as a neighbor.\n"
-               << "But " << base_mapped_box
+               << "Head box " << head_box << "\n"
+               << " has base box "
+               << base_box << " as a neighbor.\n"
+               << "But " << base_box
                << " has no neighbor container.\n";
-               tbox::perr << "Neighbors of head mapped_box " << BoxId(
-                  mapped_box_id)
+               tbox::perr << "Neighbors of head box " << BoxId(box_id)
                << ":" << std::endl;
                for (ConstNeighborIterator nj = tran_relationships.begin(ci);
                     nj != tran_relationships.end(ci); ++nj) {
@@ -1319,32 +1316,32 @@ Connector::checkTransposeCorrectness(
                continue;
             }
 
-            const Box nabr_nabr(dim, mapped_box_id.getGlobalId(),
+            const Box nabr_nabr(dim, box_id.getGlobalId(),
                                 shift_catalog->getOppositeShiftNumber(
-                                   base_mapped_box.getPeriodicId()));
+                                   base_box.getPeriodicId()));
 
             if (!d_relationships.hasNeighbor(base_non_per_id, nabr_nabr)) {
                tbox::perr << "\nConnector::checkTransposeCorrectness:\n"
-               << "Head mapped_box " << head_mapped_box << "\n"
-               << " has base mapped_box " << base_mapped_box
+               << "Head box " << head_box << "\n"
+               << " has base box " << base_box
                << " as a neighbor.\n"
-               << "But base mapped_box " << base_mapped_box
-               << " does not have a mapped_box indexed "
+               << "But base box " << base_box
+               << " does not have a box indexed "
                << nabr_nabr.getBoxId()
                << " in its neighbor list." << std::endl;
-               tbox::perr << "Neighbors of head mapped_box " << nabr_nabr.getBoxId()
+               tbox::perr << "Neighbors of head box " << nabr_nabr.getBoxId()
                << ":" << std::endl;
                for (ConstNeighborIterator nj = tran_relationships.begin(ci);
                     nj != tran_relationships.end(ci); ++nj) {
                   tbox::perr << "   " << *nj << std::endl;
                }
-               tbox::perr << "Neighbors of base mapped_box ";
+               tbox::perr << "Neighbors of base box ";
                if (nabr.isPeriodicImage()) {
-                  unshifted_mapped_box.initialize(
+                  unshifted_box.initialize(
                      nabr,
                      shift_catalog->getZeroShiftNumber(),
                      getBase().getRefinementRatio());
-                  tbox::perr << unshifted_mapped_box;
+                  tbox::perr << unshifted_box;
                }
                tbox::perr << ":" << std::endl;
                ConstNeighborhoodIterator nabr_nabrs_ =
@@ -1388,13 +1385,13 @@ Connector::checkConsistencyWithBase() const
    size_t num_errors = 0;
    for (ConstNeighborhoodIterator i_relationships = begin();
         i_relationships != end(); ++i_relationships) {
-      const BoxId& mapped_box_id = *i_relationships;
-      if (!getBase().hasBox(mapped_box_id)) {
+      const BoxId& box_id = *i_relationships;
+      if (!getBase().hasBox(box_id)) {
          ++num_errors;
          tbox::plog << "ERROR->"
          << "Connector::assertConsistencyWithBase: Neighbor data given "
-         << "\nfor mapped_box " << mapped_box_id
-         << " but the mapped_box does not exist.\n";
+         << "\nfor box " << box_id
+         << " but the box does not exist.\n";
       }
    }
    return num_errors;
@@ -1438,13 +1435,13 @@ Connector::computeNeighborhoodDifferences(
 
    for (ConstNeighborhoodIterator ai = left.begin(); ai != left.end(); ++ai) {
 
-      const BoxId& mapped_box_id = *ai;
+      const BoxId& box_id = *ai;
 
-      ConstNeighborhoodIterator bi = right.findLocal(mapped_box_id);
+      ConstNeighborhoodIterator bi = right.findLocal(box_id);
       if (bi != right.end()) {
          // Remove bi from ai.  Put results in a_minus_b.
          NeighborhoodIterator base_box_itr =
-            left_minus_right.makeEmptyLocalNeighborhood(mapped_box_id);
+            left_minus_right.makeEmptyLocalNeighborhood(box_id);
 
          //equivalent of stl set_difference
          ConstNeighborIterator na = left.begin(ai);
@@ -1461,12 +1458,12 @@ Connector::computeNeighborhoodDifferences(
             } 
          }
              
-         if (left_minus_right.isEmptyNeighborhood(mapped_box_id)) {
-            left_minus_right.eraseLocalNeighborhood(mapped_box_id);
+         if (left_minus_right.isEmptyNeighborhood(box_id)) {
+            left_minus_right.eraseLocalNeighborhood(box_id);
          }
-      } else if (left.numLocalNeighbors(mapped_box_id) != 0) {
+      } else if (left.numLocalNeighbors(box_id) != 0) {
          NeighborhoodIterator base_box_itr =
-            left_minus_right.makeEmptyLocalNeighborhood(mapped_box_id);
+            left_minus_right.makeEmptyLocalNeighborhood(box_id);
          for (ConstNeighborIterator na = left.begin(ai);
               na != left.end(ai); ++na) {
             left_minus_right.insertLocalNeighbor(*na, base_box_itr);
@@ -1502,40 +1499,38 @@ Connector::assertConsistencyWithHead() const
 size_t
 Connector::checkConsistencyWithHead() const
 {
-   const BoxLevel& head_mapped_box_level = getHead().getGlobalizedVersion();
+   const BoxLevel& head_box_level = getHead().getGlobalizedVersion();
 
-   TBOX_ASSERT(head_mapped_box_level.getParallelState() ==
-      BoxLevel::GLOBALIZED);
+   TBOX_ASSERT(head_box_level.getParallelState() == BoxLevel::GLOBALIZED);
 
-   const BoxContainer& head_mapped_boxes =
-      head_mapped_box_level.getGlobalBoxes();
+   const BoxContainer& head_boxes = head_box_level.getGlobalBoxes();
 
    size_t number_of_inconsistencies = 0;
 
    /*
     * For each neighbor in each neighbor list,
-    * check that the neighbor is in the head_mapped_box_level.
+    * check that the neighbor is in the head_box_level.
     */
 
    for (ConstNeighborhoodIterator ei = begin(); ei != end(); ++ei) {
 
-      const BoxId& mapped_box_id = *ei;
+      const BoxId& box_id = *ei;
 
       for (ConstNeighborIterator na = begin(ei); na != end(ei); ++na) {
 
          const Box& nabr = *na;
          const Box unshifted_nabr(
-            nabr, PeriodicId::zero(), head_mapped_box_level.getRefinementRatio());
+            nabr, PeriodicId::zero(), head_box_level.getRefinementRatio());
 
          BoxContainer::const_iterator na_in_head =
-            head_mapped_boxes.find(unshifted_nabr);
+            head_boxes.find(unshifted_nabr);
 
-         if (na_in_head == head_mapped_boxes.end()) {
+         if (na_in_head == head_boxes.end()) {
             tbox::perr << "\nConnector::checkConsistencyWithHead:\n"
-            << "Neighbor list for mapped_box " << mapped_box_id << "\n"
+            << "Neighbor list for box " << box_id << "\n"
             << "referenced nonexistent neighbor "
             << nabr << "\n";
-            tbox::perr << "Neighbors of mapped_box " << mapped_box_id << ":\n";
+            tbox::perr << "Neighbors of box " << box_id << ":\n";
             for (ConstNeighborIterator nb = begin(ei); nb != end(ei); ++nb) {
                tbox::perr << "   " << *nb << '\n';
             }
@@ -1547,11 +1542,11 @@ Connector::checkConsistencyWithHead() const
          if (!unshifted_nabr.isIdEqual(nabr_in_head) ||
              !unshifted_nabr.isSpatiallyEqual(nabr_in_head)) {
             tbox::perr << "\nConnector::checkConsistencyWithHead:\n"
-            << "Inconsistent mapped_box data at mapped_box "
-            << mapped_box_id << "\n"
+            << "Inconsistent box data at box "
+            << box_id << "\n"
             << "Neighbor " << nabr << "(unshifted to "
             << unshifted_nabr << ") does not match "
-            << "head mapped_box " << nabr_in_head
+            << "head box " << nabr_in_head
             << "\n";
             ++number_of_inconsistencies;
          }

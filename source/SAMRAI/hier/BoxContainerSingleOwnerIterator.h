@@ -41,7 +41,7 @@ public:
    operator = (
       const BoxContainerSingleOwnerIterator& r)
    {
-      d_mapped_boxes = r.d_mapped_boxes;
+      d_boxes = r.d_boxes;
       d_iter = r.d_iter;
       d_owner_rank = r.d_owner_rank;
       return *this;
@@ -72,7 +72,7 @@ public:
    operator == (
       const BoxContainerSingleOwnerIterator& r) const
    {
-      return d_mapped_boxes == r.d_mapped_boxes &&
+      return d_boxes == r.d_boxes &&
              d_owner_rank == r.d_owner_rank &&
              d_iter == r.d_iter;
    }
@@ -84,7 +84,7 @@ public:
    operator != (
       const BoxContainerSingleOwnerIterator& r) const
    {
-      return d_mapped_boxes != r.d_mapped_boxes ||
+      return d_boxes != r.d_boxes ||
              d_owner_rank != r.d_owner_rank ||
              d_iter != r.d_iter;
    }
@@ -124,7 +124,7 @@ private:
    /*!
     * @brief BoxContainer being iterated through.
     */
-   const BoxContainer* d_mapped_boxes;
+   const BoxContainer* d_boxes;
 
    /*!
     * @brief The owner_rank.

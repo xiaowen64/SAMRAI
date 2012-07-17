@@ -156,7 +156,7 @@ public:
     *
     * @param[in] dim
     *
-    * @param[in] mapped_box_id
+    * @param[in] box_id
     */
    /*
     * TODO: Constructors initializing boxes are only used to construct
@@ -166,7 +166,7 @@ public:
     */
    Box(
       const tbox::Dimension& dim,
-      const BoxId& mapped_box_id);
+      const BoxId& box_id);
 
    /*!
     * @brief "Copy" constructor allowing change in PeriodicId.

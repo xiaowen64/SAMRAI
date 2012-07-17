@@ -66,11 +66,11 @@ public:
     * @note
     * Patch data components are not allocated/instantiated.
     *
-    * @param[in]  mapped_box
+    * @param[in]  box
     * @param[in]  descriptor
     */
    Patch(
-      const Box& mapped_box,
+      const Box& box,
       const boost::shared_ptr<PatchDescriptor>& descriptor);
 
    /*!
@@ -90,7 +90,7 @@ public:
    const Box&
    getBox() const
    {
-      return d_mapped_box;
+      return d_box;
    }
 
    /*!
@@ -105,7 +105,7 @@ public:
    const GlobalId&
    getGlobalId() const
    {
-      return d_mapped_box.getGlobalId();
+      return d_box.getGlobalId();
    }
 
    /*!
@@ -119,7 +119,7 @@ public:
    const LocalId&
    getLocalId() const
    {
-      return d_mapped_box.getLocalId();
+      return d_box.getLocalId();
    }
 
    /*!
@@ -236,7 +236,7 @@ public:
       const int id) const
    {
       return d_descriptor->getPatchDataFactory(id)->getSizeOfMemory(
-         d_mapped_box);
+         d_box);
    }
 
    /*!
@@ -505,7 +505,7 @@ public:
    const tbox::Dimension&
    getDim() const
    {
-      return d_mapped_box.getDim();
+      return d_box.getDim();
    }
 
    /*!
@@ -537,7 +537,7 @@ private:
    /*
     * The box defining the extent of this patch.
     */
-   Box d_mapped_box;
+   Box d_box;
 
    boost::shared_ptr<PatchDescriptor> d_descriptor;
 

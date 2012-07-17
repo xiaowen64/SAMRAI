@@ -275,7 +275,7 @@ struct BoxUtilities {
     * the box in an inappropriate manner.  Intersections that are
     * disallowed are those in which a portion of the domain boundary is
     * parallel to a box face and lies strictly in the interior of the ghost
-    * cell mapped_box_level adjacent to that face.  In other words, we eliminate
+    * cell box_level adjacent to that face.  In other words, we eliminate
     * ghost cell regions residing outside of a given domain and which are
     * narrower than the specified ghost width.   The boolean return value
     * is true if the input box was extended to the boundary and thus

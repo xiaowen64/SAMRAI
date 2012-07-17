@@ -203,7 +203,7 @@ public:
     * argument must be a decomposition of the the coarsest level, and
     * must exactly fill the index space of the physical domain of the
     * hierarchy.  If omitted or given an uninitialized
-    * mapped_box_level, the standard decomposition method is used.
+    * box_level, the standard decomposition method is used.
     */
    double
    initializeHierarchy();

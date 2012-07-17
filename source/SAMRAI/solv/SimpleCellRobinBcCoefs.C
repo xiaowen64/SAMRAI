@@ -334,10 +334,10 @@ SimpleCellRobinBcCoefs::setBcCoefs(
                              << "after the hierarchy changed.\n");
          }
 #endif
-         hier::BoxId mapped_box_id(global_id);
+         hier::BoxId box_id(global_id);
 
          std::map<hier::BoxId, int> foo = d_dirichlet_data_pos[ln];
-         int position = foo[mapped_box_id] + bn;
+         int position = foo[box_id] + bn;
          gcoef_data->copy(*d_dirichlet_data[position],
             d_dirichlet_data[position]->getBox(),
             hier::IntVector::getZero(d_dim));
@@ -448,10 +448,10 @@ SimpleCellRobinBcCoefs::setBcCoefs(
                              << "hierarchy changed.\n");
          }
 #endif
-         hier::BoxId mapped_box_id(global_id);
+         hier::BoxId box_id(global_id);
 
          std::map<hier::BoxId, int> foo = d_dirichlet_data_pos[ln];
-         int position = foo[mapped_box_id] + bn;
+         int position = foo[box_id] + bn;
 
          const pdat::ArrayData<double>& dirichlet_array_data =
             *d_dirichlet_data[position];
@@ -542,13 +542,13 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
       for ( ; pi != level.end(); ++pi) {
          hier::Patch& patch = **pi;
          const hier::GlobalId& global_id = patch.getGlobalId();
-         hier::BoxId mapped_box_id(global_id);
+         hier::BoxId box_id(global_id);
          boost::shared_ptr<geom::CartesianPatchGeometry> pg(
             patch.getPatchGeometry(),
             boost::detail::dynamic_cast_tag());
          const tbox::Array<hier::BoundaryBox>& codim1_boxes =
             pg->getCodimensionBoundaries(1);
-         d_dirichlet_data_pos[ln][mapped_box_id] = n_reqd_boxes;
+         d_dirichlet_data_pos[ln][box_id] = n_reqd_boxes;
          n_reqd_boxes += codim1_boxes.getSize();
       }
    }
@@ -560,7 +560,7 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
       for ( ; pi != level.end(); ++pi) {
          hier::Patch& patch = **pi;
          const hier::GlobalId& global_id = patch.getGlobalId();
-         hier::BoxId mapped_box_id(global_id);
+         hier::BoxId box_id(global_id);
          boost::shared_ptr<pdat::CellData<double> > cell_data(
             patch.getPatchData(dirichlet_data_id),
             boost::detail::dynamic_cast_tag());
@@ -571,7 +571,7 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
             pg->getCodimensionBoundaries(1);
          for (bn = 0; bn < codim1_boxes.getSize(); ++bn) {
             const hier::BoundaryBox& bdry_box = codim1_boxes[bn];
-            position = d_dirichlet_data_pos[ln][mapped_box_id] + bn;
+            position = d_dirichlet_data_pos[ln][box_id] + bn;
             hier::Box databox = makeSideBoundaryBox(bdry_box);
             d_dirichlet_data[position].reset(
                new pdat::ArrayData<double>(databox, 1));
@@ -613,7 +613,7 @@ SimpleCellRobinBcCoefs::restoreDirichletData(
       for ( ; pi != level.end(); ++pi) {
          hier::Patch& patch = **pi;
          const hier::GlobalId& global_id = patch.getGlobalId();
-         hier::BoxId mapped_box_id(global_id);
+         hier::BoxId box_id(global_id);
          boost::shared_ptr<pdat::CellData<double> > cell_data(
             patch.getPatchData(dirichlet_data_id),
             boost::detail::dynamic_cast_tag());
@@ -624,7 +624,7 @@ SimpleCellRobinBcCoefs::restoreDirichletData(
             pg->getCodimensionBoundaries(1);
          for (bn = 0; bn < codim1_boxes.getSize(); ++bn) {
             const hier::BoundaryBox& bdry_box = codim1_boxes[bn];
-            position = d_dirichlet_data_pos[ln][mapped_box_id] + bn;
+            position = d_dirichlet_data_pos[ln][box_id] + bn;
             pdat::ArrayData<double>& array_data = *d_dirichlet_data[position];
             hier::IntVector shift_amount(d_dim, 0);
             const int location_index = bdry_box.getLocationIndex();

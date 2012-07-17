@@ -175,15 +175,15 @@ Box::Box(
 
 Box::Box(
    const tbox::Dimension& dim,
-   const BoxId& mapped_box_id):
+   const BoxId& box_id):
    d_lo(dim),
    d_hi(dim),
-   d_id(mapped_box_id),
+   d_id(box_id),
    d_id_locked(false)
 {
-   TBOX_ASSERT(mapped_box_id.getPeriodicId().isValid());
+   TBOX_ASSERT(box_id.getPeriodicId().isValid());
    TBOX_ASSERT(
-      mapped_box_id.getPeriodicId().getPeriodicValue() <
+      box_id.getPeriodicId().getPeriodicValue() <
       PeriodicShiftCatalog::getCatalog(dim)->getNumberOfShifts());
 #ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active mapped box count and

@@ -51,7 +51,7 @@ public:
     */
    virtual boost::shared_ptr<Patch>
    allocate(
-      const Box& mapped_box_level_mapped_box,
+      const Box& box_level_box,
       const boost::shared_ptr<PatchDescriptor>& descriptor) const;
 
 private:

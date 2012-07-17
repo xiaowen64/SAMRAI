@@ -230,7 +230,7 @@ public:
     * @brief Compute the parts of one BoxLevel that are internal
     * to another BoxLevel.
     *
-    * Compare an input BoxLevel to a "reference" mapped_box_level.
+    * Compare an input BoxLevel to a "reference" box_level.
     * Identify parts of the input that are internal to the reference
     * BoxLevel, and store the internal parts in a
     * BoxLevel.  Set up a mapping Connector between the input
@@ -296,7 +296,7 @@ public:
     * @param[out] boundary Boundary boxes, sorted into BoxContainers
     * according to the BlockId.
     *
-    * @param[in] refinement_ratio Refinement ratio of mapped_boxes.
+    * @param[in] refinement_ratio Refinement ratio of boxes.
     *
     * @param[in] grid_geometry
     *
@@ -323,7 +323,7 @@ public:
     * The Connector map created is local (no Box is mapped to a new
     * owner).
     *
-    * If @c sort_mapped_boxes_by_corner is true, the map will reorder
+    * If @c sort_boxes_by_corner is true, the map will reorder
     * local Boxes by their box corners.  This is useful for
     * making random box ordering into something deterministic.
     *
@@ -338,15 +338,15 @@ public:
     * For more information on mapping Connectors, see
     * MappingConnectorAlgorithm.
     *
-    * @param[out] sorted_mapped_box_level Sorted version of the input
-    * unsorted_mapped_box_level.
+    * @param[out] sorted_box_level Sorted version of the input
+    * unsorted_box_level.
     *
-    * @param[out] output_map Mapping from @c unsorted_mapped_box_level
-    * to @c sorted_mapped_box_level.
+    * @param[out] output_map Mapping from @c unsorted_box_level
+    * to @c sorted_box_level.
     *
-    * @param[in] unsorted_mapped_box_level
+    * @param[in] unsorted_box_level
     *
-    * @param[in] sort_mapped_boxes_by_corner Whether to sort local
+    * @param[in] sort_boxes_by_corner Whether to sort local
     * Boxes by their indices to make their ordering solely a
     * function of box positions.
     *
@@ -359,10 +359,10 @@ public:
     */
    void
    makeSortingMap(
-      BoxLevel& sorted_mapped_box_level,
+      BoxLevel& sorted_box_level,
       Connector& output_map,
-      const BoxLevel& unsorted_mapped_box_level,
-      bool sort_mapped_boxes_by_corner = true,
+      const BoxLevel& unsorted_box_level,
+      bool sort_boxes_by_corner = true,
       bool sequentialize_global_indices = true,
       LocalId initial_sequential_index = LocalId::getZero()) const;
 
@@ -404,7 +404,7 @@ public:
     * added, Those farther out are not added.  The threshold distance
     * is @c threshold_distance.
     *
-    * @param[in,out] mapped_box_level BoxLevel subject to the
+    * @param[in,out] box_level BoxLevel subject to the
     * addition of periodic Boxes.
     *
     * @param[in] domain_search_tree Domain description in the reference
@@ -414,7 +414,7 @@ public:
     */
    void
    addPeriodicImages(
-      BoxLevel& mapped_box_level,
+      BoxLevel& box_level,
       const BoxContainer& domain_search_tree,
       const IntVector& threshold_distance) const;
 
@@ -426,27 +426,27 @@ public:
     *
     * Any periodic images within a certain distance of the domain is
     * added, but the rest are not added.  The threshold distance is
-    * the width of the Connector @c mapped_box_level_to_anchor.
+    * the width of the Connector @c box_level_to_anchor.
     *
     * This method updates the overlap Connectors between the
     * BoxLevel getting new periodic Boxes and an "anchor"
     * BoxLevel.  New periodic overlap relationships generated
     * are added to the overlap Connector @c
-    * mapped_box_level_to_anchor.  If you don't need to have a
+    * box_level_to_anchor.  If you don't need to have a
     * Connector updated, use addPeriodicImages() instead of this
     * method.
     *
-    * Preconditions: mapped_box_level<==>anchor must be transpose
+    * Preconditions: box_level<==>anchor must be transpose
     * overlap Connectors (or communications may hang).
     * anchor--->anchor must be a complete overlap Connector.
     *
-    * @param[in,out] mapped_box_level BoxLevel subject to the
+    * @param[in,out] box_level BoxLevel subject to the
     * addition of periodic Boxes.
     *
-    * @param[in,out] mapped_box_level_to_anchor Overlap Connector to
+    * @param[in,out] box_level_to_anchor Overlap Connector to
     * be updated with new relationships.
     *
-    * @param[in,out] anchor_to_mapped_box_level Overlap Connector to
+    * @param[in,out] anchor_to_box_level Overlap Connector to
     * be updated with new relationships.
     *
     * @param[in] domain_search_tree Domain description in the
@@ -459,9 +459,9 @@ public:
     */
    void
    addPeriodicImagesAndRelationships(
-      BoxLevel& mapped_box_level,
-      Connector& mapped_box_level_to_anchor,
-      Connector& anchor_to_mapped_box_level,
+      BoxLevel& box_level,
+      Connector& box_level_to_anchor,
+      Connector& anchor_to_box_level,
       const BoxContainer& domain_search_tree,
       const Connector& anchor_to_anchor) const;
 

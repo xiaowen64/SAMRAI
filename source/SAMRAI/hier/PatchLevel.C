@@ -89,15 +89,15 @@ PatchLevel::PatchLevel(
  */
 
 PatchLevel::PatchLevel(
-   const BoxLevel& mapped_box_level,
+   const BoxLevel& box_level,
    const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
    const boost::shared_ptr<PatchDescriptor>& descriptor,
    const boost::shared_ptr<PatchFactory>& factory,
    bool defer_boundary_box_creation):
    d_dim(grid_geometry->getDim()),
-   d_mapped_box_level(boost::make_shared<BoxLevel>(mapped_box_level)),
+   d_box_level(boost::make_shared<BoxLevel>(box_level)),
    d_has_globalized_data(false),
-   d_ratio_to_level_zero(d_mapped_box_level->getRefinementRatio()),
+   d_ratio_to_level_zero(d_box_level->getRefinementRatio()),
    d_factory(factory ? factory : boost::make_shared<PatchFactory>()),
    d_physical_domain(grid_geometry->getNumberBlocks()),
    d_ratio_to_coarser_level(grid_geometry->getDim(), 0)
@@ -105,7 +105,7 @@ PatchLevel::PatchLevel(
 {
    d_number_blocks = grid_geometry->getNumberBlocks();
 
-   TBOX_ASSERT_OBJDIM_EQUALITY2(mapped_box_level, *grid_geometry);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box_level, *grid_geometry);
 
    t_level_constructor->start();
 
@@ -116,17 +116,17 @@ PatchLevel::PatchLevel(
     * All components of ratio must be nonzero.  Additionally, all components
     * of ratio not equal to 1 must have the same sign.
     */
-   TBOX_ASSERT(mapped_box_level.getRefinementRatio() !=
+   TBOX_ASSERT(box_level.getRefinementRatio() !=
       IntVector::getZero(getDim()));
 
    if (getDim().getValue() > 1) {
       for (int i = 0; i < getDim().getValue(); i++) {
-         TBOX_ASSERT((mapped_box_level.getRefinementRatio() (i)
-                      * mapped_box_level.getRefinementRatio() ((i
+         TBOX_ASSERT((box_level.getRefinementRatio() (i)
+                      * box_level.getRefinementRatio() ((i
                                                                 + 1)
                          % getDim().getValue()) > 0)
-            || (mapped_box_level.getRefinementRatio() (i) == 1)
-            || (mapped_box_level.getRefinementRatio() ((i + 1) % getDim().getValue()) ==
+            || (box_level.getRefinementRatio() (i) == 1)
+            || (box_level.getRefinementRatio() ((i + 1) % getDim().getValue()) ==
                 1));
       }
    }
@@ -135,7 +135,7 @@ PatchLevel::PatchLevel(
    t_constructor_setup->start();
 
    d_local_number_patches =
-      static_cast<int>(d_mapped_box_level->getLocalNumberOfBoxes());
+      static_cast<int>(d_box_level->getLocalNumberOfBoxes());
    d_descriptor = descriptor;
 
    d_geometry = grid_geometry;
@@ -144,13 +144,13 @@ PatchLevel::PatchLevel(
    d_next_coarser_level_number = -1;
    d_in_hierarchy = false;
 
-   const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
-   for (RealBoxConstIterator ni(mapped_boxes.realBegin());
-        ni != mapped_boxes.realEnd(); ++ni) {
-      const Box& mapped_box = *ni;
-      const BoxId& ip = mapped_box.getBoxId();
+   const BoxContainer& boxes = d_box_level->getBoxes();
+   for (RealBoxConstIterator ni(boxes.realBegin());
+        ni != boxes.realEnd(); ++ni) {
+      const Box& box = *ni;
+      const BoxId& ip = box.getBoxId();
       boost::shared_ptr<Patch>& patch(d_patches[ip]);
-      patch = d_factory->allocate(mapped_box, d_descriptor);
+      patch = d_factory->allocate(box, d_descriptor);
       patch->setPatchLevelNumber(d_level_number);
       patch->setPatchInHierarchy(d_in_hierarchy);
    }
@@ -341,16 +341,16 @@ PatchLevel::setRefinedPatchLevel(
    d_boxes.refine(refine_ratio);
 
    {
-      d_mapped_box_level.reset(
+      d_box_level.reset(
          new BoxLevel(
             d_ratio_to_level_zero,
             d_geometry,
-            coarse_level->d_mapped_box_level->getMPI()));
-      coarse_level->d_mapped_box_level->refineBoxes(
-         *d_mapped_box_level,
+            coarse_level->d_box_level->getMPI()));
+      coarse_level->d_box_level->refineBoxes(
+         *d_box_level,
          refine_ratio,
          d_ratio_to_level_zero);
-      d_mapped_box_level->finalize();
+      d_box_level->finalize();
    }
    d_local_number_patches = coarse_level->getLocalNumberOfPatches();
    d_number_blocks = coarse_level->d_number_blocks;
@@ -367,14 +367,14 @@ PatchLevel::setRefinedPatchLevel(
     * domain information.
     */
 
-   const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
-   for (RealBoxConstIterator ni(mapped_boxes.realBegin());
-        ni != mapped_boxes.realEnd(); ++ni) {
-      const Box& mapped_box = *ni;
-      const BoxId& mapped_box_id = mapped_box.getBoxId();
-      d_patches[mapped_box_id] = d_factory->allocate(mapped_box, d_descriptor);
-      d_patches[mapped_box_id]->setPatchLevelNumber(d_level_number);
-      d_patches[mapped_box_id]->setPatchInHierarchy(d_in_hierarchy);
+   const BoxContainer& boxes = d_box_level->getBoxes();
+   for (RealBoxConstIterator ni(boxes.realBegin());
+        ni != boxes.realEnd(); ++ni) {
+      const Box& box = *ni;
+      const BoxId& box_id = box.getBoxId();
+      d_patches[box_id] = d_factory->allocate(box, d_descriptor);
+      d_patches[box_id]->setPatchLevelNumber(d_level_number);
+      d_patches[box_id]->setPatchInHierarchy(d_in_hierarchy);
    }
 
    std::map<BoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
@@ -513,24 +513,23 @@ PatchLevel::setCoarsenedPatchLevel(
    d_boxes.coarsen(coarsen_ratio);
 
    /*
-    * Set coarse mapped_box_level to be the coarsened version of fine mapped_box_level.
+    * Set coarse box_level to be the coarsened version of fine box_level.
     *
     * NOTE: Some parts of SAMRAI (CoarsenSchedule in particular)
-    * assumes that the mapped_box identities are the same between the
+    * assumes that the box identities are the same between the
     * fine and coarsened levels.
     */
-   const BoxLevel& fine_mapped_box_level =
-      *fine_level->d_mapped_box_level;
-   d_mapped_box_level.reset(
+   const BoxLevel& fine_box_level = *fine_level->d_box_level;
+   d_box_level.reset(
       new BoxLevel(
          d_ratio_to_level_zero,
          d_geometry,
-         fine_mapped_box_level.getMPI()));
-   fine_level->d_mapped_box_level->coarsenBoxes(
-      *d_mapped_box_level,
+         fine_box_level.getMPI()));
+   fine_level->d_box_level->coarsenBoxes(
+      *d_box_level,
       coarsen_ratio,
       d_ratio_to_level_zero);
-   d_mapped_box_level->finalize();
+   d_box_level->finalize();
    d_local_number_patches = fine_level->getNumberOfPatches();
    d_number_blocks = fine_level->d_number_blocks;
 
@@ -546,14 +545,14 @@ PatchLevel::setCoarsenedPatchLevel(
     * domain information.
     */
 
-   const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
-   for (RealBoxConstIterator ni(mapped_boxes.realBegin());
-        ni != mapped_boxes.realEnd(); ++ni) {
-      const Box& mapped_box = *ni;
-      const BoxId& mapped_box_id = mapped_box.getBoxId();
-      d_patches[mapped_box_id] = d_factory->allocate(mapped_box, d_descriptor);
-      d_patches[mapped_box_id]->setPatchLevelNumber(d_level_number);
-      d_patches[mapped_box_id]->setPatchInHierarchy(d_in_hierarchy);
+   const BoxContainer& boxes = d_box_level->getBoxes();
+   for (RealBoxConstIterator ni(boxes.realBegin());
+        ni != boxes.realEnd(); ++ni) {
+      const Box& box = *ni;
+      const BoxId& box_id = box.getBoxId();
+      d_patches[box_id] = d_factory->allocate(box, d_descriptor);
+      d_patches[box_id]->setPatchLevelNumber(d_level_number);
+      d_patches[box_id]->setPatchInHierarchy(d_in_hierarchy);
    }
 
    d_boundary_boxes_created = false;
@@ -623,11 +622,11 @@ PatchLevel::getBoxes(
    }
 
    boxes.clear();
-   const BoxContainer& global_mapped_boxes =
-      d_mapped_box_level->getGlobalizedVersion().getGlobalBoxes();
+   const BoxContainer& global_boxes =
+      d_box_level->getGlobalizedVersion().getGlobalBoxes();
 
-   for (BoxContainerSingleBlockIterator gi(global_mapped_boxes.begin(block_id));
-        gi != global_mapped_boxes.end(block_id); ++gi) {
+   for (BoxContainerSingleBlockIterator gi(global_boxes.begin(block_id));
+        gi != global_boxes.end(block_id); ++gi) {
       boxes.pushBack(*gi);
    }
 }
@@ -694,35 +693,34 @@ PatchLevel::getFromRestart(
 
    boost::shared_ptr<tbox::Database> mbl_database(
       restart_db->getDatabase("mapped_box_level"));
-   boost::shared_ptr<BoxLevel> mapped_box_level(
+   boost::shared_ptr<BoxLevel> box_level(
       boost::make_shared<BoxLevel>(getDim()));
    boost::shared_ptr<const BaseGridGeometry> grid_geometry(getGridGeometry());
-   mapped_box_level->getFromRestart(*mbl_database, grid_geometry);
-   d_mapped_box_level = mapped_box_level;
+   box_level->getFromRestart(*mbl_database, grid_geometry);
+   d_box_level = box_level;
 
    d_patches.clear();
 
-   const BoxContainer& mapped_boxes = d_mapped_box_level->getBoxes();
-   for (RealBoxConstIterator ni(mapped_boxes.realBegin());
-        ni != mapped_boxes.realEnd(); ++ni) {
-      const Box& mapped_box = *ni;
-      const LocalId& local_id = mapped_box.getLocalId();
-      const BoxId& mapped_box_id = mapped_box.getBoxId();
+   const BoxContainer& boxes = d_box_level->getBoxes();
+   for (RealBoxConstIterator ni(boxes.realBegin());
+        ni != boxes.realEnd(); ++ni) {
+      const Box& box = *ni;
+      const LocalId& local_id = box.getLocalId();
+      const BoxId& box_id = box.getBoxId();
 
       std::string patch_name = "level_" + tbox::Utilities::levelToString(
             d_level_number)
          + "-patch_" + tbox::Utilities::patchToString(local_id.getValue())
          + "-block_"
-         + tbox::Utilities::blockToString(
-            mapped_box.getBlockId().getBlockValue());
+         + tbox::Utilities::blockToString(box.getBlockId().getBlockValue());
       if (!(restart_db->isDatabase(patch_name))) {
          TBOX_ERROR("PatchLevel::getFromRestart() error...\n"
             << "   patch name " << patch_name
             << " not found in restart database" << std::endl);
       }
 
-      boost::shared_ptr<Patch>& patch(d_patches[mapped_box_id]);
-      patch = d_factory->allocate(mapped_box, d_descriptor);
+      boost::shared_ptr<Patch>& patch(d_patches[box_id]);
+      patch = d_factory->allocate(box, d_descriptor);
       patch->setPatchLevelNumber(d_level_number);
       patch->setPatchInHierarchy(d_in_hierarchy);
       patch->getFromRestart(
@@ -793,7 +791,7 @@ PatchLevel::putToRestart(
 
    boost::shared_ptr<tbox::Database> mbl_database(
       restart_db->putDatabase("mapped_box_level"));
-   d_mapped_box_level->putToRestart(mbl_database);
+   d_box_level->putToRestart(mbl_database);
 
    for (iterator ip(begin()); ip != end(); ip++) {
 
@@ -852,27 +850,26 @@ PatchLevel::initializeGlobalizedBoxLevel() const
 {
    if (!d_has_globalized_data) {
 
-      const BoxLevel& globalized_mapped_box_level(
-         d_mapped_box_level->getGlobalizedVersion());
+      const BoxLevel& globalized_box_level(
+         d_box_level->getGlobalizedVersion());
 
-      const int nboxes = globalized_mapped_box_level.getGlobalNumberOfBoxes();
+      const int nboxes = globalized_box_level.getGlobalNumberOfBoxes();
       d_boxes.clear();
       d_mapping.setMappingSize(nboxes);
 
       /*
        * Backward compatibility with things requiring global sequential
        * indices (such as the VisIt writer) is provided by the implicit
-       * ordering of the mapped_boxes in the nested loops below.
+       * ordering of the boxes in the nested loops below.
        *
        * Due to this necessary renumbering, the patch number obtained
        * by the PatchLevel::Iterator does not correspond to the
        * global sequential index.
        */
       int count = 0;
-      const BoxContainer& mapped_boxes =
-         globalized_mapped_box_level.getGlobalBoxes();
-      for (RealBoxConstIterator ni(mapped_boxes.realBegin());
-           ni != mapped_boxes.realEnd();
+      const BoxContainer& boxes = globalized_box_level.getGlobalBoxes();
+      for (RealBoxConstIterator ni(boxes.realBegin());
+           ni != boxes.realEnd();
            ++ni) {
          d_mapping.setProcessorAssignment(count, ni->getOwnerRank());
          d_boxes.pushBack(*ni);

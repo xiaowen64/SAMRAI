@@ -309,13 +309,13 @@ public:
     * coarsened with respect to the physical domain description.
     * Otherwise, the index space is refined.
     *
-    * @param[out]    domain_mapped_boxes The BoxContainer containing all
+    * @param[out]    domain_boxes The BoxContainer containing all
     *                Boxes describing the physical domain
     * @param[in]     ratio_to_level_zero ratio to the coarsest level
     */
    void
    computePhysicalDomain(
-      BoxContainer& domain_mapped_boxes,
+      BoxContainer& domain_boxes,
       const IntVector& ratio_to_level_zero) const;
 
    /*!
@@ -545,9 +545,9 @@ public:
     * of boundary box arrays will be ordered as follows:
     *
     * @code
-    * (patch 0 face array, patch 0 edge array, patch 0 mapped_box array,
-    *  patch 1 face array, patch 1 edge array, patch 1 mapped_box array, . . . ,
-    *  patch n-1 face array, patch n-1 edge array, patch n-1 mapped_box array)
+    * (patch 0 face array, patch 0 edge array, patch 0 box array,
+    *  patch 1 face array, patch 1 edge array, patch 1 box array, . . . ,
+    *  patch n-1 face array, patch n-1 edge array, patch n-1 box array)
     * @endcode
     *
     * @note
@@ -587,7 +587,7 @@ public:
     *
     * Decompose patch boundary region into pieces depending on spatial
     * directions. Boxes are extended along the boundary to the edge
-    * of the ghost mapped_box_level if necessary.
+    * of the ghost box_level if necessary.
     *
     * @param[out]    patch_boundaries output boundaries
     * @param[in]     box

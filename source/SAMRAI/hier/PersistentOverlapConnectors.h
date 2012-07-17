@@ -223,11 +223,11 @@ private:
     * @brief Constructor, to be called from the BoxLevel
     * allocating the object.
     *
-    * @param my_mapped_box_level The BoxLevel served by this
+    * @param my_box_level The BoxLevel served by this
     * object.
     */
    explicit PersistentOverlapConnectors(
-      const BoxLevel& my_mapped_box_level);
+      const BoxLevel& my_box_level);
 
    /*
     * Read from the input database.
@@ -260,7 +260,7 @@ private:
    /*!
     * @brief Reference to the BoxLevel served by this object.
     */
-   const BoxLevel& d_my_mapped_box_level;
+   const BoxLevel& d_my_box_level;
 
    /*!
     * @brief Whether to check overlap Connectors when they are created.

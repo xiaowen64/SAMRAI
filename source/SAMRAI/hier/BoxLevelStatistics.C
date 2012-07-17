@@ -111,8 +111,8 @@ void BoxLevelStatistics::computeLocalBoxLevelStatistics( const BoxLevel &box_lev
    for (RealBoxConstIterator ni(boxes.realBegin());
         ni != boxes.realEnd(); ++ni) {
 
-      const Box& mapped_box = *ni;
-      const IntVector boxdims = mapped_box.numberCells();
+      const Box& box = *ni;
+      const IntVector boxdims = box.numberCells();
       const int boxvol = boxdims.getProduct();
       const int longdim = boxdims.max();
       const int shortdim = boxdims.min();

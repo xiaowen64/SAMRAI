@@ -32,7 +32,7 @@ public:
    /*!
     * @brief Print a vector of Boxes to an output stream.
     *
-    * @param[in] mapped_boxes
+    * @param[in] boxes
     *
     * @param[in] output_stream
     *
@@ -42,7 +42,7 @@ public:
     */
    static void
    recursivePrintBoxVector(
-      const std::vector<Box>& mapped_boxes,
+      const std::vector<Box>& boxes,
       std::ostream& output_stream = tbox::plog,
       const std::string& border = std::string(),
       int detail_depth = 0);

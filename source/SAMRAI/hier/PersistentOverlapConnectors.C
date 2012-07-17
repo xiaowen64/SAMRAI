@@ -30,8 +30,8 @@ bool PersistentOverlapConnectors::s_always_create_missing_connector(true);
  ************************************************************************
  */
 PersistentOverlapConnectors::PersistentOverlapConnectors(
-   const BoxLevel& my_mapped_box_level):
-   d_my_mapped_box_level(my_mapped_box_level)
+   const BoxLevel& my_box_level):
+   d_my_box_level(my_box_level)
 {
    getFromInput();
 }
@@ -90,7 +90,7 @@ PersistentOverlapConnectors::createConnector(
    const BoxLevel& head,
    const IntVector& connector_width)
 {
-   TBOX_ASSERT(d_my_mapped_box_level.isInitialized());
+   TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
@@ -103,7 +103,7 @@ PersistentOverlapConnectors::createConnector(
    }
 
    Connector* new_connector = new Connector(
-         d_my_mapped_box_level,
+         d_my_box_level,
          head,
          connector_width,
          BoxLevel::DISTRIBUTED);
@@ -127,7 +127,7 @@ PersistentOverlapConnectors::createConnector(
    const IntVector& connector_width,
    const Connector& relationships)
 {
-   TBOX_ASSERT(d_my_mapped_box_level.isInitialized());
+   TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
@@ -151,7 +151,7 @@ PersistentOverlapConnectors::createConnector(
    }
 
    Connector* new_connector = new Connector(relationships);
-   new_connector->setBase(d_my_mapped_box_level);
+   new_connector->setBase(d_my_box_level);
    new_connector->setHead(head);
    new_connector->setWidth(connector_width, true);
    if (s_check_created_connectors == 'y') {
@@ -177,7 +177,7 @@ PersistentOverlapConnectors::cacheConnector(
    const BoxLevel& head,
    Connector* connector)
 {
-   TBOX_ASSERT(d_my_mapped_box_level.isInitialized());
+   TBOX_ASSERT(d_my_box_level.isInitialized());
 
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
@@ -199,7 +199,7 @@ PersistentOverlapConnectors::cacheConnector(
       }
    }
 
-   connector->setBase(d_my_mapped_box_level);
+   connector->setBase(d_my_box_level);
    connector->setHead(head, true);
 
    if (s_check_created_connectors == 'y') {
@@ -231,7 +231,7 @@ PersistentOverlapConnectors::findConnector(
       return findOrCreateConnector(head, min_connector_width, exact_width_only);
    }
 
-   TBOX_ASSERT(d_my_mapped_box_level.isInitialized());
+   TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
    const Connector* found = NULL;
@@ -280,10 +280,10 @@ PersistentOverlapConnectors::findConnector(
 
       TBOX_ERROR(
          "PersistentOverlapConnectors::findConnector: Failed to find Connector\n"
-         << &d_my_mapped_box_level << "--->" << &head
+         << &d_my_box_level << "--->" << &head
          << " with " << (exact_width_only ? "exact" : "min")
          << " width of " << min_connector_width << ".\n"
-         << "base:\n" << d_my_mapped_box_level.format("B: ")
+         << "base:\n" << d_my_box_level.format("B: ")
          << "head:\n" << head.format("H: ")
          << "To automatically create the missing\n"
          << "connector, use findOrCreateConnector.");
@@ -298,7 +298,7 @@ PersistentOverlapConnectors::findConnector(
        */
 
       Connector* new_connector = new Connector(
-         d_my_mapped_box_level,
+         d_my_box_level,
          head,
          min_connector_width);
       oca.extractNeighbors(*new_connector, *found, min_connector_width);
@@ -337,7 +337,7 @@ PersistentOverlapConnectors::findOrCreateConnector(
    const IntVector& min_connector_width,
    bool exact_width_only)
 {
-   TBOX_ASSERT(d_my_mapped_box_level.isInitialized());
+   TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
    const Connector* found = NULL;
@@ -385,7 +385,7 @@ PersistentOverlapConnectors::findOrCreateConnector(
    if (found == NULL) {
 
       Connector* new_connector = new Connector(
-            d_my_mapped_box_level,
+            d_my_box_level,
             head,
             min_connector_width,
             BoxLevel::DISTRIBUTED);
@@ -406,7 +406,7 @@ PersistentOverlapConnectors::findOrCreateConnector(
        */
 
       Connector* new_connector = new Connector(
-         d_my_mapped_box_level,
+         d_my_box_level,
          head,
          min_connector_width);
       oca.extractNeighbors(*new_connector, *found, min_connector_width);

@@ -87,8 +87,8 @@ BoxContainer::BoxContainer(
 {
    BoxContainerSingleBlockIterator itr(other.begin(block_id));
    while (itr != other.end(block_id)) {
-      const Box& mapped_box = *itr;
-      pushBack(mapped_box);
+      const Box& box = *itr;
+      pushBack(box);
       ++itr;
    }
    if (other.d_ordered) {
@@ -573,8 +573,8 @@ BoxContainer::removePeriodicImageBoxes()
  */
 void
 BoxContainer::separatePeriodicImages(
-   std::vector<Box>& real_mapped_box_vector,
-   std::vector<Box>& periodic_image_mapped_box_vector) const
+   std::vector<Box>& real_box_vector,
+   std::vector<Box>& periodic_image_box_vector) const
 {
    if (!d_ordered) {
       TBOX_ERROR("separatePeriodicImages called on unordered BoxContainer.");
@@ -588,13 +588,13 @@ BoxContainer::separatePeriodicImages(
                                             first_element.getDim())->
                                          getZeroShiftNumber());
 
-      real_mapped_box_vector.reserve(real_mapped_box_vector.size() + size());
+      real_box_vector.reserve(real_box_vector.size() + size());
       for (const_iterator ni = begin(); ni != end(); ++ni) {
-         const Box& mapped_box = *ni;
-         if (mapped_box.getPeriodicId() == zero_shift_number) {
-            real_mapped_box_vector.push_back(mapped_box);
+         const Box& box = *ni;
+         if (box.getPeriodicId() == zero_shift_number) {
+            real_box_vector.push_back(box);
          } else {
-            periodic_image_mapped_box_vector.push_back(mapped_box);
+            periodic_image_box_vector.push_back(box);
          }
       }
    }
@@ -846,28 +846,28 @@ BoxContainer::removeIntersections(
 
    const BaseGridGeometry& grid_geometry(*takeaway.d_tree->getGridGeometry());
 
-   std::vector<const Box *> overlap_mapped_boxes;
+   std::vector<const Box *> overlap_boxes;
    iterator itr(*this);
    while (itr != end()) {
       const Box& tryme = *itr;
-      takeaway.d_tree->findOverlapBoxes(overlap_mapped_boxes,
+      takeaway.d_tree->findOverlapBoxes(overlap_boxes,
          tryme,
          refinement_ratio,
          include_singularity_block_neighbors);
-      if (overlap_mapped_boxes.empty()) {
+      if (overlap_boxes.empty()) {
          ++itr;
       } else {
          iterator sublist_start = itr;
          iterator sublist_end = sublist_start;
          ++sublist_end;
          for (size_t i = 0;
-              i < overlap_mapped_boxes.size() && sublist_start != sublist_end;
+              i < overlap_boxes.size() && sublist_start != sublist_end;
               ++i) {
             iterator insertion_pt = sublist_start;
             const BlockId& overlap_box_block_id =
-               overlap_mapped_boxes[i]->getBlockId();
+               overlap_boxes[i]->getBlockId();
             if (overlap_box_block_id != sublist_start->getBlockId()) {
-               Box overlap_box = *overlap_mapped_boxes[i];
+               Box overlap_box = *overlap_boxes[i];
                grid_geometry.transformBox(overlap_box,
                   refinement_ratio,
                   sublist_start->getBlockId(),
@@ -879,13 +879,13 @@ BoxContainer::removeIntersections(
                   insertion_pt);
             } else {
                removeIntersectionsFromSublist(
-                  *overlap_mapped_boxes[i],
+                  *overlap_boxes[i],
                   sublist_start,
                   sublist_end,
                   insertion_pt);
             }
          }
-         overlap_mapped_boxes.clear();
+         overlap_boxes.clear();
          itr = sublist_end;
       }
    }
@@ -938,28 +938,28 @@ BoxContainer::removeIntersections(
       d_tree.reset();
    }
 
-   std::vector<const Box *> overlap_mapped_boxes;
+   std::vector<const Box *> overlap_boxes;
    iterator itr(*this);
    while (itr != end()) {
       const Box& tryme = *itr;
-      takeaway.findOverlapBoxes(overlap_mapped_boxes, tryme);
-      if (overlap_mapped_boxes.empty()) {
+      takeaway.findOverlapBoxes(overlap_boxes, tryme);
+      if (overlap_boxes.empty()) {
          ++itr;
       } else {
          iterator sublist_start = itr;
          iterator sublist_end = sublist_start;
          ++sublist_end;
          for (size_t i = 0;
-              i < overlap_mapped_boxes.size() && sublist_start != sublist_end;
+              i < overlap_boxes.size() && sublist_start != sublist_end;
               ++i) {
             iterator insertion_pt = sublist_start;
             removeIntersectionsFromSublist(
-               *overlap_mapped_boxes[i],
+               *overlap_boxes[i],
                sublist_start,
                sublist_end,
                insertion_pt);
          }
-         overlap_mapped_boxes.clear();
+         overlap_boxes.clear();
          itr = sublist_end;
       }
    }
@@ -1093,21 +1093,21 @@ BoxContainer::intersectBoxes(
       d_tree.reset();
    }
 
-   std::vector<const Box *> overlap_mapped_boxes;
+   std::vector<const Box *> overlap_boxes;
    Box overlap(front().getDim());
    iterator itr(*this);
    iterator insertion_pt = itr;
    while (itr != end()) {
       const Box& tryme = *itr;
-      keep.findOverlapBoxes(overlap_mapped_boxes, tryme);
-      for (size_t i = 0; i < overlap_mapped_boxes.size(); ++i) {
-         tryme.intersect(*overlap_mapped_boxes[i], overlap);
+      keep.findOverlapBoxes(overlap_boxes, tryme);
+      for (size_t i = 0; i < overlap_boxes.size(); ++i) {
+         tryme.intersect(*overlap_boxes[i], overlap);
          if (!overlap.empty()) {
             insertAfter(insertion_pt, overlap);
             ++insertion_pt;
          }
       }
-      overlap_mapped_boxes.clear();
+      overlap_boxes.clear();
       iterator tmp = itr;
       ++insertion_pt;
       itr = insertion_pt;
@@ -1144,21 +1144,20 @@ BoxContainer::intersectBoxes(
 
    const BaseGridGeometry& grid_geometry(*keep.d_tree->getGridGeometry());
 
-   std::vector<const Box *> overlap_mapped_boxes;
+   std::vector<const Box *> overlap_boxes;
    Box overlap(front().getDim());
    iterator itr(*this);
    iterator insertion_pt = itr;
    while (itr != end()) {
       const Box& tryme = *itr;
-      keep.d_tree->findOverlapBoxes(overlap_mapped_boxes,
+      keep.d_tree->findOverlapBoxes(overlap_boxes,
          tryme,
          refinement_ratio,
          include_singularity_block_neighbors);
-      for (size_t i = 0; i < overlap_mapped_boxes.size(); ++i) {
-         const BlockId& overlap_box_block_id =
-            overlap_mapped_boxes[i]->getBlockId();
+      for (size_t i = 0; i < overlap_boxes.size(); ++i) {
+         const BlockId& overlap_box_block_id = overlap_boxes[i]->getBlockId();
          if (overlap_box_block_id != tryme.getBlockId()) {
-            Box overlap_box = *overlap_mapped_boxes[i];
+            Box overlap_box = *overlap_boxes[i];
             grid_geometry.transformBox(overlap_box,
                refinement_ratio,
                tryme.getBlockId(),
@@ -1169,14 +1168,14 @@ BoxContainer::intersectBoxes(
                ++insertion_pt;
             }
          } else {
-            tryme.intersect(*overlap_mapped_boxes[i], overlap);
+            tryme.intersect(*overlap_boxes[i], overlap);
             if (!overlap.empty()) {
                insertAfter(insertion_pt, overlap);
                ++insertion_pt;
             }
          }
       }
-      overlap_mapped_boxes.clear();
+      overlap_boxes.clear();
       iterator tmp = itr;
       ++insertion_pt;
       itr = insertion_pt;
@@ -1333,14 +1332,14 @@ BoxContainer::getOwners(
  */
 void
 BoxContainer::unshiftPeriodicImageBoxes(
-   BoxContainer& output_mapped_boxes,
+   BoxContainer& output_boxes,
    const IntVector& refinement_ratio) const
 {
    if (!d_ordered) {
       TBOX_ERROR("unshiftPeriodicImageBoxes called on unordered container.");
    }
 
-   iterator hint = output_mapped_boxes.begin();
+   iterator hint = output_boxes.begin();
 
    if (!isEmpty()) {
       const Box& first_element(*begin());
@@ -1351,11 +1350,10 @@ BoxContainer::unshiftPeriodicImageBoxes(
 
       for (const_iterator na = begin(); na != end(); ++na) {
          if (na->isPeriodicImage()) {
-            const Box unshifted_mapped_box(
-               *na, zero_shift_number, refinement_ratio);
-            hint = output_mapped_boxes.insert(hint, unshifted_mapped_box);
+            const Box unshifted_box(*na, zero_shift_number, refinement_ratio);
+            hint = output_boxes.insert(hint, unshifted_box);
          } else {
-            hint = output_mapped_boxes.insert(hint, *na);
+            hint = output_boxes.insert(hint, *na);
          }
       }
    }
@@ -1666,14 +1664,14 @@ BoxContainer::getFromRestart(
          "boxes", &db_box_array[0], mbs_size);
 
       for (unsigned int i = 0; i < mbs_size; ++i) {
-         Box box(db_box_array[i]);
-         box.setBlockId(BlockId(block_ids[i]));
-         Box mapped_box(
-            box,
+         Box array_box(db_box_array[i]);
+         array_box.setBlockId(BlockId(block_ids[i]));
+         Box box(
+            array_box,
             LocalId(local_ids[i]),
             ranks[i],
             PeriodicId(periodic_ids[i]));
-         insert(end(), mapped_box);
+         insert(end(), box);
       }
    }
 }
@@ -1704,10 +1702,10 @@ BoxContainer::print(
  */
 
 BoxContainer::Outputter::Outputter(
-   const BoxContainer& mapped_box_set,
+   const BoxContainer& boxes,
    const std::string& border,
    int detail_depth):
-   d_set(mapped_box_set),
+   d_set(boxes),
    d_border(border),
    d_detail_depth(detail_depth)
 {

@@ -493,7 +493,7 @@ BoxUtilities::chopBox(
  * This process eliminates domain boundary intersections which are
  * deemed unacceptable.  Intersections that are disallowed are those in
  * which a portion of the domain boundary is parallel to a box face and
- * lies strictly in the interior of the ghost cell mapped_box_level adjacent to
+ * lies strictly in the interior of the ghost cell box_level adjacent to
  * that face.  In other words, we eliminate ghost cell regions residing
  * outside of the domain and which are narrower than the ghost width.
  *

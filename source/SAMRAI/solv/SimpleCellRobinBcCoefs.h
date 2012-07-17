@@ -130,7 +130,7 @@ public:
     *
     * If using Dirichlet boundary conditions, then before the solver is
     * called, the storage for the unknown u
-    * must have a mapped_box_level of ghost cells at least one cell wide that includes
+    * must have a box_level of ghost cells at least one cell wide that includes
     * the Dirichlet boundary values.
     *
     * If using Neumann boundary conditions, then before the solver is called,

@@ -1550,13 +1550,13 @@ public:
     * efficiency, the output containers are NOT cleared first, so users
     * may want to clear them before calling this method.
     *
-    * @param[out] real_mapped_box_vector
-    * @param[out] periodic_image_mapped_box_vector
+    * @param[out] real_box_vector
+    * @param[out] periodic_image_box_vector
     */
    void
    separatePeriodicImages(
-      std::vector<Box>& real_mapped_box_vector,
-      std::vector<Box>& periodic_image_mapped_box_vector) const;
+      std::vector<Box>& real_box_vector,
+      std::vector<Box>& periodic_image_box_vector) const;
 
    /*!
     * @brief  Any members of this container that are periodic images will
@@ -1576,13 +1576,13 @@ public:
     * For flexibility and efficiency, the output container is NOT cleared
     * first, so users may want to clear it before calling this method.
     *
-    * @param[out] output_mapped_boxes
+    * @param[out] output_boxes
     *
     * @param[in] refinement_ratio Refinement ratio where the boxes live.
     */
    void
    unshiftPeriodicImageBoxes(
-      BoxContainer& output_mapped_boxes,
+      BoxContainer& output_boxes,
       const IntVector& refinement_ratio) const;
 
    //@}
@@ -1665,7 +1665,7 @@ private:
        * parameters needed to output the BoxContainer to a stream.
        */
       Outputter(
-         const BoxContainer& mapped_box_set,
+         const BoxContainer& boxes,
          const std::string& border,
          int detail_depth = 0);
 
@@ -1686,7 +1686,7 @@ private:
     *
     * Usage example (printing with a tab indentation):
     * @verbatim
-    *    cout << "my mapped_boxes:\n" << mapped_boxes.format("\t") << endl;
+    *    cout << "my boxes:\n" << boxes.format("\t") << endl;
     * @endverbatim
     *
     * @param[in] border Left border of the output

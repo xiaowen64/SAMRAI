@@ -66,7 +66,7 @@ PatchHierarchy::PatchHierarchy(
    d_fine_connector_widths(),
    d_connector_widths_are_computed(false),
    d_individual_cwrs(),
-   d_domain_mapped_box_level(d_dim)
+   d_domain_box_level(d_dim)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(geometry);
@@ -79,14 +79,14 @@ PatchHierarchy::PatchHierarchy(
     * Grab the physical domain (including periodic images) from the
     * grid geometry and set up domain data dependent on it.
     */
-   d_domain_mapped_box_level.initialize(
+   d_domain_box_level.initialize(
       IntVector::getOne(d_dim),
       getGridGeometry(),
       tbox::SAMRAI_MPI::getSAMRAIWorld(),
       BoxLevel::GLOBALIZED);
-   d_grid_geometry->computePhysicalDomain(d_domain_mapped_box_level,
+   d_grid_geometry->computePhysicalDomain(d_domain_box_level,
       IntVector::getOne(d_dim));
-   d_domain_mapped_box_level.finalize();
+   d_domain_box_level.finalize();
 
    d_individual_cwrs = s_class_cwrs;
 
@@ -557,14 +557,14 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
 void
 PatchHierarchy::makeNewPatchLevel(
    const int ln,
-   const BoxLevel& new_mapped_box_level)
+   const BoxLevel& new_box_level)
 {
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, new_mapped_box_level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, new_box_level);
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(ln >= 0);
    for (int i = 0; i < d_dim.getValue(); i++) {
       TBOX_ASSERT(
-         new_mapped_box_level.getRefinementRatio() > IntVector::getZero(d_dim));
+         new_box_level.getRefinementRatio() > IntVector::getZero(d_dim));
    }
 #endif
 
@@ -583,10 +583,10 @@ PatchHierarchy::makeNewPatchLevel(
       const IntVector expected_ratio(
          d_ratio_to_coarser[ln] * (d_patch_levels[ln - 1]->getRatioToLevelZero()));
       if (ln > 0 &&
-          (new_mapped_box_level.getRefinementRatio() != expected_ratio)) {
+          (new_box_level.getRefinementRatio() != expected_ratio)) {
          TBOX_ERROR("PatchHierarchy::makeNewPatchLevel: patch level "
             << ln << " has refinement ratio "
-            << new_mapped_box_level.getRefinementRatio()
+            << new_box_level.getRefinementRatio()
             << ", it should be " << expected_ratio);
       }
    }
@@ -597,8 +597,10 @@ PatchHierarchy::makeNewPatchLevel(
    }
 
    d_patch_levels[ln] = d_patch_level_factory->allocate(
-         new_mapped_box_level,
-         d_grid_geometry, d_patch_descriptor, d_patch_factory);
+      new_box_level,
+      d_grid_geometry,
+      d_patch_descriptor,
+      d_patch_factory);
    d_patch_levels[ln]->getBoxLevel()->cacheGlobalReducedData();
 
    d_patch_levels[ln]->setLevelNumber(ln);
@@ -921,7 +923,7 @@ PatchHierarchy::recursivePrint(
    int totl_npatches = 0;
    int totl_ncells = 0;
    int nlevels = getNumberOfLevels();
-   os << border << "Domain of hierarchy:\n" << d_domain_mapped_box_level.format(border, 2) << '\n'
+   os << border << "Domain of hierarchy:\n" << d_domain_box_level.format(border, 2) << '\n'
       << border << "Number of levels = " << nlevels << '\n';
    if (depth > 0) {
       int ln;

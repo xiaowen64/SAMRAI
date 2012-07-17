@@ -336,15 +336,15 @@ public:
  * @brief Construct new PatchLevel in hierarchy at given level number.
  *
  * Boxes, their mappings and the refinement ratio are obtained from
- * @c new_mapped_box_level.
+ * @c new_box_level.
  *
  * @param[in]  level_number
- * @param[in]  new_mapped_box_level
+ * @param[in]  new_box_level
  */
    void
    makeNewPatchLevel(
       const int level_number,
-      const BoxLevel& new_mapped_box_level);
+      const BoxLevel& new_box_level);
 
    /*!
     * @brief Remove a patch level
@@ -558,7 +558,7 @@ public:
    const BoxLevel&
    getDomainBoxLevel() const
    {
-      return d_domain_mapped_box_level;
+      return d_domain_box_level;
    }
 
    /*!
@@ -568,7 +568,7 @@ public:
    const tbox::SAMRAI_MPI&
    getMPI() const
    {
-      return d_domain_mapped_box_level.getMPI();
+      return d_domain_box_level.getMPI();
    }
 
    //@{
@@ -1165,13 +1165,13 @@ private:
    /*!
     * @brief Physical domain BoxLevel.
     *
-    * All mapped_boxes in the domain
+    * All boxes in the domain
     * BoxLevel are owned by process 0.
     *
     * The physical domain BoxLevel is maintained in GLOBALIZED
     * mode with processor 0 owning all mapped boxes.
     */
-   BoxLevel d_domain_mapped_box_level;
+   BoxLevel d_domain_box_level;
 
    //@}
 

@@ -90,14 +90,14 @@ public:
     *
     * The coarse-fine boundary will be computed using the physical domain
     * as the reference coarser level.  The physical domain is provided to this
-    * method as the 'head' level of the mapped_box_level_to_domain Connector.
+    * method as the 'head' level of the box_level_to_domain Connector.
     *
     * @note If the level covers the entire physical domain, the coarse-fine
     * boundary will be empty.
     *
     * @param[in] level
-    * @param[in] mapped_box_level_to_domain
-    * @param[in] mapped_box_level_to_self
+    * @param[in] box_level_to_domain
+    * @param[in] box_level_to_self
     * @param[in] max_ghost_width The ghost width determines the extent of the
     *                            boundary boxes along the level domain boundary,
     *                            similar to regular domain boundary boxes.  Note
@@ -107,8 +107,8 @@ public:
     */
    CoarseFineBoundary(
       const PatchLevel& level,
-      const Connector& mapped_box_level_to_domain,
-      const Connector& mapped_box_level_to_self,
+      const Connector& box_level_to_domain,
+      const Connector& box_level_to_self,
       const IntVector& max_ghost_width);
 
    /*!
@@ -252,7 +252,7 @@ private:
     *
     * The coarse-fine boundary will be computed using the physical domain
     * as the reference coarser level.  The physical domain is provided to this
-    * method as the 'head' level of the mapped_box_level_to_domain Connector.
+    * method as the 'head' level of the box_level_to_domain Connector.
     *
     * @note If the level covers the entire physical domain, the coarse-fine
     * boundary will be empty.

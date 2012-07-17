@@ -75,15 +75,15 @@ public:
    /*!
     * @brief Most general version for modifying Connectors using
     * mapping Connectors.  Modification is the changing of existing
-    * Connectors when mapped_boxes in a BoxLevel changes according to specified
+    * Connectors when boxes in a BoxLevel changes according to specified
     * mapping connectors.
     *
     * The change is represented by a the mapper @c old_to_new
     * and its transpose @c new_to_old.  The Connectors to be
     * modified are @c anchor_to_mapped and @c mapped_to_anchor, which
     * on input, go between a anchor (not mapped) BoxLevel and the old
-    * BoxLevel.  On output, these Connectors will go from the anchor mapped_box_level
-    * to the new mapped_box_level.
+    * BoxLevel.  On output, these Connectors will go from the anchor box_level
+    * to the new box_level.
     *
     * @code
     * Input:
@@ -94,7 +94,7 @@ public:
     *              mapped_to_anchor-> / /
     *                                / / <--anchor_to_mapped
     *                               / v
-    * mapped mapped_box_level:    (old) ---------> (new)
+    * mapped box_level:           (old) ---------> (new)
     *                                   <---------
     *
     *
@@ -116,10 +116,10 @@ public:
     *
     * An important constraint in the old_to_new Connectors is
     * that this method cannot handle multiple maps at once.  For
-    * example, it cannot map mapped_box J to mapped_box K and at the
-    * same time map mapped_box I to mapped_box J.  Box J in the
-    * old mapped_box_level and mapped_box J on the new
-    * mapped_box_level are considered entirely different mapped_boxes.
+    * example, it cannot map box J to box K and at the
+    * same time map box I to box J.  Box J in the
+    * old box_level and box J on the new
+    * box_level are considered entirely different boxes.
     *
     * After modifying, the output Connectors that had referenced old
     * BoxLevels will be reset to reference the new
@@ -184,7 +184,7 @@ public:
     *              mapped_to_anchor-> / /
     *                                / / <--anchor_to_mapped
     *                               / v
-    * mapped mapped_box_level:    (old) ---------> (new)
+    * mapped box_level:           (old) ---------> (new)
     *
     *
     * Output:
@@ -242,7 +242,7 @@ public:
     * old_to_new must contain no remote neighbor.
     *
     * This version does not update the Connector from
-    * the mapped mapped_box_level back to the anchor mapped_box_level.
+    * the mapped box_level back to the anchor box_level.
     * (This is implicit in the fact that mapped_to_anchor
     * is absent from the interface.)
     *
@@ -255,7 +255,7 @@ public:
     *                                   /
     *                                  / <--anchor_to_mapped
     *                                 v
-    * mapped mapped_box_level:    (old) ---------> (new)
+    * mapped box_level:           (old) ---------> (new)
     *
     *
     * Output:
@@ -349,7 +349,7 @@ private:
 
    /*!
     * @brief Most general version of method to modify existing
-    * Connectors objects by using another to map the head mapped_boxes.
+    * Connectors objects by using another to map the head boxes.
     *
     * This version does no checking of the inputs.  The three
     * public versions do input checking and setting up temporaries

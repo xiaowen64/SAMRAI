@@ -16,16 +16,16 @@ namespace SAMRAI {
 namespace hier {
 
 BoxContainerSingleOwnerIterator::BoxContainerSingleOwnerIterator(
-   const BoxContainer& mapped_boxes,
+   const BoxContainer& boxes,
    const int& owner_rank,
    bool begin):
-   d_mapped_boxes(&mapped_boxes),
+   d_boxes(&boxes),
    d_owner_rank(owner_rank),
-   d_iter(begin ? d_mapped_boxes->begin() : d_mapped_boxes->end())
+   d_iter(begin ? d_boxes->begin() : d_boxes->end())
 {
    if (begin)
    {
-      while (d_iter != d_mapped_boxes->end() &&
+      while (d_iter != d_boxes->end() &&
              d_iter->getOwnerRank() != d_owner_rank) {
          ++d_iter;
       }
@@ -34,7 +34,7 @@ BoxContainerSingleOwnerIterator::BoxContainerSingleOwnerIterator(
 
 BoxContainerSingleOwnerIterator::~BoxContainerSingleOwnerIterator()
 {
-   d_mapped_boxes = NULL;
+   d_boxes = NULL;
 }
 
 /*
@@ -48,7 +48,7 @@ BoxContainerSingleOwnerIterator::operator ++ ()
 {
    do {
       ++d_iter;
-   } while (d_iter != d_mapped_boxes->end() &&
+   } while (d_iter != d_boxes->end() &&
             d_iter->getOwnerRank() != d_owner_rank);
    return *this;
 }
@@ -66,7 +66,7 @@ BoxContainerSingleOwnerIterator::operator ++ (
    BoxContainerSingleOwnerIterator saved = *this;
    do {
       ++d_iter;
-   } while (d_iter != d_mapped_boxes->end() &&
+   } while (d_iter != d_boxes->end() &&
             d_iter->getOwnerRank() != d_owner_rank);
    return saved;
 }
