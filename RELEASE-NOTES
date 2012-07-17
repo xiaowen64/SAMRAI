@@ -57,6 +57,9 @@ descriptions of items in the following list are provided below.
 1) Input for StandardTagAndInitialize has changed to allow for more flexible
    tagging criteria.
 
+2) fillSingularityBoundaryConditions moved from RefinePatchStrategy
+   to new SingularityPatchStrategy class.
+
 *****************************************************************************
 
 -----------------------------------------------------------------------------
@@ -105,6 +108,16 @@ descriptions of items in the following list are provided below.
    tagging_method = RICHARDSON_EXTRAPOLATION | GRADIENT_DETECTOR
 
    See the header for StandardTagAndInitialize for more details.
+
+8) fillSingularityBoundaryConditions moved from RefinePatchStrategy
+   to new SingularityPatchStrategy class.
+
+   The fillSingularityBoundaryConditions method is only used for multiblock
+   configurations with at least one singularity.  If you have such a
+   configuration, you must inherit SingularityPatchStrategy in the class
+   where you inheritted RefinePatchStrategy.  See the SingularityPatchStrategy
+   and RefinePatchStrategy class documentations.  If you don't have block
+   singularities, you need not change anything.
 
 =============================================================================
 =============================================================================
