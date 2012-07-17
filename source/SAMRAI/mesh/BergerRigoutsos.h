@@ -127,8 +127,8 @@ public:
     *
     * If the communicator is not set, the parallel clustering
     * algorithm uses the communicator of the input tag
-    * mapped_box_level.  If it is set, then the algorithm only works
-    * for input tag mapped_box_levels with a congruent communicator.
+    * box_level.  If it is set, then the algorithm only works
+    * for input tag box_levels with a congruent communicator.
     *
     * If communicator is SAMRAI_MPI::commNull, it is the same as not
     * using a duplicate communicator.
@@ -156,7 +156,7 @@ public:
     */
    void
    findBoxesContainingTags(
-      hier::BoxLevel& new_mapped_box_level,
+      hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
       const boost::shared_ptr<hier::PatchLevel>& tag_level,
@@ -188,7 +188,7 @@ private:
 
    void
    sortOutputBoxes(
-      hier::BoxLevel& new_mapped_box_level,
+      hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag) const;
 

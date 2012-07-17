@@ -192,7 +192,7 @@ public:
     */
    void
    loadBalanceBoxLevel(
-      hier::BoxLevel& balance_mapped_box_level,
+      hier::BoxLevel& balance_box_level,
       hier::Connector& balance_to_anchor,
       hier::Connector& anchor_to_balance,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -201,7 +201,7 @@ public:
       const hier::Connector& attractor_to_unbalanced,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
-      const hier::BoxLevel& domain_mapped_box_level,
+      const hier::BoxLevel& domain_box_level,
       const hier::IntVector& bad_interval,
       const hier::IntVector& cut_factor,
       const tbox::RankGroup& rank_group = tbox::RankGroup()) const;

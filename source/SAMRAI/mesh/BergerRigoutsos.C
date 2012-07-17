@@ -178,7 +178,7 @@ BergerRigoutsos::setMPI(
  */
 void
 BergerRigoutsos::findBoxesContainingTags(
-   hier::BoxLevel& new_mapped_box_level,
+   hier::BoxLevel& new_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
    const boost::shared_ptr<hier::PatchLevel>& tag_level,
@@ -192,7 +192,7 @@ BergerRigoutsos::findBoxesContainingTags(
    const hier::BlockId& block_id,
    const hier::LocalId& first_local_id) const
 {
-   TBOX_ASSERT_OBJDIM_EQUALITY5(new_mapped_box_level,
+   TBOX_ASSERT_OBJDIM_EQUALITY5(new_box_level,
       *tag_level,
       bound_box,
       min_box,
@@ -228,29 +228,28 @@ BergerRigoutsos::findBoxesContainingTags(
       TBOX_ERROR("BergerRigoutsos: empty bounding box not allowed.");
    }
 
-   const hier::BoxLevel& tag_mapped_box_level =
-      *tag_level->getBoxLevel();
+   const hier::BoxLevel& tag_box_level = *tag_level->getBoxLevel();
 
    /*
     * If using a duplicate MPI communicator, check that the duplicate
-    * and the communicator of the tag_mapped_box_level are congruent.
+    * and the communicator of the tag_box_level are congruent.
     */
    if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
       tbox::SAMRAI_MPI mpi1(d_mpi);
-      tbox::SAMRAI_MPI mpi2(tag_mapped_box_level.getMPI());
+      tbox::SAMRAI_MPI mpi2(tag_box_level.getMPI());
       TBOX_ASSERT(mpi1.getSize() == mpi2.getSize());
       TBOX_ASSERT(mpi1.getRank() == mpi2.getRank());
       if (mpi1.getSize() > 1) {
          int compare_result;
          tbox::SAMRAI_MPI::Comm_compare(
             d_mpi.getCommunicator(),
-            tag_mapped_box_level.getMPI().getCommunicator(),
+            tag_box_level.getMPI().getCommunicator(),
             &compare_result);
          if (compare_result != MPI_CONGRUENT) {
             TBOX_ERROR("BergerRigoutsos set-up error: MPI communicator\n"
                << "set by setMPI() (" << d_mpi.getCommunicator()
-               << ") and the communicator of the input tag_mapped_box_level ("
-               << tag_mapped_box_level.getMPI().getCommunicator() << ") are not congruent.");
+               << ") and the communicator of the input tag_box_level ("
+               << tag_box_level.getMPI().getCommunicator() << ") are not congruent.");
          }
       }
    }
@@ -277,7 +276,7 @@ BergerRigoutsos::findBoxesContainingTags(
    // Set debugging/verbosity parameters.
    root_node.setLogNodeHistory(d_log_node_history);
 
-   root_node.clusterAndComputeRelationships(new_mapped_box_level,
+   root_node.clusterAndComputeRelationships(new_box_level,
       tag_to_new,
       new_to_tag,
       bound_box,
@@ -293,7 +292,7 @@ BergerRigoutsos::findBoxesContainingTags(
        * clustering algorithm is non-deterministic because
        * it depends on the order of asynchronous messages.)
        */
-      sortOutputBoxes(new_mapped_box_level,
+      sortOutputBoxes(new_box_level,
          tag_to_new,
          new_to_tag);
    }
@@ -303,14 +302,14 @@ BergerRigoutsos::findBoxesContainingTags(
     * the logging flag from having an undue side effect on performance.
     */
    t_global_reductions->start();
-   new_mapped_box_level.getGlobalNumberOfBoxes();
-   new_mapped_box_level.getGlobalNumberOfCells();
-   new_mapped_box_level.getGlobalBoundingBox(block_id.getBlockValue());
+   new_box_level.getGlobalNumberOfBoxes();
+   new_box_level.getGlobalNumberOfCells();
+   new_box_level.getGlobalBoundingBox(block_id.getBlockValue());
    t_global_reductions->stop();
 
    if (d_log_cluster) {
       tbox::plog << "BergerRigoutsos cluster log:\n"
-      << "\tNew mapped_box_level clustered by BergerRigoutsos:\n" << new_mapped_box_level.format("",
+      << "\tNew box_level clustered by BergerRigoutsos:\n" << new_box_level.format("",
          2)
       << "\tBergerRigoutsos tag_to_new:\n" << tag_to_new.format("", 2)
       << "\tBergerRigoutsos new_to_tag:\n" << new_to_tag.format("", 2);
@@ -332,23 +331,23 @@ BergerRigoutsos::findBoxesContainingTags(
                  << "Initial bounding box = " << bound_box << ", "
                  << bound_box.size() << " cells, "
                  << "final global bounding box = "
-                 << new_mapped_box_level.getGlobalBoundingBox(block_id.getBlockValue())
+                 << new_box_level.getGlobalBoundingBox(block_id.getBlockValue())
                  << ", "
-                 << new_mapped_box_level.getGlobalBoundingBox(block_id.getBlockValue()).size()
+                 << new_box_level.getGlobalBoundingBox(block_id.getBlockValue()).size()
                  << " cells\n\t"
                  << "Final output has " << root_node.getNumTags()
                  << " tags in "
-                 << new_mapped_box_level.getGlobalNumberOfCells()
-                 << " global cells [" << new_mapped_box_level.getMinNumberOfCells()
-                 << "-" << new_mapped_box_level.getMaxNumberOfCells() << "], "
-                 << new_mapped_box_level.getGlobalNumberOfBoxes()
-                 << " global mapped boxes [" << new_mapped_box_level.getMinNumberOfBoxes()
-                 << "-" << new_mapped_box_level.getMaxNumberOfBoxes() << "]\n\t"
+                 << new_box_level.getGlobalNumberOfCells()
+                 << " global cells [" << new_box_level.getMinNumberOfCells()
+                 << "-" << new_box_level.getMaxNumberOfCells() << "], "
+                 << new_box_level.getGlobalNumberOfBoxes()
+                 << " global mapped boxes [" << new_box_level.getMinNumberOfBoxes()
+                 << "-" << new_box_level.getMaxNumberOfBoxes() << "]\n\t"
                  << "Number of continuations: avg = "
                  << root_node.getAvgNumberOfCont()
                  << "   max = " << root_node.getMaxNumberOfCont() << '\n'
-                 << "\tBergerRigoutsos new_level summary:\n" << new_mapped_box_level.format("\t\t",0)
-                 << "\tBergerRigoutsos new_level statistics:\n" << new_mapped_box_level.formatStatistics("\t\t")
+                 << "\tBergerRigoutsos new_level summary:\n" << new_box_level.format("\t\t",0)
+                 << "\tBergerRigoutsos new_level statistics:\n" << new_box_level.formatStatistics("\t\t")
                  << "\tBergerRigoutsos new_to_tag summary:\n" << new_to_tag.format("\t\t",0)
                  << "\tBergerRigoutsos new_to_tag statistics:\n" << new_to_tag.formatStatistics("\t\t")
                  << "\tBergerRigoutsos tag_to_new summary:\n" << tag_to_new.format("\t\t",0)
@@ -375,7 +374,7 @@ BergerRigoutsos::findBoxesContainingTags(
  */
 void
 BergerRigoutsos::sortOutputBoxes(
-   hier::BoxLevel& new_mapped_box_level,
+   hier::BoxLevel& new_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag) const
 {
@@ -398,8 +397,8 @@ BergerRigoutsos::sortOutputBoxes(
       if (errs != 0) {
          TBOX_ERROR(
             "Errors found before sorting nodes."
-            << "new_mapped_box_level:\n" << new_mapped_box_level.format("", 2)
-            << "tag mapped_box_level:\n" << tag_to_new.getBase().format("", 2)
+            << "new_box_level:\n" << new_box_level.format("", 2)
+            << "tag box_level:\n" << tag_to_new.getBase().format("", 2)
             << "tag_to_new:\n" << tag_to_new.format("", 2)
             << "new_to_tag:\n" << new_to_tag.format("", 2));
       }
@@ -409,17 +408,17 @@ BergerRigoutsos::sortOutputBoxes(
     * Sort local indices by corners to make the output deterministic.
     */
    hier::Connector sorting_map(d_dim);
-   hier::BoxLevel sorted_mapped_box_level(d_dim);
+   hier::BoxLevel sorted_box_level(d_dim);
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(
-      sorted_mapped_box_level,
+      sorted_box_level,
       sorting_map,
-      new_mapped_box_level,
+      new_box_level,
       true /* sort nodes by corners */,
       false /* don't sequentialize indices globally */);
    if (0) {
       tbox::plog
-      << "tag mapped_box_level:\n" << tag_to_new.getBase().format("", 2)
+      << "tag box_level:\n" << tag_to_new.getBase().format("", 2)
       << "tag_to_new:\n" << tag_to_new.format("", 2)
       << "new_to_tag:\n" << new_to_tag.format("", 2)
       << "Sorting map:\n" << sorting_map.format("", 2);
@@ -434,8 +433,8 @@ BergerRigoutsos::sortOutputBoxes(
       if (errs != 0) {
          TBOX_ERROR(
             "Errors in load balance mapping found."
-            << "presorted mapped_box_level:\n" << new_mapped_box_level.format("", 2)
-            << "sorted mapped_box_level:\n" << sorted_mapped_box_level.format("", 2)
+            << "presorted box_level:\n" << new_box_level.format("", 2)
+            << "sorted box_level:\n" << sorted_box_level.format("", 2)
             << "sorting_map:\n" << sorting_map.format("", 2));
       }
    }
@@ -443,7 +442,7 @@ BergerRigoutsos::sortOutputBoxes(
    mca.modify(tag_to_new,
       new_to_tag,
       sorting_map,
-      &new_mapped_box_level);
+      &new_box_level);
    if (0) {
       // Check result of mapping.
       int errs = 0;
@@ -458,8 +457,8 @@ BergerRigoutsos::sortOutputBoxes(
       if (errs != 0) {
          TBOX_ERROR(
             "Errors found after sorting nodes."
-            << "new_mapped_box_level:\n" << new_mapped_box_level.format("", 2)
-            << "tag mapped_box_level:\n" << tag_to_new.getBase().format("", 2)
+            << "new_box_level:\n" << new_box_level.format("", 2)
+            << "tag box_level:\n" << tag_to_new.getBase().format("", 2)
             << "tag_to_new:\n" << tag_to_new.format("", 2)
             << "new_to_tag:\n" << new_to_tag.format("", 2));
       }

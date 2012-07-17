@@ -318,9 +318,9 @@ public:
     * function is pure virtual in the LoadBalanceStrategy base class.
     *
     * The load balancing algorithm should ignore any periodic image Boxes
-    * in the input balance_mapped_box_level.
+    * in the input balance_box_level.
     *
-    * @param balance_mapped_box_level
+    * @param balance_box_level
     * @param balance_to_anchor
     * @param anchor_to_balance
     * @param hierarchy       Input patch hierarchy in which level will reside.
@@ -332,7 +332,7 @@ public:
     *                        output boxes. All entries must be > 0.
     * @param max_size        Input integer vector of maximum sizes for
     *                        output boxes. All entries must be >= min_size.
-    * @param domain_mapped_box_level
+    * @param domain_box_level
     * @param bad_interval    Input integer vector used to create boxes near
     *                        physical domain boundary with sufficient number
     *                        of cells.  No box face will be closer to the
@@ -358,7 +358,7 @@ public:
     */
    void
    loadBalanceBoxLevel(
-      hier::BoxLevel& balance_mapped_box_level,
+      hier::BoxLevel& balance_box_level,
       hier::Connector& balance_to_anchor,
       hier::Connector& anchor_to_balance,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -367,7 +367,7 @@ public:
       const hier::Connector& attractor_to_unbalanced,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
-      const hier::BoxLevel& domain_mapped_box_level,
+      const hier::BoxLevel& domain_box_level,
       const hier::IntVector& bad_interval,
       const hier::IntVector& cut_factor, // Default v2.x.x = hier::IntVector::getOne(tbox::Dimension(DIM))
       const tbox::RankGroup& rank_group = tbox::RankGroup()) const;

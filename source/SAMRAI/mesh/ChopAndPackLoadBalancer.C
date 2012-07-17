@@ -264,7 +264,7 @@ ChopAndPackLoadBalancer::setBinPackMethod(
  */
 void
 ChopAndPackLoadBalancer::loadBalanceBoxLevel(
-   hier::BoxLevel& balance_mapped_box_level,
+   hier::BoxLevel& balance_box_level,
    hier::Connector& balance_to_anchor,
    hier::Connector& anchor_to_balance,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -273,16 +273,16 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
    const hier::Connector& attractor_to_balance,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
-   const hier::BoxLevel& domain_mapped_box_level,
+   const hier::BoxLevel& domain_box_level,
    const hier::IntVector& bad_interval,
    const hier::IntVector& cut_factor,
    const tbox::RankGroup& rank_group) const
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY6(d_dim,
-      balance_mapped_box_level,
+      balance_box_level,
       min_size,
       max_size,
-      domain_mapped_box_level,
+      domain_box_level,
       bad_interval,
       cut_factor);
    NULL_USE(balance_to_attractor);
@@ -296,21 +296,19 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       }
    }
 
-   hier::BoxLevel globalized_input_mapped_box_level(
-      balance_mapped_box_level);
-   globalized_input_mapped_box_level.setParallelState(
-      hier::BoxLevel::GLOBALIZED);
+   hier::BoxLevel globalized_input_box_level(balance_box_level);
+   globalized_input_box_level.setParallelState(hier::BoxLevel::GLOBALIZED);
 
    hier::BoxContainer in_boxes;
-   const hier::BoxContainer globalized_input_mapped_boxes(
-      globalized_input_mapped_box_level.getGlobalBoxes());
-   for (hier::RealBoxConstIterator bi(globalized_input_mapped_boxes.realBegin());
-        bi != globalized_input_mapped_boxes.realEnd(); ++bi) {
+   const hier::BoxContainer globalized_input_boxes(
+      globalized_input_box_level.getGlobalBoxes());
+   for (hier::RealBoxConstIterator bi(globalized_input_boxes.realBegin());
+        bi != globalized_input_boxes.realEnd(); ++bi) {
       in_boxes.pushBack(*bi);
    }
 
    hier::BoxContainer physical_domain;
-   domain_mapped_box_level.getGlobalBoxes(physical_domain);
+   domain_box_level.getGlobalBoxes(physical_domain);
 
    hier::BoxContainer out_boxes;
    hier::ProcessorMapping mapping;
@@ -322,35 +320,35 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       hierarchy,
       level_number,
       physical_domain,
-      balance_mapped_box_level.getRefinementRatio(),
+      balance_box_level.getRefinementRatio(),
       min_size,
       actual_max_size,
       cut_factor,
       bad_interval);
 
-   // Build up balance_mapped_box_level from old-style data.
-   balance_mapped_box_level.initialize(
-      balance_mapped_box_level.getRefinementRatio(),
-      balance_mapped_box_level.getGridGeometry(),
-      balance_mapped_box_level.getMPI(),
+   // Build up balance_box_level from old-style data.
+   balance_box_level.initialize(
+      balance_box_level.getRefinementRatio(),
+      balance_box_level.getGridGeometry(),
+      balance_box_level.getMPI(),
       hier::BoxLevel::GLOBALIZED);
    int i = 0;
    for (hier::BoxContainer::iterator itr(out_boxes);
         itr != out_boxes.end(); ++itr, ++i) {
       hier::Box node(*itr, hier::LocalId(i),
                      mapping.getProcessorAssignment(i));
-      balance_mapped_box_level.addBox(node);
+      balance_box_level.addBox(node);
    }
-   // Reinitialize Connectors due to changed balance_mapped_box_level.
+   // Reinitialize Connectors due to changed balance_box_level.
    balance_to_anchor.clearNeighborhoods();
-   balance_to_anchor.setBase(balance_mapped_box_level, true);
+   balance_to_anchor.setBase(balance_box_level, true);
    anchor_to_balance.clearNeighborhoods();
-   anchor_to_balance.setHead(balance_mapped_box_level, true);
+   anchor_to_balance.setHead(balance_box_level, true);
    hier::OverlapConnectorAlgorithm oca;
    oca.findOverlaps(balance_to_anchor);
-   oca.findOverlaps(anchor_to_balance, balance_mapped_box_level);
+   oca.findOverlaps(anchor_to_balance, balance_box_level);
 
-   balance_mapped_box_level.setParallelState(hier::BoxLevel::DISTRIBUTED);
+   balance_box_level.setParallelState(hier::BoxLevel::DISTRIBUTED);
 }
 
 /*
@@ -862,7 +860,7 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
       tmp_level_workloads,
       "GREEDY");
 
-   boost::shared_ptr<hier::BoxLevel> tmp_mapped_box_level(
+   boost::shared_ptr<hier::BoxLevel> tmp_box_level(
       boost::make_shared<hier::BoxLevel>(
          ratio_to_hierarchy_level_zero,
          hierarchy->getGridGeometry(),
@@ -873,11 +871,11 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
         i != tmp_level_boxes.end(); ++i, ++idx) {
       hier::Box node(*i, hier::LocalId(idx),
                      tmp_level_mapping.getProcessorAssignment(idx));
-      tmp_mapped_box_level->addBox(node);
+      tmp_box_level->addBox(node);
    }
 
    boost::shared_ptr<hier::PatchLevel> tmp_level(
-      boost::make_shared<hier::PatchLevel>(*tmp_mapped_box_level,
+      boost::make_shared<hier::PatchLevel>(*tmp_box_level,
          hierarchy->getGridGeometry(),
          hierarchy->getPatchDescriptor()));
 
