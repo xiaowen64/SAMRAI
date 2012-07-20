@@ -726,6 +726,15 @@ BaseGridGeometry::getFromInput(
                                   << "No boxes for " << domain_name
                                   << " array found in input.");
             }
+         } else if (b == 0 && d_number_blocks == 1 &&
+                    input_db->keyExists("domain_boxes")) {
+            block_domain_boxes = input_db->getDatabaseBoxArray("domain_boxes");
+            if (block_domain_boxes.size() == 0) {
+               TBOX_ERROR(
+                  getObjectName() << ":  "
+                                  << "No boxes for domain_boxes"
+                                  << " array found in input.");
+            }
          } else {
             TBOX_ERROR(
                getObjectName() << ":  "
@@ -750,9 +759,10 @@ BaseGridGeometry::getFromInput(
          }
       }
 
+      initializePeriodicShift(per_bc);
+
       setPhysicalDomain(domain, d_number_blocks);
 
-      initializePeriodicShift(per_bc);
    }
 
    readBlockDataFromInput(input_db);

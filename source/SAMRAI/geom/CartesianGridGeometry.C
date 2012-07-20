@@ -99,8 +99,6 @@ namespace geom {
 
 const int CartesianGridGeometry::GEOM_CARTESIAN_GRID_GEOMETRY_VERSION = 2;
 
-// using namespace std;
-
 /*
  *************************************************************************
  *
@@ -115,13 +113,10 @@ CartesianGridGeometry::CartesianGridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
    const boost::shared_ptr<tbox::Database>& input_db):
-   GridGeometry(dim, object_name),
+   GridGeometry(dim, object_name, input_db),
    d_domain_box(dim)
 {
    TBOX_ASSERT(input_db);
-
-   tbox::RestartManager::getManager()->registerRestartItem(getObjectName(),
-      this);
 
    bool is_from_restart = tbox::RestartManager::getManager()->isFromRestart();
    if (is_from_restart) {
@@ -302,7 +297,9 @@ CartesianGridGeometry::setGeometryData(
       d_x_up[id] = x_up[id];
    }
 
-   setPhysicalDomain(domain, 1);
+   if (getPhysicalDomain().isEmpty()) {
+      setPhysicalDomain(domain, 1);
+   }
 
    hier::Box bigbox(dim);
    const hier::BoxContainer& block_domain = getPhysicalDomain();
@@ -556,22 +553,15 @@ CartesianGridGeometry::putToRestart(
 {
    TBOX_ASSERT(restart_db);
 
+   hier::BaseGridGeometry::putToRestart(restart_db);
+
    const tbox::Dimension& dim(getDim());
 
    restart_db->putInteger("GEOM_CARTESIAN_GRID_GEOMETRY_VERSION",
       GEOM_CARTESIAN_GRID_GEOMETRY_VERSION);
-   tbox::Array<tbox::DatabaseBox> temp_box_array = getPhysicalDomain();
-   restart_db->putDatabaseBoxArray("domain_boxes", temp_box_array);
 
    restart_db->putDoubleArray("x_lo", d_x_lo, dim.getValue());
    restart_db->putDoubleArray("x_up", d_x_up, dim.getValue());
-
-   hier::IntVector level0_shift(
-      getPeriodicShift(hier::IntVector::getOne(dim)));
-   int* temp_shift = &level0_shift[0];
-   restart_db->putIntegerArray("periodic_dimension",
-      temp_shift,
-      dim.getValue());
 
 }
 
@@ -598,29 +588,6 @@ CartesianGridGeometry::getFromInput(
 
    if (!is_from_restart) {
 
-      hier::BoxContainer domain;
-      if (input_db->keyExists("domain_boxes")) {
-         hier::BoxContainer input_domain(
-            input_db->getDatabaseBoxArray("domain_boxes"));
-         if (input_domain.size() == 0) {
-            TBOX_ERROR(
-               "CartesianGridGeometry::getFromInput() error...\n"
-               << "    geometry object with name = " << getObjectName()
-               << "\n    Empty `domain_boxes' array found in input."
-               << std::endl);
-         }
-         hier::LocalId local_id(0);
-         for (hier::BoxContainer::iterator itr = input_domain.begin();
-              itr != input_domain.end(); ++itr) {
-            itr->setBlockId(hier::BlockId(0));
-            domain.pushBack(hier::Box(*itr, local_id++, 0));
-         }
-      } else {
-         TBOX_ERROR("CartesianGridGeometry::getFromInput() error...\n"
-            << "    geometry object with name = " << getObjectName()
-            << "\n    Key data `domain_boxes' not found in input." << std::endl);
-      }
-
       double x_lo[SAMRAI::MAX_DIM_VAL],
              x_up[SAMRAI::MAX_DIM_VAL];
 
@@ -639,19 +606,7 @@ CartesianGridGeometry::getFromInput(
             << "\n   Key data `x_up' not found in input." << std::endl);
       }
 
-      int pbc[SAMRAI::MAX_DIM_VAL];
-      hier::IntVector per_bc(dim, 0);
-      if (input_db->keyExists("periodic_dimension")) {
-         input_db->getIntegerArray("periodic_dimension", pbc, dim.getValue());
-         for (int i = 0; i < dim.getValue(); i++) {
-            per_bc(i) = ((pbc[i] == 0) ? 0 : 1);
-         }
-      }
-
-
-      initializePeriodicShift(per_bc);
-
-      setGeometryData(x_lo, x_up, domain);
+      setGeometryData(x_lo, x_up, getPhysicalDomain());
 
    }
 }
@@ -689,27 +644,13 @@ CartesianGridGeometry::getFromRestart()
          << "    geometry object with name = " << getObjectName()
          << "Restart file version is different than class version" << std::endl);
    }
-   hier::BoxContainer restart_domain(
-      db->getDatabaseBoxArray("domain_boxes"));
+
    double x_lo[SAMRAI::MAX_DIM_VAL],
           x_up[SAMRAI::MAX_DIM_VAL];
    db->getDoubleArray("x_lo", x_lo, dim.getValue());
    db->getDoubleArray("x_up", x_up, dim.getValue());
 
-   hier::BoxContainer domain;
-   hier::LocalId local_id(0);
-   for (hier::BoxContainer::iterator itr = restart_domain.begin();
-        itr != restart_domain.end(); ++itr) {
-      itr->setBlockId(hier::BlockId(0));
-      domain.pushBack(hier::Box(*itr, local_id++, 0));
-   }
-
-   setGeometryData(x_lo, x_up, domain);
-
-   hier::IntVector periodic_shift(dim);
-   int* temp_shift = &periodic_shift[0];
-   db->getIntegerArray("periodic_dimension", temp_shift, dim.getValue());
-   initializePeriodicShift(periodic_shift);
+   setGeometryData(x_lo, x_up, getPhysicalDomain());
 
 }
 
