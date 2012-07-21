@@ -144,46 +144,6 @@ BaseGridGeometry::BaseGridGeometry(
 }
 
 BaseGridGeometry::BaseGridGeometry(
-   const tbox::Dimension& dim,
-   const std::string& object_name,
-   const boost::shared_ptr<TransferOperatorRegistry>& op_reg):
-   d_transfer_operator_registry(op_reg),
-   d_dim(dim),
-   d_object_name(object_name),
-   d_periodic_shift(IntVector::getZero(d_dim)),
-   d_max_data_ghost_width(IntVector(d_dim, -1)),
-   d_number_blocks(1),
-   d_number_of_block_singularities(0),
-   d_block_neighbors(1),
-   d_singularity(1),
-   d_singularity_indices(1),
-   d_reduced_connect(1),
-   d_has_enhanced_connectivity(false)
-{
-   TBOX_ASSERT(!object_name.empty());
-}
-
-BaseGridGeometry::BaseGridGeometry(
-   const tbox::Dimension& dim,
-   const std::string& object_name):
-   d_transfer_operator_registry(
-      boost::make_shared<TransferOperatorRegistry>(dim)),
-   d_dim(dim),
-   d_object_name(object_name),
-   d_periodic_shift(IntVector::getZero(d_dim)),
-   d_max_data_ghost_width(IntVector(d_dim, -1)),
-   d_number_blocks(1),
-   d_number_of_block_singularities(0),
-   d_block_neighbors(1),
-   d_singularity(1),
-   d_singularity_indices(1),
-   d_reduced_connect(1),
-   d_has_enhanced_connectivity(false)
-{
-   TBOX_ASSERT(!object_name.empty());
-}
-
-BaseGridGeometry::BaseGridGeometry(
    const std::string& object_name,
    const BoxContainer& domain,
    const boost::shared_ptr<TransferOperatorRegistry>& op_reg) :

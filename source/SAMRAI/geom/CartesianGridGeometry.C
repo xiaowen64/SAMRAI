@@ -131,15 +131,12 @@ CartesianGridGeometry::CartesianGridGeometry(
    const double* x_lo,
    const double* x_up,
    const hier::BoxContainer& domain):
-   GridGeometry(domain.front().getDim(), object_name),
+   GridGeometry(object_name, domain), 
    d_domain_box(domain.front().getDim())
 {
    TBOX_ASSERT(domain.size() > 0);
    TBOX_ASSERT(!(x_lo == (double *)NULL));
    TBOX_ASSERT(!(x_up == (double *)NULL));
-
-   tbox::RestartManager::getManager()->
-   registerRestartItem(getObjectName(), this);
 
    setGeometryData(x_lo, x_up, domain);
 }
@@ -150,15 +147,12 @@ CartesianGridGeometry::CartesianGridGeometry(
    const double* x_up,
    const hier::BoxContainer& domain,
    const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg) :
-   GridGeometry(domain.front().getDim(), object_name, op_reg),
+   GridGeometry(object_name, domain, op_reg),
    d_domain_box(domain.front().getDim())
 {
    TBOX_ASSERT(domain.size() > 0);
    TBOX_ASSERT(!(x_lo == (double *)NULL));
    TBOX_ASSERT(!(x_up == (double *)NULL));
-
-   tbox::RestartManager::getManager()->
-   registerRestartItem(getObjectName(), this);
 
    setGeometryData(x_lo, x_up, domain);
 }

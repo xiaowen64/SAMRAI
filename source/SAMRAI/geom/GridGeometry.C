@@ -119,21 +119,6 @@ GridGeometry::GridGeometry(
 }
 
 GridGeometry::GridGeometry(
-   const tbox::Dimension& dim,
-   const std::string& object_name,
-   const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg) :
-   hier::BaseGridGeometry(dim, object_name, op_reg)
-{
-}
-
-GridGeometry::GridGeometry(
-   const tbox::Dimension& dim,
-   const std::string& object_name) :
-   hier::BaseGridGeometry(dim, object_name)
-{
-}
-
-GridGeometry::GridGeometry(
    const std::string& object_name,
    const hier::BoxContainer& domain,
    const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg):

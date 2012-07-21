@@ -142,30 +142,6 @@ public:
 
 protected:
    /*!
-    * @brief To be called from derived class constructor when constructing
-    *        coarsened/refined grid geometry.
-    *
-    * @param [in] dim
-    * @param [in] object_name
-    * @param [in] op_reg
-    */
-   GridGeometry(
-      const tbox::Dimension& dim,
-      const std::string& object_name,
-      const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg);
-
-   /*!
-    * @brief To be called from derived class constructors except when
-    *        constructing coarsened/refined grid geometry.
-    *
-    * @param [in] dim
-    * @param [in] object_name
-    */
-   GridGeometry(
-      const tbox::Dimension& dim,
-      const std::string& object_name);
-
-   /*!
     * @brief Build operators appropriate for a GridGeometry.
     */
    virtual void

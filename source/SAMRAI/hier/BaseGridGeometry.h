@@ -1160,38 +1160,6 @@ private:
 
 protected:
    /*!
-    * @brief Construct a new BaseGridGeometry object in its default state.
-    *
-    * This constructor is intended to be called from a child class derived
-    * from BaseGridGeometry.  It will not read any
-    * input data, as it is expected that the child class will handle that
-    * operations.
-    *
-    * @param[in]  dim
-    * @param[in]  object_name
-    * @param[in]  op_reg
-    */
-   BaseGridGeometry(
-      const tbox::Dimension& dim,
-      const std::string& object_name,
-      const boost::shared_ptr<TransferOperatorRegistry>& op_reg);
-
-   /*!
-    * @brief Construct a new BaseGridGeometry object in its default state.
-    *
-    * This constructor is intended to be called from a child class derived
-    * from BaseGridGeometry.  It will not read any
-    * input data, as it is expected that the child class will handle that
-    * operations.
-    *
-    * @param[in]  dim
-    * @param[in]  object_name
-    */
-   BaseGridGeometry(
-      const tbox::Dimension& dim,
-      const std::string& object_name);
-
-   /*!
     * @brief Construct a new BaseGridGeometry object based on arguments.
     *
     * @param[in]  object_name
