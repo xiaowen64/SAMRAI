@@ -19,18 +19,6 @@ namespace SAMRAI {
 namespace xfer {
 
 /*!
- * @brief Class BoxGeometryVariableFillPattern is a default implementation of
- * the abstract base class VariableFillPattern.
- *
- * It is used to calculate overlaps that consist of the full intersection
- * between source and destination patches, including all ghost regions.  If
- * no VariableFillPattern object is provided when a refine operation is
- * registered with a RefineAlgorithm, this class is used by default.
- *
- * @see xfer::RefineAlgorithm
- */
-
-/*!
  * @brief Class PatchInteriorVariableFillPattern is an implementation of the
  * abstract base class VariableFillPattern.
  *

@@ -48,8 +48,10 @@ public:
     * @brief Compute the boxes representing the region that will
     *        be filled by a RefineSchedule.
     *
-    * This is currently unimplemented until BoxLevel is
-    * multiblock-aware.  An error will occur if this is called.
+    * The fill boxes will exist only for destination patches that touch
+    * a block boundary at enhanced connectivity.  The fill boxes will be
+    * the portion of the ghost regions of those patches lying across the
+    * enhanced connectivity boundary.
     *
     * @param[out] fill_box_level       Output BoxLevel to be filled
     * @param[out] dst_to_fill          Output Connector between

@@ -25,7 +25,7 @@ namespace xfer {
  *
  * For documentation on this interface see @ref xfer::PatchLevelFillPattern
  *
- * The fill boxes for this "All" PatchLevelFillPattern will consist of
+ * The fill boxes for this PatchLevelFillPattern will consist of
  * the entire region of the destination level that can be filled, both
  * interior and ghost regions.
  *

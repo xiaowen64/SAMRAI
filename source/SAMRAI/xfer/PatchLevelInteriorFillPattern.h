@@ -126,7 +126,7 @@ public:
    fillingCoarseFineGhosts() const;
 
    /*!
-    * @brief Returns false because this fill pattern is specialized for
+    * @brief Returns false because this fill pattern is not specialized for
     * enhanced connectivity only.
     */
    bool
