@@ -1409,13 +1409,13 @@ private:
    /*
     * Static integer constant describing class's version number.
     */
-   static const int HIER_MAPPED_BOX_LEVEL_VERSION;
+   static const int HIER_BOX_LEVEL_VERSION;
 
    /*
     * Static integer constant describing the number of statistics in this
     * class.
     */
-   static const int MAPPED_BOX_LEVEL_NUMBER_OF_STATS;
+   static const int BOX_LEVEL_NUMBER_OF_STATS;
 
    /*
     * TODO: This same enum is defined in the Connector header.

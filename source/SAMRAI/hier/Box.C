@@ -139,8 +139,8 @@ Box::Box(
    TBOX_ASSERT(periodic_id.getPeriodicValue() <
       PeriodicShiftCatalog::getCatalog(box.getDim())->getNumberOfShifts());
 #ifdef BOX_TELEMETRY
-   // Increment the cumulative constructed count, active mapped box count and
-   // reset the high water mark of active mapped boxes if necessary.
+   // Increment the cumulative constructed count, active box count and
+   // reset the high water mark of active boxes if necessary.
    ++s_cumulative_constructed_ct;
    ++s_active_ct;
    if (s_active_ct > s_high_water) {
@@ -163,8 +163,8 @@ Box::Box(
    TBOX_ASSERT(periodic_id.getPeriodicValue() < PeriodicShiftCatalog::getCatalog(
          dim)->getNumberOfShifts());
 #ifdef BOX_TELEMETRY
-   // Increment the cumulative constructed count, active mapped box count and
-   // reset the high water mark of active mapped boxes if necessary.
+   // Increment the cumulative constructed count, active box count and
+   // reset the high water mark of active boxes if necessary.
    ++s_cumulative_constructed_ct;
    ++s_active_ct;
    if (s_active_ct > s_high_water) {
@@ -186,8 +186,8 @@ Box::Box(
       box_id.getPeriodicId().getPeriodicValue() <
       PeriodicShiftCatalog::getCatalog(dim)->getNumberOfShifts());
 #ifdef BOX_TELEMETRY
-   // Increment the cumulative constructed count, active mapped box count and
-   // reset the high water mark of active mapped boxes if necessary.
+   // Increment the cumulative constructed count, active box count and
+   // reset the high water mark of active boxes if necessary.
    ++s_cumulative_constructed_ct;
    ++s_active_ct;
    if (s_active_ct > s_high_water) {
@@ -215,8 +215,8 @@ Box::Box(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, other, refinement_ratio);
 #ifdef BOX_TELEMETRY
-   // Increment the cumulative constructed count, active mapped box count and
-   // reset the high water mark of active mapped boxes if necessary.
+   // Increment the cumulative constructed count, active box count and
+   // reset the high water mark of active boxes if necessary.
    ++s_cumulative_constructed_ct;
    ++s_active_ct;
    if (s_active_ct > s_high_water) {

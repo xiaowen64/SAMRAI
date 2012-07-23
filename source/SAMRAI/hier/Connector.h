@@ -974,10 +974,10 @@ public:
    // problematic.
    /*!
     * @brief Check for consistency between the relationship data and base
-    * mapped boxes, and return the number of consistency errors.
+    * boxes, and return the number of consistency errors.
     *
     * Consistency stipulates that each neighbor list must correspond to
-    * a base mapped box.
+    * a base box.
     *
     * relationship consistency errors should be treated as fatal because many
     * operations assume consistency.

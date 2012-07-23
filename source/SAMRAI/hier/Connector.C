@@ -1408,7 +1408,7 @@ Connector::assertConsistencyWithBase() const
    if (checkConsistencyWithBase() > 0) {
       TBOX_ERROR(
          "Connector::assertConsistencyWithBase() found inconsistencies.\n"
-         << "Base mapped box level:\n" << getBase().format("ERROR->", 2));
+         << "Base box level:\n" << getBase().format("ERROR->", 2));
    }
 }
 

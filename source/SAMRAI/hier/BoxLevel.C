@@ -35,8 +35,8 @@
 namespace SAMRAI {
 namespace hier {
 
-const int BoxLevel::HIER_MAPPED_BOX_LEVEL_VERSION = 0;
-const int BoxLevel::MAPPED_BOX_LEVEL_NUMBER_OF_STATS = 20;
+const int BoxLevel::HIER_BOX_LEVEL_VERSION = 0;
+const int BoxLevel::BOX_LEVEL_NUMBER_OF_STATS = 20;
 
 boost::shared_ptr<tbox::Timer> BoxLevel::t_initialize_private;
 boost::shared_ptr<tbox::Timer> BoxLevel::t_acquire_remote_boxes;
@@ -1443,7 +1443,7 @@ BoxLevel::putToRestart(
 {
    restart_db->putBool("d_is_mapped_box_level", true);
    restart_db->putInteger(
-      "HIER_MAPPED_BOX_LEVEL_VERSION", HIER_MAPPED_BOX_LEVEL_VERSION);
+      "HIER_MAPPED_BOX_LEVEL_VERSION", HIER_BOX_LEVEL_VERSION);
    restart_db->putInteger("d_nproc", d_mpi.getSize());
    restart_db->putInteger("d_rank", d_mpi.getRank());
    restart_db->putInteger("dim", d_ratio.getDim().getValue());
@@ -1476,7 +1476,7 @@ BoxLevel::getFromRestart(
    const int nproc = restart_db.getInteger("d_nproc");
    const int rank = restart_db.getInteger("d_rank");
    TBOX_ASSERT(ratio >= IntVector::getOne(dim));
-   TBOX_ASSERT(version <= HIER_MAPPED_BOX_LEVEL_VERSION);
+   TBOX_ASSERT(version <= HIER_BOX_LEVEL_VERSION);
 #endif
 
    /*

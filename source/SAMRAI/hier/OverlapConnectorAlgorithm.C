@@ -1852,7 +1852,7 @@ OverlapConnectorAlgorithm::findOverlapErrors(
     * Before checking on overlap errors, make sure the user gave a
     * valid Connector.
     *
-    * Each neighbor set should correspond to a base mapped box.
+    * Each neighbor set should correspond to a base box.
     *
     * Each referenced neighbor should exist in the head.
     */

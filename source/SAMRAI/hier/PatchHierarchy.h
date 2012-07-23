@@ -551,7 +551,7 @@ public:
  * @brief Access the domain description as a BoxLevel.
  *
  * The domain BoxLevel is maintained in Globalized mode with
- * processor 0 owning all mapped boxes.
+ * processor 0 owning all boxes.
  *
  * @return The domain description as a BoxLevel
  */
@@ -1169,7 +1169,7 @@ private:
     * BoxLevel are owned by process 0.
     *
     * The physical domain BoxLevel is maintained in GLOBALIZED
-    * mode with processor 0 owning all mapped boxes.
+    * mode with processor 0 owning all boxes.
     */
    BoxLevel d_domain_box_level;
 
