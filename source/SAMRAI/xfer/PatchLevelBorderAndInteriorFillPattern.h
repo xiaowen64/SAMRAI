@@ -45,19 +45,17 @@ public:
    virtual ~PatchLevelBorderAndInteriorFillPattern();
 
    /*!
-    * @brief Compute the mapped boxes to be filled and related communication
-    * data.
+    * @brief Compute the boxes to be filled and related communication data.
     *
-    * The computed fill_mapped_boxes will cover the ghost regions around the
-    * boxes of dst_mapped_box_level at coarse-fine and physical boundaries,
-    * as well as the interior of the boxes of dst_mapped_box_level.  The
+    * The computed fill_box_level will cover the ghost regions around the
+    * boxes of dst_box_level at coarse-fine and physical boundaries,
+    * as well as the interior of the boxes of dst_box_level.  The
     * width of the ghost regions will be determined by fill_ghost_width.
     *
-    * @param[out] fill_mapped_boxes    Output BoxLevel to be filled
+    * @param[out] fill_box_level       Output BoxLevel to be filled
     * @param[out] dst_to_fill          Output Connector between
-    *                                  dst_mapped_box_level and
-    *                                  and fill_mapped_boxes
-    * @param[in] dst_mapped_box_level  destination level
+    *                                  dst_box_level and fill_box_level
+    * @param[in] dst_box_level         destination level
     * @param[in] dst_to_dst            Connector of destination to itself
     * @param[in] dst_to_src            Connector of destination to source
     * @param[in] src_to_dst            Connector of source to destination
@@ -66,9 +64,9 @@ public:
     */
    void
    computeFillBoxesAndNeighborhoodSets(
-      hier::BoxLevel& fill_mapped_boxes,
+      hier::BoxLevel& fill_box_level,
       hier::Connector& dst_to_fill,
-      const hier::BoxLevel& dst_mapped_box_level,
+      const hier::BoxLevel& dst_box_level,
       const hier::Connector& dst_to_dst,
       const hier::Connector& dst_to_src,
       const hier::Connector& src_to_dst,
@@ -90,7 +88,7 @@ public:
     * @param[out] dst_fill_boxes_on_src_proc FillSet storing the destination
     *                                        neighbors of the source mapped
     *                                        boxes
-    * @param[in] dst_mapped_box_level  destination level
+    * @param[in] dst_box_level             destination level
     * @param[in] src_to_dst                Connector of source to destination
     * @param[in] fill_ghost_width          Ghost width being filled by refine
     *                                      schedule
@@ -98,7 +96,7 @@ public:
    void
    computeDestinationFillBoxesOnSourceProc(
       FillSet& dst_fill_boxes_on_src_proc,
-      const hier::BoxLevel& dst_mapped_box_level,
+      const hier::BoxLevel& dst_box_level,
       const hier::Connector& src_to_dst,
       const hier::IntVector& fill_ghost_width);
 

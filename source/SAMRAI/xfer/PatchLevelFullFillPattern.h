@@ -54,14 +54,14 @@ public:
    /*!
     * @copydoc PatchLevelFillPattern::computeFillBoxesAndNeighborhoodSets()
     *
-    * The computed fill_mapped_boxes for this fill pattern will be the
-    * boxes of dst_mapped_box_level grown by the fill_ghost_width.
+    * The computed fill_box_level for this fill pattern will be the
+    * boxes of dst_box_level grown by the fill_ghost_width.
     */
    void
    computeFillBoxesAndNeighborhoodSets(
-      hier::BoxLevel& fill_mapped_boxes,
+      hier::BoxLevel& fill_box_level,
       hier::Connector& dst_to_fill,
-      const hier::BoxLevel& dst_mapped_box_level,
+      const hier::BoxLevel& dst_box_level,
       const hier::Connector& dst_to_dst,
       const hier::Connector& dst_to_src,
       const hier::Connector& src_to_dst,
@@ -83,7 +83,7 @@ public:
    void
    computeDestinationFillBoxesOnSourceProc(
       FillSet& dst_fill_boxes_on_src_proc,
-      const hier::BoxLevel& dst_mapped_box_level,
+      const hier::BoxLevel& dst_box_level,
       const hier::Connector& src_to_dst,
       const hier::IntVector& fill_ghost_width);
 

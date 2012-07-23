@@ -551,13 +551,13 @@ private:
     * The resulting transactions will only fill the regions of intersection
     * between the fill level, which is "head" level that the Connector
     * dst_to_fill points to, and the source level.  The remaining
-    * box regions are added to unfilled_mapped_box_level.
+    * box regions are added to unfilled_box_level.
     *
-    * @param[out] unfilled_mapped_box_level  The parts of the fill level
+    * @param[out] unfilled_box_level  The parts of the fill level
     *                                        that cannot be filled from
     *                                        the source level are added here.
     * @param[out] dst_to_unfilled  Connector from dst_level to
-    *                              unfilled_mapped_box_level.
+    *                              unfilled_box_level.
     * @param[out] unfilled_encon_box_level  The parts of the fill level
     *                                      at enhanced connectivity block
     *                                      boundaries that cannot be filled
@@ -583,7 +583,7 @@ private:
     */
    void
    generateCommunicationSchedule(
-      boost::shared_ptr<BoxLevel>& unfilled_mapped_box_level,
+      boost::shared_ptr<BoxLevel>& unfilled_box_level,
       boost::shared_ptr<Connector>& dst_to_unfilled,
       boost::shared_ptr<BoxLevel>& unfilled_encon_box_level,
       boost::shared_ptr<Connector>& encon_to_unfilled_encon,
@@ -598,36 +598,35 @@ private:
     * @brief Compute boxes that need to be filled and data associated with
     * them.
     *
-    * fill_mapped_box_level will be filled with mapped boxes representing all
+    * fill_box_level will be filled with boxes representing all
     * of the regions intended to be filled by the schedule.  It will include
-    * the boxes of dst_mapped_box_level grown by ill_gcw, but then can be
+    * the boxes of dst_box_level grown by ill_gcw, but then can be
     * restricted based on the PatchLevelFillPattern given to the schedule
     * constructor.  This method sets up this fill level, as well as a
     * connector from the destination level to the fill level, and also provides
-    * a mapping from each source mapped box to the boxes they can fill
+    * a mapping from each source box to the boxes they can fill
     * on the fill level.
     *
-    * @param[out] fill_mapped_box_level  Will contain all boxes that need to
-    *                                    be filled.
-    * @param[out] dst_to_fill  Connector from dst_level to
-    *                          fill_mapped_box_level.
+    * @param[out] fill_box_level  Will contain all boxes that need to
+    *                             be filled.
+    * @param[out] dst_to_fill  Connector from dst_level to fill_box_level.
     * @param[out] src_owner_dst_to_fill  A BoxNeighborhoodCollection that maps
     *                                    each local box on the source level to
     *                                    a collection of boxes that indicates
-    *                                    what parts of fill_mapped_box_level
+    *                                    what parts of fill_box_level
     *                                    can be filled by that source box.
-    * @param[in] dst_mapped_box_level  Mapped box representation of the
-    *                                  dst_level given to the constructor.
+    * @param[in] dst_box_level  Box representation of the
+    *                           dst_level given to the constructor.
     * @param[in] dst_to_src  Connector from dst_level to src_level.
     * @param[in] src_to_dst  Connector from src_level to dst_level.
     * @param[in] fill_gcw  Maximum ghost width to be filled by the schedule.
     */
    void
    setDefaultFillBoxLevel(
-      BoxLevel& fill_mapped_box_level,
+      BoxLevel& fill_box_level,
       Connector& dst_to_fill,
       BoxNeighborhoodCollection& src_owner_dst_to_fill,
-      const hier::BoxLevel& dst_mapped_box_level,
+      const hier::BoxLevel& dst_box_level,
       const hier::Connector* dst_to_src,
       const hier::Connector* src_to_dst,
       const hier::IntVector& fill_gcw);
@@ -675,7 +674,7 @@ private:
     *                                       level_encon_unfilled_boxes
     * @param[in,out]  last_unfilled_local_id a unique LocalId not already
     *                                        used in level_encon_unfilled_boxes
-    * @param[in]  dst_mapped_box  The destination box
+    * @param[in]  dst_box  The destination box
     * @param[in]  dst_to_src
     * @param[in]  encon_fill_boxes
     */
@@ -684,7 +683,7 @@ private:
       const boost::shared_ptr<hier::BoxLevel>& unfilled_encon_box_level,
       const boost::shared_ptr<hier::Connector>& encon_to_unfilled_encon,
       hier::LocalId& last_unfilled_local_id,
-      const hier::Box& dst_mapped_box,
+      const hier::Box& dst_box,
       const Connector& dst_to_src,
       const hier::BoxContainer& encon_fill_boxes);
 
@@ -714,7 +713,7 @@ private:
     * @param[out] src_owner_dst_to_fill  A BoxNeighborhoodCollection that maps
     *                                    each local box on the source level to
     *                                    a collection of boxes that indicates
-    *                                    what parts of fill_mapped_box_level
+    *                                    what parts of fill_box_level
     *                                    can be filled by that source box.
     * @param[in] dst_to_fill  Mapping from the dst_level to boxes it needs
     *                         need to have filled.
@@ -748,7 +747,7 @@ private:
     * Also sets up dst_to_coarse_interp, coarse_interp_to_dst and
     * coarse_interp_to_unfilled.
     *
-    * @param[out] coarse_interp_mapped_box_level
+    * @param[out] coarse_interp_box_level
     *
     * @param[out] dst_to_coarse_interp
     *
@@ -756,19 +755,18 @@ private:
     *
     * @param[out] coarse_interp_to_unfilled
     *
-    * @param[in] hiercoarse_mapped_box_level The BoxLevel on the
-    * hierarchy at the resolution that coarse_interp_mapped_box_level is to
-    * have.
+    * @param[in] hiercoarse_box_level The BoxLevel on the
+    * hierarchy at the resolution that coarse_interp_box_level is to have.
     *
     * @param[in] dst_to_unfilled
     */
    void
    setupCoarseInterpBoxLevel(
-      hier::BoxLevel &coarse_interp_mapped_box_level,
+      hier::BoxLevel &coarse_interp_box_level,
       hier::Connector &dst_to_coarse_interp,
       hier::Connector &coarse_interp_to_dst,
       hier::Connector &coarse_interp_to_unfilled,
-      const hier::BoxLevel &hiercoarse_mapped_box_level,
+      const hier::BoxLevel &hiercoarse_box_level,
       const hier::Connector &dst_to_unfilled);
 
    /*!
@@ -778,8 +776,8 @@ private:
     *
     * @param[out] coarse_interp_level
     *
-    * @param[in,out] coarse_interp_mapped_box_level This method will add
-    * periodic images to coarse_interp_mapped_box_level, if needed.
+    * @param[in,out] coarse_interp_box_level This method will add
+    * periodic images to coarse_interp_box_level, if needed.
     *
     * @param[in] hierarchy
     *
@@ -805,7 +803,7 @@ private:
    void
    createCoarseInterpPatchLevel(
       boost::shared_ptr<hier::PatchLevel>& coarse_interp_level,
-      hier::BoxLevel& coarse_interp_mapped_box_level,
+      hier::BoxLevel& coarse_interp_box_level,
       hier::Connector &coarse_interp_to_hiercoarse,
       hier::Connector &hiercoarse_to_coarse_interp,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -852,46 +850,46 @@ private:
 
    /*!
     * @brief Function that constructs schedule transactions between
-    * one source mapped box and one destination mapped box.
+    * one source box and one destination box.
     *
     * Transactions will move data on the intersection of the source and
-    * destination mapped boxes with the fill boxes.
+    * destination boxes with the fill boxes.
     *
     * @param[in] fill_boxes  A container of boxes that need to be filled.
-    * @param[in] dst_mapped_box  Box from a destination patch.
-    * @param[in] src_mapped_box  Box from a source patch.
+    * @param[in] dst_box  Box from a destination patch.
+    * @param[in] src_box  Box from a source patch.
     * @param[in] use_time_interpolation
     */
    void
    constructScheduleTransactions(
       const BoxNeighborhoodCollection& dst_to_fill_on_src_proc,
       BoxNeighborhoodCollection::ConstIterator& dst_to_fill_iter,
-      const hier::Box& dst_mapped_box,
-      const hier::Box& src_mapped_box,
+      const hier::Box& dst_box,
+      const hier::Box& src_box,
       const bool use_time_interpolation);
 
    /*!
     * @brief Function that constructs schedule transactions between
-    * one source mapped box and one destination mapped box.
+    * one source box and one destination box.
     *
     * Transactions will move data on the intersection of the source and
-    * destination mapped boxes with the fill boxes.
+    * destination boxes with the fill boxes.
     *
     * @param[in] dst_to_fill  A connector from the destination to the fill
     * levels.
     * filled.
     * @param[in] dst_itr  An iterator to the neighborhood of a Box in
     * dst_to_fill.
-    * @param[in] dst_mapped_box  Box from a destination patch.
-    * @param[in] src_mapped_box  Box from a source patch.
+    * @param[in] dst_box  Box from a destination patch.
+    * @param[in] src_box  Box from a source patch.
     * @param[in] use_time_interpolation
     */
    void
    constructScheduleTransactions(
       const hier::Connector& dst_to_fill,
       hier::Connector::ConstNeighborhoodIterator& dst_itr,
-      const hier::Box& dst_mapped_box,
-      const hier::Box& src_mapped_box,
+      const hier::Box& dst_box,
+      const hier::Box& src_box,
       const bool use_time_interpolation);
 
    /*!
@@ -903,10 +901,10 @@ private:
     * same order that dst owners see them.  Transactions must have the same
     * order on the sending and receiving processors.
     *
-    * Section, it shifts periodic image dst mapped_boxes back to the zero-shift
-    * position, and applies a similar shift to src mapped_boxes so that the
+    * Section, it shifts periodic image dst boxes back to the zero-shift
+    * position, and applies a similar shift to src boxes so that the
     * overlap is unchanged.  The constructScheduleTransactions method requires
-    * all shifts to be absorbed in the src mapped_box.
+    * all shifts to be absorbed in the src box.
     *
     * The reordered neighboorhood sets are added to the output parameter.
     *
@@ -1135,7 +1133,7 @@ private:
     * fill from the source level.  These remaining boxes must be
     * filled using a coarse interpolation schedule, d_coarse_interp_schedule.
     */
-   boost::shared_ptr<BoxLevel> d_unfilled_mapped_box_level;
+   boost::shared_ptr<BoxLevel> d_unfilled_box_level;
 
    /*!
     * @brief Describes remaining unfilled boxes of d_encon_level after
@@ -1173,7 +1171,7 @@ private:
    Connector d_encon_to_coarse_interp_encon;
 
    /*!
-    * @brief Connector d_coarse_interp_level to d_unfilled_mapped_box_level.
+    * @brief Connector d_coarse_interp_level to d_unfilled_box_level.
     *
     * Cached for use during schedule filling.
     */
@@ -1263,9 +1261,9 @@ private:
    static boost::shared_ptr<tbox::Timer> t_shear;
    static boost::shared_ptr<tbox::Timer> t_misc1;
    static boost::shared_ptr<tbox::Timer> t_barrier_and_time;
-   static boost::shared_ptr<tbox::Timer> t_get_global_mapped_box_count;
+   static boost::shared_ptr<tbox::Timer> t_get_global_box_count;
    static boost::shared_ptr<tbox::Timer> t_coarse_shear;
-   static boost::shared_ptr<tbox::Timer> t_setup_coarse_interp_mapped_box_level;
+   static boost::shared_ptr<tbox::Timer> t_setup_coarse_interp_box_level;
    static boost::shared_ptr<tbox::Timer> t_misc2;
    static boost::shared_ptr<tbox::Timer> t_bridge_coarse_interp_hiercoarse;
    static boost::shared_ptr<tbox::Timer> t_bridge_dst_hiercoarse;

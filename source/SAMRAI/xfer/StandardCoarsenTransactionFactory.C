@@ -77,21 +77,21 @@ StandardCoarsenTransactionFactory::allocate(
    const boost::shared_ptr<hier::PatchLevel>& dst_level,
    const boost::shared_ptr<hier::PatchLevel>& src_level,
    const boost::shared_ptr<hier::BoxOverlap>& overlap,
-   const hier::Box& dst_mapped_box,
-   const hier::Box& src_mapped_box,
+   const hier::Box& dst_box,
+   const hier::Box& src_box,
    int citem_id) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level,
       *src_level,
-      dst_mapped_box,
-      src_mapped_box);
+      dst_box,
+      src_box);
 
    return boost::make_shared<CoarsenCopyTransaction>(
       dst_level,
       src_level,
       overlap,
-      dst_mapped_box,
-      src_mapped_box,
+      dst_box,
+      src_box,
       citem_id);
 }
 

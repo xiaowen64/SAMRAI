@@ -335,7 +335,7 @@ RefineAlgorithm::createSchedule(
    const boost::shared_ptr<RefineTransactionFactory>& transaction_factory)
 {
 
-   // Do we all agree on the destination mapped_box_level?
+   // Do we all agree on the destination box_level?
    TBOX_ASSERT(level);
    TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
@@ -389,7 +389,7 @@ RefineAlgorithm::createSchedule(
    const boost::shared_ptr<RefineTransactionFactory>& transaction_factory)
 {
 
-   // Do we all agree on the destination mapped_box_level?
+   // Do we all agree on the destination box_level?
    TBOX_ASSERT(level);
    TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
@@ -452,7 +452,7 @@ RefineAlgorithm::createSchedule(
    }
 #endif
 
-   // Do we all agree on the destination mapped_box_level?
+   // Do we all agree on the destination box_level?
    if (src_level) {
       if (next_coarser_level >= 0) {
       }
@@ -516,7 +516,7 @@ RefineAlgorithm::createSchedule(
    }
 #endif
 
-   // Do we all agree on the destination mapped_box_level?
+   // Do we all agree on the destination box_level?
    if (src_level) {
       if (next_coarser_level >= 0) {
       }

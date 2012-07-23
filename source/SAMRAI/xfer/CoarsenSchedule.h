@@ -313,17 +313,17 @@ private:
     * data from temporary coarse level to the destination level.
     *
     * @param[in] dst_level      The destination level for the schedule
-    * @param[in] dst_mapped_box Owned by a Patch on the destination level
+    * @param[in] dst_box        Owned by a Patch on the destination level
     * @param[in] src_level      The temporary coarse level that will have
     *                           coarsened data
-    * @param[in] src_mapped_box Owned by a Patch on the temporary coarse level
+    * @param[in] src_box        Owned by a Patch on the temporary coarse level
     */
    void
    constructScheduleTransactions(
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
-      const hier::Box& dst_mapped_box,
+      const hier::Box& dst_box,
       const boost::shared_ptr<hier::PatchLevel>& src_level,
-      const hier::Box& src_mapped_box);
+      const hier::Box& src_box);
 
    /*!
     * @brief Restructure the neighborhood sets from a src_to_dst Connector
@@ -334,10 +334,10 @@ private:
     * same order that dst owners see them.  Transactions must have the same
     * order on the sending and receiving processors.
     *
-    * Section, it shifts periodic image dst mapped_boxes back to the zero-shift
-    * position, and applies a similar shift to src mapped_boxes so that the
+    * Section, it shifts periodic image dst boxes back to the zero-shift
+    * position, and applies a similar shift to src boxes so that the
     * overlap is unchanged.  The constructScheduleTransactions method requires
-    * all shifts to be absorbed in the src mapped_box.
+    * all shifts to be absorbed in the src box.
     *
     * The restructured neighboorhood sets are added to the output parameter.
     *
@@ -424,14 +424,14 @@ private:
    boost::shared_ptr<hier::PatchLevel> d_temp_crse_level;
 
    /*!
-    * @brief Connector from temporary (coarsened fine) mapped_box_level
-    * to coarse mapped_box_level.
+    * @brief Connector from temporary (coarsened fine) box_level
+    * to coarse box_level.
     */
    Connector d_temp_to_coarse;
 
    /*!
-    * @brief Connector from coarse mapped_box_level to temporary
-    * (coarsened fine) mapped_box_level.
+    * @brief Connector from coarse box_level to temporary
+    * (coarsened fine) box_level.
     */
    Connector d_coarse_to_temp;
 

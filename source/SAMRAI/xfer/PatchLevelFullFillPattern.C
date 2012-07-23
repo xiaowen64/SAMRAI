@@ -62,9 +62,9 @@ PatchLevelFullFillPattern::~PatchLevelFullFillPattern()
 
 void
 PatchLevelFullFillPattern::computeFillBoxesAndNeighborhoodSets(
-   hier::BoxLevel& fill_mapped_boxes,
+   hier::BoxLevel& fill_box_level,
    hier::Connector& dst_to_fill,
-   const hier::BoxLevel& dst_mapped_box_level,
+   const hier::BoxLevel& dst_box_level,
    const hier::Connector& dst_to_dst,
    const hier::Connector& dst_to_src,
    const hier::Connector& src_to_dst,
@@ -73,21 +73,20 @@ PatchLevelFullFillPattern::computeFillBoxesAndNeighborhoodSets(
    NULL_USE(dst_to_dst);
    NULL_USE(dst_to_src);
    NULL_USE(src_to_dst);
-   TBOX_ASSERT_OBJDIM_EQUALITY2(dst_mapped_box_level, fill_ghost_width);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(dst_box_level, fill_ghost_width);
 
-   const hier::BoxContainer& dst_mapped_boxes =
-      dst_mapped_box_level.getBoxes();
+   const hier::BoxContainer& dst_boxes = dst_box_level.getBoxes();
 
-   for (hier::RealBoxConstIterator ni(dst_mapped_boxes.realBegin());
-        ni != dst_mapped_boxes.realEnd(); ++ni) {
-      const hier::Box& dst_mapped_box = *ni;
-      hier::Box fill_mapped_box(dst_mapped_box);
-      fill_mapped_box.grow(fill_ghost_width);
-      fill_mapped_boxes.addBoxWithoutUpdate(fill_mapped_box);
-      dst_to_fill.insertLocalNeighbor(fill_mapped_box, dst_mapped_box.getBoxId());
-      TBOX_ASSERT(dst_to_fill.numLocalNeighbors(dst_mapped_box.getBoxId()) == 1);
+   for (hier::RealBoxConstIterator ni(dst_boxes.realBegin());
+        ni != dst_boxes.realEnd(); ++ni) {
+      const hier::Box& dst_box = *ni;
+      hier::Box fill_box(dst_box);
+      fill_box.grow(fill_ghost_width);
+      fill_box_level.addBoxWithoutUpdate(fill_box);
+      dst_to_fill.insertLocalNeighbor(fill_box, dst_box.getBoxId());
+      TBOX_ASSERT(dst_to_fill.numLocalNeighbors(dst_box.getBoxId()) == 1);
    }
-   fill_mapped_boxes.finalize();
+   fill_box_level.finalize();
 }
 
 /*
@@ -101,24 +100,24 @@ PatchLevelFullFillPattern::computeFillBoxesAndNeighborhoodSets(
 void
 PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
    FillSet& dst_fill_boxes_on_src_proc,
-   const hier::BoxLevel& dst_mapped_box_level,
+   const hier::BoxLevel& dst_box_level,
    const hier::Connector& src_to_dst,
    const hier::IntVector& fill_ghost_width)
 {
-   TBOX_ASSERT_OBJDIM_EQUALITY2(dst_mapped_box_level, fill_ghost_width);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(dst_box_level, fill_ghost_width);
 
    const tbox::Dimension& dim(fill_ghost_width.getDim());
-   const hier::IntVector& ratio(dst_mapped_box_level.getRefinementRatio());
+   const hier::IntVector& ratio(dst_box_level.getRefinementRatio());
 
    bool is_periodic = false;
-   if (dst_mapped_box_level.getGridGeometry()->getPeriodicShift(ratio) != 
+   if (dst_box_level.getGridGeometry()->getPeriodicShift(ratio) != 
        hier::IntVector::getZero(dim)) {
       is_periodic = true; 
    }
 
    /*
-    * src_to_dst initialized only when there is a src mapped_box_level.
-    * Without the src mapped_box_level, we do not need to compute
+    * src_to_dst initialized only when there is a src box_level.
+    * Without the src box_level, we do not need to compute
     * dst_fill_boxes_on_src_proc.
     *
     * For PatchLevelFullFillPattern, the src owner can compute fill boxes
@@ -132,7 +131,7 @@ PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
       src_to_dst.getLocalNeighbors(tmp_nabrs);
       tmp_nabrs.unshiftPeriodicImageBoxes(
          all_dst_nabrs,
-         dst_mapped_box_level.getRefinementRatio());
+         dst_box_level.getRefinementRatio());
    } else {
       src_to_dst.getLocalNeighbors(all_dst_nabrs);
    }

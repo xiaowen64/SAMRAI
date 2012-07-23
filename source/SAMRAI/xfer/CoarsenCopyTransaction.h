@@ -86,8 +86,8 @@ public:
     * @param dst_level        boost::shared_ptr to destination patch level.
     * @param src_level        boost::shared_ptr to source patch level.
     * @param overlap          boost::shared_ptr to overlap region between patches.
-    * @param dst_mapped_box   Destination Box in destination patch level.
-    * @param src_mapped_box   Source Box in source patch level.
+    * @param dst_box          Destination Box in destination patch level.
+    * @param src_box          Source Box in source patch level.
     * @param coarsen_item_id  Integer id of coarsen data item owned by coarsen schedule.
     *
     * When assertion checking is active, an assertion will result if any of the pointer
@@ -97,8 +97,8 @@ public:
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
       const boost::shared_ptr<hier::PatchLevel>& src_level,
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
-      const hier::Box& dst_mapped_box,
-      const hier::Box& src_mapped_box,
+      const hier::Box& dst_box,
+      const hier::Box& src_box,
       const int coarsen_item_id);
 
    /*!
@@ -111,7 +111,7 @@ public:
     * Return a boolean indicating whether this transaction can estimate
     * the size of an incoming message.  If this is false, then a different
     * communication protocol kicks in and the message size is transmitted
-    * between mapped_boxes.
+    * between boxes.
     */
    virtual bool
    canEstimateIncomingMessageSize();

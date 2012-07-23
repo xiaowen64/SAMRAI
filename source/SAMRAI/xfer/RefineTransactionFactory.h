@@ -87,8 +87,8 @@ public:
     * @param dst_level      boost::shared_ptr to destination patch level.
     * @param src_level      boost::shared_ptr to source patch level.
     * @param overlap        boost::shared_ptr to overlap region between patches.
-    * @param dst_mapped_box Destination Box in destination patch level.
-    * @param src_mapped_box Source Box in source patch level.
+    * @param dst_box        Destination Box in destination patch level.
+    * @param src_box        Source Box in source patch level.
     * @param ritem_id       Integer index of RefineClass::Data item associated
     *                       with transaction.
     * @param box            Optional const reference to box defining region of
@@ -102,8 +102,8 @@ public:
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
       const boost::shared_ptr<hier::PatchLevel>& src_level,
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
-      const hier::Box& dst_mapped_box,
-      const hier::Box& src_mapped_box,
+      const hier::Box& dst_box,
+      const hier::Box& src_box,
       int ritem_id,
       const hier::Box& box,
       bool use_time_interpolation = false) const = 0;
@@ -113,20 +113,20 @@ public:
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
       const boost::shared_ptr<hier::PatchLevel>& src_level,
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
-      const hier::Box& dst_mapped_box,
-      const hier::Box& src_mapped_box,
+      const hier::Box& dst_box,
+      const hier::Box& src_box,
       int ritem_id) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level,
          *src_level,
-         dst_mapped_box,
-         src_mapped_box);
+         dst_box,
+         src_box);
       return allocate(
          dst_level,
          src_level,
          overlap,
-         dst_mapped_box,
-         src_mapped_box,
+         dst_box,
+         src_box,
          ritem_id,
          hier::Box::getEmptyBox(src_level->getDim()),
          false);
