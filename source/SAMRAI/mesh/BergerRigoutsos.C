@@ -341,7 +341,7 @@ BergerRigoutsos::findBoxesContainingTags(
                  << " global cells [" << new_box_level.getMinNumberOfCells()
                  << "-" << new_box_level.getMaxNumberOfCells() << "], "
                  << new_box_level.getGlobalNumberOfBoxes()
-                 << " global mapped boxes [" << new_box_level.getMinNumberOfBoxes()
+                 << " global boxes [" << new_box_level.getMinNumberOfBoxes()
                  << "-" << new_box_level.getMaxNumberOfBoxes() << "]\n\t"
                  << "Number of continuations: avg = "
                  << root_node.getAvgNumberOfCont()
