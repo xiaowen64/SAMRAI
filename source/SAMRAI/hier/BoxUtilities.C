@@ -1342,7 +1342,7 @@ BoxUtilities::findBadCutPointsForDirection(
       bad_cuts[ic] = false;
    }
 
-   if (physical_boxes.size() == 0) {
+   if (physical_boxes.isEmpty()) {
       return; // Avoid the code below, which may crash for zero boxes.
    }
 

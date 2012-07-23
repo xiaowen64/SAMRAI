@@ -680,7 +680,7 @@ BaseGridGeometry::getFromInput(
          BoxContainer block_domain_boxes; 
          if (input_db->keyExists(domain_name)) {
             block_domain_boxes = input_db->getDatabaseBoxArray(domain_name);
-            if (block_domain_boxes.size() == 0) {
+            if (block_domain_boxes.isEmpty()) {
                TBOX_ERROR(
                   getObjectName() << ":  "
                                   << "No boxes for " << domain_name
@@ -689,7 +689,7 @@ BaseGridGeometry::getFromInput(
          } else if (b == 0 && d_number_blocks == 1 &&
                     input_db->keyExists("domain_boxes")) {
             block_domain_boxes = input_db->getDatabaseBoxArray("domain_boxes");
-            if (block_domain_boxes.size() == 0) {
+            if (block_domain_boxes.isEmpty()) {
                TBOX_ERROR(
                   getObjectName() << ":  "
                                   << "No boxes for domain_boxes"
@@ -1042,7 +1042,7 @@ BaseGridGeometry::getBoundaryBoxes(
                   for (int bd = 0; bd < d; bd++) {
                      border_list.removeIntersections(codim_boxlist[bd]);
 
-                     if (border_list.size() == 0) {
+                     if (border_list.isEmpty()) {
                         break;
                      }
                   }
@@ -1341,7 +1341,7 @@ BaseGridGeometry::setPhysicalDomain(
       Box bounding_box(block_domain.getBoundingBox());
       BoxContainer bounding_cntnr(bounding_box);
       bounding_cntnr.removeIntersections(block_domain);
-      if (bounding_cntnr.size() == 0) {
+      if (bounding_cntnr.isEmpty()) {
          d_domain_is_single_box[b] = true;
          Box box(bounding_box, local_id++, 0);
          box.setBlockId(block_id);
@@ -1805,7 +1805,7 @@ BaseGridGeometry::readBlockDataFromInput(
               si(d_singularity[b]); si != d_singularity[b].end(); ++si) {
             BoxContainer test_domain(pseudo_domain);
             test_domain.intersectBoxes(*si);
-            if (test_domain.size() == 0) {
+            if (test_domain.isEmpty()) {
                d_reduced_connect[b] = true;
                break;
             }
@@ -2115,7 +2115,7 @@ BaseGridGeometry::adjustBoundaryBoxesOnPatch(
             Box border_box(codim_boundaries[codim - 1][n].getBox());
             BoxContainer sing_test_list(singularity);
             sing_test_list.intersectBoxes(border_box);
-            if (sing_test_list.size() != 0) {
+            if (!sing_test_list.isEmpty()) {
                boundaries_in_sing[codim - 1].push_front(n);
             }
          }
