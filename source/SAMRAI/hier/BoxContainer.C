@@ -223,12 +223,12 @@ BoxContainer::insert(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(box.getBoxId().isValid());
    TBOX_ASSERT(box.getBlockId() != BlockId::invalidId());
-   if (size() > 0) {
+   if (!isEmpty()) {
       TBOX_ASSERT_OBJDIM_EQUALITY2(front(), box);
    }
 #endif
 
-   if (!d_ordered && size() == 0) {
+   if (!d_ordered && isEmpty()) {
       order();
    }
 
@@ -262,12 +262,12 @@ BoxContainer::insert(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(box.getBoxId().isValid());
-   if (size() > 0) {
+   if (!isEmpty()) {
       TBOX_ASSERT_OBJDIM_EQUALITY2(front(), box);
    }
 #endif
 
-   if (!d_ordered && size() == 0) {
+   if (!d_ordered && isEmpty()) {
       order();
    }
 
@@ -305,7 +305,7 @@ BoxContainer::insert (
    const_iterator last )
 {
 
-   if (!d_ordered && size() == 0) {
+   if (!d_ordered && isEmpty()) {
       order();
    }
 
@@ -322,7 +322,7 @@ BoxContainer::insert (
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT((**set_iter).getBoxId().isValid());
-      if (size() > 0) {
+      if (!isEmpty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), **set_iter);
       }
 #endif
@@ -374,7 +374,7 @@ BoxContainer::simplify()
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (size() > 0) {
+   if (!isEmpty()) {
       const BlockId& front_block_id = front().getBlockId();
       for (const_iterator itr = begin(); itr != end(); ++itr) {
          TBOX_ASSERT(itr->getBlockId() == front_block_id);
@@ -497,7 +497,7 @@ void
 BoxContainer::coalesce()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (size() > 0) {
+   if (!isEmpty()) {
       const BlockId& front_block_id = front().getBlockId();
       for (const_iterator itr = begin(); itr != end(); ++itr) {
          TBOX_ASSERT(itr->getBlockId() == front_block_id);
@@ -548,7 +548,7 @@ BoxContainer::coalesce()
 void
 BoxContainer::removePeriodicImageBoxes()
 {
-   if (!d_ordered && size() > 0) {
+   if (!d_ordered && !isEmpty()) {
       TBOX_ERROR("removePeriodicImages attempted on unordered container.");
    }
 
@@ -836,7 +836,7 @@ BoxContainer::removeIntersections(
       d_tree.reset();
    }
 
-   if (takeaway.size() == 0) {
+   if (takeaway.isEmpty()) {
       return;
    }
 
@@ -1133,7 +1133,7 @@ BoxContainer::intersectBoxes(
       d_tree.reset();
    }
 
-   if (keep.size() == 0) {
+   if (keep.isEmpty()) {
       clear();
       return; 
    }
@@ -1568,7 +1568,7 @@ BoxContainer::makeTree(
 {
    TBOX_ASSERT(min_number > 0);
 
-   if (!d_tree && size() > 0) {
+   if (!d_tree && !isEmpty()) {
       d_tree.reset(new MultiblockBoxTree(*this, grid_geometry, min_number));
    }
 }

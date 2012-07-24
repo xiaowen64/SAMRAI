@@ -983,7 +983,7 @@ BoxLevel::addBox(
 
    BoxContainer::iterator new_iterator(d_boxes);
 
-   if (d_boxes.size() == 0) {
+   if (d_boxes.isEmpty()) {
       Box new_box(
          box,
          LocalId::getZero(),

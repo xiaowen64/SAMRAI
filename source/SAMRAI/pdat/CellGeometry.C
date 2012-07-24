@@ -130,7 +130,7 @@ CellGeometry::computeDestinationBoxes(
       }
    }
 
-   if (dst_boxes.size() && dst_restrict_boxes.size()) {
+   if (!dst_boxes.isEmpty() && !dst_restrict_boxes.isEmpty()) {
       dst_boxes.intersectBoxes(dst_restrict_boxes);
    }
 }

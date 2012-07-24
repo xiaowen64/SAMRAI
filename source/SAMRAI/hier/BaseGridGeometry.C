@@ -125,7 +125,7 @@ BaseGridGeometry::BaseGridGeometry(
    d_has_enhanced_connectivity(false)
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(domain.size() > 0);
+   TBOX_ASSERT(!domain.isEmpty());
 
    tbox::RestartManager::getManager()->
    registerRestartItem(getObjectName(), this);
@@ -157,7 +157,7 @@ BaseGridGeometry::BaseGridGeometry(
    d_has_enhanced_connectivity(false)
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(domain.size() > 0);
+   TBOX_ASSERT(!domain.isEmpty());
 
    tbox::RestartManager::getManager()->
    registerRestartItem(getObjectName(), this);
@@ -361,7 +361,7 @@ BaseGridGeometry::computeBoxTouchingBoundaries(
    bdry_list.grow(IntVector::getOne(d_dim));
    bdry_list.removeIntersections(refinement_ratio,
                                  refined_periodic_domain_tree);
-   const bool touches_any_boundary = (bdry_list.size() > 0);
+   const bool touches_any_boundary = !bdry_list.isEmpty();
 
    if (!touches_any_boundary) {
       for (int d = 0; d < d_dim.getValue(); ++d) {
@@ -383,14 +383,14 @@ BaseGridGeometry::computeBoxTouchingBoundaries(
          test_box.growUpper(nd, 1);
          upper_list.intersectBoxes(test_box); // performance ok.  upper_list is short.
 
-         if (lower_list.size()) {
+         if (!lower_list.isEmpty()) {
             // Touches regular or periodic bdry on lower side.
             touches_periodic_bdry(nd, 0) = (d_periodic_shift(nd) != 0);
             touches_regular_bdry(nd, 0) = (d_periodic_shift(nd) == 0);
             bdry_located = true;
          }
 
-         if (upper_list.size()) {
+         if (!upper_list.isEmpty()) {
             // Touches regular or periodic bdry on upper side.
             touches_periodic_bdry(nd, 1) = (d_periodic_shift(nd) != 0);
             touches_regular_bdry(nd, 1) = (d_periodic_shift(nd) == 0);
@@ -849,7 +849,7 @@ BaseGridGeometry::computeShiftsForBox(
 
                border_list.removeIntersections(domain_search_tree);
 
-               if (border_list.size() > 0) {
+               if (!border_list.isEmpty()) {
 
                   const Box& domain_bound_box =
                      domain_search_tree.getBoundingBox();
@@ -1038,7 +1038,7 @@ BaseGridGeometry::getBoundaryBoxes(
                   border_list.removeIntersections(domain_boxes);
                }
  
-               if (border_list.size() > 0) {
+               if (!border_list.isEmpty()) {
                   for (int bd = 0; bd < d; bd++) {
                      border_list.removeIntersections(codim_boxlist[bd]);
 
@@ -1048,7 +1048,7 @@ BaseGridGeometry::getBoundaryBoxes(
                   }
                }
 
-               if (border_list.size() > 0) {
+               if (!border_list.isEmpty()) {
                   border_list.coalesce();
                   for (BoxContainer::iterator bl(border_list);
                        bl != border_list.end(); ++bl) {
@@ -1321,7 +1321,7 @@ BaseGridGeometry::setPhysicalDomain(
    const int number_blocks)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(domain.size() > 0);
+   TBOX_ASSERT(!domain.isEmpty());
    for (BoxContainer::const_iterator itr = domain.begin(); itr != domain.end();
         ++itr) {
       TBOX_ASSERT(itr->getBlockId().isValid());       
@@ -1679,7 +1679,7 @@ BaseGridGeometry::checkBoundaryBox(
    BoxContainer bbox_list(bbox);
    bbox_list.intersectBoxes(domain);
 
-   if (bbox_list.size()) {
+   if (!bbox_list.isEmpty()) {
       return_val = false;
    }
 

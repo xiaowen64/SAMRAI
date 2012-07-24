@@ -739,7 +739,7 @@ TreeLoadBalancer::constrainMaxBoxSizes(
             d_cut_factor,
             d_bad_interval,
             d_block_domain_boxes[box.getBlockId().getBlockValue()]);
-         TBOX_ASSERT( chopped.size() != 0 );
+         TBOX_ASSERT( !chopped.isEmpty() );
 
          if (chopped.size() != 1) {
 
@@ -3455,9 +3455,9 @@ TreeLoadBalancer::burstBox(
       l2.pushFront(*bi);
    }
    l1.removeIntersections(l2);
-   TBOX_ASSERT(l1.size() == 0);
+   TBOX_ASSERT(l1.isEmpty());
    l2.removeIntersections(bursty);
-   TBOX_ASSERT(l2.size() == 0);
+   TBOX_ASSERT(l2.isEmpty());
 #endif
 }
 

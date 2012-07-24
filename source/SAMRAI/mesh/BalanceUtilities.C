@@ -316,7 +316,7 @@ BalanceUtilities::privateBadCutPointsExist(
    hier::BoxContainer bounding_box(physical_domain.getBoundingBox());
    bounding_box.removeIntersections(physical_domain);
 
-   return bounding_box.size() > 0;
+   return !bounding_box.isEmpty();
 }
 
 /*
@@ -354,7 +354,7 @@ BalanceUtilities::privateInitializeBadCutPointsForBox(
       hier::BoxContainer bdry_list(box);
       bdry_list.grow(tmp_max_gcw);
       bdry_list.removeIntersections(physical_domain);
-      if (bdry_list.size() > 0) {
+      if (!bdry_list.isEmpty()) {
          set_dummy_cut_points = false;
       }
 
@@ -1237,7 +1237,7 @@ BalanceUtilities::recursiveBisectionUniform(
    TBOX_ASSERT(min_size > hier::IntVector::getZero(dim));
    TBOX_ASSERT(cut_factor > hier::IntVector::getZero(dim));
    TBOX_ASSERT(bad_interval >= hier::IntVector::getZero(dim));
-   TBOX_ASSERT(physical_domain.size() > 0);
+   TBOX_ASSERT(!physical_domain.isEmpty());
 
    out_boxes.clear();
    out_workloads.clear();
@@ -1324,7 +1324,7 @@ BalanceUtilities::recursiveBisectionNonuniform(
    TBOX_ASSERT(min_size > hier::IntVector::getZero(dim));
    TBOX_ASSERT(cut_factor > hier::IntVector::getZero(dim));
    TBOX_ASSERT(bad_interval >= hier::IntVector::getZero(dim));
-   TBOX_ASSERT(physical_domain.size() > 0);
+   TBOX_ASSERT(!physical_domain.isEmpty());
 
    out_boxes.clear();
    out_workloads.clear();

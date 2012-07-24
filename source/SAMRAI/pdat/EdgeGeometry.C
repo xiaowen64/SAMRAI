@@ -187,7 +187,7 @@ EdgeGeometry::doOverlap(
 
          }  // if (!together.empty())
 
-         if (dst_restrict_boxes.size() && dst_boxes[d].size()) {
+         if (!dst_restrict_boxes.isEmpty() && !dst_boxes[d].isEmpty()) {
             hier::BoxContainer edge_restrict_boxes;
             for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
                  b != dst_restrict_boxes.end(); ++b) {

@@ -1014,7 +1014,7 @@ public:
       const Box& item)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (size() > 0) {
+      if (!isEmpty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), item);
       }
 #endif
@@ -1041,7 +1041,7 @@ public:
       const Box& item)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (size() > 0) {
+      if (!isEmpty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), item);
       }
 #endif
@@ -1070,7 +1070,7 @@ public:
       const Box& item)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (size() > 0) {
+      if (!isEmpty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), item);
       }
 #endif
@@ -1126,7 +1126,7 @@ public:
       BoxContainer& boxes)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (size() > 0 && boxes.size() > 0) {
+      if (!isEmpty() && !boxes.isEmpty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), boxes.front());
       }
 #endif
@@ -1152,7 +1152,7 @@ public:
       BoxContainer& boxes)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (size() > 0 && boxes.size() > 0) {
+      if (!isEmpty() && !boxes.isEmpty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), boxes.front());
       }
 #endif

@@ -192,7 +192,7 @@ OuternodeGeometry::doOverlap(
 
       }  // loop over dim
 
-      if (dst_restrict_boxes.size() && dst_boxes.size()) {
+      if (!dst_restrict_boxes.isEmpty() && !dst_boxes.isEmpty()) {
          hier::BoxContainer node_restrict_boxes;
          for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
               b != dst_restrict_boxes.end(); ++b) {
@@ -297,7 +297,7 @@ OuternodeGeometry::doOverlap(
 
       }  // loop over dim
 
-      if (dst_restrict_boxes.size() && src_boxes.size()) {
+      if (!dst_restrict_boxes.isEmpty() && !src_boxes.isEmpty()) {
          hier::BoxContainer node_restrict_boxes;
          for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
               b != dst_restrict_boxes.end(); ++b) {
@@ -427,7 +427,7 @@ OuternodeGeometry::doOverlap(
 
       }  // loop over dst dim
 
-      if (dst_restrict_boxes.size() && dst_boxes.size()) {
+      if (!dst_restrict_boxes.isEmpty() && !dst_boxes.isEmpty()) {
          hier::BoxContainer node_restrict_boxes;
          for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
               b != dst_restrict_boxes.end(); ++b) {

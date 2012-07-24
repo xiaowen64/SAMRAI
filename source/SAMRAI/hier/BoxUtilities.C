@@ -185,7 +185,7 @@ BoxUtilities::checkBoxConstraints(
          << "  Box violates cut factor restriction" << std::endl);
    }
 
-   if (physical_boxes.size() > 0) {
+   if (!physical_boxes.isEmpty()) {
 
       tbox::Array<bool> cut_is_bad(dim.getValue());
       for (id = 0; id < dim.getValue(); id++) {
@@ -337,7 +337,7 @@ BoxUtilities::chopBoxes(
    TBOX_ASSERT(max_size >= min_size);
    TBOX_ASSERT(cut_factor > IntVector::getZero(min_size.getDim()));
    TBOX_ASSERT(bad_interval >= IntVector::getZero(min_size.getDim()));
-   TBOX_ASSERT(physical_boxes.size() > 0);
+   TBOX_ASSERT(!physical_boxes.isEmpty());
    TBOX_ASSERT(!boxes.isOrdered());
 
    const tbox::Dimension& dim(max_size.getDim());
@@ -1199,7 +1199,7 @@ BoxUtilities::checkBoxForBadCutPointsInDirection(
 
    bool found_bad = false;
 
-   if (physical_boxes.size() > 0) {
+   if (!physical_boxes.isEmpty()) {
 
       int bad = bad_interval(id);
 

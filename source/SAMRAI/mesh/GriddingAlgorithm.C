@@ -2567,7 +2567,7 @@ GriddingAlgorithm::readLevelBoxes(
     */
 
    if (d_load_balancer->getLoadBalanceDependsOnPatchData(fine_level_number)
-       && boxes_to_refine.size() > 0) {
+       && !boxes_to_refine.isEmpty()) {
       compute_load_balanced_level_boxes = true;
       remove_old_fine_level = true;
    }
@@ -2578,7 +2578,7 @@ GriddingAlgorithm::readLevelBoxes(
     * constructed.  In this case, avoid load balance steps and
     * specify that we want to remove the old fine level.
     */
-   if (boxes_to_refine.size() == 0) {
+   if (boxes_to_refine.isEmpty()) {
       compute_load_balanced_level_boxes = false;
       remove_old_fine_level = true;
    }
@@ -3067,7 +3067,7 @@ GriddingAlgorithm::findRefinementBoxes(
             accumulated_boxes.insert(
                new_box_level.getBoxes().begin(),
                new_box_level.getBoxes().end());
-            if (accumulated_boxes.size() > 0) {
+            if (!accumulated_boxes.isEmpty()) {
                first_local_id =
                   accumulated_boxes.back().getBoxId().getLocalId() + 1;
             }

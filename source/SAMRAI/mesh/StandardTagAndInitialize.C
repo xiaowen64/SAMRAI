@@ -900,7 +900,7 @@ bool
 StandardTagAndInitialize::coarsestLevelBoxesOK(
    const hier::BoxContainer& boxes) const
 {
-   TBOX_ASSERT(boxes.size() > 0);
+   TBOX_ASSERT(!boxes.isEmpty());
 
    bool boxes_ok = true;
    if (everUsesRichardsonExtrapolation()) {

@@ -427,7 +427,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
 
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
-   TBOX_ASSERT(physical_domain.size() > 0);
+   TBOX_ASSERT(!physical_domain.isEmpty());
    TBOX_ASSERT(min_size > hier::IntVector::getZero(d_dim));
    TBOX_ASSERT(max_size >= min_size);
    TBOX_ASSERT(cut_factor > hier::IntVector::getZero(d_dim));

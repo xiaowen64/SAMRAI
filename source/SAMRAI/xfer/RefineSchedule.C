@@ -1328,7 +1328,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
             coarser_physical_domain[dst_blk],
             d_max_stencil_width);
 
-         if (sheared_coarse_interp_boxes.size() > 0) {
+         if (!sheared_coarse_interp_boxes.isEmpty() > 0) {
 
             if (!has_base_box) {
                dst_base_box_itr =
@@ -2682,7 +2682,7 @@ RefineSchedule::generateCommunicationSchedule(
       }
 
       if (grid_geometry->hasEnhancedConnectivity() &&
-          unfilled_boxes_for_dst.size()) {
+          !unfilled_boxes_for_dst.isEmpty()) {
          hier::BoxContainer fixed_unfilled_boxes(unfilled_boxes_for_dst);
          hier::BoxContainer dst_block_domain;
          grid_geometry->computePhysicalDomain(
@@ -2707,7 +2707,7 @@ RefineSchedule::generateCommunicationSchedule(
 
                transformed_domain.intersectBoxes(*bi);
 
-               if (transformed_domain.size()) {
+               if (!transformed_domain.isEmpty()) {
                   fixed_unfilled_boxes.spliceBack(transformed_domain);
                }
             }
@@ -2720,7 +2720,7 @@ RefineSchedule::generateCommunicationSchedule(
        * Add mapping information to unfilled boxes and add them to
        * containers for the level.
        */
-      if (unfilled_boxes_for_dst.size() > 0) {
+      if (!unfilled_boxes_for_dst.isEmpty()) {
          hier::Connector::NeighborhoodIterator base_box_itr =
             dst_to_unfilled->makeEmptyLocalNeighborhood(dst_box_id);
          for (hier::BoxContainer::iterator bi(unfilled_boxes_for_dst);
@@ -2743,7 +2743,7 @@ RefineSchedule::generateCommunicationSchedule(
        * Call private method to handle unfilled boxes where the destination
        * box touches enhanced connectivity.
        */
-      if (encon_fill_boxes.size() > 0) {
+      if (!encon_fill_boxes.isEmpty()) {
          findEnconUnfilledBoxes(
             unfilled_encon_box_level,
             encon_to_unfilled_encon,
@@ -2776,7 +2776,7 @@ RefineSchedule::findEnconFillBoxes(
    const hier::BoxContainer& fill_boxes_list,
    const hier::BlockId& dst_block_id)
 {
-   TBOX_ASSERT(encon_fill_boxes.size() == 0);
+   TBOX_ASSERT(encon_fill_boxes.isEmpty());
 
    boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
@@ -2912,7 +2912,7 @@ RefineSchedule::findEnconUnfilledBoxes(
             const hier::BoxContainer& unfilled_boxes =
                unfilled_encon_nbr_boxes[nbr_block_id];
 
-            if (unfilled_boxes.size() > 0) {
+            if (!unfilled_boxes.isEmpty()) {
 
                /*
                 * The unfilled boxes are, at this point, represented in
@@ -3237,7 +3237,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
          const hier::BoxContainer& sing_boxes =
             grid_geometry->getSingularityBoxContainer(block_id);
 
-         if (sing_boxes.size() > 0) {
+         if (!sing_boxes.isEmpty()) {
             const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
                grid_geometry->getNeighbors(block_id);
 
@@ -3303,7 +3303,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                         encon_test_list.grow(encon_gcw);
                         encon_test_list.intersectBoxes(trans_neighbor_list);
 
-                        if (encon_test_list.size() > 0) {
+                        if (!encon_test_list.isEmpty()) {
 
                            encon_test_list.coalesce();
                            TBOX_ASSERT(encon_test_list.size() == 1);
@@ -3871,7 +3871,7 @@ RefineSchedule::constructScheduleTransactions(
                }
             }
          }
-         if (encon_nbr_choices.size() == 0) {
+         if (encon_nbr_choices.isEmpty()) {
             transaction_dst_box.setEmpty();
             transaction_dst_box.setBlockId(src_box.getBlockId());
          } else {
@@ -4357,7 +4357,7 @@ RefineSchedule::constructScheduleTransactions(
                }
             }
          }
-         if (encon_nbr_choices.size() == 0) {
+         if (encon_nbr_choices.isEmpty()) {
             transaction_dst_box.setEmpty();
          } else {
             int max_nbr_size = 0;

@@ -134,7 +134,7 @@ NodeGeometry::computeDestinationBoxes(
       }
    }
 
-   if (dst_restrict_boxes.size() && dst_boxes.size()) {
+   if (!dst_restrict_boxes.isEmpty() && !dst_boxes.isEmpty()) {
       hier::BoxContainer node_restrict_boxes;
       for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
            b != dst_restrict_boxes.end(); ++b) {

@@ -468,7 +468,7 @@ FaceData<TYPE>::packStream(
                                         transformation.getEndBlock());
 
          const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-         if (boxes.size() > 0) {
+         if (!boxes.isEmpty()) {
             d_data[d]->packStream(stream, boxes, transform);
          }
       }
@@ -567,7 +567,7 @@ FaceData<TYPE>::unpackStream(
       }
 
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-      if (boxes.size() > 0) {
+      if (!boxes.isEmpty()) {
          d_data[d]->unpackStream(stream, boxes, face_offset);
       }
    }

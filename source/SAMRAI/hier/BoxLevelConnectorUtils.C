@@ -647,7 +647,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
          grid_geometry);
       // ... reference_boundary is now ( (R^1) \ R )
 
-      if (domain.size() > 0) {
+      if (!domain.isEmpty()) {
 
          if (input.getRefinementRatio() == one_vec) {
             reference_box_list.intersectBoxes(

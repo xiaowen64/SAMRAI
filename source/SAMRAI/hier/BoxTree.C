@@ -258,7 +258,7 @@ BoxTree::privateGenerateTree(
 {
    ++s_num_generate[d_dim.getValue() - 1];
 
-   if (d_boxes.size()) {
+   if (d_boxes.size() > 0) {
       d_block_id = (**(d_boxes.begin())).getBlockId();
    }
 
