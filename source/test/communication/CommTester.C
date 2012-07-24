@@ -688,7 +688,7 @@ void CommTester::setupHierarchy(
    if (0) {
       tbox::plog << "h:  generated hierarchy:\n";
       d_patch_hierarchy->recursivePrint(tbox::plog, "h:  ", 3);
-      tbox::plog << "h:  mapped_box_level hierarchy:\n";
+      tbox::plog << "h:  box_level hierarchy:\n";
       d_patch_hierarchy->recursivePrint(tbox::plog,
          "",
          3);

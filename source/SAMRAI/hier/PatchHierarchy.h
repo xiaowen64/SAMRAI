@@ -1157,7 +1157,7 @@ private:
 /*
  * TODO: These things (if really needed) should be moved to the
  * BaseGridGeometry class.  However, the BaseGridGeometry object cannot own a
- * MappedBoxLevel because the BaseGridGeometry object is incapable of creating
+ * BoxLevel because the BaseGridGeometry object is incapable of creating
  * a boost::shared_ptr to itself.  Might need to change BoxLevel to take a raw
  * pointer to BaseGridGeometry.
  */

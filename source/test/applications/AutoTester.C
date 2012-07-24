@@ -226,15 +226,14 @@ int AutoTester::evalTestData(
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
             boost::shared_ptr<tbox::Database> level_db(
                step_db->getDatabase(level_name));
-            hier::BoxLevel correct_mapped_box_level(d_dim);
+            hier::BoxLevel correct_box_level(d_dim);
             boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
                hierarchy->getGridGeometry());
-            correct_mapped_box_level.getFromRestart(*level_db,
-               grid_geometry);
+            correct_box_level.getFromRestart(*level_db, grid_geometry);
 
             num_failures += checkHierarchyBoxes(hierarchy,
                   ln,
-                  correct_mapped_box_level,
+                  correct_box_level,
                   iter);
          }
 
@@ -396,15 +395,14 @@ int AutoTester::evalTestData(
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
             boost::shared_ptr<tbox::Database> level_db(
                step_db->getDatabase(level_name));
-            hier::BoxLevel correct_mapped_box_level(d_dim);
+            hier::BoxLevel correct_box_level(d_dim);
             boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
                hierarchy->getGridGeometry());
-            correct_mapped_box_level.getFromRestart(*level_db,
-               grid_geometry);
+            correct_box_level.getFromRestart(*level_db, grid_geometry);
 
             num_failures += checkHierarchyBoxes(hierarchy,
                   ln,
-                  correct_mapped_box_level,
+                  correct_box_level,
                   iter);
          }
 
@@ -536,18 +534,16 @@ void AutoTester::getFromInput(
 int AutoTester::checkHierarchyBoxes(
    const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
-   const hier::BoxLevel& correct_mapped_box_level,
+   const hier::BoxLevel& correct_box_level,
    int iter)
 {
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    const boost::shared_ptr<hier::PatchLevel> patch_level(
       hierarchy->getPatchLevel(level_number));
-   const hier::BoxLevel& mapped_box_level =
-      *patch_level->getBoxLevel();
+   const hier::BoxLevel& box_level = *patch_level->getBoxLevel();
 
-   const int local_exact_match =
-      mapped_box_level == correct_mapped_box_level;
+   const int local_exact_match = box_level == correct_box_level;
 
    int global_exact_match = local_exact_match;
    if (mpi.getSize() > 1) {
@@ -556,7 +552,7 @@ int AutoTester::checkHierarchyBoxes(
 
    /*
     * Check to make sure hierarchy's BoxLevel and
-    * correct_mapped_box_level are identical.  If not, write an error
+    * correct_box_level are identical.  If not, write an error
     * message.
     */
 
@@ -579,18 +575,18 @@ int AutoTester::checkHierarchyBoxes(
                  << std::endl;
 
       if (!local_exact_match) {
-         tbox::pout << "LOCAL MAPPED BOX LEVEL DOES NOT MATCH "
+         tbox::pout << "LOCAL BOX LEVEL DOES NOT MATCH "
                     << "ON LEVEL: " << level_number << std::endl;
       }
 
       if (!global_exact_match) {
-         tbox::pout << "GLOBAL MAPPED BOX LEVEL DOES NOT MATCH "
+         tbox::pout << "GLOBAL BOX LEVEL DOES NOT MATCH "
                     << "ON LEVEL: " << level_number << std::endl;
       }
       tbox::pout << "BoxLevel: " << std::endl;
-      mapped_box_level.recursivePrint(tbox::pout, "", 3);
+      box_level.recursivePrint(tbox::pout, "", 3);
       tbox::pout << "correct BoxLevel: " << std::endl;
-      correct_mapped_box_level.recursivePrint(tbox::pout, "", 3);
+      correct_box_level.recursivePrint(tbox::pout, "", 3);
 
       tbox::pout << "-------------------------------------------------------"
                  << std::endl << std::endl;

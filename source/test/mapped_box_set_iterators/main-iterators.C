@@ -98,7 +98,7 @@ int main(
       }
 
       if (fail_count == 0) {
-         tbox::pout << "\nPASSED:  testmappedboxsetiterator" << endl;
+         tbox::pout << "\nPASSED:  testboxcontaineriterator" << endl;
       }
    }
 

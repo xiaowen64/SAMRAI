@@ -18,7 +18,7 @@ namespace SAMRAI {
 namespace hier {
 
 /*!
- * @brief A utility for writing out various statistics of MappedBoxes.
+ * @brief A utility for writing out various statistics of Boxes.
  */
 class BoxLevelStatistics
 {

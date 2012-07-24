@@ -93,7 +93,7 @@ public:
    checkHierarchyBoxes(
       const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int ln,
-      const hier::BoxLevel& correct_mapped_box_level,
+      const hier::BoxLevel& correct_box_level,
       int iter);
 
 private:

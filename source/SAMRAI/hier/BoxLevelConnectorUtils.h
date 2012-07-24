@@ -123,8 +123,8 @@ public:
     * to which the base nests in the head.
     *
     * This method is similar to the version taking a Connector instead
-    * of the base and head MappedBoxLevels, except that it will use
-    * the base MappedBoxLevel's PersistentOverlapConnectors object to
+    * of the base and head BoxLevels, except that it will use
+    * the base BoxLevel's PersistentOverlapConnectors object to
     * get the base--->head Connector.  If such a Connector does not
     * exist, the PersistentOverlapConnectors object will create it, an
     * unscalable operation possibly requiring collective

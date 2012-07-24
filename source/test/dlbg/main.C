@@ -458,7 +458,7 @@ static int createAndTestDLBG(
    const bool build_peer_edge =
       main_db.getBoolWithDefault("build_peer_edge", false);
 
-   const bool globalize_mapped_box_levels =
+   const bool globalize_box_levels =
       main_db.getBoolWithDefault("globalize_mapped_box_levels", false);
 
    const int node_log_detail =
@@ -474,7 +474,7 @@ static int createAndTestDLBG(
 
    int ln;
 
-   tbox::Array<BoxLevel> mapped_box_levels(
+   tbox::Array<BoxLevel> box_levels(
       patch_hierarchy.getNumberOfLevels(), BoxLevel(dim));
    for (int conn = 0; conn < patch_hierarchy.getNumberOfLevels(); ++conn) {
       if (build_peer_edge) {
@@ -487,26 +487,26 @@ static int createAndTestDLBG(
    }
 
    /*
-    * Set the mapped_box_level nodes.
+    * Set the box_level nodes.
     */
    for (ln = 0; ln < patch_hierarchy.getNumberOfLevels(); ++ln) {
       boost::shared_ptr<PatchLevel> level_ptr(
          patch_hierarchy.getPatchLevel(ln));
       PatchLevel& level = *level_ptr;
-      mapped_box_levels[ln] = *level.getBoxLevel();
+      box_levels[ln] = *level.getBoxLevel();
       plog << "****************************************\n";
-      plog << "mapped_box_levels[" << ln << "]:\n";
+      plog << "box_levels[" << ln << "]:\n";
       plog << "****************************************\n";
-      mapped_box_levels[ln].recursivePrint(plog, "", node_log_detail);
-      if (globalize_mapped_box_levels) {
+      box_levels[ln].recursivePrint(plog, "", node_log_detail);
+      if (globalize_box_levels) {
          pout << "Globalizing BoxLevel " << ln << ".\n";
-         mapped_box_levels[ln].setParallelState(BoxLevel::GLOBALIZED);
+         box_levels[ln].setParallelState(BoxLevel::GLOBALIZED);
       }
       pout << "BoxLevel " << ln << " done.\n";
    }
 
    /*
-    * Compute the cross edges by searching globalized node mapped_box_levels.
+    * Compute the cross edges by searching globalized node box_levels.
     */
    hier::OverlapConnectorAlgorithm oca;
    if (build_cross_edge) {
@@ -515,14 +515,14 @@ static int createAndTestDLBG(
             patch_hierarchy.getPatchLevel(ln));
          PatchLevel& level = *level_ptr;
          if (ln < patch_hierarchy.getNumberOfLevels() - 1) {
-            fine_connectors[ln].setBase(mapped_box_levels[ln]);
-            fine_connectors[ln].setHead(mapped_box_levels[ln + 1]);
+            fine_connectors[ln].setBase(box_levels[ln]);
+            fine_connectors[ln].setHead(box_levels[ln + 1]);
             fine_connectors[ln].setWidth(IntVector(dim, 1), true);
             oca.findOverlaps(fine_connectors[ln]);
          }
          if (ln > 0) {
-            crse_connectors[ln].setBase(mapped_box_levels[ln]);
-            crse_connectors[ln].setHead(mapped_box_levels[ln - 1]);
+            crse_connectors[ln].setBase(box_levels[ln]);
+            crse_connectors[ln].setHead(box_levels[ln - 1]);
             crse_connectors[ln].setWidth(level.getRatioToCoarserLevel(), true);
             oca.findOverlaps(crse_connectors[ln]);
             if (edge_log_detail >= 0) {
@@ -541,12 +541,12 @@ static int createAndTestDLBG(
 
    /*
     * Compute the peer edges.  Use bridging operation centered on the coarse edge
-    * if available.  Else, search globalized node mapped_box_levels.
+    * if available.  Else, search globalized node box_levels.
     */
    if (build_peer_edge) {
       for (ln = 0; ln < patch_hierarchy.getNumberOfLevels(); ++ln) {
-         peer_connectors[ln].setBase(mapped_box_levels[ln]);
-         peer_connectors[ln].setHead(mapped_box_levels[ln]);
+         peer_connectors[ln].setBase(box_levels[ln]);
+         peer_connectors[ln].setHead(box_levels[ln]);
          peer_connectors[ln].setWidth(IntVector(dim, 1), true);
          if (build_cross_edge && ln > 0) {
             // plog << " Bridging for level " << ln << std::endl;
@@ -616,7 +616,7 @@ static int createAndTestDLBG(
    << "=====================================================================\n";
    patch_hierarchy.recursivePrint(plog, "", 2);
 
-   mapped_box_levels.clear();
+   box_levels.clear();
 
    return 0;
 }
