@@ -858,9 +858,7 @@ public:
       bool other_set_created = other.d_ordered;
       other.d_ordered = d_ordered;
       d_ordered = other_set_created;
-      boost::shared_ptr<MultiblockBoxTree> tree = d_tree;
-      d_tree = other.d_tree;
-      other.d_tree = tree;
+      d_tree.swap(other.d_tree);
    }
 
    /*!

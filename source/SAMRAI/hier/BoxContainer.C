@@ -70,7 +70,7 @@ BoxContainer::BoxContainer(
       order();
    }
    if (other.d_tree) {
-      makeTree();
+      makeTree(other.d_tree->getGridGeometry());
    }
 }
 
