@@ -451,6 +451,10 @@ public:
     * invalidate other internal data.  Use other methods for modifying
     * the BoxContainer.
     *
+    * FIXME: The combination of BoxLevel::getBoxes and BoxContainer::makeTree
+    * allows to set up d_boxes with a GridGeometry that is inconsistent
+    * with the BoxLevel's GridGeometry.
+    *
     * @see getGlobalNumberOfBoxes()
     * @see getLocalNumberOfBoxes()
     *
@@ -463,6 +467,10 @@ public:
 
    /*!
     * @brief Returns the container of global Boxes.
+    *
+    * FIXME: The combination of BoxLevel::getGlobalBoxes and BoxContainer::makeTree
+    * allows to set up d_global_boxes with a GridGeometry that is inconsistent
+    * with the BoxLevel's GridGeometry.
     */
    const BoxContainer&
    getGlobalBoxes() const
