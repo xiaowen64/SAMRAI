@@ -118,10 +118,11 @@ SNES_SAMRAIContext::SNES_SAMRAIContext(
     * databases.  Note that PETSc object parameters are set in
     * initialize().
     */
-   if (tbox::RestartManager::getManager()->isFromRestart()) {
+   bool is_from_restart = tbox::RestartManager::getManager()->isFromRestart();
+   if (is_from_restart) {
       getFromRestart();
    }
-   getFromInput(input_db);
+   getFromInput(input_db, is_from_restart);
 
 }
 
@@ -546,108 +547,120 @@ SNES_SAMRAIContext::destroyPetscObjects()
 
 void
 SNES_SAMRAIContext::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db)
+   const boost::shared_ptr<tbox::Database>& input_db,
+   bool is_from_restart)
 {
    if (input_db) {
-      if (input_db->keyExists("maximum_nonlinear_iterations")) {
-         d_maximum_nonlinear_iterations =
-            input_db->getInteger("maximum_nonlinear_iterations");
-      }
-      if (input_db->keyExists("maximum_function_evals")) {
-         d_maximum_function_evals = input_db->getInteger(
-            "maximum_function_evals");
-      }
 
-      if (input_db->keyExists("uses_preconditioner")) {
-         d_uses_preconditioner = input_db->getBool("uses_preconditioner");
-      }
-      if (input_db->keyExists("uses_explicit_jacobian")) {
-         d_uses_explicit_jacobian = input_db->getBool("uses_explicit_jacobian");
-      }
-      if (input_db->keyExists("absolute_tolerance")) {
-         d_absolute_tolerance = input_db->getDouble("absolute_tolerance");
-      }
-      if (input_db->keyExists("relative_tolerance")) {
-         d_relative_tolerance = input_db->getDouble("relative_tolerance");
-      }
-      if (input_db->keyExists("step_tolerance")) {
-         d_step_tolerance = input_db->getDouble("step_tolerance");
-      }
-
-      if (input_db->keyExists("forcing_term_strategy")) {
-         d_forcing_term_strategy = input_db->getString(
-            "forcing_term_strategy");
-         if (d_forcing_term_strategy == "EWCHOICE1") {
-            d_forcing_term_flag = 1;
-         } else if (d_forcing_term_strategy == "EWCHOICE2") {
-            d_forcing_term_flag = 2;
-         } else if (!(d_forcing_term_strategy == "CONSTANT")) {
-            TBOX_ERROR(
-               d_object_name << ": "
-                             << "Key data `forcing_term_strategy' = "
-                             << d_forcing_term_strategy
-                             << " in input not recognized.");
+      // If the user does not want to override anything on restart then just
+      // return.
+      if (is_from_restart) {
+         bool read_on_restart =
+            input_db->getBoolWithDefault("read_on_restart", false);
+         if (!read_on_restart) {
+            return;
          }
       }
 
-      if (input_db->keyExists("constant_forcing_term")) {
-         d_constant_forcing_term = input_db->getDouble(
-            "constant_forcing_term");
-      }
-      if (input_db->keyExists("initial_forcing_term")) {
-         d_initial_forcing_term = input_db->getDouble("initial_forcing_term");
-      }
-      if (input_db->keyExists("maximum_forcing_term")) {
-         d_maximum_forcing_term = input_db->getDouble("maximum_forcing_term");
-      }
-      if (input_db->keyExists("EW_choice2_alpha")) {
-         d_EW_choice2_alpha = input_db->getDouble("EW_choice2_alpha");
-      }
-      if (input_db->keyExists("EW_choice2_gamma")) {
-         d_EW_choice2_gamma = input_db->getDouble("EW_choice2_gamma");
-      }
-      if (input_db->keyExists("EW_safeguard_exponent")) {
-         d_EW_safeguard_exponent = input_db->getDouble(
-            "EW_safeguard_exponent");
-      }
-      if (input_db->keyExists("EW_safeguard_disable_threshold")) {
-         d_EW_safeguard_disable_threshold =
-            input_db->getDouble("EW_safeguard_disable_threshold");
+      d_uses_preconditioner =
+         input_db->getBoolWithDefault("uses_preconditioner",
+            d_uses_preconditioner);
+
+      d_uses_explicit_jacobian =
+         input_db->getBoolWithDefault("uses_explicit_jacobian",
+            d_uses_explicit_jacobian);
+
+      d_maximum_nonlinear_iterations =
+         input_db->getIntegerWithDefault("maximum_nonlinear_iterations",
+            d_maximum_nonlinear_iterations);
+
+      d_maximum_function_evals =
+         input_db->getIntegerWithDefault("maximum_function_evals",
+            d_maximum_function_evals);
+
+      d_absolute_tolerance =
+         input_db->getDoubleWithDefault("absolute_tolerance",
+            d_absolute_tolerance);
+
+      d_relative_tolerance =
+         input_db->getDoubleWithDefault("relative_tolerance",
+            d_relative_tolerance);
+
+      d_step_tolerance =
+         input_db->getDoubleWithDefault("step_tolerance", d_step_tolerance);
+
+      d_forcing_term_strategy =
+         input_db->getStringWithDefault("forcing_term_strategy",
+            d_forcing_term_strategy);
+      if (d_forcing_term_strategy == "EWCHOICE1") {
+         d_forcing_term_flag = 1;
+      } else if (d_forcing_term_strategy == "EWCHOICE2") {
+         d_forcing_term_flag = 2;
+      } else if (!(d_forcing_term_strategy == "CONSTANT")) {
+         TBOX_ERROR(
+            d_object_name << ": "
+                          << "Key data `forcing_term_strategy' = "
+                          << d_forcing_term_strategy
+                          << " in input not recognized.");
       }
 
-      if (input_db->keyExists("linear_solver_type")) {
-         d_linear_solver_type = input_db->getString("linear_solver_type");
-      }
-      if (input_db->keyExists("linear_solver_absolute_tolerance")) {
-         d_linear_solver_absolute_tolerance =
-            input_db->getDouble("linear_solver_absolute_tolerance");
-      }
-      if (input_db->keyExists("linear_solver_divergence_tolerance")) {
-         d_linear_solver_divergence_tolerance =
-            input_db->getDouble("linear_solver_divergence_tolerance");
-      }
-      if (input_db->keyExists("maximum_linear_iterations")) {
-         d_maximum_linear_iterations =
-            input_db->getInteger("maximum_linear_iterations");
-      }
+      d_constant_forcing_term =
+         input_db->getDoubleWithDefault("constant_forcing_term",
+            d_constant_forcing_term);
 
-      if (input_db->keyExists("maximum_gmres_krylov_dimension")) {
-         d_maximum_gmres_krylov_dimension =
-            input_db->getInteger("maximum_gmres_krylov_dimension");
-      }
-      if (input_db->keyExists("gmres_orthogonalization_algorithm")) {
-         d_gmres_orthogonalization_algorithm =
-            input_db->getString("gmres_orthogonalization_algorithm");
-      }
+      d_initial_forcing_term =
+         input_db->getDoubleWithDefault("initial_forcing_term",
+            d_initial_forcing_term);
 
-      if (input_db->keyExists("differencing_parameter_strategy")) {
-         d_differencing_parameter_strategy =
-            input_db->getString("differencing_parameter_strategy");
-      }
-      if (input_db->keyExists("function_evaluation_error")) {
-         d_function_evaluation_error =
-            input_db->getDouble("function_evaluation_error");
-      }
+      d_maximum_forcing_term =
+         input_db->getDoubleWithDefault("maximum_forcing_term",
+            d_maximum_forcing_term);
+
+      d_EW_choice2_alpha =
+         input_db->getDoubleWithDefault("EW_choice2_alpha", d_EW_choice2_alpha);
+
+      d_EW_choice2_gamma =
+         input_db->getDoubleWithDefault("EW_choice2_gamma", d_EW_choice2_gamma);
+
+      d_EW_safeguard_exponent =
+         input_db->getDoubleWithDefault("EW_safeguard_exponent",
+            d_EW_safeguard_exponent);
+
+      d_EW_safeguard_disable_threshold =
+         input_db->getDoubleWithDefault("EW_safeguard_disable_threshold",
+            d_EW_safeguard_disable_threshold);
+
+      d_linear_solver_type =
+         input_db->getStringWithDefault("linear_solver_type",
+            d_linear_solver_type);
+
+      d_linear_solver_absolute_tolerance =
+         input_db->getDoubleWithDefault("linear_solver_absolute_tolerance",
+            d_linear_solver_absolute_tolerance);
+
+      d_linear_solver_divergence_tolerance =
+         input_db->getDoubleWithDefault("linear_solver_divergence_tolerance",
+            d_linear_solver_divergence_tolerance);
+
+      d_maximum_linear_iterations =
+         input_db->getIntegerWithDefault("maximum_linear_iterations",
+            d_maximum_linear_iterations);
+
+      d_maximum_gmres_krylov_dimension =
+         input_db->getIntegerWithDefault("maximum_gmres_krylov_dimension",
+            d_maximum_gmres_krylov_dimension);
+
+      d_gmres_orthogonalization_algorithm =
+         input_db->getStringWithDefault("gmres_orthogonalization_algorithm",
+            d_gmres_orthogonalization_algorithm);
+
+      d_function_evaluation_error =
+         input_db->getDoubleWithDefault("function_evaluation_error",
+            d_function_evaluation_error);
+
+      d_differencing_parameter_strategy =
+         input_db->getStringWithDefault("differencing_parameter_strategy",
+            d_differencing_parameter_strategy);
    }
 
 }
@@ -675,7 +688,7 @@ SNES_SAMRAIContext::getFromRestart()
 
    int ver = db->getInteger("SOLV_SNES_SAMRAI_CONTEXT_VERSION");
    if (ver != SOLV_SNES_SAMRAI_CONTEXT_VERSION) {
-      TBOX_ERROR(d_object_name << ":  "
+      TBOX_ERROR(d_object_name << ":SNES_SAMRAIContext::getFromRestart() error ...\n "
                                << "Restart file version different "
                                << "than class version.");
    }

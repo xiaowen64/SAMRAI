@@ -352,8 +352,7 @@ Timer::putToRestart(
 #ifdef ENABLE_SAMRAI_TIMERS
    TBOX_ASSERT(restart_db);
 
-   restart_db->putInteger("TBOX_TIMER_VERSION",
-      TBOX_TIMER_VERSION);
+   restart_db->putInteger("TBOX_TIMER_VERSION", TBOX_TIMER_VERSION);
 
    restart_db->putString("d_name", d_name);
 

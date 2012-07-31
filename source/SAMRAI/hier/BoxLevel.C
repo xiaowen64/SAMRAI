@@ -1441,7 +1441,9 @@ void
 BoxLevel::putToRestart(
    const boost::shared_ptr<tbox::Database>& restart_db) const
 {
+   // This appears to be used in the RedistributedRestartUtility.
    restart_db->putBool("d_is_mapped_box_level", true);
+
    restart_db->putInteger(
       "HIER_MAPPED_BOX_LEVEL_VERSION", HIER_BOX_LEVEL_VERSION);
    restart_db->putInteger("d_nproc", d_mpi.getSize());

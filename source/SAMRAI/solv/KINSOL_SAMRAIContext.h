@@ -213,10 +213,15 @@ public:
     *
     * When assertion checking is active, an unrecoverable assertion
     * will result if the database pointer is null.
+    *
+    * @param[in] input_db
+    *
+    * @param[in] is_from_restart
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const boost::shared_ptr<tbox::Database>& input_db,
+       bool is_from_restart);
 
    /**
     * Retrieve solver parameters from restart database matching object name.

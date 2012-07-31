@@ -576,7 +576,10 @@ CartesianGridGeometry::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart)
 {
-   TBOX_ASSERT(input_db);
+   if (!is_from_restart && !input_db) {
+      TBOX_ERROR(": CartesianGridGeometry::getFromInput()\n"
+         << "no input database supplied" << std::endl);
+   }
 
    const tbox::Dimension& dim(getDim());
 
@@ -602,6 +605,16 @@ CartesianGridGeometry::getFromInput(
 
       setGeometryData(x_lo, x_up, getPhysicalDomain());
 
+   }
+   else if (input_db) {
+      bool read_on_restart =
+         input_db->getBoolWithDefault("read_on_restart", false);
+      if (read_on_restart) {
+         TBOX_WARNING(
+            "CartesianGridGeometry::getFromInput() warning...\n"
+            << "You want to override restart data with values from\n"
+            << "an input database which is not allowed." << std::endl);
+      }
    }
 }
 

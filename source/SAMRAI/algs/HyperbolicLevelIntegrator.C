@@ -2588,6 +2588,8 @@ HyperbolicLevelIntegrator::putToRestart(
    restart_db->putDouble("cfl_init", d_cfl_init);
    restart_db->putBool("lag_dt_computation", d_lag_dt_computation);
    restart_db->putBool("use_ghosts_to_compute_dt", d_use_ghosts_for_dt);
+   restart_db->putBool("distinguish_mpi_reduction_costs",
+      d_distinguish_mpi_reduction_costs);
 }
 
 /*
@@ -2606,34 +2608,12 @@ HyperbolicLevelIntegrator::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart)
 {
-   TBOX_ASSERT(is_from_restart || input_db);
+   if (!is_from_restart && !input_db) {
+      TBOX_ERROR(": HyperbolicLevelIntegrator::getFromInput()\n"
+         << "no input database supplied" << std::endl);
+   }
 
-   if (is_from_restart) {
-
-      if (input_db) {
-         if (input_db->keyExists("cfl")) {
-            d_cfl = input_db->getDouble("cfl");
-         }
-
-         if (input_db->keyExists("cfl_init")) {
-            d_cfl_init = input_db->getDouble("cfl_init");
-         }
-
-         if (input_db->keyExists("lag_dt_computation")) {
-            d_lag_dt_computation = input_db->getBool("lag_dt_computation");
-         }
-
-         if (input_db->keyExists("use_ghosts_to_compute_dt")) {
-            d_use_ghosts_for_dt = input_db->getBool(
-               "use_ghosts_to_compute_dt");
-         }
-
-         if (input_db->keyExists("distinguish_mpi_reduction_costs")) {
-            d_distinguish_mpi_reduction_costs =
-               input_db->getBool("distinguish_mpi_reduction_costs");
-         }
-      }
-   } else {
+   if (!is_from_restart) {
 
       d_cfl = input_db->getDouble("cfl");
 
@@ -2656,6 +2636,33 @@ HyperbolicLevelIntegrator::getFromInput(
       if (input_db->keyExists("distinguish_mpi_reduction_costs")) {
          d_distinguish_mpi_reduction_costs =
             input_db->getBool("distinguish_mpi_reduction_costs");
+      }
+   } else if (input_db) {
+      bool read_on_restart =
+         input_db->getBoolWithDefault("read_on_restart", false);
+
+      if (read_on_restart) {
+         if (input_db->keyExists("cfl")) {
+            d_cfl = input_db->getDouble("cfl");
+         }
+
+         if (input_db->keyExists("cfl_init")) {
+            d_cfl_init = input_db->getDouble("cfl_init");
+         }
+
+         if (input_db->keyExists("lag_dt_computation")) {
+            d_lag_dt_computation = input_db->getBool("lag_dt_computation");
+         }
+
+         if (input_db->keyExists("use_ghosts_to_compute_dt")) {
+            d_use_ghosts_for_dt = input_db->getBool(
+               "use_ghosts_to_compute_dt");
+         }
+
+         if (input_db->keyExists("distinguish_mpi_reduction_costs")) {
+            d_distinguish_mpi_reduction_costs =
+               input_db->getBool("distinguish_mpi_reduction_costs");
+         }
       }
    }
 }
@@ -2698,6 +2705,8 @@ HyperbolicLevelIntegrator::getFromRestart()
    d_cfl_init = db->getDouble("cfl_init");
    d_lag_dt_computation = db->getBool("lag_dt_computation");
    d_use_ghosts_for_dt = db->getBool("use_ghosts_to_compute_dt");
+   d_distinguish_mpi_reduction_costs =
+      db->getBool("distinguish_mpi_reduction_costs");
 }
 
 /*

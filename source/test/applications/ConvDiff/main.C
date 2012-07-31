@@ -421,7 +421,7 @@ int main(
 
       if (tbox::RestartManager::getManager()->isFromRestart()) {
 
-         patch_hierarchy->getFromRestart();
+         patch_hierarchy->initializeHierarchy();
 
          gridding_algorithm->getTagAndInitializeStrategy()->
          resetHierarchyConfiguration(patch_hierarchy,

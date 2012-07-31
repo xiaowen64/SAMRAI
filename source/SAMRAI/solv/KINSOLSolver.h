@@ -304,7 +304,7 @@ public:
    setResidualStoppingTolerance(
       const double tol)
    {
-      TBOX_ASSERT(tol >= 0.0);
+      TBOX_ASSERT(tol == -1.0 || tol >= 0.0);
       d_residual_tol = tol;
       d_KINSOL_needs_initialization = true;
    }
@@ -344,7 +344,7 @@ public:
    setMaxNewtonStep(
       const double maxstep)
    {
-      TBOX_ASSERT(maxstep > 0.0);
+      TBOX_ASSERT(maxstep == -1.0 || maxstep > 0.0);
       d_max_newton_step = maxstep;
       d_KINSOL_needs_initialization = true;
    }
@@ -354,7 +354,7 @@ public:
    setNonlinearStepTolerance(
       const double tol)
    {
-      TBOX_ASSERT(tol >= 0.0);
+      TBOX_ASSERT(tol == -1.0 || tol >= 0.0);
       d_step_tol = tol;
       d_KINSOL_needs_initialization = true;
    }
@@ -364,7 +364,7 @@ public:
    setRelativeFunctionError(
       const double reserr)
    {
-      TBOX_ASSERT(reserr > 0.0);
+      TBOX_ASSERT(reserr == -1.0 || reserr > 0.0);
       d_relative_function_error = reserr;
       d_KINSOL_needs_initialization = true;
    }

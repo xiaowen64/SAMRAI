@@ -543,16 +543,13 @@ public:
       const boost::shared_ptr<tbox::Database>& restart_db);
 
    /*!
-    * Write out array data object data to restart database.  The default
-    * behavior (boolean argument is false) is to put all data members in
-    * database.  Otherwise, only the array contents are written out.
+    * Write out array data object data to restart database.
     *
     * Assertions:  restart_db must be a non-null pointer.
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db,
-      bool data_only = false) const;
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * Return the dimension of this object.

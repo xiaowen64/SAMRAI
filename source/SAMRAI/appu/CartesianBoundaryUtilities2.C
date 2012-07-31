@@ -113,9 +113,13 @@ CartesianBoundaryUtilities2::getFromInput(
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(2));
    TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(input_db);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
    TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
+
+   if (!input_db) {
+      TBOX_ERROR(": CartesianBoundaryUtility2::getFromInput()\n"
+         << "no input database supplied" << std::endl);
+   }
 
    if (!s_fortran_constants_stuffed) {
       stuff2dBdryFortConst();

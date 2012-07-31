@@ -58,10 +58,10 @@ PatchData::getFromRestart(
 
    d_box = restart_db->getDatabaseBox("d_box");
    d_ghost_box = restart_db->getDatabaseBox("d_ghost_box");
+   d_timestamp = restart_db->getDouble("d_timestamp");
    restart_db->getIntegerArray("d_ghosts",
       &d_ghosts[0],
       d_ghosts.getDim().getValue());
-   d_timestamp = restart_db->getDouble("d_timestamp");
 }
 
 /*

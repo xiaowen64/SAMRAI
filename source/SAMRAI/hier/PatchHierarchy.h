@@ -819,33 +819,7 @@ public:
       const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
-    * @brief Read in the entire hierarchy from the restart file.
-    *
-    * The database from which the restart data is read is determined by the
-    * object_name specified in the constructor.
-    *
-    * @note
-    * <ul>
-    * <li> This method handles the memory allocation for each PatchLevel
-    *      it reads in.
-    * <li> The number of levels read in is the minimum of the d_max_levels
-    *      and the number of levels stored in the database.
-    * </ul>
-    *
-    * @par Assertions
-    * When assertion checking is active, @c d_max_levels must be
-    * greater than zero.  An unrecoverable assertion will result if the
-    * database cannot be found in the restart file or the data in the
-    * restart file is erroneous.
-    */
-   void
-   getFromRestart();
-
-   /*!
-    * @brief Read in the entire hierarchy from the specified restart database.
-    *
-    * The component_selector specifies which patch data components
-    * to read in from the database.
+    * @brief Read in the entire hierarchy from the restart database.
     *
     * @note
     * <ul>
@@ -859,17 +833,11 @@ public:
     * @par Assertions
     *
     * <ul>
-    * <li>   The restart_db argument must not be null.
     * <li>   The number of levels (if given) must be greater than zero.
     * </ul>
-    *
-    * @param[in]  restart_db
-    * @param[in]  component_selector
     */
    void
-   getFromRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db,
-      const ComponentSelector& component_selector);
+   initializeHierarchy();
 
    /*!
     * @brief Get the dimension of this object.
@@ -952,10 +920,27 @@ private:
     * non-null.
     *
     * @param[in]  input_db   Input database
+    * @param[in]  is_from_restart   True is being invoked on restart
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const boost::shared_ptr<tbox::Database>& input_db,
+      bool is_from_restart);
+
+   /*!
+    * @brief Read in the entire hierarchy from the restart file.
+    *
+    * The database from which the restart data is read is determined by the
+    * object_name specified in the constructor.
+    *
+    * @par Assertions
+    * When assertion checking is active, @c d_max_levels must be
+    * greater than zero.  An unrecoverable assertion will result if the
+    * database cannot be found in the restart file or the data in the
+    * restart file is erroneous.
+    */
+   void
+   getFromRestart();
 
    /*!
     * @brief Set up things for the entire class.

@@ -706,11 +706,13 @@ BoxNeighborhoodCollection::putToRestart(
       std::vector<int> owners(num_neighborhoods);
       std::vector<int> local_indices(num_neighborhoods);
       std::vector<int> periodic_ids(num_neighborhoods);
+      int counter = 0;
       for (ConstIterator ei = begin(); ei != end(); ++ei) {
          const BoxId& base_box_id = *ei;
-         owners.push_back(base_box_id.getOwnerRank());
-         local_indices.push_back(base_box_id.getLocalId().getValue());
-         periodic_ids.push_back(base_box_id.getPeriodicId().getPeriodicValue());
+         owners[counter] = base_box_id.getOwnerRank();
+         local_indices[counter] = base_box_id.getLocalId().getValue();
+         periodic_ids[counter] = base_box_id.getPeriodicId().getPeriodicValue();
+         ++counter;
       }
 
       restart_db->putIntegerArray(
@@ -734,10 +736,11 @@ BoxNeighborhoodCollection::putToRestart(
             + tbox::Utilities::processorToString(mbid.getOwnerRank())
             + tbox::Utilities::patchToString(mbid.getLocalId().getValue())
             + tbox::Utilities::intToString(mbid.getPeriodicId().getPeriodicValue());
-         tbox::Database& nbr_db = *restart_db->putDatabase(set_name);
+	 boost::shared_ptr<tbox::Database> nbr_db =
+            restart_db->putDatabase(set_name);
 
          const int mbs_size = numNeighbors(ei);
-         nbr_db.putInteger("mapped_box_set_size", mbs_size);
+         nbr_db->putInteger("mapped_box_set_size", mbs_size);
 
          if (mbs_size > 0) {
 
@@ -748,34 +751,35 @@ BoxNeighborhoodCollection::putToRestart(
 
             tbox::Array<tbox::DatabaseBox> db_box_array(mbs_size);
 
-            int counter = -1;
+            counter = 0;
 
             for (ConstNeighborIterator ni = begin(ei); ni != end(ei); ++ni) {
                const Box& nbr = *ni;
-               local_ids.push_back(nbr.getLocalId().getValue());
-               ranks.push_back(nbr.getOwnerRank());
-               block_ids.push_back(nbr.getBlockId().getBlockValue());
-               periodic_ids.push_back(nbr.getPeriodicId().getPeriodicValue());
-               db_box_array[++counter] = nbr;
+               local_ids[counter] = nbr.getLocalId().getValue();
+               ranks[counter] = nbr.getOwnerRank();
+               block_ids[counter] = nbr.getBlockId().getBlockValue();
+               periodic_ids[counter] = nbr.getPeriodicId().getPeriodicValue();
+               db_box_array[counter] = nbr;
+               ++counter;
             }
 
-            nbr_db.putIntegerArray(
+            nbr_db->putIntegerArray(
                "local_indices",
                &local_ids[0],
                mbs_size);
-            nbr_db.putIntegerArray(
+            nbr_db->putIntegerArray(
                "ranks",
                &ranks[0],
                mbs_size);
-            nbr_db.putIntegerArray(
+            nbr_db->putIntegerArray(
                "block_ids",
                &block_ids[0],
                mbs_size);
-            nbr_db.putIntegerArray(
+            nbr_db->putIntegerArray(
                "periodic_ids",
                &periodic_ids[0],
                mbs_size);
-            nbr_db.putDatabaseBoxArray(
+            nbr_db->putDatabaseBoxArray(
                "boxes",
                &db_box_array[0],
                mbs_size);
@@ -789,6 +793,12 @@ void
 BoxNeighborhoodCollection::getFromRestart(
    tbox::Database& restart_db)
 {
+   int version = restart_db.getInteger("HIER_BOX_NBRHD_COLLECTION_VERSION");
+   if (version != HIER_BOX_NBRHD_COLLECTION_VERSION) {
+      TBOX_ERROR("BoxNeighborhoodCollection::getFromRestart() error...\n"
+         << "   Restart file version different than class version.");
+   }
+
    const unsigned int number_of_sets = restart_db.getInteger("number_of_sets");
    if (number_of_sets > 0) {
 

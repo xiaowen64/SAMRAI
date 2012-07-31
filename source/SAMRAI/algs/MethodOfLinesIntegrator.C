@@ -696,7 +696,10 @@ MethodOfLinesIntegrator::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart)
 {
-   TBOX_ASSERT(is_from_restart || input_db);
+   if (!is_from_restart && !input_db) {
+      TBOX_ERROR(": MethodOfLinesIntegrator::getFromInput()\n"
+         << "no input database supplied" << std::endl);
+   }
 
    if (!is_from_restart) {
 
@@ -738,7 +741,16 @@ MethodOfLinesIntegrator::getFromInput(
       d_order = d_alpha_1.getSize();
 
    }
-
+   else if (input_db) {
+      bool read_on_restart =
+         input_db->getBoolWithDefault("read_on_restart", false);
+      if (read_on_restart) {
+         TBOX_WARNING(
+            "MethodOfLinesIntegrator::getFromInput() warning...\n"
+            << "You want to override restart data with values from\n"
+            << "an input database which is not allowed." << std::endl);
+      }
+   }
 }
 
 /*

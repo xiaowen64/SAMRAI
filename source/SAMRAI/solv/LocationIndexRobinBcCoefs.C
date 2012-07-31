@@ -66,7 +66,10 @@ void
 LocationIndexRobinBcCoefs::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db)
 {
-   TBOX_ASSERT(input_db);
+   if (!input_db) {
+      TBOX_ERROR(": LocationIndexRobinBcCoefs::getFromInput()\n"
+         << "no input database supplied" << std::endl);
+   }
 
    for (int i = 0; i < 2 * d_dim.getValue(); ++i) {
       std::string name = "boundary_" + tbox::Utilities::intToString(i);

@@ -441,8 +441,7 @@ Statistic::putToRestart(
 {
    TBOX_ASSERT(restart_db);
 
-   restart_db->putInteger("TBOX_STATISTIC_VERSION",
-      TBOX_STATISTIC_VERSION);
+   restart_db->putInteger("TBOX_STATISTIC_VERSION", TBOX_STATISTIC_VERSION);
 
    restart_db->putString("object_name", d_object_name);
    restart_db->putInteger("stat_type", d_stat_type);

@@ -710,7 +710,8 @@ PatchLevel::getFromRestart(
 
       std::string patch_name = "level_" + tbox::Utilities::levelToString(
             d_level_number)
-         + "-patch_" + tbox::Utilities::patchToString(local_id.getValue())
+         + "-patch_"
+         + tbox::Utilities::patchToString(local_id.getValue())
          + "-block_"
          + tbox::Utilities::blockToString(box.getBlockId().getBlockValue());
       if (!(restart_db->isDatabase(patch_name))) {
@@ -757,6 +758,7 @@ PatchLevel::putToRestart(
    restart_db->putInteger("HIER_PATCH_LEVEL_VERSION",
       HIER_PATCH_LEVEL_VERSION);
 
+   // This appears to be used in the RedistributedRestartUtility.
    restart_db->putBool("d_is_patch_level", true);
 
    tbox::Array<tbox::DatabaseBox> temp_boxes = d_boxes;

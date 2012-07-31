@@ -217,7 +217,7 @@ GriddingAlgorithm::GriddingAlgorithm(
       getFromRestart();
    }
 
-   getFromInput(input_db);
+   getFromInput(input_db, is_from_restart);
 
    if (d_hierarchy->getMaxNumberOfLevels() > 1) {
       tbox::Array<hier::IntVector> ratio_to_coarser(d_hierarchy->getMaxNumberOfLevels(),
@@ -4448,13 +4448,32 @@ GriddingAlgorithm::putToRestart(
    restart_db->putInteger("ALGS_GRIDDING_ALGORITHM_VERSION",
       ALGS_GRIDDING_ALGORITHM_VERSION);
 
-   restart_db->putDoubleArray("efficiency_tolerance",
-      d_efficiency_tolerance);
-   restart_db->putDoubleArray("combine_efficiency",
-      d_combine_efficiency);
+   restart_db->putBool("check_overflow_nesting", d_check_overflow_nesting);
+   restart_db->putBool("check_proper_nesting", d_check_proper_nesting);
+   restart_db->putBool("check_connectors", d_check_connectors);
+   restart_db->putBool("print_steps", d_print_steps);
+   restart_db->putBool("log_metadata_statistics", d_log_metadata_statistics);
+
+   restart_db->putDoubleArray("efficiency_tolerance", d_efficiency_tolerance);
+   restart_db->putDoubleArray("combine_efficiency", d_combine_efficiency);
+
+   restart_db->putChar("check_nonrefined_tags", d_check_nonrefined_tags);
+   restart_db->putChar("check_overlapping_patches",
+      d_check_overlapping_patches);
+   restart_db->putChar("check_nonnesting_user_boxes",
+      d_check_nonnesting_user_boxes);
+   restart_db->putChar("check_boundary_proximity_violation",
+      d_check_boundary_proximity_violation);
 
    restart_db->putBool("sequentialize_patch_indices",
       d_sequentialize_patch_indices);
+
+   restart_db->putBool("enforce_proper_nesting", d_enforce_proper_nesting);
+   restart_db->putBool("extend_to_domain_boundary",
+      d_extend_to_domain_boundary);
+   restart_db->putBool("load_balance", d_load_balance);
+
+   restart_db->putBool("barrier_and_time", d_barrier_and_time);
 }
 
 /*
@@ -4469,9 +4488,20 @@ GriddingAlgorithm::putToRestart(
 
 void
 GriddingAlgorithm::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db)
+   const boost::shared_ptr<tbox::Database>& input_db,
+   bool is_from_restart)
 {
    if (input_db) {
+
+      // If the user does not want to override anything on restart then just
+      // return.
+      if (is_from_restart) {
+         bool read_on_restart =
+            input_db->getBoolWithDefault("read_on_restart", false);
+         if (!read_on_restart) {
+            return;
+         }
+      }
 
       d_check_overflow_nesting = input_db->getBoolWithDefault(
          "check_overflow_nesting",
@@ -4539,15 +4569,6 @@ GriddingAlgorithm::getFromInput(
          }
 
       }
-
-      const tbox::Dimension& dim = d_hierarchy->getDim();
-
-      d_proper_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels(),
-         hier::BoxLevel(dim));
-      d_to_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels(),
-         hier::Connector(dim));
-      d_from_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels(),
-         hier::Connector(dim));
 
       std::string tmp_str;
 
@@ -4642,14 +4663,28 @@ GriddingAlgorithm::getFromRestart()
                        << "Restart file version different than class version.");
    }
 
-   d_proper_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels(),
-      hier::BoxLevel(d_hierarchy->getDim()));
+   d_check_overflow_nesting = db->getBool("check_overflow_nesting");
+   d_check_proper_nesting = db->getBool("check_proper_nesting");
+   d_check_connectors = db->getBool("check_connectors");
+   d_print_steps = db->getBool("print_steps");
+   d_log_metadata_statistics = db->getBool("log_metadata_statistics");
 
    d_efficiency_tolerance = db->getDoubleArray("efficiency_tolerance");
    d_combine_efficiency = db->getDoubleArray("combine_efficiency");
 
+   d_check_nonrefined_tags = db->getChar("check_nonrefined_tags");
+   d_check_overlapping_patches = db->getChar("check_overlapping_patches");
+   d_check_nonnesting_user_boxes = db->getChar("check_nonnesting_user_boxes");
+   d_check_boundary_proximity_violation =
+      db->getChar("check_boundary_proximity_violation");
+
    d_sequentialize_patch_indices = db->getBool("sequentialize_patch_indices");
 
+   d_enforce_proper_nesting = db->getBool("enforce_proper_nesting");
+   d_extend_to_domain_boundary = db->getBool("extend_to_domain_boundary");
+   d_load_balance = db->getBool("load_balance");
+
+   d_barrier_and_time = db->getBool("barrier_and_time");
 }
 
 /*

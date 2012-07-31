@@ -970,18 +970,15 @@ ArrayData<TYPE>::getFromRestart(
 template<class TYPE>
 void
 ArrayData<TYPE>::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db,
-   bool data_only) const
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
-   if (!data_only) {
-      restart_db->putInteger("PDAT_ARRAYDATA_VERSION", PDAT_ARRAYDATA_VERSION);
+   restart_db->putInteger("PDAT_ARRAYDATA_VERSION", PDAT_ARRAYDATA_VERSION);
 
-      restart_db->putInteger("d_depth", d_depth);
-      restart_db->putInteger("d_offset", d_offset);
-      restart_db->putDatabaseBox("d_box", d_box);
-   }
+   restart_db->putInteger("d_depth", d_depth);
+   restart_db->putInteger("d_offset", d_offset);
+   restart_db->putDatabaseBox("d_box", d_box);
 
    restart_db->putArray("d_array", d_array);
 }

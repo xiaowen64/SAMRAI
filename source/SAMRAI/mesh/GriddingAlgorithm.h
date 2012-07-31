@@ -519,13 +519,16 @@ private:
    /*
     * @brief Read input data from specified database and initialize class members.
     *
-    * When assertion checking is active, the database pointer must be non-null.
+    * The database pointer must be non-null.
     *
     * @param[in] input_db
+    *
+    * @param[in] is_from_restart
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const boost::shared_ptr<tbox::Database>& input_db,
+      bool is_from_restart);
 
    /*
     * @brief Read object state from the restart file and initialize

@@ -1644,6 +1644,12 @@ void
 BoxContainer::getFromRestart(
    tbox::Database& restart_db)
 {
+   int version = restart_db.getInteger("HIER_BOX_CONTAINER_VERSION");
+   if (version != HIER_BOX_CONTAINER_VERSION) {
+      TBOX_ERROR("BoxContainer::getFromRestart() error...\n"
+         << "   Restart file version different than class version.");
+   }
+
    const unsigned int mbs_size = restart_db.getInteger("mapped_box_set_size");
    if (mbs_size > 0) {
       std::vector<int> local_ids(mbs_size);
@@ -1666,12 +1672,11 @@ BoxContainer::getFromRestart(
       for (unsigned int i = 0; i < mbs_size; ++i) {
          Box array_box(db_box_array[i]);
          array_box.setBlockId(BlockId(block_ids[i]));
-         Box box(
-            array_box,
-            LocalId(local_ids[i]),
+         BoxId box_id(LocalId(local_ids[i]),
             ranks[i],
             PeriodicId(periodic_ids[i]));
-         insert(end(), box);
+         array_box.setId(box_id);
+         insert(end(), array_box);
       }
    }
 }

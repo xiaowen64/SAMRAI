@@ -839,6 +839,11 @@ SparseData<BOX_GEOMETRY>::getFromRestart(
             ioffset += d_int_attr_size;
          } // for (int curr_list ...
       } // if (restart_db->isDatabase(...
+      else {
+         TBOX_ERROR("SparseData::getFromRestart error...\n"
+         << " : Restart database missing data for attribute index "
+         << index_keyword << std::endl);
+      }
    } // for (int curr_item = ...
 }
 

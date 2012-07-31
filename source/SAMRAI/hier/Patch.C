@@ -227,10 +227,8 @@ Patch::getFromRestart(
    ComponentSelector local_selector(component_selector);
 
    for (int i = 0; i < patch_data_namelist.getSize(); i++) {
-      std::string patch_data_name;
+      std::string& patch_data_name = patch_data_namelist[i];
       int patch_data_index;
-
-      patch_data_name = patch_data_namelist[i];
 
       if (!restart_db->isDatabase(patch_data_name)) {
          TBOX_ERROR("Patch::getFromRestart() error...\n"

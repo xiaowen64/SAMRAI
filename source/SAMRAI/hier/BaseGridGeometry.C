@@ -613,9 +613,15 @@ BaseGridGeometry::getFromRestart()
 
    d_number_blocks = db->getInteger("num_blocks");
 
+   d_singularity.resizeArray(d_number_blocks);
+   d_singularity_indices.resizeArray(d_number_blocks);
+   d_reduced_connect.resizeArray(d_number_blocks);
+   d_block_neighbors.resizeArray(d_number_blocks);
+
    std::string domain_name;
    BoxContainer domain;
    LocalId local_id(0);
+   d_number_of_block_singularities = 0;
 
    for (int b = 0; b < d_number_blocks; b++) {
       domain_name = "domain_boxes_" + tbox::Utilities::intToString(b);
@@ -635,8 +641,72 @@ BaseGridGeometry::getFromRestart()
          box.setBlockId(BlockId(b));
          domain.pushBack(box);
       }
+
+      if (d_number_blocks > 1) {
+
+         std::string singularity_db_name =
+            "Singularity_" + tbox::Utilities::intToString(b);
+         boost::shared_ptr<tbox::Database> singularity_db =
+            db->getDatabase(singularity_db_name);
+         d_singularity[b].getFromRestart(*singularity_db);
+
+         std::string singularity_indices_db_name =
+            "SingularityIndices_" + tbox::Utilities::intToString(b);
+         boost::shared_ptr<tbox::Database> singularity_indices_db =
+            db->getDatabase(singularity_indices_db_name);
+         int num_singularity_indices =
+            singularity_indices_db->getInteger("num_singularity_indices");
+         d_singularity_indices[b].reserve(num_singularity_indices);
+         singularity_indices_db->getIntegerArray("singularity_indices",
+            &d_singularity_indices[b][0],
+            num_singularity_indices);
+         for (int sing_index = 0;
+              sing_index < num_singularity_indices; ++sing_index) {
+            if (d_singularity_indices[b][sing_index] > d_number_of_block_singularities) {
+               d_number_of_block_singularities = d_singularity_indices[b][sing_index];
+            }
+         }
+
+         std::string reduced_connect_name =
+            "reduced_connect_" + tbox::Utilities::intToString(b);
+         d_reduced_connect[b] = db->getBool(reduced_connect_name);
+
+         std::string neighbors_db_name =
+            "Neighbors_" + tbox::Utilities::intToString(b);
+         boost::shared_ptr<tbox::Database> neighbors_db =
+            db->getDatabase(neighbors_db_name);
+         int num_neighbors = neighbors_db->getInteger("num_neighbors");
+         for (int count = 0; count < num_neighbors; ++count) {
+            std::string neighbor_db_name =
+               "neighbor_" + tbox::Utilities::intToString(count);
+            boost::shared_ptr<tbox::Database> neighbor_db =
+               neighbors_db->getDatabase(neighbor_db_name);
+            BlockId nbr_block_id(neighbor_db->getInteger("nbr_block_id"));
+            BoxContainer nbr_transformed_domain;
+            nbr_transformed_domain.getFromRestart(*neighbor_db);
+            Transformation::RotationIdentifier nbr_rotation_ident =
+               static_cast<Transformation::RotationIdentifier>(
+                  neighbor_db->getInteger("rotation_identifier"));
+            IntVector nbr_offset(dim);
+            nbr_offset.getFromRestart(*neighbor_db, "offset");
+            BlockId nbr_begin_block(neighbor_db->getInteger("begin_block"));
+            BlockId nbr_end_block(neighbor_db->getInteger("end_block"));
+            bool nbr_is_singularity = neighbor_db->getBool("d_is_singularity");
+            Transformation nbr_transformation(nbr_rotation_ident,
+               nbr_offset,
+               nbr_begin_block,
+               nbr_end_block);
+            Neighbor block_nbr(nbr_block_id,
+               nbr_transformed_domain,
+               nbr_transformation,
+               nbr_is_singularity);
+            d_block_neighbors[b].push_front(block_nbr);
+         }
+      }
    }
    setPhysicalDomain(domain, d_number_blocks);
+
+   d_has_enhanced_connectivity = db->getInteger("d_has_enhanced_connectivity");
 
    IntVector periodic_shift(dim);
    int* temp_shift = &periodic_shift[0];
@@ -660,8 +730,10 @@ BaseGridGeometry::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart)
 {
-
-   TBOX_ASSERT(input_db);
+   if (!is_from_restart && !input_db) {
+      TBOX_ERROR(": BaseGridGeometry::getFromInput()\n"
+         << "no input database supplied" << std::endl);
+   }
 
    const tbox::Dimension dim(getDim());
 
@@ -723,9 +795,18 @@ BaseGridGeometry::getFromInput(
 
       setPhysicalDomain(domain, d_number_blocks);
 
+      readBlockDataFromInput(input_db);
    }
-
-   readBlockDataFromInput(input_db);
+   else if (input_db) {
+      bool read_on_restart =
+         input_db->getBoolWithDefault("read_on_restart", false);
+      if (read_on_restart) {
+         TBOX_WARNING(
+            "BaseGridGeometry::getFromInput() warning...\n"
+            << "You want to override restart data with values from\n"
+            << "an input database which is not allowed." << std::endl);
+      }
+   }
 }
 
 /*
@@ -749,17 +830,70 @@ BaseGridGeometry::putToRestart(
 
    restart_db->putInteger("num_blocks", d_number_blocks);
 
-   std::string domain_name;
-
    for (int b = 0; b < d_number_blocks; b++) {
 
-      domain_name = "domain_boxes_" + tbox::Utilities::intToString(b);
+      std::string domain_name =
+         "domain_boxes_" + tbox::Utilities::intToString(b);
 
       BoxContainer block_phys_domain(getPhysicalDomain(), BlockId(b));
       tbox::Array<tbox::DatabaseBox> temp_box_array = block_phys_domain;
 
       restart_db->putDatabaseBoxArray(domain_name, temp_box_array);
+
+      if (d_number_blocks > 1) {
+
+         std::string singularity_db_name =
+            "Singularity_" + tbox::Utilities::intToString(b);
+         boost::shared_ptr<tbox::Database> singularity_db =
+            restart_db->putDatabase(singularity_db_name);
+         d_singularity[b].putToRestart(singularity_db);
+
+         std::string singularity_indices_db_name =
+            "SingularityIndices_" + tbox::Utilities::intToString(b);
+         boost::shared_ptr<tbox::Database> singularity_indices_db =
+            restart_db->putDatabase(singularity_indices_db_name);
+         singularity_indices_db->putInteger("num_singularity_indices",
+            static_cast<int>(d_singularity_indices[b].size()));
+         singularity_indices_db->putIntegerArray("singularity_indices",
+            &d_singularity_indices[b][0],
+            static_cast<int>(d_singularity_indices[b].size()));
+
+         std::string reduced_connect_name =
+            "reduced_connect_" + tbox::Utilities::intToString(b);
+         restart_db->putBool(reduced_connect_name, d_reduced_connect[b]);
+
+         std::string neighbors_db_name =
+            "Neighbors_" + tbox::Utilities::intToString(b);
+         boost::shared_ptr<tbox::Database> neighbors_db =
+            restart_db->putDatabase(neighbors_db_name);
+         neighbors_db->putInteger("num_neighbors",
+            static_cast<int>(d_block_neighbors[b].size()));
+         int count = 0;
+         for (std::list<Neighbor>::const_iterator ni = d_block_neighbors[b].begin();
+              ni != d_block_neighbors[b].end(); ++ni) {
+            std::string neighbor_db_name =
+               "neighbor_" + tbox::Utilities::intToString(count);
+            boost::shared_ptr<tbox::Database> neighbor_db =
+               neighbors_db->putDatabase(neighbor_db_name);
+            neighbor_db->putInteger("nbr_block_id",
+               ni->getBlockId().getBlockValue());
+            ni->getTransformedDomain().putToRestart(neighbor_db);
+            neighbor_db->putInteger("rotation_identifier",
+               ni->getTransformation().getRotation());
+            ni->getTransformation().getOffset().putToRestart(*neighbor_db,
+               "offset");
+            neighbor_db->putInteger("begin_block",
+               ni->getTransformation().getBeginBlock().getBlockValue());
+            neighbor_db->putInteger("end_block",
+               ni->getTransformation().getEndBlock().getBlockValue());
+            neighbor_db->putBool("d_is_singularity", ni->isSingularity());
+            ++count;
+         }
+      }
    }
+
+   restart_db->putInteger("d_has_enhanced_connectivity",
+      d_has_enhanced_connectivity);
 
    IntVector level0_shift(getPeriodicShift(IntVector::getOne(dim)));
    int* temp_shift = &level0_shift[0];
@@ -1801,8 +1935,8 @@ BaseGridGeometry::readBlockDataFromInput(
          BoxContainer block_domain(d_physical_domain, block_id);
          pseudo_domain.spliceFront(block_domain);
 
-         for (BoxContainer::iterator
-              si(d_singularity[b]); si != d_singularity[b].end(); ++si) {
+         for (BoxContainer::iterator si(d_singularity[b]);
+              si != d_singularity[b].end(); ++si) {
             BoxContainer test_domain(pseudo_domain);
             test_domain.intersectBoxes(*si);
             if (test_domain.isEmpty()) {
