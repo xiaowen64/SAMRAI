@@ -366,6 +366,9 @@ public:
    /*!
     * @brief Return the neighbor set for the specified BoxId.
     *
+    * An assertion will be generated if the Box associated with box_id is
+    * not a member of the base BoxLevel.
+    *
     * @param[in] box_id
     * @param[out] nbr_boxes
     */
@@ -374,6 +377,8 @@ public:
       const BoxId& box_id,
       BoxContainer& nbr_boxes) const
    {
+      TBOX_ASSERT(hasNeighborSet(box_id));
+
       const BoxNeighborhoodCollection& relationships = getRelations(box_id);
       BoxId non_per_id(box_id.getGlobalId(),
                        PeriodicId::zero());
