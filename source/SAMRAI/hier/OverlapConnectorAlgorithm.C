@@ -118,7 +118,7 @@ OverlapConnectorAlgorithm::getFromInput()
             boost::shared_ptr<tbox::Database> ocu_db(
                idb->getDatabase("OverlapConnectorAlgorithm"));
             s_print_steps =
-               ocu_db->getCharWithDefault("DEV_print_bridge_steps", s_print_steps);
+               ocu_db->getCharWithDefault("DEV_print_bridge_steps", '\0');
          }
       }
    }

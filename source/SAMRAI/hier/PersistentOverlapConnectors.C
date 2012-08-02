@@ -73,8 +73,7 @@ PersistentOverlapConnectors::getFromInput()
                check_accessed_connectors ? 'y' : 'n';
 
             s_always_create_missing_connector =
-               pocdb->getBoolWithDefault("always_create_missing_connector",
-                  s_always_create_missing_connector);
+               pocdb->getBoolWithDefault("always_create_missing_connector", true);
          }
       }
    }

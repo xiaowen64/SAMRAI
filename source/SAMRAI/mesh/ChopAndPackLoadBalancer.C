@@ -1167,8 +1167,7 @@ ChopAndPackLoadBalancer::getFromInput(
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       d_master_bin_pack_method =
-         input_db->getStringWithDefault("bin_pack_method",
-            d_master_bin_pack_method);
+         input_db->getStringWithDefault("bin_pack_method", "SPATIAL");
       if (!(d_master_bin_pack_method == "GREEDY" ||
             d_master_bin_pack_method == "SPATIAL")) {
          TBOX_WARNING(
@@ -1212,8 +1211,7 @@ ChopAndPackLoadBalancer::getFromInput(
       }
 
       d_ignore_level_box_union_is_single_box =
-         input_db->getBoolWithDefault("ignore_level_box_union_is_single_box",
-            d_ignore_level_box_union_is_single_box);
+         input_db->getBoolWithDefault("ignore_level_box_union_is_single_box", false);
 
       d_processor_layout_specified = false;
       int temp_processor_layout[SAMRAI::MAX_DIM_VAL];

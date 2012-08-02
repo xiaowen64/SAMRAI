@@ -337,13 +337,11 @@ CellPoissonHypreSolver::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db)
 {
    if (input_db) {
-      d_print_solver_info = input_db->getBoolWithDefault("print_solver_info",
-            d_print_solver_info);
-      d_max_iterations = input_db->getIntegerWithDefault("max_iterations",
-            d_max_iterations);
-      d_relative_residual_tol = input_db->getDoubleWithDefault(
-            "relative_residual_tol",
-            d_relative_residual_tol);
+      d_print_solver_info =
+         input_db->getBoolWithDefault("print_solver_info", false);
+      d_max_iterations = input_db->getIntegerWithDefault("max_iterations", 10);
+      d_relative_residual_tol =
+         input_db->getDoubleWithDefault("relative_residual_tol", 1.0e-10);
       if (input_db->isDouble("residual_tol")) {
          TBOX_ERROR("CellPoissonHypreSolver input error.\n"
             << "The parameter 'residual_tol' has been replaced\n"
@@ -351,20 +349,18 @@ CellPoissonHypreSolver::getFromInput(
             << "Please change the parameter name in the input database.");
       }
       d_num_pre_relax_steps =
-         input_db->getIntegerWithDefault("num_pre_relax_steps",
-            d_num_pre_relax_steps);
+         input_db->getIntegerWithDefault("num_pre_relax_steps", 1);
       if (d_num_pre_relax_steps < 0) {
          TBOX_ERROR(d_object_name << ": Number of relaxation steps must be\n"
                                   << "non-negative.\n");
       }
       d_num_post_relax_steps =
-         input_db->getIntegerWithDefault("num_post_relax_steps",
-            d_num_post_relax_steps);
+         input_db->getIntegerWithDefault("num_post_relax_steps", 1);
       if (d_num_post_relax_steps < 0) {
          TBOX_ERROR(d_object_name << ": Number of relaxation steps must be\n"
                                   << "non-negative.\n");
       }
-      d_use_smg = input_db->getBoolWithDefault("use_smg", d_use_smg);
+      d_use_smg = input_db->getBoolWithDefault("use_smg", true);
    }
 }
 

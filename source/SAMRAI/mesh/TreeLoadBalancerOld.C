@@ -3500,47 +3500,34 @@ TreeLoadBalancerOld::getFromInput(
 
    if (input_db) {
 
-      d_print_steps =
-         input_db->getBoolWithDefault("DEV_print_steps",
-            d_print_steps);
+      d_print_steps = input_db->getBoolWithDefault("DEV_print_steps", false);
       d_print_break_steps =
-         input_db->getBoolWithDefault("DEV_print_break_steps",
-            d_print_break_steps);
+         input_db->getBoolWithDefault("DEV_print_break_steps", false);
       d_print_swap_steps =
-         input_db->getBoolWithDefault("DEV_print_swap_steps",
-            d_print_swap_steps);
+         input_db->getBoolWithDefault("DEV_print_swap_steps", false);
       d_print_edge_steps =
-         input_db->getBoolWithDefault("DEV_print_edge_steps",
-            d_print_edge_steps);
+         input_db->getBoolWithDefault("DEV_print_edge_steps", false);
       d_check_connectivity =
-         input_db->getBoolWithDefault("DEV_check_connectivity",
-            d_check_connectivity);
-      d_check_map =
-         input_db->getBoolWithDefault("DEV_check_map",
-            d_check_map);
+         input_db->getBoolWithDefault("DEV_check_connectivity", false);
+      d_check_map = input_db->getBoolWithDefault("DEV_check_map", false);
 
-      d_report_load_balance = input_db->getBoolWithDefault(
-            "DEV_report_load_balance",
-            d_report_load_balance);
-      d_barrier_before = input_db->getBoolWithDefault("DEV_barrier_before",
-            d_barrier_before);
-      d_barrier_after = input_db->getBoolWithDefault("DEV_barrier_after",
-            d_barrier_after);
+      d_report_load_balance =
+         input_db->getBoolWithDefault("DEV_report_load_balance", false);
+      d_barrier_before =
+         input_db->getBoolWithDefault("DEV_barrier_before", false);
+      d_barrier_after =
+         input_db->getBoolWithDefault("DEV_barrier_after", false);
 
-      d_n_root_cycles = input_db->getIntegerWithDefault("n_root_cycles",
-            d_n_root_cycles);
+      d_n_root_cycles = input_db->getIntegerWithDefault("n_root_cycles", -1);
 
-      d_balance_penalty_wt = input_db->getDoubleWithDefault(
-            "balance_penalty_wt",
-            d_balance_penalty_wt);
-      d_surface_penalty_wt = input_db->getDoubleWithDefault(
-            "surface_penalty_wt",
-            d_surface_penalty_wt);
-      d_slender_penalty_wt = input_db->getDoubleWithDefault(
-            "slender_penalty_wt",
-            d_slender_penalty_wt);
-      d_precut_penalty_wt = input_db->getDoubleWithDefault("precut_penalty_wt",
-            d_precut_penalty_wt);
+      d_balance_penalty_wt =
+         input_db->getDoubleWithDefault("balance_penalty_wt", 1.0);
+      d_surface_penalty_wt =
+         input_db->getDoubleWithDefault("surface_penalty_wt", 1.0);
+      d_slender_penalty_wt =
+         input_db->getDoubleWithDefault("slender_penalty_wt", 1.0);
+      d_precut_penalty_wt =
+         input_db->getDoubleWithDefault("precut_penalty_wt", 1.0);
 
    }
 }

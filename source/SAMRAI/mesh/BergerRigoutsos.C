@@ -98,29 +98,21 @@ BergerRigoutsos::getFromInput(
             d_dim.getValue());
       }
       d_max_lap_cut_from_center =
-         input_db->getDoubleWithDefault("DEV_max_lap_cut_from_center",
-            d_max_lap_cut_from_center);
+         input_db->getDoubleWithDefault("DEV_max_lap_cut_from_center", 1.0);
       d_laplace_cut_threshold_ar =
-         input_db->getDoubleWithDefault("DEV_laplace_cut_threshold_ar",
-            d_laplace_cut_threshold_ar);
+         input_db->getDoubleWithDefault("DEV_laplace_cut_threshold_ar", 0.0);
       d_log_node_history =
-         input_db->getBoolWithDefault("DEV_log_node_history",
-            d_log_node_history);
+         input_db->getBoolWithDefault("DEV_log_node_history", false);
       d_log_cluster_summary =
-         input_db->getBoolWithDefault("DEV_log_cluster_summary",
-            d_log_cluster_summary);
+         input_db->getBoolWithDefault("DEV_log_cluster_summary", false);
       d_log_cluster =
-         input_db->getBoolWithDefault("DEV_log_cluster",
-            d_log_cluster);
+         input_db->getBoolWithDefault("DEV_log_cluster", false);
       d_algo_advance_mode =
-         input_db->getStringWithDefault("DEV_algo_advance_mode",
-            d_algo_advance_mode);
+         input_db->getStringWithDefault("DEV_algo_advance_mode", "ADVANCE_SOME");
       d_owner_mode =
-         input_db->getStringWithDefault("DEV_owner_mode",
-            d_owner_mode);
+         input_db->getStringWithDefault("DEV_owner_mode", "MOST_OVERLAP");
       d_sort_output_nodes =
-         input_db->getBoolWithDefault("sort_output_nodes",
-            d_sort_output_nodes);
+         input_db->getBoolWithDefault("sort_output_nodes", false);
 
       std::string tmp_str;
 
@@ -135,11 +127,9 @@ BergerRigoutsos::getFromInput(
       }
 
       d_barrier_before =
-         input_db->getBoolWithDefault("DEV_barrier_before",
-            d_barrier_before);
+         input_db->getBoolWithDefault("DEV_barrier_before", false);
       d_barrier_after =
-         input_db->getBoolWithDefault("DEV_barrier_after",
-            d_barrier_after);
+         input_db->getBoolWithDefault("DEV_barrier_after", false);
    }
 }
 

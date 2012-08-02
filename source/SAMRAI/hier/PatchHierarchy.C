@@ -148,7 +148,7 @@ PatchHierarchy::getFromInput(
        */
 
       d_max_levels =
-         input_db->getIntegerWithDefault("max_levels", d_max_levels);
+         input_db->getIntegerWithDefault("max_levels", 1);
 
       if (d_max_levels != int(d_ratio_to_coarser.size())) {
          d_ratio_to_coarser.resize(d_max_levels, d_ratio_to_coarser.back());
@@ -237,13 +237,10 @@ PatchHierarchy::getFromInput(
       }
 
       d_allow_patches_smaller_than_ghostwidth =
-         input_db->getBoolWithDefault("allow_patches_smaller_than_ghostwidth",
-            d_allow_patches_smaller_than_ghostwidth);
+         input_db->getBoolWithDefault("allow_patches_smaller_than_ghostwidth", false);
 
       d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps =
-         input_db->getBoolWithDefault(
-            "allow_patches_smaller_than_minimum_size_to_prevent_overlaps",
-            d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps);
+         input_db->getBoolWithDefault("allow_patches_smaller_than_minimum_size_to_prevent_overlaps", false);
       if (d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps) {
          TBOX_WARNING(
             d_object_name << ":  "

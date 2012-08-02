@@ -588,20 +588,8 @@ CartesianGridGeometry::getFromInput(
       double x_lo[SAMRAI::MAX_DIM_VAL],
              x_up[SAMRAI::MAX_DIM_VAL];
 
-      if (input_db->keyExists("x_lo")) {
-         input_db->getDoubleArray("x_lo", x_lo, dim.getValue());
-      } else {
-         TBOX_ERROR("CartesianGridGeometry::getFromInput() error...\n"
-            << "    geometry object with name = " << getObjectName()
-            << "\n    Key data `x_lo' not found in input." << std::endl);
-      }
-      if (input_db->keyExists("x_up")) {
-         input_db->getDoubleArray("x_up", x_up, dim.getValue());
-      } else {
-         TBOX_ERROR("CartesianGridGeometry::getFromInput() error...\n"
-            << "    geometry object with name = " << getObjectName()
-            << "\n   Key data `x_up' not found in input." << std::endl);
-      }
+      input_db->getDoubleArray("x_lo", x_lo, dim.getValue());
+      input_db->getDoubleArray("x_up", x_up, dim.getValue());
 
       setGeometryData(x_lo, x_up, getPhysicalDomain());
 

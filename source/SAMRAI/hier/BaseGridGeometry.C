@@ -626,14 +626,7 @@ BaseGridGeometry::getFromRestart()
    for (int b = 0; b < d_number_blocks; b++) {
       domain_name = "domain_boxes_" + tbox::Utilities::intToString(b);
       BoxContainer block_domain_boxes;
-      if (db->keyExists(domain_name)) {
-         block_domain_boxes = db->getDatabaseBoxArray(domain_name);
-      } else {
-         TBOX_ERROR(
-            getObjectName() << ":  "
-                            << "No '" << domain_name << "' restart data found for "
-                            << "Block " << b << " physical domain. ");
-      }
+      block_domain_boxes = db->getDatabaseBoxArray(domain_name);
 
       for (BoxContainer::iterator itr = block_domain_boxes.begin();
            itr != block_domain_boxes.end(); ++itr) {

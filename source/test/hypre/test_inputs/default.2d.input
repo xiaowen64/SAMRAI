@@ -78,7 +78,6 @@ TreeLoadBalancer {
 PatchHierarchy {
    max_levels = 1
    proper_nesting_buffer = 2, 2, 2, 2, 2, 2
-   // load_balance = FALSE
    largest_patch_size {
       // level_0 = 8, 8
       level_0 = -1, -1
@@ -105,14 +104,10 @@ PatchHierarchy {
 
 GriddingAlgorithm {
    enforce_proper_nesting = TRUE
-   extend_to_domain_boundary = FALSE
-   // load_balance = FALSE
+   DEV_extend_to_domain_boundary = FALSE
+   // DEV_load_balance = FALSE
    efficiency_tolerance = 0.70
    combine_efficiency = 0.95
-   // write_regrid_boxes = TRUE
-   // read_regrid_boxes = TRUE
-   // regrid_boxes_filename = "grid"
    check_nonrefined_tags = "IGNORE"
-   extend_tags_to_bdry = TRUE
    sequentialize_patch_indices = TRUE
 }

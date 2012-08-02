@@ -147,48 +147,40 @@ KINSOL_SAMRAIContext::getFromInput(
       }
 
       d_residual_stop_tolerance =
-         input_db->getDoubleWithDefault("residual_stop_tolerance",
-            d_residual_stop_tolerance);
+         input_db->getDoubleWithDefault("residual_stop_tolerance", -1.0);
       d_KINSOL_solver->setResidualStoppingTolerance(d_residual_stop_tolerance);
 
       d_max_nonlinear_iterations =
-         input_db->getIntegerWithDefault("max_nonlinear_iterations",
-            d_max_nonlinear_iterations);
+         input_db->getIntegerWithDefault("max_nonlinear_iterations", 200);
       d_KINSOL_solver->setMaxIterations(d_max_nonlinear_iterations);
 
       d_max_krylov_dimension =
-         input_db->getIntegerWithDefault("max_krylov_dimension",
-            d_max_krylov_dimension);
+         input_db->getIntegerWithDefault("max_krylov_dimension", 10);
       d_KINSOL_solver->setMaxKrylovDimension(d_max_krylov_dimension);
 
       d_global_newton_strategy =
-         input_db->getIntegerWithDefault("global_newton_strategy",
-            d_global_newton_strategy);
+         input_db->getIntegerWithDefault("global_newton_strategy", 0);
       d_KINSOL_solver->setGlobalStrategy(d_global_newton_strategy);
 
       d_max_newton_step =
-         input_db->getDoubleWithDefault("max_newton_step", d_max_newton_step);
+         input_db->getDoubleWithDefault("max_newton_step", -1.0);
       d_KINSOL_solver->setMaxNewtonStep(d_max_newton_step);
 
       d_nonlinear_step_tolerance =
-         input_db->getDoubleWithDefault("nonlinear_step_tolerance",
-            d_nonlinear_step_tolerance);
+         input_db->getDoubleWithDefault("nonlinear_step_tolerance", -1.0);
       d_KINSOL_solver->setNonlinearStepTolerance(d_nonlinear_step_tolerance);
 
       d_relative_function_error =
-         input_db->getDoubleWithDefault("relative_function_error",
-            d_relative_function_error);
+         input_db->getDoubleWithDefault("relative_function_error", -1.0);
       d_KINSOL_solver->setRelativeFunctionError(d_relative_function_error);
 
       d_linear_convergence_test =
-         input_db->getIntegerWithDefault("linear_convergence_test",
-            d_linear_convergence_test);
+         input_db->getIntegerWithDefault("linear_convergence_test", 3);
       d_KINSOL_solver->setLinearSolverConvergenceTest(
          d_linear_convergence_test);
 
       d_max_subsetup_calls =
-         input_db->getIntegerWithDefault("max_subsetup_calls",
-            d_max_subsetup_calls);
+         input_db->getIntegerWithDefault("max_subsetup_calls", 5);
       d_KINSOL_solver->setMaxSubSetupCalls(d_max_subsetup_calls);
 
       if (input_db->keyExists("residual_monitoring_params")) {
@@ -200,12 +192,11 @@ KINSOL_SAMRAIContext::getFromInput(
       }
 
       d_residual_monitoring_constant =
-         input_db->getDoubleWithDefault("residual_monitoring_constant",
-            d_residual_monitoring_constant);
+         input_db->getDoubleWithDefault("residual_monitoring_constant", 0.0);
       d_KINSOL_solver->setResidualMonitoringConstant(
          d_residual_monitoring_constant);
 
-      d_no_min_eps = input_db->getBoolWithDefault("no_min_eps", d_no_min_eps);
+      d_no_min_eps = input_db->getBoolWithDefault("no_min_eps", false);
       d_KINSOL_solver->setNoMinEps(d_no_min_eps);
 
       if (input_db->keyExists("eisenstat_walker_params")) {
@@ -217,40 +208,33 @@ KINSOL_SAMRAIContext::getFromInput(
       }
 
       d_linear_solver_constant_tolerance =
-         input_db->getDoubleWithDefault("linear_solver_constant_tolerance",
-            d_linear_solver_constant_tolerance);
+         input_db->getDoubleWithDefault("linear_solver_constant_tolerance", 0.1);
       d_KINSOL_solver->setLinearSolverConstantTolerance(
          d_linear_solver_constant_tolerance);
 
       d_max_solves_no_precond_setup =
-         input_db->getIntegerWithDefault("max_solves_no_precond_setup",
-            d_max_solves_no_precond_setup);
+         input_db->getIntegerWithDefault("max_solves_no_precond_setup", 10);
       d_KINSOL_solver->setMaxStepsWithNoPrecondSetup(
          d_max_solves_no_precond_setup);
 
       d_max_linear_solve_restarts =
-         input_db->getIntegerWithDefault("max_linear_solve_restarts",
-            d_max_linear_solve_restarts);
+         input_db->getIntegerWithDefault("max_linear_solve_restarts", 0);
       d_KINSOL_solver->setMaxLinearSolveRestarts(d_max_linear_solve_restarts);
 
       d_KINSOL_log_filename =
-         input_db->getStringWithDefault("KINSOL_log_filename",
-            d_KINSOL_log_filename);
+         input_db->getStringWithDefault("KINSOL_log_filename", "");
       d_KINSOL_print_flag =
-         input_db->getIntegerWithDefault("KINSOL_print_flag",
-            d_KINSOL_print_flag);
+         input_db->getIntegerWithDefault("KINSOL_print_flag", 0);
       d_KINSOL_solver->setLogFileData(d_KINSOL_log_filename,
          d_KINSOL_print_flag);
 
       d_uses_preconditioner =
-         input_db->getBoolWithDefault("uses_preconditioner",
-            d_uses_preconditioner);
+         input_db->getBoolWithDefault("uses_preconditioner", false);
       d_KINSOL_solver->setPreconditioner(
          (d_uses_preconditioner == false) ? 0 : 1);
 
       d_uses_jac_times_vector =
-         input_db->getBoolWithDefault("uses_jac_times_vector",
-            d_uses_jac_times_vector);
+         input_db->getBoolWithDefault("uses_jac_times_vector", false);
       d_KINSOL_solver->setJacobianTimesVector(
          (d_uses_jac_times_vector == false) ? 0 : 1);
    }

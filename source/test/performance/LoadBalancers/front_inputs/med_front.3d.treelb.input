@@ -134,10 +134,6 @@ PatchHierarchy {
    */
    max_levels = 3
 
-   enforce_proper_nesting = FALSE
-   extend_to_domain_boundary = FALSE
-   check_nonrefined_tags = "IGNORE"
-   // load_balance = FALSE
    largest_patch_size {
       level_0 = -1,-1,-1
       // level_0 = 20,20,20

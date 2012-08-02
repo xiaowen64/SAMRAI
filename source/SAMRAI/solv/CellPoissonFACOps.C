@@ -704,15 +704,13 @@ CellPoissonFACOps::getFromInput(
             d_coarse_solver_max_iterations);
 
       d_cf_discretization =
-         input_db->getStringWithDefault("cf_discretization",
-            d_cf_discretization);
+         input_db->getStringWithDefault("cf_discretization", "Ewing");
 
       d_prolongation_method =
          input_db->getStringWithDefault("prolongation_method",
-            d_prolongation_method);
+            "CONSTANT_REFINE");
 
-      d_enable_logging =
-         input_db->getBoolWithDefault("enable_logging", d_enable_logging);
+      d_enable_logging = input_db->getBoolWithDefault("enable_logging", false);
    }
 }
 

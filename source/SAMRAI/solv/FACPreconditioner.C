@@ -42,7 +42,7 @@ FACPreconditioner::FACPreconditioner(
    d_finest_ln(0),
    d_max_iterations(10),
    d_residual_tolerance(1.0e-6),
-   d_relative_residual_tolerance(-1),
+   d_relative_residual_tolerance(-1.0),
    d_presmoothing_sweeps(1),
    d_postsmoothing_sweeps(1),
    d_algorithm_choice("default"),
@@ -88,19 +88,15 @@ FACPreconditioner::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db)
 {
    if (input_db) {
-      d_max_iterations =
-         input_db->getIntegerWithDefault("max_cycles", d_max_iterations);
+      d_max_iterations = input_db->getIntegerWithDefault("max_cycles", 10);
       d_residual_tolerance =
-         input_db->getDoubleWithDefault("residual_tol", d_residual_tolerance);
+         input_db->getDoubleWithDefault("residual_tol", 1.0e-6);
       d_relative_residual_tolerance =
-         input_db->getDoubleWithDefault("relative_residual_tol",
-            d_relative_residual_tolerance);
+         input_db->getDoubleWithDefault("relative_residual_tol", -1.0);
       d_presmoothing_sweeps =
-         input_db->getIntegerWithDefault("num_pre_sweeps",
-            d_presmoothing_sweeps);
+         input_db->getIntegerWithDefault("num_pre_sweeps", 1);
       d_postsmoothing_sweeps =
-         input_db->getIntegerWithDefault("num_post_sweeps",
-            d_postsmoothing_sweeps);
+         input_db->getIntegerWithDefault("num_post_sweeps", 1);
    }
 }
 

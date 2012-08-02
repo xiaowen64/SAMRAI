@@ -250,7 +250,7 @@ HyperbolicLevelIntegrator {
    cfl_init                 = 0.1e0    // initial cfl factor
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
-   distinguish_mpi_reduction_costs = TRUE
+   DEV_distinguish_mpi_reduction_costs = TRUE
 }
 
 TimeRefinementIntegrator {

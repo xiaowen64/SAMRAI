@@ -278,33 +278,18 @@ ImplicitIntegrator::getFromInput(
 
    if (!is_from_restart) {
 
-      if (input_db->keyExists("initial_time")) {
-         d_initial_time = input_db->getDouble("initial_time");
-      } else {
-         TBOX_ERROR(d_object_name << " -- Key data `initial_time'"
-                                  << " missing in input.");
+      d_initial_time = input_db->getDouble("initial_time");
+
+      d_final_time = input_db->getDouble("final_time");
+      if (d_final_time < d_initial_time) {
+         TBOX_ERROR(d_object_name << " -- Error in input data "
+                                  << "final_time < initial_time.");
       }
 
-      if (input_db->keyExists("final_time")) {
-         d_final_time = input_db->getDouble("final_time");
-         if (d_final_time < d_initial_time) {
-            TBOX_ERROR(d_object_name << " -- Error in input data "
-                                     << "final_time < initial_time.");
-         }
-      } else {
-         TBOX_ERROR(d_object_name << " -- Key data `final_time'"
-                                  << " missing in input.");
-      }
-
-      if (input_db->keyExists("max_integrator_steps")) {
-         d_max_integrator_steps = input_db->getInteger("max_integrator_steps");
-         if (d_max_integrator_steps < 0) {
-            TBOX_ERROR(d_object_name << " -- Error in input data "
-                                     << "max_integrator_steps < 0.");
-         }
-      } else {
-         TBOX_ERROR(d_object_name << " -- Key data `max_integrator_steps'"
-                                  << " missing in input.");
+      d_max_integrator_steps = input_db->getInteger("max_integrator_steps");
+      if (d_max_integrator_steps < 0) {
+         TBOX_ERROR(d_object_name << " -- Error in input data "
+                                  << "max_integrator_steps < 0.");
       }
 
    } else if (input_db) {
@@ -312,27 +297,23 @@ ImplicitIntegrator::getFromInput(
          input_db->getBoolWithDefault("read_on_restart", false);
 
       if (read_on_restart) {
-         if (input_db->keyExists("final_time")) {
-            d_final_time = input_db->getDouble("final_time");
-            if (d_final_time < d_initial_time) {
-               TBOX_ERROR(d_object_name << " -- Error in input data "
-                                        << "final_time < initial_time.");
-            }
+         d_final_time =
+            input_db->getDoubleWithDefault("final_time", d_final_time);
+         if (d_final_time < d_initial_time) {
+            TBOX_ERROR(d_object_name << " -- Error in input data "
+                                     << "final_time < initial_time.");
          }
 
-         if (input_db->keyExists("max_integrator_steps")) {
-            d_max_integrator_steps = input_db->getInteger(
-               "max_integrator_steps");
-            if (d_max_integrator_steps < 0) {
-               TBOX_ERROR(d_object_name << " -- Error in input data "
-                                        << "max_integrator_steps < 0.");
-            } else {
-               if (d_max_integrator_steps < d_integrator_step) {
-                  TBOX_ERROR(
-                     d_object_name << " -- Error in input data "
-                                   << "max_integrator_steps < current integrator step.");
-               }
-            }
+         d_max_integrator_steps =
+            input_db->getIntegerWithDefault("max_integrator_steps",
+               d_max_integrator_steps);
+         if (d_max_integrator_steps < 0) {
+            TBOX_ERROR(d_object_name << " -- Error in input data "
+                                     << "max_integrator_steps < 0.");
+         } else if (d_max_integrator_steps < d_integrator_step) {
+            TBOX_ERROR(
+               d_object_name << " -- Error in input data "
+                             << "max_integrator_steps < current integrator step.");
          }
       }
    }

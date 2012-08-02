@@ -151,8 +151,7 @@ CellPoissonFACSolver::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db)
 {
    if (input_db) {
-      d_enable_logging =
-        input_db->getBoolWithDefault("enable_logging", d_enable_logging);
+      d_enable_logging = input_db->getBoolWithDefault("enable_logging", false);
    }
 }
 

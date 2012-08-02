@@ -204,8 +204,7 @@ CoarsenSchedule::getFromInput()
       if (idb && idb->isDatabase("CoarsenSchedule")) {
          boost::shared_ptr<tbox::Database> csdb(
             idb->getDatabase("CoarsenSchedule"));
-         s_extra_debug =
-            csdb->getBoolWithDefault("DEV_extra_debug", s_extra_debug);
+         s_extra_debug = csdb->getBoolWithDefault("DEV_extra_debug", false);
       }
    }
 }

@@ -140,12 +140,10 @@ PatchHierarchy {
 
 GriddingAlgorithm {
    enforce_proper_nesting = TRUE
-   extend_to_domain_boundary = FALSE
-   // load_balance = FALSE
+   DEV_extend_to_domain_boundary = FALSE
+   // DEV_load_balance = FALSE
    efficiency_tolerance = 0.75
    combine_efficiency = 0.80
-   sort_boxes_after_globalizing = FALSE
-   extend_tags_to_bdry = TRUE
 }
 
 HyperbolicLevelIntegrator {

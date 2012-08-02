@@ -98,18 +98,13 @@ PatchHierarchy {
 
 GriddingAlgorithm {
    enforce_proper_nesting = TRUE
-   extend_to_domain_boundary = FALSE
-   // load_balance = FALSE
+   DEV_extend_to_domain_boundary = FALSE
+   // DEV_load_balance = FALSE
    efficiency_tolerance = 0.80
    combine_efficiency = 0.75
-   // write_regrid_boxes = TRUE
-   // read_regrid_boxes = TRUE
-   // regrid_boxes_filename = "grid"
    check_nonrefined_tags = "ERROR"
    check_overlapping_patches = "ERROR"
-   extend_tags_to_bdry = TRUE
    sequentialize_patch_indices = TRUE
-   coalesce_boxes = FALSE
 }
 
 
