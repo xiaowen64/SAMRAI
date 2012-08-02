@@ -40,6 +40,8 @@
 #include "SAMRAI/tbox/TimerManager.h"
 #include <vector>
 
+#include <cmath>
+
 #include "DerivedVisOwnerData.h"
 #include "SinusoidalFrontTagger.h"
 

@@ -55,6 +55,8 @@
 #include <cstring>
 #include <stdlib.h>
 
+#include <cmath>
+
 using namespace SAMRAI;
 
 AdaptivePoisson::AdaptivePoisson(

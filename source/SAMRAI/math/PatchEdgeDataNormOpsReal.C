@@ -17,6 +17,8 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/pdat/EdgeGeometry.h"
 
+#include <cmath>
+
 namespace SAMRAI {
 namespace math {
 

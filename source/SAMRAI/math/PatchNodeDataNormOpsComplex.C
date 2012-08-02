@@ -14,6 +14,8 @@
 #include "SAMRAI/math/PatchNodeDataNormOpsComplex.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
 
+#include <cmath>
+
 namespace SAMRAI {
 namespace math {
 

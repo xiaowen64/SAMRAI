@@ -23,6 +23,8 @@
 
 #include <iomanip>
 
+#include <cmath>
+
 using namespace SAMRAI;
 
 

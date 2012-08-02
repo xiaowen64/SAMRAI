@@ -18,6 +18,8 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
+#include <cmath>
+
 #define POLY3(i, j, k, imin, jmin, kmin, nx, nxny) \
    ((i - imin) + (j - jmin) * (nx) + (k - kmin) * (nxny))
 

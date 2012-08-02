@@ -15,6 +15,8 @@
 
 #include "SAMRAI/tbox/MathUtilities.h"
 
+#include <cmath>
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings

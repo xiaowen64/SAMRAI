@@ -38,6 +38,8 @@
 #include <vector>
 #include <algorithm>
 
+#include <cmath>
+
 using namespace SAMRAI;
 using namespace tbox;
 

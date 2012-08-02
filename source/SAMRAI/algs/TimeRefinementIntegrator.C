@@ -24,6 +24,8 @@
 #include <cstdlib>
 #include <fstream>
 
+#include <cmath>
+
 // #define DEBUG_TIMES
 
 namespace SAMRAI {

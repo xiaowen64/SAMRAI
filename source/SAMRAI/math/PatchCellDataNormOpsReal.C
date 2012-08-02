@@ -14,6 +14,8 @@
 #include "SAMRAI/math/PatchCellDataNormOpsReal.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <cmath>
+
 namespace SAMRAI {
 namespace math {
 

@@ -49,6 +49,8 @@
 
 #include "boost/shared_ptr.hpp"
 
+#include <cmath>
+
 // using namespace std;
 using namespace SAMRAI;
 

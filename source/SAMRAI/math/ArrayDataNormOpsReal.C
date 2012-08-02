@@ -15,6 +15,8 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <cmath>
+
 namespace SAMRAI {
 namespace math {
 

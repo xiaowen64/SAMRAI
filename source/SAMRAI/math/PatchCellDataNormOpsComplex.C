@@ -13,6 +13,8 @@
 
 #include "SAMRAI/math/PatchCellDataNormOpsComplex.h"
 
+#include <cmath>
+
 namespace SAMRAI {
 namespace math {
 

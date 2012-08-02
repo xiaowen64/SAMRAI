@@ -15,6 +15,8 @@
 #include "SAMRAI/pdat/FaceGeometry.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
+#include <cmath>
+
 namespace SAMRAI {
 namespace math {
 
