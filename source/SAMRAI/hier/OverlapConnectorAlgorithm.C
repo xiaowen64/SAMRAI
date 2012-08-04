@@ -47,7 +47,7 @@ boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_share;
 boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_receive_and_unpack;
 boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_MPI_wait;
 
-char OverlapConnectorAlgorithm::s_print_steps = 'y';
+char OverlapConnectorAlgorithm::s_print_steps = '\0';
 
 int OverlapConnectorAlgorithm::s_operation_mpi_tag = 0;
 /*
