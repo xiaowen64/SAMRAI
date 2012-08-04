@@ -185,13 +185,6 @@ int main(
       tbox::plog << "Running on " << mpi.getSize()
                  << " processes.\n";
 
-      /*
-       * Choose which BR implementation to use.
-       */
-      char which_br = 'o';
-      which_br = main_db->getCharWithDefault("which_br", which_br);
-      tbox::plog << "which_br is " << which_br << std::endl;
-
       int ln;
 
       int plot_step = main_db->getIntegerWithDefault("plot_step", 0);

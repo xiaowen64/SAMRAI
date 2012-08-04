@@ -4264,8 +4264,7 @@ GriddingAlgorithm::getGriddingParameters(
 
    /*
     * Following if-check prevents changing a negative largest_patch
-    * bacause TreeLoadBalancer interprets the non-negative value as
-    * dissabling the upper limit on patch size.
+    * because a negative value dissables the upper limit on patch size.
     */
    if (largest_patch > hier::IntVector::getZero(dim)) {
       largest_patch.max(smallest_patch);
