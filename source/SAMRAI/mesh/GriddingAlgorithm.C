@@ -2632,6 +2632,10 @@ GriddingAlgorithm::readLevelBoxes(
             fine_level_number,
             false);
       }
+      const hier::IntVector smallest_patch_in_tag_space =
+         hier::IntVector::ceilingDivide(smallest_patch, ratio);
+      const hier::IntVector largest_patch_in_tag_space =
+         largest_patch / ratio;
 
       hier::IntVector patch_cut_factor(dim, 1);
 
@@ -2644,8 +2648,8 @@ GriddingAlgorithm::readLevelBoxes(
          tag_ln,
          hier::Connector(dim),
          hier::Connector(dim),
-         smallest_patch,
-         largest_patch,
+         smallest_patch_in_tag_space,
+         largest_patch_in_tag_space,
          d_hierarchy->getDomainBoxLevel(),
          extend_ghosts,
          patch_cut_factor);
