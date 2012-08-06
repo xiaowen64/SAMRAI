@@ -105,10 +105,10 @@ TreeLoadBalancer {
   DEV_report_load_balance = FALSE // Reported in main
   n_root_cycles = -1
   min_load_fraction_per_box = 0.03
-  balance_penalty_wt = 1.0
-  surface_penalty_wt = 1.0
-  slender_penalty_wt = 1.0
-  precut_penalty_wt = 1.0
+  DEV_balance_penalty_wt = 1.0
+  DEV_surface_penalty_wt = 1.0
+  DEV_slender_penalty_wt = 1.0
+  DEV_precut_penalty_wt = 1.0
 
   // Debugging options
   DEV_check_map = FALSE

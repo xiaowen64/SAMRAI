@@ -696,19 +696,53 @@ CellPoissonFACOps::getFromInput(
       d_coarse_solver_choice =
          input_db->getStringWithDefault("coarse_solver_choice",
             d_coarse_solver_choice);
+      if (d_coarse_solver_choice != "hypre" &&
+          d_coarse_solver_choice != "redblack" &&
+          d_coarse_solver_choice != "jacobi") {
+         TBOX_ERROR("CellPoissonFACOps::getFromInput error..."
+            << "\n   coarse_solver_choice must be"
+            << "\n    \"hypre\", \"redblack\", or \"jacobi\"." << std::endl);
+      }
+
       d_coarse_solver_tolerance =
          input_db->getDoubleWithDefault("coarse_solver_tolerance",
             d_coarse_solver_tolerance);
+      if (d_coarse_solver_tolerance <= 0) {
+         TBOX_ERROR("CellPoissonFACOps::getFromInput error..."
+            << "\n   coarse_solver_tolerance must be > 0." << std::endl);
+      }
+
       d_coarse_solver_max_iterations =
          input_db->getIntegerWithDefault("coarse_solver_max_iterations",
             d_coarse_solver_max_iterations);
+      if (d_coarse_solver_max_iterations <= 0) {
+         TBOX_ERROR("CellPoissonFACOps::getFromInput error..."
+            << "\n   coarse_solver_max_iterations must be > 0." << std::endl);
+      }
 
       d_cf_discretization =
          input_db->getStringWithDefault("cf_discretization", "Ewing");
+      if (d_cf_discretization != "Ewing" &&
+          d_cf_discretization != "CONSTANT_REFINE" &&
+          d_cf_discretization != "LINEAR_REFINE" &&
+          d_cf_discretization != "CONSERVATIVE_LINEAR_REFINE") {
+         TBOX_ERROR("CellPoissonFACOps::getFromInput error..."
+            << "\n   cf_discretization must be"
+            << "\n   \"Ewing\", \"CONSTANT_REFINE\", \"LINEAR_REFINE\","
+            << "\n   or \"CONSERVATIVE_LINEAR_REFINE\"." << std::endl);
+      }
 
       d_prolongation_method =
          input_db->getStringWithDefault("prolongation_method",
             "CONSTANT_REFINE");
+      if (d_prolongation_method != "CONSTANT_REFINE" &&
+          d_prolongation_method != "LINEAR_REFINE" &&
+          d_prolongation_method != "CONSERVATIVE_LINEAR_REFINE") {
+         TBOX_ERROR("CellPoissonFACOps::getFromInput error..."
+            << "\n   prolongation_method must be"
+            << "\n   \"CONSTANT_REFINE\", \"LINEAR_REFINE\","
+            << "\n   or \"CONSERVATIVE_LINEAR_REFINE\"." << std::endl);
+      }
 
       d_enable_logging = input_db->getBoolWithDefault("enable_logging", false);
    }

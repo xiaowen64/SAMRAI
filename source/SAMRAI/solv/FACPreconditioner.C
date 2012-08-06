@@ -89,14 +89,39 @@ FACPreconditioner::getFromInput(
 {
    if (input_db) {
       d_max_iterations = input_db->getIntegerWithDefault("max_cycles", 10);
+      if (d_max_iterations <= 0) {
+         TBOX_ERROR("FACPreconditioner::getFromInput error..."
+            << "\n   max_cycles must be > 0." << std::endl);
+      }
+
       d_residual_tolerance =
          input_db->getDoubleWithDefault("residual_tol", 1.0e-6);
+      if (d_residual_tolerance <= 0.0) {
+         TBOX_ERROR("FACPreconditioner::getFromInput error..."
+            << "\n   residual_tol must be > 0." << std::endl);
+      }
+
       d_relative_residual_tolerance =
          input_db->getDoubleWithDefault("relative_residual_tol", -1.0);
+      if (d_relative_residual_tolerance <= 0.0 &&
+          d_relative_residual_tolerance != -1) {
+         TBOX_ERROR("FACPreconditioner::getFromInput error..."
+            << "\n   relative_residual_tol must be > 0." << std::endl);
+      }
+
       d_presmoothing_sweeps =
          input_db->getIntegerWithDefault("num_pre_sweeps", 1);
+      if (d_presmoothing_sweeps < 0) {
+         TBOX_ERROR("FACPreconditioner::getFromInput error..."
+            << "\n   num_pre_sweeps must be >= 0." << std::endl);
+      }
+
       d_postsmoothing_sweeps =
          input_db->getIntegerWithDefault("num_post_sweeps", 1);
+      if (d_postsmoothing_sweeps < 0) {
+         TBOX_ERROR("FACPreconditioner::getFromInput error..."
+            << "\n   num_post_sweeps must be >= 0." << std::endl);
+      }
    }
 }
 

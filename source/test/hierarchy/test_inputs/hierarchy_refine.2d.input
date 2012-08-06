@@ -79,8 +79,8 @@ TreeLoadBalancer {
   DEV_barrier_before = FALSE
   DEV_barrier_after = FALSE
   n_root_cycles = 1
-  balance_penalty_wt = 1.0
-  surface_penalty_wt = 1.0
+  DEV_balance_penalty_wt = 1.0
+  DEV_surface_penalty_wt = 1.0
 
   // Debugging options
   DEV_check_map = FALSE

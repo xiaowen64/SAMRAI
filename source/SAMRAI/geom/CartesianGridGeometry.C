@@ -591,13 +591,22 @@ CartesianGridGeometry::getFromInput(
       input_db->getDoubleArray("x_lo", x_lo, dim.getValue());
       input_db->getDoubleArray("x_up", x_up, dim.getValue());
 
+      for (int i = 0; i < dim.getValue(); ++i) {
+         if (x_lo[i] >= x_up[i]) {
+            TBOX_ERROR("CartesianGridGeometry::getFromInput error...\n"
+		       << "each x_lo value must be < corresponding x_up value."
+                       << std::endl);
+         }
+      }
+
       setGeometryData(x_lo, x_up, getPhysicalDomain());
 
    }
    else if (input_db) {
       bool read_on_restart =
          input_db->getBoolWithDefault("read_on_restart", false);
-      if (read_on_restart) {
+      int num_keys = input_db->getAllKeys().getSize();
+      if (num_keys > 0 && read_on_restart) {
          TBOX_WARNING(
             "CartesianGridGeometry::getFromInput() warning...\n"
             << "You want to override restart data with values from\n"

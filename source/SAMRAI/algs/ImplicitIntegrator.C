@@ -297,6 +297,14 @@ ImplicitIntegrator::getFromInput(
          input_db->getBoolWithDefault("read_on_restart", false);
 
       if (read_on_restart) {
+         if (input_db->keyExists("initial_time")) {
+            double tmp = input_db->getDouble("initial_time");
+            if (tmp != d_initial_time) {
+               TBOX_WARNING("ImplicitIntegrator::getFromInput warning...\n"
+                  << "initial_time may not be changed on restart." << std::endl);
+            }
+         }
+
          d_final_time =
             input_db->getDoubleWithDefault("final_time", d_final_time);
          if (d_final_time < d_initial_time) {

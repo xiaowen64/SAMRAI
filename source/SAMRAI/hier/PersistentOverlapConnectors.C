@@ -56,6 +56,7 @@ PersistentOverlapConnectors::getFromInput()
 {
    if (s_check_created_connectors == '\0') {
       s_check_created_connectors = 'n';
+      s_check_accessed_connectors = 'n';
       if (tbox::InputManager::inputDatabaseExists()) {
          boost::shared_ptr<tbox::Database> input_db(
             tbox::InputManager::getInputDatabase());

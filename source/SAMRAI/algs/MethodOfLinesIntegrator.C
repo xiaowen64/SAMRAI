@@ -696,59 +696,33 @@ MethodOfLinesIntegrator::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart)
 {
-   if (!is_from_restart && !input_db) {
-      TBOX_ERROR(": MethodOfLinesIntegrator::getFromInput()\n"
-         << "no input database supplied" << std::endl);
-   }
+   if (input_db) {
 
-   if (!is_from_restart) {
-
-      if (input_db->keyExists("alpha_1")) {
-         d_alpha_1 = input_db->getDoubleArray("alpha_1");
-      } else {
-         TBOX_WARNING(
-            d_object_name << ":  "
-                          << "Key data `alpha_1' not found in input.  "
-                          << "Using default values.  See class header.");
-      }
-
-      if (input_db->keyExists("alpha_2")) {
-         d_alpha_2 = input_db->getDoubleArray("alpha_2");
-      } else {
-         TBOX_WARNING(
-            d_object_name << ":  "
-                          << "Key data `alpha_2' not found in input.  "
-                          << "Using default values.  See class header.");
-      }
-
-      if (input_db->keyExists("beta")) {
-         d_beta = input_db->getDoubleArray("beta");
-      } else {
-         TBOX_WARNING(
-            d_object_name << ":  "
-                          << "Key data `beta' not found in input.  "
-                          << "Using default values.  See class header.");
-      }
-
-      if (d_alpha_1.getSize() != d_alpha_2.getSize() ||
-          d_alpha_2.getSize() != d_beta.getSize()) {
-         TBOX_ERROR(
-            d_object_name << ":  "
-                          << "The number of alpha_1, alpha_2, and beta values "
-                          << "specified in input is not consistent");
-      }
-
-      d_order = d_alpha_1.getSize();
-
-   }
-   else if (input_db) {
       bool read_on_restart =
          input_db->getBoolWithDefault("read_on_restart", false);
-      if (read_on_restart) {
-         TBOX_WARNING(
-            "MethodOfLinesIntegrator::getFromInput() warning...\n"
-            << "You want to override restart data with values from\n"
-            << "an input database which is not allowed." << std::endl);
+      if (!is_from_restart || read_on_restart) {
+
+         if (input_db->keyExists("alpha_1")) {
+            d_alpha_1 = input_db->getDoubleArray("alpha_1");
+         }
+
+         if (input_db->keyExists("alpha_2")) {
+            d_alpha_2 = input_db->getDoubleArray("alpha_2");
+         }
+
+         if (input_db->keyExists("beta")) {
+            d_beta = input_db->getDoubleArray("beta");
+         }
+
+         if (d_alpha_1.getSize() != d_alpha_2.getSize() ||
+             d_alpha_2.getSize() != d_beta.getSize()) {
+            TBOX_ERROR(
+               d_object_name << ":  "
+                             << "The number of alpha_1, alpha_2, and beta "
+                             << "values specified in input is not consistent");
+         }
+
+         d_order = d_alpha_1.getSize();
       }
    }
 }

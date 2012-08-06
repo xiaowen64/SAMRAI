@@ -80,15 +80,35 @@ LocationIndexRobinBcCoefs::getFromInput(
          if (specs[0] == "value") {
             d_a_map[i] = 1.0;
             d_b_map[i] = 0.0;
-            if (specs.size() > 1) d_g_map[i] = atof(specs[1].c_str());
+            if (specs.size() != 2) {
+               TBOX_ERROR("LocationIndexRobinBcCoefs::getFromInput error...\n"
+                  << "exactly 1 value needed with \"value\" boundary specifier"
+                  << std::endl);
+            }
+            else {
+               d_g_map[i] = atof(specs[1].c_str());
+            }
          } else if (specs[0] == "slope") {
             d_a_map[i] = 0.0;
             d_b_map[i] = 1.0;
-            if (specs.size() > 1) d_g_map[i] = atof(specs[1].c_str());
+            if (specs.size() != 2) {
+               TBOX_ERROR("LocationIndexRobinBcCoefs::getFromInput error...\n"
+                  << "exactly 1 value needed with \"slope\" boundary specifier"
+                  << std::endl);
+            }
+            else {
+               d_g_map[i] = atof(specs[1].c_str());
+            }
          } else if (specs[0] == "coefficients") {
-            if (specs.size() > 1) d_a_map[i] = atof(specs[1].c_str());
-            if (specs.size() > 2) d_b_map[i] = atof(specs[2].c_str());
-            if (specs.size() > 3) d_g_map[i] = atof(specs[3].c_str());
+            if (specs.size() != 3) {
+               TBOX_ERROR("LocationIndexRobinBcCoefs::getFromInput error...\n"
+                  << "exactly 2 values needed with \"coefficients\" boundary specifier"
+                  << std::endl);
+            }
+            else {
+               d_a_map[i] = atof(specs[1].c_str());
+               d_b_map[i] = atof(specs[2].c_str());
+            }
          } else {
             TBOX_ERROR(d_object_name << ": Bad boundary specifier\n"
                                      << "'" << specs[0] << "'.  Use either 'value'\n"

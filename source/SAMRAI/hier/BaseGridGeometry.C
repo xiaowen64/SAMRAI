@@ -733,6 +733,10 @@ BaseGridGeometry::getFromInput(
    if (!is_from_restart) {
 
       d_number_blocks = input_db->getIntegerWithDefault("num_blocks", 1);
+      if (d_number_blocks < 1) {
+         TBOX_ERROR("BaseGridGeometry::getFromInput error...\n"
+            << "num_blocks must be >= 1." << std::endl);
+      }
 
       std::string domain_name;
       BoxContainer domain;
@@ -793,7 +797,8 @@ BaseGridGeometry::getFromInput(
    else if (input_db) {
       bool read_on_restart =
          input_db->getBoolWithDefault("read_on_restart", false);
-      if (read_on_restart) {
+      int num_keys = input_db->getAllKeys().getSize();
+      if (num_keys > 0 && read_on_restart) {
          TBOX_WARNING(
             "BaseGridGeometry::getFromInput() warning...\n"
             << "You want to override restart data with values from\n"

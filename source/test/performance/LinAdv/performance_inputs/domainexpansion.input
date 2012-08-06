@@ -288,7 +288,7 @@ TreeLoadBalancer {
   DEV_print_swap_steps = FALSE
   DEV_print_break_steps = FALSE
   DEV_print_edge_steps = FALSE
-  slender_penalty_wt = 0.0
+  DEV_slender_penalty_wt = 0.0
   DEV_summarize_map = TRUE
 }
 

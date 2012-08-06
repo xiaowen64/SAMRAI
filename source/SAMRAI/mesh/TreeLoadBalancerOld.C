@@ -3521,13 +3521,13 @@ TreeLoadBalancerOld::getFromInput(
       d_n_root_cycles = input_db->getIntegerWithDefault("n_root_cycles", -1);
 
       d_balance_penalty_wt =
-         input_db->getDoubleWithDefault("balance_penalty_wt", 1.0);
+         input_db->getDoubleWithDefault("DEV_balance_penalty_wt", 1.0);
       d_surface_penalty_wt =
-         input_db->getDoubleWithDefault("surface_penalty_wt", 1.0);
+         input_db->getDoubleWithDefault("DEV_surface_penalty_wt", 1.0);
       d_slender_penalty_wt =
-         input_db->getDoubleWithDefault("slender_penalty_wt", 1.0);
+         input_db->getDoubleWithDefault("DEV_slender_penalty_wt", 1.0);
       d_precut_penalty_wt =
-         input_db->getDoubleWithDefault("precut_penalty_wt", 1.0);
+         input_db->getDoubleWithDefault("DEV_precut_penalty_wt", 1.0);
 
    }
 }

@@ -96,28 +96,52 @@ BergerRigoutsos::getFromInput(
          input_db->getIntegerArray("max_box_size",
             &d_max_box_size[0],
             d_dim.getValue());
+         for (int i = 0; i < d_dim.getValue(); ++i) {
+            if (d_max_box_size[i] <= 0) {
+               TBOX_ERROR("BergerRigoutsos::getFromInput error...\n"
+                  << "max_box_size must be > 0." << std::endl);
+            }
+         }
       }
+
       d_max_lap_cut_from_center =
          input_db->getDoubleWithDefault("DEV_max_lap_cut_from_center", 1.0);
       d_laplace_cut_threshold_ar =
          input_db->getDoubleWithDefault("DEV_laplace_cut_threshold_ar", 0.0);
       d_log_node_history =
+
          input_db->getBoolWithDefault("DEV_log_node_history", false);
       d_log_cluster_summary =
          input_db->getBoolWithDefault("DEV_log_cluster_summary", false);
       d_log_cluster =
          input_db->getBoolWithDefault("DEV_log_cluster", false);
+
       d_algo_advance_mode =
          input_db->getStringWithDefault("DEV_algo_advance_mode", "ADVANCE_SOME");
+      if (d_algo_advance_mode != "ADVANCE_SOME" &&
+          d_algo_advance_mode != "ADVANCE_ANY" &&
+          d_algo_advance_mode != "SYNCHRONOUS") {
+         TBOX_ERROR("BergerRigoutsos::getFromInput error...\n"
+            << "d_algo_advance_mode must be one of \"ADVANCE_SOME\",\n"
+            << "\"ADVANCE_ANY\", or \"SYNCHRONOUS\"." << std::endl);
+      }
+
       d_owner_mode =
          input_db->getStringWithDefault("DEV_owner_mode", "MOST_OVERLAP");
+      if (d_owner_mode != "SINGLE_OWNER" && d_owner_mode != "MOST_OVERLAP" &&
+          d_owner_mode != "FEWEST_OWNED" && d_owner_mode != "LEAST_ACTIVE") {
+         TBOX_ERROR("BergerRigoutsos::getFromInput error...\n"
+            << "d_owner must be one of \"SINGLE_OWNER\", \"MOST_OVERLAP\",\n"
+            << "\"FEWEST_OWNED\", or \"LEAST_ACTIVE\"." << std::endl);
+      }
+
       d_sort_output_nodes =
          input_db->getBoolWithDefault("sort_output_nodes", false);
 
       std::string tmp_str;
 
-      tmp_str = input_db->getStringWithDefault("check_min_box_size",
-            std::string("WARN"));
+      tmp_str =
+         input_db->getStringWithDefault("check_min_box_size", std::string("WARN"));
       d_check_min_box_size = char(tolower(*tmp_str.c_str()));
       if (d_check_min_box_size != 'i' &&
           d_check_min_box_size != 'w' &&

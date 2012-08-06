@@ -1662,6 +1662,14 @@ TimeRefinementIntegrator::getFromInput(
             d_tag_buffer = temp_tag_buffer;
          }
 
+         if (input_db->keyExists("start_time")) {
+            double tmp = input_db->getDouble("start_time");
+            if (tmp != d_start_time) {
+               TBOX_WARNING("TimeRefinementIntegrator::getFromInput warning...\n"
+                  << "start_time may not be changed on restart." << std::endl);
+            }
+         }
+
          d_barrier_and_time =
             input_db->getBoolWithDefault("DEV_barrier_and_time",
                d_barrier_and_time);

@@ -551,96 +551,187 @@ SNES_SAMRAIContext::getFromInput(
    bool is_from_restart)
 {
    if (input_db) {
+      if (!is_from_restart) {
 
-      // If the user does not want to override anything on restart then just
-      // return.
-      if (is_from_restart) {
+         d_maximum_nonlinear_iterations =
+            input_db->getIntegerWithDefault("maximum_nonlinear_iterations", PETSC_DEFAULT);
+
+         d_maximum_function_evals =
+            input_db->getIntegerWithDefault("maximum_function_evals", PETSC_DEFAULT);
+
+         d_uses_preconditioner =
+            input_db->getBoolWithDefault("uses_preconditioner", true);
+
+         d_uses_explicit_jacobian =
+            input_db->getBoolWithDefault("uses_explicit_jacobian", true);
+
+         d_absolute_tolerance =
+            input_db->getDoubleWithDefault("absolute_tolerance", PETSC_DEFAULT);
+
+         d_relative_tolerance =
+            input_db->getDoubleWithDefault("relative_tolerance", PETSC_DEFAULT);
+
+         d_step_tolerance =
+            input_db->getDoubleWithDefault("step_tolerance", PETSC_DEFAULT);
+
+         d_forcing_term_strategy =
+            input_db->getStringWithDefault("forcing_term_strategy", "CONSTANT");
+         if (d_forcing_term_strategy == "EWCHOICE1") {
+            d_forcing_term_flag = 1;
+         } else if (d_forcing_term_strategy == "EWCHOICE2") {
+            d_forcing_term_flag = 2;
+         } else if (!(d_forcing_term_strategy == "CONSTANT")) {
+            TBOX_ERROR(
+               d_object_name << ": "
+                             << "Key data `forcing_term_strategy' = "
+                             << d_forcing_term_strategy
+                             << " in input not recognized.");
+         }
+
+         d_constant_forcing_term =
+            input_db->getDoubleWithDefault("constant_forcing_term", PETSC_DEFAULT);
+
+         d_initial_forcing_term =
+            input_db->getDoubleWithDefault("initial_forcing_term", PETSC_DEFAULT);
+
+         d_maximum_forcing_term =
+            input_db->getDoubleWithDefault("maximum_forcing_term", PETSC_DEFAULT);
+
+         d_EW_choice2_alpha =
+            input_db->getDoubleWithDefault("EW_choice2_alpha", PETSC_DEFAULT);
+
+         d_EW_choice2_gamma =
+            input_db->getDoubleWithDefault("EW_choice2_gamma", PETSC_DEFAULT);
+
+         d_EW_safeguard_exponent =
+            input_db->getDoubleWithDefault("EW_safeguard_exponent", PETSC_DEFAULT);
+
+         d_EW_safeguard_disable_threshold =
+            input_db->getDoubleWithDefault("EW_safeguard_disable_threshold", PETSC_DEFAULT);
+
+         d_linear_solver_type =
+            input_db->getStringWithDefault("linear_solver_type", "");
+
+         d_linear_solver_absolute_tolerance =
+            input_db->getDoubleWithDefault("linear_solver_absolute_tolerance", PETSC_DEFAULT);
+
+         d_linear_solver_divergence_tolerance =
+            input_db->getDoubleWithDefault("linear_solver_divergence_tolerance", PETSC_DEFAULT);
+
+         d_maximum_linear_iterations =
+            input_db->getIntegerWithDefault("maximum_linear_iterations", PETSC_DEFAULT);
+
+         d_maximum_gmres_krylov_dimension =
+            input_db->getIntegerWithDefault("maximum_gmres_krylov_dimension", PETSC_DEFAULT);
+
+         d_gmres_orthogonalization_algorithm =
+            input_db->getStringWithDefault("gmres_orthogonalization_algorithm", "");
+
+         d_differencing_parameter_strategy =
+            input_db->getStringWithDefault("differencing_parameter_strategy", MATMFFD_WP);
+         if (d_differencing_parameter_strategy != MATMFFD_WP &&
+             d_differencing_parameter_strategy != MATMFFD_DS) {
+            TBOX_ERROR("SNES_SAMRAIContext::getFromInput error...\n"
+               << "differencing_parameter_strategy must be \"wp\" or \"ds\"."
+               << std::endl);
+         }
+
+         d_function_evaluation_error =
+            input_db->getDoubleWithDefault("function_evaluation_error", PETSC_DEFAULT);
+      }
+      else {
          bool read_on_restart =
             input_db->getBoolWithDefault("read_on_restart", false);
          if (!read_on_restart) {
             return;
          }
+
+         d_maximum_nonlinear_iterations =
+            input_db->getIntegerWithDefault("maximum_nonlinear_iterations",
+               d_maximum_nonlinear_iterations);
+         d_maximum_function_evals =
+            input_db->getIntegerWithDefault("maximum_function_evals",
+               d_maximum_function_evals);
+         d_uses_preconditioner =
+            input_db->getBoolWithDefault("uses_preconditioner",
+               d_uses_preconditioner);
+         d_uses_explicit_jacobian =
+            input_db->getBoolWithDefault("uses_explicit_jacobian",
+               d_uses_explicit_jacobian);
+         d_absolute_tolerance =
+            input_db->getDoubleWithDefault("absolute_tolerance",
+               d_absolute_tolerance);
+         d_relative_tolerance =
+            input_db->getDoubleWithDefault("relative_tolerance",
+               d_relative_tolerance);
+         d_step_tolerance =
+            input_db->getDoubleWithDefault("step_tolerance", d_step_tolerance);
+         d_forcing_term_strategy =
+            input_db->getStringWithDefault("forcing_term_strategy",
+               d_forcing_term_strategy);
+         if (d_forcing_term_strategy == "EWCHOICE1") {
+            d_forcing_term_flag = 1;
+         } else if (d_forcing_term_strategy == "EWCHOICE2") {
+            d_forcing_term_flag = 2;
+         } else if (!(d_forcing_term_strategy == "CONSTANT")) {
+            TBOX_ERROR(
+               d_object_name << ": "
+                             << "Key data `forcing_term_strategy' = "
+                             << d_forcing_term_strategy
+                             << " in input not recognized.");
+         }
+         d_constant_forcing_term =
+            input_db->getDoubleWithDefault("constant_forcing_term",
+               d_constant_forcing_term);
+         d_initial_forcing_term =
+            input_db->getDoubleWithDefault("initial_forcing_term",
+               d_initial_forcing_term);
+         d_maximum_forcing_term =
+            input_db->getDoubleWithDefault("maximum_forcing_term",
+               d_maximum_forcing_term);
+         d_EW_choice2_alpha =
+            input_db->getDoubleWithDefault("EW_choice2_alpha",
+               d_EW_choice2_alpha);
+         d_EW_choice2_gamma =
+            input_db->getDoubleWithDefault("EW_choice2_gamma",
+               d_EW_choice2_gamma);
+         d_EW_safeguard_exponent =
+            input_db->getDoubleWithDefault("EW_safeguard_exponent",
+               d_EW_safeguard_exponent);
+         d_EW_safeguard_disable_threshold =
+            input_db->getDoubleWithDefault("EW_safeguard_disable_threshold",
+               d_EW_safeguard_disable_threshold);
+         d_linear_solver_type =
+            input_db->getStringWithDefault("linear_solver_type",
+               d_linear_solver_type);
+         d_linear_solver_absolute_tolerance =
+            input_db->getDoubleWithDefault("linear_solver_absolute_tolerance",
+               d_linear_solver_absolute_tolerance);
+         d_linear_solver_divergence_tolerance =
+            input_db->getDoubleWithDefault("linear_solver_divergence_tolerance",
+               d_linear_solver_divergence_tolerance);
+         d_maximum_linear_iterations =
+            input_db->getIntegerWithDefault("maximum_linear_iterations",
+               d_maximum_linear_iterations);
+         d_maximum_gmres_krylov_dimension =
+            input_db->getIntegerWithDefault("maximum_gmres_krylov_dimension",
+               d_maximum_gmres_krylov_dimension);
+         d_gmres_orthogonalization_algorithm =
+            input_db->getStringWithDefault("gmres_orthogonalization_algorithm",
+               d_gmres_orthogonalization_algorithm);
+         d_differencing_parameter_strategy =
+            input_db->getStringWithDefault("differencing_parameter_strategy",
+               d_differencing_parameter_strategy);
+         if (d_differencing_parameter_strategy != MATMFFD_WP &&
+             d_differencing_parameter_strategy != MATMFFD_DS) {
+            TBOX_ERROR("SNES_SAMRAIContext::getFromInput error...\n"
+               << "differencing_parameter_strategy must be \"wp\" or \"ds\"."
+               << std::endl);
+         }
+         d_function_evaluation_error =
+            input_db->getDoubleWithDefault("function_evaluation_error",
+               d_function_evaluation_error);
       }
-
-      d_maximum_nonlinear_iterations =
-         input_db->getIntegerWithDefault("maximum_nonlinear_iterations", PETSC_DEFAULT);
-
-      d_maximum_function_evals =
-         input_db->getIntegerWithDefault("maximum_function_evals", PETSC_DEFAULT);
-
-      d_uses_preconditioner =
-         input_db->getBoolWithDefault("uses_preconditioner", true);
-
-      d_uses_explicit_jacobian =
-         input_db->getBoolWithDefault("uses_explicit_jacobian", true);
-
-      d_absolute_tolerance =
-         input_db->getDoubleWithDefault("absolute_tolerance", PETSC_DEFAULT);
-
-      d_relative_tolerance =
-         input_db->getDoubleWithDefault("relative_tolerance", PETSC_DEFAULT);
-
-      d_step_tolerance =
-         input_db->getDoubleWithDefault("step_tolerance", PETSC_DEFAULT);
-
-      d_forcing_term_strategy =
-         input_db->getStringWithDefault("forcing_term_strategy", "CONSTANT");
-      if (d_forcing_term_strategy == "EWCHOICE1") {
-         d_forcing_term_flag = 1;
-      } else if (d_forcing_term_strategy == "EWCHOICE2") {
-         d_forcing_term_flag = 2;
-      } else if (!(d_forcing_term_strategy == "CONSTANT")) {
-         TBOX_ERROR(
-            d_object_name << ": "
-                          << "Key data `forcing_term_strategy' = "
-                          << d_forcing_term_strategy
-                          << " in input not recognized.");
-      }
-
-      d_constant_forcing_term =
-         input_db->getDoubleWithDefault("constant_forcing_term", PETSC_DEFAULT);
-
-      d_initial_forcing_term =
-         input_db->getDoubleWithDefault("initial_forcing_term", PETSC_DEFAULT);
-
-      d_maximum_forcing_term =
-         input_db->getDoubleWithDefault("maximum_forcing_term", PETSC_DEFAULT);
-
-      d_EW_choice2_alpha =
-         input_db->getDoubleWithDefault("EW_choice2_alpha", PETSC_DEFAULT);
-
-      d_EW_choice2_gamma =
-         input_db->getDoubleWithDefault("EW_choice2_gamma", PETSC_DEFAULT);
-
-      d_EW_safeguard_exponent =
-         input_db->getDoubleWithDefault("EW_safeguard_exponent", PETSC_DEFAULT);
-
-      d_EW_safeguard_disable_threshold =
-         input_db->getDoubleWithDefault("EW_safeguard_disable_threshold", PETSC_DEFAULT);
-
-      d_linear_solver_type =
-         input_db->getStringWithDefault("linear_solver_type", "");
-
-      d_linear_solver_absolute_tolerance =
-         input_db->getDoubleWithDefault("linear_solver_absolute_tolerance", PETSC_DEFAULT);
-
-      d_linear_solver_divergence_tolerance =
-         input_db->getDoubleWithDefault("linear_solver_divergence_tolerance", PETSC_DEFAULT);
-
-      d_maximum_linear_iterations =
-         input_db->getIntegerWithDefault("maximum_linear_iterations", PETSC_DEFAULT);
-
-      d_maximum_gmres_krylov_dimension =
-         input_db->getIntegerWithDefault("maximum_gmres_krylov_dimension", PETSC_DEFAULT);
-
-      d_gmres_orthogonalization_algorithm =
-         input_db->getStringWithDefault("gmres_orthogonalization_algorithm", "");
-
-      d_differencing_parameter_strategy =
-         input_db->getStringWithDefault("differencing_parameter_strategy", MATMFFD_WP);
-
-      d_function_evaluation_error =
-         input_db->getDoubleWithDefault("function_evaluation_error", PETSC_DEFAULT);
    }
 
 }

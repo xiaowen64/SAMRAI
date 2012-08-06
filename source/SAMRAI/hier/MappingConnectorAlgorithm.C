@@ -93,7 +93,11 @@ MappingConnectorAlgorithm::getFromInput()
             boost::shared_ptr<tbox::Database> ocu_db(
                idb->getDatabase("MappingConnectorAlgorithm"));
             s_print_steps =
-               ocu_db->getCharWithDefault("DEV_print_modify_steps", '\0');
+               ocu_db->getCharWithDefault("DEV_print_modify_steps", 'n');
+            if (s_print_steps != 'n' && s_print_steps != 'y') {
+               TBOX_ERROR("MappingConnectorAlgorithm::getFromInput error...\n"
+                  << "s_print_steps must be 'y' or 'n'." << std:: endl);
+            }
          }
       }
    }

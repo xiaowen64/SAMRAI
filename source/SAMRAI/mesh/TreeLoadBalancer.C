@@ -3553,20 +3553,21 @@ TreeLoadBalancer::getFromInput(
 
       d_min_load_fraction_per_box =
          input_db->getDoubleWithDefault("min_load_fraction_per_box", 0.03);
-      if ( d_min_load_fraction_per_box >= 1.0 ) {
+      if ( d_min_load_fraction_per_box < 0.0 ||
+           d_min_load_fraction_per_box > 1.0 ) {
          TBOX_ERROR("TreeLoadBalancer::getFromInput: min_load_fraction_per_box value of "
                     << d_min_load_fraction_per_box
-                    << " is excessive.  It should be on the order of 0.01.");
+                    << " is out of range.  It should be >= 0 and <= 1 and on the order of 0.01.");
       }
 
       d_balance_penalty_wt =
-         input_db->getDoubleWithDefault("balance_penalty_wt", 1.0);
+         input_db->getDoubleWithDefault("DEV_balance_penalty_wt", 1.0);
       d_surface_penalty_wt =
-         input_db->getDoubleWithDefault("surface_penalty_wt", 1.0);
+         input_db->getDoubleWithDefault("DEV_surface_penalty_wt", 1.0);
       d_slender_penalty_wt =
-         input_db->getDoubleWithDefault("slender_penalty_wt", 1.0);
+         input_db->getDoubleWithDefault("DEV_slender_penalty_wt", 1.0);
       d_precut_penalty_wt =
-         input_db->getDoubleWithDefault("precut_penalty_wt", 1.0);
+         input_db->getDoubleWithDefault("DEV_precut_penalty_wt", 1.0);
 
    }
 }

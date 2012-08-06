@@ -132,122 +132,274 @@ PatchHierarchy::getFromInput(
    bool is_from_restart)
 {
    if (input_db) {
+      if (!is_from_restart) {
 
-      // If the user does not want to override anything on restart then just
-      // return.
-      if (is_from_restart) {
+         /*
+          * Read input for maximum number of levels.
+          */
+
+         d_max_levels =
+            input_db->getIntegerWithDefault("max_levels", 1);
+         if (d_max_levels < 1) {
+            TBOX_ERROR("PatchHierarchy::getFromInput error...\n"
+               << "max_levels must be > 0." << std::endl);
+         }
+
+         if (d_max_levels != int(d_ratio_to_coarser.size())) {
+            d_ratio_to_coarser.resize(d_max_levels, d_ratio_to_coarser.back());
+            d_smallest_patch_size.resize(d_max_levels,
+               d_smallest_patch_size.back());
+            d_largest_patch_size.resize(d_max_levels,
+               d_largest_patch_size.back());
+         }
+
+         std::vector<std::string> level_names(d_max_levels,
+            std::string("level_"));
+         for (int ln = 0; ln < d_max_levels; ++ln) {
+            level_names[ln] += tbox::Utilities::intToString(ln);
+         }
+
+         // Read in ratio_to_coarser.
+         if (input_db->isDatabase("ratio_to_coarser")) {
+            const boost::shared_ptr<tbox::Database> tmp_db(
+               input_db->getDatabase("ratio_to_coarser"));
+            for (int ln = 1; ln < d_max_levels; ++ln) {
+               if (tmp_db->isInteger(level_names[ln])) {
+                  tmp_db->getIntegerArray(level_names[ln],
+                     &d_ratio_to_coarser[ln][0],
+                     d_dim.getValue());
+                  for (int i = 0; i < d_dim.getValue(); ++i) {
+                     if (d_ratio_to_coarser[ln][i] < 1) {
+                        TBOX_ERROR("PatchHierarchy::getFromInput error...\n"
+                           << "ratio_to_coarser must be > 0." <<std::endl);
+                     }
+                  }
+               } else {
+                  d_ratio_to_coarser[ln] = d_ratio_to_coarser[ln - 1];
+               }
+            }
+         }
+
+         // Read in smallest_patch_size.
+         if (input_db->isDatabase("smallest_patch_size")) {
+            const boost::shared_ptr<tbox::Database> tmp_db(
+               input_db->getDatabase("smallest_patch_size"));
+            for (int ln = 0; ln < d_max_levels; ++ln) {
+               if (tmp_db->isInteger(level_names[ln])) {
+                  tmp_db->getIntegerArray(level_names[ln],
+                     &d_smallest_patch_size[ln][0],
+                     d_dim.getValue());
+                  for (int i = 0; i < d_dim.getValue(); ++i) {
+                     if (d_smallest_patch_size[ln][i] < 1) {
+                        TBOX_ERROR("PatchHierarchy::getFromInput error...\n"
+                           << "smallest_patch_size must be > 0." <<std::endl);
+                     }
+                  }
+               } else {
+                  d_smallest_patch_size[ln] = d_smallest_patch_size[ln - 1];
+               }
+            }
+         }
+
+         // Read in largest_patch_size.
+         if (input_db->isDatabase("largest_patch_size")) {
+            const boost::shared_ptr<tbox::Database> tmp_db(
+               input_db->getDatabase("largest_patch_size"));
+            for (int ln = 0; ln < d_max_levels; ++ln) {
+               if (tmp_db->isInteger(level_names[ln])) {
+                  tmp_db->getIntegerArray(level_names[ln],
+                     &d_largest_patch_size[ln][0],
+                     d_dim.getValue());
+                  for (int i = 0; i < d_dim.getValue(); ++i) {
+                     if (d_largest_patch_size[ln][i] >= 0 &&
+                         d_largest_patch_size[ln][i] <
+                         d_smallest_patch_size[ln][i]) {
+                        TBOX_ERROR("PatchHierarchy::getFromInput error...\n"
+                           << "largest_patch_size must be >= smallest_patch_size."
+                           <<std::endl);
+                     }
+                  }
+               } else {
+                  d_largest_patch_size[ln] = d_largest_patch_size[ln - 1];
+               }
+            }
+         }
+
+         tbox::Array<int> proper_nesting_buffer(1, 1);
+         if (input_db->isInteger("proper_nesting_buffer")) {
+            proper_nesting_buffer = input_db->getIntegerArray(
+               "proper_nesting_buffer");
+         }
+         d_proper_nesting_buffer.clear();
+         for (int ln = 0; ln < d_max_levels - 1; ++ln) {
+            if (ln < proper_nesting_buffer.size()) {
+               d_proper_nesting_buffer.push_back(proper_nesting_buffer[ln]);
+            } else {
+               d_proper_nesting_buffer.push_back(d_proper_nesting_buffer[ln - 1]);
+            }
+         }
+         for (size_t ln = 0; ln < d_proper_nesting_buffer.size(); ln++) {
+            if (d_proper_nesting_buffer[ln] < 0) {
+               TBOX_ERROR(
+                  d_object_name << ":  "
+                                << "Key data `proper_nesting_buffer' has values < 0.");
+            }
+            if (d_proper_nesting_buffer[ln] == 0) {
+               TBOX_WARNING(
+                  d_object_name << ":  "
+                                << "Using zero `proper_nesting_buffer' values.");
+            }
+         }
+
+         d_allow_patches_smaller_than_ghostwidth =
+            input_db->getBoolWithDefault("allow_patches_smaller_than_ghostwidth", false);
+
+         d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps =
+            input_db->getBoolWithDefault("allow_patches_smaller_than_minimum_size_to_prevent_overlaps", false);
+         if (d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps) {
+            TBOX_WARNING(
+               d_object_name << ":  "
+                             << "Allowing patches smaller than the given "
+                             << "smallest patch size.  Note:  If periodic "
+                             << "boundary conditions are used, this flag is "
+                             << "ignored in the periodic directions.");
+         }
+      }
+      else {
          bool read_on_restart =
             input_db->getBoolWithDefault("read_on_restart", false);
          if (!read_on_restart) {
             return;
          }
-      }
-      
-      /*
-       * Read input for maximum number of levels.
-       */
 
-      d_max_levels =
-         input_db->getIntegerWithDefault("max_levels", 1);
+         /*
+          * Read input for maximum number of levels.
+          */
 
-      if (d_max_levels != int(d_ratio_to_coarser.size())) {
-         d_ratio_to_coarser.resize(d_max_levels, d_ratio_to_coarser.back());
-         d_smallest_patch_size.resize(d_max_levels,
-            d_smallest_patch_size.back());
-         d_largest_patch_size.resize(d_max_levels,
-            d_largest_patch_size.back());
-      }
-
-      std::vector<std::string> level_names(d_max_levels,
-         std::string("level_"));
-      for (int ln = 0; ln < d_max_levels; ++ln) {
-         level_names[ln] += tbox::Utilities::intToString(ln);
-      }
-
-      // Read in ratio_to_coarser.
-      if (input_db->isDatabase("ratio_to_coarser")) {
-         const boost::shared_ptr<tbox::Database> tmp_db(
-            input_db->getDatabase("ratio_to_coarser"));
-         for (int ln = 1; ln < d_max_levels; ++ln) {
-            if (tmp_db->isInteger(level_names[ln])) {
-               tmp_db->getIntegerArray(level_names[ln],
-                  &d_ratio_to_coarser[ln][0],
-                  d_dim.getValue());
-            } else {
-               d_ratio_to_coarser[ln] = d_ratio_to_coarser[ln - 1];
-            }
+         int new_max_levels =
+            input_db->getIntegerWithDefault("max_levels", d_max_levels);
+         if (new_max_levels > d_max_levels) {
+            TBOX_ERROR("PatchHierarchy::getFromInput error...\n"
+               << "max_levels must not increase on restart." << std::endl);
          }
-      }
+         d_max_levels = new_max_levels;
 
-      // Read in smallest_patch_size.
-      if (input_db->isDatabase("smallest_patch_size")) {
-         const boost::shared_ptr<tbox::Database> tmp_db(
-            input_db->getDatabase("smallest_patch_size"));
+         if (d_max_levels != int(d_ratio_to_coarser.size())) {
+            d_ratio_to_coarser.resize(d_max_levels, d_ratio_to_coarser.back());
+            d_smallest_patch_size.resize(d_max_levels,
+               d_smallest_patch_size.back());
+            d_largest_patch_size.resize(d_max_levels,
+               d_largest_patch_size.back());
+         }
+
+         std::vector<std::string> level_names(d_max_levels,
+            std::string("level_"));
          for (int ln = 0; ln < d_max_levels; ++ln) {
-            if (tmp_db->isInteger(level_names[ln])) {
-               tmp_db->getIntegerArray(level_names[ln],
-                  &d_smallest_patch_size[ln][0],
-                  d_dim.getValue());
-            } else {
-               d_smallest_patch_size[ln] = d_smallest_patch_size[ln - 1];
+            level_names[ln] += tbox::Utilities::intToString(ln);
+         }
+
+         // Read in ratio_to_coarser.
+         if (input_db->isDatabase("ratio_to_coarser")) {
+            const boost::shared_ptr<tbox::Database> tmp_db(
+               input_db->getDatabase("ratio_to_coarser"));
+            int ratio_to_coarser[SAMRAI::MAX_DIM_VAL];
+            bool error = false;
+            for (int ln = 1; !error && ln < d_max_levels; ++ln) {
+               if (tmp_db->isInteger(level_names[ln])) {
+                  tmp_db->getIntegerArray(level_names[ln],
+                     &ratio_to_coarser[0],
+                     d_dim.getValue());
+                  for (int i = 0; i < d_dim.getValue(); ++i) {
+                     if (ratio_to_coarser[i] != d_ratio_to_coarser[ln][i]) {
+                        TBOX_WARNING("PatchHierarchy::getFromInput error...\n"
+                           << "ratio_to_coarser may not be changed on restart."
+                           <<std::endl);
+                        error = true;
+                        break;
+                     }
+                  }
+               }
             }
          }
-      }
 
-      // Read in largest_patch_size.
-      if (input_db->isDatabase("largest_patch_size")) {
-         const boost::shared_ptr<tbox::Database> tmp_db(
-            input_db->getDatabase("largest_patch_size"));
-         for (int ln = 0; ln < d_max_levels; ++ln) {
-            if (tmp_db->isInteger(level_names[ln])) {
-               tmp_db->getIntegerArray(level_names[ln],
-                  &d_largest_patch_size[ln][0],
-                  d_dim.getValue());
-            } else {
-               d_largest_patch_size[ln] = d_largest_patch_size[ln - 1];
+         // Read in smallest_patch_size.
+         if (input_db->isDatabase("smallest_patch_size")) {
+            const boost::shared_ptr<tbox::Database> tmp_db(
+               input_db->getDatabase("smallest_patch_size"));
+            for (int ln = 0; ln < d_max_levels; ++ln) {
+               if (tmp_db->isInteger(level_names[ln])) {
+                  tmp_db->getIntegerArray(level_names[ln],
+                     &d_smallest_patch_size[ln][0],
+                     d_dim.getValue());
+                  for (int i = 0; i < d_dim.getValue(); ++i) {
+                     if (d_smallest_patch_size[ln][i] < 1) {
+                        TBOX_ERROR("PatchHierarchy::getFromInput error...\n"
+                           << "smallest_patch_size must be > 0." <<std::endl);
+                     }
+                  }
+               } else {
+                  d_smallest_patch_size[ln] = d_smallest_patch_size[ln - 1];
+               }
             }
          }
-      }
 
-      tbox::Array<int> proper_nesting_buffer(1, 1);
-      if (input_db->isInteger("proper_nesting_buffer")) {
-         proper_nesting_buffer = input_db->getIntegerArray(
-            "proper_nesting_buffer");
-      }
-      d_proper_nesting_buffer.clear();
-      for (int ln = 0; ln < d_max_levels - 1; ++ln) {
-         if (ln < proper_nesting_buffer.size()) {
-            d_proper_nesting_buffer.push_back(int(proper_nesting_buffer[ln]));
-         } else {
-            d_proper_nesting_buffer.push_back(
-               int(d_proper_nesting_buffer[ln - 1]));
+         // Read in largest_patch_size.
+         if (input_db->isDatabase("largest_patch_size")) {
+            const boost::shared_ptr<tbox::Database> tmp_db(
+               input_db->getDatabase("largest_patch_size"));
+            for (int ln = 0; ln < d_max_levels; ++ln) {
+               if (tmp_db->isInteger(level_names[ln])) {
+                  tmp_db->getIntegerArray(level_names[ln],
+                     &d_largest_patch_size[ln][0],
+                     d_dim.getValue());
+                  for (int i = 0; i < d_dim.getValue(); ++i) {
+                     if (d_largest_patch_size[ln][i] >= 0 &&
+                         d_largest_patch_size[ln][i] <
+                         d_smallest_patch_size[ln][i]) {
+                        TBOX_ERROR("PatchHierarchy::getFromInput error...\n"
+                           << "largest_patch_size must be >= smallest_patch_size."
+                           <<std::endl);
+                     }
+                  }
+               } else {
+                  d_largest_patch_size[ln] = d_largest_patch_size[ln - 1];
+               }
+            }
          }
-      }
-      for (size_t ln = 0; ln < d_proper_nesting_buffer.size(); ln++) {
-         if (d_proper_nesting_buffer[ln] < 0) {
-            TBOX_ERROR(
-               d_object_name << ":  "
-                             << "Key data `proper_nesting_buffer' has values < 0.");
-         }
-         if (d_proper_nesting_buffer[ln] == 0) {
-            TBOX_WARNING(
-               d_object_name << ":  "
-                             << "Using zero `proper_nesting_buffer' values.");
-         }
-      }
 
-      d_allow_patches_smaller_than_ghostwidth =
-         input_db->getBoolWithDefault("allow_patches_smaller_than_ghostwidth", false);
+         if (input_db->keyExists("proper_nesting_buffer")) {
+            tbox::Array<int> proper_nesting_buffer(1, 1);
+            proper_nesting_buffer = input_db->getIntegerArray(
+               "proper_nesting_buffer");
+            for (int ln = 0; ln < d_max_levels - 1; ++ln) {
+               int val;
+               if (ln < proper_nesting_buffer.size()) {
+                  val = proper_nesting_buffer[ln];
+               } else {
+                  val = proper_nesting_buffer[proper_nesting_buffer.size()-1];
+               }
+               if (val != d_proper_nesting_buffer[ln]) {
+                  TBOX_WARNING("PatchHierarchy::getFromInput warning...\n"
+                     << "proper_nesting_buffer may not be changed on restart."
+                     << std::endl);
+                  break;
+               }
+            }
+         }
 
-      d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps =
-         input_db->getBoolWithDefault("allow_patches_smaller_than_minimum_size_to_prevent_overlaps", false);
-      if (d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps) {
-         TBOX_WARNING(
-            d_object_name << ":  "
-                          << "Allowing patches smaller than the given "
-                          << "smallest patch size.  Note:  If periodic "
-                          << "boundary conditions are used, this flag is "
-                          << "ignored in the periodic directions.");
+         if (input_db->keyExists("allow_patches_smaller_than_ghostwidth")) {
+            bool tmp = input_db->getBool("allow_patches_smaller_than_ghostwidth");
+            if (tmp != d_allow_patches_smaller_than_ghostwidth) {
+               TBOX_WARNING("PatchHierarchy::getFromInput warning...\n"
+                  << "allow_patches_smaller_than_ghostwidth\n"
+                  << "may not be changed on restart." << std::endl);
+            }
+         }
+
+         d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps =
+            input_db->getBoolWithDefault(
+               "allow_patches_smaller_than_minimum_size_to_prevent_overlaps",
+               d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps);
       }
    }
 }
