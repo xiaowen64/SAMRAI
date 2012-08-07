@@ -51,7 +51,7 @@ using namespace SAMRAI;
  * shrink_distance_0, shrink_distance_1, ...:
  * shrink_distance[ln] is the shink distance when tagging ON
  * level ln by shrinking the boundaries of level ln.
- * We use this method ONLY when shrink_distance[ln] is not given.
+ * We use this method ONLY when buffer_distance[ln] is not given.
  */
 class SphericalShellGenerator:
    public MeshGenerationStrategy
