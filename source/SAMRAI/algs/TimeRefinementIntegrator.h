@@ -162,7 +162,7 @@ namespace algs {
  *     <td>max_integrator_steps</td>
  *     <td>int</td>
  *     <td>none</td>
- *     <td>any int</td>
+ *     <td>>=0</td>
  *     <td>req</td>
  *     <td>Parameter read from restart db may be overridden by input db</td>
  *   </tr>
