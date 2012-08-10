@@ -871,7 +871,8 @@ GriddingAlgorithm::makeFinerLevel(
                      << "tag_to_new:\n" << tag_to_new->format("N->", 2)
                      << "new_to_tag:\n" << new_to_tag->format("N->", 2)
                      << "violator:\n" << violator.format("N->", 2)
-                     << "new_to_violator:\n" << new_to_violator.format("N->", 2));
+                     << "new_to_violator:\n" << new_to_violator.format("N->", 2)
+                     << std::endl);
                }
             }
 
@@ -1845,7 +1846,8 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
             tbox::plog << "External parts:\n" << finer_to_external.format("FE->", 3);
 
             TBOX_ERROR(
-               "Internal library error: Failed to produce proper nesting.");
+               "Internal library error: Failed to produce proper nesting."
+               << std::endl);
 
          } /* !finer_nests_in_new */
 
@@ -2035,7 +2037,8 @@ GriddingAlgorithm::checkBoundaryProximityViolation(
                   << extend_ghosts(d) - leftover_size(d)
                   << " cells from a physical domain boundary.\n"
                   << "All boxes must be at least " << extend_ghosts
-                  << " from physical boundaries or touching the physical boundary.");
+                  << " from physical boundaries or touching the physical boundary."
+                  << std::endl);
             }
          }
       }
@@ -2118,7 +2121,8 @@ GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes) cons
    if (domain_boxes.boxesIntersect()) {
       TBOX_ERROR(d_object_name << ":  "
                                << "Boxes specified for coarsest level "
-                               << "contain intersections with each other!");
+                               << "contain intersections with each other!"
+                               << std::endl);
    }
 
    /*
@@ -2128,7 +2132,8 @@ GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes) cons
        && (!d_tag_init_strategy->coarsestLevelBoxesOK(domain_boxes))) {
       TBOX_ERROR(d_object_name << ":  "
                                << "level gridding strategy encountered"
-                               << " a problem with the domain boxes!");
+                               << " a problem with the domain boxes!"
+                               << std::endl);
    }
 }
 
@@ -2172,12 +2177,12 @@ GriddingAlgorithm::checkNonnestingUserBoxes(
       << new_to_violating_parts.format(left_margin, 2);
 
       if (d_check_nonnesting_user_boxes == 'e') {
-         TBOX_ERROR("Exiting due to above error");
+         TBOX_ERROR("Exiting due to above error" << std::endl);
       }
       if (d_check_nonnesting_user_boxes == 'w') {
          TBOX_WARNING("Proceeding with nesting violation as requested.\n"
             << "SAMRAI is not guaranteed to work with nesting"
-            << "violations!");
+            << "violations!" << std::endl);
       }
 
    }
@@ -2214,7 +2219,8 @@ GriddingAlgorithm::checkBoundaryProximityViolation(
          << "Making level " << tag_ln + 1 << ".\n"
          << "New boxes violate boundary proximity.\n"
          << "All boxes must be at least " << extend_ghosts
-         << " from physical boundaries or touching the physical boundary.");
+         << " from physical boundaries or touching the physical boundary."
+         << std::endl);
    }
 }
 
@@ -3213,7 +3219,8 @@ GriddingAlgorithm::findRefinementBoxes(
                   << "tag_box_level:\n" << tag_box_level.format("", 2)
                   << "new_box_level:\n" << new_box_level.format("", 2)
                   << "tag_to_new:\n" << tag_to_new.format("", 2)
-                  << "new_to_tag:\n" << new_to_tag.format("", 2));
+                  << "new_to_tag:\n" << new_to_tag.format("", 2)
+                  << std::endl);
             }
          }
       }
@@ -3314,7 +3321,8 @@ GriddingAlgorithm::findRefinementBoxes(
                   d_hierarchy->getGridGeometry()->getDomainSearchTree());
                tbox::plog << "External parts:\n" << new_to_external.format("NE->", 3);
                TBOX_ERROR(
-                  "Internal library error: Failed to produce proper nesting.");
+                  "Internal library error: Failed to produce proper nesting."
+                  << std::endl);
             }
          }
       }
@@ -3450,7 +3458,8 @@ GriddingAlgorithm::findRefinementBoxes(
                   << "new_box_level:\n" << new_box_level.format("", 2)
                   << "tag_box_level:\n" << tag_box_level.format("", 2)
                   << "new_to_tag:\n" << new_to_tag.format("", 2)
-                  << "tag_to_new:\n" << tag_to_new.format("", 2));
+                  << "tag_to_new:\n" << tag_to_new.format("", 2)
+                  << std::endl);
             }
          }
       }
@@ -3656,7 +3665,8 @@ GriddingAlgorithm::extendBoxesToDomainBoundary(
       &new_box_level);
 
 #if 0
-   TBOX_WARNING("Performing extensive error checking due to using new code!");
+   TBOX_WARNING("Performing extensive error checking due to using new code!"
+       << std::endl);
    TBOX_ASSERT(new_to_tag.checkOverlapCorrectness() == 0);
    TBOX_ASSERT(tag_to_new.checkOverlapCorrectness() == 0);
 #endif
@@ -4524,7 +4534,8 @@ GriddingAlgorithm::getFromInput(
                    (efficiency_tolerance[ln] >= 1.0e0)) {
                   TBOX_ERROR(d_object_name << ":  "
                                            << "Key data `efficiency_tolerance' has values"
-                                           << " out of range 0.0 < tol < 1.0.");
+                                           << " out of range 0.0 < tol < 1.0."
+                                           << std::endl);
                }
                d_efficiency_tolerance[ln] = efficiency_tolerance[ln];
             }
@@ -4551,7 +4562,8 @@ GriddingAlgorithm::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ":  "
                                    << "Key data `combine_efficiency' has values"
-                                   << " out of range 0.0 < tol < 1.0.");
+                                   << " out of range 0.0 < tol < 1.0."
+                                   << std::endl);
                }
                d_combine_efficiency[ln] = combine_efficiency[ln];
             }
@@ -4570,7 +4582,8 @@ GriddingAlgorithm::getFromInput(
              d_check_nonrefined_tags != 'w' &&
              d_check_nonrefined_tags != 'e') {
             TBOX_ERROR("GriddingAlgorithm: input parameter check_nonrefined_tags\n"
-               << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
+               << "can only be \"IGNORE\", \"WARN\" or \"ERROR\""
+               << std::endl);
          }
 
          tmp_str =
@@ -4581,7 +4594,8 @@ GriddingAlgorithm::getFromInput(
              d_check_overlapping_patches != 'e') {
             TBOX_ERROR(
                "GriddingAlgorithm: input parameter check_overlapping_patches\n"
-               << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
+               << "can only be \"IGNORE\", \"WARN\" or \"ERROR\""
+               << std::endl);
          }
 
          tmp_str =
@@ -4591,7 +4605,8 @@ GriddingAlgorithm::getFromInput(
              d_check_nonnesting_user_boxes != 'w' &&
              d_check_nonnesting_user_boxes != 'e') {
             TBOX_ERROR("GriddingAlgorithm: input parameter check_nonnesting_user_boxes\n"
-               << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
+               << "can only be \"IGNORE\", \"WARN\" or \"ERROR\""
+               << std::endl);
          }
 
          tmp_str =
@@ -4601,7 +4616,8 @@ GriddingAlgorithm::getFromInput(
              d_check_boundary_proximity_violation != 'w' &&
              d_check_boundary_proximity_violation != 'e') {
             TBOX_ERROR("GriddingAlgorithm: input parameter check_boundary_proximity_violation\n"
-               << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
+               << "can only be \"IGNORE\", \"WARN\" or \"ERROR\""
+               << std::endl);
          }
 
          d_sequentialize_patch_indices =
@@ -4655,7 +4671,8 @@ GriddingAlgorithm::getFromInput(
                    (efficiency_tolerance[ln] >= 1.0e0)) {
                   TBOX_ERROR(d_object_name << ":  "
                                            << "Key data `efficiency_tolerance' has values"
-                                           << " out of range 0.0 < tol < 1.0.");
+                                           << " out of range 0.0 < tol < 1.0."
+                                           << std::endl);
                }
                d_efficiency_tolerance[ln] = efficiency_tolerance[ln];
             }
@@ -4682,7 +4699,8 @@ GriddingAlgorithm::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ":  "
                                    << "Key data `combine_efficiency' has values"
-                                   << " out of range 0.0 < tol < 1.0.");
+                                   << " out of range 0.0 < tol < 1.0."
+                                   << std::endl);
                }
                d_combine_efficiency[ln] = combine_efficiency[ln];
             }
@@ -4701,7 +4719,8 @@ GriddingAlgorithm::getFromInput(
                 d_check_nonrefined_tags != 'w' &&
                 d_check_nonrefined_tags != 'e') {
                TBOX_ERROR("GriddingAlgorithm: input parameter check_nonrefined_tags\n"
-                  << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
+                  << "can only be \"IGNORE\", \"WARN\" or \"ERROR\""
+                  << std::endl);
             }
          }
 
@@ -4713,7 +4732,8 @@ GriddingAlgorithm::getFromInput(
                 d_check_overlapping_patches != 'e') {
                TBOX_ERROR(
                   "GriddingAlgorithm: input parameter check_overlapping_patches\n"
-                  << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
+                  << "can only be \"IGNORE\", \"WARN\" or \"ERROR\""
+                  << std::endl);
             }
          }
 
@@ -4724,7 +4744,8 @@ GriddingAlgorithm::getFromInput(
                 d_check_nonnesting_user_boxes != 'w' &&
                 d_check_nonnesting_user_boxes != 'e') {
                TBOX_ERROR("GriddingAlgorithm: input parameter check_nonnesting_user_boxes\n"
-                  << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
+                  << "can only be \"IGNORE\", \"WARN\" or \"ERROR\""
+                  << std::endl);
             }
          }
 
@@ -4737,7 +4758,8 @@ GriddingAlgorithm::getFromInput(
                 d_check_boundary_proximity_violation != 'w' &&
                 d_check_boundary_proximity_violation != 'e') {
                TBOX_ERROR("GriddingAlgorithm: input parameter check_boundary_proximity_violation\n"
-                  << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
+                  << "can only be \"IGNORE\", \"WARN\" or \"ERROR\""
+                  << std::endl);
             }
          }
 
@@ -4781,7 +4803,7 @@ GriddingAlgorithm::getFromRestart()
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
-         << d_object_name << " not found in restart file.");
+         << d_object_name << " not found in restart file." << std::endl);
    }
    boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
@@ -4789,7 +4811,8 @@ GriddingAlgorithm::getFromRestart()
    if (ver != ALGS_GRIDDING_ALGORITHM_VERSION) {
       TBOX_ERROR(
          d_object_name << ":  "
-                       << "Restart file version different than class version.");
+                       << "Restart file version different than class version."
+                       << std::endl);
    }
 
    d_check_overflow_nesting = db->getBool("check_overflow_nesting");

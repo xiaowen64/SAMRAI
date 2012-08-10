@@ -301,8 +301,7 @@ public:
       const RobinBcCoefStrategy* coef_strategy)
    {
       if (!coef_strategy) {
-         TBOX_ERROR(d_object_name << ": Invalid pointer value"
-                                  << std::endl);
+         TBOX_ERROR(d_object_name << ": Invalid pointer value" << std::endl);
       }
       d_coef_strategy = coef_strategy;
    }

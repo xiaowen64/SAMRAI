@@ -915,9 +915,9 @@ StandardTagAndInitialize::coarsestLevelBoxesOK(
             if (!((n_cells(i) % error_coarsen_ratio) == 0)) {
                tbox::perr << "Bad domain box: " << *ib << std::endl;
                TBOX_WARNING(
-                  getObjectName() << "At least one box on the \n"
+                  getObjectName() << "At least one box on the\n"
                                   << "coarsest level could not be coarsened by the ratio: "
-                                  << error_coarsen_ratio);
+                                  << error_coarsen_ratio << std::endl);
                boxes_ok = false;
             }
          }
@@ -957,7 +957,7 @@ StandardTagAndInitialize::checkCoarsenRatios(
          error_coarsen_ratio = 3;
       } else {
          TBOX_ERROR("Unable to perform Richardson extrapolation algorithm "
-            << "with ratio_to_coarser[1](0) = " << gcd_level1);
+            << "with ratio_to_coarser[1](0) = " << gcd_level1 << std::endl);
       }
 
       /*
@@ -985,7 +985,8 @@ StandardTagAndInitialize::checkCoarsenRatios(
                                   << error_coarsen_ratio
                                   << "\n   level " << ln << "(" << d
                                   << "):"
-                                  << ": ratio_to_coarser = " << gcd);
+                                  << ": ratio_to_coarser = " << gcd
+                                  << std::endl);
             }
          }
       }
@@ -1262,9 +1263,10 @@ StandardTagAndInitialize::getFromInput(
          }
          else {
             TBOX_WARNING(
-               getObjectName() << "::getFromInput \n"
-                               << "NO METHOD IS SPECIFIED TO TAG CELLS FOR \n"
-                               << "REFINEMENT so no tagging is performed.");
+               getObjectName() << "::getFromInput\n"
+                               << "NO METHOD IS SPECIFIED TO TAG CELLS FOR\n"
+                               << "REFINEMENT so no tagging is performed."
+                               << std::endl);
          }
          this_cycle_crit.d_tag_criteria.push_back(this_tag_crit);
          d_cycle_criteria.insert(this_cycle_crit);
@@ -1435,16 +1437,18 @@ StandardTagAndInitialize::getFromInput(
 
       if (d_cycle_criteria.empty() && d_time_criteria.empty()) {
          TBOX_WARNING(
-            getObjectName() << "::getFromInput \n"
-                            << "NO METHOD IS SPECIFIED TO TAG CELLS FOR \n"
-                            << "REFINEMENT so no tagging is performed.");
+            getObjectName() << "::getFromInput\n"
+                            << "NO METHOD IS SPECIFIED TO TAG CELLS FOR\n"
+                            << "REFINEMENT so no tagging is performed."
+                            << std::endl);
       }
    }
    else {
       TBOX_WARNING(
-         getObjectName() << "::getFromInput \n"
-                         << "no input database specified - NO METHOD IS SPECIFIED TO TAG \n"
-                         << "CELLS FOR REFINEMENT so no tagging is performed.");
+         getObjectName() << "::getFromInput\n"
+                         << "no input database specified - NO METHOD IS SPECIFIED TO TAG\n"
+                         << "CELLS FOR REFINEMENT so no tagging is performed."
+                         << std::endl);
    }
 
 }
@@ -1512,7 +1516,8 @@ StandardTagAndInitialize::getUserSuppliedRefineBoxes(
       TBOX_WARNING(
          getObjectName() << ": getRefineBoxes\n"
                          << "No refine boxes specified on level " << level_num
-                         << ".\n No refinement will be performed.");
+                         << ".\n No refinement will be performed."
+                         << std::endl);
    }
 
    /*

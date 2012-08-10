@@ -1740,7 +1740,7 @@ TimerManager::checkConsistencyAcrossProcessors()
          << "\nwill continue for this process, but checking only\n"
          << d_timers.size() << " timers."
          << "\nIt is not possible to print global"
-         << "\nsummed or max timer information.");
+         << "\nsummed or max timer information." << std::endl);
       ++inconsistency_count;
    }
 
@@ -1752,7 +1752,7 @@ TimerManager::checkConsistencyAcrossProcessors()
                                << max_timer_lengths[i] << " characters in their names."
                                << "\nIt is not possible to print global"
                                << "\nsummed or max timer information."
-            );
+                               << std::endl);
          ++inconsistency_count;
       }
    }
@@ -1771,7 +1771,7 @@ TimerManager::checkConsistencyAcrossProcessors()
       if (inconsistency_count == 0) {
          TBOX_WARNING("Though this process found no timer inconsistencies,"
             << "\nother processes did.  It is not possible to print"
-            << "\nglobal summed or max timer information.");
+            << "\nglobal summed or max timer information." << std::endl);
       }
    }
 

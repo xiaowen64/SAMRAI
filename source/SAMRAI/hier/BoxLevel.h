@@ -1021,7 +1021,7 @@ public:
          if (d_parallel_state != GLOBALIZED) {
             TBOX_ERROR(
                "BoxLevel::getBox: cannot get remote box "
-               << box << " without being in globalized state.");
+               << box << " without being in globalized state." << std::endl);
          }
 #endif
          return d_global_boxes.find(box);
@@ -1279,7 +1279,7 @@ public:
           * Sanity check: The handle for this object should be attached
           * to this object.
           */
-         TBOX_ERROR("Library error in BoxLevelHandle::getBoxLevel");
+         TBOX_ERROR("Library error in BoxLevelHandle::getBoxLevel" << std::endl);
       }
       return d_handle;
    }

@@ -646,7 +646,8 @@ CartesianGridGeometry::getFromRestart()
    if (ver != GEOM_CARTESIAN_GRID_GEOMETRY_VERSION) {
       TBOX_ERROR("CartesianGridGeometry::getFromRestart() error...\n"
          << "    geometry object with name = " << getObjectName()
-         << "Restart file version is different than class version" << std::endl);
+         << "Restart file version is different than class version"
+         << std::endl);
    }
 
    double x_lo[SAMRAI::MAX_DIM_VAL],

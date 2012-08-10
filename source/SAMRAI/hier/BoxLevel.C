@@ -660,7 +660,8 @@ BoxLevel::getLocalNumberOfBoxes(
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state == DISTRIBUTED && rank != d_mpi.getRank()) {
       TBOX_ERROR(
-         "Non-local boxes are not available in DISTRIBUTED mode.");
+         "Non-local boxes are not available in DISTRIBUTED mode."
+         << std::endl);
    }
    TBOX_ASSERT(rank >= 0 && rank < d_mpi.getSize());
 #endif
@@ -688,7 +689,8 @@ BoxLevel::getLocalNumberOfCells(
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state == DISTRIBUTED && rank != d_mpi.getRank()) {
       TBOX_ERROR(
-         "Non-local boxes are not available in DISTRIBUTED mode.");
+         "Non-local boxes are not available in DISTRIBUTED mode."
+         << std::endl);
    }
    TBOX_ASSERT(rank >= 0 && rank < d_mpi.getSize());
 #endif
@@ -739,7 +741,8 @@ BoxLevel::setParallelState(
    if (!isInitialized()) {
       TBOX_ERROR(
          "BoxLevel::setParallelState: Cannot change the parallel state of\n"
-         << "an uninitialized BoxLevel.  See BoxLevel::initialize()");
+         << "an uninitialized BoxLevel.  See BoxLevel::initialize()"
+         << std::endl);
    }
 #endif
    if (parallel_state != DISTRIBUTED && parallel_state != GLOBALIZED) {
@@ -972,7 +975,7 @@ BoxLevel::addBox(
    if (d_parallel_state != DISTRIBUTED) {
       TBOX_ERROR("Individually adding Boxes is a local process\n"
          << "so it can only be performed in\n"
-         << "distributed state.");
+         << "distributed state." << std::endl);
    }
    if (box.getBlockId() != BlockId::invalidId()) {
       TBOX_ASSERT(box.getBlockId() == block_id);
@@ -1030,14 +1033,15 @@ BoxLevel::addPeriodicBox(
    if (shift_number ==
        PeriodicShiftCatalog::getCatalog(getDim())->getZeroShiftNumber()) {
       TBOX_ERROR(
-         "BoxLevel::addPeriodicBox cannot be used to add regular box.");
+         "BoxLevel::addPeriodicBox cannot be used to add regular box."
+         << std::endl);
    }
    if (d_parallel_state != GLOBALIZED && ref_box.getOwnerRank() !=
        d_mpi.getRank()) {
       TBOX_ERROR(
          "BoxLevel::addPeriodicBox: Cannot add remote Box\n"
          << "(owned by rank " << ref_box.getOwnerRank() << ")\n"
-         << "when not in GLOBALIZED state.");
+         << "when not in GLOBALIZED state." << std::endl);
    }
 #endif
 
@@ -1087,7 +1091,7 @@ BoxLevel::addBox(
    if (d_parallel_state != GLOBALIZED && box.getOwnerRank() != d_mpi.getRank()) {
       TBOX_ERROR("BoxLevel::addBox: Cannot add remote Box\n"
          << "(owned by rank " << box.getOwnerRank() << ")\n"
-         << "when not in GLOBALIZED state.");
+         << "when not in GLOBALIZED state." << std::endl);
    }
 #endif
 
@@ -1163,7 +1167,7 @@ BoxLevel::eraseBox(
    if (d_parallel_state != DISTRIBUTED) {
       TBOX_ERROR("Individually erasing boxes is a local process\n"
          << "so it can only be performed in\n"
-         << "distributed state.");
+         << "distributed state." << std::endl);
    }
 #endif
 
@@ -1222,7 +1226,7 @@ BoxLevel::eraseBox(
    if (d_parallel_state != DISTRIBUTED) {
       TBOX_ERROR("Individually erasing Boxes is a local process\n"
          << "so it can only be performed in\n"
-         << "distributed state.");
+         << "distributed state." << std::endl);
    }
 #endif
 
@@ -1330,7 +1334,7 @@ BoxLevel::hasBox(
       if (d_parallel_state == DISTRIBUTED) {
          TBOX_ERROR("BoxLevel: Cannot check on remote Box "
             << box << " while in DISTRIBUTED mode.\n"
-            << "See BoxLevel::setParallelState().");
+            << "See BoxLevel::setParallelState()." << std::endl);
       }
 #endif
       BoxContainer::const_iterator ni = d_global_boxes.find(box);
@@ -1352,7 +1356,7 @@ BoxLevel::getBoxStrict(
          TBOX_ERROR(
             "BoxContainer::getBoxStrict: requested box "
             << box
-            << " does not exist in the box_level.");
+            << " does not exist in the box_level." << std::endl);
       }
 
       return ni;
@@ -1361,7 +1365,7 @@ BoxLevel::getBoxStrict(
       if (d_parallel_state != GLOBALIZED) {
          TBOX_ERROR(
             "BoxLevel::getBox: cannot get remote box "
-            << box << " without being in globalized state.");
+            << box << " without being in globalized state." << std::endl);
       }
 #endif
       BoxContainer::const_iterator ni = d_global_boxes.find(box);
@@ -1369,7 +1373,7 @@ BoxLevel::getBoxStrict(
          TBOX_ERROR(
             "BoxContainer::getBoxStrict: requested box "
             << box
-            << " does not exist in the box_level.");
+            << " does not exist in the box_level." << std::endl);
       }
 
       return ni;
@@ -1389,7 +1393,7 @@ BoxLevel::getBoxStrict(
       TBOX_ERROR(
          "BoxLevel::getBoxStrict: cannot get remote box " << box_id
                                                                  <<
-         " without being in globalized state.");
+         " without being in globalized state." << std::endl);
    }
 #endif
 
@@ -1401,7 +1405,7 @@ BoxLevel::getBoxStrict(
          TBOX_ERROR(
             "BoxContainer::getBoxStrict: requested box "
             << box
-            << " does not exist in the box_level.");
+            << " does not exist in the box_level." << std::endl);
       }
       return ni;
    } else {
@@ -1410,7 +1414,7 @@ BoxLevel::getBoxStrict(
          TBOX_ERROR(
             "BoxContainer::getBoxStrict: requested box "
             << box
-            << " does not exist in the box_level.");
+            << " does not exist in the box_level." << std::endl);
       }
       return ni;
    }
@@ -1496,7 +1500,7 @@ BoxLevel::getFromRestart(
    } else {
       TBOX_WARNING(
          "BoxLevel::getFromRestart: Uninitialized MPI communicator.\n"
-         << "Using tbox::SAMRAI_MPI::getSAMRAIWorld().");
+         << "Using tbox::SAMRAI_MPI::getSAMRAIWorld()." << std::endl);
       initialize(ratio, grid_geom,
          tbox::SAMRAI_MPI::getSAMRAIWorld(), DISTRIBUTED);
    }

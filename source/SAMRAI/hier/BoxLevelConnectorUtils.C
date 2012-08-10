@@ -96,7 +96,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
    } else {
       TBOX_ERROR("BoxLevelConnectorUtils::baseNestsInHead: head index space\n"
          << "must be either a refinement or a coarsening of\n"
-         << "base, but not both.");
+         << "base, but not both." << std::endl);
    }
 
    Connector base_to_head(
@@ -168,7 +168,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
    if (!(connector.getConnectorWidth() >= required_gcw)) {
       TBOX_ERROR("BoxLevelConnectorUtils::baseNestsInHead: connector lacks\n"
          << "sufficient ghost cell width for determining whether its base\n"
-         << "nests inside its head.");
+         << "nests inside its head." << std::endl);
    }
 
    OverlapConnectorAlgorithm oca;
@@ -566,7 +566,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
                                                                    <<
          "nesting_width may not have mix of positive\n"
                                                                    <<
-         "and negative values.");
+         "and negative values." << std::endl);
    }
 
    if ( nesting_width != zero_vec &&
@@ -578,7 +578,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
          << "If nesting width (" << nesting_width << " is non-zero,\n"
          << "width of input_to_reference, " << input_to_reference.getConnectorWidth() << ",\n"
          << "must be at least 1.  Otherwise, correct results cannot be guaranteed."
-         );
+         << std::endl);
    }
 
    if ( !( input_to_reference.getConnectorWidth() >=
@@ -588,7 +588,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
          << caller << ": error:\n"
          << "input_to_reference width, " << input_to_reference.getConnectorWidth()
          << ",\nmust be greater than the absolute value of nesting_width, "
-         << nesting_width << ",\nto avoid erroneous results.");
+         << nesting_width << ",\nto avoid erroneous results." << std::endl);
    }
 
    parts.initialize(input.getRefinementRatio(),
@@ -1235,25 +1235,25 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
          TBOX_ERROR(
             "BoxLevelConnectorUtils::addPeriodicImages: non-transposed connector inputs.\n"
             << "box_level_to_anchor and anchor_to_box_level\n"
-            << "must be mutual transposes.");
+            << "must be mutual transposes." << std::endl);
       }
       box_level_to_anchor.assertTransposeCorrectness(anchor_to_box_level);
       if (oca.checkOverlapCorrectness(anchor_to_anchor)) {
          TBOX_ERROR(
             "BoxLevelConnectorUtils::addPeriodicImages: input anchor_to_anchor\n"
-            << "Connector failed edge correctness check.");
+            << "Connector failed edge correctness check." << std::endl);
       }
       if (oca.checkOverlapCorrectness(anchor_to_box_level, false, true,
              true)) {
          TBOX_ERROR(
             "BoxLevelConnectorUtils::addPeriodicImages: input anchor_to_box_level\n"
-            << "Connector failed edge correctness check.");
+            << "Connector failed edge correctness check." << std::endl);
       }
       if (oca.checkOverlapCorrectness(box_level_to_anchor, false, true,
              true)) {
          TBOX_ERROR(
             "BoxLevelConnectorUtils::addPeriodicImages: input box_level_to_anchor\n"
-            << "Connector failed edge correctness check.");
+            << "Connector failed edge correctness check." << std::endl);
       }
    }
    if (!(anchor_to_anchor.getConnectorWidth() >=
@@ -1399,7 +1399,7 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
             << "anchor_to_box_level:\n"
             << anchor_to_box_level.format("ERR-> ", 3)
             << "box_level_to_anchor:\n"
-            << box_level_to_anchor.format("ERR-> ", 3));
+            << box_level_to_anchor.format("ERR-> ", 3) << std::endl);
       }
    }
    if (d_sanity_check_postcond) {
@@ -1434,7 +1434,7 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
             << "anchor_to_box_level:\n"
             << anchor_to_box_level.format("ERR-> ", 3)
             << "box_level_to_anchor:\n"
-            << box_level_to_anchor.format("ERR-> ", 3));
+            << box_level_to_anchor.format("ERR-> ", 3) << std::endl);
       }
    }
 }

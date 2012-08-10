@@ -509,7 +509,7 @@ BaseGridGeometry::setBoundaryBoxes(
       TBOX_ERROR("Error in BaseGridGeometry object with name = "
          << d_object_name << ": in computeMaxGhostWidth():  "
          << "Cannot add variables and increase maximum ghost "
-         << "width after creating the BaseGridGeometry!");
+         << "width after creating the BaseGridGeometry!" << std::endl);
    }
 
    d_max_data_ghost_width = ghost_width;
@@ -598,7 +598,7 @@ BaseGridGeometry::getFromRestart()
 
    if (!restart_db->isDatabase(getObjectName())) {
       TBOX_ERROR("Restart database corresponding to "
-         << getObjectName() << " not found in the restart file.");
+         << getObjectName() << " not found in the restart file." << std::endl);
    }
    boost::shared_ptr<tbox::Database> db(
       restart_db->getDatabase(getObjectName()));
@@ -609,7 +609,8 @@ BaseGridGeometry::getFromRestart()
    if (ver != HIER_GRID_GEOMETRY_VERSION) {
       TBOX_ERROR(
          getObjectName() << ":  "
-                         << "Restart file version is different than class version.");
+                         << "Restart file version is different than class version."
+                         << std::endl);
    }
 
    d_number_blocks = db->getInteger("num_blocks");
@@ -761,7 +762,7 @@ BaseGridGeometry::getFromInput(
                TBOX_ERROR(
                   getObjectName() << ":  "
                                   << "No boxes for " << domain_name
-                                  << " array found in input.");
+                                  << " array found in input." << std::endl);
             }
          } else if (b == 0 && d_number_blocks == 1 &&
                     input_db->keyExists("domain_boxes")) {
@@ -770,12 +771,13 @@ BaseGridGeometry::getFromInput(
                TBOX_ERROR(
                   getObjectName() << ":  "
                                   << "No boxes for domain_boxes"
-                                  << " array found in input.");
+                                  << " array found in input." << std::endl);
             }
          } else {
             TBOX_ERROR(
                getObjectName() << ":  "
-                               << "Key data '" << domain_name << "' not found in input.");
+                               << "Key data '" << domain_name << "' not found in input."
+                               << std::endl);
          }
 
          for (BoxContainer::iterator itr = block_domain_boxes.begin();
@@ -1530,7 +1532,7 @@ BaseGridGeometry::setPhysicalDomain(
             TBOX_ERROR("Error in BaseGridGeometry object with name = "
                << d_object_name << ": in initializePeriodicShift():  "
                << "Domain is not periodic for one (or more) of the directions "
-               << "specified in the geometry input file!");
+               << "specified in the geometry input file!" << std::endl);
          }
       }
    }

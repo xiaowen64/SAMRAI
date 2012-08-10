@@ -233,7 +233,7 @@ BoxContainer::insert(
    }
 
    if (!d_ordered) {
-      TBOX_ERROR("insert attempted on unordered container.");
+      TBOX_ERROR("insert attempted on unordered container." << std::endl);
    }
 
    if (d_tree) {
@@ -272,7 +272,8 @@ BoxContainer::insert(
    }
 
    if (!d_ordered) {
-      TBOX_ERROR("BoxContainer::insert called on unordered BoxContainer.");
+      TBOX_ERROR("BoxContainer::insert called on unordered BoxContainer."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -310,7 +311,7 @@ BoxContainer::insert (
    }
 
    if (!d_ordered) {
-      TBOX_ERROR("insert attempted on unordered container.");
+      TBOX_ERROR("insert attempted on unordered container." << std::endl);
    }
 
    if (d_tree) {
@@ -370,7 +371,7 @@ void
 BoxContainer::simplify()
 {
    if (d_ordered) {
-      TBOX_ERROR("simplify called on ordered BoxContainer.");
+      TBOX_ERROR("simplify called on ordered BoxContainer." << std::endl);
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -506,7 +507,7 @@ BoxContainer::coalesce()
 #endif
 
    if (d_ordered) {
-      TBOX_ERROR("coalesce called on ordered BoxContainer.");
+      TBOX_ERROR("coalesce called on ordered BoxContainer." << std::endl);
    }
 
    if (d_tree) {
@@ -549,7 +550,8 @@ void
 BoxContainer::removePeriodicImageBoxes()
 {
    if (!d_ordered && !isEmpty()) {
-      TBOX_ERROR("removePeriodicImages attempted on unordered container.");
+      TBOX_ERROR("removePeriodicImages attempted on unordered container."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -577,7 +579,8 @@ BoxContainer::separatePeriodicImages(
    std::vector<Box>& periodic_image_box_vector) const
 {
    if (!d_ordered) {
-      TBOX_ERROR("separatePeriodicImages called on unordered BoxContainer.");
+      TBOX_ERROR("separatePeriodicImages called on unordered BoxContainer."
+         << std::endl);
    }
 
    if (!isEmpty()) {
@@ -649,7 +652,7 @@ Box
 BoxContainer::getBoundingBox() const
 {
    if (isEmpty()) {
-      TBOX_ERROR("Bounding box container is empty");
+      TBOX_ERROR("Bounding box container is empty" << std::endl);
    }
    const_iterator i = begin();
    Box bbox(*i);
@@ -659,7 +662,8 @@ BoxContainer::getBoundingBox() const
       if (i->getBlockId() == block_id) {
          bbox += *i;
       } else {
-         TBOX_ERROR("Attempted to find bounding box for BoxContainer with boxes from different blocks");
+         TBOX_ERROR("Attempted to find bounding box for BoxContainer with boxes from different blocks"
+            << std::endl);
       }
    }
    return bbox;
@@ -671,7 +675,7 @@ BoxContainer::getBoundingBox(
    const BlockId& block_id) const
 {
    if (isEmpty()) {
-      TBOX_ERROR("Bounding box container is empty");
+      TBOX_ERROR("Bounding box container is empty" << std::endl);
    }
 
    const tbox::Dimension& dim = d_list.front().getDim();
@@ -693,7 +697,8 @@ BoxContainer::getBoundingBox(
     * box will be empty.
     */
    if (i == end()) {
-      TBOX_WARNING("Container has no boxes with the given BlockId");
+      TBOX_WARNING("Container has no boxes with the given BlockId"
+         << std::endl);
    } else {
 
       ++i;
@@ -755,7 +760,8 @@ BoxContainer::removeIntersections(
    }
 
    if (d_ordered) {
-      TBOX_ERROR("removeIntersections attempted on ordered container.");
+      TBOX_ERROR("removeIntersections attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -793,7 +799,8 @@ BoxContainer::removeIntersections(
    }
 
    if (d_ordered) {
-      TBOX_ERROR("removeIntersections attempted on ordered container.");
+      TBOX_ERROR("removeIntersections attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -829,7 +836,8 @@ BoxContainer::removeIntersections(
    }
 
    if (d_ordered) {
-      TBOX_ERROR("removeIntersections attempted on ordered container.");
+      TBOX_ERROR("removeIntersections attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -841,7 +849,8 @@ BoxContainer::removeIntersections(
    }
 
    if (!takeaway.d_tree) {
-      TBOX_ERROR("Multiblock removeIntersections called without makeTree.");
+      TBOX_ERROR("Multiblock removeIntersections called without makeTree."
+         << std::endl);
    }
 
    const BaseGridGeometry& grid_geometry(*takeaway.d_tree->getGridGeometry());
@@ -897,7 +906,8 @@ BoxContainer::removeIntersections(
    const Box& takeaway)
 {
    if (d_ordered) {
-      TBOX_ERROR("removeIntersections attempted on ordered container.");
+      TBOX_ERROR("removeIntersections attempted on ordered container."
+         << std::endl);
    }
 
    /*
@@ -931,7 +941,8 @@ BoxContainer::removeIntersections(
    }
 
    if (d_ordered) {
-      TBOX_ERROR("removeIntersections attempted on ordered container.");
+      TBOX_ERROR("removeIntersections attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -974,7 +985,8 @@ BoxContainer::removeIntersectionsFromSublist(
    iterator& insertion_pt)
 {
    if (d_ordered) {
-      TBOX_ERROR("removeIntersections attempted on ordered container.");
+      TBOX_ERROR("removeIntersections attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -1017,7 +1029,8 @@ BoxContainer::intersectBoxes(
    }
 
    if (d_ordered) {
-      TBOX_ERROR("intersectBoxes attempted on ordered container.");
+      TBOX_ERROR("intersectBoxes attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -1049,7 +1062,8 @@ BoxContainer::intersectBoxes(
    }
 
    if (d_ordered) {
-      TBOX_ERROR("intersectBoxes attempted on ordered container.");
+      TBOX_ERROR("intersectBoxes attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -1086,7 +1100,8 @@ BoxContainer::intersectBoxes(
    }
 
    if (d_ordered) {
-      TBOX_ERROR("intersectBoxes attempted on ordered container.");
+      TBOX_ERROR("intersectBoxes attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -1126,7 +1141,8 @@ BoxContainer::intersectBoxes(
    }
 
    if (d_ordered) {
-      TBOX_ERROR("intersectBoxes attempted on ordered container.");
+      TBOX_ERROR("intersectBoxes attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -1139,7 +1155,8 @@ BoxContainer::intersectBoxes(
    }
 
    if (!keep.d_tree) {
-      TBOX_ERROR("Multiblock intersectBoxes called without makeTree.");
+      TBOX_ERROR("Multiblock intersectBoxes called without makeTree."
+         << std::endl);
    }
 
    const BaseGridGeometry& grid_geometry(*keep.d_tree->getGridGeometry());
@@ -1319,7 +1336,8 @@ BoxContainer::getOwners(
             const int owner = i_nabr->getOwnerRank();
             owners.insert(owner);
          } else {
-            TBOX_ERROR("Attempted to get owner of Box with invalid BoxId.");
+            TBOX_ERROR("Attempted to get owner of Box with invalid BoxId."
+               << std::endl);
          }
       }
    }
@@ -1336,7 +1354,8 @@ BoxContainer::unshiftPeriodicImageBoxes(
    const IntVector& refinement_ratio) const
 {
    if (!d_ordered) {
-      TBOX_ERROR("unshiftPeriodicImageBoxes called on unordered container.");
+      TBOX_ERROR("unshiftPeriodicImageBoxes called on unordered container."
+         << std::endl);
    }
 
    iterator hint = output_boxes.begin();
@@ -1371,10 +1390,12 @@ BoxContainer::order()
       d_set.clear();
       for (iterator i(*this); i != end(); ++i) {
          if (!i->getBoxId().isValid()) {
-            TBOX_ERROR("Attempted to order a BoxContainer that has a member with an invalid BoxId.");
+            TBOX_ERROR("Attempted to order a BoxContainer that has a member with an invalid BoxId."
+               << std::endl);
          }
          if (d_set.insert(&(*i)).second == false) {
-            TBOX_ERROR("Attempted to order a BoxContainer with duplicate BoxIds.");
+            TBOX_ERROR("Attempted to order a BoxContainer with duplicate BoxIds."
+               << std::endl);
          }
          i->lockId();
       }
@@ -1448,7 +1469,8 @@ BoxContainer::erase(
    const Box& box)
 {
    if (!d_ordered) {
-      TBOX_ERROR("erase with Box argument attempted on unordered BoxContainer.");
+      TBOX_ERROR("erase with Box argument attempted on unordered BoxContainer."
+         << std::endl);
    }
 
    int ret = static_cast<int>(d_set.erase(const_cast<Box*>(&box)));
@@ -1647,7 +1669,8 @@ BoxContainer::getFromRestart(
    int version = restart_db.getInteger("HIER_BOX_CONTAINER_VERSION");
    if (version != HIER_BOX_CONTAINER_VERSION) {
       TBOX_ERROR("BoxContainer::getFromRestart() error...\n"
-         << "   Restart file version different than class version.");
+         << "   Restart file version different than class version."
+         << std::endl);
    }
 
    const unsigned int mbs_size = restart_db.getInteger("mapped_box_set_size");
@@ -1802,7 +1825,8 @@ BoxContainer::findOverlapBoxes(
    }
 
    if (!d_tree) {
-      TBOX_ERROR("Must call makeTree before calling findOverlapBoxes with refinement ratio argument.");
+      TBOX_ERROR("Must call makeTree before calling findOverlapBoxes with refinement ratio argument."
+         << std::endl);
    }
 
    d_tree->findOverlapBoxes(overlap_boxes,

@@ -220,7 +220,7 @@ public:
       if (!d_id_locked) {
          d_id.initialize(local_id, owner_rank, periodic_id);
       } else {
-         TBOX_ERROR("Attempted to change BoxId that is locked in an ordered BoxContainer.");
+         TBOX_ERROR("Attempted to change BoxId that is locked in an ordered BoxContainer." << std::endl);
       }
    }
 

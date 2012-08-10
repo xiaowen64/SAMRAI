@@ -976,27 +976,27 @@ CellPoissonFACOps::initializeOperatorState(
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (!d_prolongation_refine_operator) {
       TBOX_ERROR(d_object_name
-         << ": Cannot find prolongation refine operator");
+         << ": Cannot find prolongation refine operator" << std::endl);
    }
    if (!d_urestriction_coarsen_operator) {
       TBOX_ERROR(d_object_name
-         << ": Cannot find restriction coarsening operator");
+         << ": Cannot find restriction coarsening operator" << std::endl);
    }
    if (!d_rrestriction_coarsen_operator) {
       TBOX_ERROR(d_object_name
-         << ": Cannot find restriction coarsening operator");
+         << ": Cannot find restriction coarsening operator" << std::endl);
    }
    if (!d_flux_coarsen_operator) {
       TBOX_ERROR(d_object_name
-         << ": Cannot find flux coarsening operator");
+         << ": Cannot find flux coarsening operator" << std::endl);
    }
    if (!d_ghostfill_refine_operator) {
       TBOX_ERROR(d_object_name
-         << ": Cannot find ghost filling refinement operator");
+         << ": Cannot find ghost filling refinement operator" << std::endl);
    }
    if (!d_ghostfill_nocoarse_refine_operator) {
       TBOX_ERROR(d_object_name
-         << ": Cannot find ghost filling refinement operator");
+         << ": Cannot find ghost filling refinement operator" << std::endl);
    }
 #endif
 
@@ -1288,7 +1288,7 @@ CellPoissonFACOps::prolongErrorAndCorrect(
    if (s.getPatchHierarchy() != d_hierarchy
        || d.getPatchHierarchy() != d_hierarchy) {
       TBOX_ERROR(d_object_name << ": Vector hierarchy does not match\n"
-         "internal state hierarchy.");
+         "internal state hierarchy." << std::endl);
    }
 #endif
 
@@ -1376,7 +1376,7 @@ CellPoissonFACOps::smoothErrorByRedBlack(
    if (data.getPatchHierarchy() != d_hierarchy
        || residual.getPatchHierarchy() != d_hierarchy) {
       TBOX_ERROR(d_object_name << ": Vector hierarchy does not match\n"
-         "internal hierarchy.");
+         "internal hierarchy." << std::endl);
    }
 #endif
    boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(ln));
@@ -1714,7 +1714,8 @@ CellPoissonFACOps::solveCoarsestLevel(
       TBOX_ERROR(d_object_name << ": Coarse level solver choice '"
                                << d_coarse_solver_choice
                                << "' unavailable in "
-                               << "scapCellPoissonOps::solveCoarsestLevel.");
+                               << "scapCellPoissonOps::solveCoarsestLevel."
+                               << std::endl);
 #else
       return_value = solveCoarsestLevel_HYPRE(data, residual, coarsest_ln);
 #endif
@@ -1722,7 +1723,8 @@ CellPoissonFACOps::solveCoarsestLevel(
       TBOX_ERROR(
          d_object_name << ": Bad coarse level solver choice '"
                        << d_coarse_solver_choice
-                       << "' in scapCellPoissonOps::solveCoarsestLevel.");
+                       << "' in scapCellPoissonOps::solveCoarsestLevel."
+                       << std::endl);
    }
 
    xeqScheduleGhostFillNoCoarse(data.getComponentDescriptorIndex(0),
@@ -1753,7 +1755,8 @@ CellPoissonFACOps::solveCoarsestLevel_HYPRE(
    TBOX_ERROR(d_object_name << ": Coarse level solver choice '"
                             << d_coarse_solver_choice
                             << "' unavailable in "
-                            << "CellPoissonFACOps::solveCoarsestLevel_HYPRE.");
+                            << "CellPoissonFACOps::solveCoarsestLevel_HYPRE."
+                            << std::endl);
 
    return 0;
 
@@ -1807,7 +1810,7 @@ CellPoissonFACOps::computeCompositeResidualOnLevel(
        || solution.getPatchHierarchy() != d_hierarchy
        || rhs.getPatchHierarchy() != d_hierarchy) {
       TBOX_ERROR(d_object_name << ": Vector hierarchy does not match\n"
-         "internal hierarchy.");
+         "internal hierarchy." << std::endl);
    }
 #endif
    boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(ln));
@@ -2008,7 +2011,8 @@ CellPoissonFACOps::computeVectorWeights(
    if (finest_ln == -1) finest_ln = hierarchy->getFinestLevelNumber();
    if (finest_ln < coarsest_ln) {
       TBOX_ERROR(d_object_name
-         << ": Illegal level number range.  finest_ln < coarsest_ln.");
+         << ": Illegal level number range.  finest_ln < coarsest_ln."
+         << std::endl);
    }
 
    int ln;
@@ -2040,7 +2044,8 @@ CellPoissonFACOps::computeVectorWeights(
             boost::detail::dynamic_cast_tag());
          if (!w) {
             TBOX_ERROR(d_object_name
-               << ": weight id must refer to a pdat::CellVariable");
+               << ": weight id must refer to a pdat::CellVariable"
+               << std::endl);
          }
          w->fillAll(cell_vol);
       }
@@ -2115,7 +2120,7 @@ CellPoissonFACOps::checkInputPatchDataIndices() const
          boost::detail::dynamic_cast_tag());
       if (!diffcoef_var) {
          TBOX_ERROR(d_object_name
-            << ": Bad diffusion coefficient patch data index.");
+            << ": Bad diffusion coefficient patch data index." << std::endl);
       }
    }
 
@@ -2126,7 +2131,8 @@ CellPoissonFACOps::checkInputPatchDataIndices() const
          var,
          boost::detail::dynamic_cast_tag());
       if (!scalar_field_var) {
-         TBOX_ERROR(d_object_name << ": Bad linear term patch data index.");
+         TBOX_ERROR(d_object_name << ": Bad linear term patch data index."
+             << std::endl);
       }
    }
 
@@ -2772,7 +2778,7 @@ CellPoissonFACOps::xeqScheduleProlongation(
    int dest_ln)
 {
    if (!d_prolongation_refine_schedules[dest_ln]) {
-      TBOX_ERROR("Expected schedule not found.");
+      TBOX_ERROR("Expected schedule not found." << std::endl);
    }
    xfer::RefineAlgorithm refiner;
    refiner.registerRefine(dst_id,
@@ -2792,7 +2798,7 @@ CellPoissonFACOps::xeqScheduleURestriction(
    int dest_ln)
 {
    if (!d_urestriction_coarsen_schedules[dest_ln]) {
-      TBOX_ERROR("Expected schedule not found.");
+      TBOX_ERROR("Expected schedule not found." << std::endl);
    }
 
    xfer::CoarsenAlgorithm coarsener(d_dim);
@@ -2812,7 +2818,7 @@ CellPoissonFACOps::xeqScheduleRRestriction(
    int dest_ln)
 {
    if (!d_rrestriction_coarsen_schedules[dest_ln]) {
-      TBOX_ERROR("Expected schedule not found.");
+      TBOX_ERROR("Expected schedule not found." << std::endl);
    }
 
    xfer::CoarsenAlgorithm coarsener(d_dim);
@@ -2832,7 +2838,7 @@ CellPoissonFACOps::xeqScheduleFluxCoarsen(
    int dest_ln)
 {
    if (!d_flux_coarsen_schedules[dest_ln]) {
-      TBOX_ERROR("Expected schedule not found.");
+      TBOX_ERROR("Expected schedule not found." << std::endl);
    }
 
    xfer::CoarsenAlgorithm coarsener(d_dim);
@@ -2851,7 +2857,7 @@ CellPoissonFACOps::xeqScheduleGhostFill(
    int dest_ln)
 {
    if (!d_ghostfill_refine_schedules[dest_ln]) {
-      TBOX_ERROR("Expected schedule not found.");
+      TBOX_ERROR("Expected schedule not found." << std::endl);
    }
    xfer::RefineAlgorithm refiner;
    refiner.
@@ -2872,7 +2878,7 @@ CellPoissonFACOps::xeqScheduleGhostFillNoCoarse(
    int dest_ln)
 {
    if (!d_ghostfill_nocoarse_refine_schedules[dest_ln]) {
-      TBOX_ERROR("Expected schedule not found.");
+      TBOX_ERROR("Expected schedule not found." << std::endl);
    }
    xfer::RefineAlgorithm refiner;
    refiner.

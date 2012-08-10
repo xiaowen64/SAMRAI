@@ -309,7 +309,7 @@ public:
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (mi == d_patches.end()) {
          TBOX_ERROR("PatchLevel::getPatch(" << mbid
-            << "): patch does not exist locally.");
+            << "): patch does not exist locally." << std::endl);
       }
 #endif
       return (*mi).second;

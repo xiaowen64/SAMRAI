@@ -1185,7 +1185,8 @@ ChopAndPackLoadBalancer::getFromInput(
             if (d_max_workload_factor[i] < 0.0) {
                TBOX_ERROR(
                   d_object_name
-                  << "Max workload values should be greater than 0");
+                  << "Max workload values should be greater than 0"
+                  << std::endl);
             }
          }
 
@@ -1201,7 +1202,8 @@ ChopAndPackLoadBalancer::getFromInput(
                 1.0) {
                TBOX_ERROR(
                   d_object_name
-                  << "Workload tolerance should be >= 0 and < 1.0");
+                  << "Workload tolerance should be >= 0 and < 1.0"
+                  << std::endl);
             }
          }
 

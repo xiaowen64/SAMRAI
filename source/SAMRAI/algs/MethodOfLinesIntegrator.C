@@ -472,7 +472,8 @@ MethodOfLinesIntegrator::registerVariable(
       default: {
 
          TBOX_ERROR(d_object_name << ":  "
-                                  << "unknown MOL_VAR_TYPE = " << m_v_type);
+                                  << "unknown MOL_VAR_TYPE = " << m_v_type
+                                  << std::endl);
 
       }
 
@@ -762,7 +763,7 @@ MethodOfLinesIntegrator::getFromRestart()
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
-         << d_object_name << " not found in restart file.");
+         << d_object_name << " not found in restart file." << std::endl);
    }
    boost::shared_ptr<tbox::Database> restart_db(
       root_db->getDatabase(d_object_name));
@@ -771,7 +772,8 @@ MethodOfLinesIntegrator::getFromRestart()
    if (ver != ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION) {
       TBOX_ERROR(
          d_object_name << ":  "
-                       << "Restart file version different than class version.");
+                       << "Restart file version different than class version."
+                       << std::endl);
    }
 
    d_alpha_1 = restart_db->getDoubleArray("alpha_1");
@@ -783,7 +785,8 @@ MethodOfLinesIntegrator::getFromRestart()
       TBOX_ERROR(
          d_object_name << ":  "
                        << "The number of alpha_1, alpha_2, and beta values "
-                       << "specified in restart is not consistent");
+                       << "specified in restart is not consistent"
+                       << std::endl);
    }
 
    d_order = d_alpha_1.getSize();

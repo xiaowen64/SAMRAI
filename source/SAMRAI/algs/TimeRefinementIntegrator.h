@@ -138,7 +138,7 @@ namespace algs {
  *     <td>start_time</td>
  *     <td>double</td>
  *     <td>none</td>
- *     <td>start_time <= end_time</td>
+ *     <td>start_time >=0</td>
  *     <td>req</td>
  *     <td>May not be modified by input db on restart</td>
  *   </tr>
@@ -154,7 +154,7 @@ namespace algs {
  *     <td>grow_dt</td>
  *     <td>double</td>
  *     <td>1.0</td>
- *     <td>any double</td>
+ *     <td>>0</td>
  *     <td>opt</td>
  *     <td>Parameter read from restart db may be overridden by input db</td>
  *   </tr>

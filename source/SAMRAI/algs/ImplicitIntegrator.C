@@ -111,7 +111,7 @@ ImplicitIntegrator::initialize()
    d_implicit_equations->setupSolutionVector(d_solution_vector);
 
    if (d_solution_vector->getNumberOfComponents() == 0) {
-      TBOX_ERROR("Solution vector has zero components.");
+      TBOX_ERROR("Solution vector has zero components." << std::endl);
    }
 
    d_nonlinear_solver->initialize(d_solution_vector);
@@ -279,17 +279,21 @@ ImplicitIntegrator::getFromInput(
    if (!is_from_restart) {
 
       d_initial_time = input_db->getDouble("initial_time");
+      if (d_initial_time < 0) {
+         TBOX_ERROR("ImplicitIntegrator::getFromInput() error...\n"
+            << "initial_time must be >= 0." << std::endl);
+      }
 
       d_final_time = input_db->getDouble("final_time");
       if (d_final_time < d_initial_time) {
-         TBOX_ERROR(d_object_name << " -- Error in input data "
-                                  << "final_time < initial_time.");
+         TBOX_ERROR("ImplicitIntegrator::getFromInput() error...\n"
+            << "final_time must be >= initial_time " << std::endl);
       }
 
       d_max_integrator_steps = input_db->getInteger("max_integrator_steps");
       if (d_max_integrator_steps < 0) {
-         TBOX_ERROR(d_object_name << " -- Error in input data "
-                                  << "max_integrator_steps < 0.");
+         TBOX_ERROR("ImplicitIntegrator::getFromInput() error...\n"
+            << "max_integrator_steps must be >= 0." << std::endl);
       }
 
    } else if (input_db) {
@@ -301,27 +305,28 @@ ImplicitIntegrator::getFromInput(
             double tmp = input_db->getDouble("initial_time");
             if (tmp != d_initial_time) {
                TBOX_WARNING("ImplicitIntegrator::getFromInput warning...\n"
-                  << "initial_time may not be changed on restart." << std::endl);
+                  << "initial_time may not be changed on restart."
+                  << std::endl);
             }
          }
 
          d_final_time =
             input_db->getDoubleWithDefault("final_time", d_final_time);
          if (d_final_time < d_initial_time) {
-            TBOX_ERROR(d_object_name << " -- Error in input data "
-                                     << "final_time < initial_time.");
+            TBOX_ERROR("ImplicitIntegrator::getFromInput() error...\n"
+               << "final_time must be >= initial_time " << std::endl);
          }
 
          d_max_integrator_steps =
             input_db->getIntegerWithDefault("max_integrator_steps",
                d_max_integrator_steps);
          if (d_max_integrator_steps < 0) {
-            TBOX_ERROR(d_object_name << " -- Error in input data "
-                                     << "max_integrator_steps < 0.");
+            TBOX_ERROR("ImplicitIntegrator::getFromInput() error...\n"
+               << "max_integrator_steps must be >= 0." << std::endl);
          } else if (d_max_integrator_steps < d_integrator_step) {
-            TBOX_ERROR(
-               d_object_name << " -- Error in input data "
-                             << "max_integrator_steps < current integrator step.");
+            TBOX_ERROR("ImplicitIntegrator::getFromInput() error...\n"
+               << "max_integrator_steps must be >= current integrator step."
+               << std::endl);
          }
       }
    }
@@ -371,7 +376,7 @@ ImplicitIntegrator::getFromRestart()
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
-         << d_object_name << " not found in restart file");
+         << d_object_name << " not found in restart file" << std::endl);
    }
    boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
@@ -379,7 +384,7 @@ ImplicitIntegrator::getFromRestart()
    if (ver != ALGS_IMPLICIT_INTEGRATOR_VERSION) {
       TBOX_ERROR(d_object_name << ":  "
                                << "Restart file version different "
-                               << "than class version.");
+                               << "than class version." << std::endl);
    }
 
    d_initial_time = db->getDouble("initial_time");

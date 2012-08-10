@@ -242,12 +242,14 @@ PatchHierarchy::getFromInput(
             if (d_proper_nesting_buffer[ln] < 0) {
                TBOX_ERROR(
                   d_object_name << ":  "
-                                << "Key data `proper_nesting_buffer' has values < 0.");
+                                << "Key data `proper_nesting_buffer' has values < 0."
+                                << std::endl);
             }
             if (d_proper_nesting_buffer[ln] == 0) {
                TBOX_WARNING(
                   d_object_name << ":  "
-                                << "Using zero `proper_nesting_buffer' values.");
+                                << "Using zero `proper_nesting_buffer' values."
+                                << std::endl);
             }
          }
 
@@ -262,7 +264,8 @@ PatchHierarchy::getFromInput(
                              << "Allowing patches smaller than the given "
                              << "smallest patch size.  Note:  If periodic "
                              << "boundary conditions are used, this flag is "
-                             << "ignored in the periodic directions.");
+                             << "ignored in the periodic directions."
+                             << std::endl);
          }
       }
       else {
@@ -419,7 +422,7 @@ PatchHierarchy::registerConnectorWidthRequestor(
          << "Registering a new ConnectorWidthRequestorStrategy after\n"
          << "calling getRequiredConnectorWidth() is disallowed because\n"
          << "it may cause getRequiredConnectorWidth() to return\n"
-         << "conflicting requirements.");
+         << "conflicting requirements." << std::endl);
    }
 
    size_t i;
@@ -551,7 +554,7 @@ PatchHierarchy::getRequiredConnectorWidth(
       }
       TBOX_ERROR("PatchHierarchy::getRequiredConnectorWidth: base_ln and\n"
          << "head_ln should differ by at most 1.\n"
-         << "base_ln=" << base_ln << "  head_ln=" << head_ln);
+         << "base_ln=" << base_ln << "  head_ln=" << head_ln << std::endl);
    }
    return d_self_connector_widths[base_ln];
 }
@@ -752,7 +755,7 @@ PatchHierarchy::makeNewPatchLevel(
          TBOX_ERROR("PatchHierarchy::makeNewPatchLevel: patch level "
             << ln << " has refinement ratio "
             << new_box_level.getRefinementRatio()
-            << ", it should be " << expected_ratio);
+            << ", it should be " << expected_ratio << std::endl);
       }
    }
 
@@ -966,7 +969,7 @@ PatchHierarchy::getFromRestart()
    if (d_number_levels <= 0) {
       TBOX_ERROR("PatchHierarchy::getFromRestart error ...\n"
          << "  object name = " << d_object_name
-         << " : `d_number_levels' is <= zero in restart file");
+         << " : `d_number_levels' is <= zero in restart file" << std::endl);
    }
 
    d_max_levels = database->getInteger("max_levels");
@@ -1023,7 +1026,7 @@ PatchHierarchy::getFromRestart()
                        << "Allowing patches smaller than the given "
                        << "smallest patch size.  Note:  If periodic "
                        << "boundary conditions are used, this flag is "
-                       << "ignored in the periodic directions.");
+                       << "ignored in the periodic directions." << std::endl);
    }
 
    boost::shared_ptr<tbox::Database> self_connector_widths_db(

@@ -1183,7 +1183,7 @@ HyperbolicLevelIntegrator::advanceLevel(
             if (!d_bdry_sched_advance_new[level_number]) {
                TBOX_ERROR(
                   d_object_name << ":  "
-                                << "Attempt to fill new ghost data for timestep"
+                                << "Attempt to fill new ghost data for timestep "
                                 << "computation, but schedule not defined." << std::endl);
             }
 
@@ -1971,7 +1971,8 @@ HyperbolicLevelIntegrator::registerVariable(
          } else {
             TBOX_ERROR(
                d_object_name << ":  "
-                             << "Flux is neither face- or side-centered." << std::endl);
+                             << "Flux is neither face- or side-centered."
+                             << std::endl);
          }
 
          d_flux_variables.push_back(var);
@@ -2176,7 +2177,7 @@ HyperbolicLevelIntegrator::postprocessFluxData(
 
    if (level->getDim() > tbox::Dimension(3)) {
       TBOX_ERROR(
-         "HyperbolicLevelIntegrator::postprocessFluxData : DIM > 3 not implemented");
+         "HyperbolicLevelIntegrator::postprocessFluxData : DIM > 3 not implemented" << std::endl);
    }
 
    if (regrid_advance && first_step) {

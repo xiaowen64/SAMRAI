@@ -63,7 +63,7 @@ AsyncCommStage::~AsyncCommStage()
                << "have pending communication leads to\n"
                << "abandoned MPI messages.  Member number "
                << i << "\n"
-               << "is not yet done.");
+               << "is not yet done." << std::endl);
          }
          d_members[i] = NULL;
       }
@@ -152,7 +152,7 @@ AsyncCommStage::privateDestageMember(
        * bug in the library.
        */
       TBOX_ERROR("Library error: An AsyncCommStage cannot destage a Member\n"
-         << "that was not staged with it.");
+         << "that was not staged with it." << std::endl);
    }
 
    d_members[member->d_index_on_stage] = NULL;
@@ -198,10 +198,10 @@ AsyncCommStage::assertDataConsistency() const
    if (d_members.size() + 1 != d_member_to_req.size()) {
       TBOX_ERROR("d_members.size()=" << d_members.size()
                                      << "+1 is not d_member_to_req.size()="
-                                     << d_member_to_req.size());
+                                     << d_member_to_req.size() << std::endl);
    }
    if (d_member_to_req[d_member_to_req.size() - 1] != d_req.size()) {
-      TBOX_ERROR("d_member_to_req's last entry is bad.");
+      TBOX_ERROR("d_member_to_req's last entry is bad." << std::endl);
    }
 
    if (d_members.empty()) {
@@ -210,14 +210,15 @@ AsyncCommStage::assertDataConsistency() const
 
    for (size_t i = 0; i < d_members.size() - 1; ++i) {
       if (d_member_to_req[i] >= d_member_to_req[i + 1]) {
-         TBOX_ERROR("d_member_to_req out of order at i=" << i);
+         TBOX_ERROR("d_member_to_req out of order at i=" << i << std::endl);
       }
       if (d_members[i] != NULL) {
          if (d_members[i]->d_nreq !=
              d_member_to_req[i + 1] - d_member_to_req[i]) {
             TBOX_ERROR("d_members[" << i << "] has bad d_nreq="
                                     << d_members[i]->d_nreq << ", stage value is "
-                                    << (d_member_to_req[i + 1] - d_member_to_req[i]));
+                                    << (d_member_to_req[i + 1] - d_member_to_req[i])
+                                     << std::endl);
          }
       }
    }
@@ -233,7 +234,8 @@ AsyncCommStage::assertDataConsistency() const
                TBOX_ERROR("d_members[" << member_index << "]->d_nreq is "
                                        << d_members[member_index]->d_nreq
                                        << " while stage claims it should have "
-                                       << number_of_requests << " requests");
+                                       << number_of_requests << " requests"
+                                       << std::endl);
             }
          }
          member_index = d_req_to_member[i];
@@ -244,7 +246,8 @@ AsyncCommStage::assertDataConsistency() const
       TBOX_ERROR("d_members[" << member_index << "]->d_nreq is "
                               << d_members[member_index]->d_nreq
                               << " while stage claims it should have "
-                              << number_of_requests << " requests");
+                              << number_of_requests << " requests"
+                              << std::endl);
    }
 }
 
@@ -308,7 +311,7 @@ AsyncCommStage::popCompletionQueue()
    if ( d_completed_members.empty() ) {
       TBOX_ERROR("AsyncCommStage::popCompletionQueue(): There is no\n"
                  << "completed member.  You cannot call this method\n"
-                 << "when numberOfCompletedMembers() > 0.");
+                 << "when numberOfCompletedMembers() > 0." << std::endl);
    }
    Member *completed = d_members[d_completed_members.front()];
    if ( ! completed->isDone() ) {
@@ -318,7 +321,7 @@ AsyncCommStage::popCompletionQueue()
                  << "stage last identified it as being completed.\n"
                  << "This is likely caused by some code re-using the\n"
                  << "Member for another operation before poping it\n"
-                 << "using this method.");
+                 << "using this method." << std::endl);
    }
    d_completed_members.pop_front();
    return completed;
@@ -367,7 +370,7 @@ AsyncCommStage::advanceSome()
         i < d_req.size();
         ++i) {
       if (d_req[i] != MPI_REQUEST_NULL)
-         TBOX_WARNING("non-null request above d_n_req.");
+         TBOX_WARNING("non-null request above d_n_req." << std::endl);
    }
 #endif
 
@@ -415,7 +418,7 @@ AsyncCommStage::advanceSome()
               i < d_req.size();
               ++i) {
             if (d_req[i] != MPI_REQUEST_NULL)
-               TBOX_WARNING("non-null request above d_n_reg.");
+               TBOX_WARNING("non-null request above d_n_reg." << std::endl);
          }
       }
       if (n_req_completed == 0) {
@@ -513,7 +516,7 @@ AsyncCommStage::advanceAny()
         i < d_req.size();
         ++i) {
       if (d_req[i] != MPI_REQUEST_NULL)
-         TBOX_WARNING("non-null request above d_n_reg.");
+         TBOX_WARNING("non-null request above d_n_reg." << std::endl);
    }
 #endif
 
@@ -860,7 +863,8 @@ AsyncCommStage::Member::pushToCompletionQueue()
    if ( ! isDone() ) {
       TBOX_ERROR("AsyncCommStage::Member::pushToCompletionQueue error:\n"
                  << "This method may not be called by Members that have not\n"
-                 << "completed their operation (and returns true from isDon().");
+                 << "completed their operation (and returns true from isDone()."
+                 << std::endl);
    }
    d_stage->privatePushToCompletionQueue(*this);
    return;

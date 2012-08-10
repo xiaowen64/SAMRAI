@@ -199,7 +199,7 @@ BergerRigoutsosNode::~BergerRigoutsosNode()
        d_wait_phase != completed) {
       TBOX_ERROR("Should not delete a node that is currently running\n"
          << "the Berger-Rigoutsos algorithm because there\n"
-         << "may be pending communications.");
+         << "may be pending communications." << std::endl);
    }
 #endif
 
@@ -207,7 +207,7 @@ BergerRigoutsosNode::~BergerRigoutsosNode()
       if (!d_comm_group->isDone()) {
          TBOX_ERROR("Library error: Destructing a node with an unfinished\n"
             << "communication tree is bad because it leaves\n"
-            << "pending MPI messages.");
+            << "pending MPI messages." << std::endl);
       }
       delete d_comm_group;
       d_comm_group = NULL;
@@ -450,7 +450,7 @@ BergerRigoutsosNode::clusterAndComputeRelationships()
       printDendogramState(tbox::plog, "ERR->");
       TBOX_ERROR(
          "Root node finished but d_wait_phase is not set to completed.\n"
-         << "d_wait_phase=" << d_wait_phase);
+         << "d_wait_phase=" << d_wait_phase << std::endl);
    }
    if (d_common->compute_relationships > 2) {
       // Each new node should have its own neighbor list.
@@ -515,7 +515,7 @@ BergerRigoutsosNode::setMPI(
                << "MPI communicator (" << mpi_object.getCommunicator()
                << ") and the communicator of the input tag_box_level ("
                << d_common->tag_box_level->getMPI().getCommunicator()
-               << ") are not congruent.");
+               << ") are not congruent." << std::endl);
          }
       }
 #endif
@@ -618,7 +618,8 @@ BergerRigoutsosNode::continueAlgorithm()
     */
    switch (d_wait_phase) {
       case for_data_only:
-         TBOX_ERROR("Library error: Attempt to execute data-only node.");
+         TBOX_ERROR("Library error: Attempt to execute data-only node."
+            << std::endl);
       case to_be_launched:
          goto TO_BE_LAUNCHED;
       case reduce_histogram:
@@ -634,9 +635,10 @@ BergerRigoutsosNode::continueAlgorithm()
       case bcast_to_dropouts:
          goto BCAST_TO_DROPOUTS;
       case completed:
-         TBOX_ERROR("Library error: Senseless continuation of completed node.");
+         TBOX_ERROR("Library error: Senseless continuation of completed node."
+            << std::endl);
       default:
-         TBOX_ERROR("Library error: Nonexistent phase.");
+         TBOX_ERROR("Library error: Nonexistent phase." << std::endl);
    }
 
    bool sub_completed;
@@ -2388,7 +2390,7 @@ BergerRigoutsosNode::formChildGroups()
     * Only owner process should be here.
     */
    if (d_common->rank != d_owner) {
-      TBOX_ERROR("Library error!");
+      TBOX_ERROR("Library error!" << std::endl);
    }
    TBOX_ASSERT(d_recv_msg.size() == 4 * d_group.size());
 #endif
@@ -2428,7 +2430,7 @@ BergerRigoutsosNode::formChildGroups()
          rht_criteria[imyself * 4] = -d_common->num_nodes_active;
          break;
       default:
-         TBOX_ERROR("LIBRARY error");
+         TBOX_ERROR("LIBRARY error" << std::endl);
          break;
    }
 
@@ -2924,7 +2926,8 @@ BergerRigoutsosNode::claimMPITag()
          << "\nmber of nodes = " << d_common->nproc
          << "\nmax tag required = " << d_mpi_tag + total_phase_tags - 1
          << "\nmax tag available = "
-         << d_common->tag_upper_bound / (d_common->nproc) * (d_common->rank + 1));
+         << d_common->tag_upper_bound / (d_common->nproc) * (d_common->rank + 1)
+         << std::endl);
       /*
        * It is probably safe to recycle tags if we run out of MPI tags.
        * This is not implemented because thus far, there is no need for it.
@@ -3044,7 +3047,7 @@ BergerRigoutsosNode::setOwnerMode(
       d_common->owner_mode = LEAST_ACTIVE;
    } else {
       TBOX_ERROR("BergerRigoutsosNode: Unrecognized owner mode request: "
-         << mode);
+         << mode << std::endl);
    }
 }
 
@@ -3062,7 +3065,7 @@ BergerRigoutsosNode::setComputeRelationships(
    } else {
       TBOX_ERROR("BergerRigoutsosNode::setComputeRelationships error:\n"
          << "bad mode '" << mode << "' specified.\n"
-         << "Should be one of NONE, TAG_TO_NEW, BIDIRECTIONAL");
+         << "Should be one of NONE, TAG_TO_NEW, BIDIRECTIONAL" << std::endl);
    }
    TBOX_ASSERT(ghost_cell_width >= hier::IntVector::getZero(d_common->d_dim));
    d_common->max_gcw = ghost_cell_width;

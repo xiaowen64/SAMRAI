@@ -139,7 +139,8 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
                   TBOX_ERROR(
                      d_object_name << ":  "
                                    << " integrator cannot set regrid interval"
-                                   << " based on ratios between levels.");
+                                   << " based on ratios between levels."
+                                   << std::endl);
                }
             }
          }
@@ -1599,16 +1600,28 @@ TimeRefinementIntegrator::getFromInput(
       }
 
       d_start_time = input_db->getDouble("start_time");
+      if (d_start_time < 0) {
+         TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
+            << "start_time must be >= 0." << std::endl);
+      }
 
       d_end_time = input_db->getDouble("end_time");
       if (d_end_time < d_start_time) {
          TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
-            << "end_time must be >= start_time" << std::endl);
+            << "end_time must be >= start_time." << std::endl);
       }
 
       d_grow_dt = input_db->getDoubleWithDefault("grow_dt", 1.0);
+         if (d_grow_dt <= 0) {
+            TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
+               << "grow_dt must be > 0." << std::endl);
+         }
 
       d_max_steps_level[0] = input_db->getInteger("max_integrator_steps");
+      if (d_max_steps_level[0] < 0) {
+         TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
+            << "max_integrator_steps must be >= 0." << std::endl);
+      }
 
       if (input_db->keyExists("tag_buffer")) {
          d_tag_buffer = input_db->getIntegerArray("tag_buffer");
@@ -1632,10 +1645,10 @@ TimeRefinementIntegrator::getFromInput(
             d_tag_buffer[level_number] = d_regrid_interval[level_number];
          }
 
-         TBOX_WARNING(
-            d_object_name << ":  "
-                          << "Key data `tag_buffer' not found in input.  "
-                          << "Default values used.  See class header for details.");
+         TBOX_WARNING("TimeRefinementIntegrator::getFromInput() warning...\n"
+            << "Key data `tag_buffer' not found in input.  "
+            << "Default values used.  See class header for details."
+            << std::endl);
       }
 
       d_barrier_and_time =
@@ -1660,13 +1673,38 @@ TimeRefinementIntegrator::getFromInput(
                << "refined timestepping and will be ignored." << std::endl);
          }
 
+         if (input_db->keyExists("start_time")) {
+            double tmp = input_db->getDouble("start_time");
+            if (tmp != d_start_time) {
+               TBOX_WARNING("TimeRefinementIntegrator::getFromInput warning...\n"
+                  << "start_time may not be changed on restart." << std::endl);
+            }
+         }
+
          d_end_time = input_db->getDoubleWithDefault("end_time", d_end_time);
+         if (d_end_time < d_start_time) {
+            TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
+               << "end_time must be >= start_time." << std::endl);
+         }
 
          d_grow_dt = input_db->getDoubleWithDefault("grow_dt", d_grow_dt);
+         if (d_grow_dt <= 0) {
+            TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
+               << "grow_dt must be > 0." << std::endl);
+         }
 
          d_max_steps_level[0] =
             input_db->getIntegerWithDefault("max_integrator_steps",
                d_max_steps_level[0]);
+         if (d_max_steps_level[0] < 0) {
+            TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
+               << "max_integrator_steps must be >= 0." << std::endl);
+         }
+         else if (d_max_steps_level[0] < d_step_level[0]) {
+            TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
+               << "max_integrator_steps must be >= current integrator step."
+               << std::endl);
+         }
 
          if (input_db->keyExists("tag_buffer")) {
             tbox::Array<int> temp_tag_buffer =
@@ -1682,14 +1720,6 @@ TimeRefinementIntegrator::getFromInput(
                }
             }
             d_tag_buffer = temp_tag_buffer;
-         }
-
-         if (input_db->keyExists("start_time")) {
-            double tmp = input_db->getDouble("start_time");
-            if (tmp != d_start_time) {
-               TBOX_WARNING("TimeRefinementIntegrator::getFromInput warning...\n"
-                  << "start_time may not be changed on restart." << std::endl);
-            }
          }
 
          d_barrier_and_time =
@@ -1724,7 +1754,7 @@ TimeRefinementIntegrator::getFromRestart()
 
    if (!restart_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
-         << d_object_name << " not found in restart file.");
+         << d_object_name << " not found in restart file." << std::endl);
    }
    boost::shared_ptr<tbox::Database> db(
       restart_db->getDatabase(d_object_name));
@@ -1733,7 +1763,8 @@ TimeRefinementIntegrator::getFromRestart()
    if (ver != ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION) {
       TBOX_ERROR(
          d_object_name << ":  "
-                       << "Restart file version different than class version.");
+                       << "Restart file version different than class version."
+                       << std::endl);
    }
 
    d_start_time = db->getDouble("start_time");

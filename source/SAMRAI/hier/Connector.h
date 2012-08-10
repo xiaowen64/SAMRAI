@@ -1303,7 +1303,7 @@ private:
    getGlobalNeighborhoodSets() const
    {
       if (d_parallel_state == BoxLevel::DISTRIBUTED) {
-         TBOX_ERROR("Global connectivity unavailable in DISTRIBUTED state.");
+         TBOX_ERROR("Global connectivity unavailable in DISTRIBUTED state." << std::endl);
       }
       return d_global_relationships;
    }

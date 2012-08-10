@@ -147,7 +147,7 @@ BergerRigoutsos::getFromInput(
           d_check_min_box_size != 'w' &&
           d_check_min_box_size != 'e') {
          TBOX_ERROR("BergerRigoutsos: input parameter check_min_box_size\n"
-            << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"");
+            << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"" << std::endl);
       }
 
       d_barrier_before =
@@ -239,7 +239,8 @@ BergerRigoutsos::findBoxesContainingTags(
    }
 
    if (bound_box.empty()) {
-      TBOX_ERROR("BergerRigoutsos: empty bounding box not allowed.");
+      TBOX_ERROR("BergerRigoutsos: empty bounding box not allowed."
+         << std::endl);
    }
 
    const hier::BoxLevel& tag_box_level = *tag_level->getBoxLevel();
@@ -263,7 +264,8 @@ BergerRigoutsos::findBoxesContainingTags(
             TBOX_ERROR("BergerRigoutsos set-up error: MPI communicator\n"
                << "set by setMPI() (" << d_mpi.getCommunicator()
                << ") and the communicator of the input tag_box_level ("
-               << tag_box_level.getMPI().getCommunicator() << ") are not congruent.");
+               << tag_box_level.getMPI().getCommunicator() << ") are not congruent."
+               << std::endl);
          }
       }
    }
@@ -414,7 +416,7 @@ BergerRigoutsos::sortOutputBoxes(
             << "new_box_level:\n" << new_box_level.format("", 2)
             << "tag box_level:\n" << tag_to_new.getBase().format("", 2)
             << "tag_to_new:\n" << tag_to_new.format("", 2)
-            << "new_to_tag:\n" << new_to_tag.format("", 2));
+            << "new_to_tag:\n" << new_to_tag.format("", 2) << std::endl);
       }
    }
 
@@ -449,7 +451,7 @@ BergerRigoutsos::sortOutputBoxes(
             "Errors in load balance mapping found."
             << "presorted box_level:\n" << new_box_level.format("", 2)
             << "sorted box_level:\n" << sorted_box_level.format("", 2)
-            << "sorting_map:\n" << sorting_map.format("", 2));
+            << "sorting_map:\n" << sorting_map.format("", 2) << std::endl);
       }
    }
    hier::MappingConnectorAlgorithm mca;
@@ -474,7 +476,7 @@ BergerRigoutsos::sortOutputBoxes(
             << "new_box_level:\n" << new_box_level.format("", 2)
             << "tag box_level:\n" << tag_to_new.getBase().format("", 2)
             << "tag_to_new:\n" << tag_to_new.format("", 2)
-            << "new_to_tag:\n" << new_to_tag.format("", 2));
+            << "new_to_tag:\n" << new_to_tag.format("", 2) << std::endl);
       }
    }
 
@@ -503,7 +505,7 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
             &flag,
             &mpi_status);
       if (mpi_err != MPI_SUCCESS) {
-         TBOX_ERROR("Error probing for possible lost messages.");
+         TBOX_ERROR("Error probing for possible lost messages." << std::endl);
       }
       if (flag == true) {
          int count = -1;

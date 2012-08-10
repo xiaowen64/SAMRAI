@@ -1021,7 +1021,7 @@ public:
       if (!d_ordered) {
          d_list.push_front(item);
       } else {
-         TBOX_ERROR("Attempted pushFront on an ordered BoxContainer");
+         TBOX_ERROR("Attempted pushFront on an ordered BoxContainer" << std::endl);
       }
       if (d_tree) {
          d_tree.reset();
@@ -1048,7 +1048,7 @@ public:
       if (!d_ordered) {
          d_list.push_back(item);
       } else {
-         TBOX_ERROR("Attempted pushBack on an ordered BoxContainer");
+         TBOX_ERROR("Attempted pushBack on an ordered BoxContainer" << std::endl);
       }
       if (d_tree) {
          d_tree.reset();
@@ -1077,7 +1077,7 @@ public:
       if (!d_ordered) {
          d_list.insert(iter.d_list_iter, item);
       } else {
-         TBOX_ERROR("Attempted insertBefore on an ordered BoxContainer");
+         TBOX_ERROR("Attempted insertBefore on an ordered BoxContainer" << std::endl);
       }
       if (d_tree) {
          d_tree.reset();
@@ -1107,7 +1107,7 @@ public:
             insertBefore(tmp, item);
          }
       } else {
-         TBOX_ERROR("Attempted insertAfter called on ordered BoxContainer.");
+         TBOX_ERROR("Attempted insertAfter called on ordered BoxContainer." << std::endl);
       }
       if (d_tree) {
          d_tree.reset();
@@ -1133,7 +1133,7 @@ public:
       if (!d_ordered) {
          d_list.splice(begin().d_list_iter, boxes.d_list);
       } else {
-         TBOX_ERROR("Attempted spliceFront on an ordered BoxContainer");
+         TBOX_ERROR("Attempted spliceFront on an ordered BoxContainer" << std::endl);
       }
       if (d_tree) {
          d_tree.reset();
@@ -1160,7 +1160,7 @@ public:
          boxes.spliceFront(*this);
          d_list.swap(boxes.d_list);
       } else {
-         TBOX_ERROR("Attempted spliceBack on an ordered BoxContainer");
+         TBOX_ERROR("Attempted spliceBack on an ordered BoxContainer" << std::endl);
       }
       if (d_tree) {
          d_tree.reset();
@@ -1176,7 +1176,7 @@ public:
       if (!d_ordered) {
          d_list.pop_front();
       } else {
-         TBOX_ERROR("Attempted popFront on an ordered BoxContainer");
+         TBOX_ERROR("Attempted popFront on an ordered BoxContainer" << std::endl);
       }
       if (d_tree) {
          d_tree.reset();
@@ -1192,7 +1192,7 @@ public:
       if (!d_ordered) {
          d_list.pop_back();
       } else {
-         TBOX_ERROR("Attempted popBack on an ordered BoxContainer");
+         TBOX_ERROR("Attempted popBack on an ordered BoxContainer" << std::endl);
       }
       if (d_tree) {
          d_tree.reset();
@@ -1466,7 +1466,7 @@ public:
       const Box& box) const
    {
       if (!d_ordered) {
-         TBOX_ERROR("find attempted on unordered BoxContainer.");
+         TBOX_ERROR("find attempted on unordered BoxContainer." << std::endl);
       }
       iterator iter;
       iter.d_set_iter = d_set.find(const_cast<Box*>(&box));
@@ -1490,7 +1490,7 @@ public:
       const Box& box) const
    {
       if (!d_ordered) {
-         TBOX_ERROR("lowerBound attempted on unordered BoxContainer.");
+         TBOX_ERROR("lowerBound attempted on unordered BoxContainer." << std::endl);
       }
       iterator iter;
       iter.d_set_iter = d_set.lower_bound(const_cast<Box*>(&box));
@@ -1515,7 +1515,7 @@ public:
       const Box& box) const
    {
       if (!d_ordered) {
-         TBOX_ERROR("upperBound attempted on unordered BoxContainer.");
+         TBOX_ERROR("upperBound attempted on unordered BoxContainer." << std::endl);
       }
       iterator iter;
       iter.d_set_iter = d_set.upper_bound(const_cast<Box*>(&box));

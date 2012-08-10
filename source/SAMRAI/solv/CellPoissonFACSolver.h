@@ -282,7 +282,7 @@ public:
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (!bc_object) {
-         TBOX_ERROR(d_object_name << ": NULL pointer for boundary condition\n"
+         TBOX_ERROR(d_object_name << ": NULL pointer for boundary condition "
                                   << "object.\n");
       }
 #endif

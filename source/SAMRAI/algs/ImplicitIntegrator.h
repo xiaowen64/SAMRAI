@@ -67,7 +67,7 @@ namespace algs {
  *     <td>initial_time</td>
  *     <td>double</td>
  *     <td>none</td>
- *     <td>any double</td>
+ *     <td>>=0</td>
  *     <td>req</td>
  *     <td>May not be modified by input db on restart</td>
  *   </tr>

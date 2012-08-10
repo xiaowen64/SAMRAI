@@ -160,8 +160,7 @@ MappingConnectorAlgorithm::modify(
          << "\n"
          << "new_to_old is  TO  " << &new_to_old.getHead()
          << "\n"
-         << "old_to_anchor is FROM " << &old_to_anchor.getBase() << "\n"
-         );
+         << "old_to_anchor is FROM " << &old_to_anchor.getBase() << "\n");
    }
    /*
     * Ensure that head and base box_levels in argument agree with
@@ -172,8 +171,7 @@ MappingConnectorAlgorithm::modify(
          << "Given Connectors to and from base of modify do not refer\n"
          << "to the base of the modify in:\n"
          << "anchor_to_old is FROM " << &anchor_to_old.getBase() << "\n"
-         << "old_to_anchor is  TO  " << &old_to_anchor.getHead() << "\n"
-         );
+         << "old_to_anchor is  TO  " << &old_to_anchor.getHead() << "\n");
    }
    if (&old_to_new.getHead() != &new_to_old.getBase()) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
@@ -182,22 +180,19 @@ MappingConnectorAlgorithm::modify(
          << "new_to_old is FROM " << &new_to_old.getBase()
          << "\n"
          << "old_to_new is  TO  " << &old_to_new.getHead()
-         << "\n"
-         );
+         << "\n");
    }
    if (!anchor_to_old.isTransposeOf(old_to_anchor)) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
          << "Given Connectors between base and old of modify\n"
          << "are not transposes of each other.\n"
-         << "See MappingConnectorAlgorithm::isTransposeOf().\n"
-         );
+         << "See MappingConnectorAlgorithm::isTransposeOf().\n");
    }
    if (!new_to_old.isTransposeOf(old_to_new)) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
          << "Given Connectors between head and old of modify\n"
          << "are not transposes of each other.\n"
-         << "See MappingConnectorAlgorithm::isTransposeOf().\n"
-         );
+         << "See MappingConnectorAlgorithm::isTransposeOf().\n");
    }
    if (anchor_to_old.getParallelState() != BoxLevel::DISTRIBUTED) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
@@ -290,7 +285,7 @@ MappingConnectorAlgorithm::modify(
                << "To modify using non-local maps, the\n"
                << "reverse mapping must be provide and\n"
                << "the four-argument version of modify\n"
-               << "must be used.");
+               << "must be used." << std::endl);
          }
       }
    }
@@ -314,8 +309,7 @@ MappingConnectorAlgorithm::modify(
          << "anchor_to_old is  TO   " << &anchor_to_old.getHead() << "\n"
          << "old_to_anchor is FROM  " << &old_to_anchor.getBase() << "\n"
          << "old_to_new is FROM " << &old_to_new.getBase()
-         << "\n"
-         );
+         << "\n");
    }
    /*
     * Ensure that head and base box_levels in argument agree with
@@ -326,15 +320,13 @@ MappingConnectorAlgorithm::modify(
          << "Given Connectors to and from base of modify do not refer\n"
          << "to the base of the modify in MappingConnectorAlgorithm::modify:\n"
          << "anchor_to_old is FROM " << &anchor_to_old.getBase() << "\n"
-         << "old_to_anchor is  TO  " << &old_to_anchor.getHead() << "\n"
-         );
+         << "old_to_anchor is  TO  " << &old_to_anchor.getHead() << "\n");
    }
    if (!anchor_to_old.isTransposeOf(old_to_anchor)) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
          << "Given Connectors between base and old of modify\n"
          << "are not transposes of each other.\n"
-         << "See MappingConnectorAlgorithm::isTransposeOf().\n"
-         );
+         << "See MappingConnectorAlgorithm::isTransposeOf().\n");
    }
    if (anchor_to_old.getParallelState() != BoxLevel::DISTRIBUTED) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
@@ -393,8 +385,7 @@ MappingConnectorAlgorithm::modify(
          << "Input MappingConnectorAlgorithm do not agree on what the old box_level is.\n"
          << "anchor_to_mapped is  TO  " << &anchor_to_mapped.getHead() << "\n"
          << "old_to_new is FROM " << &old_to_new.getBase()
-         << "\n"
-         );
+         << "\n");
    }
 
    if (anchor_to_mapped.getParallelState() != BoxLevel::DISTRIBUTED) {
@@ -421,7 +412,7 @@ MappingConnectorAlgorithm::modify(
                << "To modify using non-local maps, the\n"
                << "reverse mapping must be provide and\n"
                << "the four-argument version of modify\n"
-               << "must be used.");
+               << "must be used." << std::endl);
          }
       }
    }
@@ -602,7 +593,7 @@ MappingConnectorAlgorithm::privateModify(
          << "anchor--->mapped:\n" << anchor_to_new.format("", 0)
          << "Connector width of anchor--->mapped will shrink\n"
          << "by " << shrinkage_in_anchor_index_space << " which\n"
-         << "will result in a non-positive width.");
+         << "will result in a non-positive width." << std::endl);
    }
    const IntVector new_to_anchor_width =
       Connector::convertHeadWidthToBase(
@@ -786,7 +777,7 @@ MappingConnectorAlgorithm::privateModify(
       TBOX_WARNING("MappingConnectorAlgorithm::privateModify: generated\n"
          << "overlap Connectors with non-integer ratio between\n"
          << "the base and head.  The results are not guaranteed\n"
-         << "to be complete overlap Connectors.");
+         << "to be complete overlap Connectors." << std::endl);
    }
    t_modify_misc->stop();
 
@@ -857,8 +848,7 @@ MappingConnectorAlgorithm::privateModify_checkParameters(
          << "\n"
          << "new_to_old is  TO  " << &new_to_old.getHead()
          << "\n"
-         << "mapped_to_anchor is FROM " << &mapped_to_anchor.getBase() << "\n"
-         );
+         << "mapped_to_anchor is FROM " << &mapped_to_anchor.getBase() << "\n");
    }
    /*
     * Ensure that new and anchor box_levels in argument agree with
@@ -870,8 +860,7 @@ MappingConnectorAlgorithm::privateModify_checkParameters(
          << "to the anchor of the modify in MappingConnectorAlgorithm::modify:\n"
          << "anchor_to_mapped is FROM " << &anchor_to_mapped.getBase() << "\n"
          << "mapped_to_anchor is  TO  " << &mapped_to_anchor.getHead() << "\n"
-         << "anchor of modify is    " << &anchor_to_mapped.getBase() << "\n"
-         );
+         << "anchor of modify is    " << &anchor_to_mapped.getBase() << "\n");
    }
    if (new_to_old.isFinalized() && &old_to_new.getHead() !=
        &new_to_old.getBase()) {
@@ -882,23 +871,20 @@ MappingConnectorAlgorithm::privateModify_checkParameters(
          << "\n"
          << "old_to_new is  TO  " << &old_to_new.getHead()
          << "\n"
-         << "new of modify is    " << &anchor_to_mapped.getHead() << "\n"
-         );
+         << "new of modify is    " << &anchor_to_mapped.getHead() << "\n");
    }
    if (!anchor_to_mapped.isTransposeOf(mapped_to_anchor)) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
          << "Given Connectors between anchor and mapped of modify\n"
          << "are not transposes of each other.\n"
-         << "See Connector::isTransposeOf().\n"
-         );
+         << "See Connector::isTransposeOf().\n");
    }
    if (new_to_old.isFinalized() &&
        !new_to_old.isTransposeOf(old_to_new)) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
          << "Given Connectors between new and old of modify\n"
          << "are not transposes of each other.\n"
-         << "See Connector::isTransposeOf().\n"
-         );
+         << "See Connector::isTransposeOf().\n");
    }
    if (anchor_to_mapped.getParallelState() != BoxLevel::DISTRIBUTED) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
@@ -926,7 +912,7 @@ MappingConnectorAlgorithm::privateModify_checkParameters(
       size_t nerrs = findMappingErrors(old_to_new);
       if (nerrs != 0) {
          TBOX_ERROR("MappingConnectorUtil::privateModify: found errors in\n"
-            << "mapping Connector.");
+            << "mapping Connector." << std::endl);
       }
    }
 }
@@ -1511,7 +1497,7 @@ MappingConnectorAlgorithm::assertMappingValidity(
                  << "post-map:\n" << connector.getHead().format("POST: ", 2)
                  << std::endl;
       TBOX_ERROR("MappingConnectorAlgorithm::assertMappingValidity exiting due\n"
-         << "to above errors.");
+         << "to above errors." << std::endl);
    }
 }
 

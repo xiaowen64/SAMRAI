@@ -2666,7 +2666,7 @@ void StatisticRestartDatabase::getFromRestart()
          d_object_name << ":  "
          "Restart file version different than class version. \n"
                        << "Cannot read statistic information from restart file so"
-                       << "all statistics will be reset.");
+                       << "all statistics will be reset." << std::endl);
    }
 
    int number_of_procstats = db->getInteger("number_of_procstats");
