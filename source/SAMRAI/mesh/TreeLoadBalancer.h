@@ -49,28 +49,50 @@ namespace mesh {
  * non-uniform load balancing should be supported.  (Non-uniform load
  * balancing is supported by the CutAndPackLoadBalancer class.)
  *
- * Inputs and their default values:
+ * <b> Input Parameters </b>
  *
- * No special inputs are required for this class.
+ * <b> Definitions: </b>
+ *    - \b    n_root_cycles
+ *       Number of steps over which to smoothly spread out work load.  This
+ *       helps scalability when initial work load is grossly unbalanced.
+ *       Usually 1 step is sufficient.  Can be set higher (2 or 3) to reduce
+ *       negative performance effects of extremely poor initial load balance.
+ *       Set to -1, the default, or any negative number to compute the number
+ *       of cycles by a simple heuristic.  Set to zero to effectively bypass
+ *       load balancing.
  *
- * @verbatim
- * min_load_fraction_per_box = 0.03
- *                           // Additional restriction on box size.
- *                           // Will not generate a box that has less
- *                           // than this fraction of the global average
- *                           // work load in order to move work load.
- *                           // Set to negative to disable.
- * report_load_balance = TRUE // Write out load balance report in log
- * n_root_cycles = -1         // Number of steps over which to smoothly spread
- *                            // out work load.  This helps scalability when
- *                            // initial work load is grossly unbalanced.
- *                            // Usually 1 step is sufficient.
- *                            // Can be set higher (2 or 3) to reduce negative
- *                            // performance effects of extremely poor initial
- *                            // load balance.  Set to -1 (default) to compute
- *                            // the number of cycles by a simple heuristic.
- *                            // Set to zero to effectively bypass load balancing.
- * @endverbatim
+ *    - \b    min_load_fraction_per_box
+ *       Additional restriction on box size.  Will not generate a box that
+ *       has less than this fraction of the global average work load in
+ *       order to move work load.
+ *
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>n_root_cycles</td>
+ *     <td>int</td>
+ *     <td>-1</td>
+ *     <td>any int</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>min_load_fraction_per_box</td>
+ *     <td>double</td>
+ *     <td>0.03</td>
+ *     <td>>=0 && <=1.0</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ * </table>
  *
  * @see mesh::LoadBalanceStrategy
  */

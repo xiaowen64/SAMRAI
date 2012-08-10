@@ -43,6 +43,9 @@ namespace mesh {
  * If none is provided, the class will, by default, not use any criteria
  * to tag cells for refinement and issue a warning.
  *
+ * <b> Input Parameters </b>
+ *
+ * <b> Definitions: </b> <br>
  * The general input syntax is as follows:
  *
  *    - \b    at_0
@@ -79,15 +82,13 @@ namespace mesh {
  *       or GRADIENT_DETECTOR on for the entire simulation then an input
  *       of the following form may be used:
  *
- * \verbatim
- *
+ * @code
  *    tagging_method = RICHARDSON_EXTRAPOLATION
- * \endverbatim
+ * @endcode
  *
  * A sample input file entry might look like:
  *
- * \verbatim
- *
+ * @code
  *    at_0 {
  *       cycle = 0
  *       tag_0 {
@@ -139,7 +140,7 @@ namespace mesh {
  *          }
  *       }
  *    }
- * \endverbatim
+ * @endcode
  *
  * This class supplies the routines for tagging cells
  * and invoking problem-specific level initialization routines after AMR

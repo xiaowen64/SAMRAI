@@ -1586,12 +1586,27 @@ TimeRefinementIntegrator::getFromInput(
       if (!d_use_refined_timestepping) {
          int regrid_interval =
             input_db->getIntegerWithDefault("regrid_interval", 1);
+         if (regrid_interval < 1) {
+            TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
+               << "regrid_interval must be >=1." << std::endl);
+         }
          setRegridInterval(regrid_interval);
       }
+      else if (input_db->keyExists("regrid_interval")) {
+         TBOX_WARNING("TimeRefinementIntegrator::getFromInput() warning...\n"
+            << "regrid_interval input parameter not applicable with\n"
+            << "refined timestepping and will be ignored." << std::endl);
+      }
+
+      d_start_time = input_db->getDouble("start_time");
 
       d_end_time = input_db->getDouble("end_time");
+      if (d_end_time < d_start_time) {
+         TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
+            << "end_time must be >= start_time" << std::endl);
+      }
 
-      d_grow_dt = input_db->getDouble("grow_dt");
+      d_grow_dt = input_db->getDoubleWithDefault("grow_dt", 1.0);
 
       d_max_steps_level[0] = input_db->getInteger("max_integrator_steps");
 
@@ -1623,8 +1638,6 @@ TimeRefinementIntegrator::getFromInput(
                           << "Default values used.  See class header for details.");
       }
 
-      d_start_time = input_db->getDouble("start_time");
-
       d_barrier_and_time =
          input_db->getBoolWithDefault("DEV_barrier_and_time", false);
    } else if (input_db) {
@@ -1635,7 +1648,16 @@ TimeRefinementIntegrator::getFromInput(
          if (!d_use_refined_timestepping) {
             int regrid_interval =
                input_db->getIntegerWithDefault("regrid_interval", 1);
+            if (regrid_interval < 1) {
+               TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
+                  << "regrid_interval must be >=1." << std::endl);
+            }
             setRegridInterval(regrid_interval);
+         }
+         else if (input_db->keyExists("regrid_interval")) {
+            TBOX_WARNING("TimeRefinementIntegrator::getFromInput() warning...\n"
+               << "regrid_interval input parameter not applicable with\n"
+               << "refined timestepping and will be ignored." << std::endl);
          }
 
          d_end_time = input_db->getDoubleWithDefault("end_time", d_end_time);

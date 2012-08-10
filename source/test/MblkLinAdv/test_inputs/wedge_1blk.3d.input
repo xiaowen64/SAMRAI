@@ -180,12 +180,6 @@ TimerManager {
 BlockGeometry {
    num_blocks = 1
    domain_boxes_0 = [ (0,0,0) , (29,19,19) ]
-
-   // Singularity defn and neighbors
-   Singularity0 {
-      blocks = 0
-      sing_box_0 = [(30,20,20),(30,20,20)]
-   }
 }
 
 PatchHierarchy {

@@ -39,57 +39,83 @@ namespace geom {
  * an AMR hierarchy.  This class is derived from the geom::GridGeometry
  * base class.
  *
- * An object of this class requires numerous parameters to be read from
- * input.  Also, data must be written to and read from files for restart.
- * The input and restart data are summarized as follows:
+ * <b> Input Parameters </b>
  *
- * Required input keys and data types:
- *
- *
- *
- *
+ * <b> Definitions: </b>
  *    - \b    domain_boxes
- *       tbox::Array of boxes representing the index space for the entire
- *       domain (on the coarsest refinement level).
- *
- *    - \b    x_lo
- *       tbox::Array of double values representing the spatial coordinates of
- *       the lower corner of the physical domain.
- *
- *    - \b    x_up
- *       tbox::Array of double values representing the spatial coordinates of
- *       the upper corner of the physical domain.
- *
- *
- *
- *
- *
- * Optional input keys, data types, and defaults:
- *
- *
- *
+ *       an array of boxes representing the index space for the entire domain
+ *       on the coarsest mesh level; i.e., level zero.
  *
  *    - \b    periodic_dimension
- *       tbox::Array of integer values representing the directions in which
- *       the physical domain is periodic.  A non-zero value indicates
- *       that the direction is periodic.  A zero value indicates that
- *       the direction is not periodic.  If no values are specified, then
- *       the array is initialized to all zeros (no periodic directions).
+ *       An array of integer values (expected number of values is equal to
+ *       the spatial dimension of the mesh) representing the directions in
+ *       which the physical domain is periodic.  A non-zero value indicates
+ *       that the direction is periodic.  A zero value indicates that the
+ *       direction is not periodic.
  *
+ *    - \b    x_lo
+ *       values representing the spatial coordinates of the lower corner of the
+ *       physical domain.
  *
+ *    - \b    x_up
+ *       values representing the spatial coordinates of the upper corner of the
+ *       physical domain.
  *
- * No input values can overwrite restart values.
+ * No values read in from a restart database may be overridden by input
+ * database values.
+ *
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>domain_boxes</td>
+ *     <td>Array<DatabaseBox></td>
+ *     <td>none</td>
+ *     <td>all Boxes must be non-empty</td>
+ *     <td>req</td>
+ *     <td>May not be modified by input db on restart</td>
+ *   </tr>
+ *   <tr>
+ *     <td>periodic_dimension</td>
+ *     <td>int[]</td>
+ *     <td>all values 0</td>
+ *     <td>any int</td>
+ *     <td>opt</td>
+ *     <td>May not be modified by input db on restart</td>
+ *   </tr>
+ *   <tr>
+ *     <td>x_lo</td>
+ *     <td>double[]</td>
+ *     <td>none</td>
+ *     <td>each x_lo < corresponding x_up</td>
+ *     <td>req</td>
+ *     <td>May not be modified by input db on restart</td>
+ *   </tr>
+ *   <tr>
+ *     <td>x_up</td>
+ *     <td>double[]</td>
+ *     <td>none</td>
+ *     <td>each x_up > corresponding x_lo</td>
+ *     <td>req</td>
+ *     <td>May not be modified by input db on restart</td>
+ *   </tr>
+ * </table>
  *
  * A sample input file for a two-dimensional problem might look like:
  *
- * @verbatim
- *
+ * @code
  *    domain_boxes = [(0,0) , (49,39)]
  *    x_lo = 0.0 , 0.0
  *    x_up = 50.0 , 40.0
  *    periodic_dimension = 0, 1  // periodic in y only
- *
- * @endverbatim
+ * @endcode
  *
  * This generates a two-dimensional rectangular domain periodic in the
  * y-direction, and having 50 cells in the x-direction and 40 cells in

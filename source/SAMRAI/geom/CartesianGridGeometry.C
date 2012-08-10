@@ -113,7 +113,7 @@ CartesianGridGeometry::CartesianGridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
    const boost::shared_ptr<tbox::Database>& input_db):
-   GridGeometry(dim, object_name, input_db),
+   GridGeometry(dim, object_name, input_db, false),
    d_domain_box(dim)
 {
    TBOX_ASSERT(input_db);

@@ -48,54 +48,6 @@ class BoxTree;
  * about the index space describing the physical domain and computing this
  * information for patches in an AMR hierarchy.
  *
- * Required input file keys and data types (only required when using first
- * constructor which takes an input database):
- *
- *    - @b    num_blocks
- *       Integer value specifying the number of blocks in the multiblock
- *       mesh configuration.
- *
- *    - @b    domain_boxes_
- *       For each block, an array of boxes representing the index space for the
- *       entire domain within a block (on the coarsest mesh level; i.e., level
- *       zero).  The key must have an integer value as a suffix
- *       (domain_boxes_0, domain_boxes_1, etc.), and there must be an entry
- *       for every block from 0 to num_blocks-1.
- *
- * Optional input file keys and data types (for first constructor which
- * takes an input database):
- *
- *    - @b    periodic_dimension
- *       An array of integer values (expected number of values is equal to
- *       the spatial dimension of the mesh) representing the directions in
- *       which the physical domain is periodic.  A non-zero value indicates
- *       that the direction is periodic.  A zero value indicates that
- *       the direction is not periodic.  If no values are specified, then
- *       the array is initialized to all zeros (no periodic directions).
- *       This key should only be used when the number of blocks is 1 (a
- *       single block mesh), as periodic boundaries are not supported for
- *       multiblock meshes.
- *
- *    - @b   BlockNeighbors
- *
- *       For multiblock grids, a BlockNeighbors entry must be given for
- *       every pair of blocks that touch each other in any way.  The key
- *       for this entry must include a unique trailing integer, and the
- *       integers for the full set of BlockNeighbors keys must be a
- *       continuous sequence beginning with 0.
- *
- *    - @b  Singularity
- *
- *       When there is a reduced or enhanced connectivity singularity,
- *       this key must be used to identify which blocks touch the
- *       singularity and the position of the singularity in relation to
- *       each block's index space.  Like BlockNeighbors, each entry must
- *       have a trailing integer beginning with 0.
- *
- * A description of the input format for BlockNeighbors* and Singularity
- * is included in the Multiblock.pdf document in the docs/userdocs
- * directory of the SAMRAI distribution.
- *
  * @par Additional Functionality
  * Operations performed by this class include determining which patches are
  * adjacent to the physical domain boundary and computing boundary boxes
@@ -132,11 +84,14 @@ public:
     * @param[in]  dim
     * @param[in]  object_name
     * @param[in]  input_db
+    * @param[in]  allow_multiblock set to false if called by inherently single
+    *             block derived class such as CartesianGridGeometry
     */
    BaseGridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const boost::shared_ptr<tbox::Database>& input_db,
+      bool allow_multiblock = true);
 
    /*!
     * @brief Construct a new BaseGridGeometry object based on arguments.
@@ -1272,11 +1227,14 @@ private:
     *
     * @param[in] input_db  input database, must not be NULL pointer
     * @param[in] is_from_restart  set to true if simulation is from restart
+    * @param[in] allow_multiblock set to false if called by inherently single
+    *            block derived class such as CartesianGridGeometry
     */
    void
    getFromInput(
       const boost::shared_ptr<tbox::Database>& input_db,
-      bool is_from_restart);
+      bool is_from_restart,
+      bool allow_multiblock);
 
    /*!
     * @brief Read object state from the restart file and initialize class data

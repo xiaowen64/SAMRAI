@@ -87,55 +87,104 @@ namespace algs {
  * time integration, data synchronization, and mesh movement are coordinated
  * properly.
  *
- * An object of this class requires numerous parameters to be read from
- * input.  Also, data must be written to and read from files for restart.
- * The input data are summarized as follows.
+ * <b> Input Parameters </b>
  *
- * Required input keys and data types:
+ * <b> Definitions: </b>
+ *    - \b    regrid_interval
+ *       when using synchronized timestepping, number of timesteps between each
+ *        regrid of the hierarchy
  *
  *    - \b    start_time
- *        double value representing the start time for the simulation.
+ *       start time for the simulation.
  *
  *    - \b    end_time
- *        double value representing the end time for the simulation.
+ *       end time for the simulation.
  *
  *    - \b    grow_dt
- *        double value representing the maximum factor by which each
- *        succesive time increment may grow (typically >= 1.0).
+ *       maximum factor by which each succesive time increment may grow
+ *       (typically >= 1.0).
  *
  *    - \b    max_integrator_steps
- *        integer value representing the maximum number of timesteps
- *        performed on the coarsest hierarchy level during the simulation.
- *
- *
- * Optional input keys, data types, and defaults:
+ *       maximum number of timesteps performed on the coarsest hierarchy level
+ *       during the simulation.
  *
  *    - \b    tag_buffer
  *       array of integer values (one for each level that may be refined)
  *       representing the number of cells by which tagged cells are buffered
- *       before clustering into boxes.  If no input is given, a default value
- *       equal to the number of steps taken on the level before the next
- *       regrid is used.
+ *       before clustering into boxes.
  *
+ * Note that the input values for regrid_interval, end_time, grow_dt,
+ * max_integrator_steps, and tag_buffer override values read in from restart.
  *
- * Note that the input values for end_time, grow_dt, max_integrator_step,
- * and tag_buffer override values read in from restart.
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>regrid_interval</td>
+ *     <td>int</td>
+ *     <td>1</td>
+ *     <td>>=1</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>start_time</td>
+ *     <td>double</td>
+ *     <td>none</td>
+ *     <td>start_time <= end_time</td>
+ *     <td>req</td>
+ *     <td>May not be modified by input db on restart</td>
+ *   </tr>
+ *   <tr>
+ *     <td>end_time</td>
+ *     <td>double</td>
+ *     <td>none</td>
+ *     <td>end_time >= start_time</td>
+ *     <td>req</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>grow_dt</td>
+ *     <td>double</td>
+ *     <td>1.0</td>
+ *     <td>any double</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>max_integrator_steps</td>
+ *     <td>int</td>
+ *     <td>none</td>
+ *     <td>any int</td>
+ *     <td>req</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>tag_buffer</td>
+ *     <td>Array<int></td>
+ *     <td>regrid_interval value for corresponding level</td>
+ *     <td>all values >= 0</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ * </table>
  *
  * A sample input file entry might look like:
  *
- * \verbatim
- *
+ * @code
  *    start_time            = 0.e0      // initial simulation time
  *    end_time              = 10.e0     // final simulation time
  *    grow_dt               = 1.1e0     // growth factor for timesteps
  *    max_integrator_steps  = 50        // max number of simulation timesteps
  *    tag_buffer            = 1,1,1,1   // a max of 4 finer levels in hierarchy
- *
- * \endverbatim
- *
- * When running in synchronized timestepping mode, an additional input
- * key 'regrid_interval' can be added to specify the number of timesteps
- * between each regrid of the hierarchy.
+ * @endcode
  *
  * @see algs::TimeRefinementLevelStrategy
  * @see mesh::GriddingAlgorithmStrategy

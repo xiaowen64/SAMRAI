@@ -42,100 +42,202 @@ namespace tbox {
  *
  * Here `name' is the name string identifier for the timer.
  *
- * The input data is summarized as follows.
+ * <b> Input Parameters </b>
  *
- * Required input keys: NONE
- *
- * Optional input keys and defaults:
- *
- *
+ * <b> Definitions: </b>
  *    - \b    print_exclusive
- *       (bool) Specifying whether to track and print exclusive times.
- *       Exclusive times are convenient for identifying time spent inside
- *       nested routines.  Exclusive time is measured by turning off the
- *       parent timer when the timer in the nested routine is started.
- *       It then turns on the parent timer again once the nested timer is
- *       stopped. This option should be used with some discretion
- *       because the extra overhead to manage the nested list of timers
- *       is between four and seven times more expensive than doing simple
- *       start/stop operations (as is done with the print_total option).
- *       For this reason, we leave it off by default. [FALSE]
+ *       Specifies whether to track and print exclusive times.  Exclusive
+ *       times are convenient for identifying time spent inside nested
+ *       routines.  This option should be used with some discretion because
+ *       the extra overhead to manage the nested list of timers is between
+ *       four and seven times more expensive than doing simple start/stop
+ *       operations (as is done with the print_total option).  For this
+ *       reason, we leave it off by default.
  *
  *    - \b    print_total
- *       (bool) Specifies whether to print total (i.e. non-nested) time.
- *       This is the least expensive way to time parts of the code.  The
- *       overhead associated with each start/stop sequence is about
- *       one-half a millionth of a second. [TRUE]
- *
- *    - \b    print_wall
- *       (bool) Print wallclock time. [TRUE]
- *
- *    - \b    print_user
- *       (bool) Print user time (measured by system clock). [FALSE]
- *
- *    - \b    print_sys
- *       (bool) Print system time (measured by system clock). [FALSE]
+ *       Specifies whether to print total (i.e. non-nested) time.  This is
+ *       the least expensive way to time parts of the code.  The overhead
+ *       associated with each start/stop sequence is about one-half a
+ *       millionth of a second.
  *
  *    - \b    print_processor
- *       (bool) Print times measured on individual processors. [TRUE]
- *
- *    - \b    print_summed
- *       (bool) Print time summed across all processors. [FALSE]
+ *       Print times measured on individual processors.
  *
  *    - \b    print_max
- *       (bool) Print maximum time spent on any processor, and the
- *       processor ID that incurred the time. [FALSE]
+ *       Print maximum time spent on any processor, and the processor ID
+ *       that incurred the time.
  *
- *    - \b    print_concurrent
- *       (bool) Prints the concurrent timer tree, as determined during
- *       exclusive timing.  That is, for each timer, it prints the list
- *       of names of the timers in nested routines it calls. [FALSE]
+ *    - \b    print_summed
+ *       Print time summed across all processors.
+ *
+ *    - \b    print_user
+ *       Print user time (measured by system clock).
+ *
+ *    - \b    print_sys
+ *       Print system time (measured by system clock).
+ *
+ *    - \b    print_wall
+ *       Print wallclock time.
  *
  *    - \b    print_percentage
- *       (bool) Prints the percentage of total time with each timer. [TRUE]
+ *       Prints the percentage of total time with each timer.
+ *
+ *    - \b    print_concurrent
+ *       Prints the concurrent timer tree, as determined during exclusive
+ *       timing.  That is, for each timer, it prints the list of names of
+ *       the timers in nested routines it calls.
  *
  *    - \b    print_timer_overhead
- *       (bool) Prints some overhead stats associated with the timers.
- *       Information like the number of times a start/stop sequence was
- *       called for the timer, and the predicted overhead time associated
- *       with the timer.  This is a convenient option to occasionally
- *       check to make sure the timers themselves are not affecting the
- *       performance of your calculation. [FALSE]
+ *       Prints some overhead stats associated with the timers.  Information
+ *       like the number of times a start/stop sequence was called for the
+ *       timer, and the predicted overhead time associated with the timer.
+ *       This is a convenient option to occasionally check to make sure the
+ *       timers themselves are not affecting the performance of your
+ *       calculation.
  *
  *    - \b    print_threshold
- *       (double) Timers that use up less than (<EM>print_threshold</EM>)
- *       percent of the overall run time are not printed.  This can be
- *       a convenient option to limit output if you have many timers
- *       invoked. [0.25]
+ *       Timers that use up less than (<EM>print_threshold</EM>) percent of
+ *       the overall run time are not printed.  This can be a convenient
+ *       option to limit output if you have many timers invoked.
  *
  *    - \b    timer_list
- *       (string array) List of timers to be invoked.  The timers can be
- *       listed individually in <TT>package::class::method</TT> format or
- *       the entries may contain wildcards to turn on a set of timers in
- *       a given package or class:
- *       \verbatim
- *          timer_list = "pkg1::*::*", "pkg2::class2::*", ...
- *       \endverbatim
+ *       List of timers to be invoked.  The timers can be listed individually
+ *       in <TT>package::class::method</TT> format or the entries may contain
+ *       wildcards to turn on a set of timers in a given package or class: <br>
+ *       timer_list = "pkg1::*::*", "pkg2::class2::*", ...
  *
- *
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>print_exclusive</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>print_total</td>
+ *     <td>bool</td>
+ *     <td>TRUE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>print_processor</td>
+ *     <td>bool</td>
+ *     <td>TRUE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>print_max</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>print_summed</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>print_user</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>print_sys</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>print_wall</td>
+ *     <td>bool</td>
+ *     <td>TRUE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>print_percentage</td>
+ *     <td>bool</td>
+ *     <td>TRUE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>print_concurrent</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>print_timer_overhead</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>print_threshold</td>
+ *     <td>double</td>
+ *     <td>0.25</td>
+ *     <td>any double</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>timer_list</td>
+ *     <td>Array<string></td>
+ *     <td>none</td>
+ *     <td>N/A</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ * </table>
  *
  * A sample input file entry might look like:
  *
- * \verbatim
- *
- *    print_exclusive      = TRUE
- *    print_timer_overhead = TRUE
- *    timer_list = "algs::HyperbolicLevelIntegrator::advanceLevel()",
- *                 "mesh::GriddingAlgorithm::*",
- *                 "xfer::*::*"
- *
- * \endverbatim
+ * @code
+ *    print_exclusive      = TRUE <br>
+ *    print_timer_overhead = TRUE <br>
+ *    timer_list = "algs::HyperbolicLevelIntegrator::advanceLevel()", <br>
+ *                 "mesh::GriddingAlgorithm::*", <br>
+ *                 "xfer::*::*" <br>
+ * @endcode
  *
  * TimerManager expects timer names to be in a certain format to preserve
  * the wildcard naming capability (i.e. to turn on entire package or class
- * of timers).  See the PDF document in /SAMRAI/docs/userdocs/timing.pdf
- * for a discussion of how to add timers that maintain this format as well
- * as a catalog of available timers currently implemented in the library.
+ * of timers).  See the PDF document in
+ * /SAMRAI/docs/userdocs/Timing-Instrumentation.pdf for a discussion of how
+ * to add timers that maintain this format as well as a catalog of available
+ * timers currently implemented in the library.
  *
  * Timing recursive function calls will yeild erroneous results and
  * may lead to memory problems.  We recommend {\em not to use timers

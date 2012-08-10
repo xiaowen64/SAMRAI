@@ -38,6 +38,8 @@ namespace appu {
  * capabilities, or use the input reading, boundary setting, and error
  * checking routines independently.
  *
+ * <b> Input Parameters </b>
+ *
  * To use the boundary condition input reading capabilities, the format
  * of the input file section containing the boundary information must
  * be as described next.  Boundary face, node, and edge entries are only
@@ -46,62 +48,53 @@ namespace appu {
  *
  * The boundary condition for face "*" is provided in a section as follows:
  *
- * \verbatim
- *
+ * @code
  *    boundary_face_* {
- *       boundary_condition  = ...  // boundary condition std::string identifier
- *       // Any problem-specific boundary data read by user routines
- *       // is placed here...
+ *       boundary_condition  = ...  // boundary condition string identifier
  *    }
+ * @endcode
  *
- * Allowable face identifiers (i.e., values for "*") are:
- *       xlo, xhi, ylo, yhi, zlo, zhi
- * Supported face boundary_condition std::string values are:
+ * Allowable face identifiers (i.e., values for "*") are: <br>
+ *       xlo, xhi, ylo, yhi, zlo, zhi <br>
+ * Supported face boundary_condition string values are: <br>
  *       "FLOW", "REFLECT", "DIRICHLET", "NEUMANN"
- *
- * \endverbatim
  *
  * The boundary condition for edge "*" is provided in a section as follows:
  *
- * \verbatim
- *
+ * @code
  *    boundary_edge_* {
- *       boundary_condition  = ...  // boundary condition std::string identifier
+ *       boundary_condition  = ...  // boundary condition string identifier
  *    }
+ * @endcode
  *
- * Allowable edge identifiers (i.e., values for "*") are:
+ * Allowable edge identifiers (i.e., values for "*") are: <br>
  *       ylo_zlo, yhi_zlo, ylo_zhi, yhi_zhi,
  *       xlo_zlo, xlo_zhi, xhi_zlo, xhi_zhi,
- *       xlo_ylo, xhi_ylo, xlo_yhi, xhi_yhi
- * Supported edge boundary_condition std::string values are:
+ *       xlo_ylo, xhi_ylo, xlo_yhi, xhi_yhi <br>
+ * Supported edge boundary_condition string values are: <br>
  *       "XFLOW", "YFLOW", "ZFLOW",
  *       "XREFLECT", "YREFLECT", "ZREFLECT",
  *       "XDIRICHLET", "YDIRICHLET", "ZDIRICHLET"
  *       "XNEUMANN", "YNEUMANN", "ZNEUMANN"
- *
- * \endverbatim
  *
  * Note that edge conditions must be consistent with adjacent face conditions.
  *
  * The boundary condition for node "*" is provided in a section as follows:
  *
- * \verbatim
- *
+ * @code
  *    boundary_node_* {
- *       boundary_condition  = ...  // boundary condition std::string identifier
+ *       boundary_condition  = ...  // boundary condition string identifier
  *    }
+ * @endcode
  *
- * Allowable node identifiers (i.e., values for "*") are:
- *       ylo_zlo, yhi_zlo, ylo_zhi, yhi_zhi,
- *       xlo_zlo, xlo_zhi, xhi_zlo, xhi_zhi,
- *       xlo_ylo, xhi_ylo, xlo_yhi, xhi_yhi
- * Supported node boundary_condition values are:
+ * Allowable node identifiers (i.e., values for "*") are: <br>
+ *       xlo_ylo_zlo, xhi_ylo_zlo, xlo_yhi_zlo, xhi_yhi_zlo,
+ *       xlo_ylo_zhi, xhi_ylo_zhi, xlo_yhi_zhi, xhi_yhi_zhi <br>
+ * Supported node boundary_condition values are: <br>
  *       "XFLOW", "YFLOW", "ZFLOW",
  *       "XREFLECT", "YREFLECT", "ZREFLECT",
  *       "XDIRICHLET", "YDIRICHLET", "ZDIRICHLET"
  *       "XNEUMANN", "YNEUMANN", "ZNEUMANN"
- *
- * \endverbatim
  *
  * Note that node conditions must be consistent with adjacent face conditions.
  *

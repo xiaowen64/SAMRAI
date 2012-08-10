@@ -57,6 +57,72 @@ namespace solv {
  * -# After solving, get solver statistics by viewing the log information
  *    and calling getNumberOfIterations(), getResidualNorm() functions
  *    if desired.
+ * 
+ * <b> Input Parameters </b>
+ *
+ * <b> Definitions: </b>
+ *    - \b    max_cycles
+ *
+ *    - \b    residual_tol
+ *
+ *    - \b    relative_residual_tol
+ *
+ *    - \b    num_pre_sweeps
+ *
+ *    - \b    num_post_sweeps
+ *
+ * <b> Details:</b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+       <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>max_cycles</td>
+ *     <td>int</td>
+ *     <td>10</td>
+ *     <td>>0</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>residual_tol</td>
+ *     <td>double</td>
+ *     <td>1.0e-6</td>
+ *     <td>>0.0</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>relative_residual_tol</td>
+ *     <td>double</td>
+ *     <td>-1.0</td>
+ *     <td>-1.0 or >0.0</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>num_pre_sweeps</td>
+ *     <td>int</td>
+ *     <td>1</td>
+ *     <td>>=0</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>num_post_sweeps</td>
+ *     <td>int</td>
+ *     <td>1</td>
+ *     <td>>=0</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ * </table>
+ *
  */
 
 class FACPreconditioner

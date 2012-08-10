@@ -97,8 +97,9 @@ namespace geom {
 GridGeometry::GridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& input_db):
-   hier::BaseGridGeometry(dim, object_name, input_db)
+   const boost::shared_ptr<tbox::Database>& input_db,
+   bool allow_multiblock):
+   hier::BaseGridGeometry(dim, object_name, input_db, allow_multiblock)
 {
 }
 

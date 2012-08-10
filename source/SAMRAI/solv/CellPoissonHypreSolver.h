@@ -82,17 +82,87 @@ namespace solv {
  * - Solve the linear system, passing in u and f as the patch
  *   indices of the solution and the right hand side, respectively.
  *
- * Sample parameters for initialization from database (and their
- * default values):
- * @verbatim
- *     print_solver_info = FALSE      // Whether to print some data for debugging
- *     max_iterations = 10            // Max iterations used by Hypre
- *     relative_residual_tol = 1.0e-8 // Residual tolerance used by Hypre
- *     num_pre_relax_steps = 1        // # of presmoothing steps used by Hypre
- *     num_post_relax_steps = 1       // # of postsmoothing steps used by Hypre
- *     use_smg = FALSE                // Whether to use hypre's smg solver
- *                                    // (alternative is the pfmg solver)
- * @endverbatim
+ * <b> Input Parameters </b>
+ *
+ * <b> Definitions: </b>
+ *    - \b    print_solver_info
+ *       whether to print some data for debugging
+ *
+ *    - \b    max_iterations
+ *       max iterations used by Hypre
+ *
+ *    - \b    relative_residual_tol
+ *       residual tolerance used by Hypre
+ *
+ *    - \b    num_pre_relax_steps
+ *       number of presmoothing steps used by Hypre
+ *
+ *    - \b    num_post_relax_steps
+ *       number of postsmoothing steps used by Hypre
+ *
+ *    - \b    use_smg
+ *       whether to use hypre's smg solver (alternative is the pfmg solver)
+ *
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>print_solver_info</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>max_iterations</td>
+ *     <td>int</td>
+ *     <td>10</td>
+ *     <td>>0</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>relative_residual_tol</td>
+ *     <td>double</td>
+ *     <td>1.0e-10</td>
+ *     <td>>0.0</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>num_pre_relax_steps</td>
+ *     <td>int</td>
+ *     <td>1</td>
+ *     <td>>=0</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>num_post_relax_steps</td>
+ *     <td>int</td>
+ *     <td>1</td>
+ *     <td>>=0</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>use_smg</td>
+ *     <td>bool</td>
+ *     <td>TRUE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ * </table>
+ *
  */
 
 class CellPoissonHypreSolver

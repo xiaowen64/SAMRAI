@@ -44,25 +44,40 @@ namespace solv {
  * a and g directly (see RobinBcCoefStrategy) for the
  * meanings of a and g.
  *
- * @b Inputs:
- * You can specify the boundary conditions for any location index
- * through the input database.  One line is required for each
- * location index.  The input parameters are "boundary_N", where
- * N is the index of the location.  Each parameter must be
- * a std::string array so that all boundary types can be accomodated
- * the same way.  The first std::string must be one of "value",
- * "slope" or "coefficients".  If the std::string is "value" or "slope"
- * the next std::string is the value you want to set, defaulting to
- * zero if not specified.  If the first std::string is "coefficients",
- * the next two strings specifies the values of a and g.
+ * <b> Input Parameters </b>
  *
- * @b Examples inputs:
- * @verbatim
- * boundary_0 = "value", "0.0"
- * boundary_1 = "value", "1.0"
- * boundary_2 = "slope", "0.0"
- * boundary_4 = "coefficients", "1.0", "0.0"
- * @endverbatim
+ * <b> Definitions:</b>
+ *    - \b    boundary_N
+ *       You can specify the boundary conditions for any location index
+ *       through the input database.  One line is required for each
+ *       location index.  The input parameters are "boundary_N", where
+ *       N is the index of the location.  Each parameter must be
+ *       a std::string array so that all boundary types can be accomodated
+ *       the same way.  The first std::string must be one of "value",
+ *       "slope" or "coefficients".  If the std::string is "value" or "slope"
+ *       the next std::string is the value you want to set.  If the first
+ *       std::string is "coefficients", the next two strings specify the
+ *       values of a and b.
+ *
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>boundary_N</td>
+ *     <td>Array<string></td>
+ *     <td>none</td>
+ *     <td>"value", "gval"; "slope", "gval"; "coefficients", "aVal", "bVal"</td>
+ *     <td>req</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ * </table>
+ *
  */
 class LocationIndexRobinBcCoefs:
    public RobinBcCoefStrategy

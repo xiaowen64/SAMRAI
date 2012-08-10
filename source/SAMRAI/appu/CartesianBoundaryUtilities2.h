@@ -38,6 +38,8 @@ namespace appu {
  * capabilities, or use the input reading, boundary setting, and error
  * checking routines independently.
  *
+ * <b> Input Parameters </b>
+ *
  * To use the boundary condition input reading capabilities, the format
  * of the input file section containing the boundary information must
  * be as described next.  Boundary node and edge entries are only
@@ -46,38 +48,32 @@ namespace appu {
  *
  * The boundary condition for edge "*" is provided in a section as follows:
  *
- * \verbatim
- *
+ * @code
  *    boundary_edge_* {
- *       boundary_condition  = ...  // boundary condition std::string identifier
- *       // Any problem-specific boundary data read by user routines
- *       // is placed here...
+ *       boundary_condition  = ...  // boundary condition string identifier
  *    }
+ * @endcode
  *
- * Allowable edge identifiers (i.e., values for "*") are:
- *       xlo, xhi, ylo, yhi
- * Supported edge boundary_condition strin values are:
+ * Allowable edge identifiers (i.e., values for "*") are: <br>
+ *       xlo, xhi, ylo, yhi <br>
+ * Supported edge boundary_condition string values are: <br>
  *       "FLOW", "REFLECT", "DIRICHLET", "NEUMANN"
- *
- * \endverbatim
  *
  * The boundary condition for node "*" is provided in a section as follows:
  *
- * \verbatim
- *
+ * @code
  *    boundary_node_* {
- *       boundary_condition  = ...  // boundary condition std::string identifier
+ *       boundary_condition  = ...  // boundary condition string identifier
  *    }
+ * @endcode
  *
- * Allowable node identifiers (i.e., values for "*") are:
- *       xlo_ylo, xhi_ylo, xlo_yhi, xhi_yhi
- * Supported node boundary_condition std::string values are:
+ * Allowable node identifiers (i.e., values for "*") are: <br>
+ *       xlo_ylo, xhi_ylo, xlo_yhi, xhi_yhi <br>
+ * Supported node boundary_condition string values are: <br>
  *       "XFLOW", "YFLOW",
  *       "XREFLECT", "YREFLECT",
  *       "XDIRICHLET", "YDIRICHLET",
  *       "XNEUMANN", "YNEUMANN"
- *
- * \endverbatim
  *
  * Note that node conditions must be consistent with adjacent edge conditions.
  *

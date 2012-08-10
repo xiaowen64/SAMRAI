@@ -78,7 +78,8 @@ boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_get_boundary_boxes;
 BaseGridGeometry::BaseGridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& input_db):
+   const boost::shared_ptr<tbox::Database>& input_db,
+   bool allow_multiblock):
    d_transfer_operator_registry(
       boost::make_shared<TransferOperatorRegistry>(dim)),
    d_dim(dim),
@@ -98,7 +99,7 @@ BaseGridGeometry::BaseGridGeometry(
       getFromRestart();
    }
 
-   getFromInput(input_db, is_from_restart);
+   getFromInput(input_db, is_from_restart, allow_multiblock);
 }
 
 /*
@@ -721,7 +722,8 @@ BaseGridGeometry::getFromRestart()
 void
 BaseGridGeometry::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db,
-   bool is_from_restart)
+   bool is_from_restart,
+   bool allow_multiblock)
 {
    if (!is_from_restart && !input_db) {
       TBOX_ERROR(": BaseGridGeometry::getFromInput()\n"
@@ -736,6 +738,12 @@ BaseGridGeometry::getFromInput(
       if (d_number_blocks < 1) {
          TBOX_ERROR("BaseGridGeometry::getFromInput error...\n"
             << "num_blocks must be >= 1." << std::endl);
+      }
+
+      if (d_number_blocks > 1 && !allow_multiblock) {
+         TBOX_ERROR("BaseGridGeometry::getFromInput error...\n"
+            << "num_blocks is >1 for an inherently single block grid geometry."
+            << std::endl);
       }
 
       std::string domain_name;
@@ -786,6 +794,12 @@ BaseGridGeometry::getFromInput(
          for (int i = 0; i < dim.getValue(); i++) {
             per_bc(i) = ((pbc[i] == 0) ? 0 : 1);
          }
+      }
+
+      if (d_number_blocks > 1 && per_bc != IntVector::getZero(dim)) {
+         TBOX_ERROR("BaseGridGeometry::getFromInput() error...\n"
+            << "periodic boundaries are not currently supported for multiblock meshes."
+            << std::endl);
       }
 
       initializePeriodicShift(per_bc);
@@ -1870,6 +1884,12 @@ BaseGridGeometry::readBlockDataFromInput(
 
          d_singularity_indices[block_number].push_back(d_number_of_block_singularities);
       }
+   }
+
+   if (d_number_blocks == 1 && d_number_of_block_singularities > 0) {
+      TBOX_ERROR("BaseGridGeometry::readBlockDataFromInput() error...\n"
+         << "block singularities specified for single block problem."
+         << std::endl);
    }
 
    for (int bn = 0; true; bn++) {

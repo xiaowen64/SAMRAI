@@ -36,79 +36,137 @@ namespace hier {
  * @brief Class PatchHierarchy maintains the patch levels that
  * define the AMR hierarchy.
  *
- * The following describes the input file keys and data types. For each
- * input key that involves input for levels in the hierarchy, assume that
- * we have N levels, numbered coarsest to finest as 0,..., N-1.  For such
- * input, the value for a level must be given as ``level_n = value'' where
+ * <b> Input Parameters </b> <br>
+ * For ratio_to_coarser, smallest_patch_size, and largest_patch_size assume
+ * that we have N levels numbered coarsest to finest as 0,..., N-1.  For these
+ * inputs, the value for a level must be given as ``level_n = value'' where
  * n is the level number.  When more values are given than needed for the
  * maximum number of levels, extra values are ignored.  When fewer values
  * are given, the last value provided will be used on each level without a
  * specified input value.  See example input below.
  *
+ * <b> Details: </b>
  *   - \b    max_levels
- *      Integer value specifying maximum number of levels
- *      allowed in the AMR patch hierarchy.
+ *      specifies maximum number of levels allowed in the AMR patch hierarchy.
  *
  *   - \b    ratio_to_coarser
- *      A set of max_levels - 1 integer vectors (each has length = DIM),
- *      each of which indicates the ratio of the index space of a patch
- *      level to that of the next coarser level in the hierarchy.  The
- *      input is given for each level n, where n (= 1, 2,..., N-1) is the
- *      level number.
- *
- *   - \b    largest_patch_size
- *      A set of max_levels integer vectors (each has length = DIM) each of
- *      which indicates the size of largest patch allowed on the level
- *      in the hierarchy.  Non-positive values for patch size corresponds to
- *      no upper limit on patch size.  The input is given for each level n,
- *      where n (= 0, 1,..., N-1) is the level number.
+ *      A set of max_levels - 1 integer arrays each with length = DIM, each of
+ *      which indicates the ratio of the index space of a patch level to that
+ *      of the next coarser level in the hierarchy.  The input is given for
+ *      each level n, where n (= 1, 2,..., N-1) is the level number.
  *
  *   - \b    smallest_patch_size
- *      A set of max_levels integer vectors (each has length = DIM) each of
- *      which indicates the size of smallest patch allowed on the level
- *      in the hierarchy.  The smallest patch allowed must be at least as
- *      large as the maximum ghost cell width for all variables in the problem.
- *      If some smaller patch size is given in input, then it will be
- *      overridden by the maximum ghost width.  If no input is given, a
- *      default of the maximum ghost cell width over all variables is used.
- *      The input is given for each level n, where n (= 0, 1,..., N-1) is
- *      the level number.
+ *      A set of max_levels integer vectors each with length = DIM, each of
+ *      which indicates the size of smallest patch allowed on the level in the
+ *      hierarchy.  The smallest patch allowed must be at least as large as the
+ *      maximum ghost cell width for all variables in the problem.  If some
+ *      smaller patch size is given in input, then it will be overridden by the
+ *      maximum ghost width.  If no input is given, a default of the maximum
+ *      ghost cell width over all variables is used.  The input is given for
+ *      each level n, where n (= 0, 1,..., N-1) is the level number.
+ *
+ *   - \b    largest_patch_size
+ *      A set of max_levels integer vectors each with length = DIM, each of
+ *      which indicates the size of largest patch allowed on the level in the
+ *      hierarchy.  Negative values for patch size corresponds to no upper
+ *      limit on patch size.  The input is given for each level n, where
+ *      n (= 0, 1,..., N-1) is the level number.
  *
  *   - \b    proper_nesting_buffer
- *      A set of max_levels - 1 integer values specifying the number of
- *      coarse cells by which the next finer level is nested within the
- *      interior of the union of the patches on the next coarser level.
- *      The input is given for each level n, where n (= 0, 1,..., N-2) is
- *      the level number.
+ *      A set of max_levels - 1 integer values specifying the number of coarse
+ *      cells by which the next finer level is nested within the interior of
+ *      the union of the patches on the next coarser level.  The input is given
+ *      for each level n, where n (= 0, 1,..., N-2) is the level number.
  *
  *    - \b    allow_patches_smaller_than_ghostwidth
- *      A boolean value ("TRUE" or "FALSE") indicating whether patches
- *      are allowed that are smaller than the maximum variable ghost width
- *      along some coordinate direction.  Recall that when a smallest
- *      patch size provided in the input file is smaller than the maximum
- *      ghost width of all the registered variables, then by default the
- *      smallest patch size will be set to the maximum ghost width.  Set this
- *      flag to TRUE to override this default behavior and to allow the
+ *      indicates whether patches are allowed that are smaller than the maximum
+ *      variable ghost width along some coordinate direction.  Recall that when
+ *      a smallest patch size provided in the input file is smaller than the
+ *      maximum ghost width of all the registered variables, then by default
+ *      the smallest patch size will be set to the maximum ghost width.  Set
+ *      this flag to TRUE to override this default behavior and to allow the
  *      smallest patch size given in the input to remain in effect.
- *      The default value is FALSE.
  *
  *    - \b    allow_patches_smaller_than_minimum_size_to_prevent_overlaps
- *      A boolean value ("TRUE" or "FALSE") indicating whether patches
- *      are allowed to be smaller than the minimum patch size to prevent
- *      overlapping patches.  In order to enforce minimum patch size
- *      restrictions, boxes may be grown during adaptive gridding operations.
- *      This may lead to patches whose boxes overlap.  This may be a problem
- *      for some applications. If overlaps are undesirable and you are
- *      willing to relax the minimum size constraints, set this parameter
- *      TRUE.  By default, it is FALSE.
+ *      indicates whether patches are allowed to be smaller than the minimum
+ *      patch size to prevent overlapping patches.  In order to enforce minimum
+ *      patch size restrictions, boxes may be grown during adaptive gridding
+ *      operations.  This may lead to patches whose boxes overlap.  This may be
+ *      a problem for some applications. If overlaps are undesirable and you
+ *      are willing to relax the minimum size constraints, set this parameter
+ *      TRUE.
  *
- * Note that when continuing from restart, the input values in the
- * input file override all values read in from the restart database.
+ * <b> Details: </b>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>max_levels</td>
+ *     <td>int</td>
+ *     <td>>0</td>
+ *     <td>1</td>
+ *     <td>opt</td>
+ *     <td>May be made smaller by input db on restart</td>
+ *   </tr>
+ *   <tr>
+ *     <td>ratio_to_coarser</td>
+ *     <td>max_levels-1 int[]</td>
+ *     <td>all values 1</td>
+ *     <td>all values >0</td>
+ *     <td>opt</td>
+ *     <td>May not be modified by input db on restart</td>
+ *   </tr>
+ *   <tr>
+ *     <td>smallest_patch_size</td>
+ *     <td>max_levels int[]</td>
+ *     <td>all values 1</td>
+ *     <td>all values >0</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>largest_patch_size</td>
+ *     <td>max_levels int[]</td>
+ *     <td>all values max int</td>
+ *     <td>each value >=0 must be >= corresponding smallest_patch_size value</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>proper_nesting_buffer</td>
+ *     <td>int[]</td>
+ *     <td>all values 1</td>
+ *     <td>all values >=0</td>
+ *     <td>opt</td>
+ *     <td>May not be modified by input db on restart</td>
+ *   </tr>
+ *   <tr>
+ *     <td>allow_patches_smaller_than_ghostwidth</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>May not be modified by input db on restart</td>
+ *   </tr>
+ *   <tr>
+ *     <td>allow_patches_smaller_than_minimum_size_to_prevent_overlap</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ * </table>
  *
  * The following represents sample input data for a three-dimensional problem:
  *
  * @code
- *
  *   // Required input: maximum number of levels in patch hierarchy
  *   max_levels = 4
  *
@@ -134,7 +192,6 @@ namespace hier {
  *
  *   // Optional input:  buffer of one cell used on each level
  *   proper_nesting_buffer = 1
- *
  * @endcode
  *
  * @see hier::PatchLevel

@@ -87,130 +87,179 @@ namespace mesh {
  * BoxGeneratorStrategy argument.  Routines that load balance patches
  * on a level are provided by the LoadBalanceStrategy constructor argument.
  *
- * Initialization of a GriddingAlgorithm object is performed via a
- * combination of default parameters and values read from an input
- * database.  Data read from input is summarized as follows:
+ * <b> Input Parameters </b>
  *
- * Optional input keys, data types, and defaults:
+ * <b> Definitions: </b>
+ *   - \b    check_overflow_nesting
+ *
+ *   - \b    check_proper_nesting
  *
  *   - \b    efficiency_tolerance
- *      An array of double values, each of which specifies the minimum
- *      fraction of tagged cells to total cells in boxes used to
- *      construct patches on a new level.  If the ratio is below the
- *      tolerance value, the box may be split into smaller boxes and
- *      pieces removed until the ratio becomes greater than or equal to
- *      the tolerance.  This tolerance helps users control the amount
- *      of extra refined cells created (beyond those tagged explicitly)
- *      that is typical in patch-based AMR computations.
- *      If no input values are given, a default of 0.8 is
- *      used.  See sample input below for input file format.
- *      The index of the value in the array corresponds to the number
- *      of the level to which the tolerance value applies.  If more
- *      values are given than the maximum number of levels allowed in
- *      the hierarchy, extra values will be ignored.  If fewer values
- *      are given, then the last value given will be used for each
- *      level without a specified input value.  For example, if only a
- *      single value is specified, then that value will be used on all
- *      levels.
+ *      each value specifies the minimum fraction of tagged cells to total
+ *      cells in boxes used to construct patches on a new level.  If the ratio
+ *      is below the tolerance value, the box may be split into smaller boxes
+ *      and pieces removed until the ratio becomes greater than or equal to the
+ *      tolerance.  This tolerance helps users control the amount of extra
+ *      refined cells created (beyond those tagged explicitly) that is typical
+ *      in patch-based AMR computations.  The index of the value in the array
+ *      corresponds to the number of the level to which the tolerance value
+ *      applies.  If more values are given than the maximum number of levels
+ *      allowed in the hierarchy, extra values will be ignored.  If fewer
+ *      values are given, then the last value given will be used for each level
+ *      without a specified input value.  For example, if only a single value
+ *      is specified, then that value will be used on all levels.
  *
  *   - \b    combine_efficiency
- *      An array of double values, each of which serves as a threshold
- *      for the ratio of the total number of cells in two boxes into which
- *      a box may be split and the number of cells in the original box.
- *      If that ratio is greater than the combine efficiency, the box will not
- *      be split.  This tolerance helps users avoids splitting up portions
- *      of the domain into into very small patches which can increase
- *      the overhead of AMR operations.
- *      If no input values are given, a default of 0.8 is
- *      used.  See sample input below for input file format.
- *      Multiple values in the array are handled similar to
- *      efficiency_tolerance.
- *
- *   - @b check_nonnesting_user_boxes
- *      A flag to control how user-specified refinement boxes that violate
- *      proper nesting are handled.
- *      Set to one of these strings:
- *      @b "IGNORE" - nesting violations will be quietly disregarded.
- *      @b "WARN" - nesting violations will cause a warning but the
- *      code will continue anyway.
- *      @b "ERROR" - nesting violations will cause an unrecoverable
- *      assertion.
- *      The default is "ERROR".  We highly recommend making nesting violation
- *      an error.  The code may work anyway, but there are no guarantees.
- *
- *   - @b check_boundary_proximity_violation
- *      A flag to control how to resolve refinement boxes that violate
- *      boundary proximity (are less than the max ghost cell width of
- *      physical boundaries without touching the boundary).
- *      Set to one of these strings:
- *      @b "IGNORE" - violations will be quietly disregarded.
- *      @b "WARN" - violations will cause a warning but the
- *      code will continue anyway.
- *      @b "ERROR" - violations will cause an unrecoverable
- *      assertion.
- *      The default is "ERROR".  We highly recommend making boundary
- *      proximity violation an error.  The code may work anyway, but there
- *      are no guarantees.
+ *      each value serves as a threshold for the ratio of the total number of
+ *      cells in two boxes into which a box may be split and the number of
+ *      cells in the original box.  If that ratio is greater than the combine
+ *      efficiency, the box will not be split.  This tolerance helps users
+ *      avoids splitting up portions of the domain into into very small patches
+ *      which can increase the overhead of AMR operations.  Multiple values in
+ *      the array are handled similar to efficiency_tolerance.
  *
  *   - \b    check_nonrefined_tags
- *      A flag to control how to resolve user-specified tags that violate
- *      proper nesting.
- *
- *      If a tag violates the nesting requirements, its location in index space
- *      will not be refined when creating the finer level.  This flag allows the
- *      user to determine what to do when this occurs
- *
- *      Set to one of these strings:
- *      @b "IGNORE" - violating tags will be quietly disregarded.
- *      @b "WARN" - violating tags will cause a warning and be
- *      disregarded.
- *      @b "ERROR" - violating tags will cause an unrecoverable
- *      assertion.
- *      The default is "WARN".  It is fastest to ignore non-nesting tags
- *      because no checking has to be done.
+ *      controls how to resolve user-specified tags that violate proper
+ *      nesting.  If a tag violates the nesting requirements, its location in
+ *      index space will not be refined when creating the finer level.  This
+ *      flag allows the user to determine what to do when this occurs. <br>
+ *      Set to one of these characters: <br>
+ *      @b 'i' - violating tags will be quietly disregarded. <br>
+ *      @b 'w' - violating tags will cause a warning and be disregarded. <br>
+ *      @b 'e' - violating tags will cause an unrecoverable assertion. <br>
+ *      It is fastest to ignore non-nesting tags because no checking has to be
+ *      done.
  *
  *   - \b    check_overlapping_patches
- *      A flag to control checking for overlapping patches on a new level.
- *      Set to one of these strings:
- *      @b "IGNORE" - there is no check for overlapping patches,
- *      and they will be quietly disregarded.
- *      @b "WARN" - overlapping patches will cause a warning and be
- *      disregarded.
- *      @b "ERROR" - violating tags will cause an unrecoverable
- *      assertion.
- *      The default is "WARN".  The check for overlapping patches may be
- *      and should be bypassed by application that can tolerate overlaps.
- *      To prevent the creation of levels with overlapping patches, see
- *      the input flag
- *      "allow_patches_smaller_than_minimum_size_to_prevent_overlaps"
+ *      controls checking for overlapping patches on a new level. <br>
+ *      Set to one of these characters: <br>
+ *      @b 'i' - there is no check for overlapping patches, and they will be
+ *      quietly disregarded. <br>
+ *      @b 'w' - overlapping patches will cause a warning and be
+ *      disregarded. <br>
+ *      @b 'e' - violating tags will cause an unrecoverable assertion. <br>
+ *      The check for overlapping patches may be and should be bypassed by
+ *      applications that can tolerate overlaps.  To prevent the creation of
+ *      levels with overlapping patches, see the PatchHierarchy input flag
+ *      "allow_patches_smaller_than_minimum_size_to_prevent_overlaps".
  *
- *   - \b   sequentialize_patch_indices
- *      A flag to specify whether patch indices will be globally sequentialized.
+ *   - \b    check_nonnesting_user_boxes
+ *      controls how user-specified refinement boxes that violate proper
+ *      nesting are handled. <br>
+ *      Set to one of these characters: <br>
+ *      @b 'i' - nesting violations will be quietly disregarded. <br>
+ *      @b 'w' - nesting violations will cause a warning but the code will
+ *      continue anyway. <br>
+ *      @b 'e' - nesting violations will cause an unrecoverable assertion <br>
+ *      We highly recommend making nesting violation an error.  The code may
+ *      work anyway, but there are no guarantees.
+ *
+ *   - \b    sequentialize_patch_indices
+ *      whether patch indices will be globally sequentialized.
  *      This is not scalable, but is required for writing correct VisIt files.
- *      Due to the current VisIt requirement, this is currently true by default.
- *      It will evetually be set back to false after we remove the VisIt
- *      requirement.
+ *      Due to the current VisIt requirement, this is currently true by
+ *      default.  It will evetually be set back to false after we remove the
+ *      VisIt requirement.
  *
- *   - @b log_metadata_statistics = FALSE
- *      Whether to log metadata statistics after generating a new level.
- *      This flag writes out data that would be of interest to analyzing
- *      how metadata statistics affects performance.
+ *   - \b    enforce_proper_nesting
  *
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>check_overflow_nesting</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>check_proper_nesting</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>efficiency_tolerance</td>
+ *     <td>Array<double></td>
+ *     <td>0.8 for each level</td>
+ *     <td>all values > 0.0 && < 1.0</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>combine_efficiency</td>
+ *     <td>Array<double></td>
+ *     <td>0.8 for each level</td>
+ *     <td>all values > 0.0 && < 1.0</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>check_nonrefined_tags</td>
+ *     <td>char</td>
+ *     <td>'w'</td>
+ *     <td>'w', 'i', 'e'</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>check_overlapping_patches</td>
+ *     <td>char</td>
+ *     <td>'i'</td>
+ *     <td>'w', 'i', 'e'</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>check_nonnesting_user_boxes</td>
+ *     <td>char</td>
+ *     <td>'e'</td>
+ *     <td>'w', 'i', 'e'</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>sequentialize_patch_indices</td>
+ *     <td>bool</td>
+ *     <td>TRUE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>enforce_proper_nesting</td>
+ *     <td>bool</td>
+ *     <td>TRUE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ * </table>
  *
- * Note that when continuing from restart, the input values in the
- * input file override all values read in from the restart database.
+ * All values read in from a restart database may be overriden by input
+ * database values.  If no new input database value is given, the restart
+ * database value is used.
  *
  * The following represents sample input data for a three-level problem:
  *
- * \verbatim
- *
+ * @code
  *   // Optional input: different efficiency tolerance for each coarser level
  *   efficiency_tolerance = 0.80e0, 0.85e0, 0.90e0
  *
  *   // Optional input: combine efficiency is same for all levels.
  *   combine_efficiency = 0.95e0
- *
- * \endverbatim
+ * @endcode
  *
  * @see mesh::TagAndInitializeStrategy
  * @see mesh::LoadBalanceStrategy

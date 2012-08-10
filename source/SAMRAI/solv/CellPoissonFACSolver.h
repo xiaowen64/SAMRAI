@@ -87,23 +87,31 @@ namespace solv {
  *
  * Finer solver controls can be set using the functions in this class.
  *
- * Object of this class can be set using input databases.
- * The following parameters can be set.  Each is shown with its
- * default value in the case where hypre is used.
- * @verbatim
- * enable_logging = TRUE // Bool flag to switch logging on/off
- * max_cycles = 10       // Integer number of max FAC cycles to use
- * residual_tol = 1.e-6  // Residual tolerance to solve for
- * num_pre_sweeps = 1    // Number of presmoothing sweeps to use
- * num_post_sweeps = 1   // Number of postsmoothing sweeps to use
- * coarse_fine_discretization = "Ewing" // Name of coarse-fine discretization
- * prolongation_method = "CONSTANT_REFINE" // Name of prolongation method
- * coarse_solver_choice = "hypre"  // Name of coarse level solver
- * coarse_solver_tolerance = 1e-10 // Coarse level tolerance
- * coarse_solver_max_iterations = 20 // Coarse level max iterations
- * use_smg = "FALSE"     // Whether to use hypre's smg solver
- *                       // (alternative is the pfmg solver)
- * @endverbatim
+ * <b> Input Parameters </b>
+ *
+ * <b> Definitions: </b>
+ *    - \b    enable_logging
+ *       turn logging on or off
+ *
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>enable_logging</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ * </table>
  *
  */
 class CellPoissonFACSolver

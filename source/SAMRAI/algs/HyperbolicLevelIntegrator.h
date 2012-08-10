@@ -84,63 +84,79 @@ namespace algs {
  * applyGradientDetector(), applyRichardsonExtrapolation(), and
  * coarsenDataForRichardsonExtrapolation().
  *
- * An object of this class requires numerous parameters to be read from
- * input.  Also, data must be written to and read from files for restart.
- * The input and restart data are summarized as follows.
+ * <b> Input Parameters </b>
  *
- * Required input keys and data types: NONE
- *
- * Optional input keys, data types, and defaults:
- *
- *
- *
- *
+ * <b> Descriptions: </b>
  *    - \b    cfl
- *       double value for the CFL factor used for timestep selection
- *       (dt used = CFL * max dt).  If no input value is given, a default
- *       value of 0.9 is used.
+ *       the CFL factor used for timestep selection (dt used = CFL * max dt)
  *
  *    - \b    cfl_init
- *       double value for CFL factor used for initial timestep.
- *       If no input value is given, a default value of 0.9 is used.
+ *       the CFL factor used for initial timestep
  *
  *    - \b    lag_dt_computation
- *       boolean value indicating whether dt is based on current
- *       solution or solution from previous step (possible optimization
- *       in communication for characteristic analysis).  If no input
- *       value is given, a default value of TRUE is used.
- *
+ *       indicates whether dt is based on current solution or solution from
+ *       previous step (possible optimization in communication for
+ *       characteristic analysis)
  *
  *    - \b    use_ghosts_to_compute_dt
- *       boolean value indicating whether ghost data must be filled before
- *       timestep is computed on each patch (possible communication
- *       optimization).  if no input value is given, a default value
- *       of TRUE is used.
+ *       indicates whether ghost data must be filled before timestep is
+ *       computed on each patch (possible communication optimization)
  *
- *    - \b    distinguish_mpi_reduction_costs
- *       boolean specifying whether to separate reduction costs in tbox::MPI
- *       from costs of load imbalances.  By specifying it true, a
- *       barrier is put in place before the reduction call, so an extra
- *       operation is incurred.  For this reason, it is defaulted FALSE.
+ * Note that when continuing from restart, the input parameters in the input
+ * database override all values read in from the restart database.
  *
- *
- *
- *
- *
- * Note that when continuing from restart, the input values in the
- * input file override all values read in from the restart database.
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>cfl</td>
+ *     <td>double</td>
+ *     <td>none</td>
+ *     <td>any double</td>
+ *     <td>req</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>cfl_init</td>
+ *     <td>double</td>
+ *     <td>none</td>
+ *     <td>any double</td>
+ *     <td>req</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>lag_dt_computation</td>
+ *     <td>bool</td>
+ *     <td>TRUE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>use_ghosts_to_compute_dt</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ * </table>
  *
  * A sample input file entry might look like:
  *
- * \verbatim
- *
+ * @code
  *    cfl = 0.9
  *    cfl_init = 0.9
  *    lag_dt_computation = FALSE
  *    use_ghosts_to_compute_dt = TRUE
- *    distinguish_mpi_reduction_costs = TRUE
- *
- * \endverbatim
+ * @endcode
  *
  * @see algs::TimeRefinementIntegrator
  * @see mesh::StandardTagAndInitStrategy

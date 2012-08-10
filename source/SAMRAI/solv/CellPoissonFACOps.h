@@ -103,16 +103,81 @@ namespace solv {
  * Hence, it owns none of the solution vectors, error vectors,
  * diffusion coefficient data, or any such things.
  *
- * Input Examples
- * @verbatim
- * coarse_solver_choice = "hypre"
- * coarse_solver_tolerance = 1e-14
- * coarse_solver_max_iterations = 10
- * smoothing_choice = "redblack"
- * cf_discretization = "Ewing"
- * prolongation_method = "LINEAR_REFINE"
- * hypre_solver = { ... }            // tbox::Database for initializing Hypre solver
- * @endverbatim
+ * <b> Input Parameters </b>
+ *
+ * <b> Definitions: </b>
+ *    - \b    coarse_solver_choice
+ *
+ *    - \b    coarse_solver_tolerance
+ *
+ *    - \b    coarse_solver_max_iterations
+ *
+ *    - \b    cf_discretization
+ *
+ *    - \b    prolongation_method
+ *
+ *    - \b    enable_logging
+ *
+ * <b> Details:</b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>coarse_solver_choice</td>
+ *     <td>string</td>
+ *     <td>"hypre"</td>
+ *     <td>"hypre", "redblack", "jacobi"</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>coarse_solver_tolerance</td>
+ *     <td>double</td>
+ *     <td>1e-14</td>
+ *     <td>>0.0</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>coarse_solver_max_iterations</td>
+ *     <td>int</td>
+ *     <td>10</td>
+ *     <td>>0</td>
+ *     <td>opt
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>cf_discretization</td>
+ *     <td>string</td>
+ *     <td>"Ewing"</td>
+ *     <td>"Ewing", "CONSTANT_REFINE", "CONSERVATIVE_LINEAR_REFINE", "LINEAR_REFINE"</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>prolongation_method</td>
+ *     <td>string</td>
+ *     <td>"LINEAR_REFINE"</td>
+ *     <td>"CONSTANT_REFINE", "CONSERVATIVE_LINEAR_REFINE", "LINEAR_REFINE"</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>enable_logging</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ * </table>
+ *
  */
 class CellPoissonFACOps:
    public FACOperatorStrategy

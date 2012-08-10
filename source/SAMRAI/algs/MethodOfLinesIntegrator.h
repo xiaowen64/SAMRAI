@@ -68,30 +68,61 @@ namespace algs {
  *
  * Optional input keys, data types, and defaults:
  *
- *    - \b    order
- *       integer value specifying order of Runge-Kutta scheme.  If no input
- *       value is given, third order (i.e. order = 3) is used.
- *
  *    - \b    alpha_1
  *    - \b    alpha_2
- *    - \b    beta
+ *    - \b    beta <br>
  *       arrays of double values (length = order) specifying the coeffients
  *       used in the multi-step Strong Stability Preserving (SSP) Runge-Kutta
- *       algorithm.  If no input is supplied, the default alpha_1, alpha_2,
- *       and beta values are automatically set to correspond to the
- *       specified order.
+ *       algorithm.
  *
+ * Note that when continuing from restart, the input parameters in the input
+ * database override all values read in from the restart database.
+ *
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *      <td>alpha_1</td>
+ *      <td>Array<double></td>
+ *      <td>[1.0, 0.75, 2.0/3.0]</td>
+ *      <td>any doubles but no more than 3 of them</td>
+ *      <td>opt</td>
+ *      <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *      <td>alpha_2</td>
+ *      <td>Array<double></td>
+ *      <td>[0.0, 0.25, 2.0/3.0]</td>
+ *      <td>any doubles but no more than 3 of them</td>
+ *      <td>opt</td>
+ *      <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *      <td>beta</td>
+ *      <td>Array<double></td>
+ *      <td>[1.0, 0.25, 2.0/3.0]</td>
+ *      <td>any doubles but no more than 3 of them</td>
+ *      <td>opt</td>
+ *      <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ * </table>
  *
  * The following represents a sample input entry:
  *
- * \verbatim
+ * @code
  *  MethodOfLinesIntegrator{
- *     order                 = 3
  *     alpha_1               = 1., 0.75, 0.33333
  *     alpha_2               = 0., 0.25, 0.66666
  *     beta                  = 1., 0.25, 0.66666
  *  }
- *  \endverbatim
+ *  @endcode
  *
  * @see mesh::StandardTagAndInitStrategy
  */
