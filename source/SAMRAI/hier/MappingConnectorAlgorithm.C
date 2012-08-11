@@ -1486,9 +1486,9 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
 void
 MappingConnectorAlgorithm::assertMappingValidity(
    const Connector& connector,
-   char is_local_map) const
+   MappingType map_type) const
 {
-   size_t nerr = findMappingErrors(connector, is_local_map);
+   size_t nerr = findMappingErrors(connector, map_type);
    if (nerr != 0) {
       tbox::perr << "MappingConnectorAlgorithm::assertMappingValidity found\n"
                  << nerr << " errors.\n"
@@ -1509,35 +1509,37 @@ MappingConnectorAlgorithm::assertMappingValidity(
 size_t
 MappingConnectorAlgorithm::findMappingErrors(
    const Connector& connector,
-   char is_local_map) const
+   MappingType map_type) const
 {
    const tbox::SAMRAI_MPI& mpi(connector.getMPI());
 
    // Need to know whether this is a local map.
-   if (is_local_map == '\0') {
+   if (map_type == UNKNOWN) {
       if (mpi.getSize() > 1) {
          for (Connector::ConstNeighborhoodIterator ei = connector.begin();
               ei != connector.end(); ++ei) {
             for (Connector::ConstNeighborIterator ni = connector.begin(ei);
                  ni != connector.end(ei); ++ni) {
                if ((*ni).getOwnerRank() != connector.getMPI().getRank()) {
-                  is_local_map = 'n';
+                  map_type = NOT_LOCAL;
                   break;
                }
             }
-            if (is_local_map == 'n') {
+            if (map_type == NOT_LOCAL) {
                break;
             }
          }
-         if (is_local_map != 'n') {
-            is_local_map = 'y';
+         if (map_type == UNKNOWN) {
+            map_type = LOCAL;
          }
-         int tmpi = is_local_map == 'y' ? 0 : 1;
+         int tmpi = map_type == LOCAL ? 0 : 1;
          int tmpj; // For some reason, MPI_IN_PLACE is undeclared!
          mpi.Allreduce(&tmpi, &tmpj, 1, MPI_INT, MPI_MAX);
-         if (tmpj > 0) is_local_map = 'n';
+         if (tmpj > 0) {
+            map_type = NOT_LOCAL;
+         }
       } else {
-         is_local_map = 'y';
+         map_type = LOCAL;
       }
    }
 
@@ -1545,7 +1547,7 @@ MappingConnectorAlgorithm::findMappingErrors(
     * If not a local map, we need a globalized copy of the head.
     */
    const BoxLevel& new_box_level =
-      is_local_map == 'y' ? connector.getHead() :
+      map_type == LOCAL ? connector.getHead() :
       connector.getHead().getGlobalizedVersion();
 
    int error_count = 0;

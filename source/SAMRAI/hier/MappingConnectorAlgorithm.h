@@ -295,7 +295,12 @@ public:
       BoxLevel* mutable_new = NULL,
       BoxLevel* mutable_old = NULL) const;
 
-   // TODO:  Create an enum to replace the char for clarity.
+   /*!
+    * @brief Types of mappings for use in findMappingErrors() and
+    *        assertMappingValidity().
+    */
+   enum MappingType {LOCAL, NOT_LOCAL, UNKNOWN};
+
    /*!
     * @brief Check if the Connector has a valid mapping.
     *
@@ -306,8 +311,8 @@ public:
     * in modify() without logic errors.  It does no other checks.
     *
     * @param[in] connector
-    * @param[in] is_local_map 'y' means assume the mapping is local.  'n'
-    * means the mapping is not local.  '\0' means find out whether the
+    * @param[in] map_type LOCAL means assume the mapping is local.  NOT_LOCAL
+    * means the mapping is not local.  UNKNOWN means find out whether the
     * map is local or not (communication required) and act
     * accordingly.
     *
@@ -316,23 +321,21 @@ public:
    size_t
    findMappingErrors(
       const Connector& connector,
-      char is_local_map = '\0') const;
+      MappingType map_type = UNKNOWN) const;
 
    /*!
     * @brief Run findMappingErrors and abort if any errors are found.
     *
     * @param[in] connector
-    * @param[in] is_local_map 'y' means assume the mapping is local.  'n'
-    * means the mapping is not local.  '\0' means find out whether the
+    * @param[in] map_type LOCAL means assume the mapping is local.  NOT_LOCAL
+    * means the mapping is not local.  UNKNOWN means find out whether the
     * map is local or not (communication required) and act
     * accordingly.
     */
    void
    assertMappingValidity(
       const Connector& connector,
-      char is_local_map = '\0') const;
-
-   //@}
+      MappingType map_type = UNKNOWN) const;
 
 private:
    /*!
