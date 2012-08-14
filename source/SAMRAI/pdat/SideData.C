@@ -53,8 +53,7 @@ SideData<TYPE>::SideData(
 
    for (int d = 0; d < getDim().getValue(); d++) {
       if (d_directions(d)) {
-         const hier::Box side =
-            SideGeometry::toSideBox(getGhostBox(), d);
+         const hier::Box side = SideGeometry::toSideBox(getGhostBox(), d);
          d_data[d].reset(new ArrayData<TYPE>(side, depth));
       } else {
          d_data[d].reset(new ArrayData<TYPE>(hier::Box::getEmptyBox(dim), depth));
@@ -77,16 +76,9 @@ SideData<TYPE>::SideData(
    TBOX_ASSERT(ghosts.min() >= 0);
    TBOX_ASSERT(d_directions.min() >= 0);
 
-   const tbox::Dimension& dim(box.getDim());
-
    for (int d = 0; d < getDim().getValue(); d++) {
-      if (d_directions(d)) {
-         const hier::Box side =
-            SideGeometry::toSideBox(getGhostBox(), d);
-         d_data[d].reset(new ArrayData<TYPE>(side, depth));
-      } else {
-         d_data[d].reset(new ArrayData<TYPE>(hier::Box::getEmptyBox(dim), depth));
-      }
+      const hier::Box side = SideGeometry::toSideBox(getGhostBox(), d);
+      d_data[d].reset(new ArrayData<TYPE>(side, depth));
    }
 }
 

@@ -651,7 +651,8 @@ CellPoissonFACOps::buildObject(
       ss.str("");
       ss << "CellPoissonFACOps::private_flux_scratch" << d_dim.getValue();
       s_flux_scratch_var[d_dim.getValue() - 1].reset(
-         new pdat::SideVariable<double>(d_dim, ss.str()));
+         new pdat::SideVariable<double>(d_dim, ss.str(),
+            hier::IntVector::getOne(d_dim)));
       ss.str("");
       ss << "CellPoissonFACOps::private_oflux_scratch" << d_dim.getValue();
       s_oflux_scratch_var[d_dim.getValue() - 1].reset(

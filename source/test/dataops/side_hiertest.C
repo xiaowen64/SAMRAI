@@ -177,21 +177,26 @@ int main(
       // Make some dummy variables and data on the hierarchy
       boost::shared_ptr<pdat::SideVariable<double> > fvar[NVARS];
       int svindx[NVARS];
-      fvar[0].reset(new pdat::SideVariable<double>(dim2d, "fvar0", 1));
+      fvar[0].reset(new pdat::SideVariable<double>(dim2d, "fvar0",
+         hier::IntVector::getOne(dim2d), 1));
       svindx[0] = variable_db->registerVariableAndContext(
             fvar[0], dummy, no_ghosts);
-      fvar[1].reset(new pdat::SideVariable<double>(dim2d, "fvar1", 1));
+      fvar[1].reset(new pdat::SideVariable<double>(dim2d, "fvar1",
+         hier::IntVector::getOne(dim2d), 1));
       svindx[1] = variable_db->registerVariableAndContext(
             fvar[1], dummy, no_ghosts);
-      fvar[2].reset(new pdat::SideVariable<double>(dim2d, "fvar2", 1));
+      fvar[2].reset(new pdat::SideVariable<double>(dim2d, "fvar2",
+         hier::IntVector::getOne(dim2d), 1));
       svindx[2] = variable_db->registerVariableAndContext(
             fvar[2], dummy, no_ghosts);
-      fvar[3].reset(new pdat::SideVariable<double>(dim2d, "fvar3", 1));
+      fvar[3].reset(new pdat::SideVariable<double>(dim2d, "fvar3",
+         hier::IntVector::getOne(dim2d), 1));
       svindx[3] = variable_db->registerVariableAndContext(
             fvar[3], dummy, no_ghosts);
 
       boost::shared_ptr<pdat::SideVariable<double> > swgt(
-         new pdat::SideVariable<double>(dim2d, "swgt", 1));
+         new pdat::SideVariable<double>(dim2d, "swgt",
+            hier::IntVector::getOne(dim2d), 1));
       int swgt_id = variable_db->registerVariableAndContext(
             swgt, dummy, no_ghosts);
 

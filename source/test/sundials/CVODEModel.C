@@ -130,7 +130,8 @@ CVODEModel::CVODEModel(
          d_scr_cxt,
          IntVector(d_dim, 1));
 #ifdef USE_FAC_PRECONDITIONER
-   d_diff_var.reset(new SideVariable<double>(d_dim, "diffusion", 1));
+   d_diff_var.reset(new SideVariable<double>(d_dim, "diffusion",
+      hier::IntVector::getOne(d_dim), 1));
 
    d_diff_id = variable_db->registerVariableAndContext(d_diff_var,
          d_cur_cxt,

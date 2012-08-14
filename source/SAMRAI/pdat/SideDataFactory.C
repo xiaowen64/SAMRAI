@@ -32,43 +32,20 @@ namespace pdat {
  *************************************************************************
  */
 
-// SGS DODIM TODO
-// WARNING! WARNING! WARNING! WARNING!
-// This was hacked to replicate a bug in the SAMRAI.  The direction vector
-// should not be all ones but not having this causes the tests to fail
-// WARNING! WARNING! WARNING! WARNING!
-
 template<class TYPE>
 SideDataFactory<TYPE>::SideDataFactory(
-   const int depth,
+   int depth,
    const hier::IntVector& ghosts,
    bool fine_boundary_represents_var,
    const hier::IntVector& directions):
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
    d_fine_boundary_represents_var(fine_boundary_represents_var),
-   d_directions(hier::IntVector::getOne(ghosts.getDim()))
+   d_directions(directions)
 {
-#ifndef DEBUG_CHECK_ASSERTIONS
-   NULL_USE(directions);
-#endif
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
    TBOX_ASSERT(directions.min() >= 0);
-}
-
-template<class TYPE>
-SideDataFactory<TYPE>::SideDataFactory(
-   const int depth,
-   const hier::IntVector& ghosts,
-   bool fine_boundary_represents_var):
-   hier::PatchDataFactory(ghosts),
-   d_depth(depth),
-   d_fine_boundary_represents_var(fine_boundary_represents_var),
-   d_directions(ghosts.getDim(), 1)
-{
-   TBOX_ASSERT(depth > 0);
-   TBOX_ASSERT(ghosts.min() >= 0);
 }
 
 template<class TYPE>

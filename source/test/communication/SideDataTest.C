@@ -55,9 +55,6 @@ SideDataTest::SideDataTest(
 
    d_refine_option = refine_option;
 
-   d_test_direction.resizeArray(0);
-   d_use_fine_value_at_interface.resizeArray(0);
-
    d_Acoef = 0.0;
    d_Bcoef = 0.0;
    d_Ccoef = 0.0;
@@ -102,17 +99,18 @@ void SideDataTest::readTestInput(
    tbox::Array<string> var_keys = var_data->getAllKeys();
    int nkeys = var_keys.getSize();
 
-   d_test_direction.resizeArray(nkeys);
+   d_test_direction.resizeArray(nkeys, hier::IntVector::getZero(d_dim));
    d_use_fine_value_at_interface.resizeArray(nkeys);
 
    for (int i = 0; i < nkeys; i++) {
       boost::shared_ptr<tbox::Database> var_db(
          var_data->getDatabase(var_keys[i]));
 
-      if (var_db->keyExists("test_direction")) {
-         d_test_direction[i] = var_db->getInteger("test_direction");
-      } else {
-         d_test_direction[i] = -1;
+      int test_direction = var_db->getIntegerWithDefault("test_direction", -1);
+      for (int j = 0; j < d_dim.getValue(); ++j) {
+         if (test_direction == -1 || test_direction == j) {
+            d_test_direction[i][j] = 1;
+         }
       }
 
       if (var_db->keyExists("use_fine_value_at_interface")) {
@@ -165,9 +163,9 @@ void SideDataTest::registerVariables(
          new pdat::SideVariable<double>(
             d_dim,
             d_variable_src_name[i],
+            d_test_direction[i],
             d_variable_depth[i],
-            d_use_fine_value_at_interface[i],
-            d_test_direction[i]));
+            d_use_fine_value_at_interface[i]));
 
       if (d_do_refine) {
          commtest->registerVariable(d_variables[i],

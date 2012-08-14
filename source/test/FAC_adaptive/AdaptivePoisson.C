@@ -73,8 +73,10 @@ AdaptivePoisson::AdaptivePoisson(
    d_fac_preconditioner(fac_precond),
    d_context_persistent(new hier::VariableContext("PERSISTENT")),
    d_context_scratch(new hier::VariableContext("SCRATCH")),
-   d_diffcoef(new pdat::SideVariable<double>(d_dim, "solution:diffcoef", 1)),
-   d_flux(new pdat::SideVariable<double>(d_dim, "flux", 1)),
+   d_diffcoef(new pdat::SideVariable<double>(d_dim, "solution:diffcoef",
+      hier::IntVector::getOne(d_dim), 1)),
+   d_flux(new pdat::SideVariable<double>(d_dim, "flux",
+      hier::IntVector::getOne(d_dim), 1)),
    d_scalar(new pdat::CellVariable<double>(d_dim, "solution:scalar", 1)),
    d_constant_source(new pdat::CellVariable<double>(
       d_dim, "poisson source", 1)),

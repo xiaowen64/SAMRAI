@@ -130,9 +130,9 @@ ModifiedBratuProblem::ModifiedBratuProblem(
    d_exponential_term(new pdat::CellVariable<double>(
       dim, object_name + "exponential_term", 1)),
    d_diffusion_coef(new pdat::SideVariable<double>(
-      dim, object_name + "diffusion_coef", 1)),
+      dim, object_name + "diffusion_coef", hier::IntVector::getOne(dim), 1)),
    d_flux(new pdat::SideVariable<double>(
-      dim, object_name + "flux", 1)),
+      dim, object_name + "flux", hier::IntVector::getOne(dim), 1)),
    d_coarse_fine_flux(new pdat::OutersideVariable<double>(
       dim, object_name + "coarse_fine_flux", 1)),
    d_jacobian_a(new pdat::CellVariable<double>(

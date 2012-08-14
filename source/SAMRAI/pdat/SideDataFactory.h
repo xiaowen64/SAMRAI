@@ -58,14 +58,6 @@ public:
    SideDataFactory(
       int depth,
       const hier::IntVector& ghosts,
-      bool fine_boundary_represents_var);
-
-   /**
-    * Same as previous constructor but with directions vector of 1's
-    */
-   SideDataFactory(
-      int depth,
-      const hier::IntVector& ghosts,
       bool fine_boundary_represents_var,
       const hier::IntVector& directions);
 

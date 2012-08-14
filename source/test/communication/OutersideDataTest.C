@@ -170,6 +170,7 @@ void OutersideDataTest::registerVariables(
          new pdat::SideVariable<double>(
             d_dim,
             d_variable_dst_name[i],
+            hier::IntVector::getOne(d_dim),
             d_variable_depth[i],
             d_use_fine_value_at_interface[i]));
 

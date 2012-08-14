@@ -20,9 +20,6 @@
 namespace SAMRAI {
 namespace pdat {
 
-template<class TYPE>
-const int SideVariable<TYPE>::ALL_DIRECTIONS = -1;
-
 /*
  *************************************************************************
  *
@@ -35,34 +32,20 @@ template<class TYPE>
 SideVariable<TYPE>::SideVariable(
    const tbox::Dimension& dim,
    const std::string& name,
+   const hier::IntVector& directions,
    int depth,
-   bool fine_boundary_represents_var,
-   int direction):
+   bool fine_boundary_represents_var):
    hier::Variable(name,
                   boost::make_shared<SideDataFactory<TYPE> >(
                      depth,
                      // default zero ghost cells
                      hier::IntVector::getZero(dim),
-                     fine_boundary_represents_var)),
+                     fine_boundary_represents_var,
+                     directions)),
    d_fine_boundary_represents_var(fine_boundary_represents_var),
-   d_directions(dim)
+   d_directions(directions)
 {
-   TBOX_ASSERT((direction >= ALL_DIRECTIONS) && (direction < getDim().getValue()));
-
-   d_directions = hier::IntVector::getOne(getDim());
-   if ((direction != ALL_DIRECTIONS)) {
-      // SGS this loop seems stupid, why not just set directions(direction) = 1?
-      for (int id = 0; id < getDim().getValue(); id++) {
-         d_directions(id) = ((direction == id) ? 1 : 0);
-      }
-      const hier::IntVector& zero_vector(hier::IntVector::getZero(getDim()));
-      setPatchDataFactory(
-         boost::make_shared<SideDataFactory<TYPE> >(
-            depth,
-            zero_vector,
-            fine_boundary_represents_var,
-            d_directions));
-   }
+   TBOX_ASSERT(directions.getDim() == getDim());
 }
 
 template<class TYPE>

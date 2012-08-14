@@ -65,9 +65,9 @@ public:
    SideVariable(
       const tbox::Dimension& dim,
       const std::string& name,
+      const hier::IntVector& directions,
       int depth = 1,
-      bool fine_boundary_represents_var = true,
-      int direction = -1);
+      bool fine_boundary_represents_var = true);
 
    /*!
     * @brief Virtual destructor for side variable objects.
@@ -112,12 +112,6 @@ public:
    getDepth() const;
 
 private:
-   /*
-    * Static integer constant describing the value indicating that all
-    * directions are relevent.
-    */
-   static const int ALL_DIRECTIONS;
-
    bool d_fine_boundary_represents_var;
    hier::IntVector d_directions;
 
