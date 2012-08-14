@@ -294,10 +294,6 @@ public:
 private:
    static TYPE s_zero;
    static TYPE s_one;
-   static TYPE s_signaling_nan;
-   static TYPE s_max;
-   static TYPE s_min;
-   static TYPE s_epsilon;
 };
 
 /*
