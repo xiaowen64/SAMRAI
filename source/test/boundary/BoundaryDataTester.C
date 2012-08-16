@@ -447,8 +447,7 @@ void BoundaryDataTester::setBoundaryDataDefaults()
          d_variable_bc_values[iv].resizeArray(NUM_3D_FACES
             * d_variable_depth[iv]);
       }
-      tbox::MathUtilities<double>::setArrayToSignalingNaN(d_variable_bc_values[
-            iv]);
+      tbox::MathUtilities<double>::setArrayToMax(d_variable_bc_values[iv]);
    }
 
 }

@@ -650,10 +650,6 @@ private:
    double d_residual_norm;
 
    /*!
-    * @brief Norm of RHS, for computing relative residual.
-    */
-   double d_rhs_norm;
-   /*!
     * @brief Convergence factor stack.
     *
     * The convergence factor stack is reset for each solve

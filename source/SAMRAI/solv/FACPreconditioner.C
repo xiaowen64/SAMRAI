@@ -47,11 +47,10 @@ FACPreconditioner::FACPreconditioner(
    d_postsmoothing_sweeps(1),
    d_algorithm_choice("default"),
    d_number_iterations(0),
-   d_residual_norm(tbox::MathUtilities<double>::getSignalingNaN()),
-   d_rhs_norm(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_residual_norm(tbox::MathUtilities<double>::getMax()),
    d_convergence_factor(),
-   d_avg_convergence_factor(tbox::MathUtilities<double>::getSignalingNaN()),
-   d_net_convergence_factor(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_avg_convergence_factor(tbox::MathUtilities<double>::getMax()),
+   d_net_convergence_factor(tbox::MathUtilities<double>::getMax()),
    d_controlled_level_ops()
 {
 
@@ -849,7 +848,6 @@ FACPreconditioner::printClassData(
       << "d_postsmoothing_sweeps = " << d_postsmoothing_sweeps << "\n"
       << "d_number_iterations = " << d_number_iterations << "\n"
       << "d_residual_norm = " << d_residual_norm << "\n"
-      << "d_rhs_norm = " << d_rhs_norm << "\n"
       << std::endl;
 
 }

@@ -1066,7 +1066,9 @@ GriddingAlgorithm::regridAllFinerLevels(
                bool initial_time = false;
                double level_regrid_start_time = 0.;
                if (regrid_start_time.getSize() < ln + 1) {
-                  tbox::IEEE::setNaN(level_regrid_start_time);
+                  TBOX_ERROR("GriddingAlgorithm::regridAllFinerLevels()...\n"
+                     << "no regrid_start_time specified for level " << ln
+                     << "." <<std::endl);
                } else {
                   level_regrid_start_time = regrid_start_time[ln];
                }
@@ -1515,10 +1517,14 @@ GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
 
    bool initial_time = false;
    double level_regrid_start_time = 0.;
-   if (regrid_start_time.getSize() < tag_ln + 1) {
-      tbox::IEEE::setNaN(level_regrid_start_time);
-   } else {
-      level_regrid_start_time = regrid_start_time[tag_ln];
+   if (d_tag_init_strategy->usesTimeIntegration(regrid_cycle, regrid_time)) {
+      if (regrid_start_time.getSize() < tag_ln + 1) {
+         TBOX_ERROR("GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid()...\n"
+            << "no regrid_start_time specified for level " << tag_ln
+            << "." <<std::endl);
+      } else {
+         level_regrid_start_time = regrid_start_time[tag_ln];
+      }
    }
 
    if (d_barrier_and_time) {
