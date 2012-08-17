@@ -293,7 +293,7 @@ public:
       const hier::IntVector& gcw_to_check,
       const hier::BoundaryBox& bbox,
       int bcase,
-      double bstate);
+      const double& bstate);
 
 private:
    static bool s_fortran_constants_stuffed;

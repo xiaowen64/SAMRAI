@@ -447,7 +447,8 @@ void BoundaryDataTester::setBoundaryDataDefaults()
          d_variable_bc_values[iv].resizeArray(NUM_3D_FACES
             * d_variable_depth[iv]);
       }
-      tbox::MathUtilities<double>::setArrayToMax(d_variable_bc_values[iv]);
+      tbox::MathUtilities<double>::setArrayToSignalingNaN(
+         d_variable_bc_values[iv]);
    }
 
 }
@@ -953,7 +954,8 @@ void BoundaryDataTester::printClassData(
             << d_scalar_bdry_face_conds[j] << endl;
          os << "       d_vector_bdry_face_conds[" << j << "] = "
             << d_vector_bdry_face_conds[j] << endl;
-         if (d_master_bdry_face_conds[j] == BdryCond::DIRICHLET) {
+         if (d_master_bdry_face_conds[j] == BdryCond::DIRICHLET ||
+             d_master_bdry_face_conds[j] == BdryCond::NEUMANN) {
             for (i = 0; i < d_variable_name.getSize(); i++) {
                os << d_variable_name[i] << " bdry edge value[" << j << "] = "
                   << d_variable_bc_values[i][j * d_variable_depth[i]];

@@ -387,7 +387,7 @@ CartesianBoundaryUtilities2::checkBdryData(
    const hier::IntVector& gcw_to_check,
    const hier::BoundaryBox& bbox,
    int bcase,
-   double bstate)
+   const double& bstate)
 {
    TBOX_ASSERT(!varname.empty());
    TBOX_ASSERT(data_id >= 0);
