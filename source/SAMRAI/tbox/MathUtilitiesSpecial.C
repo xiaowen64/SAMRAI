@@ -25,18 +25,6 @@
 #include "SAMRAI/tbox/Complex.h"
 
 /*
- * Floating point assertion handling.
- * The following lines setup assertion handling header files on
- * systems other than solaris.
- */
-#if defined(HAVE_EXCEPTION_HANDLING)
-#include <stdlib.h>
-#include <stdio.h>
-#include <fpu_control.h>
-#include <signal.h>
-#endif
-
-/*
  * The following lines setup assertion handling headers on the Sun.  If we
  * use Sun's native compiler, just pull in the <sunmath.h> include file.
  * If we are under solaris but use a different compiler (e.g. g++)
