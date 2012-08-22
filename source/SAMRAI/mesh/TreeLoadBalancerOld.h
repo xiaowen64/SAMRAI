@@ -246,7 +246,14 @@ public:
          output_stream);
    }
 
-
+   /*!
+    * @brief Get the name of this object.
+    */
+   const std::string&
+   getObjectName()
+   {
+      return d_object_name;
+   }
 
 private:
 
