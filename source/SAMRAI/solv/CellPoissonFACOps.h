@@ -148,7 +148,7 @@ namespace solv {
  *     <td>coarse_solver_max_iterations</td>
  *     <td>int</td>
  *     <td>10</td>
- *     <td>>0</td>
+ *     <td>>=1</td>
  *     <td>opt
  *     <td>Not written to restart.  Value in input db used.</td>
  *   </tr>

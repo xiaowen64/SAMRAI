@@ -85,7 +85,7 @@ namespace solv {
  *     <td>max_cycles</td>
  *     <td>int</td>
  *     <td>10</td>
- *     <td>>0</td>
+ *     <td>>=1</td>
  *     <td>opt</td>
  *     <td>Not written to restart.  Value in input db used.</td>
  *   </tr>
