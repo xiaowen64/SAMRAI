@@ -207,25 +207,25 @@ namespace mesh {
  *   </tr>
  *   <tr>
  *     <td>check_nonrefined_tags</td>
- *     <td>char</td>
- *     <td>'w'</td>
- *     <td>'w', 'i', 'e'</td>
+ *     <td>string</td>
+ *     <td>"WARN"</td>
+ *     <td>"WARN", "IGNORE", "ERROR"</td>
  *     <td>opt</td>
  *     <td>Parameter read from restart db may be overridden by input db</td>
  *   </tr>
  *   <tr>
  *     <td>check_overlapping_patches</td>
- *     <td>char</td>
- *     <td>'i'</td>
- *     <td>'w', 'i', 'e'</td>
+ *     <td>string</td>
+ *     <td>"IGNORE"</td>
+ *     <td>"WARN", "IGNORE", "ERROR"</td>
  *     <td>opt</td>
  *     <td>Parameter read from restart db may be overridden by input db</td>
  *   </tr>
  *   <tr>
  *     <td>check_nonnesting_user_boxes</td>
- *     <td>char</td>
- *     <td>'e'</td>
- *     <td>'w', 'i', 'e'</td>
+ *     <td>string</td>
+ *     <td>"ERROR"</td>
+ *     <td>"WARN", "IGNORE", "ERROR"</td>
  *     <td>opt</td>
  *     <td>Parameter read from restart db may be overridden by input db</td>
  *   </tr>
@@ -555,6 +555,15 @@ public:
    void
    printStatistics(
       std::ostream& s = tbox::plog) const;
+
+   /*!
+    * @brief Get the name of this object.
+    */
+   const std::string&
+   getObjectName() const
+    {
+       return d_object_name;
+    }
 
 private:
    /*
