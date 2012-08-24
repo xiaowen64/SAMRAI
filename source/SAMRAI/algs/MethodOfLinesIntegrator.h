@@ -64,10 +64,9 @@ namespace algs {
  * values may override values read from restart.  Data read from input is
  * summarized as follows:
  *
- * Required input keys and data types: NONE
+ * <b> Input Parameters </b>
  *
- * Optional input keys, data types, and defaults:
- *
+ * <b> Definitions: </b>
  *    - \b    alpha_1
  *    - \b    alpha_2
  *    - \b    beta <br>

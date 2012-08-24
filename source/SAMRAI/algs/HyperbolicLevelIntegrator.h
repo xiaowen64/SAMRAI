@@ -86,7 +86,7 @@ namespace algs {
  *
  * <b> Input Parameters </b>
  *
- * <b> Descriptions: </b>
+ * <b> Definitions: </b>
  *    - \b    cfl
  *       the CFL factor used for timestep selection (dt used = CFL * max dt)
  *

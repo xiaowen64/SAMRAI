@@ -45,7 +45,7 @@ namespace hier {
  * are given, the last value provided will be used on each level without a
  * specified input value.  See example input below.
  *
- * <b> Details: </b>
+ * <b> Definitions: </b>
  *   - \b    max_levels
  *      specifies maximum number of levels allowed in the AMR patch hierarchy.
  *
