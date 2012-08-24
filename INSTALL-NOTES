@@ -482,7 +482,5 @@ the default XCode compilers must be overridden):
 *  Looking for list of configure options?  We have encapsulated this in    *
 *  the new ``config.suggest'' tool.                                        *
 *                                                                          *
-*  SEE DISCUSSION UNDER "CONFIGURE OPTIONS" AT LINE 216 ABOVE.             *
+*  SEE DISCUSSION UNDER "CONFIGURE OPTIONS" AT LINE 208 ABOVE.             *
 ****************************************************************************
-****************************************************************************
-
