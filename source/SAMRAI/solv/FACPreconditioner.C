@@ -47,10 +47,10 @@ FACPreconditioner::FACPreconditioner(
    d_postsmoothing_sweeps(1),
    d_algorithm_choice("default"),
    d_number_iterations(0),
-   d_residual_norm(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_residual_norm(tbox::MathUtilities<double>::getMax()),
    d_convergence_factor(),
-   d_avg_convergence_factor(tbox::MathUtilities<double>::getSignalingNaN()),
-   d_net_convergence_factor(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_avg_convergence_factor(tbox::MathUtilities<double>::getMax()),
+   d_net_convergence_factor(tbox::MathUtilities<double>::getMax()),
    d_controlled_level_ops()
 {
 
