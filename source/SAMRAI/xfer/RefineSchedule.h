@@ -198,12 +198,6 @@ public:
    ~RefineSchedule();
 
    /*!
-    * @brief Read static data from input database.
-    */
-   void
-   getFromInput();
-
-   /*!
     * @brief Reset this refine schedule to perform data transfers
     * asssociated with refine class items in function argument.
     *
@@ -247,72 +241,6 @@ public:
       bool do_physical_boundary_fill = true) const;
 
    /*!
-    * @brief Initialize a component selector to store the components
-    * needed to allocate source data.
-    *
-    * @param[out] allocate_vector ComponentSelector that will be
-    *                             set to contain the patch data indices for
-    *                             source data.
-    */
-   void
-   initializeSourceVector(
-      hier::ComponentSelector& allocate_vector) const
-   {
-      allocate_vector.clrAllFlags();
-      for (int iri = 0; iri < d_number_refine_items; iri++) {
-         allocate_vector.setFlag(d_refine_items[iri]->d_src);
-      }
-   }
-
-   /*!
-    * @brief Allocate destination space on the destination level and store the
-    * allocated patch data indices in the component selector for later
-    * deallocation.
-    *
-    * @param[out] allocate_vector Component selector that will store the
-    *                             allocated patch data indices.
-    * @param[in] fill_time        Simulation time for filling operation.
-    */
-   void
-   allocateDestinationSpace(
-      hier::ComponentSelector& allocate_vector,
-      double fill_time) const;
-
-   /*!
-    * @brief Allocate scratch space on the specified level and store the
-    * allocated patch data indices in the component selector for later
-    * deallocation.
-    *
-    * @param[in,out] level
-    * @param[in] fill_time        Simulation time for filling operation.
-    * @param[out] allocate_vector Component selector that will store the
-    *                             allocated patch data indices.
-    */
-   void
-   allocateScratchSpace(
-      hier::ComponentSelector& allocate_vector,
-      const boost::shared_ptr<hier::PatchLevel>& level,
-      double fill_time) const;
-
-   /*!
-    * @brief Initialize a component selector to store the components needed to
-    * allocate destination data.
-    *
-    * @param[out] allocate_vector An empty ComponentSelector that will be
-    *                             set to contain the patch data indices for
-    *                             destination data.
-    */
-   void
-   initializeDestinationVector(
-      hier::ComponentSelector& allocate_vector) const
-   {
-      allocate_vector.clrAllFlags();
-      for (int iri = 0; iri < d_number_refine_items; iri++) {
-         allocate_vector.setFlag(d_refine_items[iri]->d_dst);
-      }
-   }
-
-   /*!
     * @brief Return refine equivalence classes.
     *
     * The equivalence class information is used in schedule classes.
@@ -321,16 +249,6 @@ public:
    getEquivalenceClasses() const
    {
       return d_refine_classes;
-   }
-
-   /*!
-    * @brief Return width of ghost cell region to fill which is passed to user
-    * supplied physical boundary condition routine.
-    */
-   const hier::IntVector&
-   getBoundaryFillGhostWidth() const
-   {
-      return d_boundary_fill_ghost_width;
    }
 
    /*!
@@ -425,6 +343,12 @@ private:
       RefinePatchStrategy* patch_strategy);
 
    /*!
+    * @brief Read static data from input database.
+    */
+   void
+   getFromInput();
+
+   /*!
     * @brief Finish the schedule construction for the two constructors
     * that take a hierarchy as an argument.
     *
@@ -473,6 +397,22 @@ private:
       const BoxNeighborhoodCollection& src_owner_dst_to_fill,
       bool use_time_interpolation,
       bool skip_generate_schedule = false);
+
+   /*!
+    * @brief Allocate scratch space on the specified level and store the
+    * allocated patch data indices in the component selector for later
+    * deallocation.
+    *
+    * @param[out] allocate_vector Component selector that will store the
+    *                             allocated patch data indices.
+    * @param[in,out] level
+    * @param[in] fill_time        Simulation time for filling operation.
+    */
+   void
+   allocateScratchSpace(
+      hier::ComponentSelector& allocate_vector,
+      const boost::shared_ptr<hier::PatchLevel>& level,
+      double fill_time) const;
 
    /*!
     * @brief Recursively fill the destination level with data at the
@@ -779,14 +719,14 @@ private:
     * @param[in,out] coarse_interp_box_level This method will add
     * periodic images to coarse_interp_box_level, if needed.
     *
-    * @param[in] hierarchy
-    *
     * @param[in] coarse_interp_to_hiercoarse
     *
     * @param[in] hiercoarse_to_coarse_interp
     *
     * @param[in] next_coarser_ln Level number of hiercoarse (the
     * coarser level on the hierarchy
+    *
+    * @param[in] hierarchy
     *
     * @param[in] dst_to_src
     *
@@ -806,8 +746,8 @@ private:
       hier::BoxLevel& coarse_interp_box_level,
       hier::Connector &coarse_interp_to_hiercoarse,
       hier::Connector &hiercoarse_to_coarse_interp,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int next_coarser_ln,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const hier::Connector &dst_to_src,
       const hier::Connector &src_to_dst,
       const hier::Connector &coarse_interp_to_dst,
@@ -823,10 +763,10 @@ private:
     */
    void
    sanityCheckCoarseInterpAndHiercoarseLevels(
-      const hier::Connector& coarse_interp_to_hiercoarse,
-      const hier::Connector& hiercoarse_to_coarse_interp,
+      const int next_coarser_ln,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      const int next_coarser_ln);
+      const hier::Connector& coarse_interp_to_hiercoarse,
+      const hier::Connector& hiercoarse_to_coarse_interp);
 
    /*!
     * @brief Get the maximum ghost cell width of all destination

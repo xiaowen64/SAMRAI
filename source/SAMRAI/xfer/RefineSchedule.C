@@ -884,8 +884,8 @@ RefineSchedule::finishScheduleConstruction(
          coarse_interp_box_level,
          coarse_interp_to_hiercoarse,
          hiercoarse_to_coarse_interp,
-         hierarchy,
          next_coarser_ln,
+         hierarchy,
          dst_to_src,
          src_to_dst,
          d_coarse_interp_to_dst,
@@ -1049,8 +1049,8 @@ RefineSchedule::createEnconFillSchedule(
       coarse_interp_encon_box_level,
       coarse_interp_encon_to_hiercoarse,
       hiercoarse_to_coarse_interp_encon,
-      hierarchy,
       next_coarser_ln,
+      hierarchy,
       d_encon_to_src,
       d_src_to_encon,
       d_coarse_interp_encon_to_encon,
@@ -1376,8 +1376,8 @@ RefineSchedule::createCoarseInterpPatchLevel(
    hier::BoxLevel& coarse_interp_box_level,
    hier::Connector &coarse_interp_to_hiercoarse,
    hier::Connector &hiercoarse_to_coarse_interp,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int next_coarser_ln,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const hier::Connector &dst_to_src,
    const hier::Connector &src_to_dst,
    const hier::Connector &coarse_interp_to_dst,
@@ -1620,10 +1620,10 @@ RefineSchedule::createCoarseInterpPatchLevel(
 
    if (s_extra_debug) {
       sanityCheckCoarseInterpAndHiercoarseLevels(
-         coarse_interp_to_hiercoarse,
-         hiercoarse_to_coarse_interp,
+         next_coarser_ln,
          hierarchy,
-         next_coarser_ln);
+         coarse_interp_to_hiercoarse,
+         hiercoarse_to_coarse_interp);
    }
 
    /*
@@ -1657,10 +1657,10 @@ RefineSchedule::createCoarseInterpPatchLevel(
  */
 void
 RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
-   const hier::Connector& coarse_interp_to_hiercoarse,
-   const hier::Connector& hiercoarse_to_coarse_interp,
+   const int next_coarser_ln,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-   const int next_coarser_ln)
+   const hier::Connector& coarse_interp_to_hiercoarse,
+   const hier::Connector& hiercoarse_to_coarse_interp)
 {
 
    /*
@@ -2176,34 +2176,6 @@ RefineSchedule::allocateScratchSpace(
          fill_time,
          preprocess_vector);
    }
-}
-
-/*
- **************************************************************************
- *
- * Allocate all destination data and store the destination components
- * in a component selector.
- *
- **************************************************************************
- */
-
-void
-RefineSchedule::allocateDestinationSpace(
-   hier::ComponentSelector& allocate_vector,
-   double fill_time) const
-{
-   TBOX_ASSERT(d_dst_level);
-
-   allocate_vector.clrAllFlags();
-
-   for (int iri = 0; iri < d_number_refine_items; iri++) {
-      const int dst_id = d_refine_items[iri]->d_dst;
-      if (!d_dst_level->checkAllocated(dst_id)) {
-         allocate_vector.setFlag(dst_id);
-      }
-   }
-
-   d_dst_level->allocatePatchData(allocate_vector, fill_time);
 }
 
 /*
