@@ -103,7 +103,6 @@ public:
     */
    BergerRigoutsosNode(
       const tbox::Dimension& dim,
-      const hier::BlockId& block_id,
       const hier::LocalId& first_local_id);
 
    /*!
@@ -242,6 +241,8 @@ public:
     * If relationships computation is not specified, the Connectors are
     * unchanged.
     *
+    * @param bound_boxes Contains one global bounding box for each
+    *                    block with a patch in tag_level.
     * @param mpi_communicator Alternative MPI communicator.  If given,
     *   must be congruent with the tag box_level's MPI communicator.
     *   Specify tbox::SAMRAI_MPI::commNull if unused.  Highly recommend
@@ -252,7 +253,7 @@ public:
       hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
-      const hier::Box& bound_box,
+      const hier::BoxContainer& bound_boxes,
       const boost::shared_ptr<hier::PatchLevel>& tag_level,
       const tbox::SAMRAI_MPI& mpi_object);
 
@@ -585,6 +586,8 @@ public:
       int num_conts_to_complete;
       //! @brief Highest number of continueAlgorithm calls to complete nodes.
       int max_conts_to_complete;
+
+      int num_nodes_existing;
       //@}
    };
 
@@ -599,7 +602,18 @@ public:
       CommonParams* common_params,
       BergerRigoutsosNode* parent,
       const int child_number,
-      const hier::BlockId& block_id, 
+      const hier::LocalId& first_local_id);
+
+   /*!
+    * @brief Construct a root node for a single block.
+    * 
+    * @param common_params  Parameters shares by all nodes in clustering
+    * @param box            Global bounding box for a single block
+    * @param first_local_id First available local id for new boxes
+    */
+   BergerRigoutsosNode(
+      CommonParams* common_params,
+      const hier::Box& box,
       const hier::LocalId& first_local_id);
 
    /*
@@ -1028,6 +1042,7 @@ public:
     */
 
    hier::Box d_box;
+   hier::BoxContainer d_root_boxes;
    int d_owner;
 
    /*!
@@ -1111,7 +1126,6 @@ public:
    tbox::AsyncCommGroup* d_comm_group;
    //@}
 
-   hier::BlockId d_block_id;
    hier::LocalId d_first_local_id;
 
    //@{

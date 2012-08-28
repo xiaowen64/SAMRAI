@@ -728,12 +728,11 @@ void generatePrebalanceByUserShells(
       tag_level,
       tag_id,
       tag_val,
-      anchor_box_level.getGlobalBoundingBox(0),
+      hier::BoxContainer(anchor_box_level.getGlobalBoundingBox(0)),
       min_size,
       efficiency_tol,
       combine_tol,
       max_gcw,
-      hier::BlockId::zero(),
       hier::LocalId(0));
 
    /*

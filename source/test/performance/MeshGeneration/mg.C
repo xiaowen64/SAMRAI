@@ -579,12 +579,11 @@ int main(
             hierarchy->getPatchLevel(coarser_ln),
             tag_data_id,
             1 /* tag_val */,
-            L0.getGlobalBoundingBox(0),
+            hier::BoxContainer(L0.getGlobalBoundingBox(0)),
             min_size,
             exact_tagging ? 1.0 : efficiency_tol,
             exact_tagging ? 1.0 : combine_tol,
             required_connector_width,
-            hier::BlockId::zero(),
             hier::LocalId(0));
 
          outputPostcluster( L1, L0, required_connector_width, "L1: " );
@@ -712,12 +711,11 @@ int main(
             hierarchy->getPatchLevel(coarser_ln),
             tag_data_id,
             1 /* tag_val */,
-            L1.getGlobalBoundingBox(0),
+            hier::BoxContainer(L1.getGlobalBoundingBox(0)),
             min_size,
             exact_tagging ? 1.0 : efficiency_tol,
             exact_tagging ? 1.0 : combine_tol,
             required_connector_width,
-            hier::BlockId::zero(),
             hier::LocalId(0));
 
          outputPostcluster( L2, L1, required_connector_width, "L2: " );

@@ -198,37 +198,43 @@ BergerRigoutsos::findBoxesContainingTags(
    const boost::shared_ptr<hier::PatchLevel>& tag_level,
    const int tag_data_index,
    const int tag_val,
-   const hier::Box& bound_box,
+   const hier::BoxContainer& bound_boxes,
    const hier::IntVector& min_box,
    const double efficiency_tol,
    const double combine_tol,
    const hier::IntVector& max_gcw,
-   const hier::BlockId& block_id,
    const hier::LocalId& first_local_id) const
 {
+   TBOX_ASSERT(!bound_boxes.isEmpty());
    TBOX_ASSERT_OBJDIM_EQUALITY5(new_box_level,
       *tag_level,
-      bound_box,
+      *(bound_boxes.begin()),
       min_box,
       max_gcw);
 
    tbox::SAMRAI_MPI mpi(tag_level->getBoxLevel()->getMPI());
 
-   if (!(bound_box.numberCells() >= min_box)) {
-      if (d_check_min_box_size == 'e') {
-         TBOX_ERROR("BergerRigoutsos::findBoxesContainingTags input error:\n"
-            << "Input box " << bound_box << " has size " << bound_box.numberCells()
-            << "\nwhich is already smaller than the minimum box size\n"
-            << min_box << "\n\n"
-            << "To ignore or just issue a warning, see the input parameter\n"
-            << "check_min_box_size.\n");
-      } else if (d_check_min_box_size == 'w') {
-         TBOX_WARNING("BergerRigoutsos::findBoxesContainingTags input warning:\n"
-            << "Input box " << bound_box << " has size " << bound_box.numberCells()
-            << "\nwhich is already smaller than the minimum box size\n"
-            << min_box << "\n\n"
-            << "To ignore or issue error, see the input parameter\n"
-            << "check_min_box_size.\n");
+   for (hier::BoxContainer::const_iterator bb_itr = bound_boxes.begin();
+        bb_itr != bound_boxes.end(); ++bb_itr) { 
+      if (!(bb_itr->numberCells() >= min_box)) {
+         if (d_check_min_box_size == 'e') {
+            TBOX_ERROR("BergerRigoutsos::findBoxesContainingTags input error:\n"
+               << "Input box " << *bb_itr << " has size " << bb_itr->numberCells()
+               << "\nwhich is already smaller than the minimum box size\n"
+               << min_box << "\n\n"
+               << "To ignore or just issue a warning, see the input parameter\n"
+               << "check_min_box_size.\n");
+         } else if (d_check_min_box_size == 'w') {
+            TBOX_WARNING("BergerRigoutsos::findBoxesContainingTags input warning:\n"
+               << "Input box " << *bb_itr << " has size " << bb_itr->numberCells()
+               << "\nwhich is already smaller than the minimum box size\n"
+               << min_box << "\n\n"
+               << "To ignore or issue error, see the input parameter\n"
+               << "check_min_box_size.\n");
+         }
+         if (bb_itr->empty()) {
+            TBOX_ERROR("BergerRigoutsos: empty bounding box not allowed.");
+         }
       }
    }
 
@@ -236,11 +242,6 @@ BergerRigoutsos::findBoxesContainingTags(
       t_barrier_before->start();
       mpi.Barrier();
       t_barrier_before->stop();
-   }
-
-   if (bound_box.empty()) {
-      TBOX_ERROR("BergerRigoutsos: empty bounding box not allowed."
-         << std::endl);
    }
 
    const hier::BoxLevel& tag_box_level = *tag_level->getBoxLevel();
@@ -272,7 +273,7 @@ BergerRigoutsos::findBoxesContainingTags(
 
    t_find_boxes_with_tags->start();
 
-   BergerRigoutsosNode root_node(d_dim, block_id, first_local_id);
+   BergerRigoutsosNode root_node(d_dim, first_local_id);
 
    // Set standard Berger-Rigoutsos clustering parameters.
    root_node.setClusteringParameters(tag_data_index,
@@ -295,7 +296,7 @@ BergerRigoutsos::findBoxesContainingTags(
    root_node.clusterAndComputeRelationships(new_box_level,
       tag_to_new,
       new_to_tag,
-      bound_box,
+      bound_boxes,
       tag_level,
       d_mpi);
 
@@ -320,7 +321,10 @@ BergerRigoutsos::findBoxesContainingTags(
    t_global_reductions->start();
    new_box_level.getGlobalNumberOfBoxes();
    new_box_level.getGlobalNumberOfCells();
-   new_box_level.getGlobalBoundingBox(block_id.getBlockValue());
+   for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
+        bi != bound_boxes.end(); ++bi) {
+      new_box_level.getGlobalBoundingBox(bi->getBlockId().getBlockValue());
+   }
    t_global_reductions->stop();
 
    if (d_log_cluster) {
@@ -334,6 +338,7 @@ BergerRigoutsos::findBoxesContainingTags(
       /*
        * Log summary of clustering and dendogram.
        */
+
       tbox::plog << "BergerRigoutsos summary:\n"
                  << "\tAsync BR on proc " << mpi.getRank()
                  << " owned "
@@ -343,15 +348,22 @@ BergerRigoutsos::findBoxesContainingTags(
                  << ") in " << root_node.getMaxGeneration() << " generations,"
                  << "   " << root_node.getNumBoxesGenerated()
                  << " boxes generated.\n\t"
-                 << root_node.getMaxTagsOwned() << " locally owned tags on new BoxLevel.\n\t"
-                 << "Initial bounding box = " << bound_box << ", "
-                 << bound_box.size() << " cells, "
-                 << "final global bounding box = "
-                 << new_box_level.getGlobalBoundingBox(block_id.getBlockValue())
-                 << ", "
-                 << new_box_level.getGlobalBoundingBox(block_id.getBlockValue()).size()
-                 << " cells\n\t"
-                 << "Final output has " << root_node.getNumTags()
+                 << root_node.getMaxTagsOwned() << " locally owned tags on new BoxLevel.\n\t";
+
+      for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
+           bi != bound_boxes.end(); ++bi) {
+         const int bn = bi->getBlockId().getBlockValue();
+         tbox::plog << "Block " << bn
+                    << " initial bounding box = " << *bi << ", "
+                    << bi->size() << " cells, "
+                    << "final global bounding box = "
+                    << new_box_level.getGlobalBoundingBox(bn)
+                    << ", "
+                    << new_box_level.getGlobalBoundingBox(bn).size()
+                    << " cells.\n\t";
+      }
+
+      tbox::plog << "Final output has " << root_node.getNumTags()
                  << " tags in "
                  << new_box_level.getGlobalNumberOfCells()
                  << " global cells [" << new_box_level.getMinNumberOfCells()

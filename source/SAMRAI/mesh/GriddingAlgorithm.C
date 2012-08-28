@@ -3036,92 +3036,30 @@ GriddingAlgorithm::findRefinementBoxes(
    tag_to_cluster_width += smallest_box_to_refine;
 
    const int nblocks = d_hierarchy->getGridGeometry()->getNumberBlocks();
-   if (nblocks == 1) {
+
+   hier::BoxContainer bounding_container;
+   for (int bn = 0; bn < nblocks; ++bn) {
       hier::Box bounding_box(dim);
       bounding_box =
-         d_hierarchy->getBoxLevel(tag_ln)->getGlobalBoundingBox(0);
+         d_hierarchy->getBoxLevel(tag_ln)->getGlobalBoundingBox(bn);
+      if (!bounding_box.empty()) {
+         bounding_container.pushBack(bounding_box);
+      }
+   }
+
+   hier::LocalId first_local_id(0);
+
+   if (!bounding_container.isEmpty()) {
       d_box_generator->findBoxesContainingTags(
          new_box_level,
          tag_to_new,
          new_to_tag,
-         level, d_tag_indx, d_true_tag, bounding_box,
+         level, d_tag_indx, d_true_tag, bounding_container,
          smallest_box_to_refine,
          getEfficiencyTolerance(tag_ln),
          getCombineEfficiency(tag_ln),
          tag_to_cluster_width,
-         hier::BlockId(0),
-         hier::LocalId(0));
-   } else {
-      /*
-       * TODO: The following loop is an inefficient work-around to
-       * handle multiple blocks through the single-block
-       * findBoxesContainingTags interface.  The interfaces should be
-       * changed to support multiblock.
-       */
-      hier::BoxContainer accumulated_boxes;
-      hier::LocalId first_local_id(0);
-      for (int bn = 0; bn < nblocks; ++bn) {
-         /*
-          * Determine single smallest bounding box for all nesting boxes.
-          */
-         hier::Box bounding_box(dim);
-         bounding_box =
-            d_hierarchy->getBoxLevel(tag_ln)->getGlobalBoundingBox(bn);
-
-         if (!bounding_box.isEmpty()) {
-            d_box_generator->findBoxesContainingTags(
-               new_box_level,
-               tag_to_new,
-               new_to_tag,
-               level, d_tag_indx, d_true_tag, bounding_box,
-               smallest_box_to_refine,
-               getEfficiencyTolerance(tag_ln),
-               getCombineEfficiency(tag_ln),
-               tag_to_cluster_width,
-               hier::BlockId(bn),
-               first_local_id);
-            accumulated_boxes.insert(
-               new_box_level.getBoxes().begin(),
-               new_box_level.getBoxes().end());
-            if (!accumulated_boxes.isEmpty()) {
-               first_local_id =
-                  accumulated_boxes.back().getBoxId().getLocalId() + 1;
-            }
-         }
-
-      }
-#ifdef DEBUG_CHECK_ASSERTIONS
-      std::set<int> local_ids;
-      for (hier::BoxContainer::iterator
-           ac_itr = accumulated_boxes.begin();
-           ac_itr != accumulated_boxes.end(); ++ac_itr) {
-         local_ids.insert(ac_itr->getBoxId().getLocalId().getValue());
-      }
-      TBOX_ASSERT(static_cast<int>(local_ids.size()) == accumulated_boxes.size());
-#endif
-      const hier::BoxLevel& tag_box_level(tag_to_new.getBase());
-      new_box_level.swapInitialize(
-         accumulated_boxes,
-         new_box_level.getRefinementRatio(),
-         new_box_level.getGridGeometry(),
-         new_box_level.getMPI());
-
-      /*
-       * Set up tag<==>new Connectors.  We cannot use the neighborhood sets
-       * from findBoxesContainingTags because those do not include cross-block
-       * neighbors.
-       */
-      tag_to_new.clearNeighborhoods();
-      tag_to_new.setBase(tag_box_level);
-      tag_to_new.setHead(new_box_level);
-      tag_to_new.setWidth(tag_to_cluster_width, true);
-      new_to_tag.clearNeighborhoods();
-      new_to_tag.setBase(new_box_level);
-      new_to_tag.setHead(tag_box_level);
-      new_to_tag.setWidth(tag_to_cluster_width, true);
-      oca.findOverlaps(tag_to_new);
-      oca.findOverlaps(new_to_tag);
-
+         first_local_id);
    }
    t_find_boxes_containing_tags->stop();
 

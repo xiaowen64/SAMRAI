@@ -1090,12 +1090,11 @@ void generatePrebalanceByUserShells(
       tag_level,
       tag_id,
       tag_val,
-      L0.getGlobalBoundingBox(0),
+      hier::BoxContainer(L0.getGlobalBoundingBox(0)),
       min_size,
       efficiency_tol,
       combine_tol,
       connector_width,
-      hier::BlockId::zero(),
       hier::LocalId(0));
 
    /*
@@ -1251,12 +1250,11 @@ void generatePrebalanceByShrinkingLevel(
       tag_level,
       tag_id,
       tag_val,
-      L1.getGlobalBoundingBox(0),
+      hier::BoxContainer(L1.getGlobalBoundingBox(0)),
       min_size,
       efficiency_tol,
       combine_tol,
       connector_width,
-      hier::BlockId::zero(),
       hier::LocalId(0));
 
 
@@ -1408,12 +1406,11 @@ void generatePrebalanceBySinusoidalFront(
       tag_level,
       tag_id,
       tag_val,
-      L1.getGlobalBoundingBox(0),
+      hier::BoxContainer(L1.getGlobalBoundingBox(0)),
       min_size,
       efficiency_tol,
       combine_tol,
       connector_width,
-      hier::BlockId::zero(),
       hier::LocalId(0));
 
 
