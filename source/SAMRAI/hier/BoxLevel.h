@@ -124,7 +124,6 @@ public:
     * @brief Constructs an empty, initialized object.
     *
     * @see addBox()
-    * @see addBox()
     * @see initialize()
     *
     * @param[in] ratio
@@ -154,7 +153,6 @@ public:
     * The content and state of the object before calling this function
     * is discarded.
     *
-    * @see addBox()
     * @see addBox()
     * @see initialize(const BoxContainer&, const IntVector&, const tbox::SAMRAI_MPI&, const ParallelState)
     *
@@ -303,7 +301,7 @@ public:
     * be accessed without further communications, until the object
     * changes.
     *
-    * Sets d_global_data_up_to_date;
+    * Sets d_global_data_up_to_date to true;
     */
    void
    cacheGlobalReducedData() const;
@@ -451,17 +449,15 @@ public:
     * invalidate other internal data.  Use other methods for modifying
     * the BoxContainer.
     *
-    * FIXME: The combination of BoxLevel::getBoxes and BoxContainer::makeTree
-    * allows to set up d_boxes with a GridGeometry that is inconsistent
-    * with the BoxLevel's GridGeometry.  This is how it could happen:
+    * @note It is possible that one may wish to perform repeated searches on
+    * the Boxes in the BoxContainer returned by this method.  As noted in
+    * BoxContainer's documentation, it may be advantageous to call the makeTree
+    * method on the BoxContainer in this case.  If you do, remember that the
+    * GridGeometry passed to makeTree must be the GridGeometry held by this
+    * BoxLevel.  Thus the proper use of makeTree with the result of a call to
+    * this method will look like:
     * @verbatim
-    *    box_level.getBoxes().makeTree([no argument or unrelated GridGeometry]);
-    * @endverbatim
-    * There is now an inconsistency between box_level.d_grid_geomtry and
-    * box_level.d_boxes.d_tree->d_grid_geometry.
-    * In addition, this inconsistency can be propagated to other BoxLevels like this:
-    * @verbatim
-    *    BoxLevel another_box_level(box_level);
+    *    box_level.getBoxes().makeTree(box_level.getGridGeometry());
     * @endverbatim
     *
     * @see getGlobalNumberOfBoxes()
@@ -477,9 +473,16 @@ public:
    /*!
     * @brief Returns the container of global Boxes.
     *
-    * FIXME: The combination of BoxLevel::getGlobalBoxes and BoxContainer::makeTree
-    * allows to set up d_global_boxes with a GridGeometry that is inconsistent
-    * with the BoxLevel's GridGeometry.  See details for getBoxes().
+    * @note It is possible that one may wish to perform repeated searches on
+    * the Boxes in the BoxContainer returned by this method.  As noted in
+    * BoxContainer's documentation, it may be advantageous to call the makeTree
+    * method on the BoxContainer in this case.  If you do, remember that the
+    * GridGeometry passed to makeTree must be the GridGeometry held by this
+    * BoxLevel.  Thus the proper use of makeTree with the result of a call to
+    * this method will look like:
+    * @verbatim
+    *    box_level.getBoxes().makeTree(box_level.getGridGeometry());
+    * @endverbatim
     */
    const BoxContainer&
    getGlobalBoxes() const
@@ -840,15 +843,6 @@ public:
 
    //! @name Individual Box methods.
 
-   /*
-    * TODO: Why does the first method require "distributed" state and the ones
-    * after require GLOBALIZED state for a remote box?  These comments
-    * are inconsistent and confusing.  I think it would be best to have the
-    * same pre/post conditions apply to all similar methods (e.g., "add box"
-    * methods), then describe them once rather than repeat (potentially
-    * inconsistently for each method).
-    */
-
    /*!
     * @brief Create new local Box from given Box and add it to this
     * level.
@@ -859,6 +853,15 @@ public:
     *
     * The new Box will have a periodic shift number
     * corresponding to zero-shift.
+    *
+    * @note It is imperative that applications which call addBox also call
+    * invalidateGlobalData.  It is possible for some processes to add Boxes and
+    * for others to not.  Since the addBox method sets d_global_data_up_to_date
+    * to false, some processes in this situation will have this flag set to
+    * true and others will not.  This will result in a hang in
+    * cacheGlobalReducedData when global data is accessed.  We could have
+    * performed and allReduce of this flag to the top of cacheGlobalReducedData
+    * but this would have added a costly call for every access of global data.
     *
     * @param[in] box
     * @param[in] block_id
@@ -873,9 +876,6 @@ public:
    /*!
     * @brief Add a Box to this level.
     *
-    * Adding a remote Box is allowed if the object is in
-    * GLOBALIZED mode.
-    *
     * @par CAUTION
     * To be efficient, no checks are made to make sure the
     * BoxLevel representation is consistent across all
@@ -888,8 +888,14 @@ public:
     *
     * It is an error to add any Box that already exists.
     *
-    * FIXME: Should we prevent this operation if persistent overlap
-    * Connectors are attached to this object?
+    * @note It is imperative that applications which call addBox also call
+    * invalidateGlobalData.  It is possible for some processes to add Boxes and
+    * for others to not.  Since the addBox method sets d_global_data_up_to_date
+    * to false, some processes in this situation will have this flag set to
+    * true and others will not.  This will result in a hang in
+    * cacheGlobalReducedData when global data is accessed.  We could have
+    * performed and allReduce of this flag to the top of cacheGlobalReducedData
+    * but this would have added a costly call for every access of global data.
     *
     * @param[in] box
     */
@@ -920,17 +926,14 @@ public:
    /*!
     * @brief Insert given periodic image of an existing Box.
     *
-    * Adding a remote Box is allowed if the object is in
-    * GLOBALIZED mode.
-    *
     * Unlike adding a regular Box, it is OK to add a periodic
     * image Box that already exists.  However, that is a no-op.
     *
     * @par CAUTION
     * To be efficient, no checks are made to make sure the
     * BoxLevel representation is consistent across all
-    * processors.  Setting inconsistent data leads potentially elusive
-    * bugs.
+    * processors.  Setting inconsistent data leads to potentially
+    * elusive bugs.
     *
     * @par Errors
     * It is an error to add a periodic image of a Box that does
@@ -964,6 +967,16 @@ public:
     * FIXME: Should we prevent this operation if the object has
     * persistent overlap Connectors?
     *
+    * @note It is imperative that applications which call eraseBox also call
+    * invalidateGlobalData.  It is possible for some processes to erase Boxes
+    * and for others to not.  Since the eraseBox method sets
+    * d_global_data_up_to_date to false, some processes in this situation will
+    * have this flag set to true and others will not.  This will result in a
+    * hang in cacheGlobalReducedData when global data is accessed.  We could
+    * have performed and allReduce of this flag to the top of
+    * cacheGlobalReducedData but this would have erased a costly call for every
+    * access of global data.
+    *
     * @param[in] ibox The iterator of the Box to erase.
     */
    void
@@ -981,6 +994,16 @@ public:
     *
     * FIXME: Should we prevent this operation if the object has
     * persistent overlap Connectors?
+    *
+    * @note It is imperative that applications which call eraseBox also call
+    * invalidateGlobalData.  It is possible for some processes to erase Boxes
+    * and for others to not.  Since the eraseBox method sets
+    * d_global_data_up_to_date to false, some processes in this situation will
+    * have this flag set to true and others will not.  This will result in a
+    * hang in cacheGlobalReducedData when global data is accessed.  We could
+    * have performed and allReduce of this flag to the top of
+    * cacheGlobalReducedData but this would have erased a costly call for every
+    * access of global data.
     *
     * @param[in] box
     */
@@ -1211,6 +1234,19 @@ public:
       const boost::shared_ptr<const BaseGridGeometry>& grid_geom);
 
    //@}
+
+   /*!
+    * @brief Sets d_global_data_up_to_date to false.  Must be called after
+    * calls to addBox or eraseBox.
+    *
+    * @see addBox()
+    * @see eraseBox()
+    */
+   void
+   invalidateGlobalData()
+   {
+      d_global_data_up_to_date = false;
+   }
 
    /*!
     * @brief Get the collection of overlap Connectors dedicated to

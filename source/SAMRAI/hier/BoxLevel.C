@@ -959,23 +959,11 @@ BoxLevel::addBox(
    const BlockId& block_id)
 {
    const tbox::Dimension& dim(getDim());
-   /*
-    * FIXME: bug: if some procs add a Box and others do not,
-    * their d_computed_global_* flags will be inconsistent
-    * resulting in incomplete participation in future communication
-    * calls to compute those parameters.
-    *
-    * This problem is not exclusive to box adding.
-    * It would also happen if some call initialize()
-    * and others do not.  But because box adding is finer grained
-    * than initialize(), it is more likely that some processors
-    * will skip over the box adding.
-    */
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != DISTRIBUTED) {
       TBOX_ERROR("Individually adding Boxes is a local process\n"
          << "so it can only be performed in\n"
-         << "distributed state." << std::endl);
+         << "DISTRIBUTED state." << std::endl);
    }
    if (box.getBlockId() != BlockId::invalidId()) {
       TBOX_ASSERT(box.getBlockId() == block_id);
@@ -1028,20 +1016,12 @@ BoxLevel::addPeriodicBox(
    const Box& ref_box,
    const PeriodicId& shift_number)
 {
-   // FIXME: We don't allow individually adding remote Boxes even in globalized state.  We probably shouldn't allow adding remote images either.
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (shift_number ==
        PeriodicShiftCatalog::getCatalog(getDim())->getZeroShiftNumber()) {
       TBOX_ERROR(
          "BoxLevel::addPeriodicBox cannot be used to add regular box."
          << std::endl);
-   }
-   if (d_parallel_state != GLOBALIZED && ref_box.getOwnerRank() !=
-       d_mpi.getRank()) {
-      TBOX_ERROR(
-         "BoxLevel::addPeriodicBox: Cannot add remote Box\n"
-         << "(owned by rank " << ref_box.getOwnerRank() << ")\n"
-         << "when not in GLOBALIZED state." << std::endl);
    }
 #endif
 
@@ -1087,14 +1067,6 @@ void
 BoxLevel::addBox(
    const Box& box)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_parallel_state != GLOBALIZED && box.getOwnerRank() != d_mpi.getRank()) {
-      TBOX_ERROR("BoxLevel::addBox: Cannot add remote Box\n"
-         << "(owned by rank " << box.getOwnerRank() << ")\n"
-         << "when not in GLOBALIZED state." << std::endl);
-   }
-#endif
-
    clearForBoxChanges(false);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1136,14 +1108,8 @@ BoxLevel::addBox(
          d_local_bounding_box[box.getBlockId().getBlockValue()] += box;
          d_local_max_box_size[box.getBlockId().getBlockValue()].max(box_size);
          d_local_min_box_size[box.getBlockId().getBlockValue()].min(box_size);
+         d_global_data_up_to_date = false;
       }
-      d_global_data_up_to_date = false;
-      /*
-       * FIXME: bug: if some procs add a real Box and others do not,
-       * their d_global_data_up_to_date flags will be inconsistent
-       * resulting in incomplete participation in future collective
-       * communication to compute that parameter.
-       */
    }
 
    if (d_parallel_state == GLOBALIZED) {
@@ -1211,17 +1177,6 @@ void
 BoxLevel::eraseBox(
    const Box& box)
 {
-   /*
-    * FIXME: bug: if some procs erase some Boxes and others do
-    * not, their d_computed_global_* flags will be inconsistent
-    * resulting in incomplete participation in future communication
-    * calls to compute those parameters.
-    *
-    * This problem is not exclusive to box adding/erasing.  It would
-    * also happen if some call initialize() and others do not.  But
-    * because box adding is finer grained than initialize(), it is
-    * more likely that some processors will skip over the box adding.
-    */
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != DISTRIBUTED) {
       TBOX_ERROR("Individually erasing Boxes is a local process\n"
