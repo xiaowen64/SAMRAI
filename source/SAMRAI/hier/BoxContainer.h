@@ -1731,6 +1731,10 @@ private:
     * container is going to be used in any of the methods that handle
     * multiblock transformations.  If this container is used only in a
     * single-block context, no BaseGridGeometry argument is necessary.
+    *
+    * @note The grid_geometry argument is required for multiblock.  It must
+    * be the GridGeometry from which the Boxes stored in the container came
+    * from.
     * 
     * @param[in]  grid_geometry  To handle multiblock transformations if
     *                            needed.  
