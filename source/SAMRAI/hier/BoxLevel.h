@@ -453,7 +453,16 @@ public:
     *
     * FIXME: The combination of BoxLevel::getBoxes and BoxContainer::makeTree
     * allows to set up d_boxes with a GridGeometry that is inconsistent
-    * with the BoxLevel's GridGeometry.
+    * with the BoxLevel's GridGeometry.  This is how it could happen:
+    * @verbatim
+    *    box_level.getBoxes().makeTree([no argument or unrelated GridGeometry]);
+    * @endverbatim
+    * There is now an inconsistency between box_level.d_grid_geomtry and
+    * box_level.d_boxes.d_tree->d_grid_geometry.
+    * In addition, this inconsistency can be propagated to other BoxLevels like this:
+    * @verbatim
+    *    BoxLevel another_box_level(box_level);
+    * @endverbatim
     *
     * @see getGlobalNumberOfBoxes()
     * @see getLocalNumberOfBoxes()
@@ -470,7 +479,7 @@ public:
     *
     * FIXME: The combination of BoxLevel::getGlobalBoxes and BoxContainer::makeTree
     * allows to set up d_global_boxes with a GridGeometry that is inconsistent
-    * with the BoxLevel's GridGeometry.
+    * with the BoxLevel's GridGeometry.  See details for getBoxes().
     */
    const BoxContainer&
    getGlobalBoxes() const
