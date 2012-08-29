@@ -627,8 +627,7 @@ BaseGridGeometry::getFromRestart()
 
    for (int b = 0; b < d_number_blocks; b++) {
       domain_name = "domain_boxes_" + tbox::Utilities::intToString(b);
-      BoxContainer block_domain_boxes;
-      block_domain_boxes = db->getDatabaseBoxArray(domain_name);
+      BoxContainer block_domain_boxes(db->getDatabaseBoxArray(domain_name));
 
       for (BoxContainer::iterator itr = block_domain_boxes.begin();
            itr != block_domain_boxes.end(); ++itr) {
@@ -736,9 +735,8 @@ BaseGridGeometry::getFromInput(
    if (!is_from_restart) {
 
       d_number_blocks = input_db->getIntegerWithDefault("num_blocks", 1);
-      if (d_number_blocks < 1) {
-         TBOX_ERROR("BaseGridGeometry::getFromInput error...\n"
-            << "num_blocks must be >= 1." << std::endl);
+      if (!(d_number_blocks >= 1)) {
+         INPUT_RANGE_ERROR("num_blocks");
       }
 
       if (d_number_blocks > 1 && !allow_multiblock) {

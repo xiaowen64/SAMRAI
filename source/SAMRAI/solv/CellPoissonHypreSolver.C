@@ -341,16 +341,14 @@ CellPoissonHypreSolver::getFromInput(
          input_db->getBoolWithDefault("print_solver_info", false);
 
       d_max_iterations = input_db->getIntegerWithDefault("max_iterations", 10);
-      if (d_max_iterations <= 0) {
-         TBOX_ERROR("CellPoissonHypreSolver::getFromInput error..."
-            << "\n   max_iterations must be > 0." << std::endl);
+      if (!(d_max_iterations >= 1)) {
+         INPUT_RANGE_ERROR("max_iterations");
       }
 
       d_relative_residual_tol =
          input_db->getDoubleWithDefault("relative_residual_tol", 1.0e-10);
-      if (d_relative_residual_tol <= 0) {
-         TBOX_ERROR("CellPoissonHypreSolver::getFromInput error..."
-            << "\n   relative_residual_tol must be > 0." << std::endl);
+      if (!(d_relative_residual_tol > 0)) {
+         INPUT_RANGE_ERROR("relative_residual_tol");
       }
 
       if (input_db->isDouble("residual_tol")) {
@@ -362,16 +360,14 @@ CellPoissonHypreSolver::getFromInput(
 
       d_num_pre_relax_steps =
          input_db->getIntegerWithDefault("num_pre_relax_steps", 1);
-      if (d_num_pre_relax_steps < 0) {
-         TBOX_ERROR("CellPoissonHypreSolver::getFromInput error...\n"
-            << "num_pre_relax_steps must be non-negative.\n");
+      if (!(d_num_pre_relax_steps >= 0)) {
+         INPUT_RANGE_ERROR("num_pre_relax_steps");
       }
 
       d_num_post_relax_steps =
          input_db->getIntegerWithDefault("num_post_relax_steps", 1);
-      if (d_num_post_relax_steps < 0) {
-         TBOX_ERROR("CellPoissonHypreSolver::getFromInput error...\n"
-            << "num_pre_relax_steps must be non-negative.\n");
+      if (!(d_num_post_relax_steps >= 0)) {
+         INPUT_RANGE_ERROR("num_post_relax_steps");
       }
 
       d_use_smg = input_db->getBoolWithDefault("use_smg", true);

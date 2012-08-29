@@ -337,6 +337,15 @@ public:
       const Connector& connector,
       MappingType map_type = UNKNOWN) const;
 
+   /*!
+    * @brief Get the name of this object.
+    */
+   const std::string
+   getObjectName() const
+   {
+      return "MappingConnectorAlgorithm";
+   }
+
 private:
    /*!
     * @brief BoxIdSet is a clarifying typedef.

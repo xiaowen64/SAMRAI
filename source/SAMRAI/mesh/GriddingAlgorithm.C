@@ -4467,19 +4467,17 @@ GriddingAlgorithm::getFromInput(
           */
 
          if (input_db->keyExists("efficiency_tolerance")) {
-            tbox::Array<double> efficiency_tolerance =
+            tbox::Array<double> efficiency_tolerance;
+            efficiency_tolerance =
                input_db->getDoubleArray("efficiency_tolerance");
 
             int ln;
             for (ln = 0;
                  ln < efficiency_tolerance.getSize() && ln < d_hierarchy->getMaxNumberOfLevels();
                  ++ln) {
-               if ((efficiency_tolerance[ln] <= 0.0e0) ||
-                   (efficiency_tolerance[ln] >= 1.0e0)) {
-                  TBOX_ERROR(d_object_name << ":  "
-                                           << "Key data `efficiency_tolerance' has values"
-                                           << " out of range 0.0 < tol < 1.0."
-                                           << std::endl);
+               if (!((efficiency_tolerance[ln] > 0.0e0) &&
+                     (efficiency_tolerance[ln] < 1.0e0))) {
+                  INPUT_RANGE_ERROR("efficiency_tolerance");
                }
                d_efficiency_tolerance[ln] = efficiency_tolerance[ln];
             }
@@ -4494,20 +4492,17 @@ GriddingAlgorithm::getFromInput(
           */
 
          if (input_db->keyExists("combine_efficiency")) {
-            tbox::Array<double> combine_efficiency =
+            tbox::Array<double> combine_efficiency;
+            combine_efficiency =
                input_db->getDoubleArray("combine_efficiency");
 
             int ln;
             for (ln = 0;
                  ln < combine_efficiency.getSize() && ln < d_hierarchy->getMaxNumberOfLevels();
                  ++ln) {
-               if ((combine_efficiency[ln] <= 0.0e0) ||
-                   (combine_efficiency[ln] >= 1.0e0)) {
-                  TBOX_ERROR(
-                     d_object_name << ":  "
-                                   << "Key data `combine_efficiency' has values"
-                                   << " out of range 0.0 < tol < 1.0."
-                                   << std::endl);
+               if (!((combine_efficiency[ln] > 0.0e0) &&
+                     (combine_efficiency[ln] < 1.0e0))) {
+                  INPUT_RANGE_ERROR("combine_efficiency");
                }
                d_combine_efficiency[ln] = combine_efficiency[ln];
             }
@@ -4521,48 +4516,31 @@ GriddingAlgorithm::getFromInput(
 
          tmp_str =
             input_db->getStringWithDefault("check_nonrefined_tags", std::string("WARN"));
-         d_check_nonrefined_tags = char(tolower(*tmp_str.c_str()));
-         if (d_check_nonrefined_tags != 'i' &&
-             d_check_nonrefined_tags != 'w' &&
-             d_check_nonrefined_tags != 'e') {
-            TBOX_ERROR("GriddingAlgorithm: input parameter check_nonrefined_tags\n"
-               << "can only be \"IGNORE\", \"WARN\" or \"ERROR\""
-               << std::endl);
+         if (!(tmp_str == "IGNORE" || tmp_str == "WARN" || tmp_str == "ERROR")) {
+            INPUT_VALUE_ERROR("check_nonrefined_tags");
          }
+         d_check_nonrefined_tags = char(tolower(*tmp_str.c_str()));
 
          tmp_str =
             input_db->getStringWithDefault("check_overlapping_patches", std::string("IGNORE"));
-         d_check_overlapping_patches = char(tolower(*tmp_str.c_str()));
-         if (d_check_overlapping_patches != 'i' &&
-             d_check_overlapping_patches != 'w' &&
-             d_check_overlapping_patches != 'e') {
-            TBOX_ERROR(
-               "GriddingAlgorithm: input parameter check_overlapping_patches\n"
-               << "can only be \"IGNORE\", \"WARN\" or \"ERROR\""
-               << std::endl);
+         if (!(tmp_str == "IGNORE" || tmp_str == "WARN" || tmp_str == "ERROR")) {
+            INPUT_VALUE_ERROR("check_overlapping_patches");
          }
+         d_check_overlapping_patches = char(tolower(*tmp_str.c_str()));
 
          tmp_str =
             input_db->getStringWithDefault("check_nonnesting_user_boxes", std::string("ERROR"));
-         d_check_nonnesting_user_boxes = char(tolower(*tmp_str.c_str()));
-         if (d_check_nonnesting_user_boxes != 'i' &&
-             d_check_nonnesting_user_boxes != 'w' &&
-             d_check_nonnesting_user_boxes != 'e') {
-            TBOX_ERROR("GriddingAlgorithm: input parameter check_nonnesting_user_boxes\n"
-               << "can only be \"IGNORE\", \"WARN\" or \"ERROR\""
-               << std::endl);
+         if (!(tmp_str == "IGNORE" || tmp_str == "WARN" || tmp_str == "ERROR")) {
+            INPUT_VALUE_ERROR("check_nonnesting_user_boxes");
          }
+         d_check_nonnesting_user_boxes = char(tolower(*tmp_str.c_str()));
 
          tmp_str =
             input_db->getStringWithDefault("DEV_check_boundary_proximity_violation", std::string("ERROR"));
-         d_check_boundary_proximity_violation = char(tolower(*tmp_str.c_str()));
-         if (d_check_boundary_proximity_violation != 'i' &&
-             d_check_boundary_proximity_violation != 'w' &&
-             d_check_boundary_proximity_violation != 'e') {
-            TBOX_ERROR("GriddingAlgorithm: input parameter check_boundary_proximity_violation\n"
-               << "can only be \"IGNORE\", \"WARN\" or \"ERROR\""
-               << std::endl);
+         if (!(tmp_str == "IGNORE" || tmp_str == "WARN" || tmp_str == "ERROR")) {
+            INPUT_VALUE_ERROR("DEV_check_boundary_proximity_violation");
          }
+         d_check_boundary_proximity_violation = char(tolower(*tmp_str.c_str()));
 
          d_sequentialize_patch_indices =
             input_db->getBoolWithDefault("sequentialize_patch_indices", true);

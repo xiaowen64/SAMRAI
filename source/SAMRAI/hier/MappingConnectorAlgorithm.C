@@ -94,9 +94,8 @@ MappingConnectorAlgorithm::getFromInput()
                idb->getDatabase("MappingConnectorAlgorithm"));
             s_print_steps =
                ocu_db->getCharWithDefault("DEV_print_modify_steps", 'n');
-            if (s_print_steps != 'n' && s_print_steps != 'y') {
-               TBOX_ERROR("MappingConnectorAlgorithm::getFromInput error...\n"
-                  << "s_print_steps must be 'y' or 'n'." << std:: endl);
+            if (!(s_print_steps == 'n' || s_print_steps == 'y')) {
+               INPUT_VALUE_ERROR("DEV_print_modify_steps");
             }
          }
       }

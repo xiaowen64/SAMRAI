@@ -140,9 +140,8 @@ PatchHierarchy::getFromInput(
 
          d_max_levels =
             input_db->getIntegerWithDefault("max_levels", 1);
-         if (d_max_levels < 1) {
-            TBOX_ERROR("PatchHierarchy::getFromInput error...\n"
-               << "max_levels must be > 0." << std::endl);
+         if (!(d_max_levels >= 1)) {
+            INPUT_RANGE_ERROR("max_levels");
          }
 
          if (d_max_levels != int(d_ratio_to_coarser.size())) {
@@ -169,9 +168,8 @@ PatchHierarchy::getFromInput(
                      &d_ratio_to_coarser[ln][0],
                      d_dim.getValue());
                   for (int i = 0; i < d_dim.getValue(); ++i) {
-                     if (d_ratio_to_coarser[ln][i] < 1) {
-                        TBOX_ERROR("PatchHierarchy::getFromInput error...\n"
-                           << "ratio_to_coarser must be > 0." <<std::endl);
+                     if (!(d_ratio_to_coarser[ln][i] > 0)) {
+                        INPUT_RANGE_ERROR("ratio_to_coarser");
                      }
                   }
                } else {
@@ -190,9 +188,8 @@ PatchHierarchy::getFromInput(
                      &d_smallest_patch_size[ln][0],
                      d_dim.getValue());
                   for (int i = 0; i < d_dim.getValue(); ++i) {
-                     if (d_smallest_patch_size[ln][i] < 1) {
-                        TBOX_ERROR("PatchHierarchy::getFromInput error...\n"
-                           << "smallest_patch_size must be > 0." <<std::endl);
+                     if (!d_smallest_patch_size[ln][i] > 0) {
+                        INPUT_RANGE_ERROR("smallest_patch_size");
                      }
                   }
                } else {
@@ -211,12 +208,9 @@ PatchHierarchy::getFromInput(
                      &d_largest_patch_size[ln][0],
                      d_dim.getValue());
                   for (int i = 0; i < d_dim.getValue(); ++i) {
-                     if (d_largest_patch_size[ln][i] >= 0 &&
-                         d_largest_patch_size[ln][i] <
-                         d_smallest_patch_size[ln][i]) {
-                        TBOX_ERROR("PatchHierarchy::getFromInput error...\n"
-                           << "largest_patch_size must be >= smallest_patch_size."
-                           <<std::endl);
+                     if (!(d_largest_patch_size[ln][i] < 0 ||
+                           d_largest_patch_size[ln][i] >= d_smallest_patch_size[ln][i])) {
+                        INPUT_RANGE_ERROR("largest_patch_size");
                      }
                   }
                } else {

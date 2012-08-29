@@ -484,6 +484,15 @@ public:
       Connector& extra,
       bool ignore_self_overlap = false) const;
 
+   /*!
+    * @brief Get the name of this object.
+    */
+   const std::string
+   getObjectName() const
+   {
+      return "OverlapConnectorAlgorithm";
+   }
+
 private:
    // Internal shorthand.
    typedef Connector::NeighborSet NeighborSet;

@@ -629,11 +629,9 @@ SNES_SAMRAIContext::getFromInput(
 
          d_differencing_parameter_strategy =
             input_db->getStringWithDefault("differencing_parameter_strategy", MATMFFD_WP);
-         if (d_differencing_parameter_strategy != MATMFFD_WP &&
-             d_differencing_parameter_strategy != MATMFFD_DS) {
-            TBOX_ERROR("SNES_SAMRAIContext::getFromInput error...\n"
-               << "differencing_parameter_strategy must be \"wp\" or \"ds\"."
-               << std::endl);
+         if (!(d_differencing_parameter_strategy == MATMFFD_WP ||
+               d_differencing_parameter_strategy == MATMFFD_DS)) {
+            INPUT_VALUE_ERROR("differencing_parameter_strategy");
          }
 
          d_function_evaluation_error =

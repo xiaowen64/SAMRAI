@@ -3553,11 +3553,9 @@ TreeLoadBalancer::getFromInput(
 
       d_min_load_fraction_per_box =
          input_db->getDoubleWithDefault("min_load_fraction_per_box", 0.03);
-      if ( d_min_load_fraction_per_box < 0.0 ||
-           d_min_load_fraction_per_box > 1.0 ) {
-         TBOX_ERROR("TreeLoadBalancer::getFromInput: min_load_fraction_per_box value of "
-                    << d_min_load_fraction_per_box
-                    << " is out of range.  It should be >= 0 and <= 1 and on the order of 0.01.");
+      if (!(d_min_load_fraction_per_box >= 0.0 &&
+            d_min_load_fraction_per_box <= 1.0)) {
+         INPUT_RANGE_ERROR("min_load_fraction_per_box");
       }
 
       d_balance_penalty_wt =

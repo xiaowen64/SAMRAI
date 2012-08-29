@@ -590,12 +590,9 @@ CartesianGridGeometry::getFromInput(
 
       input_db->getDoubleArray("x_lo", x_lo, dim.getValue());
       input_db->getDoubleArray("x_up", x_up, dim.getValue());
-
       for (int i = 0; i < dim.getValue(); ++i) {
-         if (x_lo[i] >= x_up[i]) {
-            TBOX_ERROR("CartesianGridGeometry::getFromInput error...\n"
-		       << "each x_lo value must be < corresponding x_up value."
-                       << std::endl);
+         if (!(x_lo[i] < x_up[i])) {
+            INPUT_RANGE_ERROR("x_lo and x_up");
          }
       }
 

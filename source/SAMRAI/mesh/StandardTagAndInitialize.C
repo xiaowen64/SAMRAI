@@ -1218,14 +1218,11 @@ StandardTagAndInitialize::getFromInput(
          TagCriteria this_tag_crit;
          this_cycle_crit.d_cycle = 0;
          std::string tagging_method = input_db->getString("tagging_method");
-         if (tagging_method != "RICHARDSON_EXTRAPOLATION" &&
-             tagging_method != "GRADIENT_DETECTOR" &&
-             tagging_method != "REFINE_BOXES" &&
-             tagging_method != "NONE") {
-            TBOX_ERROR(
-               getObjectName() << "::getFromInput \n"
-                               << "Invalid tagging_method supplied."
-                               << std::endl);
+         if (!(tagging_method == "RICHARDSON_EXTRAPOLATION" ||
+               tagging_method == "GRADIENT_DETECTOR" ||
+               tagging_method == "REFINE_BOXES" ||
+               tagging_method == "NONE")) {
+            INPUT_VALUE_ERROR("tagging_method");
          }
          this_tag_crit.d_tagging_method = tagging_method;
          if (tagging_method == "REFINE_BOXES") {
@@ -1297,11 +1294,8 @@ StandardTagAndInitialize::getFromInput(
                 * Read cycle tagging criteria.
                 */
                int cycle = at_db->getInteger("cycle");
-               if (cycle < 0) {
-                  TBOX_ERROR(
-                     getObjectName() << "::getFromInput \n"
-                                     << "Invalid cycle supplied for cycle tagging criteria."
-                                     << std::endl);
+               if (!(cycle >= 0)) {
+                  INPUT_RANGE_ERROR("cycle");
                }
                this_cycle_crit.d_cycle = cycle;
                is_cycle = true;
@@ -1311,11 +1305,8 @@ StandardTagAndInitialize::getFromInput(
                 * Read time tagging criteria.
                 */
                double time = at_db->getDouble("time");
-               if (time < 0.0) {
-                  TBOX_ERROR(
-                     getObjectName() << "::getFromInput \n"
-                                     << "Invalid time supplied for time tagging criteria."
-                                     << std::endl);
+               if (!(time >= 0)) {
+                  INPUT_RANGE_ERROR("time");
                }
                this_time_crit.d_time = time;
             }

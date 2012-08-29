@@ -279,21 +279,18 @@ ImplicitIntegrator::getFromInput(
    if (!is_from_restart) {
 
       d_initial_time = input_db->getDouble("initial_time");
-      if (d_initial_time < 0) {
-         TBOX_ERROR("ImplicitIntegrator::getFromInput() error...\n"
-            << "initial_time must be >= 0." << std::endl);
+      if (!(d_initial_time >= 0)) {
+         INPUT_RANGE_ERROR("initial_time");
       }
 
       d_final_time = input_db->getDouble("final_time");
-      if (d_final_time < d_initial_time) {
-         TBOX_ERROR("ImplicitIntegrator::getFromInput() error...\n"
-            << "final_time must be >= initial_time " << std::endl);
+      if (!(d_final_time >= d_initial_time)) {
+         INPUT_RANGE_ERROR("final_time");
       }
 
       d_max_integrator_steps = input_db->getInteger("max_integrator_steps");
-      if (d_max_integrator_steps < 0) {
-         TBOX_ERROR("ImplicitIntegrator::getFromInput() error...\n"
-            << "max_integrator_steps must be >= 0." << std::endl);
+      if (!(d_max_integrator_steps >= 0)) {
+         INPUT_RANGE_ERROR("max_integrator_steps");
       }
 
    } else if (input_db) {

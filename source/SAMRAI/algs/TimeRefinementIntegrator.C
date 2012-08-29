@@ -1587,9 +1587,8 @@ TimeRefinementIntegrator::getFromInput(
       if (!d_use_refined_timestepping) {
          int regrid_interval =
             input_db->getIntegerWithDefault("regrid_interval", 1);
-         if (regrid_interval < 1) {
-            TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
-               << "regrid_interval must be >=1." << std::endl);
+         if (!(regrid_interval >= 1)) {
+            INPUT_RANGE_ERROR("regrid_interval");
          }
          setRegridInterval(regrid_interval);
       }
@@ -1600,27 +1599,23 @@ TimeRefinementIntegrator::getFromInput(
       }
 
       d_start_time = input_db->getDouble("start_time");
-      if (d_start_time < 0) {
-         TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
-            << "start_time must be >= 0." << std::endl);
+      if (!(d_start_time >= 0)) {
+         INPUT_RANGE_ERROR("start_time");
       }
 
       d_end_time = input_db->getDouble("end_time");
-      if (d_end_time < d_start_time) {
-         TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
-            << "end_time must be >= start_time." << std::endl);
+      if (!(d_end_time >= d_start_time)) {
+         INPUT_RANGE_ERROR("end_time");
       }
 
       d_grow_dt = input_db->getDoubleWithDefault("grow_dt", 1.0);
-         if (d_grow_dt <= 0) {
-            TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
-               << "grow_dt must be > 0." << std::endl);
-         }
+      if (!(d_grow_dt > 0)) {
+         INPUT_RANGE_ERROR("grow_dt");
+      }
 
       d_max_steps_level[0] = input_db->getInteger("max_integrator_steps");
-      if (d_max_steps_level[0] < 0) {
-         TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
-            << "max_integrator_steps must be >= 0." << std::endl);
+      if (!(d_max_steps_level[0] >= 0)) {
+         INPUT_RANGE_ERROR("max_integrator_steps");
       }
 
       if (input_db->keyExists("tag_buffer")) {
@@ -1629,11 +1624,8 @@ TimeRefinementIntegrator::getFromInput(
              (d_patch_hierarchy->getMaxNumberOfLevels() - 1)) {
             int tsize = d_tag_buffer.getSize();
             d_tag_buffer.resizeArray(
-               d_patch_hierarchy->getMaxNumberOfLevels() - 1);
-            for (int i = tsize;
-                 i < d_patch_hierarchy->getMaxNumberOfLevels() - 1; i++) {
-               d_tag_buffer[i] = d_tag_buffer[tsize - 1];
-            }
+               d_patch_hierarchy->getMaxNumberOfLevels() - 1,
+               d_tag_buffer[tsize - 1]);
          }
       } else {
          int level_number;

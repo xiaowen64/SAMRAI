@@ -1170,23 +1170,15 @@ ChopAndPackLoadBalancer::getFromInput(
          input_db->getStringWithDefault("bin_pack_method", "SPATIAL");
       if (!(d_master_bin_pack_method == "GREEDY" ||
             d_master_bin_pack_method == "SPATIAL")) {
-         TBOX_WARNING(
-            d_object_name << ": "
-                          << "Unknown 'bin_pack_method' "
-                          << d_master_bin_pack_method
-                          << " found in input. \nDefault 'GREEDY' will be used." << std::endl);
-         d_master_bin_pack_method = "GREEDY";
+         INPUT_VALUE_ERROR("bin_pack_method");
       }
 
       if (input_db->keyExists("max_workload_factor")) {
          d_max_workload_factor = input_db->getDoubleArray(
             "max_workload_factor");
-         for (int i = 0; i < d_max_workload_factor.getSize(); i++) {
-            if (d_max_workload_factor[i] < 0.0) {
-               TBOX_ERROR(
-                  d_object_name
-                  << "Max workload values should be greater than 0"
-                  << std::endl);
+         for (int i = 0; i < d_max_workload_factor.getSize(); ++i) {
+            if (!(d_max_workload_factor[i] >=0)) {
+               INPUT_RANGE_ERROR("max_workload_factor");
             }
          }
 
@@ -1197,13 +1189,10 @@ ChopAndPackLoadBalancer::getFromInput(
 
       if (input_db->keyExists("workload_tolerance")) {
          d_workload_tolerance = input_db->getDoubleArray("workload_tolerance");
-         for (int i = 0; i < d_workload_tolerance.getSize(); i++) {
-            if (d_workload_tolerance[i] < 0.0 || d_workload_tolerance[i] >=
-                1.0) {
-               TBOX_ERROR(
-                  d_object_name
-                  << "Workload tolerance should be >= 0 and < 1.0"
-                  << std::endl);
+         for (int i = 0; i < d_workload_tolerance.getSize(); ++i) {
+            if (!(d_workload_tolerance[i] >= 0.0 &&
+                  d_workload_tolerance[i] < 1.0)) {
+               INPUT_RANGE_ERROR("workload_tolerance");
             }
          }
 

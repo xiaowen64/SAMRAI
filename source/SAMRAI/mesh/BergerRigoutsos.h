@@ -174,6 +174,15 @@ public:
       const hier::IntVector& max_gcw,
       const hier::LocalId& first_local_id) const;
 
+   /*!
+    * @brief Get the name of this object.
+    */
+   const std::string
+   getObjectName() const
+   {
+      return "BergerRigoutsos";
+   }
+
 protected:
    /*!
     * @brief Read parameters from input database.

@@ -24,6 +24,14 @@
 #include <string>
 #include <iostream>
 
+#define INPUT_RANGE_ERROR(param_name)                                     \
+   TBOX_ERROR(getObjectName() << ": getFromInput() error\n" << param_name \
+      << " out of range.  Check documentation for valid input.\n")
+
+#define INPUT_VALUE_ERROR(param_name)                                     \
+   TBOX_ERROR(getObjectName() << ": getFromInput() error\n" << param_name \
+      << " invalid value.  Check documentation for valid input.\n")
+
 namespace SAMRAI {
 namespace tbox {
 

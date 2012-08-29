@@ -97,11 +97,10 @@ BergerRigoutsos::getFromInput(
             &d_max_box_size[0],
             d_dim.getValue());
          for (int i = 0; i < d_dim.getValue(); ++i) {
-            if (d_max_box_size[i] <= 0) {
-               TBOX_ERROR("BergerRigoutsos::getFromInput error...\n"
-                  << "max_box_size must be > 0." << std::endl);
+            if (!(d_max_box_size[i] > 0)) {
+               INPUT_RANGE_ERROR("max_box_size");
             }
-         }
+         } 
       }
 
       d_max_lap_cut_from_center =
@@ -109,7 +108,6 @@ BergerRigoutsos::getFromInput(
       d_laplace_cut_threshold_ar =
          input_db->getDoubleWithDefault("DEV_laplace_cut_threshold_ar", 0.0);
       d_log_node_history =
-
          input_db->getBoolWithDefault("DEV_log_node_history", false);
       d_log_cluster_summary =
          input_db->getBoolWithDefault("DEV_log_cluster_summary", false);
@@ -118,21 +116,19 @@ BergerRigoutsos::getFromInput(
 
       d_algo_advance_mode =
          input_db->getStringWithDefault("DEV_algo_advance_mode", "ADVANCE_SOME");
-      if (d_algo_advance_mode != "ADVANCE_SOME" &&
-          d_algo_advance_mode != "ADVANCE_ANY" &&
-          d_algo_advance_mode != "SYNCHRONOUS") {
-         TBOX_ERROR("BergerRigoutsos::getFromInput error...\n"
-            << "d_algo_advance_mode must be one of \"ADVANCE_SOME\",\n"
-            << "\"ADVANCE_ANY\", or \"SYNCHRONOUS\"." << std::endl);
+      if (!(d_algo_advance_mode == "ADVANCE_SOME" ||
+            d_algo_advance_mode == "ADVANCE_ANY" ||
+            d_algo_advance_mode == "SYNCHRONOUS")) {
+         INPUT_VALUE_ERROR("DEV_algo_advance_mode");
       }
 
       d_owner_mode =
          input_db->getStringWithDefault("DEV_owner_mode", "MOST_OVERLAP");
-      if (d_owner_mode != "SINGLE_OWNER" && d_owner_mode != "MOST_OVERLAP" &&
-          d_owner_mode != "FEWEST_OWNED" && d_owner_mode != "LEAST_ACTIVE") {
-         TBOX_ERROR("BergerRigoutsos::getFromInput error...\n"
-            << "d_owner must be one of \"SINGLE_OWNER\", \"MOST_OVERLAP\",\n"
-            << "\"FEWEST_OWNED\", or \"LEAST_ACTIVE\"." << std::endl);
+      if (!(d_owner_mode == "SINGLE_OWNER" ||
+            d_owner_mode == "MOST_OVERLAP" ||
+            d_owner_mode == "FEWEST_OWNED" ||
+            d_owner_mode == "LEAST_ACTIVE")) {
+         INPUT_VALUE_ERROR("DEV_owner_mode");
       }
 
       d_sort_output_nodes =
@@ -142,13 +138,10 @@ BergerRigoutsos::getFromInput(
 
       tmp_str =
          input_db->getStringWithDefault("check_min_box_size", std::string("WARN"));
-      d_check_min_box_size = char(tolower(*tmp_str.c_str()));
-      if (d_check_min_box_size != 'i' &&
-          d_check_min_box_size != 'w' &&
-          d_check_min_box_size != 'e') {
-         TBOX_ERROR("BergerRigoutsos: input parameter check_min_box_size\n"
-            << "can only be \"IGNORE\", \"WARN\" or \"ERROR\"" << std::endl);
+      if (!(tmp_str == "IGNORE" || tmp_str == "WARN" || tmp_str == "ERROR")) {
+         INPUT_VALUE_ERROR("check_min_box_size");
       }
+      d_check_min_box_size = char(tolower(*tmp_str.c_str()));
 
       d_barrier_before =
          input_db->getBoolWithDefault("DEV_barrier_before", false);
