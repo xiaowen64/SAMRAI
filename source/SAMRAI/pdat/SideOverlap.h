@@ -65,8 +65,6 @@ public:
     * destination coordinate space and must be shifted by
     * -(getSourceOffset()) to lie in the source index space.  The axis
     * argument represents which axis is desired: X=0, Y=1, and Z=2.
-    * This method over-rides the virtual function in the
-    * hier::BoxOverlap base class.
     */
    virtual const hier::BoxContainer&
    getDestinationBoxContainer(

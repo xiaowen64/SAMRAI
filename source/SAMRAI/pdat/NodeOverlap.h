@@ -63,9 +63,7 @@ public:
     * Return the list of boxes (in node centered index space) that
     * constitute the intersection.  The boxes are given in the
     * destination coordinate space and must be shifted by
-    * -(getSourceOffset()) to lie in the source index space.  This
-    * method over-rides the virtual function in the
-    * hier::BoxOverlap base class.
+    * -(getSourceOffset()) to lie in the source index space.
     */
    virtual const hier::BoxContainer&
    getDestinationBoxContainer() const;
