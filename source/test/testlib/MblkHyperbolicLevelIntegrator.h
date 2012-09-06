@@ -9,35 +9,16 @@
  *
  ************************************************************************/
 
-#ifndef included_MblkHyperbolicLevelIntegratorXD
-#define included_MblkHyperbolicLevelIntegratorXD
+#ifndef included_MblkHyperbolicLevelIntegrator
+#define included_MblkHyperbolicLevelIntegrator
 
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "MblkHyperbolicPatchStrategy.h"
-#include "SAMRAI/algs/TimeRefinementLevelStrategy.h"
-#include "SAMRAI/hier/ComponentSelector.h"
-#include "SAMRAI/hier/Variable.h"
-#include "SAMRAI/hier/VariableContext.h"
-#include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
-#include "SAMRAI/hier/CoarsenOperator.h"
-#include "SAMRAI/hier/RefineOperator.h"
-#include "SAMRAI/hier/TimeInterpolateOperator.h"
-#include "SAMRAI/hier/PatchHierarchy.h"
+
+#include "SAMRAI/xfer/CoarsenAlgorithm.h"
 #include "SAMRAI/mesh/StandardTagAndInitStrategy.h"
-#include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Serializable.h"
-#include "SAMRAI/xfer/CoarsenAlgorithm.h"
-#include "SAMRAI/xfer/CoarsenAlgorithm.h"
-#include "SAMRAI/xfer/RefineAlgorithm.h"
-#include "SAMRAI/tbox/Timer.h"
-
-#include "boost/shared_ptr.hpp"
-#include <string>
-#include <iostream>
-#include <list>
-
-using namespace std;
+#include "SAMRAI/algs/TimeRefinementLevelStrategy.h"
 
 /**
  * Class MblkHyperbolicLevelIntegrator provides routines needed to
@@ -139,10 +120,9 @@ using namespace std;
  */
 
 using namespace SAMRAI;
-using namespace algs;
 
 class MblkHyperbolicLevelIntegrator:
-   public TimeRefinementLevelStrategy,
+   public algs::TimeRefinementLevelStrategy,
    public mesh::StandardTagAndInitStrategy,
    public tbox::Serializable
 {
@@ -192,7 +172,7 @@ public:
     * or an empty string will result in an unrecoverable assertion.
     */
    MblkHyperbolicLevelIntegrator(
-      const string& object_name,
+      const std::string& object_name,
       const tbox::Dimension& dim,
       const boost::shared_ptr<tbox::Database> input_db,
       MblkHyperbolicPatchStrategy* patch_strategy,
@@ -489,8 +469,7 @@ public:
       const double init_data_time,
       const bool can_be_refined,
       const bool initial_time,
-      const boost::shared_ptr<hier::PatchLevel>& old_level =
-         boost::shared_ptr<hier::PatchLevel>(),
+      const boost::shared_ptr<hier::PatchLevel>& old_level,
       const bool allocate_data = true);
 
    /**
@@ -636,7 +615,7 @@ public:
     */
    virtual void
    printClassData(
-      ostream& os) const;
+      std::ostream& os) const;
 
    /**
     * Write out object state to the given restart database.
@@ -821,7 +800,7 @@ private:
     * The object name is used as a handle to databases stored in
     * restart files and for error reporting purposes.
     */
-   string d_object_name;
+   std::string d_object_name;
 
    const tbox::Dimension d_dim;
 
@@ -879,7 +858,7 @@ private:
     */
    boost::shared_ptr<xfer::RefineAlgorithm> d_mblk_bdry_fill_advance;
    tbox::Array<boost::shared_ptr<xfer::RefineSchedule> >
-       d_mblk_bdry_sched_advance;
+      d_mblk_bdry_sched_advance;
 
    /*
     * The "advance new" schedule can be used twice during a time integration
@@ -1005,6 +984,8 @@ private:
     * when doing performance timings.
     */
    bool d_distinguish_mpi_reduction_costs;
+
+   bool d_do_coarsening;
 
    /*
     * Timers interspersed throughout the class.

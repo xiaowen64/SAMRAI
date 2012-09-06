@@ -16,7 +16,7 @@ using namespace std;
 #include "SAMRAI/tbox/SAMRAIManager.h"
 
 #include "CommTester.h"
-#include "VisItDerivedData.h"
+#include "DerivedVisOwnerData.h"
 
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
@@ -403,7 +403,7 @@ int main(
          time_man->getTimer("test::main::performCoarsenOperations"));
 
       const bool plot = main_db->getBoolWithDefault("plot", false);
-      VisItDerivedData vdd;
+      DerivedVisOwnerData vdd;
       if (plot) {
 #ifdef HAVE_HDF5
          const std::string visit_filename = base_name + ".visit";

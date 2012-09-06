@@ -1362,16 +1362,18 @@ void MblkHyperbolicLevelIntegrator::synchronizeNewLevels(
          boost::shared_ptr<hier::PatchLevel> coarse_level(
             hierarchy->getPatchLevel(coarse_ln));
 
-         t_sync_initial_create->start();
-         boost::shared_ptr<xfer::CoarsenSchedule> sched(
-            d_mblk_sync_initial_data->createSchedule(coarse_level,
-               fine_level,
-               d_patch_strategy));
-         t_sync_initial_create->stop();
+         if (d_do_coarsening) {
+            t_sync_initial_create->start();
+            boost::shared_ptr<xfer::CoarsenSchedule> sched(
+               d_mblk_sync_initial_data->createSchedule(coarse_level,
+                  fine_level,
+                  d_patch_strategy));
+            t_sync_initial_create->stop();
 
-         t_sync_initial_comm->start();
-         sched->coarsenData();
-         t_sync_initial_comm->stop();
+            t_sync_initial_comm->start();
+            sched->coarsenData();
+            t_sync_initial_comm->stop();
+         }
 
          for (hier::PatchLevel::iterator mi(coarse_level->begin());
               mi != coarse_level->end(); ++mi) {
@@ -1446,18 +1448,20 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
     * i.e. patch model is not needed in coarsening of flux integrals.
     */
 
-   t_coarsen_fluxsum_create->start();
-   boost::shared_ptr<xfer::CoarsenSchedule> sched(
-      d_mblk_coarsen_fluxsum->createSchedule(mblk_coarse_level,
-         mblk_fine_level,
-         NULL));
-   t_coarsen_fluxsum_create->stop();
+   boost::shared_ptr<xfer::CoarsenSchedule> sched;
+   if (d_do_coarsening) { 
+      t_coarsen_fluxsum_create->start();
+         sched = d_mblk_coarsen_fluxsum->createSchedule(mblk_coarse_level,
+            mblk_fine_level,
+            NULL);
+      t_coarsen_fluxsum_create->stop();
 
-   d_patch_strategy->setDataContext(d_current);
-   t_coarsen_fluxsum_comm->start();
-   sched->coarsenData();
-   t_coarsen_fluxsum_comm->stop();
-   d_patch_strategy->clearDataContext();
+      d_patch_strategy->setDataContext(d_current);
+      t_coarsen_fluxsum_comm->start();
+      sched->coarsenData();
+      t_coarsen_fluxsum_comm->stop();
+      d_patch_strategy->clearDataContext();
+   }
 
    /*
     * Repeat conservative difference on coarser level.
@@ -1498,20 +1502,21 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
     * Coarsen time-dependent data from fine patch interiors to coarse patches.
     */
 
-   t_coarsen_sync_create->start();
-   sched = d_mblk_coarsen_sync_data->createSchedule(mblk_coarse_level,
-         mblk_fine_level,
-         d_patch_strategy);
-   t_coarsen_sync_create->stop();
+   if (d_do_coarsening) {
+      t_coarsen_sync_create->start();
+      sched = d_mblk_coarsen_sync_data->createSchedule(mblk_coarse_level,
+            mblk_fine_level,
+            d_patch_strategy);
+      t_coarsen_sync_create->stop();
 
-   d_patch_strategy->setDataContext(d_new);
+      d_patch_strategy->setDataContext(d_new);
 
-   t_coarsen_sync_comm->start();
-   sched->coarsenData();
-   t_coarsen_sync_comm->stop();
-
-   d_patch_strategy->clearDataContext();
-
+      t_coarsen_sync_comm->start();
+      sched->coarsenData();
+      t_coarsen_sync_comm->stop();
+   
+      d_patch_strategy->clearDataContext();
+   }
 }
 
 /*
@@ -1898,7 +1903,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
       case FLUX: {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(coarsen_op);
+//         TBOX_ASSERT(coarsen_op);
 #endif
          /*
           * Note that we force all flux variables to hold double precision
@@ -2405,6 +2410,7 @@ void MblkHyperbolicLevelIntegrator::putToRestart(
    restart_db->putDouble("d_cfl_init", d_cfl_init);
    restart_db->putBool("d_lag_dt_computation", d_lag_dt_computation);
    restart_db->putBool("d_use_ghosts_for_dt", d_use_ghosts_for_dt);
+   restart_db->putBool("d_do_coarsening", d_do_coarsening);
 }
 
 /*
@@ -2471,6 +2477,8 @@ void MblkHyperbolicLevelIntegrator::getFromInput(
       d_distinguish_mpi_reduction_costs =
          input_db->getBool("distinguish_mpi_reduction_costs");
    }
+
+   d_do_coarsening = input_db->getBoolWithDefault("do_coarsening", true);
 }
 
 /*
@@ -2510,6 +2518,7 @@ void MblkHyperbolicLevelIntegrator::getFromRestart()
    d_cfl_init = db->getDouble("d_cfl_init");
    d_lag_dt_computation = db->getBool("d_lag_dt_computation");
    d_use_ghosts_for_dt = db->getBool("d_use_ghosts_for_dt");
+   d_do_coarsening = db->getBool("d_do_coarsening");
 }
 
 /*

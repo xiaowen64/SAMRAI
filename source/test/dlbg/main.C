@@ -127,7 +127,7 @@ int main(
       boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
-      tbox::plog << "Main database:" << endl;
+      tbox::plog << "Main database:" << std::endl;
       main_db->printClassData(tbox::plog);
 
       int verbose = main_db->getIntegerWithDefault("verbose", 0);

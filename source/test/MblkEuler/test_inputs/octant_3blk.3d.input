@@ -165,6 +165,7 @@ HyperbolicLevelIntegrator{
    cfl_init                  = 0.5e0    // initial cfl factor
    lag_dt_computation        = TRUE
    use_ghosts_to_compute_dt  = TRUE
+   do_coarsening             = FALSE
 }
 
 

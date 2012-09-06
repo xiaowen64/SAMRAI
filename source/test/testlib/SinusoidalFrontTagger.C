@@ -24,6 +24,8 @@
 
 using namespace SAMRAI;
 
+
+
 SinusoidalFrontTagger::SinusoidalFrontTagger(
    const std::string& object_name,
    const tbox::Dimension& dim,
@@ -121,9 +123,13 @@ SinusoidalFrontTagger::SinusoidalFrontTagger(
       getTimer("apps::SinusoidalFrontTagger::copy");
 }
 
+
+
 SinusoidalFrontTagger::~SinusoidalFrontTagger()
 {
 }
+
+
 
 void SinusoidalFrontTagger::initializeLevelData(
    /*! Hierarchy to initialize */
@@ -175,6 +181,8 @@ void SinusoidalFrontTagger::initializeLevelData(
 #endif
 }
 
+
+
 void SinusoidalFrontTagger::initializePatchData(
    hier::Patch& patch,
    const double init_data_time,
@@ -210,6 +218,8 @@ void SinusoidalFrontTagger::initializePatchData(
    }
 }
 
+
+
 void SinusoidalFrontTagger::resetHierarchyConfiguration(
    /*! New hierarchy */ const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
    /*! Coarsest level */ int coarsest_level,
@@ -220,6 +230,8 @@ void SinusoidalFrontTagger::resetHierarchyConfiguration(
    d_hierarchy = new_hierarchy;
    TBOX_ASSERT(d_hierarchy);
 }
+
+
 
 void SinusoidalFrontTagger::applyGradientDetector(
    const boost::shared_ptr<hier::PatchHierarchy>& base_hierarchy_,
@@ -243,7 +255,8 @@ void SinusoidalFrontTagger::applyGradientDetector(
       hier::Patch& patch = **pi;
 
       boost::shared_ptr<hier::PatchData> tag_data(
-         patch.getPatchData(tag_index));
+         patch.getPatchData(tag_index),
+         boost::detail::dynamic_cast_tag());
       if (!tag_data) {
          TBOX_ERROR("Data index " << tag_index
                                   << " does not exist for patch.\n");
@@ -259,7 +272,8 @@ void SinusoidalFrontTagger::applyGradientDetector(
       if (d_allocate_data) {
          // Use internally stored data.
          boost::shared_ptr<hier::PatchData> saved_tag_data(
-            patch.getPatchData(d_tag_id));
+            patch.getPatchData(d_tag_id),
+            boost::detail::dynamic_cast_tag());
          tag_cell_data_->copy(*saved_tag_data);
       } else {
          // Compute tag data for patch.
@@ -271,6 +285,8 @@ void SinusoidalFrontTagger::applyGradientDetector(
 
    }
 }
+
+
 
 /*
  * Deallocate patch data allocated by this class.
@@ -286,6 +302,8 @@ void SinusoidalFrontTagger::deallocatePatchData(
    }
 }
 
+
+
 /*
  * Deallocate patch data allocated by this class.
  */
@@ -296,6 +314,8 @@ void SinusoidalFrontTagger::deallocatePatchData(
    level.deallocatePatchData(d_dist_id);
    level.deallocatePatchData(d_tag_id);
 }
+
+
 
 /*
  * Deallocate patch data allocated by this class.
@@ -311,6 +331,8 @@ void SinusoidalFrontTagger::computeHierarchyData(
       computeLevelData(hierarchy, ln, time, d_dist_id, d_tag_id);
    }
 }
+
+
 
 /*
  * Compute the solution data for a level.
@@ -353,6 +375,8 @@ void SinusoidalFrontTagger::computeLevelData(
    }
 }
 
+
+
 /*
  * Compute the solution data for a patch.
  */
@@ -374,7 +398,6 @@ void SinusoidalFrontTagger::computePatchData(
       d_hierarchy->getPatchLevel(ln));
    const hier::IntVector& ratio(level->getRatioToLevelZero());
 
-   const hier::Box& pbox = patch.getBox();
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
       boost::detail::dynamic_cast_tag());
@@ -383,183 +406,211 @@ void SinusoidalFrontTagger::computePatchData(
 
    const double* dx = patch_geom->getDx();
 
-   // Compute the size of buffer to tag around cells crossing front.
+   /*
+    * Compute the size of buffer to tag around cells crossing front.
+    * They should be at least d_buffer_cells in reference index space
+    * and at least getBufferSpace(ln) in physical space.
+    */
    hier::IntVector buffer(d_buffer_cells);
    for (int i = 0; i < d_dim.getValue(); ++i) {
-      if (d_buffer_space.size() > ln * d_dim.getValue() + i) {
+      const double *buffer_space = getBufferSpace(ln);
+      if ( buffer_space != NULL ) {
          int space_based_buffer =
             int(d_buffer_space[ln * d_dim.getValue() + i] / dx[i] + 0.5);
-         if (space_based_buffer > buffer(i)) buffer(i) = space_based_buffer;
+         if (space_based_buffer > buffer(i)) {
+            buffer(i) = space_based_buffer;
+         }
       }
    }
-   // std::cout << "buffer for ln of " << ln << " is " << buffer << std::endl;
+   buffer *= ratio;
+
+   t_setup->stop();
+ 
+   computeFrontsData( dist_data, tag_data, buffer, xlo, dx, time );
+}
+
+
+
+/*
+ * Compute the various data due to the fronts.
+ */
+void SinusoidalFrontTagger::computeFrontsData(
+   pdat::NodeData<double>* dist_data,
+   pdat::CellData<int>* tag_data,
+   const hier::IntVector &tag_buffer,
+   const double xlo[],
+   const double dx[],
+   const double time ) const
+{
+   TBOX_ASSERT(dist_data != NULL || tag_data != NULL);
+ 
+   const tbox::Dimension &dim(tag_buffer.getDim());
+
+   if ( dist_data != NULL && tag_data != NULL ) {
+      TBOX_ASSERT( dist_data->getBox().isSpatiallyEqual(tag_data->getBox()) );
+   }
+
+   hier::Box pbox(dim);
+   if (tag_data != NULL) {
+      pbox = tag_data->getBox();
+   } else {
+      pbox = dist_data->getBox();
+   }
 
    /*
-    * We need at least buffer ghost cells to compute
-    * the tags, but the data does not have as many ghost cells.
-    * So we create temporary patch data with the required "ghost"
-    * buffer for computing tag values.  (We could give the real
-    * data the required ghost cells, but that may affect the
-    * regridding algorithm I'm testing.)
+    * Initialize node x-distances from front.
     */
-   hier::IntVector required_tmp_buffer(buffer);
-   required_tmp_buffer *= ratio;
-   pdat::NodeData<double> tmp_dist(pbox, 1, required_tmp_buffer);
-   pdat::CellData<int> tmp_tag(pbox, 1, required_tmp_buffer);
 
-   /*
-    * Determine what x-cell-index contains the sinusoidal front.
-    */
+   t_node_pos->start();
 
    double wave_number[SAMRAI::MAX_DIM_VAL];
    for (int idim = 0; idim < d_dim.getValue(); ++idim) {
       wave_number[idim] = 2 * 3.141592654 / d_period[idim];
    }
-   const int iperiod = int(d_period[0] / dx[0] + 0.5);
-
-   t_setup->stop();
-
-   t_node_pos->start();
 
    hier::Box front_box = pbox;
-   front_box.grow(required_tmp_buffer);
+   front_box.grow(tag_buffer);
    front_box.growUpper(hier::IntVector(d_dim, 1));
    // Squash front_box to a single plane.
-   front_box.upper(0) = front_box.lower(0);
+   front_box.upper(0) = front_box.lower(0) = pbox.lower(0);
    const int ifront = front_box.lower(0);
+   pdat::ArrayData<double> front_x(front_box, 1);
+   pdat::ArrayData<int>::iterator aiend(front_x.getBox(), false);
+   for ( pdat::ArrayData<int>::iterator ai(front_x.getBox(), true);
+         ai != aiend; ++ai ) {
 
-   pdat::ArrayData<int> front_i_(front_box, 1);
+      const hier::Index &index = *ai;
+      double y=0.0, siny=0.0, z=0.0, sinz=1.0;
 
-   MDA_Access<int, 2, MDA_OrderColMajor<2> > front_i2;
-   MDA_Access<int, 3, MDA_OrderColMajor<3> > front_i3;
-   if (d_dim == tbox::Dimension(2)) {
-      front_i2 = MDA_Access<int, 2, MDA_OrderColMajor<2> >(
-            front_i_.getPointer(0),
-            &front_i_.getBox().lower()[0],
-            &front_i_.getBox().upper()[0]);
-      for (int j = front_i2.beg(1); j < front_i2.end(1); ++j) {
-         double y = xlo[1] + dx[1] * (j - pbox.lower(1));
-         double siny =
-            sin(wave_number[1] * (y + d_init_disp[1] - d_velocity[1] * time));
-         double fx = d_amplitude * siny + d_init_disp[0] + d_velocity[0] * time;
-         front_i2(ifront, j) = int((fx - xlo[0]) / dx[0]) + pbox.lower(0);
-         // std::cout << i << '\t' << j << '\t' << y << '\t' << front_i(i,j) << std::endl;
+      y = xlo[1] + dx[1]*(index(1) - pbox.lower()[1]);
+      siny = sin(wave_number[1] * (y + d_init_disp[1] - d_velocity[1] * time));
+
+      if ( dim.getValue() > 2 ) {
+         z = xlo[2] + dx[2]*(index(2) - front_box.lower()[2]);
+         sinz = sin(wave_number[2] * (z + d_init_disp[2] - d_velocity[2] * time));
       }
-   } else if (d_dim == tbox::Dimension(3)) {
-      front_i3 = MDA_Access<int, 3, MDA_OrderColMajor<3> >(
-            front_i_.getPointer(0),
-            &front_i_.getBox().lower()[0],
-            &front_i_.getBox().upper()[0]);
-      for (int k = front_i3.beg(2); k < front_i3.end(2); ++k) {
-         double z = xlo[2] + dx[2] * (k - pbox.lower(2));
-         double sinz =
-            sin(wave_number[2] * (z + d_init_disp[2] - d_velocity[2] * time));
-         for (int j = front_i3.beg(1); j < front_i3.end(1); ++j) {
-            double y = xlo[1] + dx[1] * (j - pbox.lower(1));
-            double siny =
-               sin(wave_number[1] * (y + d_init_disp[1] + d_velocity[1] * time));
-            double fx = d_amplitude * siny * sinz + d_init_disp[0]
-               + d_velocity[0] * time;
-            front_i3(ifront, j, k) = int((fx - xlo[0]) / dx[0]) + pbox.lower(0);
-#if 0
-            std::cout << ifront
-                      << '\t' << j
-                      << '\t' << k
-                      << '\t' << y
-                      << '\t' << siny
-                      << '\t' << z
-                      << '\t' << sinz
-                      << '\t' << fx
-                      << std::endl;
-#endif
-         }
-      }
-   }
 
+      front_x(index,0) = d_amplitude * siny * sinz + d_init_disp[0];
+      // tbox::plog << "front_x" << index << " = " << front_x(index,0) << std::endl;
+                                                                                   }
    t_node_pos->stop();
 
+   if (tag_data != NULL) {
+
+      t_setup->start();
+
+      /*
+       * We need at least tag_buffer ghost cells to compute
+       * the tags, but the data may not have as many ghost cells.
+       * So we create temporary patch data with the required
+       * tag_buffer for computing tag values.  (We could give the real
+       * data the required ghost cells, but that may affect the
+       * regridding algorithm I'm testing.)
+       */
+      pdat::CellData<int> tmp_tag(pbox, 1, tag_buffer);
+
+      t_setup->stop();
+
+      /*
+       * Initialize tmp_tag to zero then tag specific cells.
+       */
+      tmp_tag.fill(0);
+      hier::BlockId blk0(0);
+      pdat::CellData<int>::iterator ciend(tmp_tag.getGhostBox(), false);
+      for ( pdat::CellData<int>::iterator ci(tmp_tag.getGhostBox(), true);
+            ci != ciend; ++ci ) {
+
+         const pdat::CellIndex &cell_index = *ci;
+         const hier::Box cell_box(cell_index, cell_index, blk0);
+
+#if 0
+         int node_orientation = 0;
+#endif
+         double min_distance_to_front =  tbox::MathUtilities<double>::getMax();
+         double max_distance_to_front = -tbox::MathUtilities<double>::getMax();
+         // tbox::plog << "initial distances to front: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
+         pdat::NodeIterator niend(cell_box, false);
+         for ( pdat::NodeIterator ni(cell_box, true); ni != niend; ++ni ) {
+
+            const pdat::NodeIndex &node_index = *ni;
+            hier::Index front_index = node_index;
+            front_index(0) = pbox.lower(0);
+
+            double node_x = xlo[0] + dx[0]*( node_index(0) - pbox.lower()(0) );
+
+            double distance_to_front = node_x - front_x(front_index,0);
+            min_distance_to_front = tbox::MathUtilities<double>::Min(min_distance_to_front, distance_to_front);
+            max_distance_to_front = tbox::MathUtilities<double>::Max(max_distance_to_front, distance_to_front);
+            // tbox::plog << "cell_index = " << cell_index << "   node_index = " << node_index << "   node_x = " << node_x << "   front_index = " << front_index << "   front_x = " << front_x(front_index,0) << "   distance to front(" << node_x << ") = " << distance_to_front << std::endl;
+
+#if 0
+            while ( distance_to_front > 0.5*d_period[0] ) distance_to_front -= d_period[0];
+            while ( distance_to_front < -0.5*d_period[0] ) distance_to_front += d_period[0];
+            // tbox::plog << "distance_to_front adjusted = " << distance_to_front << std::endl;
+            int distance_sign = distance_to_front < 0 ? -1 : 1;
+            if ( node_orientation == 0 ) {
+               node_orientation = distance_sign;
+            }
+            else {
+               if ( distance_sign != node_orientation ) {
+                  // This cell has nodes on both sides of the front.  Tag it and the tag_buffer around it.
+                  hier::Box cell_and_buffer(cell_index, cell_index);
+                  cell_and_buffer.grow(tag_buffer);
+                  tmp_tag.fill(1,cell_and_buffer);
+               }
+            }
+#endif
+         }
+         // tbox::plog << "distances to front: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
+         while ( min_distance_to_front < -0.5*d_period[0] ) {
+            min_distance_to_front += d_period[0];
+            max_distance_to_front += d_period[0];
+         }
+         while ( max_distance_to_front >  0.5*d_period[0] ) {
+            min_distance_to_front -= d_period[0];
+            max_distance_to_front -= d_period[0];
+         }
+         // tbox::plog << "shifted ..........: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
+         if ( min_distance_to_front < 0 && max_distance_to_front > 0 ) {
+            // This cell has nodes on both sides of the front.  Tag it and the tag_buffer around it.
+            hier::Box cell_and_buffer(cell_index, cell_index, blk0);
+            cell_and_buffer.grow(tag_buffer);
+            tmp_tag.fill(1,cell_and_buffer);
+         }
+
+      }
+
+      t_copy->start();
+      tag_data->copy(tmp_tag);
+      t_copy->stop();
+
+   }
+
+
+   /*
+    * Initialize distance data.
+    */
    if (dist_data != NULL) {
       t_distance->start();
 
-      pdat::NodeData<double>::iterator ni(tmp_dist.getGhostBox(), true);
-      pdat::NodeData<double>::iterator niend(tmp_dist.getGhostBox(), false);
+      pdat::NodeData<double> &dist_to_front(*dist_data);
+      pdat::NodeData<double>::iterator ni(dist_to_front.getGhostBox(), true);
+      pdat::NodeData<double>::iterator niend(dist_to_front.getGhostBox(), false);
       for ( ; ni != niend; ++ni) {
          const pdat::NodeIndex& index = *ni;
-         if (d_dim == tbox::Dimension(2)) {
-            tmp_dist(index) = xlo[0] + (index(0) - pbox.lower(0)) * dx[0]
-               - front_i2(ifront, index(1)) * dx[0];
-         } else if (d_dim == tbox::Dimension(3)) {
-            tmp_dist(index) = xlo[0] + (index(0) - pbox.lower(0)) * dx[0]
-               - front_i3(ifront, index(1), index(2)) * dx[0];
-         }
+         pdat::NodeIndex front_index(index);
+         front_index(0) = ifront;
+         dist_to_front(index) = xlo[0] + (index(0) - pbox.lower(0)) * dx[0]
+            - front_x(front_index,0);
       }
-      // tmp_dist.print(tmp_dist.getBox(),0,plog);
+      // dist_to_front.print(dist_to_front.getBox(),0,plog);
 
       t_distance->stop();
    }
 
-   if (tag_data != NULL) {
-
-      t_tag_cells->start();
-
-      tag_data->fill(0);
-      const hier::IntVector& glower = tag_data->getGhostBox().lower();
-      const hier::IntVector& gupper = tag_data->getGhostBox().upper();
-
-      if (d_dim == tbox::Dimension(2)) {
-         MDA_Access<int, 2, MDA_OrderColMajor<2> > tag_aa(
-            tag_data->getPointer(0),
-            &tag_data->getGhostBox().lower()[0],
-            &tag_data->getGhostBox().upper()[0]);
-         for (int j = pbox.lower(1); j <= pbox.upper(1); ++j) {
-            int if3 = front_i3(ifront, j);
-            while (if3 >= glower(0)) {
-               if3 -= iperiod;
-            }
-            while (if3 + iperiod < glower(0)) {
-               if3 += iperiod;
-            }
-            for (if3 += iperiod; if3 <= gupper(0); if3 += iperiod) {
-               tag_aa(if3, j) = 1;
-            }
-         }
-      } else if (d_dim == tbox::Dimension(3)) {
-         MDA_Access<int, 3, MDA_OrderColMajor<3> > tag_aa(
-            tag_data->getPointer(0),
-            &tag_data->getGhostBox().lower()[0],
-            &tag_data->getGhostBox().upper()[0]);
-         for (int k = pbox.lower(2); k <= pbox.upper(2); ++k) {
-            for (int j = pbox.lower(1); j <= pbox.upper(1); ++j) {
-               int if3 = front_i3(ifront, j, k);
-               while (if3 >= glower(0)) {
-                  if3 -= iperiod;
-               }
-               while (if3 + iperiod < glower(0)) {
-                  if3 += iperiod;
-               }
-               for (if3 += iperiod; if3 <= gupper(0); if3 += iperiod) {
-                  tag_aa(if3, j, k) = 1;
-               }
-            }
-         }
-      }
-
-      t_tag_cells->stop();
-
-   }
-
-   t_copy->start();
-
-   /*
-    * Copy computed data to output.  Recall that the convention is
-    * to send in a NULL pointer to indicate that data is not wanted.
-    */
-   if (dist_data != NULL) {
-      dist_data->copy(tmp_dist);
-   }
-
-   t_copy->stop();
 }
+
+
 
 #ifdef HAVE_HDF5
 int SinusoidalFrontTagger::registerVariablesWithPlotter(
@@ -581,6 +632,8 @@ int SinusoidalFrontTagger::registerVariablesWithPlotter(
    return 0;
 }
 #endif
+
+
 
 bool SinusoidalFrontTagger::packDerivedDataIntoDoubleBuffer(
    double* buffer,
@@ -616,8 +669,20 @@ bool SinusoidalFrontTagger::packDerivedDataIntoDoubleBuffer(
    return true;
 }
 
+
+
 void SinusoidalFrontTagger::setTime(
    double time)
 {
    d_time = time;
+}
+
+
+
+const double *SinusoidalFrontTagger::getBufferSpace( int ln ) const
+{
+   if ( d_buffer_space.size() > ln*d_dim.getValue() ) {
+      return &d_buffer_space[ln*d_dim.getValue()];
+   }
+   return NULL;
 }

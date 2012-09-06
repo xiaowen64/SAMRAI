@@ -1,0 +1,62 @@
+#########################################################################
+##
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
+##
+## Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+## Description:   makefile for library for reusable test code
+##
+#########################################################################
+
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
+SUBDIR        = source/test/testlib
+VPATH         = @srcdir@
+TESTTOOLS     = ../../testtools
+OBJECT        = ../../..
+
+default: check	
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA= -I$(TESTLIBDIR) -DTESTING=1
+
+CXX_OBJS      = AutoTester.o \
+		DerivedVisOwnerData.o \
+		MblkHyperbolicLevelIntegrator.o \
+		MblkHyperbolicPatchStrategy.o \
+		SinusoidalFrontTagger.o \
+		SkeletonBoundaryUtilities2.o \
+		SkeletonBoundaryUtilities3.o \
+		SkeletonCellDoubleConservativeLinearRefine.o \
+		SkeletonCellDoubleWeightedAverage.o
+  
+
+library:        libSAMRAI_test$(LIB_SUFFIX)
+
+libSAMRAI_test.a:   $(CXX_OBJS)
+	rm -rf libSAMRAI_test$(LIB_SUFFIX)
+	echo $(CXX_OBJS) | @XARGS@ @AR@ ru libSAMRAI_test$(LIB_SUFFIX);
+
+check:          library
+
+checkcompile:
+	$(MAKE) check
+
+checktest:
+	$(MAKE) check
+
+clean-check:
+	$(SAMCLEAN)
+	rm -rf libSAMRAI*
+
+clean:		clean-check
+
+include $(SRCDIR)/Makefile.depend
+
+# AutoTester.o:	$(SRCDIR)/AutoTester.C
+#	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $(SRCDIR)/AutoTester.C -o $@
+
+#SinusoidalFrontTagger.o:	$(SRCDIR)/SinusoidalFrontTagger.C
+#	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $(SRCDIR)/SinusoidalFrontTagger.C -o $@
+

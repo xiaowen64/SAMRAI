@@ -14,30 +14,31 @@ SUBDIR        = source/test/performance/multiblock
 VPATH         = @srcdir@
 TESTTOOLS     = ../../testtools
 OBJECT        = ../../../..
+TESTINCLUDE   = $(SAMRAI)/source/test/testlib
+TESTLIBDIR    = $(OBJECT)/source/test/testlib
+TESTLIB       = $(TESTLIBDIR)/libSAMRAI_test$(LIB_SUFFIX)
 
 default:      check
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA= -DTESTING=0
+CPPFLAGS_EXTRA= -I$(TESTINCLUDE) -DTESTING=0
 
 NUM_TESTS     = 8
 
 TEST_NPROCS   = @TEST_NPROCS@
 
-CXX_OBJS      = MblkGeometry.o main.o MblkLinAdv.o MblkHyperbolicLevelIntegrator.o \
-	MblkHyperbolicPatchStrategy.o Pointer-MblkHyperbolicLevelIntegrator.o \
-	SkeletonCellDoubleConservativeLinearRefine.o Pointer-SkeletonCellDoubleConservativeLinearRefine.o \
-	SkeletonCellDoubleWeightedAverage.o Pointer-SkeletonCellDoubleWeightedAverage.o \
-	SkeletonOutersideDoubleWeightedAverage.o Pointer-SkeletonOutersideDoubleWeightedAverage.o \
-	SkeletonBoundaryUtilities2.o \
-	SkeletonBoundaryUtilities3.o
+CXX_OBJS      = MblkGeometry.o main.o MblkLinAdv.o \
+		SkeletonOutersideDoubleWeightedAverage.o
 
 F_OBJS      = stufprobc.o trace1d.o trace2d.o trace3d.o grad2d.o grad3d.o flux2d.o flux3d.o fluxcorner3d.o stable2d.o stable3d.o init2d.o init3d.o upfluxsum2d.o skelbdry2d.o upfluxsum3d.o skelbdry3d.o
 
-main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) \
+main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND) testlib
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
+
+testlib:
+	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
 
 check:
 	$(MAKE) check3d

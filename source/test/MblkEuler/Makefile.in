@@ -14,25 +14,30 @@ SUBDIR        = source/test/MblkEuler
 VPATH         = @srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
+TESTINCLUDE   = $(SAMRAI)/source/test/testlib
+TESTLIBDIR    = $(OBJECT)/source/test/testlib
+TESTLIB       = $(TESTLIBDIR)/libSAMRAI_test$(LIB_SUFFIX)
 
 default:      check
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA= -DNDIM=$(PDIM)  -DTESTING=1
+CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
 
 NUM_TESTS     = 1
 
 TEST_NPROCS   = @TEST_NPROCS@
 
-CXX_OBJS      = MblkGeometry.o main.o MblkEuler.o MblkHyperbolicLevelIntegrator.o \
-                MblkHyperbolicPatchStrategy.o Pointer-MblkHyperbolicLevelIntegrator.o
+CXX_OBJS      = MblkGeometry.o main.o MblkEuler.o
 
 F_OBJS      = upfluxsum.o boundaryconditions.o
 
-main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) \
+main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND) testlib
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
+
+testlib:
+	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
 
 check:
 	$(MAKE) check3d

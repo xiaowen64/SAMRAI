@@ -20694,6 +20694,7 @@ source/test/restartdb
 source/test/samrai_mpi
 source/test/sparsedata
 source/test/sundials
+source/test/testlib
 source/test/timers
 source/test/transformation
 source/test/variables

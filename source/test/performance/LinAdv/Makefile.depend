@@ -99,11 +99,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIndex.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceData.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceGeometry.h			\
@@ -153,7 +148,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h LinAdv.C	\
-	LinAdv.h LinAdvFort.h SinusoidalFrontTagger.h
+	LinAdv.h LinAdvFort.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
@@ -168,7 +163,6 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceVariable.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceData.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
@@ -191,142 +185,8 @@ endif
 
 ${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
 
-FILE_2=SinusoidalFrontTagger.o
+FILE_2=main.o
 DEPENDS_2:=\
-	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/appu/VisDerivedDataStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/appu/VisItDataWriter.h			\
-	$(INCLUDE_SAM)/SAMRAI/appu/VisMaterialsDataStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.h		\
-	$(INCLUDE_SAM)/SAMRAI/geom/CartesianPatchGeometry.h		\
-	$(INCLUDE_SAM)/SAMRAI/geom/GridGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSingleBlockIterator.h	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchHierarchy.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevelFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PersistentOverlapConnectors.h	\
-	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.h	\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyCellDataOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataBasicOps.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataMiscellaneousOpsReal.h	\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/mesh/StandardTagAndInitStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MDA_Access.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeDataFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIndex.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeData.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.h		\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/HDFDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/ReferenceCounter.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SinusoidalFrontTagger.C	\
-	SinusoidalFrontTagger.h
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_2 +=\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyCellDataOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataBasicOps.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataMiscellaneousOpsReal.C	\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.C				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeDataFactory.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeVariable.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeData.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
-
-${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
-
-FILE_3=main.o
-DEPENDS_3:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/algs/HyperbolicLevelIntegrator.h		\
 	$(INCLUDE_SAM)/SAMRAI/algs/HyperbolicPatchStrategy.h		\
@@ -414,11 +274,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIndex.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceData.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceGeometry.h			\
@@ -470,11 +325,10 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h LinAdv.h	\
-	SinusoidalFrontTagger.h main.C
+	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h LinAdv.h main.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_3 +=\
+DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
@@ -486,7 +340,6 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceVariable.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceData.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
@@ -495,5 +348,5 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
+${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
 
