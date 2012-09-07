@@ -22,9 +22,9 @@ include $(OBJECT)/config/Makefile.config
 CPPFLAGS_EXTRA	= -DDISPLAY -DNDIM=$(PDIM)  -DTESTING=1
 
 ifneq (,$(findstring libdcomplex, $(SAMRAI_LIBRARY_TARGETS)))
-  NUM_TESTS = 20
+  NUM_TESTS = 28
 else
-  NUM_TESTS = 14
+  NUM_TESTS = 18
 endif
 
 TEST_NPROCS = @TEST_NPROCS@
@@ -102,14 +102,10 @@ checkcompile:   $(TARGETS2D) cell_hiertest
 
 check:
 	$(MAKE) check2d
-	$(MAKE) check3d
 
 check2d:	$(SAMRAI_LIBRARY_TARGETS)
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_patchtest 2;
 
-check3d:	cell_patchtest cell_hiertest
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_patchtest 3;
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_hiertest 3;
+check3d:	$(SAMRAI_LIBRARY_TARGETS)
 
 libbool:
 
@@ -125,9 +121,13 @@ libdcomplex:	cell_cplxtest \
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_cplxtest 2; \
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_cplxtest 3; \
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./face_cplxtest 2; \
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./face_cplxtest 3; \
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./node_cplxtest 2; \
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./node_cplxtest 3; \
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./edge_cplxtest 2; \
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./side_cplxtest 2
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./edge_cplxtest 3; \
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./side_cplxtest 2; \
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./side_cplxtest 3
 
 
 libdefault:	cell_patchtest \
@@ -140,16 +140,23 @@ libdefault:	cell_patchtest \
 		node_hierops \
 		indx_dataops
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_hierops 2; \
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_hierops 3; \
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./node_hierops 2; \
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./node_hierops 3; \
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./indx_dataops 2; \
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./indx_dataops 3; \
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_hiertest 2; \
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_hiertest 3; \
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_patchtest 2; \
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_patchtest 3; \
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./face_hiertest 2; \
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./face_hiertest 3; \
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./node_hiertest 2; \
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./node_hiertest 3; \
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./edge_hiertest 2; \
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./side_hiertest 2
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./edge_hiertest 3; \
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./side_hiertest 2; \
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./side_hiertest 3
 
 checktest:
 		rm -f makecheck.logfile

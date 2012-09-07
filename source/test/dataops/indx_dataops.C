@@ -55,10 +55,6 @@ int main(
    TBOX_ASSERT(d <= SAMRAI::MAX_DIM_VAL);
    const tbox::Dimension dim(d);
 
-   if (dim != tbox::Dimension(2)) {
-      TBOX_ERROR("This test code is completed only for 2D!!!");
-   }
-
    const std::string log_fn = std::string("indx_dataops.")
       + tbox::Utilities::intToString(dim.getValue(), 1) + "d.log";
    tbox::PIO::logAllNodes(log_fn);
@@ -77,13 +73,47 @@ int main(
  *
  ************************************************************************
  */
-      double lo[2] = { 0.0, 0.0 };
-      double hi[2] = { 1.0, 0.5 };
+      double lo[SAMRAI::MAX_DIM_VAL];
+      double hi[SAMRAI::MAX_DIM_VAL];
 
-      hier::Box coarse0(hier::Index(0, 0), hier::Index(9, 2), hier::BlockId(0));
-      hier::Box coarse1(hier::Index(0, 3), hier::Index(9, 4), hier::BlockId(0));
-      hier::Box fine0(hier::Index(4, 4), hier::Index(7, 7), hier::BlockId(0));
-      hier::Box fine1(hier::Index(8, 4), hier::Index(13, 7), hier::BlockId(0));
+      hier::Index clo0(dim);
+      hier::Index chi0(dim);
+      hier::Index clo1(dim);
+      hier::Index chi1(dim);
+      hier::Index flo0(dim);
+      hier::Index fhi0(dim);
+      hier::Index flo1(dim);
+      hier::Index fhi1(dim);
+
+      for (int i = 0; i < dim.getValue(); i++) {
+         lo[i] = 0.0;
+         clo0(i) = 0;
+         flo0(i) = 4;
+         fhi0(i) = 7;
+         if (i == 1) {
+            hi[i] = 0.5;
+            chi0(i) = 2;
+            clo1(i) = 3;
+            chi1(i) = 4;
+         } else {
+            hi[i] = 1.0;
+            chi0(i) = 9;
+            clo1(i) = 0;
+            chi1(i) = 9;
+         }
+         if (i == 0) {
+            flo1(i) = 8;
+            fhi1(i) = 13;
+         } else {
+            flo1(i) = flo0(i);
+            fhi1(i) = fhi0(i);
+         }
+      }
+
+      hier::Box coarse0(clo0, chi0, hier::BlockId(0));
+      hier::Box coarse1(clo1, chi1, hier::BlockId(0));
+      hier::Box fine0(flo0, fhi0, hier::BlockId(0));
+      hier::Box fine1(flo1, fhi1, hier::BlockId(0));
       hier::IntVector ratio(dim, 2);
 
       coarse0.initialize(coarse0, hier::LocalId(0), 0);
@@ -134,7 +164,8 @@ int main(
 
       hier::BoxContainer::iterator fine_itr(fine_domain);
       for (int ib = 0; ib < n_fine_boxes; ++ib) {
-         if (nproc > 1) {            if (ib == layer1.getMPI().getRank()) {
+         if (nproc > 1) {
+            if (ib == layer1.getMPI().getRank()) {
                layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib),
                   layer1.getMPI().getRank()));
             }

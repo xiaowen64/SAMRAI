@@ -315,7 +315,7 @@ int main(
          tbox::perr
          << "FAILED: - Test #1a: Check control volume data set properly"
          << std::endl;
-         cwgt_ops->printData(cwgt_id, tbox::pout);
+         cwgt_ops->printData(cwgt_id, tbox::plog);
       }
 
       // Test #1b: math::HierarchyCellDataOpsReal::sumControlVolumes()
@@ -349,7 +349,7 @@ int main(
          tbox::perr
          << "FAILED: - Test #3a: math::HierarchyCellDataOpsReal::setToScalar()\n"
          << "Expected: v0 = " << val0 << std::endl;
-         cell_ops->printData(cvindx[0], tbox::pout);
+         cell_ops->printData(cvindx[0], tbox::plog);
       }
 
       // Test #3b: math::HierarchyCellDataOpsReal::setToScalar()
@@ -361,7 +361,7 @@ int main(
          tbox::perr
          << "FAILED: - Test #3b: math::HierarchyCellDataOpsReal::setToScalar()\n"
          << "Expected: v1 = " << val1 << std::endl;
-         cell_ops->printData(cvindx[1], tbox::pout);
+         cell_ops->printData(cvindx[1], tbox::plog);
       }
 
       // Test #4: math::HierarchyCellDataOpsReal::copyData()
@@ -372,7 +372,7 @@ int main(
          tbox::perr
          << "FAILED: - Test #4: math::HierarchyCellDataOpsReal::copyData()\n"
          << "Expected: v2 = " << val1 << std::endl;
-         cell_ops->printData(cvindx[2], tbox::pout);
+         cell_ops->printData(cvindx[2], tbox::plog);
       }
 
       // Test #5: math::HierarchyCellDataOpsReal::swapData()
@@ -383,14 +383,14 @@ int main(
          tbox::perr
          << "FAILED: - Test #5a: math::HierarchyCellDataOpsReal::swapData()\n"
          << "Expected: v0 = " << val1 << std::endl;
-         cell_ops->printData(cvindx[0], tbox::pout);
+         cell_ops->printData(cvindx[0], tbox::plog);
       }
       if (!doubleDataSameAsValue(cvindx[1], val0, hierarchy)) {
          num_failures++;
          tbox::perr
          << "FAILED: - Test #5b: math::HierarchyCellDataOpsReal::swapData()\n"
          << "Expected: v1 = " << val0 << std::endl;
-         cell_ops->printData(cvindx[1], tbox::pout);
+         cell_ops->printData(cvindx[1], tbox::plog);
       }
 
       // Test #6: math::HierarchyCellDataOpsReal::scale()
@@ -402,7 +402,7 @@ int main(
          tbox::perr
          << "FAILED: - Test #6: math::HierarchyCellDataOpsReal::scale()\n"
          << "Expected: v2 = " << val_scale << std::endl;
-         cell_ops->printData(cvindx[2], tbox::pout);
+         cell_ops->printData(cvindx[2], tbox::plog);
       }
 
       // Test #7: math::HierarchyCellDataOpsReal::add()
@@ -414,7 +414,7 @@ int main(
          tbox::perr
          << "FAILED: - Test #7: math::HierarchyCellDataOpsReal::add()\n"
          << "Expected: v3 = " << val_add << std::endl;
-         cell_ops->printData(cvindx[3], tbox::pout);
+         cell_ops->printData(cvindx[3], tbox::plog);
       }
 
       // Reset v0: v0 = (0.0)
@@ -429,7 +429,7 @@ int main(
          tbox::perr
          << "FAILED: - Test #8: math::HierarchyCellDataOpsReal::subtract()\n"
          << "Expected: v1 = " << val_sub << std::endl;
-         cell_ops->printData(cvindx[1], tbox::pout);
+         cell_ops->printData(cvindx[1], tbox::plog);
       }
 
       // Test #9a: math::HierarchyCellDataOpsReal::addScalar()
@@ -441,7 +441,7 @@ int main(
          tbox::perr
          << "FAILED: - Test #9a: math::HierarchyCellDataOpsReal::addScalar()\n"
          << "Expected: v1 = " << val_addScalar << std::endl;
-         cell_ops->printData(cvindx[1], tbox::pout);
+         cell_ops->printData(cvindx[1], tbox::plog);
       }
 
       // Test #9b: math::HierarchyCellDataOpsReal::addScalar()
@@ -453,7 +453,7 @@ int main(
          tbox::perr
          << "FAILED: - Test #9b: math::HierarchyCellDataOpsReal::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
-         cell_ops->printData(cvindx[2], tbox::pout);
+         cell_ops->printData(cvindx[2], tbox::plog);
       }
 
       // Test #9c: math::HierarchyCellDataOpsReal::addScalar()
@@ -465,7 +465,7 @@ int main(
          tbox::perr
          << "FAILED: - Test #9c: math::HierarchyCellDataOpsReal::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
-         cell_ops->printData(cvindx[2], tbox::pout);
+         cell_ops->printData(cvindx[2], tbox::plog);
       }
 
       // Reset v3:  v3 = (0.5)
@@ -480,7 +480,7 @@ int main(
          tbox::perr
          << "FAILED: - Test #10: math::HierarchyCellDataOpsReal::multiply()\n"
          << "Expected: v1 = " << val_mult << std::endl;
-         cell_ops->printData(cvindx[1], tbox::pout);
+         cell_ops->printData(cvindx[1], tbox::plog);
       }
 
       // Test #11: math::HierarchyCellDataOpsReal::divide()
@@ -492,7 +492,7 @@ int main(
          tbox::perr
          << "FAILED: - Test #11: math::HierarchyCellDataOpsReal::divide()\n"
          << "Expected: v0 = " << val_div << std::endl;
-         cell_ops->printData(cvindx[0], tbox::pout);
+         cell_ops->printData(cvindx[0], tbox::plog);
       }
 
       // Test #12: math::HierarchyCellDataOpsReal::reciprocal()
@@ -504,7 +504,7 @@ int main(
          tbox::perr
          << "FAILED: - Test #12: math::HierarchyCellDataOpsReal::reciprocal()\n"
          << "Expected: v1 = " << val_rec << std::endl;
-         cell_ops->printData(cvindx[1], tbox::pout);
+         cell_ops->printData(cvindx[1], tbox::plog);
       }
 
       // Test #13: math::HierarchyCellDataOpsReal::abs()
@@ -516,7 +516,7 @@ int main(
          tbox::perr
          << "FAILED: - Test #13: math::HierarchyCellDataOpsReal::abs()\n"
          << "Expected: v3 = " << val_abs << std::endl;
-         cell_ops->printData(cvindx[3], tbox::pout);
+         cell_ops->printData(cvindx[3], tbox::plog);
       }
 
       // Test #14: Place some bogus values on coarse level
@@ -582,7 +582,7 @@ int main(
          tbox::perr
          << "FAILED: - Test #14:  Place some bogus values on coarse level"
          << std::endl;
-         cell_ops->printData(cvindx[2], tbox::pout);
+         cell_ops->printData(cvindx[2], tbox::plog);
       }
 
       // Test #15: math::HierarchyCellDataOpsReal::L1Norm() - w/o control weight
@@ -660,7 +660,7 @@ int main(
          tbox::perr
          << "FAILED: - Test #20: math::HierarchyCellDataOpsReal::linearSum()\n"
          << "Expected: v3 = " << val_linearSum << std::endl;
-         cell_ops->printData(cvindx[3], tbox::pout);
+         cell_ops->printData(cvindx[3], tbox::plog);
       }
 
       // Test #21: math::HierarchyCellDataOpsReal::axmy()
@@ -672,7 +672,7 @@ int main(
          tbox::perr
          << "FAILED: - Test #21: math::HierarchyCellDataOpsReal::axmy()\n"
          << "Expected: v3 = " << val_axmy << std::endl;
-         cell_ops->printData(cvindx[3], tbox::pout);
+         cell_ops->printData(cvindx[3], tbox::plog);
       }
 
       // Test #22a: math::HierarchyCellDataOpsReal::dot() - (ind2) * (ind1)
