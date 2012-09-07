@@ -31,7 +31,7 @@ TEST_NPROCS   = @TEST_NPROCS@
 CXX_OBJS      = MblkGeometry.o main.o MblkLinAdv.o \
 		SkeletonOutersideDoubleWeightedAverage.o 
 
-F_OBJS      = upfluxsum2d.o skelbdry2d.o upfluxsum3d.o skelbdry3d.o
+F_OBJS      = skelbdry2d.o skelbdry3d.o
 
 main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND) testlib
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) $(TESTLIB) \
@@ -90,16 +90,7 @@ skelbdry2d.o:	$(FORTRAN)/2d/skelbdry2d.m4
 	$(M4) $(M4DIRS) $(FORTRAN)/2d/skelbdry2d.m4 > skelbdry2d.f
 	$(F77) $(FFLAGS) -c skelbdry2d.f -o $@
 
-upfluxsum2d.o:	$(FORTRAN)/2d/upfluxsum2d.m4
-	$(M4) $(M4DIRS) $(FORTRAN)/2d/upfluxsum2d.m4 > upfluxsum2d.f
-	$(F77) $(FFLAGS) -c upfluxsum2d.f -o $@
-
-
 skelbdry3d.o:	$(FORTRAN)/3d/skelbdry3d.m4
 	$(M4) $(M4DIRS) $(FORTRAN)/3d/skelbdry3d.m4 > skelbdry3d.f
 	$(F77) $(FFLAGS) -c skelbdry3d.f -o $@
-
-upfluxsum3d.o:	$(FORTRAN)/3d/upfluxsum3d.m4
-	$(M4) $(M4DIRS) $(FORTRAN)/3d/upfluxsum3d.m4 > upfluxsum3d.f
-	$(F77) $(FFLAGS) -c upfluxsum3d.f -o $@
 
