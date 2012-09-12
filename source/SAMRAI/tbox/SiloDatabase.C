@@ -592,6 +592,7 @@ bool
 SiloDatabase::isBool(
    const std::string& key)
 {
+   TBOX_ASSERT(!key.empty());
    return isSiloSimpleType(key, DB_SHORT);
 }
 
@@ -824,6 +825,7 @@ bool
 SiloDatabase::isChar(
    const std::string& key)
 {
+   TBOX_ASSERT(!key.empty());
    return isSiloSimpleType(key, DB_CHAR);
 }
 
@@ -1027,6 +1029,7 @@ bool
 SiloDatabase::isDouble(
    const std::string& key)
 {
+   TBOX_ASSERT(!key.empty());
    return isSiloSimpleType(key, DB_DOUBLE);
 }
 
@@ -1095,6 +1098,7 @@ bool
 SiloDatabase::isFloat(
    const std::string& key)
 {
+   TBOX_ASSERT(!key.empty());
    return isSiloSimpleType(key, DB_FLOAT);
 }
 
@@ -1164,6 +1168,7 @@ bool
 SiloDatabase::isInteger(
    const std::string& key)
 {
+   TBOX_ASSERT(!key.empty());
    return isSiloSimpleType(key, DB_INT);
 }
 

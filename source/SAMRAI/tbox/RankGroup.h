@@ -60,6 +60,9 @@ public:
     * This constructor creates a RankGroup consisting of all ranks from min
     * to max, inclusive.  min must be >= 0 and max must be less than the
     * total number of available processors.
+    *
+    * @pre min >= 0
+    * @pre min <= max
     */
    RankGroup(
       const int min,
@@ -76,6 +79,8 @@ public:
     * than those created with the above min/max constructor.
     *
     * An assertion failure will result if the array is empty.
+    *
+    * @pre rank_group.size() > 0
     */
    explicit RankGroup(
       const Array<int>& rank_group,
@@ -129,6 +134,8 @@ public:
 
    /*!
     * Return the size of the subset of ranks represented by this RankGroup.
+    *
+    * @pre d_storage != INVALID_STORAGE
     */
    int
    size() const;
@@ -137,6 +144,8 @@ public:
     * Given an integer identifier from the set [0,N-1], N being the size of
     * the RankGroup, return a unique rank from the RankGroup according to
     * a 1-to-1 mapping.
+    *
+    * @pre d_storage != INVALID_STORAGE
     */
    int
    getMappedRank(
@@ -147,6 +156,9 @@ public:
     * contained in the RankGroup, return a unique integer identifier in the
     * set [0,N-1], N being the size of the rank group, according to a 1-to-1
     * mapping.
+    *
+    * @pre rank >= 0
+    * @pre d_storage != INVALID_STORAGE
     */
    int
    getMapIndex(

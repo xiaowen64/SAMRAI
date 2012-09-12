@@ -49,21 +49,25 @@ public:
    /*!
     * @brief Create a message stream of the specified size and mode
     *
-    * @param[in] bytes   Number of bytes in the stream.
+    * @param[in] num_bytes   Number of bytes in the stream.
     *
     * @param[in] mode    MessageStream::Read or MessageStream::Write.
     *
-    * @param[in] data_to_read    Data for unpacking, should be num_bytes bytes long.
-    *   This is used when mode == MessageStream::Read, ignored in write mode.
+    * @param[in] data_to_read    Data for unpacking, should be num_bytes bytes
+    *   long.  This is used when mode == MessageStream::Read, ignored in write
+    *   mode.
     *
     * @param[in] deep_copy Whether to make deep copy of data_to_read.
     * The default is to make a deep copy, which is safer but slower
     * than a shallow (pointer) copy.  This is used when mode ==
     * MessageStream::Read, ignored in write mode.  In shallow copy mode,
     * you cannot call growBufferAsNeeded().
+    *
+    * @pre num_bytes >= 0
+    * @pre mode != Read || data_to_read != NULL
     */
    MessageStream(
-      const size_t bytes,
+      const size_t num_bytes,
       const StreamMode mode,
       const void *data_to_read = NULL,
       bool deep_copy = true);
@@ -103,6 +107,8 @@ public:
 
    /*!
     * @brief Return a pointer to the start of the message buffer.
+    *
+    * @pre d_buffer_access != NULL
     */
    const void *
    getBufferStart() const
@@ -125,6 +131,8 @@ public:
     * as needed for data.
     *
     * It is an error to use this method for a Read-mode stream.
+    *
+    * @pre d_mode == Write
     */
    void
    growBufferAsNeeded()
@@ -137,6 +145,8 @@ public:
    /*!
     * @brief Whether a Read-mode MessageStream has reached the end of
     * its data.
+    *
+    * @pre d_mode == Read
     */
    bool endOfData() const
    {
@@ -149,6 +159,8 @@ public:
     *
     * @param[in] data  Single item of type DATA_TYPE to be copied
     * into the stream.
+    *
+    * @pre d_mode == Write
     */
    template<typename DATA_TYPE>
    MessageStream&
@@ -168,6 +180,8 @@ public:
     * @param[in] data  Pointer to an array of data of type DATA_TYPE
     *                  to be copied into the stream.
     * @param[in] size  Number of items to pack.
+    *
+    * @pre d_mode == Write
     */
    template<typename DATA_TYPE>
    void
@@ -187,6 +201,8 @@ public:
     *
     * @param[out] data  Single item of type DATA_TYPE that will be
     *                   copied from the stream.
+    *
+    * @pre d_mode == Read
     */
    template<typename DATA_TYPE>
    MessageStream&
@@ -207,6 +223,8 @@ public:
     *                   that will receive data copied from
     *                   the stream.
     * @param[out] size  Number of items that will be copied.
+    *
+    * @pre d_mode == Read
     */
    template<typename DATA_TYPE>
    void
@@ -237,40 +255,44 @@ private:
     *
     * @param[in]  data
     * @param[in]  num_bytes
+    *
+    * @pre d_grow_as_needed || d_buffer_index + num_bytes <= d_buffer.capacity()
     */
    void copyDataIn(
       const void *input_data,
       const size_t num_bytes)
-      {
-         if ( !d_grow_as_needed ) {
-            TBOX_ASSERT(d_buffer_index + num_bytes <= d_buffer.capacity());
-         }
-         if ( num_bytes > 0 ) {
-            d_buffer.insert( d_buffer.end(),
-                             static_cast<const char*>(input_data),
-                             static_cast<const char*>(input_data) + num_bytes );
-            d_buffer_size = d_buffer.size();
-            d_buffer_index += num_bytes;
-            d_buffer_access = &d_buffer[0];
-         }
-         return;
+   {
+      if ( !d_grow_as_needed ) {
+         TBOX_ASSERT(d_buffer_index + num_bytes <= d_buffer.capacity());
       }
+      if ( num_bytes > 0 ) {
+         d_buffer.insert( d_buffer.end(),
+                          static_cast<const char*>(input_data),
+                          static_cast<const char*>(input_data) + num_bytes );
+         d_buffer_size = d_buffer.size();
+         d_buffer_index += num_bytes;
+         d_buffer_access = &d_buffer[0];
+      }
+      return;
+   }
 
    /*!
     * @brief Copy data out of the stream, advancing the stream pointer.
     *
     * @param[in]  output_data
     * @param[in]  num_bytes
+    *
+    * @pre d_buffer_index + num_bytes <= d_buffer_size
     */
    void copyDataOut(
       void *output_data,
       const size_t num_bytes)
-      {
-         TBOX_ASSERT( d_buffer_index + num_bytes <= d_buffer_size );
-         memcpy(output_data, &d_buffer_access[d_buffer_index], num_bytes);
-         d_buffer_index += num_bytes;
-         return;
-      }
+   {
+      TBOX_ASSERT( d_buffer_index + num_bytes <= d_buffer_size );
+      memcpy(output_data, &d_buffer_access[d_buffer_index], num_bytes);
+      d_buffer_index += num_bytes;
+      return;
+   }
 
    MessageStream(
       const MessageStream&);            // not implemented

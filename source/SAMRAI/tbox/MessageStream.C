@@ -41,7 +41,7 @@ MessageStream::MessageStream(
    d_buffer.reserve(num_bytes);
 
    if ( mode == Read ) {
-      if ( num_bytes > 0 && data_to_read == NULL ) {
+      if ( data_to_read == NULL ) {
          TBOX_ERROR("MessageStream::MessageStream: error:\n"
                     <<"No data_to_read was given to a Read-mode MessageStream.\n");
       }

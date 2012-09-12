@@ -117,6 +117,8 @@ public:
        * @brief Destructor detach the Member from its stage.
        * Memory allocated by the stage to support the Member
        * will be recycled.
+       *
+       * @pre !hasPendingRequests()
        */
       virtual ~Member();
 
@@ -218,6 +220,8 @@ public:
        *
        * This causes the member to be returned by a call to
        * AsyncCommStage::popCompletionQueue(), eventually.
+       *
+       * @pre isDone()
        */
       void
       pushToCompletionQueue();
@@ -267,6 +271,8 @@ protected:
        * @b Important: Do not save the pointer returned by this
        * method.  The stage's dynamic memory actions may render old
        * pointers invalid.
+       *
+       * @pre d_stage != NULL
        */
       SAMRAI_MPI::Request *
       getRequestPointer() const;
@@ -284,6 +290,8 @@ protected:
        * @b Important: Do not save the pointer returned by this
        * method.  The stage's dynamic memory actions may render old
        * pointers invalid.
+       *
+       * @pre d_stage != NULL
        */
       SAMRAI_MPI::Status *
       getStatusPointer() const;
@@ -403,6 +411,9 @@ private:
     * populated by advanceAny(), advanceSome() and advanceAll().  You
     * can also push Members onto the queue using the Member's
     * pushToCompletionQueue().
+    *
+    * @pre !d_completed_members.empty()
+    * @pre d_members[d_completed_members.front()]->isDone()
     */
    Member*
    popCompletionQueue();
@@ -484,6 +495,9 @@ private:
     *
     * @param handle Optional pointer back to a Member object associated
     *               with the Member.  See class documentation.
+    *
+    * @pre member->d_stage == NULL
+    * @pre nreq >= 1
     */
    void
    privateStageMember(
@@ -493,6 +507,9 @@ private:
    /*!
     * @brief Remove a member from the stage, clearing mutual
     * references between the stage and the member.
+    *
+    * @pre !member->hasPendingRequests()
+    * @pre d_members[member->d_index_on_stage] == member
     */
    void
    privateDestageMember(
@@ -500,6 +517,9 @@ private:
 
    /*!
     * @brief Get the number of requests for the given Member index.
+    *
+    * @pre index_on_stage < d_members.size()
+    * @pre d_members[index_on_stage] != NULL
     */
    size_t
    numberOfRequests(
@@ -526,6 +546,9 @@ private:
     *
     * This is private because only friend class Member should
     * use it.
+    *
+    * @pre index_on_stage < d_members.size()
+    * @pre d_members[index_on_stage] != NULL
     */
    SAMRAI_MPI::Request *
    lookupRequestPointer(
@@ -534,6 +557,9 @@ private:
    /*!
     * @brief Look up and return the status pointer from the stage
     * for the given Member.  (Works similarly to lookupRequestPointer().)
+    *
+    * @pre index_on_stage < d_members.size()
+    * @pre d_members[index_on_stage] != NULL
     */
    SAMRAI_MPI::Status *
    lookupStatusPointer(
@@ -542,6 +568,8 @@ private:
    /*!
     * @brief Push the given Member onto the stage's list of completed
     * Members.
+    *
+    * @pre member.isDone()
     */
    void
    privatePushToCompletionQueue( Member &member );

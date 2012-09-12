@@ -80,7 +80,7 @@ public:
    /**
     * Start the timer if active.
     *
-    * It is an error to start a timer that is already started.
+    * @pre !d_active || !d_is_running
     */
    void
    start();
@@ -88,7 +88,7 @@ public:
    /**
     * Stop the timer if active.
     *
-    * It is an error to stop a timer that is already stopped.
+    * @pre !d_active || d_is_running
     */
    void
    stop();
@@ -269,6 +269,8 @@ public:
 
    /**
     * Write timer data members to restart database.
+    *
+    * @pre restart_db
     */
    void
    putToRestart(
@@ -277,6 +279,8 @@ public:
    /**
     * Read restarted times from restart database.  When assertion checking
     * is on, the database pointer must be non-null.
+    *
+    * @pre restart_db
     */
    void
    getFromRestart(

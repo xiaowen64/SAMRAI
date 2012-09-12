@@ -107,6 +107,8 @@ public:
     * If there is no error opening the file, then the restart manager
     * mounts the restart file.
     * Returns true if open is successful; false otherwise.
+    *
+    * @pre d_database_factory
     */
    bool
    openRestartFile(
@@ -163,6 +165,9 @@ public:
     * When assertion checking is active, an unrecoverable assertion
     * will result if either the string is empty or the serializable
     * object pointer is null.
+    *
+    * @pre !name.empty()
+    * @pre obj != NULL
     */
    void
    registerRestartItem(
@@ -175,6 +180,8 @@ public:
     *
     * When assertion checking is active, an unrecoverable assertion
     * will result if the string is empty.
+    *
+    * @pre !name.empty()
     */
    void
    unregisterRestartItem(
@@ -209,6 +216,8 @@ public:
     * restart database.  The string argument is the name of the
     * root of restart directory.  The integer argument is the
     * identification number associated with the restart files generated.
+    *
+    * @pre d_database_factory
     */
    void
    writeRestartFile(
@@ -218,6 +227,8 @@ public:
    /**
     * Write all objects registered to as restart objects to the
     * restart database.
+    *
+    * @pre d_database_root
     */
    void
    writeRestartToDatabase();
@@ -243,6 +254,8 @@ protected:
     * Initialize Singleton instance with instance of subclass.  This function
     * is used to make the singleton object unique when inheriting from this
     * base class.
+    *
+    * @pre !s_manager_instance
     */
    void
    registerSingletonSubclassInstance(
@@ -252,6 +265,8 @@ private:
    /**
     * Write all objects registered to as restart objects to the
     * restart database.
+    *
+    * @pre database
     */
    void
    writeRestartFile(

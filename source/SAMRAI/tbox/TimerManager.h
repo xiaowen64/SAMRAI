@@ -287,8 +287,7 @@ public:
     * This argument allows one to override the input file criteria and
     * turn the timer on anyway.
     *
-    * When assertion checking is active, an assertion will result if the
-    * string is empty.
+    * @pre !name.empty()
     */
    boost::shared_ptr<Timer>
    getTimer(
@@ -300,7 +299,8 @@ public:
     * exists in the database of timers controlled by the manager.  If
     * a match is found, the timer pointer in the argument list is set
     * to that timer.  Otherwise, return false and return a null pointer.
-    * If the name string is empty, a null pointer is returned.
+    *
+    * @pre !name.empty()
     */
    bool
    checkTimerExists(
@@ -311,6 +311,8 @@ public:
     * Return true if a timer whose name matches the argument string
     * exists in the database of timers and is currently running.
     * Otherwise, return false.
+    *
+    * @pre !name.empty()
     */
    bool
    checkTimerRunning(
@@ -348,6 +350,8 @@ protected:
     * Initialize Singleton instance with instance of subclass.  This function
     * is used to make the singleton object unique when inheriting from this
     * base class.
+    *
+    * @pre !s_timer_manager_instance
     */
    void
    registerSingletonSubclassInstance(
@@ -359,7 +363,7 @@ protected:
     * timer. Also stop exclusive time for timer on top of exclusive timer
     * stack and push given timer on to that stack.
     *
-    * When assertion checking is active, the timer pointer must be non-null.
+    * @pre timer != NULL
     */
    void
    startTime(
@@ -371,7 +375,7 @@ protected:
     * Also, pop timer off top of exclusive timer stack and start exclusive
     * timer for new top of stack timer.
     *
-    * When assertion checking is active, the timer pointer must be non-null.
+    * @pre timer != NULL
     */
    void
    stopTime(

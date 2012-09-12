@@ -75,6 +75,7 @@ public:
     * thrown when dim < 1 or dim > getMaxDimension() value specified when
     * the library is configured (defaults to 3).
     *
+    * @pre dim > 0 && dim <= SAMRAI::MAX_DIM_VAL
     */
    explicit Dimension(
       const unsigned short& dim);

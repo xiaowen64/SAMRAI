@@ -368,6 +368,9 @@ struct Utilities {
 
    /*!
     * Rename a file from old file name to new file name.
+    *
+    * @pre !old_filename.empty()
+    * @pre !new_filename.empty()
     */
    static void
    renameFile(

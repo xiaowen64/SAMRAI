@@ -499,7 +499,7 @@ Statistician::getGlobalProcStatMaxProcessorId(
       }
 
       TBOX_ASSERT(proc_stat_id >= 0 &&
-         proc_stat_id < d_global_proc_stat_data.getSize());
+         proc_stat_id < d_global_proc_stat_imax.getSize());
       TBOX_ASSERT(seq_num >= 0 &&
          seq_num < d_global_proc_stat_imax[proc_stat_id].getSize());
 
@@ -1345,12 +1345,6 @@ Statistician::getGlobalPatchStatNumberPatchesOnProc(
    int proc_id)
 {
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
-   TBOX_ASSERT(patch_stat_id >= 0 &&
-      patch_stat_id < d_global_patch_stat_data.getSize());
-   TBOX_ASSERT(seq_num >= 0 &&
-      seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
-   TBOX_ASSERT(proc_id >= 0 &&
-      proc_id < mpi.getRank());
    int num_patches = -1;
 
    if (mpi.getRank() == 0) {
@@ -1367,6 +1361,12 @@ Statistician::getGlobalPatchStatNumberPatchesOnProc(
             << "stats data BEFORE this metho." << std::endl);
       }
 
+      TBOX_ASSERT(patch_stat_id >= 0 &&
+         patch_stat_id < d_global_patch_stat_data.getSize());
+      TBOX_ASSERT(seq_num >= 0 &&
+         seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
+      TBOX_ASSERT(proc_id >= 0 && proc_id < mpi.getSize());
+
       num_patches =
          d_global_patch_stat_mapping[patch_stat_id][seq_num][proc_id];
    }
@@ -1381,11 +1381,6 @@ Statistician::getGlobalPatchStatMaxPatchesPerProc(
    int seq_num)
 {
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
-   TBOX_ASSERT(patch_stat_id >= 0 &&
-      patch_stat_id < d_global_patch_stat_proc_data.getSize());
-   TBOX_ASSERT(seq_num >= 0 &&
-      seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
-
    int pmax = -999999;
 
    if (mpi.getRank() == 0) {
@@ -1402,6 +1397,11 @@ Statistician::getGlobalPatchStatMaxPatchesPerProc(
             << "must be called with the argument to gather global "
             << "stats data BEFORE this metho." << std::endl);
       }
+
+      TBOX_ASSERT(patch_stat_id >= 0 &&
+         patch_stat_id < d_global_patch_stat_proc_data.getSize());
+      TBOX_ASSERT(seq_num >= 0 &&
+         seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
 
       int val = pmax;
       Array<int> patches_per_proc;
@@ -1435,11 +1435,6 @@ Statistician::getGlobalPatchStatMaxPatchesPerProcId(
    int seq_num)
 {
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
-   TBOX_ASSERT(patch_stat_id >= 0 &&
-      patch_stat_id < d_global_patch_stat_proc_data.getSize());
-   TBOX_ASSERT(seq_num >= 0 &&
-      seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
-
    int pmax = -999999;
    int id = -1;
 
@@ -1457,6 +1452,11 @@ Statistician::getGlobalPatchStatMaxPatchesPerProcId(
             << "must be called with the argument to gather global "
             << "stats data BEFORE this metho." << std::endl);
       }
+
+      TBOX_ASSERT(patch_stat_id >= 0 &&
+         patch_stat_id < d_global_patch_stat_proc_data.getSize());
+      TBOX_ASSERT(seq_num >= 0 &&
+         seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
 
       int val = pmax;
       Array<int> patches_per_proc;
@@ -1494,11 +1494,6 @@ Statistician::getGlobalPatchStatMinPatchesPerProc(
    int seq_num)
 {
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
-   TBOX_ASSERT(patch_stat_id >= 0 &&
-      patch_stat_id < d_global_patch_stat_proc_data.getSize());
-   TBOX_ASSERT(seq_num >= 0 &&
-      seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
-
    int pmin = 999999;
 
    if (mpi.getRank() == 0) {
@@ -1515,7 +1510,10 @@ Statistician::getGlobalPatchStatMinPatchesPerProc(
             << "must be called with the argument to gather global "
             << "stats data BEFORE this metho." << std::endl);
       }
-
+      TBOX_ASSERT(patch_stat_id >= 0 &&
+         patch_stat_id < d_global_patch_stat_proc_data.getSize());
+      TBOX_ASSERT(seq_num >= 0 &&
+         seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
       TBOX_ASSERT(patch_stat_id >= 0 &&
          patch_stat_id < d_global_patch_stat_data.getSize());
       TBOX_ASSERT(seq_num >= 0 &&
@@ -1554,10 +1552,6 @@ Statistician::getGlobalPatchStatMinPatchesPerProcId(
    int seq_num)
 {
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
-   TBOX_ASSERT(patch_stat_id >= 0 &&
-      patch_stat_id < d_global_patch_stat_proc_data.getSize());
-   TBOX_ASSERT(seq_num >= 0 &&
-      seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
 
    int pmin = 9999999;
    int id = -1;
@@ -1576,6 +1570,11 @@ Statistician::getGlobalPatchStatMinPatchesPerProcId(
             << "must be called with the argument to gather global "
             << "stats data BEFORE this metho." << std::endl);
       }
+
+      TBOX_ASSERT(patch_stat_id >= 0 &&
+         patch_stat_id < d_global_patch_stat_proc_data.getSize());
+      TBOX_ASSERT(seq_num >= 0 &&
+         seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
 
       int val = pmin;
       Array<int> patches_per_proc;

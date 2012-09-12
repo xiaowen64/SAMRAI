@@ -87,6 +87,8 @@ public:
     *        i.e., nchild=2 is a binary tree.
     * @param stage
     * @param handler
+    *
+    * @post nchild == numberOfRequests()
     */
    AsyncCommGroup(
       const size_t nchild,
@@ -95,6 +97,8 @@ public:
 
    /*!
     * @brief Destructor.
+    *
+    * @pre isDone()
     */
    virtual ~AsyncCommGroup();
 
@@ -110,6 +114,8 @@ public:
     * message passing calls.
     *
     * @param handler Optional handler (see AsyncCommStage::Member).
+    *
+    * @pre isDone()
     */
    void
    initialize(
@@ -126,6 +132,8 @@ public:
     *
     * The root rank is specified by dereferencing @c group array with
     * @c root_index.
+    *
+    * @pre d_next_task_op == none
     */
    void
    setGroupAndRootIndex(
@@ -160,6 +168,8 @@ public:
     * if incorrect messages are received.  To be safe, it is best to
     * create a new communicator to avoid interference with other
     * communications within SAMRAI.
+    *
+    * @pre isDone()
     */
    void
    setMPITag(
@@ -172,6 +182,8 @@ public:
     * This option is off by default to avoid MPI lock-ups.  If you use
     * it, make sure all processors can get to the collective operation
     * to avoid lock-ups.
+    *
+    * @pre isDone()
     */
    void
    setUseMPICollectiveForFullGroups(
@@ -223,6 +235,8 @@ public:
     * it returns true before any change in object state is allowed.
     *
     * @return Whether operation is completed.
+    *
+    * @pre d_next_task_op == none
     */
    bool
    beginBcast(
@@ -237,6 +251,9 @@ public:
     * If no communication is in progress, this call does nothing.
     *
     * @return Whether operation is completed.
+    *
+    * @pre d_base_op == bcast
+    * @post d_parent_rank != -1 || d_next_task_op != recv_check
     */
    bool
    checkBcast();
@@ -265,6 +282,8 @@ public:
     * times the number of processes in the group).
     *
     * @return Whether operation is completed.
+    *
+    * @pre d_next_task_op == none
     */
    bool
    beginGather(
@@ -276,6 +295,8 @@ public:
     * gather if all MPI requests are fulfilled.
     *
     * @return Whether operation is completed.
+    *
+    * @pre d_base_op == gather
     */
    bool
    checkGather();
@@ -292,6 +313,8 @@ public:
     * Buffer should contain the data to be gathered.
     *
     * @return Whether operation is completed.
+    *
+    * @pre d_next_task_op == none
     */
    bool
    beginSumReduce(
@@ -324,6 +347,8 @@ public:
     * such as that returned by hasPendingRequests().  The communication
     * may be more complex, requiring several messages and copying of the
     * received message into the correct buffer.
+    *
+    * @pre d_next_task_op != none || !hasPendingRequests()
     */
    bool
    isDone() const;
@@ -349,6 +374,8 @@ public:
 private:
    /*
     * @brief Assert that user-set MPI parameters are valid.
+    *
+    * @pre d_mpi_tag >= 0
     */
    void
    checkMPIParams();
@@ -433,6 +460,11 @@ private:
     * This method is the workhorse underneath the public reduce methods.
     *
     * @return Whether operation is completed.
+    *
+    * @pre d_base_op == max_reduce || d_base_op == min_reduce ||
+    *      d_base_op == sum_reduce
+    * @post d_parent_rank != -1 || d_next_task_op != send_check
+    * @post d_next_task_op == none || numberOfPendingRequests() > 0
     */
    bool
    checkReduce();
@@ -480,12 +512,16 @@ private:
 
    /*!
     * @brief Convert the array index to the position.
+    *
+    * @pre index >= 0 && index < d_group_size
     */
    int
    toPosition(
       int index) const;
    /*!
     * @brief Convert the position to the array index.
+    *
+    * @pre position >= 0 && position < d_group_size
     */
    int
    toIndex(
@@ -497,6 +533,8 @@ private:
     *
     * @param parent_pos Position of the parent in the group.
     * @param ic Index of the child.  (Zero coresponds to the first child.)
+    *
+    * @pre parent_pos >= 0 && parent_pos < d_group_size
     */
    int
    toChildPosition(
@@ -508,6 +546,8 @@ private:
     * of a given position (whether or not that child really exists).
     *
     * Same as toChildPosition( parent_pos, 0 );
+    *
+    * @pre parent_pos >= 0 && parent_pos < d_group_size
     */
    int
    toOldest(
@@ -517,6 +557,8 @@ private:
     * of a given position (whether or not that child really exists).
     *
     * Same as toChildPosition( parent_pos, d_nchild-1 );
+    *
+    * @pre parent_pos >= 0 && parent_pos < d_group_size
     */
    int
    toYoungest(

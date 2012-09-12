@@ -107,6 +107,8 @@ public:
 
    /**
     * Return the specified component (non-const) of the lower index of the box.
+    *
+    * @pre i >+ 0 && i < d_data.d_dimension
     */
    int&
    lower(
@@ -118,6 +120,8 @@ public:
 
    /**
     * Return the specified component (non-const) of the upper index of the box.
+    *
+    * @pre i >+ 0 && i < d_data.d_dimension
     */
    int&
    upper(
@@ -129,6 +133,8 @@ public:
 
    /**
     * Return the specified component (const) of the lower index of the box.
+    *
+    * @pre i >+ 0 && i < d_data.d_dimension
     */
    int
    lower(
@@ -140,6 +146,8 @@ public:
 
    /**
     * Return the specified component (const) of the upper index of the box.
+    *
+    * @pre i >+ 0 && i < d_data.d_dimension
     */
    int
    upper(

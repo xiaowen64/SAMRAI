@@ -52,13 +52,17 @@ public:
     * specified name.  By default the database will not be associated
     * with a file until it is mounted, using the mount() member function.
     *
-    * When assertion checking is active, the name string must be non-empty.
+    * @pre !name.empty
     */
    explicit SiloDatabase(
       const std::string& name);
 
    /**
     * Constructor used to create sub-databases.
+    *
+    * @pre !name.empty()
+    * @pre file != NULL
+    * @pre !directory.empty()
     */
    SiloDatabase(
       const std::string& name,
@@ -75,7 +79,7 @@ public:
     * Return true if the specified key exists in the database
     * and false otherwise.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
     */
    virtual bool
    keyExists(
@@ -86,6 +90,8 @@ public:
     * no keys from subdatabases contained in the current database
     * will appear in the array.  To get the keys of any other
     * database, you must call this routine for that database.
+    *
+    * @pre !d_directory.empty()
     */
    virtual Array<std::string>
    getAllKeys();
@@ -96,6 +102,8 @@ public:
     * If the key does not exist, then INVALID is returned
     *
     * @param key Key name in database.
+    *
+    * @pre !key.empty()
     */
    virtual enum DataType
    getArrayType(
@@ -105,7 +113,7 @@ public:
     * Return the size of the array associated with the key.  If the key
     * does not exist, then zero is returned.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
     */
    virtual int
    getArraySize(
@@ -113,8 +121,10 @@ public:
 
    /**
     * Return true or false depending on whether the specified key
-    * represents a database entry.  If the key does not exist or if
-    * the string is empty, then false is returned.
+    * represents a database entry.  If the key does not exist, then
+    * false is returned.
+    *
+    * @pre !key.empty()
     */
    virtual bool
    isDatabase(
@@ -125,7 +135,7 @@ public:
     * pointer to it.  A new group with the key name is also created
     * in the data file.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
     */
    virtual boost::shared_ptr<Database>
    putDatabase(
@@ -136,7 +146,8 @@ public:
     * key does not represent a database entry in the database, then
     * an error message is printed and the program exits.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
+    * @pre isDatabase(key)
     */
    virtual boost::shared_ptr<Database>
    getDatabase(
@@ -144,8 +155,10 @@ public:
 
    /**
     * Return true or false depending on whether the specified key
-    * represents a boolean entry.  If the key does not exist or if
-    * the string is empty, then false is returned.
+    * represents a boolean entry.  If the key does not exist, then
+    * false is returned.
+    *
+    * @pre !key.empty()
     */
    virtual bool
    isBool(
@@ -155,7 +168,8 @@ public:
     * Create a boolean array entry in the database with the specified
     * key name.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
+    * @pre data != NULL
     */
    virtual void
    putBoolArray(
@@ -170,6 +184,9 @@ public:
     * the program exits.
     *
     * @param key Key name in database.
+    *
+    * @pre !key.empty()
+    * @pre isBool(key)
     */
    virtual Array<bool>
    getBoolArray(
@@ -177,8 +194,10 @@ public:
 
    /**
     * Return true or false depending on whether the specified key
-    * represents a box entry.  If the key does not exist or if
-    * the string is empty, then false is returned.
+    * represents a box entry.  If the key does not exist, then false
+    * is returned.
+    *
+    * @pre !key.empty()
     */
    virtual bool
    isDatabaseBox(
@@ -188,7 +207,8 @@ public:
     * Create a box array entry in the database with the specified
     * key name.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
+    * @pre data != NULL
     */
    virtual void
    putDatabaseBoxArray(
@@ -201,7 +221,7 @@ public:
     * name.  If the specified key does not exist in the database,
     * then an error message is printed and the program exits.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
     */
    virtual Array<DatabaseBox>
    getDatabaseBoxArray(
@@ -209,8 +229,10 @@ public:
 
    /**
     * Return true or false depending on whether the specified key
-    * represents a char entry.  If the key does not exist or if
-    * the string is empty, then false is returned.
+    * represents a char entry.  If the key does not exist, then
+    * false is returned.
+    *
+    * @pre !key.empty()
     */
    virtual bool
    isChar(
@@ -220,7 +242,8 @@ public:
     * Create a character array entry in the database with the specified
     * key name.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
+    * @pre data != NULL
     */
    virtual void
    putCharArray(
@@ -233,7 +256,8 @@ public:
     * name.  If the specified key does not exist in the database,
     * then an error message is printed and the program exits.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
+    * @pre isChar(key)
     */
    virtual Array<char>
    getCharArray(
@@ -241,8 +265,10 @@ public:
 
    /**
     * Return true or false depending on whether the specified key
-    * represents a complex entry.  If the key does not exist or if
-    * the string is empty, then false is returned.
+    * represents a complex entry.  If the key does not exist, then
+    * false is returned.
+    *
+    * @pre !key.empty()
     */
    virtual bool
    isComplex(
@@ -252,7 +278,8 @@ public:
     * Create a complex array entry in the database with the specified
     * key name.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
+    * @pre data != NULL
     */
    virtual void
    putComplexArray(
@@ -265,7 +292,8 @@ public:
     * name.  If the specified key does not exist in the database
     * then an error message is printed and the program exits.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
+    * @pre isComplex(key)
     */
    virtual Array<dcomplex>
    getComplexArray(
@@ -273,8 +301,10 @@ public:
 
    /**
     * Return true or false depending on whether the specified key
-    * represents a double entry.  If the key does not exist or if
-    * the string is empty, then false is returned.
+    * represents a double entry.  If the key does not exist, then
+    * false is returned.
+    *
+    * @pre !key.empty()
     */
    virtual bool
    isDouble(
@@ -284,7 +314,8 @@ public:
     * Create a double array entry in the database with the specified
     * key name.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
+    * @pre data != NULL
     */
    virtual void
    putDoubleArray(
@@ -297,7 +328,8 @@ public:
     * name.  If the specified key does not exist in the database
     * then an error message is printed and the program exits.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
+    * @pre isDouble(key)
     */
    virtual Array<double>
    getDoubleArray(
@@ -305,8 +337,10 @@ public:
 
    /**
     * Return true or false depending on whether the specified key
-    * represents a float entry.  If the key does not exist or if
-    * the string is empty, then false is returned.
+    * represents a float entry.  If the key does not exist, then
+    * false is returned.
+    *
+    * @pre !key.empty()
     */
    virtual bool
    isFloat(
@@ -316,7 +350,8 @@ public:
     * Create a float array entry in the database with the specified
     * key name.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
+    * @pre data != NULL
     */
    virtual void
    putFloatArray(
@@ -329,7 +364,8 @@ public:
     * name.  If the specified key does not exist in the database
     * then an error message is printed and the program exits.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
+    * @pre isFloat(key)
     */
    virtual Array<float>
    getFloatArray(
@@ -337,8 +373,10 @@ public:
 
    /**
     * Return true or false depending on whether the specified key
-    * represents an integer entry.  If the key does not exist or if
-    * the string is empty, then false is returned.
+    * represents an integer entry.  If the key does not exist, then
+    * false is returned.
+    *
+    * @pre !key.empty()
     */
    virtual bool
    isInteger(
@@ -348,7 +386,8 @@ public:
     * Create an integer array entry in the database with the specified
     * key name.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
+    * @pre data != NULL
     */
    virtual void
    putIntegerArray(
@@ -361,7 +400,8 @@ public:
     * name.  If the specified key does not exist in the database
     * then an error message is printed and the program exits.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
+    * @pre isInteger(key)
     */
    virtual Array<int>
    getIntegerArray(
@@ -369,8 +409,10 @@ public:
 
    /**
     * Return true or false depending on whether the specified key
-    * represents a string entry.  If the key does not exist or if
-    * the string is empty, then false is returned.
+    * represents a string entry.  If the key does not exist, then
+    * false is returned.
+    *
+    * @pre !key.empty()
     */
    virtual bool
    isString(
@@ -380,7 +422,8 @@ public:
     * Create a string array entry in the database with the specified
     * key name.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
+    * @pre data != NULL
     */
    virtual void
    putStringArray(
@@ -393,7 +436,8 @@ public:
     * name.  If the specified key does not exist in the database
     * then an error message is printed and the program exits.
     *
-    * When assertion checking is active, the key string must be non-empty.
+    * @pre !key.empty()
+    * @pre isString(key)
     */
    virtual Array<std::string>
    getStringArray(
@@ -402,8 +446,9 @@ public:
    /**
     * @brief Returns the name of this database.
     *
-    * The name for the root of the database is the name supplied when creating it.
-    * Names for nested databases are the keyname of the database.
+    * The name for the root of the database is the name supplied
+    * when creating it.  Names for nested databases are the keyname
+    * of the database.
     *
     */
    virtual std::string
@@ -426,6 +471,9 @@ public:
     * Returns true if successful.
     *
     * @param name name of database. Normally a filename.
+    *
+    * @pre !name.empty()
+    * @post d_file != NULL
     */
    virtual bool
    create(
@@ -441,6 +489,9 @@ public:
     * @param read_write_mode Open the database in read-write
     * mode instead of read-only mode.  NOTE: This class currently
     * does not support read-only mode, so this flag must be true.
+    *
+    * @pre !name.empty()
+    * @post d_file != NULL
     */
    virtual bool
    open(
@@ -458,6 +509,8 @@ public:
     * the Silo file.
     *
     * Returns true if attach was successful.
+    *
+    * @pre file != NULL
     */
    virtual bool
    attachToFile(
@@ -526,18 +579,18 @@ private:
       const std::string& key);
 
    /*!
-    * @brief Convert/mangle SAMRAI name into characters acceptable to SILO naming conventions.
-    *
-    * SILO only supports alphanumeric and "_" as valid characters in names.  Other characters
-    * are allowed by SAMRAI (such as " " and "-") so they are converted to a mangled
-    * representation for SILO.
+    * @brief Convert/mangle SAMRAI name into characters acceptable to SILO
+    * naming conventions.  SILO only supports alphanumeric and "_" as valid
+    * characters in names.  Other characters are allowed by SAMRAI (such as
+    * " " and "-") so they are converted to a mangled representation for SILO.
     */
    std::string
    nameMangle(
       std::string name);
 
    /*!
-    * @brief Convert/unmangle SILO name with possible mangled characters back to SAMRAI name.
+    * @brief Convert/unmangle SILO name with possible mangled characters back
+    * to SAMRAI name.
     */
    std::string
    nameDemangle(

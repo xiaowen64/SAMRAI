@@ -77,6 +77,8 @@ public:
 
    /*!
     * @brief Destructor.
+    *
+    * @pre isDone()
     */
    virtual ~AsyncCommPeer();
 
@@ -87,6 +89,8 @@ public:
     *
     * @param stage The stage handling communicaiton requests for the object.
     * @param handler Optional pointer to user-defined data.
+    *
+    * @pre isDone()
     */
    void
    initialize(
@@ -103,6 +107,8 @@ public:
     * a complementary call using this processor as its peer.
     * If this assumption is wrong, there will likely be
     * communication errors.
+    *
+    * @pre isDone()
     */
    void
    setPeerRank(
@@ -153,6 +159,8 @@ public:
     * select the correct messages.  Please specify appropriate values
     * for the MPI communicator and tag.  Very elusive bugs can occur
     * if incorrect messages are received.
+    *
+    * @pre isDone()
     */
    void
    setMPITag(
@@ -169,6 +177,8 @@ public:
     * if incorrect messages are received.  To be safe, it is best
     * to create a new communicator to avoid interference with other
     * communications within SAMRAI.
+    *
+    * @pre isDone()
     */
    void
    setMPI(
@@ -189,6 +199,8 @@ public:
     * safe to deallocate or modify @c buffer.
     *
     * @return Whether operation is completed.
+    *
+    * @pre d_next_task_op == none
     */
    bool
    beginSend(
@@ -202,6 +214,8 @@ public:
     * If no communication is in progress, this call does nothing.
     *
     * @return Whether operation is completed.
+    *
+    * @pre d_next_task_op == send
     */
    bool
    checkSend();
@@ -227,6 +241,8 @@ public:
     * need to copy from the internal to an external buffer.  But it
     * requires some thought about size checking, especially with
     * regards to how to use the limit on the first message size.
+    *
+    * @pre d_next_task_op == none
     */
    bool
    beginRecv();
@@ -236,18 +252,24 @@ public:
     * receive if the MPI request has been fulfilled.
     *
     * @return Whether operation is completed.
+    *
+    * @pre d_next_task_op == recv
     */
    bool
    checkRecv();
 
    /*!
     * @brief Return the size of received data.
+    *
+    * @pre d_base_op == recv
     */
    int
    getRecvSize() const;
 
    /*!
     * @brief Get access to the received data.
+    *
+    * @pre d_base_op == recv
     */
    const TYPE *
    getRecvData() const;
@@ -261,6 +283,8 @@ public:
     *
     * It is an error to clear the receive buffer in the middle of a
     * communication operation.
+    *
+    * @pre d_base_op == none
     */
    void
    clearRecvData();
@@ -305,7 +329,8 @@ public:
     *
     * @param [in] send_timer
     */
-   void setSendTimer(
+   void
+   setSendTimer(
       const boost::shared_ptr<Timer> &send_timer );
 
    /*!
@@ -317,7 +342,8 @@ public:
     *
     * @param [in] recv_timer
     */
-   void setRecvTimer(
+   void
+   setRecvTimer(
       const boost::shared_ptr<Timer> &recv_timer );
 
    /*!
@@ -333,7 +359,8 @@ public:
     *
     * @param [in] wait_timer
     */
-   void setWaitTimer(
+   void
+   setWaitTimer(
       const boost::shared_ptr<Timer> &wait_timer );
 
    //@}
@@ -358,6 +385,11 @@ private:
 
    /*
     * @brief Assert that user-set MPI parameters are valid.
+    *
+    * @pre d_tag0 >= 0 && d_tag1 >= 0
+    * @pre d_mpi.getCommunicator() != SAMRAI_MPI::commNull
+    * @pre d_peer_rank >= 0
+    * @pre d_peer_rank != d_mpi.getRank() || SAMRAI_MPI::usingMPI()
     */
    void
    checkMPIParams();

@@ -148,6 +148,10 @@ public:
     * Non-const array subscripting.  Return a reference the object at array
     * index ``i'' (between 0 and N-1, where N is the number of elements in
     * the array.
+    *
+    * @param i Array index of item whose reference is to be returned.
+    *
+    * @pre i >= 0 && i < d_elements
     */
    TYPE&
    operator [] (
@@ -157,6 +161,10 @@ public:
     * Const array subscripting.  Return a const reference to the object
     * at array index ``i'' (between 0 and N-1, where N is the number of
     * elements in the array.
+    *
+    * @param i Array index of item whose reference is to be returned.
+    *
+    * @pre i >= 0 && i < d_elements
     */
    const TYPE&
    operator [] (
@@ -197,6 +205,10 @@ public:
    /**
     * Return a non-const pointer to the i-th object.  The index must be
     * between 0 and N-1, where N is the number of elements in the array.
+    *
+    * @param i Array index of item whose reference is to be returned.
+    *
+    * @pre i >= 0 && i < d_elements
     */
    TYPE *
    getPointer(
@@ -205,6 +217,10 @@ public:
    /**
     * Return a const pointer to the i-th object.  The index must be
     * between 0 and N-1, where N is the number of elements in the array.
+    *
+    * @param i Array index of item whose reference is to be returned.
+    *
+    * @pre i >= 0 && i < d_elements
     */
    const TYPE *
    getPointer(
@@ -248,9 +264,9 @@ public:
       const TYPE& value);
 
    /**
-    *
     * Returns a reference to the last element in the array container.
     *
+    * @pre d_elements > 0
     */
    const TYPE&
    back();
@@ -259,6 +275,9 @@ public:
     *
     * Removes from the array container a single element at position.
     *
+    * @param position Array index of element to be removed.
+    *
+    * @pre position >= 0 && position < d_elements
     */
    void
    erase(

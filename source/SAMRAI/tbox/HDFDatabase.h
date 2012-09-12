@@ -58,12 +58,16 @@ public:
     *
     * When assertion checking is active, the name string must be non-empty.
     * The name string is *NOT* the name of the HDF file.
+    *
+    * @pre !name.empty()
     */
    explicit HDFDatabase(
       const std::string& name);
 
    /**
     * Constructor used to create sub-databases.
+    *
+    * @pre !name.empty()
     */
    HDFDatabase(
       const std::string& name,
@@ -79,6 +83,8 @@ public:
     * and false otherwise.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
     */
    virtual bool
    keyExists(
@@ -109,6 +115,8 @@ public:
     * does not exist, then zero is returned.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
     */
    virtual int
    getArraySize(
@@ -118,6 +126,8 @@ public:
     * Return true or false depending on whether the specified key
     * represents a database entry.  If the key does not exist or if
     * the string is empty, then false is returned.
+    *
+    * @pre !key.empty()
     */
    virtual bool
    isDatabase(
@@ -129,6 +139,8 @@ public:
     * in the data file.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
     */
    virtual boost::shared_ptr<Database>
    putDatabase(
@@ -140,6 +152,9 @@ public:
     * an error message is printed and the program exits.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
+    * @pre isDatabase(key)
     */
    virtual boost::shared_ptr<Database>
    getDatabase(
@@ -159,6 +174,9 @@ public:
     * key name.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
+    * @pre data != NULL
     */
    virtual void
    putBoolArray(
@@ -179,6 +197,9 @@ public:
     * then an error message is printed and the program exits.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
+    * @pre isBool(key)
     */
    virtual Array<bool>
    getBoolArray(
@@ -198,6 +219,9 @@ public:
     * key name.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
+    * @pre data != NULL
     */
    virtual void
    putDatabaseBoxArray(
@@ -211,6 +235,9 @@ public:
     * then an error message is printed and the program exits.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
+    * @pre isDatabaseBox(key)
     */
    virtual Array<DatabaseBox>
    getDatabaseBoxArray(
@@ -230,6 +257,9 @@ public:
     * key name.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
+    * @pre data != NULL
     */
    virtual void
    putCharArray(
@@ -243,6 +273,9 @@ public:
     * then an error message is printed and the program exits.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
+    * @pre isChar(key)
     */
    virtual Array<char>
    getCharArray(
@@ -262,6 +295,9 @@ public:
     * key name.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
+    * @pre data != NULL
     */
    virtual void
    putComplexArray(
@@ -275,6 +311,9 @@ public:
     * then an error message is printed and the program exits.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
+    * @pre isComplex(key)
     */
    virtual Array<dcomplex>
    getComplexArray(
@@ -294,6 +333,9 @@ public:
     * key name.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
+    * @pre data != NULL
     */
    virtual void
    putDoubleArray(
@@ -307,6 +349,9 @@ public:
     * then an error message is printed and the program exits.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
+    * @pre isDouble(key)
     */
    virtual Array<double>
    getDoubleArray(
@@ -326,6 +371,9 @@ public:
     * key name.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
+    * @pre data != NULL
     */
    virtual void
    putFloatArray(
@@ -339,6 +387,9 @@ public:
     * then an error message is printed and the program exits.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
+    * @pre isFloat(key)
     */
    virtual Array<float>
    getFloatArray(
@@ -358,6 +409,9 @@ public:
     * key name.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
+    * @pre data != NULL
     */
    virtual void
    putIntegerArray(
@@ -371,6 +425,9 @@ public:
     * then an error message is printed and the program exits.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
+    * @pre isInteger(key)
     */
    virtual Array<int>
    getIntegerArray(
@@ -390,6 +447,9 @@ public:
     * key name.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
+    * @pre data != NULL
     */
    virtual void
    putStringArray(
@@ -403,6 +463,9 @@ public:
     * then an error message is printed and the program exits.
     *
     * When assertion checking is active, the key string must be non-empty.
+    *
+    * @pre !key.empty()
+    * @pre isString(key)
     */
    virtual Array<std::string>
    getStringArray(
@@ -425,6 +488,8 @@ public:
     * Returns true if successful.
     *
     * @param name name of database. Normally a filename.
+    *
+    * @pre !name.empty()
     */
    virtual bool
    create(
@@ -439,6 +504,8 @@ public:
     *
     * @param read_write_mode Open the database in read-write
     * mode instead of read-only mode.
+    *
+    * @pre !name.empty()
     */
    virtual bool
    open(
@@ -456,6 +523,8 @@ public:
     * SAMRAI data will be written within this group.
     *
     * Returns true if attach was successful.
+    *
+    * @pre group_id > 0
     */
    virtual bool
    attachToFile(
@@ -558,6 +627,8 @@ private:
     * @internal We currently create a new compound type every
     * time we write a compound.  It would be more efficient to
     * cache the type id for the file.
+    *
+    * @pre type_spec == 'n' || type_spec == 's'
     */
    hid_t
    createCompoundDatabaseBox(

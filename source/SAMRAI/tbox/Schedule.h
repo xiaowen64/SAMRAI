@@ -64,6 +64,8 @@ public:
     *
     * Note that the schedule can not be deleted during a communication
     * phase; this will result in an assertion being thrown.
+    *
+    * @pre d_coms == NULL
     */
    ~Schedule();
 
@@ -145,6 +147,9 @@ public:
     * isolated from other communications, you can specify distinct
     * tags to avoid message mix-ups.  Up to two messages are sent from
     * each communicating pairs.  Specify two distinct tags.
+    *
+    * @pre first_tag >= 0
+    * @pre second_tag >= 0
     */
    void
    setMPITag(
@@ -188,6 +193,8 @@ public:
     * first_message_length defaults to 1000.
     *
     * @param first_message_length length (in bytes) of first message
+    *
+    * @pre first_message_length > 0
     */
    void
    setFirstMessageLength(
