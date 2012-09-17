@@ -134,8 +134,6 @@ public:
 
    /*!
     * Return the size of the subset of ranks represented by this RankGroup.
-    *
-    * @pre d_storage != INVALID_STORAGE
     */
    int
    size() const;
@@ -144,8 +142,6 @@ public:
     * Given an integer identifier from the set [0,N-1], N being the size of
     * the RankGroup, return a unique rank from the RankGroup according to
     * a 1-to-1 mapping.
-    *
-    * @pre d_storage != INVALID_STORAGE
     */
    int
    getMappedRank(
@@ -158,7 +154,6 @@ public:
     * mapping.
     *
     * @pre rank >= 0
-    * @pre d_storage != INVALID_STORAGE
     */
    int
    getMapIndex(
@@ -167,8 +162,7 @@ public:
 private:
    enum StorageType { USING_ALL,
                       USING_ARRAY,
-                      USING_MIN_MAX,
-                      INVALID_STORAGE };
+                      USING_MIN_MAX };
 
    int d_min;
    int d_max;
