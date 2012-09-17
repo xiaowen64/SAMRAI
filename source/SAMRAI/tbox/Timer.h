@@ -80,7 +80,7 @@ public:
    /**
     * Start the timer if active.
     *
-    * @pre !d_active || !d_is_running
+    * @pre !isActive() || !isRunning()
     */
    void
    start();
@@ -88,7 +88,7 @@ public:
    /**
     * Stop the timer if active.
     *
-    * @pre !d_active || d_is_running
+    * @pre !isActive() || isRunning()
     */
    void
    stop();
