@@ -151,7 +151,7 @@ public:
     *
     * @param i Array index of item whose reference is to be returned.
     *
-    * @pre i >= 0 && i < d_elements
+    * @pre (i >= 0) && (i < size())
     */
    TYPE&
    operator [] (
@@ -164,7 +164,7 @@ public:
     *
     * @param i Array index of item whose reference is to be returned.
     *
-    * @pre i >= 0 && i < d_elements
+    * @pre (i >= 0) && (i < size())
     */
    const TYPE&
    operator [] (
@@ -208,7 +208,7 @@ public:
     *
     * @param i Array index of item whose reference is to be returned.
     *
-    * @pre i >= 0 && i < d_elements
+    * @pre (i >= 0) && (i < size())
     */
    TYPE *
    getPointer(
@@ -220,7 +220,7 @@ public:
     *
     * @param i Array index of item whose reference is to be returned.
     *
-    * @pre i >= 0 && i < d_elements
+    * @pre (i >= 0) && (i < size())
     */
    const TYPE *
    getPointer(
@@ -266,7 +266,7 @@ public:
    /**
     * Returns a reference to the last element in the array container.
     *
-    * @pre d_elements > 0
+    * @pre size() > 0
     */
    const TYPE&
    back();
@@ -277,7 +277,7 @@ public:
     *
     * @param position Array index of element to be removed.
     *
-    * @pre position >= 0 && position < d_elements
+    * @pre (position >= 0) && (position < size())
     */
    void
    erase(

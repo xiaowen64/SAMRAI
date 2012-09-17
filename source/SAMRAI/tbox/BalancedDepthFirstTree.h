@@ -94,7 +94,7 @@ public:
     *
     * @param do_left_leaf_switch
     *
-    * @pre first_rank <= rank && rank <= last_rank
+    * @pre (first_rank <= rank) && (rank <= last_rank)
     */
    void
    initialize(

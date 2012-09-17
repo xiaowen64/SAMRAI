@@ -628,7 +628,7 @@ private:
     * time we write a compound.  It would be more efficient to
     * cache the type id for the file.
     *
-    * @pre type_spec == 'n' || type_spec == 's'
+    * @pre (type_spec == 'n') || (type_spec == 's')
     */
    hid_t
    createCompoundDatabaseBox(

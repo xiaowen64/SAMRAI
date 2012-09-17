@@ -108,52 +108,52 @@ public:
    /**
     * Return the specified component (non-const) of the lower index of the box.
     *
-    * @pre i >+ 0 && i < d_data.d_dimension
+    * @pre (i >= 0) && (i < getDimVal())
     */
    int&
    lower(
       const int i)
    {
-      TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
+      TBOX_ASSERT((i >= 0) && (i < getDimVal()));
       return d_data.d_lo[i];
    }
 
    /**
     * Return the specified component (non-const) of the upper index of the box.
     *
-    * @pre i >+ 0 && i < d_data.d_dimension
+    * @pre (i >= 0) && (i < getDimVal())
     */
    int&
    upper(
       const int i)
    {
-      TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
+      TBOX_ASSERT((i >= 0) && (i < getDimVal()));
       return d_data.d_hi[i];
    }
 
    /**
     * Return the specified component (const) of the lower index of the box.
     *
-    * @pre i >+ 0 && i < d_data.d_dimension
+    * @pre (i >= 0) && (i < getDimVal())
     */
    int
    lower(
       const int i) const
    {
-      TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
+      TBOX_ASSERT((i >= 0) && (i < getDimVal()));
       return d_data.d_lo[i];
    }
 
    /**
     * Return the specified component (const) of the upper index of the box.
     *
-    * @pre i >+ 0 && i < d_data.d_dimension
+    * @pre (i >= 0) && (i < getDimVal())
     */
    int
    upper(
       const int i) const
    {
-      TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
+      TBOX_ASSERT((i >= 0) && (i < getDimVal()));
       return d_data.d_hi[i];
    }
 

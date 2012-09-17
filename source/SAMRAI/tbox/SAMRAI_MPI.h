@@ -566,7 +566,7 @@ public:
     * @param[out] ranks_of_extrema  Ranks associated with min or max of x
     *                               (if op indicates min or max operation).
     *
-    * @pre (op != MPI_MINLOC && op != MPI_MAXLOC) || ranks_of_extrema != NULL
+    * @pre (op != MPI_MINLOC && op != MPI_MAXLOC) || (ranks_of_extrema != NULL)
     * @pre s_mpi_is_initialized
     */
    int
@@ -589,7 +589,7 @@ public:
     * @param[out] ranks_of_extrema  Ranks associated with min or max of x
     *                               (if op indicates min or max operation).
     *
-    * @pre (op != MPI_MINLOC && op != MPI_MAXLOC) || ranks_of_extrema != NULL
+    * @pre (op != MPI_MINLOC && op != MPI_MAXLOC) || (ranks_of_extrema != NULL)
     * @pre s_mpi_is_initialized
     */
    int
@@ -612,7 +612,7 @@ public:
     * @param[out] ranks_of_extrema  Ranks associated with min or max of x
     *                               (if op indicates min or max operation).
     *
-    * @pre (op != MPI_MINLOC && op != MPI_MAXLOC) || ranks_of_extrema != NULL
+    * @pre (op != MPI_MINLOC && op != MPI_MAXLOC) || (ranks_of_extrema != NULL)
     * @pre s_mpi_is_initialized
     */
    int

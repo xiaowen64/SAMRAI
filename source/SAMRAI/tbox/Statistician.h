@@ -109,7 +109,7 @@ public:
     *
     * @pre !name.empty()
     * @pre !stat_type.empty()
-    * @pre stat_type == "PROC_STAT" || stat_type == "PATCH_STAT"
+    * @pre (stat_type == "PROC_STAT") || (stat_type == "PATCH_STAT")
     */
    boost::shared_ptr<Statistic>
    getStatistic(
@@ -187,7 +187,7 @@ public:
     * provided to map the statistic string name to the proper integer
     * identifier.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_state &&
     *       (proc_stat_id >= 0 && proc_stat_id < d_global_proc_stat_data.getSize()))
     */
@@ -203,10 +203,12 @@ public:
     * getGlobalProcStatSequenceLength() provides the sequence length for
     * a given processor statistic.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_state &&
-    *       (proc_stat_id >= 0 && proc_stat_id < d_global_proc_stat_data.getSize()) &&
-    *       (seq_num >= 0 && seq_num < d_global_proc_stat_data[proc_stat_id].getSize()) &&
+    *       (proc_stat_id >= 0) &&
+    *       (proc_stat_id < d_global_proc_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_proc_stat_data[proc_stat_id].getSize()) &&
     *       (proc_num < SAMRAI_MPI::getSAMRAIWorld().getSize()))
     */
    double
@@ -223,10 +225,12 @@ public:
     * getGlobalProcStatSequenceLength() returns the maximum sequence length
     * for the processor statistic.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize &&
-    *       (proc_stat_id >= 0 && proc_stat_id < d_global_proc_stat_sum.getSize()) &&
-    *       (seq_num >= 0 && seq_num < d_global_proc_stat_sum[proc_stat_id].getSize()))
+    *       (proc_stat_id >= 0) &&
+    *       (proc_stat_id < d_global_proc_stat_sum.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_proc_stat_sum[proc_stat_id].getSize()))
     */
    double
    getGlobalProcStatSum(
@@ -241,10 +245,12 @@ public:
     * getGlobalProcStatSequenceLength() returns the maximum sequence length
     * for the processor statistic.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize &&
-    *       (proc_stat_id >= 0 && proc_stat_id < d_global_proc_stat_max.getSize()) &&
-    *       (seq_num >= 0 && seq_num < d_global_proc_stat_max[proc_stat_id].getSize()))
+    *       (proc_stat_id >= 0) &&
+    *       (proc_stat_id < d_global_proc_stat_max.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_proc_stat_max[proc_stat_id].getSize()))
     */
    double
    getGlobalProcStatMax(
@@ -256,10 +262,12 @@ public:
     * statistic specified by the given integer identifyer and sequence
     * number.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize &&
-    *       (proc_stat_id >= 0 && proc_stat_id < d_global_proc_stat_imax.getSize()) &&
-    *       (seq_num >= 0 && seq_num < d_global_proc_stat_imax[proc_stat_id].getSize()))
+    *       (proc_stat_id >= 0) &&
+    *       (proc_stat_id < d_global_proc_stat_imax.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_proc_stat_imax[proc_stat_id].getSize()))
     */
    int
    getGlobalProcStatMaxProcessorId(
@@ -274,10 +282,12 @@ public:
     * getGlobalProcStatSequenceLength() returns the maximum sequence length
     * for the processor statistic.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize &&
-    *       (proc_stat_id >= 0 && proc_stat_id < d_global_proc_stat_min.getSize()) &&
-    *       (seq_num >= 0 && seq_num < d_global_proc_stat_min[proc_stat_id].getSize()))
+    *       (proc_stat_id >= 0) &&
+    *       (proc_stat_id < d_global_proc_stat_min.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_proc_stat_min[proc_stat_id].getSize()))
     */
    double
    getGlobalProcStatMin(
@@ -289,10 +299,12 @@ public:
     * statistic specified by the given integer identifyer and sequence
     * number.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize &&
-    *       (proc_stat_id >= 0 && proc_stat_id < d_global_proc_stat_imin.getSize()) &&
-    *       (seq_num >= 0 && seq_num < d_global_proc_stat_imin[proc_stat_id].getSize()))
+    *       (proc_stat_id >= 0) &&
+    *       (proc_stat_id < d_global_proc_stat_imin.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_proc_stat_imin[proc_stat_id].getSize()))
     */
    int
    getGlobalProcStatMinProcessorId(
@@ -306,9 +318,9 @@ public:
     * the data but does NOT generate it in tabulated form.  To generate
     * tabulated data, see the printGlobalProcStatDataFormatted() method.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-            proc_stat_id >= 0 && precision > 0)
+    *       (proc_stat_id >= 0) && (precision > 0))
     */
    void
    printGlobalProcStatData(
@@ -320,9 +332,9 @@ public:
     * Print processor stat data in formatted output to given output
     * stream.  Floating point precision may be specified (default is 12).
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-            proc_stat_id >= 0 && precision > 0)
+    *       (proc_stat_id >= 0) && (precision > 0))
     */
    void
    printGlobalProcStatDataFormatted(
@@ -335,9 +347,9 @@ public:
     * given output stream.  Floating point precision may be specified
     * (default is 12).
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-            proc_stat_id >= 0 && proc_id >= 0 && precision > 0)
+    *       (proc_stat_id >= 0) && (proc_id >= 0) && (precision > 0))
     */
    void
    printGlobalProcStatDataFormatted(
@@ -362,10 +374,10 @@ public:
     * is provided to map the statistic string name to the proper integer
     * identifier.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_data.getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()))
     */
    int
    getGlobalPatchStatSequenceLength(
@@ -379,12 +391,12 @@ public:
     * getGlobalPatchStatSequenceLength() provides the sequence length for
     * a given patch statistic.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_data.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_data[patch_stat_id].getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatNumberPatches(
@@ -401,14 +413,14 @@ public:
     * getGlobalPatchStatNumberPatches() gives the number of patches
     * associated with a patch statistic and sequence number.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_mapping.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_mapping[patch_stat_id].getSize() &&
-    *       patch_num >= 0 &&
-    *       patch_num < d_global_patch_stat_mapping[patch_stat_id][seq_num].getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_mapping.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_mapping[patch_stat_id].getSize()) &&
+    *       (patch_num >= 0) &&
+    *       (patch_num < d_global_patch_stat_mapping[patch_stat_id][seq_num].getSize()))
     */
    int
    getGlobalPatchStatPatchMapping(
@@ -426,14 +438,14 @@ public:
     * getGlobalPatchStatNumberPatches() gives the number of patches
     * associated with a patch statistic and sequence number.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_data.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_data[patch_stat_id].getSize() &&
-    *       patch_num >= 0 &&
-    *       patch_num < d_global_patch_stat_data[patch_stat_id][seq_num].getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()) &&
+    *       (patch_num >= 0) &&
+    *       (patch_num < d_global_patch_stat_data[patch_stat_id][seq_num].getSize()))
     */
    double
    getGlobalPatchStatValue(
@@ -449,12 +461,12 @@ public:
     * getGlobalPatchStatSequenceLength() returns the maximum sequence length
     * for the processor statistic.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_data.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_data[patch_stat_id].getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
     */
    double
    getGlobalPatchStatSum(
@@ -469,12 +481,12 @@ public:
     * getGlobalPatchStatSequenceLength() returns the maximum sequence length
     * for the processor statistic.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_data.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_data[patch_stat_id].getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
     */
    double
    getGlobalPatchStatMax(
@@ -486,12 +498,12 @@ public:
     * statistic specified by the given integer identifyer and sequence
     * number.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_data.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_data[patch_stat_id].getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatMaxPatchId(
@@ -506,12 +518,12 @@ public:
     * getGlobalPatchStatSequenceLength() returns the maximum sequence length
     * for the processor statistic.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_data.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_data[patch_stat_id].getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
     */
    double
    getGlobalPatchStatMin(
@@ -523,12 +535,12 @@ public:
     * statistic specified by the given integer identifyer and sequence
     * number.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_data.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_data[patch_stat_id].getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatMinPatchId(
@@ -540,14 +552,14 @@ public:
     * processor.  The patch statistic is specified by its integer identifyer
     * and sequence number.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_proc_data.getSize() &&
-    *       processor_id >= 0 &&
-    *       processor_id < SAMRAI_MPI::getSAMRAIWorld().getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (processor_id >= 0) &&
+    *       (processor_id < SAMRAI_MPI::getSAMRAIWorld().getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
     */
    double
    getGlobalPatchStatProcessorSum(
@@ -563,12 +575,12 @@ public:
     * statistic is specified by its integer identifyer and sequence
     * number.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_proc_data.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
     */
    double
    getGlobalPatchStatProcessorSumMax(
@@ -582,12 +594,12 @@ public:
     * for more information on the summed patch statistic information
     * on processors.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_proc_data.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatProcessorSumMaxId(
@@ -601,12 +613,12 @@ public:
     * statistic is specified by its integer identifyer and sequence
     * number.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_proc_data.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
     */
    double
    getGlobalPatchStatProcessorSumMin(
@@ -620,12 +632,12 @@ public:
     * for more information on the summed patch statistic information
     * on processors.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_proc_data.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatProcessorSumMinId(
@@ -636,13 +648,13 @@ public:
     * Return number of patches on the specified processor number for
     * patch statistic with given identifier, and sequence number.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_data.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_data[patch_stat_id].getSize() &&
-    *       proc_id >= 0 && proc_id < SAMRAI_MPI::getSAMRAIWorld().getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()) &&
+    *       (proc_id >= 0 && proc_id < SAMRAI_MPI::getSAMRAIWorld().getSize()))
     */
    int
    getGlobalPatchStatNumberPatchesOnProc(
@@ -654,12 +666,12 @@ public:
     * Returns the maximum number of patches per processor for the
     * specified patch statistic.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_proc_data.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatMaxPatchesPerProc(
@@ -670,12 +682,12 @@ public:
     * Returns the processor ID holding the maximum number of patches
     * per processor for the specified patch statistic.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_proc_data.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatMaxPatchesPerProcId(
@@ -686,16 +698,16 @@ public:
     * Returns the minimum number of patches per processor for the
     * specified patch statistic.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_proc_data.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize() &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_data.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_data[patch_stat_id].getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()) &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatMinPatchesPerProc(
@@ -706,12 +718,12 @@ public:
     * Returns the processor ID holding the minimum number of patches
     * per processor for the specified patch statistic.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
-    *       patch_stat_id >= 0 &&
-    *       patch_stat_id < d_global_patch_stat_proc_data.getSize() &&
-    *       seq_num >= 0 &&
-    *       seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize())
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatMinPatchesPerProcId(
@@ -724,7 +736,7 @@ public:
     * the data but does NOT generate it in tabulated form.  To generate
     * tabulated data, see the printGlobalPatchStatDataFormatted() method.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (patch_stat_id >= 0 && precision > 0)
     */
    void
@@ -737,7 +749,7 @@ public:
     * Print patch stat data in formatted output to given output
     * stream.  Floating point precision may be specified (default is 12).
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (patch_stat_id >= 0 && precision > 0)
     */
    void
@@ -779,7 +791,7 @@ public:
     * The data will NOT be in tabulated form.  Floating point precision
     * can be specified (default is 12).
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats)
     */
    void
@@ -814,7 +826,7 @@ public:
     * no directory name is supplied, the files will be written to the directory
     * where the application is run.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats)
     */
    void
@@ -829,7 +841,7 @@ public:
     * that is the same across all processors.  This method will only print
     * processor stats. Any patch stats will be ignored.
     *
-    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0 ||
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats)
     */
    void
