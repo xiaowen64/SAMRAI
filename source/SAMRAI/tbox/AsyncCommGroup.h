@@ -71,6 +71,21 @@ namespace tbox {
 class AsyncCommGroup:public AsyncCommStage::Member
 {
 
+private:
+   //! @brief Operations user would want to do.
+   enum BaseOp { undefined,
+                 gather,
+                 bcast,
+                 max_reduce,
+                 min_reduce,
+                 sum_reduce };
+   //! @brief Tasks, executed in order, to complete a base operation.
+   enum TaskOp { recv_start,
+                 recv_check,
+                 send_start,
+                 send_check,
+                 none };
+
 public:
    /*!
     * @brief Default constructor does not set up anything.
@@ -133,7 +148,7 @@ public:
     * The root rank is specified by dereferencing @c group array with
     * @c root_index.
     *
-    * @pre d_next_task_op == none
+    * @pre getNextTaskOp() == none
     */
    void
    setGroupAndRootIndex(
@@ -174,6 +189,51 @@ public:
    void
    setMPITag(
       const int mpi_tag);
+
+   /*!
+    * @brief Returns the MPI tag used for communication within the group.
+    */
+   int
+   getMPITag() const
+   {
+      return d_mpi_tag;
+   }
+
+   /*!
+    * @brief Returns the size of the group.
+    */
+   int
+   getGroupSize() const
+   {
+      return d_group_size;
+   }
+
+   /*!
+    * @brief Returns next task in a current communication operation.
+    */
+   TaskOp
+   getNextTaskOp() const
+   {
+      return d_next_task_op;
+   }
+
+   /*!
+    * @brief Returns operation being performed.
+    */
+   BaseOp
+   getBaseOp() const
+   {
+      return d_base_op;
+   }
+
+   /*!
+    * @brief Rank of parent process in the group.
+    */
+   int
+   getParentRank() const
+   {
+      return d_parent_rank;
+   }
 
    /*!
     * @brief Set whether to use native MPI collective function calls
@@ -236,7 +296,7 @@ public:
     *
     * @return Whether operation is completed.
     *
-    * @pre d_next_task_op == none
+    * @pre getNextTaskOp() == none
     */
    bool
    beginBcast(
@@ -252,8 +312,8 @@ public:
     *
     * @return Whether operation is completed.
     *
-    * @pre d_base_op == bcast
-    * @post d_parent_rank != -1 || d_next_task_op != recv_check
+    * @pre getBaseOp() == bcast
+    * @post (getParentRank() != -1) || (getNextTaskOp() != recv_check)
     */
    bool
    checkBcast();
@@ -283,7 +343,7 @@ public:
     *
     * @return Whether operation is completed.
     *
-    * @pre d_next_task_op == none
+    * @pre getNextTaskOp() == none
     */
    bool
    beginGather(
@@ -296,7 +356,7 @@ public:
     *
     * @return Whether operation is completed.
     *
-    * @pre d_base_op == gather
+    * @pre getBaseOp() == gather
     */
    bool
    checkGather();
@@ -314,7 +374,7 @@ public:
     *
     * @return Whether operation is completed.
     *
-    * @pre d_next_task_op == none
+    * @pre getNextTaskOp() == none
     */
    bool
    beginSumReduce(
@@ -348,7 +408,7 @@ public:
     * may be more complex, requiring several messages and copying of the
     * received message into the correct buffer.
     *
-    * @pre d_next_task_op != none || !hasPendingRequests()
+    * @pre (getNextTaskOp() != none) || !hasPendingRequests()
     */
    bool
    isDone() const;
@@ -375,7 +435,7 @@ private:
    /*
     * @brief Assert that user-set MPI parameters are valid.
     *
-    * @pre d_mpi_tag >= 0
+    * @pre getMPITag() >= 0
     */
    void
    checkMPIParams();
@@ -416,20 +476,6 @@ private:
    bool
    reduceByMpiCollective();
 
-   //! @brief Operations user would want to do.
-   enum BaseOp { undefined,
-                 gather,
-                 bcast,
-                 max_reduce,
-                 min_reduce,
-                 sum_reduce };
-   //! @brief Tasks, executed in order, to complete a base operation.
-   enum TaskOp { recv_start,
-                 recv_check,
-                 send_start,
-                 send_check,
-                 none };
-
    struct ChildData {
       //! @brief Rank of child process in the group.
       int rank;
@@ -461,10 +507,10 @@ private:
     *
     * @return Whether operation is completed.
     *
-    * @pre d_base_op == max_reduce || d_base_op == min_reduce ||
-    *      d_base_op == sum_reduce
-    * @post d_parent_rank != -1 || d_next_task_op != send_check
-    * @post d_next_task_op == none || numberOfPendingRequests() > 0
+    * @pre (getBaseOp() == max_reduce) || (getBaseOp() == min_reduce) ||
+    *      (getBaseOp() == sum_reduce)
+    * @post (getParentRank() != -1) || (getNextTaskOp() != send_check)
+    * @post (getNextTaskOp() == none) || (numberOfPendingRequests() > 0)
     */
    bool
    checkReduce();
@@ -513,7 +559,7 @@ private:
    /*!
     * @brief Convert the array index to the position.
     *
-    * @pre index >= 0 && index < d_group_size
+    * @pre (index >= 0) && (index < getGroupSize())
     */
    int
    toPosition(
@@ -521,7 +567,7 @@ private:
    /*!
     * @brief Convert the position to the array index.
     *
-    * @pre position >= 0 && position < d_group_size
+    * @pre (position >= 0) && (position < getGroupSize())
     */
    int
    toIndex(
@@ -534,7 +580,7 @@ private:
     * @param parent_pos Position of the parent in the group.
     * @param ic Index of the child.  (Zero coresponds to the first child.)
     *
-    * @pre parent_pos >= 0 && parent_pos < d_group_size
+    * @pre (parent_pos >= 0) && (parent_pos < getGroupSize())
     */
    int
    toChildPosition(
@@ -547,7 +593,7 @@ private:
     *
     * Same as toChildPosition( parent_pos, 0 );
     *
-    * @pre parent_pos >= 0 && parent_pos < d_group_size
+    * @pre (parent_pos >= 0) && (parent_pos < getGroupSize())
     */
    int
    toOldest(
@@ -558,7 +604,7 @@ private:
     *
     * Same as toChildPosition( parent_pos, d_nchild-1 );
     *
-    * @pre parent_pos >= 0 && parent_pos < d_group_size
+    * @pre (parent_pos >= 0) && (parent_pos < getGroupSize())
     */
    int
    toYoungest(

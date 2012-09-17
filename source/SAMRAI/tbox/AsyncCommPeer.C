@@ -247,7 +247,7 @@ AsyncCommPeer<TYPE>::beginSend(
    const TYPE* buffer,
    int size)
 {
-   if (d_next_task_op != none) {
+   if (getNextTaskOp() != none) {
       TBOX_ERROR("Cannot begin communication while another is in progress."
          << "mpi_communicator = " << d_mpi.getCommunicator()
          << "mpi_tag = " << d_tag0);
@@ -302,7 +302,7 @@ template<class TYPE>
 bool
 AsyncCommPeer<TYPE>::checkSend()
 {
-   if (d_base_op != send) {
+   if (getBaseOp() != send) {
       TBOX_ERROR("Cannot check nonexistent send operation."
          << " mpi_communicator = " << d_mpi.getCommunicator()
          << " mpi_tag = " << d_tag0 << ", " << d_tag1);
@@ -493,7 +493,7 @@ template<class TYPE>
 bool
 AsyncCommPeer<TYPE>::beginRecv()
 {
-   if (d_next_task_op != none) {
+   if (getNextTaskOp() != none) {
       TBOX_ERROR("Cannot begin communication while another is in progress."
          << "mpi_communicator = " << d_mpi.getCommunicator()
          << "mpi_tag = " << d_tag0);
@@ -522,7 +522,7 @@ template<class TYPE>
 bool
 AsyncCommPeer<TYPE>::checkRecv()
 {
-   if (d_base_op != recv) {
+   if (getBaseOp() != recv) {
       TBOX_ERROR("Cannot check nonexistent receive operation."
          << " mpi_communicator = " << d_mpi.getCommunicator()
          << " mpi_tag = " << d_tag0 << ", " << d_tag1);
@@ -775,20 +775,20 @@ template<class TYPE>
 void
 AsyncCommPeer<TYPE>::checkMPIParams()
 {
-   if (d_tag0 < 0 || d_tag1 < 0) {
+   if (getPrimaryTag() < 0 || getSecondaryTag() < 0) {
       TBOX_ERROR("AsyncCommPeer: Invalid MPI tag values "
          << d_tag0 << " and " << d_tag1
          << "\nUse setMPITag() to set it.");
    }
-   if (d_mpi.getCommunicator() == SAMRAI_MPI::commNull) {
+   if (getMPI().getCommunicator() == SAMRAI_MPI::commNull) {
       TBOX_ERROR("AsyncCommPeer: Invalid MPI communicator value "
          << d_mpi.getCommunicator() << "\nUse setCommunicator() to set it.");
    }
-   if (d_peer_rank < 0) {
+   if (getPeerRank() < 0) {
       TBOX_ERROR("AsyncCommPeer: Invalid peer rank "
          << d_peer_rank << "\nUse setPeerRank() to set it.");
    }
-   if (d_peer_rank == d_mpi.getRank() && !SAMRAI_MPI::usingMPI()) {
+   if (getPeerRank() == getMPI().getRank() && !SAMRAI_MPI::usingMPI()) {
       TBOX_ERROR("AsyncCommPeer: Peer rank cannot be the local rank\n"
          << "when running without MPI.");
    }
@@ -889,7 +889,7 @@ template<class TYPE>
 int
 AsyncCommPeer<TYPE>::getRecvSize() const
 {
-   if (d_base_op != recv) {
+   if (getBaseOp() != recv) {
       TBOX_ERROR("AsyncCommPeer::getRecvSize() called without a\n"
          << "corresponding receive.");
    }
@@ -904,7 +904,7 @@ template<class TYPE>
 const TYPE*
 AsyncCommPeer<TYPE>::getRecvData() const
 {
-   if (d_base_op != recv) {
+   if (getBaseOp() != recv) {
       TBOX_ERROR("AsyncCommPeer::getRecvData() called without a\n"
          << "corresponding receive.");
    }
@@ -919,7 +919,7 @@ template<class TYPE>
 void
 AsyncCommPeer<TYPE>::clearRecvData()
 {
-   if (d_next_task_op != none) {
+   if (getNextTaskOp() != none) {
       TBOX_ERROR("AsyncCommPeer::clearRecvData() called during an\n"
          << "operation.");
    }

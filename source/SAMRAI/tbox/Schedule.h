@@ -65,7 +65,7 @@ public:
     * Note that the schedule can not be deleted during a communication
     * phase; this will result in an assertion being thrown.
     *
-    * @pre d_coms == NULL
+    * @pre !allocatedCommunicationObjects()
     */
    ~Schedule();
 
@@ -253,6 +253,15 @@ public:
    void
    printClassData(
       std::ostream& stream) const;
+
+   /*!
+    * @brief Returns true if the communication objects have been allocated.
+    */
+   bool
+   allocatedCommunicationObjects()
+   {
+      return d_coms != NULL;
+   }
 
 private:
    void

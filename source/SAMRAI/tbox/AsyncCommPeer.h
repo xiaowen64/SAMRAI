@@ -59,6 +59,20 @@ template<class TYPE>
 class AsyncCommPeer:public AsyncCommStage::Member
 {
 
+private:
+
+   //! @brief Operations users would want to do.
+   enum BaseOp { undefined,
+                 send,
+                 recv };
+   //! @brief Tasks used to complete a base operation.
+   enum TaskOp { send_start,
+                 send_check,
+                 recv_start,
+                 recv_check0,
+                 recv_check1,
+                 none };
+
 public:
    /*!
     * @brief Default constructor does not set up anything.
@@ -108,12 +122,17 @@ public:
     * If this assumption is wrong, there will likely be
     * communication errors.
     *
+    * @param peer_rank
+    *
     * @pre isDone()
     */
    void
    setPeerRank(
       int peer_rank);
 
+   /*!
+    * @brief Rank of peer process.
+    */
    int
    getPeerRank() const
    {
@@ -160,6 +179,9 @@ public:
     * for the MPI communicator and tag.  Very elusive bugs can occur
     * if incorrect messages are received.
     *
+    * @param primary_tag
+    * @param secondary_tag
+    *
     * @pre isDone()
     */
    void
@@ -178,11 +200,58 @@ public:
     * to create a new communicator to avoid interference with other
     * communications within SAMRAI.
     *
+    * @param mpi
+    *
     * @pre isDone()
     */
    void
    setMPI(
       const SAMRAI_MPI& mpi);
+
+   /*!
+    * @brief Gets the MPI object used for communications.
+    */
+   const SAMRAI_MPI&
+   getMPI() const
+   {
+      return d_mpi;
+   }
+
+   /*!
+    * @brief Next task in a current communication operation.
+    */
+   TaskOp
+   getNextTaskOp() const
+   {
+      return d_next_task_op;
+   }
+
+   /*!
+    * @brief Operation being performed.
+    */
+   BaseOp
+   getBaseOp() const
+   {
+      return d_base_op;
+   }
+
+   /*!
+    * @brief Primary tag for the first message.
+    */
+   int
+   getPrimaryTag() const
+   {
+      return d_tag0;
+   }
+
+   /*!
+    * @brief Secondary tag for the first message.
+    */
+   int
+   getSecondaryTag() const
+   {
+      return d_tag1;
+   }
 
    //@{
 
@@ -198,9 +267,12 @@ public:
     * On return, the data in @b buffer would have been copied so it is
     * safe to deallocate or modify @c buffer.
     *
+    * @param buffer
+    * @param size
+    *
     * @return Whether operation is completed.
     *
-    * @pre d_next_task_op == none
+    * @pre getNextTaskOp() == none
     */
    bool
    beginSend(
@@ -215,7 +287,7 @@ public:
     *
     * @return Whether operation is completed.
     *
-    * @pre d_next_task_op == send
+    * @pre getBaseOp() == send
     */
    bool
    checkSend();
@@ -242,7 +314,7 @@ public:
     * requires some thought about size checking, especially with
     * regards to how to use the limit on the first message size.
     *
-    * @pre d_next_task_op == none
+    * @pre getNextTaskOp() == none
     */
    bool
    beginRecv();
@@ -253,7 +325,7 @@ public:
     *
     * @return Whether operation is completed.
     *
-    * @pre d_next_task_op == recv
+    * @pre getBaseOp() == recv
     */
    bool
    checkRecv();
@@ -261,7 +333,7 @@ public:
    /*!
     * @brief Return the size of received data.
     *
-    * @pre d_base_op == recv
+    * @pre getBaseOp() == recv
     */
    int
    getRecvSize() const;
@@ -269,7 +341,7 @@ public:
    /*!
     * @brief Get access to the received data.
     *
-    * @pre d_base_op == recv
+    * @pre getBaseOp() == recv
     */
    const TYPE *
    getRecvData() const;
@@ -284,7 +356,7 @@ public:
     * It is an error to clear the receive buffer in the middle of a
     * communication operation.
     *
-    * @pre d_base_op == none
+    * @pre getNextTaksOp() == none
     */
    void
    clearRecvData();
@@ -386,10 +458,10 @@ private:
    /*
     * @brief Assert that user-set MPI parameters are valid.
     *
-    * @pre d_tag0 >= 0 && d_tag1 >= 0
-    * @pre d_mpi.getCommunicator() != SAMRAI_MPI::commNull
-    * @pre d_peer_rank >= 0
-    * @pre d_peer_rank != d_mpi.getRank() || SAMRAI_MPI::usingMPI()
+    * @pre getPrimaryTag() >= 0 && getSecondaryTag() >= 0
+    * @pre getMPI().getCommunicator() != SAMRAI_MPI::commNull
+    * @pre getPeerRank() >= 0
+    * @pre getPeerRank() != getMPI().getRank() || SAMRAI_MPI::usingMPI()
     */
    void
    checkMPIParams();
@@ -414,18 +486,6 @@ private:
    AsyncCommPeer&
    operator = (
       const AsyncCommPeer& r);
-
-   //! @brief Operations users would want to do.
-   enum BaseOp { undefined,
-                 send,
-                 recv };
-   //! @brief Tasks used to complete a base operation.
-   enum TaskOp { send_start,
-                 send_check,
-                 recv_start,
-                 recv_check0,
-                 recv_check1,
-                 none };
 
    void
    resetStatus(

@@ -127,7 +127,7 @@ RestartManager::openRestartFile(
    bool open_successful = true;
    /* try to mount restart file */
 
-   if (d_database_factory) {
+   if (hasDatabaseFactory()) {
 
       boost::shared_ptr<Database> database(d_database_factory->allocate(
          restart_filename));
@@ -275,7 +275,7 @@ RestartManager::writeRestartFile(
 
    std::string restart_filename = restart_dirname + restart_filename_buf;
 
-   if (d_database_factory) {
+   if (hasDatabaseFactory()) {
 
       boost::shared_ptr<Database> new_restartDB(d_database_factory->allocate(
          restart_filename));
@@ -326,7 +326,7 @@ RestartManager::writeRestartFile(
 void
 RestartManager::writeRestartToDatabase()
 {
-   if (d_database_root) {
+   if (hasRootDatabase()) {
       writeRestartFile(d_database_root);
    } else {
       TBOX_ERROR("writeRestartToDatabase has no database to write to"

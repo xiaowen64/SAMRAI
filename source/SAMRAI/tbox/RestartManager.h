@@ -108,7 +108,7 @@ public:
     * mounts the restart file.
     * Returns true if open is successful; false otherwise.
     *
-    * @pre d_database_factory
+    * @pre hasDatabaseFactory()
     */
    bool
    openRestartFile(
@@ -127,6 +127,15 @@ public:
     */
    boost::shared_ptr<Database>
    getRootDatabase()
+   {
+      return d_database_root;
+   }
+
+   /*!
+    * @brief Returns true if the root of the database has been set.
+    */
+   bool
+   hasRootDatabase()
    {
       return d_database_root;
    }
@@ -157,6 +166,15 @@ public:
       const boost::shared_ptr<DatabaseFactory>& database_factory)
    {
       d_database_factory = database_factory;
+   }
+
+   /*!
+    * @brief Returns true if the database for restore or dumps has been set.
+    */
+   bool
+   hasDatabaseFactory()
+   {
+      return d_database_factory;
    }
 
    /**
@@ -217,7 +235,7 @@ public:
     * root of restart directory.  The integer argument is the
     * identification number associated with the restart files generated.
     *
-    * @pre d_database_factory
+    * @pre hasDatabaseFactory()
     */
    void
    writeRestartFile(
@@ -228,7 +246,7 @@ public:
     * Write all objects registered to as restart objects to the
     * restart database.
     *
-    * @pre d_database_root
+    * @pre hasRootDatabase()
     */
    void
    writeRestartToDatabase();

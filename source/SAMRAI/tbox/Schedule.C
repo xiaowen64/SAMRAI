@@ -74,7 +74,7 @@ Schedule::Schedule():
  */
 Schedule::~Schedule()
 {
-   if (d_coms != NULL) {
+   if (allocatedCommunicationObjects()) {
       TBOX_ERROR("Destructing a schedule while communication is pending\n"
          << "leads to lost messages.  Aborting.");
    }

@@ -91,7 +91,7 @@ public:
     * will appear in the array.  To get the keys of any other
     * database, you must call this routine for that database.
     *
-    * @pre !d_directory.empty()
+    * @pre hasDirectory()
     */
    virtual Array<std::string>
    getAllKeys();
@@ -473,7 +473,6 @@ public:
     * @param name name of database. Normally a filename.
     *
     * @pre !name.empty()
-    * @post d_file != NULL
     */
    virtual bool
    create(
@@ -491,7 +490,6 @@ public:
     * does not support read-only mode, so this flag must be true.
     *
     * @pre !name.empty()
-    * @post d_file != NULL
     */
    virtual bool
    open(
@@ -527,6 +525,12 @@ public:
     */
    virtual bool
    close();
+
+   bool
+   hasDirectory()
+   {
+      return !d_directory.empty();
+   }
 
    using Database::putBoolArray;
    using Database::getBoolArray;

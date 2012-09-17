@@ -108,12 +108,12 @@ public:
    /*!
     * @brief Return a pointer to the start of the message buffer.
     *
-    * @pre d_buffer_access != NULL
+    * @pre hasBufferAccess()
     */
    const void *
    getBufferStart() const
    {
-      TBOX_ASSERT( d_buffer_access != NULL );
+      TBOX_ASSERT(hasBufferAccess());
       return static_cast<const void *>(d_buffer_access);
    }
 
@@ -132,25 +132,31 @@ public:
     *
     * It is an error to use this method for a Read-mode stream.
     *
-    * @pre d_mode == Write
+    * @pre writeMode()
     */
    void
    growBufferAsNeeded()
    {
-      TBOX_ASSERT( d_mode == Write );
+      TBOX_ASSERT(writeMode());
       d_grow_as_needed = true;
       return;
+   }
+
+   bool
+   hasBufferAccess() const
+   {
+      return d_buffer_access != NULL;
    }
 
    /*!
     * @brief Whether a Read-mode MessageStream has reached the end of
     * its data.
     *
-    * @pre d_mode == Read
+    * @pre readMode()
     */
    bool endOfData() const
    {
-      TBOX_ASSERT( d_mode == Read );
+      TBOX_ASSERT(readMode());
       return d_buffer_index >= d_buffer_size;
    }
 
@@ -160,14 +166,14 @@ public:
     * @param[in] data  Single item of type DATA_TYPE to be copied
     * into the stream.
     *
-    * @pre d_mode == Write
+    * @pre writeMode()
     */
    template<typename DATA_TYPE>
    MessageStream&
    operator << (
       const DATA_TYPE& data)
    {
-      TBOX_ASSERT(d_mode == MessageStream::Write);
+      TBOX_ASSERT(writeMode());
       static const unsigned int nbytes =
          MessageStream::getSizeof<DATA_TYPE>(1);
       copyDataIn(static_cast<const void *>(&data), nbytes);
@@ -181,7 +187,7 @@ public:
     *                  to be copied into the stream.
     * @param[in] size  Number of items to pack.
     *
-    * @pre d_mode == Write
+    * @pre writeMode()
     */
    template<typename DATA_TYPE>
    void
@@ -189,7 +195,7 @@ public:
       const DATA_TYPE* data,
       unsigned int size = 1)
    {
-      TBOX_ASSERT(d_mode == MessageStream::Write);
+      TBOX_ASSERT(writeMode());
       if (data && (size > 0)) {
          const unsigned int nbytes = MessageStream::getSizeof<DATA_TYPE>(size);
          copyDataIn(static_cast<const void *>(data), nbytes);
@@ -202,14 +208,14 @@ public:
     * @param[out] data  Single item of type DATA_TYPE that will be
     *                   copied from the stream.
     *
-    * @pre d_mode == Read
+    * @pre readMode()
     */
    template<typename DATA_TYPE>
    MessageStream&
    operator >> (
       DATA_TYPE& data)
    {
-      TBOX_ASSERT(d_mode == MessageStream::Read);
+      TBOX_ASSERT(readMode());
       static const unsigned int nbytes =
          MessageStream::getSizeof<DATA_TYPE>(1);
       copyDataOut(static_cast<void *>(&data), nbytes);
@@ -224,7 +230,7 @@ public:
     *                   the stream.
     * @param[out] size  Number of items that will be copied.
     *
-    * @pre d_mode == Read
+    * @pre readMode()
     */
    template<typename DATA_TYPE>
    void
@@ -232,7 +238,7 @@ public:
       DATA_TYPE * data,
       unsigned int size = 1)
    {
-      TBOX_ASSERT(d_mode == MessageStream::Read);
+      TBOX_ASSERT(readMode());
       if (data && (size > 0)) {
          const unsigned int nbytes = MessageStream::getSizeof<DATA_TYPE>(size);
          copyDataOut(static_cast<void *>(data), nbytes);
@@ -248,6 +254,53 @@ public:
    printClassData(
       std::ostream& os) const;
 
+   /*!
+    * @brief Returns true if stream is in read mode.
+    */
+   bool
+   readMode() const
+   {
+      return d_mode == Read;
+   }
+
+   /*!
+    * @brief Returns true if stream is in write mode.
+    */
+   bool
+   writeMode() const
+   {
+      return d_mode == Write;
+   }
+
+   /*!
+    * @brief Returns true if the buffer is grown as needed in Write mode.
+    */
+   bool
+   growAsNeeded() const
+   {
+      return d_grow_as_needed;
+   }
+
+   /*!
+    * @brief Returns true if num_bytes can be copied into the stream.
+    */
+   bool
+   canCopyIn(
+      size_t num_bytes) const
+   {
+      return d_buffer_index + num_bytes <= d_buffer.capacity();
+   }
+
+   /*!
+    * @brief Returns true if num_bytes can be copied out of the stream.
+    */
+   bool
+   canCopyOut(
+      size_t num_bytes) const
+   {
+      return d_buffer_index + num_bytes <= d_buffer_size;
+   }
+
 private:
 
    /*!
@@ -256,14 +309,14 @@ private:
     * @param[in]  data
     * @param[in]  num_bytes
     *
-    * @pre d_grow_as_needed || d_buffer_index + num_bytes <= d_buffer.capacity()
+    * @pre growAsNeeded() || canCopyIn(num_bytes)
     */
    void copyDataIn(
       const void *input_data,
       const size_t num_bytes)
    {
-      if ( !d_grow_as_needed ) {
-         TBOX_ASSERT(d_buffer_index + num_bytes <= d_buffer.capacity());
+      if ( !growAsNeeded() ) {
+         TBOX_ASSERT(canCopyIn(num_bytes));
       }
       if ( num_bytes > 0 ) {
          d_buffer.insert( d_buffer.end(),
@@ -282,13 +335,13 @@ private:
     * @param[in]  output_data
     * @param[in]  num_bytes
     *
-    * @pre d_buffer_index + num_bytes <= d_buffer_size
+    * @pre canCopyOut(num_bytes)
     */
    void copyDataOut(
       void *output_data,
       const size_t num_bytes)
    {
-      TBOX_ASSERT( d_buffer_index + num_bytes <= d_buffer_size );
+      TBOX_ASSERT(canCopyOut(num_bytes));
       memcpy(output_data, &d_buffer_access[d_buffer_index], num_bytes);
       d_buffer_index += num_bytes;
       return;
@@ -319,7 +372,7 @@ private:
    /*!
     * @brief Number of bytes in the buffer.
     *
-    * Equal to d_buffer.size() if using internal buffer.  Otherwixe,
+    * Equal to d_buffer.size() if using internal buffer.  Otherwise,
     * equal to external buffer size.
     */
    size_t d_buffer_size;

@@ -83,7 +83,7 @@ AsyncCommStage::privateStageMember(
    size_t nreq)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(member->d_stage == NULL);   // Double stage not allowed.
+   TBOX_ASSERT(!member->hasStage());   // Double stage not allowed.
    if (nreq < 1) {
       TBOX_ERROR("Each Member on a stage must have at least one request.\n");
    }
@@ -145,7 +145,7 @@ AsyncCommStage::privateDestageMember(
    assertDataConsistency();
 #endif
 
-   if (d_members[member->d_index_on_stage] != member) {
+   if (getMember(member->d_index_on_stage) != member) {
       /*
        * Member was not staged with this AsyncCommStage.  Since staging
        * and destaging are private methods, there must be some logic
@@ -308,13 +308,12 @@ AsyncCommStage::privateYankFromCompletionQueue( Member &member )
 AsyncCommStage::Member*
 AsyncCommStage::popCompletionQueue()
 {
-   if ( d_completed_members.empty() ) {
+   if (numberOfCompletedMembers() == 0) {
       TBOX_ERROR("AsyncCommStage::popCompletionQueue(): There is no\n"
                  << "completed member.  You cannot call this method\n"
                  << "when numberOfCompletedMembers() > 0." << std::endl);
    }
-   Member *completed = d_members[d_completed_members.front()];
-   if ( ! completed->isDone() ) {
+   if (!firstCompletedMember()->isDone()) {
       TBOX_ERROR("AsyncCommStage::popCompletionQueue error:\n"
                  << "You asked for a completed AsyncCommStage Member\n"
                  << "but its stage has changed to pending since the\n"
@@ -323,6 +322,7 @@ AsyncCommStage::popCompletionQueue()
                  << "Member for another operation before poping it\n"
                  << "using this method." << std::endl);
    }
+   Member *completed = d_members[d_completed_members.front()];
    d_completed_members.pop_front();
    return completed;
 }
@@ -606,8 +606,8 @@ size_t
 AsyncCommStage::numberOfRequests(
    size_t index_on_stage) const
 {
-   TBOX_ASSERT(index_on_stage < d_members.size());
-   TBOX_ASSERT(d_members[index_on_stage] != NULL);
+   TBOX_ASSERT(index_on_stage < numManagedMembers());
+   TBOX_ASSERT(getMember(index_on_stage) != NULL);
 
    const int init_req = static_cast<int>(d_member_to_req[index_on_stage]);
    const int term_req = static_cast<int>(d_member_to_req[index_on_stage + 1]);
@@ -674,8 +674,8 @@ SAMRAI_MPI::Request*
 AsyncCommStage::lookupRequestPointer(
    const size_t imember) const
 {
-   TBOX_ASSERT(imember < d_members.size());
-   TBOX_ASSERT(d_members[imember] != NULL);
+   TBOX_ASSERT(imember < numManagedMembers());
+   TBOX_ASSERT(getMember(imember) != NULL);
    return &d_req[d_member_to_req[imember]];
 }
 
@@ -689,8 +689,8 @@ SAMRAI_MPI::Status*
 AsyncCommStage::lookupStatusPointer(
    const size_t imember) const
 {
-   TBOX_ASSERT(imember < d_members.size());
-   TBOX_ASSERT(d_members[imember] != NULL);
+   TBOX_ASSERT(imember < numManagedMembers());
+   TBOX_ASSERT(getMember(imember) != NULL);
    return &d_stat[d_member_to_req[imember]];
 }
 
@@ -820,7 +820,7 @@ AsyncCommStage::Member::numberOfPendingRequests() const
 SAMRAI_MPI::Request*
 AsyncCommStage::Member::getRequestPointer() const
 {
-   if (d_stage == NULL) {
+   if (!hasStage()) {
       TBOX_ERROR("AssyncCommStage::Member::getRequestPointer():\n"
          << "Empty stage encountered!\n"
          << "This probably means that the stage that allocated\n"
@@ -840,7 +840,7 @@ AsyncCommStage::Member::getRequestPointer() const
 SAMRAI_MPI::Status*
 AsyncCommStage::Member::getStatusPointer() const
 {
-   if (d_stage == NULL) {
+   if (!hasStage()) {
       TBOX_ERROR("AssyncCommStage::Member::getStatusPointer():\n"
          << "Empty stage encountered!\n"
          << "This probably means that the stage that allocated\n"

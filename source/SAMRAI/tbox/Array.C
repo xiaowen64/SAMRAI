@@ -145,7 +145,7 @@ void
 Array<TYPE>::erase(
    const int position)
 {
-   TBOX_ASSERT(position >= 0 && position < d_elements);
+   TBOX_ASSERT((position >= 0) && (position < size()));
 
    if (d_elements > 1) {
 
@@ -207,7 +207,7 @@ TYPE&
 Array<TYPE>::operator [] (
    const int i)
 {
-   TBOX_ASSERT((i >= 0) && (i < d_elements));
+   TBOX_ASSERT((i >= 0) && (i < size()));
 
    return d_objects[i];
 }
@@ -217,7 +217,7 @@ const TYPE&
 Array<TYPE>::operator [] (
    const int i) const
 {
-   TBOX_ASSERT((i >= 0) && (i < d_elements));
+   TBOX_ASSERT((i >= 0) && (i < size()));
 
    return d_objects[i];
 }
@@ -265,7 +265,7 @@ TYPE*
 Array<TYPE>::getPointer(
    const int i)
 {
-   TBOX_ASSERT((i >= 0) && (i < d_elements));
+   TBOX_ASSERT((i >= 0) && (i < size()));
 
    return &d_objects[i];
 }
@@ -275,7 +275,7 @@ const TYPE*
 Array<TYPE>::getPointer(
    const int i) const
 {
-   TBOX_ASSERT((i >= 0) && (i < d_elements));
+   TBOX_ASSERT((i >= 0) && (i < size()));
 
    return &d_objects[i];
 }
@@ -318,7 +318,7 @@ template<class TYPE>
 const TYPE&
 Array<TYPE>::back()
 {
-   TBOX_ASSERT(d_elements > 0);
+   TBOX_ASSERT(size() > 0);
 
    return d_objects[d_elements - 1];
 }

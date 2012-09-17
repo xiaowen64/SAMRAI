@@ -334,7 +334,7 @@ SiloDatabase::keyExists(
 Array<std::string>
 SiloDatabase::getAllKeys()
 {
-   TBOX_ASSERT(!d_directory.empty());
+   TBOX_ASSERT(hasDirectory());
 
    std::string path = nameMangle(d_directory);
 
