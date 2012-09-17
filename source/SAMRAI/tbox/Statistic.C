@@ -62,7 +62,7 @@ Statistic::Statistic(
    if (stat_type == "PROC_STAT") {
       d_stat_type = PROC_STAT;
    }
-   if (stat_type == "PATCH_STAT") {
+   else if (stat_type == "PATCH_STAT") {
       d_stat_type = PATCH_STAT;
    }
 
@@ -91,7 +91,7 @@ Statistic::recordProcStat(
    double value,
    int seq_num)
 {
-   if (d_stat_type != PROC_STAT) {
+   if (getType() != "PROC_STAT") {
       TBOX_ERROR("Statistic::recordProcStat error...\n"
          << "    Statistic type is `PATCH_STAT'" << std::endl);
    }
@@ -130,7 +130,7 @@ Statistic::recordPatchStat(
    double value,
    int seq_num)
 {
-   if (d_stat_type != PATCH_STAT) {
+   if (getType() != "PATCH_STAT") {
       TBOX_ERROR("Statistic::recordPatchStat error...\n"
          << "    Statistic type is `PROC_STAT'" << std::endl);
    }

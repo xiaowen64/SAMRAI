@@ -138,7 +138,7 @@ public:
     * If the sequence number is not specified, an internal counter will
     * determine the appropriate sequence number.
     *
-    * @pre d_stat_type == "PROC_STAT"
+    * @pre getType() == "PROC_STAT"
     */
    void
    recordProcStat(
@@ -153,7 +153,7 @@ public:
     * of patches on each processor will generally be different at
     * each sequence step.
     *
-    * @pre d_stat_type == "PATCH_STAT"
+    * @pre getType() == "PATCH_STAT"
     */
    void
    recordPatchStat(
@@ -252,7 +252,7 @@ protected:
     *
     * @pre !name.empty()
     * @pre !stat_type.empty()
-    * @pre stat_type == "PROC_STAT" || stat_type = "PATCH_STAT"
+    * @pre (stat_type == "PROC_STAT") || (stat_type = "PATCH_STAT")
     * @pre instance_id > -1
     */
    Statistic(
