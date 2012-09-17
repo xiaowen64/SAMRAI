@@ -61,6 +61,8 @@ public:
     * The constructor for a patch data object.  Patch data objects will
     * manage the interior box over which they are defined and the associated
     * ghost cell width.
+    *
+    * @pre domain.getDim() == ghosts.getDim()
     */
    PatchData(
       const Box& domain,
@@ -218,6 +220,8 @@ public:
     * Checks that class version and restart file version are equal.  If so,
     * reads in the data members common to all patch data types from restart
     * database.
+    *
+    * @pre restart_db
     */
    virtual void
    getFromRestart(
@@ -226,13 +230,15 @@ public:
    /**
     * Writes out the class version number to the restart database.  Then,
     * writes the data members common to all patch data types to database.
+    *
+    * @pre restart_db
     */
    virtual void
    putToRestart(
       const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
-    * Return the dimension of this object.
+    * @brief Return the dimension of this object.
     */
    const tbox::Dimension&
    getDim() const
@@ -250,6 +256,9 @@ protected:
     *
     * This function is included to treat some special cases for concrete
     * patch data types and should be used with caution.
+    *
+    * @pre getDim() == ghost_box.getDim()
+    * @pre (ghost_box * getBox()).isSpatiallyEqual(getBox())
     */
    void
    setGhostBox(

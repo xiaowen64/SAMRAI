@@ -116,8 +116,7 @@ PatchLevel::PatchLevel(
     * All components of ratio must be nonzero.  Additionally, all components
     * of ratio not equal to 1 must have the same sign.
     */
-   TBOX_ASSERT(box_level.getRefinementRatio() !=
-      IntVector::getZero(getDim()));
+   TBOX_ASSERT(box_level.getRefinementRatio() != IntVector::getZero(getDim()));
 
    if (getDim().getValue() > 1) {
       for (int i = 0; i < getDim().getValue(); i++) {

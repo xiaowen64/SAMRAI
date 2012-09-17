@@ -724,10 +724,7 @@ PatchHierarchy::makeNewPatchLevel(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, new_box_level);
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(ln >= 0);
-   for (int i = 0; i < d_dim.getValue(); i++) {
-      TBOX_ASSERT(
-         new_box_level.getRefinementRatio() > IntVector::getZero(d_dim));
-   }
+   TBOX_ASSERT(new_box_level.getRefinementRatio() > IntVector::getZero(d_dim));
 #endif
 
    /*
@@ -744,8 +741,7 @@ PatchHierarchy::makeNewPatchLevel(
    if (ln > 0) {
       const IntVector expected_ratio(
          d_ratio_to_coarser[ln] * (d_patch_levels[ln - 1]->getRatioToLevelZero()));
-      if (ln > 0 &&
-          (new_box_level.getRefinementRatio() != expected_ratio)) {
+      if (new_box_level.getRefinementRatio() != expected_ratio) {
          TBOX_ERROR("PatchHierarchy::makeNewPatchLevel: patch level "
             << ln << " has refinement ratio "
             << new_box_level.getRefinementRatio()

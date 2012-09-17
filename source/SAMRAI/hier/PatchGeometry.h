@@ -106,7 +106,13 @@ private:
    };
 
    /**
-    * The default constructor for the patch geometry base class.
+    * The constructor for the patch geometry base class.
+    *
+    * @pre (ratio_to_level_zero.getDim() == touches_regular_bdry.getDim()) &&
+    *      (ratio_to_level_zero.getDim() == touches_periodic_bdry.getDim())
+    * @pre all components of ratio_to_level_zero must be nonzero and all
+    *      components of ratio_to_level_zero not equal to 1 must have the same
+    *      sign
     */
    PatchGeometry(
       const IntVector& ratio_to_level_zero,
@@ -172,7 +178,7 @@ private:
    const tbox::Array<BoundaryBox>&
    getNodeBoundaries() const
    {
-      return d_patch_boundaries[d_dim.getValue() - 1];
+     return d_patch_boundaries[getDim().getValue() - 1];
    }
 
    /**
@@ -180,13 +186,12 @@ private:
     * intersects the patch along a 1-dim edge (i.e., 1-dim intersection
     * between cells in patch and cells in boundary box).
     *
-    * When assertion checking is active, this routine throws an assertion
-    * when DIM < 2.
+    * @pre getDim().getValue() >= 2
     */
    const tbox::Array<BoundaryBox>&
    getEdgeBoundaries() const
    {
-      if (d_dim.getValue() < 2) {
+     if (getDim().getValue() < 2) {
          TBOX_ERROR("PatchGeometry error in getEdgeBoundary...\n"
             << "DIM < 2 not supported." << std::endl);
       }
@@ -194,7 +199,7 @@ private:
       // The "funny" indexing prevents a warning when compiling for
       // DIM < 2.  This code is only reached if DIM >= 2 when
       // executing.
-      return d_patch_boundaries[d_dim.getValue() < 2 ? 0 : d_dim.getValue() - 2];
+      return d_patch_boundaries[getDim().getValue() < 2 ? 0 : getDim().getValue() - 2];
    }
 
    /**
@@ -202,13 +207,12 @@ private:
     * intersects the patch along a 2-dim face (i.e., 2-dim intersection
     * between cells in patch and cells in boundary box).
     *
-    * When assertion checking is active, this routine throws an assertion
-    * when DIM < 3.
+    * @pre getDim().getValue() >= 3
     */
    const tbox::Array<BoundaryBox>&
    getFaceBoundaries() const
    {
-      if (d_dim.getValue() < 3) {
+     if (getDim().getValue() < 3) {
          TBOX_ERROR("PatchGeometry error in getFaceBoundary...\n"
             << "DIM < 3 not supported." << std::endl);
       }
@@ -216,7 +220,7 @@ private:
       // The "funny" indexing prevents a warning when compiling for
       // DIM < 3.  This code is only reached if DIM >= 3 when
       // executing.
-      return d_patch_boundaries[d_dim.getValue() < 3 ? 0 : d_dim.getValue() - 3];
+      return d_patch_boundaries[getDim().getValue() < 3 ? 0 : getDim().getValue() - 3];
    }
 
    /**
@@ -233,20 +237,23 @@ private:
     *              (codim == 2) => same components as getEdgeBoundaries.
     *              (codim == 3) => same components as getNodeBoundaries.
     *
-    * When assertion checking is active, this routine throws an assertion
+    * @pre (codim > 0) && (codim <= getDim().getValue())
     * when codim < 0 or codim > DIM.
     */
    const tbox::Array<BoundaryBox>&
    getCodimensionBoundaries(
       const int codim) const
    {
-      TBOX_ASSERT((codim > 0) && (codim <= d_dim.getValue()));
+     TBOX_ASSERT((codim > 0) && (codim <= getDim().getValue()));
       return d_patch_boundaries[codim - 1];
    }
 
    /**
     * Set the array of boundary box components of the given codimension
     * for a patch.
+    *
+    * @pre (codim > 0) && (codim <= getDim().getValue())
+    * @pre for each boundary_box in bdry_boxes, getBoundaryType() == codim
     */
    void
    setCodimensionBoundaries(
@@ -264,6 +271,10 @@ private:
     * @param bbox BoundaryBox representing location and type of boundary
     * @param patch_box The box for the patch where data is being filled
     * @param gcw ghost cell width to fill
+    *
+    * @pre bbox.getDim() == patch_box.getDim()
+    * @pre bbox.getDim() == gcw.getDim()
+    * @pre all components of gcw are >= 0
     */
    Box
    getBoundaryFillBox(
@@ -304,13 +315,16 @@ private:
     * @param axis       Axis direction normal to the side being checked
     * @param upperlower Flag should be 0 if checking the lower side in the
     *                   axis direction, or 1 if checking the upper side.
+    *
+    * @pre (axis >= 0) && (axis < getDim().getValue())
+    * @pre (upperlower == 0) || (upperlower == 1)
     */
    bool
    getTouchesRegularBoundary(
       int axis,
       int upperlower) const
    {
-      TBOX_ASSERT(axis >= 0 && axis < d_dim.getValue());
+      TBOX_ASSERT(axis >= 0 && axis < getDim().getValue());
       TBOX_ASSERT(upperlower == 0 || upperlower == 1);
       return d_touches_regular_bdry(axis, upperlower);
    }
@@ -321,6 +335,12 @@ private:
    void
    printClassData(
       std::ostream& stream) const;
+
+   const tbox::Dimension&
+   getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    const tbox::Dimension d_dim;

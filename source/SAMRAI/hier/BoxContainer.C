@@ -615,9 +615,9 @@ BoxContainer::rotate(
 {
    if (!isEmpty()) {
 
-   if (d_tree) {
-      d_tree.reset();
-   }
+      if (d_tree) {
+         d_tree.reset();
+      }
 
       const tbox::Dimension& dim = d_list.front().getDim();
       const BlockId& block_id = d_list.front().getBlockId();

@@ -312,14 +312,12 @@ public:
  * levels to zero, sets the geometry for the PatchHierarchy, and
  * registers the PatchHierarchy for restart with the specified name.
  *
- * @par Errors/Assertions
- * Passing in an empty std::string or a null grid geometry pointer
- * will result in an unrecoverable assertion when assertion checking is
- * active.
- *
  * @param[in]  object_name
  * @param[in]  geometry
  * @param[in]  input_db Input database specifying hierarchy parameters.
+ *
+ * @pre !object_name.empty()
+ * @pre geometry
  */
    PatchHierarchy(
       const std::string& object_name,
@@ -352,6 +350,11 @@ public:
     *
     * @param[in]  fine_hierarchy_name
     * @param[in]  refine_ratio
+    *
+    * @pre getDim() == refine_ratio.getDim()
+    * @pre !fine_hierarchy_name.empty()
+    * @pre fine_hierarchy_name != getObjectName()
+    * @pre refine_ratio > IntVector::getZero(refine_ratio.getDim())
     */
    boost::shared_ptr<PatchHierarchy>
    makeRefinedPatchHierarchy(
@@ -379,6 +382,11 @@ public:
     *
     * @param[in]  coarse_hierarchy_name
     * @param[in]  coarsen_ratio
+    *
+    * @pre getDim() == coarsen_ratio.getDim()
+    * @pre !coarse_hierarchy_name.empty()
+    * @pre coarse_hierarchy_name != getObjectName()
+    * @pre coarsen_ratio > IntVector::getZero(coarsen_ratio.getDim())
     */
    boost::shared_ptr<PatchHierarchy>
    makeCoarsenedPatchHierarchy(
@@ -397,6 +405,10 @@ public:
  *
  * @param[in]  level_number
  * @param[in]  new_box_level
+ *
+ * @pre getDim() == new_box_level.getDim()
+ * @pre level_number >= 0 && ln < getMaxNumberOfLevels()
+ * @pre new_box_level.getRefinementRatio() > IntVector::getZero(getDim())
  */
    void
    makeNewPatchLevel(
@@ -410,6 +422,8 @@ public:
     * accordingly.
     *
     * @param[in]  level
+    *
+    * @pre (level >= 0) && (level < getNumberOfLevels())
     */
    void
    removePatchLevel(
@@ -421,12 +435,14 @@ public:
     * @return a pointer to the specified patch level.
     *
     * @param[in]  level
+    *
+    * @pre (level >= 0) && (level < getNumberOfLevels())
     */
    boost::shared_ptr<PatchLevel>
    getPatchLevel(
       const int level) const
    {
-      TBOX_ASSERT((level >= 0) && (level < d_number_levels));
+      TBOX_ASSERT((level >= 0) && (level < getNumberOfLevels()));
       return d_patch_levels[level];
    }
 
@@ -454,7 +470,7 @@ public:
    levelExists(
       const int level) const
    {
-      return (level < d_number_levels) && d_patch_levels[level];
+      return (level < getNumberOfLevels()) && d_patch_levels[level];
    }
 
    /*!
@@ -470,7 +486,7 @@ public:
    finerLevelExists(
       const int level) const
    {
-      return (level + 1 < d_number_levels) && d_patch_levels[level + 1];
+      return (level + 1 < getNumberOfLevels()) && d_patch_levels[level + 1];
    }
 
    /*!
@@ -493,7 +509,7 @@ public:
    int
    getFinestLevelNumber() const
    {
-      return d_number_levels - 1;
+      return getNumberOfLevels() - 1;
    }
 
    /*!
@@ -502,6 +518,8 @@ public:
     * @return true if level associated with the specified level number can
     * be refined; i.e., the level number is less than that of the finest
     * level allowed in the hierarchy.  Otherwise, false is returned.
+    *
+    * @pre level_number >= 0
     */
    bool
    levelCanBeRefined(
@@ -537,6 +555,9 @@ public:
     *             connector.
     * @param[in]  head_ln The head level indicating the other end of
     *             the connector.
+    *
+    * @pre (base_ln >= 0) && (base_ln < getNumberOfLevels())
+    * @pre (head_ln >= 0) && (head_ln < getNumberOfLevels())
     */
    const Connector&
    getConnector(
@@ -560,11 +581,9 @@ public:
     * All registrations must occur before the first call to
     * getRequiredConnectorWidth().
     *
-    * @par Errors/Assertions
-    * Calling this method after the first getRequiredConnectorWidth()
-    * results in an unrecoverable assertion.
-    *
     * @param[in]  cwrs The connector width requester strategy instance.
+    *
+    * @pre d_connector_widths_are_computed
     */
    void
    registerConnectorWidthRequestor(
@@ -580,6 +599,9 @@ public:
     *
     * @param[in]  base_ln
     * @param[in]  head_ln
+    *
+    * @pre (head_ln >= 0) && (head_ln < getMaxNumberOfLevels())
+    * @pre (base_ln >= 0) && (base_ln < getMaxNumberOfLevels())
     */
    IntVector
    getRequiredConnectorWidth(
@@ -682,13 +704,15 @@ public:
     *
     * @param[in]  ratio   Refinement ratio in each direction
     * @param[in]  level
+    *
+    * @pre (level > 0) && (level < getMaxNumberOfLevels())
     */
    void
    setRatioToCoarserLevel(
       const IntVector& ratio,
       int level)
    {
-      TBOX_ASSERT(level > 0 && level < d_max_levels);
+      TBOX_ASSERT(level > 0 && level < getMaxNumberOfLevels());
       d_ratio_to_coarser[level] = ratio;
    }
 
@@ -698,12 +722,14 @@ public:
     * @return The ratio between specified @c level and @ level-1
     *
     * @param[in]  level
+    *
+    * @pre level < getMaxNumberOfLevels()
     */
    const IntVector&
    getRatioToCoarserLevel(
       int level) const
    {
-      TBOX_ASSERT(level < d_max_levels);
+      TBOX_ASSERT(level < getMaxNumberOfLevels());
       return d_ratio_to_coarser[level];
    }
 
@@ -712,13 +738,15 @@ public:
     *
     * @param[in]  size   Smallest size in each direction
     * @param[in]  level
+    *
+    * @pre (level >= 0) && (level < getMaxNumberOfLevels())
     */
    void
    setSmallestPatchSize(
       const IntVector& size,
       int level)
    {
-      TBOX_ASSERT(level >= 0 && level < d_max_levels);
+      TBOX_ASSERT(level >= 0 && level < getMaxNumberOfLevels());
       d_smallest_patch_size[level] = size;
    }
 
@@ -728,12 +756,14 @@ public:
     * @return The smallest patch size allowed on the given level.
     *
     * @param[in]  level
+    *
+    * @pre (level >= 0) && (level < getMaxNumberOfLevels())
     */
    const IntVector&
    getSmallestPatchSize(
       int level) const
    {
-      TBOX_ASSERT(level >= 0 && level < d_max_levels);
+      TBOX_ASSERT(level >= 0 && level < getMaxNumberOfLevels());
       return d_smallest_patch_size[level];
    }
 
@@ -742,13 +772,15 @@ public:
     *
     * @param[in]  size   Largest size in each direction.
     * @param[in]  level
+    *
+    * @pre (level >= 0) && (level < getMaxNumberOfLevels())
     */
    void
    setLargestPatchSize(
       const IntVector& size,
       int level)
    {
-      TBOX_ASSERT(level >= 0 && level < d_max_levels);
+      TBOX_ASSERT(level >= 0 && level < getMaxNumberOfLevels());
       d_largest_patch_size[level] = size;
    }
 
@@ -758,12 +790,14 @@ public:
     * @return The largest patch size allowed on the given level.
     *
     * @param[in]  level
+    *
+    * @pre (level >= 0) && (level < getMaxNumberOfLevels())
     */
    const IntVector&
    getLargestPatchSize(
       int level) const
    {
-      TBOX_ASSERT(level >= 0 && level < d_max_levels);
+      TBOX_ASSERT(level >= 0 && level < getMaxNumberOfLevels());
       return d_largest_patch_size[level];
    }
 
@@ -780,13 +814,15 @@ public:
     * @return The proper nesting buffer
     *
     * @param[in]  ln
+    *
+    * @pre (ln >= 0) && (ln < getMaxNumberOfLevels())
     */
    int
    getProperNestingBuffer(
       int ln) const
    {
-      TBOX_ASSERT(ln >= 0 && ln < d_max_levels);
-      return (ln < d_max_levels - 1) ? d_proper_nesting_buffer[ln] : -1;
+      TBOX_ASSERT(ln >= 0 && ln < getMaxNumberOfLevels());
+      return (ln < getMaxNumberOfLevels() - 1) ? d_proper_nesting_buffer[ln] : -1;
    }
 
    /*!
@@ -865,11 +901,10 @@ public:
     * This method implements the pure virtual method in tbox::Serializable
     * class which is used by the tbox::RestartManager for writing the
     * PatchHierarchy to a restart file.
-    * @par Assertions
-    * When assertion checking is active, the restart_db pointer must be
-    * non-null.
     *
     * @param[out]  restart_db
+    *
+    * @pre restart_db
     */
    void
    putToRestart(
@@ -957,10 +992,6 @@ private:
     * Only those patch data indicated in the ComponentSelector are written to
     * the specified database.
     *
-    * @par Assertions
-    * When assertion checking is active, the restart_db pointer must be
-    * non-null.
-    *
     * @param[out] restart_db
     * @param[in]  patchdata_write_table
     */
@@ -972,9 +1003,6 @@ private:
    /*!
     * @brief Read input data from specified database and initialize
     * class members.
-    *
-    * When assertion checking is active, the database pointer must be
-    * non-null.
     *
     * @param[in]  input_db   Input database
     * @param[in]  is_from_restart   True is being invoked on restart

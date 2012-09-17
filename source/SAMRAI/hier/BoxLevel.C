@@ -745,16 +745,10 @@ BoxLevel::setParallelState(
          << std::endl);
    }
 #endif
-   if (parallel_state != DISTRIBUTED && parallel_state != GLOBALIZED) {
-      TBOX_ERROR(
-         "BoxLevel::setParallelState: Invalid distribution state: "
-         << parallel_state << "\n");
-   }
-
    if (d_parallel_state == DISTRIBUTED && parallel_state == GLOBALIZED) {
       acquireRemoteBoxes();
-   } else if (d_parallel_state == GLOBALIZED && parallel_state ==
-              DISTRIBUTED) {
+   } else if (d_parallel_state == GLOBALIZED &&
+              parallel_state == DISTRIBUTED) {
       d_global_boxes.clear();
    }
    d_parallel_state = parallel_state;
@@ -1352,8 +1346,7 @@ BoxLevel::getBoxStrict(
    }
 #endif
 
-   Box box(getDim(),
-                  box_id);
+   Box box(getDim(), box_id);
    if (box.getOwnerRank() == d_mpi.getRank()) {
       BoxContainer::const_iterator ni = d_boxes.find(box);
       if (ni == d_boxes.end()) {

@@ -158,13 +158,11 @@ struct BoxUtilities {
     *    - \b physical_boxes (input)
     *       box array representing the index space of box list domain
     *
-    *
-    * Assertion checks:
-    *
-    *    - all components of min_size and bad_interval must be nonnegative
-    *
-    *    - all components of cut_factor must be positive
-    *
+    * @pre (min_size.getDim() == cut_factor.getDim()) &&
+    *      (min_size.getDim() == bad_interval.getDim())
+    * @pre min_size > IntVector::getZero(min_size.getDim())
+    * @pre cut_factor > IntVector::getZero(min_size.getDim())
+    * @pre bad_interval >= IntVector::getZero(min_size.getDim())
     */
    static void
    checkBoxConstraints(
@@ -218,6 +216,15 @@ struct BoxUtilities {
     *      restricts the cut locations or if the maximum size is not a
     *      multiple of the cut factor.
     *
+    * @pre (max_size.getDim() == min_size.getDim()) &&
+    *      (max_size.getDim() == cut_factor.getDim()) &&
+    *      (max_size.getDim() == bad_interval.getDim())
+    * @pre min_size > IntVector::getZero(min_size.getDim())
+    * @pre max_size >= min_size
+    * @pre cut_factor > IntVector::getZero(min_size.getDim())
+    * @pre bad_interval >= IntVector::getZero(min_size.getDim())
+    * @pre !physical_boxes.isEmpty()
+    * @pre !boxes.isOrdered()
     */
    static void
    chopBoxes(
@@ -249,9 +256,6 @@ struct BoxUtilities {
     *
     * Assertion checks:
     *
-    *    - The cut point array must have size equal to the number of
-    *      spatial dimensions for the box.
-    *
     *    - The cut points for each direction must be on the list in
     *      increasing order.
     *
@@ -262,6 +266,7 @@ struct BoxUtilities {
     *      operations are performed.  Thus, any boxes on the list when
     *      the function is called will be lost.
     *
+    * @pre cut_points.getSize() == box.getDim().getValue()
     */
    static void
    chopBox(
@@ -297,13 +302,6 @@ struct BoxUtilities {
     *       ghost cell region
     *
     *
-    * Assertion checks:
-    *
-    *    - domain must not be an empty boxlist.
-    *
-    *    - All components of ext_ghosts must be nonnegative.
-    *
-    *
     * Notes:
     *
     *    - The ext_ghosts argument often corresponds to the bad_interval
@@ -318,6 +316,8 @@ struct BoxUtilities {
     *      far as it can, but will not remedy these degenerate situations
     *      in general.
     *
+    * @pre !domain.isEmpty()
+    * @pre ext_ghosts >= IntVector::getZero(ext_ghosts.getDim())
     */
    static bool
    extendBoxToDomainBoundary(
@@ -332,6 +332,9 @@ struct BoxUtilities {
     * is true if any box in the input box list was extended to the boundary
     * and thus is changed by the routine.  Otherwise, the return value
     * is false.
+    *
+    * @pre !domain.isEmpty()
+    * @pre ext_ghosts >= IntVector::getZero(ext_ghosts.getDim())
     */
    static bool
    extendBoxesToDomainBoundary(
@@ -356,11 +359,6 @@ struct BoxUtilities {
     *       description.
     *
     *
-    * Assertion checks:
-    *
-    *    - The minimum box size argument must have all nonnegative entries.
-    *
-    *
     * Notes:
     *
     *    - Each box that is grown must remain within the union of the
@@ -383,6 +381,8 @@ struct BoxUtilities {
     *
     *      This routine will grow each box as far as it can, but will not
     *      remedy these situations, generally.
+    *
+    * @pre min_size > IntVector::getZero(min_size.getDim())
     */
    static void
    growBoxesWithinDomain(
@@ -390,10 +390,12 @@ struct BoxUtilities {
       const BoxContainer& domain,
       const IntVector& min_size);
 
-   /*
+   /**
     * Similar to growBoxesWithinDomain but works on one box at
     * a time and the domain is specified by the complement of local
     * parts of the domain.
+    *
+    * @pre min_size > IntVector::getZero(min_size.getDim())
     */
    static void
    growBoxWithinDomain(
@@ -433,17 +435,11 @@ struct BoxUtilities {
     *    - \b cut_factor(input)
     *       See class header for description.
     *
-    *
-    * Assertion checks:
-    *
-    *    - all components of min_size must be nonnegative
-    *
-    *    - all components of max_size and cut_factor must be positive
-    *
-    *    - for each i between 0 and (dim-1), the i-th component of
-    *      min_size must be less than or equal to the i-th component
-    *      of max_size
-    *
+    * @pre (max_size.getDim() == min_size.getDim()) &&
+    *      (max_size.getDim() == cut_factor.getDim())
+    * @pre min_size > IntVector::getZero(max_size.getDim())
+    * @pre min_size <= max_size
+    * @pre cut_factor > IntVector::getZero(max_size.getDim())
     */
    static bool
    findBestCutPointsGivenMax(
@@ -485,15 +481,10 @@ struct BoxUtilities {
     *    - \b cut_factor (input)
     *       See class header for description.
     *
-    *
-    * Assertion checks:
-    *
-    *    - min_size must be nonnegative
-    *
-    *    - max_size and cut_factor must be positive
-    *
-    *    - min_size must be less than or equal to max_size
-    *
+    * @pre !box.empty()
+    * @pre min_size > 0
+    * @pre max_size >= min_size
+    * @pre cut_factor > 0
     */
    static bool
    findBestCutPointsForDirectionGivenMax(
@@ -541,12 +532,12 @@ struct BoxUtilities {
     * Important note: By convention, each integer cut point that is computed
     *                 corresponds to the cell index to the right of cut point.
     *
-    * Assertion checks:
-    *
-    *    - all components of min_size must be nonnegative
-    *
-    *    - all components of cut_factor and number_boxes must be positive
-    *
+    * @pre (number_boxes.getDim() == min_size.getDim()) &&
+    *      (number_boxes.getDim() == cut_factor.getDim())
+    * @pre !box.empty()
+    * @pre min_size > IntVector::getZero(number_boxes.getDim())
+    * @pre number_boxes > IntVector::getZero(number_boxes.getDim())
+    * @pre cut_factor > IntVector::getZero(number_boxes.getDim())
     */
    static bool
    findBestCutPointsGivenNumber(
@@ -589,13 +580,9 @@ struct BoxUtilities {
     *    - \b cut_factor (input)
     *       See class header for description.
     *
-    *
-    * Assertion checks:
-    *
-    *    - min_size must be nonnegative
-    *
-    *    - cut_factor and num_boxes must be positive
-    *
+    * @pre min_size > 0
+    * @pre num_boxes > 0
+    * @pre cut_factor > 0
     */
    static bool
    findBestCutPointsForDirectionGivenNumber(
@@ -635,11 +622,9 @@ struct BoxUtilities {
     *    - \b bad_interval (input)
     *       See class header for description.
     *
-    *
-    * Assertion checks:
-    *
-    *    - all components of bad_interval must be nonnegative
-    *
+    * @pre (bad_cut_information.getDim() == box.getDim()) &&
+    *      (bad_cut_information.getDim() == bad_interval.getDim())
+    * @pre bad_interval >= IntVector::getZero(box.getDim())
     */
    static bool
    checkBoxForBadCutPoints(
@@ -671,11 +656,9 @@ struct BoxUtilities {
     *    - \b bad_interval (input)
     *       See class header for description.
     *
-    *
-    * Assertion checks:
-    *
-    *    - all components of bad_interval must be nonnegative.
-    *
+    * @pre box.getDim() == bad_interval.getDim()
+    * @pre !box.empty()
+    * @pre bad_interval >= IntVector::getZero(box.getDim())
     */
    static bool
    checkBoxForBadCutPointsInDirection(
@@ -709,13 +692,9 @@ struct BoxUtilities {
     *    - \b bad_interval (input)
     *        See class header for description.
     *
-    *
-    * Assertion checks:
-    *
-    *    - all components of bad_interval must be nonnegative
-    *
-    *    - bad_cuts must have size equal to dim
-    *
+    * @pre !box.empty()
+    * @pre bad_cuts.getSize() == box.getDim().getValue()
+    * @pre bad_interval >= IntVector::getZero(box.getDim())
     */
    static void
    findBadCutPoints(
@@ -749,11 +728,9 @@ struct BoxUtilities {
     *    - \b bad_interval (input)
     *       See class header for description.
     *
-    *
-    * Assertion checks:
-    *
-    *    - all components of bad_interval must be nonnegative
-    *
+    * @pre box.getDim() == bad_interval.getDim()
+    * @pre !box.empty()
+    * @pre bad_interval >= IntVector::getZero(box.getDim())
     */
    static void
    findBadCutPointsForDirection(
@@ -795,18 +772,17 @@ struct BoxUtilities {
     *
     * Assertion checks:
     *
-    *    - All components of min_size must be nonnegative.
-    *
-    *    - All components of cut_factor must be positive.
-    *
-    *    - cuts and bad_cuts must have size equal to dim
-    *
-    *    - Each array of integers in bad_cuts must have length
-    *      equal to the number of cells for the box in that direction.
-    *
     *    - The cut points for each direction must be strictly increasing
     *      and all satisfy the cut_factor restriction.
     *
+    * @pre (box.getDim() == min_size.getDim()) &&
+    *      (box.getDim() == cut_factor.getDim())
+    * @pre cuts.getSize() == box.getDim().getValue()
+    * @pre bad_cuts.getSize() == box.getDim().getValue()
+    * @pre !box.empty()
+    * @pre min_size > IntVector::getZero(box.getDim())
+    * @pre cut_factor > IntVector::getZero(box.getDim())
+    * @pre for the ith array in bad_cuts, array.getSize() == box.numberCells(i)
     */
    static void
    fixBadCutPoints(
@@ -847,19 +823,10 @@ struct BoxUtilities {
     *    - \b cut_factor (input)
     *       See class header for description.
     *
-    *
-    * Assertion checks:
-    *
-    *    - min_size must be nonnegative.
-    *
-    *    - cut_factor must be positive.
-    *
-    *    - bad_cut_points must have size equal to the number of
-    *      cells in the box along the specified coordinate direction.
-    *
-    *    - The cut points must be strictly increasing and all
-    *      satisfy the cut_factor constraint.
-    *
+    * @pre bad_cuts.getSize() == box.numberCells(dir)
+    * @pre !box.empty()
+    * @pre min_size > 0
+    * @pre cut_factor > 0
     */
    static void
    fixBadCutPointsForDirection(
@@ -876,6 +843,11 @@ struct BoxUtilities {
     * and the findBadCutPointsForDirection() member functions.  It sets bad
     * cut points near the lower and upper ends of the border box in the
     * given coordinate direction.
+    *
+    * @pre box.getDim() == border.getDim()
+    * @pre (0 <= id) && (id < box.getDim().getValue())
+    * @pre bad_cuts.getSize() == box.numberCells(id)
+    * @pre bad_interval >= 0
     *
     */
    static void

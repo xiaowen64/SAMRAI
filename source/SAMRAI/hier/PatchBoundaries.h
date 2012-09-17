@@ -65,7 +65,7 @@ public:
    operator = (
       const PatchBoundaries& r)
    {
-      for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
+      for (unsigned int d = 0; d < getDim().getValue(); ++d) {
          d_array_of_bboxes[d] = r.d_array_of_bboxes[d];
       }
       return *this;
@@ -75,12 +75,14 @@ public:
     * @brief Array access operator.
     *
     * @param[in] i  Array index.
+    *
+    * @pre i < getDim().getValue()
     */
    tbox::Array<BoundaryBox>&
    operator [] (
       unsigned int i)
    {
-      TBOX_ASSERT(i < d_dim.getValue());
+      TBOX_ASSERT(i < getDim().getValue());
       return d_array_of_bboxes[i];
    }
 
@@ -88,12 +90,14 @@ public:
     * @brief Const Array access operator.
     *
     * @param[in] i  Array index.
+    *
+    * @pre i < getDim().getValue()
     */
    const tbox::Array<BoundaryBox>&
    operator [] (
       unsigned int i) const
    {
-      TBOX_ASSERT(i < d_dim.getValue());
+      TBOX_ASSERT(i < getDim().getValue());
       return d_array_of_bboxes[i];
    }
 
@@ -117,6 +121,12 @@ public:
    getArrays() const
    {
       return d_array_of_bboxes;
+   }
+
+   const tbox::Dimension&
+   getDim() const
+   {
+      return d_dim;
    }
 
 private:

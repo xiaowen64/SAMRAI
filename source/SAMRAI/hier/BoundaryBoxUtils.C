@@ -99,6 +99,7 @@ BoundaryBoxUtils::computeOutwardShift()
          TBOX_ERROR("BoundaryBoxUtils cannot compute\n"
          << "boundary direction for type "
          << d_bbox.getBoundaryType() << " in " << dim << "D");
+         break;
    }
 }
 

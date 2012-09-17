@@ -103,14 +103,19 @@ public:
     * @param[out] neighbors
     * @param[in] connector
     * @param[in] box_id
-    * @param[in] connector_width
+    * @param[in] gcw
+    *
+    * @pre gcw <= connector.getConnectorWidth()
+    * @pre (connector.getParallelState() == BoxLevel::GLOBALIZED) ||
+    *      (box_id.getOwnerRank() == connector.getMPI().getRank())
+    * @pre connector.getBase().hasBox(box_id)
     */
    void
    extractNeighbors(
       Connector::NeighborSet& neighbors,
       const Connector& connector,
       const BoxId& box_id,
-      const IntVector& connector_width) const;
+      const IntVector& gcw) const;
 
    /*!
     * @brief Like extractNeighbors above except that it computes all
@@ -118,13 +123,20 @@ public:
     *
     * @param[out] other
     * @param[in] connector
-    * @param[in] connector_width
+    * @param[in] gcw
+    *
+    * @pre gcw <= connector.getConnectorWidth()
+    * @pre for the box_id of each neighborhood base box in connector,
+    *      (connector.getParallelState() == BoxLevel::GLOBALIZED) ||
+    *      (box_id.getOwnerRank() == connector.getMPI().getRank())
+    * @pre for the box_id of each neighborhood base box in connector,
+    *      connector.getBase().hasBox(box_id)
     */
    void
    extractNeighbors(
       Connector& other,
       const Connector& connector,
-      const IntVector& connector_width) const;
+      const IntVector& gcw) const;
 
    /*!
     * @brief Compute the overlap Connectors between BoxLevels
@@ -422,12 +434,16 @@ public:
     *
     * @param[in] connector
     * @param[in] ignore_self_overlap Ignore a box's overlap with itself
-    * @param[in] assert_completeness If false, ignore missing overlaps. This will
-    *   still look for overlaps that should not be there.
+    * @param[in] assert_completeness If false, ignore missing overlaps. This
+    *   will still look for overlaps that should not be there.
     * @param[in] ignore_periodic_images If true, do not require neighbors
     *   that are periodic images.
     *
     * @return Number of overlap errors found locally.
+    *
+    * @pre (connector.getBase().isInitialized()) &&
+    *      (connector.getHead().isInitialized())
+    * @pre !connector.hasPeriodicLocalNeighborhoodBaseBoxes()
     */
    int
    checkOverlapCorrectness(
@@ -451,6 +467,9 @@ public:
     * @param[in] ignore_self_overlap
     * @param[in] assert_completeness
     * @param[in] ignore_periodic_images
+    *
+    * @pre (connector.getBase().isInitialized()) &&
+    *      (connector.getHead().isInitialized())
     */
    void
    assertOverlapCorrectness(
@@ -476,6 +495,9 @@ public:
     * @param[out] missing
     * @param[out] extra
     * @param[in] ignore_self_overlap
+    *
+    * @pre (connector.getBase().isInitialized()) &&
+    *      (connector.getHead().isInitialized())
     */
    void
    findOverlapErrors(
@@ -589,7 +611,7 @@ private:
     * outgoing information in message buffers.
     */
    void
-   privateModify_removeAndCache(
+   privateBridge_removeAndCache(
       std::map<int, std::vector<int> >& neighbor_removal_mesg,
       Connector& overlap_connector,
       Connector* overlap_connector_transpose,
@@ -655,6 +677,8 @@ private:
     * - The boxes are equal by comparison (they have the same
     *   owner and the same indices), and
     * - They are from box_levels with the same refinement ratio.
+    *
+    * @pre head.getParallelState() == BoxLevel::GLOBALIZED
     */
    void
    findOverlaps_rbbt(

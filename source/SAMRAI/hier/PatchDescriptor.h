@@ -83,6 +83,10 @@ public:
     *                  which must be non-empty when assertion checking is active.
     * @param factory   pointer to factory to add to patch descriptor, which must
     *                  be non-null when assertion checking is active.
+    *
+    * @pre !name.empty()
+    * @pre factory
+    * @pre !d_free_indices.empty()
     */
    int
    definePatchDataComponent(
@@ -111,6 +115,8 @@ public:
     *
     * @param id      int index of factory to return, which must be >= 0 and
     *                < the return value of getMaxNumberRegisteredComponents();
+    *
+    * @pre (id >= 0) && (id < getMaxNumberRegisteredComponents())
     */
    boost::shared_ptr<PatchDataFactory>
    getPatchDataFactory(
@@ -165,6 +171,8 @@ public:
 
    /*!
     * Lookup a factory by identifier and return its name.
+    *
+    * @pre (id >= 0) && (id < getMaxNumberRegisteredComponents())
     */
    const std::string&
    mapIndexToName(

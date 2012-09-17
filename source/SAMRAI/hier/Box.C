@@ -546,6 +546,25 @@ Box::operator + (
    return bbox;
 }
 
+Box&
+Box::operator += (
+   const Box& box)
+{
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
+
+   if (!box.empty()) {
+      if (empty()) {
+         *this = box;
+      } else if (d_block_id == box.d_block_id) {
+         d_lo.min(box.d_lo);
+         d_hi.max(box.d_hi);
+      } else {
+         TBOX_ERROR("Attempted bounding box of Boxes from different blocks.");
+      } 
+   }
+   return *this;
+}
+
 void
 Box::lengthen(
    const int direction,
@@ -755,25 +774,6 @@ operator << (
       s << box.getBoxId() << " [" << box.lower() << "," << box.upper() << "]";
    }
    return s;
-}
-
-Box&
-Box::operator += (
-   const Box& box)
-{
-   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
-
-   if (!box.empty()) {
-      if (empty()) {
-         *this = box;
-      } else if (d_block_id == box.d_block_id) {
-         d_lo.min(box.d_lo);
-         d_hi.max(box.d_hi);
-      } else {
-         TBOX_ERROR("Attempted bounding box of Boxes from different blocks.");
-      } 
-   }
-   return *this;
 }
 
 /*

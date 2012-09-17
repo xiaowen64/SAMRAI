@@ -87,14 +87,15 @@ private:
     *
     * @param[in] dim
     *
-    * @param[in] boxes.  No empty boxes are allowed.  An assertion
-    *                           failure will occur if the boxes in this
-    *                           input set do not all have the same BlockId.
+    * @param[in] boxes
     *
     * @param[in] min_number Split up sets of boxes while the number of
     * boxes in a subset is greater than this value.  Setting to a
     * larger value tends to make tree building faster but tree
     * searching slower, and vice versa.  @b Default: 10
+    *
+    * @pre for each box in boxes, !box.empty()
+    * @pre each box in boxes has a valid, identical BlockId
     */
    BoxTree(
       const tbox::Dimension& dim,
@@ -158,6 +159,12 @@ private:
       return d_dim;
    }
 
+   const BlockId&
+   getBlockId() const
+   {
+      return d_block_id;
+   }
+
    //@}
 
    //@{
@@ -170,6 +177,8 @@ private:
     *
     * @param[in] box The box is assumed to be in same index space as
     * those in the tree.
+    *
+    * @pre getDim() == box.getDim()
     */
    bool
    hasOverlap(
@@ -188,8 +197,9 @@ private:
     * with box.
     *
     * @param[in] box the specified box whose overlaps are requested.
-    * An assertion failure will occur if the box does not have the same
-    * BlockId as the tree.
+    *
+    * @pre getDim() == box.getDim()
+    * @pre box.getBlockId() == getBlockId()
     */
    void
    findOverlapBoxes(
@@ -208,8 +218,9 @@ private:
     * entry of this method
     *
     * @param[in] box the specified box whose overlaps are requested.
-    * An assertion failure will occur if the box does not have the same
-    * BlockId as the tree.
+    *
+    * @pre getDim() == box.getDim()
+    * @pre box.getBlockId() == getBlockId()
     */
    void
    findOverlapBoxes(

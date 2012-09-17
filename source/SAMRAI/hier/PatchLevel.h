@@ -67,12 +67,6 @@ public:
     * by the grid geometry instance to initialize geometry information
     * of both the level and the patches on that level.
     *
-    * @par Error conditions
-    * When assertion checking is active, an unrecoverable assertion results
-    * if either the grid geometry pointer or patch descriptor pointer is
-    * null, or if the number of boxes in the array does not match the
-    * mapping array.
-    *
     * @param[in]  box_level
     * @param[in]  grid_geometry
     * @param[in]  descriptor The PatchDescriptor used to allocate patch data
@@ -82,6 +76,12 @@ public:
     * @param[in]  defer_boundary_box_creation Flag to indicate suppressing
     *             construction of the boundary boxes.
     *
+    * @pre grid_geometry
+    * @pre descriptor
+    * @pre box_level.getDim() == grid_geometry->getDim()
+    * @pre box_level.getRefinementRatio() != IntVector::getZero(getDim())
+    * @pre all components of box_level's refinement ratio must be nonzero and,
+    *      all components not equal to 1 must have the same sign
     */
    PatchLevel(
       const BoxLevel& box_level,
@@ -103,12 +103,7 @@ public:
     * component selector are set to false so that no patch data are
     * allocated.
     *
-    * @par Error conditions
-    * When assertion checking is turned on, the restart_database,
-    * grid_geometry, and descriptor are checked to make sure that
-    * they are not null.  If null, an unrecoverable assertion will result.
-    *
-    * @param[in]  level_database
+    * @param[in]  restart_database
     * @param[in]  grid_geometry
     * @param[in]  descriptor The PatchDescriptor used to allocate patch
     *             data.
@@ -117,9 +112,13 @@ public:
     *             a ComponentSelector with all elements set to false
     * @param[in]  defer_boundary_box_creation Flag to indicate suppressing
     *             construction of the boundary boxes.  @b Default: false
+    *
+    * @pre restart_database
+    * @pre grid_geometry
+    * @pre descriptor
     */
    PatchLevel(
-      const boost::shared_ptr<tbox::Database>& level_database,
+      const boost::shared_ptr<tbox::Database>& restart_database,
       const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
       const boost::shared_ptr<PatchDescriptor>& descriptor,
       const boost::shared_ptr<PatchFactory>& factory,
@@ -300,6 +299,8 @@ public:
     * @param[in]  mbid
     *
     * @return A boost::shared_ptr to the Patch indicated by the BoxId.
+    *
+    * @pre d_patches.find(mbid) != d_patches.end()
     */
    boost::shared_ptr<Patch>
    getPatch(
@@ -388,6 +389,12 @@ public:
     * @param[in]  fine_grid_geometry @b Default: boost::shared_ptr to a null
     *             grid geometry
     * @param[in]  defer_boundary_box_creation @b Default: false
+    *
+    * @pre coarse_level
+    * @pre refine_ratio > IntVector::getZero(getDim())
+    * @pre (getDim() == coarse_level->getDim()) &&
+    *      (getDim() == refine_ratio.getDim())
+    * @pre !fine_grid_geometry || getDim() == fine_grid_geometry->getDim()
     */
    void
    setRefinedPatchLevel(
@@ -436,6 +443,12 @@ public:
     * @param[in]  coarse_grid_geom @b Default: boost::shared_ptr to a null
     *             grid geometry
     * @param[in]  defer_boundary_box_creation @b Default: false
+    *
+    * @pre fine_level
+    * @pre coarsen_ratio > IntVector::getZero(getDim())
+    * @pre (getDim() == fine_level->getDim()) &&
+    *      (getDim() == coarsen_ratio.getDim())
+    * @pre !coarse_grid_geom || getDim() == coarse_grid_geom->getDim()
     */
    void
    setCoarsenedPatchLevel(
@@ -639,6 +652,8 @@ public:
     * @return The box for the specified patch.
     *
     * @param[in] box_id Patch's BoxId
+    *
+    * @pre box_id.getOwnerRank() == getBoxLevel()->getMPI().getRank()
     */
    const Box&
    getBoxForPatch(
@@ -656,6 +671,8 @@ public:
     *
     * @return True if patch with given number is adjacent to a non-periodic
     * physical domain boundary.  Otherwise, false.
+    *
+    * @pre box_id.getOwnerRank() == getBoxLevel()->getMPI().getRank()
     */
    bool
    patchTouchesRegularBoundary(
@@ -824,6 +841,8 @@ public:
     *
     * @param[in,out] restart_db
     * @param[in]     component_selector
+    *
+    * @pre restart_db
     */
    void
    getFromRestart(
@@ -837,12 +856,11 @@ public:
     * Also tells all local patches to write out their state to
     * the restart database.
     *
-    * @par Assertions
-    * Check that restart_db is a non-null boost::shared_ptr.
-    *
     * @param[in,out]  restart_db
     * @param[in]      patchdata_write_table The ComponentSelector specifying
     *                 which patch data to write to the database
+    *
+    * @pre restart_db
     */
    void
    putToRestart(

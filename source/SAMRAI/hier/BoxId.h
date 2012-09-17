@@ -54,6 +54,8 @@ public:
     * @param[in] owner_rank
     *
     * @param[in] periodic_id
+    *
+    * @pre periodic_id.isValid()
     */
    BoxId(
       const LocalId& local_id,
@@ -66,6 +68,8 @@ public:
     * @param[in] id
     *
     * @param[in] periodic_id
+    *
+    * @pre periodic_id.isValid()
     */
    explicit BoxId(
       const GlobalId& id,
@@ -75,6 +79,8 @@ public:
     * @brief Copy constructor.
     *
     * @param[in] other
+    *
+    * @pre other.periodic_id.isValid()
     */
    BoxId(
       const BoxId& other);

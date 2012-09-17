@@ -135,6 +135,9 @@ public:
     * @param[in]  var The Variable for which the corresponding coarsening
     *                 operator should match.
     * @param[in]  op_name The string identifier of the coarsening operator.
+    *
+    * @pre var
+    * @pre getMinTransferOpStencilWidth().getDim() == var->getDim()
     */
    boost::shared_ptr<CoarsenOperator>
    lookupCoarsenOperator(
@@ -155,6 +158,9 @@ public:
     * @param[in]  var The Variable for which the corresponding refinement
     *                 operator should match.
     * @param[in]  op_name The string identifier of the refinement operator.
+    *
+    * @pre var
+    * @pre getMinTransferOpStencilWidth().getDim() == var->getDim()
     */
    boost::shared_ptr<RefineOperator>
    lookupRefineOperator(
@@ -176,6 +182,9 @@ public:
     *                 interpolation operator should match.
     * @param[in]  op_name The string identifier of the time interpolation
     *                     operator.  \b Default: STD_LINEAR_TIME_INTERPOLATE
+    *
+    * @pre var
+    * @pre getMinTransferOpStencilWidth().getDim() == var->getDim()
     */
    boost::shared_ptr<TimeInterpolateOperator>
    lookupTimeInterpolateOperator(
@@ -212,13 +221,21 @@ public:
     * in getMaxTransferOpStencilWidth().
     *
     * @param[in]  min_value The minimum value to set.
+    *
+    * @pre getMinTransferOpStencilWidth().getDim() == min_value.getDim()
     */
    void
    setMinTransferOpStencilWidth(
       const IntVector& min_value)
    {
-      TBOX_ASSERT_OBJDIM_EQUALITY2(d_min_stencil_width, min_value);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(getMinTransferOpStencilWidth(), min_value);
       d_min_stencil_width = min_value;
+   }
+
+   const IntVector&
+   getMinTransferOpStencilWidth() const
+   {
+      return d_min_stencil_width;
    }
 
    /*!

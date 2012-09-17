@@ -867,6 +867,8 @@ public:
     * The rank of every member of this container is inserted into the set.
     *
     * @param[out] owners
+    *
+    * @pre isOrdered() || for each box in container has valid BoxId
     */
    void
    getOwners(
@@ -925,6 +927,8 @@ public:
     *
     * @param[in] idx
     * @param[in] block_id
+    *
+    * @pre each box in container must have a valid BlockId
     */
    bool
    contains(
@@ -934,9 +938,8 @@ public:
    /*!
     * @brief  Returns the bounding box for all the boxes in the container.
     *
-    * Requires that the container is not empty.
-    * A run-time error will occur if Boxes in this container have different
-    * BlockIds.
+    * @pre !isEmpty()
+    * @pre each Box in container has same BlockId
     */
    Box
    getBoundingBox() const;
@@ -945,9 +948,9 @@ public:
     * @brief  Returns the bounding box for all the boxes in the container
     *         having the given BlockId.
     *
-    * Requires that the container is not empty.
-    *
     * @param[in] block_id
+    *
+    * @pre !isEmpty()
     */
    Box
    getBoundingBox(
@@ -969,11 +972,9 @@ public:
    /*!
     * @brief Changes state of this container to ordered.
     *
-    * This can be called on an unordered container with the restriction that
-    * every member of the container must have a valid and unique BoxId.
-    * If this restriction is not met, then a run-time error will occur.
-    *
     * If called on a container that is already ordered, nothing changes.
+    *
+    * @pre each box in container must have valid and unique BoxId
     */
    void
    order();
@@ -1008,6 +1009,9 @@ public:
     * front() in an unordered container.
     *
     * @param[in] item
+    *
+    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre !isOrdered()
     */
    void
    pushFront(
@@ -1035,6 +1039,9 @@ public:
     * back() in an unordered container.
     *
     * @param[in] item
+    *
+    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre !isOrdered()
     */
    void
    pushBack(
@@ -1063,6 +1070,9 @@ public:
     *
     * @param[in] iter Location to add item before.
     * @param[in] item Box to add to container.
+    *
+    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre !isOrdered()
     */
    void
    insertBefore(
@@ -1092,6 +1102,9 @@ public:
     *
     * @param[in] iter Location to add item after.
     * @param[in] item Box to add to container.
+    *
+    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre !isOrdered()
     */
    void
    insertAfter(
@@ -1120,6 +1133,10 @@ public:
     * "boxes" will be empty following this operation.
     *
     * @param[in] boxes
+    *
+    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre !isOrdered()
+    * @post boxes.isEmpty()
     */
    void
    spliceFront(
@@ -1146,6 +1163,10 @@ public:
     * "boxes" will be empty following this operation.
     *
     * @param[in] boxes
+    *
+    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre !isOrdered()
+    * @post boxes.isEmpty()
     */
    void
    spliceBack(
@@ -1169,6 +1190,8 @@ public:
 
    /*!
     * @brief Remove the first member of the unordered container.
+    *
+    * @pre !isOrdered()
     */
    void
    popFront()
@@ -1185,6 +1208,8 @@ public:
 
    /*!
     * @brief Remove the last member of the unordered container.
+    *
+    * @pre !isOrdered()
     */
    void
    popBack()
@@ -1212,6 +1237,9 @@ public:
     * of the domain calculus routines call simplify(); all calls to simplify
     * the boxes must be explicit.  Note that this routine is distinct from
     * coalesce(), which is not guaranteed to produce a canonical ordering.
+    *
+    * @pre !isOrdered()
+    * @pre isEmpty() || all Boxes in container have same BlockId
     */
    void
    simplify();
@@ -1230,6 +1258,9 @@ public:
     * the boxes in the order in which they appear in the container, rather
     * than attempting to coalesce boxes along specific coordinate directions
     * before others.
+    *
+    * @pre !isOrdered()
+    * @pre isEmpty() || all Boxes in container have same BlockId
     */
    void
    coalesce();
@@ -1240,6 +1271,9 @@ public:
     * @note Works only in 2D or 3D.
     *
     * @param[in] rotation_ident
+    *
+    * @pre each Box in container has dim 2 or 3
+    * @pre each Box in container has same BlockId
     */
    void
    rotate(
@@ -1255,6 +1289,8 @@ public:
     * '^' indicates intersection.
     *
     * @param[in] takeaway What to exclude from each box in the container.
+    *
+    * @pre !isOrdered()
     */
    void
    removeIntersections(
@@ -1270,6 +1306,8 @@ public:
     * BoxContainer have the same BlockId.  An error will occur otherwise.
     *
     * @param[in] takeaway What to exclude from each box in the container.
+    *
+    * @pre !isOrdered()
     */
    void
    removeIntersections(
@@ -1292,6 +1330,9 @@ public:
     * @param[in] include_singularity_block_neighbors  If true, intersections
     * with neighboring blocks that touch only across an enhanced connectivity
     * singularity will be removed.  If false, those intersections are ignored.
+    *
+    * @pre !isOrdered()
+    * @pre takeaway.hasTree()
     */
    void
    removeIntersections(
@@ -1312,6 +1353,10 @@ public:
     *
     * @param[in] box
     * @param[in] takeaway
+    *
+    * @pre !isOrdered()
+    * @pre isEmpty()
+    * @pre box.getBlockId() == takeaway.getBlockId()
     */
    void
    removeIntersections(
@@ -1325,6 +1370,8 @@ public:
     * container with \f$N\f$ boxes.  The complement of removeIntersections.
     *
     * @param[in] keep
+    *
+    * @pre !isOrdered()
     */
    void
    intersectBoxes(
@@ -1342,6 +1389,8 @@ public:
     * BoxContainer have the same BlockId.  An error will occur otherwise.
     *
     * @param[in] keep
+    *
+    * @pre !isOrdered()
     */
    void
    intersectBoxes(
@@ -1364,6 +1413,9 @@ public:
     * @param[in] include_singularity_block_neighbors  If true, intersections
     * with neighboring blocks that touch only across an enhanced connectivity
     * singularity will be kept.  If false, those intersections are ignored.
+    *
+    * @pre !isOrdered()
+    * @pre keep.hasTree()
     */
    void
    intersectBoxes(
@@ -1394,6 +1446,10 @@ public:
     *          same BoxId, false otherwise.
     *
     * @param[in]  box Box to attempt to insert into the container.
+    *
+    * @pre box.getBoxId().isValid()
+    * @pre isEmpty() || (front().getDim() == box.getDim())
+    * @pre isEmpty() || isOrdered()
     */ 
    bool
    insert(
@@ -1423,6 +1479,11 @@ public:
     *
     * @param[in] position  Location to begin searching for place to insert Box
     * @param[in] box       Box to attempt to insert into the container
+    *
+    * @pre box.getBoxId().isValid()
+    * @pre box.getBlockId() != BlockId::invalidId()
+    * @pre isEmpty() || (front().getDim() == box.getDim())
+    * @pre isEmpty() || isOrdered()
     */
    iterator
    insert(
@@ -1438,6 +1499,10 @@ public:
     *
     * @param[in] first
     * @param[in] last
+    *
+    * @pre isEmpty() || isOrdered()
+    * @pre for each box in [first, last), box.getBoxId().isValid() &&
+    *      (isEmpty || front().getDim() == box.getDim())
     */
    void
    insert(
@@ -1460,6 +1525,8 @@ public:
     *
     * @param[in]  box  Box serving as key for the find operation.  Only
     *                  its BoxId is compared to members of this container. 
+    *
+    * @pre isOrdered()
     */  
    iterator
    find(
@@ -1484,6 +1551,8 @@ public:
     *          the argument Box.
     *
     * @param[in]  box  Box serving as key for the lower bound search.
+    *
+    * @pre isOrdered()
     */
    iterator
    lowerBound(
@@ -1501,14 +1570,14 @@ public:
    /*!
     * @brief  Get upper bound iterator for a given Box.
     *
-    * This may only be called on an ordered container.
-    *
     * @return  iterator pointing to the first member of this container
     *          with a BoxId value greater than the BoxId of the argument
     *          Box.  Will return end() if there are no members with a greater
     *          BoxId value.
     *
     * @param[in]  box  Box serving as key for the upper bound search.
+    *
+    * @pre isOrdered()
     */
    iterator
    upperBound(
@@ -1526,14 +1595,15 @@ public:
    /*!
     * @brief  Erase a Box from the container.
     *
-    * This may only be called on an ordered container.  If a member of the
-    * container has the same BoxId as the argument Box, it will be erased
-    * from the container.  If no such member is found, the container is
-    * unchanged.
+    * If a member of the container has the same BoxId as the argument Box,
+    * it will be erased from the container.  If no such member is found,
+    * the container is unchanged.
     *
     * @return  1 if a Box is erased, 0 otherwise.
     *
     * @param[in]  box  Box serving as key to find a Box to be erased.
+    *
+    * @pre isOrdered()
     */
    int
    erase(
@@ -1552,6 +1622,8 @@ public:
     *
     * @param[out] real_box_vector
     * @param[out] periodic_image_box_vector
+    *
+    * @pre isOrdered()
     */
    void
    separatePeriodicImages(
@@ -1561,6 +1633,8 @@ public:
    /*!
     * @brief  Any members of this container that are periodic images will
     *         be erased.
+    *
+    * @pre isEmpty() || isOrdered()
     */
    void
    removePeriodicImageBoxes();
@@ -1579,6 +1653,8 @@ public:
     * @param[out] output_boxes
     *
     * @param[in] refinement_ratio Refinement ratio where the boxes live.
+    *
+    * @pre isOrdered()
     */
    void
    unshiftPeriodicImageBoxes(
@@ -1738,7 +1814,9 @@ private:
     * 
     * @param[in]  grid_geometry  To handle multiblock transformations if
     *                            needed.  
-    * @param[in]  min_number  An assertion failure will occur if not positive
+    * @param[in]  min_number
+    *
+    * @pre min_number > 0
     */
    void
    makeTree(
@@ -1801,6 +1879,8 @@ private:
     * @param[out] overlap_boxes
     *
     * @param[in] box
+    *
+    * @pre !hasTree() || (d_tree->getNumberBlocksInTree() == 1)
     */
    void
    findOverlapBoxes(
@@ -1832,6 +1912,8 @@ private:
     * with neighboring blocks that touch only across an enhanced connectivity
     * singularity will be added to output.  If false, those intersections are
     * ignored.
+    *
+    * @pre hasTree()
     */
    void
    findOverlapBoxes(
@@ -1876,6 +1958,8 @@ private:
     * this operation computes b-(b^t) where '^' indicates intersection.
     *
     * @param[in] takeaway What to exclude from each box in the container.
+    *
+    * @pre !isOrdered()
     */
    void
    removeIntersections(
@@ -1889,6 +1973,8 @@ private:
     * removeIntersections.
     *
     * @param[in] keep
+    *
+    * @pre !isOrdered()
     */
    void
    intersectBoxes(
@@ -1904,6 +1990,9 @@ private:
     * @param[in] bursty
     * @param[in] solid
     * @param[in] direction
+    *
+    * @pre bursty.getDim() == solid.getDim()
+    * @pre dimension <= bursty.getDim().getValue()
     */
    void
    burstBoxes(
@@ -1923,6 +2012,9 @@ private:
     * @param[in] solid
     * @param[in] direction
     * @param[in] itr
+    *
+    * @pre bursty.getDim() == solid.getDim()
+    * @pre dimension <= bursty.getDim().getValue()
     */
    void
    burstBoxes(
@@ -1940,6 +2032,8 @@ private:
     * @param[in] sublist_end
     * @param[in] insertion_pt Where to put new boxes created by this
     * operation.
+    *
+    * @pre !isOrdered()
     */
    void
    removeIntersectionsFromSublist(

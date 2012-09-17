@@ -47,7 +47,7 @@ PatchGeometry::PatchGeometry(
 #ifdef DEBUG_CHECK_ASSERTIONS
 
    /*
-    * All components of ratio must me nonzero.  Additionally, all components
+    * All components of ratio must be nonzero.  Additionally, all components
     * of ratio not equal to 1 must have the same sign.
     */
    int i;

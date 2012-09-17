@@ -58,6 +58,9 @@ public:
     * shift number.
     *
     * @param[in] shift_number
+    *
+    * @pre shift_number.isValid()
+    * @pre shift_number.getPeriodicValue() < getNumberOfShifts()
     */
    const IntVector&
    shiftNumberToShiftDistance(
@@ -107,6 +110,9 @@ public:
     * the shift distance of the given shift number.
     *
     * @param[in] shift_number
+    *
+    * @pre shift_number.isValid()
+    * @pre shift_number.getPeriodicValue() < getNumberOfShifts()
     */
    const PeriodicId&
    getOppositeShiftNumber(

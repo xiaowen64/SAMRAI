@@ -57,6 +57,8 @@ public:
     * @param[in]  descriptor
     * @param[in]  factory @b Default: a boost::shared_ptr to the standard
     *             PatchFactory
+    *
+    * @pre box_level.getDim() == grid_geometry->getDim()
     */
    virtual boost::shared_ptr<PatchLevel>
    allocate(

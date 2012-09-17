@@ -54,10 +54,9 @@ public:
    /*!
     * @brief Return the BoxLevel attached to this handle.
     *
-    * If there is no attached BoxLevel (isAttached() returns
-    * false), an assertion is thrown.
-    *
     * @see isAttached()
+    *
+    * @pre isAttached()
     */
    const BoxLevel&
    getBoxLevel() const;

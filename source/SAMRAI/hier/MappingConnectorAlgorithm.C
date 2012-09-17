@@ -835,10 +835,9 @@ MappingConnectorAlgorithm::privateModify_checkParameters(
     * Ensure that Connectors incident to and from the old agree on
     * what the old is.
     */
-   if (&old != &old_to_new.getBase() ||
-       (new_to_old.isFinalized() && &old !=
-        &new_to_old.getHead()) ||
-       &old != &anchor_to_mapped.getHead()) {
+   if ((&old != &old_to_new.getBase()) ||
+       (new_to_old.isFinalized() && (&old != &new_to_old.getHead())) ||
+       (&old != &anchor_to_mapped.getHead())) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
          << "Given Connectors to anchor and new of modify are not incident\n"
          << "from the same old in MappingConnectorAlgorithm::modify:\n"

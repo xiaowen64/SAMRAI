@@ -170,12 +170,11 @@ public:
    /*!
     * @brief Check whether the specified bit vector position is true.
     *
-    * When assertion checking is active, an assertion will result if the
-    * given position is out-of-bounds.
-    *
     * @param[in]  i The position in the bit vector to check.
     *
     * @return True if the bit at position i is set to true.
+    *
+    * @pre (i >= 0) && (i < getSize())
     */
    bool
    isSet(
@@ -188,10 +187,9 @@ public:
    /*!
     * @brief Set the specified bit vector position to true.
     *
-    * When assertion checking is active, an assertion will result if the
-    * given position is out-of-bounds.
-    *
     * @param[in]  i The position in the bit vector to set to true.
+    *
+    * @pre (i >= 0) && (i < getSize())
     */
    void
    setFlag(
@@ -204,10 +202,9 @@ public:
    /*!
     * @brief Set the specified bit vector position to false.
     *
-    * When assertion checking is active, an assertion will result if the
-    * given position is out-of-bounds.
-    *
     * @param[in]  i The position in the bit vector to set to false.
+    *
+    * @pre (i >= 0) && (i < getSize())
     */
    void
    clrFlag(

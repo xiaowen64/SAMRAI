@@ -58,6 +58,8 @@ private:
     * boxes in a subset is greater than this value.  Setting to a
     * larger value tends to make tree building faster but tree
     * searching slower, and vice versa.  @b Default: 10
+    *
+    * @pre for each box in boxes, box.getBlockId().isValid()
     */
    MultiblockBoxTree(
       const BoxContainer& boxes, 
@@ -117,7 +119,9 @@ private:
     * tree.
     *
     * @param[in] box The box must have the same BlockId as all Boxes in the
-    * tree. 
+    * tree.
+    *
+    * @pre getNumberBlocksInTree() == 1
     */
    bool
    hasOverlap(const Box& box) const; 
@@ -135,6 +139,8 @@ private:
     * @param[out] overlap_boxes
     *
     * @param[in] box
+    *
+    * @pre getNumberBlocksInTree() == 1
     */
    void
    findOverlapBoxes(
@@ -163,6 +169,11 @@ private:
     * with neighboring blocks that touch only across an enhanced connectivity
     * singularity will be added to output.  If false, those intersections are
     * ignored.
+    *
+    * @pre (getGridGeometry().getDim() == box.getDim()) &&
+    *      (getGridGeometry().getDim() == refinement_ratio.getDim())
+    * @pre (box.getBlockId().getBlockValue() >= 0) &&
+    *      (box.getBlockId().getBlockValue() < getGridGeometry()->getNumberBlocks())
     */
    void
    findOverlapBoxes(
@@ -185,6 +196,8 @@ private:
     * @param[out] overlap_boxes
     *
     * @param[in] box
+    *
+    * @pre getNumberBlocksInTree() == 1
     */
    void
    findOverlapBoxes(
@@ -214,6 +227,11 @@ private:
     * with neighboring blocks that touch only across an enhanced connectivity
     * singularity will be added to output.  If false, those intersections are
     * ignored.
+    *
+    * @pre (getGridGeometry().getDim() == box.getDim()) &&
+    *      (getGridGeometry().getDim() == refinement_ratio.getDim())
+    * @pre (box.getBlockId().getBlockValue() >= 0) &&
+    *      (box.getBlockId().getBlockValue() < getGridGeometry()->getNumberBlocks())
     */
    void
    findOverlapBoxes(

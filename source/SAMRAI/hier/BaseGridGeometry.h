@@ -77,15 +77,14 @@ public:
     * contain all index space grid information for a mesh, but nothing about
     * the physical coordinates of the mesh.
     *
-    * @note
-    * @b Errors: passing in a null database pointer or an empty string
-    * will result in an unrecoverable assertion.
-    *
     * @param[in]  dim
     * @param[in]  object_name
     * @param[in]  input_db
     * @param[in]  allow_multiblock set to false if called by inherently single
     *             block derived class such as CartesianGridGeometry
+    *
+    * @pre !object_name.empty()
+    * @pre input_db
     */
    BaseGridGeometry(
       const tbox::Dimension& dim,
@@ -102,6 +101,9 @@ public:
     * @param[in]  object_name
     * @param[in]  domain      Each element of the array describes the index
     *                         space for a block.
+    *
+    * @pre !object_name.empty()
+    * @pre !domain.isEmpty()
     */
    BaseGridGeometry(
       const std::string& object_name,
@@ -171,6 +173,10 @@ public:
     *              periodic boundaries.
     * @param[in]   defer_boundary_box_creation Flag to indicate if boundary
     *              boxes should be created
+    *
+    * @pre (getDim() == level.getDim()) &&
+    *      (getDim() == ratio_to_level_zero.getDim())
+    * @pre ratio_to_level_zero != IntVector::getZero(getDim())
     */
    /*
     * TODO:  The confusing coordination and sequence of calls between
@@ -196,6 +202,8 @@ public:
     * PatchGeometry object.
     *
     * @param[in,out] level The level for which boundary boxes are constructed.
+    *
+    * @pre getDim() == level.getDim()
     */
    /*
     * TODO:  See the second TODO item for the previous method.
@@ -219,6 +227,8 @@ public:
     * @param[out]    domain The BoxContainer to be computed
     * @param[in]     ratio_to_level_zero ratio to the coarsest level
     * @param[in]     block_id
+    *
+    * @pre getDim() == ratio_to_level_zero.getDim()
     */
    void
    computePhysicalDomain(
@@ -247,6 +257,8 @@ public:
     *                Boxes describing the index space
     * @param[in]     ratio_to_level_zero ratio to the coarsest level
     * @param[in]     block_id
+    *
+    * @pre getDim() == ratio_to_level_zero.getDim()
     */
    void
    computePhysicalDomain(
@@ -267,6 +279,8 @@ public:
     * @param[out]    domain_boxes The BoxContainer containing all
     *                Boxes describing the physical domain
     * @param[in]     ratio_to_level_zero ratio to the coarsest level
+    *
+    * @pre getDim() == ratio_to_level_zero.getDim()
     */
    void
    computePhysicalDomain(
@@ -286,6 +300,8 @@ public:
     * @param[out]    box_level The BoxLevel containing all
     *                Boxes describing the physical domain
     * @param[in]     ratio_to_level_zero ratio to the coarsest level
+    *
+    * @pre getDim() == ratio_to_level_zero.getDim()
     */
    void
    computePhysicalDomain(
@@ -306,6 +322,10 @@ public:
     *
     * @param[in]     domain The input array of BoxContainer
     * @param[in]     number_blocks
+    *
+    * @pre !domain.isEmpty()
+    * @pre for each box in domain: box.getBlockId().isValid() &&
+    *      (box.getBlockId().getBlockValue() < number_blocks)
     */
    void
    setPhysicalDomain(
@@ -373,6 +393,8 @@ public:
     * @param[in]  directions an array indicating periodic directions(1) or
     *             all others (0).
     *
+    * @pre getDim() == directions.getDim()
+    *
     * @note
     * The IntVector argument should be set to 1 for periodic directions
     * and 0 for all other directions.  The shift will be calculated to
@@ -397,6 +419,8 @@ public:
     * @return        The periodic shift in each direction for a domain
     *                represented by a refinement of the reference physical
     *                domain.
+    *
+    * @pre getDim() == ratio_to_level_zero.getDim()
     */
    IntVector
    getPeriodicShift(
@@ -474,6 +498,11 @@ public:
     *                   non-periodic boundaries.
     * @param[in]        touches_periodic_bdry Array storing which patches touch
     *                   periodic boundaries.
+    *
+    * @pre (getDim() == patch.getDim()) && 
+    *      (getDim() == ratio_to_level_zero.getDim()) &&
+    *      (getDim() == touches_regular_bdry.getDim()) &&
+    *      (getDim() == touches_periodic_bdry.getDim())
     */
    /*
     * TODO:  See the second TODO item for the setGeometryOnPatches() method.
@@ -527,6 +556,11 @@ public:
     *                computing boundary boxes.
     * @param[in]     do_all_patches Flag to indicate boundary box computation
     *                on all patches, even those known to not touch a boundary
+    *
+    * @pre (getDim() == level.getDim()) &&
+    *      (getDim() == periodic_shift.getDim()) &&
+    *      (getDim() == ghost_width.getDim())
+    * @pre ghost_width >= IntVector::getZero(ghost_width.getDim())
     */
    void
    computeBoundaryBoxesOnLevel(
@@ -549,6 +583,9 @@ public:
     * @param[in]     domain_boxes
     * @param[in]     ghosts
     * @param[in]     periodic_shift
+    *
+    * @pre (getDim() == box.getDim()) && (getDim() == ghosts.getDim()) &&
+    *      (getDim() == periodic_shift.getDim())
     */
    void
    getBoundaryBoxes(
@@ -571,6 +608,10 @@ public:
     * are represented.
     *
     * @param[in,out] patch_level Level where boundaries need to be adjusted.
+    *
+    * @pre getDim() == patch_level.getDim()
+    * @pre patch_level.getGridGeometry()->getNumberBlocks() == getNumberBlocks()
+    *
     * TODO:  Incorporate into regular boundary box computation once
     * PatchLevel is multiblock-aware.
     */
@@ -857,6 +898,8 @@ private:
     *                            correct location within a's index space
     * @param[in] neighbor_type   The type (codimension) of the neighbor
     *                            relationship
+    *
+    * @pre getDim() = shift_b_to_a.getDim()
     */
    void
    registerNeighbors(
@@ -952,13 +995,15 @@ private:
     * resolution level defined by ratio_to_level_zero.
     *
     * @param[in,out] box The boxes will be transformed from the
-    *                      transformed_block index space to the base_block
-    *                      index space.
+    *                    transformed_block index space to the base_block
+    *                    index space.
     * @param[in] ratio
     * @param[in] output_block Integer identifier of the block whose index space
-    *                       will be represented in the boxes at output
+    *                         will be represented in the boxes at output
     * @param[in] input_block Integer identifier of the block whose index
-    *                             space is represented in the boxes at input
+    *                        space is represented in the boxes at input
+    *
+    * @pre (getDim() == box.getDim()) && (getDim() == ratio.getDim())
     *
     * @return Whether the box has been transformed.  True if there is a
     * relationship between input_block and output_block.  False if
@@ -1052,6 +1097,9 @@ private:
 
    /*!
     * @brief Tell if the given BlockIds represent neighboring blocks.
+    *
+    * @param block_a
+    * @param block_b
     */
    bool
    areNeighbors(
@@ -1060,6 +1108,9 @@ private:
 
    /*!
     * @brief Tell if the given BlockIds represent neighboring blocks.
+    *
+    * @param block_a
+    * @param block_b
     */
    bool
    areSingularityNeighbors(
@@ -1067,7 +1118,12 @@ private:
       const BlockId& block_b) const;
 
    /*!
-    * @brief Get the rotation identifier to rotate from src to dst.
+    * @brief Get the rotation identifier to rotate from src to dst.\
+    *
+    * @param dst
+    * @param src
+    *
+    * @pre areNeighbors(dst, src)
     */
    Transformation::RotationIdentifier
    getRotationIdentifier(
@@ -1076,6 +1132,11 @@ private:
 
    /*!
     * @brief Get the offset to shift from src to dst after rotation.
+    *
+    * @param dst
+    * @param src
+    *
+    * @pre areNeighbors(dst, src)
     */
    const IntVector&
    getOffset(
@@ -1104,10 +1165,9 @@ private:
     * @brief Writes the state of the BaseGridGeometry object to the
     * restart database.
     *
-    * When assertion checking is active, restart_db cannot be a null database
-    * pointer.
-    *
     * @param[in,out]  restart_db The restart database to write/serialize to.
+    *
+    * @pre restart_db
     */
    virtual void
    putToRestart(
@@ -1121,6 +1181,9 @@ protected:
     * @param[in]  domain      Each element of the array describes the index
     *                         space for a block.
     * @param[in]  op_reg
+    *
+    * @pre !object_name.empty()
+    * @pre !domain.isEmpty()
     */
    BaseGridGeometry(
       const std::string& object_name,
@@ -1131,6 +1194,8 @@ protected:
     * @brief Read multiblock metadata input from the input database
     *
     * @param[in] input_db
+    *
+    * @pre input_db
     */
    void
    readBlockDataFromInput(
@@ -1172,6 +1237,10 @@ private:
     * It returns true when a BoundaryBox has a width of 1 in at least
     * one direction, is adjacent to the patch boundary (possible extended
     * into the patch's ghost region) and is outside the physical domain.
+    *
+    * @pre (getDim() == boundary_box.getDim()) &&
+    *      (getDim() == patch.getDim()) &&
+    *      (getDim() == max_data_ghost_width.getDim())
     */
    bool
    checkBoundaryBox(
@@ -1192,6 +1261,8 @@ private:
     * @param[in]     box Box on which to compute periodic shifts
     * @param[in]     domain_search_tree search tree for the domain
     * @param[in]     periodic_shift
+    *
+    * @pre (getDim() == box.getDim()) && (getDim() == periodic_shift.getDim())
     */
    void
    computeShiftsForBox(
@@ -1210,6 +1281,8 @@ private:
     *            every block were in the index space where the patch exists
     * @param[in] gcw         The maximum patch data ghost width
     * @param[in] singularity BoxContainer obtained by getSingularityBoxContainer()
+    *
+    * @pre (getDim() == patch.getDim()) && (getDim() == gcw.getDim())
     */
 
    void
@@ -1229,6 +1302,8 @@ private:
     * @param[in] is_from_restart  set to true if simulation is from restart
     * @param[in] allow_multiblock set to false if called by inherently single
     *            block derived class such as CartesianGridGeometry
+    *
+    * @pre is_from_restart || input_db
     */
    void
    getFromInput(
@@ -1242,6 +1317,8 @@ private:
     *
     * The database from which the restart data is read is
     * determined by the object_name specified in the constructor.
+    *
+    * @pre tbox::RestartManager::getManager()->getRootDatabase()->isDatabase(getObjectName()
     *
     * Unrecoverable Errors:
     *

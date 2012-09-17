@@ -108,6 +108,11 @@ public:
     *
     * @return True if the given base BoxLevel nests in the head,
     * otherwise False.
+    * @pre (connector.getBase().getDim() == base_swell.getDim()) &&
+    *      (connector.getBase().getDim() == head_nesting_margin.getDim())
+    * @pre connector.isFinalized()
+    * @pre base_swell >= IntVector::getZero(connector.getBase().getDim())
+    * @pre head_nesting_margin >= IntVector::getZero(connector.getBase().getDim())
     */
    bool
    baseNestsInHead(
@@ -154,6 +159,14 @@ public:
     * in search tree format.
     *
     * @return Whether the given base BoxLevel nests in the head.
+    *
+    * @pre head_nesting_margin.getDim() == base_swell.getDim()
+    * @pre head.getMPI() == base.getMPI()
+    * @pre base_swell >= IntVector::getZero(head.getDim())
+    * @pre head_swell >= IntVector::getZero(head.getDim())
+    * @pre head_nesting_margin >= IntVector::getZero(head.getDim())
+    * @pre (head.getRefinementRatio() <= base.getRefinementRatio()) ||
+    *      (head.getRefinementRatio() >= base.getRefinementRatio()) ||
     */
    bool
    baseNestsInHead(
@@ -206,6 +219,8 @@ public:
     * images, in search tree form.  These boxes should be in the
     * reference index space.  If domain is given, do not shrink the
     * reference BoxLevel where it touches the domain boundary.
+    *
+    * @post input_to_external.isLocal()
     */
    void
    computeExternalParts(
@@ -267,6 +282,8 @@ public:
     * images, in search tree form.  These boxes should be in the
     * reference index space.  If domain is given, do not shrink the
     * reference BoxLevel where it touches the domain boundary.
+    *
+    * @post input_to_internal.isLocal()
     */
    void
    computeInternalParts(
@@ -382,6 +399,8 @@ public:
     * @param[in] orig_to_rejections Mapping from original
     * BoxLevel to its parts that should be be removed.  This
     * must be a local map.
+    *
+    * @pre orig_to_rejection.isLocal()
     */
    void
    makeRemainderMap(
@@ -471,6 +490,8 @@ private:
    /*!
     * @brief Delegated work of computeInternalParts and
     * computeExternalParts.
+    *
+    * @post input_to_parts.isLocal()
     */
    void
    computeInternalOrExternalParts(

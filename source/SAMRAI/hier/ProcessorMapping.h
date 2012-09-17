@@ -87,6 +87,8 @@ public:
 
    /**
     * Return the processor assignment for the specified patch index.
+    *
+    * @pre (i >= 0) && (i < getProcessorMapping().getSize())
     */
    int
    getProcessorAssignment(
@@ -99,6 +101,9 @@ public:
    /**
     * Set the processor assignment (second argument) for the specified
     * patch index (first argument).
+    *
+    * @pre (i >= 0) && (i < getProcessorMapping().getSize())
+    * @pre (p >= 0) && (p < d_nodes)
     */
    void
    setProcessorAssignment(
@@ -162,6 +167,8 @@ public:
    /**
     * Check whether the specified index is a local index (that is, mapped
     * to the local processor).
+    *
+    * @pre (i >= 0) && (i < getProcessorMapping().getSize())
     */
    bool
    isMappingLocal(

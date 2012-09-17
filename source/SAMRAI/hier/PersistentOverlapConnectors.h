@@ -100,6 +100,9 @@ public:
     * @param[in] connector_width
     *
     * @return A const reference to the newly created overlap Connector.
+    *
+    * @pre myBoxLevel().isInitialized()
+    * @pre head.isInitialized()
     */
    const Connector&
    createConnector(
@@ -119,6 +122,9 @@ public:
     * @param[in] head
     * @param[in] connector_width
     * @param[in] relationships
+    *
+    * @pre myBoxLevel().isInitialized()
+    * @pre head.isInitialized()
     */
    const Connector&
    createConnector(
@@ -134,6 +140,8 @@ public:
     *
     * @param[in] head
     * @param[in] connector
+    *
+    * @pre myBoxLevel().isInitialized()
     */
    void
    cacheConnector(
@@ -165,6 +173,9 @@ public:
     *      match the requested width exactly.
     *
     * @return The Connector which matches the search criterion.
+    *
+    * @pre myBoxLevel().isInitialized()
+    * @pre head.isInitialized()
     */
    const Connector&
    findConnector(
@@ -228,6 +239,12 @@ public:
     */
    void
    clear();
+
+   const BoxLevel&
+   myBoxLevel()
+   {
+      return d_my_box_level;
+   }
 
 private:
    //@{ @name Methods meant only for BoxLevel to use.

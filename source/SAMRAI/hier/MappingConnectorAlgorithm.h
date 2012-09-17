@@ -157,6 +157,15 @@ public:
     * @param[in] new_to_old Reverse (transpose) of old_to_new.
     * @param[in,out] mutable_new See comments.
     * @param[in,out] mutable_old See comments.
+    *
+    * @pre (&old_to_new.getBase() == &new_to_old.getHead()) &&
+    *      (&old_to_new.getBase() == &anchor_to_mapped.getHead()) &&
+    *      (&old_to_new.getBase() == &mapped_to_anchor.getBase())
+    * @pre &anchor_to_mapped.getBase() == &mapped_to_anchor.getHead()
+    * @pre &old_to_new.getHead() == &new_to_old.getBase()
+    * @pre anchor_to_mapped.isTransposeOf(mapped_to_anchor)
+    * @pre new_to_old.isTransposeOf(old_to_new)
+    * @pre anchor_to_mapped.getParallelState() == BoxLevel::DISTRIBUTED
     */
    void
    modify(
@@ -223,6 +232,12 @@ public:
     *   growth caused by the change.  A value of zero means no growth.
     * @param[in,out] mutable_new See comments.
     * @param[in,out] mutable_old See comments.
+    *
+    * @pre (&old_to_new.getBase() == &old_to_new.getBase()) &&
+    *      (&old_to_new.getBase() == &anchor_to_mapped.getHead())
+    * @pre &anchor_to_mapped.getBase() == &mapped_to_anchor.getHead()
+    * @pre anchor_to_mapped.isTransposeOf(mapped_to_anchor)
+    * @pre anchor_to_mapped.getParallelState() == BoxLevel::DISTRIBUTED
     */
    void
    modify(
@@ -287,6 +302,9 @@ public:
     *   points to the BoxLevel being mapped.
     * @param[in,out] mutable_new See comments.
     * @param[in,out] mutable_old See comments.
+    *
+    * @pre &anchor_to_mapped.getHead() == &old_to_new.getBase()
+    * @pre anchor_to_mapped.getParallelState() == BoxLevel::DISTRIBUTED
     */
    void
    modify(

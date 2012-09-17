@@ -68,6 +68,8 @@ public:
     *
     * @param[in]  box
     * @param[in]  descriptor
+    *
+    * @pre box.getLocalId() >= 0
     */
    Patch(
       const Box& box,
@@ -148,12 +150,14 @@ public:
     * identifier.
     *
     * @param[in]  id
+    *
+    * @pre (id >= 0) && (id < numPatchData())
     */
    boost::shared_ptr<PatchData>
    getPatchData(
       const int id) const
    {
-      TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
+      TBOX_ASSERT((id >= 0) && (id < numPatchData()));
       return d_patch_data[id];
    }
 
@@ -171,6 +175,9 @@ public:
     *
     * @param[in]  variable
     * @param[in]  context
+    *
+    * @pre getDim() == variable->getDim()
+    * @pre (id >= 0) && (id < numPatchData())
     */
    boost::shared_ptr<PatchData>
    getPatchData(
@@ -180,7 +187,7 @@ public:
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *variable);
       int id = VariableDatabase::getDatabase()->
          mapVariableAndContextToIndex(variable, context);
-      TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
+      TBOX_ASSERT((id >= 0) && (id < numPatchData()));
       return d_patch_data[id];
    }
 
@@ -199,6 +206,9 @@ public:
     *
     * @param[in]  id
     * @param[out] data
+    *
+    * @pre getDim() == data->getDim();
+    * @pre (id >= 0) && (id < numPatchData())
     */
    void
    setPatchData(
@@ -206,7 +216,7 @@ public:
       const boost::shared_ptr<PatchData>& data)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *data);
-      TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
+      TBOX_ASSERT((id >= 0) && (id < numPatchData()));
       d_patch_data[id] = data;
    }
 
@@ -221,7 +231,7 @@ public:
    checkAllocated(
       const int id) const
    {
-      return (id < d_patch_data.getSize()) && d_patch_data[id];
+      return (id < numPatchData()) && d_patch_data[id];
    }
 
    /*!
@@ -235,8 +245,7 @@ public:
    getSizeOfPatchData(
       const int id) const
    {
-      return d_descriptor->getPatchDataFactory(id)->getSizeOfMemory(
-         d_box);
+      return getPatchDescriptor()->getPatchDataFactory(id)->getSizeOfMemory(d_box);
    }
 
    /*!
@@ -259,6 +268,8 @@ public:
     *
     * @param[in]  id
     * @param[in]  time
+    *
+    * @pre (id >= 0) && (id < getPatchDescriptor()->getMaxNumberRegisteredComponents())
     */
    void
    allocatePatchData(
@@ -286,14 +297,16 @@ public:
     * This component will need to be reallocated before its next use.
     *
     * @param[in]  id
+    *
+    * @pre (id >= 0) && (id < getPatchDescriptor()->getMaxNumberRegisteredComponents())
     */
    void
    deallocatePatchData(
       const int id)
    {
       TBOX_ASSERT((id >= 0) &&
-         (id < d_descriptor->getMaxNumberRegisteredComponents()));
-      if (id < d_patch_data.getSize()) {
+         (id < getPatchDescriptor()->getMaxNumberRegisteredComponents()));
+      if (id < numPatchData()) {
          d_patch_data[id].reset();
       }
    }
@@ -339,13 +352,16 @@ public:
     *
     * @param[in]  timestamp
     * @param[in]  id
+    *
+    * @pre (id >= 0) && (id < numPatchData())
+    * @pre getPatchData(id)
     */
    void
    setTime(
       const double timestamp,
       const int id)
    {
-      TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
+      TBOX_ASSERT((id >= 0) && (id < numPatchData()));
       TBOX_ASSERT(d_patch_data[id]);
       d_patch_data[id]->setTime(timestamp);
    }
@@ -456,6 +472,8 @@ public:
     *
     * @param[in]  restart_db
     * @param[in]  component_selector
+    *
+    * @pre restart_db
     */
    void
    getFromRestart(
@@ -474,6 +492,8 @@ public:
     * @param[in]  restart_db
     * @param[in]  patchdata_write_table The ComponentSelector specifying the
     *             patch data components to write.
+    *
+    * @pre restart_db
     */
    void
    putToRestart(
@@ -518,6 +538,15 @@ public:
    operator << (
       std::ostream& s,
       const Patch& patch);
+
+   /*!
+    * @brief Number of PatchData objects defined on this Patch.
+    */
+   int
+   numPatchData() const
+   {
+      return d_patch_data.size();
+   }
 
 private:
    /*

@@ -35,6 +35,8 @@ public:
     * collective communication.
     *
     * @param[in] box_level BoxLevel to compute statistics for.
+    *
+    * @pre box_level.isInitialized()
     */
    explicit BoxLevelStatistics(
       const BoxLevel &box_level);

@@ -133,6 +133,8 @@ public:
     * Set the patch data factory object.  Normally, the factory is set in
     * the constructor, but this member function enables the factory to be
     * changed later in the lifetime of the variable.
+    *
+    * @pre getDim() == factory->getDim()
     */
    void
    setPatchDataFactory(

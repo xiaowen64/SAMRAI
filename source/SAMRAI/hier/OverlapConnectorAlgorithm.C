@@ -247,6 +247,13 @@ OverlapConnectorAlgorithm::extractNeighbors(
    const Connector& connector,
    const IntVector& gcw) const
 {
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (!(gcw <= connector.getConnectorWidth())) {
+      TBOX_ERROR("OverlapConnectorAlgorithm::extractNeighbors cannot provide neighbors for\n"
+         << "a wider ghost cell width that used to initialize it.\n");
+   }
+#endif
+
    other.clearNeighborhoods();
    for (Connector::ConstNeighborhoodIterator ni = connector.begin();
         ni != connector.end(); ++ni) {
@@ -258,10 +265,6 @@ OverlapConnectorAlgorithm::extractNeighbors(
       const tbox::Dimension& dim(gcw.getDim());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (!(gcw <= connector.getConnectorWidth())) {
-         TBOX_ERROR("OverlapConnectorAlgorithm::extractNeighbors cannot provide neighbors for\n"
-            << "a wider ghost cell width that used to initialize it.\n");
-      }
       if (connector.getParallelState() != BoxLevel::GLOBALIZED &&
           box_id.getOwnerRank() != connector.getMPI().getRank()) {
          TBOX_ERROR("OverlapConnectorAlgorithm::extractNeighbors cannot get neighbor data\n"
@@ -902,7 +905,7 @@ OverlapConnectorAlgorithm::privateBridge(
     * First step: Remove neighbor data for Boxes that are
     * going away and cache information to be sent out.
     */
-   privateModify_removeAndCache(
+   privateBridge_removeAndCache(
       neighbor_removal_mesg,
       west_to_east,
       east_to_west,
@@ -1191,7 +1194,7 @@ OverlapConnectorAlgorithm::privateBridge(
     * First step: Remove neighbor data for Boxes that are
     * going away and cache information to be sent out.
     */
-   privateModify_removeAndCache(
+   privateBridge_removeAndCache(
       neighbor_removal_mesg,
       west_to_cent,
       &cent_to_west,
@@ -1317,7 +1320,7 @@ OverlapConnectorAlgorithm::privateBridge_checkParameters(
  ***********************************************************************
  */
 void
-OverlapConnectorAlgorithm::privateModify_removeAndCache(
+OverlapConnectorAlgorithm::privateBridge_removeAndCache(
    std::map<int, std::vector<int> >& neighbor_removal_mesg,
    Connector& overlap_connector,
    Connector* overlap_connector_transpose,

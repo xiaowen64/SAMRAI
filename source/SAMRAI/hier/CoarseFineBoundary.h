@@ -79,6 +79,8 @@ public:
     *                            that as in the case of regular boundary boxes,
     *                            each box will always be one cell wide in the
     *                            direction perpendicular to the patch boundary.
+    *
+    * @pre max_ghost_width > IntVector(max_ghost_width.getDim(), -1)
     */
    CoarseFineBoundary(
       const PatchHierarchy& hierarchy,
@@ -104,6 +106,8 @@ public:
     *                            that as in the case of regular boundary boxes,
     *                            each box will always be one cell wide in the
     *                            direction perpendicular to the patch boundary.
+    *
+    * @pre max_ghost_width > IntVector(max_ghost_width.getDim(), -1)
     */
    CoarseFineBoundary(
       const PatchLevel& level,
@@ -140,6 +144,8 @@ public:
     * @param[in] global_id
     * @param[in] boundary_type Codimension of boundaries.
     * @param[in] block_id     Defaults to 0 for the single block case
+    *
+    * @pre d_initialize[block_id.getBlockValue()]
     */
    const tbox::Array<BoundaryBox>&
    getBoundaries(
@@ -163,7 +169,7 @@ public:
       const GlobalId& global_id,
       const BlockId& block_id = BlockId::zero()) const
    {
-      return getBoundaries(global_id, d_dim.getValue(), block_id);
+      return getBoundaries(global_id, getDim().getValue(), block_id);
    }
 
    /*!
@@ -177,6 +183,8 @@ public:
     *
     * @param[in] global_id
     * @param[in] block_id     Defaults to 0 for the single block case
+    *
+    * @pre getDim().getValue() >= 2
     */
    const tbox::Array<BoundaryBox>&
    getEdgeBoundaries(
@@ -184,12 +192,12 @@ public:
       const BlockId& block_id = BlockId::zero()) const
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (d_dim.getValue() < 2) {
+      if (getDim().getValue() < 2) {
          TBOX_ERROR("CoarseFineBoundary::getEdgeBoundaries():  There are\n"
             << "no edge boundaries in " << d_dim << "d.\n");
       }
 #endif
-      return getBoundaries(global_id, d_dim.getValue() - 1, block_id);
+      return getBoundaries(global_id, getDim().getValue() - 1, block_id);
    }
 
    /*!
@@ -203,6 +211,8 @@ public:
     *
     * @param[in] global_id
     * @param[in] block_id     Defaults to 0 for the single block case
+    *
+    * @pre getDim().getValue() >= 3
     */
    const tbox::Array<BoundaryBox>&
    getFaceBoundaries(
@@ -210,12 +220,12 @@ public:
       const BlockId& block_id = BlockId::zero()) const
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (d_dim.getValue() < 3) {
+      if (getDim().getValue() < 3) {
          TBOX_ERROR("CoarseFineBoundary::getFaceBoundaries():  There are\n"
             << "no face boundaries in " << d_dim << "d.\n");
       }
 #endif
-      return getBoundaries(global_id, d_dim.getValue() - 2, block_id);
+      return getBoundaries(global_id, getDim().getValue() - 2, block_id);
    }
 
    //@}
@@ -243,6 +253,12 @@ public:
       return *this;
    }
 
+   const tbox::Dimension&
+   getDim() const
+   {
+      return d_dim;
+   }
+
 private:
    /* Don't allow default ctor */
    CoarseFineBoundary();
@@ -266,6 +282,8 @@ private:
     *                            that as in the case of regular boundary boxes,
     *                            each box will always be one cell wide in the
     *                            direction perpendicular to the patch boundary.
+    *
+    * @pre getDim() == max_ghost_width.getDim()
     */
    void
    computeFromLevel(
@@ -292,6 +310,8 @@ private:
     *                            that as in the case of regular boundary boxes,
     *                            each box will always be one cell wide in the
     *                            direction perpendicular to the patch boundary.
+    *
+    * @pre getDim() == max_ghost_width.getDim()
     */
    void
    computeFromMultiblockLevel(

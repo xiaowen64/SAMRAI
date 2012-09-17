@@ -258,7 +258,7 @@ Connector::insertNeighbors(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state == BoxLevel::DISTRIBUTED &&
-       base_box.getOwnerRank() != getBase().getMPI().getRank()) {
+       base_box.getOwnerRank() != getMPI().getRank()) {
       TBOX_ERROR("Connector::insertNeighbors error: Cannot work on remote\n"
          << "data in DISTRIBUTED mode.");
    }
@@ -274,7 +274,7 @@ Connector::insertNeighbors(
    if (d_parallel_state == BoxLevel::GLOBALIZED) {
       d_global_relationships.insert(base_box, neighbors);
    }
-   if (base_box.getOwnerRank() == getBase().getMPI().getRank()) {
+   if (base_box.getOwnerRank() == getMPI().getRank()) {
       d_relationships.insert(base_box, neighbors);
    }
 }
@@ -290,7 +290,7 @@ Connector::eraseNeighbor(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state == BoxLevel::DISTRIBUTED &&
-       box_id.getOwnerRank() != getBase().getMPI().getRank()) {
+       box_id.getOwnerRank() != getMPI().getRank()) {
       TBOX_ERROR("Connector::eraseNeighbor error: Cannot work on remote\n"
          << "data in DISTRIBUTED mode.");
    }
@@ -305,7 +305,7 @@ Connector::eraseNeighbor(
    if (d_parallel_state == BoxLevel::GLOBALIZED) {
       d_global_relationships.erase(box_id, neighbor);
    }
-   if (box_id.getOwnerRank() == getBase().getMPI().getRank()) {
+   if (box_id.getOwnerRank() == getMPI().getRank()) {
       d_relationships.erase(box_id, neighbor);
    }
 }
@@ -491,12 +491,6 @@ Connector::setParallelState(
          << "an unfinalized Connector.  See Connector::finalizeContext()");
    }
 #endif
-   if (parallel_state != BoxLevel::DISTRIBUTED && parallel_state !=
-       BoxLevel::GLOBALIZED) {
-      TBOX_ERROR("Connector::setParallelState: Invalid distribution state: "
-         << parallel_state << "\n");
-   }
-
    if (d_parallel_state == BoxLevel::DISTRIBUTED && parallel_state ==
        BoxLevel::GLOBALIZED) {
       acquireRemoteNeighborhoods();
@@ -1369,7 +1363,7 @@ Connector::checkTransposeCorrectness(
    }
 
    int global_err_count = static_cast<int>(err_count);
-   getBase().getMPI().AllReduce( &global_err_count, 1, MPI_SUM );
+   getMPI().AllReduce( &global_err_count, 1, MPI_SUM );
 
    return static_cast<size_t>(global_err_count);
 }

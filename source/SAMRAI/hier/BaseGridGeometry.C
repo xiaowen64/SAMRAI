@@ -544,8 +544,7 @@ BaseGridGeometry::setGeometryDataOnPatch(
    Patch& patch,
    const IntVector& ratio_to_level_zero,
    const PatchGeometry::TwoDimBool& touches_regular_bdry,
-   const PatchGeometry::TwoDimBool& touches_periodic_bdry)
-const
+   const PatchGeometry::TwoDimBool& touches_periodic_bdry) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    const tbox::Dimension& dim(getDim());
@@ -2001,10 +2000,10 @@ BaseGridGeometry::registerNeighbors(
    const BlockId& block_a,
    const BlockId& block_b,
    const Transformation::RotationIdentifier rotation,
-   const IntVector& shift,
+   const IntVector& shift_b_to_a,
    const int is_singularity)
 {
-   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, shift);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, shift_b_to_a);
 
    const int& a = block_a.getBlockValue();
    const int& b = block_b.getBlockValue();
@@ -2018,7 +2017,9 @@ BaseGridGeometry::registerNeighbors(
    IntVector back_shift(d_dim);
 
    if (d_dim.getValue() == 2 || d_dim.getValue() == 3) {
-      Transformation::calculateReverseShift(back_shift, shift, rotation);
+      Transformation::calculateReverseShift(back_shift,
+         shift_b_to_a,
+         rotation);
    } else {
       TBOX_ERROR("BaseGridGeometry::registerNeighbors error...\n"
          << "  object name = " << d_object_name
@@ -2036,7 +2037,7 @@ BaseGridGeometry::registerNeighbors(
       b_domain_in_a_space.rotate(rotation);
       a_domain_in_b_space.rotate(back_rotation);
    }
-   b_domain_in_a_space.shift(shift);
+   b_domain_in_a_space.shift(shift_b_to_a);
    a_domain_in_b_space.shift(back_shift);
 
    for (BoxContainer::iterator itr = b_domain_in_a_space.begin();
@@ -2048,7 +2049,7 @@ BaseGridGeometry::registerNeighbors(
       itr->setBlockId(block_b);
    }
 
-   Transformation transformation(rotation, shift, block_b, block_a);
+   Transformation transformation(rotation, shift_b_to_a, block_b, block_a);
    Transformation back_transformation(back_rotation, back_shift,
                                       block_a, block_b);
 

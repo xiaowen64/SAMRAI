@@ -162,6 +162,9 @@ public:
     * @brief Transform the Box in the way defined by this object
     *
     * @param[in,out] box  The Box will be transformed
+    *
+    * @pre (box.getBlockId() == getBeginBlock()) ||
+           (getBeginBlock() == BlockId::invalidId())
     */
    void
    transform(
@@ -174,6 +177,9 @@ public:
     * a Box, the Box will end up in its original state.
     *
     * @param[in,out] box
+    *
+    * @pre (box.getBlockId() == getBeginBlock()) ||
+           (getBeginBlock() == BlockId::invalidId())
     */
    void
    inverseTransform(
@@ -220,15 +226,16 @@ public:
     * See the comments for the RotationIdentifier definition for the
     * explanation of the meaning of the RotationIdentifier values.
     *
-    * An assertion failure will occur if the array length is not equal to
-    * the dimension of the hierarchy.  A run-time error will occur if the
-    * strings do not match the format needed to create a valid
-    * Transformation::RotationIdentifier value.
+    * A run-time error will occur if the strings do not match the format
+    * needed to create a valid Transformation::RotationIdentifier value.
     *
     * @return RotationIdentifier determined by the strings.
     *
     * @param[in] rotation_string
     * @param[in] dim
+    *
+    * @pre rotation_string.getSize() == dim.getValue()
+    * @pre (dim.getValue() == 2) || (dim.getValue() == 3)
     */
    static RotationIdentifier
    getRotationIdentifier(
@@ -247,6 +254,8 @@ public:
     *
     * @param[in] rotation Rotation for which the reverse rotation is sought
     * @param[in] dim      Dimension being used
+    *
+    * @pre (dim.getValue() == 2) || (dim.getValue() == 3)
     */
    static RotationIdentifier
    getReverseRotationIdentifier(
@@ -264,6 +273,9 @@ public:
     * @param[out] back_shift
     * @param[in] shift
     * @param[in] rotation
+    *
+    * @pre back_shift.getDim() == shift.getDim()
+    * @pre (dim.getValue() == 2) || (dim.getValue() == 3)
     */
    static void
    calculateReverseShift(
@@ -284,6 +296,8 @@ public:
     * @param dim Dimension of the index and the hierarchy where it is located
     * @param rotation    identifier of the rotation that will be applied
     *                        to index
+    *
+    * @pre (dim.getValue() == 2) || (dim.getValue() == 3)
     */
    static void
    rotateIndex(
@@ -321,6 +335,8 @@ private:
     * @param index array identifying a point in index space
     * @param axis axis around which index will be rotated
     * @param num_rotations number of 90-degree rotations around the axis
+    *
+    * @pre (dim.getValue() != 3) || (axis < dim.getValue())
     */
    static void
    rotateAboutAxis(

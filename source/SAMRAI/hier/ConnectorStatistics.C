@@ -75,7 +75,8 @@ ConnectorStatistics::StatisticalQuantities::StatisticalQuantities()
  ***********************************************************************
  */
 
-void ConnectorStatistics::computeLocalConnectorStatistics( const Connector &connector )
+void
+ConnectorStatistics::computeLocalConnectorStatistics( const Connector &connector )
 {
    if (!connector.isFinalized()) {
       TBOX_ERROR("ConnectorStatistics::computeLocalStatistics cannot compute\n"

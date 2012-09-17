@@ -57,7 +57,6 @@ CoarseFineBoundary::CoarseFineBoundary(
    d_dim(max_ghost_width.getDim()),
    d_initialized(hierarchy.getGridGeometry()->getNumberBlocks(), false)
 {
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, max_ghost_width);
    TBOX_ASSERT(max_ghost_width > IntVector(d_dim, -1));
 
    const PatchLevel& level =
@@ -97,7 +96,6 @@ CoarseFineBoundary::CoarseFineBoundary(
    d_dim(max_ghost_width.getDim()),
    d_initialized(1, false)
 {
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, max_ghost_width);
    TBOX_ASSERT(max_ghost_width > IntVector(d_dim, -1));
 
    computeFromLevel(level,

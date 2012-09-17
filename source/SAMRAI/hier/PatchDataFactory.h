@@ -74,6 +74,8 @@ public:
     *
     * @param ghosts ghost cell width for concrete classes created from
     * the factory.
+    *
+    * @pre ghosts.min() >= 0
     */
    explicit PatchDataFactory(
       const IntVector& ghosts);

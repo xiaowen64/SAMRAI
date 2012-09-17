@@ -110,6 +110,9 @@ public:
     * @param[in] head_box_level
     * @param[in] base_width
     * @param[in] parallel_state
+    *
+    * @pre (base_box_level.getDim() == head_box_level.getDim()) &&
+    *      (base_box_level.getDim() == base_width.getDim())
     */
    Connector(
       const BoxLevel& base_box_level,
@@ -288,8 +291,7 @@ public:
       const BoxId& box_id) const
    {
       const BoxNeighborhoodCollection& relationships = getRelations(box_id);
-      BoxId non_per_id(box_id.getGlobalId(),
-                       PeriodicId::zero());
+      BoxId non_per_id(box_id.getGlobalId(), PeriodicId::zero());
       ConstNeighborhoodIterator ei = relationships.find(non_per_id);
       if (ei == relationships.end()) {
          TBOX_ERROR("Connector::find: No neighbor set exists for\n"
@@ -353,6 +355,8 @@ public:
     *
     * @param[in] box_id
     * @param[in] neighbor
+    *
+    * @pre box_id.getOwnerRank() == getMPI().getRank()
     */
    bool
    hasLocalNeighbor(
@@ -366,11 +370,10 @@ public:
    /*!
     * @brief Return the neighbor set for the specified BoxId.
     *
-    * An assertion will be generated if the Box associated with box_id is
-    * not a member of the base BoxLevel.
-    *
     * @param[in] box_id
     * @param[out] nbr_boxes
+    *
+    * @pre hasNeighborSet(box_id)
     */
    void
    getNeighborBoxes(
@@ -416,6 +419,8 @@ public:
     * supplied BoxId.
     *
     * @param[in] box_id
+    *
+    * @pre hasNeighborSet(box_id)
     */
    int
    numLocalNeighbors(
@@ -484,6 +489,10 @@ public:
     *
     * @param[in] neighbors
     * @param[in] base_box
+    *
+    * @pre (getParallelState() == BoxLevel::GLOBALIZED) ||
+    *      (base_box.getOwnerRank() == getMPI().getRank())
+    * @pre getBase().hasBox(base_box)
     */
    void
    insertNeighbors(
@@ -493,11 +502,12 @@ public:
    /*!
     * @brief Erase neighbor of the specified BoxId.
     *
-    * @note Assertions
-    * It is an error to to specify a non-existent BoxId.
-    *
     * @param[in] neighbor
     * @param[in] box_id
+    *
+    * @pre (getParallelState() == BoxLevel::GLOBALIZED) ||
+    *      (base_box.getOwnerRank() == getMPI().getRank())
+    * @pre getBase().hasBox(box_id)
     */
    void
    eraseNeighbor(
@@ -509,6 +519,8 @@ public:
     *
     * @param[in] neighbor
     * @param[in] box_id
+    *
+    * @pre box_id.getOwnerRank() == getMPI().getRank()
     */
    void
    insertLocalNeighbor(
@@ -524,6 +536,8 @@ public:
     *
     * @param[in] neighbor
     * @param[in] base_box_itr
+    *
+    * @pre base_box_itr->getOwnerRank() == getMPI().getRank()
     */
    void
    insertLocalNeighbor(
@@ -538,6 +552,8 @@ public:
     * @brief Erases the neighborhood of the specified BoxId.
     *
     * @param[in] box_id
+    *
+    * @pre box_id.getOwnerRank() == getMPI().getRank()
     */
    void
    eraseLocalNeighborhood(
@@ -592,6 +608,8 @@ public:
     * @brief Make an empty set of neighbors of the supplied box_id.
     *
     * @param[in] box_id
+    *
+    * @pre box_id.getOwnerRank() == getMPI().getRank()
     */
    NeighborhoodIterator
    makeEmptyLocalNeighborhood(
@@ -671,6 +689,13 @@ public:
     *
     * To be called after modifying a Connector's context through setBase,
     * setHead, or setWidth methods.
+    *
+    * @pre d_base_handle && d_head_handle
+    * @pre getBase().getGridGeometry() == getHead().getGridGeometry()
+    * @pre (getBase().getRefinementRatio() >= getHead().getRefinementRatio()) ||
+    *      (getBase().getRefinementRatio() <= getHead().getRefinementRatio())
+    * @pre (getParallelState() == BoxLevel::DISTRIBUTED) ||
+    *      (getBase().getParallelState() == BoxLevel::GLOBALIZED)
     */
    void
    finalizeContext();
@@ -682,6 +707,8 @@ public:
     *
     * @param new_base
     * @param finalize_context
+    *
+    * @pre new_base.isInitialized()
     */
    void
    setBase(
@@ -690,6 +717,8 @@ public:
 
    /*!
     * @brief Return a reference to the base BoxLevel.
+    *
+    * @pre isFinalized()
     */
    const BoxLevel&
    getBase() const
@@ -705,6 +734,8 @@ public:
     *
     * @param new_head
     * @param finalize_context
+    *
+    * @pre new_head.isInitialized()
     */
    void
    setHead(
@@ -713,6 +744,8 @@ public:
 
    /*!
     * @brief Return a reference to the head BoxLevel.
+    *
+    * @pre isFinalized()
     */
    const BoxLevel&
    getHead() const
@@ -728,6 +761,8 @@ public:
     * The ratio is the same regardless of which is the coarser of the two.
     * Use getHeadCoarserFlag() to determine which is coarser.  If the ratio
     * cannot be represented by an IntVector, truncated.  @see ratioIsExact().
+    *
+    * @pre isFinalized()
     */
    const IntVector&
    getRatio() const
@@ -741,6 +776,8 @@ public:
     *
     * The ratio is exact if it can be represented by an IntVector.
     * @see getRatio().
+    *
+    * @pre isFinalized()
     */
    bool
    ratioIsExact() const
@@ -752,6 +789,8 @@ public:
    /*!
     * @brief Return true if head BoxLevel is coarser than base
     * BoxLevel.
+    *
+    * @pre isFinalized()
     */
    bool
    getHeadCoarserFlag() const
@@ -847,6 +886,8 @@ public:
     * cost for switching parallel states.
     *
     * @param[in] parallel_state
+    *
+    * @pre isFinalized()
     */
    void
    setParallelState(
@@ -864,12 +905,14 @@ public:
    /*!
     * @brief Returns the MPI communication object, which is always
     * that of the base BoxLevel.
+    *
+    * @pre isFinalized()
     */
    const tbox::SAMRAI_MPI&
    getMPI() const
    {
       TBOX_ASSERT(isFinalized());
-      return d_base_handle->getBoxLevel().getMPI();
+      return getBase().getMPI();
    }
 
    /*!
@@ -879,6 +922,8 @@ public:
     *
     * @param new_width
     * @param finalize_context
+    *
+    * @pre new_width >= IntVector::getZero(new_width.getDim())
     */
    void
    setWidth(
@@ -892,7 +937,9 @@ public:
     * Boxes if the base box, grown by this width,
     * overlaps the head box.  For mapping Connectors, the width
     * the amount that a pre-map box must grow to nest the post-map
-    * boxes.
+    * boxes
+    *
+    * @pre isFinalized().
     */
    const IntVector&
    getConnectorWidth() const
@@ -906,6 +953,9 @@ public:
     * relationships as needed.
     *
     * @param[in] new_width
+    *
+    * @pre new_width <= getConnectorWidth()
+    * @pre getParallelState() == BoxLevel::DISTRIBUTED
     */
    void
    shrinkWidth(
@@ -968,6 +1018,9 @@ public:
     *
     * @return A copy of the connector width converted to the base index
     * space.
+    *
+    * @pre (base_refinement_ratio >= head_refinement_ratio) ||
+    *      (base_refinement_ratio <= head_refinement_ratio)
     */
    static IntVector
    convertHeadWidthToBase(
@@ -1008,6 +1061,8 @@ public:
     * globalized for checking, triggering communication.
     *
     * @return number of inconsistencies found.
+    *
+    * @pre getHead().getGlobalizedVersion().getParallelState() == BoxLevel::GLOBALIZED
     */
 
    size_t
@@ -1099,6 +1154,8 @@ public:
     * been computed and cached.  When communication is required, all
     * processors must call this method.  To ensure that no
     * communication is needed, call cacheGlobalReducedData() first.
+    *
+    * @pre isFinalized()
     */
    int
    getGlobalNumberOfNeighborSets() const
@@ -1115,6 +1172,8 @@ public:
     * been computed and cached.  When communication is required, all
     * processors must call this method.  To ensure that no
     * communication is needed, call cacheGlobalReducedData() first.
+    *
+    * @pre isFinalized()
     */
    int
    getGlobalNumberOfRelationships() const
@@ -1134,6 +1193,8 @@ public:
     * changes.
     *
     * Sets d_global_data_up_to_date;
+    *
+    * @pre isFinalized()
     */
    void
    cacheGlobalReducedData() const;
@@ -1296,8 +1357,7 @@ private:
    /*!
     * @brief Return the globalized relationship data.
     *
-    * @par Assertions
-    * Throws an unrecoverable assertion if not in GLOBALIZED mode.
+    * @pre getParallelState() == BoxLevel::GLOBALIZED
     */
    const BoxNeighborhoodCollection&
    getGlobalNeighborhoodSets() const
@@ -1310,6 +1370,9 @@ private:
 
    /*!
     * @brief Return the relationships appropriate to the parallel state.
+    *
+    * @pre (getParallelState() == BoxLevel::GLOBALIZED) ||
+    *      (box_id.getOwnerRank() == getMPI().getRank())
     */
    const BoxNeighborhoodCollection&
    getRelations(
@@ -1332,6 +1395,8 @@ private:
     * change its state to GLOBALIZED.
     *
     * The returned object should be deleted to prevent memory leaks.
+    *
+    * @pre other.getParallelState() != BoxLevel::GLOBALIZED
     */
    Connector *
    makeGlobalizedCopy(

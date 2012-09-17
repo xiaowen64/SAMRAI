@@ -1151,8 +1151,7 @@ BoxUtilities::checkBoxForBadCutPoints(
    const BoxContainer& physical_boxes,
    const IntVector& bad_interval)
 {
-   TBOX_ASSERT_OBJDIM_EQUALITY3(bad_cut_information, box,
-      bad_interval);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(bad_cut_information, box, bad_interval);
 
    const tbox::Dimension& dim(box.getDim());
 
