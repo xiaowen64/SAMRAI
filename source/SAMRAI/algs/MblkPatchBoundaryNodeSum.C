@@ -165,7 +165,8 @@ MblkPatchBoundaryNodeSum::registerSum(
    hier::VariableDatabase* var_db = hier::VariableDatabase::getDatabase();
 
    boost::shared_ptr<pdat::NodeDataFactory<double> > node_factory(
-      var_db->getPatchDescriptor()->getPatchDataFactory(node_data_id));
+      var_db->getPatchDescriptor()->getPatchDataFactory(node_data_id),
+      boost::detail::dynamic_cast_tag());
 
    if (!node_factory) {
 

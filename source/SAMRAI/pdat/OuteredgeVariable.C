@@ -47,7 +47,8 @@ template<class TYPE>
 int OuteredgeVariable<TYPE>::getDepth() const
 {
    boost::shared_ptr<OuteredgeDataFactory<TYPE> > factory(
-      getPatchDataFactory());
+      getPatchDataFactory(),
+      boost::detail::dynamic_cast_tag());
    TBOX_ASSERT(factory);
    return factory->getDepth();
 }

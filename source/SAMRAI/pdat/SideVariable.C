@@ -62,7 +62,9 @@ const hier::IntVector& SideVariable<TYPE>::getDirectionVector() const
 template<class TYPE>
 int SideVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<SideDataFactory<TYPE> > factory(getPatchDataFactory());
+   boost::shared_ptr<SideDataFactory<TYPE> > factory(
+      getPatchDataFactory(),
+      boost::detail::dynamic_cast_tag());
    TBOX_ASSERT(factory);
    return factory->getDepth();
 }

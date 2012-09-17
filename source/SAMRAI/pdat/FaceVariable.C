@@ -52,7 +52,9 @@ FaceVariable<TYPE>::~FaceVariable()
 template<class TYPE>
 int FaceVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<FaceDataFactory<TYPE> > factory(getPatchDataFactory());
+   boost::shared_ptr<FaceDataFactory<TYPE> > factory(
+      getPatchDataFactory(),
+      boost::detail::dynamic_cast_tag());
    TBOX_ASSERT(factory);
    return factory->getDepth();
 }
