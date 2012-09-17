@@ -376,7 +376,7 @@ Statistician::getGlobalProcStatSequenceLength(
          TBOX_ERROR("Statistician::getGlobalProcStatSeqLength ..."
             << "\n   The finalize() method to construct global data "
             << "must be called with the argument to gather global "
-            << "stats data BEFORE this metho." << std::endl);
+            << "stats data BEFORE this method." << std::endl);
       }
 
       TBOX_ASSERT(proc_stat_id >= 0 &&

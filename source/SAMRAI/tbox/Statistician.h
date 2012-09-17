@@ -189,7 +189,7 @@ public:
     *
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_state &&
-    *       (proc_stat_id >= 0 && proc_stat_id < d_global_proc_stat_data.getSize()))
+    *       (proc_stat_id >= 0) && (proc_stat_id < d_global_proc_stat_data.getSize()))
     */
    int
    getGlobalProcStatSequenceLength(
