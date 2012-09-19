@@ -246,18 +246,23 @@ protected:
 
 private:
    /*!
-    * @brief Build table by recursively computing the entries in the
+    * @brief Build static table by recursively computing the entries in the
     * lookup table for a given codimension.
     *
-    * TODO:  Document the parameters.
+    * @param table      Array to hold data for the table
+    * @param work       Storage where values are computed for the table
+    * @param rec_level  Level of recursion
+    * @param ptr        Pointer to pass the table array recursively
+    * @param codim      Codimension being worked on
+    * @param ibeg       Beginning of iteration over dimensions
     */
    void
    buildTable(int* table,
-              int codim,
-              int ibeg,
               int(&work)[SAMRAI::MAX_DIM_VAL],
-              int& lvl,
-              int * & ptr);
+              int& rec_level,
+              int * & ptr,
+              const int codim,
+              const int ibeg);
 
    /*!
     * @brief Build table of direction IntVectors
