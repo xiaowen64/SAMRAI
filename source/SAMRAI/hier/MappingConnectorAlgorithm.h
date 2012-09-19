@@ -173,8 +173,8 @@ public:
       Connector& mapped_to_anchor,
       const Connector& old_to_new,
       const Connector& new_to_old,
-      BoxLevel* mutable_new = NULL,
-      BoxLevel* mutable_old = NULL) const;
+      BoxLevel* mutable_new = 0,
+      BoxLevel* mutable_old = 0) const;
 
    /*!
     * @brief Version of modify requiring only the forward map
@@ -244,8 +244,8 @@ public:
       Connector& anchor_to_mapped,
       Connector& mapped_to_anchor,
       const Connector& old_to_new,
-      BoxLevel* mutable_new = NULL,
-      BoxLevel* mutable_old = NULL) const;
+      BoxLevel* mutable_new = 0,
+      BoxLevel* mutable_old = 0) const;
 
    /*!
     * @brief Version of modify requiring only the forward map
@@ -310,8 +310,8 @@ public:
    modify(
       Connector& anchor_to_mapped,
       const Connector& old_to_new,
-      BoxLevel* mutable_new = NULL,
-      BoxLevel* mutable_old = NULL) const;
+      BoxLevel* mutable_new = 0,
+      BoxLevel* mutable_old = 0) const;
 
    /*!
     * @brief Types of mappings for use in findMappingErrors() and

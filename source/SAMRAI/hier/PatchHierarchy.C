@@ -463,7 +463,7 @@ void
 PatchHierarchy::finalizeCallback()
 {
    for (int i = 0; i < int(s_class_cwrs.size()); ++i) {
-      s_class_cwrs[i] = NULL;
+      s_class_cwrs[i] = 0;
    }
    s_class_cwrs.clear();
    /*

@@ -33,7 +33,7 @@ BoxContainerSingleBlockIterator::BoxContainerSingleBlockIterator(
 
 BoxContainerSingleBlockIterator::~BoxContainerSingleBlockIterator()
 {
-   d_boxes = NULL;
+   d_boxes = 0;
 }
 
 /*

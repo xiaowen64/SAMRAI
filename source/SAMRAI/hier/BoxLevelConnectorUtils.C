@@ -1177,7 +1177,7 @@ BoxLevelConnectorUtils::addPeriodicImages(
    boost::shared_ptr<BoxContainer> domain_tree_for_box_level(
       boost::make_shared<BoxContainer>(domain_search_tree));
    domain_tree_for_box_level->refine(box_level.getRefinementRatio());
-   domain_tree_for_box_level->makeTree(NULL);
+   domain_tree_for_box_level->makeTree(0);
 
    const BoxContainer& domain_tree = *domain_tree_for_box_level;
 
@@ -1276,7 +1276,7 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
 
    BoxContainer domain_tree_for_box_level(domain_search_tree);
    domain_tree_for_box_level.refine(box_level.getRefinementRatio());
-   domain_tree_for_box_level.makeTree(NULL);
+   domain_tree_for_box_level.makeTree(0);
 
    {
       /*

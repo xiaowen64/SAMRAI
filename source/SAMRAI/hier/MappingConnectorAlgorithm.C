@@ -669,7 +669,7 @@ MappingConnectorAlgorithm::privateModify(
     * Object for communicating relationship changes.
     */
    tbox::AsyncCommStage comm_stage;
-   tbox::AsyncCommPeer<int> * all_comms(NULL);
+   tbox::AsyncCommPeer<int> * all_comms(0);
 
    t_modify_misc->stop();
 
@@ -802,12 +802,12 @@ MappingConnectorAlgorithm::privateModify(
       new_to_anchor.setBase(*mutable_new, true);
       anchor_to_new.setHead(*mutable_new, true);
    } else {
-      if (mutable_new != NULL) {
+      if (mutable_new != 0) {
          *mutable_new = old_to_new.getHead();
          new_to_anchor.setBase(*mutable_new, true);
          anchor_to_new.setHead(*mutable_new, true);
       }
-      if (mutable_old != NULL) {
+      if (mutable_old != 0) {
          *mutable_old = old_to_new.getBase();
       }
    }

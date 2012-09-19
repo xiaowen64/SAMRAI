@@ -23,7 +23,7 @@ namespace SAMRAI {
 namespace hier {
 
 VariableDatabase *
-VariableDatabase::s_variable_database_instance = NULL;
+VariableDatabase::s_variable_database_instance = 0;
 
 int VariableDatabase::s_context_array_alloc_size = 10;
 int VariableDatabase::s_variable_array_alloc_size = 100;
@@ -60,7 +60,7 @@ VariableDatabase::shutdownCallback()
    if (s_variable_database_instance) {
       delete s_variable_database_instance;
    }
-   s_variable_database_instance = ((VariableDatabase *)NULL);
+   s_variable_database_instance = 0;
 }
 
 /*

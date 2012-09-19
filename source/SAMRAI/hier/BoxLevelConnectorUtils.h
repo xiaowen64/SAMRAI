@@ -121,7 +121,7 @@ public:
       const IntVector& base_swell,
       const IntVector& head_swell,
       const IntVector& head_nesting_margin,
-      const BoxContainer* domain = NULL) const;
+      const BoxContainer* domain = 0) const;
 
    /*!
     * @brief Given base and head BoxLevels, determine the extent
@@ -176,7 +176,7 @@ public:
       const IntVector& base_swell,
       const IntVector& head_swell,
       const IntVector& head_margin,
-      const BoxContainer* domain = NULL) const;
+      const BoxContainer* domain = 0) const;
 
    /*!
     * @brief Compute the parts of one BoxLevel that are external

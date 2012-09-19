@@ -501,7 +501,7 @@ OverlapConnectorAlgorithm::bridge(
       cent_to_east.getConnectorWidth().getDim(), -1); // No user-imposed limit.
    privateBridge(
       west_to_east,
-      &east_to_west == &west_to_east ? NULL : &east_to_west,
+      &east_to_west == &west_to_east ? 0 : &east_to_west,
       west_to_cent,
       cent_to_east,
       east_to_cent,
@@ -531,7 +531,7 @@ OverlapConnectorAlgorithm::bridgeWithNesting(
 {
    privateBridge(
       west_to_east,
-      &east_to_west == &west_to_east ? NULL : &east_to_west,
+      &east_to_west == &west_to_east ? 0 : &east_to_west,
       west_to_cent,
       cent_to_east,
       east_to_cent,
@@ -561,7 +561,7 @@ OverlapConnectorAlgorithm::bridge(
       IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
    privateBridge(
       west_to_east,
-      &east_to_west == &west_to_east ? NULL : &east_to_west,
+      &east_to_west == &west_to_east ? 0 : &east_to_west,
       west_to_cent,
       cent_to_east,
       east_to_cent,
@@ -616,7 +616,7 @@ OverlapConnectorAlgorithm::bridge(
       IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
    privateBridge(
       west_to_east,
-      NULL,
+      0,
       west_to_cent,
       cent_to_east,
       east_to_cent,
@@ -646,7 +646,7 @@ OverlapConnectorAlgorithm::bridge(
       cent_to_east.getConnectorWidth().getDim(), -1); // No user-imposed limit.
    privateBridge(
       west_to_east,
-      NULL,
+      0,
       west_to_cent,
       cent_to_east,
       east_to_cent,
@@ -812,7 +812,7 @@ OverlapConnectorAlgorithm::privateBridge(
     * distinct.
     */
    const bool compute_reverse =
-      (east_to_west != NULL && east_to_west != &west_to_east);
+      (east_to_west != 0 && east_to_west != &west_to_east);
 
    /*
     * Owners we have to exchange information with are the ones
@@ -875,7 +875,7 @@ OverlapConnectorAlgorithm::privateBridge(
     */
 
    tbox::AsyncCommStage comm_stage;
-   tbox::AsyncCommPeer<int>* all_comms(NULL);
+   tbox::AsyncCommPeer<int>* all_comms(0);
 
    t_bridge_share->start();
    t_bridge_setup_comm->start();
@@ -1164,7 +1164,7 @@ OverlapConnectorAlgorithm::privateBridge(
     */
 
    tbox::AsyncCommStage comm_stage;
-   tbox::AsyncCommPeer<int>* all_comms(NULL);
+   tbox::AsyncCommPeer<int>* all_comms(0);
 
    t_bridge_share->start();
    t_bridge_setup_comm->start();
@@ -1372,7 +1372,7 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
       }
 
       bool compute_reverse =
-         (east_to_west != NULL && east_to_west != &west_to_east);
+         (east_to_west != 0 && east_to_west != &west_to_east);
 
       const BoxLevel& east(west_to_east.getBase());
       const boost::shared_ptr<const BaseGridGeometry> &grid_geometry(

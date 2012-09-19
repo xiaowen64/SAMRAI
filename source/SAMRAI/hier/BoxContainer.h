@@ -1820,7 +1820,7 @@ private:
     */
    void
    makeTree(
-      const BaseGridGeometry* grid_geometry = NULL,
+      const BaseGridGeometry* grid_geometry = 0,
       const int min_number = 10) const;
 
    /*!

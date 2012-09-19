@@ -36,7 +36,7 @@ PatchDataFactory::~PatchDataFactory()
 MultiblockDataTranslator *
 PatchDataFactory::getMultiblockDataTranslator()
 {
-   return (MultiblockDataTranslator *)NULL;
+   return 0;
 }
 
 }

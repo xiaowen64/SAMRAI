@@ -68,7 +68,7 @@ public:
    bool
    isAttached() const
    {
-      return d_box_level != NULL;
+      return d_box_level != 0;
    }
 
 private:
@@ -115,7 +115,7 @@ private:
    void
    detachMyBoxLevel()
    {
-      d_box_level = NULL;
+      d_box_level = 0;
    }
 
    //@{

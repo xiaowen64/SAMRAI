@@ -79,8 +79,8 @@ BoxLevel::BoxLevel(
    d_global_data_up_to_date(false),
 
    d_parallel_state(DISTRIBUTED),
-   d_globalized_version(NULL),
-   d_persistent_overlap_connectors(NULL),
+   d_globalized_version(0),
+   d_persistent_overlap_connectors(0),
    d_handle(),
    d_grid_geometry()
 {
@@ -114,8 +114,8 @@ BoxLevel::BoxLevel(
    d_global_data_up_to_date(rhs.d_global_data_up_to_date),
 
    d_parallel_state(rhs.d_parallel_state),
-   d_globalized_version(NULL),
-   d_persistent_overlap_connectors(NULL),
+   d_globalized_version(0),
+   d_persistent_overlap_connectors(0),
    d_handle(),
    d_grid_geometry(rhs.d_grid_geometry)
 {
@@ -151,8 +151,8 @@ BoxLevel::BoxLevel(
    d_global_data_up_to_date(false),
 
    d_parallel_state(DISTRIBUTED),
-   d_globalized_version(NULL),
-   d_persistent_overlap_connectors(NULL),
+   d_globalized_version(0),
+   d_persistent_overlap_connectors(0),
    d_handle(),
    d_grid_geometry()
 {
@@ -162,9 +162,9 @@ BoxLevel::BoxLevel(
 BoxLevel::~BoxLevel()
 {
    clear();
-   if (d_persistent_overlap_connectors != NULL) {
+   if (d_persistent_overlap_connectors != 0) {
       delete d_persistent_overlap_connectors;
-      d_persistent_overlap_connectors = NULL;
+      d_persistent_overlap_connectors = 0;
    }
 }
 
@@ -1204,12 +1204,12 @@ BoxLevel::getGlobalizedVersion() const
       return *this;
    }
 
-   if (d_globalized_version == NULL) {
+   if (d_globalized_version == 0) {
       BoxLevel* globalized_version = new BoxLevel(*this);
       globalized_version->setParallelState(GLOBALIZED);
       TBOX_ASSERT(globalized_version->getParallelState() == GLOBALIZED);
       d_globalized_version = globalized_version;
-      globalized_version = NULL;
+      globalized_version = 0;
    }
 
    TBOX_ASSERT(d_globalized_version->getParallelState() == GLOBALIZED);
@@ -1223,7 +1223,7 @@ BoxLevel::getGlobalizedVersion() const
 PersistentOverlapConnectors&
 BoxLevel::getPersistentOverlapConnectors() const
 {
-   if (d_persistent_overlap_connectors == NULL) {
+   if (d_persistent_overlap_connectors == 0) {
       d_persistent_overlap_connectors = new PersistentOverlapConnectors(*this);
    }
    return *d_persistent_overlap_connectors;

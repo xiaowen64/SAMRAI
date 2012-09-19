@@ -201,7 +201,7 @@ BaseConnectorAlgorithm::receiveAndUnpack(
       tbox::AsyncCommPeer<int>* peer =
          dynamic_cast<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
 
-      TBOX_ASSERT(peer != NULL);
+      TBOX_ASSERT(peer != 0);
 
       if ((size_t)(peer - all_comms) < incoming_ranks.size()) {
          // Receive from this peer.
@@ -316,7 +316,7 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
    const int n_reference_new_base_boxes = *(ref_box_ptr++);
    const int n_reference_new_head_boxes = *(ref_box_ptr++);
 
-   TBOX_ASSERT(new_head_to_new_base != NULL || n_new_head_boxes == 0);
+   TBOX_ASSERT(new_head_to_new_base != 0 || n_new_head_boxes == 0);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    const int correct_msg_size = offset

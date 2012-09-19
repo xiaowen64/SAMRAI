@@ -1090,7 +1090,7 @@ BaseGridGeometry::getBoundaryBoxes(
 
    } else {
       if (!domain_boxes.hasTree() && domain_boxes.size() > 10) {
-         domain_boxes.makeTree(NULL);
+         domain_boxes.makeTree(0);
       }
 
       BoxContainer per_domain_boxes;
@@ -1098,7 +1098,7 @@ BaseGridGeometry::getBoundaryBoxes(
          per_domain_boxes = domain_boxes;
          per_domain_boxes.grow(periodic_shift);
          if (per_domain_boxes.size() > 10) { 
-            per_domain_boxes.makeTree(NULL);
+            per_domain_boxes.makeTree(0);
          }
       }
 

@@ -340,16 +340,16 @@ public:
     * @brief Deallocate the internal globalized version of the
     * BoxLevel, if there is any.
     *
-    * @pre (d_globalized_version == NULL) ||
+    * @pre (d_globalized_version == 0) ||
     *      (d_globalized_version->getParallelState() == GLOBALIZED)
     */
    void
    deallocateGlobalizedVersion() const
    {
-      if (d_globalized_version != NULL) {
+      if (d_globalized_version != 0) {
          TBOX_ASSERT(d_globalized_version->getParallelState() == GLOBALIZED);
          delete d_globalized_version;
-         d_globalized_version = NULL;
+         d_globalized_version = 0;
       }
    }
 
@@ -1603,7 +1603,7 @@ private:
    void
    clearPersistentOverlapConnectors()
    {
-      if (d_persistent_overlap_connectors != NULL) {
+      if (d_persistent_overlap_connectors != 0) {
          d_persistent_overlap_connectors->clear();
       }
    }

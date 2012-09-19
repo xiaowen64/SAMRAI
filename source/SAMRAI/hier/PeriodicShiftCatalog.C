@@ -47,7 +47,7 @@ const PeriodicShiftCatalog*
 PeriodicShiftCatalog::getCatalog(
    const tbox::Dimension& dim)
 {
-   if (s_periodic_shift_catalog_instance[dim.getValue() - 1] == NULL) {
+   if (s_periodic_shift_catalog_instance[dim.getValue() - 1] == 0) {
       s_periodic_shift_catalog_instance[dim.getValue() - 1] = new PeriodicShiftCatalog(dim);
    }
    return s_periodic_shift_catalog_instance[dim.getValue() - 1];
@@ -62,9 +62,9 @@ void
 PeriodicShiftCatalog::finalizeCallback()
 {
    for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
-      if (s_periodic_shift_catalog_instance[i] != NULL) {
+      if (s_periodic_shift_catalog_instance[i] != 0) {
          delete s_periodic_shift_catalog_instance[i];
-         s_periodic_shift_catalog_instance[i] = NULL;
+         s_periodic_shift_catalog_instance[i] = 0;
       }
    }
 }

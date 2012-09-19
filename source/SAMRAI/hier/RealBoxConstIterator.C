@@ -31,7 +31,7 @@ RealBoxConstIterator::RealBoxConstIterator(
 
 RealBoxConstIterator::~RealBoxConstIterator()
 {
-   d_boxes = NULL;
+   d_boxes = 0;
 }
 
 /*

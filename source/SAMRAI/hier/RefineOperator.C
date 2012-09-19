@@ -58,7 +58,7 @@ RefineOperator::removeFromLookupTable(
       }
       TBOX_ASSERT(mi->first == name);
       TBOX_ASSERT(mi->second == this);
-      mi->second = NULL;
+      mi->second = 0;
       s_lookup_table.erase(mi);
    }
 }

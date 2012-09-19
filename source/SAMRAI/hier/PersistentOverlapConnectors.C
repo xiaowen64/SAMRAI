@@ -162,7 +162,7 @@ PersistentOverlapConnectors::createConnector(
    d_cons_from_me.push_back(new_connector);
    head.getPersistentOverlapConnectors().d_cons_to_me.push_back(new_connector);
 
-   new_connector = NULL; // Help Insure++ avoid false positive dangling pointer.
+   new_connector = 0; // Help Insure++ avoid false positive dangling pointer.
 
    return *d_cons_from_me.back();
 }
@@ -234,7 +234,7 @@ PersistentOverlapConnectors::findConnector(
    TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
-   const Connector* found = NULL;
+   const Connector* found = 0;
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
@@ -250,7 +250,7 @@ PersistentOverlapConnectors::findConnector(
 
       if (&(d_cons_from_me[i]->getHead()) == &head) {
          if (d_cons_from_me[i]->getConnectorWidth() >= min_connector_width) {
-            if (found == NULL) {
+            if (found == 0) {
                found = d_cons_from_me[i];
             } else {
                IntVector vdiff =
@@ -276,7 +276,7 @@ PersistentOverlapConnectors::findConnector(
 
    OverlapConnectorAlgorithm oca;
 
-   if (found == NULL) {
+   if (found == 0) {
 
       TBOX_ERROR(
          "PersistentOverlapConnectors::findConnector: Failed to find Connector\n"
@@ -340,7 +340,7 @@ PersistentOverlapConnectors::findOrCreateConnector(
    TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
-   const Connector* found = NULL;
+   const Connector* found = 0;
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
@@ -356,7 +356,7 @@ PersistentOverlapConnectors::findOrCreateConnector(
 
       if (&(d_cons_from_me[i]->getHead()) == &head) {
          if (d_cons_from_me[i]->getConnectorWidth() >= min_connector_width) {
-            if (found == NULL) {
+            if (found == 0) {
                found = d_cons_from_me[i];
             } else {
                IntVector vdiff =
@@ -382,7 +382,7 @@ PersistentOverlapConnectors::findOrCreateConnector(
 
    OverlapConnectorAlgorithm oca;
 
-   if (found == NULL) {
+   if (found == 0) {
 
       Connector* new_connector = new Connector(
             d_my_box_level,
@@ -500,7 +500,7 @@ PersistentOverlapConnectors::clear()
 #endif
 
       delete d_cons_from_me[i];
-      d_cons_from_me[i] = NULL;
+      d_cons_from_me[i] = 0;
    }
    d_cons_from_me.clear();
 
@@ -531,7 +531,7 @@ PersistentOverlapConnectors::clear()
 #endif
 
       delete d_cons_to_me[i];
-      d_cons_to_me[i] = NULL;
+      d_cons_to_me[i] = 0;
 
    }
    d_cons_to_me.clear();

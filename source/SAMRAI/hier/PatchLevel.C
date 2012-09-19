@@ -932,7 +932,7 @@ PatchLevel::finalizeCallback()
 PatchLevel::Iterator::Iterator(
    const PatchLevel::Iterator& r):
    d_iterator(r.d_iterator),
-   d_patches(NULL /* Unused since not backward compatibility not needed */)
+   d_patches(0 /* Unused since not backward compatibility not needed */)
 {
 }
 

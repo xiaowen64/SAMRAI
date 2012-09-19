@@ -34,7 +34,7 @@ BoxContainerSingleOwnerIterator::BoxContainerSingleOwnerIterator(
 
 BoxContainerSingleOwnerIterator::~BoxContainerSingleOwnerIterator()
 {
-   d_boxes = NULL;
+   d_boxes = 0;
 }
 
 /*
