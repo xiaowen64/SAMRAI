@@ -101,6 +101,8 @@ public:
     *            Note: the ghost cell width is assumed to be zero.
     * @param depth gives the number of data values for each
     *              spatial location in the array.
+    *
+    * @pre depth > 0
     */
    static size_t
    getSizeOfData(
@@ -117,6 +119,8 @@ public:
     *            outerside data object will be created.
     * @param depth gives the number of data values for each
     *              spatial location in the array.
+    *
+    * @pre depth > 0
     */
    OutersideData(
       const hier::Box& box,
@@ -139,12 +143,14 @@ public:
     * side normal, side, and depth component of the outerside centered
     * array.
     *
-    * @param side_normal  integer side normal direction for data,
-    *              must satisfy 0 <= side_normal < DIM
+    * @param side_normal  integer side normal direction for data
     * @param side integer lower (0) or upper (1) side of outerside
     *             data array
-    * @param depth integer depth component, must satisfy
-    *              0 <= depth < actual depth of data array
+    * @param depth integer depth component
+    *
+    * @pre (side_normal >= 0) && (side_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    TYPE *
    getPointer(
@@ -157,12 +163,14 @@ public:
     * side normal, side, and depth component of the outerside centered
     * array.
     *
-    * @param side_normal  integer side normal direction for data,
-    *              must satisfy 0 <= side_normal < DIM
+    * @param side_normal  integer side normal direction for data
     * @param side integer lower (0) or upper (1) side of outerside
     *             data array
-    * @param depth integer depth component, must satisfy
-    *              0 <= depth < actual depth of data array
+    * @param depth integer depth component
+    *
+    * @pre (side_normal >= 0) && (side_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    const TYPE *
    getPointer(
@@ -176,10 +184,12 @@ public:
     *
     * @param i const reference to SideIndex, @em MUST be
     *          an index on the outerside of the box.
-    * @param side  integer (lower/upper location of outerside data),
-    *              must satisfy 0 <= side <= 1
-    * @param depth integer depth component, must satisfy
-    *              0 <= depth < actual depth of data array
+    * @param side  integer (lower/upper location of outerside data)
+    * @param depth integer depth component
+    *
+    * @pre (i.getAxis() >= 0) && (i.getAxis() < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    TYPE&
    operator () (
@@ -193,10 +203,12 @@ public:
     *
     * @param i const reference to SideIndex, @em MUST be
     *          an index on the outerside of the box.
-    * @param side  integer (lower/upper location of outerside data),
-    *              must satisfy 0 <= side <= 1
-    * @param depth integer depth component, must satisfy
-    *              0 <= depth < actual depth of data array
+    * @param side  integer (lower/upper location of outerside data)
+    * @param depth integer depth component
+    *
+    * @pre (i.getAxis() >= 0) && (i.getAxis() < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    const TYPE&
    operator () (
@@ -208,10 +220,12 @@ public:
     * @brief Return a reference to the array data object for
     * side normal and side location of the outerside centered array.
     *
-    * @param side_normal  integer side normal direction for data,
-    *              must satisfy 0 <= side_normal < DIM
+    * @param side_normal  integer side normal direction for data
     * @param side integer lower (0) or upper (1) side of outerside
     *             data array
+    *
+    * @pre (side_normal >= 0) && (side_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
     */
    ArrayData<TYPE>&
    getArrayData(
@@ -222,10 +236,12 @@ public:
     * @brief Return a const reference to the array data object for
     * side normal and side location of the outerside centered array.
     *
-    * @param side_normal  integer side normal direction for data,
-    *              must satisfy 0 <= side_normal < DIM
+    * @param side_normal  integer side normal direction for data
     * @param side integer lower (0) or upper (1) side of outerside
     *             data array
+    *
+    * @pre (side_normal >= 0) && (side_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
     */
    const ArrayData<TYPE>&
    getArrayData(
@@ -241,6 +257,9 @@ public:
     * both the source and destination).  Currently, source data must be
     * SideData the same DIM and TYPE.  If not, then an unrecoverable error
     * results.
+    *
+    * @pre getDim() == src.getDim()
+    * @pre dynamic_cast<const SideData<TYPE> *>(&src) != NULL
     */
    virtual void
    copy(
@@ -255,6 +274,9 @@ public:
     * both the source and destination).  Currently, destination data must be
     * SideData of the same DIM and TYPE.  If not, then an unrecoverable
     * error results.
+    *
+    * @pre getDim() == dst.getDim()
+    * @pre dynamic_cast<SideData<TYPE> *>(&dst) != NULL
     */
    virtual void
    copy2(
@@ -278,6 +300,10 @@ public:
     * Currently, destination data must be SideData of the same DIM
     * and TYPE and the overlap must be a SideOverlap of the same
     * DIM.  If not, then an unrecoverable error results.
+    *
+    * @pre getDim() == dst.getDim()
+    * @pre dynamic_cast<SideData<TYPE> *>(&dst) != NULL
+    * @pre dynamic_cast<const SideOverlap *>(&overlap) != NULL
     */
    virtual void
    copy2(
@@ -288,6 +314,8 @@ public:
     * @brief Fast copy (i.e., assumes side and outerside data objects are
     * defined over the same box) from the given side source data object to
     * this destination outerside data object at the specified depths.
+    *
+    * @pre getDim == src.getDim()
     */
    void
    copyDepth(
@@ -299,6 +327,8 @@ public:
     * @brief Fast copy (i.e., assumes side and outerside data objects are
     * defined over the same box) to the given side destination data object
     * from this source outerside data object at the specified depths.
+    *
+    * @pre getDim == dst.getDim()
     */
    void
    copyDepth2(
@@ -324,6 +354,8 @@ public:
     *
     * This routine is defined for the standard types (bool, char,
     * double, float, int, and dcomplex).
+    *
+    * @pre dynamic_cast<const SideOverlap *>(&overlap) != NULL
     */
    virtual int
    getDataStreamSize(
@@ -333,6 +365,8 @@ public:
     * @brief Pack data in this patch data object lying in the specified
     * box overlap region into the stream.  The overlap must be an
     * SideOverlap of the same DIM.
+    *
+    * @pre dynamic_cast<const SideOverlap *>(&overlap) != NULL
     */
    virtual void
    packStream(
@@ -343,6 +377,8 @@ public:
     * @brief Unpack data from stream into this patch data object over
     * the specified box overlap region. The overlap must be an
     * SideOverlap of the same DIM.
+    *
+    * @pre dynamic_cast<const SideOverlap *>(&overlap) != NULL
     */
    virtual void
    unpackStream(
@@ -351,6 +387,8 @@ public:
 
    /*!
     * @brief Fill all values at depth d with the value t.
+    *
+    * @pre (d >= 0) && (d < getDepth())
     */
    void
    fill(
@@ -359,6 +397,9 @@ public:
 
    /*!
     * @brief Fill all values at depth d within the box with the value t.
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (d >= 0) && (d < getDepth())
     */
    void
    fill(
@@ -375,6 +416,8 @@ public:
 
    /*!
     * @brief Fill all depth components within the box with value t.
+    *
+    * @pre getDim() == box.getDim()
     */
    void
    fillAll(
@@ -394,6 +437,8 @@ public:
     *        is 12 decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
+    *
+    * @pre getDim() == box.getDim()
     */
    void
    print(
@@ -408,14 +453,16 @@ public:
     * @param box  const reference to box over whioch to print data. Note box
     *        is assumed to reside in standard cell-centered index space
     *        and will be converted to side index space.
-    * @param depth integer depth component, must satisfy
-    *              0 <= depth < actual depth of data array
+    * @param depth integer depth component
     * @param os   reference to output stream.
     * @param prec integer precision for printing floating point numbers
     *        (i.e., TYPE = float, double, or dcomplex). The default
     *        is 12 decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    void
    print(
@@ -429,8 +476,7 @@ public:
     * side_normal and side location residing in the specified box.
     * If the depth of the data is greater than one, all depths are printed.
     *
-    * @param side_normal  integer side normal direction for data,
-    *              must satisfy 0 <= side_normal < DIM
+    * @param side_normal  integer side normal direction for data
     * @param side integer lower (0) or upper (1) side of outerside
     *             data array
     * @param box  const reference to box over whioch to print data. Note box
@@ -442,6 +488,10 @@ public:
     *        is 12 decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (side_normal >= 0) && (side_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
     */
    void
    printAxisSide(
@@ -455,21 +505,24 @@ public:
     * @brief Print all outerside centered data values for specified
     * side_normal, side location, and depth residing in the specified box.
     *
-    * @param side_normal  integer side normal direction for data,
-    *              must satisfy 0 <= side_normal < DIM
+    * @param side_normal  integer side normal direction for data
     * @param side integer lower (0) or upper (1) side of outerside
     *             data array
     * @param box  const reference to box over whioch to print data. Note box
     *        is assumed to reside in standard cell-centered index space
     *        and will be converted to side index space.
-    * @param depth integer depth component, must satisfy
-    *              0 <= depth < actual depth of data array
+    * @param depth integer depth component
     * @param os    reference to output stream.
     * @param prec integer precision for printing floating point numbers
     *        (i.e., TYPE = float, double, or dcomplex). The default
     *        is 12 decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (depth >= 0) && (depth < getDepth())
+    * @pre (side_normal >= 0) && (side_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
     */
    void
    printAxisSide(
@@ -484,7 +537,7 @@ public:
     * @brief Check that class version and restart file version are equal.
     * If so, read data members from the restart database.
     *
-    * Assertions: restart_db must be a non-null pointer.
+    * @pre restart_db
     */
    virtual void
    getFromRestart(
@@ -494,7 +547,7 @@ public:
     * @brief Write out the class version number and other data members to
     * the restart database.
     *
-    * Assertions: restart_db must be a non-null pointer.
+    * @pre restart_db
     */
    virtual void
    putToRestart(

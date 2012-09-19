@@ -236,6 +236,7 @@ SparseData<BOX_GEOMETRY>::SparseData(
    d_dbl_attr_size(static_cast<int>(dbl_names.size())),
    d_int_attr_size(static_cast<int>(int_names.size()))
 {
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
 
    std::vector<std::string>::const_iterator name_iter;
    int val(0);
@@ -276,7 +277,7 @@ SparseData<BOX_GEOMETRY>::copy(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const SparseData<BOX_GEOMETRY>* tmp_src =
-      static_cast<const SparseData<BOX_GEOMETRY> *>(&src);
+      dynamic_cast<const SparseData<BOX_GEOMETRY> *>(&src);
 
    TBOX_ASSERT(tmp_src != NULL);
    const hier::Box& src_ghost_box = tmp_src->getGhostBox();
@@ -319,10 +320,10 @@ SparseData<BOX_GEOMETRY>::copy(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const SparseData<BOX_GEOMETRY>* tmp_src =
-      static_cast<const SparseData<BOX_GEOMETRY> *>(&src);
+      dynamic_cast<const SparseData<BOX_GEOMETRY> *>(&src);
 
    const typename BOX_GEOMETRY::Overlap * tmp_overlap =
-      static_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap);
+      dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap);
 
    TBOX_ASSERT(tmp_src != NULL);
    TBOX_ASSERT(tmp_overlap != NULL);
@@ -387,7 +388,7 @@ SparseData<BOX_GEOMETRY>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
    const typename BOX_GEOMETRY::Overlap * tmp_overlap =
-      static_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap);
+      dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap);
 
    TBOX_ASSERT(tmp_overlap != NULL);
 

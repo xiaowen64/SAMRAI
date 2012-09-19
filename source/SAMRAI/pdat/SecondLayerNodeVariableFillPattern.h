@@ -73,6 +73,10 @@ public:
     *                            destination index space.
     *
     * @return                boost::shared_ptr to the calculated overlap object
+    *
+    * @pre dst_patch_box.getDim() == src_mask.getDim()
+    * @pre dynamic_cast<const NodeGeometry *>(&dst_geometry) != NULL
+    * @pre dynamic_cast<const NodeGeometry *>(&src_geometry) != NULL
     */
    boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
@@ -139,6 +143,8 @@ private:
     *
     * @param[out] stencil_boxes   The computed stencil BoxContainer.
     * @param[in]  dst_box         Input box around which stencil is computed.
+    *
+    * @pre stencil_boxes.size() == 0
     */
    void
    computeStencilBoxes(

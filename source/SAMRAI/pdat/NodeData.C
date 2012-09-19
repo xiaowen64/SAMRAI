@@ -136,8 +136,7 @@ NodeData<TYPE>::copy(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
-   const NodeData<TYPE>* t_src =
-      dynamic_cast<const NodeData<TYPE> *>(&src);
+   const NodeData<TYPE>* t_src = dynamic_cast<const NodeData<TYPE> *>(&src);
    if (t_src == NULL) {
       src.copy2(*this);
    } else {
@@ -155,8 +154,7 @@ NodeData<TYPE>::copy2(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
-   NodeData<TYPE>* t_dst =
-      dynamic_cast<NodeData<TYPE> *>(&dst);
+   NodeData<TYPE>* t_dst = dynamic_cast<NodeData<TYPE> *>(&dst);
 
    TBOX_ASSERT(t_dst != NULL);
 
@@ -183,10 +181,8 @@ NodeData<TYPE>::copy(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
-   const NodeData<TYPE>* t_src =
-      dynamic_cast<const NodeData<TYPE> *>(&src);
-   const NodeOverlap* t_overlap =
-      dynamic_cast<const NodeOverlap *>(&overlap);
+   const NodeData<TYPE>* t_src = dynamic_cast<const NodeData<TYPE> *>(&src);
+   const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
    if ((t_src == NULL) || (t_overlap == NULL)) {
       src.copy2(*this, overlap);
@@ -210,10 +206,8 @@ NodeData<TYPE>::copy2(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
-   NodeData<TYPE>* t_dst =
-      dynamic_cast<NodeData<TYPE> *>(&dst);
-   const NodeOverlap* t_overlap =
-      dynamic_cast<const NodeOverlap *>(&overlap);
+   NodeData<TYPE>* t_dst = dynamic_cast<NodeData<TYPE> *>(&dst);
+   const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_dst != NULL);
    TBOX_ASSERT(t_overlap != NULL);
@@ -342,8 +336,7 @@ int
 NodeData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
-   const NodeOverlap* t_overlap =
-      dynamic_cast<const NodeOverlap *>(&overlap);
+   const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -367,8 +360,7 @@ NodeData<TYPE>::packStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap) const
 {
-   const NodeOverlap* t_overlap =
-      dynamic_cast<const NodeOverlap *>(&overlap);
+   const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -452,8 +444,7 @@ NodeData<TYPE>::unpackStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
-   const NodeOverlap* t_overlap =
-      dynamic_cast<const NodeOverlap *>(&overlap);
+   const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 

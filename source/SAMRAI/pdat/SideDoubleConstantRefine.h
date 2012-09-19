@@ -69,6 +69,8 @@ public:
     * of the destination patch and the boxes contained in fine_overlap.
     * It is assumed that the coarse patch contains sufficient data for the
     * stencil width of the refinement operator.
+    *
+    * @pre dynamic_cast<const SideOverlap *>(&fine_overlap) != NULL
     */
    void
    refine(

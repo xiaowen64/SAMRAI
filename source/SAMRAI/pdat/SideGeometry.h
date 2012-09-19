@@ -50,6 +50,8 @@ public:
     * @brief Convert an AMR index box space box into an side geometry box.
     * An side geometry box extends the given AMR index space box
     * by one at upper end for the side normal coordinate direction.
+    *
+    * @pre (side_normal >= 0) && (side_normal < box.getDim().getValue())
     */
    static hier::Box
    toSideBox(
@@ -93,6 +95,10 @@ public:
     * @brief Construct the side geometry object given an AMR index
     * space box, ghost cell width and directions vector indicating
     * which coordinate directions are allocated.
+    *
+    * @pre box.getDim() == ghosts.getDim()
+    * @pre ghosts.min() >= 0
+    * @pre directions.min() >= 0
     */
    SideGeometry(
       const hier::Box& box,
@@ -107,6 +113,8 @@ public:
    /*!
     * @brief Compute the overlap in side-centered index space between
     * the source box geometry and the destination box geometry.
+    *
+    * @pre getBox().getDim() == src_mask.getDim()
     */
    virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
@@ -167,6 +175,9 @@ private:
     * Function doOverlap() is the function that computes the overlap
     * between the source and destination objects, where both box geometry
     * objects are guaranteed to have side centered geometry.
+    *
+    * @pre src_mask.getDim() == transformation.getOffset().getDim()
+    * @pre dst_geometry.getDirectionVector() == src_geometry.getDirectionVector()
     */
    static boost::shared_ptr<hier::BoxOverlap>
    doOverlap(

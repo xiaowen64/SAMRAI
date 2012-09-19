@@ -51,6 +51,8 @@ public:
     * An edge geometry box extends the given AMR index box space box
     * by one in upper end for each coordinate direction not equal
     * to the axis direction.
+    *
+    * @pre (0 <= axis) && (axis < box.getDim().getValue())
     */
    static hier::Box
    toEdgeBox(
@@ -93,6 +95,9 @@ public:
    /*!
     * @brief Construct the edge geometry object given an AMR index
     * space box and ghost cell width.
+    *
+    * @pre box.getDim() == ghosts.getDim()
+    * @pre ghosts.min() >= 0
     */
    EdgeGeometry(
       const hier::Box& box,
@@ -106,6 +111,8 @@ public:
    /*!
     * @brief Compute the overlap in edge-centered index space between
     * the source box geometry and the destination box geometry.
+    *
+    * @pre getBox().getDim() == src_mask.getDim()
     */
    virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(

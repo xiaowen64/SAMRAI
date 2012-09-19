@@ -161,6 +161,9 @@ OuternodeData<TYPE>::operator () (
    const NodeIndex& i,
    int depth)
 {
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
    for (int d = getDim().getValue() - 1; d >= 0; d--) {
       if (i[d] == d_data[d][0]->getBox().lower()[d]) {
          return (*(d_data[d][0]))(i, depth);
@@ -186,6 +189,7 @@ OuternodeData<TYPE>::operator () (
    int depth) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    for (int d = getDim() - 1; d >= 0; d--) {
       if (i[d] == d_data[d][0]->getBox().lower()[d]) {
@@ -245,10 +249,8 @@ OuternodeData<TYPE>::copy2(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
-   NodeData<TYPE>* t_node_dst =
-      dynamic_cast<NodeData<TYPE> *>(&dst);
-   OuternodeData<TYPE>* t_onode_dst =
-      dynamic_cast<OuternodeData<TYPE> *>(&dst);
+   NodeData<TYPE>* t_node_dst = dynamic_cast<NodeData<TYPE> *>(&dst);
+   OuternodeData<TYPE>* t_onode_dst = dynamic_cast<OuternodeData<TYPE> *>(&dst);
 
    if (t_node_dst != NULL) {
       copyToNode(*t_node_dst);
@@ -279,8 +281,7 @@ OuternodeData<TYPE>::copy(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
-   const NodeOverlap* t_overlap =
-      dynamic_cast<const NodeOverlap *>(&overlap);
+   const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -310,15 +311,12 @@ OuternodeData<TYPE>::copy2(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
-   const NodeOverlap* t_overlap =
-      dynamic_cast<const NodeOverlap *>(&overlap);
+   const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
-   NodeData<TYPE>* t_node_dst =
-      dynamic_cast<NodeData<TYPE> *>(&dst);
-   OuternodeData<TYPE>* t_onode_dst =
-      dynamic_cast<OuternodeData<TYPE> *>(&dst);
+   NodeData<TYPE>* t_node_dst = dynamic_cast<NodeData<TYPE> *>(&dst);
+   OuternodeData<TYPE>* t_onode_dst = dynamic_cast<OuternodeData<TYPE> *>(&dst);
 
    if (t_node_dst != NULL) {
       copyToNode(*t_node_dst, *t_overlap);
@@ -409,8 +407,7 @@ OuternodeData<TYPE>::sum(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
-   const NodeOverlap* t_overlap =
-      dynamic_cast<const NodeOverlap *>(&overlap);
+   const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -476,8 +473,7 @@ int
 OuternodeData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
-   const NodeOverlap* t_overlap =
-      dynamic_cast<const NodeOverlap *>(&overlap);
+   const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -506,8 +502,7 @@ OuternodeData<TYPE>::packStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap) const
 {
-   const NodeOverlap* t_overlap =
-      dynamic_cast<const NodeOverlap *>(&overlap);
+   const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -536,8 +531,7 @@ OuternodeData<TYPE>::unpackStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
-   const NodeOverlap* t_overlap =
-      dynamic_cast<const NodeOverlap *>(&overlap);
+   const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -572,8 +566,7 @@ OuternodeData<TYPE>::unpackStreamAndSum(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
-   const NodeOverlap* t_overlap =
-      dynamic_cast<const NodeOverlap *>(&overlap);
+   const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 

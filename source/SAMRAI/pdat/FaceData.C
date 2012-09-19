@@ -160,8 +160,7 @@ FaceData<TYPE>::copy(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
-   const FaceData<TYPE>* t_src =
-      dynamic_cast<const FaceData<TYPE> *>(&src);
+   const FaceData<TYPE>* t_src = dynamic_cast<const FaceData<TYPE> *>(&src);
 
    if (t_src == NULL) {
       src.copy2(*this);
@@ -182,8 +181,7 @@ FaceData<TYPE>::copy2(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
-   FaceData<TYPE>* t_dst =
-      dynamic_cast<FaceData<TYPE> *>(&dst);
+   FaceData<TYPE>* t_dst = dynamic_cast<FaceData<TYPE> *>(&dst);
 
    TBOX_ASSERT(t_dst != NULL);
 
@@ -212,10 +210,8 @@ FaceData<TYPE>::copy(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
-   const FaceData<TYPE>* t_src =
-      dynamic_cast<const FaceData<TYPE> *>(&src);
-   const FaceOverlap* t_overlap =
-      dynamic_cast<const FaceOverlap *>(&overlap);
+   const FaceData<TYPE>* t_src = dynamic_cast<const FaceData<TYPE> *>(&src);
+   const FaceOverlap* t_overlap = dynamic_cast<const FaceOverlap *>(&overlap);
 
    if ((t_src == NULL) || (t_overlap == NULL)) {
       src.copy2(*this, overlap);
@@ -252,11 +248,9 @@ FaceData<TYPE>::copy2(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
-   FaceData<TYPE>* t_dst =
-      dynamic_cast<FaceData<TYPE> *>(&dst);
+   FaceData<TYPE>* t_dst = dynamic_cast<FaceData<TYPE> *>(&dst);
 
-   const FaceOverlap* t_overlap =
-      dynamic_cast<const FaceOverlap *>(&overlap);
+   const FaceOverlap* t_overlap = dynamic_cast<const FaceOverlap *>(&overlap);
 
    TBOX_ASSERT(t_dst != NULL);
    TBOX_ASSERT(t_overlap != NULL);
@@ -409,8 +403,7 @@ int
 FaceData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
-   const FaceOverlap* t_overlap =
-      dynamic_cast<const FaceOverlap *>(&overlap);
+   const FaceOverlap* t_overlap = dynamic_cast<const FaceOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -445,8 +438,7 @@ FaceData<TYPE>::packStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap) const
 {
-   const FaceOverlap* t_overlap =
-      dynamic_cast<const FaceOverlap *>(&overlap);
+   const FaceOverlap* t_overlap = dynamic_cast<const FaceOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -552,8 +544,7 @@ FaceData<TYPE>::unpackStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
-   const FaceOverlap* t_overlap =
-      dynamic_cast<const FaceOverlap *>(&overlap);
+   const FaceOverlap* t_overlap = dynamic_cast<const FaceOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 

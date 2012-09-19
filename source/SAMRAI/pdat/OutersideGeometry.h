@@ -52,6 +52,9 @@ public:
    /*!
     * @brief Construct an outerside geometry object given an AMR index
     * space box and ghost cell width.
+    *
+    * @pre box.getDim() == ghosts.getDim
+    * @pre ghosts.min() >= 0
     */
    OutersideGeometry(
       const hier::Box& box,
@@ -65,6 +68,8 @@ public:
    /*!
     * @brief Compute the overlap in side-centered index space on the
     * boundaries of the source box geometry and the destination box geometry.
+    *
+    * @pre getBox().getDim() == src_mask.getDim()
     */
    virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
@@ -109,6 +114,9 @@ private:
     * Function doOverlap() is the function that computes the overlap
     * between the source and destination objects, where the source
     * has outerside geometry and the destination side geometry.
+    *
+    * @pre src_mask.getDim() == transformation.getOffset().getDim()
+    * @pre dst_geometry.getDirectionVector() == hier::IntVector::getOne(src_mask.getDim())
     */
    static boost::shared_ptr<hier::BoxOverlap>
    doOverlap(

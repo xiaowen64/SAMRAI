@@ -166,8 +166,7 @@ CellData<TYPE>::copy(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*d_data, src);
 
-   const CellData<TYPE>* t_src =
-      dynamic_cast<const CellData<TYPE> *>(&src);
+   const CellData<TYPE>* t_src = dynamic_cast<const CellData<TYPE> *>(&src);
    if (t_src == NULL) {
       src.copy2(*this);
    } else {
@@ -210,11 +209,9 @@ CellData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
-   const CellData<TYPE>* t_src =
-      dynamic_cast<const CellData<TYPE> *>(&src);
+   const CellData<TYPE>* t_src = dynamic_cast<const CellData<TYPE> *>(&src);
 
-   const CellOverlap* t_overlap =
-      dynamic_cast<const CellOverlap *>(&overlap);
+   const CellOverlap* t_overlap = dynamic_cast<const CellOverlap *>(&overlap);
 
    if ((t_src == NULL) || (t_overlap == NULL)) {
       src.copy2(*this, overlap);
@@ -237,8 +234,7 @@ CellData<TYPE>::copy2(
    const hier::BoxOverlap& overlap) const
 {
    CellData<TYPE>* t_dst = dynamic_cast<CellData<TYPE> *>(&dst);
-   const CellOverlap* t_overlap =
-      dynamic_cast<const CellOverlap *>(&overlap);
+   const CellOverlap* t_overlap = dynamic_cast<const CellOverlap *>(&overlap);
 
    TBOX_ASSERT(t_dst != NULL);
    TBOX_ASSERT(t_overlap != NULL);
@@ -365,8 +361,7 @@ int
 CellData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
-   const CellOverlap* t_overlap =
-      dynamic_cast<const CellOverlap *>(&overlap);
+   const CellOverlap* t_overlap = dynamic_cast<const CellOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -390,8 +385,7 @@ CellData<TYPE>::packStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap) const
 {
-   const CellOverlap* t_overlap =
-      dynamic_cast<const CellOverlap *>(&overlap);
+   const CellOverlap* t_overlap = dynamic_cast<const CellOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -470,8 +464,7 @@ CellData<TYPE>::unpackStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
-   const CellOverlap* t_overlap =
-      dynamic_cast<const CellOverlap *>(&overlap);
+   const CellOverlap* t_overlap = dynamic_cast<const CellOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 

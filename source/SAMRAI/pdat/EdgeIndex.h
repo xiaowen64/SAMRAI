@@ -113,6 +113,8 @@ public:
 
    /**
     * Plus-equals operator for a edge index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    EdgeIndex&
    operator += (
@@ -125,6 +127,8 @@ public:
 
    /**
     * Plus operator for a edge index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    EdgeIndex
    operator + (
@@ -161,6 +165,8 @@ public:
 
    /**
     * Minus-equals operator for a edge index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    EdgeIndex&
    operator -= (
@@ -173,6 +179,8 @@ public:
 
    /**
     * Minus operator for a edge index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    EdgeIndex
    operator - (
@@ -209,6 +217,8 @@ public:
 
    /**
     * Times-equals operator for a edge index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    EdgeIndex&
    operator *= (
@@ -221,6 +231,8 @@ public:
 
    /**
     * Times operator for a edge index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    EdgeIndex
    operator * (
@@ -258,6 +270,8 @@ public:
    /**
     * Returns true if two edge index objects are equal.  All components
     * and the corresponding edge axes must be the same for equality.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    bool
    operator == (
@@ -270,6 +284,8 @@ public:
    /**
     * Returns true if two edge index objects are not equal.  Any of
     * the components or axes may be different for inequality.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    bool
    operator != (

@@ -119,6 +119,21 @@ ArrayData<TYPE>::getOffset() const
 }
 
 template<class TYPE>
+int
+ArrayData<TYPE>::getIndex(
+   const hier::Index& i,
+   int d) const
+{
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
+
+   int index = d_box.offset(i) + d * d_offset;
+
+   TBOX_ASSERT((index >= 0) && (index < d_depth * d_offset));
+
+   return index;
+}
+
+template<class TYPE>
 TYPE*
 ArrayData<TYPE>::getPointer(
    int d)
@@ -144,13 +159,10 @@ ArrayData<TYPE>::operator () (
    const hier::Index& i,
    int d)
 {
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
-   const int index = d_box.offset(i) + d * d_offset;
-
-   TBOX_ASSERT((index >= 0) && (index < d_depth * d_offset));
-
-   return d_array[index];
+   return d_array[getIndex(i, d)];
 }
 
 template<class TYPE>
@@ -160,14 +172,9 @@ ArrayData<TYPE>::operator () (
    int d) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
-
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
-   const int index = d_box.offset(i) + d * d_offset;
-
-   TBOX_ASSERT((index >= 0) && (index < d_depth * d_offset));
-
-   return d_array[index];
+   return d_array[getIndex(i, d)];
 }
 
 /*

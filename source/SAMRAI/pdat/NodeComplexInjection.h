@@ -70,6 +70,10 @@ public:
     * the destination patch and the coarse box.  It is assumed that the
     * fine patch contains sufficient data for the stencil width of the
     * coarsening operator.
+    *
+    * @pre coarse.getDim == fine.getDim() &&
+    *      coarse.getDim == coarse_box.getDim() &&
+    *      coarse.getDim == ratio.getDim()
     */
    void
    coarsen(

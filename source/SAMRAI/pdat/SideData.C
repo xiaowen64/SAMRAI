@@ -199,8 +199,7 @@ SideData<TYPE>::copy(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, src);
 
-   const SideData<TYPE>* t_src =
-      dynamic_cast<const SideData<TYPE> *>(&src);
+   const SideData<TYPE>* t_src = dynamic_cast<const SideData<TYPE> *>(&src);
 
    if (t_src == NULL) {
       src.copy2(*this);
@@ -227,8 +226,7 @@ SideData<TYPE>::copy2(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, dst);
 
-   SideData<TYPE>* t_dst =
-      dynamic_cast<SideData<TYPE> *>(&dst);
+   SideData<TYPE>* t_dst = dynamic_cast<SideData<TYPE> *>(&dst);
 
    TBOX_ASSERT(t_dst != NULL);
    TBOX_ASSERT(t_dst->getDirectionVector() == d_directions);
@@ -260,10 +258,8 @@ SideData<TYPE>::copy(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, src);
 
-   const SideData<TYPE>* t_src =
-      dynamic_cast<const SideData<TYPE> *>(&src);
-   const SideOverlap* t_overlap =
-      dynamic_cast<const SideOverlap *>(&overlap);
+   const SideData<TYPE>* t_src = dynamic_cast<const SideData<TYPE> *>(&src);
+   const SideOverlap* t_overlap = dynamic_cast<const SideOverlap *>(&overlap);
 
    if ((t_src == NULL) || (t_overlap == NULL)) {
       src.copy2(*this, overlap);
@@ -296,10 +292,8 @@ SideData<TYPE>::copy2(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, dst);
 
-   SideData<TYPE>* t_dst =
-      dynamic_cast<SideData<TYPE> *>(&dst);
-   const SideOverlap* t_overlap =
-      dynamic_cast<const SideOverlap *>(&overlap);
+   SideData<TYPE>* t_dst = dynamic_cast<SideData<TYPE> *>(&dst);
+   const SideOverlap* t_overlap = dynamic_cast<const SideOverlap *>(&overlap);
 
    TBOX_ASSERT(t_dst != NULL);
    TBOX_ASSERT(t_overlap != NULL);
@@ -449,8 +443,7 @@ int
 SideData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
-   const SideOverlap* t_overlap =
-      dynamic_cast<const SideOverlap *>(&overlap);
+   const SideOverlap* t_overlap = dynamic_cast<const SideOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -483,8 +476,7 @@ SideData<TYPE>::packStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap) const
 {
-   const SideOverlap* t_overlap =
-      dynamic_cast<const SideOverlap *>(&overlap);
+   const SideOverlap* t_overlap = dynamic_cast<const SideOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -581,8 +573,7 @@ SideData<TYPE>::unpackStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
-   const SideOverlap* t_overlap =
-      dynamic_cast<const SideOverlap *>(&overlap);
+   const SideOverlap* t_overlap = dynamic_cast<const SideOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -740,17 +731,17 @@ SideData<TYPE>::print(
 template<class TYPE>
 void
 SideData<TYPE>::printAxis(
-   int axis,
+   int side_normal,
    const hier::Box& box,
    std::ostream& os,
    int prec) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
-   TBOX_ASSERT((axis >= 0) && (axis < getDim().getValue()));
+   TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
 
    for (int d = 0; d < d_depth; d++) {
       os << "Array depth = " << d << std::endl;
-      printAxis(axis, box, d, os, prec);
+      printAxis(side_normal, box, d, os, prec);
    }
 }
 

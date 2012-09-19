@@ -109,6 +109,11 @@ public:
     * @param directions const IntVector reference indicating which
     *                   coordinate directions are assumed to have data
     *                   for the purposes of the calculation.
+    *
+    * @pre (box.getDim() == ghosts.getDim()) &&
+    *      (box.getDim() == directions.getDim())
+    * @pre depth > 0
+    * @pre directions.min() >= 0
     */
    static size_t
    getSizeOfData(
@@ -131,6 +136,12 @@ public:
     * @param directions const IntVector reference indicating which
     *                   coordinate directions will have data associated
     *                   with them.
+    *
+    * @pre (box.getDim() == ghosts.getDim()) &&
+    *      (box.getDim() == directions.getDim())
+    * @pre depth > 0
+    * @pre ghosts.min() >= 0
+    * @pre directions.min() >= 0
     */
    SideData(
       const hier::Box& box,
@@ -141,6 +152,10 @@ public:
    /*!
     * @brief Same as previous constructor but with directions
     * vector of 1's.
+    *
+    * @pre box.getDim() == ghosts.getDim()
+    * @pre depth > 0
+    * @pre ghosts.min() >= 0
     *
     */
    SideData(
@@ -175,6 +190,10 @@ public:
    /*!
     * @brief Get a pointer to the beginning of a particular side normal and
     * depth component of the side centered array.
+    *
+    * @pre (side_normal >= 0) && (side_normal < getDim().getValue())
+    * @pre getDirectionVector()(side_normal)
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    TYPE *
    getPointer(
@@ -184,6 +203,10 @@ public:
    /*!
     * @brief Get a const pointer to the beginning of a particular side normal
     * and depth component of the side centered array.
+    *
+    * @pre (side_normal >= 0) && (side_normal < getDim().getValue())
+    * @pre getDirectionVector()(side_normal)
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    const TYPE *
    getPointer(
@@ -193,6 +216,10 @@ public:
    /*!
     * @brief Return a reference to the data entry corresponding
     * to a given side index and depth.
+    *
+    * @pre (i.getAxis() >= 0) && (i.getAxis() < getDim().getValue())
+    * @pre getDirectionVector()(i.getAxis())
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    TYPE&
    operator () (
@@ -202,6 +229,10 @@ public:
    /*!
     * @brief Return a const reference to the data entry corresponding
     * to a given side index and depth.
+    *
+    * @pre (i.getAxis() >= 0) && (i.getAxis() < getDim().getValue())
+    * @pre getDirectionVector()(i.getAxis())
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    const TYPE&
    operator () (
@@ -211,6 +242,9 @@ public:
    /*!
     * @brief Return a reference to the array data object for the
     * given side normal of the side centered data object.
+    *
+    * @pre (side_normal >= 0) && (side_normal < getDim().getValue())
+    * @pre getDirectionVector()(side_normal)
     */
    ArrayData<TYPE>&
    getArrayData(
@@ -219,6 +253,9 @@ public:
    /*!
     * @brief Return a const reference to the array data object for the
     * given side normal of the side centered data object.
+    *
+    * @pre (side_normal >= 0) && (side_normal < getDim().getValue())
+    * @pre getDirectionVector()(side_normal)
     */
    const ArrayData<TYPE>&
    getArrayData(
@@ -233,6 +270,8 @@ public:
     * both the source and destination).  Currently, source data must be
     * an SideData of the same DIM and TYPE.  If not, then an unrecoverable
     * error results.
+    *
+    * @pre getDirectionVector().getDim() == src.getDim()
     */
    virtual void
    copy(
@@ -247,6 +286,10 @@ public:
     * both the source and destination).  Currently, destination data must be
     * an SideData of the same DIM and TYPE.  If not, then an unrecoverable
     * error results.
+    *
+    * @pre getDirectionVector().getDim() == dst.getDim()
+    * @pre dynamic_cast<SideData<TYPE> *>(&dst) != NULL
+    * @pre (dynamic_cast<SideData<TYPE> *>(&dst))->getDirectionVector() == getDirectionVector()
     */
    virtual void
    copy2(
@@ -259,6 +302,8 @@ public:
     * Currently, source data must be SideData of the same DIM and TYPE
     * and the overlap must be a SideOverlap of the same DIM. If not,
     * then an unrecoverable error results.
+    *
+    * @pre getDirectionVector().getDim() == src.getDim()
     */
    virtual void
    copy(
@@ -272,6 +317,11 @@ public:
     * Currently, destination data must be SideData of the same DIM and TYPE
     * and the overlap must be a SideOverlap of the same DIM.  If not,
     * then an unrecoverable error results.
+    *
+    * @pre getDirectionVector().getDim() == dst.getDim()
+    * @pre dynamic_cast<SideData<TYPE> *>(&dst) != NULL
+    * @pre dynamic_cast<const SideOverlap *>(&overlap) != NULL
+    * @pre (dynamic_cast<SideData<TYPE> *>(&dst))->getDirectionVector() == getDirectionVector()
     */
    virtual void
    copy2(
@@ -281,6 +331,8 @@ public:
    /*!
     * @brief Copy data from source to destination (i.e., this)
     * patch data object on the given CELL-centered AMR index box.
+    *
+    * @pre (getDim() == src.getDim()) && (getDim() == box.getDim())
     */
    void
    copyOnBox(
@@ -291,6 +343,9 @@ public:
     * @brief Fast copy (i.e., source and this side data objects are
     * defined over the same box) to this destination side data object
     * from the given source side data object at the specified depths.
+    *
+    * @pre getDirectionVector.getDim() == src.getDim()
+    * @pre src.getDirectionVector() == getDirectionVector()
     */
    void
    copyDepth(
@@ -316,6 +371,8 @@ public:
     *
     * This routine is defined for the standard types (bool, char,
     * double, float, int, and dcomplex).
+    *
+    * @pre dynamic_cast<const SideOverlap *>(&overlap) != NULL
     */
    virtual int
    getDataStreamSize(
@@ -325,6 +382,8 @@ public:
     * @brief Pack data in this patch data object lying in the specified
     * box overlap region into the stream.  The overlap must be an
     * SideOverlap of the same DIM.
+    *
+    * @pre dynamic_cast<const SideOverlap *>(&overlap) != NULL
     */
    virtual void
    packStream(
@@ -335,6 +394,8 @@ public:
     * @brief Unpack data from stream into this patch data object over
     * the specified box overlap region. The overlap must be an
     * SideOverlap of the same DIM.
+    *
+    * @pre dynamic_cast<const SideOverlap *>(&overlap) != NULL
     */
    virtual void
    unpackStream(
@@ -343,6 +404,8 @@ public:
 
    /*!
     * @brief Fill all values at depth d with the value t.
+    *
+    * @pre (d >= 0) && (d < getDepth())
     */
    void
    fill(
@@ -351,6 +414,9 @@ public:
 
    /*!
     * @brief Fill all values at depth d within the box with the value t.
+    *
+    * @pre getDirectionVector().getDim() == box.getDim()
+    * @pre (d >= 0) && (d < getDepth())
     */
    void
    fill(
@@ -367,6 +433,8 @@ public:
 
    /*!
     * @brief Fill all depth components within the box with value t.
+    *
+    * @pre getDirectionVector().getDim() == box.getDim()
     */
    void
    fillAll(
@@ -386,6 +454,8 @@ public:
     *        is 12 decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
+    *
+    * @pre getDirectionVector().getDim() == box.getDim()
     */
    void
    print(
@@ -400,14 +470,16 @@ public:
     * @param box  const reference to box over whioch to print data. Note box
     *        is assumed to reside in standard cell-centered index space
     *        and will be converted to side index space.
-    * @param depth integer depth component, must satisfy
-    *              0 <= depth < actual depth of data array
+    * @param depth integer depth component
     * @param os   reference to output stream.
     * @param prec integer precision for printing floating point numbers
     *        (i.e., TYPE = float, double, or dcomplex). The default
     *        is 12 decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
+    *
+    * @pre getDirectionVector().getDim() == box.getDim()
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    void
    print(
@@ -421,8 +493,7 @@ public:
     * direction residing in the specified box.  If the depth of the data is
     * greater than one, all depths are printed.
     *
-    * @param side_normal  integer side normal coordinate direction,
-    *              must satisfy 0 <= side_normal < DIM
+    * @param side_normal  integer side normal coordinate direction
     * @param box  const reference to box over whioch to print data. Note box
     *        is assumed to reside in standard cell-centered index space
     *        and will be converted to side index space.
@@ -432,6 +503,9 @@ public:
     *        is 12 decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
+    *
+    * @pre getDirectionVector().getDim() == box.getDim()
+    * @pre (side_normal >= 0) && (side_normal < getDim().getValue())
     */
    void
    printAxis(
@@ -445,8 +519,7 @@ public:
     * direction residing in the specified box.  If the depth of the data is
     * greater than one, all depths are printed.
     *
-    * @param side_normal  integer side normal coordinate direction,
-    *              must satisfy 0 <= side_normal < DIM
+    * @param side_normal  integer side normal coordinate direction
     * @param box  const reference to box over whioch to print data. Note box
     *        is assumed to reside in standard cell-centered index space
     *        and will be converted to side index space.
@@ -458,6 +531,10 @@ public:
     *        is 12 decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
+    *
+    * @pre getDirectionVector().getDim() == box.getDim()
+    * @pre (depth >= 0) && (depth < getDepth())
+    * @pre (side_normal >= 0) && (side_normal < getDim().getValue())
     */
    void
    printAxis(
@@ -471,7 +548,7 @@ public:
     * Check that class version and restart file version are equal.  If so,
     * read data members from the restart database.
     *
-    * Assertions: restart_db must be a non-null pointer.
+    * @pre restart_db
     */
    virtual void
    getFromRestart(
@@ -481,7 +558,7 @@ public:
     * Write out the class version number and other data members to
     * the restart database.
     *
-    * Assertions: restart_db must be a non-null pointer.
+    * @pre restart_db
     */
    virtual void
    putToRestart(

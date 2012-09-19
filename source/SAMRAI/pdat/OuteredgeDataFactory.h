@@ -46,6 +46,8 @@ public:
     *
     * The depth (number of components) gives the default for all of
     * the outeredge data objects created with this factory.
+    *
+    * @pre depth > 0
     */
    OuteredgeDataFactory(
       const tbox::Dimension& dim,
@@ -66,6 +68,8 @@ public:
     *
     * @param ghosts default ghost cell width for concrete classes created from
     * the factory.
+    *
+    * @pre getDim() == ghosts.getDim()
     */
    virtual boost::shared_ptr<hier::PatchDataFactory>
    cloneFactory(
@@ -77,6 +81,8 @@ public:
     *
     * The default information about the object (e.g., depth) is taken from
     * the factory.
+    *
+    * @pre getDim() == patch.getDim()
     */
    virtual boost::shared_ptr<hier::PatchData>
    allocate(
@@ -88,6 +94,8 @@ public:
     *
     * This information will be used in the computation of intersections
     * and data dependencies between objects.
+    *
+    * @pre getDim() == box.getDim()
     */
    virtual boost::shared_ptr<hier::BoxGeometry>
    getBoxGeometry(
@@ -107,6 +115,8 @@ public:
     * @brief
     * Calculate the amount of memory needed to store the outeredge data
     * object, including object data and dynamically allocated data.
+    *
+    * @pre getDim() == box.getDim()
     */
    virtual size_t
    getSizeOfMemory(
@@ -131,6 +141,8 @@ public:
     * Return whether it is valid to copy this OuteredgeDataFactory to the
     * supplied destination patch data factory.  It will return true if
     * dst_pdf is EdgeDataFactory or OuteredgeDataFactory, false otherwise.
+    *
+    * @pre getDim() == dst_pdf->getDim()
     */
    bool
    validCopyTo(

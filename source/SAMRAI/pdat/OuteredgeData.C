@@ -266,10 +266,8 @@ OuteredgeData<TYPE>::copy2(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
-   EdgeData<TYPE>* t_edge_dst =
-      dynamic_cast<EdgeData<TYPE> *>(&dst);
-   OuteredgeData<TYPE>* t_oedge_dst =
-      dynamic_cast<OuteredgeData<TYPE> *>(&dst);
+   EdgeData<TYPE>* t_edge_dst = dynamic_cast<EdgeData<TYPE> *>(&dst);
+   OuteredgeData<TYPE>* t_oedge_dst = dynamic_cast<OuteredgeData<TYPE> *>(&dst);
 
    if (t_edge_dst != NULL) {
       copyToEdge(*t_edge_dst);
@@ -300,8 +298,7 @@ OuteredgeData<TYPE>::copy(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
-   const EdgeOverlap* t_overlap =
-      dynamic_cast<const EdgeOverlap *>(&overlap);
+   const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -331,15 +328,12 @@ OuteredgeData<TYPE>::copy2(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
-   const EdgeOverlap* t_overlap =
-      dynamic_cast<const EdgeOverlap *>(&overlap);
+   const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
-   EdgeData<TYPE>* t_edge_dst =
-      dynamic_cast<EdgeData<TYPE> *>(&dst);
-   OuteredgeData<TYPE>* t_oedge_dst =
-      dynamic_cast<OuteredgeData<TYPE> *>(&dst);
+   EdgeData<TYPE>* t_edge_dst = dynamic_cast<EdgeData<TYPE> *>(&dst);
+   OuteredgeData<TYPE>* t_oedge_dst = dynamic_cast<OuteredgeData<TYPE> *>(&dst);
 
    if (t_edge_dst != NULL) {
       copyToEdge(*t_edge_dst, *t_overlap);
@@ -462,8 +456,7 @@ OuteredgeData<TYPE>::sum(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
-   const EdgeOverlap* t_overlap =
-      dynamic_cast<const EdgeOverlap *>(&overlap);
+   const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -561,8 +554,7 @@ int
 OuteredgeData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
-   const EdgeOverlap* t_overlap =
-      dynamic_cast<const EdgeOverlap *>(&overlap);
+   const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -614,8 +606,7 @@ OuteredgeData<TYPE>::packStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap) const
 {
-   const EdgeOverlap* t_overlap =
-      dynamic_cast<const EdgeOverlap *>(&overlap);
+   const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -669,8 +660,7 @@ OuteredgeData<TYPE>::unpackStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
-   const EdgeOverlap* t_overlap =
-      dynamic_cast<const EdgeOverlap *>(&overlap);
+   const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
@@ -728,8 +718,7 @@ OuteredgeData<TYPE>::unpackStreamAndSum(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
-   const EdgeOverlap* t_overlap =
-      dynamic_cast<const EdgeOverlap *>(&overlap);
+   const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 

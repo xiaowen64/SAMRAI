@@ -93,6 +93,9 @@ public:
    /*!
     * @brief Construct the node geometry object given an AMR index
     * space box and ghost cell width.
+    *
+    * @pre box.getDim() == ghosts.getDim()
+    * @pre ghosts.min() >= 0
     */
    NodeGeometry(
       const hier::Box& box,
@@ -106,6 +109,8 @@ public:
    /*!
     * @brief Compute the overlap in node-centered index space between
     * the source box geometry and the destination box geometry.
+    *
+    * @pre getBox().getDim() == src_mask.getDim()
     */
    virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
@@ -122,6 +127,8 @@ public:
     * @brief Compute the node-centered destination boxes that represent
     * the overlap between the source box geometry and the destination
     * box geometry.
+    *
+    * @pre src_mask.getDim() == transformation.getOffset.getDim()
     */
    void
    computeDestinationBoxes(

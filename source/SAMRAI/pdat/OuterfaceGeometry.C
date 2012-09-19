@@ -35,6 +35,7 @@ OuterfaceGeometry::OuterfaceGeometry(
    d_box(box),
    d_ghosts(ghosts)
 {
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(ghosts.min() >= 0);
 }
 

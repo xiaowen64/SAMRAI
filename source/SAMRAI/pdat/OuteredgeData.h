@@ -142,6 +142,8 @@ public:
     *            Note: the ghost cell width is assumed to be zero.
     * @param depth gives the number of data values for each
     *              spatial location in the array.
+    *
+    * @pre depth > 0
     */
    static size_t
    getSizeOfData(
@@ -158,6 +160,8 @@ public:
     *            outeredge data object will be created.
     * @param depth gives the number of data values for each
     *              spatial location in the array.
+    *
+    * @pre depth > 0
     */
    OuteredgeData(
       const hier::Box& box,
@@ -183,6 +187,9 @@ public:
     *              must satisfy 0 <= axis < DIM
     * @param face_normal  integer face normal direction for data,
     *              must satisfy 0 <= face_normal < DIM
+    *
+    * @pre (axis >= 0) && (axis < getDim().getValue())
+    * @pre (face_normal >= 0) && (face_normal < getDim().getValue())
     */
    bool
    dataExists(
@@ -220,6 +227,11 @@ public:
     *             data array
     * @param depth integer depth component, must satisfy
     *              0 <= depth < actual depth of data array
+    *
+    * @pre (axis >= 0) && (axis < getDim().getValue())
+    * @pre (face_normal >= 0) && (face_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    TYPE *
    getPointer(
@@ -241,6 +253,11 @@ public:
     *             data array
     * @param depth integer depth component, must satisfy
     *              0 <= depth < actual depth of data array
+    *
+    * @pre (axis >= 0) && (axis < getDim().getValue())
+    * @pre (face_normal >= 0) && (face_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    const TYPE *
    getPointer(
@@ -257,6 +274,10 @@ public:
     *          an index on the outeredge of the box.
     * @param depth integer depth component, must satisfy
     *              0 <= depth < actual depth of data array
+    *
+    * @pre getDim() == i.getDim()
+    * @pre (i.getAxis() >= 0) && (i.getAxis() < getDim().getValue())
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    TYPE&
    operator () (
@@ -271,6 +292,10 @@ public:
     *          an index on the outeredge of the box.
     * @param depth integer depth component, must satisfy
     *              0 <= depth < actual depth of data array
+    *
+    * @pre getDim() == i.getDim()
+    * @pre (i.getAxis() >= 0) && (i.getAxis() < getDim().getValue())
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    const TYPE&
    operator () (
@@ -288,6 +313,10 @@ public:
     *              must satisfy 0 <= face_normal < DIM
     * @param side integer lower (0) or upper (1) side of outeredge
     *             data array
+    *
+    * @pre (axis >= 0) && (axis < getDim().getValue())
+    * @pre (face_normal >= 0) && (face_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
     */
    ArrayData<TYPE>&
    getArrayData(
@@ -306,6 +335,10 @@ public:
     *              must satisfy 0 <= face_normal < DIM
     * @param side integer lower (0) or upper (1) side of outeredge
     *             data array
+    *
+    * @pre (axis >= 0) && (axis < getDim().getValue())
+    * @pre (face_normal >= 0) && (face_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
     */
    const ArrayData<TYPE>&
    getArrayData(
@@ -322,6 +355,10 @@ public:
     * both the source and destination).  Currently, source data must be
     * either EdgeData or OuteredgeData of the same DIM and TYPE.  If not,
     * then an unrecoverable error results.
+    *
+    * @pre getDim() == src.getDim()
+    * @pre dynamic_cast<const EdgeData<TYPE> *>(&src) != NULL ||
+    *      dynamic_cast<const OuteredgeData<TYPE> *>(&src) != NULL
     */
    virtual void
    copy(
@@ -336,6 +373,10 @@ public:
     * both the source and destination).  Currently, destination data must be
     * either EdgeData or OuteredgeData of the same DIM and TYPE.  If not,
     * then an unrecoverable error results.
+    *
+    * @pre getDim() == dst.getDim()
+    * @pre dynamic_cast<EdgeData<TYPE> *>(&dst) != NULL ||
+    *      dynamic_cast<OuteredgeData<TYPE> *>(&dst) != NULL
     */
    virtual void
    copy2(
@@ -349,6 +390,11 @@ public:
     * of the same DIM and TYPE and the overlap must be an EdgeOverlap
     * of the same DIM.  If not, then an unrecoverable error
     * results.
+    *
+    * @pre getDim() == src.getDim()
+    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const EdgeData<TYPE> *>(&src) != NULL ||
+    *      dynamic_cast<const OuteredgeData<TYPE> *>(&src) != NULL
     */
    virtual void
    copy(
@@ -363,6 +409,11 @@ public:
     * of the same DIM and TYPE and the overlap must be an EdgeOverlap
     * of the same DIM.  If not, then an unrecoverable error
     * results.
+    *
+    * @pre getDim() == dst.getDim()
+    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<EdgeData<TYPE> *>(&dst) != NULL ||
+    *      dynamic_cast<OuteredgeData<TYPE> *>(&dst) != NULL
     */
    virtual void
    copy2(
@@ -373,6 +424,8 @@ public:
     * @brief Fast copy (i.e., assumes edge and outeredge data objects are
     * defined over the same box) from the given edge source data object to
     * this destination outeredge data object at the specified depths.
+    *
+    * @pre getDim() == src.getDim()
     */
    void
    copyDepth(
@@ -384,6 +437,8 @@ public:
     * @brief Fast copy (i.e., assumes edge and outeredge data objects are
     * defined over the same box) to the given edge destination data object
     * from this source outeredge data object at the specified depths.
+    *
+    * @pre getDim() == dst.getDim()
     */
    void
    copyDepth2(
@@ -398,6 +453,10 @@ public:
     * Currently, source data must be OuteredgeData of the same DIM and
     * TYPE and the overlap must be an EdgeOverlap of the same DIM.
     * If not, then an unrecoverable error results.
+    *
+    * @pre getDim() == src.getDim()
+    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const OuteredgeData<TYPE> *>(&src) != NULL
     */
    virtual void
    sum(
@@ -422,6 +481,8 @@ public:
     *
     * This routine is defined for the standard types (bool, char,
     * double, float, int, and dcomplex).
+    *
+    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != NULL
     */
    virtual int
    getDataStreamSize(
@@ -431,6 +492,8 @@ public:
     * @brief Pack data in this patch data object lying in the specified
     * box overlap region into the stream.  The overlap must be an
     * EdgeOverlap of the same DIM.
+    *
+    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != NULL
     */
    virtual void
    packStream(
@@ -441,6 +504,8 @@ public:
     * @brief Unpack data from stream into this patch data object over
     * the specified box overlap region. The overlap must be an
     * EdgeOverlap of the same DIM.
+    *
+    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != NULL
     */
    virtual void
    unpackStream(
@@ -450,6 +515,8 @@ public:
    /*!
     * @brief Unpack data from stream and add into this patch data object
     * over the specified box overlap region.
+    *
+    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != NULL
     */
    virtual void
    unpackStreamAndSum(
@@ -458,6 +525,8 @@ public:
 
    /*!
     * @brief Fill all values at depth d with the value t.
+    *
+    * @pre (d >= 0) && (d < getDepth())
     */
    void
    fill(
@@ -466,6 +535,9 @@ public:
 
    /*!
     * @brief Fill all values at depth d within the box with the value t.
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (d >= 0) && (d < getDepth())
     */
    void
    fill(
@@ -482,6 +554,8 @@ public:
 
    /*!
     * @brief Fill all depth components within the box with value t.
+    *
+    * @pre getDim() == box.getDim()
     */
    void
    fillAll(
@@ -501,6 +575,8 @@ public:
     *        is 12 decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
+    *
+    * @pre getDim() == box.getDim()
     */
    void
    print(
@@ -523,6 +599,9 @@ public:
     *        is 12 decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    void
    print(
@@ -551,6 +630,11 @@ public:
     *        is 12 decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (axis >= 0) && (axis < getDim().getValue())
+    * @pre (face_normal >= 0) && (face_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
     */
    void
    printAxisSide(
@@ -582,6 +666,12 @@ public:
     *        is 12 decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (depth >= 0) && (depth < getDepth())
+    * @pre (axis >= 0) && (axis < getDim().getValue())
+    * @pre (face_normal >= 0) && (face_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
     */
    void
    printAxisSide(
@@ -597,7 +687,7 @@ public:
     * @brief Check that class version and restart file version are equal.
     * If so, read data members from the restart database.
     *
-    * Assertions: restart_db must be a non-null pointer.
+    * @pre restart_db
     */
    virtual void
    getFromRestart(
@@ -607,7 +697,7 @@ public:
     * @brief Write out the class version number and other data members to
     * the restart database.
     *
-    * Assertions: restart_db must be a non-null pointer.
+    * @pre restart_db
     */
    virtual void
    putToRestart(

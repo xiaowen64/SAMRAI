@@ -101,6 +101,8 @@ public:
     *            Note: the ghost cell width is assumed to be zero.
     * @param depth gives the number of data values for each
     *              spatial location in the array.
+    *
+    * @pre depth > 0
     */
    static size_t
    getSizeOfData(
@@ -117,6 +119,8 @@ public:
     *            outerface data object will be created.
     * @param depth gives the number of data values for each
     *              spatial location in the array.
+    *
+    * @pre depth > 0
     */
    OuterfaceData(
       const hier::Box& box,
@@ -139,12 +143,14 @@ public:
     * face normal, side, and depth component of the outerface centered
     * array.
     *
-    * @param face_normal  integer face normal direction for data,
-    *              must satisfy 0 <= face_normal < DIM
+    * @param face_normal  integer face normal direction for data
     * @param side integer lower (0) or upper (1) side of outerface
     *             data array
-    * @param depth integer depth component, must satisfy
-    *              0 <= depth < actual depth of data array
+    * @param depth integer depth component
+    *
+    * @pre (face_normal >= 0) && (face_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    TYPE *
    getPointer(
@@ -157,12 +163,14 @@ public:
     * face normal, side location, and depth component of the outerface
     * centered array.
     *
-    * @param face_normal  integer face normal direction for data,
-    *              must satisfy 0 <= face_normal < DIM
+    * @param face_normal  integer face normal direction for data
     * @param side integer lower (0) or upper (1) side of outerface
     *             data array
-    * @param depth integer depth component, must satisfy
-    *              0 <= depth < actual depth of data array
+    * @param depth integer depth component
+    *
+    * @pre (face_normal >= 0) && (face_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    const TYPE *
    getPointer(
@@ -176,10 +184,12 @@ public:
     *
     * @param i const reference to FaceIndex, @em MUST be
     *          an index on the outerface of the box.
-    * @param side  integer (lower/upper location of outerface data),
-    *              must satisfy 0 <= side <= 1
-    * @param depth integer depth component, must satisfy
-    *              0 <= depth < actual depth of data array
+    * @param side  integer (lower/upper location of outerface data)
+    * @param depth integer depth component
+    *
+    * @pre (i.getAxis() >= 0) && (i.getAxis() < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    TYPE&
    operator () (
@@ -193,10 +203,12 @@ public:
     *
     * @param i const reference to FaceIndex, @em MUST be
     *          an index on the outerface of the box.
-    * @param side  integer (lower/upper location of outerface data),
-    *              must satisfy 0 <= side <= 1
-    * @param depth integer depth component, must satisfy
-    *              0 <= depth < actual depth of data array
+    * @param side  integer (lower/upper location of outerface data)
+    * @param depth integer depth component
+    *
+    * @pre (i.getAxis() >= 0) && (i.getAxis() < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    const TYPE&
    operator () (
@@ -208,10 +220,12 @@ public:
     * @brief Return a reference to the array data object for
     * face normal and side location of the outerface centered array.
     *
-    * @param face_normal  integer face normal direction for data,
-    *              must satisfy 0 <= face_normal < DIM
+    * @param face_normal  integer face normal direction for data
     * @param side integer lower (0) or upper (1) side of outerface
     *             data array
+    *
+    * @pre (face_normal >= 0) && (face_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
     */
    ArrayData<TYPE>&
    getArrayData(
@@ -222,10 +236,12 @@ public:
     * @brief Return a const reference to the array data object for
     * face normal and side location of the outerface centered array.
     *
-    * @param face_normal  integer face normal direction for data,
-    *              must satisfy 0 <= face_normal < DIM
+    * @param face_normal  integer face normal direction for data
     * @param side integer lower (0) or upper (1) side of outerface
     *             data array
+    *
+    * @pre (face_normal >= 0) && (face_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
     */
    const ArrayData<TYPE>&
    getArrayData(
@@ -241,6 +257,9 @@ public:
     * both the source and destination).  Currently, source data must be
     * FaceData the same DIM and TYPE.  If not, then an unrecoverable error
     * results.
+    *
+    * @pre getDim() == src.getDim()
+    * @pre dynamic_cast<const FaceData<TYPE> *>(&src) != NULL
     */
    virtual void
    copy(
@@ -255,6 +274,9 @@ public:
     * both the source and destination).  Currently, destination data must be
     * FaceData of the same DIM and TYPE.  If not, then an unrecoverable
     * error results.
+    *
+    * @pre getDim() == dst.getDim()
+    * @pre dynamic_cast<FaceData<TYPE> *>(&dst) != NULL
     */
    virtual void
    copy2(
@@ -278,6 +300,11 @@ public:
     * Currently, destination data must be FaceData of the same DIM
     * and TYPE and the overlap must be a FaceOverlap of the same
     * DIM.  If not, then an unrecoverable error results.
+    *
+    * @pre getDim() == dst.getDim()
+    * @pre dynamic_cast<FaceData<TYPE> *>(&dst) != NULL
+    * @pre dynamic_cast<const FaceOverlap *>(&overlap) != NULL
+    * @pre overlap.getTransformation().getRotation() == hier::Transformation::NO_ROTATE
     */
    virtual void
    copy2(
@@ -288,6 +315,8 @@ public:
     * @brief Fast copy (i.e., assumes face and outerface data objects are
     * defined over the same box) from the given face source data object to
     * this destination outerface data object at the specified depths.
+    *
+    * @pre getDim() == src.getDim()
     */
    void
    copyDepth(
@@ -299,6 +328,8 @@ public:
     * @brief Fast copy (i.e., assumes face and outerface data objects are
     * defined over the same box) to the given face destination data object
     * from this source outerface data object at the specified depths.
+    *
+    * @pre getDim() == dst.getDim()
     */
    void
    copyDepth2(
@@ -324,6 +355,8 @@ public:
     *
     * This routine is defined for the standard types (bool, char,
     * double, float, int, and dcomplex).
+    *
+    * @pre dynamic_cast<const FaceOverlap *>(&overlap) != NULL
     */
    virtual int
    getDataStreamSize(
@@ -333,6 +366,8 @@ public:
     * @brief Pack data in this patch data object lying in the specified
     * box overlap region into the stream.  The overlap must be an
     * FaceOverlap of the same DIM.
+    *
+    * @pre dynamic_cast<const FaceOverlap *>(&overlap) != NULL
     */
    virtual void
    packStream(
@@ -343,6 +378,8 @@ public:
     * @brief Unpack data from stream into this patch data object over
     * the specified box overlap region. The overlap must be an
     * FaceOverlap of the same DIM.
+    *
+    * @pre dynamic_cast<const FaceOverlap *>(&overlap) != NULL
     */
    virtual void
    unpackStream(
@@ -351,6 +388,8 @@ public:
 
    /*!
     * @brief Fill all values at depth d with the value t.
+    *
+    * @pre (d >= 0) && (d < getDepth())
     */
    void
    fill(
@@ -359,6 +398,9 @@ public:
 
    /*!
     * @brief Fill all values at depth d within the box with the value t.
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (d >= 0) && (d < getDepth())
     */
    void
    fill(
@@ -375,6 +417,8 @@ public:
 
    /*!
     * @brief Fill all depth components within the box with value t.
+    *
+    * @pre getDim() == box.getDim()
     */
    void
    fillAll(
@@ -394,6 +438,8 @@ public:
     *        is 12 decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
+    *
+    * @pre getDim() == box.getDim()
     */
    void
    print(
@@ -416,6 +462,9 @@ public:
     *        is 12 decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (depth >= 0) && (depth < getDepth())
     */
    void
    print(
@@ -442,6 +491,10 @@ public:
     *        is 12 decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (face_normal >= 0) && (face_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
     */
    void
    printAxisFace(
@@ -470,6 +523,11 @@ public:
     *        is 12 decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (depth >= 0) && (depth < getDepth())
+    * @pre (face_normal >= 0) && (face_normal < getDim().getValue())
+    * @pre (side == 0) || (side == 1)
     */
    void
    printAxisFace(
@@ -484,7 +542,7 @@ public:
     * @brief Check that class version and restart file version are equal.
     * If so, read data members from the restart database.
     *
-    * Assertions: restart_db must be a non-null pointer.
+    * @pre restart_db
     */
    virtual void
    getFromRestart(
@@ -494,7 +552,7 @@ public:
     * @brief Write out the class version number and other data members to
     * the restart database.
     *
-    * Assertions: restart_db must be a non-null pointer.
+    * @pre restart_db
     */
    virtual void
    putToRestart(

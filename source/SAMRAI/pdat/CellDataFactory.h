@@ -43,6 +43,9 @@ public:
     * The default constructor for the cell data factory class.  The ghost
     * cell width and depth (number of components) arguments give the defaults
     * for all cell data objects created with this factory.
+    *
+    * @pre depth > 0
+    * @pre ghosts.min() >= 0
     */
    CellDataFactory(
       int depth,
@@ -62,6 +65,8 @@ public:
     *
     * @param ghosts default ghost cell width for concrete classes created from
     * the factory.
+    *
+    * @pre getDim() == ghosts.getDim()
     */
    virtual boost::shared_ptr<hier::PatchDataFactory>
    cloneFactory(
@@ -71,6 +76,8 @@ public:
     * Virtual factory function to allocate a concrete cell data object.
     * The default information about the object (e.g., ghost cell width)
     * is taken from the factory.
+    *
+    * @pre getDim() == patch.getDim()
     */
    virtual boost::shared_ptr<hier::PatchData>
    allocate(
@@ -80,6 +87,8 @@ public:
     * Allocate the box geometry object associated with the patch data.
     * This information will be used in the computation of intersections
     * and data dependencies between objects.
+    *
+    * @pre getDim() == box.getDim()
     */
 
    virtual boost::shared_ptr<hier::BoxGeometry>
@@ -96,6 +105,8 @@ public:
    /**
     * Calculate the amount of memory needed to store the cell data object,
     * including object data and dynamically allocated data.
+    *
+    * @pre getDim() == box.getDim()
     */
    virtual size_t
    getSizeOfMemory(
@@ -122,6 +133,8 @@ public:
     * Return whether it is valid to copy this CellDataFactory to the
     * supplied destination patch data factory. It will return true if
     * dst_pdf is a CellDataFactory, false otherwise.
+    *
+    * @pre getDim() == dst_pdf->getDim()
     */
    bool
    validCopyTo(

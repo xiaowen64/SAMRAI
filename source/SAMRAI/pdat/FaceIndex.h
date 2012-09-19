@@ -61,6 +61,8 @@ public:
 
    /**
     * The assignment operator sets the face index equal to the argument.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    FaceIndex&
    operator = (
@@ -106,6 +108,8 @@ public:
 
    /**
     * Plus-equals operator for a face index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    FaceIndex&
    operator += (
@@ -118,6 +122,8 @@ public:
 
    /**
     * Plus operator for a face index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    FaceIndex
    operator + (
@@ -154,6 +160,8 @@ public:
 
    /**
     * Minus-equals operator for a face index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    FaceIndex&
    operator -= (
@@ -166,6 +174,8 @@ public:
 
    /**
     * Minus operator for a face index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    FaceIndex
    operator - (
@@ -202,6 +212,8 @@ public:
 
    /**
     * Times-equals operator for a face index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    FaceIndex&
    operator *= (
@@ -214,6 +226,8 @@ public:
 
    /**
     * Times operator for a face index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    FaceIndex
    operator * (
@@ -251,6 +265,8 @@ public:
    /**
     * Returns true if two face index objects are equal.  All components
     * and the corresponding face axes must be the same for equality.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    bool
    operator == (
@@ -263,6 +279,8 @@ public:
    /**
     * Returns true if two face index objects are not equal.  Any of
     * the components or axes may be different for inequality.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    bool
    operator != (

@@ -68,6 +68,8 @@ public:
     * @return a cloned factory with the same properties which can
     * then be changed without modifying the original.
     * @param [in] ghosts
+    *
+    * @pre getDim() == ghosts.getDim()
     */
    boost::shared_ptr<hier::PatchDataFactory>
    cloneFactory(
@@ -80,6 +82,8 @@ public:
     * is provided by the factory.
     *
     * @param [in] patch
+    *
+    * @pre getDim() == patch.getDim()
     */
    boost::shared_ptr<hier::PatchData>
    allocate(
@@ -92,6 +96,8 @@ public:
     * and data dependencies between objects.
     *
     * @param [in] box
+    *
+    * @pre getDim() == box.getDim()
     */
    boost::shared_ptr<hier::BoxGeometry>
    getBoxGeometry(
@@ -103,6 +109,8 @@ public:
     *
     * The calculation includes object data, and does not include dynamically
     * allocated data.
+    *
+    * @pre getDim() == box.getDim()
     */
    size_t
    getSizeOfMemory(
@@ -137,6 +145,8 @@ public:
     *
     * If the destination PatchDataFactory is of the same type and dimension,
     * a valid copy can be made.
+    *
+    * @pre getDim() == dst_pdf->getDim()
     */
    bool
    validCopyTo(

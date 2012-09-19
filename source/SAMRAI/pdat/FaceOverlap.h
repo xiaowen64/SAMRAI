@@ -63,6 +63,8 @@ public:
     * destination coordinate space and must be shifted by
     * -(getSourceOffset()) to lie in the source index space.  The axis
     * argument represents which axis is desired: X=0, Y=1, and Z=2.
+    *
+    * @pre (axis >= 0) && (axis < d_dst_boxes.getSize())
     */
    virtual const hier::BoxContainer&
    getDestinationBoxContainer(

@@ -61,6 +61,8 @@ public:
 
    /**
     * The assignment operator sets the side index equal to the argument.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    SideIndex&
    operator = (
@@ -106,6 +108,8 @@ public:
 
    /**
     * Plus-equals operator for a side index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    SideIndex&
    operator += (
@@ -118,6 +122,8 @@ public:
 
    /**
     * Plus operator for a side index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    SideIndex
    operator + (
@@ -154,6 +160,8 @@ public:
 
    /**
     * Minus-equals operator for a side index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    SideIndex&
    operator -= (
@@ -166,6 +174,8 @@ public:
 
    /**
     * Minus operator for a side index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    SideIndex
    operator - (
@@ -202,6 +212,8 @@ public:
 
    /**
     * Times-equals operator for a side index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    SideIndex&
    operator *= (
@@ -214,6 +226,8 @@ public:
 
    /**
     * Times operator for a side index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    SideIndex
    operator * (
@@ -251,6 +265,8 @@ public:
    /**
     * Returns true if two side index objects are equal.  All components
     * and the corresponding side axes must be the same for equality.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    bool
    operator == (
@@ -263,6 +279,8 @@ public:
    /**
     * Returns true if two side index objects are not equal.  Any of
     * the components or axes may be different for inequality.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    bool
    operator != (

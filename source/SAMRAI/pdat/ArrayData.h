@@ -59,11 +59,11 @@ class ArrayData
 {
 public:
    /*!
-    * Static member function that returns tru when the amount of buffer space in a
-    * message stream can be estimated from box only.  For built-in types (bool, char,
-    * double, float, int, and dcomplex), this routine returns true.  For other
-    * data types (template paramters) that may require special handling,
-    * a different implementation must be provided.
+    * Static member function that returns true when the amount of buffer space
+    * in a message stream can be estimated from box only.  For built-in types
+    * (bool, char, double, float, int, and dcomplex), this routine returns
+    * true.  For other data types (template paramters) that may require special
+    * handling, a different implementation must be provided.
     */
    static bool
    canEstimateStreamSizeFromBox();
@@ -73,10 +73,11 @@ public:
     * store data of given depth on a box.
     *
     * Note that this function is only defined for the standard data types:
-    * bool, char, double, float, int, and dcomplex.  It must be provided for other
-    * template parameter types.
+    * bool, char, double, float, int, and dcomplex.  It must be provided for
+    * other template parameter types.
     *
-    * @return size_t value indicating the amount of memory space needed for the data.
+    * @return size_t value indicating the amount of memory space needed for the
+    *         data.
     *
     * @param box   Const reference to box object describing the spatial extents
     *              of the array data index region of interest.
@@ -95,6 +96,8 @@ public:
     *              of the index space associated with the array data object.
     * @param depth Integer number of data values at each spatial location in
     *              the array.
+    *
+    * @pre depth > 0
     */
    ArrayData(
       const hier::Box& box,
@@ -116,10 +119,10 @@ public:
    isInitialized() const;
 
    /*!
-    * Set the array data to an ``undefined'' state appropriate for the data type.
-    * For example, for float and double, this means setting data to signaling NaNs
-    * that cause a floating point assertion when used in a numerical expression
-    * without being set to valid values.
+    * Set the array data to an ``undefined'' state appropriate for the data
+    * type. For example, for float and double, this means setting data to
+    * signaling NaNs that cause a floating point assertion when used in a
+    * numerical expression without being set to valid values.
     */
    void
    undefineData();
@@ -147,6 +150,8 @@ public:
    /*!
     * Get a non-const pointer to the beginning of the given depth
     * component of this data array.
+    *
+    * @pre (d >= 0) && (d < getDepth())
     */
    TYPE *
    getPointer(
@@ -155,6 +160,8 @@ public:
    /*!
     * Get a const pointer to the beginning of the given depth
     * component of this data array.
+    *
+    * @pre (d >= 0) && (d < getDepth())
     */
    const TYPE *
    getPointer(
@@ -163,6 +170,9 @@ public:
    /*!
     * Return reference to value in this array associated with the given
     * box index and depth component.
+    *
+    * @pre getDim() == i.getDim()
+    * @pre (d >= 0) && (d < getDepth())
     */
    TYPE&
    operator () (
@@ -172,6 +182,9 @@ public:
    /*!
     * Return const reference to value in this array associated with the given
     * box index and depth component.
+    *
+    * @pre getDim() == i.getDim()
+    * @pre (d >= 0) && (d < getDepth())
     */
    const TYPE&
    operator () (
@@ -189,9 +202,12 @@ public:
     *
     * @param src   Const reference to source array data object.
     * @param box   Const reference to box object describing the spatial extents
-    *              of the index space region over which to perform the copy operation.
-    *              Note: the box is in either the source or destination index space
-    *                    (which are assumed to be the same).
+    *              of the index space region over which to perform the copy
+    *              operation.
+    *              Note: the box is in either the source or destination index
+    *                    space (which are assumed to be the same).
+    *
+    * @pre (getDim() == src.getDim()) && (getDim() == box.getDim())
     */
    void
    copy(
@@ -204,15 +220,17 @@ public:
     *
     * Note that this routine assumes that the source array box region must
     * be shifted to be consistent with the destination (this) array box region.
-    * This routine will intersect the specified box with the destination box and
-    * shifted source box to find the region of intersection.
+    * This routine will intersect the specified box with the destination box
+    * and shifted source box to find the region of intersection.
     *
     * @param src   Const reference to source array data object.
     * @param box   Const reference to box object describing the spatial extents
-    *              of the index space region over which to perform the copy operation.
+    *              of the index space region over which to perform the copy
+    *              operation.
     *              Note: the box is in the destination index space.
     * @param src_shift Const reference to shift vector used to put the source
-    *              array data box into the index space region of this array data object.
+    *              array data box into the index space region of this array
+    *              data object.
     */
    void
    copy(
@@ -232,15 +250,17 @@ public:
     *
     * Note that this routine assumes that the source array box region must
     * be shifted to be consistent with the destination (this) array box region.
-    * This routine will intersect the specified boxes with the destination box and
-    * shifted source box to find the regions of intersection.
+    * This routine will intersect the specified boxes with the destination box
+    * and shifted source box to find the regions of intersection.
     *
     * @param src   Const reference to source array data object.
     * @param boxes Const reference to box list describing the spatial extents
-    *              of the index space regions over which to perform the copy operation.
+    *              of the index space regions over which to perform the copy
+    *              operation.
     *              Note: the boxes are in the destination index space.
     * @param src_shift Const reference to shift vector used to put the source
-    *              array data box into the index space region of this array data object.
+    *              array data box into the index space region of this array
+    *              data object.
     */
    void
    copy(
@@ -266,10 +286,14 @@ public:
     * @param dst_depth Integer depth of destination array.
     * @param src       Const reference to source array data object.
     * @param src_depth Integer depth of source array.
-    * @param box       Const reference to box object describing the spatial extents
-    *                  of the index space region over which to perform the copy operation.
-    *                  Note: the box is in either the source or destination index space
-    *                        (which are assumed to be the same).
+    * @param box       Const reference to box object describing the spatial
+    *                  extents of the index space region over which to perform
+    *                  the copy operation.
+    *                  Note: the box is in either the source or destination
+    *                        index space (which are assumed to be the same).
+    *
+    * @pre (0 <= dst_depth) && (dst_depth <= getDepth()))
+    * @pre (0 <= src_depth) && (src_depth <= src.getDepth())
     */
    void
    copyDepth(
@@ -289,9 +313,10 @@ public:
     *
     * @param src   Const reference to source array data object.
     * @param box   Const reference to box object describing the spatial extents
-    *              of the index space region over which to perform the sum operation.
-    *              Note: the box is in either the source or destination index space
-    *                    (which are assumed to be the same).
+    *              of the index space region over which to perform the sum
+    *              operation.
+    *              Note: the box is in either the source or destination index
+    *                    space (which are assumed to be the same).
     */
    void
    sum(
@@ -304,15 +329,17 @@ public:
     *
     * Note that this routine assumes that the source array box region must
     * be shifted to be consistent with the destination (this) array box region.
-    * This routine will intersect the specified box with the destination box and
-    * shifted source box to find the region of intersection.
+    * This routine will intersect the specified box with the destination box
+    * and shifted source box to find the region of intersection.
     *
     * @param src   Const reference to source array data object.
     * @param box   Const reference to box object describing the spatial extents
-    *              of the index space region over which to perform the sum operation.
+    *              of the index space region over which to perform the sum
+    *              operation.
     *              Note: the box is in the destination index space.
     * @param src_shift Const reference to shift vector used to put the source
-    *              array data box into the index space region of this array data object.
+    *              array data box into the index space region of this array
+    *              data object.
     */
    void
    sum(
@@ -326,15 +353,17 @@ public:
     *
     * Note that this routine assumes that the source array box region must
     * be shifted to be consistent with the destination (this) array box region.
-    * This routine will intersect the specified boxes with the destination box and
-    * shifted source box to find the regions of intersection.
+    * This routine will intersect the specified boxes with the destination box
+    * and shifted source box to find the regions of intersection.
     *
     * @param src   Const reference to source array data object.
     * @param boxes Const reference to box list describing the spatial extents
-    *              of the index space regions over which to perform the sum operation.
+    *              of the index space regions over which to perform the sum
+    *              operation.
     *              Note: the boxes are in the destination index space.
     * @param src_shift Const reference to shift vector used to put the source
-    *              array data box into the index space region of this array data object.
+    *              array data box into the index space region of this array
+    *              data object.
     */
    void
    sum(
@@ -355,6 +384,8 @@ public:
     * @param src_shift Const reference to vector used to shift the given
     *              boxes into the index space region of this array data object.
     *              Note: this argument is currently ignored.
+    *
+    * @pre (getDim() == src_shift.getDim())
     */
    int
    getDataStreamSize(
@@ -376,7 +407,8 @@ public:
     *
     * Note: The shifted box must lie completely within the index space of this
     * array data object.  When assertion checking is active, the routine will
-    * abort if the box is not contained in the index space of this array.
+    * abort if the shifted box is not contained in the index space of this
+    * array.
     */
    void
    packStream(
@@ -400,12 +432,12 @@ public:
     * @param dest_boxes Const reference to boxes describing the spatial extents
     *              of the destination index space regions of interest.
     * @param src_shift Const reference to vector used to shift the given
-    *              boxes into the index space region of this (source) array data
-    *              object.
+    *              boxes into the index space region of this (source) array
+    *              data object.
     *
-    * Note: The shifted boxes must lie completely within the index space of this
-    * array.  If compiled with assertions enabled, the routine will abort if
-    * the shifted boxes are not contained in the index space of this array.
+    * Note: The shifted boxes must lie completely within the index space of
+    * this array.  If compiled with assertions enabled, the routine will abort
+    * if the shifted boxes are not contained in the index space of this array.
     */
    void
    packStream(
@@ -443,11 +475,11 @@ public:
     * Unpack data from the stream into the index regions specified.
     *
     * @param stream Reference to stream from which to unpack data.
-    * @param dest_boxes Const reference to box list describing the spatial extents
-    *              of the destination index space regions of interest.
+    * @param dest_boxes Const reference to box list describing the spatial
+    *              extents of the destination index space regions of interest.
     * @param src_offset Const reference to vector used to offset the given
-    *              boxes into the index space region of some (source) array data
-    *              object. Currently, this argument is ignored.
+    *              boxes into the index space region of some (source) array
+    *              data object. Currently, this argument is ignored.
     *
     * Note: The given boxes must lie completely within the index space of this
     * array data object.  When assertion checking is active, the routine will
@@ -460,7 +492,8 @@ public:
       const hier::IntVector& src_offset);
 
    /*!
-    * Unpack data from the stream and add to the array in the index region specified.
+    * Unpack data from the stream and add to the array in the index region
+    * specified.
     *
     * @param stream Reference to stream from which to unpack data.
     * @param dest_box Const reference to box describing the spatial extent
@@ -480,14 +513,15 @@ public:
       const hier::IntVector& src_offset);
 
    /*!
-    * Unpack data from the stream and ad to the array in the index region specified.
+    * Unpack data from the stream and ad to the array in the index region
+    * specified.
     *
     * @param stream Reference to stream from which to unpack data.
-    * @param dest_boxes Const reference to box list describing the spatial extents
-    *              of the destination index space regions of interest.
+    * @param dest_boxes Const reference to box list describing the spatial
+    *              extents of the destination index space regions of interest.
     * @param src_offset Const reference to vector used to offset the given
-    *              boxes into the index space region of some (source) array data
-    *              object. Currently, this argument is ignored.
+    *              boxes into the index space region of some (source) array
+    *              data object. Currently, this argument is ignored.
     *
     * Note: The given boxes must lie completely within the index space of this
     * array.  If compiled with assertions enabled, the routine will abort if
@@ -516,6 +550,8 @@ public:
 
    /*!
     * Fill all array values associated with depth component d with the value t.
+    *
+    * @pre (d >= 0) && (d < getDepth())
     */
    void
    fill(
@@ -525,6 +561,8 @@ public:
    /*!
     * Fill all array values associated with depth component d
     * within the box with the value t.
+    *
+    * @pre (d >= 0) && (d < getDepth())
     */
    void
    fill(
@@ -536,7 +574,7 @@ public:
     * Check to make sure that the class version and restart file
     * version are equal.  If so, read in data from restart database.
     *
-    * Assertions:  restart_db must be a non-null pointer.
+    * @pre restart_db
     */
    void
    getFromRestart(
@@ -545,7 +583,7 @@ public:
    /*!
     * Write out array data object data to restart database.
     *
-    * Assertions:  restart_db must be a non-null pointer.
+    * @pre restart_db
     */
    void
    putToRestart(
@@ -612,6 +650,20 @@ private:
    unpackBufferAndSum(
       const TYPE* buffer,
       const hier::Box& box);
+
+   /*!
+    * @brief Compte index into d_array for data at index i and depth d.
+    *
+    * @param i Index of data
+    * @param d depth of data
+    *
+    * @pre (d >= 0) && (d < getDepth())
+    * @post (index >= 0) && (index < getDepth() * getOffset())
+    */
+   int
+   getIndex(
+      const hier::Index& i,
+      int d) const;
 
    int d_depth;
    int d_offset;

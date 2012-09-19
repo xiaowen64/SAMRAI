@@ -64,6 +64,8 @@ public:
     * The Corner enumerated type is only defined for 3D or lower, so use
     * the next constructor with an hier::IntVector argument when using higher
     * dimensions.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    NodeIndex(
       const hier::Index& rhs,
@@ -76,6 +78,9 @@ public:
     * contains a 0, the node index will represent a lower bound in that
     * direction, and if 1 will represent an upper bound in that
     * direction.
+    *
+    * @pre getDim() == rhs.getDim()
+    * @pre for each element of corner, e, e == 0 || e == 1
     */
    NodeIndex(
       const hier::Index& rhs,
@@ -83,12 +88,16 @@ public:
 
    /**
     * The copy constructor creates a node index equal to the argument.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    NodeIndex(
       const NodeIndex& rhs);
 
    /**
     * The assignment operator sets the node index equal to the argument.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    NodeIndex&
    operator = (
@@ -106,6 +115,8 @@ public:
 
    /**
     * Plus-equals operator for a node index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    NodeIndex&
    operator += (
@@ -118,6 +129,8 @@ public:
 
    /**
     * Plus operator for a node index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    NodeIndex
    operator + (
@@ -154,6 +167,8 @@ public:
 
    /**
     * Minus-equals operator for a node index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    NodeIndex&
    operator -= (
@@ -166,6 +181,8 @@ public:
 
    /**
     * Minus operator for a node index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    NodeIndex
    operator - (
@@ -202,6 +219,8 @@ public:
 
    /**
     * Times-equals operator for a node index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    NodeIndex&
    operator *= (
@@ -214,6 +233,8 @@ public:
 
    /**
     * Times operator for a node index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    NodeIndex
    operator * (
@@ -251,6 +272,8 @@ public:
    /**
     * Returns true if two node index objects are equal.
     * All components must be the same for equality.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    bool
    operator == (
@@ -263,6 +286,8 @@ public:
    /**
     * Returns true if two node index objects are not equal.
     * Any of the components may be different for inequality.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    bool
    operator != (

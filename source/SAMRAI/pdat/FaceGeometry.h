@@ -53,6 +53,8 @@ public:
     *
     * Recall that box indices are cyclically shifted such that the face normal
     * direction is the first coordinate index.  See SideData header file.
+    *
+    * @pre (face_normal >= 0) && (face_normal < box.getDim().getValue())
     */
    static hier::Box
    toFaceBox(
@@ -95,6 +97,9 @@ public:
    /*!
     * @brief Construct the face geometry object given an AMR index
     * space box and ghost cell width.
+    *
+    * @pre box.getDim() == ghosts.getDim()
+    * @pre ghosts.min() >= 0
     */
    FaceGeometry(
       const hier::Box& box,
@@ -108,6 +113,8 @@ public:
    /*!
     * @brief Compute the overlap in face-centered index space between
     * the source box geometry and the destination box geometry.
+    *
+    * @pre getBox().getDim() == src_mask.getDim()
     */
    virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(

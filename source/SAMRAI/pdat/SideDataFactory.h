@@ -54,6 +54,10 @@ public:
     * A zero entry indicates that data for that direction is not wanted.
     * Otherwise, data will be created for that direction.  See the
     * SideVariable<TYPE> class header file for more information.
+    *
+    * @pre depth > 0
+    * @pre ghosts.min() >= 0
+    * @pre directions.min() >= 0
     */
    SideDataFactory(
       int depth,
@@ -75,6 +79,8 @@ public:
     *
     * @param ghosts default ghost cell width for concrete classes created from
     * the factory.
+    *
+    * @pre getDim() == ghosts.getDim()
     */
    virtual boost::shared_ptr<hier::PatchDataFactory>
    cloneFactory(
@@ -84,6 +90,8 @@ public:
     * Virtual factory function to allocate a concrete side data object.
     * The default information about the object (e.g., ghost cell width)
     * is taken from the factory.
+    *
+    * @pre getDim() == patch.getDim()
     */
    virtual boost::shared_ptr<hier::PatchData>
    allocate(
@@ -93,6 +101,8 @@ public:
     * Allocate the box geometry object associated with the patch data.
     * This information will be used in the computation of intersections
     * and data dependencies between objects.
+    *
+    * @pre getDim() == box.getDim()
     */
    virtual boost::shared_ptr<hier::BoxGeometry>
    getBoxGeometry(
@@ -119,6 +129,8 @@ public:
    /**
     * Calculate the amount of memory needed to store the side data object,
     * including object data and dynamically allocated data.
+    *
+    * @pre getDim() == box.getDim()
     */
    virtual size_t
    getSizeOfMemory(
@@ -144,6 +156,8 @@ public:
     * Return whether it is valid to copy this SideDataFactory to the
     * supplied destination patch data factory.  It will return true if
     * dst_pdf is SideDataFactory or OutersideDataFactory, false otherwise.
+    *
+    * @pre getDim() == dst_pdf->getDim()
     */
    bool
    validCopyTo(

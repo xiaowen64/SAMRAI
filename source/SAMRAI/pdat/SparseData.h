@@ -156,14 +156,12 @@ public:
     * will be stored in Index attributes in this instance.  Once the
     * instance is constructed, no other attribute (names) can be added.
     *
-    * ASSERTIONS:
-    *    The dimensions must be valid and equal between the box
-    * and ghosts.
-    *
     * @param [in] box Describes the interior of the index space
     * @param [in] ghosts Describes the ghost nodes in each coordinate direction.
     * @param [in] dbl_attributes The double (named) attributes
     * @param [in] int_attributes The integer (named) attributes
+    *
+    * @pre box.getDim() == ghosts.getDim()
     */
    SparseData(
       const hier::Box& box,
@@ -184,12 +182,10 @@ public:
     * All data is copied from the source into the destination where there is
     * overlap in the index space.
     *
-    * ASSERTIONS:
-    *    The dimensions of the src and <tt>this</tt> must be the same and
-    *    valid.  <tt>src</tt> must not be NULL
-    *
-    *
     * @param [in] src The source PatchData from which to copy.
+    *
+    * @pre getDim() == ghosts.getDim()
+    * @pre dynamic_cast<const SparseData<BOX_GEOMETRY> *>(&src) != NULL
     */
    void
    copy(
@@ -202,11 +198,9 @@ public:
     * overlap in the index space.  This copy does not change the state of
     * <tt>this</tt>
     *
-    * ASSERTIONS:
-    *    The dimensions of the src and <tt>this</tt> must be the same and
-    *    valid.  <tt>src</tt> must not be NULL
-    *
     * @param [in] dst The destination PatchData
+    *
+    * @pre getDim() == dst.getDim()
     */
    void
    copy2(
@@ -215,12 +209,12 @@ public:
    /*!
     * @brief Copy data from the source using the designated overlap descriptor.
     *
-    * ASSERTIONS:
-    *    The dimensions of the src and <tt>this</tt> must be the same and
-    *    valid.  <tt>src</tt> and <tt>overlap</tt> must not be NULL.
-    *
     * @param [in] src The source PatchData from which to copy.
     * @param [in] overlap The overlap description
+    *
+    * @pre getDim() == ghosts.getDim()
+    * @pre dynamic_cast<const SparseData<BOX_GEOMETRY> *>(&src) != NULL
+    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != NULL
     */
    void
    copy(
@@ -230,14 +224,12 @@ public:
    /*!
     * @brief Copy data to the destination using the overlap descriptor.
     *
-    * ASSERTIONS:
-    *    The dimensions of the src and <tt>this</tt> must be the same and
-    *    valid.  <tt>src</tt> and <tt>overlap</tt> must not be NULL.
-    *
     * All data is copied from <tt>this</tt> to the destination, without
     * changing the state of <tt>this</tt>.
     * @param [in] dst The destination PatchData
     * @param [in] overlap The overlap description
+    *
+    * @pre getDim() == dst.getDim()
     */
    void
    copy2(
@@ -255,10 +247,9 @@ public:
    /*!
     * @brief Calculate the number of bytes needed to stream the data.
     *
-    * ASSERTION
-    *    <tt>overlap</tt> must not be NULL.
-    *
     * @param [in] overlap
+    *
+    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != NULL
     */
    int
    getDataStreamSize(
@@ -267,11 +258,10 @@ public:
    /*!
     * @brief Pack data residing on the specified index space.
     *
-    * ASSERTION
-    *    <tt>overlap</tt> must not be NULL.
-    *
     * @param [out] stream The message stream
     * @param [in] overlap
+    *
+    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap)
     */
    void
    packStream(
@@ -281,11 +271,10 @@ public:
    /*!
     * @brief Unpack data from the message stream
     *
-    * ASSERTION
-    *    <tt>overlap</tt> must not be NULL.
-    *
     * @param [in,out] stream The message stream
     * @param [in] overlap
+    *
+    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != NULL
     */
    void
    unpackStream(
@@ -301,9 +290,7 @@ public:
     * will check the version number of this instance to ensure that
     * it is valid.
     *
-    * ASSERTIONS:
-    *    The restart_db must be a non-null pointer.
-    *    The version must match with the class-specified version
+    * @pre restart_db
     */
    void
    getFromRestart(
@@ -315,8 +302,7 @@ public:
     * A version number is written out as well, in order to maintain
     * validity across runs.
     *
-    * ASSERTION:
-    *    The restart_db must be a non-null pointer.
+    * @pre restart_db
     */
    void
    putToRestart(
