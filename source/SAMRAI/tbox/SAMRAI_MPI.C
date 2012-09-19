@@ -1135,7 +1135,7 @@ SAMRAI_MPI::AllReduce(
    NULL_USE(ranks_of_extrema);
 #endif
    if ((op == MPI_MINLOC || op == MPI_MAXLOC) &&
-       ranks_of_extrema == NULL) {
+       ranks_of_extrema == 0) {
       TBOX_ERROR("SAMRAI_MPI::AllReduce: If you specify reduce\n"
          << "operation MPI_MINLOC or MPI_MAXLOC, you must\n"
          << "provide space for the ranks in the 'ranks_of_extrema'\n"
@@ -1153,7 +1153,7 @@ SAMRAI_MPI::AllReduce(
    bool get_ranks_of_extrema =
       op == MPI_MINLOC ? true :
       op == MPI_MAXLOC ? true :
-      ranks_of_extrema != NULL && (op == MPI_MIN || op == MPI_MAX);
+      ranks_of_extrema != 0 && (op == MPI_MIN || op == MPI_MAX);
 
    if (!get_ranks_of_extrema) {
       std::vector<int> recv_buf(count);
@@ -1204,7 +1204,7 @@ SAMRAI_MPI::AllReduce(
    NULL_USE(ranks_of_extrema);
 #endif
    if ((op == MPI_MINLOC || op == MPI_MAXLOC) &&
-       ranks_of_extrema == NULL) {
+       ranks_of_extrema == 0) {
       TBOX_ERROR("SAMRAI_MPI::AllReduce: If you specify reduce\n"
          << "operation MPI_MINLOC or MPI_MAXLOC, you must\n"
          << "provide space for the ranks in the 'ranks_of_extrema'\n"
@@ -1222,7 +1222,7 @@ SAMRAI_MPI::AllReduce(
    bool get_ranks_of_extrema =
       op == MPI_MINLOC ? true :
       op == MPI_MAXLOC ? true :
-      ranks_of_extrema != NULL && (op == MPI_MIN || op == MPI_MAX);
+      ranks_of_extrema != 0 && (op == MPI_MIN || op == MPI_MAX);
 
    if (!get_ranks_of_extrema) {
       std::vector<double> recv_buf(count);
@@ -1273,7 +1273,7 @@ SAMRAI_MPI::AllReduce(
    NULL_USE(ranks_of_extrema);
 #endif
    if ((op == MPI_MINLOC || op == MPI_MAXLOC) &&
-       ranks_of_extrema == NULL) {
+       ranks_of_extrema == 0) {
       TBOX_ERROR("SAMRAI_MPI::AllReduce: If you specify reduce\n"
          << "operation MPI_MINLOC or MPI_MAXLOC, you must\n"
          << "provide space for the ranks in the 'ranks_of_extrema'\n"
@@ -1291,7 +1291,7 @@ SAMRAI_MPI::AllReduce(
    bool get_ranks_of_extrema =
       op == MPI_MINLOC ? true :
       op == MPI_MAXLOC ? true :
-      ranks_of_extrema != NULL && (op == MPI_MIN || op == MPI_MAX);
+      ranks_of_extrema != 0 && (op == MPI_MIN || op == MPI_MAX);
 
    if (!get_ranks_of_extrema) {
       std::vector<float> recv_buf(count);

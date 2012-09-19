@@ -108,7 +108,7 @@ public:
    AsyncCommGroup(
       const size_t nchild,
       AsyncCommStage * stage,
-      AsyncCommStage::Handler * handler = NULL);
+      AsyncCommStage::Handler * handler = 0);
 
    /*!
     * @brief Destructor.
@@ -136,7 +136,7 @@ public:
    initialize(
       const int nchild,
       AsyncCommStage * stage,
-      AsyncCommStage::Handler * handler = NULL);
+      AsyncCommStage::Handler * handler = 0);
 
    //@{
    //! @name Define the communication group

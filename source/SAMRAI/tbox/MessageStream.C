@@ -32,7 +32,7 @@ MessageStream::MessageStream(
    bool deep_copy):
    d_mode(mode),
    d_buffer(),
-   d_buffer_access(NULL),
+   d_buffer_access(0),
    d_buffer_size(0),
    d_buffer_index(0),
    d_grow_as_needed(false)
@@ -41,7 +41,7 @@ MessageStream::MessageStream(
    d_buffer.reserve(num_bytes);
 
    if ( mode == Read ) {
-      if ( data_to_read == NULL ) {
+      if ( data_to_read == 0 ) {
          TBOX_ERROR("MessageStream::MessageStream: error:\n"
                     <<"No data_to_read was given to a Read-mode MessageStream.\n");
       }
@@ -62,7 +62,7 @@ MessageStream::MessageStream(
 MessageStream::MessageStream()
    : d_mode(Write),
      d_buffer(),
-     d_buffer_access(NULL),
+     d_buffer_access(0),
      d_buffer_size(0),
      d_buffer_index(0),
      d_grow_as_needed(true)
@@ -73,7 +73,7 @@ MessageStream::MessageStream()
 
 MessageStream::~MessageStream()
 {
-   d_buffer_access = NULL;
+   d_buffer_access = 0;
 }
 
 /*

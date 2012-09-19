@@ -59,10 +59,10 @@
    {                                                     \
       herr_t (* H5E_saved_efunc)( \
          hid_t, \
-         void *) = NULL;   \
-      void* H5E_saved_edata = NULL;                      \
+         void *) = 0;   \
+      void* H5E_saved_edata = 0;                      \
       H5Eget_auto(H5E_DEFAULT, &H5E_saved_efunc, &H5E_saved_edata); \
-      H5Eset_auto(H5E_DEFAULT, NULL, NULL);
+      H5Eset_auto(H5E_DEFAULT, 0, 0);
 
 #define END_SUPPRESS_HDF5_WARNINGS                     \
    H5Eset_auto(H5E_DEFAULT, H5E_saved_efunc, H5E_saved_edata);  \
@@ -71,10 +71,10 @@
 #define BEGIN_SUPPRESS_HDF5_WARNINGS                  \
    {                                                     \
       herr_t (* H5E_saved_efunc)( \
-         void *) = NULL;          \
-      void* H5E_saved_edata = NULL;                      \
+         void *) = 0;          \
+      void* H5E_saved_edata = 0;                      \
       H5Eget_auto(&H5E_saved_efunc, &H5E_saved_edata);   \
-      H5Eset_auto(NULL, NULL);
+      H5Eset_auto(0, 0);
 
 #define END_SUPPRESS_HDF5_WARNINGS                     \
    H5Eset_auto(H5E_saved_efunc, H5E_saved_edata);      \
@@ -126,7 +126,7 @@ HDFDatabase::iterateKeys(
    const char* name,
    void* void_database)
 {
-   TBOX_ASSERT(name != (char *)NULL);
+   TBOX_ASSERT(name != 0);
 
    HDFDatabase* database = (HDFDatabase *)(void_database);
 
@@ -156,7 +156,7 @@ HDFDatabase::iterateKeys(
 
                database->d_found_group = true;
                database->d_still_searching =
-                  H5Giterate(grp, ".", NULL,
+                  H5Giterate(grp, ".", 0,
                      HDFDatabase::iterateKeys, void_database);
                TBOX_ASSERT(database->d_still_searching >= 0);
 
@@ -175,7 +175,7 @@ HDFDatabase::iterateKeys(
                if (database->d_found_group) {
                   addKeyToList(name, KEY_DATABASE, void_database);
                } else {
-                  errf = H5Giterate(grp, ".", NULL,
+                  errf = H5Giterate(grp, ".", 0,
                         HDFDatabase::iterateKeys, void_database);
 
                   TBOX_ASSERT(errf >= 0);
@@ -249,8 +249,8 @@ HDFDatabase::addKeyToList(
    int type,
    void* database)
 {
-   TBOX_ASSERT(name != (char *)NULL);
-   TBOX_ASSERT(database != NULL);
+   TBOX_ASSERT(name != 0);
+   TBOX_ASSERT(database != 0);
 
    KeyData key_item;
    key_item.d_key = name;
@@ -720,7 +720,7 @@ HDFDatabase::putBoolArray(
    const int nelements)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != (bool *)NULL);
+   TBOX_ASSERT(data != 0);
 
    herr_t errf;
    NULL_USE(errf);
@@ -728,7 +728,7 @@ HDFDatabase::putBoolArray(
    if (nelements > 0) {
 
       hsize_t dim[1] = { nelements };
-      hid_t space = H5Screate_simple(1, dim, NULL);
+      hid_t space = H5Screate_simple(1, dim, 0);
       TBOX_ASSERT(space >= 0);
 
       /*
@@ -902,7 +902,7 @@ HDFDatabase::putDatabaseBoxArray(
    const int nelements)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != (DatabaseBox *)NULL);
+   TBOX_ASSERT(data != 0);
 
    if (nelements > 0) {
 
@@ -915,7 +915,7 @@ HDFDatabase::putDatabaseBoxArray(
       hid_t stype = createCompoundDatabaseBox('s');
 
       hsize_t length = nelements;
-      hid_t space = H5Screate_simple(1, &length, NULL);
+      hid_t space = H5Screate_simple(1, &length, 0);
 
 #if (H5_VERS_MAJOR > 1) || ((H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 6))
       hid_t dataset =
@@ -1056,9 +1056,9 @@ HDFDatabase::createCompoundDatabaseBox(
 
    const hsize_t box_dim = SAMRAI::MAX_DIM_VAL;
    insertArray(type, "lo", HOFFSET(DatabaseBox_POD, d_lo), 1, &box_dim,
-      NULL, int_type_spec);
+      0, int_type_spec);
    insertArray(type, "hi", HOFFSET(DatabaseBox_POD, d_hi), 1, &box_dim,
-      NULL, int_type_spec);
+      0, int_type_spec);
    return type;
 }
 
@@ -1119,7 +1119,7 @@ HDFDatabase::putCharArray(
    const int nelements)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != (char *)NULL);
+   TBOX_ASSERT(data != 0);
 
    herr_t errf;
    NULL_USE(errf);
@@ -1301,7 +1301,7 @@ HDFDatabase::putComplexArray(
    const int nelements)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != (dcomplex *)NULL);
+   TBOX_ASSERT(data != 0);
 
    herr_t errf;
    NULL_USE(errf);
@@ -1316,7 +1316,7 @@ HDFDatabase::putComplexArray(
       hid_t stype = createCompoundComplex('s');
 
       hsize_t dim[] = { nelements };
-      space = H5Screate_simple(1, dim, NULL);
+      space = H5Screate_simple(1, dim, 0);
       TBOX_ASSERT(space >= 0);
 
 #if (H5_VERS_MAJOR > 1) || ((H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 6))
@@ -1509,7 +1509,7 @@ HDFDatabase::putDoubleArray(
    const int nelements)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != (double *)NULL);
+   TBOX_ASSERT(data != 0);
 
    herr_t errf;
    NULL_USE(errf);
@@ -1517,7 +1517,7 @@ HDFDatabase::putDoubleArray(
    if (nelements > 0) {
 
       hsize_t dim[] = { nelements };
-      hid_t space = H5Screate_simple(1, dim, NULL);
+      hid_t space = H5Screate_simple(1, dim, 0);
       TBOX_ASSERT(space >= 0);
 
 #if (H5_VERS_MAJOR > 1) || ((H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 6))
@@ -1665,7 +1665,7 @@ HDFDatabase::putFloatArray(
    const int nelements)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != (float *)NULL);
+   TBOX_ASSERT(data != 0);
 
    herr_t errf;
    NULL_USE(errf);
@@ -1673,7 +1673,7 @@ HDFDatabase::putFloatArray(
    if (nelements > 0) {
 
       hsize_t dim[] = { nelements };
-      hid_t space = H5Screate_simple(1, dim, NULL);
+      hid_t space = H5Screate_simple(1, dim, 0);
       TBOX_ASSERT(space >= 0);
 
 #if (H5_VERS_MAJOR > 1) || ((H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 6))
@@ -1824,7 +1824,7 @@ HDFDatabase::putIntegerArray(
    const int nelements)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != (int *)NULL);
+   TBOX_ASSERT(data != 0);
 
    herr_t errf;
    NULL_USE(errf);
@@ -1832,7 +1832,7 @@ HDFDatabase::putIntegerArray(
    if (nelements > 0) {
 
       hsize_t dim[] = { nelements };
-      hid_t space = H5Screate_simple(1, dim, NULL);
+      hid_t space = H5Screate_simple(1, dim, 0);
       TBOX_ASSERT(space >= 0);
 
 #if (H5_VERS_MAJOR > 1) || ((H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 6))
@@ -1981,7 +1981,7 @@ HDFDatabase::putStringArray(
    const int nelements)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != (std::string *)NULL);
+   TBOX_ASSERT(data != 0);
 
    herr_t errf;
    NULL_USE(errf);
@@ -2016,7 +2016,7 @@ HDFDatabase::putStringArray(
       TBOX_ASSERT(errf >= 0);
 
       hsize_t dim[] = { nelements };
-      hid_t space = H5Screate_simple(1, dim, NULL);
+      hid_t space = H5Screate_simple(1, dim, 0);
       TBOX_ASSERT(space >= 0);
 
 #if (H5_VERS_MAJOR > 1) || ((H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 6))
@@ -2447,7 +2447,7 @@ HDFDatabase::performKeySearch()
 
    d_still_searching = 1;
 
-   errf = H5Giterate(d_group_id, "/", NULL,
+   errf = H5Giterate(d_group_id, "/", 0,
          HDFDatabase::iterateKeys, (void *)this);
    TBOX_ASSERT(errf >= 0);
 }

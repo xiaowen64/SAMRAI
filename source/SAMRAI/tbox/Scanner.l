@@ -132,7 +132,7 @@ S_STRING  (\"([^\n"])*\")
    } else {
       if (Parser::getParser()->pushIncludeFile(filename)) {
          s_include_stack[s_include_stack_top++] = YY_CURRENT_BUFFER;
-         yy_switch_to_buffer(yy_create_buffer(NULL,YY_BUF_SIZE));
+         yy_switch_to_buffer(yy_create_buffer(0,YY_BUF_SIZE));
       }
    }
 }

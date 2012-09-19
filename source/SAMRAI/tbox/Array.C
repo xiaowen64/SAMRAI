@@ -72,8 +72,8 @@ Array<TYPE>::Array(
          (void)new (p)TYPE(default_value);
       }
    } else {
-      d_objects = (TYPE *)NULL;
-      d_counter = (ReferenceCounter *)NULL;
+      d_objects = 0;
+      d_counter = 0;
       d_elements = 0;
    }
 }
@@ -90,8 +90,8 @@ Array<TYPE>::Array(
       d_counter = new ReferenceCounter;
       d_elements = n;
    } else {
-      d_objects = (TYPE *)NULL;
-      d_counter = (ReferenceCounter *)NULL;
+      d_objects = 0;
+      d_counter = 0;
       d_elements = 0;
    }
 }
@@ -178,8 +178,8 @@ Array<TYPE>::erase(
       if (d_counter && d_counter->deleteReference()) {
          deleteObjects();
       }
-      d_objects = (TYPE *)NULL;
-      d_counter = (ReferenceCounter *)NULL;
+      d_objects = 0;
+      d_counter = 0;
       d_elements = 0;
    }
 
@@ -197,8 +197,8 @@ Array<TYPE>::deleteObjects()
       delete d_counter;
    }
 
-   d_objects = (TYPE *)NULL;
-   d_counter = (ReferenceCounter *)NULL;
+   d_objects = 0;
+   d_counter = 0;
    d_elements = 0;
 }
 
@@ -229,8 +229,8 @@ Array<TYPE>::setNull()
    if (d_counter && d_counter->deleteReference()) {
       deleteObjects();
    }
-   d_objects = (TYPE *)NULL;
-   d_counter = (ReferenceCounter *)NULL;
+   d_objects = 0;
+   d_counter = 0;
    d_elements = 0;
 }
 
@@ -241,8 +241,8 @@ Array<TYPE>::clear()
    if (d_counter && d_counter->deleteReference()) {
       deleteObjects();
    }
-   d_objects = (TYPE *)NULL;
-   d_counter = (ReferenceCounter *)NULL;
+   d_objects = 0;
+   d_counter = 0;
    d_elements = 0;
 }
 

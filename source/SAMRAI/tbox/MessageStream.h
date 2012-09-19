@@ -64,12 +64,12 @@ public:
     * you cannot call growBufferAsNeeded().
     *
     * @pre num_bytes >= 0
-    * @pre mode != Read || data_to_read != NULL
+    * @pre mode != Read || data_to_read != 0
     */
    MessageStream(
       const size_t num_bytes,
       const StreamMode mode,
-      const void *data_to_read = NULL,
+      const void *data_to_read = 0,
       bool deep_copy = true);
 
    /*!
@@ -145,7 +145,7 @@ public:
    bool
    hasBufferAccess() const
    {
-      return d_buffer_access != NULL;
+      return d_buffer_access != 0;
    }
 
    /*!

@@ -24,8 +24,7 @@
 namespace SAMRAI {
 namespace tbox {
 
-RestartManager * RestartManager::s_manager_instance =
-   (RestartManager *)NULL;
+RestartManager * RestartManager::s_manager_instance = 0;
 
 StartupShutdownManager::Handler
 RestartManager::s_shutdown_handler(
@@ -59,7 +58,7 @@ RestartManager::shutdownCallback()
    if (s_manager_instance) {
       s_manager_instance->clearRestartItems();
       delete s_manager_instance;
-      s_manager_instance = ((RestartManager *)NULL);
+      s_manager_instance = 0;
    }
 }
 
@@ -191,7 +190,7 @@ RestartManager::registerRestartItem(
    Serializable* obj)
 {
    TBOX_ASSERT(!name.empty());
-   TBOX_ASSERT(obj != ((Serializable *)NULL));
+   TBOX_ASSERT(obj != 0);
 
    /*
     * Run through list to see if there is another object registered

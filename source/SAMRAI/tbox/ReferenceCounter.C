@@ -17,7 +17,7 @@
 namespace SAMRAI {
 namespace tbox {
 
-ReferenceCounter * ReferenceCounter::s_free_list = NULL;
+ReferenceCounter * ReferenceCounter::s_free_list = 0;
 bool ReferenceCounter::s_is_finalized = false;
 
 StartupShutdownManager::Handler
@@ -31,7 +31,7 @@ ReferenceCounter::s_handler(
 ReferenceCounter::ReferenceCounter()
 {
    d_references = 1;
-   d_next = (ReferenceCounter *)NULL;
+   d_next = 0;
 }
 
 ReferenceCounter::~ReferenceCounter()

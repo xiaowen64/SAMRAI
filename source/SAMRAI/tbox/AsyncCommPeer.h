@@ -87,7 +87,7 @@ public:
     */
    explicit AsyncCommPeer(
       AsyncCommStage* stage,
-      AsyncCommStage::Handler* handler = NULL);
+      AsyncCommStage::Handler* handler = 0);
 
    /*!
     * @brief Destructor.
@@ -109,7 +109,7 @@ public:
    void
    initialize(
       AsyncCommStage* stage,
-      AsyncCommStage::Handler* handler = NULL);
+      AsyncCommStage::Handler* handler = 0);
 
    //@{
    //! @name Define the peer relationship.

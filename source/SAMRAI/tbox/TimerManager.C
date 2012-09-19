@@ -38,7 +38,7 @@
 namespace SAMRAI {
 namespace tbox {
 
-TimerManager * TimerManager::s_timer_manager_instance = (TimerManager *)NULL;
+TimerManager * TimerManager::s_timer_manager_instance = 0;
 
 int TimerManager::s_main_timer_identifier = -1;
 int TimerManager::s_inactive_timer_identifier = -9999;
@@ -100,7 +100,7 @@ TimerManager::finalizeCallback()
 {
    if (s_timer_manager_instance) {
       delete s_timer_manager_instance;
-      s_timer_manager_instance = ((TimerManager *)NULL);
+      s_timer_manager_instance = 0;
    }
 }
 
@@ -383,7 +383,7 @@ TimerManager::startTime(
    Timer* timer)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   TBOX_ASSERT(!(timer == (Timer *)NULL));
+   TBOX_ASSERT(timer != 0);
 
    if (timer->isActive()) {
    }
@@ -412,7 +412,7 @@ TimerManager::stopTime(
    Timer* timer)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   TBOX_ASSERT(!(timer == (Timer *)NULL));
+   TBOX_ASSERT(timer != 0);
 
    if (d_print_exclusive) {
       timer->stopExclusive();

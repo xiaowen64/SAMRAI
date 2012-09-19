@@ -38,7 +38,7 @@ parser_static_table_initialize();
 namespace SAMRAI {
 namespace tbox {
 
-Parser * Parser::s_default_parser = NULL;
+Parser * Parser::s_default_parser = 0;
 bool Parser::s_static_tables_initialized = 0;
 
 /*
@@ -109,11 +109,11 @@ Parser::parse(
    d_scope_stack.push_front(database);
 
    s_default_parser = this;
-   yyrestart(NULL);
+   yyrestart(0);
    if (yyparse() && (d_errors == 0)) {
       error("Unexpected parse error");
    }
-   s_default_parser = NULL;
+   s_default_parser = 0;
 
    d_parse_stack.clear();
    d_scope_stack.clear();
@@ -252,7 +252,7 @@ bool
 Parser::pushIncludeFile(
    const std::string& filename)
 {
-   FILE* fstream = NULL;
+   FILE* fstream = 0;
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
    std::string filename_with_path;

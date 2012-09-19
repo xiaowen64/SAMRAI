@@ -67,11 +67,11 @@ AsyncCommGroup::AsyncCommGroup():
    d_idx(-1),
    d_root_idx(-1),
    d_parent_rank(-1),
-   d_child_data(NULL),
+   d_child_data(0),
    d_branch_size_totl(-1),
    d_base_op(undefined),
    d_next_task_op(none),
-   d_external_buf(NULL),
+   d_external_buf(0),
    d_external_size(0),
    d_internal_buf(),
    d_mpi_tag(-1),
@@ -106,7 +106,7 @@ AsyncCommGroup::AsyncCommGroup(
    d_branch_size_totl(-1),
    d_base_op(undefined),
    d_next_task_op(none),
-   d_external_buf(NULL),
+   d_external_buf(0),
    d_external_size(0),
    d_internal_buf(),
    d_mpi_tag(-1),
@@ -128,7 +128,7 @@ AsyncCommGroup::AsyncCommGroup(
  */
 AsyncCommGroup::AsyncCommGroup(
    const AsyncCommGroup& r):
-   AsyncCommStage::Member(0, NULL, NULL),
+   AsyncCommStage::Member(0, 0, 0),
    d_nchild(0),
    d_mpi(SAMRAI_MPI::getSAMRAIWorld())
 {
@@ -163,7 +163,7 @@ AsyncCommGroup::~AsyncCommGroup()
          << "mpi_tag = " << d_mpi_tag);
    }
    delete[] d_child_data;
-   d_child_data = NULL;
+   d_child_data = 0;
 }
 
 /*
@@ -256,7 +256,7 @@ AsyncCommGroup::completeCurrentOperation()
 {
    SAMRAI_MPI::Request * const req = getRequestPointer();
    SAMRAI_MPI::Status* mpi_stat = d_next_task_op == none ?
-      (SAMRAI_MPI::Status *)NULL : new SAMRAI_MPI::Status[d_nchild];
+      0 : new SAMRAI_MPI::Status[d_nchild];
 
    while (d_next_task_op != none) {
 
@@ -276,7 +276,7 @@ AsyncCommGroup::completeCurrentOperation()
 
    }
 
-   if (mpi_stat != NULL) {
+   if (mpi_stat != 0) {
       delete[] mpi_stat;
    }
 }

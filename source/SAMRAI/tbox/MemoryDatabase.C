@@ -1317,7 +1317,7 @@ bool MemoryDatabase::deleteKeyIfFound(
  *************************************************************************
  *
  * Find the key data associated with the specified key and return a
- * pointer to the record.  If no such key data exists, then return NULL.
+ * pointer to the record.  If no such key data exists, then return 0.
  *
  *************************************************************************
  */
@@ -1332,7 +1332,7 @@ MemoryDatabase::findKeyData(
          return &(*i);
       }
    }
-   return NULL;
+   return 0;
 }
 
 /*
@@ -1356,7 +1356,7 @@ MemoryDatabase::findKeyDataOrExit(
       }
    }
    MEMORY_DB_ERROR("Key ``" << key << "'' does not exist in the database...");
-   return NULL;
+   return 0;
 }
 
 /*

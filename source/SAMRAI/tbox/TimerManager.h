@@ -363,7 +363,7 @@ protected:
     * timer. Also stop exclusive time for timer on top of exclusive timer
     * stack and push given timer on to that stack.
     *
-    * @pre timer != NULL
+    * @pre timer != 0
     */
    void
    startTime(
@@ -375,7 +375,7 @@ protected:
     * Also, pop timer off top of exclusive timer stack and start exclusive
     * timer for new top of stack timer.
     *
-    * @pre timer != NULL
+    * @pre timer != 0
     */
    void
    stopTime(

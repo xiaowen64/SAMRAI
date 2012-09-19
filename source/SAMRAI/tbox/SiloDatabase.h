@@ -61,7 +61,7 @@ public:
     * Constructor used to create sub-databases.
     *
     * @pre !name.empty()
-    * @pre file != NULL
+    * @pre file != 0
     * @pre !directory.empty()
     */
    SiloDatabase(
@@ -169,7 +169,7 @@ public:
     * key name.
     *
     * @pre !key.empty()
-    * @pre data != NULL
+    * @pre data != 0
     */
    virtual void
    putBoolArray(
@@ -208,7 +208,7 @@ public:
     * key name.
     *
     * @pre !key.empty()
-    * @pre data != NULL
+    * @pre data != 0
     */
    virtual void
    putDatabaseBoxArray(
@@ -243,7 +243,7 @@ public:
     * key name.
     *
     * @pre !key.empty()
-    * @pre data != NULL
+    * @pre data != 0
     */
    virtual void
    putCharArray(
@@ -279,7 +279,7 @@ public:
     * key name.
     *
     * @pre !key.empty()
-    * @pre data != NULL
+    * @pre data != 0
     */
    virtual void
    putComplexArray(
@@ -315,7 +315,7 @@ public:
     * key name.
     *
     * @pre !key.empty()
-    * @pre data != NULL
+    * @pre data != 0
     */
    virtual void
    putDoubleArray(
@@ -351,7 +351,7 @@ public:
     * key name.
     *
     * @pre !key.empty()
-    * @pre data != NULL
+    * @pre data != 0
     */
    virtual void
    putFloatArray(
@@ -387,7 +387,7 @@ public:
     * key name.
     *
     * @pre !key.empty()
-    * @pre data != NULL
+    * @pre data != 0
     */
    virtual void
    putIntegerArray(
@@ -423,7 +423,7 @@ public:
     * key name.
     *
     * @pre !key.empty()
-    * @pre data != NULL
+    * @pre data != 0
     */
    virtual void
    putStringArray(
@@ -508,7 +508,7 @@ public:
     *
     * Returns true if attach was successful.
     *
-    * @pre file != NULL
+    * @pre file != 0
     */
    virtual bool
    attachToFile(

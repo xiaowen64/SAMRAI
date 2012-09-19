@@ -671,7 +671,7 @@ YY_MALLOC_DECL
 YY_DECL
 	{
 	register yy_state_type yy_current_state;
-	register char *yy_cp = NULL, *yy_bp = NULL;
+	register char *yy_cp = 0, *yy_bp = 0;
 	register int yy_act;
 
 
@@ -973,7 +973,7 @@ YY_RULE_SETUP
    } else {
       if (Parser::getParser()->pushIncludeFile(filename)) {
          s_include_stack[s_include_stack_top++] = YY_CURRENT_BUFFER;
-         yy_switch_to_buffer(yy_create_buffer(NULL,YY_BUF_SIZE));
+         yy_switch_to_buffer(yy_create_buffer(0,YY_BUF_SIZE));
       }
    }
 }

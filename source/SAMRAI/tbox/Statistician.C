@@ -28,7 +28,7 @@ namespace tbox {
 const int Statistician::DEFAULT_NUMBER_OF_TIMERS_INCREMENT = 128;
 const int StatisticRestartDatabase::TBOX_STATISTICRESTARTDATABASE_VERSION = 1;
 
-Statistician * Statistician::s_statistician_instance = (Statistician *)NULL;
+Statistician * Statistician::s_statistician_instance = 0;
 
 StartupShutdownManager::Handler
 Statistician::s_finalize_handler(
@@ -115,7 +115,7 @@ Statistician::registerSingletonSubclassInstance(
 Statistician::Statistician():
    d_has_gathered_stats(false)
 {
-   d_restart_database_instance = (StatisticRestartDatabase *)NULL;
+   d_restart_database_instance = 0;
 
    d_must_call_finalize = true;
 
@@ -1789,11 +1789,11 @@ Statistician::finalize(
       Array<boost::shared_ptr<Statistic> >* global_proc_stats =
          d_num_proc_stats > 0
          ? new Array<boost::shared_ptr<Statistic> >[d_num_proc_stats]
-         : (Array<boost::shared_ptr<Statistic> > *)NULL;
+         : 0;
       Array<boost::shared_ptr<Statistic> >* global_patch_stats =
          d_num_patch_stats > 0
          ? new Array<boost::shared_ptr<Statistic> >[d_num_patch_stats]
-         : (Array<boost::shared_ptr<Statistic> > *)NULL;
+         : 0;
 
       if (my_rank == 0) {
 

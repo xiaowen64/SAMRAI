@@ -566,7 +566,7 @@ public:
     * @param[out] ranks_of_extrema  Ranks associated with min or max of x
     *                               (if op indicates min or max operation).
     *
-    * @pre (op != MPI_MINLOC && op != MPI_MAXLOC) || (ranks_of_extrema != NULL)
+    * @pre (op != MPI_MINLOC && op != MPI_MAXLOC) || (ranks_of_extrema != 0)
     * @pre s_mpi_is_initialized
     */
    int
@@ -574,7 +574,7 @@ public:
       int* x,
       int count,
       Op op,
-      int* ranks_of_extrema = NULL) const;
+      int* ranks_of_extrema = 0) const;
 
    /*!
     * @brief Specialized Allreduce for doubles.
@@ -589,7 +589,7 @@ public:
     * @param[out] ranks_of_extrema  Ranks associated with min or max of x
     *                               (if op indicates min or max operation).
     *
-    * @pre (op != MPI_MINLOC && op != MPI_MAXLOC) || (ranks_of_extrema != NULL)
+    * @pre (op != MPI_MINLOC && op != MPI_MAXLOC) || (ranks_of_extrema != 0)
     * @pre s_mpi_is_initialized
     */
    int
@@ -597,7 +597,7 @@ public:
       double* x,
       int count,
       Op op,
-      int* ranks_of_extrema = NULL) const;
+      int* ranks_of_extrema = 0) const;
 
    /*!
     * @brief Specialized Allreduce for floats.
@@ -612,7 +612,7 @@ public:
     * @param[out] ranks_of_extrema  Ranks associated with min or max of x
     *                               (if op indicates min or max operation).
     *
-    * @pre (op != MPI_MINLOC && op != MPI_MAXLOC) || (ranks_of_extrema != NULL)
+    * @pre (op != MPI_MINLOC && op != MPI_MAXLOC) || (ranks_of_extrema != 0)
     * @pre s_mpi_is_initialized
     */
    int
@@ -620,7 +620,7 @@ public:
       float* x,
       int count,
       Op op,
-      int* ranks_of_extrema = NULL) const;
+      int* ranks_of_extrema = 0) const;
 
    //@}
 

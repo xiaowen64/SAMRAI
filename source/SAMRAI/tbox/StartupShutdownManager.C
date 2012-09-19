@@ -64,7 +64,7 @@ StartupShutdownManager::registerHandler(
 
    unsigned char priority = handler->getPriority();
 
-   item->next = (ListElement *)NULL;
+   item->next = 0;
    if (s_num_manager_items[priority] == 0) {
       s_manager_list[priority] = item;
    } else {
@@ -174,8 +174,8 @@ void
 StartupShutdownManager::setupSingleton()
 {
    for (int priority = s_number_of_priorities - 1; priority > -1; priority--) {
-      s_manager_list[priority] = (ListElement *)NULL;
-      s_manager_list_last[priority] = (ListElement *)NULL;
+      s_manager_list[priority] = 0;
+      s_manager_list_last[priority] = 0;
       s_num_manager_items[priority] = 0;
    }
 

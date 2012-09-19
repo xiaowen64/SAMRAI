@@ -27,7 +27,7 @@ SiloDatabaseFactory::allocate(
    return boost::make_shared<SiloDatabase>(name);
 
 #else
-   return NULL;
+   return 0;
 
 #endif
 }

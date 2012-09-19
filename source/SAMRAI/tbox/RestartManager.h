@@ -185,7 +185,7 @@ public:
     * object pointer is null.
     *
     * @pre !name.empty()
-    * @pre obj != NULL
+    * @pre obj != 0
     */
    void
    registerRestartItem(

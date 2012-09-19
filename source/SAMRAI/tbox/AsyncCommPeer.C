@@ -68,7 +68,7 @@ AsyncCommPeer<TYPE>::AsyncCommPeer():
    d_next_task_op(none),
    d_max_first_data_len(1),
    d_full_count(0),
-   d_external_buf(NULL),
+   d_external_buf(0),
    d_internal_buf_size(0),
    d_internal_buf(),
    d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
@@ -109,7 +109,7 @@ AsyncCommPeer<TYPE>::AsyncCommPeer(
    d_next_task_op(none),
    d_max_first_data_len(1),
    d_full_count(0),
-   d_external_buf(NULL),
+   d_external_buf(0),
    d_internal_buf_size(0),
    d_internal_buf(),
    d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
@@ -260,7 +260,7 @@ AsyncCommPeer<TYPE>::beginSend(
    d_base_op = send;
    d_next_task_op = send_start;
    bool status = checkSend();
-   d_external_buf = NULL;
+   d_external_buf = 0;
    return status;
 }
 
@@ -468,7 +468,7 @@ AsyncCommPeer<TYPE>::checkSend()
          } else {
             // Sends completed.  No next task.
             d_next_task_op = none;
-            d_external_buf = NULL;
+            d_external_buf = 0;
             d_full_count = 0;
          }
 

@@ -242,7 +242,7 @@ public:
       bool
       hasStage() const
       {
-         return d_stage != NULL;
+         return d_stage != 0;
       }
 
 protected:
@@ -561,7 +561,7 @@ private:
     * @param index_on_stage Member index.
     *
     * @pre index_on_stage < numManagedMembers()
-    * @pre getMember(index_on_stage) != NULL
+    * @pre getMember(index_on_stage) != 0
     */
    size_t
    numberOfRequests(
@@ -592,7 +592,7 @@ private:
     * @param index_on_stage Member index.
     *
     * @pre index_on_stage < numManagedMembers()
-    * @pre getMember(index_on_stage) != NULL
+    * @pre getMember(index_on_stage) != 0
     */
    SAMRAI_MPI::Request *
    lookupRequestPointer(
@@ -605,7 +605,7 @@ private:
     * @param index_on_stage Member index.
     *
     * @pre index_on_stage < numManagedMembers()
-    * @pre getMember(index_on_stage) != NULL
+    * @pre getMember(index_on_stage) != 0
     */
    SAMRAI_MPI::Status *
    lookupStatusPointer(

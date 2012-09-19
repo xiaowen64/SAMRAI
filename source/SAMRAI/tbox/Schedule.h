@@ -260,7 +260,7 @@ public:
    bool
    allocatedCommunicationObjects()
    {
-      return d_coms != NULL;
+      return d_coms != 0;
    }
 
 private:
@@ -270,7 +270,7 @@ private:
    deallocateCommunicationObjects()
    {
       delete[] d_coms;
-      d_coms = NULL;
+      d_coms = 0;
    }
 
    void

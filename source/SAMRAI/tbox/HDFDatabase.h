@@ -176,7 +176,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
-    * @pre data != NULL
+    * @pre data != 0
     */
    virtual void
    putBoolArray(
@@ -221,7 +221,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
-    * @pre data != NULL
+    * @pre data != 0
     */
    virtual void
    putDatabaseBoxArray(
@@ -259,7 +259,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
-    * @pre data != NULL
+    * @pre data != 0
     */
    virtual void
    putCharArray(
@@ -297,7 +297,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
-    * @pre data != NULL
+    * @pre data != 0
     */
    virtual void
    putComplexArray(
@@ -335,7 +335,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
-    * @pre data != NULL
+    * @pre data != 0
     */
    virtual void
    putDoubleArray(
@@ -373,7 +373,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
-    * @pre data != NULL
+    * @pre data != 0
     */
    virtual void
    putFloatArray(
@@ -411,7 +411,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
-    * @pre data != NULL
+    * @pre data != 0
     */
    virtual void
    putIntegerArray(
@@ -449,7 +449,7 @@ public:
     * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
-    * @pre data != NULL
+    * @pre data != 0
     */
    virtual void
    putStringArray(
