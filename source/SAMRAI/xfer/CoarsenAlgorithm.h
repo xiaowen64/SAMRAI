@@ -181,6 +181,8 @@ public:
     *                             constructed.  If the NULL default is used,
     *                             then class BoxGeometryVariableFillPattern
     *                             will be used internally.
+    *
+    * @pre !d_schedule_created
     */
    void
    registerCoarsen(
@@ -241,12 +243,15 @@ public:
     *                                pointer is null default state), then a
     *                                StandardCoarsenTransactionFactory object
     *                                will be used.
+    *
+    * @pre (getDim() == crse_level->getDim()) &&
+    *      (getDim() == fine_level->getDim())
     */
    boost::shared_ptr<CoarsenSchedule>
    createSchedule(
       const boost::shared_ptr<hier::PatchLevel>& crse_level,
       const boost::shared_ptr<hier::PatchLevel>& fine_level,
-      CoarsenPatchStrategy * coarsen_strategy = ((CoarsenPatchStrategy *)NULL),
+      CoarsenPatchStrategy * coarsen_strategy = 0,
       const boost::shared_ptr<CoarsenTransactionFactory>& transaction_factory =
          boost::shared_ptr<CoarsenTransactionFactory>());
 
@@ -265,6 +270,8 @@ public:
     *
     * @param[in] schedule  boost::shared_ptr to coarsen schedule, which cannot
     *                      be null.
+    *
+    * @pre schedule
     */
    bool
    checkConsistency(
@@ -288,6 +295,9 @@ public:
     *
     * @param[in,out] schedule  boost::shared_ptr to coarsen schedule, which
     *                          cannot be null.
+    *
+    * @pre schedule
+    * @pre d_coarsen_classes->classesMatch(schedule->getEquivalenceClasses())
     */
    void
    resetSchedule(

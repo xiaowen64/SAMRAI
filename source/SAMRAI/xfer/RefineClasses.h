@@ -154,6 +154,9 @@ public:
     * from that class is returned.
     *
     * @param[in] equiv_class_index
+    *
+    * @pre (equiv_class_index >= 0) &&
+    *      (equiv_class_index < getNumberOfEquivalenceClasses())
     */
    const RefineClasses::Data&
    getClassRepresentative(
@@ -202,6 +205,9 @@ public:
     * class.
     *
     * @param[in] equiv_class_index
+    *
+    * @pre (equiv_class_index >= 0) &&
+    *      (equiv_class_index < getNumberOfEquivalenceClasses())
     */
    std::list<int>::iterator
    getIterator(
@@ -229,6 +235,9 @@ public:
     * class.
     *
     * @param[in] equiv_class_index
+    *
+    * @pre (equiv_class_index >= 0) &&
+    *      (equiv_class_index < getNumberOfEquivalenceClasses())
     */
    std::list<int>::iterator
    getIteratorEnd(
@@ -257,6 +266,8 @@ public:
     *
     * @param[in,out] data_item
     * @param[in] descriptor
+    *
+    * @pre itemIsValid(data, descriptor)
     */
    void
    insertEquivalenceClassItem(

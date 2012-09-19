@@ -107,11 +107,18 @@ public:
     *                            may be null, in which case no boundary filling
     *                            operations will occur.  If your mesh has a
     *                            singularity, the object this points to should
-    *                            have also inherited from SingularityPatchStrategy.
+    *                            have also inherited from
+    *                            SingularityPatchStrategy.
     * @param[in] use_time_interpolation  Boolean flag indicating whether to
     *                                    use time interpolation when setting
     *                                    data on the destination level.
     *                                    Default is no time interpolation.
+    *
+    * @pre dst_level
+    * @pre src_level
+    * @pre refine_classes
+    * @pre dst_level->getDim() == src_level->getDim()
+    * @pre dst_level->getGridGeometry()->getNumberOfBlockSingularities() == 0 || d_singularity_patch_strategy
     */
    RefineSchedule(
       const boost::shared_ptr<PatchLevelFillPattern>& dst_level_fill_pattern,
@@ -173,13 +180,21 @@ public:
     *                            object that provides user-defined physical
     *                            boundary filling operations.  This pointer
     *                            may be null, in which case no boundary filling
-    *                            or user-defined refine operations will occur.  If your mesh has a
-    *                            singularity, the object this points to should
-    *                            have also inherited from SingularityPatchStrategy.
+    *                            or user-defined refine operations will occur.
+    *                            If your mesh has a singularity, the object
+    *                            this points to should have also inherited
+    *                            from SingularityPatchStrategy.
     * @param[in] use_time_refinement  Boolean flag indicating whether to use
     *                                 time interpolation when setting data
     *                                 on the destination level.  Default
     *                                 is no time interpolation.
+    *
+    * @pre dst_level
+    * @pre (next_coarser_level == -1) || hierarchy
+    * @pre refine_classes
+    * @pre !src_level || (dst_level->getDim() == src_level.getDim())
+    * @pre !hierarchy || (dst_level->getDim() == hierarchy.getDim())
+    * @pre dst_level->getGridGeometry()->getNumberOfBlockSingularities() == 0 || d_singularity_patch_strategy
     */
    RefineSchedule(
       const boost::shared_ptr<PatchLevelFillPattern>& dst_level_fill_pattern,
@@ -210,6 +225,8 @@ public:
     *                            general, this is constructed by the calling
     *                            RefineAlgorithm object.  This pointer must be
     *                            non-null.
+    *
+    * @pre refine_classes
     */
    void
    reset(
@@ -329,6 +346,15 @@ private:
     *                            boundary filling operations.  This pointer
     *                            may be null, in which case no boundary filling
     *                            or user-defined refine operations will occur.
+    *
+    * @pre dst_level
+    * @pre src_level
+    * @pre (next_coarser_level == -1) || hierarchy
+    * @pre refine_classes
+    * @pre !src_level || (dst_level->getDim() == src_level.getDim())
+    * @pre !hierarchy || (dst_level->getDim() == hierarchy.getDim())
+    * @pre dst_to_src.getBase() == *dst_level->getBoxLevel()
+    * @pre src_to_dst.getHead() == *dst_level->getBoxLevel()
     */
    RefineSchedule(
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
@@ -384,6 +410,9 @@ private:
     *                                    transactions to communicate from
     *                                    source level to destination level
     *                                    will be skipped.
+    *
+    * @pre (next_coarser_ln == -1) || hierarchy
+    * !d_src_level || dst_to_src.isFinalized()
     */
    void
    finishScheduleConstruction(
@@ -407,6 +436,8 @@ private:
     *                             allocated patch data indices.
     * @param[in,out] level
     * @param[in] fill_time        Simulation time for filling operation.
+    *
+    * @pre level
     */
    void
    allocateScratchSpace(
@@ -436,6 +467,8 @@ private:
     * @brief Fill the physical boundaries for each patch on d_dst_level.
     *
     * @param[in] fill_time  Simulation time when the fill takes place
+    *
+    * @pre d_dst_level
     */
    void
    fillPhysicalBoundaries(
@@ -450,6 +483,8 @@ private:
     *
     * If the scratch and destination patch data components are the same,
     * then no copying is performed.
+    *
+    * @pre d_dst_level
     */
    void
    copyScratchToDestination() const;
@@ -560,6 +595,9 @@ private:
     * @param[in] dst_to_src  Connector from dst_level to src_level.
     * @param[in] src_to_dst  Connector from src_level to dst_level.
     * @param[in] fill_gcw  Maximum ghost width to be filled by the schedule.
+    *
+    * @pre (d_dst_level->getDim() == dst_box_level.getDim()) &&
+    *      (d_dst_level->getDim() == fill_ghost_width.getDim())
     */
    void
    setDefaultFillBoxLevel(
@@ -591,6 +629,8 @@ private:
     * @param[out]  encon_fill_boxes
     * @param[in]   fill_boxes_list
     * @param[in]   dst_block_id
+    *
+    * @pre encon_fill_boxes.isEmpty()
     */
    void
    findEnconFillBoxes(
@@ -799,6 +839,10 @@ private:
     * @param[in] dst_box  Box from a destination patch.
     * @param[in] src_box  Box from a source patch.
     * @param[in] use_time_interpolation
+    *
+    * @pre d_dst_level
+    * @pre d_src_level
+    * @pre !dst_box.isPeriodicImage()
     */
    void
    constructScheduleTransactions(
@@ -823,6 +867,10 @@ private:
     * @param[in] dst_box  Box from a destination patch.
     * @param[in] src_box  Box from a source patch.
     * @param[in] use_time_interpolation
+    *
+    * @pre d_dst_level
+    * @pre d_src_level
+    * @pre !dst_box.isPeriodicImage()
     */
    void
    constructScheduleTransactions(
@@ -1015,9 +1063,9 @@ private:
     * destination that could not be filled directly from the source
     * level.
     *
-    * Once d_coarse_interp_level is filled (by executing d_coarse_interp_schedule)
-    * interpolating data into the corresponding fill boxes of the
-    * destination is a local operation.
+    * Once d_coarse_interp_level is filled (by executing
+    * d_coarse_interp_schedule) interpolating data into the corresponding fill
+    * boxes of the destination is a local operation.
     *
     * This coarser level is filled by the d_coarse_interp_schedule.  If
     * no coarser level data is needed, then this pointer will be NULL.
@@ -1031,9 +1079,9 @@ private:
     * to hold data used for interpolating into unfilled boxes at
     * enhanced connectivity block boundaries.
     *
-    * d_coarse_interp_encon_level will be filled by d_coarse_interp_encon_schedule.  Once it
-    * is filled, the interpolation of data to patches in d_encon_level will
-    * be a local operation.
+    * d_coarse_interp_encon_level will be filled by
+    * d_coarse_interp_encon_schedule.  Once it is filled, the interpolation of
+    * data to patches in d_encon_level will be a local operation.
     */
    boost::shared_ptr<hier::PatchLevel> d_coarse_interp_encon_level;
 
@@ -1078,7 +1126,8 @@ private:
    /*!
     * @brief Describes remaining unfilled boxes of d_encon_level after
     * attempting to fill from the source level.  These remaining boxes must
-    * be filled using a coarse interpolation schedule, d_coarse_interp_encon_schedule.
+    * be filled using a coarse interpolation schedule,
+    * d_coarse_interp_encon_schedule.
     */
    boost::shared_ptr<BoxLevel> d_unfilled_encon_box_level;
 

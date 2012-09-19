@@ -64,6 +64,8 @@ public:
     *
     * @return                    boost::shared_ptr to the calculated overlap
     *                            object
+    *
+    * @pre dst_patch_box.getDim() == src_mask.getDim()
     */
    boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(

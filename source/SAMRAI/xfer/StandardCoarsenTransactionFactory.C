@@ -60,7 +60,7 @@ void
 StandardCoarsenTransactionFactory::unsetCoarsenItems()
 {
    CoarsenCopyTransaction::unsetCoarsenItems();
-   d_coarsen_items = (const CoarsenClasses::Data **)NULL;
+   d_coarsen_items = 0;
    d_num_coarsen_items = 0;
 }
 

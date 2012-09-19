@@ -23,11 +23,11 @@ namespace SAMRAI {
 namespace xfer {
 
 /*!
- * @brief Abstract base class defining the interface for all concrete transaction
- * factory objects that generate data transaction objects used with a CoarsenSchedule
- * object.  A concrete subclass will allocate new transaction objects.  This class
- * is an example of the ``Abstract Factory'' method described in the Design Patterns
- * book by Gamma, et al.
+ * @brief Abstract base class defining the interface for all concrete
+ * transaction factory objects that generate data transaction objects used with
+ * a CoarsenSchedule object.  A concrete subclass will allocate new transaction
+ * objects.  This class is an example of the ``Abstract Factory'' method
+ * described in the Design Patterns book by Gamma, et al.
  *
  * To add a new type of Transaction object MyCoarsenTransaction:
  *
@@ -59,8 +59,8 @@ public:
 
    /*!
     * @brief Pure virtual function to set the array of CoarsenClass::Data items
-    * associated with the coarsen schedule.  Typical concrete transactions used by
-    * the schedule use this information to communicate data.  This operation
+    * associated with the coarsen schedule.  Typical concrete transactions used
+    * by the schedule use this information to communicate data.  This operation
     * is called by the coarsen schedule during the execution of the
     * CoarsenSchedule::fillData() routine before data communication
     * operations begin.
@@ -71,17 +71,17 @@ public:
       int num_coarsen_items) = 0;
 
    /*!
-    * @brief Pure virtual function to clear the array of CoarsenClass::Data items
-    * associated with the coarsen schedule.  This operation is called by the
-    * coarsen schedule after data communication operations are complete.
+    * @brief Pure virtual function to clear the array of CoarsenClass::Data
+    * items associated with the coarsen schedule.  This operation is called by
+    * the coarsen schedule after data communication operations are complete.
     */
    virtual void
    unsetCoarsenItems() = 0;
 
    /*!
-    * @brief Pure virtual function to allocate a concrete coarsen transaction object.
-    * This routine is called by the coarsen schedule during construction of the
-    * schedule.
+    * @brief Pure virtual function to allocate a concrete coarsen transaction
+    * object.  This routine is called by the coarsen schedule during
+    * construction of the schedule.
     *
     * @param dst_level      boost::shared_ptr to destination patch level.
     * @param src_level      boost::shared_ptr to source patch level.
@@ -102,7 +102,7 @@ public:
 
 private:
    CoarsenTransactionFactory(
-      const CoarsenTransactionFactory&);                        // not implemented
+      const CoarsenTransactionFactory&);                  // not implemented
    void
    operator = (
       const CoarsenTransactionFactory&);                  // not implemented

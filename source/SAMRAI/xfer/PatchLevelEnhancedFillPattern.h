@@ -62,6 +62,8 @@ public:
     * @param[in] src_to_dst            Connector of source to destination
     * @param[in] fill_ghost_width      Ghost width being filled by refine
     *                                  schedule
+    *
+    * @pre dst_box_level.getDim() == fill_ghost_width.getDim()
     */
    void
    computeFillBoxesAndNeighborhoodSets(
@@ -89,6 +91,8 @@ public:
     * method should never be called.  It is implemented here to satisfy
     * the pure virtual interface from the base class.  An error will result
     * if this is ever called.
+    *
+    * @pre needsToCommunicateDestinationFillBoxes()
     */
    void
    computeDestinationFillBoxesOnSourceProc(

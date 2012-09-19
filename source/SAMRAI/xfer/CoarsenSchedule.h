@@ -105,6 +105,11 @@ public:
     * @param[in] fill_coarse_data  Boolean indicating whether coarse data
     *                              should be filled before coarsening
     *                              operations are done.
+    *
+    * @pre crse_level
+    * @pre fine_level
+    * @pre coarsen_classes
+    * @pre crse_level->getDim() == fine_level->getDim()
     */
    CoarsenSchedule(
       const boost::shared_ptr<hier::PatchLevel>& crse_level,
@@ -139,6 +144,8 @@ public:
     *                             general, this is constructed by the calling
     *                             CoarsenAlgorithm object.  This pointer must
     *                             be non-null.
+    *
+    * @pre coarsen_classes
     */
    void
    reset(
@@ -171,6 +178,8 @@ public:
     *                    choices are:  "DLBG" (default case),
     *                    and "ORIG_NSQUARED".   More details can be found below
     *                    in the comments for the generateSchedule() routine.
+    *
+    * @pre (method == "ORIG_NSQUARED") || (method == "DLBG")
     */
    static void
    setScheduleGenerationMethod(
@@ -247,6 +256,9 @@ private:
     *    <li>   if setScheduleGenerationMethod("ORIG_NSQUARED") is called use
     *           generateScheduleNSquared() to generate the schedule.
     * </ul>
+    *
+    * @pre (s_schedule_generation_method == "ORIG_NSQUARED") ||
+    *      (s_schedule_generation_method == "DLBG")
     */
    void
    generateSchedule();
@@ -317,6 +329,13 @@ private:
     * @param[in] src_level      The temporary coarse level that will have
     *                           coarsened data
     * @param[in] src_box        Owned by a Patch on the temporary coarse level
+    *
+    * @pre dst_level
+    * @pre src_level
+    * @pre (d_crse_level.getDim() == dst_level->getDim()) &&
+    *      (d_crse_level.getDim() == src_level->getDim()) &&
+    *      (d_crse_level.getDim() == dst_box.getDim()) &&
+    *      (d_crse_level.getDim() == src_box.getDim())
     */
    void
    constructScheduleTransactions(

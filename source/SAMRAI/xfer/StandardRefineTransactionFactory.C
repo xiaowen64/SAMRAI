@@ -62,7 +62,7 @@ StandardRefineTransactionFactory::unsetRefineItems()
 {
    RefineCopyTransaction::unsetRefineItems();
    RefineTimeTransaction::unsetRefineItems();
-   d_refine_items = (const RefineClasses::Data **)NULL;
+   d_refine_items = 0;
    d_num_refine_items = 0;
 }
 

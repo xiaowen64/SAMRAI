@@ -24,11 +24,11 @@ namespace SAMRAI {
 namespace xfer {
 
 /*!
- * @brief Abstract base class defining the interface for all concrete transaction
- * factory objects that generate data transaction objects used with a RefineSchedule
- * object.  A concrete subclass will allocate new transaction objects.  This class
- * is an example of the ``Abstract Factory'' method described in the Design Patterns
- * book by Gamma, et al.
+ * @brief Abstract base class defining the interface for all concrete
+ * transaction factory objects that generate data transaction objects used with
+ * a RefineSchedule object.  A concrete subclass will allocate new transaction
+ * objects.  This class is an example of the ``Abstract Factory'' method
+ * described in the Design Patterns book by Gamma, et al.
  *
  * To add a new type of Transaction object MyRefineTransaction:
  *
@@ -60,8 +60,8 @@ public:
 
    /*!
     * @brief Pure virtual function to set the array of RefineClass::Data items
-    * associated with the refine schedule.  Typical concrete transactions used by
-    * the schedule use this information to communicate data.  This operation
+    * associated with the refine schedule.  Typical concrete transactions used
+    * by the schedule use this information to communicate data.  This operation
     * is called by the refine schedule during the execution of the
     * RefineSchedule::fillData() routine before data communication
     * operations begin.
@@ -80,21 +80,22 @@ public:
    unsetRefineItems() = 0;
 
    /*!
-    * @brief Pure virtual function to allocate a concrete refine transaction object.
-    * This routine is called by the refine schedule during construction of the
-    * schedule.
+    * @brief Pure virtual function to allocate a concrete refine transaction
+    * object.  This routine is called by the refine schedule during
+    * construction of the schedule.
     *
     * @param dst_level      boost::shared_ptr to destination patch level.
     * @param src_level      boost::shared_ptr to source patch level.
-    * @param overlap        boost::shared_ptr to overlap region between patches.
+    * @param overlap        boost::shared_ptr to overlap region between
+    *                       patches.
     * @param dst_box        Destination Box in destination patch level.
     * @param src_box        Source Box in source patch level.
     * @param ritem_id       Integer index of RefineClass::Data item associated
     *                       with transaction.
     * @param box            Optional const reference to box defining region of
     *                       refine transaction.  Default is an empty box.
-    * @param use_time_interpolation  Optional boolean flag indicating whether the
-    *                       refine transaction involves time interpolation.
+    * @param use_time_interpolation  Optional boolean flag indicating whether
+    *                       the refine transaction involves time interpolation.
     *                       Default is false.
     */
    virtual boost::shared_ptr<tbox::Transaction>
@@ -144,17 +145,17 @@ public:
       double fill_time);
 
    /*!
-    * @brief Virtual function allowing transaction factory to preprocess scratch
-    * space data before transactactions use it if they need to.  This function is
-    * optional for the concrete transaction factory object.
+    * @brief Virtual function allowing transaction factory to preprocess
+    * scratch space data before transactactions use it if they need to.  This
+    * function is optional for the concrete transaction factory object.
     * The default implementation is a no-op.
     *
     * @param level        boost::shared_ptr to patch level holding scratch data.
     * @param fill_time    Double value of simulation time corresponding to
     *                     RefineSchedule operations.
-    * @param preprocess_vector Const reference to ComponentSelector that indicates
-    *                     patch data array indices of scratch patch data objects
-    *                     to preprocess.
+    * @param preprocess_vector Const reference to ComponentSelector that
+    *                     indicates patch data array indices of scratch patch
+    *                     data objects to preprocess.
     */
    virtual void
    preprocessScratchSpace(

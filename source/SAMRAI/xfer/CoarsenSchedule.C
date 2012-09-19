@@ -101,7 +101,7 @@ CoarsenSchedule::CoarsenSchedule(
    CoarsenPatchStrategy* patch_strategy,
    bool fill_coarse_data):
    d_number_coarsen_items(0),
-   d_coarsen_items((const CoarsenClasses::Data **)NULL),
+   d_coarsen_items(0),
    d_crse_level(crse_level),
    d_fine_level(fine_level),
    d_temp_to_coarse(crse_level->getDim()),
@@ -448,7 +448,7 @@ CoarsenSchedule::generateSchedule()
       t_coarse_data_fill->barrierAndStart();
       d_precoarsen_refine_schedule =
          d_precoarsen_refine_algorithm->createSchedule(d_temp_crse_level,
-            d_crse_level, NULL);
+            d_crse_level, 0);
       t_coarse_data_fill->stop();
    }
 
@@ -1157,10 +1157,10 @@ CoarsenSchedule::clearCoarsenItems()
 {
    if (d_coarsen_items) {
       for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
-         d_coarsen_items[ici] = (CoarsenClasses::Data *)NULL;
+         d_coarsen_items[ici] = 0;
       }
       delete[] d_coarsen_items;
-      d_coarsen_items = (const CoarsenClasses::Data **)NULL;
+      d_coarsen_items = 0;
       d_number_coarsen_items = 0;
    }
 }

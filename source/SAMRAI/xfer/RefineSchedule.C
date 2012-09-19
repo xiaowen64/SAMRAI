@@ -110,7 +110,7 @@ RefineSchedule::RefineSchedule(
    RefinePatchStrategy* patch_strategy,
    bool use_time_refinement):
    d_number_refine_items(0),
-   d_refine_items((const RefineClasses::Data **)NULL),
+   d_refine_items(0),
    d_dst_level(dst_level),
    d_src_level(src_level),
    d_refine_patch_strategy(patch_strategy),
@@ -303,7 +303,7 @@ RefineSchedule::RefineSchedule(
    RefinePatchStrategy* patch_strategy,
    bool use_time_refinement):
    d_number_refine_items(0),
-   d_refine_items((const RefineClasses::Data **)NULL),
+   d_refine_items(0),
    d_dst_level(dst_level),
    d_src_level(src_level),
    d_refine_patch_strategy(patch_strategy),
@@ -483,7 +483,7 @@ RefineSchedule::RefineSchedule(
    const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
    RefinePatchStrategy* patch_strategy):
    d_number_refine_items(0),
-   d_refine_items((const RefineClasses::Data **)NULL),
+   d_refine_items(0),
    d_dst_level(dst_level),
    d_src_level(src_level),
    d_refine_patch_strategy(patch_strategy),
@@ -1423,8 +1423,8 @@ RefineSchedule::createCoarseInterpPatchLevel(
     * scalability.
     */
 
-   const Connector* dst_to_hiercoarse = NULL;
-   const Connector* hiercoarse_to_dst = NULL;
+   const Connector* dst_to_hiercoarse = 0;
+   const Connector* hiercoarse_to_dst = 0;
    Connector bridged_dst_to_hiercoarse(hiercoarse_box_level.getDim());
    Connector bridged_hiercoarse_to_dst(hiercoarse_box_level.getDim());
 
@@ -3027,8 +3027,7 @@ RefineSchedule::setDefaultFillBoxLevel(
 
    const tbox::Dimension& dim(d_dst_level->getDim());
 
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, dst_box_level,
-      fill_ghost_width);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, dst_box_level, fill_ghost_width);
 
    const hier::IntVector& constant_one_intvector(hier::IntVector::getOne(dim));
 
@@ -3101,8 +3100,8 @@ RefineSchedule::setDefaultFillBoxLevel(
       dst_to_fill,
       dst_box_level,
       *dst_to_dst,
-      dst_to_src == NULL ? dummy_connector : *dst_to_src,
-      src_to_dst == NULL ? dummy_connector : *src_to_dst,
+      dst_to_src == 0 ? dummy_connector : *dst_to_src,
+      src_to_dst == 0 ? dummy_connector : *src_to_dst,
       fill_gcw);
 
    d_max_fill_boxes = tbox::MathUtilities<int>::Max(
@@ -3507,7 +3506,7 @@ RefineSchedule::communicateFillBoxes(
            comm_stage.advanceSome() ) {
       tbox::AsyncCommPeer<int>* peer =
          dynamic_cast<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
-      TBOX_ASSERT(peer != NULL);
+      TBOX_ASSERT(peer != 0);
       if (peer < comms + src_owners.size()) {
          // This is a receive.  Unpack it.  (Otherwise, ignore send completion.)
          const int* ptr = peer->getRecvData();
@@ -4734,10 +4733,10 @@ RefineSchedule::clearRefineItems()
 {
    if (d_refine_items) {
       for (int iri = 0; iri < d_number_refine_items; iri++) {
-         d_refine_items[iri] = (RefineClasses::Data *)NULL;
+         d_refine_items[iri] = 0;
       }
       delete[] d_refine_items;
-      d_refine_items = (const RefineClasses::Data **)NULL;
+      d_refine_items = 0;
       d_number_refine_items = 0;
    }
 }

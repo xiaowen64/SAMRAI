@@ -56,6 +56,8 @@ public:
     *
     * The computed fill_box_level for this fill pattern will be the
     * boxes of dst_box_level grown by the fill_ghost_width.
+    *
+    * @pre dst_box_level.getDim() == fill_ghost_width.getDim()
     */
    void
    computeFillBoxesAndNeighborhoodSets(
@@ -79,6 +81,8 @@ public:
 
    /*!
     * @copydoc PatchLevelFillPattern::computeDestinationFillBoxesOnSourceProc()
+    *
+    * @pre dst_box_level.getDim() == fill_ghost_width.getDim()
     */
    void
    computeDestinationFillBoxesOnSourceProc(

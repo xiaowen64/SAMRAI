@@ -26,13 +26,13 @@ namespace xfer {
 
 /*!
  * @brief Class CoarsenCopyTransaction represents a single copy communication
- * transaction between two processors or a local data copy for coaren schedules.
- * Note that to there is an implicit hand-shaking between objects of this class
- * and the CoarsenSchedule object that constructs them.  Following the coarsen
- * schedule implementation, the source patch data index for a copy transaction
- * always refers to the source data, and the destination patch data index for a copy
- * transaction is always the destination data, all as defined in the
- * CoarsenClasses class.
+ * transaction between two processors or a local data copy for coaren
+ * schedules.  Note that to there is an implicit hand-shaking between objects
+ * of this class and the CoarsenSchedule object that constructs them.
+ * Following the coarsen schedule implementation, the source patch data index
+ * for a copy transaction always refers to the source data, and the destination
+ * patch data index for a copy transaction is always the destination data, all
+ * as defined in the CoarsenClasses class.
  *
  * @see xfer::CoarsenSchedule
  * @see xfer::CoarsenClasses
@@ -46,52 +46,65 @@ public:
    /*!
     * Static member function to set the array of coarsen class data items that
     * is shared by all object instances of this copy transaction class during
-    * data transfers.  The array must be set before any transactions are executed.
-    * The array is set in the CoarsenSchedule class.
+    * data transfers.  The array must be set before any transactions are
+    * executed.  The array is set in the CoarsenSchedule class.
+    *
+    * @pre coarsen_items != 0
+    * @pre num_coarsen_items >= 0
     */
    static void
    setCoarsenItems(
       const CoarsenClasses::Data** coarsen_items,
       int num_coarsen_items)
    {
-      TBOX_ASSERT(coarsen_items != (const CoarsenClasses::Data **)NULL);
+      TBOX_ASSERT(coarsen_items != 0);
       TBOX_ASSERT(num_coarsen_items >= 0);
       s_coarsen_items = coarsen_items;
       s_num_coarsen_items = num_coarsen_items;
    }
 
    /*!
-    * Static member function to unset the array of coarsen class data items that
-    * is shared by all object instances of this copy transaction class during
-    * data transfers.  The unset function is used to prevent erroneous execution
-    * of different schedules.  The array is unset in the CoarsenSchedule class.
+    * Static member function to unset the array of coarsen class data items
+    * that is shared by all object instances of this copy transaction class
+    * during data transfers.  The unset function is used to prevent erroneous
+    * execution of different schedules.  The array is unset in the
+    * CoarsenSchedule class.
     */
    static void
    unsetCoarsenItems()
    {
-      s_coarsen_items = (const CoarsenClasses::Data **)NULL;
+      s_coarsen_items = 0;
       s_num_coarsen_items = 0;
    }
 
    /*!
     * Construct a transaction with the specified source and destination
     * levels, patches, and patch data components found in the coarsen class
-    * item with the given id owned by the calling coarsen schedule.  In general,
-    * this constructor is called by a CoarsenSchedule object for each data
-    * transaction (not involving time interpolation) that must occur.  This
-    * transaction will be responsible for one of the following: (1) a local data
-    * copy, (2) packing a message stream with source patch data, or (3) unpacking
-    * destination patch data from a message stream.
+    * item with the given id owned by the calling coarsen schedule.  In
+    * general, this constructor is called by a CoarsenSchedule object for each
+    * data transaction (not involving time interpolation) that must occur.
+    * This transaction will be responsible for one of the following: (1) a
+    * local data copy, (2) packing a message stream with source patch data, or
+    * (3) unpacking destination patch data from a message stream.
     *
     * @param dst_level        boost::shared_ptr to destination patch level.
     * @param src_level        boost::shared_ptr to source patch level.
-    * @param overlap          boost::shared_ptr to overlap region between patches.
+    * @param overlap          boost::shared_ptr to overlap region between
+    *                         patches.
     * @param dst_box          Destination Box in destination patch level.
     * @param src_box          Source Box in source patch level.
-    * @param coarsen_item_id  Integer id of coarsen data item owned by coarsen schedule.
+    * @param coarsen_item_id  Integer id of coarsen data item owned by coarsen
+    *                         schedule.
     *
-    * When assertion checking is active, an assertion will result if any of the pointer
-    * arguments is null, or if any of the integer arguments are invalid (i.e., < 0);
+    * @pre dst_level
+    * @pre src_level
+    * @pre overlap
+    * @pre (dst_level->getDim() == src_level->getDim()) &&
+    *      (dst_level->getDim() == dst_box.getDim()) &&
+    *      (dst_level->getDim() == src_box.getDim())
+    * @pre dst_box.getLocalId() >= 0
+    * @pre src_box.getLocalId() >= 0
+    * @pre coarsen_item_id >= 0
     */
    CoarsenCopyTransaction(
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
@@ -117,15 +130,16 @@ public:
    canEstimateIncomingMessageSize();
 
    /*!
-    * Return the integer buffer space (in bytes) needed for the incoming message.
-    * This routine is only called if the transaction can estimate the
+    * Return the integer buffer space (in bytes) needed for the incoming
+    * message.  This routine is only called if the transaction can estimate the
     * size of the incoming message.  See canEstimateIncomingMessageSize().
     */
    virtual size_t
    computeIncomingMessageSize();
 
    /*!
-    * Return the integer buffer space (in bytes) needed for the outgoing message.
+    * Return the integer buffer space (in bytes) needed for the outgoing
+    * message.
     */
    virtual size_t
    computeOutgoingMessageSize();

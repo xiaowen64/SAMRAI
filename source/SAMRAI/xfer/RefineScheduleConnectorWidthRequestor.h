@@ -71,11 +71,13 @@ public:
     * factor.  Increasing the factor is NOT the same as multiplying
     * the Connector widths by the same factor.
     *
-    * @param[in] factor By default, @c factor=1.
+    * @param[in] gcw_factor By default, @c gcw_factor=1.
+    *
+    * @pre gcw_factor >= 0
     */
    void
    setGhostCellWidthFactor(
-      int factor);
+      int gcw_factor);
 
 private:
    /*!

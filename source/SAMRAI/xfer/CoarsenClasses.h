@@ -151,6 +151,9 @@ private:
     * from that class is returned.
     *
     * @param[in] equiv_class_index
+    *
+    * @pre (equiv_class_index >= 0) &&
+    *      (equiv_class_index < getNumberOfEquivalenceClasses())
     */
    const CoarsenClasses::Data&
    getClassRepresentative(
@@ -199,6 +202,9 @@ private:
     * class.
     *
     * @param[in] equiv_class_index
+    *
+    * @pre (equiv_class_index >= 0) &&
+    *      (equiv_class_index < getNumberOfEquivalenceClasses())
     */
    std::list<int>::iterator
    getIterator(
@@ -226,6 +232,9 @@ private:
     * class.
     *
     * @param[in] equiv_class_index
+    *
+    * @pre (equiv_class_index >= 0) &&
+    *      (equiv_class_index < getNumberOfEquivalenceClasses())
     */
    std::list<int>::iterator
    getIteratorEnd(
@@ -254,6 +263,8 @@ private:
     *
     * @param[in,out] data
     * @param[in] descriptor
+    *
+    * @pre itemIsValid(data, descriptor)
     */
    void
    insertEquivalenceClassItem(

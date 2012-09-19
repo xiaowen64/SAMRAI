@@ -61,6 +61,8 @@ public:
     * @param[in] src_to_dst            Connector of source to destination
     * @param[in] fill_ghost_width      Ghost width being filled by refine
     *                                  schedule
+    *
+    * @pre dst_box_level.getDim() == fill_ghost_width.getDim()
     */
    void
    computeFillBoxesAndNeighborhoodSets(
@@ -92,6 +94,8 @@ public:
     * @param[in] src_to_dst                Connector of source to destination
     * @param[in] fill_ghost_width          Ghost width being filled by refine
     *                                      schedule
+    *
+    * @pre needsToCommunicateDestinationFillBoxes()
     */
    void
    computeDestinationFillBoxesOnSourceProc(

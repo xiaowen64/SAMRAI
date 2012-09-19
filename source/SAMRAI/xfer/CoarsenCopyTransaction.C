@@ -28,8 +28,7 @@
 namespace SAMRAI {
 namespace xfer {
 
-const CoarsenClasses::Data ** CoarsenCopyTransaction::s_coarsen_items =
-   (const CoarsenClasses::Data **)NULL;
+const CoarsenClasses::Data ** CoarsenCopyTransaction::s_coarsen_items = 0;
 int CoarsenCopyTransaction::s_num_coarsen_items = 0;
 
 /*

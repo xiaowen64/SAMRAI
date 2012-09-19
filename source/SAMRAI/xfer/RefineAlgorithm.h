@@ -158,6 +158,8 @@ public:
     *                              the NULL default is used, then class
     *                              BoxGeometryVariableFillPattern will be used
     *                              internally.
+    *
+    * @pre !d_schedule_created
     */
    void
    registerRefine(
@@ -202,6 +204,9 @@ public:
     *                              the NULL default is used, then class
     *                              BoxGeometryVariableFillPattern will be used
     *                              internally.
+    *
+    * @pre optime
+    * @pre !d_schedule_created
     */
    void
    registerRefine(
@@ -245,11 +250,13 @@ public:
     *                                pointer is null (default state), then a
     *                                StandardRefineTransactionFactory object
     *                                will be used.
+    *
+    * @pre level
     */
    boost::shared_ptr<RefineSchedule>
    createSchedule(
       const boost::shared_ptr<hier::PatchLevel>& level,
-      RefinePatchStrategy * patch_strategy = ((RefinePatchStrategy *)NULL),
+      RefinePatchStrategy * patch_strategy = 0,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
          boost::shared_ptr<RefineTransactionFactory>());
 
@@ -259,12 +266,14 @@ public:
     * @param[in] fill_pattern  Indicates which parts of the destination level
     *                          to fill.  See RefineSchedule for available
     *                          patterns.
+    *
+    * @pre level
     */
    boost::shared_ptr<RefineSchedule>
    createSchedule(
       const boost::shared_ptr<PatchLevelFillPattern>& fill_pattern,
       const boost::shared_ptr<hier::PatchLevel>& level,
-      RefinePatchStrategy * patch_strategy = ((RefinePatchStrategy *)NULL),
+      RefinePatchStrategy * patch_strategy = 0,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
          boost::shared_ptr<RefineTransactionFactory>());
 
@@ -308,12 +317,16 @@ public:
     *                                 null (default state), then a
     *                                 StandardRefineTransactionFactory object
     *                                 will be used.
+    *
+    * @pre dst_level
+    * @pre src_level
+    * @pre dst_level->getDim() == src_level->getDim()
     */
    boost::shared_ptr<RefineSchedule>
    createSchedule(
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
       const boost::shared_ptr<hier::PatchLevel>& src_level,
-      RefinePatchStrategy * patch_strategy = ((RefinePatchStrategy *)NULL),
+      RefinePatchStrategy * patch_strategy = 0,
       bool use_time_interpolation = false,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
          boost::shared_ptr<RefineTransactionFactory>());
@@ -329,13 +342,17 @@ public:
     * @param patch_strategy
     * @param[in] use_time_interpolation
     * @param[in] transaction_factory
+    *
+    * @pre dst_level
+    * @pre src_level
+    * @pre dst_level->getDim() == src_level->getDim()
     */
    boost::shared_ptr<RefineSchedule>
    createSchedule(
       const boost::shared_ptr<PatchLevelFillPattern>& fill_pattern,
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
       const boost::shared_ptr<hier::PatchLevel>& src_level,
-      RefinePatchStrategy * patch_strategy = ((RefinePatchStrategy *)NULL),
+      RefinePatchStrategy * patch_strategy = 0,
       bool use_time_interpolation = false,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
          boost::shared_ptr<RefineTransactionFactory>());
@@ -405,13 +422,17 @@ public:
     *                                 null (default state), then a
     *                                 StandardRefineTransactionFactory object
     *                                 will be used.
+    *
+    * @pre level
+    * @pre (next_coarser_level == -1) || hierarchy
+    * @pre !hierarchy || (level->getDim() == hierarchy->getDim())
     */
    boost::shared_ptr<RefineSchedule>
    createSchedule(
       const boost::shared_ptr<hier::PatchLevel>& level,
       const int next_coarser_level,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      RefinePatchStrategy * patch_strategy = ((RefinePatchStrategy *)NULL),
+      RefinePatchStrategy * patch_strategy = 0,
       bool use_time_interpolation = false,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
          boost::shared_ptr<RefineTransactionFactory>());
@@ -428,6 +449,10 @@ public:
     * @param patch_strategy
     * @param[in] use_time_interpolation
     * @param[in] transaction_factory
+    *
+    * @pre level
+    * @pre (next_coarser_level == -1) || hierarchy
+    * @pre !hierarchy || (level->getDim() == hierarchy->getDim())
     */
    boost::shared_ptr<RefineSchedule>
    createSchedule(
@@ -435,7 +460,7 @@ public:
       const boost::shared_ptr<hier::PatchLevel>& level,
       const int next_coarser_level,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      RefinePatchStrategy * patch_strategy = ((RefinePatchStrategy *)NULL),
+      RefinePatchStrategy * patch_strategy = 0,
       bool use_time_interpolation = false,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
          boost::shared_ptr<RefineTransactionFactory>());
@@ -521,6 +546,11 @@ public:
     *                                 null (default state), then a
     *                                 StandardRefineTransactionFactory object
     *                                 will be used.
+    *
+    * @pre dst_level
+    * @pre (next_coarser_level == -1) || hierarchy
+    * @pre !src_level || (dst_level->getDim() == src_level->getDim())
+    * @pre !hierarchy || (dst_level->getDim() == hierarchy->getDim())
     */
    boost::shared_ptr<RefineSchedule>
    createSchedule(
@@ -528,7 +558,7 @@ public:
       const boost::shared_ptr<hier::PatchLevel>& src_level,
       const int next_coarser_level,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      RefinePatchStrategy * patch_strategy = ((RefinePatchStrategy *)NULL),
+      RefinePatchStrategy * patch_strategy = 0,
       bool use_time_interpolation = false,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
          boost::shared_ptr<RefineTransactionFactory>());
@@ -546,6 +576,11 @@ public:
     * @param patch_strategy
     * @param[in] use_time_interpolation
     * @param[in] transaction_factory
+    *
+    * @pre dst_level
+    * @pre (next_coarser_level == -1) || hierarchy
+    * @pre !src_level || (dst_level->getDim() == src_level->getDim())
+    * @pre !hierarchy || (dst_level->getDim() == hierarchy->getDim())
     */
    boost::shared_ptr<RefineSchedule>
    createSchedule(
@@ -554,7 +589,7 @@ public:
       const boost::shared_ptr<hier::PatchLevel>& src_level,
       const int next_coarser_level,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      RefinePatchStrategy * patch_strategy = ((RefinePatchStrategy *)NULL),
+      RefinePatchStrategy * patch_strategy = 0,
       bool use_time_interpolation = false,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
          boost::shared_ptr<RefineTransactionFactory>());
@@ -576,6 +611,8 @@ public:
     *
     * @param[in] schedule  boost::shared_ptr to refine schedule, which cannot
     *                      be null.
+    *
+    * @pre schedule
     */
    bool
    checkConsistency(
@@ -597,6 +634,9 @@ public:
     *
     * @param[in,out] schedule  boost::shared_ptr to refine schedule, which
     *                          cannot be null.
+    *
+    * @pre schedule
+    * @pre d_refine_classes->classesMatch(schedule->getEquivalenceClasses())
     */
    void
    resetSchedule(

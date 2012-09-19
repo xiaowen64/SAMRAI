@@ -183,6 +183,9 @@ public:
     * @param[in] fine_boxes  List of box regions on fine patch into which data
     *                        is refined.
     * @param[in] ratio     Refinement ratio between coarse and fine patches.
+    *
+    * @pre (fine.getDim() == coarse.getDim()) &&
+    *      (fine.getDim() == ratio.getDim())
     */
    virtual void
    preprocessRefineBoxes(
@@ -212,6 +215,9 @@ public:
     * @param[in] fine_boxes  List of box regions on fine patch into which data
     *                        is refined.
     * @param[in] ratio     Refinement ratio between coarse and fine patches.
+    *
+    * @pre (fine.getDim() == coarse.getDim()) &&
+    *      (fine.getDim() == ratio.getDim())
     */
    virtual void
    postprocessRefineBoxes(

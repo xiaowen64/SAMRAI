@@ -26,8 +26,8 @@ namespace SAMRAI {
 namespace xfer {
 
 /*!
- * @brief Concrete subclass of RefineTransactionFactory base class that allocates
- * RefineCopyTransaction and RefineTimeTransaction objects for a
+ * @brief Concrete subclass of RefineTransactionFactory base class that
+ * allocates RefineCopyTransaction and RefineTimeTransaction objects for a
  * RefineSchedule object.
  *
  * @see xfer::RefineCopyTransaction
@@ -57,7 +57,8 @@ public:
       int num_refine_items);
 
    /*!
-    * @brief Clear the array of RefineClass::Data items used by the transactions.
+    * @brief Clear the array of RefineClass::Data items used by the
+    * transactions.
     */
    virtual void
    unsetRefineItems();
@@ -77,16 +78,22 @@ public:
     *
     * @param dst_level      boost::shared_ptr to destination patch level.
     * @param src_level      boost::shared_ptr to source patch level.
-    * @param overlap        boost::shared_ptr to overlap region between patches.
+    * @param overlap        boost::shared_ptr to overlap region between
+    *                       patches.
     * @param dst_box        Destination Box in destination patch level.
     * @param src_box        Source Box in source patch level.
     * @param ritem_id       Integer index of RefineClass::Data item associated
     *                       with transaction.
     * @param box            Optional const reference to box defining region of
     *                       refine transaction.  Default is an empty box.
-    * @param use_time_interpolation  Optional boolean flag indicating whether the
-    *                       refine transaction involves time interpolation.
+    * @param use_time_interpolation  Optional boolean flag indicating whether
+    *                       the refine transaction involves time interpolation.
     *                       Default is false.
+    *
+    * @pre (dst_level->getDim() == src_level->getDim()) &&
+    *      (dst_level->getDim() == dst_box.getDim()) &&
+    *      (dst_level->getDim() == src_box.getDim()) &&
+    *      (dst_level->getDim() == box.getDim())
     */
    virtual boost::shared_ptr<tbox::Transaction>
    allocate(
@@ -100,17 +107,18 @@ public:
       bool use_time_interpolation = false) const;
 
    /*!
-    * @brief Virtual function allowing transaction factory to preprocess scratch
-    * space data before transactactions use it if they need to.  This function is
-    * optional for the concrete transaction factory object.
+    * @brief Virtual function allowing transaction factory to preprocess
+    * scratch space data before transactactions use it if they need to.  This
+    * function is optional for the concrete transaction factory object.
     * The default implementation is a no-op.
     *
-    * @param level        boost::shared_ptr to patch level holding scratch data.
+    * @param level        boost::shared_ptr to patch level holding scratch
+    *                     data.
     * @param fill_time    Double value of simulation time corresponding to
     *                     RefineSchedule operations.
-    * @param preprocess_vector Const reference to ComponentSelector that indicates
-    *                     patch data array indices of scratch patch data objects
-    *                     to preprocess.
+    * @param preprocess_vector Const reference to ComponentSelector that
+    *                     indicates patch data array indices of scratch patch
+    *                     data objects to preprocess.
     */
    virtual void
    preprocessScratchSpace(
