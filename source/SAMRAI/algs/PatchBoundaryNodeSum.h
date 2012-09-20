@@ -226,18 +226,41 @@ public:
    }
 
 private:
-   /*
-    * Private member function to perform node sum across single level --
-    * called from computeSum().
+
+   /*!
+    * @brief Perform node sum across single level.
+    * 
+    * Called from computeSum().
     */
    void
    doLevelSum(
       const boost::shared_ptr<hier::PatchLevel>& level) const;
 
-   /*
-    * Private member function to set node node data on a fine level at a
-    * coarse-fine boundary to the sum of the node values and the associated
-    * outernode values on a coarsened version of the fine level.
+   /*!
+    * @ Sum node data on a coarse-fine boundary
+    *
+    * A fine level and a coarse level are given as arguments, with the
+    * coarse level being a coarsened representation of the fine level.
+    * This method modifies node data on the coarse-fine boundary of the
+    * fine level by summing the existing node data values with outernode
+    * data values from the coarse level.
+    *
+    * The data to modify are specified by the node_data_id and onode_data_id
+    * arrays.  Each entry in node_data_id identifies data that will be
+    * summed with data identified by the corresponding entry in onode_data_id.
+    *
+    * If the boolean fill_hanging_nodes is false, only data on the nodes
+    * coincident between the fine and coarse levels will be modified.  If true,
+    * linear interpolation will be used to fill the remaining fine nodes
+    * on the coarse-fine boundary.  See documentation of method computeSum()
+    * for more information on this argument.
+    *
+    * @param fine_level            Level where data will be modified
+    * @param coarsened_fine_level  Coarsened version of fine_level
+    * @param node_data_id   Array of data ids specifying data to modify
+    * @param onode_data_id  Array of data ids specifying data to use in sums
+    * @param fill_hanging_nodes    Tells whether to fill fine data on
+    *                              intermediate fine nodes.
     */
    void
    doLocalCoarseFineBoundarySum(
@@ -248,8 +271,14 @@ private:
       bool fill_hanging_nodes) const;
 
    /*
-    * Private member function to copy node data to outernode data
-    * on all patches on a level.
+    * @brief Copy node data to outernode data on all patches of level
+    *
+    * Data specified in the node_data_id array will be copied to data
+    * specified by the onode_data_id array on all patches.
+    *
+    * @param level
+    * @param node_data_id   Array of data ids for NodeData source
+    * @param onode_data_id  Array of data ids for OuternodeData destination
     */
    void
    copyNodeToOuternodeOnLevel(
@@ -258,8 +287,14 @@ private:
       const tbox::Array<int>& onode_data_id) const;
 
    /*
-    * Private member function to copy outernode data to node data
-    * on all patches on a level.
+    * @brief Copy outernode data to node data on all patches of level
+    *
+    * Data specified in the onode_data_id array will be copied to data
+    * specified by the node_data_id array on all patches.
+    *
+    * @param level
+    * @param onode_data_id Array of data ids for OuternodeData source
+    * @param node_data_id  Array of data ids for NodeData destination
     */
    void
    copyOuternodeToNodeOnLevel(
