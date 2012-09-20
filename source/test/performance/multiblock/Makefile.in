@@ -31,7 +31,7 @@ TEST_NPROCS   = @TEST_NPROCS@
 CXX_OBJS      = MblkGeometry.o main.o MblkLinAdv.o \
 		SkeletonOutersideDoubleWeightedAverage.o
 
-F_OBJS      = stufprobc.o trace1d.o trace2d.o trace3d.o grad2d.o grad3d.o flux2d.o flux3d.o fluxcorner3d.o stable2d.o stable3d.o init2d.o init3d.o upfluxsum2d.o skelbdry2d.o upfluxsum3d.o skelbdry3d.o
+F_OBJS      = stufprobc.o trace1d.o trace2d.o trace3d.o grad2d.o grad3d.o flux2d.o flux3d.o fluxcorner3d.o stable2d.o stable3d.o init2d.o init3d.o
 
 main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND) testlib
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) $(TESTLIB) \
@@ -85,23 +85,6 @@ include $(SRCDIR)/Makefile.depend
 
 FORTRAN       = $(SRCDIR)/fortran
 M4DIRS        = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
-
-skelbdry2d.o:	$(FORTRAN)/skelbdry2d.m4
-	$(M4) $(M4DIRS) $(FORTRAN)/skelbdry2d.m4 > skelbdry2d.f
-	$(F77) $(FFLAGS) -c skelbdry2d.f -o $@
-
-upfluxsum2d.o:	$(FORTRAN)/upfluxsum2d.m4
-	$(M4) $(M4DIRS) $(FORTRAN)/upfluxsum2d.m4 > upfluxsum2d.f
-	$(F77) $(FFLAGS) -c upfluxsum2d.f -o $@
-
-
-skelbdry3d.o:	$(FORTRAN)/skelbdry3d.m4
-	$(M4) $(M4DIRS) $(FORTRAN)/skelbdry3d.m4 > skelbdry3d.f
-	$(F77) $(FFLAGS) -c skelbdry3d.f -o $@
-
-upfluxsum3d.o:	$(FORTRAN)/upfluxsum3d.m4
-	$(M4) $(M4DIRS) $(FORTRAN)/upfluxsum3d.m4 > upfluxsum3d.f
-	$(F77) $(FFLAGS) -c upfluxsum3d.f -o $@
 
 init2d.o:       $(FORTRAN)/init2d.m4
 		$(M4) $(M4DIRS) $(FORTRAN)/init2d.m4 > init2d.f

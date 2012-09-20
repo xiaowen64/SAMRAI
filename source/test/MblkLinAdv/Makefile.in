@@ -31,10 +31,8 @@ TEST_NPROCS   = @TEST_NPROCS@
 CXX_OBJS      = MblkGeometry.o main.o MblkLinAdv.o \
 		SkeletonOutersideDoubleWeightedAverage.o 
 
-F_OBJS      = skelbdry2d.o skelbdry3d.o
-
-main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND) testlib
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) $(TESTLIB) \
+main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) testlib
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 
 testlib:
@@ -82,15 +80,4 @@ redo:
 	$(RM) main
 
 include $(SRCDIR)/Makefile.depend
-
-FORTRAN       = $(SRCDIR)/fortran
-M4DIRS        = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
-
-skelbdry2d.o:	$(FORTRAN)/2d/skelbdry2d.m4
-	$(M4) $(M4DIRS) $(FORTRAN)/2d/skelbdry2d.m4 > skelbdry2d.f
-	$(F77) $(FFLAGS) -c skelbdry2d.f -o $@
-
-skelbdry3d.o:	$(FORTRAN)/3d/skelbdry3d.m4
-	$(M4) $(M4DIRS) $(FORTRAN)/3d/skelbdry3d.m4 > skelbdry3d.f
-	$(F77) $(FFLAGS) -c skelbdry3d.f -o $@
 

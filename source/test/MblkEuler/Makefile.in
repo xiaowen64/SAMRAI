@@ -30,7 +30,7 @@ TEST_NPROCS   = @TEST_NPROCS@
 
 CXX_OBJS      = MblkGeometry.o main.o MblkEuler.o
 
-F_OBJS      = upfluxsum.o boundaryconditions.o
+F_OBJS      = boundaryconditions.o
 
 main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND) testlib
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) $(TESTLIB) \
@@ -79,7 +79,3 @@ include $(SRCDIR)/Makefile.depend
 
 boundaryconditions.o:	$(SRCDIR)/boundaryconditions.f $(SRCDIR)/bc_common.f
 	$(F77) $(FFLAGS) -c $(SRCDIR)/boundaryconditions.f -o $@
-
-upfluxsum.o:	$(SRCDIR)/upfluxsum.f
-	$(F77) $(FFLAGS) -c $(SRCDIR)/upfluxsum.f -o $@
-

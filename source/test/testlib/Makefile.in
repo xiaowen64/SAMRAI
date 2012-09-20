@@ -30,13 +30,14 @@ CXX_OBJS      = AutoTester.o \
 		SkeletonBoundaryUtilities3.o \
 		SkeletonCellDoubleConservativeLinearRefine.o \
 		SkeletonCellDoubleWeightedAverage.o
-  
+
+F_OBJS      = skelbdry2d.o skelbdry3d.o upfluxsum2d.o upfluxsum3d.o
 
 library:        libSAMRAI_test$(LIB_SUFFIX)
 
-libSAMRAI_test.a:   $(CXX_OBJS)
+libSAMRAI_test.a:   $(CXX_OBJS) $(F_OBJS)
 	rm -rf libSAMRAI_test$(LIB_SUFFIX)
-	echo $(CXX_OBJS) | @XARGS@ @AR@ ru libSAMRAI_test$(LIB_SUFFIX);
+	echo $(CXX_OBJS) $(F_OBJS) | @XARGS@ @AR@ ru libSAMRAI_test$(LIB_SUFFIX);
 
 check:          library
 
@@ -48,15 +49,29 @@ checktest:
 
 clean-check:
 	$(SAMCLEAN)
-	rm -rf libSAMRAI*
+	rm -rf *f libSAMRAI*
 
 clean:		clean-check
 
 include $(SRCDIR)/Makefile.depend
 
-# AutoTester.o:	$(SRCDIR)/AutoTester.C
-#	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $(SRCDIR)/AutoTester.C -o $@
+FORTRAN       = $(SRCDIR)/fortran
+M4DIRS        = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
 
-#SinusoidalFrontTagger.o:	$(SRCDIR)/SinusoidalFrontTagger.C
-#	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $(SRCDIR)/SinusoidalFrontTagger.C -o $@
+skelbdry2d.o:   $(FORTRAN)/skelbdry2d.m4
+	$(M4) $(M4DIRS) $(FORTRAN)/skelbdry2d.m4 > skelbdry2d.f
+	$(F77) $(FFLAGS) -c skelbdry2d.f -o $@
+
+skelbdry3d.o:   $(FORTRAN)/skelbdry3d.m4
+	$(M4) $(M4DIRS) $(FORTRAN)/skelbdry3d.m4 > skelbdry3d.f
+	$(F77) $(FFLAGS) -c skelbdry3d.f -o $@
+
+upfluxsum2d.o:  $(FORTRAN)/upfluxsum2d.m4
+	$(M4) $(M4DIRS) $(FORTRAN)/upfluxsum2d.m4 > upfluxsum2d.f
+	$(F77) $(FFLAGS) -c upfluxsum2d.f -o $@
+
+upfluxsum3d.o:  $(FORTRAN)/upfluxsum3d.m4
+	$(M4) $(M4DIRS) $(FORTRAN)/upfluxsum3d.m4 > upfluxsum3d.f
+	$(F77) $(FFLAGS) -c upfluxsum3d.f -o $@
+
 
