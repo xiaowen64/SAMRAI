@@ -162,7 +162,7 @@ FaceData<TYPE>::copy(
 
    const FaceData<TYPE>* t_src = dynamic_cast<const FaceData<TYPE> *>(&src);
 
-   if (t_src == NULL) {
+   if (t_src == 0) {
       src.copy2(*this);
    } else {
       for (int d = 0; d < getDim().getValue(); d++) {
@@ -183,7 +183,7 @@ FaceData<TYPE>::copy2(
 
    FaceData<TYPE>* t_dst = dynamic_cast<FaceData<TYPE> *>(&dst);
 
-   TBOX_ASSERT(t_dst != NULL);
+   TBOX_ASSERT(t_dst != 0);
 
    for (int d = 0; d < getDim().getValue(); d++) {
       const hier::Box box = d_data[d]->getBox() * t_dst->d_data[d]->getBox();
@@ -213,7 +213,7 @@ FaceData<TYPE>::copy(
    const FaceData<TYPE>* t_src = dynamic_cast<const FaceData<TYPE> *>(&src);
    const FaceOverlap* t_overlap = dynamic_cast<const FaceOverlap *>(&overlap);
 
-   if ((t_src == NULL) || (t_overlap == NULL)) {
+   if ((t_src == 0) || (t_overlap == 0)) {
       src.copy2(*this, overlap);
    } else {
       if (t_overlap->getTransformation().getRotation() ==
@@ -252,8 +252,8 @@ FaceData<TYPE>::copy2(
 
    const FaceOverlap* t_overlap = dynamic_cast<const FaceOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_dst != NULL);
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_dst != 0);
+   TBOX_ASSERT(t_overlap != 0);
 
    if (t_overlap->getTransformation().getRotation() ==
        hier::Transformation::NO_ROTATE) {
@@ -405,7 +405,7 @@ FaceData<TYPE>::getDataStreamSize(
 {
    const FaceOverlap* t_overlap = dynamic_cast<const FaceOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
 
@@ -440,7 +440,7 @@ FaceData<TYPE>::packStream(
 {
    const FaceOverlap* t_overlap = dynamic_cast<const FaceOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::Transformation& transformation =
       t_overlap->getTransformation();
@@ -546,7 +546,7 @@ FaceData<TYPE>::unpackStream(
 {
    const FaceOverlap* t_overlap = dynamic_cast<const FaceOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {

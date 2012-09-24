@@ -32,10 +32,10 @@ namespace pdat {
  * at cell sides (faces) on the boundaries of AMR patches.  It is derived from
  * the hier::PatchData interface common to all SAMRAI patch data types.  Given
  * a CELL-centered AMR index space box, an outerside data object represents
- * data of some template TYPE and depth on the cell sides (faces) on the boundary
- * of the box.  Here, depth indicates the number of data values at each face
- * index location.  The OuteredgsideGeometry class provides the translation
- * between the standard SAMRAI cell-centered AMR index space and
+ * data of some template TYPE and depth on the cell sides (faces) on the
+ * boundary of the box.  Here, depth indicates the number of data values at
+ * each face index location.  The OuteredgsideGeometry class provides the
+ * translation between the standard SAMRAI cell-centered AMR index space and
  * outerside-centered data.
  *
  * Outerside data is stored in 2*DIM arrays, each of which contains data
@@ -259,7 +259,7 @@ public:
     * results.
     *
     * @pre getDim() == src.getDim()
-    * @pre dynamic_cast<const SideData<TYPE> *>(&src) != NULL
+    * @pre dynamic_cast<const SideData<TYPE> *>(&src) != 0
     */
    virtual void
    copy(
@@ -276,7 +276,7 @@ public:
     * error results.
     *
     * @pre getDim() == dst.getDim()
-    * @pre dynamic_cast<SideData<TYPE> *>(&dst) != NULL
+    * @pre dynamic_cast<SideData<TYPE> *>(&dst) != 0
     */
    virtual void
    copy2(
@@ -302,8 +302,8 @@ public:
     * DIM.  If not, then an unrecoverable error results.
     *
     * @pre getDim() == dst.getDim()
-    * @pre dynamic_cast<SideData<TYPE> *>(&dst) != NULL
-    * @pre dynamic_cast<const SideOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<SideData<TYPE> *>(&dst) != 0
+    * @pre dynamic_cast<const SideOverlap *>(&overlap) != 0
     */
    virtual void
    copy2(
@@ -355,7 +355,7 @@ public:
     * This routine is defined for the standard types (bool, char,
     * double, float, int, and dcomplex).
     *
-    * @pre dynamic_cast<const SideOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const SideOverlap *>(&overlap) != 0
     */
    virtual int
    getDataStreamSize(
@@ -366,7 +366,7 @@ public:
     * box overlap region into the stream.  The overlap must be an
     * SideOverlap of the same DIM.
     *
-    * @pre dynamic_cast<const SideOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const SideOverlap *>(&overlap) != 0
     */
    virtual void
    packStream(
@@ -378,7 +378,7 @@ public:
     * the specified box overlap region. The overlap must be an
     * SideOverlap of the same DIM.
     *
-    * @pre dynamic_cast<const SideOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const SideOverlap *>(&overlap) != 0
     */
    virtual void
    unpackStream(
@@ -433,8 +433,8 @@ public:
     *        and will be converted to side index space.
     * @param os   reference to output stream.
     * @param prec integer precision for printing floating point numbers
-    *        (i.e., TYPE = float, double, or dcomplex). The default
-    *        is 12 decimal places for double and complex floating point numbers,
+    *        (i.e., TYPE = float, double, or dcomplex). The default is 12
+    *        decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
     *
@@ -456,8 +456,8 @@ public:
     * @param depth integer depth component
     * @param os   reference to output stream.
     * @param prec integer precision for printing floating point numbers
-    *        (i.e., TYPE = float, double, or dcomplex). The default
-    *        is 12 decimal places for double and complex floating point numbers,
+    *        (i.e., TYPE = float, double, or dcomplex). The default is 12
+    *        decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
     *
@@ -484,8 +484,8 @@ public:
     *        and will be converted to side index space.
     * @param os    reference to output stream.
     * @param prec integer precision for printing floating point numbers
-    *        (i.e., TYPE = float, double, or dcomplex). The default
-    *        is 12 decimal places for double and complex floating point numbers,
+    *        (i.e., TYPE = float, double, or dcomplex). The default is 12
+    *        decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
     *
@@ -514,8 +514,8 @@ public:
     * @param depth integer depth component
     * @param os    reference to output stream.
     * @param prec integer precision for printing floating point numbers
-    *        (i.e., TYPE = float, double, or dcomplex). The default
-    *        is 12 decimal places for double and complex floating point numbers,
+    *        (i.e., TYPE = float, double, or dcomplex). The default is 12
+    *        decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
     *

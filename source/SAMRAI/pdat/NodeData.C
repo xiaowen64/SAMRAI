@@ -137,7 +137,7 @@ NodeData<TYPE>::copy(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const NodeData<TYPE>* t_src = dynamic_cast<const NodeData<TYPE> *>(&src);
-   if (t_src == NULL) {
+   if (t_src == 0) {
       src.copy2(*this);
    } else {
       const hier::Box box = d_data->getBox() * t_src->d_data->getBox();
@@ -156,7 +156,7 @@ NodeData<TYPE>::copy2(
 
    NodeData<TYPE>* t_dst = dynamic_cast<NodeData<TYPE> *>(&dst);
 
-   TBOX_ASSERT(t_dst != NULL);
+   TBOX_ASSERT(t_dst != 0);
 
    const hier::Box box = d_data->getBox() * t_dst->d_data->getBox();
    if (!box.empty()) {
@@ -184,7 +184,7 @@ NodeData<TYPE>::copy(
    const NodeData<TYPE>* t_src = dynamic_cast<const NodeData<TYPE> *>(&src);
    const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
-   if ((t_src == NULL) || (t_overlap == NULL)) {
+   if ((t_src == 0) || (t_overlap == 0)) {
       src.copy2(*this, overlap);
    } else {
       if (t_overlap->getTransformation().getRotation() ==
@@ -209,8 +209,8 @@ NodeData<TYPE>::copy2(
    NodeData<TYPE>* t_dst = dynamic_cast<NodeData<TYPE> *>(&dst);
    const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_dst != NULL);
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_dst != 0);
+   TBOX_ASSERT(t_overlap != 0);
 
    if (t_overlap->getTransformation().getRotation() ==
        hier::Transformation::NO_ROTATE) {
@@ -338,7 +338,7 @@ NodeData<TYPE>::getDataStreamSize(
 {
    const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    return d_data->getDataStreamSize(
       t_overlap->getDestinationBoxContainer(),
@@ -362,7 +362,7 @@ NodeData<TYPE>::packStream(
 {
    const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    if (t_overlap->getTransformation().getRotation() ==
        hier::Transformation::NO_ROTATE) {
@@ -446,7 +446,7 @@ NodeData<TYPE>::unpackStream(
 {
    const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    d_data->unpackStream(stream,
       t_overlap->getDestinationBoxContainer(),

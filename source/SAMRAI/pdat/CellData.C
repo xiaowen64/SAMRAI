@@ -167,7 +167,7 @@ CellData<TYPE>::copy(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*d_data, src);
 
    const CellData<TYPE>* t_src = dynamic_cast<const CellData<TYPE> *>(&src);
-   if (t_src == NULL) {
+   if (t_src == 0) {
       src.copy2(*this);
    } else {
       const hier::Box box = d_data->getBox() * t_src->d_data->getBox();
@@ -186,7 +186,7 @@ CellData<TYPE>::copy2(
 
    CellData<TYPE>* t_dst = dynamic_cast<CellData<TYPE> *>(&dst);
 
-   TBOX_ASSERT(t_dst != NULL);
+   TBOX_ASSERT(t_dst != 0);
 
    const hier::Box box = d_data->getBox() * t_dst->d_data->getBox();
    if (!box.empty()) {
@@ -213,7 +213,7 @@ CellData<TYPE>::copy(
 
    const CellOverlap* t_overlap = dynamic_cast<const CellOverlap *>(&overlap);
 
-   if ((t_src == NULL) || (t_overlap == NULL)) {
+   if ((t_src == 0) || (t_overlap == 0)) {
       src.copy2(*this, overlap);
    } else {
       if (t_overlap->getTransformation().getRotation() ==
@@ -236,8 +236,8 @@ CellData<TYPE>::copy2(
    CellData<TYPE>* t_dst = dynamic_cast<CellData<TYPE> *>(&dst);
    const CellOverlap* t_overlap = dynamic_cast<const CellOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_dst != NULL);
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_dst != 0);
+   TBOX_ASSERT(t_overlap != 0);
 
    if (t_overlap->getTransformation().getRotation() ==
        hier::Transformation::NO_ROTATE) {
@@ -363,7 +363,7 @@ CellData<TYPE>::getDataStreamSize(
 {
    const CellOverlap* t_overlap = dynamic_cast<const CellOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    return d_data->getDataStreamSize(
       t_overlap->getDestinationBoxContainer(),
@@ -387,7 +387,7 @@ CellData<TYPE>::packStream(
 {
    const CellOverlap* t_overlap = dynamic_cast<const CellOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    if (t_overlap->getTransformation().getRotation() ==
        hier::Transformation::NO_ROTATE) {
@@ -466,7 +466,7 @@ CellData<TYPE>::unpackStream(
 {
    const CellOverlap* t_overlap = dynamic_cast<const CellOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    d_data->unpackStream(stream, t_overlap->getDestinationBoxContainer(),
       t_overlap->getSourceOffset());

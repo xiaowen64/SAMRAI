@@ -81,11 +81,11 @@ OuteredgeGeometry::calculateOverlap(
 
    boost::shared_ptr<hier::BoxOverlap> over;
 
-   if ((t_src != NULL) && (t_dst_edge != NULL)) {
+   if ((t_src != 0) && (t_dst_edge != 0)) {
       over = doOverlap(*t_dst_edge, *t_src, src_mask, fill_box,
             overwrite_interior,
             transformation, dst_restrict_boxes);
-   } else if ((t_src != NULL) && (t_dst_oedge != NULL)) {
+   } else if ((t_src != 0) && (t_dst_oedge != 0)) {
       over = doOverlap(*t_dst_oedge, *t_src, src_mask, fill_box,
             overwrite_interior,
             transformation, dst_restrict_boxes);

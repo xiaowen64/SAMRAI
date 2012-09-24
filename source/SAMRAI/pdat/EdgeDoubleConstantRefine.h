@@ -70,7 +70,7 @@ public:
     * It is assumed that the coarse patch contains sufficient data for the
     * stencil width of the refinement operator.
     *
-    * @pre dynamic_cast<const EdgeOverlap *>(&fine_overlap) != NULL
+    * @pre dynamic_cast<const EdgeOverlap *>(&fine_overlap) != 0
     */
    void
    refine(

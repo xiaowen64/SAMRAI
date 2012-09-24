@@ -82,15 +82,15 @@ OuternodeGeometry::calculateOverlap(
       dynamic_cast<const OuternodeGeometry *>(&src_geometry);
 
    boost::shared_ptr<hier::BoxOverlap> over;
-   if ((t_src_onode != NULL) && (t_dst_node != NULL)) {
+   if ((t_src_onode != 0) && (t_dst_node != 0)) {
       over = doOverlap(*t_dst_node, *t_src_onode, src_mask, fill_box,
             overwrite_interior,
             transformation, dst_restrict_boxes);
-   } else if ((t_dst_onode != NULL) && (t_src_node != NULL)) {
+   } else if ((t_dst_onode != 0) && (t_src_node != 0)) {
       over = doOverlap(*t_dst_onode, *t_src_node, src_mask, fill_box,
             overwrite_interior,
             transformation, dst_restrict_boxes);
-   } else if ((t_src_onode != NULL) && (t_dst_onode != NULL)) {
+   } else if ((t_src_onode != 0) && (t_dst_onode != 0)) {
       over = doOverlap(*t_dst_onode, *t_src_onode, src_mask, fill_box,
             overwrite_interior,
             transformation, dst_restrict_boxes);

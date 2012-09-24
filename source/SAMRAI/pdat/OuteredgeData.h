@@ -39,20 +39,20 @@ namespace pdat {
  * between the standard SAMRAI cell-centered AMR index space and
  * outeredge-centered data.
  *
- * Outeredge data is stored in 2*DIM*(DIM-2) arrays, each of which contains data
- * associated with edge indices in a coordinate axis direction, an outward
+ * Outeredge data is stored in 2*DIM*(DIM-2) arrays, each of which contains
+ * data associated with edge indices in a coordinate axis direction, an outward
  * pointing face normal direction, and an upper or lower box face in the
  * face normal direction.  The data layout in the outernode data arrays matches
  * the corresponding array sections provided by the node data implementation.
- * Note that outeredge data is NOT defined when the axis and face normal are equal.
- * This is consistent with the edge data representation.  Where an edge index falls
- * on more than one box face (patch boundary edges and corners), the outeredge
- * data value belongs to only one data array so that there are no redundant data
- * values. Specifically, when DIM > 2, outeredge data boxes are "trimmed" for each
- * axis edge direction so that each edge index that lives on more than one
- * face on the box boundary will be associated with the largest face normal
- * direction and only that face.  Within each array, data is stored in
- * (i,...,k,d) order, where i,...,k indicates a spatial index and the
+ * Note that outeredge data is NOT defined when the axis and face normal are
+ * equal.  This is consistent with the edge data representation.  Where an edge
+ * index falls on more than one box face (patch boundary edges and corners),
+ * the outeredge data value belongs to only one data array so that there are no
+ * redundant data values. Specifically, when DIM > 2, outeredge data boxes are
+ * "trimmed" for each axis edge direction so that each edge index that lives on
+ * more than one face on the box boundary will be associated with the largest
+ * face normal direction and only that face.  Within each array, data is stored
+ * in (i,...,k,d) order, where i,...,k indicates a spatial index and the
  * d indicates the component depth at that location.  Memory allocation is
  * in column-major ordering (e.g., Fortran style) so that the leftmost
  * index runs fastest in memory.
@@ -60,7 +60,8 @@ namespace pdat {
  * To illustrate the outeredge data layout, in particular the "box trimming"
  * that prevents redundant data values, we describe the data for a
  * three-dimensional outeredge data object instantiated over a
- * box [l0:u0,l1:u1,l2:u2] in the standard SAMRAI cell-centered AMR index space.
+ * box [l0:u0,l1:u1,l2:u2] in the standard SAMRAI cell-centered AMR index
+ * space.
  * Note: no boxes are trimmed when DIM < 3.
  *
  * \verbatim
@@ -357,8 +358,8 @@ public:
     * then an unrecoverable error results.
     *
     * @pre getDim() == src.getDim()
-    * @pre dynamic_cast<const EdgeData<TYPE> *>(&src) != NULL ||
-    *      dynamic_cast<const OuteredgeData<TYPE> *>(&src) != NULL
+    * @pre dynamic_cast<const EdgeData<TYPE> *>(&src) != 0 ||
+    *      dynamic_cast<const OuteredgeData<TYPE> *>(&src) != 0
     */
    virtual void
    copy(
@@ -375,8 +376,8 @@ public:
     * then an unrecoverable error results.
     *
     * @pre getDim() == dst.getDim()
-    * @pre dynamic_cast<EdgeData<TYPE> *>(&dst) != NULL ||
-    *      dynamic_cast<OuteredgeData<TYPE> *>(&dst) != NULL
+    * @pre dynamic_cast<EdgeData<TYPE> *>(&dst) != 0 ||
+    *      dynamic_cast<OuteredgeData<TYPE> *>(&dst) != 0
     */
    virtual void
    copy2(
@@ -392,9 +393,9 @@ public:
     * results.
     *
     * @pre getDim() == src.getDim()
-    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != NULL
-    * @pre dynamic_cast<const EdgeData<TYPE> *>(&src) != NULL ||
-    *      dynamic_cast<const OuteredgeData<TYPE> *>(&src) != NULL
+    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != 0
+    * @pre dynamic_cast<const EdgeData<TYPE> *>(&src) != 0 ||
+    *      dynamic_cast<const OuteredgeData<TYPE> *>(&src) != 0
     */
    virtual void
    copy(
@@ -411,9 +412,9 @@ public:
     * results.
     *
     * @pre getDim() == dst.getDim()
-    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != NULL
-    * @pre dynamic_cast<EdgeData<TYPE> *>(&dst) != NULL ||
-    *      dynamic_cast<OuteredgeData<TYPE> *>(&dst) != NULL
+    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != 0
+    * @pre dynamic_cast<EdgeData<TYPE> *>(&dst) != 0 ||
+    *      dynamic_cast<OuteredgeData<TYPE> *>(&dst) != 0
     */
    virtual void
    copy2(
@@ -455,8 +456,8 @@ public:
     * If not, then an unrecoverable error results.
     *
     * @pre getDim() == src.getDim()
-    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != NULL
-    * @pre dynamic_cast<const OuteredgeData<TYPE> *>(&src) != NULL
+    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != 0
+    * @pre dynamic_cast<const OuteredgeData<TYPE> *>(&src) != 0
     */
    virtual void
    sum(
@@ -482,7 +483,7 @@ public:
     * This routine is defined for the standard types (bool, char,
     * double, float, int, and dcomplex).
     *
-    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != 0
     */
    virtual int
    getDataStreamSize(
@@ -493,7 +494,7 @@ public:
     * box overlap region into the stream.  The overlap must be an
     * EdgeOverlap of the same DIM.
     *
-    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != 0
     */
    virtual void
    packStream(
@@ -505,7 +506,7 @@ public:
     * the specified box overlap region. The overlap must be an
     * EdgeOverlap of the same DIM.
     *
-    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != 0
     */
    virtual void
    unpackStream(
@@ -516,7 +517,7 @@ public:
     * @brief Unpack data from stream and add into this patch data object
     * over the specified box overlap region.
     *
-    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const EdgeOverlap *>(&overlap) != 0
     */
    virtual void
    unpackStreamAndSum(
@@ -571,10 +572,10 @@ public:
     *        and will be converted to edge index space.
     * @param os   reference to output stream.
     * @param prec integer precision for printing floating point numbers
-    *        (i.e., TYPE = float, double, or dcomplex). The default
-    *        is 12 decimal places for double and complex floating point numbers,
-    *        and the default is 6 decimal places floats.  For other types, this
-    *        value is ignored.
+    *        (i.e., TYPE = float, double, or dcomplex). The default is 12
+    *        decimal places for double and complex floating point
+    *        numbers, and the default is 6 decimal places floats.  For other
+    *        types, this value is ignored.
     *
     * @pre getDim() == box.getDim()
     */
@@ -595,10 +596,10 @@ public:
     *              0 <= depth < actual depth of data array
     * @param os   reference to output stream.
     * @param prec integer precision for printing floating point numbers
-    *        (i.e., TYPE = float, double, or dcomplex). The default
-    *        is 12 decimal places for double and complex floating point numbers,
-    *        and the default is 6 decimal places floats.  For other types, this
-    *        value is ignored.
+    *        (i.e., TYPE = float, double, or dcomplex). The default is 12
+    *        decimal places for double and complex floating point
+    *        numbers, and the default is 6 decimal places floats.  For other
+    *        types, this value is ignored.
     *
     * @pre getDim() == box.getDim()
     * @pre (depth >= 0) && (depth < getDepth())
@@ -626,10 +627,10 @@ public:
     *        and will be converted to edge index space.
     * @param os    reference to output stream.
     * @param prec integer precision for printing floating point numbers
-    *        (i.e., TYPE = float, double, or dcomplex). The default
-    *        is 12 decimal places for double and complex floating point numbers,
-    *        and the default is 6 decimal places floats.  For other types, this
-    *        value is ignored.
+    *        (i.e., TYPE = float, double, or dcomplex). The default is 12
+    *        decimal places for double and complex floating point
+    *        numbers, and the default is 6 decimal places floats.  For other
+    *        types, this value is ignored.
     *
     * @pre getDim() == box.getDim()
     * @pre (axis >= 0) && (axis < getDim().getValue())
@@ -662,10 +663,10 @@ public:
     *              0 <= depth < actual depth of data array
     * @param os    reference to output stream.
     * @param prec integer precision for printing floating point numbers
-    *        (i.e., TYPE = float, double, or dcomplex). The default
-    *        is 12 decimal places for double and complex floating point numbers,
-    *        and the default is 6 decimal places floats.  For other types, this
-    *        value is ignored.
+    *        (i.e., TYPE = float, double, or dcomplex). The default is 12
+    *        decimal places for double and complex floating point
+    *        numbers, and the default is 6 decimal places floats.  For other
+    *        types, this value is ignored.
     *
     * @pre getDim() == box.getDim()
     * @pre (depth >= 0) && (depth < getDepth())

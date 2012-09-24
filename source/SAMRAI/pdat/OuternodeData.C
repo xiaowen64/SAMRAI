@@ -229,9 +229,9 @@ OuternodeData<TYPE>::copy(
    const OuternodeData<TYPE> * const t_onode_src =
       dynamic_cast<const OuternodeData<TYPE> *>(&src);
 
-   if (t_node_src != NULL) {
+   if (t_node_src != 0) {
       copyFromNode(*t_node_src);
-   } else if (t_onode_src != NULL) {
+   } else if (t_onode_src != 0) {
       copyFromOuternode(*t_onode_src);
    } else {
       TBOX_ERROR("OuternodeData<dim>::copy error!\n"
@@ -252,9 +252,9 @@ OuternodeData<TYPE>::copy2(
    NodeData<TYPE>* t_node_dst = dynamic_cast<NodeData<TYPE> *>(&dst);
    OuternodeData<TYPE>* t_onode_dst = dynamic_cast<OuternodeData<TYPE> *>(&dst);
 
-   if (t_node_dst != NULL) {
+   if (t_node_dst != 0) {
       copyToNode(*t_node_dst);
-   } else if (t_onode_dst != NULL) {
+   } else if (t_onode_dst != 0) {
       copyToOuternode(*t_onode_dst);
    } else {
       TBOX_ERROR("OuternodeData<dim>::copy2 error!\n"
@@ -283,16 +283,16 @@ OuternodeData<TYPE>::copy(
 
    const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const NodeData<TYPE>* t_node_src =
       dynamic_cast<const NodeData<TYPE> *>(&src);
    const OuternodeData<TYPE>* t_onode_src =
       dynamic_cast<const OuternodeData<TYPE> *>(&src);
 
-   if (t_node_src != NULL) {
+   if (t_node_src != 0) {
       copyFromNode(*t_node_src, *t_overlap);
-   } else if (t_onode_src != NULL) {
+   } else if (t_onode_src != 0) {
       copyFromOuternode(*t_onode_src, *t_overlap);
    } else {
       TBOX_ERROR("OuternodeData<dim>::copy error!\n"
@@ -313,14 +313,14 @@ OuternodeData<TYPE>::copy2(
 
    const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    NodeData<TYPE>* t_node_dst = dynamic_cast<NodeData<TYPE> *>(&dst);
    OuternodeData<TYPE>* t_onode_dst = dynamic_cast<OuternodeData<TYPE> *>(&dst);
 
-   if (t_node_dst != NULL) {
+   if (t_node_dst != 0) {
       copyToNode(*t_node_dst, *t_overlap);
-   } else if (t_onode_dst != NULL) {
+   } else if (t_onode_dst != 0) {
       copyToOuternode(*t_onode_dst, *t_overlap);
    } else {
       TBOX_ERROR("OuternodeData<dim>::copy2 error!\n"
@@ -409,7 +409,7 @@ OuternodeData<TYPE>::sum(
 
    const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const OuternodeData<TYPE>* t_onode_src =
       dynamic_cast<const OuternodeData<TYPE> *>(&src);
@@ -420,7 +420,7 @@ OuternodeData<TYPE>::sum(
    //        data or other flavors of the copy operation, we
    //        should refactor the routine similar to the way
    //        the regular copy operations are implemented.
-   if (t_onode_src == NULL) {
+   if (t_onode_src == 0) {
       TBOX_ERROR("OuternodeData<dim>::sum error!\n"
          << "Can copy and add only from OuternodeData<TYPE> "
          << "of the same dim and TYPE.");
@@ -475,7 +475,7 @@ OuternodeData<TYPE>::getDataStreamSize(
 {
    const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    int size = 0;
    const hier::BoxContainer& boxlist = t_overlap->getDestinationBoxContainer();
@@ -504,7 +504,7 @@ OuternodeData<TYPE>::packStream(
 {
    const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::BoxContainer& dst_boxes = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
@@ -533,7 +533,7 @@ OuternodeData<TYPE>::unpackStream(
 {
    const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::BoxContainer& dst_boxes = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
@@ -568,7 +568,7 @@ OuternodeData<TYPE>::unpackStreamAndSum(
 {
    const NodeOverlap* t_overlap = dynamic_cast<const NodeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::BoxContainer& dst_boxes = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();

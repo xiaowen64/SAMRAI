@@ -175,7 +175,7 @@ OutersideData<TYPE>::copy(
    const SideData<TYPE> * const t_src =
       dynamic_cast<const SideData<TYPE> *>(&src);
 
-   TBOX_ASSERT(t_src != NULL);
+   TBOX_ASSERT(t_src != 0);
 
    for (int axis = 0; axis < getDim().getValue(); axis++) {
       const ArrayData<TYPE>& side_array = t_src->getArrayData(axis);
@@ -196,7 +196,7 @@ OutersideData<TYPE>::copy2(
 
    SideData<TYPE>* t_dst = dynamic_cast<SideData<TYPE> *>(&dst);
 
-   TBOX_ASSERT(t_dst != NULL);
+   TBOX_ASSERT(t_dst != 0);
 
    for (int d = 0; d < getDim().getValue(); d++) {
       t_dst->getArrayData(d).copy(*(d_data[d][0]), d_data[d][0]->getBox());
@@ -236,8 +236,8 @@ OutersideData<TYPE>::copy2(
    SideData<TYPE>* t_dst = dynamic_cast<SideData<TYPE> *>(&dst);
    const SideOverlap* t_overlap = dynamic_cast<const SideOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_dst != NULL);
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_dst != 0);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
@@ -330,7 +330,7 @@ OutersideData<TYPE>::getDataStreamSize(
 {
    const SideOverlap* t_overlap = dynamic_cast<const SideOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
 
@@ -360,7 +360,7 @@ OutersideData<TYPE>::packStream(
 {
    const SideOverlap* t_overlap = dynamic_cast<const SideOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
@@ -388,7 +388,7 @@ OutersideData<TYPE>::unpackStream(
 {
    const SideOverlap* t_overlap = dynamic_cast<const SideOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {

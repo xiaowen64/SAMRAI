@@ -135,7 +135,7 @@ FaceComplexConstantRefine::refine(
    const FaceOverlap* t_overlap =
       dynamic_cast<const FaceOverlap *>(&fine_overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);

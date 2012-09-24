@@ -246,9 +246,9 @@ OuteredgeData<TYPE>::copy(
    const OuteredgeData<TYPE> * const t_oedge_src =
       dynamic_cast<const OuteredgeData<TYPE> *>(&src);
 
-   if (t_edge_src != NULL) {
+   if (t_edge_src != 0) {
       copyFromEdge(*t_edge_src);
-   } else if (t_oedge_src != NULL) {
+   } else if (t_oedge_src != 0) {
       copyFromOuteredge(*t_oedge_src);
    } else {
       TBOX_ERROR("OuteredgeData<getDim()>::copy error!\n"
@@ -269,9 +269,9 @@ OuteredgeData<TYPE>::copy2(
    EdgeData<TYPE>* t_edge_dst = dynamic_cast<EdgeData<TYPE> *>(&dst);
    OuteredgeData<TYPE>* t_oedge_dst = dynamic_cast<OuteredgeData<TYPE> *>(&dst);
 
-   if (t_edge_dst != NULL) {
+   if (t_edge_dst != 0) {
       copyToEdge(*t_edge_dst);
-   } else if (t_oedge_dst != NULL) {
+   } else if (t_oedge_dst != 0) {
       copyToOuteredge(*t_oedge_dst);
    } else {
       TBOX_ERROR("OuteredgeData<getDim()>::copy2 error!\n"
@@ -300,16 +300,16 @@ OuteredgeData<TYPE>::copy(
 
    const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const EdgeData<TYPE>* t_edge_src =
       dynamic_cast<const EdgeData<TYPE> *>(&src);
    const OuteredgeData<TYPE>* t_oedge_src =
       dynamic_cast<const OuteredgeData<TYPE> *>(&src);
 
-   if (t_edge_src != NULL) {
+   if (t_edge_src != 0) {
       copyFromEdge(*t_edge_src, *t_overlap);
-   } else if (t_oedge_src != NULL) {
+   } else if (t_oedge_src != 0) {
       copyFromOuteredge(*t_oedge_src, *t_overlap);
    } else {
       TBOX_ERROR("OuternodeData<getDim()>::copy error!\n"
@@ -330,14 +330,14 @@ OuteredgeData<TYPE>::copy2(
 
    const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    EdgeData<TYPE>* t_edge_dst = dynamic_cast<EdgeData<TYPE> *>(&dst);
    OuteredgeData<TYPE>* t_oedge_dst = dynamic_cast<OuteredgeData<TYPE> *>(&dst);
 
-   if (t_edge_dst != NULL) {
+   if (t_edge_dst != 0) {
       copyToEdge(*t_edge_dst, *t_overlap);
-   } else if (t_oedge_dst != NULL) {
+   } else if (t_oedge_dst != 0) {
       copyToOuteredge(*t_oedge_dst, *t_overlap);
    } else {
       TBOX_ERROR("OuternodeData<getDim()>::copy2 error!\n"
@@ -458,7 +458,7 @@ OuteredgeData<TYPE>::sum(
 
    const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const OuteredgeData<TYPE>* t_oedge_src =
       dynamic_cast<const OuteredgeData<TYPE> *>(&src);
@@ -469,7 +469,7 @@ OuteredgeData<TYPE>::sum(
    //        data or other flavors of the copy operation, we
    //        should refactor the routine similar to the way
    //        the regular copy operations are implemented.
-   if (t_oedge_src == NULL) {
+   if (t_oedge_src == 0) {
       TBOX_ERROR("OuteredgeData<getDim()>::sum error!\n"
          << "Can copy and add only from OuteredgeData<TYPE> "
          << "of the same getDim() and TYPE.");
@@ -529,7 +529,7 @@ OuteredgeData<TYPE>::sum(
 
       }  // iterate over axis directions
 
-   } // else t_oedge_src != NULL
+   } // else t_oedge_src != 0
 
 }
 
@@ -556,7 +556,7 @@ OuteredgeData<TYPE>::getDataStreamSize(
 {
    const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    int size = 0;
 
@@ -608,7 +608,7 @@ OuteredgeData<TYPE>::packStream(
 {
    const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
 
@@ -662,7 +662,7 @@ OuteredgeData<TYPE>::unpackStream(
 {
    const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
 
@@ -720,7 +720,7 @@ OuteredgeData<TYPE>::unpackStreamAndSum(
 {
    const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
 

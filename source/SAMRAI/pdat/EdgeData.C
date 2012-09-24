@@ -159,7 +159,7 @@ EdgeData<TYPE>::copy(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const EdgeData<TYPE>* t_src = dynamic_cast<const EdgeData<TYPE> *>(&src);
-   if (t_src == NULL) {
+   if (t_src == 0) {
       src.copy2(*this);
    } else {
       for (int d = 0; d < getDim().getValue(); d++) {
@@ -180,7 +180,7 @@ EdgeData<TYPE>::copy2(
 
    EdgeData<TYPE>* t_dst = dynamic_cast<EdgeData<TYPE> *>(&dst);
 
-   TBOX_ASSERT(t_dst != NULL);
+   TBOX_ASSERT(t_dst != 0);
 
    for (int d = 0; d < getDim().getValue(); d++) {
       const hier::Box box = d_data[d]->getBox() * t_dst->d_data[d]->getBox();
@@ -211,7 +211,7 @@ EdgeData<TYPE>::copy(
 
    const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
-   if ((t_src == NULL) || (t_overlap == NULL)) {
+   if ((t_src == 0) || (t_overlap == 0)) {
       src.copy2(*this, overlap);
    } else {
       if (t_overlap->getTransformation().getRotation() ==
@@ -240,8 +240,8 @@ EdgeData<TYPE>::copy2(
    EdgeData<TYPE>* t_dst = dynamic_cast<EdgeData<TYPE> *>(&dst);
    const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_dst != NULL);
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_dst != 0);
+   TBOX_ASSERT(t_overlap != 0);
 
    if (t_overlap->getTransformation().getRotation() ==
        hier::Transformation::NO_ROTATE) {
@@ -383,7 +383,7 @@ EdgeData<TYPE>::getDataStreamSize(
 {
    const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
 
@@ -413,7 +413,7 @@ EdgeData<TYPE>::packStream(
 {
    const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    if (t_overlap->getTransformation().getRotation() ==
        hier::Transformation::NO_ROTATE) {
@@ -506,7 +506,7 @@ EdgeData<TYPE>::unpackStream(
 {
    const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {

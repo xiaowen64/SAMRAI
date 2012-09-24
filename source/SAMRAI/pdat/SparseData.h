@@ -157,7 +157,8 @@ public:
     * instance is constructed, no other attribute (names) can be added.
     *
     * @param [in] box Describes the interior of the index space
-    * @param [in] ghosts Describes the ghost nodes in each coordinate direction.
+    * @param [in] ghosts Describes the ghost nodes in each coordinate
+    *                    direction.
     * @param [in] dbl_attributes The double (named) attributes
     * @param [in] int_attributes The integer (named) attributes
     *
@@ -185,7 +186,7 @@ public:
     * @param [in] src The source PatchData from which to copy.
     *
     * @pre getDim() == ghosts.getDim()
-    * @pre dynamic_cast<const SparseData<BOX_GEOMETRY> *>(&src) != NULL
+    * @pre dynamic_cast<const SparseData<BOX_GEOMETRY> *>(&src) != 0
     */
    void
    copy(
@@ -213,8 +214,8 @@ public:
     * @param [in] overlap The overlap description
     *
     * @pre getDim() == ghosts.getDim()
-    * @pre dynamic_cast<const SparseData<BOX_GEOMETRY> *>(&src) != NULL
-    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const SparseData<BOX_GEOMETRY> *>(&src) != 0
+    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != 0
     */
    void
    copy(
@@ -249,7 +250,7 @@ public:
     *
     * @param [in] overlap
     *
-    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != 0
     */
    int
    getDataStreamSize(
@@ -274,7 +275,7 @@ public:
     * @param [in,out] stream The message stream
     * @param [in] overlap
     *
-    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != 0
     */
    void
    unpackStream(

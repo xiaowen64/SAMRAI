@@ -136,7 +136,7 @@ EdgeComplexConstantRefine::refine(
    const EdgeOverlap* t_overlap =
       dynamic_cast<const EdgeOverlap *>(&fine_overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);

@@ -94,7 +94,7 @@ public:
     *            individual data array elements.
     *
     * @pre arraydata.getDim() == opbox.getDim()
-    * @pre buffer != NULL
+    * @pre buffer != 0
     * @pre opbox.isSpatiallyEqual(opbox * arraydata.getBox())
     */
    static void

@@ -75,8 +75,8 @@ public:
     * @return                boost::shared_ptr to the calculated overlap object
     *
     * @pre dst_patch_box.getDim() == src_mask.getDim()
-    * @pre dynamic_cast<const NodeGeometry *>(&dst_geometry) != NULL
-    * @pre dynamic_cast<const NodeGeometry *>(&src_geometry) != NULL
+    * @pre dynamic_cast<const NodeGeometry *>(&dst_geometry) != 0
+    * @pre dynamic_cast<const NodeGeometry *>(&src_geometry) != 0
     */
    boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(

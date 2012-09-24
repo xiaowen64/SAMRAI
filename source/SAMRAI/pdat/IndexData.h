@@ -130,7 +130,7 @@ public:
     * index space.
     *
     * @pre getDim() == src.getDim()
-    * @pre dynamic_cast<const IndexData<TYPE, BOX_GEOMETRY> *>(&src) != NULL
+    * @pre dynamic_cast<const IndexData<TYPE, BOX_GEOMETRY> *>(&src) != 0
     */
    virtual void
    copy(
@@ -153,8 +153,8 @@ public:
     * previously from computeIntersection().
     *
     * @pre getDim() == src.getDim()
-    * @pre dynamic_cast<const IndexData<TYPE, BOX_GEOMETRY> *>(&src) != NULL
-    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const IndexData<TYPE, BOX_GEOMETRY> *>(&src) != 0
+    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != 0
     */
    virtual void
    copy(
@@ -184,7 +184,7 @@ public:
     * Calculate the number of bytes needed to stream the data lying
     * in the specified box domain.
     *
-    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != 0
     */
    virtual int
    getDataStreamSize(
@@ -193,7 +193,7 @@ public:
    /**
     * Pack data lying on the specified index set into the output stream.
     *
-    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != 0
     */
    virtual void
    packStream(
@@ -203,7 +203,7 @@ public:
    /**
     * Unpack data from the message stream into the specified index set.
     *
-    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != 0
     */
    virtual void
    unpackStream(
@@ -378,7 +378,7 @@ public:
     * the index data list.
     *
     * @pre offset >= 0 && offset <= hier::PatchData::getGhostBox().size()
-    * @pre d_data[offset] != NULL
+    * @pre d_data[offset] != 0
     */
    int
    getNumberOfItems() const;

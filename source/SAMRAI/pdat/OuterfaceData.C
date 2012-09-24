@@ -175,7 +175,7 @@ OuterfaceData<TYPE>::copy(
    const FaceData<TYPE> * const t_src =
       dynamic_cast<const FaceData<TYPE> *>(&src);
 
-   TBOX_ASSERT(t_src != NULL);
+   TBOX_ASSERT(t_src != 0);
 
    for (int axis = 0; axis < getDim().getValue(); axis++) {
       const ArrayData<TYPE>& face_array = t_src->getArrayData(axis);
@@ -195,7 +195,7 @@ OuterfaceData<TYPE>::copy2(
 
    FaceData<TYPE>* t_dst = dynamic_cast<FaceData<TYPE> *>(&dst);
 
-   TBOX_ASSERT(t_dst != NULL);
+   TBOX_ASSERT(t_dst != 0);
 
    for (int d = 0; d < getDim().getValue(); d++) {
       t_dst->getArrayData(d).copy(*(d_data[d][0]), d_data[d][0]->getBox());
@@ -236,8 +236,8 @@ OuterfaceData<TYPE>::copy2(
    FaceData<TYPE>* t_dst = dynamic_cast<FaceData<TYPE> *>(&dst);
    const FaceOverlap* t_overlap = dynamic_cast<const FaceOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_dst != NULL);
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_dst != 0);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::Transformation& transformation = t_overlap->getTransformation();
    TBOX_ASSERT(transformation.getRotation() == hier::Transformation::NO_ROTATE);
@@ -344,7 +344,7 @@ OuterfaceData<TYPE>::getDataStreamSize(
 {
    const FaceOverlap* t_overlap = dynamic_cast<const FaceOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
 
@@ -380,7 +380,7 @@ OuterfaceData<TYPE>::packStream(
 {
    const FaceOverlap* t_overlap = dynamic_cast<const FaceOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
@@ -426,7 +426,7 @@ OuterfaceData<TYPE>::unpackStream(
 {
    const FaceOverlap* t_overlap = dynamic_cast<const FaceOverlap *>(&overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {

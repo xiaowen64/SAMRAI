@@ -211,7 +211,7 @@ public:
     * error results.
     *
     * @pre getDim() == dst.getDim()
-    * @pre dynamic_cast<NodeData<TYPE> *>(&dst) != NULL
+    * @pre dynamic_cast<NodeData<TYPE> *>(&dst) != 0
     */
    virtual void
    copy2(
@@ -241,8 +241,8 @@ public:
     * then an unrecoverable error results.
     *
     * @pre getDim() == dst.getDim()
-    * @pre dynamic_cast<NodeData<TYPE> *>(&dst) != NULL
-    * @pre dynamic_cast<const NodeOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<NodeData<TYPE> *>(&dst) != 0
+    * @pre dynamic_cast<const NodeOverlap *>(&overlap) != 0
     */
    virtual void
    copy2(
@@ -292,7 +292,7 @@ public:
     * This routine is defined for the standard types (bool, char,
     * double, float, int, and dcomplex).
     *
-    * @pre dynamic_cast<const NodeOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const NodeOverlap *>(&overlap) != 0
     */
    virtual int
    getDataStreamSize(
@@ -303,7 +303,7 @@ public:
     * box overlap region into the stream.  The overlap must be a
     * NodeOverlap of the same DIM.
     *
-    * @pre dynamic_cast<const NodeOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const NodeOverlap *>(&overlap) != 0
     */
    virtual void
    packStream(
@@ -315,7 +315,7 @@ public:
     * the specified box overlap region. The overlap must be a
     * NodeOverlap of the same DIM.
     *
-    * @pre dynamic_cast<const NodeOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const NodeOverlap *>(&overlap) != 0
     */
    virtual void
    unpackStream(
@@ -370,8 +370,8 @@ public:
     *        and will be converted to node index space.
     * @param os   reference to output stream.
     * @param prec integer precision for printing floating point numbers
-    *        (i.e., TYPE = float, double, or dcomplex). The default
-    *        is 12 decimal places for double and complex floating point numbers,
+    *        (i.e., TYPE = float, double, or dcomplex). The default is 12
+    *        decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
     *
@@ -394,8 +394,8 @@ public:
     *              0 <= depth < actual depth of data array
     * @param os   reference to output stream.
     * @param prec integer precision for printing floating point numbers
-    *        (i.e., TYPE = float, double, or dcomplex). The default
-    *        is 12 decimal places for double and complex floating point numbers,
+    *        (i.e., TYPE = float, double, or dcomplex). The default is 12
+    *        decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
     *

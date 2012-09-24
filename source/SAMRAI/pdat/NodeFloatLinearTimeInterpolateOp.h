@@ -49,6 +49,18 @@ public:
     * Time interpolation is performed on the intersection of the destination
     * patch data and the input box.  The time to which data is interpolated
     * is provided by the destination data.
+    *
+    * @pre dynamic_cast<const NodeData<float> *>(&src_data_old) != 0
+    * @pre dynamic_cast<const NodeData<float> *>(&src_data_new) != 0
+    * @pre dynamic_cast<NodeData<float> *>(&dst_data) != 0
+    * @pre (where * src_data_old->getGhostBox()).isSpatiallyEqual(where)
+    * @pre (where * src_data_new->getGhostBox()).isSpatiallyEqual(where)
+    * @pre (where * dst_data->getGhostBox()).isSpatiallyEqual(where)
+    * @pre (dst_data.getDim() == where.getDim()) &&
+    *      (dst_data.getDim() == src_data_old.getDim()) &&
+    *      (dst_data.getDim() == src_data_new.getDim())
+    * @pre direction vector of dst_data is smaller than that of src_data_old or
+    *      src_data_new
     */
    void
    timeInterpolate(

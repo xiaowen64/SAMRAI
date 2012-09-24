@@ -39,14 +39,15 @@ namespace pdat {
  *
  * Outerface data is stored in 2*DIM arrays, each of which contains data
  * associated with face indices normal to a coordinate axis direction and an
- * upper or lower box face in the face normal direction.  The data layout in the
- * outerface data arrays matches the corresponding array sections provided by the
- * face data implementation.  Specifically, within each array, the data indices are
- * cyclically permuted to be consistent with the FaceData<TYPE> implementation.
- * Also, in each of array, memory allocation is in column-major ordering
- * (e.g., Fortran style) so that the leftmost index runs fastest in memory.
- * For example, a three-dimensional outerface data object created over a CELL-centered
- * AMR index space [l0:u0,l1:u1,l2:u2] allocates six data arrays sized as follows:
+ * upper or lower box face in the face normal direction.  The data layout in
+ * the outerface data arrays matches the corresponding array sections provided
+ * by the face data implementation.  Specifically, within each array, the data
+ * indices are cyclically permuted to be consistent with the FaceData<TYPE>
+ * implementation.  Also, in each of array, memory allocation is in
+ * column-major ordering (e.g., Fortran style) so that the leftmost index runs
+ * fastest in memory.  For example, a three-dimensional outerface data object
+ * created over a CELL-centered AMR index space [l0:u0,l1:u1,l2:u2] allocates
+ * six data arrays sized as follows:
  * \verbatim
  *
  * face normal 0:
@@ -259,7 +260,7 @@ public:
     * results.
     *
     * @pre getDim() == src.getDim()
-    * @pre dynamic_cast<const FaceData<TYPE> *>(&src) != NULL
+    * @pre dynamic_cast<const FaceData<TYPE> *>(&src) != 0
     */
    virtual void
    copy(
@@ -276,7 +277,7 @@ public:
     * error results.
     *
     * @pre getDim() == dst.getDim()
-    * @pre dynamic_cast<FaceData<TYPE> *>(&dst) != NULL
+    * @pre dynamic_cast<FaceData<TYPE> *>(&dst) != 0
     */
    virtual void
    copy2(
@@ -302,8 +303,8 @@ public:
     * DIM.  If not, then an unrecoverable error results.
     *
     * @pre getDim() == dst.getDim()
-    * @pre dynamic_cast<FaceData<TYPE> *>(&dst) != NULL
-    * @pre dynamic_cast<const FaceOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<FaceData<TYPE> *>(&dst) != 0
+    * @pre dynamic_cast<const FaceOverlap *>(&overlap) != 0
     * @pre overlap.getTransformation().getRotation() == hier::Transformation::NO_ROTATE
     */
    virtual void
@@ -356,7 +357,7 @@ public:
     * This routine is defined for the standard types (bool, char,
     * double, float, int, and dcomplex).
     *
-    * @pre dynamic_cast<const FaceOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const FaceOverlap *>(&overlap) != 0
     */
    virtual int
    getDataStreamSize(
@@ -367,7 +368,7 @@ public:
     * box overlap region into the stream.  The overlap must be an
     * FaceOverlap of the same DIM.
     *
-    * @pre dynamic_cast<const FaceOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const FaceOverlap *>(&overlap) != 0
     */
    virtual void
    packStream(
@@ -379,7 +380,7 @@ public:
     * the specified box overlap region. The overlap must be an
     * FaceOverlap of the same DIM.
     *
-    * @pre dynamic_cast<const FaceOverlap *>(&overlap) != NULL
+    * @pre dynamic_cast<const FaceOverlap *>(&overlap) != 0
     */
    virtual void
    unpackStream(
@@ -434,8 +435,8 @@ public:
     *        and will be converted to face index space.
     * @param os   reference to output stream.
     * @param prec integer precision for printing floating point numbers
-    *        (i.e., TYPE = float, double, or dcomplex). The default
-    *        is 12 decimal places for double and complex floating point numbers,
+    *        (i.e., TYPE = float, double, or dcomplex). The default is 12
+    *        decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
     *
@@ -458,8 +459,8 @@ public:
     *              0 <= depth < actual depth of data array
     * @param os   reference to output stream.
     * @param prec integer precision for printing floating point numbers
-    *        (i.e., TYPE = float, double, or dcomplex). The default
-    *        is 12 decimal places for double and complex floating point numbers,
+    *        (i.e., TYPE = float, double, or dcomplex). The default is 12
+    *        decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
     *
@@ -487,8 +488,8 @@ public:
     *        and will be converted to face index space.
     * @param os    reference to output stream.
     * @param prec integer precision for printing floating point numbers
-    *        (i.e., TYPE = float, double, or dcomplex). The default
-    *        is 12 decimal places for double and complex floating point numbers,
+    *        (i.e., TYPE = float, double, or dcomplex). The default is 12
+    *        decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
     *
@@ -519,8 +520,8 @@ public:
     *              0 <= depth < actual depth of data array
     * @param os    reference to output stream.
     * @param prec integer precision for printing floating point numbers
-    *        (i.e., TYPE = float, double, or dcomplex). The default
-    *        is 12 decimal places for double and complex floating point numbers,
+    *        (i.e., TYPE = float, double, or dcomplex). The default is 12
+    *        decimal places for double and complex floating point numbers,
     *        and the default is 6 decimal places floats.  For other types, this
     *        value is ignored.
     *
