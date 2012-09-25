@@ -69,6 +69,10 @@ public:
     * Return 1 if \f$\|data2_i\| > 0\f$ and \f$data1_i * data2_i \leq 0\f$, for
     * any \f$i\f$ in the index region, where \f$cvol_i > 0\f$.  Otherwise return 0.
     * If the control volume is NULL, all values in the index set are used.
+    *
+    * @pre data1 && data2
+    * @pre data1->getDirectionVector() == data2->getDirectionVector()
+    * @pre !cvol || (data1->getDirectionVector() == hier::IntVector::min(data1->getDirectionVector(), cvol->getDirectionVector()))
     */
    int
    computeConstrProdPos(
@@ -82,6 +86,10 @@ public:
     * Wherever \f$cvol_i > 0\f$ in the index region, set \f$dst_i = 1\f$
     * if \f$\|src_i\| > \alpha\f$, and \f$dst_i = 0\f$ otherwise.  If the control
     * volume is NULL, all values in the index set are considered.
+    *
+    * @pre dst && src
+    * @pre dst->getDirectionVector() == src->getDirectionVector()
+    * @pre !cvol || (dst->getDirectionVector() == hier::IntVector::min(dst->getDirectionVector(), cvol->getDirectionVector()))
     */
    void
    compareToScalar(
@@ -97,6 +105,10 @@ public:
     * \f$src_i \neq 0\f$, and \f$dst_i = 0\f$ otherwise.  If \f$dst_i = 0\f$ anywhere,
     * 0 is the return value.  Otherwise 1 is returned.  If the control volume
     * all values in the index set are considered.
+    *
+    * @pre dst && src
+    * @pre dst->getDirectionVector() == src->getDirectionVector()
+    * @pre !cvol || (dst->getDirectionVector() == hier::IntVector::min(dst->getDirectionVector(), cvol->getDirectionVector()))
     */
    int
    testReciprocal(
@@ -118,6 +130,8 @@ public:
     *
     * @b Note: This method is currently intended to support the
     * PETSc-2.1.6 vector wrapper only.  Please do not use it!
+    *
+    * @pre numer && denom
     */
    TYPE
    maxPointwiseDivide(
@@ -138,6 +152,8 @@ public:
     *
     * @b Note: This method is currently intended to support the
     * SUNDIALS vector wrapper only.  Please do not use it!
+    *
+    * @pre numer && denom
     */
    TYPE
    minPointwiseDivide(

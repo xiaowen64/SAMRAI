@@ -58,6 +58,10 @@ public:
 
    /**
     * Set dst = alpha * src, elementwise.
+    *
+    * @pre dst && src
+    * @pre dst->getDirectionVector() == src->getDirectionVector()
+    * @pre (dst->getDim() == src->getDim()) && (dst->getDim() == box.getDim())
     */
    void
    scale(
@@ -68,6 +72,10 @@ public:
 
    /**
     * Set dst = src + alpha, elementwise.
+    *
+    * @pre dst && src
+    * @pre dst->getDirectionVector() == src->getDirectionVector()
+    * @pre (dst->getDim() == src->getDim()) && (dst->getDim() == box.getDim())
     */
    void
    addScalar(
@@ -78,6 +86,12 @@ public:
 
    /**
     * Set dst = src1 + src2, elementwise.
+    *
+    * @pre dst && src1 && src2
+    * @pre (dst->getDirectionVector() == src1->getDirectionVector()) &&
+    *      (dst->getDirectionVector() == src2->getDirectionVector())
+    * @pre (dst->getDim() == src1->getDim()) &&
+    *      (dst->getDim() == src2->getDim()) && (dst->getDim() == box.getDim())
     */
    void
    add(
@@ -88,6 +102,12 @@ public:
 
    /**
     * Set dst = src1 - src2, elementwise.
+    *
+    * @pre dst && src1 && src2
+    * @pre (dst->getDirectionVector() == src1->getDirectionVector()) &&
+    *      (dst->getDirectionVector() == src2->getDirectionVector())
+    * @pre (dst->getDim() == src1->getDim()) &&
+    *      (dst->getDim() == src2->getDim()) && (dst->getDim() == box.getDim())
     */
    void
    subtract(
@@ -98,6 +118,12 @@ public:
 
    /**
     * Set dst = src1 * src2, elementwise.
+    *
+    * @pre dst && src1 && src2
+    * @pre (dst->getDirectionVector() == src1->getDirectionVector()) &&
+    *      (dst->getDirectionVector() == src2->getDirectionVector())
+    * @pre (dst->getDim() == src1->getDim()) &&
+    *      (dst->getDim() == src2->getDim()) && (dst->getDim() == box.getDim())
     */
    void
    multiply(
@@ -108,6 +134,12 @@ public:
 
    /**
     * Set dst = src1 / src2, elementwise.  No check for division by zero.
+    *
+    * @pre dst && src1 && src2
+    * @pre (dst->getDirectionVector() == src1->getDirectionVector()) &&
+    *      (dst->getDirectionVector() == src2->getDirectionVector())
+    * @pre (dst->getDim() == src1->getDim()) &&
+    *      (dst->getDim() == src2->getDim()) && (dst->getDim() == box.getDim())
     */
    void
    divide(
@@ -118,6 +150,10 @@ public:
 
    /**
     * Set dst = 1 / src, elementwise.  No check for division by zero.
+    *
+    * @pre dst && src
+    * @pre dst->getDirectionVector() == src->getDirectionVector()
+    * @pre (dst->getDim() == src->getDim()) && (dst->getDim() == box.getDim())
     */
    void
    reciprocal(
@@ -127,6 +163,12 @@ public:
 
    /**
     * Set dst = alpha * src1 + beta * src2, elementwise.
+    *
+    * @pre dst && src1 && src2
+    * @pre (dst->getDirectionVector() == src1->getDirectionVector()) &&
+    *      (dst->getDirectionVector() == src2->getDirectionVector())
+    * @pre (dst->getDim() == src1->getDim()) &&
+    *      (dst->getDim() == src2->getDim()) && (dst->getDim() == box.getDim())
     */
    void
    linearSum(
@@ -139,6 +181,12 @@ public:
 
    /**
     * Set dst = alpha * src1 + src2, elementwise.
+    *
+    * @pre dst && src1 && src2
+    * @pre (dst->getDirectionVector() == src1->getDirectionVector()) &&
+    *      (dst->getDirectionVector() == src2->getDirectionVector())
+    * @pre (dst->getDim() == src1->getDim()) &&
+    *      (dst->getDim() == src2->getDim()) && (dst->getDim() == box.getDim())
     */
    void
    axpy(
@@ -150,6 +198,12 @@ public:
 
    /**
     * Set dst = alpha * src1 - src2, elementwise.
+    *
+    * @pre dst && src1 && src2
+    * @pre (dst->getDirectionVector() == src1->getDirectionVector()) &&
+    *      (dst->getDirectionVector() == src2->getDirectionVector())
+    * @pre (dst->getDim() == src1->getDim()) &&
+    *      (dst->getDim() == src2->getDim()) && (dst->getDim() == box.getDim())
     */
    void
    axmy(
@@ -162,6 +216,9 @@ public:
    /**
     * Return the minimum patch data component entry  When the data is
     * complex, the result is the data element with the smallest norm.
+    *
+    * @pre data
+    * @pre data->getDim() == box.getDim()
     */
    TYPE
    min(
@@ -171,6 +228,9 @@ public:
    /**
     * Return the maximum patch data component entry  When the data is
     * complex, the result is the data element with the largest norm.
+    *
+    * @pre data
+    * @pre data->getDim() == box.getDim()
     */
    TYPE
    max(
@@ -181,6 +241,9 @@ public:
     * Set patch data to random values.  See the operations in the
     * ArrayDataBasicOps class for details on the generation
     * of the random values for each data type.
+    *
+    * @pre dst
+    * @pre dst->getDim() == box.getDim()
     */
    void
    setRandomValues(

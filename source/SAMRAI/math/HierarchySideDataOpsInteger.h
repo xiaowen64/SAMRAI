@@ -67,6 +67,8 @@ public:
     * be performed are those already existing in the hierarchy.  If the
     * hierarchy level configuration changes, the operations must be explicitly
     * reset by calling the resetLevels() function.
+    *
+    * @pre hierarchy
     */
    explicit HierarchySideDataOpsInteger(
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -80,6 +82,8 @@ public:
 
    /**
     * Reset patch hierarchy over which operations occur.
+    *
+    * @pre hierarchy
     */
    void
    setPatchHierarchy(
@@ -88,6 +92,10 @@ public:
    /**
     * Reset range of patch levels over which operations occur.
     * Levels must exist in hierarchy or an assertion will result.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (coarsest_level >= 0) && (finest_level >= coarsest_level) &&
+    *      (finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    resetLevels(
@@ -107,6 +115,10 @@ public:
     * avoids multiple counting of redundant values (recall the definition
     * of node points on a patch interior).  If the boolean argument is false,
     * all elements will be counted (including ghost values) over all patches.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    int
    numberOfEntries(
@@ -115,6 +127,10 @@ public:
 
    /**
     * Copy source data to destination data.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    copyData(
@@ -124,6 +140,10 @@ public:
 
    /**
     * Swap data pointers (i.e., storage) between two data components.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    swapData(
@@ -132,6 +152,10 @@ public:
 
    /**
     * Print data over multiple levels to specified output stream.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    printData(
@@ -141,6 +165,10 @@ public:
 
    /**
     * Set data component to given scalar.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    setToScalar(
@@ -150,6 +178,10 @@ public:
 
    /**
     * Set destination to source multiplied by given scalar, pointwise.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    scale(
@@ -160,6 +192,10 @@ public:
 
    /**
     * Add scalar to each entry in source data and set destination to result.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    addScalar(
@@ -170,6 +206,10 @@ public:
 
    /**
     * Set destination to sum of two source components, pointwise.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    add(
@@ -181,6 +221,10 @@ public:
    /**
     * Subtract second source component from first source component pointwise
     * and set destination data component to result.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    subtract(
@@ -191,6 +235,10 @@ public:
 
    /**
     * Set destination component to product of two source components, pointwise.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    multiply(
@@ -202,6 +250,10 @@ public:
    /**
     * Divide first data component by second source component pointwise
     * and set destination data component to result.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    divide(
@@ -213,6 +265,10 @@ public:
    /**
     * Set each entry of destination component to reciprocal of corresponding
     * source data component entry.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    reciprocal(
@@ -224,6 +280,10 @@ public:
     * Set \f$d = \alpha s_1 + \beta s_2\f$, where \f$d\f$ is the destination patch
     * data component and \f$s_1, s_2\f$ are the first and second source components,
     * respectively.  Here \f$\alpha, \beta\f$ are scalar values.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    linearSum(
@@ -238,6 +298,10 @@ public:
     * Set \f$d = \alpha s_1 + s_2\f$, where \f$d\f$ is the destination patch data
     * component and \f$s_1, s_2\f$ are the first and second source components,
     * respectively.  Here \f$\alpha\f$ is a scalar.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    axpy(
@@ -251,6 +315,10 @@ public:
     * Set \f$d = \alpha s_1 - s_2\f$, where \f$d\f$ is the destination patch data
     * component and \f$s_1, s_2\f$ are the first and second source components,
     * respectively.  Here \f$\alpha\f$ is a scalar.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    axmy(
@@ -262,6 +330,10 @@ public:
 
    /**
     * Set destination data to absolute value of source data, pointwise.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    abs(
@@ -271,6 +343,10 @@ public:
 
    /**
     * Return minimum data value over all patches in the collection of levels.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    int
    min(
@@ -279,6 +355,10 @@ public:
 
    /**
     * Return maximum data value over all patches in the collection of levels.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    int
    max(
@@ -289,6 +369,10 @@ public:
     * Set data entries to random values.  See the operations in the
     * array data operation classes for details on the generation of
     * the random values.
+    *
+    * @pre getPatchHierarchy()
+    * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
+    *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    setRandomValues(

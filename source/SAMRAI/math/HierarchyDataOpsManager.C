@@ -51,8 +51,7 @@ namespace math {
  */
 
 HierarchyDataOpsManager *
-HierarchyDataOpsManager::s_pdat_op_manager_instance =
-   ((HierarchyDataOpsManager *)NULL);
+HierarchyDataOpsManager::s_pdat_op_manager_instance = 0;
 
 tbox::StartupShutdownManager::Handler
 HierarchyDataOpsManager::s_shutdown_handler(

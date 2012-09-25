@@ -57,6 +57,9 @@ public:
     * Return the number of data values for the face-centered data object
     * in the given box.  Note that it is assumed that the box refers to
     * the cell-centered index space corresponding to the patch hierarchy.
+    *
+    * @pre data
+    * @pre data->getDim() == box.getDim()
     */
    int
    numberOfEntries(
@@ -65,6 +68,9 @@ public:
 
    /**
     * Copy dst data to src data over given box.
+    *
+    * @pre dst && src
+    * @pre (dst->getDim() == src->getDim()) && (dst->getDim() == box.getDim())
     */
    void
    copyData(
@@ -75,6 +81,13 @@ public:
    /**
     * Swap pointers for patch data objects.  Objects are checked for
     * consistency of depth, box, and ghost box.
+    *
+    * @pre patch
+    * @pre patch->getPatchData(data1_id) is actually a boost::shared_ptr<pdat::FaceData<int> >
+    * @pre patch->getPatchData(data2_id) is actually a boost::shared_ptr<pdat::FaceData<int> >
+    * @pre patch->getPatchData(data1_id)->getDepth() == patch->getPatchData(data2_id)->getDepth()
+    * @pre patch->getPatchData(data1_id)->getBox().isSpatiallyEqual(patch->getPatchData(data2_id)->getBox())
+    * @pre patch->getPatchData(data1_id)->getGhostBox().isSpatiallyEqual(patch->getPatchData(data2_id)->getGhostBox())
     */
    void
    swapData(
@@ -84,6 +97,9 @@ public:
 
    /**
     * Print data entries over given box to given output stream.
+    *
+    * @pre data
+    * @pre data->getDim() == box.getDim()
     */
    void
    printData(
@@ -93,6 +109,9 @@ public:
 
    /**
     * Initialize data to given scalar over given box.
+    *
+    * @pre dst
+    * @pre dst->getDim() == box.getDim()
     */
    void
    setToScalar(
@@ -108,6 +127,9 @@ public:
    /**
     * Set destination component to absolute value of source component.
     * That is, each destination entry is set to \f$d_i = \| s_i \|\f$.
+    *
+    * @pre dst && src
+    * @pre (dst->getDim() == src->getDim()) && (dst->getDim() == box.getDim())
     */
    void
    abs(

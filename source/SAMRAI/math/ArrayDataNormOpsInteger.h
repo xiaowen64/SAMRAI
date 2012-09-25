@@ -46,6 +46,9 @@ public:
    /**
     * Set destination component to absolute value of source component.
     * That is, each destination entry is set to \f$d_i = \| s_i \|\f$.
+    *
+    * @pre (dst.getDim() == src.getDim()) && (dst.getDim() == box.getDim())
+    * @pre dst.getDepth() == src.getDepth()
     */
    void
    abs(
