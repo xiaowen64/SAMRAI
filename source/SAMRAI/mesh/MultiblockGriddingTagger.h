@@ -96,6 +96,9 @@ public:
     *                             about the type and location of the boundary
     *                             where ghost cells will be filled
     * @param grid_geometry
+    *
+    * @pre (patch.getDim() == fill_box.getDim()) &&
+    *      (patch.getDim() == boundary_box.getDim())
     */
    virtual void
    fillSingularityBoundaryConditions(
@@ -114,7 +117,9 @@ public:
     * Always returns an IntVector of ones, because that is the maximum
     * stencil needed for the operations in GriddingAlgorithm
     */
-   virtual hier::IntVector getRefineOpStencilWidth( const tbox::Dimension &dim ) const;
+   virtual hier::IntVector
+   getRefineOpStencilWidth(
+      const tbox::Dimension &dim ) const;
 
    /*!
     * Perform user-defined refining operations.  This member function
@@ -132,7 +137,8 @@ public:
     * @param ratio       Integer vector containing ratio relating index space
     *                    between coarse and fine patches.
     */
-   virtual void preprocessRefine(
+   virtual void
+   preprocessRefine(
       hier::Patch& fine,
       const hier::Patch& coarse,
       const hier::Box& fine_box,
@@ -153,6 +159,10 @@ public:
     * @param fine_box    Box region on fine patch into which data is refined.
     * @param ratio       Integer vector containing ratio relating index space
     *                    between coarse and fine patches.
+    *
+    * @pre (fine.getDim() == coarse.getDim()) &&
+    *      (fine.getDim() == fine_box.getDim()) &&
+    *      (fine.getDim() == ratio.getDim())
     */
    virtual void
    postprocessRefine(

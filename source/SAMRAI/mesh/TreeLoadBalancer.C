@@ -841,8 +841,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
    const tbox::RankGroup& rank_group,
    const double group_sum_load ) const
 {
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim,
-      balance_box_level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, balance_box_level);
 
    double group_avg_load = group_sum_load / rank_group.size();
 
@@ -935,9 +934,9 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
     */
 
    tbox::AsyncCommStage child_send_stage;
-   tbox::AsyncCommPeer<char>* child_sends = NULL;
+   tbox::AsyncCommPeer<char>* child_sends = 0;
    tbox::AsyncCommStage parent_send_stage;
-   tbox::AsyncCommPeer<char>* parent_send = NULL;
+   tbox::AsyncCommPeer<char>* parent_send = 0;
 
    setupAsyncCommObjects(
       child_send_stage,
@@ -950,9 +949,9 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
    parent_send_stage.setCommunicationWaitTimer(t_parent_send_wait);
 
    tbox::AsyncCommStage child_recv_stage;
-   tbox::AsyncCommPeer<char>* child_recvs = NULL;
+   tbox::AsyncCommPeer<char>* child_recvs = 0;
    tbox::AsyncCommStage parent_recv_stage;
-   tbox::AsyncCommPeer<char>* parent_recv = NULL;
+   tbox::AsyncCommPeer<char>* parent_recv = 0;
 
    setupAsyncCommObjects(
       child_recv_stage,
@@ -1185,7 +1184,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       tbox::AsyncCommPeer<char>* child_recv =
          dynamic_cast<tbox::AsyncCommPeer<char> *>(child_recv_stage.popCompletionQueue());
 
-      TBOX_ASSERT(child_recv != NULL);
+      TBOX_ASSERT(child_recv != 0);
       TBOX_ASSERT(child_recv >= child_recvs);
       TBOX_ASSERT(child_recv < child_recvs + num_children);
 
@@ -1273,7 +1272,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
     * Send subtree info and excess work (if any) up to parent.
     */
    t_send_load_to_parent->start();
-   if (parent_send != NULL) {
+   if (parent_send != 0) {
 
       /*
        * Compute the excess work we want to send to parent.
@@ -1335,7 +1334,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
     * To preclude sending work in both directions, the parent
     * will *not* send a work message down if we sent work up.
     */
-   if (parent_send != NULL && my_load_data.d_load_exported == 0) {
+   if (parent_send != 0 && my_load_data.d_load_exported == 0) {
       t_parent_load_comm->start();
       t_get_load_from_parent->start();
 
@@ -1359,7 +1358,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
     */
 
 
-   if (parent_recv != NULL && my_load_data.d_load_exported == 0) {
+   if (parent_recv != 0 && my_load_data.d_load_exported == 0) {
 
       /*
        * Receive and unpack message from parent.  Since we did not
@@ -1557,7 +1556,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       TBOX_ASSERT(child_sends[i].isDone());
       TBOX_ASSERT(child_recvs[i].isDone());
    }
-   if (parent_send != NULL) {
+   if (parent_send != 0) {
       TBOX_ASSERT(parent_send->isDone());
       TBOX_ASSERT(parent_recv->isDone());
    }
@@ -2147,7 +2146,7 @@ TreeLoadBalancer::setupAsyncCommObjects(
    const tbox::BalancedDepthFirstTree &bdfs ) const
 {
 
-   child_comms = parent_comm = NULL;
+   child_comms = parent_comm = 0;
 
    const int num_children = bdfs.getNumberOfChildren();
 
@@ -2199,16 +2198,16 @@ TreeLoadBalancer::destroyAsyncCommObjects(
    tbox::AsyncCommPeer<char> *& parent_comm) const
 {
    if (d_mpi.getSize() == 1) {
-      TBOX_ASSERT(child_comms == NULL);
-      TBOX_ASSERT(parent_comm == NULL);
+      TBOX_ASSERT(child_comms == 0);
+      TBOX_ASSERT(parent_comm == 0);
    } else {
-      if ( child_comms != NULL ) {
+      if ( child_comms != 0 ) {
          delete[] child_comms;
       }
-      if ( parent_comm != NULL ) {
+      if ( parent_comm != 0 ) {
          delete parent_comm;
       }
-      child_comms = parent_comm = NULL;
+      child_comms = parent_comm = 0;
    }
 }
 
@@ -4218,10 +4217,10 @@ TreeLoadBalancer::prebalanceBoxLevel(
     * the send and receive comm objects
     */
    tbox::AsyncCommStage comm_stage;
-   tbox::AsyncCommPeer<int>* box_send = NULL;
-   tbox::AsyncCommPeer<int>* box_recv = NULL;
-   tbox::AsyncCommPeer<int>* id_send = NULL;
-   tbox::AsyncCommPeer<int>* id_recv = NULL;
+   tbox::AsyncCommPeer<int>* box_send = 0;
+   tbox::AsyncCommPeer<int>* box_recv = 0;
+   tbox::AsyncCommPeer<int>* id_send = 0;
+   tbox::AsyncCommPeer<int>* id_recv = 0;
 
    /*
     * A sending rank will send its Boxes to a receiving rank, and

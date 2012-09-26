@@ -162,6 +162,8 @@ public:
     * may read inputs from the provided input_db.  If no input
     * database is provided, the class interprets that no tagging
     * is desired so no cell-tagging will be performed.
+    *
+    * @pre !object_name.empty()
     */
    StandardTagAndInitialize(
       const std::string& object_name,
@@ -202,6 +204,8 @@ public:
    /*!
     * Returns true if Richardson extrapolation is used at the supplied cycle
     * and time.
+    *
+    * @pre !d_use_cycle_criteria || !d_use_time_criteria
     */
    bool
    usesRichardsonExtrapolation(
@@ -216,6 +220,8 @@ public:
 
    /*!
     * Returns true if gradient detector is used at the supplied cycle and time.
+    *
+    * @pre !d_use_cycle_criteria || !d_use_time_criteria
     */
    bool
    usesGradientDetector(
@@ -231,6 +237,8 @@ public:
    /*!
     * Returns true if user supplied refine boxes is used at the supplied cycle
     * and time.
+    *
+    * @pre !d_use_cycle_criteria || !d_use_time_criteria
     */
    bool
    usesRefineBoxes(
@@ -263,6 +271,12 @@ public:
     * must first be allocated.  For more information on the operations that
     * must be performed, see the
     * TagAndInitializeStrategy::initializeLevelData() method.
+    *
+    * @pre hierarchy
+    * @pre (level_number >= 0) &&
+    *      (level_number <= hierarchy->getFinestLevelNumber())
+    * @pre !old_level || (level_number == old_level->getLevelNumber())
+    * @pre hierarchy->getPatchLevel(level_number)
     */
    void
    initializeLevelData(
@@ -281,6 +295,10 @@ public:
     * For more information on the operations that must be performed, see
     * the TagAndInitializeStrategy::resetHierarchyConfiguration()
     * method.
+    *
+    * @pre hierarchy
+    * @pre (coarsest_level >= 0) && (coarsest_level <= finest_level) &&
+    *      (finest_level <= hierarchy->getFinestLevelNumber())
     */
    void
    resetHierarchyConfiguration(
@@ -293,7 +311,12 @@ public:
     * before tagging cells, which is handled by this method.  For more
     * information on the operations that must be performed, see the
     * TagAndInitializeStrategy::preprocessErrorEstimation()
-    * method
+    * method.
+    *
+    * @pre hierarchy
+    * @pre (level_number >= 0) &&
+    *      (level_number <= hierarchy->getFinestLevelNumber())
+    * @pre hierarchy->getPatchLevel(level_number)
     */
    void
    preprocessErrorEstimation(
@@ -311,6 +334,12 @@ public:
     *
     * For more information on the operations that must be performed, see the
     * TagAndInitializeStrategy::tagCellsForRefinement() routine.
+    *
+    * @pre level
+    * @pre (level_number >= 0) &&
+    *      (level_number <= level->getFinestLevelNumber())
+    * @pre level->getPatchLevel(level_number)
+    * @pre tag_index >= 0
     */
    void
    tagCellsForRefinement(
@@ -329,6 +358,8 @@ public:
     * for gridding strategy.  Otherwise, return false.  If false is returned,
     * it is useful to provide a detailed explanatory message describing the
     * problems with the boxes.
+    *
+    * @pre !boxes.isEmpty()
     */
    bool
    coarsestLevelBoxesOK(
@@ -356,6 +387,11 @@ public:
     * have been reset from the last time this method was called.  If they
     * have been reset, it returns true.  If they are unchanged, it returns
     * false.
+    *
+    * @pre refine_boxes.isEmpty()
+    * @pre level_num >= 0
+    * @pre time >= 0.0
+    * @pre !d_use_cycle_criteria || !d_use_time_criteria
     */
    bool
    getUserSuppliedRefineBoxes(
@@ -367,6 +403,8 @@ public:
    /*!
     * Reset the static refine boxes for the specified level number in the
     * hierarchy.  The level number must be greater than or equal to zero.
+    *
+    * @pre level_num >= 0
     */
    void
    resetRefineBoxes(

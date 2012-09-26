@@ -96,7 +96,7 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_box_generator(generator),
    d_load_balancer(balancer),
    d_load_balancer0(balancer0 ? balancer0 : balancer),
-   d_mb_tagger_strategy(NULL),
+   d_mb_tagger_strategy(0),
    d_true_tag(1),
    d_false_tag(0),
    d_base_ln(-1),
@@ -279,7 +279,7 @@ GriddingAlgorithm::~GriddingAlgorithm()
 {
    tbox::RestartManager::getManager()->unregisterRestartItem(d_object_name);
    delete d_mb_tagger_strategy;
-   d_mb_tagger_strategy = NULL;
+   d_mb_tagger_strategy = 0;
 }
 
 boost::shared_ptr<TagAndInitializeStrategy>
@@ -1774,8 +1774,8 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
 
    boost::shared_ptr<hier::PatchLevel> old_fine_level;
    boost::shared_ptr<const hier::BoxLevel> old_box_level;
-   const hier::Connector* old_to_tag = NULL;
-   const hier::Connector* tag_to_old = NULL;
+   const hier::Connector* old_to_tag = 0;
+   const hier::Connector* tag_to_old = 0;
 
    hier::IntVector ratio(tag_level->getRatioToLevelZero()
                          * d_hierarchy->getRatioToCoarserLevel(new_ln));
@@ -2425,8 +2425,7 @@ void GriddingAlgorithm::resetTagBufferingData(const int tag_buffer)
 
    d_bdry_fill_tags.reset();
 
-   hier::VariableDatabase* var_db =
-      hier::VariableDatabase::getDatabase();
+   hier::VariableDatabase* var_db = hier::VariableDatabase::getDatabase();
 
    /*
     * Remove d_buf_tag from the VariableDatabase and re-register it with

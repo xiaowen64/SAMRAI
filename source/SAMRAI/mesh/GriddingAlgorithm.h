@@ -302,6 +302,12 @@ public:
     *
     * @param[in] balancer_zero Special load balancer to use for level
     * zero.  If omitted, will use @c balancer instead.
+    *
+    * @pre hierarchy
+    * @pre !object_name.empty()
+    * @pre tag_init_strategy
+    * @pre generator
+    * @pre balancer
     */
    GriddingAlgorithm(
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -341,6 +347,8 @@ public:
     * cells for refinement, whereas the other routine does.
     *
     * @param[in] level_time Simulation time.
+    *
+    * @pre d_hierarchy->getMaxNumberOfLevels() > 0
     */
    void
    makeCoarsestLevel(
@@ -374,6 +382,10 @@ public:
     * @param[in] regrid_start_time The simulation time when the
     * regridding operation began (this parameter is ignored except
     * when using Richardson extrapolation)
+    *
+    * @pre d_hierarchy
+    * @pre d_hierarchy->getPatchLevel(d_hierarchy->getFinestLevelNumber())
+    * @pre tag_buffer >= 0
     */
    void
    makeFinerLevel(
@@ -423,6 +435,12 @@ public:
     * ignored except when using Richardson extrapolation)
     *
     * @param[in] level_is_coarsest_to_sync Level is the coarsest to sync
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number <= d_hierarchy->getFinestLevelNumber())
+    * @pre d_hierarchy->getPatchLevel(level_number)
+    * @pre tag_buffer.getSize() >= level_number + 1
+    * @pre for each member, tb, of tag_buffer, tb >= 0
     */
    void
    regridAllFinerLevels(
@@ -468,6 +486,10 @@ public:
     *
     * @param[in] efficiency_tolerance
     * @param[in] level_number
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number < d_hierarchy->getMaxNumberOfLevels())
+    * @pre (efficiency_tolerance >= 0) && (efficiency_tolerance <= 1.0)
     */
    void
    setEfficiencyTolerance(
@@ -485,6 +507,9 @@ public:
     * @brief Return efficiency tolerance for clustering tags on level.
     *
     * @return efficiency tolerance for clustering tags on level.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number < d_hierarchy->getMaxNumberOfLevels())
     */
    double
    getEfficiencyTolerance(
@@ -503,6 +528,10 @@ public:
     *
     * @param[in] combine_efficiency
     * @param[in] level_number
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number < d_hierarchy->getMaxNumberOfLevels())
+    * @pre (combine_efficiency >= 0) && (combine_efficiency <= 1.0)
     */
    void
    setCombineEfficiency(
@@ -519,6 +548,9 @@ public:
     * @brief Return combine efficiency for clustering tags on level.
     *
     * @return combine efficiency for clustering tags on level.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number < d_hierarchy->getMaxNumberOfLevels())
     */
    double
    getCombineEfficiency(
@@ -542,8 +574,7 @@ public:
    /*!
     * @brief Write object state out to the given restart database.
     *
-    * When assertion checking is active, the restart_db pointer must be
-    * non-null.
+    * @pre restart_db
     */
    void
    putToRestart(
@@ -574,7 +605,7 @@ private:
    //! @brief Shorthand typedef.
    typedef hier::Connector::NeighborSet NeighborSet;
 
-   /*
+   /*!
     * @brief Read input data from specified database and initialize class members.
     *
     * The database pointer must be non-null.
@@ -588,7 +619,7 @@ private:
       const boost::shared_ptr<tbox::Database>& input_db,
       bool is_from_restart);
 
-   /*
+   /*!
     * @brief Read object state from the restart file and initialize
     * class data members.
     *
@@ -606,13 +637,21 @@ private:
    void
    getFromRestart();
 
-   /*
+   /*!
     * @brief Recursively regrid the hierarchy level and all finer
     * levels in the hierarchy.
     *
     * This private member function is invoked by the
     * regridAllFinerLevels() routine.  It may invoke recursively
     * invoke itself.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number <= d_hierarchy->getFinestLevelNumber())
+    * @pre d_hierarchy->getPatchLevel(level_number)
+    * @pre (finest_level_not_regridded >= 0) &&
+    *      (finest_level_not_regridded <= level_number)
+    * @pre tag_buffer.getSize() >= level_number + 1
+    * @pre for each member, tb, of tag_buffer, tb >= 0
     */
    void
    regridFinerLevel(
@@ -624,7 +663,7 @@ private:
       const tbox::Array<int>& tag_buffer,
       const tbox::Array<double>& regrid_start_time = tbox::Array<double>(0));
 
-   /*
+   /*!
     * @brief Tagging stuff before recursive regrid, called from regridFinerLevel.
     */
    void
@@ -635,7 +674,7 @@ private:
       const double regrid_time,
       const int regrid_cycle);
 
-   /*
+   /*!
     * @brief Tagging stuff after recursive regrid, called from regridFinerLevel.
     *
     * A side-effect of this method is setting the overlap Connectors
@@ -649,7 +688,7 @@ private:
       const int tag_ln,
       const tbox::Array<int>& tag_buffer);
 
-   /*
+   /*!
     * @brief Given the metadata describing the new level, this method
     * creates and installs new PatchLevel in the hierarchy.
     */
@@ -662,7 +701,7 @@ private:
       const hier::Connector& tag_to_finer,
       const hier::Connector& finer_to_tag);
 
-   /*
+   /*!
     * @brief Set all tags on a level to a given value.
     *
     * @param[in] tag_value
@@ -670,6 +709,10 @@ private:
     * @param[in] level
     *
     * @param[in] tag_index
+    *
+    * @pre (tag_value == d_true_tag) || (tag_value == d_false_tag)
+    * @pre tag_level
+    * @pre (tag_index == d_tag_indx) || (tag_index == d_buf_tag_indx)
     */
    void
    fillTags(
@@ -677,7 +720,7 @@ private:
       const boost::shared_ptr<hier::PatchLevel>& tag_level,
       const int tag_index) const;
 
-   /*
+   /*!
     * @brief Set integer tags to specified value on intersection
     * between patch level and a BoxLevel
     *
@@ -700,6 +743,11 @@ private:
     *
     * @param fill_box_growth How much to grow fill boxes before using
     * them to tag.  Must be in index space of level holding fill boxes.
+    *
+    * @pre (tag_value == d_true_tag) || (tag_value == d_false_tag)
+    * @pre tag_level
+    * @pre (index == d_tag_indx || index == d_buf_tag_indx)
+    * @pre tag_level_to_fill_box_level.getHeadCoarserFlag() == false
     */
    void
    fillTagsFromBoxLevel(
@@ -710,7 +758,7 @@ private:
       const bool interior_only,
       const hier::IntVector& fill_box_growth) const;
 
-   /*
+   /*!
     * @brief Make a map that, when applied to an improperly nested
     * BoxLevel, removes the nonnesting parts.
     *
@@ -729,6 +777,10 @@ private:
     *
     * @param[in] unnested_ln Level number of PatchLevel being
     * generated (one more than the tag level number).
+    *
+    * @pre (d_hierarchy->getDim() == unnested_box_level.getDim()) &&
+    *      (d_hierarchy->getDim() == nested_box_level.getDim()) &&
+    *      (d_hierarchy->getDim() == nested_box_level.getDim())
     */
    void
    makeProperNestingMap(
@@ -739,7 +791,7 @@ private:
       const hier::Connector& unnested_to_tag,
       const int unnested_ln) const;
 
-   /*
+   /*!
     * @brief Make a map that, when applied to a BoxLevel that
     * extends outside of a reference BoxLevel, removes those
     * outside parts.
@@ -752,6 +804,9 @@ private:
     * @param[in] unnested_box_level
     *
     * @param[in] unnested_to_reference
+    *
+    * @pre (d_hierarchy->getDim() == unnested_box_level.getDim()) &&
+    *      (d_hierarchy->getDim() == nested_box_level.getDim())
     */
    void
    makeOverflowNestingMap(
@@ -775,6 +830,11 @@ private:
     *
     * @param[in] hierarchy_to_candidate Connector from box_level number
     *       tag_ln in the hierarchy.
+    *
+    * @pre (d_hierarchy->getDim() == candidate.getDim()) &&
+    *      (d_hierarchy->getDim() == violator.getDim())
+    * @pre candidate_to_hierarchy.getRatio() == hier::IntVector::getOne(d_hierarchy->getDim())
+    * @pre hierarchy_to_candidate.getRatio() == hier::IntVector::getOne(d_hierarchy->getDim())
     */
    void
    computeNestingViolator(
@@ -785,7 +845,7 @@ private:
       const hier::Connector& hierarchy_to_candidate,
       const int tag_ln) const;
 
-   /*
+   /*!
     * @brief Extend Boxes to domain boundary if they they are too close.
     *
     * See hier::BoxUtilities::extendBoxToDomainBoundary().
@@ -816,6 +876,9 @@ private:
     * constructing level number ln+1.
     *
     * @param[in] ln
+    *
+    * @pre (d_base_ln >= 0) && (ln >= d_base_ln)
+    * @pre (ln == d_base_ln) || (d_to_nesting_complement[ln - 1].isFinalized())
     */
    void
    computeProperNestingData(
@@ -835,6 +898,9 @@ private:
     * @param[in] min_size
     *
     * @param[in] tag_ln Level number of the tag level.
+    *
+    * @pre (d_hierarchy->getDim() == new_box_level.getDim()) &&
+    *      (d_hierarchy->getDim() == min_size.getDim())
     */
    void
    growBoxesWithinNestingDomain(
@@ -844,7 +910,7 @@ private:
       const hier::IntVector& min_size,
       const int tag_ln) const;
 
-   /*
+   /*!
     * @brief Refine a BoxLevel from the resolution of the tag
     * level to the resolution of the level being created.
     *
@@ -864,7 +930,7 @@ private:
       hier::Connector& new_to_tag,
       const hier::IntVector& ratio) const;
 
-   /*
+   /*!
     * @brief Renumber Boxes in a BoxLevel.
     *
     * This method renumbers Boxes to give them globally
@@ -883,6 +949,8 @@ private:
     * @param[in] sort_by_corners
     *
     * @param[in] sequentialize_global_indices
+    *
+    * @pre d_hierarchy->getDim() == new_box_level.getDim()
     */
    void
    renumberBoxes(
@@ -892,9 +960,14 @@ private:
       bool sort_by_corners,
       bool sequentialize_global_indices) const;
 
-   /*
+   /*!
     * @brief Buffer each integer tag on patch level matching given tag
     * value with a border of matching tags.
+    *
+    * @pre (tag_value == d_true_tag) || (tag_value == d_false_tag)
+    * @pre level
+    * @pre buffer_size >= 0
+    * @pre d_hierarchy->getDim() == level->getDim()
     */
    void
    bufferTagsOnLevel(
@@ -902,7 +975,7 @@ private:
       const boost::shared_ptr<hier::PatchLevel>& level,
       const int buffer_size) const;
 
-   /*
+   /*!
     * @brief Set the new level boxes using information stored in a file.
     *
     * If cell tagging is not performed, the new level boxes may
@@ -913,6 +986,9 @@ private:
     * parameter "remove_old_fine_level" which indicates whether
     * the level box configuration has changed and, consequently,
     * whether we need to remove the old level.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number <= d_hierarchy->getFinestLevelNumber())
     */
    void
    readLevelBoxes(
@@ -924,7 +1000,7 @@ private:
       const int regrid_cycle,
       bool& remove_old_fine_level);
 
-   /*
+   /*!
     * @brief Given the number for the level where cells are tagged for
     * refinement, compute a BoxLevel from which a refinement of
     * the level may be constructed.
@@ -934,6 +1010,9 @@ private:
     * called.  At the end of this function, new_box_level will
     * represent the box extents of a new fine level on the given
     * block.
+    *
+    * @pre (tag_ln >= 0) && (tag_ln <= d_hierarchy->getFinestLevelNumber())
+    * @pre d_hierarchy->getPatchLevel(tag_ln)
     */
    void
    findRefinementBoxes(
@@ -942,7 +1021,7 @@ private:
       hier::Connector& new_to_tag,
       const int tag_ln) const;
 
-   /*
+   /*!
     * @brief Set patch size and ghost cell information needed to
     * create new refinement levels.
     *
@@ -965,6 +1044,13 @@ private:
     * level, the smallest box to refine on the next coarser level, and the
     * number of cells that a patch may be extended to the boundary if it
     * sufficiently close to the boundary (extend_ghosts).
+    *
+    * @pre (d_hierarchy->getDim() == smallest_patch.getDim()) &&
+    *      (d_hierarchy->getDim() == smallest_box_to_refine.getDim()) &&
+    *      (d_hierarchy->getDim() == largest_patch.getDim()) &&
+    *      (d_hierarchy->getDim() == extend_ghosts.getDim())
+    * @pre (level_number >= 0) &&
+    *      (level_number < d_hierarchy->getMaxNumberOfLevels())
     */
    void
    getGriddingParameters(
@@ -1027,13 +1113,15 @@ private:
     * @param tag_level  Tag level
     *
     * @param tag_ln  Tag level number
+    *
+    * @pre d_hierarchy->getDim() == tag_level.getDim()
     */
    void
    checkNonrefinedTags(
       const hier::PatchLevel& tag_level,
       int tag_ln) const;
 
-   /*
+   /*!
     * @brief Reset data that handles tag buffering.
     *
     * Resets the tag buffering data so that it will be able to handle a

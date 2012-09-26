@@ -131,6 +131,9 @@ public:
     *   Under most situations, one is fine.
     *
     * @param[in] laplace_cut_threshold_ar
+    *
+    * @pre (d_common->d_dim == min_box.getDim()) &&
+    *      (d_common->d_dim == max_box_size.getDim())
     */
    void
    setClusteringParameters(
@@ -164,6 +167,10 @@ public:
     * the ordering of message completion, which is not deterministic.
     * If you require consistent outputs, we suggest you have a scheme
     * for reordering the output boxes.
+    *
+    * @pre (algo_advance_mode == "ADVANCE_ANY") ||
+    *      (algo_advance_mode == "ADVANCE_SOME") ||
+    *      (algo_advance_mode == "SYNCHRONOUS")
     */
    void
    setAlgorithmAdvanceMode(
@@ -193,6 +200,9 @@ public:
     * Experiments show that "MOST_OVERLAP" gives the best
     * clustering speed, while "SINGLE_OWNER" may give a faster
     * output globalization (since you don't need an all-gather).
+    *
+    * @pre (mode == "SINGLE_OWNER") ||(mode == "MOST_OVERLAP") ||
+    *      (mode == "FEWEST_OWNED") ||(mode == "LEAST_ACTIVE")
     */
    void
    setOwnerMode(
@@ -226,6 +236,10 @@ public:
     *
     * By default, compute bidirectional relationships with a ghost cell width
     * of 1.
+    *
+    * @pre (mode == "NONE") || (mode == "TAG_TO_NEW") ||
+    *      (mode == "BIDIRECTIONAL")
+    * @pre ghost_cell_width >= hier::IntVector::getZero(d_common->d_dim)
     */
    void
    setComputeRelationships(
@@ -234,7 +248,7 @@ public:
 
    //@}
 
-   /*
+   /*!
     * @brief Run the clustering algorithm to generate the new BoxLevel
     * and compute relationships (if specified by setComputeRelationships()).
     *
@@ -247,6 +261,12 @@ public:
     *   must be congruent with the tag box_level's MPI communicator.
     *   Specify tbox::SAMRAI_MPI::commNull if unused.  Highly recommend
     *   using an isolated communicator to prevent message mix-ups.
+    *
+    * @pre !bound_boxes.isEmpty()
+    * @pre d_parent == 0
+    * @pre (d_common->d_dim == new_box_level.getDim()) &&
+    *      (d_common->d_dim == (*(bound_boxes.begin())).getDim()) &&
+    *      (d_common->d_dim == tag_level->getDim())
     */
    void
    clusterAndComputeRelationships(
@@ -616,11 +636,14 @@ public:
       const hier::Box& box,
       const hier::LocalId& first_local_id);
 
-   /*
+   /*!
     * @brief Duplicate given MPI communicator for private use
     * and various dependent parameters.
     *
     * Requires that d_common->tag_box_level is already set!
+    *
+    * @pre d_parent == 0
+    * @pre d_common->tag_box_level != 0
     */
    void
    setMPI(
@@ -629,6 +652,9 @@ public:
    /*!
     * @brief Run the BR algorithm to find boxes, then generate the relationships
     * between the tag box_level and the new box_level.
+    *
+    * @pre d_box.empty() && !d_root_boxes.isEmpty()
+    * @pre d_parent == 0
     */
    void
    clusterAndComputeRelationships();
@@ -703,6 +729,9 @@ public:
     * the leaf queue to be checked for completion later.
     *
     * @return The communication phase currently running.
+    *
+    * @pre (d_parent == 0) || (d_parent->d_wait_phase != completed)
+    * @pre inRelaunchQueue(this) == d_common->relaunch_queue.end()
     */
    WaitPhase
    continueAlgorithm();
@@ -787,6 +816,8 @@ public:
    }
 
    //! @brief Form child groups from gathered overlap counts.
+   // @pre d_common->rank == d_owner
+   // @pre d_recv_msg.size() == 4 * d_group.size()
    void
    formChildGroups();
 
@@ -816,6 +847,12 @@ public:
    eraseBox();
 
    //! @brief Compute new graph relationships touching local tag nodes.
+   // @pre d_common->compute_relationships > 0
+   // @pre d_accepted_box.getLocalId() >= 0
+   // @pre boxAccepted()
+   // @pre d_box_acceptance != accepted_by_dropout_bcast
+   // @pre (d_parent == 0) || (d_box.numberCells() >= d_common->min_box)
+   // @pre d_box_acceptance != accepted_by_dropout_bcast
    void
    computeNewNeighborhoodSets();
 
@@ -842,6 +879,7 @@ public:
    }
 
    //! @brief Claim a unique tag from process's available tag pool.
+   // @pre d_mpi_tag < 0
    void
    claimMPITag();
 
@@ -905,6 +943,7 @@ public:
       int* buffer) const;
 
    //! @brief Compute list of non-participating processes.
+   // @pre main_group.size() >= sub_group.size()
    void
    computeDropoutGroup(
       const VectorOfInts& main_group,

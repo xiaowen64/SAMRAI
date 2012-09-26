@@ -44,6 +44,9 @@ struct BalanceUtilities {
     * @param mapping  Output processor mapping.
     * @param weights  tbox::Array of double-valued weights to distribute.
     * @param nproc    Integer number of processors, must be > 0.
+    *
+    * @pre nproc > 0
+    * @pre for each memeber of weights, w, w >=0
     */
    static double
    binPack(
@@ -70,7 +73,8 @@ struct BalanceUtilities {
     * @param boxes    tbox::Array of boxes to distribute to processors.
     * @param nproc    Integer number of processors, must be > 0.
     *
-    * Note that the wight and box arrrays must be the same size.
+    * @pre nproc > 0
+    * @pre weights.getSize() == boxes.size()
     */
    static double
    spatialBinPack(
@@ -118,6 +122,15 @@ struct BalanceUtilities {
     * @param physical_domain tbox::Array of boxes describing the physical extent of
     *                        the index space associated with the in_boxes.
     *                        This box array cannot be empty.
+    *
+    * @pre (min_size.getDim() == cut_factor.getDim()) &&
+    *      (min_size.getDim() == bad_interval.getDim())
+    * @pre ideal_workload > 0
+    * @pre (workload_tolerance >= 0) && (workload_tolerance < 1.0)
+    * @pre min_size > hier::IntVector::getZero(min_size.getDim())
+    * @pre cut_factor > hier::IntVector::getZero(min_size.getDim())
+    * @pre bad_interval >= hier::IntVector::getZero(min_size.getDim())
+    * @pre !physical_domain.isEmpty()
     */
    static void
    recursiveBisectionUniform(
@@ -175,6 +188,15 @@ struct BalanceUtilities {
     * @param physical_domain tbox::Array of boxes describing the physical extent of
     *                        the index space associated with the in_boxes.
     *                        This box array cannot be empty.
+    *
+    * @pre (min_size.getDim() == cut_factor.getDim()) &&
+    *      (min_size.getDim() == bad_interval.getDim())
+    * @pre ideal_workload > 0
+    * @pre (workload_tolerance >= 0) && (workload_tolerance < 1.0)
+    * @pre min_size > hier::IntVector::getZero(min_size.getDim())
+    * @pre cut_factor > hier::IntVector::getZero(min_size.getDim())
+    * @pre bad_interval >= hier::IntVector::getZero(min_size.getDim())
+    * @pre !physical_domain.isEmpty()
     */
    static void
    recursiveBisectionNonuniform(
@@ -197,6 +219,10 @@ struct BalanceUtilities {
     *                   coordinate direction.
     * @param num_procs  Input integer number of processors, must be > 0.
     * @param box        Input box to be distributed.
+    *
+    * @pre proc_dist.getDim() == box.getDim()
+    * @pre num_procs > 0
+    * @pre for each dimension, i, box.numberCells(i) > 0
     */
    static void
    computeDomainDependentProcessorLayout(
@@ -216,6 +242,10 @@ struct BalanceUtilities {
     *                   coordinate direction.
     * @param num_procs  Input integer number of processors, must be > 0.
     * @param box        Input box to be distributed.
+    *
+    * @pre proc_dist.getDim() == box.getDim()
+    * @pre num_procs > 0
+    * @pre for each dimension, i, box.numberCells(i) > 0
     */
    static void
    computeDomainIndependentProcessorLayout(
@@ -234,7 +264,7 @@ struct BalanceUtilities {
     * @param boxes     Boxes to be sorted based on workload array.
     * @param workload  Workloads to use for sorting boxes.
     *
-    * Note that both arrays must be the same size.
+    * @pre boxes.size() == workload.getSize()
     */
    static void
    sortDescendingBoxWorkloads(
@@ -254,6 +284,9 @@ struct BalanceUtilities {
     * @param box       Input box region
     *
     * Note that wrk_indx must refer to a valid cell-centered patch data entry.
+    *
+    * @pre param
+    * @pre param->getDim() == box.getDim()
     */
    static double
    computeNonUniformWorkload(
@@ -273,6 +306,8 @@ struct BalanceUtilities {
     * @param workload_data_id (Optional) Input integer id for workload
     *                         data on level.  If no value is given, the
     *                         calculation assumes spatially-uniform load.
+    *
+    * @pre level
     */
    static double
    computeLoadBalanceEfficiency(
@@ -338,6 +373,8 @@ struct BalanceUtilities {
     * processes is taken to be the size of this container.
     *
     * @param[in] output_stream
+    *
+    * @pre workloads.size() == tbox::SAMRAI_MPI::getSAMRAIWorld().getSize()
     */
    static void
    reportLoadBalance(

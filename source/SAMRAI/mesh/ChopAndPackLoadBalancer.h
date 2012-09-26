@@ -190,6 +190,8 @@ public:
     * @param[in] input_db (optional) database pointer providing parameters from
     *                   input file.  This pointer may be null indicating no
     *                   input will be read.
+    *
+    * @pre !name.empty()
     */
    ChopAndPackLoadBalancer(
       const tbox::Dimension& dim,
@@ -229,6 +231,8 @@ public:
     * @param level_number  Optional integer number for level to which factor
     *                      is applied. If no value is given, the factor will
     *                      be used for all levels.
+    *
+    * @pre factor > 0.0
     */
    void
    setMaxWorkloadFactor(
@@ -245,6 +249,8 @@ public:
     * @param level_number  Optional integer number for level to which factor
     *                      is applied. If no value is given, the value will
     *                      be used for all levels.
+    *
+    * @pre tolerance > 0.0
     */
    void
    setWorkloadTolerance(
@@ -260,6 +266,8 @@ public:
     * @param level_number  Optional integer number for level on which data id
     *                      is used.  If no value is given, the data will be
     *                      used for all levels.
+    *
+    * @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(data_id) is actually a  boost::shared_ptr<pdat::CellDataFactory<double> >
     */
    void
    setWorkloadPatchDataIndex(
@@ -290,6 +298,8 @@ public:
     *                      bin-packing method will be used. If no value is
     *                      given, the prescribed methods will be used on all
     *                      levels.
+    *
+    * @pre (method == "GREEDY") || (method == "SPATIAL")
     */
    void
    setBinPackMethod(
@@ -377,6 +387,11 @@ public:
     *                        documentation for more details.
     * @param rank_group      Needed for compatibility with parent class.
     *                        This argument is ignored.
+    *
+    * @pre (d_dim == balance_box_level.getDim()) &&
+    *      (d_dim == min_size.getDim()) && (d_dim == max_size.getDim()) &&
+    *      (d_dim == domain_box_level.getDim()) &&
+    *      (d_dim == bad_interval.getDim()) && (d_dim == cut_factor.getDim())
     */
    void
    loadBalanceBoxLevel(
@@ -472,6 +487,18 @@ private:
     *                        will be either in the domain interior or outside
     *                        the domain.  All entries must be >= 0. See
     *                        hier::BoxUtilities documentation for more details.
+    *
+    * @pre (ratio_to_hierarchy_level_zero.getDim() == min_size.getDim()) &&
+    *      (ratio_to_hierarchy_level_zero.getDim() == max_size.getDim()) &&
+    *      (ratio_to_hierarchy_level_zero.getDim() == cut_factor.getDim()) &&
+    *      (ratio_to_hierarchy_level_zero.getDim() == bad_interval.getDim())
+    * @pre hierarchy
+    * @pre level_number >= 0
+    * @pre !physical_domain.isEmpty()
+    * @pre min_size > hier::IntVector::getZero(d_dim)
+    * @pre max_size >= min_size
+    * @pre cut_factor > hier::IntVector::getZero(d_dim)
+    * @pre bad_interval >= hier::IntVector::getZero(d_dim)
     */
    void
    loadBalanceBoxes(
@@ -557,6 +584,8 @@ private:
     * by all processors, and their associated weights.
     * If all processors input arrays have zero length, an error
     * is thrown.
+    *
+    * @pre box_list_in.size() == weights_in.getSize()
     */
    void
    exchangeBoxContainersAndWeightArrays(

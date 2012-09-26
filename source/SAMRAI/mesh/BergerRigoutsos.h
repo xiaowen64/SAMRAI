@@ -158,6 +158,12 @@ public:
     * The combine tolerance is a threshold value for the sum of the volumes
     * of two boxes into which a box may be potentially split.  If ratio of
     * that sum and the volume of the original box, the box will not be split.
+    *
+    * @pre !bound_boxes.isEmpty()
+    * @pre (new_box_level.getDim() == tag_level->getDim()) &&
+    *      (new_box_level.getDim() == (*(bound_boxes.begin())).getDim()) &&
+    *      (new_box_level.getDim() == min_box.getDim()) &&
+    *      (new_box_level.getDim() == max_gcw.getDim())
     */
    void
    findBoxesContainingTags(
@@ -209,6 +215,8 @@ private:
     * @brief Set up things for the entire class.
     *
     * Only called by StartupShutdownManager.
+    *
+    * @pre !t_global_reductions
     */
    static void
    initializeCallback();

@@ -114,6 +114,8 @@ public:
     * @param[in] input_db (optional) database pointer providing
     * parameters from input file.  This pointer may be null indicating
     * no input is used.
+    *
+    * @pre !name.empty()
     */
    TreeLoadBalancer(
       const tbox::Dimension& dim,
@@ -144,6 +146,8 @@ public:
     * Otherwise, the SAMRAI_MPI of the BoxLevel will be used.  The
     * duplicate MPI communicator is freed when the object is
     * destructed, or freeMPICommunicator() is called.
+    *
+    * @pre samrai_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull
     */
    void
    setSAMRAI_MPI(
@@ -178,6 +182,8 @@ public:
     * Optional integer number for level on which data id
     * is used.  If no value is given, the data will be
     * used for all levels.
+    *
+    * @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(data_id) is actually a  boost::shared_ptr<pdat::CellDataFactory<double> >
     */
    void
    setWorkloadPatchDataIndex(
@@ -217,6 +223,16 @@ public:
     *
     * Note: This implementation does not yet support non-uniform load
     * balancing.
+    *
+    * @pre anchor_to_balance.isFinalized() == balance_to_anchor.isFinalized()
+    * @pre !anchor_to_balance.isFinalized() || anchor_to_balance.isTransposeOf(balance_to_anchor)
+    * @pre (d_dim == balance_box_level.getDim()) &&
+    *      (d_dim == min_size.getDim()) && (d_dim == max_size.getDim()) &&
+    *      (d_dim == domain_box_level.getDim()) &&
+    *      (d_dim == bad_interval.getDim()) && (d_dim == cut_factor.getDim())
+    * @pre !hierarchy || (d_dim == hierarchy->getDim())
+    * @pre !d_mpi_is_dupe || (d_mpi.getSize() == balance_box_level.getMPI().getSize())
+    * @pre !d_mpi_is_dupe || (d_mpi.getSize() == balance_box_level.getMPI().getRank())
     */
    void
    loadBalanceBoxLevel(
@@ -514,6 +530,9 @@ private:
     * Move Boxes in balance_box_level from ranks outside of
     * rank_group to ranks inside rank_group.  Modify the given connectors
     * to make them correct following this moving of boxes.
+    *
+    * @pre !balance_to_anchor.isFinalized() || (anchor_to_balance.checkTransposeCorrectness(balance_to_anchor) == 0)
+    * @pre !balance_to_anchor.isFinalized() || (balance_to_anchor.checkTransposeCorrectness(anchor_to_balance) == 0)
     */
    void
    prebalanceBoxLevel(
@@ -666,6 +685,8 @@ private:
     * @param[o] leftover Remainder of Box after breakoff is gone.
     *
     * @param[o] brk_load The load broken off.
+    *
+    * @pre ideal_load_to_break > 0
     */
    bool
    breakOffLoad(
@@ -843,6 +864,8 @@ private:
     * @brief Given an "unbalanced" BoxLevel, compute the BoxLevel that
     * is load-balanced within the given rank_group and compute the
     * mapping between the unbalanced and balanced BoxLevels.
+    *
+    * @pre d_dim == balance_box_level.getDim()
     */
    void
    loadBalanceWithinRankGroup(
@@ -855,6 +878,8 @@ private:
    /*!
     * @brief Constrain maximum box sizes in the given BoxLevel and
     * update given Connectors to the changed BoxLevel.
+    *
+    * @pre d_dim == box_level.getDim()
     */
    void
    constrainMaxBoxSizes(
@@ -910,6 +935,8 @@ private:
 
    /*
     * @brief Undo the set-up done by setupAsyncCommObjects.
+    *
+    * @pre (d_mpi.getSize() != 1) || ((child_comms == 0) && (parent_comms == 0))
     */
    void
    destroyAsyncCommObjects(

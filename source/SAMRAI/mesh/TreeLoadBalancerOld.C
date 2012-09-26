@@ -708,7 +708,7 @@ TreeLoadBalancerOld::constrainMaxBoxSizes(
             d_cut_factor,
             d_bad_interval,
             d_block_domain_boxes[box.getBlockId().getBlockValue()]);
-         TBOX_ASSERT( chopped.size() != 0 );
+         TBOX_ASSERT( !chopped.isEmpty() );
 
          if (chopped.size() != 1) {
 
@@ -809,8 +809,7 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
    const tbox::RankGroup& rank_group,
    const double group_sum_load ) const
 {
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim,
-      balance_box_level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, balance_box_level);
 
    double group_avg_load = group_sum_load / rank_group.size();
 
@@ -903,9 +902,9 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
     */
 
    tbox::AsyncCommStage child_send_stage;
-   tbox::AsyncCommPeer<int>* child_sends = NULL;
+   tbox::AsyncCommPeer<int>* child_sends = 0;
    tbox::AsyncCommStage parent_send_stage;
-   tbox::AsyncCommPeer<int>* parent_send = NULL;
+   tbox::AsyncCommPeer<int>* parent_send = 0;
 
    setupAsyncCommObjects(
       child_send_stage,
@@ -918,9 +917,9 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
    parent_send_stage.setCommunicationWaitTimer(t_parent_send_wait);
 
    tbox::AsyncCommStage child_recv_stage;
-   tbox::AsyncCommPeer<int>* child_recvs = NULL;
+   tbox::AsyncCommPeer<int>* child_recvs = 0;
    tbox::AsyncCommStage parent_recv_stage;
-   tbox::AsyncCommPeer<int>* parent_recv = NULL;
+   tbox::AsyncCommPeer<int>* parent_recv = 0;
 
    setupAsyncCommObjects(
       child_recv_stage,
@@ -1082,7 +1081,7 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
       int ideal_transfer = int(0.5 + my_load_data.d_total_work - group_avg_load);
 
       if (d_print_steps) {
-         tbox::plog << "  Reassigning initial overload of " << ideal_transfer
+         tbox::plog << "Reassigning initial overload of " << ideal_transfer
                     << " to unassigned.\n";
       }
 
@@ -1132,7 +1131,7 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
    /*
     * Step 2, remote part:
     *
-    * Complete load-receive communications with children.
+    * Finish getting tree and load data from children.
     * Add imported BoxInTransit to unassigned bin.
     */
    t_get_load_from_children->start();
@@ -1142,7 +1141,7 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
       tbox::AsyncCommPeer<int>* child_recv =
          dynamic_cast<tbox::AsyncCommPeer<int> *>(child_recv_stage.popCompletionQueue());
 
-      TBOX_ASSERT(child_recv != NULL);
+      TBOX_ASSERT(child_recv != 0);
       TBOX_ASSERT(child_recv >= child_recvs);
       TBOX_ASSERT(child_recv < child_recvs + num_children);
 
@@ -1171,7 +1170,7 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
             ni = unassigned.begin();
          for (int ii = 0; ii < old_size; ++ii) { ++ni; }
          if (d_print_steps) {
-            tbox::plog << "    Got " << unassigned.size() - old_size
+            tbox::plog << "Got " << unassigned.size() - old_size
                        << " boxes (" << child_load_data[cindex].d_load_imported
                        << " units) from child "
                        << child_recv->getPeerRank() << ":";
@@ -1227,7 +1226,7 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
     * Send subtree info and excess work (if any) up to parent.
     */
    t_send_load_to_parent->start();
-   if (parent_send != NULL) {
+   if (parent_send != 0) {
 
       /*
        * Compute the excess work we want to send to parent.
@@ -1239,7 +1238,7 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
       if (ideal_transfer > 0) {
 
          if (d_print_steps) {
-            tbox::plog << "  Attempting to reassign " << ideal_transfer
+            tbox::plog << "Attempting to reassign " << ideal_transfer
                        << " of unassigned load to parent.\n";
          }
 
@@ -1252,7 +1251,7 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
          my_load_data.d_total_work -= actual_transfer;
 
          if (d_print_steps) {
-            tbox::plog << "  Giving " << my_load_data.d_for_export.size()
+            tbox::plog << "Giving " << my_load_data.d_for_export.size()
                        << " boxes (" << actual_transfer << " / "
                        << ideal_transfer << " units) to parent "
                        << parent_send->getPeerRank() << ":";
@@ -1286,7 +1285,7 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
     * To preclude sending work in both directions, the parent
     * will *not* send a work message down if we sent work up.
     */
-   if (parent_send != NULL && my_load_data.d_load_exported == 0) {
+   if (parent_send != 0 && my_load_data.d_load_exported == 0) {
       t_parent_load_comm->start();
       t_get_load_from_parent->start();
 
@@ -1308,7 +1307,7 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
     */
 
 
-   if (parent_recv != NULL && my_load_data.d_load_exported == 0) {
+   if (parent_recv != 0 && my_load_data.d_load_exported == 0) {
 
       /*
        * Receive and unpack message from parent.  Since we did not
@@ -1339,7 +1338,7 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
             ++ni;
          }
          if (d_print_steps) {
-            tbox::plog << "    Got " << unassigned.size() - old_size
+            tbox::plog << "Got " << unassigned.size() - old_size
                        << " boxes (" << parent_load_data.d_load_imported
                        << " units) from parent "
                        << parent_recv->getPeerRank() << ":";
@@ -1355,7 +1354,7 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
    }
 
    if (d_print_steps) {
-      tbox::plog << "  After parent/children, my total work is "
+      tbox::plog << "  After parent, my total work is "
                  << my_load_data.d_total_work << " / "
                  << my_load_data.d_ideal_work << std::endl;
    }
@@ -1383,7 +1382,7 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
          int actual_transfer = 0;
 
          if (d_print_steps) {
-            tbox::plog << "  Attempting to reassign " << ideal_transfer
+            tbox::plog << "Attempting to reassign " << ideal_transfer
                        << " of unassigned load to child "
                        << child_sends[ichild].getPeerRank() << "\n";
          }
@@ -1399,7 +1398,7 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
          }
 
          if (d_print_steps) {
-            tbox::plog << "  Giving " << recip_data.d_for_export.size()
+            tbox::plog << "Giving " << recip_data.d_for_export.size()
                        << " boxes (" << actual_transfer << " / " << ideal_transfer
                        << " units) to child " << ichild << ':'
                        << child_sends[ichild].getPeerRank() << " for "
@@ -1487,7 +1486,7 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
       TBOX_ASSERT(child_sends[i].isDone());
       TBOX_ASSERT(child_recvs[i].isDone());
    }
-   if (parent_send != NULL) {
+   if (parent_send != 0) {
       TBOX_ASSERT(parent_send->isDone());
       TBOX_ASSERT(parent_recv->isDone());
    }
@@ -1688,7 +1687,7 @@ TreeLoadBalancerOld::reassignLoads(
             src,
             dst,
             actual_transfer - ideal_transfer);
-         tbox::plog << "    Balance penalty after shiftLoadsByBreaking = "
+         tbox::plog << "  Balance penalty after shiftLoadsByBreaking = "
                     << balance_penalty
                     << ", needs " << (ideal_transfer - actual_transfer)
                     << " more with " << src.size() << " source and "
@@ -1841,8 +1840,8 @@ TreeLoadBalancerOld::constructSemilocalUnbalancedToBalanced(
     * reuse.
     */
    tbox::AsyncCommStage comm_stage;
-   tbox::AsyncCommPeer<int> *importer_comms = import_srcs.empty() ? NULL : new tbox::AsyncCommPeer<int>[import_srcs.size()];
-   tbox::AsyncCommPeer<int> *exporter_comms = export_dsts.empty() ? NULL : new tbox::AsyncCommPeer<int>[export_dsts.size()];
+   tbox::AsyncCommPeer<int> *importer_comms = import_srcs.empty() ? 0 : new tbox::AsyncCommPeer<int>[import_srcs.size()];
+   tbox::AsyncCommPeer<int> *exporter_comms = export_dsts.empty() ? 0 : new tbox::AsyncCommPeer<int>[export_dsts.size()];
 
    for ( size_t i=0; i<export_dsts.size(); ++i ) {
       exporter_comms[i].initialize(&comm_stage);
@@ -1891,7 +1890,7 @@ TreeLoadBalancerOld::constructSemilocalUnbalancedToBalanced(
 
       tbox::AsyncCommPeer<int>* peer_comm =
          dynamic_cast<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
-      TBOX_ASSERT(peer_comm != NULL);
+      TBOX_ASSERT(peer_comm != 0);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       size_t j;
@@ -2140,7 +2139,7 @@ TreeLoadBalancerOld::setupAsyncCommObjects(
    const tbox::BalancedDepthFirstTree &bdfs ) const
 {
 
-   child_comms = parent_comm = NULL;
+   child_comms = parent_comm = 0;
 
    const int num_children = bdfs.getNumberOfChildren();
 
@@ -2192,16 +2191,16 @@ TreeLoadBalancerOld::destroyAsyncCommObjects(
    tbox::AsyncCommPeer<int> *& parent_comm) const
 {
    if (d_mpi.getSize() == 1) {
-      TBOX_ASSERT(child_comms == NULL);
-      TBOX_ASSERT(parent_comm == NULL);
+      TBOX_ASSERT(child_comms == 0);
+      TBOX_ASSERT(parent_comm == 0);
    } else {
-      if ( child_comms != NULL ) {
+      if ( child_comms != 0 ) {
          delete[] child_comms;
       }
-      if ( parent_comm != NULL ) {
+      if ( parent_comm != 0 ) {
          delete parent_comm;
       }
-      child_comms = parent_comm = NULL;
+      child_comms = parent_comm = 0;
    }
 }
 
@@ -4178,10 +4177,10 @@ TreeLoadBalancerOld::prebalanceBoxLevel(
     * the send and receive comm objects
     */
    tbox::AsyncCommStage comm_stage;
-   tbox::AsyncCommPeer<int>* box_send = NULL;
-   tbox::AsyncCommPeer<int>* box_recv = NULL;
-   tbox::AsyncCommPeer<int>* id_send = NULL;
-   tbox::AsyncCommPeer<int>* id_recv = NULL;
+   tbox::AsyncCommPeer<int>* box_send = 0;
+   tbox::AsyncCommPeer<int>* box_recv = 0;
+   tbox::AsyncCommPeer<int>* id_send = 0;
+   tbox::AsyncCommPeer<int>* id_recv = 0;
 
    /*
     * A sending rank will send its Boxes to a receiving rank, and

@@ -124,7 +124,7 @@ StandardTagAndInitialize::StandardTagAndInitialize(
     * registered StandardTagAndInitStrategy must be non-NULL.
     */
    if ((d_ever_uses_richardson_extrapolation || d_ever_uses_gradient_detector) &&
-       tag_strategy == NULL) {
+       tag_strategy == 0) {
       TBOX_ERROR(
          getObjectName() << ":constructor "
                          << "\nThe supplied implementation of the "
@@ -169,7 +169,7 @@ StandardTagAndInitialize::initializeLevelData(
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
 #endif
 
-   if (d_tag_strategy != ((StandardTagAndInitStrategy *)NULL)) {
+   if (d_tag_strategy != 0) {
       d_tag_strategy->initializeLevelData(hierarchy,
          level_number,
          init_data_time,
@@ -207,7 +207,7 @@ StandardTagAndInitialize::resetHierarchyConfiguration(
    }
 #endif
 
-   if (d_tag_strategy != ((StandardTagAndInitStrategy *)NULL)) {
+   if (d_tag_strategy != 0) {
       d_tag_strategy->resetHierarchyConfiguration(hierarchy,
          coarsest_level,
          finest_level);
@@ -270,7 +270,7 @@ StandardTagAndInitialize::tagCellsForRefinement(
 
    if (usesGradientDetector(regrid_cycle, regrid_time)) {
 
-      TBOX_ASSERT(d_tag_strategy != ((StandardTagAndInitStrategy *)NULL));
+      TBOX_ASSERT(d_tag_strategy != 0);
 
       d_tag_strategy->applyGradientDetector(hierarchy,
          level_number,
@@ -392,7 +392,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
    const bool can_be_refined)
 {
    TBOX_ASSERT(regrid_start_time <= regrid_time);
-   TBOX_ASSERT(d_tag_strategy != ((StandardTagAndInitStrategy *)NULL));
+   TBOX_ASSERT(d_tag_strategy != 0);
 
    const tbox::Dimension& dim = hierarchy->getDim();
 
@@ -674,7 +674,7 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
 {
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(regrid_start_time <= regrid_time);
-   TBOX_ASSERT(d_tag_strategy != ((StandardTagAndInitStrategy *)NULL));
+   TBOX_ASSERT(d_tag_strategy != 0);
 
    const tbox::Dimension& dim = hierarchy->getDim();
 

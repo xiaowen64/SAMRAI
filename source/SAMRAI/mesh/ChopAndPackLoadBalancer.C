@@ -1024,10 +1024,10 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
    tbox::Array<int> buf_in(buf_size_in);
    tbox::Array<int> buf_out(buf_size_out);
 
-   int* buf_in_ptr = (int *)NULL;
-   int* buf_out_ptr = (int *)NULL;
-   const double* wgts_in_ptr = (const double *)NULL;
-   double* wgts_out_ptr = (double *)NULL;
+   int* buf_in_ptr = 0;
+   int* buf_out_ptr = 0;
+   const double* wgts_in_ptr = 0;
+   double* wgts_out_ptr = 0;
 
    if (size_in > 0) {
       buf_in_ptr = buf_in.getPointer();
