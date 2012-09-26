@@ -835,7 +835,9 @@ private:
     * Transactions will move data on the intersection of the source and
     * destination boxes with the fill boxes.
     *
-    * @param[in] fill_boxes  A container of boxes that need to be filled.
+    * @param[in] num_nbrs
+    * @param[in] nbrs_begin
+    * @param[in] nbrs_end
     * @param[in] dst_box  Box from a destination patch.
     * @param[in] src_box  Box from a source patch.
     * @param[in] use_time_interpolation
@@ -846,36 +848,9 @@ private:
     */
    void
    constructScheduleTransactions(
-      const BoxNeighborhoodCollection& dst_to_fill_on_src_proc,
-      BoxNeighborhoodCollection::ConstIterator& dst_to_fill_iter,
-      const hier::Box& dst_box,
-      const hier::Box& src_box,
-      const bool use_time_interpolation);
-
-   /*!
-    * @brief Function that constructs schedule transactions between
-    * one source box and one destination box.
-    *
-    * Transactions will move data on the intersection of the source and
-    * destination boxes with the fill boxes.
-    *
-    * @param[in] dst_to_fill  A connector from the destination to the fill
-    * levels.
-    * filled.
-    * @param[in] dst_itr  An iterator to the neighborhood of a Box in
-    * dst_to_fill.
-    * @param[in] dst_box  Box from a destination patch.
-    * @param[in] src_box  Box from a source patch.
-    * @param[in] use_time_interpolation
-    *
-    * @pre d_dst_level
-    * @pre d_src_level
-    * @pre !dst_box.isPeriodicImage()
-    */
-   void
-   constructScheduleTransactions(
-      const hier::Connector& dst_to_fill,
-      hier::Connector::ConstNeighborhoodIterator& dst_itr,
+      int num_nbrs,
+      hier::BoxNeighborhoodCollection::ConstNeighborIterator& nbrs_begin,
+      hier::BoxNeighborhoodCollection::ConstNeighborIterator& nbrs_end,
       const hier::Box& dst_box,
       const hier::Box& src_box,
       const bool use_time_interpolation);

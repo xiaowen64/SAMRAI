@@ -2532,6 +2532,11 @@ RefineSchedule::generateCommunicationSchedule(
             continue;
          }
 
+         int num_nbrs = dst_to_fill_on_src_proc.numNeighbors(dst_fill_iter);
+         hier::BoxNeighborhoodCollection::ConstNeighborIterator nbrs_begin =
+            dst_to_fill_on_src_proc.begin(dst_fill_iter);
+         hier::BoxNeighborhoodCollection::ConstNeighborIterator nbrs_end =
+            dst_to_fill_on_src_proc.end(dst_fill_iter);
          for (hier::BoxContainer::const_iterator ni = local_src_boxes.begin();
               ni != local_src_boxes.end(); ++ni) {
             const hier::Box& src_box = *ni;
@@ -2539,8 +2544,9 @@ RefineSchedule::generateCommunicationSchedule(
             if (src_box.getOwnerRank() != dst_box.getOwnerRank()) {
 
                constructScheduleTransactions(
-                  dst_to_fill_on_src_proc,
-                  dst_fill_iter,
+                  num_nbrs,
+                  nbrs_begin,
+                  nbrs_end,
                   dst_box,
                   src_box,
                   use_time_interpolation);
@@ -2603,6 +2609,11 @@ RefineSchedule::generateCommunicationSchedule(
 
          if (dst_to_src_iter != dst_to_src.end()) {
 
+            int num_nbrs = dst_to_fill.numLocalNeighbors(*cf);
+            hier::Connector::ConstNeighborIterator nbrs_begin =
+               dst_to_fill.begin(cf);
+            hier::Connector::ConstNeighborIterator nbrs_end =
+               dst_to_fill.end(cf);
             for (hier::Connector::ConstNeighborIterator
                  na = dst_to_src.begin(dst_to_src_iter);
                  na != dst_to_src.end(dst_to_src_iter); ++na) {
@@ -2641,8 +2652,9 @@ RefineSchedule::generateCommunicationSchedule(
                   unfilled_boxes_for_dst.removeIntersections(src_box);
                }
                constructScheduleTransactions(
-                  dst_to_fill,
-                  cf,
+                  num_nbrs,
+                  nbrs_begin,
+                  nbrs_end,
                   dst_box,
                   src_box,
                   use_time_interpolation);
@@ -3625,8 +3637,9 @@ RefineSchedule::getMaxStencilGhosts() const
 
 void
 RefineSchedule::constructScheduleTransactions(
-   const BoxNeighborhoodCollection& dst_to_fill_on_src_proc,
-   BoxNeighborhoodCollection::ConstIterator& dst_to_fill_iter,
+   int num_nbrs,
+   hier::BoxNeighborhoodCollection::ConstNeighborIterator& nbrs_begin,
+   hier::BoxNeighborhoodCollection::ConstNeighborIterator& nbrs_end,
    const hier::Box& dst_box,
    const hier::Box& src_box,
    bool use_time_interpolation)
@@ -3650,9 +3663,9 @@ RefineSchedule::constructScheduleTransactions(
       tbox::plog << "  dst: L" << d_dst_level->getLevelNumber()
                  << "R" << d_dst_level->getRatioToLevelZero()
                  << " / " << dst_box << std::endl;
-      tbox::plog << "  fill_boxes (" << dst_to_fill_on_src_proc.numNeighbors(dst_to_fill_iter) << ")";
-      for (BoxNeighborhoodCollection::ConstNeighborIterator bi = dst_to_fill_on_src_proc.begin(dst_to_fill_iter);
-           bi != dst_to_fill_on_src_proc.end(dst_to_fill_iter); ++bi) {
+      tbox::plog << "  fill_boxes (" << num_nbrs << ")";
+      for (hier::BoxNeighborhoodCollection::ConstNeighborIterator bi = nbrs_begin;
+           bi != nbrs_end; ++bi) {
          tbox::plog << " " << *bi;
       }
       tbox::plog << std::endl;
@@ -3884,493 +3897,8 @@ RefineSchedule::constructScheduleTransactions(
 
       hier::BoxContainer::iterator box_itr(d_src_masks);
       int box_num = 0;
-      for (BoxNeighborhoodCollection::ConstNeighborIterator bi =
-              dst_to_fill_on_src_proc.begin(dst_to_fill_iter);
-           bi != dst_to_fill_on_src_proc.end(dst_to_fill_iter); ++bi) {
-
-         const hier::Box& fill_box = *bi;
-
-         /*
-          * Get the patch data factories and calculate the overlap.
-          * Note that we restrict the domain of the time interpolation
-          * to the intersection of the fill box and the ghost box of
-          * the destination patch data component.  This is needed for
-          * the case where the schedule treats data components with
-          * different ghost cell widths since the fill boxes are
-          * generated using the largest ghost width.
-          */
-
-         hier::Box dst_fill_box(dst_box);
-         dst_fill_box.grow(dst_gcw);
-         dst_fill_box = dst_fill_box * fill_box;
-
-         boost::shared_ptr<hier::BoxOverlap> overlap;
-         hier::Box src_mask(dim);
-         if (!is_singularity) {
-
-            /*
-             * Create overlap for normal cases (all but enhanced connectivity).
-             */
-
-            hier::Box test_mask(dst_fill_box * transformed_src_box);
-            if (test_mask.empty() && dst_pdf->dataLivesOnPatchBorder()) {
-               if ((dst_gcw == constant_zero_intvector) ||
-                   (dst_box.isSpatiallyEqual(fill_box))) {
-
-                  test_mask = dst_fill_box;
-                  test_mask.grow(constant_one_intvector);
-                  test_mask = test_mask * transformed_src_box;
-
-               }
-            }
-
-            src_mask = test_mask;
-            transformation.inverseTransform(src_mask);
-
-            overlap =
-               rep_item.d_var_fill_pattern->calculateOverlap(
-                  *dst_pdf->getBoxGeometry(unshifted_dst_box),
-                  *src_pdf->getBoxGeometry(unshifted_src_box),
-                  dst_box,
-                  src_mask,
-                  fill_box,
-                  true, transformation);
-         } else {
-
-            /*
-             * Create overlap for enhanced connectivity.  This overlap
-             * will be used in transaction from d_src_level to d_encon_level.
-             */
-
-            hier::Box test_mask(dst_fill_box);
-            transformation.inverseTransform(test_mask);
-            test_mask = test_mask * src_box;
-            if (test_mask.empty() && dst_pdf->dataLivesOnPatchBorder()) {
-               if ((dst_gcw == constant_zero_intvector) ||
-                   (dst_box.isSpatiallyEqual(fill_box))) {
-
-                  test_mask = dst_fill_box;
-                  test_mask.grow(constant_one_intvector);
-                  transformation.inverseTransform(test_mask);
-                  test_mask = test_mask * src_box;
-
-               }
-            }
-
-            src_mask = test_mask;
-            hier::Box transformed_fill_box(fill_box);
-            hier::Box transformed_dst_box(dst_box);
-            transformation.inverseTransform(transformed_fill_box);
-            transformation.inverseTransform(transformed_dst_box);
-
-            overlap =
-               rep_item.d_var_fill_pattern->calculateOverlap(
-                  *dst_pdf->getBoxGeometry(transaction_dst_box),
-                  *src_pdf->getBoxGeometry(unshifted_src_box),
-                  transformed_dst_box,
-                  src_mask,
-                  transformed_fill_box,
-                  true, hier::Transformation(hier::IntVector::getZero(dim)));
-         }
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-         if (!overlap) {
-            TBOX_ERROR("Internal RefineSchedule error..."
-               << "\n Overlap is NULL for "
-               << "\n src box = " << src_box
-               << "\n dst box = " << dst_box
-               << "\n src mask = " << src_mask << std::endl);
-         }
-#endif
-
-         if (s_extra_debug) {
-            tbox::plog << "  overlap: ";
-            overlap->print(tbox::plog);
-         }
-         *box_itr = src_mask;
-         d_overlaps[box_num] = overlap;
-         box_num++;
-         ++box_itr;
-
-      }
-
-      /*
-       * Iterate over components in refine description list
-       */
-      for (std::list<int>::iterator l(d_refine_classes->getIterator(nc));
-           l != d_refine_classes->getIteratorEnd(nc); l++) {
-         const RefineClasses::Data& item = d_refine_classes->getRefineItem(*l);
-         TBOX_ASSERT(item.d_class_index == nc);
-
-         const int dst_id = item.d_scratch;
-         const int src_id = item.d_src;
-         const int ritem_count = item.d_tag;
-
-         /*
-          * If the src and dst patches, levels, and components are the
-          * same, and there is no shift, the data exchange is unnecessary.
-          */
-         if (!same_patch_no_shift || (dst_id != src_id)) {
-
-            /*
-             * Iterate over the fill boxes and create transactions
-             * for each box that has a non-empty overlap.
-             */
-            hier::BoxContainer::iterator itr(d_src_masks);
-            for (int i = 0; i < box_num; i++, ++itr) {
-
-               /*
-                * If overlap is not empty, then add the transaction
-                * to the appropriate communication schedule.
-                * There are two schedules depending on whether
-                * coarse or fine data takes precedence at
-                * coarse-fine boundaries for communications
-                * where the destination variable quantity
-                * has data residing on the boundary.
-                * There are two types of transactions depending on
-                * whether we use time interpolation.
-                */
-
-               /*
-                * If we only perform the following block only for
-                * non-null d_overlap[i], why not just loop through
-                * box_num instead of num_fill_boxes?
-                */
-               if (!d_overlaps[i]->isOverlapEmpty()) {
-
-                  boost::shared_ptr<tbox::Transaction> transaction;
-
-                  if (d_transaction_factory) {
-
-                     transaction =
-                        d_transaction_factory->allocate(transaction_dst_level,
-                           d_src_level,
-                           d_overlaps[i],
-                           transaction_dst_box,
-                           src_box,
-                           ritem_count);
-                  } else if (use_time_interpolation &&
-                             item.d_time_interpolate) {
-
-                     transaction.reset(new RefineTimeTransaction(
-                           transaction_dst_level, d_src_level,
-                           d_overlaps[i],
-                           transaction_dst_box, src_box,
-                           *itr,
-                           ritem_count));
-
-                  } else {  // no time interpolation
-
-                     transaction.reset(new RefineCopyTransaction(
-                           transaction_dst_level, d_src_level,
-                           d_overlaps[i],
-                           transaction_dst_box, src_box,
-                           ritem_count));
-
-                  }  // time interpolation conditional
-
-                  if (item.d_fine_bdry_reps_var) {
-                     if (same_patch) {
-                        d_fine_priority_level_schedule->addTransaction(
-                           transaction);
-                     } else {
-                        d_fine_priority_level_schedule->appendTransaction(
-                           transaction);
-                     }
-                  } else {
-                     if (same_patch) {
-                        d_coarse_priority_level_schedule->addTransaction(
-                           transaction);
-                     } else {
-                        d_coarse_priority_level_schedule->appendTransaction(
-                           transaction);
-                     }
-                  }
-
-               }  // if overlap not empty
-
-            }  // iterate over fill_boxes
-
-         }
-
-      }  // iterate over refine components in equivalence class
-
-   }  // iterate over refine equivalence classes
-}
-
-/*
- *************************************************************************
- *
- * Private utility function that constructs schedule transactions that
- * move data from source patch on source level to destination patch
- * on destination level on regions defined by list of fil boxes.
- *
- *************************************************************************
- */
-
-void
-RefineSchedule::constructScheduleTransactions(
-   const hier::Connector& dst_to_fill,
-   hier::Connector::ConstNeighborhoodIterator& dst_itr,
-   const hier::Box& dst_box,
-   const hier::Box& src_box,
-   bool use_time_interpolation)
-{
-   TBOX_ASSERT(d_dst_level);
-   TBOX_ASSERT(d_src_level);
-   TBOX_ASSERT(!dst_box.isPeriodicImage()); // src absorbs the shift, if any.
-
-   const tbox::Dimension& dim(d_dst_level->getDim());
-   const int my_rank = d_dst_level->getBoxLevel()->getMPI().getRank();
-
-   const hier::IntVector& constant_zero_intvector(hier::IntVector::getZero(dim));
-   const hier::IntVector& constant_one_intvector(hier::IntVector::getOne(dim));
-
-   if (s_extra_debug) {
-      tbox::plog << "RefineSchedule::constructScheduleTransactions: " << use_time_interpolation
-                 << std::endl;
-      tbox::plog << "  src: L" << d_src_level->getLevelNumber()
-                 << "R" << d_src_level->getRatioToLevelZero()
-                 << " / " << src_box << std::endl;
-      tbox::plog << "  dst: L" << d_dst_level->getLevelNumber()
-                 << "R" << d_dst_level->getRatioToLevelZero()
-                 << " / " << dst_box << std::endl;
-      tbox::plog << "  fill_boxes ("
-                 << dst_to_fill.numLocalNeighbors(*dst_itr) << ")";
-      for (hier::Connector::ConstNeighborIterator bi = dst_to_fill.begin(dst_itr);
-           bi != dst_to_fill.end(dst_itr); ++bi) {
-         tbox::plog << " " << *bi;
-      }
-      tbox::plog << std::endl;
-   }
-
-   /*
-    * d_src_masks and d_overlaps exist only in this method, but are
-    * class members instead of temporaries so that they don't
-    * have to be reallocated every time this method is used.
-    */
-   int max_overlap_array_size = d_max_fill_boxes;
-
-   if (d_src_masks.size() < max_overlap_array_size) {
-      for (int i = d_src_masks.size();
-           i < max_overlap_array_size; ++i) {
-         d_src_masks.pushBack(hier::Box(dim));
-      }
-   }
-
-   if (d_overlaps.getSize() < max_overlap_array_size) {
-      d_overlaps.setNull();
-      d_overlaps.resizeArray(max_overlap_array_size);
-   }
-
-   boost::shared_ptr<hier::PatchDescriptor> dst_patch_descriptor(
-      d_dst_level->getPatchDescriptor());
-   boost::shared_ptr<hier::PatchDescriptor> src_patch_descriptor(
-      d_src_level->getPatchDescriptor());
-
-   const bool same_patch =
-      (d_dst_level == d_src_level &&
-       dst_box.getGlobalId() == src_box.getGlobalId());
-   const bool same_patch_no_shift =
-      (same_patch && !src_box.isPeriodicImage());
-
-   const int num_equiv_classes =
-      d_refine_classes->getNumberOfEquivalenceClasses();
-
-   const hier::PeriodicShiftCatalog* shift_catalog =
-      hier::PeriodicShiftCatalog::getCatalog(dim);
-
-   /*
-    * Calculate the shift and the shifted source box.
-    */
-   hier::IntVector src_shift(dim, 0);
-   hier::IntVector dst_shift(dim, 0);
-   hier::Box unshifted_src_box = src_box;
-   hier::Box unshifted_dst_box = dst_box;
-   if (src_box.isPeriodicImage()) {
-      TBOX_ASSERT(!dst_box.isPeriodicImage());
-      src_shift = shift_catalog->shiftNumberToShiftDistance(
-            src_box.getPeriodicId());
-      src_shift = (d_src_level->getRatioToLevelZero() >
-                   constant_zero_intvector) ?
-         (src_shift * d_src_level->getRatioToLevelZero()) :
-         hier::IntVector::ceilingDivide(src_shift,
-            -d_src_level->getRatioToLevelZero());
-      unshifted_src_box.shift(-src_shift);
-   }
-   if (dst_box.isPeriodicImage()) {
-      TBOX_ASSERT(!src_box.isPeriodicImage());
-      dst_shift = shift_catalog->shiftNumberToShiftDistance(
-            dst_box.getPeriodicId());
-      dst_shift = (d_dst_level->getRatioToLevelZero() >
-                   constant_zero_intvector) ?
-         (dst_shift * d_dst_level->getRatioToLevelZero()) :
-         hier::IntVector::ceilingDivide(dst_shift,
-            -d_dst_level->getRatioToLevelZero());
-      unshifted_dst_box.shift(-dst_shift);
-   }
-   if (s_extra_debug) {
-      tbox::plog << "  src_shift: " << src_shift
-                 << " unshifted_src_box " << unshifted_src_box << std::endl;
-      tbox::plog << "  dst_shift: " << dst_shift
-                 << " unshifted_dst_box " << unshifted_dst_box << std::endl;
-   }
-
-   /*
-    * Transformation initialized to src_shift with no rotation.
-    * It will never be modified in single-block runs, nor in multiblock runs
-    * when src_box and dst_box are on the same block.
-    */
-   hier::Transformation transformation(src_shift);
-
-   /*
-    * When src_box and dst_box are on different blocks
-    * transformed_src_box is a representation of the source box in the
-    * destination coordinate system.
-    *
-    * For all other cases, transformed_src_box is simply a copy of the
-    * box from src_box.
-    */
-   hier::Box transformed_src_box(src_box);
-
-   /*
-    * When needed, transform the source box and determine if src and
-    * dst touch at an enhance connectivity singularity.
-    */
-   bool is_singularity = false;
-   if (src_box.getBlockId() != dst_box.getBlockId()) {
-      const hier::BlockId& dst_block_id = dst_box.getBlockId();
-      const hier::BlockId& src_block_id = src_box.getBlockId();
-
-      boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
-         d_dst_level->getGridGeometry());
-
-      hier::Transformation::RotationIdentifier rotation =
-         grid_geometry->getRotationIdentifier(dst_block_id,
-            src_block_id);
-      hier::IntVector offset(
-         grid_geometry->getOffset(dst_block_id, src_block_id));
-
-      offset *= d_dst_level->getRatioToLevelZero();
-
-      is_singularity = grid_geometry->areSingularityNeighbors(dst_block_id,
-            src_block_id);
-
-      transformation = hier::Transformation(rotation, offset,
-                                            src_block_id, dst_block_id);
-      transformation.transform(transformed_src_box);
-   }
-
-   /*
-    * For any case except when src and dst touch at enhanced connectivity,
-    * the transactions use d_dst_level as the destination level and
-    * dst_box as the destination box.  For the enhanced connectivity
-    * case, the destination level becomes d_encon_level and the destination
-    * box is a member of d_encon_level.
-    */
-   boost::shared_ptr<hier::PatchLevel> transaction_dst_level;
-   hier::Box transaction_dst_box(dim);
-   if (is_singularity) {
-
-      /*
-       * Determination of transaction_dst_box is done differently
-       * depending of if dst_box is local.  When it is local
-       * (regardless of whether source is also local), the appropriate
-       * Box to assign to transaction_dst_box can be
-       * found from the d_dst_to_encon connector.
-       *
-       * If the destination is not local, then the source is,
-       * and d_src_to_encon is searched to fined the right member of
-       * d_encon_level to assign to transaction_dst_box.
-       */
-      if (dst_box.getOwnerRank() == my_rank) {
-
-         hier::Connector::ConstNeighborhoodIterator ei =
-            d_dst_to_encon.findLocal(dst_box.getBoxId());
-
-         const hier::BlockId& src_block_id = src_box.getBlockId();
-
-         for (hier::Connector::ConstNeighborIterator en = d_dst_to_encon.begin(ei);
-              en != d_dst_to_encon.end(ei); ++en) {
-
-            if (src_block_id == (*en).getBlockId()) {
-               TBOX_ASSERT(transaction_dst_box.empty());
-               transaction_dst_box = *en;
-            }
-         }
-
-      } else {
-
-         TBOX_ASSERT(src_box.getOwnerRank() == my_rank);
-
-         hier::IntVector test_gcw(
-            hier::IntVector::max(d_boundary_fill_ghost_width,
-               d_max_stencil_width));
-         test_gcw.max(hier::IntVector::getOne(dim));
-
-         hier::Box test_dst_box(dst_box);
-         test_dst_box.grow(test_gcw);
-
-         hier::Connector::ConstNeighborhoodIterator ei =
-            d_src_to_encon.findLocal(src_box.getBoxId());
-
-         hier::BoxContainer encon_nbr_choices;
-         for (hier::Connector::ConstNeighborIterator ni = d_src_to_encon.begin(ei);
-              ni != d_src_to_encon.end(ei); ++ni) {
-            if ((*ni).getOwnerRank() == dst_box.getOwnerRank()) {
-               hier::Box encon_box(*ni);
-               transformation.transform(encon_box);
-
-               if (test_dst_box.contains(encon_box)) {
-                  encon_nbr_choices.pushBack(*ni);
-               }
-            }
-         }
-         if (encon_nbr_choices.isEmpty()) {
-            transaction_dst_box.setEmpty();
-         } else {
-            int max_nbr_size = 0;
-            for (hier::BoxContainer::iterator en(encon_nbr_choices);
-                 en != encon_nbr_choices.end(); ++en) {
-               const int box_size = en->size();
-               if (box_size > max_nbr_size) {
-                  max_nbr_size = box_size;
-                  transaction_dst_box = *en;
-               }
-            }
-         }
-      }
-
-      transaction_dst_level = d_encon_level;
-
-   } else {
-      /*
-       * All cases except for handling enhance connectivity neighbors
-       * go here to do a simple assignment.
-       */
-      transaction_dst_level = d_dst_level;
-      transaction_dst_box = dst_box;
-   }
-
-   for (int nc = 0; nc < num_equiv_classes; nc++) {
-
-      const RefineClasses::Data& rep_item =
-         d_refine_classes->getClassRepresentative(nc);
-
-      const int rep_item_dst_id = rep_item.d_scratch;
-      const int rep_item_src_id = rep_item.d_src;
-
-      boost::shared_ptr<hier::PatchDataFactory> src_pdf(
-         src_patch_descriptor->getPatchDataFactory(rep_item_src_id));
-      boost::shared_ptr<hier::PatchDataFactory> dst_pdf(
-         dst_patch_descriptor->getPatchDataFactory(rep_item_dst_id));
-
-      const hier::IntVector& dst_gcw = dst_pdf->getGhostCellWidth();
-
-      hier::BoxContainer::iterator box_itr(d_src_masks);
-      int box_num = 0;
-      for (hier::Connector::ConstNeighborIterator bi = dst_to_fill.begin(dst_itr);
-           bi != dst_to_fill.end(dst_itr); ++bi) {
+      for (hier::BoxNeighborhoodCollection::ConstNeighborIterator bi = nbrs_begin;
+           bi != nbrs_end; ++bi) {
 
          const hier::Box& fill_box = *bi;
 
