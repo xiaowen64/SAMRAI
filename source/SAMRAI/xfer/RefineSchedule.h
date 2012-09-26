@@ -305,14 +305,6 @@ private:
    static void
    finalizeCallback();
 
-   //! @brief Shorthand typedef.
-   typedef hier::LocalId LocalId;
-   //! @brief Shorthand typedef.
-   typedef hier::BoxLevel BoxLevel;
-   //! @brief Shorthand typedef.
-   typedef hier::Connector Connector;
-   //! @brief Shorthand typedef.
-   typedef hier::BoxNeighborhoodCollection BoxNeighborhoodCollection;
    //! @brief Mapping from a (potentially remote) Box to a set of neighbors.
    typedef std::map<hier::Box, hier::BoxContainer, hier::Box::id_less> FullNeighborhoodSet;
 
@@ -418,12 +410,12 @@ private:
    finishScheduleConstruction(
       int next_coarser_ln,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      const Connector& dst_to_src,
-      const Connector& src_to_dst,
+      const hier::Connector& dst_to_src,
+      const hier::Connector& src_to_dst,
       const bool dst_is_coarse_interp_level,
       const hier::IntVector& src_growth_to_nest_dst,
-      const Connector& dst_to_fill,
-      const BoxNeighborhoodCollection& src_owner_dst_to_fill,
+      const hier::Connector& dst_to_fill,
+      const hier::BoxNeighborhoodCollection& src_owner_dst_to_fill,
       bool use_time_interpolation,
       bool skip_generate_schedule = false);
 
@@ -502,8 +494,8 @@ private:
    refineScratchData(
       const boost::shared_ptr<hier::PatchLevel>& fine_level,
       const boost::shared_ptr<hier::PatchLevel>& coarse_level,
-      const Connector& coarse_to_fine,
-      const Connector& coarse_to_unfilled,
+      const hier::Connector& coarse_to_fine,
+      const hier::Connector& coarse_to_unfilled,
       const std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >&
       overlaps) const;
 
@@ -516,8 +508,8 @@ private:
       std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
       const boost::shared_ptr<hier::PatchLevel>& fine_level,
       const boost::shared_ptr<hier::PatchLevel>& coarse_level,
-      const Connector& coarse_to_fine,
-      const Connector& coarse_to_unfilled);
+      const hier::Connector& coarse_to_fine,
+      const hier::Connector& coarse_to_unfilled);
 
    /*!
     * @brief Constructs the transactions for all communication and copying
@@ -558,14 +550,14 @@ private:
     */
    void
    generateCommunicationSchedule(
-      boost::shared_ptr<BoxLevel>& unfilled_box_level,
-      boost::shared_ptr<Connector>& dst_to_unfilled,
-      boost::shared_ptr<BoxLevel>& unfilled_encon_box_level,
-      boost::shared_ptr<Connector>& encon_to_unfilled_encon,
-      const Connector& dst_to_src,
-      const Connector& src_to_dst,
-      const Connector& dst_to_fill,
-      const BoxNeighborhoodCollection& src_owner_dst_to_fill,
+      boost::shared_ptr<hier::BoxLevel>& unfilled_box_level,
+      boost::shared_ptr<hier::Connector>& dst_to_unfilled,
+      boost::shared_ptr<hier::BoxLevel>& unfilled_encon_box_level,
+      boost::shared_ptr<hier::Connector>& encon_to_unfilled_encon,
+      const hier::Connector& dst_to_src,
+      const hier::Connector& src_to_dst,
+      const hier::Connector& dst_to_fill,
+      const hier::BoxNeighborhoodCollection& src_owner_dst_to_fill,
       const bool use_time_interpolation,
       const bool create_transactions);
 
@@ -601,9 +593,9 @@ private:
     */
    void
    setDefaultFillBoxLevel(
-      BoxLevel& fill_box_level,
-      Connector& dst_to_fill,
-      BoxNeighborhoodCollection& src_owner_dst_to_fill,
+      hier::BoxLevel& fill_box_level,
+      hier::Connector& dst_to_fill,
+      hier::BoxNeighborhoodCollection& src_owner_dst_to_fill,
       const hier::BoxLevel& dst_box_level,
       const hier::Connector* dst_to_src,
       const hier::Connector* src_to_dst,
@@ -664,7 +656,7 @@ private:
       const boost::shared_ptr<hier::Connector>& encon_to_unfilled_encon,
       hier::LocalId& last_unfilled_local_id,
       const hier::Box& dst_box,
-      const Connector& dst_to_src,
+      const hier::Connector& dst_to_src,
       const hier::BoxContainer& encon_fill_boxes);
 
    /*
@@ -702,10 +694,10 @@ private:
     */
    void
    communicateFillBoxes(
-      BoxNeighborhoodCollection& src_owner_dst_to_fill,
-      const Connector& dst_to_fill,
-      const Connector& dst_to_src,
-      const Connector& src_to_dst);
+      hier::BoxNeighborhoodCollection& src_owner_dst_to_fill,
+      const hier::Connector& dst_to_fill,
+      const hier::Connector& dst_to_src,
+      const hier::Connector& src_to_dst);
 
    /*!
     * @brief Shear off parts of unfilled boxes that lie outside non-periodic
@@ -877,7 +869,7 @@ private:
    void
    reorderNeighborhoodSetsByDstNodes(
       FullNeighborhoodSet& full_inverted_edges,
-      const Connector& src_to_dst) const;
+      const hier::Connector& src_to_dst) const;
 
    /*!
     * @brief Cache local copies of hierarchy information and compute
@@ -1096,7 +1088,7 @@ private:
     * fill from the source level.  These remaining boxes must be
     * filled using a coarse interpolation schedule, d_coarse_interp_schedule.
     */
-   boost::shared_ptr<BoxLevel> d_unfilled_box_level;
+   boost::shared_ptr<hier::BoxLevel> d_unfilled_box_level;
 
    /*!
     * @brief Describes remaining unfilled boxes of d_encon_level after
@@ -1104,7 +1096,7 @@ private:
     * be filled using a coarse interpolation schedule,
     * d_coarse_interp_encon_schedule.
     */
-   boost::shared_ptr<BoxLevel> d_unfilled_encon_box_level;
+   boost::shared_ptr<hier::BoxLevel> d_unfilled_encon_box_level;
 
    /*!
     * @brief Stores the BoxOverlaps needed by refineScratchData()
@@ -1122,31 +1114,31 @@ private:
    /*!
     * @brief Connector from the coarse interpolation level to the destination.
     */
-   Connector d_coarse_interp_to_dst;
+   hier::Connector d_coarse_interp_to_dst;
 
    /*!
     * @brief Connector from the destination level to the coarse interpolation.
     */
-   Connector d_dst_to_coarse_interp;
+   hier::Connector d_dst_to_coarse_interp;
 
    /*!
     * @brief Connector from d_encon_level to d_coarse_interp_encon_level.
     */
-   Connector d_encon_to_coarse_interp_encon;
+   hier::Connector d_encon_to_coarse_interp_encon;
 
    /*!
     * @brief Connector d_coarse_interp_level to d_unfilled_box_level.
     *
     * Cached for use during schedule filling.
     */
-   Connector d_coarse_interp_to_unfilled;
+   hier::Connector d_coarse_interp_to_unfilled;
 
-   Connector d_coarse_interp_encon_to_unfilled_encon;
-   Connector d_coarse_interp_encon_to_encon;
+   hier::Connector d_coarse_interp_encon_to_unfilled_encon;
+   hier::Connector d_coarse_interp_encon_to_encon;
 
-   Connector d_dst_to_encon;
-   Connector d_src_to_encon;
-   Connector d_encon_to_src;
+   hier::Connector d_dst_to_encon;
+   hier::Connector d_src_to_encon;
+   hier::Connector d_encon_to_src;
 
    //@{
 
