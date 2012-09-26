@@ -135,8 +135,8 @@ CartesianGridGeometry::CartesianGridGeometry(
    d_domain_box(domain.front().getDim())
 {
    TBOX_ASSERT(domain.size() > 0);
-   TBOX_ASSERT(!(x_lo == (double *)NULL));
-   TBOX_ASSERT(!(x_up == (double *)NULL));
+   TBOX_ASSERT(x_lo != 0);
+   TBOX_ASSERT(x_up != 0);
 
    setGeometryData(x_lo, x_up, domain);
 }
@@ -151,8 +151,8 @@ CartesianGridGeometry::CartesianGridGeometry(
    d_domain_box(domain.front().getDim())
 {
    TBOX_ASSERT(domain.size() > 0);
-   TBOX_ASSERT(!(x_lo == (double *)NULL));
-   TBOX_ASSERT(!(x_up == (double *)NULL));
+   TBOX_ASSERT(x_lo != 0);
+   TBOX_ASSERT(x_up != 0);
 
    setGeometryData(x_lo, x_up, domain);
 }
@@ -283,8 +283,8 @@ CartesianGridGeometry::setGeometryData(
 {
    const tbox::Dimension& dim(getDim());
 
-   TBOX_ASSERT(!(x_lo == (double *)NULL));
-   TBOX_ASSERT(!(x_up == (double *)NULL));
+   TBOX_ASSERT(x_lo != 0);
+   TBOX_ASSERT(x_up != 0);
 
    for (int id = 0; id < dim.getValue(); id++) {
       d_x_lo[id] = x_lo[id];

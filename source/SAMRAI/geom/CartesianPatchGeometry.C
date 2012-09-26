@@ -38,9 +38,9 @@ CartesianPatchGeometry::CartesianPatchGeometry(
                        touches_regular_bdry,
                        touches_periodic_bdry)
 {
-   TBOX_ASSERT(!(dx == (double *)NULL));
-   TBOX_ASSERT(!(x_lo == (double *)NULL));
-   TBOX_ASSERT(!(x_up == (double *)NULL));
+   TBOX_ASSERT(dx != 0);
+   TBOX_ASSERT(x_lo != 0);
+   TBOX_ASSERT(x_up != 0);
 
    const tbox::Dimension& dim(ratio_to_level_zero.getDim());
 

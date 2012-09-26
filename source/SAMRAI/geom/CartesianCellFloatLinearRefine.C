@@ -103,7 +103,7 @@ CartesianCellFloatLinearRefine::refine(
    const pdat::CellOverlap* t_overlap =
       dynamic_cast<const pdat::CellOverlap *>(&fine_overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
    for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
