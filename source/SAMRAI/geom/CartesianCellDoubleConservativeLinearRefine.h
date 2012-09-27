@@ -70,6 +70,8 @@ public:
     * intersection of the destination patch and the boxes contained in
     * fine_overlap.  It is assumed that the coarse patch contains sufficient
     * data for the stencil width of the refinement operator.
+    *
+    * @pre dynamic_cast<const pdat::CellOverlap *>(&fine_overlap) != 0
     */
    void
    refine(
@@ -88,6 +90,15 @@ public:
     * that the coarse patch contains sufficient data for the stencil width of
     * the refinement operator.  This differs from the above refine() method
     * only in that it operates on a single fine box instead of a BoxOverlap.
+    *
+    * @pre (fine.getDim() == coarse.getDim()) &&
+    *      (fine.getDim() == fine_box.getDim()) &&
+    *      (fine.getDim() == ratio.getDim())
+    * @pre coarse.getPatchData(src_component) is actually a boost::shared_ptr<pdat::CellData<double> >
+    * @pre fine.getPatchData(dst_component) is actually a boost::shared_ptr<pdat::CellData<double> >
+    * @pre coarse.getPatchData(src_component)->getDepth() == fine.getPatchData(dst_component)->getDepth()
+    * @pre (fine.getDim().getValue() == 1) ||
+    *      (fine.getDim().getValue() == 2) || (fine.getDim().getValue() == 3)
     */
    void
    refine(

@@ -142,7 +142,7 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
    const hier::IntVector& ratio) const
 {
    const tbox::Dimension& dim(fine.getDim());
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, fine, coarse, ratio);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, coarse, ratio);
 
    boost::shared_ptr<pdat::EdgeData<double> > cdata(
       coarse.getPatchData(src_component),

@@ -214,6 +214,11 @@ public:
     * @param[in]     refine_ratio the refinement ratio.
     *
     * @return The pointer to the grid geometry object.
+    *
+    * @pre !fine_geom_name.empty()
+    * @pre fine_geom_name != getObjectName()
+    * @pre getDim() == refine_ratio.getDim()
+    * @pre refine_ratio > hier::IntVector::getZero(getDim())
     */
    virtual boost::shared_ptr<hier::BaseGridGeometry>
    makeRefinedGridGeometry(
@@ -231,6 +236,11 @@ public:
     * @param[in]     coarsen_ratio the coasening ratio
     *
     * @return The pointer to a coarsened version of this grid geometry object.
+    *
+    * @pre !coarse_geom_name.empty()
+    * @pre coarse_geom_name != getObjectName()
+    * @pre getDim() == coarsen_ratio.getDim()
+    * @pre coarsen_ratio > hier::IntVector::getZero(getDim())
     */
    virtual boost::shared_ptr<hier::BaseGridGeometry>
    makeCoarsenedGridGeometry(

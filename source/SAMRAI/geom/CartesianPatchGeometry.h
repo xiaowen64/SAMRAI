@@ -43,6 +43,10 @@ public:
     * Constructor for CartesianPatchGeometry class.  It simply passes
     * patch boundary information to hier::PatchGeometry base class constructor
     * and allocates storage for spatial coordinates on patch.
+    *
+    * @pre dx != 0
+    * @pre x_lo != 0
+    * @pre x_up != 0
     */
    CartesianPatchGeometry(
       const hier::IntVector& ratio_to_level_zero,

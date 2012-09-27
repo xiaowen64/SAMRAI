@@ -131,7 +131,7 @@ CartesianOutersideDoubleWeightedAverage::coarsen(
 {
    const tbox::Dimension& dim(fine.getDim());
 
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(dim, coarse, fine, coarse_box, ratio);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, coarse_box, ratio);
 
    boost::shared_ptr<pdat::OutersideData<double> > fdata(
       fine.getPatchData(src_component),

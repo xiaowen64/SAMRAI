@@ -116,6 +116,7 @@ CartesianGridGeometry::CartesianGridGeometry(
    GridGeometry(dim, object_name, input_db, false),
    d_domain_box(dim)
 {
+   TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
 
    bool is_from_restart = tbox::RestartManager::getManager()->isFromRestart();
@@ -134,6 +135,7 @@ CartesianGridGeometry::CartesianGridGeometry(
    GridGeometry(object_name, domain), 
    d_domain_box(domain.front().getDim())
 {
+   TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(domain.size() > 0);
    TBOX_ASSERT(x_lo != 0);
    TBOX_ASSERT(x_up != 0);
@@ -150,6 +152,7 @@ CartesianGridGeometry::CartesianGridGeometry(
    GridGeometry(object_name, domain, op_reg),
    d_domain_box(domain.front().getDim())
 {
+   TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(domain.size() > 0);
    TBOX_ASSERT(x_lo != 0);
    TBOX_ASSERT(x_up != 0);

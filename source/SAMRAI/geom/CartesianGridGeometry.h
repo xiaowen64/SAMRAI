@@ -136,8 +136,8 @@ public:
     * or from the restart database corresponding to the specified
     * object name.
     *
-    * Errors: passing in a null database pointer or an empty std::string
-    * will result in an unrecoverable assertion.
+    * @pre !object_name.empty()
+    * @pre input_db
     */
    CartesianGridGeometry(
       const tbox::Dimension& dim,
@@ -148,8 +148,10 @@ public:
     * Constructor for CartesianGridGeometry sets data members
     * based on arguments.
     *
-    * Errors: passing in an empty std::string, or null data pointers will
-    * result in an unrecoverable assertion.
+    * @pre !object_name.empty()
+    * @pre domain.size() > 0
+    * @pre x_lo != 0
+    * @pre x_up != 0
     */
    CartesianGridGeometry(
       const std::string& object_name,
@@ -174,6 +176,11 @@ public:
     * @param[in] domain The coarsened/refined domain.
     * @param[in] op_reg The same operator registry as the uncoarsened/unrefined
     *            grid geometry.
+    *
+    * @pre !object_name.empty()
+    * @pre domain.size() > 0
+    * @pre x_lo != 0
+    * @pre x_up != 0
     */
    CartesianGridGeometry(
       const std::string& object_name,
@@ -192,6 +199,10 @@ public:
    /**
     * Create and return a pointer to a refined version of this Cartesian grid
     * geometry object.
+    *
+    * @pre !fine_geom_name.empty()
+    * @pre fine_geom_name != getObjectName()
+    * @pre refine_ratio > hier::IntVector::getZero(getDim())
     */
    boost::shared_ptr<hier::BaseGridGeometry>
    makeRefinedGridGeometry(
@@ -201,6 +212,10 @@ public:
    /**
     * Create and return a pointer to a coarsened version of this Cartesian grid
     * geometry object.
+    *
+    * @pre !coarse_geom_name.empty()
+    * @pre coarse_geom_name != getObjectName()
+    * @pre coarsen_ratio > hier::IntVector::getZero(getDim())
     */
    boost::shared_ptr<hier::BaseGridGeometry>
    makeCoarsenedGridGeometry(
@@ -210,6 +225,10 @@ public:
    /*
     * Compute grid data for patch and assign new geom_CartesianPatchGeometry
     * object to patch.
+    *
+    * @pre (getDim() == patch.getDim()) &&
+    *      (getDim() == ratio_to_level_zero.getDim())
+    * @pre ratio_to_level_zero != hier::IntVector::getZero(getDim())
     */
    void
    setGeometryDataOnPatch(
@@ -220,6 +239,9 @@ public:
 
    /**
     * Set data members for this CartesianGridGeometry object.
+    *
+    * @pre x_lo != 0
+    * @pre x_up != 0
     */
    void
    setGeometryData(
@@ -267,7 +289,7 @@ public:
     * Writes the state of the CartesianGridGeometry object to the
     * restart database.
     *
-    * When assertion checking is active, restart_db cannot be a null pointer.
+    * @pre restart_db
     */
    virtual void
    putToRestart(
@@ -291,8 +313,7 @@ private:
     * Data is read from input only if the simulation is not from restart.
     * Otherwise, all values specified in the input database are ignored.
     *
-    * Arguments: is_from_restart is true when simulation is from restart
-    * Assertions: db must not be a null pointer.
+    * @pre is_from_restart || input_db
     */
    void
    getFromInput(
