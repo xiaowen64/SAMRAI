@@ -58,7 +58,7 @@ CellPoissonFACSolver::CellPoissonFACSolver(
    d_poisson_spec(object_name + "::poisson_spec"),
    d_fac_ops(fac_ops),
    d_fac_precond(fac_precond),
-   d_bc_object(NULL),
+   d_bc_object(0),
    d_simple_bc(d_dim, object_name + "::bc"),
    d_ln_min(-1),
    d_ln_max(-1),
@@ -179,7 +179,7 @@ CellPoissonFACSolver::initializeSolverState(
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
 
-   if (d_bc_object == NULL) {
+   if (d_bc_object == 0) {
       TBOX_ERROR(
          d_object_name << ": No BC coefficient strategy object!\n"
                        << "Use either setBoundaries or setPhysicalBcCoefObject\n"
@@ -281,7 +281,7 @@ CellPoissonFACSolver::setBoundaries(
    int* bdry_types)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_bc_object != NULL && d_bc_object != &d_simple_bc) {
+   if (d_bc_object != 0 && d_bc_object != &d_simple_bc) {
       TBOX_ERROR(
          d_object_name << ": Bad attempt to set boundary condition\n"
                        << "by using default bc object after it has been overriden.\n");

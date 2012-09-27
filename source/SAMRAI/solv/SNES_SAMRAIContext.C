@@ -75,12 +75,12 @@ SNES_SAMRAIContext::SNES_SAMRAIContext(
    const boost::shared_ptr<tbox::Database>& input_db) :
    d_object_name(object_name),
    d_context_needs_initialization(true),
-   d_SNES_solver(((SNES)NULL)),
-   d_krylov_solver(((KSP)NULL)),
-   d_jacobian(((Mat)NULL)),
-   d_preconditioner(((PC)NULL)),
-   d_solution_vector(((Vec)NULL)),
-   d_residual_vector(((Vec)NULL)),
+   d_SNES_solver(0),
+   d_krylov_solver(0),
+   d_jacobian(0),
+   d_preconditioner(0),
+   d_solution_vector(0),
+   d_residual_vector(0),
    d_SNES_functions(my_functions),
    d_uses_preconditioner(true),
    d_uses_explicit_jacobian(true),
@@ -108,7 +108,7 @@ SNES_SAMRAIContext::SNES_SAMRAIContext(
    d_nonlinear_iterations(0)
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!(my_functions == (SNESAbstractFunctions *)NULL));
+   TBOX_ASSERT(my_functions != 0);
 
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name,
       this);
@@ -526,14 +526,14 @@ SNES_SAMRAIContext::destroyPetscObjects()
 {
    if (d_jacobian) {
       MatDestroy(d_jacobian);
-      d_jacobian = ((Mat)NULL);
+      d_jacobian = 0;
    }
 
    if (d_SNES_solver) {
       SNESDestroy(d_SNES_solver);
-//     if (d_SLES_solver) d_SLES_solver = ((SLES)NULL);
-      if (d_preconditioner) d_preconditioner = ((PC)NULL);
-      if (d_krylov_solver) d_krylov_solver = ((KSP)NULL);
+//     if (d_SLES_solver) d_SLES_solver = 0;
+      if (d_preconditioner) d_preconditioner = 0;
+      if (d_krylov_solver) d_krylov_solver = 0;
    }
 }
 

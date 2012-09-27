@@ -51,7 +51,7 @@ boost::shared_ptr<SAMRAIVectorReal<double> >
 Sundials_SAMRAIVector::getSAMRAIVector(
    SundialsAbstractVector* sundials_vec)
 {
-   TBOX_ASSERT(!(sundials_vec == (SundialsAbstractVector *)NULL));
+   TBOX_ASSERT(sundials_vec != 0);
    return (dynamic_cast<Sundials_SAMRAIVector *>(sundials_vec))->
           getSAMRAIVector();
 }
@@ -60,7 +60,7 @@ boost::shared_ptr<SAMRAIVectorReal<double> >
 Sundials_SAMRAIVector::getSAMRAIVector(
    N_Vector sundials_vec)
 {
-   TBOX_ASSERT(!(sundials_vec == NULL));
+   TBOX_ASSERT(sundials_vec != 0);
 // sgs
    return static_cast<Sundials_SAMRAIVector *>(sundials_vec->content)->
           getSAMRAIVector();

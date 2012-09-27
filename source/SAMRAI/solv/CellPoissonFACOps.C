@@ -571,7 +571,7 @@ CellPoissonFACOps::CellPoissonFACOps(
    d_residual_tolerance_during_smoothing(-1.0),
    d_flux_id(-1),
    d_hypre_solver(hypre_solver),
-   d_physical_bc_coef(NULL),
+   d_physical_bc_coef(0),
    d_context(hier::VariableDatabase::getDatabase()->getContext(
              object_name + "::PRIVATE_CONTEXT")),
    d_cell_scratch_id(-1),
@@ -600,7 +600,7 @@ CellPoissonFACOps::CellPoissonFACOps(
    d_coarse_solver_max_iterations(500),
    d_residual_tolerance_during_smoothing(-1.0),
    d_flux_id(-1),
-   d_physical_bc_coef(NULL),
+   d_physical_bc_coef(0),
    d_context(hier::VariableDatabase::getDatabase()->getContext(
              object_name + "::PRIVATE_CONTEXT")),
    d_cell_scratch_id(-1),
@@ -769,7 +769,7 @@ CellPoissonFACOps::initializeOperatorState(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
 
-   if (d_physical_bc_coef == NULL) {
+   if (d_physical_bc_coef == 0) {
       /*
        * It's an error not to have bc object set.
        * Note that the bc object cannot be passed in through

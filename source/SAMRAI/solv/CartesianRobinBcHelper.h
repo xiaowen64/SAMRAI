@@ -66,7 +66,7 @@ public:
    explicit CartesianRobinBcHelper(
       const tbox::Dimension& dim,
       std::string object_name = std::string(),
-      RobinBcCoefStrategy* coef_strategy = NULL);
+      RobinBcCoefStrategy* coef_strategy = 0);
 
    /*!
     * @brief Destructor.

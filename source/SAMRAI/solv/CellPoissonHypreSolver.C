@@ -295,12 +295,12 @@ CellPoissonHypreSolver::CellPoissonHypreSolver(
    d_num_post_relax_steps(1),
    d_relative_residual_norm(-1.0),
    d_use_smg(true),
-   d_grid(NULL),
-   d_stencil(NULL),
-   d_matrix(NULL),
-   d_linear_rhs(NULL),
-   d_linear_sol(NULL),
-   d_mg_data(NULL),
+   d_grid(0),
+   d_stencil(0),
+   d_matrix(0),
+   d_linear_rhs(0),
+   d_linear_sol(0),
+   d_mg_data(0),
    d_print_solver_info(false)
 {
    if (d_dim == tbox::Dimension(1) || d_dim > tbox::Dimension(3)) {
@@ -568,8 +568,8 @@ CellPoissonHypreSolver::allocateHypreData()
        * Allocate the structured matrix
        */
 
-      int* full_ghosts = NULL;
-      int* no_ghosts = NULL;
+      int* full_ghosts = 0;
+      int* no_ghosts = 0;
 
       if (d_dim == tbox::Dimension(1)) {
          full_ghosts = full_ghosts1;
@@ -643,23 +643,23 @@ CellPoissonHypreSolver::deallocateHypreData()
 {
    if (d_stencil) {
       HYPRE_StructStencilDestroy(d_stencil);
-      d_stencil = NULL;
+      d_stencil = 0;
    }
    if (d_grid) {
       HYPRE_StructGridDestroy(d_grid);
-      d_grid = NULL;
+      d_grid = 0;
    }
    if (d_matrix) {
       HYPRE_StructMatrixDestroy(d_matrix);
-      d_matrix = NULL;
+      d_matrix = 0;
    }
    if (d_linear_rhs) {
       HYPRE_StructVectorDestroy(d_linear_rhs);
-      d_linear_rhs = NULL;
+      d_linear_rhs = 0;
    }
    if (d_linear_sol) {
       HYPRE_StructVectorDestroy(d_linear_sol);
-      d_linear_sol = NULL;
+      d_linear_sol = 0;
    }
    destroyHypreSolver();
 }
@@ -729,7 +729,7 @@ void
 CellPoissonHypreSolver::setMatrixCoefficients(
    const PoissonSpecifications& spec)
 {
-   if (d_physical_bc_coef_strategy == NULL) {
+   if (d_physical_bc_coef_strategy == 0) {
       TBOX_ERROR(
          d_object_name << ": No BC coefficient strategy object!\n"
                        << "Use either setBoundaries or setPhysicalBcCoefObject\n"
@@ -1179,7 +1179,7 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
 void
 CellPoissonHypreSolver::setupHypreSolver()
 {
-   TBOX_ASSERT(d_mg_data == NULL);
+   TBOX_ASSERT(d_mg_data == 0);
 
    tbox::SAMRAI_MPI::Comm communicator =
       d_hierarchy->getMPI().getCommunicator();
@@ -1217,13 +1217,13 @@ CellPoissonHypreSolver::setupHypreSolver()
 void
 CellPoissonHypreSolver::destroyHypreSolver()
 {
-   if (d_mg_data != NULL) {
+   if (d_mg_data != 0) {
       if (d_use_smg) {
          HYPRE_StructSMGDestroy(d_mg_data);
       } else {
          HYPRE_StructPFMGDestroy(d_mg_data);
       }
-      d_mg_data = NULL;
+      d_mg_data = 0;
    }
 }
 
@@ -1242,7 +1242,7 @@ CellPoissonHypreSolver::solveSystem(
    const int f,
    bool homogeneous_bc)
 {
-   if (d_physical_bc_coef_strategy == NULL) {
+   if (d_physical_bc_coef_strategy == 0) {
       TBOX_ERROR(
          d_object_name << ": No BC coefficient strategy object!\n"
                        << "Use either setBoundaries or setPhysicalBcCoefObject\n"

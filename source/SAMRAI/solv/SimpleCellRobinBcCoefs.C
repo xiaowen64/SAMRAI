@@ -135,7 +135,7 @@ SimpleCellRobinBcCoefs::setBoundaries(
 #endif
       d_flux_id = fluxes;
       d_flag_id = flags;
-      if (bdry_types != NULL) {
+      if (bdry_types != 0) {
          for (k = 0; k < 2 * d_dim.getValue(); k++) {
             d_bdry_types[k] = bdry_types[k];
          }

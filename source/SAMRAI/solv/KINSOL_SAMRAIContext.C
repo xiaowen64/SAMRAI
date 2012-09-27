@@ -42,7 +42,7 @@ KINSOL_SAMRAIContext::KINSOL_SAMRAIContext(
    const boost::shared_ptr<tbox::Database>& input_db) :
    d_object_name(object_name),
    d_KINSOL_solver(new KINSOLSolver(object_name, my_functions, 0, 0)),
-   d_solution_vector(((SundialsAbstractVector *)NULL)),
+   d_solution_vector(0),
    d_residual_stop_tolerance(-1.0),
    d_max_nonlinear_iterations(200),
    d_max_krylov_dimension(10),
@@ -62,7 +62,7 @@ KINSOL_SAMRAIContext::KINSOL_SAMRAIContext(
    d_uses_jac_times_vector(false)
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!(my_functions == (KINSOLAbstractFunctions *)NULL));
+   TBOX_ASSERT(my_functions != 0);
 
    d_residual_monitoring_params[0] = 0.00001;
    d_residual_monitoring_params[1] = 0.9;

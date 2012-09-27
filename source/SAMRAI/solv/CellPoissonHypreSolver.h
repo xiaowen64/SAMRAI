@@ -353,7 +353,7 @@ public:
       const std::string& boundary_type,
       const int fluxes = -1,
       const int flags = -1,
-      int* bdry_types = NULL)
+      int* bdry_types = 0)
    {
       d_physical_bc_simple_case.setBoundaries(boundary_type,
          fluxes,

@@ -145,8 +145,8 @@ public:
    void
    initialize(
       SundialsAbstractVector* solution,
-      SundialsAbstractVector* uscale = NULL,
-      SundialsAbstractVector* fscale = NULL);
+      SundialsAbstractVector* uscale = 0,
+      SundialsAbstractVector* fscale = 0);
 
    /**
     * Solve nonlinear problem and return integer termination code defined
@@ -211,7 +211,7 @@ public:
       const int uses_preconditioner,
       const int uses_jac_times_vector)
    {
-      TBOX_ASSERT(!(my_functions == (KINSOLAbstractFunctions *)NULL));
+      TBOX_ASSERT(my_functions != 0);
       d_KINSOL_functions = my_functions;
       d_uses_preconditioner = uses_preconditioner;
       d_uses_jac_times_vector = uses_jac_times_vector;

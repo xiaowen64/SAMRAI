@@ -583,7 +583,7 @@ private:
       const pdat::CellData<double>& rhs_data,
       pdat::CellData<double>& soln_data,
       char red_or_black,
-      double* p_maxres = NULL) const;
+      double* p_maxres = 0) const;
 
    //@}
 
