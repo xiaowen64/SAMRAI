@@ -255,9 +255,13 @@ public:
     * If relationships computation is not specified, the Connectors are
     * unchanged.
     *
+    * @param new_box_level
+    * @param tag_to_new
+    * @param new_to_tag
     * @param bound_boxes Contains one global bounding box for each
     *                    block with a patch in tag_level.
-    * @param mpi_communicator Alternative MPI communicator.  If given,
+    * @param tag_level
+    * @param mpi_object Alternative MPI communicator.  If given,
     *   must be congruent with the tag box_level's MPI communicator.
     *   Specify tbox::SAMRAI_MPI::commNull if unused.  Highly recommend
     *   using an isolated communicator to prevent message mix-ups.
