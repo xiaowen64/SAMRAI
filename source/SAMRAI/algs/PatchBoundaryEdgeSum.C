@@ -294,7 +294,7 @@ PatchBoundaryEdgeSum::setupSum(
    d_single_level_sum_schedule =
       single_level_sum_algorithm.createSchedule(
          d_level,
-         (xfer::RefinePatchStrategy *)NULL,
+         0,
          d_sum_transaction_factory);
 
 }

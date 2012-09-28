@@ -387,7 +387,7 @@ PatchBoundaryNodeSum::setupSum(
       d_single_level_sum_schedule[0] =
          single_level_sum_algorithm.createSchedule(
             d_level,
-            (xfer::RefinePatchStrategy *)NULL,
+            0,
             d_sum_transaction_factory);
 
    }
@@ -473,7 +473,7 @@ PatchBoundaryNodeSum::setupSum(
       d_single_level_sum_schedule[d_coarsest_level] =
          single_level_sum_algorithm.createSchedule(
             d_hierarchy->getPatchLevel(d_coarsest_level),
-            (xfer::RefinePatchStrategy *)NULL,
+            0,
             d_sum_transaction_factory);
 
       for (int ln = d_coarsest_level + 1; ln <= d_finest_level; ln++) {
@@ -489,7 +489,7 @@ PatchBoundaryNodeSum::setupSum(
          d_single_level_sum_schedule[fine_level_num] =
             single_level_sum_algorithm.createSchedule(
                fine_level,
-               (xfer::RefinePatchStrategy *)NULL,
+               0,
                d_sum_transaction_factory);
 
          d_cfbdry_tmp_level[fine_level_num].reset(new hier::PatchLevel(dim));
@@ -937,25 +937,25 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
                   tmp_onode_data_ptr00 = tmp_onode_data.getPointer(0, 0);
                }
                else {
-                  tmp_onode_data_ptr00 = NULL;
+                  tmp_onode_data_ptr00 = 0;
                }
                if (tmp_onode_data.getArrayData(0, 1).isInitialized()) {
                   tmp_onode_data_ptr01 = tmp_onode_data.getPointer(0, 1);
                }
                else {
-                  tmp_onode_data_ptr01 = NULL;
+                  tmp_onode_data_ptr01 = 0;
                }
                if (tmp_onode_data.getArrayData(1, 0).isInitialized()) {
                   tmp_onode_data_ptr10 = tmp_onode_data.getPointer(1, 0);
                }
                else {
-                  tmp_onode_data_ptr10 = NULL;
+                  tmp_onode_data_ptr10 = 0;
                }
                if (tmp_onode_data.getArrayData(1, 1).isInitialized()) {
                   tmp_onode_data_ptr11 = tmp_onode_data.getPointer(1, 1);
                }
                else {
-                  tmp_onode_data_ptr11 = NULL;
+                  tmp_onode_data_ptr11 = 0;
                }
 
                SAMRAI_F77_FUNC(nodeouternodesum2d, NODEOUTERNODESUM2D) (
@@ -983,37 +983,37 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
                   tmp_onode_data_ptr00 = tmp_onode_data.getPointer(0, 0);
                }
                else {
-                  tmp_onode_data_ptr00 = NULL;
+                  tmp_onode_data_ptr00 = 0;
                }
                if (tmp_onode_data.getArrayData(0, 1).isInitialized()) {
                   tmp_onode_data_ptr01 = tmp_onode_data.getPointer(0, 1);
                }
                else {
-                  tmp_onode_data_ptr01 = NULL;
+                  tmp_onode_data_ptr01 = 0;
                }
                if (tmp_onode_data.getArrayData(1, 0).isInitialized()) {
                   tmp_onode_data_ptr10 = tmp_onode_data.getPointer(1, 0);
                }
                else {
-                  tmp_onode_data_ptr10 = NULL;
+                  tmp_onode_data_ptr10 = 0;
                }
                if (tmp_onode_data.getArrayData(1, 1).isInitialized()) {
                   tmp_onode_data_ptr11 = tmp_onode_data.getPointer(1, 1);
                }
                else {
-                  tmp_onode_data_ptr11 = NULL;
+                  tmp_onode_data_ptr11 = 0;
                }
                if (tmp_onode_data.getArrayData(2, 0).isInitialized()) {
                   tmp_onode_data_ptr20 = tmp_onode_data.getPointer(2, 0);
                }
                else {
-                  tmp_onode_data_ptr20 = NULL;
+                  tmp_onode_data_ptr20 = 0;
                }
                if (tmp_onode_data.getArrayData(2, 1).isInitialized()) {
                   tmp_onode_data_ptr21 = tmp_onode_data.getPointer(2, 1);
                }
                else {
-                  tmp_onode_data_ptr21 = NULL;
+                  tmp_onode_data_ptr21 = 0;
                }
 
                SAMRAI_F77_FUNC(nodeouternodesum3d, NODEOUTERNODESUM3D) (

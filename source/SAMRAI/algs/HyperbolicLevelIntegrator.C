@@ -215,7 +215,7 @@ HyperbolicLevelIntegrator::HyperbolicLevelIntegrator(
    d_distinguish_mpi_reduction_costs(false)
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(patch_strategy != ((HyperbolicPatchStrategy *)NULL));
+   TBOX_ASSERT(patch_strategy != 0);
 
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name,
       this);
@@ -1463,7 +1463,7 @@ HyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
       d_coarsen_fluxsum->createSchedule(
          coarse_level,
          fine_level,
-         NULL));
+         0));
    t_coarsen_fluxsum_create->stop();
 
    t_coarsen_fluxsum_comm->start();

@@ -39,9 +39,7 @@ namespace algs {
  *************************************************************************
  */
 
-const xfer::RefineClasses::Data **
-OuteredgeSumTransaction::s_refine_items =
-   (const xfer::RefineClasses::Data **)NULL;
+const xfer::RefineClasses::Data ** OuteredgeSumTransaction::s_refine_items = 0;
 int OuteredgeSumTransaction::s_num_refine_items = 0;
 
 /*

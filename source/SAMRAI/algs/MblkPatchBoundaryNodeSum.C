@@ -321,7 +321,7 @@ MblkPatchBoundaryNodeSum::setupSum(
             d_onode_dst_id[i],  // dst data
             d_onode_src_id[i],  // src data
             d_onode_dst_id[i],  // scratch data
-            (hier::RefineOperator *)NULL);
+            0);
       }
 
       xfer::RefineAlgorithm mblk_sum_algorithm(
@@ -330,7 +330,7 @@ MblkPatchBoundaryNodeSum::setupSum(
       d_single_level_sum_schedule[0] =
          mblk_sum_algorithm.createSchedule(
             d_level,
-            (xfer::RefinePatchStrategy *)NULL,
+            0,
             d_sum_transaction_factory);
 
    }

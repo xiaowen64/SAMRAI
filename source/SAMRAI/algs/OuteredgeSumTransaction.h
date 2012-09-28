@@ -54,7 +54,7 @@ public:
       const xfer::RefineClasses::Data ** refine_items,
       int num_refine_items)
    {
-      TBOX_ASSERT(refine_items != (const xfer::RefineClasses::Data **)NULL);
+      TBOX_ASSERT(refine_items != 0);
       TBOX_ASSERT(num_refine_items >= 0);
       s_refine_items = refine_items;
       s_num_refine_items = num_refine_items;
@@ -70,7 +70,7 @@ public:
    static void
    unsetRefineItems()
    {
-      s_refine_items = (const xfer::RefineClasses::Data **)NULL;
+      s_refine_items = 0;
       s_num_refine_items = 0;
    }
 

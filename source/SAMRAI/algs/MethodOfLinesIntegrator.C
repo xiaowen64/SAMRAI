@@ -48,7 +48,7 @@ MethodOfLinesIntegrator::MethodOfLinesIntegrator(
    d_scratch(hier::VariableDatabase::getDatabase()->getContext("SCRATCH"))
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(patch_strategy != ((MethodOfLinesPatchStrategy *)NULL));
+   TBOX_ASSERT(patch_strategy != 0);
 
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name,
       this);
@@ -598,7 +598,7 @@ MethodOfLinesIntegrator::resetHierarchyConfiguration(
             d_coarsen_algorithm->createSchedule(
                coarser_level,
                level,
-               NULL);
+               0);
       }
 
    }

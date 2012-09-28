@@ -59,8 +59,8 @@ ImplicitIntegrator::ImplicitIntegrator(
    d_max_integrator_steps(0)
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(implicit_equations != ((ImplicitEquationStrategy *)NULL));
-   TBOX_ASSERT(nonlinear_solver != ((solv::NonlinearSolverStrategy *)NULL));
+   TBOX_ASSERT(implicit_equations != 0);
+   TBOX_ASSERT(nonlinear_solver != 0);
    TBOX_ASSERT(hierarchy);
 
    /*

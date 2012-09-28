@@ -58,7 +58,7 @@ void OuternodeSumTransactionFactory::setRefineItems(
 void OuternodeSumTransactionFactory::unsetRefineItems()
 {
    OuternodeSumTransaction::unsetRefineItems();
-   d_refine_items = (const xfer::RefineClasses::Data **)NULL;
+   d_refine_items = 0;
    d_number_refine_items = 0;
 }
 

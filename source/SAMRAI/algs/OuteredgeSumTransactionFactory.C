@@ -60,7 +60,7 @@ void
 OuteredgeSumTransactionFactory::unsetRefineItems()
 {
    OuteredgeSumTransaction::unsetRefineItems();
-   d_refine_items = (const xfer::RefineClasses::Data **)NULL;
+   d_refine_items = 0;
    d_number_refine_items = 0;
 }
 
