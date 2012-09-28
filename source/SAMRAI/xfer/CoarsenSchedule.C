@@ -350,11 +350,11 @@ CoarsenSchedule::generateTemporaryLevel()
    const hier::Connector& coarse_to_fine =
       d_crse_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
          *d_fine_level->getBoxLevel(),
-         transpose_width);
+         transpose_width, true);
    const hier::Connector& fine_to_coarse =
       d_fine_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
          *d_crse_level->getBoxLevel(),
-         min_gcw);
+         min_gcw, true);
 
    /*
     * Generate temporary BoxLevel and Connectors.
