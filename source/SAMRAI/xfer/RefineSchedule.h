@@ -358,7 +358,8 @@ private:
       const hier::IntVector& src_growth_to_nest_dst,
       const boost::shared_ptr<RefineClasses>& refine_classes,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
-      RefinePatchStrategy* patch_strategy);
+      RefinePatchStrategy* patch_strategy,
+      const RefineSchedule *top_refine_schedule);
 
    /*!
     * @brief Read static data from input database.
@@ -801,6 +802,12 @@ private:
       const hier::Connector& hiercoarse_to_coarse_interp);
 
    /*!
+    * @brief Get whether there is data living on patch borders.
+    */
+   bool
+   getDataOnPatchBorderFlag() const;
+
+   /*!
     * @brief Get the maximum ghost cell width of all destination
     * patch data components.
     */
@@ -950,6 +957,11 @@ private:
     * constructed.
     */
    boost::shared_ptr<RefineTransactionFactory> d_transaction_factory;
+
+   /*!
+    * @brief  Whether there is data on patch borders.
+    */
+   bool d_data_on_patch_border_flag;
 
    /*!
     * @brief  maximum stencil width.
@@ -1179,11 +1191,22 @@ private:
    boost::shared_ptr<PatchLevelFillPattern> d_dst_level_fill_pattern;
 
    /*!
-    * @brief Tells whether recursive construction of an internal schedule
-    * is happening.  Gets set to true by the private RefineSchedule
-    * constructor.
+    * @brief Required fine Connector widths used in refining data from
+    * coarser levels.
+    *
+    * Maintained by the top level RefineSchedule for use by the
+    * recursive schedules.  Unused in when there is no hierarchy for
+    * recursion.
     */
-   bool d_constructing_internal_schedule;
+    std::vector<hier::IntVector> d_fine_connector_widths;
+
+   /*!
+    * @brief The top RefineSchedule that led recursively to this one.
+    *
+    * The top RefineSchedule contains some parameters to be shared by
+    * the recursive RefineSchedules.
+    */
+   const RefineSchedule *d_top_refine_schedule;
 
    /*!
     * @brief Shared debug checking flag.
