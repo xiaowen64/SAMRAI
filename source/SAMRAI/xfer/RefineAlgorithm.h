@@ -179,9 +179,7 @@ public:
     * the destination data using scratch data as a temporary work
     * space.  The scratch data must have sufficient ghost cells to cover
     * the required operator stencil width and any needed physical boundary
-    * ghost cells.  The time interpolation operator cannot be null.  When
-    * assertion checking is active, passing in a null pointer will result in an
-    * unrecoverable assertion.
+    * ghost cells.
     *
     * @param[in] dst   Patch data index filled on the destination level.
     * @param[in] src   Patch data index for source data.

@@ -115,6 +115,8 @@ CoarsenAlgorithm::createSchedule(
    CoarsenPatchStrategy* patch_strategy,
    const boost::shared_ptr<CoarsenTransactionFactory>& transaction_factory)
 {
+   TBOX_ASSERT(crse_level);
+   TBOX_ASSERT(fine_level);
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, *crse_level, *fine_level);
 
    d_schedule_created = true;

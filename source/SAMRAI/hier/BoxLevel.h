@@ -331,6 +331,7 @@ public:
     * point.
     *
     * @pre isInitialized()
+    *
     * @post d_globalized_version->getParallelState() == GLOBALIZED
     */
    const BoxLevel&

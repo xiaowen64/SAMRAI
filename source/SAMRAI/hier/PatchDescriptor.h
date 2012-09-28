@@ -33,22 +33,25 @@ namespace hier {
  * constructed on each patch in an AMR hierarchy.  The factory mechanism is
  * used to create new instances of concrete patch data objects without knowing
  * their actual types.  See the Design Patterns book by Gamma {\em et al.}
- * for more details about the Abstract Factory pattern.  Generally, a PatchDescriptor
- * object is intended to be shared among all patches (which are distributed across
- * processors) so that they store patch data objects in the same way.
+ * for more details about the Abstract Factory pattern.  Generally, a
+ * PatchDescriptor object is intended to be shared among all patches (which are
+ * distributed across processors) so that they store patch data objects in the
+ * same way.
  *
- * Patch data factory objects (and associated names) are explicitly added to the
- * PatchDescriptor using the definePatchDataComponent() member function.  This function
- * returns an integer index that can be used to identify the corresponding patch data
- * on a a patch.  Factories can be removed from the PatchDescriptor using the
- * removePatchDataComponent() member function, which returns the integer index associated
- * with the removed factory to a "free list" so that it can be used again.  At any time,
- * the valid range of indices is >= 0 and < getMaxNumberRegisteredComponents().
+ * Patch data factory objects (and associated names) are explicitly added to
+ * the PatchDescriptor using the definePatchDataComponent() member function.
+ * This function returns an integer index that can be used to identify the
+ * corresponding patch data on a a patch.  Factories can be removed from the
+ * PatchDescriptor using the removePatchDataComponent() member function, which
+ * returns the integer index associated with the removed factory to a "free
+ * list" so that it can be used again.  At any time, the valid range of indices
+ * is >= 0 and < getMaxNumberRegisteredComponents().
  *
- * Note that the SAMRAIManager utility establishes a maximum number of patch data
- * object that may live on a Patch object which, for consistency, must be the same as
- * the number of patch data factories a PatchDescriptor will hold.   See the documentation
- * of the SAMRAIManager utility for information about changing this maximum value.
+ * Note that the SAMRAIManager utility establishes a maximum number of patch
+ * data object that may live on a Patch object which, for consistency, must be
+ * the same as the number of patch data factories a PatchDescriptor will hold.
+ * See the documentation of the SAMRAIManager utility for information about
+ * changing this maximum value.
  *
  * @see tbox::SAMRAIManager
  * @see hier::PatchDataFactory
@@ -77,12 +80,12 @@ public:
     * unique for the mapNameToIndex() function to execute as expected. However,
     * there is no internal checking done to ensure that names are unique.
     *
-    * @return int index assigned to given patch data factory in patch descriptor.
+    * @return int index assigned to given patch data factory in patch
+    *         descriptor.
     *
-    * @param name      std::string name to be associated in name list with given factory,
-    *                  which must be non-empty when assertion checking is active.
-    * @param factory   pointer to factory to add to patch descriptor, which must
-    *                  be non-null when assertion checking is active.
+    * @param name      std::string name to be associated in name list with
+    *                  given factory
+    * @param factory   pointer to factory to add to patch descriptor
     *
     * @pre !name.empty()
     * @pre factory
@@ -94,11 +97,11 @@ public:
       const boost::shared_ptr<PatchDataFactory>& factory);
 
    /*!
-    * Deallocate the patch data factory in the patch descriptor identified by the
-    * given index.  The index may be assigned to another factory in the future.
-    * However, index will be invalid as a patch data index until it is re-allocated
-    * by the definePatchDataComponent() member function.  An invalid id value
-    * passed to this function is silently ignored.
+    * Deallocate the patch data factory in the patch descriptor identified by
+    * the given index.  The index may be assigned to another factory in the
+    * future.  However, index will be invalid as a patch data index until it is
+    * re-allocated by the definePatchDataComponent() member function.  An
+    * invalid id value passed to this function is silently ignored.
     *
     * @param id      int index of factory to remove from patch descriptor.
     */
@@ -107,9 +110,10 @@ public:
       int id);
 
    /*!
-    * Retrieve a patch data factory by integer index identifier.  The identifier
-    * is the one previously returned by definePatchDataComponent().  Note that the
-    * factory pointer will be null if the index is is not currently assigned.
+    * Retrieve a patch data factory by integer index identifier.  The
+    * identifier is the one previously returned by definePatchDataComponent().
+    * Note that the factory pointer will be null if the index is is not
+    * currently assigned.
     *
     * @return pointer to patch data factory assigned to given index.
     *
@@ -127,8 +131,8 @@ public:
    }
 
    /*!
-    * Retrieve a patch data factory by name std::string identifier.  Recall that
-    * uniqueness of names is not strictly enforced. So if more than one
+    * Retrieve a patch data factory by name std::string identifier.  Recall
+    * that uniqueness of names is not strictly enforced. So if more than one
     * factory matches the given name, then only one of them is returned.  If no
     * matching factory is found, then a null pointer is returned.
     *
@@ -160,10 +164,10 @@ public:
    }
 
    /*!
-    * Lookup a factory by std::string name and return its integer index identifier.
-    * Note that more than one factory may have the same name.  In this case, the
-    * identifier of one of the factories is chosen.  If no matching factory is found,
-    * then an invalid negative index is returned.
+    * Lookup a factory by std::string name and return its integer index
+    * identifier.  Note that more than one factory may have the same name.  In
+    * this case, the identifier of one of the factories is chosen.  If no
+    * matching factory is found, then an invalid negative index is returned.
     */
    int
    mapNameToIndex(
@@ -183,8 +187,8 @@ public:
    }
 
    /*!
-    * Return the IntVector indicating the maximum ghost cell width of all registered
-    * patch data components for the provided dimension.
+    * Return the IntVector indicating the maximum ghost cell width of all
+    * registered patch data components for the provided dimension.
     *
     * If no components have been registered returns the value set by
     * setMinGhostWidth(), which is zero by default.

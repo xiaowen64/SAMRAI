@@ -91,7 +91,6 @@ public:
 
    /**
     * Reset range of patch levels over which operations occur.
-    * The levels must exist in the hierarchy or an assertion will result.
     *
     * @pre getPatchHierarchy()
     * @pre (coarsest_level >= 0) && (finest_level >= coarsest_level) &&

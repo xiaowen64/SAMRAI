@@ -114,6 +114,7 @@ CoarsenSchedule::CoarsenSchedule(
    TBOX_ASSERT(crse_level);
    TBOX_ASSERT(fine_level);
    TBOX_ASSERT(coarsen_classes);
+   TBOX_ASSERT(transaction_factory);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*crse_level, *fine_level);
 
    getFromInput();

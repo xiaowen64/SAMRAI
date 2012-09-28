@@ -56,7 +56,6 @@ public:
     * specified name.  By default the database will not be associated
     * with a file until it is mounted, using the mount() member function.
     *
-    * When assertion checking is active, the name string must be non-empty.
     * The name string is *NOT* the name of the HDF file.
     *
     * @pre !name.empty()
@@ -81,8 +80,6 @@ public:
    /**
     * Return true if the specified key exists in the database
     * and false otherwise.
-    *
-    * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
     */
@@ -114,8 +111,6 @@ public:
     * Return the size of the array associated with the key.  If the key
     * does not exist, then zero is returned.
     *
-    * When assertion checking is active, the key string must be non-empty.
-    *
     * @pre !key.empty()
     */
    virtual int
@@ -138,8 +133,6 @@ public:
     * pointer to it.  A new group with the key name is also created
     * in the data file.
     *
-    * When assertion checking is active, the key string must be non-empty.
-    *
     * @pre !key.empty()
     */
    virtual boost::shared_ptr<Database>
@@ -150,8 +143,6 @@ public:
     * Get the database with the specified key name.  If the specified
     * key does not represent a database entry in the database, then
     * an error message is printed and the program exits.
-    *
-    * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
     * @pre isDatabase(key)
@@ -173,8 +164,6 @@ public:
     * Create a boolean array entry in the database with the specified
     * key name.
     *
-    * When assertion checking is active, the key string must be non-empty.
-    *
     * @pre !key.empty()
     * @pre data != 0
     */
@@ -185,18 +174,9 @@ public:
       const int nelements);
 
    /**
-    * Get a boolean entry in the database with the specified key name.
-    * If the specified key does not exist in the database, then an
-    * error message is printed and the program exits.
-    *
-    * When assertion checking is active, the key string must be non-empty.
-    */
-   /**
     * Get a boolean entry from the database with the specified key
     * name.  If the specified key does not exist in the database,
     * then an error message is printed and the program exits.
-    *
-    * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
     * @pre isBool(key)
@@ -218,8 +198,6 @@ public:
     * Create a box array entry in the database with the specified
     * key name.
     *
-    * When assertion checking is active, the key string must be non-empty.
-    *
     * @pre !key.empty()
     * @pre data != 0
     */
@@ -233,8 +211,6 @@ public:
     * Get a box entry from the database with the specified key
     * name.  If the specified key does not exist in the database,
     * then an error message is printed and the program exits.
-    *
-    * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
     * @pre isDatabaseBox(key)
@@ -256,8 +232,6 @@ public:
     * Create a character array entry in the database with the specified
     * key name.
     *
-    * When assertion checking is active, the key string must be non-empty.
-    *
     * @pre !key.empty()
     * @pre data != 0
     */
@@ -271,8 +245,6 @@ public:
     * Get a character entry from the database with the specified key
     * name.  If the specified key does not exist in the database,
     * then an error message is printed and the program exits.
-    *
-    * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
     * @pre isChar(key)
@@ -294,8 +266,6 @@ public:
     * Create a complex array entry in the database with the specified
     * key name.
     *
-    * When assertion checking is active, the key string must be non-empty.
-    *
     * @pre !key.empty()
     * @pre data != 0
     */
@@ -309,8 +279,6 @@ public:
     * Get a complex entry from the database with the specified key
     * name.  If the specified key does not exist in the database
     * then an error message is printed and the program exits.
-    *
-    * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
     * @pre isComplex(key)
@@ -332,8 +300,6 @@ public:
     * Create a double array entry in the database with the specified
     * key name.
     *
-    * When assertion checking is active, the key string must be non-empty.
-    *
     * @pre !key.empty()
     * @pre data != 0
     */
@@ -347,8 +313,6 @@ public:
     * Get a double entry from the database with the specified key
     * name.  If the specified key does not exist in the database
     * then an error message is printed and the program exits.
-    *
-    * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
     * @pre isDouble(key)
@@ -370,8 +334,6 @@ public:
     * Create a float array entry in the database with the specified
     * key name.
     *
-    * When assertion checking is active, the key string must be non-empty.
-    *
     * @pre !key.empty()
     * @pre data != 0
     */
@@ -385,8 +347,6 @@ public:
     * Get a float entry from the database with the specified key
     * name.  If the specified key does not exist in the database
     * then an error message is printed and the program exits.
-    *
-    * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
     * @pre isFloat(key)
@@ -408,8 +368,6 @@ public:
     * Create an integer array entry in the database with the specified
     * key name.
     *
-    * When assertion checking is active, the key string must be non-empty.
-    *
     * @pre !key.empty()
     * @pre data != 0
     */
@@ -423,8 +381,6 @@ public:
     * Get an integer entry from the database with the specified key
     * name.  If the specified key does not exist in the database
     * then an error message is printed and the program exits.
-    *
-    * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
     * @pre isInteger(key)
@@ -446,8 +402,6 @@ public:
     * Create a string array entry in the database with the specified
     * key name.
     *
-    * When assertion checking is active, the key string must be non-empty.
-    *
     * @pre !key.empty()
     * @pre data != 0
     */
@@ -461,8 +415,6 @@ public:
     * Get a string entry from the database with the specified key
     * name.  If the specified key does not exist in the database
     * then an error message is printed and the program exits.
-    *
-    * When assertion checking is active, the key string must be non-empty.
     *
     * @pre !key.empty()
     * @pre isString(key)

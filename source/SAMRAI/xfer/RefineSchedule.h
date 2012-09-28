@@ -87,10 +87,6 @@ public:
     * to be in the same AMR patch hierarchy.  Generally, this
     * constructor is called by a RefineAlgorithm object.
     *
-    * When assertion checking is active, unrecoverable assertions will result
-    * if either patch level pointer, the refine classes pointer, or the
-    * transaction factory factory pointer is null.
-    *
     * @param[in] dst_level_fill_pattern Indicates which parts of the
     *                                   destination level to fill.
     * @param[in] dst_level       boost::shared_ptr to destination patch level.
@@ -117,6 +113,7 @@ public:
     * @pre dst_level
     * @pre src_level
     * @pre refine_classes
+    * @pre transaction_factory
     * @pre dst_level->getDim() == src_level->getDim()
     * @pre dst_level->getGridGeometry()->getNumberOfBlockSingularities() == 0 || d_singularity_patch_strategy
     */
@@ -144,10 +141,6 @@ public:
     * source and destination patch levels must reside in the same index space.
     * However, the levels do not have to be in the same AMR patch hierarchy.
     * In general, this constructor is called by a RefineAlgorithm object.
-    *
-    * When assertion checking is active, unrecoverable assertions will result
-    * if either patch level pointer, the refine classes pointer, or the
-    * transaction factory factory pointer is null.
     *
     * @param[in] dst_level_fill_pattern  Indicates which parts of the
     *                                    destination level to fill.

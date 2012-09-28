@@ -313,6 +313,7 @@ public:
     * @return Whether operation is completed.
     *
     * @pre getBaseOp() == bcast
+    *
     * @post (getParentRank() != -1) || (getNextTaskOp() != recv_check)
     */
    bool
@@ -509,6 +510,7 @@ private:
     *
     * @pre (getBaseOp() == max_reduce) || (getBaseOp() == min_reduce) ||
     *      (getBaseOp() == sum_reduce)
+    *
     * @post (getParentRank() != -1) || (getNextTaskOp() != send_check)
     * @post (getNextTaskOp() == none) || (numberOfPendingRequests() > 0)
     */

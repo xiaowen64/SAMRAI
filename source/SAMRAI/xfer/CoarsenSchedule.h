@@ -84,10 +84,6 @@ public:
     * cell width and and they must be filled with valid data before calling
     * coarsenData().
     *
-    * When assertion checking is active, unrecoverable assertions will result
-    * if either patch level pointer, the refine classes pointer, or the
-    * transaction factory pointer, is null.
-    *
     * @param[in] crse_level      boost::shared_ptr to coarse (destination)
     *                            patch level.
     * @param[in] fine_level      boost::shared_ptr to fine (source) patch level.
@@ -109,6 +105,7 @@ public:
     * @pre crse_level
     * @pre fine_level
     * @pre coarsen_classes
+    * @pre transaction_factory
     * @pre crse_level->getDim() == fine_level->getDim()
     */
    CoarsenSchedule(

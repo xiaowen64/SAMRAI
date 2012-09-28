@@ -180,10 +180,6 @@ public:
    /**
     * Registers an object for restart with the given name.
     *
-    * When assertion checking is active, an unrecoverable assertion
-    * will result if either the string is empty or the serializable
-    * object pointer is null.
-    *
     * @pre !name.empty()
     * @pre obj != 0
     */
@@ -195,9 +191,6 @@ public:
    /**
     * Removes the object with the specified name from the list of
     * restartable items.
-    *
-    * When assertion checking is active, an unrecoverable assertion
-    * will result if the string is empty.
     *
     * @pre !name.empty()
     */

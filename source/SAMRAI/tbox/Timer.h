@@ -277,8 +277,7 @@ public:
       const boost::shared_ptr<Database>& restart_db) const;
 
    /**
-    * Read restarted times from restart database.  When assertion checking
-    * is on, the database pointer must be non-null.
+    * Read restarted times from restart database.
     *
     * @pre restart_db
     */

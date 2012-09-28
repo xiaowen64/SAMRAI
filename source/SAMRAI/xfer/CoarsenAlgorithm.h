@@ -221,9 +221,6 @@ public:
     * fine level.  To avoid potentially erroneous behavior, the coarse level
     * domain should cover the domain of the fine level.
     *
-    * Neither patch level can be null and when assertion checking is active,
-    * passing a null level pointer will produce an unrecoverable assertion.
-    *
     * Note that the schedule remains valid as long as the levels do not
     * change; thus, it can be used for multiple data communication cycles.
     *
@@ -244,6 +241,7 @@ public:
     *                                StandardCoarsenTransactionFactory object
     *                                will be used.
     *
+    * @pre crse_level && fine_level
     * @pre (getDim() == crse_level->getDim()) &&
     *      (getDim() == fine_level->getDim())
     */

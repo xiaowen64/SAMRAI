@@ -72,12 +72,10 @@ public:
       const Corner corner);
 
    /**
-    * Construct a node index from a regular index and an hier::IntVector.  The
-    * hier::IntVector is binary--an assertion failure will result if it contains
-    * any values other than 0 or 1.  For each direction, if the hier::IntVector
-    * contains a 0, the node index will represent a lower bound in that
-    * direction, and if 1 will represent an upper bound in that
-    * direction.
+    * Construct a node index from a regular index and an hier::IntVector.  For
+    * each direction, if the hier::IntVector contains a 0, the node index will
+    * represent a lower bound in that direction, and if 1 will represent an
+    * upper bound in that direction.
     *
     * @pre getDim() == rhs.getDim()
     * @pre for each element of corner, e, e == 0 || e == 1

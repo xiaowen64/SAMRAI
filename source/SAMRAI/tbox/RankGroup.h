@@ -78,9 +78,7 @@ public:
     * created with this constructor should be expected to be less efficient
     * than those created with the above min/max constructor.
     *
-    * An assertion failure will result if the array is empty.
-    *
-    * @pre rank_group.size() > 0
+    * @pre !rank_group.empty()
     */
    explicit RankGroup(
       const Array<int>& rank_group,

@@ -71,10 +71,6 @@ public:
     * type conversions from integers impossible.  This is intentionally to
     * avoid unintended conversions.
     *
-    * When dimensional assertion checking is active an assert is
-    * thrown when dim < 1 or dim > getMaxDimension() value specified when
-    * the library is configured (defaults to 3).
-    *
     * @pre (dim > 0) && (dim <= SAMRAI::MAX_DIM_VAL)
     */
    explicit Dimension(

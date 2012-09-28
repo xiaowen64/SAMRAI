@@ -149,10 +149,6 @@ public:
     * contain all index space grid information for a mesh, but nothing about
     * the physical coordinates of the mesh.
     *
-    * @note
-    * @b Errors: passing in a null database pointer or an empty string
-    * will result in an unrecoverable assertion.
-    *
     * @param[in]  dim
     * @param[in]  object_name
     * @param[in]  input_db

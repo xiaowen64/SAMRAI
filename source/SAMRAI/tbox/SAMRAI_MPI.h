@@ -308,7 +308,7 @@ public:
     * The purpose of these wrappers is to provide a single place for
     * compile- and run-time toggling of MPI code.  The signatures and
     * return values of these methods are identical to the MPI C bindings.
-    * Thes methods will throw an assertion if they are called when MPI is
+    * These methods will throw an assertion if they are called when MPI is
     * not enabled.
     *
     * @pre s_mpi_is_initialized

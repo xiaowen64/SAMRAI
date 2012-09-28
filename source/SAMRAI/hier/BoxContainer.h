@@ -1136,6 +1136,7 @@ public:
     *
     * @pre isEmpty() || (front().getDim() == item.getDim())
     * @pre !isOrdered()
+    *
     * @post boxes.isEmpty()
     */
    void
@@ -1166,6 +1167,7 @@ public:
     *
     * @pre isEmpty() || (front().getDim() == item.getDim())
     * @pre !isOrdered()
+    *
     * @post boxes.isEmpty()
     */
    void

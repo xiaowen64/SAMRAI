@@ -280,11 +280,6 @@ public:
     * specified input and in the restart database corresponding to the
     * specified object_name argument.
     *
-    * If assertion checking is turned on, an unrecoverable assertion
-    * will result if any of the required pointer arguments is null.
-    * Assertions may also be thrown if any checks for consistency
-    * among input parameters fail.
-    *
     * @param[in] hierarchy The hierarchy that this GriddingAlgorithm will
     * work on.  The pointer is cached.  All hierarchy operations will
     * be on this hierarchy.
@@ -411,13 +406,6 @@ public:
     * to be added to the hierarchy with each call to this method.
     * This constraint, though seemingly restrictive makes the
     * process of maintaining properly nested levels much easier.
-    *
-    * Important note: If assertion checking is activated, several
-    * checks are applied to the functions arguments.  If any check is
-    * violated, an unrecoverable assertion will result.  In
-    * particular, the given level number must match that of of some
-    * level in the hierarchy.  Also, the tag buffer array must contain
-    * a positive value for each level in the hierarchy.
     *
     * @param[in] level_number Coarsest level on which cells will be
     * tagged for refinement

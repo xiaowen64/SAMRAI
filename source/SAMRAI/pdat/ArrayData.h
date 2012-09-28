@@ -658,6 +658,7 @@ private:
     * @param d depth of data
     *
     * @pre (d >= 0) && (d < getDepth())
+    *
     * @post (index >= 0) && (index < getDepth() * getOffset())
     */
    int

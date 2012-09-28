@@ -66,7 +66,6 @@ public:
 
    /**
     * Reset range of patch levels over which operations occur.
-    * Typically, levels must exist in hierarchy or an assertion will result.
     */
    virtual void
    resetLevels(

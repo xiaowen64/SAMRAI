@@ -141,6 +141,7 @@ RefineSchedule::RefineSchedule(
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
    TBOX_ASSERT(refine_classes);
+   TBOX_ASSERT(transaction_factory);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *src_level);
 #endif
@@ -335,6 +336,7 @@ RefineSchedule::RefineSchedule(
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT((next_coarser_ln == -1) || hierarchy);
    TBOX_ASSERT(refine_classes);
+   TBOX_ASSERT(transaction_factory);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    if (src_level) {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *src_level);
@@ -3592,8 +3594,6 @@ RefineSchedule::communicateFillBoxes(
 bool
 RefineSchedule::getDataOnPatchBorderFlag() const
 {
-   const tbox::Dimension& dim(d_dst_level->getDim());
-
    bool rval = false;
    boost::shared_ptr<hier::PatchDescriptor> pd(
       d_dst_level->getPatchDescriptor());

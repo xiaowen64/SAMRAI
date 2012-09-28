@@ -461,8 +461,7 @@ public:
     * The class version and restart file version must be equal.
     *
     * @par Assertions
-    * Checks that the restart_db is a non-null boost::shared_ptr,
-    * that data retrieved from the database are of the type
+    * Checks that data retrieved from the database are of the type
     * expected, and that the patch_number read in from the database
     * matches the patch number assigned to this Patch.
     * @note
@@ -486,8 +485,6 @@ public:
     *
     * Class version number and the state of the patch object are written.
     * Patch data objects specified in the component selector are also written.
-    * @par Assertions
-    * Check that restart_db is a non-null boost::shared_ptr.
     *
     * @param[in]  restart_db
     * @param[in]  patchdata_write_table The ComponentSelector specifying the

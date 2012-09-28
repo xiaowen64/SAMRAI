@@ -450,8 +450,6 @@ private:
 
    /*
     * Read input values, indicated above, from given database.
-    *
-    * When assertion checking is active, the database pointer must be non-null.
     */
    void
    getFromInput(
