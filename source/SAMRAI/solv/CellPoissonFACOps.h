@@ -337,6 +337,10 @@ public:
     * @param finest_ln Finest level number.  Must be included
     *        in hierarchy.  Must not be less than @c coarsest_ln.
     *        Default to finest level in @c hierarchy.
+    *
+    * @pre hierarchy
+    * @pre d_dim == hierarchy->getDim()
+    * @pre finest_ln >= coarsest_ln
     */
    void
    computeVectorWeights(
@@ -387,6 +391,12 @@ public:
     *                               is level zero, this is ignored
     * @param w_data cell-centered data
     * @param Dgradw_data side-centered flux data (i.e., D (grad w))
+    *
+    * @pre (d_dim == patch.getDim()) &&
+    *      (d_dim == ratio_to_coarser_level.getDim()) &&
+    *      (d_dim == w_data.getDim()) && (d_dim == Dgradw_data.getDim())
+    * @pre patch.inHierarchy()
+    * @pre w_data.getGhostCellWidth() >= hier::IntVector::getOne(ratio_to_coarser_level.getDim())
     */
    void
    computeFluxOnPatch(
@@ -500,6 +510,9 @@ private:
     * @param num_sweeps number of sweeps
     * @param residual_tolerance the maximum residual considered to be
     *        converged
+    *
+    * @pre data.getPatchHierarchy() == d_hierarchy &&
+    *      residual.getPatchHierarchy() == d_hierarchy
     */
    void
    smoothErrorByRedBlack(
@@ -537,6 +550,10 @@ private:
     * @param cfb coarse-fine boundary object for the level
     *        in which patch resides
     * @param ratio_to_coarser Refinement ratio to the next coarser level.
+    *
+    * @pre (d_dim == patch.getDim()) && (d_dim == soln_data.getDim()) &&
+    *      (d_dim == flux_data.getDim()) &&
+    *      (d_dim == ratio_to_coarser.getDim())
     */
    void
    ewingFixFlux(
@@ -554,6 +571,10 @@ private:
     * @param soln_data cell-centered solution data
     * @param rhs_data cell-centered rhs data
     * @param residual_data cell-centered residual data
+    *
+    * @pre (d_dim = patch.getDim()) && (d_dim == flux_data.getDim()) &&
+    *      (d_dim == soln_data.getDim()) && (d_dim == rhs_data.getDim()) &&
+    *      (d_dim == residual_data.getDim())
     */
    void
    computeResidualOnPatch(
@@ -575,6 +596,10 @@ private:
     * @param soln_data cell-centered solution data
     * @param red_or_black red-black switch.  Set to 'r' or 'b'.
     * @param p_maxres max residual output.  Set to NULL to avoid computing.
+    *
+    * @pre (d_dim == patch.getDim()) && (d_dim == flux_data.getDim()) &&
+    *      (d_dim == soln_data.getDim()) && (d_dim == rhs_data.getDim())
+    * @pre (red_or_black == 'r') || (red_or_black == 'b')
     */
    void
    redOrBlackSmoothingOnPatch(
@@ -637,6 +662,8 @@ private:
     * </ol>
     *
     * @return refinement schedule for prolongation
+    *
+    * @pre d_prolongation_refine_schedules[dest_ln]
     */
    void
    xeqScheduleProlongation(
@@ -652,6 +679,8 @@ private:
     * See general notes for xeqScheduleProlongation().
     *
     * @return coarsening schedule for restriction
+    *
+    * @pre d_urestriction_coarsen_schedules[dest_ln]
     */
    void
    xeqScheduleURestriction(
@@ -666,6 +695,8 @@ private:
     * See general notes for xeqScheduleProlongation().
     *
     * @return coarsening schedule for restriction
+    *
+    * @pre d_rrestriction_coarsen_schedules[dest_ln]
     */
    void
    xeqScheduleRRestriction(
@@ -681,6 +712,8 @@ private:
     *
     * @return coarsening schedule for setting composite grid flux at
     * coarse-fine boundaries.
+    *
+    * @pre d_flux_coarsen_schedules[dest_ln]
     */
    void
    xeqScheduleFluxCoarsen(
@@ -696,6 +729,8 @@ private:
     *
     * @return refine schedule for filling ghost data from coarser level
     * and physical bc.
+    *
+    * @pre d_ghostfill_refine_schedules[dest_ln]
     */
    void
    xeqScheduleGhostFill(
@@ -715,6 +750,8 @@ private:
     *
     * @return refine schedule for filling ghost data from same level
     * and physical bc.
+    *
+    * @pre d_ghostfill_nocoarse_refine_schedules[dest_ln]
     */
    void
    xeqScheduleGhostFillNoCoarse(

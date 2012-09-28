@@ -86,6 +86,8 @@ class LocationIndexRobinBcCoefs:
 public:
    /*!
     * @brief Constructor using input database.
+    *
+    * @pre input_db
     */
    LocationIndexRobinBcCoefs(
       const tbox::Dimension& dim,
@@ -123,6 +125,13 @@ public:
     *        the coefficient data is needed.
     * @param fill_time Solution time corresponding to filling,
     *        for use when coefficients are time-dependent.
+    *
+    * @pre (d_dim == patch.getDim()) && (d_dim == bdry_box.getDim())
+    * @pre (!acoef_data || (d_dim == acoef_data.getDim())
+    * @pre (!bcoef_data || (d_dim == acoef_data.betDim())
+    * @pre (!gcoef_data || (d_dim == acoef_data.getDim())
+    * @pre (bdry_box.getLocationIndex() >= 0) &&
+    *      (bdry_box.getLocationIndex() < 2 * d_dim.getValue())
     */
    void
    setBcCoefs(
@@ -146,6 +155,8 @@ public:
     *
     * @param location_index Set coefficients for this index.
     * @param value Boundary value at @c location_index.
+    *
+    * @pre (location_index >= 0) && (location_index < 2 * d_dim.getValue())
     */
    void
    setBoundaryValue(
@@ -154,7 +165,7 @@ public:
    {
       if (location_index < 0 || location_index >= 2 * d_dim.getValue()) {
          TBOX_ERROR("Location index in " << d_dim.getValue() << "D must be\n"
-                    << "in [0," << 2 * d_dim.getValue() - 1 << "].\n");
+                    << "in [0," << 2 * d_dim.getValue() - 1 << ").\n");
       }
       d_a_map[location_index] = 1.0;
       d_b_map[location_index] = 0.0;
@@ -166,15 +177,17 @@ public:
     *
     * @param location_index Set coefficients for this index.
     * @param slope Boundary slope at @c location_index.
+    *
+    * @pre (location_index >= 0) && (location_index < 2 * d_dim.getValue())
     */
    void
    setBoundarySlope(
       int location_index,
       double slope)
    {
-      if (location_index >= 2 * d_dim.getValue()) {
+      if (location_index < 0 || location_index >= 2 * d_dim.getValue()) {
          TBOX_ERROR("Location index in " << d_dim.getValue() << "D must be\n"
-                    << "in [0," << 2 * d_dim.getValue() - 1 << "].\n");
+                    << "in [0," << 2 * d_dim.getValue() - 1 << ").\n");
       }
       d_a_map[location_index] = 0.0;
       d_b_map[location_index] = 1.0;
@@ -196,6 +209,8 @@ public:
     * @param a Value of coefficient a at given location index.
     * @param b Value of coefficient b at given location index.
     * @param g Value of coefficient g at given location index.
+    *
+    * @pre (location_index >= 0) && (location_index < 2 * d_dim.getValue())
     */
    void
    setRawCoefficients(
@@ -204,9 +219,9 @@ public:
       double b,
       double g)
    {
-      if (location_index >= 2 * d_dim.getValue()) {
+      if (location_index < 0 || location_index >= 2 * d_dim.getValue()) {
          TBOX_ERROR("Location index in " << d_dim.getValue() << "D must be\n"
-                    << "in [0," << 2 * d_dim.getValue() - 1 << "].\n");
+                    << "in [0," << 2 * d_dim.getValue() - 1 << ").\n");
       }
       d_a_map[location_index] = a;
       d_b_map[location_index] = b;
@@ -215,6 +230,13 @@ public:
 
    /*!
     * @brief Access coefficients.
+    *
+    * @param location_index Set coefficients for this index.
+    * @param a Value of coefficient a at given location index.
+    * @param b Value of coefficient b at given location index.
+    * @param g Value of coefficient g at given location index.
+    *
+    * @pre (location_index >= 0) && (location_index < 2 * d_dim.getValue())
     */
    void
    getCoefficients(
@@ -223,6 +245,10 @@ public:
       double& b,
       double& g) const
    {
+      if (location_index < 0 || location_index >= 2 * d_dim.getValue()) {
+         TBOX_ERROR("Location index in " << d_dim.getValue() << "D must be\n"
+                    << "in [0," << 2 * d_dim.getValue() - 1 << ").\n");
+      }
       a = d_a_map[location_index];
       b = d_b_map[location_index];
       g = d_g_map[location_index];
@@ -253,8 +279,9 @@ private:
     * See the class description for the parameters that can be set
     * from a database.
     *
-    * @param input_db Input database.  If a NULL pointer is given,
-    * nothing is done.
+    * @param input_db Input database.
+    *
+    * @pre input_db
     */
    void
    getFromInput(

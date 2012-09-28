@@ -386,9 +386,8 @@ public:
     * user-supplied solver components.  Then, it reads solver parameter
     * from input and restart which may override default values.
     *
-    * When assertion checking is active, an unrecoverable assertion
-    * will result if the name std::string is empty or the pointer to the
-    * user-defined SNES functions object is null.
+    * @pre !object_name.empty()
+    * @pre my_functions != 0
     */
    SNES_SAMRAIContext(
       const std::string& object_name,
@@ -554,6 +553,9 @@ public:
 
    /*!
     *  Set strategy for forcing term.
+    *
+    * @pre (strategy == "CONSTANT") || (strategy == "EWCHOICE1") ||
+    *      (strategy == "EWCHOICE2")
     */
    void
    setForcingTermStrategy(
@@ -914,6 +916,8 @@ public:
     * Initialize the state of the SNES solver based on vector argument
     * representing the solution of the nonlinear system.  In general, this
     * routine must be called before the solve() routine is invoked.
+    *
+    * @pre solution
     */
    void
    initialize(
@@ -967,8 +971,7 @@ public:
    /*!
     * Write solver parameters to restart database matching object name.
     *
-    * When assertion checking is active, an unrecoverable assertion
-    * will result if database pointer is null.
+    * @pre restart_db
     */
    void
    putToRestart(

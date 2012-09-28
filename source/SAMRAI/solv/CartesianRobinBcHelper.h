@@ -196,6 +196,10 @@ public:
     *        This data must be a cell-centered double.
     * @param homogeneous_bc Set a homogeneous boundary condition.
     *    This means g=0 for the boundary.
+    *
+    * @pre patch.getDim() == ghost_width_to_fill.getDim()
+    * @pre d_coef_strategy
+    * @pre patch.getDim().getValue() != 1
     */
    void
    setBoundaryValuesInCells(
@@ -223,6 +227,8 @@ public:
     *        This data must be a cell-centered double.
     * @param homogeneous_bc Set a homogeneous boundary condition.
     *    This means g=0 for the boundary.
+    *
+    * @pre level.getDim() == ghost_width_to_fill.getDim()
     */
    void
    setBoundaryValuesInCells(
@@ -295,6 +301,8 @@ public:
     *
     * @param coef_strategy Pointer to a concrete inmplementation of
     *        the coefficient strategy.
+    *
+    * @pre coef_strategy
     */
    void
    setCoefImplementation(
@@ -378,6 +386,8 @@ private:
     * @param limit_box hier::Box to not stick past
     *
     * @return New trimmed boundary box.
+    *
+    * @pre boundary_box.getDim() == limit_box.getDim()
     */
    hier::BoundaryBox
    trimBoundaryBox(
@@ -398,6 +408,8 @@ private:
     * @param boundary_box input boundary box
     * @return a box to define the node indices corresponding to
     *   boundary_box
+    *
+    * @pre boundary_box.getBoundaryType() == 1
     */
    hier::Box
    makeNodeBoundaryBox(
@@ -420,6 +432,8 @@ private:
     * @param boundary_box input boundary box
     * @return a box to define the face indices corresponding to
     *    boundary_box
+    *
+    * @pre boundary_box.getBoundaryType() == 1
     */
    hier::Box
    makeFaceBoundaryBox(

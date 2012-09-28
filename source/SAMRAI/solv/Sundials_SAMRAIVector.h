@@ -67,6 +67,8 @@ public:
     * through the SAMRAI vector object directly.  For output of the
     * data through "N_VPrint" calls, the output stream to which the
     * SAMRAI vector object writes will be used.
+    *
+    * @pre samrai_vec
     */
    static SundialsAbstractVector *
    createSundialsVector(
@@ -84,6 +86,8 @@ public:
    /**
     * Return pointer to the SAMRAI vector object associated with the
     * given Sundials wrapper vector.
+    *
+    * @pre sundials_vec != 0
     */
    static boost::shared_ptr<SAMRAIVectorReal<double> >
    getSAMRAIVector(
@@ -92,6 +96,8 @@ public:
    /**
     * Return pointer to the SAMRAI vector object associated with the
     * given Sundials vector.
+    *
+    * @pre sundials_vec != 0
     */
    static boost::shared_ptr<SAMRAIVectorReal<double> >
    getSAMRAIVector(

@@ -110,11 +110,9 @@ public:
     * added as vector components.  In any case, storage for all
     * components must be allocated before the vector can be used.
     *
-    * It is important to note that a non-recoverable assertion will result
-    * if the specified levels do not exist in the hierarchy before a vector
-    * object is used, or if the hierarchy pointer itself is null.  The range
-    * levels can be reset at any time (e.g., if the level configuration
-    * changes by re-meshing), by calling the resetLevels() member function.
+    * The range levels can be reset at any time (e.g., if the level
+    * configuration changes by re-meshing), by calling the resetLevels() member
+    * function.
     *
     * Although an empty std::string may be passed as the vector name, it is
     * recommended that a descriptive name be used to facilitate debugging
@@ -123,6 +121,10 @@ public:
     * By default the vector component information and data will be sent to
     * the "plog" output stream when the print() function is called.  This
     * stream can be changed at any time via the setOutputStream() function.
+    *
+    * @pre hierarchy
+    * @pre (coarsest_level >= 0) && (finest_level >= coarsest_level) &&
+    *      (finest_level <= hierarchy->getFinestLevelNumber())
     */
    SAMRAIVectorReal(
       const std::string& name,
@@ -210,6 +212,8 @@ public:
 
    /**
     * Return patch data object for given vector component index.
+    *
+    * @pre (comp_id >= 0) && (comp_id < getNumberOfComponents())
     */
    boost::shared_ptr<hier::PatchData>
    getComponentPatchData(
@@ -218,6 +222,9 @@ public:
 
    /**
     * Return patch data object associated with given variable.
+    *
+    * @pre var
+    * @pre d_variableid_2_vectorcomponent_map[var->getInstanceIdentifier()] >= 0
     */
    boost::shared_ptr<hier::PatchData>
    getComponentPatchData(
@@ -226,6 +233,8 @@ public:
 
    /**
     * Return pointer to variable for specified vector component.
+    *
+    * @pre (component >= 0) && (component < getNumberOfComponents())
     */
    boost::shared_ptr<hier::Variable>
    getComponentVariable(
@@ -233,6 +242,8 @@ public:
 
    /**
     * Return patch data index for specified vector component.
+    *
+    * @pre (component >= 0) && (component < getNumberOfComponents())
     */
    int
    getComponentDescriptorIndex(
@@ -240,6 +251,8 @@ public:
 
    /**
     * Return patch data index of control volume data for vector component.
+    *
+    * @pre (component >= 0) && (component < getNumberOfComponents())
     */
    int
    getControlVolumeIndex(
@@ -293,9 +306,8 @@ public:
     * Thus, the mapping between the variable and its patch data for the
     * vector can be obtained from the variable database if needed.
     *
-    * When assertion checking is active, this routine checks make sure
-    * that the type of the variable matches the types associated with
-    * the patch data indices passed in.
+    * @pre hier::VariableDatabase::getDatabase()->checkVariablePatchDataIndexType(var, comp_data_id)
+    * @pre (comp_vol_id < 0) || (hier::VariableDatabase::getDatabase()->checkVariablePatchDataIndexType(var, comp_vol_id))
     */
    void
    addComponent(
@@ -307,6 +319,11 @@ public:
 
    /**
     * Allocate data storage for all components of this vector object.
+    *
+    * @pre getPatchHierarchy
+    * @pre (getCoarsestLevelNumber() >= 0) &&
+    *      (getFinestLevelNumber() >= getCoarsestLevelNumber()) &&
+    *      (getFinestLevelNumber( <= d_hierarchy->getFinestLevelNumber())
     */
    void
    allocateVectorData(
@@ -316,6 +333,11 @@ public:
     * Deallocate data storage for all components of this vector object.
     * Note that this routine will not free the associated data
     * indices in the patch descriptor.  See freeVectorComponents() function.
+    *
+    * @pre getPatchHierarchy
+    * @pre (getCoarsestLevelNumber() >= 0) &&
+    *      (getFinestLevelNumber() >= getCoarsestLevelNumber()) &&
+    *      (getFinestLevelNumber( <= d_hierarchy->getFinestLevelNumber())
     */
    void
    deallocateVectorData();
@@ -664,8 +686,10 @@ private:
     * either double or float vector types.  This function is called from
     * addComponent() and clonevector().
     *
-    * A non-recoverable assertion will be thrown if component id is
-    * greater than the number of componenents in the vector.
+    * @pre comp_id < getNumberOfComponents()
+    * @pre getPatchHierarchy()->getDim() == var->getDim()
+    *
+    * @post d_component_operations[comp_id]
     */
 #ifdef _MSC_VER
    boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> > _bug_in_msvc;

@@ -211,25 +211,8 @@ public:
     *        Before the solver can be used, the initialize() function must
     *        be called.
     *
-    *
-    *
-    *
-    *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *        my_functions must not be null
-    *
-    *    -
-    *        object_name must not be empty.
-    *
-    *
-    *
-    *
-    *
+    * @pre !object_name.empty()
+    * @pre my_functions != 0
     */
    CVODESolver(
       const std::string& object_name,
@@ -248,20 +231,8 @@ public:
     * required to initialize the memory record used internally within
     * CVODE.  This routine must be called before the solver can be used.
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *        the solution vector must not be null
-    *
-    *    -
-    *        the solution vector must not have already been set
-    *
-    *
-    *
-    *
+    * @pre solution != 0
+    * @pre d_solution_vector == 0
     */
    void
    initialize(
@@ -341,18 +312,7 @@ public:
     * of the CVODE or CVSpgmr data parameters have changed since the
     * last call to the solver.
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *     -
-    *        The user specified final value for the independent variable t
-    *        must be greater than the specified initial value.
-    *
-    *
-    *
-    *
+    * @pre d_user_t_f > d_t_0
     */
    int
    solve()
@@ -380,17 +340,18 @@ public:
     * Accessor function for setting CVODE output log file name and output
     * printing options.  Output file name and options may be changed
     * throughout run as desired.
-    *
-    * If the file name string is empty the default file name "cvode.log"
-    * is used.
     */
    void
    setLogFileData(
       const std::string& log_fname = std::string())
    {
-      TBOX_ASSERT(!log_fname.empty());
-      if (!(log_fname == d_cvode_log_file_name)) {
-         d_cvode_log_file_name = log_fname;
+      if (log_fname != d_cvode_log_file_name) {
+         if (log_fname.empty()) {
+            d_cvode_log_file_name = "cvode.log";
+         }
+         else {
+            d_cvode_log_file_name = log_fname;
+         }
          d_CVODE_needs_initialization = true;
       }
    }
@@ -403,17 +364,7 @@ public:
     * the user has defined preconditioner routines in their concrete
     * subclass of the CVODEAbstractFunctions class.
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *        my_function must not be a null pointer
-    *
-    *
-    *
-    *
+    * @pre my_functions != 0
     */
    void
    setCVODEFunctions(
@@ -444,19 +395,10 @@ public:
     * The BDF method is recommended  for stiff problems, and
     * the ADAMS method is recommended for nonstiff problems.
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *        linear_multistep_method must be one of ADAMS or BDF.
-    *
-    *
-    *
-    *
-    *
     * Note: the enumeration constants ADAMS and BDF are defined in cvode.h.
+    *
+    * @pre (linear_multistep_method == CV_ADAMS) ||
+    *      (linear_multistep_method == CV_BDF)
     */
    void
    setLinearMultistepMethod(
@@ -476,20 +418,10 @@ public:
     * CVODE linear solver. NEWTON is recommended in case of
     * stiff problems.
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *        iteration_type must be one of FUNCTIONAL or NEWTON
-    *
-    *
-    *
-    *
-    *
     * Note: the enumeration constants FUNCTIONAL and NEWTON are defined
     * in cvode.h.
+    *
+    * @pre (iteration_type == CV_FUNCTIONAL) || (iteration_type == CV_NEWTON)
     */
    void
    setIterationType(
@@ -509,19 +441,9 @@ public:
     * vector absolute tolerance (a potentially different
     * absolute tolerance for each vector component).
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *        tolerance_type must be one of SS or SV
-    *
-    *
-    *
-    *
-    *
     * Note: the enumeration constants SS and SV are defined in cvode.h.
+    *
+    * @pre (tolerance_type == CV_SS) || (tolerance_type == CV_SV)
     */
    void
    setToleranceType(
@@ -536,22 +458,12 @@ public:
    /**
     * Set the relative tolerance level.
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *        relative_tolerance must be greater than or equal to 0.0
-    *
-    *
-    *
-    *
-    *
     * Note that pure absolute tolerance can be used by
     * setting the relative tolerance to 0.  However,
     * it is an error to simultaneously set relative and
     * absolute tolerances to 0.
+    *
+    * @pre relative_tolerance >= 0.0
     */
    void
    setRelativeTolerance(
@@ -565,22 +477,12 @@ public:
    /**
     * Set the scalar absolute tolerance level.
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *        absolute_tolerance must be greater than or equal to 0.0
-    *
-    *
-    *
-    *
-    *
     * Note that pure relative tolerance can be used by
     * setting the absolute tolerance to 0.  However,
     * it is an error to simultaneously set relative and
     * absolute tolerances to 0.
+    *
+    * @pre absolute_tolerance >= 0.0
     */
    void
    setAbsoluteTolerance(
@@ -595,26 +497,13 @@ public:
    /**
     * Set the vector absolute tolerance level.
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *        absolute_tolerance must not be a null pointer
-    *
-    *    -
-    *        each component of absolute_tolerance must be
-    *        greater than or equal to 0.0
-    *
-    *
-    *
-    *
-    *
     * Note that pure relative tolerance can be used by
     * setting the absolute tolerance to 0.  However,
     * it is an error to simultaneously set relative and
     * absolute tolerances to 0.
+    *
+    * @pre absolute_tolerance != 0
+    * @pre absolute_tolerance->vecMin() >= 0.0
     */
    void
    setAbsoluteTolerance(
@@ -638,20 +527,10 @@ public:
     * and return the solution at the point reached by that
     * step.
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *        stepping_method must be one of NORMAL or ONE_STEP
-    *
-    *
-    *
-    *
-    *
     * Note: the enumeration constants NORMAL and ONE_STEP are
     * defined in cvode.h.
+    *
+    * @pre (stepping_method == CV_NORMAL) || (stepping_method == CV_ONE_STEP)
     */
    void
    setSteppingMethod(
@@ -693,17 +572,7 @@ public:
    /**
     * Set initial condition vector.
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *        ic_vector must not be null
-    *
-    *
-    *
-    *
+    * @pre ic_vector != 0
     */
    void
    setInitialConditionVector(
@@ -719,17 +588,7 @@ public:
     * By default, this is set to 12 for ADAMS methods and 5 for BDF
     * methods.
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *        max_order must be greater than or equal to 0
-    *
-    *
-    *
-    *
+    * @pre max_order >= 0
     */
    void
    setMaximumLinearMultistepMethodOrder(
@@ -745,17 +604,7 @@ public:
     * the solver in its attempt to reach t_f.
     * By default, this is set to 500.
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *        max_num_internal_steps must be greater than or equal to 0
-    *
-    *
-    *
-    *
+    * @pre max_num_internal_steps >= 0
     */
    void
    setMaximumNumberOfInternalSteps(
@@ -771,17 +620,7 @@ public:
     * that (t + h == t) on the next internal step.  By default,
     * this is set to 10.
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *        max_num_warnings must be greater than or equal to 0
-    *
-    *
-    *
-    *
+    * @pre max_num_warnings >= 0
     */
    void
    setMaximumNumberOfNilStepWarnings(
@@ -795,17 +634,7 @@ public:
    /**
     * Set initial step size.
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *        init_step_size must be greater than or equal to 0.0
-    *
-    *
-    *
-    *
+    * @pre init_step_size >= 0.0
     */
    void
    setInitialStepSize(
@@ -821,17 +650,7 @@ public:
     * By default, there is no upper bound on the absolute value
     * of step size.
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *        max_step_size must be greater than or equal to 0.0
-    *
-    *
-    *
-    *
+    * @pre max_step_size >= 0.0
     */
    void
    setMaximumAbsoluteStepSize(
@@ -846,17 +665,7 @@ public:
     * Set minimum absolute value of step size allowed.
     * By default, this is set to 0.0.
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *        min_step_size must be greater than or equal to 0.0
-    *
-    *
-    *
-    *
+    * @pre min_step_size >= 0.0
     */
    void
    setMinimumAbsoluteStepSize(
@@ -877,17 +686,10 @@ public:
     * right preconditioning only, and both left and right
     * preconditioning, respectively.
     *
-    * Assertion Checks:
-    *
-    *
-    *
-    *
-    *    -
-    *       precondition_type must be one of NONE, LEFT, RIGHT, or BOTH.
-    *
-    *
-    *
-    *
+    * @pre (precondition_type == PREC_NONE) ||
+    *      (precondition_type == PREC_LEFT) ||
+    *      (precondition_type == PREC_RIGHT) ||
+    *      (precondition_type == PREC_BOTH)
     */
    void
    setPreconditioningType(
@@ -907,17 +709,7 @@ public:
     * or CLASSICAL_GS defined in iterativ.h. These correspond to
     * using modified Gram-Schmidt and classical Gram-Schmidt, respectively.
     *
-    * Assertion Checks:
-    *
-    *
-    *
-    *
-    *    -
-    *       gs_type must be one of CLASSICAL_GS or MODIFIED_GS.
-    *
-    *
-    *
-    *
+    * @pre (gs_type == CLASSICAL_GS) || (gs_type == MODIFIED_GS)
     */
    void
    setGramSchmidtType(
@@ -933,17 +725,7 @@ public:
     * This is an optional input to the CVSPGMR solver. Pass 0 to
     * use the default value MIN(num_equations, CVSPGMR_MAXL=5).
     *
-    * Assertion Checks:
-    *
-    *
-    *
-    *
-    *    -
-    *       max_krylov_dim must be nonnegative
-    *
-    *
-    *
-    *
+    * @pre max_krylov_dim >= 0
     */
    void
    setMaxKrylovDimension(
@@ -960,17 +742,7 @@ public:
     * This is an optional input to the CVSPGMR solver. Pass 0 to
     * use the default value CVSPGMR_DELT = 0.05.
     *
-    * Assertion Checks:
-    *
-    *
-    *
-    *
-    *    -
-    *       tol_scale_factor must be nonnegative
-    *
-    *
-    *
-    *
+    * @pre tol_scale_factor >= 0
     */
    void
    setCVSpgmrToleranceScaleFactor(
@@ -1568,18 +1340,7 @@ private:
     * invoked at next call to the solve() method.  Also, if NEWTON iteration
     * is specified, this method also initializes the CVSpgmr linear solver.
     *
-    * Assertion checks:
-    *
-    *
-    *
-    *
-    *    -
-    *       the solution vector must have already been set.
-    *
-    *
-    *
-    *
-    *
+    * @pre d_solution_vector != 0
     */
    void
    initializeCVODE();

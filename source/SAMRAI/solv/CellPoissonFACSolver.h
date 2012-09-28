@@ -175,6 +175,10 @@ public:
     * @return whether solver converged to specified level
     *
     * @see initializeSolverState
+    *
+    * @pre hierarchy
+    * @pre d_dim == hierarchy->getDim()
+    * @pre !d_solver_is_initialized
     */
    bool
    solveSystem(
@@ -203,6 +207,9 @@ public:
     * @return whether solver converged to specified level
     *
     * @see solveSystem( const int, const int, boost::shared_ptr< hier::PatchHierarchy >, int, int);
+    *
+    * @pre d_solver_is_initialized
+    * @pre (solution >= 0) || (rhs >= 0)
     */
    bool
    solveSystem(
@@ -250,6 +257,8 @@ public:
     * conditions, 1 for Neumann conditions, and 2 for mixed boundary
     * conditions.  The bdry_type argument is never required, but if used
     * it can sometimes make the PoissonHYPRESolver class more efficient.
+    *
+    * @pre (d_bc_object == 0) || (d_bc_object == &d_simple_bc)
     */
 
    void
@@ -275,6 +284,8 @@ public:
     *
     * Once the boundary condition object is overwritten by this
     * method, you must no longer call the setBoundaries() method.
+    *
+    * @pre bc_object
     */
    void
    setBcObject(
@@ -382,6 +393,11 @@ public:
     * @param hierarchy The patch hierarchy to solve on
     * @param coarse_level The coarsest level in the solve
     * @param fine_level The finest level in the solve
+    *
+    * @pre hierarchy
+    * @pre d_dim == hierarchy->getDim()
+    * @pre d_bc_object != 0
+    * @pre (solution >= 0) || (rhs >= 0)
     */
    void
    initializeSolverState(

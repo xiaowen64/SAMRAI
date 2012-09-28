@@ -95,6 +95,8 @@ public:
     *
     * In addition, disregard any previous value
     * specified by setDConstant().
+    *
+    * @pre id >= 0
     */
    void
    setDPatchDataId(
@@ -152,6 +154,8 @@ public:
     * Error if D is not represented by a patch data id.
     *
     * @return D's id
+    *
+    * @pre d_D_id != -1
     */
    int
    getDPatchDataId() const
@@ -170,6 +174,8 @@ public:
     * Error if D is not represented by a constant.
     *
     * @return D's constant value
+    *
+    * @pre d_D_id != -1
     */
    double
    getDConstant() const
@@ -192,6 +198,8 @@ public:
     *
     * In addition, disregard any previous values
     * specified by setCConstant() or setCZero().
+    *
+    * @pre id >= 0
     */
    void
    setCPatchDataId(
@@ -289,6 +297,8 @@ public:
     * Error if C is not represented by a patch data id.
     *
     * @return C's patch data id
+    *
+    * @pre d_C_id != -1
     */
    int
    getCPatchDataId() const
@@ -307,6 +317,8 @@ public:
     * Error if C is not represented by a constant.
     *
     * @return C's constant value
+    *
+    * @pre (d_C_id == -1) && !d_C_zero
     */
    double
    getCConstant() const

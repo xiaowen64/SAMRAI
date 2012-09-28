@@ -294,8 +294,7 @@ FACPreconditioner::solveSystem(
    bool clear_hierarchy_configuration_when_done = false;
    if (!d_patch_hierarchy) {
       clear_hierarchy_configuration_when_done = true;
-      initializeSolverState(u,
-         f);
+      initializeSolverState(u, f);
    } else {
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (!checkVectorStateCompatibility(u, f)) {

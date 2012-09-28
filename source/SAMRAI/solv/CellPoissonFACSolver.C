@@ -192,12 +192,6 @@ CellPoissonFACSolver::initializeSolverState(
    }
 #endif
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (!hierarchy) {
-      TBOX_ERROR(d_object_name << ": NULL hierarchy pointer not allowed\n"
-                               << "in inititialization.");
-   }
-#endif
    d_hierarchy = hierarchy;
 
    d_ln_min = coarse_level;
@@ -389,10 +383,6 @@ CellPoissonFACSolver::solveSystem(
                        << "solver state.  This function can only used when the\n"
                        << "solver state is uninitialized.  You should deallocate\n"
                        << "the solver state or use solveSystem(int,int).\n");
-   }
-   if (!hierarchy) {
-      TBOX_ERROR(d_object_name << ".solveSystem(): Null hierarchy\n"
-                               << "specified.\n");
    }
 #endif
    initializeSolverState(u, f, hierarchy, coarse_ln, fine_ln);

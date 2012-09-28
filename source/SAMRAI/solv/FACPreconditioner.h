@@ -184,6 +184,8 @@ public:
     * @return whether solver converged to specified level
     *
     * @see initializeSolverState
+    *
+    * @pre !d_patch_hierarchy || checkVectorStateCompatibility(solution, rhs)
     */
    bool
    solveSystem(
@@ -238,6 +240,10 @@ public:
     *
     * @param solution solution vector u
     * @param rhs right hand side vector f
+    *
+    * @post d_patch_hierarchy == rhs.getPatchHierarchy()
+    * @post d_coarsest_ln >= 0
+    * @post d_coarsest_ln <= d_finest_ln
     */
    void
    initializeSolverState(
@@ -279,6 +285,8 @@ public:
     * It is possible that a false compatibility is returned.
     *
     * @return true if vectors are compatible with existing state
+    *
+    * @pre d_patch_hierarchy
     */
    bool
    checkVectorStateCompatibility(
@@ -335,6 +343,8 @@ public:
     * @param avg_factor average convergence factor over FAC cycles
     *        from last solve.
     * @param final_factor convergence factor of the last FAC cycle
+    *
+    * @pre d_number_iterations > 0
     */
    void
    getConvergenceFactors(
@@ -359,6 +369,8 @@ public:
     * has been reduced by the FAC cycles.
     * It is (current residual)/( initial residual + epsilon),
     * so it may not be accurate if the initial residual is very small.
+    *
+    * @pre d_number_iterations > 0
     */
    double
    getNetConvergenceFactor() const
@@ -379,6 +391,8 @@ public:
     * The average factor is the net factor to the power of
     * 1/(number of FAC cycles).
     * It may not be accurate if the initial residual is very small.
+    *
+    * @pre d_number_iterations > 0
     */
    double
    getAvgConvergenceFactor() const
@@ -398,6 +412,8 @@ public:
     *
     * The final factor is the factor to which the residual
     * has been reduced by the last FAC cycle.
+    *
+    * @pre d_number_iterations > 0
     */
    double
    getFinalConvergenceFactor() const

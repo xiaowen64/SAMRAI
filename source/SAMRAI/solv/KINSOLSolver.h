@@ -36,21 +36,21 @@ extern "C" {
 #include <string>
 
 #ifndef LACKS_SSTREAM
-#define KINSOL_SAMRAI_ERROR(ierr) \
-   do {                                          \
-      if (ierr != KIN_SUCCESS) {                                                                \
-         std::ostringstream tboxos;                                                     \
-         tbox::Utilities::abort( \
-            tboxos.str().c_str(), __FILE__, __LINE__);      \
-      }                                                                         \
+#define KINSOL_SAMRAI_ERROR(ierr)                                   \
+   do {                                                             \
+      if (ierr != KIN_SUCCESS) {                                    \
+         std::ostringstream tboxos;                                 \
+         tbox::Utilities::abort(                                    \
+            tboxos.str().c_str(), __FILE__, __LINE__);              \
+      }                                                             \
    } while (0)
 #else
-#define KINSOL_SAMRAI_ERROR(ierr) \
-   do {                                          \
-      if (ierr != KIN_SUCCESS) {                                                                \
-         std::ostrstream tboxos;                                                        \
-         tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__);              \
-      }                                                                         \
+#define KINSOL_SAMRAI_ERROR(ierr)                                   \
+   do {                                                             \
+      if (ierr != KIN_SUCCESS) {                                    \
+         std::ostrstream tboxos;                                    \
+         tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__);  \
+      }                                                             \
    } while (0)
 #endif
 
@@ -109,8 +109,8 @@ public:
     * Important note:  The solution vector is not passed into the constructor.
     * Before the solver can be used, the initialize() function must be called.
     *
-    * When assertion checking is active, an unrecoverable assertion will
-    * result if pointer to functions is null or string is empty.
+    * @pre !object_name.empty()
+    * @pre my_functions != 0
     */
    KINSOLSolver(
       const std::string& object_name,
@@ -128,9 +128,6 @@ public:
     * required to initialize the memory record used internally within
     * KINSOL.  This routine must be called before the solver can be used.
     *
-    * When assertion checking is active, an unrecoverable assertion will
-    * result if vector pointer is null.
-    *
     * Optionally set the scaling vectors used by KINSOL to scale
     * either nonlinear solution vector or nonlinear residual vector.
     * The elements of the scaling vectors must be positive.  In either
@@ -141,6 +138,8 @@ public:
     * NEAR a root of the nonlinear function.
     *
     * See KINSOL documentation for more information.
+    *
+    * @pre solution != 0
     */
    void
    initialize(
@@ -185,6 +184,8 @@ public:
     * the default file name "kinsol.log" is used.
     *
     * See KINSOL documentation for more information.
+    *
+    * @pre flag >= 0 && flag <= 3
     */
    void
    setLogFileData(
@@ -204,6 +205,8 @@ public:
     *
     * Flags use "TRUE"/"FALSE" values defined in KINSOL.  See KINSOL
     * documentation for more information.
+    *
+    * @pre my_functions != 0
     */
    void
    setKINSOLFunctions(
@@ -299,6 +302,8 @@ public:
     * the original vectors.  The default is no constraint.
     *
     * See KINSOL documentation for more information.
+    *
+    * @pre (tol == -1.0) || (tol >= 0.0)
     */
    void
    setResidualStoppingTolerance(
@@ -393,6 +398,9 @@ public:
     * For choice ETACHOICE2, alpha = 2.0 and gamma = 0.9 are defaults.
     *
     * See KINSOL documentation for more information.
+    *
+    * @pre (conv == KIN_ETACONSTANT) || (conv == KIN_ETACHOICE1) ||
+    *      (conv == KIN_ETACHOICE2)
     */
    void
    setLinearSolverConvergenceTest(
@@ -469,6 +477,10 @@ public:
     * residual monitoring algorithm.
     *
     *  Defaults is [0.00001 and 0.9]
+    *
+    * @pre omega_min >= 0
+    * @pre omega_max >= 0
+    * @pre omega_max >= omega_min
     */
    void
    setResidualMonitoringParams(
@@ -489,6 +501,8 @@ public:
     * omega_max.
     *
     * Default is 0.0.
+    *
+    * @pre omega >= 0
     */
    void
    setResidualMonitoringConstant(
@@ -526,6 +540,8 @@ public:
     * Set maximum number of beta condition failures in the line search algorithm.
     *
     * Default is [MXNBCF_DEFAULT] (defined in kinsol_impl.h)
+    *
+    * @pre max_beta_fails >= 0
     */
    void
    setMaxBetaFails(

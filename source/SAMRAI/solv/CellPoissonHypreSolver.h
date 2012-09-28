@@ -174,6 +174,8 @@ public:
     * @param dim
     * @param object_name Name of object.
     * @param input_db tbox::Database for input.
+    *
+    * @pre (dim.getValue() == 2) || (dim.getValue() == 3)
     */
    CellPoissonHypreSolver(
       const tbox::Dimension& dim,
@@ -193,6 +195,9 @@ public:
     *
     * @param hierarchy Hierarchy
     * @param ln Level number
+    *
+    * @pre hierarchy
+    * @pre d_dim == hierarchy->getDim()
     */
    void
    initializeSolverState(
@@ -213,6 +218,8 @@ public:
     * you set the values of C and D.
     *
     * This method must be called before solveSystem().
+    *
+    * @pre d_physical_bc_coef_strategy != 0
     */
    void
    setMatrixCoefficients(
@@ -264,6 +271,9 @@ public:
     *
     * @param max_iterations gives the maximum number of iterations
     * @param relative_residual_tol the maximum error tolerance
+    *
+    * @pre max_iterations >= 0
+    * @pre relative_residual_tol >= 0.0
     */
    void
    setStoppingCriteria(
@@ -308,6 +318,12 @@ public:
     *        are assumed.
     *
     * @return whether solver converged to specified level
+    *
+    * @pre d_physical_bc_coef_strategy != 0
+    * @pre u >= 0
+    * @pre f >= 0
+    * @pre u < d_hierarchy->getPatchLevel(d_ln)->getPatchDescriptor()->getMaxNumberRegisteredComponents()
+    * @pre v < d_hierarchy->getPatchLevel(d_ln)->getPatchDescriptor()->getMaxNumberRegisteredComponents()
     */
    int
    solveSystem(
@@ -477,6 +493,8 @@ private:
     * boundary or coarse-fine boundary for the patch.  The
     * bc coefficient implementation should correspond to the
     * boundary being worked on.
+    *
+    * @pre (d_dim == patch.getDim()) && (d_dim == rhs.getDim())
     */
    void
    add_gAk0_toRhs(
@@ -492,6 +510,9 @@ private:
     */
 
    //! @brief Compute diagonal entries of the matrix when C is variable.
+   // @pre (d_dim == diagonal.getDim()) && (d_dim == C_data.getDim()) &&
+   //      (d_dim == variable_off_diagonal.getDim()) &&
+   //      (d_dim == patch_box.getDim())
    void
    computeDiagonalEntries(
       pdat::CellData<double>& diagonal,
@@ -499,6 +520,9 @@ private:
       const pdat::SideData<double>& variable_off_diagonal,
       const hier::Box& patch_box);
    //! @brief Compute diagonal entries of the matrix when C is constant.
+   // @pre (d_dim == diagonal.getDim()) &&
+   //      (d_dim == variable_off_diagonal.getDim()) &&
+   //      (d_dim == patch_box.getDim())
    void
    computeDiagonalEntries(
       pdat::CellData<double>& diagonal,
@@ -506,6 +530,9 @@ private:
       const pdat::SideData<double>& variable_off_diagonal,
       const hier::Box& patch_box);
    //! @brief Compute diagonal entries of the matrix when C is zero.
+   // @pre (d_dim == diagonal.getDim()) &&
+   //      (d_dim == variable_off_diagonal.getDim()) &&
+   //      (d_dim == patch_box.getDim())
    void
    computeDiagonalEntries(
       pdat::CellData<double>& diagonal,
@@ -516,6 +543,13 @@ private:
     *
     * At the same time, save information that are needed to adjust
     * the rhs.
+    *
+    * @pre (d_dim == diagonal.getDim()) &&
+    *      (d_dim == variable_off_diagonal.getDim()) &&
+    *      (d_dim == patch_box.getDim()) && (d_dim == acoef_data.getDim()) &&
+    *      (d_dim == bcoef_data.getDim()) && (d_dim == bccoef_box.getDim()) &&
+    *      (d_dim == Ak0_data.getDim()) &&
+    *      (d_dim == trimmed_boundary_box.getDim())
     */
    void
    adjustBoundaryEntries(

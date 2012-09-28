@@ -323,9 +323,8 @@ public:
     * with user-supplied solver components.  Then, it reads solver parameter
     * from input and restart which may override default values.
     *
-    * When assertion checking is active, an unrecoverable assertion
-    * will result if the name string is empty or the pointer to the
-    * user-defined KINSOL functions object is null.
+    * @pre !object_name.empty()
+    * @pre my_functions != 0
     */
    KINSOL_SAMRAIContext(
       const std::string& object_name,
@@ -343,6 +342,8 @@ public:
     * Initialize the state of KINSOL based on vector argument representing
     * the solution of the nonlinear system.  In general, this routine must
     * be called before the solve() routine is invoked.
+    *
+    * @pre solution
     */
    void
    initialize(
@@ -371,9 +372,6 @@ public:
    /**
     * Read input parameters from given database.
     *
-    * When assertion checking is active, an unrecoverable assertion
-    * will result if the database pointer is null.
-    *
     * @param[in] input_db
     *
     * @param[in] is_from_restart
@@ -396,8 +394,7 @@ public:
    /**
     * Retrieve solver parameters from restart database matching object name.
     *
-    * When assertion checking is active, an unrecoverable assertion
-    * will result if database pointer is null.
+    * @pre restart_db
     */
    void
    putToRestart(
