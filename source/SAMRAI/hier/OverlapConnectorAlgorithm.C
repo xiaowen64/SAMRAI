@@ -968,6 +968,9 @@ OverlapConnectorAlgorithm::privateBridge(
  * for overlaps.  Local overlaps are stored immediately.
  * Remote overlaps are placed in messages to be sent to appropriate
  * processors by the sharing phase.
+ *
+ * TODO: This method appears to be nearly identical to the other
+ * privateBridge.  See artifact artf18798.
  ***********************************************************************
  */
 
