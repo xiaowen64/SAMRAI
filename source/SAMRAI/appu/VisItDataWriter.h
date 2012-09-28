@@ -229,7 +229,7 @@ public:
    setDefaultDerivedDataWriter(
       VisDerivedDataStrategy* default_derived_writer)
    {
-      TBOX_ASSERT(default_derived_writer != (VisDerivedDataStrategy *)NULL);
+      TBOX_ASSERT(default_derived_writer != 0);
       d_default_derived_writer = default_derived_writer;
    }
 
@@ -246,7 +246,7 @@ public:
    setMaterialsDataWriter(
       VisMaterialsDataStrategy* materials_data_writer)
    {
-      TBOX_ASSERT(materials_data_writer != (VisMaterialsDataStrategy *)NULL);
+      TBOX_ASSERT(materials_data_writer != 0);
       d_materials_writer = materials_data_writer;
    }
 
@@ -344,8 +344,7 @@ public:
    registerDerivedPlotQuantity(
       const std::string& variable_name,
       const std::string& variable_type,
-      VisDerivedDataStrategy* derived_writer =
-         (VisDerivedDataStrategy *)NULL,
+      VisDerivedDataStrategy* derived_writer = 0,
       const double scale_factor = 1.0,
       const std::string& variable_centering = "CELL",
       const std::string& variable_mix_type = "CLEAN");

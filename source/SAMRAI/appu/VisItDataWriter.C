@@ -133,8 +133,8 @@ VisItDataWriter::VisItDataWriter(
 
    d_object_name = object_name;
 
-   d_default_derived_writer = NULL;
-   d_materials_writer = NULL;
+   d_default_derived_writer = 0;
+   d_materials_writer = 0;
 
    d_number_working_slaves = VISIT_UNDEFINED_INDEX;
    d_file_cluster_size = number_procs_per_file;
@@ -156,7 +156,7 @@ VisItDataWriter::VisItDataWriter(
    d_summary_filename = "summary.samrai";
    d_number_levels = 1;
 
-   d_worker_min_max = (patchMinMaxStruct *)NULL;
+   d_worker_min_max = 0;
 
    d_is_multiblock = is_multiblock;
 }
@@ -174,13 +174,13 @@ VisItDataWriter::~VisItDataWriter()
    /*
     * De-allocate min/max structs for each variable.
     */
-   if (d_worker_min_max != (patchMinMaxStruct *)NULL)
+   if (d_worker_min_max != 0)
       delete[] d_worker_min_max;
 
    for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
         ipi != d_plot_items.end(); ipi++) {
       for (int comp = 0; comp < VISIT_MAX_NUMBER_COMPONENTS; comp++) {
-         if (ipi->d_master_min_max[comp] != (patchMinMaxStruct *)NULL)
+         if (ipi->d_master_min_max[comp] != 0)
             delete[] ipi->d_master_min_max[comp];
       }
    }
@@ -327,8 +327,8 @@ VisItDataWriter::registerDerivedPlotQuantity(
     */
    plotitem.d_is_derived = true;
 
-   if (derived_writer == NULL) {
-      if (d_default_derived_writer == NULL) {
+   if (derived_writer == 0) {
+      if (d_default_derived_writer == 0) {
          TBOX_ERROR("VisItDataWriter::registerDerivedPlotQuantity"
             << "\n    no derived data writer specified for variable:"
             << variable_name
@@ -935,7 +935,7 @@ VisItDataWriter::registerSpeciesNames(
    /*
     * Find the material in the list of plot items
     */
-   VisItItem* material_item = (VisItItem *)NULL;
+   VisItItem* material_item = 0;
    for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
         ipi != d_plot_items.end(); ipi++) {
       if ((ipi->d_material_name == material_name) &&
@@ -952,7 +952,7 @@ VisItDataWriter::registerSpeciesNames(
       }
    }
 
-   TBOX_ASSERT(material_item != (VisItItem *)NULL);
+   TBOX_ASSERT(material_item != 0);
 
    d_number_species += species_names.getSize();
    material_item->d_species_names = species_names;
@@ -1256,7 +1256,7 @@ VisItDataWriter::initializePlotItem(
     * Initialize min/max information.
     */
    for (int i = 0; i < VISIT_MAX_NUMBER_COMPONENTS; i++) {
-      plotitem.d_master_min_max[i] = (patchMinMaxStruct *)NULL;
+      plotitem.d_master_min_max[i] = 0;
    }
 
    /*
@@ -1265,14 +1265,14 @@ VisItDataWriter::initializePlotItem(
     * should be set by the appropriate registration functions.
     */
    plotitem.d_is_derived = false;
-   plotitem.d_derived_writer = (VisDerivedDataStrategy *)NULL;
+   plotitem.d_derived_writer = 0;
    plotitem.d_is_deformed_coords = false;
 
    plotitem.d_isa_material = false;
-   plotitem.d_materials_writer = (VisMaterialsDataStrategy *)NULL;
+   plotitem.d_materials_writer = 0;
 
    plotitem.d_isa_species = false;
-   plotitem.d_parent_material_pointer = (VisItItem *)NULL;
+   plotitem.d_parent_material_pointer = 0;
 
    // default to CLEAN (not mixed data)
    plotitem.d_is_material_state_variable = false;
@@ -1392,7 +1392,7 @@ VisItDataWriter::writePlotData(
    d_time_step_number = time_step_number;
 
    if ((d_materials_names.getSize() > 0) &&
-       (d_materials_writer == NULL)) {
+       (d_materials_writer == 0)) {
       TBOX_ERROR("VisItDataWriter::writePlotData"
          << "\n    data writer with name " << d_object_name
          << "\n    setMaterialsDataWriter() has not been called,"
@@ -1501,7 +1501,7 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
          + d_number_species;
 
       int num_components = max_number_local_patches * num_items_to_plot;
-      if (d_worker_min_max != (patchMinMaxStruct *)NULL) {
+      if (d_worker_min_max != 0) {
          delete[] d_worker_min_max;
       }
       d_worker_min_max = new patchMinMaxStruct[num_components];
@@ -1532,7 +1532,7 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
              * Create space for master min/max struct, if it doesn't
              * already exist.
              */
-            if (ipi->d_master_min_max[comp] != (patchMinMaxStruct *)NULL) {
+            if (ipi->d_master_min_max[comp] != 0) {
                delete[] ipi->d_master_min_max[comp];
             }
             patchMinMaxStruct* mm =
@@ -2213,10 +2213,10 @@ VisItDataWriter::packMaterialsData(
                ipi->d_var_centering);
 
          // Pointers to buffers for dense packing format
-         double* dbuffer = NULL; // used to pack var
-         float* fbuffer = NULL;   // copy to float for writing
+         double* dbuffer = 0;  // used to pack var
+         float* fbuffer = 0;   // copy to float for writing
          // Pointer to buffer for sparse packing format
-         int* ibuffer = NULL;      // used to pack mat_list
+         int* ibuffer = 0;     // used to pack mat_list
 
          // Allocate appropriate memory for packing format
          if (!(ipi->d_is_material_state_variable)) {
@@ -3527,7 +3527,7 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
        */
 
       // recv buffer large enough to receive info from any processor.
-      patchMinMaxStruct* buf = NULL;
+      patchMinMaxStruct* buf = 0;
       if (d_number_working_slaves > 0) {
          buf = new patchMinMaxStruct[max_number_local_patches
                                      * num_items_to_plot];
@@ -3739,12 +3739,12 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
       }
    }
 
-   int* parent_array = (int *)NULL;
-   int* child_array = (int *)NULL;
+   int* parent_array = 0;
+   int* child_array = 0;
    int parent_array_length = 0;
    int child_array_length = child_parent_idx;
 
-   struct cpPointerStruct* parent_ptrs = (cpPointerStruct *)NULL;
+   struct cpPointerStruct* parent_ptrs = 0;
 
    // copy child info to child array
    if (child_array_length > 0) {
@@ -3940,7 +3940,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
    switch (data_type) {
 
       case VISIT_FLOAT: {
-         float* dat_ptr = NULL;
+         float* dat_ptr = 0;
          if (centering == VISIT_CELL) {
             const boost::shared_ptr<pdat::CellData<float> > fpdata(
                pdata,
@@ -3989,7 +3989,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
       }
 
       case VISIT_DOUBLE: {
-         double* dat_ptr = NULL;
+         double* dat_ptr = 0;
          if (centering == VISIT_CELL) {
             const boost::shared_ptr<pdat::CellData<double> > dpdata( 
                pdata,
@@ -4036,7 +4036,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
       }
 
       case VISIT_INT: {
-         int* dat_ptr = NULL;
+         int* dat_ptr = 0;
          if (centering == VISIT_CELL) {
             const boost::shared_ptr<pdat::CellData<int> > ipdata(
                pdata,
@@ -4109,13 +4109,13 @@ VisItDataWriter::HDFputIntegerArray2D(
    const hid_t group_id)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != NULL);
+   TBOX_ASSERT(data != 0);
    TBOX_ASSERT((nelements0 > 0) && (nelements1 > 0));
 
    herr_t errf;
    if ((nelements0 > 0) && (nelements1 > 0)) {
       hsize_t dim[] = { nelements0, nelements1 };
-      hid_t space = H5Screate_simple(2, dim, NULL);
+      hid_t space = H5Screate_simple(2, dim, 0);
 
       TBOX_ASSERT(space >= 0);
 
@@ -4180,13 +4180,13 @@ VisItDataWriter::HDFputDoubleArray2D(
 {
 
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != NULL);
+   TBOX_ASSERT(data != 0);
    TBOX_ASSERT((nelements0 > 0) && (nelements1 > 0));
 
    herr_t errf;
    if ((nelements0 > 0) && (nelements1 > 0)) {
       hsize_t dim[] = { nelements0, nelements1 };
-      hid_t space = H5Screate_simple(2, dim, NULL);
+      hid_t space = H5Screate_simple(2, dim, 0);
 
       TBOX_ASSERT(space >= 0);
 
@@ -4249,7 +4249,7 @@ VisItDataWriter::HDFputPatchExtentsStructArray(
    const hid_t group_id)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != NULL);
+   TBOX_ASSERT(data != 0);
    TBOX_ASSERT(nelements > 0);
 
    herr_t errf;
@@ -4257,7 +4257,7 @@ VisItDataWriter::HDFputPatchExtentsStructArray(
       hid_t space;
       hsize_t dim[1];
       dim[0] = nelements;
-      space = H5Screate_simple(1, dim, NULL);
+      space = H5Screate_simple(1, dim, 0);
       TBOX_ASSERT(space >= 0);
 
       hid_t pe_id = H5Tcreate(H5T_COMPOUND, sizeof(patchExtentsStruct));
@@ -4268,14 +4268,14 @@ VisItDataWriter::HDFputPatchExtentsStructArray(
 #if (H5_VERS_MAJOR > 1) || ((H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 6))
       hid_t intXdType = H5Tarray_create(H5T_NATIVE_INT, 1, dim1);
 #else
-      hid_t intXdType = H5Tarray_create(H5T_NATIVE_INT, 1, dim1, NULL);
+      hid_t intXdType = H5Tarray_create(H5T_NATIVE_INT, 1, dim1, 0);
 #endif
       TBOX_ASSERT(intXdType >= 0);
 
 #if (H5_VERS_MAJOR > 1) || ((H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 6))
       hid_t doubleXdType = H5Tarray_create(H5T_NATIVE_DOUBLE, 1, dim1);
 #else
-      hid_t doubleXdType = H5Tarray_create(H5T_NATIVE_DOUBLE, 1, dim1, NULL);
+      hid_t doubleXdType = H5Tarray_create(H5T_NATIVE_DOUBLE, 1, dim1, 0);
 #endif
       TBOX_ASSERT(doubleXdType >= 0);
 
@@ -4368,7 +4368,7 @@ VisItDataWriter::HDFputPatchMapStructArray(
    const hid_t group_id)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != NULL);
+   TBOX_ASSERT(data != 0);
    TBOX_ASSERT(nelements > 0);
 
    herr_t errf;
@@ -4376,7 +4376,7 @@ VisItDataWriter::HDFputPatchMapStructArray(
       hid_t space;
       hsize_t dim[1];
       dim[0] = nelements;
-      space = H5Screate_simple(1, dim, NULL);
+      space = H5Screate_simple(1, dim, 0);
       TBOX_ASSERT(space >= 0);
 
       hid_t pm_id = H5Tcreate(H5T_COMPOUND, sizeof(patchMapStruct));
@@ -4464,7 +4464,7 @@ VisItDataWriter::HDFputPatchMinMaxStructArray(
    const hid_t group_id)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != NULL);
+   TBOX_ASSERT(data != 0);
    TBOX_ASSERT(nelements > 0);
 
    herr_t errf;
@@ -4472,7 +4472,7 @@ VisItDataWriter::HDFputPatchMinMaxStructArray(
       hid_t space;
       hsize_t dim[1];
       dim[0] = nelements;
-      space = H5Screate_simple(1, dim, NULL);
+      space = H5Screate_simple(1, dim, 0);
       TBOX_ASSERT(space >= 0);
 
       hid_t s1_tid = H5Tcreate(H5T_COMPOUND, sizeof(patchMinMaxStruct));
@@ -4571,7 +4571,7 @@ VisItDataWriter::HDFputChildParentStructArray(
    const std::string& field_name)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != NULL);
+   TBOX_ASSERT(data != 0);
    TBOX_ASSERT(nelements > 0);
 
    herr_t errf;
@@ -4579,7 +4579,7 @@ VisItDataWriter::HDFputChildParentStructArray(
       hid_t space;
       hsize_t dim[1];
       dim[0] = nelements;
-      space = H5Screate_simple(1, dim, NULL);
+      space = H5Screate_simple(1, dim, 0);
       TBOX_ASSERT(space >= 0);
 
       hid_t s1_tid = H5Tcreate(H5T_COMPOUND, sizeOfStruct);

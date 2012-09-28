@@ -112,7 +112,7 @@ CartesianBoundaryUtilities2::getFromInput(
 
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(2));
-   TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
+   TBOX_ASSERT(bdry_strategy != 0);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
    TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
 
@@ -553,7 +553,7 @@ CartesianBoundaryUtilities2::read2dBdryEdges(
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(2));
 
-   TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
+   TBOX_ASSERT(bdry_strategy != 0);
    TBOX_ASSERT(input_db);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
 
