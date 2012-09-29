@@ -210,8 +210,8 @@ public:
     * use_time_refinement argument is true, and for synchronized
     * timestepping when the boolean is false.
     *
-    * When assertion checking is active, passing in any null pointer
-    * or an empty string will result in an unrecoverable assertion.
+    * @pre !object_name.empty()
+    * @pre patch_strategy != 0
     */
    HyperbolicLevelIntegrator(
       const std::string& object_name,
@@ -231,8 +231,7 @@ public:
     *
     * This routine also invokes variable registration in the patch strategy.
     *
-    * Assertion checking will throw unrecoverable assertions if either
-    * pointer is null.
+    * @pre gridding_alg_strategy is actually a boost::dynamic_pointer_cast<mesh::GriddingAlgorithm>
     */
    virtual void
    initializeLevelIntegrator(
@@ -249,8 +248,7 @@ public:
     * integrator. The default true setting means the timestep will be
     * computed if no value is supplied.
     *
-    * When assertion checking is active, an unrecoverable assertion will
-    * result if the level pointer is null.
+    * @pre level
     */
    virtual double
    getLevelDt(
@@ -266,8 +264,7 @@ public:
     * conservation laws (constrained by a CFL limit), the fine time increment
     * is typically the coarse increment divided by the refinement ratio.
     *
-    * When assertion checking is active, an unrecoverable assertion will
-    * result if the ratio vector is not acceptable (i.e., all values > 0).
+    * @pre each component of ratio_to_coarser is > 0
     */
    virtual double
    getMaxFinerLevelDt(
@@ -362,12 +359,10 @@ public:
     *    - \b  regrid_advance
     *        = true.
     *
-    *
-    *
-    *
-    * When assertion checking is active, an unrecoverable assertion will
-    * result if either the level or hierarchy pointer is null, or the
-    * new time is not greater than the given time.
+    * @pre level
+    * @pre hierarchy
+    * @pre current_time <= new_time
+    * @pre level->getDim() == hierarchy->getDim()
     */
 
    virtual double
@@ -388,11 +383,12 @@ public:
     * coarsest_level.  The array of old time values are used in the
     * re-integration of the time-dependent data.
     *
-    * When assertion checking is active, an unrecoverable assertion will
-    * result if the hierarchy pointer is null, the level numbers do
-    * not properly match existing levels in the hierarchy (either
-    * coarsest_level > finest_level or some level is null), or
-    * all of the old time values are less than the value of sync_time.
+    * @pre hierarchy
+    * @pre (coarsest_level >= 0) && (coarsest_level < finest_level) &&
+    *      (finest_level <= hierarchy->getFinestLevelNumber())
+    * @pre old_times.getSize() >= finest_level
+    * @pre for each i in [coarsest_level, finest_level) hierarchy->getPatchLevel(i) && sync_time >= old_times[i]
+    * @pre hierarchy->getPatchLevel(finest_level)
     */
    virtual void
    standardLevelSynchronization(
@@ -407,6 +403,13 @@ public:
     * a routine used for synchronized timestepping.  Only a single
     * value for the old time is needed, since all levels would have the
     * same old time.
+    *
+    * @pre hierarchy
+    * @pre (coarsest_level >= 0) && (coarsest_level < finest_level) &&
+    *      (finest_level <= hierarchy->getFinestLevelNumber())
+    * @pre for each i in [coarsest_level, finest_level) hierarchy->getPatchLevel(i)
+    * @pre sync_time >= old_time
+    * @pre hierarchy->getPatchLevel(finest_level)
     */
    virtual void
    standardLevelSynchronization(
@@ -432,10 +435,10 @@ public:
     * no data synchronization after regridding beyond interpolation of
     * data from coarser levels in the hierarchy in some conservative fashion.
     *
-    * When assertion checking is active, an unrecoverable assertion will
-    * result if the hierarchy pointer is null, the level numbers do
-    * not properly match existing levels in the hierarchy (either
-    * coarsest_level > finest_level or some level is null).
+    * @pre hierarchy
+    * @pre (coarsest_level >= 0) && (coarsest_level < finest_level) &&
+    *      (finest_level <= hierarchy->getFinestLevelNumber())
+    * @pre for each i in [coarsest_level, finest_level] hierarchy->getPatchLevel(i)
     */
    virtual void
    synchronizeNewLevels(
@@ -448,8 +451,7 @@ public:
    /**
     * Resets time-dependent data storage and update time for patch level.
     *
-    * When assertion checking is active, an unrecoverable assertion will
-    * result if the level pointer is null.
+    * @pre level
     */
    virtual void
    resetTimeDependentData(
@@ -461,8 +463,7 @@ public:
     * Deallocate all new simulation data on the given level.  This may
     * be necessary during regridding, or setting up levels initially.
     *
-    * When assertion checking is active, an unrecoverable assertion will
-    * result if the level pointer is null.
+    * @pre level
     */
    virtual void
    resetDataToPreadvanceState(
@@ -497,10 +498,11 @@ public:
     * the level is the finest level allowed in the hierarchy.  This may or
     * may not affect the data initialization process depending on the problem.
     *
-    * When assertion checking is active, an unrecoverable assertion will
-    * result if the hierarchy pointer is null, the level number does
-    * not match any level in the hierarchy, or the old level number
-    * does not match the level number (if the old level pointer is non-null).
+    * @pre hierarchy
+    * @pre (level_number >= 0) &&
+    *      (level_number <= hierarchy->getFinestLevelNumber())
+    * @pre !old_level || (level_number == old_level->getLevelNumber())
+    * @pre hierarchy->getPatchLevel(level_number))
     */
    virtual void
    initializeLevelData(
@@ -527,11 +529,10 @@ public:
     * communication schedules every level finer than and including that
     * indexed by the coarsest level number given.
     *
-    * When assertion checking is active, an unrecoverable assertion will
-    * result if the hierarchy pointer is null, any pointer to a level
-    * in the hierarchy that is coarser than the finest level is null,
-    * or the given level numbers not specified properly; e.g.,
-    * coarsest_level > finest_level.
+    * @pre hierarchy
+    * @pre (coarsest_level >= 0) && (coarsest_level <= finest_level) &&
+    *      (finest_level <= hierarchy->getFinestLevelNumber())
+    * @pre for all i <= finest_level hierarchy->getPatchLevel(i) is non-NULL
     */
    virtual void
    resetHierarchyConfiguration(
@@ -556,9 +557,10 @@ public:
     * to the user's patch tagging routines since the application of the
     * gradient detector may be different in each case.
     *
-    * When assertion checking is active, an unrecoverable assertion will
-    * result if the hierarchy pointer is null or the level number does
-    * not match any existing level in the hierarchy.
+    * @pre hierarchy
+    * @pre (level_number >= 0) &&
+    *      (level_number <= hierarchy->getFinestLevelNumber())
+    * @pre hierarchy->getPatchLevel(level_number)
     */
    virtual void
    applyGradientDetector(
@@ -595,8 +597,7 @@ public:
     * and false otherwise.  This argument helps the user to manage multiple
     * regridding criteria.
     *
-    * When assertion checking is active, an unrecoverable assertion will
-    * result if the level pointer is null.
+    * @pre level
     */
    virtual void
    applyRichardsonExtrapolation(
@@ -617,8 +618,12 @@ public:
     * (i.e., before it has been advanced) or by coarsening the "new"
     * solution on the fine level (i.e., after it has been advanced).
     *
-    * When assertion checking is active, an unrecoverable assertion will
-    * result if either level pointer is null.
+    * @pre hierarchy
+    * @pre (level_number >= 0) &&
+    *      (level_number <= hierarchy->getFinestLevelNumber())
+    * @pre (hierarchy->getPatchLevel(level_number)
+    * @pre coarse_level
+    * @pre hierarchy->getDim() == coarse_level->getDim()
     */
    virtual void
    coarsenDataForRichardsonExtrapolation(
@@ -636,8 +641,9 @@ public:
     * invoked by calling the function initializeLevelIntegrator() above.
     * In fact, that function should be called before this routine is called.
     *
-    * When assertion checking is active, an unrecoverable assertion will
-    * result if the variable pointer or geometry pointer is null.
+    * @pre var
+    * @pre transfer_geom
+    * @pre ghosts.getDim() == var->getDim()
     */
    virtual void
    registerVariable(
@@ -650,8 +656,6 @@ public:
 
    /**
     * Print class data representation for hyperbolic level integrator object.
-    * This is done automatically, when an unrecoverable run-time assertion
-    * is thrown within some member function of this class.
     */
    virtual void
    printClassData(
@@ -660,7 +664,7 @@ public:
    /**
     * Write out object state to the given restart database.
     *
-    * When assertion checking is active, restart_db point must be non-null.
+    * @pre restart_db
     */
    virtual void
    putToRestart(
@@ -760,7 +764,7 @@ protected:
     * argument is_from_restart should be set to true if the simulation
     * is beginning from restart.  Otherwise it should be set to false.
     *
-    * When assertion checking is active, the database pointer must be non-null.
+    * @pre is_from_restart || input_db
     */
    virtual void
    getFromInput(
@@ -799,9 +803,6 @@ protected:
     * how flux and flux integral storage is allocated and initialized.
     * These are needed since the advanceLevel() routine is used for
     * both level integration and time-dependent error estimation.
-    *
-    * When assertion checking is active, the level and schedule pointers
-    * must be non-null and the current time must be less than the new time.
     */
    virtual void
    preprocessFluxData(
@@ -818,8 +819,6 @@ protected:
     * storage is copied and de-allocated. This is needed since the
     * advanceLevel() routine is used for both level integration and
     * time-dependent error estimation.
-    *
-    * When assertion checking is active, the level pointer must be non-null.
     */
    virtual void
    postprocessFluxData(
@@ -830,9 +829,6 @@ protected:
 
    /*
     * Copy time-dependent data from source space to destination space.
-    *
-    * When assertion checking is active, the level and context pointers
-    * must be non-null.
     */
    virtual void
    copyTimeDependentData(
@@ -851,10 +847,11 @@ protected:
     * synchronization, the flux and flux integral data storage is reset on
     * the levels.
     *
-    * When assertion checking is turned on, an unrecoverable assertion
-    * will result if either level pointer is null, the levels are not
-    * consecutive in the AMR hierarchy, or the coarse sim time is not
-    * less than the sync time.
+    * @pre fine_level
+    * @pre coarse_level
+    * @pre coarse_level->getLevelNumber() == (fine_level->getLevelNumber()-1))
+    * @pre fine_level->getDim() == coarse_level->getDim()
+    * @pre sync_time > coarse_sim_time
     */
    virtual void
    synchronizeLevelWithCoarser(

@@ -48,6 +48,9 @@ public:
     * is shared by all object instances of this sum transaction class during
     * data transfers.  The array must be set before any transactions are
     * executed.  The array is set in the RefineSchedule class.
+    *
+    * @pre refine_items != 0
+    * @pre num_refine_items >= 0
     */
    static void
    setRefineItems(
@@ -94,9 +97,15 @@ public:
     * @param refine_item_id   Integer id of refine data item owned by refine
     *                         schedule.
     *
-    * When assertion checking is active, an assertion will result if any of the
-    * pointer arguments is null, or if any of the integer arguments is invalid
-    * (i.e., < 0).
+    * @pre dst_level
+    * @pre src_level
+    * @pre overlap
+    * @pre dst_node.getLocalId() >= 0
+    * @pre src_node.getLocalId() >= 0
+    * @pre refine_item_id >= 0
+    * @pre (dst_level->getDim() == src_level->getDim()) &&
+    *      (dst_level->getDim() == dst_node.getDim()) &&
+    *      (dst_level->getDim() == src_node.getDim())
     */
    OuteredgeSumTransaction(
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
@@ -157,6 +166,8 @@ public:
 
    /*!
     * Unpack the transaction data from the message stream.
+    *
+    * @pre d_dst_level->getPatch(d_dst_node.getGlobalId())->getPatchData(s_refine_items[d_refine_item_id]->d_scratch) is actually a boost::shared_ptr<pdat::OuteredgeData<double> >
     */
    virtual void
    unpackStream(
@@ -164,6 +175,9 @@ public:
 
    /*!
     * Perform the local data copy for the transaction.
+    *
+    * @pre d_dst_level->getPatch(d_dst_node.getGlobalId())->getPatchData(s_refine_items[d_refine_item_id]->d_scratch) is actually a boost::shared_ptr<pdat::OuteredgeData<double> >
+    * @pre d_src_level->getPatch(d_src_node.getGlobalId())->getPatchData(s_refine_items[d_refine_item_id]->d_src) is actually a boost::shared_ptr<pdat::OuteredgeData<double> >
     */
    virtual void
    copyLocalData();

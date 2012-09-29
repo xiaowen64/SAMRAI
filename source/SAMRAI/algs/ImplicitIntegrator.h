@@ -116,10 +116,10 @@ public:
     * created and the nonlinear solver is initialized in the initialize()
     * member function.
     *
-    * If assertion checking is turned on, an unrecoverable assertion will
-    * result if any of the database, strategy, or hierarchy pointers is
-    * null.  Assertions may also be thrown if any checks for consistency
-    * among input parameters fail.
+    * @pre !object_name.empty()
+    * @pre implicit_equations != 0
+    * @pre nonlinear_solver != 0
+    * @pre hierarchy
     */
    ImplicitIntegrator(
       const std::string& object_name,
@@ -281,8 +281,7 @@ public:
    /**
     * Write out state of object to given restart database.
     *
-    * When assertion checking is active, the restart_db pointer must be
-    * non-null.
+    * @pre restart_db
     */
    void
    putToRestart(
@@ -307,8 +306,6 @@ private:
     * Read input data from specified database and initialize class members.
     * If run is from restart, a subset of the restart values may be replaced
     * with those read from input.
-    *
-    * When assertion checking is active, the database pointer must be non-null.
     */
    void
    getFromInput(

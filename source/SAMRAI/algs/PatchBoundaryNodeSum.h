@@ -120,8 +120,9 @@ public:
     *  state.
     *
     *  @param object_name const std::string reference for name of object used
-    *  in error reporting.  When assertion checking is on, the string
-    *  cannot be empty.
+    *  in error reporting.
+    *
+    *  @pre !object_name.empty()
     */
    explicit PatchBoundaryNodeSum(
       const std::string& object_name);
@@ -136,8 +137,9 @@ public:
     *
     *  @param node_data_id  integer patch data index for node data to sum
     *
-    *  The node data id must be a valid patch data id (>=0) and must
-    *  correspond to node-centered double data.  If not, an error will result.
+    *  @pre !d_setup_called
+    *  @pre node_data_id >= 0
+    *  @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(node_data_id) is actually a boost::shared_ptr<pdat::NodeDataFactory<double> >
     */
    void
    registerSum(
@@ -152,7 +154,8 @@ public:
     *
     *  @param level         pointer to level on which to perform node sum
     *
-    *  When assertion checking is active, the level pointer cannot be null.
+    *  @pre level
+    *  @pre !d_hierarchy_setup_called
     */
    void
    setupSum(
@@ -169,8 +172,10 @@ public:
     *  @param coarsest_level coarsest level number for node sum
     *  @param finest_level   finest level number for node sum
     *
-    *  When assertion checking is active, the hierarchy pointer cannot be null,
-    *  and the range of levels must be valid.
+    *  @pre hierarchy
+    *  @pre (coarsest_level >= 0) && (finest_level >= coarsest_level) &&
+    *       (finest_level <= hierarchy->getFinestLevelNumber())
+    *  @pre !d_hierarchy_setup_called
     */
    void
    setupSum(
@@ -231,6 +236,8 @@ private:
     * @brief Perform node sum across single level.
     * 
     * Called from computeSum().
+    *
+    * @pre level
     */
    void
    doLevelSum(
@@ -261,6 +268,13 @@ private:
     * @param onode_data_id  Array of data ids specifying data to use in sums
     * @param fill_hanging_nodes    Tells whether to fill fine data on
     *                              intermediate fine nodes.
+    *
+    * @pre fine_level
+    * @pre coarsened_fine_level
+    * @pre fine_level->getDim() == coarsened_fine_level->getDim()
+    * @pre node_data_id.size() == onode_data_id.size()
+    * @pre for each member, i, of node_data_id fine_level->checkAllocated(i)
+    * @pre for each member, i, of onode_data_id coarsened_fine_level->checkAllocated(i)
     */
    void
    doLocalCoarseFineBoundarySum(

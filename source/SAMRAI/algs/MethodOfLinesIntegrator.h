@@ -155,8 +155,8 @@ public:
     * database and in the restart database corresponding to the
     * specified object_name.
     *
-    * When assertion checking is active, passing in any null pointer
-    * or an empty std::string will result in an unrecoverable assertion.
+    * @pre !object_name.empty()
+    * @pre patch_strategy != 0
     */
    MethodOfLinesIntegrator(
       const std::string& object_name,
@@ -174,6 +174,8 @@ public:
     * of data needed based on specifications of the gridding algorithm.
     *
     * This routine also invokes variable registration in the patch strategy.
+    *
+    * @pre gridding_alg
     */
    void
    initializeIntegrator(
@@ -183,6 +185,8 @@ public:
     * Return a suitable time increment over which to integrate the ODE
     * problem.  A minimum is taken over the increment computed on
     * each patch in the hierarchy.
+    *
+    * @pre hierarchy
     */
    double
    getTimestep(
@@ -193,6 +197,8 @@ public:
     * Advance the solution through the specified dt, which is assumed
     * for the problem and state of the solution.  Advances all patches
     * in the hierarchy passed in.
+    *
+    * @pre hierarchy
     */
    void
    advanceHierarchy(
@@ -203,6 +209,10 @@ public:
    /*!
     * Register variable quantity defined in the patch strategy with the
     * method of lines integrator which manipulates its storage.
+    *
+    * @pre variable
+    * @pre transfer_geom
+    * @pre variable->getDim() == ghosts.getDim()
     */
    void
    registerVariable(
@@ -249,8 +259,11 @@ public:
     * circumstances.  The can_be_refined boolean argument indicates whether
     * the level is the finest allowable level in the hierarchy.
     *
-    * Note: This function is overloaded from the base class
-    *       mesh::StandardTagAndInitStrategy.
+    * @pre hierarchy
+    * @pre level_number >= 0
+    * @pre hierarchy->getPatchLevel(level_number)
+    * @pre !old_level || (level_number == old_level->getLevelNumber())
+    * @pre !old_level || (hierarchy->getDim() == old_level->getDim())
     */
    void
    initializeLevelData(
@@ -276,8 +289,9 @@ public:
     * schedules are updated for every level finer than and including that
     * indexed by coarsest_level.
     *
-    * Note: This function is overloaded from the base class
-    *       mesh::StandardTagAndInitStrategy.
+    * @pre hierarchy
+    * @pre (coarsest_level >= 0) && (coarsest_level <= finest_level) &&
+    *      (finest_level <= hierarchy->getFinestLevelNumber())
     */
    void
    resetHierarchyConfiguration(
@@ -300,8 +314,8 @@ public:
     * application of the error estimator may be different in each of those
     * circumstances.
     *
-    * Note: This function is overloaded from the base class
-    *       mesh::StandardTagAndInitStrategy.
+    * @pre hierarchy
+    * @pre hierarchy->getPatchLevel(level_number)
     */
    virtual void
    applyGradientDetector(
@@ -315,8 +329,7 @@ public:
    /*!
     * Writes object state out to the given restart database.
     *
-    * When assertion checking is enabled, the restart_db pointer must be
-    * non-null.
+    * @pre restart_db
     */
    void
    putToRestart(
@@ -355,8 +368,6 @@ private:
     * Reads in parameters from the input database.  All
     * values from the input file take precedence over values from the
     * restart file.
-    *
-    * When assertion checking enabled: db must not be a non-NULL pointer.
     */
    void
    getFromInput(

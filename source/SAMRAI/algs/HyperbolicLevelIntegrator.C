@@ -1305,8 +1305,6 @@ HyperbolicLevelIntegrator::standardLevelSynchronization(
    for (int fine_ln = finest_level; fine_ln > coarsest_level; fine_ln--) {
       const int coarse_ln = fine_ln - 1;
 
-      TBOX_ASSERT(sync_time >= old_times[coarse_ln]);
-
       boost::shared_ptr<hier::PatchLevel> fine_level(
          hierarchy->getPatchLevel(fine_ln));
       boost::shared_ptr<hier::PatchLevel> coarse_level(
@@ -1450,6 +1448,7 @@ HyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
    TBOX_ASSERT(coarse_level->getLevelNumber() ==
       (fine_level->getLevelNumber() - 1));
    TBOX_ASSERT_OBJDIM_EQUALITY2(*fine_level, *coarse_level);
+   TBOX_ASSERT(sync_time > coarse_sim_time);
 
    /*
     * Coarsen flux integrals around fine patch boundaries to coarser level

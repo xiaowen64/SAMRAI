@@ -205,11 +205,10 @@ public:
     * Note that this object also invokes the variable creation and
     * registration process in the level strategy.
     *
-    * If assertion checking is turned on, an unrecoverable assertion will
-    * result if any of the input database, patch hierarchy,
-    * level strategy, or regridding algorithm pointers is null.  Assertions
-    * may also be thrown if any checks for consistency between parameters
-    * in the gridding algorithm, level strategy, and this object fail.
+    * @pre !object_name.empty()
+    * @pre hierarchy
+    * @pre level_integrator
+    * @pre gridding_algorithm
     */
    TimeRefinementIntegrator(
       const std::string& object_name,
@@ -242,17 +241,6 @@ public:
     * initial hierarchy configuration and simulation data is set properly for
     * the advanceHierarchy() function to be called.  In particular, on each
     * level constructed only the data needed for initialization exists.
-    *
-    * When assertion checking is active, the hierachy database pointer
-    * must be non-null.
-    *
-    * The optional argument is only to be used for a special case
-    * where the user wishes to manually specify a decomposition for
-    * the coarsest level of the hierarchy.  The BoxLevel
-    * argument must be a decomposition of the the coarsest level, and
-    * must exactly fill the index space of the physical domain of the
-    * hierarchy.  If omitted or given an uninitialized
-    * box_level, the standard decomposition method is used.
     */
    double
    initializeHierarchy();
@@ -278,6 +266,8 @@ public:
     * the new simulation time (where this synchronization process is defined
     * by the level strategy).  Thus, the data is set properly for any
     * subsequent calls to this function.
+    *
+    * @pre dt >= 0
     */
    double
    advanceHierarchy(
@@ -290,6 +280,9 @@ public:
     * if both the level allows refinement and the step count is an
     * integer multiple of the regrid step interval.
     * Otherwise, false is returned.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number <= getPatchHierarchy()->getFinestLevelNumber())
     */
    bool
    atRegridPoint(
@@ -346,6 +339,9 @@ public:
     * Return true if any steps remain in current step sequence on level
     * (i.e., before it will synchronize with some coarser level).
     * Return false otherwise.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number <= getPatchHierarchy()->getFinestLevelNumber())
     */
    bool
    stepsRemaining(
@@ -372,6 +368,9 @@ public:
 
    /**
     * Return current time increment used to advance level.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number <= getPatchHierarchy()->getFinestLevelNumber())
     */
    double
    getLevelDtActual(
@@ -384,6 +383,9 @@ public:
 
    /**
     * Return maximum time increment currently allowed on level.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number <= getPatchHierarchy()->getFinestLevelNumber())
     */
    double
    getLevelDtMax(
@@ -396,6 +398,9 @@ public:
 
    /**
     * Return current simulation time for level.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number <= getPatchHierarchy()->getFinestLevelNumber())
     */
    double
    getLevelSimTime(
@@ -408,6 +413,9 @@ public:
 
    /**
     * Return step count for current integration sequence on level.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number <= getPatchHierarchy()->getFinestLevelNumber())
     */
    int
    getLevelStep(
@@ -426,6 +434,9 @@ public:
    /**
     * Return maximum number of time steps allowed on level in
     * current integration step sequence.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number <= getPatchHierarchy()->getFinestLevelNumber())
     */
    int
    getLevelMaxSteps(
@@ -471,6 +482,9 @@ public:
    /**
     * Return true if current step on level is first in current step
     * sequence; otherwise return false.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number <= getPatchHierarchy()->getFinestLevelNumber())
     */
    bool
    firstLevelStep(
@@ -489,6 +503,9 @@ public:
    /**
     * Return true if current step on level is last in current step
     * sequence; otherwise return false.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number <= getPatchHierarchy()->getFinestLevelNumber())
     */
    bool
    lastLevelStep(
@@ -505,8 +522,10 @@ public:
    }
 
    /**
-    * set the regrid interval to a new value.  This may only be used
+    * Set the regrid interval to a new value.  This may only be used
     * when using synchronized timestepping.
+    *
+    * @pre !d_use_refined_timestepping
     */
    void
    setRegridInterval(
@@ -527,6 +546,9 @@ public:
 
    /**
     * Print time stepping data for a single level to given output stream.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number <= getPatchHierarchy()->getFinestLevelNumber())
     */
    void
    printDataForLevel(
@@ -536,8 +558,7 @@ public:
    /**
     * Write object state out to the given restart database.
     *
-    * When assertion checking is active, the restart_db pointer must be
-    * non-null.
+    * @pre restart_db
     */
    void
    putToRestart(
@@ -626,8 +647,6 @@ private:
     * If the simulation is from restart, then only read in end_time,
     * grow_dt, max_integrator_step and tag_buffer if they are
     * found in the input database.
-    *
-    * When assertion checking is active, the databse pointer must be non-null.
     */
    virtual void
    getFromInput(

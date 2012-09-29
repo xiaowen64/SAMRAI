@@ -79,6 +79,16 @@ public:
     * @param use_time_interpolation  Optional boolean flag indicating whether
     *                       the refine transaction involves time interpolation.
     *                       Default is false.
+    *
+    * @pre dst_level
+    * @pre src_level
+    * @pre overlap
+    * @pre dst_node.getLocalId() >= 0
+    * @pre src_node.getLocalId() >= 0
+    * @pre ritem_id >= 0
+    * @pre (dst_level->getDim() == src_level->getDim()) &&
+    *      (dst_level->getDim() == dst_node.getDim()) &&
+    *      (dst_level->getDim() == src_node.getDim())
     */
    boost::shared_ptr<tbox::Transaction>
    allocate(
@@ -96,6 +106,16 @@ public:
     *
     * Same as previous allocate routine but with default empty box and no
     * timer interpolation.
+    *
+    * @pre dst_level
+    * @pre src_level
+    * @pre overlap
+    * @pre dst_node.getLocalId() >= 0
+    * @pre src_node.getLocalId() >= 0
+    * @pre ritem_id >= 0
+    * @pre (dst_level->getDim() == src_level->getDim()) &&
+    *      (dst_level->getDim() == dst_node.getDim()) &&
+    *      (dst_level->getDim() == src_node.getDim())
     */
    boost::shared_ptr<tbox::Transaction>
    allocate(
@@ -117,6 +137,8 @@ public:
     * @param preprocess_vector Const reference to hier::ComponentSelector
     *                     indicating patch data array indices of scratch patch
     *                     data objects to preprocess.
+    *
+    * @pre level
     */
    void
    preprocessScratchSpace(

@@ -112,8 +112,9 @@ public:
     *  state.
     *
     *  @param object_name const std::string reference for name of object used
-    *  in error reporting.  When assertion checking is on, the string
-    *  cannot be empty.
+    *  in error reporting.
+    *
+    *  @pre !object_name.empty()
     */
    explicit PatchBoundaryEdgeSum(
       const std::string& object_name);
@@ -128,8 +129,9 @@ public:
     *
     *  @param edge_data_id  integer patch data index for edge data to sum
     *
-    *  The edge data id must be a valid patch data id (>=0) and must
-    *  correspond to edge-centered double data.  If not, an error will result.
+    *  @pre !d_setup_called
+    *  @pre edge_data_id >= 0
+    *  @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(edge_data_id) is actually a boost::shared_ptr<pdat::EdgeDataFactory<double> >
     */
    void
    registerSum(
@@ -141,7 +143,7 @@ public:
     *
     *  @param level         pointer to level on which to perform edge sum
     *
-    *  When assertion checking is active, the level pointer cannot be null.
+    *  @pre level
     */
    void
    setupSum(

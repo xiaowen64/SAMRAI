@@ -84,6 +84,12 @@ OuternodeSumTransactionFactory::allocate(
    NULL_USE(box);
    NULL_USE(use_time_interpolation);
 
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
+   TBOX_ASSERT(overlap);
+   TBOX_ASSERT(dst_node.getLocalId() >= 0);
+   TBOX_ASSERT(src_node.getLocalId() >= 0);
+   TBOX_ASSERT(ritem_id >= 0);
    TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level, *src_level, dst_node, src_node);
 
    return boost::make_shared<OuternodeSumTransaction>(dst_level,
@@ -103,6 +109,12 @@ OuternodeSumTransactionFactory::allocate(
    const hier::Box& src_node,
    int ritem_id) const
 {
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
+   TBOX_ASSERT(overlap);
+   TBOX_ASSERT(dst_node.getLocalId() >= 0);
+   TBOX_ASSERT(src_node.getLocalId() >= 0);
+   TBOX_ASSERT(ritem_id >= 0);
    TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level, *src_level, dst_node, src_node);
 
    return allocate(dst_level,
