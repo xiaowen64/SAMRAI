@@ -190,11 +190,15 @@ public:
     * @param dim
     * @param object_name String name for data writer object
     * @param dump_directory_name String name for dump directory, which
-    *   may include a path.
+    *    may include a path.
     * @param number_procs_per_file Optional integer number processors
-    *  (>= 1) to share a common dump file; default is 1.
+    *    (>= 1) to share a common dump file; default is 1.
     * @param is_multiblock Optional argument should be set to true only
-    *  only for problems on a multiblock domain.
+    *    only for problems on a multiblock domain.
+    *
+    * @pre !object_name.empty()
+    * @pre number_procs_per_file > 0
+    * @pre (dim.getValue() == 2) || (dim.getValue() == 3)
     */
    VisItDataWriter(
       const tbox::Dimension& dim,
@@ -223,7 +227,9 @@ public:
     *     pointer is null.
     *
     * @param default_derived_writer Pointer to a VisDerivedDataStrategy
-    *  object.
+    *    object.
+    *
+    * @pre default_derived_writer != 0
     */
    void
    setDefaultDerivedDataWriter(
@@ -240,7 +246,10 @@ public:
     *   - assertion checking is active and the materials_data__writer
     *     pointer is null.
     *
-    * @param materials_data_writer Pointer to a VisMaterialsDataStrategy object.
+    * @param materials_data_writer Pointer to a VisMaterialsDataStrategy
+    *    object.
+    *
+    * @pre materials_data_writer != 0
     */
    void
    setMaterialsDataWriter(
@@ -293,8 +302,12 @@ public:
     * @param variable_centering (optional) "CELL" or "NODE" - used
     *    only when data being registered is not standard cell or
     *    node type.
+    *
+    * @pre !variable_name.empty()
+    * @pre !variable_type.empty()
+    * @pre patch_data_index >= -1
+    * @pre start_depth_index >= 0
     */
-
    void
    registerPlotQuantity(
       const std::string& variable_name,
@@ -334,11 +347,17 @@ public:
     *    derived data object if not supplied
     * @param scale_factor (optional) scale factor with which to multiply
     *    all data values
-    * @param variable_centering (optional) centering of derived data - "CELL" or "NODE"
-    * @param variable_mix_type (optional) indicate whether or not the mixed material
-    *    state will be stored, "MIXED", or the default of using cell averages
-    *    "CLEAN". If "MIXED" then packMixedDerivedDataIntoDoubleBuffer() must
-    *    be provided.
+    * @param variable_centering (optional) centering of derived data - "CELL"
+    *    or "NODE"
+    * @param variable_mix_type (optional) indicate whether or not the mixed
+    *    material state will be stored, "MIXED", or the default of using cell
+    *    averages "CLEAN". If "MIXED" then
+    *    packMixedDerivedDataIntoDoubleBuffer() must be provided.
+    *
+    * @pre !variable_name.empty()
+    * @pre !variable_type.empty()
+    * @pre (variable_name != "Coords") ||
+    *      ((variable_type == "VECTOR") && (variable_centering == "NODE"))
     */
    void
    registerDerivedPlotQuantity(
@@ -380,7 +399,13 @@ public:
     * @param variable_name name of variable.
     * @param level_number level number on which data index is being reset.
     * @param patch_data_index new patch data array index.
-    * @param start_depth_index (optional) argument indicating the new depth index.
+    * @param start_depth_index (optional) argument indicating the new depth
+    *    index.
+    *
+    * @pre !variable_name.empty()
+    * @pre level_number >= 0
+    * @pre patch_data_index >= -1
+    * @pre start_depth_index >= 0
     */
    void
    resetLevelPlotQuantity(
@@ -409,6 +434,9 @@ public:
     * @param patch_data_index patch data index of the coordinate data.
     * @param start_depth_index (optional) start index for case where
     *    coordinate data is a subcomponent of a larger patch data vector
+    *
+    * @pre patch_data_index >= -1
+    * @pre start_depth_index >= 0
     */
    void
    registerNodeCoordinates(
@@ -435,6 +463,10 @@ public:
     *    coordinate data is a subcomponent of a larger patch data vector
     * @param scale_factor scale factor with which to multiply
     *    coordinate data values
+    *
+    * @pre (coordinate_number >= 0) && (coordinate_number < d_dim.getValue())
+    * @pre patch_data_index >= -1
+    * @pre depth_index >= 0
     */
    void
    registerSingleNodeCoordinate(
@@ -485,6 +517,10 @@ public:
     *     or any material name string is empty.
     *
     * @param material_names tbox::Array of strings: the names of the materials.
+    *
+    * @pre material_names.getSize() > 0
+    * @pre for each member of material_names, mn, !mn.empty()
+    * @pre d_materials_names.getSize() == 0
     */
    void
    registerMaterialNames(
@@ -527,6 +563,10 @@ public:
     *     or any material name string is empty.
     *
     * @param material_names tbox::Array of strings: the names of the materials.
+    *
+    * @pre material_names.getSize() > 0
+    * @pre for each member of material_names, mn, !mn.empty()
+    * @pre d_materials_names.getSize() == 0
     */
    void
    registerSparseMaterialNames(
@@ -572,9 +612,13 @@ public:
     *     or any name string is empty.
     *
     * @param material_name String name of the material whose species
-    *  names are being registered.
+    *    names are being registered.
     * @param species_names tbox::Array of strings: the names of the species
-    *  for material_name.
+    *    for material_name.
+    *
+    * @pre !material_name.empty()
+    * @pre species_names.getSize() > 0
+    * @pre d_materials_names.getSize() > 0
     */
    void
    registerSpeciesNames(
@@ -590,7 +634,6 @@ public:
     * (scalar, vector, tensor). For more information on defining VisIt
     * expressions see the VisItUsersManual.
     */
-
    void
    registerVisItExpressions(
       const tbox::Array<std::string>& expression_keys,
@@ -617,11 +660,15 @@ public:
     *     the time step is < 0, or the dump directory name string is empty,
     *
     * @param hierarchy A pointer to the patch hierarchy on which the data
-    *  to be plotted is defined.
+    *    to be plotted is defined.
     * @param time_step Non-negative integer value specifying the current
-    *  time step number.
+    *    time step number.
     * @param simulation_time Optional argument specifying the double
-    *  precision simulation time. Default is 0.0.
+    *    precision simulation time. Default is 0.0.
+    *
+    * @pre hierarchy
+    * @pre time_step_number >= 0
+    * @pre !d_top_level_directory_name.empty()
     */
    void
    writePlotData(
@@ -638,6 +685,8 @@ public:
     * so the actual name of the file will be "<filename>.samrai".  If no
     * alternative name is supplied, by default the summary file used is
     * "summary.samrai".
+    *
+    * @pre !filename.empty()
     */
    void
    setSummaryFilename(

@@ -138,15 +138,22 @@ public:
     * @param bdry_strategy user-defined object that reads DIRICHLET or NEUMANN
     *                      conditions
     * @param input_db      input database containing all boundary data
-    * @param face_conds    array into which integer face boundary condition types
-    *                      are read
-    * @param edge_conds    array into which integer edge boundary condition types
-    *                      are read
-    * @param node_conds    array into which integer node boundary condition types
-    *                      are read
+    * @param face_conds    array into which integer face boundary condition
+    *                      types are read
+    * @param edge_conds    array into which integer edge boundary condition
+    *                      types are read
+    * @param node_conds    array into which integer node boundary condition
+    *                      types are read
     * @param periodic      integer vector specifying which coordinate
     *                      directions are periodic (e.g., value returned from
     *                      GridGeometry2::getPeriodicShift())
+    *
+    * @pre input_db
+    * @pre periodic.getDim() == tbox::Dimension(3)
+    * @pre bdry_strategy != 0
+    * @pre face_conds.getSize() == NUM_3D_FACES
+    * @pre edge_conds.getSize() == NUM_3D_EDGES
+    * @pre node_conds.getSize() == NUM_3D_NODES
     */
    static void
    getFromInput(
@@ -168,8 +175,18 @@ public:
     * @param vardata             Cell-centered patch data object to fill.
     * @param patch               hier::Patch on which data object lives.
     * @param ghost_width_to_fill Width of ghost region to fill.
-    * @param bdry_face_conds     tbox::Array of boundary condition types for patch faces.
-    * @param bdry_face_values    tbox::Array of boundary values for patch faces.
+    * @param bdry_face_conds     tbox::Array of boundary condition types for
+    *                            patch faces.
+    * @param bdry_face_values    tbox::Array of boundary values for patch
+    *                            faces.
+    *
+    * @pre !varname.empty()
+    * @pre vardata
+    * @pre bdry_face_conds.getSize() == NUM_3D_FACES
+    * @pre bdry_face_values.getSize() == NUM_3D_FACES * (vardata->getDepth())
+    * @pre ghost_fill_width.getDim() == tbox::Dimension(3)
+    * @pre (vardata->getDim() == patch.getDim()) &&
+    *      (vardata->getDim() == ghost_fill_width.getDim())
     */
    static void
    fillFaceBoundaryData(
@@ -191,8 +208,18 @@ public:
     * @param vardata             Cell-centered patch data object to fill.
     * @param patch               hier::Patch on which data object lives.
     * @param ghost_width_to_fill Width of ghost region to fill.
-    * @param bdry_edge_conds     tbox::Array of boundary condition types for patch edges.
-    * @param bdry_face_values    tbox::Array of boundary values for patch faces.
+    * @param bdry_edge_conds     tbox::Array of boundary condition types for
+    *                            patch edges.
+    * @param bdry_face_values    tbox::Array of boundary values for patch
+    *                            faces.
+    *
+    * @pre !varname.empty()
+    * @pre vardata
+    * @pre bdry_edge_conds.getSize() == NUM_3D_EDGES
+    * @pre bdry_face_values.getSize() == NUM_3D_FACES * (vardata->getDepth())
+    * @pre ghost_fill_width.getDim() == tbox::Dimension(3)
+    * @pre (vardata->getDim() == patch.getDim()) &&
+    *      (vardata->getDim() == ghost_fill_width.getDim())
     */
    static void
    fillEdgeBoundaryData(
@@ -214,8 +241,18 @@ public:
     * @param vardata             Cell-centered patch data object to fill.
     * @param patch               hier::Patch on which data object lives.
     * @param ghost_width_to_fill Width of ghost region to fill.
-    * @param bdry_node_conds     tbox::Array of boundary condition types for patch nodes.
-    * @param bdry_face_values    tbox::Array of boundary values for patch faces.
+    * @param bdry_node_conds     tbox::Array of boundary condition types for
+    *                            patch nodes.
+    * @param bdry_face_values    tbox::Array of boundary values for patch
+    *                            faces.
+    *
+    * @pre !varname.empty()
+    * @pre vardata
+    * @pre bdry_node_conds.getSize() == NUM_3D_NODES
+    * @pre bdry_face_values.getSize() == NUM_3D_FACES * (vardata->getDepth())
+    * @pre ghost_fill_width.getDim() == tbox::Dimension(3)
+    * @pre (vardata->getDim() == patch.getDim()) &&
+    *      (vardata->getDim() == ghost_fill_width.getDim())
     */
    static void
    fillNodeBoundaryData(
@@ -235,10 +272,24 @@ public:
     * or the boundary condition type is inconsistant with the edge location
     * an error results.
     *
-    * @return Integer face location for edge location and boundary condition type.
+    * @return Integer face location for edge location and boundary condition
+    *         type.
     *
     * @param edge_loc   Integer location for edge.
     * @param edge_btype Integer boundary condition type for edge.
+    *
+    * @pre (edge_btype == BdryCond::XFLOW) ||
+    *      (edge_btype == BdryCond::XREFLECT) ||
+    *      (edge_btype == BdryCond::XDIRICHLET) ||
+    *      (edge_btype == BdryCond::XNEUMANN) ||
+    *      (edge_btype == BdryCond::YFLOW) ||
+    *      (edge_btype == BdryCond::YREFLECT) ||
+    *      (edge_btype == BdryCond::YDIRICHLET) ||
+    *      (edge_btype == BdryCond::YNEUMANN) ||
+    *      (edge_btype == BdryCond::ZFLOW) ||
+    *      (edge_btype == BdryCond::ZREFLECT) ||
+    *      (edge_btype == BdryCond::ZDIRICHLET) ||
+    *      (edge_btype == BdryCond::ZNEUMANN)
     */
    static int
    getFaceLocationForEdgeBdry(
@@ -254,10 +305,24 @@ public:
     * or the boundary condition type is inconsistant with the node location
     * an error results.
     *
-    * @return Integer face location for node location and boundary condition type.
+    * @return Integer face location for node location and boundary condition
+    *         type.
     *
     * @param node_loc   Integer location for node.
     * @param node_btype Integer boundary condition type for node.
+    *
+    * @pre (edge_btype == BdryCond::XFLOW) ||
+    *      (edge_btype == BdryCond::XREFLECT) ||
+    *      (edge_btype == BdryCond::XDIRICHLET) ||
+    *      (edge_btype == BdryCond::XNEUMANN) ||
+    *      (edge_btype == BdryCond::YFLOW) ||
+    *      (edge_btype == BdryCond::YREFLECT) ||
+    *      (edge_btype == BdryCond::YDIRICHLET) ||
+    *      (edge_btype == BdryCond::YNEUMANN) ||
+    *      (edge_btype == BdryCond::ZFLOW) ||
+    *      (edge_btype == BdryCond::ZREFLECT) ||
+    *      (edge_btype == BdryCond::ZDIRICHLET) ||
+    *      (edge_btype == BdryCond::ZNEUMANN)
     */
    static int
    getFaceLocationForNodeBdry(
@@ -282,7 +347,32 @@ public:
     * @param gcw_to_check  Width of ghost region to check.
     * @param bbox          Boundary box to check.
     * @param bcase         Boundary condition type for given edge or node.
-    * @param bstate        Boundary value that applies in DIRICHLET or NEUMANN case.
+    * @param bstate        Boundary value that applies in DIRICHLET or NEUMANN
+    *                      case.
+    *
+    * @pre !varname.empty()
+    * @pre data_id >= 0
+    * @pre depth >= 0
+    * @pre gcw_to_check.getDim() == tbox::Dimension(3)
+    * @pre (patch.getDim() == gcw_to_check.getDim() &&
+    *      (patch.getDim() == bbox.getDim())
+    * @pre (bbox.getBoundaryType() == Bdry::FACE3D) ||
+    *      (bbox.getBoundaryType() == Bdry::EDGE3D) ||
+    *      (bbox.getBoundaryType() == Bdry::NODE3D)
+    * @pre ((bbox.getBoundaryType() == Bdry::FACE3D) &&
+    *       ((bcase == BdryCond::FLOW) || (bcase == BdryCond::REFLECT) ||
+    *        (bcase == BdryCond::DIRICHLET) ||
+    *        (bcase == BdryCond::NEUMANN))) ||
+    *      (((bbox.getBoundaryType() == Bdry::EDGE3D) ||
+    *        (bbox.getBoundaryType() == Bdry::NODE3D)) &&
+    *        ((bcase == BdryCond::XFLOW) || (bcase == BdryCond::YFLOW) ||
+    *         (bcase == BdryCond::ZFLOW) || (bcase == BdryCond::XREFLECT) ||
+    *         (bcase == BdryCond::YREFLECT) || (bcase == BdryCond::XREFLECT) ||
+    *         (bcase == BdryCond::XDIRICHLET) ||
+    *         (bcase == BdryCond::YDIRICHLET) || 
+    *         (bcase == BdryCond::ZDIRICHLET) ||
+    *         (bcase == BdryCond::XNEUMANN) || (bcase == BdryCond::YNEUMANN) ||
+    *         (bcase == BdryCond::ZNEUMANN)))
     */
    static int
    checkBdryData(
