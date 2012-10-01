@@ -125,7 +125,7 @@ void NodeDataTest::registerVariables(
    CommTester* commtest)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(commtest != (CommTester *)NULL);
+   TBOX_ASSERT(commtest != 0);
 #endif
 
    int nvars = d_variable_src_name.getSize();

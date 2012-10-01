@@ -138,7 +138,7 @@ void SkeletonBoundaryUtilities3::getFromInput(
    const hier::IntVector& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
+   TBOX_ASSERT(bdry_strategy != 0);
    TBOX_ASSERT(input_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(edge_conds.getSize() == NUM_3D_EDGES);
@@ -777,7 +777,7 @@ void SkeletonBoundaryUtilities3::read3dBdryFaces(
    const hier::IntVector& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
+   TBOX_ASSERT(bdry_strategy != 0);
    TBOX_ASSERT(input_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
 #endif

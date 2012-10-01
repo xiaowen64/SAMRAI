@@ -72,7 +72,7 @@ MultiblockTester::MultiblockTester(
    NULL_USE(main_input_db);
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(data_test != (PatchMultiblockTestStrategy *)NULL);
+   TBOX_ASSERT(data_test != 0);
 #endif
 
    if (!do_refine) {

@@ -260,7 +260,7 @@ int main(
             boost::shared_ptr<tbox::Database>()));
       tree_lb.setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      mesh::LoadBalanceStrategy* lb = NULL;
+      mesh::LoadBalanceStrategy* lb = 0;
 
       std::string load_balancer_type;
       if (main_db->isString("load_balancer_type")) {
@@ -271,7 +271,7 @@ int main(
             lb = &cut_and_pack_lb;
          }
       }
-      if (lb == NULL) {
+      if (lb == 0) {
          TBOX_ERROR(
             "Missing or bad load_balancer specification in Main database.\n"
             << "Specify load_balancer_type = STRING, where STRING can be\n"

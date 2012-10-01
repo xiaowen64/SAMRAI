@@ -705,7 +705,7 @@ void MblkGeometry::buildWedgeGridOnPatch(
    int nd_kmin;
    int nd_kmax;
    dx[2] = d_dx[level_number][2];
-   double* z = NULL;
+   double* z = 0;
    if (d_dim == tbox::Dimension(3)) {
       nd_kmin = ifirst(2) - nghost_cells(2);
       nd_kmax = ilast(2) + 1 + nghost_cells(2);

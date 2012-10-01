@@ -52,8 +52,8 @@ printObject(
    const double* a_ptr,
    const int* a_lower,
    const int* a_upper,
-   const int* lower = NULL,
-   const int* upper = NULL);
+   const int* lower = 0,
+   const int* upper = 0);
 
 /*!
  * @brief Print an array data object

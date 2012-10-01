@@ -90,8 +90,8 @@ public:
       boost::shared_ptr<solv::CellPoissonFACOps>& fac_ops,
       boost::shared_ptr<solv::FACPreconditioner>& fac_precond,
       tbox::Database& database,
-      /*! Standard output stream */ std::ostream* out_stream = NULL,
-      /*! Log output stream */ std::ostream* log_stream = NULL);
+      /*! Standard output stream */ std::ostream* out_stream = 0,
+      /*! Log output stream */ std::ostream* log_stream = 0);
 
    //@{ @name mesh::StandardTagAndInitStrategy virtuals
 

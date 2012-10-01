@@ -270,7 +270,7 @@ int main(
        * Create communication tester and patch data test object
        */
 
-      PatchMultiblockTestStrategy* patch_data_test = NULL;
+      PatchMultiblockTestStrategy* patch_data_test = 0;
 
       if (test_to_run == "CellMultiblockTest") {
          patch_data_test = new CellMultiblockTest("CellMultiblockTest",

@@ -875,7 +875,7 @@ void ModifiedBratuProblem::initializeLevelData(
             old_level,
             level_number - 1,
             hierarchy,
-            NULL));
+            0));
       sched->fillData(time);
 
       if (old_level) {
@@ -1040,8 +1040,8 @@ void ModifiedBratuProblem::evaluateNonlinearFunction(
    solv::SundialsAbstractVector* fval)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(soln == (solv::SundialsAbstractVector *)NULL));
-   TBOX_ASSERT(!(fval == (solv::SundialsAbstractVector *)NULL));
+   TBOX_ASSERT(soln != 0);
+   TBOX_ASSERT(fval != 0);
 #endif
 
    boost::shared_ptr<solv::SAMRAIVectorReal<double> > x(
@@ -1067,7 +1067,7 @@ int ModifiedBratuProblem::precondSetup(
    NULL_USE(vtemp1);
    NULL_USE(vtemp2);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(soln == (solv::SundialsAbstractVector *)NULL));
+   TBOX_ASSERT(soln != 0);
 #endif
 
    num_feval += 0;
@@ -1095,7 +1095,7 @@ int ModifiedBratuProblem::precondSolve(
    NULL_USE(fval_scale);
    NULL_USE(vtemp);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(rhs == (solv::SundialsAbstractVector *)NULL));
+   TBOX_ASSERT(rhs != 0);
 #endif
 
    num_feval += 0;
@@ -1114,9 +1114,9 @@ ModifiedBratuProblem::jacobianTimesVector(
    solv::SundialsAbstractVector* soln)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(vector == (solv::SundialsAbstractVector *)NULL));
-   TBOX_ASSERT(!(product == (solv::SundialsAbstractVector *)NULL));
-   TBOX_ASSERT(!(soln == (solv::SundialsAbstractVector *)NULL));
+   TBOX_ASSERT(vector != 0);
+   TBOX_ASSERT(product != 0);
+   TBOX_ASSERT(soln != 0);
 #endif
 
    boost::shared_ptr<solv::SAMRAIVectorReal<double> > v(
@@ -1145,8 +1145,8 @@ int ModifiedBratuProblem::evaluateNonlinearFunction(
    Vec fcur)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(xcur == NULL));
-   TBOX_ASSERT(!(fcur == NULL));
+   TBOX_ASSERT(xcur != 0);
+   TBOX_ASSERT(fcur != 0);
 #endif
 
    boost::shared_ptr<solv::SAMRAIVectorReal<double> > x(
@@ -1163,7 +1163,7 @@ int ModifiedBratuProblem::evaluateJacobian(
    Vec x)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(x == NULL));
+   TBOX_ASSERT(x != 0);
 #endif
 
    boost::shared_ptr<solv::SAMRAIVectorReal<double> > xvec(
@@ -1179,8 +1179,8 @@ int ModifiedBratuProblem::jacobianTimesVector(
    Vec xout)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(xin != NULL);
-   TBOX_ASSERT(xout != NULL);
+   TBOX_ASSERT(xin != 0);
+   TBOX_ASSERT(xout != 0);
 #endif
 
    boost::shared_ptr<solv::SAMRAIVectorReal<double> > xinvec(
@@ -1208,8 +1208,8 @@ int ModifiedBratuProblem::applyPreconditioner(
    Vec z)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(r != NULL);
-   TBOX_ASSERT(z != NULL);
+   TBOX_ASSERT(r != 0);
+   TBOX_ASSERT(z != 0);
 #endif
 
    boost::shared_ptr<solv::SAMRAIVectorReal<double> > rhs(

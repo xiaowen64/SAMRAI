@@ -111,10 +111,6 @@ void SAMRAI_F77_FUNC(upfluxsumside3d2, UPFLUXSUMSIDE3D2) (
    const double *, double *);
 }
 
-#ifndef NULL
-#define NULL (0)
-#endif
-
 #define ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION (3)
 
 using namespace SAMRAI;
@@ -213,7 +209,7 @@ MblkHyperbolicLevelIntegrator::MblkHyperbolicLevelIntegrator(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
-   TBOX_ASSERT(patch_strategy != ((MblkHyperbolicPatchStrategy *)NULL));
+   TBOX_ASSERT(patch_strategy != 0);
 #endif
 
    tbox::RestartManager::getManager()->
@@ -1453,7 +1449,7 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
       t_coarsen_fluxsum_create->start();
          sched = d_mblk_coarsen_fluxsum->createSchedule(mblk_coarse_level,
             mblk_fine_level,
-            NULL);
+            0);
       t_coarsen_fluxsum_create->stop();
 
       d_patch_strategy->setDataContext(d_current);

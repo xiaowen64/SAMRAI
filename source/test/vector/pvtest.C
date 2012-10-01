@@ -50,10 +50,6 @@ using namespace std;
 
 #include "boost/shared_ptr.hpp"
 
-#ifndef NULL
-#define NULL (0)
-#endif
-
 #define NCELL_VARS 2
 #define NFACE_VARS 2
 #define NNODE_VARS 4
@@ -85,7 +81,7 @@ int main(
 //   This problem fixed, DAH 9/19/2001.  Problem arose from the PETSc
 //   libs not having world readable and executable permisions.
 //   Also added a matching PetscFinalize, to prevent memory leaks, etc.
-      PetscInitialize(&argc, &argv, (char *)NULL, NULL);
+      PetscInitialize(&argc, &argv, 0, 0);
 
       int ln, iv;
 
@@ -1029,7 +1025,7 @@ int main(
 
       // my_vec0 = 2.0
       my_vec0->setToScalar(2.0);
-      VecView(pvec0, ((PetscViewer)NULL));
+      VecView(pvec0, 0);
 
       double my_norm;
       double p_norm;
@@ -1283,27 +1279,27 @@ int main(
       variable_db->printClassData(tbox::plog);
 
       tbox::plog << "pvec3 = Random....?" << endl;
-      VecView(pvec3, ((PetscViewer)NULL));
+      VecView(pvec3, 0);
 
       VecSwap(pvec0, pvec3);
       tbox::plog << "After swapping pvec0 and pvec3, pvec0 = Random....?"
                  << endl;
-      VecView(pvec0, ((PetscViewer)NULL));
+      VecView(pvec0, 0);
       tbox::plog
       << "pvec3 = 2.0 on L0 (-1.0 in covered region), = 3.0 pn L1?" << endl;
-      VecView(pvec3, ((PetscViewer)NULL));
+      VecView(pvec3, 0);
 
       VecAXPY(pvec0, four, pvec3);
       tbox::plog
       <<
       "pvec0 = pvec0 + 4.0 * pvec3 = Random + 8.0 on L0 (-3.0 - Random in covered region), = 12.0 + Random on L1?"
       << endl;
-      VecView(pvec0, ((PetscViewer)NULL));
+      VecView(pvec0, 0);
 
       VecScale(pvec3, half);
       tbox::plog
       << "pvec3 = 1.0 on L0 (-0.5 in covered region), = 1.5 pn L1?" << endl;
-      VecView(pvec3, ((PetscViewer)NULL));
+      VecView(pvec3, 0);
 
       VecSet(pvec0, one);
       VecSet(pvec1, two);
@@ -1311,15 +1307,15 @@ int main(
 
       VecAXPBY(pvec0, three, half, pvec1);
       tbox::plog << "pvec0 = 3 * 2 + 0.5 * 1 = 6.5?" << endl;
-      VecView(pvec0, ((PetscViewer)NULL));
+      VecView(pvec0, 0);
 
       VecAYPX(pvec1, twelve, pvec0);
       tbox::plog << "pvec1 = 6.5 + 12 * 2 = 30.5?" << endl;
-      VecView(pvec1, ((PetscViewer)NULL));
+      VecView(pvec1, 0);
 
       VecWAXPY(pvec0, zero, pvec0, pvec0);
       tbox::plog << "pvec0 = 0 * 6.5 + 6.5 = 6.5?" << endl;
-      VecView(pvec0, ((PetscViewer)NULL));
+      VecView(pvec0, 0);
 
       // No more tests....Destroy vectors and data...
 

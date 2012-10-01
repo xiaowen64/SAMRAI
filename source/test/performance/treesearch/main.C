@@ -247,7 +247,7 @@ int main(
           * Build search tree.
           */
          t_build_tree->start();
-         nodes.makeTree(NULL);
+         nodes.makeTree(0);
          t_build_tree->stop();
 
          /*

@@ -202,9 +202,9 @@ void PoissonGaussianSolution::setBcCoefs(
    hier::Index upper = box.upper();
 
    if (d_dim == tbox::Dimension(2)) {
-      double* a_array = acoef_data ? acoef_data->getPointer() : NULL;
-      double* b_array = bcoef_data ? bcoef_data->getPointer() : NULL;
-      double* g_array = gcoef_data ? gcoef_data->getPointer() : NULL;
+      double* a_array = acoef_data ? acoef_data->getPointer() : 0;
+      double* b_array = bcoef_data ? bcoef_data->getPointer() : 0;
+      double* g_array = gcoef_data ? gcoef_data->getPointer() : 0;
       int i, j, ibeg, iend, jbeg, jend;
       double x, y;
       switch (bdry_box.getLocationIndex()) {

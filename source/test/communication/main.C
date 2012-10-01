@@ -298,7 +298,7 @@ int main(
        * Create communication tester and patch data test object
        */
 
-      PatchDataTestStrategy* patch_data_test = NULL;
+      PatchDataTestStrategy* patch_data_test = 0;
 
       if (test_to_run == "CellDataTest") {
          patch_data_test = new CellDataTest("CellDataTest",

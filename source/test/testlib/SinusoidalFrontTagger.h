@@ -47,7 +47,7 @@ public:
       const std::string& object_name,
       const tbox::Dimension& dim,
       /*! Input database */
-      tbox::Database* database = NULL);
+      tbox::Database* database = 0);
 
    ~SinusoidalFrontTagger();
 

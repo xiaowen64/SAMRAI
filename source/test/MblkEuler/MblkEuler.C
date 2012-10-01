@@ -195,7 +195,7 @@ void MblkEuler::registerModelVariables(
 {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(integrator != (MblkHyperbolicLevelIntegrator *)NULL);
+   TBOX_ASSERT(integrator != 0);
 #endif
 
    //
@@ -1857,8 +1857,8 @@ void MblkEuler::postprocessRefine(
    //
    // ================================= state variable refinement ====================
    //
-   double* cdata = NULL; // keeps pointers around till end of loop
-   double* fdata = NULL;
+   double* cdata = 0; // keeps pointers around till end of loop
+   double* fdata = 0;
 
    for (int n = 0; n < depth; n++) {
 

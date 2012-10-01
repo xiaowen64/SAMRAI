@@ -153,7 +153,7 @@ void OutersideDataTest::readTestInput(
 void OutersideDataTest::registerVariables(
    CommTester* commtest)
 {
-   TBOX_ASSERT(commtest != (CommTester *)NULL);
+   TBOX_ASSERT(commtest != 0);
 
    int nvars = d_variable_src_name.getSize();
 

@@ -94,7 +94,7 @@ int main(
       std::string name = "./restart." + tbox::Utilities::processorToString(
             mpi.getRank()) + ".silo";
       DBfile* silo_file = DBCreate(
-            name.c_str(), DB_CLOBBER, DB_LOCAL, NULL, DB_PDB);
+            name.c_str(), DB_CLOBBER, DB_LOCAL, 0, DB_PDB);
       database->attachToFile(silo_file, "/");
 
       restart_manager->setRootDatabase(database);

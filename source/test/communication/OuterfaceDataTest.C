@@ -147,7 +147,7 @@ void OuterfaceDataTest::readTestInput(
 void OuterfaceDataTest::registerVariables(
    CommTester* commtest)
 {
-   TBOX_ASSERT(commtest != (CommTester *)NULL);
+   TBOX_ASSERT(commtest != 0);
 
    const tbox::Dimension dim(d_dim);
 

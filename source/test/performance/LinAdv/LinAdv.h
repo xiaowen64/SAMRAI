@@ -82,7 +82,7 @@ public:
       const tbox::Dimension& dim,
       boost::shared_ptr<tbox::Database> input_db,
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geom,
-      SinusoidalFrontTagger* analytical_tagger = NULL);
+      SinusoidalFrontTagger* analytical_tagger = 0);
 
    /**
     * The destructor for LinAdv does nothing.

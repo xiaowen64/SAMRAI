@@ -261,7 +261,7 @@ void TypeIndependentTester<TYPE>::runTest(
                   peer_comm.getPeerRank(),
                   completion_counter[i],
                   send_data);
-               peer_comm.beginSend(send_data.size() > 0 ? &send_data[0] : NULL,
+               peer_comm.beginSend(send_data.size() > 0 ? &send_data[0] : 0,
                   static_cast<int>(send_data.size()));
                /*
                 * Check if the new communication is done (because if it is,

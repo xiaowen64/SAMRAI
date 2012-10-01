@@ -54,7 +54,7 @@ CommTester::CommTester(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(main_input_db);
-   TBOX_ASSERT(data_test != (PatchDataTestStrategy *)NULL);
+   TBOX_ASSERT(data_test != 0);
 #endif
 
    d_object_name = object_name;
@@ -279,9 +279,9 @@ void CommTester::createRefineSchedule(
       const hier::Connector& peer_cnect =
          d_patch_hierarchy->getConnector(level_number, level_number);
       const hier::Connector* cnect_to_coarser = level_number > 0 ?
-         &d_patch_hierarchy->getConnector(level_number, level_number - 1) : NULL;
+         &d_patch_hierarchy->getConnector(level_number, level_number - 1) : 0;
       const hier::Connector* cnect_from_coarser = level_number > 0 ?
-         &d_patch_hierarchy->getConnector(level_number - 1, level_number) : NULL;
+         &d_patch_hierarchy->getConnector(level_number - 1, level_number) : 0;
 
       if (0) {
          // These are expensive checks.

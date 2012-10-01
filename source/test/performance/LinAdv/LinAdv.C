@@ -368,7 +368,7 @@ void LinAdv::registerModelVariables(
 {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(integrator != (algs::HyperbolicLevelIntegrator *)NULL);
+   TBOX_ASSERT(integrator != 0);
    TBOX_ASSERT(CELLG == FACEG);
 #endif
 
@@ -1938,7 +1938,7 @@ void LinAdv::tagGradientDetectorCells(
       t_analytical_tag->start();
       d_analytical_tagger->computePatchData(patch,
          regrid_time,
-         (pdat::NodeData<double> *)NULL,
+         0,
          tags.get());
       t_analytical_tag->stop();
    } else {

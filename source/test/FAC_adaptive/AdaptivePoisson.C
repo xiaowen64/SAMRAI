@@ -96,7 +96,7 @@ AdaptivePoisson::AdaptivePoisson(
    d_polynomial_solution(dim),
    d_gaussian_diffcoef_solution(dim),
    d_robin_refine_patch(d_dim, object_name + "Refine patch implementation"),
-   d_physical_bc_coef(NULL),
+   d_physical_bc_coef(0),
    d_adaption_threshold(0.5),
    d_finest_plot_level(9999999),
    d_finest_dbg_plot_ln(database.getIntegerWithDefault("finest_dbg_plot_ln", 99))

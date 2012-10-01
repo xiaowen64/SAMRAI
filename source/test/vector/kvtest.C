@@ -59,10 +59,6 @@
 
 #include "boost/shared_ptr.hpp"
 
-#ifndef NULL
-#define NULL (0)
-#endif
-
 #define NCELL_VARS 2
 #define NFACE_VARS 2
 #define NNODE_VARS 4

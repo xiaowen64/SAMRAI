@@ -432,7 +432,7 @@ void Euler::registerModelVariables(
    algs::HyperbolicLevelIntegrator* integrator)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(integrator != (algs::HyperbolicLevelIntegrator *)NULL);
+   TBOX_ASSERT(integrator != 0);
    TBOX_ASSERT(CELLG == FACEG);
 #endif
 
@@ -1895,7 +1895,7 @@ void Euler::postprocessRefine(
    pdat::CellData<double> slope1(coarse_box, 1, tmp_ghosts);
 
    double* diff2 = d_dim ==
-      tbox::Dimension(3) ? new double[coarse_box.numberCells(2) + 1] : NULL;
+      tbox::Dimension(3) ? new double[coarse_box.numberCells(2) + 1] : 0;
    pdat::CellData<double> slope2(coarse_box, 1, tmp_ghosts);
 
    if (d_dim == tbox::Dimension(2)) {
@@ -2953,7 +2953,7 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
       const double * const dens = density->getPointer();
       const double * const xvel = velocity->getPointer(0);
       const double * const yvel = velocity->getPointer(1);
-      const double * const zvel = d_dim > tbox::Dimension(2) ? velocity->getPointer(2) : NULL;
+      const double * const zvel = d_dim > tbox::Dimension(2) ? velocity->getPointer(2) : 0;
       const double * const pres = pressure->getPointer();
 
       double valinv = 1.0 / (d_gamma - 1.0);

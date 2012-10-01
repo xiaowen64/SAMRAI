@@ -1385,7 +1385,7 @@ void generatePrebalanceBySinusoidalFront(
          boost::detail::dynamic_cast_tag());
 
       sinusoidal_front_tagger.computeFrontsData(
-         NULL /* distance data */,
+         0 /* distance data */,
          tag_data.get(),
          tag_buffer,
          patch_geom->getXLower(),

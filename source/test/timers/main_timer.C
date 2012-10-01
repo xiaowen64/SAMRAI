@@ -88,10 +88,6 @@ private:
 };
 #endif
 
-#ifndef NULL
-#define NULL (0)
-#endif
-
 using namespace SAMRAI;
 
 int main(

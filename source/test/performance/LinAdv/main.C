@@ -385,7 +385,7 @@ int main(
             dim,
             input_db->getDatabase("LinAdv"),
             grid_geometry,
-            use_analytical_tagger ? &analytical_tagger : NULL);
+            use_analytical_tagger ? &analytical_tagger : 0);
 
       boost::shared_ptr<tbox::Database> hli_db(
          scaled_input_db->isDatabase("HyperbolicLevelIntegrator") ?

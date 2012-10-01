@@ -350,7 +350,7 @@ int main(
             grid_geometry,
             visit_data_writer);
 
-      solv::NonlinearSolverStrategy* nonlinear_solver = NULL;
+      solv::NonlinearSolverStrategy* nonlinear_solver = 0;
 
       if (nonlinear_solver_package == "PETSc-SNES") {
 

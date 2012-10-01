@@ -895,7 +895,7 @@ void BoundaryDataTester::printClassData(
       os << "d_variable_context = "
          << d_variable_context->getName() << endl;
    } else {
-      os << "d_variable_context = NULL" << endl;
+      os << "d_variable_context = 0" << endl;
    }
 
    os << "\nVariables ...\n" << endl;

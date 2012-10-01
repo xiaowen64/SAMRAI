@@ -71,9 +71,9 @@ public:
       , /*! Input database */
       tbox::Database& database
       , /*! Standard output stream */
-      std::ostream * out_stream = NULL
+      std::ostream * out_stream = 0
       , /*! Log output stream */
-      std::ostream * log_stream = NULL);
+      std::ostream * log_stream = 0);
 
    virtual ~PoissonMultigaussianSolution();
 

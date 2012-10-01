@@ -40,14 +40,14 @@ SinusoidalFrontTagger::SinusoidalFrontTagger(
 {
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(variable_db != NULL);
+   TBOX_ASSERT(variable_db != 0);
 #endif
 
    tbox::Array<double> init_disp;
    tbox::Array<double> velocity;
    tbox::Array<double> period;
 
-   if (database != NULL) {
+   if (database != 0) {
       d_allocate_data =
          database->getBoolWithDefault("allocate_data",
             d_allocate_data);
@@ -279,7 +279,7 @@ void SinusoidalFrontTagger::applyGradientDetector(
          // Compute tag data for patch.
          computePatchData(patch,
             error_data_time,
-            NULL,
+            0,
             tag_cell_data_.get());
       }
 
@@ -414,7 +414,7 @@ void SinusoidalFrontTagger::computePatchData(
    hier::IntVector buffer(d_buffer_cells);
    for (int i = 0; i < d_dim.getValue(); ++i) {
       const double *buffer_space = getBufferSpace(ln);
-      if ( buffer_space != NULL ) {
+      if ( buffer_space != 0 ) {
          int space_based_buffer =
             int(d_buffer_space[ln * d_dim.getValue() + i] / dx[i] + 0.5);
          if (space_based_buffer > buffer(i)) {
@@ -442,16 +442,16 @@ void SinusoidalFrontTagger::computeFrontsData(
    const double dx[],
    const double time ) const
 {
-   TBOX_ASSERT(dist_data != NULL || tag_data != NULL);
+   TBOX_ASSERT(dist_data != 0 || tag_data != 0);
  
    const tbox::Dimension &dim(tag_buffer.getDim());
 
-   if ( dist_data != NULL && tag_data != NULL ) {
+   if ( dist_data != 0 && tag_data != 0 ) {
       TBOX_ASSERT( dist_data->getBox().isSpatiallyEqual(tag_data->getBox()) );
    }
 
    hier::Box pbox(dim);
-   if (tag_data != NULL) {
+   if (tag_data != 0) {
       pbox = tag_data->getBox();
    } else {
       pbox = dist_data->getBox();
@@ -495,7 +495,7 @@ void SinusoidalFrontTagger::computeFrontsData(
                                                                                    }
    t_node_pos->stop();
 
-   if (tag_data != NULL) {
+   if (tag_data != 0) {
 
       t_setup->start();
 
@@ -590,7 +590,7 @@ void SinusoidalFrontTagger::computeFrontsData(
    /*
     * Initialize distance data.
     */
-   if (dist_data != NULL) {
+   if (dist_data != 0) {
       t_distance->start();
 
       pdat::NodeData<double> &dist_to_front(*dist_data);
@@ -649,7 +649,7 @@ bool SinusoidalFrontTagger::packDerivedDataIntoDoubleBuffer(
    if (variable_name == "Distance to front") {
       pdat::NodeData<double> dist_data(patch.getBox(), 1, hier::IntVector(d_dim,
                                           0));
-      computePatchData(patch, d_time, &dist_data, NULL);
+      computePatchData(patch, d_time, &dist_data, 0);
       pdat::NodeData<double>::iterator ciend(patch.getBox(), false);
       for (pdat::NodeData<double>::iterator ci(patch.getBox(), true);
            ci != ciend; ++ci) {
@@ -657,7 +657,7 @@ bool SinusoidalFrontTagger::packDerivedDataIntoDoubleBuffer(
       }
    } else if (variable_name == "Tag value") {
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
-      computePatchData(patch, d_time, NULL, &tag_data);
+      computePatchData(patch, d_time, 0, &tag_data);
       pdat::CellData<double>::iterator ciend(patch.getBox(), false);
       for (pdat::CellData<double>::iterator ci(patch.getBox(), true);
            ci != ciend; ++ci) {
@@ -684,5 +684,5 @@ const double *SinusoidalFrontTagger::getBufferSpace( int ln ) const
    if ( d_buffer_space.size() > ln*d_dim.getValue() ) {
       return &d_buffer_space[ln*d_dim.getValue()];
    }
-   return NULL;
+   return 0;
 }
