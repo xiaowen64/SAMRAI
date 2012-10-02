@@ -113,13 +113,12 @@ BaseGridGeometry::BaseGridGeometry(
  */
 BaseGridGeometry::BaseGridGeometry(
    const std::string& object_name,
-   const BoxContainer& domain):
+   BoxContainer& domain):
    d_transfer_operator_registry(
       boost::make_shared<TransferOperatorRegistry>(
          (*(domain.begin())).getDim())),
    d_dim((*(domain.begin())).getDim()),
    d_object_name(object_name),
-   d_physical_domain(domain),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
@@ -131,11 +130,15 @@ BaseGridGeometry::BaseGridGeometry(
    tbox::RestartManager::getManager()->
    registerRestartItem(getObjectName(), this);
 
+   LocalId local_id(0);
    std::set<int> block_numbers;
-   for (BoxContainer::const_iterator itr = domain.begin(); itr != domain.end();
+   for (BoxContainer::iterator itr = domain.begin(); itr != domain.end();
         ++itr) {
       block_numbers.insert(itr->getBlockId().getBlockValue());
+      BoxId box_id(local_id++, 0);
+      itr->setId(box_id);
    }
+   d_physical_domain = domain;
    d_number_blocks = static_cast<int>(block_numbers.size());
    d_reduced_connect.resizeArray(d_number_blocks, false);
    d_block_neighbors.resizeArray(d_number_blocks);
@@ -146,12 +149,11 @@ BaseGridGeometry::BaseGridGeometry(
 
 BaseGridGeometry::BaseGridGeometry(
    const std::string& object_name,
-   const BoxContainer& domain,
+   BoxContainer& domain,
    const boost::shared_ptr<TransferOperatorRegistry>& op_reg) :
    d_transfer_operator_registry(op_reg),
    d_dim((*(domain.begin())).getDim()),
    d_object_name(object_name),
-   d_physical_domain(domain),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
@@ -163,11 +165,15 @@ BaseGridGeometry::BaseGridGeometry(
    tbox::RestartManager::getManager()->
    registerRestartItem(getObjectName(), this);
 
+   LocalId local_id(0);
    std::set<int> block_numbers;
-   for (BoxContainer::const_iterator itr = domain.begin(); itr != domain.end();
+   for (BoxContainer::iterator itr = domain.begin(); itr != domain.end();
         ++itr) {
       block_numbers.insert(itr->getBlockId().getBlockValue());
+      BoxId box_id(local_id++, 0);
+      itr->setId(box_id);
    }
+   d_physical_domain = domain;
    d_number_blocks = static_cast<int>(block_numbers.size());
    d_reduced_connect.resizeArray(d_number_blocks, false);
    d_block_neighbors.resizeArray(d_number_blocks);

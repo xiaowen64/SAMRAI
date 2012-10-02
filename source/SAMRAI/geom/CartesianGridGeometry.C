@@ -131,7 +131,7 @@ CartesianGridGeometry::CartesianGridGeometry(
    const std::string& object_name,
    const double* x_lo,
    const double* x_up,
-   const hier::BoxContainer& domain):
+   hier::BoxContainer& domain):
    GridGeometry(object_name, domain), 
    d_domain_box(domain.front().getDim())
 {
@@ -147,7 +147,7 @@ CartesianGridGeometry::CartesianGridGeometry(
    const std::string& object_name,
    const double* x_lo,
    const double* x_up,
-   const hier::BoxContainer& domain,
+   hier::BoxContainer& domain,
    const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg) :
    GridGeometry(object_name, domain, op_reg),
    d_domain_box(domain.front().getDim())
@@ -196,7 +196,7 @@ CartesianGridGeometry::makeRefinedGridGeometry(
    fine_domain.refine(refine_ratio);
 
    boost::shared_ptr<hier::BaseGridGeometry> fine_geometry(
-      boost::make_shared<CartesianGridGeometry>(fine_geom_name,
+      new CartesianGridGeometry(fine_geom_name,
          d_x_lo,
          d_x_up,
          fine_domain,
@@ -258,7 +258,7 @@ CartesianGridGeometry::makeCoarsenedGridGeometry(
    }
 
    boost::shared_ptr<hier::BaseGridGeometry> coarse_geometry(
-      boost::make_shared<CartesianGridGeometry>(coarse_geom_name,
+      new CartesianGridGeometry(coarse_geom_name,
          d_x_lo,
          d_x_up,
          coarse_domain,

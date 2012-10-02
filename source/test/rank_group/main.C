@@ -220,13 +220,10 @@ int main(
       /*
        * Set up the domain from input.
        */
-      hier::BoxContainer input_boxes(main_db->getDatabaseBoxArray("domain_boxes"));
-      hier::BoxContainer domain_boxes;
-      hier::LocalId local_id(0);
-      for (hier::BoxContainer::iterator itr = input_boxes.begin();
-           itr != input_boxes.end(); ++itr) {
+      hier::BoxContainer domain_boxes(main_db->getDatabaseBoxArray("domain_boxes"));
+      for (hier::BoxContainer::iterator itr = domain_boxes.begin();
+           itr != domain_boxes.end(); ++itr) {
          itr->setBlockId(hier::BlockId(0));
-         domain_boxes.pushBack(hier::Box(*itr, local_id++, 0));
       }
 
       /*

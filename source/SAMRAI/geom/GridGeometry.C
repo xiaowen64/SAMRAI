@@ -114,14 +114,14 @@ GridGeometry::GridGeometry(
  */
 GridGeometry::GridGeometry(
    const std::string& object_name,
-   const hier::BoxContainer& domain):
+   hier::BoxContainer& domain):
    hier::BaseGridGeometry(object_name, domain)
 {
 }
 
 GridGeometry::GridGeometry(
    const std::string& object_name,
-   const hier::BoxContainer& domain,
+   hier::BoxContainer& domain,
    const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg):
    hier::BaseGridGeometry(object_name, domain, op_reg)
 {
@@ -192,7 +192,7 @@ GridGeometry::makeCoarsenedGridGeometry(
    }
 
    boost::shared_ptr<hier::BaseGridGeometry> coarse_geometry(
-      boost::make_shared<GridGeometry>(
+      new GridGeometry(
          coarse_geom_name,
          coarse_domain,
          d_transfer_operator_registry));
@@ -228,7 +228,7 @@ GridGeometry::makeRefinedGridGeometry(
    fine_domain.refine(refine_ratio);
 
    boost::shared_ptr<hier::BaseGridGeometry> fine_geometry(
-      boost::make_shared<GridGeometry>(
+      new GridGeometry(
          fine_geom_name,
          fine_domain,
          d_transfer_operator_registry));

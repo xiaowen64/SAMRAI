@@ -116,11 +116,6 @@ int main(
       hier::Box fine1(flo1, fhi1, hier::BlockId(0));
       hier::IntVector ratio(dim, 2);
 
-      coarse0.initialize(coarse0, hier::LocalId(0), 0);
-      coarse1.initialize(coarse1, hier::LocalId(1), 0);
-      fine0.initialize(fine0, hier::LocalId(0), 0);
-      fine1.initialize(fine1, hier::LocalId(1), 0);
-
       hier::BoxContainer coarse_domain;
       hier::BoxContainer fine_domain;
       coarse_domain.pushBack(coarse0);

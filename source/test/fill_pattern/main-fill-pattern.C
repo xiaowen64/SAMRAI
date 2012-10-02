@@ -332,17 +332,10 @@ bool SingleLevelTestCase(
    hier::BoxContainer level_boxes;
    txt2boxes(levelboxes_txt, level_boxes);
 
-   hier::BoxContainer domain_boxes;
-   hier::LocalId domain_id(0);
-   for (hier::BoxContainer::iterator itr(level_boxes);
-        itr != level_boxes.end(); ++itr) {
-      domain_boxes.pushBack(hier::Box(*itr, domain_id++, 0));
-   }
-
    boost::shared_ptr<geom::GridGeometry> geom(
       new geom::GridGeometry(
          "GridGeometry",
-         domain_boxes));
+         level_boxes));
 
    boost::shared_ptr<hier::PatchHierarchy> hierarchy(
       new hier::PatchHierarchy("hier", geom));

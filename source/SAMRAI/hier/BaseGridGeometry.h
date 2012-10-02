@@ -107,7 +107,7 @@ public:
     */
    BaseGridGeometry(
       const std::string& object_name,
-      const BoxContainer& domain);
+      BoxContainer& domain);
 
    /*!
     * @brief Virtual destructor
@@ -1187,7 +1187,7 @@ protected:
     */
    BaseGridGeometry(
       const std::string& object_name,
-      const BoxContainer& domain,
+      BoxContainer& domain,
       const boost::shared_ptr<TransferOperatorRegistry>& op_reg);
 
    /*!

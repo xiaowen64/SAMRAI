@@ -107,7 +107,6 @@ int main(
       hier::Index indxhi(dim, 9);
       indxhi(1) = 4;
       hier::Box patch_box(indxlo, indxhi, hier::BlockId(0));
-      patch_box.initialize(patch_box, hier::LocalId(0), 0);
       hier::BoxContainer grid_domain(patch_box);
       hier::IntVector ratio(dim, 1);
 

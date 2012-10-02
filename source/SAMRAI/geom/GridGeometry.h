@@ -173,7 +173,7 @@ public:
     */
    GridGeometry(
       const std::string& object_name,
-      const hier::BoxContainer& domain);
+      hier::BoxContainer& domain);
 
    /*!
     * @brief Construct a new coarsened/refined GridGeometry object with the
@@ -191,7 +191,7 @@ public:
     */
    GridGeometry(
       const std::string& object_name,
-      const hier::BoxContainer& domain,
+      hier::BoxContainer& domain,
       const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg);
 
    /*!

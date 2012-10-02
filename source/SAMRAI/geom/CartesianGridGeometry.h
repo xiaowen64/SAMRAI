@@ -157,7 +157,7 @@ public:
       const std::string& object_name,
       const double* x_lo,
       const double* x_up,
-      const hier::BoxContainer& domain);
+      hier::BoxContainer& domain);
 
    /*!
     * @brief Construct a new coarsened/refined CartesianGridGeometry object
@@ -186,7 +186,7 @@ public:
       const std::string& object_name,
       const double* x_lo,
       const double* x_up,
-      const hier::BoxContainer& domain,
+      hier::BoxContainer& domain,
       const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg);
 
    /**
