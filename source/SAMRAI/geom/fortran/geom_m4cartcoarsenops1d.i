@@ -86,8 +86,9 @@ cart_coarsen_op_subroutine_head_1d()dnl
       $1
      &  arrayf(EDGE1d(filo,fihi,0)),
      &  arrayc(EDGE1d(cilo,cihi,0))
-      integer ie0
-cart_injection_body_1d(`ie0',`ifirstc0,ilastc0+1')dnl
+      double precision dVf,dVc
+      integer ic0,if0,ir0
+cart_wgtavg_cell_body_1d($1)dnl
 ')dnl
 c
 define(cart_wgtavg_op_face_1d,`dnl

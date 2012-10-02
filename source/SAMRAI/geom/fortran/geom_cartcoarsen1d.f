@@ -210,12 +210,27 @@ c
       double precision
      &  arrayf(filo0:fihi0),
      &  arrayc(cilo0:cihi0)
-      integer ie0
+      double precision dVf,dVc
+      integer ic0,if0,ir0
 c
 c***********************************************************************
 c
-      do ie0=ifirstc0,ilastc0+1
-         arrayc(ie0)=arrayf(ie0*ratio(0))
+      dVf = dxf(0)
+      dVc = dxc(0)
+
+      do ic0=ifirstc0,ilastc0
+         arrayc(ic0) = zero
+      enddo
+
+      do ir0=0,ratio(0)-1
+         do ic0=ifirstc0,ilastc0
+            if0=ic0*ratio(0)+ir0
+            arrayc(ic0)=arrayc(ic0)+arrayf(if0)*dVf
+         enddo
+      enddo
+
+      do ic0=ifirstc0,ilastc0
+         arrayc(ic0)=arrayc(ic0)/dVc
       enddo
 c
       return
@@ -247,12 +262,27 @@ c
       real
      &  arrayf(filo0:fihi0),
      &  arrayc(cilo0:cihi0)
-      integer ie0
+      double precision dVf,dVc
+      integer ic0,if0,ir0
 c
 c***********************************************************************
 c
-      do ie0=ifirstc0,ilastc0+1
-         arrayc(ie0)=arrayf(ie0*ratio(0))
+      dVf = dxf(0)
+      dVc = dxc(0)
+
+      do ic0=ifirstc0,ilastc0
+         arrayc(ic0) = zero
+      enddo
+
+      do ir0=0,ratio(0)-1
+         do ic0=ifirstc0,ilastc0
+            if0=ic0*ratio(0)+ir0
+            arrayc(ic0)=arrayc(ic0)+arrayf(if0)*dVf
+         enddo
+      enddo
+
+      do ic0=ifirstc0,ilastc0
+         arrayc(ic0)=arrayc(ic0)/dVc
       enddo
 c
       return
@@ -284,12 +314,27 @@ c
       double complex
      &  arrayf(filo0:fihi0),
      &  arrayc(cilo0:cihi0)
-      integer ie0
+      double precision dVf,dVc
+      integer ic0,if0,ir0
 c
 c***********************************************************************
 c
-      do ie0=ifirstc0,ilastc0+1
-         arrayc(ie0)=arrayf(ie0*ratio(0))
+      dVf = dxf(0)
+      dVc = dxc(0)
+
+      do ic0=ifirstc0,ilastc0
+         arrayc(ic0) = cmplx(zero, zero)
+      enddo
+
+      do ir0=0,ratio(0)-1
+         do ic0=ifirstc0,ilastc0
+            if0=ic0*ratio(0)+ir0
+            arrayc(ic0)=arrayc(ic0)+arrayf(if0)*dVf
+         enddo
+      enddo
+
+      do ic0=ifirstc0,ilastc0
+         arrayc(ic0)=arrayc(ic0)/dVc
       enddo
 c
       return
