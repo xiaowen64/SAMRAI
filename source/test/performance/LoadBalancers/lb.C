@@ -424,10 +424,9 @@ int main(
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
          hier::BoxLevel::GLOBALIZED);
-      hier::BoxContainer::iterator domain_boxes_itr(domain_boxes);
-      for (int i = 0; i < domain_boxes.size(); ++i, ++domain_boxes_itr) {
-         domain_box_level.addBox(hier::Box(*domain_boxes_itr,
-               hier::LocalId(i), 0));
+      for (hier::BoxContainer::const_iterator bi=grid_geometry->getPhysicalDomain().begin();
+           bi!=grid_geometry->getPhysicalDomain().end() ; ++bi) {
+         domain_box_level.addBox(*bi);
       }
 
 
@@ -1476,8 +1475,7 @@ void generatePrebalanceByUserBoxes(
       const int owner = i % initial_owners.size();
       if (owner == L1.getMPI().getRank()) {
          prebalance_boxes_itr->setBlockId(hier::BlockId(0));
-         L1.addBox(hier::Box(*prebalance_boxes_itr,
-               hier::LocalId(i), owner));
+         L1.addBox(hier::Box(*prebalance_boxes_itr, hier::LocalId(i), owner));
       }
    }
 

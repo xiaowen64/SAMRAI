@@ -259,10 +259,10 @@ int main(
          mpi,
          hier::BoxLevel::GLOBALIZED);
 
-      hier::BoxContainer::iterator domain_boxes_itr(domain_boxes);
-      for (int i = 0; i < domain_boxes.size(); ++i, ++domain_boxes_itr) {
-         domain_box_level.addBox(hier::Box(*domain_boxes_itr,
-               hier::LocalId(i), 0));
+      ;
+      for (hier::BoxContainer::iterator domain_boxes_itr(domain_boxes);
+           domain_boxes_itr != domain_boxes.end(); ++domain_boxes_itr) {
+         domain_box_level.addBox(*domain_boxes_itr);
       }
 
       /*
