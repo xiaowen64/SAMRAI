@@ -448,6 +448,7 @@ public:
    IntVector
    getMaxTransferOpStencilWidth( const tbox::Dimension &dim )
    {
+      buildOperators();
       return d_transfer_operator_registry->getMaxTransferOpStencilWidth(dim);
    }
 
