@@ -33,7 +33,8 @@ CXX_OBJS      = MblkGeometry.o main.o MblkLinAdv.o \
 
 F_OBJS      = stufprobc.o trace1d.o trace2d.o trace3d.o grad2d.o grad3d.o flux2d.o flux3d.o fluxcorner3d.o stable2d.o stable3d.o init2d.o init3d.o
 
-main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND) testlib
+main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
+	$(MAKE) testlib
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 

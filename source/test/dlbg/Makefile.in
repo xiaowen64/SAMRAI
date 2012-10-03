@@ -30,7 +30,8 @@ TEST_NPROCS = @TEST_NPROCS@
 
 CXX_OBJS      = main.o DLBGTest.o get-input-filename.o
 
-main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) testlib
+main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
+	$(MAKE) testlib
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(TESTLIB)	\
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 

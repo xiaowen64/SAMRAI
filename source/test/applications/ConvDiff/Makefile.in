@@ -33,7 +33,8 @@ F77_OBJS      = compute_rhs2d.o init2d.o rkstep2d.o tag_cells2d.o \
 		compute_rhs3d.o init3d.o rkstep3d.o tag_cells3d.o
 
 
-main:	$(CXX_OBJS) $(F77_OBJS) $(LIBSAMRAIDEPEND) testlib
+main:	$(CXX_OBJS) $(F77_OBJS) $(LIBSAMRAIDEPEND)
+	$(MAKE) testlib
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F77_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main
 

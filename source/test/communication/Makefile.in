@@ -42,7 +42,8 @@ CXX_OBJS      = \
 	Pointer-CommTester.o \
 	SideDataTest.o
 
-main: $(CXX_OBJS) $(LIBSAMRAI) testlib
+main: $(CXX_OBJS) $(LIBSAMRAI)
+	$(MAKE) testlib
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 

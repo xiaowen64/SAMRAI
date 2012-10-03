@@ -31,7 +31,8 @@ TEST_NPROCS   = @TEST_NPROCS@
 CXX_OBJS      = MblkGeometry.o main.o MblkLinAdv.o \
 		SkeletonOutersideDoubleWeightedAverage.o 
 
-main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) testlib
+main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
+	$(MAKE) testlib
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 

@@ -26,7 +26,8 @@ CPPFLAGS_EXTRA= -I$(TESTINCLUDE) -DTESTING=1
 
 CXX_OBJS      = main.o ABRTest.o get-input-filename.o
 
-main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) testlib
+main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
+	$(MAKE) testlib
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o $@
 
