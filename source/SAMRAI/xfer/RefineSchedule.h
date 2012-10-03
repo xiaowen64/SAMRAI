@@ -375,10 +375,6 @@ private:
     *                        in constructor.
     * @param[in] src_to_dst  Connector between src and dst levels given
     *                        in constructor.
-    * @param[in] dst_is_coarse_interp_level  Tells if the destination level
-    *                                        is a temporary coarse
-    *                                        interpolation level used for
-    *                                        interpolation.
     * @param[in] src_growth_to_nest_dst  The minimum amount that the source
     *                                    level has to grow in order to nest the
     *                                    destination level.
@@ -406,7 +402,6 @@ private:
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const hier::Connector& dst_to_src,
       const hier::Connector& src_to_dst,
-      const bool dst_is_coarse_interp_level,
       const hier::IntVector& src_growth_to_nest_dst,
       const hier::Connector& dst_to_fill,
       const hier::BoxNeighborhoodCollection& src_owner_dst_to_fill,
@@ -576,24 +571,16 @@ private:
     *                                    a collection of boxes that indicates
     *                                    what parts of fill_box_level
     *                                    can be filled by that source box.
-    * @param[in] dst_box_level  Box representation of the
-    *                           dst_level given to the constructor.
     * @param[in] dst_to_src  Connector from dst_level to src_level.
     * @param[in] src_to_dst  Connector from src_level to dst_level.
-    * @param[in] fill_gcw  Maximum ghost width to be filled by the schedule.
-    *
-    * @pre (d_dst_level->getDim() == dst_box_level.getDim()) &&
-    *      (d_dst_level->getDim() == fill_ghost_width.getDim())
     */
    void
    setDefaultFillBoxLevel(
       hier::BoxLevel& fill_box_level,
       hier::Connector& dst_to_fill,
       hier::BoxNeighborhoodCollection& src_owner_dst_to_fill,
-      const hier::BoxLevel& dst_box_level,
       const hier::Connector* dst_to_src,
-      const hier::Connector* src_to_dst,
-      const hier::IntVector& fill_gcw);
+      const hier::Connector* src_to_dst);
 
    /*
     * @brief Set up level to represent ghost regions at enhanced
@@ -660,7 +647,6 @@ private:
     * @param[in]  hierarchy         The patch hierarchy
     * @param[in]  hiercoarse_level  Level on hierarchy one level coarser than
     *                               the destination level
-    * @param[in]  dst_is_coarse_interp_level
     * @param[in]  src_growth_to_nest_dst
     * @param[in]  encon_to_unfilled_encon
     */
@@ -668,7 +654,6 @@ private:
    createEnconFillSchedule(
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const boost::shared_ptr<hier::PatchLevel>& hiercoarse_level,
-      const bool dst_is_coarse_interp_level,
       const hier::IntVector& src_growth_to_nest_dst,
       const hier::Connector& encon_to_unfilled_encon);
 
@@ -763,8 +748,6 @@ private:
     * @param[in] dst_to_coarse_interp
     *
     * @param[in] dst_level
-    *
-    * @param[in] dst_is_coarse_interp_level
     */
    void
    createCoarseInterpPatchLevel(
@@ -778,8 +761,7 @@ private:
       const hier::Connector &src_to_dst,
       const hier::Connector &coarse_interp_to_dst,
       const hier::Connector &dst_to_coarse_interp,
-      const boost::shared_ptr<hier::PatchLevel> &dst_level,
-      const bool dst_is_coarse_interp_level );
+      const boost::shared_ptr<hier::PatchLevel> &dst_level );
 
    /*!
     * @brief Check that the Connectors between the coarse
@@ -876,13 +858,9 @@ private:
     * necessary ghost and stencil widths.
     *
     * This is called by every RefineSchedule constructor.
-    *
-    * @param[in]  True if the constructor calling this method is being
-    *             called recursively from another RefineSchedule constructor.
     */
    void
-   initializeDomainAndGhostInformation(
-      bool recursive_schedule);
+   initializeDomainAndGhostInformation();
 
    /*!
     * @brief Utility function to set up local copies of refine items.
