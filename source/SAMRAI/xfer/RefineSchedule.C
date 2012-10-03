@@ -397,6 +397,8 @@ RefineSchedule::RefineSchedule(
       }
    }
 
+   hier::IntVector min_connector_width_for_recursion(min_connector_width);
+
    if ( d_data_on_patch_border_flag ) {
       min_connector_width += 1;
    }
@@ -412,12 +414,10 @@ RefineSchedule::RefineSchedule(
       }
       rscwr.computeRequiredFineConnectorWidthsForRecursiveRefinement(
          d_fine_connector_widths,
-         min_connector_width,
+         min_connector_width_for_recursion,
          d_max_stencil_width,
          *hierarchy,
          next_coarser_ln+1);
-      min_connector_width.max(d_fine_connector_widths[next_coarser_ln] *
-                              hierarchy->getRatioToCoarserLevel(next_coarser_ln+1));
    }
 
    const hier::Connector dummy_connector(dim);
@@ -591,8 +591,8 @@ RefineSchedule::RefineSchedule(
 
    if ( s_extra_debug ) {
       hier::OverlapConnectorAlgorithm oca;
-      oca.assertOverlapCorrectness(src_to_dst);
-      oca.assertOverlapCorrectness(dst_to_src);
+      oca.assertOverlapCorrectness(src_to_dst, false, true, true);
+      oca.assertOverlapCorrectness(dst_to_src, false, true, true);
    }
 
 
@@ -863,6 +863,7 @@ RefineSchedule::finishScheduleConstruction(
             << "\n d_unfilled_box_level:\n" << d_unfilled_box_level->format("UF->", 2)
             << "\n dst_to_unfilled:\n" << dst_to_unfilled->format("DU->", 2)
             << "\n dst_to_src:\n" << dst_to_src.format("DS->", 2)
+            << "\n src_to_dst:\n" << src_to_dst.format("SD->", 2)
             << std::endl);
       } else {
          if (!hierarchy) {
@@ -945,7 +946,7 @@ RefineSchedule::finishScheduleConstruction(
           * Assume that src barely nests in hiercoarse.  (In most
           * places, it nests by a margin equal to the nesting buffer,
           * but we don't count on that because the nesting buffer is
-          * relaxed at physical boundaries.)  To nest dst, hiercoarse
+          * zero at physical boundaries.)  To nest dst, hiercoarse
           * has to grow as much as the src does, plus the ghost width
           * of the fill.
           *
@@ -1451,19 +1452,71 @@ RefineSchedule::createCoarseInterpPatchLevel(
     * scalability.
     */
 
+   // Required hiercoarse<==>dst width for recursion:
+   const hier::IntVector& hiercoarse_to_dst_width(d_top_refine_schedule->d_fine_connector_widths[next_coarser_ln]);
+   const hier::IntVector dst_to_hiercoarse_width(
+      hier::Connector::convertHeadWidthToBase(
+         dst_level->getBoxLevel()->getRefinementRatio(),
+         hiercoarse_box_level.getRefinementRatio(),
+         hiercoarse_to_dst_width));
+
+   /*
+    * dst_to_hiercoarse and hiercoarse_to_dst point to the
+    * hiercoarse<==>dst Connector we will use.  The exact Connectors
+    * will be either the ones cached in PersistentOverlapConnectors,
+    * or if not there, the ones computed by the
+    * dst<==>src<==>hiercoarse bridge.
+    *
+    * We expect to find cached hiercoarse<==>dst if:
+    * - dst is on the hierarchy
+    * - someone had the foresight to compute and cache it (such as the
+    * coarsening step of the Richardson extrapolation).
+    *
+    * If there is no cached hiercoarse<==>dst, we'll bridge
+    * dst<==>src<==>hiercoarse for it.  Therefore, we require src to
+    * be on the hierarchy and satisfying certain nesting requirement
+    * and having cached src<==>hiercoarse.
+    *
+    * An unscalable alternative of last resort would be to have the
+    * PersistentOverlapConnector compute the missing
+    * dst<==>hiercoarse.  This is not implemented but could be in the
+    * future.
+    */
    const hier::Connector* dst_to_hiercoarse = 0;
    const hier::Connector* hiercoarse_to_dst = 0;
    hier::Connector bridged_dst_to_hiercoarse(hiercoarse_box_level.getDim());
    hier::Connector bridged_hiercoarse_to_dst(hiercoarse_box_level.getDim());
 
-   if (dst_is_coarse_interp_level) {
+   bool has_cached_connectors =
+      dst_level->getBoxLevel()->getPersistentOverlapConnectors().
+      hasConnector(hiercoarse_box_level, dst_to_hiercoarse_width);
+   has_cached_connectors = has_cached_connectors &&
+      hiercoarse_box_level.getPersistentOverlapConnectors().
+      hasConnector(*dst_level->getBoxLevel(), hiercoarse_to_dst_width);
+
+   if ( has_cached_connectors ) {
+
+      dst_to_hiercoarse = &dst_level->getBoxLevel()->
+         getPersistentOverlapConnectors().
+         findConnector(hiercoarse_box_level,
+                       dst_to_hiercoarse_width, true);
+      hiercoarse_to_dst = &hiercoarse_box_level.
+         getPersistentOverlapConnectors().
+         findConnector(*dst_level->getBoxLevel(),
+                       hiercoarse_to_dst_width, true);
+
+   }
+
+   else {
 
       const hier::BoxLevel& src_box_level =
          *(d_src_level->getBoxLevel());
       if (hierarchy->getBoxLevel(next_coarser_ln + 1).get() !=
           &src_box_level) {
          TBOX_ERROR("Missing dst<==>hiercoarse connector and\n"
-            << "src is not from hierarchy.");
+                    << "src is not from hierarchy.  RefineSchedule cannot\n"
+                    << "continue because there is no way to connect\n"
+                    << "the destination to the hierarchy.");
       }
 
       const hier::BoxLevel& dst_box_level = dst_to_src.getBase();
@@ -1475,8 +1528,8 @@ RefineSchedule::createCoarseInterpPatchLevel(
 
       /*
        * The computation of src_to_hiercoarse_width puts it in the
-       * resolution of next_coarser_ln+1, but that is not the
-       * resolution of src (for example, src may be a Richardson
+       * resolution of next_coarser_ln+1, but that is not necessarily
+       * the resolution of src (for example, src may be a Richardson
        * extrapolation temporary level), so we have to adjust.
        */
       if (d_src_level->getBoxLevel()->getRefinementRatio() <=
@@ -1574,24 +1627,8 @@ RefineSchedule::createCoarseInterpPatchLevel(
       dst_to_hiercoarse = &bridged_dst_to_hiercoarse;
       hiercoarse_to_dst = &bridged_hiercoarse_to_dst;
 
-   } else { /* !dst_is_coarse_interp_level */
+   } /* !has_cached_connectors */
 
-      const hier::IntVector& hiercoarse_to_dst_width(d_top_refine_schedule->d_fine_connector_widths[next_coarser_ln]);
-      const hier::IntVector dst_to_hiercoarse_width(
-         hier::Connector::convertHeadWidthToBase(
-            dst_level->getBoxLevel()->getRefinementRatio(),
-            hiercoarse_box_level.getRefinementRatio(),
-            hiercoarse_to_dst_width));
-
-      dst_to_hiercoarse = &dst_level->getBoxLevel()->
-         getPersistentOverlapConnectors().
-         findConnector(hiercoarse_box_level,
-                       dst_to_hiercoarse_width, true);
-      hiercoarse_to_dst = &hiercoarse_box_level.
-         getPersistentOverlapConnectors().
-         findConnector(*dst_level->getBoxLevel(),
-                       hiercoarse_to_dst_width, true);
-   }
 
    /*
     * Compute coarse_interp<==>hiercoarse by bridging
@@ -1607,16 +1644,14 @@ RefineSchedule::createCoarseInterpPatchLevel(
       dst_to_coarse_interp.getConnectorWidth() -
       (d_max_stencil_width * dst_to_hiercoarse->getRatio());
 
-   oca.bridgeWithNesting(
+   oca.bridge(
       coarse_interp_to_hiercoarse,
       hiercoarse_to_coarse_interp,
       coarse_interp_to_dst,
       *dst_to_hiercoarse,
       *hiercoarse_to_dst,
       dst_to_coarse_interp,
-      dst_growth_to_nest_coarse_interp,
-      neg1,
-      neg1);
+      hiercoarse_to_dst->getConnectorWidth());
    TBOX_ASSERT( coarse_interp_to_hiercoarse.getConnectorWidth() >= d_max_stencil_width );
    TBOX_ASSERT( hiercoarse_to_coarse_interp.getConnectorWidth() >= d_max_stencil_width );
    if (s_barrier_and_time) {
@@ -1709,22 +1744,6 @@ RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
       << std::endl;
 
    hier::OverlapConnectorAlgorithm oca;
-
-   /*
-    * For certain, the completeness of coarse_interp_to_hiercoarse and
-    * hiercoarse_to_coarse_interp can not be guaranteed for periodic problems.
-    * The comment immediately following this block of code implies that their
-    * correctness can not ever be guaranteed.  However, the author of the code
-    * is uncertain of the validity of that comment.  Therefore, for the time
-    * being, the overlap correctness be checked only for non-periodic problems.
-    * If the validity of the following comment block is ever verified then
-    * these checks need to be completely removed.
-    */
-   if (d_num_periodic_directions == 0) {
-      // Check completeness of coarse_interp<==>hiercoarse Connectors.
-      oca.assertOverlapCorrectness( coarse_interp_to_hiercoarse );
-      oca.assertOverlapCorrectness( hiercoarse_to_coarse_interp );
-   }
 
    /*
     * To work properly, we must ensure that
