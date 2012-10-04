@@ -262,120 +262,127 @@ SideGeometry::transform(
       const hier::Transformation::RotationIdentifier rotation =
          transformation.getRotation();
 
-      box.upper() (normal_direction) -= 1;
-      transformation.transform(box);
-      if (dim.getValue() == 2) {
-         const int rotation_num = static_cast<int>(rotation);
-         if (rotation_num % 2) {
-            normal_direction = (normal_direction + 1) % 2;
+      if (rotation == hier::Transformation::NO_ROTATE) {
+
+         transformation.transform(box);
+
+      } else {
+
+         box.upper() (normal_direction) -= 1;
+         transformation.transform(box);
+         if (dim.getValue() == 2) {
+            const int rotation_num = static_cast<int>(rotation);
+            if (rotation_num % 2) {
+               normal_direction = (normal_direction + 1) % 2;
+            }
+         } else if (dim.getValue() == 3) {
+
+            if (normal_direction == 0) {
+
+               switch (rotation) {
+
+                  case hier::Transformation::IUP_JUP_KUP:
+                  case hier::Transformation::IDOWN_KUP_JUP:
+                  case hier::Transformation::IUP_KDOWN_JUP:
+                  case hier::Transformation::IDOWN_JUP_KDOWN:
+                  case hier::Transformation::IUP_KUP_JDOWN:
+                  case hier::Transformation::IDOWN_JDOWN_KUP:
+                  case hier::Transformation::IUP_JDOWN_KDOWN:
+                  case hier::Transformation::IDOWN_KDOWN_JDOWN:
+
+                     normal_direction = 0;
+                     break;
+
+                  case hier::Transformation::KUP_IUP_JUP:
+                  case hier::Transformation::JUP_IDOWN_KUP:
+                  case hier::Transformation::JUP_IUP_KDOWN:
+                  case hier::Transformation::KDOWN_IDOWN_JUP:
+                  case hier::Transformation::JDOWN_IUP_KUP:
+                  case hier::Transformation::KUP_IDOWN_JDOWN:
+                  case hier::Transformation::KDOWN_IUP_JDOWN:
+                  case hier::Transformation::JDOWN_IDOWN_KDOWN:
+
+                     normal_direction = 1;
+                     break;
+
+                  default:
+
+                     normal_direction = 2;
+                     break;
+
+               }
+
+            } else if (normal_direction == 1) {
+
+               switch (rotation) {
+                  case hier::Transformation::JUP_KUP_IUP:
+                  case hier::Transformation::JUP_IDOWN_KUP:
+                  case hier::Transformation::JUP_IUP_KDOWN:
+                  case hier::Transformation::JUP_KDOWN_IDOWN:
+                  case hier::Transformation::JDOWN_IUP_KUP:
+                  case hier::Transformation::JDOWN_KUP_IDOWN:
+                  case hier::Transformation::JDOWN_KDOWN_IUP:
+                  case hier::Transformation::JDOWN_IDOWN_KDOWN:
+
+                     normal_direction = 0;
+                     break;
+
+                  case hier::Transformation::IUP_JUP_KUP:
+                  case hier::Transformation::KUP_JUP_IDOWN:
+                  case hier::Transformation::KDOWN_JUP_IUP:
+                  case hier::Transformation::IDOWN_JUP_KDOWN:
+                  case hier::Transformation::KUP_JDOWN_IUP:
+                  case hier::Transformation::IDOWN_JDOWN_KUP:
+                  case hier::Transformation::IUP_JDOWN_KDOWN:
+                  case hier::Transformation::KDOWN_JDOWN_IDOWN:
+
+                     normal_direction = 1;
+                     break;
+
+                  default:
+
+                     normal_direction = 2;
+                     break;
+               }
+
+            } else if (normal_direction == 2) {
+
+               switch (rotation) {
+                  case hier::Transformation::KUP_IUP_JUP:
+                  case hier::Transformation::KUP_JUP_IDOWN:
+                  case hier::Transformation::KDOWN_JUP_IUP:
+                  case hier::Transformation::KDOWN_IDOWN_JUP:
+                  case hier::Transformation::KUP_JDOWN_IUP:
+                  case hier::Transformation::KUP_IDOWN_JDOWN:
+                  case hier::Transformation::KDOWN_IUP_JDOWN:
+                  case hier::Transformation::KDOWN_JDOWN_IDOWN:
+
+                     normal_direction = 0;
+                     break;
+
+                  case hier::Transformation::JUP_KUP_IUP:
+                  case hier::Transformation::IDOWN_KUP_JUP:
+                  case hier::Transformation::IUP_KDOWN_JUP:
+                  case hier::Transformation::JUP_KDOWN_IDOWN:
+                  case hier::Transformation::IUP_KUP_JDOWN:
+                  case hier::Transformation::JDOWN_KUP_IDOWN:
+                  case hier::Transformation::JDOWN_KDOWN_IUP:
+                  case hier::Transformation::IDOWN_KDOWN_JDOWN:
+
+                     normal_direction = 1;
+                     break;
+
+                  default:
+
+                     normal_direction = 2;
+                     break;
+
+               }
+            }
          }
-      } else if (dim.getValue() == 3) {
 
-         if (normal_direction == 0) {
-
-            switch (rotation) {
-
-               case hier::Transformation::IUP_JUP_KUP:
-               case hier::Transformation::IDOWN_KUP_JUP:
-               case hier::Transformation::IUP_KDOWN_JUP:
-               case hier::Transformation::IDOWN_JUP_KDOWN:
-               case hier::Transformation::IUP_KUP_JDOWN:
-               case hier::Transformation::IDOWN_JDOWN_KUP:
-               case hier::Transformation::IUP_JDOWN_KDOWN:
-               case hier::Transformation::IDOWN_KDOWN_JDOWN:
-
-                  normal_direction = 0;
-                  break;
-
-               case hier::Transformation::KUP_IUP_JUP:
-               case hier::Transformation::JUP_IDOWN_KUP:
-               case hier::Transformation::JUP_IUP_KDOWN:
-               case hier::Transformation::KDOWN_IDOWN_JUP:
-               case hier::Transformation::JDOWN_IUP_KUP:
-               case hier::Transformation::KUP_IDOWN_JDOWN:
-               case hier::Transformation::KDOWN_IUP_JDOWN:
-               case hier::Transformation::JDOWN_IDOWN_KDOWN:
-
-                  normal_direction = 1;
-                  break;
-
-               default:
-
-                  normal_direction = 2;
-                  break;
-
-            }
-
-         } else if (normal_direction == 1) {
-
-            switch (rotation) {
-               case hier::Transformation::JUP_KUP_IUP:
-               case hier::Transformation::JUP_IDOWN_KUP:
-               case hier::Transformation::JUP_IUP_KDOWN:
-               case hier::Transformation::JUP_KDOWN_IDOWN:
-               case hier::Transformation::JDOWN_IUP_KUP:
-               case hier::Transformation::JDOWN_KUP_IDOWN:
-               case hier::Transformation::JDOWN_KDOWN_IUP:
-               case hier::Transformation::JDOWN_IDOWN_KDOWN:
-
-                  normal_direction = 0;
-                  break;
-
-               case hier::Transformation::IUP_JUP_KUP:
-               case hier::Transformation::KUP_JUP_IDOWN:
-               case hier::Transformation::KDOWN_JUP_IUP:
-               case hier::Transformation::IDOWN_JUP_KDOWN:
-               case hier::Transformation::KUP_JDOWN_IUP:
-               case hier::Transformation::IDOWN_JDOWN_KUP:
-               case hier::Transformation::IUP_JDOWN_KDOWN:
-               case hier::Transformation::KDOWN_JDOWN_IDOWN:
-
-                  normal_direction = 1;
-                  break;
-
-               default:
-
-                  normal_direction = 2;
-                  break;
-            }
-
-         } else if (normal_direction == 2) {
-
-            switch (rotation) {
-               case hier::Transformation::KUP_IUP_JUP:
-               case hier::Transformation::KUP_JUP_IDOWN:
-               case hier::Transformation::KDOWN_JUP_IUP:
-               case hier::Transformation::KDOWN_IDOWN_JUP:
-               case hier::Transformation::KUP_JDOWN_IUP:
-               case hier::Transformation::KUP_IDOWN_JDOWN:
-               case hier::Transformation::KDOWN_IUP_JDOWN:
-               case hier::Transformation::KDOWN_JDOWN_IDOWN:
-
-                  normal_direction = 0;
-                  break;
-
-               case hier::Transformation::JUP_KUP_IUP:
-               case hier::Transformation::IDOWN_KUP_JUP:
-               case hier::Transformation::IUP_KDOWN_JUP:
-               case hier::Transformation::JUP_KDOWN_IDOWN:
-               case hier::Transformation::IUP_KUP_JDOWN:
-               case hier::Transformation::JDOWN_KUP_IDOWN:
-               case hier::Transformation::JDOWN_KDOWN_IUP:
-               case hier::Transformation::IDOWN_KDOWN_JDOWN:
-
-                  normal_direction = 1;
-                  break;
-
-               default:
-
-                  normal_direction = 2;
-                  break;
-
-            }
-         }
+         box.upper() (normal_direction) += 1;
       }
-
-      box.upper() (normal_direction) += 1;
    }
 }
 

@@ -116,6 +116,29 @@ Transformation::inverseTransform(
 /*
  * ************************************************************************
  *
+ * Get Transformation object that is the inverse of 'this'.
+ *
+ * ************************************************************************
+ */
+Transformation
+Transformation::getInverseTransformation() const
+{
+   const tbox::Dimension& dim = d_offset.getDim();
+   IntVector inv_offset(dim);
+   calculateReverseShift(inv_offset, d_offset, d_rotation);
+
+   RotationIdentifier inv_rotate =
+       getReverseRotationIdentifier(d_rotation, dim);
+
+   return (Transformation(inv_rotate,
+                          inv_offset,
+                          d_end_block,
+                          d_begin_block));
+}
+
+/*
+ * ************************************************************************
+ *
  * Get a RotationIdentifier value associated with given string input
  *
  * ************************************************************************

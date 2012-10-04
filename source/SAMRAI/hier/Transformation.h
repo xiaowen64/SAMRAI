@@ -186,6 +186,12 @@ public:
       Box& box) const;
 
    /*!
+    * @brief Get a Tranformation object that defines the inverse of this
+    * tranformation.
+    */
+   Transformation getInverseTransformation() const;
+
+   /*!
     * @brief Assignment operator
     */
    Transformation&

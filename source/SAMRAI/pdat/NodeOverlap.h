@@ -68,6 +68,19 @@ public:
    virtual const hier::BoxContainer&
    getDestinationBoxContainer() const;
 
+   /*!
+    * @brief Get a BoxContainer representing the source boxes of the overlap.
+    *
+    * The src_boxes container will be filled with the node-centered source
+    * boxes of the overlap in the source coordinate space.
+    *
+    * @param[out] src_boxes
+    *
+    * @pre src_boxes.isEmpty()
+    */
+   virtual void
+   getSourceBoxContainer(hier::BoxContainer& src_boxes) const;
+
    /**
     * Return the offset between the destination and source index spaces.
     * The destination index space is the source index spaced shifted

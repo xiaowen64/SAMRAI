@@ -41,6 +41,24 @@ NodeOverlap::getDestinationBoxContainer() const
    return d_dst_boxes;
 }
 
+void
+NodeOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes) const
+{
+   TBOX_ASSERT(src_boxes.isEmpty());
+
+   src_boxes = d_dst_boxes;
+   if (!src_boxes.isEmpty()) {
+      const tbox::Dimension& dim = src_boxes.front().getDim();
+      for (hier::BoxContainer::iterator bi = src_boxes.begin();
+           bi != src_boxes.end(); ++bi) {
+         bi->upper() -= hier::IntVector::getOne(dim);
+         d_transformation.inverseTransform(*bi);
+         bi->upper() += hier::IntVector::getOne(dim);
+      }
+   }
+}
+
+
 const hier::IntVector&
 NodeOverlap::getSourceOffset() const
 {

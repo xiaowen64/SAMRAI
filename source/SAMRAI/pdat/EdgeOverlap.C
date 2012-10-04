@@ -13,6 +13,8 @@
 
 #include "SAMRAI/pdat/EdgeOverlap.h"
 
+#include "SAMRAI/pdat/EdgeGeometry.h"
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -23,9 +25,9 @@ EdgeOverlap::EdgeOverlap(
    d_transformation(transformation)
 {
    const tbox::Dimension dim(transformation.getOffset().getDim());
-   d_dst_boxes.resizeArray(boxes.getSize());
+   d_dst_boxes.resizeArray(boxes.size());
 
-   for (int d = 0; d < boxes.getSize(); d++) {
+   for (int d = 0; d < boxes.size(); d++) {
       d_dst_boxes[d] = boxes[d];
       if (!d_dst_boxes[d].isEmpty()) d_is_overlap_empty = false;
    }
@@ -45,9 +47,38 @@ const hier::BoxContainer&
 EdgeOverlap::getDestinationBoxContainer(
    const int axis) const
 {
-   TBOX_ASSERT((axis >= 0) && (axis < d_dst_boxes.getSize()));
+   TBOX_ASSERT((axis >= 0) && (axis < d_dst_boxes.size()));
 
    return d_dst_boxes[axis];
+}
+
+void
+EdgeOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
+                                   int& axis_direction) const
+{
+   TBOX_ASSERT(src_boxes.isEmpty());
+   TBOX_ASSERT(axis_direction >= 0 &&
+               axis_direction < d_dst_boxes.size());
+
+   src_boxes = d_dst_boxes[axis_direction];
+   int transform_direction = axis_direction;
+   if (!src_boxes.isEmpty()) {
+      hier::Transformation inverse_transform =
+         d_transformation.getInverseTransformation();
+      for (hier::BoxContainer::iterator bi = src_boxes.begin();
+           bi != src_boxes.end(); ++bi) {
+         transform_direction = axis_direction;
+         EdgeGeometry::transform(*bi,
+                                 transform_direction,
+                                 inverse_transform);
+      }
+   }
+
+   axis_direction = transform_direction;
+
+   TBOX_ASSERT(axis_direction >= 0 &&
+               axis_direction < d_dst_boxes.size());
+
 }
 
 const hier::IntVector&
