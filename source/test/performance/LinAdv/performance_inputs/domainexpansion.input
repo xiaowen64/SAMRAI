@@ -135,7 +135,7 @@ LinAdv {
 BergerRigoutsos {
    DEV_algo_advance_mode = "ADVANCE_SOME"
    DEV_owner_mode = "MOST_OVERLAP"
-   DEV_laplace_cut_threshold_ar = 4
+   DEV_inflection_cut_threshold_ar = 4
    DEV_log_node_history = FALSE
    sort_output_nodes = TRUE
    max_box_size = 100, 100, 100

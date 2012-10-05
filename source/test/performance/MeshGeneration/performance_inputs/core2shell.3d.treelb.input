@@ -44,7 +44,7 @@ Main {
    combine_tol = 0.85
 
    BergerRigoutsos {
-      DEV_laplace_cut_threshold_ar = 4
+      DEV_inflection_cut_threshold_ar = 4
       sort_output_nodes = TRUE
       DEV_log_node_history = FALSE
       DEV_log_cluster_summary = FALSE

@@ -53,8 +53,8 @@ BergerRigoutsos::BergerRigoutsos(
    d_dim(dim),
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_max_box_size(hier::IntVector(d_dim, tbox::MathUtilities<int>::getMax())),
-   d_max_lap_cut_from_center(1.0),
-   d_laplace_cut_threshold_ar(0.0),
+   d_max_inflection_cut_from_center(1.0),
+   d_inflection_cut_threshold_ar(0.0),
    d_log_node_history(false),
    d_log_cluster_summary(false),
    d_log_cluster(false),
@@ -103,10 +103,10 @@ BergerRigoutsos::getFromInput(
          } 
       }
 
-      d_max_lap_cut_from_center =
-         input_db->getDoubleWithDefault("DEV_max_lap_cut_from_center", 1.0);
-      d_laplace_cut_threshold_ar =
-         input_db->getDoubleWithDefault("DEV_laplace_cut_threshold_ar", 0.0);
+      d_max_inflection_cut_from_center =
+         input_db->getDoubleWithDefault("DEV_max_inflection_cut_from_center", 1.0);
+      d_inflection_cut_threshold_ar =
+         input_db->getDoubleWithDefault("DEV_inflection_cut_threshold_ar", 0.0);
       d_log_node_history =
          input_db->getBoolWithDefault("DEV_log_node_history", false);
       d_log_cluster_summary =
@@ -275,8 +275,8 @@ BergerRigoutsos::findBoxesContainingTags(
       efficiency_tol,
       combine_tol,
       d_max_box_size,
-      d_max_lap_cut_from_center,
-      d_laplace_cut_threshold_ar);
+      d_max_inflection_cut_from_center,
+      d_inflection_cut_threshold_ar);
 
    // Set the parallel algorithm and DLBG parameters.
    root_node.setAlgorithmAdvanceMode(d_algo_advance_mode);

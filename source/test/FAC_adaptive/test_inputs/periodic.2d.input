@@ -72,7 +72,7 @@ BergerRigoutsos {
   DEV_log_node_history = TRUE
   DEV_log_cluster_summary = TRUE
   DEV_log_cluster = TRUE
-  DEV_max_lap_cut_from_center = 0.1
+  DEV_max_inflection_cut_from_center = 0.1
 }
 
 TreeLoadBalancer{

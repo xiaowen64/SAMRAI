@@ -125,12 +125,12 @@ public:
     * @param[in] efficiency_tol
     * @param[in] combine_tol
     * @param[in] max_box_size
-    * @param[in] max_lap_cut_from_center Limit the Laplace cut to this
+    * @param[in] max_inflection_cut_from_center Limit the Laplace cut to this
     *   fraction of the distance from the center plane to the end.
     *   Zero means cut only at the center plane.  One means unlimited.
     *   Under most situations, one is fine.
     *
-    * @param[in] laplace_cut_threshold_ar
+    * @param[in] inflection_cut_threshold_ar
     *
     * @pre (d_common->d_dim == min_box.getDim()) &&
     *      (d_common->d_dim == max_box_size.getDim())
@@ -143,8 +143,8 @@ public:
       const double efficiency_tol,
       const double combine_tol,
       const hier::IntVector& max_box_size,
-      const double max_lap_cut_from_center,
-      const double laplace_cut_threshold_ar);
+      const double max_inflection_cut_from_center,
+      const double inflection_cut_threshold_ar);
 
    //@{
    //! @name Algorithm mode settings
@@ -474,7 +474,7 @@ public:
       /*!
        * @brief
        */
-      double max_lap_cut_from_center;
+      double max_inflection_cut_from_center;
 
       /*
        * @brief Threshold for favoring thicker directions for Laplace
@@ -487,7 +487,7 @@ public:
        * direction.  Set to huge value to disregard high aspect
        * ratios.
        */
-      double laplace_cut_threshold_ar;
+      double inflection_cut_threshold_ar;
 
       /*!
        * @brief If a candidate box does not fit in this limit,
@@ -911,9 +911,9 @@ public:
       const int dim);
 
    void
-   cutAtLaplacian(
+   cutAtInflection(
       int& cut_pt,
-      int& diff_laplace,
+      int& inflection,
       const int dim);
 
    int

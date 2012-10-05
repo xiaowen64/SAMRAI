@@ -236,10 +236,10 @@ private:
    hier::IntVector d_max_box_size;
 
    //! @brief Max distance from center for Laplace cut.
-   double d_max_lap_cut_from_center;
+   double d_max_inflection_cut_from_center;
 
    //! @brief Threshold for avoiding thinner directions for Laplace cut.
-   double d_laplace_cut_threshold_ar;
+   double d_inflection_cut_threshold_ar;
 
    //! @brief Whether to log execution node allocation and deallocation.
    bool d_log_node_history;

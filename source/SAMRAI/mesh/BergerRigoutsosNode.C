@@ -297,8 +297,8 @@ BergerRigoutsosNode::setClusteringParameters(
    const double efficiency_tol,
    const double combine_tol,
    const hier::IntVector& max_box_size,
-   const double max_lap_cut_from_center,
-   const double laplace_cut_threshold_ar)
+   const double max_inflection_cut_from_center,
+   const double inflection_cut_threshold_ar)
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_common->d_dim, min_box, max_box_size);
 
@@ -308,8 +308,8 @@ BergerRigoutsosNode::setClusteringParameters(
    d_common->efficiency_tol = efficiency_tol;
    d_common->combine_tol = combine_tol;
    d_common->max_box_size = max_box_size;
-   d_common->max_lap_cut_from_center = max_lap_cut_from_center;
-   d_common->laplace_cut_threshold_ar = laplace_cut_threshold_ar;
+   d_common->max_inflection_cut_from_center = max_inflection_cut_from_center;
+   d_common->inflection_cut_threshold_ar = inflection_cut_threshold_ar;
 }
 
 /*
@@ -1297,8 +1297,8 @@ BergerRigoutsosNode::CommonParams::CommonParams(
    tag_to_new(0),
    new_to_tag(0),
    // Parameters not from clustering algorithm interface ...
-   max_lap_cut_from_center(1.0),
-   laplace_cut_threshold_ar(0.0),
+   max_inflection_cut_from_center(1.0),
+   inflection_cut_threshold_ar(0.0),
    max_box_size(d_dim, tbox::MathUtilities<int>::getMax()),
    // Parameters from clustering algorithm interface ...
    tag_data_index(-1),
@@ -2057,19 +2057,19 @@ BergerRigoutsosNode::acceptOrSplitBox()
       }
 
       /*
-       * If no zero point found, try Laplacian cut.
+       * If no zero point found, try inflection cut.
        */
 
       if (dir == d_common->d_dim.getValue()) {
 
          /*
-          * laplace_cut_threshold_ar specifies the mininum box
+          * inflection_cut_threshold_ar specifies the mininum box
           * thickness that can be cut, as a ratio to the thinnest box
           * direction.  If the box doesn't have any direction thick
           * enough, then it has a reasonable aspect ratio, so we can
           * cut it in any direction.
           *
-          * Degenerate values of laplace_cut_threshold_ar:
+          * Degenerate values of inflection_cut_threshold_ar:
           *
           * 1: cut any direction except the thinnest.
           *
@@ -2081,8 +2081,8 @@ BergerRigoutsosNode::acceptOrSplitBox()
           * directions.
           */
          int max_box_length_to_leave = boxdims(max_margin_dir) - 1;
-         if ( d_common->laplace_cut_threshold_ar > 0.0 ) {
-            max_box_length_to_leave = static_cast<int>(0.5 + boxdims(min_margin_dir)*d_common->laplace_cut_threshold_ar);
+         if ( d_common->inflection_cut_threshold_ar > 0.0 ) {
+            max_box_length_to_leave = static_cast<int>(0.5 + boxdims(min_margin_dir)*d_common->inflection_cut_threshold_ar);
             if ( max_box_length_to_leave >= boxdims(max_margin_dir) ) {
                /*
                 * Box aspect ratio is not too bad. Disable preference
@@ -2092,18 +2092,18 @@ BergerRigoutsosNode::acceptOrSplitBox()
             }
          }
 
-         int diff_laplace = -1;
+         int inflection = -1;
          for ( int d=0; d<d_common->d_dim.getValue(); ++d ) {
             if ( cut_margin(d) < 0 || boxdims(d) <= max_box_length_to_leave ) {
                continue;  // Direction d is too small to cut.
             }
-            int try_cut_pt, try_diff_laplace;
-            cutAtLaplacian(try_cut_pt, try_diff_laplace, d);
-            if ( diff_laplace < try_diff_laplace ||
-                 ( diff_laplace == try_diff_laplace && cut_margin(d) > cut_margin(cut_dir) ) ) {
+            int try_cut_pt, try_inflection;
+            cutAtInflection(try_cut_pt, try_inflection, d);
+            if ( inflection < try_inflection ||
+                 ( inflection == try_inflection && cut_margin(d) > cut_margin(cut_dir) ) ) {
                cut_dir = d;
                cut_pt = try_cut_pt;
-               diff_laplace = try_diff_laplace;
+               inflection = try_inflection;
             }
          }
          TBOX_ASSERT( cut_dir >= 0 && cut_dir < d_common->d_dim.getValue() );
@@ -2248,7 +2248,7 @@ BergerRigoutsosNode::findZeroCutSwath(
  * inflection point in the histogram for that direction. Note that the
  * cut point is kept more than a minimium distance from the endpoints
  * of the index interval (lo, hi).  Also, the box must have at least
- * three cells along a side to apply the Laplacian test.  If no
+ * three cells along a side to apply the inflection test.  If no
  * inflection point is found, the mid-point of the interval is
  * returned as the cut point.
  *
@@ -2258,14 +2258,14 @@ BergerRigoutsosNode::findZeroCutSwath(
  */
 
 void
-BergerRigoutsosNode::cutAtLaplacian(
+BergerRigoutsosNode::cutAtInflection(
    int& cut_pt,
-   int& diff_laplace,
+   int& inflection,
    const int dim)
 {
    /*
-    * New implementation prefers and possibly restricts the Laplace cut
-    * to the center part of the box.
+    * New implementation prefers and possibly restricts the inflection
+    * cut to the center part of the box.
     *
     * The cuts refer to face indices, not cell indices.
     *
@@ -2279,9 +2279,9 @@ BergerRigoutsosNode::cutAtLaplacian(
    TBOX_ASSERT(hist_size >= 2);
 
    /*
-    * Laplacian cut requires at least 4 cells of histogram, so it can
-    * compare at 2 Laplacians.  Without 4 cells, we just cut across the
-    * largest change in the histogram.
+    * Inflection cut requires at least 4 cells of histogram, so it can
+    * compute an inflection value.  Without 4 cells, we just cut
+    * across the largest change in the histogram.
     */
    if (hist_size < 4) {
       cut_pt = 1;
@@ -2292,14 +2292,14 @@ BergerRigoutsosNode::cutAtLaplacian(
          }
       }
       cut_pt += d_box.lower() (dim);
-      diff_laplace = 0;  // Did not use any Laplace values.
+      inflection = 0;  // Not necessarily an inflection point.
       return;
    }
 
    const int box_lo = 0;
    const int box_hi = hist_size - 1;
    const int max_dist_from_center =
-      int(d_common->max_lap_cut_from_center * hist_size / 2);
+      int(d_common->max_inflection_cut_from_center * hist_size / 2);
    const int box_mid = (box_lo + box_hi + 1) / 2;
 
    const int cut_lo_lim = tbox::MathUtilities<int>::Max(
@@ -2311,28 +2311,28 @@ BergerRigoutsosNode::cutAtLaplacian(
          box_mid + max_dist_from_center);
 
    /*
-    * Initial cut point and differences between the Laplaces on either
-    * side of it.  We want to cut where this difference is biggest.
+    * Initial cut point and differences between the Laplacian on
+    * either side of it.  We want to cut where the difference between
+    * the two Laplacians is greatest and they have oposite signs.
     */
    cut_pt = box_mid;
-   diff_laplace =
+   inflection =
       (hist[cut_pt - 1] - 2 * hist[cut_pt] + hist[cut_pt + 1])
       - (hist[cut_pt - 2] - 2 * hist[cut_pt - 1] + hist[cut_pt]);
-   diff_laplace = tbox::MathUtilities<int>::Abs(diff_laplace);
+   inflection = tbox::MathUtilities<int>::Abs(inflection);
 
-   int ic = 1;
-   int cut_lo = box_mid - ic;
-   int cut_hi = box_mid + ic;
+   int cut_lo = box_mid - 1;
+   int cut_hi = box_mid + 1;
 
    while (cut_lo > cut_lo_lim || cut_hi < cut_hi_lim) {
       if (cut_lo > cut_lo_lim) {
          const int la = (hist[cut_lo - 1] - 2 * hist[cut_lo] + hist[cut_lo + 1]);
          const int lb = (hist[cut_lo - 2] - 2 * hist[cut_lo - 1] + hist[cut_lo]);
          if ( la*lb <= 0 ) {
-            const int try_diff_laplace = tbox::MathUtilities<int>::Abs(la-lb);
-            if (try_diff_laplace > diff_laplace) {
+            const int try_inflection = tbox::MathUtilities<int>::Abs(la-lb);
+            if (try_inflection > inflection) {
                cut_pt = cut_lo;
-               diff_laplace = try_diff_laplace;
+               inflection = try_inflection;
             }
          }
       }
@@ -2340,10 +2340,10 @@ BergerRigoutsosNode::cutAtLaplacian(
          const int la = (hist[cut_hi - 1] - 2 * hist[cut_hi] + hist[cut_hi + 1]);
          const int lb = (hist[cut_hi - 2] - 2 * hist[cut_hi - 1] + hist[cut_hi]);
          if ( la*lb <= 0 ) {
-            const int try_diff_laplace = tbox::MathUtilities<int>::Abs(la-lb);
-            if (try_diff_laplace > diff_laplace) {
+            const int try_inflection = tbox::MathUtilities<int>::Abs(la-lb);
+            if (try_inflection > inflection) {
                cut_pt = cut_hi;
-               diff_laplace = try_diff_laplace;
+               inflection = try_inflection;
             }
          }
       }
