@@ -451,8 +451,8 @@ BoxUtilities::chopBox(
 #endif
                while (cut != cut_points_list.end()) {
                   int cut_val = *cut;
-#ifdef DEBUG_CHECK_ASSERTIONS
                   TBOX_ASSERT(last_cut <= cut_val);
+#ifdef DEBUG_CHECK_ASSERTIONS
                   last_cut = cut_val;
 #endif
                   ihi(id) = cut_val - 1;

@@ -117,15 +117,13 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
 {
    boost::shared_ptr<pdat::OuterfaceData<double> > fdata(
       fine.getPatchData(src_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::OuterfaceData<double> > cdata(
       coarse.getPatchData(dst_component),
-      boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+      BOOST_CAST_TAG);
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
-#endif
 
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();

@@ -97,10 +97,10 @@ NodeComplexInjection::coarsen(
 
    boost::shared_ptr<NodeData<dcomplex> > fdata(
       fine.getPatchData(src_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<NodeData<dcomplex> > cdata(
       coarse.getPatchData(dst_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);

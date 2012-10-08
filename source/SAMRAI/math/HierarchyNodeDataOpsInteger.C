@@ -130,7 +130,7 @@ HierarchyNodeDataOpsInteger::numberOfEntries(
 
       boost::shared_ptr<pdat::NodeDataFactory<int> > dfact(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
       TBOX_ASSERT(dfact);
 
@@ -161,7 +161,7 @@ HierarchyNodeDataOpsInteger::numberOfEntries(
               ip != level->end(); ++ip) {
             boost::shared_ptr<pdat::NodeData<int> > d(
                (*ip)->getPatchData(data_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
 
             TBOX_ASSERT(d);
 
@@ -200,12 +200,13 @@ HierarchyNodeDataOpsInteger::copyData(
 
          boost::shared_ptr<pdat::NodeData<int> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > s(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(s);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -222,11 +223,11 @@ HierarchyNodeDataOpsInteger::swapData(
 #ifdef DEBUG_CHECK_ASSERTIONS
    boost::shared_ptr<pdat::NodeDataFactory<int> > d1fact(
       d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(d1fact);
    boost::shared_ptr<pdat::NodeDataFactory<int> > d2fact(
       d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
    TBOX_ASSERT(d1fact->getGhostCellWidth() == d2fact->getGhostCellWidth());
@@ -275,7 +276,7 @@ HierarchyNodeDataOpsInteger::printData(
 
          boost::shared_ptr<pdat::NodeData<int> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 
@@ -306,7 +307,7 @@ HierarchyNodeDataOpsInteger::setToScalar(
 
          boost::shared_ptr<pdat::NodeData<int> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 
@@ -346,12 +347,13 @@ HierarchyNodeDataOpsInteger::scale(
 
          boost::shared_ptr<pdat::NodeData<int> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -381,12 +383,13 @@ HierarchyNodeDataOpsInteger::addScalar(
 
          boost::shared_ptr<pdat::NodeData<int> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -416,15 +419,17 @@ HierarchyNodeDataOpsInteger::add(
 
          boost::shared_ptr<pdat::NodeData<int> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > s1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > s2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(s1);
+         TBOX_ASSERT(s2);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -454,15 +459,17 @@ HierarchyNodeDataOpsInteger::subtract(
 
          boost::shared_ptr<pdat::NodeData<int> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > s1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > s2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(s1);
+         TBOX_ASSERT(s2);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -492,15 +499,17 @@ HierarchyNodeDataOpsInteger::multiply(
 
          boost::shared_ptr<pdat::NodeData<int> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > s1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > s2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(s1);
+         TBOX_ASSERT(s2);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -530,15 +539,17 @@ HierarchyNodeDataOpsInteger::divide(
 
          boost::shared_ptr<pdat::NodeData<int> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > s1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > s2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(s1);
+         TBOX_ASSERT(s2);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -567,12 +578,13 @@ HierarchyNodeDataOpsInteger::reciprocal(
 
          boost::shared_ptr<pdat::NodeData<int> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -604,15 +616,17 @@ HierarchyNodeDataOpsInteger::linearSum(
 
          boost::shared_ptr<pdat::NodeData<int> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > s1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > s2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(s1);
+         TBOX_ASSERT(s2);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -643,15 +657,17 @@ HierarchyNodeDataOpsInteger::axpy(
 
          boost::shared_ptr<pdat::NodeData<int> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > s1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > s2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(s1);
+         TBOX_ASSERT(s2);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -682,15 +698,17 @@ HierarchyNodeDataOpsInteger::axmy(
 
          boost::shared_ptr<pdat::NodeData<int> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > s1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > s2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(s1);
+         TBOX_ASSERT(s2);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -719,12 +737,13 @@ HierarchyNodeDataOpsInteger::abs(
 
          boost::shared_ptr<pdat::NodeData<int> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::NodeData<int> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -756,7 +775,7 @@ HierarchyNodeDataOpsInteger::min(
 
          boost::shared_ptr<pdat::NodeData<int> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 
@@ -797,7 +816,7 @@ HierarchyNodeDataOpsInteger::max(
 
          boost::shared_ptr<pdat::NodeData<int> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 
@@ -836,7 +855,7 @@ HierarchyNodeDataOpsInteger::setRandomValues(
 
          boost::shared_ptr<pdat::NodeData<int> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 

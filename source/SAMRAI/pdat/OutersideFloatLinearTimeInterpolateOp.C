@@ -130,11 +130,11 @@ OutersideFloatLinearTimeInterpolateOp::timeInterpolate(
    const tbox::Dimension& dim(where.getDim());
 
    const OutersideData<float>* old_dat =
-      dynamic_cast<const OutersideData<float> *>(&src_data_old);
+      CPP_CAST<const OutersideData<float> *>(&src_data_old);
    const OutersideData<float>* new_dat =
-      dynamic_cast<const OutersideData<float> *>(&src_data_new);
+      CPP_CAST<const OutersideData<float> *>(&src_data_new);
    OutersideData<float>* dst_dat =
-      dynamic_cast<OutersideData<float> *>(&dst_data);
+      CPP_CAST<OutersideData<float> *>(&dst_data);
 
    TBOX_ASSERT(old_dat != 0);
    TBOX_ASSERT(new_dat != 0);

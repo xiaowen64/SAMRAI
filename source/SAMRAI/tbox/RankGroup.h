@@ -111,10 +111,6 @@ public:
       const int min,
       const int max)
    {
-#ifdef DEBUG_CHECK_ASSERTIONS
-      int nodes = 1;
-      d_samrai_mpi.Comm_size(&nodes);
-#endif
       TBOX_ASSERT(min >= 0);
       TBOX_ASSERT(min <= max);
       d_storage = USING_MIN_MAX;

@@ -40,10 +40,8 @@ MblkGeometry::MblkGeometry(
    const int nblocks):
    d_dim(dim)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
-#endif
 
    d_object_name = object_name;
    //tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
@@ -112,9 +110,7 @@ bool MblkGeometry::getRefineBoxes(
 void MblkGeometry::getFromInput(
    boost::shared_ptr<tbox::Database> input_db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(input_db);
-#endif
 
    boost::shared_ptr<tbox::Database> db(
       input_db->getDatabase("MblkGeometry"));
@@ -546,11 +542,9 @@ void MblkGeometry::buildCartesianGridOnPatch(
    //
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(xyz_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(xyz);
-#endif
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
@@ -620,11 +614,9 @@ void MblkGeometry::buildWedgeGridOnPatch(
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(xyz_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(xyz);
-#endif
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
@@ -692,11 +684,9 @@ void MblkGeometry::buildTrilinearGridOnPatch(
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(xyz_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(xyz);
-#endif
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
@@ -822,11 +812,9 @@ void MblkGeometry::buildSShellGridOnPatch(
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(xyz_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(xyz);
-#endif
 
    if (d_dim == tbox::Dimension(3)) {
 

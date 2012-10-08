@@ -220,9 +220,9 @@ BoxContainer::insert(
    iterator position,
    const Box& box)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(box.getBoxId().isValid());
    TBOX_ASSERT(box.getBlockId() != BlockId::invalidId());
+#ifdef DEBUG_CHECK_ASSERTIONS
    if (!isEmpty()) {
       TBOX_ASSERT_OBJDIM_EQUALITY2(front(), box);
    }
@@ -260,8 +260,8 @@ bool
 BoxContainer::insert(
    const Box& box)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(box.getBoxId().isValid());
+#ifdef DEBUG_CHECK_ASSERTIONS
    if (!isEmpty()) {
       TBOX_ASSERT_OBJDIM_EQUALITY2(front(), box);
    }
@@ -321,8 +321,8 @@ BoxContainer::insert (
    for (std::set<Box*>::const_iterator set_iter = first.d_set_iter;
         set_iter != last.d_set_iter; ++set_iter) {
 
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT((**set_iter).getBoxId().isValid());
+#ifdef DEBUG_CHECK_ASSERTIONS
       if (!isEmpty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), **set_iter);
       }

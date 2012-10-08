@@ -96,8 +96,7 @@ CellDoubleConstantRefine::refine(
    const hier::BoxOverlap& fine_overlap,
    const hier::IntVector& ratio) const
 {
-   const CellOverlap* t_overlap =
-      dynamic_cast<const CellOverlap *>(&fine_overlap);
+   const CellOverlap* t_overlap = CPP_CAST<const CellOverlap *>(&fine_overlap);
 
    TBOX_ASSERT(t_overlap != 0);
 
@@ -123,10 +122,10 @@ CellDoubleConstantRefine::refine(
 {
    boost::shared_ptr<CellData<double> > cdata(
       coarse.getPatchData(src_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<CellData<double> > fdata(
       fine.getPatchData(dst_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);

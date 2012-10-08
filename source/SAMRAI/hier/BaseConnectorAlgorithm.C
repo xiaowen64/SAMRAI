@@ -199,7 +199,7 @@ BaseConnectorAlgorithm::receiveAndUnpack(
            comm_stage.advanceSome() ) {
 
       tbox::AsyncCommPeer<int>* peer =
-         dynamic_cast<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
+         CPP_CAST<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
 
       TBOX_ASSERT(peer != 0);
 

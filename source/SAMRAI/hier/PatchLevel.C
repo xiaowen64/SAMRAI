@@ -109,7 +109,6 @@ PatchLevel::PatchLevel(
 
    t_level_constructor->start();
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(grid_geometry);
    TBOX_ASSERT(descriptor);
    /*
@@ -117,7 +116,7 @@ PatchLevel::PatchLevel(
     * of ratio not equal to 1 must have the same sign.
     */
    TBOX_ASSERT(box_level.getRefinementRatio() != IntVector::getZero(getDim()));
-
+#ifdef DEBUG_CHECK_ASSERTIONS
    if (getDim().getValue() > 1) {
       for (int i = 0; i < getDim().getValue(); i++) {
          TBOX_ASSERT((box_level.getRefinementRatio() (i)

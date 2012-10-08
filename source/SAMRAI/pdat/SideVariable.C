@@ -64,7 +64,7 @@ int SideVariable<TYPE>::getDepth() const
 {
    boost::shared_ptr<SideDataFactory<TYPE> > factory(
       getPatchDataFactory(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(factory);
    return factory->getDepth();
 }

@@ -138,6 +138,22 @@ typedef int mode_t;
 #endif
 
 /*!
+ */
+#ifdef DEBUG_CHECK_ASSERTIONS
+
+#define BOOST_CAST boost::dynamic_pointer_cast
+#define BOOST_CAST_TAG boost::detail::dynamic_cast_tag()
+#define CPP_CAST dynamic_cast
+
+#else
+
+#define BOOST_CAST boost::static_pointer_cast
+#define BOOST_CAST_TAG boost::detail::static_cast_tag()
+#define CPP_CAST static_cast
+
+#endif
+
+/*!
  * Throw an error assertion from within any C++ source code if the
  * given expression is not true.  This version is used for assertions
  * that are useful checking internal SAMRAI state for developers working

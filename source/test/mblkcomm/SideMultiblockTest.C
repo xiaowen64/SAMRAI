@@ -126,7 +126,8 @@ void SideMultiblockTest::initializeDataOnPatch(
 
          boost::shared_ptr<pdat::SideData<double> > side_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(side_data);
 
          hier::Box dbox = side_data->getGhostBox();
 
@@ -182,7 +183,8 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
 
       boost::shared_ptr<pdat::SideData<double> > side_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(side_data);
 
       /*
        * Set node boundary data.
@@ -329,7 +331,8 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
 
       boost::shared_ptr<pdat::SideData<double> > side_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(side_data);
 
       hier::Box sing_fill_box(side_data->getGhostBox() * fill_box);
 
@@ -418,7 +421,8 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
 
                   boost::shared_ptr<pdat::SideData<double> > sing_data(
                      encon_patch->getPatchData(d_variables[i], getDataContext()),
-                     boost::detail::dynamic_cast_tag());
+                     BOOST_CAST_TAG);
+                  TBOX_ASSERT(sing_data);
 
                   for (int axis = 0; axis < d_dim.getValue(); axis++) {
 
@@ -577,7 +581,8 @@ bool SideMultiblockTest::verifyResults(
 
       boost::shared_ptr<pdat::SideData<double> > side_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(side_data);
       int depth = side_data->getDepth();
 
       hier::Box interior_box(pbox);

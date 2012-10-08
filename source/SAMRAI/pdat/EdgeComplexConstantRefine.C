@@ -128,13 +128,12 @@ EdgeComplexConstantRefine::refine(
 
    boost::shared_ptr<EdgeData<dcomplex> > cdata(
       coarse.getPatchData(src_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<EdgeData<dcomplex> > fdata(
       fine.getPatchData(dst_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-   const EdgeOverlap* t_overlap =
-      dynamic_cast<const EdgeOverlap *>(&fine_overlap);
+   const EdgeOverlap* t_overlap = CPP_CAST<const EdgeOverlap *>(&fine_overlap);
 
    TBOX_ASSERT(t_overlap != 0);
 

@@ -252,7 +252,8 @@ int main(
             patch = *ip;
             boost::shared_ptr<geom::CartesianPatchGeometry>pgeom(
                patch->getPatchGeometry(),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             double face_vol = dx[0];
             for (int i = 1; i < dim.getValue(); ++i) {
@@ -260,7 +261,8 @@ int main(
             }
             boost::shared_ptr<pdat::FaceData<double> >data(
                   patch->getPatchData(fwgt_id),
-                  boost::detail::dynamic_cast_tag());
+                  BOOST_CAST_TAG);
+            TBOX_ASSERT(data);
             data->fillAll(face_vol);
             pdat::FaceIndex fi(dim);
 
@@ -585,7 +587,9 @@ int main(
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
  *   boost::shared_ptr< pdat::FaceData<double> > cvdata(
  *      patch->getPatchData(cwgt_id),
- *      boost::detail::dynamic_cast_tag();
+ *      BOOST_CAST_TAG);
+ *
+ *   TBOX_ASSERT(cvdata);
  *
  *   pdat::FaceIterator cend(cvdata->getBox(), 1, false);
  *   for (pdat::FaceIterator c(cvdata->getBox(), 1, true); c != cend && vol_test_passed; ++c) {
@@ -850,8 +854,9 @@ int main(
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
          patch = *ip;
-         fdata = boost::dynamic_pointer_cast<pdat::FaceData<double>,
-                                             hier::PatchData>(patch->getPatchData(fvindx[2]));
+         fdata = BOOST_CAST<pdat::FaceData<double>,
+                            hier::PatchData>(patch->getPatchData(fvindx[2]));
+         TBOX_ASSERT(fdata);
 	 hier::Index index0(dim, 2);
 	 hier::Index index1(dim, 3);
          index1(0) = 5;
@@ -871,8 +876,9 @@ int main(
       for (hier::PatchLevel::iterator ipp(level_zero->begin());
            ipp != level_zero->end(); ++ipp) {
          patch = *ipp;
-         fdata = boost::dynamic_pointer_cast<pdat::FaceData<double>,
-                                             hier::PatchData>(patch->getPatchData(fvindx[2]));
+         fdata = BOOST_CAST<pdat::FaceData<double>,
+                            hier::PatchData>(patch->getPatchData(fvindx[2]));
+         TBOX_ASSERT(fdata);
 	 hier::Index idx0(dim, 2);
 	 hier::Index idx1(dim, 3);
          idx1(0) = 5;
@@ -1153,7 +1159,9 @@ doubleDataSameAsValue(
          patch = *ip;
          boost::shared_ptr<pdat::FaceData<double> > fvdata(
             patch->getPatchData(desc_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(fvdata);
 
          pdat::FaceIterator cend(fvdata->getBox(), 1, false);
          for (pdat::FaceIterator c(fvdata->getBox(), 1, true);

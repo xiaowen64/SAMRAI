@@ -453,7 +453,10 @@ CellPoissonHypreSolver::allocateHypreData()
    boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
       d_hierarchy->getGridGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(grid_geometry);
+
    const hier::IntVector ratio = level->getRatioToLevelZero();
    hier::IntVector periodic_shift =
       grid_geometry->getPeriodicShift(ratio);
@@ -776,7 +779,9 @@ CellPoissonHypreSolver::setMatrixCoefficients(
 
       boost::shared_ptr<geom::CartesianPatchGeometry> pg(
          patch.getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(pg);
 
       const double* h = pg->getDx();
 
@@ -785,29 +790,20 @@ CellPoissonHypreSolver::setMatrixCoefficients(
       const hier::Index patch_up = patch_box.upper();
 
       if (!spec.cIsZero() && !spec.cIsConstant()) {
-         C_data = boost::dynamic_pointer_cast<pdat::CellData<double>,
-                                              hier::PatchData>(patch.getPatchData(spec.getCPatchDataId()));
-         if (!C_data) {
-            TBOX_ERROR(d_object_name << ": Invalid cell variable index "
-                                     << spec.getCPatchDataId()
-                                     << " for the C parameter.  It is not\n"
-                                     << "cell-centered double data.");
-         }
+         C_data = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(spec.getCPatchDataId()));
+         TBOX_ASSERT(C_data);
       }
 
       if (!spec.dIsConstant()) {
-         D_data = boost::dynamic_pointer_cast<pdat::SideData<double>,
-                                              hier::PatchData>(patch.getPatchData(spec.getDPatchDataId()));
-         if (!D_data) {
-            TBOX_ERROR(d_object_name << ": Invalid cell variable index "
-                                     << spec.getDPatchDataId()
-                                     << " for diffusion coefficient.  It is not\n"
-                                     << "side-centered double data.");
-         }
+         D_data = BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+            patch.getPatchData(spec.getDPatchDataId()));
+         TBOX_ASSERT(D_data);
       }
 
-      Ak0 = boost::dynamic_pointer_cast<pdat::OutersideData<double>,
-                                        hier::PatchData>(patch.getPatchData(d_Ak0_id));
+      Ak0 = BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+         patch.getPatchData(d_Ak0_id));
+      TBOX_ASSERT(Ak0);
 
       Ak0->fillAll(0.0);
 
@@ -1087,7 +1083,9 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
     */
    boost::shared_ptr<pdat::OutersideData<double> >Ak0(
       patch.getPatchData(d_Ak0_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(Ak0);
 
    const int n_bdry_boxes = bdry_boxes.getSize();
    for (int n = 0; n < n_bdry_boxes; ++n) {
@@ -1297,7 +1295,7 @@ CellPoissonHypreSolver::solveSystem(
        */
       boost::shared_ptr<pdat::CellData<double> > u_data_(
          patch->getPatchData(u),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       TBOX_ASSERT(u_data_);
       pdat::CellData<double>& u_data = *u_data_;
       pdat::CellData<double> rhs_data(box, 1, no_ghosts);
@@ -1391,7 +1389,10 @@ CellPoissonHypreSolver::solveSystem(
       const boost::shared_ptr<hier::Patch>& patch = *ip;
       boost::shared_ptr<pdat::CellData<double> > u_data_(
          patch->getPatchData(u),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(u_data_);
+
       pdat::CellData<double>& u_data = *u_data_;
       copyFromHypre(u_data,
          d_soln_depth,

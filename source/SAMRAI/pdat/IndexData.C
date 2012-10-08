@@ -240,7 +240,7 @@ IndexData<TYPE, BOX_GEOMETRY>::copy(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const IndexData<TYPE, BOX_GEOMETRY>* t_src =
-      dynamic_cast<const IndexData<TYPE, BOX_GEOMETRY> *>(&src);
+      CPP_CAST<const IndexData<TYPE, BOX_GEOMETRY> *>(&src);
 
    TBOX_ASSERT(t_src != 0);
 
@@ -285,9 +285,9 @@ IndexData<TYPE, BOX_GEOMETRY>::copy(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const IndexData<TYPE, BOX_GEOMETRY>* t_src =
-      dynamic_cast<const IndexData<TYPE, BOX_GEOMETRY> *>(&src);
+      CPP_CAST<const IndexData<TYPE, BOX_GEOMETRY> *>(&src);
    const typename BOX_GEOMETRY::Overlap * t_overlap =
-      dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap);
+      CPP_CAST<const typename BOX_GEOMETRY::Overlap *>(&overlap);
 
    TBOX_ASSERT(t_src != 0);
    TBOX_ASSERT(t_overlap != 0);
@@ -351,7 +351,7 @@ IndexData<TYPE, BOX_GEOMETRY>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
    const typename BOX_GEOMETRY::Overlap * t_overlap =
-      dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap);
+      CPP_CAST<const typename BOX_GEOMETRY::Overlap *>(&overlap);
    TBOX_ASSERT(t_overlap != 0);
 
    size_t bytes = 0;
@@ -390,7 +390,7 @@ IndexData<TYPE, BOX_GEOMETRY>::packStream(
    const hier::BoxOverlap& overlap) const
 {
    const typename BOX_GEOMETRY::Overlap * t_overlap =
-      dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap);
+      CPP_CAST<const typename BOX_GEOMETRY::Overlap *>(&overlap);
    TBOX_ASSERT(t_overlap != 0);
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
@@ -438,7 +438,7 @@ IndexData<TYPE, BOX_GEOMETRY>::unpackStream(
    const hier::BoxOverlap& overlap)
 {
    const typename BOX_GEOMETRY::Overlap * t_overlap =
-      dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap);
+      CPP_CAST<const typename BOX_GEOMETRY::Overlap *>(&overlap);
    TBOX_ASSERT(t_overlap != 0);
 
    int num_items;

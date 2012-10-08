@@ -166,119 +166,108 @@ MblkPatchBoundaryNodeSum::registerSum(
 
    boost::shared_ptr<pdat::NodeDataFactory<double> > node_factory(
       var_db->getPatchDescriptor()->getPatchDataFactory(node_data_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-   if (!node_factory) {
+   TBOX_ASSERT(node_factory);
 
-      TBOX_ERROR("MblkPatchBoundaryNodeSum register error..."
-         << "\nobject named " << d_object_name
-         << "\n node_data_id = " << node_data_id
-         << " does not correspond to node data of type double." << std::endl);
+   static std::string tmp_onode_src_variable_name(
+      "MblkPatchBoundaryNodeSum__internal-onode-src");
+   static std::string tmp_onode_dst_variable_name(
+      "MblkPatchBoundaryNodeSum__internal-onode-dst");
 
-   } else {
+   const int reg_sum_id = d_num_reg_sum;
 
-      static std::string tmp_onode_src_variable_name(
-         "MblkPatchBoundaryNodeSum__internal-onode-src");
-      static std::string tmp_onode_dst_variable_name(
-         "MblkPatchBoundaryNodeSum__internal-onode-dst");
+   d_num_reg_sum++;
 
-      const int reg_sum_id = d_num_reg_sum;
+   d_user_node_data_id.resizeArray(d_num_reg_sum);
+   d_user_node_data_id[reg_sum_id] = ID_UNDEFINED;
+   d_user_node_depth.resizeArray(d_num_reg_sum);
+   d_user_node_depth[reg_sum_id] = ID_UNDEFINED;
+   d_tmp_onode_src_variable.resizeArray(d_num_reg_sum);
+   d_tmp_onode_dst_variable.resizeArray(d_num_reg_sum);
+   d_onode_src_id.resizeArray(d_num_reg_sum);
+   d_onode_src_id[reg_sum_id] = ID_UNDEFINED;
+   d_onode_dst_id.resizeArray(d_num_reg_sum);
+   d_onode_dst_id[reg_sum_id] = ID_UNDEFINED;
 
-      d_num_reg_sum++;
+   const int data_depth = node_factory->getDefaultDepth();
+   const int array_by_depth_size = data_depth + 1;
 
-      d_user_node_data_id.resizeArray(d_num_reg_sum);
-      d_user_node_data_id[reg_sum_id] = ID_UNDEFINED;
-      d_user_node_depth.resizeArray(d_num_reg_sum);
-      d_user_node_depth[reg_sum_id] = ID_UNDEFINED;
-      d_tmp_onode_src_variable.resizeArray(d_num_reg_sum);
-      d_tmp_onode_dst_variable.resizeArray(d_num_reg_sum);
-      d_onode_src_id.resizeArray(d_num_reg_sum);
-      d_onode_src_id[reg_sum_id] = ID_UNDEFINED;
-      d_onode_dst_id.resizeArray(d_num_reg_sum);
-      d_onode_dst_id[reg_sum_id] = ID_UNDEFINED;
+   if (d_num_registered_data_by_depth.size() < array_by_depth_size) {
+      const int old_size = d_num_registered_data_by_depth.size();
+      const int new_size = array_by_depth_size;
 
-      const int data_depth = node_factory->getDefaultDepth();
-      const int array_by_depth_size = data_depth + 1;
-
-      if (d_num_registered_data_by_depth.size() < array_by_depth_size) {
-         const int old_size = d_num_registered_data_by_depth.size();
-         const int new_size = array_by_depth_size;
-
-         d_num_registered_data_by_depth.resizeArray(new_size);
-         for (int i = old_size; i < new_size; i++) {
-            d_num_registered_data_by_depth[i] = 0;
-         }
+      d_num_registered_data_by_depth.resizeArray(new_size);
+      for (int i = old_size; i < new_size; i++) {
+         d_num_registered_data_by_depth[i] = 0;
       }
-
-      const int data_depth_id = d_num_registered_data_by_depth[data_depth];
-      const int num_data_at_depth = data_depth_id + 1;
-
-      if (s_onode_src_id_array.size() < array_by_depth_size) {
-         s_onode_src_id_array.resizeArray(array_by_depth_size);
-         s_onode_dst_id_array.resizeArray(array_by_depth_size);
-      }
-
-      if (s_onode_src_id_array[data_depth].size() < num_data_at_depth) {
-         const int old_size = s_onode_src_id_array[data_depth].size();
-         const int new_size = num_data_at_depth;
-
-         s_onode_src_id_array[data_depth].resizeArray(new_size);
-         s_onode_dst_id_array[data_depth].resizeArray(new_size);
-         for (int i = old_size; i < new_size; i++) {
-            s_onode_src_id_array[data_depth][i] = ID_UNDEFINED;
-            s_onode_dst_id_array[data_depth][i] = ID_UNDEFINED;
-         }
-      }
-
-      std::string var_suffix = tbox::Utilities::intToString(data_depth_id, 4)
-         + "__depth=" + tbox::Utilities::intToString(data_depth);
-
-      std::string tonode_src_var_name = tmp_onode_src_variable_name
-         + var_suffix;
-
-      d_tmp_onode_src_variable[reg_sum_id] = var_db->getVariable(
-            tonode_src_var_name);
-      if (!d_tmp_onode_src_variable[reg_sum_id]) {
-         d_tmp_onode_src_variable[reg_sum_id] =
-            new pdat::OuternodeVariable<double>(tonode_src_var_name, data_depth);
-      }
-
-      std::string tonode_dst_var_name = tmp_onode_dst_variable_name
-         + var_suffix;
-      d_tmp_onode_dst_variable[reg_sum_id] = var_db->getVariable(
-            tonode_dst_var_name);
-      if (!d_tmp_onode_dst_variable[reg_sum_id]) {
-         d_tmp_onode_dst_variable[reg_sum_id] =
-            new pdat::OuternodeVariable<double>(tonode_dst_var_name, data_depth);
-      }
-
-      if (s_onode_src_id_array[data_depth][data_depth_id] < 0) {
-         s_onode_src_id_array[data_depth][data_depth_id] =
-            var_db->registerInternalSAMRAIVariable(
-               d_tmp_onode_src_variable[reg_sum_id],
-               hier::IntVector(0));
-      }
-      if (s_onode_dst_id_array[data_depth][data_depth_id] < 0) {
-         s_onode_dst_id_array[data_depth][data_depth_id] =
-            var_db->registerInternalSAMRAIVariable(
-               d_tmp_onode_dst_variable[reg_sum_id],
-               hier::IntVector(0));
-      }
-
-      d_user_node_data_id[reg_sum_id] = node_data_id;
-      d_user_node_depth[reg_sum_id] = data_depth;
-
-      d_num_registered_data_by_depth[data_depth] = num_data_at_depth;
-
-      d_onode_src_id[reg_sum_id] =
-         s_onode_src_id_array[data_depth][data_depth_id];
-      d_onode_dst_id[reg_sum_id] =
-         s_onode_dst_id_array[data_depth][data_depth_id];
-
-      d_onode_src_data_set.setFlag(d_onode_src_id[reg_sum_id]);
-      d_onode_dst_data_set.setFlag(d_onode_dst_id[reg_sum_id]);
-
    }
+
+   const int data_depth_id = d_num_registered_data_by_depth[data_depth];
+   const int num_data_at_depth = data_depth_id + 1;
+
+   if (s_onode_src_id_array.size() < array_by_depth_size) {
+      s_onode_src_id_array.resizeArray(array_by_depth_size);
+      s_onode_dst_id_array.resizeArray(array_by_depth_size);
+   }
+
+   if (s_onode_src_id_array[data_depth].size() < num_data_at_depth) {
+      const int old_size = s_onode_src_id_array[data_depth].size();
+      const int new_size = num_data_at_depth;
+
+      s_onode_src_id_array[data_depth].resizeArray(new_size);
+      s_onode_dst_id_array[data_depth].resizeArray(new_size);
+      for (int i = old_size; i < new_size; i++) {
+         s_onode_src_id_array[data_depth][i] = ID_UNDEFINED;
+         s_onode_dst_id_array[data_depth][i] = ID_UNDEFINED;
+      }
+   }
+
+   std::string var_suffix = tbox::Utilities::intToString(data_depth_id, 4)
+      + "__depth=" + tbox::Utilities::intToString(data_depth);
+
+   std::string tonode_src_var_name = tmp_onode_src_variable_name + var_suffix;
+
+   d_tmp_onode_src_variable[reg_sum_id] = var_db->getVariable(
+         tonode_src_var_name);
+   if (!d_tmp_onode_src_variable[reg_sum_id]) {
+      d_tmp_onode_src_variable[reg_sum_id] =
+         new pdat::OuternodeVariable<double>(tonode_src_var_name, data_depth);
+   }
+
+   std::string tonode_dst_var_name = tmp_onode_dst_variable_name + var_suffix;
+   d_tmp_onode_dst_variable[reg_sum_id] = var_db->getVariable(
+      tonode_dst_var_name);
+   if (!d_tmp_onode_dst_variable[reg_sum_id]) {
+      d_tmp_onode_dst_variable[reg_sum_id] =
+         new pdat::OuternodeVariable<double>(tonode_dst_var_name, data_depth);
+   }
+
+   if (s_onode_src_id_array[data_depth][data_depth_id] < 0) {
+      s_onode_src_id_array[data_depth][data_depth_id] =
+         var_db->registerInternalSAMRAIVariable(
+            d_tmp_onode_src_variable[reg_sum_id],
+            hier::IntVector(0));
+   }
+   if (s_onode_dst_id_array[data_depth][data_depth_id] < 0) {
+      s_onode_dst_id_array[data_depth][data_depth_id] =
+         var_db->registerInternalSAMRAIVariable(
+            d_tmp_onode_dst_variable[reg_sum_id],
+            hier::IntVector(0));
+   }
+
+   d_user_node_data_id[reg_sum_id] = node_data_id;
+   d_user_node_depth[reg_sum_id] = data_depth;
+
+   d_num_registered_data_by_depth[data_depth] = num_data_at_depth;
+
+   d_onode_src_id[reg_sum_id] =
+      s_onode_src_id_array[data_depth][data_depth_id];
+   d_onode_dst_id[reg_sum_id] =
+      s_onode_dst_id_array[data_depth][data_depth_id];
+
+   d_onode_src_data_set.setFlag(d_onode_src_id[reg_sum_id]);
+   d_onode_dst_data_set.setFlag(d_onode_dst_id[reg_sum_id]);
 
 }
 

@@ -255,15 +255,19 @@ int main(
       boost::shared_ptr<math::HierarchyCellDataOpsReal<double> > cell_ops(
          math::HierarchyDataOpsManager::getManager()->getOperationsDouble(cwgt,
             hierarchy),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<math::HierarchyFaceDataOpsReal<double> > face_ops(
          math::HierarchyDataOpsManager::getManager()->getOperationsDouble(fwgt,
             hierarchy),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<math::HierarchyNodeDataOpsReal<double> > node_ops(
          math::HierarchyDataOpsManager::getManager()->getOperationsDouble(nwgt,
             hierarchy),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(cell_ops);
+      TBOX_ASSERT(face_ops);
+      TBOX_ASSERT(node_ops);
 
       cell_ops->resetLevels(0, 1);
       face_ops->resetLevels(0, 1);
@@ -287,13 +291,15 @@ int main(
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            pgeom = boost::dynamic_pointer_cast<geom::CartesianPatchGeometry,
-                                                hier::PatchGeometry>(patch->getPatchGeometry());
+            pgeom = BOOST_CAST<geom::CartesianPatchGeometry,
+                               hier::PatchGeometry>(patch->getPatchGeometry());
+            TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             const double cell_vol = dx[0] * dx[1] * dx[2];
             boost::shared_ptr<pdat::CellData<double> > cvdata(
                patch->getPatchData(cwgt_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(cvdata);
             cvdata->fillAll(cell_vol);
             if (ln == 0) cvdata->fillAll(0.0, (coarse_fine * patch->getBox()));
          }
@@ -307,13 +313,15 @@ int main(
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            pgeom = boost::dynamic_pointer_cast<geom::CartesianPatchGeometry,
-                                                hier::PatchGeometry>(patch->getPatchGeometry());
+            pgeom = BOOST_CAST<geom::CartesianPatchGeometry,
+                               hier::PatchGeometry>(patch->getPatchGeometry());
+            TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             const double face_vol = dx[0] * dx[1] * dx[2];
             boost::shared_ptr<pdat::FaceData<double> > data(
                patch->getPatchData(fwgt_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(data);
             data->fillAll(face_vol);
             pdat::FaceIndex fi(dim3d);
             int plo0 = patch->getBox().lower(0);
@@ -436,13 +444,15 @@ int main(
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            pgeom = boost::dynamic_pointer_cast<geom::CartesianPatchGeometry,
-                                                hier::PatchGeometry>(patch->getPatchGeometry());
+            pgeom = BOOST_CAST<geom::CartesianPatchGeometry,
+                               hier::PatchGeometry>(patch->getPatchGeometry());
+            TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             const double node_vol = dx[0] * dx[1] * dx[2];
             boost::shared_ptr<pdat::NodeData<double> > data(
                patch->getPatchData(nwgt_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(data);
             data->fillAll(node_vol);
             pdat::NodeIndex ni(dim3d);
             hier::Index plo = patch->getBox().lower();
@@ -1039,8 +1049,9 @@ int main(
            ip != level_zero->end(); ++ip) {
          patch = *ip;
 
-         cdata = boost::dynamic_pointer_cast<pdat::CellData<double>,
-                                             hier::PatchData>(patch->getPatchData(cvindx[1]));
+         cdata = BOOST_CAST<pdat::CellData<double>,
+                            hier::PatchData>(patch->getPatchData(cvindx[1]));
+         TBOX_ASSERT(cdata);
          hier::Index cindex0(2, 2, 2);
          hier::Index cindex1(5, 3, 2);
          hier::Index cindex2(4, 2, 2);
@@ -1058,8 +1069,9 @@ int main(
             (*cdata)(pdat::CellIndex(cindex3), 1) = -10.0;
          }
 
-         fdata = boost::dynamic_pointer_cast<pdat::FaceData<double>,
-                                             hier::PatchData>(patch->getPatchData(fvindx[1]));
+         fdata = BOOST_CAST<pdat::FaceData<double>,
+                            hier::PatchData>(patch->getPatchData(fvindx[1]));
+         TBOX_ASSERT(fdata);
          hier::Index findex0(2, 2, 2);
          hier::Index findex1(5, 3, 2);
          if (patch->getBox().contains(findex0)) {
@@ -1076,19 +1088,23 @@ int main(
          hier::Index nindex0(2, 2, 2);
          hier::Index nindex1(5, 3, 2);
          if (patch->getBox().contains(nindex0)) {
-            ndata = boost::dynamic_pointer_cast<pdat::NodeData<double>,
-                                                hier::PatchData>(patch->getPatchData(nvindx[2]));
+            ndata = BOOST_CAST<pdat::NodeData<double>,
+                               hier::PatchData>(patch->getPatchData(nvindx[2]));
+            TBOX_ASSERT(ndata);
             (*ndata)(pdat::NodeIndex(nindex0, pdat::NodeIndex::LLL)) = 300.0;
-            ndata = boost::dynamic_pointer_cast<pdat::NodeData<double>,
-                                                hier::PatchData>(patch->getPatchData(nvindx[3]));
+            ndata = BOOST_CAST<pdat::NodeData<double>,
+                               hier::PatchData>(patch->getPatchData(nvindx[3]));
+            TBOX_ASSERT(ndata);
             (*ndata)(pdat::NodeIndex(nindex0, pdat::NodeIndex::LUL)) = 30.0;
          }
          if (patch->getBox().contains(nindex1)) {
-            ndata = boost::dynamic_pointer_cast<pdat::NodeData<double>,
-                                                hier::PatchData>(patch->getPatchData(nvindx[2]));
+            ndata = BOOST_CAST<pdat::NodeData<double>,
+                               hier::PatchData>(patch->getPatchData(nvindx[2]));
+            TBOX_ASSERT(ndata);
             (*ndata)(pdat::NodeIndex(nindex1, pdat::NodeIndex::UUL)) = -300.0;
-            ndata = boost::dynamic_pointer_cast<pdat::NodeData<double>,
-                                                hier::PatchData>(patch->getPatchData(nvindx[3]));
+            ndata = BOOST_CAST<pdat::NodeData<double>,
+                               hier::PatchData>(patch->getPatchData(nvindx[3]));
+            TBOX_ASSERT(ndata);
             (*ndata)(pdat::NodeIndex(nindex1, pdat::NodeIndex::ULL)) = -3300.0;
          }
       }

@@ -37,11 +37,9 @@ CellDataTest::CellDataTest(
    PatchDataTestStrategy(dim),
    d_dim(dim)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
-#endif
 
    d_object_name = object_name;
 
@@ -158,13 +156,12 @@ void CellDataTest::setLinearData(
    const hier::Box& box,
    const hier::Patch& patch) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const pdat::CellIndex loweri(patch.getBox().lower());
    const pdat::CellIndex upperi(patch.getBox().upper());
    const double* pdx = pgeom->getDx();
@@ -207,12 +204,10 @@ void CellDataTest::setConservativeData(
    const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
-#endif
 
    boost::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
@@ -260,7 +255,8 @@ void CellDataTest::setConservativeData(
 
       boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
          patch.getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
 
       int coarse_ncells = ncells;
@@ -311,9 +307,7 @@ void CellDataTest::setPeriodicData(
    const hier::Box& box,
    const hier::Patch& patch) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
    NULL_USE(patch);
 
    const double* xlo = d_cart_grid_geometry->getXLower();
@@ -325,7 +319,8 @@ void CellDataTest::setPeriodicData(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
    const int depth = data->getDepth();
@@ -367,7 +362,8 @@ void CellDataTest::initializeDataOnPatch(
 
          boost::shared_ptr<pdat::CellData<double> > cell_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(cell_data);
 
          hier::Box dbox = cell_data->getBox();
 
@@ -385,7 +381,8 @@ void CellDataTest::initializeDataOnPatch(
 
          boost::shared_ptr<pdat::CellData<double> > cell_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(cell_data);
 
          hier::Box dbox = cell_data->getGhostBox();
 
@@ -451,7 +448,8 @@ void CellDataTest::setPhysicalBoundaryConditions(
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
 
    const tbox::Array<hier::BoundaryBox> node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -473,7 +471,8 @@ void CellDataTest::setPhysicalBoundaryConditions(
 
       boost::shared_ptr<pdat::CellData<double> > cell_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(cell_data);
 
       hier::Box patch_interior = cell_data->getBox();
       checkPatchInteriorData(cell_data, patch_interior, patch);
@@ -591,7 +590,8 @@ bool CellDataTest::verifyResults(
 
          boost::shared_ptr<pdat::CellData<double> > cell_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(cell_data);
          int depth = cell_data->getDepth();
          hier::Box dbox = cell_data->getGhostBox();
 

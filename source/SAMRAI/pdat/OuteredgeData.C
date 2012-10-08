@@ -298,7 +298,7 @@ OuteredgeData<TYPE>::copy(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
-   const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
+   const EdgeOverlap* t_overlap = CPP_CAST<const EdgeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != 0);
 
@@ -328,7 +328,7 @@ OuteredgeData<TYPE>::copy2(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, dst);
 
-   const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
+   const EdgeOverlap* t_overlap = CPP_CAST<const EdgeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != 0);
 
@@ -456,12 +456,14 @@ OuteredgeData<TYPE>::sum(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
-   const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
+   const EdgeOverlap* t_overlap = CPP_CAST<const EdgeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != 0);
 
    const OuteredgeData<TYPE>* t_oedge_src =
-      dynamic_cast<const OuteredgeData<TYPE> *>(&src);
+      CPP_CAST<const OuteredgeData<TYPE> *>(&src);
+
+   TBOX_ASSERT(t_oedge_src != 0);
 
    // NOTE:  We assume this operation is only needed to
    //        copy and add data to another outeredge data
@@ -469,67 +471,59 @@ OuteredgeData<TYPE>::sum(
    //        data or other flavors of the copy operation, we
    //        should refactor the routine similar to the way
    //        the regular copy operations are implemented.
-   if (t_oedge_src == 0) {
-      TBOX_ERROR("OuteredgeData<getDim()>::sum error!\n"
-         << "Can copy and add only from OuteredgeData<TYPE> "
-         << "of the same getDim() and TYPE.");
-   } else {
+   const hier::IntVector& src_offset = t_overlap->getSourceOffset();
 
-      const hier::IntVector& src_offset = t_overlap->getSourceOffset();
+   for (int axis = 0; axis < getDim().getValue(); ++axis) {
 
-      for (int axis = 0; axis < getDim().getValue(); ++axis) {
+      const hier::BoxContainer& box_list =
+         t_overlap->getDestinationBoxContainer(axis);
 
-         const hier::BoxContainer& box_list =
-            t_overlap->getDestinationBoxContainer(axis);
+      for (int src_face_normal = 0;
+           src_face_normal < getDim().getValue();
+           ++src_face_normal) {
 
-         for (int src_face_normal = 0;
-              src_face_normal < getDim().getValue();
-              ++src_face_normal) {
+         if (src_face_normal != axis) {
 
-            if (src_face_normal != axis) {
+            for (int src_side = 0; src_side < 2; ++src_side) {
 
-               for (int src_side = 0; src_side < 2; ++src_side) {
+               if (t_oedge_src->d_data[axis][src_face_normal][src_side]->
+                   isInitialized()) {
 
-                  if (t_oedge_src->d_data[axis][src_face_normal][src_side]->
-                      isInitialized()) {
+                  const ArrayData<TYPE>& src_array =
+                     *(t_oedge_src->d_data[axis][src_face_normal][src_side]);
 
-                     const ArrayData<TYPE>& src_array =
-                        *(t_oedge_src->d_data[axis][src_face_normal][src_side]);
+                  for (int dst_face_normal = 0;
+                       dst_face_normal < getDim().getValue(); ++dst_face_normal) {
 
-                     for (int dst_face_normal = 0;
-                          dst_face_normal < getDim().getValue(); ++dst_face_normal) {
+                     if (dst_face_normal != axis) {
 
-                        if (dst_face_normal != axis) {
+                        for (int dst_side = 0; dst_side < 2; ++dst_side) {
 
-                           for (int dst_side = 0; dst_side < 2; ++dst_side) {
+                           if (d_data[axis][dst_face_normal][dst_side]->
+                               isInitialized()) {
 
-                              if (d_data[axis][dst_face_normal][dst_side]->
-                                  isInitialized()) {
+                              d_data[axis][dst_face_normal][dst_side]->
+                              sum(src_array,
+                                 box_list,
+                                 src_offset);
 
-                                 d_data[axis][dst_face_normal][dst_side]->
-                                 sum(src_array,
-                                    box_list,
-                                    src_offset);
+                           }  // if dst data array is initialized
 
-                              }  // if dst data array is initialized
+                        }  // iterate over dst lower/upper sides
 
-                           }  // iterate over dst lower/upper sides
+                     }  // dst data is undefined when axis == face_normal
 
-                        }  // dst data is undefined when axis == face_normal
+                  }  // iterate over dst face normal directions
 
-                     }  // iterate over dst face normal directions
+               }  // if src data array is initialized
 
-                  }  // if src data array is initialized
+            }  // iterate over src lower/upper sides
 
-               }  // iterate over src lower/upper sides
+         }  // src data is undefined when axis == face_normal
 
-            }  // src data is undefined when axis == face_normal
+      }  // iterate over src face normal directions
 
-         }  // iterate over src face normal directions
-
-      }  // iterate over axis directions
-
-   } // else t_oedge_src != 0
+   }  // iterate over axis directions
 
 }
 
@@ -554,7 +548,7 @@ int
 OuteredgeData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
-   const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
+   const EdgeOverlap* t_overlap = CPP_CAST<const EdgeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != 0);
 
@@ -606,7 +600,7 @@ OuteredgeData<TYPE>::packStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap) const
 {
-   const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
+   const EdgeOverlap* t_overlap = CPP_CAST<const EdgeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != 0);
 
@@ -660,7 +654,7 @@ OuteredgeData<TYPE>::unpackStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
-   const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
+   const EdgeOverlap* t_overlap = CPP_CAST<const EdgeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != 0);
 
@@ -718,7 +712,7 @@ OuteredgeData<TYPE>::unpackStreamAndSum(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
-   const EdgeOverlap* t_overlap = dynamic_cast<const EdgeOverlap *>(&overlap);
+   const EdgeOverlap* t_overlap = CPP_CAST<const EdgeOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != 0);
 

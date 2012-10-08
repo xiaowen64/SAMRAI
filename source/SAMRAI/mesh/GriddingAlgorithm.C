@@ -1657,11 +1657,11 @@ GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
 #ifdef DEBUG_CHECK_ASSERTIONS
       oca.assertOverlapCorrectness(tag_to_finer, false, true, true);
       oca.assertOverlapCorrectness(finer_to_tag, false, true, true);
+#endif
       TBOX_ASSERT(
          tag_to_finer.getConnectorWidth()
          * d_hierarchy->getRatioToCoarserLevel(tag_ln + 1)
          * d_hierarchy->getRatioToCoarserLevel(new_ln + 1) >= nesting_buffer);
-#endif
 
       // Add periodic relationships in tag_to_finer.
       hier::BoxLevel dummy_finer_box_level = finer_to_old.getBase();
@@ -2379,7 +2379,8 @@ GriddingAlgorithm::checkNonrefinedTags(
       const hier::BoxId& box_id = *ei;
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          level.getPatch(box_id)->getPatchData(d_tag_indx),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(tag_data);
       for (hier::Connector::ConstNeighborIterator na = tag_to_violator.begin(ei);
            na != tag_to_violator.end(ei); ++na) {
          const hier::Box& vio_box = *na;
@@ -2726,7 +2727,7 @@ GriddingAlgorithm::fillTags(
       const boost::shared_ptr<hier::Patch>& patch = *ip;
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(tag_index),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       TBOX_ASSERT(tag_data);
 
       tag_data->fill(tag_value);
@@ -2782,7 +2783,7 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
 
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(tag_index),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
       TBOX_ASSERT(tag_data);
 
@@ -2865,10 +2866,13 @@ GriddingAlgorithm::bufferTagsOnLevel(
 
       boost::shared_ptr<pdat::CellData<int> > buf_tag_data(
          patch->getPatchData(d_buf_tag_indx),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(d_tag_indx),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(buf_tag_data);
+      TBOX_ASSERT(tag_data);
 
       buf_tag_data->fillAll(not_tag);
 
@@ -2901,10 +2905,13 @@ GriddingAlgorithm::bufferTagsOnLevel(
 
       boost::shared_ptr<pdat::CellData<int> > buf_tag_data(
          patch->getPatchData(d_buf_tag_indx),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(d_tag_indx),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(buf_tag_data);
+      TBOX_ASSERT(tag_data);
 
       const hier::Box& tag_box(tag_data->getBox());
       const hier::BlockId& tag_box_block_id = tag_box.getBlockId();

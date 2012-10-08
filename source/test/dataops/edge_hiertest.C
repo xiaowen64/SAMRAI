@@ -249,7 +249,8 @@ int main(
             patch = *ip;
             boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
                patch->getPatchGeometry(),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             double edge_vol = dx[0];
             for (int i = 1; i < dim.getValue(); i++) {
@@ -257,7 +258,8 @@ int main(
             }
             boost::shared_ptr<pdat::EdgeData<double> > data(
                patch->getPatchData(swgt_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(data);
             data->fillAll(edge_vol);
             pdat::EdgeIndex fi(dim);
 
@@ -1349,8 +1351,9 @@ int main(
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
          patch = *ip;
-         cdata = boost::dynamic_pointer_cast<pdat::EdgeData<double>,
-                                             hier::PatchData>(patch->getPatchData(svindx[2]));
+         cdata = BOOST_CAST<pdat::EdgeData<double>,
+                            hier::PatchData>(patch->getPatchData(svindx[2]));
+         TBOX_ASSERT(cdata);
          hier::Index index0(dim, 2);
          hier::Index index1(dim, 3);
          index1(0) = 5;
@@ -1381,8 +1384,9 @@ int main(
       for (hier::PatchLevel::iterator ipp(level_zero->begin());
            ipp != level_zero->end(); ++ipp) {
          patch = *ipp;
-         cdata = boost::dynamic_pointer_cast<pdat::EdgeData<double>,
-                                             hier::PatchData>(patch->getPatchData(svindx[2]));
+         cdata = BOOST_CAST<pdat::EdgeData<double>,
+                            hier::PatchData>(patch->getPatchData(svindx[2]));
+         TBOX_ASSERT(cdata);
          hier::Index idx0(dim, 2);
          hier::Index idx1(dim, 3);
          idx1(0) = 5;
@@ -1666,8 +1670,10 @@ doubleDataSameAsValue(
            ip != level->end(); ++ip) {
          patch = *ip;
          boost::shared_ptr<pdat::EdgeData<double> > cvdata(
-               patch->getPatchData(desc_id),
-               boost::detail::dynamic_cast_tag());
+            patch->getPatchData(desc_id),
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(cvdata);
 
          pdat::EdgeIterator cend(cvdata->getBox(), 1, false);
          for (pdat::EdgeIterator c(cvdata->getBox(), 1, true);

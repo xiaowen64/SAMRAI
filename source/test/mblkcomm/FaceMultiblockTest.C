@@ -32,11 +32,10 @@ FaceMultiblockTest::FaceMultiblockTest(
 {
    NULL_USE(do_refine);
    NULL_USE(do_coarsen);
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
-#endif
 
    d_object_name = object_name;
 
@@ -72,9 +71,7 @@ FaceMultiblockTest::~FaceMultiblockTest()
 void FaceMultiblockTest::readTestInput(
    boost::shared_ptr<tbox::Database> db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    /*
     * Base class reads variable parameters and boxes to refine.
@@ -128,7 +125,8 @@ void FaceMultiblockTest::initializeDataOnPatch(
 
          boost::shared_ptr<pdat::FaceData<double> > face_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(face_data);
 
          hier::Box dbox = face_data->getGhostBox();
 
@@ -184,7 +182,8 @@ void FaceMultiblockTest::setPhysicalBoundaryConditions(
 
       boost::shared_ptr<pdat::FaceData<double> > face_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(face_data);
 
       /*
        * Set node boundary data.
@@ -331,7 +330,8 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
 
       boost::shared_ptr<pdat::FaceData<double> > face_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(face_data);
 
       hier::Box sing_fill_box(face_data->getGhostBox() * fill_box);
 
@@ -421,7 +421,8 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
 
                   boost::shared_ptr<pdat::FaceData<double> > sing_data(
                      encon_patch->getPatchData(d_variables[i], getDataContext()),
-                     boost::detail::dynamic_cast_tag());
+                     BOOST_CAST_TAG);
+                  TBOX_ASSERT(sing_data);
 
                   for (int axis = 0; axis < d_dim.getValue(); axis++) {
 
@@ -580,7 +581,8 @@ bool FaceMultiblockTest::verifyResults(
 
       boost::shared_ptr<pdat::FaceData<double> > face_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(face_data);
       int depth = face_data->getDepth();
 
       hier::Box interior_box(pbox);

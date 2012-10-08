@@ -76,10 +76,8 @@ FirstLayerNodeVariableFillPattern::calculateOverlap(
 
    hier::BoxContainer dst_boxes;
 
-   const NodeGeometry* t_dst =
-      dynamic_cast<const NodeGeometry *>(&dst_geometry);
-   const NodeGeometry* t_src =
-      dynamic_cast<const NodeGeometry *>(&src_geometry);
+   const NodeGeometry* t_dst = CPP_CAST<const NodeGeometry *>(&dst_geometry);
+   const NodeGeometry* t_src = CPP_CAST<const NodeGeometry *>(&src_geometry);
 
    TBOX_ASSERT(t_dst);
    TBOX_ASSERT(t_src);

@@ -214,10 +214,12 @@ int main(
             // access sample data from patch
             boost::shared_ptr<LSparseData> sample1(
                patch->getPatchData(data_id1),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
             boost::shared_ptr<LSparseData> sample2(
                patch->getPatchData(data_id2),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(sample1);
+            TBOX_ASSERT(sample2);
 
             // add items to the sparse data objects.
             pdat::CellIterator ic(patch->getBox(), true);
@@ -348,7 +350,8 @@ checkIterators(
 
          boost::shared_ptr<LSparseData> sample(
             patch->getPatchData(data_id1),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(sample);
 
          // Test #1a: check empty.  This should be false.
          if (sample->empty()) {
@@ -410,13 +413,16 @@ bool checkCopyOps(
          const boost::shared_ptr<hier::Patch>& patch = *ip;
          boost::shared_ptr<LSparseData> control(
             patch->getPatchData(data_id1),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<LSparseData> copiedTo(
             patch->getPatchData(data_id1),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<LSparseData> copiedFrom(
             patch->getPatchData(data_id2),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(control);
+         TBOX_ASSERT(copiedTo);
+         TBOX_ASSERT(copiedFrom);
 
          int edit = copiedTo->size() / 2;
          LSparseData::iterator ct_it(copiedTo.get());
@@ -486,7 +492,8 @@ bool checkRemoveOps(
 
          boost::shared_ptr<LSparseData> sample(
             patch->getPatchData(data_id1),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(sample);
 
          LSparseData::iterator it;
          int stop = sample->size() / 2;

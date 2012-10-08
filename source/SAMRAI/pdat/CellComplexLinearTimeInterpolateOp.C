@@ -93,11 +93,11 @@ CellComplexLinearTimeInterpolateOp::timeInterpolate(
    const tbox::Dimension& dim(where.getDim());
 
    const CellData<dcomplex>* old_dat =
-      dynamic_cast<const CellData<dcomplex> *>(&src_data_old);
+      CPP_CAST<const CellData<dcomplex> *>(&src_data_old);
    const CellData<dcomplex>* new_dat =
-      dynamic_cast<const CellData<dcomplex> *>(&src_data_new);
+      CPP_CAST<const CellData<dcomplex> *>(&src_data_new);
    CellData<dcomplex>* dst_dat =
-      dynamic_cast<CellData<dcomplex> *>(&dst_data);
+      CPP_CAST<CellData<dcomplex> *>(&dst_data);
 
    TBOX_ASSERT(old_dat != 0);
    TBOX_ASSERT(new_dat != 0);

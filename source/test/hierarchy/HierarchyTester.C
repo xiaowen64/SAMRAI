@@ -41,10 +41,8 @@ HierarchyTester::HierarchyTester(
    d_dim(dim),
    d_ratio(dim, 0)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(hier_test_db);
-#endif
 
    d_object_name = object_name;
 
@@ -108,9 +106,8 @@ HierarchyTester::~HierarchyTester()
 void HierarchyTester::setupInitialHierarchy(
    boost::shared_ptr<Database> main_input_db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(main_input_db);
-#endif
+
    boost::shared_ptr<CartesianGridGeometry> grid_geometry(
       new CartesianGridGeometry(
          d_dim,

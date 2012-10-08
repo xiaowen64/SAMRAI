@@ -254,7 +254,8 @@ int main(
             patch = *ip;
             boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
                patch->getPatchGeometry(),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             double node_vol = dx[0];
             for (int i = 1; i < dim.getValue(); i++) {
@@ -262,7 +263,8 @@ int main(
             }
             boost::shared_ptr<pdat::NodeData<double> > data(
                patch->getPatchData(nwgt_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(data);
             data->fillAll(node_vol);
             pdat::NodeIndex ni(dim);
 
@@ -978,8 +980,9 @@ int main(
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
          patch = *ip;
-         ndata = boost::dynamic_pointer_cast<pdat::NodeData<dcomplex>,
-                                             hier::PatchData>(patch->getPatchData(nvindx[2]));
+         ndata = BOOST_CAST<pdat::NodeData<dcomplex>,
+                            hier::PatchData>(patch->getPatchData(nvindx[2]));
+         TBOX_ASSERT(ndata);
          hier::Index index0(dim, 2);
          hier::Index index1(dim, 3);
          index1(0) = 5;
@@ -1010,8 +1013,9 @@ int main(
       for (hier::PatchLevel::iterator ipp(level_zero->begin());
            ipp != level_zero->end(); ++ipp) {
          patch = *ipp;
-         ndata = boost::dynamic_pointer_cast<pdat::NodeData<dcomplex>,
-                                             hier::PatchData>(patch->getPatchData(nvindx[2]));
+         ndata = BOOST_CAST<pdat::NodeData<dcomplex>,
+                            hier::PatchData>(patch->getPatchData(nvindx[2]));
+         TBOX_ASSERT(ndata);
          hier::Index idx0(dim, 2);
          hier::Index idx1(dim, 3);
          idx1(0) = 5;
@@ -1244,7 +1248,9 @@ complexDataSameAsValue(
          patch = *ip;
          boost::shared_ptr<pdat::NodeData<dcomplex> > nvdata(
             patch->getPatchData(desc_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(nvdata);
 
          pdat::NodeIterator cend(nvdata->getBox(), false);
          for (pdat::NodeIterator c(nvdata->getBox(), true);
@@ -1282,7 +1288,9 @@ doubleDataSameAsValue(
          patch = *ip;
          boost::shared_ptr<pdat::NodeData<double> > nvdata(
             patch->getPatchData(desc_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(nvdata);
 
          pdat::NodeIterator cend(nvdata->getBox(), false);
          for (pdat::NodeIterator c(nvdata->getBox(), true);

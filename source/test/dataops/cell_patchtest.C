@@ -539,7 +539,8 @@ int main(
 
       boost::shared_ptr<pdat::CellData<double> > weight(
          tpatch->getPatchData(cwgt_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(weight);
       weight->fillAll(cell_vol);
 
       // Simple tests of cell data operations
@@ -549,20 +550,17 @@ int main(
       // Get pointers to patch data objects
       boost::shared_ptr<pdat::CellData<double> > cddata0(
          tpatch->getPatchData(cdvindx[0]),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::CellData<double> > cddata1(
          tpatch->getPatchData(cdvindx[1]),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::CellData<double> > cddata2(
          tpatch->getPatchData(cdvindx[2]),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
-      boost::shared_ptr<pdat::CellData<int> > cidata0(
-         tpatch->getPatchData(civindx[0]),
-         boost::detail::dynamic_cast_tag());
-      boost::shared_ptr<pdat::CellData<int> > cidata1(
-         tpatch->getPatchData(civindx[1]),
-         boost::detail::dynamic_cast_tag());
+      TBOX_ASSERT(cddata0);
+      TBOX_ASSERT(cddata1);
+      TBOX_ASSERT(cddata2);
 
       // Test #4a: math::PatchCellDataOpsReal::setToScalar()
       // Expected: cddata0 = 0.0
@@ -625,7 +623,9 @@ int main(
       double val_not_inbox = 3.0;
       boost::shared_ptr<pdat::CellData<double> > cvdata(
          tpatch->getPatchData(cdvindx[0]),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(cvdata);
 
       pdat::CellIterator cend(cvdata->getBox(), false);
       for (pdat::CellIterator c(cvdata->getBox(), true);
@@ -685,8 +685,9 @@ int main(
       bool divide_inbox_test_passed = true;
       val_inbox = 0.8;
       val_not_inbox = 1.6;
-      cvdata = boost::dynamic_pointer_cast<pdat::CellData<double>,
-                                           hier::PatchData>(tpatch->getPatchData(cdvindx[0]));
+      cvdata = BOOST_CAST<pdat::CellData<double>,
+                          hier::PatchData>(tpatch->getPatchData(cdvindx[0]));
+      TBOX_ASSERT(cvdata);
 
       pdat::CellIterator ccend(cvdata->getBox(), false);
       for (pdat::CellIterator cc(cvdata->getBox(), true);
@@ -766,8 +767,9 @@ int main(
       bool restricted_linSum_test_passed = true;
       val_inbox = 50.0;
       val_not_inbox = 0.0;
-      cvdata = boost::dynamic_pointer_cast<pdat::CellData<double>,
-                                           hier::PatchData>(tpatch->getPatchData(cdvindx[0]));
+      cvdata = BOOST_CAST<pdat::CellData<double>,
+                          hier::PatchData>(tpatch->getPatchData(cdvindx[0]));
+      TBOX_ASSERT(cvdata);
 
       pdat::CellIterator cciend(cvdata->getBox(), false);
       for (pdat::CellIterator cci(cvdata->getBox(), true);
@@ -830,8 +832,9 @@ int main(
       double val_inbox3 = 21.0;
       val_not_inbox = 1.0;
 
-      cvdata = boost::dynamic_pointer_cast<pdat::CellData<double>,
-                                           hier::PatchData>(tpatch->getPatchData(cdvindx[1]));
+      cvdata = BOOST_CAST<pdat::CellData<double>,
+                          hier::PatchData>(tpatch->getPatchData(cdvindx[1]));
+      TBOX_ASSERT(cvdata);
       pdat::CellIterator ciend(cvdata->getBox(), false);
       for (pdat::CellIterator ci(cvdata->getBox(), true);
            ci != ciend && setToScalar_onBox_test_passed; ++ci) {
@@ -1254,7 +1257,9 @@ doubleDataSameAsValue(
 
    boost::shared_ptr<pdat::CellData<double> > cvdata(
       patch->getPatchData(desc_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(cvdata);
 
    pdat::CellIterator cend(cvdata->getBox(), false);
    for (pdat::CellIterator c(cvdata->getBox(), true);

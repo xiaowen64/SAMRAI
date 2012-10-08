@@ -546,8 +546,8 @@ AsyncCommPeer<TYPE>::checkRecv()
                   d_max_first_data_len);
             resizeBuffer(first_chunk_count + 2);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(req[0] == MPI_REQUEST_NULL);
+#ifdef DEBUG_CHECK_ASSERTIONS
             req[0] = MPI_REQUEST_NULL;
 #endif
             t_recv_timer->start();
@@ -613,11 +613,11 @@ AsyncCommPeer<TYPE>::checkRecv()
                  << " bytes from " << d_peer_rank << " in checkRecv"
                  << std::endl;
 #endif
+#endif
             TBOX_ASSERT(count <= d_max_first_data_len + 2);
             TBOX_ASSERT(mpi_status[0].MPI_TAG == d_tag0);
             TBOX_ASSERT(mpi_status[0].MPI_SOURCE == d_peer_rank);
             TBOX_ASSERT(req[0] == MPI_REQUEST_NULL);
-#endif
             // Get full count embedded in message.
             d_full_count = d_internal_buf[count - 1].i;
 

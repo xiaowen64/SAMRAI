@@ -158,11 +158,14 @@ void SphericalShellGenerator::setTags(
 
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          patch->getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(tag_data_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(patch_geom);
+      TBOX_ASSERT(tag_data);
 
       tagShells( *tag_data, patch_geom->getDx(), d_buffer_shrink_distance[tag_ln] );
 
@@ -316,7 +319,8 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
 
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          patch.getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(patch_geom);
       const double* dx = patch_geom->getDx();
 
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));

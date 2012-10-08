@@ -943,7 +943,9 @@ BalanceUtilities::computeNonUniformWorkload(
 
    const boost::shared_ptr<pdat::CellData<double> > work_data(
       patch->getPatchData(wrk_indx),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(work_data);
 
    double workload = s_norm_ops.L1Norm(work_data, box);
 
@@ -1406,8 +1408,8 @@ BalanceUtilities::computeDomainDependentProcessorLayout(
    const tbox::Dimension& dim(proc_dist.getDim());
 
    int i;
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(num_procs > 0);
+#ifdef DEBUG_CHECK_ASSERTIONS
    for (i = 0; i < dim.getValue(); i++) {
       TBOX_ASSERT(box.numberCells(i) > 0);
    }
@@ -1517,8 +1519,8 @@ BalanceUtilities::computeDomainIndependentProcessorLayout(
    int i;
    const tbox::Dimension& dim(proc_dist.getDim());
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(num_procs > 0);
+#ifdef DEBUG_CHECK_ASSERTIONS
    for (i = 0; i < dim.getValue(); i++) {
       TBOX_ASSERT(box.numberCells(i) > 0);
    }
@@ -1717,7 +1719,9 @@ BalanceUtilities::computeLoadBalanceEfficiency(
          const boost::shared_ptr<hier::Patch>& patch = *ip;
          boost::shared_ptr<pdat::CellData<double> > weight(
             patch->getPatchData(workload_data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(weight);
 
          work[mapping.getProcessorAssignment(ip->getLocalId().getValue())] +=
             s_norm_ops.L1Norm(weight, patch->getBox());

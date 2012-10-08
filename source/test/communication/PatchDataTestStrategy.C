@@ -63,9 +63,7 @@ PatchDataTestStrategy::~PatchDataTestStrategy()
 void PatchDataTestStrategy::readVariableInput(
    boost::shared_ptr<tbox::Database> db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    tbox::Array<string> var_keys = db->getAllKeys();
    int nkeys = var_keys.getSize();
@@ -131,9 +129,7 @@ void PatchDataTestStrategy::readVariableInput(
 void PatchDataTestStrategy::readRefinementInput(
    boost::shared_ptr<tbox::Database> db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    tbox::Array<string> box_keys = db->getAllKeys();
    int nkeys = box_keys.getSize();

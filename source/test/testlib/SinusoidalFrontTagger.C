@@ -39,9 +39,7 @@ SinusoidalFrontTagger::SinusoidalFrontTagger(
    d_time(0.5)
 {
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(variable_db != 0);
-#endif
 
    tbox::Array<double> init_disp;
    tbox::Array<double> velocity;
@@ -206,10 +204,10 @@ void SinusoidalFrontTagger::initializePatchData(
          }
          boost::shared_ptr<pdat::NodeData<double> > dist_data(
             patch.getPatchData(d_dist_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<int> > tag_data(
             patch.getPatchData(d_tag_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          TBOX_ASSERT(dist_data);
          TBOX_ASSERT(tag_data);
          computePatchData(patch, init_data_time,
@@ -256,24 +254,19 @@ void SinusoidalFrontTagger::applyGradientDetector(
 
       boost::shared_ptr<hier::PatchData> tag_data(
          patch.getPatchData(tag_index),
-         boost::detail::dynamic_cast_tag());
-      if (!tag_data) {
-         TBOX_ERROR("Data index " << tag_index
-                                  << " does not exist for patch.\n");
-      }
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(tag_data);
       boost::shared_ptr<pdat::CellData<int> > tag_cell_data_(
          tag_data,
-         boost::detail::dynamic_cast_tag());
-      if (!tag_cell_data_) {
-         TBOX_ERROR("Data index " << tag_index
-                                  << " is not cell int data.\n");
-      }
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(tag_cell_data_);
 
       if (d_allocate_data) {
          // Use internally stored data.
          boost::shared_ptr<hier::PatchData> saved_tag_data(
             patch.getPatchData(d_tag_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(saved_tag_data);
          tag_cell_data_->copy(*saved_tag_data);
       } else {
          // Compute tag data for patch.
@@ -400,7 +393,9 @@ void SinusoidalFrontTagger::computePatchData(
 
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(patch_geom);
 
    const double* xlo = patch_geom->getXLower();
 

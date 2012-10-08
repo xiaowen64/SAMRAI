@@ -376,7 +376,9 @@ int main(
 
                boost::shared_ptr<CellData<double> > y_data(
                   y_init->getComponentPatchData(0, *patch),
-                  boost::detail::dynamic_cast_tag());
+                  BOOST_CAST_TAG);
+               TBOX_ASSERT(y_data);
+               y_data->print(y_data->getBox());
             }
          }
       }
@@ -455,7 +457,8 @@ int main(
 
                   boost::shared_ptr<CellData<double> > y_data(
                      y_result->getComponentPatchData(0, *patch),
-                     boost::detail::dynamic_cast_tag());
+                     BOOST_CAST_TAG);
+                  TBOX_ASSERT(y_data);
                   y_data->print(y_data->getBox());
                }
             }

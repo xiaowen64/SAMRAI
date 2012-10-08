@@ -31,11 +31,10 @@ EdgeMultiblockTest::EdgeMultiblockTest(
 {
    NULL_USE(do_refine);
    NULL_USE(do_coarsen);
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
-#endif
 
    d_object_name = object_name;
 
@@ -71,9 +70,7 @@ EdgeMultiblockTest::~EdgeMultiblockTest()
 void EdgeMultiblockTest::readTestInput(
    boost::shared_ptr<tbox::Database> db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    /*
     * Base class reads variable parameters and boxes to refine.
@@ -127,7 +124,8 @@ void EdgeMultiblockTest::initializeDataOnPatch(
 
          boost::shared_ptr<pdat::EdgeData<double> > edge_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(edge_data);
 
          hier::Box dbox = edge_data->getGhostBox();
 
@@ -183,7 +181,8 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
 
       boost::shared_ptr<pdat::EdgeData<double> > edge_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(edge_data);
 
       /*
        * Set node boundary data.
@@ -329,7 +328,8 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
 
       boost::shared_ptr<pdat::EdgeData<double> > edge_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(edge_data);
 
       hier::Box sing_fill_box(edge_data->getGhostBox() * fill_box);
 
@@ -417,7 +417,8 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
 
                   boost::shared_ptr<pdat::EdgeData<double> > sing_data(
                      encon_patch->getPatchData(d_variables[i], getDataContext()),
-                     boost::detail::dynamic_cast_tag());
+                     BOOST_CAST_TAG);
+                  TBOX_ASSERT(sing_data);
 
                   for (int axis = 0; axis < d_dim.getValue(); axis++) {
 
@@ -577,7 +578,8 @@ bool EdgeMultiblockTest::verifyResults(
 
       boost::shared_ptr<pdat::EdgeData<double> > edge_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(edge_data);
       int depth = edge_data->getDepth();
 
       hier::Box interior_box(pbox);

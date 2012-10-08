@@ -671,7 +671,8 @@ void generatePrebalanceByUserShells(
       hier::VariableDatabase::getDatabase();
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
       hierarchy->getGridGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(grid_geometry);
 
    boost::shared_ptr<hier::PatchLevel> tag_level(
       new hier::PatchLevel(
@@ -699,7 +700,8 @@ void generatePrebalanceByUserShells(
       const boost::shared_ptr<hier::Patch>& patch = *pi;
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(tag_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(tag_data);
 
       tag_data->getArrayData().undefineData();
 

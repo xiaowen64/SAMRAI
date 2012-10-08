@@ -87,12 +87,8 @@ GhostCellRobinBcCoefs::setGhostDataId(
       }
       boost::shared_ptr<pdat::CellVariable<double> > cell_variable_ptr(
          variable_ptr,
-         boost::detail::dynamic_cast_tag());
-      if (!cell_variable_ptr) {
-         TBOX_ERROR(
-            d_object_name << ": hier::Index " << ghost_data_id
-                          << " does not correspond to a cell-double variable.");
-      }
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(cell_variable_ptr);
    }
 }
 
@@ -125,7 +121,10 @@ GhostCellRobinBcCoefs::setBcCoefs(
 
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(patch_geom);
+
    const int norm_dir = bdry_box.getLocationIndex() / 2;
    const double* dx = patch_geom->getDx();
    const double h = dx[norm_dir];
@@ -168,13 +167,10 @@ GhostCellRobinBcCoefs::setBcCoefs(
       }
       boost::shared_ptr<pdat::CellData<double> > cell_data(
          patch_data,
-         boost::detail::dynamic_cast_tag());
-      if (!cell_data) {
-         TBOX_ERROR(
-            d_object_name << ": hier::Patch data for index "
-                          << d_ghost_data_id
-                          << " is not cell double data.");
-      }
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(cell_data);
+
       const int location_index = bdry_box.getLocationIndex();
       const hier::IntVector& gw = cell_data->getGhostCellWidth();
       if (gw[norm_dir] < 1) {

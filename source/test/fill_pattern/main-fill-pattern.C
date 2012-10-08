@@ -395,7 +395,8 @@ bool SingleLevelTestCase(
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::CellData<int> > cdata(
             patch->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(cdata);
 
          int data_txt_id = patch->getBox().getLocalId().getValue();
          if (mpi.getRank() == 1) {
@@ -413,7 +414,8 @@ bool SingleLevelTestCase(
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::NodeData<int> > ndata(
             patch->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(ndata);
 
          int data_txt_id = patch->getBox().getLocalId().getValue();
          if (mpi.getRank() == 1) {
@@ -444,7 +446,8 @@ bool SingleLevelTestCase(
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::CellData<int> > cdata(
             patch->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(cdata);
 
          pdat::CellData<int> expected(cdata->getBox(),
                                       cdata->getDepth(),
@@ -474,7 +477,8 @@ bool SingleLevelTestCase(
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::NodeData<int> > ndata(
             patch->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(ndata);
 
          pdat::NodeData<int> expected(ndata->getBox(),
                                       ndata->getDepth(),

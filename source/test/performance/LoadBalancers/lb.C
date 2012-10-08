@@ -1002,7 +1002,8 @@ void generatePrebalanceByUserShells(
       hier::VariableDatabase::getDatabase();
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
       hierarchy->getGridGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(grid_geometry);
 
    boost::shared_ptr<hier::PatchLevel> tag_level(
       new hier::PatchLevel(L0,
@@ -1052,7 +1053,8 @@ void generatePrebalanceByUserShells(
 
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(tag_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(tag_data);
 
       tag_data->getArrayData().fillAll(0);
 
@@ -1146,7 +1148,8 @@ void generatePrebalanceByShrinkingLevel(
 
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
       hierarchy->getGridGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(grid_geometry);
 
    // Parameters set by database, with defaults.
    double efficiency_tol = 1.00;
@@ -1215,7 +1218,8 @@ void generatePrebalanceByShrinkingLevel(
       const boost::shared_ptr<hier::Patch>& patch = *pi;
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(tag_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(tag_data);
 
       tag_data->getArrayData().fillAll(0);
 
@@ -1307,7 +1311,8 @@ void generatePrebalanceBySinusoidalFront(
 
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
       hierarchy->getGridGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(grid_geometry);
 
    // Parameters set by database, with defaults.
    double efficiency_tol = 0.70;
@@ -1337,8 +1342,7 @@ void generatePrebalanceBySinusoidalFront(
 
    const int tag_val = 1;
 
-   hier::VariableDatabase* vdb =
-      hier::VariableDatabase::getDatabase();
+   hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
 
    boost::shared_ptr<hier::PatchLevel> tag_level(
       new hier::PatchLevel(
@@ -1374,11 +1378,13 @@ void generatePrebalanceBySinusoidalFront(
 
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          patch->getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(patch_geom);
 
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(tag_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(tag_data);
 
       sinusoidal_front_tagger.computeFrontsData(
          0 /* distance data */,

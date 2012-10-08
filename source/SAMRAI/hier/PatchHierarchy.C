@@ -722,10 +722,8 @@ PatchHierarchy::makeNewPatchLevel(
    const BoxLevel& new_box_level)
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, new_box_level);
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(ln >= 0);
    TBOX_ASSERT(new_box_level.getRefinementRatio() > IntVector::getZero(d_dim));
-#endif
 
    /*
     * Make sure the level conforms to certain parameters preset

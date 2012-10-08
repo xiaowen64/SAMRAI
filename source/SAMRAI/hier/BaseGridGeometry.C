@@ -221,9 +221,9 @@ BaseGridGeometry::computeBoundaryBoxesOnLevel(
       ghost_width);
 
    t_compute_boundary_boxes_on_level->start();
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(ghost_width >= IntVector::getZero(ghost_width.getDim()));
 
+   TBOX_ASSERT(ghost_width >= IntVector::getZero(ghost_width.getDim()));
+#ifdef DEBUG_CHECK_ASSERTIONS
    int num_per_dirs = 0;
    for (int i = 0; i < d_dim.getValue(); i++) {
       if (periodic_shift(i)) {
@@ -456,12 +456,13 @@ BaseGridGeometry::setGeometryOnPatches(
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, level, ratio_to_level_zero);
 
    t_set_geometry_on_patches->start();
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    /*
     * All components of ratio must be nonzero.  Additionally,
     * all components not equal to 1 must have the same sign.
     */
    TBOX_ASSERT(ratio_to_level_zero != IntVector::getZero(d_dim));
+#ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim.getValue() > 1) {
       for (int i = 0; i < d_dim.getValue(); i++) {
          TBOX_ASSERT((ratio_to_level_zero(i)
@@ -1471,8 +1472,8 @@ BaseGridGeometry::setPhysicalDomain(
    const BoxContainer& domain,
    const int number_blocks)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!domain.isEmpty());
+#ifdef DEBUG_CHECK_ASSERTIONS
    for (BoxContainer::const_iterator itr = domain.begin(); itr != domain.end();
         ++itr) {
       TBOX_ASSERT(itr->getBlockId().isValid());       

@@ -145,13 +145,13 @@ CartesianEdgeFloatConservativeLinearRefine::refine(
 
    boost::shared_ptr<pdat::EdgeData<float> > cdata(
       coarse.getPatchData(src_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::EdgeData<float> > fdata(
       fine.getPatchData(dst_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    const pdat::EdgeOverlap* t_overlap =
-      dynamic_cast<const pdat::EdgeOverlap *>(&fine_overlap);
+      CPP_CAST<const pdat::EdgeOverlap *>(&fine_overlap);
 
    TBOX_ASSERT(t_overlap != 0);
 
@@ -168,10 +168,13 @@ CartesianEdgeFloatConservativeLinearRefine::refine(
 
    const boost::shared_ptr<CartesianPatchGeometry> cgeom(
       coarse.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    const boost::shared_ptr<CartesianPatchGeometry> fgeom(
       fine.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(cgeom);
+   TBOX_ASSERT(fgeom);
 
    for (int axis = 0; axis < dim.getValue(); axis++) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);

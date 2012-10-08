@@ -1424,8 +1424,6 @@ RefineSchedule::createCoarseInterpPatchLevel(
 {
    const tbox::Dimension& dim(hierarchy->getDim());
 
-   const bool dst_is_coarse_interp_level = this != d_top_refine_schedule;
-
    hier::OverlapConnectorAlgorithm oca;
    hier::BoxLevelConnectorUtils edge_utils;
 
@@ -3555,7 +3553,7 @@ RefineSchedule::communicateFillBoxes(
    while ( comm_stage.numberOfCompletedMembers() > 0 ||
            comm_stage.advanceSome() ) {
       tbox::AsyncCommPeer<int>* peer =
-         dynamic_cast<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
+         CPP_CAST<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
       TBOX_ASSERT(peer != 0);
       if (peer < comms + src_owners.size()) {
          // This is a receive.  Unpack it.  (Otherwise, ignore send completion.)

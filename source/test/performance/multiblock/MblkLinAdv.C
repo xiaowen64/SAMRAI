@@ -453,9 +453,7 @@ MblkLinAdv::MblkLinAdv(
 
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(CELLG == FACEG);
-#endif
 
    // SPHERE problem...
    tbox::MathUtilities<double>::setArrayToSignalingNaN(d_center, d_dim.getValue());
@@ -748,7 +746,8 @@ void MblkLinAdv::initializeDataOnPatch(
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(d_xyz, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(xyz);
 
    double xlo[SAMRAI::MAX_DIM_VAL];
    double xhi[SAMRAI::MAX_DIM_VAL];
@@ -767,10 +766,9 @@ void MblkLinAdv::initializeDataOnPatch(
 
       boost::shared_ptr<pdat::CellData<double> > uval(
          patch.getPatchData(d_uval, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
       TBOX_ASSERT(uval);
-      TBOX_ASSERT(xyz);
 
       hier::IntVector ghost_cells(uval->getGhostCellWidth());
 
@@ -882,7 +880,8 @@ void MblkLinAdv::initializeDataOnPatch(
       }
       boost::shared_ptr<pdat::CellData<double> > workload_data(
          patch.getPatchData(d_workload_data_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(workload_data);
       workload_data->fillAll(1.0);
    }
 
@@ -923,11 +922,10 @@ double MblkLinAdv::computeStableDtOnPatch(
 
    boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
-#endif
+
    hier::IntVector ghost_cells(uval->getGhostCellWidth());
 
    double stabdt;
@@ -988,9 +986,7 @@ void MblkLinAdv::computeFluxesOnPatch(
 
    if (d_dim < tbox::Dimension(3)) {
 
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(CELLG == FACEG);
-#endif
 
       double dx[SAMRAI::MAX_DIM_VAL];
       d_mblk_geometry->getDx(level_number, dx);
@@ -1001,22 +997,20 @@ void MblkLinAdv::computeFluxesOnPatch(
 
       boost::shared_ptr<pdat::CellData<double> > uval(
          patch.getPatchData(d_uval, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::FaceData<double> > flux(
          patch.getPatchData(d_flux, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
       /*
        * Verify that the integrator providing the context correctly
        * created it, and that the ghost cell width associated with the
        * context matches the ghosts defined in this class...
        */
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(uval);
       TBOX_ASSERT(flux);
       TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
       TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
-#endif
 
       /*
        * Allocate patch data for temporaries local to this routine.
@@ -1163,10 +1157,8 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport1(
    hier::Patch& patch,
    const double dt)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(CELLG == FACEG);
    TBOX_ASSERT(d_dim == tbox::Dimension(3));
-#endif
 
    int level_number = patch.getPatchLevelNumber();
 
@@ -1182,17 +1174,15 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport1(
 
    boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
    boost::shared_ptr<pdat::FaceData<double> > flux(
       patch.getPatchData(d_flux, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
    TBOX_ASSERT(flux);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
-#endif
 
    /*
     * Allocate patch data for temporaries local to this routine.
@@ -1469,10 +1459,8 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport2(
    hier::Patch& patch,
    const double dt)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(CELLG == FACEG);
    TBOX_ASSERT(d_dim == tbox::Dimension(3));
-#endif
 
    int level_number = patch.getPatchLevelNumber();
 
@@ -1488,17 +1476,15 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport2(
 
    boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
    boost::shared_ptr<pdat::FaceData<double> > flux(
       patch.getPatchData(d_flux, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
    TBOX_ASSERT(flux);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
-#endif
 
    /*
     * Allocate patch data for temporaries local to this routine.
@@ -1727,17 +1713,15 @@ void MblkLinAdv::conservativeDifferenceOnPatch(
 
    boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
    boost::shared_ptr<pdat::FaceData<double> > flux(
       patch.getPatchData(d_flux, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
    TBOX_ASSERT(flux);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
-#endif
 
    if (d_dim == tbox::Dimension(2)) {
       SAMRAI_F77_FUNC(consdiff2d, CONSDIFF2D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
@@ -1779,15 +1763,10 @@ void MblkLinAdv::setPhysicalBoundaryConditions(
 
    boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
-#endif
-   hier::IntVector uval_ghosts = uval->getGhostCellWidth();
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
-#endif
 
    if (d_dim == tbox::Dimension(2)) {
 
@@ -1995,7 +1974,8 @@ void MblkLinAdv::tagGradientDetectorCells(
 
    boost::shared_ptr<pdat::CellData<int> > tags(
       patch.getPatchData(tag_indx),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(tags);
 
    hier::Box pbox(patch.getBox());
 
@@ -2028,10 +2008,9 @@ void MblkLinAdv::tagGradientDetectorCells(
       string ref = d_refinement_criteria[ncrit];
       boost::shared_ptr<pdat::CellData<double> > var(
          patch.getPatchData(d_uval, getDataContext()),
-         boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+         BOOST_CAST_TAG);
       TBOX_ASSERT(var);
-#endif
+
       hier::IntVector vghost(var->getGhostCellWidth());
       hier::IntVector tagghost(tags->getGhostCellWidth());
 
@@ -2244,9 +2223,7 @@ void MblkLinAdv::setMappedGridOnPatch(
    const int level_number,
    const int block_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level_number >= 0);
-#endif
 
    // compute level domain
    const boost::shared_ptr<hier::PatchGeometry> patch_geom(
@@ -2284,9 +2261,7 @@ void MblkLinAdv::setMappedGridOnPatch(
 void MblkLinAdv::registerVisItDataWriter(
    boost::shared_ptr<appu::VisItDataWriter> viz_writer)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(viz_writer);
-#endif
    d_visit_writer = viz_writer;
 }
 #endif
@@ -2477,9 +2452,7 @@ void MblkLinAdv::getFromInput(
    boost::shared_ptr<tbox::Database> input_db,
    bool is_from_restart)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(input_db);
-#endif
 
    boost::shared_ptr<tbox::Database> db(input_db->getDatabase("MblkLinAdv"));
 
@@ -2941,9 +2914,7 @@ void MblkLinAdv::getFromInput(
 void MblkLinAdv::putToRestart(
    const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(restart_db);
-#endif
 
    restart_db->putInteger("MBLKLINADV_VERSION", MBLKLINADV_VERSION);
 
@@ -3130,10 +3101,9 @@ void MblkLinAdv::readDirichletBoundaryDataEntry(
    string& db_name,
    int bdry_location_index)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
-#endif
+
    if (d_dim == tbox::Dimension(2)) {
       readStateDataEntry(db,
          db_name,
@@ -3154,12 +3124,10 @@ void MblkLinAdv::readStateDataEntry(
    int array_indx,
    tbox::Array<double>& uval)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
    TBOX_ASSERT(array_indx >= 0);
    TBOX_ASSERT(uval.getSize() > array_indx);
-#endif
 
    if (db->keyExists("uval")) {
       uval[array_indx] = db->getDouble("uval");
@@ -3206,44 +3174,32 @@ void MblkLinAdv::checkBoundaryData(
 
    for (int i = 0; i < bdry_boxes.getSize(); i++) {
       hier::BoundaryBox bbox = bdry_boxes[i];
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(bbox.getBoundaryType() == btype);
-#endif
       int bloc = bbox.getLocationIndex();
 
       int bscalarcase, refbdryloc;
       if (d_dim == tbox::Dimension(2)) {
          if (btype == Bdry::EDGE2D) {
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_EDGES);
-#endif
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else { // btype == Bdry::NODE2D
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_NODES);
-#endif
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_edge[bloc];
          }
       }
       if (d_dim == tbox::Dimension(3)) {
          if (btype == Bdry::FACE3D) {
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_FACES);
-#endif
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else if (btype == Bdry::EDGE3D) {
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_EDGES);
-#endif
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_edge_bdry_face[bloc];
          } else { // btype == Bdry::NODE3D
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_NODES);
-#endif
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_face[bloc];
          }

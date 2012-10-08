@@ -130,11 +130,11 @@ FaceDoubleLinearTimeInterpolateOp::timeInterpolate(
    const tbox::Dimension& dim(where.getDim());
 
    const FaceData<double>* old_dat =
-      dynamic_cast<const FaceData<double> *>(&src_data_old);
+      CPP_CAST<const FaceData<double> *>(&src_data_old);
    const FaceData<double>* new_dat =
-      dynamic_cast<const FaceData<double> *>(&src_data_new);
+      CPP_CAST<const FaceData<double> *>(&src_data_new);
    FaceData<double>* dst_dat =
-      dynamic_cast<FaceData<double> *>(&dst_data);
+      CPP_CAST<FaceData<double> *>(&dst_data);
 
    TBOX_ASSERT(old_dat != 0);
    TBOX_ASSERT(new_dat != 0);

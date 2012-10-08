@@ -52,10 +52,8 @@ BoundaryDataTester::BoundaryDataTester(
    d_variable_context(
       hier::VariableDatabase::getDatabase()->getContext("BOUNDARY_TEST"))
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
-#endif
 
    readVariableInputAndMakeVariables(input_db);
 
@@ -93,10 +91,8 @@ void BoundaryDataTester::setPhysicalBoundaryConditions(
 
       boost::shared_ptr<pdat::CellData<double> > cvdata(
          patch.getPatchData(d_variables[iv], d_variable_context),
-         boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+         BOOST_CAST_TAG);
       TBOX_ASSERT(cvdata);
-#endif
 
       tbox::plog << "\n   iv = " << iv << " : " << d_variable_name[iv] << endl;
       tbox::plog << "   depth = " << cvdata->getDepth() << endl;
@@ -197,7 +193,7 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
       for (int iv = 0; iv < d_variables.getSize(); iv++) {
          boost::shared_ptr<pdat::CellData<double> > cvdata(
             patch->getPatchData(d_variables[iv], d_variable_context),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(cvdata);
          cvdata->getArrayData().undefineData();
@@ -212,7 +208,7 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
       for (int iv = 0; iv < d_variables.getSize(); iv++) {
          boost::shared_ptr<pdat::CellData<double> > cvdata(
             patch->getPatchData(d_variables[iv], d_variable_context),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(cvdata);
          for (int id = 0; id < cvdata->getDepth(); id++) {
@@ -245,10 +241,8 @@ int BoundaryDataTester::runBoundaryTest(
    boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number == 0);
-#endif
 
    int d_fail_count = 0;
 
@@ -267,9 +261,7 @@ int BoundaryDataTester::runBoundaryTest(
 
    boost::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level);
-#endif
 
    boundary_fill.createSchedule(level, this)->fillData(0.0);
 
@@ -482,11 +474,9 @@ void BoundaryDataTester::readBoundaryDataStateEntry(
    string& db_name,
    int bdry_location_index)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
    TBOX_ASSERT(d_variable_bc_values.getSize() == d_variable_name.getSize());
-#endif
 
    for (int iv = 0; iv < d_variable_name.getSize(); iv++) {
 
@@ -529,9 +519,7 @@ void BoundaryDataTester::readBoundaryDataStateEntry(
 void BoundaryDataTester::readBoundaryDataInput(
    boost::shared_ptr<tbox::Database> db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    hier::IntVector periodic(d_grid_geometry->getPeriodicShift(hier::IntVector(
                                   d_dim,
@@ -696,24 +684,21 @@ void BoundaryDataTester::checkBoundaryData(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const tbox::Array<hier::BoundaryBox> bdry_boxes =
       pgeom->getCodimensionBoundaries(btype);
 
    for (int i = 0; i < bdry_boxes.getSize(); i++) {
       hier::BoundaryBox bbox = bdry_boxes[i];
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(bbox.getBoundaryType() == btype);
-#endif
       int bloc = bbox.getLocationIndex();
 
       for (int iv = 0; iv < d_variables.getSize(); iv++) {
          boost::shared_ptr<pdat::CellData<double> > cvdata(
             patch.getPatchData(d_variables[iv], d_variable_context),
-            boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+            BOOST_CAST_TAG);
          TBOX_ASSERT(cvdata);
-#endif
 
          int depth = d_variable_depth[iv];
 

@@ -277,7 +277,7 @@ SparseData<BOX_GEOMETRY>::copy(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const SparseData<BOX_GEOMETRY>* tmp_src =
-      dynamic_cast<const SparseData<BOX_GEOMETRY> *>(&src);
+      CPP_CAST<const SparseData<BOX_GEOMETRY> *>(&src);
 
    TBOX_ASSERT(tmp_src != 0);
    const hier::Box& src_ghost_box = tmp_src->getGhostBox();
@@ -320,10 +320,10 @@ SparseData<BOX_GEOMETRY>::copy(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
    const SparseData<BOX_GEOMETRY>* tmp_src =
-      dynamic_cast<const SparseData<BOX_GEOMETRY> *>(&src);
+      CPP_CAST<const SparseData<BOX_GEOMETRY> *>(&src);
 
    const typename BOX_GEOMETRY::Overlap * tmp_overlap =
-      dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap);
+      CPP_CAST<const typename BOX_GEOMETRY::Overlap *>(&overlap);
 
    TBOX_ASSERT(tmp_src != 0);
    TBOX_ASSERT(tmp_overlap != 0);
@@ -388,7 +388,7 @@ SparseData<BOX_GEOMETRY>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
    const typename BOX_GEOMETRY::Overlap * tmp_overlap =
-      dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap);
+      CPP_CAST<const typename BOX_GEOMETRY::Overlap *>(&overlap);
 
    TBOX_ASSERT(tmp_overlap != 0);
 
@@ -484,7 +484,7 @@ SparseData<BOX_GEOMETRY>::packStream(
    const hier::BoxOverlap& overlap) const
 {
    const typename BOX_GEOMETRY::Overlap * tmp_overlap =
-      dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap);
+      CPP_CAST<const typename BOX_GEOMETRY::Overlap *>(&overlap);
    TBOX_ASSERT(tmp_overlap != 0);
 
    // Calculate the number of matching items
@@ -619,7 +619,7 @@ SparseData<BOX_GEOMETRY>::unpackStream(
    const hier::BoxOverlap& overlap)
 {
    const typename BOX_GEOMETRY::Overlap * tmp_overlap =
-      dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap);
+      CPP_CAST<const typename BOX_GEOMETRY::Overlap *>(&overlap);
    TBOX_ASSERT(tmp_overlap != 0);
 
    int num_items;

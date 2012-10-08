@@ -416,11 +416,8 @@ CellPoissonFACSolver::createVectorWrappers(
       }
       boost::shared_ptr<pdat::CellVariable<double> > cell_variable(
          variable,
-         boost::detail::dynamic_cast_tag());
-      if (!cell_variable) {
-         TBOX_ERROR(d_object_name << ": hier::Patch data index " << u
-                                  << " is not a cell-double variable.\n");
-      }
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(cell_variable);
 #endif
       d_uv->addComponent(variable, u, s_weight_id[d_dim.getValue() - 1]);
    }
@@ -438,11 +435,8 @@ CellPoissonFACSolver::createVectorWrappers(
       }
       boost::shared_ptr<pdat::CellVariable<double> > cell_variable(
          variable,
-         boost::detail::dynamic_cast_tag());
-      if (!cell_variable) {
-         TBOX_ERROR(d_object_name << ": hier::Patch data index " << f
-                                  << " is not a cell-double variable.\n");
-      }
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(cell_variable);
 #endif
       d_fv->addComponent(variable, f, s_weight_id[d_dim.getValue() - 1]);
    }

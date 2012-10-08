@@ -39,8 +39,7 @@ void
 StartupShutdownManager::registerHandler(
    AbstractHandler* handler)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   assert(handler);
+   TBOX_ASSERT(handler);
 
    // Don't allow registering handlers when we are looping and the
    // handler needs to be called in that loop.  This would create the
@@ -49,11 +48,10 @@ StartupShutdownManager::registerHandler(
    //
    // SGS Ideally this would not be needed and maybe with some
    // additional work this could be made more clean.
-   assert(!(s_in_initialize && handler->hasInitialize()));
-   assert(!(s_in_startup && handler->hasStartup()));
-   assert(!(s_in_shutdown && handler->hasShutdown()));
-   assert(!s_in_finalize);
-#endif
+   TBOX_ASSERT(!(s_in_initialize && handler->hasInitialize()));
+   TBOX_ASSERT(!(s_in_startup && handler->hasStartup()));
+   TBOX_ASSERT(!(s_in_shutdown && handler->hasShutdown()));
+   TBOX_ASSERT(!s_in_finalize);
 
    if (!s_singleton_initialized) {
       setupSingleton();
@@ -77,9 +75,7 @@ StartupShutdownManager::registerHandler(
 void
 StartupShutdownManager::initialize()
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   assert(!s_initialized);
-#endif
+   TBOX_ASSERT(!s_initialized);
 
    s_initialized = true;
    // only shutdown if something was registered
@@ -106,12 +102,10 @@ StartupShutdownManager::initialize()
 void
 StartupShutdownManager::startup()
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    // If this is thrown you need to make sure SAMRAIManger::initialize
    // is called before startup.
-   assert(s_initialized);
-   assert(!s_startuped);
-#endif
+   TBOX_ASSERT(s_initialized);
+   TBOX_ASSERT(!s_startuped);
 
    s_startuped = true;
 
@@ -140,11 +134,9 @@ StartupShutdownManager::startup()
 void
 StartupShutdownManager::shutdown()
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   assert(s_initialized);
-   assert(s_startuped);
-   assert(!s_shutdowned);
-#endif
+   TBOX_ASSERT(s_initialized);
+   TBOX_ASSERT(s_startuped);
+   TBOX_ASSERT(!s_shutdowned);
 
    s_shutdowned = true;
 
@@ -185,12 +177,9 @@ StartupShutdownManager::setupSingleton()
 void
 StartupShutdownManager::finalize()
 {
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   assert(s_initialized);
-   assert(s_shutdowned);
-   assert(!s_finalized);
-#endif
+   TBOX_ASSERT(s_initialized);
+   TBOX_ASSERT(s_shutdowned);
+   TBOX_ASSERT(!s_finalized);
 
    s_finalized = true;
 

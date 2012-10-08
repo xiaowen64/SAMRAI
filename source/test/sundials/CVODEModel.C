@@ -180,7 +180,7 @@ CVODEModel::CVODEModel(
       d_bdry_edge_val.resizeArray(NUM_2D_EDGES);
       MathUtilities<double>::setArrayToSignalingNaN(d_bdry_edge_val);
    }
-   if (d_dim == Dimension(3)) {
+   else if (d_dim == Dimension(3)) {
       d_scalar_bdry_face_conds.resizeArray(NUM_3D_FACES);
       for (int fi = 0; fi < NUM_3D_FACES; fi++) {
          d_scalar_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
@@ -243,7 +243,7 @@ CVODEModel::CVODEModel(
          if (d_scalar_bdry_edge_conds[i] == BdryCond::NEUMANN) d_bdry_types[i] = 1;
       }
    }
-   if (d_dim == Dimension(3)) {
+   else if (d_dim == Dimension(3)) {
       for (int i = 0; i < NUM_3D_FACES; i++) {
          d_bdry_types[i] = 0;
          if (d_scalar_bdry_face_conds[i] == BdryCond::DIRICHLET) d_bdry_types[i] = 0;
@@ -279,7 +279,7 @@ CVODEModel::CVODEModel(
          }
       }
    }
-   if (d_dim == Dimension(3)) {
+   else if (d_dim == Dimension(3)) {
       for (int i = 0; i < NUM_3D_FACES; i++) {
          if (d_scalar_bdry_face_conds[i] == BdryCond::REFLECT) {
             d_scalar_bdry_face_conds[i] = BdryCond::FLOW;
@@ -420,7 +420,8 @@ CVODEModel::applyGradientDetector(
 
       boost::shared_ptr<CellData<int> > tag_data(
          patch->getPatchData(tag_index),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(tag_data);
 
       // dumb implementation that tags all cells.
       tag_data->fillAll(TRUE);
@@ -445,11 +446,10 @@ CVODEModel::setPhysicalBoundaryConditions(
 
    boost::shared_ptr<CellData<double> > soln_data(
       patch.getPatchData(d_soln_scr_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(soln_data);
-#endif
+
    IntVector ghost_cells(soln_data->getGhostCellWidth());
 
    if (d_dim == Dimension(2)) {
@@ -476,8 +476,7 @@ CVODEModel::setPhysicalBoundaryConditions(
          d_bdry_edge_val);
 
    }
-
-   if (d_dim == Dimension(3)) {
+   else if (d_dim == Dimension(3)) {
 
       /*
        *  Set boundary conditions for cells corresponding to patch faces.
@@ -657,20 +656,24 @@ CVODEModel::evaluateRHSFunction(
 
          boost::shared_ptr<CellData<double> > y(
             patch->getPatchData(d_soln_scr_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<SideData<double> > diff(
             patch->getPatchData(d_diff_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<CellData<double> > rhs(
             patch->getPatchData(y_dot_samvect->getComponentDescriptorIndex(0)),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(y);
+         TBOX_ASSERT(diff);
+         TBOX_ASSERT(rhs);
 
          const Index ifirst(patch->getBox().lower());
          const Index ilast(patch->getBox().upper());
 
          const boost::shared_ptr<CartesianPatchGeometry> patch_geom(
             patch->getPatchGeometry(),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(patch_geom);
          const double* dx = patch_geom->getDx();
 
          IntVector ghost_cells(y->getGhostCellWidth());
@@ -837,14 +840,12 @@ int CVODEModel::CVSpgmrPrecondSet(
 
          boost::shared_ptr<SideData<double> > diffusion(
             patch->getPatchData(d_diff_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(diffusion);
 
          diffusion->fillAll(1.0);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-         double current_dt = t - d_current_soln_time;
-         TBOX_ASSERT(current_dt >= 0.);
-#endif
+         TBOX_ASSERT((t - d_current_soln_time) >= 0.);
 
          /*
           * Set Neumann fluxes and flag array (if desired)
@@ -853,10 +854,12 @@ int CVODEModel::CVSpgmrPrecondSet(
 
             boost::shared_ptr<OuterfaceData<int> > flag_data(
                patch->getPatchData(d_flag_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
             boost::shared_ptr<OuterfaceData<double> > neuf_data(
                patch->getPatchData(d_neuf_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(flag_data);
+            TBOX_ASSERT(neuf_data);
 
             /*
              * Outerface data access:
@@ -880,7 +883,7 @@ int CVODEModel::CVSpgmrPrecondSet(
                   neuf_data->getPointer(1, 0), // y lower
                   neuf_data->getPointer(1, 1)); // y upper
             }
-            if (d_dim == Dimension(3)) {
+            else if (d_dim == Dimension(3)) {
                SAMRAI_F77_FUNC(setneufluxvalues3d, SETNEUFLUXVALUES3D) (
                   ifirst(0), ilast(0),
                   ifirst(1), ilast(1),
@@ -1022,7 +1025,8 @@ int CVODEModel::CVSpgmrPrecondSolve(
 
          boost::shared_ptr<CellData<double> > z_data(
             patch->getPatchData(z_indx),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(z_data);
 
          /*
           * Set initial guess for z here.
@@ -1035,7 +1039,8 @@ int CVODEModel::CVSpgmrPrecondSolve(
          PatchCellDataOpsReal<double> math_ops;
          boost::shared_ptr<CellData<double> > r_data(
             patch->getPatchData(r_indx),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(r_data);
          math_ops.scale(r_data, 1.0 / gamma, r_data, r_data->getBox());
 
          /*
@@ -1043,7 +1048,8 @@ int CVODEModel::CVSpgmrPrecondSolve(
           */
          boost::shared_ptr<CellData<double> > z_scr_data(
             patch->getPatchData(d_soln_scr_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(z_scr_data);
          z_scr_data->copy(*z_data);
       }
 
@@ -1125,10 +1131,12 @@ int CVODEModel::CVSpgmrPrecondSolve(
 
          boost::shared_ptr<CellData<double> > soln_scratch(
             patch->getPatchData(d_soln_scr_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<CellData<double> > z(
             patch->getPatchData(z_indx),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(soln_scratch);
+         TBOX_ASSERT(z);
 
          z->copy(*soln_scratch);
       }
@@ -1200,9 +1208,7 @@ CVODEModel::setupSolutionVector(
 
    for (int ln = 0; ln < nlevels; ln++) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(level);
-#endif
       level->allocatePatchData(d_diff_id);
       if (d_use_neumann_bcs) {
          level->allocatePatchData(d_flag_id);
@@ -1250,7 +1256,8 @@ CVODEModel::setInitialConditions(
              */
             boost::shared_ptr<CellData<double> > y_init(
                soln_init_samvect->getComponentPatchData(cn, *patch),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(y_init);
             y_init->fillAll(d_initial_value);
 
             /*
@@ -1261,7 +1268,8 @@ CVODEModel::setInitialConditions(
              */
             boost::shared_ptr<SideData<double> > diffusion(
                patch->getPatchData(d_diff_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(diffusion);
 
             diffusion->fillAll(1.0);
          }
@@ -1325,7 +1333,7 @@ CVODEModel::getFromInput(
             d_scalar_bdry_node_conds,
             periodic);
       }
-      if (d_dim == Dimension(3)) {
+      else if (d_dim == Dimension(3)) {
          CartesianBoundaryUtilities3::getFromInput(this,
             boundary_db,
             d_scalar_bdry_face_conds,
@@ -1363,9 +1371,7 @@ CVODEModel::getFromInput(
 void CVODEModel::putToRestart(
    const boost::shared_ptr<Database>& restart_db) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(restart_db);
-#endif
 
    restart_db->putInteger("CVODE_MODEL_VERSION", CVODE_MODEL_VERSION);
 
@@ -1379,7 +1385,7 @@ void CVODEModel::putToRestart(
    if (d_dim == Dimension(2)) {
       restart_db->putDoubleArray("d_bdry_edge_val", d_bdry_edge_val);
    }
-   if (d_dim == Dimension(3)) {
+   else if (d_dim == Dimension(3)) {
       restart_db->putIntegerArray("d_scalar_bdry_face_conds",
          d_scalar_bdry_face_conds);
       restart_db->putDoubleArray("d_bdry_face_val", d_bdry_face_val);
@@ -1421,7 +1427,7 @@ void CVODEModel::getFromRestart()
    if (d_dim == Dimension(2)) {
       d_bdry_edge_val = db->getDoubleArray("d_bdry_edge_val");
    }
-   if (d_dim == Dimension(3)) {
+   else if (d_dim == Dimension(3)) {
       d_scalar_bdry_face_conds = db->getIntegerArray("d_scalar_bdry_face_conds");
 
       d_bdry_face_val = db->getDoubleArray("d_bdry_face_val");
@@ -1442,17 +1448,16 @@ void CVODEModel::readDirichletBoundaryDataEntry(
    string& db_name,
    int bdry_location_index)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
-#endif
+
    if (d_dim == Dimension(2)) {
       readStateDataEntry(db,
          db_name,
          bdry_location_index,
          d_bdry_edge_val);
    }
-   if (d_dim == Dimension(3)) {
+   else if (d_dim == Dimension(3)) {
       readStateDataEntry(db,
          db_name,
          bdry_location_index,
@@ -1465,17 +1470,16 @@ void CVODEModel::readNeumannBoundaryDataEntry(
    string& db_name,
    int bdry_location_index)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
-#endif
+
    if (d_dim == Dimension(2)) {
       readStateDataEntry(db,
          db_name,
          bdry_location_index,
          d_bdry_edge_val);
    }
-   if (d_dim == Dimension(3)) {
+   else if (d_dim == Dimension(3)) {
       readStateDataEntry(db,
          db_name,
          bdry_location_index,
@@ -1489,12 +1493,10 @@ void CVODEModel::readStateDataEntry(
    int array_indx,
    Array<double>& val)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
    TBOX_ASSERT(array_indx >= 0);
    TBOX_ASSERT(val.getSize() > array_indx);
-#endif
 
    if (db->keyExists("val")) {
       val[array_indx] = db->getDouble("val");
@@ -1546,7 +1548,7 @@ void CVODEModel::printClassData(
             << d_node_bdry_edge[j] << endl;
       }
    }
-   if (d_dim == Dimension(3)) {
+   else if (d_dim == Dimension(3)) {
       for (j = 0; j < d_scalar_bdry_face_conds.getSize(); j++) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
             << d_scalar_bdry_face_conds[j] << endl;

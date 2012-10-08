@@ -109,10 +109,10 @@ PatchGeometry::getBoundaryFillBox(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    const tbox::Array<int>& location_index_max = blut->getMaxLocationIndices();
+#endif
    TBOX_ASSERT(bdry_type > 0);
    TBOX_ASSERT(bdry_type <= d_dim.getValue());
    TBOX_ASSERT(location_index >= 0);
-#endif
 
    if (!fill_box.empty()) {
 
@@ -156,9 +156,9 @@ PatchGeometry::setCodimensionBoundaries(
    for (int i = 0; i < bdry_boxes.size(); i++) {
       TBOX_ASSERT(bdry_boxes[i].getBoundaryType() == codim);
    }
+#endif
    TBOX_ASSERT(codim <= d_dim.getValue());
    TBOX_ASSERT(codim > 0);
-#endif
 
    d_patch_boundaries[codim - 1].resizeArray(bdry_boxes.size(),
       BoundaryBox(d_dim));

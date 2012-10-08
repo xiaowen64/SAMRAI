@@ -82,8 +82,8 @@ AsyncCommStage::privateStageMember(
    Member* member,
    size_t nreq)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!member->hasStage());   // Double stage not allowed.
+#ifdef DEBUG_CHECK_ASSERTIONS
    if (nreq < 1) {
       TBOX_ERROR("Each Member on a stage must have at least one request.\n");
    }

@@ -51,11 +51,9 @@ CommTester::CommTester(
 {
    NULL_USE(main_input_db);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(data_test != 0);
-#endif
 
    d_object_name = object_name;
    d_data_test_strategy = data_test;
@@ -261,10 +259,8 @@ void CommTester::registerVariableForReset(
 void CommTester::createRefineSchedule(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    boost::shared_ptr<hier::PatchLevel> level(
       d_patch_hierarchy->getPatchLevel(level_number));
@@ -320,10 +316,8 @@ void CommTester::createRefineSchedule(
 void CommTester::resetRefineSchedule(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    if (d_do_refine) {
 
@@ -337,10 +331,8 @@ void CommTester::resetRefineSchedule(
 void CommTester::createCoarsenSchedule(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    if (d_do_coarsen && (level_number > 0)) {
 
@@ -364,10 +356,8 @@ void CommTester::createCoarsenSchedule(
 void CommTester::resetCoarsenSchedule(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    if (d_do_coarsen && (level_number > 0)) {
 
@@ -480,11 +470,10 @@ void CommTester::initializeLevelData(
    NULL_USE(initial_time);
    NULL_USE(old_level);
    NULL_USE(allocate_data);
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(level_number >= 0);
-#endif
 
    hier::PatchLevel& level =
       (hier::PatchLevel &) * hierarchy->getPatchLevel(level_number);
@@ -633,9 +622,7 @@ void CommTester::setupHierarchy(
    boost::shared_ptr<tbox::Database> main_input_db,
    boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(main_input_db);
-#endif
 
    d_patch_hierarchy.reset(
       new hier::PatchHierarchy("PatchHierarchy",

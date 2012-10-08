@@ -39,11 +39,9 @@ SideDataTest::SideDataTest(
    PatchDataTestStrategy(dim),
    d_dim(dim)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
-#endif
 
    d_object_name = object_name;
 
@@ -83,9 +81,7 @@ SideDataTest::~SideDataTest()
 void SideDataTest::readTestInput(
    boost::shared_ptr<tbox::Database> db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    /*
     * Base class reads variable parameters and boxes to refine.
@@ -194,12 +190,10 @@ void SideDataTest::setConservativeData(
    const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
-#endif
 
    int i, j;
    boost::shared_ptr<hier::PatchLevel> level(
@@ -265,7 +259,8 @@ void SideDataTest::setConservativeData(
 
       boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
          patch.getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
 
       int coarse_ncells = ncells;
@@ -340,7 +335,8 @@ void SideDataTest::initializeDataOnPatch(
 
          boost::shared_ptr<pdat::SideData<double> > side_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(side_data);
 
          hier::Box dbox = side_data->getBox();
 
@@ -357,7 +353,8 @@ void SideDataTest::initializeDataOnPatch(
 
          boost::shared_ptr<pdat::SideData<double> > side_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(side_data);
 
          hier::Box dbox = side_data->getGhostBox();
 
@@ -375,9 +372,7 @@ void SideDataTest::checkPatchInteriorData(
    const hier::Box& interior,
    const hier::Patch& patch) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
 
    const bool is_periodic =
       d_cart_grid_geometry->getPeriodicShift(hier::IntVector(tbox::Dimension(
@@ -435,7 +430,8 @@ void SideDataTest::setPhysicalBoundaryConditions(
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
 
    const tbox::Array<hier::BoundaryBox> node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -457,7 +453,8 @@ void SideDataTest::setPhysicalBoundaryConditions(
 
       boost::shared_ptr<pdat::SideData<double> > side_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(side_data);
 
       hier::Box patch_interior = side_data->getBox();
       checkPatchInteriorData(side_data, patch_interior, patch);
@@ -524,13 +521,12 @@ void SideDataTest::setLinearData(
    const hier::Box& box,
    const hier::Patch& patch) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
    double x, y, z;
@@ -588,9 +584,8 @@ void SideDataTest::setPeriodicData(
    const hier::Box& box,
    const hier::Patch& patch) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
+
    NULL_USE(patch);
 
    const double* xlo = d_cart_grid_geometry->getXLower();
@@ -602,7 +597,8 @@ void SideDataTest::setPeriodicData(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
    const int depth = data->getDepth();
@@ -692,7 +688,8 @@ bool SideDataTest::verifyResults(
 
          boost::shared_ptr<pdat::SideData<double> > side_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(side_data);
          int depth = side_data->getDepth();
          hier::Box dbox = side_data->getGhostBox();
 

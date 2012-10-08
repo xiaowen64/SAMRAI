@@ -155,39 +155,30 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
    /*
     * Get info on the data.
     */
-   hier::VariableDatabase* vdb =
-      hier::VariableDatabase::getDatabase();
+   hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
    boost::shared_ptr<hier::Variable> variable_ptr;
    vdb->mapIndexToVariable(target_data_id, variable_ptr);
-   boost::shared_ptr<pdat::CellVariable<double> > cell_variable_ptr(
-      variable_ptr,
-      boost::detail::dynamic_cast_tag());
    if (!variable_ptr) {
       TBOX_ERROR(d_object_name << ": No variable for index "
                                << target_data_id);
    }
-   if (!cell_variable_ptr) {
-      TBOX_ERROR(d_object_name << ": hier::Patch data index " << target_data_id
-                               << " does not correspond to\n"
-                               << "a cell-centered double variable.\n");
-   }
+   boost::shared_ptr<pdat::CellVariable<double> > cell_variable_ptr(
+      variable_ptr,
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(cell_variable_ptr);
 
    /*
     * Get the data.
     */
    boost::shared_ptr<hier::PatchData> data_ptr(
       patch.getPatchData(target_data_id));
-   boost::shared_ptr<pdat::CellData<double> > cell_data_ptr(
-      data_ptr,
-      boost::detail::dynamic_cast_tag());
    if (!data_ptr) {
       TBOX_ERROR(d_object_name << ": No data for index " << target_data_id);
    }
-   if (!cell_data_ptr) {
-      TBOX_ERROR(d_object_name << ": hier::Patch data index " << target_data_id
-                               << " does not correspond to\n"
-                               << "cell-centered double data.\n");
-   }
+   boost::shared_ptr<pdat::CellData<double> > cell_data_ptr(
+      data_ptr,
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(cell_data_ptr);
    pdat::CellData<double>& data = *cell_data_ptr;
 
    const hier::IntVector& ghost_cells =
@@ -214,7 +205,9 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
        */
       boost::shared_ptr<geom::CartesianPatchGeometry> pg(
          patch.getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(pg);
 
       const tbox::Array<hier::BoundaryBox>& codim1_boxes =
          pg->getCodimensionBoundaries(1);

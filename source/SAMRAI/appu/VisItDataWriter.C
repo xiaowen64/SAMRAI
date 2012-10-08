@@ -2820,7 +2820,8 @@ VisItDataWriter::writeSummaryToHDFFile(
 
       boost::shared_ptr<tbox::HDFDatabase> hdf_database(
          basic_HDFGroup,
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(hdf_database);
       hid_t basic_group_id = hdf_database->getGroupId();
 
       std::string key_string = "VDR_version_number";
@@ -3139,7 +3140,8 @@ VisItDataWriter::writeSummaryToHDFFile(
          //This is never entered in multiblock case
          const boost::shared_ptr<geom::CartesianGridGeometry> ggeom(
             hierarchy->getGridGeometry(),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(ggeom);
          int next = 0;
          for (ln = coarsest_plot_level; ln <= finest_plot_level; ln++) {
             for (i = 0; i < VISIT_FIXED_DIM; i++) {
@@ -3188,11 +3190,10 @@ VisItDataWriter::writeSummaryToHDFFile(
 
       sprintf(temp_buf, "extents");
       boost::shared_ptr<tbox::Database> extents_HDFGroup(
-         summary_HDFFilePointer->putDatabase(std::string(temp_buf)),
-         boost::detail::dynamic_cast_tag());
+         summary_HDFFilePointer->putDatabase(std::string(temp_buf)));
       hdf_database =
-         boost::dynamic_pointer_cast<tbox::HDFDatabase,
-                                     tbox::Database>(extents_HDFGroup);
+        BOOST_CAST<tbox::HDFDatabase, tbox::Database>(extents_HDFGroup);
+      TBOX_ASSERT(hdf_database);
       hid_t extents_group_id = hdf_database->getGroupId();
 
       /*
@@ -3258,7 +3259,8 @@ VisItDataWriter::writeSummaryToHDFFile(
          //This is never entered in multiblock case
          const boost::shared_ptr<geom::CartesianGridGeometry> ggeom(
             hierarchy->getGridGeometry(),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(ggeom);
          for (i = 0; i < d_dim.getValue(); i++) {
             geom_lo[i] = ggeom->getXLower()[i];
             dx_curr_lev[i] = ggeom->getDx()[i]; // coarsest level dx
@@ -3365,7 +3367,8 @@ VisItDataWriter::writeSummaryToHDFFile(
                }
                boost::shared_ptr<tbox::HDFDatabase> extents_database(
                   extents_material_name_HDFGroup,
-                  boost::detail::dynamic_cast_tag());
+                  BOOST_CAST_TAG);
+               TBOX_ASSERT(extents_database);
                hid_t extents_material_name_group_id =
                   extents_database->getGroupId();
 
@@ -3387,7 +3390,8 @@ VisItDataWriter::writeSummaryToHDFFile(
                key_string = ipi->d_species_name;
                boost::shared_ptr<tbox::HDFDatabase> extents_database(
                   ipi->d_parent_material_pointer->d_extents_species_HDFGroup,
-                  boost::detail::dynamic_cast_tag());
+                  BOOST_CAST_TAG);
+               TBOX_ASSERT(extents_database);
 
                /*
                 * species group
@@ -3812,7 +3816,8 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
    basic_HDFGroup->putInteger(key_string, parent_array_length);
    boost::shared_ptr<tbox::HDFDatabase> hdf_database(
       basic_HDFGroup,
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(hdf_database);
    hid_t basic_group_id = hdf_database->getGroupId();
    if (child_array_length > 0) {
       key_string = "child_array";
@@ -3944,7 +3949,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
          if (centering == VISIT_CELL) {
             const boost::shared_ptr<pdat::CellData<float> > fpdata(
                pdata,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
 
             TBOX_ASSERT(fpdata);
 
@@ -3958,7 +3963,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
          } else if (centering == VISIT_NODE) {
             const boost::shared_ptr<pdat::NodeData<float> > fpdata(
                pdata,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
 
             TBOX_ASSERT(fpdata);
 
@@ -3993,7 +3998,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
          if (centering == VISIT_CELL) {
             const boost::shared_ptr<pdat::CellData<double> > dpdata( 
                pdata,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
             TBOX_ASSERT(dpdata);
 
             dat_ptr = dpdata->getPointer(depth_index);
@@ -4006,7 +4011,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
          } else if (centering == VISIT_NODE) {
             const boost::shared_ptr<pdat::NodeData<double> > dpdata(
                pdata,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
             TBOX_ASSERT(dpdata);
 
             dat_ptr = dpdata->getPointer(depth_index);
@@ -4040,7 +4045,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
          if (centering == VISIT_CELL) {
             const boost::shared_ptr<pdat::CellData<int> > ipdata(
                pdata,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
 
             TBOX_ASSERT(ipdata);
 
@@ -4053,7 +4058,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
          } else if (centering == VISIT_NODE) {
             const boost::shared_ptr<pdat::NodeData<int> > ipdata(
                pdata,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
 
             TBOX_ASSERT(ipdata);
 

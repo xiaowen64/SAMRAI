@@ -130,11 +130,11 @@ SideFloatLinearTimeInterpolateOp::timeInterpolate(
    const tbox::Dimension& dim(where.getDim());
 
    const SideData<float>* old_dat =
-      dynamic_cast<const SideData<float> *>(&src_data_old);
+      CPP_CAST<const SideData<float> *>(&src_data_old);
    const SideData<float>* new_dat =
-      dynamic_cast<const SideData<float> *>(&src_data_new);
+      CPP_CAST<const SideData<float> *>(&src_data_new);
    SideData<float>* dst_dat =
-      dynamic_cast<SideData<float> *>(&dst_data);
+      CPP_CAST<SideData<float> *>(&dst_data);
 
    TBOX_ASSERT(old_dat != 0);
    TBOX_ASSERT(new_dat != 0);

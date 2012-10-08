@@ -507,10 +507,10 @@ MethodOfLinesIntegrator::initializeLevelData(
    NULL_USE(can_be_refined);
    NULL_USE(allocate_data);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(level_number >= 0);
+#ifdef DEBUG_CHECK_ASSERTIONS
    if (old_level) {
       TBOX_ASSERT(level_number == old_level->getLevelNumber());
       TBOX_ASSERT_OBJDIM_EQUALITY2(*hierarchy, *old_level);

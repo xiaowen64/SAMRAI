@@ -414,7 +414,8 @@ int main(
                }
                if ( comm_stage.numberOfCompletedMembers() > 0 ) {
                   AsyncCommGroup *completed_group =
-                     dynamic_cast<AsyncCommGroup *>(comm_stage.popCompletionQueue());
+                     CPP_CAST<AsyncCommGroup *>(comm_stage.popCompletionQueue());
+                  TBOX_ASSERT(completed_group);
                   ai = static_cast<int>(completed_group - comm_groups);
                   gi = active_groups[ai];
                   plog << std::setw(3) << ai
@@ -470,7 +471,8 @@ int main(
                TBOX_ASSERT( comm_stage.numberOfCompletedMembers() < 2 );
                if ( comm_stage.numberOfCompletedMembers() > 0 ) {
                   AsyncCommGroup *completed_group =
-                     dynamic_cast<AsyncCommGroup *>(comm_stage.popCompletionQueue());
+                     CPP_CAST<AsyncCommGroup *>(comm_stage.popCompletionQueue());
+                  TBOX_ASSERT(completed_group);
                   ai = static_cast<int>(completed_group - comm_groups);
                   gi = active_groups[ai];
                   plog << std::setw(3) << ai
@@ -523,7 +525,7 @@ int main(
             while ( comm_stage.numberOfCompletedMembers() > 0 ||
                     comm_stage.advanceSome() ) {
                AsyncCommGroup* completed_group =
-                  dynamic_cast<AsyncCommGroup *>(comm_stage.popCompletionQueue());
+                  CPP_CAST<AsyncCommGroup *>(comm_stage.popCompletionQueue());
                TBOX_ASSERT(completed_group != 0);
                ai = static_cast<int>(completed_group - comm_groups);
                gi = active_groups[ai];
@@ -570,7 +572,7 @@ int main(
             while ( comm_stage.numberOfCompletedMembers() > 0 ||
                     comm_stage.advanceSome() ) {
                AsyncCommGroup* completed_group =
-                  dynamic_cast<AsyncCommGroup *>(comm_stage.popCompletionQueue());
+                  CPP_CAST<AsyncCommGroup *>(comm_stage.popCompletionQueue());
                TBOX_ASSERT(completed_group != 0);
                ai = static_cast<int>(completed_group - comm_groups);
                gi = active_groups[ai];

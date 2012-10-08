@@ -70,10 +70,9 @@ MultiblockTester::MultiblockTester(
    d_is_reset(false)
 {
    NULL_USE(main_input_db);
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(data_test != 0);
-#endif
 
    if (!do_refine) {
       d_do_coarsen = do_coarsen;
@@ -250,10 +249,8 @@ void MultiblockTester::registerVariableForReset(
 void MultiblockTester::createRefineSchedule(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    boost::shared_ptr<hier::PatchLevel> level(
       d_patch_hierarchy->getPatchLevel(level_number));
@@ -290,10 +287,8 @@ void MultiblockTester::createRefineSchedule(
 void MultiblockTester::resetRefineSchedule(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    if (d_do_refine) {
 
@@ -353,10 +348,8 @@ void MultiblockTester::createCoarsenSchedule(
 void MultiblockTester::resetCoarsenSchedule(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    if (d_do_coarsen && (level_number > 0)) {
 
@@ -465,11 +458,10 @@ void MultiblockTester::initializeLevelData(
    NULL_USE(initial_time);
    NULL_USE(old_level);
    NULL_USE(allocate_data);
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(level_number >= 0);
-#endif
 
    boost::shared_ptr<hier::PatchHierarchy> mblk_hierarchy(hierarchy);
 
@@ -541,10 +533,9 @@ void MultiblockTester::applyGradientDetector(
    NULL_USE(dt_time);
    NULL_USE(initial_time);
    NULL_USE(uses_richardson_extrapolation_too);
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
-#endif
 
    boost::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
@@ -691,9 +682,7 @@ void MultiblockTester::setupHierarchy(
    boost::shared_ptr<tbox::Database> main_input_db,
    boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(main_input_db);
-#endif
 
    boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
       new mesh::BergerRigoutsos(d_dim));

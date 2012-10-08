@@ -94,11 +94,11 @@ NodeFloatLinearTimeInterpolateOp::timeInterpolate(
    const tbox::Dimension& dim(where.getDim());
 
    const NodeData<float>* old_dat =
-      dynamic_cast<const NodeData<float> *>(&src_data_old);
+      CPP_CAST<const NodeData<float> *>(&src_data_old);
    const NodeData<float>* new_dat =
-      dynamic_cast<const NodeData<float> *>(&src_data_new);
+      CPP_CAST<const NodeData<float> *>(&src_data_new);
    NodeData<float>* dst_dat =
-      dynamic_cast<NodeData<float> *>(&dst_data);
+      CPP_CAST<NodeData<float> *>(&dst_data);
 
    TBOX_ASSERT(old_dat != 0);
    TBOX_ASSERT(new_dat != 0);

@@ -38,10 +38,8 @@ MblkGeometry::MblkGeometry(
    const int nblocks):
    d_dim(dim)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
-#endif
 
    d_object_name = object_name;
    //tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
@@ -125,15 +123,14 @@ void MblkGeometry::tagOctantCells(
    const double regrid_time,
    const int refine_tag_val)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_geom_problem == "SPHERICAL_SHELL" &&
       d_sshell_type == "OCTANT");
    TBOX_ASSERT(temp_tags);
-#endif
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(xyz_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(xyz);
 
    if (d_dim == tbox::Dimension(3)) {
       /*
@@ -178,9 +175,7 @@ void MblkGeometry::getFromInput(
    boost::shared_ptr<tbox::Database> input_db,
    bool is_from_restart)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(input_db);
-#endif
 
    NULL_USE(is_from_restart);
 
@@ -566,11 +561,9 @@ void MblkGeometry::buildCartesianGridOnPatch(
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(xyz_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(xyz);
-#endif
 
    pdat::NodeIterator niend(patch.getBox(), false);
    for (pdat::NodeIterator ni(patch.getBox(), true); ni != niend; ++ni) {
@@ -661,7 +654,7 @@ void MblkGeometry::buildWedgeGridOnPatch(
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(xyz_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    TBOX_ASSERT(xyz);
 
@@ -806,11 +799,9 @@ void MblkGeometry::buildSShellGridOnPatch(
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(xyz_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(xyz);
-#endif
 
    if (d_dim == tbox::Dimension(3)) {
 

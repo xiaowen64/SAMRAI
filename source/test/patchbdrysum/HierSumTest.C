@@ -195,10 +195,12 @@ HierSumTest::setInitialNodeValues(
 
          boost::shared_ptr<NodeData<double> > unode(
             patch->getPatchData(d_unode_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<CellData<double> > ucell(
             patch->getPatchData(d_ucell_node_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(unode);
+         TBOX_ASSERT(ucell);
 
          // output initial cell values
          int level_number = level->getLevelNumber();
@@ -281,7 +283,8 @@ HierSumTest::setInitialNodeValues(
 
             boost::shared_ptr<NodeData<double> > unode(
                patch->getPatchData(d_unode_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(unode);
 
             for (BoxContainer::iterator b = fine_overlap_shrunk.begin();
                  b != fine_overlap_shrunk.end(); ++b) {
@@ -309,7 +312,8 @@ HierSumTest::setInitialNodeValues(
 
          boost::shared_ptr<NodeData<double> > unode(
             patch->getPatchData(d_unode_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(unode);
 
          // output initial node values
          tbox::plog << "INITIAL Node values - Level: " << level->getLevelNumber()
@@ -347,10 +351,12 @@ HierSumTest::setInitialEdgeValues(
 
       boost::shared_ptr<EdgeData<double> > uedge(
          patch->getPatchData(d_uedge_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<CellData<double> > ucell(
          patch->getPatchData(d_ucell_edge_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(uedge);
+      TBOX_ASSERT(ucell);
 
       // output initial cell values
       int level_number = level->getLevelNumber();
@@ -488,9 +494,7 @@ HierSumTest::setupOuternodeSum(
 void
 HierSumTest::doOuternodeSum()
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_node_sum_util);
-#endif
 
    bool fill_hanging_nodes = true;
    d_node_sum_util->computeSum(fill_hanging_nodes);
@@ -528,10 +532,8 @@ void
 HierSumTest::doOuteredgeSum(
    const int level_num)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level_num < d_edge_sum_util.getSize());
    TBOX_ASSERT(d_edge_sum_util[level_num]);
-#endif
 
    d_edge_sum_util[level_num]->computeSum();
 
@@ -582,7 +584,8 @@ int HierSumTest::checkNodeResult(
 
          boost::shared_ptr<NodeData<double> > unode(
             patch->getPatchData(d_unode_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(unode);
 
          // loop over Level complement boxlist
          for (BoxContainer::iterator b = level_boxes_complement.begin();
@@ -639,11 +642,12 @@ int HierSumTest::checkNodeResult(
             << "\tare correct." << endl;
          }
 
+#if (TESTING == 1)
          boost::shared_ptr<CellData<double> > ucell_node(
             patch->getPatchData(d_ucell_node_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(ucell_node);
 
-#if (TESTING == 1)
          tbox::plog << "FINAL Cell values for NODE - Level: "
                     << level->getLevelNumber()
                     << "\tPatch: " << patch->getBox() << endl;
@@ -692,7 +696,8 @@ int HierSumTest::checkEdgeResult(
 
       boost::shared_ptr<EdgeData<double> > uedge(
          patch->getPatchData(d_uedge_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(uedge);
 
       const Index ifirst(patch->getBox().lower());
       const Index ilast(patch->getBox().upper());
@@ -747,11 +752,12 @@ int HierSumTest::checkEdgeResult(
 
       } // loop over depth
 
+#if (TESTING == 1)
       boost::shared_ptr<CellData<double> > ucell_edge(
          patch->getPatchData(d_ucell_edge_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(ucell_edge);
 
-#if (TESTING == 1)
       tbox::plog << "FINAL Cell values for EDGE - Level: "
                  << level->getLevelNumber()
                  << "\tPatch: " << patch->getBox() << endl;
@@ -822,10 +828,12 @@ void HierSumTest::initializeLevelData(
 
       boost::shared_ptr<NodeData<double> > unode(
          patch->getPatchData(d_unode_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<EdgeData<double> > uedge(
          patch->getPatchData(d_uedge_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(unode);
+      TBOX_ASSERT(uedge);
       unode->fillAll(0.0);
       uedge->fillAll(0.0);
    }
@@ -842,10 +850,12 @@ void HierSumTest::initializeLevelData(
 
       boost::shared_ptr<CellData<double> > ucell_node(
          patch->getPatchData(d_ucell_node_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<CellData<double> > ucell_edge(
          patch->getPatchData(d_ucell_edge_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(ucell_node);
+      TBOX_ASSERT(ucell_edge);
 
       ucell_node->fillAll(0.0, ucell_node->getGhostBox()); // ghost box
       ucell_node->fillAll(1.0, patch->getBox());          // interior patch box
@@ -856,7 +866,8 @@ void HierSumTest::initializeLevelData(
       // set cell values at physical boundary
       const boost::shared_ptr<CartesianPatchGeometry> patch_geom(
          patch->getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(patch_geom);
       const tbox::Array<BoundaryBox> node_bdry =
          patch_geom->getCodimensionBoundaries(d_dim.getValue());
       const tbox::Array<BoundaryBox> edge_bdry =
@@ -900,7 +911,8 @@ void HierSumTest::initializeLevelData(
 
          boost::shared_ptr<CellData<double> > ucell_node(
             cpatch->getPatchData(d_ucell_node_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(ucell_node);
 
          Box cpbox = cpatch->getBox();
          for (BoxContainer::iterator fine_level_itr = fine_level_boxes.begin();
@@ -1008,18 +1020,18 @@ HierSumTest::setBoundaryConditions(
 
    const boost::shared_ptr<CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
 
    /*
     * boost::shared_ptr to data in ghost regions.
     */
    boost::shared_ptr<CellData<double> > ucell(
       patch.getPatchData(cell_data_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(ucell);
-#endif
+
    IntVector ghost_cells(ucell->getGhostCellWidth());
    const Box pbox(patch.getBox());
 
@@ -1190,7 +1202,8 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
 
    const boost::shared_ptr<CartesianPatchGeometry> patch_geom(
       cpatch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
 
    /*
     * Get node and edge boundary boxes.
@@ -1212,11 +1225,10 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
     */
    boost::shared_ptr<CellData<double> > ucell(
       cpatch.getPatchData(cell_data_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(ucell);
-#endif
+
    IntVector ghost_cells(ucell->getGhostCellWidth());
 
    int d;

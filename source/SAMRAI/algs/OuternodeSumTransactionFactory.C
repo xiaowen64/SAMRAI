@@ -152,7 +152,8 @@ void OuternodeSumTransactionFactory::preprocessScratchSpace(
          if (preprocess_vector.isSet(n)) {
             boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
                patch->getPatchData(n),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(onode_data);
             onode_data->fillAll(0.0);
          }
       }

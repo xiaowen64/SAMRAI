@@ -214,7 +214,8 @@ CartesianBoundaryUtilities3::fillFaceBoundaryData(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
 
    const hier::Box& interior(patch.getBox());
@@ -297,7 +298,8 @@ CartesianBoundaryUtilities3::fillEdgeBoundaryData(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
 
    const hier::Box& interior(patch.getBox());
@@ -380,7 +382,8 @@ CartesianBoundaryUtilities3::fillNodeBoundaryData(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
 
    const hier::Box& interior(patch.getBox());
@@ -640,11 +643,13 @@ CartesianBoundaryUtilities3::checkBdryData(
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
 
    boost::shared_ptr<pdat::CellData<double> > vardata(
       patch.getPatchData(data_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(vardata);
 
    std::string bdry_type_str;
    if (btype == Bdry::FACE3D) {

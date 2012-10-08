@@ -193,10 +193,7 @@ MblkEuler::~MblkEuler() {
 void MblkEuler::registerModelVariables(
    MblkHyperbolicLevelIntegrator* integrator)
 {
-
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(integrator != 0);
-#endif
 
    //
    // zonal data and its fluxes
@@ -287,20 +284,18 @@ void MblkEuler::initializeDataOnPatch(
 
       boost::shared_ptr<pdat::CellData<double> > state(
          patch.getPatchData(d_state, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::CellData<double> > vol(
          patch.getPatchData(d_vol, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::NodeData<double> > xyz(
          patch.getPatchData(d_xyz, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(state);
       TBOX_ASSERT(vol);
       TBOX_ASSERT(xyz);
       TBOX_ASSERT(state->getGhostCellWidth() == vol->getGhostCellWidth());
-#endif
 
       hier::IntVector state_ghosts = state->getGhostCellWidth();
       hier::IntVector xyz_ghosts = xyz->getGhostCellWidth();
@@ -624,7 +619,8 @@ void MblkEuler::initializeDataOnPatch(
       }
       boost::shared_ptr<pdat::CellData<double> > workload_data(
          patch.getPatchData(d_workload_data_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(workload_data);
       workload_data->fillAll(1.0);
    }
 
@@ -667,10 +663,10 @@ double MblkEuler::computeStableDtOnPatch(
    //
    boost::shared_ptr<pdat::CellData<double> > state(
       patch.getPatchData(d_state, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(d_xyz, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    hier::IntVector state_ghosts = state->getGhostCellWidth();
    hier::IntVector xyz_ghosts = xyz->getGhostCellWidth();
 
@@ -897,7 +893,8 @@ void MblkEuler::testPatchExtrema(
 {
    boost::shared_ptr<pdat::CellData<double> > state(
       patch.getPatchData(d_state, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(state);
    hier::IntVector state_ghosts = state->getGhostCellWidth();
 
    const hier::Index ifirst = patch.getBox().lower();
@@ -979,20 +976,21 @@ void MblkEuler::computeFluxesOnPatch(
 
    boost::shared_ptr<pdat::CellData<double> > state(
       patch.getPatchData(d_state, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::CellData<double> > vol(
       patch.getPatchData(d_vol, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::SideData<double> > flux(
       patch.getPatchData(d_flux, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(d_xyz, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    TBOX_ASSERT(state);
    TBOX_ASSERT(flux);
    TBOX_ASSERT(vol);
+   TBOX_ASSERT(xyz);
    TBOX_ASSERT(state->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(vol->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
@@ -1483,7 +1481,8 @@ void MblkEuler::markPhysicalBoundaryConditions(
 {
    boost::shared_ptr<pdat::CellData<double> > state(
       patch.getPatchData(d_state, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(state);
 
    //
    // the domain and its ghost box
@@ -1591,10 +1590,12 @@ void MblkEuler::setPhysicalBoundaryConditions(
 
    boost::shared_ptr<pdat::NodeData<double> > position(
       patch.getPatchData(d_xyz, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::CellData<double> > state(
       patch.getPatchData(d_state, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(position);
+   TBOX_ASSERT(state);
 
    //
    // the patch and its ghost box
@@ -1745,27 +1746,25 @@ void MblkEuler::postprocessRefine(
 {
    boost::shared_ptr<pdat::CellData<double> > cstate(
       coarse.getPatchData(d_state, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::CellData<double> > cvol(
       coarse.getPatchData(d_vol, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    boost::shared_ptr<pdat::CellData<double> > fstate(
       fine.getPatchData(d_state, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::CellData<double> > fvol(
       fine.getPatchData(d_vol, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-   int depth = cstate->getDepth();
-
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(cstate);
    TBOX_ASSERT(fstate);
    TBOX_ASSERT(cvol);
    TBOX_ASSERT(fvol);
    TBOX_ASSERT(cstate->getDepth() == fstate->getDepth());
-#endif
+
+   int depth = cstate->getDepth();
 
    //
    // get the boxes and bounds
@@ -1881,10 +1880,8 @@ void MblkEuler::postprocessRefine(
                double aii = cdata[cind];
                val[ind] = aii;
 
-#ifdef DEBUG_CHECK_ASSERTIONS
                TBOX_ASSERT(ind >= 0);   // debug assertions
                TBOX_ASSERT(ind < nel);
-#endif
 #if 0 // turn to zero for simple interp
                int im1 = cind - 1;
                int ip1 = cind + 1;
@@ -1942,10 +1939,8 @@ void MblkEuler::postprocessRefine(
 
                int ind = POLY3(ic, jc, kc, imin, jmin, kmin, nx, nxny);  // work pos
 
-#ifdef DEBUG_CHECK_ASSERTIONS
                TBOX_ASSERT(0 <= ind);
                TBOX_ASSERT(ind < nel);
-#endif
 
                fdata[find] =
                   val[ind]
@@ -2015,26 +2010,25 @@ void MblkEuler::postprocessCoarsen(
 {
    boost::shared_ptr<pdat::CellData<double> > cstate(
       coarse.getPatchData(d_state, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::CellData<double> > cvol(
       coarse.getPatchData(d_vol, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    boost::shared_ptr<pdat::CellData<double> > fstate(
       fine.getPatchData(d_state, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::CellData<double> > fvol(
       fine.getPatchData(d_vol, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-   int depth = cstate->getDepth();
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(cstate);
    TBOX_ASSERT(cvol);
    TBOX_ASSERT(fstate);
    TBOX_ASSERT(fvol);
    TBOX_ASSERT(cstate->getDepth() == fstate->getDepth());
-#endif
+
+   int depth = cstate->getDepth();
 
    //
    // box and geometry information
@@ -2144,11 +2138,9 @@ void MblkEuler::postprocessCoarsen(
                int chind =
                   POLY3(ic, jc, kc, cimin, cjmin, ckmin, cnx, cnxny) + n * cnel;  // post + state offset
 
-#ifdef DEBUG_CHECK_ASSERTIONS
                TBOX_ASSERT(cimin <= ic && ic <= cimax);
                TBOX_ASSERT(cjmin <= jc && jc <= cjmax);
                TBOX_ASSERT(ckmin <= kc && kc <= ckmax);
-#endif
 
                double fmass = fvolume[vol_ind];
 
@@ -2214,7 +2206,8 @@ void MblkEuler::tagGradientDetectorCells(
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(d_xyz, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(xyz);
    double* x = xyz->getPointer(0);
    double* y = xyz->getPointer(1);
    double* z = xyz->getPointer(2);
@@ -2231,10 +2224,12 @@ void MblkEuler::tagGradientDetectorCells(
 
    boost::shared_ptr<pdat::CellData<int> > tags(
       patch.getPatchData(tag_indx),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::CellData<double> > var(
       patch.getPatchData(d_state, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(tags);
+   TBOX_ASSERT(var);
 
    //
    // Create a set of temporary tags and set to untagged value.
@@ -2295,9 +2290,8 @@ void MblkEuler::tagGradientDetectorCells(
    //
    for (int ncrit = 0; ncrit < d_refinement_criteria.getSize(); ncrit++) {
 
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(var);
-#endif
+
       string ref = d_refinement_criteria[ncrit];
 
       if (ref == "GRADIENT") {
@@ -2593,11 +2587,13 @@ void MblkEuler::setVolumeOnPatch(
 {
    boost::shared_ptr<pdat::CellData<double> > vol(
       patch.getPatchData(d_vol, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(d_xyz, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(vol);
+   TBOX_ASSERT(xyz);
 
    hier::IntVector vol_ghosts = vol->getGhostCellWidth();
    hier::IntVector xyz_ghosts = xyz->getGhostCellWidth();
@@ -2675,9 +2671,7 @@ void MblkEuler::setVolumeOnPatch(
 void MblkEuler::registerVisItDataWriter(
    boost::shared_ptr<appu::VisItDataWriter> viz_writer)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(viz_writer);
-#endif
    d_visit_writer = viz_writer;
 }
 #endif
@@ -2729,9 +2723,7 @@ void MblkEuler::getFromInput(
    boost::shared_ptr<tbox::Database> input_db,
    bool is_from_restart)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(input_db);
-#endif
 
    boost::shared_ptr<tbox::Database> db(input_db->getDatabase("MblkEuler"));
 
@@ -3057,9 +3049,7 @@ void MblkEuler::getFromInput(
 void MblkEuler::putToRestart(
    const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(restart_db);
-#endif
 
    restart_db->putInteger("MBLKEULER_VERSION", MBLKEULER_VERSION);
 

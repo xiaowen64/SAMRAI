@@ -296,7 +296,7 @@ public:
     *
     * @pre getDim() == src.getDim()
     * @pre (dynamic_cast<const NodeData<TYPE> *>(&src) != 0) ||
-           (dynamic_cast<const OuternodeData<TYPE> *>(&src) != 0)
+    *      (dynamic_cast<const OuternodeData<TYPE> *>(&src) != 0)
     */
    virtual void
    copy(

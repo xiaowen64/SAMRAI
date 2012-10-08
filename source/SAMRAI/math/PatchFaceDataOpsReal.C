@@ -53,10 +53,10 @@ PatchFaceDataOpsReal<TYPE>::swapData(
 
    boost::shared_ptr<pdat::FaceData<TYPE> > d1(
       patch->getPatchData(data1_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::FaceData<TYPE> > d2(
       patch->getPatchData(data2_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());

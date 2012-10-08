@@ -159,15 +159,11 @@ StandardTagAndInitialize::initializeLevelData(
    const boost::shared_ptr<hier::PatchLevel>& old_level,
    const bool allocate_data)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
-   if (old_level) {
-      TBOX_ASSERT(level_number == old_level->getLevelNumber());
-   }
+   TBOX_ASSERT(!old_level || level_number == old_level->getLevelNumber());
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
-#endif
 
    if (d_tag_strategy != 0) {
       d_tag_strategy->initializeLevelData(hierarchy,
@@ -303,7 +299,7 @@ StandardTagAndInitialize::tagCellsForRefinement(
 
          boost::shared_ptr<pdat::CellData<int> > tag_data(
             patch->getPatchData(tag_index),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(tag_data);
 
@@ -501,10 +497,10 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
          patch_level->getPatch(coarse_patch->getGlobalId()));
       boost::shared_ptr<pdat::CellData<int> > ftags(
          fine_patch->getPatchData(tag_index),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::CellData<int> > ctags(
          coarse_patch->getPatchData(tag_index),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
       TBOX_ASSERT(ftags);
       TBOX_ASSERT(ctags);

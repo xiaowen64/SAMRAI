@@ -36,10 +36,7 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
    d_hierarchy(),
    d_amplitude(0.2)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-   TBOX_ASSERT(variable_db != 0);
-#endif
+   TBOX_ASSERT(hier::VariableDatabase::getDatabase() != 0);
 
    tbox::Array<double> init_disp;
    tbox::Array<double> velocity;
@@ -183,11 +180,13 @@ void SinusoidalFrontGenerator::setTags(
 
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          patch->getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(tag_data_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(patch_geom);
+      TBOX_ASSERT(tag_data);
 
       computeFrontsData(
          0 /* distance data */,
@@ -280,7 +279,8 @@ void SinusoidalFrontGenerator::computePatchData(
 
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
 
    const double* xlo = patch_geom->getXLower();
 

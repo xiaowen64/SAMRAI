@@ -197,7 +197,8 @@ void TypeIndependentTester<TYPE>::runTest(
           */
 
          AsyncCommPeer<TYPE>* completed_comm_ =
-            dynamic_cast<AsyncCommPeer<TYPE> *>(completed_member);
+            CPP_CAST<AsyncCommPeer<TYPE> *>(completed_member);
+         TBOX_ASSERT(completed_comm_);
          AsyncCommPeer<TYPE>& completed_comm = *completed_comm_;
 
          int completed_comm_index = static_cast<int>(completed_comm_ - peer_comms);

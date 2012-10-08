@@ -637,8 +637,9 @@ int main(
           * Output load balancing results for TreeLoadBalancer.
           */
          boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer(
-            boost::dynamic_pointer_cast<mesh::TreeLoadBalancer,
-                                        mesh::LoadBalanceStrategy>(load_balancer));
+            BOOST_CAST<mesh::TreeLoadBalancer, mesh::LoadBalanceStrategy>(
+               load_balancer));
+         TBOX_ASSERT(tree_load_balancer);
          tbox::plog << "\n\nLoad balancing results:\n";
          tree_load_balancer->printStatistics(tbox::plog);
       }

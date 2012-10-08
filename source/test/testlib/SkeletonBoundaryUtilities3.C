@@ -137,13 +137,11 @@ void SkeletonBoundaryUtilities3::getFromInput(
    tbox::Array<int>& node_conds,
    const hier::IntVector& periodic)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(bdry_strategy != 0);
    TBOX_ASSERT(input_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(edge_conds.getSize() == NUM_3D_EDGES);
    TBOX_ASSERT(node_conds.getSize() == NUM_3D_NODES);
-#endif
 
    if (!s_fortran_constants_stuffed) {
       stuff3dBdryFortConst();
@@ -189,11 +187,9 @@ void SkeletonBoundaryUtilities3::fillFaceBoundaryData(
    const tbox::Array<double>& bdry_face_values)
 {
    NULL_USE(varname);
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(vardata);
    TBOX_ASSERT(bdry_face_conds.getSize() == NUM_3D_FACES);
 //   TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES*(vardata->getDepth()));
-#endif
 
    if (!s_fortran_constants_stuffed) {
       stuff3dBdryFortConst();
@@ -215,9 +211,7 @@ void SkeletonBoundaryUtilities3::fillFaceBoundaryData(
    const tbox::Array<hier::BoundaryBox>& face_bdry =
       pgeom->getCodimensionBoundaries(Bdry::FACE3D);
    for (int i = 0; i < face_bdry.getSize(); i++) {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(face_bdry[i].getBoundaryType() == Bdry::FACE3D);
-#endif
 
       int bface_loc = face_bdry[i].getLocationIndex();
 
@@ -269,11 +263,10 @@ void SkeletonBoundaryUtilities3::fillEdgeBoundaryData(
    const tbox::Array<double>& bdry_face_values)
 {
    NULL_USE(varname);
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(vardata);
    TBOX_ASSERT(bdry_edge_conds.getSize() == NUM_3D_EDGES);
    TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES * (vardata->getDepth()));
-#endif
 
    if (!s_fortran_constants_stuffed) {
       stuff3dBdryFortConst();
@@ -296,9 +289,7 @@ void SkeletonBoundaryUtilities3::fillEdgeBoundaryData(
    const tbox::Array<hier::BoundaryBox>& edge_bdry =
       pgeom->getCodimensionBoundaries(Bdry::EDGE3D);
    for (int i = 0; i < edge_bdry.getSize(); i++) {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(edge_bdry[i].getBoundaryType() == Bdry::EDGE3D);
-#endif
 
       int bedge_loc = edge_bdry[i].getLocationIndex();
 
@@ -350,11 +341,10 @@ void SkeletonBoundaryUtilities3::fillNodeBoundaryData(
    const tbox::Array<double>& bdry_face_values)
 {
    NULL_USE(varname);
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(vardata);
    TBOX_ASSERT(bdry_node_conds.getSize() == NUM_3D_NODES);
    TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES * (vardata->getDepth()));
-#endif
 
    if (!s_fortran_constants_stuffed) {
       stuff3dBdryFortConst();
@@ -377,9 +367,7 @@ void SkeletonBoundaryUtilities3::fillNodeBoundaryData(
    const tbox::Array<hier::BoundaryBox>& node_bdry =
       pgeom->getCodimensionBoundaries(Bdry::NODE3D);
    for (int i = 0; i < node_bdry.getSize(); i++) {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(node_bdry[i].getBoundaryType() == Bdry::NODE3D);
-#endif
 
       int bnode_loc = node_bdry[i].getLocationIndex();
 
@@ -601,11 +589,9 @@ int SkeletonBoundaryUtilities3::checkBdryData(
    int bcase,
    double bstate)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!varname.empty());
    TBOX_ASSERT(data_id >= 0);
    TBOX_ASSERT(depth >= 0);
-#endif
 
    int num_bad_values = 0;
 
@@ -617,7 +603,8 @@ int SkeletonBoundaryUtilities3::checkBdryData(
 
    boost::shared_ptr<pdat::CellData<double> > vardata(
       patch.getPatchData(data_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(vardata);
 
    string bdry_type_str;
    if (btype == Bdry::FACE3D) {
@@ -776,11 +763,9 @@ void SkeletonBoundaryUtilities3::read3dBdryFaces(
    tbox::Array<int>& face_conds,
    const hier::IntVector& periodic)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(bdry_strategy != 0);
    TBOX_ASSERT(input_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
-#endif
 
    int num_per_dirs = 0;
    for (int id = 0; id < 3; id++) {
@@ -880,11 +865,9 @@ void SkeletonBoundaryUtilities3::read3dBdryEdges(
    tbox::Array<int>& edge_conds,
    const hier::IntVector& periodic)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(input_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(edge_conds.getSize() == NUM_3D_EDGES);
-#endif
 
    int num_per_dirs = 0;
    for (int id = 0; id < 3; id++) {
@@ -1226,11 +1209,9 @@ void SkeletonBoundaryUtilities3::read3dBdryNodes(
    tbox::Array<int>& node_conds,
    const hier::IntVector& periodic)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(input_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(node_conds.getSize() == NUM_3D_NODES);
-#endif
 
    int num_per_dirs = 0;
    for (int id = 0; id < 3; id++) {

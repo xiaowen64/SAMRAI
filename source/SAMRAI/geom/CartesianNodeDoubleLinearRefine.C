@@ -101,7 +101,7 @@ CartesianNodeDoubleLinearRefine::refine(
    const hier::IntVector& ratio) const
 {
    const pdat::NodeOverlap* t_overlap =
-      dynamic_cast<const pdat::NodeOverlap *>(&fine_overlap);
+      CPP_CAST<const pdat::NodeOverlap *>(&fine_overlap);
 
    TBOX_ASSERT(t_overlap != 0);
 
@@ -132,10 +132,10 @@ CartesianNodeDoubleLinearRefine::refine(
 
    boost::shared_ptr<pdat::NodeData<double> > cdata(
       coarse.getPatchData(src_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::NodeData<double> > fdata(
       fine.getPatchData(dst_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
@@ -149,10 +149,13 @@ CartesianNodeDoubleLinearRefine::refine(
 
    const boost::shared_ptr<CartesianPatchGeometry> cgeom(
       coarse.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    const boost::shared_ptr<CartesianPatchGeometry> fgeom(
       fine.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(cgeom);
+   TBOX_ASSERT(fgeom);
 
    const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
    const hier::Index ifirstc = coarse_box.lower();

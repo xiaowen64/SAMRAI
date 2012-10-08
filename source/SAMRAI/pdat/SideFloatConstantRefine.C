@@ -129,13 +129,12 @@ SideFloatConstantRefine::refine(
 
    boost::shared_ptr<SideData<float> > cdata(
       coarse.getPatchData(src_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<SideData<float> > fdata(
       fine.getPatchData(dst_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-   const SideOverlap* t_overlap =
-      dynamic_cast<const SideOverlap *>(&fine_overlap);
+   const SideOverlap* t_overlap = CPP_CAST<const SideOverlap *>(&fine_overlap);
 
    TBOX_ASSERT(t_overlap != 0);
 

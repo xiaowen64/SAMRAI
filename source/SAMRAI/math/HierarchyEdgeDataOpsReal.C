@@ -145,12 +145,13 @@ HierarchyEdgeDataOpsReal<TYPE>::copyData(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -168,11 +169,11 @@ HierarchyEdgeDataOpsReal<TYPE>::swapData(
 #ifdef DEBUG_CHECK_ASSERTIONS
    boost::shared_ptr<pdat::EdgeDataFactory<TYPE> > d1fact(
       d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(d1fact);
    boost::shared_ptr<pdat::EdgeDataFactory<TYPE> > d2fact(
       d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
    TBOX_ASSERT(d1fact->getGhostCellWidth() == d2fact->getGhostCellWidth());
@@ -222,7 +223,7 @@ HierarchyEdgeDataOpsReal<TYPE>::printData(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 
@@ -254,7 +255,7 @@ HierarchyEdgeDataOpsReal<TYPE>::setToScalar(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 
@@ -295,12 +296,13 @@ HierarchyEdgeDataOpsReal<TYPE>::scale(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -331,12 +333,13 @@ HierarchyEdgeDataOpsReal<TYPE>::addScalar(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -367,15 +370,17 @@ HierarchyEdgeDataOpsReal<TYPE>::add(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -406,15 +411,17 @@ HierarchyEdgeDataOpsReal<TYPE>::subtract(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -445,15 +452,17 @@ HierarchyEdgeDataOpsReal<TYPE>::multiply(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -484,15 +493,17 @@ HierarchyEdgeDataOpsReal<TYPE>::divide(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -522,12 +533,13 @@ HierarchyEdgeDataOpsReal<TYPE>::reciprocal(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -560,15 +572,17 @@ HierarchyEdgeDataOpsReal<TYPE>::linearSum(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -600,15 +614,17 @@ HierarchyEdgeDataOpsReal<TYPE>::axpy(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -640,15 +656,17 @@ HierarchyEdgeDataOpsReal<TYPE>::axmy(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -678,12 +696,13 @@ HierarchyEdgeDataOpsReal<TYPE>::abs(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -714,7 +733,7 @@ HierarchyEdgeDataOpsReal<TYPE>::setRandomValues(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(data);
 
@@ -753,7 +772,7 @@ HierarchyEdgeDataOpsReal<TYPE>::numberOfEntries(
 
       boost::shared_ptr<pdat::EdgeDataFactory<TYPE> > dfact(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
       TBOX_ASSERT(dfact);
 
@@ -790,7 +809,7 @@ HierarchyEdgeDataOpsReal<TYPE>::numberOfEntries(
               ip != level->end(); ++ip) {
             boost::shared_ptr<pdat::EdgeData<TYPE> > d(
                (*ip)->getPatchData(data_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
 
             TBOX_ASSERT(d);
 
@@ -834,11 +853,12 @@ HierarchyEdgeDataOpsReal<TYPE>::sumControlVolumes(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<double> > cv(
             p->getPatchData(vol_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
+         TBOX_ASSERT(data);
          TBOX_ASSERT(cv);
 
          hier::Box box = cv->getGhostBox();
@@ -879,13 +899,13 @@ HierarchyEdgeDataOpsReal<TYPE>::L1Norm(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(data);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(data);
 
             box = data->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -948,16 +968,17 @@ HierarchyEdgeDataOpsReal<TYPE>::weightedL2Norm(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > weight(
             p->getPatchData(wgt_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(data);
+         TBOX_ASSERT(weight);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(data);
 
             box = data->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1036,13 +1057,13 @@ HierarchyEdgeDataOpsReal<TYPE>::maxNorm(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(data);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(data);
 
             box = data->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1092,16 +1113,17 @@ HierarchyEdgeDataOpsReal<TYPE>::dot(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > data1(
             p->getPatchData(data1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > data2(
             p->getPatchData(data2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(data1);
+         TBOX_ASSERT(data2);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(data1);
 
             box = data1->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1146,10 +1168,10 @@ HierarchyEdgeDataOpsReal<TYPE>::integral(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<double> > vol(
             p->getPatchData(vol_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(data);
          TBOX_ASSERT(vol);
@@ -1200,16 +1222,17 @@ HierarchyEdgeDataOpsReal<TYPE>::computeConstrProdPos(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > data1(
             p->getPatchData(data1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > data2(
             p->getPatchData(data2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(data1);
+         TBOX_ASSERT(data2);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(data1);
 
             box = data1->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1252,16 +1275,17 @@ HierarchyEdgeDataOpsReal<TYPE>::compareToScalar(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(dst);
 
             box = dst->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1300,16 +1324,17 @@ HierarchyEdgeDataOpsReal<TYPE>::testReciprocal(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(dst);
 
             box = dst->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1355,10 +1380,13 @@ HierarchyEdgeDataOpsReal<TYPE>::maxPointwiseDivide(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > numer(
             p->getPatchData(numer_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > denom(
             p->getPatchData(denom_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(numer);
+         TBOX_ASSERT(denom);
 
          hier::Box box = p->getBox();
 
@@ -1400,10 +1428,13 @@ HierarchyEdgeDataOpsReal<TYPE>::minPointwiseDivide(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > numer(
             p->getPatchData(numer_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<TYPE> > denom(
             p->getPatchData(denom_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(numer);
+         TBOX_ASSERT(denom);
 
          hier::Box box = p->getBox();
 
@@ -1444,7 +1475,7 @@ HierarchyEdgeDataOpsReal<TYPE>::min(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 
@@ -1485,7 +1516,7 @@ HierarchyEdgeDataOpsReal<TYPE>::max(
 
          boost::shared_ptr<pdat::EdgeData<TYPE> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 

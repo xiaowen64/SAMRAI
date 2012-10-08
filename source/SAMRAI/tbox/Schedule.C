@@ -410,7 +410,7 @@ Schedule::processCompletedCommunications()
            d_com_stage.advanceSome() ) {
 
       AsyncCommPeer<char>* completed_comm =
-         dynamic_cast<AsyncCommPeer<char> *>(d_com_stage.popCompletionQueue());
+         CPP_CAST<AsyncCommPeer<char> *>(d_com_stage.popCompletionQueue());
 
       TBOX_ASSERT(completed_comm != 0);
       TBOX_ASSERT(completed_comm->isDone());

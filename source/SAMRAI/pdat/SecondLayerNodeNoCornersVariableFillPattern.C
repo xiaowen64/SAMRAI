@@ -87,9 +87,9 @@ SecondLayerNodeNoCornersVariableFillPattern::calculateOverlap(
       computeStencilBoxes(stencil_boxes, dst_patch_box);
 
       const NodeGeometry* t_dst =
-         dynamic_cast<const NodeGeometry *>(&dst_geometry);
+         CPP_CAST<const NodeGeometry *>(&dst_geometry);
       const NodeGeometry* t_src =
-         dynamic_cast<const NodeGeometry *>(&src_geometry);
+         CPP_CAST<const NodeGeometry *>(&src_geometry);
 
       TBOX_ASSERT(t_dst);
       TBOX_ASSERT(t_src);

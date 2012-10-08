@@ -48,7 +48,7 @@ int OuternodeVariable<TYPE>::getDepth() const
 {
    boost::shared_ptr<OuternodeDataFactory<TYPE> > factory(
       getPatchDataFactory(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(factory);
    return factory->getDepth();
 }

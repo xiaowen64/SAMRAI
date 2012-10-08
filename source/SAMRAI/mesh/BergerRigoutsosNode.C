@@ -1463,18 +1463,14 @@ BergerRigoutsosNode::broadcastAcceptability_check()
          const hier::LocalId node_local_id(*(ptr++));
          ptr = getBoxFromBuffer(d_box, ptr);
          d_accepted_box = hier::Box(d_box, node_local_id, d_owner);
-#ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(d_accepted_box.getBlockId() == d_box.getBlockId());
          TBOX_ASSERT(d_accepted_box.getLocalId() >= 0);
-         if (d_parent != 0) {
-            /*
-             * Do not check for min_box violation in root node.  That
-             * check should be done outside of this class in order to
-             * have flexibility regarding how to handle it.
-             */
-            TBOX_ASSERT(d_box.numberCells() >= d_common->min_box);
-         }
-#endif
+         /*
+          * Do not check for min_box violation in root node.  That
+          * check should be done outside of this class in order to
+          * have flexibility regarding how to handle it.
+          */
+         TBOX_ASSERT(d_parent == 0 || d_box.numberCells() >= d_common->min_box);
       }
 
       if (boxRejected()) {
@@ -1703,16 +1699,12 @@ BergerRigoutsosNode::broadcastToDropouts_check()
                + rejected_by_dropout_bcast);
          const hier::LocalId local_id(d_recv_msg[1]);
          getBoxFromBuffer(d_box, &d_recv_msg[2]);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         if (d_parent != 0) {
-            /*
-             * Do not check for min_box violation in root node.  That
-             * check should be done outside of this class in order to
-             * have flexibility regarding how to handle it.
-             */
-            TBOX_ASSERT(d_box.numberCells() >= d_common->min_box);
-         }
-#endif
+         /*
+          * Do not check for min_box violation in root node.  That
+          * check should be done outside of this class in order to
+          * have flexibility regarding how to handle it.
+          */
+         TBOX_ASSERT(d_parent == 0 || d_box.numberCells() >= d_common->min_box);
          d_accepted_box = hier::Box(d_box, local_id, d_owner);
          TBOX_ASSERT(d_accepted_box.getBlockId() == d_box.getBlockId());
       }
@@ -1758,7 +1750,9 @@ BergerRigoutsosNode::makeLocalTagHistogram()
 
             boost::shared_ptr<pdat::CellData<int> > tag_data_(
                patch.getPatchData(d_common->tag_data_index),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+
+            TBOX_ASSERT(tag_data_);
 
             pdat::CellData<int>& tag_data = *tag_data_;
 
@@ -1824,16 +1818,12 @@ BergerRigoutsosNode::computeMinimalBoundingBoxForTags()
    const hier::IntVector new_size = new_box.numberCells();
 
    if (!new_box.isSpatiallyEqual(d_box)) {
-#ifdef DEBUG_CHECK_ASSERTIONS
-      if (d_parent != 0) {
-         /*
-          * Do not check for min_box violation in root node.  That
-          * check should be done outside of this class in order to
-          * have flexibility regarding how to handle it.
-          */
-         TBOX_ASSERT(new_box.numberCells() >= d_common->min_box);
-      }
-#endif
+      /*
+       * Do not check for min_box violation in root node.  That
+       * check should be done outside of this class in order to
+       * have flexibility regarding how to handle it.
+       */
+      TBOX_ASSERT(d_parent == 0 || new_box.numberCells() >= d_common->min_box);
       /*
        * Save tagged part of the current histogram and reset the box.
        * Is this step really required?  No, we can just keep the
@@ -1877,8 +1867,8 @@ BergerRigoutsosNode::acceptOrSplitBox()
       TBOX_ERROR("Only the owner can determine\n"
          "whether to accept or split a box.\n");
    }
-   TBOX_ASSERT(d_box_acceptance == undetermined);
 #endif
+   TBOX_ASSERT(d_box_acceptance == undetermined);
 
    const hier::IntVector boxdims(d_box.numberCells());
    const hier::IntVector oversize(boxdims - d_common->max_box_size);
@@ -2205,10 +2195,10 @@ BergerRigoutsosNode::findZeroCutSwath(
                 (d_histogram[dim][cut_lo - lo - 1] == 0)) {
             --cut_lo;
          }
-#ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(cut_hi >= cut_lo);
          TBOX_ASSERT(cut_lo - lo >= d_common->min_box(dim));
          TBOX_ASSERT(hi - cut_hi >= d_common->min_box(dim));
+#ifdef DEBUG_CHECK_ASSERTIONS
          for (int i = cut_lo; i <= cut_hi; ++i) {
             TBOX_ASSERT(d_histogram[dim][i - lo] == 0);
          }
@@ -2224,10 +2214,10 @@ BergerRigoutsosNode::findZeroCutSwath(
                 (d_histogram[dim][cut_hi - lo + 1] == 0)) {
             ++cut_hi;
          }
-#ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(cut_hi >= cut_lo);
          TBOX_ASSERT(cut_lo - lo >= d_common->min_box(dim));
          TBOX_ASSERT(hi - cut_hi >= d_common->min_box(dim));
+#ifdef DEBUG_CHECK_ASSERTIONS
          for (int i = cut_lo; i <= cut_hi; ++i) {
             TBOX_ASSERT(d_histogram[dim][i - lo] == 0);
          }
@@ -2488,8 +2478,8 @@ BergerRigoutsosNode::formChildGroups()
    if (d_common->rank != d_owner) {
       TBOX_ERROR("Library error!" << std::endl);
    }
-   TBOX_ASSERT(d_recv_msg.size() == 4 * d_group.size());
 #endif
+   TBOX_ASSERT(d_recv_msg.size() == 4 * d_group.size());
 
    int* lft_overlap = &d_recv_msg[0];
    int* rht_overlap = &d_recv_msg[1];
@@ -2563,7 +2553,6 @@ BergerRigoutsosNode::formChildGroups()
    d_lft_child->d_group.resize(n_lft, BAD_INTEGER);
    d_rht_child->d_group.resize(n_rht, BAD_INTEGER);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    // Recall that only the owner should execute this code.
    TBOX_ASSERT(d_lft_child->d_owner >= 0);
    TBOX_ASSERT(d_lft_child->d_group.size() > 0);
@@ -2577,6 +2566,7 @@ BergerRigoutsosNode::formChildGroups()
    TBOX_ASSERT(d_common->owner_mode == SINGLE_OWNER ||
       ((d_rht_child->d_overlap == 0) !=
        inGroup(d_rht_child->d_group)));
+#ifdef DEBUG_CHECK_ASSERTIONS
    if (d_common->owner_mode == SINGLE_OWNER) {
       TBOX_ASSERT(inGroup(d_lft_child->d_group, d_owner));
       TBOX_ASSERT(inGroup(d_rht_child->d_group, d_owner));
@@ -2622,26 +2612,22 @@ void
 BergerRigoutsosNode::computeNewNeighborhoodSets()
 {
    d_common->t_compute_new_graph_relationships->start();
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_common->compute_relationships > 0);
    TBOX_ASSERT(d_accepted_box.getLocalId() >= 0);
    TBOX_ASSERT(boxAccepted());
    TBOX_ASSERT(d_box_acceptance != accepted_by_dropout_bcast);
-   if (d_parent != 0) {
-      /*
-       * Do not check for min_box violation in root node.  That
-       * check should be done outside of this class in order to
-       * have flexibility regarding how to handle it.
-       */
-      TBOX_ASSERT(d_box.numberCells() >= d_common->min_box);
-   }
+   /*
+    * Do not check for min_box violation in root node.  That
+    * check should be done outside of this class in order to
+    * have flexibility regarding how to handle it.
+    */
+   TBOX_ASSERT(d_parent == 0 || d_box.numberCells() >= d_common->min_box);
    /*
     * We should not compute nabrs if we got the node
     * by a dropout broadcast because we already know
     * there is no overlap!
     */
    TBOX_ASSERT(d_box_acceptance != accepted_by_dropout_bcast);
-#endif
 
    // Create an expanded box for intersection check.
    hier::Box grown_box = d_box;

@@ -219,7 +219,8 @@ int main(
             boost::shared_ptr<pdat::IndexData<SampleIndexData,
                               pdat::CellGeometry> > sample(
                patch->getPatchData(data_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(sample);
 
             // iterate over cells of patch and invoke one "SampleIndexData"
             // instance on each cell (its possible to do more).

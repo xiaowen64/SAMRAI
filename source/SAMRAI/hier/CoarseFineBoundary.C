@@ -59,8 +59,7 @@ CoarseFineBoundary::CoarseFineBoundary(
 {
    TBOX_ASSERT(max_ghost_width > IntVector(d_dim, -1));
 
-   const PatchLevel& level =
-      dynamic_cast<const PatchLevel&>(*hierarchy.getPatchLevel(level_num));
+   const PatchLevel& level = *hierarchy.getPatchLevel(level_num);
    const Connector& level_to_level =
       level.getBoxLevel()->getPersistentOverlapConnectors().
       findOrCreateConnector(

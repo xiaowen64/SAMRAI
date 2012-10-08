@@ -663,8 +663,8 @@ BoxLevel::getLocalNumberOfBoxes(
          "Non-local boxes are not available in DISTRIBUTED mode."
          << std::endl);
    }
-   TBOX_ASSERT(rank >= 0 && rank < d_mpi.getSize());
 #endif
+   TBOX_ASSERT(rank >= 0 && rank < d_mpi.getSize());
 
    if (rank == d_mpi.getRank()) {
       return d_local_number_of_boxes;
@@ -692,8 +692,8 @@ BoxLevel::getLocalNumberOfCells(
          "Non-local boxes are not available in DISTRIBUTED mode."
          << std::endl);
    }
-   TBOX_ASSERT(rank >= 0 && rank < d_mpi.getSize());
 #endif
+   TBOX_ASSERT(rank >= 0 && rank < d_mpi.getSize());
 
    if (rank == d_mpi.getRank()) {
       return d_local_number_of_cells;

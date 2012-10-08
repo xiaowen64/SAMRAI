@@ -165,9 +165,7 @@ MblkLinAdv::MblkLinAdv(
          input_db,
          grid_geom->getNumberBlocks());
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(CELLG == FACEG);
-#endif
 
    // SPHERE problem...
    tbox::MathUtilities<double>::setArrayToSignalingNaN(d_center, d_dim.getValue());
@@ -197,7 +195,7 @@ MblkLinAdv::MblkLinAdv(
       d_bdry_edge_uval.resizeArray(NUM_2D_EDGES);
       tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_edge_uval);
    }
-   if (d_dim == tbox::Dimension(3)) {
+   else if (d_dim == tbox::Dimension(3)) {
       d_scalar_bdry_face_conds.resizeArray(NUM_3D_FACES);
       for (int fi = 0; fi < NUM_3D_FACES; fi++) {
          d_scalar_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
@@ -284,7 +282,7 @@ MblkLinAdv::MblkLinAdv(
          }
       }
    }
-   if (d_dim == tbox::Dimension(3)) {
+   else if (d_dim == tbox::Dimension(3)) {
       for (int i = 0; i < NUM_3D_FACES; i++) {
          if (d_scalar_bdry_face_conds[i] == BdryCond::REFLECT) {
             d_scalar_bdry_face_conds[i] = BdryCond::FLOW;
@@ -470,13 +468,13 @@ void MblkLinAdv::initializeDataOnPatch(
 
       boost::shared_ptr<pdat::CellData<double> > uval(
          patch.getPatchData(d_uval, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::CellData<double> > vol(
          patch.getPatchData(d_vol, getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
       boost::shared_ptr<pdat::NodeData<double> > xyz(
          patch.getPatchData(d_xyz, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
       TBOX_ASSERT(uval);
       TBOX_ASSERT(vol);
@@ -595,7 +593,8 @@ void MblkLinAdv::initializeDataOnPatch(
       }
       boost::shared_ptr<pdat::CellData<double> > workload_data(
          patch.getPatchData(d_workload_data_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(workload_data);
       workload_data->fillAll(1.0);
    }
 
@@ -635,20 +634,18 @@ double MblkLinAdv::computeStableDtOnPatch(
 
    boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::CellData<double> > vol(
       patch.getPatchData(d_vol, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(d_xyz, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
    TBOX_ASSERT(vol);
    TBOX_ASSERT(xyz);
    TBOX_ASSERT(uval->getGhostCellWidth() == vol->getGhostCellWidth());
-#endif
 
    hier::IntVector uval_ghosts = uval->getGhostCellWidth();
    hier::IntVector xyz_ghosts = xyz->getGhostCellWidth();
@@ -804,34 +801,33 @@ void MblkLinAdv::computeFluxesOnPatch(
 
    boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    boost::shared_ptr<pdat::CellData<double> > vol(
       patch.getPatchData(d_vol, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    boost::shared_ptr<pdat::SideData<double> > flux(
       patch.getPatchData(d_flux, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(d_xyz, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    /*
     * Verify that the integrator providing the context correctly
     * created it, and that the ghost cell width associated with the
     * context matches the ghosts defined in this class...
     */
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
    TBOX_ASSERT(flux);
    TBOX_ASSERT(vol);
+   TBOX_ASSERT(xyz);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(vol->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
    TBOX_ASSERT(xyz->getGhostCellWidth() == d_nodeghosts);
-#endif
 
    //
    // ------------------------------- spliced in code ----------------------------
@@ -1091,15 +1087,10 @@ void MblkLinAdv::setPhysicalBoundaryConditions(
 
    boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
-#endif
-   hier::IntVector uval_ghosts = uval->getGhostCellWidth();
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
-#endif
 
    if (d_dim == tbox::Dimension(2)) {
 
@@ -1125,8 +1116,7 @@ void MblkLinAdv::setPhysicalBoundaryConditions(
          d_bdry_edge_uval);
 
    } // d_dim == tbox::Dimension(2))
-
-   if (d_dim == tbox::Dimension(3)) {
+   else if (d_dim == tbox::Dimension(3)) {
 
       /*
        *  Set boundary conditions for cells corresponding to patch faces.
@@ -1215,25 +1205,23 @@ void MblkLinAdv::postprocessRefine(
 
    boost::shared_ptr<pdat::CellData<double> > cuval(
       coarse.getPatchData(d_uval, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::CellData<double> > cvol(
       coarse.getPatchData(d_vol, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    boost::shared_ptr<pdat::CellData<double> > fuval(
       fine.getPatchData(d_uval, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::CellData<double> > fvol(
       fine.getPatchData(d_vol, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(cuval);
    TBOX_ASSERT(fuval);
    TBOX_ASSERT(cvol);
    TBOX_ASSERT(fvol);
    TBOX_ASSERT(cuval->getDepth() == fuval->getDepth());
-#endif
 
    //
    // get the needed geometry and box information
@@ -1371,10 +1359,9 @@ void MblkLinAdv::postprocessRefine(
 
                val[ind] = aii;
 
-#ifdef DEBUG_CHECK_ASSERTIONS
                TBOX_ASSERT(ind >= 0);   // debug assertions
                TBOX_ASSERT(ind < nel);
-#endif
+
                my_slopes(aii, aip, aim, ajp, ajm, akp, akm,
                   w_i, w_ip, w_im, w_jp, w_jm, w_kp, w_km,
                   slope0[ind],
@@ -1410,10 +1397,8 @@ void MblkLinAdv::postprocessRefine(
 
                int ind = POLY3(ic, jc, kc, imin, jmin, kmin, nx, nxny);  // work pos
 
-#ifdef DEBUG_CHECK_ASSERTIONS
                TBOX_ASSERT(0 <= ind);
                TBOX_ASSERT(ind < nel);
-#endif
 
                fdata[fhind] =
                   cdata[ind]
@@ -1484,25 +1469,23 @@ void MblkLinAdv::postprocessCoarsen(
 
    boost::shared_ptr<pdat::CellData<double> > cuval(
       coarse.getPatchData(d_uval, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::CellData<double> > cvol(
       coarse.getPatchData(d_vol, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    boost::shared_ptr<pdat::CellData<double> > fuval(
       fine.getPatchData(d_uval, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::CellData<double> > fvol(
       fine.getPatchData(d_vol, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(cuval);
    TBOX_ASSERT(cvol);
    TBOX_ASSERT(fuval);
    TBOX_ASSERT(fvol);
    TBOX_ASSERT(cuval->getDepth() == fuval->getDepth());
-#endif
 
    //
    // box and geometry information
@@ -1612,11 +1595,9 @@ void MblkLinAdv::postprocessCoarsen(
                int chind =
                   POLY3(ic, jc, kc, cimin, cjmin, ckmin, cnx, cnxny) + n * cnel;  // post + history offset
 
-#ifdef DEBUG_CHECK_ASSERTIONS
                TBOX_ASSERT(cimin <= ic && ic <= cimax);
                TBOX_ASSERT(cjmin <= jc && jc <= cjmax);
                TBOX_ASSERT(ckmin <= kc && kc <= ckmax);
-#endif
 
                real8 fmass = fvolume[vol_ind];
 
@@ -1683,7 +1664,8 @@ void MblkLinAdv::tagGradientDetectorCells(
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(d_xyz, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(xyz);
    double* x = xyz->getPointer(0);
    double* y = xyz->getPointer(1);
    double* z = xyz->getPointer(2);
@@ -1700,10 +1682,12 @@ void MblkLinAdv::tagGradientDetectorCells(
 
    boost::shared_ptr<pdat::CellData<int> > tags(
       patch.getPatchData(tag_indx),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::CellData<double> > var(
       patch.getPatchData(d_uval, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(tags);
+   TBOX_ASSERT(var);
 
    //
    // Create a set of temporary tags and set to untagged value.
@@ -1771,9 +1755,6 @@ void MblkLinAdv::tagGradientDetectorCells(
    //
    for (int ncrit = 0; ncrit < d_refinement_criteria.getSize(); ncrit++) {
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(var);
-#endif
       string ref = d_refinement_criteria[ncrit];
       int size = 0;
       double tol = 0.;
@@ -2008,9 +1989,7 @@ void MblkLinAdv::setMappedGridOnPatch(
    const int level_number,
    const int block_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level_number >= 0);
-#endif
 
    // compute level domain
    const boost::shared_ptr<hier::PatchGeometry> patch_geom(
@@ -2048,9 +2027,7 @@ void MblkLinAdv::setMappedGridOnPatch(
 void MblkLinAdv::registerVisItDataWriter(
    boost::shared_ptr<appu::VisItDataWriter> viz_writer)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(viz_writer);
-#endif
    d_visit_writer = viz_writer;
 }
 #endif
@@ -2125,7 +2102,7 @@ void MblkLinAdv::printClassData(
             << d_node_bdry_edge[j] << endl;
       }
    }
-   if (d_dim == tbox::Dimension(3)) {
+   else if (d_dim == tbox::Dimension(3)) {
       for (j = 0; j < d_scalar_bdry_face_conds.getSize(); j++) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
             << d_scalar_bdry_face_conds[j] << endl;
@@ -2241,9 +2218,7 @@ void MblkLinAdv::getFromInput(
    boost::shared_ptr<tbox::Database> input_db,
    bool is_from_restart)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(input_db);
-#endif
 
    boost::shared_ptr<tbox::Database> db(input_db->getDatabase("MblkLinAdv"));
 
@@ -2674,7 +2649,7 @@ void MblkLinAdv::getFromInput(
             d_scalar_bdry_node_conds,
             periodic);
       }
-      if (d_dim == tbox::Dimension(3)) {
+      else if (d_dim == tbox::Dimension(3)) {
          SkeletonBoundaryUtilities3::getFromInput(this,
             bdry_db,
             d_scalar_bdry_face_conds,
@@ -2702,9 +2677,7 @@ void MblkLinAdv::getFromInput(
 void MblkLinAdv::putToRestart(
    const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(restart_db);
-#endif
 
    restart_db->putInteger("MBLKLINADV_VERSION", MBLKLINADV_VERSION);
 
@@ -2749,7 +2722,7 @@ void MblkLinAdv::putToRestart(
    if (d_dim == tbox::Dimension(2)) {
       restart_db->putDoubleArray("d_bdry_edge_uval", d_bdry_edge_uval);
    }
-   if (d_dim == tbox::Dimension(3)) {
+   else if (d_dim == tbox::Dimension(3)) {
       restart_db->putIntegerArray("d_scalar_bdry_face_conds",
          d_scalar_bdry_face_conds);
       restart_db->putDoubleArray("d_bdry_face_uval", d_bdry_face_uval);
@@ -2861,7 +2834,7 @@ void MblkLinAdv::getFromRestart()
    if (d_dim == tbox::Dimension(2)) {
       d_bdry_edge_uval = db->getDoubleArray("d_bdry_edge_uval");
    }
-   if (d_dim == tbox::Dimension(3)) {
+   else if (d_dim == tbox::Dimension(3)) {
       d_scalar_bdry_face_conds = db->getIntegerArray("d_scalar_bdry_face_conds");
 
       d_bdry_face_uval = db->getDoubleArray("d_bdry_face_uval");
@@ -2908,17 +2881,16 @@ void MblkLinAdv::readDirichletBoundaryDataEntry(
    string& db_name,
    int bdry_location_index)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
-#endif
+
    if (d_dim == tbox::Dimension(2)) {
       readStateDataEntry(db,
          db_name,
          bdry_location_index,
          d_bdry_edge_uval);
    }
-   if (d_dim == tbox::Dimension(3)) {
+   else if (d_dim == tbox::Dimension(3)) {
       readStateDataEntry(db,
          db_name,
          bdry_location_index,
@@ -2932,12 +2904,10 @@ void MblkLinAdv::readStateDataEntry(
    int array_indx,
    tbox::Array<double>& uval)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
    TBOX_ASSERT(array_indx >= 0);
    TBOX_ASSERT(uval.getSize() > array_indx);
-#endif
 
    if (db->keyExists("uval")) {
       uval[array_indx] = db->getDouble("uval");
@@ -2978,7 +2948,7 @@ void MblkLinAdv::checkBoundaryData(
       TBOX_ASSERT(btype == Bdry::EDGE2D ||
          btype == Bdry::NODE2D);
    }
-   if (d_dim == tbox::Dimension(3)) {
+   else if (d_dim == tbox::Dimension(3)) {
       TBOX_ASSERT(btype == Bdry::FACE3D ||
          btype == Bdry::EDGE3D ||
          btype == Bdry::NODE3D);
@@ -2994,44 +2964,32 @@ void MblkLinAdv::checkBoundaryData(
 
    for (int i = 0; i < bdry_boxes.getSize(); i++) {
       hier::BoundaryBox bbox = bdry_boxes[i];
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(bbox.getBoundaryType() == btype);
-#endif
       int bloc = bbox.getLocationIndex();
 
       int bscalarcase = 0, refbdryloc = 0;
       if (d_dim == tbox::Dimension(2)) {
          if (btype == Bdry::EDGE2D) {
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_EDGES);
-#endif
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else { // btype == Bdry::NODE2D
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_NODES);
-#endif
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_edge[bloc];
          }
       }
-      if (d_dim == tbox::Dimension(3)) {
+      else if (d_dim == tbox::Dimension(3)) {
          if (btype == Bdry::FACE3D) {
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_FACES);
-#endif
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else if (btype == Bdry::EDGE3D) {
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_EDGES);
-#endif
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_edge_bdry_face[bloc];
          } else { // btype == Bdry::NODE3D
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_NODES);
-#endif
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_face[bloc];
          }
@@ -3050,7 +3008,7 @@ void MblkLinAdv::checkBoundaryData(
                bscalarcase,
                d_bdry_edge_uval[refbdryloc]);
       }
-      if (d_dim == tbox::Dimension(3)) {
+      else if (d_dim == tbox::Dimension(3)) {
          num_bad_values =
             SkeletonBoundaryUtilities3::checkBdryData(
                d_uval->getName(),

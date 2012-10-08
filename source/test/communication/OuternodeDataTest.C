@@ -39,11 +39,9 @@ OuternodeDataTest::OuternodeDataTest(
    PatchDataTestStrategy(dim),
    d_dim(dim)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
-#endif
 
    d_object_name = object_name;
 
@@ -91,9 +89,7 @@ OuternodeDataTest::~OuternodeDataTest()
 void OuternodeDataTest::readTestInput(
    boost::shared_ptr<tbox::Database> db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    /*
     * Read coeeficients of linear profile to test interpolation.
@@ -178,13 +174,12 @@ void OuternodeDataTest::setLinearData(
    const hier::Box& box,
    const hier::Patch& patch) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const pdat::NodeIndex loweri(
       patch.getBox().lower(), (pdat::NodeIndex::Corner)0);
    const double* dx = pgeom->getDx();
@@ -227,9 +222,9 @@ void OuternodeDataTest::setLinearData(
 {
    NULL_USE(box);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
    TBOX_ASSERT(box.isSpatiallyEqual(patch.getBox()));
+#ifdef DEBUG_CHECK_ASSERTIONS
    if (!box.isSpatiallyEqual(data->getBox())) {
       TBOX_ERROR("Box is not identical to data box, which is\n"
          << "required for testing Outernode communication.");
@@ -238,7 +233,8 @@ void OuternodeDataTest::setLinearData(
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const pdat::NodeIndex loweri(
       patch.getBox().lower(), (pdat::NodeIndex::Corner)0);
    const double* dx = pgeom->getDx();
@@ -353,9 +349,7 @@ void OuternodeDataTest::checkPatchInteriorData(
    const hier::Box& interior,
    const boost::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
 
    const pdat::NodeIndex loweri(interior.lower(), (pdat::NodeIndex::Corner)0);
    const double* dx = pgeom->getDx();
@@ -453,7 +447,8 @@ bool OuternodeDataTest::verifyResults(
 
          boost::shared_ptr<pdat::NodeData<double> > node_data(
             patch.getPatchData(d_variables_dst[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(node_data);
          int depth = node_data->getDepth();
          hier::Box dbox = node_data->getGhostBox();
 

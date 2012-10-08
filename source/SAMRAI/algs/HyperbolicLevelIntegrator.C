@@ -273,15 +273,11 @@ HyperbolicLevelIntegrator::initializeLevelData(
    const boost::shared_ptr<hier::PatchLevel>& old_level,
    const bool allocate_data)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
-   if (old_level) {
-      TBOX_ASSERT(level_number == old_level->getLevelNumber());
-   }
+   TBOX_ASSERT(!old_level || level_number == old_level->getLevelNumber());
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
-#endif
 
    boost::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
@@ -401,11 +397,11 @@ HyperbolicLevelIntegrator::resetHierarchyConfiguration(
 {
    NULL_USE(finest_level);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((coarsest_level >= 0)
       && (coarsest_level <= finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
+#ifdef DEBUG_CHECK_ASSERTIONS
    for (int ln0 = 0; ln0 <= finest_level; ln0++) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln0));
    }
@@ -719,8 +715,8 @@ HyperbolicLevelIntegrator::initializeLevelIntegrator(
    const boost::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_alg_strategy)
 {
    d_gridding_alg =
-      boost::dynamic_pointer_cast<mesh::GriddingAlgorithm,
-                                  mesh::GriddingAlgorithmStrategy>(gridding_alg_strategy);
+      BOOST_CAST<mesh::GriddingAlgorithm, mesh::GriddingAlgorithmStrategy>(
+         gridding_alg_strategy);
 
    TBOX_ASSERT(d_gridding_alg);
 
@@ -1288,18 +1284,18 @@ HyperbolicLevelIntegrator::standardLevelSynchronization(
    const double sync_time,
    const tbox::Array<double>& old_times)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((coarsest_level >= 0)
       && (coarsest_level < finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(old_times.getSize() >= finest_level);
+#ifdef DEBUG_CHECK_ASSERTIONS
    for (int ln = coarsest_level; ln < finest_level; ln++) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln));
       TBOX_ASSERT(sync_time >= old_times[ln]);
    }
-   TBOX_ASSERT(hierarchy->getPatchLevel(finest_level));
 #endif
+   TBOX_ASSERT(hierarchy->getPatchLevel(finest_level));
    t_std_level_sync->start();
 
    for (int fine_ln = finest_level; fine_ln > coarsest_level; fine_ln--) {
@@ -1361,11 +1357,11 @@ HyperbolicLevelIntegrator::synchronizeNewLevels(
    const double sync_time,
    const bool initial_time)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((coarsest_level >= 0)
       && (coarsest_level < finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
+#ifdef DEBUG_CHECK_ASSERTIONS
    for (int ln = coarsest_level; ln <= finest_level; ln++) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln));
    }
@@ -1992,7 +1988,8 @@ HyperbolicLevelIntegrator::registerVariable(
          if (d_flux_is_face) {
             boost::shared_ptr<pdat::FaceDataFactory<double> > fdf(
                var->getPatchDataFactory(),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(fdf);
             fluxsum.reset(new pdat::OuterfaceVariable<double>(
                   dim,
                   fsum_name,
@@ -2001,7 +1998,8 @@ HyperbolicLevelIntegrator::registerVariable(
          } else {
             boost::shared_ptr<pdat::SideDataFactory<double> > sdf(
                var->getPatchDataFactory(),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(sdf);
             fluxsum.reset(new pdat::OutersideVariable<double>(
                   dim,
                   fsum_name,
@@ -2116,14 +2114,14 @@ HyperbolicLevelIntegrator::preprocessFluxData(
                if (d_flux_is_face) {
                   boost::shared_ptr<pdat::OuterfaceData<double> > fsum_data(
                      patch->getPatchData(fsum_id),
-                     boost::detail::dynamic_cast_tag());
+                     BOOST_CAST_TAG);
 
                   TBOX_ASSERT(fsum_data);
                   fsum_data->fillAll(0.0);
                } else {
                   boost::shared_ptr<pdat::OutersideData<double> > fsum_data(
                      patch->getPatchData(fsum_id),
-                     boost::detail::dynamic_cast_tag());
+                     BOOST_CAST_TAG);
 
                   TBOX_ASSERT(fsum_data);
                   fsum_data->fillAll(0.0);
@@ -2215,11 +2213,11 @@ HyperbolicLevelIntegrator::postprocessFluxData(
 
             if (d_flux_is_face) {
                fflux_data =
-                  boost::dynamic_pointer_cast<pdat::FaceData<double>,
-                                              hier::PatchData>(flux_data);
+                  BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+                     flux_data);
                ffsum_data =
-                  boost::dynamic_pointer_cast<pdat::OuterfaceData<double>,
-                                              hier::PatchData>(fsum_data);
+                  BOOST_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
+                     fsum_data);
 
                TBOX_ASSERT(fflux_data && ffsum_data);
                TBOX_ASSERT(fflux_data->getDepth() == ffsum_data->getDepth());
@@ -2227,11 +2225,11 @@ HyperbolicLevelIntegrator::postprocessFluxData(
                flux_ghosts = fflux_data->getGhostCellWidth();
             } else {
                sflux_data =
-                  boost::dynamic_pointer_cast<pdat::SideData<double>,
-                                              hier::PatchData>(flux_data);
+                  BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+                     flux_data);
                sfsum_data =
-                  boost::dynamic_pointer_cast<pdat::OutersideData<double>,
-                                              hier::PatchData>(fsum_data);
+                  BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+                     fsum_data);
 
                TBOX_ASSERT(sflux_data && sfsum_data);
                TBOX_ASSERT(sflux_data->getDepth() == sfsum_data->getDepth());

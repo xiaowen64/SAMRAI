@@ -130,11 +130,11 @@ EdgeDoubleLinearTimeInterpolateOp::timeInterpolate(
    const tbox::Dimension& dim(where.getDim());
 
    const EdgeData<double>* old_dat =
-      dynamic_cast<const EdgeData<double> *>(&src_data_old);
+      CPP_CAST<const EdgeData<double> *>(&src_data_old);
    const EdgeData<double>* new_dat =
-      dynamic_cast<const EdgeData<double> *>(&src_data_new);
+      CPP_CAST<const EdgeData<double> *>(&src_data_new);
    EdgeData<double>* dst_dat =
-      dynamic_cast<EdgeData<double> *>(&dst_data);
+      CPP_CAST<EdgeData<double> *>(&dst_data);
 
    TBOX_ASSERT(old_dat != 0);
    TBOX_ASSERT(new_dat != 0);

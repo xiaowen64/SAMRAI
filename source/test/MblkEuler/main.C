@@ -466,9 +466,7 @@ void setupHierarchy(
    boost::shared_ptr<hier::BaseGridGeometry>& geometry,
    boost::shared_ptr<hier::PatchHierarchy>& mblk_hierarchy)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(main_input_db);
-#endif
 
    boost::shared_ptr<tbox::Database> mult_db(
       main_input_db->getDatabase("PatchHierarchy"));

@@ -95,11 +95,11 @@ NodeComplexLinearTimeInterpolateOp::timeInterpolate(
    const tbox::Dimension& dim(where.getDim());
 
    const NodeData<dcomplex>* old_dat =
-      dynamic_cast<const NodeData<dcomplex> *>(&src_data_old);
+      CPP_CAST<const NodeData<dcomplex> *>(&src_data_old);
    const NodeData<dcomplex>* new_dat =
-      dynamic_cast<const NodeData<dcomplex> *>(&src_data_new);
+      CPP_CAST<const NodeData<dcomplex> *>(&src_data_new);
    NodeData<dcomplex>* dst_dat =
-      dynamic_cast<NodeData<dcomplex> *>(&dst_data);
+      CPP_CAST<NodeData<dcomplex> *>(&dst_data);
 
    TBOX_ASSERT(old_dat != 0);
    TBOX_ASSERT(new_dat != 0);

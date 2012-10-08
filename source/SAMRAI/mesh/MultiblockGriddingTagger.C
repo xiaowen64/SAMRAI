@@ -73,14 +73,8 @@ MultiblockGriddingTagger::setScratchTagPatchDataIndex(
    } else {
       boost::shared_ptr<pdat::CellVariable<int> > t_check_var(
          check_var,
-         boost::detail::dynamic_cast_tag());
-      if (!t_check_var) {
-         TBOX_ERROR(
-            "MultiblockGriddingTagger::setScratchTagPatchDataIndex error...\n"
-            << "Given patch data index = " << buf_tag_indx
-            << " does not map to cell-centered"
-            << "\ninteger data in VariableDatabase." << std::endl);
-      }
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(t_check_var);
    }
 
    d_buf_tag_indx = buf_tag_indx;
@@ -98,7 +92,9 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
 
    const boost::shared_ptr<pdat::CellData<int> > tag_data(
       patch.getPatchData(d_buf_tag_indx),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(tag_data);
 
    hier::IntVector gcw =
       hier::IntVector::min(ghost_width_to_fill,
@@ -145,7 +141,9 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
    const boost::shared_ptr<pdat::CellData<int> > tag_data(
       patch.getPatchData(d_buf_tag_indx),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(tag_data);
 
    hier::Box sing_fill_box(tag_data->getGhostBox() * fill_box);
    tag_data->fillAll(0, sing_fill_box);
@@ -207,7 +205,9 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
                boost::shared_ptr<pdat::CellData<int> > sing_data(
                   encon_patch->getPatchData(d_buf_tag_indx),
-                  boost::detail::dynamic_cast_tag());
+                  BOOST_CAST_TAG);
+
+               TBOX_ASSERT(sing_data);
 
                pdat::CellIterator ciend(encon_fill_box, false);
                for (pdat::CellIterator ci(encon_fill_box, true);

@@ -146,14 +146,9 @@ TreeLoadBalancerOld::setWorkloadPatchDataIndex(
    boost::shared_ptr<pdat::CellDataFactory<double> > datafact(
       hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
       getPatchDataFactory(data_id),
-      boost::detail::dynamic_cast_tag());
-   if (!datafact) {
-      TBOX_ERROR(
-         d_object_name << " error: "
-                       << "\n   data_id " << data_id << " passed to "
-                       << "setWorkloadPatchDataIndex()"
-                       << " does not refer to cell-centered double patch data. " << std::endl);
-   }
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(datafact);
 
    if (level_number >= 0) {
       int asize = d_workload_data_id.getSize();
@@ -1139,7 +1134,7 @@ TreeLoadBalancerOld::loadBalanceWithinRankGroup(
            child_recv_stage.advanceSome() ) {
 
       tbox::AsyncCommPeer<int>* child_recv =
-         dynamic_cast<tbox::AsyncCommPeer<int> *>(child_recv_stage.popCompletionQueue());
+         CPP_CAST<tbox::AsyncCommPeer<int> *>(child_recv_stage.popCompletionQueue());
 
       TBOX_ASSERT(child_recv != 0);
       TBOX_ASSERT(child_recv >= child_recvs);
@@ -1889,7 +1884,7 @@ TreeLoadBalancerOld::constructSemilocalUnbalancedToBalanced(
            comm_stage.advanceSome() ) {
 
       tbox::AsyncCommPeer<int>* peer_comm =
-         dynamic_cast<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
+         CPP_CAST<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
       TBOX_ASSERT(peer_comm != 0);
 
 #ifdef DEBUG_CHECK_ASSERTIONS

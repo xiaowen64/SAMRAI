@@ -138,7 +138,8 @@ void HyprePoisson::initializeLevelData(
    boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy = hierarchy;
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geom(
       patch_hierarchy->getGridGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(grid_geom);
 
    boost::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
@@ -166,14 +167,17 @@ void HyprePoisson::initializeLevelData(
       hier::Box pbox = patch->getBox();
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          patch->getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
       boost::shared_ptr<pdat::CellData<double> > exact_data(
          patch->getPatchData(d_exact_id),
-        boost::detail::dynamic_cast_tag());
+        BOOST_CAST_TAG);
       boost::shared_ptr<pdat::CellData<double> > rhs_data(
          patch->getPatchData(d_rhs_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(patch_geom);
+      TBOX_ASSERT(exact_data);
+      TBOX_ASSERT(rhs_data);
 
       /*
        * Set source function and exact solution.
@@ -189,7 +193,7 @@ void HyprePoisson::initializeLevelData(
             grid_geom->getDx(),
             patch_geom->getXLower());
       }
-      if (d_dim == tbox::Dimension(3)) {
+      else if (d_dim == tbox::Dimension(3)) {
          SAMRAI_F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (
             pbox.lower()[0],
             pbox.upper()[0],
@@ -249,7 +253,8 @@ bool HyprePoisson::solvePoisson()
       const boost::shared_ptr<hier::Patch>& patch = *ip;
       boost::shared_ptr<pdat::CellData<double> > data(
          patch->getPatchData(d_comp_soln_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(data);
       data->fill(0.0);
    }
    // d_poisson_hypre->setBoundaries( "Dirichlet" );
@@ -361,10 +366,12 @@ bool HyprePoisson::packDerivedDataIntoDoubleBuffer(
    if (variable_name == "Error") {
       boost::shared_ptr<pdat::CellData<double> > current_solution_(
          patch.getPatchData(d_comp_soln_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::CellData<double> > exact_solution_(
          patch.getPatchData(d_exact_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(current_solution_);
+      TBOX_ASSERT(exact_solution_);
       pdat::CellData<double>& current_solution = *current_solution_;
       pdat::CellData<double>& exact_solution = *exact_solution_;
       for ( ; icell != icellend; ++icell) {
