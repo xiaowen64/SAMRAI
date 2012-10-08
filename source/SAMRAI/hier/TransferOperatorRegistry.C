@@ -141,9 +141,7 @@ TransferOperatorRegistry::lookupCoarsenOperator(
        (op_name.empty())) {
    }
    else {
-      if (d_coarsen_operators.empty()) {
-         grid_geometry.buildOperators();
-      }
+      grid_geometry.buildOperators();
 
       boost::unordered_map<std::string, boost::unordered_map<std::string,
          boost::shared_ptr<CoarsenOperator> > >::iterator coarsen_ops =
@@ -185,9 +183,7 @@ TransferOperatorRegistry::lookupRefineOperator(
        (op_name.empty())) {
    }
    else {
-      if (d_refine_operators.empty()) {
-         grid_geometry.buildOperators();
-      }
+      grid_geometry.buildOperators();
 
       boost::unordered_map<std::string, boost::unordered_map<std::string,
          boost::shared_ptr<RefineOperator> > >::iterator refine_ops =
@@ -228,9 +224,7 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
        (op_name.empty())) {
    }
    else {
-      if (d_time_operators.empty()) {
-         grid_geometry.buildOperators();
-      }
+      grid_geometry.buildOperators();
 
       boost::unordered_map<std::string, boost::unordered_map<std::string,
          boost::shared_ptr<TimeInterpolateOperator> > >::iterator time_ops =

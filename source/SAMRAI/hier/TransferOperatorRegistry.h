@@ -239,6 +239,17 @@ public:
    }
 
    /*!
+    * @brief
+    */
+   bool
+   hasOperators()
+   {
+      return !d_refine_operators.empty() ||
+             !d_coarsen_operators.empty() ||
+             !d_time_operators.empty();
+   }
+
+   /*!
     * @brief Print class data representation.
     *
     * @param[in]  os The std::ostream to print to.

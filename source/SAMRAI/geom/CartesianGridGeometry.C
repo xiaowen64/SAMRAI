@@ -396,6 +396,10 @@ CartesianGridGeometry::setGeometryDataOnPatch(
 void
 CartesianGridGeometry::buildOperators()
 {
+   if (d_transfer_operator_registry->hasOperators()) {
+      return;
+   }
+
    GridGeometry::buildOperators();
 
    // CartesianGridGeometry specific Coarsening Operators

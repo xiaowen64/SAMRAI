@@ -242,6 +242,10 @@ GridGeometry::makeRefinedGridGeometry(
 void
 GridGeometry::buildOperators()
 {
+   if (d_transfer_operator_registry->hasOperators()) {
+      return;
+   }
+
    // Coarsening Operators
    addCoarsenOperator(
       typeid(pdat::NodeVariable<dcomplex>).name(),
