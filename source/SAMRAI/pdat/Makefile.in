@@ -95,7 +95,9 @@ OBJS = 	\
 	ArrayDataIterator.o \
 	FirstLayerCellVariableFillPattern.o \
 	FirstLayerCellNoCornersVariableFillPattern.o \
+	FirstLayerEdgeVariableFillPattern.o \
 	FirstLayerNodeVariableFillPattern.o \
+	FirstLayerSideVariableFillPattern.o \
 	SecondLayerNodeVariableFillPattern.o \
 	SecondLayerNodeNoCornersVariableFillPattern.o \
 	SparseData.o \

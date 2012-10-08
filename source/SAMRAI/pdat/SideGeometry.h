@@ -128,6 +128,23 @@ public:
       const hier::BoxContainer& dst_restrict_boxes = hier::BoxContainer()) const;
 
    /*!
+    * @brief Compute the side-centered destination boxes that represent
+    * the overlap between the source box geometry and the destination
+    * box geometry.
+    *
+    * @pre src_mask.getDim() == transformation.getOffset.getDim()
+    */
+   void
+   computeDestinationBoxes(
+      tbox::Array<hier::BoxContainer>& dst_boxes,
+      const SideGeometry& src_geometry,
+      const hier::Box& src_mask,
+      const hier::Box& fill_box,
+      const bool overwrite_interior,
+      const hier::Transformation& transformation,
+      const hier::BoxContainer& dst_restrict_boxes = hier::BoxContainer()) const;
+
+   /*!
     * @brief Set up a SideOverlap object based on the given boxes and the
     * transformation.
     */

@@ -174,7 +174,6 @@ FaceGeometry::doOverlap(
          const hier::Box fill_face(toFaceBox(fill_box, d));
          const hier::Box together(dst_face * src_face * fill_face);
          if (!together.empty()) {
-            dst_boxes[d].pushBack(together);
             if (!overwrite_interior) {
                const hier::Box int_face(toFaceBox(dst_geometry.d_box, d));
                dst_boxes[d].removeIntersections(together, int_face);
