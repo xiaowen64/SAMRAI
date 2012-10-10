@@ -1080,11 +1080,23 @@ HierarchyNodeDataOpsComplex::dot(
       }
    }
 
-   dcomplex global_dot = dprod;
    if (mpi.getSize() > 1) {
-      mpi.Allreduce(&dprod, &global_dot, 1, MPI_DOUBLE_COMPLEX, MPI_SUM);
+      // It should be possible to do this with a single Allreduce and a
+      // datatype of MPI_C_DOUBLE_COMPLEX.  However, while recent versions of
+      // openmpi define this datatype their implementations of Allreduce do not
+      // recognize it.
+      double real_part = dprod.real();
+      double imag_part = dprod.imag();
+      double global_real_part;
+      double global_imag_part;
+      mpi.Allreduce(&real_part, &global_real_part, 1, MPI_DOUBLE, MPI_SUM);
+      mpi.Allreduce(&imag_part, &global_imag_part, 1, MPI_DOUBLE, MPI_SUM);
+      dcomplex global_dot(global_real_part, global_imag_part);
+      return global_dot;
    }
-   return global_dot;
+   else {
+      return dprod;
+   }
 }
 
 dcomplex
@@ -1124,11 +1136,23 @@ HierarchyNodeDataOpsComplex::integral(
       }
    }
 
-   dcomplex global_integral = local_integral;
    if (mpi.getSize() > 1) {
-      mpi.Allreduce(&local_integral, &global_integral, 1, MPI_DOUBLE_COMPLEX, MPI_SUM);
+      // It should be possible to do this with a single Allreduce and a
+      // datatype of MPI_C_DOUBLE_COMPLEX.  However, while recent versions of
+      // openmpi define this datatype their implementations of Allreduce do not
+      // recognize it.
+      double real_part = local_integral.real();
+      double imag_part = local_integral.imag();
+      double global_real_part;
+      double global_imag_part;
+      mpi.Allreduce(&real_part, &global_real_part, 1, MPI_DOUBLE, MPI_SUM);
+      mpi.Allreduce(&imag_part, &global_imag_part, 1, MPI_DOUBLE, MPI_SUM);
+      dcomplex global_integral(global_real_part, global_imag_part);
+      return global_integral;
    }
-   return global_integral;
+   else {
+      return local_integral;
+   }
 }
 
 }
