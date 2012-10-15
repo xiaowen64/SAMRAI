@@ -46,6 +46,11 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
 This section contains a summary of additions to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
 
+1) The BoxOverlap classes provided by SAMRAI (CellOverlap, NodeOverlap, etc.)
+   now have "getSourceBoxContainer" methods to get a representation of the
+   overlap boxes in the index space of the source box of a transaction.
+
+2) FirstLayerEdgeFillPattern and FirstLayerSideFillPattern added.
 
 -----------------------------------------------------------------------------
                 Summary of what's changed
@@ -65,6 +70,29 @@ descriptions of items in the following list are provided below.
 -----------------------------------------------------------------------------
                 Details about what's new
 -----------------------------------------------------------------------------
+
+1) The BoxOverlap classes provided by SAMRAI (CellOverlap, NodeOverlap, etc.)
+   now have "getSourceBoxContainer" methods to get a representation of the
+   overlap boxes in the index space of the source box of a transaction.
+
+   The overlap classes hold a container of Boxes and a Transformation object
+   representing a transformation between source and destination index spaces
+   for a transaction.  The Boxes are represented in the destination index
+   space, that is they exist where they are after the Transformation has been
+   invoked.  getSourceBoxContainer() provides a way to obtain a representation
+   of these Boxes in the source index space before the Boxes are transformed.
+
+   These are mainly useful for overlaps that are used for data transactions
+   at block boundaries of multiblock meshes.  The overlap object stores the
+   Boxes in terms of the destination block, while getSourceBoxContainer allows
+   a user to obtain a represenation of the same Boxes in terms of the source
+   block.
+
+2) FirstLayerEdgeFillPattern and FirstLayerSideFillPattern added.
+
+   These implementations of VariableFillPattern allow transactions to be
+   constructed to communicate EdgeData or SideData only at positions along
+   the boundary of a Patch.
 
 -----------------------------------------------------------------------------
                 Details about what's changed
