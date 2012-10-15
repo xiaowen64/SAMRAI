@@ -83,7 +83,7 @@ SparseData<BOX_GEOMETRY>::Attributes::~Attributes()
 template<typename BOX_GEOMETRY>
 typename SparseData<BOX_GEOMETRY>::Attributes&
 SparseData<BOX_GEOMETRY>::Attributes::operator = (
-   const SparseData<BOX_GEOMETRY>::Attributes& rhs)
+   const typename SparseData<BOX_GEOMETRY>::Attributes& rhs)
 {
    if (this != &rhs) {
       d_dbl_attrs = rhs.d_dbl_attrs;

@@ -593,9 +593,6 @@ void MultiblockTester::fillSingularityBoundaryConditions(
    const hier::BoundaryBox& boundary_box,
    const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
 {
-   NULL_USE(grid_geometry);
-   NULL_USE(time);
-
    boost::shared_ptr<hier::VariableContext> save_context(
       d_data_test_strategy->getDataContext());
 

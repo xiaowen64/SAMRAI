@@ -294,6 +294,7 @@ bool txt_next_val(
         << __FILE__ << endl;
 
    exit(1);
+   return false;
 }
 
 void txt2data(
