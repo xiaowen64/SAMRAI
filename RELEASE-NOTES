@@ -65,6 +65,13 @@ descriptions of items in the following list are provided below.
 2) fillSingularityBoundaryConditions moved from RefinePatchStrategy
    to new SingularityPatchStrategy class.
 
+3) Input parameters are more completely and accurately documented.
+
+4) A more self consistent model for the handling of input parameters has been
+   implemented particularly how input and restart databases interact.  In
+   addition, more error and sanity checking has been added to the parsing of
+   input databases for all classes.
+
 *****************************************************************************
 
 -----------------------------------------------------------------------------
@@ -137,7 +144,7 @@ descriptions of items in the following list are provided below.
 
    See the header for StandardTagAndInitialize for more details.
 
-8) fillSingularityBoundaryConditions moved from RefinePatchStrategy
+2) fillSingularityBoundaryConditions moved from RefinePatchStrategy
    to new SingularityPatchStrategy class.
 
    The fillSingularityBoundaryConditions method is only used for multiblock
@@ -146,6 +153,16 @@ descriptions of items in the following list are provided below.
    where you inheritted RefinePatchStrategy.  See the SingularityPatchStrategy
    and RefinePatchStrategy class documentations.  If you don't have block
    singularities, you need not change anything.
+
+3) Each class which accepts input parameters now documents those input
+   parameters via the code's doxygen source code documentation.  This
+   documentation is downloadable or may be generated from the source code
+   distribution.  Included in the documentation of each parameter is:
+   definition, data type, default value (if any), legal range, whether the
+   parameter is optional or required, and how the parameter behaves on restart.
+
+4) For a complete description of SAMRAI's input paramters handling refer to
+   a new user document, docs/userdocs/InputParametersAndRestart.pdf.
 
 =============================================================================
 =============================================================================
