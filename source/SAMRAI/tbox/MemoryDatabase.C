@@ -1392,14 +1392,14 @@ MemoryDatabase::printDatabase(
     * Get the maximum key width in the output (excluding databases)
     */
 
-   long width = 0;
+   int width = 0;
    for (std::list<KeyData>::const_iterator k = d_keyvalues.begin();
         k != d_keyvalues.end(); k++) {
       if (((k->d_from_default) && (toprint & PRINT_DEFAULT))
           || ((k->d_accessed) && (toprint & PRINT_INPUT))
           || (!(k->d_accessed) && (toprint & PRINT_UNUSED))) {
          if (k->d_type != Database::SAMRAI_DATABASE) {
-            const long keywidth = k->d_key.length();
+            const int keywidth = static_cast<int>(k->d_key.length());
             if (keywidth > width) {
                width = keywidth;
             }
@@ -1440,7 +1440,7 @@ MemoryDatabase::printDatabase(
             case Database::SAMRAI_BOOL: {
                indentStream(sstream, indent + 3);
                sstream << i->d_key;
-               indentStream(sstream, width - i->d_key.length());
+               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
                const int n = i->d_boolean.getSize();
                for (int j = 0; j < n; j++) {
@@ -1455,7 +1455,7 @@ MemoryDatabase::printDatabase(
             case Database::SAMRAI_BOX: {
                indentStream(sstream, indent + 3);
                sstream << i->d_key;
-               indentStream(sstream, width - i->d_key.length());
+               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
                const int n = i->d_box.getSize();
                for (int j = 0; j < n; j++) {
@@ -1485,7 +1485,7 @@ MemoryDatabase::printDatabase(
             case Database::SAMRAI_CHAR: {
                indentStream(sstream, indent + 3);
                sstream << i->d_key;
-               indentStream(sstream, width - i->d_key.length());
+               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
                const int n = i->d_char.getSize();
                for (int j = 0; j < n; j++) {
@@ -1500,7 +1500,7 @@ MemoryDatabase::printDatabase(
             case Database::SAMRAI_COMPLEX: {
                indentStream(sstream, indent + 3);
                sstream << i->d_key;
-               indentStream(sstream, width - i->d_key.length());
+               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
                const int n = i->d_complex.getSize();
                for (int j = 0; j < n; j++) {
@@ -1515,7 +1515,7 @@ MemoryDatabase::printDatabase(
             case Database::SAMRAI_DOUBLE: {
                indentStream(sstream, indent + 3);
                sstream << i->d_key;
-               indentStream(sstream, width - i->d_key.length());
+               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
                const int n = i->d_double.getSize();
                for (int j = 0; j < n; j++) {
@@ -1530,7 +1530,7 @@ MemoryDatabase::printDatabase(
             case Database::SAMRAI_FLOAT: {
                indentStream(sstream, indent + 3);
                sstream << i->d_key;
-               indentStream(sstream, width - i->d_key.length());
+               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
                const int n = i->d_float.getSize();
                for (int j = 0; j < n; j++) {
@@ -1545,7 +1545,7 @@ MemoryDatabase::printDatabase(
             case Database::SAMRAI_INT: {
                indentStream(sstream, indent + 3);
                sstream << i->d_key;
-               indentStream(sstream, width - i->d_key.length());
+               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
                const int n = i->d_integer.getSize();
                for (int j = 0; j < n; j++) {
@@ -1560,7 +1560,7 @@ MemoryDatabase::printDatabase(
             case Database::SAMRAI_STRING: {
                indentStream(sstream, indent + 3);
                sstream << i->d_key;
-               indentStream(sstream, width - i->d_key.length());
+               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
                const int n = i->d_string.getSize();
                for (int j = 0; j < n; j++) {
@@ -1579,9 +1579,9 @@ MemoryDatabase::printDatabase(
 
          if (i->d_type != Database::SAMRAI_DATABASE) {
 #ifndef LACKS_SSTREAM
-            const long tab = 59 - sstream.str().length();
+            const int tab = static_cast<int>(59 - sstream.str().length());
 #else
-            const long tab = 59 - sstream.pcount();
+            const int tab = static_cast<int>(59 - sstream.pcount());
 #endif
             if (tab > 0) {
                indentStream(sstream, tab);

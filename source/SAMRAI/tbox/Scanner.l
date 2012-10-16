@@ -86,7 +86,7 @@ S_STRING  (\"([^\n"])*\")
 
 {S_INTEGER} {
    Parser::getParser()->advanceCursor(yytext);
-   yylval.u_integer = atol(yytext);
+   yylval.u_integer = atoi(yytext);
    return(T_INTEGER);
 }
 

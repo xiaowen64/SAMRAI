@@ -698,8 +698,8 @@ SparseData<BOX_GEOMETRY>::unpackStream(
 
       // unpack the number of attributes
       stream >> num_attrs;
-      double dvals[d_dbl_attr_size];
-      int ivals[d_int_attr_size];
+      double dvals[static_cast<unsigned int>(d_dbl_attr_size)];
+      int ivals[static_cast<unsigned int>(d_int_attr_size)];
       for (int count = 0; count < num_attrs; ++count) {
          stream.unpack<double>(dvals, d_dbl_attr_size);
          stream.unpack<int>(ivals, d_int_attr_size);
@@ -808,10 +808,10 @@ SparseData<BOX_GEOMETRY>::getFromRestart(
             + tbox::Utilities::intToString(curr_item, 6);
 
          int dbl_ary_size = d_dbl_attr_size * list_size;
-         double dvalues[dbl_ary_size];
+         double dvalues[static_cast<unsigned int>(dbl_ary_size)];
 
          int int_ary_size = d_int_attr_size * list_size;
-         int ivalues[int_ary_size];
+         int ivalues[static_cast<unsigned int>(int_ary_size)];
 
          item_db->getDoubleArray(dvalues_keyword, dvalues,
             (dbl_ary_size));
@@ -941,8 +941,8 @@ SparseData<BOX_GEOMETRY>::putToRestart(
          + tbox::Utilities::intToString(curr_item, 6);
       item_db->putInteger(list_size_keyword, list_size);
 
-      double dvalues[d_dbl_attr_size * list_size];
-      int ivalues[d_int_attr_size * list_size];
+      double dvalues[static_cast<unsigned int>(d_dbl_attr_size * list_size)];
+      int ivalues[static_cast<unsigned int>(d_int_attr_size * list_size)];
 
       // pack all the data together.
       int doffset(0), ioffset(0);

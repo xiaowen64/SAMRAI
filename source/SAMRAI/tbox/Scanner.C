@@ -909,7 +909,7 @@ YY_RULE_SETUP
 
 {
    Parser::getParser()->advanceCursor(yytext);
-   SAMRAI_yylval.u_integer = atol(yytext);
+   SAMRAI_yylval.u_integer = atoi(yytext);
    return(T_INTEGER);
 }
 	YY_BREAK

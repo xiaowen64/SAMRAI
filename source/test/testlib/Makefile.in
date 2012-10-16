@@ -19,7 +19,7 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA= -I$(TESTLIBDIR) -DTESTING=1
+CPPFLAGS_EXTRA= -DTESTING=1
 
 CXX_OBJS      = AutoTester.o \
 		DerivedVisOwnerData.o \
