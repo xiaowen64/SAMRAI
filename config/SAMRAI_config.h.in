@@ -6,8 +6,8 @@
 #define INCLUDED_SAMRAI_CONFIG_H
 
 #define SAMRAI_VERSION_MAJOR 3
-#define SAMRAI_VERSION_MINOR 4
-#define SAMRAI_VERSION_PATCHLEVEL 1
+#define SAMRAI_VERSION_MINOR 5
+#define SAMRAI_VERSION_PATCHLEVEL 0
 
 
 /* Define if std::fill_n returns void */
