@@ -38,7 +38,7 @@ CoarsenAlgorithm::CoarsenAlgorithm(
    const tbox::Dimension& dim,
    bool fill_coarse_data):
    d_dim(dim),
-   d_coarsen_classes(boost::make_shared<CoarsenClasses>(d_fill_coarse_data)),
+   d_coarsen_classes(boost::make_shared<CoarsenClasses>()),
    d_fill_coarse_data(fill_coarse_data),
    d_schedule_created(false)
 {

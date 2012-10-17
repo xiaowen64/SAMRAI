@@ -110,12 +110,9 @@ private:
    };
 
    /*!
-    * @brief The constructor creates an empty array of coarsen classes.
-    *
-    * @deprecated fill_coarse_data is no longer used.
+    * @brief The default constructor creates an empty array of coarsen classes.
     */
-   explicit CoarsenClasses(
-      bool fill_coarse_data);
+   CoarsenClasses();
 
    /*!
     * @brief The destructor destroys the coarsen data items owned
@@ -458,11 +455,6 @@ private:
     * The default length of the coarsen item array.
     */
    static int s_default_coarsen_item_array_size;
-
-   /*!
-    * @deprecated  No longer used
-    */
-   bool d_fill_coarse_data;
 
    /*!
     * The array of coarsen items.
