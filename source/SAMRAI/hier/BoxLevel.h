@@ -831,12 +831,6 @@ public:
 
    //! @name Methods to modify all Boxes.
    /*
-    ***************************************************************************
-    * TODO: This method puts finer in an inconsistent state by not
-    * updating the attributes depenent on what has been changed.  This
-    * method seems to be an initializer, but it is not clear from the
-    * name or documentation if that is so.  The same goes for coarsenBoxes.
-    ***************************************************************************
     */
    /*!
     * @brief Refine all Boxes of this BoxLevel by ratio placing result into
@@ -855,6 +849,7 @@ public:
       finer.d_boxes = d_boxes;
       finer.d_boxes.refine(ratio);
       finer.d_ratio = final_ratio;
+      finer.computeLocalRedundantData();
       return;
    }
 
@@ -875,6 +870,7 @@ public:
       coarser.d_boxes = d_boxes;
       coarser.d_boxes.coarsen(ratio);
       coarser.d_ratio = final_ratio;
+      coarser.computeLocalRedundantData();
       return;
    }
 
