@@ -32,7 +32,6 @@ OBJS = 	\
 	TagAndInitializeStrategy.o \
 	BalanceUtilities.o \
 	TreeLoadBalancer.o \
-	TreeLoadBalancerOld.o \
 	ChopAndPackLoadBalancer.o \
 	LoadBalanceStrategy.o \
 	GriddingAlgorithmStrategy.o \
