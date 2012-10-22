@@ -566,6 +566,8 @@ int AutoTester::checkHierarchyBoxes(
       tbox::perr << "Test 4: FAILED: Level " << level_number
                  << " hier::BoxLevel configuration doesn't match at step " << iter
                  << std::endl << std::endl;
+      tbox::plog << " correct_box_level:\n" << correct_box_level.format(" ",2) << '\n'
+                 << " box_level:\n" << box_level.format(" ",2) << "\n\n";
       num_failures++;
    }
 
