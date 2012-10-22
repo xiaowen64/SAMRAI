@@ -404,8 +404,7 @@ GriddingAlgorithm::makeCoarsestLevel(
 
    t_load_balance_setup->start();
 
-   // hier::IntVector patch_cut_factor(d_tag_init_strategy-> getErrorCoarsenRatio());
-   const hier::IntVector patch_cut_factor(dim, 1);
+   hier::IntVector patch_cut_factor(dim, d_tag_init_strategy-> getErrorCoarsenRatio());
 
    /*
     * FIXME: The code for generating the coarsest level's boxes is not
@@ -2649,7 +2648,7 @@ GriddingAlgorithm::readLevelBoxes(
       const hier::IntVector largest_patch_in_tag_space =
          largest_patch / ratio;
 
-      hier::IntVector patch_cut_factor(dim, 1);
+      hier::IntVector patch_cut_factor(dim, d_tag_init_strategy-> getErrorCoarsenRatio());
 
       t_load_balance0->start();
       d_load_balancer0->loadBalanceBoxLevel(
