@@ -191,6 +191,10 @@ dox redox devdox redevdox:
 check:
 	(cd source/test; $(MAKE) check)
 
+# Compile the testlib needed by the SAMRAI test suite
+testlib:
+	(cd source/test/testlib && $(MAKE) library) || exit 1
+
 # Compile the SAMRAI test suite
 checkcompile:
 	(cd source/test; $(MAKE) checkcompile)
