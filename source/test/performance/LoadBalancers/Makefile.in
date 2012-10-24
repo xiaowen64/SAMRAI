@@ -33,7 +33,7 @@ INPUTS1D = rod.1d.input
 INPUTS2D = rect.2d.treelb.input rod.2d.treelb.input small_cube.2d.caplb.input small_cube.2d.treelb.input small_sphere.2d.caplb.input small_sphere.2d.treelb.input small_front.2d.treelb.input
 INPUTS3D = plank.3d.treelb.input small_cube.3d.treelb.input
 
-main: $(CXX_OBJS) $(LIBSAMRAI)
+main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)
 	$(MAKE) testlib
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@

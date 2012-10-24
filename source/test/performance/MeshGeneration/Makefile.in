@@ -35,7 +35,7 @@ INPUTS2D =	test_inputs/small_sphere.2d.treelb.input	\
 INPUTS3D =	test_inputs/small_sphere.3d.treelb.input	\
 		test_inputs/small_front.3d.treelb.input
 
-main: $(CXX_OBJS) $(LIBSAMRAI)
+main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)
 	$(MAKE) testlib
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@

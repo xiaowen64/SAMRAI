@@ -36,6 +36,7 @@ check2d:
 check3d:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 checkcompile:
+	(cd $(OBJECT)/source/test/testlib && $(MAKE) $@)
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 checktest:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done

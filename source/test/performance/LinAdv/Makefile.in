@@ -31,7 +31,7 @@ F_OBJS      = \
 	    flux3d.o grad3d.o init3d.o stable3d.o stufprobc3d.o trace3d.o trace1d3d.o fluxcorner3d.o \
 	    flux2d.o grad2d.o init2d.o stable2d.o stufprobc2d.o trace2d.o trace1d2d.o
 
-main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
+main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND) $(TESTLIB)
 	$(MAKE) testlib
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
