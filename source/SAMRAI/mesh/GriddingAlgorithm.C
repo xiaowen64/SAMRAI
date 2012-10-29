@@ -1653,10 +1653,6 @@ GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
          d_hierarchy->getRatioToCoarserLevel(new_ln + 1)
          * d_hierarchy->getProperNestingBuffer(tag_ln + 1);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-      oca.assertOverlapCorrectness(tag_to_finer, false, true, true);
-      oca.assertOverlapCorrectness(finer_to_tag, false, true, true);
-#endif
       TBOX_ASSERT(
          tag_to_finer.getConnectorWidth()
          * d_hierarchy->getRatioToCoarserLevel(tag_ln + 1)
@@ -1670,11 +1666,6 @@ GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
          tag_to_finer,
          d_hierarchy->getGridGeometry()->getDomainSearchTree(),
          d_hierarchy->getConnector(tag_ln, tag_ln));
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-      oca.assertOverlapCorrectness(tag_to_finer, false, true, false);
-      oca.assertOverlapCorrectness(finer_to_tag, false, true, false);
-#endif
 
       fillTagsFromBoxLevel(
          d_true_tag,
