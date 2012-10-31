@@ -31,6 +31,9 @@
 #ifdef MPICH_SKIP_MPICXX
 #undef MPICH_SKIP_MPICXX
 #endif
+#ifdef OMPI_SKIP_MPICXX
+#undef OMPI_SKIP_MPICXX
+#endif
 #include "petscvec.h"
 #endif
 
@@ -363,8 +366,8 @@ private:
     */
    static PetscErrorCode
    vecDestroyVecs(
-      Vec* v_arr,
-      PetscInt n);
+      PetscInt n,
+      Vec* v_arr);
 
    /*
     * Computes the vector dot product.
@@ -688,7 +691,8 @@ private:
    static PetscErrorCode
    vecSetOption(
       Vec x,
-      VecOption op);
+      VecOption op,
+      PetscBool result);
 
    static PetscErrorCode
    vecSetValuesBlocked(
@@ -744,9 +748,8 @@ private:
 
    static PetscErrorCode
    vecLoad(
-      PetscViewer viewer,
-      VecType outtype,
-      Vec* newvec);
+      Vec newvec,
+      PetscViewer viewer);
 
    static PetscErrorCode
    vecPointwiseMax(

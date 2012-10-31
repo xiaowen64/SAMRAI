@@ -43,7 +43,7 @@ check2d:
 
 check3d:	kvtest pvtest
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./kvtest
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./pvtest
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./pvtest -skip_petscrc
 
 checkcompile: kvtest pvtest
 

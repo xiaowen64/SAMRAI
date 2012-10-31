@@ -1256,11 +1256,11 @@ if test "${PETSC_DIR+set}" = set; then
   LIB_NAME="$petsc_LIB_NAME $LIB_NAME"
   INC_PATH="$petsc_INCLUDES $INC_PATH"
   AC_DEFINE(HAVE_PETSC,1,PETSC library is available so use it)
-  if test $PETSC_VERSION_MAJOR -ne 2 || \
-     test $PETSC_VERSION_MINOR -ne 3 || \
-     test $PETSC_VERSION_SUBMINOR -ne 3 ; then
+  if test $PETSC_VERSION_MAJOR -ne 3 || \
+     test $PETSC_VERSION_MINOR -ne 2 || \
+     test $PETSC_VERSION_SUBMINOR -ne 0 ; then
      AC_MSG_WARN([
-SAMRAI requires PETSc-2.3.3.  You have specified version $PETSC_VERSION_MAJOR.$PETSC_VERSION_MINOR.$PETSC_VERSION_SUBMINOR
+SAMRAI requires PETSc-3.2.0.  You have specified version $PETSC_VERSION_MAJOR.$PETSC_VERSION_MINOR.$PETSC_VERSION_SUBMINOR
 which may not work properly!
 ])
   fi

@@ -253,14 +253,14 @@ cat <<-EOF
 	--with-silo=/usr/casc/samrai/apps/rh5/silo/4.7.2_opt
 	--with-mpi-include=/usr/apps/mpich2/1.3.2/include
 	--with-mpi-lib-dirs=/usr/apps/mpich2/1.3.2/lib
-	--with-mpi-libs="mpich mpl pthread"
+	--with-mpi-libs="mpich mpl rt pthread"
 	--with-parallel-run-bin=/usr/apps/mpich2/1.3.2/bin/mpirun
 	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.6.0b.gcc.4.1.2.opt
 	--with-lapack=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
 	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -llapack"
 	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
 	--with-blas-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -lf77blas -lcblas -latlas"
-	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-2.3.3-p11.gcc.4.1.2
+	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-3.2-p7.gcc.4.1.2
 	--with-sundials=/usr/casc/samrai/apps/rh5/sundials/2.3.0_gcc.4.1.2
 	--enable-rpath=-Wl,-R
 EOF
@@ -279,14 +279,14 @@ cat <<-EOF
 	--with-silo=/nfs/casc/samrai/apps/rh5/silo/4.7.2_opt
 	--with-mpi-include=/usr/apps/mpich2/1.3.2/include
 	--with-mpi-lib-dirs=/usr/apps/mpich2/1.3.2/lib
-	--with-mpi-libs="mpich mpl pthread"
+	--with-mpi-libs="mpich mpl rt pthread"
 	--with-parallel-run-bin=/usr/apps/mpich2/1.3.2/bin/mpirun
 	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.6.0b.insure
 	--with-lapack=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
 	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -llapack"
 	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
 	--with-blas-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -lf77blas -lcblas -latlas"
-	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-2.3.3-p11.gcc.4.1.2
+	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-3.2-p7.gcc.4.1.2
 	--with-sundials=/usr/casc/samrai/apps/rh5/sundials/2.3.0_gcc.4.1.2
 	--enable-rpath=-Wl,-R
 EOF
@@ -305,7 +305,7 @@ cat <<-EOF
 	--with-silo=/usr/casc/samrai/apps/rh5/silo/4.7.2_opt
 	--with-mpi-include=/usr/apps/mpich2/latest/include
 	--with-mpi-lib-dirs=/usr/apps/mpich2/latest/lib
-	--with-mpi-libs="mpich mpl pthread"
+	--with-mpi-libs="mpich mpl rt pthread"
 	--with-parallel-run-bin=/usr/apps/mpich2/latest/bin/mpirun
 	--with-hypre=no
 	--without-petsc
@@ -331,8 +331,7 @@ cat <<-EOF
 	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.5.0/lib -llapack"
 	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.5.0
 	--with-blas-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.5.0/lib -lf77blas -lcblas -latlas"
-	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-2.3.3-p11
-	--with-petsc-arch=linux_gcc_openmpi
+	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-3.2-p7
 	--with-sundials=/usr/casc/samrai/apps/rh5/sundials/2.3.0
 	--with-x
 EOF
@@ -356,8 +355,7 @@ cat <<-EOF
 	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.5.0/lib -llapack"
 	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.5.0
 	--with-blas-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.5.0/lib -lf77blas -lcblas -latlas"
-	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-2.3.3-p11
-	--with-petsc-arch=linux_gcc_openmpi
+	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-3.2-p7
 	--with-sundials=/usr/casc/samrai/apps/rh5/sundials/2.3.0
 	--with-x
 EOF
@@ -377,8 +375,7 @@ cat <<-EOF
 	--with-parallel-run-bin=/nfs/casc/samrai/apps/rh5/openmpi/1.5-gcc-4.5.0.opt/bin/mpirun
 	--with-mpi-libs="mpi rt"
 	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.6.0b.opt
-	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-2.3.3-p11
-	--with-petsc-arch=linux_gcc_openmpi
+	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-3.2-p7
 	--with-lapack=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.5.0
 	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.5.0/lib -llapack"
 	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.5.0

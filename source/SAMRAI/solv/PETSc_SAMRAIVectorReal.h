@@ -29,6 +29,9 @@
 #ifdef MPICH_SKIP_MPICXX
 #undef MPICH_SKIP_MPICXX
 #endif
+#ifdef OMPI_SKIP_MPICXX
+#undef OMPI_SKIP_MPICXX
+#endif
 #include "petscvec.h"
 #endif
 

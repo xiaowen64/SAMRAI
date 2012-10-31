@@ -16,26 +16,21 @@
 #ifdef HAVE_PETSC
 
 /*
- * This is needed since petsc defines MPICH_SKIP_MPICXX so if SAMRAI
- * has already defined it the compile will fail.
+ * This is needed since petsc defines MPICH_SKIP_MPICXX and OMPI_SKIP_MPICXX
+ * so if SAMRAI has already defined them the compile will fail.
  */
 #ifndef samrai_included_petsc_snes
 #define samrai_included_petsc_snes
 #ifdef MPICH_SKIP_MPICXX
 #undef MPICH_SKIP_MPICXX
 #endif
+#ifdef OMPI_SKIP_MPICXX
+#undef OMPI_SKIP_MPICXX
+#endif
 
 extern "C" {
-#ifdef PETSC2028
-#include "snes.h"
-#else
 #include "petscsnes.h"
-#endif
 }
-#endif
-
-#ifndef MPICH_SKIP_MPICXX
-#define MPICH_SKIP_MPICXX
 #endif
 
 #ifdef REQUIRES_CMATH

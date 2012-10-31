@@ -1015,6 +1015,8 @@ int main(
             my_vec0);
       Vec pvec1 = solv::PETSc_SAMRAIVectorReal<double>::createPETScVector(
             my_vec1);
+      Vec result = solv::PETSc_SAMRAIVectorReal<double>::createPETScVector(
+            my_vec0);
 
       double zero = 0.0;
       double half = 0.5;
@@ -1320,13 +1322,13 @@ int main(
       tbox::plog << "pvec1 = 6.5 + 12 * 2 = 30.5?" << endl;
       VecView(pvec1, 0);
 
-      VecWAXPY(pvec0, zero, pvec0, pvec0);
+      VecWAXPY(result, zero, pvec0, pvec0);
       tbox::plog << "pvec0 = 0 * 6.5 + 6.5 = 6.5?" << endl;
-      VecView(pvec0, 0);
+      VecView(result, 0);
 
       // No more tests....Destroy vectors and data...
 
-      VecDestroy(pvec3);
+      VecDestroy(&pvec3);
 
       tbox::plog
       << "\n\nPRINTING VARIABLE DATABASE after freeing new vector" << endl;
@@ -1336,6 +1338,7 @@ int main(
       solv::PETSc_SAMRAIVectorReal<double>::destroyPETScVector(pvec0);
       solv::PETSc_SAMRAIVectorReal<double>::destroyPETScVector(pvec1);
       solv::PETSc_SAMRAIVectorReal<double>::destroyPETScVector(pvec2);
+      solv::PETSc_SAMRAIVectorReal<double>::destroyPETScVector(result);
 
       // Deallocate vector data and control volumes
       my_vec0->freeVectorComponents();

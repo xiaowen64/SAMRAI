@@ -173,6 +173,8 @@ insure++.leaksummaryfilter -! * PetscHeaderCreate_Private *
 insure++.leaksummaryfilter -! * PetscViewerASCIIGetStdout *
 insure++.leaksummaryfilter -! * VecInitializePackage *
 insure++.leaksummaryfilter -! * PETSC_VIEWER_STDOUT_ *
+insure++.leaksummaryfilter -! * PetscGetUserName *
+insure++.leaksummaryfilter -! * PetscMallocAlign *
 
 # SILO
 insure++.leaksummaryfilter -! * _lite_PD_init_chrt *
