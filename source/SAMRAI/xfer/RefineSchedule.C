@@ -770,6 +770,9 @@ RefineSchedule::finishScheduleConstruction(
    d_coarse_priority_level_schedule.reset(new tbox::Schedule());
    d_fine_priority_level_schedule.reset(new tbox::Schedule());
 
+   d_coarse_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
+   d_fine_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
+
    /*
     * Generate the schedule for filling the boxes in dst_to_fill.
     * Any portions of the fill boxes that cannot be filled from
