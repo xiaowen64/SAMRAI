@@ -13,7 +13,7 @@ Main {
 //
 // Log file information
 //
-    base_name  = "side-test"
+    base_name  = "side_refine_a.2d"
     log_all_nodes  = TRUE
 
 //

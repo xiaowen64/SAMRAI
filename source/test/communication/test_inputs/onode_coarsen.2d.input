@@ -13,7 +13,7 @@ Main {
 //
 // Log file information
 //
-    base_name  = "onode-test"
+    base_name  = "onode_coarsen.2d"
     log_all_nodes  = TRUE
 
 //

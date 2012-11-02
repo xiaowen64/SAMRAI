@@ -17,7 +17,7 @@ Main {
 //
 // Log file information
 //
-    base_name  = "edge-test"
+    base_name  = "edge_refine_b.3d"
     log_all_nodes  = TRUE
 
 //

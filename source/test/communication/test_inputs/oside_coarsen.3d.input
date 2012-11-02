@@ -13,7 +13,7 @@ Main {
 //
 // Log file information
 //
-    base_name  = "oside-test"
+    base_name  = "oside_coarsen.3d"
     log_all_nodes  = TRUE
 
 //

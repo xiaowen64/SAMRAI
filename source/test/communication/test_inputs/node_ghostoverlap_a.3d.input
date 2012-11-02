@@ -17,7 +17,7 @@ Main {
 //
 // Log file information
 //
-    base_name  = "node-test"
+    base_name  = "node_ghostoverlap_a.3d"
     log_all_nodes  = TRUE
 
 //
