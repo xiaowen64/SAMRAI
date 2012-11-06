@@ -624,25 +624,16 @@ PatchHierarchy::makeRefinedPatchHierarchy(
       d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps;
 
    for (int ln = 0; ln < d_number_levels; ln++) {
-
-      // SGS TODOD why isn't this a ctor with more args and not all this setting of new_level?
-      // What happened to ctor is initialization?
-      boost::shared_ptr<PatchLevel> new_level(
-         boost::make_shared<PatchLevel>(d_dim));
-      new_level->setRefinedPatchLevel(d_patch_levels[ln],
-         refine_ratio,
-         fine_geometry);
-
-      new_level->setLevelNumber(ln);
-      new_level->setNextCoarserHierarchyLevelNumber(ln - 1);
-      new_level->setLevelInHierarchy(true);
-      new_level->setRatioToCoarserLevel(
-         d_patch_levels[ln]->getRatioToCoarserLevel());
-      if (ln >= fine_hierarchy->d_number_levels) {
-         fine_hierarchy->d_number_levels = ln + 1;
-         fine_hierarchy->d_patch_levels.resizeArray(d_number_levels);
-      }
-      fine_hierarchy->d_patch_levels[ln] = new_level;
+      BoxContainer refined_boxes(d_patch_levels[ln]->getBoxLevel()->getBoxes());
+      refined_boxes.refine(refine_ratio);
+      BoxLevel refined_box_level(d_dim);
+      refined_box_level.swapInitialize(
+         refined_boxes,
+         d_patch_levels[ln]->getBoxLevel()->getRefinementRatio(),
+         fine_geometry,
+         d_patch_levels[ln]->getBoxLevel()->getMPI(),
+         BoxLevel::DISTRIBUTED );
+      fine_hierarchy->makeNewPatchLevel(ln, refined_box_level);
    }
 
    return boost::shared_ptr<PatchHierarchy>(fine_hierarchy);
@@ -688,20 +679,16 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
    coarse_hierarchy->d_proper_nesting_buffer = d_proper_nesting_buffer;
 
    for (int ln = 0; ln < d_number_levels; ln++) {
-      boost::shared_ptr<PatchLevel> new_level(new PatchLevel(d_dim));
-      new_level->setCoarsenedPatchLevel(d_patch_levels[ln],
-         coarsen_ratio,
-         coarse_geometry);
-      new_level->setLevelNumber(ln);
-      new_level->setNextCoarserHierarchyLevelNumber(ln - 1);
-      new_level->setLevelInHierarchy(true);
-      new_level->setRatioToCoarserLevel(
-         d_patch_levels[ln]->getRatioToCoarserLevel());
-      if (ln >= coarse_hierarchy->d_number_levels) {
-         coarse_hierarchy->d_number_levels = ln + 1;
-         coarse_hierarchy->d_patch_levels.resizeArray(d_number_levels);
-      }
-      coarse_hierarchy->d_patch_levels[ln] = new_level;
+      BoxContainer coarsened_boxes(d_patch_levels[ln]->getBoxLevel()->getBoxes());
+      coarsened_boxes.coarsen(coarsen_ratio);
+      BoxLevel coarsened_box_level(d_dim);
+      coarsened_box_level.swapInitialize(
+         coarsened_boxes,
+         d_patch_levels[ln]->getBoxLevel()->getRefinementRatio(),
+         coarse_geometry,
+         d_patch_levels[ln]->getBoxLevel()->getMPI(),
+         BoxLevel::DISTRIBUTED );
+      coarse_hierarchy->makeNewPatchLevel(ln, coarsened_box_level);
    }
 
    return boost::shared_ptr<PatchHierarchy>(coarse_hierarchy);
@@ -724,6 +711,8 @@ PatchHierarchy::makeNewPatchLevel(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, new_box_level);
    TBOX_ASSERT(ln >= 0);
    TBOX_ASSERT(new_box_level.getRefinementRatio() > IntVector::getZero(d_dim));
+   TBOX_ASSERT( new_box_level.getGridGeometry() == d_grid_geometry );
+   TBOX_ASSERT( d_domain_box_level.getGridGeometry() == d_grid_geometry );
 
    /*
     * Make sure the level conforms to certain parameters preset
