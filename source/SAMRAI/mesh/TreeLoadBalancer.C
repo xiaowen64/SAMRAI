@@ -418,6 +418,8 @@ TreeLoadBalancer::loadBalanceBoxLevel(
          static_cast<int>(pow(d_global_avg_load*d_min_load_fraction_per_box,
                               1.0/d_dim.getValue())+ 0.5);
       d_min_size.max( hier::IntVector( d_dim, box_size_for_min_load_restriction ) );
+      d_min_size.ceilingDivide(cut_factor);
+      d_min_size *= cut_factor;
 
       if (d_print_steps) {
          tbox::plog << "min_load_fraction_per_box changed min_size from " << tmp_vec;
@@ -609,6 +611,10 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    d_load_stat.push_back(local_load);
    d_box_count_stat.push_back(
       static_cast<int>(balance_box_level.getBoxes().size()));
+
+   if (d_print_steps) {
+      tbox::plog << "Post balanced:\n" << balance_box_level.format("", 2);
+   }
 
    if (d_report_load_balance) {
       t_report_loads->start();
