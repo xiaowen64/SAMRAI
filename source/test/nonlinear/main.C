@@ -171,8 +171,8 @@ int main(
        */
       string input_filename;
 
-      if (argc != 2) {
-         TBOX_ERROR("USAGE:  " << argv[0] << " <input file> \n"
+      if (argc != 3) {
+         TBOX_ERROR("USAGE:  " << argv[0] << " <input file> -skip_petscrc \n"
                                << "  options:\n"
                                << "  none at this time" << endl);
       } else {

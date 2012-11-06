@@ -51,13 +51,13 @@ check:
 check2d:	main
 	@for i in test_inputs/*2d*.input ; do	\
 	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-		./main $${i};	\
+		./main $${i} -skip_petscrc;	\
 	done
 
 check3dx:	main
 	@for i in test_inputs/*3d*.input ; do	\
 	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-		./main $${i};	\
+		./main $${i} -skip_petscrc;	\
 	done
 
 # Disable check3d from test, because it takes too long.
