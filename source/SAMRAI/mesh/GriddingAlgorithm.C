@@ -2669,27 +2669,14 @@ GriddingAlgorithm::readLevelBoxes(
             true);
       }
 
+      const hier::BoxLevelConnectorUtils dlbg_edge_utils;
+      dlbg_edge_utils.addPeriodicImages(
+         new_box_level,
+         d_hierarchy->getGridGeometry()->getDomainSearchTree(),
+         new_to_coarser.getConnectorWidth() );
       oca.findOverlaps(coarser_to_new);
       oca.findOverlaps(new_to_coarser);
 
-      /*
-       * Periodic relationships exist in new_to_coarser, but are not
-       * complete because new doesn't have any periodic images yet.
-       * Remove these relationships to make new<==>coarser proper
-       * transposes.
-       */
-      new_to_coarser.removePeriodicRelationships();
-
-      const hier::Connector& coarser_to_coarser =
-         d_hierarchy->getConnector(tag_ln, tag_ln);
-      const hier::BoxLevelConnectorUtils dlbg_edge_utils;
-      dlbg_edge_utils.addPeriodicImagesAndRelationships(
-         new_box_level,
-         new_to_coarser,
-         coarser_to_new,
-         d_hierarchy->getGridGeometry()->getDomainSearchTree(),
-         coarser_to_coarser);
-      new_box_level.finalize();
    }
 }
 
