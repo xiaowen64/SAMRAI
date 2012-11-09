@@ -2639,7 +2639,13 @@ GriddingAlgorithm::readLevelBoxes(
       const hier::IntVector largest_patch_in_tag_space =
          largest_patch / ratio;
 
+      refineNewBoxLevel(new_box_level,
+         coarser_to_new,
+         new_to_coarser,
+         ratio);
+
       hier::IntVector patch_cut_factor(dim, d_tag_init_strategy-> getErrorCoarsenRatio());
+      patch_cut_factor.max(ratio);
 
       t_load_balance0->start();
       d_load_balancer0->loadBalanceBoxLevel(
@@ -2650,17 +2656,13 @@ GriddingAlgorithm::readLevelBoxes(
          tag_ln,
          hier::Connector(dim),
          hier::Connector(dim),
-         smallest_patch_in_tag_space,
-         largest_patch_in_tag_space,
+         smallest_patch,
+         largest_patch,
          d_hierarchy->getDomainBoxLevel(),
          extend_ghosts,
          patch_cut_factor);
       t_load_balance0->stop();
 
-      refineNewBoxLevel(new_box_level,
-         coarser_to_new,
-         new_to_coarser,
-         ratio);
       if (d_sequentialize_patch_indices) {
          renumberBoxes(new_box_level,
             coarser_to_new,
