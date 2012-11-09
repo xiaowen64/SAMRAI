@@ -1254,12 +1254,14 @@ public:
       const std::string& border) const;
 
    /*!
-    * @brief Writes the requested neighborhood to tbox::perr.
+    * @brief Writes the requested neighborhood to an output stream.
     *
+    * @param[in] os
     * @param[in] box_id
     */
    void
-   writeNeighborhoodToErrorStream(
+   writeNeighborhoodToStream(
+      std::ostream &os,
       const BoxId& box_id) const;
 
    /*!

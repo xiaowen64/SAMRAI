@@ -717,7 +717,8 @@ Connector::writeNeighborhoodsToErrorStream(
  ***********************************************************************
  */
 void
-Connector::writeNeighborhoodToErrorStream(
+Connector::writeNeighborhoodToStream(
+   std::ostream &os,
    const BoxId& box_id) const
 {
    const BoxNeighborhoodCollection& relationships = getRelations(box_id);
@@ -730,9 +731,7 @@ Connector::writeNeighborhoodToErrorStream(
    for (ConstNeighborIterator bi = relationships.begin(ei);
         bi != relationships.end(ei); ++bi) {
       const Box& box = *bi;
-      tbox::perr << "    "
-                 << box << "   "
-                 << box.numberCells() << '\n';
+      os << "    " << box << "   " << box.numberCells() << '\n';
    }
    return;
 }

@@ -987,7 +987,8 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
                   TBOX_ASSERT(anchor_to_new.hasNeighborSet(ianchor->getBoxId()));
 
                   if (s_print_steps == 'y') {
-                     anchor_to_new.writeNeighborhoodToErrorStream(
+                     anchor_to_new.writeNeighborhoodToStream(
+                        tbox::plog,
                         ianchor->getBoxId());
                      tbox::plog << std::endl;
                   }
