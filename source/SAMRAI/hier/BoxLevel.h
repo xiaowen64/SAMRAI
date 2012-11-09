@@ -853,7 +853,7 @@ public:
       }
       finer.d_boxes = d_boxes;
       finer.d_boxes.refine(ratio);
-      finer.d_parallel_state == d_parallel_state;
+      finer.d_parallel_state = d_parallel_state;
       if ( finer.d_parallel_state == GLOBALIZED ) {
          finer.d_global_boxes = d_global_boxes;
          finer.d_global_boxes.refine(ratio);
@@ -884,7 +884,7 @@ public:
       }
       coarser.d_boxes = d_boxes;
       coarser.d_boxes.coarsen(ratio);
-      coarser.d_parallel_state == d_parallel_state;
+      coarser.d_parallel_state = d_parallel_state;
       if ( coarser.d_parallel_state == GLOBALIZED ) {
          coarser.d_global_boxes = d_global_boxes;
          coarser.d_global_boxes.coarsen(ratio);
