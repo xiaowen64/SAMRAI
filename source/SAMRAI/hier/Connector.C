@@ -1433,26 +1433,28 @@ Connector::computeNeighborhoodDifferences(
       ConstNeighborhoodIterator bi = right.findLocal(box_id);
       if (bi != right.end()) {
          // Remove bi from ai.  Put results in a_minus_b.
-         NeighborhoodIterator base_box_itr =
-            left_minus_right.makeEmptyLocalNeighborhood(box_id);
 
-         //equivalent of stl set_difference
-         ConstNeighborIterator na = left.begin(ai);
-         ConstNeighborIterator nb = right.begin(bi);
-         while (na != left.end(ai) && nb != right.end(bi)) {
-            if (na->getBoxId() < nb->getBoxId()) {
-               left_minus_right.insertLocalNeighbor(*na, base_box_itr);
-               ++na;
-            } else if (nb->getBoxId() < na->getBoxId()) {
-               ++nb;
-            } else {
-               ++na;
-               ++nb;
-            } 
-         }
-             
-         if (left_minus_right.isEmptyNeighborhood(box_id)) {
-            left_minus_right.eraseLocalNeighborhood(box_id);
+         /*
+          * In theory, we should not have to resort to using std::set
+          * in order to use set_difference, but our BoxContainer does
+          * not implement all features necessary to use
+          * set_difference.
+          */
+         std::set<Box,Box::id_less> anabrs(left.begin(ai), left.end(ai));
+         std::set<Box,Box::id_less> bnabrs(right.begin(bi), right.end(bi));
+         std::set<Box,Box::id_less> diff;
+         std::insert_iterator<std::set<Box,Box::id_less> > ii(diff, diff.begin());
+         set_difference(anabrs.begin(),
+                        anabrs.end(),
+                        bnabrs.begin(),
+                        bnabrs.end(),
+                        ii, Box::id_less());
+         if ( !diff.empty() ) {
+            NeighborhoodIterator base_box_itr =
+               left_minus_right.makeEmptyLocalNeighborhood(box_id);
+            for ( std::set<Box,Box::id_less>::const_iterator ii=diff.begin(); ii!=diff.end(); ++ii ) {
+               left_minus_right.insertLocalNeighbor(*ii, base_box_itr);
+            }
          }
       } else if (left.numLocalNeighbors(box_id) != 0) {
          NeighborhoodIterator base_box_itr =
