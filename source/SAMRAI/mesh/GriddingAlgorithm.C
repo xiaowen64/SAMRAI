@@ -3337,6 +3337,21 @@ GriddingAlgorithm::findRefinementBoxes(
 
       t_box_massage->stop();
 
+      /*
+       * We have been working with new_box_level in the
+       * tag_box_level's index space.  Now, refine it so we can
+       * build the new level.
+       */
+      refineNewBoxLevel(new_box_level,
+         tag_to_new,
+         new_to_tag,
+         ratio);
+
+      if (d_check_connectors) {
+         TBOX_ASSERT(oca.checkOverlapCorrectness(new_to_tag) == 0);
+         TBOX_ASSERT(oca.checkOverlapCorrectness(tag_to_new) == 0);
+      }
+
       if (d_load_balance) {
          if (d_print_steps) {
             tbox::plog
@@ -3346,7 +3361,7 @@ GriddingAlgorithm::findRefinementBoxes(
          t_load_balance->barrierAndStart();
          t_load_balance_setup->start();
 
-         hier::IntVector patch_cut_factor(dim, 1);
+         const hier::IntVector &patch_cut_factor = ratio;
 
          t_load_balance_setup->stop();
 
@@ -3358,10 +3373,10 @@ GriddingAlgorithm::findRefinementBoxes(
             new_ln,
             new_to_tag, // FIXME: try using finer as the attractor.
             tag_to_new, // FIXME: try using finer as the attractor.
-            smallest_patch_in_tag_space,
-            largest_patch_in_tag_space,
+            smallest_patch,
+            largest_patch,
             d_hierarchy->getDomainBoxLevel(),
-            extend_ghosts_in_tag_space,
+            extend_ghosts,
             patch_cut_factor);
 
          t_load_balance->stop();
@@ -3427,21 +3442,6 @@ GriddingAlgorithm::findRefinementBoxes(
          tbox::plog << "GriddingAlgorithm begin adding periodic images."
                     << std::endl;
       }
-
-      if (d_check_connectors) {
-         TBOX_ASSERT(oca.checkOverlapCorrectness(new_to_tag) == 0);
-         TBOX_ASSERT(oca.checkOverlapCorrectness(tag_to_new) == 0);
-      }
-
-      /*
-       * We have been working with new_box_level in the
-       * tag_box_level's index space.  Now, refine it so we can
-       * build the new level.
-       */
-      refineNewBoxLevel(new_box_level,
-         tag_to_new,
-         new_to_tag,
-         ratio);
 
       if (d_check_connectors) {
          TBOX_ASSERT(oca.checkOverlapCorrectness(new_to_tag) == 0);
