@@ -3917,6 +3917,16 @@ TreeLoadBalancer::breakOffLoad_cubic(
    hier::IntVector brk_size(d_min_size);
    brk_size.max(d_cut_factor);
    brk_size.min(box_dims);
+
+   /*
+    * Make sure brk_size is a multiple of d_cut_factor.
+    */ 
+   for (int d = 0; d < d_dim.getValue(); ++d) {
+      if (brk_size(d) % d_cut_factor(d) != 0) {
+         brk_size(d) = ((brk_size(d) / d_cut_factor(d)) + 1) * d_cut_factor(d);
+      }
+   }
+
    /*
     * If remainder is too small, zero it out to avoid
     * having non-zero remainder smaller than d_min_size.
