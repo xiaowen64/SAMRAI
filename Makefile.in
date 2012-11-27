@@ -18,7 +18,7 @@ OBJECT  = .
 include ./config/Makefile.config
 
 INCLUDE_SAM = @top_srcdir@/source/SAMRAI
-INSTALL	    = sh @srcdir@/config/install-sh
+INSTALL	    = @INSTALL@
 INSTDIR	    = @INSTDIR@
 
 #
@@ -141,16 +141,16 @@ install: library tools
 	$(INSTALL) -d -m 755 $(INSTDIR)/bin
 	$(INSTALL) -d -m 755 $(INSTDIR)/include
 	$(INSTALL) -d -m 755 $(INSTDIR)/include/SAMRAI
-	$(INSTALL) -c -m 644 COPYRIGHT $(INSTDIR)
-	$(INSTALL) -c -m 644 config.status $(INSTDIR)/config
-	$(INSTALL) -c -m 644 config/Makefile.config $(INSTDIR)/config
+	$(INSTALL) -p -c -m 644 COPYRIGHT $(INSTDIR)
+	$(INSTALL) -p -c -m 644 config.status $(INSTDIR)/config
+	$(INSTALL) -p -c -m 644 config/Makefile.config $(INSTDIR)/config
 	cat config/Makefile.config.install >> $(INSTDIR)/config/Makefile.config 
-	$(INSTALL) -c -m 644 include/SAMRAI/SAMRAI_config.h $(INSTDIR)/include/SAMRAI/
+	$(INSTALL) -p -c -m 644 include/SAMRAI/SAMRAI_config.h $(INSTDIR)/include/SAMRAI/
 	@for i in $(SAMRAI_LIBRARIES); \
 	do \
-           $(INSTALL) -d -m 755 $(INSTDIR)/include/SAMRAI/$$i;                    \
+           $(INSTALL) -p -d -m 755 $(INSTDIR)/include/SAMRAI/$$i;                    \
            for f in $(INCLUDE_SAM)/$$i/*.[hICi]; do                               \
-              $(INSTALL) -c -m 644 $$f $(INSTDIR)/include/SAMRAI/$$i;             \
+              $(INSTALL) -p -c -m 644 $$f $(INSTDIR)/include/SAMRAI/$$i;             \
            done;                                                                  \
            if test -d $(INCLUDE_SAM)/$$i/fortran; then                            \
               for f in $(INCLUDE_SAM)/$$i/fortran/*.[i]; do		          \
@@ -158,7 +158,7 @@ install: library tools
 	           if ! test -d $(INSTDIR)/include/SAMRAI/$$i/fortran; then       \
 		      $(INSTALL) -d -m 755 $(INSTDIR)/include/SAMRAI/$$i/fortran; \
 	           fi;                                                            \
-	           $(INSTALL) -c -m 644 $$f $(INSTDIR)/include/SAMRAI/$$i/fortran;\
+	           $(INSTALL) -p -c -m 644 $$f $(INSTDIR)/include/SAMRAI/$$i/fortran;\
 		fi                                                                \
 	     done;                                                                \
 	   fi                                                           	  \
