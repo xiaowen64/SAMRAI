@@ -78,7 +78,7 @@ AsyncCommGroup::AsyncCommGroup():
    d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
    d_use_mpi_collective_for_full_groups(false),
    d_use_blocking_send_to_children(false),
-   d_use_blocking_send_to_parent(true)
+   d_use_blocking_send_to_parent(false)
 #ifdef DEBUG_CHECK_ASSERTIONS
    ,
    d_group_ranks(0, true)
@@ -113,7 +113,7 @@ AsyncCommGroup::AsyncCommGroup(
    d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
    d_use_mpi_collective_for_full_groups(false),
    d_use_blocking_send_to_children(false),
-   d_use_blocking_send_to_parent(true)
+   d_use_blocking_send_to_parent(false)
 #ifdef DEBUG_CHECK_ASSERTIONS
    ,
    d_group_ranks(0, true)
