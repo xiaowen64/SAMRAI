@@ -125,7 +125,7 @@ namespace geom {
  */
 
 class CartesianGridGeometry:
-   public geom::GridGeometry
+   public GridGeometry
 {
    typedef hier::PatchGeometry::TwoDimBool TwoDimBool;
 
