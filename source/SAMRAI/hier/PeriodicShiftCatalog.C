@@ -147,24 +147,22 @@ PeriodicShiftCatalog::setShifts(
    s_periodic_shift_catalog_instance[dim_index]->d_shifts = tmp_shifts;
    s_periodic_shift_catalog_instance[dim_index]->d_zero_shift_number = 0;
 
-   if (1) {
-      // Write out the shift catalog to log file.
-      tbox::plog << "\n\nPeriodicShiftCatalog has "
-                 << s_periodic_shift_catalog_instance[dim_index]->d_shifts.size()
-                 << " shifts:\n";
-      tbox::plog << "Shift   Opposite\n";
-      tbox::plog << "Number  Shift     Shift\n";
-      for (size_t i = 0;
-           i < s_periodic_shift_catalog_instance[dim_index]->d_shifts.size();
-           ++i) {
-         tbox::plog << std::setw(3) << i << "      "
-                    << std::setw(3)
-                    << s_periodic_shift_catalog_instance[dim_index]->d_opposite_number[i]
-                    << "      "
-                    << s_periodic_shift_catalog_instance[dim_index]->d_shifts[i] << "\n";
-      }
-      tbox::plog << "\n\n";
+   // Write out the shift catalog to log file.
+   tbox::plog << "\n\nPeriodicShiftCatalog has "
+              << s_periodic_shift_catalog_instance[dim_index]->d_shifts.size()
+              << " shifts:\n";
+   tbox::plog << "Shift   Opposite\n";
+   tbox::plog << "Number  Shift     Shift\n";
+   for (size_t i = 0;
+        i < s_periodic_shift_catalog_instance[dim_index]->d_shifts.size();
+        ++i) {
+      tbox::plog << std::setw(3) << i << "      "
+                 << std::setw(3)
+                 << s_periodic_shift_catalog_instance[dim_index]->d_opposite_number[i]
+                 << "      "
+                 << s_periodic_shift_catalog_instance[dim_index]->d_shifts[i] << "\n";
    }
+   tbox::plog << "\n\n";
 
    TBOX_ASSERT(s_periodic_shift_catalog_instance[dim_index]->d_shifts.size() ==
       s_periodic_shift_catalog_instance[dim_index]->d_opposite_number.size());
