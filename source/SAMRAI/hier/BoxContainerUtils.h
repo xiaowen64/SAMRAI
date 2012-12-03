@@ -12,7 +12,9 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/Connector.h"
+#include "SAMRAI/hier/Box.h"
+
+#include <vector>
 
 namespace SAMRAI {
 namespace hier {
