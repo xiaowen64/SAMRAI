@@ -2871,41 +2871,43 @@ RefineSchedule::findEnconUnfilledBoxes(
      }
    }
 
-   /*
-    * If there are overlapping source boxes found in dst_to_src,
-    * and if those source boxes lie across enhanced connectivity from
-    * the destination box, then we remove the source box from the
-    * source block's entry in the unfilled_encon_nbr_boxes map container.
-    */
-   hier::Connector::ConstNeighborhoodIterator dst_to_src_iter =
-      dst_to_src.findLocal(dst_box_id);
+   if (d_src_level) {
+      /*
+       * If there are overlapping source boxes found in dst_to_src,
+       * and if those source boxes lie across enhanced connectivity from
+       * the destination box, then we remove the source box from the
+       * source block's entry in the unfilled_encon_nbr_boxes map container.
+       */
+      hier::Connector::ConstNeighborhoodIterator dst_to_src_iter =
+         dst_to_src.findLocal(dst_box_id);
 
-   if (dst_to_src_iter != dst_to_src.end()) {
+      if (dst_to_src_iter != dst_to_src.end()) {
 
       /*
        * If at enhanced connectivity, remove source box from container of
        * unfilled boxes
        */
-      for (hier::Connector::ConstNeighborIterator na = dst_to_src.begin(dst_to_src_iter);
-           na != dst_to_src.end(dst_to_src_iter); ++na) {
+         for (hier::Connector::ConstNeighborIterator na = dst_to_src.begin(dst_to_src_iter);
+              na != dst_to_src.end(dst_to_src_iter); ++na) {
 
-         const hier::Box& src_box = *na;
-         const hier::BlockId& src_block_id = src_box.getBlockId();
+            const hier::Box& src_box = *na;
+            const hier::BlockId& src_block_id = src_box.getBlockId();
 
-         if (src_block_id != dst_block_id) {
+            if (src_block_id != dst_block_id) {
 
-            if (grid_geometry->areSingularityNeighbors(dst_block_id,
-                   src_block_id)) {
+               if (grid_geometry->areSingularityNeighbors(dst_block_id,
+                      src_block_id)) {
 
-               hier::Box transformed_src_box(src_box);
-               grid_geometry->transformBox(transformed_src_box,
-                  d_dst_level->getRatioToLevelZero(),
-                  dst_block_id,
-                  src_block_id);
+                  hier::Box transformed_src_box(src_box);
+                  grid_geometry->transformBox(transformed_src_box,
+                     d_dst_level->getRatioToLevelZero(),
+                     dst_block_id,
+                     src_block_id);
 
-               unfilled_encon_nbr_boxes[src_block_id].removeIntersections(
-                  transformed_src_box);
+                  unfilled_encon_nbr_boxes[src_block_id].removeIntersections(
+                     transformed_src_box);
 
+               }
             }
          }
       }
