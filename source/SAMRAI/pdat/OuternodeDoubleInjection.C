@@ -9,10 +9,10 @@
  *
  ************************************************************************/
 
-#ifndef included_pdat_OuternodeDoubleConstantCoarsen_C
-#define included_pdat_OuternodeDoubleConstantCoarsen_C
+#ifndef included_pdat_OuternodeDoubleInjection_C
+#define included_pdat_OuternodeDoubleInjection_C
 
-#include "SAMRAI/pdat/OuternodeDoubleConstantCoarsen.h"
+#include "SAMRAI/pdat/OuternodeDoubleInjection.h"
 
 #include "SAMRAI/pdat/OuternodeData.h"
 #include "SAMRAI/pdat/OuternodeVariable.h"
@@ -95,29 +95,29 @@ void SAMRAI_F77_FUNC(conavgouternodedoub3d2, CONAVGOUTERNODEDOUB3D2) (const int&
 namespace SAMRAI {
 namespace pdat {
 
-OuternodeDoubleConstantCoarsen::OuternodeDoubleConstantCoarsen():
+OuternodeDoubleInjection::OuternodeDoubleInjection():
    hier::CoarsenOperator("CONSTANT_COARSEN")
 {
 }
 
-OuternodeDoubleConstantCoarsen::~OuternodeDoubleConstantCoarsen()
+OuternodeDoubleInjection::~OuternodeDoubleInjection()
 {
 }
 
 int
-OuternodeDoubleConstantCoarsen::getOperatorPriority() const
+OuternodeDoubleInjection::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-OuternodeDoubleConstantCoarsen::getStencilWidth( const tbox::Dimension &dim ) const
+OuternodeDoubleInjection::getStencilWidth( const tbox::Dimension &dim ) const
 {
    return hier::IntVector::getZero(dim);
 }
 
 void
-OuternodeDoubleConstantCoarsen::coarsen(
+OuternodeDoubleInjection::coarsen(
    hier::Patch& coarse,
    const hier::Patch& fine,
    const int dst_component,

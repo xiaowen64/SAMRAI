@@ -18,7 +18,7 @@
 #include "SAMRAI/pdat/NodeDataFactory.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/pdat/OuternodeData.h"
-#include "SAMRAI/pdat/OuternodeDoubleConstantCoarsen.h"
+#include "SAMRAI/pdat/OuternodeDoubleInjection.h"
 #include "SAMRAI/algs/OuternodeSumTransactionFactory.h"
 #include "SAMRAI/xfer/CoarsenAlgorithm.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"

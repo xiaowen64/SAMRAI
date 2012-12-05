@@ -9,8 +9,8 @@
  *
  ************************************************************************/
 
-#ifndef included_pdat_OuternodeDoubleConstantCoarsen
-#define included_pdat_OuternodeDoubleConstantCoarsen
+#ifndef included_pdat_OuternodeDoubleInjection
+#define included_pdat_OuternodeDoubleInjection
 
 #include "SAMRAI/SAMRAI_config.h"
 
@@ -27,7 +27,7 @@ namespace pdat {
 
 /*!
  * @brief
- * Class OuternodeDoubleConstantCoarsen implements constant
+ * Class OuternodeDoubleInjection implements constant
  * averaging (i.e., injection) for outernode-centered double patch data defined
  * over a  mesh.
  *
@@ -38,19 +38,19 @@ namespace pdat {
  * @see hier::CoarsenOperator
  */
 
-class OuternodeDoubleConstantCoarsen:
+class OuternodeDoubleInjection:
    public hier::CoarsenOperator
 {
 public:
    /*!
     * @brief Uninteresting default constructor.
     */
-   explicit OuternodeDoubleConstantCoarsen();
+   explicit OuternodeDoubleInjection();
 
    /*!
     * @brief Uninteresting virtual destructor.
     */
-   virtual ~OuternodeDoubleConstantCoarsen();
+   virtual ~OuternodeDoubleInjection();
 
    /*!
     * @brief Give the operator priority.

@@ -67,7 +67,7 @@ OBJS = 	\
 	NodeDoubleInjection.o \
 	NodeFloatInjection.o \
 	NodeIntegerInjection.o \
-	OuternodeDoubleConstantCoarsen.o \
+	OuternodeDoubleInjection.o \
 	CellIterator.o \
 	EdgeIterator.o \
 	FaceIterator.o \

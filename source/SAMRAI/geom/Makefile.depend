@@ -2847,7 +2847,7 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceVariable.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeData.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.h		\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDoubleConstantCoarsen.h	\
+	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDoubleInjection.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeVariable.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OutersideComplexLinearTimeInterpolateOp.h\

@@ -17,7 +17,7 @@
 #include "SAMRAI/pdat/NodeDoubleInjection.h"
 #include "SAMRAI/pdat/NodeFloatInjection.h"
 #include "SAMRAI/pdat/NodeIntegerInjection.h"
-#include "SAMRAI/pdat/OuternodeDoubleConstantCoarsen.h"
+#include "SAMRAI/pdat/OuternodeDoubleInjection.h"
 #include "SAMRAI/pdat/CellComplexConstantRefine.h"
 #include "SAMRAI/pdat/CellDoubleConstantRefine.h"
 #include "SAMRAI/pdat/CellFloatConstantRefine.h"
@@ -261,7 +261,7 @@ GridGeometry::buildOperators()
       boost::make_shared<pdat::NodeIntegerInjection>());
    addCoarsenOperator(
       typeid(pdat::OuternodeVariable<double>).name(),
-      boost::make_shared<pdat::OuternodeDoubleConstantCoarsen>());
+      boost::make_shared<pdat::OuternodeDoubleInjection>());
 
    // Refinement Operators
    addRefineOperator(

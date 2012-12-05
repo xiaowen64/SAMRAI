@@ -417,25 +417,3 @@ endif
 
 ${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
 
-FILE_5=skelbdry.o
-DEPENDS_5:=\
-	$(OBJECT)/include/SAMRAI/SAMRAI_config.h skelbdry.f
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_5 +=\
-	
-endif
-
-${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
-
-FILE_6=upfluxsum.o
-DEPENDS_6:=\
-	$(OBJECT)/include/SAMRAI/SAMRAI_config.h upfluxsum.f
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_6 +=\
-	
-endif
-
-${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
-
