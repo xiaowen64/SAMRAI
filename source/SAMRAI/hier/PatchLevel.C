@@ -689,13 +689,10 @@ PatchLevel::getFromRestart(
     * Put local patches in restart database.
     */
 
+   boost::shared_ptr<const BaseGridGeometry> grid_geometry(getGridGeometry());
    boost::shared_ptr<tbox::Database> mbl_database(
       restart_db->getDatabase("mapped_box_level"));
-   boost::shared_ptr<BoxLevel> box_level(
-      boost::make_shared<BoxLevel>(getDim()));
-   boost::shared_ptr<const BaseGridGeometry> grid_geometry(getGridGeometry());
-   box_level->getFromRestart(*mbl_database, grid_geometry);
-   d_box_level = box_level;
+   d_box_level.reset(new BoxLevel(getDim(), *mbl_database, grid_geometry));
 
    d_patches.clear();
 

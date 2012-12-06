@@ -263,8 +263,6 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
    hier::Connector& anchor_to_balance,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
-   const hier::Connector& balance_to_attractor,
-   const hier::Connector& attractor_to_balance,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
    const hier::BoxLevel& domain_box_level,
@@ -279,8 +277,6 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       domain_box_level,
       bad_interval,
       cut_factor);
-   NULL_USE(balance_to_attractor);
-   NULL_USE(attractor_to_balance);
    NULL_USE(rank_group);
 
    hier::IntVector actual_max_size = max_size;

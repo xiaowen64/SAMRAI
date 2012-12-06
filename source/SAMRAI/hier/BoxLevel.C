@@ -53,9 +53,11 @@ BoxLevel::s_initialize_finalize_handler(
    tbox::StartupShutdownManager::priorityTimers);
 
 BoxLevel::BoxLevel(
-   const tbox::Dimension& dim):
+   const tbox::Dimension& dim,
+   tbox::Database& restart_db,
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geom):
 
-   d_mpi(tbox::SAMRAI_MPI::commNull),
+   d_mpi(tbox::SAMRAI_MPI::getSAMRAIWorld()),
    d_ratio(dim, 0),
 
    d_local_number_of_cells(0),
@@ -84,6 +86,7 @@ BoxLevel::BoxLevel(
    d_handle(),
    d_grid_geometry()
 {
+   getFromRestart(restart_db, grid_geom);
 }
 
 BoxLevel::BoxLevel(
@@ -1430,29 +1433,11 @@ BoxLevel::getFromRestart(
    const int version = restart_db.getInteger("HIER_MAPPED_BOX_LEVEL_VERSION");
    const int nproc = restart_db.getInteger("d_nproc");
    const int rank = restart_db.getInteger("d_rank");
+#endif
    TBOX_ASSERT(ratio >= IntVector::getOne(dim));
    TBOX_ASSERT(version <= HIER_BOX_LEVEL_VERSION);
-#endif
 
-   /*
-    * If the communicator is already set, use it.  Otherwise, use the
-    * one in tbox::SAMRAI_MPI::getSAMRAIWorld().
-    *
-    * There must be a better way to handle the communicator than this.
-    */
-   if (isInitialized()) {
-      TBOX_ASSERT(ratio == d_ratio);
-      if (d_parallel_state != DISTRIBUTED) {
-         setParallelState(DISTRIBUTED);
-         d_boxes.clear();
-      }
-   } else {
-      TBOX_WARNING(
-         "BoxLevel::getFromRestart: Uninitialized MPI communicator.\n"
-         << "Using tbox::SAMRAI_MPI::getSAMRAIWorld()." << std::endl);
-      initialize(ratio, grid_geom,
-         tbox::SAMRAI_MPI::getSAMRAIWorld(), DISTRIBUTED);
-   }
+   initialize(ratio, grid_geom);
 
    /*
     * Failing these asserts means that we don't have a compatible

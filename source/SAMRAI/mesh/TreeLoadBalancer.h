@@ -241,8 +241,6 @@ public:
       hier::Connector& anchor_to_balance,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
-      const hier::Connector& unbalanced_to_attractor,
-      const hier::Connector& attractor_to_unbalanced,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
       const hier::BoxLevel& domain_box_level,

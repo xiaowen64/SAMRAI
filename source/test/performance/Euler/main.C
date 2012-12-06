@@ -485,7 +485,6 @@ int main(
        * Then, close restart file and write initial state for visualization.
        */
 
-      hier::Connector dummy(dim); // Cause communicator set-up before performance timings.
       tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier(); // Synchronize for the sake of accurate timings.
       double dt_now = time_integrator->initializeHierarchy();
 

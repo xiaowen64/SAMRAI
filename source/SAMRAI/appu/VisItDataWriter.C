@@ -1360,15 +1360,15 @@ VisItDataWriter::writePlotData(
    for (int ln = 0; ln < hierarchy->getNumberOfLevels(); ++ln) {
       const hier::BoxLevel& unsorted_box_level =
          *hierarchy->getPatchLevel(ln)->getBoxLevel();
-      hier::BoxLevel sorted_box_level(d_dim);
-      hier::Connector unused_sorting_map(d_dim);
+      boost::shared_ptr<hier::BoxLevel> sorted_box_level;
+      boost::shared_ptr<hier::Connector> unused_sorting_map;
       dlbg_edge_utils.makeSortingMap(
          sorted_box_level,
          unused_sorting_map,
          unsorted_box_level,
          false,
          true);
-      if (!d_is_multiblock && sorted_box_level != unsorted_box_level) {
+      if (!d_is_multiblock && *sorted_box_level != unsorted_box_level) {
          TBOX_ERROR(
             "VisItDataWriter: Encountered existing limitation of VisItDataWriter\n"
             << "This class cannot write files unless all patch levels have\n"

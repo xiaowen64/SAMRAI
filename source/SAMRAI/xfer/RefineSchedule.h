@@ -371,10 +371,6 @@ private:
     *                             the destination level
     * @param[in] hierarchy  A patch hierarchy to be used to provide coarser
     *                       levels that may be used for interpolation.
-    * @param[in] dst_to_src  Connector between dst and src levels given
-    *                        in constructor.
-    * @param[in] src_to_dst  Connector between src and dst levels given
-    *                        in constructor.
     * @param[in] src_growth_to_nest_dst  The minimum amount that the source
     *                                    level has to grow in order to nest the
     *                                    destination level.
@@ -393,15 +389,15 @@ private:
     *                                    source level to destination level
     *                                    will be skipped.
     *
+    * @pre d_dst_to_src
+    * @pre d_src_to_dst
     * @pre (next_coarser_ln == -1) || hierarchy
-    * !d_src_level || dst_to_src.isFinalized()
+    * @pre !d_src_level || d_dst_to_src.isFinalized()
     */
    void
    finishScheduleConstruction(
       int next_coarser_ln,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      const hier::Connector& dst_to_src,
-      const hier::Connector& src_to_dst,
       const hier::IntVector& src_growth_to_nest_dst,
       const hier::Connector& dst_to_fill,
       const hier::BoxNeighborhoodCollection& src_owner_dst_to_fill,
@@ -522,10 +518,6 @@ private:
     *                                      enhanced connectivity on the
     *                                      destination level to
     *                                      unfilled_encon_box_level
-    * @param[in] dst_to_src  Connector between dst_level and src_level
-    *                        passed into the constructor
-    * @param[in] src_to_dst  Connector between src_level and dst_level
-    *                        passed into the constructor
     * @param[in] dst_to_fill  Connector between dst_level and a level
     *                         representing the boxes that need to be filled.
     * @param[in] src_owner_dst_to_fill  A BoxNeighborhoodCollection that maps
@@ -536,6 +528,9 @@ private:
     * @param[in] use_time_interpolation  Boolean flag indicating whether to
     *                                    use time interpolation when setting
     *                                    data on the destination level.
+    *
+    * @pre d_dst_to_src
+    * @pre d_src_to_dst
     */
    void
    generateCommunicationSchedule(
@@ -543,8 +538,6 @@ private:
       boost::shared_ptr<hier::Connector>& dst_to_unfilled,
       boost::shared_ptr<hier::BoxLevel>& unfilled_encon_box_level,
       boost::shared_ptr<hier::Connector>& encon_to_unfilled_encon,
-      const hier::Connector& dst_to_src,
-      const hier::Connector& src_to_dst,
       const hier::Connector& dst_to_fill,
       const hier::BoxNeighborhoodCollection& src_owner_dst_to_fill,
       const bool use_time_interpolation,
@@ -571,16 +564,15 @@ private:
     *                                    a collection of boxes that indicates
     *                                    what parts of fill_box_level
     *                                    can be filled by that source box.
-    * @param[in] dst_to_src  Connector from dst_level to src_level.
-    * @param[in] src_to_dst  Connector from src_level to dst_level.
+    *
+    * @pre d_dst_to_src
+    * @pre d_src_to_dst
     */
    void
    setDefaultFillBoxLevel(
-      hier::BoxLevel& fill_box_level,
-      hier::Connector& dst_to_fill,
-      hier::BoxNeighborhoodCollection& src_owner_dst_to_fill,
-      const hier::Connector* dst_to_src,
-      const hier::Connector* src_to_dst);
+      boost::shared_ptr<hier::BoxLevel>& fill_box_level,
+      boost::shared_ptr<hier::Connector>& dst_to_fill,
+      hier::BoxNeighborhoodCollection& src_owner_dst_to_fill);
 
    /*
     * @brief Set up level to represent ghost regions at enhanced
@@ -628,8 +620,9 @@ private:
     * @param[in,out]  last_unfilled_local_id a unique LocalId not already
     *                                        used in level_encon_unfilled_boxes
     * @param[in]  dst_box  The destination box
-    * @param[in]  dst_to_src
     * @param[in]  encon_fill_boxes
+    *
+    * @pre d_dst_to_src
     */
    void
    findEnconUnfilledBoxes(
@@ -637,7 +630,6 @@ private:
       const boost::shared_ptr<hier::Connector>& encon_to_unfilled_encon,
       hier::LocalId& last_unfilled_local_id,
       const hier::Box& dst_box,
-      const hier::Connector& dst_to_src,
       const hier::BoxContainer& encon_fill_boxes);
 
    /*
@@ -668,15 +660,14 @@ private:
     *                                    can be filled by that source box.
     * @param[in] dst_to_fill  Mapping from the dst_level to boxes it needs
     *                         need to have filled.
-    * @param[in] dst_to_src  Mapping from the dst_level to src_level
-    * @param[in] src_to_dst  Mapping from the src_level to dst_level
+    *
+    * @pre d_dst_to_src
+    * @pre d_src_to_dst
     */
    void
    communicateFillBoxes(
       hier::BoxNeighborhoodCollection& src_owner_dst_to_fill,
-      const hier::Connector& dst_to_fill,
-      const hier::Connector& dst_to_src,
-      const hier::Connector& src_to_dst);
+      const hier::Connector& dst_to_fill);
 
    /*!
     * @brief Shear off parts of unfilled boxes that lie outside non-periodic
@@ -713,10 +704,10 @@ private:
     */
    void
    setupCoarseInterpBoxLevel(
-      hier::BoxLevel &coarse_interp_box_level,
-      hier::Connector &dst_to_coarse_interp,
-      hier::Connector &coarse_interp_to_dst,
-      hier::Connector &coarse_interp_to_unfilled,
+      boost::shared_ptr<hier::BoxLevel> &coarse_interp_box_level,
+      boost::shared_ptr<hier::Connector> &dst_to_coarse_interp,
+      boost::shared_ptr<hier::Connector> &coarse_interp_to_dst,
+      boost::shared_ptr<hier::Connector> &coarse_interp_to_unfilled,
       const hier::BoxLevel &hiercoarse_box_level,
       const hier::Connector &dst_to_unfilled);
 
@@ -753,8 +744,8 @@ private:
    createCoarseInterpPatchLevel(
       boost::shared_ptr<hier::PatchLevel>& coarse_interp_level,
       hier::BoxLevel& coarse_interp_box_level,
-      hier::Connector &coarse_interp_to_hiercoarse,
-      hier::Connector &hiercoarse_to_coarse_interp,
+      boost::shared_ptr<hier::Connector>& coarse_interp_to_hiercoarse,
+      boost::shared_ptr<hier::Connector>& hiercoarse_to_coarse_interp,
       const int next_coarser_ln,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const hier::Connector &dst_to_src,
@@ -846,12 +837,12 @@ private:
     * The reordered neighboorhood sets are added to the output parameter.
     *
     * @param[out] full_inverted_edges
-    * @param[in]  src_to_dst
+    *
+    * @pre d_src_to_dst
     */
    void
    reorderNeighborhoodSetsByDstNodes(
-      FullNeighborhoodSet& full_inverted_edges,
-      const hier::Connector& src_to_dst) const;
+      FullNeighborhoodSet& full_inverted_edges) const;
 
    /*!
     * @brief Cache local copies of hierarchy information and compute
@@ -1097,31 +1088,33 @@ private:
    /*!
     * @brief Connector from the coarse interpolation level to the destination.
     */
-   hier::Connector d_coarse_interp_to_dst;
+   boost::shared_ptr<hier::Connector> d_coarse_interp_to_dst;
 
    /*!
     * @brief Connector from the destination level to the coarse interpolation.
     */
-   hier::Connector d_dst_to_coarse_interp;
+   boost::shared_ptr<hier::Connector> d_dst_to_coarse_interp;
 
    /*!
     * @brief Connector from d_encon_level to d_coarse_interp_encon_level.
     */
-   hier::Connector d_encon_to_coarse_interp_encon;
+   boost::shared_ptr<hier::Connector> d_encon_to_coarse_interp_encon;
 
    /*!
     * @brief Connector d_coarse_interp_level to d_unfilled_box_level.
     *
     * Cached for use during schedule filling.
     */
-   hier::Connector d_coarse_interp_to_unfilled;
+   boost::shared_ptr<hier::Connector> d_coarse_interp_to_unfilled;
 
-   hier::Connector d_coarse_interp_encon_to_unfilled_encon;
-   hier::Connector d_coarse_interp_encon_to_encon;
+   boost::shared_ptr<hier::Connector> d_coarse_interp_encon_to_unfilled_encon;
+   boost::shared_ptr<hier::Connector> d_coarse_interp_encon_to_encon;
 
-   hier::Connector d_dst_to_encon;
-   hier::Connector d_src_to_encon;
-   hier::Connector d_encon_to_src;
+   boost::shared_ptr<hier::Connector> d_dst_to_encon;
+   boost::shared_ptr<hier::Connector> d_src_to_encon;
+   boost::shared_ptr<hier::Connector> d_encon_to_src;
+   const hier::Connector* d_dst_to_src;
+   const hier::Connector* d_src_to_dst;
 
    //@{
 

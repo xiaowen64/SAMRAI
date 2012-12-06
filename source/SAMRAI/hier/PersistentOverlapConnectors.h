@@ -142,11 +142,12 @@ public:
     * @param[in] connector
     *
     * @pre myBoxLevel().isInitialized()
+    * @pre connector
     */
    void
    cacheConnector(
       const BoxLevel& head,
-      Connector* connector);
+      boost::shared_ptr<Connector>& connector);
 
    /*!
     * @brief Find an overlap Connector with the given head and minimum
@@ -275,7 +276,7 @@ private:
    friend class BoxLevel;
    //@}
 
-   typedef tbox::Array<const Connector *> ConVect;
+   typedef tbox::Array<boost::shared_ptr<const Connector> > ConVect;
 
    /*!
     * @brief Persistent overlap Connectors incident from me.

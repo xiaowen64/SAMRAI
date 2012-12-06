@@ -358,8 +358,6 @@ public:
     * @param hierarchy       Input patch hierarchy in which level will reside.
     * @param level_number    Input integer number of level in patch hierarchy.
     *                        This value must be >= 0.
-    * @param unbalanced_to_attractor
-    * @param attractor_to_unbalanced 
     * @param min_size        Input integer vector of minimum sizes for
     *                        output boxes. All entries must be > 0.
     * @param max_size        Input integer vector of maximum sizes for
@@ -400,8 +398,6 @@ public:
       hier::Connector& anchor_to_balance,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
-      const hier::Connector& unbalanced_to_attractor,
-      const hier::Connector& attractor_to_unbalanced,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
       const hier::BoxLevel& domain_box_level,

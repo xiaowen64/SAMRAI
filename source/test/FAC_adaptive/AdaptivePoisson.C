@@ -559,23 +559,19 @@ int AdaptivePoisson::registerVariablesWithPlotter(
       1.0,
       "CELL");
 
-   // This code has memory leaks but is not critical to the test.
-   if (1) {
-      tbox::Array<string> expression_keys(1);
-      tbox::Array<string> expressions(1);
-      tbox::Array<string> expression_types(1);
+   tbox::Array<string> expression_keys(1);
+   tbox::Array<string> expressions(1);
+   tbox::Array<string> expression_types(1);
 
-      {
-         expression_keys[0] = "Error";
-         expression_types[0] = "scalar";
-         expressions[0] = "<Computed solution> - <Exact solution>";
-      }
-
-      visit_writer.registerVisItExpressions(expression_keys,
-         expressions,
-         expression_types);
-
+   {
+      expression_keys[0] = "Error";
+      expression_types[0] = "scalar";
+      expressions[0] = "<Computed solution> - <Exact solution>";
    }
+
+   visit_writer.registerVisItExpressions(expression_keys,
+      expressions,
+      expression_types);
 
    return 0;
 }

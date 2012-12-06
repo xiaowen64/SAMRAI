@@ -65,8 +65,7 @@ PatchHierarchy::PatchHierarchy(
    d_self_connector_widths(),
    d_fine_connector_widths(),
    d_connector_widths_are_computed(false),
-   d_individual_cwrs(),
-   d_domain_box_level(d_dim)
+   d_individual_cwrs()
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(geometry);
@@ -79,14 +78,14 @@ PatchHierarchy::PatchHierarchy(
     * Grab the physical domain (including periodic images) from the
     * grid geometry and set up domain data dependent on it.
     */
-   d_domain_box_level.initialize(
+   d_domain_box_level.reset(new BoxLevel(
       IntVector::getOne(d_dim),
       getGridGeometry(),
       tbox::SAMRAI_MPI::getSAMRAIWorld(),
-      BoxLevel::GLOBALIZED);
-   d_grid_geometry->computePhysicalDomain(d_domain_box_level,
+      BoxLevel::GLOBALIZED));
+   d_grid_geometry->computePhysicalDomain(*d_domain_box_level,
       IntVector::getOne(d_dim));
-   d_domain_box_level.finalize();
+   d_domain_box_level->finalize();
 
    d_individual_cwrs = s_class_cwrs;
 
@@ -626,13 +625,15 @@ PatchHierarchy::makeRefinedPatchHierarchy(
    for (int ln = 0; ln < d_number_levels; ln++) {
       BoxContainer refined_boxes(d_patch_levels[ln]->getBoxLevel()->getBoxes());
       refined_boxes.refine(refine_ratio);
-      BoxLevel refined_box_level(d_dim);
+      BoxLevel refined_box_level(
+         d_patch_levels[ln]->getBoxLevel()->getRefinementRatio(),
+         fine_geometry,
+         d_patch_levels[ln]->getBoxLevel()->getMPI());
       refined_box_level.swapInitialize(
          refined_boxes,
          d_patch_levels[ln]->getBoxLevel()->getRefinementRatio(),
          fine_geometry,
-         d_patch_levels[ln]->getBoxLevel()->getMPI(),
-         BoxLevel::DISTRIBUTED );
+         d_patch_levels[ln]->getBoxLevel()->getMPI());
       fine_hierarchy->makeNewPatchLevel(ln, refined_box_level);
    }
 
@@ -681,13 +682,15 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
    for (int ln = 0; ln < d_number_levels; ln++) {
       BoxContainer coarsened_boxes(d_patch_levels[ln]->getBoxLevel()->getBoxes());
       coarsened_boxes.coarsen(coarsen_ratio);
-      BoxLevel coarsened_box_level(d_dim);
+      BoxLevel coarsened_box_level(
+         d_patch_levels[ln]->getBoxLevel()->getRefinementRatio(),
+         coarse_geometry,
+         d_patch_levels[ln]->getBoxLevel()->getMPI());
       coarsened_box_level.swapInitialize(
          coarsened_boxes,
          d_patch_levels[ln]->getBoxLevel()->getRefinementRatio(),
          coarse_geometry,
-         d_patch_levels[ln]->getBoxLevel()->getMPI(),
-         BoxLevel::DISTRIBUTED );
+         d_patch_levels[ln]->getBoxLevel()->getMPI());
       coarse_hierarchy->makeNewPatchLevel(ln, coarsened_box_level);
    }
 
@@ -712,7 +715,7 @@ PatchHierarchy::makeNewPatchLevel(
    TBOX_ASSERT(ln >= 0);
    TBOX_ASSERT(new_box_level.getRefinementRatio() > IntVector::getZero(d_dim));
    TBOX_ASSERT( new_box_level.getGridGeometry() == d_grid_geometry );
-   TBOX_ASSERT( d_domain_box_level.getGridGeometry() == d_grid_geometry );
+   TBOX_ASSERT( d_domain_box_level->getGridGeometry() == d_grid_geometry );
 
    /*
     * Make sure the level conforms to certain parameters preset
@@ -1085,7 +1088,7 @@ PatchHierarchy::recursivePrint(
    int totl_npatches = 0;
    int totl_ncells = 0;
    int nlevels = getNumberOfLevels();
-   os << border << "Domain of hierarchy:\n" << d_domain_box_level.format(border, 2) << '\n'
+   os << border << "Domain of hierarchy:\n" << d_domain_box_level->format(border, 2) << '\n'
       << border << "Number of levels = " << nlevels << '\n';
    if (depth > 0) {
       int ln;

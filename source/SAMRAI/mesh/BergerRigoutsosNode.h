@@ -274,9 +274,9 @@ public:
     */
    void
    clusterAndComputeRelationships(
-      hier::BoxLevel& new_box_level,
-      hier::Connector& tag_to_new,
-      hier::Connector& new_to_tag,
+      boost::shared_ptr<hier::BoxLevel>& new_box_level,
+      boost::shared_ptr<hier::Connector>& tag_to_new,
+      boost::shared_ptr<hier::Connector>& new_to_tag,
       const hier::BoxContainer& bound_boxes,
       const boost::shared_ptr<hier::PatchLevel>& tag_level,
       const tbox::SAMRAI_MPI& mpi_object);

@@ -83,14 +83,6 @@ public:
     * @param[in] level_number The number of the level where the work
     * distribution data lives.
     *
-    * @param[in] unbalanced_to_attractor Connector between the
-    * balance_box_level and an "attractor" BoxLevel.
-    * This data may be used to indicate preference for data locality.
-    * The implementation should try to maximize overlaps between
-    * attractor and balance cells owned by the same process.
-    *
-    * @param[in] attractor_to_unbalanced Transpose of unbalanced_to_attractor.
-    *
     * @param[in] min_size hier::IntVector representing mimimum box size.
     *
     * @param[in] max_size hier::IntVector representing maximum box size.
@@ -132,8 +124,6 @@ public:
       hier::Connector& anchor_to_balance,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
-      const hier::Connector& unbalanced_to_attractor,
-      const hier::Connector& attractor_to_unbalanced,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
       const hier::BoxLevel& domain_box_level,

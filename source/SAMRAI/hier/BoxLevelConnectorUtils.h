@@ -224,8 +224,8 @@ public:
     */
    void
    computeExternalParts(
-      BoxLevel& external,
-      Connector& input_to_external,
+      boost::shared_ptr<BoxLevel>& external,
+      boost::shared_ptr<Connector>& input_to_external,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
       const BoxContainer& domain = BoxContainer()) const
@@ -287,8 +287,8 @@ public:
     */
    void
    computeInternalParts(
-      BoxLevel& internal,
-      Connector& input_to_internal,
+      boost::shared_ptr<BoxLevel>& internal,
+      boost::shared_ptr<Connector>& input_to_internal,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
       const BoxContainer& domain = BoxContainer()) const
@@ -376,8 +376,8 @@ public:
     */
    void
    makeSortingMap(
-      BoxLevel& sorted_box_level,
-      Connector& output_map,
+      boost::shared_ptr<BoxLevel>& sorted_box_level,
+      boost::shared_ptr<Connector>& output_map,
       const BoxLevel& unsorted_box_level,
       bool sort_boxes_by_corner = true,
       bool sequentialize_global_indices = true,
@@ -404,8 +404,8 @@ public:
     */
    void
    makeRemainderMap(
-      BoxLevel& remainder,
-      Connector& orig_to_remainder,
+      boost::shared_ptr<BoxLevel>& remainder,
+      boost::shared_ptr<Connector>& orig_to_remainder,
       const Connector& orig_to_rejections) const;
 
    //@}
@@ -488,15 +488,14 @@ public:
 
 private:
    /*!
-    * @brief Delegated work of computeInternalParts and
-    * computeExternalParts.
+    * @brief Delegated work of computeInternalParts and computeExternalParts.
     *
     * @post input_to_parts.isLocal()
     */
    void
    computeInternalOrExternalParts(
-      BoxLevel& parts,
-      Connector& input_to_parts,
+      boost::shared_ptr<BoxLevel>& parts,
+      boost::shared_ptr<Connector>& input_to_parts,
       char internal_or_external,
       const Connector& input_to_reference,
       const IntVector& nesting_width,

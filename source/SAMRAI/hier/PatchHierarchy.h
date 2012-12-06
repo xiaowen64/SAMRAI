@@ -637,7 +637,7 @@ public:
    const BoxLevel&
    getDomainBoxLevel() const
    {
-      return d_domain_box_level;
+      return *d_domain_box_level;
    }
 
    /*!
@@ -647,7 +647,7 @@ public:
    const tbox::SAMRAI_MPI&
    getMPI() const
    {
-      return d_domain_box_level.getMPI();
+      return d_domain_box_level->getMPI();
    }
 
    //@{
@@ -1241,7 +1241,7 @@ private:
     * The physical domain BoxLevel is maintained in GLOBALIZED
     * mode with processor 0 owning all boxes.
     */
-   BoxLevel d_domain_box_level;
+   boost::shared_ptr<BoxLevel> d_domain_box_level;
 
    //@}
 

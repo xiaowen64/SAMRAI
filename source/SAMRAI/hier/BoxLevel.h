@@ -92,18 +92,17 @@ public:
    enum ParallelState { DISTRIBUTED, GLOBALIZED };
 
    /*!
-    * @brief Construct uninitialized object.
-    *
-    * Uninitialized objects can be initialized by calling initialize()
-    * or swapInitialize().
-    *
-    * @see initialize()
-    * @see swapInitialize()
+    * @brief Construct a BoxLevel which will be initialized from the supplied
+    * restart database.
     *
     * @param[in] dim
+    * @param[in] restart_db
+    * @param[in] grid_geom
     */
    explicit BoxLevel(
-      const tbox::Dimension& dim);
+      const tbox::Dimension& dim,
+      tbox::Database& restart_db,
+      const boost::shared_ptr<const BaseGridGeometry>& grid_geom);
 
    /*!
     * @brief Copy constructor.
@@ -1122,7 +1121,7 @@ public:
          return d_boxes.find(box);
       } else {
 #ifdef DEBUG_CHECK_ASSERTIONS
-	if (getParallelState() != GLOBALIZED) {
+         if (getParallelState() != GLOBALIZED) {
             TBOX_ERROR(
                "BoxLevel::getBox: cannot get remote box "
                << box << " without being in globalized state." << std::endl);
@@ -1283,27 +1282,6 @@ public:
    void
    putToRestart(
       const boost::shared_ptr<tbox::Database>& restart_db) const;
-
-   /*!
-    * @brief Read the BoxLevel from a restart database.
-    *
-    * Put the BoxLevel in the DISTRIBUTED parallel state and
-    * read only local parts.
-    *
-    * If the BoxLevel is initialized, use its SAMRAI_MPI object
-    * and require its refinement ratio to match that in the database.
-    * If the BoxLevel is uninitialized, it will be initialized
-    * to use tbox::SAMRAI_MPI::getSAMRAIWorld() for the SAMRAI_MPI
-    * object.  Note that these behaviors have not been extensively
-    * discussed by the SAMRAI developers and may be subject to change.
-    *
-    * @param[in,out] restart_db
-    * @param[in] grid_geom
-    */
-   void
-   getFromRestart(
-      tbox::Database& restart_db,
-      const boost::shared_ptr<const BaseGridGeometry>& grid_geom);
 
    //@}
 
@@ -1653,6 +1631,27 @@ private:
       const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
+
+   /*!
+    * @brief Read the BoxLevel from a restart database.
+    *
+    * Put the BoxLevel in the DISTRIBUTED parallel state and
+    * read only local parts.
+    *
+    * If the BoxLevel is initialized, use its SAMRAI_MPI object
+    * and require its refinement ratio to match that in the database.
+    * If the BoxLevel is uninitialized, it will be initialized
+    * to use tbox::SAMRAI_MPI::getSAMRAIWorld() for the SAMRAI_MPI
+    * object.  Note that these behaviors have not been extensively
+    * discussed by the SAMRAI developers and may be subject to change.
+    *
+    * @param[in,out] restart_db
+    * @param[in] grid_geom
+    */
+   void
+   getFromRestart(
+      tbox::Database& restart_db,
+      const boost::shared_ptr<const BaseGridGeometry>& grid_geom);
 
    /*!
     * @brief BoxLevel is a parallel object,

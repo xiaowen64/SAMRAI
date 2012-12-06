@@ -54,8 +54,8 @@ PatchLevelEnhancedFillPattern::~PatchLevelEnhancedFillPattern()
  */
 void
 PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
-   hier::BoxLevel& fill_box_level,
-   hier::Connector& dst_to_fill,
+   boost::shared_ptr<hier::BoxLevel>& fill_box_level,
+   boost::shared_ptr<hier::Connector>& dst_to_fill,
    const hier::BoxLevel& dst_box_level,
    const hier::Connector& dst_to_dst,
    const hier::Connector& dst_to_src,
@@ -66,6 +66,15 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
    NULL_USE(dst_to_src);
    NULL_USE(src_to_dst);
    TBOX_ASSERT_OBJDIM_EQUALITY2(dst_box_level, fill_ghost_width);
+
+   fill_box_level.reset(new hier::BoxLevel(
+      dst_box_level.getRefinementRatio(),
+      dst_box_level.getGridGeometry(),
+      dst_box_level.getMPI()));
+
+   dst_to_fill.reset(new hier::Connector(dst_box_level,
+                                         *fill_box_level,
+                                         fill_ghost_width));
 
    boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
       dst_box_level.getGridGeometry());
@@ -86,8 +95,8 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
       hier::BoxContainer constructed_fill_boxes;
 
       hier::Connector::NeighborhoodIterator base_box_itr =
-         dst_to_fill.findLocal(dst_box_id);
-      bool has_base_box = base_box_itr != dst_to_fill.end();
+         dst_to_fill->findLocal(dst_box_id);
+      bool has_base_box = base_box_itr != dst_to_fill->end();
 
       for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator ni =
            neighbors.begin();
@@ -103,7 +112,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
             if (encon_boxes.size()) {
 
                if (!has_base_box) {
-                  base_box_itr = dst_to_fill.makeEmptyLocalNeighborhood(
+                  base_box_itr = dst_to_fill->makeEmptyLocalNeighborhood(
                      dst_box_id);
                   has_base_box = true;
                }
@@ -117,9 +126,9 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
 
                   TBOX_ASSERT(fill_box.getBlockId() == dst_box.getBlockId());
 
-                  fill_box_level.addBoxWithoutUpdate(fill_box);
+                  fill_box_level->addBoxWithoutUpdate(fill_box);
 
-                  dst_to_fill.insertLocalNeighbor(
+                  dst_to_fill->insertLocalNeighbor(
                      fill_box,
                      base_box_itr);
 
@@ -133,7 +142,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
             d_max_fill_boxes,
             constructed_fill_boxes.size());
    }
-   fill_box_level.finalize();
+   fill_box_level->finalize();
 }
 
 void

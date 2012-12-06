@@ -750,13 +750,13 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
       hierarchy->getRequiredConnectorWidth(level_number,
          level_number);
 
-   const hier::Connector level_to_level =
+   const hier::Connector& level_to_level =
       patch_level->getBoxLevel()->getPersistentOverlapConnectors().
       findConnector(
          *patch_level->getBoxLevel(),
          level_to_level_gcw);
 
-   hier::Connector coarsened_to_level = level_to_level;
+   hier::Connector coarsened_to_level(level_to_level);
    coarsened_to_level.setBase(*coarsened_level->getBoxLevel());
    coarsened_to_level.setHead(*patch_level->getBoxLevel());
    coarsened_to_level.setWidth(
@@ -764,7 +764,7 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
       true);
 
    hier::Connector tmp_coarsened(level_to_level);
-   tmp_coarsened.setBase( *patch_level->getBoxLevel());
+   tmp_coarsened.setBase(*patch_level->getBoxLevel());
    tmp_coarsened.setHead(*coarsened_level->getBoxLevel(), true);
    tmp_coarsened.coarsenLocalNeighbors(coarsen_ratio);
 
@@ -786,8 +786,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
        * Get Connectors coarsened<==>coarser, which are used for recursive
        * refinement filling of the coarsened level's ghosts.
        */
-      hier::Connector* coarsened_to_coarser = new hier::Connector(dim);
-      hier::Connector* coarser_to_coarsened = new hier::Connector(dim);
+      boost::shared_ptr<hier::Connector> coarsened_to_coarser;
+      boost::shared_ptr<hier::Connector> coarser_to_coarsened;
       boost::shared_ptr<hier::PatchLevel> coarser_level(
          hierarchy->getPatchLevel(level_number - 1));
       const hier::Connector& level_to_coarser =
@@ -803,8 +803,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
             hierarchy->getRequiredConnectorWidth(
                level_number - 1, level_number));
       hier::OverlapConnectorAlgorithm oca;
-      oca.bridge(*coarsened_to_coarser,
-         *coarser_to_coarsened,
+      oca.bridge(coarsened_to_coarser,
+         coarser_to_coarsened,
          coarsened_to_level,
          level_to_coarser,
          coarser_to_level,

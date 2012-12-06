@@ -337,6 +337,29 @@ OverlapConnectorAlgorithm::extractNeighbors(
 
 void
 OverlapConnectorAlgorithm::findOverlaps(
+   boost::shared_ptr<Connector>& connector,
+   const BoxLevel& base_box_level,
+   const BoxLevel& head_box_level,
+   const IntVector& base_width,
+   const BoxLevel::ParallelState parallel_state,
+   const bool ignore_self_overlap) const
+{
+   connector.reset(new Connector(base_box_level,
+      head_box_level,
+      base_width,
+      parallel_state));
+   findOverlaps(*connector,
+      head_box_level.getGlobalizedVersion(),
+      ignore_self_overlap);
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
+void
+OverlapConnectorAlgorithm::findOverlaps(
    Connector& connector,
    const bool ignore_self_overlap) const
 {
@@ -488,8 +511,8 @@ OverlapConnectorAlgorithm::findOverlaps_rbbt(
  */
 void
 OverlapConnectorAlgorithm::bridge(
-   Connector& west_to_east,
-   Connector& east_to_west,
+   boost::shared_ptr<Connector>& west_to_east,
+   boost::shared_ptr<Connector>& east_to_west,
    const Connector& west_to_cent,
    const Connector& cent_to_east,
    const Connector& east_to_cent,
@@ -501,7 +524,7 @@ OverlapConnectorAlgorithm::bridge(
       cent_to_east.getConnectorWidth().getDim(), -1); // No user-imposed limit.
    privateBridge(
       west_to_east,
-      &east_to_west == &west_to_east ? 0 : &east_to_west,
+      east_to_west,
       west_to_cent,
       cent_to_east,
       east_to_cent,
@@ -510,7 +533,8 @@ OverlapConnectorAlgorithm::bridge(
       zero_vector,
       false,
       zero_vector,
-      connector_width_limit);
+      connector_width_limit,
+      &west_to_east != &east_to_west);
 }
 
 /*
@@ -519,8 +543,8 @@ OverlapConnectorAlgorithm::bridge(
  */
 void
 OverlapConnectorAlgorithm::bridgeWithNesting(
-   Connector& west_to_east,
-   Connector& east_to_west,
+   boost::shared_ptr<Connector>& west_to_east,
+   boost::shared_ptr<Connector>& east_to_west,
    const Connector& west_to_cent,
    const Connector& cent_to_east,
    const Connector& east_to_cent,
@@ -531,7 +555,7 @@ OverlapConnectorAlgorithm::bridgeWithNesting(
 {
    privateBridge(
       west_to_east,
-      &east_to_west == &west_to_east ? 0 : &east_to_west,
+      east_to_west,
       west_to_cent,
       cent_to_east,
       east_to_cent,
@@ -540,7 +564,8 @@ OverlapConnectorAlgorithm::bridgeWithNesting(
       cent_growth_to_nest_west,
       (cent_growth_to_nest_east(0) >= 0),
       cent_growth_to_nest_east,
-      connector_width_limit);
+      connector_width_limit,
+      &west_to_east != &east_to_west);
 }
 
 /*
@@ -549,8 +574,8 @@ OverlapConnectorAlgorithm::bridgeWithNesting(
  */
 void
 OverlapConnectorAlgorithm::bridge(
-   Connector& west_to_east,
-   Connector& east_to_west,
+   boost::shared_ptr<Connector>& west_to_east,
+   boost::shared_ptr<Connector>& east_to_west,
    const Connector& west_to_cent,
    const Connector& cent_to_east,
    const Connector& east_to_cent,
@@ -561,7 +586,7 @@ OverlapConnectorAlgorithm::bridge(
       IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
    privateBridge(
       west_to_east,
-      &east_to_west == &west_to_east ? 0 : &east_to_west,
+      east_to_west,
       west_to_cent,
       cent_to_east,
       east_to_cent,
@@ -570,7 +595,8 @@ OverlapConnectorAlgorithm::bridge(
       zero_vector,
       false,
       zero_vector,
-      connector_width_limit);
+      connector_width_limit,
+      &west_to_east != &east_to_west);
 }
 
 /*
@@ -605,7 +631,7 @@ OverlapConnectorAlgorithm::bridge(
  */
 void
 OverlapConnectorAlgorithm::bridge(
-   Connector& west_to_east,
+   boost::shared_ptr<Connector>& west_to_east,
    const Connector& west_to_cent,
    const Connector& cent_to_east,
    const Connector& east_to_cent,
@@ -614,9 +640,10 @@ OverlapConnectorAlgorithm::bridge(
 {
    const IntVector& zero_vector(
       IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
+   boost::shared_ptr<Connector> dummy;
    privateBridge(
       west_to_east,
-      0,
+      dummy,
       west_to_cent,
       cent_to_east,
       east_to_cent,
@@ -625,7 +652,8 @@ OverlapConnectorAlgorithm::bridge(
       zero_vector,
       false,
       zero_vector,
-      connector_width_limit);
+      connector_width_limit,
+      false);
 }
 
 /*
@@ -634,7 +662,7 @@ OverlapConnectorAlgorithm::bridge(
  */
 void
 OverlapConnectorAlgorithm::bridge(
-   Connector& west_to_east,
+   boost::shared_ptr<Connector>& west_to_east,
    const Connector& west_to_cent,
    const Connector& cent_to_east,
    const Connector& east_to_cent,
@@ -644,9 +672,10 @@ OverlapConnectorAlgorithm::bridge(
       IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
    const IntVector connector_width_limit(
       cent_to_east.getConnectorWidth().getDim(), -1); // No user-imposed limit.
+   boost::shared_ptr<Connector> dummy;
    privateBridge(
       west_to_east,
-      0,
+      dummy,
       west_to_cent,
       cent_to_east,
       east_to_cent,
@@ -655,7 +684,8 @@ OverlapConnectorAlgorithm::bridge(
       zero_vector,
       false,
       zero_vector,
-      connector_width_limit);
+      connector_width_limit,
+      false);
 }
 
 /*
@@ -682,8 +712,8 @@ OverlapConnectorAlgorithm::bridge(
 
 void
 OverlapConnectorAlgorithm::privateBridge(
-   Connector& west_to_east,
-   Connector* east_to_west,
+   boost::shared_ptr<Connector>& west_to_east,
+   boost::shared_ptr<Connector>& east_to_west,
    const Connector& west_to_cent,
    const Connector& cent_to_east,
    const Connector& east_to_cent,
@@ -692,7 +722,8 @@ OverlapConnectorAlgorithm::privateBridge(
    const IntVector& cent_growth_to_nest_west,
    bool east_nesting_is_known,
    const IntVector& cent_growth_to_nest_east,
-   const IntVector& connector_width_limit) const
+   const IntVector& connector_width_limit,
+   bool compute_reverse) const
 {
    t_bridge->barrierAndStart();
 
@@ -808,13 +839,6 @@ OverlapConnectorAlgorithm::privateBridge(
    const int rank = mpi.getRank();
 
    /*
-    * Compute the reverse bridge (east_to_west) if it is given and is
-    * distinct.
-    */
-   const bool compute_reverse =
-      (east_to_west != 0 && east_to_west != &west_to_east);
-
-   /*
     * Owners we have to exchange information with are the ones
     * owning east/west Boxes visible to the local process.
     */
@@ -844,15 +868,9 @@ OverlapConnectorAlgorithm::privateBridge(
     * Setup the output Connectors' head, base, width and type.  Add
     * overlaps below as they are discovered or received from other procs.
     */
-   west_to_east.clearNeighborhoods();
-   west_to_east.setBase(west);
-   west_to_east.setHead(east);
-   west_to_east.setWidth(west_to_east_width, true);
+   west_to_east.reset(new Connector(west, east, west_to_east_width));
    if (compute_reverse) {
-      east_to_west->clearNeighborhoods();
-      east_to_west->setBase(east);
-      east_to_west->setHead(west);
-      east_to_west->setWidth(east_to_west_width, true);
+      east_to_west.reset(new Connector(east, west, east_to_west_width));
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (west_refinement_ratio / east_refinement_ratio * east_refinement_ratio == west_refinement_ratio ||
           east_refinement_ratio / west_refinement_ratio * west_refinement_ratio == east_refinement_ratio) {
@@ -861,8 +879,8 @@ OverlapConnectorAlgorithm::privateBridge(
           * should happen.  The requirement is that one refinement ratio is
           * an IntVector times the other.
           */
-         west_to_east.isTransposeOf(*east_to_west);
-         east_to_west->isTransposeOf(west_to_east);
+         west_to_east->isTransposeOf(*east_to_west);
+         east_to_west->isTransposeOf(*west_to_east);
       }
 #endif
    }
@@ -907,14 +925,14 @@ OverlapConnectorAlgorithm::privateBridge(
     */
    privateBridge_removeAndCache(
       neighbor_removal_mesg,
-      west_to_east,
-      east_to_west,
+      *west_to_east,
+      east_to_west.get(),
       cent_to_east);
 
    privateBridge_discoverAndSend(
       neighbor_removal_mesg,
-      west_to_east,
-      east_to_west,
+      *west_to_east,
+      east_to_west.get(),
       incoming_ranks,
       outgoing_ranks,
       all_comms,
@@ -924,8 +942,8 @@ OverlapConnectorAlgorithm::privateBridge(
    t_bridge_share->start();
 
    receiveAndUnpack(
-      west_to_east,
-      east_to_west,
+      *west_to_east,
+      east_to_west.get(),
       incoming_ranks,
       all_comms,
       comm_stage,
@@ -937,12 +955,12 @@ OverlapConnectorAlgorithm::privateBridge(
    delete[] all_comms;
 
    if (d_sanity_check_method_postconditions) {
-      west_to_east.assertConsistencyWithBase();
-      west_to_east.assertConsistencyWithHead();
+      west_to_east->assertConsistencyWithBase();
+      west_to_east->assertConsistencyWithHead();
       if (compute_reverse) {
          east_to_west->assertConsistencyWithBase();
          east_to_west->assertConsistencyWithHead();
-         east_to_west->assertTransposeCorrectness(west_to_east, true);
+         east_to_west->assertTransposeCorrectness(*west_to_east, true);
       }
    }
 
@@ -1838,8 +1856,8 @@ OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
 void
 OverlapConnectorAlgorithm::findOverlapErrors(
    const Connector& connector,
-   Connector& missing,
-   Connector& extra,
+   boost::shared_ptr<Connector>& missing,
+   boost::shared_ptr<Connector>& extra,
    bool ignore_self_overlap) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1907,14 +1925,14 @@ OverlapConnectorAlgorithm::findOverlapErrors(
       extra,
       connector,
       rebuilt);
-   TBOX_ASSERT(&extra.getBase() == &connector.getBase());
-   TBOX_ASSERT(&extra.getHead() == &connector.getHead());
+   TBOX_ASSERT(&extra->getBase() == &connector.getBase());
+   TBOX_ASSERT(&extra->getHead() == &connector.getHead());
    Connector::computeNeighborhoodDifferences(
       missing,
       rebuilt,
       connector);
-   TBOX_ASSERT(&missing.getBase() == &connector.getBase());
-   TBOX_ASSERT(&missing.getHead() == &connector.getHead());
+   TBOX_ASSERT(&missing->getBase() == &connector.getBase());
+   TBOX_ASSERT(&missing->getHead() == &connector.getHead());
 }
 
 /*
@@ -1933,7 +1951,7 @@ OverlapConnectorAlgorithm::assertOverlapCorrectness(
    if (!connector.getBase().isInitialized() ||
        !connector.getHead().isInitialized()) {
       TBOX_ERROR(
-         "OverlapConnectorAlgorithm::findOverlapErrors: Cannot check overlaps\n"
+         "OverlapConnectorAlgorithm::assertOverlapCorrectness: Cannot check overlaps\n"
          << "when base or head box_level is uninitialized.");
 
    }
@@ -1987,24 +2005,23 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
    if (!connector.getBase().isInitialized() ||
        !connector.getHead().isInitialized()) {
       TBOX_ERROR(
-         "OverlapConnectorAlgorithm::findOverlapErrors: Cannot check overlaps when\n"
+         "OverlapConnectorAlgorithm::checkOverlapCorrectness: Cannot check overlaps when\n"
          << "base or head box_level is uninitialized.");
 
    }
 #endif
    TBOX_ASSERT(!connector.hasPeriodicLocalNeighborhoodBaseBoxes());
 
-   Connector missing(connector.getRatio().getDim()),
-             extra(connector.getRatio().getDim());
+   boost::shared_ptr<Connector> missing, extra;
    findOverlapErrors(connector, missing, extra, ignore_self_overlap);
 
    if (!assert_completeness) {
       // Disregard missing overlaps by resetting missing to empty.
-      missing.clearNeighborhoods();
+      missing->clearNeighborhoods();
    } else if (ignore_periodic_images) {
       // Disregard missing overlaps if they are incident on a periodic box.
-      missing.removePeriodicLocalNeighbors();
-      missing.eraseEmptyNeighborSets();
+      missing->removePeriodicLocalNeighbors();
+      missing->eraseEmptyNeighborSets();
    }
 
    const BoxId dummy_box_id;
@@ -2015,17 +2032,17 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
     * the neighborhoods of missing and extra at the same time.
     */
 
-   Connector::ConstNeighborhoodIterator im = missing.begin();
-   Connector::ConstNeighborhoodIterator ie = extra.begin();
-   for (; im != missing.end() || ie != extra.end();
+   Connector::ConstNeighborhoodIterator im = missing->begin();
+   Connector::ConstNeighborhoodIterator ie = extra->begin();
+   for (; im != missing->end() || ie != extra->end();
         /* incremented in loop */) {
 
       const BoxId& global_id_missing =
-         im == missing.end() ? dummy_box_id : *im;
+         im == missing->end() ? dummy_box_id : *im;
       const BoxId& global_id_extra =
-         ie == extra.end() ? dummy_box_id : *ie;
+         ie == extra->end() ? dummy_box_id : *ie;
 
-      if (im != missing.end() && ie != extra.end() &&
+      if (im != missing->end() && ie != extra->end() &&
           *im == *ie) {
 
          /*
@@ -2035,9 +2052,9 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
 
          const Box& box = *connector.getBase().getBoxStrict(
                global_id_missing);
-         tbox::perr << "Found " << missing.numLocalNeighbors(*im)
+         tbox::perr << "Found " << missing->numLocalNeighbors(*im)
                     << " missing and "
-                    << extra.numLocalNeighbors(*ie)
+                    << extra->numLocalNeighbors(*ie)
                     << " extra overlaps for "
                     << box << std::endl;
          Connector::ConstNeighborhoodIterator it =
@@ -2074,12 +2091,12 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
          }
          {
             tbox::perr << "  Missing Neighbors ("
-                       << missing.numLocalNeighbors(*im) << "):"
+                       << missing->numLocalNeighbors(*im) << "):"
                        << std::endl;
             Box ghost_box = box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (Connector::ConstNeighborIterator na = missing.begin(im);
-                 na != missing.end(im); ++na) {
+            for (Connector::ConstNeighborIterator na = missing->begin(im);
+                 na != missing->end(im); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
@@ -2102,12 +2119,12 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
          }
          {
             tbox::perr << "  Extra Neighbors ("
-                       << extra.numLocalNeighbors(*ie) << "):"
+                       << extra->numLocalNeighbors(*ie) << "):"
                        << std::endl;
             Box ghost_box = box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (Connector::ConstNeighborIterator na = extra.begin(ie);
-                 na != extra.end(ie); ++na) {
+            for (Connector::ConstNeighborIterator na = extra->begin(ie);
+                 na != extra->end(ie); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
@@ -2131,8 +2148,8 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
          ++im;
          ++ie;
 
-      } else if ((ie == extra.end()) ||
-                 (im != missing.end() && *im < *ie)) {
+      } else if ((ie == extra->end()) ||
+                 (im != missing->end() && *im < *ie)) {
 
          /*
           * im goes before ie (or ie has reached the end).  Report the
@@ -2141,7 +2158,7 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
 
          const Box& box = *connector.getBase().getBoxStrict(
                global_id_missing);
-         tbox::perr << "Found " << missing.numLocalNeighbors(*im)
+         tbox::perr << "Found " << missing->numLocalNeighbors(*im)
                     << " missing overlaps for " << box << std::endl;
          Connector::ConstNeighborhoodIterator it =
             connector.findLocal(global_id_missing);
@@ -2171,12 +2188,12 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
          }
          {
             tbox::perr << "  Missing Neighbors ("
-                       << missing.numLocalNeighbors(*im) << "):"
+                       << missing->numLocalNeighbors(*im) << "):"
                        << std::endl;
             Box ghost_box = box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (Connector::ConstNeighborIterator na = missing.begin(im);
-                 na != missing.end(im); ++na) {
+            for (Connector::ConstNeighborIterator na = missing->begin(im);
+                 na != missing->end(im); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
@@ -2198,8 +2215,8 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
             }
          }
          ++im;
-      } else if ((im == missing.end()) ||
-                 (ie != extra.end() && *ie < *im)) {
+      } else if ((im == missing->end()) ||
+                 (ie != extra->end() && *ie < *im)) {
 
          /*
           * ie goes before im (or im has reached the end).  Report the
@@ -2208,7 +2225,7 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
 
          const Box& box = *connector.getBase().getBoxStrict(
                global_id_extra);
-         tbox::perr << "Found " << extra.numLocalNeighbors(*ie)
+         tbox::perr << "Found " << extra->numLocalNeighbors(*ie)
                     << " extra overlaps for " << box << std::endl;
          Connector::ConstNeighborhoodIterator it =
             connector.findLocal(global_id_extra);
@@ -2244,12 +2261,12 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
          }
          {
             tbox::perr << "  Extra Neighbors ("
-                       << extra.numLocalNeighbors(*ie) << "):"
+                       << extra->numLocalNeighbors(*ie) << "):"
                        << std::endl;
             Box ghost_box = box;
             ghost_box.grow(connector.getConnectorWidth());
-            for (Connector::ConstNeighborIterator na = extra.begin(ie);
-                 na != extra.end(ie); ++na) {
+            for (Connector::ConstNeighborIterator na = extra->begin(ie);
+                 na != extra->end(ie); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
                if (connector.getHeadCoarserFlag()) {
@@ -2275,8 +2292,8 @@ OverlapConnectorAlgorithm::checkOverlapCorrectness(
 
    }
 
-   return missing.getLocalNumberOfNeighborSets() +
-          extra.getLocalNumberOfNeighborSets();
+   return missing->getLocalNumberOfNeighborSets() +
+          extra->getLocalNumberOfNeighborSets();
 }
 
 /*

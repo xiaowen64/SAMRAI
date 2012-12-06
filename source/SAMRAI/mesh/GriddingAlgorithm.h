@@ -671,23 +671,27 @@ private:
     */
    void
    regridFinerLevel_doTaggingAfterRecursiveRegrid(
-      hier::Connector& tag_to_finer,
-      hier::Connector& finer_to_tag,
+      boost::shared_ptr<hier::Connector>& tag_to_finer,
+      boost::shared_ptr<hier::Connector>& finer_to_tag,
       const int tag_ln,
       const tbox::Array<int>& tag_buffer);
 
    /*!
     * @brief Given the metadata describing the new level, this method
     * creates and installs new PatchLevel in the hierarchy.
+    *
+    * @pre tag_to_new && new_to_tag
+    * @pre !d_hierarchy->levelExists(tag_ln + 2) || tag_to_finer
+    * @pre !d_hierarchy->levelExists(tag_ln + 2) || finer_to_tag
     */
    void
    regridFinerLevel_createAndInstallNewLevel(
       const int tag_ln,
       const double regrid_time,
-      hier::Connector* tag_to_new,
-      hier::Connector* new_to_tag,
-      const hier::Connector& tag_to_finer,
-      const hier::Connector& finer_to_tag);
+      boost::shared_ptr<hier::Connector> tag_to_new,
+      boost::shared_ptr<hier::Connector> new_to_tag,
+      boost::shared_ptr<const hier::Connector> tag_to_finer,
+      boost::shared_ptr<const hier::Connector> finer_to_tag);
 
    /*!
     * @brief Set all tags on a level to a given value.
@@ -772,8 +776,8 @@ private:
     */
    void
    makeProperNestingMap(
-      hier::BoxLevel& nested_box_level,
-      hier::Connector& unnested_to_nested,
+      boost::shared_ptr<hier::BoxLevel>& nested_box_level,
+      boost::shared_ptr<hier::Connector>& unnested_to_nested,
       const hier::BoxLevel& unnested_box_level,
       const hier::Connector& tag_to_unnested,
       const hier::Connector& unnested_to_tag,
@@ -798,8 +802,8 @@ private:
     */
    void
    makeOverflowNestingMap(
-      hier::BoxLevel& nested_box_level,
-      hier::Connector& unnested_to_nested,
+      boost::shared_ptr<hier::BoxLevel>& nested_box_level,
+      boost::shared_ptr<hier::Connector>& unnested_to_nested,
       const hier::BoxLevel& unnested_box_level,
       const hier::Connector& unnested_to_reference) const;
 
@@ -826,8 +830,8 @@ private:
     */
    void
    computeNestingViolator(
-      hier::BoxLevel& violator,
-      hier::Connector& candidate_to_violator,
+      boost::shared_ptr<hier::BoxLevel>& violator,
+      boost::shared_ptr<hier::Connector>& candidate_to_violator,
       const hier::BoxLevel& candidate,
       const hier::Connector& candidate_to_hierarchy,
       const hier::Connector& hierarchy_to_candidate,
@@ -866,7 +870,7 @@ private:
     * @param[in] ln
     *
     * @pre (d_base_ln >= 0) && (ln >= d_base_ln)
-    * @pre (ln == d_base_ln) || (d_to_nesting_complement[ln - 1].isFinalized())
+    * @pre (ln == d_base_ln) || (d_to_nesting_complement[ln - 1]->isFinalized())
     */
    void
    computeProperNestingData(
@@ -980,9 +984,9 @@ private:
     */
    void
    readLevelBoxes(
-      hier::BoxLevel& new_box_level,
-      hier::Connector& coarser_to_new,
-      hier::Connector& new_to_coarser,
+      boost::shared_ptr<hier::BoxLevel>& new_box_level,
+      boost::shared_ptr<hier::Connector>& coarser_to_new,
+      boost::shared_ptr<hier::Connector>& new_to_coarser,
       const int level_number,
       const double regrid_time,
       const int regrid_cycle,
@@ -1004,9 +1008,9 @@ private:
     */
    void
    findRefinementBoxes(
-      hier::BoxLevel& new_box_level,
-      hier::Connector& tag_to_new,
-      hier::Connector& new_to_tag,
+      boost::shared_ptr<hier::BoxLevel>& new_box_level,
+      boost::shared_ptr<hier::Connector>& tag_to_new,
+      boost::shared_ptr<hier::Connector>& new_to_tag,
       const int tag_ln) const;
 
    /*!
@@ -1305,7 +1309,7 @@ private:
     * Has length d_hierarchy->getMaxNumberOfLevels().  The objects are
     * initialized only during gridding/regridding.
     */
-   std::vector<hier::BoxLevel> d_proper_nesting_complement;
+   std::vector<boost::shared_ptr<hier::BoxLevel> > d_proper_nesting_complement;
 
    /*
     * @brief Connectors from the hierarchy to d_proper_nesting_complement.
@@ -1313,7 +1317,7 @@ private:
     * d_to_nesting_complement[ln] goes from level ln to
     * d_proper_nesting_complelemt[ln].
     */
-   std::vector<hier::Connector> d_to_nesting_complement;
+   std::vector<boost::shared_ptr<hier::Connector> > d_to_nesting_complement;
 
    /*
     * @brief Connectors from d_proper_nesting_complement to the hierarchy.
@@ -1321,7 +1325,7 @@ private:
     * d_from_nesting_complement[ln] goes from
     * d_proper_nesting_complement[ln] to level ln.
     */
-   std::vector<hier::Connector> d_from_nesting_complement;
+   std::vector<boost::shared_ptr<hier::Connector> > d_from_nesting_complement;
 
    /*!
     * @brief How to resolve user tags that violate nesting requirements.

@@ -318,17 +318,16 @@ BergerRigoutsosNode::setClusteringParameters(
  */
 void
 BergerRigoutsosNode::clusterAndComputeRelationships(
-   hier::BoxLevel& new_box_level,
-   hier::Connector& tag_to_new,
-   hier::Connector& new_to_tag,
+   boost::shared_ptr<hier::BoxLevel>& new_box_level,
+   boost::shared_ptr<hier::Connector>& tag_to_new,
+   boost::shared_ptr<hier::Connector>& new_to_tag,
    const hier::BoxContainer& bound_boxes,
    const boost::shared_ptr<hier::PatchLevel>& tag_level,
    const tbox::SAMRAI_MPI& mpi_object)
 {
    TBOX_ASSERT(!bound_boxes.isEmpty());
    TBOX_ASSERT(d_parent == 0);
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(d_common->d_dim,
-      new_box_level,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_common->d_dim,
       *(bound_boxes.begin()),
       *tag_level);
 
@@ -347,32 +346,29 @@ BergerRigoutsosNode::clusterAndComputeRelationships(
     * primitive containers.
     */
 
-   new_box_level.initialize(
+   new_box_level.reset(new hier::BoxLevel(
       d_common->tag_level->getRatioToLevelZero(),
       d_common->tag_level->getGridGeometry(),
-      d_common->tag_box_level->getMPI(),
-      hier::BoxLevel::DISTRIBUTED);
+      d_common->tag_box_level->getMPI()));
 
    if (d_common->compute_relationships >= 1) {
-      tag_to_new.clearNeighborhoods();
-      tag_to_new.setBase(*tag_level->getBoxLevel());
-      tag_to_new.setHead(new_box_level);
-      tag_to_new.setWidth(d_common->max_gcw, true);
+      tag_to_new.reset(new hier::Connector(*tag_level->getBoxLevel(),
+         *new_box_level,
+         d_common->max_gcw));
    }
    if (d_common->compute_relationships >= 2) {
-      new_to_tag.clearNeighborhoods();
-      new_to_tag.setBase(new_box_level);
-      new_to_tag.setHead(*tag_level->getBoxLevel());
-      new_to_tag.setWidth(d_common->max_gcw, true);
+      new_to_tag.reset(new hier::Connector(*new_box_level,
+         *tag_level->getBoxLevel(),
+         d_common->max_gcw));
    }
 
-   d_common->new_box_level = &new_box_level;
-   d_common->tag_to_new = &tag_to_new;
-   d_common->new_to_tag = &new_to_tag;
+   d_common->new_box_level = new_box_level.get();
+   d_common->tag_to_new = tag_to_new.get();
+   d_common->new_to_tag = new_to_tag.get();
 
    clusterAndComputeRelationships();
 
-   new_box_level.finalize();
+   new_box_level->finalize();
 
    /*
     * Clear temporary parameters that are only used during active

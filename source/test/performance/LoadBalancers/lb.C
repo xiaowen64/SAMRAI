@@ -56,10 +56,10 @@ using namespace tbox;
 
 void
 generatePrebalance(
-   hier::BoxLevel &Lb,
+   boost::shared_ptr<hier::BoxLevel>& Lb,
    hier::BoxLevel &La,
-   hier::Connector &La_to_Lb,
-   hier::Connector &Lb_to_La,
+   boost::shared_ptr<hier::Connector> &La_to_Lb,
+   boost::shared_ptr<hier::Connector> &Lb_to_La,
    const std::string &Lb_box_gen_method,
    tbox::Database &main_db,
    const boost::shared_ptr<hier::PatchHierarchy> &hierarchy,
@@ -69,9 +69,9 @@ generatePrebalance(
 
 void
 generatePrebalanceByUserBoxes(
-   hier::BoxLevel& L1,
-   hier::Connector& L0_to_L1,
-   hier::Connector& balance_to_L0,
+   boost::shared_ptr<hier::BoxLevel>& L1,
+   boost::shared_ptr<hier::Connector>& L0_to_L1,
+   boost::shared_ptr<hier::Connector>& balance_to_L0,
    const hier::BoxLevel& L0,
    boost::shared_ptr<tbox::Database> database,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -80,9 +80,9 @@ generatePrebalanceByUserBoxes(
 
 void
 generatePrebalanceByUserShells(
-   hier::BoxLevel& L1,
-   hier::Connector& L0_to_L1,
-   hier::Connector& L1_to_L0,
+   boost::shared_ptr<hier::BoxLevel>& L1,
+   boost::shared_ptr<hier::Connector>& L0_to_L1,
+   boost::shared_ptr<hier::Connector>& L1_to_L0,
    const hier::BoxLevel& L0,
    const boost::shared_ptr<tbox::Database>& database,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -91,9 +91,9 @@ generatePrebalanceByUserShells(
 
 void
 generatePrebalanceBySinusoidalFront(
-   hier::BoxLevel& L1,
-   hier::Connector& L0_to_L1,
-   hier::Connector& L1_to_L0,
+   boost::shared_ptr<hier::BoxLevel>& L1,
+   boost::shared_ptr<hier::Connector>& L0_to_L1,
+   boost::shared_ptr<hier::Connector>& L1_to_L0,
    const hier::BoxLevel& L0,
    const boost::shared_ptr<tbox::Database>& database,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -103,9 +103,9 @@ generatePrebalanceBySinusoidalFront(
 
 void
 generatePrebalanceByShrinkingLevel(
-   hier::BoxLevel& L2,
-   hier::Connector& L1_to_L2,
-   hier::Connector& L2_to_L1,
+   boost::shared_ptr<hier::BoxLevel>& L2,
+   boost::shared_ptr<hier::Connector>& L1_to_L2,
+   boost::shared_ptr<hier::Connector>& L2_to_L1,
    const hier::BoxLevel& L1,
    const boost::shared_ptr<tbox::Database>& database,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -477,16 +477,16 @@ int main(
           * reflect the load balancer use in real apps.  We just neeed a
           * distributed L0 for the real load balancing performance test.
           */
-         hier::Connector L0_to_domain(
+         boost::shared_ptr<hier::Connector> L0_to_domain;
+         boost::shared_ptr<hier::Connector> domain_to_L0;
+         oca.findOverlaps(L0_to_domain,
             L0,
             domain_box_level,
             hier::IntVector(dim, 2));
-         hier::Connector domain_to_L0(
+         oca.findOverlaps(domain_to_L0,
             domain_box_level,
             L0,
             hier::IntVector(dim, 2));
-         oca.findOverlaps(L0_to_domain);
-         oca.findOverlaps(domain_to_L0);
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb0(
             createLoadBalancer( base_db, load_balancer_type, 0, dim ));
@@ -499,12 +499,10 @@ int main(
          tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
          lb0->loadBalanceBoxLevel(
             L0,
-            L0_to_domain,
-            domain_to_L0,
+            *L0_to_domain,
+            *domain_to_L0,
             hierarchy,
             0,
-            hier::Connector(dim),
-            hier::Connector(dim),
             hierarchy->getSmallestPatchSize(0),
             hierarchy->getLargestPatchSize(0),
             domain_box_level,
@@ -512,13 +510,13 @@ int main(
             cut_factor);
 
          sortNodes(L0,
-            domain_to_L0,
-            L0_to_domain,
+            *domain_to_L0,
+            *L0_to_domain,
             false,
             true);
 
-         oca.assertOverlapCorrectness(L0_to_domain);
-         oca.assertOverlapCorrectness(domain_to_L0);
+         oca.assertOverlapCorrectness(*L0_to_domain);
+         oca.assertOverlapCorrectness(*domain_to_L0);
 
          L0.cacheGlobalReducedData();
 
@@ -535,15 +533,15 @@ int main(
 
 
 
-      hier::BoxLevel L1(dim);
-      hier::Connector L1_to_L0(dim);
-      hier::Connector L0_to_L1(dim);
-      hier::Connector L1_to_L1(dim);
+      boost::shared_ptr<hier::BoxLevel> L1;
+      boost::shared_ptr<hier::Connector> L1_to_L0;
+      boost::shared_ptr<hier::Connector> L0_to_L1;
+      boost::shared_ptr<hier::Connector> L1_to_L1;
 
-      hier::BoxLevel L2(dim);
-      hier::Connector L2_to_L1(dim);
-      hier::Connector L1_to_L2(dim);
-      hier::Connector L2_to_L2(dim);
+      boost::shared_ptr<hier::BoxLevel> L2;
+      boost::shared_ptr<hier::Connector> L2_to_L1;
+      boost::shared_ptr<hier::Connector> L1_to_L2;
+      boost::shared_ptr<hier::Connector> L2_to_L2;
 
 
 
@@ -579,9 +577,9 @@ int main(
 
 
          // Output metadata before balancing L1.
-         outputMetadataBefore( L0_to_L1, L1_to_L0, "L0", "L1pre" );
+         outputMetadataBefore( *L0_to_L1, *L1_to_L0, "L0", "L1pre" );
 
-         if ( L1.getGlobalNumberOfBoxes() == 0 ) {
+         if ( L1->getGlobalNumberOfBoxes() == 0 ) {
             TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
          }
 
@@ -589,57 +587,55 @@ int main(
             createLoadBalancer( base_db, load_balancer_type, 1 , dim));
 
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L1.getLocalNumberOfCells(),
-            L1.getMPI());
+            (double)L1->getLocalNumberOfCells(),
+            L1->getMPI());
 
          tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
          // Load balance L1.
          lb1->loadBalanceBoxLevel(
-            L1,
-            L1_to_L0,
-            L0_to_L1,
+            *L1,
+            *L1_to_L0,
+            *L0_to_L1,
             hierarchy,
             1,
-            hier::Connector(dim),
-            hier::Connector(dim),
             hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
             hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
             domain_box_level,
             bad_interval,
             cut_factor);
 
-         oca.assertOverlapCorrectness(L1_to_L0);
-         oca.assertOverlapCorrectness(L0_to_L1);
+         oca.assertOverlapCorrectness(*L1_to_L0);
+         oca.assertOverlapCorrectness(*L0_to_L1);
 
-         sortNodes(L1,
-                   L0_to_L1,
-                   L1_to_L0,
+         sortNodes(*L1,
+                   *L0_to_L1,
+                   *L1_to_L0,
                    false,
                    true);
 
          // Refine L1.
          if ( hierarchy->getRatioToCoarserLevel(1) != zero_vec ) {
             refineHead(
-               L1,
-               L0_to_L1,
-               L1_to_L0,
+               *L1,
+               *L0_to_L1,
+               *L1_to_L0,
                hierarchy->getRatioToCoarserLevel(1) );
          }
 
          // Get the L1_to_L1 for edge statistics.
          oca.bridge(
             L1_to_L1,
-            L1_to_L0,
-            L0_to_L1,
-            L1_to_L0,
-            L0_to_L1);
+            *L1_to_L0,
+            *L0_to_L1,
+            *L1_to_L0,
+            *L0_to_L1);
 
          // Output metadata after balancing L1.
-         outputMetadataAfter( L0_to_L1, L1_to_L0, L1_to_L1, "L0", "L1post" );
+         outputMetadataAfter( *L0_to_L1, *L1_to_L0, *L1_to_L1, "L0", "L1post" );
 
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L1.getLocalNumberOfCells(),
-            L1.getMPI());
+            (double)L1->getLocalNumberOfCells(),
+            L1->getMPI());
 
       }
 
@@ -664,7 +660,7 @@ int main(
             main_db->getStringWithDefault("L2_box_gen_method", "PrebalanceByShrinkingLevel");
          generatePrebalance(
             L2,
-            L1,
+            *L1,
             L1_to_L2,
             L2_to_L1,
             L2_box_gen_method,
@@ -676,9 +672,9 @@ int main(
 
 
          // Output metadata before balancing L2.
-         outputMetadataBefore( L1_to_L2, L2_to_L1, "L1", "L2pre" );
+         outputMetadataBefore( *L1_to_L2, *L2_to_L1, "L1", "L2pre" );
 
-         if ( L2.getGlobalNumberOfBoxes() == 0 ) {
+         if ( L2->getGlobalNumberOfBoxes() == 0 ) {
             TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
          }
 
@@ -686,57 +682,55 @@ int main(
             createLoadBalancer( base_db, load_balancer_type, 2 , dim));
 
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L2.getLocalNumberOfCells(),
-            L2.getMPI());
+            (double)L2->getLocalNumberOfCells(),
+            L2->getMPI());
 
          tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
          // Load balance L2.
          lb2->loadBalanceBoxLevel(
-            L2,
-            L2_to_L1,
-            L1_to_L2,
+            *L2,
+            *L2_to_L1,
+            *L1_to_L2,
             hierarchy,
             1,
-            hier::Connector(dim),
-            hier::Connector(dim),
             hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
             hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
             domain_box_level,
             bad_interval,
             cut_factor);
 
-         oca.assertOverlapCorrectness(L2_to_L1);
-         oca.assertOverlapCorrectness(L1_to_L2);
+         oca.assertOverlapCorrectness(*L2_to_L1);
+         oca.assertOverlapCorrectness(*L1_to_L2);
 
-         sortNodes(L2,
-                   L1_to_L2,
-                   L2_to_L1,
+         sortNodes(*L2,
+                   *L1_to_L2,
+                   *L2_to_L1,
                    false,
                    true);
 
          // Refine L2.
          if ( hierarchy->getRatioToCoarserLevel(2) != zero_vec ) {
             refineHead(
-               L2,
-               L1_to_L2,
-               L2_to_L1,
+               *L2,
+               *L1_to_L2,
+               *L2_to_L1,
                hierarchy->getRatioToCoarserLevel(2) );
          }
 
          // Get the L2_to_L2 for edge statistics.
          oca.bridge(
             L2_to_L2,
-            L2_to_L1,
-            L1_to_L2,
-            L2_to_L1,
-            L1_to_L2);
+            *L2_to_L1,
+            *L1_to_L2,
+            *L2_to_L1,
+            *L1_to_L2);
 
          // Output metadata after balancing L2.
-         outputMetadataAfter( L1_to_L2, L2_to_L1, L2_to_L2, "L1", "L2post" );
+         outputMetadataAfter( *L1_to_L2, *L2_to_L1, *L2_to_L2, "L1", "L2post" );
 
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L2.getLocalNumberOfCells(),
-            L2.getMPI());
+            (double)L2->getLocalNumberOfCells(),
+            L2->getMPI());
 
       }
 
@@ -749,10 +743,10 @@ int main(
 #ifdef HAVE_HDF5
          hierarchy->makeNewPatchLevel(0, L0);
          if ( hierarchy->getMaxNumberOfLevels() > 1 ) {
-            hierarchy->makeNewPatchLevel(1, L1);
+            hierarchy->makeNewPatchLevel(1, *L1);
          }
          if ( hierarchy->getMaxNumberOfLevels() > 2 ) {
-            hierarchy->makeNewPatchLevel(2, L2);
+            hierarchy->makeNewPatchLevel(2, *L2);
          }
 
          if ((dim == tbox::Dimension(2)) || (dim == tbox::Dimension(3))) {
@@ -955,9 +949,9 @@ void outputMetadataAfter(
  ***********************************************************************
  */
 void generatePrebalanceByUserShells(
-   hier::BoxLevel& L1,
-   hier::Connector& L0_to_L1,
-   hier::Connector& L1_to_L0,
+   boost::shared_ptr<hier::BoxLevel>& L1,
+   boost::shared_ptr<hier::Connector>& L0_to_L1,
+   boost::shared_ptr<hier::Connector>& L1_to_L0,
    const hier::BoxLevel& L0,
    const boost::shared_ptr<tbox::Database>& database,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -1100,29 +1094,29 @@ void generatePrebalanceByUserShells(
     * L0 BoxLevel.  We need to reset the Connectors to use
     * the L0 instead.
     */
-   L0_to_L1.setBase(L0);
-   L0_to_L1.setHead(L1, true);
-   L1_to_L0.setBase(L1);
-   L1_to_L0.setHead(L0, true);
+   L0_to_L1->setBase(L0);
+   L0_to_L1->setHead(*L1, true);
+   L1_to_L0->setBase(*L1);
+   L1_to_L0->setHead(L0, true);
 
 
    /*
     * Make L1 nest inside L0 by one cell.
     */
-   hier::BoxLevel L1nested(dim);
-   hier::Connector L1_to_L1nested(dim);
+   boost::shared_ptr<hier::BoxLevel> L1nested;
+   boost::shared_ptr<hier::Connector> L1_to_L1nested;
    hier::BoxLevelConnectorUtils blcu;
    blcu.computeInternalParts( L1nested,
                               L1_to_L1nested,
-                              L1_to_L0,
+                              *L1_to_L0,
                               -one_vec,
                               grid_geometry->getDomainSearchTree() );
    hier::MappingConnectorAlgorithm mca;
-   mca.modify( L0_to_L1,
-               L1_to_L0,
-               L1_to_L1nested,
-               &L1,
-               &L1nested );
+   mca.modify( *L0_to_L1,
+               *L1_to_L0,
+               *L1_to_L1nested,
+               L1.get(),
+               L1nested.get() );
 
    return;
 }
@@ -1132,9 +1126,9 @@ void generatePrebalanceByUserShells(
  ***********************************************************************
  */
 void generatePrebalanceByShrinkingLevel(
-   hier::BoxLevel& L2,
-   hier::Connector& L1_to_L2,
-   hier::Connector& L2_to_L1,
+   boost::shared_ptr<hier::BoxLevel>& L2,
+   boost::shared_ptr<hier::Connector>& L1_to_L2,
+   boost::shared_ptr<hier::Connector>& L2_to_L1,
    const hier::BoxLevel& L1,
    const boost::shared_ptr<tbox::Database>& database,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -1169,8 +1163,8 @@ void generatePrebalanceByShrinkingLevel(
    }
 
 
-   hier::BoxLevel L1tags(dim);
-   hier::Connector L1_to_L1tags(dim);
+   boost::shared_ptr<hier::BoxLevel> L1tags;
+   boost::shared_ptr<hier::Connector> L1_to_L1tags;
    const hier::Connector &L1_to_L1 =
       L1.getPersistentOverlapConnectors().findOrCreateConnector(
          L1,
@@ -1182,7 +1176,7 @@ void generatePrebalanceByShrinkingLevel(
                               L1_to_L1,
                               -shrink_width,
                               grid_geometry->getDomainSearchTree() );
-   tbox::plog << "L1_to_L1tags:\n" << L1_to_L1tags.format("L1->L1tags: ", 2);
+   tbox::plog << "L1_to_L1tags:\n" << L1_to_L1tags->format("L1->L1tags: ", 2);
 
 
    const int tag_val = 1;
@@ -1222,15 +1216,15 @@ void generatePrebalanceByShrinkingLevel(
 
       tag_data->getArrayData().fillAll(0);
 
-      if ( !L1_to_L1tags.hasNeighborSet(patch->getBox().getBoxId()) ) {
+      if ( !L1_to_L1tags->hasNeighborSet(patch->getBox().getBoxId()) ) {
          tag_data->getArrayData().fillAll(1);
       }
       else {
          hier::Connector::ConstNeighborhoodIterator ni =
-            L1_to_L1tags.find(patch->getBox().getBoxId());
+            L1_to_L1tags->find(patch->getBox().getBoxId());
 
-         for ( hier::Connector::ConstNeighborIterator na = L1_to_L1tags.begin(ni);
-               na != L1_to_L1tags.end(ni); ++na ) {
+         for ( hier::Connector::ConstNeighborIterator na = L1_to_L1tags->begin(ni);
+               na != L1_to_L1tags->end(ni); ++na ) {
 
             const hier::Box &tag_box = *na;
             tag_data->getArrayData().fillAll(1, tag_box);
@@ -1263,29 +1257,29 @@ void generatePrebalanceByShrinkingLevel(
     * L1 BoxLevel.  We need to reset the Connectors to use
     * the L1 instead.
     */
-   L1_to_L2.setBase(L1);
-   L1_to_L2.setHead(L2, true);
-   L2_to_L1.setBase(L2);
-   L2_to_L1.setHead(L1, true);
+   L1_to_L2->setBase(L1);
+   L1_to_L2->setHead(*L2, true);
+   L2_to_L1->setBase(*L2);
+   L2_to_L1->setHead(L1, true);
 
 
    /*
     * Make L2 nest inside L1 by shrink_width.
     */
    const hier::IntVector nesting_width(dim, hierarchy->getProperNestingBuffer(coarser_ln));
-   hier::BoxLevel L2nested(dim);
-   hier::Connector L2_to_L2nested(dim);
+   boost::shared_ptr<hier::BoxLevel> L2nested;
+   boost::shared_ptr<hier::Connector> L2_to_L2nested;
    blcu.computeInternalParts( L2nested,
                               L2_to_L2nested,
-                              L2_to_L1,
+                              *L2_to_L1,
                               -nesting_width,
                               grid_geometry->getDomainSearchTree() );
    hier::MappingConnectorAlgorithm mca;
-   mca.modify( L1_to_L2,
-               L2_to_L1,
-               L2_to_L2nested,
-               &L2,
-               &L2nested );
+   mca.modify( *L1_to_L2,
+               *L2_to_L1,
+               *L2_to_L2nested,
+               L2.get(),
+               L2nested.get() );
 
    return;
 }
@@ -1295,9 +1289,9 @@ void generatePrebalanceByShrinkingLevel(
  ***********************************************************************
  */
 void generatePrebalanceBySinusoidalFront(
-   hier::BoxLevel& L2,
-   hier::Connector& L1_to_L2,
-   hier::Connector& L2_to_L1,
+   boost::shared_ptr<hier::BoxLevel>& L2,
+   boost::shared_ptr<hier::Connector>& L1_to_L2,
+   boost::shared_ptr<hier::Connector>& L2_to_L1,
    const hier::BoxLevel& L1,
    const boost::shared_ptr<tbox::Database>& database,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -1421,30 +1415,30 @@ void generatePrebalanceBySinusoidalFront(
     * L1 BoxLevel.  We need to reset the Connectors to use
     * the L1 instead.
     */
-   L1_to_L2.setBase(L1);
-   L1_to_L2.setHead(L2, true);
-   L2_to_L1.setBase(L2);
-   L2_to_L1.setHead(L1, true);
+   L1_to_L2->setBase(L1);
+   L1_to_L2->setHead(*L2, true);
+   L2_to_L1->setBase(*L2);
+   L2_to_L1->setHead(L1, true);
 
 
    /*
     * Make L2 nest inside L1 by nesting_width.
     */
    const hier::IntVector nesting_width(dim, hierarchy->getProperNestingBuffer(coarser_ln));
-   hier::BoxLevel L2nested(dim);
-   hier::Connector L2_to_L2nested(dim);
+   boost::shared_ptr<hier::BoxLevel> L2nested;
+   boost::shared_ptr<hier::Connector> L2_to_L2nested;
    hier::BoxLevelConnectorUtils blcu;
    blcu.computeInternalParts( L2nested,
                               L2_to_L2nested,
-                              L2_to_L1,
+                              *L2_to_L1,
                               -nesting_width,
                               grid_geometry->getDomainSearchTree() );
    hier::MappingConnectorAlgorithm mca;
-   mca.modify( L1_to_L2,
-               L2_to_L1,
-               L2_to_L2nested,
-               &L2,
-               &L2nested );
+   mca.modify( *L1_to_L2,
+               *L2_to_L1,
+               *L2_to_L2nested,
+               L2.get(),
+               L2nested.get() );
 
    return;
 }
@@ -1454,9 +1448,9 @@ void generatePrebalanceBySinusoidalFront(
  ***********************************************************************
  */
 void generatePrebalanceByUserBoxes(
-   hier::BoxLevel& L1,
-   hier::Connector& L0_to_L1,
-   hier::Connector& L1_to_L0,
+   boost::shared_ptr<hier::BoxLevel>& L1,
+   boost::shared_ptr<hier::Connector>& L0_to_L1,
+   boost::shared_ptr<hier::Connector>& L1_to_L0,
    const hier::BoxLevel& L0,
    boost::shared_ptr<tbox::Database> database,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -1472,28 +1466,22 @@ void generatePrebalanceByUserBoxes(
    initial_owners[0] = 0;
    initial_owners = database->getIntegerArray("initial_owners");
 
-   L1.initialize(hier::IntVector(dim, 1),
+   L1.reset(new hier::BoxLevel(hier::IntVector(dim, 1),
       hierarchy->getGridGeometry(),
-      L0.getMPI());
+      L0.getMPI()));
    hier::BoxContainer::iterator prebalance_boxes_itr(prebalance_boxes);
    for (int i = 0; i < prebalance_boxes.size(); ++i, ++prebalance_boxes_itr) {
       const int owner = i % initial_owners.size();
-      if (owner == L1.getMPI().getRank()) {
+      if (owner == L1->getMPI().getRank()) {
          prebalance_boxes_itr->setBlockId(hier::BlockId(0));
-         L1.addBox(hier::Box(*prebalance_boxes_itr, hier::LocalId(i), owner));
+         L1->addBox(hier::Box(*prebalance_boxes_itr, hier::LocalId(i), owner));
       }
    }
 
    // Generate the balance<===>L0 Connectors.
-   L1_to_L0.setBase(L1);
-   L1_to_L0.setHead(L0);
-   L1_to_L0.setWidth(connector_width, true);
-   L0_to_L1.setBase(L0);
-   L0_to_L1.setHead(L1);
-   L0_to_L1.setWidth(connector_width, true);
    hier::OverlapConnectorAlgorithm oca;
-   oca.findOverlaps(L1_to_L0);
-   oca.findOverlaps(L0_to_L1);
+   oca.findOverlaps(L1_to_L0, *L1, L0, connector_width);
+   oca.findOverlaps(L0_to_L1, L0, *L1, connector_width);
 
    return;
 }
@@ -1511,8 +1499,8 @@ void sortNodes(
 {
    const hier::MappingConnectorAlgorithm mca;
 
-   hier::Connector sorting_map(new_box_level.getDim());
-   hier::BoxLevel seq_box_level(new_box_level.getDim());
+   boost::shared_ptr<hier::Connector> sorting_map;
+   boost::shared_ptr<hier::BoxLevel> seq_box_level;
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(
       seq_box_level,
@@ -1523,7 +1511,7 @@ void sortNodes(
 
    mca.modify(tag_to_new,
       new_to_tag,
-      sorting_map,
+      *sorting_map,
       &new_box_level);
 
    return;
@@ -1567,10 +1555,10 @@ void refineHead(
  ***********************************************************************
  */
 void generatePrebalance(
-   hier::BoxLevel &Lb,
+   boost::shared_ptr<hier::BoxLevel>& Lb,
    hier::BoxLevel &La,
-   hier::Connector &La_to_Lb,
-   hier::Connector &Lb_to_La,
+   boost::shared_ptr<hier::Connector> &La_to_Lb,
+   boost::shared_ptr<hier::Connector> &Lb_to_La,
    const std::string &box_gen_method,
    tbox::Database &main_db,
    const boost::shared_ptr<hier::PatchHierarchy> &hierarchy,

@@ -94,6 +94,20 @@ public:
       const tbox::Dimension& dim);
 
    /*!
+    * @brief Creates a Connector which is initialized from a restart database.
+    *
+    * @param dim The dimension of the head and base BoxLevels that
+    * this object will eventually connect.
+    *
+    * @see setBase()
+    * @see setHead()
+    * @see setWidth()
+    */
+   Connector(
+      const tbox::Dimension& dim,
+      tbox::Database& restart_db);
+
+   /*!
     * @brief Copy constructor.
     *
     * @param[in] other
@@ -814,23 +828,23 @@ public:
    }
 
    /*!
-    * @brief Initialize to the transpose of a given Connector object,
-    * assuming that all relationships are local (no remote neighbors).
+    * @brief Create this Connector's the transpose, assuming that all
+    * relationships are local (no remote neighbors).
     *
     * If any remote neighbor is found an unrecoverable assertion is
     * thrown.
     *
-    * Non-periodic relationships in @c connector are simply reversed to get the
-    * transpose relationship.  For each periodic relationships in @c connector,
-    * we create a periodic relationship incident from @c connector's unshifted
-    * head neighbor to @c connectors's shifted base neighbor.  This is because
-    * all relationships must be incident from a real (unshifted) Box.
+    * Non-periodic relationships in are simply reversed to get the transpose
+    * relationship.  For each periodic relationship we create a periodic
+    * relationship incident from the unshifted head neighbor to the shifted
+    * base neighbor.  This is because all relationships must be incident from a
+    * real (unshifted) Box.
     *
-    * @param[in] connector
+    * @param[in] transpose
     */
    void
-   initializeToLocalTranspose(
-      const Connector& connector);
+   createLocalTranspose(
+      boost::shared_ptr<Connector>& transpose) const;
 
    /*!
     * @brief Assignment operator
@@ -1089,7 +1103,7 @@ public:
     */
    static void
    computeNeighborhoodDifferences(
-      Connector& left_minus_right,
+      boost::shared_ptr<Connector>& left_minus_right,
       const Connector& left_connector,
       const Connector& right_connector);
 
@@ -1209,19 +1223,6 @@ public:
       const boost::shared_ptr<tbox::Database>& restart_db)
    {
       d_relationships.putToRestart(restart_db);
-      return;
-   }
-
-   /*!
-    * @brief Read the neighborhoods from a restart database.
-    *
-    * @param[in] restart_db
-    */
-   void
-   getFromRestart(
-      tbox::Database& restart_db)
-   {
-      d_relationships.getFromRestart(restart_db);
       return;
    }
 
@@ -1450,6 +1451,19 @@ private:
    {
       t_acquire_remote_relationships.reset();
       t_cache_global_reduced_data.reset();
+   }
+
+   /*!
+    * @brief Read the neighborhoods from a restart database.
+    *
+    * @param[in] restart_db
+    */
+   void
+   getFromRestart(
+      tbox::Database& restart_db)
+   {
+      d_relationships.getFromRestart(restart_db);
+      return;
    }
 
    //@{ @name Private utilities.

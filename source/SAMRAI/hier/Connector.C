@@ -80,6 +80,32 @@ Connector::Connector(
  */
 
 Connector::Connector(
+   const tbox::Dimension& dim,
+   tbox::Database& restart_db):
+   d_base_handle(),
+   d_head_handle(),
+   d_base_width(dim),
+   d_ratio(dim),
+   d_ratio_is_exact(false),
+   d_head_coarser(false),
+   d_relationships(),
+   d_global_relationships(),
+   d_mpi(tbox::SAMRAI_MPI::commNull),
+   d_parallel_state(BoxLevel::DISTRIBUTED),
+   d_finalized(false),
+   d_global_number_of_neighbor_sets(0),
+   d_global_number_of_relationships(0),
+   d_global_data_up_to_date(false)
+{
+   getFromRestart(restart_db);
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
+Connector::Connector(
    const Connector& other):
    d_base_handle(other.d_base_handle),
    d_head_handle(other.d_head_handle),
@@ -742,45 +768,42 @@ Connector::writeNeighborhoodToStream(
  */
 
 void
-Connector::initializeToLocalTranspose(
-   const Connector& connector)
+Connector::createLocalTranspose(
+   boost::shared_ptr<Connector>& transpose) const
 {
-   const IntVector my_gcw = convertHeadWidthToBase(
-         connector.getHead().getRefinementRatio(),
-         connector.getBase().getRefinementRatio(),
-         connector.getConnectorWidth());
+   const IntVector transpose_gcw = convertHeadWidthToBase(
+         getHead().getRefinementRatio(),
+         getBase().getRefinementRatio(),
+         getConnectorWidth());
 
-   clearNeighborhoods();
-   setBase(connector.d_head_handle->getBoxLevel());
-   setHead(connector.d_base_handle->getBoxLevel());
-   setWidth(my_gcw, true);
-   TBOX_ASSERT(isTransposeOf(connector));
+   transpose.reset(new Connector(d_head_handle->getBoxLevel(),
+      d_base_handle->getBoxLevel(),
+      transpose_gcw));
+   TBOX_ASSERT(isTransposeOf(*transpose));
 
-   const tbox::Dimension dim(my_gcw.getDim());
+   const tbox::Dimension dim(transpose_gcw.getDim());
    const PeriodicShiftCatalog* shift_catalog =
       PeriodicShiftCatalog::getCatalog(dim);
 
-   for (ConstNeighborhoodIterator ci = connector.begin();
-        ci != connector.end(); ++ci) {
+   for (ConstNeighborhoodIterator ci = begin(); ci != end(); ++ci) {
 
       const BoxId& box_id = *ci;
-      const BoxContainer::const_iterator ni = getHead().getBox(box_id);
-      if (ni == getHead().getBoxes().end()) {
+      const BoxContainer::const_iterator ni = transpose->getHead().getBox(box_id);
+      if (ni == transpose->getHead().getBoxes().end()) {
          TBOX_ERROR(
-            "Connector::initializeToLocalTranspose: box index\n"
+            "Connector::createLocalTranspose: box index\n"
             << box_id
             << " not found in local part of head box_level.\n"
-            << "This means that the incoming Connector data was not a\n"
+            << "This means that the Connector data was not a\n"
             << "self-consistent local mapping.\n");
       }
       const Box& my_head_box = *ni;
 
-      for (ConstNeighborIterator na = connector.begin(ci);
-           na != connector.end(ci); ++na) {
+      for (ConstNeighborIterator na = begin(ci); na != end(ci); ++na) {
          const Box& my_base_box = *na;
-         if (my_base_box.getOwnerRank() != getMPI().getRank()) {
+         if (my_base_box.getOwnerRank() != transpose->getMPI().getRank()) {
             TBOX_ERROR(
-               "Connector::initializeToLocalTranspose: base box "
+               "Connector::createLocalTranspose: base box "
                << my_head_box << "\n"
                << "has remote neighbor " << my_base_box
                << " which is disallowed.\n"
@@ -791,17 +814,17 @@ Connector::initializeToLocalTranspose(
                my_head_box,
                shift_catalog->getOppositeShiftNumber(
                   my_base_box.getPeriodicId()),
-               getHead().getRefinementRatio());
-            if (getHead().hasBox(my_shifted_head_box)) {
+               transpose->getHead().getRefinementRatio());
+            if (transpose->getHead().hasBox(my_shifted_head_box)) {
                BoxId base_non_per_id(
                   my_base_box.getGlobalId(),
                   PeriodicId::zero());
-               d_relationships.insert(
+               transpose->d_relationships.insert(
                   base_non_per_id,
                   my_shifted_head_box);
             }
          } else {
-            d_relationships.insert(
+            transpose->d_relationships.insert(
                my_base_box.getBoxId(),
                my_head_box);
          }
@@ -810,15 +833,15 @@ Connector::initializeToLocalTranspose(
    }
 
    if (0) {
-      tbox::perr << "end of initializeToLocalTranspose:\n"
-                 << "base:\n" << getBase().format("BASE->", 3)
-                 << "head:\n" << getHead().format("HEAD->", 3)
-                 << "this:\n" << format("THIS->", 3)
-                 << "r:\n" << connector.format("RRRR->", 3)
+      tbox::perr << "end of createLocalTranspose:\n"
+                 << "base:\n" << transpose->getBase().format("BASE->", 3)
+                 << "head:\n" << transpose->getHead().format("HEAD->", 3)
+                 << "this:\n" << transpose->format("RRRR->", 3)
+                 << "r:\n" << format("THIS->", 3)
                  << "Checking this transpose correctness:" << std::endl;
-      assertTransposeCorrectness(connector, false);
+      transpose->assertTransposeCorrectness(*this, false);
       tbox::perr << "Checking r's transpose correctness:" << std::endl;
-      connector.assertTransposeCorrectness(*this, false);
+      assertTransposeCorrectness(*transpose, false);
    }
 }
 
@@ -1382,7 +1405,7 @@ Connector::checkConsistencyWithBase() const
       if (!getBase().hasBox(box_id)) {
          ++num_errors;
          tbox::plog << "ERROR->"
-         << "Connector::assertConsistencyWithBase: Neighbor data given "
+         << "Connector::checkConsistencyWithBase: Neighbor data given "
          << "\nfor box " << box_id
          << " but the box does not exist.\n";
       }
@@ -1412,7 +1435,7 @@ Connector::assertConsistencyWithBase() const
 
 void
 Connector::computeNeighborhoodDifferences(
-   Connector& left_minus_right,
+   boost::shared_ptr<Connector>& left_minus_right,
    const Connector& left,
    const Connector& right)
 {
@@ -1420,11 +1443,10 @@ Connector::computeNeighborhoodDifferences(
       tbox::plog << "Computing relationship differences, a:\n" << left.format(dbgbord, 3)
       << "Computing relationship differences, b:\n" << right.format(dbgbord, 3);
    }
-   left_minus_right.clearNeighborhoods();
-   left_minus_right.d_parallel_state = left.getParallelState();
-   left_minus_right.setBase(left.d_base_handle->getBoxLevel());
-   left_minus_right.setHead(left.d_head_handle->getBoxLevel());
-   left_minus_right.setWidth(left.d_base_width, true);
+   left_minus_right.reset(new Connector(left.d_base_handle->getBoxLevel(),
+      left.d_head_handle->getBoxLevel(),
+      left.d_base_width,
+      left.getParallelState()));
 
    for (ConstNeighborhoodIterator ai = left.begin(); ai != left.end(); ++ai) {
 
@@ -1451,17 +1473,17 @@ Connector::computeNeighborhoodDifferences(
                         ii, Box::id_less());
          if ( !diff.empty() ) {
             NeighborhoodIterator base_box_itr =
-               left_minus_right.makeEmptyLocalNeighborhood(box_id);
+               left_minus_right->makeEmptyLocalNeighborhood(box_id);
             for ( std::set<Box,Box::id_less>::const_iterator ii=diff.begin(); ii!=diff.end(); ++ii ) {
-               left_minus_right.insertLocalNeighbor(*ii, base_box_itr);
+               left_minus_right->insertLocalNeighbor(*ii, base_box_itr);
             }
          }
       } else if (left.numLocalNeighbors(box_id) != 0) {
          NeighborhoodIterator base_box_itr =
-            left_minus_right.makeEmptyLocalNeighborhood(box_id);
+            left_minus_right->makeEmptyLocalNeighborhood(box_id);
          for (ConstNeighborIterator na = left.begin(ai);
               na != left.end(ai); ++na) {
-            left_minus_right.insertLocalNeighbor(*na, base_box_itr);
+            left_minus_right->insertLocalNeighbor(*na, base_box_itr);
          }
       }
 

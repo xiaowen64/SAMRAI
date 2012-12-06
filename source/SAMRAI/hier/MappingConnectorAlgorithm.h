@@ -403,7 +403,7 @@ private:
       Connector& anchor_to_mapped,
       Connector& mapped_to_anchor,
       const Connector& old_to_new,
-      const Connector& new_to_old,
+      const Connector* new_to_old,
       BoxLevel* mutable_new,
       BoxLevel* mutable_old) const;
 
@@ -415,7 +415,7 @@ private:
       const Connector& anchor_to_mapped,
       const Connector& mapped_to_anchor,
       const Connector& old_to_new,
-      const Connector& new_to_old) const;
+      const Connector* new_to_old) const;
 
    /*!
     * @brief Relationship removal part of modify algorithm, caching

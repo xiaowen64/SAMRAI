@@ -229,10 +229,7 @@ int main(
          /*
           * Get the baselined BoxLevel and compare.
           */
-         hier::BoxLevel baseline_box_level(dim);
-         baseline_box_level.getFromRestart(
-            *box_level_db,
-            grid_geometry);
+         hier::BoxLevel baseline_box_level(dim, *box_level_db, grid_geometry);
          if (box_level != baseline_box_level) {
             tbox::perr << "Multiblock Tree test problem:\n"
                        << "the BoxLevel generated is different\n"
@@ -330,8 +327,8 @@ int main(
                        << connector_from_exhaustive_search.format("EXHAUSTIVE: ", 2)
                        << std::endl;
 
-            hier::Connector exhaustive_minus_tree(dim),
-                            tree_minus_exhaustive(dim);
+            boost::shared_ptr<hier::Connector> exhaustive_minus_tree,
+                                               tree_minus_exhaustive;
             hier::Connector::computeNeighborhoodDifferences(
                exhaustive_minus_tree,
                connector_from_exhaustive_search,
@@ -341,9 +338,9 @@ int main(
                connector,
                connector_from_exhaustive_search);
             tbox::perr << "What's found by exhaustive search but not by tree search:\n"
-                       << exhaustive_minus_tree.format("", 2)
+                       << exhaustive_minus_tree->format("", 2)
                        << "\nWhat's found by tree search but not by exhaustive search:\n"
-                       << tree_minus_exhaustive.format("", 2)
+                       << tree_minus_exhaustive->format("", 2)
                        << std::endl;
 
             tbox::perr << "Baseline was NOT generated due to the above problem!"
@@ -365,8 +362,7 @@ int main(
          /*
           * Get the baseline Connector NeighborhoodSet and compare.
           */
-         hier::Connector baseline_connector(dim);
-         baseline_connector.getFromRestart(*connector_db);
+         hier::Connector baseline_connector(dim, *connector_db);
          if (!baseline_connector.localNeighborhoodsEqual(connector)) {
             tbox::perr << "Multiblock Tree test problem:\n"
                        << "the NeighborhoodSets generated is different\n"
@@ -452,8 +448,6 @@ void breakUpBoxes(
       dummy_connector,
       boost::shared_ptr<hier::PatchHierarchy>(),
       0,
-      dummy_connector,
-      dummy_connector,
       min_size,
       max_box_size,
       domain_box_level,

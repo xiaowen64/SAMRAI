@@ -67,7 +67,7 @@ public:
    fillSingularityBoundaryConditions(
       hier::Patch& patch,
       const hier::PatchLevel& encon_level,
-      const hier::Connector& dst_to_encon,
+      boost::shared_ptr<const hier::Connector> dst_to_encon,
       const hier::Box& fill_box,
       const hier::BoundaryBox& bbox,
       const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);

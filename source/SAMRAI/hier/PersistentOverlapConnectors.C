@@ -102,13 +102,12 @@ PersistentOverlapConnectors::createConnector(
       }
    }
 
-   Connector* new_connector = new Connector(
-         d_my_box_level,
-         head,
-         connector_width,
-         BoxLevel::DISTRIBUTED);
+   boost::shared_ptr<Connector> new_connector;
    OverlapConnectorAlgorithm oca;
-   oca.findOverlaps(*new_connector, head.getGlobalizedVersion());
+   oca.findOverlaps(new_connector,
+      d_my_box_level,
+      head,
+      connector_width);
 
    d_cons_from_me.push_back(new_connector);
    head.getPersistentOverlapConnectors().d_cons_to_me.push_back(new_connector);
@@ -150,7 +149,8 @@ PersistentOverlapConnectors::createConnector(
       }
    }
 
-   Connector* new_connector = new Connector(relationships);
+   boost::shared_ptr<Connector> new_connector(boost::make_shared<Connector>(
+      relationships));
    new_connector->setBase(d_my_box_level);
    new_connector->setHead(head);
    new_connector->setWidth(connector_width, true);
@@ -161,8 +161,6 @@ PersistentOverlapConnectors::createConnector(
 
    d_cons_from_me.push_back(new_connector);
    head.getPersistentOverlapConnectors().d_cons_to_me.push_back(new_connector);
-
-   new_connector = 0; // Help Insure++ avoid false positive dangling pointer.
 
    return *d_cons_from_me.back();
 }
@@ -175,8 +173,9 @@ PersistentOverlapConnectors::createConnector(
 void
 PersistentOverlapConnectors::cacheConnector(
    const BoxLevel& head,
-   Connector* connector)
+   boost::shared_ptr<Connector>& connector)
 {
+   TBOX_ASSERT(connector);
    TBOX_ASSERT(d_my_box_level.isInitialized());
 
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
@@ -234,7 +233,7 @@ PersistentOverlapConnectors::findConnector(
    TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
-   const Connector* found = 0;
+   boost::shared_ptr<const Connector> found;
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
@@ -250,7 +249,7 @@ PersistentOverlapConnectors::findConnector(
 
       if (&(d_cons_from_me[i]->getHead()) == &head) {
          if (d_cons_from_me[i]->getConnectorWidth() >= min_connector_width) {
-            if (found == 0) {
+            if (!found) {
                found = d_cons_from_me[i];
             } else {
                IntVector vdiff =
@@ -276,7 +275,7 @@ PersistentOverlapConnectors::findConnector(
 
    OverlapConnectorAlgorithm oca;
 
-   if (found == 0) {
+   if (!found) {
 
       TBOX_ERROR(
          "PersistentOverlapConnectors::findConnector: Failed to find Connector\n"
@@ -297,10 +296,10 @@ PersistentOverlapConnectors::findConnector(
        * width.  This is scalable!
        */
 
-      Connector* new_connector = new Connector(
+      boost::shared_ptr<Connector> new_connector(boost::make_shared<Connector>(
          d_my_box_level,
          head,
-         min_connector_width);
+         min_connector_width));
       oca.extractNeighbors(*new_connector, *found, min_connector_width);
       /*
        * Remove empty neighborhood sets.  They are not essential to an
@@ -340,7 +339,7 @@ PersistentOverlapConnectors::findOrCreateConnector(
    TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
-   const Connector* found = 0;
+   boost::shared_ptr<const Connector> found;
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
@@ -356,7 +355,7 @@ PersistentOverlapConnectors::findOrCreateConnector(
 
       if (&(d_cons_from_me[i]->getHead()) == &head) {
          if (d_cons_from_me[i]->getConnectorWidth() >= min_connector_width) {
-            if (found == 0) {
+            if (!found) {
                found = d_cons_from_me[i];
             } else {
                IntVector vdiff =
@@ -382,14 +381,13 @@ PersistentOverlapConnectors::findOrCreateConnector(
 
    OverlapConnectorAlgorithm oca;
 
-   if (found == 0) {
+   if (!found) {
 
-      Connector* new_connector = new Connector(
-            d_my_box_level,
-            head,
-            min_connector_width,
-            BoxLevel::DISTRIBUTED);
-      oca.findOverlaps(*new_connector, head.getGlobalizedVersion());
+      boost::shared_ptr<Connector> new_connector;
+      oca.findOverlaps(new_connector,
+         d_my_box_level,
+         head,
+         min_connector_width);
       found = new_connector;
 
       d_cons_from_me.push_back(new_connector);
@@ -405,10 +403,10 @@ PersistentOverlapConnectors::findOrCreateConnector(
        * width.  This is scalable!
        */
 
-      Connector* new_connector = new Connector(
+      boost::shared_ptr<Connector> new_connector(boost::make_shared<Connector>(
          d_my_box_level,
          head,
-         min_connector_width);
+         min_connector_width));
       oca.extractNeighbors(*new_connector, *found, min_connector_width);
       /*
        * Remove empty neighborhood sets.  They are not essential to an
@@ -480,13 +478,14 @@ PersistentOverlapConnectors::clear()
     */
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
 
-      const Connector* delete_me = d_cons_from_me[i];
+      const Connector* delete_me = d_cons_from_me[i].get();
 
       ConVect& cons_at_head =
          delete_me->getHead().getPersistentOverlapConnectors().d_cons_to_me;
 
       for (int j = 0; j < cons_at_head.size(); ++j) {
-         if (cons_at_head[j] == delete_me) {
+         if (cons_at_head[j].get() == delete_me) {
+            cons_at_head[j].reset();
             cons_at_head.erase(j);
             break;
          }
@@ -495,12 +494,11 @@ PersistentOverlapConnectors::clear()
 #ifdef DEBUG_CHECK_ASSERTIONS
 
       for (int j = 0; j < cons_at_head.size(); ++j) {
-         TBOX_ASSERT(cons_at_head[j] != delete_me);
+         TBOX_ASSERT(cons_at_head[j].get() != delete_me);
       }
 #endif
 
-      delete d_cons_from_me[i];
-      d_cons_from_me[i] = 0;
+      d_cons_from_me[i].reset();
    }
    d_cons_from_me.clear();
 
@@ -509,14 +507,15 @@ PersistentOverlapConnectors::clear()
     */
    for (int i = 0; i < d_cons_to_me.size(); ++i) {
 
-      const Connector* delete_me = d_cons_to_me[i];
+      const Connector* delete_me = d_cons_to_me[i].get();
 
       // Remove reference held by other end of Connector.
       ConVect& cons_at_base =
          delete_me->getBase().getPersistentOverlapConnectors().d_cons_from_me;
 
       for (int j = 0; j < cons_at_base.size(); ++j) {
-         if (cons_at_base[j] == delete_me) {
+         if (cons_at_base[j].get() == delete_me) {
+            cons_at_base[j].reset();
             cons_at_base.erase(j);
             break;
          }
@@ -525,13 +524,12 @@ PersistentOverlapConnectors::clear()
 #ifdef DEBUG_CHECK_ASSERTIONS
 
       for (int j = 0; j < cons_at_base.size(); ++j) {
-         TBOX_ASSERT(cons_at_base[j] != delete_me);
+         TBOX_ASSERT(cons_at_base[j].get() != delete_me);
       }
 
 #endif
 
-      delete d_cons_to_me[i];
-      d_cons_to_me[i] = 0;
+      d_cons_to_me[i].reset();
 
    }
    d_cons_to_me.clear();

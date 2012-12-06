@@ -443,13 +443,13 @@ private:
     * @brief Connector from temporary (coarsened fine) box_level
     * to coarse box_level.
     */
-   Connector d_temp_to_coarse;
+   boost::shared_ptr<Connector> d_temp_to_coarse;
 
    /*!
     * @brief Connector from coarse box_level to temporary
     * (coarsened fine) box_level.
     */
-   Connector d_coarse_to_temp;
+   boost::shared_ptr<Connector> d_coarse_to_temp;
 
    /*!
     * @brief Object supporting interface to user-defined spatial data

@@ -52,6 +52,32 @@ public:
    getFromInput();
 
    /*!
+    * @brief Create overlap Connector then discover and add overlaps from base
+    * to head to it.
+    *
+    * The Connector's neighbor information is modified.
+    *
+    * If the Connector's head is not GLOBALIZED, a copy is made and
+    * globalized.  Once a globalized head is obtained, this method
+    * simply calls findOverlaps(const BoxLevel &globalized_head).
+    *
+    * @param[in,out] connector
+    * @param[in] base_box_level
+    * @param[in] head_box_level
+    * @param[in] base_width
+    * @param[in] parallel_state
+    * @param[in] ignore_self_overlap
+    */
+   void
+   findOverlaps(
+      boost::shared_ptr<Connector>& connector,
+      const BoxLevel& base_box_level,
+      const BoxLevel& head_box_level,
+      const IntVector& base_width,
+      const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED,
+      const bool ignore_self_overlap = false) const;
+
+   /*!
     * @brief Discover and add overlaps from base to head for an
     * overlap Connector.
     *
@@ -258,8 +284,8 @@ public:
     */
    void
    bridgeWithNesting(
-      Connector& west_to_east,
-      Connector& east_to_west,
+      boost::shared_ptr<Connector>& west_to_east,
+      boost::shared_ptr<Connector>& east_to_west,
       const Connector& west_to_center,
       const Connector& center_to_east,
       const Connector& east_to_center,
@@ -291,8 +317,8 @@ public:
     */
    void
    bridge(
-      Connector& west_to_east,
-      Connector& east_to_west,
+      boost::shared_ptr<Connector>& west_to_east,
+      boost::shared_ptr<Connector>& east_to_west,
       const Connector& west_to_center,
       const Connector& center_to_east,
       const Connector& east_to_center,
@@ -313,7 +339,7 @@ public:
     */
    void
    bridge(
-      Connector& west_to_east,
+      boost::shared_ptr<Connector>& west_to_east,
       const Connector& west_to_center,
       const Connector& center_to_east,
       const Connector& east_to_center,
@@ -334,8 +360,8 @@ public:
     */
    void
    bridge(
-      Connector& west_to_east,
-      Connector& east_to_west,
+      boost::shared_ptr<Connector>& west_to_east,
+      boost::shared_ptr<Connector>& east_to_west,
       const Connector& west_to_center,
       const Connector& center_to_east,
       const Connector& east_to_center,
@@ -355,7 +381,7 @@ public:
     */
    void
    bridge(
-      Connector& west_to_east,
+      boost::shared_ptr<Connector>& west_to_east,
       const Connector& west_to_center,
       const Connector& center_to_east,
       const Connector& east_to_center,
@@ -502,8 +528,8 @@ public:
    void
    findOverlapErrors(
       const Connector& connector,
-      Connector& missing,
-      Connector& extra,
+      boost::shared_ptr<Connector>& missing,
+      boost::shared_ptr<Connector>& extra,
       bool ignore_self_overlap = false) const;
 
    /*!
@@ -546,11 +572,13 @@ private:
     * connector_width_limit is negative, do not apply any limit.  The
     * connector_width should be in the coarser of the east and west
     * indices.
+    *
+    * @param compute_reverse true if east_to_west should be computed
     */
    void
    privateBridge(
-      Connector& west_to_east,
-      Connector* east_to_west,
+      boost::shared_ptr<Connector>& west_to_east,
+      boost::shared_ptr<Connector>& east_to_west,
       const Connector& west_to_cent,
       const Connector& cent_to_east,
       const Connector& east_to_cent,
@@ -559,7 +587,8 @@ private:
       const IntVector& cent_growth_to_nest_west,
       bool east_nesting_is_known,
       const IntVector& cent_growth_to_nest_east,
-      const IntVector& connector_width_limit) const;
+      const IntVector& connector_width_limit,
+      bool compute_reverse) const;
 
    /*!
     * @brief This is where the bridge algorithm is implemented.

@@ -202,12 +202,9 @@ GriddingAlgorithm::GriddingAlgorithm(
       d_combine_efficiency[ln] = 0.8e0;
    }
 
-   d_proper_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels(),
-      hier::BoxLevel(dim));
-   d_to_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels(),
-      hier::Connector(dim));
-   d_from_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels(),
-      hier::Connector(dim));
+   d_proper_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels());
+   d_to_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels());
+   d_from_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels());
 
    /*
     * Initialize object with data read from input and restart databases.
@@ -388,15 +385,15 @@ GriddingAlgorithm::makeCoarsestLevel(
     * domain_to_domain is fast and does not require communication.
     */
 
-   hier::Connector domain_to_domain(
+   boost::shared_ptr<hier::Connector> domain_to_domain;
+
+   const hier::OverlapConnectorAlgorithm oca;
+   oca.findOverlaps(domain_to_domain,
       domain_box_level,
       domain_box_level,
       hier::IntVector::max(
          hier::IntVector::getOne(dim),
          d_hierarchy->getRequiredConnectorWidth(0, 0)));
-
-   const hier::OverlapConnectorAlgorithm oca;
-   oca.findOverlaps(domain_to_domain);
 
    if (d_barrier_and_time) {
       t_load_balance0->barrierAndStart();
@@ -416,9 +413,9 @@ GriddingAlgorithm::makeCoarsestLevel(
     */
 
    hier::BoxLevel new_box_level(domain_box_level);
-   hier::Connector domain_to_new(domain_to_domain);
+   hier::Connector domain_to_new(*domain_to_domain);
    domain_to_new.setHead(new_box_level, true);
-   hier::Connector new_to_domain(domain_to_domain);
+   hier::Connector new_to_domain(*domain_to_domain);
    new_to_domain.setBase(new_box_level, true);
 
    t_load_balance_setup->stop();
@@ -429,8 +426,6 @@ GriddingAlgorithm::makeCoarsestLevel(
       domain_to_new,
       d_hierarchy,
       ln,
-      hier::Connector(dim),
-      hier::Connector(dim),
       smallest_patch,
       largest_patch,
       domain_box_level,
@@ -454,14 +449,14 @@ GriddingAlgorithm::makeCoarsestLevel(
       new_to_domain,
       domain_to_new,
       d_hierarchy->getGridGeometry()->getDomainSearchTree(),
-      domain_to_domain);
+      *domain_to_domain);
 
    if (d_check_connectors) {
       TBOX_ASSERT(oca.checkOverlapCorrectness(new_to_domain) == 0);
       TBOX_ASSERT(oca.checkOverlapCorrectness(domain_to_new) == 0);
    }
 
-   hier::Connector* new_to_new = new hier::Connector(dim);
+   boost::shared_ptr<hier::Connector> new_to_new;
    if (domain_box_level.getLocalNumberOfBoxes(0) ==
        (size_t)domain_box_level.getGlobalNumberOfBoxes()) {
       /*
@@ -477,10 +472,10 @@ GriddingAlgorithm::makeCoarsestLevel(
          t_find_new_to_new->barrierAndStart();
       }
 
-      new_to_new->setBase(new_box_level);
-      new_to_new->setHead(new_box_level);
-      new_to_new->setWidth(d_hierarchy->getRequiredConnectorWidth(0, 0), true);
-      oca.findOverlaps(*new_to_new);
+      oca.findOverlaps(new_to_new,
+         new_box_level,
+         new_box_level,
+         d_hierarchy->getRequiredConnectorWidth(0, 0));
 
       if (d_barrier_and_time) {
          t_find_new_to_new->stop();
@@ -493,8 +488,8 @@ GriddingAlgorithm::makeCoarsestLevel(
       }
 
       oca.bridgeWithNesting(
-         *new_to_new,
-         *new_to_new,
+         new_to_new,
+         new_to_new,
          new_to_domain,
          domain_to_new,
          new_to_domain,
@@ -688,10 +683,9 @@ GriddingAlgorithm::makeFinerLevel(
       const boost::shared_ptr<hier::PatchLevel> tag_level(
          d_hierarchy->getPatchLevel(tag_ln));
 
-      hier::BoxLevel new_box_level(dim);
-      hier::Connector* tag_to_new = new hier::Connector(dim);
-      hier::Connector* new_to_tag = new hier::Connector(dim);
-      hier::Connector* new_to_new = new hier::Connector(dim);
+      boost::shared_ptr<hier::BoxLevel> new_box_level;
+      boost::shared_ptr<hier::Connector> tag_to_new;
+      boost::shared_ptr<hier::Connector> new_to_tag;
 
       /*
        * The boolean "do_tagging" specifies whether or not tagging will
@@ -804,11 +798,11 @@ GriddingAlgorithm::makeFinerLevel(
           * Determine Boxes for new fine level.
           */
          findRefinementBoxes(new_box_level,
-            *tag_to_new,
-            *new_to_tag,
+            tag_to_new,
+            new_to_tag,
             tag_ln);
 
-         if (new_box_level.isInitialized()) {
+         if (new_box_level && new_box_level->isInitialized()) {
 
             if (d_check_proper_nesting) {
                /*
@@ -835,7 +829,7 @@ GriddingAlgorithm::makeFinerLevel(
                const bool new_nests_in_tag =
                   dlbg_edge_utils.baseNestsInHead(
                      &locally_nests,
-                     new_box_level,
+                     *new_box_level,
                      *d_hierarchy->getBoxLevel(tag_ln),
                      required_nesting,
                      zero_vector,
@@ -843,8 +837,8 @@ GriddingAlgorithm::makeFinerLevel(
                      &d_hierarchy->getGridGeometry()->getPeriodicDomainSearchTree());
 
                if (!new_nests_in_tag) {
-                  hier::BoxLevel violator(dim);
-                  hier::Connector new_to_violator(dim);
+                  boost::shared_ptr<hier::BoxLevel> violator;
+                  boost::shared_ptr<hier::Connector> new_to_violator;
                   hier::BoxLevelConnectorUtils edge_utils;
                   t_compute_external_parts->start();
                   edge_utils.computeExternalParts(
@@ -864,13 +858,13 @@ GriddingAlgorithm::makeFinerLevel(
                      << d_hierarchy->getProperNestingBuffer(tag_ln)
                      << ".\nLocal nestingness: " << locally_nests
                      << ".\nProper nesting violation with new_box_level of\n"
-                     << new_box_level.format("N->", 2)
+                     << new_box_level->format("N->", 2)
                      << "Proper nesting violation with tag box_level of\n"
                      << d_hierarchy->getBoxLevel(tag_ln)->format("F->", 2)
                      << "tag_to_new:\n" << tag_to_new->format("N->", 2)
                      << "new_to_tag:\n" << new_to_tag->format("N->", 2)
-                     << "violator:\n" << violator.format("N->", 2)
-                     << "new_to_violator:\n" << new_to_violator.format("N->", 2)
+                     << "violator:\n" << violator->format("N->", 2)
+                     << "new_to_violator:\n" << new_to_violator->format("N->", 2)
                      << std::endl);
                }
             }
@@ -893,8 +887,8 @@ GriddingAlgorithm::makeFinerLevel(
           */
          bool remove_old_fine_level = false;
          readLevelBoxes(new_box_level,
-            *tag_to_new,
-            *new_to_tag,
+            tag_to_new,
+            new_to_tag,
             tag_ln,
             level_time,
             cycle,
@@ -911,12 +905,12 @@ GriddingAlgorithm::makeFinerLevel(
          }
 
          if (d_check_boundary_proximity_violation != 'i') {
-            checkBoundaryProximityViolation(tag_ln, new_box_level);
+            checkBoundaryProximityViolation(tag_ln, *new_box_level);
          }
 
       } /* do_tagging == false */
 
-      if (new_box_level.isInitialized()) {
+      if (new_box_level && new_box_level->isInitialized()) {
 
          /*
           * If we made a new_box_level, proceed to make a
@@ -926,9 +920,10 @@ GriddingAlgorithm::makeFinerLevel(
          // Bridge for new<==>new.
          t_bridge_links->start();
          t_bridge_new_to_new->start();
+         boost::shared_ptr<hier::Connector> new_to_new;
          oca.bridgeWithNesting(
-            *new_to_new,
-            *new_to_new,
+            new_to_new,
+            new_to_new,
             *new_to_tag,
             *tag_to_new,
             *new_to_tag,
@@ -945,7 +940,7 @@ GriddingAlgorithm::makeFinerLevel(
 
          t_make_finer_create->start();
 
-         d_hierarchy->makeNewPatchLevel(new_ln, new_box_level);
+         d_hierarchy->makeNewPatchLevel(new_ln, *new_box_level);
 
          boost::shared_ptr<hier::PatchLevel> new_level(
             d_hierarchy->getPatchLevel(new_ln));
@@ -984,11 +979,6 @@ GriddingAlgorithm::makeFinerLevel(
          if (d_log_metadata_statistics) {
             logMetadataStatistics("makeFinerLevel", d_hierarchy->getFinestLevelNumber(), false, true);
          }
-      }
-      else {
-         delete tag_to_new;
-         delete new_to_tag;
-         delete new_to_new;
       }
 
       d_base_ln = -1;
@@ -1204,8 +1194,6 @@ GriddingAlgorithm::regridFinerLevel(
    }
 #endif
 
-   const tbox::Dimension& dim = d_hierarchy->getDim();
-
    const hier::OverlapConnectorAlgorithm oca;
 
    if (d_print_steps) {
@@ -1256,9 +1244,9 @@ GriddingAlgorithm::regridFinerLevel(
       }
       bool remove_old_fine_level = true;
 
-      hier::BoxLevel new_box_level(dim);
-      hier::Connector* tag_to_new = new hier::Connector(dim);
-      hier::Connector* new_to_tag = new hier::Connector(dim);
+      boost::shared_ptr<hier::BoxLevel> new_box_level;
+      boost::shared_ptr<hier::Connector> tag_to_new;
+      boost::shared_ptr<hier::Connector> new_to_tag;
 
       if (d_barrier_and_time) {
          t_misc4->stop();
@@ -1273,7 +1261,8 @@ GriddingAlgorithm::regridFinerLevel(
        * [tag_ln+2] on level tag_ln.  Later on, they are used to
        * bridge for [new_ln] <-> [tag_ln+2].
        */
-      hier::Connector tag_to_finer(dim), finer_to_tag(dim);
+      boost::shared_ptr<hier::Connector> tag_to_finer;
+      boost::shared_ptr<hier::Connector> finer_to_tag;
 
       /*
        * Tag cells, determine refine boxes from tagged regions, and
@@ -1335,8 +1324,8 @@ GriddingAlgorithm::regridFinerLevel(
           */
          findRefinementBoxes(
             new_box_level,
-            *tag_to_new,
-            *new_to_tag,
+            tag_to_new,
+            new_to_tag,
             tag_ln);
 
          if (d_barrier_and_time) {
@@ -1344,7 +1333,7 @@ GriddingAlgorithm::regridFinerLevel(
          }
 
          if (d_print_steps) {
-            if (new_box_level.isInitialized()) {
+            if (new_box_level && new_box_level->isInitialized()) {
                tbox::plog
                << "GriddingAlgorithm::regridFinerLevel got inititalized new_box_level\n";
             } else {
@@ -1385,8 +1374,8 @@ GriddingAlgorithm::regridFinerLevel(
           * balance them before constructing the finer level.
           */
          readLevelBoxes(new_box_level,
-            *tag_to_new,
-            *new_to_tag,
+            tag_to_new,
+            new_to_tag,
             tag_ln,
             regrid_time,
             regrid_cycle,
@@ -1399,7 +1388,7 @@ GriddingAlgorithm::regridFinerLevel(
        * next finer level if it is no longer needed.
        */
 
-      if (new_box_level.isInitialized()) {
+      if (new_box_level && new_box_level->isInitialized()) {
 
          /*
           * Create the new PatchLevel from the new_box_level.
@@ -1429,9 +1418,6 @@ GriddingAlgorithm::regridFinerLevel(
              && remove_old_fine_level) {
             d_hierarchy->removePatchLevel(new_ln);
          }
-
-         delete tag_to_new;
-         delete new_to_tag;
 
       } // if we are not re-regenerating level new_ln.
 
@@ -1562,8 +1548,8 @@ GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
  */
 void
 GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
-   hier::Connector& tag_to_finer,
-   hier::Connector& finer_to_tag,
+   boost::shared_ptr<hier::Connector>& tag_to_finer,
+   boost::shared_ptr<hier::Connector>& finer_to_tag,
    const int tag_ln,
    const tbox::Array<int>& tag_buffer)
 {
@@ -1654,7 +1640,7 @@ GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
          * d_hierarchy->getProperNestingBuffer(tag_ln + 1);
 
       TBOX_ASSERT(
-         tag_to_finer.getConnectorWidth()
+         tag_to_finer->getConnectorWidth()
          * d_hierarchy->getRatioToCoarserLevel(tag_ln + 1)
          * d_hierarchy->getRatioToCoarserLevel(new_ln + 1) >= nesting_buffer);
 
@@ -1662,8 +1648,8 @@ GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
       hier::BoxLevel dummy_finer_box_level = finer_to_old.getBase();
       mblc_utils.addPeriodicImagesAndRelationships(
          dummy_finer_box_level,
-         finer_to_tag,
-         tag_to_finer,
+         *finer_to_tag,
+         *tag_to_finer,
          d_hierarchy->getGridGeometry()->getDomainSearchTree(),
          d_hierarchy->getConnector(tag_ln, tag_ln));
 
@@ -1671,7 +1657,7 @@ GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
          d_true_tag,
          tag_level,
          d_tag_indx,
-         tag_to_finer,
+         *tag_to_finer,
          true,
          nesting_buffer);
 
@@ -1698,11 +1684,14 @@ void
 GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    const int tag_ln,
    const double regrid_time,
-   hier::Connector* tag_to_new,
-   hier::Connector* new_to_tag,
-   const hier::Connector& tag_to_finer,
-   const hier::Connector& finer_to_tag)
+   boost::shared_ptr<hier::Connector> tag_to_new,
+   boost::shared_ptr<hier::Connector> new_to_tag,
+   boost::shared_ptr<const hier::Connector> tag_to_finer,
+   boost::shared_ptr<const hier::Connector> finer_to_tag)
 {
+   TBOX_ASSERT(tag_to_new);
+   TBOX_ASSERT(new_to_tag);
+
    /*
     * Compute self-Connector for the new level.
     */
@@ -1714,6 +1703,8 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    const tbox::Dimension& dim = d_hierarchy->getDim();
 
    const int new_ln = tag_ln + 1;
+   TBOX_ASSERT(!d_hierarchy->levelExists(new_ln + 1) || tag_to_finer);
+   TBOX_ASSERT(!d_hierarchy->levelExists(new_ln + 1) || finer_to_tag);
    const boost::shared_ptr<hier::PatchLevel>& tag_level(
       d_hierarchy->getPatchLevel(tag_ln));
    const hier::BoxLevel& new_box_level(tag_to_new->getHead());
@@ -1722,14 +1713,14 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    const hier::BoxLevelConnectorUtils mblc_utils;
    const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
 
-   hier::Connector* new_to_new = new hier::Connector(dim);
+   boost::shared_ptr<hier::Connector> new_to_new;
 
    t_bridge_links->start();
    t_bridge_new_to_new->start();
 
    oca.bridgeWithNesting(
-      *new_to_new,
-      *new_to_new,
+      new_to_new,
+      new_to_new,
       *new_to_tag,
       *tag_to_new,
       *new_to_tag,
@@ -1824,22 +1815,22 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
             << "Proper nesting violation with finer box_level of\n"
             << d_hierarchy->getBoxLevel(new_ln + 1)->format("F->", 2);
 
-            hier::BoxLevel external(dim);
-            hier::Connector finer_to_external(dim);
-            hier::Connector finer_to_new(
+            boost::shared_ptr<hier::BoxLevel> external;
+            boost::shared_ptr<hier::Connector> finer_to_external;
+            boost::shared_ptr<hier::Connector> finer_to_new;
+            const hier::OverlapConnectorAlgorithm oca;
+            oca.findOverlaps(finer_to_new,
                *d_hierarchy->getBoxLevel(new_ln + 1),
                new_box_level,
                required_nesting);
-            const hier::OverlapConnectorAlgorithm oca;
-            oca.findOverlaps(finer_to_new);
-            tbox::plog << "Finer to new:\n" << finer_to_new.format("FN->", 3);
+            tbox::plog << "Finer to new:\n" << finer_to_new->format("FN->", 3);
             mblc_utils.computeExternalParts(
                external,
                finer_to_external,
-               finer_to_new,
+               *finer_to_new,
                -required_nesting,
                d_hierarchy->getGridGeometry()->getDomainSearchTree());
-            tbox::plog << "External parts:\n" << finer_to_external.format("FE->", 3);
+            tbox::plog << "External parts:\n" << finer_to_external->format("FE->", 3);
 
             TBOX_ERROR(
                "Internal library error: Failed to produce proper nesting."
@@ -1876,16 +1867,16 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
        * There is a level finer than new_ln.  Connect the new level to
        * the finer level.
        */
-     hier::Connector* new_to_finer = new hier::Connector(dim);
-     hier::Connector* finer_to_new = new hier::Connector(dim);
+      boost::shared_ptr<hier::Connector> new_to_finer;
+      boost::shared_ptr<hier::Connector> finer_to_new;
 
       t_bridge_new_to_finer->start();
       oca.bridgeWithNesting(
-         *new_to_finer,
-         *finer_to_new,
+         new_to_finer,
+         finer_to_new,
          *new_to_tag,
-         tag_to_finer,
-         finer_to_tag,
+         *tag_to_finer,
+         *finer_to_tag,
          *tag_to_new,
          zero_vector,
          -hier::IntVector::getOne(dim),
@@ -1927,12 +1918,12 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
        * transfer data from old to new.
        */
 
-      hier::Connector* old_to_new = new hier::Connector(dim);
-      hier::Connector* new_to_old = new hier::Connector(dim);
+      boost::shared_ptr<hier::Connector> old_to_new;
+      boost::shared_ptr<hier::Connector> new_to_old;
       t_bridge_new_to_old->start();
       oca.bridgeWithNesting(
-         *old_to_new,
-         *new_to_old,
+         old_to_new,
+         new_to_old,
          *old_to_tag,
          d_hierarchy->getConnector(tag_ln, tag_ln + 1),
          d_hierarchy->getConnector(tag_ln + 1, tag_ln),
@@ -2146,10 +2137,8 @@ GriddingAlgorithm::checkNonnestingUserBoxes(
 
    const hier::BoxLevel& new_box_level(new_to_tag.getBase());
 
-   const tbox::Dimension& dim = d_hierarchy->getDim();
-
-   hier::BoxLevel violating_parts(dim);
-   hier::Connector new_to_violating_parts(dim);
+   boost::shared_ptr<hier::BoxLevel> violating_parts;
+   boost::shared_ptr<hier::Connector> new_to_violating_parts;
 
    hier::BoxLevelConnectorUtils mblc_utils;
    mblc_utils.computeExternalParts(
@@ -2159,7 +2148,7 @@ GriddingAlgorithm::checkNonnestingUserBoxes(
       -nesting_buffer,
       d_hierarchy->getGridGeometry()->getDomainSearchTree());
 
-   if (violating_parts.getGlobalNumberOfBoxes() > 0) {
+   if (violating_parts->getGlobalNumberOfBoxes() > 0) {
 
       tbox::perr << "GriddingAlgorihtm: user-specified refinement boxes\n"
                  << "violates nesting requirement.  Diagnostics will be\n"
@@ -2168,9 +2157,9 @@ GriddingAlgorithm::checkNonnestingUserBoxes(
       tbox::plog
       << left_margin << "Tag BoxLevel:\n" << new_to_tag.getHead().format(left_margin, 2)
       << left_margin << "User-specified boxes:\n" << new_box_level.format(left_margin, 2)
-      << left_margin << "Violating parts:\n" << violating_parts.format(left_margin, 2)
+      << left_margin << "Violating parts:\n" << violating_parts->format(left_margin, 2)
       << left_margin << "User-specified boxes and their violating parts:\n"
-      << new_to_violating_parts.format(left_margin, 2);
+      << new_to_violating_parts->format(left_margin, 2);
 
       if (d_check_nonnesting_user_boxes == 'e') {
          TBOX_ERROR("Exiting due to above error" << std::endl);
@@ -2346,10 +2335,10 @@ GriddingAlgorithm::checkNonrefinedTags(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, level);
 
    const hier::BoxLevel& tag_box_level = *d_hierarchy->getBoxLevel(tag_ln);
-   hier::BoxLevel violator(dim);
-   hier::Connector tag_to_violator(dim);
-   const hier::Connector& tag_box_level_to_self = d_hierarchy->getConnector(tag_ln,
-         tag_ln);
+   boost::shared_ptr<hier::BoxLevel> violator;
+   boost::shared_ptr<hier::Connector> tag_to_violator;
+   const hier::Connector& tag_box_level_to_self =
+      d_hierarchy->getConnector(tag_ln, tag_ln);
    computeNestingViolator(
       violator,
       tag_to_violator,
@@ -2364,15 +2353,15 @@ GriddingAlgorithm::checkNonrefinedTags(
    math::PatchCellDataBasicOps<int> dataop;
    math::PatchCellDataOpsInteger dataopi;
    int maxval = 0;
-   for (hier::Connector::ConstNeighborhoodIterator ei = tag_to_violator.begin();
-        ei != tag_to_violator.end(); ++ei) {
+   for (hier::Connector::ConstNeighborhoodIterator ei = tag_to_violator->begin();
+        ei != tag_to_violator->end(); ++ei) {
       const hier::BoxId& box_id = *ei;
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          level.getPatch(box_id)->getPatchData(d_tag_indx),
          BOOST_CAST_TAG);
       TBOX_ASSERT(tag_data);
-      for (hier::Connector::ConstNeighborIterator na = tag_to_violator.begin(ei);
-           na != tag_to_violator.end(ei); ++na) {
+      for (hier::Connector::ConstNeighborIterator na = tag_to_violator->begin(ei);
+           na != tag_to_violator->end(ei); ++na) {
          const hier::Box& vio_box = *na;
          maxval = dataop.max(tag_data, vio_box);
          if (maxval > 0) {
@@ -2513,9 +2502,9 @@ GriddingAlgorithm::checkOverlappingPatches(
  */
 void
 GriddingAlgorithm::readLevelBoxes(
-   hier::BoxLevel& new_box_level,
-   hier::Connector& coarser_to_new,
-   hier::Connector& new_to_coarser,
+   boost::shared_ptr<hier::BoxLevel>& new_box_level,
+   boost::shared_ptr<hier::Connector>& coarser_to_new,
+   boost::shared_ptr<hier::Connector>& new_to_coarser,
    const int tag_ln,
    const double regrid_time,
    const int regrid_cycle,
@@ -2587,8 +2576,7 @@ GriddingAlgorithm::readLevelBoxes(
 
    if (compute_load_balanced_level_boxes) {
 
-      hier::BoxLevel unbalanced_box_level(d_hierarchy->getDim());
-      unbalanced_box_level.initialize(
+      hier::BoxLevel unbalanced_box_level(
          coarser_box_level.getRefinementRatio(),
          coarser_box_level.getGridGeometry(),
          d_hierarchy->getMPI(),
@@ -2604,22 +2592,17 @@ GriddingAlgorithm::readLevelBoxes(
       const hier::IntVector& ratio =
          d_hierarchy->getRatioToCoarserLevel(fine_level_number);
 
-      new_box_level = unbalanced_box_level;
-      coarser_to_new.clearNeighborhoods();
-      coarser_to_new.setBase(coarser_box_level);
-      coarser_to_new.setHead(new_box_level);
-      coarser_to_new.setWidth(
-         d_hierarchy->getRequiredConnectorWidth(tag_ln, tag_ln + 1),
-         true);
-      new_to_coarser.clearNeighborhoods();
-      new_to_coarser.setBase(new_box_level);
-      new_to_coarser.setHead(coarser_box_level);
-      new_to_coarser.setWidth(hier::IntVector::ceilingDivide(
-            d_hierarchy->getRequiredConnectorWidth(tag_ln + 1, tag_ln), ratio),
-            true);
+      new_box_level.reset(new hier::BoxLevel(unbalanced_box_level));
       const hier::OverlapConnectorAlgorithm oca;
-      oca.findOverlaps(coarser_to_new);
-      oca.findOverlaps(new_to_coarser);
+      oca.findOverlaps(coarser_to_new,
+         coarser_box_level,
+         *new_box_level,
+         d_hierarchy->getRequiredConnectorWidth(tag_ln, tag_ln + 1));
+      oca.findOverlaps(new_to_coarser,
+         *new_box_level,
+         coarser_box_level,
+         hier::IntVector::ceilingDivide(
+            d_hierarchy->getRequiredConnectorWidth(tag_ln + 1, tag_ln), ratio));
 
       hier::IntVector smallest_patch(dim);
       hier::IntVector largest_patch(dim);
@@ -2639,9 +2622,9 @@ GriddingAlgorithm::readLevelBoxes(
       const hier::IntVector largest_patch_in_tag_space =
          largest_patch / ratio;
 
-      refineNewBoxLevel(new_box_level,
-         coarser_to_new,
-         new_to_coarser,
+      refineNewBoxLevel(*new_box_level,
+         *coarser_to_new,
+         *new_to_coarser,
          ratio);
 
       hier::IntVector patch_cut_factor(dim, d_tag_init_strategy-> getErrorCoarsenRatio());
@@ -2649,13 +2632,11 @@ GriddingAlgorithm::readLevelBoxes(
 
       t_load_balance0->start();
       d_load_balancer0->loadBalanceBoxLevel(
-         new_box_level,
-         new_to_coarser,
-         coarser_to_new,
+         *new_box_level,
+         *new_to_coarser,
+         *coarser_to_new,
          d_hierarchy,
          tag_ln,
-         hier::Connector(dim),
-         hier::Connector(dim),
          smallest_patch,
          largest_patch,
          d_hierarchy->getDomainBoxLevel(),
@@ -2664,20 +2645,20 @@ GriddingAlgorithm::readLevelBoxes(
       t_load_balance0->stop();
 
       if (d_sequentialize_patch_indices) {
-         renumberBoxes(new_box_level,
-            coarser_to_new,
-            new_to_coarser,
+         renumberBoxes(*new_box_level,
+            *coarser_to_new,
+            *new_to_coarser,
             false,
             true);
       }
 
       const hier::BoxLevelConnectorUtils dlbg_edge_utils;
       dlbg_edge_utils.addPeriodicImages(
-         new_box_level,
+         *new_box_level,
          d_hierarchy->getGridGeometry()->getDomainSearchTree(),
-         new_to_coarser.getConnectorWidth() );
-      oca.findOverlaps(coarser_to_new);
-      oca.findOverlaps(new_to_coarser);
+         new_to_coarser->getConnectorWidth() );
+      oca.findOverlaps(*coarser_to_new);
+      oca.findOverlaps(*new_to_coarser);
 
    }
 }
@@ -2933,9 +2914,9 @@ GriddingAlgorithm::bufferTagsOnLevel(
 
 void
 GriddingAlgorithm::findRefinementBoxes(
-   hier::BoxLevel& new_box_level,
-   hier::Connector& tag_to_new,
-   hier::Connector& new_to_tag,
+   boost::shared_ptr<hier::BoxLevel>& new_box_level,
+   boost::shared_ptr<hier::Connector>& tag_to_new,
+   boost::shared_ptr<hier::Connector>& new_to_tag,
    const int tag_ln) const
 {
    TBOX_ASSERT((tag_ln >= 0)
@@ -3048,7 +3029,7 @@ GriddingAlgorithm::findRefinementBoxes(
    }
    t_find_boxes_containing_tags->stop();
 
-   if (new_box_level.getGlobalNumberOfBoxes() > 0) {
+   if (new_box_level && new_box_level->getGlobalNumberOfBoxes() > 0) {
 
       if (d_check_connectors) {
          /*
@@ -3060,7 +3041,7 @@ GriddingAlgorithm::findRefinementBoxes(
             <<
             "GriddingAlgorithm::findRefinementBoxes: checking new-->tag from findBoxesContainingTags\n";
          }
-         TBOX_ASSERT(oca.checkOverlapCorrectness(new_to_tag,
+         TBOX_ASSERT(oca.checkOverlapCorrectness(*new_to_tag,
                false,
                true,
                true) == 0);
@@ -3069,7 +3050,7 @@ GriddingAlgorithm::findRefinementBoxes(
             <<
             "GriddingAlgorithm::findRefinementBoxes: checking tag-->new from findBoxesContainingTags\n";
          }
-         TBOX_ASSERT(oca.checkOverlapCorrectness(tag_to_new,
+         TBOX_ASSERT(oca.checkOverlapCorrectness(*tag_to_new,
                false,
                true,
                true) == 0);
@@ -3096,26 +3077,26 @@ GriddingAlgorithm::findRefinementBoxes(
           * the non-contributing processors and don't seek tag
           * histogram from them).
           */
-         hier::BoxLevel nested_box_level(dim);
-         hier::Connector unnested_to_nested(dim);
+         boost::shared_ptr<hier::BoxLevel> nested_box_level;
+         boost::shared_ptr<hier::Connector> unnested_to_nested;
          makeOverflowNestingMap(
             nested_box_level,
             unnested_to_nested,
-            new_box_level,
-            new_to_tag);
+            *new_box_level,
+            *new_to_tag);
          if (d_print_steps) {
             tbox::plog
             << "GriddingAlgorithm::findRefinementBoxes applying overflow nesting map."
             << std::endl;
-            tbox::plog << "Overflow nesting map:\n" << unnested_to_nested.format("", 3);
+            tbox::plog << "Overflow nesting map:\n" << unnested_to_nested->format("", 3);
          }
          t_use_overflow_map->start();
          t_modify_connector->start();
          hier::MappingConnectorAlgorithm mca;
-         mca.modify(tag_to_new,
-            new_to_tag,
-            unnested_to_nested,
-            &new_box_level);
+         mca.modify(*tag_to_new,
+            *new_to_tag,
+            *unnested_to_nested,
+            new_box_level.get());
          t_modify_connector->stop();
          t_use_overflow_map->stop();
          if (d_barrier_and_time) {
@@ -3135,7 +3116,7 @@ GriddingAlgorithm::findRefinementBoxes(
             bool locally_nested = false;
             bool nested = dlbg_edge_utils.baseNestsInHead(
                   &locally_nested,
-                  new_box_level,
+                  *new_box_level,
                   tag_box_level,
                   hier::IntVector::getZero(dim),
                   hier::IntVector::getZero(dim),
@@ -3146,9 +3127,9 @@ GriddingAlgorithm::findRefinementBoxes(
                   "Failed overflow nesting: new box_level does not nest in tagged box_level.\n"
                   << "Local nestedness = " << locally_nested << std::endl
                   << "tag_box_level:\n" << tag_box_level.format("", 2)
-                  << "new_box_level:\n" << new_box_level.format("", 2)
-                  << "tag_to_new:\n" << tag_to_new.format("", 2)
-                  << "new_to_tag:\n" << new_to_tag.format("", 2)
+                  << "new_box_level:\n" << new_box_level->format("", 2)
+                  << "tag_to_new:\n" << tag_to_new->format("", 2)
+                  << "new_to_tag:\n" << new_to_tag->format("", 2)
                   << std::endl);
             }
          }
@@ -3164,27 +3145,27 @@ GriddingAlgorithm::findRefinementBoxes(
             t_enforce_nesting->barrierAndStart();
          }
 
-         hier::Connector unnested_to_nested(dim);
-         hier::BoxLevel nested_box_level(dim);
+         boost::shared_ptr<hier::Connector> unnested_to_nested;
+         boost::shared_ptr<hier::BoxLevel> nested_box_level;
 
          makeProperNestingMap(
             nested_box_level,
             unnested_to_nested,
-            new_box_level,
-            tag_to_new,
-            new_to_tag,
+            *new_box_level,
+            *tag_to_new,
+            *new_to_tag,
             new_ln);
          if (d_print_steps) {
             tbox::plog << "GriddingAlgorithm::findRefinementBoxes applying proper nesting map.\n"
-                       << "Proper nesting map:\n" << unnested_to_nested.format("", 3);
+                       << "Proper nesting map:\n" << unnested_to_nested->format("", 3);
          }
          t_use_nesting_map->start();
          t_modify_connector->start();
          const hier::MappingConnectorAlgorithm mca;
-         mca.modify(tag_to_new,
-            new_to_tag,
-            unnested_to_nested,
-            &new_box_level);
+         mca.modify(*tag_to_new,
+            *new_to_tag,
+            *unnested_to_nested,
+            new_box_level.get());
          t_modify_connector->stop();
          t_use_nesting_map->stop();
 
@@ -3213,7 +3194,7 @@ GriddingAlgorithm::findRefinementBoxes(
             const bool new_nests_in_tag =
                dlbg_edge_utils.baseNestsInHead(
                   &locally_nests,
-                  new_box_level,
+                  *new_box_level,
                   tag_box_level,
                   required_nesting,
                   hier::IntVector::getZero(dim),
@@ -3231,24 +3212,24 @@ GriddingAlgorithm::findRefinementBoxes(
                           << std::endl;
                tbox::plog
                << "Proper nesting violation with new BoxLevel of\n"
-               << new_box_level.format("N->", 2)
+               << new_box_level->format("N->", 2)
                << "Proper nesting violation with tag BoxLevel of\n"
                << tag_box_level.format("T->", 2);
-               hier::BoxLevel external(dim);
-               hier::Connector tmp_new_to_tag(
-                  new_box_level,
+               boost::shared_ptr<hier::BoxLevel> external;
+               boost::shared_ptr<hier::Connector> tmp_new_to_tag;
+               oca.findOverlaps(tmp_new_to_tag,
+                  *new_box_level,
                   tag_box_level,
                   required_nesting);
-               oca.findOverlaps(tmp_new_to_tag);
-               tbox::plog << "tmp_new_to_tag:\n" << tmp_new_to_tag.format("NT->", 3);
-               hier::Connector new_to_external(dim);
+               tbox::plog << "tmp_new_to_tag:\n" << tmp_new_to_tag->format("NT->", 3);
+               boost::shared_ptr<hier::Connector> new_to_external;
                dlbg_edge_utils.computeExternalParts(
                   external,
                   new_to_external,
-                  tmp_new_to_tag,
+                  *tmp_new_to_tag,
                   -required_nesting,
                   d_hierarchy->getGridGeometry()->getDomainSearchTree());
-               tbox::plog << "External parts:\n" << new_to_external.format("NE->", 3);
+               tbox::plog << "External parts:\n" << new_to_external->format("NE->", 3);
                TBOX_ERROR(
                   "Internal library error: Failed to produce proper nesting."
                   << std::endl);
@@ -3265,9 +3246,9 @@ GriddingAlgorithm::findRefinementBoxes(
 
          t_extend_to_domain_boundary->barrierAndStart();
          extendBoxesToDomainBoundary(
-            new_box_level,
-            tag_to_new,
-            new_to_tag,
+            *new_box_level,
+            *tag_to_new,
+            *new_to_tag,
             level->getPhysicalDomainArray(),
             extend_ghosts_in_tag_space);
          t_extend_to_domain_boundary->stop();
@@ -3284,9 +3265,9 @@ GriddingAlgorithm::findRefinementBoxes(
          }
          t_extend_within_domain->start();
          growBoxesWithinNestingDomain(
-            new_box_level,
-            tag_to_new,
-            new_to_tag,
+            *new_box_level,
+            *tag_to_new,
+            *new_to_tag,
             smallest_box_to_refine,
             tag_ln);
          t_extend_within_domain->stop();
@@ -3307,9 +3288,9 @@ GriddingAlgorithm::findRefinementBoxes(
          if (need_to_grow) {
             t_extend_within_domain->start();
             growBoxesWithinNestingDomain(
-               new_box_level,
-               tag_to_new,
-               new_to_tag,
+               *new_box_level,
+               *tag_to_new,
+               *new_to_tag,
                min_size,
                tag_ln);
             t_extend_within_domain->stop();
@@ -3319,15 +3300,15 @@ GriddingAlgorithm::findRefinementBoxes(
              * We must manually shrink the widths as if we used the growing map
              * (matching the result of an empty map).
              */
-            tag_to_new.shrinkWidth(
-               tag_to_new.getConnectorWidth() - smallest_box_to_refine);
-            new_to_tag.shrinkWidth(
-               new_to_tag.getConnectorWidth() - smallest_box_to_refine);
+            tag_to_new->shrinkWidth(
+               tag_to_new->getConnectorWidth() - smallest_box_to_refine);
+            new_to_tag->shrinkWidth(
+               new_to_tag->getConnectorWidth() - smallest_box_to_refine);
          }
       }
 #ifdef DEBUG_CHECK_ASSERTIONS
       std::set<int> new_local_ids;
-      const hier::BoxContainer& new_boxes = new_box_level.getBoxes();
+      const hier::BoxContainer& new_boxes = new_box_level->getBoxes();
       for (hier::BoxContainer::const_iterator new_itr = new_boxes.begin();
            new_itr != new_boxes.end(); ++new_itr) {
          new_local_ids.insert(new_itr->getBoxId().getLocalId().getValue());
@@ -3342,14 +3323,14 @@ GriddingAlgorithm::findRefinementBoxes(
        * tag_box_level's index space.  Now, refine it so we can
        * build the new level.
        */
-      refineNewBoxLevel(new_box_level,
-         tag_to_new,
-         new_to_tag,
+      refineNewBoxLevel(*new_box_level,
+         *tag_to_new,
+         *new_to_tag,
          ratio);
 
       if (d_check_connectors) {
-         TBOX_ASSERT(oca.checkOverlapCorrectness(new_to_tag) == 0);
-         TBOX_ASSERT(oca.checkOverlapCorrectness(tag_to_new) == 0);
+         TBOX_ASSERT(oca.checkOverlapCorrectness(*new_to_tag) == 0);
+         TBOX_ASSERT(oca.checkOverlapCorrectness(*tag_to_new) == 0);
       }
 
       if (d_load_balance) {
@@ -3366,13 +3347,11 @@ GriddingAlgorithm::findRefinementBoxes(
          t_load_balance_setup->stop();
 
          d_load_balancer->loadBalanceBoxLevel(
-            new_box_level,
-            new_to_tag,
-            tag_to_new,
+            *new_box_level,
+            *new_to_tag,
+            *tag_to_new,
             d_hierarchy,
             new_ln,
-            new_to_tag, // FIXME: try using finer as the attractor.
-            tag_to_new, // FIXME: try using finer as the attractor.
             smallest_patch,
             largest_patch,
             d_hierarchy->getDomainBoxLevel(),
@@ -3384,25 +3363,25 @@ GriddingAlgorithm::findRefinementBoxes(
          if (d_check_connectors) {
             tbox::plog << "GriddingAlgorithm checking new-tag" << std::endl;
             int errs = 0;
-            if (oca.checkOverlapCorrectness(new_to_tag, false, true, true)) {
+            if (oca.checkOverlapCorrectness(*new_to_tag, false, true, true)) {
                ++errs;
                tbox::perr << "Error found in new_to_tag!\n";
             }
-            if (oca.checkOverlapCorrectness(tag_to_new, false, true, true)) {
+            if (oca.checkOverlapCorrectness(*tag_to_new, false, true, true)) {
                ++errs;
                tbox::perr << "Error found in tag_to_new!\n";
             }
-            if (new_to_tag.checkTransposeCorrectness(tag_to_new)) {
+            if (new_to_tag->checkTransposeCorrectness(*tag_to_new)) {
                ++errs;
                tbox::perr << "Error found in new-tag transpose!\n";
             }
             if (errs != 0) {
                TBOX_ERROR(
                   "Errors found after using load balance map."
-                  << "new_box_level:\n" << new_box_level.format("", 2)
+                  << "new_box_level:\n" << new_box_level->format("", 2)
                   << "tag_box_level:\n" << tag_box_level.format("", 2)
-                  << "new_to_tag:\n" << new_to_tag.format("", 2)
-                  << "tag_to_new:\n" << tag_to_new.format("", 2)
+                  << "new_to_tag:\n" << new_to_tag->format("", 2)
+                  << "tag_to_new:\n" << tag_to_new->format("", 2)
                   << std::endl);
             }
          }
@@ -3412,9 +3391,9 @@ GriddingAlgorithm::findRefinementBoxes(
          if (d_print_steps) {
             tbox::plog << "GriddingAlgorithm begin sorting nodes." << std::endl;
          }
-         renumberBoxes(new_box_level,
-            tag_to_new,
-            new_to_tag,
+         renumberBoxes(*new_box_level,
+            *tag_to_new,
+            *new_to_tag,
             false,
             true);
          if (d_print_steps) {
@@ -3433,9 +3412,9 @@ GriddingAlgorithm::findRefinementBoxes(
                     << std::endl;
       }
       dlbg_edge_utils.addPeriodicImagesAndRelationships(
-         new_box_level,
-         new_to_tag,
-         tag_to_new,
+         *new_box_level,
+         *new_to_tag,
+         *tag_to_new,
          d_hierarchy->getGridGeometry()->getDomainSearchTree(),
          tag_to_tag);
       if (d_print_steps) {
@@ -3444,17 +3423,17 @@ GriddingAlgorithm::findRefinementBoxes(
       }
 
       if (d_check_connectors) {
-         TBOX_ASSERT(oca.checkOverlapCorrectness(new_to_tag) == 0);
-         TBOX_ASSERT(oca.checkOverlapCorrectness(tag_to_new) == 0);
+         TBOX_ASSERT(oca.checkOverlapCorrectness(*new_to_tag) == 0);
+         TBOX_ASSERT(oca.checkOverlapCorrectness(*tag_to_new) == 0);
       }
 
-   } else {
+   } else if (new_box_level && new_box_level->getGlobalNumberOfBoxes() == 0) {
 
       /*
        * On return, new_box_level should be initialized if we
        * generated boxes, deallocated if we didnt.
        */
-      new_box_level.clear();
+      new_box_level->clear();
 
    }
 
@@ -3484,8 +3463,8 @@ GriddingAlgorithm::renumberBoxes(
 
    hier::MappingConnectorAlgorithm mca;
 
-   hier::Connector sorting_map(dim);
-   hier::BoxLevel seq_box_level(dim);
+   boost::shared_ptr<hier::Connector> sorting_map;
+   boost::shared_ptr<hier::BoxLevel> seq_box_level;
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(
       seq_box_level,
@@ -3497,7 +3476,7 @@ GriddingAlgorithm::renumberBoxes(
    t_modify_connector->start();
    mca.modify(tag_to_new,
       new_to_tag,
-      sorting_map,
+      *sorting_map,
       &new_box_level);
    t_modify_connector->stop();
 
@@ -3562,8 +3541,7 @@ GriddingAlgorithm::extendBoxesToDomainBoundary(
     */
    const hier::BoxContainer& before_nodes = new_box_level.getBoxes();
 
-   hier::BoxLevel after_box_level(d_hierarchy->getDim());
-   after_box_level.initialize(
+   hier::BoxLevel after_box_level(
       new_box_level.getRefinementRatio(),
       new_box_level.getGridGeometry(),
       new_box_level.getMPI());
@@ -3609,8 +3587,8 @@ GriddingAlgorithm::extendBoxesToDomainBoundary(
 
 void
 GriddingAlgorithm::makeOverflowNestingMap(
-   hier::BoxLevel& nested_box_level,
-   hier::Connector& unnested_to_nested,
+   boost::shared_ptr<hier::BoxLevel>& nested_box_level,
+   boost::shared_ptr<hier::Connector>& unnested_to_nested,
    const hier::BoxLevel& unnested_box_level,
    const hier::Connector& unnested_to_reference) const
 {
@@ -3620,14 +3598,12 @@ GriddingAlgorithm::makeOverflowNestingMap(
 
    const tbox::Dimension& dim = d_hierarchy->getDim();
 
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim,
-      unnested_box_level,
-      nested_box_level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, unnested_box_level);
 
    t_make_overflow_map->start();
 
-   hier::BoxLevel violator_box_level(dim);
-   hier::Connector unnested_to_violator(dim);
+   boost::shared_ptr<hier::BoxLevel> violator_box_level;
+   boost::shared_ptr<hier::Connector> unnested_to_violator;
    if (d_print_steps) {
       tbox::plog << " GriddingAlgorithm::makeOverflowNestingMap computing external parts."
                  << std::endl;
@@ -3644,7 +3620,7 @@ GriddingAlgorithm::makeOverflowNestingMap(
    t_compute_external_parts->stop();
    t_make_overflow_map_compute->stop();
 
-   TBOX_ASSERT(unnested_to_violator.isLocal());
+   TBOX_ASSERT(unnested_to_violator->isLocal());
 
    if (d_print_steps) {
       tbox::plog << " GriddingAlgorithm::makeOverflowNestingMap making remainer map." << std::endl;
@@ -3653,7 +3629,7 @@ GriddingAlgorithm::makeOverflowNestingMap(
    edge_utils.makeRemainderMap(
       nested_box_level,
       unnested_to_nested,
-      unnested_to_violator);
+      *unnested_to_violator);
    t_make_overflow_map_convert->stop();
    t_make_overflow_map->stop();
 
@@ -3671,8 +3647,8 @@ GriddingAlgorithm::makeOverflowNestingMap(
 
 void
 GriddingAlgorithm::makeProperNestingMap(
-   hier::BoxLevel& nested_box_level,
-   hier::Connector& unnested_to_nested,
+   boost::shared_ptr<hier::BoxLevel>& nested_box_level,
+   boost::shared_ptr<hier::Connector>& unnested_to_nested,
    const hier::BoxLevel& unnested_box_level,
    const hier::Connector& hierarchy_to_unnested,
    const hier::Connector& unnested_to_hierarchy,
@@ -3680,15 +3656,12 @@ GriddingAlgorithm::makeProperNestingMap(
 {
    const tbox::Dimension& dim = d_hierarchy->getDim();
 
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim,
-      unnested_box_level,
-      nested_box_level,
-      nested_box_level);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim,unnested_box_level);
 
    t_make_nesting_map->start();
 
-   hier::Connector unnested_to_violator(dim);
-   hier::BoxLevel violator(dim);
+   boost::shared_ptr<hier::Connector> unnested_to_violator;
+   boost::shared_ptr<hier::BoxLevel> violator;
    t_make_nesting_map_compute->start();
    computeNestingViolator(
       violator,
@@ -3709,7 +3682,7 @@ GriddingAlgorithm::makeProperNestingMap(
    edge_utils.makeRemainderMap(
       nested_box_level,
       unnested_to_nested,
-      unnested_to_violator);
+      *unnested_to_violator);
    t_make_nesting_map_convert->stop();
 
    t_make_nesting_map->stop();
@@ -3727,8 +3700,8 @@ GriddingAlgorithm::makeProperNestingMap(
  */
 void
 GriddingAlgorithm::computeNestingViolator(
-   hier::BoxLevel& violator,
-   hier::Connector& candidate_to_violator,
+   boost::shared_ptr<hier::BoxLevel>& violator,
+   boost::shared_ptr<hier::Connector>& candidate_to_violator,
    const hier::BoxLevel& candidate,
    const hier::Connector& candidate_to_hierarchy,
    const hier::Connector& hierarchy_to_candidate,
@@ -3736,7 +3709,7 @@ GriddingAlgorithm::computeNestingViolator(
 {
    const tbox::Dimension& dim = d_hierarchy->getDim();
 
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, candidate, violator);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, candidate);
 
    const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
 
@@ -3760,17 +3733,17 @@ GriddingAlgorithm::computeNestingViolator(
     * candidate BoxLevel that overlaps d_nesting_complement
     * violates nesting.
     */
-   hier::Connector candidate_to_complement(dim);
+   boost::shared_ptr<hier::Connector> candidate_to_complement;
    oca.bridge(candidate_to_complement,
       candidate_to_hierarchy,
-      d_to_nesting_complement[tag_ln],
-      d_from_nesting_complement[tag_ln],
+      *d_to_nesting_complement[tag_ln],
+      *d_from_nesting_complement[tag_ln],
       hierarchy_to_candidate);
 
    edge_utils.computeInternalParts(
       violator,
       candidate_to_violator,
-      candidate_to_complement,
+      *candidate_to_complement,
       zero_vector,
       grid_geometry.getDomainSearchTree());
    /*
@@ -3797,7 +3770,7 @@ GriddingAlgorithm::computeNestingViolator(
           */
          hier::BoxId cmb_non_per_id(cmb.getGlobalId(),
                                     hier::PeriodicId::zero());
-         if (candidate_to_violator.hasNeighborSet(cmb_non_per_id)) {
+         if (candidate_to_violator->hasNeighborSet(cmb_non_per_id)) {
             /*
              * Remove parts that we already know, through
              * candidate_to_violator, are non-nesting.  Leftovers are
@@ -3805,20 +3778,20 @@ GriddingAlgorithm::computeNestingViolator(
              * candidate_to_complement.
              */
             hier::Connector::NeighborhoodIterator base_box_itr =
-               candidate_to_violator.makeEmptyLocalNeighborhood(cmb_non_per_id);
+               candidate_to_violator->makeEmptyLocalNeighborhood(cmb_non_per_id);
             hier::Connector::ConstNeighborhoodIterator current_violators =
-               candidate_to_violator.find(cmb_non_per_id);
-            for (hier::Connector::ConstNeighborIterator na = candidate_to_violator.begin(current_violators);
-                 na != candidate_to_violator.end(current_violators) && !addl_violators.isEmpty();
+               candidate_to_violator->find(cmb_non_per_id);
+            for (hier::Connector::ConstNeighborIterator na = candidate_to_violator->begin(current_violators);
+                 na != candidate_to_violator->end(current_violators) && !addl_violators.isEmpty();
                  ++na) {
                addl_violators.removeIntersections(*na);
             }
             if (!addl_violators.isEmpty()) {
                for (hier::BoxContainer::iterator bi(addl_violators);
                     bi != addl_violators.end(); ++bi) {
-                  hier::BoxContainer::const_iterator new_violator = violator.addBox(
+                  hier::BoxContainer::const_iterator new_violator = violator->addBox(
                         *bi, cmb.getBlockId());
-                  candidate_to_violator.insertLocalNeighbor(*new_violator,
+                  candidate_to_violator->insertLocalNeighbor(*new_violator,
                      base_box_itr);
                }
             }
@@ -3857,8 +3830,6 @@ GriddingAlgorithm::computeProperNestingData(
        * At the base level, nesting domain is level d_base_ln,
        * shrunken by d_proper_nesting_buffer[d_base_ln].
        */
-      hier::BoxLevel& proper_nesting_complement =
-         d_proper_nesting_complement[ln];
       const hier::Connector& self_connector =
          d_hierarchy->getConnector(ln, ln);
 
@@ -3867,18 +3838,18 @@ GriddingAlgorithm::computeProperNestingData(
                    hier::IntVector(dim, -d_hierarchy->getProperNestingBuffer(ln)) );
 
       edge_utils.computeExternalParts(
-         proper_nesting_complement,
+         d_proper_nesting_complement[ln],
          d_to_nesting_complement[ln],
          self_connector,
          hier::IntVector(dim, -d_hierarchy->getProperNestingBuffer(ln)),
          d_hierarchy->getGridGeometry()->getDomainSearchTree());
 
-      d_from_nesting_complement[ln].initializeToLocalTranspose(
-         d_to_nesting_complement[ln]);
+      d_to_nesting_complement[ln]->createLocalTranspose(
+         d_from_nesting_complement[ln]);
 
    } else {
 
-      TBOX_ASSERT(d_to_nesting_complement[ln - 1].isFinalized());
+      TBOX_ASSERT(d_to_nesting_complement[ln - 1]->isFinalized());
 
       /*
        * How to build d_proper_nesting_complement[ln] and connect it to level ln:
@@ -3930,12 +3901,12 @@ GriddingAlgorithm::computeProperNestingData(
        * 1. Build the complement at ln (d_proper_nesting_complement[ln])
        *    from the complement at ln-1 (d_proper_nesting_complement[ln-1]).
        */
-      d_proper_nesting_complement[ln].initialize(
+      d_proper_nesting_complement[ln].reset(new hier::BoxLevel(
          d_hierarchy->getBoxLevel(ln)->getRefinementRatio(),
          d_hierarchy->getGridGeometry(),
-         d_to_nesting_complement[ln - 1].getMPI());
+         d_to_nesting_complement[ln - 1]->getMPI()));
       const hier::BoxContainer& lnm1_complement_boxes =
-         d_proper_nesting_complement[ln - 1].getBoxes();
+         d_proper_nesting_complement[ln - 1]->getBoxes();
       for (hier::BoxContainer::const_iterator ni =
            lnm1_complement_boxes.begin();
            ni != lnm1_complement_boxes.end(); ++ni) {
@@ -3944,7 +3915,7 @@ GriddingAlgorithm::computeProperNestingData(
          tmp_box.refine(d_hierarchy->getRatioToCoarserLevel(ln));
          tmp_box.grow(
             hier::IntVector(dim, d_hierarchy->getProperNestingBuffer(ln)));
-         d_proper_nesting_complement[ln].addBox(tmp_box);
+         d_proper_nesting_complement[ln]->addBox(tmp_box);
       }
 
       /*
@@ -3952,14 +3923,14 @@ GriddingAlgorithm::computeProperNestingData(
        */
       hier::Connector lnm1_to_ln_complement(
          *d_hierarchy->getBoxLevel(ln - 1),
-         d_proper_nesting_complement[ln],
-         d_to_nesting_complement[ln - 1].getConnectorWidth());
+         *d_proper_nesting_complement[ln],
+         d_to_nesting_complement[ln - 1]->getConnectorWidth());
       for (hier::Connector::ConstNeighborhoodIterator ei =
-              d_to_nesting_complement[ln - 1].begin();
-           ei != d_to_nesting_complement[ln - 1].end(); ++ei) {
+              d_to_nesting_complement[ln - 1]->begin();
+           ei != d_to_nesting_complement[ln - 1]->end(); ++ei) {
          for (hier::Connector::ConstNeighborIterator na =
-                 d_to_nesting_complement[ln - 1].begin(ei);
-              na != d_to_nesting_complement[ln - 1].end(ei); ++na) {
+                 d_to_nesting_complement[ln - 1]->begin(ei);
+              na != d_to_nesting_complement[ln - 1]->end(ei); ++na) {
             hier::Box tmp_box = *na;
             tmp_box.refine(d_hierarchy->getRatioToCoarserLevel(ln));
             tmp_box.grow(
@@ -3967,25 +3938,29 @@ GriddingAlgorithm::computeProperNestingData(
             lnm1_to_ln_complement.insertLocalNeighbor(tmp_box, *ei);
          }
       }
-      hier::Connector ln_complement_to_lnm1(d_from_nesting_complement[ln - 1]);
-      ln_complement_to_lnm1.setBase(d_proper_nesting_complement[ln]);
+      hier::Connector ln_complement_to_lnm1(*d_from_nesting_complement[ln - 1]);
+      ln_complement_to_lnm1.setBase(*d_proper_nesting_complement[ln]);
       ln_complement_to_lnm1.setHead(*d_hierarchy->getBoxLevel(ln - 1));
       ln_complement_to_lnm1.setWidth(
-         d_from_nesting_complement[ln - 1].getConnectorWidth() *
+         d_from_nesting_complement[ln - 1]->getConnectorWidth() *
             d_hierarchy->getRatioToCoarserLevel(ln),
          true);
 
       /*
        * 3. Bridge for Connector between level ln and d_proper_nesting_complement[ln].
        */
+      boost::shared_ptr<hier::Connector> to_nesting_complement;
+      boost::shared_ptr<hier::Connector> from_nesting_complement;
       oca.bridge(
-         d_to_nesting_complement[ln],
-         d_from_nesting_complement[ln],
+         to_nesting_complement,
+         from_nesting_complement,
          d_hierarchy->getConnector(ln, ln - 1),
          lnm1_to_ln_complement,
          ln_complement_to_lnm1,
          d_hierarchy->getConnector(ln - 1, ln),
          d_hierarchy->getRequiredConnectorWidth(ln - 1, ln));
+      d_to_nesting_complement[ln] = to_nesting_complement;
+      d_from_nesting_complement[ln] = from_nesting_complement;
    }
 }
 
@@ -4038,10 +4013,10 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
    const hier::BoxContainer& new_boxes = new_box_level.getBoxes();
 
    const hier::Connector& tag_to_nesting_complement =
-      d_to_nesting_complement[tag_ln];
+      *d_to_nesting_complement[tag_ln];
 
    const hier::Connector& nesting_complement_to_tag =
-      d_from_nesting_complement[tag_ln];
+      *d_from_nesting_complement[tag_ln];
 
    /*
     * Connect new_box_level to the nesting complement so we
@@ -4052,7 +4027,7 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
     * Connector width eliminates inter-block neighbors.)
     */
 
-   hier::Connector new_to_nesting_complement(dim);
+   boost::shared_ptr<hier::Connector> new_to_nesting_complement;
    oca.bridge(
       new_to_nesting_complement,
       new_to_tag,
@@ -4109,11 +4084,11 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
          omb,
          new_box_level.getRefinementRatio());
 
-      if (new_to_nesting_complement.hasNeighborSet(omb.getBoxId())) {
+      if (new_to_nesting_complement->hasNeighborSet(omb.getBoxId())) {
          hier::Connector::ConstNeighborhoodIterator neighbors =
-            new_to_nesting_complement.find(omb.getBoxId());
-         for (hier::Connector::ConstNeighborIterator na = new_to_nesting_complement.begin(neighbors);
-              na != new_to_nesting_complement.end(neighbors); ++na) {
+            new_to_nesting_complement->find(omb.getBoxId());
+         for (hier::Connector::ConstNeighborIterator na = new_to_nesting_complement->begin(neighbors);
+              na != new_to_nesting_complement->end(neighbors); ++na) {
             nesting_domain.removeIntersections(*na);
          }
       }

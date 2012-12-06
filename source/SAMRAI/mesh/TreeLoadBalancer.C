@@ -196,8 +196,6 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    hier::Connector& anchor_to_balance,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
-   const hier::Connector& balance_to_attractor,
-   const hier::Connector& attractor_to_balance,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
    const hier::BoxLevel& domain_box_level,
@@ -205,8 +203,6 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    const hier::IntVector& cut_factor,
    const tbox::RankGroup& rank_group) const
 {
-   NULL_USE(balance_to_attractor);
-   NULL_USE(attractor_to_balance);
    NULL_USE(hierarchy);
    NULL_USE(level_number);
    TBOX_ASSERT(anchor_to_balance.isFinalized() ==
@@ -340,25 +336,6 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    if (d_print_steps) {
       tbox::plog << "Pre balanced:\n" << balance_box_level.format("", 2);
    }
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (balance_to_attractor.isFinalized()) {
-      /*
-       * If balance_to_attractor is given, sanity-check it.
-       */
-      if (&balance_box_level != &balance_to_attractor.getBase() &&
-          !(balance_box_level == balance_to_attractor.getBase())) {
-         TBOX_ERROR(
-            "TreeLoadBalancer::loadBalanceBoxLevel: balance_box_level\n"
-            << "does not match the base of balance_to_attractor.");
-      }
-      if (!balance_to_attractor.isTransposeOf(attractor_to_balance)) {
-         TBOX_ERROR("TreeLoadBalancer::loadBalanceBoxLevel:\n"
-            << "attractor_to_balance and balance_to_attractor\n"
-            << "are not transposes of each other.");
-      }
-   }
-#endif
 
 
    t_compute_local_load->start();
@@ -690,17 +667,12 @@ TreeLoadBalancer::constrainMaxBoxSizes(
 
    const hier::IntVector& zero_vector(hier::IntVector::getZero(d_dim));
 
-   hier::BoxLevel constrained(box_level.getDim());
-   hier::Connector unconstrained_to_constrained(box_level.getDim());
-
-   constrained.initialize(
-      box_level.getRefinementRatio(),
+   hier::BoxLevel constrained(box_level.getRefinementRatio(),
       box_level.getGridGeometry(),
       box_level.getMPI());
-   unconstrained_to_constrained.clearNeighborhoods();
-   unconstrained_to_constrained.setBase(box_level);
-   unconstrained_to_constrained.setHead(constrained);
-   unconstrained_to_constrained.setWidth(zero_vector, true);
+   hier::Connector unconstrained_to_constrained(box_level,
+      constrained,
+      zero_vector);
 
    const hier::BoxContainer& unconstrained_boxes = box_level.getBoxes();
 
@@ -846,26 +818,19 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
 
    double group_avg_load = group_sum_load / rank_group.size();
 
-
-   hier::BoxLevel balanced_box_level(balance_box_level.getDim());
-   hier::Connector unbalanced_to_balanced(balance_box_level.getDim());
-   hier::Connector balanced_to_unbalanced(balance_box_level.getDim());
-
    /*
     * Initialize empty balanced_box_level and mappings.
     */
-   balanced_box_level.initialize(
+   hier::BoxLevel balanced_box_level(
       balance_box_level.getRefinementRatio(),
       balance_box_level.getGridGeometry(),
       balance_box_level.getMPI());
-   balanced_to_unbalanced.clearNeighborhoods();
-   balanced_to_unbalanced.setBase(balanced_box_level);
-   balanced_to_unbalanced.setHead(balance_box_level);
-   balanced_to_unbalanced.setWidth(hier::IntVector::getZero(d_dim), true);
-   unbalanced_to_balanced.clearNeighborhoods();
-   unbalanced_to_balanced.setBase(balance_box_level);
-   unbalanced_to_balanced.setHead(balanced_box_level);
-   unbalanced_to_balanced.setWidth(hier::IntVector::getZero(d_dim), true);
+   hier::Connector balanced_to_unbalanced(balanced_box_level,
+      balance_box_level,
+      hier::IntVector::getZero(d_dim));
+   hier::Connector unbalanced_to_balanced(balance_box_level,
+      balanced_box_level,
+      hier::IntVector::getZero(d_dim));
 
 
    if ( !rank_group.isMember(d_mpi.getRank()) ) {
@@ -4210,9 +4175,7 @@ TreeLoadBalancer::prebalanceBoxLevel(
     * balance_box_level, but all will live on the processors
     * specified in rank_group.
     */
-   hier::BoxLevel tmp_box_level(d_dim);
-   tmp_box_level.initialize(
-      balance_box_level.getRefinementRatio(),
+   hier::BoxLevel tmp_box_level(balance_box_level.getRefinementRatio(),
       balance_box_level.getGridGeometry(),
       balance_box_level.getMPI());
 
