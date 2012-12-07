@@ -564,6 +564,23 @@ int AutoTester::checkHierarchyBoxes(
       tbox::perr << "Test 4: FAILED: Level " << level_number
                  << " hier::BoxLevel configuration doesn't match at step " << iter
                  << std::endl << std::endl;
+
+      hier::BoxContainer correct_minus_computed(
+         correct_box_level.getGlobalizedVersion().getGlobalBoxes());
+      correct_minus_computed.unorder();
+      correct_minus_computed.removeIntersections(
+         box_level.getGlobalizedVersion().getGlobalBoxes());
+
+      hier::BoxContainer computed_minus_correct(
+         box_level.getGlobalizedVersion().getGlobalBoxes());
+      computed_minus_correct.unorder();
+      computed_minus_correct.removeIntersections(
+         correct_box_level.getGlobalizedVersion().getGlobalBoxes());
+
+      tbox::plog << " global correct_box_level \\ box_level:\n"
+                 << correct_minus_computed.format("\t");
+      tbox::plog << " global box_level \\ correct_box_level:\n"
+                 << computed_minus_correct.format("\t");
       tbox::plog << " correct_box_level:\n" << correct_box_level.format(" ",2) << '\n'
                  << " box_level:\n" << box_level.format(" ",2) << "\n\n";
       num_failures++;

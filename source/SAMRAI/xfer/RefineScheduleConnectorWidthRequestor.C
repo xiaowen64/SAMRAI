@@ -75,8 +75,12 @@ RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
 
    const tbox::Dimension& dim(patch_hierarchy.getDim());
 
+   /*
+    * Add one to max data ghost width to create overlaps of data
+    * living on patch boundaries.
+    */
    const hier::IntVector max_data_gcw(
-      patch_hierarchy.getPatchDescriptor()->getMaxGhostWidth(dim));
+      patch_hierarchy.getPatchDescriptor()->getMaxGhostWidth(dim) + 1);
 
    hier::IntVector max_stencil_width =
       patch_hierarchy.getGridGeometry()->getMaxTransferOpStencilWidth(dim);

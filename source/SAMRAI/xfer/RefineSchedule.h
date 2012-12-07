@@ -774,6 +774,13 @@ private:
    getDataOnPatchBorderFlag() const;
 
    /*!
+    * @brief Get the mininum width required for the overlap Connector
+    * between destination and source.
+    */
+   hier::IntVector
+   getMinConnectorWidth() const;
+
+   /*!
     * @brief Get the maximum ghost cell width of all destination
     * patch data components.
     */
