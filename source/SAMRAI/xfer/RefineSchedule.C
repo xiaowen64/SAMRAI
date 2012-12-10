@@ -2991,7 +2991,7 @@ RefineSchedule::reorderNeighborhoodSetsByDstNodes(
  * Otherwise, perform communication to get that information onto the
  * src processes.
  *
- * The Connectors dst_to_dst and dst_to_src (in the arguments)
+ * The Connectors dst_to_src and src_to_src (in the arguments)
  * are required only for fill_patterns PatchLevelBorderFillPattern and
  * and PatchLevelBorderAndInteriorFillPattern
  ****************************************************************
@@ -3039,15 +3039,6 @@ RefineSchedule::setDefaultFillBoxLevel(
       fill_gcw.max(constant_one_intvector);
    }
 
-   const hier::Connector dummy_connector(dim);
-   const hier::Connector* dst_to_dst =
-      dst_box_level.getPersistentOverlapConnectors().hasConnector(
-         dst_box_level,
-         fill_gcw + hier::IntVector(dim, int(d_data_on_patch_border_flag)) ) ?
-      &dst_box_level.getPersistentOverlapConnectors().findConnector(
-         dst_box_level,
-         fill_gcw + hier::IntVector(dim, int(d_data_on_patch_border_flag)), true) : &dummy_connector;
-
    // New data computed here:
 
    /*
@@ -3086,10 +3077,8 @@ RefineSchedule::setDefaultFillBoxLevel(
       fill_box_level,
       dst_to_fill,
       dst_box_level,
-      *dst_to_dst,
-      *d_dst_to_src,
-      *d_src_to_dst,
-      fill_gcw);
+      fill_gcw,
+      d_data_on_patch_border_flag);
 
    d_max_fill_boxes = tbox::MathUtilities<int>::Max(
          d_max_fill_boxes,

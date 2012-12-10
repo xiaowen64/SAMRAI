@@ -65,15 +65,11 @@ PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
    boost::shared_ptr<hier::BoxLevel>& fill_box_level,
    boost::shared_ptr<hier::Connector>& dst_to_fill,
    const hier::BoxLevel& dst_box_level,
-   const hier::Connector& dst_to_dst,
-   const hier::Connector& dst_to_src,
-   const hier::Connector& src_to_dst,
-   const hier::IntVector& fill_ghost_width)
+   const hier::IntVector& fill_ghost_width,
+   const bool data_on_patch_border)
 {
-   NULL_USE(dst_to_dst);
-   NULL_USE(dst_to_src);
-   NULL_USE(src_to_dst);
    NULL_USE(fill_ghost_width);
+   NULL_USE(data_on_patch_border);
    TBOX_ASSERT_OBJDIM_EQUALITY2(dst_box_level, fill_ghost_width);
 
    fill_box_level.reset(new hier::BoxLevel(

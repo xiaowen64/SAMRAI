@@ -69,10 +69,8 @@ public:
       boost::shared_ptr<hier::BoxLevel>& fill_box_level,
       boost::shared_ptr<hier::Connector>& dst_to_fill,
       const hier::BoxLevel& dst_box_level,
-      const hier::Connector& dst_to_dst,
-      const hier::Connector& dst_to_src,
-      const hier::Connector& src_to_dst,
-      const hier::IntVector& fill_ghost_width);
+      const hier::IntVector& fill_ghost_width,
+      const bool data_on_patch_border);
 
    /*!
     * @brief Return true to indicate source patch owners cannot compute

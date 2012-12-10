@@ -56,13 +56,9 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
    boost::shared_ptr<hier::BoxLevel>& fill_box_level,
    boost::shared_ptr<hier::Connector>& dst_to_fill,
    const hier::BoxLevel& dst_box_level,
-   const hier::Connector& dst_to_dst,
-   const hier::Connector& dst_to_src,
-   const hier::Connector& src_to_dst,
-   const hier::IntVector& fill_ghost_width)
+   const hier::IntVector& fill_ghost_width,
+   const bool data_on_patch_border)
 {
-   NULL_USE(dst_to_src);
-   NULL_USE(src_to_dst);
    TBOX_ASSERT_OBJDIM_EQUALITY2(dst_box_level, fill_ghost_width);
 
    fill_box_level.reset(new hier::BoxLevel(
@@ -75,6 +71,15 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
                                          fill_ghost_width));
 
    const hier::BoxContainer& dst_boxes = dst_box_level.getBoxes();
+
+   hier::IntVector dst_to_dst_width(fill_ghost_width);
+   if (data_on_patch_border) {
+      dst_to_dst_width += hier::IntVector::getOne(fill_ghost_width.getDim());
+   }
+
+   const hier::Connector& dst_to_dst =
+      dst_box_level.getPersistentOverlapConnectors().findConnector(
+         dst_box_level, dst_to_dst_width, true);
 
    /*
     * Grow each patch box and remove the level from it, except the
