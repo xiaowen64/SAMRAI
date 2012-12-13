@@ -53,11 +53,10 @@ public:
     * @param[out] dst_to_fill          Output Connector between
     *                                  dst_box_level and fill_box_level
     * @param[in] dst_box_level         destination level
-    * @param[in] dst_to_dst            Connector of destination to itself
-    * @param[in] dst_to_src            Connector of destination to source
-    * @param[in] src_to_dst            Connector of source to destination
     * @param[in] fill_ghost_width      Ghost width being filled by refine
     *                                  schedule
+    * @param[in] data_on_patch_border  true if there is data living on patch
+    *                                  borders
     *
     * @pre dst_box_level.getDim() == fill_ghost_width.getDim()
     */
@@ -67,7 +66,7 @@ public:
       boost::shared_ptr<hier::Connector>& dst_to_fill,
       const hier::BoxLevel& dst_box_level,
       const hier::IntVector& fill_ghost_width,
-      const bool data_on_patch_border);
+      bool data_on_patch_border);
 
    /*!
     * @brief Return true to indicate source patch owners cannot compute

@@ -65,7 +65,7 @@ public:
       boost::shared_ptr<hier::Connector>& dst_to_fill,
       const hier::BoxLevel& dst_box_level,
       const hier::IntVector& fill_ghost_width,
-      const bool data_on_patch_border);
+      bool data_on_patch_border);
 
    /*!
     * @copydoc PatchLevelFillPattern::needsToCommunicateDestinationFillBoxes()

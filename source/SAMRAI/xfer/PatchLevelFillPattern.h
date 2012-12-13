@@ -68,11 +68,10 @@ public:
     * @param[out] dst_to_fill          Connector between
     *                                  dst_box_level and fill_box_level
     * @param[in] dst_box_level         destination level
-    * @param[in] dst_to_dst            destination to itself connector
-    * @param[in] dst_to_src            destination to source connector
-    * @param[in] src_to_dst            source to destination connector
     * @param[in] fill_ghost_width      ghost width being filled by refine
     *                                  schedule
+    * @param[in] data_on_patch_border  true if there is data living on patch
+    *                                  borders
     */
    virtual void
    computeFillBoxesAndNeighborhoodSets(
@@ -80,7 +79,7 @@ public:
       boost::shared_ptr<hier::Connector>& dst_to_fill,
       const hier::BoxLevel& dst_box_level,
       const hier::IntVector& fill_ghost_width,
-      const bool data_on_patch_border) = 0;
+      bool data_on_patch_border) = 0;
 
    /*!
     * @brief Return true if source owner can compute destination boxes on its
