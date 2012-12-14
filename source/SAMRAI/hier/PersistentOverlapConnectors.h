@@ -44,34 +44,23 @@ class BoxLevel;
  *       findOrCreateConnector().  This essentially ensures that any Connectors
  *       sought are always found.
  *
- * <b> Details: </b> <br>
- * <table>
- *   <tr>
- *     <th>parameter</th>
- *     <th>type</th>
- *     <th>default</th>
- *     <th>range</th>
- *     <th>opt/req</th>
- *     <th>behavior on restart</th>
- *   </tr>
- *   <tr>
- *     <td>always_create_missing_connector</td>
- *     <td>bool</td>
- *     <td>TRUE</td>
- *     <td>TRUE, FALSE</td>
- *     <td>opt</td>
- *     <td>Not written to restart.  Value in input db used.</td>
- *   </tr>
- * </table>
+ * <b>bool check_accessed_connectors:</b> When true, check Connectors when
+ * they are accessed.  The check is an non-scalable operation and is
+ * meant for debugging.
  *
- * @note
- * Setting always_create_missing_connector to true is non-scalable.
- * Nevertheless, the default is true, so that application writers
- * need not worry about creating Connectors in a scalable way.  For
- * performance, this should be set to false.  To selectively enable
- * automatic Connector generation, set this to false and use
- * findOrCreateConnector() instead of findConnector() where one is
- * unsure if the Connector has been created.
+ * <b>string implicit_connector_creation_rule:</b> How to proceed when
+ * findConnector() cannot find any suitable overlap Connector.  Values
+ * can be "ERROR", "WARN" (default) or "SILENT".  If "SILENT",
+ * silently get a globalized version of the head BoxLevel and look for
+ * overlaps.  If "WARN", do the same thing but write a warning to the
+ * log.  If "ERROR", exit with an error.
+ *
+ * @note Creating overlap Connectors by global search is not scalable.
+ * Nevertheless, the default is "WARN", so that application
+ * development need not worry about missing overlap Connectors.  To
+ * selectively enable automatic Connector generation, set this to
+ * "ERROR" and use findOrCreateConnector() instead of findConnector()
+ * where you are unsure if the Connector has been created.
  *
  * @see findConnector()
  * @see findOrCreateConnector()
@@ -162,10 +151,10 @@ public:
     *
     * @par Assertions
     * If no Connector fits the criteria and @c
-    * always_create_missing_connector is false, an assertion is
+    * implicit_connector_creation_rule is "ERROR", an assertion is
     * thrown.  To automatically create the Connector instead, use
     * findOrCreateConnector() or set @c
-    * always_create_missing_connector to true.
+    * implicit_connector_creation_rule to "WARN" or "SILENT".
     *
     * @param[in] head Find the overlap Connector with this specified head.
     * @param[in] min_connector_width Find the overlap Connector satisfying
@@ -306,8 +295,10 @@ private:
    /*!
     * @brief Whether to force Connector finding functions to create
     * connectors that are missing.
+    *
+    * See input parameter implicit_connector_creation_rule.
     */
-   static bool s_always_create_missing_connector;
+   static char s_implicit_connector_creation_rule;
 
 };
 

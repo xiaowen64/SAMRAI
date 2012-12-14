@@ -303,6 +303,12 @@ RefineSchedule {
   DEV_barrier_and_time = TRUE
 }
 
+PersistentOverlapConnectors {
+   check_created_connectors = FALSE
+   check_accessed_connectors = FALSE
+   implicit_connector_creation_rule = "ERROR"
+}
+
 ////////////////////////////////////////////////////////////////////////
 // Specific databases for scaling tests.
 ////////////////////////////////////////////////////////////////////////

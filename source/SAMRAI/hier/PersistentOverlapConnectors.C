@@ -16,12 +16,14 @@
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/tbox/InputManager.h"
 
+#include <ctype.h>
+
 namespace SAMRAI {
 namespace hier {
 
 char PersistentOverlapConnectors::s_check_created_connectors('\0');
 char PersistentOverlapConnectors::s_check_accessed_connectors('\0');
-bool PersistentOverlapConnectors::s_always_create_missing_connector(true);
+char PersistentOverlapConnectors::s_implicit_connector_creation_rule('w');
 
 /*
  ************************************************************************
@@ -73,8 +75,21 @@ PersistentOverlapConnectors::getFromInput()
             s_check_accessed_connectors =
                check_accessed_connectors ? 'y' : 'n';
 
-            s_always_create_missing_connector =
-               pocdb->getBoolWithDefault("always_create_missing_connector", true);
+            if ( pocdb->isString("implicit_connector_creation_rule") ) {
+
+               std::string implicit_connector_creation_rule =
+                  pocdb->getString("implicit_connector_creation_rule");
+
+               if ( implicit_connector_creation_rule != "ERROR" &&
+                    implicit_connector_creation_rule != "WARN" &&
+                    implicit_connector_creation_rule != "SILENT" ) {
+                  TBOX_ERROR("PersistentOverlapConnectors::getFromInput error:\n"
+                             <<"implicit_connector_creation_rule must be set to\n"
+                             <<"\"ERROR\", \"WARN\" or \"SILENT\".\n");
+               }
+
+               s_implicit_connector_creation_rule = tolower(implicit_connector_creation_rule[0]);
+            }
          }
       }
    }
@@ -226,10 +241,6 @@ PersistentOverlapConnectors::findConnector(
    const IntVector& min_connector_width,
    bool exact_width_only)
 {
-   if (s_always_create_missing_connector) {
-      return findOrCreateConnector(head, min_connector_width, exact_width_only);
-   }
-
    TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
@@ -273,19 +284,40 @@ PersistentOverlapConnectors::findConnector(
       }
    }
 
+
    OverlapConnectorAlgorithm oca;
 
-   if (!found) {
+   if ( !found && s_implicit_connector_creation_rule == 'e' ) {
 
-      TBOX_ERROR(
-         "PersistentOverlapConnectors::findConnector: Failed to find Connector\n"
+      tbox::perr
+         << "PersistentOverlapConnectors::findConnector: Failed to find Connector\n"
          << &d_my_box_level << "--->" << &head
          << " with " << (exact_width_only ? "exact" : "min")
          << " width of " << min_connector_width << ".\n"
          << "base:\n" << d_my_box_level.format("B: ")
          << "head:\n" << head.format("H: ")
-         << "To automatically create the missing\n"
-         << "connector, use findOrCreateConnector.");
+         << "\nThe available Connectors have these widths:\n";
+      for (int i = 0; i < d_cons_from_me.size(); ++i) {
+         if (&(d_cons_from_me[i]->getHead()) == &head) {
+            tbox::perr << "\t" << d_cons_from_me[i]->getConnectorWidth() << '\n';
+         }
+      }
+      TBOX_ERROR("To automatically create the missing "
+                 << "connector, use findOrCreateConnector or set\n"
+                 <<"implicit_connector_creation_rule = \"WARN\" in the\n"
+                 <<"PersistentOverlapConnector input database.");
+
+   } else if ( !found ) {
+
+      if ( s_implicit_connector_creation_rule == 'w' ) {
+         TBOX_WARNING("PersistentOverlapConnectors::findConnector is resorting\n"
+                      <<"to a global search to find overlaps between "
+                      << &d_my_box_level << " and " << &head << ".\n"
+                      << "This relies on unscalable data or triggers unscalable operations.\n");
+      }
+
+      createConnector( head, min_connector_width );
+      found = d_cons_from_me.back();
 
    } else if (exact_width_only &&
               found->getConnectorWidth() != min_connector_width) {

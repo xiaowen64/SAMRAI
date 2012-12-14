@@ -72,6 +72,9 @@ descriptions of items in the following list are provided below.
    addition, more error and sanity checking has been added to the parsing of
    input databases for all classes.
 
+5) Replaced PersistentOverlapConnector static option controlling implicit
+   Connector creation.
+
 *****************************************************************************
 
 -----------------------------------------------------------------------------
@@ -163,6 +166,14 @@ descriptions of items in the following list are provided below.
 
 4) For a complete description of SAMRAI's input paramters handling refer to
    a new user document, docs/userdocs/InputParametersAndRestart.pdf.
+
+5) Replaced PersistentOverlapConnector static option controlling implicit
+   Connector creation.
+
+   The old boolean flag always_create_missing_connector is gone.  Use
+   the string implicit_global_search_rule.  See the PersistentOverlapConnector
+   documentation.  The default behavior is the same, so if you have not
+   set the old flag before, you can ignore this change.
 
 =============================================================================
 =============================================================================
