@@ -9,7 +9,6 @@
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxLevel.h"
@@ -416,8 +415,8 @@ int main(
           */
          boost::shared_ptr<hier::BoxLevel> everything;
          boost::shared_ptr<hier::BoxLevel> nothing;
-         boost::shared_ptr<hier::Connector> small_to_everything,
-                                            small_to_nothing;
+         boost::shared_ptr<hier::MappingConnector> small_to_everything,
+                                                   small_to_nothing;
          mblcu.computeExternalParts(
             nothing,
             small_to_nothing,
@@ -507,7 +506,7 @@ int main(
           */
 
          boost::shared_ptr<hier::BoxLevel> internal_box_level;
-         boost::shared_ptr<hier::Connector> big_to_internal;
+         boost::shared_ptr<hier::MappingConnector> big_to_internal;
          mblcu.computeInternalParts(
             internal_box_level,
             big_to_internal,
@@ -574,7 +573,7 @@ int main(
           *   is empty.
           */
          boost::shared_ptr<hier::BoxLevel> external_box_level;
-         boost::shared_ptr<hier::Connector> big_to_external;
+         boost::shared_ptr<hier::MappingConnector> big_to_external;
          mblcu.computeExternalParts(
             external_box_level,
             big_to_external,
@@ -708,7 +707,7 @@ void partitionBoxes(
 
    mesh::TreeLoadBalancer load_balancer(box_level.getDim());
 
-   hier::Connector dummy_connector(dim);
+   boost::shared_ptr<hier::Connector> dummy_connector;
 
    const hier::IntVector bad_interval(dim, 1);
    const hier::IntVector cut_factor(dim, 1);

@@ -88,7 +88,8 @@ PersistentOverlapConnectors::getFromInput()
                              <<"\"ERROR\", \"WARN\" or \"SILENT\".\n");
                }
 
-               s_implicit_connector_creation_rule = tolower(implicit_connector_creation_rule[0]);
+               s_implicit_connector_creation_rule =
+                  char(tolower(implicit_connector_creation_rule[0]));
             }
          }
       }
@@ -170,8 +171,7 @@ PersistentOverlapConnectors::createConnector(
    new_connector->setHead(head);
    new_connector->setWidth(connector_width, true);
    if (s_check_created_connectors == 'y') {
-      OverlapConnectorAlgorithm oca;
-      TBOX_ASSERT(oca.checkOverlapCorrectness(*new_connector) == 0);
+      TBOX_ASSERT(new_connector->checkOverlapCorrectness() == 0);
    }
 
    d_cons_from_me.push_back(new_connector);
@@ -217,8 +217,7 @@ PersistentOverlapConnectors::cacheConnector(
    connector->setHead(head, true);
 
    if (s_check_created_connectors == 'y') {
-      OverlapConnectorAlgorithm oca;
-      if (oca.checkOverlapCorrectness(*connector) != 0) {
+      if (connector->checkOverlapCorrectness() != 0) {
          TBOX_ERROR("PersistentOverlapConnectors::cacheConnector errror:\n"
                     <<"Bad overlap Connector found.");
       }
@@ -284,9 +283,6 @@ PersistentOverlapConnectors::findConnector(
       }
    }
 
-
-   OverlapConnectorAlgorithm oca;
-
    if ( !found && s_implicit_connector_creation_rule == 'e' ) {
 
       tbox::perr
@@ -328,6 +324,7 @@ PersistentOverlapConnectors::findConnector(
        * width.  This is scalable!
        */
 
+      OverlapConnectorAlgorithm oca;
       boost::shared_ptr<Connector> new_connector(boost::make_shared<Connector>(
          d_my_box_level,
          head,
@@ -348,7 +345,7 @@ PersistentOverlapConnectors::findConnector(
    }
 
    if (s_check_accessed_connectors == 'y') {
-      if (oca.checkOverlapCorrectness(*found) != 0) {
+      if (found->checkOverlapCorrectness() != 0) {
          TBOX_ERROR("PersistentOverlapConnectors::findConnector errror:\n"
                     <<"Bad overlap Connector found.");
       }
@@ -455,7 +452,7 @@ PersistentOverlapConnectors::findOrCreateConnector(
    }
 
    if (s_check_accessed_connectors == 'y') {
-      if (oca.checkOverlapCorrectness(*found) != 0) {
+      if (found->checkOverlapCorrectness() != 0) {
          TBOX_ERROR("PersistentOverlapConnectors::findOrCreateConnector errror:\n"
                     <<"Bad overlap Connector found.");
       }

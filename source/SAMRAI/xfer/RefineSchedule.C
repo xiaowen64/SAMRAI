@@ -192,9 +192,8 @@ RefineSchedule::RefineSchedule(
        * PersistentOverlapConnectors should already guarantee
        * completeness.
        */
-      hier::OverlapConnectorAlgorithm oca;
-      oca.assertOverlapCorrectness(*d_dst_to_src);
-      oca.assertOverlapCorrectness(*d_src_to_dst);
+      d_dst_to_src->assertOverlapCorrectness();
+      d_src_to_dst->assertOverlapCorrectness();
    }
 
    /*
@@ -546,9 +545,8 @@ RefineSchedule::RefineSchedule(
    TBOX_ASSERT(d_src_to_dst->getHead() == *d_dst_level->getBoxLevel());
 
    if ( s_extra_debug ) {
-      hier::OverlapConnectorAlgorithm oca;
-      oca.assertOverlapCorrectness(*d_src_to_dst, false, true, true);
-      oca.assertOverlapCorrectness(*d_dst_to_src, false, true, true);
+      d_src_to_dst->assertOverlapCorrectness(false, true, true);
+      d_dst_to_src->assertOverlapCorrectness(false, true, true);
    }
 
 
@@ -1135,7 +1133,7 @@ RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
          hierarchy->getDomainBoxLevel(),
          dst_to_unfilled.getConnectorWidth()));
 
-   boost::shared_ptr<hier::Connector> unfilled_to_sheared;
+   boost::shared_ptr<hier::MappingConnector> unfilled_to_sheared;
    boost::shared_ptr<hier::BoxLevel> sheared_box_level;
 
    hier::BoxLevelConnectorUtils edge_utils;
@@ -1340,7 +1338,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
     * Get the transpose of dst_to_coarse_interp, which is simple to compute
     * because we know the edges are all local.
     */
-   dst_to_coarse_interp->createLocalTranspose(coarse_interp_to_dst);
+   coarse_interp_to_dst.reset(dst_to_coarse_interp->createLocalTranspose());
 
    t_setup_coarse_interp_box_level->stop();
 }
@@ -1711,7 +1709,7 @@ RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
 
 
    boost::shared_ptr<hier::BoxLevel> external;
-   boost::shared_ptr<hier::Connector> coarse_interp_to_external;
+   boost::shared_ptr<hier::MappingConnector> coarse_interp_to_external;
    hier::BoxLevelConnectorUtils edge_utils;
    edge_utils.computeExternalParts(
       external,
@@ -3332,8 +3330,8 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                *d_dst_level->getBoxLevel(),
                hier::IntVector::getOne(dim), true);
 
-      boost::shared_ptr<hier::Connector> encon_to_dst;
-      d_dst_to_encon->createLocalTranspose(encon_to_dst);
+      boost::shared_ptr<hier::Connector> encon_to_dst(
+         d_dst_to_encon->createLocalTranspose());
 
       hier::OverlapConnectorAlgorithm oca;
 

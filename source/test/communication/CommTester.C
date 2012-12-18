@@ -11,7 +11,6 @@
 #include "CommTester.h"
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
-#include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/CoarsenOperator.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
@@ -281,12 +280,11 @@ void CommTester::createRefineSchedule(
 
       if (0) {
          // These are expensive checks.
-         hier::OverlapConnectorAlgorithm oca;
-         oca.assertOverlapCorrectness(peer_cnect);
+         peer_cnect.assertOverlapCorrectness();
          if (cnect_to_coarser)
-            oca.assertOverlapCorrectness(*cnect_to_coarser);
+            cnect_to_coarser->assertOverlapCorrectness();
          if (cnect_from_coarser)
-            oca.assertOverlapCorrectness(*cnect_from_coarser);
+            cnect_from_coarser->assertOverlapCorrectness();
          d_patch_hierarchy->recursivePrint(tbox::plog, "", 3);
       }
 

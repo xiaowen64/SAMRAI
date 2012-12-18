@@ -137,7 +137,7 @@ public:
    /*!
     * @brief Destructor.
     */
-   ~Connector();
+   virtual ~Connector();
 
    /*!
     * @brief Clear the Connector, putting it into an uninitialized state.
@@ -828,7 +828,7 @@ public:
    }
 
    /*!
-    * @brief Create this Connector's the transpose, assuming that all
+    * @brief Create and return this Connector's transpose, assuming that all
     * relationships are local (no remote neighbors).
     *
     * If any remote neighbor is found an unrecoverable assertion is
@@ -839,12 +839,9 @@ public:
     * relationship incident from the unshifted head neighbor to the shifted
     * base neighbor.  This is because all relationships must be incident from a
     * real (unshifted) Box.
-    *
-    * @param[in] transpose
     */
-   void
-   createLocalTranspose(
-      boost::shared_ptr<Connector>& transpose) const;
+   virtual Connector*
+   createLocalTranspose() const;
 
    /*!
     * @brief Assignment operator
@@ -1126,7 +1123,7 @@ public:
    size_t
    checkTransposeCorrectness(
       const Connector& transpose,
-      const bool ignore_periodic_relationships = false) const;
+      bool ignore_periodic_relationships = false) const;
 
    /*!
     * @brief Run checkTransposeCorrectness.  If any errors are found,
@@ -1140,6 +1137,85 @@ public:
    assertTransposeCorrectness(
       const Connector& transpose,
       const bool ignore_periodic_relationships = false) const;
+
+   /*!
+    * Check that overlap data is correct (represents overlaps).
+    *
+    * Checking is done as follows:
+    *   - Find overlap errors using @c findOverlapErrors().
+    *   - Report overlap errors to @c tbox::perr.
+    *   - Return number of local errors.
+    *
+    * @note
+    * This is an expensive operation (it uses @b findOverlapErrors())
+    * and should only be used for debugging.
+    *
+    * @see findOverlaps()
+    *
+    * @param[in] ignore_self_overlap Ignore a box's overlap with itself
+    * @param[in] assert_completeness If false, ignore missing overlaps. This
+    *   will still look for overlaps that should not be there.
+    * @param[in] ignore_periodic_images If true, do not require neighbors
+    *   that are periodic images.
+    *
+    * @return Number of overlap errors found locally.
+    *
+    * @pre (getBase().isInitialized()) && (getHead().isInitialized())
+    * @pre !hasPeriodicLocalNeighborhoodBaseBoxes()
+    */
+   int
+   checkOverlapCorrectness(
+      bool ignore_self_overlap = false,
+      bool assert_completeness = true,
+      bool ignore_periodic_images = false) const;
+
+   /*!
+    * @brief Assert overlap correctness.
+    *
+    * @par Assertions
+    * if an error is found, the method will write out diagnostic information
+    * and throw an an error on all processes.
+    *
+    * This is an expensive check.
+    *
+    * @see checkOverlapCorrectness().
+    *
+    * @param[in] ignore_self_overlap
+    * @param[in] assert_completeness
+    * @param[in] ignore_periodic_images
+    *
+    * @pre (getBase().isInitialized()) && (getHead().isInitialized())
+    */
+   void
+   assertOverlapCorrectness(
+      bool ignore_self_overlap = false,
+      bool assert_completeness = true,
+      bool ignore_periodic_images = false) const;
+
+   /*!
+    * @brief Find errors in overlap data of an overlap Connector.
+    *
+    * An error is either a missing overlap or an extra overlap.
+    *
+    * This is an expensive operation and should only be used for
+    * debugging.
+    *
+    * @par Assertions
+    * This version throws an assertion only if it finds inconsistent
+    * Connector data.  Missing and extra overlaps are returned but do
+    * not cause an assertion.
+    *
+    * @param[out] missing
+    * @param[out] extra
+    * @param[in] ignore_self_overlap
+    *
+    * @pre (getBase().isInitialized()) && (getHead().isInitialized())
+    */
+   void
+   findOverlapErrors(
+      boost::shared_ptr<Connector>& missing,
+      boost::shared_ptr<Connector>& extra,
+      bool ignore_self_overlap = false) const;
 
    //@}
 
@@ -1344,13 +1420,31 @@ private:
       return Outputter(*this, border, 0, true);
    }
 
+protected:
+   /*!
+    * @brief Method to do the work of createLocalTranspose.
+    *
+    * @param transpose
+    *
+    * @pre transpose
+    */
+   void
+   doLocalTransposeWork(
+      Connector* transpose) const;
+
 private:
+   // To access findOverlaps_rbbt().
+   friend class OverlapConnectorAlgorithm;
+
    /*
     * Static integer constant descibing class's version number.
     */
    static const int HIER_CONNECTOR_VERSION;
 
-   enum { BAD_INT = (1 << (8 * sizeof(int) - 2)) };
+   //! @brief Data structure for MPI reductions.
+   struct IntIntStruct { int i;
+                         int rank;
+   };
 
    /*
     * Uninitialized default constructor.
@@ -1439,6 +1533,8 @@ private:
          getTimer("hier::Connector::acquireRemoteNeighborhoods()");
       t_cache_global_reduced_data = tbox::TimerManager::getManager()->
          getTimer("hier::Connector::cacheGlobalReducedData()");
+      t_find_overlaps_rbbt = tbox::TimerManager::getManager()->
+         getTimer("hier::Connector::findOverlaps_rbbt()");
    }
 
    /*!
@@ -1451,6 +1547,7 @@ private:
    {
       t_acquire_remote_relationships.reset();
       t_cache_global_reduced_data.reset();
+      t_find_overlaps_rbbt.reset();
    }
 
    /*!
@@ -1466,9 +1563,34 @@ private:
       return;
    }
 
-   //@{ @name Private utilities.
-
-   //@}
+   /*!
+    * @brief Discover and add overlaps from base and externally
+    * provided head box_level.
+    *
+    * Relationships found are added to appropriate neighbor lists.  No overlap
+    * is removed.  If existing overlaps are invalid, remove them first.
+    *
+    * The provided head should be a globalized version of
+    * d_head_handle->getBoxLevel().  It should have the same
+    * refinement ratio as d_head_handle->getBoxLevel().
+    *
+    * The ignore_self_overlap directs the method to not list
+    * a box as its own neighbor.  This should be true only
+    * when the head and tail objects represent the same box_level
+    * (regardless of whether they are the same objects), and
+    * you want to disregard self-overlaps.
+    * Two boxes are considered the same if
+    * - The boxes are equal by comparison (they have the same
+    *   owner and the same indices), and
+    * - They are from box_levels with the same refinement ratio.
+    *
+    * @pre head.getParallelState() == BoxLevel::GLOBALIZED
+    */
+   void
+   findOverlaps_rbbt(
+      const BoxLevel& head,
+      bool ignore_self_overlap = false,
+      bool sanity_check_method_postconditions = false);
 
    /*!
     * @brief Handle for access to the base BoxLevel.
@@ -1576,6 +1698,7 @@ private:
 
    static boost::shared_ptr<tbox::Timer> t_acquire_remote_relationships;
    static boost::shared_ptr<tbox::Timer> t_cache_global_reduced_data;
+   static boost::shared_ptr<tbox::Timer> t_find_overlaps_rbbt;
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

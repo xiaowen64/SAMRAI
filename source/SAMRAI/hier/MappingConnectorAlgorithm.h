@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
- * Description:   Algorithms to work with maping Connectors.
+ * Description:   Algorithms to work with MapingConnectors.
  *
  ************************************************************************/
 #ifndef included_hier_MappingConnectorAlgorithm
@@ -12,6 +12,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/BaseConnectorAlgorithm.h"
+#include "SAMRAI/hier/MappingConnector.h"
 
 #include <map>
 #include <string>
@@ -20,7 +21,7 @@ namespace SAMRAI {
 namespace hier {
 
 /*!
- * @brief Algorithms for using Connectors representing changes
+ * @brief Algorithms for using MappingConnectors representing changes
  * to a BoxLevel.
  *
  * MappingConnectorAlgorithm objects check and apply mappings.
@@ -58,7 +59,10 @@ public:
     */
    void
    setSanityCheckMethodPreconditions(
-      bool do_check);
+      bool do_check)
+   {
+      d_sanity_check_inputs = do_check;
+   }
 
    /*!
     * @brief Set whether to run expensive sanity checks on outputs
@@ -70,13 +74,16 @@ public:
     */
    void
    setSanityCheckMethodPostconditions(
-      bool do_check);
+      bool do_check)
+   {
+      d_sanity_check_outputs = do_check;
+   }
 
    /*!
     * @brief Most general version for modifying Connectors using
-    * mapping Connectors.  Modification is the changing of existing
+    * MappingConnectors.  Modification is the changing of existing
     * Connectors when boxes in a BoxLevel changes according to specified
-    * mapping connectors.
+    * MappingConnectors.
     *
     * The change is represented by a the mapper @c old_to_new
     * and its transpose @c new_to_old.  The Connectors to be
@@ -114,7 +121,7 @@ public:
     * by the base and head of the mapping.  No BoxLevel is modified,
     * other than the "mutable" BoxLevels in the argument.
     *
-    * An important constraint in the old_to_new Connectors is
+    * An important constraint in the old_to_new MappingConnectors is
     * that this method cannot handle multiple maps at once.  For
     * example, it cannot map box J to box K and at the
     * same time map box I to box J.  Box J in the
@@ -171,8 +178,8 @@ public:
    modify(
       Connector& anchor_to_mapped,
       Connector& mapped_to_anchor,
-      const Connector& old_to_new,
-      const Connector& new_to_old,
+      const MappingConnector& old_to_new,
+      const MappingConnector& new_to_old,
       BoxLevel* mutable_new = 0,
       BoxLevel* mutable_old = 0) const;
 
@@ -243,7 +250,7 @@ public:
    modify(
       Connector& anchor_to_mapped,
       Connector& mapped_to_anchor,
-      const Connector& old_to_new,
+      const MappingConnector& old_to_new,
       BoxLevel* mutable_new = 0,
       BoxLevel* mutable_old = 0) const;
 
@@ -309,51 +316,9 @@ public:
    void
    modify(
       Connector& anchor_to_mapped,
-      const Connector& old_to_new,
+      const MappingConnector& old_to_new,
       BoxLevel* mutable_new = 0,
       BoxLevel* mutable_old = 0) const;
-
-   /*!
-    * @brief Types of mappings for use in findMappingErrors() and
-    *        assertMappingValidity().
-    */
-   enum MappingType {LOCAL, NOT_LOCAL, UNKNOWN};
-
-   /*!
-    * @brief Check if the Connector has a valid mapping.
-    *
-    * This function can be called prior to calling modify().  It
-    * is intended to check the Connector that is the @c old_to_new
-    * argument in modify() to determine if it has a valid mapping.
-    * In other words, it checks to see if the mapping can be used
-    * in modify() without logic errors.  It does no other checks.
-    *
-    * @param[in] connector
-    * @param[in] map_type LOCAL means assume the mapping is local.  NOT_LOCAL
-    * means the mapping is not local.  UNKNOWN means find out whether the
-    * map is local or not (communication required) and act
-    * accordingly.
-    *
-    * @return number of errors found.
-    */
-   size_t
-   findMappingErrors(
-      const Connector& connector,
-      MappingType map_type = UNKNOWN) const;
-
-   /*!
-    * @brief Run findMappingErrors and abort if any errors are found.
-    *
-    * @param[in] connector
-    * @param[in] map_type LOCAL means assume the mapping is local.  NOT_LOCAL
-    * means the mapping is not local.  UNKNOWN means find out whether the
-    * map is local or not (communication required) and act
-    * accordingly.
-    */
-   void
-   assertMappingValidity(
-      const Connector& connector,
-      MappingType map_type = UNKNOWN) const;
 
    /*!
     * @brief Get the name of this object.
@@ -379,7 +344,7 @@ private:
 
    /*!
     * @brief Most general version of method to modify existing
-    * Connectors objects by using another to map the head boxes.
+    * Connectors objects by using MappingConnectors to map the head boxes.
     *
     * This version does no checking of the inputs.  The three
     * public versions do input checking and setting up temporaries
@@ -402,8 +367,8 @@ private:
    privateModify(
       Connector& anchor_to_mapped,
       Connector& mapped_to_anchor,
-      const Connector& old_to_new,
-      const Connector* new_to_old,
+      const MappingConnector& old_to_new,
+      const MappingConnector* new_to_old,
       BoxLevel* mutable_new,
       BoxLevel* mutable_old) const;
 
@@ -414,8 +379,8 @@ private:
    privateModify_checkParameters(
       const Connector& anchor_to_mapped,
       const Connector& mapped_to_anchor,
-      const Connector& old_to_new,
-      const Connector* new_to_old) const;
+      const MappingConnector& old_to_new,
+      const MappingConnector* new_to_old) const;
 
    /*!
     * @brief Relationship removal part of modify algorithm, caching
@@ -426,7 +391,7 @@ private:
       std::map<int, std::vector<int> >& neighbor_removal_mesg,
       Connector& anchor_to_new,
       Connector* new_to_anchor,
-      const Connector& old_to_new) const;
+      const MappingConnector& old_to_new) const;
 
    /*!
     * @brief Remove relationships made obsolete by mapping and send
@@ -446,7 +411,7 @@ private:
       InvertedNeighborhoodSet& new_eto_old,
       const Connector& old_to_anchor,
       const Connector& anchor_to_old,
-      const Connector& old_to_new) const;
+      const MappingConnector& old_to_new) const;
 
    /*!
     * @brief Find overlap and save in mapping connector or pack

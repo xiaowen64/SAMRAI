@@ -14,6 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
+#include "SAMRAI/hier/MappingConnector.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
 #include "SAMRAI/tbox/BalancedDepthFirstTree.h"
@@ -237,8 +238,8 @@ public:
    void
    loadBalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
-      hier::Connector& balance_to_anchor,
-      hier::Connector& anchor_to_balance,
+      boost::shared_ptr<hier::Connector>& balance_to_anchor,
+      boost::shared_ptr<hier::Connector>& anchor_to_balance,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::IntVector& min_size,
@@ -535,8 +536,8 @@ private:
    void
    prebalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
-      hier::Connector& balance_to_anchor,
-      hier::Connector& anchor_to_balance,
+      boost::shared_ptr<hier::Connector>& balance_to_anchor,
+      boost::shared_ptr<hier::Connector>& anchor_to_balance,
       const tbox::RankGroup& rank_group) const;
 
    /*!
@@ -668,7 +669,7 @@ private:
     */
    void
    constructSemilocalUnbalancedToBalanced(
-      hier::Connector &unbalanced_to_balanced,
+      hier::MappingConnector &unbalanced_to_balanced,
       const TreeLoadBalancer::TransitSet &kept_imports ) const;
 
    /*!
@@ -868,8 +869,8 @@ private:
    void
    loadBalanceWithinRankGroup(
       hier::BoxLevel& balance_box_level,
-      hier::Connector &balance_to_anchor,
-      hier::Connector &anchor_to_balance,
+      boost::shared_ptr<hier::Connector>& balance_to_anchor,
+      boost::shared_ptr<hier::Connector>& anchor_to_balance,
       const tbox::RankGroup& rank_group,
       const double group_sum_load ) const;
 
@@ -882,8 +883,8 @@ private:
    void
    constrainMaxBoxSizes(
       hier::BoxLevel& box_level,
-      hier::Connector &anchor_to_level,
-      hier::Connector &level_to_anchor ) const;
+      boost::shared_ptr<hier::Connector>& anchor_to_level,
+      boost::shared_ptr<hier::Connector>& level_to_anchor ) const;
 
    /*!
     * @brief Create the cycle-based RankGroups the local process

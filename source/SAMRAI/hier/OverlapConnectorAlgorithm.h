@@ -428,7 +428,10 @@ public:
     */
    void
    setSanityCheckMethodPreconditions(
-      bool do_check);
+      bool do_check)
+   {
+      d_sanity_check_method_preconditions = do_check;
+   }
 
    /*!
     * @brief When @c do_check is true, turn on sanity checks for outputs
@@ -441,96 +444,10 @@ public:
     */
    void
    setSanityCheckMethodPostconditions(
-      bool do_check);
-
-   /*!
-    * Check that overlap data is correct (represents overlaps) for the
-    * given Connector.
-    *
-    * Checking is done as follows:
-    *   - Find overlap errors using @c findOverlapErrors().
-    *   - Report overlap errors to @c tbox::perr.
-    *   - Return number of local errors.
-    *
-    * @note
-    * This is an expensive operation (it uses @b findOverlapErrors())
-    * and should only be used for debugging.
-    *
-    * @see findOverlaps()
-    *
-    * @param[in] connector
-    * @param[in] ignore_self_overlap Ignore a box's overlap with itself
-    * @param[in] assert_completeness If false, ignore missing overlaps. This
-    *   will still look for overlaps that should not be there.
-    * @param[in] ignore_periodic_images If true, do not require neighbors
-    *   that are periodic images.
-    *
-    * @return Number of overlap errors found locally.
-    *
-    * @pre (connector.getBase().isInitialized()) &&
-    *      (connector.getHead().isInitialized())
-    * @pre !connector.hasPeriodicLocalNeighborhoodBaseBoxes()
-    */
-   int
-   checkOverlapCorrectness(
-      const Connector& connector,
-      bool ignore_self_overlap = false,
-      bool assert_completeness = true,
-      bool ignore_periodic_images = false) const;
-
-   /*!
-    * @brief Assert overlap correctness.
-    *
-    * @par Assertions
-    * if an error is found, the method will write out diagnostic information
-    * and throw an an error on all processes.
-    *
-    * This is an expensive check.
-    *
-    * @see checkOverlapCorrectness().
-    *
-    * @param[in] connector
-    * @param[in] ignore_self_overlap
-    * @param[in] assert_completeness
-    * @param[in] ignore_periodic_images
-    *
-    * @pre (connector.getBase().isInitialized()) &&
-    *      (connector.getHead().isInitialized())
-    */
-   void
-   assertOverlapCorrectness(
-      const Connector& connector,
-      bool ignore_self_overlap = false,
-      bool assert_completeness = true,
-      bool ignore_periodic_images = false) const;
-
-   /*!
-    * @brief Find errors in overlap data of an overlap Connector.
-    *
-    * An error is either a missing overlap or an extra overlap.
-    *
-    * This is an expensive operation and should only be used for
-    * debugging.
-    *
-    * @par Assertions
-    * This version throws an assertion only if it finds inconsistent
-    * Connector data.  Missing and extra overlaps are returned but do
-    * not cause an assertion.
-    *
-    * @param[in] connector
-    * @param[out] missing
-    * @param[out] extra
-    * @param[in] ignore_self_overlap
-    *
-    * @pre (connector.getBase().isInitialized()) &&
-    *      (connector.getHead().isInitialized())
-    */
-   void
-   findOverlapErrors(
-      const Connector& connector,
-      boost::shared_ptr<Connector>& missing,
-      boost::shared_ptr<Connector>& extra,
-      bool ignore_self_overlap = false) const;
+      bool do_check)
+   {
+      d_sanity_check_method_postconditions = do_check;
+   }
 
    /*!
     * @brief Get the name of this object.
@@ -544,11 +461,6 @@ public:
 private:
    // Internal shorthand.
    typedef Connector::NeighborSet NeighborSet;
-
-   //! @brief Data structure for MPI reductions.
-   struct IntIntStruct { int i;
-                         int rank;
-   };
 
    /*!
     * @brief This is where the bridge algorithm is implemented.
@@ -687,35 +599,6 @@ private:
       const IntVector& neighbor_refinement_ratio) const;
 
    /*!
-    * @brief Discover and add overlaps from base and externally
-    * provided head box_level.
-    *
-    * Relationships found are added to appropriate neighbor lists.  No overlap is
-    * removed.  If existing overlaps are invalid, remove them first.
-    *
-    * The provided head should be like d_head, but if necessary,
-    * it may be a globalized version of d_head.  It should have
-    * the same refinement ratio as d_head.
-    *
-    * The ignore_self_overlap directs the method to not list
-    * a box as its own neighbor.  This should be true only
-    * when the head and tail objects represent the same box_level
-    * (regardless of whether they are the same objects), and
-    * you want to disregard self-overlaps.
-    * Two boxes are considered the same if
-    * - The boxes are equal by comparison (they have the same
-    *   owner and the same indices), and
-    * - They are from box_levels with the same refinement ratio.
-    *
-    * @pre head.getParallelState() == BoxLevel::GLOBALIZED
-    */
-   void
-   findOverlaps_rbbt(
-      Connector& connector,
-      const BoxLevel& head,
-      const bool ignore_self_overlap = false) const;
-
-   /*!
     * @brief Set up things for the entire class.
     *
     * Only called by StartupShutdownManager.
@@ -755,8 +638,6 @@ private:
     * class but may not be necessary anymore.
     */
    static int s_operation_mpi_tag;
-
-   static boost::shared_ptr<tbox::Timer> t_find_overlaps_rbbt;
 
    static boost::shared_ptr<tbox::Timer> t_bridge;
    static boost::shared_ptr<tbox::Timer> t_bridge_setup_comm;

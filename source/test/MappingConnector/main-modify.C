@@ -9,7 +9,6 @@
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxLevel.h"
@@ -50,8 +49,8 @@ breakUpBoxes(
 void
 alterAndGenerateMapping(
    boost::shared_ptr<hier::BoxLevel>& box_level_c,
-   boost::shared_ptr<hier::Connector>& b_to_c,
-   boost::shared_ptr<hier::Connector>& c_to_b,
+   boost::shared_ptr<hier::MappingConnector>& b_to_c,
+   boost::shared_ptr<hier::MappingConnector>& c_to_b,
    const hier::BoxLevel& box_level_b,
    const boost::shared_ptr<tbox::Database>& database);
 
@@ -237,8 +236,8 @@ int main(
       b_to_a->checkConsistencyWithBase();
       b_to_a->checkConsistencyWithHead();
 
-      oca.checkOverlapCorrectness(*a_to_b);
-      oca.checkOverlapCorrectness(*b_to_a);
+      a_to_b->checkOverlapCorrectness();
+      b_to_a->checkOverlapCorrectness();
 
       /*
        * Generate BoxLevel C by altering B based on a simple formula.
@@ -246,7 +245,7 @@ int main(
        */
 
       boost::shared_ptr<hier::BoxLevel> box_level_c;
-      boost::shared_ptr<hier::Connector> b_to_c, c_to_b;
+      boost::shared_ptr<hier::MappingConnector> b_to_c, c_to_b;
       boost::shared_ptr<Database> alteration_db(
          main_db->getDatabase("Alteration"));
 
@@ -280,7 +279,7 @@ int main(
       b_to_a->checkConsistencyWithHead();
 
       tbox::pout << "Checking for a--->b overlap correctness:" << std::endl;
-      const int a_to_b_errors = oca.checkOverlapCorrectness(*a_to_b);
+      const int a_to_b_errors = a_to_b->checkOverlapCorrectness();
       if (a_to_b_errors) {
          tbox::pout << "... " << a_to_b_errors << " errors." << std::endl;
       } else {
@@ -288,7 +287,7 @@ int main(
       }
 
       tbox::pout << "Checking for b--->a overlap correctness:" << std::endl;
-      const int b_to_a_errors = oca.checkOverlapCorrectness(*b_to_a);
+      const int b_to_a_errors = b_to_a->checkOverlapCorrectness();
       if (b_to_a_errors) {
          tbox::pout << "... " << b_to_a_errors << " errors." << std::endl;
       } else {
@@ -371,7 +370,7 @@ void breakUpBoxes(
 
    const int level_number(0);
 
-   hier::Connector dummy_connector(dim);
+   boost::shared_ptr<hier::Connector> dummy_connector;
 
    const hier::IntVector bad_interval(dim, 1);
    const hier::IntVector cut_factor(dim, 1);
@@ -395,8 +394,8 @@ void breakUpBoxes(
  */
 void alterAndGenerateMapping(
    boost::shared_ptr<hier::BoxLevel>& box_level_c,
-   boost::shared_ptr<hier::Connector>& b_to_c,
-   boost::shared_ptr<hier::Connector>& c_to_b,
+   boost::shared_ptr<hier::MappingConnector>& b_to_c,
+   boost::shared_ptr<hier::MappingConnector>& c_to_b,
    const hier::BoxLevel& box_level_b,
    const boost::shared_ptr<tbox::Database>& database)
 {
@@ -415,10 +414,10 @@ void alterAndGenerateMapping(
       box_level_b.getGridGeometry(),
       box_level_b.getMPI()));
 
-   b_to_c.reset(new hier::Connector(box_level_b,
+   b_to_c.reset(new hier::MappingConnector(box_level_b,
       *box_level_c,
       hier::IntVector::getZero(dim)));
-   c_to_b.reset(new hier::Connector(*box_level_c,
+   c_to_b.reset(new hier::MappingConnector(*box_level_c,
       box_level_b,
       hier::IntVector::getZero(dim)));
    for (hier::BoxContainer::const_iterator bi = boxes_b.begin();
@@ -440,7 +439,6 @@ void alterAndGenerateMapping(
    c_to_b->checkConsistencyWithBase();
    c_to_b->checkConsistencyWithHead();
 
-   hier::MappingConnectorAlgorithm mca;
-   mca.assertMappingValidity(*b_to_c);
-   mca.assertMappingValidity(*c_to_b);
+   b_to_c->assertMappingValidity();
+   c_to_b->assertMappingValidity();
 }

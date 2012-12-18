@@ -436,7 +436,7 @@ void breakUpBoxes(
 
    mesh::TreeLoadBalancer load_balancer(box_level.getDim());
 
-   hier::Connector dummy_connector(dim);
+   boost::shared_ptr<hier::Connector> dummy_connector;
 
    const hier::IntVector min_size(dim, 2);
    const hier::IntVector bad_interval(dim, 1);

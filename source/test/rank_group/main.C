@@ -368,8 +368,8 @@ int main(
 
          lb->loadBalanceBoxLevel(
             anchor_box_level,
-            *anchor_to_domain,
-            *domain_to_anchor,
+            anchor_to_domain,
+            domain_to_anchor,
             hierarchy,
             0,
             min_size,
@@ -385,8 +385,8 @@ int main(
             false,
             true);
 
-         oca.assertOverlapCorrectness(*anchor_to_domain);
-         oca.assertOverlapCorrectness(*domain_to_anchor);
+         anchor_to_domain->assertOverlapCorrectness();
+         domain_to_anchor->assertOverlapCorrectness();
 
          anchor_box_level.cacheGlobalReducedData();
 
@@ -475,8 +475,8 @@ int main(
           */
          lb->loadBalanceBoxLevel(
             *balance_box_level,
-            *balance_to_anchor,
-            *anchor_to_balance,
+            balance_to_anchor,
+            anchor_to_balance,
             hierarchy,
             1,
             min_size,
@@ -486,8 +486,8 @@ int main(
             cut_factor,
             rank_group_1);
 
-         oca.assertOverlapCorrectness(*balance_to_anchor);
-         oca.assertOverlapCorrectness(*anchor_to_balance);
+         balance_to_anchor->assertOverlapCorrectness();
+         anchor_to_balance->assertOverlapCorrectness();
 
          sortNodes(*balance_box_level,
             *anchor_to_balance,
@@ -802,7 +802,7 @@ void sortNodes(
 {
    const hier::MappingConnectorAlgorithm mca;
 
-   boost::shared_ptr<hier::Connector> sorting_map;
+   boost::shared_ptr<hier::MappingConnector> sorting_map;
    boost::shared_ptr<hier::BoxLevel> seq_box_level;
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(

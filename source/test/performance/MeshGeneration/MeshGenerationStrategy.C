@@ -68,7 +68,7 @@ void MeshGenerationStrategy::setTagsByShrinkingLevel(
 
 
    boost::shared_ptr<hier::BoxLevel> tagfootprint;
-   boost::shared_ptr<hier::Connector> Ltag_to_tagfootprint;
+   boost::shared_ptr<hier::MappingConnector> Ltag_to_tagfootprint;
    const hier::Connector &Ltag_to_Ltag =
       Ltag.getPersistentOverlapConnectors().findOrCreateConnector(
          Ltag,

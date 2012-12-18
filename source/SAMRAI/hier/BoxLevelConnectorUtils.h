@@ -12,7 +12,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/hier/Connector.h"
+#include "SAMRAI/hier/MappingConnector.h"
 #include "SAMRAI/hier/BoxLevel.h"
 
 namespace SAMRAI {
@@ -185,7 +185,7 @@ public:
     * Compare an input BoxLevel to a "reference" BoxLevel.
     * Compute the parts of the input that are external to the
     * reference.  Build the "external" BoxLevel representing the
-    * external parts.  Build a mapping Connector with the input as its
+    * external parts.  Build a MappingConnector with the input as its
     * base and the external as its head.
     *
     * A partially external input cell (possible when input is coarser
@@ -225,7 +225,7 @@ public:
    void
    computeExternalParts(
       boost::shared_ptr<BoxLevel>& external,
-      boost::shared_ptr<Connector>& input_to_external,
+      boost::shared_ptr<MappingConnector>& input_to_external,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
       const BoxContainer& domain = BoxContainer()) const
@@ -248,7 +248,7 @@ public:
     * Compare an input BoxLevel to a "reference" box_level.
     * Identify parts of the input that are internal to the reference
     * BoxLevel, and store the internal parts in a
-    * BoxLevel.  Set up a mapping Connector between the input
+    * BoxLevel.  Set up a MappingConnector between the input
     * and its internal parts.
     *
     * A partially internal input cell (possible when input is coarser
@@ -288,7 +288,7 @@ public:
    void
    computeInternalParts(
       boost::shared_ptr<BoxLevel>& internal,
-      boost::shared_ptr<Connector>& input_to_internal,
+      boost::shared_ptr<MappingConnector>& input_to_internal,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
       const BoxContainer& domain = BoxContainer()) const
@@ -329,15 +329,15 @@ public:
 
    //@{
 
-   //! @name Setting up common mapping Connectors
+   //! @name Setting up common MappingConnectors
 
    /*
-    * @brief Sort the Boxes in BoxLevel and make a mapping
-    * Connector from the unsorted BoxLevel to the sorted one.
+    * @brief Sort the Boxes in BoxLevel and make a MappingConnector
+    * from the unsorted BoxLevel to the sorted one.
     * The sorting can renumber the LocalIndices of the Boxes
     * or put the Boxes in spatial ordering, or both.
     *
-    * The Connector map created is local (no Box is mapped to a new
+    * The MappingConnector created is local (no Box is mapped to a new
     * owner).
     *
     * If @c sort_boxes_by_corner is true, the map will reorder
@@ -352,7 +352,7 @@ public:
     * @c initial_sequential_index can specify the first index of first
     * Box of the lowest rank processor.
     *
-    * For more information on mapping Connectors, see
+    * For more information on MappingConnectors, see
     * MappingConnectorAlgorithm.
     *
     * @param[out] sorted_box_level Sorted version of the input
@@ -377,7 +377,7 @@ public:
    void
    makeSortingMap(
       boost::shared_ptr<BoxLevel>& sorted_box_level,
-      boost::shared_ptr<Connector>& output_map,
+      boost::shared_ptr<MappingConnector>& output_map,
       const BoxLevel& unsorted_box_level,
       bool sort_boxes_by_corner = true,
       bool sequentialize_global_indices = true,
@@ -405,8 +405,8 @@ public:
    void
    makeRemainderMap(
       boost::shared_ptr<BoxLevel>& remainder,
-      boost::shared_ptr<Connector>& orig_to_remainder,
-      const Connector& orig_to_rejections) const;
+      boost::shared_ptr<MappingConnector>& orig_to_remainder,
+      const MappingConnector& orig_to_rejections) const;
 
    //@}
 
@@ -495,7 +495,7 @@ private:
    void
    computeInternalOrExternalParts(
       boost::shared_ptr<BoxLevel>& parts,
-      boost::shared_ptr<Connector>& input_to_parts,
+      boost::shared_ptr<MappingConnector>& input_to_parts,
       char internal_or_external,
       const Connector& input_to_reference,
       const IntVector& nesting_width,

@@ -21,7 +21,6 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/pdat/NodeData.h"
-#include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/ConnectorStatistics.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
@@ -499,8 +498,8 @@ int main(
          tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
          lb0->loadBalanceBoxLevel(
             L0,
-            *L0_to_domain,
-            *domain_to_L0,
+            L0_to_domain,
+            domain_to_L0,
             hierarchy,
             0,
             hierarchy->getSmallestPatchSize(0),
@@ -515,8 +514,8 @@ int main(
             false,
             true);
 
-         oca.assertOverlapCorrectness(*L0_to_domain);
-         oca.assertOverlapCorrectness(*domain_to_L0);
+         L0_to_domain->assertOverlapCorrectness();
+         domain_to_L0->assertOverlapCorrectness();
 
          L0.cacheGlobalReducedData();
 
@@ -594,8 +593,8 @@ int main(
          // Load balance L1.
          lb1->loadBalanceBoxLevel(
             *L1,
-            *L1_to_L0,
-            *L0_to_L1,
+            L1_to_L0,
+            L0_to_L1,
             hierarchy,
             1,
             hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
@@ -604,8 +603,8 @@ int main(
             bad_interval,
             cut_factor);
 
-         oca.assertOverlapCorrectness(*L1_to_L0);
-         oca.assertOverlapCorrectness(*L0_to_L1);
+         L1_to_L0->assertOverlapCorrectness();
+         L0_to_L1->assertOverlapCorrectness();
 
          sortNodes(*L1,
                    *L0_to_L1,
@@ -689,8 +688,8 @@ int main(
          // Load balance L2.
          lb2->loadBalanceBoxLevel(
             *L2,
-            *L2_to_L1,
-            *L1_to_L2,
+            L2_to_L1,
+            L1_to_L2,
             hierarchy,
             1,
             hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
@@ -699,8 +698,8 @@ int main(
             bad_interval,
             cut_factor);
 
-         oca.assertOverlapCorrectness(*L2_to_L1);
-         oca.assertOverlapCorrectness(*L1_to_L2);
+         L2_to_L1->assertOverlapCorrectness();
+         L1_to_L2->assertOverlapCorrectness();
 
          sortNodes(*L2,
                    *L1_to_L2,
@@ -1104,7 +1103,7 @@ void generatePrebalanceByUserShells(
     * Make L1 nest inside L0 by one cell.
     */
    boost::shared_ptr<hier::BoxLevel> L1nested;
-   boost::shared_ptr<hier::Connector> L1_to_L1nested;
+   boost::shared_ptr<hier::MappingConnector> L1_to_L1nested;
    hier::BoxLevelConnectorUtils blcu;
    blcu.computeInternalParts( L1nested,
                               L1_to_L1nested,
@@ -1164,7 +1163,7 @@ void generatePrebalanceByShrinkingLevel(
 
 
    boost::shared_ptr<hier::BoxLevel> L1tags;
-   boost::shared_ptr<hier::Connector> L1_to_L1tags;
+   boost::shared_ptr<hier::MappingConnector> L1_to_L1tags;
    const hier::Connector &L1_to_L1 =
       L1.getPersistentOverlapConnectors().findOrCreateConnector(
          L1,
@@ -1268,7 +1267,7 @@ void generatePrebalanceByShrinkingLevel(
     */
    const hier::IntVector nesting_width(dim, hierarchy->getProperNestingBuffer(coarser_ln));
    boost::shared_ptr<hier::BoxLevel> L2nested;
-   boost::shared_ptr<hier::Connector> L2_to_L2nested;
+   boost::shared_ptr<hier::MappingConnector> L2_to_L2nested;
    blcu.computeInternalParts( L2nested,
                               L2_to_L2nested,
                               *L2_to_L1,
@@ -1426,7 +1425,7 @@ void generatePrebalanceBySinusoidalFront(
     */
    const hier::IntVector nesting_width(dim, hierarchy->getProperNestingBuffer(coarser_ln));
    boost::shared_ptr<hier::BoxLevel> L2nested;
-   boost::shared_ptr<hier::Connector> L2_to_L2nested;
+   boost::shared_ptr<hier::MappingConnector> L2_to_L2nested;
    hier::BoxLevelConnectorUtils blcu;
    blcu.computeInternalParts( L2nested,
                               L2_to_L2nested,
@@ -1499,7 +1498,7 @@ void sortNodes(
 {
    const hier::MappingConnectorAlgorithm mca;
 
-   boost::shared_ptr<hier::Connector> sorting_map;
+   boost::shared_ptr<hier::MappingConnector> sorting_map;
    boost::shared_ptr<hier::BoxLevel> seq_box_level;
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(

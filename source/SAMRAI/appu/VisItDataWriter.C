@@ -1361,7 +1361,7 @@ VisItDataWriter::writePlotData(
       const hier::BoxLevel& unsorted_box_level =
          *hierarchy->getPatchLevel(ln)->getBoxLevel();
       boost::shared_ptr<hier::BoxLevel> sorted_box_level;
-      boost::shared_ptr<hier::Connector> unused_sorting_map;
+      boost::shared_ptr<hier::MappingConnector> unused_sorting_map;
       dlbg_edge_utils.makeSortingMap(
          sorted_box_level,
          unused_sorting_map,

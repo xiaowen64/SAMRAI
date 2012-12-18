@@ -572,10 +572,10 @@ static int createAndTestDLBG(
          crse_connectors[ln + 1]->assertConsistencyWithHead();
          plog << "crse_connectors[" << ln + 1
               << "] passed assertConsistencyWithHead().\n";
-         oca.assertOverlapCorrectness(*fine_connectors[ln]);
+         fine_connectors[ln]->assertOverlapCorrectness();
          plog << "fine_connectors[" << ln
               << "] passed assertOverlapCorrectness().\n";
-         oca.assertOverlapCorrectness(*crse_connectors[ln + 1]);
+         crse_connectors[ln + 1]->assertOverlapCorrectness();
          plog << "crse_connectors[" << ln + 1
               << "] passed assertOverlapCorrectness().\n";
       }
@@ -589,7 +589,7 @@ static int createAndTestDLBG(
          peer_connectors[ln]->assertConsistencyWithHead();
          plog << "peer_connectors[" << ln
               << "] passed assertConsistencyWithHead().\n";
-         oca.assertOverlapCorrectness(*peer_connectors[ln]);
+         peer_connectors[ln]->assertOverlapCorrectness();
          plog << "peer_connectors[" << ln
               << "] passed assertOverlapCorrectness().\n";
       }

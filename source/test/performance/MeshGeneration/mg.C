@@ -20,7 +20,6 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/pdat/NodeData.h"
-#include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/ConnectorStatistics.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
@@ -493,8 +492,8 @@ int main(
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             lb0->loadBalanceBoxLevel(
                L0,
-               *L0_to_domain,
-               *domain_to_L0,
+               L0_to_domain,
+               domain_to_L0,
                hierarchy,
                0,
                hierarchy->getSmallestPatchSize(0),
@@ -613,8 +612,8 @@ int main(
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             lb1->loadBalanceBoxLevel(
                *L1,
-               *L1_to_L0,
-               *L0_to_L1,
+               L1_to_L0,
+               L0_to_L1,
                hierarchy,
                1,
                hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
@@ -744,8 +743,8 @@ int main(
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             lb2->loadBalanceBoxLevel(
                *L2,
-               *L2_to_L1,
-               *L1_to_L2,
+               L2_to_L1,
+               L1_to_L2,
                hierarchy,
                1,
                hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
@@ -1027,7 +1026,7 @@ void sortNodes(
 {
    const hier::MappingConnectorAlgorithm mca;
 
-   boost::shared_ptr<hier::Connector> sorting_map;
+   boost::shared_ptr<hier::MappingConnector> sorting_map;
    boost::shared_ptr<hier::BoxLevel> seq_box_level;
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(
@@ -1142,7 +1141,7 @@ void enforceNesting(
     */
    const hier::IntVector nesting_width(dim, hierarchy->getProperNestingBuffer(coarser_ln));
    boost::shared_ptr<hier::BoxLevel> L1nested;
-   boost::shared_ptr<hier::Connector> L1_to_L1nested;
+   boost::shared_ptr<hier::MappingConnector> L1_to_L1nested;
    hier::BoxLevelConnectorUtils blcu;
    blcu.computeInternalParts( L1nested,
                               L1_to_L1nested,

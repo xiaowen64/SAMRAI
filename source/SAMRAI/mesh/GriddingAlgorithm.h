@@ -19,7 +19,7 @@
 #include "SAMRAI/mesh/GriddingAlgorithmConnectorWidthRequestor.h"
 #include "SAMRAI/mesh/MultiblockGriddingTagger.h"
 #include "SAMRAI/pdat/CellVariable.h"
-#include "SAMRAI/hier/Connector.h"
+#include "SAMRAI/hier/MappingConnector.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
@@ -688,8 +688,8 @@ private:
    regridFinerLevel_createAndInstallNewLevel(
       const int tag_ln,
       const double regrid_time,
-      boost::shared_ptr<hier::Connector> tag_to_new,
-      boost::shared_ptr<hier::Connector> new_to_tag,
+      boost::shared_ptr<hier::Connector>& tag_to_new,
+      boost::shared_ptr<hier::Connector>& new_to_tag,
       boost::shared_ptr<const hier::Connector> tag_to_finer,
       boost::shared_ptr<const hier::Connector> finer_to_tag);
 
@@ -777,7 +777,7 @@ private:
    void
    makeProperNestingMap(
       boost::shared_ptr<hier::BoxLevel>& nested_box_level,
-      boost::shared_ptr<hier::Connector>& unnested_to_nested,
+      boost::shared_ptr<hier::MappingConnector>& unnested_to_nested,
       const hier::BoxLevel& unnested_box_level,
       const hier::Connector& tag_to_unnested,
       const hier::Connector& unnested_to_tag,
@@ -803,7 +803,7 @@ private:
    void
    makeOverflowNestingMap(
       boost::shared_ptr<hier::BoxLevel>& nested_box_level,
-      boost::shared_ptr<hier::Connector>& unnested_to_nested,
+      boost::shared_ptr<hier::MappingConnector>& unnested_to_nested,
       const hier::BoxLevel& unnested_box_level,
       const hier::Connector& unnested_to_reference) const;
 
@@ -831,7 +831,7 @@ private:
    void
    computeNestingViolator(
       boost::shared_ptr<hier::BoxLevel>& violator,
-      boost::shared_ptr<hier::Connector>& candidate_to_violator,
+      boost::shared_ptr<hier::MappingConnector>& candidate_to_violator,
       const hier::BoxLevel& candidate,
       const hier::Connector& candidate_to_hierarchy,
       const hier::Connector& hierarchy_to_candidate,

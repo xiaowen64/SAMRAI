@@ -46,6 +46,7 @@ OBJS = 	\
 	OverlapConnectorAlgorithm.o \
 	MappingConnectorAlgorithm.o \
 	Connector.o \
+	MappingConnector.o \
 	ConnectorStatistics.o \
 	BoxLevelHandle.o \
 	PeriodicShiftCatalog.o \

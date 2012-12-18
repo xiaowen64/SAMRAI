@@ -170,8 +170,6 @@ BoxLevelConnectorUtils::baseNestsInHead(
          << "nests inside its head." << std::endl);
    }
 
-   OverlapConnectorAlgorithm oca;
-
    const BoxLevel& base = connector.getBase();
    const BoxLevel& head = connector.getHead();
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom(
@@ -244,11 +242,11 @@ BoxLevelConnectorUtils::baseNestsInHead(
        * so it does not affect our result.  Nevertheless, because they
        * are not detected, don't make this check if head was swelled.
        */
-      oca.assertOverlapCorrectness(swelledbase_to_swelledhead);
+      swelledbase_to_swelledhead.assertOverlapCorrectness();
    }
 
    boost::shared_ptr<BoxLevel> external;
-   boost::shared_ptr<Connector> swelledbase_to_external;
+   boost::shared_ptr<MappingConnector> swelledbase_to_external;
    if (domain) {
       computeExternalParts(
          external,
@@ -281,12 +279,13 @@ BoxLevelConnectorUtils::baseNestsInHead(
          domain_box_level.addBox(*bi);
       }
       boost::shared_ptr<Connector> external_to_domain;
+      OverlapConnectorAlgorithm oca;
       oca.findOverlaps(external_to_domain,
          *external,
          domain_box_level,
          base_swell);
       boost::shared_ptr<BoxLevel> finalexternal;
-      boost::shared_ptr<Connector> external_to_finalexternal;
+      boost::shared_ptr<MappingConnector> external_to_finalexternal;
       computeInternalParts(
          finalexternal,
          external_to_finalexternal,
@@ -309,7 +308,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
 
 /*
  ***********************************************************************
- * Make a Connector object for changing the Box indices of a BoxLevel.
+ * Make a MappingConnector object for changing the Box indices of a BoxLevel.
  *
  * If sequentialize_global_indices is true, the indices are changed
  * such that they become globally sequential, with processor n
@@ -329,7 +328,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
 void
 BoxLevelConnectorUtils::makeSortingMap(
    boost::shared_ptr<BoxLevel>& sorted_box_level,
-   boost::shared_ptr<Connector>& output_map,
+   boost::shared_ptr<MappingConnector>& output_map,
    const BoxLevel& unsorted_box_level,
    bool sort_boxes_by_corner,
    bool sequentialize_global_indices,
@@ -340,7 +339,7 @@ BoxLevelConnectorUtils::makeSortingMap(
    if (!sort_boxes_by_corner && !sequentialize_global_indices) {
       // Make a blank map.
       sorted_box_level.reset(new BoxLevel(unsorted_box_level));
-      output_map.reset(new Connector(unsorted_box_level,
+      output_map.reset(new MappingConnector(unsorted_box_level,
          *sorted_box_level,
          IntVector::getZero(dim)));
       return;
@@ -384,7 +383,7 @@ BoxLevelConnectorUtils::makeSortingMap(
       unsorted_box_level.getRefinementRatio(),
       unsorted_box_level.getGridGeometry(),
       unsorted_box_level.getMPI()));
-   output_map.reset(new Connector(unsorted_box_level,
+   output_map.reset(new MappingConnector(unsorted_box_level,
       *sorted_box_level,
       IntVector::getZero(dim)));
 
@@ -482,7 +481,7 @@ BoxLevelConnectorUtils::qsortBoxCompare(
  * Identify parts of the input that are internal or external (depending
  * on the value of internal_or_external) to the reference
  * BoxLevel, and store the in/external parts in a BoxLevel.
- * Create the input_to_parts Connector between the input and these
+ * Create the input_to_parts MappingConnector between the input and these
  * parts.
  *
  * For generality, the reference BoxLevel can be grown a
@@ -532,7 +531,7 @@ BoxLevelConnectorUtils::qsortBoxCompare(
 void
 BoxLevelConnectorUtils::computeInternalOrExternalParts(
    boost::shared_ptr<BoxLevel>& parts,
-   boost::shared_ptr<Connector>& input_to_parts,
+   boost::shared_ptr<MappingConnector>& input_to_parts,
    char internal_or_external,
    const Connector& input_to_reference,
    const IntVector& nesting_width,
@@ -680,7 +679,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
     * means that no Box is mapped to something outside its
     * extent.
     */
-   input_to_parts.reset(new Connector(input, *parts, zero_vec));
+   input_to_parts.reset(new MappingConnector(input, *parts, zero_vec));
 
    const bool compute_overlaps =
       search_tree_represents_internal == (internal_or_external == 'i');
@@ -754,7 +753,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
          /*
           * Make Boxes from parts_list and create
-          * Connector from input.
+          * MappingConnector from input.
           */
          parts_list.simplify();
          if (parts_list.size() == 1 &&
@@ -1030,8 +1029,8 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
 void
 BoxLevelConnectorUtils::makeRemainderMap(
    boost::shared_ptr<BoxLevel>& remainder,
-   boost::shared_ptr<Connector>& orig_to_remainder,
-   const Connector& orig_to_rejection) const
+   boost::shared_ptr<MappingConnector>& orig_to_remainder,
+   const MappingConnector& orig_to_rejection) const
 {
    TBOX_ASSERT(orig_to_rejection.isLocal());
 
@@ -1051,7 +1050,7 @@ BoxLevelConnectorUtils::makeRemainderMap(
 
    remainder.reset(new BoxLevel(orig));
 
-   orig_to_remainder.reset(new Connector(orig,
+   orig_to_remainder.reset(new MappingConnector(orig,
       *remainder,
       IntVector::getZero(dim)));
 
@@ -1070,7 +1069,7 @@ BoxLevelConnectorUtils::makeRemainderMap(
 
       if (!orig_to_rejection.hasNeighborSet(box_id)) {
          /*
-          * By the definition of a mapping Connector, no mapping means
+          * By the definition of a MappingConnector, no mapping means
           * the entire orig_node is rejected.
           *
           * - Erase rejected node from remainder
@@ -1083,7 +1082,7 @@ BoxLevelConnectorUtils::makeRemainderMap(
          orig_to_remainder->makeEmptyLocalNeighborhood(box_id);
       } else if (orig_to_rejection.numLocalNeighbors(box_id) == 0) {
          /*
-          * By the definition of a mapping Connector, empty mapping
+          * By the definition of a MappingConnector, empty mapping
           * means entire orig_node remains.
           *
           * No orig<==>remainder mapping is required.
@@ -1230,19 +1229,17 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
             << "must be mutual transposes." << std::endl);
       }
       box_level_to_anchor.assertTransposeCorrectness(anchor_to_box_level);
-      if (oca.checkOverlapCorrectness(anchor_to_anchor)) {
+      if (anchor_to_anchor.checkOverlapCorrectness()) {
          TBOX_ERROR(
             "BoxLevelConnectorUtils::addPeriodicImages: input anchor_to_anchor\n"
             << "Connector failed edge correctness check." << std::endl);
       }
-      if (oca.checkOverlapCorrectness(anchor_to_box_level, false, true,
-             true)) {
+      if (anchor_to_box_level.checkOverlapCorrectness(false, true, true)) {
          TBOX_ERROR(
             "BoxLevelConnectorUtils::addPeriodicImages: input anchor_to_box_level\n"
             << "Connector failed edge correctness check." << std::endl);
       }
-      if (oca.checkOverlapCorrectness(box_level_to_anchor, false, true,
-             true)) {
+      if (box_level_to_anchor.checkOverlapCorrectness(false, true, true)) {
          TBOX_ERROR(
             "BoxLevelConnectorUtils::addPeriodicImages: input box_level_to_anchor\n"
             << "Connector failed edge correctness check." << std::endl);
@@ -1359,31 +1356,31 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
       // Expensive sanity check for consistency.
       size_t err1 = anchor_to_box_level.checkConsistencyWithBase();
       if (err1) {
-         tbox::perr << "OverlapConnectorAlgorithm found " << err1
+         tbox::perr << "Connector found " << err1
                     << " edge-base consistency errors in\n"
                     << "anchor_to_box_level after computing periodic images.\n";
       }
       size_t err2 = box_level_to_anchor.checkConsistencyWithBase();
       if (err2) {
-         tbox::perr << "OverlapConnectorAlgorithm found " << err2
+         tbox::perr << "Connector found " << err2
                     << " edge-base consistency errors in\n"
                     << "box_level_to_anchor after computing periodic images.\n";
       }
       size_t err3 = anchor_to_box_level.checkConsistencyWithHead();
       if (err3) {
-         tbox::perr << "OverlapConnectorAlgorithm found " << err3
+         tbox::perr << "Connector found " << err3
                     << " edge-box consistency errors in\n"
                     << "anchor_to_box_level after computing periodic images.\n";
       }
       size_t err4 = box_level_to_anchor.checkConsistencyWithHead();
       if (err4) {
-         tbox::perr << "OverlapConnectorAlgorithm found " << err4
+         tbox::perr << "Connector found " << err4
                     << " edge-box consistency errors in\n"
                     << "box_level_to_anchor after computing periodic images.\n";
       }
       if (err1 + err2 + err3 + err4) {
          TBOX_ERROR(
-            "OverlapConnectorAlgorithm found consistency errors in\n"
+            "Connector found consistency errors in\n"
             << "addPeriodicImages\n"
             << "anchor:\n" << anchor.format("ERR-> ", 3)
             << "box_level:\n" << box_level.format("ERR-> ", 3)
@@ -1396,7 +1393,7 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
    }
    if (d_sanity_check_postcond) {
       // Expensive sanity check for correctness.
-      int err1 = oca.checkOverlapCorrectness(anchor_to_box_level);
+      int err1 = anchor_to_box_level.checkOverlapCorrectness();
       if (err1) {
          tbox::perr << "BoxLevelConnectorUtils::addPeriodicImages found " << err1
                     << " errors\n"
@@ -1405,7 +1402,7 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
                     << "precondition checking, this is probably a\n"
                     << "library error.\n";
       }
-      int err2 = oca.checkOverlapCorrectness(box_level_to_anchor);
+      int err2 = box_level_to_anchor.checkOverlapCorrectness();
       if (err2) {
          tbox::perr << "BoxLevelConnectorUtils::addPeriodicImages found " << err2
                     << " errors\n"

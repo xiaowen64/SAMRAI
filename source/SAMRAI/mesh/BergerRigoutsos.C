@@ -15,7 +15,6 @@
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
-#include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/mesh/BergerRigoutsosNode.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -401,16 +400,14 @@ BergerRigoutsos::sortOutputBoxes(
 
    t_sort_output_nodes->start();
 
-   hier::OverlapConnectorAlgorithm oca;
-
    if (0) {
       // Check inputs.
       int errs = 0;
-      if (oca.checkOverlapCorrectness(tag_to_new, false, true)) {
+      if (tag_to_new.checkOverlapCorrectness(false, true)) {
          ++errs;
          tbox::perr << "Error found in tag_to_new!\n";
       }
-      if (oca.checkOverlapCorrectness(new_to_tag, false, true)) {
+      if (new_to_tag.checkOverlapCorrectness(false, true)) {
          ++errs;
          tbox::perr << "Error found in new_to_tag!\n";
       }
@@ -427,7 +424,7 @@ BergerRigoutsos::sortOutputBoxes(
    /*
     * Sort local indices by corners to make the output deterministic.
     */
-   boost::shared_ptr<hier::Connector> sorting_map;
+   boost::shared_ptr<hier::MappingConnector> sorting_map;
    boost::shared_ptr<hier::BoxLevel> sorted_box_level;
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(
@@ -446,7 +443,7 @@ BergerRigoutsos::sortOutputBoxes(
    if (0) {
       // Check sorting_map before using it.
       int errs = 0;
-      if (oca.checkOverlapCorrectness(*sorting_map, false, true)) {
+      if (sorting_map->checkOverlapCorrectness(false, true)) {
          ++errs;
          tbox::perr << "Error found in sorting_map!\n";
       }
@@ -466,11 +463,11 @@ BergerRigoutsos::sortOutputBoxes(
    if (0) {
       // Check result of mapping.
       int errs = 0;
-      if (oca.checkOverlapCorrectness(tag_to_new, false, true)) {
+      if (tag_to_new.checkOverlapCorrectness(false, true)) {
          ++errs;
          tbox::perr << "Error found in tag_to_new!\n";
       }
-      if (oca.checkOverlapCorrectness(new_to_tag, false, true)) {
+      if (new_to_tag.checkOverlapCorrectness(false, true)) {
          ++errs;
          tbox::perr << "Error found in new_to_tag!\n";
       }
