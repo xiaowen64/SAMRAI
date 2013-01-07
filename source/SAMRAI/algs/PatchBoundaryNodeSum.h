@@ -376,6 +376,7 @@ private:
    tbox::Array<boost::shared_ptr<xfer::CoarsenSchedule> >
       d_sync_coarsen_schedule;
 
+   // A coarsened version of each fine level.
    tbox::Array<boost::shared_ptr<hier::PatchLevel> > d_cfbdry_tmp_level;
 
    tbox::Array<boost::shared_ptr<hier::CoarseFineBoundary> >
