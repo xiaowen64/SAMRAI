@@ -890,7 +890,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
     * tree, d_degree = 2.
     */
    TBOX_ASSERT(d_degree == 2);
-   // FIXME: BalancedDepthFirstTree could use a constructor that takes a RankGroup.
+   // TODO: BalancedDepthFirstTree could use a constructor that takes a RankGroup.
    tbox::BalancedDepthFirstTree bdfs(0,
                                      rank_group.size()-1,
                                      rank_group.getMapIndex(d_mpi.getRank()),

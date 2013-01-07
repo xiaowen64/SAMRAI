@@ -57,7 +57,7 @@ AsyncCommPeer<TYPE>::s_initialize_finalize_handler(
 
 /*
  ***********************************************************************
- * FIXME: d_mpi should be initialized with commNull or SAMRAI's comm base.
+ * TODO: d_mpi should be initialized with commNull or SAMRAI's comm base.
  ***********************************************************************
  */
 template<class TYPE>
@@ -96,7 +96,7 @@ AsyncCommPeer<TYPE>::AsyncCommPeer():
  * Construct a simple object that works with a communication stage.
  * All parameters are set to reasonable defaults or, if appropriate,
  * invalid values.
- * FIXME: d_mpi should be initialized with commNull or SAMRAI's comm base.
+ * TODO: d_mpi should be initialized with commNull or SAMRAI's comm base.
  ***********************************************************************
  */
 template<class TYPE>

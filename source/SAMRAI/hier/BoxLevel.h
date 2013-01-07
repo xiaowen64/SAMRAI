@@ -999,7 +999,7 @@ public:
     * It is an error to add a periodic image of a Box that does
     * not exist.
     *
-    * FIXME: Should we prevent this operation if persistent overlap
+    * TODO: Should we prevent this operation if persistent overlap
     * Connectors are attached to this object?
     *
     * @param[in] existing_box  An existing Box for reference.
@@ -1026,7 +1026,7 @@ public:
     *
     * Erasing a Box also erases all of its periodic images.
     *
-    * FIXME: Should we prevent this operation if the object has
+    * TODO: Should we prevent this operation if the object has
     * persistent overlap Connectors?
     *
     * @note It is imperative that applications which call eraseBox also call
@@ -1057,7 +1057,7 @@ public:
     *
     * Erasing a Box also erases all of its periodic images.
     *
-    * FIXME: Should we prevent this operation if the object has
+    * TODO: Should we prevent this operation if the object has
     * persistent overlap Connectors?
     *
     * @note It is imperative that applications which call eraseBox also call

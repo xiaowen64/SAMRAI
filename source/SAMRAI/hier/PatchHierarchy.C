@@ -1062,7 +1062,7 @@ PatchHierarchy::initializeHierarchy()
    }
    /*
     * Compute Connectors.
-    * BTNG FIXME: This should be replaced by writing edges to
+    * BTNG TODO: This should be replaced by writing edges to
     * restart and reading them back.
     */
    for (int i = 0; i < d_number_levels; ++i) {

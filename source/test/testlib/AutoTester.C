@@ -215,7 +215,7 @@ int AutoTester::evalTestData(
             d_hdf_db.getDatabase(step_name));
 
          /*
-          * FIXME: This check give false positives!!!!!
+          * TODO: This check give false positives!!!!!
           * It writes the same file regardless of the number of processors.
           * We should be checking against base runs with the same number of processors,
           * compare different data.

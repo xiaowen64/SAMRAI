@@ -404,7 +404,7 @@ GriddingAlgorithm::makeCoarsestLevel(
    hier::IntVector patch_cut_factor(dim, d_tag_init_strategy-> getErrorCoarsenRatio());
 
    /*
-    * FIXME: The code for generating the coarsest level's boxes is not
+    * TODO: The code for generating the coarsest level's boxes is not
     * scalable because we use the domain BoxLevel in bridges and
     * Connector modifications, forcing proc 0 (which owns all domain
     * nodes) to do all of the searches.  This problem will show up in
