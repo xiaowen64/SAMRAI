@@ -489,7 +489,7 @@ PatchBoundaryNodeSum::setupSum(
             d_hierarchy->getConnector(crse_level_num,
                fine_level_num).getConnectorWidth();
          // Create persistent overlap Connectors for use in schedule construction.
-         // FIXME: There are faster ways to get these edges.  BTNG.
+         // TODO: There are faster ways to get these edges.  BTNG.
          d_cfbdry_tmp_level[fine_level_num]->getBoxLevel()->
             getPersistentOverlapConnectors().createConnector(
                *crse_level->getBoxLevel(),
