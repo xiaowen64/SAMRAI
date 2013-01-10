@@ -680,7 +680,9 @@ private:
     * @brief Given the metadata describing the new level, this method
     * creates and installs new PatchLevel in the hierarchy.
     *
-    * @pre tag_to_new && new_to_tag
+    * @pre tag_to_new
+    * @pre new_to_tag
+    * @pre new_box_level
     * @pre !d_hierarchy->levelExists(tag_ln + 2) || tag_to_finer
     * @pre !d_hierarchy->levelExists(tag_ln + 2) || finer_to_tag
     */
@@ -691,7 +693,8 @@ private:
       boost::shared_ptr<hier::Connector>& tag_to_new,
       boost::shared_ptr<hier::Connector>& new_to_tag,
       boost::shared_ptr<const hier::Connector> tag_to_finer,
-      boost::shared_ptr<const hier::Connector> finer_to_tag);
+      boost::shared_ptr<const hier::Connector> finer_to_tag,
+      boost::shared_ptr<hier::BoxLevel> new_box_level);
 
    /*!
     * @brief Set all tags on a level to a given value.

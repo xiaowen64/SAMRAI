@@ -161,34 +161,37 @@ int main(
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_boxes.size();
 
-      hier::BoxLevel layer0(hier::IntVector(dim3d, 1), geometry);
-      hier::BoxLevel layer1(ratio, geometry);
+      boost::shared_ptr<hier::BoxLevel> layer0(
+         boost::make_shared<hier::BoxLevel>(
+            hier::IntVector(dim3d, 1), geometry));
+      boost::shared_ptr<hier::BoxLevel> layer1(
+         boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_domain_itr(coarse_domain);
       if (nproc > 1) {
-         if (layer0.getMPI().getRank() == 0) {
+         if (layer0->getMPI().getRank() == 0) {
             for (int ib = 0; ib < n_coarse_boxes / 2; ib++, ++coarse_domain_itr) {
-               layer0.addBox(hier::Box(*coarse_domain_itr,
+               layer0->addBox(hier::Box(*coarse_domain_itr,
                      hier::LocalId(ib),
-                     layer0.getMPI().getRank()));
+                     layer0->getMPI().getRank()));
             }
          } else {
             for (int ib = 0; ib < n_coarse_boxes / 2; ib++) {
                ++coarse_domain_itr;
             }
             for (int ib = n_coarse_boxes / 2; ib < n_coarse_boxes; ib++, ++coarse_domain_itr) {
-               layer0.addBox(hier::Box(*coarse_domain_itr,
+               layer0->addBox(hier::Box(*coarse_domain_itr,
                      hier::LocalId(ib),
-                     layer0.getMPI().getRank()));
+                     layer0->getMPI().getRank()));
             }
          }
 
       } else {
 
          for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_domain_itr) {
-            layer0.addBox(hier::Box(*coarse_domain_itr,
+            layer0->addBox(hier::Box(*coarse_domain_itr,
                   hier::LocalId(ib),
-                  layer0.getMPI().getRank()));
+                  layer0->getMPI().getRank()));
          }
 
       }
@@ -196,29 +199,29 @@ int main(
       hier::BoxContainer::iterator fine_boxes_itr(fine_boxes);
       if (nproc > 1) {
 
-         if (layer1.getMPI().getRank() == 0) {
+         if (layer1->getMPI().getRank() == 0) {
             for (int ib = 0; ib < n_fine_boxes / 2; ib++, ++fine_boxes_itr) {
-               layer1.addBox(hier::Box(*fine_boxes_itr,
+               layer1->addBox(hier::Box(*fine_boxes_itr,
                      hier::LocalId(ib),
-                     layer1.getMPI().getRank()));
+                     layer1->getMPI().getRank()));
             }
          } else {
             for (int ib = 0; ib < n_fine_boxes / 2; ib++) {
                ++fine_boxes_itr;
             }
             for (int ib = n_fine_boxes / 2; ib < n_fine_boxes; ib++, ++fine_boxes_itr) {
-               layer1.addBox(hier::Box(*fine_boxes_itr,
+               layer1->addBox(hier::Box(*fine_boxes_itr,
                      hier::LocalId(ib),
-                     layer1.getMPI().getRank()));
+                     layer1->getMPI().getRank()));
             }
          }
 
       } else {
 
          for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_boxes_itr) {
-            layer1.addBox(hier::Box(*fine_boxes_itr,
+            layer1->addBox(hier::Box(*fine_boxes_itr,
                   hier::LocalId(ib),
-                  layer1.getMPI().getRank()));
+                  layer1->getMPI().getRank()));
          }
 
       }

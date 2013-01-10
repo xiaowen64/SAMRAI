@@ -59,6 +59,11 @@ public:
    /*!
     * @brief Construct a new patch level given a BoxLevel.
     *
+    * This constructor makes a COPY of the supplied BoxLevel.  If the caller
+    * intends to modify the supplied BoxLevel for other purposes after creating
+    * this PatchLevel, then this constructor must be used rather than the
+    * constructor taking a boost::shared_ptr<BoxLevel>.
+    *
     * The BoxLevel provides refinement ratio information, establishing
     * the ratio between the index space of the new level and some reference
     * level (typically level zero) in some patch hierarchy.
@@ -85,6 +90,50 @@ public:
     */
    PatchLevel(
       const BoxLevel& box_level,
+      const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
+      const boost::shared_ptr<PatchDescriptor>& descriptor,
+      const boost::shared_ptr<PatchFactory>& factory =
+         boost::shared_ptr<PatchFactory>(),
+      bool defer_boundary_box_creation = false);
+
+   /*!
+    * @brief Construct a new patch level given a BoxLevel.
+    *
+    * This constructor ACQUIRES the supplied BoxLevel.  If the caller will not
+    * modify the supplied BoxLevel for other purposes after creating this
+    * PatchLevel, then this constructor may be used rather than the constructor
+    * taking a BoxLevel&.  Use of this constructor where permitted is more
+    * efficient as it avoids copying an entire BoxLevel.  Note that this
+    * constructor locks the supplied BoxLevel so that any attempt by the caller
+    * to modify it after calling this constructor will result in an
+    * unrecoverable error.
+    *
+    * The BoxLevel provides refinement ratio information, establishing
+    * the ratio between the index space of the new level and some reference
+    * level (typically level zero) in some patch hierarchy.
+    *
+    * The ratio information provided by the BoxLevel is also used
+    * by the grid geometry instance to initialize geometry information
+    * of both the level and the patches on that level.
+    *
+    * @param[in]  box_level
+    * @param[in]  grid_geometry
+    * @param[in]  descriptor The PatchDescriptor used to allocate patch data
+    *             on the local processor
+    * @param[in]  factory Optional PatchFactory.  If none specified, a default
+    *             (standard) patch factory will be used.
+    * @param[in]  defer_boundary_box_creation Flag to indicate suppressing
+    *             construction of the boundary boxes.
+    *
+    * @pre grid_geometry
+    * @pre descriptor
+    * @pre box_level.getDim() == grid_geometry->getDim()
+    * @pre box_level.getRefinementRatio() != IntVector::getZero(getDim())
+    * @pre all components of box_level's refinement ratio must be nonzero and,
+    *      all components not equal to 1 must have the same sign
+    */
+   PatchLevel(
+      const boost::shared_ptr<BoxLevel> box_level,
       const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
       const boost::shared_ptr<PatchDescriptor>& descriptor,
       const boost::shared_ptr<PatchFactory>& factory =

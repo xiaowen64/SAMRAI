@@ -743,7 +743,7 @@ private:
    void
    createCoarseInterpPatchLevel(
       boost::shared_ptr<hier::PatchLevel>& coarse_interp_level,
-      hier::BoxLevel& coarse_interp_box_level,
+      boost::shared_ptr<hier::BoxLevel>& coarse_interp_box_level,
       boost::shared_ptr<hier::Connector>& coarse_interp_to_hiercoarse,
       boost::shared_ptr<hier::Connector>& hiercoarse_to_coarse_interp,
       const int next_coarser_ln,

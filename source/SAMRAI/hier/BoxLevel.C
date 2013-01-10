@@ -84,7 +84,8 @@ BoxLevel::BoxLevel(
    d_globalized_version(0),
    d_persistent_overlap_connectors(0),
    d_handle(),
-   d_grid_geometry()
+   d_grid_geometry(),
+   d_locked(false)
 {
    getFromRestart(restart_db, grid_geom);
 }
@@ -120,7 +121,8 @@ BoxLevel::BoxLevel(
    d_globalized_version(0),
    d_persistent_overlap_connectors(0),
    d_handle(),
-   d_grid_geometry(rhs.d_grid_geometry)
+   d_grid_geometry(rhs.d_grid_geometry),
+   d_locked(false)
 {
    // This cannot be the first constructor call, so no need to set timers.
 }
@@ -157,13 +159,15 @@ BoxLevel::BoxLevel(
    d_globalized_version(0),
    d_persistent_overlap_connectors(0),
    d_handle(),
-   d_grid_geometry()
+   d_grid_geometry(),
+   d_locked(false)
 {
    initialize(ratio, grid_geom, mpi, parallel_state);
 }
 
 BoxLevel::~BoxLevel()
 {
+   d_locked = false;
    clear();
    if (d_persistent_overlap_connectors != 0) {
       delete d_persistent_overlap_connectors;
@@ -180,6 +184,10 @@ BoxLevel&
 BoxLevel::operator = (
    const BoxLevel& rhs)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::operator =: operating on locked BoxLevel."
+         << std::endl);
+   }
    if (&rhs != this) {
       /*
        * Protect this block from assignment to self because it is
@@ -223,6 +231,11 @@ BoxLevel::initialize(
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::initialize(): operating on locked BoxLevel."
+         << std::endl);
+   }
+
    d_boxes.clear();
    d_boxes.order();
    initializePrivate(
@@ -240,6 +253,10 @@ BoxLevel::swapInitialize(
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::swapInitialize(): operating on locked BoxLevel."
+         << std::endl);
+   }
    TBOX_ASSERT(&boxes != &d_boxes);   // Library error if this fails.
    d_boxes.swap(boxes);
    initializePrivate(ratio,
@@ -251,6 +268,10 @@ BoxLevel::swapInitialize(
 void
 BoxLevel::finalize()
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::finalize(): operating on locked BoxLevel."
+         << std::endl);
+   }
 
    // Erase non-local Boxes, if any, from d_boxes.
    for (BoxContainer::iterator mbi = d_boxes.begin();
@@ -365,6 +386,10 @@ BoxLevel::operator != (
 void
 BoxLevel::removePeriodicImageBoxes()
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::removePeriodicImageBoxes(): operating on locked BoxLevel."
+         << std::endl);
+   }
    if (isInitialized()) {
       clearForBoxChanges();
       d_boxes.removePeriodicImageBoxes();
@@ -385,6 +410,10 @@ BoxLevel::removePeriodicImageBoxes()
 void
 BoxLevel::clear()
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::clear(): operating on locked BoxLevel."
+         << std::endl);
+   }
    if (isInitialized()) {
       clearForBoxChanges();
       d_mpi = tbox::SAMRAI_MPI(tbox::SAMRAI_MPI::commNull);
@@ -413,6 +442,10 @@ BoxLevel::swap(
    BoxLevel& level_a,
    BoxLevel& level_b)
 {
+   if (level_a.locked() || level_b.locked()) {
+      TBOX_ERROR("BoxLevel::initialize(): operating on locked BoxLevel."
+         << std::endl);
+   }
 
    if (&level_a != &level_b) {
       if (level_a.isInitialized() && level_b.isInitialized()) {
@@ -741,6 +774,10 @@ void
 BoxLevel::setParallelState(
    const ParallelState parallel_state)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::setParallelState(): operating on locked BoxLevel."
+         << std::endl);
+   }
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (!isInitialized()) {
       TBOX_ERROR(
@@ -956,6 +993,10 @@ BoxLevel::addBox(
    const Box& box,
    const BlockId& block_id)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::addBox(): operating on locked BoxLevel."
+         << std::endl);
+   }
    const tbox::Dimension& dim(getDim());
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != DISTRIBUTED) {
@@ -1014,6 +1055,10 @@ BoxLevel::addPeriodicBox(
    const Box& ref_box,
    const PeriodicId& shift_number)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::addPeriodicBox(): operating on locked BoxLevel."
+         << std::endl);
+   }
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (shift_number ==
        PeriodicShiftCatalog::getCatalog(getDim())->getZeroShiftNumber()) {
@@ -1065,6 +1110,10 @@ void
 BoxLevel::addBox(
    const Box& box)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::addBox(): operating on locked BoxLevel."
+         << std::endl);
+   }
    clearForBoxChanges(false);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1127,6 +1176,10 @@ void
 BoxLevel::eraseBox(
    BoxContainer::iterator& ibox)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::eraseBox(): operating on locked BoxLevel."
+         << std::endl);
+   }
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != DISTRIBUTED) {
       TBOX_ERROR("Individually erasing boxes is a local process\n"
@@ -1175,6 +1228,10 @@ void
 BoxLevel::eraseBox(
    const Box& box)
 {
+   if (locked()) {
+      TBOX_ERROR("BoxLevel::eraseBox(): operating on locked BoxLevel."
+         << std::endl);
+   }
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != DISTRIBUTED) {
       TBOX_ERROR("Individually erasing Boxes is a local process\n"

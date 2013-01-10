@@ -412,18 +412,19 @@ GriddingAlgorithm::makeCoarsestLevel(
     * regularly.
     */
 
-   hier::BoxLevel new_box_level(domain_box_level);
+   boost::shared_ptr<hier::BoxLevel> new_box_level(
+      boost::make_shared<hier::BoxLevel>(domain_box_level));
    boost::shared_ptr<hier::Connector> domain_to_new(
       boost::make_shared<hier::Connector>(*domain_to_domain));
-   domain_to_new->setHead(new_box_level, true);
+   domain_to_new->setHead(*new_box_level, true);
    boost::shared_ptr<hier::Connector> new_to_domain(
       boost::make_shared<hier::Connector>(*domain_to_domain));
-   new_to_domain->setBase(new_box_level, true);
+   new_to_domain->setBase(*new_box_level, true);
 
    t_load_balance_setup->stop();
 
    d_load_balancer0->loadBalanceBoxLevel(
-      new_box_level,
+      *new_box_level,
       new_to_domain,
       domain_to_new,
       d_hierarchy,
@@ -439,7 +440,7 @@ GriddingAlgorithm::makeCoarsestLevel(
    }
 
    if (d_sequentialize_patch_indices) {
-      renumberBoxes(new_box_level,
+      renumberBoxes(*new_box_level,
          *domain_to_new,
          *new_to_domain,
          false /* sort_by_corners */,
@@ -447,7 +448,7 @@ GriddingAlgorithm::makeCoarsestLevel(
    }
 
    dlbg_edge_utils.addPeriodicImagesAndRelationships(
-      new_box_level,
+      *new_box_level,
       *new_to_domain,
       *domain_to_new,
       d_hierarchy->getGridGeometry()->getDomainSearchTree(),
@@ -475,8 +476,8 @@ GriddingAlgorithm::makeCoarsestLevel(
       }
 
       oca.findOverlaps(new_to_new,
-         new_box_level,
-         new_box_level,
+         *new_box_level,
+         *new_box_level,
          d_hierarchy->getRequiredConnectorWidth(0, 0));
 
       if (d_barrier_and_time) {
@@ -506,8 +507,8 @@ GriddingAlgorithm::makeCoarsestLevel(
 
       TBOX_ASSERT(new_to_new->getConnectorWidth() ==
          d_hierarchy->getRequiredConnectorWidth(0, 0));
-      TBOX_ASSERT(&new_to_new->getBase() == &new_box_level);
-      TBOX_ASSERT(&new_to_new->getHead() == &new_box_level);
+      TBOX_ASSERT(&new_to_new->getBase() == new_box_level.get());
+      TBOX_ASSERT(&new_to_new->getHead() == new_box_level.get());
 
    }
 
@@ -518,21 +519,17 @@ GriddingAlgorithm::makeCoarsestLevel(
    t_make_new->start();
    if (!level_zero_exists) {
 
-      d_hierarchy->makeNewPatchLevel(ln,
-         new_box_level);
+      d_hierarchy->makeNewPatchLevel(ln, new_box_level);
       /*
        * Add computed Connectors to new level's collection of
        * persistent overlap Connectors.
        */
-      boost::shared_ptr<hier::PatchLevel> new_level(
-         d_hierarchy->getPatchLevel(ln));
-      new_level->getBoxLevel()->getPersistentOverlapConnectors().
-      cacheConnector(
-         *new_level->getBoxLevel(),
+      new_box_level->getPersistentOverlapConnectors().cacheConnector(
+         *new_box_level,
          new_to_new);
 
       d_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(
-         *d_hierarchy->getPatchLevel(0));
+         *d_hierarchy->getPatchLevel(ln));
 
       // "true" argument: const bool initial_time = true;
       d_tag_init_strategy->initializeLevelData(d_hierarchy,
@@ -546,32 +543,30 @@ GriddingAlgorithm::makeCoarsestLevel(
       /*
        * Save old data before they are overwritten by the new BoxLevel.
        */
-      hier::BoxLevel old_box_level = *d_hierarchy->getBoxLevel(0);
-
       boost::shared_ptr<hier::PatchLevel> old_level(
          d_hierarchy->getPatchLevel(ln));
 
       d_hierarchy->removePatchLevel(ln);
 
-      d_hierarchy->makeNewPatchLevel(ln,
-         new_box_level);
+      d_hierarchy->makeNewPatchLevel(ln, new_box_level);
 
       /*
        * Compute old<==>new.  Doing it this way is not scalable, but
        * we only do this for the coarsest level.  The old approach of
        * bridging across the domain BoxLevel is probably not
-       * scalable anyway, because the domain isusually owned by just
+       * scalable anyway, because the domain is usually owned by just
        * one processor.
        */
-      old_box_level.getPersistentOverlapConnectors().createConnector(
-         new_box_level,
+      old_level->getBoxLevel()->getPersistentOverlapConnectors().
+      createConnector(
+         *new_box_level,
          d_hierarchy->getRequiredConnectorWidth(0, 0));
-      new_box_level.getPersistentOverlapConnectors().createConnector(
-         old_box_level,
+      new_box_level->getPersistentOverlapConnectors().createConnector(
+         *old_level->getBoxLevel(),
          d_hierarchy->getRequiredConnectorWidth(0, 0));
 
       d_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(
-         *d_hierarchy->getPatchLevel(0));
+         *d_hierarchy->getPatchLevel(ln));
 
       // "false" argument: const bool initial_time = false;
       d_tag_init_strategy->initializeLevelData(d_hierarchy,
@@ -942,24 +937,19 @@ GriddingAlgorithm::makeFinerLevel(
 
          t_make_finer_create->start();
 
-         d_hierarchy->makeNewPatchLevel(new_ln, *new_box_level);
+         d_hierarchy->makeNewPatchLevel(new_ln, new_box_level);
 
-         boost::shared_ptr<hier::PatchLevel> new_level(
-            d_hierarchy->getPatchLevel(new_ln));
-
-         new_level->getBoxLevel()->getPersistentOverlapConnectors().
-         cacheConnector(
-            *new_level->getBoxLevel(),
+         new_box_level->getPersistentOverlapConnectors().cacheConnector(
+            *new_box_level,
             new_to_new);
 
-         new_level->getBoxLevel()->getPersistentOverlapConnectors().
-         cacheConnector(
+         new_box_level->getPersistentOverlapConnectors().cacheConnector(
             *tag_level->getBoxLevel(),
             new_to_tag);
 
          tag_level->getBoxLevel()->getPersistentOverlapConnectors().
          cacheConnector(
-            *new_level->getBoxLevel(),
+            *new_box_level,
             tag_to_new);
 
          d_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(
@@ -1399,7 +1389,8 @@ GriddingAlgorithm::regridFinerLevel(
             tag_to_new,
             new_to_tag,
             tag_to_finer,
-            finer_to_tag);
+            finer_to_tag,
+            new_box_level);
 
          if (d_log_metadata_statistics) {
             // Don't log the coarse Connector, if the coarse level will be updated.
@@ -1691,10 +1682,12 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    boost::shared_ptr<hier::Connector>& tag_to_new,
    boost::shared_ptr<hier::Connector>& new_to_tag,
    boost::shared_ptr<const hier::Connector> tag_to_finer,
-   boost::shared_ptr<const hier::Connector> finer_to_tag)
+   boost::shared_ptr<const hier::Connector> finer_to_tag,
+   boost::shared_ptr<hier::BoxLevel> new_box_level)
 {
    TBOX_ASSERT(tag_to_new);
    TBOX_ASSERT(new_to_tag);
+   TBOX_ASSERT(new_box_level);
 
    /*
     * Compute self-Connector for the new level.
@@ -1711,7 +1704,6 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    TBOX_ASSERT(!d_hierarchy->levelExists(new_ln + 1) || finer_to_tag);
    const boost::shared_ptr<hier::PatchLevel>& tag_level(
       d_hierarchy->getPatchLevel(tag_ln));
-   const hier::BoxLevel& new_box_level(tag_to_new->getHead());
 
    const hier::OverlapConnectorAlgorithm oca;
    const hier::BoxLevelConnectorUtils mblc_utils;
@@ -1795,7 +1787,7 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
             mblc_utils.baseNestsInHead(
                &locally_nests,
                *d_hierarchy->getBoxLevel(new_ln + 1),
-               new_box_level,
+               *new_box_level,
                required_nesting,
                zero_vector,
                zero_vector,
@@ -1815,7 +1807,7 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
                        << std::endl;
             tbox::plog
             << "Proper nesting violation with new_box_level of\n"
-            << new_box_level.format("N->", 2)
+            << new_box_level->format("N->", 2)
             << "Proper nesting violation with finer box_level of\n"
             << d_hierarchy->getBoxLevel(new_ln + 1)->format("F->", 2);
 
@@ -1825,7 +1817,7 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
             const hier::OverlapConnectorAlgorithm oca;
             oca.findOverlaps(finer_to_new,
                *d_hierarchy->getBoxLevel(new_ln + 1),
-               new_box_level,
+               *new_box_level,
                required_nesting);
             tbox::plog << "Finer to new:\n" << finer_to_new->format("FN->", 3);
             mblc_utils.computeExternalParts(
@@ -1851,19 +1843,15 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    /*
     * Cache Connectors for new level.
     */
-   boost::shared_ptr<hier::PatchLevel> new_level(
-      d_hierarchy->getPatchLevel(new_ln));
-   new_level->getBoxLevel()->getPersistentOverlapConnectors().
-   cacheConnector(
-      *new_level->getBoxLevel(),
+   new_box_level->getPersistentOverlapConnectors().cacheConnector(
+      *new_box_level,
       new_to_new);
-   new_level->getBoxLevel()->getPersistentOverlapConnectors().
-   cacheConnector(
+   new_box_level->getPersistentOverlapConnectors().cacheConnector(
       *tag_level->getBoxLevel(),
       new_to_tag);
    tag_level->getBoxLevel()->getPersistentOverlapConnectors().
    cacheConnector(
-      *new_level->getBoxLevel(),
+      *new_box_level,
       tag_to_new);
 
    if (d_hierarchy->levelExists(new_ln + 1)) {
@@ -1902,14 +1890,13 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
       boost::shared_ptr<hier::PatchLevel> finer_level(
          d_hierarchy->getPatchLevel(new_ln + 1));
 
-      new_level->getBoxLevel()->getPersistentOverlapConnectors().
-      cacheConnector(
+      new_box_level->getPersistentOverlapConnectors().cacheConnector(
          *finer_level->getBoxLevel(),
          new_to_finer);
 
       finer_level->getBoxLevel()->getPersistentOverlapConnectors().
       cacheConnector(
-         *new_level->getBoxLevel(),
+         *new_box_level,
          finer_to_new);
    }
 
@@ -1937,13 +1924,12 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
          d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln));
       t_bridge_new_to_old->stop();
 
-      new_level->getBoxLevel()->getPersistentOverlapConnectors().
-      cacheConnector(
+      new_box_level->getPersistentOverlapConnectors().cacheConnector(
          *old_fine_level->getBoxLevel(),
          new_to_old);
       old_fine_level->getBoxLevel()->getPersistentOverlapConnectors().
       cacheConnector(
-         *new_level->getBoxLevel(),
+         *new_box_level,
          old_to_new);
 
    }

@@ -341,7 +341,8 @@ bool SingleLevelTestCase(
    boost::shared_ptr<hier::PatchHierarchy> hierarchy(
       new hier::PatchHierarchy("hier", geom));
 
-   hier::BoxLevel mblevel(hier::IntVector(dim, 1), geom);
+   boost::shared_ptr<hier::BoxLevel> mblevel(
+      boost::make_shared<hier::BoxLevel>(hier::IntVector(dim, 1), geom));
 
    const int num_nodes = mpi.getSize();
    const int num_boxes = level_boxes.size();
@@ -358,7 +359,7 @@ bool SingleLevelTestCase(
       }
 
       if (proc == mpi.getRank()) {
-         mblevel.addBox(hier::Box(*level_boxes_itr, local_id, proc));
+         mblevel->addBox(hier::Box(*level_boxes_itr, local_id, proc));
          local_id++;
       }
 

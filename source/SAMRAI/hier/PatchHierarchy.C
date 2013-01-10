@@ -625,11 +625,12 @@ PatchHierarchy::makeRefinedPatchHierarchy(
    for (int ln = 0; ln < d_number_levels; ln++) {
       BoxContainer refined_boxes(d_patch_levels[ln]->getBoxLevel()->getBoxes());
       refined_boxes.refine(refine_ratio);
-      BoxLevel refined_box_level(
-         d_patch_levels[ln]->getBoxLevel()->getRefinementRatio(),
-         fine_geometry,
-         d_patch_levels[ln]->getBoxLevel()->getMPI());
-      refined_box_level.swapInitialize(
+      boost::shared_ptr<BoxLevel> refined_box_level(
+         boost::make_shared<BoxLevel>(
+            d_patch_levels[ln]->getBoxLevel()->getRefinementRatio(),
+            fine_geometry,
+            d_patch_levels[ln]->getBoxLevel()->getMPI()));
+      refined_box_level->swapInitialize(
          refined_boxes,
          d_patch_levels[ln]->getBoxLevel()->getRefinementRatio(),
          fine_geometry,
@@ -682,11 +683,12 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
    for (int ln = 0; ln < d_number_levels; ln++) {
       BoxContainer coarsened_boxes(d_patch_levels[ln]->getBoxLevel()->getBoxes());
       coarsened_boxes.coarsen(coarsen_ratio);
-      BoxLevel coarsened_box_level(
-         d_patch_levels[ln]->getBoxLevel()->getRefinementRatio(),
-         coarse_geometry,
-         d_patch_levels[ln]->getBoxLevel()->getMPI());
-      coarsened_box_level.swapInitialize(
+      boost::shared_ptr<BoxLevel> coarsened_box_level(
+         boost::make_shared<BoxLevel>(
+            d_patch_levels[ln]->getBoxLevel()->getRefinementRatio(),
+            coarse_geometry,
+            d_patch_levels[ln]->getBoxLevel()->getMPI()));
+      coarsened_box_level->swapInitialize(
          coarsened_boxes,
          d_patch_levels[ln]->getBoxLevel()->getRefinementRatio(),
          coarse_geometry,
@@ -735,6 +737,71 @@ PatchHierarchy::makeNewPatchLevel(
          TBOX_ERROR("PatchHierarchy::makeNewPatchLevel: patch level "
             << ln << " has refinement ratio "
             << new_box_level.getRefinementRatio()
+            << ", it should be " << expected_ratio << std::endl);
+      }
+   }
+
+   if (ln >= d_number_levels) {
+      d_number_levels = ln + 1;
+      d_patch_levels.resizeArray(d_number_levels);
+   }
+
+   d_patch_levels[ln] = d_patch_level_factory->allocate(
+      new_box_level,
+      d_grid_geometry,
+      d_patch_descriptor,
+      d_patch_factory);
+   d_patch_levels[ln]->getBoxLevel()->cacheGlobalReducedData();
+
+   d_patch_levels[ln]->setLevelNumber(ln);
+   d_patch_levels[ln]->setNextCoarserHierarchyLevelNumber(ln - 1);
+   d_patch_levels[ln]->setLevelInHierarchy(true);
+
+   if ((ln > 0) && d_patch_levels[ln - 1]) {
+      d_patch_levels[ln]->setRatioToCoarserLevel(
+         d_patch_levels[ln]->getRatioToLevelZero()
+         / (d_patch_levels[ln - 1]->getRatioToLevelZero()));
+   }
+
+}
+
+/*
+ *************************************************************************
+ *                                                                       *
+ * Create a new patch level in the hierarchy.                            *
+ *                                                                       *
+ *************************************************************************
+ */
+
+void
+PatchHierarchy::makeNewPatchLevel(
+   const int ln,
+   const boost::shared_ptr<BoxLevel> new_box_level)
+{
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *new_box_level);
+   TBOX_ASSERT(ln >= 0);
+   TBOX_ASSERT(new_box_level->getRefinementRatio() > IntVector::getZero(d_dim));
+   TBOX_ASSERT(new_box_level->getGridGeometry() == d_grid_geometry);
+   TBOX_ASSERT(d_domain_box_level->getGridGeometry() == d_grid_geometry);
+
+   /*
+    * Make sure the level conforms to certain parameters preset
+    * for the hierarchy.  We are not (yet) checking everything we
+    * should.
+    */
+   if (ln >= d_max_levels) {
+      TBOX_ERROR("PatchHierarchy::makeNewPatchLevel: Cannot make\n"
+         << "level " << ln << " in a PatchHierarchy with a\n"
+         << "max of " << d_max_levels << ".\n"
+         << "Use setMaxNumberOfLevels() to change the max.\n");
+   }
+   if (ln > 0) {
+      const IntVector expected_ratio(
+         d_ratio_to_coarser[ln] * (d_patch_levels[ln - 1]->getRatioToLevelZero()));
+      if (new_box_level->getRefinementRatio() != expected_ratio) {
+         TBOX_ERROR("PatchHierarchy::makeNewPatchLevel: patch level "
+            << ln << " has refinement ratio "
+            << new_box_level->getRefinementRatio()
             << ", it should be " << expected_ratio << std::endl);
       }
    }

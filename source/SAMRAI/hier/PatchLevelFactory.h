@@ -46,7 +46,13 @@ public:
    virtual ~PatchLevelFactory();
 
    /*!
-    * @brief Allocate a patch level with the specified boxes and processor mappings.
+    * @brief Allocate a patch level with the specified boxes and processor
+    * mappings.
+    *
+    * This method results in the allocated PatchLevel making a COPY of the
+    * supplied BoxLevel.  If the caller intends to modify the supplied BoxLevel
+    * for other purposes after allocating the new PatchLevel, then this method
+    * must be used rather than the method taking a boost::shared_ptr<BoxLevel>.
     *
     * Redefine this function to change the method for creating patch levels.
     *
@@ -63,6 +69,39 @@ public:
    virtual boost::shared_ptr<PatchLevel>
    allocate(
       const BoxLevel& box_level,
+      const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
+      const boost::shared_ptr<PatchDescriptor>& descriptor,
+      const boost::shared_ptr<PatchFactory>& factory =
+         boost::shared_ptr<PatchFactory>()) const;
+
+   /*!
+    * @brief Allocate a patch level with the specified boxes and processor
+    * mappings.
+    *
+    * This method results in the allocated PatchLevel ACQUIRING the supplied
+    * BoxLevel.  If the caller will not modify the supplied BoxLevel for other
+    * purposes after allocating the new PatchLevel, then this method may be
+    * used rather than the method taking a BoxLevel&.  Use of this method where
+    * permitted is more efficient as it avoids copying an entire BoxLevel.
+    * Note that this method results in the supplied BoxLevel being locked so
+    * that any attempt by the caller to modify it after calling this method
+    * will result in an unrecoverable error.
+    *
+    * Redefine this function to change the method for creating patch levels.
+    *
+    * @return A boost::shared_ptr to the newly created PatchLevel.
+    *
+    * @param[in]  box_level
+    * @param[in]  grid_geometry
+    * @param[in]  descriptor
+    * @param[in]  factory @b Default: a boost::shared_ptr to the standard
+    *             PatchFactory
+    *
+    * @pre box_level.getDim() == grid_geometry->getDim()
+    */
+   virtual boost::shared_ptr<PatchLevel>
+   allocate(
+      const boost::shared_ptr<BoxLevel> box_level,
       const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
       const boost::shared_ptr<PatchDescriptor>& descriptor,
       const boost::shared_ptr<PatchFactory>& factory =

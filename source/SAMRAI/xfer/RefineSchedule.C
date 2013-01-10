@@ -870,7 +870,7 @@ RefineSchedule::finishScheduleConstruction(
 
       createCoarseInterpPatchLevel(
          d_coarse_interp_level,
-         *coarse_interp_box_level,
+         coarse_interp_box_level,
          coarse_interp_to_hiercoarse,
          hiercoarse_to_coarse_interp,
          next_coarser_ln,
@@ -1029,7 +1029,7 @@ RefineSchedule::createEnconFillSchedule(
 
    createCoarseInterpPatchLevel(
       d_coarse_interp_encon_level,
-      *coarse_interp_encon_box_level,
+      coarse_interp_encon_box_level,
       coarse_interp_encon_to_hiercoarse,
       hiercoarse_to_coarse_interp_encon,
       next_coarser_ln,
@@ -1356,7 +1356,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
 void
 RefineSchedule::createCoarseInterpPatchLevel(
    boost::shared_ptr<hier::PatchLevel>& coarse_interp_level,
-   hier::BoxLevel& coarse_interp_box_level,
+   boost::shared_ptr<hier::BoxLevel>& coarse_interp_box_level,
    boost::shared_ptr<hier::Connector>& coarse_interp_to_hiercoarse,
    boost::shared_ptr<hier::Connector>& hiercoarse_to_coarse_interp,
    const int next_coarser_ln,
@@ -1618,7 +1618,7 @@ RefineSchedule::createCoarseInterpPatchLevel(
                        hiercoarse_to_dst->getConnectorWidth(),
                        true);
       edge_utils.addPeriodicImagesAndRelationships(
-         coarse_interp_box_level,
+         *coarse_interp_box_level,
          *coarse_interp_to_hiercoarse,
          *hiercoarse_to_coarse_interp,
          hierarchy->getGridGeometry()->getDomainSearchTree(),
@@ -3136,8 +3136,9 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
     * d_encon_level.  This level, once filled with data, will be provided
     * to SingularityPatchStrategy's fillSingularityBoundaryConditions.
     */
-   hier::BoxLevel encon_box_level(d_dst_level->getRatioToLevelZero(),
-                                  grid_geometry);
+   boost::shared_ptr<hier::BoxLevel> encon_box_level(
+      boost::make_shared<hier::BoxLevel>(d_dst_level->getRatioToLevelZero(),
+         grid_geometry));
 
    d_dst_to_encon.reset(new hier::Connector(dim));
    d_dst_to_encon->setBase(*(d_dst_level->getBoxLevel()));
@@ -3271,14 +3272,14 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                                * do not create another.
                                */
                               hier::Box actual_encon_box(dim);
-                              if (!encon_box_level.getSpatiallyEqualBox(
+                              if (!encon_box_level->getSpatiallyEqualBox(
                                   encon_box, nbr_id, actual_encon_box)) {
                                  actual_encon_box = hier::Box(encon_box,
                                           ++encon_local_id,
                                           box_id.getOwnerRank());
                                  TBOX_ASSERT(actual_encon_box.getBlockId() ==
                                              nbr_id);
-                                 encon_box_level.addBoxWithoutUpdate(
+                                 encon_box_level->addBoxWithoutUpdate(
                                     actual_encon_box);
                               }
 
@@ -3304,7 +3305,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
     * Finalize encon_box_level create d_encon_level and more associated
     * Connectors.
     */
-   encon_box_level.finalize();
+   encon_box_level->finalize();
 
    d_encon_level.reset(new hier::PatchLevel(encon_box_level,
          grid_geometry,

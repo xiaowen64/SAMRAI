@@ -162,17 +162,19 @@ int main(
       }
 
       hier::BoxLevelConnectorUtils edge_utils;
-      hier::BoxLevel layer0(hier::IntVector(dim, 1), grid_geometry);
+      boost::shared_ptr<hier::BoxLevel> layer0(
+         boost::make_shared<hier::BoxLevel>(
+            hier::IntVector(dim, 1), grid_geometry));
       hier::BoxContainer::const_iterator domain_boxes(domain);
       int rank = mpi.getRank();
       int size = mpi.getSize();
       for (hier::LocalId ib(0); ib < boxes.size(); ib++, ++domain_boxes) {
          if (ib % size == rank) {
-            layer0.addBox(hier::Box(*domain_boxes, ib, rank));
+            layer0->addBox(hier::Box(*domain_boxes, ib, rank));
          }
       }
       edge_utils.addPeriodicImages(
-         layer0,
+         *layer0,
          patch_hierarchy->getGridGeometry()->getDomainSearchTree(),
          hier::IntVector(dim, 2));
 

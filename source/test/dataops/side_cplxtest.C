@@ -163,30 +163,33 @@ int main(
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_boxes.size();
 
-      hier::BoxLevel layer0(hier::IntVector(dim, 1), geometry);
-      hier::BoxLevel layer1(ratio, geometry);
+      boost::shared_ptr<hier::BoxLevel> layer0(
+         boost::make_shared<hier::BoxLevel>(
+            hier::IntVector(dim, 1), geometry));
+      boost::shared_ptr<hier::BoxLevel> layer1(
+         boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_itr(coarse_domain);
       for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_itr) {
          if (nproc > 1) {
-            if (ib == layer0.getMPI().getRank()) {
-               layer0.addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
-                  layer0.getMPI().getRank()));
+            if (ib == layer0->getMPI().getRank()) {
+               layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
+                  layer0->getMPI().getRank()));
             }
          } else {
-            layer0.addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
+            layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
          }
       }
 
       hier::BoxContainer::iterator fine_itr(fine_boxes);
       for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_itr) {
          if (nproc > 1) {
-            if (ib == layer1.getMPI().getRank()) {
-               layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib),
-                  layer1.getMPI().getRank()));
+            if (ib == layer1->getMPI().getRank()) {
+               layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib),
+                  layer1->getMPI().getRank()));
             }
          } else {
-            layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
+            layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
          }
       }
 

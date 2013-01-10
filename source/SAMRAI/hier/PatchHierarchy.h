@@ -394,26 +394,58 @@ public:
       const IntVector& coarsen_ratio) const;
 
 /*
- * TODO: Is it an error to call this method when a level with the given
+ * TODO: Is it an error to call these methods when a level with the given
  * level number already exists?  Are some preconditions assumed?
  */
-/*!
- * @brief Construct new PatchLevel in hierarchy at given level number.
- *
- * Boxes, their mappings and the refinement ratio are obtained from
- * @c new_box_level.
- *
- * @param[in]  level_number
- * @param[in]  new_box_level
- *
- * @pre getDim() == new_box_level.getDim()
- * @pre level_number >= 0 && ln < getMaxNumberOfLevels()
- * @pre new_box_level.getRefinementRatio() > IntVector::getZero(getDim())
- */
+   /*!
+    * @brief Construct new PatchLevel in hierarchy at given level number.
+    *
+    * This method results in the new PatchLevel making a COPY of the supplied
+    * BoxLevel.  If the caller intends to modify the supplied BoxLevel for
+    * other purposes after making the new PatchLevel, then this method must be
+    * used rather than the method taking a boost::shared_ptr<BoxLevel>.
+    *
+    * Boxes, their mappings and the refinement ratio are obtained from
+    * @c new_box_level.
+    *
+    * @param[in]  level_number
+    * @param[in]  new_box_level
+    *
+    * @pre getDim() == new_box_level.getDim()
+    * @pre level_number >= 0 && ln < getMaxNumberOfLevels()
+    * @pre new_box_level.getRefinementRatio() > IntVector::getZero(getDim())
+    */
    void
    makeNewPatchLevel(
       const int level_number,
       const BoxLevel& new_box_level);
+
+   /*!
+    * @brief Construct new PatchLevel in hierarchy at given level number.
+    *
+    * This method results in the new PatchLevel ACQUIRING the supplied
+    * BoxLevel.  If the caller will not modify the supplied BoxLevel for other
+    * purposes after making the new PatchLevel, then this method may be used
+    * rather than the method taking a BoxLevel&.  Use of this method where
+    * permitted is more efficient as it avoids copying an entire BoxLevel.
+    * Note that this method results in the supplied BoxLevel being locked so
+    * that any attempt by the caller to modify it after calling this method
+    * will result in an unrecoverable error.
+    *
+    * Boxes, their mappings and the refinement ratio are obtained from
+    * @c new_box_level.
+    *
+    * @param[in]  level_number
+    * @param[in]  new_box_level
+    *
+    * @pre getDim() == new_box_level->getDim()
+    * @pre level_number >= 0 && ln < getMaxNumberOfLevels()
+    * @pre new_box_level->getRefinementRatio() > IntVector::getZero(getDim())
+    */
+   void
+   makeNewPatchLevel(
+      const int level_number,
+      const boost::shared_ptr<BoxLevel> new_box_level);
 
    /*!
     * @brief Remove a patch level

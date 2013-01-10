@@ -119,13 +119,123 @@ PatchLevel::PatchLevel(
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (getDim().getValue() > 1) {
       for (int i = 0; i < getDim().getValue(); i++) {
-         TBOX_ASSERT((box_level.getRefinementRatio() (i)
-                      * box_level.getRefinementRatio() ((i
-                                                                + 1)
-                         % getDim().getValue()) > 0)
-            || (box_level.getRefinementRatio() (i) == 1)
-            || (box_level.getRefinementRatio() ((i + 1) % getDim().getValue()) ==
-                1));
+         TBOX_ASSERT((box_level.getRefinementRatio()(i) *
+                      box_level.getRefinementRatio()(
+                         (i + 1) % getDim().getValue()) > 0) ||
+            (box_level.getRefinementRatio()(i) == 1) ||
+            (box_level.getRefinementRatio()(
+               (i + 1) % getDim().getValue()) == 1));
+      }
+   }
+#endif
+
+   t_constructor_setup->start();
+
+   d_local_number_patches =
+      static_cast<int>(d_box_level->getLocalNumberOfBoxes());
+   d_descriptor = descriptor;
+
+   d_geometry = grid_geometry;
+
+   d_level_number = -1;
+   d_next_coarser_level_number = -1;
+   d_in_hierarchy = false;
+
+   const BoxContainer& boxes = d_box_level->getBoxes();
+   for (RealBoxConstIterator ni(boxes.realBegin());
+        ni != boxes.realEnd(); ++ni) {
+      const Box& box = *ni;
+      const BoxId& ip = box.getBoxId();
+      boost::shared_ptr<Patch>& patch(d_patches[ip]);
+      patch = d_factory->allocate(box, d_descriptor);
+      patch->setPatchLevelNumber(d_level_number);
+      patch->setPatchInHierarchy(d_in_hierarchy);
+   }
+
+   d_boundary_boxes_created = false;
+   t_constructor_setup->stop();
+
+   t_constructor_phys_domain->start();
+   for (int nb = 0; nb < d_number_blocks; nb++) {
+      grid_geometry->computePhysicalDomain(d_physical_domain[nb],
+         d_ratio_to_level_zero, BlockId(nb));
+   }
+   t_constructor_phys_domain->stop();
+
+   t_constructor_touch_boundaries->start();
+   std::map<BoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
+   std::map<BoxId, PatchGeometry::TwoDimBool> touches_periodic_bdry;
+   grid_geometry->findPatchesTouchingBoundaries(
+      touches_regular_bdry,
+      touches_periodic_bdry,
+      *this);
+   t_constructor_touch_boundaries->stop();
+
+   t_constructor_set_geometry->start();
+   grid_geometry->setGeometryOnPatches(
+      *this,
+      d_ratio_to_level_zero,
+      touches_regular_bdry,
+      touches_periodic_bdry,
+      defer_boundary_box_creation);
+   t_constructor_set_geometry->stop();
+
+   if (!defer_boundary_box_creation) {
+      d_boundary_boxes_created = true;
+   }
+
+   t_level_constructor->stop();
+}
+
+/*
+ *************************************************************************
+ *
+ * Create a new patch level using the specified boxes and processor
+ * mapping.  Only those patches that are local to the processor are
+ * allocated.  Allocate patches using the specified patch factory or
+ * the standard patch factory if none is explicitly specified.
+ *
+ *************************************************************************
+ */
+
+PatchLevel::PatchLevel(
+   const boost::shared_ptr<BoxLevel> box_level,
+   const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
+   const boost::shared_ptr<PatchDescriptor>& descriptor,
+   const boost::shared_ptr<PatchFactory>& factory,
+   bool defer_boundary_box_creation):
+   d_dim(grid_geometry->getDim()),
+   d_box_level(box_level),
+   d_has_globalized_data(false),
+   d_ratio_to_level_zero(d_box_level->getRefinementRatio()),
+   d_factory(factory ? factory : boost::make_shared<PatchFactory>()),
+   d_physical_domain(grid_geometry->getNumberBlocks()),
+   d_ratio_to_coarser_level(grid_geometry->getDim(), 0)
+
+{
+   d_box_level->lock();
+   d_number_blocks = grid_geometry->getNumberBlocks();
+
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*box_level, *grid_geometry);
+
+   t_level_constructor->start();
+
+   TBOX_ASSERT(grid_geometry);
+   TBOX_ASSERT(descriptor);
+   /*
+    * All components of ratio must be nonzero.  Additionally, all components
+    * of ratio not equal to 1 must have the same sign.
+    */
+   TBOX_ASSERT(box_level->getRefinementRatio() != IntVector::getZero(getDim()));
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (getDim().getValue() > 1) {
+      for (int i = 0; i < getDim().getValue(); i++) {
+         TBOX_ASSERT((box_level->getRefinementRatio()(i) *
+                      box_level->getRefinementRatio()(
+                         (i + 1) % getDim().getValue()) > 0) ||
+            (box_level->getRefinementRatio()(i) == 1) ||
+            (box_level->getRefinementRatio()(
+               (i + 1) % getDim().getValue()) == 1));
       }
    }
 #endif

@@ -56,7 +56,7 @@ using namespace tbox;
 void
 generatePrebalance(
    boost::shared_ptr<hier::BoxLevel>& Lb,
-   hier::BoxLevel &La,
+   boost::shared_ptr<hier::BoxLevel> &La,
    boost::shared_ptr<hier::Connector> &La_to_Lb,
    boost::shared_ptr<hier::Connector> &Lb_to_La,
    const std::string &Lb_box_gen_method,
@@ -82,7 +82,7 @@ generatePrebalanceByUserShells(
    boost::shared_ptr<hier::BoxLevel>& L1,
    boost::shared_ptr<hier::Connector>& L0_to_L1,
    boost::shared_ptr<hier::Connector>& L1_to_L0,
-   const hier::BoxLevel& L0,
+   const boost::shared_ptr<hier::BoxLevel>& L0,
    const boost::shared_ptr<tbox::Database>& database,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
@@ -93,7 +93,7 @@ generatePrebalanceBySinusoidalFront(
    boost::shared_ptr<hier::BoxLevel>& L1,
    boost::shared_ptr<hier::Connector>& L0_to_L1,
    boost::shared_ptr<hier::Connector>& L1_to_L0,
-   const hier::BoxLevel& L0,
+   const boost::shared_ptr<hier::BoxLevel>& L0,
    const boost::shared_ptr<tbox::Database>& database,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarser_ln,
@@ -105,7 +105,7 @@ generatePrebalanceByShrinkingLevel(
    boost::shared_ptr<hier::BoxLevel>& L2,
    boost::shared_ptr<hier::Connector>& L1_to_L2,
    boost::shared_ptr<hier::Connector>& L2_to_L1,
-   const hier::BoxLevel& L1,
+   const boost::shared_ptr<hier::BoxLevel>& L1,
    const boost::shared_ptr<tbox::Database>& database,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarser_ln,
@@ -445,16 +445,17 @@ int main(
        */
       tbox::pout << "\nGenerating L0" << std::endl;
 
-      hier::BoxLevel L0(hier::IntVector(dim, 1), grid_geometry);
+      boost::shared_ptr<hier::BoxLevel> L0(boost::make_shared<hier::BoxLevel>(
+         hier::IntVector(dim, 1), grid_geometry));
 
       {
          hier::BoxContainer L0_boxes(
             main_db->isDatabase("L0_boxes") ?
             main_db->getDatabaseBoxArray("L0_boxes") : domain_boxes );
          const int boxes_per_proc =
-            (L0_boxes.size() + L0.getMPI().getSize()
-             - 1) / L0.getMPI().getSize();
-         const int my_boxes_start = L0.getMPI().getRank()
+            (L0_boxes.size() + L0->getMPI().getSize() - 1) /
+            L0->getMPI().getSize();
+         const int my_boxes_start = L0->getMPI().getRank()
             * boxes_per_proc;
          const int my_boxes_stop =
             tbox::MathUtilities<int>::Min(my_boxes_start + boxes_per_proc,
@@ -464,7 +465,7 @@ int main(
             ++L0_boxes_itr;
          }
          for (int i = my_boxes_start; i < my_boxes_stop; ++i, ++L0_boxes_itr) {
-            L0.addBox(*L0_boxes_itr, hier::BlockId::zero());
+            L0->addBox(*L0_boxes_itr, hier::BlockId::zero());
          }
       }
 
@@ -479,12 +480,12 @@ int main(
          boost::shared_ptr<hier::Connector> L0_to_domain;
          boost::shared_ptr<hier::Connector> domain_to_L0;
          oca.findOverlaps(L0_to_domain,
-            L0,
+            *L0,
             domain_box_level,
             hier::IntVector(dim, 2));
          oca.findOverlaps(domain_to_L0,
             domain_box_level,
-            L0,
+            *L0,
             hier::IntVector(dim, 2));
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb0(
@@ -492,12 +493,12 @@ int main(
 
          tbox::plog << "\n\n\ninitial L0 loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L0.getLocalNumberOfCells(),
-            L0.getMPI());
+            (double)L0->getLocalNumberOfCells(),
+            L0->getMPI());
 
          tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
          lb0->loadBalanceBoxLevel(
-            L0,
+            *L0,
             L0_to_domain,
             domain_to_L0,
             hierarchy,
@@ -508,7 +509,7 @@ int main(
             bad_interval,
             cut_factor);
 
-         sortNodes(L0,
+         sortNodes(*L0,
             *domain_to_L0,
             *L0_to_domain,
             false,
@@ -517,17 +518,17 @@ int main(
          L0_to_domain->assertOverlapCorrectness();
          domain_to_L0->assertOverlapCorrectness();
 
-         L0.cacheGlobalReducedData();
+         L0->cacheGlobalReducedData();
 
          tbox::plog << "\n\n\nfinal L0 loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L0.getLocalNumberOfCells(),
-            L0.getMPI());
+            (double)L0->getLocalNumberOfCells(),
+            L0->getMPI());
 
          outputMetadataL0(
-            L0,
-            L0.getPersistentOverlapConnectors().
-            findOrCreateConnector( L0, ghost_cell_width, true ) );
+            *L0,
+            L0->getPersistentOverlapConnectors().
+            findOrCreateConnector( *L0, ghost_cell_width, true ) );
       }
 
 
@@ -659,7 +660,7 @@ int main(
             main_db->getStringWithDefault("L2_box_gen_method", "PrebalanceByShrinkingLevel");
          generatePrebalance(
             L2,
-            *L1,
+            L1,
             L1_to_L2,
             L2_to_L1,
             L2_box_gen_method,
@@ -742,10 +743,10 @@ int main(
 #ifdef HAVE_HDF5
          hierarchy->makeNewPatchLevel(0, L0);
          if ( hierarchy->getMaxNumberOfLevels() > 1 ) {
-            hierarchy->makeNewPatchLevel(1, *L1);
+            hierarchy->makeNewPatchLevel(1, L1);
          }
          if ( hierarchy->getMaxNumberOfLevels() > 2 ) {
-            hierarchy->makeNewPatchLevel(2, *L2);
+            hierarchy->makeNewPatchLevel(2, L2);
          }
 
          if ((dim == tbox::Dimension(2)) || (dim == tbox::Dimension(3))) {
@@ -951,7 +952,7 @@ void generatePrebalanceByUserShells(
    boost::shared_ptr<hier::BoxLevel>& L1,
    boost::shared_ptr<hier::Connector>& L0_to_L1,
    boost::shared_ptr<hier::Connector>& L1_to_L0,
-   const hier::BoxLevel& L0,
+   const boost::shared_ptr<hier::BoxLevel>& L0,
    const boost::shared_ptr<tbox::Database>& database,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
@@ -1072,7 +1073,7 @@ void generatePrebalanceByUserShells(
    }
 
    mesh::BergerRigoutsos abr(dim, abr_db);
-   abr.setMPI(L0.getMPI());
+   abr.setMPI(L0->getMPI());
    abr.findBoxesContainingTags(
       L1,
       L0_to_L1,
@@ -1080,7 +1081,7 @@ void generatePrebalanceByUserShells(
       tag_level,
       tag_id,
       tag_val,
-      hier::BoxContainer(L0.getGlobalBoundingBox(0)),
+      hier::BoxContainer(L0->getGlobalBoundingBox(0)),
       min_size,
       efficiency_tol,
       combine_tol,
@@ -1093,10 +1094,10 @@ void generatePrebalanceByUserShells(
     * L0 BoxLevel.  We need to reset the Connectors to use
     * the L0 instead.
     */
-   L0_to_L1->setBase(L0);
+   L0_to_L1->setBase(*L0);
    L0_to_L1->setHead(*L1, true);
    L1_to_L0->setBase(*L1);
-   L1_to_L0->setHead(L0, true);
+   L1_to_L0->setHead(*L0, true);
 
 
    /*
@@ -1128,7 +1129,7 @@ void generatePrebalanceByShrinkingLevel(
    boost::shared_ptr<hier::BoxLevel>& L2,
    boost::shared_ptr<hier::Connector>& L1_to_L2,
    boost::shared_ptr<hier::Connector>& L2_to_L1,
-   const hier::BoxLevel& L1,
+   const boost::shared_ptr<hier::BoxLevel>& L1,
    const boost::shared_ptr<tbox::Database>& database,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarser_ln,
@@ -1165,8 +1166,8 @@ void generatePrebalanceByShrinkingLevel(
    boost::shared_ptr<hier::BoxLevel> L1tags;
    boost::shared_ptr<hier::MappingConnector> L1_to_L1tags;
    const hier::Connector &L1_to_L1 =
-      L1.getPersistentOverlapConnectors().findOrCreateConnector(
-         L1,
+      L1->getPersistentOverlapConnectors().findOrCreateConnector(
+         *L1,
          shrink_width );
 
    hier::BoxLevelConnectorUtils blcu;
@@ -1234,7 +1235,7 @@ void generatePrebalanceByShrinkingLevel(
    }
 
    mesh::BergerRigoutsos abr(dim, abr_db);
-   abr.setMPI(L1.getMPI());
+   abr.setMPI(L1->getMPI());
    abr.findBoxesContainingTags(
       L2,
       L1_to_L2,
@@ -1242,7 +1243,7 @@ void generatePrebalanceByShrinkingLevel(
       tag_level,
       tag_id,
       tag_val,
-      hier::BoxContainer(L1.getGlobalBoundingBox(0)),
+      hier::BoxContainer(L1->getGlobalBoundingBox(0)),
       min_size,
       efficiency_tol,
       combine_tol,
@@ -1256,10 +1257,10 @@ void generatePrebalanceByShrinkingLevel(
     * L1 BoxLevel.  We need to reset the Connectors to use
     * the L1 instead.
     */
-   L1_to_L2->setBase(L1);
+   L1_to_L2->setBase(*L1);
    L1_to_L2->setHead(*L2, true);
    L2_to_L1->setBase(*L2);
-   L2_to_L1->setHead(L1, true);
+   L2_to_L1->setHead(*L1, true);
 
 
    /*
@@ -1291,7 +1292,7 @@ void generatePrebalanceBySinusoidalFront(
    boost::shared_ptr<hier::BoxLevel>& L2,
    boost::shared_ptr<hier::Connector>& L1_to_L2,
    boost::shared_ptr<hier::Connector>& L2_to_L1,
-   const hier::BoxLevel& L1,
+   const boost::shared_ptr<hier::BoxLevel>& L1,
    const boost::shared_ptr<tbox::Database>& database,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarser_ln,
@@ -1392,7 +1393,7 @@ void generatePrebalanceBySinusoidalFront(
    }
 
    mesh::BergerRigoutsos abr(dim, abr_db);
-   abr.setMPI(L1.getMPI());
+   abr.setMPI(L1->getMPI());
    abr.findBoxesContainingTags(
       L2,
       L1_to_L2,
@@ -1400,7 +1401,7 @@ void generatePrebalanceBySinusoidalFront(
       tag_level,
       tag_id,
       tag_val,
-      hier::BoxContainer(L1.getGlobalBoundingBox(0)),
+      hier::BoxContainer(L1->getGlobalBoundingBox(0)),
       min_size,
       efficiency_tol,
       combine_tol,
@@ -1414,10 +1415,10 @@ void generatePrebalanceBySinusoidalFront(
     * L1 BoxLevel.  We need to reset the Connectors to use
     * the L1 instead.
     */
-   L1_to_L2->setBase(L1);
+   L1_to_L2->setBase(*L1);
    L1_to_L2->setHead(*L2, true);
    L2_to_L1->setBase(*L2);
-   L2_to_L1->setHead(L1, true);
+   L2_to_L1->setHead(*L1, true);
 
 
    /*
@@ -1555,7 +1556,7 @@ void refineHead(
  */
 void generatePrebalance(
    boost::shared_ptr<hier::BoxLevel>& Lb,
-   hier::BoxLevel &La,
+   boost::shared_ptr<hier::BoxLevel>& La,
    boost::shared_ptr<hier::Connector> &La_to_Lb,
    boost::shared_ptr<hier::Connector> &Lb_to_La,
    const std::string &box_gen_method,
@@ -1574,7 +1575,7 @@ void generatePrebalance(
          Lb,
          La_to_Lb,
          Lb_to_La,
-         La,
+         *La,
          box_gen_db,
          hierarchy,
          min_size,

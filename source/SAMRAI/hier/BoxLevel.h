@@ -28,6 +28,19 @@
 namespace SAMRAI {
 namespace hier {
 
+/*
+ *****************************************************************************
+ * IMPORTANT
+ * IF YOU ARE ADDING A NON-CONST METHOD IT MUST BE PREFACED WITH THE FOLLOWING
+ * CODE AS LOCKED BOX_LEVELS MAY NOT BE MODIFIED IN ANY WAY
+ * if (locked()) {
+ *    TBOX_ERROR("BoxLevel::newMethodName(): operating on locked BoxLevel."
+ *       << std::endl);
+ * }
+ *****************************************************************************
+ */
+ 
+
 /*!
  * @brief A distributed set of Box objects which reside in the
  * same index space.
@@ -251,6 +264,10 @@ public:
    clearForBoxChanges(
       bool isInvalid = true)
    {
+      if (locked()) {
+         TBOX_ERROR("BoxLevel::clearForBoxChanges(): operating on locked BoxLevel."
+            << std::endl);
+      }
       deallocateGlobalizedVersion();
       clearPersistentOverlapConnectors();
       if (isInvalid) {
@@ -976,6 +993,10 @@ public:
    addBoxWithoutUpdate(
       const Box& box)
    {
+      if (locked()) {
+         TBOX_ERROR("BoxLevel::addBoxWithoutUpdate(): operating on locked BoxLevel."
+            << std::endl);
+      }
      if (getParallelState() == GLOBALIZED) {
          d_global_boxes.insert(box);
       }
@@ -1092,6 +1113,10 @@ public:
    eraseBoxWithoutUpdate(
       const Box& box)
    {
+      if (locked()) {
+         TBOX_ERROR("BoxLevel::eraseBoxWithoutUpdate(): operating on locked BoxLevel."
+            << std::endl);
+      }
       d_boxes.erase(box);
       return;
    }
@@ -1295,6 +1320,10 @@ public:
    void
    invalidateGlobalData()
    {
+      if (locked()) {
+         TBOX_ERROR("BoxLevel::invalidateGlobalData(): operating on locked BoxLevel."
+            << std::endl);
+      }
       d_global_data_up_to_date = false;
    }
 
@@ -1379,6 +1408,18 @@ public:
          TBOX_ERROR("Library error in BoxLevelHandle::getBoxLevel" << std::endl);
       }
       return d_handle;
+   }
+
+   void
+   lock()
+   {
+      d_locked = true;
+   }
+
+   bool
+   locked()
+   {
+      return d_locked;
    }
 
    //@{
@@ -1740,17 +1781,14 @@ private:
    /*!
     * @brief Bounding box of local Boxes, excluding periodic images.
     * One for each block.
-    *
-    * This is mutable because it depends on the Boxes and may be
-    * saved by a const object if computed.
     */
-   mutable std::vector<Box> d_local_bounding_box;
+   std::vector<Box> d_local_bounding_box;
 
    /*!
     * @brief Whether d_local_bounding_box is up to date (or needs
     * recomputing.
     */
-   mutable bool d_local_bounding_box_up_to_date;
+   bool d_local_bounding_box_up_to_date;
 
    /*!
     * @brief Bounding box of global Boxes, excluding periodic images.
@@ -1828,6 +1866,8 @@ private:
     * object.
     */
    boost::shared_ptr<const BaseGridGeometry> d_grid_geometry;
+
+   bool d_locked;
 
    /*!
     * @brief A LocalId object with value of -1.

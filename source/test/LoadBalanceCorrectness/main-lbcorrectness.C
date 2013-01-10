@@ -67,7 +67,7 @@ generatePrebalanceByUserShells(
    const hier::IntVector& min_size,
    const hier::IntVector& connector_width,
    boost::shared_ptr<hier::BoxLevel>& balance_box_level,
-   const hier::BoxLevel& anchor_box_level,
+   const boost::shared_ptr<hier::BoxLevel>& anchor_box_level,
    boost::shared_ptr<hier::Connector>& anchor_to_balance,
    boost::shared_ptr<hier::Connector>& balance_to_anchor);
 
@@ -317,7 +317,9 @@ int main(
       /*
        * Set up data used by TreeLoadBalancer.
        */
-      hier::BoxLevel anchor_box_level(hier::IntVector(dim, 1), grid_geometry);
+      boost::shared_ptr<hier::BoxLevel> anchor_box_level(
+         boost::make_shared<hier::BoxLevel>(
+            hier::IntVector(dim, 1), grid_geometry));
       boost::shared_ptr<hier::BoxLevel> balance_box_level;
       boost::shared_ptr<hier::Connector> balance_to_anchor;
       boost::shared_ptr<hier::Connector> anchor_to_balance;
@@ -325,9 +327,9 @@ int main(
       {
          hier::BoxContainer anchor_boxes(main_db->getDatabaseBoxArray("anchor_boxes"));
          const int boxes_per_proc =
-            (anchor_boxes.size() + anchor_box_level.getMPI().getSize() - 1) /
-             anchor_box_level.getMPI().getSize();
-         const int my_boxes_start = anchor_box_level.getMPI().getRank()
+            (anchor_boxes.size() + anchor_box_level->getMPI().getSize() - 1) /
+             anchor_box_level->getMPI().getSize();
+         const int my_boxes_start = anchor_box_level->getMPI().getRank()
             * boxes_per_proc;
          const int my_boxes_stop =
             tbox::MathUtilities<int>::Min(my_boxes_start + boxes_per_proc,
@@ -338,7 +340,7 @@ int main(
          }
          for (int i = my_boxes_start; i < my_boxes_stop; ++i, ++anchor_boxes_itr) {
             anchor_boxes_itr->setBlockId(hier::BlockId(0));
-            anchor_box_level.addBox(*anchor_boxes_itr, hier::BlockId::zero());
+            anchor_box_level->addBox(*anchor_boxes_itr, hier::BlockId::zero());
          }
       }
 
@@ -353,21 +355,21 @@ int main(
          boost::shared_ptr<hier::Connector> anchor_to_domain;
          boost::shared_ptr<hier::Connector> domain_to_anchor;
          oca.findOverlaps(anchor_to_domain,
-            anchor_box_level,
+            *anchor_box_level,
             domain_box_level,
             hier::IntVector(dim, 2));
          oca.findOverlaps(domain_to_anchor,
             domain_box_level,
-            anchor_box_level,
+            *anchor_box_level,
             hier::IntVector(dim, 2));
 
          tbox::plog << "\n\n\ninitial anchor loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)anchor_box_level.getLocalNumberOfCells(),
-            anchor_box_level.getMPI());
+            (double)anchor_box_level->getLocalNumberOfCells(),
+            anchor_box_level->getMPI());
 
          lb->loadBalanceBoxLevel(
-            anchor_box_level,
+            *anchor_box_level,
             anchor_to_domain,
             domain_to_anchor,
             hierarchy,
@@ -381,18 +383,18 @@ int main(
          anchor_to_domain->assertOverlapCorrectness(false, true, true);
          domain_to_anchor->assertOverlapCorrectness(false, true, true);
 
-         sortNodes(anchor_box_level,
+         sortNodes(*anchor_box_level,
             *domain_to_anchor,
             *anchor_to_domain,
             false,
             true);
 
-         anchor_box_level.cacheGlobalReducedData();
+         anchor_box_level->cacheGlobalReducedData();
 
          tbox::plog << "\n\n\nfinal anchor loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)anchor_box_level.getLocalNumberOfCells(),
-            anchor_box_level.getMPI());
+            (double)anchor_box_level->getLocalNumberOfCells(),
+            anchor_box_level->getMPI());
       }
 
       {
@@ -406,7 +408,7 @@ int main(
                min_size,
                ghost_cell_width,
                balance_box_level,
-               anchor_box_level,
+               *anchor_box_level,
                anchor_to_balance,
                balance_to_anchor);
          } else if (box_gen_method == "PrebalanceByUserShells") {
@@ -440,7 +442,7 @@ int main(
             balance_box_level->getMPI());
 
          tbox::plog << "Anchor box_level:\n"
-                    << anchor_box_level.format("AL-> ", 2);
+                    << anchor_box_level->format("AL-> ", 2);
 
          tbox::plog << "Balance box_level:\n"
                     << balance_box_level->format("BL-> ", 2);
@@ -508,7 +510,7 @@ int main(
 
 #ifdef HAVE_HDF5
       hierarchy->makeNewPatchLevel(0, anchor_box_level);
-      hierarchy->makeNewPatchLevel(1, *balance_box_level);
+      hierarchy->makeNewPatchLevel(1, balance_box_level);
 
       if ((dim == tbox::Dimension(2)) || (dim == tbox::Dimension(3))) {
          /*
@@ -625,7 +627,7 @@ void generatePrebalanceByUserShells(
    const hier::IntVector& min_size,
    const hier::IntVector& connector_width,
    boost::shared_ptr<hier::BoxLevel>& balance_box_level,
-   const hier::BoxLevel& anchor_box_level,
+   const boost::shared_ptr<hier::BoxLevel>& anchor_box_level,
    boost::shared_ptr<hier::Connector>& anchor_to_balance,
    boost::shared_ptr<hier::Connector>& balance_to_anchor)
 {
@@ -719,7 +721,7 @@ void generatePrebalanceByUserShells(
    }
 
    mesh::BergerRigoutsos abr(dim, abr_db);
-   abr.setMPI(anchor_box_level.getMPI());
+   abr.setMPI(anchor_box_level->getMPI());
    abr.findBoxesContainingTags(
       balance_box_level,
       anchor_to_balance,
@@ -727,7 +729,7 @@ void generatePrebalanceByUserShells(
       tag_level,
       tag_id,
       tag_val,
-      hier::BoxContainer(anchor_box_level.getGlobalBoundingBox(0)),
+      hier::BoxContainer(anchor_box_level->getGlobalBoundingBox(0)),
       min_size,
       efficiency_tol,
       combine_tol,
@@ -740,10 +742,10 @@ void generatePrebalanceByUserShells(
     * anchor BoxLevel.  We need to reset the Connectors to use
     * the anchor_box_level instead.
     */
-   anchor_to_balance->setBase(anchor_box_level);
+   anchor_to_balance->setBase(*anchor_box_level);
    anchor_to_balance->setHead(*balance_box_level, true);
    balance_to_anchor->setBase(*balance_box_level);
-   balance_to_anchor->setHead(anchor_box_level, true);
+   balance_to_anchor->setHead(*anchor_box_level, true);
 }
 
 /*

@@ -436,17 +436,18 @@ int main(
       tbox::pout << "\n==================== Generating L0 ====================" << std::endl;
 
 
-      {
+      boost::shared_ptr<hier::BoxLevel> L0(
+         boost::make_shared<hier::BoxLevel>(
+            hier::IntVector(dim, 1), grid_geometry));
 
-         hier::BoxLevel L0(hier::IntVector(dim, 1), grid_geometry);
+      {
 
          hier::BoxContainer L0_boxes(
             grid_geometry->getPhysicalDomain() );
          const int boxes_per_proc =
-            (L0_boxes.size() + L0.getMPI().getSize()
-             - 1) / L0.getMPI().getSize();
-         const int my_boxes_start = L0.getMPI().getRank()
-            * boxes_per_proc;
+            (L0_boxes.size() + L0->getMPI().getSize() - 1) /
+            L0->getMPI().getSize();
+         const int my_boxes_start = L0->getMPI().getRank() * boxes_per_proc;
          const int my_boxes_stop =
             tbox::MathUtilities<int>::Min(my_boxes_start + boxes_per_proc,
                L0_boxes.size());
@@ -455,7 +456,7 @@ int main(
             ++L0_boxes_itr;
          }
          for (int i = my_boxes_start; i < my_boxes_stop; ++i, L0_boxes_itr++) {
-            L0.addBox(*L0_boxes_itr, hier::BlockId::zero());
+            L0->addBox(*L0_boxes_itr, hier::BlockId::zero());
          }
 
          /*
@@ -468,12 +469,12 @@ int main(
          boost::shared_ptr<hier::Connector> L0_to_domain;
          boost::shared_ptr<hier::Connector> domain_to_L0;
          oca.findOverlaps(L0_to_domain,
-            L0,
+            *L0,
             domain_box_level,
             hier::IntVector(dim, 2));
          oca.findOverlaps(domain_to_L0,
             domain_box_level,
-            L0,
+            *L0,
             hier::IntVector(dim, 2));
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb0 =
@@ -481,17 +482,17 @@ int main(
 
          tbox::plog << "\n\tL0 prebalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L0.getLocalNumberOfCells(),
-            L0.getMPI());
+            (double)L0->getLocalNumberOfCells(),
+            L0->getMPI());
 
          tbox::pout << "\tPartitioning..." << std::endl;
 
-         outputPrebalance( L0, domain_box_level, ghost_cell_width, "L0: " );
+         outputPrebalance( *L0, domain_box_level, ghost_cell_width, "L0: " );
 
          if ( load_balance[0] ) {
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             lb0->loadBalanceBoxLevel(
-               L0,
+               *L0,
                L0_to_domain,
                domain_to_L0,
                hierarchy,
@@ -503,7 +504,7 @@ int main(
                cut_factor);
          }
 
-         sortNodes(L0,
+         sortNodes(*L0,
             *domain_to_L0,
             *L0_to_domain,
             false,
@@ -511,17 +512,15 @@ int main(
 
          tbox::plog << "\n\tL0 postbalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L0.getLocalNumberOfCells(),
-            L0.getMPI());
+            (double)L0->getLocalNumberOfCells(),
+            L0->getMPI());
 
-         outputPostbalance( L0, domain_box_level, ghost_cell_width, "L0: " );
+         outputPostbalance( *L0, domain_box_level, ghost_cell_width, "L0: " );
 
-         L0.cacheGlobalReducedData();
+         L0->cacheGlobalReducedData();
 
          hierarchy->makeNewPatchLevel(0, L0);
       }
-
-      const hier::BoxLevel &L0 = *hierarchy->getPatchLevel(0)->getBoxLevel();
 
 
 
@@ -531,13 +530,13 @@ int main(
 
 
 
+      boost::shared_ptr<hier::BoxLevel> L1;
+
       if ( max_levels > 1 ) {
          /*
           * Step 2: Build L1.
           */
          tbox::pout << "\n==================== Generating L1 ====================" << std::endl;
-
-         boost::shared_ptr<hier::BoxLevel> L1;
 
          const int coarser_ln = 0;
          const int finer_ln = coarser_ln + 1;
@@ -546,7 +545,8 @@ int main(
          const hier::IntVector required_connector_width =
             hierarchy->getRequiredConnectorWidth(coarser_ln, finer_ln);
          const hier::IntVector min_size = hier::IntVector::ceilingDivide(
-            hierarchy->getSmallestPatchSize(finer_ln), hierarchy->getRatioToCoarserLevel(finer_ln) );
+            hierarchy->getSmallestPatchSize(finer_ln),
+            hierarchy->getRatioToCoarserLevel(finer_ln) );
 
 
          /*
@@ -562,7 +562,7 @@ int main(
           * Cluster.
           */
          tbox::pout << "\tClustering..." << std::endl;
-         abr.setMPI(L0.getMPI());
+         abr.setMPI(L0->getMPI());
          tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
          abr.findBoxesContainingTags(
             L1,
@@ -571,14 +571,14 @@ int main(
             hierarchy->getPatchLevel(coarser_ln),
             tag_data_id,
             1 /* tag_val */,
-            hier::BoxContainer(L0.getGlobalBoundingBox(0)),
+            hier::BoxContainer(L0->getGlobalBoundingBox(0)),
             min_size,
             exact_tagging ? 1.0 : efficiency_tol,
             exact_tagging ? 1.0 : combine_tol,
             required_connector_width,
             hier::LocalId(0));
 
-         outputPostcluster( *L1, L0, required_connector_width, "L1: " );
+         outputPostcluster( *L1, *L0, required_connector_width, "L1: " );
 
          /*
           * Enforce nesting.
@@ -601,7 +601,7 @@ int main(
 
          tbox::pout << "\tPartitioning..." << std::endl;
 
-         outputPrebalance( *L1, L0, required_connector_width, "L1: " );
+         outputPrebalance( *L1, *L0, required_connector_width, "L1: " );
 
          tbox::plog << "\n\tL1 prebalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
@@ -629,7 +629,7 @@ int main(
                    false,
                    true);
 
-         outputPostbalance( *L1, L0, required_connector_width, "L1: " );
+         outputPostbalance( *L1, *L0, required_connector_width, "L1: " );
 
          tbox::plog << "\n\tL1 postbalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
@@ -652,10 +652,8 @@ int main(
             *L1_to_L0,
             *L0_to_L1);
 
-         hierarchy->makeNewPatchLevel(1, *L1);
+         hierarchy->makeNewPatchLevel(1, L1);
       }
-
-      const hier::BoxLevel &L1 = *hierarchy->getPatchLevel(1)->getBoxLevel();
 
       boost::shared_ptr<hier::Connector> L2_to_L1;
       boost::shared_ptr<hier::Connector> L1_to_L2;
@@ -676,7 +674,8 @@ int main(
          const hier::IntVector required_connector_width =
             hierarchy->getRequiredConnectorWidth(coarser_ln, finer_ln);
          const hier::IntVector min_size = hier::IntVector::ceilingDivide(
-            hierarchy->getSmallestPatchSize(finer_ln), hierarchy->getRatioToCoarserLevel(finer_ln) );
+            hierarchy->getSmallestPatchSize(finer_ln),
+            hierarchy->getRatioToCoarserLevel(finer_ln) );
 
 
          /*
@@ -692,7 +691,7 @@ int main(
           * Cluster.
           */
          tbox::pout << "\tClustering..." << std::endl;
-         abr.setMPI(L0.getMPI());
+         abr.setMPI(L0->getMPI());
          tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
          abr.findBoxesContainingTags(
             L2,
@@ -701,14 +700,14 @@ int main(
             hierarchy->getPatchLevel(coarser_ln),
             tag_data_id,
             1 /* tag_val */,
-            hier::BoxContainer(L1.getGlobalBoundingBox(0)),
+            hier::BoxContainer(L1->getGlobalBoundingBox(0)),
             min_size,
             exact_tagging ? 1.0 : efficiency_tol,
             exact_tagging ? 1.0 : combine_tol,
             required_connector_width,
             hier::LocalId(0));
 
-         outputPostcluster( *L2, L1, required_connector_width, "L2: " );
+         outputPostcluster( *L2, *L1, required_connector_width, "L2: " );
 
          /*
           * Enforce nesting.
@@ -732,7 +731,7 @@ int main(
 
          tbox::pout << "\tPartitioning..." << std::endl;
 
-         outputPrebalance( *L2, L1, required_connector_width, "L2: " );
+         outputPrebalance( *L2, *L1, required_connector_width, "L2: " );
 
          tbox::plog << "\n\tL2 prebalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
@@ -760,7 +759,7 @@ int main(
                    false,
                    true);
 
-         outputPostbalance( *L2, L1, required_connector_width, "L2: " );
+         outputPostbalance( *L2, *L1, required_connector_width, "L2: " );
 
          tbox::plog << "\n\tL2 postalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
@@ -783,10 +782,8 @@ int main(
             *L2_to_L1,
             *L1_to_L2);
 
-         hierarchy->makeNewPatchLevel(2, *L2);
+         hierarchy->makeNewPatchLevel(2, L2);
       }
-
-      // const hier::BoxLevel &L2 = *hierarchy->getPatchLevel(2)->getBoxLevel();
 
 
       tbox::plog << "\n==================== Final hierarchy ====================" << std::endl;
