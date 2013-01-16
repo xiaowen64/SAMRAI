@@ -41,7 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CartesianSideFloatWeightedAverage();
+   CartesianSideFloatWeightedAverage();
 
    /**
     * Uninteresting virtual destructor.

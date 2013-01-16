@@ -45,7 +45,7 @@ public:
    /*!
     * @brief Uninteresting default constructor.
     */
-   explicit OuternodeDoubleInjection();
+   OuternodeDoubleInjection();
 
    /*!
     * @brief Uninteresting virtual destructor.

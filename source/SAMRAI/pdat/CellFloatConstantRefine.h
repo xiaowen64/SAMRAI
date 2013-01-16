@@ -41,7 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CellFloatConstantRefine();
+   CellFloatConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

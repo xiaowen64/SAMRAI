@@ -1405,7 +1405,7 @@ public:
     * Constructor for the box iterator.  The iterator will enumerate the
     * indices in the argument box.
     */
-   explicit BoxIterator(
+   BoxIterator(
       const Box& box,
       bool begin);
 

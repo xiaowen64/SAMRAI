@@ -40,7 +40,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit SideIntegerConstantRefine();
+   SideIntegerConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

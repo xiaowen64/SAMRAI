@@ -41,7 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit SideDoubleConstantRefine();
+   SideDoubleConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

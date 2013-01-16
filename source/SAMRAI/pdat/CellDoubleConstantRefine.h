@@ -41,7 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CellDoubleConstantRefine();
+   CellDoubleConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

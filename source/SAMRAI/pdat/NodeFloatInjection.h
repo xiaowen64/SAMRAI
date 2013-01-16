@@ -42,7 +42,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit NodeFloatInjection();
+   NodeFloatInjection();
 
    /**
     * Uninteresting virtual destructor.

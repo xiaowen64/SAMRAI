@@ -43,7 +43,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CartesianEdgeFloatWeightedAverage();
+   CartesianEdgeFloatWeightedAverage();
 
    /**
     * Uninteresting virtual destructor.

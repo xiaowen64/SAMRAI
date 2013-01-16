@@ -41,7 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CartesianNodeDoubleLinearRefine();
+   CartesianNodeDoubleLinearRefine();
 
    /**
     * Uninteresting virtual destructor.

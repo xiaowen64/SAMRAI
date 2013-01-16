@@ -131,7 +131,7 @@ private:
     * @param[in] boxes
     * @param[in] begin
     */
-   explicit RealBoxConstIterator(
+   RealBoxConstIterator(
       const BoxContainer& boxes,
       bool begin);
 

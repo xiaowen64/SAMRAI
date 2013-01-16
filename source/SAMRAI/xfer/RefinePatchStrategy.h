@@ -80,7 +80,7 @@ public:
     * The constructor will register the constructed object with a static
     * set that manages all RefinePatchStrategy objects in an application.
     */
-   explicit RefinePatchStrategy();
+   RefinePatchStrategy();
 
    /*!
     * @brief Destructor

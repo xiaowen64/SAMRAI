@@ -40,7 +40,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit SideComplexConstantRefine();
+   SideComplexConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

@@ -45,7 +45,7 @@ public:
    /*!
     * @brief The constructor does nothing interesting.
     */
-   explicit MultiblockGriddingTagger();
+   MultiblockGriddingTagger();
 
    /*!
     * @brief The virtual destructor does nothing interesting.

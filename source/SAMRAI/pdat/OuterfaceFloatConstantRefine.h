@@ -41,7 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit OuterfaceFloatConstantRefine();
+   OuterfaceFloatConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

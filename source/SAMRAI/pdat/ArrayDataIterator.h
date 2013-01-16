@@ -49,7 +49,7 @@ public:
     * Constructor for the array data iterator.  The iterator will enumerate
     * the indices in the argument box.
     */
-   explicit ArrayDataIterator(
+   ArrayDataIterator(
       const hier::Box& box,
       bool begin);
 

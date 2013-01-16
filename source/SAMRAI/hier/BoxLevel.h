@@ -112,7 +112,7 @@ public:
     * @param[in] restart_db
     * @param[in] grid_geom
     */
-   explicit BoxLevel(
+   BoxLevel(
       const tbox::Dimension& dim,
       tbox::Database& restart_db,
       const boost::shared_ptr<const BaseGridGeometry>& grid_geom);

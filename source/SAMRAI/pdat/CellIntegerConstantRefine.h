@@ -40,7 +40,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CellIntegerConstantRefine();
+   CellIntegerConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

@@ -41,7 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit EdgeComplexConstantRefine();
+   EdgeComplexConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

@@ -41,7 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit NodeIntegerInjection();
+   NodeIntegerInjection();
 
    /**
     * Uninteresting virtual destructor.

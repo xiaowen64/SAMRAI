@@ -41,7 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit FaceDoubleConstantRefine();
+   FaceDoubleConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

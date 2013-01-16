@@ -40,7 +40,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit FaceIntegerConstantRefine();
+   FaceIntegerConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

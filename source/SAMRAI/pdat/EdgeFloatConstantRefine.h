@@ -41,7 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit EdgeFloatConstantRefine();
+   EdgeFloatConstantRefine();
 
    /**
     * Uninteresting virtual destructor.

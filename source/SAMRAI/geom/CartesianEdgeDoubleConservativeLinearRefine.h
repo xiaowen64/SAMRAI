@@ -42,7 +42,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CartesianEdgeDoubleConservativeLinearRefine();
+   CartesianEdgeDoubleConservativeLinearRefine();
 
    /**
     * Uninteresting virtual destructor.

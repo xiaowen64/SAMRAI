@@ -66,7 +66,7 @@ public:
    /**
     * Blank constructor for HyperbolicPatchStrategy.
     */
-   explicit HyperbolicPatchStrategy();
+   HyperbolicPatchStrategy();
 
    /**
     * Virtual destructor for HyperbolicPatchStrategy.

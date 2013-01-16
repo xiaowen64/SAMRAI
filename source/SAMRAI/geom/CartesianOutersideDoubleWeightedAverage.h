@@ -41,7 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CartesianOutersideDoubleWeightedAverage();
+   CartesianOutersideDoubleWeightedAverage();
 
    /**
     * Uninteresting virtual destructor.

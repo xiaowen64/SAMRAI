@@ -603,7 +603,7 @@ public:
     * Constructor for the index list iterator.  The iterator will iterate
     * over the irregular index set of the argument data object.
     */
-   explicit IndexIterator(
+   IndexIterator(
       const IndexData<TYPE, BOX_GEOMETRY>& data,
       bool begin);
 

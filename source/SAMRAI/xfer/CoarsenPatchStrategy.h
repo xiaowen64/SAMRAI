@@ -67,7 +67,7 @@ public:
     * The constructor will register the constructed object with a static
     * set that manages all CoarsenPatchStrategy objects in an application.
     */
-   explicit CoarsenPatchStrategy();
+   CoarsenPatchStrategy();
 
    /*!
     * @brief Destructor.

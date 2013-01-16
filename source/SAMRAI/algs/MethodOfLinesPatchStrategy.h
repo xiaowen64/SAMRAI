@@ -53,7 +53,7 @@ public:
    /*!
     * Blank constructor for MethodOfLinesPatchStrategy.
     */
-   explicit MethodOfLinesPatchStrategy();
+   MethodOfLinesPatchStrategy();
 
    /*!
     * Virtual destructor for MethodOfLinesPatchStrategy.

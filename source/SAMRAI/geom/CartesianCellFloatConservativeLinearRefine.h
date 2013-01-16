@@ -42,7 +42,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CartesianCellFloatConservativeLinearRefine();
+   CartesianCellFloatConservativeLinearRefine();
 
    /**
     * Uninteresting virtual destructor.

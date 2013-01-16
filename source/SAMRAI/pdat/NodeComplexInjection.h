@@ -42,7 +42,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit NodeComplexInjection();
+   NodeComplexInjection();
 
    /**
     * Uninteresting virtual destructor.

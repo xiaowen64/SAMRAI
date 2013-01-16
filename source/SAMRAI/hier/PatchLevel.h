@@ -1046,7 +1046,7 @@ private:
        * @param[in]  patch_level
        * @param[in]  begin
        */
-      explicit Iterator(
+      Iterator(
          const PatchLevel* patch_level,
          bool begin);
 

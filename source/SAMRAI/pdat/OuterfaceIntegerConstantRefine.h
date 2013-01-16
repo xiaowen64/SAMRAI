@@ -41,7 +41,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit OuterfaceIntegerConstantRefine();
+   OuterfaceIntegerConstantRefine();
 
    /**
     * Uninteresting virtual destructor.
