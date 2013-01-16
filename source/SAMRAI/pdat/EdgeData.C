@@ -317,8 +317,8 @@ EdgeData<TYPE>::copyWithRotation(
             const int depth = ((getDepth() < src.getDepth()) ?
                                getDepth() : src.getDepth());
 
-            hier::Box::iterator ciend(copybox, false);
-            for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
+	    hier::Box::iterator ciend(copybox.end());
+            for (hier::Box::iterator ci(copybox.begin()); ci != ciend; ++ci) {
 
                EdgeIndex dst_index(*ci, 0, 0);
                dst_index.setAxis(i);
@@ -481,8 +481,9 @@ EdgeData<TYPE>::packWithRotation(
 
             for (int d = 0; d < depth; d++) {
 
-               hier::Box::iterator ciend(copybox, false);
-               for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
+               hier::Box::iterator ciend(copybox.end());
+               for (hier::Box::iterator ci(copybox.begin());
+                    ci != ciend; ++ci) {
 
                   EdgeIndex src_index(*ci, 0, 0);
                   src_index.setAxis(i);
@@ -675,8 +676,8 @@ EdgeData<TYPE>::printAxis(
    TBOX_ASSERT((axis >= 0) && (axis < getDim().getValue()));
 
    os.precision(prec);
-   EdgeIterator iend(box, axis, false);
-   for (EdgeIterator i(box, axis, true); i != iend; ++i) {
+   EdgeIterator iend(EdgeGeometry::end(box, axis));
+   for (EdgeIterator i(EdgeGeometry::begin(box, axis)); i != iend; ++i) {
       os << "array" << *i << " = " << (*(d_data[axis]))(*i, depth)
          << std::endl << std::flush;
    }

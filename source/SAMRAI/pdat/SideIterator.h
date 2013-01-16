@@ -46,15 +46,6 @@ class SideIterator
 {
 public:
    /**
-    * Constructor for the side iterator.  The iterator will enumerate
-    * the indices in the argument box.
-    */
-   SideIterator(
-      const hier::Box& box,
-      const int axis,
-      bool begin);
-
-   /**
     * Copy constructor for the side iterator
     */
    SideIterator(
@@ -130,6 +121,21 @@ public:
    }
 
 private:
+   friend SideIterator SideGeometry::begin(const hier::Box& box, int axis);
+   friend SideIterator SideGeometry::end(const hier::Box& box, int axis);
+
+   /**
+    * Constructor for the side iterator.  The iterator will enumerate
+    * the indices in the argument box.
+    */
+   SideIterator(
+      const hier::Box& box,
+      const int axis,
+      bool begin);
+
+   // Unimplemented default constructor.
+   SideIterator();
+
    SideIndex d_index;
    hier::Box d_box;
 };

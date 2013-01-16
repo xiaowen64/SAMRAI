@@ -583,8 +583,8 @@ int main(
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
  *   boost::shared_ptr< pdat::CellData<double> > svdata = patch->getPatchData(cwgt_id);
  *
- *   pdat::CellIterator cend(svdata->getBox(), false);
- *   for (pdat::CellIterator c(svdata->getBox(), true); c != cend && vol_test_passed; ++c) {
+ *   pdat::CellIterator cend(pdat::CellGeometry::end(svdata->getBox()));
+ *   for (pdat::CellIterator c(pdat::CellGeometry::begin(svdata->getBox())); c != cend && vol_test_passed; ++c) {
  *   pdat::CellIndex cell_index = *c;
  *
  *   if (ln == 0) {
@@ -868,8 +868,8 @@ int main(
                                 pdat::SideIndex::Upper);
 
          // check X axis data
-         pdat::SideIterator cend(sdata->getBox(), pdat::SideIndex::X, false);
-         for (pdat::SideIterator c(sdata->getBox(), pdat::SideIndex::X, true);
+         pdat::SideIterator cend(pdat::SideGeometry::end(sdata->getBox(), pdat::SideIndex::X));
+         for (pdat::SideIterator c(pdat::SideGeometry::begin(sdata->getBox(), pdat::SideIndex::X));
               c != cend && bogus_value_test_passed; ++c) {
             pdat::SideIndex side_index = *c;
 
@@ -880,8 +880,8 @@ int main(
          }
 
          // check Y axis data
-         pdat::SideIterator ccend(sdata->getBox(), pdat::SideIndex::Y, false);
-         for (pdat::SideIterator cc(sdata->getBox(), pdat::SideIndex::Y, true);
+         pdat::SideIterator ccend(pdat::SideGeometry::end(sdata->getBox(), pdat::SideIndex::Y));
+         for (pdat::SideIterator cc(pdat::SideGeometry::begin(sdata->getBox(), pdat::SideIndex::Y));
               cc != ccend && bogus_value_test_passed; ++cc) {
             pdat::SideIndex side_index = *cc;
 
@@ -909,8 +909,8 @@ int main(
 
          if (dim.getValue() == 3) {
             // check Z axis data
-            pdat::SideIterator cend(sdata->getBox(), pdat::SideIndex::Z, false);
-            for (pdat::SideIterator c(sdata->getBox(), pdat::SideIndex::Z, true);
+            pdat::SideIterator cend(pdat::SideGeometry::end(sdata->getBox(), pdat::SideIndex::Z));
+            for (pdat::SideIterator c(pdat::SideGeometry::begin(sdata->getBox(), pdat::SideIndex::Z));
                  c != cend && bogus_value_test_passed; ++c) {
                pdat::SideIndex side_index = *c;
 
@@ -1145,8 +1145,8 @@ complexDataSameAsValue(
 
          TBOX_ASSERT(svdata);
 
-         pdat::SideIterator cend(svdata->getBox(), 1, false);
-         for (pdat::SideIterator c(svdata->getBox(), 1, true);
+         pdat::SideIterator cend(pdat::SideGeometry::end(svdata->getBox(), 1));
+         for (pdat::SideIterator c(pdat::SideGeometry::begin(svdata->getBox(), 1));
               c != cend && test_passed; ++c) {
             pdat::SideIndex side_index = *c;
             if (!tbox::MathUtilities<dcomplex>::equalEps((*svdata)(side_index),
@@ -1185,8 +1185,8 @@ doubleDataSameAsValue(
 
          TBOX_ASSERT(svdata);
 
-         pdat::SideIterator cend(svdata->getBox(), 1, false);
-         for (pdat::SideIterator c(svdata->getBox(), 1, true);
+         pdat::SideIterator cend(pdat::SideGeometry::end(svdata->getBox(), 1));
+         for (pdat::SideIterator c(pdat::SideGeometry::begin(svdata->getBox(), 1));
               c != cend && test_passed; ++c) {
             pdat::SideIndex side_index = *c;
             if (!tbox::MathUtilities<double>::equalEps((*svdata)(side_index),

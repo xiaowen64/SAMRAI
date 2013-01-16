@@ -375,8 +375,9 @@ SideData<TYPE>::copyWithRotation(
                const int depth = ((getDepth() < src.getDepth()) ?
                                   getDepth() : src.getDepth());
 
-               hier::Box::iterator ciend(copybox, false);
-               for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
+               hier::Box::iterator ciend(copybox.end());
+               for (hier::Box::iterator ci(copybox.begin());
+                    ci != ciend; ++ci) {
 
                   SideIndex dst_index(*ci, 0, 0);
                   dst_index.setAxis(i);
@@ -549,8 +550,9 @@ SideData<TYPE>::packWithRotation(
 
                for (int d = 0; d < depth; d++) {
 
-                  hier::Box::iterator ciend(copybox, false);
-                  for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
+                  hier::Box::iterator ciend(copybox.end());
+                  for (hier::Box::iterator ci(copybox.begin());
+                       ci != ciend; ++ci) {
 
                      SideIndex src_index(*ci, 0, 0);
                      src_index.setAxis(i);
@@ -760,8 +762,9 @@ SideData<TYPE>::printAxis(
 
    os.precision(prec);
    if (d_directions(side_normal)) {
-      SideIterator iend(box, side_normal, false);
-      for (SideIterator i(box, side_normal, true); i != iend; ++i) {
+      SideIterator iend(SideGeometry::end(box, side_normal));
+      for (SideIterator i(SideGeometry::begin(box, side_normal));
+           i != iend; ++i) {
          os << "array" << *i << " = "
             << (*(d_data[side_normal]))(*i, depth) << std::endl << std::flush;
       }

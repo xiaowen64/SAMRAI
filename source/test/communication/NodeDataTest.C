@@ -173,8 +173,9 @@ void NodeDataTest::setLinearData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   pdat::NodeIterator ciend(sbox, false);
-   for (pdat::NodeIterator ci(sbox, true); ci != ciend; ++ci) {
+   pdat::NodeIterator ciend(pdat::NodeGeometry::end(sbox));
+   for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(sbox));
+        ci != ciend; ++ci) {
 
       /*
        * Compute spatial location of node center and
@@ -224,8 +225,9 @@ void NodeDataTest::setPeriodicData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   pdat::NodeIterator niend(sbox, false);
-   for (pdat::NodeIterator ni(sbox, true); ni != niend; ++ni) {
+   pdat::NodeIterator niend(pdat::NodeGeometry::end(sbox));
+   for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(sbox));
+        ni != niend; ++ni) {
 
       double val = 1.0;
       for (int d = 0; d < d_dim.getValue(); ++d) {
@@ -322,8 +324,9 @@ void NodeDataTest::checkPatchInteriorData(
       setLinearData(correct_data, correct_data->getGhostBox(), patch);
    }
 
-   pdat::NodeIterator niend(interior, false);
-   for (pdat::NodeIterator ni(interior, true); ni != niend; ++ni) {
+   pdat::NodeIterator niend(pdat::NodeGeometry::end(interior));
+   for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(interior));
+        ni != niend; ++ni) {
       for (int d = 0; d < depth; d++) {
          if (!(tbox::MathUtilities<double>::equalEps((*data)(*ni, d),
                   (*correct_data)(*ni, d)))) {
@@ -496,8 +499,9 @@ bool NodeDataTest::verifyResults(
          int depth = node_data->getDepth();
          hier::Box dbox = node_data->getGhostBox();
 
-         pdat::NodeIterator ciend(dbox, false);
-         for (pdat::NodeIterator ci(dbox, true); ci != ciend; ++ci) {
+         pdat::NodeIterator ciend(pdat::NodeGeometry::end(dbox));
+         for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(dbox));
+              ci != ciend; ++ci) {
             double correct = (*solution)(*ci);
             for (int d = 0; d < depth; d++) {
                double result = (*node_data)(*ci, d);

@@ -511,8 +511,8 @@ void SinusoidalFrontTagger::computeFrontsData(
        */
       tmp_tag.fill(0);
       hier::BlockId blk0(0);
-      pdat::CellData<int>::iterator ciend(tmp_tag.getGhostBox(), false);
-      for ( pdat::CellData<int>::iterator ci(tmp_tag.getGhostBox(), true);
+      pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(tmp_tag.getGhostBox()));
+      for ( pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(tmp_tag.getGhostBox()));
             ci != ciend; ++ci ) {
 
          const pdat::CellIndex &cell_index = *ci;
@@ -524,8 +524,9 @@ void SinusoidalFrontTagger::computeFrontsData(
          double min_distance_to_front =  tbox::MathUtilities<double>::getMax();
          double max_distance_to_front = -tbox::MathUtilities<double>::getMax();
          // tbox::plog << "initial distances to front: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
-         pdat::NodeIterator niend(cell_box, false);
-         for ( pdat::NodeIterator ni(cell_box, true); ni != niend; ++ni ) {
+         pdat::NodeIterator niend(pdat::NodeGeometry::end(cell_box));
+         for ( pdat::NodeIterator ni(pdat::NodeGeometry::begin(cell_box));
+               ni != niend; ++ni ) {
 
             const pdat::NodeIndex &node_index = *ni;
             hier::Index front_index = node_index;
@@ -589,8 +590,8 @@ void SinusoidalFrontTagger::computeFrontsData(
       t_distance->start();
 
       pdat::NodeData<double> &dist_to_front(*dist_data);
-      pdat::NodeData<double>::iterator ni(dist_to_front.getGhostBox(), true);
-      pdat::NodeData<double>::iterator niend(dist_to_front.getGhostBox(), false);
+      pdat::NodeData<double>::iterator ni(pdat::NodeGeometry::begin(dist_to_front.getGhostBox()));
+      pdat::NodeData<double>::iterator niend(pdat::NodeGeometry::end(dist_to_front.getGhostBox()));
       for ( ; ni != niend; ++ni) {
          const pdat::NodeIndex& index = *ni;
          pdat::NodeIndex front_index(index);
@@ -645,16 +646,16 @@ bool SinusoidalFrontTagger::packDerivedDataIntoDoubleBuffer(
       pdat::NodeData<double> dist_data(patch.getBox(), 1, hier::IntVector(d_dim,
                                           0));
       computePatchData(patch, d_time, &dist_data, 0);
-      pdat::NodeData<double>::iterator ciend(patch.getBox(), false);
-      for (pdat::NodeData<double>::iterator ci(patch.getBox(), true);
+      pdat::NodeData<double>::iterator ciend(pdat::NodeGeometry::end(patch.getBox()));
+      for (pdat::NodeData<double>::iterator ci(pdat::NodeGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {
          *(buffer++) = dist_data(*ci);
       }
    } else if (variable_name == "Tag value") {
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
       computePatchData(patch, d_time, 0, &tag_data);
-      pdat::CellData<double>::iterator ciend(patch.getBox(), false);
-      for (pdat::CellData<double>::iterator ci(patch.getBox(), true);
+      pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
+      for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {
          *(buffer++) = tag_data(*ci);
       }

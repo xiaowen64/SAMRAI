@@ -577,8 +577,8 @@ int main(
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
  *   boost::shared_ptr< pdat::FaceData<double> > fvdata = patch->getPatchData(fwgt_id);
  *
- *   pdat::FaceIterator cend(fvdata->getBox(),1, false);
- *   for (pdat::FaceIterator c(fvdata->getBox(), 1, true); c != cend && vol_test_passed; ++c) {
+ *   pdat::FaceIterator cend(pdat::FaceGeometry::end(fvdata->getBox(), 1));
+ *   for (pdat::FaceIterator c(pdat::FaceGeometry::begin(fvdata->getBox(), 1)); c != cend && vol_test_passed; ++c) {
  *   pdat::FaceIndex face_index = *c;
  *
  *   if (ln == 0) {
@@ -858,8 +858,8 @@ int main(
                                 pdat::FaceIndex::Upper);
 
          // check X axis data
-         pdat::FaceIterator cend(cdata->getBox(), pdat::FaceIndex::X, false);
-         for (pdat::FaceIterator c(cdata->getBox(), pdat::FaceIndex::X, true);
+         pdat::FaceIterator cend(pdat::FaceGeometry::end(cdata->getBox(), pdat::FaceIndex::X));
+         for (pdat::FaceIterator c(pdat::FaceGeometry::begin(cdata->getBox(), pdat::FaceIndex::X));
               c != cend && bogus_value_test_passed; ++c) {
             pdat::FaceIndex face_index = *c;
 
@@ -870,8 +870,8 @@ int main(
          }
 
          // check Y axis data
-         pdat::FaceIterator ccend(cdata->getBox(), pdat::FaceIndex::Y, false);
-         for (pdat::FaceIterator cc(cdata->getBox(), pdat::FaceIndex::Y, true);
+         pdat::FaceIterator ccend(pdat::FaceGeometry::end(cdata->getBox(), pdat::FaceIndex::Y));
+         for (pdat::FaceIterator cc(pdat::FaceGeometry::begin(cdata->getBox(), pdat::FaceIndex::Y));
               cc != ccend && bogus_value_test_passed; ++cc) {
             pdat::FaceIndex face_index = *cc;
 
@@ -899,8 +899,8 @@ int main(
 
          if (dim.getValue() == 3) {
             // check Z axis data
-            pdat::FaceIterator cend(cdata->getBox(), pdat::FaceIndex::Z, false);
-            for (pdat::FaceIterator c(cdata->getBox(), pdat::FaceIndex::Z, true);
+            pdat::FaceIterator cend(pdat::FaceGeometry::end(cdata->getBox(), pdat::FaceIndex::Z));
+            for (pdat::FaceIterator c(pdat::FaceGeometry::begin(cdata->getBox(), pdat::FaceIndex::Z));
                  c != cend && bogus_value_test_passed; ++c) {
                pdat::FaceIndex face_index = *c;
 
@@ -1134,8 +1134,8 @@ complexDataSameAsValue(
             patch->getPatchData(desc_id),
             BOOST_CAST_TAG);
          TBOX_ASSERT(fvdata);
-         pdat::FaceIterator fend(fvdata->getBox(), 1, false);
-         for (pdat::FaceIterator f(fvdata->getBox(), 1, true);
+         pdat::FaceIterator fend(pdat::FaceGeometry::end(fvdata->getBox(), 1));
+         for (pdat::FaceIterator f(pdat::FaceGeometry::begin(fvdata->getBox(), 1));
               f != fend && test_passed; ++f) {
             pdat::FaceIndex face_index = *f;
             if (!tbox::MathUtilities<dcomplex>::equalEps((*fvdata)(face_index),
@@ -1175,8 +1175,8 @@ doubleDataSameAsValue(
 
          TBOX_ASSERT(fvdata);
 
-         pdat::FaceIterator fend(fvdata->getBox(), 1, false);
-         for (pdat::FaceIterator f(fvdata->getBox(), 1, true);
+         pdat::FaceIterator fend(pdat::FaceGeometry::end(fvdata->getBox(), 1));
+         for (pdat::FaceIterator f(pdat::FaceGeometry::begin(fvdata->getBox(), 1));
               f != fend && test_passed; ++f) {
             pdat::FaceIndex face_index = *f;
             if (!tbox::MathUtilities<double>::equalEps((*fvdata)(face_index),

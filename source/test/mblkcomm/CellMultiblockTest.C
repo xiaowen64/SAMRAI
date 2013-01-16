@@ -334,8 +334,8 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
                      BOOST_CAST_TAG);
                   TBOX_ASSERT(sing_data);
 
-                  pdat::CellIterator ciend(encon_fill_box, false);
-                  for (pdat::CellIterator ci(encon_fill_box, true);
+                  pdat::CellIterator ciend(pdat::CellGeometry::end(encon_fill_box));
+                  for (pdat::CellIterator ci(pdat::CellGeometry::begin(encon_fill_box));
                        ci != ciend; ++ci) {
                      pdat::CellIndex src_index(*ci);
                      pdat::CellGeometry::transform(src_index, back_trans);
@@ -351,8 +351,9 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
       }
 
       if (num_encon_used) {
-         pdat::CellIterator ciend(sing_fill_box, false);
-         for (pdat::CellIterator ci(sing_fill_box, true); ci != ciend; ++ci) {
+         pdat::CellIterator ciend(pdat::CellGeometry::end(sing_fill_box));
+         for (pdat::CellIterator ci(pdat::CellGeometry::begin(sing_fill_box));
+              ci != ciend; ++ci) {
             for (int d = 0; d < depth; d++) {
                (*cell_data)(*ci, d) /= num_encon_used;
             }
@@ -435,8 +436,9 @@ bool CellMultiblockTest::verifyResults(
       TBOX_ASSERT(cell_data);
       int depth = cell_data->getDepth();
 
-      pdat::CellIterator ciend(pbox, false);
-      for (pdat::CellIterator ci(pbox, true); ci != ciend; ++ci) {
+      pdat::CellIterator ciend(pdat::CellGeometry::end(pbox));
+      for (pdat::CellIterator ci(pdat::CellGeometry::begin(pbox));
+           ci != ciend; ++ci) {
          for (int d = 0; d < depth; d++) {
             double result = (*cell_data)(*ci, d);
 
@@ -470,8 +472,9 @@ bool CellMultiblockTest::verifyResults(
          for (hier::BoxContainer::iterator ng(neighbor_ghost);
               ng != neighbor_ghost.end(); ++ng) {
 
-           pdat::CellIterator ciend(*ng, false);
-           for (pdat::CellIterator ci(*ng, true); ci != ciend; ++ci) {
+           pdat::CellIterator ciend(pdat::CellGeometry::end(*ng));
+           for (pdat::CellIterator ci(pdat::CellGeometry::begin(*ng));
+                ci != ciend; ++ci) {
                for (int d = 0; d < depth; d++) {
                   double result = (*cell_data)(*ci, d);
 
@@ -537,8 +540,9 @@ bool CellMultiblockTest::verifyResults(
                correct = (double)(bdry[k].getLocationIndex() + 100);
             }
 
-            pdat::CellIterator ciend(fill_box, false);
-            for (pdat::CellIterator ci(fill_box, true); ci != ciend; ++ci) {
+            pdat::CellIterator ciend(pdat::CellGeometry::end(fill_box));
+            for (pdat::CellIterator ci(pdat::CellGeometry::begin(fill_box));
+                 ci != ciend; ++ci) {
                for (int d = 0; d < depth; d++) {
                   double result = (*cell_data)(*ci, d);
 

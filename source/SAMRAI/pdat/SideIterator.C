@@ -12,6 +12,7 @@
 #define included_pdat_SideIterator_C
 
 #include "SAMRAI/pdat/SideIterator.h"
+#include "SAMRAI/pdat/SideGeometry.h"
 
 namespace SAMRAI {
 namespace pdat {

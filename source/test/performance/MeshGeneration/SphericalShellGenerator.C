@@ -259,8 +259,8 @@ void SphericalShellGenerator::tagShells(
    pdat::NodeData<double> node_tag_data(pbox, 1, tag_data.getGhostCellWidth()+buffer_cells);
    node_tag_data.getArrayData().fillAll(0);
 
-   pdat::NodeData<int>::iterator niend(node_tag_data.getGhostBox(), false);
-   for (pdat::NodeData<int>::iterator ni(node_tag_data.getGhostBox(), true);
+   pdat::NodeData<int>::iterator niend(pdat::NodeGeometry::end(node_tag_data.getGhostBox()));
+   for (pdat::NodeData<int>::iterator ni(pdat::NodeGeometry::begin(node_tag_data.getGhostBox()));
         ni != niend; ++ni) {
       const pdat::NodeIndex& idx = *ni;
       double r[SAMRAI::MAX_DIM_VAL];
@@ -284,15 +284,15 @@ void SphericalShellGenerator::tagShells(
     */
    tag_data.getArrayData().fillAll(0);
 
-   pdat::CellData<int>::iterator ciend(tag_data.getGhostBox(), false);
-   for (pdat::CellData<int>::iterator ci(tag_data.getGhostBox(), true);
+   pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(tag_data.getGhostBox()));
+   for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(tag_data.getGhostBox()));
         ci != ciend; ++ci) {
       const pdat::CellIndex& cid = *ci;
 
       hier::Box check_box(cid,cid, block_id);
       check_box.grow(buffer_cells);
-      pdat::NodeIterator node_itr_end(check_box, false);
-      for ( pdat::NodeIterator node_itr(check_box, true);
+      pdat::NodeIterator node_itr_end(pdat::NodeGeometry::end(check_box));
+      for ( pdat::NodeIterator node_itr(pdat::NodeGeometry::begin(check_box));
             node_itr != node_itr_end; ++node_itr ) {
          if ( node_tag_data(*node_itr) == tag_val ) {
             tag_data(cid) = tag_val;
@@ -325,8 +325,8 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
 
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
       tagShells(tag_data, dx, d_buffer_shrink_distance[patch.getPatchLevelNumber()]);
-      pdat::CellData<double>::iterator ciend(patch.getBox(), false);
-      for (pdat::CellData<double>::iterator ci(patch.getBox(), true);
+      pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
+      for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {
          *(buffer++) = tag_data(*ci);
       }

@@ -577,8 +577,8 @@ OutersideData<TYPE>::printAxisSide(
    const hier::Box region =
       sidebox * d_data[side_normal][side]->getBox();
    os.precision(prec);
-   hier::Box::iterator iend(region, false);
-   for (hier::Box::iterator i(region, true); i != iend; ++i) {
+   hier::Box::iterator iend(region.end());
+   for (hier::Box::iterator i(region.begin()); i != iend; ++i) {
       os << "array" << *i << " = "
          << (*(d_data[side_normal][side]))(*i, depth) << std::endl;
       os << std::flush;

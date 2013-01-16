@@ -71,6 +71,12 @@ class BoxIterator;
 class Box
 {
 public:
+   /**
+    * A box iterator iterates over the elements of a box.  This class is
+    * defined elsewhere, and the typedef is used to point to that class.
+    */
+   typedef BoxIterator iterator;
+
    /*!
     * @brief Creates an empty box with invalid BlockId and BoxId values.
     *
@@ -552,12 +558,7 @@ public:
    bool
    empty() const
    {
-      for (int i = 0; i < getDim().getValue(); i++) {
-         if (d_hi(i) < d_lo(i)) {
-            return true;
-         }
-      }
-      return false;
+      return isEmpty();
    }
 
    /*!
@@ -664,6 +665,18 @@ public:
    Index
    index(
       const int offset) const;
+
+   /*!
+    * @brief Return an iterator pointing to the first index of this.
+    */
+   iterator
+   begin() const;
+
+   /*!
+    * @brief Return an iterator pointing to the last index of this.
+    */
+   iterator
+   end() const;
 
    /*!
     * @brief Check whether an index lies within the bounds of the box.
@@ -1280,12 +1293,6 @@ public:
    {
       return *(s_universes[dim.getValue() - 1]);
    }
-
-   /**
-    * A box iterator iterates over the elements of a box.  This class is
-    * defined elsewhere, and the typedef is used to point to that class.
-    */
-   typedef BoxIterator iterator;
 
    friend class BoxIterator;
 

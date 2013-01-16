@@ -281,8 +281,8 @@ int main(
          Index hi(v);
 
          Box box1(lo, hi, BlockId(0));
-         hier::Box::iterator biend(box1, false);
-         for (Box::iterator bi(box1, true); bi != biend; ++bi) {
+         hier::Box::iterator biend(box1.end());
+         for (Box::iterator bi(box1.begin()); bi != biend; ++bi) {
 
             Index idx = *bi;
 
@@ -309,8 +309,8 @@ int main(
          Index hi(v);
 
          Box box1(lo, hi, BlockId(0));
-         hier::Box::iterator biend(box1, false);
-         for (Box::iterator bi(box1, true); bi != biend; ++bi) {
+         hier::Box::iterator biend(box1.end());
+         for (Box::iterator bi(box1.begin()); bi != biend; ++bi) {
 
             Index idx = *bi;
 
@@ -340,8 +340,8 @@ int main(
          Index hi(v);
 
          Box box1(lo, hi, BlockId(0));
-         hier::Box::iterator biend(box1, false);
-         for (Box::iterator bi(box1, true); bi != biend; ++bi) {
+         hier::Box::iterator biend(box1.end());
+         for (Box::iterator bi(box1.begin()); bi != biend; ++bi) {
             src.addItemPointer(*bi, new Item);
          }
 

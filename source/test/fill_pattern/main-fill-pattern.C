@@ -463,8 +463,8 @@ bool SingleLevelTestCase(
          txt2data(finaldata_txt[data_txt_id],
             expected, expected.getPointer(), false, false);
 
-         pdat::CellData<int>::iterator ciend(cdata->getGhostBox(), false);
-         for (pdat::CellData<int>::iterator ci(cdata->getGhostBox(), true);
+         pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(cdata->getGhostBox()));
+         for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(cdata->getGhostBox()));
               ci != ciend; ++ci) {
             if ((*cdata)(*ci) != expected(*ci)) {
                failed = true;
@@ -494,8 +494,8 @@ bool SingleLevelTestCase(
          txt2data(finaldata_txt[data_txt_id],
             expected, expected.getPointer(), false, true);
 
-         pdat::NodeData<int>::iterator niend(ndata->getGhostBox(), false);
-         for (pdat::NodeData<int>::iterator ni(ndata->getGhostBox(), true);
+         pdat::NodeData<int>::iterator niend(pdat::NodeGeometry::end(ndata->getGhostBox()));
+         for (pdat::NodeData<int>::iterator ni(pdat::NodeGeometry::begin(ndata->getGhostBox()));
               ni != niend; ++ni) {
             if ((*ndata)(*ni) != expected(*ni)) {
                failed = true;

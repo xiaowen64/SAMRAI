@@ -518,8 +518,8 @@ void AdaptivePoisson::applyGradientDetector(
       computeAdaptionEstimate(estimate_data,
          soln_cell_data);
       tag_cell_data.fill(0);
-      hier::Box::iterator iend(patch.getBox(), false);
-      for (hier::Box::iterator i(patch.getBox(), true); i != iend; ++i) {
+      hier::Box::iterator iend(patch.getBox().end());
+      for (hier::Box::iterator i(patch.getBox().begin()); i != iend; ++i) {
          const pdat::CellIndex cell_index(*i);
          if (maxestimate < estimate_data(cell_index)) maxestimate =
                estimate_data(cell_index);

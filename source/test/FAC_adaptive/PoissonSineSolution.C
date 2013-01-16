@@ -184,8 +184,8 @@ void PoissonSineSolution::setBcCoefs(
 
    if (gcoef_data) {
       if (d_dim == tbox::Dimension(2)) {
-         hier::Box::iterator boxit(gcoef_data->getBox(), true);
-         hier::Box::iterator boxitend(gcoef_data->getBox(), false);
+         hier::Box::iterator boxit(gcoef_data->getBox().begin());
+         hier::Box::iterator boxitend(gcoef_data->getBox().end());
          int i, j;
          double x, y;
          switch (location_index) {

@@ -46,14 +46,6 @@ class NodeIterator
 {
 public:
    /**
-    * Constructor for the node iterator.  The iterator will enumerate
-    * the indices in the argument box.
-    */
-   explicit NodeIterator(
-      const hier::Box& box,
-      bool begin);
-
-   /**
     * Copy constructor for the node iterator
     */
    NodeIterator(
@@ -129,6 +121,19 @@ public:
    }
 
 private:
+   friend NodeIterator NodeGeometry::begin(const hier::Box& box);
+   friend NodeIterator NodeGeometry::end(const hier::Box& box);
+   /**
+    * Constructor for the node iterator.  The iterator will enumerate
+    * the indices in the argument box.
+    */
+   NodeIterator(
+      const hier::Box& box,
+      bool begin);
+
+   // Unimplemented default constructor.
+   NodeIterator();
+
    NodeIndex d_index;
    hier::Box d_box;
 };

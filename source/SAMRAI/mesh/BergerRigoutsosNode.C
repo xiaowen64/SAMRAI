@@ -1754,8 +1754,8 @@ BergerRigoutsosNode::makeLocalTagHistogram()
 
             pdat::CellData<int>& tag_data = *tag_data_;
 
-            pdat::CellIterator ciend(intersection, false);
-            for (pdat::CellIterator ci(intersection, true);
+            pdat::CellIterator ciend(pdat::CellGeometry::end(intersection));
+            for (pdat::CellIterator ci(pdat::CellGeometry::begin(intersection));
                  ci != ciend; ++ci) {
                if (tag_data(*ci) == d_common->tag_val) {
                   const hier::IntVector& idx = *ci;

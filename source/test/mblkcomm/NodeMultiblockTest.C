@@ -195,8 +195,9 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
          hier::Box patch_node_box =
             pdat::NodeGeometry::toNodeBox(patch.getBox());
          if (!node_bdry[nb].getIsMultiblockSingularity()) {
-            pdat::NodeIterator niend(fill_box, false);
-            for (pdat::NodeIterator ni(fill_box, true); ni != niend; ++ni) {
+            pdat::NodeIterator niend(pdat::NodeGeometry::end(fill_box));
+            for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(fill_box));
+                 ni != niend; ++ni) {
                if (!patch_node_box.contains(*ni)) {
                   for (int d = 0; d < node_data->getDepth(); d++) {
                      (*node_data)(*ni, d) =
@@ -223,8 +224,9 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
             hier::Index pupper(patch_node_box.upper());
 
             if (!edge_bdry[eb].getIsMultiblockSingularity()) {
-               pdat::NodeIterator niend(fill_box, false);
-               for (pdat::NodeIterator ni(fill_box, true); ni != niend; ++ni) {
+               pdat::NodeIterator niend(pdat::NodeGeometry::end(fill_box));
+               for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(fill_box));
+                    ni != niend; ++ni) {
                   if (!patch_node_box.contains(*ni)) {
                      bool use_index = true;
                      for (int n = 0; n < d_dim.getValue(); n++) {
@@ -265,8 +267,9 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
             hier::Index pupper(patch_node_box.upper());
 
             if (!face_bdry[fb].getIsMultiblockSingularity()) {
-               pdat::NodeIterator niend(fill_box, false);
-               for (pdat::NodeIterator ni(fill_box, true); ni != niend; ++ni) {
+               pdat::NodeIterator niend(pdat::NodeGeometry::end(fill_box));
+               for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(fill_box));
+                    ni != niend; ++ni) {
                   if (!patch_node_box.contains(*ni)) {
                      bool use_index = true;
                      for (int n = 0; n < d_dim.getValue(); n++) {
@@ -327,8 +330,9 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
       hier::Index plower(pbox.lower());
       hier::Index pupper(pbox.upper());
 
-      pdat::NodeIterator niend(sing_fill_box, false);
-      for (pdat::NodeIterator ni(sing_fill_box, true); ni != niend; ++ni) {
+      pdat::NodeIterator niend(pdat::NodeGeometry::end(sing_fill_box));
+      for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(sing_fill_box));
+           ni != niend; ++ni) {
          bool use_index = true;
          for (int n = 0; n < d_dim.getValue(); n++) {
             if (bbox.getBox().numberCells(n) == 1) {
@@ -404,8 +408,8 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                      BOOST_CAST_TAG);
                   TBOX_ASSERT(sing_data);
 
-                  pdat::NodeIterator ciend(sing_fill_box, false);
-                  for (pdat::NodeIterator ci(sing_fill_box, true);
+                  pdat::NodeIterator ciend(pdat::NodeGeometry::end(sing_fill_box));
+                  for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(sing_fill_box));
                        ci != ciend; ++ci) {
                      bool use_index = true;
                      for (int n = 0; n < d_dim.getValue(); n++) {
@@ -431,8 +435,9 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
       }
 
       if (num_encon_used) {
-         pdat::NodeIterator ciend(sing_fill_box, false);
-         for (pdat::NodeIterator ci(sing_fill_box, true); ci != ciend; ++ci) {
+         pdat::NodeIterator ciend(pdat::NodeGeometry::end(sing_fill_box));
+         for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(sing_fill_box));
+              ci != ciend; ++ci) {
             bool use_index = true;
             for (int n = 0; n < d_dim.getValue(); n++) {
                if (bbox.getBox().numberCells(n) == 1) {
@@ -456,8 +461,9 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
           * from which to acquire data.
           */
 
-         pdat::NodeIterator ciend(sing_fill_box, false);
-         for (pdat::NodeIterator ci(sing_fill_box, true); ci != ciend; ++ci) {
+         pdat::NodeIterator ciend(pdat::NodeGeometry::end(sing_fill_box));
+         for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(sing_fill_box));
+              ci != ciend; ++ci) {
             bool use_index = true;
             for (int n = 0; n < d_dim.getValue(); n++) {
                if (bbox.getBox().numberCells(n) == 1) {
@@ -535,8 +541,9 @@ bool NodeMultiblockTest::verifyResults(
       hier::Box interior_box(pbox);
       interior_box.grow(hier::IntVector(d_dim, -1));
 
-      pdat::NodeIterator ciend(interior_box, false);
-      for (pdat::NodeIterator ci(interior_box, true); ci != ciend; ++ci) {
+      pdat::NodeIterator ciend(pdat::NodeGeometry::end(interior_box));
+      for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(interior_box));
+           ci != ciend; ++ci) {
          for (int d = 0; d < depth; d++) {
             double result = (*node_data)(*ci, d);
 
@@ -594,8 +601,8 @@ bool NodeMultiblockTest::verifyResults(
          for (hier::BoxContainer::iterator ng(neighbor_node_ghost);
               ng != neighbor_node_ghost.end(); ++ng) {
 
-            hier::Box::iterator ciend(*ng, false);
-            for (hier::Box::iterator ci(*ng, true); ci != ciend; ++ci) {
+               hier::Box::iterator ciend((*ng).end());
+               for (hier::Box::iterator ci((*ng).begin()); ci != ciend; ++ci) {
                pdat::NodeIndex ni(*ci, hier::IntVector(d_dim, 0));
                if (!patch_node_box.contains(ni)) {
                   for (int d = 0; d < depth; d++) {
@@ -660,8 +667,9 @@ bool NodeMultiblockTest::verifyResults(
                correct = (double)(bdry[k].getLocationIndex() + 100);
             }
 
-            pdat::NodeIterator ciend(fill_box, false);
-            for (pdat::NodeIterator ci(fill_box, true); ci != ciend; ++ci) {
+            pdat::NodeIterator ciend(pdat::NodeGeometry::end(fill_box));
+            for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(fill_box));
+                 ci != ciend; ++ci) {
 
                if (!patch_node_box.contains(*ci)) {
 

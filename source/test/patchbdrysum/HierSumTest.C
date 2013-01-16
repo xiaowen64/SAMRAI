@@ -212,8 +212,8 @@ HierSumTest::setInitialNodeValues(
          Box pbox = patch->getBox();
          double cell_val;
          int d;
-         NodeIterator niend(pbox, false);
-         for (NodeIterator ni(pbox, true); ni != niend; ++ni) {
+         NodeIterator niend(NodeGeometry::end(pbox));
+         for (NodeIterator ni(NodeGeometry::begin(pbox)); ni != niend; ++ni) {
             NodeIndex node = *ni;
             for (d = 0; d < ucell->getDepth(); d++) {
 
@@ -291,8 +291,9 @@ HierSumTest::setInitialNodeValues(
                Box fine_overlap = *b;
                Box patch_interior = patch->getBox();
                Box data_box = fine_overlap * patch_interior;
-               NodeIterator niend(data_box, false);
-               for (NodeIterator ni(data_box, true); ni != niend; ++ni) {
+               NodeIterator niend(NodeGeometry::end(data_box));
+               for (NodeIterator ni(NodeGeometry::begin(data_box));
+                    ni != niend; ++ni) {
                   NodeIndex node = *ni;
                   for (int d = 0; d < unode->getDepth(); d++) {
                      double node_val = (*unode)(node, d);
@@ -599,8 +600,9 @@ int HierSumTest::checkNodeResult(
             /*
              * Iterate over nodes and check correctness of result.
              */
-            NodeIterator iend(data_box, false);
-            for (NodeIterator i(data_box, true); i != iend; ++i) {
+            NodeIterator iend(NodeGeometry::end(data_box));
+            for (NodeIterator i(NodeGeometry::begin(data_box));
+                 i != iend; ++i) {
                NodeIndex node = *i;  // i,j
                for (int d = 0; d < unode->getDepth(); d++) {
 
@@ -1072,8 +1074,9 @@ HierSumTest::setBoundaryConditions(
          shifted_pbox.shift(shift);
          fill_box = fill_box * shifted_pbox;
 
-         CellIterator ciend(fill_box, false);
-         for (CellIterator ci(fill_box, true); ci != ciend; ++ci) {
+         CellIterator ciend(CellGeometry::end(fill_box));
+         for (CellIterator ci(CellGeometry::begin(fill_box));
+              ci != ciend; ++ci) {
             CellIndex cell = *ci;
             for (d = 0; d < ucell->getDepth(); d++) {
                (*ucell)(cell, d) = 1.0;
@@ -1161,8 +1164,9 @@ HierSumTest::setBoundaryConditions(
       shifted_pbox.shift(shift);
       fill_box = fill_box * shifted_pbox;
 
-      CellIterator ciend(fill_box, false);
-      for (CellIterator ci(fill_box, true); ci != ciend; ++ci) {
+      CellIterator ciend(CellGeometry::end(fill_box));
+      for (CellIterator ci(CellGeometry::begin(fill_box));
+           ci != ciend; ++ci) {
          CellIndex cell = *ci;
          for (d = 0; d < ucell->getDepth(); d++) {
             (*ucell)(cell, d) = 1.0;
@@ -1178,8 +1182,9 @@ HierSumTest::setBoundaryConditions(
       Box fill_box = patch_geom->getBoundaryFillBox(node_bdry[i],
             pbox,
             ghost_cells);
-      CellIterator ciend(fill_box, false);
-      for (CellIterator ci(fill_box, true); ci != ciend; ++ci) {
+      CellIterator ciend(CellGeometry::end(fill_box));
+      for (CellIterator ci(CellGeometry::begin(fill_box));
+           ci != ciend; ++ci) {
          CellIndex cell = *ci;  //i,j
 
          for (d = 0; d < ucell->getDepth(); d++) {
@@ -1251,8 +1256,9 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
           *    4,5 - Z lower,upper
           */
          int loc_indx = face_bdry[i_box].getLocationIndex();
-         CellIterator ciend(fill_box, false);
-         for (CellIterator ci(fill_box, true); ci != ciend; ++ci) {
+         CellIterator ciend(CellGeometry::end(fill_box));
+         for (CellIterator ci(CellGeometry::begin(fill_box));
+              ci != ciend; ++ci) {
             CellIndex boundary_cell = *ci;
             CellIndex interior = boundary_cell;
             if (loc_indx == 0) {
@@ -1299,8 +1305,9 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
        *    2,3 - Ylo, Yhi
        */
       int loc_indx = edge_bdry[i].getLocationIndex();
-      CellIterator ciend(fill_box, false);
-      for (CellIterator ci(fill_box, true); ci != ciend; ++ci) {
+      CellIterator ciend(CellGeometry::end(fill_box));
+      for (CellIterator ci(CellGeometry::begin(fill_box));
+           ci != ciend; ++ci) {
          CellIndex boundary_cell = *ci;
          CellIndex interior = boundary_cell;
          if (d_dim == tbox::Dimension(3)) {

@@ -190,8 +190,9 @@ void OuternodeDataTest::setLinearData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   pdat::NodeIterator ciend(sbox, false);
-   for (pdat::NodeIterator ci(sbox, true); ci != ciend; ++ci) {
+   pdat::NodeIterator ciend(pdat::NodeGeometry::end(sbox));
+   for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(sbox));
+        ci != ciend; ++ci) {
 
       /*
        * Compute spatial location of node center and
@@ -247,8 +248,8 @@ void OuternodeDataTest::setLinearData(
    for (n = 0; n < d_dim.getValue(); ++n) {
       for (s = 0; s < 2; ++s) {
          const hier::Box databox = data->getDataBox(n, s);
-         hier::Box::iterator biend(databox, false);
-         for (hier::Box::iterator bi(databox, true); bi != biend; ++bi) {
+         hier::Box::iterator biend(databox.end());
+         for (hier::Box::iterator bi(databox.begin()); bi != biend; ++bi) {
 
             /*
              * Compute spatial location of node center and
@@ -358,8 +359,9 @@ void OuternodeDataTest::checkPatchInteriorData(
 
    const int depth = data->getDepth();
 
-   pdat::NodeIterator ciend(interior, false);
-   for (pdat::NodeIterator ci(interior, true); ci != ciend; ++ci) {
+   pdat::NodeIterator ciend(pdat::NodeGeometry::end(interior));
+   for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(interior));
+        ci != ciend; ++ci) {
 
       /*
        * Compute spatial location of edge and
@@ -452,8 +454,9 @@ bool OuternodeDataTest::verifyResults(
          int depth = node_data->getDepth();
          hier::Box dbox = node_data->getGhostBox();
 
-         pdat::NodeIterator ciend(dbox, false);
-         for (pdat::NodeIterator ci(dbox, true); ci != ciend; ++ci) {
+         pdat::NodeIterator ciend(pdat::NodeGeometry::end(dbox));
+         for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(dbox));
+              ci != ciend; ++ci) {
             double correct = (*solution)(*ci);
             for (int d = 0; d < depth; d++) {
                double result = (*node_data)(*ci, d);

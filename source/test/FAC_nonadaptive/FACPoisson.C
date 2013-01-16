@@ -347,8 +347,8 @@ bool FACPoisson::packDerivedDataIntoDoubleBuffer(
 {
    NULL_USE(depth_id);
 
-   pdat::CellData<double>::iterator icell(region, true);
-   pdat::CellData<double>::iterator icellend(region, false);
+   pdat::CellData<double>::iterator icell(pdat::CellGeometry::begin(region));
+   pdat::CellData<double>::iterator icellend(pdat::CellGeometry::end(region));
 
    if (variable_name == "Error") {
       boost::shared_ptr<pdat::CellData<double> > current_solution_(

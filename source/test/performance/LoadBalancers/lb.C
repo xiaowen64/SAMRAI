@@ -1026,8 +1026,8 @@ void generatePrebalanceByUserShells(
       const boost::shared_ptr<hier::Patch>& patch = *pi;
 
       pdat::NodeData<double> node_tag_data(patch->getBox(), 1, zero_vec);
-      pdat::NodeData<int>::iterator niend(node_tag_data.getGhostBox(), false);
-      for (pdat::NodeData<int>::iterator ni(node_tag_data.getGhostBox(), true);
+      pdat::NodeData<int>::iterator niend(pdat::NodeGeometry::end(node_tag_data.getGhostBox()));
+      for (pdat::NodeData<int>::iterator ni(pdat::NodeGeometry::begin(node_tag_data.getGhostBox()));
            ni != niend; ++ni) {
          const pdat::NodeIndex& idx = *ni;
          double rr = 0;
@@ -1053,15 +1053,15 @@ void generatePrebalanceByUserShells(
 
       const hier::BlockId& block_id = patch->getBox().getBlockId();
 
-      pdat::CellData<int>::iterator ciend(tag_data->getGhostBox(), false);
-      for (pdat::CellData<int>::iterator ci(tag_data->getGhostBox(), true);
+      pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(tag_data->getGhostBox()));
+      for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(tag_data->getGhostBox()));
            ci != ciend; ++ci) {
          const pdat::CellIndex& cid = *ci;
 
          // Loop through nodes of cell cid.  Tag cell if node is tagged.
          const hier::Box cell_box(cid,cid, block_id);
-         pdat::NodeIterator node_itr_end(cell_box, false);
-         for ( pdat::NodeIterator node_itr(cell_box, true);
+         pdat::NodeIterator node_itr_end(pdat::NodeGeometry::end(cell_box));
+         for ( pdat::NodeIterator node_itr(pdat::NodeGeometry::begin(cell_box));
                node_itr != node_itr_end; ++node_itr ) {
             if ( node_tag_data(*node_itr) == tag_val ) {
                (*tag_data)(cid) = tag_val;

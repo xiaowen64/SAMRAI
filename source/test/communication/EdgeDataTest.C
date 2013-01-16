@@ -16,6 +16,7 @@
 #include "SAMRAI/pdat/CellIndex.h"
 #include "SAMRAI/pdat/CellIterator.h"
 #include "CommTester.h"
+#include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/pdat/EdgeGeometry.h"
 #include "SAMRAI/pdat/EdgeIndex.h"
 #include "SAMRAI/pdat/EdgeIterator.h"
@@ -246,8 +247,9 @@ void EdgeDataTest::setConservativeData(
        */
 
       for (int axis = 0; axis < d_dim.getValue(); axis++) {
-         pdat::CellIterator ciend(sbox, false);
-         for (pdat::CellIterator ci(sbox, true); ci != ciend; ++ci) {
+	pdat::CellIterator ciend(pdat::CellGeometry::end(sbox));
+	for (pdat::CellIterator ci(pdat::CellGeometry::begin(sbox));
+             ci != ciend; ++ci) {
             double value = 0.0;
             for (i = 0; i < d_dim.getValue(); i++) {
                if (i == axis) {
@@ -318,8 +320,9 @@ void EdgeDataTest::setConservativeData(
       for (int axis = 0; axis < d_dim.getValue(); axis++) {
          hier::IntVector ci(ratio.getDim());
          hier::IntVector del(ratio.getDim());
-         pdat::CellIterator fiend(sbox, false);
-         for (pdat::CellIterator fi(sbox, true); fi != fiend; ++fi) {
+         pdat::CellIterator fiend(pdat::CellGeometry::end(sbox));
+         for (pdat::CellIterator fi(pdat::CellGeometry::begin(sbox));
+              fi != fiend; ++fi) {
             double value = 0.0;
             for (i = 0; i < d_dim.getValue(); i++) {
                if (i == axis) {
@@ -604,8 +607,9 @@ bool EdgeDataTest::verifyResults(
          }
 
          for (int id = 0; id < d_dim.getValue(); id++) {
-            pdat::EdgeIterator siend(dbox, id, false);
-            for (pdat::EdgeIterator si(dbox, id, true); si != siend; ++si) {
+            pdat::EdgeIterator siend(pdat::EdgeGeometry::end(dbox, id));
+            for (pdat::EdgeIterator si(pdat::EdgeGeometry::begin(dbox, id));
+                 si != siend; ++si) {
                double correct = (*solution)(*si);
                for (int d = 0; d < depth; d++) {
                   double result = (*edge_data)(*si, d);
@@ -658,8 +662,9 @@ void EdgeDataTest::setLinearData(
 
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       const pdat::EdgeIndex loweri(patch.getBox().lower(), axis, 0);
-      pdat::EdgeIterator eiend(sbox, axis, false);
-      for (pdat::EdgeIterator ei(sbox, axis, true); ei != eiend; ++ei) {
+      pdat::EdgeIterator eiend(pdat::EdgeGeometry::end(sbox, axis));
+      for (pdat::EdgeIterator ei(pdat::EdgeGeometry::begin(sbox, axis));
+           ei != eiend; ++ei) {
 
          /*
           * Compute spatial location of cell center and
@@ -712,8 +717,9 @@ void EdgeDataTest::checkPatchInteriorData(
 
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       const pdat::EdgeIndex loweri(interior.lower(), axis, 0);
-      pdat::EdgeIterator eiend(interior, axis, false);
-      for (pdat::EdgeIterator ei(interior, axis, true); ei != eiend; ++ei) {
+      pdat::EdgeIterator eiend(pdat::EdgeGeometry::end(interior, axis));
+      for (pdat::EdgeIterator ei(pdat::EdgeGeometry::begin(interior, axis));
+           ei != eiend; ++ei) {
 
          /*
           * Compute spatial location of cell center and

@@ -17,6 +17,7 @@
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/pdat/SideIndex.h"
 #include "SAMRAI/pdat/SideIterator.h"
+#include "SAMRAI/pdat/SideOverlap.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
 

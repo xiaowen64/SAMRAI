@@ -1352,8 +1352,8 @@ OuteredgeData<TYPE>::printAxisSide(
       const hier::Box edgebox = EdgeGeometry::toEdgeBox(box, axis);
       const hier::Box region =
          edgebox * d_data[axis][face_normal][side]->getBox();
-      hier::Box::iterator iiend(region, false);
-      for (hier::Box::iterator ii(region, true); ii != iiend; ++ii) {
+      hier::Box::iterator iiend(region.end());
+      for (hier::Box::iterator ii(region.begin()); ii != iiend; ++ii) {
          os << "array" << *ii << " = "
             << (*(d_data[axis][face_normal][side]))(*ii, depth) << std::endl;
          os << std::flush;

@@ -15,6 +15,7 @@
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/pdat/NodeOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -276,8 +277,8 @@ NodeData<TYPE>::copyWithRotation(
          const int depth = ((getDepth() < src.getDepth()) ?
                             getDepth() : src.getDepth());
 
-         hier::Box::iterator ciend(copybox, false);
-         for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
+         hier::Box::iterator ciend(copybox.end());
+         for (hier::Box::iterator ci(copybox.begin()); ci != ciend; ++ci) {
 
             NodeIndex dst_index(*ci, hier::IntVector::getZero(dim));
             NodeIndex src_index(dst_index);
@@ -422,8 +423,8 @@ NodeData<TYPE>::packWithRotation(
       if (!copybox.empty()) {
 
          for (int d = 0; d < depth; d++) {
-            hier::Box::iterator ciend(copybox, false);
-            for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
+            hier::Box::iterator ciend(copybox.end());
+            for (hier::Box::iterator ci(copybox.begin()); ci != ciend; ++ci) {
 
                NodeIndex src_index(*ci, hier::IntVector::getZero(dim));
                NodeGeometry::transform(src_index, back_trans);
@@ -554,8 +555,8 @@ NodeData<TYPE>::print(
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    os.precision(prec);
-   NodeIterator iend(box, false);
-   for (NodeIterator i(box, true); i != iend; ++i) {
+   NodeIterator iend(NodeGeometry::end(box));
+   for (NodeIterator i(NodeGeometry::begin(box)); i != iend; ++i) {
       os << "array" << *i << " = "
          << (*d_data)(*i, depth) << std::endl << std::flush;
    }

@@ -26,6 +26,8 @@
 namespace SAMRAI {
 namespace pdat {
 
+class NodeIterator;
+
 /*!
  * Class NodeGeometry manages the mapping between the AMR index space
  * and the node-centered geometry index space.  It is a subclass of
@@ -75,6 +77,14 @@ public:
    transform(
       hier::Box& box,
       const hier::Transformation& transformation);
+
+   static NodeIterator
+   begin(
+      const hier::Box& box);
+
+   static NodeIterator
+   end(
+      const hier::Box& box);
 
    /*!
     * @brief Transform a NodeIndex.

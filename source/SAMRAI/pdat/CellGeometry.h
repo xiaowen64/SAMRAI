@@ -26,6 +26,8 @@
 namespace SAMRAI {
 namespace pdat {
 
+class CellIterator;
+
 /*!
  * Class CellGeometry manages the mapping between the AMR index space
  * and the cell-centered geometry index space.  It is a subclass of
@@ -71,6 +73,14 @@ public:
    transform(
       CellIndex& index,
       const hier::Transformation& transformation);
+
+   static CellIterator
+   begin(
+      const hier::Box& box);
+
+   static CellIterator
+   end(
+      const hier::Box& box);
 
    /*!
     * @brief Construct the cell geometry object given an AMR index

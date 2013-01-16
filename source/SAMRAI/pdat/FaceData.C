@@ -339,8 +339,9 @@ FaceData<TYPE>::copyWithRotation(
             const int depth = ((getDepth() < src.getDepth()) ?
                                getDepth() : src.getDepth());
 
-            hier::Box::iterator ciend(copybox, false);
-            for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
+            hier::Box::iterator ciend(copybox.end());
+            for (hier::Box::iterator ci(copybox.begin());
+                 ci != ciend; ++ci) {
 
                FaceIndex dst_index(*ci, 0, 0);
                dst_index.setAxis(i);
@@ -521,8 +522,9 @@ FaceData<TYPE>::packWithRotation(
 
             for (int d = 0; d < depth; d++) {
 
-               hier::Box::iterator ciend(copybox, false);
-               for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
+               hier::Box::iterator ciend(copybox.end());
+               for (hier::Box::iterator ci(copybox.begin());
+                    ci != ciend; ++ci) {
 
                   FaceIndex src_index(*ci, 0, 0);
                   src_index.setAxis(i);
@@ -725,8 +727,8 @@ FaceData<TYPE>::printAxis(
    TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
 
    os.precision(prec);
-   FaceIterator iend(box, face_normal, false);
-   for (FaceIterator i(box, face_normal, true); i != iend; ++i) {
+   FaceIterator iend(FaceGeometry::end(box, face_normal));
+   for (FaceIterator i(FaceGeometry::begin(box, face_normal)); i != iend; ++i) {
       os << "array" << *i << " = "
          << (*(d_data[face_normal]))(*i, depth) << std::endl << std::flush;
    }

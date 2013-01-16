@@ -594,8 +594,8 @@ int main(
  *
  *   TBOX_ASSERT(cvdata);
  *
- *   pdat::FaceIterator cend(cvdata->getBox(), 1, false);
- *   for (pdat::FaceIterator c(cvdata->getBox(), 1, true); c != cend && vol_test_passed; ++c) {
+ *   pdat::FaceIterator cend(pdat::FaceGeometry::end(cvdata->getBox(), 1));
+ *   for (pdat::FaceIterator c(pdat::FaceGeometry::begin(cvdata->getBox(), 1)); c != cend && vol_test_passed; ++c) {
  *   pdat::FaceIndex face_index = *c;
  *
  *   if (ln == 0) {
@@ -893,8 +893,8 @@ int main(
                                 pdat::FaceIndex::Upper);
 
          // check X axis data
-         pdat::FaceIterator cend(fdata->getBox(), pdat::FaceIndex::X, false);
-         for (pdat::FaceIterator c(fdata->getBox(), pdat::FaceIndex::X, true);
+         pdat::FaceIterator cend(pdat::FaceGeometry::end(fdata->getBox(), pdat::FaceIndex::X));
+         for (pdat::FaceIterator c(pdat::FaceGeometry::begin(fdata->getBox(), pdat::FaceIndex::X));
               c != cend && bogus_value_test_passed;
               ++c) {
             pdat::FaceIndex face_index = *c;
@@ -906,8 +906,8 @@ int main(
          }
 
          // check Y axis data
-         pdat::FaceIterator ccend(fdata->getBox(), pdat::FaceIndex::Y, false);
-         for (pdat::FaceIterator cc(fdata->getBox(), pdat::FaceIndex::Y, true);
+         pdat::FaceIterator ccend(pdat::FaceGeometry::end(fdata->getBox(), pdat::FaceIndex::Y));
+         for (pdat::FaceIterator cc(pdat::FaceGeometry::begin(fdata->getBox(), pdat::FaceIndex::Y));
               cc != ccend && bogus_value_test_passed;
               ++cc) {
             pdat::FaceIndex face_index = *cc;
@@ -935,8 +935,8 @@ int main(
          if (dim.getValue() == 3) {
 
             // check Z axis data
-            pdat::FaceIterator cend(fdata->getBox(), pdat::FaceIndex::Z, false);
-            for (pdat::FaceIterator c(fdata->getBox(), pdat::FaceIndex::Z, true);
+            pdat::FaceIterator cend(pdat::FaceGeometry::end(fdata->getBox(), pdat::FaceIndex::Z));
+            for (pdat::FaceIterator c(pdat::FaceGeometry::begin(fdata->getBox(), pdat::FaceIndex::Z));
                  c != cend && bogus_value_test_passed;
                  ++c) {
                pdat::FaceIndex face_index = *c;
@@ -1166,8 +1166,8 @@ doubleDataSameAsValue(
 
          TBOX_ASSERT(fvdata);
 
-         pdat::FaceIterator cend(fvdata->getBox(), 1, false);
-         for (pdat::FaceIterator c(fvdata->getBox(), 1, true);
+         pdat::FaceIterator cend(pdat::FaceGeometry::end(fvdata->getBox(), 1));
+         for (pdat::FaceIterator c(pdat::FaceGeometry::begin(fvdata->getBox(), 1));
               c != cend && test_passed;
               ++c) {
             pdat::FaceIndex face_index = *c;

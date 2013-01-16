@@ -210,8 +210,8 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
                TBOX_ASSERT(sing_data);
 
-               pdat::CellIterator ciend(encon_fill_box, false);
-               for (pdat::CellIterator ci(encon_fill_box, true);
+               pdat::CellIterator ciend(pdat::CellGeometry::end(encon_fill_box));
+               for (pdat::CellIterator ci(pdat::CellGeometry::begin(encon_fill_box));
                     ci != ciend; ++ci) {
                   pdat::CellIndex src_index(*ci);
                   pdat::CellGeometry::transform(src_index, back_trans);

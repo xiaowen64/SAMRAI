@@ -684,8 +684,8 @@ CellPoissonHypreSolver::copyToHypre(
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, src, box);
 
-   pdat::CellIterator cend(box, false);
-   for (pdat::CellIterator c(box, true); c != cend; ++c) {
+   pdat::CellIterator cend(pdat::CellGeometry::end(box));
+   for (pdat::CellIterator c(pdat::CellGeometry::begin(box)); c != cend; ++c) {
       hier::IntVector ic = *c;
       HYPRE_StructVectorSetValues(vector, &ic[0], src(*c, depth));
    }
@@ -708,8 +708,8 @@ CellPoissonHypreSolver::copyFromHypre(
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, dst, box);
 
-   pdat::CellIterator cend(box, false);
-   for (pdat::CellIterator c(box, true); c != cend; ++c) {
+   pdat::CellIterator cend(pdat::CellGeometry::end(box));
+   for (pdat::CellIterator c(pdat::CellGeometry::begin(box)); c != cend; ++c) {
       double value;
       hier::IntVector ic = *c;
       HYPRE_StructVectorGetValues(vector, &ic[0], &value);
@@ -1001,8 +1001,8 @@ CellPoissonHypreSolver::setMatrixCoefficients(
 
       for (i = 0; i < stencil_size; i++) stencil_indices[i] = i;
 
-      pdat::CellIterator ic(patch_box, true);
-      pdat::CellIterator icend(patch_box, false);
+      pdat::CellIterator ic(pdat::CellGeometry::begin(patch_box));
+      pdat::CellIterator icend(pdat::CellGeometry::end(patch_box));
 
       /*
        * To do: This loop uses inefficient high-level syntax.

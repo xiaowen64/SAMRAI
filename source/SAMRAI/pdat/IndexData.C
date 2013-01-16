@@ -360,8 +360,9 @@ IndexData<TYPE, BOX_GEOMETRY>::getDataStreamSize(
    for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(*b, -(t_overlap->getSourceOffset()));
-      hier::Box::iterator indexend(box, false);
-      for (hier::Box::iterator index(box, true); index != indexend; ++index) {
+      hier::Box::iterator indexend(box.end());
+      for (hier::Box::iterator index(box.begin());
+           index != indexend; ++index) {
          TYPE* item = getItem(*index);
          if (item) {
             num_items++;

@@ -740,8 +740,8 @@ int main(
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
  *   boost::shared_ptr< pdat::NodeData<double> > cvdata = patch->getPatchData(cwgt_id);
  *
- *   pdat::NodeIterator cend(cvdata->getBox(), false);
- *   for (pdat::NodeIterator c(cvdata->getBox(), true); c != cend && vol_test_passed; ++c) {
+ *   pdat::NodeIterator cend(pdat::NodeGeometry::end(cvdata->getBox()));
+ *   for (pdat::NodeIterator c(pdat::NodeGeometry::begin(cvdata->getBox())); c != cend && vol_test_passed; ++c) {
  *   pdat::NodeIndex node_index = *c;
  *
  *   if (ln == 0) {
@@ -1043,8 +1043,8 @@ int main(
          pdat::NodeIndex index0(idx0, corner0);
          pdat::NodeIndex index1(idx1, corner1);
 
-         pdat::NodeIterator cend(ndata->getBox(), false);
-         for (pdat::NodeIterator c(ndata->getBox(), true);
+         pdat::NodeIterator cend(pdat::NodeGeometry::end(ndata->getBox()));
+         for (pdat::NodeIterator c(pdat::NodeGeometry::begin(ndata->getBox()));
               c != cend && bogus_value_test_passed;
               ++c) {
             pdat::NodeIndex node_index = *c;
@@ -1249,8 +1249,8 @@ doubleDataSameAsValue(
 
          TBOX_ASSERT(nvdata);
 
-         pdat::NodeIterator cend(nvdata->getBox(), false);
-         for (pdat::NodeIterator c(nvdata->getBox(), true);
+         pdat::NodeIterator cend(pdat::NodeGeometry::end(nvdata->getBox()));
+         for (pdat::NodeIterator c(pdat::NodeGeometry::begin(nvdata->getBox()));
               c != cend && test_passed; ++c) {
             pdat::NodeIndex node_index = *c;
             if (!tbox::MathUtilities<double>::equalEps((*nvdata)(node_index),

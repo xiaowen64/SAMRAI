@@ -123,8 +123,9 @@ int main(
       }
 
       int j = 0;
-      pdat::CellIterator ciend(box, false);
-      for (pdat::CellIterator ci(box, true); ci != ciend; ++ci) {
+      pdat::CellIterator ciend(pdat::CellGeometry::end(box));
+      for (pdat::CellIterator ci(pdat::CellGeometry::begin(box));
+           ci != ciend; ++ci) {
          if (!tbox::MathUtilities<double>::equalEps(cell_data(*ci),
                 cell_ptr[j])) {
             tbox::perr << "FAILED: - CellIterator test" << std::endl;
@@ -153,8 +154,9 @@ int main(
          }
 
          j = 0;
-         pdat::FaceIterator fiend(box, axis, false);
-         for (pdat::FaceIterator fi(box, axis, true); fi != fiend; ++fi) {
+         pdat::FaceIterator fiend(pdat::FaceGeometry::end(box, axis));
+         for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(box, axis));
+              fi != fiend; ++fi) {
             if (!tbox::MathUtilities<double>::equalEps(face_data(*fi),
                    face_ptr[axis][j])) {
                tbox::perr << "FAILED: - FaceIterator test" << std::endl;
@@ -168,8 +170,9 @@ int main(
        * Test FaceIndex
        */
 
-      pdat::CellIterator ifcend(box, false);
-      for (pdat::CellIterator ifc(box, true); ifc != ifcend; ++ifc) {
+      pdat::CellIterator ifcend(pdat::CellGeometry::end(box));
+      for (pdat::CellIterator ifc(pdat::CellGeometry::begin(box));
+           ifc != ifcend; ++ifc) {
 
          for (int a = 0; a < dim.getValue(); a++) {
 
@@ -215,8 +218,9 @@ int main(
       }
 
       j = 0;
-      pdat::NodeIterator niend(box, false);
-      for (pdat::NodeIterator ni(box, true); ni != niend; ++ni) {
+      pdat::NodeIterator niend(pdat::NodeGeometry::end(box));
+      for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(box));
+           ni != niend; ++ni) {
          if (!tbox::MathUtilities<double>::equalEps(node_data(*ni),
                 node_ptr[j])) {
             tbox::perr << "FAILED: - NodeIterator test" << std::endl;
@@ -229,8 +233,9 @@ int main(
        * Test NodeIndex
        */
 
-      pdat::CellIterator incend(box, false);
-      for (pdat::CellIterator inc(box, true); inc != incend; ++inc) {
+      pdat::CellIterator incend(pdat::CellGeometry::end(box));
+      for (pdat::CellIterator inc(pdat::CellGeometry::begin(box));
+           inc != incend; ++inc) {
 
          hier::IntVector corner(dim, 0);
 
@@ -287,8 +292,9 @@ int main(
          }
 
          j = 0;
-         pdat::EdgeIterator eiend(box, axis, false);
-         for (pdat::EdgeIterator ei(box, axis, true); ei != eiend; ++ei) {
+         pdat::EdgeIterator eiend(pdat::EdgeGeometry::end(box, axis));
+         for (pdat::EdgeIterator ei(pdat::EdgeGeometry::begin(box, axis));
+              ei != eiend; ++ei) {
             if (!tbox::MathUtilities<double>::equalEps(edge_data(*ei),
                    edge_ptr[axis][j])) {
                tbox::perr << "FAILED: - EdgeIterator test" << std::endl;
@@ -302,8 +308,9 @@ int main(
        * Test EdgeIndex
        */
 
-      pdat::CellIterator iecend(box, false);
-      for (pdat::CellIterator iec(box, true); iec != iecend; ++iec) {
+      pdat::CellIterator iecend(pdat::CellGeometry::end(box));
+      for (pdat::CellIterator iec(pdat::CellGeometry::begin(box));
+           iec != iecend; ++iec) {
          for (int a = 0; a < dim.getValue(); a++) {
 
             hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box,
@@ -349,8 +356,9 @@ int main(
          }
 
          j = 0;
-         pdat::SideIterator siend(box, axis, false);
-         for (pdat::SideIterator si(box, axis, true); si != siend; ++si) {
+         pdat::SideIterator siend(pdat::SideGeometry::end(box, axis));
+         for (pdat::SideIterator si(pdat::SideGeometry::begin(box, axis));
+              si != siend; ++si) {
             if (!tbox::MathUtilities<double>::equalEps(side_data(*si),
                    side_ptr[axis][j])) {
                tbox::perr << "FAILED: - SideIterator test" << std::endl;
@@ -364,8 +372,9 @@ int main(
        * Test SideIndex
        */
 
-      pdat::CellIterator iscend(box, false);
-      for (pdat::CellIterator isc(box, true); isc != iscend; ++isc) {
+      pdat::CellIterator iscend(pdat::CellGeometry::end(box));
+      for (pdat::CellIterator isc(pdat::CellGeometry::begin(box));
+           isc != iscend; ++isc) {
          for (int a = 0; a < dim.getValue(); a++) {
 
             hier::Box side_box = pdat::SideGeometry::toSideBox(box,

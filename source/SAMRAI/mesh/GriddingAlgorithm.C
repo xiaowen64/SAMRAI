@@ -2830,8 +2830,9 @@ GriddingAlgorithm::bufferTagsOnLevel(
 
       const hier::Box& interior(patch->getBox());
 
-      pdat::CellIterator icend(interior, false);
-      for (pdat::CellIterator ic(interior, true); ic != icend; ++ic) {
+      pdat::CellIterator icend(pdat::CellGeometry::end(interior));
+      for (pdat::CellIterator ic(pdat::CellGeometry::begin(interior));
+           ic != icend; ++ic) {
          if ((*tag_data)(*ic) == tag_value) {
             (*buf_tag_data)(*ic) = d_true_tag;
          }
@@ -2872,8 +2873,9 @@ GriddingAlgorithm::bufferTagsOnLevel(
 
       tag_data->fillAll(not_tag);
 
-      pdat::CellIterator icend(buf_tag_box, false);
-      for (pdat::CellIterator ic(buf_tag_box, true); ic != icend; ++ic) {
+      pdat::CellIterator icend(pdat::CellGeometry::end(buf_tag_box));
+      for (pdat::CellIterator ic(pdat::CellGeometry::begin(buf_tag_box));
+           ic != icend; ++ic) {
          if ((*buf_tag_data)(*ic) == d_true_tag) {
             hier::Box buf_box(*ic - buffer_size,
                *ic + buffer_size,

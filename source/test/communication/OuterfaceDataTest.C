@@ -271,8 +271,9 @@ void OuterfaceDataTest::checkPatchInteriorData(
 
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       const pdat::FaceIndex loweri(interior.lower(), axis, 0);
-      pdat::FaceIterator fiend(interior, axis, false);
-      for (pdat::FaceIterator fi(interior, axis, true); fi != fiend; ++fi) {
+      pdat::FaceIterator fiend(pdat::FaceGeometry::end(interior, axis));
+      for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(interior, axis));
+           fi != fiend; ++fi) {
 
          /*
           * Compute spatial location of face and
@@ -350,8 +351,9 @@ void OuterfaceDataTest::setLinearData(
 
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       const pdat::FaceIndex loweri(patch.getBox().lower(), axis, 0);
-      pdat::FaceIterator fiend(sbox, axis, false);
-      for (pdat::FaceIterator fi(sbox, axis, true); fi != fiend; ++fi) {
+      pdat::FaceIterator fiend(pdat::FaceGeometry::end(sbox, axis));
+      for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(sbox, axis));
+           fi != fiend; ++fi) {
 
          /*
           * Compute spatial location of cell center and
@@ -419,8 +421,8 @@ void OuterfaceDataTest::setLinearData(
          const hier::Box databox = data->getArrayData(axis, f).getBox();
 
          const pdat::FaceIndex loweri(patch.getBox().lower(), axis, 0);
-         hier::Box::iterator biend(databox, false);
-         for (hier::Box::iterator bi(databox, true); bi != biend; ++bi) {
+         hier::Box::iterator biend(databox.end());
+         for (hier::Box::iterator bi(databox.begin()); bi != biend; ++bi) {
 
             /*
              * Compute spatial location of cell center and
@@ -514,8 +516,9 @@ bool OuterfaceDataTest::verifyResults(
          hier::Box dbox = face_data->getGhostBox();
 
          for (int id = 0; id < d_dim.getValue(); id++) {
-            pdat::FaceIterator fiend(dbox, id, false);
-            for (pdat::FaceIterator fi(dbox, id, true); fi != fiend; ++fi) {
+            pdat::FaceIterator fiend(pdat::FaceGeometry::end(dbox, id));
+            for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(dbox, id));
+                 fi != fiend; ++fi) {
                double correct = (*solution)(*fi);
                for (int d = 0; d < depth; d++) {
                   double result = (*face_data)(*fi, d);

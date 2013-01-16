@@ -2897,8 +2897,9 @@ void ModifiedBratuProblem::correctLevelFlux(
             getLevelEdges(level_edges, patch, level, d, s);
             for (hier::BoxContainer::iterator l(level_edges);
                  l != level_edges.end(); ++l) {
-               pdat::CellIterator icend(*l, false);
-               for (pdat::CellIterator ic(*l, true); ic != icend; ++ic) {
+               pdat::CellIterator icend(pdat::CellGeometry::end(*l));
+               for (pdat::CellIterator ic(pdat::CellGeometry::begin(*l));
+                    ic != icend; ++ic) {
                   pdat::SideIndex iside(*ic + delta, d, s);
                   (*flux_data)(iside) = 2.0 * (*flux_data)(iside) / 3.0;
                }   // cell loop
@@ -2935,8 +2936,9 @@ void ModifiedBratuProblem::correctPatchFlux(
          getLevelEdges(level_edges, patch, level, d, s);
          for (hier::BoxContainer::iterator l(level_edges);
               l != level_edges.end(); ++l) {
-            pdat::CellIterator icend(*l, false);
-            for (pdat::CellIterator ic(*l, true); ic != icend; ++ic) {
+            pdat::CellIterator icend(pdat::CellGeometry::end(*l));
+            for (pdat::CellIterator ic(pdat::CellGeometry::begin(*l));
+                 ic != icend; ++ic) {
                pdat::SideIndex iside(*ic + delta1, d, s);
                (*flux_data)(iside) = factor * (-8.0 * (*u)(*ic) / 15.0
                                                + (*u)(*ic + delta1) / 3.0

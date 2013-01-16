@@ -25,6 +25,8 @@
 namespace SAMRAI {
 namespace pdat {
 
+class EdgeIterator;
+
 /*!
  * Class EdgeGeometry manages the mapping between the AMR index space
  * and the edge-centered geometry index space.  It is a subclass of
@@ -91,6 +93,16 @@ public:
    transform(
       EdgeIndex& index,
       const hier::Transformation& transformation);
+
+   static EdgeIterator
+   begin(
+      const hier::Box& box,
+      int axis);
+
+   static EdgeIterator
+   end(
+      const hier::Box& box,
+      int axis);
 
    /*!
     * @brief Construct the edge geometry object given an AMR index

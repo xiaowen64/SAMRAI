@@ -25,6 +25,8 @@
 namespace SAMRAI {
 namespace pdat {
 
+class SideIterator;
+
 /*!
  * Class SideGeometry manages the mapping between the AMR index space
  * and the side-centered geometry index space.  It is a subclass of
@@ -90,6 +92,16 @@ public:
    transform(
       SideIndex& index,
       const hier::Transformation& transformation);
+
+   static SideIterator
+   begin(
+      const hier::Box& box,
+      int axis);
+
+   static SideIterator
+   end(
+      const hier::Box& box,
+      int axis);
 
    /*!
     * @brief Construct the side geometry object given an AMR index

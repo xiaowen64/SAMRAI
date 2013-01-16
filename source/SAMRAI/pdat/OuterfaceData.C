@@ -623,8 +623,8 @@ OuterfaceData<TYPE>::printAxisFace(
    const hier::Box region =
       facebox * d_data[face_normal][side]->getBox();
    os.precision(prec);
-   hier::Box::iterator iend(region, false);
-   for (hier::Box::iterator i(region, true); i != iend; ++i) {
+   hier::Box::iterator iend(region.end());
+   for (hier::Box::iterator i(region.begin()); i != iend; ++i) {
       os << "array" << *i << " = "
          << (*(d_data[face_normal][side]))(*i, depth) << std::endl;
       os << std::flush;

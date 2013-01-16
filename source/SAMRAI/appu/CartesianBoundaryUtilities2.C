@@ -516,9 +516,10 @@ CartesianBoundaryUtilities2::checkBdryData(
       dbox.upper(idir) = ilast(idir);
    }
 
-   pdat::CellIterator id(dbox, true);
-   pdat::CellIterator icend(cbox, false);
-   for (pdat::CellIterator ic(cbox, true); ic != icend; ++ic) {
+   pdat::CellIterator id(pdat::CellGeometry::begin(dbox));
+   pdat::CellIterator icend(pdat::CellGeometry::end(cbox));
+   for (pdat::CellIterator ic(pdat::CellGeometry::begin(cbox));
+        ic != icend; ++ic) {
       double checkval = valfact * (*vardata)(*id, depth) + constval;
       pdat::CellIndex check = *ic;
       for (int p = 0; p < gbox_to_check.numberCells(idir); p++) {

@@ -16,6 +16,7 @@
 #include "SAMRAI/pdat/CellIndex.h"
 #include "SAMRAI/pdat/CellIterator.h"
 #include "CommTester.h"
+#include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/pdat/FaceGeometry.h"
 #include "SAMRAI/pdat/FaceIndex.h"
 #include "SAMRAI/pdat/FaceIterator.h"
@@ -212,8 +213,9 @@ void FaceDataTest::setConservativeData(
        */
 
       for (int axis = 0; axis < d_dim.getValue(); axis++) {
-         pdat::CellIterator ciend(sbox, false);
-         for (pdat::CellIterator ci(sbox, true); ci != ciend; ++ci) {
+         pdat::CellIterator ciend(pdat::CellGeometry::end(sbox));
+         for (pdat::CellIterator ci(pdat::CellGeometry::begin(sbox));
+              ci != ciend; ++ci) {
             double value = 0.0;
             for (i = 0; i < d_dim.getValue(); i++) {
                if (i != axis) {
@@ -263,8 +265,9 @@ void FaceDataTest::setConservativeData(
       for (int axis = 0; axis < d_dim.getValue(); axis++) {
          hier::IntVector ci(ratio.getDim());
          hier::IntVector del(ratio.getDim());
-         pdat::CellIterator fiend(sbox, false);
-         for (pdat::CellIterator fi(sbox, true); fi != fiend; ++fi) {
+         pdat::CellIterator fiend(pdat::CellGeometry::end(sbox));
+         for (pdat::CellIterator fi(pdat::CellGeometry::begin(sbox));
+              fi != fiend; ++fi) {
             double value = 0.0;
             for (i = 0; i < d_dim.getValue(); i++) {
                if (i != axis) {
@@ -355,8 +358,9 @@ void FaceDataTest::checkPatchInteriorData(
 
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       const pdat::FaceIndex loweri(interior.lower(), axis, 0);
-      pdat::FaceIterator fiend(interior, axis, false);
-      for (pdat::FaceIterator fi(interior, axis, true); fi != fiend; ++fi) {
+      pdat::FaceIterator fiend(pdat::FaceGeometry::end(interior, axis));
+      for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(interior, axis));
+           fi != fiend; ++fi) {
 
          /*
           * Compute spatial location of face and
@@ -506,8 +510,9 @@ void FaceDataTest::setLinearData(
 
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       const pdat::FaceIndex loweri(patch.getBox().lower(), axis, 0);
-      pdat::FaceIterator fiend(sbox, axis, false);
-      for (pdat::FaceIterator fi(sbox, axis, true); fi != fiend; ++fi) {
+      pdat::FaceIterator fiend(pdat::FaceGeometry::end(sbox, axis));
+      for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(sbox, axis));
+           fi != fiend; ++fi) {
 
          /*
           * Compute spatial location of cell center and
@@ -604,8 +609,9 @@ bool FaceDataTest::verifyResults(
          }
 
          for (int id = 0; id < d_dim.getValue(); id++) {
-            pdat::FaceIterator siend(dbox, id, false);
-            for (pdat::FaceIterator si(dbox, id, true); si != siend; ++si) {
+            pdat::FaceIterator siend(pdat::FaceGeometry::end(dbox, id));
+            for (pdat::FaceIterator si(pdat::FaceGeometry::begin(dbox, id));
+                 si != siend; ++si) {
                double correct = (*solution)(*si);
                for (int d = 0; d < depth; d++) {
                   double result = (*face_data)(*si, d);

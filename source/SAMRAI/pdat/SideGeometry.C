@@ -12,6 +12,7 @@
 #define included_pdat_SideGeometry_C
 
 #include "SAMRAI/pdat/SideGeometry.h"
+#include "SAMRAI/pdat/SideIterator.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -621,6 +622,22 @@ SideGeometry::rotateAboutAxis(SideIndex& index,
       }
    }
    index.setAxis(new_normal_direction);
+}
+
+SideIterator
+SideGeometry::begin(
+   const hier::Box& box,
+   int axis)
+{
+   return SideIterator(box, axis, true);
+}
+
+SideIterator
+SideGeometry::end(
+   const hier::Box& box,
+   int axis)
+{
+   return SideIterator(box, axis, false);
 }
 
 }

@@ -12,6 +12,7 @@
 #define included_pdat_EdgeGeometry_C
 
 #include "SAMRAI/pdat/EdgeGeometry.h"
+#include "SAMRAI/pdat/EdgeIterator.h"
 #include "SAMRAI/pdat/EdgeOverlap.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -621,6 +622,22 @@ EdgeGeometry::rotateAboutAxis(EdgeIndex& index,
       }
    }
    index.setAxis(new_axis_direction);
+}
+
+EdgeIterator
+EdgeGeometry::begin(
+   const hier::Box& box,
+   int axis)
+{
+   return EdgeIterator(box, axis, true);
+}
+
+EdgeIterator
+EdgeGeometry::end(
+   const hier::Box& box,
+   int axis)
+{
+   return EdgeIterator(box, axis, false);
 }
 
 }

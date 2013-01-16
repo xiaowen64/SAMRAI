@@ -275,8 +275,9 @@ void OutersideDataTest::checkPatchInteriorData(
 
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       const pdat::SideIndex loweri(interior.lower(), axis, 0);
-      pdat::SideIterator siend(interior, axis, false);
-      for (pdat::SideIterator si(interior, axis, true); si != siend; ++si) {
+      pdat::SideIterator siend(pdat::SideGeometry::end(interior, axis));
+      for (pdat::SideIterator si(pdat::SideGeometry::begin(interior, axis));
+           si != siend; ++si) {
 
          /*
           * Compute spatial location of face and
@@ -354,8 +355,9 @@ void OutersideDataTest::setLinearData(
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       if (directions(axis)) {
          const pdat::SideIndex loweri(patch.getBox().lower(), axis, 0);
-         pdat::SideIterator eiend(sbox, axis, false);
-         for (pdat::SideIterator ei(sbox, axis, true); ei != eiend; ++ei) {
+         pdat::SideIterator eiend(pdat::SideGeometry::end(sbox, axis));
+         for (pdat::SideIterator ei(pdat::SideGeometry::begin(sbox, axis));
+              ei != eiend; ++ei) {
 
             /*
              * Compute spatial location of cell center and
@@ -416,8 +418,8 @@ void OutersideDataTest::setLinearData(
       for (int s = 0; s < 2; s++) {
          const hier::Box databox = data->getArrayData(axis, s).getBox();
          const pdat::SideIndex loweri(patch.getBox().lower(), axis, 0);
-         hier::Box::iterator biend(databox, false);
-         for (hier::Box::iterator bi(databox, true); bi != biend; ++bi) {
+         hier::Box::iterator biend(databox.end());
+         for (hier::Box::iterator bi(databox.begin()); bi != biend; ++bi) {
 
             /*
              * Compute spatial location of cell center and
@@ -510,8 +512,8 @@ bool OutersideDataTest::verifyResults(
 
          for (int id = 0; id < d_dim.getValue(); id++) {
             if (directions(id)) {
-               pdat::SideIterator siend(dbox, id, false);
-               for (pdat::SideIterator si(dbox, id, true);
+               pdat::SideIterator siend(pdat::SideGeometry::end(dbox, id));
+               for (pdat::SideIterator si(pdat::SideGeometry::begin(dbox, id));
                     si != siend; ++si) {
                   double correct = (*solution)(*si);
                   for (int d = 0; d < depth; d++) {

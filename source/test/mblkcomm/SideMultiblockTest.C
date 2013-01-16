@@ -199,8 +199,8 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
             hier::Box patch_side_box =
                pdat::SideGeometry::toSideBox(patch.getBox(), axis);
             if (!node_bdry[nb].getIsMultiblockSingularity()) {
-               pdat::SideIterator niend(fill_box, axis, false);
-               for (pdat::SideIterator ni(fill_box, axis, true);
+               pdat::SideIterator niend(pdat::SideGeometry::end(fill_box, axis));
+               for (pdat::SideIterator ni(pdat::SideGeometry::begin(fill_box, axis));
                     ni != niend; ++ni) {
                   if (!patch_side_box.contains(*ni)) {
                      for (int d = 0; d < side_data->getDepth(); d++) {
@@ -230,8 +230,8 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
                hier::Index pupper(patch_side_box.upper());
 
                if (!edge_bdry[eb].getIsMultiblockSingularity()) {
-                  pdat::SideIterator niend(fill_box, axis, false);
-                  for (pdat::SideIterator ni(fill_box, axis, true);
+                  pdat::SideIterator niend(pdat::SideGeometry::end(fill_box, axis));
+                  for (pdat::SideIterator ni(pdat::SideGeometry::begin(fill_box, axis));
                        ni != niend; ++ni) {
                      if (!patch_side_box.contains(*ni)) {
                         bool use_index = true;
@@ -277,8 +277,8 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
                hier::Index pupper(patch_side_box.upper());
 
                if (!face_bdry[fb].getIsMultiblockSingularity()) {
-                  pdat::SideIterator niend(fill_box, axis, false);
-                  for (pdat::SideIterator ni(fill_box, axis, true);
+                  pdat::SideIterator niend(pdat::SideGeometry::end(fill_box, axis));
+                  for (pdat::SideIterator ni(pdat::SideGeometry::begin(fill_box, axis));
                        ni != niend; ++ni) {
                      if (!patch_side_box.contains(*ni)) {
                         bool use_index = true;
@@ -345,8 +345,8 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
          hier::Index plower(pbox.lower());
          hier::Index pupper(pbox.upper());
 
-         pdat::SideIterator niend(sing_fill_box, axis, false);
-         for (pdat::SideIterator ni(sing_fill_box, axis, true);
+         pdat::SideIterator niend(pdat::SideGeometry::end(sing_fill_box, axis));
+         for (pdat::SideIterator ni(pdat::SideGeometry::begin(sing_fill_box, axis));
               ni != niend; ++ni) {
             bool use_index = true;
             for (int n = 0; n < d_dim.getValue(); n++) {
@@ -432,8 +432,8 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
                      hier::Index plower(pbox.lower());
                      hier::Index pupper(pbox.upper());
 
-                     pdat::SideIterator ciend(sing_fill_box, axis, false);
-                     for (pdat::SideIterator ci(sing_fill_box, axis, true);
+                     pdat::SideIterator ciend(pdat::SideGeometry::end(sing_fill_box, axis));
+                     for (pdat::SideIterator ci(pdat::SideGeometry::begin(sing_fill_box, axis));
                           ci != ciend; ++ci) {
                         bool use_index = true;
                         for (int n = 0; n < d_dim.getValue(); n++) {
@@ -472,8 +472,8 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
             hier::Index plower(pbox.lower());
             hier::Index pupper(pbox.upper());
 
-            pdat::SideIterator ciend(sing_fill_box, axis, false);
-            for (pdat::SideIterator ci(sing_fill_box, axis, true);
+            pdat::SideIterator ciend(pdat::SideGeometry::end(sing_fill_box, axis));
+            for (pdat::SideIterator ci(pdat::SideGeometry::begin(sing_fill_box, axis));
                  ci != ciend; ++ci) {
                bool use_index = true;
                for (int n = 0; n < d_dim.getValue(); n++) {
@@ -507,8 +507,8 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
             hier::Index plower(pbox.lower());
             hier::Index pupper(pbox.upper());
 
-            pdat::SideIterator ciend(sing_fill_box, axis, false);
-            for (pdat::SideIterator ci(sing_fill_box, axis, true);
+            pdat::SideIterator ciend(pdat::SideGeometry::end(sing_fill_box, axis));
+            for (pdat::SideIterator ci(pdat::SideGeometry::begin(sing_fill_box, axis));
                  ci != ciend; ++ci) {
                bool use_index = true;
                for (int n = 0; n < d_dim.getValue(); n++) {
@@ -589,8 +589,8 @@ bool SideMultiblockTest::verifyResults(
       interior_box.grow(hier::IntVector(d_dim, -1));
 
       for (int axis = 0; axis < d_dim.getValue(); axis++) {
-         pdat::SideIterator ciend(interior_box, axis, false);
-         for (pdat::SideIterator ci(interior_box, axis, true);
+         pdat::SideIterator ciend(pdat::SideGeometry::end(interior_box, axis));
+         for (pdat::SideIterator ci(pdat::SideGeometry::begin(interior_box, axis));
               ci != ciend; ++ci) {
             for (int d = 0; d < depth; d++) {
                double result = (*side_data)(*ci, d);
@@ -644,8 +644,9 @@ bool SideMultiblockTest::verifyResults(
             for (hier::BoxContainer::iterator ng(neighbor_side_ghost);
                  ng != neighbor_side_ghost.end(); ++ng) {
 
-               hier::Box::iterator ciend(*ng, false);
-               for (hier::Box::iterator ci(*ng, true); ci != ciend; ++ci) {
+                  hier::Box::iterator ciend((*ng).end());
+                  for (hier::Box::iterator ci((*ng).begin());
+                                              ci != ciend; ++ci) {
                   pdat::SideIndex si(*ci, 0, 0);
                   si.setAxis(axis);
                   if (!patch_side_box.contains(si)) {
@@ -719,8 +720,8 @@ bool SideMultiblockTest::verifyResults(
                hier::Box patch_side_box =
                   pdat::SideGeometry::toSideBox(pbox, axis);
 
-               pdat::SideIterator ciend(fill_box, axis, false);
-               for (pdat::SideIterator ci(fill_box, axis, true);
+               pdat::SideIterator ciend(pdat::SideGeometry::end(fill_box, axis));
+               for (pdat::SideIterator ci(pdat::SideGeometry::begin(fill_box, axis));
                     ci != ciend; ++ci) {
 
                   if (!patch_side_box.contains(*ci)) {

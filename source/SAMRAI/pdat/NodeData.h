@@ -16,6 +16,7 @@
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/pdat/NodeIndex.h"
 #include "SAMRAI/pdat/NodeIterator.h"
+#include "SAMRAI/pdat/NodeOverlap.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"

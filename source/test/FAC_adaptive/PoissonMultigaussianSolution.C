@@ -172,8 +172,8 @@ void PoissonMultigaussianSolution::setGridData(
       for (j = 0; j < d_dim.getValue(); ++j) {
          sl[j] = xl[j] + 0.5 * h[j];
       }
-      pdat::CellData<double>::iterator iter(patch.getBox(), true);
-      pdat::CellData<double>::iterator iterend(patch.getBox(), false);
+      pdat::CellData<double>::iterator iter(pdat::CellGeometry::begin(patch.getBox()));
+      pdat::CellData<double>::iterator iterend(pdat::CellGeometry::end(patch.getBox()));
       if (d_dim == tbox::Dimension(2)) {
          double x, y;
          for ( ; iter != iterend; ++iter) {
@@ -248,11 +248,11 @@ void PoissonMultigaussianSolution::setBcCoefs(
 
    if (d_dim == tbox::Dimension(2)) {
       hier::Box::iterator boxit(acoef_data ?
-                                acoef_data->getBox() : gcoef_data->getBox(),
-                                true);
+                                acoef_data->getBox().begin() :
+                                gcoef_data->getBox().begin());
       hier::Box::iterator boxitend(acoef_data ?
-                                   acoef_data->getBox() : gcoef_data->getBox(),
-                                   false);
+                                   acoef_data->getBox().end() :
+                                   gcoef_data->getBox().end());
       int i, j;
       double x, y;
       switch (bdry_box.getLocationIndex()) {

@@ -225,8 +225,8 @@ int main(
             TBOX_ASSERT(sample2);
 
             // add items to the sparse data objects.
-            pdat::CellIterator ic(patch->getBox(), true);
-            pdat::CellIterator icend(patch->getBox(), false);
+            pdat::CellIterator ic(pdat::CellGeometry::begin(patch->getBox()));
+            pdat::CellIterator icend(pdat::CellGeometry::end(patch->getBox()));
             for ( ; ic != icend; ++ic) {
                const hier::Index* idx = &(*ic);
                LSparseData::iterator iter1 = sample1->registerIndex(*idx);
@@ -364,8 +364,8 @@ checkIterators(
             << std::endl;
          }
 
-         pdat::CellIterator ic(patch->getBox(), true);
-         pdat::CellIterator icend(patch->getBox(), false);
+         pdat::CellIterator ic(pdat::CellGeometry::begin(patch->getBox()));
+         pdat::CellIterator icend(pdat::CellGeometry::end(patch->getBox()));
          for ( ; ic != icend; ++ic) {
             const hier::Index& idx = *ic;
             LSparseData::AttributeIterator it = sample->begin(idx);

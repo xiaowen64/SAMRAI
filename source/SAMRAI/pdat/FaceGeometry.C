@@ -12,6 +12,7 @@
 #define included_pdat_FaceGeometry_C
 
 #include "SAMRAI/pdat/FaceGeometry.h"
+#include "SAMRAI/pdat/FaceIterator.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -633,6 +634,22 @@ FaceGeometry::rotateAboutAxis(FaceIndex& index,
       }
    }
    index.setAxis(new_normal_direction);
+}
+
+FaceIterator
+FaceGeometry::begin(
+   const hier::Box& box,
+   int axis)
+{
+   return FaceIterator(box, axis, true);
+}
+
+FaceIterator
+FaceGeometry::end(
+   const hier::Box& box,
+   int axis)
+{
+   return FaceIterator(box, axis, false);
 }
 
 }

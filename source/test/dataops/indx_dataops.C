@@ -18,6 +18,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
+#include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/pdat/CellIterator.h"
 #include "SAMRAI/pdat/IndexData.h"
 #include "SAMRAI/pdat/IndexVariable.h"
@@ -227,8 +228,8 @@ int main(
 
             // iterate over cells of patch and invoke one "SampleIndexData"
             // instance on each cell (its possible to do more).
-            pdat::CellIterator icend(patch->getBox(), false);
-            for (pdat::CellIterator ic(patch->getBox(), true);
+            pdat::CellIterator icend(pdat::CellGeometry::end(patch->getBox()));
+            for (pdat::CellIterator ic(pdat::CellGeometry::begin(patch->getBox()));
                  ic != icend; ++ic) {
                SampleIndexData sd;
                sd.setInt(counter);

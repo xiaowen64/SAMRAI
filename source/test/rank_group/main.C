@@ -694,8 +694,8 @@ void generatePrebalanceByUserShells(
 
       tag_data->getArrayData().undefineData();
 
-      pdat::CellData<int>::iterator ciend(tag_data->getGhostBox(), false);
-      for (pdat::CellData<int>::iterator ci(tag_data->getGhostBox(), true);
+      pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(tag_data->getGhostBox()));
+      for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(tag_data->getGhostBox()));
            ci != ciend; ++ci) {
          const pdat::CellIndex& idx = *ci;
          double rr = 0;

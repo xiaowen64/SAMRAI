@@ -12,6 +12,7 @@
 #define included_pdat_NodeGeometry_C
 
 #include "SAMRAI/pdat/NodeGeometry.h"
+#include "SAMRAI/pdat/NodeIterator.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -364,6 +365,20 @@ NodeGeometry::rotateAboutAxis(NodeIndex& index,
       index(a) = tmp_index(b);
       index(b) = -tmp_index(a);
    }
+}
+
+NodeIterator
+NodeGeometry::begin(
+   const hier::Box& box)
+{
+   return NodeIterator(box, true);
+}
+
+NodeIterator
+NodeGeometry::end(
+   const hier::Box& box)
+{
+   return NodeIterator(box, false);
 }
 
 }

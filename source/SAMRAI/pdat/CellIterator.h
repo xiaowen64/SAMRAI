@@ -46,14 +46,6 @@ class CellIterator
 {
 public:
    /**
-    * Constructor for the cell iterator.  The iterator will enumerate
-    * the indices in the argument box.
-    */
-   explicit CellIterator(
-      const hier::Box& box,
-      bool begin);
-
-   /**
     * Copy constructor for the cell iterator
     */
    CellIterator(
@@ -129,6 +121,20 @@ public:
    }
 
 private:
+   friend CellIterator CellGeometry::begin(const hier::Box& box);
+   friend CellIterator CellGeometry::end(const hier::Box& box);
+
+   /**
+    * Constructor for the cell iterator.  The iterator will enumerate
+    * the indices in the argument box.
+    */
+   CellIterator(
+      const hier::Box& box,
+      bool begin);
+
+   // Unimplemented default constructor.
+   CellIterator();
+
    CellIndex d_index;
    hier::Box d_box;
 };

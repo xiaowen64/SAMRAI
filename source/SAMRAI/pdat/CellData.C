@@ -298,8 +298,8 @@ CellData<TYPE>::copyWithRotation(
          const int depth = ((getDepth() < src.getDepth()) ?
                             getDepth() : src.getDepth());
 
-         CellData<double>::iterator ciend(copybox, false);
-         for (CellData<double>::iterator ci(copybox, true);
+         CellData<double>::iterator ciend(CellGeometry::end(copybox));
+         for (CellData<double>::iterator ci(CellGeometry::begin(copybox));
               ci != ciend; ++ci) {
 
             const CellIndex& dst_index = *ci;
@@ -440,8 +440,8 @@ CellData<TYPE>::packWithRotation(
       if (!copybox.empty()) {
 
          for (int d = 0; d < depth; d++) {
-            CellData<double>::iterator ciend(copybox, false);
-            for (CellData<double>::iterator ci(copybox, true);
+            CellData<double>::iterator ciend(CellGeometry::end(copybox));
+            for (CellData<double>::iterator ci(CellGeometry::begin(copybox));
                  ci != ciend; ++ci) {
 
                CellIndex src_index(*ci);
@@ -551,8 +551,8 @@ CellData<TYPE>::print(
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    os.precision(prec);
-   CellIterator iend(box, false);
-   for (CellIterator i(box, true); i != iend; ++i) {
+   CellIterator iend(CellGeometry::end(box));
+   for (CellIterator i(CellGeometry::begin(box)); i != iend; ++i) {
       os << "array" << *i << " = "
          << (*d_data)(*i, depth) << std::endl << std::flush;
       os << std::flush;

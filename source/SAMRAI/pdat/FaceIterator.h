@@ -46,15 +46,6 @@ class FaceIterator
 {
 public:
    /**
-    * Constructor for the face iterator.  The iterator will enumerate
-    * the indices in the argument box.
-    */
-   FaceIterator(
-      const hier::Box& box,
-      const int axis,
-      bool begin);
-
-   /**
     * Copy constructor for the face iterator
     */
    FaceIterator(
@@ -130,6 +121,21 @@ public:
    }
 
 private:
+   friend FaceIterator FaceGeometry::begin(const hier::Box& box, int axis);
+   friend FaceIterator FaceGeometry::end(const hier::Box& box, int axis);
+
+   /**
+    * Constructor for the face iterator.  The iterator will enumerate
+    * the indices in the argument box.
+    */
+   FaceIterator(
+      const hier::Box& box,
+      const int axis,
+      bool begin);
+
+   // Unimplemented default constructor.
+   FaceIterator();
+
    FaceIndex d_index;
    hier::Box d_box;
 };

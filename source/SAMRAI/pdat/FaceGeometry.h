@@ -25,6 +25,8 @@
 namespace SAMRAI {
 namespace pdat {
 
+class FaceIterator;
+
 /*!
  * Class FaceGeometry manages the mapping between the AMR index space
  * and the face-centered geometry index space.  It is a subclass of
@@ -93,6 +95,16 @@ public:
    transform(
       FaceIndex& index,
       const hier::Transformation& transformation);
+
+   static FaceIterator
+   begin(
+      const hier::Box& box,
+      int axis);
+
+   static FaceIterator
+   end(
+      const hier::Box& box,
+      int axis);
 
    /*!
     * @brief Construct the face geometry object given an AMR index

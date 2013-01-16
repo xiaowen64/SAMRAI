@@ -46,15 +46,6 @@ class EdgeIterator
 {
 public:
    /**
-    * Constructor for the edge iterator.  The iterator will enumerate
-    * the indices in the argument box.
-    */
-   EdgeIterator(
-      const hier::Box& box,
-      const int axis,
-      bool begin);
-
-   /**
     * Copy constructor for the edge iterator
     */
    EdgeIterator(
@@ -130,6 +121,21 @@ public:
    }
 
 private:
+   friend EdgeIterator EdgeGeometry::begin(const hier::Box& box, int axis);
+   friend EdgeIterator EdgeGeometry::end(const hier::Box& box, int axis);
+
+   /**
+    * Constructor for the edge iterator.  The iterator will enumerate
+    * the indices in the argument box.
+    */
+   EdgeIterator(
+      const hier::Box& box,
+      const int axis,
+      bool begin);
+
+   // Unimplemented default constructor.
+   EdgeIterator();
+
    EdgeIndex d_index;
    hier::Box d_box;
 };

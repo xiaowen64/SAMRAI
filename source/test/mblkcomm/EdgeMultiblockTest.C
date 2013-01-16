@@ -197,8 +197,8 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
             hier::Box patch_edge_box =
                pdat::EdgeGeometry::toEdgeBox(patch.getBox(), axis);
             if (!node_bdry[nb].getIsMultiblockSingularity()) {
-               pdat::EdgeIterator niend(fill_box, axis, false);
-               for (pdat::EdgeIterator ni(fill_box, axis, true);
+               pdat::EdgeIterator niend(pdat::EdgeGeometry::end(fill_box, axis));
+               for (pdat::EdgeIterator ni(pdat::EdgeGeometry::begin(fill_box, axis));
                     ni != niend; ++ni) {
                   if (!patch_edge_box.contains(*ni)) {
                      for (int d = 0; d < edge_data->getDepth(); d++) {
@@ -228,8 +228,8 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
                hier::Index pupper(patch_edge_box.upper());
 
                if (!edge_bdry[eb].getIsMultiblockSingularity()) {
-                  pdat::EdgeIterator niend(fill_box, axis, false);
-                  for (pdat::EdgeIterator ni(fill_box, axis, true);
+                  pdat::EdgeIterator niend(pdat::EdgeGeometry::end(fill_box, axis));
+                  for (pdat::EdgeIterator ni(pdat::EdgeGeometry::begin(fill_box, axis));
                        ni != niend; ++ni) {
                      if (!patch_edge_box.contains(*ni)) {
                         bool use_index = true;
@@ -276,8 +276,8 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
                hier::Index pupper(patch_edge_box.upper());
 
                if (!face_bdry[fb].getIsMultiblockSingularity()) {
-                  pdat::EdgeIterator niend(fill_box, axis, false);
-                  for (pdat::EdgeIterator ni(fill_box, axis, true);
+                  pdat::EdgeIterator niend(pdat::EdgeGeometry::end(fill_box, axis));
+                  for (pdat::EdgeIterator ni(pdat::EdgeGeometry::begin(fill_box, axis));
                        ni != niend; ++ni) {
                      if (!patch_edge_box.contains(*ni)) {
                         bool use_index = true;
@@ -342,8 +342,8 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
          hier::Index plower(pbox.lower());
          hier::Index pupper(pbox.upper());
 
-         pdat::EdgeIterator niend(sing_fill_box, axis, false);
-         for (pdat::EdgeIterator ni(sing_fill_box, axis, true);
+         pdat::EdgeIterator niend(pdat::EdgeGeometry::end(sing_fill_box, axis));
+         for (pdat::EdgeIterator ni(pdat::EdgeGeometry::begin(sing_fill_box, axis));
               ni != niend; ++ni) {
             bool use_index = true;
             for (int n = 0; n < d_dim.getValue(); n++) {
@@ -428,8 +428,8 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
                      hier::Index plower(pbox.lower());
                      hier::Index pupper(pbox.upper());
 
-                     pdat::EdgeIterator ciend(sing_fill_box, axis, false);
-                     for (pdat::EdgeIterator ci(sing_fill_box, axis, true);
+                     pdat::EdgeIterator ciend(pdat::EdgeGeometry::end(sing_fill_box, axis));
+                     for (pdat::EdgeIterator ci(pdat::EdgeGeometry::begin(sing_fill_box, axis));
                           ci != ciend; ++ci) {
                         bool use_index = true;
                         for (int n = 0; n < d_dim.getValue(); n++) {
@@ -469,8 +469,8 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
             hier::Index plower(pbox.lower());
             hier::Index pupper(pbox.upper());
 
-            pdat::EdgeIterator ciend(sing_fill_box, axis, false);
-            for (pdat::EdgeIterator ci(sing_fill_box, axis, true);
+            pdat::EdgeIterator ciend(pdat::EdgeGeometry::end(sing_fill_box, axis));
+            for (pdat::EdgeIterator ci(pdat::EdgeGeometry::begin(sing_fill_box, axis));
                  ci != ciend; ++ci) {
                bool use_index = true;
                for (int n = 0; n < d_dim.getValue(); n++) {
@@ -504,8 +504,8 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
             hier::Index plower(pbox.lower());
             hier::Index pupper(pbox.upper());
 
-            pdat::EdgeIterator ciend(sing_fill_box, axis, false);
-            for (pdat::EdgeIterator ci(sing_fill_box, axis, true);
+            pdat::EdgeIterator ciend(pdat::EdgeGeometry::end(sing_fill_box, axis));
+            for (pdat::EdgeIterator ci(pdat::EdgeGeometry::begin(sing_fill_box, axis));
                  ci != ciend; ++ci) {
                bool use_index = true;
                for (int n = 0; n < d_dim.getValue(); n++) {
@@ -586,8 +586,8 @@ bool EdgeMultiblockTest::verifyResults(
       interior_box.grow(hier::IntVector(d_dim, -1));
 
       for (int axis = 0; axis < d_dim.getValue(); axis++) {
-         pdat::EdgeIterator ciend(interior_box, axis, false);
-         for (pdat::EdgeIterator ci(interior_box, axis, true);
+         pdat::EdgeIterator ciend(pdat::EdgeGeometry::end(interior_box, axis));
+         for (pdat::EdgeIterator ci(pdat::EdgeGeometry::begin(interior_box, axis));
              ci != ciend; ++ci) {
             for (int d = 0; d < depth; d++) {
                double result = (*edge_data)(*ci, d);
@@ -651,8 +651,8 @@ bool EdgeMultiblockTest::verifyResults(
             for (hier::BoxContainer::iterator ng(neighbor_edge_ghost);
                  ng != neighbor_edge_ghost.end(); ++ng) {
 
-               hier::Box::iterator ciend(*ng, false);
-               for (hier::Box::iterator ci(*ng, true); ci != ciend; ++ci) {
+               hier::Box::iterator ciend((*ng).end());
+               for (hier::Box::iterator ci((*ng).begin()); ci != ciend; ++ci) {
                   pdat::EdgeIndex ei(*ci, 0, 0);
                   ei.setAxis(axis);
                   if (!patch_edge_box.contains(ei)) {
@@ -728,8 +728,8 @@ bool EdgeMultiblockTest::verifyResults(
                hier::Box patch_edge_box =
                   pdat::EdgeGeometry::toEdgeBox(pbox, axis);
 
-               pdat::EdgeIterator ciend(fill_box, axis, false);
-               for (pdat::EdgeIterator ci(fill_box, axis, true);
+               pdat::EdgeIterator ciend(pdat::EdgeGeometry::end(fill_box, axis));
+               for (pdat::EdgeIterator ci(pdat::EdgeGeometry::begin(fill_box, axis));
                     ci != ciend; ++ci) {
 
                   if (!patch_edge_box.contains(*ci)) {

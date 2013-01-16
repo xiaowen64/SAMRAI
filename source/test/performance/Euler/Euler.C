@@ -1748,8 +1748,9 @@ void Euler::boundaryReset(
          bdry_case = d_master_bdry_face_conds[bside];
       }
       if (bdry_case == BdryCond::REFLECT) {
-         pdat::CellIterator icend(*ib, false);
-         for (pdat::CellIterator ic(*ib, true); ic != icend; ++ic) {
+         pdat::CellIterator icend(pdat::CellGeometry::end(*ib));
+         for (pdat::CellIterator ic(pdat::CellGeometry::begin(*ib));
+              ic != icend; ++ic) {
             for (hier::BoxContainer::iterator domain_boxes_itr(domain_boxes);
                  domain_boxes_itr != domain_boxes.end();
                  ++domain_boxes_itr) {
@@ -1778,8 +1779,9 @@ void Euler::boundaryReset(
       }
 // END SIMPLE-MINDED FIX FOR STEP PROBLEM
       if (bdry_case == BdryCond::REFLECT) {
-         pdat::CellIterator icend(*ib, false);
-         for (pdat::CellIterator ic(*ib, true); ic != icend; ++ic) {
+         pdat::CellIterator icend(pdat::CellGeometry::end(*ib));
+         for (pdat::CellIterator ic(pdat::CellGeometry::begin(*ib));
+              ic != icend; ++ic) {
             for (hier::BoxContainer::iterator domain_boxes_itr(domain_boxes);
                  domain_boxes_itr != domain_boxes.end();
                  ++domain_boxes_itr) {
@@ -2408,8 +2410,9 @@ void Euler::tagGradientDetectorCells(
             }
             hier::Box ibox = pbox * tagbox;
 
-            pdat::CellIterator itcend(ibox, false);
-            for (pdat::CellIterator itc(ibox, true); itc != itcend; ++itc) {
+            pdat::CellIterator itcend(pdat::CellGeometry::end(ibox));
+            for (pdat::CellIterator itc(pdat::CellGeometry::begin(ibox));
+                 itc != itcend; ++itc) {
                (*temp_tags)(*itc, 0) = TRUE;
             }
          }
@@ -2570,8 +2573,9 @@ void Euler::tagGradientDetectorCells(
              * RICHARDSON_NEWLY_TAGGED since these were set most recently
              * by Richardson extrapolation.
              */
-            pdat::CellIterator icend(pbox, false);
-            for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
+            pdat::CellIterator icend(pdat::CellGeometry::end(pbox));
+            for (pdat::CellIterator ic(pdat::CellGeometry::begin(pbox));
+                 ic != icend; ++ic) {
                double locden = tol;
                int tag_val = (*tags)(*ic, 0);
                if (tag_val) {
@@ -2648,8 +2652,9 @@ void Euler::tagGradientDetectorCells(
     * Adjust temp_tags from those tags set in Richardson extrapolation.
     */
    if (uses_richardson_extrapolation_too) {
-      pdat::CellIterator icend(pbox, false);
-      for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
+      pdat::CellIterator icend(pdat::CellGeometry::end(pbox));
+      for (pdat::CellIterator ic(pdat::CellGeometry::begin(pbox));
+           ic != icend; ++ic) {
          if ((*tags)(*ic, 0) == RICHARDSON_ALREADY_TAGGED ||
              (*tags)(*ic, 0) == RICHARDSON_NEWLY_TAGGED) {
             (*temp_tags)(*ic, 0) = TRUE;
@@ -2660,8 +2665,9 @@ void Euler::tagGradientDetectorCells(
    /*
     * Update tags
     */
-   pdat::CellIterator icend(pbox, false);
-   for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
+   pdat::CellIterator icend(pdat::CellGeometry::end(pbox));
+   for (pdat::CellIterator ic(pdat::CellGeometry::begin(pbox));
+        ic != icend; ++ic) {
       (*tags)(*ic, 0) = (*temp_tags)(*ic, 0);
    }
 
@@ -2820,8 +2826,9 @@ void Euler::tagRichardsonExtrapolationCells(
             double diff = 0.;
             double error = 0.;
 
-            pdat::CellIterator icend(pbox, false);
-            for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
+            pdat::CellIterator icend(pdat::CellGeometry::end(pbox));
+            for (pdat::CellIterator ic(pdat::CellGeometry::begin(pbox));
+                 ic != icend; ++ic) {
 
                /*
                 * Compute error norm
@@ -2863,8 +2870,9 @@ void Euler::tagRichardsonExtrapolationCells(
     * use this information in the gradient detector.
     */
    if (!uses_gradient_detector_too) {
-      pdat::CellIterator icend(pbox, false);
-      for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
+      pdat::CellIterator icend(pdat::CellGeometry::end(pbox));
+      for (pdat::CellIterator ic(pdat::CellGeometry::begin(pbox));
+           ic != icend; ++ic) {
          if ((*tags)(*ic, 0) == RICHARDSON_ALREADY_TAGGED ||
              (*tags)(*ic, 0) == RICHARDSON_NEWLY_TAGGED) {
             (*tags)(*ic, 0) = TRUE;
@@ -3094,8 +3102,9 @@ void Euler::writeData1dPencil(
       double valinv = 1.0 / (d_gamma - 1.0);
 
       int ccount = 0;
-      pdat::CellIterator icend(box, false);
-      for (pdat::CellIterator ic(box, true); ic != icend; ++ic) {
+      pdat::CellIterator icend(pdat::CellGeometry::end(box));
+      for (pdat::CellIterator ic(pdat::CellGeometry::begin(box));
+           ic != icend; ++ic) {
          file << cell_center + ccount * dx[idir] << " ";
          ccount++;
 

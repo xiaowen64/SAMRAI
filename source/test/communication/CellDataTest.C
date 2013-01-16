@@ -172,8 +172,9 @@ void CellDataTest::setLinearData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   pdat::CellIterator ciend(sbox, false);
-   for (pdat::CellIterator ci(sbox, true); ci != ciend; ++ci) {
+   pdat::CellIterator ciend(pdat::CellGeometry::end(sbox));
+   for (pdat::CellIterator ci(pdat::CellGeometry::begin(sbox));
+        ci != ciend; ++ci) {
 
       /*
        * Compute spatial location of cell center and
@@ -229,8 +230,9 @@ void CellDataTest::setConservativeData(
        * Set cell value on level zero to u(i,j,k) = (i + j + k)/ncells.
        */
 
-      pdat::CellIterator fiend(sbox, false);
-      for (pdat::CellIterator fi(sbox, true); fi != fiend; ++fi) {
+      pdat::CellIterator fiend(pdat::CellGeometry::end(sbox));
+      for (pdat::CellIterator fi(pdat::CellGeometry::begin(sbox));
+           fi != fiend; ++fi) {
          double value = 0.0;
          for (int d = 0; d < d_dim.getValue(); d++) {
             value += (double)((*fi)(d));
@@ -276,8 +278,9 @@ void CellDataTest::setConservativeData(
          }
       }
 
-      pdat::CellIterator fiend(sbox, false);
-      for (pdat::CellIterator fi(sbox, true); fi != fiend; ++fi) {
+      pdat::CellIterator fiend(pdat::CellGeometry::end(sbox));
+      for (pdat::CellIterator fi(pdat::CellGeometry::begin(sbox));
+           fi != fiend; ++fi) {
 
          const hier::IntVector ci(hier::Index::coarsen(*fi, ratio));
          hier::IntVector del(ci.getDim());  // Index vector from ci to fi.
@@ -327,8 +330,9 @@ void CellDataTest::setPeriodicData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   pdat::CellIterator ciend(sbox, false);
-   for (pdat::CellIterator ci(sbox, true); ci != ciend; ++ci) {
+   pdat::CellIterator ciend(pdat::CellGeometry::end(sbox));
+   for (pdat::CellIterator ci(pdat::CellGeometry::begin(sbox));
+        ci != ciend; ++ci) {
 
       double val = 1.0;
       for (int d = 0; d < d_dim.getValue(); ++d) {
@@ -422,8 +426,9 @@ void CellDataTest::checkPatchInteriorData(
       setLinearData(correct_data, correct_data->getGhostBox(), patch);
    }
 
-   pdat::CellIterator ciend(interior, false);
-   for (pdat::CellIterator ci(interior, true); ci != ciend; ++ci) {
+   pdat::CellIterator ciend(pdat::CellGeometry::end(interior));
+   for (pdat::CellIterator ci(pdat::CellGeometry::begin(interior));
+        ci != ciend; ++ci) {
       for (int d = 0; d < depth; d++) {
          if (!(tbox::MathUtilities<double>::equalEps((*data)(*ci, d),
                   (*correct_data)(*ci, d)))) {
@@ -595,8 +600,9 @@ bool CellDataTest::verifyResults(
          int depth = cell_data->getDepth();
          hier::Box dbox = cell_data->getGhostBox();
 
-         pdat::CellIterator ciend(dbox, false);
-         for (pdat::CellIterator ci(dbox, true); ci != ciend; ++ci) {
+         pdat::CellIterator ciend(pdat::CellGeometry::end(dbox));
+         for (pdat::CellIterator ci(pdat::CellGeometry::begin(dbox));
+              ci != ciend; ++ci) {
             double correct = (*solution)(*ci);
             for (int d = 0; d < depth; d++) {
                double result = (*cell_data)(*ci, d);

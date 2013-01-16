@@ -298,8 +298,8 @@ int main(
 
             TBOX_ASSERT(cvdata);
 
-            pdat::CellIterator cend(cvdata->getBox(), false);
-            for (pdat::CellIterator c(cvdata->getBox(), true);
+            pdat::CellIterator cend(pdat::CellGeometry::end(cvdata->getBox()));
+            for (pdat::CellIterator c(pdat::CellGeometry::begin(cvdata->getBox()));
                  c != cend && vol_test_passed; ++c) {
                pdat::CellIndex cell_index = *c;
 
@@ -596,8 +596,8 @@ int main(
          hier::Index index1(dim, 3);
          index1(0) = 5;
 
-         pdat::CellIterator cend(cdata->getBox(), false);
-         for (pdat::CellIterator c(cdata->getBox(), true);
+         pdat::CellIterator cend(pdat::CellGeometry::end(cdata->getBox()));
+         for (pdat::CellIterator c(pdat::CellGeometry::begin(cdata->getBox()));
               c != cend && bogus_value_test_passed; ++c) {
             pdat::CellIndex cell_index = *c;
 
@@ -802,8 +802,8 @@ doubleDataSameAsValue(
 
          TBOX_ASSERT(cvdata);
 
-         pdat::CellIterator cend(cvdata->getBox(), false);
-         for (pdat::CellIterator c(cvdata->getBox(), true);
+         pdat::CellIterator cend(pdat::CellGeometry::end(cvdata->getBox()));
+         for (pdat::CellIterator c(pdat::CellGeometry::begin(cvdata->getBox()));
               c != cend && test_passed; ++c) {
             pdat::CellIndex cell_index = *c;
             if (!tbox::MathUtilities<double>::equalEps((*cvdata)(cell_index),

@@ -12,6 +12,7 @@
 #define included_pdat_CellGeometry_C
 
 #include "SAMRAI/pdat/CellGeometry.h"
+#include "SAMRAI/pdat/CellIterator.h"
 #include "SAMRAI/pdat/CellOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -326,6 +327,20 @@ CellGeometry::rotateAboutAxis(CellIndex& index,
       index(a) = tmp_index(b);
       index(b) = -tmp_index(a) - 1;
    }
+}
+
+CellIterator
+CellGeometry::begin(
+   const hier::Box& box)
+{
+   return CellIterator(box, true);
+}
+
+CellIterator
+CellGeometry::end(
+   const hier::Box& box)
+{
+   return CellIterator(box, false);
 }
 
 }

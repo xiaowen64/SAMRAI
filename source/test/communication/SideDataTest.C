@@ -16,6 +16,7 @@
 #include "SAMRAI/pdat/CellIndex.h"
 #include "SAMRAI/pdat/CellIterator.h"
 #include "CommTester.h"
+#include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/pdat/SideGeometry.h"
 #include "SAMRAI/pdat/SideIndex.h"
 #include "SAMRAI/pdat/SideIterator.h"
@@ -224,8 +225,9 @@ void SideDataTest::setConservativeData(
 
       for (int axis = 0; axis < d_dim.getValue(); axis++) {
          if (directions(axis)) {
-            pdat::CellIterator ciend(sbox, false);
-            for (pdat::CellIterator ci(sbox, true); ci != ciend; ++ci) {
+            pdat::CellIterator ciend(pdat::CellGeometry::end(sbox));
+            for (pdat::CellIterator ci(pdat::CellGeometry::begin(sbox));
+                 ci != ciend; ++ci) {
                double value = 0.0;
                for (i = 0; i < d_dim.getValue(); i++) {
                   if (i != axis) {
@@ -277,8 +279,9 @@ void SideDataTest::setConservativeData(
          if (directions(axis)) {
             hier::IntVector ci(ratio.getDim());
             hier::IntVector del(ratio.getDim());
-            pdat::CellIterator fiend(sbox, false);
-            for (pdat::CellIterator fi(sbox, true); fi != fiend; ++fi) {
+            pdat::CellIterator fiend(pdat::CellGeometry::end(sbox));
+            for (pdat::CellIterator fi(pdat::CellGeometry::begin(sbox));
+                 fi != fiend; ++fi) {
                double value = 0.0;
                for (i = 0; i < d_dim.getValue(); i++) {
                   if (i != axis) {
@@ -400,8 +403,9 @@ void SideDataTest::checkPatchInteriorData(
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       if (directions(axis)) {
          const pdat::SideIndex loweri(interior.lower(), axis, 0);
-         pdat::SideIterator siend(interior, axis, false);
-         for (pdat::SideIterator si(interior, axis, true); si != siend; ++si) {
+         pdat::SideIterator siend(pdat::SideGeometry::end(interior, axis));
+         for (pdat::SideIterator si(pdat::SideGeometry::begin(interior, axis));
+              si != siend; ++si) {
             for (int d = 0; d < depth; d++) {
                if (!(tbox::MathUtilities<double>::equalEps((*data)(*si, d),
                         (*correct_data)(*si, d)))) {
@@ -540,8 +544,9 @@ void SideDataTest::setLinearData(
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       if (directions(axis)) {
          const pdat::SideIndex loweri(patch.getBox().lower(), axis, 0);
-         pdat::SideIterator eiend(sbox, axis, false);
-         for (pdat::SideIterator ei(sbox, axis, true); ei != eiend; ++ei) {
+         pdat::SideIterator eiend(pdat::SideGeometry::end(sbox, axis));
+         for (pdat::SideIterator ei(pdat::SideGeometry::begin(sbox, axis));
+              ei != eiend; ++ei) {
 
             /*
              * Compute spatial location of cell center and
@@ -610,8 +615,9 @@ void SideDataTest::setPeriodicData(
    for (int axis = 0; axis < d_dim.getValue(); axis++) {
       if (directions(axis)) {
          const pdat::SideIndex loweri(patch.getBox().lower(), axis, 0);
-         pdat::SideIterator siend(sbox, axis, false);
-         for (pdat::SideIterator si(sbox, axis, true); si != siend; ++si) {
+         pdat::SideIterator siend(pdat::SideGeometry::end(sbox, axis));
+         for (pdat::SideIterator si(pdat::SideGeometry::begin(sbox, axis));
+              si != siend; ++si) {
 
             double val = 1.0;
             for (int d = 0; d < d_dim.getValue(); ++d) {
@@ -697,8 +703,9 @@ bool SideDataTest::verifyResults(
 
          for (int id = 0; id < d_dim.getValue(); id++) {
             if (directions(id)) {
-               pdat::SideIterator siend(dbox, id, false);
-               for (pdat::SideIterator si(dbox, id, true); si != siend; ++si) {
+               pdat::SideIterator siend(pdat::SideGeometry::end(dbox, id));
+               for (pdat::SideIterator si(pdat::SideGeometry::begin(dbox, id));
+                    si != siend; ++si) {
                   double correct = (*solution)(*si);
                   for (int d = 0; d < depth; d++) {
                      double result = (*side_data)(*si, d);
