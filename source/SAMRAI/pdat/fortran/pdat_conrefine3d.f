@@ -1,7 +1,7 @@
 c
 c  File:        $URL$
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Description: FORTRAN routines for spatial refining of 3d patch data
 c               on a regular Cartesian mesh.
@@ -9,21 +9,21 @@ c
 c
 c  File:        $URL$
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Description: m4 include file for 3d Cartesian refine operators
 c
 c
 c  File:        $URL$
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Description: m4 include file for dimensioning 3d arrays in FORTRAN routines.
 c
 c
 c  File:        $URL$
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Description: m4 include file for constant patchdata transfer routines.
 c

@@ -488,7 +488,7 @@ char *yytext;
 //
 // File:	$URL$
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2012 Lawrence Livermore National Security, LLC
+// Copyright:	(c) 1997-2013 Lawrence Livermore National Security, LLC
 
 // Description:	Lex scanner description for the SAMRAI input database
 //

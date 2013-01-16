@@ -1,7 +1,7 @@
 c
 c  File:        $URL$
 c  Package:     SAMRAI 
-c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
 c  Release:     
 c  Revision:    
 c  Modified:    
@@ -10,7 +10,7 @@ c
 c
 c  File:        $URL$
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Description: m4 include file for dimensioning 3d arrays in FORTRAN routines.
 c
@@ -32,7 +32,7 @@ c***********************************************************************
 c
 c File:        $URL$
 c Package:     SAMRAI application
-c Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
+c Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
 c Revision:    $LastChangedRevision$
 c Description: Commonblock in embedded boundary test code.
 c
