@@ -601,8 +601,8 @@ bool NodeMultiblockTest::verifyResults(
          for (hier::BoxContainer::iterator ng(neighbor_node_ghost);
               ng != neighbor_node_ghost.end(); ++ng) {
 
-               hier::Box::iterator ciend((*ng).end());
-               for (hier::Box::iterator ci((*ng).begin()); ci != ciend; ++ci) {
+               hier::Box::iterator ciend(ng->end());
+               for (hier::Box::iterator ci(ng->begin()); ci != ciend; ++ci) {
                pdat::NodeIndex ni(*ci, hier::IntVector(d_dim, 0));
                if (!patch_node_box.contains(ni)) {
                   for (int d = 0; d < depth; d++) {

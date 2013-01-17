@@ -644,8 +644,8 @@ bool FaceMultiblockTest::verifyResults(
             for (hier::BoxContainer::iterator ng(neighbor_face_ghost);
                  ng != neighbor_face_ghost.end(); ++ng) {
 
-               hier::Box::iterator ciend(*ng, false);
-               for (hier::Box::iterator ci(*ng, true); ci != ciend; ++ci) {
+               hier::Box::iterator ciend(ng->end());
+               for (hier::Box::iterator ci(ng->begin()); ci != ciend; ++ci) {
                   pdat::FaceIndex fi(*ci, 0, 0);
                   fi.setAxis(axis);
                   if (!patch_face_box.contains(fi)) {

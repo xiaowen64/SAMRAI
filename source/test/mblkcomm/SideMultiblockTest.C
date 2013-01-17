@@ -644,9 +644,8 @@ bool SideMultiblockTest::verifyResults(
             for (hier::BoxContainer::iterator ng(neighbor_side_ghost);
                  ng != neighbor_side_ghost.end(); ++ng) {
 
-                  hier::Box::iterator ciend((*ng).end());
-                  for (hier::Box::iterator ci((*ng).begin());
-                                              ci != ciend; ++ci) {
+                  hier::Box::iterator ciend(ng->end());
+                  for (hier::Box::iterator ci(ng->begin()); ci != ciend; ++ci) {
                   pdat::SideIndex si(*ci, 0, 0);
                   si.setAxis(axis);
                   if (!patch_side_box.contains(si)) {

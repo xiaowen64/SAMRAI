@@ -651,8 +651,8 @@ bool EdgeMultiblockTest::verifyResults(
             for (hier::BoxContainer::iterator ng(neighbor_edge_ghost);
                  ng != neighbor_edge_ghost.end(); ++ng) {
 
-               hier::Box::iterator ciend((*ng).end());
-               for (hier::Box::iterator ci((*ng).begin()); ci != ciend; ++ci) {
+               hier::Box::iterator ciend(ng->end());
+               for (hier::Box::iterator ci(ng->begin()); ci != ciend; ++ci) {
                   pdat::EdgeIndex ei(*ci, 0, 0);
                   ei.setAxis(axis);
                   if (!patch_edge_box.contains(ei)) {
