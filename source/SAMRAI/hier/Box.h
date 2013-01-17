@@ -1385,8 +1385,8 @@ private:
  * \verbatim
  * Box box;
  * ...
- * Box::iterator bend(box, false);
- * for (Box::iterator b(box, true); b != bend; ++b) {
+ * Box::iterator bend(box.end());
+ * for (Box::iterator b(box.begin()); b != bend; ++b) {
  *    // use index b of the box
  * }
  * \endverbatim
@@ -1400,15 +1400,9 @@ private:
 
 class BoxIterator
 {
-public:
-   /**
-    * Constructor for the box iterator.  The iterator will enumerate the
-    * indices in the argument box.
-    */
-   BoxIterator(
-      const Box& box,
-      bool begin);
+friend class Box;
 
+public:
    /**
     * Copy constructor for the box iterator.
     */
@@ -1509,6 +1503,14 @@ public:
    }
 
 private:
+   /**
+    * Constructor for the box iterator.  The iterator will enumerate the
+    * indices in the argument box.
+    */
+   BoxIterator(
+      const Box& box,
+      bool begin);
+
    /*
     * Unimplemented default constructor.
     */
