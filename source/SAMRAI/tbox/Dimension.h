@@ -18,27 +18,6 @@
 #include <iostream>
 #include <limits>
 
-/*
- * Forward declarations, which are questionable with respect to SAMRAI 
- * package ordering.   These are needed since pdat::ArrayData and 
- * hier::IntVector classes need to access private Dimension assignment
- * constructor.
- *
- * It would be good to come up with an alternative to this.
- */
-namespace SAMRAI {
-
-namespace hier {
-class IntVector;
-}
-
-namespace pdat {
-template<class TYPE>
-class ArrayData;
-}
-
-}
-
 namespace SAMRAI {
 namespace tbox {
 
