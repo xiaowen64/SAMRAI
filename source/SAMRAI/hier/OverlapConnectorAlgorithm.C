@@ -141,26 +141,22 @@ OverlapConnectorAlgorithm::extractNeighbors(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (!(gcw <= connector.getConnectorWidth())) {
-      TBOX_ERROR("OverlapConnectorAlgorithm::extractNeighbors cannot provide neighbors for\n"
-         << "a wider ghost cell width that used to initialize it.\n");
+      TBOX_ERROR("OverlapConnectorAlgorithm::extractNeighbors cannot provide\n"
+         << "neighbors for a wider ghost cell width that used to initialize it.\n");
    }
    if (connector.getParallelState() != BoxLevel::GLOBALIZED &&
        box_id.getOwnerRank() != connector.getMPI().getRank()) {
-      TBOX_ERROR("OverlapConnectorAlgorithm::extractNeighbors cannot get neighbor data\n"
-         << "for a remote box unless in GLOBALIZED mode.\n");
+      TBOX_ERROR("OverlapConnectorAlgorithm::extractNeighbors cannot get\n"
+         << "neighbor data for a remote box unless in GLOBALIZED mode.\n");
    }
    if (!connector.getBase().hasBox(box_id)) {
       std::string dbgbord;
       TBOX_ERROR(
          "\nOverlapConnectorAlgorithm::extractNeighbors: box_id " << box_id
-                                                         <<
-         " is not in the base of the box_level.\n"
-                                                         << "base:\n"
-                                                         << connector.getBase().format(dbgbord, 2)
-                                                         << "head:\n"
-                                                         << connector.getHead().format(dbgbord, 2)
-                                                         << "connector:\n"
-                                                         << connector.format(dbgbord, 2));
+         << " is not in the base of the box_level.\n"
+         << "base:\n" << connector.getBase().format(dbgbord, 2)
+         << "head:\n" << connector.getHead().format(dbgbord, 2)
+         << "connector:\n" << connector.format(dbgbord, 2));
    }
 #endif
 
@@ -225,8 +221,8 @@ OverlapConnectorAlgorithm::extractNeighbors(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (!(gcw <= connector.getConnectorWidth())) {
-      TBOX_ERROR("OverlapConnectorAlgorithm::extractNeighbors cannot provide neighbors for\n"
-         << "a wider ghost cell width that used to initialize it.\n");
+      TBOX_ERROR("OverlapConnectorAlgorithm::extractNeighbors cannot provide\n"
+         << "neighbors for a wider ghost cell width that used to initialize it.\n");
    }
 #endif
 
@@ -243,8 +239,8 @@ OverlapConnectorAlgorithm::extractNeighbors(
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (connector.getParallelState() != BoxLevel::GLOBALIZED &&
           box_id.getOwnerRank() != connector.getMPI().getRank()) {
-         TBOX_ERROR("OverlapConnectorAlgorithm::extractNeighbors cannot get neighbor data\n"
-            << "for a remote box unless in GLOBALIZED mode.\n");
+         TBOX_ERROR("OverlapConnectorAlgorithm::extractNeighbors cannot get\n"
+            << "neighbor data for a remote box unless in GLOBALIZED mode.\n");
       }
       if (!connector.getBase().hasBox(box_id)) {
          std::string dbgbord;
@@ -252,12 +248,9 @@ OverlapConnectorAlgorithm::extractNeighbors(
             "\nOverlapConnectorAlgorithm::extractNeighbors: box_id " << box_id
                                                             <<
             " is not in the base of the box_level.\n"
-                                                            << "base:\n"
-                                                            << connector.getBase().format(dbgbord, 2)
-                                                            << "head:\n"
-                                                            << connector.getHead().format(dbgbord, 2)
-                                                            << "connector:\n"
-                                                            << connector.format(dbgbord, 2));
+            << "base:\n" << connector.getBase().format(dbgbord, 2)
+            << "head:\n" << connector.getHead().format(dbgbord, 2)
+            << "connector:\n" << connector.format(dbgbord, 2));
       }
 #endif
 
@@ -774,7 +767,7 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
             cent_to_west.getConnectorWidth() - cent_growth_to_nest_east;
       }
       if (!(output_width1 >= zero_vector || output_width2 >= zero_vector)) {
-         TBOX_ERROR("OverlapConnectorAlgorithm::computeBridgeWidths:\n"
+         TBOX_ERROR("OverlapConnectorAlgorithm::privateBridge_prologue:\n"
             << "Useless nesting specifications!\n"
             << "Neither west nor east BoxLevel nest with enough\n"
             << "margin to guarantee finding all overlaps.\n"
@@ -811,13 +804,16 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
           * bad results that result in elusive bugs.  Therefore, we
           * catch it immediately.
           */
-         TBOX_ERROR("OverlapConnectorAlgorithm::computeBridgeWidths found input error:\n"
+         TBOX_ERROR("OverlapConnectorAlgorithm::privateBridge_prologue found input error:\n"
             << "The given connector width limit, " << connector_width_limit
-            << " (" << width_limit_in_finest_refinement_ratio << " in finest index space)\n"
+            << " (" << width_limit_in_finest_refinement_ratio
+            << " in finest index space)\n"
             << "is smaller than the width of the bridge, "
-            << output_width_in_finest_refinement_ratio << " (in finest index space).");
+            << output_width_in_finest_refinement_ratio
+            << " (in finest index space).");
       }
-      output_width_in_finest_refinement_ratio.min(width_limit_in_finest_refinement_ratio);
+      output_width_in_finest_refinement_ratio.min(
+         width_limit_in_finest_refinement_ratio);
    }
 
    west_to_east_width = IntVector::ceilingDivide(
@@ -1016,9 +1012,10 @@ OverlapConnectorAlgorithm::privateBridge_checkParameters(
    if (cent != cent_to_east.getBase() ||
        cent != east_to_cent.getHead() ||
        cent != west_to_cent.getHead()) {
-      TBOX_ERROR("Bad input for OverlapConnectorAlgorithm::bridge:\n"
+      TBOX_ERROR("Bad input for OverlapConnectorAlgorithm::privateBridge_checkParameters:\n"
          << "Given Connectors to base and head of bridge are not incident\n"
-         << "from the same center in OverlapConnectorAlgorithm::bridge:\n"
+         << "from the same center in\n"
+         << "OverlapConnectorAlgorithm::privateBridge_checkParameters:\n"
          << "west_to_cent is  TO  " << &west_to_cent.getHead() << "\n"
          << "cent_to_east is FROM " << &cent_to_east.getBase() << "\n"
          << "east_to_cent is  TO  " << &east_to_cent.getHead() << "\n"
@@ -1030,30 +1027,32 @@ OverlapConnectorAlgorithm::privateBridge_checkParameters(
     * head and base in the object.
     */
    if (cent_to_west.getHead() != west_to_cent.getBase()) {
-      TBOX_ERROR("Bad input for OverlapConnectorAlgorithm::bridge:\n"
+      TBOX_ERROR("Bad input for OverlapConnectorAlgorithm::privateBridge_checkParameters:\n"
          << "Given Connectors to and from base of bridge do not refer\n"
-         << "to the base of the bridge in OverlapConnectorAlgorithm::bridge:\n"
+         << "to the base of the bridge in\n"
+         << "OverlapConnectorAlgorithm::privateBridge_checkParameters:\n"
          << "west_to_cent is FROM " << &west_to_cent.getBase() << "\n"
          << "cent_to_west is  TO  " << &cent_to_west.getHead() << "\n"
          );
    }
    if (cent_to_east.getHead() != east_to_cent.getBase()) {
-      TBOX_ERROR("Bad input for OverlapConnectorAlgorithm::bridge:\n"
+      TBOX_ERROR("Bad input for OverlapConnectorAlgorithm::privateBridge_checkParameters:\n"
          << "Given Connectors to and from head of bridge do not refer\n"
-         << "to the head of the bridge in OverlapConnectorAlgorithm::bridge:\n"
+         << "to the head of the bridge in\n"
+         << "OverlapConnectorAlgorithm::privateBridge_checkParameters:\n"
          << "east_to_cent is FROM " << &east_to_cent.getBase() << "\n"
          << "cent_to_east is  TO  " << &cent_to_east.getHead() << "\n"
          );
    }
    if (!west_to_cent.isTransposeOf(cent_to_west)) {
-      TBOX_ERROR("Bad input for OverlapConnectorAlgorithm::bridge:\n"
+      TBOX_ERROR("Bad input for OverlapConnectorAlgorithm::privateBridge_checkParameters:\n"
          << "Given Connectors between base and center of bridge\n"
          << "are not transposes of each other.\n"
          << "See OverlapConnectorAlgorithm::isTransposeOf().\n"
          );
    }
    if (!east_to_cent.isTransposeOf(cent_to_east)) {
-      TBOX_ERROR("Bad input for OverlapConnectorAlgorithm::bridge:\n"
+      TBOX_ERROR("Bad input for OverlapConnectorAlgorithm::privateBridge_checkParameters:\n"
          << "Given Connectors between head and center of bridge\n"
          << "are not transposes of each other.\n"
          << "See OverlapConnectorAlgorithm::isTransposeOf().\n"
@@ -1122,8 +1121,10 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
 
       if (s_print_steps == 'y') {
          tbox::plog << "Before building RBBTs:\n"
-                    << "visible_west_nabrs:" << visible_west_nabrs.format("\n  ")
-                    << "visible_east_nabrs:" << visible_east_nabrs.format("\n  ")
+                    << "visible_west_nabrs:"
+                    << visible_west_nabrs.format("\n  ")
+                    << "visible_east_nabrs:"
+                    << visible_east_nabrs.format("\n  ")
                     << std::endl;
       }
 
@@ -1143,7 +1144,8 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
       east_rbbt.makeTree(grid_geometry.get());
       // Note: west_rbbt only needed when compute_transpose is true.
       BoxContainer empty_nabrs(true);
-      const BoxContainer west_rbbt(compute_transpose ? visible_west_nabrs : empty_nabrs);
+      const BoxContainer west_rbbt(
+         compute_transpose ? visible_west_nabrs : empty_nabrs);
       west_rbbt.makeTree(grid_geometry.get());
       t_bridge_discover_form_rbbt->stop();
 
@@ -1268,7 +1270,8 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
           */
          if (curr_owner != rank) {
             // swap( send_mesg, neighbor_removal_mesg[curr_owner] );
-            // We could use swap, but assign instead to leave data for debugging.
+            // We could use swap, but assign instead to leave data for
+            // debugging.
             send_mesg = neighbor_removal_mesg[curr_owner];
             if (send_mesg.empty()) {
                // No neighbor-removal data found for curr_owner.
@@ -1417,7 +1420,8 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
    NeighborSet& referenced_head_nabrs,
    const BoxContainer& head_rbbt) const
 {
-   const IntVector &head_refinement_ratio(bridging_connector.getHead().getRefinementRatio());
+   const IntVector &head_refinement_ratio(
+      bridging_connector.getHead().getRefinementRatio());
 
    bool refine_base = false;
    bool coarsen_base = false;
@@ -1440,8 +1444,9 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
    }
 #endif
 
-   //std::vector<Box> found_nabrs, scratch_found_nabrs; // Should be made a member to avoid repetitive alloc/dealloc.  Reserve in privateBridge and used here.
-   BoxContainer found_nabrs, scratch_found_nabrs; // Should be made a member to avoid repetitive alloc/dealloc.  Reserve in privateBridge and used here.
+   // Should be made a member to avoid repetitive alloc/dealloc.
+   // Reserve in privateBridge and used here.
+   BoxContainer found_nabrs, scratch_found_nabrs;
 
    while (base_ni != visible_base_nabrs.end() &&
           base_ni->getOwnerRank() == owner_rank) {
@@ -1562,8 +1567,10 @@ OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
       IntVector sum_shift =
          shift_catalog->shiftNumberToShiftDistance(nabr.getPeriodicId())
          - shift_catalog->shiftNumberToShiftDistance(box.getPeriodicId());
-      const PeriodicId new_shift_number = shift_catalog->shiftDistanceToShiftNumber(sum_shift);
-      if (new_shift_number.getPeriodicValue() != shift_catalog->getInvalidShiftNumber()) {
+      const PeriodicId new_shift_number =
+         shift_catalog->shiftDistanceToShiftNumber(sum_shift);
+      if (new_shift_number.getPeriodicValue() !=
+          shift_catalog->getInvalidShiftNumber()) {
          nabr.initialize(nabr, new_shift_number, neighbor_refinement_ratio);
          scratch_space.pushBack(nabr);
       }
