@@ -160,16 +160,14 @@ public:
     * that sum and the volume of the original box, the box will not be split.
     *
     * @pre !bound_boxes.isEmpty()
-    * @pre (new_box_level.getDim() == tag_level->getDim()) &&
-    *      (new_box_level.getDim() == (*(bound_boxes.begin())).getDim()) &&
-    *      (new_box_level.getDim() == min_box.getDim()) &&
-    *      (new_box_level.getDim() == max_gcw.getDim())
+    * @pre (tag_level->getDim() == (*(bound_boxes.begin())).getDim()) &&
+    *      (tag_level->getDim() == min_box.getDim()) &&
+    *      (tag_level->getDim() == max_gcw.getDim())
     */
    void
    findBoxesContainingTags(
       boost::shared_ptr<hier::BoxLevel>& new_box_level,
       boost::shared_ptr<hier::Connector>& tag_to_new,
-      boost::shared_ptr<hier::Connector>& new_to_tag,
       const boost::shared_ptr<hier::PatchLevel>& tag_level,
       const int tag_data_index,
       const int tag_val,
@@ -208,8 +206,7 @@ private:
    void
    sortOutputBoxes(
       hier::BoxLevel& new_box_level,
-      hier::Connector& tag_to_new,
-      hier::Connector& new_to_tag) const;
+      hier::Connector& tag_to_new) const;
 
    /*!
     * @brief Set up things for the entire class.

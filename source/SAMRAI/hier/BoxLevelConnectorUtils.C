@@ -1215,10 +1215,11 @@ void
 BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
    BoxLevel& box_level,
    Connector& box_level_to_anchor,
-   Connector& anchor_to_box_level,
    const BoxContainer& domain_search_tree,
    const Connector& anchor_to_anchor) const
 {
+   TBOX_ASSERT(box_level_to_anchor.hasTranspose());
+   Connector& anchor_to_box_level = box_level_to_anchor.getTranspose();
    OverlapConnectorAlgorithm oca;
 
    if (d_sanity_check_precond) {
@@ -1346,8 +1347,6 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
    oca.setSanityCheckMethodPreconditions(d_sanity_check_precond);
    oca.bridge(box_level_to_anchor,
       anchor_to_anchor,
-      anchor_to_anchor,
-      anchor_to_box_level,
       width_limit);
    anchor_to_box_level.eraseEmptyNeighborSets();
    box_level_to_anchor.eraseEmptyNeighborSets();

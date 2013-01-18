@@ -371,15 +371,13 @@ int main(
        */
 
       const hier::Connector& small_to_big(
-         small_box_level->getPersistentOverlapConnectors().createConnector(
+         small_box_level->getPersistentOverlapConnectors().createConnectorWithTranspose(
             big_box_level,
+            shrinkage,
             shrinkage));
       small_to_big.cacheGlobalReducedData();
 
-      const hier::Connector& big_to_small(
-         big_box_level.getPersistentOverlapConnectors().createConnector(
-         *small_box_level,
-         shrinkage));
+      const hier::Connector& big_to_small = small_to_big.getTranspose();
       big_to_small.cacheGlobalReducedData();
 
       tbox::plog << "\nsmall_to_big:\n"
@@ -707,14 +705,13 @@ void partitionBoxes(
 
    mesh::TreeLoadBalancer load_balancer(box_level.getDim());
 
-   boost::shared_ptr<hier::Connector> dummy_connector;
+   hier::Connector* dummy_connector = 0;
 
    const hier::IntVector bad_interval(dim, 1);
    const hier::IntVector cut_factor(dim, 1);
 
    load_balancer.loadBalanceBoxLevel(
       box_level,
-      dummy_connector,
       dummy_connector,
       boost::shared_ptr<hier::PatchHierarchy>(),
       0,

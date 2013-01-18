@@ -303,46 +303,6 @@ void MultiblockTester::createCoarsenSchedule(
    const int level_number)
 {
    NULL_USE(level_number);
-/*
- * if (d_do_coarsen && (level_number > 0)) {
- *
- *    d_coarsen_schedule.resizeArray(
- *       d_patch_hierarchy->getFinestLevelNumber()+1);
- *    d_coarsen_schedule[level_number].reset();
- *
- *
- *
- *    boost::shared_ptr<hier::PatchLevel > level =
- *       d_patch_hierarchy->getPatchLevel(level_number);
- *    boost::shared_ptr<hier::PatchLevel > coarser_level =
- *       d_patch_hierarchy->getPatchLevel(level_number-1);
- *
- *    tbox::Array< boost::shared_ptr< hier::Connector > > fine_to_coarse;
- *    tbox::Array< boost::shared_ptr< hier::Connector > > coarse_to_fine;
- *
- *    const hier::Connector *fine_to_coarse =
- *       &lh.getConnector(level_number, level_number-1);
- *    const hier::Connector *coarse_to_fine =
- *       &lh.getConnector(level_number-1, level_number);
- *    const hier::Connector::TransposePair
- *       coarse_fine_pair( coarse_to_fine, fine_to_coarse );
- *
- *    if ( dlbg_schedule ) {
- *       d_coarsen_schedule[level_number] =
- *          d_coarsen_algorithm.createSchedule(coarser_level,
- *                                             level,
- *                                             coarse_fine_pair,
- *                                             this);
- *    } else {
- *       TBOX_ERROR("The following must be replaced with the DLBG version.");
- * #if 0
- *    d_coarsen_schedule[level_number] =
- *       d_coarsen_algorithm->createSchedule(coarser_level, level, this);
- * #endif
- *    }
- *
- * }
- */
 }
 
 void MultiblockTester::resetCoarsenSchedule(

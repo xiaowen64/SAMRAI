@@ -257,7 +257,6 @@ public:
     *
     * @param new_box_level
     * @param tag_to_new
-    * @param new_to_tag
     * @param bound_boxes Contains one global bounding box for each
     *                    block with a patch in tag_level.
     * @param tag_level
@@ -268,15 +267,13 @@ public:
     *
     * @pre !bound_boxes.isEmpty()
     * @pre d_parent == 0
-    * @pre (d_common->d_dim == new_box_level.getDim()) &&
-    *      (d_common->d_dim == (*(bound_boxes.begin())).getDim()) &&
+    * @pre (d_common->d_dim == (*(bound_boxes.begin())).getDim()) &&
     *      (d_common->d_dim == tag_level->getDim())
     */
    void
    clusterAndComputeRelationships(
       boost::shared_ptr<hier::BoxLevel>& new_box_level,
       boost::shared_ptr<hier::Connector>& tag_to_new,
-      boost::shared_ptr<hier::Connector>& new_to_tag,
       const hier::BoxContainer& bound_boxes,
       const boost::shared_ptr<hier::PatchLevel>& tag_level,
       const tbox::SAMRAI_MPI& mpi_object);

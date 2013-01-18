@@ -320,6 +320,7 @@ private:
     *                                the coarsest level), this value should be
     *                                less than zero.
     * @param[in] hierarchy   boost::shared_ptr to patch hierarchy.
+    * @param[in] dst_to_src
     * @param[in] src_growth_to_nest_dst  The minimum amount that src_level has
     *                                    to grow in order to nest dst.
     * @param[in] refine_classes  Holds refine equivalence classes to be used
@@ -331,12 +332,14 @@ private:
     *                            boundary filling operations.  This pointer
     *                            may be null, in which case no boundary filling
     *                            or user-defined refine operations will occur.
+    * @param[in] top_refine_schedule
     *
     * @pre dst_level
     * @pre src_level
     * @pre (next_coarser_level == -1) || hierarchy
+    * @pre dst_to_src.hasTranspose()
     * @pre refine_classes
-    * @pre !src_level || (dst_level->getDim() == src_level.getDim())
+    * @pre dst_level->getDim() == src_level.getDim()
     * @pre !hierarchy || (dst_level->getDim() == hierarchy.getDim())
     * @pre dst_to_src.getBase() == *dst_level->getBoxLevel()
     * @pre src_to_dst.getHead() == *dst_level->getBoxLevel()
@@ -347,7 +350,6 @@ private:
       int next_coarser_level,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const hier::Connector& dst_to_src,
-      const hier::Connector& src_to_dst,
       const hier::IntVector& src_growth_to_nest_dst,
       const boost::shared_ptr<RefineClasses>& refine_classes,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
@@ -390,9 +392,9 @@ private:
     *                                    will be skipped.
     *
     * @pre d_dst_to_src
-    * @pre d_src_to_dst
+    * @pre d_dst_to_src->hasTranspose()
     * @pre (next_coarser_ln == -1) || hierarchy
-    * @pre !d_src_level || d_dst_to_src.isFinalized()
+    * @pre !d_src_level || d_dst_to_src->isFinalized()
     */
    void
    finishScheduleConstruction(
@@ -530,7 +532,7 @@ private:
     *                                    data on the destination level.
     *
     * @pre d_dst_to_src
-    * @pre d_src_to_dst
+    * @pre d_dst_to_src->hasTranspose()
     */
    void
    generateCommunicationSchedule(
@@ -566,7 +568,7 @@ private:
     *                                    can be filled by that source box.
     *
     * @pre d_dst_to_src
-    * @pre d_src_to_dst
+    * @pre d_dst_to_src->hasTranspose()
     */
    void
    setDefaultFillBoxLevel(
@@ -662,7 +664,7 @@ private:
     *                         need to have filled.
     *
     * @pre d_dst_to_src
-    * @pre d_src_to_dst
+    * @pre d_dst_to_src->hasTranspose()
     */
    void
    communicateFillBoxes(
@@ -706,7 +708,6 @@ private:
    setupCoarseInterpBoxLevel(
       boost::shared_ptr<hier::BoxLevel> &coarse_interp_box_level,
       boost::shared_ptr<hier::Connector> &dst_to_coarse_interp,
-      boost::shared_ptr<hier::Connector> &coarse_interp_to_dst,
       boost::shared_ptr<hier::Connector> &coarse_interp_to_unfilled,
       const hier::BoxLevel &hiercoarse_box_level,
       const hier::Connector &dst_to_unfilled);
@@ -723,8 +724,6 @@ private:
     *
     * @param[in] coarse_interp_to_hiercoarse
     *
-    * @param[in] hiercoarse_to_coarse_interp
-    *
     * @param[in] next_coarser_ln Level number of hiercoarse (the
     * coarser level on the hierarchy
     *
@@ -732,25 +731,21 @@ private:
     *
     * @param[in] dst_to_src
     *
-    * @param[in] src_to_dst
-    *
-    * @param[in] coarse_interp_to_dst
-    *
     * @param[in] dst_to_coarse_interp
     *
     * @param[in] dst_level
+    *
+    * @pre dst_to_src.hasTranspose()
+    * @pre dst_to_coarse_interp.hasTranspose()
     */
    void
    createCoarseInterpPatchLevel(
       boost::shared_ptr<hier::PatchLevel>& coarse_interp_level,
       boost::shared_ptr<hier::BoxLevel>& coarse_interp_box_level,
       boost::shared_ptr<hier::Connector>& coarse_interp_to_hiercoarse,
-      boost::shared_ptr<hier::Connector>& hiercoarse_to_coarse_interp,
       const int next_coarser_ln,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const hier::Connector &dst_to_src,
-      const hier::Connector &src_to_dst,
-      const hier::Connector &coarse_interp_to_dst,
       const hier::Connector &dst_to_coarse_interp,
       const boost::shared_ptr<hier::PatchLevel> &dst_level );
 
@@ -764,8 +759,7 @@ private:
    sanityCheckCoarseInterpAndHiercoarseLevels(
       const int next_coarser_ln,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      const hier::Connector& coarse_interp_to_hiercoarse,
-      const hier::Connector& hiercoarse_to_coarse_interp);
+      const hier::Connector& coarse_interp_to_hiercoarse);
 
    /*!
     * @brief Get whether there is data living on patch borders.
@@ -845,7 +839,8 @@ private:
     *
     * @param[out] full_inverted_edges
     *
-    * @pre d_src_to_dst
+    * @pre d_dst_to_src
+    * @pre d_dst_to_src->hasTranspose()
     */
    void
    reorderNeighborhoodSetsByDstNodes(
@@ -1093,11 +1088,6 @@ private:
    d_encon_refine_overlaps;
 
    /*!
-    * @brief Connector from the coarse interpolation level to the destination.
-    */
-   boost::shared_ptr<hier::Connector> d_coarse_interp_to_dst;
-
-   /*!
     * @brief Connector from the destination level to the coarse interpolation.
     */
    boost::shared_ptr<hier::Connector> d_dst_to_coarse_interp;
@@ -1115,13 +1105,10 @@ private:
    boost::shared_ptr<hier::Connector> d_coarse_interp_to_unfilled;
 
    boost::shared_ptr<hier::Connector> d_coarse_interp_encon_to_unfilled_encon;
-   boost::shared_ptr<hier::Connector> d_coarse_interp_encon_to_encon;
 
    boost::shared_ptr<hier::Connector> d_dst_to_encon;
-   boost::shared_ptr<hier::Connector> d_src_to_encon;
    boost::shared_ptr<hier::Connector> d_encon_to_src;
    const hier::Connector* d_dst_to_src;
-   const hier::Connector* d_src_to_dst;
 
    //@{
 

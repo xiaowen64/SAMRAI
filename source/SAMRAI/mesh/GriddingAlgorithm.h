@@ -672,7 +672,6 @@ private:
    void
    regridFinerLevel_doTaggingAfterRecursiveRegrid(
       boost::shared_ptr<hier::Connector>& tag_to_finer,
-      boost::shared_ptr<hier::Connector>& finer_to_tag,
       const int tag_ln,
       const tbox::Array<int>& tag_buffer);
 
@@ -680,20 +679,17 @@ private:
     * @brief Given the metadata describing the new level, this method
     * creates and installs new PatchLevel in the hierarchy.
     *
-    * @pre tag_to_new
-    * @pre new_to_tag
+    * @pre tag_to_new && tag_to_new->hasTranspose()
     * @pre new_box_level
     * @pre !d_hierarchy->levelExists(tag_ln + 2) || tag_to_finer
-    * @pre !d_hierarchy->levelExists(tag_ln + 2) || finer_to_tag
+    * @pre !d_hierarchy->levelExists(tag_ln + 2) || tag_to_finer->hasTranspose()
     */
    void
    regridFinerLevel_createAndInstallNewLevel(
       const int tag_ln,
       const double regrid_time,
       boost::shared_ptr<hier::Connector>& tag_to_new,
-      boost::shared_ptr<hier::Connector>& new_to_tag,
       boost::shared_ptr<const hier::Connector> tag_to_finer,
-      boost::shared_ptr<const hier::Connector> finer_to_tag,
       boost::shared_ptr<hier::BoxLevel> new_box_level);
 
    /*!
@@ -768,14 +764,11 @@ private:
     * @param[in] tag_to_unnested  Overlap Connector from the tag level
     * to unnested_box_level.
     *
-    * @param[in] unnested_to_tag  Transpose of tag_to_unnested.
-    *
     * @param[in] unnested_ln Level number of PatchLevel being
     * generated (one more than the tag level number).
     *
-    * @pre (d_hierarchy->getDim() == unnested_box_level.getDim()) &&
-    *      (d_hierarchy->getDim() == nested_box_level.getDim()) &&
-    *      (d_hierarchy->getDim() == nested_box_level.getDim())
+    * @pre tag_to_unnested.hasTranspose()
+    * @pre d_hierarchy->getDim() == unnested_box_level.getDim()
     */
    void
    makeProperNestingMap(
@@ -783,7 +776,6 @@ private:
       boost::shared_ptr<hier::MappingConnector>& unnested_to_nested,
       const hier::BoxLevel& unnested_box_level,
       const hier::Connector& tag_to_unnested,
-      const hier::Connector& unnested_to_tag,
       const int unnested_ln) const;
 
    /*!
@@ -800,8 +792,7 @@ private:
     *
     * @param[in] unnested_to_reference
     *
-    * @pre (d_hierarchy->getDim() == unnested_box_level.getDim()) &&
-    *      (d_hierarchy->getDim() == nested_box_level.getDim())
+    * @pre d_hierarchy->getDim() == unnested_box_level.getDim()
     */
    void
    makeOverflowNestingMap(
@@ -823,13 +814,10 @@ private:
     * @param[in] candidate_to_hierarchy Connector to box_level number
     *       tag_ln in the hierarchy.
     *
-    * @param[in] hierarchy_to_candidate Connector from box_level number
-    *       tag_ln in the hierarchy.
-    *
-    * @pre (d_hierarchy->getDim() == candidate.getDim()) &&
-    *      (d_hierarchy->getDim() == violator.getDim())
+    * @pre candidate_to_hierarchy.hasTranspose()
+    * @pre d_hierarchy->getDim() == candidate.getDim()
     * @pre candidate_to_hierarchy.getRatio() == hier::IntVector::getOne(d_hierarchy->getDim())
-    * @pre hierarchy_to_candidate.getRatio() == hier::IntVector::getOne(d_hierarchy->getDim())
+    * @pre candidate_to_hierarchy.getTranspose().getRatio() == hier::IntVector::getOne(d_hierarchy->getDim())
     */
    void
    computeNestingViolator(
@@ -837,7 +825,6 @@ private:
       boost::shared_ptr<hier::MappingConnector>& candidate_to_violator,
       const hier::BoxLevel& candidate,
       const hier::Connector& candidate_to_hierarchy,
-      const hier::Connector& hierarchy_to_candidate,
       const int tag_ln) const;
 
    /*!
@@ -849,18 +836,17 @@ private:
     *
     * @param[in,out] tag_to_new
     *
-    * @param[in,out] new_to_tag
-    *
     * @param[in] physical_domain_array  Array holding domain for each block
     *
     * @param[in] extend_ghosts Extend the boxes to the boundary if
     * they less than extend_ghosts cells from the boundary.
+    *
+    * @pre tag_to_new.hasTranspose()
     */
    void
    extendBoxesToDomainBoundary(
       hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
-      hier::Connector& new_to_tag,
       const tbox::Array<hier::BoxContainer>& physical_domain_array,
       const hier::IntVector& extend_ghosts) const;
 
@@ -888,12 +874,11 @@ private:
     *
     * @param[in,out] tag_to_new  Connector to be updated.
     *
-    * @param[in,out] new_to_tag  Connector to be updated.
-    *
     * @param[in] min_size
     *
     * @param[in] tag_ln Level number of the tag level.
     *
+    * @pre tag_no_new.hasTranspose()
     * @pre (d_hierarchy->getDim() == new_box_level.getDim()) &&
     *      (d_hierarchy->getDim() == min_size.getDim())
     */
@@ -901,7 +886,6 @@ private:
    growBoxesWithinNestingDomain(
       hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
-      hier::Connector& new_to_tag,
       const hier::IntVector& min_size,
       const int tag_ln) const;
 
@@ -914,15 +898,14 @@ private:
     *
     * @param[in,out] tag_to_new  Connector to be updated.
     *
-    * @param[in,out] new_to_tag  Connector to be updated.
-    *
     * @param[in] ratio
+    *
+    * @pre tag_to_new.hasTranspose()
     */
    void
    refineNewBoxLevel(
       hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
-      hier::Connector& new_to_tag,
       const hier::IntVector& ratio) const;
 
    /*!
@@ -939,8 +922,6 @@ private:
     *
     * @param[in,out] tag_to_new
     *
-    * @param[in,out] new_to_tag
-    *
     * @param[in] sort_by_corners
     *
     * @param[in] sequentialize_global_indices
@@ -951,7 +932,6 @@ private:
    renumberBoxes(
       hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
-      hier::Connector& new_to_tag,
       bool sort_by_corners,
       bool sequentialize_global_indices) const;
 
@@ -989,7 +969,6 @@ private:
    readLevelBoxes(
       boost::shared_ptr<hier::BoxLevel>& new_box_level,
       boost::shared_ptr<hier::Connector>& coarser_to_new,
-      boost::shared_ptr<hier::Connector>& new_to_coarser,
       const int level_number,
       const double regrid_time,
       const int regrid_cycle,
@@ -1013,7 +992,6 @@ private:
    findRefinementBoxes(
       boost::shared_ptr<hier::BoxLevel>& new_box_level,
       boost::shared_ptr<hier::Connector>& tag_to_new,
-      boost::shared_ptr<hier::Connector>& new_to_tag,
       const int tag_ln) const;
 
    /*!
@@ -1321,14 +1299,6 @@ private:
     * d_proper_nesting_complelemt[ln].
     */
    std::vector<boost::shared_ptr<hier::Connector> > d_to_nesting_complement;
-
-   /*
-    * @brief Connectors from d_proper_nesting_complement to the hierarchy.
-    *
-    * d_from_nesting_complement[ln] goes from
-    * d_proper_nesting_complement[ln] to level ln.
-    */
-   std::vector<boost::shared_ptr<hier::Connector> > d_from_nesting_complement;
 
    /*!
     * @brief How to resolve user tags that violate nesting requirements.

@@ -72,7 +72,9 @@ Connector::Connector(
    d_finalized(false),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
-   d_global_data_up_to_date(false)
+   d_global_data_up_to_date(false),
+   d_transpose(0),
+   d_owns_transpose(false)
 {
 }
 
@@ -97,7 +99,9 @@ Connector::Connector(
    d_finalized(false),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
-   d_global_data_up_to_date(false)
+   d_global_data_up_to_date(false),
+   d_transpose(0),
+   d_owns_transpose(false)
 {
    getFromRestart(restart_db);
 }
@@ -122,7 +126,9 @@ Connector::Connector(
    d_finalized(other.d_finalized),
    d_global_number_of_neighbor_sets(other.d_global_number_of_neighbor_sets),
    d_global_number_of_relationships(other.d_global_number_of_relationships),
-   d_global_data_up_to_date(other.d_global_data_up_to_date)
+   d_global_data_up_to_date(other.d_global_data_up_to_date),
+   d_transpose(other.d_transpose),
+   d_owns_transpose(false)
 {
 }
 
@@ -146,7 +152,9 @@ Connector::Connector(
    d_finalized(false),
    d_global_number_of_neighbor_sets(0),
    d_global_number_of_relationships(0),
-   d_global_data_up_to_date(true)
+   d_global_data_up_to_date(true),
+   d_transpose(0),
+   d_owns_transpose(false)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(base_box_level,
       head_box_level,
@@ -165,6 +173,9 @@ Connector::Connector(
 Connector::~Connector()
 {
    clear();
+   if (d_transpose && d_owns_transpose && d_transpose != this) {
+      delete d_transpose;
+   }
 }
 
 /*
@@ -189,6 +200,8 @@ Connector::operator = (
       d_head_coarser = rhs.d_head_coarser;
       d_parallel_state = rhs.d_parallel_state;
       d_finalized = rhs.d_finalized;
+      d_transpose = rhs.d_transpose;
+      d_owns_transpose = false;
    }
    return *this;
 }

@@ -582,6 +582,38 @@ PatchHierarchy::getConnector(
 
 /*
  *************************************************************************
+ * Get the Connector between 2 levels in the hierarchy with its transpose.
+ * The levels must be the same or adjacent levels.
+ * The Connector will have the width required by the hierarchy.
+ *
+ * This is primarily a convenience.  Its functionality can be duplicated
+ * by getting the required Connector widths and getting the Connector
+ * with that width from the PatchLevels' BoxLevels.
+ *************************************************************************
+ */
+const Connector&
+PatchHierarchy::getConnectorWithTranspose(
+   const int base_ln,
+   const int head_ln) const
+{
+   TBOX_ASSERT(base_ln >= 0);
+   TBOX_ASSERT(base_ln < d_number_levels);
+   TBOX_ASSERT(head_ln >= 0);
+   TBOX_ASSERT(head_ln < d_number_levels);
+   const BoxLevel& base(*d_patch_levels[base_ln]->getBoxLevel());
+   const BoxLevel& head(*d_patch_levels[head_ln]->getBoxLevel());
+   const IntVector width(getRequiredConnectorWidth(base_ln, head_ln));
+   const IntVector transpose_width(
+      getRequiredConnectorWidth(head_ln, base_ln));
+   const Connector& con =
+      base.getPersistentOverlapConnectors().findConnectorWithTranspose(head,
+         width,
+         transpose_width);
+   return con;
+}
+
+/*
+ *************************************************************************
  *
  * Create a copy of this patch hierarchy with each level refined by
  * the given ratio and return a pointer to it.
@@ -1133,14 +1165,14 @@ PatchHierarchy::initializeHierarchy()
     * restart and reading them back.
     */
    for (int i = 0; i < d_number_levels; ++i) {
-      for (int j = i - 1; j <= i + 1; ++j) {
-         if (j >= 0 && j < d_number_levels) {
-            const IntVector connector_width = getRequiredConnectorWidth(i, j);
-            d_patch_levels[i]->getBoxLevel()->
-            getPersistentOverlapConnectors().findOrCreateConnector(
-               *d_patch_levels[j]->getBoxLevel(),
-               connector_width);
-         }
+      d_patch_levels[i]->getBoxLevel()->getPersistentOverlapConnectors().
+         findOrCreateConnector(*d_patch_levels[i]->getBoxLevel(),
+            getRequiredConnectorWidth(i, i));
+      if (i < d_number_levels-1) {
+         d_patch_levels[i]->getBoxLevel()->getPersistentOverlapConnectors().
+            findOrCreateConnectorWithTranspose(*d_patch_levels[i+1]->getBoxLevel(),
+               getRequiredConnectorWidth(i, i+1),
+               getRequiredConnectorWidth(i+1, i));
       }
    }
 

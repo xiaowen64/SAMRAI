@@ -597,12 +597,9 @@ HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
          level_number);
 
    coarse_level->getBoxLevel()->getPersistentOverlapConnectors().
-   findOrCreateConnector(
+   findOrCreateConnectorWithTranspose(
       *hier_level->getBoxLevel(),
-      hier::IntVector::ceilingDivide(peer_gcw, coarsen_ratio));
-   hier_level->getBoxLevel()->getPersistentOverlapConnectors().
-   findOrCreateConnector(
-      *coarse_level->getBoxLevel(),
+      hier::IntVector::ceilingDivide(peer_gcw, coarsen_ratio),
       peer_gcw);
 #endif
 

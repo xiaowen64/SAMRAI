@@ -491,12 +491,9 @@ PatchBoundaryNodeSum::setupSum(
          // Create persistent overlap Connectors for use in schedule construction.
          // TODO: There are faster ways to get these edges.  BTNG.
          d_cfbdry_tmp_level[fine_level_num]->getBoxLevel()->
-            getPersistentOverlapConnectors().createConnector(
+            getPersistentOverlapConnectors().createConnectorWithTranspose(
                *crse_level->getBoxLevel(),
-               crse_tmp_gcw);
-         crse_level->getBoxLevel()->getPersistentOverlapConnectors().
-            createConnector(
-               *d_cfbdry_tmp_level[fine_level_num]->getBoxLevel(),
+               crse_tmp_gcw,
                crse_tmp_gcw);
          const hier::Connector& crse_to_domain =
             d_cfbdry_tmp_level[fine_level_num]->getBoxLevel()->

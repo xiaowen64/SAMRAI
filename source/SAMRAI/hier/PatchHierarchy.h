@@ -578,10 +578,10 @@ public:
    /*!
     * @brief Get the connector between two levels
     *
-    * Get const access to the Connector between two given BoxLevels
-    * between two given levels in the hierarchy.
+    * Get const access to the Connector between the two BoxLevels in the
+    * hierarchy with the given level numbers.
     *
-    * @return Connector between the two given level numbers.
+    * @return Connector between the two BoxLevels with the given level numbers.
     *
     * @param[in]  base_ln The base level indicating one end of the
     *             connector.
@@ -593,6 +593,28 @@ public:
     */
    const Connector&
    getConnector(
+      const int base_ln,
+      const int head_ln) const;
+
+   /*!
+    * @brief Get the connector along with its transpose between two levels
+    *
+    * Get const access to the Connector and its transpose between two given
+    * BoxLevel numbers in the hierarchy.
+    *
+    * @return Connector containing transpose between the two given level
+    * numbers.
+    *
+    * @param[in]  base_ln The base level indicating one end of the
+    *             connector.
+    * @param[in]  head_ln The head level indicating the other end of
+    *             the connector.
+    *
+    * @pre (base_ln >= 0) && (base_ln < getNumberOfLevels())
+    * @pre (head_ln >= 0) && (head_ln < getNumberOfLevels())
+    */
+   const Connector&
+   getConnectorWithTranspose(
       const int base_ln,
       const int head_ln) const;
 

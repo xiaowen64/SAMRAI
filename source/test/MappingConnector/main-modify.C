@@ -50,7 +50,6 @@ void
 alterAndGenerateMapping(
    boost::shared_ptr<hier::BoxLevel>& box_level_c,
    boost::shared_ptr<hier::MappingConnector>& b_to_c,
-   boost::shared_ptr<hier::MappingConnector>& c_to_b,
    const hier::BoxLevel& box_level_b,
    const boost::shared_ptr<tbox::Database>& database);
 
@@ -217,27 +216,24 @@ int main(
             base_width_a);
 
       boost::shared_ptr<hier::Connector> a_to_b;
-      boost::shared_ptr<hier::Connector> b_to_a;
 
       hier::OverlapConnectorAlgorithm oca;
-      oca.findOverlaps(a_to_b,
+      oca.findOverlapsWithTranspose(a_to_b,
          box_level_a,
          box_level_b,
-         base_width_a);
-      oca.findOverlaps(b_to_a,
-         box_level_b,
-         box_level_a,
+         base_width_a,
          base_width_b);
+      hier::Connector& b_to_a = a_to_b->getTranspose();
       // tbox::pout << "a_to_b:\n" << a_to_b->format("AB: ",2) << std::endl;
-      // tbox::pout << "b_to_a:\n" << b_to_a->format("BA: ",2) << std::endl;
+      // tbox::pout << "b_to_a:\n" << b_to_a.format("BA: ",2) << std::endl;
 
       a_to_b->checkConsistencyWithBase();
       a_to_b->checkConsistencyWithHead();
-      b_to_a->checkConsistencyWithBase();
-      b_to_a->checkConsistencyWithHead();
+      b_to_a.checkConsistencyWithBase();
+      b_to_a.checkConsistencyWithHead();
 
       a_to_b->checkOverlapCorrectness();
-      b_to_a->checkOverlapCorrectness();
+      b_to_a.checkOverlapCorrectness();
 
       /*
        * Generate BoxLevel C by altering B based on a simple formula.
@@ -245,26 +241,23 @@ int main(
        */
 
       boost::shared_ptr<hier::BoxLevel> box_level_c;
-      boost::shared_ptr<hier::MappingConnector> b_to_c, c_to_b;
+      boost::shared_ptr<hier::MappingConnector> b_to_c;
       boost::shared_ptr<Database> alteration_db(
          main_db->getDatabase("Alteration"));
 
       alterAndGenerateMapping(
          box_level_c,
          b_to_c,
-         c_to_b,
          box_level_b,
          alteration_db);
       box_level_c->cacheGlobalReducedData();
       // tbox::pout << "box level c:\n" << box_level_c->format("C: ",2) << std::endl;
       // tbox::pout << "b_to_c:\n" << b_to_c->format("BC: ",2) << std::endl;
-      // tbox::pout << "c_to_b:\n" << c_to_b->format("CB: ",2) << std::endl;
+      // tbox::pout << "c_to_b:\n" << b_to_c->getTranspose().format("CB: ",2) << std::endl;
 
       hier::MappingConnectorAlgorithm mca;
       mca.modify(*a_to_b,
-         *b_to_a,
          *b_to_c,
-         *c_to_b,
          &box_level_b,
          box_level_c.get());
       // tbox::pout << "box level b after modify:\n" << box_level_b.format("B: ",2) << std::endl;
@@ -274,9 +267,9 @@ int main(
       // tbox::pout << "checking a--->b consistency with head:" << std::endl;
       a_to_b->checkConsistencyWithHead();
       // tbox::pout << "checking b--->a consistency with base:" << std::endl;
-      b_to_a->checkConsistencyWithBase();
+      b_to_a.checkConsistencyWithBase();
       // tbox::pout << "checking b--->a consistency with head:" << std::endl;
-      b_to_a->checkConsistencyWithHead();
+      b_to_a.checkConsistencyWithHead();
 
       tbox::pout << "Checking for a--->b overlap correctness:" << std::endl;
       const int a_to_b_errors = a_to_b->checkOverlapCorrectness();
@@ -287,7 +280,7 @@ int main(
       }
 
       tbox::pout << "Checking for b--->a overlap correctness:" << std::endl;
-      const int b_to_a_errors = b_to_a->checkOverlapCorrectness();
+      const int b_to_a_errors = b_to_a.checkOverlapCorrectness();
       if (b_to_a_errors) {
          tbox::pout << "... " << b_to_a_errors << " errors." << std::endl;
       } else {
@@ -370,14 +363,13 @@ void breakUpBoxes(
 
    const int level_number(0);
 
-   boost::shared_ptr<hier::Connector> dummy_connector;
+   hier::Connector* dummy_connector = 0;
 
    const hier::IntVector bad_interval(dim, 1);
    const hier::IntVector cut_factor(dim, 1);
 
    load_balancer.loadBalanceBoxLevel(
       box_level,
-      dummy_connector,
       dummy_connector,
       boost::shared_ptr<hier::PatchHierarchy>(),
       level_number,
@@ -395,7 +387,6 @@ void breakUpBoxes(
 void alterAndGenerateMapping(
    boost::shared_ptr<hier::BoxLevel>& box_level_c,
    boost::shared_ptr<hier::MappingConnector>& b_to_c,
-   boost::shared_ptr<hier::MappingConnector>& c_to_b,
    const hier::BoxLevel& box_level_b,
    const boost::shared_ptr<tbox::Database>& database)
 {
@@ -417,9 +408,11 @@ void alterAndGenerateMapping(
    b_to_c.reset(new hier::MappingConnector(box_level_b,
       *box_level_c,
       hier::IntVector::getZero(dim)));
-   c_to_b.reset(new hier::MappingConnector(*box_level_c,
-      box_level_b,
-      hier::IntVector::getZero(dim)));
+   hier::MappingConnector* c_to_b =
+      new hier::MappingConnector(*box_level_c,
+         box_level_b,
+         hier::IntVector::getZero(dim));
+   b_to_c->setTranspose(c_to_b, true);
    for (hier::BoxContainer::const_iterator bi = boxes_b.begin();
         bi != boxes_b.end(); ++bi) {
       const hier::Box& box_b(*bi);

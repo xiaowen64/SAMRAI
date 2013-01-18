@@ -133,6 +133,32 @@ PersistentOverlapConnectors::createConnector(
 
 /*
  ************************************************************************
+ * Create Connector and with transpose using global search for edges.
+ ************************************************************************
+ */
+const Connector&
+PersistentOverlapConnectors::createConnectorWithTranspose(
+   const BoxLevel& head,
+   const IntVector& connector_width,
+   const IntVector& transpose_connector_width)
+{
+   TBOX_ASSERT(d_my_box_level.isInitialized());
+   TBOX_ASSERT(head.isInitialized());
+
+   const Connector& forward = createConnector(head, connector_width);
+   if (&d_my_box_level != &head) {
+      head.getPersistentOverlapConnectors().createConnector(d_my_box_level,
+         transpose_connector_width);
+      d_cons_from_me.back()->setTranspose(
+         head.getPersistentOverlapConnectors().d_cons_from_me.back().get(),
+         false);
+   }
+
+   return forward;
+}
+
+/*
+ ************************************************************************
  * Create Connector with user-provided for edges.
  ************************************************************************
  */
@@ -176,13 +202,19 @@ PersistentOverlapConnectors::createConnector(
 
    d_cons_from_me.push_back(new_connector);
    head.getPersistentOverlapConnectors().d_cons_to_me.push_back(new_connector);
+   if (&d_my_box_level == &head) {
+      new_connector->setTranspose(new_connector.get(), false);
+   }
+   else {
+      new_connector->setTranspose(0, false);
+   }
 
    return *d_cons_from_me.back();
 }
 
 /*
  ************************************************************************
- * Cache the user-provided Connector.
+ * Cache the user-provided Connector and its transpose if it exists.
  ************************************************************************
  */
 void
@@ -193,38 +225,19 @@ PersistentOverlapConnectors::cacheConnector(
    TBOX_ASSERT(connector);
    TBOX_ASSERT(d_my_box_level.isInitialized());
 
-   for (int i = 0; i < d_cons_from_me.size(); ++i) {
-      TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
-      TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
-      TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
-      TBOX_ASSERT(d_cons_from_me[i]->getBase().getBoxLevelHandle());
-      TBOX_ASSERT(d_cons_from_me[i]->getHead().getBoxLevelHandle());
-      TBOX_ASSERT(&d_cons_from_me[i]->getBase() ==
-         &d_cons_from_me[i]->getBase().getBoxLevelHandle()->
-         getBoxLevel());
-      TBOX_ASSERT(&d_cons_from_me[i]->getHead() ==
-         &d_cons_from_me[i]->getHead().getBoxLevelHandle()->
-         getBoxLevel());
-      if (&(d_cons_from_me[i]->getHead()) == &head &&
-          d_cons_from_me[i]->getConnectorWidth() == connector->getConnectorWidth()) {
-         TBOX_ERROR(
-            "PersistentOverlapConnectors::createConnector:\n"
-            << "Cannot create duplicate Connectors.");
+   privateCacheConnector(head, connector);
+   if (connector->hasTranspose()) {
+      if (connector.get() != &connector->getTranspose()) {
+         boost::shared_ptr<Connector> transpose(&connector->getTranspose());
+         head.getPersistentOverlapConnectors().privateCacheConnector(
+            d_my_box_level,
+            transpose);
       }
+      connector->setTranspose(&connector->getTranspose(), false);
    }
-
-   connector->setBase(d_my_box_level);
-   connector->setHead(head, true);
-
-   if (s_check_created_connectors == 'y') {
-      if (connector->checkOverlapCorrectness() != 0) {
-         TBOX_ERROR("PersistentOverlapConnectors::cacheConnector errror:\n"
-                    <<"Bad overlap Connector found.");
-      }
+   else {
+      connector->setTranspose(0, false);
    }
-
-   d_cons_from_me.push_back(connector);
-   head.getPersistentOverlapConnectors().d_cons_to_me.push_back(connector);
 
    return;
 }
@@ -243,7 +256,234 @@ PersistentOverlapConnectors::findConnector(
    TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
-   boost::shared_ptr<const Connector> found;
+   boost::shared_ptr<Connector> found =
+      privateFindConnector(head, min_connector_width, exact_width_only);
+   if (found->hasTranspose()) {
+      found->setTranspose(&found->getTranspose(), false);
+   }
+   else {
+      if (&d_my_box_level == &head) {
+         found->setTranspose(found.get(), false);
+      }
+      else {
+         found->setTranspose(0, false);
+      }
+   }
+   return *found;
+}
+
+/*
+ ************************************************************************
+ *
+ ************************************************************************
+ */
+const Connector&
+PersistentOverlapConnectors::findConnectorWithTranspose(
+   const BoxLevel& head,
+   const IntVector& min_connector_width,
+   const IntVector& transpose_min_connector_width,
+   bool exact_width_only)
+{
+   TBOX_ASSERT(d_my_box_level.isInitialized());
+   TBOX_ASSERT(head.isInitialized());
+
+   boost::shared_ptr<Connector> forward =
+      privateFindConnector(head, min_connector_width, exact_width_only);
+   if (&d_my_box_level != &head) {
+      boost::shared_ptr<Connector> transpose =
+         head.getPersistentOverlapConnectors().privateFindConnector(
+            d_my_box_level,
+            transpose_min_connector_width,
+            exact_width_only);
+      forward->setTranspose(transpose.get(), false);
+   }
+   else {
+      forward->setTranspose(forward.get(), false);
+   }
+
+   return *forward;
+}
+
+/*
+ ************************************************************************
+ *
+ ************************************************************************
+ */
+const Connector&
+PersistentOverlapConnectors::findOrCreateConnector(
+   const BoxLevel& head,
+   const IntVector& min_connector_width,
+   bool exact_width_only)
+{
+   TBOX_ASSERT(d_my_box_level.isInitialized());
+   TBOX_ASSERT(head.isInitialized());
+
+   boost::shared_ptr<Connector> found = privateFindOrCreateConnector(head,
+      min_connector_width,
+      exact_width_only);
+   if (found->hasTranspose()) {
+      found->setTranspose(&found->getTranspose(), false);
+   }
+   else {
+      if (&d_my_box_level == &head) {
+         found->setTranspose(found.get(), false);
+      }
+      else {
+         found->setTranspose(0, false);
+      }
+   }
+
+   return *found;
+}
+
+/*
+ ************************************************************************
+ *
+ ************************************************************************
+ */
+const Connector&
+PersistentOverlapConnectors::findOrCreateConnectorWithTranspose(
+   const BoxLevel& head,
+   const IntVector& min_connector_width,
+   const IntVector& transpose_min_connector_width,
+   bool exact_width_only)
+{
+   TBOX_ASSERT(d_my_box_level.isInitialized());
+   TBOX_ASSERT(head.isInitialized());
+
+   boost::shared_ptr<Connector> forward = privateFindOrCreateConnector(head,
+      min_connector_width,
+      exact_width_only);
+   if (&d_my_box_level != &head) {
+      boost::shared_ptr<Connector> transpose =
+         head.getPersistentOverlapConnectors().privateFindOrCreateConnector(
+            d_my_box_level,
+            transpose_min_connector_width,
+            exact_width_only);
+      forward->setTranspose(transpose.get(), false);
+   }
+   else {
+      forward->setTranspose(forward.get(), false);
+   }
+
+   return *forward;
+}
+
+/*
+ ************************************************************************
+ *
+ ************************************************************************
+ */
+bool
+PersistentOverlapConnectors::hasConnector(
+   const BoxLevel& head,
+   const IntVector& min_connector_width,
+   bool exact_width_only) const
+{
+   if (exact_width_only) {
+      for (int i = 0; i < d_cons_from_me.size(); ++i) {
+         if (&d_cons_from_me[i]->getHead() == &head &&
+             d_cons_from_me[i]->getConnectorWidth() == min_connector_width) {
+            return true;
+         }
+      }
+   } else {
+      for (int i = 0; i < d_cons_from_me.size(); ++i) {
+         if (&d_cons_from_me[i]->getHead() == &head &&
+             d_cons_from_me[i]->getConnectorWidth() >= min_connector_width) {
+            return true;
+         }
+      }
+   }
+   return false;
+}
+
+/*
+ ************************************************************************
+ *
+ ************************************************************************
+ */
+void
+PersistentOverlapConnectors::clear()
+{
+   if (d_cons_from_me.empty() && d_cons_to_me.empty()) {
+      return;
+   }
+
+   /*
+    * Delete Connectors from me.
+    */
+   for (int i = 0; i < d_cons_from_me.size(); ++i) {
+
+      const Connector* delete_me = d_cons_from_me[i].get();
+
+      ConVect& cons_at_head =
+         delete_me->getHead().getPersistentOverlapConnectors().d_cons_to_me;
+
+      for (int j = 0; j < cons_at_head.size(); ++j) {
+         if (cons_at_head[j].get() == delete_me) {
+            cons_at_head[j].reset();
+            cons_at_head.erase(j);
+            break;
+         }
+      }
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+
+      for (int j = 0; j < cons_at_head.size(); ++j) {
+         TBOX_ASSERT(cons_at_head[j].get() != delete_me);
+      }
+#endif
+
+      d_cons_from_me[i].reset();
+   }
+   d_cons_from_me.clear();
+
+   /*
+    * Delete Connectors to me.
+    */
+   for (int i = 0; i < d_cons_to_me.size(); ++i) {
+
+      const Connector* delete_me = d_cons_to_me[i].get();
+
+      // Remove reference held by other end of Connector.
+      ConVect& cons_at_base =
+         delete_me->getBase().getPersistentOverlapConnectors().d_cons_from_me;
+
+      for (int j = 0; j < cons_at_base.size(); ++j) {
+         if (cons_at_base[j].get() == delete_me) {
+            cons_at_base[j].reset();
+            cons_at_base.erase(j);
+            break;
+         }
+      }
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+
+      for (int j = 0; j < cons_at_base.size(); ++j) {
+         TBOX_ASSERT(cons_at_base[j].get() != delete_me);
+      }
+
+#endif
+
+      d_cons_to_me[i].reset();
+
+   }
+   d_cons_to_me.clear();
+}
+
+/*
+ ************************************************************************
+ *
+ ************************************************************************
+ */
+boost::shared_ptr<Connector>
+PersistentOverlapConnectors::privateFindConnector(
+   const BoxLevel& head,
+   const IntVector& min_connector_width,
+   bool exact_width_only)
+{
+   boost::shared_ptr<Connector> found;
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
@@ -350,8 +590,7 @@ PersistentOverlapConnectors::findConnector(
                     <<"Bad overlap Connector found.");
       }
    }
-
-   return *found;
+   return found;
 }
 
 /*
@@ -359,16 +598,13 @@ PersistentOverlapConnectors::findConnector(
  *
  ************************************************************************
  */
-const Connector&
-PersistentOverlapConnectors::findOrCreateConnector(
+boost::shared_ptr<Connector>
+PersistentOverlapConnectors::privateFindOrCreateConnector(
    const BoxLevel& head,
    const IntVector& min_connector_width,
    bool exact_width_only)
 {
-   TBOX_ASSERT(d_my_box_level.isInitialized());
-   TBOX_ASSERT(head.isInitialized());
-
-   boost::shared_ptr<const Connector> found;
+   boost::shared_ptr<Connector> found;
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
@@ -457,37 +693,7 @@ PersistentOverlapConnectors::findOrCreateConnector(
                     <<"Bad overlap Connector found.");
       }
    }
-
-   return *found;
-}
-
-/*
- ************************************************************************
- *
- ************************************************************************
- */
-bool
-PersistentOverlapConnectors::hasConnector(
-   const BoxLevel& head,
-   const IntVector& min_connector_width,
-   bool exact_width_only) const
-{
-   if (exact_width_only) {
-      for (int i = 0; i < d_cons_from_me.size(); ++i) {
-         if (&d_cons_from_me[i]->getHead() == &head &&
-             d_cons_from_me[i]->getConnectorWidth() == min_connector_width) {
-            return true;
-         }
-      }
-   } else {
-      for (int i = 0; i < d_cons_from_me.size(); ++i) {
-         if (&d_cons_from_me[i]->getHead() == &head &&
-             d_cons_from_me[i]->getConnectorWidth() >= min_connector_width) {
-            return true;
-         }
-      }
-   }
-   return false;
+   return found;
 }
 
 /*
@@ -496,72 +702,42 @@ PersistentOverlapConnectors::hasConnector(
  ************************************************************************
  */
 void
-PersistentOverlapConnectors::clear()
+PersistentOverlapConnectors::privateCacheConnector(
+   const BoxLevel& head,
+   boost::shared_ptr<Connector>& connector)
 {
-   if (d_cons_from_me.empty() && d_cons_to_me.empty()) {
-      return;
-   }
-
-   /*
-    * Delete Connectors from me.
-    */
    for (int i = 0; i < d_cons_from_me.size(); ++i) {
-
-      const Connector* delete_me = d_cons_from_me[i].get();
-
-      ConVect& cons_at_head =
-         delete_me->getHead().getPersistentOverlapConnectors().d_cons_to_me;
-
-      for (int j = 0; j < cons_at_head.size(); ++j) {
-         if (cons_at_head[j].get() == delete_me) {
-            cons_at_head[j].reset();
-            cons_at_head.erase(j);
-            break;
-         }
+      TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
+      TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
+      TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
+      TBOX_ASSERT(d_cons_from_me[i]->getBase().getBoxLevelHandle());
+      TBOX_ASSERT(d_cons_from_me[i]->getHead().getBoxLevelHandle());
+      TBOX_ASSERT(&d_cons_from_me[i]->getBase() ==
+         &d_cons_from_me[i]->getBase().getBoxLevelHandle()->
+         getBoxLevel());
+      TBOX_ASSERT(&d_cons_from_me[i]->getHead() ==
+         &d_cons_from_me[i]->getHead().getBoxLevelHandle()->
+         getBoxLevel());
+      if (&(d_cons_from_me[i]->getHead()) == &head &&
+          d_cons_from_me[i]->getConnectorWidth() == connector->getConnectorWidth()) {
+         TBOX_ERROR(
+            "PersistentOverlapConnectors::createConnector:\n"
+            << "Cannot create duplicate Connectors.");
       }
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-
-      for (int j = 0; j < cons_at_head.size(); ++j) {
-         TBOX_ASSERT(cons_at_head[j].get() != delete_me);
-      }
-#endif
-
-      d_cons_from_me[i].reset();
    }
-   d_cons_from_me.clear();
 
-   /*
-    * Delete Connectors to me.
-    */
-   for (int i = 0; i < d_cons_to_me.size(); ++i) {
+   connector->setBase(d_my_box_level);
+   connector->setHead(head, true);
 
-      const Connector* delete_me = d_cons_to_me[i].get();
-
-      // Remove reference held by other end of Connector.
-      ConVect& cons_at_base =
-         delete_me->getBase().getPersistentOverlapConnectors().d_cons_from_me;
-
-      for (int j = 0; j < cons_at_base.size(); ++j) {
-         if (cons_at_base[j].get() == delete_me) {
-            cons_at_base[j].reset();
-            cons_at_base.erase(j);
-            break;
-         }
+   if (s_check_created_connectors == 'y') {
+      if (connector->checkOverlapCorrectness() != 0) {
+         TBOX_ERROR("PersistentOverlapConnectors::cacheConnector errror:\n"
+                    <<"Bad overlap Connector found.");
       }
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-
-      for (int j = 0; j < cons_at_base.size(); ++j) {
-         TBOX_ASSERT(cons_at_base[j].get() != delete_me);
-      }
-
-#endif
-
-      d_cons_to_me[i].reset();
-
    }
-   d_cons_to_me.clear();
+
+   d_cons_from_me.push_back(connector);
+   head.getPersistentOverlapConnectors().d_cons_to_me.push_back(connector);
 }
 
 }

@@ -440,12 +440,6 @@ private:
    boost::shared_ptr<hier::PatchLevel> d_temp_crse_level;
 
    /*!
-    * @brief Connector from temporary (coarsened fine) box_level
-    * to coarse box_level.
-    */
-   boost::shared_ptr<Connector> d_temp_to_coarse;
-
-   /*!
     * @brief Connector from coarse box_level to temporary
     * (coarsened fine) box_level.
     */

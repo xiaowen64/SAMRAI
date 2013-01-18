@@ -347,20 +347,19 @@ CoarsenSchedule::generateTemporaryLevel()
                                         min_gcw);
 
    const Connector& coarse_to_fine =
-      d_crse_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
-         *d_fine_level->getBoxLevel(),
-         transpose_width, true);
-   const Connector& fine_to_coarse =
-      d_fine_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
-         *d_crse_level->getBoxLevel(),
-         min_gcw, true);
+      d_crse_level->getBoxLevel()->getPersistentOverlapConnectors().
+         findConnectorWithTranspose(
+            *d_fine_level->getBoxLevel(),
+            transpose_width,
+            min_gcw,
+            true);
 
    /*
     * Generate temporary BoxLevel and Connectors.
     */
 
    /*
-    * Compute d_coarse_to_temp and d_temp_to_coarse.
+    * Compute d_coarse_to_temp and its transpose.
     *
     * We use the fact that d_temp_crse_level patches are numbered just
     * like the fine level patches.  The Connectors between coarse and
@@ -372,20 +371,21 @@ CoarsenSchedule::generateTemporaryLevel()
    d_coarse_to_temp->setWidth(coarse_to_fine.getConnectorWidth(), true);
    d_coarse_to_temp->coarsenLocalNeighbors(d_ratio_between_levels);
    /*
-    * d_temp_to_coarse is a Connector from a coarsened version of fine to
+    * temp_to_coarse is a Connector from a coarsened version of fine to
     * coarse.  Therefore it has the same neighborhoods as fine_to_coarse
     * but it's base, head and width are different.  So first assign
-    * fine_to_coarse to d_temp_to_coarse which will properly set the
+    * fine_to_coarse to temp_to_coarse which will properly set the
     * neighborhoods.  Then initialize it with the proper base/head/width
     * keeping the neighborhoods that we just set.
     */
-   d_temp_to_coarse.reset(new Connector(fine_to_coarse));
-   d_temp_to_coarse->setBase(*d_temp_crse_level->getBoxLevel());
-   d_temp_to_coarse->setHead(coarse_to_fine.getBase());
-   d_temp_to_coarse->setWidth(coarse_to_fine.getConnectorWidth(), true);
+   Connector* temp_to_coarse = new Connector(coarse_to_fine.getTranspose());
+   temp_to_coarse->setBase(*d_temp_crse_level->getBoxLevel());
+   temp_to_coarse->setHead(coarse_to_fine.getBase());
+   temp_to_coarse->setWidth(coarse_to_fine.getConnectorWidth(), true);
    const hier::IntVector one_vector(dim, 1);
    d_coarse_to_temp->shrinkWidth(one_vector);
-   d_temp_to_coarse->shrinkWidth(one_vector);
+   temp_to_coarse->shrinkWidth(one_vector);
+   d_coarse_to_temp->setTranspose(temp_to_coarse, true);
 }
 
 /*
@@ -543,14 +543,15 @@ CoarsenSchedule::generateScheduleDLBG()
     * Construct sending transactions for local src Boxes.
     */
    /*
-    * Restructure the d_temp_to_coarse edge data to arange neighbors by the
+    * Restructure the temp_to_coarse edge data to arange neighbors by the
     * coarse boxes, as required to match the transaction ordering on the
     * receiving processors.  At the same time, shift temp-coarse pairs to
     * make the coarse shifts zero.
     */
    FullNeighborhoodSet temp_eto_coarse_bycoarse;
    t_invert_edges->start();
-   restructureNeighborhoodSetsByDstNodes(temp_eto_coarse_bycoarse, *d_temp_to_coarse);
+   restructureNeighborhoodSetsByDstNodes(temp_eto_coarse_bycoarse,
+      d_coarse_to_temp->getTranspose());
    t_invert_edges->stop();
 
    for (FullNeighborhoodSet::const_iterator ei = temp_eto_coarse_bycoarse.begin();

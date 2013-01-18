@@ -436,7 +436,7 @@ void breakUpBoxes(
 
    mesh::TreeLoadBalancer load_balancer(box_level.getDim());
 
-   boost::shared_ptr<hier::Connector> dummy_connector;
+   hier::Connector* dummy_connector = 0;
 
    const hier::IntVector min_size(dim, 2);
    const hier::IntVector bad_interval(dim, 1);
@@ -444,7 +444,6 @@ void breakUpBoxes(
 
    load_balancer.loadBalanceBoxLevel(
       box_level,
-      dummy_connector,
       dummy_connector,
       boost::shared_ptr<hier::PatchHierarchy>(),
       0,

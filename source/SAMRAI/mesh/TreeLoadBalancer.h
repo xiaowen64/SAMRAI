@@ -225,8 +225,8 @@ public:
     * Note: This implementation does not yet support non-uniform load
     * balancing.
     *
-    * @pre anchor_to_balance.isFinalized() == balance_to_anchor.isFinalized()
-    * @pre !anchor_to_balance.isFinalized() || anchor_to_balance.isTransposeOf(balance_to_anchor)
+    * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
+    * @pre !balance_to_anchor || balance_to_anchor->isTransposeOf(balance_to_anchor->getTranspose())
     * @pre (d_dim == balance_box_level.getDim()) &&
     *      (d_dim == min_size.getDim()) && (d_dim == max_size.getDim()) &&
     *      (d_dim == domain_box_level.getDim()) &&
@@ -238,8 +238,7 @@ public:
    void
    loadBalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
-      boost::shared_ptr<hier::Connector>& balance_to_anchor,
-      boost::shared_ptr<hier::Connector>& anchor_to_balance,
+      hier::Connector* balance_to_anchor,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::IntVector& min_size,
@@ -530,14 +529,14 @@ private:
     * rank_group to ranks inside rank_group.  Modify the given connectors
     * to make them correct following this moving of boxes.
     *
-    * @pre !balance_to_anchor.isFinalized() || (anchor_to_balance.checkTransposeCorrectness(balance_to_anchor) == 0)
-    * @pre !balance_to_anchor.isFinalized() || (balance_to_anchor.checkTransposeCorrectness(anchor_to_balance) == 0)
+    * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
+    * @pre !balance_to_anchor || (balance_to_anchor->getTranspose().checkTransposeCorrectness(*balance_to_anchor) == 0)
+    * @pre !balance_to_anchor || (balance_to_anchor->checkTransposeCorrectness(balance_to_anchor->getTranspose()) == 0)
     */
    void
    prebalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
-      boost::shared_ptr<hier::Connector>& balance_to_anchor,
-      boost::shared_ptr<hier::Connector>& anchor_to_balance,
+      hier::Connector* balance_to_anchor,
       const tbox::RankGroup& rank_group) const;
 
    /*!
@@ -864,13 +863,13 @@ private:
     * is load-balanced within the given rank_group and compute the
     * mapping between the unbalanced and balanced BoxLevels.
     *
+    * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
     * @pre d_dim == balance_box_level.getDim()
     */
    void
    loadBalanceWithinRankGroup(
       hier::BoxLevel& balance_box_level,
-      boost::shared_ptr<hier::Connector>& balance_to_anchor,
-      boost::shared_ptr<hier::Connector>& anchor_to_balance,
+      hier::Connector* balance_to_anchor,
       const tbox::RankGroup& rank_group,
       const double group_sum_load ) const;
 
@@ -878,13 +877,13 @@ private:
     * @brief Constrain maximum box sizes in the given BoxLevel and
     * update given Connectors to the changed BoxLevel.
     *
+    * @pre !anchor_to_level || anchor_to_level->hasTranspose()
     * @pre d_dim == box_level.getDim()
     */
    void
    constrainMaxBoxSizes(
       hier::BoxLevel& box_level,
-      boost::shared_ptr<hier::Connector>& anchor_to_level,
-      boost::shared_ptr<hier::Connector>& level_to_anchor ) const;
+      hier::Connector* anchor_to_level) const;
 
    /*!
     * @brief Create the cycle-based RankGroups the local process

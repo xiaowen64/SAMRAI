@@ -61,8 +61,7 @@ generatePrebalanceByUserBoxes(
    const hier::IntVector& max_gcw,
    boost::shared_ptr<hier::BoxLevel>& balance_box_level,
    const hier::BoxLevel& anchor_box_level,
-   boost::shared_ptr<hier::Connector>& anchor_to_balance,
-   boost::shared_ptr<hier::Connector>& balacne_to_anchor);
+   boost::shared_ptr<hier::Connector>& anchor_to_balance);
 
 void
 generatePrebalanceByUserShells(
@@ -72,14 +71,12 @@ generatePrebalanceByUserShells(
    const hier::IntVector& max_gcw,
    boost::shared_ptr<hier::BoxLevel>& balance_box_level,
    const boost::shared_ptr<hier::BoxLevel>& anchor_box_level,
-   boost::shared_ptr<hier::Connector>& anchor_to_balance,
-   boost::shared_ptr<hier::Connector>& balance_to_anchor);
+   boost::shared_ptr<hier::Connector>& anchor_to_balance);
 
 void
 sortNodes(
    hier::BoxLevel& new_box_level,
    hier::Connector& tag_to_new,
-   hier::Connector& new_to_tag,
    bool sort_by_corners,
    bool sequentialize_global_indices);
 
@@ -307,7 +304,6 @@ int main(
          boost::make_shared<hier::BoxLevel>(
             hier::IntVector(dim, 1), grid_geometry));
       boost::shared_ptr<hier::BoxLevel> balance_box_level;
-      boost::shared_ptr<hier::Connector> balance_to_anchor;
       boost::shared_ptr<hier::Connector> anchor_to_balance;
       boost::shared_ptr<hier::Connector> balance_to_balance;
 
@@ -338,16 +334,13 @@ int main(
           * reflect the load balancer use in real apps.  We just neeed a
           * distributed anchor for the real loac balancing performance test.
           */
-         boost::shared_ptr<hier::Connector> anchor_to_domain;
          boost::shared_ptr<hier::Connector> domain_to_anchor;
-         oca.findOverlaps(anchor_to_domain,
-            *anchor_box_level,
-            domain_box_level,
-            hier::IntVector(dim, 2));
-         oca.findOverlaps(domain_to_anchor,
+         oca.findOverlapsWithTranspose(domain_to_anchor,
             domain_box_level,
             *anchor_box_level,
+            hier::IntVector(dim, 2),
             hier::IntVector(dim, 2));
+         hier::Connector* anchor_to_domain = &domain_to_anchor->getTranspose();
 
          tbox::plog << "\n\n\ninitial anchor loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
@@ -371,7 +364,6 @@ int main(
          lb->loadBalanceBoxLevel(
             *anchor_box_level,
             anchor_to_domain,
-            domain_to_anchor,
             hierarchy,
             0,
             min_size,
@@ -383,7 +375,6 @@ int main(
 
          sortNodes(*anchor_box_level,
             *domain_to_anchor,
-            *anchor_to_domain,
             false,
             true);
 
@@ -410,8 +401,7 @@ int main(
                ghost_cell_width,
                balance_box_level,
                *anchor_box_level,
-               anchor_to_balance,
-               balance_to_anchor);
+               anchor_to_balance);
          } else if (box_gen_method == "PrebalanceByUserShells") {
             generatePrebalanceByUserShells(
                main_db->getDatabase("PrebalanceByUserShells"),
@@ -420,12 +410,12 @@ int main(
                ghost_cell_width,
                balance_box_level,
                anchor_box_level,
-               anchor_to_balance,
-               balance_to_anchor);
+               anchor_to_balance);
          } else {
             TBOX_ERROR("Bad box_gen_method: '" << box_gen_method << "'");
          }
       }
+      hier::Connector* balance_to_anchor = &anchor_to_balance->getTranspose();
 
       {
          /*
@@ -478,7 +468,6 @@ int main(
          lb->loadBalanceBoxLevel(
             *balance_box_level,
             balance_to_anchor,
-            anchor_to_balance,
             hierarchy,
             1,
             min_size,
@@ -493,7 +482,6 @@ int main(
 
          sortNodes(*balance_box_level,
             *anchor_to_balance,
-            *balance_to_anchor,
             false,
             true);
       }
@@ -505,8 +493,7 @@ int main(
          balance_to_balance,
          *balance_to_anchor,
          *anchor_to_balance,
-         *balance_to_anchor,
-         *anchor_to_balance);
+         false);
 
       {
          /*
@@ -621,8 +608,7 @@ void generatePrebalanceByUserShells(
    const hier::IntVector& max_gcw,
    boost::shared_ptr<hier::BoxLevel>& balance_box_level,
    const boost::shared_ptr<hier::BoxLevel>& anchor_box_level,
-   boost::shared_ptr<hier::Connector>& anchor_to_balance,
-   boost::shared_ptr<hier::Connector>& balance_to_anchor)
+   boost::shared_ptr<hier::Connector>& anchor_to_balance)
 {
 
    const tbox::Dimension dim(hierarchy->getDim());
@@ -719,7 +705,6 @@ void generatePrebalanceByUserShells(
    abr.findBoxesContainingTags(
       balance_box_level,
       anchor_to_balance,
-      balance_to_anchor,
       tag_level,
       tag_id,
       tag_val,
@@ -730,6 +715,8 @@ void generatePrebalanceByUserShells(
       max_gcw,
       hier::LocalId(0));
 
+   hier::Connector& balance_to_anchor = anchor_to_balance->getTranspose();
+
    /*
     * The clustering step generated Connectors to/from the temporary
     * tag_level->getBoxLevel(), which is not the same as the
@@ -738,8 +725,8 @@ void generatePrebalanceByUserShells(
     */
    anchor_to_balance->setBase(*anchor_box_level);
    anchor_to_balance->setHead(*balance_box_level, true);
-   balance_to_anchor->setBase(*balance_box_level);
-   balance_to_anchor->setHead(*anchor_box_level, true);
+   balance_to_anchor.setBase(*balance_box_level);
+   balance_to_anchor.setHead(*anchor_box_level, true);
 }
 
 /*
@@ -753,8 +740,7 @@ void generatePrebalanceByUserBoxes(
    const hier::IntVector& max_gcw,
    boost::shared_ptr<hier::BoxLevel>& balance_box_level,
    const hier::BoxLevel& anchor_box_level,
-   boost::shared_ptr<hier::Connector>& anchor_to_balance,
-   boost::shared_ptr<hier::Connector>& balance_to_anchor)
+   boost::shared_ptr<hier::Connector>& anchor_to_balance)
 {
    NULL_USE(hierarchy);
    NULL_USE(min_size);
@@ -779,13 +765,10 @@ void generatePrebalanceByUserBoxes(
       }
    }
    hier::OverlapConnectorAlgorithm oca;
-   oca.findOverlaps(balance_to_anchor,
-      *balance_box_level,
-      anchor_box_level,
-      max_gcw);
-   oca.findOverlaps(anchor_to_balance,
+   oca.findOverlapsWithTranspose(anchor_to_balance,
       anchor_box_level,
       *balance_box_level,
+      max_gcw,
       max_gcw);
 }
 
@@ -796,7 +779,6 @@ void generatePrebalanceByUserBoxes(
 void sortNodes(
    hier::BoxLevel& new_box_level,
    hier::Connector& tag_to_new,
-   hier::Connector& new_to_tag,
    bool sort_by_corners,
    bool sequentialize_global_indices)
 {
@@ -813,7 +795,6 @@ void sortNodes(
       sequentialize_global_indices);
 
    mca.modify(tag_to_new,
-      new_to_tag,
       *sorting_map,
       &new_box_level);
 }

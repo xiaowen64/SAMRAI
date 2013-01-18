@@ -274,17 +274,17 @@ void CommTester::createRefineSchedule(
       const hier::Connector& peer_cnect =
          d_patch_hierarchy->getConnector(level_number, level_number);
       const hier::Connector* cnect_to_coarser = level_number > 0 ?
-         &d_patch_hierarchy->getConnector(level_number, level_number - 1) : 0;
-      const hier::Connector* cnect_from_coarser = level_number > 0 ?
-         &d_patch_hierarchy->getConnector(level_number - 1, level_number) : 0;
+         &d_patch_hierarchy->getConnectorWithTranspose(level_number, level_number - 1) : 0;
 
       if (0) {
          // These are expensive checks.
          peer_cnect.assertOverlapCorrectness();
-         if (cnect_to_coarser)
+         if (cnect_to_coarser) {
             cnect_to_coarser->assertOverlapCorrectness();
-         if (cnect_from_coarser)
-            cnect_from_coarser->assertOverlapCorrectness();
+            if (cnect_to_coarser->hasTranspose()) {
+               cnect_to_coarser->getTranspose().assertOverlapCorrectness();
+            }
+         }
          d_patch_hierarchy->recursivePrint(tbox::plog, "", 3);
       }
 

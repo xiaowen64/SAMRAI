@@ -186,7 +186,6 @@ void
 BergerRigoutsos::findBoxesContainingTags(
    boost::shared_ptr<hier::BoxLevel>& new_box_level,
    boost::shared_ptr<hier::Connector>& tag_to_new,
-   boost::shared_ptr<hier::Connector>& new_to_tag,
    const boost::shared_ptr<hier::PatchLevel>& tag_level,
    const int tag_data_index,
    const int tag_val,
@@ -286,7 +285,6 @@ BergerRigoutsos::findBoxesContainingTags(
 
    root_node.clusterAndComputeRelationships(new_box_level,
       tag_to_new,
-      new_to_tag,
       bound_boxes,
       tag_level,
       d_mpi);
@@ -301,8 +299,7 @@ BergerRigoutsos::findBoxesContainingTags(
        * it depends on the order of asynchronous messages.)
        */
       sortOutputBoxes(*new_box_level,
-         *tag_to_new,
-         *new_to_tag);
+         *tag_to_new);
    }
 
    /*
@@ -323,7 +320,7 @@ BergerRigoutsos::findBoxesContainingTags(
       << "\tNew box_level clustered by BergerRigoutsos:\n" << new_box_level->format("",
          2)
       << "\tBergerRigoutsos tag_to_new:\n" << tag_to_new->format("", 2)
-      << "\tBergerRigoutsos new_to_tag:\n" << new_to_tag->format("", 2);
+      << "\tBergerRigoutsos new_to_tag:\n" << tag_to_new->getTranspose().format("", 2);
    }
    if (d_log_cluster_summary) {
       /*
@@ -367,8 +364,8 @@ BergerRigoutsos::findBoxesContainingTags(
                  << "   max = " << root_node.getMaxNumberOfCont() << '\n'
                  << "\tBergerRigoutsos new_level summary:\n" << new_box_level->format("\t\t",0)
                  << "\tBergerRigoutsos new_level statistics:\n" << new_box_level->formatStatistics("\t\t")
-                 << "\tBergerRigoutsos new_to_tag summary:\n" << new_to_tag->format("\t\t",0)
-                 << "\tBergerRigoutsos new_to_tag statistics:\n" << new_to_tag->formatStatistics("\t\t")
+                 << "\tBergerRigoutsos new_to_tag summary:\n" << tag_to_new->getTranspose().format("\t\t",0)
+                 << "\tBergerRigoutsos new_to_tag statistics:\n" << tag_to_new->getTranspose().formatStatistics("\t\t")
                  << "\tBergerRigoutsos tag_to_new summary:\n" << tag_to_new->format("\t\t",0)
                  << "\tBergerRigoutsos tag_to_new statistics:\n" << tag_to_new->formatStatistics("\t\t")
                  << "\n";
@@ -394,11 +391,13 @@ BergerRigoutsos::findBoxesContainingTags(
 void
 BergerRigoutsos::sortOutputBoxes(
    hier::BoxLevel& new_box_level,
-   hier::Connector& tag_to_new,
-   hier::Connector& new_to_tag) const
+   hier::Connector& tag_to_new) const
 {
 
    t_sort_output_nodes->start();
+
+   TBOX_ASSERT(tag_to_new.hasTranspose());
+   hier::Connector& new_to_tag = tag_to_new.getTranspose();
 
    if (0) {
       // Check inputs.
@@ -457,7 +456,6 @@ BergerRigoutsos::sortOutputBoxes(
    }
    hier::MappingConnectorAlgorithm mca;
    mca.modify(tag_to_new,
-      new_to_tag,
       *sorting_map,
       &new_box_level);
    if (0) {

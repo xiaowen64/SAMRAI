@@ -1107,6 +1107,57 @@ public:
       const Connector& right_connector);
 
    /*!
+    * @brief Returns true if the transpose of this Connector exists.
+    */
+   bool
+   hasTranspose() const
+   {
+      return d_transpose;
+   }
+
+   /*!
+    * @brief Returns the transpose of this Connector if it exists.
+    *
+    * @pre hasTranspose()
+    */
+   Connector&
+   getTranspose() const
+   {
+      TBOX_ASSERT(hasTranspose());
+      return *d_transpose;
+   }
+
+   /*!
+    * @brief Sets this Connector's transpose and, if the transpose exists,
+    * sets its transpose to this Connector.  If owns_transpose is true then
+    * this object will delete the transpose during its deletion.
+    *
+    * @note If owns_transpose is false, then client code is responsible for
+    * the deletion of the transpose.  Similarly, if owns_transpose is true
+    * client code must never explicitly delete the transpose.
+    *
+    * @param[in] transpose
+    * @param[in] owns_transpose
+    */
+   void
+   setTranspose(
+      Connector* transpose,
+      bool owns_transpose)
+   {
+      if (d_transpose && d_owns_transpose &&
+          (d_transpose != transpose) && (d_transpose != this)) {
+         delete d_transpose;
+      }
+      d_transpose = transpose;
+      d_owns_transpose = owns_transpose;
+      if (d_transpose && d_transpose != this) {
+         d_transpose->d_transpose = this;
+         d_transpose->d_owns_transpose = false;
+      }
+   }
+
+
+   /*!
     * @brief Check that the relationships are a correct transpose of another
     * Connector and return the number of erroneous relationships.
     *
@@ -1497,7 +1548,7 @@ private:
     *
     * @pre other.getParallelState() != BoxLevel::GLOBALIZED
     */
-   Connector *
+   Connector*
    makeGlobalizedCopy(
       const Connector& other) const;
 
@@ -1697,6 +1748,10 @@ private:
     * recomputing using cacheGlobalReducedData().
     */
    mutable bool d_global_data_up_to_date;
+
+   Connector* d_transpose;
+
+   bool d_owns_transpose;
 
    static boost::shared_ptr<tbox::Timer> t_acquire_remote_relationships;
    static boost::shared_ptr<tbox::Timer> t_cache_global_reduced_data;

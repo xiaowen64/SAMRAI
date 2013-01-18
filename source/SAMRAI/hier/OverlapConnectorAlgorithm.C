@@ -327,6 +327,40 @@ OverlapConnectorAlgorithm::findOverlaps(
    findOverlaps(*connector,
       head_box_level.getGlobalizedVersion(),
       ignore_self_overlap);
+   if (&base_box_level == &head_box_level) {
+      connector->setTranspose(connector.get(), false);
+   }
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
+void
+OverlapConnectorAlgorithm::findOverlapsWithTranspose(
+   boost::shared_ptr<Connector>& connector,
+   const BoxLevel& base_box_level,
+   const BoxLevel& head_box_level,
+   const IntVector& base_width,
+   const IntVector& transpose_base_width,
+   const BoxLevel::ParallelState parallel_state,
+   const bool ignore_self_overlap) const
+{
+   findOverlaps(connector,
+      base_box_level,
+      head_box_level,
+      base_width,
+      parallel_state,
+      ignore_self_overlap);
+   if (&base_box_level != &head_box_level) {
+      Connector* transpose = new Connector(head_box_level,
+         base_box_level,
+         transpose_base_width,
+         parallel_state);
+      findOverlaps(*transpose, ignore_self_overlap);
+      connector->setTranspose(transpose, true);
+   }
 }
 
 /*
@@ -365,62 +399,76 @@ OverlapConnectorAlgorithm::findOverlaps(
  ***********************************************************************
  */
 void
-OverlapConnectorAlgorithm::bridge(
-   boost::shared_ptr<Connector>& west_to_east,
-   boost::shared_ptr<Connector>& east_to_west,
-   const Connector& west_to_cent,
-   const Connector& cent_to_east,
-   const Connector& east_to_cent,
-   const Connector& cent_to_west) const
-{
-   const IntVector& zero_vector(
-      IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
-   const IntVector connector_width_limit(
-      cent_to_east.getConnectorWidth().getDim(), -1); // No user-imposed limit.
-   privateBridge(
-      west_to_east,
-      east_to_west,
-      west_to_cent,
-      cent_to_east,
-      east_to_cent,
-      cent_to_west,
-      false,
-      zero_vector,
-      false,
-      zero_vector,
-      connector_width_limit,
-      &west_to_east != &east_to_west);
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void
 OverlapConnectorAlgorithm::bridgeWithNesting(
    boost::shared_ptr<Connector>& west_to_east,
-   boost::shared_ptr<Connector>& east_to_west,
    const Connector& west_to_cent,
    const Connector& cent_to_east,
-   const Connector& east_to_cent,
-   const Connector& cent_to_west,
    const IntVector& cent_growth_to_nest_west,
    const IntVector& cent_growth_to_nest_east,
-   const IntVector& connector_width_limit) const
+   const IntVector& connector_width_limit,
+   bool compute_transpose) const
 {
-   privateBridge(
-      west_to_east,
-      east_to_west,
+   t_bridge->start();
+
+   TBOX_ASSERT(west_to_cent.hasTranspose());
+   TBOX_ASSERT(cent_to_east.hasTranspose());
+   const tbox::Dimension& dim(connector_width_limit.getDim());
+   IntVector west_to_east_width(dim);
+   IntVector east_to_west_width(dim);
+   std::set<int> incoming_ranks,  outgoing_ranks;
+   bool ordered = true;
+   NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);
+   privateBridge_prologue(
       west_to_cent,
       cent_to_east,
-      east_to_cent,
-      cent_to_west,
+      cent_to_east.getTranspose(),
+      west_to_cent.getTranspose(),
       (cent_growth_to_nest_west(0) >= 0),
       cent_growth_to_nest_west,
       (cent_growth_to_nest_east(0) >= 0),
       cent_growth_to_nest_east,
       connector_width_limit,
-      &west_to_east != &east_to_west);
+      compute_transpose,
+      west_to_east_width,
+      east_to_west_width,
+      incoming_ranks,
+      outgoing_ranks,
+      visible_west_nabrs,
+      visible_east_nabrs);
+   Connector* east_to_west = 0;
+   west_to_east.reset(new Connector(west_to_cent.getBase(),
+      cent_to_east.getHead(),
+      west_to_east_width));
+   if (compute_transpose) {
+      east_to_west = new Connector(cent_to_east.getHead(),
+         west_to_cent.getBase(),
+         east_to_west_width);
+   }
+   privateBridge(
+      *west_to_east,
+      east_to_west,
+      west_to_cent,
+      cent_to_east,
+      cent_to_east.getTranspose(),
+      west_to_cent.getTranspose(),
+      (cent_growth_to_nest_west(0) >= 0),
+      cent_growth_to_nest_west,
+      (cent_growth_to_nest_east(0) >= 0),
+      cent_growth_to_nest_east,
+      connector_width_limit,
+      compute_transpose,
+      incoming_ranks,
+      outgoing_ranks,
+      visible_west_nabrs,
+      visible_east_nabrs);
+   if (compute_transpose) {
+      west_to_east->setTranspose(east_to_west, true);
+   }
+   else if (&west_to_east->getHead() == &west_to_east->getBase()) {
+      west_to_east->setTranspose(west_to_east.get(), false);
+   }
+
+   t_bridge->stop();
 }
 
 /*
@@ -430,28 +478,149 @@ OverlapConnectorAlgorithm::bridgeWithNesting(
 void
 OverlapConnectorAlgorithm::bridge(
    boost::shared_ptr<Connector>& west_to_east,
-   boost::shared_ptr<Connector>& east_to_west,
    const Connector& west_to_cent,
    const Connector& cent_to_east,
-   const Connector& east_to_cent,
-   const Connector& cent_to_west,
-   const IntVector& connector_width_limit) const
+   const IntVector& connector_width_limit,
+   bool compute_transpose) const
 {
-   const IntVector& zero_vector(
-      IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
-   privateBridge(
-      west_to_east,
-      east_to_west,
+   t_bridge->start();
+
+   TBOX_ASSERT(west_to_cent.hasTranspose());
+   TBOX_ASSERT(cent_to_east.hasTranspose());
+   const tbox::Dimension& dim(connector_width_limit.getDim());
+   const IntVector& zero_vector(IntVector::getZero(dim));
+   IntVector west_to_east_width(dim);
+   IntVector east_to_west_width(dim);
+   std::set<int> incoming_ranks,  outgoing_ranks;
+   bool ordered = true;
+   NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);
+   privateBridge_prologue(
       west_to_cent,
       cent_to_east,
-      east_to_cent,
-      cent_to_west,
+      cent_to_east.getTranspose(),
+      west_to_cent.getTranspose(),
       false,
       zero_vector,
       false,
       zero_vector,
       connector_width_limit,
-      &west_to_east != &east_to_west);
+      compute_transpose,
+      west_to_east_width,
+      east_to_west_width,
+      incoming_ranks,
+      outgoing_ranks,
+      visible_west_nabrs,
+      visible_east_nabrs);
+   Connector* east_to_west = 0;
+   west_to_east.reset(new Connector(west_to_cent.getBase(),
+      cent_to_east.getHead(),
+      west_to_east_width));
+   if (compute_transpose) {
+      east_to_west = new Connector(cent_to_east.getHead(),
+         west_to_cent.getBase(),
+         east_to_west_width);
+   }
+   privateBridge(
+      *west_to_east,
+      east_to_west,
+      west_to_cent,
+      cent_to_east,
+      cent_to_east.getTranspose(),
+      west_to_cent.getTranspose(),
+      false,
+      zero_vector,
+      false,
+      zero_vector,
+      connector_width_limit,
+      compute_transpose,
+      incoming_ranks,
+      outgoing_ranks,
+      visible_west_nabrs,
+      visible_east_nabrs);
+   if (compute_transpose) {
+      west_to_east->setTranspose(east_to_west, true);
+   }
+   else if (&west_to_east->getHead() == &west_to_east->getBase()) {
+      west_to_east->setTranspose(west_to_east.get(), false);
+   }
+
+   t_bridge->stop();
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+OverlapConnectorAlgorithm::bridge(
+   boost::shared_ptr<Connector>& west_to_east,
+   const Connector& west_to_cent,
+   const Connector& cent_to_east,
+   bool compute_transpose) const
+{
+   t_bridge->start();
+
+   TBOX_ASSERT(west_to_cent.hasTranspose());
+   TBOX_ASSERT(cent_to_east.hasTranspose());
+   const tbox::Dimension& dim(cent_to_east.getConnectorWidth().getDim());
+   const IntVector& zero_vector(IntVector::getZero(dim));
+   const IntVector connector_width_limit(dim, -1); // No user-imposed limit.
+   IntVector west_to_east_width(dim);
+   IntVector east_to_west_width(dim);
+   std::set<int> incoming_ranks,  outgoing_ranks;
+   bool ordered = true;
+   NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);
+   privateBridge_prologue(
+      west_to_cent,
+      cent_to_east,
+      cent_to_east.getTranspose(),
+      west_to_cent.getTranspose(),
+      false,
+      zero_vector,
+      false,
+      zero_vector,
+      connector_width_limit,
+      compute_transpose,
+      west_to_east_width,
+      east_to_west_width,
+      incoming_ranks,
+      outgoing_ranks,
+      visible_west_nabrs,
+      visible_east_nabrs);
+   Connector* east_to_west = 0;
+   west_to_east.reset(new Connector(west_to_cent.getBase(),
+      cent_to_east.getHead(),
+      west_to_east_width));
+   if (compute_transpose) {
+      east_to_west = new Connector(cent_to_east.getHead(),
+      west_to_cent.getBase(),
+      east_to_west_width);
+   }
+   privateBridge(
+      *west_to_east,
+      east_to_west,
+      west_to_cent,
+      cent_to_east,
+      cent_to_east.getTranspose(),
+      west_to_cent.getTranspose(),
+      false,
+      zero_vector,
+      false,
+      zero_vector,
+      connector_width_limit,
+      compute_transpose,
+      incoming_ranks,
+      outgoing_ranks,
+      visible_west_nabrs,
+      visible_east_nabrs);
+   if (compute_transpose) {
+      west_to_east->setTranspose(east_to_west, true);
+   }
+   else if (&west_to_east->getHead() == &west_to_east->getBase()) {
+      west_to_east->setTranspose(west_to_east.get(), false);
+   }
+
+   t_bridge->stop();
 }
 
 /*
@@ -462,53 +631,68 @@ void
 OverlapConnectorAlgorithm::bridge(
    Connector& west_to_cent,
    const Connector& cent_to_east,
-   const Connector& east_to_cent,
-   Connector& cent_to_west,
    const IntVector& connector_width_limit) const
 {
-   const IntVector& zero_vector(
-      IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
-   privateBridge(
-      west_to_cent,
-      cent_to_east,
-      east_to_cent,
-      cent_to_west,
-      false,
-      zero_vector,
-      false,
-      zero_vector,
-      connector_width_limit);
-}
+   t_bridge->start();
 
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void
-OverlapConnectorAlgorithm::bridge(
-   boost::shared_ptr<Connector>& west_to_east,
-   const Connector& west_to_cent,
-   const Connector& cent_to_east,
-   const Connector& east_to_cent,
-   const Connector& cent_to_west,
-   const IntVector& connector_width_limit) const
-{
+   TBOX_ASSERT(west_to_cent.hasTranspose());
+   TBOX_ASSERT(cent_to_east.hasTranspose());
+   Connector& cent_to_west = west_to_cent.getTranspose();
+   const tbox::Dimension& dim(connector_width_limit.getDim());
    const IntVector& zero_vector(
       IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
-   boost::shared_ptr<Connector> dummy;
-   privateBridge(
-      west_to_east,
-      dummy,
+   IntVector west_to_east_width(dim);
+   IntVector east_to_west_width(dim);
+   std::set<int> incoming_ranks,  outgoing_ranks;
+   bool ordered = true;
+   NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);
+   bool compute_transpose = &west_to_cent != &west_to_cent.getTranspose();
+   privateBridge_prologue(
       west_to_cent,
       cent_to_east,
-      east_to_cent,
+      cent_to_east.getTranspose(),
+      west_to_cent.getTranspose(),
+      false,
+      zero_vector,
+      false,
+      zero_vector,
+      connector_width_limit,
+      compute_transpose,
+      west_to_east_width,
+      east_to_west_width,
+      incoming_ranks,
+      outgoing_ranks,
+      visible_west_nabrs,
+      visible_east_nabrs);
+   west_to_cent.clearNeighborhoods();
+   west_to_cent.setBase(west_to_cent.getBase());
+   west_to_cent.setHead(cent_to_east.getHead());
+   west_to_cent.setWidth(west_to_east_width, true);
+   if (compute_transpose) {
+      cent_to_west.clearNeighborhoods();
+      cent_to_west.setBase(cent_to_east.getHead());
+      cent_to_west.setHead(west_to_cent.getBase());
+      cent_to_west.setWidth(east_to_west_width, true);
+   }
+   privateBridge(
+      west_to_cent,
+      &cent_to_west,
+      west_to_cent,
+      cent_to_east,
+      cent_to_east.getTranspose(),
       cent_to_west,
       false,
       zero_vector,
       false,
       zero_vector,
       connector_width_limit,
-      false);
+      compute_transpose,
+      incoming_ranks,
+      outgoing_ranks,
+      visible_west_nabrs,
+      visible_east_nabrs);
+
+   t_bridge->stop();
 }
 
 /*
@@ -516,59 +700,7 @@ OverlapConnectorAlgorithm::bridge(
  ***********************************************************************
  */
 void
-OverlapConnectorAlgorithm::bridge(
-   boost::shared_ptr<Connector>& west_to_east,
-   const Connector& west_to_cent,
-   const Connector& cent_to_east,
-   const Connector& east_to_cent,
-   const Connector& cent_to_west) const
-{
-   const IntVector& zero_vector(
-      IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
-   const IntVector connector_width_limit(
-      cent_to_east.getConnectorWidth().getDim(), -1); // No user-imposed limit.
-   boost::shared_ptr<Connector> dummy;
-   privateBridge(
-      west_to_east,
-      dummy,
-      west_to_cent,
-      cent_to_east,
-      east_to_cent,
-      cent_to_west,
-      false,
-      zero_vector,
-      false,
-      zero_vector,
-      connector_width_limit,
-      false);
-}
-
-/*
- ***********************************************************************
- *
- *                           west to east
- *        (west box_level)  ------------------> (east box_level)
- *                       ^  <------------------ ^
- *                        \    east to west    /
- *                         \                  /
- *           center to west \                / center to east
- *                           \              /
- *                            \            /
- *                          (center box_level)
- *
- * Bridge operation is in two phases, discovery and
- * sharing.  The discovery phase loops through local
- * Boxes in the center and comparing the west and east neighbors
- * for overlaps.  Local overlaps are stored immediately.
- * Remote overlaps are placed in messages to be sent to appropriate
- * processors by the sharing phase.
- ***********************************************************************
- */
-
-void
-OverlapConnectorAlgorithm::privateBridge(
-   boost::shared_ptr<Connector>& west_to_east,
-   boost::shared_ptr<Connector>& east_to_west,
+OverlapConnectorAlgorithm::privateBridge_prologue(
    const Connector& west_to_cent,
    const Connector& cent_to_east,
    const Connector& east_to_cent,
@@ -578,288 +710,14 @@ OverlapConnectorAlgorithm::privateBridge(
    bool east_nesting_is_known,
    const IntVector& cent_growth_to_nest_east,
    const IntVector& connector_width_limit,
-   bool compute_reverse) const
+   bool compute_transpose,
+   IntVector& west_to_east_width,
+   IntVector& east_to_west_width,
+   std::set<int>& incoming_ranks,
+   std::set<int>& outgoing_ranks,
+   NeighborSet& visible_west_nabrs,
+   NeighborSet& visible_east_nabrs) const
 {
-   t_bridge->barrierAndStart();
-
-   if (s_print_steps == 'y') {
-      std::string dbgbord("bridge->  ");
-      tbox::plog
-      << "bridge west:\n" << west_to_cent.getBase().format(dbgbord, 3)
-      << "bridge east:\n" << east_to_cent.getBase().format(dbgbord, 3)
-      << "bridge center:\n" << cent_to_west.getBase().format(dbgbord, 3)
-      << "bridge west_to_cent:\n" << west_to_cent.format(dbgbord, 3)
-      << "bridge cent_to_west:\n" << cent_to_west.format(dbgbord, 3)
-      << "bridge cent_to_east:\n" << cent_to_east.format(dbgbord, 3)
-      << "bridge east_to_cent:\n" << cent_to_east.format(dbgbord, 3);
-   }
-
-   privateBridge_checkParameters(
-      west_to_cent,
-      cent_to_east,
-      east_to_cent,
-      cent_to_west);
-
-   const BoxLevel& cent = cent_to_west.getBase();
-   const BoxLevel& west = cent_to_west.getHead();
-   const BoxLevel& east = cent_to_east.getHead();
-   const IntVector& cent_refinement_ratio = cent.getRefinementRatio();
-   const IntVector& west_refinement_ratio = west.getRefinementRatio();
-   const IntVector& east_refinement_ratio = east.getRefinementRatio();
-
-   const tbox::Dimension& dim(connector_width_limit.getDim());
-   const tbox::SAMRAI_MPI& mpi(cent.getMPI());
-
-   const IntVector& zero_vector(IntVector::getZero(dim));
-
-   const IntVector finest_refinement_ratio =
-      IntVector::max(
-         cent_refinement_ratio,
-         IntVector::max(west_refinement_ratio, east_refinement_ratio));
-
-   /*
-    * Using the bridge theorem, compute the largest bridge width for
-    * which we can guarantee discovering all the overlaps (when
-    * nesting is satisfied).  If either the east or west
-    * BoxLevel's nesting in the center is known, compute the
-    * output width by the bridge theorem, and use the bigger one.  If
-    * neither is known, we assume that both east and west nest in
-    * center, and just to do something reasonable.
-    */
-   IntVector output_width1(dim, 0), output_width2(dim, 0);
-   if (west_nesting_is_known || east_nesting_is_known) {
-      if (west_nesting_is_known) {
-         output_width1 =
-            cent_to_east.getConnectorWidth() - cent_growth_to_nest_west;
-      }
-      if (east_nesting_is_known) {
-         output_width2 =
-            cent_to_west.getConnectorWidth() - cent_growth_to_nest_east;
-      }
-      if (!(output_width1 >= zero_vector || output_width2 >= zero_vector)) {
-         TBOX_ERROR("OverlapConnectorAlgorithm::privateBridge:\n"
-            << "Useless nesting specifications!\n"
-            << "Neither west nor east BoxLevel nest with enough\n"
-            << "margin to guarantee finding all overlaps.\n"
-            << "To ensure you understand completness is not guaranteed,\n"
-            << "this is considered an error.  To proceed anyway and live\n"
-            << "with potential incompleteness, use a bridge interface\n"
-            << "that does not claim any nesting.  Or, you can specify\n"
-            << "a different nesting claim (but don't enable sanity\n"
-            << "checking, which will catch your fib).\n");
-      }
-   } else {
-      output_width1 = cent_to_east.getConnectorWidth();
-      output_width2 = cent_to_west.getConnectorWidth();
-   }
-   IntVector output_width_in_finest_refinement_ratio =
-      IntVector::max(output_width1, output_width2) *
-      finest_refinement_ratio / cent_refinement_ratio;
-
-   /*
-    * Reduce the output width to the user-specified width limit.  Note
-    * that the width limit is specified in the coarser of the east and
-    * west refinement ratios.
-    */
-   if (connector_width_limit >= IntVector::getZero(dim)) {
-      const IntVector coarser_refinement_ratio =
-         IntVector::min(west_refinement_ratio, east_refinement_ratio);
-      const IntVector width_limit_in_finest_refinement_ratio(
-         connector_width_limit * finest_refinement_ratio / coarser_refinement_ratio);
-      if (width_limit_in_finest_refinement_ratio > output_width_in_finest_refinement_ratio) {
-         /*
-          * If user specifies a width limit, he is probably assuming
-          * that the bridge's allowable width is bigger.  If that is
-          * not the case, this method won't crash, but it will give
-          * bad results that result in elusive bugs.  Therefore, we
-          * catch it immediately.
-          */
-         TBOX_ERROR("OverlapConnectorAlgorithm::privateBridge found input error:\n"
-            << "The given connector width limit, " << connector_width_limit
-            << " (" << width_limit_in_finest_refinement_ratio << " in finest index space)\n"
-            << "is smaller than the width of the bridge, "
-            << output_width_in_finest_refinement_ratio << " (in finest index space).");
-      }
-      output_width_in_finest_refinement_ratio.min(width_limit_in_finest_refinement_ratio);
-   }
-
-   const IntVector west_to_east_width = IntVector::ceilingDivide(
-      output_width_in_finest_refinement_ratio,
-      finest_refinement_ratio / west_refinement_ratio);
-   const IntVector east_to_west_width = IntVector::ceilingDivide(
-      output_width_in_finest_refinement_ratio,
-      finest_refinement_ratio / east_refinement_ratio);
-
-
-   const int rank = mpi.getRank();
-
-   /*
-    * Owners we have to exchange information with are the ones
-    * owning east/west Boxes visible to the local process.
-    */
-   std::set<int> incoming_ranks, outgoing_ranks;
-   cent_to_west.getLocalOwners(outgoing_ranks);
-   west_to_cent.getLocalOwners(incoming_ranks);
-   if (compute_reverse && &cent_to_west != &cent_to_east) {
-      cent_to_east.getLocalOwners(outgoing_ranks);
-      east_to_cent.getLocalOwners(incoming_ranks);
-   }
-   outgoing_ranks.erase(rank);
-   incoming_ranks.erase(rank);
-
-   /*
-    * Create BoxContainers which will later be used to initialize the search trees
-    * for visible east and west neighbors:
-    * visible_west_nabrs and visible_east_nabrs.
-    */
-   t_bridge_discover_get_neighbors->start();
-   bool ordered = true;
-   NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);
-   cent_to_west.getLocalNeighbors(visible_west_nabrs);
-   cent_to_east.getLocalNeighbors(visible_east_nabrs);
-   t_bridge_discover_get_neighbors->stop();
-
-   /*
-    * Setup the output Connectors' head, base, width and type.  Add
-    * overlaps below as they are discovered or received from other procs.
-    */
-   west_to_east.reset(new Connector(west, east, west_to_east_width));
-   if (compute_reverse) {
-      east_to_west.reset(new Connector(east, west, east_to_west_width));
-#ifdef DEBUG_CHECK_ASSERTIONS
-      if (west_refinement_ratio / east_refinement_ratio * east_refinement_ratio == west_refinement_ratio ||
-          east_refinement_ratio / west_refinement_ratio * west_refinement_ratio == east_refinement_ratio) {
-         /*
-          * If it's possible to make west<==>east transposes, it
-          * should happen.  The requirement is that one refinement ratio is
-          * an IntVector times the other.
-          */
-         west_to_east->isTransposeOf(*east_to_west);
-         east_to_west->isTransposeOf(*west_to_east);
-      }
-#endif
-   }
-
-
-   /*
-    * Set up communication mechanism and post receives.
-    * Note that in all_comms, all the incoming_comm come
-    * first, the outgoing_comm later.
-    */
-
-   tbox::AsyncCommStage comm_stage;
-   tbox::AsyncCommPeer<int>* all_comms(0);
-
-   t_bridge_share->start();
-   t_bridge_setup_comm->start();
-
-   setupCommunication(
-      all_comms,
-      comm_stage,
-      mpi,
-      incoming_ranks,
-      outgoing_ranks,
-      t_bridge_MPI_wait,
-      s_operation_mpi_tag,
-      s_print_steps == 'y');
-
-   t_bridge_setup_comm->stop();
-   t_bridge_share->stop();
-
-   /*
-    * Data for caching relationship removal messages.  This
-    * temporary object holds data computed when removing neighbors,
-    * to be used when sending out the relationship removal
-    * information.
-    */
-   std::map<int, std::vector<int> > neighbor_removal_mesg;
-
-   /*
-    * First step: Remove neighbor data for Boxes that are
-    * going away and cache information to be sent out.
-    */
-   privateBridge_removeAndCache(
-      neighbor_removal_mesg,
-      *west_to_east,
-      east_to_west.get(),
-      cent_to_east);
-
-   privateBridge_discoverAndSend(
-      neighbor_removal_mesg,
-      *west_to_east,
-      east_to_west.get(),
-      incoming_ranks,
-      outgoing_ranks,
-      all_comms,
-      visible_west_nabrs,
-      visible_east_nabrs);
-
-   t_bridge_share->start();
-
-   receiveAndUnpack(
-      *west_to_east,
-      east_to_west.get(),
-      incoming_ranks,
-      all_comms,
-      comm_stage,
-      t_bridge_receive_and_unpack,
-      s_print_steps == 'y');
-
-   t_bridge_share->stop();
-
-   delete[] all_comms;
-
-   if (d_sanity_check_method_postconditions) {
-      west_to_east->assertConsistencyWithBase();
-      west_to_east->assertConsistencyWithHead();
-      if (compute_reverse) {
-         east_to_west->assertConsistencyWithBase();
-         east_to_west->assertConsistencyWithHead();
-         east_to_west->assertTransposeCorrectness(*west_to_east, true);
-      }
-   }
-
-   t_bridge->stop();
-}
-
-/*
- ***********************************************************************
- *
- *                           west to east
- *        (west box_level)  ------------------> (east box_level)
- *                       ^  <------------------ ^
- *                        \    east to west    /
- *                         \                  /
- *           center to west \                / center to east
- *                           \              /
- *                            \            /
- *                          (center box_level)
- *
- * Bridge operation is in two phases, discovery and
- * sharing.  The discovery phase loops through local
- * Boxes in the center and comparing the west and east neighbors
- * for overlaps.  Local overlaps are stored immediately.
- * Remote overlaps are placed in messages to be sent to appropriate
- * processors by the sharing phase.
- *
- * TODO: This method appears to be nearly identical to the other
- * privateBridge.  See artifact artf18798.
- ***********************************************************************
- */
-
-void
-OverlapConnectorAlgorithm::privateBridge(
-   Connector& west_to_cent,
-   const Connector& cent_to_east,
-   const Connector& east_to_cent,
-   Connector& cent_to_west,
-   bool west_nesting_is_known,
-   const IntVector& cent_growth_to_nest_west,
-   bool east_nesting_is_known,
-   const IntVector& cent_growth_to_nest_east,
-   const IntVector& connector_width_limit) const
-{
-   t_bridge->barrierAndStart();
 
    if (s_print_steps == 'y') {
       std::string dbgbord("bridge->  ");
@@ -916,7 +774,7 @@ OverlapConnectorAlgorithm::privateBridge(
             cent_to_west.getConnectorWidth() - cent_growth_to_nest_east;
       }
       if (!(output_width1 >= zero_vector || output_width2 >= zero_vector)) {
-         TBOX_ERROR("OverlapConnectorAlgorithm::privateBridge:\n"
+         TBOX_ERROR("OverlapConnectorAlgorithm::computeBridgeWidths:\n"
             << "Useless nesting specifications!\n"
             << "Neither west nor east BoxLevel nest with enough\n"
             << "margin to guarantee finding all overlaps.\n"
@@ -953,7 +811,7 @@ OverlapConnectorAlgorithm::privateBridge(
           * bad results that result in elusive bugs.  Therefore, we
           * catch it immediately.
           */
-         TBOX_ERROR("OverlapConnectorAlgorithm::privateBridge found input error:\n"
+         TBOX_ERROR("OverlapConnectorAlgorithm::computeBridgeWidths found input error:\n"
             << "The given connector width limit, " << connector_width_limit
             << " (" << width_limit_in_finest_refinement_ratio << " in finest index space)\n"
             << "is smaller than the width of the bridge, "
@@ -962,31 +820,22 @@ OverlapConnectorAlgorithm::privateBridge(
       output_width_in_finest_refinement_ratio.min(width_limit_in_finest_refinement_ratio);
    }
 
-   const IntVector west_to_east_width = IntVector::ceilingDivide(
+   west_to_east_width = IntVector::ceilingDivide(
       output_width_in_finest_refinement_ratio,
       finest_refinement_ratio / west_refinement_ratio);
-   const IntVector east_to_west_width = IntVector::ceilingDivide(
+   east_to_west_width = IntVector::ceilingDivide(
       output_width_in_finest_refinement_ratio,
       finest_refinement_ratio / east_refinement_ratio);
 
-
    const int rank = mpi.getRank();
-
-
-   /*
-    * Compute the reverse bridge (east_to_west) if it is given and is
-    * distinct.
-    */
-   const bool compute_reverse = (&cent_to_west != &west_to_cent);
 
    /*
     * Owners we have to exchange information with are the ones
     * owning east/west Boxes visible to the local process.
     */
-   std::set<int> incoming_ranks, outgoing_ranks;
    cent_to_west.getLocalOwners(outgoing_ranks);
    west_to_cent.getLocalOwners(incoming_ranks);
-   if (compute_reverse && &cent_to_west != &cent_to_east) {
+   if (compute_transpose && &cent_to_west != &cent_to_east) {
       cent_to_east.getLocalOwners(outgoing_ranks);
       east_to_cent.getLocalOwners(incoming_ranks);
    }
@@ -994,31 +843,63 @@ OverlapConnectorAlgorithm::privateBridge(
    incoming_ranks.erase(rank);
 
    /*
-    * Create BoxContainers which will later be used to initialize the search trees
-    * for visible east and west neighbors:
+    * Create BoxContainers which will later be used to initialize the search
+    * trees for visible east and west neighbors:
     * visible_west_nabrs and visible_east_nabrs.
     */
    t_bridge_discover_get_neighbors->start();
-   bool ordered = true;
-   NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);
    cent_to_west.getLocalNeighbors(visible_west_nabrs);
    cent_to_east.getLocalNeighbors(visible_east_nabrs);
    t_bridge_discover_get_neighbors->stop();
+}
 
-   /*
-    * Initialize the output Connectors without overlaps.  Add overlaps
-    * below as they are discovered or received from other procs.
-    */
-   west_to_cent.clearNeighborhoods();
-   west_to_cent.setBase(west);
-   west_to_cent.setHead(east);
-   west_to_cent.setWidth(west_to_east_width, true);
-   if (compute_reverse) {
-      cent_to_west.clearNeighborhoods();
-      cent_to_west.setBase(east);
-      cent_to_west.setHead(west);
-      cent_to_west.setWidth(east_to_west_width, true);
+/*
+ ***********************************************************************
+ *
+ *                           west to east
+ *        (west box_level)  ------------------> (east box_level)
+ *                       ^  <------------------ ^
+ *                        \    east to west    /
+ *                         \                  /
+ *           center to west \                / center to east
+ *                           \              /
+ *                            \            /
+ *                          (center box_level)
+ *
+ * Bridge operation is in two phases, discovery and
+ * sharing.  The discovery phase loops through local
+ * Boxes in the center and comparing the west and east neighbors
+ * for overlaps.  Local overlaps are stored immediately.
+ * Remote overlaps are placed in messages to be sent to appropriate
+ * processors by the sharing phase.
+ ***********************************************************************
+ */
+
+void
+OverlapConnectorAlgorithm::privateBridge(
+   Connector& west_to_east,
+   Connector* east_to_west,
+   const Connector& west_to_cent,
+   const Connector& cent_to_east,
+   const Connector& east_to_cent,
+   const Connector& cent_to_west,
+   bool west_nesting_is_known,
+   const IntVector& cent_growth_to_nest_west,
+   bool east_nesting_is_known,
+   const IntVector& cent_growth_to_nest_east,
+   const IntVector& connector_width_limit,
+   bool compute_transpose,
+   std::set<int>& incoming_ranks,
+   std::set<int>& outgoing_ranks,
+   NeighborSet& visible_west_nabrs,
+   NeighborSet& visible_east_nabrs) const
+{
 #ifdef DEBUG_CHECK_ASSERTIONS
+   if (compute_transpose) {
+      const IntVector& west_refinement_ratio =
+         west_to_east.getBase().getRefinementRatio();
+      const IntVector& east_refinement_ratio =
+         west_to_east.getHead().getRefinementRatio();
       if (west_refinement_ratio / east_refinement_ratio * east_refinement_ratio == west_refinement_ratio ||
           east_refinement_ratio / west_refinement_ratio * west_refinement_ratio == east_refinement_ratio) {
          /*
@@ -1026,11 +907,11 @@ OverlapConnectorAlgorithm::privateBridge(
           * should happen.  The requirement is that one refinement ratio is
           * an IntVector times the other.
           */
-         TBOX_ASSERT(west_to_cent.isTransposeOf(cent_to_west));
-         TBOX_ASSERT(cent_to_west.isTransposeOf(west_to_cent));
+         TBOX_ASSERT(west_to_east.isTransposeOf(*east_to_west));
+         TBOX_ASSERT(east_to_west->isTransposeOf(west_to_east));
       }
-#endif
    }
+#endif
 
 
    /*
@@ -1045,6 +926,7 @@ OverlapConnectorAlgorithm::privateBridge(
    t_bridge_share->start();
    t_bridge_setup_comm->start();
 
+   const tbox::SAMRAI_MPI& mpi(west_to_east.getBase().getMPI());
    setupCommunication(
       all_comms,
       comm_stage,
@@ -1072,14 +954,14 @@ OverlapConnectorAlgorithm::privateBridge(
     */
    privateBridge_removeAndCache(
       neighbor_removal_mesg,
-      west_to_cent,
-      &cent_to_west,
+      west_to_east,
+      east_to_west,
       cent_to_east);
 
    privateBridge_discoverAndSend(
       neighbor_removal_mesg,
-      west_to_cent,
-      &cent_to_west,
+      west_to_east,
+      east_to_west,
       incoming_ranks,
       outgoing_ranks,
       all_comms,
@@ -1089,8 +971,8 @@ OverlapConnectorAlgorithm::privateBridge(
    t_bridge_share->start();
 
    receiveAndUnpack(
-      west_to_cent,
-      &cent_to_west,
+      west_to_east,
+      east_to_west,
       incoming_ranks,
       all_comms,
       comm_stage,
@@ -1102,16 +984,14 @@ OverlapConnectorAlgorithm::privateBridge(
    delete[] all_comms;
 
    if (d_sanity_check_method_postconditions) {
-      west_to_cent.assertConsistencyWithBase();
-      west_to_cent.assertConsistencyWithHead();
-      if (compute_reverse) {
-         cent_to_west.assertConsistencyWithBase();
-         cent_to_west.assertConsistencyWithHead();
-         cent_to_west.assertTransposeCorrectness(west_to_cent, true);
+      west_to_east.assertConsistencyWithBase();
+      west_to_east.assertConsistencyWithHead();
+      if (compute_transpose) {
+         east_to_west->assertConsistencyWithBase();
+         east_to_west->assertConsistencyWithHead();
+         east_to_west->assertTransposeCorrectness(west_to_east, true);
       }
    }
-
-   t_bridge->stop();
 }
 
 /*
@@ -1247,7 +1127,7 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
                     << std::endl;
       }
 
-      bool compute_reverse =
+      bool compute_transpose =
          (east_to_west != 0 && east_to_west != &west_to_east);
 
       const BoxLevel& east(west_to_east.getBase());
@@ -1261,9 +1141,9 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
       t_bridge_discover_form_rbbt->start();
       const BoxContainer east_rbbt(visible_east_nabrs);
       east_rbbt.makeTree(grid_geometry.get());
-      // Note: west_rbbt only needed when compute_reverse is true.
+      // Note: west_rbbt only needed when compute_transpose is true.
       BoxContainer empty_nabrs(true);
-      const BoxContainer west_rbbt(compute_reverse ? visible_west_nabrs : empty_nabrs);
+      const BoxContainer west_rbbt(compute_transpose ? visible_west_nabrs : empty_nabrs);
       west_rbbt.makeTree(grid_geometry.get());
       t_bridge_discover_form_rbbt->stop();
 
@@ -1295,12 +1175,12 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
        */
       const Box start_loop_here(dim, GlobalId(LocalId::getZero(), rank + 1));
       west_ni = visible_west_nabrs.lowerBound(start_loop_here);
-      if (compute_reverse) {
+      if (compute_transpose) {
          east_ni = visible_east_nabrs.lowerBound(start_loop_here);
       }
 
       if (west_ni == visible_west_nabrs.end() &&
-          (!compute_reverse || east_ni == visible_east_nabrs.end())) {
+          (!compute_transpose || east_ni == visible_east_nabrs.end())) {
          /*
           * There are no visible Boxes owned by rank higher than
           * local process.  So loop from the beginning.
@@ -1327,7 +1207,7 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
        * we are actively seeking neighbor data for them.
        */
       while ((west_ni != visible_west_nabrs.end()) ||
-             (compute_reverse && east_ni != visible_east_nabrs.end())) {
+             (compute_transpose && east_ni != visible_east_nabrs.end())) {
 
          /*
           * curr_owner is the owner whose neighbors is currently
@@ -1339,7 +1219,7 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
              curr_owner > west_ni->getOwnerRank()) {
             curr_owner = west_ni->getOwnerRank();
          }
-         if (compute_reverse) {
+         if (compute_transpose) {
             if (east_ni != visible_east_nabrs.end() &&
                 curr_owner > east_ni->getOwnerRank()) {
                curr_owner = east_ni->getOwnerRank();
@@ -1425,7 +1305,7 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
             east_rbbt);
 
          // Find neighbors for all east boxes owned by curr_owner.
-         if (compute_reverse) {
+         if (compute_transpose) {
             if (s_print_steps == 'y') {
                tbox::plog << "Finding west <-- east overlaps for owner "
                           << curr_owner << std::endl;
@@ -1491,7 +1371,7 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
           * to reduce communication time.)
           */
          if (west_ni == visible_west_nabrs.end() &&
-             (!compute_reverse || east_ni == visible_east_nabrs.end())) {
+             (!compute_transpose || east_ni == visible_east_nabrs.end())) {
             /*
              * There are no Boxes that owned by rank higher than
              * local process and that we still need to find neighbors

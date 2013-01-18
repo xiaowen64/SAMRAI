@@ -537,8 +537,7 @@ static int createAndTestDLBG(
                peer_connectors[ln],
                *crse_connectors[ln],
                *fine_connectors[ln - 1],
-               *crse_connectors[ln],
-               *fine_connectors[ln - 1]);
+               false);
          } else {
             oca.findOverlaps(peer_connectors[ln],
                *box_levels[ln],

@@ -14,6 +14,7 @@
 #include "SAMRAI/hier/BaseConnectorAlgorithm.h"
 
 #include <map>
+#include <set>
 
 namespace SAMRAI {
 namespace hier {
@@ -74,6 +75,35 @@ public:
       const BoxLevel& base_box_level,
       const BoxLevel& head_box_level,
       const IntVector& base_width,
+      const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED,
+      const bool ignore_self_overlap = false) const;
+
+   /*!
+    * @brief Create overlap Connector with its transpose then discover and add
+    * overlaps from base to head to it and overlaps from head to base to
+    * transpose.
+    *
+    * The Connector's neighbor information is modified.
+    *
+    * If the Connector's head is not GLOBALIZED, a copy is made and
+    * globalized.  Once a globalized head is obtained, this method
+    * simply calls findOverlaps(const BoxLevel &globalized_head).
+    *
+    * @param[in,out] connector
+    * @param[in] base_box_level
+    * @param[in] head_box_level
+    * @param[in] base_width
+    * @param[in] transpose_base_width
+    * @param[in] parallel_state
+    * @param[in] ignore_self_overlap
+    */
+   void
+   findOverlapsWithTranspose(
+      boost::shared_ptr<Connector>& connector,
+      const BoxLevel& base_box_level,
+      const BoxLevel& head_box_level,
+      const IntVector& base_width,
+      const IntVector& transpose_base_width,
       const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED,
       const bool ignore_self_overlap = false) const;
 
@@ -202,21 +232,17 @@ public:
     * refer to the west, and two refer to the east.  The center, east
     * and west BoxLevels must be the same regardless of what
     * Connector is used to get them.  For example, <tt>
-    * &center_to_west.getHead() == &west_to_center.getBase() </tt> must
+    * &west_to_center.getTranspose().getHead() == &west_to_center.getBase() </tt> must
     * be true.
-    *
-    * - @c west_to_center and @c center_to_west must be mutual transposes.
-    *
-    * - @c east_to_center and @c center_to_east must be mutual transposes.
     *
     * Postconditions:
     *
     * @li @c west and @c east, as referenced by the output Connectors
-    * are heads of @c center_to_west and @c center_to_east.
+    * are heads of west_to_center's transpose and @c center_to_east.
     *
     * @li Widths of the output Connectors will be either @c
     * center_to_east's width reduced by @c center_growth_to_nest_west
-    * or @c center_to_west's width reduced by @c
+    * or west_to_center's transpose's width reduced by @c
     * center_growth_to_nest_east, which ever is greater.  Output
     * Connector widths are still limited by the @c
     * connector_width_limit argument.  All comparisons are done after
@@ -230,7 +256,7 @@ public:
     *
     * @li The bridge operation works in the degenerate case where @c
     * east and @c west are the same object.  In that case, @c
-    * west_to_east and @c east_to_west should also be the same object.
+    * west_to_east and its transpose should also be the same object.
     *
     * @li Bridging finds as many overlaps as it can, given the inputs,
     * but can only guarantee that the output Connectors are complete
@@ -254,11 +280,8 @@ public:
     * using BoxLevelConnectorUtils.
     *
     * @param[out] west_to_east
-    * @param[out] east_to_west
     * @param[in] west_to_center
     * @param[in] center_to_east
-    * @param[in] east_to_center
-    * @param[in] center_to_west
     *
     * @param center_growth_to_nest_west The amount by which the center
     * BoxLevel must grow to nest the west BoxLevel.
@@ -270,29 +293,33 @@ public:
     * @param center_growth_to_nest_east The amount by which the center
     * BoxLevel must grow to nest the east BoxLevel.
     * Bridging guarantees completeness if the width of @b
-    * center_to_west exceeds this amount.  If unknown, set to negative
-    * value if unknown so it won't be considered when computing the
+    * west_to_center's transpose exceeds this amount.  If unknown, set to
+    * negative value if unknown so it won't be considered when computing the
     * output Connector widths.
     *
     * @param connector_width_limit specifies the maximum Connector
     * width to compute overlaps for.  The connector_width should be in
     * the coarser of the east and west indices.  If
     * connector_width_limit is negative, use the default
-    * connector_width, which is the larger of the center_to_west and
-    * center_to_east Connectors', coarsened into the coarser of east
+    * connector_width, which is the larger of the west_to_center's transpose
+    * and center_to_east Connectors', coarsened into the coarser of east
     * and west indices.
+    *
+    * @param compute_transpose true if west_to_east's transpose should be
+    * computed
+    *
+    * @pre west_to_cent.hasTranspose()
+    * @pre cent_to_east.hasTranspose()
     */
    void
    bridgeWithNesting(
       boost::shared_ptr<Connector>& west_to_east,
-      boost::shared_ptr<Connector>& east_to_west,
       const Connector& west_to_center,
       const Connector& center_to_east,
-      const Connector& east_to_center,
-      const Connector& center_to_west,
       const IntVector& center_growth_to_nest_west,
       const IntVector& center_growth_to_nest_east,
-      const IntVector& connector_width_limit) const;
+      const IntVector& connector_width_limit,
+      bool compute_transpose) const;
 
    /*!
     * @brief A version of bridge without any guarantee of nesting.
@@ -306,114 +333,73 @@ public:
     * index space, of course).
     *
     * @param[out] west_to_east
-    * @param[out] east_to_west
     * @param[in] west_to_center
     * @param[in] center_to_east
-    * @param[in] east_to_center
-    * @param[in] center_to_west
     * @param[in] connector_width_limit
+    * @param compute_transpose true if west_to_east's transpose should be
+    * computed
     *
-    * @see bridgeWithNesting( Connector& west_to_east, Connector& east_to_west, const Connector& west_to_center, const Connector& center_to_east, const Connector& east_to_center, const Connector& center_to_west, const IntVector& center_growth_to_nest_west, const IntVector& center_growth_to_nest_east, const IntVector& connector_width_limit) const;
+    * @pre west_to_cent.hasTranspose()
+    * @pre cent_to_east.hasTranspose()
+    *
+    * @see bridgeWithNesting( Connector& west_to_east, const Connector& west_to_center, const Connector& center_to_east, const IntVector& center_growth_to_nest_west, const IntVector& center_growth_to_nest_east, const IntVector& connector_width_limit, bool compute_transpose) const;
     */
    void
    bridge(
       boost::shared_ptr<Connector>& west_to_east,
-      boost::shared_ptr<Connector>& east_to_west,
       const Connector& west_to_center,
       const Connector& center_to_east,
-      const Connector& east_to_center,
-      const Connector& center_to_west,
-      const IntVector& connector_width_limit) const;
+      const IntVector& connector_width_limit,
+      bool compute_transpose) const;
 
    /*!
-    * @brief A version of bridge without computing the reverse bridge.
+    * @brief A version of bridge without limiting the connector_width of the
+    * result.
     *
     * @param[out] west_to_east
     * @param[in] west_to_center
     * @param[in] center_to_east
-    * @param[in] east_to_center
-    * @param[in] center_to_west
-    * @param[in] connector_width_limit
+    * @param compute_transpose true if west_to_east's transpose should be
+    * computed
     *
-    * @see bridge( Connector& west_to_east, Connector& east_to_west, const Connector& west_to_center, const Connector& center_to_east, const Connector& east_to_center, const Connector& center_to_west, const IntVector& connector_width_limit) const;
+    * @pre west_to_cent.hasTranspose()
+    * @pre cent_to_east.hasTranspose()
+    *
+    * @see bridge( Connector& west_to_east, const Connector& west_to_center, const Connector& center_to_east, const IntVector& connector_width_limit, bool compute_transpose) const;
     */
    void
    bridge(
       boost::shared_ptr<Connector>& west_to_east,
       const Connector& west_to_center,
       const Connector& center_to_east,
-      const Connector& east_to_center,
-      const Connector& center_to_west,
-      const IntVector& connector_width_limit) const;
-
-   /*!
-    * @brief A version of bridge without limiting the connector_width of the result.
-    *
-    * @param[out] west_to_east
-    * @param[out] east_to_west
-    * @param[in] west_to_center
-    * @param[in] center_to_east
-    * @param[in] east_to_center
-    * @param[in] center_to_west
-    *
-    * @see bridge( Connector& west_to_east, Connector& east_to_west, const Connector& west_to_center, const Connector& center_to_east, const Connector& east_to_center, const Connector& center_to_west, const IntVector& connector_width_limit) const;
-    */
-   void
-   bridge(
-      boost::shared_ptr<Connector>& west_to_east,
-      boost::shared_ptr<Connector>& east_to_west,
-      const Connector& west_to_center,
-      const Connector& center_to_east,
-      const Connector& east_to_center,
-      const Connector& center_to_west) const;
-
-   /*!
-    * @brief A version of bridge without computing the reverse bridge
-    * and without limiting the connector_width of the result.
-    *
-    * @param[out] west_to_east
-    * @param[in] west_to_center
-    * @param[in] center_to_east
-    * @param[in] east_to_center
-    * @param[in] center_to_west
-    *
-    * @see bridge( Connector& west_to_east, Connector& east_to_west, const Connector& west_to_center, const Connector& center_to_east, const Connector& east_to_center, const Connector& center_to_west, const IntVector& connector_width_limit) const;
-    */
-   void
-   bridge(
-      boost::shared_ptr<Connector>& west_to_east,
-      const Connector& west_to_center,
-      const Connector& center_to_east,
-      const Connector& east_to_center,
-      const Connector& center_to_west) const;
+      bool compute_transpose) const;
 
    /*!
     * @brief A version of bridge without any guarantee of nesting in which
-    * one pair of input connectors is modified to form the resulting bridge
-    * connectors.
+    * an input connector and its transpose are modified to form the resulting
+    * bridge connectors.
     *
     * The east and west BoxLevels are assumed
     * to nest in the center BoxLevel.  If they do not,
     * the results are not guaranteed to be complete.
     *
     * The output Connector widths are the greater of the widths of @c
-    * center_to_east and @c center_to_west (converted into the proper
+    * center_to_east and west_to_center's transpose (converted into the proper
     * index space, of course).
     *
     * @param[in,out] west_to_center
     * @param[in] center_to_east
-    * @param[in] east_to_center
-    * @param[in,out] center_to_west
     * @param[in] connector_width_limit
     *
-    * @see bridgeWithNesting( Connector& west_to_east, Connector& east_to_west, const Connector& west_to_center, const Connector& center_to_east, const Connector& east_to_center, const Connector& center_to_west, const IntVector& center_growth_to_nest_west, const IntVector& center_growth_to_nest_east, const IntVector& connector_width_limit) const;
+    * @pre west_to_cent.hasTranspose()
+    * @pre cent_to_east.hasTranspose()
+    *
+    * @see bridgeWithNesting( Connector& west_to_east, const Connector& west_to_center, const Connector& center_to_east, const IntVector& center_growth_to_nest_west, const IntVector& center_growth_to_nest_east, const IntVector& connector_width_limit, bool compute_transpose) const;
     */
    void
    bridge(
       Connector& west_to_center,
       const Connector& center_to_east,
-      const Connector& east_to_center,
-      Connector& center_to_west,
       const IntVector& connector_width_limit) const;
 
    /*!
@@ -462,6 +448,25 @@ private:
    // Internal shorthand.
    typedef Connector::NeighborSet NeighborSet;
 
+   void
+   privateBridge_prologue(
+      const Connector& west_to_cent,
+      const Connector& cent_to_east,
+      const Connector& east_to_cent,
+      const Connector& cent_to_west,
+      bool west_nesting_is_known,
+      const IntVector& cent_growth_to_nest_west,
+      bool east_nesting_is_known,
+      const IntVector& cent_growth_to_nest_east,
+      const IntVector& connector_width_limit,
+      bool compute_transpose,
+      IntVector& west_to_east_width,
+      IntVector& east_to_west_width,
+      std::set<int>& incoming_ranks,
+      std::set<int>& outgoing_ranks,
+      NeighborSet& visible_west_nabrs,
+      NeighborSet& visible_east_nabrs) const;
+
    /*!
     * @brief This is where the bridge algorithm is implemented.
     * All public bridge interfaces which do not perform an "in place" bridge
@@ -485,12 +490,12 @@ private:
     * connector_width should be in the coarser of the east and west
     * indices.
     *
-    * @param compute_reverse true if east_to_west should be computed
+    * @param compute_transpose true if east_to_west should be computed
     */
    void
    privateBridge(
-      boost::shared_ptr<Connector>& west_to_east,
-      boost::shared_ptr<Connector>& east_to_west,
+      Connector& west_to_east,
+      Connector* east_to_west,
       const Connector& west_to_cent,
       const Connector& cent_to_east,
       const Connector& east_to_cent,
@@ -500,42 +505,11 @@ private:
       bool east_nesting_is_known,
       const IntVector& cent_growth_to_nest_east,
       const IntVector& connector_width_limit,
-      bool compute_reverse) const;
-
-   /*!
-    * @brief This is where the bridge algorithm is implemented.
-    * All public bridge interfaces which perform an "in place" bridge call
-    * this method underneath.
-    *
-    * @param west_nesting_is_known Whether we know how west nests in
-    * center.
-    *
-    * @param cent_growth_to_nest_west Amount center BoxLevel has
-    * to grow to nest west BoxLevel (if known).
-    *
-    * @param east_nesting_is_known Whether we know how east nests in
-    * center.
-    *
-    * @param cent_growth_to_nest_east Amount center BoxLevel has
-    * to grow to nest east BoxLevel (if known).
-    *
-    * @param connector_width_limit specifies the maximum Connector
-    * width to compute overlaps for (negative if unlimited).  If
-    * connector_width_limit is negative, do not apply any limit.  The
-    * connector_width should be in the coarser of the east and west
-    * indices.
-    */
-   void
-   privateBridge(
-      Connector& west_to_cent,
-      const Connector& cent_to_east,
-      const Connector& east_to_cent,
-      Connector& cent_to_west,
-      bool west_nesting_is_known,
-      const IntVector& cent_growth_to_nest_west,
-      bool east_nesting_is_known,
-      const IntVector& cent_growth_to_nest_east,
-      const IntVector& connector_width_limit) const;
+      bool compute_transpose,
+      std::set<int>& incoming_ranks,
+      std::set<int>& outgoing_ranks,
+      NeighborSet& visible_west_nabrs,
+      NeighborSet& visible_east_nabrs) const;
 
    /*
     * @brief Perform checks on the arguments of bridge.

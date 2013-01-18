@@ -99,6 +99,31 @@ public:
       const IntVector& connector_width);
 
    /*!
+    * @brief Create an overlap Connector with its transpose, computing
+    * relationships by globalizing data.
+    *
+    * The base will be the BoxLevel that owns this object.
+    * Find Connector relationships using a (non-scalable) global search.
+    *
+    * @see hier::Connector
+    * @see hier::Connector::initialize()
+    *
+    * @param[in] head
+    * @param[in] connector_width
+    * @param[in] transpose_connector_width
+    *
+    * @return A const reference to the newly created overlap Connector.
+    *
+    * @pre myBoxLevel().isInitialized()
+    * @pre head.isInitialized()
+    */
+   const Connector&
+   createConnectorWithTranspose(
+      const BoxLevel& head,
+      const IntVector& connector_width,
+      const IntVector& transpose_connector_width);
+
+   /*!
     * @brief Create an overlap Connector using externally
     * computed relationships.
     *
@@ -174,6 +199,44 @@ public:
       bool exact_width_only = false);
 
    /*!
+    * @brief Find an overlap Connector with its transpose with the given head
+    * and minimum Connector widths.
+    *
+    * If multiple Connectors fit the criteria, the one with the
+    * smallest ghost cell width (based on the algebraic sum of the
+    * components) is selected.
+    *
+    * TODO: The criterion for selecting a single Connector is
+    * arbitrary and should be re-examined.
+    *
+    * @par Assertions
+    * If no Connector fits the criteria and @c
+    * implicit_connector_creation_rule is "ERROR", an assertion is
+    * thrown.  To automatically create the Connector instead, use
+    * findOrCreateConnector() or set @c
+    * implicit_connector_creation_rule to "WARN" or "SILENT".
+    *
+    * @param[in] head Find the overlap Connector with this specified head.
+    * @param[in] min_connector_width Find the overlap Connector satisfying
+    *      this minimum Connector width.
+    * @param[in] transpose_min_connector_width Find the transpose overlap
+    *      Connector satisfying this minimum Connector width.
+    * @param[in] exact_width_only If true, reject Connectors that do not
+    *      match the requested width exactly.
+    *
+    * @return The Connector which matches the search criterion.
+    *
+    * @pre myBoxLevel().isInitialized()
+    * @pre head.isInitialized()
+    */
+   const Connector&
+   findConnectorWithTranspose(
+      const BoxLevel& head,
+      const IntVector& min_connector_width,
+      const IntVector& transpose_min_connector_width,
+      bool exact_width_only = false);
+
+   /*!
     * @brief Find or create an overlap Connectors with the
     * given head and minimum Connector width.
     *
@@ -192,11 +255,46 @@ public:
     *      this minimum ghost cell width.
     * @param[in] exact_width_only If true, reject Connectors that do not
     *      match the requested width exactly.
+    *
+    * @pre myBoxLevel().isInitialized()
+    * @pre head.isInitialized()
     */
    const Connector&
    findOrCreateConnector(
       const BoxLevel& head,
       const IntVector& min_connector_width,
+      bool exact_width_only = false);
+
+   /*!
+    * @brief Find or create an overlap Connectors with its transpose with the
+    * given head and minimum Connector widths.
+    *
+    * If multiple Connectors fit the criteria, the one with the
+    * smallest ghost cell width (based on the algebraic sum of the
+    * components) is selected.
+    *
+    * TODO: The criterion for selecting a
+    * single Connector is arbitrary and should be re-examined.
+    *
+    * If no Connector fits the criteria, a new one is created using
+    * global search for edges.
+    *
+    * @param[in] head Find the overlap Connector with this specified head.
+    * @param[in] min_connector_width Find the overlap Connector satisfying
+    *      this minimum ghost cell width.
+    * @param[in] transpose_min_connector_width Find the transpose overlap
+    *      Connector satisfying this minimum ghost cell width.
+    * @param[in] exact_width_only If true, reject Connectors that do not
+    *      match the requested width exactly.
+    *
+    * @pre myBoxLevel().isInitialized()
+    * @pre head.isInitialized()
+    */
+   const Connector&
+   findOrCreateConnectorWithTranspose(
+      const BoxLevel& head,
+      const IntVector& min_connector_width,
+      const IntVector& transpose_min_connector_width,
       bool exact_width_only = false);
 
    /*!
@@ -237,6 +335,9 @@ public:
    }
 
 private:
+   // Unimplemented default constructor.
+   PersistentOverlapConnectors();
+
    //@{ @name Methods meant only for BoxLevel to use.
 
    /*!
@@ -255,6 +356,33 @@ private:
    void
    getFromInput();
 
+   /*
+    * Private method used by different public versions of findConnector.
+    */
+   boost::shared_ptr<Connector>
+   privateFindConnector(
+      const BoxLevel& head,
+      const IntVector& min_connector_width,
+      bool exact_width_only);
+
+   /*
+    * Private method used by different public versions of
+    * findOrCreateConnector.
+    */
+   boost::shared_ptr<Connector>
+   privateFindOrCreateConnector(
+      const BoxLevel& head,
+      const IntVector& min_connector_width,
+      bool exact_width_only);
+
+   /*
+    * Private method used by cacheConnector.
+    */
+   void
+   privateCacheConnector(
+      const BoxLevel& head,
+      boost::shared_ptr<Connector>& connector);
+
    //@}
 
    //@{
@@ -265,7 +393,7 @@ private:
    friend class BoxLevel;
    //@}
 
-   typedef tbox::Array<boost::shared_ptr<const Connector> > ConVect;
+   typedef tbox::Array<boost::shared_ptr<Connector> > ConVect;
 
    /*!
     * @brief Persistent overlap Connectors incident from me.

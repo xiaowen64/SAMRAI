@@ -75,8 +75,6 @@ public:
     *  This must be accurate on input.  On putput, connects the newly
     *  balanced balance_box_level to the anchor box_level.
     *
-    * @param[in,out] anchor_to_balance Transpose of balance_to_anchor.
-    *
     * @param[in] hierarchy The hierarchy where the work distribution
     * data lives.
     *
@@ -120,8 +118,7 @@ public:
    virtual void
    loadBalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
-      boost::shared_ptr<hier::Connector>& balance_to_anchor,
-      boost::shared_ptr<hier::Connector>& anchor_to_balance,
+      hier::Connector* balance_to_anchor,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::IntVector& min_size,

@@ -354,7 +354,6 @@ public:
     *
     * @param balance_box_level
     * @param balance_to_anchor
-    * @param anchor_to_balance
     * @param hierarchy       Input patch hierarchy in which level will reside.
     * @param level_number    Input integer number of level in patch hierarchy.
     *                        This value must be >= 0.
@@ -386,6 +385,7 @@ public:
     * @param rank_group      Needed for compatibility with parent class.
     *                        This argument is ignored.
     *
+    * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
     * @pre (d_dim == balance_box_level.getDim()) &&
     *      (d_dim == min_size.getDim()) && (d_dim == max_size.getDim()) &&
     *      (d_dim == domain_box_level.getDim()) &&
@@ -394,8 +394,7 @@ public:
    void
    loadBalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
-      boost::shared_ptr<hier::Connector>& balance_to_anchor,
-      boost::shared_ptr<hier::Connector>& anchor_to_balance,
+      hier::Connector* balance_to_anchor,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::IntVector& min_size,

@@ -320,7 +320,6 @@ void
 BergerRigoutsosNode::clusterAndComputeRelationships(
    boost::shared_ptr<hier::BoxLevel>& new_box_level,
    boost::shared_ptr<hier::Connector>& tag_to_new,
-   boost::shared_ptr<hier::Connector>& new_to_tag,
    const hier::BoxContainer& bound_boxes,
    const boost::shared_ptr<hier::PatchLevel>& tag_level,
    const tbox::SAMRAI_MPI& mpi_object)
@@ -356,15 +355,17 @@ BergerRigoutsosNode::clusterAndComputeRelationships(
          *new_box_level,
          d_common->max_gcw));
    }
+   hier::Connector* new_to_tag = 0;
    if (d_common->compute_relationships >= 2) {
-      new_to_tag.reset(new hier::Connector(*new_box_level,
+      new_to_tag = new hier::Connector(*new_box_level,
          *tag_level->getBoxLevel(),
-         d_common->max_gcw));
+         d_common->max_gcw);
+      tag_to_new->setTranspose(new_to_tag, true);
    }
 
    d_common->new_box_level = new_box_level.get();
    d_common->tag_to_new = tag_to_new.get();
-   d_common->new_to_tag = new_to_tag.get();
+   d_common->new_to_tag = new_to_tag;
 
    clusterAndComputeRelationships();
 

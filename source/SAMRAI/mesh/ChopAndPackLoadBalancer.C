@@ -259,8 +259,7 @@ ChopAndPackLoadBalancer::setBinPackMethod(
 void
 ChopAndPackLoadBalancer::loadBalanceBoxLevel(
    hier::BoxLevel& balance_box_level,
-   boost::shared_ptr<hier::Connector>& balance_to_anchor,
-   boost::shared_ptr<hier::Connector>& anchor_to_balance,
+   hier::Connector* balance_to_anchor,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const hier::IntVector& min_size,
@@ -270,8 +269,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
    const hier::IntVector& cut_factor,
    const tbox::RankGroup& rank_group) const
 {
-   TBOX_ASSERT((balance_to_anchor && anchor_to_balance) ||
-               (!balance_to_anchor && !anchor_to_balance));
+   TBOX_ASSERT(!balance_to_anchor || balance_to_anchor->hasTranspose());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY6(d_dim,
       balance_box_level,
       min_size,
@@ -333,13 +331,14 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
    }
    // Reinitialize Connectors due to changed balance_box_level.
    if (balance_to_anchor) {
+      hier::Connector& anchor_to_balance = balance_to_anchor->getTranspose();
       balance_to_anchor->clearNeighborhoods();
       balance_to_anchor->setBase(balance_box_level, true);
-      anchor_to_balance->clearNeighborhoods();
-      anchor_to_balance->setHead(balance_box_level, true);
+      anchor_to_balance.clearNeighborhoods();
+      anchor_to_balance.setHead(balance_box_level, true);
       hier::OverlapConnectorAlgorithm oca;
       oca.findOverlaps(*balance_to_anchor);
-      oca.findOverlaps(*anchor_to_balance, balance_box_level);
+      oca.findOverlaps(anchor_to_balance, balance_box_level);
    }
 
    balance_box_level.setParallelState(hier::BoxLevel::DISTRIBUTED);

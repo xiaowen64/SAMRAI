@@ -86,9 +86,9 @@ public:
     * MappingConnectors.
     *
     * The change is represented by a the mapper @c old_to_new
-    * and its transpose @c new_to_old.  The Connectors to be
-    * modified are @c anchor_to_mapped and @c mapped_to_anchor, which
-    * on input, go between a anchor (not mapped) BoxLevel and the old
+    * and its transpose, new_to_old.  The Connectors to be
+    * modified are @c anchor_to_mapped and its transpose mapped_to_anchor,
+    * which on input, go between an anchor (not mapped) BoxLevel and the old
     * BoxLevel.  On output, these Connectors will go from the anchor box_level
     * to the new box_level.
     *
@@ -155,162 +155,23 @@ public:
     *
     * @param[in,out] anchor_to_mapped Connector to be modified.  On input, this
     *   points to the BoxLevel being mapped.
-    * @param[in,out] mapped_to_anchor Reverse (transpose) of anchor_to_mapped.
-    *   points to the BoxLevel being mapped.
     * @param[in] old_to_new Mapping from the old BoxLevel to the
     *   new BoxLevel.
     *   The width of old-->new should indicate the maximum amount of box
     *   growth caused by the change.  A value of zero means no growth.
-    * @param[in] new_to_old Reverse (transpose) of old_to_new.
     * @param[in,out] mutable_new See comments.
     * @param[in,out] mutable_old See comments.
     *
-    * @pre (&old_to_new.getBase() == &new_to_old.getHead()) &&
+    * @pre (!old_to_new.hasTranspose() ||
+    *      (&old_to_new.getBase() == &old_to_new.getTranspose().getHead())) &&
     *      (&old_to_new.getBase() == &anchor_to_mapped.getHead()) &&
     *      (&old_to_new.getBase() == &mapped_to_anchor.getBase())
     * @pre &anchor_to_mapped.getBase() == &mapped_to_anchor.getHead()
-    * @pre &old_to_new.getHead() == &new_to_old.getBase()
+    * @pre (!old_to_new.hasTranspose() ||
+    *       (&old_to_new.getHead() == &old_to_new.getTranspose().getBase()))
     * @pre anchor_to_mapped.isTransposeOf(mapped_to_anchor)
-    * @pre new_to_old.isTransposeOf(old_to_new)
-    * @pre anchor_to_mapped.getParallelState() == BoxLevel::DISTRIBUTED
-    */
-   void
-   modify(
-      Connector& anchor_to_mapped,
-      Connector& mapped_to_anchor,
-      const MappingConnector& old_to_new,
-      const MappingConnector& new_to_old,
-      BoxLevel* mutable_new = 0,
-      BoxLevel* mutable_old = 0) const;
-
-   /*!
-    * @brief Version of modify requiring only the forward map
-    * and allows only local mappings.
-    *
-    * This version does not require the reverse mapping, but the
-    * mapping must be totally local, e.g.  old_to_new must
-    * contain no remote neighbor.
-    *
-    * @code
-    * Input:
-    *
-    *                                    (anchor)
-    *                                   ^ /
-    *                                  / /
-    *              mapped_to_anchor-> / /
-    *                                / / <--anchor_to_mapped
-    *                               / v
-    * mapped box_level:           (old) ---------> (new)
-    *
-    *
-    * Output:
-    *
-    *                                    (anchor)
-    *                                          \ ^
-    *                                           \ \
-    *                                            \ \ <-mapped_to_anchor
-    *                        anchor_to_mapped --> \ \
-    *                                              v \
-    *                                              (new)
-    *
-    * @endcode
-    *
-    * The modify methods support these optional steps as follows: If
-    * mutable versions of some BoxLevel are given, the output
-    * Connectors can be reset to reference these versions instead.
-    *
-    * If mutable_new points to the old BoxLevel and mutable_old
-    * points to the new, then do an in-place switch as follows:
-    * @li Swap the mutable_old and mutable_new BoxLevels.
-    * @li Use mutable_old (which actually the new BoxLevel after
-    *    the swap) as the mapped BoxLevel in the output Connectors.
-    * Otherwise:
-    * @li If mutable_new is non-NULL, set it equal to new and use
-    *    it as the mapped BoxLevel in the output Connectors.
-    * @li If mutable_old is non-NULL, set it equal to the old BoxLevel.
-    *
-    * @param[in,out] anchor_to_mapped Connector to be modified.  On input, this
-    *   points to the BoxLevel being mapped.
-    * @param[in,out] mapped_to_anchor Reverse (transpose) of anchor_to_mapped.
-    *   points to the BoxLevel being mapped.
-    * @param[in] old_to_new Mapping from the old BoxLevel to the
-    *   new BoxLevel.
-    *   The width of old-->new should indicate the maximum amount of box
-    *   growth caused by the change.  A value of zero means no growth.
-    * @param[in,out] mutable_new See comments.
-    * @param[in,out] mutable_old See comments.
-    *
-    * @pre (&old_to_new.getBase() == &old_to_new.getBase()) &&
-    *      (&old_to_new.getBase() == &anchor_to_mapped.getHead())
-    * @pre &anchor_to_mapped.getBase() == &mapped_to_anchor.getHead()
-    * @pre anchor_to_mapped.isTransposeOf(mapped_to_anchor)
-    * @pre anchor_to_mapped.getParallelState() == BoxLevel::DISTRIBUTED
-    */
-   void
-   modify(
-      Connector& anchor_to_mapped,
-      Connector& mapped_to_anchor,
-      const MappingConnector& old_to_new,
-      BoxLevel* mutable_new = 0,
-      BoxLevel* mutable_old = 0) const;
-
-   /*!
-    * @brief Version of modify requiring only the forward map
-    * and does not set the Connector from the mapped BoxLevel back
-    * to the anchor BoxLevel.
-    *
-    * This version does not require the reverse mapping,
-    * but the forward mapping must be totally local, e.g.
-    * old_to_new must contain no remote neighbor.
-    *
-    * This version does not update the Connector from
-    * the mapped box_level back to the anchor box_level.
-    * (This is implicit in the fact that mapped_to_anchor
-    * is absent from the interface.)
-    *
-    * @code
-    * Input:
-    *
-    *                                    (anchor)
-    *                                     /
-    *                                    /
-    *                                   /
-    *                                  / <--anchor_to_mapped
-    *                                 v
-    * mapped box_level:           (old) ---------> (new)
-    *
-    *
-    * Output:
-    *
-    *                                    (anchor)
-    *                                          \
-    *                                           \
-    *                                            \
-    *                        anchor_to_mapped --> \
-    *                                              v
-    *                                              (new)
-    *
-    * @endcode
-    *
-    *
-    * If mutable_new points to the old BoxLevel and mutable_old
-    * points to the new, then do an in-place switch as follows:
-    * @li Swap the mutable_old and mutable_new BoxLevels.
-    * @li Use mutable_old (which actually the new BoxLevel after
-    *    the swap) as the mapped BoxLevel in the output Connectors.
-    * Otherwise:
-    * @li If mutable_new is non-NULL, set it equal to new and use
-    *    it as the mapped BoxLevel in the output Connectors.
-    * @li If mutable_old is non-NULL, set it equal to the old BoxLevel.
-    *
-    * @param[in,out] anchor_to_mapped Connector to be modified.  On input, this
-    *   points to the BoxLevel being mapped.
-    * @param[in,out] old_to_new Reverse (transpose) of anchor_to_mapped.
-    *   points to the BoxLevel being mapped.
-    * @param[in,out] mutable_new See comments.
-    * @param[in,out] mutable_old See comments.
-    *
-    * @pre &anchor_to_mapped.getHead() == &old_to_new.getBase()
+    * @pre (!old_to_new.hasTranspose() ||
+    *       (old_to_new.getTranspose().isTransposeOf(old_to_new)))
     * @pre anchor_to_mapped.getParallelState() == BoxLevel::DISTRIBUTED
     */
    void

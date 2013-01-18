@@ -465,9 +465,6 @@ public:
     * @param[in,out] box_level_to_anchor Overlap Connector to
     * be updated with new relationships.
     *
-    * @param[in,out] anchor_to_box_level Overlap Connector to
-    * be updated with new relationships.
-    *
     * @param[in] domain_search_tree Domain description in the
     * reference index space.  This tree must NOT include periodic
     * images.
@@ -475,12 +472,13 @@ public:
     * @param[in] anchor_to_anchor Self overlap Connector for anchor
     * BoxLevel.  Must be a complete overlap Connector with
     * periodic relationships.
+    *
+    * @pre box_level_to_anchor.hasTranspose()
     */
    void
    addPeriodicImagesAndRelationships(
       BoxLevel& box_level,
       Connector& box_level_to_anchor,
-      Connector& anchor_to_box_level,
       const BoxContainer& domain_search_tree,
       const Connector& anchor_to_anchor) const;
 
