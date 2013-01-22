@@ -1836,7 +1836,9 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
          true);
       t_bridge_new_to_finer->stop();
 
+#ifdef DEBUG_CHECK_ASSERTIONS
       hier::Connector& finer_to_new = new_to_finer->getTranspose();
+#endif
 
       TBOX_ASSERT(
          new_to_finer->getConnectorWidth() ==
