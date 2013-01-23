@@ -77,7 +77,7 @@ int main(
    TBOX_ASSERT(d <= SAMRAI::MAX_DIM_VAL);
    const tbox::Dimension dim(d);
 
-   const std::string log_fn = std::string("cell_hieops.")
+   const std::string log_fn = std::string("node_hierops.")
       + tbox::Utilities::intToString(dim.getValue(), 1) + "d.log";
    tbox::PIO::logAllNodes(log_fn);
 
