@@ -138,7 +138,6 @@ BaseGridGeometry::BaseGridGeometry(
       BoxId box_id(local_id++, 0);
       itr->setId(box_id);
    }
-   d_physical_domain = domain;
    d_number_blocks = static_cast<int>(block_numbers.size());
    d_reduced_connect.resizeArray(d_number_blocks, false);
    d_block_neighbors.resizeArray(d_number_blocks);
@@ -173,7 +172,6 @@ BaseGridGeometry::BaseGridGeometry(
       BoxId box_id(local_id++, 0);
       itr->setId(box_id);
    }
-   d_physical_domain = domain;
    d_number_blocks = static_cast<int>(block_numbers.size());
    d_reduced_connect.resizeArray(d_number_blocks, false);
    d_block_neighbors.resizeArray(d_number_blocks);
