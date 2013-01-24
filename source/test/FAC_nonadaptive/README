@@ -29,28 +29,24 @@ RobinBcCoefStrategy class.  The boundary conditions specified
 in the input files are parsed by that the LocationIndexRobinBcCoefs
 class.
  
-COMPILE and RUN
----------------
-Compile:  make main2d main3d
-Run:      main2 2d.default.input
-          main2 2d.otherbc.input
-          main2 2d.const-refine.input
-          main3 3d.default.input
-          main3 3d.otherbc.input
-          main3 3d.const-refine.input
+COMPILATION AND EXECUTION
+-------------------------
+   Compilation:
+      make main
+
+   Execution:
+      serial:
+         ./main default.[2,3]d.input
+      parallel:
+         Parallel execution is platform dependent.  This example demonstrates
+         execution via mpirun.
+         mpirun -np <nprocs> [options] ./main test_inputs/default.[2,3]d.input
  
 
 INPUTS
 ------
 
-   The input files *.default.input have sample default settings.
-   Variations of the boundary conditions in this example are shown
-   in the files *otherbc.input.  (Other ways to vary boundary
-   conditions are to supply different implementations of the
-   RobinBcCoefStrategy strategy class.)  Using constant refinement
-   in the prolongation step is shown in the *.const-refine.input
-   files.  (Constant refinement gives slower convergence but may
-   be more effective with strongly varying diffusion coefficients.)
+   The input files default.*.input have sample default settings.
 
    Main {
       // General specifications.

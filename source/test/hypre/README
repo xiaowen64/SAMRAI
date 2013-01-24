@@ -27,11 +27,18 @@ The files/classes included in this directory are as follows:
                            to interfaces for building grid and
                            plotting.
 
-COMPILE and RUN
----------------
-Compile:  make main2d main3d
-Run:      main2d 2d.default.input
-          main3d 3d.default.input
+COMPILATION AND EXECUTION
+-------------------------
+   Compilation:
+      make main
+
+   Execution:
+      serial:
+         ./main test_inputs/default.[2,3]d.input
+      parallel:
+         Parallel execution is platform dependent.  This example demonstrates
+         execution via mpirun.
+         mpirun -np <nprocs> [options] ./main test_inputs/default.[2,3]d.input
  
 
 INPUTS

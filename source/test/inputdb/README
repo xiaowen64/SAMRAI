@@ -11,14 +11,22 @@
 The inputdb program tests the reading of input files into the input database.
 Several sample input files are available within this directory.  
 
-Compilation:
-             make
+COMPILATION AND EXECUTION
+-------------------------
+   Compilation:
+      make main
 
-Execution:
-             ./inputdb <list of input files separated by spaces>
+   Execution:
+      serial:
+         ./main inputdb.input
+      parallel:
+         Parallel execution is platform dependent.  This example demonstrates
+         execution via mpirun.
+         mpirun -np <nprocs> [options] ./main inputdb.input
 
-Output:
-             Input Database is dumped to stdout.
+OUTPUT
+------
+   Input Database is dumped to inputdb.log.
 
 
 ==============================================================================

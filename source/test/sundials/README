@@ -14,14 +14,27 @@ SAMRAI.  The files included in this directory are as follows:
           main.C               -  example main program
           CVODEModel.[Ch]      -  example user routines that supply interface
                                   methods to CVODE operations in the library 
-          cvode-[2d,3d].input  -  2d and 3d input files
+          cvode-dir.[2d,3d].input  -  2d and 3d Dirichlet input files
+          cvode-neu.[2d,3d].input  -  2d and 3d Neumann input files
  
-COMPILE and RUN
----------------
-Compile:  make     
-Run:      main2d sundials-2d-[dir,neu].input                        
+COMPILATION AND EXECUTION
+-------------------------
+   Compilation:
+      make main
 
-"dir" indicates dirichlet BCs, while "neu" indicates neumann BCs.
+   Execution:
+      For one of the following input files:
+         "dir" indicates Dirichlet BCs, while "neu" indicates Neumann BCs.
+         test_inputs/cvode_dir.2d.input
+         test_inputs/cvode_neu.2d.input
+         test_inputs/cvode_dir.3d.input
+         test_inputs/cvode_neu.3d.input
+      serial:
+         ./main <input file>
+      parallel:
+         Parallel execution is platform dependent.  This example demonstrates
+         execution via mpirun.
+         mpirun -np <nprocs> [options] ./main <input file>
  
 
 INPUTS:

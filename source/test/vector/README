@@ -14,20 +14,23 @@ interface and the SAMRAI-Kinsol vector interface.  Each of these test programs
 creates a 2 level patch hierarchy with 2 patches on each level and may only 
 be run on 1 or 2 processors.
 
+COMPILATION AND EXECUTION
+-------------------------
+   Compilation:
+      pvtest - make pvtest
+      kvtest - make kvtest
 
-Compilation:
-              pvtest - make pvtest
-              kvtest - make kvtest
+   Execution:
+      serial:
+         pvtest - ./pvtest
+         kvtest - ./kvtest
+      parallel:
+         Parallel execution is platform dependent.  These examples demonstrate
+         execution via mpirun.
+         pvtest - mpirun -np <nprocs> [options] ./pvtest
+         kvtest - mpirun -np <nprocs> [options] ./kvtest
 
-Execution:
-   serial -
-              pvtest - ./pvtest
-              kvtest - ./kvtest
-
-   parallel -
-              pvtest - mpirun -np <procs> pvtest
-              kvtest - mpirun -np <procs> kvtest
-
-Output:
-              pvtest - pvtest.log.*
-              kvtest - kvtest.log.*
+OUTPUT
+------
+   pvtest - pvtest.log.*
+   kvtest - kvtest.log.*

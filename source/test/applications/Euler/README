@@ -50,11 +50,22 @@ AutoTester {
    output_correct = FALSE
 }
 
-A 2D and a 3D test input file are included with Euler:
-   test-2d.input - contains input and "correct" output data for 2D
-                   test of Euler
-   test-3d.input - same, but for 3D test. 
+COMPILATION AND EXECUTION
+-------------------------
+   Compilation:
+      make main
 
+   Execution:
+      A 2D and a 3D test input file are included with Euler:
+         test.2d.input - contains input and "correct" output data for 2D
+                         test of Euler
+         test.3d.input - same, but for 3D test. 
+      serial:
+         ./main teat test_inputs/test.[2,3]d.input
+      parallel:
+         Parallel execution is platform dependent.  This example demonstrates
+         execution via mpirun.
+         mpirun -np <nprocs> [options] ./main test_inputs/test.[2,3]d.input
 
 RESETTING BASELINES
 

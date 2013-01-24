@@ -13,24 +13,30 @@ SAMRAI application.  This example is for 2D and 3D only.
 
 The files included in this directory are as follows:
  
-	  ModifiedBratuProblem.h, ModifiedBratuProblem.C
+          ModifiedBratuProblem.h, ModifiedBratuProblem.C
                         -  Class to set up and solve the modified Bratu
                            problem..
-	  ModifiedBratuFort.h
-			-  Declarations of FORTRAN functions for
-			   the modified Bratu problem.
+          ModifiedBratuFort.h
+                        -  Declarations of FORTRAN functions for
+                           the modified Bratu problem.
           main.C        -  example main program.
  
-COMPILE and RUN
----------------
+COMPILATION AND EXECUTION
+-------------------------
 
-Compile:  make main2d
-Run:      main2d 2d.kinsol.input
-          main2d 2d.petsc.input
- 
-Compile:  make main3d
-Run:      main3d 3d.kinsol.input
-          main3d 3d.petsc.input
+   Compilation:
+      make main
+
+   Execution:
+      For one of the following input files:
+         test_inputs/kinsol.2d.input
+         test_inputs/petsc.2d.input
+      serial:
+         ./main <input file>
+      parallel:
+         Parallel execution is platform dependent.  This example demonstrates
+         execution via mpirun.
+         mpirun -np <nprocs> [options] ./main <input file>
  
 
 INPUTS
@@ -38,7 +44,7 @@ INPUTS
 
    Main {
       // General specifications.
-      base_name = "default"	// The base file name for output files.
+      base_name = "default"     // The base file name for output files.
       nonlinear_solver_package = "KINSOL" // Name of the nonlinear
          // solver package.  Can be "KINSOL" or "PETSc-SNES"
    }

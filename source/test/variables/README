@@ -17,15 +17,20 @@ code near the end of main-var_db.C that are errors in the usage of
 the VariableDatabase.  These are removed by the preprocessor in the
 distribution version of the code.
 
+COMPILATION AND EXECUTION
+-------------------------
+   Compilation:
+      make main
 
-Compilation:
-              make
-  or  
-              make vdbtest
+   Execution:
+      serial:
+         ./main
+      parallel:
+         Parallel execution is platform dependent.  This example demonstrates
+         execution via mpirun.
+         mpirun -np <nprocs> [options] ./main
 
-Execution:
-              ./vdbtest
-
-Output:
-              main-var_db.log
+OUTPUT
+------
+   vdbtest.log.*
 

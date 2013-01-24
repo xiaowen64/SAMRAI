@@ -11,22 +11,31 @@
 Test problems for FAC solver
 ============================
 
-To generate the 2D and 3D sources, use the genfiles.sh script.
-This script should be run in the SAMRAI/source/test/FAC directory
-or one of the dimensional subdirectories.
+COMPILATION AND EXECUTION
+-------------------------
+   Compilation:
+      make main
 
-To regenerate the source while in the object directory of this
-test, use "make src".
-
-To run:
-======
-
-Compilation:
-              make
-
-Execution:
-              make check
-  or  
-              make check2d
-  or  
-              make check2d
+   Execution:
+      For one of the following input files:
+         test_inputs/allneumann.2d.input
+         test_inputs/allneumann.3d.input
+         test_inputs/complex.2d.input
+         test_inputs/default.2d.input
+         test_inputs/default.3d.input
+         test_inputs/gauss.2d.input
+         test_inputs/gauss.3d.input
+         test_inputs/periodic.2d.input
+         test_inputs/periodic.3d.input
+         test_inputs/ring_gauss.2d.input
+         test_inputs/simple.2d.input
+         test_inputs/simple_gauss.2d.input
+         test_inputs/simple_gauss.3d.input
+         test_inputs/varcoef.2d.input
+         test_inputs/varcoef.3d.input
+      serial:
+         ./main <input_file>
+      parallel:
+         Parallel execution is platform dependent.  This example demonstrates
+         execution via mpirun.
+         mpirun -np <nprocs> [options] ./main <input file>

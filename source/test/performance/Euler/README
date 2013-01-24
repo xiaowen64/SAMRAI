@@ -17,7 +17,7 @@ are as follows:
                          Euler example and which are called 
                          from SAMRAI AMR library routines
           EulerFort.h -  header file defining external fortran routines
-          fortran/2d,3d - Fortran numerical routines for 2d,3d problems, resp.
+          fortran     - Fortran numerical routines for 2d and 3d problems
 
 To understand the construction of this application code from pieces 
 specific to the Euler model and more generic pieces in the SAMRAI
@@ -25,67 +25,64 @@ library consider the object construction pattern in the main.C file.
 For more details on these files and the Euler class consult the comments
 in those files and the Euler.h class header file.
 
-COMPILE and RUN
----------------
-Compile:  make <prog name>   where <prog name> = "main2d" for 2D case
-                                               = "main3d" for 3D case  
+COMPILATION AND EXECUTION
+-------------------------
+   Compilation:
+      make main
 
-Run: 
+   Execution:
+      For one of the following input files:
+         sample_inputs/box-3d.input
+         sample_inputs/room-2d.input
+         sample_inputs/room-3d.input
+         sample_inputs/sphere-2d-re.input
+         sample_inputs/step-2d-5levels.input
+         sample_inputs/step-2d.input
+      serial:
+         ./main <input file>
+      parallel:
+         Parallel execution is platform dependent.  This example demonstrates
+         execution via mpirun.
+         mpirun -np <nprocs> [options] ./main <input file>
 
-   main2d <input file>                     ... Serial run   (w/o  MPI)
-   mpirun -np <nprocs> main2d <input file> ... Parallel run (with MPI)
+      Restarted Run:
 
-      NOTE: <input file> is the FULL-PATH of the input file
+         same format as regular run but add <restart dir> <restore num>
+         to end of command.
+            <restart dir> is directory where restart files are stored
+                          (set in input file).
+            <restore num> is the identifier of which restart file to use
+                          (generally the timestep).
 
-   There are sample input files in the subdirectory sample_input.
+         example:  (to start from timestep #5)
 
-   example:
-      main2d sample_input/room-2d.input
-      mpirun -np 2 main2d sample_input/room-2d.input
+           ./main sample_inputs/room-2d.input restart_room-2d 5
+           mpirun -np 2 ./main [options] sample_inputs/room-2d.input restart_room-2d 5
 
-Restarted Run:
-
-      same format as regular run but add <restart dir> <restore num>
-      to end of command.
-         <restart dir> is directory where restart files are stored
-                       (set in input file).
-         <restore num> is the identifier of which restart file to use
-                       (generally the timestep).
-     
-      example:  (to start from timestep #5)
-        
-        main2d sample_input/room-2d.input restart_room-2d 5
-        mpirun -np 2 main2d sample_input/room-2d.input restart_room-2d 5
-
-      NOTE:  The ordinary use of our restart functionality requires that
-             a problem can only be restarted on on the same number of
-             processors on which the problem was originally run.  To restart
-             on a different number of processors, use the
-             restart-redistribute tool in SAMRAI/tools/restart.
+         NOTE:  The ordinary use of our restart functionality requires that
+                a problem can only be restarted on on the same number of
+                processors on which the problem was originally run.  To restart
+                on a different number of processors, use the
+                restart-redistribute tool in SAMRAI/tools/restart.
 
 
 INPUT FILES:
 ------------
 
-      sphere-2d-re.input  - exploding 2D sphere, uses Richardson extrapolation.
-      step-2d.input - supersonic flow over a step
-      step-2d-5levels.input - supersonic flow over a step
+   Six example input files are included with the Euler application:
 
-
-   Three example input files are included with the Euler application:
-
-      sample_input/box-3d.input  ... exploding 3D sphere with large initial
+      sample_inputs/box-3d.input  ... exploding 3D sphere with large initial
                                      pressure differences inside a cube. 
-      sample_input/room-2d.input ... exploding 2D sphere with large pressure
+      sample_inputs/room-2d.input ... exploding 2D sphere with large pressure
                                      differences at time zero, in a room with 
                                      fixed boundaries. Room denoted with set of    
                                      boxes to define the computational region.
-      sample_input/room-3d.input ... 3d version of above.
-      sample_input/
+      sample_inputs/room-3d.input ... 3d version of above.
+      sample_inputs/
               sphere-2d-re.input ... exploding 2D sphere, using Richardson 
                                      extrapolation.
-      sample_input/step-2d.input ... 2d supersonic flow over a step.
-      sample_input/
+      sample_inputs/step-2d.input ... 2d supersonic flow over a step.
+      sample_inputs/
            step-2d-5levels.input ... as above but with 5 levels.
 
    The Euler application code is composed of various classes that implement
@@ -153,7 +150,7 @@ INPUT FILES:
       // viz_dump_dirname  -- (char string) directory where viz files are 
       //                      writen (may include a path).  VisIt requires a
       //                      non-empty string.  Vizamrai permits an empty string,
-      //                      in which case dumps go to directory where main2d/3d
+      //                      in which case dumps go to directory where main
       //                      exists. If both data writers are used, directory name
       //                      must be nonempty, and main.C will append _VisIt,
       //                       _Vizamrai to dirname.
@@ -171,7 +168,7 @@ INPUT FILES:
       viz_dump_dirname      = "viz_room-2d"
       viz_dump_filename     = "room-2d"
       //                       would result in the following dump structure:
-      //                         main2d
+      //                         main
       //                         viz_room-2d_VisIt/
       //                           visit_dump.00000/
       //                           visit_dump.00001/

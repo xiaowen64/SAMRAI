@@ -10,3 +10,22 @@ We don't test all steps in mesh generation or remeshing here, just the
 most expensive steps.  These steps have the same characteristics
 whether generating the mesh or remeshing, so we omit remesh-specific
 steps.
+ 
+COMPILATION AND EXECUTION
+-------------------------
+
+   Compilation:
+      make main
+
+   Execution:
+      For one the following input files:
+         test_inputs/small_sphere.2d.treelb.input
+         test_inputs/small_front.2d.treelb.input
+         test_inputs/small_sphere.3d.treelb.input
+         test_inputs/small_front.3d.treelb.input
+      serial:
+         ./main <input file>
+      parallel:
+         Parallel execution is platform dependent.  This example demonstrates
+         execution via mpirun.
+         mpirun -np <nprocs> [options] ./main <input file>

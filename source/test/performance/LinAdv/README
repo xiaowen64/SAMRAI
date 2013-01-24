@@ -25,28 +25,21 @@ library consider the object construction pattern in the main.C file.
 For more details on these files and the LinAdv class consult the comments
 in those files and the LinAdv.h class header file.
 
-COMPILE and RUN
----------------
-Compile:  make <prog name>   where <prog name> = "main2d" for 2D case
-                                               = "main3d" for 3D case  
+COMPILATION AND EXECUTION
+-------------------------
+   Compilation:
+      make main
 
-Run: 
-
-   main2d <input file>                     ... Serial run   (w/o  MPI)
-   mpirun -np <nprocs> main2d <input file> ... Parallel run (with MPI)
-
-      NOTE: <input file> is the FULL-PATH of the input file
-
-   There are sample input files in the subdirectory sample_input.
-      sphere-2d.input - advecting sphere with periodic boundaries
-      sphere-2d-per-4levels.input - same as above but with 4 levels
-      sphere-2d-re.input - advecting sphere using Richardson extrapolation
-      sine-front-2d.input - advecting sphere with sinusoidal front
-      sphere-3d.input - advecting sphere with periodic boundaries
-
-   example:
-      main2d sample_input/sphere-2d.input
-      mpirun -np 2 main2d sample_input/sphere-2d.input
+   Execution:
+      For one the following input files:
+         performance_inputs/domainexpansion.input
+         performance_inputs/domainexpansionb.input
+      serial:
+         ./main   <input file>
+      parallel:
+         Parallel execution is platform dependent.  This example demonstrates
+         execution via mpirun.
+         mpirun -np <nprocs> [options] ./main <input file>
 
 Restarted Run:
 
@@ -56,11 +49,11 @@ Restarted Run:
                        (set in input file).
          <restore num> is the identifier of which restart file to use
                        (generally the timestep).
-     
+
       example:  (to start from timestep #5)
-        
-        main2d sample_input/sphere-2d.input restart_sphere2d 5
-        mpirun -np 2 main2d sample_input/sphere-2d.input restart_sphere2d 5
+
+        ./main sample_inputs/sphere-2d.input restart_sphere2d 5
+        mpirun -np 2 ./main [options] sample_inputs/sphere-2d.input restart_sphere2d 5
 
       NOTE:  The ordinary use of our restart functionality requires that
              a problem can only be restarted on on the same number of
@@ -71,17 +64,21 @@ Restarted Run:
 INPUT FILES:
 ------------
 
-   Two example input files are included with the LinAdv application:
+   Five example input files are included with the LinAdv application:
 
-      sample_input/sphere-2d.input ... 2d sphere with large uval
-				       differences at time zero - simulates
-                                       advection of "blob" of fluid in 2D.  
-      sample_input/sphere-2d-re.input ... same as above case but with
-				       Richardson extrapolation applied to 
-                                       resolve solution errors.     
-      sample_input/sphere-3d.input ... 3d sphere with large uval 
-				       differences at time zero - simulates
-                                       advection of "blob" of fluid in 3D.  
+      sample_inputs/sphere-2d.input ... 2d sphere with large uval
+                                        differences at time zero - simulates
+                                        advection of "blob" of fluid in 2D.
+      sample_inputs/sphere-2d-per-4levels.input ... same as above case but with
+                                        4 levels
+      sample_inputs/sphere-2d-re.input ... same as above case but with
+                                           Richardson extrapolation applied to 
+                                           resolve solution errors.
+      sample_inputs/sine-front-2d.input ... advecting sphere with sinnusoidal
+                                        front
+      sample_inputs/sphere-3d.input ... 3d sphere with large uval
+                                        differences at time zero - simulates
+                                        advection of "blob" of fluid in 3D.
 
 
    The LinAdv application code is composed of various classes that implement
@@ -144,7 +141,7 @@ INPUT FILES:
       // viz_dump_dirname  -- (char string) directory where viz files are 
       //                      writen (may include a path).  VisIt requires a
       //                      non-empty string.  Vizamrai permits an empty string,
-      //                      in which case dumps go to directory where main2d/3d
+      //                      in which case dumps go to directory where main
       //                      exists. If both data writers are used, directory name
       //                      must be nonempty, and main.C will append _VisIt,
       //                       _Vizamrai to dirname.
@@ -161,7 +158,7 @@ INPUT FILES:
       viz_dump_dirname      = "viz_sphere-2d"
       viz_dump_filename     = "sphere-2d"
       //                       would result in the following dump structure:
-      //                         main2d
+      //                         main
       //                         viz_sphere-2d_VisIt/
       //                           visit_dump.00000/
       //                           visit_dump.00001/

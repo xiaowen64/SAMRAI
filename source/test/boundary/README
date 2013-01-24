@@ -14,21 +14,43 @@ The files included in this directory are as follows:
  
           main.C                      -  example main program
           BoundaryDataTester.[Ch]     -  example user routines for boundary data
-          sample_input/*.input        -  various 2d and 3d input files
+          test_inputs/*.input         -  various 2d and 3d input files
  
-COMPILE and RUN
----------------
-Compile:  make main*d  to build the *d version of the example
-Run:      main*d sample_input/*.input
+COMPILATION AND EXECUTION
+-------------------------
+   Compilation:
+      make main
+   Execution:
+      For one of the following input files:
+         test_inputs/dirichlet.2d.input
+         test_inputs/dirichlet.3d.input
+         test_inputs/flow.2d.input
+         test_inputs/flow.3d.input
+         test_inputs/neumann.2d.input
+         test_inputs/neumann.3d.input
+         test_inputs/periodic010.3d.input
+         test_inputs/periodic011.3d.input
+         test_inputs/periodic01.2d.input
+         test_inputs/periodic111.3d.input
+         test_inputs/periodic11.2d.input
+         test_inputs/reflect.2d.input
+         test_inputs/reflect.3d.input
+      serial:
+         ./main <input file>
+      parallel:
+         Parallel execution is platform dependent.  This example demonstrates
+         execution via mpirun.
+         mpirun -np <nprocs> [options] ./main <input file>
 
-Results will be reported in a log file whose name corresponds to the 
-given input file; i.e., main*d sample_input/*.input produces a log
-file named *.log.
- 
+
+Results will be reported in a log file whose name is related to the 
+given input file; i.e., ./main test_inputs/dirichlet.2d.input produces a log
+file named basic2d-dirichlet.log.
+
 
 INPUTS:
 ------------
-  
+
 Each input file contains 3 sections used to describe the test and to
 initialize the various object involved inthe test.
 
@@ -43,20 +65,20 @@ Main {
 
 The "CartesianGridGeometry" section describes the physical coordinates
 of the domain and the periodic directions (if any).  For example in 2d 
-this might look like: 
- 
+this might look like:
+
 CartesianGridGeometry {
    domain_boxes = [ (0,0) , (7,3) ]
    x_lo         = 0.e0 , 0.e0   // lower end of computational domain.
-   x_up         = 1.e0 , 0.5e0   // upper end of computational domain.
+   x_up         = 1.e0 , 0.5e0  // upper end of computational domain.
    periodic_dimension = 0, 0
 }
 
 The "BoundaryDataTester" section describes the variables and their
 attributes in the test problem.  Applicable boundary information is
-described in a subdatabase called "Boundary_data".  For example in 2d  
+described in a subdatabase called "Boundary_data".  For example in 2d
 this might look like:
- 
+
 BoundaryDataTester {
 
    //
@@ -71,14 +93,14 @@ BoundaryDataTester {
    //    Optional input:  depth              (default = 1)
    //                     num_ghosts         (default = 1,1)
    //
- 
+
    variable_1 {
       name            = "var1"
       depth           = 1
       num_ghosts      = 2 , 2
       interior_values = 1.0
    }
- 
+
    variable_2 {
       name            = "var2"
       depth           = 2
@@ -104,14 +126,14 @@ BoundaryDataTester {
    // which edge is used.
    //
    // Boundary data must be given for each edge and node in a non-periodic
-   // direction.  Any input values given for periodic directions will be ignored.
+   // direction.  Any input values given for periodic directions will be
+   // ignored.
    //
    //
    Boundary_data {
 
-      // see the various sample input files for more details....
+      // see the various test input files for more details....
 
    }
 
 }
-

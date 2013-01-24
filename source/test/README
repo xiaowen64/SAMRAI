@@ -30,6 +30,8 @@ applications:
    doing a "diff" on the output data file with these
    correct result files.
 
+   Requires the testlib be built.
+
 async_comm:
 
 boundary:
@@ -40,6 +42,7 @@ boundary:
    All test source code is contained in the SAMRAI/examples/boundary directory.
 
 clustering:
+   Requires the testlib be built.
 
 communication:
    Performs a set of tests that invoke data transfer operations
@@ -50,6 +53,8 @@ communication:
    configuration and number of processors may be set through the 
    input file.  
 
+   Requires the testlib be built.
+
 dataaccess:
 
 dataops:
@@ -58,74 +63,108 @@ dataops:
    operations.  The operations set data on patches and 
    test operations like linear_sum(), dot_product(), 
    axmy(), etc. on the hierarchy.  The grid hierarchy is
-   fixed so it must be run on 1 or 2 processors.
-   of processors.
+   fixed.
+
+dimension:
 
 dlbg:
+   Requires the testlib be built.
 
-emb_bdry:
+FAC_adaptive:
 
-FAC:
+FAC_nonadaptive:
 
-HDF5:
-   A set of tests to check the correctness of the routines to read from and 
-   write to an HDF5 file in the tbox::HDFDatabase class (used for writing and
-   reading SAMRAI restart files).
-
-   All test source code is contained in the SAMRAI/source/test/HDF5 directory.
+fill_pattern:
 
 hierarchy:
    A set of tests to check the correctness of the PatchHierarchy operations
    to make coarsened and refined versions of a given AMR patch hierarchy.
 
-   All test source code is contained in the SAMRAI/source/test/hierarchy directory.
+   All test source code is contained in the SAMRAI/source/test/hierarchy
+   directory.
 
 hypre:
 
 ieee:
 
+indexdata:
+
 inputdb:
    A set of tests to check the correctness of the routines to read data
    from SAMRAI inut files defined in the tbox:InputDatabase class.
 
-   All test source code is contained in the SAMRAI/source/test/inputdb directory.
+   All test source code is contained in the SAMRAI/source/test/inputdb
+   directory.
 
-locally_active:
-   A set of tests to check coarsening and refinement communication operations for
-   locally-active data defined on a SAMRAI patch hierarchy.
+LoadBalanceCorrectness:
+   Requires the testlib be built.
 
-   All test source code is contained in the SAMRAI/source/test/locally_active directory.
+logger:
+
+MappedBoxLevelConnectorUtilsTests:
+
+mapped_box_set_iterators:
+
+MappingConnector:
 
 mblkcomm:
+
+MblkEuler:
+   Requires the testlib be built.
+
+MblkLinAdv:
+   Requires the testlib be built.
+
+mblktree:
 
 nonlinear:
 
 patchbdrysum:
-   A set of tests to check operations for summing node and edge data across shared points
-   on the boundaries of patches in a SAMRAI patch hierarchy. 
+   A set of tests to check operations for summing node and edge data across
+   shared points on the boundaries of patches in a SAMRAI patch hierarchy. 
 
-   All test source code is contained in the SAMRAI/examples/patchbdrysum directory.
+   All test source code is contained in the SAMRAI/examples/patchbdrysum
+   directory.
+
+performance:
+   Requires the testlib be built.
 
 pointer:
    A set of tests to basic operation of SAMRAI smart pointers.
 
-   All test source code is contained in the SAMRAI/source/test/pointer directory.
+   All test source code is contained in the SAMRAI/source/test/pointer
+   directory.
+
+rank_group:
+
+restartdb:
+
+samrai_mpi:
+
+sparsedata:
 
 sundials:
 
-schedules:
+testlib:
+   Not a test itself but a collection of classes and methods common to multiple
+   tests.  There are no associated tests.
+
+testtools:
 
 timers:
    Tests use of timers, verifying nested structure, input,
    parallel usage, and restart capability.
 
-variables:
-   A set of tests to check operations provided by the SAMRAI VariableDatabase class.
+transformation:
 
-   All test source code is contained in the SAMRAI/source/test/variables directory.
+variables:
+   A set of tests to check operations provided by the SAMRAI VariableDatabase
+   class.
+
+   All test source code is contained in the SAMRAI/source/test/variables
+   directory.
 
 vector:
    Tests the SAMRAI vector classes. In particular, the SAMRAI-PETSc
    and SAMRAI-Kinsol vector interfaces.  Tests use a specific
    grid hierarchy layout and can only be tested on 1 or 2 processors.
-

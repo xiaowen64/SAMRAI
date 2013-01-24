@@ -11,16 +11,29 @@
 This program tests the methods provided by the HDF5Database and
 RestartManager classes.
 
-Compilation:
-              make
-  or  
-              make testHDF5
+COMPILATION AND EXECUTION
+-------------------------
+   Compilation:
+      make checkcompile
 
-Execution:
-              ./testHDF5
+   Execution:
+      serial:
+         ./testHDF5
+         ./testHDF5AppFileOpen
+         ./testSilo
+         ./testSiloAppFileOpen
+         ./testMemory
+      parallel:
+         Parallel execution is platform dependent.  These examples demonstrate
+         execution via mpirun.
+         mpirun -np <nprocs> [options] ./testHDF5
+         mpirun -np <nprocs> [options] ./testHDF5AppFileOpen
+         mpirun -np <nprocs> [options] ./testSilo
+         mpirun -np <nprocs> [options] ./testSiloAppFileOpen
+         mpirun -np <nprocs> [options] ./testMemory
 
-Output:
-              HDF5test.log
-
--OR- make check
-
+OUTPUT
+------
+   HDF5test.log
+   Silotest.log
+   Memorytest.log

@@ -24,46 +24,42 @@ library consider the object construction pattern in the main.C file.
 For more details on these files and the Euler class consult the comments
 in those files and the ConvDiff.h class header file.
 
-COMPILE and RUN
----------------
-Compile:  make <prog name>   where <prog name> = "main2d" for 2D case
-                                               = "main3d" for 3D case  
+COMPILATION AND EXECUTION
+-------------------------
+   Compilation:
+      make main
 
-Run: 
+   Run:
+      serial:
+         ./main test_inputs/test.[2,3]d.input
+      parallel:
+         Parallel execution is platform dependent.  This example demonstrates
+         execution via mpirun.
+         mpirun -np <nprocs> [options] main test_inputs/test.[2,3]d.input
 
-   main2d <input file>                     ... Serial run   (w/o  MPI)
-   mpirun -np <nprocs> main2d <input file> ... Parallel run (with MPI)
+      Restarted Run:
+         same format as regular run but add <restart dir> <restore num>
+         to end of command.
+            <restart dir> is directory where restart files are stored
+                          (set in input file).
+            <restore num> is the identifier of which restart file to use
+                          (generally the timestep).
 
-      NOTE: <input file> is the FULL-PATH of the input file
+         example:  (to start from timestep #5)
 
-   There are sample input files in the subdirectory sample_input.
-      sphere-2d.input - advecting sphere in a box with fixed boundaries
-      sphere-3d.input - advecting sphere in a cube with fixed boundaries
-      heated-flr-2d.input  - mimics a heated floor, demonstrating diffusion. 
+         /main test_inputs/test.2d.input test.2d.restart 5
+         mpirun -np 2 ./main test_inputs/test.2d.input test.2d.restart 5
 
-   example:
-      main2d sample_input/sphere-2d.input
-      mpirun -np 2 main2d sample_input/sphere-2d.input
+         NOTE:  The ordinary use of our restart functionality requires that
+                a problem can only be restarted on on the same number of
+                processors on which the problem was originally run.  To restart
+                on a different number of processors, used the
+                restart-redistribute tool in SAMRAI/tools/restart.
 
-Restarted Run:
-
-      same format as regular run but add <restart dir> <restore num>
-      to end of command.
-         <restart dir> is directory where restart files are stored
-                       (set in input file).
-         <restore num> is the identifier of which restart file to use
-                       (generally the timestep).
-     
-      example:  (to start from timestep #5)
-        
-        main2d sample_input/sphere-2d.input restart_sphere-2d 5
-        mpirun -np 2 main2d sample_input/sphere-2d.input restart_sphere-2d 5
-
-      NOTE:  The ordinary use of our restart functionality requires that
-             a problem can only be restarted on on the same number of
-             processors on which the problem was originally run.  To restart
-             on a different number of processors, used the
-             restart-redistribute tool in SAMRAI/tools/restart.
+   There are also example input files in the subdirectory example_inputs.
+      sphere.2d.input - advecting sphere in a box with fixed boundaries
+      sphere.3d.input - advecting sphere in a cube with fixed boundaries
+      heated_floor.2d.input  - mimics a heated floor, demonstrating diffusion. 
 
 
 CONSTRUCTION:
