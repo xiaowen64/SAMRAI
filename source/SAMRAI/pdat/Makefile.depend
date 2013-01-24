@@ -805,6 +805,7 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
@@ -1760,6 +1761,7 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeIndex.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
@@ -2702,6 +2704,7 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceIndex.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/FaceIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
@@ -4067,6 +4070,7 @@ DEPENDS_65:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIndex.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
@@ -7041,6 +7045,7 @@ DEPENDS_108:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideIndex.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/SideIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
