@@ -2467,7 +2467,7 @@ void MblkEuler::tagGradientDetectorCells(
          if (d_mblk_geometry->getRefineBoxes(refine_boxes,
                 patch.getBox().getBlockId().getBlockValue(),
                 level_number)) {
-            for (hier::BoxContainer::iterator b(refine_boxes);
+            for (hier::BoxContainer::iterator b = refine_boxes.begin();
                  b != refine_boxes.end(); ++b) {
                hier::Box intersect = pbox * (*b);
                if (!intersect.empty()) {
@@ -2544,7 +2544,7 @@ void MblkEuler::setMappedGridOnPatch(
    //
    d_dom_current_nboxes = domain_boxes.size();
 
-   hier::BoxContainer::iterator itr(domain_boxes);
+   hier::BoxContainer::iterator itr = domain_boxes.begin();
    d_dom_current_bounds[0] = itr->lower(0);
    d_dom_current_bounds[1] = itr->lower(1);
    d_dom_current_bounds[2] = itr->lower(2);

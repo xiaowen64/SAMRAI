@@ -1303,7 +1303,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
                   dst_to_coarse_interp->makeEmptyLocalNeighborhood(dst_box_id);
                has_base_box = true;
             }
-            for (hier::BoxContainer::iterator b(sheared_coarse_interp_boxes);
+            for (hier::BoxContainer::iterator b = sheared_coarse_interp_boxes.begin();
                  b != sheared_coarse_interp_boxes.end(); ++b) {
                const hier::Box& coarse_interp_level_box =
                   *coarse_interp_box_level->addBox(*b, ni->getBlockId());
@@ -2017,7 +2017,7 @@ RefineSchedule::fillSingularityBoundaries(
 
             const hier::BoxContainer& sing_boxes =
                grid_geometry->getSingularityBoxContainer(block_id);
-            for (hier::BoxContainer::const_iterator sb(sing_boxes);
+            for (hier::BoxContainer::const_iterator sb = sing_boxes.begin();
                  sb != sing_boxes.end(); ++sb) {
 
                hier::Box singularity(*sb);
@@ -2629,7 +2629,7 @@ RefineSchedule::generateCommunicationSchedule(
             dst_box.getBlockId());
          fixed_unfilled_boxes.intersectBoxes(dst_block_domain);
 
-         for (hier::BoxContainer::iterator bi(unfilled_boxes_for_dst);
+         for (hier::BoxContainer::iterator bi = unfilled_boxes_for_dst.begin();
               bi != unfilled_boxes_for_dst.end(); ++bi) {
 
             const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
@@ -2661,7 +2661,7 @@ RefineSchedule::generateCommunicationSchedule(
       if (!unfilled_boxes_for_dst.isEmpty()) {
          hier::Connector::NeighborhoodIterator base_box_itr =
             dst_to_unfilled->makeEmptyLocalNeighborhood(dst_box_id);
-         for (hier::BoxContainer::iterator bi(unfilled_boxes_for_dst);
+         for (hier::BoxContainer::iterator bi = unfilled_boxes_for_dst.begin();
               bi != unfilled_boxes_for_dst.end(); ++bi) {
 
             hier::Box unfilled_box(*bi,
@@ -2864,7 +2864,7 @@ RefineSchedule::findEnconUnfilledBoxes(
                hier::Connector::NeighborhoodIterator base_box_itr =
                   encon_to_unfilled_encon->makeEmptyLocalNeighborhood(
                      encon_box_id);
-               for (hier::BoxContainer::const_iterator bi(unfilled_boxes);
+               for (hier::BoxContainer::const_iterator bi = unfilled_boxes.begin();
                     bi != unfilled_boxes.end(); ++bi) {
 
                   hier::Box unfilled_box(*bi);
@@ -3242,7 +3242,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                            hier::Connector::NeighborhoodIterator base_box_itr =
                               d_dst_to_encon->makeEmptyLocalNeighborhood(
                                  box_id);
-                           for (hier::BoxContainer::iterator bi(encon_test_list);
+                           for (hier::BoxContainer::iterator bi = encon_test_list.begin();
                                 bi != encon_test_list.end(); ++bi) {
                               hier::Box encon_box(*bi);
 
@@ -3876,7 +3876,7 @@ RefineSchedule::constructScheduleTransactions(
             transaction_dst_box.setBlockId(src_box.getBlockId());
          } else {
             int max_nbr_size = 0;
-            for (hier::BoxContainer::iterator en(encon_nbr_choices);
+            for (hier::BoxContainer::iterator en = encon_nbr_choices.begin();
                  en != encon_nbr_choices.end(); ++en) {
                const int box_size = en->size();
                if (box_size > max_nbr_size) {
@@ -3913,7 +3913,7 @@ RefineSchedule::constructScheduleTransactions(
 
       const hier::IntVector& dst_gcw = dst_pdf->getGhostCellWidth();
 
-      hier::BoxContainer::iterator box_itr(d_src_masks);
+      hier::BoxContainer::iterator box_itr = d_src_masks.begin();
       int box_num = 0;
       for (hier::BoxNeighborhoodCollection::ConstNeighborIterator bi = nbrs_begin;
            bi != nbrs_end; ++bi) {
@@ -4046,7 +4046,7 @@ RefineSchedule::constructScheduleTransactions(
              * Iterate over the fill boxes and create transactions
              * for each box that has a non-empty overlap.
              */
-            hier::BoxContainer::iterator itr(d_src_masks);
+            hier::BoxContainer::iterator itr = d_src_masks.begin();
             for (int i = 0; i < box_num; i++, ++itr) {
 
                /*

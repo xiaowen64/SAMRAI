@@ -3290,7 +3290,7 @@ VisItDataWriter::writeSummaryToHDFFile(
          }
 
          pn = 0;
-         for (hier::BoxContainer::const_iterator itr(boxes);
+         for (hier::BoxContainer::const_iterator itr = boxes.begin();
               itr != boxes.end(); ++itr, ++pn) {
             int global_patch_id = getGlobalPatchNumber(hierarchy, ln, pn);
             const hier::Box& box = *itr;
@@ -3728,8 +3728,7 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
                   delete[] temp;
                }
 
-               for (hier::BoxContainer::iterator
-                    ob_itr = overlap_boxes.begin();
+               for (hier::BoxContainer::iterator ob_itr = overlap_boxes.begin();
                     ob_itr != overlap_boxes.end(); ++ob_itr) { 
                   child_parent[child_parent_idx].child =
                      getGlobalPatchNumber(hierarchy, ln + 1,

@@ -288,7 +288,7 @@ CellData<TYPE>::copyWithRotation(
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
 
-   for (hier::BoxContainer::const_iterator bi(overlap_boxes);
+   for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
         bi != overlap_boxes.end(); ++bi) {
       const hier::Box& overlap_box = *bi;
 
@@ -431,7 +431,7 @@ CellData<TYPE>::packWithRotation(
    tbox::Array<TYPE> buffer(size);
 
    int i = 0;
-   for (hier::BoxContainer::const_iterator bi(overlap_boxes);
+   for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
         bi != overlap_boxes.end(); ++bi) {
       const hier::Box& overlap_box = *bi;
 

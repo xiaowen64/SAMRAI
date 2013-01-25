@@ -106,20 +106,6 @@ public:
    public:
 
       /*!
-       * @brief Constructor for the BoxContainerConstIterator.
-       *
-       * The iterator will point to the beginning or the end of the argument
-       * container, depending on the from_start argument
-       *
-       * @param[in] container The container whose members are iterated.
-       * @param[in] from_start true if iteration starts at beginning of
-       * container.
-       */
-      explicit BoxContainerConstIterator(
-         const BoxContainer& container,
-         bool from_start = true);
-
-      /*!
        * @brief Copy constructor.
        *
        * @param[in] other
@@ -286,6 +272,20 @@ public:
        */
       BoxContainerConstIterator();
 
+      /*!
+       * @brief Constructor for the BoxContainerConstIterator.
+       *
+       * The iterator will point to the beginning or the end of the argument
+       * container, depending on the from_start argument
+       *
+       * @param[in] container The container whose members are iterated.
+       * @param[in] from_start true if iteration starts at beginning of
+       * container.
+       */
+      explicit BoxContainerConstIterator(
+         const BoxContainer& container,
+         bool from_start = true);
+
       /*
        * Underlying iterator to be used when unordered.
        */
@@ -316,20 +316,6 @@ public:
       friend class BoxContainerConstIterator;
 
    public:
-
-      /*!
-       * @brief Constructor for the BoxContainerIterator.
-       *
-       * The iterator will point to the beginning or the end of the argument
-       * container, depending on the from_start argument
-       *
-       * @param[in] container The container whose members are iterated.
-       * @param[in] from_start true if iteration starts at beginning of
-       * container.
-       */
-      explicit BoxContainerIterator(
-         BoxContainer& container,
-         bool from_start = true);
 
       /*!
        * @brief Copy constructor.
@@ -509,6 +495,20 @@ public:
        * @brief Default constructor is defined but accessible only by friends.
        */
       BoxContainerIterator();
+
+      /*!
+       * @brief Constructor for the BoxContainerIterator.
+       *
+       * The iterator will point to the beginning or the end of the argument
+       * container, depending on the from_start argument
+       *
+       * @param[in] container The container whose members are iterated.
+       * @param[in] from_start true if iteration starts at beginning of
+       * container.
+       */
+      explicit BoxContainerIterator(
+         BoxContainer& container,
+         bool from_start = true);
 
       /*
        * Underlying iterator to be used when unordered.

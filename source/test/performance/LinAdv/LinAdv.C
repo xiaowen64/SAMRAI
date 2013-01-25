@@ -1494,7 +1494,7 @@ void LinAdv::boundaryReset(
       bdrybox.pushBack(hier::Box(ibfirst, iblast, patch.getBox().getBlockId()));
    }
 
-   hier::BoxContainer::iterator bdryboxitr(bdrybox);
+   hier::BoxContainer::iterator bdryboxitr = bdrybox.begin();
    if (d_dim == tbox::Dimension(2)) {
       for (idir = 0; idir < d_dim.getValue(); idir++) {
          bside = 2 * idir;
@@ -1503,7 +1503,7 @@ void LinAdv::boundaryReset(
             pdat::CellIterator icend(pdat::CellGeometry::end(*bdryboxitr));
             for (pdat::CellIterator ic(pdat::CellGeometry::begin(*bdryboxitr));
                  ic != icend; ++ic) {
-               for (hier::BoxContainer::iterator i(domain_boxes);
+               for (hier::BoxContainer::iterator i = domain_boxes.begin();
                     i != domain_boxes.end(); ++i) {
                   if (i->contains(*ic))
                      bdry_cell = false;
@@ -1522,7 +1522,7 @@ void LinAdv::boundaryReset(
             pdat::CellIterator icend(pdat::CellGeometry::end(*bdryboxitr));
             for (pdat::CellIterator ic(pdat::CellGeometry::begin(*bdryboxitr));
                  ic != icend; ++ic) {
-               for (hier::BoxContainer::iterator i(domain_boxes);
+               for (hier::BoxContainer::iterator i = domain_boxes.begin();
                     i != domain_boxes.end(); ++i) {
                   if (i->contains(*ic))
                      bdry_cell = false;
@@ -1543,7 +1543,7 @@ void LinAdv::boundaryReset(
             pdat::CellIterator icend(pdat::CellGeometry::end(*bdryboxitr));
             for (pdat::CellIterator ic(pdat::CellGeometry::begin(*bdryboxitr));
                  ic != icend; ++ic) {
-               for (hier::BoxContainer::iterator i(domain_boxes);
+               for (hier::BoxContainer::iterator i = domain_boxes.begin();
                     i != domain_boxes.end(); ++i) {
                   if (i->contains(*ic))
                      bdry_cell = false;
@@ -1562,7 +1562,7 @@ void LinAdv::boundaryReset(
             pdat::CellIterator icend(pdat::CellGeometry::end(*bdryboxitr));
             for (pdat::CellIterator ic(pdat::CellGeometry::begin(*bdryboxitr));
                  ic != icend; ++ic) {
-               for (hier::BoxContainer::iterator i(domain_boxes);
+               for (hier::BoxContainer::iterator i = domain_boxes.begin();
                     i != domain_boxes.end(); ++i) {
                   if (i->contains(*ic))
                      bdry_cell = false;

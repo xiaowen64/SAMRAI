@@ -165,7 +165,7 @@ int main(
       boost::shared_ptr<hier::BoxLevel> layer0(
          boost::make_shared<hier::BoxLevel>(
             hier::IntVector(dim, 1), grid_geometry));
-      hier::BoxContainer::const_iterator domain_boxes(domain);
+      hier::BoxContainer::const_iterator domain_boxes = domain.begin();
       int rank = mpi.getRank();
       int size = mpi.getSize();
       for (hier::LocalId ib(0); ib < boxes.size(); ib++, ++domain_boxes) {

@@ -309,7 +309,7 @@ BoxLevel::initializePrivate(
    }
 
    // Erase non-local Boxes, if any, from d_boxes.
-   for (BoxContainer::iterator mbi(d_boxes.begin());
+   for (BoxContainer::iterator mbi = d_boxes.begin();
         mbi != d_boxes.end(); /* incremented in loop */) {
       if (mbi->getOwnerRank() != d_mpi.getRank()) {
          d_boxes.erase(mbi++);
@@ -1011,7 +1011,7 @@ BoxLevel::addBox(
 
    clearForBoxChanges(false);
 
-   BoxContainer::iterator new_iterator(d_boxes);
+   BoxContainer::iterator new_iterator = d_boxes.begin();
 
    if (d_boxes.isEmpty()) {
       Box new_box(

@@ -267,7 +267,7 @@ NodeData<TYPE>::copyWithRotation(
                                    node_rotatebox.getBlockId(),
                                    getBox().getBlockId());
 
-   for (hier::BoxContainer::const_iterator bi(overlap_boxes);
+   for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
         bi != overlap_boxes.end(); ++bi) {
       const hier::Box& overlap_box = *bi;
 
@@ -414,7 +414,7 @@ NodeData<TYPE>::packWithRotation(
    tbox::Array<TYPE> buffer(size);
 
    int i = 0;
-   for (hier::BoxContainer::const_iterator bi(overlap_boxes);
+   for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
         bi != overlap_boxes.end(); ++bi) {
       const hier::Box& overlap_box = *bi;
 

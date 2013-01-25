@@ -192,7 +192,7 @@ SecondLayerNodeNoCornersVariableFillPattern::computeFillBoxesOverlap(
     * to a node centering, which must be done before intersecting with
     * stencil_boxes, which is node-centered.
     */
-   for (hier::BoxContainer::iterator b(overlap_boxes);
+   for (hier::BoxContainer::iterator b = overlap_boxes.begin();
         b != overlap_boxes.end(); ++b) {
       b->growUpper(hier::IntVector::getOne(dim));
    }

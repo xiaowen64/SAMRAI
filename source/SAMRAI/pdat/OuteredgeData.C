@@ -611,7 +611,7 @@ OuteredgeData<TYPE>::packStream(
       const hier::BoxContainer& dst_boxes =
          t_overlap->getDestinationBoxContainer(axis);
 
-      for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
+      for (hier::BoxContainer::const_iterator dst_box = dst_boxes.begin();
            dst_box != dst_boxes.end(); ++dst_box) {
 
          const hier::Box src_box = hier::Box::shift(*dst_box,
@@ -665,7 +665,7 @@ OuteredgeData<TYPE>::unpackStream(
       const hier::BoxContainer& dst_boxes =
          t_overlap->getDestinationBoxContainer(axis);
 
-      for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
+      for (hier::BoxContainer::const_iterator dst_box = dst_boxes.begin();
            dst_box != dst_boxes.end(); ++dst_box) {
 
          for (int face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
@@ -723,7 +723,7 @@ OuteredgeData<TYPE>::unpackStreamAndSum(
       const hier::BoxContainer& dst_boxes =
          t_overlap->getDestinationBoxContainer(axis);
 
-      for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
+      for (hier::BoxContainer::const_iterator dst_box = dst_boxes.begin();
            dst_box != dst_boxes.end(); ++dst_box) {
 
          for (int face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {

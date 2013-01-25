@@ -296,7 +296,7 @@ int main(
             box_level,
             connector_width);
          for (hier::BoxContainer::const_iterator bi =
-              box_level.getBoxes().begin();
+                 box_level.getBoxes().begin();
               bi != box_level.getBoxes().end(); ++bi) {
 
             const hier::Box& box(*bi);

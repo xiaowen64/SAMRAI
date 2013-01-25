@@ -567,7 +567,7 @@ bool NodeMultiblockTest::verifyResults(
          pdat::NodeGeometry::toNodeBox(pbox);
 
       hier::BoxContainer sing_node_boxlist;
-      for (hier::BoxContainer::iterator si(singularity);
+      for (hier::BoxContainer::iterator si = singularity.begin();
            si != singularity.end(); ++si) {
          sing_node_boxlist.pushFront(pdat::NodeGeometry::toNodeBox(*si));
       }
@@ -582,7 +582,7 @@ bool NodeMultiblockTest::verifyResults(
          hier::BoxContainer neighbor_ghost(ne->getTransformedDomain());
 
          hier::BoxContainer neighbor_node_ghost;
-         for (hier::BoxContainer::iterator nn(neighbor_ghost);
+         for (hier::BoxContainer::iterator nn = neighbor_ghost.begin();
               nn != neighbor_ghost.end(); ++nn) {
             hier::Box neighbor_ghost_interior(
                pdat::NodeGeometry::toNodeBox(*nn));
@@ -598,7 +598,7 @@ bool NodeMultiblockTest::verifyResults(
          neighbor_node_ghost.removeIntersections(sing_node_boxlist);
          neighbor_node_ghost.removeIntersections(tested_neighbors);
 
-         for (hier::BoxContainer::iterator ng(neighbor_node_ghost);
+         for (hier::BoxContainer::iterator ng = neighbor_node_ghost.begin();
               ng != neighbor_node_ghost.end(); ++ng) {
 
                hier::Box::iterator ciend(ng->end());

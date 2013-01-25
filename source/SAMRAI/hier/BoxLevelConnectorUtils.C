@@ -771,7 +771,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
             Connector::NeighborhoodIterator base_box_itr =
                input_to_parts->makeEmptyLocalNeighborhood(input_box_id);
-            for (BoxContainer::iterator bi(parts_list);
+            for (BoxContainer::iterator bi = parts_list.begin();
                  bi != parts_list.end(); ++bi) {
                const Box parts_box((*bi),
                   ++last_used_index,
@@ -1005,7 +1005,7 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
    for (std::map<BlockId, BoxContainer>::iterator bi = boundary_by_blocks.begin();
         bi != boundary_by_blocks.end(); ++bi) {
       BoxContainer &boxes(bi->second);
-      for ( BoxContainer::iterator bj=boxes.begin(); bj!=boxes.end(); ++bj ) {
+      for ( BoxContainer::iterator bj = boxes.begin(); bj!=boxes.end(); ++bj ) {
          bj->setId(BoxId( bj->getLocalId(), bj->getOwnerRank(),
                           bj->getPeriodicId() ));
       }
@@ -1125,7 +1125,7 @@ BoxLevelConnectorUtils::makeRemainderMap(
           */
          Connector::NeighborhoodIterator base_box_itr =
             orig_to_remainder->makeEmptyLocalNeighborhood(box_id);
-         for (BoxContainer::iterator bi(remaining_parts_list);
+         for (BoxContainer::iterator bi = remaining_parts_list.begin();
               bi != remaining_parts_list.end(); ++bi) {
             Box new_box = (*bi);
             Box new_node(new_box,

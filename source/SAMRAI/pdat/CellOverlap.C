@@ -74,7 +74,7 @@ CellOverlap::print(
    std::ostream& os) const
 {
    os << "CellOverlap boxes:";
-   for (hier::BoxContainer::const_iterator b(d_dst_boxes);
+   for (hier::BoxContainer::const_iterator b = d_dst_boxes.begin();
         b != d_dst_boxes.end(); ++b) {
       const hier::Box& box = *b;
       os << "  " << box << std::endl;

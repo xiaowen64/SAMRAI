@@ -94,7 +94,7 @@ HierarchyFaceDataOpsComplex::resetLevels(
 
       for (int nd = 0; nd < dimVal; nd++) {
          face_boxes = level->getBoxes();
-         for (hier::BoxContainer::iterator i(face_boxes);
+         for (hier::BoxContainer::iterator i = face_boxes.begin();
               i != face_boxes.end(); ++i) {
             *i = pdat::FaceGeometry::toFaceBox(*i, nd);
          }

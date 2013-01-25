@@ -296,7 +296,7 @@ IndexData<TYPE, BOX_GEOMETRY>::copy(
    const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer();
    const hier::Box& src_ghost_box = t_src->getGhostBox();
 
-   for (hier::BoxContainer::const_iterator b(box_list);
+   for (hier::BoxContainer::const_iterator b = box_list.begin();
         b != box_list.end(); ++b) {
       const hier::Box& dst_box = *b;
       const hier::Box src_box(hier::Box::shift(*b, -src_offset));
@@ -357,7 +357,8 @@ IndexData<TYPE, BOX_GEOMETRY>::getDataStreamSize(
    size_t bytes = 0;
    int num_items = 0;
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
-   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b = boxes.begin();
+        b != boxes.end(); ++b) {
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(*b, -(t_overlap->getSourceOffset()));
       hier::Box::iterator indexend(box.end());
@@ -396,7 +397,8 @@ IndexData<TYPE, BOX_GEOMETRY>::packStream(
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
    int num_items = 0;
-   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b = boxes.begin();
+        b != boxes.end(); ++b) {
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(*b, -(t_overlap->getSourceOffset()));
       typename IndexData<TYPE, BOX_GEOMETRY>::iterator send(*this, false);
@@ -410,7 +412,8 @@ IndexData<TYPE, BOX_GEOMETRY>::packStream(
 
    stream << num_items;
 
-   for (hier::BoxContainer::const_iterator c(boxes); c != boxes.end(); ++c) {
+   for (hier::BoxContainer::const_iterator c = boxes.begin();
+        c != boxes.end(); ++c) {
       hier::Box box = hier::PatchData::getBox()
          * hier::Box::shift(*c, -(t_overlap->getSourceOffset()));
       typename IndexData<TYPE, BOX_GEOMETRY>::iterator tend(*this, false);
@@ -446,7 +449,8 @@ IndexData<TYPE, BOX_GEOMETRY>::unpackStream(
    stream >> num_items;
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
-   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b = boxes.begin();
+        b != boxes.end(); ++b) {
       removeInsideBox(*b);
    }
 

@@ -1115,8 +1115,8 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
        * interested in the east-->west connector, then east_ni will
        * be unused.
        */
-      NeighborSet::iterator west_ni(visible_west_nabrs);
-      NeighborSet::iterator east_ni(visible_east_nabrs);
+      NeighborSet::iterator west_ni = visible_west_nabrs.begin();
+      NeighborSet::iterator east_ni = visible_east_nabrs.begin();
       /*
        * Local process can find some neighbors for the (local and
        * remote) Boxes in visible_west_nabrs and

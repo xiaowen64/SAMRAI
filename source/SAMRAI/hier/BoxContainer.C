@@ -405,7 +405,7 @@ BoxContainer::simplify()
 
             if (!tryMe.empty()) {
                bool combineDaPuppies = false;
-               iterator l(*this);
+               iterator l = begin();
                for ( ; l != end(); ++l) {
                   const Box andMe = *l;
 
@@ -514,7 +514,7 @@ BoxContainer::coalesce()
       d_tree.reset();
    }
 
-   iterator tb(*this);
+   iterator tb = begin();
    while (tb != end()) {
 
       bool found_match = false;
@@ -622,7 +622,7 @@ BoxContainer::rotate(
       const tbox::Dimension& dim = d_list.front().getDim();
       const BlockId& block_id = d_list.front().getBlockId();
       if (dim.getValue() == 2 || dim.getValue() == 3) {
-         for (iterator i(*this); i != end(); ++i) {
+         for (iterator i = begin(); i != end(); ++i) {
             if (i->getBlockId() != block_id) {
                TBOX_ERROR("BoxContainer::rotate() error ..."
                  << "\n  Attempted to rotate BoxContainer having Boxes with"
@@ -725,8 +725,8 @@ BoxContainer::boxesIntersect() const
 {
    bool intersections = false;
 
-   const_iterator tryMe(*this);
-   const_iterator whatAboutMe(*this);
+   const_iterator tryMe = begin();
+   const_iterator whatAboutMe = begin();
    ++whatAboutMe;
    while (!intersections && tryMe != end()) {
       while (!intersections && whatAboutMe != end()) {
@@ -769,7 +769,7 @@ BoxContainer::removeIntersections(
    }
 
    const unsigned short dim = takeaway.getDim().getValue();
-   iterator insertion_pt(*this);
+   iterator insertion_pt = begin();
    while (insertion_pt != end()) {
       Box& tryme = *insertion_pt;
       if (!tryme.intersects(takeaway)) {
@@ -810,7 +810,8 @@ BoxContainer::removeIntersections(
    if (takeaway.d_tree) {
       removeIntersections(*(takeaway.d_tree));
    } else {
-      for (const_iterator remove(takeaway); remove != takeaway.end(); ++remove) {
+      for (const_iterator remove = takeaway.begin();
+           remove != takeaway.end(); ++remove) {
          const Box& byebye = *remove;
          removeIntersections(byebye);
       }
@@ -856,7 +857,7 @@ BoxContainer::removeIntersections(
    const BaseGridGeometry& grid_geometry(*takeaway.d_tree->getGridGeometry());
 
    std::vector<const Box *> overlap_boxes;
-   iterator itr(*this);
+   iterator itr = begin();
    while (itr != end()) {
       const Box& tryme = *itr;
       takeaway.d_tree->findOverlapBoxes(overlap_boxes,
@@ -950,7 +951,7 @@ BoxContainer::removeIntersections(
    }
 
    std::vector<const Box *> overlap_boxes;
-   iterator itr(*this);
+   iterator itr = begin();
    while (itr != end()) {
       const Box& tryme = *itr;
       takeaway.findOverlapBoxes(overlap_boxes, tryme);
@@ -1037,7 +1038,7 @@ BoxContainer::intersectBoxes(
       d_tree.reset();
    }
 
-   iterator i(*this);
+   iterator i = begin();
    Box overlap(i->getDim());
    while (i != end()) {
       Box& tryMe = *i;
@@ -1073,12 +1074,12 @@ BoxContainer::intersectBoxes(
    if (keep.d_tree) {
       intersectBoxes(*(keep.d_tree));
    } else {
-      iterator insertion_pt(*this);
+      iterator insertion_pt = begin();
       Box overlap(insertion_pt->getDim());
       while (insertion_pt != end()) {
          iterator tmp = insertion_pt;
          const Box& tryme = *insertion_pt;
-         for (const_iterator i(keep); i != keep.end(); ++i) {
+         for (const_iterator i = keep.begin(); i != keep.end(); ++i) {
             tryme.intersect(*i, overlap);
             if (!overlap.empty()) {
                insertAfter(insertion_pt, overlap);
@@ -1110,7 +1111,7 @@ BoxContainer::intersectBoxes(
 
    std::vector<const Box *> overlap_boxes;
    Box overlap(front().getDim());
-   iterator itr(*this);
+   iterator itr = begin();
    iterator insertion_pt = itr;
    while (itr != end()) {
       const Box& tryme = *itr;
@@ -1163,7 +1164,7 @@ BoxContainer::intersectBoxes(
 
    std::vector<const Box *> overlap_boxes;
    Box overlap(front().getDim());
-   iterator itr(*this);
+   iterator itr = begin();
    iterator insertion_pt = itr;
    while (itr != end()) {
       const Box& tryme = *itr;
@@ -1388,7 +1389,7 @@ BoxContainer::order()
 {
    if (!d_ordered) {
       d_set.clear();
-      for (iterator i(*this); i != end(); ++i) {
+      for (iterator i = begin(); i != end(); ++i) {
          if (!i->getBoxId().isValid()) {
             TBOX_ERROR("Attempted to order a BoxContainer that has a member with an invalid BoxId."
                << std::endl);
@@ -1500,11 +1501,11 @@ BoxContainer::getTotalSizeOfBoxes() const
 {
    int size = 0;
    if (!d_ordered) {
-      for (const_iterator i(*this); i != end(); ++i) {
+      for (const_iterator i = begin(); i != end(); ++i) {
          size += i->size();
       }
    } else {
-      for (const_iterator i(*this); i != end(); ++i) {
+      for (const_iterator i = begin(); i != end(); ++i) {
          size += i->size();
       }
    }
@@ -1516,7 +1517,7 @@ BoxContainer::contains(
    const Index& idx,
    const BlockId& block_id) const
 {
-   for (const_iterator i(*this); i != end(); ++i) {
+   for (const_iterator i = begin(); i != end(); ++i) {
       TBOX_ASSERT(i->getBlockId().isValid());
       if (i->getBlockId() == block_id) {
          if (i->contains(idx)) {
@@ -1537,7 +1538,7 @@ void
 BoxContainer::grow(
    const IntVector& ghosts)
 {
-   for (iterator i(*this); i != end(); ++i) {
+   for (iterator i = begin(); i != end(); ++i) {
       i->grow(ghosts);
    }
 
@@ -1551,7 +1552,7 @@ void
 BoxContainer::shift(
    const IntVector& offset)
 {
-   for (iterator i(*this); i != end(); ++i) {
+   for (iterator i = begin(); i != end(); ++i) {
       i->shift(offset);
    }
    if (d_tree) {
@@ -1563,7 +1564,7 @@ void
 BoxContainer::refine(
    const IntVector& ratio)
 {
-   for (iterator i(*this); i != end(); ++i) {
+   for (iterator i = begin(); i != end(); ++i) {
       i->refine(ratio);
    }
    if (d_tree) {
@@ -1575,7 +1576,7 @@ void
 BoxContainer::coarsen(
    const IntVector& ratio)
 {
-   for (iterator i(*this); i != end(); ++i) {
+   for (iterator i = begin(); i != end(); ++i) {
       i->coarsen(ratio);
    }
    if (d_tree) {

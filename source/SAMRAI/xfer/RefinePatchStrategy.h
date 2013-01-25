@@ -195,7 +195,7 @@ public:
       const hier::IntVector& ratio)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY3(fine, coarse, ratio);
-      for (hier::BoxContainer::const_iterator b(fine_boxes);
+      for (hier::BoxContainer::const_iterator b = fine_boxes.begin();
            b != fine_boxes.end(); ++b) {
          preprocessRefine(fine, coarse, *b, ratio);
       }
@@ -227,7 +227,7 @@ public:
       const hier::IntVector& ratio)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY3(fine, coarse, ratio);
-      for (hier::BoxContainer::const_iterator b(fine_boxes);
+      for (hier::BoxContainer::const_iterator b = fine_boxes.begin();
            b != fine_boxes.end(); ++b) {
          postprocessRefine(fine, coarse, *b, ratio);
       }

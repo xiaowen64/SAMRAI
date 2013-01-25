@@ -1954,7 +1954,7 @@ GriddingAlgorithm::checkBoundaryProximityViolation(
          box_level.getRefinementRatio(),
          refined_periodic_domain_search_tree);
 
-      for (hier::BoxContainer::iterator bli(external_parts);
+      for (hier::BoxContainer::iterator bli = external_parts.begin();
            bli != external_parts.end();
            ++bli) {
          hier::IntVector leftover_size((*bli).numberCells());
@@ -2007,7 +2007,7 @@ GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes) cons
     * Check minimum size violations.
     */
    int i = 0;
-   for (hier::BoxContainer::const_iterator itr(domain_boxes);
+   for (hier::BoxContainer::const_iterator itr = domain_boxes.begin();
         itr != domain_boxes.end(); ++itr, ++i) {
 
       hier::Box test_box = *itr;
@@ -2526,7 +2526,7 @@ GriddingAlgorithm::readLevelBoxes(
          d_hierarchy->getMPI(),
          hier::BoxLevel::GLOBALIZED);
       hier::LocalId i(0);
-      for (hier::BoxContainer::iterator itr(boxes_to_refine);
+      for (hier::BoxContainer::iterator itr = boxes_to_refine.begin();
            itr != boxes_to_refine.end(); ++itr, ++i) {
          hier::Box unbalanced_box(*itr, i, 0);
          unbalanced_box.setBlockId(hier::BlockId(0));
@@ -3718,7 +3718,7 @@ GriddingAlgorithm::computeNestingViolator(
                addl_violators.removeIntersections(*na);
             }
             if (!addl_violators.isEmpty()) {
-               for (hier::BoxContainer::iterator bi(addl_violators);
+               for (hier::BoxContainer::iterator bi = addl_violators.begin();
                     bi != addl_violators.end(); ++bi) {
                   hier::BoxContainer::const_iterator new_violator = violator->addBox(
                         *bi, cmb.getBlockId());

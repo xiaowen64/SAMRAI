@@ -718,7 +718,7 @@ TreeLoadBalancer::constrainMaxBoxSizes(
                unconstrained_to_constrained.makeEmptyLocalNeighborhood(
                   box.getBoxId());
 
-            for (hier::BoxContainer::iterator li(chopped);
+            for (hier::BoxContainer::iterator li = chopped.begin();
                  li != chopped.end(); ++li) {
 
                const hier::Box fragment = *li;

@@ -170,8 +170,8 @@ GridGeometry::makeCoarsenedGridGeometry(
     */
    const hier::BoxContainer& fine_domain = getPhysicalDomain();
    const int nboxes = fine_domain.size();
-   hier::BoxContainer::const_iterator coarse_domain_itr(coarse_domain);
-   hier::BoxContainer::const_iterator fine_domain_itr(fine_domain);
+   hier::BoxContainer::const_iterator coarse_domain_itr = coarse_domain.begin();
+   hier::BoxContainer::const_iterator fine_domain_itr = fine_domain.begin();
    for (int ib = 0; ib < nboxes; ib++, ++coarse_domain_itr, ++fine_domain_itr) {
       hier::Box testbox = hier::Box::refine(*coarse_domain_itr, coarsen_ratio);
       if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {

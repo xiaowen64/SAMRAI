@@ -106,7 +106,8 @@ CartesianNodeDoubleLinearRefine::refine(
    TBOX_ASSERT(t_overlap != 0);
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
-   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b = boxes.begin();
+        b != boxes.end(); ++b) {
       hier::Box fine_box(*b);
       fine_box.growUpper(hier::IntVector(ratio.getDim(), -1));
       refine(fine,

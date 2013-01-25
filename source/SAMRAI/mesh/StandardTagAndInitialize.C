@@ -303,7 +303,7 @@ StandardTagAndInitialize::tagCellsForRefinement(
 
          TBOX_ASSERT(tag_data);
 
-         for (hier::BoxContainer::iterator ib(refine_boxes);
+         for (hier::BoxContainer::iterator ib = refine_boxes.begin();
               ib != refine_boxes.end(); ++ib) {
             hier::Box intersection = *ib * tag_data->getBox();
             if (!(intersection.empty())) {
@@ -904,7 +904,7 @@ StandardTagAndInitialize::coarsestLevelBoxesOK(
 
       const tbox::Dimension& dim = boxes.begin()->getDim();
 
-      for (hier::BoxContainer::const_iterator ib(boxes);
+      for (hier::BoxContainer::const_iterator ib = boxes.begin();
            ib != boxes.end(); ++ib) {
          hier::IntVector n_cells = ib->numberCells();
          for (int i = 0; i < dim.getValue(); i++) {

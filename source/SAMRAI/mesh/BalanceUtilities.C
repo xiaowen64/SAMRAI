@@ -1059,7 +1059,8 @@ BalanceUtilities::spatialBinPack(
     * is positive.
     */
    hier::IntVector offset(boxes.front().lower());
-   for (hier::BoxContainer::iterator itr(boxes); itr != boxes.end(); ++itr) {
+   for (hier::BoxContainer::iterator itr = boxes.begin();
+        itr != boxes.end(); ++itr) {
       offset.min(itr->lower());
    }
 
@@ -1070,7 +1071,7 @@ BalanceUtilities::spatialBinPack(
    if (nboxes > 0) {
       const tbox::Dimension& dim = boxes.front().getDim();
 
-      for (hier::BoxContainer::iterator itr(boxes);
+      for (hier::BoxContainer::iterator itr = boxes.begin();
            itr != boxes.end(); ++itr) {
 
          /* compute center of box */
@@ -1121,7 +1122,7 @@ BalanceUtilities::spatialBinPack(
       tbox::Array<double> unsorted_weights(nboxes);
 
       i = 0;
-      for (hier::BoxContainer::iterator itr(boxes);
+      for (hier::BoxContainer::iterator itr = boxes.begin();
            itr != boxes.end(); ++itr) {
          unsorted_boxes[i] = *itr;
          unsorted_weights[i] = weights[i];
@@ -1129,7 +1130,7 @@ BalanceUtilities::spatialBinPack(
       }
 
       i = 0;
-      for (hier::BoxContainer::iterator itr(boxes);
+      for (hier::BoxContainer::iterator itr = boxes.begin();
            itr != boxes.end(); ++itr) {
          *itr = unsorted_boxes[permutation[i]];
          weights[i] = unsorted_weights[permutation[i]];
@@ -1247,7 +1248,7 @@ BalanceUtilities::recursiveBisectionUniform(
    bool bad_domain_boundaries_exist =
       privateBadCutPointsExist(physical_domain);
 
-   for (hier::BoxContainer::const_iterator ib(in_boxes);
+   for (hier::BoxContainer::const_iterator ib = in_boxes.begin();
         ib != in_boxes.end(); ++ib) {
 
       hier::Box box2chop = *ib;
@@ -1647,7 +1648,7 @@ BalanceUtilities::sortDescendingBoxWorkloads(
       tbox::Array<double> unsorted_workload(nboxes);
 
       int l = 0;
-      for (hier::BoxContainer::iterator itr(boxes);
+      for (hier::BoxContainer::iterator itr = boxes.begin();
            itr != boxes.end(); ++itr) {
          unsorted_boxes[l] = *itr;
          unsorted_workload[l] = workload[l];
@@ -1655,7 +1656,7 @@ BalanceUtilities::sortDescendingBoxWorkloads(
       }
 
       int m = 0;
-      for (hier::BoxContainer::iterator itr(boxes);
+      for (hier::BoxContainer::iterator itr = boxes.begin();
            itr != boxes.end(); ++itr) {
          *itr = unsorted_boxes[permutation[m]];
          workload[m] = unsorted_workload[permutation[m]];

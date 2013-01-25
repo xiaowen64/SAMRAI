@@ -95,7 +95,7 @@ HierarchyEdgeDataOpsInteger::resetLevels(
 
       for (int nd = 0; nd < dimVal; nd++) {
          edge_boxes = level->getBoxes();
-         for (hier::BoxContainer::iterator i(edge_boxes);
+         for (hier::BoxContainer::iterator i = edge_boxes.begin();
               i != edge_boxes.end(); ++i) {
             *i = pdat::EdgeGeometry::toEdgeBox(*i, nd);
          }

@@ -112,7 +112,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
                      dst_box_id);
                   has_base_box = true;
                }
-               for (hier::BoxContainer::iterator ei(encon_boxes);
+               for (hier::BoxContainer::iterator ei = encon_boxes.begin();
                     ei != encon_boxes.end(); ei++) {
 
                   hier::Box fill_box(

@@ -148,7 +148,7 @@ EdgeGeometry::computeDestinationBoxes(
 
          if (!dst_restrict_boxes.isEmpty() && !dst_boxes[d].isEmpty()) {
             hier::BoxContainer edge_restrict_boxes;
-            for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
+            for (hier::BoxContainer::const_iterator b = dst_restrict_boxes.begin();
                  b != dst_restrict_boxes.end(); ++b) {
                edge_restrict_boxes.pushBack(toEdgeBox(*b, d));
             }
@@ -246,7 +246,8 @@ EdgeGeometry::setUpOverlap(
    const tbox::Dimension& dim(transformation.getOffset().getDim());
    tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
 
-   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b = boxes.begin();
+        b != boxes.end(); ++b) {
       for (int d = 0; d < dim.getValue(); d++) {
          hier::Box edge_box(EdgeGeometry::toEdgeBox(*b, d));
          dst_boxes[d].pushBack(edge_box);

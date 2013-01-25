@@ -1465,7 +1465,7 @@ void LinAdv::boundaryReset(
       bdrybox.pushBack(hier::Box(ibfirst, iblast, hier::BlockId(0)));
    }
 
-   hier::BoxContainer::iterator ib(bdrybox);
+   hier::BoxContainer::iterator ib = bdrybox.begin();
    for (idir = 0; idir < d_dim.getValue(); idir++) {
       bside = 2 * idir;
       if (d_dim == tbox::Dimension(2)) {
@@ -1478,7 +1478,8 @@ void LinAdv::boundaryReset(
          pdat::CellIterator icend(pdat::CellGeometry::end(*ib));
          for (pdat::CellIterator ic(pdat::CellGeometry::begin(*ib));
               ic != icend; ++ic) {
-            for (hier::BoxContainer::iterator domain_boxes_itr(domain_boxes);
+            for (hier::BoxContainer::iterator domain_boxes_itr =
+                    domain_boxes.begin();
                  domain_boxes_itr != domain_boxes.end();
                  ++domain_boxes_itr) {
                if (domain_boxes_itr->contains(*ic))
@@ -1503,7 +1504,8 @@ void LinAdv::boundaryReset(
          pdat::CellIterator icend(pdat::CellGeometry::end(*ib));
          for (pdat::CellIterator ic(pdat::CellGeometry::begin(*ib));
               ic != icend; ++ic) {
-            for (hier::BoxContainer::iterator domain_boxes_itr(domain_boxes);
+            for (hier::BoxContainer::iterator domain_boxes_itr =
+                    domain_boxes.begin();
                  domain_boxes_itr != domain_boxes.end();
                  ++domain_boxes_itr) {
                if (domain_boxes_itr->contains(*ic))
@@ -1860,7 +1862,7 @@ void LinAdv::tagGradientDetectorCells(
     * Construct domain bounding box
     */
    hier::Box domain(d_dim);
-   for (hier::BoxContainer::iterator i(domain_boxes);
+   for (hier::BoxContainer::iterator i = domain_boxes.begin();
         i != domain_boxes.end(); ++i) {
       domain += *i;
    }

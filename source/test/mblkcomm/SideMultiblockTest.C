@@ -627,7 +627,7 @@ bool SideMultiblockTest::verifyResults(
 
             hier::BoxContainer neighbor_ghost(ne->getTransformedDomain());
             hier::BoxContainer neighbor_side_ghost;
-            for (hier::BoxContainer::iterator nn(neighbor_ghost);
+            for (hier::BoxContainer::iterator nn = neighbor_ghost.begin();
                  nn != neighbor_ghost.end(); ++nn) {
                hier::Box neighbor_ghost_interior(
                   pdat::SideGeometry::toSideBox(*nn, axis));
@@ -641,7 +641,7 @@ bool SideMultiblockTest::verifyResults(
 
             neighbor_side_ghost.removeIntersections(tested_neighbors);
 
-            for (hier::BoxContainer::iterator ng(neighbor_side_ghost);
+            for (hier::BoxContainer::iterator ng = neighbor_side_ghost.begin();
                  ng != neighbor_side_ghost.end(); ++ng) {
 
                   hier::Box::iterator ciend(ng->end());

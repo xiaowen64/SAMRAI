@@ -257,7 +257,7 @@ int main(
          hier::BoxLevel::GLOBALIZED);
 
       ;
-      for (hier::BoxContainer::iterator domain_boxes_itr(domain_boxes);
+      for (hier::BoxContainer::iterator domain_boxes_itr = domain_boxes.begin();
            domain_boxes_itr != domain_boxes.end(); ++domain_boxes_itr) {
          domain_box_level.addBox(*domain_boxes_itr);
       }
@@ -317,7 +317,7 @@ int main(
          const int my_boxes_stop =
             tbox::MathUtilities<int>::Min(my_boxes_start + boxes_per_proc,
                anchor_boxes.size());
-         hier::BoxContainer::iterator anchor_boxes_itr(anchor_boxes);
+         hier::BoxContainer::iterator anchor_boxes_itr = anchor_boxes.begin();
          for (int i = 0; i < my_boxes_start; ++i) {
             ++anchor_boxes_itr;
          }
@@ -755,7 +755,7 @@ void generatePrebalanceByUserBoxes(
    balance_box_level.reset(new hier::BoxLevel(hier::IntVector(dim, 1),
       hierarchy->getGridGeometry(),
       anchor_box_level.getMPI()));
-   hier::BoxContainer::iterator balance_boxes_itr(balance_boxes);
+   hier::BoxContainer::iterator balance_boxes_itr = balance_boxes.begin();
    for (int i = 0; i < balance_boxes.size(); ++i, ++balance_boxes_itr) {
       const int owner = i % initial_owners.size();
       if (owner == balance_box_level->getMPI().getRank()) {

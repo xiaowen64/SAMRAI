@@ -501,7 +501,7 @@ OuternodeData<TYPE>::packStream(
 
    const hier::BoxContainer& dst_boxes = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
-   for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
+   for (hier::BoxContainer::const_iterator dst_box = dst_boxes.begin();
         dst_box != dst_boxes.end(); ++dst_box) {
       const hier::Box src_box =
          hier::Box::shift(*dst_box, -src_offset);
@@ -530,7 +530,7 @@ OuternodeData<TYPE>::unpackStream(
 
    const hier::BoxContainer& dst_boxes = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
-   for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
+   for (hier::BoxContainer::const_iterator dst_box = dst_boxes.begin();
         dst_box != dst_boxes.end(); ++dst_box) {
       for (int d = 0; d < getDim().getValue(); d++) {
          for (int f = 0; f < 2; f++) {
@@ -566,7 +566,7 @@ OuternodeData<TYPE>::unpackStreamAndSum(
    const hier::BoxContainer& dst_boxes = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
-      for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
+      for (hier::BoxContainer::const_iterator dst_box = dst_boxes.begin();
            dst_box != dst_boxes.end(); ++dst_box) {
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect =

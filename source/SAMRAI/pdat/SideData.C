@@ -365,7 +365,7 @@ SideData<TYPE>::copyWithRotation(
 
          hier::Box side_rotatebox(SideGeometry::toSideBox(rotatebox, i));
 
-         for (hier::BoxContainer::const_iterator bi(overlap_boxes);
+         for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
               bi != overlap_boxes.end(); ++bi) {
             const hier::Box& overlap_box = *bi;
 
@@ -540,7 +540,7 @@ SideData<TYPE>::packWithRotation(
          hier::Box side_rotatebox(SideGeometry::toSideBox(rotatebox, i));
 
          int buf_count = 0;
-         for (hier::BoxContainer::const_iterator bi(overlap_boxes);
+         for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
               bi != overlap_boxes.end(); ++bi) {
             const hier::Box& overlap_box = *bi;
 

@@ -236,8 +236,8 @@ CartesianGridGeometry::makeCoarsenedGridGeometry(
     */
    const hier::BoxContainer& fine_domain = getPhysicalDomain();
    const int nboxes = fine_domain.size();
-   hier::BoxContainer::const_iterator fine_domain_itr(fine_domain);
-   hier::BoxContainer::iterator coarse_domain_itr(coarse_domain);
+   hier::BoxContainer::const_iterator fine_domain_itr = fine_domain.begin();
+   hier::BoxContainer::iterator coarse_domain_itr = coarse_domain.begin();
    for (int ib = 0; ib < nboxes; ib++, ++fine_domain_itr, ++coarse_domain_itr) {
       hier::Box testbox = hier::Box::refine(*coarse_domain_itr, coarsen_ratio);
       if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
@@ -300,7 +300,7 @@ CartesianGridGeometry::setGeometryData(
 
    hier::Box bigbox(dim);
    const hier::BoxContainer& block_domain = getPhysicalDomain();
-   for (hier::BoxContainer::const_iterator k(block_domain);
+   for (hier::BoxContainer::const_iterator k = block_domain.begin();
         k != block_domain.end(); ++k) {
       bigbox += *k;
    }

@@ -614,7 +614,7 @@ bool EdgeMultiblockTest::verifyResults(
          hier::BoxContainer tested_neighbors;
 
          hier::BoxContainer sing_edge_boxlist;
-         for (hier::BoxContainer::iterator si(singularity);
+         for (hier::BoxContainer::iterator si = singularity.begin();
               si != singularity.end(); ++si) {
             sing_edge_boxlist.pushFront(
                pdat::EdgeGeometry::toEdgeBox(*si, axis));
@@ -632,7 +632,7 @@ bool EdgeMultiblockTest::verifyResults(
             hier::BoxContainer neighbor_ghost(ne->getTransformedDomain());
 
             hier::BoxContainer neighbor_edge_ghost;
-            for (hier::BoxContainer::iterator nn(neighbor_ghost);
+            for (hier::BoxContainer::iterator nn = neighbor_ghost.begin();
                  nn != neighbor_ghost.end(); ++nn) {
                hier::Box neighbor_ghost_interior(
                   pdat::EdgeGeometry::toEdgeBox(*nn, axis));
@@ -648,7 +648,7 @@ bool EdgeMultiblockTest::verifyResults(
             neighbor_edge_ghost.removeIntersections(sing_edge_boxlist);
             neighbor_edge_ghost.removeIntersections(tested_neighbors);
 
-            for (hier::BoxContainer::iterator ng(neighbor_edge_ghost);
+            for (hier::BoxContainer::iterator ng = neighbor_edge_ghost.begin();
                  ng != neighbor_edge_ghost.end(); ++ng) {
 
                hier::Box::iterator ciend(ng->end());

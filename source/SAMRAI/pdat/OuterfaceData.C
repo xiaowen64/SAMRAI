@@ -399,7 +399,7 @@ OuterfaceData<TYPE>::packStream(
                                              getBox().getBlockId(),
                                              boxes.begin()->getBlockId());
 
-         for (hier::BoxContainer::const_iterator b(boxes);
+         for (hier::BoxContainer::const_iterator b = boxes.begin();
               b != boxes.end(); ++b) {
             hier::Box src_box(*b);
             face_transform.inverseTransform(src_box);
@@ -438,7 +438,7 @@ OuterfaceData<TYPE>::unpackStream(
          }
       }
 
-      for (hier::BoxContainer::const_iterator b(boxes);
+      for (hier::BoxContainer::const_iterator b = boxes.begin();
            b != boxes.end(); ++b) {
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect = (*b) * d_data[d][f]->getBox();

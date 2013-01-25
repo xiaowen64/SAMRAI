@@ -114,7 +114,8 @@ CartesianCellComplexConservativeLinearRefine::refine(
    TBOX_ASSERT(t_overlap != 0);
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
-   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b = boxes.begin();
+        b != boxes.end(); ++b) {
       refine(fine,
          coarse,
          dst_component,

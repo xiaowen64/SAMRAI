@@ -832,7 +832,7 @@ static void dumpMatlabData1dPencil(
          const boost::shared_ptr<hier::Patch>& patch = *i;
          hier::Box pbox = patch->getBox();
 
-         for (hier::BoxContainer::iterator b(outboxes[l5]);
+         for (hier::BoxContainer::iterator b = outboxes[l5].begin();
               b != outboxes[l5].end(); ++b) {
             const hier::Box box = (*b) * pbox * level_pencil_box;
 

@@ -330,7 +330,7 @@ int main(
          const int my_boxes_stop =
             tbox::MathUtilities<int>::Min(my_boxes_start + boxes_per_proc,
                anchor_boxes.size());
-         hier::BoxContainer::iterator anchor_boxes_itr(anchor_boxes);
+         hier::BoxContainer::iterator anchor_boxes_itr = anchor_boxes.begin();
          for (int i = 0; i < my_boxes_start; ++i) {
             ++anchor_boxes_itr;
          }
@@ -762,7 +762,7 @@ void generatePrebalanceByUserBoxes(
    balance_box_level.reset(new hier::BoxLevel(hier::IntVector(dim, 1),
       hierarchy->getGridGeometry(),
       anchor_box_level.getMPI()));
-   hier::BoxContainer::iterator balance_boxes_itr(balance_boxes);
+   hier::BoxContainer::iterator balance_boxes_itr = balance_boxes.begin();
    for (int i = 0; i < balance_boxes.size(); ++i, ++balance_boxes_itr) {
       const int owner = i % initial_owners.size();
       if (owner == balance_box_level->getMPI().getRank()) {
@@ -850,7 +850,8 @@ int checkBalanceCorrectness(
 
 
    // Check for prebalance indices absent in postbalance.
-   for (hier::BoxContainer::const_iterator bi = globalized_prebalance_boxes.begin();
+   for (hier::BoxContainer::const_iterator bi =
+           globalized_prebalance_boxes.begin();
         bi != globalized_prebalance_boxes.end(); ++bi) {
       hier::BoxContainer box_container(*bi);
       box_container.removeIntersections(
@@ -859,7 +860,7 @@ int checkBalanceCorrectness(
       if (!box_container.isEmpty()) {
          tbox::plog << "Prebalance Box " << *bi << " has " << box_container.size()
                     << " parts absent in postbalance:\n";
-         for (hier::BoxContainer::iterator bj(box_container);
+         for (hier::BoxContainer::iterator bj = box_container.begin();
               bj != box_container.end(); ++bj) {
             tbox::plog << "  " << *bj << std::endl;
          }
@@ -868,7 +869,8 @@ int checkBalanceCorrectness(
    }
 
    // Check for postbalance indices absent in prebalance.
-   for (hier::BoxContainer::const_iterator bi = globalized_postbalance_boxes.begin();
+   for (hier::BoxContainer::const_iterator bi =
+           globalized_postbalance_boxes.begin();
         bi != globalized_postbalance_boxes.end(); ++bi) {
       hier::BoxContainer box_container(*bi);
       box_container.removeIntersections(
@@ -877,7 +879,7 @@ int checkBalanceCorrectness(
       if (!box_container.isEmpty()) {
          tbox::plog << "Postbalance Box " << *bi << " has " << box_container.size()
                     << " parts absent in prebalance:\n";
-         for (hier::BoxContainer::iterator bj(box_container);
+         for (hier::BoxContainer::iterator bj = box_container.begin();
               bj != box_container.end(); ++bj) {
             tbox::plog << "  " << *bj << std::endl;
          }

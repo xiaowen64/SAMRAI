@@ -392,7 +392,8 @@ int main(
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
          hier::BoxLevel::GLOBALIZED);
-      for (hier::BoxContainer::const_iterator bi=grid_geometry->getPhysicalDomain().begin();
+      for (hier::BoxContainer::const_iterator bi =
+              grid_geometry->getPhysicalDomain().begin();
            bi!=grid_geometry->getPhysicalDomain().end(); ++bi) {
          domain_box_level.addBox(*bi);
       }
@@ -448,7 +449,7 @@ int main(
          const int my_boxes_stop =
             tbox::MathUtilities<int>::Min(my_boxes_start + boxes_per_proc,
                L0_boxes.size());
-         hier::BoxContainer::iterator L0_boxes_itr(L0_boxes);
+         hier::BoxContainer::iterator L0_boxes_itr = L0_boxes.begin();
          for (int i = 0; i < my_boxes_start; ++i) {
             ++L0_boxes_itr;
          }

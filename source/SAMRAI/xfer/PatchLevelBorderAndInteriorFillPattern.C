@@ -140,7 +140,7 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
 
          hier::Connector::NeighborhoodIterator base_box_itr =
             dst_to_fill->makeEmptyLocalNeighborhood(gid);
-         for (hier::BoxContainer::iterator li(fill_boxes);
+         for (hier::BoxContainer::iterator li = fill_boxes.begin();
               li != fill_boxes.end(); ++li) {
             hier::Box fill_box(*li,
                                ++last_id,

@@ -166,7 +166,8 @@ void txt2boxes(
    }
 
    // Shift all boxes into SAMRAI coordinates
-   for (hier::BoxContainer::iterator itr(boxes); itr != boxes.end(); ++itr) {
+   for (hier::BoxContainer::iterator itr = boxes.begin();
+        itr != boxes.end(); ++itr) {
       itr->shift(-hier::IntVector(tbox::Dimension(2), 2));
    }
 }
@@ -348,7 +349,7 @@ bool SingleLevelTestCase(
    const int num_boxes = level_boxes.size();
    hier::LocalId local_id(0);
    tbox::Array<int> local_indices(mpi.getSize(), 0);
-   hier::BoxContainer::iterator level_boxes_itr(level_boxes);
+   hier::BoxContainer::iterator level_boxes_itr = level_boxes.begin();
    for (int i = 0; i < num_boxes; ++i, ++level_boxes_itr) {
 
       int proc;

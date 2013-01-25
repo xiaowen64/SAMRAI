@@ -88,7 +88,7 @@ HierarchyNodeDataOpsInteger::resetLevels(
       boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       hier::BoxContainer node_boxes = level->getBoxes();
-      for (hier::BoxContainer::iterator i(node_boxes);
+      for (hier::BoxContainer::iterator i = node_boxes.begin();
            i != node_boxes.end(); ++i) {
          *i = pdat::NodeGeometry::toNodeBox(*i);
       }

@@ -282,7 +282,7 @@ BoxUtilities::checkBoxConstraints(
                     << bad_interval << std::endl;
          tbox::perr << "Physical domain boxes ... " << std::endl;
          int ib = 0;
-         for (BoxContainer::const_iterator itr(physical_boxes);
+         for (BoxContainer::const_iterator itr = physical_boxes.begin();
               itr != physical_boxes.end(); ++itr, ++ib) {
             tbox::perr << "Box # " << ib << " -- " << *itr << std::endl;
          }
@@ -1391,7 +1391,7 @@ BoxUtilities::findBadCutPointsForDirection(
          if (!border_boxes.isEmpty()) {
             border_boxes.simplify();
 
-            for (BoxContainer::iterator bbox(border_boxes);
+            for (BoxContainer::iterator bbox = border_boxes.begin();
                  bbox != border_boxes.end(); ++bbox) {
                findBadCutPointsForBorderAndDirection(id,
                   bad_cuts,
@@ -1430,7 +1430,7 @@ BoxUtilities::findBadCutPointsForDirection(
 
          if (!border_boxes.isEmpty()) {
             border_boxes.simplify();
-            for (BoxContainer::iterator bbox(border_boxes);
+            for (BoxContainer::iterator bbox = border_boxes.begin();
                  bbox != border_boxes.end(); ++bbox) {
                findBadCutPointsForBorderAndDirection(id,
                   bad_cuts,
@@ -1765,11 +1765,12 @@ BoxUtilities::makeNonOverlappingBoxContainers(
 
    // Remove portion of index space represented by array box from list.
    // Keep unique pieces on box list.
-   BoxContainer::const_iterator itr(boxes);
+   BoxContainer::const_iterator itr = boxes.begin();
    for (int ib = 0; ib < nb; ++ib, ++itr) {
       Box remove = *itr;
 
-      for (BoxContainer::iterator l(box_list); l != box_list.end(); ++l) {
+      for (BoxContainer::iterator l = box_list.begin();
+           l != box_list.end(); ++l) {
          Box intersection = remove * (*l);
          if (intersection.isSpatiallyEqual(*l)) {
             box_list_array[ib].pushBack(*l);

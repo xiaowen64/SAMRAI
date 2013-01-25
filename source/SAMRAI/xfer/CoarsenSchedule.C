@@ -498,15 +498,16 @@ CoarsenSchedule::generateScheduleNSquared()
    const hier::ProcessorMapping& src_mapping =
       d_temp_crse_level->getProcessorMapping();
 
-   hier::BoxContainer::const_iterator crse_itr_dp(d_crse_level->getBoxes());
+   hier::BoxContainer::const_iterator crse_itr_dp =
+      d_crse_level->getBoxes().begin();
    for (int dp = 0; dp < dst_npatches; dp++, ++crse_itr_dp) {
 
       const hier::Box dst_box(*crse_itr_dp,
                               hier::LocalId(dp),
                               dst_mapping.getProcessorAssignment(dp));
 
-      hier::BoxContainer::const_iterator crse_itr_sp(
-         d_temp_crse_level->getBoxes());
+      hier::BoxContainer::const_iterator crse_itr_sp =
+         d_temp_crse_level->getBoxes().begin();
       for (int sp = 0; sp < src_npatches; sp++, ++crse_itr_sp) {
 
          const hier::Box src_box(

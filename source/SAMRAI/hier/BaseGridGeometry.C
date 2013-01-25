@@ -416,7 +416,7 @@ BaseGridGeometry::computeBoxTouchingBoundaries(
 
             bool lower_side = false;
             bool upper_side = false;
-            for (BoxContainer::iterator bl(bdry_list);
+            for (BoxContainer::iterator bl = bdry_list.begin();
                  bl != bdry_list.end(); ++bl) {
                if (bl->lower() (nd) < box.lower(nd)) {
                   lower_side = true;
@@ -1200,7 +1200,7 @@ BaseGridGeometry::getBoundaryBoxes(
 
                if (!border_list.isEmpty()) {
                   border_list.coalesce();
-                  for (BoxContainer::iterator bl(border_list);
+                  for (BoxContainer::iterator bl = border_list.begin();
                        bl != border_list.end(); ++bl) {
                      if (num_bboxes == bdry_array_size) {
                         patch_boundaries[d].resizeArray(
@@ -1570,7 +1570,7 @@ BaseGridGeometry::resetDomainBoxContainer()
 
       const IntVector &one_vector(IntVector::getOne(d_dim));
 
-      for ( BoxContainer::const_iterator ni(d_physical_domain.begin());
+      for ( BoxContainer::const_iterator ni = d_physical_domain.begin();
             ni!=d_physical_domain.end(); ++ni ) {
 
          const Box &real_box = *ni;
@@ -1715,7 +1715,7 @@ BaseGridGeometry::checkPeriodicValidity(
       dup_domain2.unorder();
       dup_domain2.removeIntersections(domain);
 
-      BoxContainer::iterator n(dup_domain2);
+      BoxContainer::iterator n = dup_domain2.begin();
       for ( ; n != dup_domain2.end(); ++n) {
          Box this_box = *n;
          Index box_lower = this_box.lower();
@@ -1957,7 +1957,7 @@ BaseGridGeometry::readBlockDataFromInput(
          BoxContainer block_domain(d_physical_domain, block_id);
          pseudo_domain.spliceFront(block_domain);
 
-         for (BoxContainer::iterator si(d_singularity[b]);
+         for (BoxContainer::iterator si = d_singularity[b].begin();
               si != d_singularity[b].end(); ++si) {
             BoxContainer test_domain(pseudo_domain);
             test_domain.intersectBoxes(*si);
@@ -2449,7 +2449,7 @@ BaseGridGeometry::printClassData(
       }
 
       stream << "      singularity Boxes (" << singularity_boxlist.size() << ")\n";
-      for (BoxContainer::const_iterator bi(singularity_boxlist);
+      for (BoxContainer::const_iterator bi = singularity_boxlist.begin();
            bi != singularity_boxlist.end(); ++bi) {
          stream << "         " << *bi << '\n';
       }

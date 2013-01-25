@@ -173,7 +173,7 @@ int main(
       boost::shared_ptr<hier::BoxLevel> layer1(
          boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
-      hier::BoxContainer::iterator coarse_domain_itr(coarse_domain);
+      hier::BoxContainer::iterator coarse_domain_itr = coarse_domain.begin();
       for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_domain_itr) {
          if (ib % nproc == layer0->getMPI().getRank()) {
             layer0->addBox(hier::Box(*coarse_domain_itr,
@@ -182,7 +182,7 @@ int main(
          }
       }
 
-      hier::BoxContainer::iterator fine_boxes_itr(fine_boxes);
+      hier::BoxContainer::iterator fine_boxes_itr = fine_boxes.begin();
       for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_boxes_itr) {
          if (ib % nproc == layer1->getMPI().getRank()) {
             layer1->addBox(hier::Box(*fine_boxes_itr,

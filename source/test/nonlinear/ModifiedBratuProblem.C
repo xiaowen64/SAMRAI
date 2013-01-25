@@ -454,7 +454,7 @@ void ModifiedBratuProblem::setVectorWeights(
               p != level->end(); ++p) {
 
             const boost::shared_ptr<hier::Patch>& patch = *p;
-            for (hier::BoxContainer::const_iterator i(coarsened_boxes);
+            for (hier::BoxContainer::const_iterator i = coarsened_boxes.begin();
                  i != coarsened_boxes.end(); ++i) {
 
                const hier::Box& coarse_box = *i;
@@ -2895,7 +2895,7 @@ void ModifiedBratuProblem::correctLevelFlux(
             twodelta(d) = ((s == 0) ? 2 : -2);
             hier::BoxContainer level_edges;
             getLevelEdges(level_edges, patch, level, d, s);
-            for (hier::BoxContainer::iterator l(level_edges);
+            for (hier::BoxContainer::iterator l = level_edges.begin();
                  l != level_edges.end(); ++l) {
                pdat::CellIterator icend(pdat::CellGeometry::end(*l));
                for (pdat::CellIterator ic(pdat::CellGeometry::begin(*l));
@@ -2934,7 +2934,7 @@ void ModifiedBratuProblem::correctPatchFlux(
          double factor = ((s == 0) ? 1.0 / dx[d] : -1.0 / dx[d]);
          hier::BoxContainer level_edges;
          getLevelEdges(level_edges, patch, level, d, s);
-         for (hier::BoxContainer::iterator l(level_edges);
+         for (hier::BoxContainer::iterator l = level_edges.begin();
               l != level_edges.end(); ++l) {
             pdat::CellIterator icend(pdat::CellGeometry::end(*l));
             for (pdat::CellIterator ic(pdat::CellGeometry::begin(*l));

@@ -208,8 +208,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
    const int npdboxes = init_phys_domain.size();
 
    // Test #0b:
-   hier::BoxContainer::const_iterator ipditr(init_phys_domain);
-   hier::BoxContainer::const_iterator tpditr(test_phys_domain);
+   hier::BoxContainer::const_iterator ipditr = init_phys_domain.begin();
+   hier::BoxContainer::const_iterator tpditr = test_phys_domain.begin();
    if (d_do_refine_test) {
       for (int ib = 0; ib < npdboxes; ib++, ++ipditr, ++tpditr) {
          if (!Box::refine(*ipditr, d_ratio).isSpatiallyEqual(*tpditr)) {
@@ -339,8 +339,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
       const int nboxes = init_domain.size();
 
       // Test #8:
-      hier::BoxContainer::const_iterator iditr(init_domain);
-      hier::BoxContainer::const_iterator tditr(test_domain);
+      hier::BoxContainer::const_iterator iditr = init_domain.begin();
+      hier::BoxContainer::const_iterator tditr = test_domain.begin();
       if (d_do_refine_test) {
          for (int ib = 0; ib < nboxes; ib++, ++iditr, ++tditr) {
             if (!Box::refine(*iditr, d_ratio).isSpatiallyEqual(*tditr)) {

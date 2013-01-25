@@ -364,7 +364,7 @@ OutersideData<TYPE>::packStream(
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-      for (hier::BoxContainer::const_iterator b(boxes);
+      for (hier::BoxContainer::const_iterator b = boxes.begin();
            b != boxes.end(); ++b) {
          const hier::Box src_box = hier::Box::shift(*b, -src_offset);
          for (int f = 0; f < 2; f++) {
@@ -392,7 +392,7 @@ OutersideData<TYPE>::unpackStream(
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-      for (hier::BoxContainer::const_iterator b(boxes);
+      for (hier::BoxContainer::const_iterator b = boxes.begin();
            b != boxes.end(); ++b) {
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect = (*b) * d_data[d][f]->getBox();

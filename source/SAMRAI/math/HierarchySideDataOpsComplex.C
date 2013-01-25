@@ -94,7 +94,7 @@ HierarchySideDataOpsComplex::resetLevels(
 
       for (int nd = 0; nd < dimVal; nd++) {
          side_boxes = level->getBoxes();
-         for (hier::BoxContainer::iterator i(side_boxes);
+         for (hier::BoxContainer::iterator i = side_boxes.begin();
               i != side_boxes.end(); ++i) {
             *i = pdat::SideGeometry::toSideBox(*i, nd);
          }

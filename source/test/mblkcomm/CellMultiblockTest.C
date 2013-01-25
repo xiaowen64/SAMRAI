@@ -469,7 +469,7 @@ bool CellMultiblockTest::verifyResults(
          neighbor_ghost.refine(ratio);
          neighbor_ghost.intersectBoxes(gbox);
 
-         for (hier::BoxContainer::iterator ng(neighbor_ghost);
+         for (hier::BoxContainer::iterator ng = neighbor_ghost.begin();
               ng != neighbor_ghost.end(); ++ng) {
 
            pdat::CellIterator ciend(pdat::CellGeometry::end(*ng));

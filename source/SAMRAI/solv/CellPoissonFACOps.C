@@ -2079,7 +2079,7 @@ CellPoissonFACOps::computeVectorWeights(
               p != level->end(); ++p) {
 
             const boost::shared_ptr<hier::Patch>& patch = *p;
-            for (hier::BoxContainer::iterator i(coarsened_boxes);
+            for (hier::BoxContainer::iterator i = coarsened_boxes.begin();
                  i != coarsened_boxes.end(); ++i) {
 
                hier::Box intersection = *i * (patch->getBox());

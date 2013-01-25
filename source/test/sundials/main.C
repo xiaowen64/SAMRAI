@@ -331,7 +331,7 @@ int main(
       boost::shared_ptr<hier::PatchLevel> level_zero(
          hierarchy->getPatchLevel(0));
       const hier::BoxContainer& level_0_boxes = level_zero->getBoxes();
-      for (hier::BoxContainer::const_iterator i(level_0_boxes);
+      for (hier::BoxContainer::const_iterator i = level_0_boxes.begin();
            i != level_0_boxes.end(); ++i) {
          neq += i->size();
       }

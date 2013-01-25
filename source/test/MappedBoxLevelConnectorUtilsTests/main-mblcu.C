@@ -273,7 +273,7 @@ int main(
             block_domain.removeIntersections(exclude_boxes);
 
             hier::LocalId last_local_id(-1);
-            for (hier::BoxContainer::iterator bi(block_domain);
+            for (hier::BoxContainer::iterator bi = block_domain.begin();
                  bi != block_domain.end(); ++bi) {
                big_box_level.addBoxWithoutUpdate(
                   hier::Box(*bi,
@@ -786,8 +786,8 @@ void shrinkBoxLevel(
    for (std::map<hier::BlockId, hier::BoxContainer>::iterator mi = boundary_boxes.begin();
         mi != boundary_boxes.end(); ++mi) {
       tbox::plog << "Block " << mi->first << '\n';
-      for (hier::BoxContainer::iterator bi(mi->second); bi != mi->second.end();
-           ++bi) {
+      for (hier::BoxContainer::iterator bi = mi->second.begin();
+           bi != mi->second.end(); ++bi) {
          tbox::plog << "  " << *bi << '\t' << bi->numberCells() << '\n';
       }
    }
@@ -817,7 +817,7 @@ void shrinkBoxLevel(
       hier::BlockId block_id(mi->first);
       hier::BoxContainer& boundary_for_block(mi->second);
 
-      for (hier::BoxContainer::iterator bi(boundary_for_block);
+      for (hier::BoxContainer::iterator bi = boundary_for_block.begin();
            bi != boundary_for_block.end(); ++bi) {
          hier::Box box(*bi);
          assert( box.getBlockId() == block_id );
@@ -867,7 +867,7 @@ void shrinkBoxLevel(
             complement_boxes);
          shrunken_boxes.simplify();
 
-         for (hier::BoxContainer::iterator li(shrunken_boxes);
+         for (hier::BoxContainer::iterator li = shrunken_boxes.begin();
               li != shrunken_boxes.end(); ++li) {
             const hier::Box shrunken_box(
                *li,
