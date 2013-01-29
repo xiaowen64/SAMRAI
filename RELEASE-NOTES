@@ -52,7 +52,11 @@ descriptions of items in the following list are provided below.
    places where a Connector represents a mapping a MappingConnector is now
    used.
 
-2) A new PatchLevel constructor which acquires a supplied BoxLevel has been
+2) Both Connctor and MappingConnector hold pointers to their transposes.  Hence
+   one Connector can now be used where 2--the Connector and its transpose--
+   were previously required.
+
+3) A new PatchLevel constructor which acquires a supplied BoxLevel has been
    introduced.  The existing constructor which copies a supplied BoxLevel is
    unchanged.
 
@@ -70,12 +74,17 @@ descriptions of items in the following list are provided below.
 3) Instantiation of Connectors and BoxLevels now occurs in the methods that
    know how to build them.
 
-3) BoxIterators are now accessed through the begin and end methods on class
+4) BoxIterators are now accessed through the begin and end methods on class
    Box.  The BoxIterator constructor itself is now private.
 
-4) Cell/Edge/Face/Node/SideIterators are now accessed through the static
+5) Cell/Edge/Face/Node/SideIterators are now accessed through the static
    begin and end methods on Cell/Edge/Face/Node/SideGeometry respectively.
    The Iterator constructors themselves are now private.
+
+6) BoxContainerIterator (aka BoxContainer::iterator) and
+   BoxContainerConstIterator (aka BoxContainer::const_iterator) are now
+   accessed through the begin and end methods on class BoxContainer.  The
+   constructors for each iterator are now private.
 
 *****************************************************************************
 
@@ -101,7 +110,22 @@ descriptions of items in the following list are provided below.
    safety and added clarity as to how methods taking various Connectors are to
    be used.
 
-2) The BoxLevel contained in a PatchLevel may not be modified.  Therefore, the
+2) Many interfaces have been simplified as a single Connector object can now
+   be used to refer to both the Connector and its transpose.  In particular,
+   there is now only 1 modify method and 3 bridge methods as the other
+   overloaded versions which existed were degenerate cases.  Note that in the
+   case of bridgeWithNesting() and the 2 bridge() methods which create the
+   result it is now necessary to specify whether or not the tranpose bridge
+   should be computed.
+
+   Several convenience methods have been added to find/create both a Connector
+   and its transpose.  These are PatchHierarchy::getConnectorWithTranspose(),
+   OverlapConnectorAlgorithm::findOverlapsWithTranspose(),
+   PersistentOverlapConnectors::createConnectorWithTranspose(),
+   PersistentOverlapConnectors::findConnectorWithTranspose(), and
+   PersistentOverlapConnectors::findOrCreateConnectorWithTranspose().
+
+3) The BoxLevel contained in a PatchLevel may not be modified.  Therefore, the
    existing PatchLevel constructor copied the supplied BoxLevel.  However, this
    means a BoxLevel copy for each PatchLevel constructed.  It the client code
    will never modify the supplied BoxLevel, it is not necessary for the new
@@ -151,6 +175,11 @@ descriptions of items in the following list are provided below.
    are static methods on Cell/Edge/Face/Node/SideGeometry respectively.  The
    begin and end methods are simpler to use that the iterator constructors
    which are now private.
+
+6) Use of BoxContainerIterator and BoxContainerConstIterator now follows the
+   well established pattern of requesting the iterators through begin and end
+   methods on BoxContainer.  These methods are also simpler to use than the
+   constructors for these iterators which are now private.
 
 =============================================================================
 =============================================================================
