@@ -86,6 +86,8 @@ descriptions of items in the following list are provided below.
    accessed through the begin and end methods on class BoxContainer.  The
    constructors for each iterator are now private.
 
+7) The restart-redistribute tool is now parallel.
+
 *****************************************************************************
 
 -----------------------------------------------------------------------------
@@ -180,6 +182,13 @@ descriptions of items in the following list are provided below.
    well established pattern of requesting the iterators through begin and end
    methods on BoxContainer.  These methods are also simpler to use than the
    constructors for these iterators which are now private.
+
+7) The restart-redistribute tool has been parallelized on the smaller of the
+   number of input files and the number of output files.  You may run the
+   tool with any number of processors up to the smaller of the number of
+   input and the number output files.  Invocation of the tool is via mpirun
+   or the appropriate parallel program launcher for your platform.  No
+   arguments to the tool have changed.
 
 =============================================================================
 =============================================================================

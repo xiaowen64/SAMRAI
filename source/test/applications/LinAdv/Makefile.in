@@ -47,8 +47,10 @@ check:
 #          to have been done.  So remove the old stuff.
 check2d:	main
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test.2d.input;
-		$(RM) -rf  test.2d.restart/restore.000003/nodes.*[2-9]
-		$(OBJECT)/tools/restart/restart-redistribute test.2d.restart test_restart_redistribute_2d 3 4;
+		$(RM) test.2d.restart/restore.000003/nodes.*1;
+		$(RM) test.2d.restart/restore.000003/nodes.*4;
+		$(OBJECT)/config/serpa-run 2 $(OBJECT)/tools/restart/restart-redistribute test.2d.restart test_restart_redistribute_2d 3 4;
+		$(OBJECT)/config/serpa-run 4 ./main test_inputs/test.2d.input test_restart_redistribute_2d 3;
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test.2d.input test.2d.restart 5;
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test_sync.2d.input;
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test_sync.2d.input test_sync.2d.restart 5;

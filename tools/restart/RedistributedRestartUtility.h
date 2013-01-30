@@ -72,7 +72,7 @@ private:
       const string& key,
       const tbox::Array<tbox::Array<int> >* file_mapping = NULL,
       int num_files_written = -1,
-      int input_proc_num = -1,
+      int which_file_mapping = -1,
       int total_input_files = -1,
       int total_output_files = -1);
 

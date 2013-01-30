@@ -235,35 +235,60 @@ int main(
    // file_mapping will have size equal to the lesser value of
    // num_input_files and num_output_files.
    tbox::Array<tbox::Array<int> > file_mapping;
-   int file_ratio;
-   int remainder;
+   int smaller, larger;
    if (num_output_files > num_input_files) {
-      file_mapping.resizeArray(num_input_files);
-      file_ratio = num_output_files / num_input_files;
-      remainder = num_output_files % num_input_files;
-   } else {
-      file_mapping.resizeArray(num_output_files);
-      file_ratio = num_input_files / num_output_files;
-      remainder = num_input_files % num_output_files;
+      smaller = num_input_files;
+      larger = num_output_files;
    }
+   else {
+      smaller = num_output_files;
+      larger = num_input_files;
+   }
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   int nprocs = mpi.getSize();
+   int rank = mpi.getRank();
+   if (nprocs > smaller) {
+      TBOX_ERROR("The number of processes must be equal to the smaller of\n"
+         << "the number of input files an the number of output files."
+         << std::endl);
+   }
+   int file_ratio = larger / smaller;
+   int remainder = larger % smaller;
+   int files_per_each_proc = smaller / nprocs;
+   int extra_files = smaller % nprocs;
+   int my_file_mapping_size = files_per_each_proc;
+   if (rank < extra_files) {
+      ++my_file_mapping_size;
+   }
+   file_mapping.resizeArray(my_file_mapping_size);
 
    int file_counter = 0;
 
    // fill file_mapping.
-   int i;
-   for (i = 0; i < file_mapping.size(); i++) {
-      if (i < remainder) {
-         file_mapping[i].resizeArray(file_ratio + 1);
-         for (int j = 0; j <= file_ratio; j++) {
-            file_mapping[i][j] = file_counter + j;
+   for (int i = 0; i <= rank; ++i) {
+      int this_file_mapping_size = files_per_each_proc;
+      if (i < extra_files) {
+         ++this_file_mapping_size;
+      }
+      for (int j = 0; j < this_file_mapping_size; j++) {
+         if (remainder > 0) {
+            if (i == rank) {
+               file_mapping[j].resizeArray(file_ratio + 1);
+               for (int k = 0; k <= file_ratio; k++) {
+                  file_mapping[j][k] = file_counter + k;
+               }
+            }
+            file_counter += file_ratio + 1;
+            --remainder;
+         } else {
+            if (i == rank) {
+               file_mapping[j].resizeArray(file_ratio);
+               for (int k = 0; k < file_ratio; k++) {
+                  file_mapping[j][k] = file_counter + k;
+               }
+            }
+            file_counter += file_ratio;
          }
-         file_counter += file_ratio + 1;
-      } else {
-         file_mapping[i].resizeArray(file_ratio);
-         for (int j = 0; j < file_ratio; j++) {
-            file_mapping[i][j] = file_counter + j;
-         }
-         file_counter += file_ratio;
       }
    }
 
@@ -280,6 +305,7 @@ int main(
 
    tbox::SAMRAIManager::shutdown();
    tbox::SAMRAIManager::finalize();
+   tbox::SAMRAI_MPI::finalize();
 
    return 0;
 

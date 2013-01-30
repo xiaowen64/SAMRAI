@@ -35,9 +35,27 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
    const tbox::Array<tbox::Array<int> >& file_mapping,
    const int restore_num)
 {
-   int num_files_written = 0;
-   int num_iterations = tbox::MathUtilities<int>::Min(total_input_files,
-         total_output_files);
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   int nprocs = mpi.getSize();
+   int rank = mpi.getRank();
+   int output_files_per_proc = total_output_files / nprocs;
+   int extra_output_files = total_output_files % nprocs;
+   int num_files_written;
+   if (total_input_files < total_output_files) {
+      num_files_written = file_mapping[0][0];
+   }
+   else {
+      num_files_written = output_files_per_proc * rank;
+      if (extra_output_files) {
+         if (rank >= extra_output_files) {
+            num_files_written += extra_output_files;
+         }
+         else {
+            num_files_written += rank;
+         }
+      }
+   }
+   int num_iterations = file_mapping.size();
 
    for (int icount = 0; icount < num_iterations; icount++) {
 
@@ -58,6 +76,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
       //Make the subdirectories if this is the first iteration.
       if (icount == 0) {
          tbox::Utilities::recursiveMkdir(restart_dirname);
+         tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
       }
 
       //Mount the output files on an array of output databases
@@ -65,16 +84,31 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
       output_dbs(num_files_to_write);
 
       string proc_buf;
-      for (int j = 0; j < num_files_to_write; j++) {
+      for (int i = 0; i < num_files_to_write; i++) {
+
+         int cur_out_file_id;
+         if (total_input_files < total_output_files) {
+            cur_out_file_id = file_mapping[icount][i];
+         } else {
+            cur_out_file_id = (output_files_per_proc * rank) + icount;
+            if (extra_output_files) {
+               if (rank >= extra_output_files) {
+                  cur_out_file_id += extra_output_files;
+               }
+               else {
+                  cur_out_file_id += rank;
+               }
+            }
+         }
 
          proc_buf = "/proc." + tbox::Utilities::processorToString(
-               num_files_written + j);
+            cur_out_file_id);
 
          string output_filename = restart_dirname + proc_buf;
 
-         output_dbs[j].reset(new tbox::HDFDatabase(output_filename));
+         output_dbs[i].reset(new tbox::HDFDatabase(output_filename));
 
-         int open_success = output_dbs[j]->create(output_filename);
+         int open_success = output_dbs[i]->create(output_filename);
 
          if (open_success < 0) {
             TBOX_ERROR(
@@ -95,12 +129,21 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
       tbox::Array<string> test_keys(0);
       int num_keys = 0;
 
+      int input_files_per_proc = total_input_files / nprocs;
+      int extra_input_files = total_input_files % nprocs;
       for (int i = 0; i < num_files_to_read; i++) {
 
          int cur_in_file_id;
          if (total_input_files < total_output_files) {
-            //cur_in_file_id = num_files_written;
-            cur_in_file_id = icount;
+            cur_in_file_id = (input_files_per_proc * rank) + icount;
+            if (extra_input_files) {
+               if (rank >= extra_input_files) {
+                  cur_in_file_id += extra_input_files;
+               }
+               else {
+                  cur_in_file_id += rank;
+               }
+            }
          } else {
             cur_in_file_id = file_mapping[icount][i];
          }
@@ -136,10 +179,10 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
 
       //For every input key, call the recursive function that reads from the
       //input databases and writes to output databases.
-      for (int j = 0; j < num_keys; j++) {
+      for (int i = 0; i < num_keys; i++) {
          readAndWriteRestartData(output_dbs,
             input_dbs,
-            input_keys[j],
+            input_keys[i],
             &file_mapping,
             num_files_written,
             icount,
@@ -148,12 +191,11 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
       }
 
       //Unmount the databases.  This closes the files.
-      int k;
-      for (k = 0; k < num_files_to_read; k++) {
-         input_dbs[k]->close();
+      for (int i = 0; i < num_files_to_read; i++) {
+         input_dbs[i]->close();
       }
-      for (k = 0; k < num_files_to_write; k++) {
-         output_dbs[k]->close();
+      for (int i = 0; i < num_files_to_write; i++) {
+         output_dbs[i]->close();
       }
 
       num_files_written += num_files_to_write;
@@ -172,7 +214,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
    const string& key,
    const tbox::Array<tbox::Array<int> >* file_mapping,  // = NULL
    const int num_files_written, // = -1,
-   const int input_proc_num, // = -1
+   const int which_file_mapping, // = -1
    const int total_input_files, // = -1,
    const int total_output_files) // = -1););
 {
@@ -191,6 +233,10 @@ void RedistributedRestartUtility::readAndWriteRestartData(
    //If the key is associated with any type other than Database, then the data
    //can be read from input_dbs[0] and written to every element of output_dbs.
    //The Database case is handled separately.
+
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   int nprocs = mpi.getSize();
+   int rank = mpi.getRank();
 
    if (input_dbs[0]->isDatabase(key)) {
       boost::shared_ptr<tbox::Database> db = input_dbs[0]->getDatabase(key);
@@ -214,13 +260,26 @@ void RedistributedRestartUtility::readAndWriteRestartData(
          tbox::Array<int> input_proc_nums;
          if (total_input_files < total_output_files) {
             input_proc_nums.resizeArray(1);
+            int output_files_per_proc = total_output_files / nprocs;
+            int extra_output_files = total_output_files % nprocs;
+            int input_proc_num =
+               (output_files_per_proc * rank) + which_file_mapping;
+            if (extra_output_files) {
+               if (rank >= extra_output_files) {
+                  input_proc_num += extra_output_files;
+               }
+               else {
+                  input_proc_num += rank;
+               }
+            }
             input_proc_nums[0] = input_proc_num;
          } else {
-            input_proc_nums = (*file_mapping)[num_files_written];
+            input_proc_nums = (*file_mapping)[which_file_mapping];
          }
 
          //Call routine to write output according to the new processor mapping
-         readAndWritePatchLevelRestartData(output_dbs, level_in_dbs,
+         readAndWritePatchLevelRestartData(output_dbs,
+            level_in_dbs,
             key,
             num_files_written,
             input_proc_nums,
@@ -243,12 +302,25 @@ void RedistributedRestartUtility::readAndWriteRestartData(
          tbox::Array<int> input_proc_nums;
          if (total_input_files < total_output_files) {
             input_proc_nums.resizeArray(1);
+            int output_files_per_proc = total_output_files / nprocs;
+            int extra_output_files = total_output_files % nprocs;
+            int input_proc_num =
+               (output_files_per_proc * rank) + which_file_mapping;
+            if (extra_output_files) {
+               if (rank >= extra_output_files) {
+                  input_proc_num += extra_output_files;
+               }
+               else {
+                  input_proc_num += rank;
+               }
+            }
             input_proc_nums[0] = input_proc_num;
          } else {
-            input_proc_nums = (*file_mapping)[num_files_written];
+            input_proc_nums = (*file_mapping)[which_file_mapping];
          }
 
-         readAndWriteBoxLevelRestartData(output_dbs, level_in_dbs,
+         readAndWriteBoxLevelRestartData(output_dbs,
+            level_in_dbs,
             key,
             num_files_written,
             input_proc_nums,
@@ -289,7 +361,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
                child_keys[j],
                file_mapping,
                num_files_written,
-               input_proc_num,
+               which_file_mapping,
                total_input_files,
                total_output_files);
          }
@@ -747,6 +819,8 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
 
    //Each iteration of this loop processes the patches from one input
    //database.
+   version = level_in_dbs[0]->getDatabase("mapped_boxes")->getInteger(
+      "HIER_BOX_CONTAINER_VERSION");
    for (int i = 0; i < input_proc_nums.size(); i++) {
 
       boost::shared_ptr<tbox::Database> mapped_boxes_in_db =
@@ -886,7 +960,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
          level_out_dbs[j]->putDatabase("mapped_boxes");
 
       mapped_boxes_out_db->
-      putInteger("HIER_MAPPED_BOX_SET_VERSION", version);
+      putInteger("HIER_BOX_CONTAINER_VERSION", version);
       mapped_boxes_out_db->
       putInteger("mapped_box_set_size", out_mbs_size[j]);
 
@@ -947,7 +1021,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
  *          level_out_dbs[j]->putDatabase("mapped_boxes");
  *
  *       mapped_boxes_out_db->
- *          putInteger("HIER_MAPPED_BOX_SET_VERSION", version);
+ *          putInteger("HIER_BOX_CONTAINER_VERSION", version);
  *       mapped_boxes_out_db->
  *          putInteger("mapped_box_set_size", out_mbs_size);
  *
