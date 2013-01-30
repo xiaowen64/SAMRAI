@@ -68,7 +68,7 @@ checktest:
 
 clean: 
 	$(SAMCLEAN)
-	$(RM) -rf defaultloggertest userloggertest
-	$(RM) -rf *.log.* stats
+	$(RM) defaultloggertest userloggertest
+	$(RM) *.log.* stats
 
 include $(SRCDIR)/Makefile.depend

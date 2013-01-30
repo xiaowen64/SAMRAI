@@ -62,7 +62,7 @@ checktest:
 
 clean:
 	$(SAMCLEAN)
-	$(RM) timertest statstest timermaxtest
-	$(RM) -rf *.log.* stats
+	$(RM) timertest statstest timermaxtest example
+	$(RM) *.log.* stats *.txt restart
 
 include $(SRCDIR)/Makefile.depend

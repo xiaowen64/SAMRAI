@@ -63,8 +63,8 @@ clean-check:
 clean:
 	$(SAMCLEAN)
 	$(RM) *.f *main* 
-	$(RM) -rf restart-*d*
-	$(RM) -r viz*
+	$(RM) restart-*d*
+	$(RM) viz*
 
 
 include $(SRCDIR)/Makefile.depend

@@ -50,6 +50,6 @@ checktest:
 clean:
 	$(SAMCLEAN)
 	$(RM) main
-	$(RM) -rf *.log.* stats
+	$(RM) *.log.* stats
 
 include $(SRCDIR)/Makefile.depend

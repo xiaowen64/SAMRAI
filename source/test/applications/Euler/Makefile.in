@@ -76,7 +76,7 @@ clean-check:
 
 clean:		clean-check
 		$(RM) *.f main
-		$(RM) -rf test*restart test*visit viz*
+		$(RM) test*restart test*visit viz*
 
 include $(SRCDIR)/Makefile.depend
 

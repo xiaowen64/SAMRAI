@@ -73,6 +73,6 @@ clean-check:
 
 clean:
 		$(SAMCLEAN)
-		$(RM) -rf *.f main *visit
+		$(RM) *.f main *visit
 
 include $(SRCDIR)/Makefile.depend

@@ -73,5 +73,5 @@ clean-check:
 	$(SAMCLEAN)
 
 clean:		clean-check
-	$(RM) main
+	$(RM) main *.f
 

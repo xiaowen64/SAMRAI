@@ -69,7 +69,7 @@ checktest:
 
 clean:
 	$(SAMCLEAN)
-	$(RM) testHDF5 testSilo
-	$(RM) -r test_dir *.silo *.hdf5
+	$(RM) testHDF5 testHDF5AppFileOpen testSilo testSiloAppFileOpen testMemory
+	$(RM) test_dir *.silo *.hdf5
 
 include $(SRCDIR)/Makefile.depend

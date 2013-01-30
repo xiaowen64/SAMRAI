@@ -61,7 +61,7 @@ clean-check:
 	$(SAMCLEAN)
 
 clean:
-	$(RM) *.o main
+	$(RM) *.o main *.log.* *.f
 
 include $(SRCDIR)/Makefile.depend
 

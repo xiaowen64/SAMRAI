@@ -44,7 +44,7 @@ clean:
 
 redo:
 		$(RM) main2d main3d core *.ii *.int.c
-		$(RM) -r ti_files ii_files
+		$(RM) ti_files ii_files
 
 include $(SRCDIR)/Makefile.depend
 

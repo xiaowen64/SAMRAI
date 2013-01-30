@@ -80,7 +80,7 @@ clean-check:
 
 clean:		clean-check
 	$(RM) *.f main
-	$(RM) -rf test*restart
+	$(RM) test*restart
 
 redo:
 	$(RM) core main*d

@@ -76,8 +76,8 @@ clean-check:
 	$(SAMCLEAN)
 
 clean:		clean-check
-	$(RM) main
-	$(RM) -rf *visit
+	$(RM) main *.f
+	$(RM) *visit
 
 redo:
 	$(RM) core main
