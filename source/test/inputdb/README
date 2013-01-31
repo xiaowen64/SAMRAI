@@ -18,7 +18,7 @@ COMPILATION AND EXECUTION
 
    Execution:
       serial:
-         ./main inputdb.input
+         ./main test_inputs/inputdb.input
       parallel:
          Parallel execution is platform dependent.  This example demonstrates
          execution via mpirun.

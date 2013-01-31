@@ -29,7 +29,6 @@ TEST_NPROCS = @TEST_NPROCS@
 
 CXX_OBJS      = main-lbcorrectness.o
 
-INPUTS1D = rod.1d.input
 INPUTS2D = rect.2d.treelb.input rod.2d.treelb.input small_cube.2d.caplb.input small_cube.2d.treelb.input small_sphere.2d.caplb.input small_sphere.2d.treelb.input
 INPUTS3D = plank.3d.treelb.input small_cube.3d.treelb.input
 
@@ -44,11 +43,6 @@ testlib:
 check:
 		$(MAKE) check2d
 		$(MAKE) check3d
-
-check1d:	main
-		for f in $(INPUTS1D); do	\
-			$(OBJECT)/config/serpa-run $(TEST_NPROCS) \ ./main "test_inputs/$$f";	\
-		done
 
 check2d:	main
 		for f in $(INPUTS2D); do	\
@@ -65,7 +59,7 @@ checkcompile: main
 checktest:
 		rm -f makecheck.logfile
 		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-		$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
 		rm -f makecheck.logfile
 
 clean-check:

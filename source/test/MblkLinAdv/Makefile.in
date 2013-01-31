@@ -55,20 +55,8 @@ checkcompile: main
 checktest:
 	rm -f makecheck.logfile
 	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
 	rm -f makecheck.logfile
-
-examples2d: 
-
-examples3d: main
-	@for i in $(SRCDIR)/example_inputs/*.3d.input ; do	\
-	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-		./main $${i};	\
-	done
-
-examples:
-	$(MAKE) examples2d
-	$(MAKE) examples3d
 
 clean-check:
 	$(SAMCLEAN)

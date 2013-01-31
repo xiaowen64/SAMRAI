@@ -24,7 +24,7 @@ include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA= -I$(TESTINCLUDE) -DTESTING=0
 
-NUM_TESTS     = 8
+NUM_TESTS     = 0
 
 TEST_NPROCS   = @TEST_NPROCS@
 
@@ -42,12 +42,19 @@ testlib:
 	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
 
 check:
-	$(MAKE) check3d
 
-check2d:
+perf:
+	$(MAKE) perf2d
+	$(MAKE) perf3d
 
-check3d:       main
-	@for i in test_inputs/*.input ; do \
+perf2d:       main
+	@for i in performance_inputs/*.2d.*input ; do \
+	 $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+	       ./main $${i}; \
+	done
+
+perf3d:       main
+	@for i in performance_inputs/*.3d.*input ; do \
 	 $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
 	       ./main $${i}; \
 	done
@@ -57,20 +64,8 @@ checkcompile: main
 checktest:
 	rm -f makecheck.logfile
 	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
 	rm -f makecheck.logfile
-
-examples2d: 
-
-examples3d: main
-	@for i in $(SRCDIR)/example_inputs/*.3d.input ; do	\
-	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-		./main $${i};	\
-	done
-
-examples:
-	$(MAKE) examples2d
-	$(MAKE) examples3d
 
 clean-check:
 	$(SAMCLEAN)

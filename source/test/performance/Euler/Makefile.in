@@ -19,9 +19,7 @@ default:	main
 
 include $(OBJECT)/config/Makefile.config
 
-AUTOTEST      = $(SAMRAI)/source/test/applications
-CPPFLAGS_EXTRA= -I$(AUTOTEST) -DNDIM=$(PDIM) -DTESTING=0
-FORTRAN       = $(SRCDIR)/fortran/$(PDIM)d
+CPPFLAGS_EXTRA= -DTESTING=0
 
 NUM_TESTS = 1
 
@@ -36,15 +34,17 @@ F_OBJS      = \
 
 main:		$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
 		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS)     \
-		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main
+		$(LIBSAMRAI) $(LDLIBS) -o main
 
 clean:
 		$(SAMCLEAN)
-		$(RM) *.f main2d main3d
+		$(RM) *.f main
 
 redo:
-		$(RM) main2d main3d core *.ii *.int.c
+		$(RM) main core *.ii *.int.c
 		$(RM) ti_files ii_files
+
+checkcompile:	main
 
 include $(SRCDIR)/Makefile.depend
 

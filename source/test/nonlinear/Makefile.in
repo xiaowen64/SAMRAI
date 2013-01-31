@@ -46,7 +46,9 @@ main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
 
 check:
 	$(MAKE) check2d
-	echo Skipping for now: $(MAKE) check3d
+
+perf:
+	$(MAKE) perf3d
 
 check2d:	main
 	@for i in test_inputs/*2d*.input ; do	\
@@ -54,22 +56,18 @@ check2d:	main
 		./main $${i} -skip_petscrc;	\
 	done
 
-check3dx:	main
-	@for i in test_inputs/*3d*.input ; do	\
+perf3d:	main
+	@for i in performance_inputs/*3d*.input ; do	\
 	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
 		./main $${i} -skip_petscrc;	\
 	done
-
-# Disable check3d from test, because it takes too long.
-# It can be run using check3dx
-check3d:	main
 
 checkcompile: main
 
 checktest:
 	rm -f makecheck.logfile
 	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
 	rm -f makecheck.logfile
 
 clean-check:

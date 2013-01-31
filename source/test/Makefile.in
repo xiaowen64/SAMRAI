@@ -15,9 +15,7 @@ SUBDIR        = source/test
 
 SUBDIRS = \
    testlib \
-   pointer \
    logger \
-   ieee \
    dimension \
    dataaccess \
    inputdb \

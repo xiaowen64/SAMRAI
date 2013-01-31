@@ -1582,11 +1582,6 @@ then
      define(samrai_test_inputs,[ '(' -type d -name '*inputs*' '!' -path '*/*inputs*/*' ')' ])
      SAMRAI_LINK_FILES([ esyscmd(find source/test samrai_test_inputs | sort --ignore-case) ])
 
-     dnl
-     dnl Special directories in test that are not caught as part of the previous fined.
-     dnl 
-     SAMRAI_LINK_FILES([ source/test/applications/Euler/RP_test ])
-
 fi
 
 dnl Undefine the m4 symbols not needed anymore.
@@ -1630,7 +1625,6 @@ then
      $INSTALL  $srcdir/INSTALL-NOTES INSTALL-NOTES 
      $MKDIR_P source/test/testtools
      $INSTALL  $srcdir/source/test/testtools/* source/test/testtools
-     $INSTALL  $srcdir/source/test/inputdb/*.input  source/test/inputdb
 
      dnl
      dnl Copy README files
