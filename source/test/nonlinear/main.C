@@ -404,7 +404,6 @@ int main(
          new mesh::TreeLoadBalancer(
             dim,
             "LoadBalancer",
-            boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::BalancedDepthFirstTree),
             input_db->getDatabase("LoadBalancer")));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 

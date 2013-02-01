@@ -234,7 +234,6 @@ int main(
          new mesh::TreeLoadBalancer(
             dim,
             "load balancer",
-            boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::BalancedDepthFirstTree),
             input_db->getDatabase("TreeLoadBalancer")));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
@@ -245,7 +244,7 @@ int main(
       boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
             patch_hierarchy,
-            " Gridding Algorithm",
+            "Gridding Algorithm",
             input_db->getDatabase("GriddingAlgorithm"),
             tag_and_initializer,
             box_generator,
