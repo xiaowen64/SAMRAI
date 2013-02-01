@@ -192,7 +192,7 @@ cat <<-EOF
 	--disable-rpath
 	--with-zlib
 	--with-hdf5=/usr/local/tools/hdf5-intel-parallel-1.8.8
-	--with-silo=/usr/gapps/silo/4.8/chaos_5_x86_64_ib
+	--without-silo
 	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
 	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.45.0
 	--without-tbb 

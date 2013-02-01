@@ -16,6 +16,7 @@
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/geom/GridGeometry.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/HDFDatabase.h"
@@ -703,7 +704,8 @@ void partitionBoxes(
 
    domain_box_level.setParallelState(hier::BoxLevel::GLOBALIZED);
 
-   mesh::TreeLoadBalancer load_balancer(box_level.getDim());
+   mesh::TreeLoadBalancer load_balancer(box_level.getDim(),
+                                        "TreeLoaadBalaancer");
 
    hier::Connector* dummy_connector = 0;
 

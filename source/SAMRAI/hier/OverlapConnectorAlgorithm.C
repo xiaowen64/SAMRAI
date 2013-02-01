@@ -32,18 +32,8 @@
 namespace SAMRAI {
 namespace hier {
 
-boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge;
-boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_setup_comm;
-boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_remove_and_cache;
-boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_discover;
-boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::
-t_bridge_discover_get_neighbors;
-boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_discover_form_rbbt;
-boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::
-t_bridge_discover_find_overlaps;
-boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_share;
-boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_receive_and_unpack;
-boost::shared_ptr<tbox::Timer> OverlapConnectorAlgorithm::t_bridge_MPI_wait;
+const std::string OverlapConnectorAlgorithm::s_default_timer_prefix("hier::OverlapConnectorAlgorithm");
+std::map<std::string, OverlapConnectorAlgorithm::TimerStruct> OverlapConnectorAlgorithm::s_static_timers;
 
 char OverlapConnectorAlgorithm::s_print_steps = '\0';
 
@@ -87,6 +77,7 @@ OverlapConnectorAlgorithm::OverlapConnectorAlgorithm():
          s_class_mpi.dupCommunicator(mpi);
       }
    }
+   setTimerPrefix(s_default_timer_prefix);
 
    getFromInput();
 }
@@ -401,7 +392,7 @@ OverlapConnectorAlgorithm::bridgeWithNesting(
    const IntVector& connector_width_limit,
    bool compute_transpose) const
 {
-   t_bridge->start();
+   d_object_timers->t_bridge->start();
 
    TBOX_ASSERT(west_to_cent.hasTranspose());
    TBOX_ASSERT(cent_to_east.hasTranspose());
@@ -453,7 +444,7 @@ OverlapConnectorAlgorithm::bridgeWithNesting(
       west_to_east->setTranspose(west_to_east.get(), false);
    }
 
-   t_bridge->stop();
+   d_object_timers->t_bridge->stop();
 }
 
 /*
@@ -468,7 +459,7 @@ OverlapConnectorAlgorithm::bridge(
    const IntVector& connector_width_limit,
    bool compute_transpose) const
 {
-   t_bridge->start();
+   d_object_timers->t_bridge->start();
 
    TBOX_ASSERT(west_to_cent.hasTranspose());
    TBOX_ASSERT(cent_to_east.hasTranspose());
@@ -521,7 +512,7 @@ OverlapConnectorAlgorithm::bridge(
       west_to_east->setTranspose(west_to_east.get(), false);
    }
 
-   t_bridge->stop();
+   d_object_timers->t_bridge->stop();
 }
 
 /*
@@ -535,7 +526,7 @@ OverlapConnectorAlgorithm::bridge(
    const Connector& cent_to_east,
    bool compute_transpose) const
 {
-   t_bridge->start();
+   d_object_timers->t_bridge->start();
 
    TBOX_ASSERT(west_to_cent.hasTranspose());
    TBOX_ASSERT(cent_to_east.hasTranspose());
@@ -589,7 +580,7 @@ OverlapConnectorAlgorithm::bridge(
       west_to_east->setTranspose(west_to_east.get(), false);
    }
 
-   t_bridge->stop();
+   d_object_timers->t_bridge->stop();
 }
 
 /*
@@ -602,7 +593,7 @@ OverlapConnectorAlgorithm::bridge(
    const Connector& cent_to_east,
    const IntVector& connector_width_limit) const
 {
-   t_bridge->start();
+   d_object_timers->t_bridge->start();
 
    TBOX_ASSERT(west_to_cent.hasTranspose());
    TBOX_ASSERT(cent_to_east.hasTranspose());
@@ -653,7 +644,7 @@ OverlapConnectorAlgorithm::bridge(
       visible_west_nabrs,
       visible_east_nabrs);
 
-   t_bridge->stop();
+   d_object_timers->t_bridge->stop();
 }
 
 /*
@@ -811,10 +802,10 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
     * trees for visible east and west neighbors:
     * visible_west_nabrs and visible_east_nabrs.
     */
-   t_bridge_discover_get_neighbors->start();
+   d_object_timers->t_bridge_discover_get_neighbors->start();
    cent_to_west.getLocalNeighbors(visible_west_nabrs);
    cent_to_east.getLocalNeighbors(visible_east_nabrs);
-   t_bridge_discover_get_neighbors->stop();
+   d_object_timers->t_bridge_discover_get_neighbors->stop();
 }
 
 /*
@@ -879,8 +870,8 @@ OverlapConnectorAlgorithm::privateBridge(
    tbox::AsyncCommStage comm_stage;
    tbox::AsyncCommPeer<int>* all_comms(0);
 
-   t_bridge_share->start();
-   t_bridge_setup_comm->start();
+   d_object_timers->t_bridge_share->start();
+   d_object_timers->t_bridge_setup_comm->start();
 
    const tbox::SAMRAI_MPI& mpi(west_to_east.getBase().getMPI());
    setupCommunication(
@@ -889,12 +880,12 @@ OverlapConnectorAlgorithm::privateBridge(
       mpi,
       incoming_ranks,
       outgoing_ranks,
-      t_bridge_MPI_wait,
+      d_object_timers->t_bridge_MPI_wait,
       s_operation_mpi_tag,
       s_print_steps == 'y');
 
-   t_bridge_setup_comm->stop();
-   t_bridge_share->stop();
+   d_object_timers->t_bridge_setup_comm->stop();
+   d_object_timers->t_bridge_share->stop();
 
    /*
     * Data for caching relationship removal messages.  This
@@ -924,7 +915,7 @@ OverlapConnectorAlgorithm::privateBridge(
       visible_west_nabrs,
       visible_east_nabrs);
 
-   t_bridge_share->start();
+   d_object_timers->t_bridge_share->start();
 
    receiveAndUnpack(
       west_to_east,
@@ -932,10 +923,10 @@ OverlapConnectorAlgorithm::privateBridge(
       incoming_ranks,
       all_comms,
       comm_stage,
-      t_bridge_receive_and_unpack,
+      d_object_timers->t_bridge_receive_and_unpack,
       s_print_steps == 'y');
 
-   t_bridge_share->stop();
+   d_object_timers->t_bridge_share->stop();
 
    delete[] all_comms;
 
@@ -1041,7 +1032,7 @@ OverlapConnectorAlgorithm::privateBridge_removeAndCache(
    Connector* overlap_connector_transpose,
    const Connector& misc_connector) const
 {
-   t_bridge_remove_and_cache->start();
+   d_object_timers->t_bridge_remove_and_cache->start();
 
    NULL_USE(neighbor_removal_mesg); 
    NULL_USE(overlap_connector); 
@@ -1051,7 +1042,7 @@ OverlapConnectorAlgorithm::privateBridge_removeAndCache(
    * As the overlap relationships are empty to start there are never any
    * that need to be deleted.
    */
-   t_bridge_remove_and_cache->stop();
+   d_object_timers->t_bridge_remove_and_cache->stop();
    return;
 }
 
@@ -1077,7 +1068,7 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
        * packed into a message for sending.
        */
 
-      t_bridge_discover->start();
+      d_object_timers->t_bridge_discover->start();
 
       if (s_print_steps == 'y') {
          tbox::plog << "Before building RBBTs:\n"
@@ -1099,7 +1090,7 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
       const int rank = east.getMPI().getRank();
       const int nproc = east.getMPI().getSize();
 
-      t_bridge_discover_form_rbbt->start();
+      d_object_timers->t_bridge_discover_form_rbbt->start();
       const BoxContainer east_rbbt(visible_east_nabrs);
       east_rbbt.makeTree(grid_geometry.get());
       // Note: west_rbbt only needed when compute_transpose is true.
@@ -1107,7 +1098,7 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
       const BoxContainer west_rbbt(
          compute_transpose ? visible_west_nabrs : empty_nabrs);
       west_rbbt.makeTree(grid_geometry.get());
-      t_bridge_discover_form_rbbt->stop();
+      d_object_timers->t_bridge_discover_form_rbbt->stop();
 
       /*
        * Iterators west_ni and east_ni point to the west/east
@@ -1249,7 +1240,7 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
          BoxContainer referenced_west_nabrs;
          BoxContainer referenced_east_nabrs;
 
-         t_bridge_discover_find_overlaps->start();
+         d_object_timers->t_bridge_discover_find_overlaps->start();
 
          if (s_print_steps == 'y') {
             tbox::plog << "Finding west --> east overlaps for owner "
@@ -1284,15 +1275,15 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
                west_rbbt);
          }
 
-         t_bridge_discover_find_overlaps->stop();
+         d_object_timers->t_bridge_discover_find_overlaps->stop();
 
          if (curr_owner != rank) {
             /*
              * Send discoveries to the curr_owner.
              */
 
-            t_bridge_discover->stop();
-            t_bridge_share->start();
+            d_object_timers->t_bridge_discover->stop();
+            d_object_timers->t_bridge_share->start();
 
             /*
              * Find the communication object by increasing send_comm_idx
@@ -1322,8 +1313,8 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
             owners_sent_to.insert(curr_owner);
 #endif
 
-            t_bridge_share->stop();
-            t_bridge_discover->start();
+            d_object_timers->t_bridge_share->stop();
+            d_object_timers->t_bridge_discover->start();
 
          } // Block to send discoveries to curr_owner.
 
@@ -1346,7 +1337,7 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
 
       } // Loop through visible neighbors.
 
-      t_bridge_discover->stop();
+      d_object_timers->t_bridge_discover->stop();
 
    }
 }
@@ -1548,29 +1539,20 @@ OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
 void
 OverlapConnectorAlgorithm::initializeCallback()
 {
-   t_bridge = tbox::TimerManager::getManager()->
-      getTimer("hier::OverlapConnectorAlgorithm::privateBridge()");
-   t_bridge_setup_comm = tbox::TimerManager::getManager()->
-      getTimer("hier::OverlapConnectorAlgorithm::setupCommunication()");
-   t_bridge_remove_and_cache = tbox::TimerManager::getManager()->
-      getTimer("hier::OverlapConnectorAlgorithm::privateBridge_removeAndCache()");
-   t_bridge_discover = tbox::TimerManager::getManager()->
-      getTimer("hier::OverlapConnectorAlgorithm::privateBridge()_discover");
-   t_bridge_discover_get_neighbors = tbox::TimerManager::getManager()->
-      getTimer(
-         "hier::OverlapConnectorAlgorithm::privateBridge()_discover_get_neighbors");
-   t_bridge_discover_form_rbbt = tbox::TimerManager::getManager()->
-      getTimer(
-         "hier::OverlapConnectorAlgorithm::privateBridge()_discover_form_rbbt");
-   t_bridge_discover_find_overlaps = tbox::TimerManager::getManager()->
-      getTimer(
-         "hier::OverlapConnectorAlgorithm::privateBridge()_discover_find_overlaps");
-   t_bridge_share = tbox::TimerManager::getManager()->
-      getTimer("hier::OverlapConnectorAlgorithm::privateBridge()_share");
-   t_bridge_receive_and_unpack = tbox::TimerManager::getManager()->
-      getTimer("hier::OverlapConnectorAlgorithm::receiveAndUnpack");
-   t_bridge_MPI_wait = tbox::TimerManager::getManager()->
-      getTimer("hier::OverlapConnectorAlgorithm::privateBridge()_MPI_wait");
+
+   if (s_print_steps == '\0') {
+      if (tbox::InputManager::inputDatabaseExists()) {
+         s_print_steps = 'n';
+         boost::shared_ptr<tbox::Database> idb(
+            tbox::InputManager::getInputDatabase());
+         if (idb->isDatabase("OverlapConnectorAlgorithm")) {
+            boost::shared_ptr<tbox::Database> ocu_db(
+               idb->getDatabase("OverlapConnectorAlgorithm"));
+            s_print_steps = ocu_db->getCharWithDefault("print_bridge_steps",
+                  s_print_steps);
+         }
+      }
+   }
 }
 
 /*
@@ -1583,21 +1565,64 @@ OverlapConnectorAlgorithm::initializeCallback()
 void
 OverlapConnectorAlgorithm::finalizeCallback()
 {
-   t_bridge.reset();
-   t_bridge_setup_comm.reset();
-   t_bridge_remove_and_cache.reset();
-   t_bridge_discover.reset();
-   t_bridge_discover_get_neighbors.reset();
-   t_bridge_discover_form_rbbt.reset();
-   t_bridge_discover_find_overlaps.reset();
-   t_bridge_share.reset();
-   t_bridge_receive_and_unpack.reset();
-   t_bridge_MPI_wait.reset();
-
    if (s_class_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
       s_class_mpi.freeCommunicator();
    }
 
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+OverlapConnectorAlgorithm::setTimerPrefix(
+   const std::string& timer_prefix)
+{
+   std::map<std::string, TimerStruct>::iterator ti(
+      s_static_timers.find(timer_prefix));
+   if (ti == s_static_timers.end()) {
+      d_object_timers = &s_static_timers[timer_prefix];
+      getAllTimers(timer_prefix, *d_object_timers);
+   } else {
+      d_object_timers = &(ti->second);
+   }
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+OverlapConnectorAlgorithm::getAllTimers(
+   const std::string& timer_prefix,
+   TimerStruct& timers)
+{
+   timers.t_find_overlaps_rbbt = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::findOverlaps_rbbt()");
+   timers.t_bridge = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::privateBridge()");
+   timers.t_bridge_setup_comm = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::setupCommunication()");
+   timers.t_bridge_remove_and_cache = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::privateBridge_removeAndCache()");
+   timers.t_bridge_discover = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::privateBridge()_discover");
+   timers.t_bridge_discover_get_neighbors = tbox::TimerManager::getManager()->
+      getTimer(
+         timer_prefix + "::privateBridge()_discover_get_neighbors");
+   timers.t_bridge_discover_form_rbbt = tbox::TimerManager::getManager()->
+      getTimer(
+         timer_prefix + "::privateBridge()_discover_form_rbbt");
+   timers.t_bridge_discover_find_overlaps = tbox::TimerManager::getManager()->
+      getTimer(
+         timer_prefix + "::privateBridge()_discover_find_overlaps");
+   timers.t_bridge_share = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::privateBridge()_share");
+   timers.t_bridge_receive_and_unpack = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::receiveAndUnpack");
+   timers.t_bridge_MPI_wait = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::privateBridge()_MPI_wait");
 }
 
 }

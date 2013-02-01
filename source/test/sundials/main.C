@@ -28,6 +28,7 @@ using namespace std;
 #include "SAMRAI/tbox/PIO.h"
 
 #include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/pdat/CellVariable.h"
@@ -263,6 +264,7 @@ int main(
          new mesh::TreeLoadBalancer(
             dim,
             "LoadBalancer",
+            boost::shared_ptr<tbox::RankTreeStrategy>(new BalancedDepthFirstTree),
             input_db->getDatabase("LoadBalancer")));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 

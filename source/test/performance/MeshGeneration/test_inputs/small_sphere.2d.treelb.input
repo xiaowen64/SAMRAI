@@ -20,6 +20,9 @@ Main {
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
    load_balancer_type = "TreeLoadBalancer"
 
+   // Tree type for TreeLoadBalancer: CenteredRankTree, BalancedDepthFirstTree, BreadthFirstTree
+   rank_tree_type = "BalancedDepthFirstTree"
+
    /*
      Specify domain as a box array in the reference index space.
    */
@@ -70,24 +73,35 @@ Main {
       // shrink_distance_1 = 0.06, 0.06
    }
 
+   load_balance = TRUE, TRUE
+
 }
 
 TreeLoadBalancer {
   DEV_report_load_balance = FALSE // Reported in main
   n_root_cycles = -1
+  flexible_load_tolerance = 0.00
   min_load_fraction_per_box = 0.03
-  DEV_balance_penalty_wt = 1.0
-  DEV_surface_penalty_wt = 1.0
-  DEV_slender_penalty_wt = 1.0
-  DEV_precut_penalty_wt = 1.0
 
   // Debugging options
   DEV_check_map = FALSE
   DEV_check_connectivity = FALSE
-  DEV_print_steps = FALSE
-  DEV_print_swap_steps = FALSE
-  DEV_print_break_steps = FALSE
+  DEV_print_steps = TRUE
+  DEV_print_swap_steps = TRUE
+  DEV_print_break_steps = TRUE
   DEV_print_edge_steps = FALSE
+}
+
+CenteredRankTree { // Parameters for BalancedDepthFirstTree in getRankTree()
+  make_first_rank_the_root = TRUE
+}
+
+BalancedDepthFirstTree { // Parameters for BalancedDepthFirstTree in getRankTree()
+  do_left_leaf_switch = TRUE
+}
+
+BreadthFirstRankTree { // Parameters for CenteredRankTree in getRankTree()
+  tree_degree = 2
 }
 
 TimerManager {

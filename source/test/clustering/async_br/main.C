@@ -16,6 +16,7 @@
 #include <sstream>
 #include <string>
 #include "SAMRAI/SAMRAI_config.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/MemoryUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"

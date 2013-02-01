@@ -16,6 +16,7 @@
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 #include "SAMRAI/hier/RefineOperator.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 

@@ -566,6 +566,11 @@ private:
     *                                    a collection of boxes that indicates
     *                                    what parts of fill_box_level
     *                                    can be filled by that source box.
+    * @param[in] dst_to_src  Connector from dst_level to src_level.
+    * @param[in] src_to_dst  Connector from src_level to dst_level.
+    *
+    * @pre (d_dst_level->getDim() == dst_box_level.getDim()) &&
+    *      (d_dst_level->getDim() == fill_ghost_width.getDim())
     *
     * @pre d_dst_to_src
     * @pre d_dst_to_src->hasTranspose()
@@ -1194,18 +1199,12 @@ private:
    static boost::shared_ptr<tbox::Timer> t_gen_comm_sched;
    static boost::shared_ptr<tbox::Timer> t_bridge_connector;
    static boost::shared_ptr<tbox::Timer> t_modify_connector;
-   static boost::shared_ptr<tbox::Timer> t_make_seq_map;
    static boost::shared_ptr<tbox::Timer> t_shear;
-   static boost::shared_ptr<tbox::Timer> t_misc1;
-   static boost::shared_ptr<tbox::Timer> t_barrier_and_time;
    static boost::shared_ptr<tbox::Timer> t_get_global_box_count;
    static boost::shared_ptr<tbox::Timer> t_coarse_shear;
    static boost::shared_ptr<tbox::Timer> t_setup_coarse_interp_box_level;
-   static boost::shared_ptr<tbox::Timer> t_misc2;
    static boost::shared_ptr<tbox::Timer> t_bridge_coarse_interp_hiercoarse;
    static boost::shared_ptr<tbox::Timer> t_bridge_dst_hiercoarse;
-   static boost::shared_ptr<tbox::Timer> t_make_coarse_interp_level;
-   static boost::shared_ptr<tbox::Timer> t_make_coarse_interp_to_unfilled;
    static boost::shared_ptr<tbox::Timer> t_invert_edges;
    static boost::shared_ptr<tbox::Timer> t_construct_send_trans;
    static boost::shared_ptr<tbox::Timer> t_construct_recv_trans;

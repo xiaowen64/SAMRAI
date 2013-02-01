@@ -1868,14 +1868,14 @@ BalanceUtilities::reportLoadBalance(
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:1572)
 #endif
-   os << std::setprecision(2)
+   os << std::setprecision(6)
       << "min/max loads: "
       << min_load << " @ P" << r_min_load << " / "
       << max_load << " @ P" << r_max_load << "   "
       << "diffs: "
       << min_load - avg_load << " / "
       << max_load - avg_load << "   "
-      << std::setprecision(3)
+      << std::setprecision(4)
       << "normalized: "
       << (avg_load != 0 ? min_load / avg_load : 0.0) << " / "
       << (avg_load != 0 ? max_load / avg_load : 0.0) << "\n";

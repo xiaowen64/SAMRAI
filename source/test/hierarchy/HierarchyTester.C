@@ -20,6 +20,7 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 
 using namespace geom;
 

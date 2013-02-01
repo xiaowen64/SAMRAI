@@ -16,6 +16,7 @@
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/geom/GridGeometry.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/HDFDatabase.h"
@@ -188,7 +189,6 @@ int main(
       boost::shared_ptr<Database> a_db(main_db->getDatabase("BoxLevelA"));
       breakUpBoxes(box_level_a, domain_box_level, a_db);
       box_level_a.cacheGlobalReducedData();
-      // tbox::pout << "box level a:\n" << box_level_a.format("A: ",2) << std::endl;
 
       /*
        * Generate BoxLevel B from the multiblock domain description
@@ -198,7 +198,6 @@ int main(
       boost::shared_ptr<Database> b_db(main_db->getDatabase("BoxLevelB"));
       breakUpBoxes(box_level_b, domain_box_level, b_db);
       box_level_b.cacheGlobalReducedData();
-      // tbox::pout << "box level b:\n" << box_level_b.format("B: ",2) << std::endl;
 
       /*
        * Generate Connector A<==>B, to be modified by the mapping
@@ -359,7 +358,8 @@ void breakUpBoxes(
       database->getIntegerArray("min_box_size", &min_box_size[0], dim.getValue());
    }
 
-   mesh::TreeLoadBalancer load_balancer(box_level.getDim());
+   mesh::TreeLoadBalancer load_balancer(box_level.getDim(),
+                                        "TreeLoadBalancer");
 
    const int level_number(0);
 

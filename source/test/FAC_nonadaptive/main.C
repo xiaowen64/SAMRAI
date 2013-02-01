@@ -27,6 +27,7 @@ using namespace std;
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 
 #include "FACPoisson.h"
 

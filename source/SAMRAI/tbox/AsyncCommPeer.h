@@ -397,7 +397,7 @@ public:
     *
     * Set the timer for non-blocking sends.
     * If the timer is null, revert to the default timer named
-    * ""tbox::AsyncCommPeer::MPI_ISend".
+    * "tbox::AsyncCommPeer::MPI_Isend()".
     *
     * @param [in] send_timer
     */
@@ -410,7 +410,7 @@ public:
     *
     * Set the timer for non-blocking receives.
     * If the timer is null, revert to the default timer named
-    * ""tbox::AsyncCommPeer::MPI_IRecv".
+    * "tbox::AsyncCommPeer::MPI_Irecv()".
     *
     * @param [in] recv_timer
     */
@@ -423,7 +423,7 @@ public:
     *
     * Set the timer for blocking waits.
     * If the timer is null, revert to the default timer named
-    * ""tbox::AsyncCommPeer::wait_all()".
+    * "tbox::AsyncCommPeer::MPI_Waitall()".
     *
     * This timer is used when in this class and is not the same
     * as the timer given to AsyncCommStage (unless the user sets

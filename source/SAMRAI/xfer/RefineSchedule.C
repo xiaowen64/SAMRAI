@@ -63,18 +63,12 @@ boost::shared_ptr<tbox::Timer> RefineSchedule::t_finish_sched_const_recurse;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_gen_comm_sched;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_bridge_connector;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_modify_connector;
-boost::shared_ptr<tbox::Timer> RefineSchedule::t_make_seq_map;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_shear;
-boost::shared_ptr<tbox::Timer> RefineSchedule::t_misc1;
-boost::shared_ptr<tbox::Timer> RefineSchedule::t_barrier_and_time;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_get_global_box_count;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_coarse_shear;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_setup_coarse_interp_box_level;
-boost::shared_ptr<tbox::Timer> RefineSchedule::t_misc2;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_bridge_coarse_interp_hiercoarse;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_bridge_dst_hiercoarse;
-boost::shared_ptr<tbox::Timer> RefineSchedule::t_make_coarse_interp_level;
-boost::shared_ptr<tbox::Timer> RefineSchedule::t_make_coarse_interp_to_unfilled;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_invert_edges;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_construct_send_trans;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_construct_recv_trans;
@@ -1358,6 +1352,8 @@ RefineSchedule::createCoarseInterpPatchLevel(
 
    const tbox::Dimension& dim(hierarchy->getDim());
 
+   const bool dst_is_coarse_interp_level = this != d_top_refine_schedule;
+
    hier::OverlapConnectorAlgorithm oca;
    hier::BoxLevelConnectorUtils edge_utils;
 
@@ -1393,6 +1389,10 @@ RefineSchedule::createCoarseInterpPatchLevel(
          hiercoarse_box_level.getRefinementRatio(),
          hiercoarse_to_dst_width));
 
+   const hier::Connector* dst_to_hiercoarse = 0;
+   boost::shared_ptr<hier::Connector> bridged_dst_to_hiercoarse;
+   boost::shared_ptr<hier::Connector> bridged_hiercoarse_to_dst;
+
    /*
     * dst_to_hiercoarse and its transpose point to the
     * hiercoarse<==>dst Connector we will use.  The exact Connectors
@@ -1415,8 +1415,6 @@ RefineSchedule::createCoarseInterpPatchLevel(
     * dst<==>hiercoarse.  This is not implemented but could be in the
     * future.
     */
-   const hier::Connector* dst_to_hiercoarse = 0;
-   boost::shared_ptr<hier::Connector> bridged_dst_to_hiercoarse;
 
    bool has_cached_connectors =
       dst_level->getBoxLevel()->getPersistentOverlapConnectors().
@@ -1582,9 +1580,15 @@ RefineSchedule::createCoarseInterpPatchLevel(
    if (d_num_periodic_directions > 0) {
       /*
        * Remove periodic relationships added by bridging.  Some of
-       * them may be extraneous because coarse_interp may have parts outside
-       * the domain boundary.  Then add periodic images for coarse_interp and
-       * periodic relationships in coarse_interp<==>hiercoarse.
+       * them may be extraneous because coarse_interp may have parts
+       * outside the domain boundary.  Then add periodic images for
+       * coarse_interp and periodic relationships in
+       * coarse_interp<==>hiercoarse.  Connector
+       * hiercoarse--->hiercoarse must be as wide as hiercoarse--->dst
+       * to make sure it sees everything dst sees.  Because dst sees
+       * all of coarse_interp, this guarantees that
+       * hiercoarse<==>coarse_interp does not miss any periodic
+       * relationships.
        */
       coarse_interp_to_hiercoarse->removePeriodicRelationships();
       hiercoarse_to_coarse_interp.removePeriodicRelationships();
@@ -1616,12 +1620,10 @@ RefineSchedule::createCoarseInterpPatchLevel(
     * BoxLevel.
     */
 
-   t_make_coarse_interp_level->start();
    coarse_interp_level.reset(new hier::PatchLevel(
          coarse_interp_box_level,
          hiercoarse_level->getGridGeometry(),
          hiercoarse_level->getPatchDescriptor()));
-   t_make_coarse_interp_level->stop();
    coarse_interp_level->setLevelNumber(next_coarser_ln);
    coarse_interp_level->setNextCoarserHierarchyLevelNumber(next_coarser_ln - 1);
 
@@ -4344,14 +4346,8 @@ RefineSchedule::initializeCallback()
       getTimer("xfer::RefineSchedule::bridge_connector");
    t_modify_connector = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::modify_connector");
-   t_make_seq_map = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::make_seq_map");
    t_shear = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::finish...()_shear");
-   t_misc1 = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::finish...()_misc1");
-   t_barrier_and_time = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::barrier_and_time");
    t_get_global_box_count = tbox::TimerManager::getManager()->
       getTimer(
          "xfer::RefineSchedule::finish...()_get_global_box_count");
@@ -4359,16 +4355,10 @@ RefineSchedule::initializeCallback()
       getTimer("xfer::RefineSchedule::finish...()_coarse_shear");
    t_setup_coarse_interp_box_level = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::setupCoarseInterpBoxLevel()");
-   t_misc2 = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::finish...()_misc2");
    t_bridge_coarse_interp_hiercoarse = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::finish...()_bridge_coarse_interp_hiercoarse");
    t_bridge_dst_hiercoarse = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::finish...()_bridge_dst_hiercoarse");
-   t_make_coarse_interp_level = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::finish...()_make_coarse_interp_level");
-   t_make_coarse_interp_to_unfilled = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::finish...()_make_coarse_interp_to_unfilled");
    t_invert_edges = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::generate...()_invert_edges");
    t_construct_send_trans = tbox::TimerManager::getManager()->
@@ -4395,18 +4385,12 @@ RefineSchedule::finalizeCallback()
    t_gen_comm_sched.reset();
    t_bridge_connector.reset();
    t_modify_connector.reset();
-   t_make_seq_map.reset();
    t_shear.reset();
-   t_misc1.reset();
-   t_barrier_and_time.reset();
    t_get_global_box_count.reset();
    t_coarse_shear.reset();
    t_setup_coarse_interp_box_level.reset();
-   t_misc2.reset();
    t_bridge_coarse_interp_hiercoarse.reset();
    t_bridge_dst_hiercoarse.reset();
-   t_make_coarse_interp_level.reset();
-   t_make_coarse_interp_to_unfilled.reset();
    t_invert_edges.reset();
    t_construct_send_trans.reset();
    t_construct_recv_trans.reset();

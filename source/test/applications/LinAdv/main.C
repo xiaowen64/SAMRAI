@@ -32,6 +32,7 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
@@ -374,7 +375,8 @@ int main(
             new mesh::TreeLoadBalancer(
                dim,
                "LoadBalancer",
-               input_db->getDatabase("LoadBalancer")));
+               input_db->getDatabase("LoadBalancer"),
+               boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::BalancedDepthFirstTree)));
          load_balancer->setSAMRAI_MPI(
             tbox::SAMRAI_MPI::getSAMRAIWorld());
 

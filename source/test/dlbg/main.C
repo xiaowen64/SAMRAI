@@ -19,6 +19,7 @@
  */
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -452,7 +453,7 @@ static int createAndTestDLBG(
       main_db.getBoolWithDefault("build_peer_edge", false);
 
    const bool globalize_box_levels =
-      main_db.getBoolWithDefault("globalize_mapped_box_levels", false);
+      main_db.getBoolWithDefault("globalize_box_levels", false);
 
    const int node_log_detail =
       main_db.getIntegerWithDefault("node_log_detail", -1);

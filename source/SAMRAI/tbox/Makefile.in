@@ -26,7 +26,10 @@ OBJS = 	\
 	AsyncCommGroup.o \
 	AsyncCommStage.o \
 	BalancedDepthFirstTree.o \
+	BreadthFirstRankTree.o \
+	CenteredRankTree.o \
 	Clock.o \
+	CommGraphWriter.o \
 	Database.o \
 	DatabaseBox.o \
 	DatabaseFactory.o \
@@ -47,6 +50,7 @@ OBJS = 	\
 	ParallelBuffer.o \
 	Parser.o \
 	RankGroup.o \
+	RankTreeStrategy.o \
 	ReferenceCounter.o \
 	RestartManager.o \
 	SAMRAIManager.o \

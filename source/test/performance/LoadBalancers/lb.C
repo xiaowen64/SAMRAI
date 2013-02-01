@@ -31,6 +31,7 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
 
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -1060,8 +1061,7 @@ void generatePrebalanceByUserShells(
       min_size,
       efficiency_tol,
       combine_tol,
-      connector_width,
-      hier::LocalId(0));
+      connector_width);
 
    hier::Connector& L1_to_L0 = L0_to_L1->getTranspose();
 
@@ -1221,8 +1221,7 @@ void generatePrebalanceByShrinkingLevel(
       min_size,
       efficiency_tol,
       combine_tol,
-      connector_width,
-      hier::LocalId(0));
+      connector_width);
 
    hier::Connector& L2_to_L1 = L1_to_L2->getTranspose();
 
@@ -1377,8 +1376,7 @@ void generatePrebalanceBySinusoidalFront(
       min_size,
       efficiency_tol,
       combine_tol,
-      connector_width,
-      hier::LocalId(0));
+      connector_width);
 
    hier::Connector& L2_to_L1 = L1_to_L2->getTranspose();
 

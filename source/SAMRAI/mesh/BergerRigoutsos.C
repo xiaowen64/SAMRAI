@@ -28,8 +28,10 @@ namespace mesh {
 boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_barrier_before;
 boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_barrier_after;
 boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_find_boxes_with_tags;
+boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_cluster_and_compute_relationships;
 boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_run_abr;
 boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_global_reductions;
+boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_logging;
 boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_sort_output_nodes;
 
 tbox::StartupShutdownManager::Handler
@@ -61,6 +63,7 @@ BergerRigoutsos::BergerRigoutsos(
    d_algo_advance_mode("ADVANCE_SOME"),
    d_sort_output_nodes(false),
    d_check_min_box_size('w'),
+   d_min_box_size_from_cutting(d_dim, 0),
    d_barrier_before(false),
    d_barrier_after(false)
 {
@@ -103,9 +106,21 @@ BergerRigoutsos::getFromInput(
       }
 
       d_max_inflection_cut_from_center =
-         input_db->getDoubleWithDefault("DEV_max_inflection_cut_from_center", 1.0);
+         input_db->getDoubleWithDefault("DEV_max_inflection_cut_from_center",
+                                        d_max_inflection_cut_from_center);
       d_inflection_cut_threshold_ar =
-         input_db->getDoubleWithDefault("DEV_inflection_cut_threshold_ar", 0.0);
+         input_db->getDoubleWithDefault("DEV_inflection_cut_threshold_ar",
+                                        d_inflection_cut_threshold_ar);
+      if (input_db->isInteger("DEV_min_box_size_from_cutting")) {
+         input_db->getIntegerArray("DEV_min_box_size_from_cutting",
+            &d_min_box_size_from_cutting[0],
+            d_dim.getValue());
+      }
+      if (input_db->isInteger("DEV_min_box_size_from_cutting")) {
+         input_db->getIntegerArray("DEV_min_box_size_from_cutting",
+            &d_min_box_size_from_cutting[0],
+            d_dim.getValue());
+      }
       d_log_node_history =
          input_db->getBoolWithDefault("DEV_log_node_history", false);
       d_log_cluster_summary =
@@ -193,8 +208,7 @@ BergerRigoutsos::findBoxesContainingTags(
    const hier::IntVector& min_box,
    const double efficiency_tol,
    const double combine_tol,
-   const hier::IntVector& max_gcw,
-   const hier::LocalId& first_local_id) const
+   const hier::IntVector& max_gcw) const
 {
    TBOX_ASSERT(!bound_boxes.isEmpty());
    TBOX_ASSERT_OBJDIM_EQUALITY4(*tag_level,
@@ -234,6 +248,13 @@ BergerRigoutsos::findBoxesContainingTags(
       t_barrier_before->stop();
    }
 
+   for ( hier::BoxContainer::const_iterator bi=bound_boxes.begin();
+         bi!=bound_boxes.end(); ++bi ) {
+      if (bi->empty()) {
+         TBOX_ERROR("BergerRigoutsos: empty bounding box not allowed.");
+      }
+   }
+
    const hier::BoxLevel& tag_box_level = *tag_level->getBoxLevel();
 
    /*
@@ -263,7 +284,7 @@ BergerRigoutsos::findBoxesContainingTags(
 
    t_find_boxes_with_tags->start();
 
-   BergerRigoutsosNode root_node(d_dim, first_local_id);
+   BergerRigoutsosNode root_node(d_dim);
 
    // Set standard Berger-Rigoutsos clustering parameters.
    root_node.setClusteringParameters(tag_data_index,
@@ -279,15 +300,18 @@ BergerRigoutsos::findBoxesContainingTags(
    root_node.setAlgorithmAdvanceMode(d_algo_advance_mode);
    root_node.setOwnerMode(d_owner_mode);
    root_node.setComputeRelationships("BIDIRECTIONAL", max_gcw);
+   root_node.setMinBoxSizeFromCutting(d_min_box_size_from_cutting);
 
    // Set debugging/verbosity parameters.
    root_node.setLogNodeHistory(d_log_node_history);
 
+   t_cluster_and_compute_relationships->start();
    root_node.clusterAndComputeRelationships(new_box_level,
       tag_to_new,
       bound_boxes,
       tag_level,
       d_mpi);
+   t_cluster_and_compute_relationships->stop();
 
    if (d_sort_output_nodes == true) {
       /*
@@ -316,17 +340,19 @@ BergerRigoutsos::findBoxesContainingTags(
    t_global_reductions->stop();
 
    if (d_log_cluster) {
+      t_logging->start();
       tbox::plog << "BergerRigoutsos cluster log:\n"
       << "\tNew box_level clustered by BergerRigoutsos:\n" << new_box_level->format("",
          2)
       << "\tBergerRigoutsos tag_to_new:\n" << tag_to_new->format("", 2)
       << "\tBergerRigoutsos new_to_tag:\n" << tag_to_new->getTranspose().format("", 2);
+      t_logging->stop();
    }
    if (d_log_cluster_summary) {
       /*
        * Log summary of clustering and dendogram.
        */
-
+      t_logging->start();
       tbox::plog << "BergerRigoutsos summary:\n"
                  << "\tAsync BR on proc " << mpi.getRank()
                  << " owned "
@@ -356,6 +382,7 @@ BergerRigoutsos::findBoxesContainingTags(
                  << new_box_level->getGlobalNumberOfCells()
                  << " global cells [" << new_box_level->getMinNumberOfCells()
                  << "-" << new_box_level->getMaxNumberOfCells() << "], "
+                 << "over-refinement " << double(new_box_level->getGlobalNumberOfCells())/root_node.getNumTags()-1 << ", "
                  << new_box_level->getGlobalNumberOfBoxes()
                  << " global boxes [" << new_box_level->getMinNumberOfBoxes()
                  << "-" << new_box_level->getMaxNumberOfBoxes() << "]\n\t"
@@ -369,6 +396,7 @@ BergerRigoutsos::findBoxesContainingTags(
                  << "\tBergerRigoutsos tag_to_new summary:\n" << tag_to_new->format("\t\t",0)
                  << "\tBergerRigoutsos tag_to_new statistics:\n" << tag_to_new->formatStatistics("\t\t")
                  << "\n";
+      t_logging->stop();
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -535,8 +563,12 @@ BergerRigoutsos::initializeCallback()
       getTimer("mesh::BergerRigoutsos::run_abr");
    t_find_boxes_with_tags = tbox::TimerManager::getManager()->
       getTimer("mesh::BergerRigoutsos::find_boxes_with_tags");
+   t_cluster_and_compute_relationships = tbox::TimerManager::getManager()->
+      getTimer("mesh::BergerRigoutsos::cluster_and_compute_relationships");
    t_global_reductions = tbox::TimerManager::getManager()->
       getTimer("mesh::BergerRigoutsos::global_reductions");
+   t_logging = tbox::TimerManager::getManager()->
+      getTimer("mesh::BergerRigoutsos::logging");
    t_sort_output_nodes = tbox::TimerManager::getManager()->
       getTimer("mesh::BergerRigoutsos::sort_output_nodes");
    t_barrier_before = tbox::TimerManager::getManager()->

@@ -19,6 +19,7 @@
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/mesh/MultiblockGriddingTagger.h"
 #include "SAMRAI/hier/RefineOperator.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 

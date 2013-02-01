@@ -990,11 +990,11 @@ void
 AsyncCommPeer<TYPE>::initializeCallback()
 {
    t_default_send_timer = TimerManager::getManager()->
-      getTimer("tbox::AsyncCommPeer::MPI_ISend");
+      getTimer("tbox::AsyncCommPeer::MPI_Isend()");
    t_default_recv_timer = TimerManager::getManager()->
-      getTimer("tbox::AsyncCommPeer::MPI_Irecv");
+      getTimer("tbox::AsyncCommPeer::MPI_Irecv()");
    t_default_wait_timer = TimerManager::getManager()->
-      getTimer("tbox::AsyncCommPeer::wait_all()");
+      getTimer("tbox::AsyncCommPeer::MPI_Waitall()");
 }
 
 /*

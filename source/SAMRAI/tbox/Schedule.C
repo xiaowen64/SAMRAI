@@ -61,9 +61,10 @@ Schedule::Schedule():
    d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
    d_first_tag(s_default_first_tag),
    d_second_tag(s_default_second_tag),
-   d_first_message_length(s_default_first_message_length)
+   d_first_message_length(s_default_first_message_length),
+   d_object_timers(NULL)
 {
-   setTimerPrefix("tbox::Schedule");
+   setTimerPrefix(s_default_timer_prefix);
 }
 
 /*

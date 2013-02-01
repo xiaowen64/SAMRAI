@@ -230,7 +230,7 @@ public:
       const IntVector& nesting_width,
       const BoxContainer& domain = BoxContainer()) const
    {
-      t_compute_external_parts->start();
+      d_object_timers->t_compute_external_parts->start();
       computeInternalOrExternalParts(
          external,
          input_to_external,
@@ -238,7 +238,7 @@ public:
          input_to_reference,
          nesting_width,
          domain);
-      t_compute_external_parts->stop();
+      d_object_timers->t_compute_external_parts->stop();
    }
 
    /*!
@@ -293,7 +293,7 @@ public:
       const IntVector& nesting_width,
       const BoxContainer& domain = BoxContainer()) const
    {
-      t_compute_internal_parts->start();
+      d_object_timers->t_compute_internal_parts->start();
       computeInternalOrExternalParts(
          internal,
          input_to_internal,
@@ -301,7 +301,7 @@ public:
          input_to_reference,
          nesting_width,
          domain);
-      t_compute_internal_parts->stop();
+      d_object_timers->t_compute_internal_parts->stop();
    }
 
    //@}
@@ -470,10 +470,10 @@ public:
     * images.
     *
     * @param[in] anchor_to_anchor Self overlap Connector for anchor
-    * BoxLevel.  Must be a complete overlap Connector with
-    * periodic relationships.
-    *
-    * @pre box_level_to_anchor.hasTranspose()
+    * BoxLevel.  Must be a complete overlap Connector with periodic
+    * relationships.  To guarantee complete periodic relationships,
+    * the anchor, grown by the width of this Connector, must nest
+    * box_level grown by the width of box_level_to_anchor.
     */
    void
    addPeriodicImagesAndRelationships(
@@ -483,6 +483,20 @@ public:
       const Connector& anchor_to_anchor) const;
 
    //@}
+
+   /*!
+    * @brief Setup names of timers.
+    *
+    * By default, timers are named
+    * "hier::BoxLevelConnectorUtils::*", where the third field is
+    * the specific steps performed by the BoxLevelConnectorUtils.
+    * You can override the first two fields with this method.
+    * Conforming to the timer naming convention, timer_prefix should
+    * have the form "*::*".
+    */
+   void
+   setTimerPrefix(
+      const std::string& timer_prefix);
 
 private:
    /*!
@@ -507,54 +521,59 @@ private:
       const void* v,
       const void* w);
 
-   /*!
-    * @brief Allocate statics
+
+   //@{
+   //! @name Timer data for this class.
+
+   /*
+    * @brief Structure of timers used by this class.
     *
-    * Only called by StartupShutdownManager.
+    * Each object can set its own timer names through
+    * setTimerPrefix().  This leads to many timer look-ups.  Because
+    * it is expensive to look up timers, this class caches the timers
+    * that has been looked up.  Each TimerStruct stores the timers
+    * corresponding to a prefix.
     */
-   static void
-   initializeCallback()
-   {
-      t_make_sorting_map = tbox::TimerManager::getManager()->
-         getTimer("BoxLevelConnectorUtils::makeSortingMap()");
-      t_compute_external_parts = tbox::TimerManager::getManager()->
-         getTimer("BoxLevelConnectorUtils::computeExternalParts()");
-      t_compute_external_parts_intersection =
-         tbox::TimerManager::getManager()->
-         getTimer("BoxLevelConnectorUtils::computeExternalParts()_intersection");
-      t_compute_internal_parts = tbox::TimerManager::getManager()->
-         getTimer("BoxLevelConnectorUtils::computeInternalParts()");
-      t_compute_internal_parts_intersection =
-         tbox::TimerManager::getManager()->
-         getTimer("BoxLevelConnectorUtils::computeInternalParts()_intersection");
-   }
+   struct TimerStruct {
+      boost::shared_ptr<tbox::Timer> t_make_sorting_map;
+      boost::shared_ptr<tbox::Timer> t_compute_boxes_around_boundary;
+      boost::shared_ptr<tbox::Timer> t_compute_boxes_around_boundary_singularity;
+      boost::shared_ptr<tbox::Timer> t_compute_boxes_around_boundary_simplify;
+      boost::shared_ptr<tbox::Timer> t_compute_external_parts;
+      boost::shared_ptr<tbox::Timer> t_compute_internal_parts;
+      boost::shared_ptr<tbox::Timer> t_compute_internal_or_external_parts;
+      boost::shared_ptr<tbox::Timer> t_compute_internal_or_external_parts_manip_reference;
+      boost::shared_ptr<tbox::Timer> t_compute_internal_or_external_parts_simplify;
+   };
+
+   //! @brief Default prefix for Timers.
+   static const std::string s_default_timer_prefix;
 
    /*!
-    * @brief Delete statics.
-    *
-    * Only called by StartupShutdownManager.
+    * @brief Static container of timers that have been looked up.
+    */
+   static std::map<std::string, TimerStruct> s_static_timers;
+
+   /*!
+    * @brief Structure of timers in s_static_timers, matching this
+    * object's timer prefix.
+    */
+   TimerStruct* d_object_timers;
+
+   /*!
+    * @brief Get all the timers defined in TimerStruct.  The timers
+    * are named with the given prefix.
     */
    static void
-   finalizeCallback()
-   {
-      t_make_sorting_map.reset();
-      t_compute_external_parts.reset();
-      t_compute_external_parts_intersection.reset();
-      t_compute_internal_parts.reset();
-      t_compute_internal_parts_intersection.reset();
-   }
+   getAllTimers(
+      const std::string& timer_prefix,
+      TimerStruct& timers);
 
-   static boost::shared_ptr<tbox::Timer> t_make_sorting_map;
-   static boost::shared_ptr<tbox::Timer> t_compute_external_parts;
-   static boost::shared_ptr<tbox::Timer> t_compute_external_parts_intersection;
-   static boost::shared_ptr<tbox::Timer> t_compute_internal_parts;
-   static boost::shared_ptr<tbox::Timer> t_compute_internal_parts_intersection;
+   //@}
+
 
    bool d_sanity_check_precond;
    bool d_sanity_check_postcond;
-
-   static tbox::StartupShutdownManager::Handler
-      s_initialize_finalize_handler;
 
 };
 

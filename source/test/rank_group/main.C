@@ -30,6 +30,7 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
 
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -712,8 +713,7 @@ void generatePrebalanceByUserShells(
       min_size,
       efficiency_tol,
       combine_tol,
-      max_gcw,
-      hier::LocalId(0));
+      max_gcw);
 
    hier::Connector& balance_to_anchor = anchor_to_balance->getTranspose();
 

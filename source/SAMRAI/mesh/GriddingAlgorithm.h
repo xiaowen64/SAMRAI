@@ -19,7 +19,9 @@
 #include "SAMRAI/mesh/GriddingAlgorithmConnectorWidthRequestor.h"
 #include "SAMRAI/mesh/MultiblockGriddingTagger.h"
 #include "SAMRAI/pdat/CellVariable.h"
-#include "SAMRAI/hier/MappingConnector.h"
+#include "SAMRAI/hier/Connector.h"
+#include "SAMRAI/hier/MappingConnectorAlgorithm.h"
+#include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
@@ -767,6 +769,8 @@ private:
     * @param[in] unnested_ln Level number of PatchLevel being
     * generated (one more than the tag level number).
     *
+    * @param[in] oca
+    *
     * @pre tag_to_unnested.hasTranspose()
     * @pre d_hierarchy->getDim() == unnested_box_level.getDim()
     */
@@ -776,7 +780,8 @@ private:
       boost::shared_ptr<hier::MappingConnector>& unnested_to_nested,
       const hier::BoxLevel& unnested_box_level,
       const hier::Connector& tag_to_unnested,
-      const int unnested_ln) const;
+      const int unnested_ln,
+      const hier::OverlapConnectorAlgorithm &oca) const;
 
    /*!
     * @brief Make a map that, when applied to a BoxLevel that
@@ -814,6 +819,8 @@ private:
     * @param[in] candidate_to_hierarchy Connector to box_level number
     *       tag_ln in the hierarchy.
     *
+    * @parm[in] oca
+    *
     * @pre candidate_to_hierarchy.hasTranspose()
     * @pre d_hierarchy->getDim() == candidate.getDim()
     * @pre candidate_to_hierarchy.getRatio() == hier::IntVector::getOne(d_hierarchy->getDim())
@@ -825,7 +832,8 @@ private:
       boost::shared_ptr<hier::MappingConnector>& candidate_to_violator,
       const hier::BoxLevel& candidate,
       const hier::Connector& candidate_to_hierarchy,
-      const int tag_ln) const;
+      const int tag_ln,
+      const hier::OverlapConnectorAlgorithm &oca) const;
 
    /*!
     * @brief Extend Boxes to domain boundary if they they are too close.
@@ -858,12 +866,15 @@ private:
     *
     * @param[in] ln
     *
+    * @param[in] oca
+    *
     * @pre (d_base_ln >= 0) && (ln >= d_base_ln)
     * @pre (ln == d_base_ln) || (d_to_nesting_complement[ln - 1]->isFinalized())
     */
    void
    computeProperNestingData(
-      const int ln);
+      const int ln,
+      const hier::OverlapConnectorAlgorithm &oca);
 
    /*!
     * @brief Attempt to fix boxes that are too small by growing them
@@ -926,6 +937,9 @@ private:
     *
     * @param[in] sequentialize_global_indices
     *
+    * @param[in] mca MappingConnectorAlgorithm with timer set
+    * in the calling context.
+    *
     * @pre d_hierarchy->getDim() == new_box_level.getDim()
     */
    void
@@ -933,7 +947,8 @@ private:
       hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
       bool sort_by_corners,
-      bool sequentialize_global_indices) const;
+      bool sequentialize_global_indices,
+      const hier::MappingConnectorAlgorithm &mca) const;
 
    /*!
     * @brief Buffer each integer tag on patch level matching given tag
@@ -1087,12 +1102,15 @@ private:
     *
     * @param tag_ln  Tag level number
     *
+    * @param oca
+    *
     * @pre d_hierarchy->getDim() == tag_level.getDim()
     */
    void
    checkNonrefinedTags(
       const hier::PatchLevel& tag_level,
-      int tag_ln) const;
+      int tag_ln,
+      const hier::OverlapConnectorAlgorithm &oca) const;
 
    /*!
     * @brief Reset data that handles tag buffering.
@@ -1343,6 +1361,30 @@ private:
     */
    bool d_log_metadata_statistics;
 
+   /*!
+    * @brief OverlapConnectorAlgorithm object used for regrid.
+    */
+   hier::OverlapConnectorAlgorithm d_oca;
+
+   /*!
+    * @brief MappingConnectorAlgorithm object used for regrid.
+    */
+   hier::MappingConnectorAlgorithm d_mca;
+
+   /*!
+    * @brief OverlapConnectorAlgorithm object used for initial mesh
+    * construction, sanity checks and other operations that are not
+    * expected to scale well.
+    */
+   hier::OverlapConnectorAlgorithm d_oca0;
+
+   /*!
+    * @brief MappingConnectorAlgorithm object used for initial mesh
+    * construction, sanity checks and other operations that are not
+    * expected to scale well.
+    */
+   hier::MappingConnectorAlgorithm d_mca0;
+
    /*
     * Switches for massaging boxes after clustering.  Should be on for
     * most AMR applications.  Turning off is mainly for debugging
@@ -1363,18 +1405,17 @@ private:
    boost::shared_ptr<tbox::Timer> t_find_domain_complement;
    boost::shared_ptr<tbox::Timer> t_load_balance;
    boost::shared_ptr<tbox::Timer> t_load_balance0;
-   boost::shared_ptr<tbox::Timer> t_load_balance_setup;
    boost::shared_ptr<tbox::Timer> t_bdry_fill_tags_create;
    boost::shared_ptr<tbox::Timer> t_make_coarsest;
    boost::shared_ptr<tbox::Timer> t_make_finer;
-   boost::shared_ptr<tbox::Timer> t_make_finer_setup;
-   boost::shared_ptr<tbox::Timer> t_make_finer_tagging;
-   boost::shared_ptr<tbox::Timer> t_make_finer_create;
    boost::shared_ptr<tbox::Timer> t_regrid_all_finer;
+   boost::shared_ptr<tbox::Timer> t_regrid_finer_do_tagging_before;
+   boost::shared_ptr<tbox::Timer> t_regrid_finer_do_tagging_after;
+   boost::shared_ptr<tbox::Timer> t_regrid_finer_create_and_install;
    boost::shared_ptr<tbox::Timer> t_regrid_finer_create;
-   boost::shared_ptr<tbox::Timer> t_bridge_links;
    boost::shared_ptr<tbox::Timer> t_fill_tags;
    boost::shared_ptr<tbox::Timer> t_tag_cells_for_refinement;
+   boost::shared_ptr<tbox::Timer> t_initialize_level_data;
    boost::shared_ptr<tbox::Timer> t_buffer_tags;
    boost::shared_ptr<tbox::Timer> t_bdry_fill_tags_comm;
    boost::shared_ptr<tbox::Timer> t_second_finer_tagging;
@@ -1386,13 +1427,10 @@ private:
    boost::shared_ptr<tbox::Timer> t_bridge_new_to_old;
    boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
    boost::shared_ptr<tbox::Timer> t_enforce_nesting;
+   boost::shared_ptr<tbox::Timer> t_compute_proper_nesting_data;
    boost::shared_ptr<tbox::Timer> t_make_nesting_map;
-   boost::shared_ptr<tbox::Timer> t_make_nesting_map_compute;
-   boost::shared_ptr<tbox::Timer> t_make_nesting_map_convert;
    boost::shared_ptr<tbox::Timer> t_use_nesting_map;
    boost::shared_ptr<tbox::Timer> t_make_overflow_map;
-   boost::shared_ptr<tbox::Timer> t_make_overflow_map_compute;
-   boost::shared_ptr<tbox::Timer> t_make_overflow_map_convert;
    boost::shared_ptr<tbox::Timer> t_use_overflow_map;
    boost::shared_ptr<tbox::Timer> t_compute_external_parts;
    boost::shared_ptr<tbox::Timer> t_compute_nesting_violator;
@@ -1401,19 +1439,11 @@ private:
    boost::shared_ptr<tbox::Timer> t_grow_boxes_within_domain;
    boost::shared_ptr<tbox::Timer> t_sort_nodes;
    boost::shared_ptr<tbox::Timer> t_modify_connector;
-   boost::shared_ptr<tbox::Timer> t_misc1;
-   boost::shared_ptr<tbox::Timer> t_misc2;
-   boost::shared_ptr<tbox::Timer> t_misc3;
-   boost::shared_ptr<tbox::Timer> t_misc4;
-   boost::shared_ptr<tbox::Timer> t_misc5;
    boost::shared_ptr<tbox::Timer> t_make_domain;
-   boost::shared_ptr<tbox::Timer> t_get_balance;
-   boost::shared_ptr<tbox::Timer> t_use_balance;
    boost::shared_ptr<tbox::Timer> t_make_new;
    boost::shared_ptr<tbox::Timer> t_process_error;
    boost::shared_ptr<tbox::Timer> t_limit_overflow;
    boost::shared_ptr<tbox::Timer> t_reset_hier;
-   boost::shared_ptr<tbox::Timer> t_box_massage;
 
 #ifdef GA_RECORD_STATS
    /*

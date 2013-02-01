@@ -22,6 +22,11 @@ Main {
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
    load_balancer_type = "TreeLoadBalancer"
 
+   // Tree type for TreeLoadBalancer: CenteredRankTree, BalancedDepthFirstTree, BreadthFirstTree
+   rank_tree_type = "CenteredRankTree"
+
+   write_comm_graph = FALSE // Whether to write communication graph of TreeLoadBalancer.
+
    /*
      Specify domain as a box array in the reference index space.
    */
@@ -77,12 +82,9 @@ Main {
 
 TreeLoadBalancer {
   DEV_report_load_balance = FALSE // Reported in main
-  n_root_cycles = -1
-  min_load_fraction_per_box = 0.03
-  DEV_balance_penalty_wt = 1.0
-  DEV_surface_penalty_wt = 1.0
-  DEV_slender_penalty_wt = 1.0
-  DEV_precut_penalty_wt = 1.0
+  max_cycle_spread_ratio = 1000000
+  flexible_load_tolerance = 0.05
+  min_load_fraction_per_box = 0.00
 
   // Debugging options
   DEV_check_map = FALSE
@@ -91,6 +93,25 @@ TreeLoadBalancer {
   DEV_print_swap_steps = FALSE
   DEV_print_break_steps = FALSE
   DEV_print_edge_steps = FALSE
+}
+
+CenteredRankTree { // Parameters for BalancedDepthFirstTree in getRankTree()
+  make_first_rank_the_root = TRUE
+}
+
+BalancedDepthFirstTree { // Parameters for BalancedDepthFirstTree in getRankTree()
+  do_left_leaf_switch = TRUE
+}
+
+BreadthFirstRankTree { // Parameters for CenteredRankTree in getRankTree()
+  tree_degree = 2
+}
+
+ChopAndPackLoadBalancer {
+  // processor_layout = 10, 10, 10
+  bin_pack_method = "SPATIAL"
+  max_workload_factor = 0.3333333333
+  workload_tolerance = 0.0
 }
 
 TimerManager {

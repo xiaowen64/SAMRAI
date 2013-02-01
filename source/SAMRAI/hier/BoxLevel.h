@@ -1439,7 +1439,7 @@ public:
    recursivePrint(
       std::ostream& os,
       const std::string& border,
-      int detail_depth = 0) const;
+      int detail_depth = 2) const;
 
    /*!
     * @brief A class for outputting BoxLevel.
@@ -1475,7 +1475,7 @@ private:
       Outputter(
          const BoxLevel& box_level,
          const std::string& border,
-         int detail_depth = 0,
+         int detail_depth = 2,
          bool output_statistics = false);
       void
       operator = (
@@ -1492,8 +1492,7 @@ private:
     *
     * Usage example:
     * @code
-    *    std::cout << "my box_level:\n"
-    *              << box_level.format("  ", 2) << std::endl;
+    *    tbox::plog << "my box_level:\n" << box_level.format() << endl;
     * @endcode
     *
     * @param[in] border
@@ -1502,7 +1501,7 @@ private:
    Outputter
    format(
       const std::string& border = std::string(),
-      int detail_depth = 0) const;
+      int detail_depth = 2) const;
 
    /*!
     * @brief Return a object that can format the BoxLevel for

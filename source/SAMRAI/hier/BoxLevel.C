@@ -1157,6 +1157,13 @@ BoxLevel::addBox(
          d_local_min_box_size[box.getBlockId().getBlockValue()].min(box_size);
          d_global_data_up_to_date = false;
       }
+      d_global_data_up_to_date = false;
+      /*
+       * TODO: bug: if some procs add a real Box and others do not,
+       * their d_global_data_up_to_date flags will be inconsistent
+       * resulting in incomplete participation in future collective
+       * communication to compute that parameter.
+       */
    }
 
    if (d_parallel_state == GLOBALIZED) {

@@ -107,7 +107,7 @@ BergerRigoutsos {
    DEV_log_node_history = FALSE
    sort_output_nodes = TRUE // Makes results repeatable.
    max_box_size = 100, 100
-   DEV_log_cluster_summary = TRUE
+   DEV_log_cluster_summary = FALSE
    DEV_log_cluster = FALSE
    DEV_barrier_before = TRUE
    DEV_barrier_after = TRUE

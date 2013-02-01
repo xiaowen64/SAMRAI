@@ -21,19 +21,31 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
+NUM_TESTS = 17
 CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
-
-NUM_TESTS = 4
 
 TEST_NPROCS = @TEST_NPROCS@
 
 CXX_OBJS      = mg.o MeshGenerationStrategy.o SinusoidalFrontGenerator.o SphericalShellGenerator.o
 
 INPUTS2D =	test_inputs/small_sphere.2d.treelb.input	\
-		test_inputs/small_front.2d.treelb.input
+		test_inputs/small_front.2d.treelb.input		\
+		test_inputs/single_sphere.2d.treelb.input	\
+		test_inputs/single_sphere.2d.caplb.input	\
+		test_inputs/core2shell.2d.treelb.input		\
+		test_inputs/core2shell.2d.caplb.input		\
+		test_inputs/rootcycles.2d.treelb.input		\
+		test_inputs/mincutsize_a.2d.treelb.input	\
+		test_inputs/mincutsize_b.2d.treelb.input
 
 INPUTS3D =	test_inputs/small_sphere.3d.treelb.input	\
-		test_inputs/small_front.3d.treelb.input
+		test_inputs/small_front.3d.treelb.input		\
+		test_inputs/spreadby10.3d.treelb.input		\
+		performance_inputs/core2shell.3d.caplb.input	\
+		performance_inputs/core2shell.3d.treelb.input	\
+		performance_inputs/single_sphere.3d.caplb.input	\
+		performance_inputs/single_sphere.3d.treelb.input	\
+		performance_inputs/mincutsize_b.3d.treelb.input
 
 main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)
 	$(MAKE) testlib
@@ -65,7 +77,7 @@ checkcompile: main
 checktest:
 		rm -f makecheck.logfile
 		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-		$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
+		$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
 		rm -f makecheck.logfile
 
 clean-check:

@@ -12,6 +12,7 @@
 
 // Headers for basic SAMRAI objects
 #include "SAMRAI/tbox/SAMRAIManager.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"

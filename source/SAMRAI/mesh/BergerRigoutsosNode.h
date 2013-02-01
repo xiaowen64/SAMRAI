@@ -102,8 +102,7 @@ public:
     * obtain outputs.
     */
    BergerRigoutsosNode(
-      const tbox::Dimension& dim,
-      const hier::LocalId& first_local_id);
+      const tbox::Dimension& dim);
 
    /*!
     * @brief Destructor.
@@ -246,6 +245,16 @@ public:
       const std::string mode,
       const hier::IntVector& ghost_cell_width);
 
+   /*!
+    * @brief Set the minimum box size constraint when making cuts.
+    *
+    * This parameter is not in the the BoxGeneratorStrategy interface so it
+    * has to be set here.
+    */
+   void
+   setMinBoxSizeFromCutting(
+      const hier::IntVector& min_box_size_from_cutting);
+
    //@}
 
    /*!
@@ -260,7 +269,7 @@ public:
     * @param bound_boxes Contains one global bounding box for each
     *                    block with a patch in tag_level.
     * @param tag_level
-    * @param mpi_object Alternative MPI communicator.  If given,
+    * @param mpi_object Alternative SAMRAI_MPI object.  If given,
     *   must be congruent with the tag box_level's MPI communicator.
     *   Specify tbox::SAMRAI_MPI::commNull if unused.  Highly recommend
     *   using an isolated communicator to prevent message mix-ups.
@@ -401,6 +410,22 @@ public:
       explicit CommonParams(
          const tbox::Dimension& dim);
 
+      void incNumNodesCommWait() {
+         ++num_nodes_commwait;
+         max_nodes_commwait = tbox::MathUtilities<int>::Max(num_nodes_commwait, max_nodes_commwait);
+      }
+      void decNumNodesCommWait() {
+         --num_nodes_commwait;
+      }
+      void writeCounters() {
+         tbox::plog << num_nodes_allocated << "-alloc  "
+                    << num_nodes_active << "-act  "
+                    << num_nodes_owned << "-owned  "
+                    << num_nodes_completed << "-done  "
+                    << relaunch_queue.size() << "-qd  "
+                    << num_nodes_commwait << "-wait  ";
+      }
+
       const tbox::Dimension d_dim;
 
       /*!
@@ -469,6 +494,11 @@ public:
       hier::Connector* new_to_tag;
 
       /*!
+       * @brief Initial boxes for top-down clustering.
+       */
+      hier::BoxContainer root_boxes;
+
+      /*!
        * @brief
        */
       double max_inflection_cut_from_center;
@@ -497,6 +527,17 @@ public:
        * performances in when later processing the box.
        */
       hier::IntVector max_box_size;
+
+      /*!
+       * @brief Alternate minimum box size applying to inflection
+       * point cuts.
+       *
+       * This size can be greater than the absolute min_size
+       * specified by the
+       * BoxGeneratorStrategy::findBoxesContainingTags() abstract
+       * interface.
+       */
+      hier::IntVector min_box_size_from_cutting;
 
       //@{
       //@name Parameters from clustering algorithm interface
@@ -587,7 +628,7 @@ public:
       int max_tags_owned;
       //! @brief Current number of dendogram nodes allocated.
       int num_nodes_allocated;
-      //! @brief Highest number of dendogram nodes.
+      //! @brief Highest number of dendogram nodes allocated.
       int max_nodes_allocated;
       //! @brief Current number of dendogram nodes active.
       int num_nodes_active;
@@ -597,7 +638,11 @@ public:
       int num_nodes_owned;
       //! @brief Highest number of dendogram nodes owned.
       int max_nodes_owned;
-      //! @brief Current number of dendogram nodes completed.
+      //! @brief Current number of dendogram nodes in communication wait.
+      int num_nodes_commwait;
+      //! @brief Highest number of dendogram nodes in communication wait.
+      int max_nodes_commwait;
+      //! @brief Current number of completed.
       int num_nodes_completed;
       //! @brief Highest number of generation.
       int max_generation;
@@ -622,20 +667,17 @@ public:
    BergerRigoutsosNode(
       CommonParams* common_params,
       BergerRigoutsosNode* parent,
-      const int child_number,
-      const hier::LocalId& first_local_id);
+      const int child_number);
 
    /*!
     * @brief Construct a root node for a single block.
     * 
     * @param common_params  Parameters shares by all nodes in clustering
     * @param box            Global bounding box for a single block
-    * @param first_local_id First available local id for new boxes
     */
    BergerRigoutsosNode(
       CommonParams* common_params,
-      const hier::Box& box,
-      const hier::LocalId& first_local_id);
+      const hier::Box& box);
 
    /*!
     * @brief Duplicate given MPI communicator for private use
@@ -901,6 +943,8 @@ public:
       return tree_deg;
    }
 
+   void computeGlobalTagDependentVariables();
+
    bool
    findZeroCutSwath(
       int& cut_lo,
@@ -1082,8 +1126,6 @@ public:
     */
 
    hier::Box d_box;
-   hier::BoxContainer d_root_boxes;
-   int d_owner;
 
    /*!
     * @name Id of participating processes.
@@ -1114,7 +1156,7 @@ public:
    /*!
     * @brief Histogram for all directions of box d_box.
     *
-    * If local process is d_owner, this is initially the
+    * If local process is owner, this is initially the
     * local histogram, then later, the reduced histogram.
     * If not, it is just the local histogram.
     */
@@ -1133,7 +1175,7 @@ public:
     * Box assigned by the owner.  The Box is important for
     * computing neighbor data.
     */
-   hier::Box d_accepted_box;
+   hier::Box d_accepted_box;  // Try to use d_box for this.
 
    /*!
     * @brief Box iterator corresponding to an accepted box on
@@ -1166,7 +1208,6 @@ public:
    tbox::AsyncCommGroup* d_comm_group;
    //@}
 
-   hier::LocalId d_first_local_id;
 
    //@{
    //! @name Deubgging aid

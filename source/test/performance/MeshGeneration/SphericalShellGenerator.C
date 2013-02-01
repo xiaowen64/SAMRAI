@@ -59,6 +59,14 @@ SphericalShellGenerator::SphericalShellGenerator(
          }
       }
 
+      if (database->isDouble("center")) {
+         tbox::Array<double> tmpa;
+         tmpa = database->getDoubleArray("center");
+         for ( int d=0; d<d_dim.getValue(); ++d ) {
+            d_center[d] = tmpa[d];
+         }
+      }
+
       /*
        * Input parameters to determine whether to tag by buffering
        * fronts or shrinking level, and by how much.
@@ -167,7 +175,7 @@ void SphericalShellGenerator::setTags(
       TBOX_ASSERT(patch_geom);
       TBOX_ASSERT(tag_data);
 
-      tagShells( *tag_data, patch_geom->getDx(), d_buffer_shrink_distance[tag_ln] );
+      tagShells( *tag_data, *patch_geom, d_buffer_shrink_distance[tag_ln] );
 
    }
 
@@ -185,14 +193,12 @@ void SphericalShellGenerator::setDomain(
    int autoscale_base_nprocs,
    const tbox::SAMRAI_MPI &mpi)
 {
-   TBOX_ASSERT( autoscale_base_nprocs <= mpi.getSize() );
    TBOX_ASSERT( !domain.isEmpty() );
    NULL_USE(xlo);
    NULL_USE(xhi);
 
    if ( domain.size() != 1 ) {
-      TBOX_ERROR("SphericalShellGenerator only supports autoscale_base_nprocs\n"
-                 << "for single-box domains.");
+      TBOX_ERROR("SphericalShellGenerator only supports single-box domains.");
    }
 
    hier::BoxContainer::const_iterator ii = domain.begin();
@@ -237,7 +243,7 @@ void SphericalShellGenerator::resetHierarchyConfiguration(
  */
 void SphericalShellGenerator::tagShells(
    pdat::CellData<int> &tag_data,
-   const double dx[],
+   const geom::CartesianPatchGeometry &patch_geom,
    const std::vector<double> &buffer_distance ) const
 {
    const tbox::Dimension &dim(tag_data.getDim());
@@ -245,6 +251,9 @@ void SphericalShellGenerator::tagShells(
    const hier::Box& pbox = tag_data.getBox();
    const hier::BlockId& block_id = pbox.getBlockId();
    const int tag_val = 1;
+
+   const double *dx = patch_geom.getDx();
+   const double *xlo = patch_geom.getXLower();
 
    // Compute the buffer in terms of cells.
    hier::IntVector buffer_cells(dim);
@@ -266,7 +275,7 @@ void SphericalShellGenerator::tagShells(
       double r[SAMRAI::MAX_DIM_VAL];
       double rr = 0;
       for (int d = 0; d < dim.getValue(); ++d) {
-         r[d] = dx[d] * idx(d);
+         r[d] = xlo[d] + dx[d] * ( idx(d) - pbox.lower()(d) ) - d_center[d];
          rr += r[d] * r[d];
       }
       rr = sqrt(rr);
@@ -280,7 +289,7 @@ void SphericalShellGenerator::tagShells(
 
    /*
     * Initialize tag_data to zero then tag specific cells.
-    * Tag cell if any of is node in its buffered neighborhood is tagged.
+    * Tag cell if any node in its buffered neighborhood is tagged.
     */
    tag_data.getArrayData().fillAll(0);
 
@@ -321,10 +330,9 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
          patch.getPatchGeometry(),
          BOOST_CAST_TAG);
       TBOX_ASSERT(patch_geom);
-      const double* dx = patch_geom->getDx();
 
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
-      tagShells(tag_data, dx, d_buffer_shrink_distance[patch.getPatchLevelNumber()]);
+      tagShells(tag_data, *patch_geom, d_buffer_shrink_distance[patch.getPatchLevelNumber()]);
       pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
       for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {

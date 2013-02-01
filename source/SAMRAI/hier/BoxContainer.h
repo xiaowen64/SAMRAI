@@ -1745,7 +1745,7 @@ private:
       Outputter(
          const BoxContainer& boxes,
          const std::string& border,
-         int detail_depth = 0);
+         int detail_depth = 2);
 
       void
       operator = (
@@ -1774,7 +1774,7 @@ private:
    Outputter
    format(
       const std::string& border = std::string(),
-      int detail_depth = 0) const;
+      int detail_depth = 2) const;
 
    //@}
 

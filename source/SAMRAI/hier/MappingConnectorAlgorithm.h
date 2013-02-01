@@ -190,6 +190,20 @@ public:
       return "MappingConnectorAlgorithm";
    }
 
+   /*!
+    * @brief Setup names of timers.
+    *
+    * By default, timers are named
+    * "hier::MappingConnectorAlgorithm::*", where the third field is
+    * the specific steps performed by the MappingConnectorAlgorithm.
+    * You can override the first two fields with this method.
+    * Conforming to the timer naming convention, timer_prefix should
+    * have the form "*::*".
+    */
+   void
+   setTimerPrefix(
+      const std::string& timer_prefix);
+
 private:
    /*!
     * @brief BoxIdSet is a clarifying typedef.
@@ -339,13 +353,54 @@ private:
     */
    static int s_operation_mpi_tag;
 
-   static boost::shared_ptr<tbox::Timer> t_modify;
-   static boost::shared_ptr<tbox::Timer> t_modify_setup_comm;
-   static boost::shared_ptr<tbox::Timer> t_modify_remove_and_cache;
-   static boost::shared_ptr<tbox::Timer> t_modify_discover_and_send;
-   static boost::shared_ptr<tbox::Timer> t_modify_receive_and_unpack;
-   static boost::shared_ptr<tbox::Timer> t_modify_MPI_wait;
-   static boost::shared_ptr<tbox::Timer> t_modify_misc;
+
+   //@{
+   //! @name Timer data for this class.
+
+   /*
+    * @brief Structure of timers used by this class.
+    *
+    * Each object can set its own timer names through
+    * setTimerPrefix().  This leads to many timer look-ups.  Because
+    * it is expensive to look up timers, this class caches the timers
+    * that has been looked up.  Each TimerStruct stores the timers
+    * corresponding to a prefix.
+    */
+   struct TimerStruct {
+      boost::shared_ptr<tbox::Timer> t_modify;
+      boost::shared_ptr<tbox::Timer> t_modify_setup_comm;
+      boost::shared_ptr<tbox::Timer> t_modify_remove_and_cache;
+      boost::shared_ptr<tbox::Timer> t_modify_discover_and_send;
+      boost::shared_ptr<tbox::Timer> t_modify_find_overlaps_for_one_process;
+      boost::shared_ptr<tbox::Timer> t_modify_receive_and_unpack;
+      boost::shared_ptr<tbox::Timer> t_modify_MPI_wait;
+      boost::shared_ptr<tbox::Timer> t_modify_misc;
+   };
+
+   //! @brief Default prefix for Timers.
+   static const std::string s_default_timer_prefix;
+
+   /*!
+    * @brief Static container of timers that have been looked up.
+    */
+   static std::map<std::string, TimerStruct> s_static_timers;
+
+   /*!
+    * @brief Structure of timers in s_static_timers, matching this
+    * object's timer prefix.
+    */
+   TimerStruct* d_object_timers;
+
+   /*!
+    * @brief Get all the timers defined in TimerStruct.  The timers
+    * are named with the given prefix.
+    */
+   static void
+   getAllTimers(
+      const std::string& timer_prefix,
+      TimerStruct& timers);
+
+   //@}
 
    bool d_sanity_check_inputs;
    bool d_sanity_check_outputs;

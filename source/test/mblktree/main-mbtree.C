@@ -14,6 +14,7 @@
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/geom/GridGeometry.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/HDFDatabase.h"
@@ -434,7 +435,8 @@ void breakUpBoxes(
    hier::BoxLevel domain_box_level(box_level);
    domain_box_level.setParallelState(hier::BoxLevel::GLOBALIZED);
 
-   mesh::TreeLoadBalancer load_balancer(box_level.getDim());
+   mesh::TreeLoadBalancer load_balancer(box_level.getDim(),
+                                        "TreeLoadBalancer");
 
    hier::Connector* dummy_connector = 0;
 

@@ -990,7 +990,7 @@ public:
    recursivePrint(
       std::ostream& os,
       const std::string& border,
-      int detail_depth = 0) const;
+      int detail_depth = 2) const;
 
    /*!
     * @brief Return true if two Connector objects are
@@ -1422,7 +1422,7 @@ private:
       Outputter(
          const Connector& connector,
          const std::string& border,
-         int detail_depth = 0,
+         int detail_depth = 2,
          bool output_statistics = false);
       void
       operator = (
@@ -1439,8 +1439,7 @@ private:
     *
     * Usage example:
     * @code
-    *    cout << "my connector:\n"
-    *         << connector.format("  ", 2) << endl;
+    *    tbox::plog << "my connector:\n" << connector.format() << endl;
     * @endcode
     *
     * @param[in] border
@@ -1449,7 +1448,7 @@ private:
    Outputter
    format(
       const std::string& border = std::string(),
-      int detail_depth = 0) const
+      int detail_depth = 2) const
    {
       return Outputter(*this, border, detail_depth);
    }

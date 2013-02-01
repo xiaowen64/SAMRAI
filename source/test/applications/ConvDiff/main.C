@@ -25,6 +25,7 @@ using namespace std;
 // Headers for basic SAMRAI objects
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/tbox/Database.h"
@@ -345,7 +346,8 @@ int main(
          new mesh::TreeLoadBalancer(
             dim,
             "LoadBalancer",
-            input_db->getDatabase("LoadBalancer")));
+            input_db->getDatabase("LoadBalancer"),
+            boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::BalancedDepthFirstTree)));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(

@@ -14,11 +14,14 @@ Main {
    dim = 2
 
    base_name = "small_front.2d.treelb"
-   log_all_nodes = FALSE
+   log_all_nodes = TRUE
    write_visit = TRUE
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
    load_balancer_type = "TreeLoadBalancer"
+
+   // Tree type for TreeLoadBalancer: CenteredRankTree, BalancedDepthFirstTree, BreadthFirstTree
+   rank_tree_type = "CenteredRankTree"
 
    /*
      Specify domain as a box array in the reference index space.
@@ -49,6 +52,7 @@ Main {
       DEV_log_cluster = FALSE
       // DEV_owner_mode = "SINGLE_OWNER"
       // DEV_algo_advance_mode = "SYNCHRONOUS"
+      min_box_size_for_inflection_cut = 1, 1, 1
    }
 
    mesh_generator_name = "SinusoidalFrontGenerator"
@@ -75,19 +79,28 @@ Main {
 TreeLoadBalancer {
   DEV_report_load_balance = FALSE // Reported in main
   n_root_cycles = -1
-  min_load_fraction_per_box = 0.03
-  DEV_balance_penalty_wt = 1.0
-  DEV_surface_penalty_wt = 1.0
-  DEV_slender_penalty_wt = 1.0
-  DEV_precut_penalty_wt = 1.0
+  min_load_fraction_per_box = 0.0
+  flexible_load_tolerance = 0.00
 
   // Debugging options
   DEV_check_map = FALSE
   DEV_check_connectivity = FALSE
-  DEV_print_steps = FALSE
+  DEV_print_steps = TRUE
   DEV_print_swap_steps = FALSE
   DEV_print_break_steps = FALSE
   DEV_print_edge_steps = FALSE
+}
+
+CenteredRankTree { // Parameters for BalancedDepthFirstTree in getRankTree()
+  make_first_rank_the_root = TRUE
+}
+
+BalancedDepthFirstTree { // Parameters for BalancedDepthFirstTree in getRankTree()
+  do_left_leaf_switch = TRUE
+}
+
+BreadthFirstRankTree { // Parameters for CenteredRankTree in getRankTree()
+  tree_degree = 2
 }
 
 TimerManager {

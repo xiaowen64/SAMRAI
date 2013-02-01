@@ -28,19 +28,8 @@
 namespace SAMRAI {
 namespace hier {
 
-boost::shared_ptr<tbox::Timer> BoxLevelConnectorUtils::t_make_sorting_map;
-boost::shared_ptr<tbox::Timer> BoxLevelConnectorUtils::t_compute_external_parts;
-boost::shared_ptr<tbox::Timer> BoxLevelConnectorUtils::t_compute_external_parts_intersection;
-boost::shared_ptr<tbox::Timer> BoxLevelConnectorUtils::t_compute_internal_parts;
-boost::shared_ptr<tbox::Timer> BoxLevelConnectorUtils::t_compute_internal_parts_intersection;
-
-tbox::StartupShutdownManager::Handler
-BoxLevelConnectorUtils::s_initialize_finalize_handler(
-   BoxLevelConnectorUtils::initializeCallback,
-   0,
-   0,
-   BoxLevelConnectorUtils::finalizeCallback,
-   tbox::StartupShutdownManager::priorityTimers);
+const std::string BoxLevelConnectorUtils::s_default_timer_prefix("hier::BoxLevelConnectorUtils");
+std::map<std::string, BoxLevelConnectorUtils::TimerStruct> BoxLevelConnectorUtils::s_static_timers;
 
 /*
  ***********************************************************************
@@ -50,6 +39,7 @@ BoxLevelConnectorUtils::BoxLevelConnectorUtils():
    d_sanity_check_precond(false),
    d_sanity_check_postcond(false)
 {
+   setTimerPrefix(s_default_timer_prefix);
 }
 
 /*
@@ -345,7 +335,7 @@ BoxLevelConnectorUtils::makeSortingMap(
       return;
    }
 
-   t_make_sorting_map->start();
+   d_object_timers->t_make_sorting_map->start();
 
    const BoxContainer& cur_boxes = unsorted_box_level.getBoxes();
 
@@ -431,7 +421,7 @@ BoxLevelConnectorUtils::makeSortingMap(
       sorted_box_level->finalize();
    }
 
-   t_make_sorting_map->stop();
+   d_object_timers->t_make_sorting_map->stop();
 }
 
 /*
@@ -537,6 +527,8 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
    const IntVector& nesting_width,
    const BoxContainer& domain) const
 {
+   d_object_timers->t_compute_internal_or_external_parts->start();
+
    const BoxLevel& input = input_to_reference.getBase();
 
    const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
@@ -621,6 +613,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
     * reference.
     */
 
+   d_object_timers->t_compute_internal_or_external_parts_manip_reference->start();
    const bool search_tree_represents_internal = nonnegative_nesting_width;
 
    if (search_tree_represents_internal) {
@@ -634,12 +627,18 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
       /*
        * nesting_width is non-positive.  The external parts are given
        * by the grown boundary boxes.
+       *
+       * Note: Don't simplify the boxes in computeBoxesAroundBoundary.
+       * Doing so caused a 200X increase in the run time of this method
+       * in the domainexpansionc benchmark.  We will have to live with
+       * having extraneous boxes in the boundary description.
        */
 
       computeBoxesAroundBoundary(
          reference_box_list,
          input.getRefinementRatio(),
-         grid_geometry);
+         grid_geometry,
+         false );
       // ... reference_boundary is now ( (R^1) \ R )
 
       if (!domain.isEmpty()) {
@@ -662,8 +661,11 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
       reference_box_list.grow(-nesting_width);
       // ... reference_boundary is now ( ( (R^1) \ R ) <intersection> O )^(-g)
    } // search_tree_represents_internal == false
+   d_object_timers->t_compute_internal_or_external_parts_manip_reference->stop();
+
 
    reference_box_list.makeTree(grid_geometry.get());
+
 
    /*
     * Keep track of last index so we don't give parts an index
@@ -737,7 +739,6 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
           * underspecifying external parts, and vice versa.
           */
 
-         t_compute_internal_parts_intersection->start();
          if (compute_overlaps) {
             parts_list.intersectBoxes(
                input.getRefinementRatio(),
@@ -749,13 +750,14 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
                reference_box_list,
                true /* Count singularity neighbors */);
          }
-         t_compute_internal_parts_intersection->stop();
 
          /*
           * Make Boxes from parts_list and create
           * MappingConnector from input.
           */
+         d_object_timers->t_compute_internal_or_external_parts_simplify->start();
          parts_list.simplify();
+         d_object_timers->t_compute_internal_or_external_parts_simplify->stop();
          if (parts_list.size() == 1 &&
              parts_list.front().isSpatiallyEqual(input_box)) {
 
@@ -789,6 +791,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
    } // Loop through input_boxes
 
+
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (parts->getBoxes().isEmpty()) {
       /*
@@ -814,6 +817,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
 #endif
 
    TBOX_ASSERT(input_to_parts->isLocal());
+   d_object_timers->t_compute_internal_or_external_parts->stop();
 }
 
 /*
@@ -832,6 +836,7 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
    const boost::shared_ptr<const BaseGridGeometry>& grid_geometry,
    const bool simplify_boundary_boxes) const
 {
+   d_object_timers->t_compute_boxes_around_boundary->start();
 
    const tbox::Dimension& dim(grid_geometry->getDim());
    const IntVector& one_vec(IntVector::getOne(dim));
@@ -879,6 +884,7 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
 
 
    if (grid_geometry->getNumberOfBlockSingularities() > 0) {
+      d_object_timers->t_compute_boxes_around_boundary_singularity->start();
       /*
        * The boundary obtained by the formula (R^1)\R can have
        * errors at multiblock singularities.  Fix it here.
@@ -992,13 +998,16 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
 
       } // for std::map<BlockId, ...
 
+      d_object_timers->t_compute_boxes_around_boundary_singularity->stop();
    } // grid_geometry->getNumberOfBlockSingularities() > 0
 
    if (simplify_boundary_boxes) {
+      d_object_timers->t_compute_boxes_around_boundary_simplify->start();
       for (std::map<BlockId, BoxContainer>::iterator mi = boundary_by_blocks.begin();
            mi != boundary_by_blocks.end(); ++mi) {
          mi->second.simplify();
       }
+      d_object_timers->t_compute_boxes_around_boundary_simplify->stop();
    }
 
    // Set correct box ids.
@@ -1016,6 +1025,7 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
       boundary.spliceBack(bi->second);
    }
 
+   d_object_timers->t_compute_boxes_around_boundary->stop();
 }
 
 /*
@@ -1192,6 +1202,7 @@ BoxLevelConnectorUtils::addPeriodicImages(
       }
    }
 
+   box_level.finalize();
 }
 
 /*
@@ -1425,6 +1436,66 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
             << box_level_to_anchor.format("ERR-> ", 3) << std::endl);
       }
    }
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+BoxLevelConnectorUtils::setTimerPrefix(
+   const std::string& timer_prefix)
+{
+   std::map<std::string, TimerStruct>::iterator ti(
+      s_static_timers.find(timer_prefix));
+   if (ti == s_static_timers.end()) {
+      d_object_timers = &s_static_timers[timer_prefix];
+      getAllTimers(timer_prefix, *d_object_timers);
+   } else {
+      d_object_timers = &(ti->second);
+   }
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+BoxLevelConnectorUtils::getAllTimers(
+   const std::string& timer_prefix,
+   TimerStruct& timers)
+{
+   timers.t_make_sorting_map = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::makeSortingMap()");
+
+   timers.t_compute_boxes_around_boundary =
+      tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::computeBoxesAroundBoundary()");
+
+   timers.t_compute_boxes_around_boundary_singularity =
+      tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::computeBoxesAroundBoundary()_singularity");
+
+   timers.t_compute_boxes_around_boundary_simplify =
+      tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::computeBoxesAroundBoundary()_simplify");
+
+   timers.t_compute_external_parts = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::computeExternalParts()");
+   timers.t_compute_internal_parts = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::computeInternalParts()");
+
+   timers.t_compute_internal_or_external_parts =
+      tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::computeInternalOrExternalParts()");
+
+   timers.t_compute_internal_or_external_parts_manip_reference =
+      tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::computeInternalOrExternalParts()_manip_reference");
+
+   timers.t_compute_internal_or_external_parts_simplify =
+      tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::computeInternalOrExternalParts()_simplify");
 }
 
 }

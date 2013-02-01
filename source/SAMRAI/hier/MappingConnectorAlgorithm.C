@@ -25,13 +25,8 @@
 namespace SAMRAI {
 namespace hier {
 
-boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify;
-boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_setup_comm;
-boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_remove_and_cache;
-boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_discover_and_send;
-boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_receive_and_unpack;
-boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_MPI_wait;
-boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_misc;
+const std::string MappingConnectorAlgorithm::s_default_timer_prefix("hier::MappingConnectorAlgorithm");
+std::map<std::string, MappingConnectorAlgorithm::TimerStruct> MappingConnectorAlgorithm::s_static_timers;
 
 char MappingConnectorAlgorithm::s_print_steps = '\0';
 
@@ -62,8 +57,10 @@ MappingConnectorAlgorithm::s_initialize_finalize_handler(
 
 MappingConnectorAlgorithm::MappingConnectorAlgorithm():
    d_sanity_check_inputs(false),
-   d_sanity_check_outputs(false)
+   d_sanity_check_outputs(false),
+   d_object_timers(NULL)
 {
+   setTimerPrefix(s_default_timer_prefix);
    getFromInput();
 }
 
@@ -307,8 +304,8 @@ MappingConnectorAlgorithm::privateModify(
    BoxLevel* mutable_new,
    BoxLevel* mutable_old) const
 {
-   t_modify->barrierAndStart();
-   t_modify_misc->start();
+   d_object_timers->t_modify->barrierAndStart();
+   d_object_timers->t_modify_misc->start();
 
    if (s_print_steps == 'y') {
       tbox::plog
@@ -408,13 +405,13 @@ MappingConnectorAlgorithm::privateModify(
          anchor.getRefinementRatio(),
          anchor_to_new_width);
 
-   t_modify_misc->stop();
+   d_object_timers->t_modify_misc->stop();
 
    /*
     * The essential modify algorithm is in this block.
     */
 
-   t_modify_misc->start();
+   d_object_timers->t_modify_misc->start();
 
    /*
     * Initialize the output connectors with the correct new
@@ -481,12 +478,12 @@ MappingConnectorAlgorithm::privateModify(
    tbox::AsyncCommStage comm_stage;
    tbox::AsyncCommPeer<int> * all_comms(0);
 
-   t_modify_misc->stop();
+   d_object_timers->t_modify_misc->stop();
 
    /*
     * Set up communication mechanism (and post receives).
     */
-   t_modify_setup_comm->start();
+   d_object_timers->t_modify_setup_comm->start();
 
    setupCommunication(
       all_comms,
@@ -494,11 +491,11 @@ MappingConnectorAlgorithm::privateModify(
       anchor.getMPI(),
       incoming_ranks,
       outgoing_ranks,
-      t_modify_MPI_wait,
+      d_object_timers->t_modify_MPI_wait,
       s_operation_mpi_tag,
       s_print_steps == 'y');
 
-   t_modify_setup_comm->stop();
+   d_object_timers->t_modify_setup_comm->stop();
 
    /*
     * There are three major parts to computing the new neighbors:
@@ -565,10 +562,10 @@ MappingConnectorAlgorithm::privateModify(
       incoming_ranks,
       all_comms,
       comm_stage,
-      t_modify_receive_and_unpack,
+      d_object_timers->t_modify_receive_and_unpack,
       s_print_steps == 'y');
 
-   t_modify_misc->start();
+   d_object_timers->t_modify_misc->start();
 
    delete[] all_comms;
 
@@ -588,7 +585,7 @@ MappingConnectorAlgorithm::privateModify(
          << "the base and head.  The results are not guaranteed\n"
          << "to be complete overlap Connectors." << std::endl);
    }
-   t_modify_misc->stop();
+   d_object_timers->t_modify_misc->stop();
 
    /*
     * Optional in-place changes:
@@ -601,7 +598,7 @@ MappingConnectorAlgorithm::privateModify(
     * BoxLevel, this method initializes it to the new
     * BoxLevel and uses it in the output Connectors.
     */
-   t_modify_misc->start();
+   d_object_timers->t_modify_misc->start();
    if (mutable_new == &old_to_new.getBase() &&
        mutable_old == &old_to_new.getHead()) {
       /*
@@ -621,9 +618,9 @@ MappingConnectorAlgorithm::privateModify(
          *mutable_old = old_to_new.getBase();
       }
    }
-   t_modify_misc->stop();
+   d_object_timers->t_modify_misc->stop();
 
-   t_modify->stop();
+   d_object_timers->t_modify->stop();
 }
 
 /*
@@ -750,7 +747,7 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
    Connector* new_to_anchor,
    const MappingConnector& old_to_new) const
 {
-   t_modify_remove_and_cache->start();
+   d_object_timers->t_modify_remove_and_cache->start();
 
    const tbox::Dimension& dim(old_to_new.getBase().getDim());
    const tbox::SAMRAI_MPI& mpi(old_to_new.getBase().getMPI());
@@ -870,7 +867,7 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
 
    }
 
-   t_modify_remove_and_cache->stop();
+   d_object_timers->t_modify_remove_and_cache->stop();
 }
 
 /*
@@ -904,7 +901,7 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
        * packed into a message for sending.
        */
 
-      t_modify_discover_and_send->start();
+      d_object_timers->t_modify_discover_and_send->start();
 
       const BoxLevel& old(old_to_new.getBase());
 
@@ -1145,7 +1142,7 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
 
       }
 
-      t_modify_discover_and_send->stop();
+      d_object_timers->t_modify_discover_and_send->stop();
    }
 }
 
@@ -1181,6 +1178,8 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    InvertedNeighborhoodSet& inverted_nbrhd,
    const IntVector& head_refinement_ratio) const
 {
+   d_object_timers->t_modify_find_overlaps_for_one_process->start();
+
    const BoxLevel& old = mapping_connector.getBase();
    const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
       old.getGridGeometry());
@@ -1296,6 +1295,8 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
          }
       }
    }
+
+   d_object_timers->t_modify_find_overlaps_for_one_process->stop();
 }
 
 /*
@@ -1318,20 +1319,24 @@ MappingConnectorAlgorithm::initializeCallback()
       s_class_mpi.dupCommunicator(mpi);
    }
 
-   t_modify = tbox::TimerManager::getManager()->
-      getTimer("hier::MappingConnectorAlgorithm::privateModify()");
-   t_modify_setup_comm = tbox::TimerManager::getManager()->
-      getTimer("hier::MappingConnectorAlgorithm::setupCommunication()");
-   t_modify_remove_and_cache = tbox::TimerManager::getManager()->
-      getTimer("hier::MappingConnectorAlgorithm::privateModify_removeAndCache()");
-   t_modify_discover_and_send = tbox::TimerManager::getManager()->
-      getTimer("hier::MappingConnectorAlgorithm::privateModify_discoverAndSend()");
-   t_modify_receive_and_unpack = tbox::TimerManager::getManager()->
-      getTimer("hier::MappingConnectorAlgorithm::receiveAndUnpack()");
-   t_modify_MPI_wait = tbox::TimerManager::getManager()->
-      getTimer("hier::MappingConnectorAlgorithm::privateModify()_MPI_wait");
-   t_modify_misc = tbox::TimerManager::getManager()->
-      getTimer("hier::MappingConnectorAlgorithm::privateModify()_misc");
+   /*
+    * - sets up debugging flags.
+    */
+
+   if (s_print_steps == '\0') {
+      if (tbox::InputManager::inputDatabaseExists()) {
+         s_print_steps = 'n';
+         boost::shared_ptr<tbox::Database> idb(
+            tbox::InputManager::getInputDatabase());
+         if (idb->isDatabase("MappingConnectorAlgorithm")) {
+            boost::shared_ptr<tbox::Database> ocu_db(
+               idb->getDatabase("MappingConnectorAlgorithm"));
+            s_print_steps = ocu_db->getCharWithDefault("print_modify_steps",
+                  s_print_steps);
+         }
+      }
+   }
+
 }
 
 /*
@@ -1344,17 +1349,54 @@ MappingConnectorAlgorithm::initializeCallback()
 void
 MappingConnectorAlgorithm::finalizeCallback()
 {
-   t_modify.reset();
-   t_modify_setup_comm.reset();
-   t_modify_remove_and_cache.reset();
-   t_modify_discover_and_send.reset();
-   t_modify_receive_and_unpack.reset();
-   t_modify_MPI_wait.reset();
-   t_modify_misc.reset();
-
    if (s_class_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
       s_class_mpi.freeCommunicator();
    }
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+MappingConnectorAlgorithm::setTimerPrefix(
+   const std::string& timer_prefix)
+{
+   std::map<std::string, TimerStruct>::iterator ti(
+      s_static_timers.find(timer_prefix));
+   if (ti == s_static_timers.end()) {
+      d_object_timers = &s_static_timers[timer_prefix];
+      getAllTimers(timer_prefix, *d_object_timers);
+   } else {
+      d_object_timers = &(ti->second);
+   }
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+MappingConnectorAlgorithm::getAllTimers(
+   const std::string& timer_prefix,
+   TimerStruct& timers)
+{
+   timers.t_modify = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::privateModify()");
+   timers.t_modify_setup_comm = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::setupCommunication()");
+   timers.t_modify_remove_and_cache = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::privateModify_removeAndCache()");
+   timers.t_modify_discover_and_send = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::privateModify_discoverAndSend()");
+   timers.t_modify_find_overlaps_for_one_process = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::privateModify_findOverlapsForOneProcess()");
+   timers.t_modify_receive_and_unpack = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::receiveAndUnpack()");
+   timers.t_modify_MPI_wait = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::privateModify()_MPI_wait");
+   timers.t_modify_misc = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::privateModify()_misc");
 }
 
 }
