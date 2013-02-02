@@ -1481,6 +1481,8 @@ BaseGridGeometry::setPhysicalDomain(
    } 
 #endif
 
+   d_physical_domain.clear();
+
    d_domain_is_single_box.resizeArray(number_blocks);
    d_number_blocks = number_blocks;
    LocalId local_id(0);
