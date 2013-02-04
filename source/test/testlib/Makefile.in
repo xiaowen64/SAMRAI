@@ -51,6 +51,12 @@ clean-check:
 	$(SAMCLEAN)
 	rm -rf *f libSAMRAI*
 
+examples:
+
+perf:
+
+everything:
+
 clean:		clean-check
 
 include $(SRCDIR)/Makefile.depend

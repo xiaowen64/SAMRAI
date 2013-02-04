@@ -47,7 +47,7 @@ check:
 #          to have been done.  So remove the old stuff.
 check2d:	main
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test.2d.input;
-		$(RM) -rf  test.2d.restart/restore.000003/nodes.*[2-9]
+		$(RM) test.2d.restart/restore.000003/nodes.*[2-9]
 		$(OBJECT)/tools/restart/restart-redistribute test.2d.restart test_restart_redistribute_2d 3 4;
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test.2d.input test.2d.restart 5;
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test_sync.2d.input;
@@ -87,13 +87,19 @@ examples:
 
 perf:
 
+everything:
+	$(MAKE) checkcompile
+	$(MAKE) checktest
+	$(MAKE) examples
+	$(MAKE) perf
+
 clean-check:
 		$(SAMCLEAN)
 
 clean:		clean-check
 		$(RM) *.f *main* 
-		$(RM) -rf test*restart*
-		$(RM) -rf viz*
+		$(RM) test*restart*
+		$(RM) viz*
 
 include $(SRCDIR)/Makefile.depend
 

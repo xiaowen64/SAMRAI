@@ -83,12 +83,24 @@ checktest:
 examples:
 
 perf:	main
+		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/core2shell.3d.caplb.input;
 		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/core2shell.3d.treelb.input;
 		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/deep_front.3d.treelb.input;
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/domexlike.input;
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/domexlike.caplb.input;
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/domexlike.treelb.input;
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/lsphere_weak.3d.treelb.input;
 		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/mild_front.3d.treelb.input;
+		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/mincutsize_b.3d.treelb.input;
+		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/mincutsize_c.3d.treelb.input;
 		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/shallow_front.3d.treelb.input;
+		$(OBJECT)/config/serpa-run 2,4 ./main performance_inputs/single_sphere.3d.caplb.input;
 		$(OBJECT)/config/serpa-run 2,4 ./main performance_inputs/single_sphere.3d.treelb.input;
+
+everything:
+	$(MAKE) checkcompile
+	$(MAKE) checktest
+	$(MAKE) examples
+	$(MAKE) perf
 
 clean-check:
 		$(SAMCLEAN)

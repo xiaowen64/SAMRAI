@@ -304,8 +304,8 @@ RefineSchedule {
 }
 
 PersistentOverlapConnectors {
-   check_created_connectors = FALSE
-   check_accessed_connectors = FALSE
+   DEV_check_created_connectors = FALSE
+   DEV_check_accessed_connectors = FALSE
    implicit_connector_creation_rule = "ERROR"
 }
 

@@ -59,7 +59,17 @@ checktest:
 
 examples:
 
-perf:
+perf: main
+	@for i in performance_inputs/*.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+
+everything:
+	$(MAKE) checkcompile
+	$(MAKE) checktest
+	$(MAKE) examples
+	$(MAKE) perf
 
 include $(SRCDIR)/Makefile.depend
 

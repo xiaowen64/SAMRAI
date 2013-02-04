@@ -96,6 +96,12 @@ perf:
 	$(MAKE) perf2d
 	$(MAKE) perf3d
 
+everything:
+	$(MAKE) checkcompile
+	$(MAKE) checktest
+	$(MAKE) examples
+	$(MAKE) perf
+
 clean-check:
 		$(SAMCLEAN)
 

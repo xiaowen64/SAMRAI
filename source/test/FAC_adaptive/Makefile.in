@@ -72,6 +72,12 @@ examples:
 
 perf:
 
+everything:
+	$(MAKE) checkcompile
+	$(MAKE) checktest
+	$(MAKE) examples
+	$(MAKE) perf
+
 clean-check:
 	$(SAMCLEAN)
 

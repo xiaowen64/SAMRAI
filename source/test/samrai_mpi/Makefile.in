@@ -65,6 +65,12 @@ examples:
 
 perf:
 
+everything:
+	$(MAKE) checkcompile
+	$(MAKE) checktest
+	$(MAKE) examples
+	$(MAKE) perf
+
 clean:
 	$(SAMCLEAN)
 	$(RM) main-runtime-on main-runtime-off main-runtime-disabled

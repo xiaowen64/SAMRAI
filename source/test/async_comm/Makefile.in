@@ -53,6 +53,12 @@ examples:
 
 perf:
 
+everything:
+	$(MAKE) checkcompile
+	$(MAKE) checktest
+	$(MAKE) examples
+	$(MAKE) perf
+
 clean:
 	$(SAMCLEAN)
 	$(RM) main-async_comm main-peer_comm

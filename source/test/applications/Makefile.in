@@ -44,5 +44,7 @@ examples:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 perf:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+everything:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 clean:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done

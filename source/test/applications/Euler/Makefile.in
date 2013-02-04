@@ -89,12 +89,18 @@ examples:
 
 perf:
 
+everything:
+	$(MAKE) checkcompile
+	$(MAKE) checktest
+	$(MAKE) examples
+	$(MAKE) perf
+
 clean-check:
 		$(SAMCLEAN)
 
 clean:		clean-check
 		$(RM) *.f main
-		$(RM) test*restart test*visit viz*
+		$(RM) test*restart test*visit viz* *.restart
 
 include $(SRCDIR)/Makefile.depend
 

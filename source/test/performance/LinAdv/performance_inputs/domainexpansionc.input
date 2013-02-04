@@ -185,8 +185,6 @@ TimerManager {
 
 PatchHierarchy {
    max_levels = 3
-   enforce_proper_nesting = TRUE
-   extend_to_domain_boundary = TRUE
    largest_patch_size {
       level_0 = -1,-1,-1
       // level_0 = 20,20,20
@@ -223,11 +221,11 @@ GriddingAlgorithm {
    // read_regrid_boxes = TRUE
    // regrid_boxes_filename = "grid"
    sequentialize_patch_indices = FALSE
-   barrier_and_time = TRUE
-   log_metadata_statistics = TRUE
-   print_steps = FALSE
-   check_boundary_proximity_violation = "ERROR"
-   check_nonrefined_tags = "IGNORE"
+   DEV_barrier_and_time = TRUE
+   DEV_log_metadata_statistics = TRUE
+   DEV_print_steps = FALSE
+   DEV_check_boundary_proximity_violation = "ERROR"
+   DEV_check_nonrefined_tags = "IGNORE"
 }
 
 SinusoidalFrontTagger {
@@ -249,7 +247,7 @@ TimeRefinementIntegrator {
    // max_integrator_steps  = 1     // max number of simulation timesteps
    max_integrator_steps  = 25     // max number of simulation timesteps
    // tag_buffer            = 3, 3, 3, 3, 3, 3
-   barrier_and_time        = TRUE
+   DEV_barrier_and_time        = TRUE
 }
 
 ChopAndPackLoadBalancer{
@@ -273,7 +271,7 @@ TreeLoadBalancer {
   DEV_print_swap_steps = FALSE
   DEV_print_break_steps = FALSE
   DEV_print_edge_steps = FALSE
-  slender_penalty_wt = 0.0
+  DEV_slender_penalty_wt = 0.0
   DEV_summarize_map = FALSE
 }
 
@@ -282,17 +280,17 @@ HyperbolicLevelIntegrator {
    cfl_init                 = 0.5
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
-   distinguish_mpi_reduction_costs = TRUE
+   DEV_distinguish_mpi_reduction_costs = TRUE
 }
 
 RefineSchedule {
-  barrier_and_time = TRUE
-  extra_debug = FALSE
+  DEV_barrier_and_time = TRUE
+  DEV_extra_debug = FALSE
 }
 
 PersistentOverlapConnectors {
-   check_created_connectors = FALSE
-   check_accessed_connectors = FALSE
+   DEV_check_created_connectors = FALSE
+   DEV_check_accessed_connectors = FALSE
    implicit_connector_creation_rule = "ERROR"
 }
 

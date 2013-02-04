@@ -77,12 +77,18 @@ examples:
 
 perf:
 
+everything:
+	$(MAKE) checkcompile
+	$(MAKE) checktest
+	$(MAKE) examples
+	$(MAKE) perf
+
 clean-check:
 	$(SAMCLEAN)
 
 clean:		clean-check
 	$(RM) *.f main
-	$(RM) test*restart
+	$(RM) test*restart viz_*
 
 redo:
 	$(RM) core main*d

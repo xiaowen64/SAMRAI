@@ -72,12 +72,18 @@ perf3d:	main
 perf:
 	$(MAKE) perf3d
 
+everything:
+	$(MAKE) checkcompile
+	$(MAKE) checktest
+	$(MAKE) examples
+	$(MAKE) perf
+
 clean-check:
 	$(SAMCLEAN)
 
 clean:		clean-check
 	$(RM) *.o *.f main
-	$(RM) *visit
+	$(RM) *visit nkLog.32x32.8
 
 include $(SRCDIR)/Makefile.depend
 

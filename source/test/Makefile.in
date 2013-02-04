@@ -84,5 +84,11 @@ examples:
 perf:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 
+everything:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) checkcompile); done
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) checktest); done
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) examples); done
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) perf); done
+
 clean:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
