@@ -325,7 +325,6 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          patch.getPatchGeometry(),
          boost::detail::dynamic_cast_tag());
-      const double* dx = patch_geom->getDx();
 
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
       tagShells(tag_data, *patch_geom, d_buffer_shrink_distance[patch.getPatchLevelNumber()]);
