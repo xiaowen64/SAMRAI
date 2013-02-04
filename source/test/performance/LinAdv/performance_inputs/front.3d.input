@@ -283,19 +283,19 @@ TreeLoadBalancer {
 
 
 ScaledInput {
-CartesianGeometry {
-   domain_boxes  = [ (0,0,0) , ( 9, 9, 9) ]
-   x_lo          = -2.e0, -1.e0,-1.e0     // lower end of computational domain.
-   x_up          = 2.e0, 1.e0, 1.e0  // upper end of computational domain.
-   periodic_dimension = 0,0,0
-}
-HyperbolicLevelIntegrator {
-   cfl                      = 0.1125e0 // procs 1, 2
-   cfl_init                 = 0.1125e0 // procs 1, 2
-   lag_dt_computation       = TRUE
-   use_ghosts_to_compute_dt = TRUE
-   DEV_distinguish_mpi_reduction_costs = TRUE
-}
+   CartesianGeometry {
+      domain_boxes  = [ (0,0,0) , ( 9, 9, 9) ]
+      x_lo          = -2.e0, -1.e0,-1.e0     // lower end of computational domain.
+      x_up          = 2.e0, 1.e0, 1.e0  // upper end of computational domain.
+      periodic_dimension = 0,0,0
+   }
+   HyperbolicLevelIntegrator {
+      cfl                      = 0.1125e0 // procs 1, 2
+      cfl_init                 = 0.1125e0 // procs 1, 2
+      lag_dt_computation       = TRUE
+      use_ghosts_to_compute_dt = TRUE
+      DEV_distinguish_mpi_reduction_costs = TRUE
+   }
    SinusoidalFrontTagger {
       allocate_data = FALSE
       buffer_cells = 0,0,0

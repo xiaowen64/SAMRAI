@@ -8,6 +8,9 @@
  *
  ************************************************************************/
 
+AutoTester {
+}
+
 Euler {
    use_nonuniform_workload = TRUE
    gamma            = 1.4      // gamma = Ratio of specific heats

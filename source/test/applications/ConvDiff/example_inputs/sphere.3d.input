@@ -7,6 +7,10 @@
  * Description:   Advecting sphere input for SAMRAI ConvDiff example problem 
  *
  ************************************************************************/
+
+AutoTester {
+}
+
 ConvDiff {
    convection_coeff =  4.0e0 , 2.0e0 , 2.0e0 // vector [NDIM]
    diffusion_coeff   = 0.5       // scalar

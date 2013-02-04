@@ -70,6 +70,8 @@ checktest:
 
 examples:
 
+perf:
+
 clean-check:
 	$(SAMCLEAN)
 

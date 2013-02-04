@@ -67,6 +67,10 @@ checktest:
 	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
 	rm -f makecheck.logfile
 
+examples:
+
+perf:
+
 clean:
 	$(SAMCLEAN)
 	$(RM) testHDF5 testHDF5AppFileOpen testSilo testSiloAppFileOpen testMemory

@@ -43,9 +43,15 @@ testlib:
 
 check:
 
-perf:
-	$(MAKE) perf2d
-	$(MAKE) perf3d
+checkcompile: main
+
+checktest:
+	rm -f makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
+	rm -f makecheck.logfile
+
+examples:
 
 perf2d:       main
 	@for i in performance_inputs/*.2d.*input ; do \
@@ -59,13 +65,9 @@ perf3d:       main
 	       ./main $${i}; \
 	done
 
-checkcompile: main
-
-checktest:
-	rm -f makecheck.logfile
-	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
-	rm -f makecheck.logfile
+perf:
+	$(MAKE) perf2d
+	$(MAKE) perf3d
 
 clean-check:
 	$(SAMCLEAN)

@@ -47,17 +47,8 @@ main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
 check:
 	$(MAKE) check2d
 
-perf:
-	$(MAKE) perf3d
-
 check2d:	main
 	@for i in test_inputs/*2d*.input ; do	\
-	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-		./main $${i} -skip_petscrc;	\
-	done
-
-perf3d:	main
-	@for i in performance_inputs/*3d*.input ; do	\
 	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
 		./main $${i} -skip_petscrc;	\
 	done
@@ -69,6 +60,17 @@ checktest:
 	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
 	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
 	rm -f makecheck.logfile
+
+examples:
+
+perf3d:	main
+	@for i in performance_inputs/*3d*.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i} -skip_petscrc;	\
+	done
+
+perf:
+	$(MAKE) perf3d
 
 clean-check:
 	$(SAMCLEAN)

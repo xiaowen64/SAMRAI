@@ -23,14 +23,14 @@ include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA = -I$(TESTINCLUDE)  -DTESTING=1
 
-NUM_TESTS = 9
+NUM_TESTS = 11
 
 TEST_NPROCS = @TEST_NPROCS@
 
 CXX_OBJS      = lb.o
 
-INPUTS2D = rect.2d.treelb.input rod.2d.treelb.input small_cube.2d.caplb.input small_cube.2d.treelb.input small_sphere.2d.caplb.input small_sphere.2d.treelb.input small_front.2d.treelb.input
-INPUTS3D = plank.3d.treelb.input small_cube.3d.treelb.input
+INPUTS2D = rect.2d.treelb.input rod.2d.treelb.input small_cube.2d.caplb.input small_cube.2d.treelb.input small_sphere.2d.caplb.input small_sphere.2d.treelb.input small_front.2d.treelb.input small_rect.2d.treelb.input
+INPUTS3D = plank.3d.treelb.input small_cube.3d.treelb.input small_front.3d.treelb.input
 
 main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)
 	$(MAKE) testlib
@@ -61,6 +61,40 @@ checktest:
 		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
 		$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
 		rm -f makecheck.logfile
+
+examples:
+
+perf2d: main
+	@for i in performance_inputs/cube_inputs/*.2d.*input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+	@for i in performance_inputs/front_inputs/*.2d.*input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+	@for i in performance_inputs/sphere_inputs/*.2d.*input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+
+perf3d: main
+	@for i in performance_inputs/cube_inputs/*.3d.*input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+	@for i in performance_inputs/front_inputs/*.3d.*input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+	@for i in performance_inputs/sphere_inputs/*.3d.*input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+
+perf:
+	$(MAKE) perf2d
+	$(MAKE) perf3d
 
 clean-check:
 		$(SAMCLEAN)

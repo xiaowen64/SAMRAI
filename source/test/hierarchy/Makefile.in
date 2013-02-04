@@ -57,6 +57,10 @@ checktest:
 	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
 	rm -f makecheck.logfile
 
+examples:
+
+perf:
+
 clean-check:
 	$(SAMCLEAN)
 

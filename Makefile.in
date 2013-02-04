@@ -203,6 +203,14 @@ checkcompile:
 checktest:
 	(cd source/test; $(MAKE) checktest)
 
+# Run the SAMRAI example problems
+examples:
+	(cd source/test; $(MAKE) examples)
+
+# Run the SAMRAI performance tests
+perf:
+	(cd source/test; $(MAKE) perf)
+
 memtest: 
 	rm -f ~/insure.out 
 	$(MAKE) checktest

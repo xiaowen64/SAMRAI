@@ -94,8 +94,8 @@ Euler {
 
 Main {
    dim = 2
+   base_name = "sphere.2d"
 // log file parameters 
-   log_file_name    = "sphere-2d.log"
    log_all_nodes    = TRUE
 
 // visualization dump parameters 
@@ -106,7 +106,7 @@ Main {
    visit_number_procs_per_file = 1    // not used by Vizamrai
 
 // restart dump parameters
-   restart_interval       = 0        // zero to turn off
+   restart_interval       = 1        // zero to turn off
    restart_write_dirname  = "restart_sphere2d"
 }
 
@@ -182,6 +182,6 @@ TimeRefinementIntegrator{
    max_integrator_steps = 301      // max number of simulation timesteps
 }
 
-LoadBalancer {
+TreeLoadBalancer {
 // using default uniform load balance configuration (see mesh_LoadBalancerX.h.sed)
 }

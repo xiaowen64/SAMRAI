@@ -3180,7 +3180,7 @@ void MblkLinAdv::checkBoundaryData(
       TBOX_ASSERT(bbox.getBoundaryType() == btype);
       int bloc = bbox.getLocationIndex();
 
-      int bscalarcase, refbdryloc;
+      int bscalarcase = 0, refbdryloc = 0;
       if (d_dim == tbox::Dimension(2)) {
          if (btype == Bdry::EDGE2D) {
             TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_EDGES);

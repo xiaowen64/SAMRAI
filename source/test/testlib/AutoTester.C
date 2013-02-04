@@ -312,41 +312,46 @@ int AutoTester::evalTestData(
       /*
        * Test 0: Time test
        */
-      if (d_output_correct) {
-         tbox::plog << "Test 0: Simulation Time: "
-                    << "\n   computed result: " << time;
-         if (d_correct_result.getSize() > 0) {
+      if (d_correct_result.getSize() > 0) {
+         if (d_output_correct) {
+            tbox::plog << "Test 0: Simulation Time: "
+                       << "\n   computed result: " << time;
             tbox::plog << "\n   specified result = "
                        << d_correct_result[0];
          }
          tbox::plog << std::endl;
-      }
-      if (tbox::MathUtilities<double>::equalEps(time, d_correct_result[0])) {
-         tbox::plog << "Test 0: Simulation Time check successful" << std::endl;
-      } else {
-         tbox::perr << "Test 0 FAILED: Simulation time incorrect" << std::endl;
-         num_failures++;
+
+         if (tbox::MathUtilities<double>::equalEps(time,
+                d_correct_result[0])) {
+            tbox::plog << "Test 0: Simulation Time check successful"
+                       << std::endl;
+         } else {
+            tbox::perr << "Test 0 FAILED: Simulation time incorrect"
+                       << std::endl;
+            num_failures++;
+         }
       }
 
       /*
        * Test 1: MethodOfLinesIntegrator
        */
       double dt = mol->getTimestep(hierarchy, time);
-      if (d_output_correct) {
-         tbox::plog << "Test 1: Method of Lines Integrator "
-                    << "\n   computed result: " << dt;
-         if (d_correct_result.getSize() > 1) {
+      if (d_correct_result.getSize() > 1) {
+         if (d_output_correct) {
+            tbox::plog << "Test 1: Method of Lines Integrator "
+                       << "\n   computed result: " << dt;
             tbox::plog << "\n   specified result = "
                        << d_correct_result[1];
          }
          tbox::plog << std::endl;
-      }
-      if (tbox::MathUtilities<double>::equalEps(dt, d_correct_result[1])) {
-         tbox::plog << "Test 1: MOL Int check successful" << std::endl;
-      } else {
-         tbox::perr << "Test 1 FAILED: Check Method of Lines Integrator"
-                    << std::endl;
-         num_failures++;
+
+         if (tbox::MathUtilities<double>::equalEps(dt, d_correct_result[1])) {
+            tbox::plog << "Test 1: MOL Int check successful" << std::endl;
+         } else {
+            tbox::perr << "Test 1 FAILED: Check Method of Lines Integrator"
+                       << std::endl;
+            num_failures++;
+         }
       }
 
       /*

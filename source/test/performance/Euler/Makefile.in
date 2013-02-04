@@ -44,7 +44,31 @@ redo:
 		$(RM) main core *.ii *.int.c
 		$(RM) ti_files ii_files
 
+check:
+
 checkcompile:	main
+
+examples2d: main
+	@for i in example_inputs/*2d*.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+
+examples3d: main
+	@for i in example_inputs/*3d*.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+
+examples:
+	$(MAKE) examples2d
+	$(MAKE) examples3d
+
+perf: main
+	@for i in performance_inputs/mEuler/*.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
 
 include $(SRCDIR)/Makefile.depend
 

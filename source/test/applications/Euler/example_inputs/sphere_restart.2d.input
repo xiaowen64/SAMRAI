@@ -7,6 +7,10 @@
  * Description:   Input file for SAMRAI Euler example problem (2d sphere) 
  *
  ************************************************************************/
+
+AutoTester {
+}
+
 Euler {
    gamma            = 1.4      // gamma = Ratio of specific heats
 

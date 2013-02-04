@@ -84,20 +84,19 @@ Euler {
 
 Main {
    dim = 2
-   base_name = "room-2d"
+   base_name = "room.2d"
 // log file parameters 
-   log_file_name    = "room-2d.log"
    log_all_nodes    = TRUE
 
 // visualization dump parameters
    viz_writer            = "VisIt" // use: "Vizamrai", "VisIt" for both
    viz_dump_interval     = 1          // zero to turn off
-   // viz_dump_dirname      = "viz_room2d"
-   // viz_dump_filename     = "room2d"   // not used by VisIt
+   viz_dump_dirname      = "viz_room2d"
+   viz_dump_filename     = "room2d"   // not used by VisIt
    visit_file_cluster_size = 1        // not used by Vizamrai
 
 // restart dump parameters
-   restart_interval       = 0         // zero to turn off
+   restart_interval       = 1         // zero to turn off
    restart_write_dirname  = "restart_room2d"
 }
 

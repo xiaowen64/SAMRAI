@@ -43,7 +43,7 @@ Main {
      number of MPI processes be a power-of-two times
      num_procs_in_tile.
    */
-   num_procs_in_tile = 8
+   num_procs_in_tile = 1
 
    /*
      Specify ghost-cell-width between L0 and unbalanced.

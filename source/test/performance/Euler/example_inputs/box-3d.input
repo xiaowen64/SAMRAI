@@ -154,8 +154,8 @@ Euler {
 
 Main {
    dim = 3
+   base_name = "box.3d"
 // log file parameters 
-   log_file_name    = "box-3d.log"
    log_all_nodes    = TRUE
 
 // visualization dump parameters 
@@ -227,7 +227,7 @@ TimeRefinementIntegrator {
    max_integrator_steps  = 25     // max number of simulation timesteps
 }
 
-LoadBalancer {
+TreeLoadBalancer {
 // using default uniform load balance configuration (see mesh_LoadBalancerX.h.sed)
 }
 

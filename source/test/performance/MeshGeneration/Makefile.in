@@ -80,6 +80,16 @@ checktest:
 		$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
 		rm -f makecheck.logfile
 
+examples:
+
+perf:	main
+		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/core2shell.3d.treelb.input;
+		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/deep_front.3d.treelb.input;
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/domexlike.input;
+		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/mild_front.3d.treelb.input;
+		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/shallow_front.3d.treelb.input;
+		$(OBJECT)/config/serpa-run 2,4 ./main performance_inputs/single_sphere.3d.treelb.input;
+
 clean-check:
 		$(SAMCLEAN)
 

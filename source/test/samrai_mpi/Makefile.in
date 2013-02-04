@@ -61,6 +61,10 @@ checktest:      checkcompile
 	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
 	rm -f makecheck.logfile
 
+examples:
+
+perf:
+
 clean:
 	$(SAMCLEAN)
 	$(RM) main-runtime-on main-runtime-off main-runtime-disabled

@@ -78,5 +78,11 @@ checktest:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 	@echo "Completed " $@ " in source/test at `date`"
 
+examples:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+
+perf:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+
 clean:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done

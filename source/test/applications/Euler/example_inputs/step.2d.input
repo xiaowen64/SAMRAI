@@ -8,6 +8,9 @@
  *
  ************************************************************************/
 
+AutoTester {
+}
+
 Euler {
    gamma            = 1.4      // gamma = Ratio of specific heats
 

@@ -7,6 +7,10 @@
  * Description:   Input file for SAMRAI LinAdv example problem 
  *
  ************************************************************************/
+
+AutoTester {
+}
+
 LinAdv {
 
    advection_velocity = 2.0e0 , 1.0e0 

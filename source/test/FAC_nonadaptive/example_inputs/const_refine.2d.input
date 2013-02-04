@@ -34,6 +34,7 @@ fac_precond {
   residual_tol = 1e-8     // Residual tolerance to solve for
   num_pre_sweeps = 1      // Number of presmoothing sweeps to use
   num_post_sweeps = 3     // Number of postsmoothing sweeps to use
+}
 
 fac_ops {
   prolongation_method = "CONSTANT_REFINE" // Type of refinement

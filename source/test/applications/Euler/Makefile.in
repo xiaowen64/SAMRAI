@@ -71,6 +71,24 @@ checktest:
 		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
 		rm -f makecheck.logfile
 
+examples2d:	main
+	@for i in example_inputs/*.2d.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+
+examples3d:	main
+	@for i in example_inputs/*.3d.input ; do	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main $${i};	\
+	done
+
+examples:
+	$(MAKE) examples2d
+	$(MAKE) examples3d
+
+perf:
+
 clean-check:
 		$(SAMCLEAN)
 

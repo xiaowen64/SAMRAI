@@ -63,6 +63,10 @@ checktest:
 		$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
 		rm -f makecheck.logfile
 
+examples:
+
+perf:
+
 clean-check:
 		$(SAMCLEAN)
 

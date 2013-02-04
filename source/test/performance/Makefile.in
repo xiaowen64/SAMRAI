@@ -17,7 +17,7 @@ default: library
 
 include $(OBJECT)/config/Makefile.config
 
-SUBDIRS = multiblock treesearch TreeCommunication MeshGeneration LoadBalancers LinAdv
+SUBDIRS = treesearch multiblock TreeCommunication MeshGeneration LoadBalancers LinAdv Euler
 
 library:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
@@ -39,6 +39,10 @@ checkcompile:
 	(cd $(OBJECT)/source/test/testlib && $(MAKE) $@)
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 checktest:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+examples:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+perf:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 clean:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done

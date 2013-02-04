@@ -7,7 +7,6 @@
  * Description:   Input file for SAMRAI Euler example problem (2d step) 
  *
  ************************************************************************/
-
 Euler {
    gamma            = 1.4      // gamma = Ratio of specific heats
 
@@ -42,7 +41,7 @@ Euler {
  
       PRESSURE_SHOCK {
          shock_tol = 10.0
-         shock_onset = 0.90
+         shock_onset = 0.90 
       }
    }
 
@@ -85,8 +84,8 @@ Euler {
 
 Main {
    dim = 2
+   base_name = "step-2d"
 // log file parameters 
-   log_file_name    = "step-2d.log"
    log_all_nodes    = TRUE
 
 // visualization dump parameters 
@@ -121,34 +120,30 @@ StandardTagAndInitialize{
 }
 
 PatchHierarchy {
-   max_levels          = 5         // Maximum number of levels in hierarchy.
-
-   ratio_to_coarser {              // vector ratio to next coarser level
-      level_1            = 2 , 2
-      level_2            = 2 , 2
-      level_3            = 2 , 2
-      level_4            = 2 , 2
-   }
-
+   max_levels = 3
+   proper_nesting_buffer = 2, 2, 2, 2, 2, 2
    largest_patch_size {
-      level_0 = 32 , 32
+      level_0 = 32, 32
       // all finer levels will use same values as level_0...
    }
-
    smallest_patch_size {
-      level_0 = 8 , 8
-      level_1 = 8 , 8
-      level_2 = 8 , 8
-      level_3 = 12 , 12
-      // all finer levels will use same values as level_3...
+      level_0 = 8,8
+      // all finer levels will use same values as level_0...
    }
+   ratio_to_coarser {
+      level_1            = 4, 4
+      level_2            = 4, 4
+      //  etc.
+   }
+   allow_patches_smaller_than_ghostwidth = TRUE
 }
 
 GriddingAlgorithm {
-
-   efficiency_tolerance = 0.75e0   // min % of tag cells in new patch level
-   combine_efficiency   = 0.85e0   // chop box if sum of volumes of smaller
-                                   // boxes < efficiency * vol of large box
+   enforce_proper_nesting = TRUE
+   DEV_extend_to_domain_boundary = FALSE
+   // DEV_load_balance = FALSE
+   efficiency_tolerance = 0.75
+   combine_efficiency = 0.80
 }
 
 HyperbolicLevelIntegrator {
@@ -167,4 +162,16 @@ TimeRefinementIntegrator {
 
 LoadBalancer {
 // using default uniform load balance configuration (see mesh_LoadBalancerX.h.sed)
+}
+
+TreeLoadBalancer {
+  DEV_report_load_balance = FALSE
+  DEV_barrier_before = TRUE
+  DEV_barrier_after = TRUE
+  n_root_cycles = 2
+}
+
+BergerRigoutsos {
+  DEV_log_node_history = TRUE
+  DEV_log_cluster_summary = TRUE
 }
