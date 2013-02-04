@@ -98,7 +98,10 @@ public:
     */
    bool
    getLoadBalanceDependsOnPatchData(
-      int level_number) const { return false; }
+      int level_number) const {
+      NULL_USE(level_number);
+      return false;
+   }
 
    /*!
     * @copydoc LoadBalanceStrategy::loadBalanceBoxLevel()

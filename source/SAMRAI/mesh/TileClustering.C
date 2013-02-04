@@ -109,6 +109,9 @@ TileClustering::findBoxesContainingTags(
    const double combine_tol,
    const hier::IntVector& max_gcw) const
 {
+   NULL_USE(efficiency_tol);
+   NULL_USE(combine_tol);
+
    TBOX_ASSERT(!bound_boxes.isEmpty());
    TBOX_ASSERT_OBJDIM_EQUALITY4(
       *tag_level,

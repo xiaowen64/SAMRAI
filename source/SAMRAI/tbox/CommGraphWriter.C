@@ -145,10 +145,10 @@ void CommGraphWriter::writeGraphToTextStream(
    if ( ostr.getCurrentSize() > 0 ) {
       record.d_mpi.Gather(
          (void*)ostr.getBufferStart(),
-         ostr.getCurrentSize(),
+         int(ostr.getCurrentSize()),
          MPI_CHAR,
          (record.d_mpi.getRank() == record.d_root_rank ? &tmpbuf[0] : NULL),
-         (record.d_mpi.getRank() == record.d_root_rank ? ostr.getCurrentSize() : 0),
+         int(record.d_mpi.getRank() == record.d_root_rank ? ostr.getCurrentSize() : 0),
          MPI_CHAR,
          record.d_root_rank );
    }

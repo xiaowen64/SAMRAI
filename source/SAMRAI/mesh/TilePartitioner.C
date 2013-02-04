@@ -244,7 +244,7 @@ TilePartitioner::getFromInput(
                        <<"\"ChopAndPackLoadBalancer\" or \"TreeLoadBalancer\".\n");
          }
 
-         d_internal_load_balancer = tolower(internal_load_balancer[0]);
+         d_internal_load_balancer = char(tolower(internal_load_balancer[0]));
       }
 
    }

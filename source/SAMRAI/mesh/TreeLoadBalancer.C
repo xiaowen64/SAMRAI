@@ -433,7 +433,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
     */
    const double fanout_size = max_local_load/d_global_avg_load;
    const int number_of_cycles =
-      ceil( log(fanout_size)/log(d_max_cycle_spread_ratio) );
+      int(ceil( log(fanout_size)/log(d_max_cycle_spread_ratio) ));
       if (d_print_steps) {
          tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel"
                     << " max_cycle_spread_ratio=" << d_max_cycle_spread_ratio
@@ -1049,7 +1049,7 @@ t_post_load_distribution_barrier->stop();
    next_available_index[0] +=
       hier::LocalId(2+d_rank_tree->getDegree()) - (next_available_index[0] % (2 + d_rank_tree->getDegree()));
 
-   for (int c = 1; c < d_rank_tree->getDegree() + 2; ++c) {
+   for (unsigned int c = 1; c < d_rank_tree->getDegree() + 2; ++c) {
       next_available_index[c] = next_available_index[0] + c;
    }
 
@@ -1660,35 +1660,35 @@ t_post_load_distribution_barrier->stop();
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(0),
          "load up",
-         (my_subtree.d_wants_work_from_parent ? 0 : my_subtree.d_work_traded.getSumLoad()),
+         double(my_subtree.d_wants_work_from_parent ? 0 : my_subtree.d_work_traded.getSumLoad()),
          tbox::CommGraphWriter::TO,
          prank );
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(1),
          "boxes up",
-         (my_subtree.d_wants_work_from_parent ? 0 : my_subtree.d_work_traded.size()),
+         double(my_subtree.d_wants_work_from_parent ? 0 : my_subtree.d_work_traded.size()),
          tbox::CommGraphWriter::TO,
          prank );
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(2),
          "load down",
-         (my_subtree.d_wants_work_from_parent ? my_subtree.d_work_traded.getSumLoad() : 0),
+         double(my_subtree.d_wants_work_from_parent ? my_subtree.d_work_traded.getSumLoad() : 0),
          tbox::CommGraphWriter::FROM,
          (my_subtree.d_wants_work_from_parent ? prank : -1) );
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(3),
          "boxes down",
-         (my_subtree.d_wants_work_from_parent ? my_subtree.d_work_traded.size() : 0),
+         double(my_subtree.d_wants_work_from_parent ? my_subtree.d_work_traded.size() : 0),
          tbox::CommGraphWriter::FROM,
          (my_subtree.d_wants_work_from_parent ? prank : -1) );
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(4),
          "bytes down",
-         (my_subtree.d_wants_work_from_parent ? parent_recv->getRecvSize() : int(0)),
+         double(my_subtree.d_wants_work_from_parent ? parent_recv->getRecvSize() : int(0)),
          tbox::CommGraphWriter::FROM,
          (my_subtree.d_wants_work_from_parent ? prank : -1) );
 
@@ -1716,37 +1716,37 @@ t_post_load_distribution_barrier->stop();
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(0),
          "initial box count",
-         balance_box_level.getLocalNumberOfBoxes() );
+         double(balance_box_level.getLocalNumberOfBoxes()) );
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(1),
          "initial load",
-         balance_box_level.getLocalNumberOfCells()/group_avg_load );
+         double(balance_box_level.getLocalNumberOfCells())/group_avg_load );
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(2),
          "final box count",
-         balanced_box_level.getLocalNumberOfBoxes() );
+         double(balanced_box_level.getLocalNumberOfBoxes()) );
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(3),
          "final surplus",
-         balanced_box_level.getLocalNumberOfCells()-group_avg_load );
+         double(balanced_box_level.getLocalNumberOfCells())-group_avg_load );
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(4),
          "final load",
-         balanced_box_level.getLocalNumberOfCells()/group_avg_load );
+         double(balanced_box_level.getLocalNumberOfCells())/group_avg_load );
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(5),
          "subtree surplus",
-         my_subtree.surplus() );
+         double(my_subtree.surplus()) );
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(6),
          "unassigned highwater",
-         unassigned_highwater );
+         double(unassigned_highwater) );
 
    }
 
@@ -4020,11 +4020,6 @@ TreeLoadBalancer::breakOffLoad_planar(
    hier::IntVector sorted_dirs(dim);
    sorted_dirs.sortIntVector(box_dims);
 
-   /*
-    * best_difference is the difference between the best cut found and
-    * ideal_brk_load.  Initialize it for zero breakoff.
-    */
-   double best_difference = static_cast<double>(ideal_brk_load);
    hier::Box best_breakoff_box(dim);
    hier::Box best_leftover_box(dim);
    best_breakoff_box.setBlockId(box.getBlockId());
@@ -4062,7 +4057,7 @@ TreeLoadBalancer::breakOffLoad_planar(
 
       // Compute valid cut planes on high and low sides of upper cut plane.
       int lo_upper_cut_plane = int(ideal_upper_cut_plane);
-      int hi_upper_cut_plane = ideal_upper_cut_plane + 1;
+      int hi_upper_cut_plane = int(ideal_upper_cut_plane) + 1;
       lo_upper_cut_plane = ROUND_TO_LO(lo_upper_cut_plane, d_cut_factor(brk_dir));
       hi_upper_cut_plane = ROUND_TO_HI(hi_upper_cut_plane, d_cut_factor(brk_dir));
       while ( lo_upper_cut_plane > box.lower()(brk_dir)   && bad[lo_upper_cut_plane-box.lower()(brk_dir)] ) { lo_upper_cut_plane -= d_cut_factor(brk_dir); }
@@ -4070,7 +4065,7 @@ TreeLoadBalancer::breakOffLoad_planar(
 
       // Compute valid cut planes on high and low sides of lower cut plane.
       int lo_lower_cut_plane = int(ideal_lower_cut_plane);
-      int hi_lower_cut_plane = ideal_lower_cut_plane + 1;
+      int hi_lower_cut_plane = int(ideal_lower_cut_plane) + 1;
       lo_lower_cut_plane = ROUND_TO_LO(lo_lower_cut_plane, d_cut_factor(brk_dir));
       hi_lower_cut_plane = ROUND_TO_HI(hi_lower_cut_plane, d_cut_factor(brk_dir));
       while ( lo_lower_cut_plane > box.lower()(brk_dir)   && bad[lo_lower_cut_plane-box.lower()(brk_dir)] ) { lo_lower_cut_plane -= d_cut_factor(brk_dir); }
@@ -4352,7 +4347,6 @@ TreeLoadBalancer::breakOffLoad_cubic(
 
 
    const int num_corners = 1 << d_dim.getValue();
-   const int first_bit_mask = 1;
 
    for ( int bn=0; bn<num_corners; ++bn ) {
 

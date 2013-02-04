@@ -977,7 +977,7 @@ void simulateDataProcessing( const CommonTestSwitches &cts )
 */
 void my_usleep( size_t num_usec )
 {
-   size_t num_calls = static_cast<size_t>(num_usec * my_usleep_calls_per_usec);
+   size_t num_calls = static_cast<size_t>(double(num_usec) * my_usleep_calls_per_usec);
    for ( size_t i=0; i<num_calls; ++i ) {
       dummy();
    }
