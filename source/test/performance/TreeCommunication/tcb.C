@@ -272,6 +272,8 @@ int main(
     */
    srand48(mpi.getRank()+10+mpi.getSize());
 
+   int total_err_count = 0;
+
    {
       /*
        * Scope to force destruction of objects that would otherwise
@@ -352,14 +354,12 @@ int main(
 
       calibrate_my_usleep();
 
-
       if ( mpi.getCommunicator() != MPI_COMM_NULL ) {
          /*
           * Run each test as it is pulled out of input_db.
           */
 
          int test_number = 0;
-         int err_count = 0;
 
          CommGraphWriter comm_graph_writer;
 
@@ -418,9 +418,15 @@ int main(
                TBOX_ERROR("Test direction '" << cts.direction << "' is not supported.");
             }
 
+            total_err_count += test_err_count;
+
             plog << "\n";
             pout << "Completed " << test_name << " (" << nickname << ") with "
-                 << test_err_count << " errors, total of " << err_count << "\n";
+                 << test_err_count << " errs, total of " << total_err_count << "\n";
+
+            if ( test_err_count != 0 ) {
+               perr << "Test FaILED.\n";
+            }
 
 
             comm_graph_writer.addRecord(mpi, int(0), size_t(1+rank_tree->getDegree()), size_t(1));
@@ -476,7 +482,9 @@ int main(
    plog << "Input database after running..." << std::endl;
    tbox::InputManager::getManager()->getInputDatabase()->printClassData(plog);
 
-   tbox::pout << "\nPASSED:  TreeCommunicationBenchmark" << std::endl;
+   if (total_err_count == 0) {
+      tbox::pout << "\nPASSED:  TreeCommunicationBenchmark" << std::endl;
+   }
 
    /*
     * Exit properly by shutting down services in correct order.
