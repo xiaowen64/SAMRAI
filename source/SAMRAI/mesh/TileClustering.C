@@ -111,6 +111,7 @@ TileClustering::findBoxesContainingTags(
 {
    NULL_USE(efficiency_tol);
    NULL_USE(combine_tol);
+   NULL_USE(min_box);
 
    TBOX_ASSERT(!bound_boxes.isEmpty());
    TBOX_ASSERT_OBJDIM_EQUALITY4(
