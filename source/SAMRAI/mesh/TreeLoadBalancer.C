@@ -4284,6 +4284,7 @@ TreeLoadBalancer::breakOffLoad_cubic(
 
    breakoff.clear();
    leftover.clear();
+   brk_load = 0.0;
 
    const hier::IntVector &one_vec = hier::IntVector::getOne(d_dim);
    const hier::IntVector &zero_vec = hier::IntVector::getZero(d_dim);
