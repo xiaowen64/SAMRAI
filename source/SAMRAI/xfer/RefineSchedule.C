@@ -1352,8 +1352,6 @@ RefineSchedule::createCoarseInterpPatchLevel(
 
    const tbox::Dimension& dim(hierarchy->getDim());
 
-   const bool dst_is_coarse_interp_level = this != d_top_refine_schedule;
-
    hier::OverlapConnectorAlgorithm oca;
    hier::BoxLevelConnectorUtils edge_utils;
 

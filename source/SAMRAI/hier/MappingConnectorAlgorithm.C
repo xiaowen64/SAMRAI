@@ -56,9 +56,9 @@ MappingConnectorAlgorithm::s_initialize_finalize_handler(
  */
 
 MappingConnectorAlgorithm::MappingConnectorAlgorithm():
+   d_object_timers(NULL),
    d_sanity_check_inputs(false),
-   d_sanity_check_outputs(false),
-   d_object_timers(NULL)
+   d_sanity_check_outputs(false)
 {
    setTimerPrefix(s_default_timer_prefix);
    getFromInput();
