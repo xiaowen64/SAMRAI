@@ -3848,7 +3848,6 @@ GriddingAlgorithm::computeProperNestingData(
       /*
        * 3. Bridge for Connector between level ln and d_proper_nesting_complement[ln].
        */
-      const hier::OverlapConnectorAlgorithm oca;
       oca.bridge(
          d_to_nesting_complement[ln],
          d_hierarchy->getConnectorWithTranspose(ln, ln - 1),
