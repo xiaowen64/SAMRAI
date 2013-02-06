@@ -109,7 +109,6 @@ public:
     * efficiency or coordinating the dendogram nodes.  All such
     * parameters are contained in a single CommonParams object.
     *
-    * @param[in] tag_level
     * @param[in] tag_data_index
     * @param[in] tag_val
     * @param[in] min_box
@@ -127,7 +126,6 @@ public:
    {
 public:
       explicit CommonParams(
-         const boost::shared_ptr<hier::PatchLevel> &tag_level,
          const int tag_data_index,
          const int tag_val,
          const hier::IntVector min_box,
@@ -260,7 +258,7 @@ public:
        * @param tag_to_new
        * @param bound_boxes Contains one global bounding box for each
        *                    block with a patch in tag_level.
-       * @param tag_level
+       * @param[in] tag_level
        * @param mpi_object Alternative SAMRAI_MPI object.  If given,
        *   must be congruent with the tag box_level's MPI communicator.
        *   Specify tbox::SAMRAI_MPI::commNull if unused.  Highly recommend
@@ -275,6 +273,7 @@ public:
       clusterAndComputeRelationships(
          boost::shared_ptr<hier::BoxLevel>& new_box_level,
          boost::shared_ptr<hier::Connector>& tag_to_new,
+         const boost::shared_ptr<hier::PatchLevel> &tag_level,
          const hier::BoxContainer& bound_boxes);
 
 

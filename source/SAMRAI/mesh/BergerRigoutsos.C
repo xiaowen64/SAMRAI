@@ -285,7 +285,6 @@ BergerRigoutsos::findBoxesContainingTags(
    t_find_boxes_with_tags->start();
 
    BergerRigoutsosNode::CommonParams cluster_data(
-      tag_level,
       tag_data_index,
       tag_val,
       min_box,
@@ -307,6 +306,7 @@ BergerRigoutsos::findBoxesContainingTags(
    t_cluster_and_compute_relationships->start();
    cluster_data.clusterAndComputeRelationships(new_box_level,
                                                tag_to_new,
+                                               tag_level,
                                                bound_boxes);
    t_cluster_and_compute_relationships->stop();
 

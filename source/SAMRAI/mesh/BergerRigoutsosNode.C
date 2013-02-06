@@ -39,45 +39,6 @@ std::map<std::string, BergerRigoutsosNode::CommonParams::TimerStruct> BergerRigo
 
 const int BergerRigoutsosNode::BAD_INTEGER = -9999999;
 
-#if 0
-/*
- *******************************************************************
- * Construct root node of the dendogram.
- * This node will not be run.
- *
- * Note: Since the implementation of multiple dendograms for
- * simultaneously clustering in multiple blocks, the root node has no
- * real role except to allocate d_common and launch the entire
- * algorithm.  It would now be cleaner to merge the role of the root
- * node (and possibly d_common) into the BergerRigoutsos class.  The
- * algorithm would be launched from BergerRigoutsos or CommonParams.
- * BTNG.
- *******************************************************************
- */
-BergerRigoutsosNode::BergerRigoutsosNode(
-   const tbox::Dimension& dim):
-   d_pos(0),
-   d_common(new CommonParams(dim)),
-   d_parent(0),
-   d_lft_child(0),
-   d_rht_child(0),
-   d_box(dim, hier::GlobalId(hier::LocalId(0),0)),
-   d_group(0),
-   d_mpi_tag(-1),
-   d_overlap(-1),
-   d_box_acceptance(undetermined),
-   d_accepted_box(dim),
-   d_box_iterator(hier::BoxContainer().end()),
-   d_wait_phase(for_data_only),
-   d_send_msg(),
-   d_recv_msg(),
-   d_comm_group(0),
-   d_generation(0),
-   d_n_cont(0)
-{
-}
-#endif
-
 /*
  *******************************************************************
  * Construct root node for a single block.
@@ -255,16 +216,27 @@ void
 BergerRigoutsosNode::CommonParams::clusterAndComputeRelationships(
    boost::shared_ptr<hier::BoxLevel>& new_box_level,
    boost::shared_ptr<hier::Connector>& tag_to_new,
+   const boost::shared_ptr<hier::PatchLevel> &tag_level,
    const hier::BoxContainer& bound_boxes)
 {
    TBOX_ASSERT(!bound_boxes.isEmpty());
    TBOX_ASSERT_OBJDIM_EQUALITY2(
       *(bound_boxes.begin()),
-      *d_tag_level);
+      *tag_level);
 
    d_object_timers->t_cluster_and_compute_relationships->start();
 
+   d_tag_level = tag_level;
    d_root_boxes = bound_boxes;
+
+   /*
+    * If d_mpi_object has not been set, user wants to do use the
+    * MPI in tag_level (nothing special.  If it has been set, user
+    * wants to use own MPI, so don't change it.
+    */
+   if ( d_mpi_object.getCommunicator() == MPI_COMM_NULL ) {
+      setMPI(d_tag_level->getBoxLevel()->getMPI());
+   }
 
    /*
     * During the algorithm, we kept the results in primitive
@@ -465,7 +437,7 @@ void
 BergerRigoutsosNode::CommonParams::setMPI(
    const tbox::SAMRAI_MPI& mpi_object)
 {
-   TBOX_ASSERT(mpi_object.getCommunicator() != tbox::SAMRAI_MPI::commNull);
+   TBOX_ASSERT(mpi_object.getCommunicator() != MPI_COMM_NULL);
 
    d_mpi_object = mpi_object;
 
@@ -531,7 +503,9 @@ BergerRigoutsosNode::CommonParams::checkMPICongruency() const
          d_mpi_object.getCommunicator(),
          d_tag_level->getBoxLevel()->getMPI().getCommunicator(),
          &compare_result);
-      is_congruent = (compare_result == MPI_CONGRUENT);
+      is_congruent =
+         (compare_result == MPI_CONGRUENT) ||
+         (compare_result == MPI_IDENT);
    }
 
    return is_congruent;
@@ -1200,7 +1174,6 @@ BergerRigoutsosNode::runChildren_check()
 }
 
 BergerRigoutsosNode::CommonParams::CommonParams(
-   const boost::shared_ptr<hier::PatchLevel> &tag_level,
    const int tag_data_index,
    const int tag_val,
    const hier::IntVector min_box,
@@ -1214,7 +1187,6 @@ BergerRigoutsosNode::CommonParams::CommonParams(
    d_relaunch_queue(),
    d_comm_stage(),
    d_algo_advance_mode(ADVANCE_SOME),
-   d_tag_level(tag_level),
    d_new_box_level(),
    d_tag_to_new(),
    d_root_boxes(),
@@ -1222,7 +1194,7 @@ BergerRigoutsosNode::CommonParams::CommonParams(
    d_max_inflection_cut_from_center(max_inflection_cut_from_center),
    d_inflection_cut_threshold_ar(inflection_cut_threshold_ar),
    d_max_box_size(max_box_size),
-   d_min_box_size_from_cutting(tag_level->getDim(), 0),
+   d_min_box_size_from_cutting(min_box.getDim(), 0),
    // Parameters from clustering algorithm interface ...
    d_tag_data_index(tag_data_index),
    d_tag_val(tag_val),
@@ -1233,10 +1205,10 @@ BergerRigoutsosNode::CommonParams::CommonParams(
    d_compute_relationships(2),
    d_relationship_senders(),
    d_relationship_messages(),
-   d_max_gcw(tag_level->getDim(), 1),
+   d_max_gcw(min_box.getDim(), 1),
    d_owner_mode(MOST_OVERLAP),
    // Communication parameters ...
-   d_mpi_object(tag_level->getBoxLevel()->getMPI()),
+   d_mpi_object(MPI_COMM_NULL),
    d_tag_upper_bound(-1),
    d_available_mpi_tag(-1),
    // Analysis support ...
@@ -1258,7 +1230,6 @@ BergerRigoutsosNode::CommonParams::CommonParams(
    d_max_conts_to_complete(0),
    d_num_nodes_existing(0)
 {
-   setupMPIDependentData();
    setObjectTimers(s_default_timer_prefix);
    // Set the timer for the communication stage's MPI waiting.
    d_comm_stage.setCommunicationWaitTimer(d_object_timers->t_MPI_wait);
@@ -3093,7 +3064,7 @@ BergerRigoutsosNode::CommonParams::setComputeRelationships(
          << "bad mode '" << mode << "' specified.\n"
          << "Should be one of NONE, TAG_TO_NEW, BIDIRECTIONAL" << std::endl);
    }
-   TBOX_ASSERT(ghost_cell_width >= hier::IntVector::getZero(getDim()));
+   TBOX_ASSERT(ghost_cell_width >= hier::IntVector::getZero(ghost_cell_width.getDim()));
    d_max_gcw = ghost_cell_width;
 }
 
