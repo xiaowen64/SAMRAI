@@ -59,7 +59,6 @@ namespace mesh {
  * To use this class:
  * -# Construct the root dendogram node, an object of type
  *    BergerRigoutsosNode.
- * -# Set the clustering parameters using setClusteringParameters().
  * -# Finetune the algorithm settings using the methods under
  *    "Algorithm settings".
  * -# Start clustering by calling clusterAndComputeRelationships().
@@ -95,29 +94,22 @@ public:
                           ADVANCE_SOME,
                           SYNCHRONOUS };
 
-   /*!
-    * @brief Construct the root node of a BR dendogram.
-    *
-    * The root node is used to run the BR algorithm and
-    * obtain outputs.
-    */
-   BergerRigoutsosNode(
-      const tbox::Dimension& dim);
 
    /*!
-    * @brief Destructor.
+    * @brief Data structure for clustering set-up, initiation, and
+    * output.
     *
-    * Deallocate internal data.
-    */
-   virtual ~BergerRigoutsosNode();
-
-   /*!
-    * @brief Set parameters for (our slight variation of) the
-    * Berger-Rigoutsos algorithm.
+    * This structure contains data input, output, set-up data shared
+    * by the dendogram nodes and the BergerRigoutsos object initiating
+    * the clustering.  Also contains parameters shared among all nodes
+    * in a dendogram and collectively managed by those nodes.
     *
-    * These parameters are not specific to the asynchronous algorithm
-    * or DLBG.
+    * In the implementation of the BR algorithm, some parameters are
+    * to be shared among all nodes in the dendogram, either for
+    * efficiency or coordinating the dendogram nodes.  All such
+    * parameters are contained in a single CommonParams object.
     *
+    * @param[in] tag_level
     * @param[in] tag_data_index
     * @param[in] tag_val
     * @param[in] min_box
@@ -130,162 +122,575 @@ public:
     *   Under most situations, one is fine.
     *
     * @param[in] inflection_cut_threshold_ar
-    *
-    * @pre (d_common->d_dim == min_box.getDim()) &&
-    *      (d_common->d_dim == max_box_size.getDim())
     */
-   void
-   setClusteringParameters(
-      const int tag_data_index,
-      const int tag_val,
-      const hier::IntVector min_box,
-      const double efficiency_tol,
-      const double combine_tol,
-      const hier::IntVector& max_box_size,
-      const double max_inflection_cut_from_center,
-      const double inflection_cut_threshold_ar);
+   class CommonParams
+   {
+public:
+      explicit CommonParams(
+         const boost::shared_ptr<hier::PatchLevel> &tag_level,
+         const int tag_data_index,
+         const int tag_val,
+         const hier::IntVector min_box,
+         const double efficiency_tol,
+         const double combine_tol,
+         const hier::IntVector& max_box_size,
+         const double max_inflection_cut_from_center,
+         const double inflection_cut_threshold_ar);
 
-   //@{
-   //! @name Algorithm mode settings
+      //@{
+      //! @name Algorithm mode settings
+
+      /*!
+       * @brief Set the mode for advancing the asynchronous implementation.
+       *
+       * Choices are:
+       * - @b "SYNCHRONOUS" --> wait for each communication stage to complete
+       *   before moving on, thus resulting in synchronous execution.
+       * - @b "ADVANCE_ANY" --> advance an dendogram node through its
+       *   communication stage by using tbox::AsyncCommStage::advanceAny().
+       * - @b "ADVANCE_SOME" --> advance an dendogram node through its
+       *   communication stage by using tbox::AsyncCommStage::advanceSome().
+       *
+       * The default is "ADVANCE_SOME".
+       *
+       * Asynchronous modes are NOT guaranteed to compute the output
+       * graph nodes in any particular order.  The order depends on
+       * the ordering of message completion, which is not deterministic.
+       * If you require consistent outputs, we suggest you have a scheme
+       * for reordering the output boxes.
+       *
+       * @pre (algo_advance_mode == "ADVANCE_ANY") ||
+       *      (algo_advance_mode == "ADVANCE_SOME") ||
+       *      (algo_advance_mode == "SYNCHRONOUS")
+       */
+      void
+      setAlgorithmAdvanceMode(
+         const std::string& algo_advance_mode);
+
+      /*!
+       * @brief Set the method for choosing the owner.
+       * Choices:
+       * - "MOST_OVERLAP"
+       *   Ownership is given to the processor with the most
+       *   overlap on the candidate box.  Default.
+       * - "SINGLE_OWNER"
+       *   In single-owner mode, the initial owner (process 0)
+       *   always participates and owns all dendogram nodes.
+       * - "FEWEST_OWNED"
+       *   Choose the processor that owns the fewest dendogram
+       *   nodes when the choice is made.  This is meant to
+       *   relieve bottle-necks caused by excessive ownership.
+       *   This option may lead to non-deterministic ownerships.
+       * - "LEAST_ACTIVE"
+       *   Choose the processor that participates in the fewest
+       *   number of dendogram nodes when the choice is made.
+       *   This is meant to relieve bottle-necks caused by
+       *   excessive participation. This option may lead to
+       *   non-deterministic ownerships.
+       *
+       * Experiments show that "MOST_OVERLAP" gives the best
+       * clustering speed, while "SINGLE_OWNER" may give a faster
+       * output globalization (since you don't need an all-gather).
+       *
+       * @pre (mode == "SINGLE_OWNER") ||(mode == "MOST_OVERLAP") ||
+       *      (mode == "FEWEST_OWNED") ||(mode == "LEAST_ACTIVE")
+       */
+      void
+      setOwnerMode(
+         const std::string& mode);
+
+      /*!
+       * @brief Relationship computation flag.
+       *
+       * Valid mode values to set are:
+       *
+       * - "NONE" = No relationship computation.
+       *
+       * - "TAG_TO_NEW": Compute directed relationships from input (tagged) to
+       * output (new) graph nodes.  With this option, it is possible to
+       * determine output nodes neighboring any input nodes, but not
+       * possible to determine input nodes neighboring a specific output
+       * node.
+       *
+       * - "BIDIRECTIONAL": Compute directed relationships from input (tagged) to
+       * output (new) graph nodes as well as the reverse.  With this
+       * option, it is possible to determine output nodes neighboring any
+       * input nodes, as well as input nodes neighboring any output node.
+       * This is accomplished using an additional relationship-sharing
+       * communication after all graph nodes have been created.
+       *
+       * The ghost_cell_width specifies the growth for the overlap
+       * checks.  Overlap checking is done to determine nearest-neighbor
+       * relationships when generating connectivity to new graph nodes.
+       * If a box grown by this ammount intersects another box, the two
+       * boxes are considered neighbors.
+       *
+       * By default, compute bidirectional relationships with a ghost cell width
+       * of 1.
+       *
+       * @pre (mode == "NONE") || (mode == "TAG_TO_NEW") ||
+       *      (mode == "BIDIRECTIONAL")
+       * @pre ghost_cell_width >= hier::IntVector::getZero(d_common->getDim())
+       */
+      void
+      setComputeRelationships(
+         const std::string mode,
+         const hier::IntVector& ghost_cell_width);
+
+      /*!
+       * @brief Set the minimum box size constraint when making cuts.
+       *
+       * This parameter is not in the the BoxGeneratorStrategy interface so it
+       * has to be set here.
+       */
+      void
+      setMinBoxSizeFromCutting(
+         const hier::IntVector& min_box_size_from_cutting);
+
+      //@}
+
+      /*!
+       * @brief Run the clustering algorithm to generate the new BoxLevel
+       * and compute relationships (if specified by setComputeRelationships()).
+       *
+       * If relationships computation is not specified, the Connectors are
+       * unchanged.
+       *
+       * @param new_box_level
+       * @param tag_to_new
+       * @param bound_boxes Contains one global bounding box for each
+       *                    block with a patch in tag_level.
+       * @param tag_level
+       * @param mpi_object Alternative SAMRAI_MPI object.  If given,
+       *   must be congruent with the tag box_level's MPI communicator.
+       *   Specify tbox::SAMRAI_MPI::commNull if unused.  Highly recommend
+       *   using an isolated communicator to prevent message mix-ups.
+       *
+       * @pre !bound_boxes.isEmpty()
+       * @pre d_parent == 0
+       * @pre (d_common->getDim() == (*(bound_boxes.begin())).getDim()) &&
+       *      (d_common->getDim() == tag_level->getDim())
+       */
+      void
+      clusterAndComputeRelationships(
+         boost::shared_ptr<hier::BoxLevel>& new_box_level,
+         boost::shared_ptr<hier::Connector>& tag_to_new,
+         const hier::BoxContainer& bound_boxes);
+
+
+      /*!
+       * @brief Duplicate given MPI communicator for private use
+       * and various dependent parameters.
+       *
+       * This method overrides the MPI object from the tag level,
+       * which is set in the constructor.  Calling this method
+       * guarantees that an exclusive MPI Communicator is used for
+       * clustering, making the execution immune to stray messages
+       * from un-related code.
+       */
+      void setMPI( const tbox::SAMRAI_MPI& mpi );
+
+      /*!
+       * @brief Setup names of timers.
+       *
+       * By default, timers are named
+       * "mesh::BergerRigoutsosNode::*", where the third field is
+       * the specific steps performed by the BergerRigoutsosNode.
+       * You can override the first two fields with this method.
+       * Conforming to the timer naming convention, timer_prefix should
+       * have the form "*::*".
+       */
+      void
+      setTimerPrefix(
+         const std::string& timer_prefix);
+
+      const tbox::Dimension &getDim() const {
+         return d_tag_level->getDim();
+      }
+
+      //! @brief Global number of tags in clusters.
+      int
+      getNumTags() const
+         {
+            return d_num_tags_in_all_nodes;
+         }
+
+      //! @brief Max number of tags owned.
+      int
+      getMaxTagsOwned() const
+         {
+            return d_max_tags_owned;
+         }
+
+      //! @brief Max number of local nodes for dendogram.
+      int
+      getMaxNodes() const
+         {
+            return d_max_nodes_allocated;
+         }
+
+      //! @brief max generation count for the local nodes in the dendogram.
+      int
+      getMaxGeneration() const
+         {
+            return d_max_generation;
+         }
+
+      //! @brief Max number of locally owned nodes in the dendogram.
+      int
+      getMaxOwnership() const
+         {
+            return d_max_nodes_owned;
+         }
+
+      //! @brief Average number of continuations for local nodes in dendogram.
+      double
+      getAvgNumberOfCont() const
+         {
+            if (d_num_nodes_completed > 0) {
+               return (double)d_num_conts_to_complete
+                  / d_num_nodes_completed;
+            }
+            return 0;
+         }
+
+      //! @brief Max number of continuations for local nodes in dendogram.
+      int
+      getMaxNumberOfCont() const
+         {
+            return d_max_conts_to_complete;
+         }
+
+      /*!
+       * @brief Number of boxes generated (but not necessarily owned)
+       * on the local process.
+       */
+      int
+      getNumBoxesGenerated() const
+         {
+            return d_num_boxes_generated;
+         }
+
+      /*!
+       * @brief Set whether to log dendogram node action history
+       * (useful for debugging).
+       */
+      void
+      setLogNodeHistory(
+         bool flag)
+         {
+            d_log_node_history = flag;
+         }
+
+
+      //@{
+      //! @name Timer data for this class.
+
+      /*
+       * @brief Structure of timers used by this class.
+       *
+       * Each object can set its own timer names through
+       * setTimerPrefix().  This leads to many timer look-ups.  Because
+       * it is expensive to look up timers, this class caches the timers
+       * that has been looked up.  Each TimerStruct stores the timers
+       * corresponding to a prefix.
+       */
+      struct TimerStruct {
+         boost::shared_ptr<tbox::Timer> t_cluster;
+         boost::shared_ptr<tbox::Timer> t_cluster_and_compute_relationships;
+         boost::shared_ptr<tbox::Timer> t_continue_algorithm;
+         boost::shared_ptr<tbox::Timer> t_compute;
+         boost::shared_ptr<tbox::Timer> t_comm_wait;
+         boost::shared_ptr<tbox::Timer> t_MPI_wait;
+         boost::shared_ptr<tbox::Timer> t_compute_new_graph_relationships;
+         boost::shared_ptr<tbox::Timer> t_share_new_relationships;
+         boost::shared_ptr<tbox::Timer> t_share_new_relationships_send;
+         boost::shared_ptr<tbox::Timer> t_share_new_relationships_recv;
+         boost::shared_ptr<tbox::Timer> t_share_new_relationships_unpack;
+         boost::shared_ptr<tbox::Timer> t_local_tasks;
+         boost::shared_ptr<tbox::Timer> t_local_histogram;
+         /*
+          * Multi-stage timers.  These are used in continueAlgorithm()
+          * instead of the methods they time, because what they time may
+          * include waiting for messages.  They are included in the
+          * timer t_continue_algorithm.  They provide timing breakdown
+          * for the different stages.
+          */
+         boost::shared_ptr<tbox::Timer> t_reduce_histogram;
+         boost::shared_ptr<tbox::Timer> t_bcast_acceptability;
+         boost::shared_ptr<tbox::Timer> t_gather_grouping_criteria;
+         boost::shared_ptr<tbox::Timer> t_bcast_child_groups;
+         boost::shared_ptr<tbox::Timer> t_bcast_to_dropouts;
+      };
+
+      //! @brief Default prefix for Timers.
+      static const std::string s_default_timer_prefix;
+
+      /*!
+       * @brief Static container of timers that have been looked up.
+       */
+      static std::map<std::string, TimerStruct> s_static_timers;
+
+      /*!
+       * @brief Structure of timers in s_static_timers, matching this
+       * object's timer prefix.
+       */
+      TimerStruct* d_object_timers;
+
+      /*!
+       * @brief Set d_object_timers.  The timers are named with the
+       * given prefix.
+       */
+      void
+      setObjectTimers(
+         const std::string& timer_prefix);
+
+      //@}
+
+      void incNumNodesCommWait() {
+         ++d_num_nodes_commwait;
+         d_max_nodes_commwait =
+            tbox::MathUtilities<int>::Max(d_num_nodes_commwait,
+                                          d_max_nodes_commwait);
+      }
+      void decNumNodesCommWait() {
+         --d_num_nodes_commwait;
+      }
+      void writeCounters() {
+         tbox::plog << d_num_nodes_allocated << "-alloc  "
+                    << d_num_nodes_active << "-act  "
+                    << d_num_nodes_owned << "-owned  "
+                    << d_num_nodes_completed << "-done  "
+                    << d_relaunch_queue.size() << "-qd  "
+                    << d_num_nodes_commwait << "-wait  ";
+      }
+
+      /*!
+       * @brief Check the congruency between d_mpi and d_tag_level's MPI.
+       */
+      bool checkMPICongruency() const;
+
+      /*!
+       * @brief Set up data that depend on the MPI communicator being
+       * used.
+       */
+      void setupMPIDependentData();
+
+      //! @brief Participants send new relationship data to graph node owners.
+      void shareNewNeighborhoodSetsWithOwners();
+
+      //! @brief Shorthand for a sorted, possibly incontiguous, set of integers.
+      typedef std::set<int> IntSet;
+
+      /*!
+       * @brief Shorthand for std::vector<int> for internal use.
+       */
+      typedef std::vector<int> VectorOfInts;
+
+      /*!
+       * @brief Queue on which to append jobs to be
+       * launched or relaunched.
+       */
+      std::list<BergerRigoutsosNode *> d_relaunch_queue;
+
+      /*!
+       * @brief Stage handling multiple asynchronous communication groups.
+       */
+      tbox::AsyncCommStage d_comm_stage;
+
+      AlgoAdvanceMode d_algo_advance_mode;
+
+      /*!
+       * @brief Level where tags live.
+       */
+      boost::shared_ptr<hier::PatchLevel> d_tag_level;
+
+      /*!
+       * @brief New BoxLevel generated by BR.
+       *
+       * This is where we store the boxes as we progress in the BR algorithm.
+       *
+       * This is set in the public clusterAndComputeRelationships method.
+       */
+      boost::shared_ptr<hier::BoxLevel> d_new_box_level;
+
+      /*!
+       * @brief Connector from tag_box_level to new_box_level.
+       *
+       * This is where we store the relationships resulting from the BR
+       * algorithm.  The relationships are created locally for local nodes in
+       * tag_box_level.
+       *
+       * This is set in the public clusterAndComputeRelationships method.
+       */
+      boost::shared_ptr<hier::Connector> d_tag_to_new;
+
+      /*!
+       * @brief Initial boxes for top-down clustering.
+       */
+      hier::BoxContainer d_root_boxes;
+
+      /*!
+       * @brief
+       */
+      double d_max_inflection_cut_from_center;
+
+      /*
+       * @brief Threshold for favoring thicker directions for Laplace
+       * cuts.
+       *
+       * The higher the value, the more we tolerate high aspect
+       * ratios.  Box directions corresponding to aspect ratios lower
+       * than this will not be subject to Laplace cuts (except for the
+       * thickest direction).  Set to 0 to always cut the thickest
+       * direction.  Set to huge value to disregard high aspect
+       * ratios.
+       */
+      double d_inflection_cut_threshold_ar;
+
+      /*!
+       * @brief If a candidate box does not fit in this limit,
+       * it will be split.
+       *
+       * Boxes will not be recombined (@see combine_tol) if the
+       * combination breaks this limit.
+       *
+       * This is meant to prevent huge boxes that degrades worst-case
+       * performances in when later processing the box.
+       */
+      hier::IntVector d_max_box_size;
+
+      /*!
+       * @brief Alternate minimum box size applying to inflection
+       * point cuts.
+       *
+       * This size can be greater than the absolute min_size
+       * specified by the
+       * BoxGeneratorStrategy::findBoxesContainingTags() abstract
+       * interface.
+       */
+      hier::IntVector d_min_box_size_from_cutting;
+
+      //@{
+      //@name Parameters from clustering algorithm interface
+      int d_tag_data_index;
+      int d_tag_val;
+      hier::IntVector d_min_box;
+      double d_efficiency_tol;
+      double d_combine_tol;
+      //@}
+
+      /*!
+       * @brief Relationship computation flag.
+       *
+       * See setComputeRelationships().
+       */
+      int d_compute_relationships;
+
+      /*!
+       * @brief List of processes that will send neighbor data
+       * for locally owned boxes after the BR algorithm completes.
+       */
+      IntSet d_relationship_senders;
+
+      /*!
+       * @brief Outgoing messages to be sent to graph node owners
+       * describing new relationships found by local process.
+       */
+      std::map<int, CommonParams::VectorOfInts> d_relationship_messages;
+
+      //! @brief Ammount to grow a box when checking for overlap.
+      hier::IntVector d_max_gcw;
+
+      //! @brief How to chose the group's owner.
+      OwnerMode d_owner_mode;
+
+      //@{
+      //! @name Communication parameters
+      /*!
+       * @brief MPI communicator used in all communications in
+       * the dendogram.
+       */
+      tbox::SAMRAI_MPI d_mpi_object;
+      //! @brief Upperbound of valid tags.
+      int d_tag_upper_bound;
+      //! @brief Smallest unclaimed MPI tag in pool given to local process.
+      int d_available_mpi_tag;
+      //@}
+
+      //@{
+      //! @name Auxiliary data for analysis and debugging.
+
+      //TODO: Are these counters multiblock?  If not, which block?  Make them consistent.
+
+      //! @brief Whether to log major actions of dendogram node.
+      bool d_log_node_history;
+      //! @brief Number of tags.
+      int d_num_tags_in_all_nodes;
+      //! @brief Max number of tags owned.
+      int d_max_tags_owned;
+      //! @brief Current number of dendogram nodes allocated.
+      int d_num_nodes_allocated;
+      //! @brief Highest number of dendogram nodes allocated.
+      int d_max_nodes_allocated;
+      //! @brief Current number of dendogram nodes active.
+      int d_num_nodes_active;
+      //! @brief Highest number of dendogram nodes active.
+      int d_max_nodes_active;
+      //! @brief Current number of dendogram nodes owned.
+      int d_num_nodes_owned;
+      //! @brief Highest number of dendogram nodes owned.
+      int d_max_nodes_owned;
+      //! @brief Current number of dendogram nodes in communication wait.
+      int d_num_nodes_commwait;
+      //! @brief Highest number of dendogram nodes in communication wait.
+      int d_max_nodes_commwait;
+      //! @brief Current number of completed.
+      int d_num_nodes_completed;
+      //! @brief Highest number of generation.
+      int d_max_generation;
+      //! @brief Current number of boxes generated.
+      int d_num_boxes_generated;
+      //! @brief Number of continueAlgorithm calls for to complete nodes.
+      int d_num_conts_to_complete;
+      //! @brief Highest number of continueAlgorithm calls to complete nodes.
+      int d_max_conts_to_complete;
+
+      int d_num_nodes_existing;
+      //@}
+   };
 
    /*!
-    * @brief Set the mode for advancing the asynchronous implementation.
+    * @brief Construct a root node for a single block.
     *
-    * Choices are:
-    * - @b "SYNCHRONOUS" --> wait for each communication stage to complete
-    *   before moving on, thus resulting in synchronous execution.
-    * - @b "ADVANCE_ANY" --> advance an dendogram node through its
-    *   communication stage by using tbox::AsyncCommStage::advanceAny().
-    * - @b "ADVANCE_SOME" --> advance an dendogram node through its
-    *   communication stage by using tbox::AsyncCommStage::advanceSome().
-    *
-    * The default is "ADVANCE_SOME".
-    *
-    * Asynchronous modes are NOT guaranteed to compute the output
-    * graph nodes in any particular order.  The order depends on
-    * the ordering of message completion, which is not deterministic.
-    * If you require consistent outputs, we suggest you have a scheme
-    * for reordering the output boxes.
-    *
-    * @pre (algo_advance_mode == "ADVANCE_ANY") ||
-    *      (algo_advance_mode == "ADVANCE_SOME") ||
-    *      (algo_advance_mode == "SYNCHRONOUS")
+    * @param common_params  Parameters shares by all nodes in clustering
+    * @param box            Global bounding box for a single block
     */
-   void
-   setAlgorithmAdvanceMode(
-      const std::string& algo_advance_mode);
+   BergerRigoutsosNode(
+      CommonParams* common_params,
+      const hier::Box& box);
+
+#if 0
+   /*!
+    * @brief Construct the root node of a BR dendogram.
+    *
+    * The root node is used to run the BR algorithm and
+    * obtain outputs.
+    */
+   BergerRigoutsosNode(
+      const tbox::Dimension& dim);
+#endif
 
    /*!
-    * @brief Set the method for choosing the owner.
-    * Choices:
-    * - "MOST_OVERLAP"
-    *   Ownership is given to the processor with the most
-    *   overlap on the candidate box.  Default.
-    * - "SINGLE_OWNER"
-    *   In single-owner mode, the initial owner (process 0)
-    *   always participates and owns all dendogram nodes.
-    * - "FEWEST_OWNED"
-    *   Choose the processor that owns the fewest dendogram
-    *   nodes when the choice is made.  This is meant to
-    *   relieve bottle-necks caused by excessive ownership.
-    *   This option may lead to non-deterministic ownerships.
-    * - "LEAST_ACTIVE"
-    *   Choose the processor that participates in the fewest
-    *   number of dendogram nodes when the choice is made.
-    *   This is meant to relieve bottle-necks caused by
-    *   excessive participation. This option may lead to
-    *   non-deterministic ownerships.
+    * @brief Destructor.
     *
-    * Experiments show that "MOST_OVERLAP" gives the best
-    * clustering speed, while "SINGLE_OWNER" may give a faster
-    * output globalization (since you don't need an all-gather).
-    *
-    * @pre (mode == "SINGLE_OWNER") ||(mode == "MOST_OVERLAP") ||
-    *      (mode == "FEWEST_OWNED") ||(mode == "LEAST_ACTIVE")
+    * Deallocate internal data.
     */
-   void
-   setOwnerMode(
-      const std::string& mode);
+   virtual ~BergerRigoutsosNode();
 
-   /*!
-    * @brief Relationship computation flag.
-    *
-    * Valid mode values to set are:
-    *
-    * - "NONE" = No relationship computation.
-    *
-    * - "TAG_TO_NEW": Compute directed relationships from input (tagged) to
-    * output (new) graph nodes.  With this option, it is possible to
-    * determine output nodes neighboring any input nodes, but not
-    * possible to determine input nodes neighboring a specific output
-    * node.
-    *
-    * - "BIDIRECTIONAL": Compute directed relationships from input (tagged) to
-    * output (new) graph nodes as well as the reverse.  With this
-    * option, it is possible to determine output nodes neighboring any
-    * input nodes, as well as input nodes neighboring any output node.
-    * This is accomplished using an additional relationship-sharing
-    * communication after all graph nodes have been created.
-    *
-    * The ghost_cell_width specifies the growth for the overlap
-    * checks.  Overlap checking is done to determine nearest-neighbor
-    * relationships when generating connectivity to new graph nodes.
-    * If a box grown by this ammount intersects another box, the two
-    * boxes are considered neighbors.
-    *
-    * By default, compute bidirectional relationships with a ghost cell width
-    * of 1.
-    *
-    * @pre (mode == "NONE") || (mode == "TAG_TO_NEW") ||
-    *      (mode == "BIDIRECTIONAL")
-    * @pre ghost_cell_width >= hier::IntVector::getZero(d_common->d_dim)
-    */
-   void
-   setComputeRelationships(
-      const std::string mode,
-      const hier::IntVector& ghost_cell_width);
-
-   /*!
-    * @brief Set the minimum box size constraint when making cuts.
-    *
-    * This parameter is not in the the BoxGeneratorStrategy interface so it
-    * has to be set here.
-    */
-   void
-   setMinBoxSizeFromCutting(
-      const hier::IntVector& min_box_size_from_cutting);
-
-   //@}
-
-   /*!
-    * @brief Run the clustering algorithm to generate the new BoxLevel
-    * and compute relationships (if specified by setComputeRelationships()).
-    *
-    * If relationships computation is not specified, the Connectors are
-    * unchanged.
-    *
-    * @param new_box_level
-    * @param tag_to_new
-    * @param bound_boxes Contains one global bounding box for each
-    *                    block with a patch in tag_level.
-    * @param tag_level
-    * @param mpi_object Alternative SAMRAI_MPI object.  If given,
-    *   must be congruent with the tag box_level's MPI communicator.
-    *   Specify tbox::SAMRAI_MPI::commNull if unused.  Highly recommend
-    *   using an isolated communicator to prevent message mix-ups.
-    *
-    * @pre !bound_boxes.isEmpty()
-    * @pre d_parent == 0
-    * @pre (d_common->d_dim == (*(bound_boxes.begin())).getDim()) &&
-    *      (d_common->d_dim == tag_level->getDim())
-    */
-   void
-   clusterAndComputeRelationships(
-      boost::shared_ptr<hier::BoxLevel>& new_box_level,
-      boost::shared_ptr<hier::Connector>& tag_to_new,
-      const hier::BoxContainer& bound_boxes,
-      const boost::shared_ptr<hier::PatchLevel>& tag_level,
-      const tbox::SAMRAI_MPI& mpi_object);
+   const tbox::Dimension &getDim() const {
+      return d_box.getDim();
+   }
 
    //@{
 
@@ -294,80 +699,6 @@ public:
    printClassData(
       std::ostream& os,
       int detail_level = 0) const;
-
-   //! @brief Global number of tags in clusters.
-   int
-   getNumTags() const
-   {
-      return d_common->num_tags_in_all_nodes;
-   }
-
-   //! @brief Max number of tags owned.
-   int
-   getMaxTagsOwned() const
-   {
-      return d_common->max_tags_owned;
-   }
-
-   //! @brief Max number of local nodes for dendogram.
-   int
-   getMaxNodes() const
-   {
-      return d_common->max_nodes_allocated;
-   }
-
-   //! @brief max generation count for the local nodes in the dendogram.
-   int
-   getMaxGeneration() const
-   {
-      return d_common->max_generation;
-   }
-
-   //! @brief Max number of locally owned nodes in the dendogram.
-   int
-   getMaxOwnership() const
-   {
-      return d_common->max_nodes_owned;
-   }
-
-   //! @brief Average number of continuations for local nodes in dendogram.
-   double
-   getAvgNumberOfCont() const
-   {
-      if (d_common->num_nodes_completed > 0) {
-         return (double)d_common->num_conts_to_complete
-                / d_common->num_nodes_completed;
-      }
-      return 0;
-   }
-
-   //! @brief Max number of continuations for local nodes in dendogram.
-   int
-   getMaxNumberOfCont() const
-   {
-      return d_common->max_conts_to_complete;
-   }
-
-   /*!
-    * @brief Number of boxes generated (but not necessarily owned)
-    * on the local process.
-    */
-   int
-   getNumBoxesGenerated() const
-   {
-      return d_common->num_boxes_generated;
-   }
-
-   /*!
-    * @brief Set whether to log dendogram node action history
-    * (useful for debugging).
-    */
-   void
-   setLogNodeHistory(
-      bool flag)
-   {
-      d_common->log_node_history = flag;
-   }
 
    //@}
 
@@ -386,276 +717,7 @@ private:
    //! @brief Shorthand for a container of graph-nodes.
    typedef hier::BoxContainer BoxContainer;
 
-   //! @brief Shorthand for a sorted, possibly incontiguous, set of integers.
-   typedef std::set<int> IntSet;
-
-   /*!
-    * @brief Shorthand for std::vector<int> for internal use.
-    */
-   typedef std::vector<int> VectorOfInts;
-
-   /*!
-    * @brief Parameters shared among all dendogram nodes in
-    * a dendogram and collectively managed by those nodes.
-    *
-    * In the implementation of the BR algorithm, some parameters
-    * are to be shared among all nodes in the dendogram,
-    * either for efficiency or coordinating the dendogram nodes.
-    * All such parameters are contained in a single CommonParams
-    * object.
-    */
-   class CommonParams
-   {
-public:
-      explicit CommonParams(
-         const tbox::Dimension& dim);
-
-      void incNumNodesCommWait() {
-         ++num_nodes_commwait;
-         max_nodes_commwait = tbox::MathUtilities<int>::Max(num_nodes_commwait, max_nodes_commwait);
-      }
-      void decNumNodesCommWait() {
-         --num_nodes_commwait;
-      }
-      void writeCounters() {
-         tbox::plog << num_nodes_allocated << "-alloc  "
-                    << num_nodes_active << "-act  "
-                    << num_nodes_owned << "-owned  "
-                    << num_nodes_completed << "-done  "
-                    << relaunch_queue.size() << "-qd  "
-                    << num_nodes_commwait << "-wait  ";
-      }
-
-      const tbox::Dimension d_dim;
-
-      /*!
-       * @brief Queue on which to append jobs to be
-       * launched or relaunched.
-       *
-       * What is placed on the queue depends on the version of
-       * clusterAndComputeRelationships_...() used.
-       *
-       * We use void* to avoid having to explicitly instantiate
-       * multiple types, although we only place BergerRigoutsosNode
-       * pointers in the relaunch_queue.
-       */
-      std::list<BergerRigoutsosNode *> relaunch_queue;
-
-      /*!
-       * @brief Stage handling multiple asynchronous communication groups.
-       */
-      tbox::AsyncCommStage comm_stage;
-
-      AlgoAdvanceMode algo_advance_mode;
-
-      /*!
-       * @brief Level where tags live.
-       */
-      boost::shared_ptr<hier::PatchLevel> tag_level;
-
-      /*!
-       * @brief BoxLevel associated with tag_level.
-       *
-       * If relationships are computed (see setComputeRelationships()), the
-       * relationships go between the graph nodes on the tagged level and the
-       * generated graph nodes.
-       */
-      const hier::BoxLevel* tag_box_level;
-
-      /*!
-       * @brief New BoxLevel generated by BR.
-       *
-       * This is where we store the boxes as we progress in the BR algorithm.
-       *
-       * This is set in the public clusterAndComputeRelationships method.
-       */
-      hier::BoxLevel* new_box_level;
-
-      /*!
-       * @brief Connector from tag_box_level to new_box_level.
-       *
-       * This is where we store the relationships resulting from the BR
-       * algorithm.  The relationships are created locally for local nodes in
-       * tag_box_level.
-       *
-       * This is set in the public clusterAndComputeRelationships method.
-       */
-      hier::Connector* tag_to_new;
-
-      /*!
-       * @brief Connector from new_box_level to tag_box_level.
-       *
-       * The relationships are created when the owners of nodes in
-       * tag_box_level share relationship data with owners of nodes in
-       * new_box_level.
-       *
-       * This is set in the public clusterAndComputeRelationships method.
-       */
-      hier::Connector* new_to_tag;
-
-      /*!
-       * @brief Initial boxes for top-down clustering.
-       */
-      hier::BoxContainer root_boxes;
-
-      /*!
-       * @brief
-       */
-      double max_inflection_cut_from_center;
-
-      /*
-       * @brief Threshold for favoring thicker directions for Laplace
-       * cuts.
-       *
-       * The higher the value, the more we tolerate high aspect
-       * ratios.  Box directions corresponding to aspect ratios lower
-       * than this will not be subject to Laplace cuts (except for the
-       * thickest direction).  Set to 0 to always cut the thickest
-       * direction.  Set to huge value to disregard high aspect
-       * ratios.
-       */
-      double inflection_cut_threshold_ar;
-
-      /*!
-       * @brief If a candidate box does not fit in this limit,
-       * it will be split.
-       *
-       * Boxes will not be recombined (@see combine_tol) if the
-       * combination breaks this limit.
-       *
-       * This is meant to prevent huge boxes that degrades worst-case
-       * performances in when later processing the box.
-       */
-      hier::IntVector max_box_size;
-
-      /*!
-       * @brief Alternate minimum box size applying to inflection
-       * point cuts.
-       *
-       * This size can be greater than the absolute min_size
-       * specified by the
-       * BoxGeneratorStrategy::findBoxesContainingTags() abstract
-       * interface.
-       */
-      hier::IntVector min_box_size_from_cutting;
-
-      //@{
-      //@name Parameters from clustering algorithm interface
-      int tag_data_index;
-      int tag_val;
-      hier::IntVector min_box;
-      double efficiency_tol;
-      double combine_tol;
-      //@}
-
-      /*!
-       * @brief Relationship computation flag.
-       *
-       * See setComputeRelationships().
-       */
-      int compute_relationships;
-
-      /*!
-       * @brief List of processes that will send neighbor data
-       * for locally owned boxes after the BR algorithm completes.
-       */
-      IntSet relationship_senders;
-
-      /*!
-       * @brief Outgoing messages to be sent to graph node owners
-       * describing new relationships found by local process.
-       */
-      std::map<int, VectorOfInts> relationship_messages;
-
-      //! @brief Ammount to grow a box when checking for overlap.
-      hier::IntVector max_gcw;
-
-      //! @brief How to chose the group's owner.
-      OwnerMode owner_mode;
-
-      //@{
-      //! @name Communication parameters
-      /*!
-       * @brief MPI communicator used in all communications in
-       * the dendogram.
-       */
-      tbox::SAMRAI_MPI mpi_object;
-      int rank;
-      int nproc;
-      //! @brief Upperbound of valid tags.
-      int tag_upper_bound;
-      //! @brief Smallest unclaimed MPI tag in pool given to local process.
-      int available_mpi_tag;
-      //@}
-
-      //@{
-      //! @name Performance monitors
-      static boost::shared_ptr<tbox::Timer> t_cluster;
-      static boost::shared_ptr<tbox::Timer> t_cluster_and_compute_relationships;
-      static boost::shared_ptr<tbox::Timer> t_continue_algorithm;
-      static boost::shared_ptr<tbox::Timer> t_compute;
-      static boost::shared_ptr<tbox::Timer> t_comm_wait;
-      static boost::shared_ptr<tbox::Timer> t_MPI_wait;
-      static boost::shared_ptr<tbox::Timer> t_compute_new_graph_relationships;
-      static boost::shared_ptr<tbox::Timer> t_share_new_relationships;
-      static boost::shared_ptr<tbox::Timer> t_share_new_relationships_send;
-      static boost::shared_ptr<tbox::Timer> t_share_new_relationships_recv;
-      static boost::shared_ptr<tbox::Timer> t_share_new_relationships_unpack;
-      static boost::shared_ptr<tbox::Timer> t_local_tasks;
-      static boost::shared_ptr<tbox::Timer> t_local_histogram;
-      /*
-       * Multi-stage timers.  These are used in continueAlgorithm()
-       * instead of the methods they time, because what they time may
-       * include waiting for messages.  They are included in the
-       * timer t_continue_algorithm.  They provide timing breakdown
-       * for the different stages.
-       */
-      static boost::shared_ptr<tbox::Timer> t_reduce_histogram;
-      static boost::shared_ptr<tbox::Timer> t_bcast_acceptability;
-      static boost::shared_ptr<tbox::Timer> t_gather_grouping_criteria;
-      static boost::shared_ptr<tbox::Timer> t_bcast_child_groups;
-      static boost::shared_ptr<tbox::Timer> t_bcast_to_dropouts;
-      //@}
-
-      //@{
-      //! @name Auxiliary data for analysis and debugging.
-
-      //! @brief Whether to log major actions of dendogram node.
-      bool log_node_history;
-      //! @brief Number of tags.
-      int num_tags_in_all_nodes;
-      //! @brief Max number of tags owned.
-      int max_tags_owned;
-      //! @brief Current number of dendogram nodes allocated.
-      int num_nodes_allocated;
-      //! @brief Highest number of dendogram nodes allocated.
-      int max_nodes_allocated;
-      //! @brief Current number of dendogram nodes active.
-      int num_nodes_active;
-      //! @brief Highest number of dendogram nodes active.
-      int max_nodes_active;
-      //! @brief Current number of dendogram nodes owned.
-      int num_nodes_owned;
-      //! @brief Highest number of dendogram nodes owned.
-      int max_nodes_owned;
-      //! @brief Current number of dendogram nodes in communication wait.
-      int num_nodes_commwait;
-      //! @brief Highest number of dendogram nodes in communication wait.
-      int max_nodes_commwait;
-      //! @brief Current number of completed.
-      int num_nodes_completed;
-      //! @brief Highest number of generation.
-      int max_generation;
-      //! @brief Current number of boxes generated.
-      int num_boxes_generated;
-      //! @brief Number of continueAlgorithm calls for to complete nodes.
-      int num_conts_to_complete;
-      //! @brief Highest number of continueAlgorithm calls to complete nodes.
-      int max_conts_to_complete;
-
-      int num_nodes_existing;
-      //@}
-   };
+private:
 
    /*!
     * @brief Construct a non-root node.
@@ -668,39 +730,6 @@ public:
       CommonParams* common_params,
       BergerRigoutsosNode* parent,
       const int child_number);
-
-   /*!
-    * @brief Construct a root node for a single block.
-    * 
-    * @param common_params  Parameters shares by all nodes in clustering
-    * @param box            Global bounding box for a single block
-    */
-   BergerRigoutsosNode(
-      CommonParams* common_params,
-      const hier::Box& box);
-
-   /*!
-    * @brief Duplicate given MPI communicator for private use
-    * and various dependent parameters.
-    *
-    * Requires that d_common->tag_box_level is already set!
-    *
-    * @pre d_parent == 0
-    * @pre d_common->tag_box_level != 0
-    */
-   void
-   setMPI(
-      const tbox::SAMRAI_MPI& mpi);
-
-   /*!
-    * @brief Run the BR algorithm to find boxes, then generate the relationships
-    * between the tag box_level and the new box_level.
-    *
-    * @pre d_box.empty() && !d_root_boxes.isEmpty()
-    * @pre d_parent == 0
-    */
-   void
-   clusterAndComputeRelationships();
 
    /*!
     * @brief Names of algorithmic phases while outside of
@@ -774,7 +803,7 @@ public:
     * @return The communication phase currently running.
     *
     * @pre (d_parent == 0) || (d_parent->d_wait_phase != completed)
-    * @pre inRelaunchQueue(this) == d_common->relaunch_queue.end()
+    * @pre inRelaunchQueue(this) == d_common->d_relaunch_queue.end()
     */
    WaitPhase
    continueAlgorithm();
@@ -859,7 +888,7 @@ public:
    }
 
    //! @brief Form child groups from gathered overlap counts.
-   // @pre d_common->rank == d_owner
+   // @pre d_common->d_rank == d_owner
    // @pre d_recv_msg.size() == 4 * d_group.size()
    void
    formChildGroups();
@@ -890,18 +919,14 @@ public:
    eraseBox();
 
    //! @brief Compute new graph relationships touching local tag nodes.
-   // @pre d_common->compute_relationships > 0
+   // @pre d_common->d_compute_relationships > 0
    // @pre d_accepted_box.getLocalId() >= 0
    // @pre boxAccepted()
    // @pre d_box_acceptance != accepted_by_dropout_bcast
-   // @pre (d_parent == 0) || (d_box.numberCells() >= d_common->min_box)
+   // @pre (d_parent == 0) || (d_box.numberCells() >= d_common->d_min_box)
    // @pre d_box_acceptance != accepted_by_dropout_bcast
    void
    computeNewNeighborhoodSets();
-
-   //! @brief Participants send new relationship data to graph node owners.
-   void
-   shareNewNeighborhoodSetsWithOwners();
    //@}
 
    //@{
@@ -911,7 +936,7 @@ public:
    int
    findOwnerInGroup(
       int owner,
-      const VectorOfInts& group) const
+      const CommonParams::VectorOfInts& group) const
    {
       for (unsigned int i = 0; i < group.size(); ++i) {
          if (group[i] == owner) {
@@ -962,7 +987,7 @@ public:
       const hier::Box& box) const
    {
       int size = box.numberCells(0);
-      int dim_val = d_common->d_dim.getValue();
+      int dim_val = d_common->getDim().getValue();
       for (int d = 1; d < dim_val; ++d) {
          size += box.numberCells(d);
       }
@@ -991,9 +1016,9 @@ public:
    // @pre main_group.size() >= sub_group.size()
    void
    computeDropoutGroup(
-      const VectorOfInts& main_group,
-      const VectorOfInts& sub_group,
-      VectorOfInts& dropouts,
+      const CommonParams::VectorOfInts& main_group,
+      const CommonParams::VectorOfInts& sub_group,
+      CommonParams::VectorOfInts& dropouts,
       const int add_group) const;
 
    BoxAcceptance
@@ -1026,19 +1051,19 @@ public:
       BergerRigoutsosNode* node_ptr) const
    {
       std::list<BergerRigoutsosNode *>::const_iterator li =
-         std::find(d_common->relaunch_queue.begin(),
-            d_common->relaunch_queue.end(),
+         std::find(d_common->d_relaunch_queue.begin(),
+            d_common->d_relaunch_queue.end(),
             node_ptr);
       return li;
    }
 
    bool
    inGroup(
-      VectorOfInts& group,
+      CommonParams::VectorOfInts& group,
       int rank = -1) const
    {
       if (rank < 0) {
-         rank = d_common->rank;
+         rank = d_common->d_mpi_object.getRank();
       }
       for (size_t i = 0; i < group.size(); ++i) {
          if (rank == group[i]) {
@@ -1057,22 +1082,6 @@ public:
       std::ostream& co,
       const std::string& border) const;
    //@}
-
-   /*!
-    * @brief Initialize static objects and register shutdown routine.
-    *
-    * Only called by StartupShutdownManager.
-    */
-   static void
-   initializeCallback();
-
-   /*!
-    * @brief Method registered with ShutdownRegister to cleanup statics.
-    *
-    * Only called by StartupShutdownManager.
-    */
-   static void
-   finalizeCallback();
 
    /*!
     * @brief Unique id in the binary dendogram.
@@ -1130,7 +1139,7 @@ public:
    /*!
     * @name Id of participating processes.
     */
-   VectorOfInts d_group;
+   CommonParams::VectorOfInts d_group;
 
    /*!
     * @brief MPI tag for message within a dendogram node.
@@ -1160,7 +1169,7 @@ public:
     * local histogram, then later, the reduced histogram.
     * If not, it is just the local histogram.
     */
-   VectorOfInts d_histogram[SAMRAI::MAX_DIM_VAL];
+   CommonParams::VectorOfInts d_histogram[SAMRAI::MAX_DIM_VAL];
 
    /*!
     * @brief Number of tags in the candidate box.
@@ -1201,9 +1210,9 @@ public:
     */
 
    //! @brief Buffer for organizing outgoing data.
-   VectorOfInts d_send_msg;
+   CommonParams::VectorOfInts d_send_msg;
    //! @brief Buffer for organizing incoming data.
-   VectorOfInts d_recv_msg;
+   CommonParams::VectorOfInts d_recv_msg;
 
    tbox::AsyncCommGroup* d_comm_group;
    //@}

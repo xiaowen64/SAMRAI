@@ -284,10 +284,9 @@ BergerRigoutsos::findBoxesContainingTags(
 
    t_find_boxes_with_tags->start();
 
-   BergerRigoutsosNode root_node(d_dim);
-
-   // Set standard Berger-Rigoutsos clustering parameters.
-   root_node.setClusteringParameters(tag_data_index,
+   BergerRigoutsosNode::CommonParams cluster_data(
+      tag_level,
+      tag_data_index,
       tag_val,
       min_box,
       efficiency_tol,
@@ -296,21 +295,19 @@ BergerRigoutsos::findBoxesContainingTags(
       d_max_inflection_cut_from_center,
       d_inflection_cut_threshold_ar);
 
-   // Set the parallel algorithm and DLBG parameters.
-   root_node.setAlgorithmAdvanceMode(d_algo_advance_mode);
-   root_node.setOwnerMode(d_owner_mode);
-   root_node.setComputeRelationships("BIDIRECTIONAL", max_gcw);
-   root_node.setMinBoxSizeFromCutting(d_min_box_size_from_cutting);
+   // Set the parallel algorithm.
+   cluster_data.setAlgorithmAdvanceMode(d_algo_advance_mode);
+   cluster_data.setOwnerMode(d_owner_mode);
+   cluster_data.setComputeRelationships("BIDIRECTIONAL", max_gcw);
+   cluster_data.setMinBoxSizeFromCutting(d_min_box_size_from_cutting);
 
    // Set debugging/verbosity parameters.
-   root_node.setLogNodeHistory(d_log_node_history);
+   cluster_data.setLogNodeHistory(d_log_node_history);
 
    t_cluster_and_compute_relationships->start();
-   root_node.clusterAndComputeRelationships(new_box_level,
-      tag_to_new,
-      bound_boxes,
-      tag_level,
-      d_mpi);
+   cluster_data.clusterAndComputeRelationships(new_box_level,
+                                               tag_to_new,
+                                               bound_boxes);
    t_cluster_and_compute_relationships->stop();
 
    if (d_sort_output_nodes == true) {
@@ -323,7 +320,7 @@ BergerRigoutsos::findBoxesContainingTags(
        * it depends on the order of asynchronous messages.)
        */
       sortOutputBoxes(*new_box_level,
-         *tag_to_new);
+                      *tag_to_new);
    }
 
    /*
@@ -342,10 +339,10 @@ BergerRigoutsos::findBoxesContainingTags(
    if (d_log_cluster) {
       t_logging->start();
       tbox::plog << "BergerRigoutsos cluster log:\n"
-      << "\tNew box_level clustered by BergerRigoutsos:\n" << new_box_level->format("",
-         2)
-      << "\tBergerRigoutsos tag_to_new:\n" << tag_to_new->format("", 2)
-      << "\tBergerRigoutsos new_to_tag:\n" << tag_to_new->getTranspose().format("", 2);
+                 << "\tNew box_level clustered by BergerRigoutsos:\n" << new_box_level->format("",
+                                                                                               2)
+                 << "\tBergerRigoutsos tag_to_new:\n" << tag_to_new->format("", 2)
+                 << "\tBergerRigoutsos new_to_tag:\n" << tag_to_new->getTranspose().format("", 2);
       t_logging->stop();
    }
    if (d_log_cluster_summary) {
@@ -356,13 +353,13 @@ BergerRigoutsos::findBoxesContainingTags(
       tbox::plog << "BergerRigoutsos summary:\n"
                  << "\tAsync BR on proc " << mpi.getRank()
                  << " owned "
-                 << root_node.getMaxOwnership() << " participating in "
-                 << root_node.getMaxNodes() << " nodes ("
-                 << (double)root_node.getMaxOwnership() / root_node.getMaxNodes()
-                 << ") in " << root_node.getMaxGeneration() << " generations,"
-                 << "   " << root_node.getNumBoxesGenerated()
+                 << cluster_data.getMaxOwnership() << " participating in "
+                 << cluster_data.getMaxNodes() << " nodes ("
+                 << (double)cluster_data.getMaxOwnership() / cluster_data.getMaxNodes()
+                 << ") in " << cluster_data.getMaxGeneration() << " generations,"
+                 << "   " << cluster_data.getNumBoxesGenerated()
                  << " boxes generated.\n\t"
-                 << root_node.getMaxTagsOwned() << " locally owned tags on new BoxLevel.\n\t";
+                 << cluster_data.getMaxTagsOwned() << " locally owned tags on new BoxLevel.\n\t";
 
       for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
            bi != bound_boxes.end(); ++bi) {
@@ -377,18 +374,18 @@ BergerRigoutsos::findBoxesContainingTags(
                     << " cells.\n\t";
       }
 
-      tbox::plog << "Final output has " << root_node.getNumTags()
+      tbox::plog << "Final output has " << cluster_data.getNumTags()
                  << " tags in "
                  << new_box_level->getGlobalNumberOfCells()
                  << " global cells [" << new_box_level->getMinNumberOfCells()
                  << "-" << new_box_level->getMaxNumberOfCells() << "], "
-                 << "over-refinement " << double(new_box_level->getGlobalNumberOfCells())/root_node.getNumTags()-1 << ", "
+                 << "over-refinement " << double(new_box_level->getGlobalNumberOfCells())/cluster_data.getNumTags()-1 << ", "
                  << new_box_level->getGlobalNumberOfBoxes()
                  << " global boxes [" << new_box_level->getMinNumberOfBoxes()
                  << "-" << new_box_level->getMaxNumberOfBoxes() << "]\n\t"
                  << "Number of continuations: avg = "
-                 << root_node.getAvgNumberOfCont()
-                 << "   max = " << root_node.getMaxNumberOfCont() << '\n'
+                 << cluster_data.getAvgNumberOfCont()
+                 << "   max = " << cluster_data.getMaxNumberOfCont() << '\n'
                  << "\tBergerRigoutsos new_level summary:\n" << new_box_level->format("\t\t",0)
                  << "\tBergerRigoutsos new_level statistics:\n" << new_box_level->formatStatistics("\t\t")
                  << "\tBergerRigoutsos new_to_tag summary:\n" << tag_to_new->getTranspose().format("\t\t",0)
@@ -413,9 +410,9 @@ BergerRigoutsos::findBoxesContainingTags(
 }
 
 /*
- ***********************************************************************
- ***********************************************************************
- */
+***********************************************************************
+***********************************************************************
+*/
 void
 BergerRigoutsos::sortOutputBoxes(
    hier::BoxLevel& new_box_level,
@@ -462,10 +459,10 @@ BergerRigoutsos::sortOutputBoxes(
       false /* don't sequentialize indices globally */);
    if (0) {
       tbox::plog
-      << "tag box_level:\n" << tag_to_new.getBase().format("", 2)
-      << "tag_to_new:\n" << tag_to_new.format("", 2)
-      << "new_to_tag:\n" << new_to_tag.format("", 2)
-      << "Sorting map:\n" << sorting_map->format("", 2);
+         << "tag box_level:\n" << tag_to_new.getBase().format("", 2)
+         << "tag_to_new:\n" << tag_to_new.format("", 2)
+         << "new_to_tag:\n" << new_to_tag.format("", 2)
+         << "Sorting map:\n" << sorting_map->format("", 2);
    }
    if (0) {
       // Check sorting_map before using it.
@@ -484,8 +481,8 @@ BergerRigoutsos::sortOutputBoxes(
    }
    hier::MappingConnectorAlgorithm mca;
    mca.modify(tag_to_new,
-      *sorting_map,
-      &new_box_level);
+              *sorting_map,
+              &new_box_level);
    if (0) {
       // Check result of mapping.
       int errs = 0;
@@ -511,10 +508,10 @@ BergerRigoutsos::sortOutputBoxes(
 }
 
 /*
- ***************************************************************************
- *
- ***************************************************************************
- */
+***************************************************************************
+*
+***************************************************************************
+*/
 void
 BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
 {
@@ -528,9 +525,9 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
       int flag;
       tbox::SAMRAI_MPI::Status mpi_status;
       int mpi_err = d_mpi.Iprobe(MPI_ANY_SOURCE,
-            MPI_ANY_TAG,
-            &flag,
-            &mpi_status);
+                                 MPI_ANY_TAG,
+                                 &flag,
+                                 &mpi_status);
       if (mpi_err != MPI_SUCCESS) {
          TBOX_ERROR("Error probing for possible lost messages." << std::endl);
       }
@@ -538,23 +535,23 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
          int count = -1;
          mpi_err = tbox::SAMRAI_MPI::Get_count(&mpi_status, MPI_INT, &count);
          TBOX_ERROR("Library error!\n"
-            << "BergerRigoutsos detected before or after\n"
-            << "running BergerRigoutsosNode that there\n"
-            << "is a message yet to be received.  This is\n"
-            << "an error because all messages using the\n"
-            << "private communicator should have been\n"
-            << "accounted for.  Message status:\n"
-            << "source " << mpi_status.MPI_SOURCE << '\n'
-            << "tag " << mpi_status.MPI_TAG << '\n'
-            << "count " << count << " (assuming integers)\n");
+                    << "BergerRigoutsos detected before or after\n"
+                    << "running BergerRigoutsosNode that there\n"
+                    << "is a message yet to be received.  This is\n"
+                    << "an error because all messages using the\n"
+                    << "private communicator should have been\n"
+                    << "accounted for.  Message status:\n"
+                    << "source " << mpi_status.MPI_SOURCE << '\n'
+                    << "tag " << mpi_status.MPI_TAG << '\n'
+                    << "count " << count << " (assuming integers)\n");
       }
    }
 }
 
 /*
- ***********************************************************************
- ***********************************************************************
- */
+***********************************************************************
+***********************************************************************
+*/
 void
 BergerRigoutsos::initializeCallback()
 {
@@ -578,13 +575,13 @@ BergerRigoutsos::initializeCallback()
 }
 
 /*
- ***************************************************************************
- *
- * Release static timers.  To be called by shutdown registry to make sure
- * memory for timers does not leak.
- *
- ***************************************************************************
- */
+***************************************************************************
+*
+* Release static timers.  To be called by shutdown registry to make sure
+* memory for timers does not leak.
+*
+***************************************************************************
+*/
 void
 BergerRigoutsos::finalizeCallback()
 {
