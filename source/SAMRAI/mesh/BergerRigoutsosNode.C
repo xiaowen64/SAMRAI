@@ -417,6 +417,14 @@ BergerRigoutsosNode::CommonParams::clusterAndComputeRelationships(
    TBOX_ASSERT( d_relaunch_queue.empty() );
    TBOX_ASSERT( !d_comm_stage.hasPendingRequests() );
 
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (d_compute_relationships > 2) {
+      // Each new node should have its own neighbor list.
+      TBOX_ASSERT(d_new_box_level->getBoxes().size() ==
+                  d_tag_to_new->getTranspose().getLocalNumberOfNeighborSets());
+   }
+#endif
+
    // Barrier to separate clustering cost from relationship sharing cost.
    d_mpi_object.Barrier();
 
@@ -2563,7 +2571,7 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
     */
    bool on_owner_process = d_common->d_mpi_object.getRank() == d_box.getOwnerRank();
    if (on_owner_process) {
-      d_common->d_tag_to_new->makeEmptyLocalNeighborhood(d_accepted_box.getBoxId());
+      d_common->d_tag_to_new->getTranspose().makeEmptyLocalNeighborhood(d_accepted_box.getBoxId());
    }
 
    // Data to send to owner regarding new relationships found by local process.
@@ -2602,7 +2610,7 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
          intersection = tag_box * grown_box;
       } else {
          hier::Box transform_box(tag_box);
-         bool transformed = 
+         bool transformed =
             d_common->d_tag_level->getGridGeometry()->transformBox(
                transform_box,
                d_common->d_tag_level->getRatioToLevelZero(),
@@ -2621,7 +2629,7 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
 
          if (on_owner_process) {
             // Owner adds tag_box as a neighbor of d_accepted_box.
-            d_common->d_tag_to_new->insertLocalNeighbor(tag_box,
+            d_common->d_tag_to_new->getTranspose().insertLocalNeighbor(tag_box,
                                                         d_accepted_box.getBoxId());
          }
 
@@ -2769,15 +2777,15 @@ BergerRigoutsosNode::CommonParams::shareNewNeighborhoodSetsWithOwners()
          const hier::LocalId new_local_id(*(ptr++));
          hier::BoxId box_id(new_local_id, d_mpi_object.getRank());
          int n_new_relationships = *(ptr++);
-         TBOX_ASSERT(d_tag_to_new->hasNeighborSet(box_id));
+         TBOX_ASSERT(d_tag_to_new->getTranspose().hasNeighborSet(box_id));
          if (n_new_relationships > 0) {
             hier::Connector::NeighborhoodIterator base_box_itr =
-               d_tag_to_new->makeEmptyLocalNeighborhood(box_id);
+               d_tag_to_new->getTranspose().makeEmptyLocalNeighborhood(box_id);
             for (int n = 0; n < n_new_relationships; ++n) {
                hier::Box node(getDim());
                node.getFromIntBuffer(ptr);
                ptr += ints_per_node;
-               d_tag_to_new->insertLocalNeighbor(node, base_box_itr);
+               d_tag_to_new->getTranspose().insertLocalNeighbor(node, base_box_itr);
             }
          }
          consumed += 2 + n_new_relationships * ints_per_node;
