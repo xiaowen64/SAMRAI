@@ -397,7 +397,7 @@ int main(
                hyp_level_integrator,
                gridding_algorithm));
 
-         // VisitDataWriter is only present if HDF is available
+         // VisItDataWriter is only present if HDF is available
 #ifdef HAVE_HDF5
          boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
             new appu::VisItDataWriter(

@@ -398,7 +398,7 @@ void LinAdv::registerModelVariables(
 #ifdef HAVE_HDF5
    if (!d_visit_writer) {
       TBOX_WARNING(d_object_name << ": registerModelVariables()"
-                                 << "\nVisit data writer was not registered.\n"
+                                 << "\nVisIt data writer was not registered.\n"
                                  << "Consequently, no plot data will"
                                  << "\nbe written." << endl);
    }

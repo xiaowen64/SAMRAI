@@ -22,7 +22,7 @@ Main {
   // Whether to log all nodes in a parallel run.
   log_all_nodes = FALSE
   // Visualization writers to write files for.
-  vis_writer = "Vizamrai", "VisIt"
+  vis_writer = "VisIt"
 }
 
 fac_solver {

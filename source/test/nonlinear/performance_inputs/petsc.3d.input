@@ -15,11 +15,9 @@ Main{
    base_name = "3d.petsc"
 
 // visualization dump parameters 
-   viz_writer            = "VisIt" // use: "Vizamrai", "VisIt" for both
    viz_dump_interval     = 1          // zero to turn off
    viz_dump_dirname      = "3d.petsc.visit"
-   viz_dump_filename     = "3d.petsc"    // not used by VisIt
-   visit_number_procs_per_file = 1    // not used by Vizamrai
+   visit_number_procs_per_file = 1
 
 // regrid parameters
    regrid_interval       = 0         // zero to turn off

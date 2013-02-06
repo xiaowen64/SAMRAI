@@ -230,7 +230,7 @@ int main(
 
       /*
        * Retrieve "Main" section of the input database.  First, read dump
-       * information, which is used for writing vizamrai plot files.  Second,
+       * information, which is used for writing VisIt plot files.  Second,
        * if proper restart information was given on command line, and the restart
        * interval is non-zero, create a restart database.
        */
@@ -411,7 +411,7 @@ int main(
       /*
        * Set up Visualization plot file writer(s).
        */
-      // VisitDataWriter is only present if HDF is available
+      // VisItDataWriter is only present if HDF is available
 #ifdef HAVE_HDF5
       bool is_multiblock = true;
       boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(

@@ -269,7 +269,7 @@ private:
    const tbox::Dimension d_dim;
 
    /*
-    * We cache pointers to the grid geometry and Vizamrai data writer
+    * We cache pointers to the grid geometry and VisIt data writer
     * object to set up initial data, set physical boundary conditions,
     * and register plot variables.
     */

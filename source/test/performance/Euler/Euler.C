@@ -487,7 +487,7 @@ void Euler::registerModelVariables(
 
    if (!d_visit_writer) {
       TBOX_WARNING(d_object_name << ": registerModelVariables()\n"
-                                 << "Visit data writer was not registered\n"
+                                 << "VisIt data writer was not registered\n"
                                  << "Consequently, no plot data will\n"
                                  << "be written." << endl);
    }

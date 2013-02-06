@@ -639,7 +639,7 @@ MblkLinAdv::~MblkLinAdv() {
  *
  * Register conserved variable (u) (i.e., solution state variable) and
  * flux variable with hyperbolic integrator that manages storage for
- * those quantities.  Also, register plot data with Vizamrai or VisIt.
+ * those quantities.  Also, register plot data with VisIt.
  *
  *************************************************************************
  */
@@ -702,7 +702,7 @@ void MblkLinAdv::registerModelVariables(
    if (!d_visit_writer) {
       TBOX_WARNING(
          d_object_name << ": registerModelVariables()"
-                       << "\nVisit data writer was"
+                       << "\nVisIt data writer was"
                        << "\nregistered.  Consequently, no plot data will"
                        << "\nbe written." << endl);
    }

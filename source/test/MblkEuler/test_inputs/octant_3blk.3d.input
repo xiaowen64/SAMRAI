@@ -119,11 +119,9 @@ Main {
    log_all_nodes    = TRUE
 
 // visualization dump parameters 
-   viz_writer            = "VisIt" // use: "Vizamrai", "VisIt" for both
    viz_dump_interval     = 1          // zero to turn off
    viz_dump_dirname      = "viz_octant-3blk"
-   viz_dump_filename     = "octant"    // not used by VisIt
-   visit_number_procs_per_file = 1    // not used by Vizamrai
+   visit_number_procs_per_file = 1
 
 
 // restart dump parameters

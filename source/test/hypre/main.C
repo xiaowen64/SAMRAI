@@ -240,7 +240,7 @@ int main(
        * with the plotter.
        */
       tbox::Array<string> vis_writer(1);
-      vis_writer[0] = "Visit";
+      vis_writer[0] = "VisIt";
       if (main_db->keyExists("vis_writer")) {
          vis_writer = main_db->getStringArray("vis_writer");
       }
@@ -254,7 +254,7 @@ int main(
       boost::shared_ptr<appu::VisItDataWriter> visit_writer;
       if (use_visit) {
          visit_writer.reset(new appu::VisItDataWriter(dim,
-               "Visit Writer",
+               "VisIt Writer",
                vis_filename + ".visit"));
          hypre_poisson.registerVariablesWithPlotter(*visit_writer);
       }

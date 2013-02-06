@@ -141,45 +141,30 @@ INPUT FILES:
       // Visualization dump parameters.
       // viz_writer        -- (char string [, char string]) which visualization
       //                      data writer to use.  Use "VisIt" for the VisIt Data
-      //                      Writer, or "Vizamrai" for the Vizamrai Data Writer,
-      /                       or "VisIt", "Vizamrai" for both.
+      //                      Writer.
       // viz_dump_interval -- (int) the interval in timesteps over coarsest 
       //                      level between writing of consecutive 
       //                      visualization dumps.  Setting it to zero turns off 
       //                      writing of visualization files.
       // viz_dump_dirname  -- (char string) directory where viz files are 
       //                      writen (may include a path).  VisIt requires a
-      //                      non-empty string.  Vizamrai permits an empty string,
-      //                      in which case dumps go to directory where main
-      //                      exists. If both data writers are used, directory name
-      //                      must be nonempty, and main.C will append _VisIt,
-      //                       _Vizamrai to dirname.
-      // viz_dump_filename -- (char string) Nonempty file prefix required for 
-      //                      vizamrai filenames.  Not used by VisIt.
+      //                      non-empty string.
       // visit_number_procs_per_file
       //                   -- (int >= 1) for parallel runs, number of processors 
       //                      that share a single common dump file. If this parameter
       //                      > number processors being used, all processors share 
-      //                      single dump file.  Not used by Vizamrai.
+      //                      single dump file.
       //
       //                      For example, the following inputs:
-      viz_writer            = "Vizamrai", "VisIt"
       viz_dump_interval     = 1
       viz_dump_dirname      = "viz_room-2d"
-      viz_dump_filename     = "room-2d"
       //                       would result in the following dump structure:
       //                         main
-      //                         viz_room-2d_VisIt/
+      //                         viz_room-2d
       //                           visit_dump.00000/
       //                           visit_dump.00001/
       //                           ...
       //                           dumps.visit
-      //                         viz_room-2d_Vizamrai/
-      //                           room-2d.00000.vis
-      //                           room-2d.00001.vis
-      //                           ...
-      //                       If only one data writer is selected, the
-      //                       _VisIt, _Vizamrai extension will be omitted.
 
       // Restart dump parameters.
       // restart_interval -- (int) the interval in timesteps over coarsest
@@ -626,8 +611,6 @@ INPUT FILES:
       // Variable_Types -- (string array) list of the corresponding
       //                    variable type to write to the viz file.
       //                    Must be either "primitive" or "derived".
-      //                    Note that until vizamrai is updated to use
-      //                    HDF5, "derived" must always be used.
       // Variable_Depths -- (int array) depth, or number of components, of
       //                    each variable.
       // Variable_Scales -- (double array) list of scaling factors for each

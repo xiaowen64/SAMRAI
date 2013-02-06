@@ -2876,7 +2876,7 @@ VisItDataWriter::writeSummaryToHDFFile(
       basic_HDFGroup->putInteger(key_string, tot_number_of_patches);
 
       /*
-       * When writing Visit data, it expects to see 3D data for
+       * When writing VisIt data, it expects to see 3D data for
        * xlo, dx, ratios_to_coarser, and number of ghosts.  The
        * VISIT_FIXED_DIM is set to 3, and the third element
        * is zero if we have 2D data.
@@ -2976,7 +2976,7 @@ VisItDataWriter::writeSummaryToHDFFile(
       basic_HDFGroup->putDoubleArray(key_string,
          var_scale_factors);
 
-      // VCHANGE Visit needs to read this array so it will
+      // VCHANGE VisIt needs to read this array so it will
       //         know which variables have mixed material data.
       // SGS
       key_string = "material_state_variable";
@@ -3112,7 +3112,7 @@ VisItDataWriter::writeSummaryToHDFFile(
       }
 
       /*
-       * When writing Visit data, it expects to see 3D data for
+       * When writing VisIt data, it expects to see 3D data for
        * xlo, dx, ratios_to_coarser, and number of ghosts.  The
        * VISIT_FIXED_DIM is set to 3, and the third element
        * is zero if we have 2D data.

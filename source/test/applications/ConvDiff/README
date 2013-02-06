@@ -120,19 +120,15 @@ CONSTRUCTION:
       //                      writing of visualization files.
       // viz_dump_dirname  -- (char string) directory where viz files are 
       //                      writen (may include a path).  VisIt requires a
-      //                      non-empty string.  Vizamrai permits an empty string,
-      //                      in which case dumps go to directory where main2d/3d
-      //                      exists. If both data writers are used, directory name
-      //                      must be nonempty, and main.C will append _VisIt,
-      //                       _Vizamrai to dirname.
+      //                      non-empty string.
       // visit_number_procs_per_file
       //                   -- (int >= 1) for parallel runs, number of processors 
       //                      that share a single common dump file. If this parameter
       //                      > number processors being used, all processors share 
-      //                      single dump file.  Not used by Vizamrai.
+      //                      single dump file.
       //
       //                      For example, the following inputs:
-      viz_writer            = "Vizamrai", "VisIt"
+      viz_writer            = "VisIt"
       viz_dump_interval     = 1
       viz_dump_dirname      = "viz_sphere-2d"
       //                       would result in the following dump structure:

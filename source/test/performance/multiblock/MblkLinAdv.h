@@ -111,7 +111,7 @@ public:
     * In other words, variables are registered according to their role
     * in the integration process (e.g., time-dependent, flux, etc.).
     * This routine also registers variables for plotting with the
-    * Vis writer (Vizamrai or VisIt).
+    * Vis writer.
     */
    void
    registerModelVariables(
@@ -369,7 +369,7 @@ private:
    const tbox::Dimension d_dim;
 
    /*
-    * We cache pointers to the grid geometry and Vizamrai data writer
+    * We cache pointers to the grid geometry and VisIt data writer
     * object to set up initial data, set physical boundary conditions,
     * and register plot variables.
     */

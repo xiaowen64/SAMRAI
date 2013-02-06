@@ -30,10 +30,6 @@ Main {
    uses_newton              = TRUE
    uses_preconditioning     = TRUE
 
-   viz_dump_filename        = "rad3d"
-   viz_dump_dirname         = "viz_rad3d"
-   viz_dump_interval        = 0
-
 // Used for testing only
    correct_rhs_evals        = 498
    correct_precond_setups   = 372

@@ -285,7 +285,7 @@ int main(
        * with the plotter.
        */
       tbox::Array<string> vis_writer(1);
-      vis_writer[0] = "Visit";
+      vis_writer[0] = "VisIt";
       if (main_db->keyExists("vis_writer")) {
          vis_writer = main_db->getStringArray("vis_writer");
       }
@@ -299,7 +299,7 @@ int main(
          main_db->getStringWithDefault("vis_filename", base_name);
       if (use_visit) {
          visit_writer.reset(new appu::VisItDataWriter(dim,
-               "Visit Writer",
+               "VisIt Writer",
                vis_filename + ".visit"));
          fac_poisson.setupPlotter(*visit_writer);
       }

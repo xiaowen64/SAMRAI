@@ -156,21 +156,8 @@ int main(
       int stepping_method = main_db->getInteger("stepping_method");
       bool uses_preconditioning =
          main_db->getBoolWithDefault("uses_preconditioning", false);
-      int viz_dump_interval =
-         main_db->getIntegerWithDefault("viz_dump_interval", 0);
       bool solution_logging =
          main_db->getBoolWithDefault("solution_logging", false);
-
-      string viz_dump_filename;
-      string viz_dump_dirname;
-      if (viz_dump_interval > 0) {
-         if (main_db->keyExists("viz_dump_filename")) {
-            viz_dump_filename = main_db->getString("viz_dump_filename");
-         }
-         if (main_db->keyExists("viz_dump_dirname")) {
-            viz_dump_dirname = main_db->getString("viz_dump_dirname");
-         }
-      }
 
       /*
        * Create geometry and hierarchy objects.
