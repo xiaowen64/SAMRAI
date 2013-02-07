@@ -171,18 +171,10 @@ BergerRigoutsos::getFromInput(
  *************************************************************************
  */
 void
-BergerRigoutsos::setMPI(
+BergerRigoutsos::useDuplicateMPI(
    const tbox::SAMRAI_MPI& mpi)
 {
    d_common.useDuplicateMPI(mpi);
-#if 0
-   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
-      d_mpi.freeCommunicator();
-   }
-   if (mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
-      d_mpi.dupCommunicator(mpi);
-   }
-#endif
 }
 
 /*

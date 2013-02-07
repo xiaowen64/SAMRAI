@@ -129,28 +129,23 @@ public:
    virtual ~BergerRigoutsos();
 
    /*!
-    * @brief Set the MPI communication object.
+    * @brief Duplicate the MPI communication object for private internal use.
     *
-    * Duplicate the communicator in the given for private use.  A private
-    * communicator isolates the complex communications used by the
-    * asynchronous algorithm from other communications.  Duplicating
-    * the communicator is expensive but should only be need once.  All
-    * processes in the communicator must participate.  The duplicate
-    * communicator is active until this object is destructed.
+    * A private communicator isolates the complex communications used
+    * by the asynchronous algorithm from other communications,
+    * protecting this algorithm from un-related communication bugs.
     * Using a duplicated MPI communicator is optional but recommended.
-    * When a duplicate MPI communicator is in use, it must be congruent
-    * with the communicator associated with the tag level.
     *
-    * If the communicator is not set, the parallel clustering
-    * algorithm uses the communicator of the input tag
-    * box_level.  If it is set, then the algorithm only works
-    * for input tag box_levels with a congruent communicator.
+    * Duplicating the communicator is expensive but need only be done
+    * once.  All processes in the communicator must participate.  The
+    * duplicate communicator is active until this object is destructed
+    * or you call this method with MPI_COMM_NULL.
     *
-    * If communicator is SAMRAI_MPI::commNull, it is the same as not
-    * using a duplicate communicator.
+    * When a duplicate MPI communicator is in use, the tag level must
+    * be congruent with it.
     */
    void
-   setMPI(
+   useDuplicateMPI(
       const tbox::SAMRAI_MPI& mpi);
 
    /*!

@@ -1050,7 +1050,7 @@ void generatePrebalanceByUserShells(
    }
 
    mesh::BergerRigoutsos abr(dim, abr_db);
-   abr.setMPI(L0->getMPI());
+   abr.useDuplicateMPI(L0->getMPI());
    abr.findBoxesContainingTags(
       L1,
       L0_to_L1,
@@ -1210,7 +1210,7 @@ void generatePrebalanceByShrinkingLevel(
    }
 
    mesh::BergerRigoutsos abr(dim, abr_db);
-   abr.setMPI(L1->getMPI());
+   abr.useDuplicateMPI(L1->getMPI());
    abr.findBoxesContainingTags(
       L2,
       L1_to_L2,
@@ -1365,7 +1365,7 @@ void generatePrebalanceBySinusoidalFront(
    }
 
    mesh::BergerRigoutsos abr(dim, abr_db);
-   abr.setMPI(L1->getMPI());
+   abr.useDuplicateMPI(L1->getMPI());
    abr.findBoxesContainingTags(
       L2,
       L1_to_L2,

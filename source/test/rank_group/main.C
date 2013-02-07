@@ -702,7 +702,7 @@ void generatePrebalanceByUserShells(
    }
 
    mesh::BergerRigoutsos abr(dim, abr_db);
-   abr.setMPI(anchor_box_level->getMPI());
+   abr.useDuplicateMPI(anchor_box_level->getMPI());
    abr.findBoxesContainingTags(
       balance_box_level,
       anchor_to_balance,

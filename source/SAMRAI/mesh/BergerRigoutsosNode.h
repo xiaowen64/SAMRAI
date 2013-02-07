@@ -616,8 +616,10 @@ public:
       //@{
       //! @name Communication parameters
       /*!
-       * @brief MPI communicator used in all communications in
-       * the dendogram.
+       * @brief MPI communicator used in all communications in the
+       * dendogram.
+       *
+       * @see useDuplicateMPI().
        */
       tbox::SAMRAI_MPI d_mpi_object;
       //! @brief Upperbound of valid tags.
