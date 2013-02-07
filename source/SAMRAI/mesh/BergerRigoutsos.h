@@ -13,6 +13,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/mesh/BoxGeneratorStrategy.h"
+#include "SAMRAI/mesh/BergerRigoutsosNode.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchLevel.h"
@@ -185,7 +186,7 @@ public:
       const hier::IntVector& min_box,
       const double efficiency_tol,
       const double combine_tol,
-      const hier::IntVector& max_gcw) const;
+      const hier::IntVector& max_gcw);
 
    /*!
     * @brief Get the name of this object.
@@ -237,6 +238,9 @@ private:
 
    //! @brief Communication object.
    tbox::SAMRAI_MPI d_mpi;
+
+   //! @brief Parameters shared with BergerRigoutsosNode during clustering.
+   BergerRigoutsosNode::CommonParams d_common;
 
    //! @brief Max box size constraint used by BergerRigoutsosNode.
    hier::IntVector d_max_box_size;

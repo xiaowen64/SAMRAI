@@ -102,30 +102,35 @@ public:
     * This structure contains data input, output, set-up data shared
     * by the dendogram nodes and the BergerRigoutsos object initiating
     * the clustering.  Also contains parameters shared among all nodes
-    * in a dendogram and collectively managed by those nodes.
+    * in a dendogram and collectively managed by those nodes.  Only
+    * BergerRigoutsos and BergerRigoutsosNode classes should use this
+    * struct.
     *
     * In the implementation of the BR algorithm, some parameters are
     * to be shared among all nodes in the dendogram, either for
     * efficiency or coordinating the dendogram nodes.  All such
     * parameters are contained in a single CommonParams object.
-    *
-    * @param[in] tag_data_index
-    * @param[in] tag_val
-    * @param[in] min_box
-    * @param[in] efficiency_tol
-    * @param[in] combine_tol
-    * @param[in] max_box_size
-    * @param[in] max_inflection_cut_from_center Limit the Laplace cut to this
-    *   fraction of the distance from the center plane to the end.
-    *   Zero means cut only at the center plane.  One means unlimited.
-    *   Under most situations, one is fine.
-    *
-    * @param[in] inflection_cut_threshold_ar
     */
    class CommonParams
    {
 public:
-      explicit CommonParams(
+      explicit CommonParams( const tbox::Dimension &dim );
+
+      /*! @brief General parameter setter.
+       * @param[in] tag_data_index
+       * @param[in] tag_val
+       * @param[in] min_box
+       * @param[in] efficiency_tol
+       * @param[in] combine_tol
+       * @param[in] max_box_size
+       * @param[in] max_inflection_cut_from_center Limit the Laplace cut to this
+       *   fraction of the distance from the center plane to the end.
+       *   Zero means cut only at the center plane.  One means unlimited.
+       *   Under most situations, one is fine.
+       *
+       * @param[in] inflection_cut_threshold_ar
+       */
+      void setParameters(
          const int tag_data_index,
          const int tag_val,
          const hier::IntVector min_box,
@@ -281,13 +286,14 @@ public:
        * @brief Duplicate given MPI communicator for private use
        * and various dependent parameters.
        *
-       * This method overrides the MPI object from the tag level,
-       * which is set in the constructor.  Calling this method
-       * guarantees that an exclusive MPI Communicator is used for
-       * clustering, making the execution immune to stray messages
-       * from un-related code.
+       * This method overrides the MPI object from the tag level.
+       * Calling this method guarantees that an exclusive MPI
+       * Communicator is used for clustering, making the execution
+       * immune to stray messages from un-related code.  However,
+       * it limits the tag level to those with compatible SAMRAI_MPI
+       * objects (congruent MPI Communicators).
        */
-      void setMPI( const tbox::SAMRAI_MPI& mpi );
+      void useDuplicateMPI( const tbox::SAMRAI_MPI& mpi );
 
       /*!
        * @brief Setup names of timers.
@@ -477,6 +483,9 @@ public:
 
       //! @brief Participants send new relationship data to graph node owners.
       void shareNewNeighborhoodSetsWithOwners();
+
+      //! @brief Reset analysis counters.
+      void resetCounters();
 
       //! @brief Shorthand for a sorted, possibly incontiguous, set of integers.
       typedef std::set<int> IntSet;
@@ -668,17 +677,6 @@ public:
    BergerRigoutsosNode(
       CommonParams* common_params,
       const hier::Box& box);
-
-#if 0
-   /*!
-    * @brief Construct the root node of a BR dendogram.
-    *
-    * The root node is used to run the BR algorithm and
-    * obtain outputs.
-    */
-   BergerRigoutsosNode(
-      const tbox::Dimension& dim);
-#endif
 
    /*!
     * @brief Destructor.

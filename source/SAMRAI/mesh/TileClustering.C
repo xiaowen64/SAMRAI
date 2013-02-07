@@ -107,7 +107,7 @@ TileClustering::findBoxesContainingTags(
    const hier::IntVector& min_box,
    const double efficiency_tol,
    const double combine_tol,
-   const hier::IntVector& max_gcw) const
+   const hier::IntVector& max_gcw)
 {
    NULL_USE(efficiency_tol);
    NULL_USE(combine_tol);

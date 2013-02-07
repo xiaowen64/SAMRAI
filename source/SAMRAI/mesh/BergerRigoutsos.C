@@ -52,6 +52,7 @@ BergerRigoutsos::BergerRigoutsos(
    const tbox::Dimension& dim,
    const boost::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
+   d_common(dim),
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_max_box_size(hier::IntVector(d_dim, tbox::MathUtilities<int>::getMax())),
    d_max_inflection_cut_from_center(1.0),
@@ -173,12 +174,15 @@ void
 BergerRigoutsos::setMPI(
    const tbox::SAMRAI_MPI& mpi)
 {
+   d_common.useDuplicateMPI(mpi);
+#if 0
    if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
       d_mpi.freeCommunicator();
    }
    if (mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
       d_mpi.dupCommunicator(mpi);
    }
+#endif
 }
 
 /*
@@ -208,7 +212,7 @@ BergerRigoutsos::findBoxesContainingTags(
    const hier::IntVector& min_box,
    const double efficiency_tol,
    const double combine_tol,
-   const hier::IntVector& max_gcw) const
+   const hier::IntVector& max_gcw)
 {
    TBOX_ASSERT(!bound_boxes.isEmpty());
    TBOX_ASSERT_OBJDIM_EQUALITY4(*tag_level,
@@ -284,7 +288,7 @@ BergerRigoutsos::findBoxesContainingTags(
 
    t_find_boxes_with_tags->start();
 
-   BergerRigoutsosNode::CommonParams cluster_data(
+   d_common.setParameters(
       tag_data_index,
       tag_val,
       min_box,
@@ -295,19 +299,19 @@ BergerRigoutsos::findBoxesContainingTags(
       d_inflection_cut_threshold_ar);
 
    // Set the parallel algorithm.
-   cluster_data.setAlgorithmAdvanceMode(d_algo_advance_mode);
-   cluster_data.setOwnerMode(d_owner_mode);
-   cluster_data.setComputeRelationships("BIDIRECTIONAL", max_gcw);
-   cluster_data.setMinBoxSizeFromCutting(d_min_box_size_from_cutting);
+   d_common.setAlgorithmAdvanceMode(d_algo_advance_mode);
+   d_common.setOwnerMode(d_owner_mode);
+   d_common.setComputeRelationships("BIDIRECTIONAL", max_gcw);
+   d_common.setMinBoxSizeFromCutting(d_min_box_size_from_cutting);
 
    // Set debugging/verbosity parameters.
-   cluster_data.setLogNodeHistory(d_log_node_history);
+   d_common.setLogNodeHistory(d_log_node_history);
 
    t_cluster_and_compute_relationships->start();
-   cluster_data.clusterAndComputeRelationships(new_box_level,
-                                               tag_to_new,
-                                               tag_level,
-                                               bound_boxes);
+   d_common.clusterAndComputeRelationships(new_box_level,
+                                           tag_to_new,
+                                           tag_level,
+                                           bound_boxes);
    t_cluster_and_compute_relationships->stop();
 
    if (d_sort_output_nodes == true) {
@@ -353,13 +357,13 @@ BergerRigoutsos::findBoxesContainingTags(
       tbox::plog << "BergerRigoutsos summary:\n"
                  << "\tAsync BR on proc " << mpi.getRank()
                  << " owned "
-                 << cluster_data.getMaxOwnership() << " participating in "
-                 << cluster_data.getMaxNodes() << " nodes ("
-                 << (double)cluster_data.getMaxOwnership() / cluster_data.getMaxNodes()
-                 << ") in " << cluster_data.getMaxGeneration() << " generations,"
-                 << "   " << cluster_data.getNumBoxesGenerated()
+                 << d_common.getMaxOwnership() << " participating in "
+                 << d_common.getMaxNodes() << " nodes ("
+                 << (double)d_common.getMaxOwnership() / d_common.getMaxNodes()
+                 << ") in " << d_common.getMaxGeneration() << " generations,"
+                 << "   " << d_common.getNumBoxesGenerated()
                  << " boxes generated.\n\t"
-                 << cluster_data.getMaxTagsOwned() << " locally owned tags on new BoxLevel.\n\t";
+                 << d_common.getMaxTagsOwned() << " locally owned tags on new BoxLevel.\n\t";
 
       for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
            bi != bound_boxes.end(); ++bi) {
@@ -374,18 +378,18 @@ BergerRigoutsos::findBoxesContainingTags(
                     << " cells.\n\t";
       }
 
-      tbox::plog << "Final output has " << cluster_data.getNumTags()
+      tbox::plog << "Final output has " << d_common.getNumTags()
                  << " tags in "
                  << new_box_level->getGlobalNumberOfCells()
                  << " global cells [" << new_box_level->getMinNumberOfCells()
                  << "-" << new_box_level->getMaxNumberOfCells() << "], "
-                 << "over-refinement " << double(new_box_level->getGlobalNumberOfCells())/cluster_data.getNumTags()-1 << ", "
+                 << "over-refinement " << double(new_box_level->getGlobalNumberOfCells())/d_common.getNumTags()-1 << ", "
                  << new_box_level->getGlobalNumberOfBoxes()
                  << " global boxes [" << new_box_level->getMinNumberOfBoxes()
                  << "-" << new_box_level->getMaxNumberOfBoxes() << "]\n\t"
                  << "Number of continuations: avg = "
-                 << cluster_data.getAvgNumberOfCont()
-                 << "   max = " << cluster_data.getMaxNumberOfCont() << '\n'
+                 << d_common.getAvgNumberOfCont()
+                 << "   max = " << d_common.getMaxNumberOfCont() << '\n'
                  << "\tBergerRigoutsos new_level summary:\n" << new_box_level->format("\t\t",0)
                  << "\tBergerRigoutsos new_level statistics:\n" << new_box_level->formatStatistics("\t\t")
                  << "\tBergerRigoutsos new_to_tag summary:\n" << tag_to_new->getTranspose().format("\t\t",0)

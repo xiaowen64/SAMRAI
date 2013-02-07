@@ -55,7 +55,7 @@ public:
       const hier::IntVector& min_box,
       const double efficiency_tol,
       const double combine_tol,
-      const hier::IntVector& max_gcw) const = 0;
+      const hier::IntVector& max_gcw) = 0;
 
 private:
    // The following are not implemented:
