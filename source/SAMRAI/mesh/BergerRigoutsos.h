@@ -420,22 +420,6 @@ private:
          const boost::shared_ptr<hier::PatchLevel> &tag_level,
          const hier::BoxContainer& bound_boxes);
 
-
-#if 0
-      /*!
-       * @brief Duplicate given MPI communicator for private use
-       * and various dependent parameters.
-       *
-       * This method overrides the MPI object from the tag level.
-       * Calling this method guarantees that an exclusive MPI
-       * Communicator is used for clustering, making the execution
-       * immune to stray messages from un-related code.  However,
-       * it limits the tag level to those with compatible SAMRAI_MPI
-       * objects (congruent MPI Communicators).
-       */
-      void useDuplicateMPI( const tbox::SAMRAI_MPI& mpi );
-#endif
-
       /*!
        * @brief Setup names of timers.
        *
@@ -680,36 +664,6 @@ private:
       hier::BoxContainer d_root_boxes;
 
       /*!
-       * @brief
-       */
-      // double d_max_inflection_cut_from_center;
-
-      /*
-       * @brief Threshold for favoring thicker directions for Laplace
-       * cuts.
-       *
-       * The higher the value, the more we tolerate high aspect
-       * ratios.  Box directions corresponding to aspect ratios lower
-       * than this will not be subject to Laplace cuts (except for the
-       * thickest direction).  Set to 0 to always cut the thickest
-       * direction.  Set to huge value to disregard high aspect
-       * ratios.
-       */
-      // double d_inflection_cut_threshold_ar;
-
-      /*!
-       * @brief If a candidate box does not fit in this limit,
-       * it will be split.
-       *
-       * Boxes will not be recombined (@see combine_tol) if the
-       * combination breaks this limit.
-       *
-       * This is meant to prevent huge boxes that degrades worst-case
-       * performances in when later processing the box.
-       */
-      // hier::IntVector d_max_box_size;
-
-      /*!
        * @brief Alternate minimum box size applying to inflection
        * point cuts.
        *
@@ -819,29 +773,17 @@ private:
    //! @brief Threshold for avoiding thinner directions for Laplace cut.
    double d_inflection_cut_threshold_ar;
 
-   //! @brief Whether to log execution node allocation and deallocation.
-   // bool d_log_node_history;
-
    //! @brief Whether to briefly log cluster summary.
    bool d_log_cluster_summary;
 
    //! @brief Whether to log cluster summary.
    bool d_log_cluster;
 
-   //! @brief How to select the owner of a node.
-   // std::string d_owner_mode;
-
-   //! @brief Asynchronous mode for advancing algorithm.
-   // std::string d_algo_advance_mode;
-
    //! @brief Whether to sort results to make them deterministic.
    bool d_sort_output_nodes;
 
    //! @brief How to resolve initial boxes smaller than min box size.
    char d_check_min_box_size;
-
-   //! @brief Minimum box size constraint for making cuts.
-   // hier::IntVector d_min_box_size_from_cutting;
 
    //@{
    //! @name Used for evaluating performance;

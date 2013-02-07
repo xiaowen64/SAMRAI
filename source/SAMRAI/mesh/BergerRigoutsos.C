@@ -154,7 +154,7 @@ BergerRigoutsos::getFromInput(
             if (!(d_max_box_size[i] > 0)) {
                INPUT_RANGE_ERROR("max_box_size");
             }
-         } 
+         }
       }
 
       d_max_inflection_cut_from_center =
@@ -270,7 +270,7 @@ BergerRigoutsos::findBoxesContainingTags(
    tbox::SAMRAI_MPI mpi(tag_level->getBoxLevel()->getMPI());
 
    for (hier::BoxContainer::const_iterator bb_itr = bound_boxes.begin();
-        bb_itr != bound_boxes.end(); ++bb_itr) { 
+        bb_itr != bound_boxes.end(); ++bb_itr) {
       if (!(bb_itr->numberCells() >= min_box)) {
          if (d_check_min_box_size == 'e') {
             TBOX_ERROR("BergerRigoutsos::findBoxesContainingTags input error:\n"
