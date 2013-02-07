@@ -12,6 +12,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/tbox/AsyncCommGroup.h"
 #include "SAMRAI/hier/BlockId.h"
 #include "SAMRAI/hier/BoxLevel.h"
@@ -79,7 +80,10 @@ class BergerRigoutsosNode:
    private tbox::AsyncCommStage::Handler
 {
 
+   friend BergerRigoutsos;
+
 public:
+#if 0
    enum OwnerMode { SINGLE_OWNER = 0,
                     MOST_OVERLAP = 1,
                     FEWEST_OWNED = 2,
@@ -93,8 +97,15 @@ public:
    enum AlgoAdvanceMode { ADVANCE_ANY,
                           ADVANCE_SOME,
                           SYNCHRONOUS };
+#endif
 
 
+   /*!
+    * @brief Shorthand for std::vector<int> for internal use.
+    */
+   typedef std::vector<int> VectorOfInts;
+
+#if 0
    /*!
     * @brief Data structure for clustering set-up, initiation, and
     * output.
@@ -669,6 +680,7 @@ public:
       int d_num_nodes_existing;
       //@}
    };
+#endif
 
    /*!
     * @brief Construct a root node for a single block.
@@ -677,7 +689,7 @@ public:
     * @param box            Global bounding box for a single block
     */
    BergerRigoutsosNode(
-      CommonParams* common_params,
+      BergerRigoutsos* common_params,
       const hier::Box& box);
 
    /*!
@@ -726,7 +738,7 @@ private:
     * only meant for internal use by the recursion mechanism.
     */
    BergerRigoutsosNode(
-      CommonParams* common_params,
+      BergerRigoutsos* common_params,
       BergerRigoutsosNode* parent,
       const int child_number);
 
@@ -935,7 +947,7 @@ private:
    int
    findOwnerInGroup(
       int owner,
-      const CommonParams::VectorOfInts& group) const
+      const VectorOfInts& group) const
    {
       for (unsigned int i = 0; i < group.size(); ++i) {
          if (group[i] == owner) {
@@ -1015,9 +1027,9 @@ private:
    // @pre main_group.size() >= sub_group.size()
    void
    computeDropoutGroup(
-      const CommonParams::VectorOfInts& main_group,
-      const CommonParams::VectorOfInts& sub_group,
-      CommonParams::VectorOfInts& dropouts,
+      const VectorOfInts& main_group,
+      const VectorOfInts& sub_group,
+      VectorOfInts& dropouts,
       const int add_group) const;
 
    BoxAcceptance
@@ -1058,7 +1070,7 @@ private:
 
    bool
    inGroup(
-      CommonParams::VectorOfInts& group,
+      VectorOfInts& group,
       int rank = -1) const
    {
       if (rank < 0) {
@@ -1106,7 +1118,7 @@ private:
     * Only the root of the tree allocates the common parameters.
     * For all others, this pointer is set by the parent.
     */
-   CommonParams* d_common;
+   BergerRigoutsos* d_common;
 
    //@{
    /*!
@@ -1138,7 +1150,7 @@ private:
    /*!
     * @name Id of participating processes.
     */
-   CommonParams::VectorOfInts d_group;
+   VectorOfInts d_group;
 
    /*!
     * @brief MPI tag for message within a dendogram node.
@@ -1168,7 +1180,7 @@ private:
     * local histogram, then later, the reduced histogram.
     * If not, it is just the local histogram.
     */
-   CommonParams::VectorOfInts d_histogram[SAMRAI::MAX_DIM_VAL];
+   VectorOfInts d_histogram[SAMRAI::MAX_DIM_VAL];
 
    /*!
     * @brief Number of tags in the candidate box.
@@ -1209,9 +1221,9 @@ private:
     */
 
    //! @brief Buffer for organizing outgoing data.
-   CommonParams::VectorOfInts d_send_msg;
+   VectorOfInts d_send_msg;
    //! @brief Buffer for organizing incoming data.
-   CommonParams::VectorOfInts d_recv_msg;
+   VectorOfInts d_recv_msg;
 
    tbox::AsyncCommGroup* d_comm_group;
    //@}
