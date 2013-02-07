@@ -493,13 +493,9 @@ private:
    }
 
    void
-   printState(
+   printNodeState(
       std::ostream& co) const;
 
-   void
-   printDendogramState(
-      std::ostream& co,
-      const std::string& border) const;
    //@}
 
    /*!
