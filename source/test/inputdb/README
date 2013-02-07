@@ -22,7 +22,7 @@ COMPILATION AND EXECUTION
       parallel:
          Parallel execution is platform dependent.  This example demonstrates
          execution via mpirun.
-         mpirun -np <nprocs> [options] ./main inputdb.input
+         mpirun -np <nprocs> [mpirun options] ./main inputdb.input
 
 OUTPUT
 ------

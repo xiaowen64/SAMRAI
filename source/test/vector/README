@@ -27,8 +27,8 @@ COMPILATION AND EXECUTION
       parallel:
          Parallel execution is platform dependent.  These examples demonstrate
          execution via mpirun.
-         pvtest - mpirun -np <nprocs> [options] ./pvtest
-         kvtest - mpirun -np <nprocs> [options] ./kvtest
+         pvtest - mpirun -np <nprocs> [mpirun options] ./pvtest
+         kvtest - mpirun -np <nprocs> [mpirun options] ./kvtest
 
 OUTPUT
 ------

@@ -26,11 +26,11 @@ COMPILATION AND EXECUTION
       parallel:
          Parallel execution is platform dependent.  These examples demonstrate
          execution via mpirun.
-         mpirun -np <nprocs> [options] ./testHDF5
-         mpirun -np <nprocs> [options] ./testHDF5AppFileOpen
-         mpirun -np <nprocs> [options] ./testSilo
-         mpirun -np <nprocs> [options] ./testSiloAppFileOpen
-         mpirun -np <nprocs> [options] ./testMemory
+         mpirun -np <nprocs> [mpirun options] ./testHDF5
+         mpirun -np <nprocs> [mpirun options] ./testHDF5AppFileOpen
+         mpirun -np <nprocs> [mpirun options] ./testSilo
+         mpirun -np <nprocs> [mpirun options] ./testSiloAppFileOpen
+         mpirun -np <nprocs> [mpirun options] ./testMemory
 
 OUTPUT
 ------

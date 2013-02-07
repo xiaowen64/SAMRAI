@@ -39,7 +39,7 @@ COMPILATION AND EXECUTION
       parallel:
          Parallel execution is platform dependent.  This example demonstrates
          execution via mpirun.
-         mpirun -np <nprocs> [options] ./main <input file>
+         mpirun -np <nprocs> [mpirun options] ./main <input file>
 
 Restarted Run:
 
@@ -53,7 +53,7 @@ Restarted Run:
       example:  (to start from timestep #5)
 
         ./main sample_inputs/sphere-2d.input restart_sphere2d 5
-        mpirun -np 2 ./main [options] sample_inputs/sphere-2d.input restart_sphere2d 5
+        mpirun -np 2 ./main [mpirun options] sample_inputs/sphere-2d.input restart_sphere2d 5
 
       NOTE:  The ordinary use of our restart functionality requires that
              a problem can only be restarted on on the same number of

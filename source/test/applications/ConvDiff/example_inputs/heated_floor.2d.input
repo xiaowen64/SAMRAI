@@ -12,15 +12,19 @@ AutoTester {
 }
 
 ConvDiff {
-   convection_coeff  = 0.0, 0.0  // vector [NDIM]
+   // convection-diffusion equation coefficients
+   convection_coeff  = 0.0, 0.0  // vector of length dim
    diffusion_coeff   = 0.5       // scalar
    source_coeff      = 0.0       // scalar
 
+   // CFL condition for timestepping
    cfl               = 0.5
-   cell_tagging_tolerance = 11.0  // vector [NEQU] 
 
+   // Tolerance used for tagging cells.
+   cell_tagging_tolerance = 11.0  // vector of length NEQU defined in ConvDiff.h
+
+   // General type of problem and its initial conditions.
    data_problem      = "SPHERE"
-
    Initial_data {
       radius            = 2.9   
       center            = 15.0, 10.0    // vector [NDIM]
@@ -29,8 +33,8 @@ ConvDiff {
       val_outside    = 10.            // vector [NEQU]
    }
 
-   // valid boundary_condition values are "FLOW", "REFLECT", "DIRICHLET"
-   // and "NEUMANN"
+   // Boundary condition data following the format defined in
+   // appu::CartesianBoundaryUtility[2,3]
    Boundary_data {
       boundary_edge_xlo {
          boundary_condition      = "DIRICHLET"
@@ -72,40 +76,58 @@ ConvDiff {
 }
 
 Main {
+   // dimension of problem
    dim = 2
+
+   // base name of log file
    base_name = "heated_floor.2d"
-// log file parameters 
+
+   // if true all nodes will log to individual files
+   // if false only node 0 will log
    log_all_nodes    = TRUE
 
-// visualization dump parameters 
-   viz_dump_interval     = 1          // zero to turn off
-   viz_dump_dirname      = "viz_htdflr2d"
+   // visualization dump parameters
+   // frequency at which to dump viz output--zero to turn off
+   viz_dump_interval    = 1
+   // directory in which to place viz output
+   viz_dump_dirname     = "viz_htdflr2d"
+   // number of processors which write to each viz file
    visit_number_procs_per_file = 1
 
-// restart dump parameters
-   restart_interval       = 0         // zero to turn off
+   // restart dump parameters
+   // frequency at which to dump restart output--zero to turn off
+   restart_interval     = 0
 }
 
 MainRestartData{
-   max_timesteps       = 20 
+   // maximum number of timesteps to take
+   max_timesteps       = 20
+
+   // simulation time of first timestep
    start_time          = 0.
+
+   // simulation time of last timestep
    end_time            = 100.
+
+   // number of timesteps between regrids
    regrid_step         = 3
+
+   // tag buffer for each finer level
    tag_buffer          = 2
 }
 
-
+// Refer to geom::CartesianGeometry and its base clases for input
 CartesianGeometry{
    domain_boxes	= [(0,0),(59,39)]
-   x_lo = 0.e0 , 0.e0   // lower end of computational domain.
+   x_lo = 0.e0 , 0.e0     // lower end of computational domain.
    x_up = 30.e0 , 20.e0   // upper end of computational domain.
-//   periodic_dimension = 1, 0
 }
 
+// Refer to hier::PatchHierarchy for input
 PatchHierarchy {
    max_levels = 3         // Maximum number of levels in hierarchy.
 
-   ratio_to_coarser {      // vector ratio to next coarser level
+   ratio_to_coarser {     // vector ratio to next coarser level
       level_1 = 4 , 4
       level_2 = 4 , 4
       level_3 = 4 , 4
@@ -123,6 +145,7 @@ PatchHierarchy {
                                       // boxes < efficiency * vol of large box
 }
 
+// Refer to mesh::GriddingAlgorithm for input
 GriddingAlgorithm{
 
    efficiency_tolerance    = 0.70e0   // min % of tag cells in new patch level
@@ -130,15 +153,16 @@ GriddingAlgorithm{
                                       // boxes < efficiency * vol of large box
 }
 
+// Refer to mesh::StandardTagAndInitialize for input
 StandardTagAndInitialize {
    tagging_method = "GRADIENT_DETECTOR"
 }
 
+// Refer to algs::MethodOfLinesIntegrator for input
 MethodOfLinesIntegrator{
-   order              = 2
-   alpha              = 0.5 , 1.0
 }
 
+// Refer to mesh::TreeLoadBalancer for input
 LoadBalancer {
-// using default uniform load balance configuration (see mesh_LoadBalancerX.h.sed)
+   // using default TreeLoadBalancer configuration
 }

@@ -70,7 +70,7 @@ clean-check:
 	$(SAMCLEAN)
 
 clean:
-	$(RM) *.o main *.log.* *.f
+	$(RM) *.o main *.log *.log.* *.f
 
 include $(SRCDIR)/Makefile.depend
 

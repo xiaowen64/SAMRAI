@@ -284,25 +284,14 @@ int main(
        * function setupExternalPlotter to register its data
        * with the plotter.
        */
-      tbox::Array<string> vis_writer(1);
-      vis_writer[0] = "VisIt";
-      if (main_db->keyExists("vis_writer")) {
-         vis_writer = main_db->getStringArray("vis_writer");
-      }
-      bool use_visit = false;
-      for (int i = 0; i < vis_writer.getSize(); i++) {
-         if (vis_writer[i] == "VisIt") use_visit = true;
-      }
 #ifdef HAVE_HDF5
-      boost::shared_ptr<appu::VisItDataWriter> visit_writer;
       string vis_filename =
          main_db->getStringWithDefault("vis_filename", base_name);
-      if (use_visit) {
-         visit_writer.reset(new appu::VisItDataWriter(dim,
-               "VisIt Writer",
-               vis_filename + ".visit"));
-         fac_poisson.setupPlotter(*visit_writer);
-      }
+      boost::shared_ptr<appu::VisItDataWriter> visit_writer(
+         boost::make_shared<appu::VisItDataWriter>(dim,
+            "VisIt Writer",
+            vis_filename + ".visit"));
+      fac_poisson.setupPlotter(*visit_writer);
 #endif
 
       /*
@@ -324,9 +313,7 @@ int main(
       /*
        * Plot.
        */
-      if (use_visit) {
-         visit_writer->writePlotData(patch_hierarchy, 0);
-      }
+      visit_writer->writePlotData(patch_hierarchy, 0);
 #endif
 
       /*

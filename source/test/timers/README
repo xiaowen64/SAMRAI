@@ -23,8 +23,8 @@ COMPILATION AND EXECUTION
       parallel:
          Parallel execution is platform dependent.  These examples demonstrate
          execution via mpirun.
-            mpirun -np <nprocs> [options] ./statstest
-            mpirun -np <nprocs> [options] ./timertest test_inputs/test.input
+            mpirun -np <nprocs> [mpirun options] ./statstest
+            mpirun -np <nprocs> [mpirun options] ./timertest test_inputs/test.input
 
       Restarted Run:
 
@@ -38,7 +38,7 @@ COMPILATION AND EXECUTION
          example:  (to start from timestep #0)
 
            ./timertest test_inputs/test.input restart 0
-           mpirun -np <nprocs> ./timertest [options] test_inputs/test.input restart 0
+           mpirun -np <nprocs> ./timertest [mpirun options] test_inputs/test.input restart 0
 
          NOTE:  The ordinary use of our restart functionality requires that
                 a problem can only be restarted on on the same number of

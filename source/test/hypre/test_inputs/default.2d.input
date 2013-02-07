@@ -12,8 +12,6 @@ Main {
   dim = 2
   base_name = "default2"
   log_all_nodes = FALSE
-  // Visualization writers to write files for.
-  vis_writer = "VisIt"
 }
 
 hypre_solver {

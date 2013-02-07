@@ -57,20 +57,20 @@ COMPILATION AND EXECUTION
       parallel:
          Parallel execution is platform dependent.  These examples demonstrate
          execution via mpirun.
-         cell_patchtest  - mpirun -np <nprocs> [options] cell_patchtest [2, 3]
-         cell_hiertest   - mpirun -np <nprocs> [options] cell_hiertest [2, 3]
-         cell_hierops    - mpirun -np <nprocs> [options] cell_hierops [2, 3]
-         cell_cplxtest   - mpirun -np <nprocs> [options] cell_cplxtest [2, 3]
-         face_hiertest   - mpirun -np <nprocs> [options] face_hiertest [2, 3]
-         face_cplxtest   - mpirun -np <nprocs> [options] face_cplxtest [2, 3]
-         node_hiertest   - mpirun -np <nprocs> [options] node_hiertest [2, 3]
-         node_hierops    - mpirun -np <nprocs> [options] node_hierops [2, 3]
-         node_cplxtest   - mpirun -np <nprocs> [options] node_cplxtest [2, 3]
-         edge_hiertest   - mpirun -np <nprocs> [options] edge_hiertest [2, 3]
-         edge_cplxtest   - mpirun -np <nprocs> [options] edge_cplxtest [2, 3]
-         side_hiertest   - mpirun -np <nprocs> [options] side_hiertest [2, 3]
-         side_cplxtest   - mpirun -np <nprocs> [options] side_cplxtest [2, 3]
-         indx_dataops    - mpirun -np <nprocs> [options] indx_dataops [2, 3]
+         cell_patchtest  - mpirun -np <nprocs> [mpirun options] cell_patchtest [2, 3]
+         cell_hiertest   - mpirun -np <nprocs> [mpirun options] cell_hiertest [2, 3]
+         cell_hierops    - mpirun -np <nprocs> [mpirun options] cell_hierops [2, 3]
+         cell_cplxtest   - mpirun -np <nprocs> [mpirun options] cell_cplxtest [2, 3]
+         face_hiertest   - mpirun -np <nprocs> [mpirun options] face_hiertest [2, 3]
+         face_cplxtest   - mpirun -np <nprocs> [mpirun options] face_cplxtest [2, 3]
+         node_hiertest   - mpirun -np <nprocs> [mpirun options] node_hiertest [2, 3]
+         node_hierops    - mpirun -np <nprocs> [mpirun options] node_hierops [2, 3]
+         node_cplxtest   - mpirun -np <nprocs> [mpirun options] node_cplxtest [2, 3]
+         edge_hiertest   - mpirun -np <nprocs> [mpirun options] edge_hiertest [2, 3]
+         edge_cplxtest   - mpirun -np <nprocs> [mpirun options] edge_cplxtest [2, 3]
+         side_hiertest   - mpirun -np <nprocs> [mpirun options] side_hiertest [2, 3]
+         side_cplxtest   - mpirun -np <nprocs> [mpirun options] side_cplxtest [2, 3]
+         indx_dataops    - mpirun -np <nprocs> [mpirun options] indx_dataops [2, 3]
 
 OUTPUT
 ------
