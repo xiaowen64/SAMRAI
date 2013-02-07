@@ -80,8 +80,6 @@ class BergerRigoutsosNode:
    private tbox::AsyncCommStage::Handler
 {
 
-   friend BergerRigoutsos;
-
 public:
 
 
@@ -137,6 +135,14 @@ private:
    typedef hier::BoxContainer BoxContainer;
 
 private:
+
+   /*
+    * BergerRigoutsos and BergerRigoutsosNode are very tightly
+    * coupled.  BergerRigoutsos has the common parts of the data and
+    * algorithm.  BergerRigoutsosNode has the node-specific parts of
+    * the data algorithm.
+    */
+   friend BergerRigoutsos;
 
    /*!
     * @brief Construct a non-root node.

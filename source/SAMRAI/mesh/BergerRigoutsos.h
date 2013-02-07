@@ -131,26 +131,6 @@ public:
    virtual ~BergerRigoutsos();
 
    /*!
-    * @brief Duplicate the MPI communication object for private internal use.
-    *
-    * A private communicator isolates the complex communications used
-    * by the asynchronous algorithm from other communications,
-    * protecting this algorithm from un-related communication bugs.
-    * Using a duplicated MPI communicator is optional but recommended.
-    *
-    * Duplicating the communicator is expensive but need only be done
-    * once.  All processes in the communicator must participate.  The
-    * duplicate communicator is active until this object is destructed
-    * or you call this method with MPI_COMM_NULL.
-    *
-    * When a duplicate MPI communicator is in use, the tag level must
-    * be congruent with it.
-    */
-   void
-   useDuplicateMPI(
-      const tbox::SAMRAI_MPI& mpi);
-
-   /*!
     * @brief Implement the mesh::BoxGeneratorStrategy interface
     * method of the same name.
     *
@@ -186,6 +166,26 @@ public:
       const hier::IntVector& max_gcw);
 
    /*!
+    * @brief Duplicate the MPI communication object for private internal use.
+    *
+    * A private communicator isolates the complex communications used
+    * by the asynchronous algorithm from other communications,
+    * protecting this algorithm from un-related communication bugs.
+    * Using a duplicated MPI communicator is optional but recommended.
+    *
+    * Duplicating the communicator is expensive but need only be done
+    * once.  All processes in the communicator must participate.  The
+    * duplicate communicator is active until this object is destructed
+    * or you call this method with MPI_COMM_NULL.
+    *
+    * When a duplicate MPI communicator is in use, the tag level must
+    * be congruent with it.
+    */
+   void
+   useDuplicateMPI(
+      const tbox::SAMRAI_MPI& mpi);
+
+   /*!
     * @brief Get the name of this object.
     */
    const std::string
@@ -206,14 +206,13 @@ protected:
 
 private:
 
-   void
-   assertNoMessageForPrivateCommunicator() const;
-
-   /*!
-    * @brief Sort boxes in d_new_box_level and update d_tag_to_new.
+   /*
+    * BergerRigoutsos and BergerRigoutsosNode are very tightly
+    * coupled.  BergerRigoutsos has the common parts of the data and
+    * algorithm.  BergerRigoutsosNode has the node-specific parts of
+    * the data algorithm.
     */
-   void
-   sortOutputBoxes();
+   friend BergerRigoutsosNode;
 
    enum OwnerMode { SINGLE_OWNER = 0,
                     MOST_OVERLAP = 1,
@@ -229,31 +228,17 @@ private:
                           ADVANCE_SOME,
                           SYNCHRONOUS };
 
-   friend BergerRigoutsosNode;
+   /*!
+    * @brief Sanity check on the private communicator, if it is used.
+    */
+   void
+   assertNoMessageForPrivateCommunicator() const;
 
-      /*! @brief General parameter setter.
-       * @param[in] tag_data_index
-       * @param[in] tag_val
-       * @param[in] min_box
-       * @param[in] efficiency_tol
-       * @param[in] combine_tol
-       * @param[in] max_box_size
-       * @param[in] max_inflection_cut_from_center Limit the Laplace cut to this
-       *   fraction of the distance from the center plane to the end.
-       *   Zero means cut only at the center plane.  One means unlimited.
-       *   Under most situations, one is fine.
-       *
-       * @param[in] inflection_cut_threshold_ar
-       */
-      void setParameters(
-         const int tag_data_index,
-         const int tag_val,
-         const hier::IntVector min_box,
-         const double efficiency_tol,
-         const double combine_tol,
-         const hier::IntVector& max_box_size,
-         const double max_inflection_cut_from_center,
-         const double inflection_cut_threshold_ar);
+   /*!
+    * @brief Sort boxes in d_new_box_level and update d_tag_to_new.
+    */
+   void
+   sortOutputBoxes();
 
       //@{
       //! @name Algorithm mode settings

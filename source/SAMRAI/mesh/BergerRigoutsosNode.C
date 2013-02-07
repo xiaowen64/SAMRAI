@@ -820,26 +820,6 @@ BergerRigoutsosNode::runChildren_check()
    return true;
 }
 
-void BergerRigoutsos::setParameters(
-   const int tag_data_index,
-   const int tag_val,
-   const hier::IntVector min_box,
-   const double efficiency_tol,
-   const double combine_tol,
-   const hier::IntVector& max_box_size,
-   const double max_inflection_cut_from_center,
-   const double inflection_cut_threshold_ar)
-{
-   d_tag_data_index = tag_data_index;
-   d_tag_val = tag_val;
-   d_min_box = min_box;
-   d_efficiency_tol = efficiency_tol;
-   d_combine_tol = combine_tol;
-   d_max_box_size = max_box_size;
-   d_max_inflection_cut_from_center = max_inflection_cut_from_center;
-   d_inflection_cut_threshold_ar = inflection_cut_threshold_ar;
-}
-
 
 /*
 ********************************************************************

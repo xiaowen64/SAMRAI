@@ -287,17 +287,17 @@ BergerRigoutsos::findBoxesContainingTags(
 
    resetCounters();
 
-   const hier::BoxLevel& tag_box_level = *tag_level->getBoxLevel();
 
-   setParameters(
-      tag_data_index,
-      tag_val,
-      min_box,
-      efficiency_tol,
-      combine_tol,
-      d_max_box_size,
-      d_max_inflection_cut_from_center,
-      d_inflection_cut_threshold_ar);
+   /*
+    * Set parameters received from findBoxesContainingTags() virtual
+    * interface.
+    */
+
+   d_tag_data_index = tag_data_index;
+   d_tag_val = tag_val;
+   d_min_box = min_box;
+   d_efficiency_tol = efficiency_tol;
+   d_combine_tol = combine_tol;
 
    setComputeRelationships("BIDIRECTIONAL", max_gcw);
 
@@ -317,7 +317,7 @@ BergerRigoutsos::findBoxesContainingTags(
    else {
       if ( !checkMPICongruency() ) {
          TBOX_ERROR("BergerRigoutsosNode::clusterAndComputeRelationships:\n"
-                    << "The communicator of the input tag_box_level ("
+                    << "The communicator of the input tag BoxLevel ("
                     << d_tag_level->getBoxLevel()->getMPI().getCommunicator()
                     << " is not congruent with the MPI communicator ("
                     << d_mpi_object.getCommunicator()
@@ -932,8 +932,8 @@ BergerRigoutsos::checkMPICongruency() const
 
    /*
     * If a valid MPI communicator is given, use it instead of the
-    * tag_box_level's communicator.  It must be congruent with
-    * the tag_box_level's.
+    * tag BoxLevel's communicator.  It must be congruent with
+    * the tag BoxLevel's.
     */
 
    bool is_congruent = true;
@@ -1146,6 +1146,7 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
       }
    }
 }
+
 
 /*
  ***********************************************************************
