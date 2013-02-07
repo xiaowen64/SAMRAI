@@ -209,10 +209,11 @@ private:
    void
    assertNoMessageForPrivateCommunicator() const;
 
+   /*!
+    * @brief Sort boxes in d_new_box_level and update d_tag_to_new.
+    */
    void
-   sortOutputBoxes(
-      hier::BoxLevel& new_box_level,
-      hier::Connector& tag_to_new) const;
+   sortOutputBoxes();
 
    enum OwnerMode { SINGLE_OWNER = 0,
                     MOST_OVERLAP = 1,
@@ -370,30 +371,10 @@ private:
        * @brief Run the clustering algorithm to generate the new BoxLevel
        * and compute relationships (if specified by setComputeRelationships()).
        *
-       * If relationships computation is not specified, the Connectors are
-       * unchanged.
-       *
-       * @param new_box_level
-       * @param tag_to_new
-       * @param bound_boxes Contains one global bounding box for each
-       *                    block with a patch in tag_level.
-       * @param[in] tag_level
-       * @param mpi_object Alternative SAMRAI_MPI object.  If given,
-       *   must be congruent with the tag box_level's MPI communicator.
-       *   Specify tbox::SAMRAI_MPI::commNull if unused.  Highly recommend
-       *   using an isolated communicator to prevent message mix-ups.
-       *
-       * @pre !bound_boxes.isEmpty()
-       * @pre d_parent == 0
-       * @pre (d_common->getDim() == (*(bound_boxes.begin())).getDim()) &&
-       *      (d_common->getDim() == tag_level->getDim())
+       * Sets d_new_box_level and d_tag_to_new.
        */
       void
-      clusterAndComputeRelationships(
-         boost::shared_ptr<hier::BoxLevel>& new_box_level,
-         boost::shared_ptr<hier::Connector>& tag_to_new,
-         const boost::shared_ptr<hier::PatchLevel> &tag_level,
-         const hier::BoxContainer& bound_boxes);
+      clusterAndComputeRelationships();
 
       /*!
        * @brief Setup names of timers.
@@ -498,17 +479,6 @@ private:
          }
 
    //@}
-
-      /*!
-       * @brief Set whether to log dendogram node action history
-       * (useful for debugging).
-       */
-      void
-      setLogNodeHistory(
-         bool flag)
-         {
-            d_log_node_history = flag;
-         }
 
    const tbox::Dimension d_dim;
 

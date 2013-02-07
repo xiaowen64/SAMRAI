@@ -214,50 +214,10 @@ BergerRigoutsosNode::~BergerRigoutsosNode()
  ********************************************************************
  */
 void
-BergerRigoutsos::clusterAndComputeRelationships(
-   boost::shared_ptr<hier::BoxLevel>& new_box_level,
-   boost::shared_ptr<hier::Connector>& tag_to_new,
-   const boost::shared_ptr<hier::PatchLevel> &tag_level,
-   const hier::BoxContainer& bound_boxes)
+BergerRigoutsos::clusterAndComputeRelationships()
 {
-   TBOX_ASSERT(!bound_boxes.isEmpty());
-   TBOX_ASSERT_OBJDIM_EQUALITY2(
-      *(bound_boxes.begin()),
-      *tag_level);
-
    d_object_timers->t_cluster_and_compute_relationships->start();
 
-   resetCounters();
-
-   d_tag_level = tag_level;
-   d_root_boxes = bound_boxes;
-   tbox::plog << "Tag Level:\n" << tag_level->getBoxLevel()->format();
-
-   /*
-    * If d_mpi_object has not been set, then user wants to do use the
-    * MPI in tag_level (nothing special).  If it has been set, it is a
-    * duplicate MPI, so don't change it.
-    */
-   if ( d_mpi_object.getCommunicator() == MPI_COMM_NULL ) {
-      d_mpi_object = d_tag_level->getBoxLevel()->getMPI();
-      setupMPIDependentData();
-   }
-#if defined(DEBUG_CHECK_ASSERTIONS)
-   else {
-      if ( !checkMPICongruency() ) {
-         TBOX_ERROR("BergerRigoutsosNode::clusterAndComputeRelationships:\n"
-                    << "The communicator of the input tag_box_level ("
-                    << d_tag_level->getBoxLevel()->getMPI().getCommunicator()
-                    << " is not congruent with the MPI communicator ("
-                    << d_mpi_object.getCommunicator()
-                    << " duplicated in the call to useDuplicateMPI().\n"
-                    << "If you call useDuplicateMPI(), you are restricted\n"
-                    << "to using SAMRAI_MPI objects that are congruent with\n"
-                    << "the duplicated object."
-                    << std::endl);
-      }
-   }
-#endif
 
    /*
     * During the algorithm, we kept the results in primitive
@@ -450,21 +410,13 @@ BergerRigoutsos::clusterAndComputeRelationships(
 #endif
 
    if ( d_mpi_object == d_tag_level->getBoxLevel()->getMPI() ) {
+      /*
+       * We have been using an external SAMRAI_MPI.
+       * Reset it to avoid mistaking it for an internal one.
+       */
       d_mpi_object.setCommunicator(MPI_COMM_NULL);
    }
 
-
-   /*
-    * Set outputs.
-    * Clear temporary parameters that are only used during active
-    * clustering.
-    */
-   new_box_level = d_new_box_level;
-   tag_to_new = d_tag_to_new;
-
-   d_new_box_level.reset();
-   d_tag_to_new.reset();
-   d_tag_level.reset();
 }
 
 
@@ -3076,15 +3028,6 @@ BergerRigoutsos::setComputeRelationships(
    }
    TBOX_ASSERT(ghost_cell_width >= hier::IntVector::getZero(ghost_cell_width.getDim()));
    d_max_gcw = ghost_cell_width;
-}
-
-void
-BergerRigoutsos::setMinBoxSizeFromCutting(
-   const hier::IntVector& min_box_size_from_cutting)
-{
-   TBOX_ASSERT( min_box_size_from_cutting >=
-                hier::IntVector::getZero(min_box_size_from_cutting.getDim()) );
-   d_min_box_size_from_cutting = min_box_size_from_cutting;
 }
 
 /*
