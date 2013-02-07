@@ -205,7 +205,6 @@ protected:
       const boost::shared_ptr<tbox::Database>& input_db);
 
 private:
-   const tbox::Dimension d_dim;
 
    void
    assertNoMessageForPrivateCommunicator() const;
@@ -233,9 +232,6 @@ private:
    static void
    finalizeCallback();
 
-   //! @brief Communication object.
-   tbox::SAMRAI_MPI d_mpi;
-
    enum OwnerMode { SINGLE_OWNER = 0,
                     MOST_OVERLAP = 1,
                     FEWEST_OWNED = 2,
@@ -251,9 +247,6 @@ private:
                           SYNCHRONOUS };
 
    friend BergerRigoutsosNode;
-
-   //! @brief Parameters shared with BergerRigoutsosNode during clustering.
-   // BergerRigoutsosNode::CommonParams d_common;
 
       /*! @brief General parameter setter.
        * @param[in] tag_data_index
@@ -438,6 +431,27 @@ private:
          return d_tag_level->getDim();
       }
 
+   //@{
+      //! @name Counter methods.
+
+      void incNumNodesCommWait() {
+         ++d_num_nodes_commwait;
+         d_max_nodes_commwait =
+            tbox::MathUtilities<int>::Max(d_num_nodes_commwait,
+                                          d_max_nodes_commwait);
+      }
+      void decNumNodesCommWait() {
+         --d_num_nodes_commwait;
+      }
+      void writeCounters() {
+         tbox::plog << d_num_nodes_allocated << "-alloc  "
+                    << d_num_nodes_active << "-act  "
+                    << d_num_nodes_owned << "-owned  "
+                    << d_num_nodes_completed << "-done  "
+                    << d_relaunch_queue.size() << "-qd  "
+                    << d_num_nodes_commwait << "-wait  ";
+      }
+
       //! @brief Global number of tags in clusters.
       int
       getNumTags() const
@@ -501,6 +515,8 @@ private:
             return d_num_boxes_generated;
          }
 
+   //@}
+
       /*!
        * @brief Set whether to log dendogram node action history
        * (useful for debugging).
@@ -512,6 +528,7 @@ private:
             d_log_node_history = flag;
          }
 
+   const tbox::Dimension d_dim;
 
       //@{
       //! @name Timer data for this class.
@@ -576,24 +593,6 @@ private:
          const std::string& timer_prefix);
 
       //@}
-
-      void incNumNodesCommWait() {
-         ++d_num_nodes_commwait;
-         d_max_nodes_commwait =
-            tbox::MathUtilities<int>::Max(d_num_nodes_commwait,
-                                          d_max_nodes_commwait);
-      }
-      void decNumNodesCommWait() {
-         --d_num_nodes_commwait;
-      }
-      void writeCounters() {
-         tbox::plog << d_num_nodes_allocated << "-alloc  "
-                    << d_num_nodes_active << "-act  "
-                    << d_num_nodes_owned << "-owned  "
-                    << d_num_nodes_completed << "-done  "
-                    << d_relaunch_queue.size() << "-qd  "
-                    << d_num_nodes_commwait << "-wait  ";
-      }
 
       /*!
        * @brief Check the congruency between d_mpi and d_tag_level's MPI.

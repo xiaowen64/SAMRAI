@@ -444,12 +444,21 @@ BergerRigoutsos::clusterAndComputeRelationships(
    TBOX_ASSERT(d_tag_to_new->checkConsistencyWithHead() == 0);
    TBOX_ASSERT(d_tag_to_new->getTranspose().checkConsistencyWithBase() == 0);
    TBOX_ASSERT(d_tag_to_new->getTranspose().checkConsistencyWithHead() == 0);
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+   assertNoMessageForPrivateCommunicator();
+#endif
+
+   if ( d_mpi_object == d_tag_level->getBoxLevel()->getMPI() ) {
+      d_mpi_object.setCommunicator(MPI_COMM_NULL);
+   }
+
+
    /*
     * Set outputs.
     * Clear temporary parameters that are only used during active
     * clustering.
     */
-
    new_box_level = d_new_box_level;
    tag_to_new = d_tag_to_new;
 

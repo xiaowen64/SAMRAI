@@ -52,7 +52,6 @@ BergerRigoutsos::BergerRigoutsos(
    const tbox::Dimension& dim,
    const boost::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
-   // d_common(dim),
 
    d_object_timers(0),
    d_relaunch_queue(),
@@ -101,7 +100,6 @@ BergerRigoutsos::BergerRigoutsos(
    d_max_conts_to_complete(0),
    d_num_nodes_existing(0),
 
-   d_mpi(tbox::SAMRAI_MPI::commNull),
    // d_max_box_size(hier::IntVector(d_dim, tbox::MathUtilities<int>::getMax())),
    // d_max_inflection_cut_from_center(1.0),
    // d_inflection_cut_threshold_ar(0.0),
@@ -130,12 +128,12 @@ BergerRigoutsos::BergerRigoutsos(
 
 BergerRigoutsos::~BergerRigoutsos()
 {
-   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (d_mpi_object.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
       // Free the private communicator (if SAMRAI_MPI has not been finalized).
       int flag;
       tbox::SAMRAI_MPI::Finalized(&flag);
       if (!flag) {
-         d_mpi.freeCommunicator();
+         d_mpi_object.freeCommunicator();
       }
    }
 }
@@ -308,31 +306,6 @@ BergerRigoutsos::findBoxesContainingTags(
 
    const hier::BoxLevel& tag_box_level = *tag_level->getBoxLevel();
 
-   /*
-    * If using a duplicate MPI communicator, check that the duplicate
-    * and the communicator of the tag_box_level are congruent.
-    */
-   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
-      tbox::SAMRAI_MPI mpi1(d_mpi);
-      tbox::SAMRAI_MPI mpi2(tag_box_level.getMPI());
-      TBOX_ASSERT(mpi1.getSize() == mpi2.getSize());
-      TBOX_ASSERT(mpi1.getRank() == mpi2.getRank());
-      if (mpi1.getSize() > 1) {
-         int compare_result;
-         tbox::SAMRAI_MPI::Comm_compare(
-            d_mpi.getCommunicator(),
-            tag_box_level.getMPI().getCommunicator(),
-            &compare_result);
-         if (compare_result != MPI_CONGRUENT) {
-            TBOX_ERROR("BergerRigoutsos set-up error: MPI communicator\n"
-               << "set by setMPI() (" << d_mpi.getCommunicator()
-               << ") and the communicator of the input tag_box_level ("
-               << tag_box_level.getMPI().getCommunicator() << ") are not congruent."
-               << std::endl);
-         }
-      }
-   }
-
    t_find_boxes_with_tags->start();
 
    setParameters(
@@ -446,10 +419,6 @@ BergerRigoutsos::findBoxesContainingTags(
                  << "\n";
       t_logging->stop();
    }
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   assertNoMessageForPrivateCommunicator();
-#endif
 
    if (d_barrier_after) {
       t_barrier_after->start();
@@ -572,13 +541,14 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
     * that there is no messages in transit, but it can find
     * messages that have arrived but not received.
     */
-   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (d_mpi_object.getCommunicator() != tbox::SAMRAI_MPI::commNull &&
+       d_mpi_object != d_tag_level->getBoxLevel()->getMPI() ) {
       int flag;
       tbox::SAMRAI_MPI::Status mpi_status;
-      int mpi_err = d_mpi.Iprobe(MPI_ANY_SOURCE,
-                                 MPI_ANY_TAG,
-                                 &flag,
-                                 &mpi_status);
+      int mpi_err = d_mpi_object.Iprobe(MPI_ANY_SOURCE,
+                                        MPI_ANY_TAG,
+                                        &flag,
+                                        &mpi_status);
       if (mpi_err != MPI_SUCCESS) {
          TBOX_ERROR("Error probing for possible lost messages." << std::endl);
       }
