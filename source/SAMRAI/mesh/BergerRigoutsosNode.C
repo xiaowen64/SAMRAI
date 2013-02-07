@@ -467,6 +467,11 @@ BergerRigoutsos::clusterAndComputeRelationships(
    d_tag_level.reset();
 }
 
+
+/*
+ **************************************************************************
+ **************************************************************************
+ */
 void
 BergerRigoutsos::resetCounters()
 {
@@ -3155,7 +3160,12 @@ BergerRigoutsos::setObjectTimers(
    const std::string& timer_prefix)
 {
    d_object_timers = &s_static_timers[timer_prefix];
+
    tbox::TimerManager *tm = tbox::TimerManager::getManager();
+
+   d_object_timers->t_find_boxes_containing_tags = tm->
+      getTimer("mesh::BergerRigoutsos::findBoxesContainingTags()");
+
    d_object_timers->t_cluster = tm->
       getTimer(timer_prefix + "::cluster");
    d_object_timers->t_cluster_and_compute_relationships = tm->
@@ -3197,6 +3207,18 @@ BergerRigoutsos::setObjectTimers(
       getTimer(timer_prefix + "::bcast_child_groups");
    d_object_timers->t_bcast_to_dropouts = tm->
       getTimer(timer_prefix + "::bcast_to_dropouts");
+
+   // Pre- and post-processing timers.
+   d_object_timers->t_barrier_before = tm->
+      getTimer("mesh::BergerRigoutsos::barrier_before");
+   d_object_timers->t_barrier_after = tm->
+      getTimer("mesh::BergerRigoutsos::barrier_after");
+   d_object_timers->t_global_reductions = tm->
+      getTimer("mesh::BergerRigoutsos::global_reductions");
+   d_object_timers->t_sort_output_nodes = tm->
+      getTimer("mesh::BergerRigoutsos::sort_output_nodes");
+   d_object_timers->t_logging = tm->
+      getTimer("mesh::BergerRigoutsos::logging");
 }
 
 

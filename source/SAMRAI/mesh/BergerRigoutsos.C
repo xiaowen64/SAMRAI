@@ -25,22 +25,6 @@
 namespace SAMRAI {
 namespace mesh {
 
-boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_barrier_before;
-boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_barrier_after;
-boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_find_boxes_with_tags;
-boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_cluster_and_compute_relationships;
-boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_run_abr;
-boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_global_reductions;
-boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_logging;
-boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_sort_output_nodes;
-
-tbox::StartupShutdownManager::Handler
-BergerRigoutsos::s_initialize_finalize_handler(
-   BergerRigoutsos::initializeCallback,
-   0,
-   0,
-   BergerRigoutsos::finalizeCallback,
-   tbox::StartupShutdownManager::priorityTimers);
 
 /*
  ************************************************************************
@@ -216,19 +200,6 @@ BergerRigoutsos::getFromInput(
    }
 }
 
-#if 0
-/*
- *************************************************************************
- * Set the MPI communicator.
- *************************************************************************
- */
-void
-BergerRigoutsos::useDuplicateMPI(
-   const tbox::SAMRAI_MPI& mpi)
-{
-   d_common.useDuplicateMPI(mpi);
-}
-#endif
 
 /*
  ************************************************************************
@@ -292,9 +263,9 @@ BergerRigoutsos::findBoxesContainingTags(
    }
 
    if (d_barrier_before) {
-      t_barrier_before->start();
+      d_object_timers->t_barrier_before->start();
       mpi.Barrier();
-      t_barrier_before->stop();
+      d_object_timers->t_barrier_before->stop();
    }
 
    for ( hier::BoxContainer::const_iterator bi=bound_boxes.begin();
@@ -306,7 +277,7 @@ BergerRigoutsos::findBoxesContainingTags(
 
    const hier::BoxLevel& tag_box_level = *tag_level->getBoxLevel();
 
-   t_find_boxes_with_tags->start();
+   d_object_timers->t_find_boxes_containing_tags->start();
 
    setParameters(
       tag_data_index,
@@ -327,12 +298,10 @@ BergerRigoutsos::findBoxesContainingTags(
    // Set debugging/verbosity parameters.
    setLogNodeHistory(d_log_node_history);
 
-   t_cluster_and_compute_relationships->start();
    clusterAndComputeRelationships(new_box_level,
-                                           tag_to_new,
-                                           tag_level,
-                                           bound_boxes);
-   t_cluster_and_compute_relationships->stop();
+                                  tag_to_new,
+                                  tag_level,
+                                  bound_boxes);
 
    if (d_sort_output_nodes == true) {
       /*
@@ -351,29 +320,29 @@ BergerRigoutsos::findBoxesContainingTags(
     * Get some global parameters.  Do it before logging to prevent
     * the logging flag from having an undue side effect on performance.
     */
-   t_global_reductions->start();
+   d_object_timers->t_global_reductions->start();
    new_box_level->getGlobalNumberOfBoxes();
    new_box_level->getGlobalNumberOfCells();
    for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
         bi != bound_boxes.end(); ++bi) {
       new_box_level->getGlobalBoundingBox(bi->getBlockId().getBlockValue());
    }
-   t_global_reductions->stop();
+   d_object_timers->t_global_reductions->stop();
 
    if (d_log_cluster) {
-      t_logging->start();
+      d_object_timers->t_logging->start();
       tbox::plog << "BergerRigoutsos cluster log:\n"
                  << "\tNew box_level clustered by BergerRigoutsos:\n" << new_box_level->format("",
                                                                                                2)
                  << "\tBergerRigoutsos tag_to_new:\n" << tag_to_new->format("", 2)
                  << "\tBergerRigoutsos new_to_tag:\n" << tag_to_new->getTranspose().format("", 2);
-      t_logging->stop();
+      d_object_timers->t_logging->stop();
    }
    if (d_log_cluster_summary) {
       /*
        * Log summary of clustering and dendogram.
        */
-      t_logging->start();
+      d_object_timers->t_logging->start();
       tbox::plog << "BergerRigoutsos summary:\n"
                  << "\tAsync BR on proc " << mpi.getRank()
                  << " owned "
@@ -417,16 +386,16 @@ BergerRigoutsos::findBoxesContainingTags(
                  << "\tBergerRigoutsos tag_to_new summary:\n" << tag_to_new->format("\t\t",0)
                  << "\tBergerRigoutsos tag_to_new statistics:\n" << tag_to_new->formatStatistics("\t\t")
                  << "\n";
-      t_logging->stop();
+      d_object_timers->t_logging->stop();
    }
 
    if (d_barrier_after) {
-      t_barrier_after->start();
+      d_object_timers->t_barrier_after->start();
       mpi.Barrier();
-      t_barrier_after->stop();
+      d_object_timers->t_barrier_after->stop();
    }
 
-   t_find_boxes_with_tags->stop();
+   d_object_timers->t_find_boxes_containing_tags->stop();
 }
 
 /*
@@ -439,7 +408,7 @@ BergerRigoutsos::sortOutputBoxes(
    hier::Connector& tag_to_new) const
 {
 
-   t_sort_output_nodes->start();
+   d_object_timers->t_sort_output_nodes->start();
 
    TBOX_ASSERT(tag_to_new.hasTranspose());
    hier::Connector& new_to_tag = tag_to_new.getTranspose();
@@ -524,7 +493,7 @@ BergerRigoutsos::sortOutputBoxes(
       }
    }
 
-   t_sort_output_nodes->stop();
+   d_object_timers->t_sort_output_nodes->stop();
 }
 
 /*
@@ -569,50 +538,6 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
    }
 }
 
-/*
-***********************************************************************
-***********************************************************************
-*/
-void
-BergerRigoutsos::initializeCallback()
-{
-   TBOX_ASSERT(!t_global_reductions);
-   t_run_abr = tbox::TimerManager::getManager()->
-      getTimer("mesh::BergerRigoutsos::run_abr");
-   t_find_boxes_with_tags = tbox::TimerManager::getManager()->
-      getTimer("mesh::BergerRigoutsos::find_boxes_with_tags");
-   t_cluster_and_compute_relationships = tbox::TimerManager::getManager()->
-      getTimer("mesh::BergerRigoutsos::cluster_and_compute_relationships");
-   t_global_reductions = tbox::TimerManager::getManager()->
-      getTimer("mesh::BergerRigoutsos::global_reductions");
-   t_logging = tbox::TimerManager::getManager()->
-      getTimer("mesh::BergerRigoutsos::logging");
-   t_sort_output_nodes = tbox::TimerManager::getManager()->
-      getTimer("mesh::BergerRigoutsos::sort_output_nodes");
-   t_barrier_before = tbox::TimerManager::getManager()->
-      getTimer("mesh::BergerRigoutsos::barrier_before");
-   t_barrier_after = tbox::TimerManager::getManager()->
-      getTimer("mesh::BergerRigoutsos::barrier_after");
-}
-
-/*
-***************************************************************************
-*
-* Release static timers.  To be called by shutdown registry to make sure
-* memory for timers does not leak.
-*
-***************************************************************************
-*/
-void
-BergerRigoutsos::finalizeCallback()
-{
-   t_barrier_before.reset();
-   t_barrier_after.reset();
-   t_find_boxes_with_tags.reset();
-   t_run_abr.reset();
-   t_global_reductions.reset();
-   t_sort_output_nodes.reset();
-}
 
 }
 }

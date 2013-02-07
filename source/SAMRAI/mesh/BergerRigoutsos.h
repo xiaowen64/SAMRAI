@@ -214,24 +214,6 @@ private:
       hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new) const;
 
-   /*!
-    * @brief Set up things for the entire class.
-    *
-    * Only called by StartupShutdownManager.
-    *
-    * @pre !t_global_reductions
-    */
-   static void
-   initializeCallback();
-
-   /*!
-    * @brief Free static timers.
-    *
-    * Only called by StartupShutdownManager.
-    */
-   static void
-   finalizeCallback();
-
    enum OwnerMode { SINGLE_OWNER = 0,
                     MOST_OVERLAP = 1,
                     FEWEST_OWNED = 2,
@@ -543,6 +525,10 @@ private:
        * corresponding to a prefix.
        */
       struct TimerStruct {
+         boost::shared_ptr<tbox::Timer> t_barrier_before;
+         boost::shared_ptr<tbox::Timer> t_barrier_after;
+
+         boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
          boost::shared_ptr<tbox::Timer> t_cluster;
          boost::shared_ptr<tbox::Timer> t_cluster_and_compute_relationships;
          boost::shared_ptr<tbox::Timer> t_continue_algorithm;
@@ -568,6 +554,10 @@ private:
          boost::shared_ptr<tbox::Timer> t_gather_grouping_criteria;
          boost::shared_ptr<tbox::Timer> t_bcast_child_groups;
          boost::shared_ptr<tbox::Timer> t_bcast_to_dropouts;
+
+         boost::shared_ptr<tbox::Timer> t_global_reductions;
+         boost::shared_ptr<tbox::Timer> t_logging;
+         boost::shared_ptr<tbox::Timer> t_sort_output_nodes;
       };
 
       //! @brief Default prefix for Timers.
@@ -790,17 +780,6 @@ private:
    bool d_barrier_after;
    //@}
 
-   static boost::shared_ptr<tbox::Timer> t_barrier_before;
-   static boost::shared_ptr<tbox::Timer> t_barrier_after;
-   static boost::shared_ptr<tbox::Timer> t_cluster_and_compute_relationships;
-   static boost::shared_ptr<tbox::Timer> t_find_boxes_with_tags;
-   static boost::shared_ptr<tbox::Timer> t_run_abr;
-   static boost::shared_ptr<tbox::Timer> t_global_reductions;
-   static boost::shared_ptr<tbox::Timer> t_logging;
-   static boost::shared_ptr<tbox::Timer> t_sort_output_nodes;
-
-   static tbox::StartupShutdownManager::Handler
-      s_initialize_finalize_handler;
 
 };
 
