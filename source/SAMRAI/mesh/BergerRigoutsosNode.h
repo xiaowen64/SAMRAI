@@ -139,8 +139,7 @@ private:
    /*
     * BergerRigoutsos and BergerRigoutsosNode are very tightly
     * coupled.  BergerRigoutsos has the common parts of the data and
-    * algorithm.  BergerRigoutsosNode has the node-specific parts of
-    * the data algorithm.
+    * algorithm.  BergerRigoutsosNode has the node-specific parts.
     */
    friend BergerRigoutsos;
 

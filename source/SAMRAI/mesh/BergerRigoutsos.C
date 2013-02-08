@@ -106,7 +106,7 @@ BergerRigoutsos::BergerRigoutsos(
     */
    getFromInput(input_db);
 
-   setObjectTimers(s_default_timer_prefix);
+   setTimerPrefix(s_default_timer_prefix);
    // Set the timer for the communication stage's MPI waiting.
    d_comm_stage.setCommunicationWaitTimer(d_object_timers->t_MPI_wait);
 }
@@ -304,6 +304,7 @@ BergerRigoutsos::findBoxesContainingTags(
    d_tag_level = tag_level;
    d_root_boxes = bound_boxes;
 
+
    /*
     * If d_mpi_object has not been set, then user wants to do use the
     * MPI in tag_level (nothing special).  If it has been set, it is a
@@ -329,6 +330,7 @@ BergerRigoutsos::findBoxesContainingTags(
       }
    }
 #endif
+
 
    clusterAndComputeRelationships();
 
@@ -418,6 +420,16 @@ BergerRigoutsos::findBoxesContainingTags(
       d_object_timers->t_logging->stop();
    }
 
+
+   if ( d_mpi_object == d_tag_level->getBoxLevel()->getMPI() ) {
+      /*
+       * We have been using an external SAMRAI_MPI.
+       * Reset it to avoid mistaking it for an internal one.
+       */
+      d_mpi_object.setCommunicator(MPI_COMM_NULL);
+   }
+
+
    /*
     * Set outputs.  Clear temporary parameters that are only used
     * during active clustering.
@@ -475,19 +487,11 @@ BergerRigoutsos::clusterAndComputeRelationships()
 
    d_object_timers->t_cluster->start();
 
-   /*
-    * If compute_relationships == 1:
-    *   - Compute relationships from tagged level to new levels.
-    *     These relationships are organized around the tagged nodes.
-    *     They do not need to be shared with the owners of the
-    *     new nodes.
-    *
-    * If compute_relationships == 2:
-    *   - Compute relationships as in compute_relationships == 1 case.
-    *   - Owners of new relationships send new relationship data to owners
-    *     of new nodes.  This creates the neighbor data
-    *     organized around the new nodes.
-    */
+
+   // Clear out communication data or it will mess up this clustering run.
+   d_relationship_senders.clear();
+   d_relationship_messages.clear();
+
 
    if (d_compute_relationships > 0) {
 
@@ -504,12 +508,10 @@ BergerRigoutsos::clusterAndComputeRelationships()
       TBOX_ASSERT(
          static_cast<int>(d_tag_level->getBoxLevel()->getLocalNumberOfBoxes()) ==
          d_tag_to_new->getLocalNumberOfNeighborSets());
-
    }
 
-   TBOX_ASSERT(d_algo_advance_mode == ADVANCE_SOME ||
-      d_algo_advance_mode == ADVANCE_ANY ||
-      d_algo_advance_mode == SYNCHRONOUS);            // No other supported currently.
+
+
    {
 
       /*
@@ -619,11 +621,10 @@ BergerRigoutsos::clusterAndComputeRelationships()
     */
    if (d_compute_relationships > 1) {
       shareNewNeighborhoodSetsWithOwners();
+      d_relationship_senders.clear();
+      d_relationship_messages.clear();
    }
 
-   // Clear out communication data or it will mess up next clustering run.
-   d_relationship_senders.clear();
-   d_relationship_messages.clear();
 
    d_object_timers->t_cluster_and_compute_relationships->stop();
 
@@ -637,14 +638,6 @@ BergerRigoutsos::clusterAndComputeRelationships()
 #ifdef DEBUG_CHECK_ASSERTIONS
    assertNoMessageForPrivateCommunicator();
 #endif
-
-   if ( d_mpi_object == d_tag_level->getBoxLevel()->getMPI() ) {
-      /*
-       * We have been using an external SAMRAI_MPI.
-       * Reset it to avoid mistaking it for an internal one.
-       */
-      d_mpi_object.setCommunicator(MPI_COMM_NULL);
-   }
 
 }
 
@@ -1158,82 +1151,74 @@ BergerRigoutsos::setTimerPrefix(
 {
    std::map<std::string, TimerStruct>::iterator ti(
       s_static_timers.find(timer_prefix));
+
    if (ti != s_static_timers.end()) {
       d_object_timers = &(ti->second);
    } else {
-      setObjectTimers(timer_prefix);
+
+      d_object_timers = &s_static_timers[timer_prefix];
+
+      tbox::TimerManager *tm = tbox::TimerManager::getManager();
+
+      d_object_timers->t_find_boxes_containing_tags = tm->
+         getTimer("mesh::BergerRigoutsos::findBoxesContainingTags()");
+
+      d_object_timers->t_cluster = tm->
+         getTimer(timer_prefix + "::cluster");
+      d_object_timers->t_cluster_and_compute_relationships = tm->
+         getTimer(timer_prefix + "::clusterAndComputeRelationships()");
+      d_object_timers->t_continue_algorithm = tm->
+         getTimer(timer_prefix + "::continueAlgorithm()");
+
+      d_object_timers->t_compute = tm->
+         getTimer(timer_prefix + "::compute");
+      d_object_timers->t_comm_wait = tm->
+         getTimer(timer_prefix + "::Comm_wait");
+      d_object_timers->t_MPI_wait = tm->
+         getTimer(timer_prefix + "::MPI_wait");
+
+      d_object_timers->t_compute_new_neighborhood_sets = tm->
+         getTimer(timer_prefix + "::computeNewNeighborhoodSets()");
+      d_object_timers->t_share_new_relationships = tm->
+         getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()");
+      d_object_timers->t_share_new_relationships_send = tm->
+         getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()_send");
+      d_object_timers->t_share_new_relationships_recv = tm->
+         getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()_recv");
+      d_object_timers->t_share_new_relationships_unpack = tm->
+         getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()_unpack");
+
+      d_object_timers->t_local_histogram = tm->
+         getTimer(timer_prefix + "::makeLocalTagHistogram()");
+      d_object_timers->t_local_tasks = tm->
+         getTimer(timer_prefix + "::continueAlgorithm()_local_tasks");
+
+      // Multi-stage timers
+      d_object_timers->t_reduce_histogram = tm->
+         getTimer(timer_prefix + "::reduce_histogram");
+      d_object_timers->t_bcast_acceptability = tm->
+         getTimer(timer_prefix + "::bcast_acceptability");
+      d_object_timers->t_gather_grouping_criteria = tm->
+         getTimer(timer_prefix + "::gather_grouping_criteria");
+      d_object_timers->t_bcast_child_groups = tm->
+         getTimer(timer_prefix + "::bcast_child_groups");
+      d_object_timers->t_bcast_to_dropouts = tm->
+         getTimer(timer_prefix + "::bcast_to_dropouts");
+
+      // Pre- and post-processing timers.
+      d_object_timers->t_barrier_before = tm->
+         getTimer("mesh::BergerRigoutsos::barrier_before");
+      d_object_timers->t_barrier_after = tm->
+         getTimer("mesh::BergerRigoutsos::barrier_after");
+      d_object_timers->t_global_reductions = tm->
+         getTimer("mesh::BergerRigoutsos::global_reductions");
+      d_object_timers->t_sort_output_nodes = tm->
+         getTimer("mesh::BergerRigoutsos::sort_output_nodes");
+      d_object_timers->t_logging = tm->
+         getTimer("mesh::BergerRigoutsos::logging");
    }
 }
 
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void
-BergerRigoutsos::setObjectTimers(
-   const std::string& timer_prefix)
-{
-   d_object_timers = &s_static_timers[timer_prefix];
-
-   tbox::TimerManager *tm = tbox::TimerManager::getManager();
-
-   d_object_timers->t_find_boxes_containing_tags = tm->
-      getTimer("mesh::BergerRigoutsos::findBoxesContainingTags()");
-
-   d_object_timers->t_cluster = tm->
-      getTimer(timer_prefix + "::cluster");
-   d_object_timers->t_cluster_and_compute_relationships = tm->
-      getTimer(timer_prefix + "::clusterAndComputeRelationships()");
-   d_object_timers->t_continue_algorithm = tm->
-      getTimer(timer_prefix + "::continueAlgorithm()");
-
-   d_object_timers->t_compute = tm->
-      getTimer(timer_prefix + "::compute");
-   d_object_timers->t_comm_wait = tm->
-      getTimer(timer_prefix + "::Comm_wait");
-   d_object_timers->t_MPI_wait = tm->
-      getTimer(timer_prefix + "::MPI_wait");
-
-   d_object_timers->t_compute_new_graph_relationships = tm->
-      getTimer(timer_prefix + "::computeNewNeighborhoodSets()");
-   d_object_timers->t_share_new_relationships = tm->
-      getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()");
-   d_object_timers->t_share_new_relationships_send = tm->
-      getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()_send");
-   d_object_timers->t_share_new_relationships_recv = tm->
-      getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()_recv");
-   d_object_timers->t_share_new_relationships_unpack = tm->
-      getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()_unpack");
-
-   d_object_timers->t_local_histogram = tm->
-      getTimer(timer_prefix + "::makeLocalTagHistogram()");
-   d_object_timers->t_local_tasks = tm->
-      getTimer(timer_prefix + "::continueAlgorithm()_local_tasks");
-
-   // Multi-stage timers
-   d_object_timers->t_reduce_histogram = tm->
-      getTimer(timer_prefix + "::reduce_histogram");
-   d_object_timers->t_bcast_acceptability = tm->
-      getTimer(timer_prefix + "::bcast_acceptability");
-   d_object_timers->t_gather_grouping_criteria = tm->
-      getTimer(timer_prefix + "::gather_grouping_criteria");
-   d_object_timers->t_bcast_child_groups = tm->
-      getTimer(timer_prefix + "::bcast_child_groups");
-   d_object_timers->t_bcast_to_dropouts = tm->
-      getTimer(timer_prefix + "::bcast_to_dropouts");
-
-   // Pre- and post-processing timers.
-   d_object_timers->t_barrier_before = tm->
-      getTimer("mesh::BergerRigoutsos::barrier_before");
-   d_object_timers->t_barrier_after = tm->
-      getTimer("mesh::BergerRigoutsos::barrier_after");
-   d_object_timers->t_global_reductions = tm->
-      getTimer("mesh::BergerRigoutsos::global_reductions");
-   d_object_timers->t_sort_output_nodes = tm->
-      getTimer("mesh::BergerRigoutsos::sort_output_nodes");
-   d_object_timers->t_logging = tm->
-      getTimer("mesh::BergerRigoutsos::logging");
-}
 
 
 }

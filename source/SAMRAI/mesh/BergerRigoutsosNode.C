@@ -1532,6 +1532,8 @@ BergerRigoutsosNode::acceptOrSplitBox()
           * only the thickest direction.  This leads to more cubic
           * boxes but can miss feature edges aligned across other
           * directions.
+          *
+          * Experiments show that a value of 4 works well.
           */
          int max_box_length_to_leave = boxdims(max_margin_dir) - 1;
          if ( d_common->d_inflection_cut_threshold_ar > 0.0 ) {
@@ -2095,7 +2097,7 @@ BergerRigoutsosNode::formChildGroups()
 void
 BergerRigoutsosNode::computeNewNeighborhoodSets()
 {
-   d_common->d_object_timers->t_compute_new_graph_relationships->start();
+   d_common->d_object_timers->t_compute_new_neighborhood_sets->start();
    TBOX_ASSERT(d_common->d_compute_relationships > 0);
    TBOX_ASSERT(d_accepted_box.getLocalId() >= 0);
    TBOX_ASSERT(boxAccepted());
@@ -2211,7 +2213,7 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
       d_common->d_relationship_senders.insert(d_group.begin(), d_group.end());
    }
 
-   d_common->d_object_timers->t_compute_new_graph_relationships->stop();
+   d_common->d_object_timers->t_compute_new_neighborhood_sets->stop();
 }
 
 /*
