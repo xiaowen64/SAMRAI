@@ -472,17 +472,18 @@ BergerRigoutsos::clusterAndComputeRelationships()
    d_object_timers->t_cluster->start();
 
 
-   // Clear out communication data or it will mess up this clustering run.
+   /*
+    * Clear out accumulated communication data or it will mess up this
+    * clustering run.
+    */
    d_relationship_senders.clear();
    d_relationship_messages.clear();
 
 
    if (d_compute_relationships > 0) {
-
       /*
-       * Create empty neighbor lists for nodes on tagged box_level.
-       * As new nodes are finalized, they will be added to
-       * these lists.
+       * Create empty neighbor lists for nodes on tag level.  As new
+       * nodes are finalized, they will be added to these lists.
        */
       const hier::BoxContainer& tag_boxes = d_tag_level->getBoxLevel()->getBoxes();
       for (hier::RealBoxConstIterator ni(tag_boxes.realBegin());
@@ -537,7 +538,7 @@ BergerRigoutsos::clusterAndComputeRelationships()
             }
             node_for_relaunch->continueAlgorithm();
             if (d_log_do_loop) {
-               tbox::plog << "Exiting continueAlgorithm ";
+               tbox::plog << "Exited continueAlgorithm ";
                node_for_relaunch->printNodeState(tbox::plog);
                tbox::plog << std::endl;
             }
@@ -550,7 +551,7 @@ BergerRigoutsos::clusterAndComputeRelationships()
             static_cast<int>(d_comm_stage.advanceSome());
          d_object_timers->t_comm_wait->stop();
 
-         // Continue nodes with completed receives.
+         // Continue nodes with completed messages.
          d_object_timers->t_compute->start();
          while ( d_comm_stage.numberOfCompletedMembers() > 0 ) {
             BergerRigoutsosNode* node_for_relaunch =
@@ -562,7 +563,7 @@ BergerRigoutsos::clusterAndComputeRelationships()
             }
             node_for_relaunch->continueAlgorithm();
             if (d_log_do_loop) {
-               tbox::plog << "Exiting continueAlgorithm ";
+               tbox::plog << "Exited continueAlgorithm ";
                node_for_relaunch->printNodeState(tbox::plog);
                tbox::plog << std::endl;
             }

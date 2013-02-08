@@ -39,15 +39,8 @@ TileClustering::TileClustering(
    d_log_cluster_summary(false),
    d_barrier_and_time(false)
 {
-
-   /*
-    * Set database-dependent parameters or cache them for use
-    * when we construct a dendogram root.
-    */
    getFromInput(input_db);
-
    setTimers();
-
 }
 
 TileClustering::~TileClustering()
@@ -82,18 +75,8 @@ TileClustering::getFromInput(
 
 /*
  ************************************************************************
- *
  * Implement the BoxGeneratorStrategy interface method using
  * the asynchronous Berger-Rigoutsos implementation.
- *
- * Create objects for using the ABR recursion tree, set options for
- * using the ABR implementation, then run it.
- *
- * The output boxes from the dendogram root is in the form of a
- * BoxLevel.  This method postprocess that data to
- * convert the output to the box list form required by the
- * box clustering strategy interface.
- *
  ************************************************************************
  */
 void
@@ -290,7 +273,7 @@ TileClustering::findBoxesContainingTags(
    }
    if (d_log_cluster_summary) {
       /*
-       * Log summary of clustering and dendogram.
+       * Log summary of clustering.
        */
       tbox::plog << "TileClustering summary:\n";
 

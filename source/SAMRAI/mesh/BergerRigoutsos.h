@@ -52,7 +52,7 @@ class BergerRigoutsosNode;
  *   processors and work adequately for lower numbers of processors.
  *
  * - std::string @b DEV_owner_mode ("MOST_OVERLAP"):
- *   How to chose the owner from a dendogram node group.
+ *   How to chose the owner from a node group.
  *   This std::string is used in BergerRigoutsosNode::setOwnerMode().
  *
  * - bool @b sort_output_nodes (false):
@@ -101,7 +101,7 @@ class BergerRigoutsosNode;
  * Debugging inputs (default):
  *
  * - bool @b DEV_log_node_history (false):
- *   Whether to log what certain actions of nodes in the dendogram.
+ *   Whether to log what certain actions of nodes in the tree.
  *   This degrades the performance but is a very useful debugging
  *   tool.
  *
@@ -260,9 +260,9 @@ private:
     * Choices are:
     * - @b "SYNCHRONOUS" --> wait for each communication stage to complete
     *   before moving on, thus resulting in synchronous execution.
-    * - @b "ADVANCE_ANY" --> advance an dendogram node through its
+    * - @b "ADVANCE_ANY" --> advance a node through its
     *   communication stage by using tbox::AsyncCommStage::advanceAny().
-    * - @b "ADVANCE_SOME" --> advance an dendogram node through its
+    * - @b "ADVANCE_SOME" --> advance a node through its
     *   communication stage by using tbox::AsyncCommStage::advanceSome().
     *
     * The default is "ADVANCE_SOME".
@@ -289,15 +289,15 @@ private:
     *   overlap on the candidate box.  Default.
     * - "SINGLE_OWNER"
     *   In single-owner mode, the initial owner (process 0)
-    *   always participates and owns all dendogram nodes.
+    *   always participates and owns all nodes.
     * - "FEWEST_OWNED"
-    *   Choose the processor that owns the fewest dendogram
+    *   Choose the processor that owns the fewest
     *   nodes when the choice is made.  This is meant to
     *   relieve bottle-necks caused by excessive ownership.
     *   This option may lead to non-deterministic ownerships.
     * - "LEAST_ACTIVE"
     *   Choose the processor that participates in the fewest
-    *   number of dendogram nodes when the choice is made.
+    *   number of nodes when the choice is made.
     *   This is meant to relieve bottle-necks caused by
     *   excessive participation. This option may lead to
     *   non-deterministic ownerships.
@@ -360,28 +360,28 @@ private:
          return d_max_tags_owned;
       }
 
-   //! @brief Max number of local nodes for dendogram.
+   //! @brief Max number of local nodes.
    int
    getMaxNodes() const
       {
          return d_max_nodes_existing;
       }
 
-   //! @brief max generation count for the local nodes in the dendogram.
+   //! @brief max generation count for the local nodes.
    int
    getMaxGeneration() const
       {
          return d_max_generation;
       }
 
-   //! @brief Max number of locally owned nodes in the dendogram.
+   //! @brief Max number of locally owned nodes.
    int
    getMaxOwnership() const
       {
          return d_max_nodes_owned;
       }
 
-   //! @brief Average number of continuations for local nodes in dendogram.
+   //! @brief Average number of continuations for local nodes.
    double
    getAvgNumberOfCont() const
       {
@@ -392,7 +392,7 @@ private:
          return 0;
       }
 
-   //! @brief Max number of continuations for local nodes in dendogram.
+   //! @brief Max number of continuations for local nodes.
    int
    getMaxNumberOfCont() const
       {
@@ -603,8 +603,7 @@ private:
    //@{
    //! @name Communication parameters
    /*!
-    * @brief MPI communicator used in all communications in the
-    * dendogram.
+    * @brief MPI communicator used in communications by the algorithm.
     *
     * @see useDuplicateMPI().
     */

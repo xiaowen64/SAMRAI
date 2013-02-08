@@ -496,7 +496,7 @@ BergerRigoutsosNode::continueAlgorithm()
    } else {
       /*
        * This process is not in the group that decides on the box for
-       * this dendogram node.
+       * this node.
        */
       TBOX_ASSERT(!inGroup(d_group));
    }
@@ -523,7 +523,7 @@ BergerRigoutsosNode::continueAlgorithm()
    /*
     * Broadcast the result to dropouts.
     * Dropout processes are those that participated in the
-    * parent but not in this dendogram node.  They need the
+    * parent but not in this node.  They need the
     * result to perform combined efficiency check for the
     * parent.
     *
@@ -540,7 +540,7 @@ BergerRigoutsosNode::continueAlgorithm()
     *      know results to do recombination check, to determine
     *      if parent box is preferred.
     *
-    *    - This is NOT the root dendogram node.  The root node
+    *    - This is NOT the root node.  The root node
     *      has no parent and no corresponding dropout group.
     *
     *    - Dropout group is not empty.  Number of dropouts
