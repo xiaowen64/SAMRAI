@@ -141,7 +141,7 @@ private:
     * coupled.  BergerRigoutsos has the common parts of the data and
     * algorithm.  BergerRigoutsosNode has the node-specific parts.
     */
-   friend BergerRigoutsos;
+   friend class BergerRigoutsos;
 
    /*!
     * @brief Construct a non-root node.

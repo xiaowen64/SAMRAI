@@ -228,7 +228,7 @@ private:
     * coupled.  BergerRigoutsos has the common parts of the data and
     * algorithm.  BergerRigoutsosNode has the node-specific parts.
     */
-   friend BergerRigoutsosNode;
+   friend class BergerRigoutsosNode;
 
    /*!
     * @brief How to choose owner for a new box.
