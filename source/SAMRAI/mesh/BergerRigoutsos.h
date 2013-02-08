@@ -364,7 +364,7 @@ private:
    int
    getMaxNodes() const
       {
-         return d_max_nodes_allocated;
+         return d_max_nodes_existing;
       }
 
    //! @brief max generation count for the local nodes in the dendogram.
@@ -455,28 +455,45 @@ private:
    //@{
    //! @name Counter methods.
 
-   //! @brief Reset analysis counters.
    void resetCounters();
+   void writeCounters();
 
+   void incNumNodesConstructed() { ++d_num_nodes_constructed; }
+
+   void incNumNodesExisting() {
+      ++d_num_nodes_existing;
+      d_max_nodes_existing =
+         tbox::MathUtilities<int>::Max(d_num_nodes_existing, d_max_nodes_existing);
+   }
+   void incNumNodesActive() {
+      ++d_num_nodes_active;
+      d_max_nodes_active =
+         tbox::MathUtilities<int>::Max(d_num_nodes_active, d_max_nodes_active);
+   }
+   void incNumNodesOwned() {
+      ++d_num_nodes_owned;
+      d_max_nodes_owned =
+         tbox::MathUtilities<int>::Max(d_num_nodes_owned, d_max_nodes_owned);
+   }
    void incNumNodesCommWait() {
       ++d_num_nodes_commwait;
       d_max_nodes_commwait =
-         tbox::MathUtilities<int>::Max(d_num_nodes_commwait,
-                                       d_max_nodes_commwait);
+         tbox::MathUtilities<int>::Max(d_num_nodes_commwait, d_max_nodes_commwait);
+   }
+   void incNumNodesCompleted() {
+      ++d_num_nodes_completed;
+   }
+   void incNumContinues(int num_continues) {
+      d_num_conts_to_complete += num_continues;
+      d_max_conts_to_complete =
+         tbox::MathUtilities<int>::Max(d_max_conts_to_complete, num_continues);
    }
 
-   void decNumNodesCommWait() {
-      --d_num_nodes_commwait;
-   }
-
-   void writeCounters() {
-      tbox::plog << d_num_nodes_allocated << "-alloc  "
-                 << d_num_nodes_active << "-act  "
-                 << d_num_nodes_owned << "-owned  "
-                 << d_num_nodes_completed << "-done  "
-                 << d_relaunch_queue.size() << "-qd  "
-                 << d_num_nodes_commwait << "-wait  ";
-   }
+   void decNumNodesConstructed() { --d_num_nodes_constructed; }
+   void decNumNodesExisting() { --d_num_nodes_existing; }
+   void decNumNodesActive() { --d_num_nodes_active; }
+   void decNumNodesOwned() { --d_num_nodes_owned; }
+   void decNumNodesCommWait() { --d_num_nodes_commwait; }
 
    //@}
 
@@ -602,48 +619,65 @@ private:
    //@{
    //! @name Auxiliary data for analysis and debugging.
 
-   //TODO: Are these counters multiblock?  If not, which block?  Make them consistent.
+   //! @brief Whether to log major actions of primary do loop.
+   bool d_log_do_loop;
 
-   //! @brief Whether to log major actions of dendogram node.
+   //! @brief Whether to log major actions of nodes.
    bool d_log_node_history;
+
    //! @brief Whether to briefly log cluster summary.
    bool d_log_cluster_summary;
+
    //! @brief Whether to log cluster summary.
    bool d_log_cluster;
+
    //! @brief How to resolve initial boxes smaller than min box size.
    char d_check_min_box_size;
+
    //! @brief Number of tags.
    int d_num_tags_in_all_nodes;
+
    //! @brief Max number of tags owned.
    int d_max_tags_owned;
-   //! @brief Current number of dendogram nodes allocated.
-   int d_num_nodes_allocated;
-   //! @brief Highest number of dendogram nodes allocated.
-   int d_max_nodes_allocated;
-   //! @brief Current number of dendogram nodes active.
+
+   //! @brief Number of nodes constructed.
+   int d_num_nodes_constructed;
+
+   //! @brief Current number of nodes existing.
+   int d_num_nodes_existing;
+   //! @brief Highest number of nodes existing.
+   int d_max_nodes_existing;
+
+   //! @brief Current number of nodes active.
    int d_num_nodes_active;
-   //! @brief Highest number of dendogram nodes active.
+   //! @brief Highest number of nodes active.
    int d_max_nodes_active;
-   //! @brief Current number of dendogram nodes owned.
+
+   //! @brief Current number of nodes owned.
    int d_num_nodes_owned;
-   //! @brief Highest number of dendogram nodes owned.
+   //! @brief Highest number of nodes owned.
    int d_max_nodes_owned;
-   //! @brief Current number of dendogram nodes in communication wait.
+
+   //! @brief Current number of nodes in communication wait.
    int d_num_nodes_commwait;
-   //! @brief Highest number of dendogram nodes in communication wait.
+   //! @brief Highest number of nodes in communication wait.
    int d_max_nodes_commwait;
+
    //! @brief Current number of completed.
    int d_num_nodes_completed;
+
    //! @brief Highest number of generation.
    int d_max_generation;
+
    //! @brief Current number of boxes generated.
    int d_num_boxes_generated;
+
    //! @brief Number of continueAlgorithm calls for to complete nodes.
    int d_num_conts_to_complete;
+
    //! @brief Highest number of continueAlgorithm calls to complete nodes.
    int d_max_conts_to_complete;
 
-   int d_num_nodes_existing;
    //@}
 
 

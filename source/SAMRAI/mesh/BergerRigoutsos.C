@@ -36,42 +36,54 @@ namespace mesh {
 BergerRigoutsos::BergerRigoutsos(
    const tbox::Dimension& dim,
    const boost::shared_ptr<tbox::Database>& input_db):
+
    d_dim(dim),
 
-   d_object_timers(0),
-   d_relaunch_queue(),
-   d_comm_stage(),
-   d_algo_advance_mode(ADVANCE_SOME),
-   d_new_box_level(),
-   d_tag_to_new(),
-   d_root_boxes(),
-   // Parameters not from clustering algorithm interface ...
-   d_max_inflection_cut_from_center(1.0),
-   d_inflection_cut_threshold_ar(0.0),
-   d_max_box_size(hier::IntVector(dim, tbox::MathUtilities<int>::getMax())),
-   d_min_box_size_from_cutting(dim, 0),
    // Parameters from clustering algorithm interface ...
    d_tag_data_index(-1),
    d_tag_val(1),
    d_min_box(dim),
    d_efficiency_tol(0.80),
    d_combine_tol(0.80),
+   d_max_gcw(dim, 1),
+
+   d_tag_level(),
+   d_new_box_level(),
+   d_tag_to_new(),
+   d_root_boxes(),
+
+   // Parameters not from clustering algorithm interface ...
+   d_max_box_size(hier::IntVector(dim, tbox::MathUtilities<int>::getMax())),
+   d_max_inflection_cut_from_center(1.0),
+   d_inflection_cut_threshold_ar(0.0),
+   d_algo_advance_mode(ADVANCE_SOME),
+   d_owner_mode(MOST_OVERLAP),
+
    // Implementation flags and data...
    d_compute_relationships(2),
+   d_sort_output_nodes(false),
+   d_relaunch_queue(),
+   d_comm_stage(),
+   d_min_box_size_from_cutting(dim, 0),
    d_relationship_senders(),
    d_relationship_messages(),
-   d_max_gcw(dim, 1),
-   d_owner_mode(MOST_OVERLAP),
+
    // Communication parameters ...
    d_mpi_object(MPI_COMM_NULL),
    d_tag_upper_bound(-1),
    d_available_mpi_tag(-1),
+
    // Analysis support ...
+   d_log_do_loop(false),
    d_log_node_history(false),
+   d_log_cluster_summary(false),
+   d_log_cluster(false),
+   d_check_min_box_size('w'),
    d_num_tags_in_all_nodes(0),
    d_max_tags_owned(0),
-   d_num_nodes_allocated(0),
-   d_max_nodes_allocated(0),
+   d_num_nodes_constructed(0),
+   d_num_nodes_existing(0),
+   d_max_nodes_existing(0),
    d_num_nodes_active(0),
    d_max_nodes_active(0),
    d_num_nodes_owned(0),
@@ -83,32 +95,14 @@ BergerRigoutsos::BergerRigoutsos(
    d_num_boxes_generated(0),
    d_num_conts_to_complete(0),
    d_max_conts_to_complete(0),
-   d_num_nodes_existing(0),
 
-   // d_max_box_size(hier::IntVector(d_dim, tbox::MathUtilities<int>::getMax())),
-   // d_max_inflection_cut_from_center(1.0),
-   // d_inflection_cut_threshold_ar(0.0),
-   // d_log_node_history(false),
-   d_log_cluster_summary(false),
-   d_log_cluster(false),
-   // d_owner_mode("MOST_OVERLAP"),
-   // d_algo_advance_mode("ADVANCE_SOME"),
-   d_sort_output_nodes(false),
-   d_check_min_box_size('w'),
-   // d_min_box_size_from_cutting(d_dim, 0),
+   // Performance timing...
    d_barrier_before(false),
-   d_barrier_after(false)
+   d_barrier_after(false),
+   d_object_timers(0)
 {
-
-   /*
-    * Set database-dependent parameters or cache them for use
-    * when we construct a dendogram root.
-    */
    getFromInput(input_db);
-
    setTimerPrefix(s_default_timer_prefix);
-   // Set the timer for the communication stage's MPI waiting.
-   d_comm_stage.setCommunicationWaitTimer(d_object_timers->t_MPI_wait);
 }
 
 BergerRigoutsos::~BergerRigoutsos()
@@ -156,6 +150,8 @@ BergerRigoutsos::getFromInput(
             &d_min_box_size_from_cutting[0],
             d_dim.getValue());
       }
+      d_log_do_loop =
+         input_db->getBoolWithDefault("DEV_log_do_loop", false);
       d_log_node_history =
          input_db->getBoolWithDefault("DEV_log_node_history", false);
       d_log_cluster_summary =
@@ -165,21 +161,10 @@ BergerRigoutsos::getFromInput(
 
       std::string algo_advance_mode =
          input_db->getStringWithDefault("DEV_algo_advance_mode", "ADVANCE_SOME");
-      if (!(algo_advance_mode == "ADVANCE_SOME" ||
-            algo_advance_mode == "ADVANCE_ANY" ||
-            algo_advance_mode == "SYNCHRONOUS")) {
-         INPUT_VALUE_ERROR("DEV_algo_advance_mode");
-      }
       setAlgorithmAdvanceMode(algo_advance_mode);
 
       std::string owner_mode =
          input_db->getStringWithDefault("DEV_owner_mode", "MOST_OVERLAP");
-      if (!(owner_mode == "SINGLE_OWNER" ||
-            owner_mode == "MOST_OVERLAP" ||
-            owner_mode == "FEWEST_OWNED" ||
-            owner_mode == "LEAST_ACTIVE")) {
-         INPUT_VALUE_ERROR("DEV_owner_mode");
-      }
       setOwnerMode(owner_mode);
 
       d_sort_output_nodes =
@@ -208,10 +193,9 @@ BergerRigoutsos::getFromInput(
  * Implement the BoxGeneratorStrategy interface method using
  * the asynchronous Berger-Rigoutsos implementation.
  *
- * Create objects for using the ABR recursion tree, set options for
- * using the ABR implementation, then run it.
+ * Set options for using the ABR implementation, then run it.
  *
- * The output boxes from the dendogram root is in the form of a
+ * The output boxes from the tree root is in the form of a
  * BoxLevel.  This method postprocess that data to
  * convert the output to the box list form required by the
  * box clustering strategy interface.
@@ -371,7 +355,7 @@ BergerRigoutsos::findBoxesContainingTags(
    }
    if (d_log_cluster_summary) {
       /*
-       * Log summary of clustering and dendogram.
+       * Log summary of clustering and tree.
        */
       d_object_timers->t_logging->start();
       tbox::plog << "BergerRigoutsos summary:\n"
@@ -541,17 +525,18 @@ BergerRigoutsos::clusterAndComputeRelationships()
       int n_comm_group_completed = 0;
       do {
 
+         // Continue nodes in launch queue.
          d_object_timers->t_compute->start();
          while (!d_relaunch_queue.empty()) {
             BergerRigoutsosNode* node_for_relaunch = d_relaunch_queue.front();
             d_relaunch_queue.pop_front();
-            if (0) {
+            if (d_log_do_loop) {
                tbox::plog << "Continuing from queue ";
                node_for_relaunch->printNodeState(tbox::plog);
                tbox::plog << std::endl;
             }
             node_for_relaunch->continueAlgorithm();
-            if (0) {
+            if (d_log_do_loop) {
                tbox::plog << "Exiting continueAlgorithm ";
                node_for_relaunch->printNodeState(tbox::plog);
                tbox::plog << std::endl;
@@ -559,22 +544,24 @@ BergerRigoutsos::clusterAndComputeRelationships()
          }
          d_object_timers->t_compute->stop();
 
+         // Wait for some incoming messages.
          d_object_timers->t_comm_wait->start();
          n_comm_group_completed =
             static_cast<int>(d_comm_stage.advanceSome());
          d_object_timers->t_comm_wait->stop();
 
+         // Continue nodes with completed receives.
          d_object_timers->t_compute->start();
          while ( d_comm_stage.numberOfCompletedMembers() > 0 ) {
             BergerRigoutsosNode* node_for_relaunch =
                (BergerRigoutsosNode *)(d_comm_stage.popCompletionQueue()->getHandler());
-            if (0) {
+            if (d_log_do_loop) {
                tbox::plog << "Continuing from stage ";
                node_for_relaunch->printNodeState(tbox::plog);
                tbox::plog << std::endl;
             }
             node_for_relaunch->continueAlgorithm();
-            if (0) {
+            if (d_log_do_loop) {
                tbox::plog << "Exiting continueAlgorithm ";
                node_for_relaunch->printNodeState(tbox::plog);
                tbox::plog << std::endl;
@@ -582,7 +569,7 @@ BergerRigoutsos::clusterAndComputeRelationships()
          }
          d_object_timers->t_compute->stop();
 
-         if (0) {
+         if (d_log_do_loop) {
             tbox::plog << "relaunch_queue size "
                        << d_relaunch_queue.size()
                        << "   groups completed: " << n_comm_group_completed
@@ -862,8 +849,9 @@ BergerRigoutsos::resetCounters()
 {
    d_num_tags_in_all_nodes = 0;
    d_max_tags_owned = 0;
-   d_num_nodes_allocated = 0;
-   d_max_nodes_allocated = 0;
+   d_num_nodes_constructed = 0;
+   d_num_nodes_existing = 0;
+   d_max_nodes_existing = 0;
    d_num_nodes_active = 0;
    d_max_nodes_active = 0;
    d_num_nodes_owned = 0;
@@ -876,6 +864,21 @@ BergerRigoutsos::resetCounters()
    d_num_conts_to_complete = 0;
    d_max_conts_to_complete = 0;
    d_num_nodes_existing = 0;
+}
+
+
+/*
+ **************************************************************************
+ **************************************************************************
+ */
+void
+BergerRigoutsos::writeCounters() {
+   tbox::plog << d_num_nodes_existing << "-exist  "
+              << d_num_nodes_active << "-act  "
+              << d_num_nodes_owned << "-owned  "
+              << d_num_nodes_completed << "-done  "
+              << d_relaunch_queue.size() << "-qd  "
+              << d_num_nodes_commwait << "-wait  ";
 }
 
 /*
@@ -1217,8 +1220,9 @@ BergerRigoutsos::setTimerPrefix(
       d_object_timers->t_logging = tm->
          getTimer("mesh::BergerRigoutsos::logging");
    }
-}
 
+   d_comm_stage.setCommunicationWaitTimer(d_object_timers->t_MPI_wait);
+}
 
 
 }

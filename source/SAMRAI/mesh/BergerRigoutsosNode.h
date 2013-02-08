@@ -82,11 +82,19 @@ class BergerRigoutsosNode:
 
 public:
 
-
    /*!
-    * @brief Shorthand for std::vector<int> for internal use.
+    * @brief Destructor.
     */
-   typedef std::vector<int> VectorOfInts;
+   virtual ~BergerRigoutsosNode();
+
+private:
+
+   /*
+    * BergerRigoutsos and BergerRigoutsosNode are very tightly
+    * coupled.  BergerRigoutsos has the common parts of the data and
+    * algorithm.  BergerRigoutsosNode has the node-specific parts.
+    */
+   friend class BergerRigoutsos;
 
    /*!
     * @brief Construct a root node for a single block.
@@ -98,50 +106,20 @@ public:
       BergerRigoutsos* common_params,
       const hier::Box& box);
 
-   /*!
-    * @brief Destructor.
-    *
-    * Deallocate internal data.
-    */
-   virtual ~BergerRigoutsosNode();
-
    const tbox::Dimension &getDim() const {
       return d_box.getDim();
    }
 
-   //@{
 
-   //! @name Developer's methods for analysis and debugging this class.
-   virtual void
-   printClassData(
-      std::ostream& os,
-      int detail_level = 0) const;
-
-   //@}
-
-private:
    /*
     * Static integer constant defining value corresponding to a bad integer.
     */
    static const int BAD_INTEGER;
 
    /*!
-    * @brief Shorthand for the box-graph node corresponding
-    * to boxes.
+    * @brief Shorthand for std::vector<int> for internal use.
     */
-   typedef hier::Box Box;
-
-   //! @brief Shorthand for a container of graph-nodes.
-   typedef hier::BoxContainer BoxContainer;
-
-private:
-
-   /*
-    * BergerRigoutsos and BergerRigoutsosNode are very tightly
-    * coupled.  BergerRigoutsos has the common parts of the data and
-    * algorithm.  BergerRigoutsosNode has the node-specific parts.
-    */
-   friend class BergerRigoutsos;
+   typedef std::vector<int> VectorOfInts;
 
    /*!
     * @brief Construct a non-root node.
@@ -497,11 +475,12 @@ private:
       return false;
    }
 
+
+   //! @name Developer's methods for analysis and debugging this class.
    void
    printNodeState(
       std::ostream& co) const;
 
-   //@}
 
    /*!
     * @brief Unique id in the binary dendogram.
@@ -614,7 +593,7 @@ private:
     * in a container.  On contributors, the graph node is non-local
     * and stands alone.
     */
-   BoxContainer::const_iterator d_box_iterator;
+   hier::BoxContainer::const_iterator d_box_iterator;
 
    /*!
     * @brief Name of wait phase when continueAlgorithm()

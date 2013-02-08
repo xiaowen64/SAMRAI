@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Node in asynchronous Berger-Rigoutsos dendogram
+ * Description:   Node in asynchronous Berger-Rigoutsos tree
  *
  ************************************************************************/
 #ifndef included_mesh_BergerRigoutsosNode_C
@@ -39,13 +39,13 @@ std::map<std::string, BergerRigoutsos::TimerStruct> BergerRigoutsos::s_static_ti
 
 const int BergerRigoutsosNode::BAD_INTEGER = -9999999;
 
+
+
 /*
  *******************************************************************
  * Construct root node for a single block.
  *******************************************************************
  */
-
-
 BergerRigoutsosNode::BergerRigoutsosNode(
    BergerRigoutsos* common,
    const hier::Box& box):
@@ -69,11 +69,12 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_n_cont(0)
 {
 
-   ++(d_common->d_num_nodes_owned);
-   ++(d_common->d_max_nodes_owned);
-   ++(d_common->d_num_nodes_allocated);
-   ++(d_common->d_max_nodes_allocated);
-   ++(d_common->d_num_nodes_existing);
+   d_common->incNumNodesConstructed();
+   d_common->incNumNodesExisting();
+   if ( d_box.getOwnerRank() == d_common->d_mpi_object.getRank() ) {
+      d_common->incNumNodesOwned();
+   }
+
    if (d_common->d_max_generation < d_generation) {
       d_common->d_max_generation = d_generation;
    }
@@ -85,7 +86,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    }
 
    /*
-    * Set the processor group (for the root dendogram node).
+    * Set the processor group (for the root node).
     */
    d_group.resize(d_common->d_mpi_object.getSize(), BAD_INTEGER);
    for (unsigned int i = 0; i < d_group.size(); ++i) {
@@ -102,7 +103,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
 
 /*
  *******************************************************************
- * Construct non-root node of the dendogram.  This is private!
+ * Construct non-root node of the tree.  This is private!
  * Public constructors are only for root nodes.
  *******************************************************************
  */
@@ -145,12 +146,12 @@ BergerRigoutsosNode::BergerRigoutsosNode(
 #endif
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   d_box_iterator = BoxContainer().end();
+   d_box_iterator = hier::BoxContainer().end();
 #endif
 
-   ++(d_common->d_num_nodes_allocated);
-   ++(d_common->d_max_nodes_allocated);
-   ++(d_common->d_num_nodes_existing);
+   d_common->incNumNodesConstructed();
+   d_common->incNumNodesExisting();
+
    if (d_common->d_max_generation < d_generation) {
       d_common->d_max_generation = d_generation;
    }
@@ -193,9 +194,7 @@ BergerRigoutsosNode::~BergerRigoutsosNode()
       d_comm_group = 0;
    }
 
-   --(d_common->d_num_nodes_allocated);
-
-   if (d_parent != 0 && d_common->d_log_node_history) {
+   if (d_common->d_log_node_history) {
       d_common->writeCounters();
       tbox::plog << "Destruct " << d_generation << ':' << d_pos
                  << "  " << d_accepted_box
@@ -203,7 +202,7 @@ BergerRigoutsosNode::~BergerRigoutsosNode()
                  << ".\n";
    }
 
-   --(d_common->d_num_nodes_existing);
+   d_common->decNumNodesExisting();
 
    d_wait_phase = deallocated;
 }
@@ -226,7 +225,6 @@ BergerRigoutsosNode::continueAlgorithm()
    ++d_n_cont;
 
    TBOX_ASSERT(d_parent == 0 || d_parent->d_wait_phase != completed);
-   // TBOX_ASSERT( ! inRelaunchQueue(this) );
    TBOX_ASSERT(inRelaunchQueue(this) == d_common->d_relaunch_queue.end());
 
    /*
@@ -271,10 +269,7 @@ BergerRigoutsosNode::continueAlgorithm()
 
   TO_BE_LAUNCHED:
 
-   ++(d_common->d_num_nodes_active);
-   if (d_common->d_max_nodes_active < d_common->d_num_nodes_active) {
-      d_common->d_max_nodes_active = d_common->d_num_nodes_active;
-   }
+   d_common->incNumNodesActive();
 
    if (d_common->d_log_node_history) {
       d_common->writeCounters();
@@ -473,12 +468,10 @@ BergerRigoutsosNode::continueAlgorithm()
          }
 
          if (d_lft_child->d_box.getOwnerRank() == d_common->d_mpi_object.getRank()) {
-            ++(d_common->d_num_nodes_owned);
-            ++(d_common->d_max_nodes_owned);
+            d_common->incNumNodesOwned();
          }
          if (d_rht_child->d_box.getOwnerRank() == d_common->d_mpi_object.getRank()) {
-            ++(d_common->d_num_nodes_owned);
-            ++(d_common->d_max_nodes_owned);
+            d_common->incNumNodesOwned();
          }
 
          runChildren_start();
@@ -620,19 +613,13 @@ BergerRigoutsosNode::continueAlgorithm()
    TBOX_ASSERT(d_common->d_num_nodes_owned >= 0);
 
    // Adjust counters.
-   --(d_common->d_num_nodes_active);
-   ++(d_common->d_num_nodes_completed);
+   d_common->decNumNodesActive();
+   d_common->incNumNodesCompleted();
    if (d_box.getOwnerRank() == d_common->d_mpi_object.getRank()) {
-      TBOX_ASSERT(d_common->d_num_nodes_owned > 0);
-      --(d_common->d_num_nodes_owned);
-      TBOX_ASSERT(d_common->d_num_nodes_owned >= 0);
+      d_common->decNumNodesOwned();
    }
-   d_common->d_num_conts_to_complete += d_n_cont;
-   if (d_common->d_max_conts_to_complete < d_n_cont) {
-      d_common->d_max_conts_to_complete = d_n_cont;
-   }
+   d_common->incNumContinues(d_n_cont);
 
-   TBOX_ASSERT(d_common->d_num_nodes_owned >= 0);
 
    if (d_common->d_log_node_history) {
       d_common->writeCounters();
@@ -643,7 +630,7 @@ BergerRigoutsosNode::continueAlgorithm()
    }
 
    /*
-    * Recall that an dendogram node waiting for its children
+    * Recall that a tree node waiting for its children
     * is not placed in the relaunch queue (because it is
     * pointless to relaunch it until the children are completed).
     * Therefore, to eventually continue that node, its last
@@ -1169,7 +1156,7 @@ BergerRigoutsosNode::broadcastToDropouts_check()
           * to keeps things explicit and help detect bugs.
           * But in fact, having no tags is impossible
           * in the broadcastToDropout step, because it is
-          * only possible for the root dendogram node,
+          * only possible for the root node,
           * which has no dropout group.
           */
          TBOX_ASSERT(d_recv_msg[0] >= 0);
@@ -1392,7 +1379,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
                           << "  accept=" << d_box_acceptance << ".\n";
             }
          } else if (num_tagged == 0) {
-            // No tags!  This should be caught at the dendogram root.
+            // No tags!  This should be caught at the root.
             TBOX_ASSERT(d_parent == 0);
             d_box_acceptance = hasnotag_by_owner;
             if (d_common->d_log_node_history) {
@@ -1859,7 +1846,7 @@ BergerRigoutsosNode::eraseBox()
          *d_box_iterator);
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
-   d_box_iterator = BoxContainer().end();
+   d_box_iterator = hier::BoxContainer().end();
    d_accepted_box = hier::Box(d_common->getDim());
 #endif
 }
@@ -2152,7 +2139,7 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
       (relationship_message != 0 ? static_cast<int>(relationship_message->size()) : 0) - 1;
    const int ints_per_node = hier::Box::commBufferSize(d_common->getDim());
 
-   const BoxContainer& tag_boxes = d_common->d_tag_level->getBoxLevel()->getBoxes();
+   const hier::BoxContainer& tag_boxes = d_common->d_tag_level->getBoxLevel()->getBoxes();
 
    for (hier::RealBoxConstIterator ni(tag_boxes.realBegin());
         ni != tag_boxes.realEnd(); ++ni) {
@@ -2336,7 +2323,7 @@ void
 BergerRigoutsosNode::claimMPITag()
 {
    /*
-    * Each dendogram node should claim no more than one MPI tag
+    * Each node should claim no more than one MPI tag
     * so make sure it does not already have one.
     */
    TBOX_ASSERT(d_mpi_tag < 0);
@@ -2412,38 +2399,13 @@ BergerRigoutsosNode::intToBoxAcceptance(
    return undetermined;
 }
 
-void
-BergerRigoutsosNode::printClassData(
-   std::ostream& os,
-   int detail_level) const
-{
-   os << "ID              " << d_pos << " owner=" << d_box.getOwnerRank() << " box="
-      << d_box
-   ;
-   if (detail_level > 0) {
-      os << "\nfamily          " << (d_parent == 0 ? 0 : d_parent->d_pos)
-         << ' ' << (d_lft_child ? (d_lft_child->d_pos) : -1)
-         << ' ' << (d_rht_child ? (d_rht_child->d_pos) : -1)
-      ;
-   }
-   if (detail_level > 1) {
-      os << "\nthis           " << this
-         << "\ngeneration     " << d_generation << " place="
-         << ((d_pos % 2) ? 'r' : 'l')
-         << "\nnode           " << d_accepted_box
-         << "\nbox_acceptance " << d_box_acceptance
-         << "\noverlap        " << d_overlap
-         << "\ngroup          " << d_group.size() << ':'
-      ;
-      for (size_t i = 0; i < d_group.size(); ++i) {
-         os << ' ' << d_group[i];
-      }
-      os << std::endl;
-   }
-}
 
 
 
+/*
+ **********************************************************************
+ **********************************************************************
+ */
 void
 BergerRigoutsosNode::printNodeState(
    std::ostream& co) const
