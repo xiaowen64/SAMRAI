@@ -361,13 +361,13 @@ BergerRigoutsos::findBoxesContainingTags(
       tbox::plog << "BergerRigoutsos summary:\n"
                  << "\tAsync BR on proc " << mpi.getRank()
                  << " owned "
-                 << getMaxOwnership() << " participating in "
-                 << getMaxNodes() << " nodes ("
-                 << (double)getMaxOwnership() / getMaxNodes()
-                 << ") in " << getMaxGeneration() << " generations,"
-                 << "   " << getNumBoxesGenerated()
+                 << d_num_nodes_owned << " participating in "
+                 << d_num_nodes_constructed << " nodes ("
+                 << double(d_num_nodes_owned) / d_num_nodes_constructed
+                 << ") in " << d_max_generation << " generations,"
+                 << "   " << d_num_boxes_generated
                  << " boxes generated.\n\t"
-                 << getMaxTagsOwned() << " locally owned tags on new BoxLevel.\n\t";
+                 << d_max_tags_owned << " locally owned tags on new BoxLevel.\n\t";
 
       for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
            bi != bound_boxes.end(); ++bi) {
@@ -382,18 +382,18 @@ BergerRigoutsos::findBoxesContainingTags(
                     << " cells.\n\t";
       }
 
-      tbox::plog << "Final output has " << getNumTags()
+      tbox::plog << "Final output has " << d_num_tags_in_all_nodes
                  << " tags in "
                  << d_new_box_level->getGlobalNumberOfCells()
                  << " global cells [" << d_new_box_level->getMinNumberOfCells()
                  << "-" << d_new_box_level->getMaxNumberOfCells() << "], "
-                 << "over-refinement " << double(d_new_box_level->getGlobalNumberOfCells())/getNumTags()-1 << ", "
+                 << "over-refinement " << double(d_new_box_level->getGlobalNumberOfCells())/d_num_tags_in_all_nodes-1 << ", "
                  << d_new_box_level->getGlobalNumberOfBoxes()
                  << " global boxes [" << d_new_box_level->getMinNumberOfBoxes()
                  << "-" << d_new_box_level->getMaxNumberOfBoxes() << "]\n\t"
                  << "Number of continuations: avg = "
-                 << getAvgNumberOfCont()
-                 << "   max = " << getMaxNumberOfCont() << '\n'
+                 << (d_num_nodes_completed > 0 ? double(d_num_conts_to_complete)/d_num_nodes_completed : 0)
+                 << "   max = " << d_max_conts_to_complete << '\n'
                  << "\tBergerRigoutsos new_level summary:\n" << d_new_box_level->format("\t\t",0)
                  << "\tBergerRigoutsos new_level statistics:\n" << d_new_box_level->formatStatistics("\t\t")
                  << "\tBergerRigoutsos new_to_tag summary:\n" << d_tag_to_new->getTranspose().format("\t\t",0)
@@ -1013,32 +1013,7 @@ BergerRigoutsos::setupMPIDependentData()
 void
 BergerRigoutsos::sortOutputBoxes()
 {
-
    d_object_timers->t_sort_output_nodes->start();
-
-   TBOX_ASSERT(d_tag_to_new->hasTranspose());
-   hier::Connector& new_to_tag = d_tag_to_new->getTranspose();
-
-   if (0) {
-      // Check inputs.
-      int errs = 0;
-      if (d_tag_to_new->checkOverlapCorrectness(false, true)) {
-         ++errs;
-         tbox::perr << "Error found in tag_to_new!\n";
-      }
-      if (new_to_tag.checkOverlapCorrectness(false, true)) {
-         ++errs;
-         tbox::perr << "Error found in new_to_tag!\n";
-      }
-      if (errs != 0) {
-         TBOX_ERROR(
-            "Errors found before sorting nodes."
-            << "new_box_level:\n" << d_new_box_level->format("", 2)
-            << "tag box_level:\n" << d_tag_to_new->getBase().format("", 2)
-            << "tag_to_new:\n" << d_tag_to_new->format("", 2)
-            << "new_to_tag:\n" << new_to_tag.format("", 2) << std::endl);
-      }
-   }
 
    /*
     * Sort local indices by corners to make the output deterministic.
@@ -1052,52 +1027,10 @@ BergerRigoutsos::sortOutputBoxes()
       *d_new_box_level,
       true /* sort nodes by corners */,
       false /* don't sequentialize indices globally */);
-   if (0) {
-      tbox::plog
-         << "tag box_level:\n" << d_tag_to_new->getBase().format("", 2)
-         << "tag_to_new:\n" << d_tag_to_new->format("", 2)
-         << "new_to_tag:\n" << new_to_tag.format("", 2)
-         << "Sorting map:\n" << sorting_map->format("", 2);
-   }
-   if (0) {
-      // Check sorting_map before using it.
-      int errs = 0;
-      if (sorting_map->checkOverlapCorrectness(false, true)) {
-         ++errs;
-         tbox::perr << "Error found in sorting_map!\n";
-      }
-      if (errs != 0) {
-         TBOX_ERROR(
-            "Errors in load balance mapping found."
-            << "presorted box_level:\n" << d_new_box_level->format("", 2)
-            << "sorted box_level:\n" << sorted_box_level->format("", 2)
-            << "sorting_map:\n" << sorting_map->format("", 2) << std::endl);
-      }
-   }
    hier::MappingConnectorAlgorithm mca;
    mca.modify(*d_tag_to_new,
               *sorting_map,
               d_new_box_level.get());
-   if (0) {
-      // Check result of mapping.
-      int errs = 0;
-      if (d_tag_to_new->checkOverlapCorrectness(false, true)) {
-         ++errs;
-         tbox::perr << "Error found in tag_to_new!\n";
-      }
-      if (new_to_tag.checkOverlapCorrectness(false, true)) {
-         ++errs;
-         tbox::perr << "Error found in new_to_tag!\n";
-      }
-      if (errs != 0) {
-         TBOX_ERROR(
-            "Errors found after sorting nodes."
-            << "new_box_level:\n" << d_new_box_level->format("", 2)
-            << "tag box_level:\n" << d_tag_to_new->getBase().format("", 2)
-            << "tag_to_new:\n" << d_tag_to_new->format("", 2)
-            << "new_to_tag:\n" << new_to_tag.format("", 2) << std::endl);
-      }
-   }
 
    d_object_timers->t_sort_output_nodes->stop();
 }

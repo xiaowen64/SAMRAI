@@ -410,7 +410,7 @@ BergerRigoutsosNode::continueAlgorithm()
        * in all nodes.
        */
       if (d_parent == 0 && d_common->d_mpi_object.getRank() != d_box.getOwnerRank()) {
-         d_common->d_num_tags_in_all_nodes = d_num_tags;
+         d_common->d_num_tags_in_all_nodes += d_num_tags;
       }
 
       if (boxRejected()) {
@@ -924,9 +924,6 @@ BergerRigoutsosNode::broadcastAcceptability_check()
       int* ptr = &d_recv_msg[0];
 
       d_num_tags = *(ptr++);
-      if (d_parent == 0) {
-         d_common->d_num_tags_in_all_nodes = d_num_tags;
-      }
 
       d_box_acceptance = intToBoxAcceptance(*(ptr++));
       TBOX_ASSERT(boxAccepted() || boxRejected() ||
