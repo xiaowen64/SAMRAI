@@ -11,18 +11,13 @@
 Main {
   dim = 3
   check_dlbg_in_main = FALSE
-  which_br = 'n'
   base_name = "front3d"
   log_all = TRUE
   plot_step = 10
-  check_graph = FALSE
-  // restart_write_dirname = "restart"
-  // time_nlbg_random_rmi = TRUE
   log_hierarchy = TRUE
   num_steps = 100
   build_cross_edge = TRUE
   build_peer_edge = TRUE
-  globalize_node_sets = FALSE
   node_log_detail = 2
   edge_log_detail = 3
   tag_buffer = 1, 1, 1, 1, 1, 1, 1, 1
@@ -68,7 +63,6 @@ TreeLoadBalancer {
   DEV_report_load_balance = TRUE
   DEV_barrier_before = FALSE
   DEV_barrier_after = FALSE
-  n_root_cycles = -1
 
   // Debugging options
   DEV_check_map = FALSE
@@ -121,12 +115,6 @@ GriddingAlgorithm {
    DEV_check_connectors = FALSE
    DEV_print_steps = FALSE
 }
-
-
-GlobalInputs{
-   tag_clustering_method = "BINARY_TREE"
-}
-
 
 TimerManager{
   timer_list = "*::*::*"

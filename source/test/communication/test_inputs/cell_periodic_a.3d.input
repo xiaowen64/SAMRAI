@@ -205,11 +205,11 @@ StandardTaggingAndInitializer {
    }
 }
 
-OverlapConnectorUtil {
+OverlapConnectorAlgorithm {
    DEV_print_bridge_steps = 'n'
 }
 
-MappingConnectorUtil {
+MappingConnectorAlgorithm {
    DEV_print_modify_steps = 'n'
 }
 

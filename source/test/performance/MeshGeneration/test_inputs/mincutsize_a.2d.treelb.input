@@ -78,7 +78,6 @@ Main {
 
 TreeLoadBalancer {
   DEV_report_load_balance = FALSE // Reported in main
-  n_root_cycles = -1
   min_load_fraction_per_box = 0.0
   flexible_load_tolerance = 0.00
 

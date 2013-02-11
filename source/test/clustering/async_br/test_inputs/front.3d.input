@@ -14,9 +14,6 @@ Main {
   base_name = "front3d"
   log_all = TRUE
   plot_step = 1
-  check_graph = FALSE
-  // restart_write_dirname = "restart"
-  // time_nlbg_random_rmi = TRUE
   log_hierarchy = FALSE
   num_steps = 3
 }
@@ -24,7 +21,6 @@ Main {
 ABRTest {
   sine_tagger {
     allocate_data = FALSE
-    adaption_buffer = 1
     period = 1
     amplitude = .3
     init_disp = 0.5, 0.0, 0.0
@@ -93,14 +89,7 @@ PatchHierarchy {
 GriddingAlgorithm {
    combine_efficiency = 0.88
    efficiency_tolerance = 0.88
-   allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
 }
-
-
-GlobalInputs{
-   tag_clustering_method = "BINARY_TREE"
-}
-
 
 TimerManager{
   timer_list = "hier::*::*", "mesh::*::*", "tbox::*::*", "apps::*::*"

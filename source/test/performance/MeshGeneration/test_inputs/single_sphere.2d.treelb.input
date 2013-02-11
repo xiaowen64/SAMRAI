@@ -82,7 +82,6 @@ Main {
 
 TreeLoadBalancer {
   report_load_balance = FALSE // Reported in main
-  n_root_cycles = 1
   flexible_load_tolerance = 0.05
   balance_penalty_wt = 1.0
   surface_penalty_wt = 1.0

@@ -66,7 +66,6 @@ TreeLoadBalancer {
   DEV_report_load_balance = TRUE
   DEV_barrier_before = FALSE
   DEV_barrier_after = FALSE
-  n_root_cycles = 3
 }
 
 PatchHierarchy {

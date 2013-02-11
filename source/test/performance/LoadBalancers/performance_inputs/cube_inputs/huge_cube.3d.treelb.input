@@ -58,7 +58,6 @@ Main {
 
 TreeLoadBalancer {
   DEV_report_load_balance = FALSE // Reported in main
-  n_root_cycles = -1
   min_load_fraction_per_box = 0.03
   DEV_balance_penalty_wt = 1.0
   DEV_surface_penalty_wt = 1.0

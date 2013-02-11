@@ -36,15 +36,6 @@ hypre_solver {
 AdaptivePoisson {
   fac_algo = "default"
   problem_name = "multigauss"
-  ScalarPoissonOps {
-    enable_logging = TRUE
-    coarse_solver_choice = "hypre"
-    coarse_solver_tolerance = 1e-14
-    coarse_solver_max_iterations = 10000
-    smoothing_choice = "redblack"
-    cf_discretization = "LINEAR_REFINE"
-    prolongation_method = "LINEAR_REFINE"
-  }
   multigaussian_solution {
     GaussianFcnControl_0 = "{ lambda=-100 cx=0.5 cy=0.5 }"
     GaussianFcnControl_1 = "{ lambda=-50 cx=0.0 cy=0.5 }"

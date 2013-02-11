@@ -36,15 +36,6 @@ hypre_solver {
 AdaptivePoisson {
   problem_name = "multigauss"
     // finest_dbg_plot_ln = 0
-  ScalarPoissonOps {
-    enable_logging = TRUE
-    coarse_solver_choice = "hypre"
-    coarse_solver_tolerance = 1e-14
-    coarse_solver_max_iterations = 10
-    smoothing_choice = "redblack"
-    cf_discretization = "Ewing"
-    prolongation_method = "LINEAR_REFINE"
-  }
   multigaussian_solution {
     GaussianFcnControl_0 = "{ lambda=-50 cx=0.5 cy=0.5 cz=0.0 }"
     GaussianFcnControl_1 = "{ lambda=-20 cx=0.0 cy=0.0 cz=1.0 }"
@@ -68,7 +59,6 @@ TreeLoadBalancer {
   DEV_report_load_balance = TRUE
   DEV_barrier_before = FALSE
   DEV_barrier_after = FALSE
-  n_root_cycles = 1
 }
 
 PatchHierarchy {

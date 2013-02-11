@@ -48,7 +48,6 @@ Main {
 //
     do_refine = TRUE
     refine_option = "INTERIOR_FROM_SAME_LEVEL"
-    create_ghost_overlap = TRUE
 
     do_coarsen = FALSE
 }

@@ -240,7 +240,6 @@ LoadBalancer {
    DEV_report_load_balance = FALSE
    DEV_barrier_before = TRUE
    DEV_barrier_after = TRUE
-   n_root_cycles = 1
 }
 
 // Refer to xfer::RefineSchedule for input

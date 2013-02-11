@@ -36,15 +36,6 @@ hypre_solver {
 AdaptivePoisson {
   problem_name = "gauss"
     // finest_dbg_plot_ln = 0
-  ScalarPoissonOps {
-    enable_logging = TRUE
-    coarse_solver_choice = "hypre"
-    coarse_solver_tolerance = 1e-14
-    coarse_solver_max_iterations = 10
-    smoothing_choice = "redblack"
-    cf_discretization = "Ewing"
-    prolongation_method = "LINEAR_REFINE"
-  }
   gaussian_solution {
     GaussianFcnControl = "{ lambda=-20.0 cx=0.0 cy=0.0 cz=0.0 }"
   }
@@ -66,7 +57,6 @@ TreeLoadBalancer {
   DEV_report_load_balance = TRUE
   DEV_barrier_before = FALSE
   DEV_barrier_after = FALSE
-  n_root_cycles = 1
 }
 
 PatchHierarchy {

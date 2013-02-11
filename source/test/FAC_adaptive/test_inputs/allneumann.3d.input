@@ -37,15 +37,6 @@ AdaptivePoisson {
   problem_name = "sine"
     // finest_dbg_plot_ln = 0
   adaption_threshold = 3.0e-2
-  ScalarPoissonOps {
-    enable_logging = TRUE
-    coarse_solver_choice = "hypre"
-    coarse_solver_tolerance = 1e-14
-    coarse_solver_max_iterations = 10
-    smoothing_choice = "redblack"
-    cf_discretization = "Ewing"
-    prolongation_method = "LINEAR_REFINE"
-  }
   sine_solution {
     SinusoidFcnControl = "{ nx=1.0 px=0.5 ny=1.0 py=0.3 nz=1.0 pz=1.8 }"
     neumann_locations = TRUE, TRUE, TRUE, TRUE, TRUE, TRUE
@@ -68,7 +59,6 @@ TreeLoadBalancer {
   DEV_report_load_balance = TRUE
   DEV_barrier_before = FALSE
   DEV_barrier_after = FALSE
-  n_root_cycles = 1
 }
 
 PatchHierarchy {

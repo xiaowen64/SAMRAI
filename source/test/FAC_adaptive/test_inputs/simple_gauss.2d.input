@@ -36,15 +36,6 @@ hypre_solver {
 AdaptivePoisson {
   fac_algo = "default"
   problem_name = "gauss"
-  ScalarPoissonOps {
-    enable_logging = TRUE
-    coarse_solver_choice = "hypre"
-    coarse_solver_tolerance = 1e-14
-    coarse_solver_max_iterations = 10000
-    smoothing_choice = "redblack"
-    cf_discretization = "Ewing"
-    prolongation_method = "LINEAR_REFINE"
-  }
   gaussian_solution {
     GaussianFcnControl = "{ lambda=-200.0 cx=0.5 cy=0.5 }"
   }

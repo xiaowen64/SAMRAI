@@ -113,7 +113,6 @@ TilePartitioner {
 
 TreeLoadBalancer {
   DEV_report_load_balance = TRUE // Reported in main
-  n_root_cycles = -1
   balance_penalty_wt = 1.0
   surface_penalty_wt = 1.0
   slender_penalty_wt = 1.0

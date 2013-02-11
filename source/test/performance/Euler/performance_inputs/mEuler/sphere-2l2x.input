@@ -261,7 +261,6 @@ TreeLoadBalancer {
   DEV_report_load_balance = FALSE
   DEV_barrier_before = TRUE
   DEV_barrier_after = TRUE
-  n_root_cycles = 2
 }
 
 // LoadBalancer is used by the new code.

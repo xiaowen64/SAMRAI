@@ -280,7 +280,6 @@ TreeLoadBalancer {
   DEV_report_load_balance = FALSE
   DEV_barrier_before = TRUE
   DEV_barrier_after = TRUE
-  n_root_cycles = 1
   DEV_check_map = FALSE
   DEV_check_connectivity = FALSE
   DEV_print_steps = FALSE

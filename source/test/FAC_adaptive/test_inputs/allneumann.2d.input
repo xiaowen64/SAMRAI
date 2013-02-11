@@ -38,18 +38,6 @@ AdaptivePoisson {
   problem_name = "sine"
   // finest_plot_level = 0
   adaption_threshold = 5.0e-3
-  ScalarPoissonOps {
-    enable_logging = TRUE
-    coarse_solver_choice = "hypre"
-    coarse_solver_tolerance = 1e-14
-    coarse_solver_max_iterations = 10000
-    smoothing_choice = "redblack"
-    cf_discretization = "Ewing"
-    prolongation_method = "LINEAR_REFINE"
-    hypre_solver {
-       use_smg = TRUE
-    }
-  }
   sine_solution {
     SinusoidFcnControl = "{ nx=1.0 px=0.40 ny=1.0 py=0.75 }"
     neumann_locations = TRUE, TRUE, TRUE, TRUE
