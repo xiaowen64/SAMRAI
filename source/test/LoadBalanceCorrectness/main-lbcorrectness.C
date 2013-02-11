@@ -1424,7 +1424,7 @@ createBoxGenerator(
          new mesh::BergerRigoutsos(
             dim,
             input_db->getDatabaseWithDefault("BergerRigoutsos", boost::shared_ptr<tbox::Database>()) ) );
-      berger_rigoutsos->setMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      berger_rigoutsos->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       return berger_rigoutsos;
 

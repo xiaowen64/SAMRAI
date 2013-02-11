@@ -228,7 +228,7 @@ int main(
             input_db->isDatabase("BergerRigoutsos") ?
             input_db->getDatabase("BergerRigoutsos") :
             boost::shared_ptr<tbox::Database>()));
-      new_br->setMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      new_br->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       tbox::plog << "Creating grid algorithm.\n";
       /*

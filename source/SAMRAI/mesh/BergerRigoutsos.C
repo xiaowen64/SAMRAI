@@ -14,9 +14,10 @@
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 
-#include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/mesh/BergerRigoutsosNode.h"
+#include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
+#include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -25,22 +26,6 @@
 namespace SAMRAI {
 namespace mesh {
 
-boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_barrier_before;
-boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_barrier_after;
-boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_find_boxes_with_tags;
-boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_cluster_and_compute_relationships;
-boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_run_abr;
-boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_global_reductions;
-boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_logging;
-boost::shared_ptr<tbox::Timer> BergerRigoutsos::t_sort_output_nodes;
-
-tbox::StartupShutdownManager::Handler
-BergerRigoutsos::s_initialize_finalize_handler(
-   BergerRigoutsos::initializeCallback,
-   0,
-   0,
-   BergerRigoutsos::finalizeCallback,
-   tbox::StartupShutdownManager::priorityTimers);
 
 /*
  ************************************************************************
@@ -51,39 +36,83 @@ BergerRigoutsos::s_initialize_finalize_handler(
 BergerRigoutsos::BergerRigoutsos(
    const tbox::Dimension& dim,
    const boost::shared_ptr<tbox::Database>& input_db):
+
    d_dim(dim),
-   d_mpi(tbox::SAMRAI_MPI::commNull),
-   d_max_box_size(hier::IntVector(d_dim, tbox::MathUtilities<int>::getMax())),
+
+   // Parameters from clustering algorithm interface ...
+   d_tag_data_index(-1),
+   d_tag_val(1),
+   d_min_box(dim),
+   d_efficiency_tol(0.80),
+   d_combine_tol(0.80),
+   d_max_gcw(dim, 1),
+
+   d_tag_level(),
+   d_new_box_level(),
+   d_tag_to_new(),
+   d_root_boxes(),
+
+   // Parameters not from clustering algorithm interface ...
+   d_max_box_size(hier::IntVector(dim, tbox::MathUtilities<int>::getMax())),
    d_max_inflection_cut_from_center(1.0),
    d_inflection_cut_threshold_ar(0.0),
+   d_algo_advance_mode(ADVANCE_SOME),
+   d_owner_mode(MOST_OVERLAP),
+
+   // Implementation flags and data...
+   d_compute_relationships(2),
+   d_sort_output_nodes(false),
+   d_relaunch_queue(),
+   d_comm_stage(),
+   d_min_box_size_from_cutting(dim, 0),
+   d_relationship_senders(),
+   d_relationship_messages(),
+
+   // Communication parameters ...
+   d_mpi_object(MPI_COMM_NULL),
+   d_tag_upper_bound(-1),
+   d_available_mpi_tag(-1),
+
+   // Analysis support ...
+   d_log_do_loop(false),
    d_log_node_history(false),
    d_log_cluster_summary(false),
    d_log_cluster(false),
-   d_owner_mode("MOST_OVERLAP"),
-   d_algo_advance_mode("ADVANCE_SOME"),
-   d_sort_output_nodes(false),
    d_check_min_box_size('w'),
-   d_min_box_size_from_cutting(d_dim, 0),
+   d_num_tags_in_all_nodes(0),
+   d_max_tags_owned(0),
+   d_num_nodes_constructed(0),
+   d_num_nodes_existing(0),
+   d_max_nodes_existing(0),
+   d_num_nodes_active(0),
+   d_max_nodes_active(0),
+   d_num_nodes_owned(0),
+   d_max_nodes_owned(0),
+   d_num_nodes_commwait(0),
+   d_max_nodes_commwait(0),
+   d_num_nodes_completed(0),
+   d_max_generation(0),
+   d_num_boxes_generated(0),
+   d_num_conts_to_complete(0),
+   d_max_conts_to_complete(0),
+
+   // Performance timing...
    d_barrier_before(false),
-   d_barrier_after(false)
+   d_barrier_after(false),
+   d_object_timers(0)
 {
-
-   /*
-    * Set database-dependent parameters or cache them for use
-    * when we construct a dendogram root.
-    */
    getFromInput(input_db);
-
+   setTimerPrefix(s_default_timer_prefix);
 }
 
 BergerRigoutsos::~BergerRigoutsos()
 {
-   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (d_mpi_object.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
       // Free the private communicator (if SAMRAI_MPI has not been finalized).
       int flag;
       tbox::SAMRAI_MPI::Finalized(&flag);
       if (!flag) {
-         d_mpi.freeCommunicator();
+         d_mpi_object.freeCommunicator();
       }
    }
 }
@@ -102,7 +131,7 @@ BergerRigoutsos::getFromInput(
             if (!(d_max_box_size[i] > 0)) {
                INPUT_RANGE_ERROR("max_box_size");
             }
-         } 
+         }
       }
 
       d_max_inflection_cut_from_center =
@@ -121,6 +150,8 @@ BergerRigoutsos::getFromInput(
             &d_min_box_size_from_cutting[0],
             d_dim.getValue());
       }
+      d_log_do_loop =
+         input_db->getBoolWithDefault("DEV_log_do_loop", false);
       d_log_node_history =
          input_db->getBoolWithDefault("DEV_log_node_history", false);
       d_log_cluster_summary =
@@ -128,22 +159,13 @@ BergerRigoutsos::getFromInput(
       d_log_cluster =
          input_db->getBoolWithDefault("DEV_log_cluster", false);
 
-      d_algo_advance_mode =
+      std::string algo_advance_mode =
          input_db->getStringWithDefault("DEV_algo_advance_mode", "ADVANCE_SOME");
-      if (!(d_algo_advance_mode == "ADVANCE_SOME" ||
-            d_algo_advance_mode == "ADVANCE_ANY" ||
-            d_algo_advance_mode == "SYNCHRONOUS")) {
-         INPUT_VALUE_ERROR("DEV_algo_advance_mode");
-      }
+      setAlgorithmAdvanceMode(algo_advance_mode);
 
-      d_owner_mode =
+      std::string owner_mode =
          input_db->getStringWithDefault("DEV_owner_mode", "MOST_OVERLAP");
-      if (!(d_owner_mode == "SINGLE_OWNER" ||
-            d_owner_mode == "MOST_OVERLAP" ||
-            d_owner_mode == "FEWEST_OWNED" ||
-            d_owner_mode == "LEAST_ACTIVE")) {
-         INPUT_VALUE_ERROR("DEV_owner_mode");
-      }
+      setOwnerMode(owner_mode);
 
       d_sort_output_nodes =
          input_db->getBoolWithDefault("sort_output_nodes", false);
@@ -164,22 +186,6 @@ BergerRigoutsos::getFromInput(
    }
 }
 
-/*
- *************************************************************************
- * Set the MPI communicator.
- *************************************************************************
- */
-void
-BergerRigoutsos::setMPI(
-   const tbox::SAMRAI_MPI& mpi)
-{
-   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
-      d_mpi.freeCommunicator();
-   }
-   if (mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
-      d_mpi.dupCommunicator(mpi);
-   }
-}
 
 /*
  ************************************************************************
@@ -187,10 +193,9 @@ BergerRigoutsos::setMPI(
  * Implement the BoxGeneratorStrategy interface method using
  * the asynchronous Berger-Rigoutsos implementation.
  *
- * Create objects for using the ABR recursion tree, set options for
- * using the ABR implementation, then run it.
+ * Set options for using the ABR implementation, then run it.
  *
- * The output boxes from the dendogram root is in the form of a
+ * The output boxes from the tree root is in the form of a
  * BoxLevel.  This method postprocess that data to
  * convert the output to the box list form required by the
  * box clustering strategy interface.
@@ -208,7 +213,7 @@ BergerRigoutsos::findBoxesContainingTags(
    const hier::IntVector& min_box,
    const double efficiency_tol,
    const double combine_tol,
-   const hier::IntVector& max_gcw) const
+   const hier::IntVector& max_gcw)
 {
    TBOX_ASSERT(!bound_boxes.isEmpty());
    TBOX_ASSERT_OBJDIM_EQUALITY4(*tag_level,
@@ -219,7 +224,7 @@ BergerRigoutsos::findBoxesContainingTags(
    tbox::SAMRAI_MPI mpi(tag_level->getBoxLevel()->getMPI());
 
    for (hier::BoxContainer::const_iterator bb_itr = bound_boxes.begin();
-        bb_itr != bound_boxes.end(); ++bb_itr) { 
+        bb_itr != bound_boxes.end(); ++bb_itr) {
       if (!(bb_itr->numberCells() >= min_box)) {
          if (d_check_min_box_size == 'e') {
             TBOX_ERROR("BergerRigoutsos::findBoxesContainingTags input error:\n"
@@ -242,10 +247,11 @@ BergerRigoutsos::findBoxesContainingTags(
       }
    }
 
+
    if (d_barrier_before) {
-      t_barrier_before->start();
+      d_object_timers->t_barrier_before->start();
       mpi.Barrier();
-      t_barrier_before->stop();
+      d_object_timers->t_barrier_before->stop();
    }
 
    for ( hier::BoxContainer::const_iterator bi=bound_boxes.begin();
@@ -255,63 +261,63 @@ BergerRigoutsos::findBoxesContainingTags(
       }
    }
 
-   const hier::BoxLevel& tag_box_level = *tag_level->getBoxLevel();
+   d_object_timers->t_find_boxes_containing_tags->start();
+
 
    /*
-    * If using a duplicate MPI communicator, check that the duplicate
-    * and the communicator of the tag_box_level are congruent.
+    * Set up some internal data then call
+    * clusterAndComputeRelationships run the clustering algorithm.
     */
-   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
-      tbox::SAMRAI_MPI mpi1(d_mpi);
-      tbox::SAMRAI_MPI mpi2(tag_box_level.getMPI());
-      TBOX_ASSERT(mpi1.getSize() == mpi2.getSize());
-      TBOX_ASSERT(mpi1.getRank() == mpi2.getRank());
-      if (mpi1.getSize() > 1) {
-         int compare_result;
-         tbox::SAMRAI_MPI::Comm_compare(
-            d_mpi.getCommunicator(),
-            tag_box_level.getMPI().getCommunicator(),
-            &compare_result);
-         if (compare_result != MPI_CONGRUENT) {
-            TBOX_ERROR("BergerRigoutsos set-up error: MPI communicator\n"
-               << "set by setMPI() (" << d_mpi.getCommunicator()
-               << ") and the communicator of the input tag_box_level ("
-               << tag_box_level.getMPI().getCommunicator() << ") are not congruent."
-               << std::endl);
-         }
+
+   resetCounters();
+
+
+   /*
+    * Set parameters received from findBoxesContainingTags() virtual
+    * interface.
+    */
+
+   d_tag_data_index = tag_data_index;
+   d_tag_val = tag_val;
+   d_min_box = min_box;
+   d_efficiency_tol = efficiency_tol;
+   d_combine_tol = combine_tol;
+
+   setComputeRelationships("BIDIRECTIONAL", max_gcw);
+
+   d_tag_level = tag_level;
+   d_root_boxes = bound_boxes;
+
+
+   /*
+    * If d_mpi_object has not been set, then user wants to do use the
+    * MPI in tag_level (nothing special).  If it has been set, it is a
+    * duplicate MPI, so don't change it.
+    */
+   if ( d_mpi_object.getCommunicator() == MPI_COMM_NULL ) {
+      d_mpi_object = d_tag_level->getBoxLevel()->getMPI();
+      setupMPIDependentData();
+   }
+#if defined(DEBUG_CHECK_ASSERTIONS)
+   else {
+      if ( !checkMPICongruency() ) {
+         TBOX_ERROR("BergerRigoutsosNode::clusterAndComputeRelationships:\n"
+                    << "The communicator of the input tag BoxLevel ("
+                    << d_tag_level->getBoxLevel()->getMPI().getCommunicator()
+                    << " is not congruent with the MPI communicator ("
+                    << d_mpi_object.getCommunicator()
+                    << " duplicated in the call to useDuplicateMPI().\n"
+                    << "If you call useDuplicateMPI(), you are restricted\n"
+                    << "to using SAMRAI_MPI objects that are congruent with\n"
+                    << "the duplicated object."
+                    << std::endl);
       }
    }
+#endif
 
-   t_find_boxes_with_tags->start();
 
-   BergerRigoutsosNode root_node(d_dim);
+   clusterAndComputeRelationships();
 
-   // Set standard Berger-Rigoutsos clustering parameters.
-   root_node.setClusteringParameters(tag_data_index,
-      tag_val,
-      min_box,
-      efficiency_tol,
-      combine_tol,
-      d_max_box_size,
-      d_max_inflection_cut_from_center,
-      d_inflection_cut_threshold_ar);
-
-   // Set the parallel algorithm and DLBG parameters.
-   root_node.setAlgorithmAdvanceMode(d_algo_advance_mode);
-   root_node.setOwnerMode(d_owner_mode);
-   root_node.setComputeRelationships("BIDIRECTIONAL", max_gcw);
-   root_node.setMinBoxSizeFromCutting(d_min_box_size_from_cutting);
-
-   // Set debugging/verbosity parameters.
-   root_node.setLogNodeHistory(d_log_node_history);
-
-   t_cluster_and_compute_relationships->start();
-   root_node.clusterAndComputeRelationships(new_box_level,
-      tag_to_new,
-      bound_boxes,
-      tag_level,
-      d_mpi);
-   t_cluster_and_compute_relationships->stop();
 
    if (d_sort_output_nodes == true) {
       /*
@@ -322,47 +328,46 @@ BergerRigoutsos::findBoxesContainingTags(
        * clustering algorithm is non-deterministic because
        * it depends on the order of asynchronous messages.)
        */
-      sortOutputBoxes(*new_box_level,
-         *tag_to_new);
+      sortOutputBoxes();
    }
 
    /*
     * Get some global parameters.  Do it before logging to prevent
     * the logging flag from having an undue side effect on performance.
     */
-   t_global_reductions->start();
-   new_box_level->getGlobalNumberOfBoxes();
-   new_box_level->getGlobalNumberOfCells();
+   d_object_timers->t_global_reductions->start();
+   d_new_box_level->getGlobalNumberOfBoxes();
+   d_new_box_level->getGlobalNumberOfCells();
    for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
         bi != bound_boxes.end(); ++bi) {
-      new_box_level->getGlobalBoundingBox(bi->getBlockId().getBlockValue());
+      d_new_box_level->getGlobalBoundingBox(bi->getBlockId().getBlockValue());
    }
-   t_global_reductions->stop();
+   d_object_timers->t_global_reductions->stop();
 
    if (d_log_cluster) {
-      t_logging->start();
+      d_object_timers->t_logging->start();
       tbox::plog << "BergerRigoutsos cluster log:\n"
-      << "\tNew box_level clustered by BergerRigoutsos:\n" << new_box_level->format("",
-         2)
-      << "\tBergerRigoutsos tag_to_new:\n" << tag_to_new->format("", 2)
-      << "\tBergerRigoutsos new_to_tag:\n" << tag_to_new->getTranspose().format("", 2);
-      t_logging->stop();
+                 << "\tNew box_level clustered by BergerRigoutsos:\n" << d_new_box_level->format("",
+                                                                                               2)
+                 << "\tBergerRigoutsos tag_to_new:\n" << d_tag_to_new->format("", 2)
+                 << "\tBergerRigoutsos new_to_tag:\n" << d_tag_to_new->getTranspose().format("", 2);
+      d_object_timers->t_logging->stop();
    }
    if (d_log_cluster_summary) {
       /*
-       * Log summary of clustering and dendogram.
+       * Log summary of clustering and tree.
        */
-      t_logging->start();
+      d_object_timers->t_logging->start();
       tbox::plog << "BergerRigoutsos summary:\n"
                  << "\tAsync BR on proc " << mpi.getRank()
                  << " owned "
-                 << root_node.getMaxOwnership() << " participating in "
-                 << root_node.getMaxNodes() << " nodes ("
-                 << (double)root_node.getMaxOwnership() / root_node.getMaxNodes()
-                 << ") in " << root_node.getMaxGeneration() << " generations,"
-                 << "   " << root_node.getNumBoxesGenerated()
+                 << d_num_nodes_owned << " participating in "
+                 << d_num_nodes_constructed << " nodes ("
+                 << double(d_num_nodes_owned) / d_num_nodes_constructed
+                 << ") in " << d_max_generation << " generations,"
+                 << "   " << d_num_boxes_generated
                  << " boxes generated.\n\t"
-                 << root_node.getMaxTagsOwned() << " locally owned tags on new BoxLevel.\n\t";
+                 << d_max_tags_owned << " locally owned tags on new BoxLevel.\n\t";
 
       for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
            bi != bound_boxes.end(); ++bi) {
@@ -371,82 +376,644 @@ BergerRigoutsos::findBoxesContainingTags(
                     << " initial bounding box = " << *bi << ", "
                     << bi->size() << " cells, "
                     << "final global bounding box = "
-                    << new_box_level->getGlobalBoundingBox(bn)
+                    << d_new_box_level->getGlobalBoundingBox(bn)
                     << ", "
-                    << new_box_level->getGlobalBoundingBox(bn).size()
+                    << d_new_box_level->getGlobalBoundingBox(bn).size()
                     << " cells.\n\t";
       }
 
-      tbox::plog << "Final output has " << root_node.getNumTags()
+      tbox::plog << "Final output has " << d_num_tags_in_all_nodes
                  << " tags in "
-                 << new_box_level->getGlobalNumberOfCells()
-                 << " global cells [" << new_box_level->getMinNumberOfCells()
-                 << "-" << new_box_level->getMaxNumberOfCells() << "], "
-                 << "over-refinement " << double(new_box_level->getGlobalNumberOfCells())/root_node.getNumTags()-1 << ", "
-                 << new_box_level->getGlobalNumberOfBoxes()
-                 << " global boxes [" << new_box_level->getMinNumberOfBoxes()
-                 << "-" << new_box_level->getMaxNumberOfBoxes() << "]\n\t"
+                 << d_new_box_level->getGlobalNumberOfCells()
+                 << " global cells [" << d_new_box_level->getMinNumberOfCells()
+                 << "-" << d_new_box_level->getMaxNumberOfCells() << "], "
+                 << "over-refinement " << double(d_new_box_level->getGlobalNumberOfCells())/d_num_tags_in_all_nodes-1 << ", "
+                 << d_new_box_level->getGlobalNumberOfBoxes()
+                 << " global boxes [" << d_new_box_level->getMinNumberOfBoxes()
+                 << "-" << d_new_box_level->getMaxNumberOfBoxes() << "]\n\t"
                  << "Number of continuations: avg = "
-                 << root_node.getAvgNumberOfCont()
-                 << "   max = " << root_node.getMaxNumberOfCont() << '\n'
-                 << "\tBergerRigoutsos new_level summary:\n" << new_box_level->format("\t\t",0)
-                 << "\tBergerRigoutsos new_level statistics:\n" << new_box_level->formatStatistics("\t\t")
-                 << "\tBergerRigoutsos new_to_tag summary:\n" << tag_to_new->getTranspose().format("\t\t",0)
-                 << "\tBergerRigoutsos new_to_tag statistics:\n" << tag_to_new->getTranspose().formatStatistics("\t\t")
-                 << "\tBergerRigoutsos tag_to_new summary:\n" << tag_to_new->format("\t\t",0)
-                 << "\tBergerRigoutsos tag_to_new statistics:\n" << tag_to_new->formatStatistics("\t\t")
+                 << (d_num_nodes_completed > 0 ? double(d_num_conts_to_complete)/d_num_nodes_completed : 0)
+                 << "   max = " << d_max_conts_to_complete << '\n'
+                 << "\tBergerRigoutsos new_level summary:\n" << d_new_box_level->format("\t\t",0)
+                 << "\tBergerRigoutsos new_level statistics:\n" << d_new_box_level->formatStatistics("\t\t")
+                 << "\tBergerRigoutsos new_to_tag summary:\n" << d_tag_to_new->getTranspose().format("\t\t",0)
+                 << "\tBergerRigoutsos new_to_tag statistics:\n" << d_tag_to_new->getTranspose().formatStatistics("\t\t")
+                 << "\tBergerRigoutsos tag_to_new summary:\n" << d_tag_to_new->format("\t\t",0)
+                 << "\tBergerRigoutsos tag_to_new statistics:\n" << d_tag_to_new->formatStatistics("\t\t")
                  << "\n";
-      t_logging->stop();
+      d_object_timers->t_logging->stop();
    }
+
+
+   if ( d_mpi_object == d_tag_level->getBoxLevel()->getMPI() ) {
+      /*
+       * We have been using an external SAMRAI_MPI.
+       * Reset it to avoid mistaking it for an internal one.
+       */
+      d_mpi_object.setCommunicator(MPI_COMM_NULL);
+   }
+
+
+   /*
+    * Set outputs.  Clear temporary parameters that are only used
+    * during active clustering.
+    */
+   new_box_level = d_new_box_level;
+   tag_to_new = d_tag_to_new;
+   d_new_box_level.reset();
+   d_tag_to_new.reset();
+   d_tag_level.reset();
+
+
+   if (d_barrier_after) {
+      d_object_timers->t_barrier_after->start();
+      mpi.Barrier();
+      d_object_timers->t_barrier_after->stop();
+   }
+
+   d_object_timers->t_find_boxes_containing_tags->stop();
+}
+
+/*
+ ********************************************************************
+ ********************************************************************
+ */
+void
+BergerRigoutsos::clusterAndComputeRelationships()
+{
+   d_object_timers->t_cluster_and_compute_relationships->start();
+
+
+   /*
+    * During the algorithm, we kept the results in primitive
+    * containers to avoid the overhead of fine-grain changes to the
+    * output objects.  Now initialize the outputs using those
+    * primitive containers.
+    */
+
+   d_new_box_level.reset(new hier::BoxLevel(
+      d_tag_level->getRatioToLevelZero(),
+      d_tag_level->getGridGeometry(),
+      d_tag_level->getBoxLevel()->getMPI()));
+
+   if (d_compute_relationships >= 1) {
+      d_tag_to_new.reset(new hier::Connector(*d_tag_level->getBoxLevel(),
+         *d_new_box_level,
+         d_max_gcw));
+   }
+   if (d_compute_relationships >= 2) {
+      hier::Connector* new_to_tag =
+         new hier::Connector(*d_new_box_level,
+                             *d_tag_level->getBoxLevel(),
+                             d_max_gcw);
+      d_tag_to_new->setTranspose(new_to_tag, true);
+   }
+
+   d_object_timers->t_cluster->start();
+
+
+   /*
+    * Clear out accumulated communication data or it will mess up this
+    * clustering run.
+    */
+   d_relationship_senders.clear();
+   d_relationship_messages.clear();
+
+
+   if (d_compute_relationships > 0) {
+      /*
+       * Create empty neighbor lists for nodes on tag level.  As new
+       * nodes are finalized, they will be added to these lists.
+       */
+      const hier::BoxContainer& tag_boxes = d_tag_level->getBoxLevel()->getBoxes();
+      for (hier::RealBoxConstIterator ni(tag_boxes.realBegin());
+           ni != tag_boxes.realEnd(); ++ni) {
+         d_tag_to_new->makeEmptyLocalNeighborhood(ni->getBoxId());
+      }
+      TBOX_ASSERT(
+         static_cast<int>(d_tag_level->getBoxLevel()->getLocalNumberOfBoxes()) ==
+         d_tag_to_new->getLocalNumberOfNeighborSets());
+   }
+
+
+
+   {
+
+      /*
+       * Create a BergerRigoutsosNode for each incoming root box and
+       * push into the relaunch queue for execution.
+       *
+       * We use extent data from each incoming root box but do not
+       * assume its id is properly set, because the interface did not
+       * guarantee they would be.
+       */
+      hier::LocalId root_box_local_id(0);
+      std::list< boost::shared_ptr<BergerRigoutsosNode> > block_nodes_to_delete;
+      for (hier::BoxContainer::const_iterator rb = d_root_boxes.begin();
+           rb != d_root_boxes.end(); ++rb) {
+
+         const hier::Box block_box(*rb, root_box_local_id, 0);
+
+         BergerRigoutsosNode *block_node(
+            new BergerRigoutsosNode( this, block_box ) );
+
+         d_relaunch_queue.push_back(block_node);
+
+         block_nodes_to_delete.push_back(boost::shared_ptr<BergerRigoutsosNode>(block_node));
+      }
+
+
+      int n_comm_group_completed = 0;
+      do {
+
+         // Continue nodes in launch queue.
+         d_object_timers->t_compute->start();
+         while (!d_relaunch_queue.empty()) {
+            BergerRigoutsosNode* node_for_relaunch = d_relaunch_queue.front();
+            d_relaunch_queue.pop_front();
+            if (d_log_do_loop) {
+               tbox::plog << "Continuing from queue ";
+               node_for_relaunch->printNodeState(tbox::plog);
+               tbox::plog << std::endl;
+            }
+            node_for_relaunch->continueAlgorithm();
+            if (d_log_do_loop) {
+               tbox::plog << "Exited continueAlgorithm ";
+               node_for_relaunch->printNodeState(tbox::plog);
+               tbox::plog << std::endl;
+            }
+         }
+         d_object_timers->t_compute->stop();
+
+         // Wait for some incoming messages.
+         d_object_timers->t_comm_wait->start();
+         n_comm_group_completed =
+            static_cast<int>(d_comm_stage.advanceSome());
+         d_object_timers->t_comm_wait->stop();
+
+         // Continue nodes with completed messages.
+         d_object_timers->t_compute->start();
+         while ( d_comm_stage.numberOfCompletedMembers() > 0 ) {
+            BergerRigoutsosNode* node_for_relaunch =
+               (BergerRigoutsosNode *)(d_comm_stage.popCompletionQueue()->getHandler());
+            if (d_log_do_loop) {
+               tbox::plog << "Continuing from stage ";
+               node_for_relaunch->printNodeState(tbox::plog);
+               tbox::plog << std::endl;
+            }
+            node_for_relaunch->continueAlgorithm();
+            if (d_log_do_loop) {
+               tbox::plog << "Exited continueAlgorithm ";
+               node_for_relaunch->printNodeState(tbox::plog);
+               tbox::plog << std::endl;
+            }
+         }
+         d_object_timers->t_compute->stop();
+
+         if (d_log_do_loop) {
+            tbox::plog << "relaunch_queue size "
+                       << d_relaunch_queue.size()
+                       << "   groups completed: " << n_comm_group_completed
+                       << std::endl;
+            tbox::plog << "Stage has " << d_comm_stage.numberOfMembers()
+                       << " members, "
+                       << d_comm_stage.numberOfPendingMembers()
+                       << " pending members, "
+                       << d_comm_stage.numberOfPendingRequests()
+                       << " pending requests." << std::endl;
+         }
+      } while ( !d_relaunch_queue.empty() || d_comm_stage.hasPendingRequests() );
+
+   }
+
+   TBOX_ASSERT( d_relaunch_queue.empty() );
+   TBOX_ASSERT( !d_comm_stage.hasPendingRequests() );
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (d_compute_relationships > 2) {
+      // Each new node should have its own neighbor list.
+      TBOX_ASSERT(d_new_box_level->getBoxes().size() ==
+                  d_tag_to_new->getTranspose().getLocalNumberOfNeighborSets());
+   }
+#endif
+
+   // Barrier to separate clustering cost from relationship sharing cost.
+   d_mpi_object.Barrier();
+
+   d_object_timers->t_cluster->stop();
+
+   /*
+    * Share relationships with owners, if requested.
+    * This is a one-time operation that is not considered a part
+    * of continueAlgorithm(), so it lies outside that timimg.
+    */
+   if (d_compute_relationships > 1) {
+      shareNewNeighborhoodSetsWithOwners();
+      d_relationship_senders.clear();
+      d_relationship_messages.clear();
+   }
+
+
+   d_object_timers->t_cluster_and_compute_relationships->stop();
+
+   d_new_box_level->finalize();
+
+   TBOX_ASSERT(d_tag_to_new->checkConsistencyWithBase() == 0);
+   TBOX_ASSERT(d_tag_to_new->checkConsistencyWithHead() == 0);
+   TBOX_ASSERT(d_tag_to_new->getTranspose().checkConsistencyWithBase() == 0);
+   TBOX_ASSERT(d_tag_to_new->getTranspose().checkConsistencyWithHead() == 0);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    assertNoMessageForPrivateCommunicator();
 #endif
 
-   if (d_barrier_after) {
-      t_barrier_after->start();
-      mpi.Barrier();
-      t_barrier_after->stop();
-   }
-
-   t_find_boxes_with_tags->stop();
 }
 
 /*
- ***********************************************************************
- ***********************************************************************
+ **********************************************************************
+ *
+ * Send new relationships found by local process to owners of the new nodes
+ * associated with those relationships.  Receive similar data from other
+ * processes.
+ *
+ * Messages to be sent out were placed in d_relationship_messages by
+ * computeNewNeighborhoodSets().  This method sends out these messages
+ * and receives anticipated messages from processes listed in
+ * d_relationship_senders.  Received messages are unpacked to get
+ * data on new relationships.
+ *
+ **********************************************************************
  */
 void
-BergerRigoutsos::sortOutputBoxes(
-   hier::BoxLevel& new_box_level,
-   hier::Connector& tag_to_new) const
+BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
 {
+   tbox::SAMRAI_MPI mpi(d_mpi_object);
+   if (mpi.getSize() == 1) {
+      return;
+   }
 
-   t_sort_output_nodes->start();
+   d_object_timers->t_share_new_relationships->start();
 
-   TBOX_ASSERT(tag_to_new.hasTranspose());
-   hier::Connector& new_to_tag = tag_to_new.getTranspose();
+   IntSet relationship_senders = d_relationship_senders;
+   std::map<int, VectorOfInts>& relationship_messages = d_relationship_messages;
 
-   if (0) {
-      // Check inputs.
-      int errs = 0;
-      if (tag_to_new.checkOverlapCorrectness(false, true)) {
-         ++errs;
-         tbox::perr << "Error found in tag_to_new!\n";
-      }
-      if (new_to_tag.checkOverlapCorrectness(false, true)) {
-         ++errs;
-         tbox::perr << "Error found in new_to_tag!\n";
-      }
-      if (errs != 0) {
-         TBOX_ERROR(
-            "Errors found before sorting nodes."
-            << "new_box_level:\n" << new_box_level.format("", 2)
-            << "tag box_level:\n" << tag_to_new.getBase().format("", 2)
-            << "tag_to_new:\n" << tag_to_new.format("", 2)
-            << "new_to_tag:\n" << new_to_tag.format("", 2) << std::endl);
+   const int ints_per_node = hier::Box::commBufferSize(getDim());
+
+   int ierr;
+   tbox::SAMRAI_MPI::Status mpi_status;
+
+   // Nonblocking send of relationship data.
+   d_object_timers->t_share_new_relationships_send->start();
+   tbox::Array<tbox::SAMRAI_MPI::Request> mpi_request(
+      static_cast<int>(relationship_messages.size()));
+   std::map<int, VectorOfInts>::iterator send_i;
+   int nsend = 0;
+   for (send_i = relationship_messages.begin(), nsend = 0;
+        send_i != relationship_messages.end();
+        ++send_i, ++nsend) {
+      const int& owner = (*send_i).first;
+      VectorOfInts& msg = (*send_i).second;
+      ierr = mpi.Isend(&msg[0],
+            static_cast<int>(msg.size()),
+            MPI_INT,
+            owner,
+            d_tag_upper_bound,
+            &mpi_request[nsend]);
+#ifndef DEBUG_CHECK_ASSERTIONS
+      NULL_USE(ierr);
+#endif
+      TBOX_ASSERT(ierr == MPI_SUCCESS);
+   }
+   d_object_timers->t_share_new_relationships_send->stop();
+
+   {
+      /*
+       * The rest of this method assumes current process is NOT
+       * in relationship_senders, so remove it.  For efficiency, method
+       * computeNewNeighborhoodSets() (which created the relationship senders)
+       * did not remove it.
+       */
+      IntSet::iterator local = relationship_senders.find(d_mpi_object.getRank());
+      if (local != relationship_senders.end()) {
+         relationship_senders.erase(local);
       }
    }
+
+   /*
+    * Create set recved_from which is to contain ranks of
+    * processes from which we've received the expected relationship data.
+    * The while loop goes until all expected messages have
+    * been received from relationship_senders.
+    *
+    * In the while loop:
+    *    - Probe for an incomming message.
+    *    - Determine its size allocate memory for receiving the message.
+    *    - Receive the message.
+    *    - Get relationship data from the message.
+    */
+   IntSet recved_from;
+   while (recved_from.size() < relationship_senders.size()) {
+
+      d_object_timers->t_share_new_relationships_recv->start();
+      ierr = mpi.Probe(MPI_ANY_SOURCE,
+            d_tag_upper_bound,
+            &mpi_status);
+      TBOX_ASSERT(ierr == MPI_SUCCESS);
+
+      const int sender = mpi_status.MPI_SOURCE;
+      int mesg_size = -1;
+      mpi.Get_count(&mpi_status, MPI_INT, &mesg_size);
+      TBOX_ASSERT(relationship_senders.find(sender) != relationship_senders.end());
+      TBOX_ASSERT(recved_from.find(sender) == recved_from.end());
+      TBOX_ASSERT(mesg_size >= 0);
+
+      tbox::Array<int> buf(mesg_size);
+      int* ptr = buf.getPointer();
+      ierr = mpi.Recv(ptr,
+            mesg_size,
+            MPI_INT,
+            sender,
+            d_tag_upper_bound,
+            &mpi_status);
+      TBOX_ASSERT(ierr == MPI_SUCCESS);
+      d_object_timers->t_share_new_relationships_recv->stop();
+
+      d_object_timers->t_share_new_relationships_unpack->start();
+      int consumed = 0;
+      while (ptr < buf.getPointer() + buf.size()) {
+         const hier::LocalId new_local_id(*(ptr++));
+         hier::BoxId box_id(new_local_id, d_mpi_object.getRank());
+         int n_new_relationships = *(ptr++);
+         TBOX_ASSERT(d_tag_to_new->getTranspose().hasNeighborSet(box_id));
+         if (n_new_relationships > 0) {
+            hier::Connector::NeighborhoodIterator base_box_itr =
+               d_tag_to_new->getTranspose().makeEmptyLocalNeighborhood(box_id);
+            for (int n = 0; n < n_new_relationships; ++n) {
+               hier::Box node(getDim());
+               node.getFromIntBuffer(ptr);
+               ptr += ints_per_node;
+               d_tag_to_new->getTranspose().insertLocalNeighbor(node, base_box_itr);
+            }
+         }
+         consumed += 2 + n_new_relationships * ints_per_node;
+      }
+      recved_from.insert(sender);
+      d_object_timers->t_share_new_relationships_unpack->stop();
+   }
+
+   if (nsend > 0) {
+      // Make sure all nonblocking sends completed.
+      d_object_timers->t_share_new_relationships_send->start();
+      tbox::Array<tbox::SAMRAI_MPI::Status> mpi_statuses(
+         static_cast<int>(relationship_messages.size()));
+      ierr = mpi.Waitall(static_cast<int>(relationship_messages.size()),
+            mpi_request.getPointer(),
+            mpi_statuses.getPointer());
+      TBOX_ASSERT(ierr == MPI_SUCCESS);
+      d_object_timers->t_share_new_relationships_send->stop();
+   }
+
+   d_object_timers->t_share_new_relationships->stop();
+
+}
+
+
+
+/*
+ **********************************************************************
+ *
+ * Methods for setting algorithm parameters before running.
+ *
+ **********************************************************************
+ */
+
+void
+BergerRigoutsos::setAlgorithmAdvanceMode(
+   const std::string& mode)
+{
+   if (mode == "ADVANCE_ANY") {
+      d_algo_advance_mode = ADVANCE_ANY;
+   } else if (mode == "ADVANCE_SOME") {
+      d_algo_advance_mode = ADVANCE_SOME;
+   } else if (mode == "SYNCHRONOUS") {
+      d_algo_advance_mode = SYNCHRONOUS;
+   } else {
+      TBOX_ERROR("No such algorithm choice: " << mode << "\n");
+   }
+}
+
+void
+BergerRigoutsos::setOwnerMode(
+   const std::string& mode)
+{
+   if (mode == "SINGLE_OWNER") {
+      d_owner_mode = SINGLE_OWNER;
+   } else if (mode == "MOST_OVERLAP") {
+      d_owner_mode = MOST_OVERLAP;
+   } else if (mode == "FEWEST_OWNED") {
+      d_owner_mode = FEWEST_OWNED;
+   } else if (mode == "LEAST_ACTIVE") {
+      d_owner_mode = LEAST_ACTIVE;
+   } else {
+      TBOX_ERROR("BergerRigoutsos: Unrecognized owner mode request: "
+         << mode << std::endl);
+   }
+}
+
+void
+BergerRigoutsos::setComputeRelationships(
+   const std::string mode,
+   const hier::IntVector& ghost_cell_width)
+{
+   if (mode == "NONE") {
+      d_compute_relationships = 0;
+   } else if (mode == "TAG_TO_NEW") {
+      d_compute_relationships = 1;
+   } else if (mode == "BIDIRECTIONAL") {
+      d_compute_relationships = 2;
+   } else {
+      TBOX_ERROR("BergerRigoutsos::setComputeRelationships error:\n"
+         << "bad mode '" << mode << "' specified.\n"
+         << "Should be one of NONE, TAG_TO_NEW, BIDIRECTIONAL" << std::endl);
+   }
+   TBOX_ASSERT(ghost_cell_width >= hier::IntVector::getZero(ghost_cell_width.getDim()));
+   d_max_gcw = ghost_cell_width;
+}
+
+
+/*
+ **************************************************************************
+ **************************************************************************
+ */
+void
+BergerRigoutsos::resetCounters()
+{
+   d_num_tags_in_all_nodes = 0;
+   d_max_tags_owned = 0;
+   d_num_nodes_constructed = 0;
+   d_num_nodes_existing = 0;
+   d_max_nodes_existing = 0;
+   d_num_nodes_active = 0;
+   d_max_nodes_active = 0;
+   d_num_nodes_owned = 0;
+   d_max_nodes_owned = 0;
+   d_num_nodes_commwait = 0;
+   d_max_nodes_commwait = 0;
+   d_num_nodes_completed = 0;
+   d_max_generation = 0;
+   d_num_boxes_generated = 0;
+   d_num_conts_to_complete = 0;
+   d_max_conts_to_complete = 0;
+   d_num_nodes_existing = 0;
+}
+
+
+/*
+ **************************************************************************
+ **************************************************************************
+ */
+void
+BergerRigoutsos::writeCounters() {
+   tbox::plog << d_num_nodes_existing << "-exist  "
+              << d_num_nodes_active << "-act  "
+              << d_num_nodes_owned << "-owned  "
+              << d_num_nodes_completed << "-done  "
+              << d_relaunch_queue.size() << "-qd  "
+              << d_num_nodes_commwait << "-wait  ";
+}
+
+/*
+ **************************************************************************
+ **************************************************************************
+ */
+void
+BergerRigoutsos::useDuplicateMPI(
+   const tbox::SAMRAI_MPI& mpi_object)
+{
+   TBOX_ASSERT( !d_tag_level ); // Setting MPI during clustering makes a mess.
+
+   // If needed, free current private communicator.
+   if ( d_mpi_object.getCommunicator() != MPI_COMM_NULL ) {
+      d_mpi_object.freeCommunicator();
+      TBOX_ASSERT( d_mpi_object.getCommunicator() == MPI_COMM_NULL );
+   }
+
+   if (mpi_object.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+      d_mpi_object.dupCommunicator(mpi_object);
+   }
+
+   setupMPIDependentData();
+}
+
+/*
+ **************************************************************************
+ * Check the congruency between d_mpi and d_tag_level's MPI.
+ * Writes out warning in log if not congruent.
+ * Returns whether the two are congruent.
+ *
+ * Note: Sequential runs (no MPI or MPI with 1 process) always means
+ * congruency.  d_mpi with a Null communicator indicates that we will
+ * use the d_tag_level's MPI, so that is also automatically congruent.
+ **************************************************************************
+ */
+bool
+BergerRigoutsos::checkMPICongruency() const
+{
+
+   if ( !tbox::SAMRAI_MPI::usingMPI() ||
+        ( d_mpi_object.getCommunicator() == MPI_COMM_NULL ) ||
+        ( d_mpi_object.getSize() == 1 &&
+          d_tag_level->getBoxLevel()->getMPI().getSize() == 1 ) ) {
+      return true;
+   }
+
+   /*
+    * If a valid MPI communicator is given, use it instead of the
+    * tag BoxLevel's communicator.  It must be congruent with
+    * the tag BoxLevel's.
+    */
+
+   bool is_congruent = true;
+   /*
+    * Make sure mpi_object is compatible with the BoxLevel
+    * involved.
+    */
+   tbox::SAMRAI_MPI mpi1(d_mpi_object);
+   tbox::SAMRAI_MPI mpi2(d_tag_level->getBoxLevel()->getMPI());
+   TBOX_ASSERT(mpi1.getSize() == mpi2.getSize());
+   TBOX_ASSERT(mpi1.getRank() == mpi2.getRank());
+   if (mpi1.getSize() > 1) {
+      int compare_result;
+      tbox::SAMRAI_MPI::Comm_compare(
+         d_mpi_object.getCommunicator(),
+         d_tag_level->getBoxLevel()->getMPI().getCommunicator(),
+         &compare_result);
+      is_congruent =
+         (compare_result == MPI_CONGRUENT) ||
+         (compare_result == MPI_IDENT);
+   }
+
+   return is_congruent;
+}
+
+/*
+ **************************************************************************
+ **************************************************************************
+ */
+void
+BergerRigoutsos::setupMPIDependentData()
+{
+   /*
+    * Reserve the tag upper bound for the relationship-sharing phase.
+    * Divide the rest into tag pools divided among all processes.
+    */
+   if (tbox::SAMRAI_MPI::usingMPI()) {
+      /*
+       * For some MPI implementations, I cannot get the attribute for
+       * any communicator except for MPI_COMM_WORLD.  Assuming the tag
+       * upper bound is the same for all communicators, I will try
+       * some other communicators to get it.
+       */
+      int* tag_upper_bound_ptr, flag;
+      d_mpi_object.Attr_get(
+         MPI_TAG_UB,
+         &tag_upper_bound_ptr,
+         &flag);
+      if (tag_upper_bound_ptr == 0) {
+         tbox::SAMRAI_MPI::getSAMRAIWorld().Attr_get(
+            MPI_TAG_UB,
+            &tag_upper_bound_ptr,
+            &flag);
+      }
+      if (tag_upper_bound_ptr == 0) {
+         tbox::SAMRAI_MPI mpi1(tbox::SAMRAI_MPI::commWorld);
+         mpi1.Attr_get(
+            MPI_TAG_UB,
+            &tag_upper_bound_ptr,
+            &flag);
+      }
+      TBOX_ASSERT(tag_upper_bound_ptr != 0);
+      d_tag_upper_bound = *tag_upper_bound_ptr;
+
+   } else {
+      // MPI not used, so choose a sufficiently big tag upper bound.
+      d_tag_upper_bound = 1000000;
+   }
+
+   // Divide the rest into tag pools divided among all processes.
+   d_available_mpi_tag =
+      d_tag_upper_bound / d_mpi_object.getSize() * d_mpi_object.getRank();
+
+}
+
+/*
+***********************************************************************
+***********************************************************************
+*/
+void
+BergerRigoutsos::sortOutputBoxes()
+{
+   d_object_timers->t_sort_output_nodes->start();
 
    /*
     * Sort local indices by corners to make the output deterministic.
@@ -457,64 +1024,22 @@ BergerRigoutsos::sortOutputBoxes(
    dlbg_edge_utils.makeSortingMap(
       sorted_box_level,
       sorting_map,
-      new_box_level,
+      *d_new_box_level,
       true /* sort nodes by corners */,
       false /* don't sequentialize indices globally */);
-   if (0) {
-      tbox::plog
-      << "tag box_level:\n" << tag_to_new.getBase().format("", 2)
-      << "tag_to_new:\n" << tag_to_new.format("", 2)
-      << "new_to_tag:\n" << new_to_tag.format("", 2)
-      << "Sorting map:\n" << sorting_map->format("", 2);
-   }
-   if (0) {
-      // Check sorting_map before using it.
-      int errs = 0;
-      if (sorting_map->checkOverlapCorrectness(false, true)) {
-         ++errs;
-         tbox::perr << "Error found in sorting_map!\n";
-      }
-      if (errs != 0) {
-         TBOX_ERROR(
-            "Errors in load balance mapping found."
-            << "presorted box_level:\n" << new_box_level.format("", 2)
-            << "sorted box_level:\n" << sorted_box_level->format("", 2)
-            << "sorting_map:\n" << sorting_map->format("", 2) << std::endl);
-      }
-   }
    hier::MappingConnectorAlgorithm mca;
-   mca.modify(tag_to_new,
-      *sorting_map,
-      &new_box_level);
-   if (0) {
-      // Check result of mapping.
-      int errs = 0;
-      if (tag_to_new.checkOverlapCorrectness(false, true)) {
-         ++errs;
-         tbox::perr << "Error found in tag_to_new!\n";
-      }
-      if (new_to_tag.checkOverlapCorrectness(false, true)) {
-         ++errs;
-         tbox::perr << "Error found in new_to_tag!\n";
-      }
-      if (errs != 0) {
-         TBOX_ERROR(
-            "Errors found after sorting nodes."
-            << "new_box_level:\n" << new_box_level.format("", 2)
-            << "tag box_level:\n" << tag_to_new.getBase().format("", 2)
-            << "tag_to_new:\n" << tag_to_new.format("", 2)
-            << "new_to_tag:\n" << new_to_tag.format("", 2) << std::endl);
-      }
-   }
+   mca.modify(*d_tag_to_new,
+              *sorting_map,
+              d_new_box_level.get());
 
-   t_sort_output_nodes->stop();
+   d_object_timers->t_sort_output_nodes->stop();
 }
 
 /*
- ***************************************************************************
- *
- ***************************************************************************
- */
+***************************************************************************
+*
+***************************************************************************
+*/
 void
 BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
 {
@@ -524,13 +1049,14 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
     * that there is no messages in transit, but it can find
     * messages that have arrived but not received.
     */
-   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (d_mpi_object.getCommunicator() != tbox::SAMRAI_MPI::commNull &&
+       d_mpi_object != d_tag_level->getBoxLevel()->getMPI() ) {
       int flag;
       tbox::SAMRAI_MPI::Status mpi_status;
-      int mpi_err = d_mpi.Iprobe(MPI_ANY_SOURCE,
-            MPI_ANY_TAG,
-            &flag,
-            &mpi_status);
+      int mpi_err = d_mpi_object.Iprobe(MPI_ANY_SOURCE,
+                                        MPI_ANY_TAG,
+                                        &flag,
+                                        &mpi_status);
       if (mpi_err != MPI_SUCCESS) {
          TBOX_ERROR("Error probing for possible lost messages." << std::endl);
       }
@@ -538,63 +1064,100 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
          int count = -1;
          mpi_err = tbox::SAMRAI_MPI::Get_count(&mpi_status, MPI_INT, &count);
          TBOX_ERROR("Library error!\n"
-            << "BergerRigoutsos detected before or after\n"
-            << "running BergerRigoutsosNode that there\n"
-            << "is a message yet to be received.  This is\n"
-            << "an error because all messages using the\n"
-            << "private communicator should have been\n"
-            << "accounted for.  Message status:\n"
-            << "source " << mpi_status.MPI_SOURCE << '\n'
-            << "tag " << mpi_status.MPI_TAG << '\n'
-            << "count " << count << " (assuming integers)\n");
+                    << "BergerRigoutsos detected before or after\n"
+                    << "the clustering algorithm that there\n"
+                    << "is a message yet to be received.  This is\n"
+                    << "an error because all messages using the\n"
+                    << "private communicator should have been\n"
+                    << "accounted for.  Message status:\n"
+                    << "source " << mpi_status.MPI_SOURCE << '\n'
+                    << "tag " << mpi_status.MPI_TAG << '\n'
+                    << "count " << count << " (assuming integers)\n");
       }
    }
 }
 
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void
-BergerRigoutsos::initializeCallback()
-{
-   TBOX_ASSERT(!t_global_reductions);
-   t_run_abr = tbox::TimerManager::getManager()->
-      getTimer("mesh::BergerRigoutsos::run_abr");
-   t_find_boxes_with_tags = tbox::TimerManager::getManager()->
-      getTimer("mesh::BergerRigoutsos::find_boxes_with_tags");
-   t_cluster_and_compute_relationships = tbox::TimerManager::getManager()->
-      getTimer("mesh::BergerRigoutsos::cluster_and_compute_relationships");
-   t_global_reductions = tbox::TimerManager::getManager()->
-      getTimer("mesh::BergerRigoutsos::global_reductions");
-   t_logging = tbox::TimerManager::getManager()->
-      getTimer("mesh::BergerRigoutsos::logging");
-   t_sort_output_nodes = tbox::TimerManager::getManager()->
-      getTimer("mesh::BergerRigoutsos::sort_output_nodes");
-   t_barrier_before = tbox::TimerManager::getManager()->
-      getTimer("mesh::BergerRigoutsos::barrier_before");
-   t_barrier_after = tbox::TimerManager::getManager()->
-      getTimer("mesh::BergerRigoutsos::barrier_after");
-}
 
 /*
- ***************************************************************************
- *
- * Release static timers.  To be called by shutdown registry to make sure
- * memory for timers does not leak.
- *
- ***************************************************************************
+ ***********************************************************************
+ ***********************************************************************
  */
 void
-BergerRigoutsos::finalizeCallback()
+BergerRigoutsos::setTimerPrefix(
+   const std::string& timer_prefix)
 {
-   t_barrier_before.reset();
-   t_barrier_after.reset();
-   t_find_boxes_with_tags.reset();
-   t_run_abr.reset();
-   t_global_reductions.reset();
-   t_sort_output_nodes.reset();
+   std::map<std::string, TimerStruct>::iterator ti(
+      s_static_timers.find(timer_prefix));
+
+   if (ti != s_static_timers.end()) {
+      d_object_timers = &(ti->second);
+   } else {
+
+      d_object_timers = &s_static_timers[timer_prefix];
+
+      tbox::TimerManager *tm = tbox::TimerManager::getManager();
+
+      d_object_timers->t_find_boxes_containing_tags = tm->
+         getTimer("mesh::BergerRigoutsos::findBoxesContainingTags()");
+
+      d_object_timers->t_cluster = tm->
+         getTimer(timer_prefix + "::cluster");
+      d_object_timers->t_cluster_and_compute_relationships = tm->
+         getTimer(timer_prefix + "::clusterAndComputeRelationships()");
+      d_object_timers->t_continue_algorithm = tm->
+         getTimer(timer_prefix + "::continueAlgorithm()");
+
+      d_object_timers->t_compute = tm->
+         getTimer(timer_prefix + "::compute");
+      d_object_timers->t_comm_wait = tm->
+         getTimer(timer_prefix + "::Comm_wait");
+      d_object_timers->t_MPI_wait = tm->
+         getTimer(timer_prefix + "::MPI_wait");
+
+      d_object_timers->t_compute_new_neighborhood_sets = tm->
+         getTimer(timer_prefix + "::computeNewNeighborhoodSets()");
+      d_object_timers->t_share_new_relationships = tm->
+         getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()");
+      d_object_timers->t_share_new_relationships_send = tm->
+         getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()_send");
+      d_object_timers->t_share_new_relationships_recv = tm->
+         getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()_recv");
+      d_object_timers->t_share_new_relationships_unpack = tm->
+         getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()_unpack");
+
+      d_object_timers->t_local_histogram = tm->
+         getTimer(timer_prefix + "::makeLocalTagHistogram()");
+      d_object_timers->t_local_tasks = tm->
+         getTimer(timer_prefix + "::continueAlgorithm()_local_tasks");
+
+      // Multi-stage timers
+      d_object_timers->t_reduce_histogram = tm->
+         getTimer(timer_prefix + "::reduce_histogram");
+      d_object_timers->t_bcast_acceptability = tm->
+         getTimer(timer_prefix + "::bcast_acceptability");
+      d_object_timers->t_gather_grouping_criteria = tm->
+         getTimer(timer_prefix + "::gather_grouping_criteria");
+      d_object_timers->t_bcast_child_groups = tm->
+         getTimer(timer_prefix + "::bcast_child_groups");
+      d_object_timers->t_bcast_to_dropouts = tm->
+         getTimer(timer_prefix + "::bcast_to_dropouts");
+
+      // Pre- and post-processing timers.
+      d_object_timers->t_barrier_before = tm->
+         getTimer("mesh::BergerRigoutsos::barrier_before");
+      d_object_timers->t_barrier_after = tm->
+         getTimer("mesh::BergerRigoutsos::barrier_after");
+      d_object_timers->t_global_reductions = tm->
+         getTimer("mesh::BergerRigoutsos::global_reductions");
+      d_object_timers->t_sort_output_nodes = tm->
+         getTimer("mesh::BergerRigoutsos::sort_output_nodes");
+      d_object_timers->t_logging = tm->
+         getTimer("mesh::BergerRigoutsos::logging");
+   }
+
+   d_comm_stage.setCommunicationWaitTimer(d_object_timers->t_MPI_wait);
 }
+
 
 }
 }
