@@ -45,7 +45,7 @@ Main {
    combine_tol = 0.85
 
    BergerRigoutsos {
-      DEV_sort_output_nodes = TRUE
+      sort_output_nodes = TRUE
       DEV_log_node_history = FALSE
       DEV_log_cluster_summary = FALSE
       DEV_log_cluster = FALSE

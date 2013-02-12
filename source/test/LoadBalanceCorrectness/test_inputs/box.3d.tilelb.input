@@ -49,11 +49,6 @@ Main {
    */
    ghost_cell_width = 4, 4, 4
 
-   /*
-     Specify the min patch size for load balancer.
-   */
-   min_size = 4, 4, 4
-
    mesh_generator_name = "SphericalShellGenerator"
 
    SphericalShellGenerator {
@@ -113,10 +108,10 @@ TilePartitioner {
 
 TreeLoadBalancer {
   DEV_report_load_balance = TRUE // Reported in main
-  balance_penalty_wt = 1.0
-  surface_penalty_wt = 1.0
-  slender_penalty_wt = 1.0
-  precut_penalty_wt = 1.0
+  DEV_balance_penalty_wt = 1.0
+  DEV_surface_penalty_wt = 1.0
+  DEV_slender_penalty_wt = 1.0
+  DEV_precut_penalty_wt = 1.0
 
   // Debugging options
   DEV_check_map = TRUE

@@ -95,11 +95,14 @@ boost::shared_ptr<mesh::LoadBalanceStrategy>
 createLoadBalancer(
    const boost::shared_ptr<tbox::Database> &input_db,
    const std::string &lb_type,
+   const std::string &rank_tree_type,
    int ln,
    const tbox::Dimension &dim );
 
 boost::shared_ptr<RankTreeStrategy>
-getRankTree( Database &input_db );
+getRankTree(
+   Database &input_db,
+   const std::string &rank_tree_type );
 
 static boost::shared_ptr<tbox::CommGraphWriter> comm_graph_writer;
 size_t num_records_written = 0;
@@ -406,6 +409,9 @@ int main(
       std::string load_balancer_type =
          main_db->getStringWithDefault("load_balancer_type", "TreeLoadBalancer");
 
+      std::string rank_tree_type =
+         main_db->getStringWithDefault("rank_tree_type", "CenteredRankTree");
+
 
       const bool write_comm_graph = main_db->getBoolWithDefault("write_comm_graph", false);
       if ( write_comm_graph ) {
@@ -463,7 +469,7 @@ int main(
          hier::Connector* L0_to_domain = &domain_to_L0->getTranspose();
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb0 =
-            createLoadBalancer( input_db, load_balancer_type, 0, dim );
+            createLoadBalancer( input_db, load_balancer_type, rank_tree_type, 0, dim );
 
          tbox::plog << "\n\tL0 prebalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
@@ -584,7 +590,7 @@ int main(
          }
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb1
-            = createLoadBalancer( input_db, load_balancer_type, 1 , dim);
+            = createLoadBalancer( input_db, load_balancer_type, rank_tree_type, 1 , dim);
 
          tbox::pout << "\tPartitioning..." << std::endl;
 
@@ -718,7 +724,7 @@ int main(
 
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb2
-            = createLoadBalancer( input_db, load_balancer_type, 2 , dim);
+            = createLoadBalancer( input_db, load_balancer_type, rank_tree_type, 2 , dim);
 
          tbox::pout << "\tPartitioning..." << std::endl;
 
@@ -1082,13 +1088,14 @@ boost::shared_ptr<mesh::LoadBalanceStrategy>
 createLoadBalancer(
    const boost::shared_ptr<tbox::Database> &input_db,
    const std::string &lb_type,
+   const std::string &rank_tree_type,
    int ln,
    const tbox::Dimension &dim )
 {
 
    if (lb_type == "TreeLoadBalancer") {
 
-      boost::shared_ptr<tbox::RankTreeStrategy> rank_tree = getRankTree(*input_db);
+      boost::shared_ptr<tbox::RankTreeStrategy> rank_tree = getRankTree(*input_db, rank_tree_type);
 
       boost::shared_ptr<mesh::TreeLoadBalancer>
          tree_lb(new mesh::TreeLoadBalancer(
@@ -1128,15 +1135,15 @@ createLoadBalancer(
 * Get the RankTreeStrategy implementation for TreeLoadBalancer
 ****************************************************************************
 */
-boost::shared_ptr<RankTreeStrategy> getRankTree( Database &input_db )
+boost::shared_ptr<RankTreeStrategy> getRankTree(
+   Database &input_db,
+   const std::string &rank_tree_type )
 {
-   const std::string tree_type = input_db.getStringWithDefault(
-      "rank_tree_type", "CenteredRankTree" );
-   tbox::plog << "Rank tree type is " << tree_type << '\n';
+   tbox::plog << "Rank tree type is " << rank_tree_type << '\n';
 
    boost::shared_ptr<tbox::RankTreeStrategy> rank_tree;
 
-   if (tree_type == "BalancedDepthFirstTree") {
+   if (rank_tree_type == "BalancedDepthFirstTree") {
 
       BalancedDepthFirstTree *bdfs( new BalancedDepthFirstTree() );
 
@@ -1150,7 +1157,7 @@ boost::shared_ptr<RankTreeStrategy> getRankTree( Database &input_db )
 
    }
 
-   else if (tree_type == "CenteredRankTree") {
+   else if (rank_tree_type == "CenteredRankTree") {
 
       CenteredRankTree *crt( new tbox::CenteredRankTree() );
 
@@ -1164,7 +1171,7 @@ boost::shared_ptr<RankTreeStrategy> getRankTree( Database &input_db )
 
    }
 
-   else if (tree_type == "BreadthFirstRankTree") {
+   else if (rank_tree_type == "BreadthFirstRankTree") {
 
       BreadthFirstRankTree *dft( new tbox::BreadthFirstRankTree() );
 
@@ -1179,7 +1186,7 @@ boost::shared_ptr<RankTreeStrategy> getRankTree( Database &input_db )
    }
 
    else {
-      TBOX_ERROR("Unrecognized RankTreeStrategy " << tree_type);
+      TBOX_ERROR("Unrecognized RankTreeStrategy " << rank_tree_type);
    }
 
    return rank_tree;

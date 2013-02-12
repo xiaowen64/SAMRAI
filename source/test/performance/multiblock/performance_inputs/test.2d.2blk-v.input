@@ -139,7 +139,7 @@ BlockGeometry {
 PatchHierarchy {
    max_levels = 4         // Maximum number of levels in hierarchy.
    ratio_to_coarser {      // vector ratio to next coarser level
-      level_1 = 4 , 4 
+      level_1 = 4 , 4
       level_2 = 4 , 4
       level_3 = 4 , 4
    }
@@ -152,6 +152,7 @@ PatchHierarchy {
       // all finer levels will use same values as level_0...
    }
 }
+
 
 
 

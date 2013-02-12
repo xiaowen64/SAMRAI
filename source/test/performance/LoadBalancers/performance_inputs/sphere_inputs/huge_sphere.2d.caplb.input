@@ -32,11 +32,6 @@ Main {
      If omitted, the L0 layer is the same as the domain.
    */
    L0_boxes = [(0,0),(3199,3199)]
-   /*
-     If L0 is not contained in domain, you can use this flag
-     to remove the parts that are outside the domain.
-   */
-   autonest_L0 = TRUE
 
    /*
      Specify ghost-cell-width between L0 and unbalanced.
@@ -54,7 +49,6 @@ Main {
       */
       prebalance_boxes = [(10,10),(189,189)]
       initial_owners = 0
-      max_box_size = -1, -1, -1
    }
 
    PrebalanceByUserShells {

@@ -23,7 +23,6 @@ TimerManager{
    print_concurrent         = TRUE
    print_timer_overhead     = TRUE
    print_threshold          = 0.0
-   init_from_restart        = TRUE
    timer_list               = "apps::main::*",
                               "apps::Foo::*"
 }

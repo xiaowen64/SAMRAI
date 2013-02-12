@@ -52,7 +52,7 @@ LinAdv {
       }
    }
 
-  // valid boundary_condition values are "FLOW", "REFLECT", "DIRICHLET"
+   // valid boundary_condition values are "FLOW", "REFLECT", "DIRICHLET"
    Boundary_data {
       boundary_face_xlo {
          boundary_condition      = "FLOW"
@@ -158,12 +158,9 @@ Main {
 
 // visualization dump parameters
    viz_dump_interval     = 0          // zero to turn off
-   visit_number_procs_per_file = 1
 
 // restart dump parameters
    restart_interval        = 0        // zero to turn off
-
-   run_time_plotting = FALSE
 
    use_scaled_input = TRUE
    // timestepping = "SYNCHRONIZED"
@@ -223,36 +220,11 @@ GriddingAlgorithm {
    DEV_log_metadata_statistics = TRUE
 }
 
-V2GriddingAlgorithm {
-   max_levels             = 3        // Maximum number of levels in hierarchy.
-   ratio_to_coarser {            // vector ratio to next coarser level
-      level_1             = 2 , 2 , 2
-      level_2             = 2 , 2 , 2
-      level_3             = 2 , 2 , 2
-      level_4             = 2 , 2 , 2
-      level_5             = 2 , 2 , 2
-      level_6             = 2 , 2 , 2
-      level_7             = 2 , 2 , 2
-      level_8             = 2 , 2 , 2
-      level_9             = 2 , 2 , 2
-   }
-
-   largest_patch_size {
-      level_0 =  30, 30, 30  // largest patch allowed in hierarchy
-           // all finer levels will use same values as level_0...
-   }
-
-   smallest_patch_size {
-      level_0 =  5, 5, 5
-      // all finer levels will use same values as level_0...
-   }
-}
-
 SinusoidalFrontTagger {
-  init_disp = 1.0, 1.0, 1.0
-  period = 8.0, 4.0, 4.0
-  velocity = 2.0e0 , 0.01e0, 0.01e0
-  amplitude = 0.5
+   init_disp = 1.0, 1.0, 1.0
+   period = 8.0, 4.0, 4.0
+   velocity = 2.0e0 , 0.01e0, 0.01e0
+   amplitude = 0.5
 }
 
 StandardTagAndInitialize {
@@ -270,23 +242,22 @@ TimeRefinementIntegrator {
    DEV_barrier_and_time        = TRUE
 }
 
-LoadBalancer{
-  processors = 1, 1
-  bin_pack_method = "GREEDY"
-  // bin_pack_method = "SPATIAL"
-  ignore_level_box_union_is_single_box = TRUE
+ChopAndPackLoadBalancer{
+   bin_pack_method = "GREEDY"
+   // bin_pack_method = "SPATIAL"
+   ignore_level_box_union_is_single_box = TRUE
 }
 
 TreeLoadBalancer {
-  DEV_report_load_balance = FALSE
-  DEV_barrier_before = TRUE
-  DEV_barrier_after = TRUE
-  DEV_check_map = FALSE
-  DEV_check_connectivity = FALSE
-  DEV_print_steps = FALSE
-  DEV_print_swap_steps = FALSE
-  DEV_print_break_steps = FALSE
-  DEV_print_edge_steps = FALSE
+   DEV_report_load_balance = FALSE
+   DEV_barrier_before = TRUE
+   DEV_barrier_after = TRUE
+   DEV_check_map = FALSE
+   DEV_check_connectivity = FALSE
+   DEV_print_steps = FALSE
+   DEV_print_swap_steps = FALSE
+   DEV_print_break_steps = FALSE
+   DEV_print_edge_steps = FALSE
 }
 
 HyperbolicLevelIntegrator {
@@ -298,7 +269,7 @@ HyperbolicLevelIntegrator {
 }
 
 RefineSchedule {
-  DEV_barrier_and_time = TRUE
+   DEV_barrier_and_time = TRUE
 }
 
 PersistentOverlapConnectors {

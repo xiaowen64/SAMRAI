@@ -17,7 +17,6 @@ Main {
    nsteps                   = 1
 
    log_file_name            = "2lev-2d-node-edge-perx.log"
-   visit_dump_dirname       = "viz_2lev-2d-node-edge-perx"
 }
 
 HierSumTest {
@@ -81,6 +80,5 @@ StandardTagAndInitialize{
 }
 
 LoadBalancer {  // for SAMRAI v1.3.2
-   use_spatial_bin_pack = TRUE
 }
 

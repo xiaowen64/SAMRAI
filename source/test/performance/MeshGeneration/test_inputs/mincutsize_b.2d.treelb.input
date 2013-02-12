@@ -52,7 +52,6 @@ Main {
       DEV_log_node_history = FALSE
       DEV_log_cluster_summary = FALSE
       DEV_log_cluster = FALSE
-      DEV_barrier_before_cluster = FALSE
       // DEV_owner_mode = "SINGLE_OWNER"
       // DEV_algo_advance_mode = "SYNCHRONOUS"
       DEV_min_box_size_from_cutting = 6, 6

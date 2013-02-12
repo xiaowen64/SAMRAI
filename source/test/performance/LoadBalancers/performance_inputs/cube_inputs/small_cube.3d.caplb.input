@@ -32,11 +32,6 @@ Main {
      If omitted, the L0 layer is the same as the domain.
    */
    L0_boxes = [(0,0,0),(19,19,19)]
-   /*
-     If L0 is not contained in domain, you can use this flag
-     to remove the parts that are outside the domain.
-   */
-   autonest_L0 = TRUE
 
    /*
      Specify ghost-cell-width between L0 and unbalanced.

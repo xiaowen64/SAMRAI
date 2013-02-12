@@ -42,12 +42,6 @@ Main {
    // L0_boxes = [(0,0),(49,24)]
 
    /*
-     If L0 is not contained in domain, you can use this flag
-     to remove the parts that are outside the domain.
-   */
-   autonest_L0 = TRUE
-
-   /*
      Specify ghost-cell-width between L0 and unbalanced.
    */
    ghost_cell_width = 4, 4

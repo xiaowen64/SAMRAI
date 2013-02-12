@@ -114,9 +114,6 @@ MblkEuler {
 
 Main {
    dim = 3
-// log file parameters 
-   log_file_name    = "octant.log"
-   log_all_nodes    = TRUE
 
 // visualization dump parameters 
    viz_dump_interval     = 1          // zero to turn off

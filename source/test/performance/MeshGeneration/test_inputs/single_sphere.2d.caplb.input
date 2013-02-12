@@ -47,15 +47,12 @@ Main {
    combine_tol = 0.88
 
    BergerRigoutsos {
-      laplace_cut_threshold_ar = 4
       sort_output_nodes = TRUE
-      log_node_history = FALSE
-      log_cluster_summary = FALSE
-      log_cluster = FALSE
-      sequentialize_output_indices = FALSE
-      barrier_before_cluster = FALSE
-      // owner_mode = "SINGLE_OWNER"
-      // algo_advance_mode = "SYNCHRONOUS"
+      DEV_log_node_history = FALSE
+      DEV_log_cluster_summary = FALSE
+      DEV_log_cluster = FALSE
+      // DEV_owner_mode = "SINGLE_OWNER"
+      // DEV_algo_advance_mode = "SYNCHRONOUS"
    }
 
    mesh_generator_name = "SphericalShellGenerator"
@@ -81,20 +78,20 @@ Main {
 }
 
 TreeLoadBalancer {
-  report_load_balance = FALSE // Reported in main
+  DEV_report_load_balance = FALSE // Reported in main
   flexible_load_tolerance = 0.10
-  balance_penalty_wt = 1.0
-  surface_penalty_wt = 1.0
-  slender_penalty_wt = 1.0
-  precut_penalty_wt = 1.0
+  DEV_balance_penalty_wt = 1.0
+  DEV_surface_penalty_wt = 1.0
+  DEV_slender_penalty_wt = 1.0
+  DEV_precut_penalty_wt = 1.0
 
   // Debugging options
-  check_map = FALSE
-  check_connectivity = FALSE
-  print_steps = TRUE
-  print_swap_steps = TRUE
-  print_break_steps = TRUE
-  print_edge_steps = FALSE
+  DEV_check_map = FALSE
+  DEV_check_connectivity = FALSE
+  DEV_print_steps = TRUE
+  DEV_print_swap_steps = TRUE
+  DEV_print_break_steps = TRUE
+  DEV_print_edge_steps = FALSE
 }
 
 CenteredRankTree { // Parameters for BalancedDepthFirstTree in getRankTree()

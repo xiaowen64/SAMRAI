@@ -64,20 +64,6 @@ TimerManager {
 CellMultiblockTest {
 
    //
-   // Anything specific to the test goes here...
-   //
-   // e.g., coefficients for linear function to interpolate
-   //          Ax + By + Cz + D = f(x,y,z)
-   //          (NOTE: f(x,y,z) is the value assigned to each 
-   //                 array value at initialization and 
-   //                 against which interpolation is tested) 
-   //   
-   Acoef = 2.1
-   Bcoef = 3.2
-   Ccoef = 4.3
-   Dcoef = 5.4
-
-   //
    // The VariableData database is read in by the PatchDataTestStrategy
    // base class.  Each sub-database must contain variable parameter data.
    // The name of the sub-databases for each variable is arbitrary.  But
@@ -253,8 +239,6 @@ GriddingAlgorithm {
 }
 
 TreeLoadBalancer {
-// processors      = 1 , 1 
-   use_spatial_bin_pack = TRUE
 }
 
 StandardTaggingAndInitializer {

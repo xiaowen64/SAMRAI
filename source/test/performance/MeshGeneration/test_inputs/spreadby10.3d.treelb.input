@@ -53,7 +53,6 @@ Main {
    combine_tol = 0.88
 
    BergerRigoutsos {
-      DEV_laplace_cut_threshold_ar = 4
       sort_output_nodes = TRUE
       DEV_log_node_history = FALSE
       DEV_log_cluster_summary = FALSE
@@ -89,10 +88,10 @@ TreeLoadBalancer {
   max_cycle_spread_ratio = 10
   flexible_load_tolerance = 0.05
   min_load_fraction_per_box = 0.00
-  balance_penalty_wt = 1.0
-  surface_penalty_wt = 0.0
-  slender_penalty_wt = 0.0
-  precut_penalty_wt = 1.0
+  DEV_balance_penalty_wt = 1.0
+  DEV_surface_penalty_wt = 0.0
+  DEV_slender_penalty_wt = 0.0
+  DEV_precut_penalty_wt = 1.0
 
   // Debugging options
   DEV_check_map = FALSE

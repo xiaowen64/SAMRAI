@@ -52,7 +52,6 @@ Main {
       DEV_log_cluster = FALSE
       // DEV_owner_mode = "SINGLE_OWNER"
       // DEV_algo_advance_mode = "SYNCHRONOUS"
-      min_box_size_for_inflection_cut = 1, 1, 1
    }
 
    mesh_generator_name = "SinusoidalFrontGenerator"

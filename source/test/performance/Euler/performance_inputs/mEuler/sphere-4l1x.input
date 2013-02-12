@@ -11,12 +11,6 @@
 // 4-level Euler strong scaling performance test.
 // The 1x version is set up to do about 28.4 cell updates.
 
-GlobalInputs {
-   //use_new_comm_sched = FALSE  // uncomment to turn on OLD
-   use_newest_comm_sched = TRUE // uncomment to turn on NEW
-   //use_old_method_for_clustering = TRUE // uncomment to turn on OLD
-}
-
 Euler {
    gamma            = 1.4      // gamma = Ratio of specific heats
 
@@ -59,7 +53,7 @@ Euler {
 
       PRESSURE_DEVIATION {
          dev_tol = 0.01
-        pressure_dev = 0.01
+         pressure_dev = 0.01
       }
    }
 
@@ -268,9 +262,4 @@ TreeLoadBalancer {
   DEV_report_load_balance = FALSE
   DEV_barrier_before = TRUE
   DEV_barrier_after = TRUE
-}
-
-// LoadBalancer is used by the new code.
-LoadBalancer {
-// using default uniform load balance configuration (see mesh_LoadBalancerX.h.sed)
 }

@@ -145,11 +145,6 @@ BergerRigoutsos::getFromInput(
             &d_min_box_size_from_cutting[0],
             d_dim.getValue());
       }
-      if (input_db->isInteger("DEV_min_box_size_from_cutting")) {
-         input_db->getIntegerArray("DEV_min_box_size_from_cutting",
-            &d_min_box_size_from_cutting[0],
-            d_dim.getValue());
-      }
       d_log_do_loop =
          input_db->getBoolWithDefault("DEV_log_do_loop", false);
       d_log_node_history =

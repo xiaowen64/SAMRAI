@@ -7,12 +7,6 @@
  * Description:   Input file for SAMRAI Euler example problem (3d sphere) 
  *
  ************************************************************************/
-GlobalInputs {
-   //use_new_comm_sched = FALSE  // uncomment to turn on OLD
-   use_newest_comm_sched = TRUE // uncomment to turn on NEW
-   //use_old_method_for_clustering = TRUE // uncomment to turn on OLD
-}
-
 Euler {
    gamma            = 1.4      // gamma = Ratio of specific heats
 
@@ -55,7 +49,7 @@ Euler {
 
       PRESSURE_DEVIATION {
          dev_tol = 0.01
-        pressure_dev = 0.01
+         pressure_dev = 0.01
       }
    }
 
@@ -230,6 +224,7 @@ PatchHierarchy {
       level_1 =  8, 8, 8 
       // all finer levels will use same values as level_0...
    }
+
    allow_patches_smaller_than_ghostwidth = TRUE
 }
 
@@ -261,9 +256,4 @@ TreeLoadBalancer {
   DEV_report_load_balance = FALSE
   DEV_barrier_before = TRUE
   DEV_barrier_after = TRUE
-}
-
-// LoadBalancer is used by the new code.
-LoadBalancer {
-// using default uniform load balance configuration (see mesh_LoadBalancerX.h.sed)
 }

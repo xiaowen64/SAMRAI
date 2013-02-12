@@ -32,11 +32,6 @@ Main {
      If omitted, the anchor layer is the same as the domain.
    */
    anchor_boxes = [(0,0),(199,199)]
-   /*
-     If anchor is not contained in domain, you can use this flag
-     to remove the parts that are outside the domain.
-   */
-   autonest_anchor = TRUE
 
    /*
      Specify ghost-cell-width between anchor and unbalanced.

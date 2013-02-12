@@ -123,8 +123,6 @@ StandardTagAndInitialize{
 }
 
 LoadBalancer{
-    processors = 1, 1
-    use_spatial_bin_pack = TRUE
 }
 
 ModifiedBratuProblem{
@@ -133,8 +131,6 @@ ModifiedBratuProblem{
 
    max_precond_its = 35    // maximum iterations for preconditioner 
    precond_tol = 1.0e-2    // preconditioner convergence tolerance
-
-   preconditioner_print_flag = FALSE // should the preconditioner report residuals
 }
 
 KINSOLSolver{
@@ -162,9 +158,6 @@ SNESSolver{
     maximum_gmres_krylov_dimension = 20
     maximum_linear_iterations      = 50
     forcing_term_strategy          = "EWCHOICE1"
-    collect_convergence_histories  = TRUE
-    print_nonlinear_residuals      = TRUE
-    print_linear_residuals         = TRUE
 }
 
 ImplicitIntegrator{

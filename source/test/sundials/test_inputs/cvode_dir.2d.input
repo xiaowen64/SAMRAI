@@ -21,14 +21,14 @@ Main {
    max_internal_steps       = 100000
    relative_tolerance       = 1e-4
    absolute_tolerance       = 1e-4
-// // 0=use default
+// 0=use default
    max_order                = 0
 // stepping_method          = timestepping mode for CVODE
     NORMAL                  = 1
     ONESTEP                 = 2
    stepping_method          = NORMAL
    uses_newton              = TRUE
-   uses_preconditioning     = TRUE 
+   uses_preconditioning     = TRUE
 
 // Used for testing only
    correct_rhs_evals        = 678
@@ -110,7 +110,7 @@ StandardTagAndInitialize{
 }
 
 TimerManager {
-   timer_list = "apps::main::*" 
+   timer_list = "apps::main::*"
 }
 
 Geometry {
@@ -155,7 +155,5 @@ GriddingAlgorithm {
 }
 
 LoadBalancer {
-//   processors         = 1 , 1
-   use_spatial_bin_pack = TRUE
 }
 
