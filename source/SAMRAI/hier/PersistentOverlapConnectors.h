@@ -40,16 +40,32 @@ class BoxLevel;
  *
  * <b> Definitions: </b>
  *
- * <b>bool check_accessed_connectors:</b> When true, check Connectors when
- * they are accessed.  The check is an non-scalable operation and is
- * meant for debugging.
+ *    - \b implicit_connector_creation_rule
+ *      How to proceed when findConnector() cannot find any suitable overlap
+ *      Connector.  Values can be "ERROR", "WARN" (default) or "SILENT".  If
+ *      "SILENT", silently get a globalized version of the head BoxLevel and
+ *      look for overlaps.  If "WARN", do the same thing but write a warning to
+ *      the log.  If "ERROR", exit with an error.
  *
- * <b>string implicit_connector_creation_rule:</b> How to proceed when
- * findConnector() cannot find any suitable overlap Connector.  Values
- * can be "ERROR", "WARN" (default) or "SILENT".  If "SILENT",
- * silently get a globalized version of the head BoxLevel and look for
- * overlaps.  If "WARN", do the same thing but write a warning to the
- * log.  If "ERROR", exit with an error.
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>implicit_connector_creation_rule</td>
+ *     <td>string</td>
+ *     <td>"WARN"</td>
+ *     <td>"ERROR", "WARN", "SILENT"</td>
+ *     <td>opt</td>
+ *     <td>Not read from restart</td>
+ *   </tr>
+ * </table>
  *
  * @note Creating overlap Connectors by global search is not scalable.
  * Nevertheless, the default is "WARN", so that application
