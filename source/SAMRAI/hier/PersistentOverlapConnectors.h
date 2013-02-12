@@ -39,10 +39,6 @@ class BoxLevel;
  * <b> Input Parameters </b>
  *
  * <b> Definitions: </b>
- *    - \b always_create_missing_connector
- *       When true, override findConnector() to behave like
- *       findOrCreateConnector().  This essentially ensures that any Connectors
- *       sought are always found.
  *
  * <b>bool check_accessed_connectors:</b> When true, check Connectors when
  * they are accessed.  The check is an non-scalable operation and is
