@@ -962,8 +962,12 @@ BergerRigoutsosNode::broadcastAcceptability_check()
          d_lft_child->d_mpi_tag = *(ptr++);
          d_rht_child->d_mpi_tag = *(ptr++);
 
-         TBOX_ASSERT(d_lft_child->d_box.numberCells() >= d_common->d_min_box);
-         TBOX_ASSERT(d_rht_child->d_box.numberCells() >= d_common->d_min_box);
+#ifdef DEBUG_CHECK_ASSERTIONS
+         if (d_box.numberCells() >= d_common->d_min_box) {
+            TBOX_ASSERT(d_lft_child->d_box.numberCells() >= d_common->d_min_box);
+            TBOX_ASSERT(d_rht_child->d_box.numberCells() >= d_common->d_min_box);
+         }
+#endif
          TBOX_ASSERT(d_lft_child->d_mpi_tag > -1);
          TBOX_ASSERT(d_rht_child->d_mpi_tag > -1);
          if (d_common->d_log_node_history) {
@@ -1570,8 +1574,12 @@ BergerRigoutsosNode::acceptOrSplitBox()
 
       d_lft_child->d_box = hier::Box(box_lo, lft_hi, d_box.getBlockId());
       d_rht_child->d_box = hier::Box(rht_lo, box_hi, d_box.getBlockId());
-      TBOX_ASSERT(d_lft_child->d_box.numberCells() >= d_common->d_min_box);
-      TBOX_ASSERT(d_rht_child->d_box.numberCells() >= d_common->d_min_box);
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_box.numberCells() >= d_common->d_min_box) {
+         TBOX_ASSERT(d_lft_child->d_box.numberCells() >= d_common->d_min_box);
+         TBOX_ASSERT(d_rht_child->d_box.numberCells() >= d_common->d_min_box);
+      }
+#endif
 
       d_lft_child->claimMPITag();
       d_rht_child->claimMPITag();
