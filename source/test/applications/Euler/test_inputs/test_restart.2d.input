@@ -8,6 +8,9 @@
  *
  ************************************************************************/
 
+// Refer to test2d.input for full description of all input parameters specific
+// to this problem.
+
 GlobalInputs {
    call_abort_in_serial_instead_of_exit = FALSE
 }

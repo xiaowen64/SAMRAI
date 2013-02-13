@@ -44,6 +44,25 @@ COMPILATION AND EXECUTION
          execution via mpirun.
          mpirun -np <nprocs> [mpirun options] ./main test_inputs/test.[2,3]d.input
 
+      Restarted Run:
+         same format as regular run but add <restart dir> <restore num>
+         to end of command.
+            <restart dir> is directory where restart files are stored
+                          (set in input file).
+            <restore num> is the identifier of which restart file to use
+                          (generally the timestep).
+
+         example:  (to start from timestep #5)
+
+         ./main test_inputs/test.2d.input test.2d.restart 5
+         mpirun -np 2 ./main test_inputs/test.2d.input test.2d.restart 5
+
+         NOTE:  The ordinary use of our restart functionality requires that
+                a problem can only be restarted on on the same number of
+                processors on which the problem was originally run.  To restart
+                on a different number of processors, used the
+                restart-redistribute tool in SAMRAI/tools/restart.
+
    There are also example input files in the subdirectory example_inputs.
       sine_front.2d.input - advecting 2d sinusoidal front in a box with 3
                             levels
@@ -58,6 +77,12 @@ COMPILATION AND EXECUTION
                                 using UVAL_RICHARDSON refinement criteria and
                                 different values for a number of meshing and
                                 tagging parameters from the file above
+
+
+INPUT PARAMETER
+---------------
+Refer to test_inputs/test2d.input for full description of all input parameters
+specific to this problem.
 
 
 RESETTING BASELINES

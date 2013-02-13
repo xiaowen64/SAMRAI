@@ -8,7 +8,11 @@
  *
  ************************************************************************/
 
+// Refer to ../test_inputs/test2d.input for full description of all input
+// parameters specific to this problem.
+
 AutoTester {
+   // No input--this is an example and does not test results.
 }
 
 Euler {

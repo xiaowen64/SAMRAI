@@ -9,56 +9,96 @@
  ************************************************************************/
 
 GlobalInputs {
+   // If FALSE, when an error is encountered in serial exit(-1) will be called
+   // instead of SAMRAI_MPI::abort().
    call_abort_in_serial_instead_of_exit = FALSE
 }
 
 AutoTester {
-   // iteration to carry out test
+   // If true, fluxes will be written out to a .dat file for inspection.
+   // Default is FALSE.
+   test_fluxes = FALSE
+
+   // iteration to carry out test.  Default is 10.
    test_iter_num = 10
 
-   // expected correct result
-   correct_result = 0.0048828125,  0.00048828125
-
-   // if true will write corrct result--useful for rebaselining
-   output_correct = FALSE
-
-   // if true will write correct patch boxes--useful for rebaselining
+   // if true will write correct patch boxes--used for rebaselining
+   // Default is FALSE.
    write_patch_boxes = FALSE
 
    // if true will read correct patch boxes--set to FALSE to rebaseline
+   // Default is FALSE.
    read_patch_boxes = TRUE
 
    // time steps for which correctness of patch boxes will be checked
+   // Required if one of write_patch_boxes or read_patch_boxes is true.
+   // No default.
    test_patch_boxes_at_steps = 0, 5, 10
 
    // base name of files containing correct patch boxes
+   // Required if one of write_patch_boxes or read_patch_boxes is true.
+   // No default.
    test_patch_boxes_filename = "test_inputs/test.2d.boxes"
+
+   // expected correct result
+   // Required if test_fluxes is FALSE.  Unread otherwise.  No default.
+   correct_result = 0.0048828125,  0.00048828125
+
+   // if true will write corrct result--used for rebaselining
+   // Default is FALSE.
+   output_correct = FALSE
 }
 
 ConvDiff {
    // convection-diffusion equation coefficients
-   convection_coeff  = 40.0, 20.0  // vector of length dim
-   diffusion_coeff   = 0.1         // scalar
-   source_coeff      = 0.0         // scalar
+   // Vector of length dim.  Required input.  No default.
+   convection_coeff  = 40.0, 20.0
 
-   // CFL condition for timestepping
+   // Scalar.  Required input.  No default.
+   diffusion_coeff   = 0.1
+
+   // Scalar.  Required input.  No default.
+   source_coeff      = 0.0
+
+
+   // CFL condition for timestepping.
+   // Default is 0.9.
    cfl               = 0.5
 
+
    // Tolerance used for tagging cells.
-   cell_tagging_tolerance = 20.0   // vector of length NEQU defined in ConvDiff.h
+   // Vector of length NEQU defined in ConvDiff.h.
+   // Required input.  No default.
+   cell_tagging_tolerance = 20.0
+
 
    // General type of problem and its initial conditions.
+   // May only be "SPHERE".  Required input.  No default.
    data_problem      = "SPHERE"
-   Initial_data {
-      radius            = 2.9
-      center            = 5.5, 5.5 // vector of length dim
 
-      val_inside     = 80.0        // vector of length NEQU defined in ConvDiff.h
-      val_outside    = 10.         // vector of length NEQU defined in ConvDiff.h
+   // Problem initial data.  Required inputs.  No default.
+   Initial_data {
+      // Radius of sphere.  Required input.  No default.
+      radius            = 2.9
+
+      // Center of sphere.  Vector of length dim.
+      // Required input.  No default.
+      center            = 5.5, 5.5
+
+      // Initial value of "u" inside sphere.
+      // Vector of length NEQU defined in ConDiff.h.
+      // Required input.  No default.
+      val_inside     = 80.0
+
+      // Initial value of "u" outside sphere.
+      // Vector of length NEQU defined in ConDiff.h.
+      // Required input.  No default.
+      val_outside    = 10.
    }
 
+
    // Boundary condition data following the format defined in
-   // appu::CartesianBoundaryUtility[2,3]
+   // appu::CartesianBoundaryUtility[2,3].  Refer to these classes for details.
    Boundary_data {
       boundary_edge_xlo {
          boundary_condition      = "DIRICHLET"
@@ -100,41 +140,67 @@ ConvDiff {
 }
 
 Main {
-   // dimension of problem
+   // Dimension of problem.  Required input.  No default.
    dim = 2
 
-   // base name of log file
+
+   // Base name of log file.  Default is "unnamed".
    base_name = "test.2d"
 
-   // if true all nodes will log to individual files
-   // if false only node 0 will log
+
+   // Explicit name of log file.  Default is base_name + ".log"
+   log_filname = "test.2d.log"
+
+
+   // If true all nodes will log to individual files.
+   // If false only node 0 will log.
+   // Default is false.
    log_all_nodes    = TRUE
 
+
    // visualization dump parameters
-   // frequency at which to dump viz output--zero to turn off
+   // Frequency at which to dump viz output--zero to turn off.
+   // Default is 0.
    viz_dump_interval    = 0
-   // directory in which to place viz output
+
+   // Directory in which to place viz output.
+   // Default is base_name + ".visit"
    viz_dump_dirname     = "viz_test-2d"
 
+   // Number of processors which write to each viz file.
+   // Default is 1.
+   visit_number_procs_per_file = 1
+
+
    // restart dump parameters
-   // frequency at which to dump restart output--zero to turn off
+   // Frequency at which to dump restart output--zero to turn off
+   // Default is 0.
    restart_interval     = 5
+
+   // Directory in which to place restart output.
+   // Default is base_name + ".restart"
+   restart_write_dirname = "test.2d.restart"
 }
 
 MainRestartData{
-   // maximum number of timesteps to take
+   // Maximum number of timesteps to take.
+   // Required if not run from restart.
    max_timesteps       = 10
 
-   // simulation time of first timestep
+   // Simulation time of first timestep.
+   // Default is 0.0.
    start_time          = 0.
 
-   // simulation time of last timestep
+   // Simulation time of last timestep.
+   // Default is 100000.
    end_time            = 100.
 
-   // number of timesteps between regrids
+   // Number of timesteps between regrids.
+   // Default is 2.
    regrid_step         = 3
 
-   // tag buffer for each finer level
+   // Tag buffer for each finer level.
+   // Default is regrid_step.
    tag_buffer          = 2
 }
 

@@ -77,6 +77,12 @@ COMPILATION AND EXECUTION
    their header files.
 
 
+INPUT PARAMETER
+---------------
+Refer to test_inputs/test2d.input for full description of all input parameters
+specific to this problem.
+
+
 RESETTING BASELINES
 -------------------
 The tests that are run from this directory include comparisons of the results
