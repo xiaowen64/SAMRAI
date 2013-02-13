@@ -59,7 +59,7 @@ checkcompile: main
 checktest:
 		rm -f makecheck.logfile
 		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-		$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+		$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
 		rm -f makecheck.logfile
 
 examples:
