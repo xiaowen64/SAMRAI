@@ -649,22 +649,19 @@ BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
 
    d_object_timers->t_share_new_relationships->start();
 
-   IntSet relationship_senders = d_relationship_senders;
-   std::map<int, VectorOfInts>& relationship_messages = d_relationship_messages;
-
-   const int ints_per_node = hier::Box::commBufferSize(getDim());
+   const int ints_per_box = hier::Box::commBufferSize(getDim());
 
    int ierr;
    tbox::SAMRAI_MPI::Status mpi_status;
 
    // Nonblocking send of relationship data.
    d_object_timers->t_share_new_relationships_send->start();
-   tbox::Array<tbox::SAMRAI_MPI::Request> mpi_request(
-      static_cast<int>(relationship_messages.size()));
+   std::vector<tbox::SAMRAI_MPI::Request> mpi_request(
+      d_relationship_messages.size());
    std::map<int, VectorOfInts>::iterator send_i;
    int nsend = 0;
-   for (send_i = relationship_messages.begin(), nsend = 0;
-        send_i != relationship_messages.end();
+   for (send_i = d_relationship_messages.begin(), nsend = 0;
+        send_i != d_relationship_messages.end();
         ++send_i, ++nsend) {
       const int& owner = (*send_i).first;
       VectorOfInts& msg = (*send_i).second;
@@ -681,33 +678,28 @@ BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
    }
    d_object_timers->t_share_new_relationships_send->stop();
 
-   {
-      /*
-       * The rest of this method assumes current process is NOT
-       * in relationship_senders, so remove it.  For efficiency, method
-       * computeNewNeighborhoodSets() (which created the relationship senders)
-       * did not remove it.
-       */
-      IntSet::iterator local = relationship_senders.find(d_mpi_object.getRank());
-      if (local != relationship_senders.end()) {
-         relationship_senders.erase(local);
-      }
-   }
+   /*
+    * The rest of this method assumes current process is NOT in
+    * d_relationship_senders, so remove it.  For efficiency,
+    * BergerRigoutsosNode::computeNewNeighborhoodSets(), which
+    * populated the d_relationship_senders, did not remove it.
+    */
+   d_relationship_senders.erase(d_mpi_object.getRank());
 
    /*
     * Create set recved_from which is to contain ranks of
     * processes from which we've received the expected relationship data.
     * The while loop goes until all expected messages have
-    * been received from relationship_senders.
+    * been received from d_relationship_senders.
     *
     * In the while loop:
-    *    - Probe for an incomming message.
-    *    - Determine its size allocate memory for receiving the message.
-    *    - Receive the message.
-    *    - Get relationship data from the message.
+    * - Probe for an incomming message.
+    * - Determine its size allocate memory for receiving the message.
+    * - Receive the message.
+    * - Get relationship data from the message.
     */
    IntSet recved_from;
-   while (recved_from.size() < relationship_senders.size()) {
+   while (recved_from.size() < d_relationship_senders.size()) {
 
       d_object_timers->t_share_new_relationships_recv->start();
       ierr = mpi.Probe(MPI_ANY_SOURCE,
@@ -718,12 +710,12 @@ BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
       const int sender = mpi_status.MPI_SOURCE;
       int mesg_size = -1;
       mpi.Get_count(&mpi_status, MPI_INT, &mesg_size);
-      TBOX_ASSERT(relationship_senders.find(sender) != relationship_senders.end());
+      TBOX_ASSERT(d_relationship_senders.find(sender) != d_relationship_senders.end());
       TBOX_ASSERT(recved_from.find(sender) == recved_from.end());
       TBOX_ASSERT(mesg_size >= 0);
 
-      tbox::Array<int> buf(mesg_size);
-      int* ptr = buf.getPointer();
+      std::vector<int> buf(static_cast<size_t>(mesg_size));
+      int* ptr = &buf[0];
       ierr = mpi.Recv(ptr,
             mesg_size,
             MPI_INT,
@@ -735,7 +727,7 @@ BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
 
       d_object_timers->t_share_new_relationships_unpack->start();
       int consumed = 0;
-      while (ptr < buf.getPointer() + buf.size()) {
+      while (ptr < &buf[0] + buf.size()) {
          const hier::LocalId new_local_id(*(ptr++));
          hier::BoxId box_id(new_local_id, d_mpi_object.getRank());
          int n_new_relationships = *(ptr++);
@@ -746,11 +738,11 @@ BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
             for (int n = 0; n < n_new_relationships; ++n) {
                hier::Box node(getDim());
                node.getFromIntBuffer(ptr);
-               ptr += ints_per_node;
+               ptr += ints_per_box;
                d_tag_to_new->getTranspose().insertLocalNeighbor(node, base_box_itr);
             }
          }
-         consumed += 2 + n_new_relationships * ints_per_node;
+         consumed += 2 + n_new_relationships * ints_per_box;
       }
       recved_from.insert(sender);
       d_object_timers->t_share_new_relationships_unpack->stop();
@@ -759,11 +751,11 @@ BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
    if (nsend > 0) {
       // Make sure all nonblocking sends completed.
       d_object_timers->t_share_new_relationships_send->start();
-      tbox::Array<tbox::SAMRAI_MPI::Status> mpi_statuses(
-         static_cast<int>(relationship_messages.size()));
-      ierr = mpi.Waitall(static_cast<int>(relationship_messages.size()),
-            mpi_request.getPointer(),
-            mpi_statuses.getPointer());
+      std::vector<tbox::SAMRAI_MPI::Status> mpi_statuses(
+         static_cast<int>(d_relationship_messages.size()));
+      ierr = mpi.Waitall(static_cast<int>(d_relationship_messages.size()),
+                         &mpi_request[0],
+                         &mpi_statuses[0]);
       TBOX_ASSERT(ierr == MPI_SUCCESS);
       d_object_timers->t_share_new_relationships_send->stop();
    }

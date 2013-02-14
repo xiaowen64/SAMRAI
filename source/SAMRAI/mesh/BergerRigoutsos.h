@@ -224,9 +224,11 @@ protected:
 private:
 
    /*
-    * BergerRigoutsos and BergerRigoutsosNode are very tightly
-    * coupled.  BergerRigoutsos has the common parts of the data and
-    * algorithm.  BergerRigoutsosNode has the node-specific parts.
+    * BergerRigoutsos and BergerRigoutsosNode are tightly coupled.
+    * Technically, BergerRigoutsosNode can be made a private subclass
+    * of BergerRigoutsos.  BergerRigoutsos has the common parts of the
+    * data and algorithm.  BergerRigoutsosNode has the node-specific
+    * parts.
     */
    friend class BergerRigoutsosNode;
 
