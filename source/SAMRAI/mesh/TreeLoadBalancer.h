@@ -51,48 +51,58 @@ namespace mesh {
  * non-uniform load balancing should be supported.  (Non-uniform load
  * balancing is supported by the CutAndPackLoadBalancer class.)
  *
- * <b> Input Parameters </b>
+ * @b Input Parameters
  *
- * <b> Definitions: </b>
- *    - \b    n_root_cycles
- *       Number of steps over which to smoothly spread out work load.  This
- *       helps scalability when initial work load is grossly unbalanced.
- *       Usually 1 step is sufficient.  Can be set higher (2 or 3) to reduce
- *       negative performance effects of extremely poor initial load balance.
- *       Set to -1, the default, or any negative number to compute the number
- *       of cycles by a simple heuristic.  Set to zero to effectively bypass
- *       load balancing.
+ * - double @b flexible_load_tolerance (0.05):
+ *   Fraction of ideal load a process can take
+ *   on in order to avoid excessive box cutting
+ *   and load movement.  This is not a hard limit
+ *   and some processes can still exceed this amount.
+ *   Higher values help the load balancer run faster
+ *   but produces less balanced work loads.
  *
- * @verbatim
- * flexible_load_tolerance = 0.05
- *                        // Fraction of ideal load a process can take
- *                        // on in order to avoid excessive box cutting
- *                        // and load movement.  This is not a hard limit
- *                        // and some processes can still exceed this amount.
- *                        // Higher values help the load balancer run faster
- *                        // but produces less balanced work loads.
- * min_load_fraction_per_box = 0.03
- *                           // Additional restriction on box size.
- *                           // Will not generate a box that has less
- *                           // than this fraction of the global average
- *                           // work load in order to move work load.
- *                           // Set to negative to disable.
- * report_load_balance = TRUE // Write out load balance report in log
- * max_cycle_spread_ratio = 1000000
- *                            // This parameter limits how many processes may
- *                            // receive the load of one process in a load
- *                            // fan-out cycle.  If a process has too much initial
- *                            // load, this fans out the load over multiple cycles.
- *                            // This alleviates the bottle-neck of one process
- *                            // having to work with too many other processes in
- *                            // any cycle.
- * log_global_tree_data = FALSE
- *                        // Whether to log tree data (for performance
- *                        // diagnostic purposes).
+ * - int @b max_cycle_spread_ratio (1000000):
+ *   This parameter limits how many processes may
+ *   receive the load of one process in a load
+ *   fan-out cycle.  If a process has too much initial
+ *   load, this limit causes the load to fan out the load over multiple cycles.
+ *   It alleviates the bottle-neck of one process
+ *   having to work with too many other processes in
+ *   any cycle.
  *
- * DEV_summarize_map = FALSE
- *                        // Write a summary of the map before applying it.
- * @endverbatim
+ * - bool @b DEV_report_load_balance (FALSE):
+ *   Whether to report load balance in log file.
+ *
+ * - bool @b DEV_summarize_map (FALSE):
+ *   Write a summary of the map before applying it.
+ *
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>flexible_load_tolerance</td>
+ *     <td>int</td>
+ *     <td>0.05</td>
+ *     <td>0-1</td>
+ *     <td>opt</td>
+ *     <td>no restart</td>
+ *   </tr>
+ *   <tr>
+ *     <td>max_cycle_spread_ratio</td>
+ *     <td>int</td>
+ *     <td>1000000</td>
+ *     <td> > 1</td>
+ *     <td>opt</td>
+ *     <td>no restart</td>
+ *   </tr>
+ * </table>
  *
  * @see mesh::LoadBalanceStrategy
  */
