@@ -39,21 +39,45 @@ namespace mesh {
  * but overrides the cut_factor parameter in loadBalanceBoxLevel()
  * to control the patch size.
  *
- * @verbatim
+ * <b> Input Parameters </b>
  *
- * User inputs (default):
+ * <b> Definitions: </b>
  *
- * - IntVector @b box_size Box size in the index space of the tag level.
+ *   - \b box_size
+ *   Box size in the index space of the tag level.
  *
- * - report_load_balance = TRUE // Write out load balance report in log.
+ *   - \b internal_load_balancer
+ *   Which internal load balancer to use.
  *
- * // Internal load balancer to use: TreeLoadBalancer, ChopAndPackLoadBalancer
- * // TODO: There may be a bug in the ChopAndPackLoadBalancer.
- * internal_load_balancer = "TreeLoadBalancer"
- * TreeLoadBalancer { ... } // Input for internal TreeLoadBalancer.
- * ChopAndPackLoadBalancer { ... } // Input for internal ChopAndPackLoadBalancer.
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>box_size</td>
+ *     <td>int[]</td>
+ *     <td>none</td>
+ *     <td>????????</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>internal_load_balancer</td>
+ *     <td>string</td>
+ *     <td>"TreeLoadBalancer"</td>
+ *     <td>"TreeLoadBalancer", "ChopAndPackLoadBalancer"</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ * </table>
  *
- * @endverbatim
+ * TODO: There may be a bug in the ChopAndPackLoadBalancer.
  *
  * @see mesh::LoadBalanceStrategy
  */
@@ -71,9 +95,6 @@ public:
     * @param[in] name User-defined std::string identifier used for error
     * reporting and timer names.  If omitted, "TilePartitioner"
     * is used.
-    *
-    * @param[in] rank_tree How to arange a contiguous range of MPI ranks
-    * into a tree.
     *
     * @param[in] input_db (optional) database pointer providing
     * parameters from input file.  This pointer may be null indicating

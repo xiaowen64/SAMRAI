@@ -28,20 +28,32 @@ namespace mesh {
 /*!
  * @brief Tiled patch clustering algorithm.
  *
- * User inputs (default):
+ * <b> Input Parameters </b>
  *
- * - IntVector @b box_size Box size in the index space of the tag level.
+ * <b> Definitions: </b>
  *
- * Developer inputs (default):
+ *   - \b box_size
+ *   Box size in the index space of the tag level.
  *
- * - bool @b DEV_barrier_and_time (false):
- *   Activate barriers and performance timers.
- *
- * - bool @b DEV_log_cluster_summary (false):
- *   Whether to briefly log the results of the clustering.
- *
- * - bool @b DEV_log_cluster (false):
- *   Whether to log the results of the clustering.
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>box_size</td>
+ *     <td>int[]</td>
+ *     <td>all values are 8</td>
+ *     <td>????????</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ * </table>
  */
 class TileClustering:public BoxGeneratorStrategy
 {

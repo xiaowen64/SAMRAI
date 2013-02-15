@@ -51,30 +51,22 @@ namespace mesh {
  * non-uniform load balancing should be supported.  (Non-uniform load
  * balancing is supported by the CutAndPackLoadBalancer class.)
  *
- * @b Input Parameters
+ * <b> Input Parameters </b>
  *
- * - double @b flexible_load_tolerance (0.05):
- *   Fraction of ideal load a process can take
- *   on in order to avoid excessive box cutting
- *   and load movement.  This is not a hard limit
- *   and some processes can still exceed this amount.
- *   Higher values help the load balancer run faster
- *   but produces less balanced work loads.
+ * <b> Definitions: </b>
  *
- * - int @b max_cycle_spread_ratio (1000000):
- *   This parameter limits how many processes may
- *   receive the load of one process in a load
- *   fan-out cycle.  If a process has too much initial
- *   load, this limit causes the load to fan out the load over multiple cycles.
- *   It alleviates the bottle-neck of one process
- *   having to work with too many other processes in
- *   any cycle.
+ *   - \b flexible_load_tolerance
+ *   Fraction of ideal load a process can take on in order to avoid excessive
+ *   box cutting and load movement.  This is not a hard limit and some
+ *   processes can still exceed this amount.  Higher values help the load
+ *   balancer run faster but produces less balanced work loads.
  *
- * - bool @b DEV_report_load_balance (FALSE):
- *   Whether to report load balance in log file.
- *
- * - bool @b DEV_summarize_map (FALSE):
- *   Write a summary of the map before applying it.
+ *   - \b max_cycle_spread_ratio
+ *   This parameter limits how many processes may receive the load of one
+ *   process in a load fan-out cycle.  If a process has too much initial load,
+ *   this limit causes the load to fan out the load over multiple cycles.  It
+ *   alleviates the bottle-neck of one process having to work with too many
+ *   other processes in any cycle.
  *
  * <b> Details: </b> <br>
  * <table>
@@ -88,11 +80,11 @@ namespace mesh {
  *   </tr>
  *   <tr>
  *     <td>flexible_load_tolerance</td>
- *     <td>int</td>
- *     <td>0.05</td>
+ *     <td>double</td>
+ *     <td>0.0</td>
  *     <td>0-1</td>
  *     <td>opt</td>
- *     <td>no restart</td>
+ *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
  *   <tr>
  *     <td>max_cycle_spread_ratio</td>
@@ -100,7 +92,7 @@ namespace mesh {
  *     <td>1000000</td>
  *     <td> > 1</td>
  *     <td>opt</td>
- *     <td>no restart</td>
+ *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
  * </table>
  *
@@ -273,7 +265,8 @@ public:
    /*!
     * @brief Enable or disable saving of tree data for diagnostics.
     *
-    * @param [i] External CommGraphWriter to save tree data to.
+    * @param [in] comm_graph_writer
+    * External CommGraphWriter to save tree data to.
     * Use NULL to disable saving.
     */
    void

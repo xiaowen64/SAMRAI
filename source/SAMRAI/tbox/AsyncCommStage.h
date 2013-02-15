@@ -253,9 +253,9 @@ protected:
        * Specify the stage to use and the number of SAMRAI_MPI::Request
        * objects needed from the stage.
        *
-       * @param[i] nreq Number of SAMRAI_MPI::Requests needed by the member.
+       * @param[in] nreq Number of SAMRAI_MPI::Requests needed by the member.
        *
-       * @param[i] stage The AsyncCommStage to attach to.
+       * @param[in] stage The AsyncCommStage to attach to.
        */
       void
       attachStage(

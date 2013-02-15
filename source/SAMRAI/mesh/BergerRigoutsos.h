@@ -44,72 +44,62 @@ class BergerRigoutsosNode;
  * For more details on the parallel implementation,
  * see mesh::BergerRigoutsosNode.
  *
- * User inputs (default):
+ * <b> Input Parameters </b>
  *
- * - string @b DEV_algo_advance_mode ("ADVANCE_SOME"):
- *   Asynchronous algorithm advance mode.  The default has been
- *   empirically determined to scale best to higher numbers of
- *   processors and work adequately for lower numbers of processors.
+ * <b> Definitions: </b>
+ *    - \b max_box_size
+ *       The maximum cluster size allowed. This parameter is not critical to
+ *       clustering but limiting the cluster size may improve performance of
+ *       load balancing algorithms (due to the excessive work required by the
+ *       owner of huge clusters).
  *
- * - std::string @b DEV_owner_mode ("MOST_OVERLAP"):
- *   How to chose the owner from a node group.
- *   This std::string is used in BergerRigoutsosNode::setOwnerMode().
+ *    - \b sort_output_nodes
+ *       Whether to sort the output. This makes the normally non-deterministic
+ *       ordering deterministic and the results repeatable.
  *
- * - bool @b sort_output_nodes (false):
- *   Whether to sort the output.  This makes the normally
- *   non-deterministic ordering deterministic and the results repeatable.
+ *    - \b check_min_box_size
+ *       A flag to control how to resolve an initial box that violates the
+ *       minimum box size. Set to one of these strings: <br>
+ *       \b "IGNORE" - violations will be quietly disregarded. <br>
+ *       \b "WARN" - violations will cause a warning but the code will
+ *       continue anyway. <br>
+ *       \b "ERROR" - violations will cause an unrecoverable assertion.
  *
- * - int * @b max_box_size:
- *   The maximum cluster size allowed.  This parameter is not
- *   critical to clustering but limiting the cluster size may improve
- *   performance of load balancing algorithms (due to the excessive work
- *   required by the owner of huge clusters).
- *
- * - int * @b DEV_min_box_size_from_cutting  This is an alternative minimum
- *   box size.  It helps reduce excessive box cutting.  If used, a good value
- *   is a box with about 3-4 times the volume of the minimum size specified
- *   by the findBoxesContainingTags() interface.
- *
- * - bool @b check_min_box_size:
- *   A flag to control how to resolve an initial box that violates the
- *   minimum box size.  Set to one of these strings:
- *   @b "IGNORE" - violations will be quietly disregarded.
- *   @b "WARN" - violations will cause a warning but the
- *   code will continue anyway.
- *   @b "ERROR" - violations will cause an unrecoverable assertion.
- *   The default is "WARN".
- *
- * - double @b DEV_max_inflection_cut_from_center (1.0): Limit the Laplace cut to this
- *   fraction of the distance from the center plane to the end.
- *   Zero means cut only at the center plane.  One means unlimited.
- *   Under most situations, one is fine.  A lower setting helps prevent
- *   parallel slivers.
- *
- * - DEV_inflection_cut_threshold_ar (0.0): specifies the mininum box
- *   thickness that can be cut, as a ratio to the thinnest box
- *   direction.  If the box doesn't have any direction thick
- *   enough, then it has a reasonable aspect ratio, so we can
- *   cut it in any direction.
- *   Degenerate values of DEV_inflection_cut_threshold_ar:
- *   1: cut any direction except the thinnest.
- *   (0,1) and huge values: cut any direction.
- *   0: Not a degenerate case but a special case meaning always
- *   cut the thickest direction.  This leads to more cubic
- *   boxes but may prevent cutting at important feature
- *   changes.
- *
- * Debugging inputs (default):
- *
- * - bool @b DEV_log_node_history (false):
- *   Whether to log what certain actions of nodes in the tree.
- *   This degrades the performance but is a very useful debugging
- *   tool.
- *
- * - bool @b DEV_log_cluster_summary (false):
- *   Whether to briefly log the results of the clustering.
- *
- * - bool @b DEV_log_cluster (false):
- *   Whether to log the results of the clustering.
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>max_box_size</td>
+ *     <td>int[]</td>
+ *     <td>all values max int</td>
+ *     <td>all values > 0</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>sort_output_nodes</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>check_min_box_size</td>
+ *     <td>string</td>
+ *     <td>"WARN"</td>
+ *     <td>"WARN", "IGNORE", "ERROR"</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ * </table>
  */
 class BergerRigoutsos:public BoxGeneratorStrategy
 {

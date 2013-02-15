@@ -3888,18 +3888,21 @@ TreeLoadBalancer::getFromInput(
          d_barrier_after);
 
       d_max_cycle_spread_ratio =
-         input_db->getIntegerWithDefault("max_cycle_spread_ratio", d_max_cycle_spread_ratio);
+         input_db->getIntegerWithDefault("max_cycle_spread_ratio",
+            d_max_cycle_spread_ratio);
 
-      d_flexible_load_tol = input_db->getDoubleWithDefault("flexible_load_tolerance",
+      d_flexible_load_tol =
+         input_db->getDoubleWithDefault("flexible_load_tolerance",
             d_flexible_load_tol);
 
-      d_min_load_fraction_per_box = input_db->getDoubleWithDefault(
-         "min_load_fraction_per_box",
-         d_min_load_fraction_per_box);
-      if ( d_min_load_fraction_per_box >= 1.0 ) {
+      d_min_load_fraction_per_box =
+         input_db->getDoubleWithDefault("min_load_fraction_per_box",
+            d_min_load_fraction_per_box);
+      if ( d_min_load_fraction_per_box < 0 ||
+           d_min_load_fraction_per_box >= 1.0 ) {
          TBOX_ERROR("TreeLoadBalancer::getFromInput: min_load_fraction_per_box value of "
                     << d_min_load_fraction_per_box
-                    << " is out of range.  It should be >= 0 and <= 1 and on the order of 0.01.");
+                    << " is out of range.  It should be >= 0 and < 1 and on the order of 0.01.");
       }
 
       d_balance_penalty_wt =

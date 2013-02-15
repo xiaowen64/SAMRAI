@@ -44,9 +44,13 @@ public:
    /*!
     * @brief Add a graph record.
     *
-    * @param[i] mpi Where the graph data is distributed.
+    * @param[in] mpi Where the graph data is distributed.
     *
-    * @param[i] root_rank Process responsible for writing the graph
+    * @param[in] root_rank Process responsible for writing the graph
+    *
+    * @param[in] number_of_edges
+    *
+    * @param[in] number_of_node_values
     *
     * @return Index of the record.
     */
