@@ -2537,10 +2537,6 @@ GriddingAlgorithm::readLevelBoxes(
             fine_level_number,
             false);
       }
-      const hier::IntVector smallest_patch_in_tag_space =
-         hier::IntVector::ceilingDivide(smallest_patch, ratio);
-      const hier::IntVector largest_patch_in_tag_space =
-         largest_patch / ratio;
 
       refineNewBoxLevel(*new_box_level,
          *coarser_to_new,
@@ -2882,11 +2878,6 @@ GriddingAlgorithm::findRefinementBoxes(
       new_ln,
       true);
 
-   const hier::IntVector smallest_patch_in_tag_space =
-      hier::IntVector::ceilingDivide(smallest_patch,
-         d_hierarchy->getRatioToCoarserLevel(new_ln));
-   const hier::IntVector largest_patch_in_tag_space =
-      largest_patch / d_hierarchy->getRatioToCoarserLevel(new_ln);
    const hier::IntVector extend_ghosts_in_tag_space =
       hier::IntVector::ceilingDivide(extend_ghosts,
          d_hierarchy->getRatioToCoarserLevel(new_ln));

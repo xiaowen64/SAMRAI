@@ -2198,7 +2198,8 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
        * which process will be sending relationship data.
        * Update the list of relationship senders to make sure
        * it includes all processes in the group.
-       * We use this list in shareNewNeighborhoodSetsWithOwners to
+       * We use this list in
+       * BergerRigoutsos::shareNewNeighborhoodSetsWithOwners to
        * tell us which processors are sending us new relationships.
        * The relationship senders are the participants of the group.
        */

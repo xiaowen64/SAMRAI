@@ -12,7 +12,6 @@
 #define included_mesh_TilePartitioner
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
@@ -49,6 +48,12 @@ namespace mesh {
  *   - \b internal_load_balancer
  *   Which internal load balancer to use.
  *
+ *   - @b TreeLoadBalancer { ... }
+ *   Input for internal TreeLoadBalancer, required if internal_load_balancer = "TreeLoadBalancer".
+ *
+ *   - @b ChopAndPackLoadBalancer { ... }
+ *   Input for internal ChopAndPackLoadBalancer, required if internal_load_balancer = "ChopAndPackLoadBalancer".
+ *
  * <b> Details: </b> <br>
  * <table>
  *   <tr>
@@ -64,7 +69,7 @@ namespace mesh {
  *     <td>int[]</td>
  *     <td>none</td>
  *     <td>????????</td>
- *     <td>opt</td>
+ *     <td>req</td>
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
  *   <tr>
@@ -75,9 +80,31 @@ namespace mesh {
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
+ *   <tr>
+ *     <td>TreeLoadBalancer</td>
+ *     <td>database</td>
+ *     <td>NULL</td>
+ *     <td></td>
+ *     <td>conditionally req</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>ChopAndPackLoadBalancer</td>
+ *     <td>database</td>
+ *     <td>NULL</td>
+ *     <td></td>
+ *     <td>conditionally req</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
  * </table>
  *
+ *
+ * @internal
+ * - DEV_report_load_balance (FALSE):
+ * Whether to write out load balance report in log.
+ *
  * TODO: There may be a bug in the ChopAndPackLoadBalancer.
+ * It is not giving correct results when used by this class.
  *
  * @see mesh::LoadBalanceStrategy
  */
@@ -150,13 +177,7 @@ public:
     * @param[in] output_stream
     */
    void
-   printStatistics(
-      std::ostream& output_stream = tbox::plog) const
-   {
-      BalanceUtilities::gatherAndReportLoadBalance(d_load_stat,
-         tbox::SAMRAI_MPI::getSAMRAIWorld(),
-         output_stream);
-   }
+   printStatistics(std::ostream& output_stream = tbox::plog) const;
 
 
 
@@ -206,22 +227,24 @@ private:
    hier::IntVector d_box_size;
 
    /*!
-    * @brief Whether to immediately report the results of the load balancing cycles
-    * in the log files.
+    * @brief Whether to immediately report the results of the load
+    * balancing cycles in the log files.
     */
    bool d_report_load_balance;
+
+   /*!
+    * @brief Load statistics collected for output.
+    *
+    * d_load_stat[i] is the final local load for the i-th call to the
+    * partitioner.
+    */
+   mutable std::vector<double> d_load_stat;
 
    //@{
    //! @name Used for evaluating peformance.
    bool d_barrier_and_time;
    boost::shared_ptr<tbox::Timer> t_load_balance_box_level;
    //@}
-
-   /*
-    * Statistics on number of cells and patches generated.
-    */
-   mutable std::vector<double> d_load_stat;
-   mutable std::vector<int> d_box_count_stat;
 
 
    // Extra debug independent of optimization/debug flag.

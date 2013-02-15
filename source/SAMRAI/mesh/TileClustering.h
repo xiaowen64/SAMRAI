@@ -12,13 +12,13 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/mesh/BoxGeneratorStrategy.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Utilities.h"
 
 #include "boost/shared_ptr.hpp"
 
@@ -134,11 +134,11 @@ private:
    //! @brief Box size constraint.
    hier::IntVector d_box_size;
 
+   //@{
+   //! @name Diagnostics and performance evaluation
+   hier::OverlapConnectorAlgorithm d_oca;
    bool d_log_cluster_summary;
    bool d_log_cluster;
-
-   //@{
-   //! @name Used for evaluating performance;
    bool d_barrier_and_time;
    boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
    boost::shared_ptr<tbox::Timer> t_cluster;

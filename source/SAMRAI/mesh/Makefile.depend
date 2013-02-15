@@ -142,6 +142,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PersistentOverlapConnectors.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/RealBoxConstIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
@@ -1264,7 +1265,6 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelConnectorUtils.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxNeighborhoodCollection.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
@@ -1276,8 +1276,6 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappingConnector.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappingConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/OverlapConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
@@ -1351,7 +1349,6 @@ ${FILE_15:X.o=${NDIM}.o}: ${DEPENDS_15}
 FILE_16=TilePartitioner.o
 DEPENDS_16:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -1365,7 +1362,6 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxNeighborhoodCollection.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Connector.h				\
@@ -1374,9 +1370,7 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappingConnector.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/MappingConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/OverlapConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
@@ -1409,7 +1403,6 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
@@ -1417,11 +1410,9 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommGroup.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/CenteredRankTree.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/CommGraphWriter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
@@ -1457,7 +1448,6 @@ DEPENDS_16 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.C				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C				\

@@ -12,31 +12,10 @@
 #define included_mesh_TilePartitioner_C
 
 #include "SAMRAI/mesh/TilePartitioner.h"
-#include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/hier/BoxUtilities.h"
-#include "SAMRAI/tbox/StartupShutdownManager.h"
 
-#include "SAMRAI/hier/MappingConnectorAlgorithm.h"
-#include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
-#include "SAMRAI/hier/BoxUtilities.h"
-#include "SAMRAI/hier/PatchDescriptor.h"
-#include "SAMRAI/hier/VariableDatabase.h"
-#include "SAMRAI/pdat/CellData.h"
-#include "SAMRAI/pdat/CellDataFactory.h"
-#include "SAMRAI/tbox/CenteredRankTree.h"
-#include "SAMRAI/tbox/Array.h"
+#include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/tbox/InputManager.h"
-#include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
-#include "SAMRAI/tbox/AsyncCommStage.h"
-#include "SAMRAI/tbox/AsyncCommGroup.h"
-#include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Statistician.h"
-
-#include <algorithm>
-#include <cstdlib>
-#include <fstream>
-#include <cmath>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -143,6 +122,16 @@ TilePartitioner::loadBalanceBoxLevel(
    }
 
 
+   if (d_report_load_balance) {
+      tbox::plog
+         << "TilePartitioner::loadBalanceBoxLevel loads before partitioning:"
+         << std::endl;
+      BalanceUtilities::gatherAndReportLoadBalance(
+         static_cast<double>(balance_box_level.getLocalNumberOfCells()),
+         balance_box_level.getMPI());
+   }
+
+
    if (d_print_steps) {
       tbox::plog << "TilePartitioner::loadBalanceBoxLevel called with:"
                  << "\n  min_size = " << min_size
@@ -188,6 +177,13 @@ TilePartitioner::loadBalanceBoxLevel(
          rank_group);
       break;
    case 'c':
+      /*
+       * TODO: There may be a bug in the ChopAndPackLoadBalancer.
+       * Its cuts cann fall off the tile boundaries.
+       */
+      TBOX_WARNING("TilePartitioner: Warning: using the \"ChopAndPackLoadBalancer\"\n"
+                   <<"internal load balancer may produce cuts that fall off of\n"
+                   <<"the tile boundaries.  This is a known bug.");
       d_cap.loadBalanceBoxLevel(
          balance_box_level,
          balance_to_anchor,
@@ -208,6 +204,19 @@ TilePartitioner::loadBalanceBoxLevel(
       t_load_balance_box_level->stop();
    }
 
+
+   if (d_report_load_balance) {
+      tbox::plog
+         << "TilePartitioner::loadBalanceBoxLevel loads after partitioning:"
+         << std::endl;
+      BalanceUtilities::gatherAndReportLoadBalance(
+         static_cast<double>(balance_box_level.getLocalNumberOfCells()),
+         balance_box_level.getMPI());
+   }
+
+
+   // Save results for analysis of quality.
+   d_load_stat.push_back(static_cast<double>(balance_box_level.getLocalNumberOfCells()));
 
 }
 
@@ -247,12 +256,30 @@ TilePartitioner::getFromInput(
          d_internal_load_balancer = char(tolower(internal_load_balancer[0]));
       }
 
+      d_report_load_balance = database->getBoolWithDefault(
+         "DEV_report_load_balance",
+         d_report_load_balance);
+
    }
 }
 
 
 
-
+/*
+ *************************************************************************
+ * Write out statistics recorded for the most recent load
+ * balancing result.
+ *************************************************************************
+ */
+void
+TilePartitioner::printStatistics(
+   std::ostream& output_stream) const
+{
+   BalanceUtilities::gatherAndReportLoadBalance(
+      d_load_stat,
+      tbox::SAMRAI_MPI::getSAMRAIWorld(),
+      output_stream);
+}
 
 
 

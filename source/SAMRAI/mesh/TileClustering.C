@@ -14,11 +14,8 @@
 
 #include "SAMRAI/mesh/TileClustering.h"
 
-#include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
-#include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/pdat/CellData.h"
-#include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
@@ -41,6 +38,7 @@ TileClustering::TileClustering(
 {
    getFromInput(input_db);
    setTimers();
+   d_oca.setTimerPrefix("hier::TileClustering");
 }
 
 TileClustering::~TileClustering()
@@ -221,8 +219,6 @@ TileClustering::findBoxesContainingTags(
       tag_box_level.getPersistentOverlapConnectors().findConnector(
          tag_box_level, max_gcw, true);
 
-   hier::OverlapConnectorAlgorithm oca;
-
    hier::Connector tmp_new_to_tag(*new_to_tag);
    hier::Connector tmp_tag_to_new(*tag_to_new);
    tmp_new_to_tag.setTranspose(&tmp_tag_to_new, false);
@@ -231,7 +227,7 @@ TileClustering::findBoxesContainingTags(
       t_get_connectors->barrierAndStart();
    }
    boost::shared_ptr<hier::Connector> bridged_new_to_tag;
-   oca.bridgeWithNesting(
+   d_oca.bridgeWithNesting(
       bridged_new_to_tag,
       tmp_new_to_tag,
       tag_to_tag,
