@@ -33,6 +33,7 @@ namespace mesh {
 /*!
  * @brief Load balance by cutting boxes along designated mesh lines
  * defining a tile box grid.  Implemementing the LoadBalancerStrategy.
+ * This is UNSUPPORTED, EXPERIMENTAL code not for general use.
  *
  * This class delegates its partitioning to the TreeLoadBalancer
  * but overrides the cut_factor parameter in loadBalanceBoxLevel()

@@ -27,6 +27,7 @@ namespace mesh {
 
 /*!
  * @brief Tiled patch clustering algorithm.
+ * This is UNSUPPORTED, EXPERIMENTAL code not for general use.
  *
  * <b> Input Parameters </b>
  *
