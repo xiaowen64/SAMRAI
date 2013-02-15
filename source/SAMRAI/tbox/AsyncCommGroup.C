@@ -373,7 +373,7 @@ AsyncCommGroup::checkBcast()
             if (flag == 1) {
 #ifdef DEBUG_CHECK_ASSERTIONS
                int count = -1;
-               d_mpi_err = d_mpi.Get_count(&d_mpi_status, MPI_INT, &count);
+               d_mpi_err = SAMRAI_MPI::Get_count(&d_mpi_status, MPI_INT, &count);
                if (d_mpi_err != MPI_SUCCESS) {
                   TBOX_ERROR("Error in MPI_Get_count.\n"
                      << "Error-in-status is "
@@ -450,7 +450,7 @@ AsyncCommGroup::checkBcast()
 #ifdef DEBUG_CHECK_ASSERTIONS
                if (req[ic] == MPI_REQUEST_NULL) {
                   int count = -1;
-                  d_mpi.Get_count(&d_mpi_status, MPI_INT, &count);
+                  SAMRAI_MPI::Get_count(&d_mpi_status, MPI_INT, &count);
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
                   plog << "tag-" << d_mpi_tag
                        << " sent unknown size (MPI convention)"
@@ -664,7 +664,7 @@ AsyncCommGroup::checkGather()
                   TBOX_ASSERT(d_mpi_status.MPI_SOURCE == d_child_data[ic].rank);
                   TBOX_ASSERT(req[ic] == MPI_REQUEST_NULL);
                   int count = -1;
-                  d_mpi.Get_count(&d_mpi_status, MPI_INT, &count);
+                  SAMRAI_MPI::Get_count(&d_mpi_status, MPI_INT, &count);
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
                   plog << "tag-" << d_mpi_tag
                        << " received " << count
@@ -984,7 +984,7 @@ AsyncCommGroup::checkReduce()
                   TBOX_ASSERT(d_mpi_status.MPI_SOURCE == d_child_data[ic].rank);
                   TBOX_ASSERT(req[ic] == MPI_REQUEST_NULL);
                   int count = -1;
-                  d_mpi.Get_count(&d_mpi_status, MPI_INT, &count);
+                  SAMRAI_MPI::Get_count(&d_mpi_status, MPI_INT, &count);
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
                   plog << " child-" << ic << " tag-" << d_mpi_tag
                        << " received " << count
@@ -1089,7 +1089,7 @@ AsyncCommGroup::checkReduce()
          if (req[0] != MPI_REQUEST_NULL) {
 #ifdef DEBUG_CHECK_ASSERTIONS
             int count = -1;
-            d_mpi.Get_count(&d_mpi_status, MPI_INT, &count);
+            SAMRAI_MPI::Get_count(&d_mpi_status, MPI_INT, &count);
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
             plog << "tag-" << d_mpi_tag
                  << " sent " << count

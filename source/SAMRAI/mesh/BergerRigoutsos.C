@@ -766,7 +766,7 @@ BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
 
       const int sender = mpi_status.MPI_SOURCE;
       int mesg_size = -1;
-      mpi.Get_count(&mpi_status, MPI_INT, &mesg_size);
+      tbox::SAMRAI_MPI::Get_count(&mpi_status, MPI_INT, &mesg_size);
       TBOX_ASSERT(d_relationship_senders.find(sender) != d_relationship_senders.end());
       TBOX_ASSERT(recved_from.find(sender) == recved_from.end());
       TBOX_ASSERT(mesg_size >= 0);
