@@ -64,7 +64,7 @@ PatchHierarchy::PatchHierarchy(
    d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps(false),
    d_self_connector_widths(),
    d_fine_connector_widths(),
-   d_connector_widths_are_computed(false),
+   d_connector_widths_committed(false),
    d_individual_cwrs()
 {
    TBOX_ASSERT(!object_name.empty());
@@ -410,12 +410,13 @@ void
 PatchHierarchy::registerConnectorWidthRequestor(
    const ConnectorWidthRequestorStrategy& cwrs)
 {
-   if (d_connector_widths_are_computed) {
+   if (d_connector_widths_committed) {
       TBOX_ERROR("PatchHierarchy::registerConnectorWidthRequestor:\n"
-         << "Registering a new ConnectorWidthRequestorStrategy after\n"
-         << "calling getRequiredConnectorWidth() is disallowed because\n"
-         << "it may cause getRequiredConnectorWidth() to return\n"
-         << "conflicting requirements." << std::endl);
+         << "Registering a new ConnectorWidthRequestorStrategy is not\n"
+         << "allowed for this hierarchy because some code has called\n"
+         << "getRequiredConnectorWidth() with commit = true.  See the\n"
+         << "documentation for getRequiredConnectorWidth()."
+         << std::endl);
    }
 
    size_t i;
@@ -479,62 +480,19 @@ PatchHierarchy::finalizeCallback()
 IntVector
 PatchHierarchy::getRequiredConnectorWidth(
    int base_ln,
-   int head_ln) const
+   int head_ln,
+   bool commit ) const
 {
    TBOX_ASSERT(head_ln >= 0);
    TBOX_ASSERT(head_ln < d_max_levels);
    TBOX_ASSERT(base_ln >= 0);
    TBOX_ASSERT(base_ln < d_max_levels);
 
-   if (!d_connector_widths_are_computed) {
-
-      const IntVector& zero_vector(IntVector::getZero(d_dim));
-      d_self_connector_widths.clear();
-      d_self_connector_widths.insert(d_self_connector_widths.begin(),
-         d_max_levels,
-         zero_vector);
-      d_fine_connector_widths.clear();
-      if (d_max_levels > 1) {
-         d_fine_connector_widths.insert(d_fine_connector_widths.begin(),
-            d_max_levels - 1,
-            zero_vector);
+   if (!d_connector_widths_committed) {
+      computeRequiredConnectorWidths();
+      if ( commit ) {
+         d_connector_widths_committed = true;
       }
-
-      /*
-       * Get the required widths satisfying all registered
-       * ConnectorWidthRequestorStrategy objects.
-       */
-
-      std::vector<IntVector> self_connector_widths;
-      std::vector<IntVector> fine_connector_widths;
-      for (size_t i = 0; i < d_individual_cwrs.size(); ++i) {
-         d_individual_cwrs[i]->computeRequiredConnectorWidths(
-            self_connector_widths,
-            fine_connector_widths,
-            *this);
-         TBOX_ASSERT(self_connector_widths.size() == static_cast<unsigned int>(d_max_levels));
-         TBOX_ASSERT(fine_connector_widths.size() == static_cast<unsigned int>(d_max_levels - 1));
-         for (int ln = 0; ln < d_max_levels; ++ln) {
-            d_self_connector_widths[ln].max(self_connector_widths[ln]);
-         }
-         for (int ln = 0; ln < d_max_levels - 1; ++ln) {
-            d_fine_connector_widths[ln].max(fine_connector_widths[ln]);
-         }
-      }
-
-      /*
-       * Make sure the self connector widths are at least as big as
-       * the fine.  This is required because self Connectors at the
-       * tag level is used to compute the fine Connectors.  This
-       * requirement is due to the GriddingAlgorithm, so perhaps it
-       * should be moved there!  On the other hand, GriddingAlgorithm
-       * cannot be expected know about fine_connector_width
-       * requirements of other width requestors.
-       */
-      for (int ln = 0; ln < d_max_levels - 1; ++ln) {
-         d_self_connector_widths[ln].max(d_fine_connector_widths[ln]);
-      }
-      d_connector_widths_are_computed = true;
    }
 
    if (base_ln != head_ln) {
@@ -551,6 +509,68 @@ PatchHierarchy::getRequiredConnectorWidth(
    }
    return d_self_connector_widths[base_ln];
 }
+
+
+
+/*
+ *************************************************************************
+ * Compute required Connector widths using all the registered
+ * ConnectorWidthRequestorStrategy objects.
+ *************************************************************************
+ */
+void
+PatchHierarchy::computeRequiredConnectorWidths() const
+{
+   const IntVector& zero_vector(IntVector::getZero(d_dim));
+   d_self_connector_widths.clear();
+   d_self_connector_widths.insert(d_self_connector_widths.begin(),
+                                  d_max_levels,
+                                  zero_vector);
+   d_fine_connector_widths.clear();
+   if (d_max_levels > 1) {
+      d_fine_connector_widths.insert(d_fine_connector_widths.begin(),
+                                     d_max_levels - 1,
+                                     zero_vector);
+   }
+
+   /*
+    * Get the required widths satisfying all registered
+    * ConnectorWidthRequestorStrategy objects.
+    */
+
+   std::vector<IntVector> self_connector_widths;
+   std::vector<IntVector> fine_connector_widths;
+   for (size_t i = 0; i < d_individual_cwrs.size(); ++i) {
+      d_individual_cwrs[i]->computeRequiredConnectorWidths(
+         self_connector_widths,
+         fine_connector_widths,
+         *this);
+      TBOX_ASSERT(self_connector_widths.size() == static_cast<unsigned int>(d_max_levels));
+      TBOX_ASSERT(fine_connector_widths.size() == static_cast<unsigned int>(d_max_levels - 1));
+      for (int ln = 0; ln < d_max_levels; ++ln) {
+         d_self_connector_widths[ln].max(self_connector_widths[ln]);
+      }
+      for (int ln = 0; ln < d_max_levels - 1; ++ln) {
+         d_fine_connector_widths[ln].max(fine_connector_widths[ln]);
+      }
+   }
+
+   /*
+    * Make sure the self connector widths are at least as big as
+    * the fine.  This is required because self Connectors at the
+    * tag level is used to compute the fine Connectors.  This
+    * requirement is due to the GriddingAlgorithm, so perhaps it
+    * should be moved there!  On the other hand, GriddingAlgorithm
+    * cannot be expected know about fine_connector_width
+    * requirements of other width requestors.
+    */
+   for (int ln = 0; ln < d_max_levels - 1; ++ln) {
+      d_self_connector_widths[ln].max(d_fine_connector_widths[ln]);
+   }
+
+}
+
+
 
 /*
  *************************************************************************
@@ -574,11 +594,13 @@ PatchHierarchy::getConnector(
    TBOX_ASSERT(head_ln < d_number_levels);
    const BoxLevel& base(*d_patch_levels[base_ln]->getBoxLevel());
    const BoxLevel& head(*d_patch_levels[head_ln]->getBoxLevel());
-   const IntVector width(getRequiredConnectorWidth(base_ln, head_ln));
+   const IntVector width(getRequiredConnectorWidth(base_ln, head_ln, true));
    const Connector& con = base.getPersistentOverlapConnectors().
       findConnector(head, width);
    return con;
 }
+
+
 
 /*
  *************************************************************************
@@ -602,7 +624,7 @@ PatchHierarchy::getConnectorWithTranspose(
    TBOX_ASSERT(head_ln < d_number_levels);
    const BoxLevel& base(*d_patch_levels[base_ln]->getBoxLevel());
    const BoxLevel& head(*d_patch_levels[head_ln]->getBoxLevel());
-   const IntVector width(getRequiredConnectorWidth(base_ln, head_ln));
+   const IntVector width(getRequiredConnectorWidth(base_ln, head_ln, true));
    const IntVector transpose_width(
       getRequiredConnectorWidth(head_ln, base_ln));
    const Connector& con =
@@ -611,6 +633,8 @@ PatchHierarchy::getConnectorWithTranspose(
          transpose_width);
    return con;
 }
+
+
 
 /*
  *************************************************************************
@@ -674,6 +698,8 @@ PatchHierarchy::makeRefinedPatchHierarchy(
 
 }
 
+
+
 /*
  *************************************************************************
  *                                                                       *
@@ -731,6 +757,8 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
    return boost::shared_ptr<PatchHierarchy>(coarse_hierarchy);
 
 }
+
+
 
 /*
  *************************************************************************
@@ -797,6 +825,8 @@ PatchHierarchy::makeNewPatchLevel(
 
 }
 
+
+
 /*
  *************************************************************************
  *                                                                       *
@@ -862,6 +892,8 @@ PatchHierarchy::makeNewPatchLevel(
 
 }
 
+
+
 /*
  *************************************************************************
  *                                                                       *
@@ -881,6 +913,8 @@ PatchHierarchy::removePatchLevel(
       d_number_levels--;
    }
 }
+
+
 
 /*
  *************************************************************************
@@ -904,6 +938,8 @@ PatchHierarchy::putToRestart(
    putToRestart(restart_db,
       VariableDatabase::getDatabase()->getPatchDataRestartTable());
 }
+
+
 
 /*
  *************************************************************************
@@ -1006,6 +1042,8 @@ PatchHierarchy::putToRestart(
          patchdata_write_table);
    }
 }
+
+
 
 /*
  *************************************************************************
@@ -1127,6 +1165,8 @@ PatchHierarchy::getFromRestart()
    }
 }
 
+
+
 void
 PatchHierarchy::initializeHierarchy()
 {
@@ -1177,6 +1217,8 @@ PatchHierarchy::initializeHierarchy()
    }
 
 }
+
+
 
 int
 PatchHierarchy::recursivePrint(
