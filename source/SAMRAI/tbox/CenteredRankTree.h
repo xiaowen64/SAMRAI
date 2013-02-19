@@ -198,13 +198,13 @@ private:
     *
     * Setting up has log complexity.
     *
-    * @param[i] first_rank The first in a contiguous range of ranks in
+    * @param[in] first_rank The first in a contiguous range of ranks in
     * the communication group.
     *
-    * @param[i] last_rank The last in a contiguous range of ranks in
+    * @param[in] last_rank The last in a contiguous range of ranks in
     * the communication group.
     *
-    * @param[i] rank The rank whose parent and children are sought.
+    * @param[in] rank The rank whose parent and children are sought.
     */
    void
    setupTreeForContiguousRanks(

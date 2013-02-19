@@ -546,9 +546,6 @@ private:
     * @param patch patch
     * @param soln_data cell-centered solution data
     * @param flux_data side-centered flux data
-    * @param diffcoef_data side-centered diffusion coefficient data
-    * @param cfb coarse-fine boundary object for the level
-    *        in which patch resides
     * @param ratio_to_coarser Refinement ratio to the next coarser level.
     *
     * @pre (d_dim == patch.getDim()) && (d_dim == soln_data.getDim()) &&
@@ -591,8 +588,6 @@ private:
     * @param patch patch
     * @param flux_data side-centered flux data
     * @param rhs_data cell-centered rhs data
-    * @param scalar_field_data
-    *        cell-centered scalar field data
     * @param soln_data cell-centered solution data
     * @param red_or_black red-black switch.  Set to 'r' or 'b'.
     * @param p_maxres max residual output.  Set to NULL to avoid computing.

@@ -112,9 +112,9 @@ private:
    /*!
     * @brief Constructor
     *
-    * @param [i] container
-    * @param [i] owner_rank
-    * @param [i] begin
+    * @param [in] container
+    * @param [in] owner_rank
+    * @param [in] begin
     */
    BoxContainerSingleOwnerIterator(
       const BoxContainer& container,

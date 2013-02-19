@@ -219,7 +219,7 @@ AsyncCommPeer<TYPE>::completeCurrentOperation()
    while (!isDone()) {
 
       t_wait_timer->start();
-      int errf = d_mpi.Waitall(2,
+      int errf = SAMRAI_MPI::Waitall(2,
             req,
             mpi_status);
       t_wait_timer->stop();

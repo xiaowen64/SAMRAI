@@ -486,25 +486,21 @@ private:
     * All public bridge interfaces which do not perform an "in place" bridge
     * call this method underneath.
     *
-    * @param west_nesting_is_known Whether we know how west nests in
-    * center.
+    * @param west_to_east
     *
-    * @param cent_growth_to_nest_west Amount center BoxLevel has
-    * to grow to nest west BoxLevel (if known).
+    * @param east_to_west
     *
-    * @param east_nesting_is_known Whether we know how east nests in
-    * center.
-    *
-    * @param cent_growth_to_nest_east Amount center BoxLevel has
-    * to grow to nest east BoxLevel (if known).
-    *
-    * @param connector_width_limit specifies the maximum Connector
-    * width to compute overlaps for (negative if unlimited).  If
-    * connector_width_limit is negative, do not apply any limit.  The
-    * connector_width should be in the coarser of the east and west
-    * indices.
+    * @param cent_to_east
     *
     * @param compute_transpose true if east_to_west should be computed
+    *
+    * @param incoming_ranks
+    *
+    * @param outgoing_ranks
+    *
+    * @param visible_west_nabrs
+    *
+    * @param visible_east_nabrs
     */
    void
    privateBridge(

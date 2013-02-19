@@ -52,7 +52,9 @@ private:
    /*!
     * @brief Constructs a MultiblockBoxTree from set of Boxes.
     *
-    * @param[in] boxes.  No empty boxes are allowed.
+    * @param[in] boxes  No empty boxes are allowed.
+    *
+    * @param[in] grid_geometry GridGeometry associated with boxes in tree.
     *
     * @param[in] min_number Split up sets of boxes while the number of
     * boxes in a subset is greater than this value.  Setting to a

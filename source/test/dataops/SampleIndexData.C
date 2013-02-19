@@ -161,13 +161,13 @@ void SampleIndexData::getFromRestart(
 //template class pdat::SparseDataFactory<SampleIndexData, pdat::CellGeometry>;
 //template class pdat::IndexData<SampleIndexData, pdat::CellGeometry>;
 //template class pdat::IndexDataFactory<SampleIndexData, pdat::CellGeometry>;
-//template class pdat::IndexDataNode<NDIM, SampleIndexData, pdat::CellGeometry>;
-//template class pdat::IndexIterator<NDIM, SampleIndexData, pdat::CellGeometry>;
+//template class pdat::IndexDataNode<SampleIndexData, pdat::CellGeometry>;
+//template class pdat::IndexIterator<SampleIndexData, pdat::CellGeometry>;
 //template class pdat::IndexVariable<SampleIndexData, pdat::CellGeometry>;
 //template class tbox::Array<SampleIndexData>;
-//template class tbox::Array<pdat::IndexDataNode<NDIM, SampleIndexData,
+//template class tbox::Array<pdat::IndexDataNode<SampleIndexData,
 //                                               pdat::CellGeometry> >;
-//template class boost::shared_ptr<pdat::IndexData<NDIM, SampleIndexData,
+//template class boost::shared_ptr<pdat::IndexData<SampleIndexData,
 //                                                 pdat::CellGeometry> >;
 //template class boost::shared_ptr<pdat::IndexVariable<SampleIndexData,
 //                                                     pdat::CellGeometry> >;

@@ -76,7 +76,7 @@ private:
     */
    int
    computeCoarsenRatio(
-      const tbox::Array<hier::IntVector>& ratio_to_coarser) const;
+      const tbox::Array<hier::IntVector>& ratios_to_coarser) const;
 
 };
 

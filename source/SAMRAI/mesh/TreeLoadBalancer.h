@@ -311,7 +311,7 @@ private:
       /*!
        * @brief Construct a new BoxInTransit from an originating box.
        *
-       * @param[in] other
+       * @param[in] origin
        */
       BoxInTransit(const hier::Box& origin);
 
@@ -648,19 +648,19 @@ private:
     * @brief Adjust the load in a TransitSet by moving work between it
     * and another TransitSet.
     *
-    * @param[io] main_bin
+    * @param[in,out] main_bin
     *
-    * @param[io] hold_bin
+    * @param[in,out] hold_bin
     *
-    * @param[io] next_available_index Index for guaranteeing new
+    * @param[in,out] next_available_index Index for guaranteeing new
     * Boxes are uniquely numbered.
     *
-    * @param[i] ideal_load The load that main_bin should have.
+    * @param[in] ideal_load The load that main_bin should have.
     *
-    * @param[i] low_load Return when main_bin's load is in the range
+    * @param[in] low_load Return when main_bin's load is in the range
     * [low_load,high_load]
     *
-    * @param[i] highload Return when main_bin's load is in the range
+    * @param[in] high_load Return when main_bin's load is in the range
     * [low_load,high_load]
     *
     * @return Net load transfered into main_bin.  If negative, net
@@ -679,16 +679,16 @@ private:
     * @brief Shift load from src to dst by swapping BoxInTransit
     * between them.
     *
-    * @param[io] main_bin
+    * @param[in,out] main_bin
     *
-    * @param[io] hold_bin
+    * @param[in,out] hold_bin
     *
-    * @param[i] ideal_load The load that main_bin should have.
+    * @param[in] ideal_load The load that main_bin should have.
     *
-    * @param[i] low_load Return when main_bin's load is in the range
+    * @param[in] low_load Return when main_bin's load is in the range
     * [low_load,high_load]
     *
-    * @param[i] highload Return when main_bin's load is in the range
+    * @param[in] high_load Return when main_bin's load is in the range
     * [low_load,high_load]
     *
     * @return Amount of load transfered.  If positive, load went
@@ -706,18 +706,23 @@ private:
     * @brief Shift load from src to dst by swapping BoxInTransit
     * between them.
     *
-    * @param[io] src Source of work, for a positive ideal_transfer.
+    * @param[in,out] main_bin
     *
-    * @param[io] dst Destination of work, for a positive ideal_transfer.
+    * @param[in,out] hold_bin
     *
-    * @param next_available_index Index for guaranteeing new
+    * @param[in,out] next_available_index Index for guaranteeing new
     * Boxes are uniquely numbered.
     *
-    * @param[i] ideal_transfer Amount of load to reassign from src to
-    * dst.  If negative, reassign the load from dst to src.
+    * @param[in] ideal_load The load that main_bin should have.
+    *
+    * @param[in] low_load Return when main_bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @param[in] high_load Return when main_bin's load is in the range
+    * [low_load,high_load]
     *
     * @return Amount of load transfered.  If positive, load went
-    * from src to dst (if negative, from dst to src).
+    * from main_bin to hold_bin.
     */
    LoadType
    adjustLoadByBreaking(
@@ -733,15 +738,19 @@ private:
     * containers that, when swapped, effects a transfer of the given
     * amount of work from the source to the destination.  Swap the boxes.
     *
-    * @param [io] src
+    * @param [in,out] src
     *
-    * @param [io] dst
+    * @param [in,out] dst
     *
-    * @param actual_transfer [o] Amount of work transfered from src to
+    * @param actual_transfer [out] Amount of work transfered from src to
     * dst.
     *
-    * @param ideal_transfer [i] Amount of work to be transfered from
+    * @param ideal_transfer [in] Amount of work to be transfered from
     * src to dst.
+    *
+    * @param low_transfer
+    *
+    * @param high_transfer
     */
    bool
    swapLoadPair(
@@ -795,10 +804,10 @@ private:
     * This methods does the necessary communication and constructs
     * these relationship in the given Connector.
     *
-    * @param [o] unbalanced_to_balanced Connector to store
+    * @param [out] unbalanced_to_balanced Connector to store
     * relationships in.
     *
-    * @param [i] kept_imports Work that was imported and locally kept.
+    * @param [in] kept_imports Work that was imported and locally kept.
     */
    void
    constructSemilocalUnbalancedToBalanced(
@@ -808,15 +817,19 @@ private:
    /*!
     * @brief Break off a given load size from a given Box.
     *
-    * @param[i] box Box to break.
+    * @param[out] breakoff Boxes broken off (usually just one).
     *
-    * @param[i] ideal_load Ideal load to break.
+    * @param[out] leftover Remainder of Box after breakoff is gone.
     *
-    * @param[o] breakoff Boxes broken off (usually just one).
+    * @param[out] brk_load The load broken off.
     *
-    * @param[o] leftover Remainder of Box after breakoff is gone.
+    * @param[in] box Box to break.
     *
-    * @param[o] brk_load The load broken off.
+    * @param[in] ideal_load Ideal load to break.
+    *
+    * @param[in] low_load
+    *
+    * @param[in] high_load
     *
     * @return whether a successful break was made.
     *
@@ -1076,11 +1089,11 @@ private:
     * number such that for the last cycle the rank group includes
     * all processes in d_mpi.
     *
-    * @param [o] rank_group
-    * @param [o] num_groups
-    * @param [o] group_num
-    * @param [i] cycle_number
-    * @param [i] number_of_cycles
+    * @param [out] rank_group
+    * @param [out] num_groups
+    * @param [out] group_num
+    * @param [in] cycle_number
+    * @param [in] number_of_cycles
     */
    void
    createBalanceRankGroupBasedOnCycles(
@@ -1098,11 +1111,11 @@ private:
     * set the AsyncCommPeer objects for communication with children
     * and parent.
     *
-    * @param [o] child_stage
-    * @param [o] child_comms
-    * @param [o] parent_stage
-    * @param [o] parent_comm
-    * @param [i] rank_group
+    * @param [out] child_stage
+    * @param [out] child_comms
+    * @param [out] parent_stage
+    * @param [out] parent_comm
+    * @param [in] rank_group
     */
    void
    setupAsyncCommObjects(

@@ -573,7 +573,7 @@ private:
     *
     * When finished, the type should be closed using H5Tclose(hid_t).
     *
-    * @param char_type 'n' mean use native types; 'f' = means use
+    * @param type_spec 'n' mean use native types; 'f' = means use
     *        types for file.
     * @return the compound type id.
     * @internal We currently create a new compound type every
@@ -591,7 +591,7 @@ private:
     *
     * When finished, the type should be closed using H5Tclose(hid_t).
     *
-    * @param char_type 'n' mean use native types; 'f' = means use
+    * @param type_spec 'n' mean use native types; 'f' = means use
     *        types for file.
     * @return the compound type id.
     * @internal We currently create a new compound type every

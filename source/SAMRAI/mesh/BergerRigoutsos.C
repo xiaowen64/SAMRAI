@@ -121,63 +121,6 @@ void
 BergerRigoutsos::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db)
 {
-   /*
-    * The following are developer inputs useful for experimentation.  Defaults
-    * listed in parenthesis:
-    *
-    * DEV_algo_advance_mode ("ADVANCE_SOME")
-    * string
-    * Asynchronous algorithm advance mode.  The default has been empirically
-    * determined to scale best to higher numbers of processors and work
-    * adequately for lower numbers of processors.
-    *
-    * DEV_owner_mode ("MOST_OVERLAP")
-    * string
-    * How to chose the owner from a node group.
-    * This string is used in BergerRigoutsosNode::setOwnerMode().
-    *
-    * DEV_min_box_size_from_cutting (all members are 0.0)
-    * int[]
-    * This is an alternative minimum box size.  It helps reduce excessive box
-    * cutting.  If used, a good value is a box with about 3-4 times the volume
-    * of the minimum size specified by the findBoxesContainingTags() interface.
-    *
-    * DEV_max_inflection_cut_from_center (1.0)
-    * double
-    * Limit the Laplace cut to this fraction of the distance from the center
-    * plane to the end.  Zero means cut only at the center plane.  One means
-    * unlimited.  Under most situations, one is fine.  A lower setting helps
-    * prevent parallel slivers.
-    *
-    * DEV_inflection_cut_threshold_ar (0.0)
-    * double
-    * Specifies the mininum box thickness that can be cut, as a ratio to the
-    * thinnest box direction.  If the box doesn't have any direction thick
-    * enough, then it has a reasonable aspect ratio, so we can cut it in any
-    * direction.
-    * Degenerate values of DEV_inflection_cut_threshold_ar:
-    *    1: cut any direction except the thinnest.
-    *    (0,1) and huge values: cut any direction.
-    *    0: Not a degenerate case but a special case meaning always cut the
-    *       thickest direction.  This leads to more cubic boxes but may
-    *       prevent cutting at important feature changes.
-    *
-    * The following are developer inputs for debugging.  Defaults listed in
-    * parenthesis:
-    *
-    * DEV_log_node_history (false)
-    * bool
-    * Whether to log what certain actions of nodes in the tree.
-    * This degrades the performance but is a very useful debugging tool.
-    *
-    * DEV_log_cluster_summary (false)
-    * bool
-    * Whether to briefly log the results of the clustering.
-    *
-    * DEV_log_cluster (false)
-    * bool
-    * Whether to log the results of the clustering.
-    */
    if (input_db) {
 
       if (input_db->isInteger("max_box_size")) {
@@ -810,9 +753,9 @@ BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
       d_object_timers->t_share_new_relationships_send->start();
       std::vector<tbox::SAMRAI_MPI::Status> mpi_statuses(
          static_cast<int>(d_relationship_messages.size()));
-      ierr = mpi.Waitall(static_cast<int>(d_relationship_messages.size()),
-                         &mpi_request[0],
-                         &mpi_statuses[0]);
+      ierr = tbox::SAMRAI_MPI::Waitall(static_cast<int>(d_relationship_messages.size()),
+                                 &mpi_request[0],
+                                 &mpi_statuses[0]);
       TBOX_ASSERT(ierr == MPI_SUCCESS);
       d_object_timers->t_share_new_relationships_send->stop();
    }

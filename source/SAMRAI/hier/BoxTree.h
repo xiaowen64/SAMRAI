@@ -198,6 +198,9 @@ private:
     *
     * @param[in] box the specified box whose overlaps are requested.
     *
+    * @param[in] recursive_call Disable logging of information except at first
+    * call.
+    *
     * @pre getDim() == box.getDim()
     * @pre box.getBlockId() == getBlockId()
     */
@@ -218,6 +221,9 @@ private:
     * entry of this method
     *
     * @param[in] box the specified box whose overlaps are requested.
+    *
+    * @param[in] recursive_call Disable logging of information except at first
+    * call.
     *
     * @pre getDim() == box.getDim()
     * @pre box.getBlockId() == getBlockId()
@@ -241,7 +247,7 @@ private:
     * been initialized, it should be cleared before calling this
     * method.  @see clear().
     *
-    * @param min_number.  @b Default: 10
+    * @param min_number  @b Default: 10
     */
    void
    privateGenerateTree(

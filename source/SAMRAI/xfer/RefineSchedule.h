@@ -476,6 +476,7 @@ private:
     * @param[in] coarse_to_fine      Connector coarse to fine
     * @param[in] coarse_to_unfilled  Connector coarse to level representing
     *                                boxes that need to be filled.
+    * @param[in] overlaps
     */
    void
    refineScratchData(
@@ -531,6 +532,8 @@ private:
     *                                    use time interpolation when setting
     *                                    data on the destination level.
     *
+    * @param[in] create_transactions
+    *
     * @pre d_dst_to_src
     * @pre d_dst_to_src->hasTranspose()
     */
@@ -566,8 +569,6 @@ private:
     *                                    a collection of boxes that indicates
     *                                    what parts of fill_box_level
     *                                    can be filled by that source box.
-    * @param[in] dst_to_src  Connector from dst_level to src_level.
-    * @param[in] src_to_dst  Connector from src_level to dst_level.
     *
     * @pre (d_dst_level->getDim() == dst_box_level.getDim()) &&
     *      (d_dst_level->getDim() == fill_ghost_width.getDim())
@@ -618,7 +619,7 @@ private:
     * level_encon_unfilled_boxes, and edges are added to
     * encon_to_unfilled_encon_nbrhood_set.
     *
-    * The source level is the head level from the connector dst_to_src.
+    * The source level is the head level from the connector d_dst_to_src.
     *
     * @param[out]  unfilled_encon_box_level  encon unfilled boxes for the dst
     *                                        level
@@ -683,6 +684,8 @@ private:
     * @param[in,out] unfilled
     *
     * @param[in,out] dst_to_unfilled
+    *
+    * @param[in] hierarchy
     */
    void
    shearUnfilledBoxesOutsideNonperiodicBoundaries(
@@ -699,8 +702,6 @@ private:
     * @param[out] coarse_interp_box_level
     *
     * @param[out] dst_to_coarse_interp
-    *
-    * @param[out] coarse_interp_to_dst
     *
     * @param[out] coarse_interp_to_unfilled
     *

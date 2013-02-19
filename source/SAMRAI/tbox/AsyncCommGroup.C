@@ -261,7 +261,7 @@ AsyncCommGroup::completeCurrentOperation()
    while (d_next_task_op != none) {
 
       t_wait_all->start();
-      int errf = d_mpi.Waitall(static_cast<int>(d_nchild),
+      int errf = SAMRAI_MPI::Waitall(static_cast<int>(d_nchild),
             req,
             mpi_stat);
       t_wait_all->stop();
@@ -360,7 +360,7 @@ AsyncCommGroup::checkBcast()
       case recv_check:
          if (req[0] != MPI_REQUEST_NULL) {
             resetStatus();
-            d_mpi_err = d_mpi.Test(&req[0], &flag, &d_mpi_status);
+            d_mpi_err = SAMRAI_MPI::Test(&req[0], &flag, &d_mpi_status);
             if (d_mpi_err != MPI_SUCCESS) {
                TBOX_ERROR("Error in MPI_Test.\n"
                   << "Error-in-status is "
@@ -437,7 +437,7 @@ AsyncCommGroup::checkBcast()
          for (ic = 0; ic < d_nchild; ++ic) {
             if (req[ic] != MPI_REQUEST_NULL) {
                resetStatus();
-               d_mpi_err = d_mpi.Test(&req[ic], &flag, &d_mpi_status);
+               d_mpi_err = SAMRAI_MPI::Test(&req[ic], &flag, &d_mpi_status);
                if (d_mpi_err != MPI_SUCCESS) {
                   TBOX_ERROR("Error in MPI_Test.\n"
                      << "Error-in-status is "
@@ -648,7 +648,7 @@ AsyncCommGroup::checkGather()
          for (ic = 0; ic < d_nchild; ++ic) {
             if (req[ic] != MPI_REQUEST_NULL) {
                resetStatus();
-               d_mpi_err = d_mpi.Test(&req[ic], &flag, &d_mpi_status);
+               d_mpi_err = SAMRAI_MPI::Test(&req[ic], &flag, &d_mpi_status);
                if (d_mpi_err != MPI_SUCCESS) {
                   TBOX_ERROR("Error in MPI_Test.\n"
                      << "Error-in-status is "
@@ -755,7 +755,7 @@ AsyncCommGroup::checkGather()
       case send_check:
          if (req[0] != MPI_REQUEST_NULL) {
             resetStatus();
-            d_mpi_err = d_mpi.Test(&req[0], &flag, &d_mpi_status);
+            d_mpi_err = SAMRAI_MPI::Test(&req[0], &flag, &d_mpi_status);
             if (d_mpi_err != MPI_SUCCESS) {
                TBOX_ERROR("Error in MPI_Test.\n"
                   << "Error-in-status is "
@@ -968,7 +968,7 @@ AsyncCommGroup::checkReduce()
          for (ic = 0; ic < d_nchild; ++ic) {
             if (req[ic] != MPI_REQUEST_NULL) {
                resetStatus();
-               d_mpi_err = d_mpi.Test(&req[ic], &flag, &d_mpi_status);
+               d_mpi_err = SAMRAI_MPI::Test(&req[ic], &flag, &d_mpi_status);
                if (d_mpi_err != MPI_SUCCESS) {
                   TBOX_ERROR("Error in MPI_Test.\n"
                      << "Error-in-status is "
@@ -1075,7 +1075,7 @@ AsyncCommGroup::checkReduce()
       case send_check:
          if (req[0] != MPI_REQUEST_NULL) {
             resetStatus();
-            d_mpi_err = d_mpi.Test(&req[0], &flag, &d_mpi_status);
+            d_mpi_err = SAMRAI_MPI::Test(&req[0], &flag, &d_mpi_status);
             if (d_mpi_err != MPI_SUCCESS) {
                TBOX_ERROR("Error in MPI_Test.\n"
                   << "Error-in-status is "

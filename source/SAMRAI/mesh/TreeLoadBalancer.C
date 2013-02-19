@@ -2299,7 +2299,7 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
    // Wait for the sends to complete before clearing outgoing_messages.
    std::vector<tbox::SAMRAI_MPI::Status> status(send_requests.size());
    t_construct_semilocal_comm_wait->start();
-   d_mpi.Waitall(
+   tbox::SAMRAI_MPI::Waitall(
       static_cast<int>(send_requests.size()),
       &send_requests[0],
       &status[0]);

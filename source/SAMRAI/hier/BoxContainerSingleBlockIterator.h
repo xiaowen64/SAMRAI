@@ -119,9 +119,9 @@ private:
    /*!
     * @brief Constructor
     *
-    * @param [i] container
-    * @param [i] block_id
-    * @param [i] begin
+    * @param [in] container
+    * @param [in] block_id
+    * @param [in] begin
     */
    BoxContainerSingleBlockIterator(
       const BoxContainer& container,

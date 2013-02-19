@@ -100,6 +100,63 @@ class BergerRigoutsosNode;
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
  * </table>
+ *
+ *
+ * @internal The following are developer inputs useful for experimentation.
+ * Defaults are listed in parenthesis:
+ *
+ * @internal DEV_algo_advance_mode ("ADVANCE_SOME")
+ * string
+ * Asynchronous algorithm advance mode.  The default has been empirically
+ * determined to scale best to higher numbers of processors and work
+ * adequately for lower numbers of processors.
+ *
+ * @internal DEV_owner_mode ("MOST_OVERLAP")
+ * string
+ * How to chose the owner from a node group.
+ * This string is used in BergerRigoutsosNode::setOwnerMode().
+ *
+ * @internal DEV_min_box_size_from_cutting (all members are 0.0)
+ * int[]
+ * This is an alternative minimum box size.  It helps reduce excessive box
+ * cutting.  If used, a good value is a box with about 3-4 times the volume
+ * of the minimum size specified by the findBoxesContainingTags() interface.
+ *
+ * @internal DEV_max_inflection_cut_from_center (1.0)
+ * double
+ * Limit the Laplace cut to this fraction of the distance from the center
+ * plane to the end.  Zero means cut only at the center plane.  One means
+ * unlimited.  Under most situations, one is fine.  A lower setting helps
+ * prevent parallel slivers.
+ *
+ * @internal DEV_inflection_cut_threshold_ar (0.0)
+ * double
+ * Specifies the mininum box thickness that can be cut, as a ratio to the
+ * thinnest box direction.  If the box doesn't have any direction thick
+ * enough, then it has a reasonable aspect ratio, so we can cut it in any
+ * direction.
+ * Degenerate values of DEV_inflection_cut_threshold_ar:
+ *    1: cut any direction except the thinnest.
+ *    (0,1) and huge values: cut any direction.
+ *    0: Not a degenerate case but a special case meaning always cut the
+ *       thickest direction.  This leads to more cubic boxes but may
+ *       prevent cutting at important feature changes.
+ *
+ * @internal The following are developer inputs for debugging.  Defaults listed
+ * in parenthesis:
+ *
+ * @internal DEV_log_node_history (false)
+ * bool
+ * Whether to log what certain actions of nodes in the tree.
+ * This degrades the performance but is a very useful debugging tool.
+ *
+ * @internal DEV_log_cluster_summary (false)
+ * bool
+ * Whether to briefly log the results of the clustering.
+ *
+ * @internal DEV_log_cluster (false)
+ * bool
+ * Whether to log the results of the clustering.
  */
 class BergerRigoutsos:public BoxGeneratorStrategy
 {

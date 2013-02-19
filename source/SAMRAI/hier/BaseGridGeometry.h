@@ -1277,7 +1277,6 @@ private:
     * into account the full multiblock configuration.
     *
     * @param[in] patch
-    * @param[in] geometry
     * @param[in] pseudo_domain The full multiblock domain represented as if
     *            every block were in the index space where the patch exists
     * @param[in] gcw         The maximum patch data ghost width

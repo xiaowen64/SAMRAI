@@ -699,7 +699,7 @@ private:
     *
     * @param[in] tag_value
     *
-    * @param[in] level
+    * @param[in] tag_level
     *
     * @param[in] tag_index
     *
@@ -724,11 +724,11 @@ private:
     *
     * @param[in] tag_value
     *
-    * @param[in] level
+    * @param[in] tag_level
     *
     * @param[in] index
     *
-    * @param[in] level_to_fill_box_level Connector from the
+    * @param[in] tag_level_to_fill_box_level Connector from the
     * level with the tags to the BoxLevel describing where to
     * fill.
     *
@@ -810,16 +810,18 @@ private:
     * @brief Make a map from a BoxLevel to parts of that BoxLevel
     * that violate proper nesting.
     *
-    * @param[in] candidate BoxLevel being examined for nesting violation.
-    *
     * @param[out] violator BoxLevel containing violating parts of candidate.
     *
-    * @param[in] tag_ln Level number of the level that candidate should nest in.
+    * @param[in] candidate_to_violator Connector between candidate and violator.
+    *
+    * @param[in] candidate BoxLevel being examined for nesting violation.
     *
     * @param[in] candidate_to_hierarchy Connector to box_level number
     *       tag_ln in the hierarchy.
     *
-    * @parm[in] oca
+    * @param[in] tag_ln Level number of the level that candidate should nest in.
+    *
+    * @param[in] oca
     *
     * @pre candidate_to_hierarchy.hasTranspose()
     * @pre d_hierarchy->getDim() == candidate.getDim()

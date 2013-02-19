@@ -338,6 +338,7 @@ private:
     * series of rotations about an axis.  This function performs one such
     * rotation.
     *
+    * @param dim space associated rotation performed in
     * @param index array identifying a point in index space
     * @param axis axis around which index will be rotated
     * @param num_rotations number of 90-degree rotations around the axis

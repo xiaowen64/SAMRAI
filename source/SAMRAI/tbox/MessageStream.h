@@ -306,7 +306,7 @@ private:
    /*!
     * @brief Copy data into the stream, advancing the stream pointer.
     *
-    * @param[in]  data
+    * @param[in]  input_data
     * @param[in]  num_bytes
     *
     * @pre growAsNeeded() || canCopyIn(num_bytes)

@@ -1640,7 +1640,7 @@ void LinAdv::setPhysicalBoundaryConditions(
 #endif
 #endif
 
-   } // NDIM == 2
+   } // d_dim == tbox::Dimension(2)
 
    if (d_dim == tbox::Dimension(3)) {
 
@@ -1695,7 +1695,7 @@ void LinAdv::setPhysicalBoundaryConditions(
 #endif
 #endif
 
-   } // NDIM == 3
+   } // d_dim == tbox::Dimension(3)
 
 }
 
