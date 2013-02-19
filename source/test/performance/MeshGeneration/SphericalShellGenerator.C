@@ -66,6 +66,11 @@ SphericalShellGenerator::SphericalShellGenerator(
             d_center[d] = tmpa[d];
          }
       }
+      else {
+         for (int d = 0; d < d_dim.getValue(); ++d) {
+            d_center[d] = 0.0;
+         }
+      }
 
       /*
        * Input parameters to determine whether to tag by buffering
