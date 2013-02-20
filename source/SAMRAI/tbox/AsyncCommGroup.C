@@ -447,19 +447,6 @@ AsyncCommGroup::checkBcast()
                      << "mpi_communicator = " << d_mpi.getCommunicator()
                      << "mpi_tag = " << d_mpi_tag);
                }
-#ifdef DEBUG_CHECK_ASSERTIONS
-               if (req[ic] == MPI_REQUEST_NULL) {
-                  int count = -1;
-                  SAMRAI_MPI::Get_count(&d_mpi_status, MPI_INT, &count);
-#ifdef AsyncCommGroup_DEBUG_OUTPUT
-                  plog << "tag-" << d_mpi_tag
-                       << " sent unknown size (MPI convention)"
-                       << " to " << d_child_data[ic].rank
-                       << " in checkBcast"
-                       << std::endl;
-#endif
-               }
-#endif
             }
          }
          for (ic = 0; ic < d_nchild; ++ic) {
