@@ -1049,6 +1049,13 @@ private:
       const int level_number,
       const bool for_building_finer) const;
 
+
+   /*!
+    * @brief Compute d_tag_to_cluster_width.
+    */
+   void
+   computeTagToClusterWidths();
+
    /*!
     * @brief Check domain boxes for violations of certain constraints.
     */
@@ -1300,6 +1307,11 @@ private:
     * See input parameter combine_efficiency.
     */
    tbox::Array<double> d_combine_efficiency;
+
+   /*!
+    * @brief Connector widths to use when clustering.
+    */
+   std::vector<hier::IntVector> d_tag_to_cluster_width;
 
    /*
     * @brief When regridding level ln+1, the new level ln must not flow into
