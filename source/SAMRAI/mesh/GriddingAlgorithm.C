@@ -917,6 +917,7 @@ GriddingAlgorithm::makeFinerLevel(
          // Bridge for new<==>new.
          t_bridge_new_to_new->start();
          boost::shared_ptr<hier::Connector> new_to_new;
+// std::out << __FILE__<<':'<<__LINE__<< ": " << 
          d_oca0.bridgeWithNesting(
             new_to_new,
             *new_to_tag,
@@ -1903,12 +1904,13 @@ GriddingAlgorithm::computeTagToClusterWidths()
 {
    TBOX_ASSERT( d_tag_to_cluster_width.empty() );  // Never recompute.
 
+std::cout << "computeTagToClusterWidths:";
    const tbox::Dimension &dim = d_hierarchy->getDim();
 
    d_tag_to_cluster_width.resize(d_hierarchy->getMaxNumberOfLevels()-1,
                                  hier::IntVector::getZero(dim));
 
-   for (int ln = 0; ln < d_hierarchy->getMaxNumberOfLevels()-1; ++ln) {
+   for (int ln = d_hierarchy->getMaxNumberOfLevels()-2; ln >= 0; --ln) {
       /*
        * Construct list of boxes covering the true tags on the level.
        * Note that box list will be contained in the bounding box
@@ -1943,14 +1945,33 @@ GriddingAlgorithm::computeTagToClusterWidths()
        */
       d_tag_to_cluster_width[ln] =
          d_hierarchy->getRequiredConnectorWidth(ln, ln+1, false);
+std::cout << "Required width = " << d_tag_to_cluster_width[ln] << std::endl;
+
+      // For width of d_tag_to_cluster_width[ln+1] in bridge new<==>tag<==>new
+      if ( ln+1 < d_tag_to_cluster_width.size() ) {
+std::cout << " d_tag_to_cluster_width[" << ln+1 << "] = " << d_tag_to_cluster_width[ln+1] << std::endl;
+std::cout << " d_hierarchy->getRatioToCoarserLevel(" << ln+1 << ") = " << d_hierarchy->getRatioToCoarserLevel(ln+1) << std::endl;
+         d_tag_to_cluster_width[ln].max(
+            hier::IntVector::ceilingDivide(d_tag_to_cluster_width[ln+1],
+                                           d_hierarchy->getRatioToCoarserLevel(ln+1)) );
+std::cout << "Required width inc to = " << d_tag_to_cluster_width[ln] << std::endl;
+      }
 
       if (d_extend_to_domain_boundary) {
          // For extending boxes to domain boundary by amount of extend_ghosts_in_tag_space.
          d_tag_to_cluster_width[ln] += extend_ghosts_in_tag_space;
+std::cout << "extend_ghosts_in_tag_space = " << extend_ghosts_in_tag_space << std::endl;
       }
       // For growing within domain by amount of smallest_box_to_refine.
       d_tag_to_cluster_width[ln] += smallest_box_to_refine;
+std::cout << "smallest_box_to_refine = " << smallest_box_to_refine << std::endl;
+std::cout << "   [" << ln << "] = " << d_tag_to_cluster_width[ln] << std::endl;
    }
+
+   d_connector_width_requestor.setTagToClusterWidth(d_tag_to_cluster_width);
+
+   // Commit to computing the widths required by the hierarchy.
+   d_hierarchy->getRequiredConnectorWidth(0, 0, true);
 }
 
 
@@ -2963,7 +2984,7 @@ GriddingAlgorithm::findRefinementBoxes(
    t_find_boxes_containing_tags->barrierAndStart();
    hier::IntVector ratio = d_hierarchy->getRatioToCoarserLevel(new_ln);
 
-#if 1
+#if 0
    // Temporary sanity check on d_tag_to_cluster_width.
    /*
     * Compute the width for tag<==>cluster.  This width be wide enough to
@@ -2998,6 +3019,7 @@ GriddingAlgorithm::findRefinementBoxes(
    hier::LocalId first_local_id(0);
 
    if (!bounding_container.isEmpty()) {
+std::cout << "GriddingAlgorithm::findRefinementBoxes d_tag_to_cluster_width[" << tag_ln << "] = " << d_tag_to_cluster_width[tag_ln] << std::endl;
       d_box_generator->findBoxesContainingTags(
          new_box_level,
          tag_to_new,
@@ -3006,6 +3028,7 @@ GriddingAlgorithm::findRefinementBoxes(
          getEfficiencyTolerance(tag_ln),
          getCombineEfficiency(tag_ln),
          d_tag_to_cluster_width[tag_ln]);
+std::cout << "GriddingAlgorithm::findRefinementBoxes after clustering tag--->cluster width = " << tag_to_new->getConnectorWidth() << std::endl;
    }
    hier::Connector& new_to_tag = tag_to_new->getTranspose();
    t_find_boxes_containing_tags->stop();
@@ -3080,6 +3103,7 @@ GriddingAlgorithm::findRefinementBoxes(
             << "GriddingAlgorithm::findRefinementBoxes finished applying overflow nesting map."
             << std::endl;
          }
+std::cout << "GriddingAlgorithm::findRefinementBoxes after overflow control tag--->cluster width = " << tag_to_new->getConnectorWidth() << std::endl;
 
          if (d_check_overflow_nesting) {
             if (d_print_steps) {
@@ -3144,6 +3168,7 @@ GriddingAlgorithm::findRefinementBoxes(
          if (d_barrier_and_time) {
             t_enforce_nesting->stop();
          }
+std::cout << "GriddingAlgorithm::findRefinementBoxes after nesting control tag--->cluster width = " << tag_to_new->getConnectorWidth() << std::endl;
 
          if (tag_ln == d_base_ln && d_check_proper_nesting) {
             /*
@@ -3223,6 +3248,7 @@ GriddingAlgorithm::findRefinementBoxes(
             level->getPhysicalDomainArray(),
             extend_ghosts_in_tag_space);
          t_extend_to_domain_boundary->stop();
+std::cout << "GriddingAlgorithm::findRefinementBoxes after boundary extend tag--->cluster width = " << tag_to_new->getConnectorWidth() << std::endl;
       }
 
       bool allow_patches_smaller_than_minimum_size_to_prevent_overlaps =
@@ -3275,6 +3301,7 @@ GriddingAlgorithm::findRefinementBoxes(
                new_to_tag.getConnectorWidth() - smallest_box_to_refine);
          }
       }
+std::cout << "GriddingAlgorithm::findRefinementBoxes after within extend tag--->cluster width = " << tag_to_new->getConnectorWidth() << std::endl;
 #ifdef DEBUG_CHECK_ASSERTIONS
       std::set<int> new_local_ids;
       const hier::BoxContainer& new_boxes = new_box_level->getBoxes();

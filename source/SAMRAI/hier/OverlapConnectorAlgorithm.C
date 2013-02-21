@@ -755,7 +755,7 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
          IntVector::min(west_refinement_ratio, east_refinement_ratio);
       const IntVector width_limit_in_finest_refinement_ratio(
          connector_width_limit * finest_refinement_ratio / coarser_refinement_ratio);
-      if (width_limit_in_finest_refinement_ratio > output_width_in_finest_refinement_ratio) {
+      if (!(width_limit_in_finest_refinement_ratio <= output_width_in_finest_refinement_ratio)) {
          /*
           * If user specifies a width limit, he is probably assuming
           * that the bridge's allowable width is bigger.  If that is
@@ -763,11 +763,11 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
           * bad results that result in elusive bugs.  Therefore, we
           * catch it immediately.
           */
-         TBOX_ERROR("OverlapConnectorAlgorithm::privateBridge_prologue found input error:\n"
+         TBOX_ERROR("OverlapConnectorAlgorithm::privateBridge_prologue input error:\n"
             << "The given connector width limit, " << connector_width_limit
             << " (" << width_limit_in_finest_refinement_ratio
             << " in finest index space)\n"
-            << "is smaller than the width of the bridge, "
+            << "is not <= the maximum width of the bridge, "
             << output_width_in_finest_refinement_ratio
             << " (in finest index space).");
       }
