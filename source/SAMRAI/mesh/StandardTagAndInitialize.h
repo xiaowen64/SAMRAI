@@ -61,11 +61,16 @@ namespace mesh {
  *           first tagging method in this set of tagging methods
  *              - \b tagging_method = one of RICHARDSON_EXTRAPOLATION,
  *                                    GRADIENT_DETECTOR, REFINE_BOXES, NONE
- *              - \b level_0
+ *              - \b level_m
  *                required if tagging_method is REFINE_BOXES, the static boxes
- *                for one of the levels
- *                   - \b level = required integer level boxes are defined for
- *                   - \b boxes = required box array specifying refine boxes
+ *                for the mth level
+ *                   - \b block_m
+ *                     required description of refine boxes in the mth block
+ *                     of the level just specified
+ *                        - \b boxes = required box array specifying refine
+ *                                     boxes
+ *                   - \b . . .
+ *                   - \b block_n
  *              - \b . . .
  *              - \b level_n
  *         - \b . . .
@@ -94,16 +99,19 @@ namespace mesh {
  *       tag_0 {
  *          tagging_method = REFINE_BOXES
  *          level_0 {
- *             level = 0
- *             boxes = [(5,5),(9,9)],[(12,15),(18,19)]
+ *             block_1 {
+ *                boxes = [(5,5),(9,9)],[(12,15),(18,19)]
+ *             }
  *          }
  *          level_1 {
- *             level = 1
- *             boxes = [(25,30),(29,35)]
+ *             block_1 {
+ *                boxes = [(25,30),(29,35)]
+ *             }
  *          }
  *          level_2 {
- *             level = 2
- *             boxes = [(60,70),(70,80)]
+ *             block_1 {
+ *                boxes = [(60,70),(70,80)]
+ *             }
  *          }
  *       }
  *    }
@@ -113,8 +121,9 @@ namespace mesh {
  *       tag_0 {
  *          tagging_method = REFINE_BOXES
  *          level_0 {
- *             level = 0
- *             boxes = [(7,7),(11,11)],[(14,17),(20,21)]
+ *             block_2 {
+ *                boxes = [(7,7),(11,11)],[(14,17),(20,21)]
+ *             }
  *          }
  *       }
  *    }
@@ -123,9 +132,10 @@ namespace mesh {
  *       time = 0.05
  *       tag_0 {
  *          tagging_method = REFINE_BOXES
- *          level_0 {
- *             level = 1
- *             boxes = [(30,35),(34,40)]
+ *          level_1 {
+ *             block_0 {
+ *                boxes = [(30,35),(34,40)]
+ *             }
  *          }
  *       }
  *    }
@@ -134,9 +144,10 @@ namespace mesh {
  *       time = 0.10
  *       tag_0 {
  *          tagging_method = REFINE_BOXES
- *          level_0 {
- *             level = 1
- *             boxes = [(35,40),(39,45)]
+ *          level_1 {
+ *             block_1 {
+ *                boxes = [(35,40),(39,45)]
+ *             }
  *          }
  *       }
  *    }
@@ -410,6 +421,68 @@ public:
    resetRefineBoxes(
       const hier::BoxContainer& refine_boxes,
       const int level_number);
+
+   /*!
+    * Turn on refine boxes criteria at the specified time programmatically.
+    *
+    * @param time Time to turn refine boxes criteria on.
+    */
+   void
+   turnOnRefineBoxes(
+      double time);
+
+   /*!
+    * Turn off refine boxes criteria at the specified time programmatically.
+    *
+    * @param time Time to turn refine boxes criteria off.
+    */
+   void
+   turnOffRefineBoxes(
+      double time);
+
+   /*!
+    * Turn on gradient detector criteria at the specified time
+    * programmatically.
+    *
+    * @param time Time to turn gradient detector criteria on.
+    *
+    * @pre d_tag_strategy
+    */
+   void
+   turnOnGradientDetector(
+      double time);
+
+   /*!
+    * Turn off gradient detector criteria at the specified time
+    * programmatically.
+    *
+    * @param time Time to turn gradient detector criteria off.
+    */
+   void
+   turnOffGradientDetector(
+      double time);
+
+   /*!
+    * Turn on Richardson extrapolation criteria at the specified time
+    * programmatically.
+    *
+    * @param time Time to turn Richardson extrapolation on.
+    *
+    * @pre d_tag_strategy
+    */
+   void
+   turnOnRichardsonExtrapolation(
+      double time);
+
+   /*!
+    * Turn off Richardson extrapolation criteria at the specified time
+    * programmatically.
+    *
+    * @param time Time to turn Richardson extrapolation off.
+    */
+   void
+   turnOffRichardsonExtrapolation(
+      double time);
 
 private:
    /*

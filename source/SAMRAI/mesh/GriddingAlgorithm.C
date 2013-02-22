@@ -2506,7 +2506,6 @@ GriddingAlgorithm::readLevelBoxes(
       for (hier::BoxContainer::iterator itr = boxes_to_refine.begin();
            itr != boxes_to_refine.end(); ++itr, ++i) {
          hier::Box unbalanced_box(*itr, i, 0);
-         unbalanced_box.setBlockId(hier::BlockId(0));
          unbalanced_box_level.addBox(unbalanced_box);
       }
 

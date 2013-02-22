@@ -173,7 +173,8 @@ TreeLoadBalancer {
 StandardTaggingAndInitializer {
    tagging_method = "REFINE_BOXES"
    level_0 {
-      level = 0
-      boxes = [ (3,3) , (4,4) ]
+      block_0 {
+         boxes = [ (3,3) , (4,4) ]
+      }
    }
 }

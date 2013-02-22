@@ -60,6 +60,12 @@ descriptions of items in the following list are provided below.
    introduced.  The existing constructor which copies a supplied BoxLevel is
    unchanged.
 
+4) Dynamic control of refinement criteria via the following methods of
+   mesh::StandardTagAndInitialize has been added:
+   turnOnGradientDetector, turnOffGradientDetector,
+   turnOnRichardsonExtrapolation, turnOffRichardsonExtrapolation,
+   turnOnRefineBoxes, and turnOffRefineBoxes.
+
 -----------------------------------------------------------------------------
                 Summary of what's changed
 -----------------------------------------------------------------------------
@@ -87,6 +93,9 @@ descriptions of items in the following list are provided below.
    constructors for each iterator are now private.
 
 7) The restart-redistribute tool is now parallel.
+
+8) The input to mesh::StandardTagAndInitialize for REFINE_BOXES tagging
+   criteria has been modified to support multiblock.
 
 *****************************************************************************
 
@@ -142,6 +151,12 @@ descriptions of items in the following list are provided below.
    To make use of this new constructor there is are new versions of
    PatchHierarchy::makeNewPatchLevel and PatchLevelFactory::allocate.
 
+4) The ability to dynamically control refinement criteria from an application
+   has been restored.  It is still possible to statically control refinement
+   criteria via an input file.  It is possible to mix static and dynamic
+   control however caution should be exercised if this is done as these two
+   separate controls can override one another and yield unintended behavior.
+
 -----------------------------------------------------------------------------
                 Details about what's changed
 -----------------------------------------------------------------------------
@@ -189,6 +204,20 @@ descriptions of items in the following list are provided below.
    input and the number output files.  Invocation of the tool is via mpirun
    or the appropriate parallel program launcher for your platform.  No
    arguments to the tool have changed.
+
+8) In all previous versions of SAMRAI, input for the REFINE_BOXES tagging
+   criteria consisted only of a level number and the boxes on that level.
+   There was no way to specify the block these boxes come from.  The result was
+   that the code read the refine boxes as being from block 0 and only that
+   block.  We have expanded the input for REFINE_BOXES to include block numbers
+   so that boxes from multiple blocks in any given level may be specified for
+   tagging.  In addition, there was some redundancy concerning the
+   specification of the level which has been removed.  Needing a level_n
+   database followed by a "level" input parameter was clearly unnecessary.  See
+   the docuementation for mesh::StandardTagAndInitialize for specifics of this
+   new syntax.
+
+   Any input files using REFINE_BOXES will need to be modified.
 
 =============================================================================
 =============================================================================
