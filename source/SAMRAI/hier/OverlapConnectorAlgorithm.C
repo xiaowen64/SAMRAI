@@ -1012,6 +1012,14 @@ OverlapConnectorAlgorithm::privateBridge_checkParameters(
 
    // Expensive sanity checks:
    if (d_sanity_check_method_preconditions) {
+      west_to_cent.assertConsistencyWithBase();
+      west_to_cent.assertConsistencyWithHead();
+      cent_to_east.assertConsistencyWithBase();
+      cent_to_east.assertConsistencyWithHead();
+      east_to_cent.assertConsistencyWithBase();
+      east_to_cent.assertConsistencyWithHead();
+      cent_to_west.assertConsistencyWithBase();
+      cent_to_west.assertConsistencyWithHead();
       west_to_cent.assertTransposeCorrectness(cent_to_west);
       cent_to_west.assertTransposeCorrectness(west_to_cent);
       east_to_cent.assertTransposeCorrectness(cent_to_east);

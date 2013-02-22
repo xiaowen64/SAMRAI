@@ -1376,26 +1376,26 @@ private:
    /*!
     * @brief OverlapConnectorAlgorithm object used for regrid.
     */
-   hier::OverlapConnectorAlgorithm d_oca;
+   mutable hier::OverlapConnectorAlgorithm d_oca;
 
    /*!
     * @brief MappingConnectorAlgorithm object used for regrid.
     */
-   hier::MappingConnectorAlgorithm d_mca;
+   mutable hier::MappingConnectorAlgorithm d_mca;
 
    /*!
     * @brief OverlapConnectorAlgorithm object used for initial mesh
     * construction, sanity checks and other operations that are not
     * expected to scale well.
     */
-   hier::OverlapConnectorAlgorithm d_oca0;
+   mutable hier::OverlapConnectorAlgorithm d_oca0;
 
    /*!
     * @brief MappingConnectorAlgorithm object used for initial mesh
     * construction, sanity checks and other operations that are not
     * expected to scale well.
     */
-   hier::MappingConnectorAlgorithm d_mca0;
+   mutable hier::MappingConnectorAlgorithm d_mca0;
 
    /*
     * Switches for massaging boxes after clustering.  Should be on for

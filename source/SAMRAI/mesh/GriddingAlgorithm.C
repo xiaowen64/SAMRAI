@@ -795,6 +795,10 @@ GriddingAlgorithm::makeFinerLevel(
          findRefinementBoxes(new_box_level,
             tag_to_new,
             tag_ln);
+tag_to_new->assertConsistencyWithBase();
+tag_to_new->assertConsistencyWithHead();
+tag_to_new->getTranspose().assertConsistencyWithBase();
+tag_to_new->getTranspose().assertConsistencyWithHead();
 
          new_to_tag = &tag_to_new->getTranspose();
 
@@ -918,6 +922,12 @@ GriddingAlgorithm::makeFinerLevel(
          t_bridge_new_to_new->start();
          boost::shared_ptr<hier::Connector> new_to_new;
 // std::out << __FILE__<<':'<<__LINE__<< ": " << 
+tag_to_new->assertConsistencyWithBase();
+tag_to_new->assertConsistencyWithHead();
+tag_to_new->getTranspose().assertConsistencyWithBase();
+tag_to_new->getTranspose().assertConsistencyWithHead();
+d_oca0.setSanityCheckMethodPreconditions(true);
+d_oca0.setSanityCheckMethodPostconditions(true);
          d_oca0.bridgeWithNesting(
             new_to_new,
             *new_to_tag,
@@ -3027,8 +3037,13 @@ std::cout << "GriddingAlgorithm::findRefinementBoxes d_tag_to_cluster_width[" <<
          smallest_box_to_refine,
          getEfficiencyTolerance(tag_ln),
          getCombineEfficiency(tag_ln),
-         d_tag_to_cluster_width[tag_ln]);
+         hier::IntVector::getZero(dim));
+         // d_tag_to_cluster_width[tag_ln]);
 std::cout << "GriddingAlgorithm::findRefinementBoxes after clustering tag--->cluster width = " << tag_to_new->getConnectorWidth() << std::endl;
+tag_to_new->assertConsistencyWithBase();
+tag_to_new->assertConsistencyWithHead();
+tag_to_new->getTranspose().assertConsistencyWithBase();
+tag_to_new->getTranspose().assertConsistencyWithHead();
    }
    hier::Connector& new_to_tag = tag_to_new->getTranspose();
    t_find_boxes_containing_tags->stop();
@@ -3093,6 +3108,10 @@ std::cout << "GriddingAlgorithm::findRefinementBoxes after clustering tag--->clu
          d_mca.modify(*tag_to_new,
             *unnested_to_nested,
             new_box_level.get());
+tag_to_new->assertConsistencyWithBase();
+tag_to_new->assertConsistencyWithHead();
+tag_to_new->getTranspose().assertConsistencyWithBase();
+tag_to_new->getTranspose().assertConsistencyWithHead();
          t_modify_connector->stop();
          t_use_overflow_map->stop();
          if (d_barrier_and_time) {
@@ -3130,6 +3149,20 @@ std::cout << "GriddingAlgorithm::findRefinementBoxes after overflow control tag-
                   << std::endl);
             }
          }
+
+      d_oca.bridgeWithNesting(
+         tag_to_new,
+         tag_box_level.getPersistentOverlapConnectors().findConnectorWithTranspose( tag_box_level, d_tag_to_cluster_width[tag_ln], d_tag_to_cluster_width[tag_ln] ),
+         hier::Connector(*tag_to_new),
+         hier::IntVector::getZero(dim),
+         hier::IntVector::getZero(dim),
+         -hier::IntVector::getOne(dim),
+         true);
+tbox::plog << "After bridging to increase tag--->new width:\n" << tag_to_new->format("",1) << std::endl;
+tag_to_new->assertConsistencyWithBase();
+tag_to_new->assertConsistencyWithHead();
+tag_to_new->getTranspose().assertConsistencyWithBase();
+tag_to_new->getTranspose().assertConsistencyWithHead();
       }
 
       if (d_enforce_proper_nesting) {
@@ -3149,7 +3182,7 @@ std::cout << "GriddingAlgorithm::findRefinementBoxes after overflow control tag-
             nested_box_level,
             unnested_to_nested,
             *new_box_level,
-            new_to_tag,
+            tag_to_new->getTranspose(),
             new_ln,
             d_oca);
          if (d_print_steps) {
@@ -3159,9 +3192,29 @@ std::cout << "GriddingAlgorithm::findRefinementBoxes after overflow control tag-
          t_use_nesting_map->start();
          t_modify_connector->start();
          const hier::MappingConnectorAlgorithm mca;
+         tbox::plog << "Before:\n"
+                    << "tag:\n" << tag_to_new->getBase().format("T: ")
+                    << "new:\n" << tag_to_new->getHead().format("H: ")
+                    << "tag--->new:\n" << tag_to_new->format("TN: ")
+                    << "new--->tag:\n" << tag_to_new->getTranspose().format("NT: ");
+tag_to_new->assertConsistencyWithBase();
+tag_to_new->assertConsistencyWithHead();
+tag_to_new->getTranspose().assertConsistencyWithBase();
+tag_to_new->getTranspose().assertConsistencyWithHead();
+d_mca.setSanityCheckMethodPreconditions(true);
+d_mca.setSanityCheckMethodPostconditions(true);
          d_mca.modify(*tag_to_new,
             *unnested_to_nested,
             new_box_level.get());
+         tbox::plog << "After:\n"
+                    << "tag:\n" << tag_to_new->getBase().format("T: ")
+                    << "new:\n" << tag_to_new->getHead().format("H: ")
+                    << "tag--->new:\n" << tag_to_new->format("TN: ")
+                    << "new--->tag:\n" << tag_to_new->getTranspose().format("NT: ");
+tag_to_new->assertConsistencyWithBase();
+tag_to_new->assertConsistencyWithHead();
+tag_to_new->getTranspose().assertConsistencyWithBase();
+tag_to_new->getTranspose().assertConsistencyWithHead();
          t_modify_connector->stop();
          t_use_nesting_map->stop();
 
@@ -3249,6 +3302,10 @@ std::cout << "GriddingAlgorithm::findRefinementBoxes after nesting control tag--
             extend_ghosts_in_tag_space);
          t_extend_to_domain_boundary->stop();
 std::cout << "GriddingAlgorithm::findRefinementBoxes after boundary extend tag--->cluster width = " << tag_to_new->getConnectorWidth() << std::endl;
+tag_to_new->assertConsistencyWithBase();
+tag_to_new->assertConsistencyWithHead();
+tag_to_new->getTranspose().assertConsistencyWithBase();
+tag_to_new->getTranspose().assertConsistencyWithHead();
       }
 
       bool allow_patches_smaller_than_minimum_size_to_prevent_overlaps =
@@ -3266,6 +3323,10 @@ std::cout << "GriddingAlgorithm::findRefinementBoxes after boundary extend tag--
             *tag_to_new,
             smallest_box_to_refine,
             tag_ln);
+tag_to_new->assertConsistencyWithBase();
+tag_to_new->assertConsistencyWithHead();
+tag_to_new->getTranspose().assertConsistencyWithBase();
+tag_to_new->getTranspose().assertConsistencyWithHead();
          t_extend_within_domain->stop();
       } else {
          const hier::IntVector periodic_dirs(
@@ -3288,6 +3349,10 @@ std::cout << "GriddingAlgorithm::findRefinementBoxes after boundary extend tag--
                *tag_to_new,
                min_size,
                tag_ln);
+tag_to_new->assertConsistencyWithBase();
+tag_to_new->assertConsistencyWithHead();
+tag_to_new->getTranspose().assertConsistencyWithBase();
+tag_to_new->getTranspose().assertConsistencyWithHead();
             t_extend_within_domain->stop();
          } else {
             /*
@@ -3297,8 +3362,8 @@ std::cout << "GriddingAlgorithm::findRefinementBoxes after boundary extend tag--
              */
             tag_to_new->shrinkWidth(
                tag_to_new->getConnectorWidth() - smallest_box_to_refine);
-            new_to_tag.shrinkWidth(
-               new_to_tag.getConnectorWidth() - smallest_box_to_refine);
+            tag_to_new->getTranspose().shrinkWidth(
+               tag_to_new->getTranspose().getConnectorWidth() - smallest_box_to_refine);
          }
       }
 std::cout << "GriddingAlgorithm::findRefinementBoxes after within extend tag--->cluster width = " << tag_to_new->getConnectorWidth() << std::endl;
@@ -3321,9 +3386,13 @@ std::cout << "GriddingAlgorithm::findRefinementBoxes after within extend tag--->
       refineNewBoxLevel(*new_box_level,
          *tag_to_new,
          ratio);
+tag_to_new->assertConsistencyWithBase();
+tag_to_new->assertConsistencyWithHead();
+tag_to_new->getTranspose().assertConsistencyWithBase();
+tag_to_new->getTranspose().assertConsistencyWithHead();
 
       if (d_check_connectors) {
-         TBOX_ASSERT(new_to_tag.checkOverlapCorrectness() == 0);
+         TBOX_ASSERT(tag_to_new->getTranspose().checkOverlapCorrectness() == 0);
          TBOX_ASSERT(tag_to_new->checkOverlapCorrectness() == 0);
       }
 
@@ -3339,7 +3408,7 @@ std::cout << "GriddingAlgorithm::findRefinementBoxes after within extend tag--->
 
          d_load_balancer->loadBalanceBoxLevel(
             *new_box_level,
-            &new_to_tag,
+            &tag_to_new->getTranspose(),
             d_hierarchy,
             new_ln,
             smallest_patch,
@@ -3347,13 +3416,17 @@ std::cout << "GriddingAlgorithm::findRefinementBoxes after within extend tag--->
             d_hierarchy->getDomainBoxLevel(),
             extend_ghosts,
             patch_cut_factor);
+tag_to_new->assertConsistencyWithBase();
+tag_to_new->assertConsistencyWithHead();
+tag_to_new->getTranspose().assertConsistencyWithBase();
+tag_to_new->getTranspose().assertConsistencyWithHead();
 
          t_load_balance->stop();
 
          if (d_check_connectors) {
             tbox::plog << "GriddingAlgorithm checking new-tag" << std::endl;
             int errs = 0;
-            if (new_to_tag.checkOverlapCorrectness(false, true, true)) {
+            if (tag_to_new->getTranspose().checkOverlapCorrectness(false, true, true)) {
                ++errs;
                tbox::perr << "Error found in new_to_tag!\n";
             }
@@ -3361,7 +3434,7 @@ std::cout << "GriddingAlgorithm::findRefinementBoxes after within extend tag--->
                ++errs;
                tbox::perr << "Error found in tag_to_new!\n";
             }
-            if (new_to_tag.checkTransposeCorrectness(*tag_to_new)) {
+            if (tag_to_new->getTranspose().checkTransposeCorrectness(*tag_to_new)) {
                ++errs;
                tbox::perr << "Error found in new-tag transpose!\n";
             }
@@ -3370,7 +3443,7 @@ std::cout << "GriddingAlgorithm::findRefinementBoxes after within extend tag--->
                   "Errors found after using load balance map."
                   << "new_box_level:\n" << new_box_level->format("", 2)
                   << "tag_box_level:\n" << tag_box_level.format("", 2)
-                  << "new_to_tag:\n" << new_to_tag.format("", 2)
+                  << "new_to_tag:\n" << tag_to_new->getTranspose().format("", 2)
                   << "tag_to_new:\n" << tag_to_new->format("", 2)
                   << std::endl);
             }
@@ -3386,6 +3459,10 @@ std::cout << "GriddingAlgorithm::findRefinementBoxes after within extend tag--->
             false,
             true,
             d_mca);
+tag_to_new->assertConsistencyWithBase();
+tag_to_new->assertConsistencyWithHead();
+tag_to_new->getTranspose().assertConsistencyWithBase();
+tag_to_new->getTranspose().assertConsistencyWithHead();
          if (d_print_steps) {
             tbox::plog << "GriddingAlgorithm end sorting nodes." << std::endl;
          }
@@ -3403,16 +3480,20 @@ std::cout << "GriddingAlgorithm::findRefinementBoxes after within extend tag--->
       }
       dlbg_edge_utils.addPeriodicImagesAndRelationships(
          *new_box_level,
-         new_to_tag,
+         tag_to_new->getTranspose(),
          d_hierarchy->getGridGeometry()->getDomainSearchTree(),
          tag_to_tag);
+tag_to_new->assertConsistencyWithBase();
+tag_to_new->assertConsistencyWithHead();
+tag_to_new->getTranspose().assertConsistencyWithBase();
+tag_to_new->getTranspose().assertConsistencyWithHead();
       if (d_print_steps) {
          tbox::plog << "GriddingAlgorithm begin adding periodic images."
                     << std::endl;
       }
 
       if (d_check_connectors) {
-         TBOX_ASSERT(new_to_tag.checkOverlapCorrectness() == 0);
+         TBOX_ASSERT(tag_to_new->getTranspose().checkOverlapCorrectness() == 0);
          TBOX_ASSERT(tag_to_new->checkOverlapCorrectness() == 0);
       }
 
