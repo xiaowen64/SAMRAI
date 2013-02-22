@@ -1023,6 +1023,9 @@ OverlapConnectorAlgorithm::privateBridge_checkParameters(
  ***********************************************************************
  * Remove relationships from resulting overlap.  Cache outgoing
  * information in message buffers.
+ *
+ * TODO: This method is a no-op.  Is it a place holder for something?
+ * Maybe it should be removed.  artf19532.
  ***********************************************************************
  */
 void
