@@ -370,6 +370,7 @@ AsyncCommGroup::checkBcast()
                   << "mpi_communicator = " << d_mpi.getCommunicator()
                   << "mpi_tag = " << d_mpi_tag);
             }
+            TBOX_ASSERT( (req[0] == MPI_REQUEST_NULL) == (flag == 1) );
             if (flag == 1) {
 #ifdef DEBUG_CHECK_ASSERTIONS
                int count = -1;
@@ -393,7 +394,6 @@ AsyncCommGroup::checkBcast()
                TBOX_ASSERT(count <= d_external_size);
                TBOX_ASSERT(d_mpi_status.MPI_TAG == d_mpi_tag);
                TBOX_ASSERT(d_mpi_status.MPI_SOURCE == d_parent_rank);
-               TBOX_ASSERT(req[0] == MPI_REQUEST_NULL);
 #endif
             } else {
                d_next_task_op = recv_check;
@@ -447,6 +447,16 @@ AsyncCommGroup::checkBcast()
                      << "mpi_communicator = " << d_mpi.getCommunicator()
                      << "mpi_tag = " << d_mpi_tag);
                }
+               TBOX_ASSERT( (req[ic] == MPI_REQUEST_NULL) == (flag == 1) );
+#ifdef AsyncCommGroup_DEBUG_OUTPUT
+               if (req[ic] == MPI_REQUEST_NULL) {
+                  plog << "tag-" << d_mpi_tag
+                       << " sent unknown size (MPI convention)"
+                       << " to " << d_child_data[ic].rank
+                       << " in checkBcast"
+                       << std::endl;
+               }
+#endif
             }
          }
          for (ic = 0; ic < d_nchild; ++ic) {
@@ -645,11 +655,11 @@ AsyncCommGroup::checkGather()
                      << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
                      << "mpi_tag = " << d_mpi_tag << '\n');
                }
+               TBOX_ASSERT( (req[ic] == MPI_REQUEST_NULL) == (flag == 1) );
 #ifdef DEBUG_CHECK_ASSERTIONS
                if (flag == 1) {
                   TBOX_ASSERT(d_mpi_status.MPI_TAG == d_mpi_tag);
                   TBOX_ASSERT(d_mpi_status.MPI_SOURCE == d_child_data[ic].rank);
-                  TBOX_ASSERT(req[ic] == MPI_REQUEST_NULL);
                   int count = -1;
                   SAMRAI_MPI::Get_count(&d_mpi_status, MPI_INT, &count);
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
@@ -752,6 +762,7 @@ AsyncCommGroup::checkGather()
                   << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
                   << "mpi_tag = " << d_mpi_tag << '\n');
             }
+            TBOX_ASSERT( (req[0] == MPI_REQUEST_NULL) == (flag == 1) );
          }
          if (req[0] != MPI_REQUEST_NULL) {
             d_next_task_op = send_check;
@@ -965,11 +976,11 @@ AsyncCommGroup::checkReduce()
                      << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
                      << "mpi_tag = " << d_mpi_tag << '\n');
                }
+               TBOX_ASSERT( (req[ic] == MPI_REQUEST_NULL) == (flag == 1) );
                if (flag == 1) {
 #ifdef DEBUG_CHECK_ASSERTIONS
                   TBOX_ASSERT(d_mpi_status.MPI_TAG == d_mpi_tag);
                   TBOX_ASSERT(d_mpi_status.MPI_SOURCE == d_child_data[ic].rank);
-                  TBOX_ASSERT(req[ic] == MPI_REQUEST_NULL);
                   int count = -1;
                   SAMRAI_MPI::Get_count(&d_mpi_status, MPI_INT, &count);
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
@@ -1072,18 +1083,15 @@ AsyncCommGroup::checkReduce()
                   << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
                   << "mpi_tag = " << d_mpi_tag << '\n');
             }
+            TBOX_ASSERT( (req[0] == MPI_REQUEST_NULL) == (flag == 1) );
          }
          if (req[0] != MPI_REQUEST_NULL) {
-#ifdef DEBUG_CHECK_ASSERTIONS
-            int count = -1;
-            SAMRAI_MPI::Get_count(&d_mpi_status, MPI_INT, &count);
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
             plog << "tag-" << d_mpi_tag
-                 << " sent " << count
+                 << " sent unknown size (MPI convention)"
                  << " to " << d_parent_rank
                  << " in checkReduce"
                  << std::endl;
-#endif
 #endif
             d_next_task_op = send_check;
          } else {
