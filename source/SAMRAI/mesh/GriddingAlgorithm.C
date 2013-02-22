@@ -670,7 +670,7 @@ GriddingAlgorithm::makeFinerLevel(
        * Compute nesting data at d_base_ln for use in constructing
        * level d_base_ln+1;
        */
-      computeProperNestingData(d_base_ln, d_oca0);
+      computeProperNestingData(d_base_ln, d_oca);
 
       const boost::shared_ptr<hier::PatchLevel> tag_level(
          d_hierarchy->getPatchLevel(tag_ln));
@@ -736,7 +736,7 @@ GriddingAlgorithm::makeFinerLevel(
           * except if user specified that the violating tags be ignored.
           */
          if (d_check_nonrefined_tags != 'i') {
-            checkNonrefinedTags(*tag_level, tag_ln, d_oca0);
+            checkNonrefinedTags(*tag_level, tag_ln, d_oca);
          }
 
          /*
@@ -910,7 +910,7 @@ GriddingAlgorithm::makeFinerLevel(
          t_bridge_new_to_new->start();
          const hier::OverlapConnectorAlgorithm oca;
          boost::shared_ptr<hier::Connector> new_to_new;
-         d_oca0.bridgeWithNesting(
+         d_oca.bridgeWithNesting(
             new_to_new,
             *new_to_tag,
             *tag_to_new,
