@@ -82,6 +82,10 @@ namespace mesh {
  *       where both a time and a cycle entry are active, the time entry
  *       takes precedence.
  *
+ *       If the problem is single block one may omit the "block_0" database
+ *       enclosing the boxes and simply include the boxes directly inside the
+ *       "level_m" database.
+ *
  *       It is possible to use a "shortcut" input syntax for extremely
  *       simple tagging criteria.  If you only want RICHARDSON_EXTRAPOLATION
  *       or GRADIENT_DETECTOR on for the entire simulation then an input
@@ -91,7 +95,7 @@ namespace mesh {
  *    tagging_method = RICHARDSON_EXTRAPOLATION
  * @endcode
  *
- * A sample input file entry might look like:
+ * A sample input file entry for a multi-block problem might look like:
  *
  * @code
  *    at_0 {

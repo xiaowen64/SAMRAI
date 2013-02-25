@@ -1256,24 +1256,35 @@ StandardTagAndInitialize::getFromInput(
                                      << "No refine boxes supplied."
                                      << std::endl);
                }
-               for (int l = 0; l < n_block_keys; ++l) {
-                  if (block_keys[l].find("block_") != 0) {
-                     TBOX_ERROR(
-                        getObjectName() << "::getFromInput \n"
-                                        << "Invalid syntax for level refine boxes."
-                                        << std::endl);
-                  }
-                  int block = atoi(block_keys[l].substr(6).c_str());
-                  boost::shared_ptr<tbox::Database> block_db(
-                     level_db->getDatabase(block_keys[l]));
+               if ((n_block_keys == 1) && (block_keys[0] == "boxes")) {
                   hier::BoxContainer boxes(
-                     block_db->getDatabaseBoxArray("boxes"));
+                     level_db->getDatabaseBoxArray("boxes"));
                   for (hier::BoxContainer::iterator b = boxes.begin();
                        b != boxes.end(); ++b) {
-                     b->setBlockId(hier::BlockId(block));
+                     b->setBlockId(hier::BlockId(0));
                   }
                   level_boxes.spliceBack(boxes);
-                  boxes.clear();
+               }
+               else {
+                  for (int l = 0; l < n_block_keys; ++l) {
+                     if (block_keys[l].find("block_") != 0) {
+                        TBOX_ERROR(
+                           getObjectName() << "::getFromInput \n"
+                                           << "Invalid syntax for level refine boxes."
+                                           << std::endl);
+                     }
+                     int block = atoi(block_keys[l].substr(6).c_str());
+                     boost::shared_ptr<tbox::Database> block_db(
+                        level_db->getDatabase(block_keys[l]));
+                     hier::BoxContainer boxes(
+                        block_db->getDatabaseBoxArray("boxes"));
+                     for (hier::BoxContainer::iterator b = boxes.begin();
+                          b != boxes.end(); ++b) {
+                        b->setBlockId(hier::BlockId(block));
+                     }
+                     level_boxes.spliceBack(boxes);
+                     boxes.clear();
+                  }
                }
                this_tag_crit.d_level_refine_boxes.insert(
                   std::make_pair(level, level_boxes));
@@ -1418,24 +1429,35 @@ StandardTagAndInitialize::getFromInput(
                                            << "No refine boxes supplied."
                                            << std::endl);
                      }
-                     for (int l = 0; l < n_block_keys; ++l) {
-                        if (block_keys[l].find("block_") != 0) {
-                           TBOX_ERROR(
-                              getObjectName() << "::getFromInput \n"
-                                              << "Invalid syntax for level refine boxes."
-                                              << std::endl);
-                        }
-                        int block = atoi(block_keys[l].substr(6).c_str());
-                        boost::shared_ptr<tbox::Database> block_db(
-                           level_db->getDatabase(block_keys[l]));
+                     if ((n_block_keys == 1) && (block_keys[0] == "boxes")) {
                         hier::BoxContainer boxes(
-                           block_db->getDatabaseBoxArray("boxes"));
+                           level_db->getDatabaseBoxArray("boxes"));
                         for (hier::BoxContainer::iterator b = boxes.begin();
                              b != boxes.end(); ++b) {
-                           b->setBlockId(hier::BlockId(block));
+                           b->setBlockId(hier::BlockId(0));
                         }
                         level_boxes.spliceBack(boxes);
-                        boxes.clear();
+                     }
+                     else {
+                        for (int l = 0; l < n_block_keys; ++l) {
+                           if (block_keys[l].find("block_") != 0) {
+                              TBOX_ERROR(
+                                 getObjectName() << "::getFromInput \n"
+                                                 << "Invalid syntax for level refine boxes."
+                                                 << std::endl);
+                           }
+                           int block = atoi(block_keys[l].substr(6).c_str());
+                           boost::shared_ptr<tbox::Database> block_db(
+                              level_db->getDatabase(block_keys[l]));
+                           hier::BoxContainer boxes(
+                              block_db->getDatabaseBoxArray("boxes"));
+                           for (hier::BoxContainer::iterator b = boxes.begin();
+                                b != boxes.end(); ++b) {
+                              b->setBlockId(hier::BlockId(block));
+                           }
+                           level_boxes.spliceBack(boxes);
+                           boxes.clear();
+                        }
                      }
                      this_tag_crit.d_level_refine_boxes.insert(
                         std::make_pair(level, level_boxes));

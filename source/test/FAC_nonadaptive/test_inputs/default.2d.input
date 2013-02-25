@@ -82,19 +82,13 @@ CartesianGridGeometry {
 StandardTagAndInitialize {
    tagging_method = "REFINE_BOXES"
    level_0 {
-      block_0 {
-         boxes = [(0,0),(31,15)]
-      }
+      boxes = [(0,0),(31,15)]
    }
    level_1 {
-      block_0 {
-         boxes = [(0,0),(63,15)]
-      }
+      boxes = [(0,0),(63,15)]
    }
    level_2 {
-      block_0 {
-         boxes = [(0,0),(16,16)]
-      }
+      boxes = [(0,0),(16,16)]
    }
    //etc.
 }

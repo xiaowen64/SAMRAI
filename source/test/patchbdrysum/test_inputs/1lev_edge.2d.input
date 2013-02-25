@@ -71,9 +71,7 @@ StandardTagAndInitialize{
    tagging_method = "REFINE_BOXES"
 
    level_0 {
-      block_0 {
-         boxes = [ (2,2) , (4,4) ] 
-      }
+      boxes = [ (2,2) , (4,4) ] 
    }
 }
 

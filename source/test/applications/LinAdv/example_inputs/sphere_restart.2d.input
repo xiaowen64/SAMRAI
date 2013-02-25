@@ -183,14 +183,10 @@ StandardTagAndInitialize {
 //   tagging_method = "RICHARDSON_EXTRAPOLATION", "GRADIENT_DETECTOR"
 //   tagging_method = "REFINE_BOXES"
 //   level_0 {
-//      block_0 {
-//         boxes = [(15,0),(29,14)]
-//      }
+//      boxes = [(15,0),(29,14)]
 //   }
 //   level_1 {
-//      block_0 {
-//         boxes = [(65,10),(114,40)]
-//      }
+//      boxes = [(65,10),(114,40)]
 //   }
 }
 
