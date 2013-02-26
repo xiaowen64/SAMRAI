@@ -795,14 +795,14 @@ GriddingAlgorithm::makeFinerLevel(
          findRefinementBoxes(new_box_level,
             tag_to_new,
             tag_ln);
-tag_to_new->assertConsistencyWithBase();
-tag_to_new->assertConsistencyWithHead();
-tag_to_new->getTranspose().assertConsistencyWithBase();
-tag_to_new->getTranspose().assertConsistencyWithHead();
 
          new_to_tag = &tag_to_new->getTranspose();
 
          if (new_box_level && new_box_level->isInitialized()) {
+tag_to_new->assertConsistencyWithBase();
+tag_to_new->assertConsistencyWithHead();
+tag_to_new->getTranspose().assertConsistencyWithBase();
+tag_to_new->getTranspose().assertConsistencyWithHead();
 
             if (d_check_proper_nesting) {
                /*
@@ -3158,6 +3158,8 @@ std::cout << "GriddingAlgorithm::findRefinementBoxes after overflow control tag-
          hier::IntVector::getZero(dim),
          -hier::IntVector::getOne(dim),
          true);
+      tag_to_new->removePeriodicRelationships();  // Verified not to cause errors in base code.
+      tag_to_new->getTranspose().removePeriodicRelationships();  // Verified not to cause errors in base code.
 tbox::plog << "After bridging to increase tag--->new width:\n" << tag_to_new->format("",1) << std::endl;
 tag_to_new->assertConsistencyWithBase();
 tag_to_new->assertConsistencyWithHead();
@@ -3496,6 +3498,10 @@ tag_to_new->getTranspose().assertConsistencyWithHead();
          TBOX_ASSERT(tag_to_new->getTranspose().checkOverlapCorrectness() == 0);
          TBOX_ASSERT(tag_to_new->checkOverlapCorrectness() == 0);
       }
+tag_to_new->assertConsistencyWithBase();
+tag_to_new->assertConsistencyWithHead();
+tag_to_new->getTranspose().assertConsistencyWithBase();
+tag_to_new->getTranspose().assertConsistencyWithHead();
 
    } else if (new_box_level && new_box_level->getGlobalNumberOfBoxes() == 0) {
 
