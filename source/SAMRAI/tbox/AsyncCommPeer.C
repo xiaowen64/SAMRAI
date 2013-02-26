@@ -70,7 +70,7 @@ AsyncCommPeer<TYPE>::AsyncCommPeer():
    d_full_count(0),
    d_external_buf(0),
    d_internal_buf_size(0),
-   d_internal_buf(),
+   d_internal_buf(0),
    d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
    d_tag0(-1),
    d_tag1(-1),
@@ -111,7 +111,7 @@ AsyncCommPeer<TYPE>::AsyncCommPeer(
    d_full_count(0),
    d_external_buf(0),
    d_internal_buf_size(0),
-   d_internal_buf(),
+   d_internal_buf(0),
    d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
    d_tag0(-1),
    d_tag1(-1),
@@ -148,6 +148,7 @@ AsyncCommPeer<TYPE>::~AsyncCommPeer()
 
    if (d_internal_buf) {
       free(d_internal_buf);
+      d_internal_buf = 0;
    }
 
 }
@@ -270,6 +271,8 @@ void
 AsyncCommPeer<TYPE>::resizeBuffer(
    size_t size)
 {
+   TBOX_ASSERT( !hasPendingRequests() );
+
    if (d_internal_buf_size < size) {
       if (d_internal_buf) {
          d_internal_buf = (FlexData *)realloc(d_internal_buf, size * sizeof(FlexData));
@@ -636,7 +639,6 @@ AsyncCommPeer<TYPE>::checkRecv()
                const size_t second_chunk_count = getNumberOfFlexData(
                      d_full_count - d_max_first_data_len);
 
-               // SGS this is bad coding.`
                resizeBuffer(d_internal_buf_size + second_chunk_count);
 
                TBOX_ASSERT(req[1] == MPI_REQUEST_NULL);

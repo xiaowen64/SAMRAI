@@ -306,6 +306,13 @@ protected:
       SAMRAI_MPI::Status *
       getStatusPointer() const;
 
+      /*!
+       * @brief Return the number of requests for this stage Member.
+       */
+      size_t getNumberOfRequests() const {
+         return d_nreq;
+      }
+
 private:
       /*!
        * @brief Member is an integral part of the stage code and the
