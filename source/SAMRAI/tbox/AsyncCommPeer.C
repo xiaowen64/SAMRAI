@@ -275,7 +275,23 @@ AsyncCommPeer<TYPE>::resizeBuffer(
 
    if (d_internal_buf_size < size) {
       if (d_internal_buf) {
+
+#if 0
+         /*
+          * The following use of realloc causes insure to report a
+          * dangling pointer read/write in the TreeCommunication test
+          * using firstlengths.input.  I believe it is a false
+          * positive.  Using malloc, memcpy and free instead of
+          * realloc seems to fix the problem.  BTNG.  2/26/2013.
+          */
          d_internal_buf = (FlexData *)realloc(d_internal_buf, size * sizeof(FlexData));
+#else
+         FlexData *tmp = d_internal_buf;
+         d_internal_buf = (FlexData *)malloc(size * sizeof(FlexData));
+         memcpy( d_internal_buf, tmp, d_internal_buf_size*sizeof(FlexData) );
+         free(tmp);
+#endif
+
 #ifdef DEBUG_INITIALIZE_UNDEFINED
          memset(d_internal_buf + d_internal_buf_size, 0, (size - d_internal_buf_size) * sizeof(FlexData));
 #endif
