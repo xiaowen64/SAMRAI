@@ -153,7 +153,7 @@ TileClustering {
 
 Main {
    dim = 3
-   base_name    = "domex"
+   base_name    = "domext"
    log_all_nodes    = FALSE
 
    // Clustering choices: BergerRigoutsos, TileClustering
