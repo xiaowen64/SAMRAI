@@ -65,6 +65,7 @@ class BergerRigoutsosNode;
  *       continue anyway. <br>
  *       \b "ERROR" - violations will cause an unrecoverable assertion.
  *
+ *
  * <b> Details: </b> <br>
  * <table>
  *   <tr>
@@ -100,6 +101,14 @@ class BergerRigoutsosNode;
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
  * </table>
+ *
+ * @internal - \b DEV_build_zero_width_connector (false):
+ *       Build Connectors with zero between the tag level and the new level,
+ *       regardless of the width requested by in the interface
+ *       findBoxesContainingTags().  This forces the calling method to
+ *       recompute the Connectors with the correct width.  Using this option
+ *       has some consequences for performance, but whether it is a net gain
+ *       or loss has not been generally established.
  */
 class BergerRigoutsos:public BoxGeneratorStrategy
 {
@@ -140,7 +149,7 @@ public:
     * @pre !bound_boxes.isEmpty()
     * @pre (tag_level->getDim() == (*(bound_boxes.begin())).getDim()) &&
     *      (tag_level->getDim() == min_box.getDim()) &&
-    *      (tag_level->getDim() == max_gcw.getDim())
+    *      (tag_level->getDim() == tag_to_new_width.getDim())
     */
    void
    findBoxesContainingTags(
@@ -153,7 +162,7 @@ public:
       const hier::IntVector& min_box,
       const double efficiency_tol,
       const double combine_tol,
-      const hier::IntVector& max_gcw);
+      const hier::IntVector& tag_to_new_width);
 
    /*!
     * @brief Duplicate the MPI communication object for private internal use.
@@ -168,8 +177,8 @@ public:
     * duplicate communicator is active until this object is destructed
     * or you call this method with MPI_COMM_NULL.
     *
-    * When a duplicate MPI communicator is in use, the tag level must
-    * be congruent with it.
+    * When a duplicate MPI communicator is in use, the SAMRAI_MPI object
+    * from the tag level must be congruent with it.
     */
    void
    useDuplicateMPI(
@@ -346,19 +355,12 @@ private:
     *
     * - "BIDIRECTIONAL": Compute both tag<==>new.
     *
-    * The ghost_cell_width specifies the overlap Connector width.
-    *
-    * By default, compute bidirectional relationships with a ghost cell width
-    * of 1.
-    *
     * @pre (mode == "NONE") || (mode == "TAG_TO_NEW") ||
     *      (mode == "BIDIRECTIONAL")
-    * @pre ghost_cell_width >= hier::IntVector::getZero(d_common->getDim())
     */
    void
    setComputeRelationships(
-      const std::string mode,
-      const hier::IntVector& ghost_cell_width);
+      const std::string mode);
 
    /*!
     * @brief Sort boxes in d_new_box_level and update d_tag_to_new.
@@ -430,7 +432,7 @@ private:
    hier::IntVector d_min_box;
    double d_efficiency_tol;
    double d_combine_tol;
-   hier::IntVector d_max_gcw;
+   hier::IntVector d_tag_to_new_width;
    //@}
 
    /*!
@@ -488,6 +490,12 @@ private:
 
    //! @brief Whether to sort results to make them deterministic.
    bool d_sort_output_nodes;
+
+   /*!
+    * @brief Whether to build tag<==>new Connectors width of zero,
+    * disregarding the width specified in findBoxesContainingTags().
+    */
+   bool d_build_zero_width_connector;
 
    /*!
     * @brief Queue on which to append jobs to be

@@ -45,7 +45,7 @@ BergerRigoutsos::BergerRigoutsos(
    d_min_box(dim),
    d_efficiency_tol(0.80),
    d_combine_tol(0.80),
-   d_max_gcw(dim, 1),
+   d_tag_to_new_width(dim, 1),
 
    d_tag_level(),
    d_new_box_level(),
@@ -62,6 +62,7 @@ BergerRigoutsos::BergerRigoutsos(
    // Implementation flags and data...
    d_compute_relationships(2),
    d_sort_output_nodes(false),
+   d_build_zero_width_connector(false),
    d_relaunch_queue(),
    d_comm_stage(),
    d_min_box_size_from_cutting(dim, 0),
@@ -202,6 +203,8 @@ BergerRigoutsos::getFromInput(
             &d_min_box_size_from_cutting[0],
             d_dim.getValue());
       }
+      d_build_zero_width_connector =
+         input_db->getBoolWithDefault("DEV_build_zero_width_connector", d_build_zero_width_connector);
       d_log_do_loop =
          input_db->getBoolWithDefault("DEV_log_do_loop", false);
       d_log_node_history =
@@ -265,13 +268,14 @@ BergerRigoutsos::findBoxesContainingTags(
    const hier::IntVector& min_box,
    const double efficiency_tol,
    const double combine_tol,
-   const hier::IntVector& max_gcw)
+   const hier::IntVector& tag_to_new_width)
 {
    TBOX_ASSERT(!bound_boxes.isEmpty());
    TBOX_ASSERT_OBJDIM_EQUALITY4(*tag_level,
       *(bound_boxes.begin()),
       min_box,
-      max_gcw);
+      tag_to_new_width);
+   TBOX_ASSERT(tag_to_new_width >= hier::IntVector::getZero(tag_to_new_width.getDim()));
 
    tbox::SAMRAI_MPI mpi(tag_level->getBoxLevel()->getMPI());
 
@@ -335,7 +339,10 @@ BergerRigoutsos::findBoxesContainingTags(
    d_efficiency_tol = efficiency_tol;
    d_combine_tol = combine_tol;
 
-   setComputeRelationships("BIDIRECTIONAL", max_gcw);
+   d_tag_to_new_width = d_build_zero_width_connector ?
+      hier::IntVector::getZero(tag_to_new_width.getDim()) : tag_to_new_width;
+
+   setComputeRelationships("BIDIRECTIONAL");
 
    d_tag_level = tag_level;
    d_root_boxes = bound_boxes;
@@ -511,13 +518,13 @@ BergerRigoutsos::clusterAndComputeRelationships()
    if (d_compute_relationships >= 1) {
       d_tag_to_new.reset(new hier::Connector(*d_tag_level->getBoxLevel(),
          *d_new_box_level,
-         d_max_gcw));
+         d_tag_to_new_width));
    }
    if (d_compute_relationships >= 2) {
       hier::Connector* new_to_tag =
          new hier::Connector(*d_new_box_level,
                              *d_tag_level->getBoxLevel(),
-                             d_max_gcw);
+                             d_tag_to_new_width);
       d_tag_to_new->setTranspose(new_to_tag, true);
    }
 
@@ -866,8 +873,7 @@ BergerRigoutsos::setOwnerMode(
 
 void
 BergerRigoutsos::setComputeRelationships(
-   const std::string mode,
-   const hier::IntVector& ghost_cell_width)
+   const std::string mode)
 {
    if (mode == "NONE") {
       d_compute_relationships = 0;
@@ -880,8 +886,6 @@ BergerRigoutsos::setComputeRelationships(
          << "bad mode '" << mode << "' specified.\n"
          << "Should be one of NONE, TAG_TO_NEW, BIDIRECTIONAL" << std::endl);
    }
-   TBOX_ASSERT(ghost_cell_width >= hier::IntVector::getZero(ghost_cell_width.getDim()));
-   d_max_gcw = ghost_cell_width;
 }
 
 

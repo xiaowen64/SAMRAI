@@ -43,6 +43,10 @@ public:
 
    /*!
     * @brief Cluster tags using the DLBG interfaces.
+    *
+    * @param tag_to_new_width [in] Width that tag_to_new should have.
+    * If implementation does not provide this width for tag_to_new,
+    * then it should set the width to zero.
     */
    virtual void
    findBoxesContainingTags(
@@ -55,7 +59,7 @@ public:
       const hier::IntVector& min_box,
       const double efficiency_tol,
       const double combine_tol,
-      const hier::IntVector& max_gcw) = 0;
+      const hier::IntVector& tag_to_new_width) = 0;
 
 private:
    // The following are not implemented:

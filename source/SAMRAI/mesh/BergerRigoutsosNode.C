@@ -1865,9 +1865,9 @@ BergerRigoutsosNode::countOverlapWithLocalPatches()
     * Remove the child if it has zero overlap.
     */
    hier::Box lft_grown_box = d_lft_child->d_box;
-   lft_grown_box.grow(d_common->d_max_gcw);
+   lft_grown_box.grow(d_common->d_tag_to_new_width);
    hier::Box rht_grown_box = d_rht_child->d_box;
-   rht_grown_box.grow(d_common->d_max_gcw);
+   rht_grown_box.grow(d_common->d_tag_to_new_width);
    int& lft_overlap = d_lft_child->d_overlap;
    int& rht_overlap = d_rht_child->d_overlap;
    lft_overlap = rht_overlap = 0;
@@ -2109,7 +2109,7 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
 
    // Create an expanded box for intersection check.
    hier::Box grown_box = d_box;
-   grown_box.grow(d_common->d_max_gcw);
+   grown_box.grow(d_common->d_tag_to_new_width);
 
    /*
     * On the owner process, we store the neighbors of the new node.
