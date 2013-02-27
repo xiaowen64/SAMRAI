@@ -3017,8 +3017,7 @@ GriddingAlgorithm::findRefinementBoxes(
          smallest_box_to_refine,
          getEfficiencyTolerance(tag_ln),
          getCombineEfficiency(tag_ln),
-         hier::IntVector::getZero(dim));
-         // d_tag_to_cluster_width[tag_ln]);
+         d_tag_to_cluster_width[tag_ln]);
    }
    hier::Connector& new_to_tag = tag_to_new->getTranspose();
    t_find_boxes_containing_tags->stop();
@@ -3045,7 +3044,8 @@ GriddingAlgorithm::findRefinementBoxes(
       }
 
 
-      {
+      { // Limit overflow.
+
          if (d_print_steps) {
             tbox::plog
             << "GriddingAlgorithm::findRefinementBoxes: enforcing overflow nesting\n";
@@ -3120,17 +3120,34 @@ GriddingAlgorithm::findRefinementBoxes(
             }
          }
 
-      d_oca.bridgeWithNesting(
-         tag_to_new,
-         tag_box_level.getPersistentOverlapConnectors().findConnectorWithTranspose( tag_box_level, d_tag_to_cluster_width[tag_ln], d_tag_to_cluster_width[tag_ln] ),
-         hier::Connector(*tag_to_new),
-         hier::IntVector::getZero(dim),
-         hier::IntVector::getZero(dim),
-         -hier::IntVector::getOne(dim),
-         true);
-      tag_to_new->removePeriodicRelationships();  // Verified not to cause errors in base code.
-      tag_to_new->getTranspose().removePeriodicRelationships();  // Verified not to cause errors in base code.
       }
+
+
+      /*
+       * If clustering implementation didn't provide the requested width,
+       * recompute the tag<==>new with the right width now.
+       *
+       * The bridge generates some periodic edges that we don't need just
+       * yet, so remove them.
+       */
+      if ( tag_to_new->getConnectorWidth() != d_tag_to_cluster_width[tag_ln] ) {
+         const hier::Connector &tag_to_tag =
+            tag_box_level.getPersistentOverlapConnectors().findConnectorWithTranspose(
+               tag_box_level, d_tag_to_cluster_width[tag_ln], d_tag_to_cluster_width[tag_ln] );
+         d_oca.bridgeWithNesting(
+            tag_to_new,
+            tag_to_tag,
+            hier::Connector(*tag_to_new),
+            hier::IntVector::getZero(dim),
+            hier::IntVector::getZero(dim),
+            d_tag_to_cluster_width[tag_ln],
+            true);
+         if ( hier::PeriodicShiftCatalog::getCatalog(dim)->isPeriodic() ) {
+            tag_to_new->removePeriodicRelationships();
+            tag_to_new->getTranspose().removePeriodicRelationships();
+         }
+      }
+
 
       if (d_enforce_proper_nesting) {
 
