@@ -143,7 +143,6 @@ private:
    bool d_barrier_and_time;
    boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
    boost::shared_ptr<tbox::Timer> t_cluster;
-   boost::shared_ptr<tbox::Timer> t_get_connectors;
    boost::shared_ptr<tbox::Timer> t_global_reductions;
    //@}
 

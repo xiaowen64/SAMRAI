@@ -585,22 +585,22 @@ HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
 
 #if 1
    /*
-    * Compute the gcw needed for Connectors.  The peer GCW for
-    * coarse<==>fine can be equivalent to the GCW for fine<==>fine in
+    * Compute the width needed for Connectors.  The peer width for
+    * coarse<==>fine can be equivalent to the width for fine<==>fine in
     * the hierarcy, because the coarse level is just the coarsened fine
-    * level.  We just have to convert the GCW to the correct refinement
+    * level.  We just have to convert the width to the correct refinement
     * ratio before initializing the Connectors.
     */
-   const hier::IntVector peer_gcw =
+   const hier::IntVector peer_connector_width =
       hierarchy->getRequiredConnectorWidth(
          level_number,
-         level_number);
+         level_number, true);
 
    coarse_level->getBoxLevel()->getPersistentOverlapConnectors().
    findOrCreateConnectorWithTranspose(
       *hier_level->getBoxLevel(),
-      hier::IntVector::ceilingDivide(peer_gcw, coarsen_ratio),
-      peer_gcw);
+      hier::IntVector::ceilingDivide(peer_connector_width, coarsen_ratio),
+      peer_connector_width);
 #endif
 
    if (before_advance) {

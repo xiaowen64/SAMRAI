@@ -745,10 +745,10 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
    /*
     * Generate Connector patch_level<==>coarsened_level and
     * coarsened_level--->coarsened_level.  To support recursive data
-    * transfer, these Connectors should have gcw equivalent to
+    * transfer, these Connectors should have widths equivalent to
     * patch_level<==>patch_level.
     */
-   const hier::IntVector level_to_level_gcw =
+   const hier::IntVector level_to_level_width =
       hierarchy->getRequiredConnectorWidth(level_number,
          level_number);
 
@@ -756,7 +756,7 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
       patch_level->getBoxLevel()->getPersistentOverlapConnectors().
       findConnector(
          *patch_level->getBoxLevel(),
-         level_to_level_gcw);
+         level_to_level_width);
 
    hier::Connector tmp_coarsened(level_to_level);
    tmp_coarsened.setBase(*patch_level->getBoxLevel());
@@ -768,13 +768,13 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
       boost::make_shared<hier::Connector>(tmp_coarsened));
    level_to_coarsened->setBase(*patch_level->getBoxLevel());
    level_to_coarsened->setHead(*coarsened_level->getBoxLevel());
-   level_to_coarsened->setWidth(level_to_level_gcw, true);
+   level_to_coarsened->setWidth(level_to_level_width, true);
    level_to_coarsened->setTranspose(0, false);
 
    coarsened_level->getBoxLevel()->getPersistentOverlapConnectors().
    createConnector(
       *coarsened_level->getBoxLevel(),
-      hier::IntVector::ceilingDivide(level_to_level_gcw, coarsen_ratio),
+      hier::IntVector::ceilingDivide(level_to_level_width, coarsen_ratio),
       tmp_coarsened);
 
    if (level_number > 0) {
@@ -790,9 +790,9 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
          findConnectorWithTranspose(
             *patch_level->getBoxLevel(),
             hierarchy->getRequiredConnectorWidth(
-               level_number - 1, level_number),
+               level_number - 1, level_number, true),
             hierarchy->getRequiredConnectorWidth(
-               level_number, level_number - 1));
+               level_number, level_number - 1, true));
 
       // level_to_coarsened only needs its transpose set temporarily for this
       // call to bridge.  When it is cached later we don't want to also cache
@@ -802,7 +802,7 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
       coarsened_to_level.setBase(*coarsened_level->getBoxLevel());
       coarsened_to_level.setHead(*patch_level->getBoxLevel());
       coarsened_to_level.setWidth(
-         hier::IntVector::ceilingDivide(level_to_level_gcw, coarsen_ratio),
+         hier::IntVector::ceilingDivide(level_to_level_width, coarsen_ratio),
          true);
       level_to_coarsened->setTranspose(&coarsened_to_level, false);
 

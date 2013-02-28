@@ -1531,18 +1531,23 @@ void enforceNesting(
 
    const tbox::Dimension dim(hierarchy->getDim());
 
+   const hier::BoxLevel &L0 = L1_to_L0.getHead();
+
    const int cell_count = L1.getGlobalNumberOfCells();
 
    /*
     * Make L1 nest inside L0 by nesting_width.
     */
    const hier::IntVector nesting_width(dim, hierarchy->getProperNestingBuffer(coarser_ln));
+   const hier::IntVector nesting_width_transpose = hier::Connector::convertHeadWidthToBase(L0.getRefinementRatio(),
+                                                                                           L1.getRefinementRatio(),
+                                                                                           nesting_width);
    boost::shared_ptr<hier::BoxLevel> L1nested;
    boost::shared_ptr<hier::MappingConnector> L1_to_L1nested;
    hier::BoxLevelConnectorUtils blcu;
    blcu.computeInternalParts( L1nested,
                               L1_to_L1nested,
-                              L1_to_L0,
+                              L1.getPersistentOverlapConnectors().findOrCreateConnectorWithTranspose(L0, nesting_width, nesting_width_transpose),
                               -nesting_width,
                               hierarchy->getGridGeometry()->getDomainSearchTree() );
    hier::MappingConnectorAlgorithm mca;

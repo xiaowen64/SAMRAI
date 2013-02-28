@@ -98,6 +98,7 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_true_tag(1),
    d_false_tag(0),
    d_base_ln(-1),
+   d_tag_to_cluster_width(),
    d_check_nonrefined_tags('w'),
    d_check_overlapping_patches('w'),
    d_check_nonnesting_user_boxes('e'),
@@ -334,6 +335,10 @@ GriddingAlgorithm::makeCoarsestLevel(
       t_make_coarsest->barrierAndStart();
    }
 
+   if ( d_tag_to_cluster_width.empty() ) {
+      computeTagToClusterWidths();
+   }
+
    const hier::IntVector& zero_vec(hier::IntVector::getZero(dim));
 
    const hier::BoxLevelConnectorUtils dlbg_edge_utils;
@@ -393,13 +398,12 @@ GriddingAlgorithm::makeCoarsestLevel(
 
    boost::shared_ptr<hier::Connector> domain_to_domain;
 
-   const hier::OverlapConnectorAlgorithm oca;
    d_oca0.findOverlaps(domain_to_domain,
       domain_box_level,
       domain_box_level,
       hier::IntVector::max(
          hier::IntVector::getOne(dim),
-         d_hierarchy->getRequiredConnectorWidth(0, 0)));
+         d_hierarchy->getRequiredConnectorWidth(0, 0, true)));
 
 
    if (d_barrier_and_time) {
@@ -480,7 +484,7 @@ GriddingAlgorithm::makeCoarsestLevel(
       d_oca0.findOverlaps(new_to_new,
          *new_box_level,
          *new_box_level,
-         d_hierarchy->getRequiredConnectorWidth(0, 0));
+         d_hierarchy->getRequiredConnectorWidth(0, 0, true));
 
       if (d_barrier_and_time) {
          t_find_new_to_new->stop();
@@ -498,7 +502,7 @@ GriddingAlgorithm::makeCoarsestLevel(
          domain_to_new,
          zero_vec,
          zero_vec,
-         d_hierarchy->getRequiredConnectorWidth(0, 0),
+         d_hierarchy->getRequiredConnectorWidth(0, 0, true),
          false);
 
       if (d_barrier_and_time) {
@@ -560,8 +564,8 @@ GriddingAlgorithm::makeCoarsestLevel(
       old_level->getBoxLevel()->getPersistentOverlapConnectors().
       createConnectorWithTranspose(
          *new_box_level,
-         d_hierarchy->getRequiredConnectorWidth(0, 0),
-         d_hierarchy->getRequiredConnectorWidth(0, 0));
+         d_hierarchy->getRequiredConnectorWidth(0, 0, true),
+         d_hierarchy->getRequiredConnectorWidth(0, 0, true));
 
       d_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(
          *d_hierarchy->getPatchLevel(ln));
@@ -648,6 +652,10 @@ GriddingAlgorithm::makeFinerLevel(
 
    if (d_barrier_and_time) {
       t_make_finer->barrierAndStart();
+   }
+
+   if ( d_tag_to_cluster_width.empty() ) {
+      computeTagToClusterWidths();
    }
 
    const tbox::Dimension& dim = d_hierarchy->getDim();
@@ -908,7 +916,6 @@ GriddingAlgorithm::makeFinerLevel(
 
          // Bridge for new<==>new.
          t_bridge_new_to_new->start();
-         const hier::OverlapConnectorAlgorithm oca;
          boost::shared_ptr<hier::Connector> new_to_new;
          d_oca.bridgeWithNesting(
             new_to_new,
@@ -916,7 +923,7 @@ GriddingAlgorithm::makeFinerLevel(
             *tag_to_new,
             zero_vector,
             zero_vector,
-            d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln),
+            d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln, true),
             false);
          t_bridge_new_to_new->stop();
 
@@ -1001,6 +1008,10 @@ GriddingAlgorithm::regridAllFinerLevels(
 
    if (d_barrier_and_time) {
       t_regrid_all_finer->barrierAndStart();
+   }
+
+   if ( d_tag_to_cluster_width.empty() ) {
+      computeTagToClusterWidths();
    }
 
    if (d_hierarchy->levelCanBeRefined(level_number)) {
@@ -1560,7 +1571,6 @@ GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
          t_second_finer_tagging->start();
       }
 
-      const hier::OverlapConnectorAlgorithm oca;
       const hier::Connector& tag_to_old =
          d_hierarchy->getConnectorWithTranspose(tag_ln, new_ln);
       const hier::Connector& old_to_finer =
@@ -1659,7 +1669,7 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
       *tag_to_new,
       zero_vector,
       zero_vector,
-      d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln),
+      d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln, true),
       false);
 
    t_bridge_new_to_new->stop();
@@ -1748,7 +1758,6 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
             boost::shared_ptr<hier::BoxLevel> external;
             boost::shared_ptr<hier::MappingConnector> finer_to_external;
             boost::shared_ptr<hier::Connector> finer_to_new;
-            const hier::OverlapConnectorAlgorithm oca;
             d_oca.findOverlaps(finer_to_new,
                *d_hierarchy->getBoxLevel(new_ln + 1),
                *new_box_level,
@@ -1799,7 +1808,7 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
          *tag_to_finer,
          zero_vector,
          -hier::IntVector::getOne(dim),
-         d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln + 1),
+         d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln + 1, true),
          true);
       t_bridge_new_to_finer->stop();
 
@@ -1844,7 +1853,7 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
          d_hierarchy->getConnectorWithTranspose(tag_ln, tag_ln + 1),
          zero_vector,
          zero_vector,
-         d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln),
+         d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln, true),
          true);
       t_bridge_new_to_old->stop();
 
@@ -1882,6 +1891,81 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
 
    t_regrid_finer_create_and_install->stop();
 }
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void
+GriddingAlgorithm::computeTagToClusterWidths()
+{
+   TBOX_ASSERT( d_tag_to_cluster_width.empty() );  // Never recompute.
+
+   const tbox::Dimension &dim = d_hierarchy->getDim();
+
+   d_tag_to_cluster_width.resize(d_hierarchy->getMaxNumberOfLevels()-1,
+                                 hier::IntVector::getZero(dim));
+
+   for (int ln = d_hierarchy->getMaxNumberOfLevels()-2; ln >= 0; --ln) {
+      /*
+       * Construct list of boxes covering the true tags on the level.
+       * Note that box list will be contained in the bounding box
+       * but will not be contained in the list of proper nesting boxes,
+       * in general.  So we intersect the box list against the list of
+       * nesting boxes.  Note that this may produce boxes which are too
+       * small.  Thus, boxes are regrown later.
+       */
+
+      hier::IntVector smallest_patch(dim);
+      hier::IntVector smallest_box_to_refine(dim);
+      hier::IntVector largest_patch(dim);
+      hier::IntVector extend_ghosts(dim);
+      // "true" argument: for_building_finer level = true
+      getGriddingParameters(smallest_patch,
+                            smallest_box_to_refine,
+                            largest_patch,
+                            extend_ghosts,
+                            ln+1,
+                            true);
+      const hier::IntVector extend_ghosts_in_tag_space =
+         hier::IntVector::ceilingDivide(extend_ghosts,
+                                        d_hierarchy->getRatioToCoarserLevel(ln+1));
+
+
+      /*
+       * Compute the width for tag<==>cluster.  This width be wide enough to
+       * guarantee completeness for tag<==>new when we massage the
+       * cluster into the new level.  In the massage step, we grow the new boxes.
+       * The width of tag<==>cluster must be big enough to see new overlaps
+       * generated by the growths.
+       */
+      d_tag_to_cluster_width[ln] =
+         d_hierarchy->getRequiredConnectorWidth(ln, ln+1, false);
+
+      // For width of d_tag_to_cluster_width[ln+1] in bridge new<==>tag<==>new
+      if ( ln+1 < d_tag_to_cluster_width.size() ) {
+         d_tag_to_cluster_width[ln].max(
+            hier::IntVector::ceilingDivide(d_tag_to_cluster_width[ln+1],
+                                           d_hierarchy->getRatioToCoarserLevel(ln+1)) );
+      }
+
+      if (d_extend_to_domain_boundary) {
+         // For extending boxes to domain boundary by amount of extend_ghosts_in_tag_space.
+         d_tag_to_cluster_width[ln] += extend_ghosts_in_tag_space;
+      }
+      // For growing within domain by amount of smallest_box_to_refine.
+      d_tag_to_cluster_width[ln] += smallest_box_to_refine;
+   }
+
+   d_connector_width_requestor.setTagToClusterWidth(d_tag_to_cluster_width);
+
+   // Commit to computing the widths required by the hierarchy.
+   d_hierarchy->getRequiredConnectorWidth(0, 0, true);
+}
+
+
 
 /*
  *************************************************************************
@@ -2513,13 +2597,12 @@ GriddingAlgorithm::readLevelBoxes(
          d_hierarchy->getRatioToCoarserLevel(fine_level_number);
 
       new_box_level.reset(new hier::BoxLevel(unbalanced_box_level));
-      const hier::OverlapConnectorAlgorithm oca;
       d_oca0.findOverlapsWithTranspose(coarser_to_new,
          coarser_box_level,
          *new_box_level,
-         d_hierarchy->getRequiredConnectorWidth(tag_ln, tag_ln + 1),
+         d_hierarchy->getRequiredConnectorWidth(tag_ln, tag_ln + 1, true),
          hier::IntVector::ceilingDivide(
-            d_hierarchy->getRequiredConnectorWidth(tag_ln + 1, tag_ln), ratio));
+            d_hierarchy->getRequiredConnectorWidth(tag_ln + 1, tag_ln, true), ratio));
 
       hier::Connector& new_to_coarser = coarser_to_new->getTranspose();
 
@@ -2891,22 +2974,6 @@ GriddingAlgorithm::findRefinementBoxes(
    t_find_boxes_containing_tags->barrierAndStart();
    hier::IntVector ratio = d_hierarchy->getRatioToCoarserLevel(new_ln);
 
-   /*
-    * Compute the width for tag<==>cluster.  This width be wide enough to
-    * guarantee completeness for tag<==>new when we massage the
-    * cluster into the new level.  In the massage step, we grow the new boxes.
-    * The width of tag<==>cluster must be big enough to see new overlaps
-    * generated by the growths.
-    */
-   hier::IntVector tag_to_cluster_width =
-      d_hierarchy->getRequiredConnectorWidth(tag_ln, tag_ln + 1);
-   if (d_extend_to_domain_boundary) {
-      // For extending boxes to domain boundary by amount of extend_ghosts_in_tag_space.
-      tag_to_cluster_width += extend_ghosts_in_tag_space;
-   }
-   // For growing within domain by amount of smallest_box_to_refine.
-   tag_to_cluster_width += smallest_box_to_refine;
-
    const int nblocks = d_hierarchy->getGridGeometry()->getNumberBlocks();
 
    hier::BoxContainer bounding_container;
@@ -2929,7 +2996,7 @@ GriddingAlgorithm::findRefinementBoxes(
          smallest_box_to_refine,
          getEfficiencyTolerance(tag_ln),
          getCombineEfficiency(tag_ln),
-         tag_to_cluster_width);
+         d_tag_to_cluster_width[tag_ln]);
    }
    hier::Connector& new_to_tag = tag_to_new->getTranspose();
    t_find_boxes_containing_tags->stop();
@@ -2956,7 +3023,8 @@ GriddingAlgorithm::findRefinementBoxes(
       }
 
 
-      {
+      { // Limit overflow.
+
          if (d_print_steps) {
             tbox::plog
             << "GriddingAlgorithm::findRefinementBoxes: enforcing overflow nesting\n";
@@ -3030,7 +3098,35 @@ GriddingAlgorithm::findRefinementBoxes(
                   << std::endl);
             }
          }
+
       }
+
+
+      /*
+       * If clustering implementation didn't provide the requested width,
+       * recompute the tag<==>new with the right width now.
+       *
+       * The bridge generates some periodic edges that we don't need just
+       * yet, so remove them.
+       */
+      if ( tag_to_new->getConnectorWidth() != d_tag_to_cluster_width[tag_ln] ) {
+         const hier::Connector &tag_to_tag =
+            tag_box_level.getPersistentOverlapConnectors().findConnectorWithTranspose(
+               tag_box_level, d_tag_to_cluster_width[tag_ln], d_tag_to_cluster_width[tag_ln] );
+         d_oca.bridgeWithNesting(
+            tag_to_new,
+            tag_to_tag,
+            hier::Connector(*tag_to_new),
+            hier::IntVector::getZero(dim),
+            hier::IntVector::getZero(dim),
+            d_tag_to_cluster_width[tag_ln],
+            true);
+         if ( hier::PeriodicShiftCatalog::getCatalog(dim)->isPeriodic() ) {
+            tag_to_new->removePeriodicRelationships();
+            tag_to_new->getTranspose().removePeriodicRelationships();
+         }
+      }
+
 
       if (d_enforce_proper_nesting) {
 
@@ -3049,7 +3145,7 @@ GriddingAlgorithm::findRefinementBoxes(
             nested_box_level,
             unnested_to_nested,
             *new_box_level,
-            new_to_tag,
+            tag_to_new->getTranspose(),
             new_ln,
             d_oca);
          if (d_print_steps) {
@@ -3059,9 +3155,19 @@ GriddingAlgorithm::findRefinementBoxes(
          t_use_nesting_map->start();
          t_modify_connector->start();
          const hier::MappingConnectorAlgorithm mca;
+         tbox::plog << "Before:\n"
+                    << "tag:\n" << tag_to_new->getBase().format("T: ")
+                    << "new:\n" << tag_to_new->getHead().format("H: ")
+                    << "tag--->new:\n" << tag_to_new->format("TN: ")
+                    << "new--->tag:\n" << tag_to_new->getTranspose().format("NT: ");
          d_mca.modify(*tag_to_new,
             *unnested_to_nested,
             new_box_level.get());
+         tbox::plog << "After:\n"
+                    << "tag:\n" << tag_to_new->getBase().format("T: ")
+                    << "new:\n" << tag_to_new->getHead().format("H: ")
+                    << "tag--->new:\n" << tag_to_new->format("TN: ")
+                    << "new--->tag:\n" << tag_to_new->getTranspose().format("NT: ");
          t_modify_connector->stop();
          t_use_nesting_map->stop();
 
@@ -3111,7 +3217,6 @@ GriddingAlgorithm::findRefinementBoxes(
                << new_box_level->format("N->", 2)
                << "Proper nesting violation with tag BoxLevel of\n"
                << tag_box_level.format("T->", 2);
-               const hier::OverlapConnectorAlgorithm oca;
                boost::shared_ptr<hier::BoxLevel> external;
                boost::shared_ptr<hier::Connector> tmp_new_to_tag;
                d_oca.findOverlaps(tmp_new_to_tag,
@@ -3196,8 +3301,8 @@ GriddingAlgorithm::findRefinementBoxes(
              */
             tag_to_new->shrinkWidth(
                tag_to_new->getConnectorWidth() - smallest_box_to_refine);
-            new_to_tag.shrinkWidth(
-               new_to_tag.getConnectorWidth() - smallest_box_to_refine);
+            tag_to_new->getTranspose().shrinkWidth(
+               tag_to_new->getTranspose().getConnectorWidth() - smallest_box_to_refine);
          }
       }
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -3221,7 +3326,7 @@ GriddingAlgorithm::findRefinementBoxes(
          ratio);
 
       if (d_check_connectors) {
-         TBOX_ASSERT(new_to_tag.checkOverlapCorrectness() == 0);
+         TBOX_ASSERT(tag_to_new->getTranspose().checkOverlapCorrectness() == 0);
          TBOX_ASSERT(tag_to_new->checkOverlapCorrectness() == 0);
       }
 
@@ -3237,7 +3342,7 @@ GriddingAlgorithm::findRefinementBoxes(
 
          d_load_balancer->loadBalanceBoxLevel(
             *new_box_level,
-            &new_to_tag,
+            &tag_to_new->getTranspose(),
             d_hierarchy,
             new_ln,
             smallest_patch,
@@ -3251,7 +3356,7 @@ GriddingAlgorithm::findRefinementBoxes(
          if (d_check_connectors) {
             tbox::plog << "GriddingAlgorithm checking new-tag" << std::endl;
             int errs = 0;
-            if (new_to_tag.checkOverlapCorrectness(false, true, true)) {
+            if (tag_to_new->getTranspose().checkOverlapCorrectness(false, true, true)) {
                ++errs;
                tbox::perr << "Error found in new_to_tag!\n";
             }
@@ -3259,7 +3364,7 @@ GriddingAlgorithm::findRefinementBoxes(
                ++errs;
                tbox::perr << "Error found in tag_to_new!\n";
             }
-            if (new_to_tag.checkTransposeCorrectness(*tag_to_new)) {
+            if (tag_to_new->getTranspose().checkTransposeCorrectness(*tag_to_new)) {
                ++errs;
                tbox::perr << "Error found in new-tag transpose!\n";
             }
@@ -3268,7 +3373,7 @@ GriddingAlgorithm::findRefinementBoxes(
                   "Errors found after using load balance map."
                   << "new_box_level:\n" << new_box_level->format("", 2)
                   << "tag_box_level:\n" << tag_box_level.format("", 2)
-                  << "new_to_tag:\n" << new_to_tag.format("", 2)
+                  << "new_to_tag:\n" << tag_to_new->getTranspose().format("", 2)
                   << "tag_to_new:\n" << tag_to_new->format("", 2)
                   << std::endl);
             }
@@ -3301,7 +3406,7 @@ GriddingAlgorithm::findRefinementBoxes(
       }
       dlbg_edge_utils.addPeriodicImagesAndRelationships(
          *new_box_level,
-         new_to_tag,
+         tag_to_new->getTranspose(),
          d_hierarchy->getGridGeometry()->getDomainSearchTree(),
          tag_to_tag);
       if (d_print_steps) {
@@ -3310,7 +3415,7 @@ GriddingAlgorithm::findRefinementBoxes(
       }
 
       if (d_check_connectors) {
-         TBOX_ASSERT(new_to_tag.checkOverlapCorrectness() == 0);
+         TBOX_ASSERT(tag_to_new->getTranspose().checkOverlapCorrectness() == 0);
          TBOX_ASSERT(tag_to_new->checkOverlapCorrectness() == 0);
       }
 
@@ -3457,12 +3562,6 @@ GriddingAlgorithm::extendBoxesToDomainBoundary(
       &new_box_level);
    t_modify_connector->stop();
 
-#if 0
-   TBOX_WARNING("Performing extensive error checking due to using new code!"
-       << std::endl);
-   TBOX_ASSERT(tag_to_new.getTranspose().checkOverlapCorrectness() == 0);
-   TBOX_ASSERT(tag_to_new.checkOverlapCorrectness() == 0);
-#endif
 }
 
 /*
@@ -3842,7 +3941,7 @@ GriddingAlgorithm::computeProperNestingData(
          d_to_nesting_complement[ln],
          d_hierarchy->getConnectorWithTranspose(ln, ln - 1),
          lnm1_to_ln_complement,
-         d_hierarchy->getRequiredConnectorWidth(ln - 1, ln),
+         d_hierarchy->getRequiredConnectorWidth(ln - 1, ln, true),
          true);
    }
 

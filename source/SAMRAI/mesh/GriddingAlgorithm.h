@@ -1051,6 +1051,13 @@ private:
       const int level_number,
       const bool for_building_finer) const;
 
+
+   /*!
+    * @brief Compute d_tag_to_cluster_width.
+    */
+   void
+   computeTagToClusterWidths();
+
    /*!
     * @brief Check domain boxes for violations of certain constraints.
     */
@@ -1303,6 +1310,11 @@ private:
     */
    tbox::Array<double> d_combine_efficiency;
 
+   /*!
+    * @brief Connector widths to use when clustering.
+    */
+   std::vector<hier::IntVector> d_tag_to_cluster_width;
+
    /*
     * @brief When regridding level ln+1, the new level ln must not flow into
     * d_proper_nesting_complement[ln].
@@ -1366,26 +1378,26 @@ private:
    /*!
     * @brief OverlapConnectorAlgorithm object used for regrid.
     */
-   hier::OverlapConnectorAlgorithm d_oca;
+   mutable hier::OverlapConnectorAlgorithm d_oca;
 
    /*!
     * @brief MappingConnectorAlgorithm object used for regrid.
     */
-   hier::MappingConnectorAlgorithm d_mca;
+   mutable hier::MappingConnectorAlgorithm d_mca;
 
    /*!
     * @brief OverlapConnectorAlgorithm object used for initial mesh
     * construction, sanity checks and other operations that are not
     * expected to scale well.
     */
-   hier::OverlapConnectorAlgorithm d_oca0;
+   mutable hier::OverlapConnectorAlgorithm d_oca0;
 
    /*!
     * @brief MappingConnectorAlgorithm object used for initial mesh
     * construction, sanity checks and other operations that are not
     * expected to scale well.
     */
-   hier::MappingConnectorAlgorithm d_mca0;
+   mutable hier::MappingConnectorAlgorithm d_mca0;
 
    /*
     * Switches for massaging boxes after clustering.  Should be on for

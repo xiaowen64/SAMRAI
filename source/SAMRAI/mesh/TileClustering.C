@@ -209,38 +209,6 @@ TileClustering::findBoxesContainingTags(
       t_cluster->stop();
    }
 
-   /*
-    Note: In order to generate the Connectors without global search,
-    we need a tag<==>tag Connector whose width is at least max_gcw.
-    We use it to bridge for semi-local edges in tag<==>new.
-   */
-
-   const hier::Connector &tag_to_tag =
-      tag_box_level.getPersistentOverlapConnectors().findConnector(
-         tag_box_level, max_gcw, true);
-
-   hier::Connector tmp_new_to_tag(*new_to_tag);
-   hier::Connector tmp_tag_to_new(*tag_to_new);
-   tmp_new_to_tag.setTranspose(&tmp_tag_to_new, false);
-
-   if (d_barrier_and_time) {
-      t_get_connectors->barrierAndStart();
-   }
-   boost::shared_ptr<hier::Connector> bridged_new_to_tag;
-   d_oca.bridgeWithNesting(
-      bridged_new_to_tag,
-      tmp_new_to_tag,
-      tag_to_tag,
-      zero_vector,
-      zero_vector,
-      max_gcw,
-      true);
-   *new_to_tag = *bridged_new_to_tag;
-   *tag_to_new = bridged_new_to_tag->getTranspose();
-   tag_to_new->setTranspose(new_to_tag, true);
-   if (d_barrier_and_time) {
-      t_get_connectors->barrierAndStop();
-   }
 
 
    /*
@@ -352,8 +320,6 @@ TileClustering::setTimers()
       getTimer("mesh::TileClustering::findBoxesContainingTags()");
    t_cluster = tbox::TimerManager::getManager()->
       getTimer("mesh::TileClustering::cluster");
-   t_get_connectors = tbox::TimerManager::getManager()->
-      getTimer("mesh::TileClustering::get_connectors");
    t_global_reductions = tbox::TimerManager::getManager()->
       getTimer("mesh::TileClustering::global_reductions");
 }

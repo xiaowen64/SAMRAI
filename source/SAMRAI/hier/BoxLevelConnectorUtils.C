@@ -562,7 +562,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
          "BoxLevelConnectorUtils::computeInternalOrExternalParts:" << caller
                                                                    <<
          ": error:\n"
-         << "If nesting width (" << nesting_width << " is non-zero,\n"
+         << "If nesting width " << nesting_width << " is non-zero,\n"
          << "width of input_to_reference, " << input_to_reference.getConnectorWidth() << ",\n"
          << "must be at least 1.  Otherwise, correct results cannot be guaranteed."
          << std::endl);

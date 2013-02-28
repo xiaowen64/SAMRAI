@@ -40,11 +40,13 @@ using namespace std;
 // Headers for major algorithm/data structure objects
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
+#include "SAMRAI/mesh/TileClustering.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 #include "SAMRAI/algs/HyperbolicLevelIntegrator.h"
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/mesh/TilePartitioner.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/algs/TimeRefinementIntegrator.h"
@@ -404,10 +406,34 @@ int main(
             hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
-      boost::shared_ptr<Database> abr_db(
-         input_db->getDatabase("BergerRigoutsos"));
-      boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator(
-         new mesh::BergerRigoutsos(dim, abr_db));
+
+      // Set up the clustering.
+
+      const std::string clustering_type =
+         main_db->getStringWithDefault("clustering_type", "BergerRigoutsos");
+
+      boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator;
+
+      if ( clustering_type == "BergerRigoutsos" ) {
+
+         boost::shared_ptr<Database> abr_db(
+            input_db->getDatabase("BergerRigoutsos"));
+         boost::shared_ptr<mesh::BoxGeneratorStrategy> berger_rigoutsos(
+            new mesh::BergerRigoutsos(dim, abr_db));
+         box_generator = berger_rigoutsos;
+
+      }
+      else if ( clustering_type == "TileClustering" ) {
+
+         boost::shared_ptr<Database> tc_db(
+            input_db->getDatabase("TileClustering"));
+         boost::shared_ptr<mesh::BoxGeneratorStrategy> tile_clustering(
+            new mesh::TileClustering(dim, tc_db));
+         box_generator = tile_clustering;
+
+      }
+
+
 
 
       // Set up the load balancer.
@@ -449,6 +475,17 @@ int main(
 
          load_balancer = cap_load_balancer;
          load_balancer0 = cap_load_balancer;
+      }
+      else if ( load_balancer_type == "TilePartitioner" ) {
+
+         boost::shared_ptr<mesh::TilePartitioner> tile_load_balancer(
+            new mesh::TilePartitioner(
+               dim,
+               "mesh::TilePartitioner",
+               input_db->getDatabase("TilePartitioner")));
+
+         load_balancer = tile_load_balancer;
+         load_balancer0 = tile_load_balancer;
       }
 
 

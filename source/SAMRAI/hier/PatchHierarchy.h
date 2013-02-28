@@ -637,7 +637,7 @@ public:
     *
     * @param[in]  cwrs The connector width requester strategy instance.
     *
-    * @pre d_connector_widths_are_computed
+    * @pre d_connector_widths_committed
     */
    void
    registerConnectorWidthRequestor(
@@ -649,10 +649,20 @@ public:
     *
     * The two level numbers must differ by no more than one.
     *
+    * The @b commit flag tells the hierarchy whether the calling code
+    * is commiting to the required widths in such a way that would
+    * break if this method later returns a bigger value.  Once this
+    * method is called with commit = true, the hierarchy will always
+    * return the same width for the same pair of level numbers.  Thus
+    * the hierarchy would not allow any changes that could result in
+    * changing the required widths.
+    *
     * @return The widths required from the base to head levels.
     *
     * @param[in]  base_ln
     * @param[in]  head_ln
+    * @param[in]  commit  Set to true if you want all future
+    * return values to be the same for the same level numbers.
     *
     * @pre (head_ln >= 0) && (head_ln < getMaxNumberOfLevels())
     * @pre (base_ln >= 0) && (base_ln < getMaxNumberOfLevels())
@@ -660,7 +670,8 @@ public:
    IntVector
    getRequiredConnectorWidth(
       int base_ln,
-      int head_ln) const;
+      int head_ln,
+      bool commit = false ) const;
 
    /*!
     * @brief Add a ConnectorWidthRequestorStrategy implementation to
@@ -1039,6 +1050,13 @@ private:
     */
    static const int HIER_PATCH_HIERARCHY_VERSION;
 
+   /*
+    * Compute required Connector widths using all the registered
+    * ConnectorWidthRequestorStrategy objects.
+    */
+   void
+   computeRequiredConnectorWidths() const;
+
    /*!
     * @brief Writes the state of the PatchHierarchy object and the PatchLevels
     * it contains to the restart database.
@@ -1240,12 +1258,16 @@ private:
    mutable std::vector<IntVector> d_fine_connector_widths;
 
    /*!
-    * @brief Whether Connector widths have been computed.
+    * @brief Whether Connector widths have been cached.
     *
     * This is mutable because it is computed as required by the const
-    * method getConnectorWidth().
+    * method getRequiredConnectorWidth().  Once someone indicates that
+    * the results of getRequiredConnectorWidth() has been cached, this
+    * flag becomes true and the hierarchy will not recompute the
+    * required widths or allow more ConnectorWidthRequestorStrategy
+    * registration so that the cached value would not be invalidated.
     */
-   mutable bool d_connector_widths_are_computed;
+   mutable bool d_connector_widths_committed;
 
    /*!
     * @brief Vector of all ConnectorWidthRequestorStrategy objects registered
