@@ -249,6 +249,11 @@ suppress COPY_WILD in BergerRigoutsosNode.C:395
 # Insure++ is getting confused by this code; causing bogus leaks to be detected.
 file_ignore BoxTree.C
 
+# WJA 2/27/13
+# Something in the TreeCommunication performance test is confusing Insure++.
+suppress READ_DANGLING {* testUpThenDown *}
+suppress WRITE_DANGLING {* testUpThenDown *}
+
 #=============================================================================
 # These lines should improve insure++ performance but will result in
 # less valuable information on finding the location of leaks.  By
