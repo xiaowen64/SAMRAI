@@ -47,7 +47,7 @@ GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
    const hier::PatchHierarchy& patch_hierarchy) const
 {
    if ( !d_tag_to_cluster_width.empty() ) {
-      TBOX_ASSERT( d_tag_to_cluster_width.size() >=
+      TBOX_ASSERT( static_cast<int>(d_tag_to_cluster_width.size()) >=
                    patch_hierarchy.getMaxNumberOfLevels()-1 );
    }
 
