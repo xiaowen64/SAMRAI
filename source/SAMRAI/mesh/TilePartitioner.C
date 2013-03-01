@@ -248,7 +248,7 @@ TilePartitioner::getFromInput(
 
          if ( internal_load_balancer != "ChopAndPackLoadBalancer" &&
               internal_load_balancer != "TreeLoadBalancer" ) {
-            TBOX_ERROR("PersistentOverlapConnectors::getFromInput error:\n"
+            TBOX_ERROR("TilePartitioner::getFromInput error:\n"
                        <<"internal_load_balancer must be set to\n"
                        <<"\"ChopAndPackLoadBalancer\" or \"TreeLoadBalancer\".\n");
          }
