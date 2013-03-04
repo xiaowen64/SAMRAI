@@ -46,7 +46,7 @@ namespace tbox {
  */
 
 /*
- * Function celled when an exception is tripped.
+ * Function called when an exception is tripped.
  */
 #if defined(HAVE_EXCEPTION_HANDLING)
 static void error_action(
