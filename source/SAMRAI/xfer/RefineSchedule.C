@@ -2659,6 +2659,8 @@ RefineSchedule::generateCommunicationSchedule(
        * containers for the level.
        */
       if (!unfilled_boxes_for_dst.isEmpty()) {
+
+         unfilled_boxes_for_dst.coalesce(); 
          hier::Connector::NeighborhoodIterator base_box_itr =
             dst_to_unfilled->makeEmptyLocalNeighborhood(dst_box_id);
          for (hier::BoxContainer::iterator bi = unfilled_boxes_for_dst.begin();
