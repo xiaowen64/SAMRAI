@@ -16,21 +16,6 @@ LinAdv {
    godunov_order    = 4
    corner_transport = "CORNER_TRANSPORT_1"
 
-   data_problem      = "SINE_CONSTANT_X"
-
-   Initial_data {
-      front_position    = 1.0
-      interval_0 {
-         uval      = 40.0
-      }
-      interval_1 {
-         uval      = 1.0
-      }
-      amplitude = 0.5
-      period = 8.0, 4.0, 4.0
-
-   }
-
    Refinement_data {
       // refine_criteria = "UVAL_GRADIENT", "UVAL_SHOCK"
       refine_criteria = "UVAL_GRADIENT"
@@ -43,91 +28,6 @@ LinAdv {
          shock_tol = 20.0
          shock_onset = 0.85
       }
-   }
-
-  // valid boundary_condition values are "FLOW", "REFLECT", "DIRICHLET"
-   Boundary_data {
-      boundary_face_xlo {
-         boundary_condition      = "FLOW"
-      }
-      boundary_face_xhi {
-         boundary_condition      = "FLOW"
-      }
-      boundary_face_ylo {
-         boundary_condition      = "FLOW"
-      }
-      boundary_face_yhi {
-         boundary_condition      = "FLOW"
-      }
-      boundary_face_zlo {
-         boundary_condition      = "FLOW"
-      }
-      boundary_face_zhi {
-         boundary_condition      = "FLOW"
-      }
-
-      boundary_edge_ylo_zlo { // XFLOW, XREFLECT, XDIRICHLET not allowed
-         boundary_condition      = "ZFLOW"
-      }
-      boundary_edge_yhi_zlo { // XFLOW, XREFLECT, XDIRICHLET not allowed
-         boundary_condition      = "ZFLOW"
-      }
-      boundary_edge_ylo_zhi { // XFLOW, XREFLECT, XDIRICHLET not allowed
-         boundary_condition      = "ZFLOW"
-      }
-      boundary_edge_yhi_zhi { // XFLOW, XREFLECT, XDIRICHLET not allowed
-         boundary_condition      = "ZFLOW"
-      }
-      boundary_edge_xlo_zlo { // YFLOW, YREFLECT, YDIRICHLET not allowed
-         boundary_condition      = "XFLOW"
-      }
-      boundary_edge_xlo_zhi { // YFLOW, YREFLECT, YDIRICHLET not allowed
-         boundary_condition      = "XFLOW"
-      }
-      boundary_edge_xhi_zlo { // YFLOW, YREFLECT, YDIRICHLET not allowed
-         boundary_condition      = "XFLOW"
-      }
-      boundary_edge_xhi_zhi { // YFLOW, YREFLECT, YDIRICHLET not allowed
-         boundary_condition      = "XFLOW"
-      }
-      boundary_edge_xlo_ylo { // ZFLOW, ZREFLECT, ZDIRICHLET not allowed
-         boundary_condition      = "YFLOW"
-      }
-      boundary_edge_xhi_ylo { // ZFLOW, ZREFLECT, ZDIRICHLET not allowed
-         boundary_condition      = "YFLOW"
-      }
-      boundary_edge_xlo_yhi { // ZFLOW, ZREFLECT, ZDIRICHLET not allowed
-         boundary_condition      = "YFLOW"
-      }
-      boundary_edge_xhi_yhi { // ZFLOW, ZREFLECT, ZDIRICHLET not allowed
-         boundary_condition      = "YFLOW"
-      }
-
-      boundary_node_xlo_ylo_zlo {
-         boundary_condition      = "XFLOW"
-      }
-      boundary_node_xhi_ylo_zlo {
-         boundary_condition      = "XFLOW"
-      }
-      boundary_node_xlo_yhi_zlo {
-         boundary_condition      = "XFLOW"
-      }
-      boundary_node_xhi_yhi_zlo {
-         boundary_condition      = "XFLOW"
-      }
-      boundary_node_xlo_ylo_zhi {
-         boundary_condition      = "XFLOW"
-      }
-      boundary_node_xhi_ylo_zhi {
-         boundary_condition      = "XFLOW"
-      }
-      boundary_node_xlo_yhi_zhi {
-         boundary_condition      = "XFLOW"
-      }
-      boundary_node_xhi_yhi_zhi {
-         boundary_condition      = "XFLOW"
-      }
-
    }
 
 }

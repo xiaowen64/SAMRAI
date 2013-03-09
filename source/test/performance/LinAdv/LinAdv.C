@@ -132,8 +132,7 @@ LinAdv::LinAdv(
    d_godunov_order (1),
    d_corner_transport("CORNER_TRANSPORT_1"),
    d_nghosts(hier::IntVector(dim, CELLG)),
-   d_fluxghosts(hier::IntVector(dim, FLUXG)),
-   d_data_problem_int(tbox::MathUtilities<int>::getMax())
+   d_fluxghosts(hier::IntVector(dim, FLUXG))
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
@@ -158,67 +157,6 @@ LinAdv::LinAdv(
 
    int k;
 
-   // SPHERE problem...
-   d_radius = tbox::MathUtilities<double>::getSignalingNaN();
-   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_center, d_dim.getValue());
-   d_uval_inside = tbox::MathUtilities<double>::getSignalingNaN();
-   d_uval_outside = tbox::MathUtilities<double>::getSignalingNaN();
-
-   d_number_of_intervals = 0;
-   d_front_position.resizeArray(0);
-   d_interval_uval.resizeArray(0);
-
-   // SINE problem
-   d_amplitude = 0.;
-   for (k = 0; k < d_dim.getValue(); k++) d_period[k] = 0.;
-
-   /*
-    * Defaults for boundary conditions. Set to bogus values
-    * for error checking.
-    */
-
-   if (d_dim == tbox::Dimension(2)) {
-      d_scalar_bdry_edge_conds.resizeArray(NUM_2D_EDGES);
-      for (int ei = 0; ei < NUM_2D_EDGES; ei++) {
-         d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
-      }
-
-      d_scalar_bdry_node_conds.resizeArray(NUM_2D_NODES);
-      d_node_bdry_edge.resizeArray(NUM_2D_NODES);
-
-      for (int ni = 0; ni < NUM_2D_NODES; ni++) {
-         d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
-         d_node_bdry_edge[ni] = BOGUS_BDRY_DATA;
-      }
-
-      d_bdry_edge_uval.resizeArray(NUM_2D_EDGES);
-      tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_edge_uval);
-   }
-   if (d_dim == tbox::Dimension(3)) {
-      d_scalar_bdry_face_conds.resizeArray(NUM_3D_FACES);
-      for (int fi = 0; fi < NUM_3D_FACES; fi++) {
-         d_scalar_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
-      }
-
-      d_scalar_bdry_edge_conds.resizeArray(NUM_3D_EDGES);
-      d_edge_bdry_face.resizeArray(NUM_3D_EDGES);
-      for (int ei = 0; ei < NUM_3D_EDGES; ei++) {
-         d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
-         d_edge_bdry_face[ei] = BOGUS_BDRY_DATA;
-      }
-
-      d_scalar_bdry_node_conds.resizeArray(NUM_3D_NODES);
-      d_node_bdry_face.resizeArray(NUM_3D_NODES);
-
-      for (int ni = 0; ni < NUM_3D_NODES; ni++) {
-         d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
-         d_node_bdry_face[ni] = BOGUS_BDRY_DATA;
-      }
-
-      d_bdry_face_uval.resizeArray(NUM_3D_FACES);
-      tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_face_uval);
-   }
-
    /*
     * Initialize object with data read from given input/restart databases.
     */
@@ -227,104 +165,6 @@ LinAdv::LinAdv(
       getFromRestart();
    }
    getFromInput(input_db, is_from_restart);
-
-   /*
-    * Set problem data to values read from input/restart.
-    */
-
-   if (d_data_problem == "PIECEWISE_CONSTANT_X") {
-      d_data_problem_int = PIECEWISE_CONSTANT_X;
-   } else if (d_data_problem == "PIECEWISE_CONSTANT_Y") {
-      d_data_problem_int = PIECEWISE_CONSTANT_Y;
-   } else if (d_data_problem == "PIECEWISE_CONSTANT_Z") {
-      d_data_problem_int = PIECEWISE_CONSTANT_Z;
-   } else if (d_data_problem == "SINE_CONSTANT_X") {
-      d_data_problem_int = SINE_CONSTANT_X;
-   } else if (d_data_problem == "SINE_CONSTANT_Y") {
-      d_data_problem_int = SINE_CONSTANT_Y;
-   } else if (d_data_problem == "SINE_CONSTANT_Z") {
-      d_data_problem_int = SINE_CONSTANT_Z;
-   } else if (d_data_problem == "SPHERE") {
-      d_data_problem_int = SPHERE;
-   } else {
-      TBOX_ERROR(
-         d_object_name << ": "
-                       << "Unknown d_data_problem string = "
-                       << d_data_problem
-                       << " encountered in constructor" << endl);
-   }
-
-   /*
-    * Postprocess boundary data from input/restart values.  Note: scalar
-    * quantity in this problem cannot have reflective boundary conditions
-    * so we reset them to FLOW.
-    */
-   if (d_dim == tbox::Dimension(2)) {
-      for (int i = 0; i < NUM_2D_EDGES; i++) {
-         if (d_scalar_bdry_edge_conds[i] == BdryCond::REFLECT) {
-            d_scalar_bdry_edge_conds[i] = BdryCond::FLOW;
-         }
-      }
-
-      for (int i = 0; i < NUM_2D_NODES; i++) {
-         if (d_scalar_bdry_node_conds[i] == BdryCond::XREFLECT) {
-            d_scalar_bdry_node_conds[i] = BdryCond::XFLOW;
-         }
-         if (d_scalar_bdry_node_conds[i] == BdryCond::YREFLECT) {
-            d_scalar_bdry_node_conds[i] = BdryCond::YFLOW;
-         }
-
-         if (d_scalar_bdry_node_conds[i] != BOGUS_BDRY_DATA) {
-            d_node_bdry_edge[i] =
-               appu::CartesianBoundaryUtilities2::getEdgeLocationForNodeBdry(
-                  i, d_scalar_bdry_node_conds[i]);
-         }
-      }
-   }
-   if (d_dim == tbox::Dimension(3)) {
-      for (int i = 0; i < NUM_3D_FACES; i++) {
-         if (d_scalar_bdry_face_conds[i] == BdryCond::REFLECT) {
-            d_scalar_bdry_face_conds[i] = BdryCond::FLOW;
-         }
-      }
-
-      for (int i = 0; i < NUM_3D_EDGES; i++) {
-         if (d_scalar_bdry_edge_conds[i] == BdryCond::XREFLECT) {
-            d_scalar_bdry_edge_conds[i] = BdryCond::XFLOW;
-         }
-         if (d_scalar_bdry_edge_conds[i] == BdryCond::YREFLECT) {
-            d_scalar_bdry_edge_conds[i] = BdryCond::YFLOW;
-         }
-         if (d_scalar_bdry_edge_conds[i] == BdryCond::ZREFLECT) {
-            d_scalar_bdry_edge_conds[i] = BdryCond::ZFLOW;
-         }
-
-         if (d_scalar_bdry_edge_conds[i] != BOGUS_BDRY_DATA) {
-            d_edge_bdry_face[i] =
-               appu::CartesianBoundaryUtilities3::getFaceLocationForEdgeBdry(
-                  i, d_scalar_bdry_edge_conds[i]);
-         }
-      }
-
-      for (int i = 0; i < NUM_3D_NODES; i++) {
-         if (d_scalar_bdry_node_conds[i] == BdryCond::XREFLECT) {
-            d_scalar_bdry_node_conds[i] = BdryCond::XFLOW;
-         }
-         if (d_scalar_bdry_node_conds[i] == BdryCond::YREFLECT) {
-            d_scalar_bdry_node_conds[i] = BdryCond::YFLOW;
-         }
-         if (d_scalar_bdry_node_conds[i] == BdryCond::ZREFLECT) {
-            d_scalar_bdry_node_conds[i] = BdryCond::ZFLOW;
-         }
-
-         if (d_scalar_bdry_node_conds[i] != BOGUS_BDRY_DATA) {
-            d_node_bdry_face[i] =
-               appu::CartesianBoundaryUtilities3::getFaceLocationForNodeBdry(
-                  i, d_scalar_bdry_node_conds[i]);
-         }
-      }
-
-   }
 
    if (d_dim == tbox::Dimension(2)) {
       SAMRAI_F77_FUNC(stufprobc2d, STUFPROBC2D) (PIECEWISE_CONSTANT_X,
@@ -741,7 +581,6 @@ void LinAdv::computeFluxesOnPatch(
             traced_right.getPointer(0),
             traced_right.getPointer(1));
 
-         boundaryReset(patch, traced_left, traced_right);
 
 /*
  *  Re-compute fluxes with updated traces.
@@ -944,7 +783,6 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
       temp_traced_right.getPointer(1),
       temp_traced_right.getPointer(2));
 
-   boundaryReset(patch, traced_left, traced_right);
 
    /*
     *  Compute fluxes with partially-corrected trace states.  Store result in
@@ -992,7 +830,6 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
       temp_traced_right.getPointer(1),
       temp_traced_right.getPointer(2));
 
-   boundaryReset(patch, traced_left, traced_right);
 
    /*
     *  Compute final predicted fluxes with both sets of transverse flux
@@ -1268,7 +1105,6 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
 
    } // loop over directions...
 
-   boundaryReset(patch, traced_left, traced_right);
 
    /*
     *  Final flux calculation using corrected trace states.
@@ -1351,134 +1187,6 @@ void LinAdv::conservativeDifferenceOnPatch(
          uval->getPointer());
    }
 
-}
-
-/*
- *************************************************************************
- *
- * Reset physical boundary values for special cases, such as those
- * involving symmetric (i.e., reflective) boundary conditions and
- * when the "STEP" problem is run.
- *
- *************************************************************************
- */
-void LinAdv::boundaryReset(
-   hier::Patch& patch,
-   pdat::FaceData<double>& traced_left,
-   pdat::FaceData<double>& traced_right) const
-{
-   const hier::Index ifirst = patch.getBox().lower();
-   const hier::Index ilast = patch.getBox().upper();
-   int idir;
-   bool bdry_cell = true;
-
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
-   TBOX_ASSERT(patch_geom);
-   hier::BoxContainer domain_boxes;
-   d_grid_geometry->computePhysicalDomain(domain_boxes,
-      patch_geom->getRatio(),
-      patch.getBox().getBlockId());
-
-   pdat::CellIndex icell(ifirst);
-   hier::BoxContainer bdrybox;
-   hier::Index ibfirst = ifirst;
-   hier::Index iblast = ilast;
-   int bdry_case, bside;
-
-   for (idir = 0; idir < d_dim.getValue(); idir++) {
-      ibfirst(idir) = ifirst(idir) - 1;
-      iblast(idir) = ifirst(idir) - 1;
-      bdrybox.pushBack(hier::Box(ibfirst, iblast, patch.getBox().getBlockId()));
-
-      ibfirst(idir) = ilast(idir) + 1;
-      iblast(idir) = ilast(idir) + 1;
-      bdrybox.pushBack(hier::Box(ibfirst, iblast, patch.getBox().getBlockId()));
-   }
-
-   hier::BoxContainer::iterator bdryboxitr = bdrybox.begin();
-   if (d_dim == tbox::Dimension(2)) {
-      for (idir = 0; idir < d_dim.getValue(); idir++) {
-         bside = 2 * idir;
-         bdry_case = d_scalar_bdry_edge_conds[bside];
-         if (bdry_case == BdryCond::REFLECT) {
-            pdat::CellIterator icend(pdat::CellGeometry::end(*bdryboxitr));
-            for (pdat::CellIterator ic(pdat::CellGeometry::begin(*bdryboxitr));
-                 ic != icend; ++ic) {
-               for (hier::BoxContainer::iterator i = domain_boxes.begin();
-                    i != domain_boxes.end(); ++i) {
-                  if (i->contains(*ic))
-                     bdry_cell = false;
-               }
-               if (bdry_cell) {
-                  pdat::FaceIndex sidein = pdat::FaceIndex(*ic, idir, 1);
-                  (traced_left)(sidein, 0) = (traced_right)(sidein, 0);
-               }
-            }
-         }
-         ++bdryboxitr;
-
-         int bnode = 2 * idir + 1;
-         bdry_case = d_scalar_bdry_edge_conds[bnode];
-         if (bdry_case == BdryCond::REFLECT) {
-            pdat::CellIterator icend(pdat::CellGeometry::end(*bdryboxitr));
-            for (pdat::CellIterator ic(pdat::CellGeometry::begin(*bdryboxitr));
-                 ic != icend; ++ic) {
-               for (hier::BoxContainer::iterator i = domain_boxes.begin();
-                    i != domain_boxes.end(); ++i) {
-                  if (i->contains(*ic))
-                     bdry_cell = false;
-               }
-               if (bdry_cell) {
-                  pdat::FaceIndex sidein = pdat::FaceIndex(*ic, idir, 0);
-                  (traced_right)(sidein, 0) = (traced_left)(sidein, 0);
-               }
-            }
-         }
-         ++bdryboxitr;
-      }
-   } else if (d_dim == tbox::Dimension(3)) {
-      for (idir = 0; idir < d_dim.getValue(); idir++) {
-         bside = 2 * idir;
-         bdry_case = d_scalar_bdry_face_conds[bside];
-         if (bdry_case == BdryCond::REFLECT) {
-            pdat::CellIterator icend(pdat::CellGeometry::end(*bdryboxitr));
-            for (pdat::CellIterator ic(pdat::CellGeometry::begin(*bdryboxitr));
-                 ic != icend; ++ic) {
-               for (hier::BoxContainer::iterator i = domain_boxes.begin();
-                    i != domain_boxes.end(); ++i) {
-                  if (i->contains(*ic))
-                     bdry_cell = false;
-               }
-               if (bdry_cell) {
-                  pdat::FaceIndex sidein = pdat::FaceIndex(*ic, idir, 1);
-                  (traced_left)(sidein, 0) = (traced_right)(sidein, 0);
-               }
-            }
-         }
-         ++bdryboxitr;
-
-         int bnode = 2 * idir + 1;
-         bdry_case = d_scalar_bdry_face_conds[bnode];
-         if (bdry_case == BdryCond::REFLECT) {
-            pdat::CellIterator icend(pdat::CellGeometry::end(*bdryboxitr));
-            for (pdat::CellIterator ic(pdat::CellGeometry::begin(*bdryboxitr));
-                 ic != icend; ++ic) {
-               for (hier::BoxContainer::iterator i = domain_boxes.begin();
-                    i != domain_boxes.end(); ++i) {
-                  if (i->contains(*ic))
-                     bdry_cell = false;
-               }
-               if (bdry_cell) {
-                  pdat::FaceIndex sidein = pdat::FaceIndex(*ic, idir, 0);
-                  (traced_right)(sidein, 0) = (traced_left)(sidein, 0);
-               }
-            }
-         }
-         ++bdryboxitr;
-      }
-   }
 }
 
 /*
@@ -2039,71 +1747,7 @@ void LinAdv::printClassData(
    os << "   d_corner_transport = " << d_corner_transport << endl;
    os << "   d_nghosts = " << d_nghosts << endl;
    os << "   d_fluxghosts = " << d_fluxghosts << endl;
-
-   os << "Problem description and initial data..." << endl;
-   os << "   d_data_problem = " << d_data_problem << endl;
-   os << "   d_data_problem_int = " << d_data_problem << endl;
-
-   os << "       d_radius = " << d_radius << endl;
-   os << "       d_center = ";
-   for (j = 0; j < d_dim.getValue(); j++) os << d_center[j] << " ";
-   os << endl;
-   os << "       d_uval_inside = " << d_uval_inside << endl;
-   os << "       d_uval_outside = " << d_uval_outside << endl;
-
-   os << "       d_number_of_intervals = " << d_number_of_intervals << endl;
-   os << "       d_front_position = ";
-   for (k = 0; k < d_number_of_intervals - 1; k++) {
-      os << d_front_position[k] << "  ";
-   }
-   os << endl;
-   os << "       d_interval_uval = " << endl;
-   for (k = 0; k < d_number_of_intervals; k++) {
-      os << "            " << d_interval_uval[k] << endl;
-   }
    os << "   Boundary condition data " << endl;
-
-   if (d_dim == tbox::Dimension(2)) {
-      for (j = 0; j < d_scalar_bdry_edge_conds.getSize(); j++) {
-         os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-            << d_scalar_bdry_edge_conds[j] << endl;
-         if (d_scalar_bdry_edge_conds[j] == BdryCond::DIRICHLET) {
-            os << "         d_bdry_edge_uval[" << j << "] = "
-               << d_bdry_edge_uval[j] << endl;
-         }
-      }
-      os << endl;
-      for (j = 0; j < d_scalar_bdry_node_conds.getSize(); j++) {
-         os << "       d_scalar_bdry_node_conds[" << j << "] = "
-            << d_scalar_bdry_node_conds[j] << endl;
-         os << "       d_node_bdry_edge[" << j << "] = "
-            << d_node_bdry_edge[j] << endl;
-      }
-   }
-   if (d_dim == tbox::Dimension(3)) {
-      for (j = 0; j < d_scalar_bdry_face_conds.getSize(); j++) {
-         os << "       d_scalar_bdry_face_conds[" << j << "] = "
-            << d_scalar_bdry_face_conds[j] << endl;
-         if (d_scalar_bdry_face_conds[j] == BdryCond::DIRICHLET) {
-            os << "         d_bdry_face_uval[" << j << "] = "
-               << d_bdry_face_uval[j] << endl;
-         }
-      }
-      os << endl;
-      for (j = 0; j < d_scalar_bdry_edge_conds.getSize(); j++) {
-         os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-            << d_scalar_bdry_edge_conds[j] << endl;
-         os << "       d_edge_bdry_face[" << j << "] = "
-            << d_edge_bdry_face[j] << endl;
-      }
-      os << endl;
-      for (j = 0; j < d_scalar_bdry_node_conds.getSize(); j++) {
-         os << "       d_scalar_bdry_node_conds[" << j << "] = "
-            << d_scalar_bdry_node_conds[j] << endl;
-         os << "       d_node_bdry_face[" << j << "] = "
-            << d_node_bdry_face[j] << endl;
-      }
-   }
 
    os << "   Refinement criteria parameters " << endl;
 
@@ -2455,206 +2099,12 @@ void LinAdv::getFromInput(
 
    } // refine db entry exists
 
-   if (!is_from_restart) {
-
-      if (input_db->keyExists("data_problem")) {
-         d_data_problem = input_db->getString("data_problem");
-      } else {
-         TBOX_ERROR(
-            d_object_name << ": "
-                          << "`data_problem' value not found in input."
-                          << endl);
-      }
-
-      if (!input_db->keyExists("Initial_data")) {
-         TBOX_ERROR(
-            d_object_name << ": "
-                          << "No `Initial_data' database found in input." << endl);
-      }
-      boost::shared_ptr<tbox::Database> init_data_db(
-         input_db->getDatabase("Initial_data"));
-
-      bool found_problem_data = false;
-
-      if (d_data_problem == "SPHERE") {
-
-         if (init_data_db->keyExists("radius")) {
-            d_radius = init_data_db->getDouble("radius");
-         } else {
-            TBOX_ERROR(
-               d_object_name << ": "
-                             << "`radius' input required for SPHERE problem." << endl);
-         }
-         if (init_data_db->keyExists("center")) {
-            init_data_db->getDoubleArray("center", d_center, d_dim.getValue());
-         } else {
-            TBOX_ERROR(
-               d_object_name << ": "
-                             << "`center' input required for SPHERE problem." << endl);
-         }
-         if (init_data_db->keyExists("uval_inside")) {
-            d_uval_inside = init_data_db->getDouble("uval_inside");
-         } else {
-            TBOX_ERROR(d_object_name << ": "
-                                     << "`uval_inside' input required for "
-                                     << "SPHERE problem." << endl);
-         }
-         if (init_data_db->keyExists("uval_outside")) {
-            d_uval_outside = init_data_db->getDouble("uval_outside");
-         } else {
-            TBOX_ERROR(d_object_name << ": "
-                                     << "`uval_outside' input required for "
-                                     << "SPHERE problem." << endl);
-         }
-
-         found_problem_data = true;
-
-      }
-
-      if (!found_problem_data &&
-          ((d_data_problem == "PIECEWISE_CONSTANT_X") ||
-           (d_data_problem == "PIECEWISE_CONSTANT_Y") ||
-           (d_data_problem == "PIECEWISE_CONSTANT_Z") ||
-           (d_data_problem == "SINE_CONSTANT_X") ||
-           (d_data_problem == "SINE_CONSTANT_Y") ||
-           (d_data_problem == "SINE_CONSTANT_Z"))) {
-
-         int idir = 0;
-         if (d_data_problem == "PIECEWISE_CONSTANT_Y") {
-            if (d_dim < tbox::Dimension(2)) {
-               TBOX_ERROR(
-                  d_object_name << ": `PIECEWISE_CONSTANT_Y' "
-                                << "problem invalid in 1 dimension."
-                                << endl);
-            }
-            idir = 1;
-         }
-
-         if (d_data_problem == "PIECEWISE_CONSTANT_Z") {
-            if (d_dim < tbox::Dimension(3)) {
-               TBOX_ERROR(
-                  d_object_name << ": `PIECEWISE_CONSTANT_Z' "
-                                << "problem invalid in 1 or 2 dimensions." << endl);
-            }
-            idir = 2;
-         }
-
-         tbox::Array<string> init_data_keys = init_data_db->getAllKeys();
-
-         if (init_data_db->keyExists("front_position")) {
-            d_front_position = init_data_db->getDoubleArray("front_position");
-         } else {
-            TBOX_ERROR(d_object_name << ": "
-                                     << "`front_position' input required for "
-                                     << d_data_problem << " problem." << endl);
-         }
-
-         d_number_of_intervals =
-            tbox::MathUtilities<int>::Min(d_front_position.getSize() + 1,
-               init_data_keys.getSize() - 1);
-
-         d_front_position.resizeArray(d_front_position.getSize() + 1);
-         d_front_position[d_front_position.getSize() - 1] =
-            d_grid_geometry->getXUpper()[idir];
-
-         d_interval_uval.resizeArray(d_number_of_intervals);
-
-         int i = 0;
-         int nkey = 0;
-         bool found_interval_data = false;
-
-         while (!found_interval_data
-                && (i < d_number_of_intervals)
-                && (nkey < init_data_keys.getSize())) {
-
-            if (!(init_data_keys[nkey] == "front_position")) {
-
-               boost::shared_ptr<tbox::Database> interval_db(
-                  init_data_db->getDatabase(init_data_keys[nkey]));
-
-               if (interval_db->keyExists("uval")) {
-                  d_interval_uval[i] = interval_db->getDouble("uval");
-               } else {
-                  TBOX_ERROR(d_object_name << ": "
-                                           << "`uval' data missing in input for key = "
-                                           << init_data_keys[nkey] << endl);
-               }
-               i++;
-
-               found_interval_data = (i == d_number_of_intervals);
-
-            }
-
-            nkey++;
-
-         }
-
-         if ((d_data_problem == "SINE_CONSTANT_X") ||
-             (d_data_problem == "SINE_CONSTANT_Y") ||
-             (d_data_problem == "SINE_CONSTANT_Z")) {
-            if (init_data_db->keyExists("amplitude")) {
-               d_amplitude = init_data_db->getDouble("amplitude");
-            }
-            if (init_data_db->keyExists("period")) {
-               init_data_db->getDoubleArray("period", d_period, d_dim.getValue());
-            } else {
-               TBOX_ERROR(
-                  d_object_name << ": "
-                                << "`period' input required for SINE problem." << endl);
-            }
-         }
-
-         if (!found_interval_data) {
-            TBOX_ERROR(
-               d_object_name << ": "
-                             << "Insufficient interval data given in input"
-                             << " for PIECEWISE_CONSTANT_*problem."
-                             << endl);
-         }
-
-         found_problem_data = true;
-      }
-
-      if (!found_problem_data) {
-         TBOX_ERROR(d_object_name << ": "
-                                  << "`Initial_data' database found in input."
-                                  << " But bad data supplied." << endl);
-      }
-
-   } // if !is_from_restart read in problem data
 
    hier::IntVector periodic(
       d_grid_geometry->getPeriodicShift(hier::IntVector(d_dim, 1)));
    int num_per_dirs = 0;
    for (int id = 0; id < d_dim.getValue(); id++) {
       if (periodic(id)) num_per_dirs++;
-   }
-
-   if (input_db->keyExists("Boundary_data")) {
-
-      boost::shared_ptr<tbox::Database> bdry_db(
-         input_db->getDatabase("Boundary_data"));
-
-      if (d_dim == tbox::Dimension(2)) {
-         appu::CartesianBoundaryUtilities2::getFromInput(this,
-            bdry_db,
-            d_scalar_bdry_edge_conds,
-            d_scalar_bdry_node_conds,
-            periodic);
-      }
-      if (d_dim == tbox::Dimension(3)) {
-         appu::CartesianBoundaryUtilities3::getFromInput(this,
-            bdry_db,
-            d_scalar_bdry_face_conds,
-            d_scalar_bdry_edge_conds,
-            d_scalar_bdry_node_conds,
-            periodic);
-      }
-
-   } else {
-      TBOX_ERROR(
-         d_object_name << ": "
-                       << "Key data `Boundary_data' not found in input. " << endl);
    }
 
 }
@@ -2684,42 +2134,6 @@ void LinAdv::putToRestart(
    restart_db->putIntegerArray("d_fluxghosts",
       &d_fluxghosts[0],
       d_dim.getValue());
-
-   restart_db->putString("d_data_problem", d_data_problem);
-
-   if (d_data_problem == "SPHERE") {
-      restart_db->putDouble("d_radius", d_radius);
-      restart_db->putDoubleArray("d_center", d_center, d_dim.getValue());
-      restart_db->putDouble("d_uval_inside", d_uval_inside);
-      restart_db->putDouble("d_uval_outside", d_uval_outside);
-   }
-
-   if ((d_data_problem == "PIECEWISE_CONSTANT_X") ||
-       (d_data_problem == "PIECEWISE_CONSTANT_Y") ||
-       (d_data_problem == "PIECEWISE_CONSTANT_Z") ||
-       (d_data_problem == "SINE_CONSTANT_X") ||
-       (d_data_problem == "SINE_CONSTANT_Y") ||
-       (d_data_problem == "SINE_CONSTANT_Z")) {
-      restart_db->putInteger("d_number_of_intervals", d_number_of_intervals);
-      if (d_number_of_intervals > 0) {
-         restart_db->putDoubleArray("d_front_position", d_front_position);
-         restart_db->putDoubleArray("d_interval_uval", d_interval_uval);
-      }
-   }
-
-   restart_db->putIntegerArray("d_scalar_bdry_edge_conds",
-      d_scalar_bdry_edge_conds);
-   restart_db->putIntegerArray("d_scalar_bdry_node_conds",
-      d_scalar_bdry_node_conds);
-
-   if (d_dim == tbox::Dimension(2)) {
-      restart_db->putDoubleArray("d_bdry_edge_uval", d_bdry_edge_uval);
-   }
-   if (d_dim == tbox::Dimension(3)) {
-      restart_db->putIntegerArray("d_scalar_bdry_face_conds",
-         d_scalar_bdry_face_conds);
-      restart_db->putDoubleArray("d_bdry_face_uval", d_bdry_face_uval);
-   }
 
    if (d_refinement_criteria.getSize() > 0) {
       restart_db->putStringArray("d_refinement_criteria",
@@ -2796,41 +2210,6 @@ void LinAdv::getFromRestart()
                        << "Key data `d_fluxghosts' in restart file != FLUXG." << endl);
    }
 
-   d_data_problem = db->getString("d_data_problem");
-
-   if (d_data_problem == "SPHERE") {
-      d_data_problem_int = SPHERE;
-      d_radius = db->getDouble("d_radius");
-      db->getDoubleArray("d_center", d_center, d_dim.getValue());
-      d_uval_inside = db->getDouble("d_uval_inside");
-      d_uval_outside = db->getDouble("d_uval_outside");
-   }
-
-   if ((d_data_problem == "PIECEWISE_CONSTANT_X") ||
-       (d_data_problem == "PIECEWISE_CONSTANT_Y") ||
-       (d_data_problem == "PIECEWISE_CONSTANT_Z") ||
-       (d_data_problem == "SINE_CONSTANT_X") ||
-       (d_data_problem == "SINE_CONSTANT_Y") ||
-       (d_data_problem == "SINE_CONSTANT_Z")) {
-      d_number_of_intervals = db->getInteger("d_number_of_intervals");
-      if (d_number_of_intervals > 0) {
-         d_front_position = db->getDoubleArray("d_front_position");
-         d_interval_uval = db->getDoubleArray("d_interval_uval");
-      }
-   }
-
-   d_scalar_bdry_edge_conds = db->getIntegerArray("d_scalar_bdry_edge_conds");
-   d_scalar_bdry_node_conds = db->getIntegerArray("d_scalar_bdry_node_conds");
-
-   if (d_dim == tbox::Dimension(2)) {
-      d_bdry_edge_uval = db->getDoubleArray("d_bdry_edge_uval");
-   }
-   if (d_dim == tbox::Dimension(3)) {
-      d_scalar_bdry_face_conds = db->getIntegerArray("d_scalar_bdry_face_conds");
-
-      d_bdry_face_uval = db->getDoubleArray("d_bdry_face_uval");
-   }
-
    if (db->keyExists("d_refinement_criteria")) {
       d_refinement_criteria = db->getStringArray("d_refinement_criteria");
    }
@@ -2859,45 +2238,6 @@ void LinAdv::getFromRestart()
 
 }
 
-/*
- *************************************************************************
- *
- * Routines to read boundary data from input database.
- *
- *************************************************************************
- */
-
-void LinAdv::readDirichletBoundaryDataEntry(
-   const boost::shared_ptr<tbox::Database>& db,
-   string& db_name,
-   int bdry_location_index)
-{
-   TBOX_ASSERT(db);
-   TBOX_ASSERT(!db_name.empty());
-
-   if (d_dim == tbox::Dimension(2)) {
-      readStateDataEntry(db,
-         db_name,
-         bdry_location_index,
-         d_bdry_edge_uval);
-   }
-   if (d_dim == tbox::Dimension(3)) {
-      readStateDataEntry(db,
-         db_name,
-         bdry_location_index,
-         d_bdry_face_uval);
-   }
-}
-
-void LinAdv::readNeumannBoundaryDataEntry(
-   const boost::shared_ptr<tbox::Database>& db,
-   string& db_name,
-   int bdry_location_index)
-{
-   NULL_USE(db);
-   NULL_USE(db_name);
-   NULL_USE(bdry_location_index);
-}
 
 void LinAdv::readStateDataEntry(
    boost::shared_ptr<tbox::Database> db,
@@ -2916,113 +2256,6 @@ void LinAdv::readStateDataEntry(
       TBOX_ERROR(d_object_name << ": "
                                << "`uval' entry missing from " << db_name
                                << " input database. " << endl);
-   }
-
-}
-
-/*
- *************************************************************************
- *
- * Routine to check boundary data when debugging.
- *
- *************************************************************************
- */
-
-void LinAdv::checkBoundaryData(
-   int btype,
-   const hier::Patch& patch,
-   const hier::IntVector& ghost_width_to_check,
-   const tbox::Array<int>& scalar_bconds) const
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_dim == tbox::Dimension(2)) {
-      TBOX_ASSERT(btype == Bdry::EDGE2D ||
-         btype == Bdry::NODE2D);
-   }
-   if (d_dim == tbox::Dimension(3)) {
-      TBOX_ASSERT(btype == Bdry::FACE3D ||
-         btype == Bdry::EDGE3D ||
-         btype == Bdry::NODE3D);
-   }
-#endif
-
-   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
-   TBOX_ASSERT(pgeom);
-   const tbox::Array<hier::BoundaryBox> bdry_boxes =
-      pgeom->getCodimensionBoundaries(btype);
-
-   hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
-
-   for (int i = 0; i < bdry_boxes.getSize(); i++) {
-      hier::BoundaryBox bbox = bdry_boxes[i];
-      TBOX_ASSERT(bbox.getBoundaryType() == btype);
-      int bloc = bbox.getLocationIndex();
-
-      int bscalarcase = 0, refbdryloc = 0;
-      if (d_dim == tbox::Dimension(2)) {
-         if (btype == Bdry::EDGE2D) {
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_EDGES);
-            bscalarcase = scalar_bconds[bloc];
-            refbdryloc = bloc;
-         } else { // btype == Bdry::NODE2D
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_NODES);
-            bscalarcase = scalar_bconds[bloc];
-            refbdryloc = d_node_bdry_edge[bloc];
-         }
-      }
-      if (d_dim == tbox::Dimension(3)) {
-         if (btype == Bdry::FACE3D) {
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_FACES);
-            bscalarcase = scalar_bconds[bloc];
-            refbdryloc = bloc;
-         } else if (btype == Bdry::EDGE3D) {
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_EDGES);
-            bscalarcase = scalar_bconds[bloc];
-            refbdryloc = d_edge_bdry_face[bloc];
-         } else { // btype == Bdry::NODE3D
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_NODES);
-            bscalarcase = scalar_bconds[bloc];
-            refbdryloc = d_node_bdry_face[bloc];
-         }
-      }
-
-      int num_bad_values = 0;
-      NULL_USE(num_bad_values);
-
-      if (d_dim == tbox::Dimension(2)) {
-         num_bad_values =
-            appu::CartesianBoundaryUtilities2::checkBdryData(
-               d_uval->getName(),
-               patch,
-               vdb->mapVariableAndContextToIndex(d_uval, getDataContext()), 0,
-               ghost_width_to_check,
-               bbox,
-               bscalarcase,
-               d_bdry_edge_uval[refbdryloc]);
-      }
-      if (d_dim == tbox::Dimension(3)) {
-         num_bad_values =
-            appu::CartesianBoundaryUtilities3::checkBdryData(
-               d_uval->getName(),
-               patch,
-               vdb->mapVariableAndContextToIndex(d_uval, getDataContext()), 0,
-               ghost_width_to_check,
-               bbox,
-               bscalarcase,
-               d_bdry_face_uval[refbdryloc]);
-      }
-#if (TESTING == 1)
-      if (num_bad_values > 0) {
-         tbox::perr << "\nLinAdv Boundary Test FAILED: \n"
-                    << "     " << num_bad_values
-                    << " bad UVAL values found for\n"
-                    << "     boundary type " << btype << " at location "
-                    << bloc << endl;
-      }
-#endif
-
    }
 
 }
