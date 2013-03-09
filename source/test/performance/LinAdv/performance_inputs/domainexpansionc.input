@@ -1,11 +1,11 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Input file for SAMRAI Linadv example problem
- *                (3d sinusoidal fronusoidal frontt) 
+ *                (3d sinusoidal fronusoidal frontt)
  *
  ************************************************************************/
 
@@ -46,12 +46,23 @@ BergerRigoutsos {
    DEV_barrier_after = TRUE
 }
 
+TileClustering {
+   box_size = 8,8,8
+   DEV_log_cluster_summary = TRUE
+   DEV_log_cluster = FALSE
+   DEV_barrier_and_time = TRUE
+}
+
 Main {
    dim = 3
    base_name    = "domexc"
    log_all_nodes    = FALSE
 
-   // load_balancer_type = "ChopAndPackLoadBalancer"
+   // Clustering choices: BergerRigoutsos, TileClustering
+   clustering_type = "BergerRigoutsos"
+
+   // Partitioner choices: TreeLoadBalancer, ChopAndPackLoadBalancer, TilePartitioner
+   load_balancer_type = "TreeLoadBalancer"
 
 // visualization dump parameters
    viz_dump_interval     = 0          // zero to turn off
@@ -113,7 +124,7 @@ GriddingAlgorithm {
    combine_efficiency = 0.85
    efficiency_tolerance = 0.85
    // DEV_load_balance = FALSE
-   sequentialize_patch_indices = FALSE
+   sequentialize_patch_indices = TRUE
    DEV_barrier_and_time = TRUE
    DEV_log_metadata_statistics = TRUE
    DEV_print_steps = FALSE
@@ -121,10 +132,10 @@ GriddingAlgorithm {
 }
 
 SinusoidalFrontTagger {
-   init_disp = 1.0, 1.0, 1.0
-   period = 8.0, 4.0, 4.0
+   init_disp = 1.0, 1.0, 0.0
+   period = 8.0, 8.0, 8.0
    velocity = 2.0e0 , 0.55e0, 0.55e0
-   amplitude = 0.5
+   amplitude = 1.0
 }
 
 StandardTagAndInitialize {
@@ -134,7 +145,7 @@ StandardTagAndInitialize {
 
 TimeRefinementIntegrator {
    start_time            = 0.e0     // initial simulation time
-   end_time              = 2.0      // final simulation time
+   end_time              = 5.0      // final simulation time
    grow_dt               = 1.0e0    // growth factor for timesteps
    // max_integrator_steps  = 1     // max number of simulation timesteps
    max_integrator_steps  = 25     // max number of simulation timesteps
@@ -166,9 +177,24 @@ TreeLoadBalancer {
    DEV_summarize_map = FALSE
 }
 
+TilePartitioner {
+  box_size = 16,16,16
+  DEV_report_load_balance = FALSE
+  DEV_barrier_before = TRUE
+  DEV_barrier_after = TRUE
+  DEV_check_map = FALSE
+  DEV_check_connectivity = FALSE
+  DEV_print_steps = FALSE
+  DEV_print_swap_steps = FALSE
+  DEV_print_break_steps = FALSE
+  DEV_print_edge_steps = FALSE
+  DEV_slender_penalty_wt = 0.0
+  DEV_summarize_map = TRUE
+}
+
 HyperbolicLevelIntegrator {
-   cfl                      = 0.5
-   cfl_init                 = 0.5
+   cfl                      = 0.43
+   cfl_init                 = 0.43
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
    DEV_distinguish_mpi_reduction_costs = TRUE

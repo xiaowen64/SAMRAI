@@ -1,17 +1,17 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
  * Description:   Input file for SAMRAI Linadv example problem
- *                (3d sinusoidal fronusoidal frontt) 
+ *                (3d sinusoidal fronusoidal frontt)
  *
  ************************************************************************/
 
 
 LinAdv {
-   advection_velocity = 2.0e0 , 0.01e0, 0.01e0
+   advection_velocity = 2.0e0 , 0.55e0, 0.55e0
 
    godunov_order    = 4
    corner_transport = "CORNER_TRANSPORT_1"
@@ -36,6 +36,7 @@ BergerRigoutsos {
    DEV_algo_advance_mode = "ADVANCE_SOME"
    DEV_owner_mode = "MOST_OVERLAP"
    DEV_inflection_cut_threshold_ar = 4
+   DEV_min_box_size_from_cutting = 1, 1, 1
    DEV_log_node_history = FALSE
    sort_output_nodes = TRUE
    max_box_size = 100, 100, 100
@@ -46,6 +47,7 @@ BergerRigoutsos {
 }
 
 TileClustering {
+   box_size = 8,8,8
    DEV_log_cluster_summary = TRUE
    DEV_log_cluster = FALSE
    DEV_barrier_and_time = TRUE
@@ -64,12 +66,9 @@ Main {
 
 // visualization dump parameters
    viz_dump_interval     = 0          // zero to turn off
-   visit_number_procs_per_file = 1
 
 // restart dump parameters
    restart_interval        = 0        // zero to turn off
-
-   run_time_plotting = FALSE
 
    use_scaled_input = TRUE
    // timestepping = "SYNCHRONIZED"
@@ -99,7 +98,7 @@ PatchHierarchy {
       // all finer levels will use same values as level_0...
    }
    smallest_patch_size {
-      level_0 = 5,5,5
+      level_0 = 6,6,6
       // all finer levels will use same values as level_0...
    }
    ratio_to_coarser {
@@ -122,45 +121,21 @@ PatchHierarchy {
 
 GriddingAlgorithm {
 
-   combine_efficiency = 0.80
-   efficiency_tolerance = 0.80
-   sequentialize_patch_indices = FALSE
+   combine_efficiency = 0.85
+   efficiency_tolerance = 0.85
+   // DEV_load_balance = FALSE
+   sequentialize_patch_indices = TRUE
    DEV_barrier_and_time = TRUE
    DEV_log_metadata_statistics = TRUE
    DEV_print_steps = FALSE
-}
-
-V2GriddingAlgorithm {
-   max_levels             = 3        // Maximum number of levels in hierarchy.
-   ratio_to_coarser {            // vector ratio to next coarser level
-      level_1             = 2 , 2 , 2
-      level_2             = 2 , 2 , 2
-      level_3             = 2 , 2 , 2
-      level_4             = 2 , 2 , 2
-      level_5             = 2 , 2 , 2
-      level_6             = 2 , 2 , 2
-      level_7             = 2 , 2 , 2
-      level_8             = 2 , 2 , 2
-      level_9             = 2 , 2 , 2
-   }
-
-   largest_patch_size {
-      level_0 =  30, 30, 30  // largest patch allowed in hierarchy
-           // all finer levels will use same values as level_0...
-   }
-
-   smallest_patch_size {
-      level_0 =  5, 5, 5
-      // all finer levels will use same values as level_0...
-   }
-
+   DEV_check_boundary_proximity_violation = "ERROR"
 }
 
 SinusoidalFrontTagger {
-  init_disp = 1.0, 1.0, 1.0
-  period = 8.0, 4.0, 4.0
-  velocity = 2.0e0 , 0.01e0, 0.01e0
-  amplitude = 0.5
+   init_disp = 1.0, 1.0, 0.0
+   period = 8.0, 8.0, 8.0
+   velocity = 2.0e0 , 0.55e0, 0.55e0
+   amplitude = 1.0
 }
 
 StandardTagAndInitialize {
@@ -170,38 +145,40 @@ StandardTagAndInitialize {
 
 TimeRefinementIntegrator {
    start_time            = 0.e0     // initial simulation time
-   end_time              = 2.0      // final simulation time
+   end_time              = 5.0      // final simulation time
    grow_dt               = 1.0e0    // growth factor for timesteps
    // max_integrator_steps  = 1     // max number of simulation timesteps
-   max_integrator_steps  = 30     // max number of simulation timesteps
+   max_integrator_steps  = 25     // max number of simulation timesteps
    // tag_buffer            = 3, 3, 3, 3, 3, 3
    DEV_barrier_and_time        = TRUE
 }
 
 ChopAndPackLoadBalancer{
-  processors = 1, 1
-  bin_pack_method = "GREEDY"
-  // bin_pack_method = "SPATIAL"
-  ignore_level_box_union_is_single_box = TRUE
+   bin_pack_method = "GREEDY"
+   // bin_pack_method = "SPATIAL"
+   ignore_level_box_union_is_single_box = TRUE
 }
 
 TreeLoadBalancer {
-  min_load_fraction_per_box = 0.03
-  DEV_report_load_balance = FALSE
-  DEV_barrier_before = TRUE
-  DEV_barrier_after = TRUE
-  DEV_check_map = FALSE
-  DEV_check_connectivity = FALSE
-  DEV_print_steps = FALSE
-  DEV_print_swap_steps = FALSE
-  DEV_print_break_steps = FALSE
-  DEV_print_edge_steps = FALSE
-  DEV_slender_penalty_wt = 0.0
-  DEV_summarize_map = TRUE
+   flexible_load_tolerance = 0.05
+   min_load_fraction_per_box = 0.0
+   max_cycle_spread_ratio = 1000000
+
+   DEV_report_load_balance = FALSE
+   DEV_barrier_before = TRUE
+   DEV_barrier_after = TRUE
+   DEV_check_map = FALSE
+   DEV_check_connectivity = FALSE
+   DEV_print_steps = FALSE
+   DEV_print_swap_steps = FALSE
+   DEV_print_break_steps = FALSE
+   DEV_print_edge_steps = FALSE
+   DEV_slender_penalty_wt = 0.0
+   DEV_summarize_map = FALSE
 }
 
 TilePartitioner {
-  box_size = 8,8,8
+  box_size = 16,16,16
   DEV_report_load_balance = FALSE
   DEV_barrier_before = TRUE
   DEV_barrier_after = TRUE
@@ -224,8 +201,8 @@ HyperbolicLevelIntegrator {
 }
 
 RefineSchedule {
-  DEV_barrier_and_time = TRUE
-  DEV_extra_debug = FALSE
+   DEV_barrier_and_time = TRUE
+   DEV_extra_debug = FALSE
 }
 
 PersistentOverlapConnectors {
